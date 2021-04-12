@@ -1,0 +1,12 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/debugger.css" />
+	</styles>
+	
+	<DebugStyleBlock>
+		<TextEntry id="Selector" multiline="true" tabindex="0" undohistory="enabled" />
+		<Label allowrawtext="true" text="{" />
+		<Panel id="PropertySection" class="DebugPropertySection" tabindex="1" />
+		<Label allowrawtext="true" text="}" />
+	</DebugStyleBlock>	
+</root>

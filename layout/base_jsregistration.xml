@@ -1,0 +1,12 @@
+<root>
+    <scripts>
+        <include src="file://{resources}/scripts/common/panelregistration.js" />
+		<include src="file://{resources}/scripts/common/eventdefinition.js" />
+	</scripts>
+
+	<Panel hittest="false">
+        <!-- This is a dummy top level window. Its only purpose is to make sure to register new panel types
+             and register new panorama events before the other top level windows are loaded
+        -->
+	</Panel>
+</root>

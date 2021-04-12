@@ -1,0 +1,121 @@
+/* styles for the Chaos Hud */
+
+ChaosHud,
+#PopupManager,
+#TooltipManager, 
+#ContextMenuManager
+{
+	width: 100%;
+	height: 100%;
+}
+
+
+#HudElemBlur {
+	visibility: collapse;
+	width: 100%;
+	height: 100%;
+	blur: fastgaussian( 3, 3, 3 );
+	visibility: visible;
+
+	-s2-mix-blend-mode: opaque;
+}
+
+
+.HudBlur
+{
+	width: 100%;
+	height: 100%;
+
+	-s2-mix-blend-mode: opaque;
+	blur: fastgaussian( 2, 2, 3 );
+}
+
+
+@keyframes 'blur-fade-in'
+{
+	from
+	{
+		blur: fastanimgaussian( 0, 0, 0 );
+	}
+
+	to
+	{
+		blur: fastgaussian( 5, 5, 4 );
+	}
+}
+
+.eom-blur-fade-in {
+
+	animation-name: blur-fade-in;
+	animation-duration: 0.65s;
+	animation-iteration-count: 1;
+	animation-timing-function: ease-in-out;
+
+	-s2-mix-blend-mode: opaque;
+	blur: fastgaussian( 5, 5, 4 );
+}
+
+
+
+#HudTopLeft
+{
+	width: 100%;
+	height: 100%;
+    horizontal-align: left;
+    vertical-align: top;
+    flow-children: down;
+}
+
+#HudTopCenter 
+{
+	horizontal-align: center;
+	opacity: 1.0;
+	margin-top: 2px;
+	flow-children: down;
+}
+
+#HudBottomCenter 
+{
+	horizontal-align: center;
+	vertical-align: bottom;
+	width: 100%;
+	height: 43%;
+	opacity: 1.0;
+	margin-bottom: 2px;
+	flow-children: down;
+}
+
+#HudLowerLeft
+{
+    horizontal-align: left;
+    vertical-align: bottom;
+    //flow-children: down; /* flow layout not possible for this section of HUD, the voicestatus and healtharmor elements need to overlap */
+}
+
+#HudTopRight
+{
+    horizontal-align: right;
+    vertical-align: top;
+    flow-children: down;
+}
+
+#HudCenter
+{
+    width: 100%;
+    height: 100%;
+    margin-top: 300px;
+    horizontal-align: center;
+    vertical-align: top;
+    flow-children: down;
+}
+
+
+#HudBottomRight
+{
+	horizontal-align: right;
+	vertical-align: bottom;
+    flow-children: down;
+    height:100%;
+    width:100%;
+}
+

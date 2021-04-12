@@ -1,0 +1,10 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/debugger.css" />
+	</styles>
+	
+	<DebugInheritedStylesHeader>
+		<Label text="#Debugger_InheritedStyleHeader" />
+		<Label allowrawtext="true" id="ParentWithProperties" class="StyleLink" />
+	</DebugInheritedStylesHeader>	
+</root>

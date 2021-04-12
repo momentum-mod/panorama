@@ -1,0 +1,64 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/chaosstyles.css" />
+		<include src="file://{resources}/styles/hud/hud.css" />
+	</styles>
+
+	<ChaosHud hittest="false">
+		<!-- Non-interactive HUD elements have hit test disabled for efficiency -->
+		
+		<!-- In world UI is first to make sure it shows up behind all "screen-looking" UI -->
+		<Panel id="HudInWorld" hittest="false" hittestchildren="false">
+
+		</Panel>
+		
+
+
+		<!-- Center of screen HUD laid out vertically top-to-bottom -->
+		<Panel id="HudCenter" hittest="false" hittestchildren="false">
+
+		</Panel>
+
+		<!-- HUD anchored to top center of screen, laid out vertically top-to-bottom
+		-  NOTE: Not really set up properly - HudTeamCounter should dynamically move
+		-        between HudTopCenter and HudBottomCenter, but instead it just moves
+		-        itself via code.  So nothing can go in here that should appear
+		-        while HudTeamCounter is visible
+		-->
+		<Panel id="HudTopCenter" hittest="false" hittestchildren="false">
+
+		</Panel>
+
+		<!-- HUD anchored to top-left corner of screen, laid out vertically top-to-bottom -->
+		<Panel id="HudTopLeft" hittest="false" hittestchildren="false">
+
+		</Panel>
+
+		<!-- Anchored to below the center of the screen, laid out from top to bottom -->
+		<!-- misleading name, not 'bottom-center' but 'below center' -->
+		<Panel id="HudBottomCenter" hittest="false" hittestchildren="false">
+			<!-- Anchored on Bottom-center, laid out from top to bottom -->
+			
+		</Panel>
+
+		<!-- Anchored to the bottom-left corner of the screen, laid out from top to bottom -->
+		<Panel id="HudLowerLeft" hittest="false" hittestchildren="false">
+		</Panel>
+
+		<!-- Anchored on lower-right corner, laid out from top to bottom -->
+		<Panel id="HudBottomRight" hittest="false" hittestchildren="false">
+
+		</Panel>
+
+		<!-- Anchored in top left corner of screen, laid out from top-to-bottom -->
+		<Panel id="HudTopRight" hittest="false" hittestchildren="false">
+
+		</Panel>
+		
+		<!-- Make sure these are at the bottom to get the z-order right -->
+		<ChaosPopupManager id="PopupManager" onpopupsdismissed="" />
+		<ContextMenuManager id="ContextMenuManager" />
+		<ChaosTooltipManager id="TooltipManager" hittest="false" />
+
+	</ChaosHud>
+</root>

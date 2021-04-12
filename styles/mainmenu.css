@@ -1,0 +1,71 @@
+.MainMenuRootPanel {
+	width: 100%;
+	height: 100%;
+}
+
+#MainMenuBackground {
+	width: 100%;
+	height: 100%;
+}
+
+#MainMenuBackgroundImage {
+	width: 100%;
+	height: 100%;
+}
+
+#MainMenuInput {
+	width: 30%;
+	height: 30%;
+	vertical-align: bottom;
+	horizontal-align: left;
+	margin-left: 50px;
+	margin-bottom: 50px;
+}
+
+#MainMenuLogo {
+	vertical-align: top;
+	horizontal-align: left;
+	margin-left: 50px;
+}
+
+#MainMenuSlider {
+	height: 100%;
+	width: 50px;
+	horizontal-align: right;
+	background-color: rgba(64, 64, 64, 1);
+	color: #00ff00ff;
+}
+
+#MainMenuSlider:hover Label {
+	color: rgba(24, 150, 211, 1);
+}
+
+.mainmenu-container {
+	width: 100%;
+	height: 100%;
+}
+
+.mainmenu-nav-list {
+	width: 100%;
+	height: 100%;
+	flow-children: down;
+}
+
+.mainmenu-nav-list-container {
+	width: 100%;
+	height: 100%;
+}
+
+.mainmenu-nav-list-item {
+	width: 100%;
+	height: 48px;
+	vertical-align: middle;
+	margin-top: 10px;
+	padding-left: 10px;
+	background-color: rgba(64, 64, 64, 0.7);
+	transition: background-color 0.1s ease-in-out 0s;
+}
+
+.mainmenu-nav-list-item:hover {
+	background-color: rgba(24, 150, 211, 1);
+}

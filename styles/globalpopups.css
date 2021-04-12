@@ -1,0 +1,9 @@
+/* styles for the Chaos gloablpopups top level window */
+ChaosGlobalPopups,
+#TooltipManager, 
+#ContextMenuManager, 
+#PopupManager
+{
+	width: 100%;
+	height: 100%;
+}
