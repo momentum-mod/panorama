@@ -1,0 +1,9 @@
+<root>
+	<styles>		
+		<include src="file://{resources}/styles/panorama_base.css" />
+	</styles>
+	
+	<TextTooltip>
+		<Label allowrawtext="true" id="Text" />	<!-- No way to tell in api whether this was properly localized or not.  See tooltips/tooltip_text.xml -->
+	</TextTooltip>	
+</root>
