@@ -3,41 +3,20 @@
 	height: 100%;
 }
 
-#MainMenuBackground {
-	width: 100%;
-	height: 100%;
-}
-
-#MainMenuBackgroundImage {
-	width: 100%;
-	height: 100%;
-}
-
-#MainMenuInput {
-	width: 30%;
-	height: 30%;
-	vertical-align: bottom;
-	horizontal-align: left;
-	margin-left: 50px;
-	margin-bottom: 50px;
-}
-
 #MainMenuLogo {
-	vertical-align: top;
-	horizontal-align: left;
-	margin-left: 50px;
+	width: 400px;
+	margin: 10px 10px;
+	vertical-align: middle;
 }
 
-#MainMenuSlider {
+#MainMenuBlur {
+	width: 100%;
 	height: 100%;
-	width: 50px;
-	horizontal-align: right;
-	background-color: rgba(64, 64, 64, 1);
-	color: #00ff00ff;
+	blur: fastgaussian( 4, 4, 3 );
 }
 
-#MainMenuSlider:hover Label {
-	color: rgba(24, 150, 211, 1);
+.VerticalDivider {
+	background-color: #ffffff33;
 }
 
 .mainmenu-container {
@@ -47,25 +26,109 @@
 
 .mainmenu-nav-list {
 	width: 100%;
+	height: 100px;
+	background-color: rgba(68, 68, 68, 0.5);
+	flow-children: right;
+}
+
+.mainmenu-right-nav-list {
 	height: 100%;
+	width: 50px;
+	background-color: rgba(68, 68, 68, 0.5);
 	flow-children: down;
+	horizontal-align: right;
 }
 
-.mainmenu-nav-list-container {
-	width: 100%;
+.mainmenu-nav-container {
 	height: 100%;
+	flow-children: right;
 }
 
-.mainmenu-nav-list-item {
-	width: 100%;
-	height: 48px;
+.mainmenu-nav-item {
+	height: 100%;
 	vertical-align: middle;
-	margin-top: 10px;
-	padding-left: 10px;
-	background-color: rgba(64, 64, 64, 0.7);
+	background-color: #ffffff00;
+	padding: 25px 25px;
 	transition: background-color 0.1s ease-in-out 0s;
 }
 
-.mainmenu-nav-list-item:hover {
-	background-color: rgba(24, 150, 211, 1);
+.mainmenu-nav-item:hover {
+	background-color: #ffffff26;
+}
+
+.mainmenu-nav-item > Image {
+	height: 100%;
+	width: height-percentage( 100% );
+	vertical-align: middle;
+	opacity: 0.51;
+	transition: opacity 0.1s ease-in-out 0s;
+}
+
+.mainmenu-nav-item:hover > Image {
+	opacity: 1.0;
+}
+
+.mainmenu-nav-item .RadioBox {
+	visibility: collapse;
+}
+
+.mainmenu-right-nav-item {
+	width: 100%;
+	height: width-percentage( 100% );
+	background-color: #ffffff00;
+	padding: 12px 12px;
+	transition: background-color 0.1s ease-in-out 0s;
+}
+
+.mainmenu-right-nav-item .RadioBox {
+	visibility: collapse;
+}
+
+.mainmenu-right-nav-item:hover {
+	background-color: #ffffff26;
+}
+
+.mainmenu-right-nav-item > Image {
+	width: 100%;
+	height: width-percentage( 100% );
+	vertical-align: middle;
+	opacity: 0.51;
+	transition: opacity 0.1s ease-in-out 0s;
+}
+
+.mainmenu-right-nav-item:hover > Image {
+	opacity: 1.0;
+}
+
+#SliderButton {
+	height: fill-parent-flow( 1.0 );
+}
+
+#NewsPanel {
+	width: 45%;
+	height: 50%;
+}
+
+.MainMenuRootPanel {
+}
+
+.MainMenuRootPanel--PauseMenuMode {
+}
+
+/*----------------------- MainMenuModeOnly class ---------------------------*/
+.MainMenuModeOnly {
+	visibility: visible;
+}
+
+.MainMenuRootPanel--PauseMenuMode .MainMenuModeOnly, {
+	visibility: collapse;
+}
+
+/*---------------------- PauseMenuModeOnly class --------------------------*/
+.PauseMenuModeOnly {
+	visibility: collapse;
+}
+
+.MainMenuRootPanel--PauseMenuMode .PauseMenuModeOnly {
+	visibility: visible;
 }

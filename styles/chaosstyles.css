@@ -2,6 +2,8 @@
 /* Add styles that are ment to be reused in many places here. */
 /* If they are only used a few times put them in the .css for the panels they are used in.*/
 
+@define momentumBlue: #1896d3;
+@define lightMomentumBlue: #71f0ff;
 @define steamOnlineColor: #80a438;
 @define blueColor: #3281AC;
 @define blueColorDark: #0D354A;
@@ -19,7 +21,7 @@
 @define backgroundGradient: gradient( linear, 75% 100%, 0% 0%, from( #14202b ), to( #1e2d3d ) );
 @define textBlueGradient: gradient( linear, 0% 100%, 0% 0%, from( blueColor  ), to( blueColorDark ) );
 
-@define baseText: #ccccccff;
+@define baseText: #ffffffff;
 @define baseBorder: #444444ff;
 @define selectedTextBackgroundColor: #0D354Abb;
 
@@ -45,38 +47,6 @@
 /* anim times */
 @define subMenuFadoutTime: 0.25s; 
 
-/* shared colors */
-@define color-CT: #B5D4EE;
-@define color-T: #EAD18A;
-
-@define color-icon-bomb: #ffb136;
-@define color-icon-hostage-alive:    yellow;
-@define color-icon-hostage-transit:  lightgreen;
-@define color-icon-hostage-rescued:  green;
-@define color-icon-hostage-dead:     red;
-
-/* rarity colors from items.txt */
-@define color-rarity-default: #6a6156;
-@define color-rarity-common: #b0c3d9;
-@define color-rarity-uncommon: #5e98d9;
-@define color-rarity-rare: #4b69ff;
-@define color-rarity-mythical: #8847ff;
-@define color-rarity-legendary: #d32ce6;
-@define color-rarity-ancient: #eb4b4b;
-@define color-rarity-immortal: #e4ae39;
-@define color-rarity-strange: #CF6A32;
-@define color-rarity-unusual: #ffd700;
-
-/* mapping from rarity levels to colors */
-@define color-rarity-0: color-rarity-default;   /* stock / default */
-@define color-rarity-1: color-rarity-common;    /* consumer grade / base grade */
-@define color-rarity-2: color-rarity-uncommon;  /* industrial grade / medium grade */
-@define color-rarity-3: color-rarity-rare;      /* mil-spec grade / high grade */
-@define color-rarity-4: color-rarity-mythical;  /* restricted / remarkable */
-@define color-rarity-5: color-rarity-legendary; /* classified / exotic */
-@define color-rarity-6: color-rarity-ancient;   /* covert / extraordinary */
-@define color-rarity-7: color-rarity-immortal;  /* contraband */
-@define color-rarity-99: color-rarity-unusual;  /* * */
 
 /* hud colors (cl_hud_color) */
 @define color-hud-0: #e8e8e8; /* white, default.  old default moved to color-hud-11. */
@@ -92,12 +62,6 @@
 @define color-hud-10: #ff7999; /* pink */
 @define color-hud-11: #d5e286; /* army green, old scaleform default */
 
-@define color-player-yellow: rgb(248, 246, 45);
-@define color-player-purple: rgb(161, 25, 240 );
-@define color-player-green: rgb(0, 181, 98);
-@define color-player-blue: rgb( 92, 168, 255);
-@define color-player-orange: rgb(255, 155, 37);
-
  /* curves */
 @define curve__ease-out-cubic: cubic-bezier(0.215, 0.61, 0.355, 1);
 @define curve__ease-out-back: cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -110,9 +74,18 @@
 /* Default fonts */
 Label, TextEntry
 {
-	font-family: notosans, 'Arial Unicode MS';
+	font-family: Roboto, notosans, 'Arial Unicode MS';
 	text-overflow: clip;
 
+}
+
+Label.header {
+	font-family: "Bebas Neue";
+	font-size: 30px;
+}
+Label.subheader {
+	font-family: "Bebas Neue";
+	font-size: 20px;
 }
 
 /* Default font, but with monospaced numbers for use in things like the scoreboard */
@@ -285,7 +258,6 @@ Label
 {
 	color: baseText;
 	font-size: 18px;
-	font-weight: lighter;
 	vertical-align: middle;
 	letter-spacing: 1px;
 }
@@ -1011,8 +983,33 @@ ToggleButton.ExpandCollapseToggleButton
     transition-duration: 0.2s;
 }
 
+Button > Label {
+	vertical-align: middle;
+	horizontal-align: center;
+	margin: 0px 5px;
+	text-shadow: 0 0.5px 1.5px rgba(0, 0, 0, 0.45);
+	font-family: "Bebas Neue";
+	text-align: center;
+}
+
+Button {
+	border-radius: 2px;
+}
+
+Button:enabled {
+	background-color: gradient( linear, 0% 0%, 0% 100%, from( #57c8ff ), to( momentumBlue ) );
+}
+
+Button:active {
+	background-color: gradient( linear, 0% 100%, 0% 0%, from( #57c8ff ), to( momentumBlue ) );
+}
+
+Button:disabled {
+	background-color: rgba(255, 255, 255, 0.15);
+}
+
 /* ------------------------------------------------------------------------- */
-/*  Radio Button                      				                         */
+/*  Radio Button                                                             */
 /* ------------------------------------------------------------------------- */
 RadioButton
 {
@@ -2192,7 +2189,11 @@ ProgressBar
 
 .ProgressBarLeft
 {
-	background-color: gradient( linear, 0% 0%, 100% 0%, from( #222222FF ), to( #444f52FF ) );
+	background-color: gradient( linear, 0% 0%, 100% 0%, from( momentumBlue ), to( lightMomentumBlue ) );
+}
+
+.ProgressBarRight {
+	background-color: #273840;
 }
 
 /* ------------------------------------------------------------------------- */

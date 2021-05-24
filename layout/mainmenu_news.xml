@@ -1,0 +1,40 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/chaosstyles.css" />
+		<include src="file://{resources}/styles/mainmenu_news.css" />
+	</styles>
+	<scripts>
+		<include src="file://{resources}/scripts/mainmenu_news.js" />
+	</scripts>
+	<snippets>
+		<snippet name="news-learn-more">
+			<Panel>
+				<Button class="full-width" id="LearnMore">
+					<Label text="Learn More" />
+				</Button>
+			</Panel>
+		</snippet>
+		<snippet name="news-update-preview">
+			<Panel>
+				<Image id="NewsUpdatePreview" src="" scaling="stretch-to-fit-y-preserve-aspect" horizontalalign="left" class="news-preview-image" />
+			</Panel>
+		</snippet>
+	</snippets>
+
+	<Panel>
+		<Panel id="NewsContainer">
+			<Panel id="LatestUpdate">
+				<Panel id="LatestUpdateDetails">
+					<Label class="header" text="Updates" />
+					<Label class="subheader" text="{s:title}" />
+					<Label html="true" class="news-description" text="{s:h:description}" />
+					<Panel id="LearnMoreParent" />
+				</Panel>
+				<Image id="LatestUpdateImage" scaling="stretch-to-fit-preserve-aspect" src="" />
+			</Panel>
+			<Panel id="OtherUpdates">
+				
+			</Panel>
+		</Panel>
+	</Panel>
+</root>

@@ -15,7 +15,6 @@ class MainMenuController {
 	{
 		if( !MainMenuController.playedInitialFadeUp )
 		{
-			$( '#MainMenuContainerPanel' ).TriggerClass( 'show' );
 			MainMenuController.playedInitialFadeUp = true;
 		}
 	};
@@ -42,7 +41,7 @@ class MainMenuController {
 	{
 		$.GetContextPanel().RemoveClass( 'MainMenuRootPanel--PauseMenuMode' );
 
-		this.onHomeButtonPressed();
+		MainMenuController.onHomeButtonPressed();
 	};
 
 	static checkTabCanBeOpenedRightNow(tab )
@@ -55,9 +54,9 @@ class MainMenuController {
 		$.Msg( 'tabToShow: ' + tab + ' XmlName = ' + XmlName  );
 		$.Msg( 'ContextPANEL: ' + $.GetContextPanel().id );
 
-		if ( !this.checkTabCanBeOpenedRightNow( tab ) )
+		if ( !MainMenuController.checkTabCanBeOpenedRightNow( tab ) )
 		{
-			this.onHomeButtonPressed();
+			MainMenuController.onHomeButtonPressed();
 			return;	// validate that tabs can be opened (GC connection / China free-to-play / etc.)
 		}
 
@@ -114,7 +113,7 @@ class MainMenuController {
 			}
 			
 			// If the tab exists then hide it
-			if( this.activeTab )
+			if( MainMenuController.activeTab )
 			{
 				const panelToHide = $.GetContextPanel().FindChildInLayoutFile(m_activeTab);
 				panelToHide.AddClass( 'mainmenu-content--hidden' );
@@ -134,18 +133,17 @@ class MainMenuController {
 
 		}
 
-		this.showContentPanel();
+		MainMenuController.showContentPanel();
 	};
 
 
 	static showContentPanel()
 	{
-		if ( this.contentPanel.HasClass( 'mainmenu-content--offscreen' ) ) {
-			this.contentPanel.RemoveClass( 'mainmenu-content--offscreen' );
+		if ( MainMenuController.contentPanel.HasClass( 'mainmenu-content--offscreen' ) ) {
+			MainMenuController.contentPanel.RemoveClass( 'mainmenu-content--offscreen' );
 		}
 
 		$.DispatchEvent( 'ShowContentPanel' );
-		this.dimMainMenuBackground( false );
 	};
 
 	static onHideContentPanel()
@@ -157,8 +155,6 @@ class MainMenuController {
 		if ( elActiveNavBarBtn && elActiveNavBarBtn.id !== 'MainMenuNavBarHome' ) {
 			elActiveNavBarBtn.checked = false;
 		}
-
-		MainMenuController.dimMainMenuBackground( true );
 		
 		// If the tab exists then hide it
 		if ( MainMenuController.activeTab )
@@ -169,7 +165,6 @@ class MainMenuController {
 		}
 
 		MainMenuController.activeTab = '';
-
 	};
 
 	static onHomeButtonPressed()
@@ -194,15 +189,6 @@ class MainMenuController {
 	static onTestButtonPressed() {
 		$.Msg("Hi!");
 	}
-
-	static dimMainMenuBackground( removeDim )
-	{		
-		if ( removeDim && MainMenuController.contentPanel.HasClass('mainmenu-content--offscreen') &&
-			$('#mainmenu-content__blur-target').HasHoverStyle() === false) {
-			$('#MainMenuBackground').RemoveClass('Dim');
-		} else
-			$('#MainMenuBackground').AddClass('Dim');
-	};
 
 	//--------------------------------------------------------------------------------------------------
 	// Icon buttons functions
@@ -256,15 +242,13 @@ class MainMenuController {
 //--------------------------------------------------------------------------------------------------
 (function()
 {
-
 	$.RegisterForUnhandledEvent( 'HideContentPanel', MainMenuController.onHideContentPanel );
 	$.RegisterForUnhandledEvent( 'OpenPlayMenu', MainMenuController.openPlayMenu );
 	$.RegisterForUnhandledEvent( 'ChaosShowMainMenu', MainMenuController.onShowMainMenu);
 	$.RegisterForUnhandledEvent( 'ChaosHideMainMenu', MainMenuController.onHideMainMenu);
 	$.RegisterForUnhandledEvent( 'ChaosShowPauseMenu', MainMenuController.onShowPauseMenu);
 	$.RegisterForUnhandledEvent( 'ChaosHidePauseMenu', MainMenuController.onHidePauseMenu);
-	
+
 	//$.RegisterKeyBind( 'Chaos_mainmenu', 'key_escape', MainMenu.OnEscapeKeyPressed );
 	$.RegisterEventHandler( "Cancelled", $.GetContextPanel(), MainMenuController.onEscapeKeyPressed );
-
 })();

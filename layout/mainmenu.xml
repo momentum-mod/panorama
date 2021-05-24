@@ -36,47 +36,77 @@
 		<!-- Background video -->
 		<Panel id="MainMenuVanityParent">
 			<!-- Vanity is not used but the engine needs this to exist -->
-		</Panel>-
-		<Panel id="MainMenuContainerPanel" class="mainmenu-container">
-			<Panel id="MainMenuBackground" class="mainmenu-bg">
-				<Image id="MainMenuBackgroundImage" src="file://{images}/bg_00.vtf" />
-			</Panel>
-			
-			<Image id="MainMenuLogo" src="file://{images}/logo.vtf" />
-		
-			<Panel id="MainMenuInput">  <!-- The actual panel with input & focus -->
-				<!-- This fills the entire width, is aligned to top and is used as the navbar -->
-				<Panel id="MainMenuOptionList" class="mainmenu-nav-list-container">
-					<Panel id="JsMainMenuNavBar" class="mainmenu-nav-list">
-						<Button id="MainMenuNavBarPlay"
-								class="mainmenu-nav-list-item MainMenuModeOnly"
-								onactivate="GameInterfaceAPI.ConsoleCommand( 'ShowMapSelectionPanel' )">
-							<Label text="PLAY"/>
-						</Button>
+		</Panel>
 
-						<Button id="MainMenuNavBarSettings"
-								class="mainmenu-nav-list-item"
-								onactivate="GameInterfaceAPI.ConsoleCommand( 'mom_settings_show' )">
-							<Label text="SETTINGS"/>
-						</Button>
+		<Panel id="MainMenuInput" class="mainmenu-container">
+			<BaseBlurTarget id="MainMenuBlur" blurrects="JsMainMenuNavBar MainMenuOptionListRight">
+				<!-- In main menu, show the background -->
+				<Image class="full-width full-height MainMenuModeOnly" src="file://{images}/bg_00.vtf" />
 
-						<Button id="MainMenuNavBarCredits"
-								class="mainmenu-nav-list-item"
-								onactivate="GameInterfaceAPI.ConsoleCommand( 'mom_credits_show' )">
-							<Label text="CREDITS"/>
-						</Button>
+				<!-- In pause menu, show the existing backbuffer -->
+				<ChaosBackbufferImagePanel class="full-width full-height PauseMenuModeOnly" />
+			</BaseBlurTarget>
 
-						<Button id="MainMenuNavBarQuit"
-								class="mainmenu-nav-list-item"
-								onactivate="GameInterfaceAPI.ConsoleCommand( 'quit' )">
-							<Label text="QUIT"/>
-						</Button>
+			<Panel class="full-width full-height top-bottom-flow">
+				<Panel id="JsMainMenuNavBar" class="mainmenu-nav-list">
+					<!-- This fills the entire width, is aligned to top and is used as the navbar -->
+					<Image id="MainMenuLogo" src="file://{images}/topnav/momentumLogo.svg" textureheight="64" />
+					
+					<Panel class="full-height left-right-flow">
+						<RadioButton id="PlayButton" class="mainmenu-nav-item" onactivate="GameInterfaceAPI.ConsoleCommand('ShowMapSelectionPanel')">
+							<Image src="file://{images}/topnav/playIcon.svg" textureheight="64" />
+						</RadioButton>
+						<RadioButton id="InventoryButton" class="mainmenu-nav-item">
+							<Image src="file://{images}/topnav/inventoryIcon.svg" textureheight="64" />
+						</RadioButton>
+						<RadioButton id="ShopButton" class="mainmenu-nav-item">
+							<Image src="file://{images}/topnav/shopIcon.svg" textureheight="64" />
+						</RadioButton>
+						<RadioButton id="LearnButton" class="mainmenu-nav-item">
+							<Image src="file://{images}/topnav/learnIcon.svg" textureheight="64" />
+						</RadioButton>
+						<RadioButton id="SettingsButton" class="mainmenu-nav-item" onactivate="GameInterfaceAPI.ConsoleCommand('mom_settings_show')">
+							<Image src="file://{images}/topnav/settingsIcon.svg" textureheight="64" />
+						</RadioButton>
+					</Panel>
+					
+					<Panel class="full-height left-right-flow horizontal-align-right">
+						<RadioButton id="NotificationsButton" class="mainmenu-nav-item">
+							<Image src="file://{images}/topnav/notificationIcon.svg" textureheight="64" />
+						</RadioButton>
+						<Frame class="full-height" src="file://{resources}/layout/player_card.xml" />
+						<RadioButton id="QuitButton" class="mainmenu-nav-item" onactivate="GameInterfaceAPI.ConsoleCommand('quit')">
+							<Image src="file://{images}/topnav/quitIcon.svg" textureheight="64" />
+						</RadioButton>
 					</Panel>
 				</Panel>
-			</Panel>
-			
-			<Panel id="MainMenuSlider">
-				<Label class="horizontal-align-center vertical-align-center" text="&lt;" />
+				
+				<Panel class="full-width full-height left-right-flow">
+					<Frame id="NewsPanel" class="MainMenuModeOnly" src="file://{resources}/layout/mainmenu_news.xml" />
+					<Panel id="JsMainMenuContent" class="mainmenu-content MainMenuModeOnly">
+						<!-- A panel gets inserted here dynamically from js, depending on which tab we click -->
+					</Panel>
+				
+					<Panel id="MainMenuOptionListRight" class="mainmenu-right-nav-list">
+						<RadioButton id="ProfileButton" class="mainmenu-right-nav-item">
+							<Image src="file://{images}/sidepanel/profileIcon.svg" textureheight="32" />
+						</RadioButton>
+						<RadioButton id="LobbyButton" class="mainmenu-right-nav-item">
+							<Image src="file://{images}/sidepanel/lobbyIcon.svg" textureheight="32" />
+						</RadioButton>
+						<RadioButton id="HostButton" class="mainmenu-right-nav-item">
+							<Image src="file://{images}/sidepanel/wrIcon.svg" textureheight="32" />
+						</RadioButton>
+						<RadioButton id="ChangelogButton" class="mainmenu-right-nav-item">
+							<Image src="file://{images}/sidepanel/newsIcon.svg" textureheight="32" />
+						</RadioButton>
+						
+						<RadioButton id="SliderButton" class="mainmenu-right-nav-item">
+							<Image src="file://{images}/sidepanel/arrowIcon.svg" textureheight="32" orientation="180" />
+						</RadioButton>
+					</Panel>
+				</Panel>
+
 			</Panel>
 		</Panel>
 

@@ -1,0 +1,66 @@
+#PlayerCard {
+	flow-children: right;
+	height: 100%;
+	width: 500px;
+}
+
+#PlayerAvatar {
+	margin: 8px;
+	height: 100%;
+	width: height-percentage( 100% );
+	border: 1px solid #ffffff10;
+}
+
+#BlackOverlay {
+	background-color: rgba(0, 0, 0, 0.6);
+	width: 100%;
+	height: 100%;
+	border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#PlayerName {
+	font-size: 24px;
+}
+
+.xp {
+	font-size: 14px;
+}
+
+.drop-shadow {
+	text-shadow: 0px 2px 3px 0.0 rgba(0, 0, 0, 0.45);
+}
+
+#PlayerDetails {
+	width: 500px;
+	flow-children: down;
+	margin: 8px;
+}
+
+#XpProgressBar {
+	margin-top: 5px;
+	height: 10px;
+}
+
+#XpAndLevel {
+	flow-children: right;
+	vertical-align: bottom;
+	height: fill-parent-flow( 1.0 );
+	width: 100%;
+}
+
+.level-indicator {
+	height: 100%;
+	horizontal-align: right;
+}
+
+#Units > Label {
+	font-family: "Bebas Neue";
+	text-shadow: 0px 2px 3px 0.0 rgba(0, 0, 0, 0.45);
+	font-size: 20px;
+	vertical-align: middle;
+}
+#Units > Image {
+	vertical-align: middle;
+	wash-color: #f9dc5c;
+	margin-right: 3px;
+}

@@ -1,0 +1,30 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/chaosstyles.css" />
+		<include src="file://{resources}/styles/player_card.css" />
+	</styles>
+	<scripts>
+		<include src="file://{resources}/scripts/player_card.js" />
+	</scripts>
+
+	<Panel onload="PlayerCard.onLoad()">
+		<Image class="full-width full-height" src="file://{images}/bg_dark.dds" scaling="stretch-to-cover-preserve-aspect" />
+		<Panel id="BlackOverlay" /> <!-- 50% opacity black overlay to make the white text readable -->
+		<Panel id="PlayerCard">
+			<ChaosAvatarImage id="PlayerAvatar" steamid="local" />
+			<Panel id="PlayerDetails">
+				<Label id="PlayerName" class="drop-shadow" text="SlidyBat" />
+				<Panel id="Units" class="left-right-flow">
+					<Image src="file://{images}/icon_Units.svg" textureheight="18" />
+					<Label text="{d:money}" />
+				</Panel>
+				<Panel id="XpAndLevel">
+					<Panel class="top-bottom-flow vertical-align-bottom">
+						<Label class="xp drop-shadow" text="{d:xp} / {d:totalxp} xp" />
+						<ProgressBar id="XpProgressBar" />
+					</Panel>
+				</Panel>
+			</Panel>
+		</Panel>
+	</Panel>
+</root>
