@@ -9,6 +9,7 @@ class PlayerCard {
 		const money = MomentumAPI.GetPlayerMoney();
 
 		// Set the dialog variables so this can be used in label
+		$.GetContextPanel().SetDialogVariable("name", FriendsAPI.GetLocalPlayerName());
 		$.GetContextPanel().SetDialogVariableInt("level", level);
 		$.GetContextPanel().SetDialogVariableInt("xp", xp - currLevelXp);
 		$.GetContextPanel().SetDialogVariableInt("totalxp", nextLevelXp - currLevelXp);

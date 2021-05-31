@@ -13,7 +13,7 @@
 		<Panel id="PlayerCard">
 			<ChaosAvatarImage id="PlayerAvatar" steamid="local" />
 			<Panel id="PlayerDetails">
-				<Label id="PlayerName" class="drop-shadow" text="SlidyBat" />
+				<Label id="PlayerName" class="drop-shadow" text="{s:name}" />
 				<Panel id="Units" class="left-right-flow">
 					<Image src="file://{images}/icon_Units.svg" textureheight="18" />
 					<Label text="{d:money}" />
