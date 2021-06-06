@@ -44,14 +44,14 @@ class MainMenuController {
 		MainMenuController.onHomeButtonPressed();
 	};
 
-	static checkTabCanBeOpenedRightNow(tab )
+	static checkTabCanBeOpenedRightNow(tab)
 	{
 		return true;
 	}
 
-	static navigateToTab( tab, XmlName )
+	static navigateToTab(tab, xmlName)
 	{
-		$.Msg( 'tabToShow: ' + tab + ' XmlName = ' + XmlName  );
+		$.Msg( 'tabToShow: ' + tab + ' XmlName = ' + xmlName  );
 		$.Msg( 'ContextPANEL: ' + $.GetContextPanel().id );
 
 		if ( !MainMenuController.checkTabCanBeOpenedRightNow( tab ) )
@@ -62,9 +62,6 @@ class MainMenuController {
 
 		//$.DispatchEvent('PlayMainMenuMusic', true, false, null );
 
-		// Turn off ambient sound on movies.
-		GameInterfaceAPI.SetSettingString( 'panorama_play_movie_ambient_sound', '0' );
-
 		// Check to see if tab to show exists.
 		// If not load the xml file.
 		if( !$.GetContextPanel().FindChildInLayoutFile( tab ) )
@@ -74,7 +71,7 @@ class MainMenuController {
 			newPanel.Data().elMainMenuRoot = $.GetContextPanel();
 			$.Msg( 'Created Panel with id: ' + newPanel.id );
 
-			newPanel.LoadLayout('file://{resources}/layout/' + XmlName + '.xml', false, false );
+			newPanel.LoadLayout('file://{resources}/layout/' + xmlName + '.xml', false, false );
 			newPanel.RegisterForReadyEvents( true );
 			
 			// Handler that catches OnPropertyTransitionEndEvent event for this panel.
@@ -108,8 +105,8 @@ class MainMenuController {
 		if( MainMenuController.activeTab !== tab )
 		{
 			//Trigger sound event for the new panel
-			if(XmlName) {
-				$.DispatchEvent('PlaySoundEffect', 'tab_' + XmlName.replace('/', '_'), 'MOUSE');
+			if(xmlName) {
+				$.DispatchEvent('PlaySoundEffect', 'tab_' + xmlName.replace('/', '_'), 'MOUSE');
 			}
 			
 			// If the tab exists then hide it
@@ -169,7 +166,7 @@ class MainMenuController {
 
 	static onHomeButtonPressed()
 	{
-		$.DispatchEvent( 'HideContentPanel' );
+		MainMenuController.onHideContentPanel();
 	}
 
 	static getActiveNavBarButton()
@@ -186,54 +183,39 @@ class MainMenuController {
 		}
 	};
 
-	static onTestButtonPressed() {
-		$.Msg("Hi!");
-	}
-
 	//--------------------------------------------------------------------------------------------------
 	// Icon buttons functions
 	//--------------------------------------------------------------------------------------------------
 
 
 	static onQuitButtonPressed()
-	{	
-		UiToolkitAPI.ShowGenericPopupTwoOptionsBgStyle( '#UI_ConfirmExitTitle',
-			'#UI_ConfirmExitMessage',
+	{
+		UiToolkitAPI.ShowGenericPopupTwoOptionsBgStyle( 'Quit',
+			'Are you sure you want to quit?',
 			'',
-			'#UI_Quit',
-			function() {
-				QuitGame( 'Option1' );
-			},
-			'#UI_Return',
+			'Quit',
+			MainMenuController.quitGame,
+			'Return',
 			function() {
 			},
 			'dim'
 		);
 	}
 
-	static quitGame( msg )
+	static quitGame()
 	{
 		GameInterfaceAPI.ConsoleCommand('quit');
 	}
 
-	static openPlayMenu()
-	{
-		NavigateToTab( 'JsPlay', 'mainmenu_play' );
-	};
-
 	static onEscapeKeyPressed( eSource, nRepeats, focusPanel )
 	{
+		MainMenuController.onHomeButtonPressed();
+		
 		// Resume game (pause menu mode)
 		if ( $.GetContextPanel().HasClass( 'MainMenuRootPanel--PauseMenuMode' ) ) {
 			$.DispatchEvent( 'ChaosMainMenuResumeGame' );
-		} else {
-			const playButton = $('#MainMenuNavBarPlay');
-			if( playButton && !playButton.HasClass( 'mainmenu-navbar__btn-small--hidden' ) ) {
-				//$.DispatchEvent('PlayMainMenuMusic', true, true, null );
-			}
 		}
 	};
-
 }
 
 
@@ -242,13 +224,10 @@ class MainMenuController {
 //--------------------------------------------------------------------------------------------------
 (function()
 {
-	$.RegisterForUnhandledEvent( 'HideContentPanel', MainMenuController.onHideContentPanel );
-	$.RegisterForUnhandledEvent( 'OpenPlayMenu', MainMenuController.openPlayMenu );
-	$.RegisterForUnhandledEvent( 'ChaosShowMainMenu', MainMenuController.onShowMainMenu);
-	$.RegisterForUnhandledEvent( 'ChaosHideMainMenu', MainMenuController.onHideMainMenu);
-	$.RegisterForUnhandledEvent( 'ChaosShowPauseMenu', MainMenuController.onShowPauseMenu);
-	$.RegisterForUnhandledEvent( 'ChaosHidePauseMenu', MainMenuController.onHidePauseMenu);
+	$.RegisterForUnhandledEvent('ChaosShowMainMenu', MainMenuController.onShowMainMenu);
+	$.RegisterForUnhandledEvent('ChaosHideMainMenu', MainMenuController.onHideMainMenu);
+	$.RegisterForUnhandledEvent('ChaosShowPauseMenu', MainMenuController.onShowPauseMenu);
+	$.RegisterForUnhandledEvent('ChaosHidePauseMenu', MainMenuController.onHidePauseMenu);
 
-	//$.RegisterKeyBind( 'Chaos_mainmenu', 'key_escape', MainMenu.OnEscapeKeyPressed );
 	$.RegisterEventHandler( "Cancelled", $.GetContextPanel(), MainMenuController.onEscapeKeyPressed );
 })();

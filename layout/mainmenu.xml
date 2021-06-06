@@ -29,7 +29,7 @@
 		</snippet>
 	</snippets>
 
-	<ChaosMainMenu class="InitialDisplay MainMenuRootPanel" hittest="false" useglobalcontext="true" oncancel="MainMenu.OnEscapeKeyPressed();">
+	<ChaosMainMenu class="InitialDisplay MainMenuRootPanel" hittest="false" useglobalcontext="true" oncancel="MainMenuController.onEscapeKeyPressed();">
 		<Panel id="MainMenuMovieParent">
 			<!-- Movie added/removed dynamically when changing the visibility of the main menu -->
 		</Panel>
@@ -75,7 +75,7 @@
 							<Image src="file://{images}/topnav/notificationIcon.svg" textureheight="64" />
 						</RadioButton>
 						<Frame class="full-height" src="file://{resources}/layout/player_card.xml" />
-						<RadioButton id="QuitButton" class="mainmenu-nav-item" onactivate="GameInterfaceAPI.ConsoleCommand('quit')">
+						<RadioButton id="QuitButton" class="mainmenu-nav-item" onactivate="MainMenuController.onQuitButtonPressed()">
 							<Image src="file://{images}/topnav/quitIcon.svg" textureheight="64" />
 						</RadioButton>
 					</Panel>
