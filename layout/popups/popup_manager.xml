@@ -1,14 +1,13 @@
 <root>
 	<styles>
-    <include src="file://{resources}/styles/gamestyles.css" />
-    <include src="file://{resources}/styles/popups/popup_manager.css" />
-  </styles>
+		<include src="file://{resources}/styles/gamestyles.css" />
+		<include src="file://{resources}/styles/popups/popup_manager.css" />
+	</styles>
 
-  <ChaosPopupManager hittest="false">
-    <Button id="DimBackground" onactivate="PopupBackgroundClicked()" />
-	  <Button id="BlurBackground" onactivate="PopupBackgroundClicked()" />
+	<ChaosPopupManager hittest="false">
+		<Button id="DimBackground" onactivate="PopupBackgroundClicked()" />
+		<Button id="BlurBackground" onactivate="PopupBackgroundClicked()" />
     
-    <!-- Popups are added here dynamically -->
-
-  </ChaosPopupManager>
+		<!-- Popups are added here dynamically -->
+	</ChaosPopupManager>
 </root>
