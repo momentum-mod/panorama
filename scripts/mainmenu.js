@@ -136,32 +136,36 @@ class MainMenuController {
 
 	static showContentPanel()
 	{
-		if ( MainMenuController.contentPanel.HasClass( 'mainmenu-content--offscreen' ) ) {
-			MainMenuController.contentPanel.RemoveClass( 'mainmenu-content--offscreen' );
+		if ( MainMenuController.contentPanel.HasClass( 'mainmenu-content--hidden' ) ) {
+			MainMenuController.contentPanel.RemoveClass( 'mainmenu-content--hidden' );
 		}
 
 		$.DispatchEvent( 'ShowContentPanel' );
+		
+		$('#HomeContent').AddClass('hidden');
 	};
 
 	static onHideContentPanel()
 	{
-		MainMenuController.contentPanel.AddClass( 'mainmenu-content--offscreen' );
+		$.Msg("Hide content panel");
+		MainMenuController.contentPanel.AddClass( 'mainmenu-content--hidden' );
 
 		// Uncheck the active button in the main menu navbar.
 		const elActiveNavBarBtn = MainMenuController.getActiveNavBarButton();
-		if ( elActiveNavBarBtn && elActiveNavBarBtn.id !== 'MainMenuNavBarHome' ) {
+		if ( elActiveNavBarBtn && elActiveNavBarBtn.id !== 'HomeButton' ) {
 			elActiveNavBarBtn.checked = false;
 		}
 		
 		// If the tab exists then hide it
-		if ( MainMenuController.activeTab )
-		{
-			const panelToHide = $.GetContextPanel().FindChildInLayoutFile(m_activeTab);
+		if ( MainMenuController.activeTab ) {
+			const panelToHide = $.GetContextPanel().FindChildInLayoutFile(MainMenuController.activeTab);
 			panelToHide.AddClass( 'mainmenu-content--hidden' );
-			 $.Msg( 'HidePanel: ' + MainMenuController.activeTab  );
+			 $.Msg('HidePanel: ' + MainMenuController.activeTab);
 		}
 
 		MainMenuController.activeTab = '';
+		
+		$('#HomeContent').RemoveClass('hidden');
 	};
 
 	static onHomeButtonPressed()

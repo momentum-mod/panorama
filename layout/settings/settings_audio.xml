@@ -1,0 +1,46 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/chaosstyles.css" />
+		<include src="file://{resources}/styles/settings/settings_shared.css" />
+	</styles>
+	
+	<scripts>
+		<include src="file://{resources}/scripts/settings_shared.js"/>
+	</scripts>
+	
+	<Panel class="settings-tab">
+		<BaseAudioSettings class="settings-scroll-container">
+			<Panel id="SettingsAudioSettings" class="settings-group">
+				<Label class="header" text="#MOM_Settings_Title_Audio" />
+				
+				<ChaosSettingsSlider text="#GameUI_SoundEffectVolume" min="0" max="1" percentage="true" convar="volume" />
+				<ChaosSettingsSlider text="#GameUI_MusicVolume" min="0" max="1" percentage="true" convar="snd_musicvolume" />
+				<ChaosSettingsEnumDropDown text="#GameUI_SpeakerConfiguration" convar="snd_surround_speakers" oninputsubmit="BaseSpeakerConfigurationChanged()">
+					<Label text="Stereo Headphones" id="speakerconfig1" value="0"/>
+					<Label text="Stereo Speakers" id="speakerconfig2" value="2"/>
+					<Label text="Quad Surround Sound" id="speakerconfig3" value="4"/>
+					<Label text="5.1 Surround Sound" id="speakerconfig4" value="5"/>
+				</ChaosSettingsEnumDropDown>
+				<ChaosSettingsEnumDropDown text="#SFUI_Settings_Audio_Device" id="DeviceConfigurationEnum" convar="sound_device_override" oninputsubmit="BaseAudioDeviceConfigurationChanged()">
+					<!--placeholder labels that will be modified in cui_audiosettingsscreen-->
+					<Label id="device1" text="XXXXXX 1" />
+					<Label id="device2" text="XXXXXX 2" />
+					<Label id="device3" text="XXXXXX 3" />
+					<Label id="device4" text="XXXXXX 4" />
+					<Label id="device5" text="XXXXXX 5" />
+					<Label id="device6" text="XXXXXX 6" />
+					<Label id="device7" text="XXXXXX 7" />
+					<Label id="device8" text="XXXXXX 8" />
+				</ChaosSettingsEnumDropDown>
+				<ChaosSettingsEnum text="#SFUI_Settings_Enable_Audio_HWCompat" convar="snd_hwcompat">
+					<RadioButton group="hwcompat" text="Off" value="0" />
+					<RadioButton group="hwcompat" text="On" value="1" />
+				</ChaosSettingsEnum>
+				<ChaosSettingsEnum text="#SFUI_Settings_Enable_Audio_Background" convar="snd_mute_losefocus">
+					<RadioButton group="losefocus" text="Off" value="0" />
+					<RadioButton group="losefocus" text="On" value="1" />
+				</ChaosSettingsEnum>
+			</Panel>
+		</BaseAudioSettings>
+	</Panel>
+</root>

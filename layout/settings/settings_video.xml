@@ -1,0 +1,123 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/chaosstyles.css" />
+		<include src="file://{resources}/styles/settings/settings_shared.css" />
+	</styles>
+	
+	<scripts>
+		<include src="file://{resources}/scripts/settings_shared.js"/>
+	</scripts>
+	
+	<Panel class="settings-tab">
+		<Panel class="content-navbar tab-group">
+			<RadioButton group="SettingsInputNavBar" onactivate='SettingsMenuShared.scrollToId("SettingsVideoSettings")'>
+				<Label text="#MOM_Settings_Title_Video" />
+			</RadioButton>
+			<RadioButton group="SettingsInputNavBar" onactivate='SettingsMenuShared.scrollToId("SettingsAdvancedSettings")'>
+				<Label text="#MOM_Settings_Title_Video_Render" />
+			</RadioButton>
+			
+			<Panel class="horizontal-align-right left-right-flow">
+				<Button id="BtnApplyVideoSettings" onactivate='SettingsMenuShared.videoSettingsApplyChanges()'>
+					<Label text="#GameUI_Apply" />
+				</Button>
+				<Button id="BtnDiscardVideoSettingChanges" onactivate='SettingsMenuShared.showConfirmDiscard(SettingsMenuShared.videoSettingsDiscardChanges)'>
+					<Label text="#GameUI_Discard" />
+				</Button>
+			</Panel>
+		</Panel>
+		
+		<ChaosVideoSettings class="settings-scroll-container">
+			<Panel id="SettingsVideoSettings" class="settings-group">
+				<Label class="header" text="#MOM_Settings_Title_Video" />
+				
+				<ChaosSettingsSlider text="#GameUI_FOV" min="90" max="179" convar="fov_desired" />
+				<ChaosSettingsEnumDropDown text="Color Mode" onuserinputsubmit="SettingsMenuShared.videoSettingsOnUserInputSubmit()" id="ColorMode">
+					<Label text="#GameUI_DisplayMonitor" value="0" id="tvmode0" />
+					<Label text="#GameUI_DisplayTV" value="1" id="tvmode1"/>
+				</ChaosSettingsEnumDropDown>
+				<ChaosSettingsSlider id="brightness" text="#GameUI_Brightness" min="1.6" max="2.6" percentage="true" invert="true" value100percent="2.0" convar="mat_monitorgamma" />
+				<ChaosSettingsEnumDropDown text="#SFUI_Settings_Aspect_Ratio" onuserinputsubmit="SettingsMenuShared.videoSettingsOnUserInputSubmit()" id="AspectRatioEnum" oninputsubmit="ChaosAspectRatioSelectionChanged()" >
+					<Label text="#SFUI_Settings_Normal" value="0" id="aspectratio0" />
+					<Label text="#SFUI_Settings_Widescreen_16_9" value="1" id="aspectratio1"/>
+					<Label text="#SFUI_Settings_Widescreen_16_10" value="2" id="aspectratio2"/>
+				</ChaosSettingsEnumDropDown>
+				<ChaosSettingsEnumDropDown text="#SFUI_Settings_Resolution" onuserinputsubmit="SettingsMenuShared.videoSettingsOnUserInputSubmit()" id="ResolutionEnum" oninputsubmit="ChaosResolutionSelectionChanged()" >
+					<Label value="0" id="resolution0" />
+				</ChaosSettingsEnumDropDown>
+				<ChaosSettingsEnumDropDown text="#SFUI_Settings_Display_Mode" onuserinputsubmit="SettingsMenuShared.videoSettingsOnUserInputSubmit()" id="DisplayModeEnum" oninputsubmit="ChaosDisplayModeSelectionChanged()" >
+					<Label text="#SFUI_Settings_Windowed" value="0" id="displaymode0" />
+					<Label text="#SFUI_Settings_Fullscreen" value="1" id="displaymode1"/>
+					<Label text="#SFUI_Settings_Fullscreen_Windowed" value="2" id="displaymode2"/>
+				</ChaosSettingsEnumDropDown>
+				<ChaosSettingsEnumDropDown text="#SFUI_Settings_Laptop_Power" onuserinputsubmit="SettingsMenuShared.videoSettingsOnUserInputSubmit()" id="PowerSavingsMode">
+					<Label text="#SFUI_Settings_Disabled" value="0" id="laptoppower0" />
+					<Label text="#SFUI_Settings_Enabled" value="1" id="laptoppower1"/>
+				</ChaosSettingsEnumDropDown>
+			</Panel>
+			
+			<Panel class="settings-horizontal-separator" />
+			
+			<Panel id="SettingsAdvancedSettings" class="settings-group">
+				<Label class="header" text="#MOM_Settings_Title_Video_Render" />
+				
+				<ChaosSettingsEnumDropDown text="#SFUI_Settings_CSM" onuserinputsubmit="SettingsMenuShared.videoSettingsOnUserInputSubmit()" id="CSMQualityLevel">
+					<Label text="#SFUI_CSM_Low" value="0" id="csmqualitylevel0" />
+					<Label text="#SFUI_CSM_Medium" value="1" id="csmqualitylevel1"/>
+					<Label text="#SFUI_CSM_High" value="2" id="csmqualitylevel2"/>
+					<Label text="#SFUI_CSM_VeryHigh" value="3" id="csmqualitylevel3"/>
+					<Label text="#SFUI_Settings_Choice_Autodetect" value="9999999" id="csmqualitylevel4"/>
+				</ChaosSettingsEnumDropDown>
+				<ChaosSettingsEnumDropDown text="#SFUI_Settings_Model_Texture_Detail" onuserinputsubmit="SettingsMenuShared.videoSettingsOnUserInputSubmit()" id="ModelTextureDetail">
+					<Label text="#SFUI_Settings_Low" value="0" id="gpumemlevel0" />
+					<Label text="#SFUI_Settings_Medium" value="1" id="gpumemlevel1"/>
+					<Label text="#SFUI_Settings_High" value="2" id="gpumemlevel2"/>
+					<Label text="#SFUI_Settings_Choice_Autodetect" value="9999999" id="gpumemlevel3"/>
+				</ChaosSettingsEnumDropDown>
+				<ChaosSettingsEnumDropDown text="#SFUI_Settings_Effect_Detail" onuserinputsubmit="SettingsMenuShared.videoSettingsOnUserInputSubmit()" id="EffectDetail">
+					<Label text="#SFUI_Settings_Low" value="0" id="cpulevel0" />
+					<Label text="#SFUI_Settings_Medium" value="1" id="cpulevel1"/>
+					<Label text="#SFUI_Settings_High" value="2" id="cpulevel2"/>
+					<Label text="#SFUI_Settings_Choice_Autodetect" value="9999999" id="cpulevel3"/>
+				</ChaosSettingsEnumDropDown>
+				<ChaosSettingsEnumDropDown text="#SFUI_Settings_Shader_Detail" onuserinputsubmit="SettingsMenuShared.videoSettingsOnUserInputSubmit()" id="ShaderDetail">
+					<Label text="#SFUI_Settings_Low" value="0" id="gpulevel0" />
+					<Label text="#SFUI_Settings_Medium" value="1" id="gpulevel1"/>
+					<Label text="#SFUI_Settings_High" value="2" id="gpulevel2"/>
+					<Label text="#SFUI_Settings_Very_High" value="3" id="gpulevel3"/>
+					<Label text="#SFUI_Settings_Choice_Autodetect" value="9999999" id="gpulevel4"/>
+				</ChaosSettingsEnumDropDown>
+				<ChaosSettingsEnumDropDown text="#SFUI_Settings_Multicore" onuserinputsubmit="SettingsMenuShared.videoSettingsOnUserInputSubmit()" id="MatQueueMode">
+					<Label text="#SFUI_Settings_Disabled" value="0" id="multicore0" />
+					<Label text="#SFUI_Settings_Enabled" value="-1" id="multicore1"/>
+				</ChaosSettingsEnumDropDown>
+				<ChaosSettingsEnumDropDown text="#SFUI_Settings_Antialiasing_Mode" onuserinputsubmit="SettingsMenuShared.videoSettingsOnUserInputSubmit()" id="AAMode">
+					<Label value="0" id="antialisaing0" />
+					<Label value="1" id="antialiasing1"/>
+				</ChaosSettingsEnumDropDown>
+				<ChaosSettingsEnumDropDown text="#SFUI_Settings_FXAA" onuserinputsubmit="SettingsMenuShared.videoSettingsOnUserInputSubmit()" id="FXAA">
+					<Label text="#SFUI_FXAA_Disabled" value="0" id="fxaa0" />
+					<Label text="#SFUI_FXAA_Enabled" value="1" id="fxaa1"/>
+				</ChaosSettingsEnumDropDown>
+				<ChaosSettingsEnumDropDown text="#SFUI_Settings_Filtering_Mode" onuserinputsubmit="SettingsMenuShared.videoSettingsOnUserInputSubmit()" id="FilteringMode">
+					<Label text="#SFUI_Settings_Bilinear" value="0" id="matforceaniso0" />
+					<Label text="#SFUI_Settings_Trilinear" value="1" id="matforceaniso1"/>
+					<Label text="#SFUI_Settings_Anisotropic_2X" value="2" id="matforceaniso2"/>
+					<Label text="#SFUI_Settings_Anisotropic_4X" value="4" id="matforceaniso3"/>
+					<Label text="#SFUI_Settings_Anisotropic_8X" value="8" id="matforceaniso4"/>
+					<Label text="#SFUI_Settings_Anisotropic_16X" value="16" id="matforceaniso5"/>
+					<Label text="#SFUI_Settings_Choice_Autodetect" value="9999999" id="matforceaniso6"/>
+				</ChaosSettingsEnumDropDown>
+				<ChaosSettingsEnumDropDown text="#SFUI_Settings_Vertical_Sync" onuserinputsubmit="SettingsMenuShared.videoSettingsOnUserInputSubmit()" id="VSync">
+					<Label text="#SFUI_Settings_Disabled" value="0" id="vsync0" />
+					<Label text="#SFUI_Settings_Enabled_Double" value="1" id="vsync1"/>
+					<Label text="#SFUI_Settings_Enabled_Triple" value="2" id="vsync2"/>
+				</ChaosSettingsEnumDropDown>
+				<ChaosSettingsEnumDropDown text="#SFUI_Settings_MotionBlur" onuserinputsubmit="SettingsMenuShared.videoSettingsOnUserInputSubmit()" id ="MotionBlur">
+					<Label text="#SFUI_MotionBlur_Disabled" value="0" id="motionblur0" />
+					<Label text="#SFUI_MotionBlur_Enabled" value="1" id="motionblur1"/>
+				</ChaosSettingsEnumDropDown>
+			</Panel>
+		</ChaosVideoSettings>
+	</Panel>
+</root>

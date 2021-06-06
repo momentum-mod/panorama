@@ -1,0 +1,146 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/chaosstyles.css" />
+		<include src="file://{resources}/styles/settings/settings_shared.css" />
+	</styles>
+	
+	<scripts>
+		<include src="file://{resources}/scripts/settings_shared.js"/>
+	</scripts>
+	
+	<Panel class="settings-tab">
+		<Panel class="content-navbar tab-group">
+			<RadioButton group="SettingsInputNavBar" onactivate='SettingsMenuShared.scrollToId("SettingsMouseSettings")'>
+				<Label text="#MOM_Settings_Title_Mouse"/>
+			</RadioButton>
+			<RadioButton group="SettingsInputNavBar" onactivate='SettingsMenuShared.scrollToId("SettingsKeybinds")'>
+				<Label text="#MOM_Settings_Title_Key"/>
+			</RadioButton>
+		</Panel>
+		
+		<Panel class="settings-scroll-container">
+			<Panel id="SettingsMouseSettings" class="settings-group">
+				<Label class="header" text="#MOM_Settings_Title_Mouse" />
+				
+				<ChaosSettingsSlider text="#GameUI_MouseSensitivity" min="0.1" max="10" displayprecision="2" convar="sensitivity" />
+				<ChaosSettingsEnum text="#GameUI_MouseAcceleration" convar="m_customaccel">
+					<RadioButton group="maccel" text="#SFUI_Off" value="0" />
+					<RadioButton group="maccel" text="#SFUI_On" value="3" />
+				</ChaosSettingsEnum>
+				<ChaosSettingsSlider text="" min="0.1" max="10" displayprecision="2" convar="m_customaccel_exponent" />
+				<ChaosSettingsEnum text="#GameUI_MouseRaw" convar="m_rawinput">
+					<RadioButton group="rawinput" text="#SFUI_Off" value="0" />
+					<RadioButton group="rawinput" text="#SFUI_On" value="1" />
+				</ChaosSettingsEnum>
+				<ChaosSettingsEnum text="#GameUI_ReverseMouse" convar="m_pitch_inverse">
+					<RadioButton group="reverse" text="#SFUI_Off" value="0" />
+					<RadioButton group="reverse" text="#SFUI_On" value="1" />
+				</ChaosSettingsEnum>
+				<ChaosSettingsEnum text="#GameUI_MouseFilter" convar="m_filter">
+					<RadioButton group="filter" text="#SFUI_Off" value="0" />
+					<RadioButton group="filter" text="#SFUI_On" value="1" />
+				</ChaosSettingsEnum>
+			</Panel>
+			
+			<Panel class="settings-horizontal-separator" />
+			
+			<Panel id="SettingsKeybinds" class="settings-group">
+				<Label class="header" text="#MOM_Settings_Title_Key" />
+				
+				<Panel class="full-width left-right-flow top-padding-large">
+					<Label class="subheader horizontal-align-left" text="#Valve_Movement_Title" />
+					<Label class="subheader horizontal-align-right" text="#GameUI_KeyButton" />
+				</Panel>
+				<ChaosSettingsKeyBinder text="#Valve_Move_Forward" bind="+forward" />
+				<Panel class="horizontal-separator" />
+				<ChaosSettingsKeyBinder text="#Valve_Move_Back" bind="+back" />
+				<Panel class="horizontal-separator" />
+				<ChaosSettingsKeyBinder text="#Valve_Move_Left" bind="+moveleft" />
+				<Panel class="horizontal-separator" />
+				<ChaosSettingsKeyBinder text="#Valve_Move_Right" bind="+moveright" />
+				<Panel class="horizontal-separator" />
+				<ChaosSettingsKeyBinder text="#Valve_Turn_Right" bind="+right" />
+				<Panel class="horizontal-separator" />
+				<ChaosSettingsKeyBinder text="#Valve_Turn_Left" bind="+left" />
+				<Panel class="horizontal-separator" />
+				<ChaosSettingsKeyBinder text="#Valve_Jump" bind="+jump" />
+				<Panel class="horizontal-separator" />
+				<ChaosSettingsKeyBinder text="#MOM_Toggle_Jump" bind="toggle_jump" />
+				<Panel class="horizontal-separator" />
+				<ChaosSettingsKeyBinder text="#Valve_Duck" bind="+duck" />
+				<Panel class="horizontal-separator" />
+				<ChaosSettingsKeyBinder text="#MOM_Toggle_Duck" bind="toggle_duck" />
+				<Panel class="horizontal-separator" />
+				<ChaosSettingsKeyBinder text="#Valve_Sprint" bind="+sprint" />
+				<Panel class="horizontal-separator" />
+				<ChaosSettingsKeyBinder text="#MOM_Toggle_Sprint" bind="toggle_sprint" />
+				<Panel class="horizontal-separator" />
+				<ChaosSettingsKeyBinder text="#Valve_Walk" bind="+walk" />
+				<Panel class="horizontal-separator" />
+				<ChaosSettingsKeyBinder text="#MOM_Toggle_Walk" bind="toggle_walk" />
+				
+				<Panel class="full-width left-right-flow top-padding-large">
+					<Label class="subheader horizontal-align-left" text="#MOM_Controls_Title" />
+					<Label class="subheader horizontal-align-right" text="#GameUI_KeyButton" />
+				</Panel>
+				<ChaosSettingsKeyBinder text="#MOM_Controls_Restart" bind="mom_restart" />
+				<Panel class="horizontal-separator" />
+				<ChaosSettingsKeyBinder text="#MOM_Controls_RestartStage" bind="mom_restart_stage" />
+				<Panel class="horizontal-separator" />
+				<ChaosSettingsKeyBinder text="#MOM_Controls_StopTimer" bind="mom_timer_stop" />
+				<Panel class="horizontal-separator" />
+				<ChaosSettingsKeyBinder text="#MOM_Controls_ToggleTimes" bind="+showtimes" />
+				<Panel class="horizontal-separator" />
+				<ChaosSettingsKeyBinder text="#MOM_Controls_Practice" bind="mom_practice" />
+				<Panel class="horizontal-separator" />
+				<ChaosSettingsKeyBinder text="#MOM_Controls_ToggleSavelocMenu" bind="mom_hud_menu_show savelocmenu" />
+				<Panel class="horizontal-separator" />
+				<ChaosSettingsKeyBinder text="#MOM_Ruler_ToggleMenu" bind="mom_hud_menu_show rulermenu" />
+				<Panel class="horizontal-separator" />
+				<ChaosSettingsKeyBinder text="#Valve_Chat_Message" bind="chat_open" />
+				<Panel class="horizontal-separator" />
+				<ChaosSettingsKeyBinder text="#MOM_Controls_Paint" bind="+paint" />
+				<Panel class="horizontal-separator" />
+				<ChaosSettingsKeyBinder text="#MOM_Controls_CreateStartMark" bind="mom_start_mark_create" />
+				<Panel class="horizontal-separator" />
+				<ChaosSettingsKeyBinder text="#MOM_Controls_ClearStartMark" bind="mom_start_mark_clear" />
+				
+				<Panel class="full-width left-right-flow top-padding-large">
+					<Label class="subheader horizontal-align-left" text="#Valve_Combat_Title" />
+					<Label class="subheader horizontal-align-right" text="#GameUI_KeyButton" />
+				</Panel>
+				<ChaosSettingsKeyBinder text="#Valve_Primary_Attack" bind="+attack" />
+				<Panel class="horizontal-separator" />
+				<ChaosSettingsKeyBinder text="#Valve_Secondary_Attack" bind="+attack2" />
+				<Panel class="horizontal-separator" />
+				<ChaosSettingsKeyBinder text="#Valve_Reload_Weapon" bind="+reload" />
+				<Panel class="horizontal-separator" />
+				<ChaosSettingsKeyBinder text="#Valve_Use_Items" bind="+use" />
+				<Panel class="horizontal-separator" />
+				<ChaosSettingsKeyBinder text="#Valve_Flashlight" bind="impulse 100" />
+				<Panel class="horizontal-separator" />
+				<ChaosSettingsKeyBinder text="#MOM_Controls_Drop" bind="drop" />
+				<Panel class="horizontal-separator" />
+				<ChaosSettingsKeyBinder text="#Valve_Weapon_Category_1" bind="slot1" />
+				<Panel class="horizontal-separator" />
+				<ChaosSettingsKeyBinder text="#Valve_Weapon_Category_2" bind="slot2" />
+				<Panel class="horizontal-separator" />
+				<ChaosSettingsKeyBinder text="#Valve_Weapon_Category_3" bind="slot3" />
+				<Panel class="horizontal-separator" />
+				<ChaosSettingsKeyBinder text="#Valve_Weapon_Category_4" bind="slot4" />
+				<Panel class="horizontal-separator" />
+				<ChaosSettingsKeyBinder text="#Valve_Weapon_Category_5" bind="slot5" />
+				
+				<Panel class="full-width left-right-flow top-padding-large">
+					<Label class="subheader horizontal-align-left" text="#Valve_Miscellaneous_Title" />
+					<Label class="subheader horizontal-align-right" text="#GameUI_KeyButton" />
+				</Panel>
+				<ChaosSettingsKeyBinder text="#Valve_Take_Screen_Shot" bind="jpeg" />
+				<Panel class="horizontal-separator" />
+				<ChaosSettingsKeyBinder text="#Valve_Quit_Game" bind="quit" />
+				<Panel class="horizontal-separator" />
+				<ChaosSettingsKeyBinder text="#Valve_Console_Toggle" bind="toggleconsole" />
+			</Panel>
+		</Panel>
+	</Panel>
+</root>

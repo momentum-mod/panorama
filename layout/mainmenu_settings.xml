@@ -1,0 +1,48 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/chaosstyles.css" />
+		<include src="file://{resources}/styles/mainmenu.css"/>
+		<include src="file://{resources}/styles/settings/settings_shared.css"/>
+	</styles>
+	
+	<scripts>
+		<include src="file://{resources}/scripts/settings_shared.js"/>
+		<include src="file://{resources}/scripts/mainmenu_settings.js"/>
+	</scripts>
+	
+	<Panel class="mainmenu-content__container" useglobalcontext="true">
+		<Label id="content-navbar__title" class="header" text="Settings"/>
+		
+		<Panel class="content-navbar">
+			<Panel class="content-navbar__tabs tab-group">
+				<RadioButton group="SettingsNavBar" onactivate='MainMenuSettings.navigateToTab("InputSettings", "settings_input")' selected="true">
+				  <Label text="Input"/>
+				</RadioButton>
+
+				<RadioButton group="SettingsNavBar" onactivate='MainMenuSettings.navigateToTab("AudioSettings", "settings_audio")'>
+				  <Label text="Audio"/>
+				</RadioButton>
+
+				<RadioButton group="SettingsNavBar" onactivate='MainMenuSettings.navigateToTab("VideoSettings", "settings_video")'>
+				  <Label text="Video"/>
+				</RadioButton>
+
+				<RadioButton group="SettingsNavBar" onactivate='MainMenuSettings.navigateToTab("OnlineSettings", "settings_online")'>
+				  <Label text="Online"/>
+				</RadioButton>
+
+				<RadioButton group="SettingsNavBar" onactivate='MainMenuSettings.navigateToTab("GameplaySettings", "settings_gameplay")'>
+				  <Label text="Gameplay"/>
+				</RadioButton>
+
+				<RadioButton group="SettingsNavBar" onactivate='MainMenuSettings.navigateToTab("HUDSettings", "settings_hud")'>
+				  <Label text="HUD"/>
+				</RadioButton>
+			</Panel>
+		</Panel>
+
+		<Panel id="SettingsMenuContent" class="full-width full-height">
+
+		</Panel>
+	</Panel>
+</root>

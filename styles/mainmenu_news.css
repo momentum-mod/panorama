@@ -55,3 +55,13 @@
 	height: 100%;
 	width: 260px; /* HACK: The image takes up full width if we don't set an exact width */
 }
+
+Label.news-header {
+	font-family: "Bebas Neue";
+	font-size: 30px;
+	text-shadow: 0 2px 3px rgba(0, 0, 0, 0.45);
+}
+Label.news-subheader {
+	font-family: "Bebas Neue";
+	font-size: 20px;
+}

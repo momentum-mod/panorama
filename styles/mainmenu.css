@@ -1,3 +1,6 @@
+#TooltipManager, 
+#ContextMenuManager, 
+#PopupManager,
 .MainMenuRootPanel {
 	width: 100%;
 	height: 100%;
@@ -27,14 +30,14 @@
 .mainmenu-nav-list {
 	width: 100%;
 	height: 100px;
-	background-color: rgba(68, 68, 68, 0.5);
+	background-color: rgba(68, 68, 68, 0.7);
 	flow-children: right;
 }
 
 .mainmenu-right-nav-list {
 	height: 100%;
 	width: 50px;
-	background-color: rgba(68, 68, 68, 0.5);
+	background-color: rgba(68, 68, 68, 0.7);
 	flow-children: down;
 	horizontal-align: right;
 }
@@ -42,6 +45,20 @@
 .mainmenu-nav-container {
 	height: 100%;
 	flow-children: right;
+}
+
+#HomeButton {
+	height: 100%;
+	background-color: #ffffff00;
+	transition: background-color 0.1s ease-in-out 0s;
+}
+
+#HomeButton:hover {
+	background-color: #ffffff26;
+}
+
+#HomeButton .RadioBox {
+	visibility: collapse;
 }
 
 .mainmenu-nav-item {
@@ -56,6 +73,10 @@
 	background-color: #ffffff26;
 }
 
+.mainmenu-nav-item:selected {
+	background-color: #ffffff26;
+}
+
 .mainmenu-nav-item > Image {
 	height: 100%;
 	width: height-percentage( 100% );
@@ -65,6 +86,10 @@
 }
 
 .mainmenu-nav-item:hover > Image {
+	opacity: 1.0;
+}
+
+.mainmenu-nav-item:selected > Image {
 	opacity: 1.0;
 }
 
@@ -104,9 +129,56 @@
 	height: fill-parent-flow( 1.0 );
 }
 
-#NewsPanel {
+#HomeContent {
 	width: 45%;
+	height: 100%;
+
+	transition-property: opacity;
+	transition-duration: .25s;
+	transition-timing-function: linear;
+}
+
+#NewsPanel {
+	width: 100%;
 	height: 50%;
+}
+
+.mainmenu-content {
+	width: fill-parent-flow(1.0);
+	height: 100%;
+	opacity: 1.0;
+}
+
+.mainmenu-content--hidden {
+	opacity: 0.0;
+}
+
+#MainMenuContentBlur {
+	background-color: rgba(0, 0, 0, 0.8);
+}
+
+.hidden {
+	visibility: collapse;
+}
+
+.mainmenu-content__container {
+	padding: 30px 100px;
+	flow-children: down;
+	width: 100%;
+	height: 100%;
+}
+
+.content-navbar {
+	width: 100%;
+	background-color: rgba(255, 255, 255, 0.05);
+}
+
+.content-navbar__title {
+	padding: 10px 0px;
+}
+
+.content-navbar__tabs {
+	flow-children: right;
 }
 
 .MainMenuRootPanel {

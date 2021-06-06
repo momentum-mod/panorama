@@ -39,7 +39,7 @@
 		</Panel>
 
 		<Panel id="MainMenuInput" class="mainmenu-container">
-			<BaseBlurTarget id="MainMenuBlur" blurrects="JsMainMenuNavBar MainMenuOptionListRight">
+			<BaseBlurTarget id="MainMenuBlur" blurrects="MainMenuContentBlur JsMainMenuNavBar MainMenuOptionListRight">
 				<!-- In main menu, show the background -->
 				<Image class="full-width full-height MainMenuModeOnly" src="file://{images}/bg_00.vtf" />
 
@@ -50,7 +50,9 @@
 			<Panel class="full-width full-height top-bottom-flow">
 				<Panel id="JsMainMenuNavBar" class="mainmenu-nav-list">
 					<!-- This fills the entire width, is aligned to top and is used as the navbar -->
-					<Image id="MainMenuLogo" src="file://{images}/topnav/momentumLogo.svg" textureheight="64" />
+					<RadioButton id="HomeButton" onactivate="MainMenuController.onHomeButtonPressed()">
+						<Image id="MainMenuLogo" src="file://{images}/topnav/momentumLogo.svg" textureheight="64" />
+					</RadioButton>
 					
 					<Panel class="full-height left-right-flow">
 						<RadioButton id="PlayButton" class="mainmenu-nav-item" onactivate="GameInterfaceAPI.ConsoleCommand('ShowMapSelectionPanel')">
@@ -65,7 +67,7 @@
 						<RadioButton id="LearnButton" class="mainmenu-nav-item">
 							<Image src="file://{images}/topnav/learnIcon.svg" textureheight="64" />
 						</RadioButton>
-						<RadioButton id="SettingsButton" class="mainmenu-nav-item" onactivate="GameInterfaceAPI.ConsoleCommand('mom_settings_show')">
+						<RadioButton id="SettingsButton" class="mainmenu-nav-item" onactivate="MainMenuController.navigateToTab('Settings', 'mainmenu_settings')">
 							<Image src="file://{images}/topnav/settingsIcon.svg" textureheight="64" />
 						</RadioButton>
 					</Panel>
@@ -82,8 +84,11 @@
 				</Panel>
 				
 				<Panel class="full-width full-height left-right-flow">
-					<Frame id="NewsPanel" class="MainMenuModeOnly" src="file://{resources}/layout/mainmenu_news.xml" />
-					<Panel id="JsMainMenuContent" class="mainmenu-content MainMenuModeOnly">
+					<Panel id="HomeContent">
+						<Frame id="NewsPanel" class="MainMenuModeOnly" src="file://{resources}/layout/mainmenu_news.xml" />
+					</Panel>
+					<Panel id="JsMainMenuContent" class="mainmenu-content mainmenu-content--hidden">
+						<Panel id="MainMenuContentBlur" class="full-width full-height" />
 						<!-- A panel gets inserted here dynamically from js, depending on which tab we click -->
 					</Panel>
 				

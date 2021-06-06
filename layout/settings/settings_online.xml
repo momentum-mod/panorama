@@ -1,0 +1,61 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/chaosstyles.css" />
+		<include src="file://{resources}/styles/settings/settings_shared.css" />
+	</styles>
+	
+	<scripts>
+		<include src="file://{resources}/scripts/settings_shared.js"/>
+	</scripts>
+	
+	<Panel class="settings-tab">
+		<Panel class="content-navbar tab-group">
+			<RadioButton group="SettingsInputNavBar" onactivate='SettingsMenuShared.scrollToId("SettingsOnlineGhostSettings")'>
+			  <Label text="#MOM_Settings_Title_Online_Ghost"/>
+			</RadioButton>
+			<RadioButton group="SettingsInputNavBar" onactivate='SettingsMenuShared.scrollToId("SettingsPlayerGhostSettings")'>
+			  <Label text="#MOM_Settings_Title_Online_Player"/>
+			</RadioButton>
+		</Panel>
+		
+		<Panel class="settings-scroll-container">
+			<Panel id="SettingsOnlineGhostSettings" class="settings-group">
+				<Label class="header" text="#MOM_Settings_Title_Online_Ghost" />
+				
+				<ChaosSettingsEnum text="#MOM_Settings_Override_Alpha_Enable" convar="mom_ghost_online_alpha_override_enable">
+					<RadioButton group="ghostalpha" text="Off" value="0" />
+					<RadioButton group="ghostalpha" text="On" value="1" />
+				</ChaosSettingsEnum>
+				<ChaosSettingsSlider text="" min="0" max="255" percentage="true" convar="mom_ghost_online_alpha_override" />
+				<ChaosSettingsEnum text="#MOM_Settings_Online_Rotations" convar="mom_ghost_online_rotations">
+					<RadioButton group="ghostrotation" text="Off" value="0" />
+					<RadioButton group="ghostrotation" text="On" value="1" />
+				</ChaosSettingsEnum>
+				<ChaosSettingsEnum text="#MOM_Settings_Online_Sounds" convar="mom_ghost_online_flashlights_enable">
+					<RadioButton group="ghostsounds" text="Off" value="0" />
+					<RadioButton group="ghostsounds" text="On" value="1" />
+				</ChaosSettingsEnum>
+				<ChaosSettingsEnum text="#MOM_Settings_Entity_Panels" convar="mom_entpanels_enable_avatars">
+					<RadioButton group="ghostpanels" text="Off" value="0" />
+					<RadioButton group="ghostpanels" text="On" value="1" />
+				</ChaosSettingsEnum>
+				<ChaosSettingsEnum text="#MOM_Settings_Online_Trails" convar="mom_ghost_online_trail_enable">
+					<RadioButton group="ghosttrail" text="Off" value="0" />
+					<RadioButton group="ghosttrail" text="On" value="1" />
+				</ChaosSettingsEnum>
+			</Panel>
+			
+			<Panel class="settings-horizontal-separator" />
+			
+			<Panel id="SettingsPlayerGhostSettings" class="settings-group">
+				<Label class="header" text="#MOM_Settings_Title_Online_Player" />
+				
+				<ChaosSettingsEnum text="#MOM_Settings_Enable_Trail" convar="mom_trail_enable">
+					<RadioButton group="playertrail" text="Off" value="0" />
+					<RadioButton group="playertrail" text="On" value="1" />
+				</ChaosSettingsEnum>
+				<ChaosSettingsSlider text="#MOM_Settings_Trail_Length" min="0.1" max="10" displayprecision="1" convar="mom_trail_length" />
+			</Panel>
+		</Panel>
+	</Panel>
+</root>
