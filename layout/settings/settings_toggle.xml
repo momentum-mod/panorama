@@ -1,0 +1,16 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/chaosstyles.css" />
+		<include src="file://{resources}/styles/settings/settings_toggle.css" />
+	</styles>
+  
+	<ChaosSettingsToggle>
+		<Panel class="left-right-flow vertical-align-center full-width">
+			<Panel id="TitleContainer">
+				<Label id="Title" />
+			</Panel>
+			<ToggleButton id="Toggle" />
+		</Panel>
+	</ChaosSettingsToggle>
+  
+</root>

@@ -1,0 +1,31 @@
+ChaosSettingsEnumDropDown {
+	height: 48px;
+	width: 100%;
+	flow-children: right;
+	vertical-align: middle;
+	horizontal-align: center;
+}
+
+#InputContainer {
+	vertical-align: middle;
+	width: 65%;
+	flow-children: right;
+}
+
+#TitleContainer {
+	width: 25%;
+	vertical-align: middle;
+	margin-right: 10px;
+}
+
+#Title {
+	vertical-align: middle;
+	horizontal-align: right;
+}
+
+#DropDown {
+	vertical-align: middle;
+	horizontal-align: right;
+	flow-children: right;
+	margin-left: 20px;
+}

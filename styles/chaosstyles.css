@@ -81,11 +81,12 @@ Label, TextEntry
 
 Label.header {
 	font-family: "Bebas Neue";
-	font-size: 30px;
+	font-size: 50px;
+	text-shadow: 0 2px 3px rgba(0, 0, 0, 0.45);
 }
 Label.subheader {
 	font-family: "Bebas Neue";
-	font-size: 20px;
+	font-size: 30px;
 }
 
 /* Default font, but with monospaced numbers for use in things like the scoreboard */
@@ -355,136 +356,67 @@ ChaosAvatarImage .AvatarImage
 /*  DropDown                                                                 */
 /* ------------------------------------------------------------------------- */
 
-DropDown,
-ChaosSettingsEnumDropDown
-{
+DropDown {
 	background-image: url("file://{images}/icons/ui/expand.svg");
 	background-repeat: no-repeat;
-	background-position: right 32px 50%;
-	background-size: 16px 16px;
-	background-color: gradient( linear, 100% 0%, 0% 0%, from( #00000000), color-stop( 1, #00000000 ), to( #00000010 ) );
-	margin: 8px;
-	
+	background-position: right 16px 50%;
+	background-size: 8px 8px;
+	background-color: rgba(255, 255, 255, 0.05);
+	border-radius: 4px;
+
 	vertical-align: center;
 	horizontal-align: right;
 	height: 36px;
 	min-width: 32px;
 	z-index: 1;
-	transition-property: brightness;
-	transition-duration: .25s;
-	transition-timing-function: ease-in-out;
+	
+	transition-property: wash-color;
+	transition-duration: 0.1s;
+	transition-timing-function: linear;
 }
 
-DropDown:hover,
-ChaosSettingsEnumDropDown:hover
-{
-	background-color: gradient( linear, 100% 0%, 0% 0%, from( #00000000), color-stop( 0, #00000050 ), to( #00000050 ) );
-	transition-property: brightness;
-	transition-duration: .25s;
-	transition-timing-function: ease-in-out;
-}
-
-DropDown:focus,
-ChaosSettingsEnumDropDown:focus
-{
-	box-shadow: none;
-	background-color: gradient( linear, 100% 0%, 0% 0%, from( #00000000), color-stop( 0, #00000030 ), to( #00000030 ) );
-}
-
-//ChaosSettingsEnumDropDown
-//{
-	//width: 32%;
-//}
-
-DropDown.NoBackground,
-ChaosSettingsEnumDropDown.NoBackground
+DropDown.NoBackground
 {
 	//background-color: #00000000;
 }
 
-DropDown:enabled:hover, 
-ChaosSettingsEnumDropDown:enabled:hover
-{
-	transition-property: brightness;
-	transition-duration: .25s;
-	transition-timing-function: ease-in-out;
-}
-
-DropDown:focus .TickBox,
-ChaosSettingsEnumDropDown:focus .TickBox
+DropDown:focus .TickBox
 {
 	text-overflow: clip;
 	white-space: nowrap;
 }
 
-DropDown:focus,
-ChaosSettingsEnumDropDown:focus
-{
-	transition-property: brightness;
-	transition-duration: .25s;
-	transition-timing-function: ease-in-out;
-}
-
 DropDown:disabled,
-ChaosSettingsEnumDropDown:disabled
+DropDown:parentdisabled
 {
 	background-image: none;
+	wash-color: disabledColor;
 }
 
-DropDown:disabled Label,
-ChaosSettingsEnumDropDown:disabled Label
+DropDown:disabled .TickBox,
+DropDown:parentdisabled .TickBox
 {
-	//color: disabledColor;
+	opacity: 0;
 }
 
-DropDown.DropDownMenuVisible:hover, 
-ChaosSettingsEnumDropDown.DropDownMenuVisible:hover
-{
-	//background-color: gradient( linear, 100% 0%, 0% 0%, from( #00000000), color-stop( 0, #00000030 ), to( #00000030 ) );
-}
-
-DropDown.DropDownMenuVisible:focus, 
-ChaosSettingsEnumDropDown.DropDownMenuVisible:focus
+DropDown.DropDownMenuVisible
 {
 	background-color: gradient( linear, 100% 0%, 0% 0%, from( #00000000), color-stop( 0, #00000050 ), to( #00000050 ) );
 }
 
-DropDown Label,
-ChaosSettingsEnumDropDown Label
+DropDown Label
 {
 	padding: 8px 12px;
 	margin-right: 32px;
 	vertical-align: center;
 	
-	font-size: 16px; 
-	color: #ffffff;
-	font-weight: bold;
-	text-transform: uppercase;
+	font-size: 16px;
+	font-family: 'Bebas Neue';
+	color: baseText;
 		
 	transition-property: color;
 	transition-duration: 0.15s;
 	transition-timing-function: linear;
-}
-
-DropDown:enabled:hover Label,
-ChaosSettingsEnumDropDown:enabled:hover Label
-{
-	color:White;
-	transition-property: color;
-	transition-duration: 0.20s;
-	transition-timing-function: ease-in-out;
-}
-
-
-DropDown:focus Label,
-ChaosSettingsEnumDropDown:focus Label
-{
-	color: #3E3E3E;
-}
-
-DropDown.DropDownMenuVisible:focus Label,
-ChaosSettingsEnumDropDown.DropDownMenuVisible:focus Label
-{
 }
 
 DropDownMenu
@@ -821,9 +753,6 @@ ContextMenuCustomLayout .ContextMenuBody,
 /* ------------------------------------------------------------------------- */
 ToggleButton
 {
-	//flow-children: right;
-	//padding: 1px 4px;
-
 	transition-property: background-color, box-shadow, color;
 	transition-duration: 0.25s;
 	transition-timing-function: ease-in-out;
@@ -831,102 +760,56 @@ ToggleButton
 
 ToggleButton .TickBox
 {
-	width: 18px;
-	height: 18px;
-	position: 0px 0px 0px;
+	width: 28px;
+	height: 28px;
 	vertical-align: center;
-	background-color: #1e2d3d;
-	border-radius: 20%;
+	background-color: #575757;
+	border-radius: 4px;
 	z-index: 1;
-
-	box-shadow: #00000055 -2px -2px 2px 4px;
+	box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.45);
+	padding: 3px;
 	
-	transition-property: background-color, box-shadow, color, border, position;
+	transition-property: background-color;
 	transition-duration: 0.20s;
 	transition-timing-function: ease-in-out;
-	
-}
-
-ToggleButton:selected .TickBox
-{
-	position: 16px 0px 0px;
-	height: 18px;
-	background-color: blueColor;
-	box-shadow: #000000FF 0px 0px 3px 0px;
-
-	transition-property: position, background-color;
-	transition-duration: 0.2s;
-	transition-timing-function: linear;
-
-}
-
-/* this capsule is added in Js currently need to move into code */
-ToggleButton .Capsule
-{
-	vertical-align: center;
-	border-radius: 10%;
-	height: 14px;
-	width: 32px;
-	box-shadow: inset #000000FF 0px 0px 2px 0px;
-	background-color: #14202b;
-	z-index: 0;
-
-	transition-property: background-color;
-	transition-duration: 0.2s;
-	transition-timing-function: linear;
-}
-
-ToggleButton:selected .Capsule
-{
-	background-color: #3281ac40;
-
-	transition-property: background-color;
-	transition-duration: 0.2s;
-	transition-timing-function: linear;
 }
 
 ToggleButton:hover .TickBox
 {
-	/*background-color: gradient( linear, 0% 0%, 0% 100%, from( #e7f6f5 ), to( #a0d6d7 ) );*/
-}
-
-ToggleButton Label,
-{
-	position: 42px 0px 0px;
-	font-size: 16px;
-	color: white;
-	font-weight: lighter;
-	vertical-align: center;
-
-	transition-property: color;
+	background-color: #6c6c6c;
+	
+	transition-property: background-color;
 	transition-duration: 0.2s;
 	transition-timing-function: linear;
 }
 
-ToggleButton:enabled:hover Label
+ToggleButton:selected .TickBox
 {
-	/*color: baseText;*/
+	background-color: momentumBlue;
+	background-image: url("file://{images}/icon_Profile_Verified.svg");
+	background-size: 75% 75%;
+	background-repeat: no-repeat;
+	background-position: center;
+
+	transition-property: background-color;
+	transition-duration: 0.2s;
+	transition-timing-function: linear;
 }
 
-ToggleButton:selected Label
+ToggleButton:selected:hover .TickBox
 {
-	/*color: baseText;*/
+	background-color: momentumBlue;
 }
 
-ToggleButton:disabled Label
+ToggleButton Label
 {
-	color: white;
+	position: 42px 0px 0px;
+	vertical-align: center;
 }
 
 ToggleButton:disabled
 {
-	wash-color:disabledColor;
-}
-
-ToggleButton:disabled .TickBox
-{
-
-	/* background-color:  #14202b; */
+	wash-color: disabledColor;
 }
 
 ToggleButton:disabled:selected .TickBox
@@ -1104,7 +987,6 @@ RadioButton:disabled:selected .RadioBox
 	background-color: gradient( radial, 50% 50%, 0% 0%, 50% 50%, from( #e7f6f533 ), to( #33339933 ) );
 }
 
-
 .ExternalIcon
 {
     background-image: url( "file://{images}/control_icons/arrow_popout.vtf" );
@@ -1134,177 +1016,11 @@ RadioButton:disabled:selected .RadioBox
 /*     $$$REI why aren't these in the individual control's CSS files?        */
 /* ------------------------------------------------------------------------- */
 
-/* Dropdown */
-.SettingsMenuDropdownContainer
-{
-	//color: red;
-	flow-children: right;
-	vertical-align: middle;
-	width: 100%;
-}
-
-
-.SettingsMenuDropdownContainer:hover,
-ChaosSettingsEnumDropDown:hover Label
-{
-	//background-color: #141c27;
-}
-
-.SettingsMenuDropdownContainer Label
-{
-	wash-color: #ffffff70;
-}
-
-.SettingsMenuDropdownContainer:hover Label
-{
-	color: #ffffff;
-}
-
-/* Slider */
-ChaosSettingsSlider
-{
-    flow-children: right;
-	width: 100%;
-	vertical-align: center;
-}
-
-ChaosSettingsSlider #Title
-{
-    width: fill-parent-flow(1.0);
-}
-
-ChaosSettingsSlider #Slider
-{
-    width: 25.5%;
-	margin-right: 10px;
-}
-
-ChaosSettingsSlider #Value
-{
-	width: 36px;
-	text-align: right;
-	font-size: 15px;
-	color: baseText;
-	margin-left: 10px;
-}
-
-/* Bindings */
-ChaosSettingsKeyBinder:selected .ActiveBindButton
-{
-    background-color: baseText;
-	animation-name: BackgroundPulse;
-	animation-duration: 3s;
-	animation-timing-function: linear;
-	animation-iteration-count: infinite;
-}
-
-ChaosSettingsKeyBinder:selected .ActiveBindFX
-{
-    opacity: 1;
-	transition-duration: 0.1s;
-}
-
-ChaosSettingsKeyBinder #LabelFXContainer
-{
-	background-color: #00000020;
-	width: fill-parent-flow( 0.3 );
-	height: 100%;
-	horizontal-align: right;
-	/*transition-property: box-shadow, background-color;
-	transition-duration: 0.16s;
-	transition-timing-function: ease-in-out;*/
-	border-radius: 2px;
-}
-
-ChaosSettingsKeyBinder .BindingRow #Value.BindingRowButton
-{
-	color:#ffffff70; 
-	font-weight: bold;
-}
-
-ChaosSettingsKeyBinder .BindingRow:hover #Value.BindingRowButton
-{
-	color:#ffffff; 
-}
-
-ChaosSettingsKeyBinder .BindingRow:hover #LabelFXContainer
-{
-	background-color: #00000050;
-}
-
-/* controls binding label vertical position */
-
-ChaosSettingsKeyBinder .BindingRow:hover .BindingRowLabel
-{
-	/* not used in Chaos*/
-	/*height: fill-parent-flow( 0.7 );*/
-	/*margin-top: 2px;*/
-}
-
-ChaosSettingsKeyBinder .BindingRow:selected #LabelFXContainer
-{
-	//border: 1px solid #172637;
-	//box-shadow: #5c99ff22 -4px -4px 8px 8px;
-}
-
-ChaosSettingsKeyBinder .ActiveBindFX
-{
-	width: 100%;
-	height: 100%;
-	opacity: 0;
-	transition-property: opacity;
-	transition-duration: 0.36s;
-	transition-timing-function: ease-in-out;
-}
-
-@keyframes 'BackgroundPulse'
-{
-	0%
-	{
-		background-color: #ffffff;
-	}
-
-	50%
-	{
-		background-color: #ccffcc;
-	}
-				
-	
-	100%
-	{
-		background-color: #ffffff;
-	}
-}
-
-.ControlGroupRow .BindingRowLabel
-{
-	width: 50%;
-}
-.ControlGroupRow #LabelFXContainer
-{
-	width: 47%;
-}
-
-/*
-PopupSettings ChaosSettingsSlider Label
-{
-	font-size: 18px;
-	color: #7d8688;
-	vertical-align: center;
-	margin: 0px;
-	padding-top: 4px;
-	padding-left: 5px;
-	letter-spacing: 1px;
-	font-weight: thin;
-}
-*/
-
 /* ------------------------------------------------------------------------- */
 /*  Default Button for Popup panels                                          */
 /* ------------------------------------------------------------------------- */
 
-.PopupButton,
-ChaosSettingsEnumDropDown
+.PopupButton
 {
 	margin: 4px;
 	height: fit-children;
@@ -1323,11 +1039,6 @@ ChaosSettingsEnumDropDown
 	transition-timing-function: ease-in-out;
 }
 
-ChaosSettingsEnumDropDown.PopupButton
-{
-	horizontal-align: right;
-}
-
 .PopupButton:not(.no-hover):hover,
 .IconButton:not(.no-hover):hover,
 .PopupButton.DropDownMenuVisible,
@@ -1335,7 +1046,6 @@ ChaosSettingsEnumDropDown.PopupButton
 .PopupButton:enabled:not(.no-hover):hover,
 .IconButton:enabled:not(.no-hover):hover,
 .PopupButtonDropdown Label:not(.no-hover):hover,
-ChaosSettingsEnumDropDown.PopupButton:not(.no-hover):hover
 {
 	background-color: gradient( linear, 100% 0%, 0% 0%, from( #00000000), color-stop( 0, #00000070 ), to( #00000070 ) );
 	box-shadow: none;
@@ -1352,7 +1062,6 @@ ChaosSettingsEnumDropDown.PopupButton:not(.no-hover):hover
 .PopupButton:enabled:focus,
 .IconButton:enabled:focus,
 .PopupButton.DropDownMenuVisible:focus
-ChaosSettingsEnumDropDown.PopupButton:focus
 {
 	box-shadow: none;
 	background-color: gradient( linear, 100% 0%, 0% 0%, from( #00000000), color-stop( 0, #00000030 ), to( #00000030 ) );
@@ -1361,7 +1070,6 @@ ChaosSettingsEnumDropDown.PopupButton:focus
 .PopupButton Label,
 .PopupButton:Selected Label,
 DropDown.PopupButton:focus Label,
-ChaosSettingsEnumDropDown.PopupButton Label
 {
 	color: White;
 	horizontal-align: left;
@@ -1375,9 +1083,7 @@ ChaosSettingsEnumDropDown.PopupButton Label
     text-overflow: shrink;
 }
 
-.PopupButton Image,
-ChaosSettingsEnumDropDown Image,
-ChaosSettingsEnumDropDown.PopupButton Image
+.PopupButton Image
 {
 	margin-left: 8px;
 	vertical-align: middle;
@@ -1593,8 +1299,7 @@ DropDown.PopupButton Image,
 	margin-right: 2px;
 }
 
-DropDown.PopupButton Label,
-ChaosSettingsEnumDropDown.PopupButton Label
+DropDown.PopupButton Label
 {
 	padding: 0px 32px 0px 0px;
 }
@@ -1996,17 +1701,26 @@ Slider
 	width: 50%;
 	height: 10px;
 	//margin-bottom: 20px;
+	
+	transition-property: wash-color;
+	transition-duration: 0.1s;
+	transition-timing-function: linear;
+	
 }
 
-#SliderTrack
-{
+#SliderTrack {
 	height: 120px;
 	width: 16px;
 	align: center center;
-	background-color: #cccccc20;
+	background-color: #c8c8c8;
 	border: 0px;
 	//box-shadow: #00000055 -2px -2px 1px 4px;
 	z-index: 2;
+}
+
+Slider:parentdisabled,
+Slider:disabled {
+	wash-color: disabledColor;
 }
 
 SlottedSlider.HorizontalSlider .SliderNotch
@@ -2035,7 +1749,7 @@ SlottedSlider.HorizontalSlider .SliderNotch
 #SliderThumb
 {
 	background-color: gradient( radial, 50% 50%, -5% -5%, 60% 60%, from( #91a5b9 ), to( #444f52 ) );
-	border-radius: 13%;
+	border-radius: 22%;
 	width: 30px;
 	height: 16px;
 	//box-shadow: fill black 1px 1px 32px 0px;
@@ -2045,6 +1759,12 @@ SlottedSlider.HorizontalSlider .SliderNotch
 #SliderThumb:hover
 {
 	background-color: gradient( radial, 50% 50%, -5% -5%, 60% 60%, from( #b8c5d3 ), to( #444f52 ) );
+}
+
+#SliderThumb:disabled:hover,
+#SliderThumb:parentdisabled:hover
+{
+	background-color: gradient( radial, 50% 50%, -5% -5%, 60% 60%, from( #91a5b9 ), to( #444f52 ) );
 }
 
 Slider.HorizontalSlider, 
@@ -2063,11 +1783,10 @@ SlottedSlider.HorizontalSlider #SliderTrack
 }
 
 Slider.HorizontalSlider #SliderTrackProgress, 
-SlottedSlider.HorizontalSlider #SliderTrackProgress
-{
+SlottedSlider.HorizontalSlider #SliderTrackProgress {
 	width: 100%;
 	height: 8px;
-	background-color: #cccccc80;
+	background-color: momentumBlue;
 	//box-shadow: inset black 0px 1px 4px 0px;
 	//margin-left: 1px;
 	border: 0px;
@@ -2094,12 +1813,11 @@ SlottedSlider.HorizontalSlider #SliderTrackProgress:disabled
 
 
 Slider.HorizontalSlider #SliderThumb, 
-SlottedSlider.HorizontalSlider #SliderThumb
-{
+SlottedSlider.HorizontalSlider #SliderThumb {
 	background-color: baseText;
 	border-radius: 2px;
 	width: 16px;
-	height: 10px;
+	height: 16px;
 	align: center center;
 }
 
@@ -2916,7 +2634,7 @@ EdgeScrollBar.Vertical #MaxButton
 	width: 100%;
 	height: 1px;
 	opacity: .25;
-	background-color: white;
+	background-color: #707070;
 }
 
 .horizontal-separator--dark

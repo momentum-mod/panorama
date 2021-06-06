@@ -1,0 +1,60 @@
+ChaosSettingsEnum {
+	height: 48px;
+	width: 100%;
+	flow-children: right;
+	vertical-align: middle;
+	horizontal-align: center;
+}
+
+ChaosSettingsEnum #TitleContainer {
+	vertical-align: middle;
+	width: 25%;
+	margin-right: 10px;
+}
+
+ChaosSettingsEnum #title {
+	vertical-align: middle;
+	horizontal-align: right;
+}
+
+ChaosSettingsEnum #values {
+	flow-children: right;
+	height: 80%;
+	width: 65%;
+	vertical-align: middle;
+}
+
+ChaosSettingsEnum #values > RadioButton {
+	width: fill-parent-flow(1.0);
+	border-radius: 4px;
+	background-color: #575757;
+	text-align: center;
+	height: 100%;
+	horizontal-align: right;
+	margin-left: 10px;
+	box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.45);
+}
+
+ChaosSettingsEnum #values > RadioButton:selected {
+	background-color: momentumBlue;
+}
+
+ChaosSettingsEnum #values > RadioButton:hover {
+	background-color: #6c6c6c;
+}
+
+ChaosSettingsEnum #values > RadioButton:hover:selected {
+	background-color: momentumBlue;
+}
+
+ChaosSettingsEnum #values > RadioButton > Label {
+	vertical-align: middle;
+	horizontal-align: center;
+	text-align: center;
+	font-family: 'Bebas Neue';
+	font-size: 20px;
+}
+
+ChaosSettingsEnum #values > RadioButton > .RadioBox {
+	visibility: collapse;
+}

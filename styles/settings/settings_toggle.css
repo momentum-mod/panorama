@@ -1,0 +1,22 @@
+ChaosSettingsToggle {
+	height: 48px;
+	flow-children: right;
+	width: 100%;
+	vertical-align: middle;
+}
+
+ChaosSettingsToggle #TitleContainer {
+	vertical-align: middle;
+	width: 30%;
+	padding-right: 50px;
+}
+
+ChaosSettingsToggle #Title {
+	vertical-align: middle;
+	horizontal-align: right;
+}
+
+ChaosSettingsToggle #Toggle {
+	vertical-align: middle;
+	horizontal-align: right;
+}

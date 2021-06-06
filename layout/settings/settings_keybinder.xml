@@ -1,0 +1,16 @@
+<root>
+  <styles>
+    <include src="file://{resources}/styles/chaosstyles.css" />
+    <include src="file://{resources}/styles/settings/settings_keybinder.css" />
+  </styles>
+
+	<ChaosSettingsKeyBinder class="BindingRow">
+		<Label id="title" text="" class="BindingRowLabel"/>
+		<Panel id="LabelFXContainer">
+			<Panel id="BindingLabelContainer">
+				<Label id="value" text="" class="BindingRowButton"/>
+			</Panel>
+			<Button id="clearkeybinding" class="ClearKeybinding" />
+		</Panel>
+	</ChaosSettingsKeyBinder>
+</root>
