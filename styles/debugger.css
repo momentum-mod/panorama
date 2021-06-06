@@ -1,4 +1,4 @@
-/* Debugger styles */
+                     
 
 @define backgroundgray : #383635ff;
 @define foregroundgray : #A6A4A1ff;
@@ -6,9 +6,9 @@
 @define monospacefont: "Courier New";
 
 
-//
-// Scroll bar styles
-//
+  
+                    
+  
 VerticalScrollBar
 {
 	width: 6px;
@@ -19,8 +19,8 @@ VerticalScrollBar
 	horizontal-align: right;
 	vertical-align: center;
 
-	// NOTE: The transition duration and timing function must match constants used in code:
-	// k_flScrollTransitionTime, k_flScrollTransitionFunc, so dont change without talking with a dev
+	                                                                                       
+	                                                                                                
 	transition-property: transform;
 	transition-duration: 0.20s;
 	transition-timing-function: ease-in-out;
@@ -30,8 +30,8 @@ VerticalScrollBar .ScrollThumb
 {
 	background-color: #d2d2d2dd;
 
-	// NOTE: The transition duration and timing function must match constants used in code:
-	// k_flScrollTransitionTime, k_flScrollTransitionFunc, so dont change without talking with a dev
+	                                                                                       
+	                                                                                                
 	transition-property: position;
 	transition-duration: 0.20s;
 	transition-timing-function: ease-in-out;
@@ -47,8 +47,8 @@ HorizontalScrollBar
 	horizontal-align: left;
 	vertical-align: bottom;
 
-	// NOTE: The transition duration and timing function must match constants used in code:
-	// k_flScrollTransitionTime, k_flScrollTransitionFunc, so dont change without talking with a dev
+	                                                                                       
+	                                                                                                
 	transition-property: transform;
 	transition-duration: 0.25s;
 	transition-timing-function: ease-in-out;
@@ -58,35 +58,48 @@ HorizontalScrollBar .ScrollThumb
 {
 	background-color: #d2d2d2dd;
 
-	// NOTE: The transition duration and timing function must match constants used in code:
-	// k_flScrollTransitionTime, k_flScrollTransitionFunc, so dont change without talking with a dev
+	                                                                                       
+	                                                                                                
 	transition-property: position;
 	transition-duration: 0.20s;
 	transition-timing-function: ease-in-out;
 }
 
-//
-// Tooltip
-// 
-TextTooltip
+  
+          
+   
+DebugTextTooltip
 {
 	background-color: gradient( linear, 0% 0%, 0% 100%, from( white ), to( #e4e5f0 ) );
 	border-radius: 2.5px;
-	border: 1px solid #767676;
+	border: 1px solid #767676ff;
 	box-shadow: #80808090 4px 4px 4px 0px;
 	padding: 4px;
 	max-width: 600px;
 	font-family: platformfont;
-	font-size: 12px;
-	line-height: 18px;
-
+	font-size: 18px;
 	color: #111111ff;
+
+    visibility: collapse;
 }
 
+DebugTextTooltip.TooltipVisible
+{
+    visibility: visible;
+}
 
-//
-// Debugger
-//
+DebugTextTooltip Label
+{
+	horizontal-align: left;
+	color: black;
+	transform: translatex(0px);
+	padding-left: 0px;
+	text-overflow: ellipsis;
+}
+
+  
+           
+  
 Debugger
 {
 	perspective-origin: 50% 50%;
@@ -99,15 +112,14 @@ Debugger
 	flow-children: down;
 	font-family: Tahoma;
 	color: black;
-	font-size: 12;
-
+	font-size: 18px;
 }
 
 .DebugBody
 {
 	flow-children: down;
 	height: fill-parent-flow( 1.0 );
-	//background-color: white;
+	                          
 }
 
 .DebugBodyTop
@@ -146,7 +158,7 @@ HorizontalSplitter
 	height: fill-parent-flow( 1.0 );
 	background-color: white;
 	color: #000000ff;
-	font-size: 12px;
+	font-size: 18px;
 	font-family: Courier New;
 	width: 100%;
 
@@ -179,9 +191,9 @@ HorizontalSplitter
 	white-space: nowrap;
 }
 
-//
-// Styles for anything on the toolbar
-//
+  
+                                     
+  
 .DebugToolbar
 {
 	background-color: gradient( linear, 0% 0%, 0% 100%, from( #F0ECEC ), to( #D0CFCF ), color-stop( 0.8, #F0ECEC ) );
@@ -229,10 +241,16 @@ HorizontalSplitter
 	flow-children: right;
 }
 
+#DebugSize
+{
+	flow-children: right;
+	margin-left: 15px;
+	margin-right: 15px;
+}
 
-//
-// Styles for layout
-//
+  
+                    
+  
 
 DebugLayout
 {
@@ -314,7 +332,7 @@ a.DebugLayoutElementPropValue:hover
 
 .DebugLabelPanelRow #Indent
 {
-	/* shouldn't 100% height work here? forcing down with some margin.. but need to fix */
+	                                                                                      
 	margin-top: 1px;
 }
 
@@ -344,16 +362,16 @@ a.DebugLayoutElementPropValue:hover
 }
 
 
-//
-// Styles for debug parents panel
-//
+  
+                                 
+  
 DebugPanelParents
 {
 	width: 100%;
 	padding: 5px;
 	background-color: gradient( linear, 0% 0%, 0% 100%, from( #ECF2F9 ), to( #9DBCDE ) );
-	flow-children: right;
-	font-size: 14;
+	flow-children: right-wrap;
+	font-size: 16px;
 }
 
 DebugPanelParents #SelectedPanelName
@@ -361,7 +379,7 @@ DebugPanelParents #SelectedPanelName
 	font-weight: bold;
 }
 
-// bugbug cboyd - can turn the following two styles into one with comma sep
+                                                                           
 DebugPanelParents Label
 {
 	padding: 4px;
@@ -388,9 +406,9 @@ DebugPanelParents Button:active
 	background-color: #5081C5;
 }
 
-//
-// Styles for debug panel
-//
+  
+                         
+  
 
 DebugPanel
 {
@@ -433,9 +451,9 @@ DebugPanel
 	width: 100%;
 }
 
-//
-// Styles for computed panel
-//
+  
+                            
+  
 
 DebugPanelComputed
 {
@@ -474,9 +492,9 @@ DebugPanelComputed
 	color: black;
 }
 
-//
-// StyleLink
-//
+  
+            
+  
 
 .StyleLink
 {
@@ -489,9 +507,9 @@ DebugPanelComputed
 	color: red;
 }
 
-//
-// Styles for individual style debug panels
-//
+  
+                                           
+  
 
 DebugPanelStyle
 {
@@ -529,9 +547,9 @@ DebugIndividualStyle .StyleLink
 }
 
 
-//
-// DebugStyleAnimation
-//
+  
+                      
+  
 DebugStyleAnimation
 {
 	width: 100%;
@@ -564,9 +582,9 @@ DebugStyleAnimation .StyleLink
 	flow-children: right;
 }
 
-//
-// DebugStyleBlock
-//
+  
+                  
+  
 
 DebugStyleBlock
 {
@@ -684,9 +702,9 @@ DebugStyleBlock TextEntry:focus
 	color: #C0C0C0;
 }
 
-//
-// DebugAutoComplete related
-//
+  
+                            
+  
 
 DebugAutoComplete
 {
@@ -703,9 +721,9 @@ DebugAutoComplete Label:focus
 	background-color: #66CCFF;
 }
 
-//
-// DebugInheritedStylesHeader
-//
+  
+                             
+  
 DebugInheritedStylesHeader
 {
 	width: 100%;
@@ -721,9 +739,9 @@ DebugInheritedStylesHeader .StyleLink
 	margin-left: 4px;
 }
 
-//
-// DebugStyleSeparator
-// 
+  
+                      
+   
 DebugStyleSeparator
 {
 	width: 100%;
@@ -733,9 +751,9 @@ DebugStyleSeparator
 }
 
 
-//
-// HTTP styles used by labels
-//
+  
+                             
+  
 
 a
 {

@@ -14,6 +14,19 @@
 			<Button id="PaintInfo">
 				<Label text="#Debugger_PaintInfo" />
 			</Button>
+			
+			<Panel id="DebugSize">
+				<Button id="DebugSizeSmaller">
+					<Label text="#Debugger_Smaller" />
+				</Button>
+				<Button id="DebugSizeLarger">
+					<Label text="#Debugger_Larger" />
+				</Button>
+				<Button id="DebugSizeReset">
+					<Label text="#Debugger_ResetSize" />
+				</Button>
+			</Panel>
+			
 			<Panel id="InMemoryButtons">
 				<Button id="RevertButton">
 					<Label text="#Debugger_Revert" />
