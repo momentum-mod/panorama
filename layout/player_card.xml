@@ -19,10 +19,11 @@
 					<Label text="{d:money}" />
 				</Panel>
 				<Panel id="XpAndLevel">
-					<Panel class="top-bottom-flow vertical-align-bottom">
+					<Panel id="XpContainer">
 						<Label class="xp drop-shadow" text="{d:xp} / {d:totalxp} xp" />
 						<ProgressBar id="XpProgressBar" />
 					</Panel>
+					<!-- Level added here in JS -->
 				</Panel>
 			</Panel>
 		</Panel>

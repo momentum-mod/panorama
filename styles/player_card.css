@@ -33,12 +33,13 @@
 #PlayerDetails {
 	width: 500px;
 	flow-children: down;
-	margin: 8px;
+	margin: 8px 8px 8px 0px;
 }
 
 #XpProgressBar {
 	margin-top: 5px;
 	height: 10px;
+	width: 100%;
 }
 
 #XpAndLevel {
@@ -46,6 +47,12 @@
 	vertical-align: bottom;
 	height: fill-parent-flow( 1.0 );
 	width: 100%;
+}
+
+#XpContainer {
+	width: fill-parent-flow(1.0);
+	flow-children: down;
+	vertical-align: bottom;
 }
 
 .level-indicator {
