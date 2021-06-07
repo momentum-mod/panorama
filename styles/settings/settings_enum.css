@@ -8,7 +8,7 @@ ChaosSettingsEnum {
 
 ChaosSettingsEnum #TitleContainer {
 	vertical-align: middle;
-	width: 25%;
+	width: 35%;
 	margin-right: 10px;
 }
 
@@ -20,7 +20,6 @@ ChaosSettingsEnum #title {
 ChaosSettingsEnum #values {
 	flow-children: right;
 	height: 80%;
-	width: 65%;
 	vertical-align: middle;
 }
 
