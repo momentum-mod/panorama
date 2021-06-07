@@ -13,7 +13,7 @@ ChaosSettingsToggle #TitleContainer {
 
 ChaosSettingsToggle #Title {
 	vertical-align: middle;
-	horizontal-align: right;
+	horizontal-align: left;
 }
 
 ChaosSettingsToggle #Toggle {

@@ -14,7 +14,7 @@ ChaosSettingsEnum #TitleContainer {
 
 ChaosSettingsEnum #title {
 	vertical-align: middle;
-	horizontal-align: right;
+	horizontal-align: left;
 }
 
 ChaosSettingsEnum #values {
