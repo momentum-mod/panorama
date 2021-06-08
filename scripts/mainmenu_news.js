@@ -13,7 +13,7 @@ class MainMenuNews {
 		MainMenuNews.feed = feed;
 		if (feed.items.length > 0) {
 			const item = MainMenuNews.feed.items[0]
-			$.Msg(item);
+			
 			$('#LatestUpdateDetails').SetDialogVariable('title', item.title);
 			$('#LatestUpdateDetails').SetDialogVariable('description', item.description);
 			$('#LatestUpdateDetails').SetDialogVariable('date', item.date);
