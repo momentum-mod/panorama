@@ -1,7 +1,6 @@
 <root>
 	<styles>
 		<include src="file://{resources}/styles/chaosstyles.css" />
-		<include src="file://{resources}/styles/mainmenu.css" />
 		<include src="file://{resources}/styles/loadingscreen.css" />
 	</styles>
 
@@ -10,99 +9,25 @@
 	</scripts>
 
 	<Panel class="loading-root">
-    
-		<BaseBlurTarget id="BackgroundMapImageBlur" class="loading-screen-blur" blurrects="loadingscreen__blur-target">
-			<Image id="BackgroundMapImage"
-					class="full-width full-height"
-					src=""
-					defaultsrc="file://{images}/map_icons/screenshots/1080p/default.png"
-					scaling="stretch-to-cover-preserve-aspect"/>
-		</BaseBlurTarget>
-
-		<Panel id="" class="mainmenu-content">
-			<Panel id="loadingscreen__blur-target"/>
-		</Panel >
-
-		<Panel class="loading-screen-fade--dark"/>
-		<Panel id="LoadingScreenContents" class="loading-screen-contents">
-			<Panel id="LoadingScreenContentsBottom" class="loading-screen-contents-bottom">
-				<Panel class="loading-screen-content__overview--background">
-
-					<Image id="LoadingScreenOverview"
-						   class="loading-screen-content__overview--map"
-						   src=""
-						   defaultsrc="file://{images}/overheadmaps/default.png"
-						   scaling="stretch-to-cover-preserve-aspect">
-						<!-- NOTE: JS will add children to this to show map objectives, and clear all children between maploads. If you need to add
-								  child panels to the LoadingScreenOverview image, move these objectives into a container panel
-								  and rework the scripts-->
-					</Image>
-				</Panel>
-
-				<Panel id="LoadingScreenInfo" class="loading-screen-content__info hidden">
-            
-					<Panel class="loading-screen-content__info-container">
-						<Panel class="loading-screen-content__titles">
-							<Label id="LoadingScreenMapName"
-								   class="loading-screen-content__info__text-title"
-								   text="XXXX XX"/>
-							<Panel class="loading-screen-content__info__gamemode">
-								<Image id="LoadingScreenGameModeIcon"
-									   class="loading-screen-content__info__modeicon"
-									   src=""
-									   defaultsrc="file://{images}/icons/ui/random.svg"
-									   scaling="stretch-to-cover-preserve-aspect"
-									   texturewidth="40"
-									   textureheight="40"/>
-
-								<Label id="LoadingScreenGameMode"
-									   class="loading-screen-content_text-gamemode"
-									   text=""/>
-							</Panel>
-						</Panel>
-						<Image id="LoadingScreenIcon"
-							   class="loading-screen__mapicon"
-							   src=""
-							   defaultsrc="file://{images}/map_icons/map_icon_de_nuke.svg"
-							   scaling="stretch-to-cover-preserve-aspect"
-							   texturewidth="112"
-							   textureheight="112"/>
-					</Panel>
-					<Panel class="loading-screen-content__info-line"/>
-					<Label id="LoadingScreenModeDesc"
-						   class="loading-screen-content__info__text"
-						   html="true"
-						   text=""/>
-				</Panel>
-      
-			</Panel>
-			<Panel id="LoadingScreenHintContents" class="loading-screen-hint-contents">
-				<Image src="file://{images}/icons/ui/info.svg" class="loading-screen-hint__icon"/>
-				<Label id="LoadingScreenHintText"
-					   class="loading-screen-hint__text"
-					   html="true"
-					   text="#SFUI_Hint_WeaponSlowdown"/>
-			</Panel>
-
-			<Panel class="loading-screen-progress-container">
-				<Label id="ProgressStatusText"
-					   class="loading-screen-progress-text"
-					   text="#SFUI_LOADING"/>
-
-				<Panel id="LoadingSecondaryProgressContainer" class="loading-screen-progress-secondary-container">
-					<Label id="ProgressSecondaryStatusText"
-						   class="loading-screen-progress-secondary-text"
-						   text="#SFUI_LOADING"/>
-
-					<ProgressBar id="ProgressBarSecondary"/>
-				</Panel>
-			</Panel>
-		</Panel>
-
-		<Panel id="" class="full-width full-height">
-		</Panel>
-
-		<ProgressBar id="ProgressBar"/>
+		<Image id="BackgroundImageDefault" src="file://{images}/bg_00.vtf" />
+		<Image id="BackgroundImage" scaling="stretch-to-cover-preserve-aspect" />
 	
+		<Panel class="full-width full-height top-bottom-flow">
+			<Panel id="DetailsContainer">
+			`	<Panel class="top-left">
+					<Label id="MapName" class="header" text="{s:mapname}" />
+					<Label id="Author" class="subheader" text="By {s:author}" />
+				</Panel>
+			`	<Panel class="top-right">
+					<Label id="TierAndType" class="header" text="Tier {d:tier} - {s:tracktype}" />
+					<Label id="NumZones" class="subheader" text="{d:numzones} zones" />
+				</Panel>
+				<Label id="GameModeTip" text="{s:tip}" />
+				<Label id="ProgressStatusText" class="header horizontal-align-left vertical-align-bottom" text="Loading..." />
+				<Label id="PercentText" class="header horizontal-align-right vertical-align-bottom" text="{d:percent}%" />
+			</Panel>
+
+			<ProgressBar id="ProgressBar"/>
+		</Panel>
 	</Panel>
 </root>

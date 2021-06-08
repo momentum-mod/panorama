@@ -1,464 +1,14 @@
-@define maxBlur: 6.0;
-@define loadingScreenWidth: 1220px;
-
-.loading-root
-{
+.loading-root {
 	width: 100%;
 	height: 100%;
-	background-color: rgba(255, 255, 255, 0.03);
-	transform: scale3d( 1.0, 1.0, 1.0 );
-	opacity: 1;
-
-	//transition-property: opacity, transform;
-	//transition-duration: 0.01s;
-	//transition-timing-function: ease-in-out;
 }
 
-.loading-root--show
-{
-	animation-name: loading-root--show-animation;
-	animation-duration: 0.65s;
-	animation-timing-function: ease-in-out;
-	animation-iteration-count: 1;
-    animation-fill-mode: both;
-}
-
-@keyframes 'loading-root--show-animation'
-{
-	0%
-	{
-        opacity: 0.5;
-        transform: scaleX(1.2) scaleY(1.2);
-    }
-	100%
-	{
-        opacity: 1.0;
-        transform: scaleX(1.0) scaleY(1.0);
-	}
-}
-
-.loading-root .mainmenu-content--offscreen
-{
-	position: 0px 0px 0px;
-
-	transition-property: position;
-	transition-duration: 1s;
-	transition-timing-function: ease-in-out;
-}
-
-.loading-screen-blur
-{
-	height: 100%;
-	width: 100%;
-	brightness: 1.2;
-	blur: fastgaussian( 6, 6, 3 );
-
-	//transition-property: brightness, blur;
-	//transition-duration: .5s;
-	//transition-timing-function: ease-in-out;
-}
-
-.loading-screen--unblur
-{
-	animation-name: loading-screen--unblur-animation;
-	animation-duration: 3.0s;
-	animation-timing-function: ease-in-out;
-	animation-iteration-count: 1;
-    animation-fill-mode: both;
-}
-
-@keyframes 'loading-screen--unblur-animation'
-{
-	0%
-	{
-        brightness: 1.0;
-        blur: fastgaussian( 5, 5, 3 );
-    }
-	100%
-	{
-        brightness: 1.25;
-        blur: fastgaussian( 0, 0, 0 );
-	}
-}
-
-.loading-screen-hint-contents
-{
-    height: 80px;
-    width: 100%;
-	horizontal-align: center;
-	vertical-align: center;
-    flow-children: right;
-
-    background-color: gradient( linear, 0% 100%, 0% 0%, from( #313131AA ), to( #31313144));
-	box-shadow: shadowOffset;
-
-    margin-top: 20px;
-}
-
-.loading-screen-hint__icon
-{
-	width: 42px;
-	height: 42px;
-    horizontal-align: center;
-	vertical-align: center;
-	//margin: 0px 10px;
-	wash-color: #eece60;
-    margin: 10px 10px 10px 20px;
-
-    brightness: 1.1;
-}
-
-.loading-screen-hint__text
-{
-	font-size: 18px;
-	//font-weight: lighter;
-	color: #eece60;
-	text-overflow: shrink;
-    text-align: left;
-    margin: 10px 10px 10px 4px;
-
-    brightness: 1.1;
-}
-
-.loading-screen-contents
-{
-	margin-top: 82px;
-	height: fit-children;
-	max-height: 1200px;
-	width: loadingScreenWidth;
-	horizontal-align: center;
-	vertical-align: top;
-	//border: 0px solid white;
-	//border-radius: 4px;
-	//background-color: gradient( linear, 0% 100%, 0% 0%, from( #191919AA ), to( #53535344));
-	//box-shadow: shadowOffset;
-	flow-children: down;
-	opacity: 1;
-
-	transition-property: height, opacity;
-	transition-duration: .5s;
-	transition-timing-function: ease-in-out;
-}
-
-.loading-screen-contents-bottom
-{
-	//margin-top: 102px;
-	height: fit-children;
-	max-height: 920px;
-	width: 1330px;
-	horizontal-align: center;
-	vertical-align: top;
-	//border: 0px solid white;
-	//border-radius: 4px;
-	background-color: gradient( linear, 0% 100%, 0% 0%, from( #313131AA ), to( #31313144));
-	box-shadow: shadowOffset;
-	flow-children: right;
-	opacity: 1;
-
-	transition-property: height, opacity;
-	transition-duration: .5s;
-	transition-timing-function: ease-in-out;
-}
-
-.loading-screen-content__overview--background
-{
-	horizontal-align: left;
-	height: 820px;
-	width: 820px;
-	//margin: 1px;
-	border: 2px solid rgba(255, 255, 255, 0.233);
-	box-shadow: #000000 -2px -2px 6px 4px;
-
-	background-image: url( "file://{images}/overheadmaps/default.png");
-	background-position: 50% 50%;
-	background-size: 100% 100%;
-
-	flow-children: none;
-}
-
-.loading-screen-content__overview--map
-{
-	horizontal-align: center;
-	height: 100%;
-	width: 100%;
-	brightness: 1;
-	border: 1px solid rgba(255, 255, 255, 0.233);
-	box-shadow: #000000 -2px -2px 6px 4px;
-	margin: 1px;
-	opacity: 1;
-
-	//transition-property: opacity;
-	//transition-duration: .5s;
-	//transition-timing-function: ease-in-out;
-
-	//-s2-mix-blend-mode: opaque;
-}
-
-.loading-screen-content__info
-{
-	flow-children: down;
-	width: 400px;
-	height: 100%;
-	horizontal-align: right;
-	vertical-align: top;
-	padding: 0px 0px;
-	margin-bottom: 24px;
-	opacity: 1;
-	visibility: visible;
-
-	transition-property: opacity;
-	transition-duration: .25s;
-	transition-timing-function: ease-in-out;
-}
-
-.loading-screen-content__info-line
-{
-	width: 100%;
-	height: 2px;
-    vertical-align: top;
-    horizontal-align: center;
-    background-color: gradient( linear, 100% 0%, 0% 0%, from( #AAAAAA00 ), color-stop( 0.05, #AAAAAA00 ) , color-stop(0.5, #AAAAAA55), color-stop( 0.95, #AAAAAA00 ), to( #AAAAAA00 ) );
-}
-
-.loading-screen-content__info.hidden
-{
-	opacity: 0;
-	visibility: collapse;
-
-	transition-property: opacity;
-	transition-duration: .25s;
-	transition-timing-function: ease-in-out;
-}
-
-.loading-screen-content__info__modeicon
-{
-	vertical-align: middle;
-	margin-right: 8px;
-}
-
-.loading-screen-content__titles
-{
-    flow-children: down;
-}
-
-.loading-screen-content__info__text-title
-{
-    font-family: Stratum2, 'Arial Unicode MS';
-    color: white;
-	font-size: 50px;
-	font-weight: bold;
-    text-overflow: shrink;
-    horizontal-align: left;
-    text-align: left;
-    white-space: nowrap;
-    margin-top: 4px;
-}
-
-.loading-screen-content__info__text-title-long
-{
-    width: 370px;
-}
-
-.loading-screen-content__info__text-title-short
-{
-    width: 260px;
-}
-
-.loading-screen-content__mapicon-container
-{
-	width: 400px;
-	height: fit-children;
-	horizontal-align: center;
-}
-
-.loading-screen-content__info-container
-{
-    flow-children: right;
-	width: 400px;
-	height: fit-children;
-	horizontal-align: center;
-    padding: 16px 16px;
-}
-
-.loading-screen-content__info__gamemode
-{
-	flow-children: right;
-}
-
-.loading-screen-content_text-gamemode
-{
-    font-family: Stratum2, 'Arial Unicode MS';
-	font-size: 28px;
-	//font-weight: lighter;
-	color: white;
-	text-overflow: shrink;
-    vertical-align: center;
-    text-align: left;
-}
-
-.loading-screen-progress-container
-{
-    width: loadingScreenWidth;
-    height: 42px;
-    vertical-align: center;
-    horizontal-align: center;
-    margin-top: 16px;
-}
-
-.loading-screen-progress-secondary-container
-{
-    width: 500px;
-    height: 32px;
-    vertical-align: bottom;
-    horizontal-align: right;
-    //background-color: black;
-    margin-bottom: 10px;
-}
-
-.loading-screen-progress-text
-{
-    height: 32px;
-    width: 400px;
-    font-family: Stratum2, 'Arial Unicode MS';
-	font-size: 22px;
-	color: #CCCCCCFF;
-	text-overflow: shrink;
-    vertical-align: bottom;
-    text-align: left;  
-    margin-bottom: 1px;
-}
-
-.loading-screen-progress-secondary-text
-{
-    width: 100%;
-    font-family: Stratum2, 'Arial Unicode MS';
-	font-size: 16px;
-	color: #FFFFFFFF;
-	text-overflow: shrink;
-    vertical-align: bottom;
-    text-align: left; 
-    margin-bottom: 5px;
-}
-
-.loading-screen-content__info__text
-{
-    font-family: Stratum2, 'Arial Unicode MS';
-	font-size: 22px;
-	font-weight: lighter;
-	color: white;
-	text-overflow: shrink;
-    vertical-align: top;
-    padding: 16px 16px;
-}
-
-
-
-.loading-screen__mapicon
-{
-	horizontal-align: right;
-	vertical-align: top;
-	margin-top: 0px;
-	img-shadow: 0px 0px 6px 4.0 #000000;
-
-	opacity: 0;
-	visibility: collapse;
-
-	transition-property: opacity;
-	transition-duration: .25s;
-	transition-timing-function: ease-in-out;
-}
-
-.loading-root .ProgressBarLeft
-{
-	background-color: gradient( linear, 0% 0%, 100% 0%, from( #134f87FF ), to( #1ab8e0FF ) );
-}
-
-.loading-root ProgressBar
-{
-
-	width: loadingScreenWidth;
-	height: 8px;
-	background-color: rgba(0, 0, 0, 0.671);
-	border: 0px solid rgb(58, 58, 58);
-	vertical-align: bottom;
-	border-radius: 0px;
-	margin-bottom: 4px;
-	horizontal-align: center;
-	box-shadow: none;
-	margin-bottom: 16px;
-}
-
-.loading-screen-fade--dark
-{
-	width: 100%;
-	height: 100%;
-    background-color: gradient(radial, 50% 50%, 0px 0px, 100% 100%, from( #00000000 ), color-stop( 0.4, #00000000), color-stop( 0.65, #000000DD), to( #000000FF ) );
-    //( centerX, centerY, offsetX, offsetY, radiusX, radiusY, vecColorStops );
-}
-
-.loading-screen-fade--teams
-{
-	width: 100%;
-	height: 100%;
-    background-color: gradient(radial, 50% 50%, 0px 0px, 100% 100%, from( #00000099 ), color-stop( 0.4, #000000DD), color-stop( 0.65, #000000FF), to( #000000FF ) );
-}
-
-.loading-screen-model
-{
-	width: 720px;
-	height: 100%;
-	horizontal-align: center;
-	vertical-align: middle;
-	opacity: 1;
-	ui-scale: 100%;
-	margin-bottom: 128px;
-
-	transition-property: position, brightness, ui-scale;
-	transition-duration: .25s;
-	transition-timing-function: ease-in-out;
-}
-
-.loading-screen-model--right
-{
-	position: 440px 0px 0px;
-}
-
-.loading-screen-model--left
-{
-	position: -440px 0px 0px;
-}
-
-.loading-screen-model--right.highlight,
-.loading-screen-model--left.highlight
-{
-	ui-scale: 108%;
-
-	transition-property: ui-scale;
-	transition-duration: .25s;
-	transition-timing-function: ease-in-out;
-}
-
-.show
-{
-	opacity: 1;
-	visibility: visible;
-	blur: none;
-
-	transition-property: opacity, blur;
-	transition-duration: .5s;
-	transition-timing-function: ease-in-out;
-}
-
-.showOverview
-{
-	opacity: 1;
-	visibility: visible;
-}
-
+/* NOTE: This class/animation is used by the game code, do not rename/remove!  */
+/*       If you want to remove the animation, just set duration to 0s instead. */
 .loading-screen--closing
 {
 	animation-name: loading-screen--closing-animation;
-	animation-duration: 2.8s;
+	animation-duration: 1s;
 	animation-timing-function: ease-in-out;
 	animation-iteration-count: 1;
     animation-fill-mode: forwards;
@@ -473,75 +23,60 @@
 	70%
 	{
         opacity: 1.0;
-        transform: scaleX(1.0) scaleY(1.0);
     }
 	100%
 	{
         opacity: 0.0;
-        transform: scaleX(1.08) scaleY(1.08);
 	}
 }
 
-.ct-spawn
-{
-    width: 64px;
-    height: 64px;
-    margin-left: -32px;
-    margin-top: -32px;
-	wash-color: #ddf4ff;
-    brightness: 1.25;
-    //img-shadow: 1px 1px 1px 1.5 #000000;
-}
-
-.t-spawn
-{
-    width: 64px;
-    height: 64px;
-    margin-left: -32px;
-    margin-top: -32px;
-	wash-color: #fff4ca;
-    brightness: 1.25;
-    //img-shadow: 1px 1px 1px 1.5 #000000;
-}
-
-.bomb-zone
-{
-    width: 23px;
-    height: 32px;
-    margin-left: -14px;
-    margin-top: -12px;
-
-    //x: -4px;
-	//y: -8px;
-	opacity: .8;
-	//border: 1px solid red;
-    wash-color:#ffcc00;
-    img-shadow: 0px 0px 1px 2 #111111FF;
-}
-
-.hostage-alive
-{
-    width: 30px;
-    height: 44px;
-    margin-left: -11px;
-    margin-top: -16px;	
-    wash-color: #ffe25b;
-}
-
-#ProgressBarSecondary
-{
+#BackgroundImageDefault {
 	width: 100%;
-	height: 5px;
-	background-color: rgba(0, 0, 0, 0.671);
-	border: 0px solid rgb(58, 58, 58);
-	vertical-align: bottom;
-	border-radius: 0px;
-	margin-bottom: -20px;
-	horizontal-align: center;
-	box-shadow: none;
+	height: 100%;
 }
 
-.loading-screen-progress-secondary-container .ProgressBarLeft
-{
-	background-color: gradient( linear, 0% 0%, 100% 0%, from( blueColor ), to( #006633FF ) );
+#BackgroundImage {
+	width: 100%;
+	height: 100%;
+	visibility: collapse;
+}
+
+.top-left {
+	flow-children: down;
+	vertical-align: top;
+	horizontal-align: left;
+}
+
+.top-right {
+	flow-children: down;
+	vertical-align: top;
+	horizontal-align: right;
+}
+
+.top-right > Label {
+	text-align: right;
+	horizontal-align: right;
+}
+
+#GameModeTip {
+	vertical-align: bottom;
+	horizontal-align: center;
+	font-size: 24px;
+	margin-bottom: 100px;
+}
+
+#DetailsContainer {
+	width: 100%;
+	height: fill-parent-flow(1.0);
+	margin: 5px 5px 0px 5px;
+}
+
+#ProgressBar {
+	width: 100%;
+	height: 20px;
+	border-radius: 0px;
+}
+
+#ProgressBar .ProgressBarRight {
+	background-color: #000;
 }
