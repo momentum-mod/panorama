@@ -1,0 +1,14 @@
+.TextContents
+{
+	min-width: 160px;
+	max-width: 600px;
+	flow-children: down;
+}
+
+.tooltip-txt-default,
+#TextLabel
+{
+	font-size: 16px;
+	color: #e0e0e0;
+	vertical-align: middle;
+}

@@ -64,6 +64,11 @@
 	horizontal-align: right;
 }
 
+.settings-tooltip {
+	width: 100%;
+	tooltip-position: bottom;
+}
+
 .tab-group {
 	flow-children: right;
 }

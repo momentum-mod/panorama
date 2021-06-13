@@ -28,18 +28,24 @@
 					<RadioButton group="maccel" text="#SFUI_On" value="3" />
 				</ChaosSettingsEnum>
 				<ChaosSettingsSlider text="" min="0.1" max="10" displayprecision="2" convar="m_customaccel_exponent" />
-				<ChaosSettingsEnum text="#GameUI_MouseRaw" convar="m_rawinput">
-					<RadioButton group="rawinput" text="#SFUI_Off" value="0" />
-					<RadioButton group="rawinput" text="#SFUI_On" value="1" />
-				</ChaosSettingsEnum>
-				<ChaosSettingsEnum text="#GameUI_ReverseMouse" convar="m_pitch_inverse">
-					<RadioButton group="reverse" text="#SFUI_Off" value="0" />
-					<RadioButton group="reverse" text="#SFUI_On" value="1" />
-				</ChaosSettingsEnum>
+				<TooltipPanel class="settings-tooltip" tooltip="#GameUI_MouseRaw_Hint">
+					<ChaosSettingsEnum text="#GameUI_MouseRaw" convar="m_rawinput">
+						<RadioButton group="rawinput" text="#SFUI_Off" value="0" />
+						<RadioButton group="rawinput" text="#SFUI_On" value="1" />
+					</ChaosSettingsEnum>
+				</TooltipPanel>
+				<TooltipPanel class="settings-tooltip" tooltip="#GameUI_ReverseMouseLabel">
+					<ChaosSettingsEnum text="#GameUI_ReverseMouse" convar="m_pitch_inverse">
+						<RadioButton group="reverse" text="#SFUI_Off" value="0" />
+						<RadioButton group="reverse" text="#SFUI_On" value="1" />
+					</ChaosSettingsEnum>#
+				</TooltipPanel>
+				<TooltipPanel class="settings-tooltip" tooltip="#GameUI_MouseFilterLabel">
 				<ChaosSettingsEnum text="#GameUI_MouseFilter" convar="m_filter">
 					<RadioButton group="filter" text="#SFUI_Off" value="0" />
 					<RadioButton group="filter" text="#SFUI_On" value="1" />
 				</ChaosSettingsEnum>
+				</TooltipPanel>
 			</Panel>
 			
 			<Panel class="settings-horizontal-separator" />

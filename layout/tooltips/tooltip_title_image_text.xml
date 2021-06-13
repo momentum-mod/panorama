@@ -1,0 +1,12 @@
+<root>
+	<styles>
+    <include src="file://{resources}/styles/gamestyles.css" />
+    <include src="file://{resources}/styles/tooltips/tooltip_title_image_text.css" />
+	</styles>
+
+	<TooltipTitleImageText class="TitleImageTextContents">
+		<Label id="TitleLabel" html="true" />
+		<Image id="Image" />
+		<Label id="TextLabel" html="true" />
+	</TooltipTitleImageText>
+</root>

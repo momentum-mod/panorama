@@ -1,0 +1,27 @@
+.TitleTextContents
+{
+    width: 480px;
+    flow-children: down;
+}
+
+#TitleLabel
+{
+    font-size: 18px;
+    color: white;
+    font-weight: bold;
+                                
+}
+
+#TextLabel
+{
+    font-size: 16px;
+    color: #e0e0e0;
+}
+
+#TextPercentage
+{
+    font-size: 14px;
+    color: #e0e0e0;
+    margin-right: 4px;
+    vertical-align: center;
+}

@@ -31,7 +31,9 @@
 			<Panel id="SettingsGeneral" class="settings-group">
 				<Label class="header" text="#MOM_Settings_Title_Gameplay_General" />
 				
-				<ChaosSettingsSlider text="#MOM_Settings_Yaw_Speed" min="0" max="360" convar="cl_yawspeed" />
+				<TooltipPanel class="settings-tooltip" tooltip="#MOM_Settings_Yaw_Speed_TT">
+					<ChaosSettingsSlider text="#MOM_Settings_Yaw_Speed" min="0" max="360" convar="cl_yawspeed" />
+				</TooltipPanel>
 				<ChaosSettingsEnum text="#GameUI_FastSwitchCheck" convar="hud_fastswitch">
 					<RadioButton group="fastswitch" text="#SFUI_Off" value="0" />
 					<RadioButton group="fastswitch" text="#SFUI_On" value="1" />
@@ -40,22 +42,29 @@
 					<RadioButton group="enableconsole" text="#SFUI_Off" value="0" />
 					<RadioButton group="enableconsole" text="#SFUI_On" value="1" />
 				</ChaosSettingsEnum>
+				<!-- MOM_TODO: Move to gamemode specific area. also what even is this -->
 				<ChaosSettingsEnum text="#MOM_Settings_Play_BlockSound" convar="mom_bhop_playblocksound">
 					<RadioButton group="bhopsound" text="#SFUI_Off" value="0" />
 					<RadioButton group="bhopsound" text="#SFUI_On" value="1" />
 				</ChaosSettingsEnum>
-				<ChaosSettingsEnum text="#MOM_Settings_Save_Checkpoints" convar="mom_saveloc_save_between_sessions">
-					<RadioButton group="savesavelocs" text="#SFUI_Off" value="0" />
-					<RadioButton group="savesavelocs" text="#SFUI_On" value="1" />
-				</ChaosSettingsEnum>
-				<ChaosSettingsEnum text="#MOM_Settings_Overlapping_Keys" convar="mom_enable_overlapping_keys">
-					<RadioButton group="allowoverlap" text="#SFUI_Off" value="0" />
-					<RadioButton group="allowoverlap" text="#SFUI_On" value="1" />
-				</ChaosSettingsEnum>
-				<ChaosSettingsEnum text="#MOM_Settings_Release_Forward_On_Jump" convar="mom_release_forward_on_jump">
-					<RadioButton group="releaseforward" text="#SFUI_Off" value="0" />
-					<RadioButton group="releaseforward" text="#SFUI_On" value="1" />
-				</ChaosSettingsEnum>
+				<TooltipPanel class="settings-tooltip" tooltip="#MOM_Settings_Save_Checkpoints_TT">
+					<ChaosSettingsEnum text="#MOM_Settings_Save_Checkpoints" convar="mom_saveloc_save_between_sessions">
+						<RadioButton group="savesavelocs" text="#SFUI_Off" value="0" />
+						<RadioButton group="savesavelocs" text="#SFUI_On" value="1" />
+					</ChaosSettingsEnum>
+				</TooltipPanel>
+				<TooltipPanel class="settings-tooltip" tooltip="#MOM_Settings_Overlapping_Keys_TT">
+					<ChaosSettingsEnum text="#MOM_Settings_Overlapping_Keys" convar="mom_enable_overlapping_keys">
+						<RadioButton group="allowoverlap" text="#SFUI_Off" value="0" />
+						<RadioButton group="allowoverlap" text="#SFUI_On" value="1" />
+					</ChaosSettingsEnum>
+				</TooltipPanel>
+				<TooltipPanel class="settings-tooltip" tooltip="#MOM_Settings_Release_Forward_On_Jump_TT">
+					<ChaosSettingsEnum text="#MOM_Settings_Release_Forward_On_Jump" convar="mom_release_forward_on_jump">
+						<RadioButton group="releaseforward" text="#SFUI_Off" value="0" />
+						<RadioButton group="releaseforward" text="#SFUI_On" value="1" />
+					</ChaosSettingsEnum>
+				</TooltipPanel>
 				<ChaosSettingsEnum text="#MOM_Settings_Draw_Viewmodel" convar="r_drawviewmodel">
 					<RadioButton group="showviewmodel" text="#SFUI_Off" value="0" />
 					<RadioButton group="showviewmodel" text="#SFUI_On" value="1" />
@@ -72,10 +81,12 @@
 					<RadioButton group="paintsound" text="#SFUI_Off" value="0" />
 					<RadioButton group="paintsound" text="#SFUI_On" value="1" />
 				</ChaosSettingsEnum>
-				<ChaosSettingsEnum text="#MOM_Settings_Paint_Limit_To_World" convar="mom_paint_limit_to_world">
-					<RadioButton group="paintlimit" text="#SFUI_Off" value="0" />
-					<RadioButton group="paintlimit" text="#SFUI_On" value="1" />
-				</ChaosSettingsEnum>
+				<TooltipPanel class="settings-tooltip" tooltip="#MOM_Settings_Paint_Limit_To_World_TT">
+					<ChaosSettingsEnum text="#MOM_Settings_Paint_Limit_To_World" convar="mom_paint_limit_to_world">
+						<RadioButton group="paintlimit" text="#SFUI_Off" value="0" />
+						<RadioButton group="paintlimit" text="#SFUI_On" value="1" />
+					</ChaosSettingsEnum>
+				</TooltipPanel>
 			</Panel>
 			
 			<Panel class="settings-horizontal-separator" />
@@ -127,35 +138,51 @@
 			<Panel id="SettingsRocketJump" class="settings-group">
 				<Label class="header" text="#MOM_Settings_Title_Gameplay_RJ" />
 				
-				<ChaosSettingsEnum text="#MOM_Settings_RJ_Enable_Trail_Particle" convar="mom_rj_particle_trail_enable">
-					<RadioButton group="rjtrailparticle" text="#SFUI_Off" value="0" />
-					<RadioButton group="rjtrailparticle" text="#SFUI_On" value="1" />
-				</ChaosSettingsEnum>
-				<ChaosSettingsEnum text="#MOM_Settings_RJ_Enable_Explosion_Particle" convar="mom_rj_particle_explosion_enable">
-					<RadioButton group="rjexplodeparticle" text="#SFUI_Off" value="0" />
-					<RadioButton group="rjexplodeparticle" text="#SFUI_On" value="1" />
-				</ChaosSettingsEnum>
-				<ChaosSettingsEnum text="#MOM_Settings_RJ_Enable_Shoot_Sound" convar="mom_rj_sound_shoot_enable">
-					<RadioButton group="rjshootsound" text="#SFUI_Off" value="0" />
-					<RadioButton group="rjshootsound" text="#SFUI_On" value="1" />
-				</ChaosSettingsEnum>
-				<ChaosSettingsEnum text="#MOM_Settings_RJ_Enable_Trail_Sound" convar="mom_rj_sound_trail_enable">
-					<RadioButton group="rjtrailsound" text="#SFUI_Off" value="0" />
-					<RadioButton group="rjtrailsound" text="#SFUI_On" value="1" />
-				</ChaosSettingsEnum>
-				<ChaosSettingsEnum text="#MOM_Settings_RJ_Enable_Explosion_Sound" convar="mom_rj_sound_explosion_enable">
-					<RadioButton group="rjexplosionsoud" text="#SFUI_Off" value="0" />
-					<RadioButton group="rjexplosionsoud" text="#SFUI_On" value="1" />
-				</ChaosSettingsEnum>
-				<ChaosSettingsEnum text="#MOM_Settings_RJ_Enable_Rocket_Decals" convar="mom_rj_decals_enable">
-					<RadioButton group="rjdecals" text="#SFUI_Off" value="0" />
-					<RadioButton group="rjdecals" text="#SFUI_On" value="1" />
-				</ChaosSettingsEnum>
-				<ChaosSettingsEnum text="#MOM_Settings_RJ_Enable_Center_Fire" convar="mom_rj_center_fire">
-					<RadioButton group="rjcenterfire" text="#SFUI_Off" value="0" />
-					<RadioButton group="rjcenterfire" text="#SFUI_On" value="1" />
-				</ChaosSettingsEnum>
-				<ChaosSettingsSlider text="#MOM_Settings_RJ_RocketDrawDelayEntry_Label" min="0" max="1" displayprecision="1" convar="mom_rj_rocket_drawdelay" />
+				<TooltipPanel class="settings-tooltip" tooltip="#MOM_Settings_RJ_Enable_Trail_Particle_TT">
+					<ChaosSettingsEnum text="#MOM_Settings_RJ_Enable_Trail_Particle" convar="mom_rj_particle_trail_enable">
+						<RadioButton group="rjtrailparticle" text="#SFUI_Off" value="0" />
+						<RadioButton group="rjtrailparticle" text="#SFUI_On" value="1" />
+					</ChaosSettingsEnum>
+				</TooltipPanel>
+				<TooltipPanel class="settings-tooltip" tooltip="#MOM_Settings_RJ_Enable_Explosion_Particle_TT">
+					<ChaosSettingsEnum text="#MOM_Settings_RJ_Enable_Explosion_Particle" convar="mom_rj_particle_explosion_enable">
+						<RadioButton group="rjexplodeparticle" text="#SFUI_Off" value="0" />
+						<RadioButton group="rjexplodeparticle" text="#SFUI_On" value="1" />
+					</ChaosSettingsEnum>
+				</TooltipPanel>
+				<TooltipPanel class="settings-tooltip" tooltip="#MOM_Settings_RJ_Enable_Shoot_Sound_TT">
+					<ChaosSettingsEnum text="#MOM_Settings_RJ_Enable_Shoot_Sound" convar="mom_rj_sound_shoot_enable">
+						<RadioButton group="rjshootsound" text="#SFUI_Off" value="0" />
+						<RadioButton group="rjshootsound" text="#SFUI_On" value="1" />
+					</ChaosSettingsEnum>
+				</TooltipPanel>
+				<TooltipPanel class="settings-tooltip" tooltip="#MOM_Settings_RJ_Enable_Trail_Sound_TT">
+					<ChaosSettingsEnum text="#MOM_Settings_RJ_Enable_Trail_Sound" convar="mom_rj_sound_trail_enable">
+						<RadioButton group="rjtrailsound" text="#SFUI_Off" value="0" />
+						<RadioButton group="rjtrailsound" text="#SFUI_On" value="1" />
+					</ChaosSettingsEnum>
+				</TooltipPanel>
+				<TooltipPanel class="settings-tooltip" tooltip="#MOM_Settings_RJ_Enable_Explosion_Sound_TT">
+					<ChaosSettingsEnum text="#MOM_Settings_RJ_Enable_Explosion_Sound" convar="mom_rj_sound_explosion_enable">
+						<RadioButton group="rjexplosionsoud" text="#SFUI_Off" value="0" />
+						<RadioButton group="rjexplosionsoud" text="#SFUI_On" value="1" />
+					</ChaosSettingsEnum>
+				</TooltipPanel>
+				<TooltipPanel class="settings-tooltip" tooltip="#MOM_Settings_RJ_Enable_Rocket_Decals_TT">
+					<ChaosSettingsEnum text="#MOM_Settings_RJ_Enable_Rocket_Decals" convar="mom_rj_decals_enable">
+						<RadioButton group="rjdecals" text="#SFUI_Off" value="0" />
+						<RadioButton group="rjdecals" text="#SFUI_On" value="1" />
+					</ChaosSettingsEnum>
+				</TooltipPanel>
+				<TooltipPanel class="settings-tooltip" tooltip="#MOM_Settings_RJ_Enable_Center_Fire_TT">
+					<ChaosSettingsEnum text="#MOM_Settings_RJ_Enable_Center_Fire" convar="mom_rj_center_fire">
+						<RadioButton group="rjcenterfire" text="#SFUI_Off" value="0" />
+						<RadioButton group="rjcenterfire" text="#SFUI_On" value="1" />
+					</ChaosSettingsEnum>
+				</TooltipPanel>
+				<TooltipPanel class="settings-tooltip" tooltip="#MOM_Settings_RJ_RocketDrawDelayEntry_TT">
+					<ChaosSettingsSlider text="#MOM_Settings_RJ_RocketDrawDelayEntry_Label" min="0" max="1" displayprecision="1" convar="mom_rj_rocket_drawdelay" />
+				</TooltipPanel>
 			</Panel>
 			
 			<Panel class="settings-horizontal-separator" />
@@ -163,53 +190,77 @@
 			<Panel id="SettingsStickyJump" class="settings-group">
 				<Label class="header" text="#MOM_Settings_Title_Gameplay_SJ" />
 				
-				<ChaosSettingsEnum text="#MOM_Settings_SJ_Enable_Trail_Particle" convar="mom_sj_particle_trail_enable">
-					<RadioButton group="sjtrailparticle" text="#SFUI_Off" value="0" />
-					<RadioButton group="sjtrailparticle" text="#SFUI_On" value="1" />
-				</ChaosSettingsEnum>
-				<ChaosSettingsEnum text="#MOM_Settings_SJ_Enable_Explosion_Particle" convar="mom_sj_particle_explosion_enable">
-					<RadioButton group="sjexplodeparticle" text="#SFUI_Off" value="0" />
-					<RadioButton group="sjexplodeparticle" text="#SFUI_On" value="1" />
-				</ChaosSettingsEnum>
-				<ChaosSettingsEnum text="#MOM_Settings_SJ_Enable_Stickybomb_Decals" convar="mom_sj_decals_enable">
-					<RadioButton group="sjdecals" text="#SFUI_Off" value="0" />
-					<RadioButton group="sjdecals" text="#SFUI_On" value="1" />
-				</ChaosSettingsEnum>
-				<ChaosSettingsEnum text="#MOM_Settings_SJ_Enable_Explosion_Sound" convar="mom_sj_sound_explosion_enable">
-					<RadioButton group="sjexplodesound" text="#SFUI_Off" value="0" />
-					<RadioButton group="sjexplodesound" text="#SFUI_On" value="1" />
-				</ChaosSettingsEnum>
-				<ChaosSettingsEnum text="#MOM_Settings_SJ_Enable_Detonation_Fail_Sound" convar="mom_sj_sound_detonate_fail_enable">
-					<RadioButton group="sjfailsound" text="#SFUI_Off" value="0" />
-					<RadioButton group="sjfailsound" text="#SFUI_On" value="1" />
-				</ChaosSettingsEnum>
-				<ChaosSettingsEnum text="#MOM_Settings_SJ_Enable_Detonation_Success_Sound" convar="mom_sj_sound_detonate_success_enable">
-					<RadioButton group="sjsuccesssound" text="#SFUI_Off" value="0" />
-					<RadioButton group="sjsuccesssound" text="#SFUI_On" value="1" />
-				</ChaosSettingsEnum>
-				<ChaosSettingsEnum text="#MOM_Settings_SJ_Enable_Charge_Sound" convar="mom_sj_sound_charge_enable">
-					<RadioButton group="sjchargesound" text="#SFUI_Off" value="0" />
-					<RadioButton group="sjchargesound" text="#SFUI_On" value="1" />
-				</ChaosSettingsEnum>
-				<ChaosSettingsEnum text="#MOM_Settings_SJ_Enable_Shoot_Sound" convar="mom_sj_sound_shot_enable">
-					<RadioButton group="sjshootsound" text="#SFUI_Off" value="0" />
-					<RadioButton group="sjshootsound" text="#SFUI_On" value="1" />
-				</ChaosSettingsEnum>
-				<ChaosSettingsSlider text="#MOM_Settings_SJ_ChargedShotSoundTheshold_Label" min="0" max="5" displayprecision="1" convar="mom_sj_sound_shot_charged_threshold" />
-				<ChaosSettingsEnum text="#MOM_Settings_SJ_Enable_ChargeMeter" convar="mom_hud_sj_chargemeter_enable">
-					<RadioButton group="chargemeter" text="#SFUI_Off" value="0" />
-					<RadioButton group="chargemeter" text="#SFUI_On" value="1" />
-				</ChaosSettingsEnum>
-				<ChaosSettingsEnum text="#MOM_Settings_SJ_Enable_Sticky_Counter" convar="mom_hud_sj_stickycount_enable">
-					<RadioButton group="stickycounter" text="#SFUI_Off" value="0" />
-					<RadioButton group="stickycounter" text="#SFUI_On" value="1" />
-				</ChaosSettingsEnum>
+				<TooltipPanel class="settings-tooltip" tooltip="#MOM_Settings_SJ_Enable_Trail_Particle_TT">
+					<ChaosSettingsEnum text="#MOM_Settings_SJ_Enable_Trail_Particle" convar="mom_sj_particle_trail_enable">
+						<RadioButton group="sjtrailparticle" text="#SFUI_Off" value="0" />
+						<RadioButton group="sjtrailparticle" text="#SFUI_On" value="1" />
+					</ChaosSettingsEnum>
+				</TooltipPanel>
+				<TooltipPanel class="settings-tooltip" tooltip="#MOM_Settings_SJ_Enable_Explosion_Particle_TT">
+					<ChaosSettingsEnum text="#MOM_Settings_SJ_Enable_Explosion_Particle" convar="mom_sj_particle_explosion_enable">
+						<RadioButton group="sjexplodeparticle" text="#SFUI_Off" value="0" />
+						<RadioButton group="sjexplodeparticle" text="#SFUI_On" value="1" />
+					</ChaosSettingsEnum>
+				</TooltipPanel>
+				<TooltipPanel class="settings-tooltip" tooltip="#MOM_Settings_SJ_Enable_Stickybomb_Decals_TT">
+					<ChaosSettingsEnum text="#MOM_Settings_SJ_Enable_Stickybomb_Decals" convar="mom_sj_decals_enable">
+						<RadioButton group="sjdecals" text="#SFUI_Off" value="0" />
+						<RadioButton group="sjdecals" text="#SFUI_On" value="1" />
+					</ChaosSettingsEnum>
+				</TooltipPanel>
+				<TooltipPanel class="settings-tooltip" tooltip="#MOM_Settings_SJ_Enable_Explosion_Sound_TT">
+					<ChaosSettingsEnum text="#MOM_Settings_SJ_Enable_Explosion_Sound" convar="mom_sj_sound_explosion_enable">
+						<RadioButton group="sjexplodesound" text="#SFUI_Off" value="0" />
+						<RadioButton group="sjexplodesound" text="#SFUI_On" value="1" />
+					</ChaosSettingsEnum>
+				</TooltipPanel>
+				<TooltipPanel class="settings-tooltip" tooltip="#MOM_Settings_SJ_Enable_Detonation_Fail_Sound_TT">
+					<ChaosSettingsEnum text="#MOM_Settings_SJ_Enable_Detonation_Fail_Sound" convar="mom_sj_sound_detonate_fail_enable">
+						<RadioButton group="sjfailsound" text="#SFUI_Off" value="0" />
+						<RadioButton group="sjfailsound" text="#SFUI_On" value="1" />
+					</ChaosSettingsEnum>
+				</TooltipPanel>
+				<TooltipPanel class="settings-tooltip" tooltip="#MOM_Settings_SJ_Enable_Detonation_Success_Sound_TT">
+					<ChaosSettingsEnum text="#MOM_Settings_SJ_Enable_Detonation_Success_Sound" convar="mom_sj_sound_detonate_success_enable">
+						<RadioButton group="sjsuccesssound" text="#SFUI_Off" value="0" />
+						<RadioButton group="sjsuccesssound" text="#SFUI_On" value="1" />
+					</ChaosSettingsEnum>
+				</TooltipPanel>
+				<TooltipPanel class="settings-tooltip" tooltip="#MOM_Settings_SJ_Enable_Charge_Sound_TT">
+					<ChaosSettingsEnum text="#MOM_Settings_SJ_Enable_Charge_Sound" convar="mom_sj_sound_charge_enable">
+						<RadioButton group="sjchargesound" text="#SFUI_Off" value="0" />
+						<RadioButton group="sjchargesound" text="#SFUI_On" value="1" />
+					</ChaosSettingsEnum>
+				</TooltipPanel>
+				<TooltipPanel class="settings-tooltip" tooltip="#MOM_Settings_SJ_Enable_Shoot_Sound_TT">
+					<ChaosSettingsEnum text="#MOM_Settings_SJ_Enable_Shoot_Sound" convar="mom_sj_sound_shot_enable">
+						<RadioButton group="sjshootsound" text="#SFUI_Off" value="0" />
+						<RadioButton group="sjshootsound" text="#SFUI_On" value="1" />
+					</ChaosSettingsEnum>
+				</TooltipPanel>
+				<TooltipPanel class="settings-tooltip" tooltip="#MOM_Settings_SJ_ChargedShotSoundTheshold_TT">
+					<ChaosSettingsSlider text="#MOM_Settings_SJ_ChargedShotSoundTheshold_Label" min="0" max="5" displayprecision="1" convar="mom_sj_sound_shot_charged_threshold" />
+				</TooltipPanel>
+				<TooltipPanel class="settings-tooltip" tooltip="#MOM_Settings_SJ_Enable_Chargemeter_TT">
+					<ChaosSettingsEnum text="#MOM_Settings_SJ_Enable_ChargeMeter" convar="mom_hud_sj_chargemeter_enable">
+						<RadioButton group="chargemeter" text="#SFUI_Off" value="0" />
+						<RadioButton group="chargemeter" text="#SFUI_On" value="1" />
+					</ChaosSettingsEnum>
+				</TooltipPanel>
+				<TooltipPanel class="settings-tooltip" tooltip="#MOM_Settings_SJ_Enable_Sticky_Counter_TT">
+					<ChaosSettingsEnum text="#MOM_Settings_SJ_Enable_Sticky_Counter" convar="mom_hud_sj_stickycount_enable">
+						<RadioButton group="stickycounter" text="#SFUI_Off" value="0" />
+						<RadioButton group="stickycounter" text="#SFUI_On" value="1" />
+					</ChaosSettingsEnum>
+				</TooltipPanel>
 				<ChaosSettingsEnumDropDown text="#MOM_Settings_SJ_ChargeMeter_Units_Label" convar="mom_hud_sj_chargemeter_units">
 					<Label id="sjunits1" text="#MOM_Settings_SJ_ChargeMeter_Units_Type_None" value="0" />
 					<Label id="sjunits2" text="#MOM_Settings_SJ_ChargeMeter_Units_Type_1" value="1" />
 					<Label id="sjunits3" text="#MOM_Settings_SJ_ChargeMeter_Units_Type_2" value="2" />
 				</ChaosSettingsEnumDropDown>
-				<ChaosSettingsSlider text="#MOM_Settings_SJ_DrawDelayEntry_Label" min="0" max="1" displayprecision="1" convar="mom_sj_stickybomb_drawdelay" />
+				<TooltipPanel class="settings-tooltip" tooltip="#MOM_Settings_SJ_DrawDelayEntry_TT">
+					<ChaosSettingsSlider text="#MOM_Settings_SJ_DrawDelayEntry_Label" min="0" max="1" displayprecision="1" convar="mom_sj_stickybomb_drawdelay" />
+				</TooltipPanel>
 			</Panel>
 		</Panel>
 	</Panel>
