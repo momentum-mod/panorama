@@ -2614,6 +2614,14 @@ EdgeScrollBar.Vertical #MaxButton
     height: 100%;
 }
 
+.fill-width {
+	width: fill-parent-flow(1.0);
+}
+
+.fill-height {
+	height: fill-parent-flow(1.0);
+}
+
 .vertical-separator
 {
 	vertical-align: middle;

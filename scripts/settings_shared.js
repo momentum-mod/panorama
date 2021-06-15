@@ -97,6 +97,10 @@ class SettingsMenuShared {
 			// Tell C++ to init controls from convars
 			$.DispatchEvent( "ChaosVideoSettingsInit" );
 		}
+		else if ( newTab == 'OnlineSettings' )
+		{
+			SettingsMenuShared.onlineSettingsUpdateModel();
+		}
 		
 		const newTabPanel = $.GetContextPanel().FindChildInLayoutFile( newTab );
 		SettingsMenuShared.refreshControlsRecursive( newTabPanel );
@@ -159,6 +163,23 @@ class SettingsMenuShared {
 	{
 		$.DispatchEvent( "ChaosApplyVideoSettings" );
 		SettingsMenuShared.videoSettingsResetUserInput();
+	}
+	
+	static onlineSettingsUpdateModel()
+	{
+		const color = GameInterfaceAPI.GetSettingColor("mom_ghost_color");
+		$.Msg(color);
+		const bodygroup = GameInterfaceAPI.GetSettingInt("mom_ghost_bodygroup");
+		
+		const onlineSettingsPanel = $('#OnlineSettings');
+		const ghostPreview = onlineSettingsPanel.FindChildInLayoutFile('GhostModelPreview');
+		ghostPreview.SetCameraFOV(60.0);
+		ghostPreview.SetModelRotationBoundsEnabled(true, false, false);
+		ghostPreview.SetModelRotationBoundsX(-90.0, 90.0);
+		ghostPreview.LookAtModel();
+		ghostPreview.SetCameraOffset(-100.0, 0.0, 0.0);
+		ghostPreview.SetModelColor(color);
+		ghostPreview.SetModelBodygroup(1, bodygroup);
 	}
 
 	static showConfirmDiscard( discardCall )
