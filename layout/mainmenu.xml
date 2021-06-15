@@ -29,7 +29,7 @@
 		</snippet>
 	</snippets>
 
-	<ChaosMainMenu class="InitialDisplay MainMenuRootPanel" hittest="false" useglobalcontext="true" oncancel="MainMenuController.onEscapeKeyPressed();">
+	<ChaosMainMenu class="InitialDisplay MainMenuRootPanel" hittest="false" useglobalcontext="true" onload="MainMenuController.onMainMenuLoaded()" oncancel="MainMenuController.onEscapeKeyPressed();">
 		<Panel id="MainMenuMovieParent">
 			<!-- Movie added/removed dynamically when changing the visibility of the main menu -->
 		</Panel>
@@ -84,12 +84,19 @@
 				</Panel>
 				
 				<Panel class="full-width full-height left-right-flow">
-					<Panel id="HomeContent">
-						<Frame id="NewsPanel" class="MainMenuModeOnly" src="file://{resources}/layout/mainmenu_news.xml" />
-					</Panel>
-					<Panel id="JsMainMenuContent" class="mainmenu-content mainmenu-content--hidden">
-						<Panel id="MainMenuContentBlur" class="full-width full-height" />
-						<!-- A panel gets inserted here dynamically from js, depending on which tab we click -->
+					<Panel id="MainMenuContent">
+						<Panel id="HomeContent">
+							<Frame id="NewsPanel" class="MainMenuModeOnly" src="file://{resources}/layout/mainmenu_news.xml" />
+							<ModelPanel id="MainMenuModel"
+										src="models/custom_props/hd_logo.mdl"
+										cubemap="cubemaps/cubemap_menu_model_bg.hdr"
+										antialias="true"
+										mouse_rotate="true" />
+						</Panel>
+						<Panel id="JsMainMenuContent" class="mainmenu-content mainmenu-content--hidden">
+							<Panel id="MainMenuContentBlur" class="full-width full-height" />
+							<!-- A panel gets inserted here dynamically from js, depending on which tab we click -->
+						</Panel>
 					</Panel>
 				
 					<Panel id="MainMenuOptionListRight" class="mainmenu-right-nav-list">

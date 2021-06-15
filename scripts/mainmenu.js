@@ -10,7 +10,6 @@ class MainMenuController {
 	static contentPanel = $( '#JsMainMenuContent' );
 	static playedInitialFadeUp = false;
 
-
 	static onInitFadeUp()
 	{
 		if( !MainMenuController.playedInitialFadeUp )
@@ -23,7 +22,6 @@ class MainMenuController {
 	{
 		MainMenuController.onInitFadeUp();
 	};
-
 
 	static onHideMainMenu()
 	{
@@ -168,11 +166,6 @@ class MainMenuController {
 		$('#HomeContent').RemoveClass('hidden');
 	};
 
-	static onHomeButtonPressed()
-	{
-		MainMenuController.onHideContentPanel();
-	}
-
 	static getActiveNavBarButton()
 	{
 		const elNavBar = $('#JsMainMenuNavBar');
@@ -186,11 +179,32 @@ class MainMenuController {
 			}
 		}
 	};
+	
+	static onMainMenuLoaded()
+	{
+		const model = $('#MainMenuModel');
+		
+		model.SetModelRotation(0.0, 270.0, 0.0); // Get arrow logo facing to the right, looks better
+		model.SetModelRotationSpeedTarget(0.0, 0.2, 0.0);
+		model.SetMouseXRotationScale(0.0, 1.0, 0.0); // By default mouse X will rotate the X axis, but we want it to spin Y axis
+		model.SetMouseYRotationScale(0.0, 0.0, 0.0); // Disable mouse Y movement rotations
+		
+		model.LookAtModel();
+		model.SetCameraOffset(-200.0, 0.0, 0.0);
+		model.SetCameraFOV(40.0);
+		
+		model.SetDirectionalLightColor(0, 1.0, 1.0, 1.0);
+		model.SetDirectionalLightDirection(0, 1.0, 0.0, 0.0);
+	}
 
 	//--------------------------------------------------------------------------------------------------
 	// Icon buttons functions
 	//--------------------------------------------------------------------------------------------------
 
+	static onHomeButtonPressed()
+	{
+		MainMenuController.onHideContentPanel();
+	}
 
 	static onQuitButtonPressed()
 	{

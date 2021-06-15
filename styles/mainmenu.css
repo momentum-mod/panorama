@@ -130,7 +130,7 @@
 }
 
 #HomeContent {
-	width: 45%;
+	width: fill-parent-flow(1.0);
 	height: 100%;
 
 	transition-property: opacity;
@@ -138,9 +138,21 @@
 	transition-timing-function: linear;
 }
 
+#MainMenuContent {
+	width: fill-parent-flow(1.0);
+	height: 100%;
+}
+
 #NewsPanel {
-	width: 100%;
+	width: 45%;
 	height: 50%;
+}
+
+#MainMenuModel {
+	width: 700px;
+	height: 100%;
+	horizontal-align: right;
+	vertical-align: middle;
 }
 
 .mainmenu-content {
