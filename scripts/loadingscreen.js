@@ -9,9 +9,10 @@ class LoadingScreen {
 		const tip = GameModeAPI.GetRandomTipForGameMode(gamemode);
 		$.GetContextPanel().SetDialogVariable("tip", $.LocalizeSafe(tip));
 		
-		$('#Author').visible = true;
-		$('#TierAndType').visible = true;
-		$('#NumZones').visible = true;
+		$('#MapName').visible = false;
+		$('#Author').visible = false;
+		$('#TierAndType').visible = false;
+		$('#NumZones').visible = false;
 		$('#BackgroundImage').visible = false;
 	}
 
@@ -25,6 +26,7 @@ class LoadingScreen {
 		if (!mapData) {
 			// No data to go off of, just set the map name and hide the rest
 			$.GetContextPanel().SetDialogVariable("mapname", mapName);
+			$('#MapName').visible = true;
 			
 			$('#Author').visible = false;
 			$('#TierAndType').visible = false;
@@ -40,6 +42,11 @@ class LoadingScreen {
 		$.GetContextPanel().SetDialogVariable("tracktype", mapData.mainTrack.isLinear ? 'Linear' : 'Staged');
 		$.GetContextPanel().SetDialogVariable("author", mapData.credits[0].user.alias);
 		
+		$('#MapName').visible = true;
+		$('#Author').visible = true;
+		$('#TierAndType').visible = true;
+		$('#NumZones').visible = true;
+		
 		const backgroundImageLoaded = function () {
 			$('#BackgroundImage').visible = true;
 		}
@@ -54,6 +61,6 @@ class LoadingScreen {
 
 
 ( function() {
-	$.RegisterForUnhandledEvent( 'PopulateLoadingScreen', LoadingScreen.updateLoadingScreenInfo );
+	$.RegisterForUnhandledEvent( 'MapCache_MapLoad', LoadingScreen.updateLoadingScreenInfo );
 	$.RegisterForUnhandledEvent( 'UnloadLoadingScreenAndReinit', LoadingScreen.init );
 })();
