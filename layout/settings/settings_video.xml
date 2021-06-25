@@ -19,10 +19,10 @@
 			
 			<Panel class="horizontal-align-right left-right-flow">
 				<Button id="BtnApplyVideoSettings" onactivate='SettingsMenuShared.videoSettingsApplyChanges()'>
-					<Label text="#GameUI_Apply" />
+					<Label text="#MOM_Settings_Apply" />
 				</Button>
 				<Button id="BtnDiscardVideoSettingChanges" onactivate='SettingsMenuShared.showConfirmDiscard(SettingsMenuShared.videoSettingsDiscardChanges)'>
-					<Label text="#GameUI_Discard" />
+					<Label text="#MOM_Settings_Discard" />
 				</Button>
 			</Panel>
 		</Panel>
@@ -31,6 +31,18 @@
 			<Panel id="SettingsVideoSettings" class="settings-group">
 				<Label class="header" text="#MOM_Settings_Title_Video" />
 				
+					<TooltipPanel class="settings-tooltip" tooltip="#MOM_Settings_Menu_Movie_TT">
+						<ChaosSettingsEnum text="#MOM_Settings_Menu_Movie" convar="mom_ui_menu_background_video">
+							<RadioButton group="mainmenuvideo" text="#SFUI_Off" value="0" onactivate="SettingsMenuShared.setMainMenuBackgroundType(0)"/>
+							<RadioButton group="mainmenuvideo" text="#SFUI_On" value="1" onactivate="SettingsMenuShared.setMainMenuBackgroundType(1)"/>
+						</ChaosSettingsEnum>
+					</TooltipPanel>
+					<TooltipPanel class="settings-tooltip" tooltip="#MOM_Settings_Menu_Type_TT">
+						<ChaosSettingsEnumDropDown text="#MOM_Settings_Menu_Type" convar="mom_ui_menu_background_type" onuserinputsubmit="$.DispatchEvent('ReloadBackground');">
+							<Label text="#MOM_Settings_Menu_Type_0" value="0" id="bgtype0"/>
+							<Label text="#MOM_Settings_Menu_Type_1" value="1" id="bgtype1"/>
+						</ChaosSettingsEnumDropDown>
+					</TooltipPanel>
 				<ChaosSettingsSlider text="#GameUI_FOV" min="90" max="179" convar="fov_desired" />
 				<ChaosSettingsEnumDropDown text="Color Mode" onuserinputsubmit="SettingsMenuShared.videoSettingsOnUserInputSubmit()" id="ColorMode">
 					<Label text="#GameUI_DisplayMonitor" value="0" id="tvmode0" />

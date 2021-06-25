@@ -30,9 +30,12 @@
 	</snippets>
 
 	<ChaosMainMenu class="InitialDisplay MainMenuRootPanel" hittest="false" useglobalcontext="true" onload="MainMenuController.onMainMenuLoaded()" oncancel="MainMenuController.onEscapeKeyPressed();">
-		<Panel id="MainMenuMovieParent">
+		<BaseBlurTarget id="MainMenuBlur" blurrects="MainMenuContentBlur JsMainMenuNavBar MainMenuOptionListRight">
+			<Panel id="MainMenuMovieParent">
 			<!-- Movie added/removed dynamically when changing the visibility of the main menu -->
-		</Panel>
+			</Panel>
+		</BaseBlurTarget>
+
 		<!-- Background video -->
 		<Panel id="MainMenuVanityParent">
 			<!-- Vanity is not used but the engine needs this to exist -->
@@ -40,8 +43,9 @@
 
 		<Panel id="MainMenuInput" class="mainmenu-container">
 			<BaseBlurTarget id="MainMenuBlur" blurrects="MainMenuContentBlur JsMainMenuNavBar MainMenuOptionListRight">
+				
 				<!-- In main menu, show the background -->
-				<Image class="full-width full-height MainMenuModeOnly" src="file://{images}/bg_00.vtf" />
+				<Image id="MainMenuBackground" class="full-width full-height MainMenuModeOnly" />
 
 				<!-- In pause menu, show the existing backbuffer -->
 				<ChaosBackbufferImagePanel class="full-width full-height PauseMenuModeOnly" />

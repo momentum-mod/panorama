@@ -114,7 +114,7 @@ class SettingsMenuShared {
 		$.DispatchEvent( "CSGOVideoSettingsResetDefault" );
 		SettingsMenuShared.resetControls();
 		SettingsMenuShared.videoSettingsOnUserInputSubmit();
-	};
+	}
 	
 	// State logic to tracking if there are changes to apply or discard:
 	// Changes in panel controls -> enable both
@@ -180,6 +180,13 @@ class SettingsMenuShared {
 		ghostPreview.SetCameraOffset(-100.0, 0.0, 0.0);
 		ghostPreview.SetModelColor(color);
 		ghostPreview.SetModelBodygroup(1, bodygroup);
+	}
+
+	static setMainMenuBackgroundType(type)
+	{
+		GameInterfaceAPI.SetSettingInt('mom_ui_menu_background_video', type); 
+		
+		$.DispatchEvent('ReloadBackground');
 	}
 
 	static showConfirmDiscard( discardCall )

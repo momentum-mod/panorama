@@ -8,6 +8,8 @@ class MainMenuController {
 
 	static activeTab = '';
 	static contentPanel = $( '#JsMainMenuContent' );
+	static videoPanel = '';
+	static imagePanel = '';
 	static playedInitialFadeUp = false;
 
 	static onInitFadeUp()
@@ -16,31 +18,36 @@ class MainMenuController {
 		{
 			MainMenuController.playedInitialFadeUp = true;
 		}
-	};
+	}
 
 	static onShowMainMenu()
 	{
 		MainMenuController.onInitFadeUp();
-	};
+
+		MainMenuController.videoPanel = $( '#MainMenuMovie' );
+		MainMenuController.imagePanel = $( '#MainMenuBackground' );
+
+		MainMenuController.setMainMenuBackground();
+	}
 
 	static onHideMainMenu()
 	{
 		$.Msg("Hide main menu");
 
 		UiToolkitAPI.CloseAllVisiblePopups();
-	};
+	}
 
 	static onShowPauseMenu()
 	{
 		$.GetContextPanel().AddClass( 'MainMenuRootPanel--PauseMenuMode' );
-	};
+	}
 
 	static onHidePauseMenu()
 	{
 		$.GetContextPanel().RemoveClass( 'MainMenuRootPanel--PauseMenuMode' );
 
 		MainMenuController.onHomeButtonPressed();
-	};
+	}
 
 	static checkTabCanBeOpenedRightNow(tab)
 	{
@@ -110,10 +117,10 @@ class MainMenuController {
 			// If the tab exists then hide it
 			if( MainMenuController.activeTab )
 			{
-				const panelToHide = $.GetContextPanel().FindChildInLayoutFile(m_activeTab);
+				const panelToHide = $.GetContextPanel().FindChildInLayoutFile(MainMenuController.activeTab);
 				panelToHide.AddClass( 'mainmenu-content--hidden' );
 
-				$.Msg( 'HidePanel: ' + m_activeTab  );
+				$.Msg( 'HidePanel: ' + MainMenuController.activeTab  );
 			}
 			
 			//Show selected tab
@@ -129,7 +136,7 @@ class MainMenuController {
 		}
 
 		MainMenuController.showContentPanel();
-	};
+	}
 
 
 	static showContentPanel()
@@ -141,7 +148,8 @@ class MainMenuController {
 		$.DispatchEvent( 'ShowContentPanel' );
 		
 		$('#HomeContent').AddClass('hidden');
-	};
+		
+	}
 
 	static onHideContentPanel()
 	{
@@ -164,7 +172,7 @@ class MainMenuController {
 		MainMenuController.activeTab = '';
 		
 		$('#HomeContent').RemoveClass('hidden');
-	};
+	}
 
 	static getActiveNavBarButton()
 	{
@@ -178,7 +186,7 @@ class MainMenuController {
 				return children[ i ];
 			}
 		}
-	};
+	}
 	
 	static onMainMenuLoaded()
 	{
@@ -195,6 +203,43 @@ class MainMenuController {
 		
 		model.SetDirectionalLightColor(0, 0.5, 0.5, 0.5);
 		model.SetDirectionalLightDirection(0, 1.0, 0.0, 0.0);
+	}
+
+	static setMainMenuBackground() 
+	{
+		const videoPanel = MainMenuController.videoPanel;
+		const imagePanel = MainMenuController.imagePanel;
+
+		const useVideo = GameInterfaceAPI.GetSettingBool('mom_ui_menu_background_video') && videoPanel && videoPanel.IsValid();
+
+		videoPanel.visible = useVideo;
+		videoPanel.SetReadyForDisplay(useVideo);
+
+		imagePanel.visible = !useVideo;
+		imagePanel.SetReadyForDisplay(!useVideo);
+
+		var name = '';
+
+		// Using a switch as we're likely to add more of these in the future
+		switch (GameInterfaceAPI.GetSettingInt('mom_ui_menu_background_type')) 
+		{
+			case 1:
+				name = 'MomentumDark';
+				break;
+			default:
+				name = 'MomentumLight';
+		}
+
+		if (useVideo) 
+		{
+			videoPanel.SetMovie('file://{resources}/videos/backgrounds/' + name + '.webm');
+
+			videoPanel.Play();
+		} 
+		else 
+		{
+			imagePanel.SetImage('file://{images}/backgrounds/' + name + '.dds')
+		}
 	}
 
 	//--------------------------------------------------------------------------------------------------
@@ -233,7 +278,7 @@ class MainMenuController {
 		if ( $.GetContextPanel().HasClass( 'MainMenuRootPanel--PauseMenuMode' ) ) {
 			$.DispatchEvent( 'ChaosMainMenuResumeGame' );
 		}
-	};
+	}
 }
 
 
@@ -246,6 +291,8 @@ class MainMenuController {
 	$.RegisterForUnhandledEvent('ChaosHideMainMenu', MainMenuController.onHideMainMenu);
 	$.RegisterForUnhandledEvent('ChaosShowPauseMenu', MainMenuController.onShowPauseMenu);
 	$.RegisterForUnhandledEvent('ChaosHidePauseMenu', MainMenuController.onHidePauseMenu);
+
+	$.RegisterForUnhandledEvent('ReloadBackground', MainMenuController.setMainMenuBackground);
 
 	$.RegisterEventHandler( "Cancelled", $.GetContextPanel(), MainMenuController.onEscapeKeyPressed );
 })();
