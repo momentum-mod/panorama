@@ -155,6 +155,35 @@
 	vertical-align: middle;
 }
 
+.mainmenu-movie {
+	width: 1920px;
+	height: 1080px;
+	overflow: noclip;
+}
+
+.AspectRatio4x3 .mainmenu-movie,
+.AspectRatio5x4 .mainmenu-movie
+{
+	                                                                                                                                                               
+	transform: translateX( -17% );
+	overflow: noclip;
+}
+
+.AspectRatio16x10 .mainmenu-movie
+{
+	                                                                                                                                                               
+	transform: translateX( -10% );
+	overflow: noclip;
+}
+
+.AspectRatio21x9 .mainmenu-movie
+{
+	width: 2580px;
+	height: 1080px;
+	transform: scaleY( 1.3 ) translateY( -15% );
+	overflow: noclip;
+}
+
 .mainmenu-content {
 	width: fill-parent-flow(1.0);
 	height: 100%;
