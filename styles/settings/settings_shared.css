@@ -1,7 +1,6 @@
 .content-navbar {
 	width: 100%;
-	background-color: rgba(255, 255, 255, 0.01);
-	margin: 10px 0px;
+	background-color: rgba(68, 68, 68, 0.1);
 	margin-top: 10px;
 }
 
@@ -97,23 +96,25 @@
 	horizontal-align: center;
 	margin: 0px;
 	padding: 4px 10px;
-	color: #828282;
+	color: rgb(210, 210, 210);
 }
 
 .tab-group > RadioButton:hover,
 .tab-group > .horizontal-align-right > Button:hover {
 	background-color: rgba(255, 255, 255, 0.3);
 }
-
+.tab-group > .horizontal-align-right > Button:disabled > Label {
+	color: rgb(177, 177, 177);
+}
 .tab-group > RadioButton:hover > Label,
 .tab-group > .horizontal-align-right > Button:hover > Label {
-	color: #ffffff;
+	color: rgb(255, 255, 255);
 }
 .tab-group > .horizontal-align-right > Button:hover:disabled {
-	background-color: #ffffff00;
+	background-color: rgba(0, 0, 0, 0);
 }
 .tab-group > .horizontal-align-right > Button:hover:disabled > Label {
-	color: #828282;
+	color: rgb(130,130,130);
 }
 
 .tab-group > RadioButton:selected {
@@ -121,7 +122,7 @@
 }
 
 .tab-group > RadioButton:selected > Label {
-	color: #ffffff;
+	color: rgb(255, 255, 255);
 }
 
 .tab-group .RadioBox {
@@ -140,12 +141,12 @@
 {
 	0%
 	{
-		background-color: rgba(255, 255, 255, 0.10) ;
+		background-color: rgba(255, 255, 255, 0.3) ;
 	}
 
 	100%
 	{
-		background-color: rgba(255, 255, 255, 0.000);
+		background-color: rgba(255, 255, 255, 0);
 	}
 }
 
