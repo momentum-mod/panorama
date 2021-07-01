@@ -193,7 +193,7 @@ class MainMenuController {
 		model.SetCameraOffset(-200.0, 0.0, 0.0);
 		model.SetCameraFOV(40.0);
 		
-		model.SetDirectionalLightColor(0, 1.0, 1.0, 1.0);
+		model.SetDirectionalLightColor(0, 0.5, 0.5, 0.5);
 		model.SetDirectionalLightDirection(0, 1.0, 0.0, 0.0);
 	}
 
