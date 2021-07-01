@@ -17,9 +17,6 @@
 	blur: fastgaussian( 4, 4, 3 );
 }
 
-.VerticalDivider {
-	background-color: #ffffff33;
-}
 
 .mainmenu-container {
 	width: 100%;
@@ -29,14 +26,14 @@
 .mainmenu-nav-list {
 	width: 100%;
 	height: 100px;
-	background-color: rgba(68, 68, 68, 0.7);
+	background-color: rgba(48, 48, 48, 0.3);
 	flow-children: right;
 }
 
 .mainmenu-right-nav-list {
 	height: 100%;
 	width: 50px;
-	background-color: rgba(68, 68, 68, 0.7);
+	background-color: rgba(48, 48, 48, 0.3);
 	flow-children: down;
 	horizontal-align: right;
 }
@@ -49,7 +46,7 @@
 #HomeButton {
 	height: 100%;
 	background-color: #ffffff00;
-	transition: background-color 0.1s ease-in-out 0s;
+	transition: background-color 0.25s ease-in-out 0s;
 }
 
 #HomeButton:hover {
@@ -63,24 +60,24 @@
 .mainmenu-nav-item {
 	height: 100%;
 	vertical-align: middle;
-	background-color: #ffffff00;
+	background-color: rgba(0, 0, 0, 0);
 	padding: 25px 25px;
-	transition: background-color 0.1s ease-in-out 0s;
+	transition: background-color 0.25s ease-in-out 0s;
 }
 
 .mainmenu-nav-item:hover {
-	background-color: #ffffff26;
+	background-color: rgba(255, 255, 255, 0.15);
 }
 
 .mainmenu-nav-item:selected {
-	background-color: #ffffff26;
+	background-color: rgba(255, 255, 255, 0.15);
 }
 
 .mainmenu-nav-item > Image {
 	height: 100%;
 	width: height-percentage( 100% );
 	vertical-align: middle;
-	opacity: 0.51;
+	opacity: 0.75;
 	transition: opacity 0.1s ease-in-out 0s;
 }
 
@@ -150,6 +147,7 @@
 #MainMenuModel {
 	width: 700px;
 	height: 100%;
+	margin-right: 120px;
 	horizontal-align: right;
 	vertical-align: middle;
 }
@@ -194,7 +192,7 @@
 }
 
 #MainMenuContentBlur {
-	background-color: rgba(0, 0, 0, 0.8);
+	background-color: rgba(0, 0, 0, 0.75);
 }
 
 .hidden {
