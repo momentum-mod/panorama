@@ -407,10 +407,10 @@ DropDown.DropDownMenuVisible
 DropDown Label
 {
 	padding: 8px 12px;
-	margin-right: 32px;
+	margin-right: 24px;
 	vertical-align: center;
 	
-	font-size: 16px;
+	font-size: 20px;
 	font-family: 'Bebas Neue';
 	color: baseText;
 		
