@@ -8,7 +8,7 @@
 	</scripts>
 
 	<Panel onload="PlayerCard.onLoad()">
-		<Image class="full-width full-height" src="file://{images}/bg_dark.dds" scaling="stretch-to-cover-preserve-aspect" />
+		<Image class="full-width full-height" src="file://{images}/card_bg.png" scaling="stretch-to-cover-preserve-aspect" />
 		<Panel id="BlackOverlay" /> <!-- 50% opacity black overlay to make the white text readable -->
 		<Panel id="PlayerCard">
 			<ChaosAvatarImage id="PlayerAvatar" steamid="local" />
