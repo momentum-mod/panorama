@@ -58,6 +58,25 @@ class MainMenuSettings {
 
             SettingsMenuShared.newTabOpened( MainMenuSettings.activeTab );
         }	
+    
+	static styleAlternatingItems() {
+		$( '#SettingsMenuContent' ).FindChildrenWithClassTraverse( 'settings-group' ).forEach( group => {
+			var n = 0;
+			group.Children().forEach( item => {
+				if ( item.paneltype === 'TooltipPanel' )
+					item.Children().forEach( subitem => styleItem( subitem ));
+				else styleItem( item );
+				
+				function styleItem( panel )
+				{
+					if (MainMenuSettings.isSettingsPanel( panel ) )
+					{
+						n++;
+						n % 2 == 0 ? item.AddClass( 'even-row' ) : item.AddClass( 'odd-row' );
+					}
+				}
+			});
+		});
 	}
 }
 

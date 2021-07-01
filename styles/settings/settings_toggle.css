@@ -1,6 +1,7 @@
 ChaosSettingsToggle {
 	height: 48px;
 	flow-children: right;
+	padding: 0 4px 0 12px;
 	width: 100%;
 	vertical-align: middle;
 }

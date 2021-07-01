@@ -1,11 +1,12 @@
 .BindingRow
 {
-    background-color: none;
-    flow-children: right;
-    width: 100%;
-    height: 48px;
-    tooltip-position: bottom;
+	background-color: none;
+	flow-children: right;
+	width: 100%;
+	height: 48px;
+	tooltip-position: bottom;
 	horizontal-align: middle;
+	padding: 0 4px 0 12px;
 }
 
 

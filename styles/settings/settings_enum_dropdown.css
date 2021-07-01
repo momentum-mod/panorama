@@ -1,6 +1,7 @@
 ChaosSettingsEnumDropDown {
 	height: 48px;
 	width: 100%;
+	padding: 0 4px 0 12px;
 	flow-children: right;
 	vertical-align: middle;
 	horizontal-align: center;
