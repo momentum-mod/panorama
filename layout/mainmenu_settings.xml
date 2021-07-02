@@ -1,3 +1,4 @@
+<!-- MOM_TODO: Localise lots of stuff in here -->
 <root>
 	<styles>
 		<include src="file://{resources}/styles/chaosstyles.css" />
@@ -8,34 +9,49 @@
 	<scripts>
 		<include src="file://{resources}/scripts/settings_shared.js"/>
 		<include src="file://{resources}/scripts/mainmenu_settings.js"/>
+		<include src="file://{resources}/scripts/settings_search.js"/>
+		
 	</scripts>
 	
 	<Panel class="mainmenu-content__container" useglobalcontext="true">
-		<Label id="content-navbar__title" class="header" text="Settings"/>
 		
+		<Panel class="settings-header full-width">
+			<Label class="header" text="Settings"/>
+
+			<Panel class="settings-search">
+				<Image src="file://{images}/settings/searchIcon.svg" textureheight="64" />
+				<Panel class="settings-search-inner">
+					<TextEntry id="SettingsSearchTextEntry" maxchars="30" placeholder="Search..." /> 
+					<Button id="SettingsSearchClear" onactivate="SettingsMenuSearch.ClearSearch()">
+						<Image src="file://{images}/settings/searchCloseIcon.svg" textureheight="32" />
+					</Button>
+				</Panel>
+			</Panel>
+		</Panel>
+
 		<Panel class="content-navbar">
 			<Panel class="content-navbar__tabs tab-group">
-				<RadioButton group="SettingsNavBar" onactivate='MainMenuSettings.navigateToTab("InputSettings", "settings_input")' selected="true">
+				<RadioButton group="SettingsNavBar" onactivate='MainMenuSettings.navigateToTab("InputSettings")' selected="true">
 				  <Label text="Input"/>
 				</RadioButton>
 
-				<RadioButton group="SettingsNavBar" onactivate='MainMenuSettings.navigateToTab("AudioSettings", "settings_audio")'>
+				<RadioButton group="SettingsNavBar" onactivate='MainMenuSettings.navigateToTab("AudioSettings")'>
 				  <Label text="Audio"/>
 				</RadioButton>
 
-				<RadioButton group="SettingsNavBar" onactivate='MainMenuSettings.navigateToTab("VideoSettings", "settings_video")'>
+				<RadioButton group="SettingsNavBar" onactivate='MainMenuSettings.navigateToTab("VideoSettings")'>
 				  <Label text="Video"/>
 				</RadioButton>
 
-				<RadioButton group="SettingsNavBar" onactivate='MainMenuSettings.navigateToTab("OnlineSettings", "settings_online")'>
+				<RadioButton group="SettingsNavBar" onactivate='MainMenuSettings.navigateToTab("OnlineSettings")'>
 				  <Label text="Online"/>
 				</RadioButton>
 
-				<RadioButton group="SettingsNavBar" onactivate='MainMenuSettings.navigateToTab("GameplaySettings", "settings_gameplay")'>
+				<RadioButton group="SettingsNavBar" onactivate='MainMenuSettings.navigateToTab("GameplaySettings")'>
 				  <Label text="Gameplay"/>
 				</RadioButton>
 
-				<RadioButton group="SettingsNavBar" onactivate='MainMenuSettings.navigateToTab("HUDSettings", "settings_hud")'>
+				<RadioButton group="SettingsNavBar" onactivate='MainMenuSettings.navigateToTab("HUDSettings")'>
 				  <Label text="HUD"/>
 				</RadioButton>
 			</Panel>

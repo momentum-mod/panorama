@@ -1,0 +1,33 @@
+<root>
+
+<styles>
+	<include src="file://{resources}/styles/chaosstyles.css" />
+	<include src="file://{resources}/styles/settings/settings_shared.css" />
+</styles>
+
+	<scripts>
+		<include src="file://{resources}/scripts/settings_shared.js"/>
+	</scripts>
+
+	<snippets>
+		<snippet name="SearchResult">
+			<Button class="settings-search-result">
+				<Label id="ResultString"/>
+				<Panel class="IconButton horizontal-align-right vertical-center">
+				</Panel>
+			</Button>
+		</snippet>
+	</snippets>
+
+    <Panel class="settings-tab">
+			<Panel class="settings-scroll-container">
+				<Panel id="Search" class="settings-group">
+				<!-- MOM_TODO: localise -->
+					<Label class="header" text="#MOM_Settings_Search_Results" />
+					<Panel id="SearchResultsContainer">
+
+					</Panel>
+				</Panel>
+			</Panel>
+    </Panel>
+</root>

@@ -2,6 +2,7 @@
 	<styles>
 		<include src="file://{resources}/styles/chaosstyles.css" />
 		<include src="file://{resources}/styles/settings/settings_enum_dropdown.css" />
+		<include src="file://{resources}/styles/settings/settings_shared.css" />
 	</styles>
   
 	<ChaosSettingsEnumDropDown>

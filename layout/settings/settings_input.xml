@@ -21,7 +21,7 @@
 		<Panel class="settings-scroll-container">
 			<Panel id="SettingsMouseSettings" class="settings-group">
 				<Label class="header" text="#MOM_Settings_Title_Mouse" />
-				
+
 				<ChaosSettingsSlider text="#GameUI_MouseSensitivity" min="0.1" max="10" displayprecision="2" convar="sensitivity" />
 				<ChaosSettingsEnum text="#GameUI_MouseAcceleration" convar="m_customaccel">
 					<RadioButton group="maccel" text="#SFUI_Off" value="0" />
@@ -38,7 +38,7 @@
 					<ChaosSettingsEnum text="#GameUI_ReverseMouse" convar="m_pitch_inverse">
 						<RadioButton group="reverse" text="#SFUI_Off" value="0" />
 						<RadioButton group="reverse" text="#SFUI_On" value="1" />
-					</ChaosSettingsEnum>#
+					</ChaosSettingsEnum>
 				</TooltipPanel>
 				<TooltipPanel class="settings-tooltip" tooltip="#GameUI_MouseFilterLabel">
 				<ChaosSettingsEnum text="#GameUI_MouseFilter" convar="m_filter">

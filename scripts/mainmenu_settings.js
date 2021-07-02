@@ -1,9 +1,20 @@
 "use strict";
 
 class MainMenuSettings {
+    
+    static settingsTabs = {
+        InputSettings: 'settings_input',
+        AudioSettings: 'settings_audio',
+        VideoSettings: 'settings_video',
+        OnlineSettings: 'settings_online',
+        GameplaySettings: 'settings_gameplay',
+        HUDSettings: 'settings_hud',
+        SearchSettings: 'settings_search',
+    }
+
 	static activeTab = null;
 	
-	static navigateToTab(tab, xmlName) {
+	static navigateToTab(tab) {
         const parentPanel = $('#SettingsMenuContent');
 
         // Check to see if tab to show  exists.
@@ -12,7 +23,7 @@ class MainMenuSettings {
             const newPanel = $.CreatePanel('Panel', parentPanel, tab);
             $.Msg( 'Created Panel with id: ' + newPanel.id );
 
-            newPanel.LoadLayout('file://{resources}/layout/settings/' + xmlName + '.xml', false, false );
+            newPanel.LoadLayout('file://{resources}/layout/settings/' + MainMenuSettings.settingsTabs[tab] + '.xml', false, false );
             
             // Handler that catches OnPropertyTransitionEndEvent event for this panel.  
             // Check if the panel is transparent then collapse it. 
@@ -56,8 +67,27 @@ class MainMenuSettings {
 			activePanel.visible = true;
 			activePanel.SetReadyForDisplay( true );
 
+            MainMenuSettings.styleAlternatingItems();
+
             SettingsMenuShared.newTabOpened( MainMenuSettings.activeTab );
         }	
+	}
+
+    static navigateToSettingPanel( tab, panel )
+    {
+        MainMenuSettings.navigateToTab( tab );
+        panel.ScrollParentToMakePanelFit( 3, false );
+        panel.SetFocus();
+        panel.AddClass( 'Highlight' );
+        var kfs = panel.CreateCopyOfCSSKeyframes( 'settings-highlight' );
+        panel.UpdateCurrentAnimationKeyframes( kfs )
+    }
+
+    static isSettingsPanel ( panel )
+    {
+        return (['ChaosSettingsEnum', 'ChaosSettingsSlider', 'ChaosSettingsEnumDropDown', 'ChaosSettingsKeyBinder', 'ChaosSettingsToggle']
+            .includes( panel.paneltype )); 
+    }
     
 	static styleAlternatingItems() {
 		$( '#SettingsMenuContent' ).FindChildrenWithClassTraverse( 'settings-group' ).forEach( group => {
@@ -77,12 +107,20 @@ class MainMenuSettings {
 				}
 			});
 		});
-	}
+    }
 }
 
 //--------------------------------------------------------------------------------------------------
 // Entry point called when panel is created
 //--------------------------------------------------------------------------------------------------
 (function() {
-	MainMenuSettings.navigateToTab("InputSettings", "settings_input");
+    // Load in every tab. This is necessary for search to work, using the same silly technique that CS:GO does.
+    // Maybe worth moving initial loading from file into its own function?
+    for (let tab in MainMenuSettings.settingsTabs) {
+        if (tab != MainMenuSettings.settingsTabs.SearchSettings) {
+            MainMenuSettings.navigateToTab(tab);
+        }
+    }
+
+	MainMenuSettings.navigateToTab("InputSettings");
 })();

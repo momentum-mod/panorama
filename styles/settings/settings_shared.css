@@ -4,9 +4,14 @@
 	margin-top: 10px;
 }
 
+.settings-header {
+	flow-children: right;
+}
+
 .subheader {
 	margin-top: 16px;
 }
+
 .settings-tab {
 	width: 100%;
 	height: 100%;
@@ -43,6 +48,122 @@
 	width: 100%;
 	overflow: squish scroll;
 	flow-children: down;
+}
+
+.settings-search {
+	flow-children: right; 
+	vertical-align: middle;
+	margin-left: 20px;
+	width: 420px;
+	height: 64px;
+	background-color: rgba(0, 0, 0, 0.1);
+	padding: 0 10px;
+}
+
+.settings-search > Image {
+	width: 40px;
+	height: 40px;
+	opacity: 0.5;
+	vertical-align: middle;
+}
+
+.settings-search-inner {
+	width: 100%;
+	height: 100%;
+	margin-left: 10px;
+	height: 42px;
+	vertical-align: middle;
+}
+
+.settings-search-inner > TextEntry {
+	background-color: rgba(0, 0, 0, 0.5);
+	border-color: rgba(255, 255, 255, 0.4);
+	color:  rgba(255, 255, 255, 1);
+	border: 0px;
+	width: 100%;
+	vertical-align: middle;
+
+	
+	transition-property: background-color, border;
+	transition-duration: 0.2s;
+	
+	/* Aligning the placeholder text with the textentry is weird, force it down a little to avoid clipping */
+	padding: 10px 8px;
+	height: 42px;
+}
+
+.settings-search-inner:hover > TextEntry {
+	background-color: rgba(0, 0, 0, 0.8);
+	border-color: rgba(255, 255, 255, 1.0);
+}
+
+.settings-search-inner > TextEntry #PlaceholderText {
+	color: rgba(218, 218, 218, 0.9);
+	height: 52px;
+	vertical-align: middle;
+}
+
+.settings-search-inner > Button {
+	width: 24px;
+	height: 24px;
+	margin-right: 8px;
+
+	horizontal-align: right;
+	vertical-align: middle;
+	
+	background-color: none;
+	border-radius: 0;
+}
+
+.settings-search-inner > Button > Image {
+	vertical-align: middle;
+	opacity: 0.25;
+
+	transition: opacity 0.2s ease-in-out 0s;
+}
+
+.settings-search-inner:hover > Button > Image {
+	opacity: 0.5;
+}
+
+.settings-search-inner > Button > Image:hover {
+	opacity: 1.0;
+}
+
+#SearchResultsContainer
+{
+	width: 100%;
+	flow-children: down;
+}
+
+.settings-search-result
+{ 
+	horizontal-align: left;
+	width: 100%;
+	height: 48px;
+	margin: 0px 32px;
+
+	transition-property: background-color, border;
+	transition-duration: 0.2s;
+	transition-timing-function: ease-in-out;
+}
+
+.settings-search-result Label
+{
+	padding-left: 12px;
+	transform: translateX(0);
+	transition: transform 0.2s ease-in-out 0s;
+}
+
+.settings-search-result:hover
+{
+	background-color: rgba(0, 0, 0, 0.5);
+	border-left: 2px solid rgba(255, 255, 255, 0.6);
+}
+
+.settings-search-result:hover Label
+{
+	transform: translateX(5px);
 }
 
 .settings-horizontal-separator

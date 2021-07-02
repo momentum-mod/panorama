@@ -1,7 +1,8 @@
 <root>
   <styles>
-    <include src="file://{resources}/styles/chaosstyles.css" />
-    <include src="file://{resources}/styles/settings/settings_keybinder.css" />
+		<include src="file://{resources}/styles/chaosstyles.css" />
+		<include src="file://{resources}/styles/settings/settings_keybinder.css" />
+		<include src="file://{resources}/styles/settings/settings_shared.css" />
   </styles>
 
 	<ChaosSettingsKeyBinder class="BindingRow">
