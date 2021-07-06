@@ -20,7 +20,7 @@
 
 			<Panel class="settings-search">
 				<Image src="file://{images}/settings/searchIcon.svg" textureheight="64" />
-				<Panel class="settings-search-inner">
+				<Panel class="settings-search-inner" acceptsfocus="true">
 					<TextEntry id="SettingsSearchTextEntry" maxchars="30" placeholder="Search..." /> 
 					<Button id="SettingsSearchClear" onactivate="SettingsMenuSearch.ClearSearch()">
 						<Image src="file://{images}/settings/searchCloseIcon.svg" textureheight="32" />

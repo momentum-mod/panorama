@@ -8,21 +8,21 @@ class SettingsMenuSearch {
 
 	static Init() 
 	{
-		$.RegisterEventHandler('ReadyForDisplay', this.searchTextEntry, function () {
-			this.searchTextEntry.SetFocus();
-			this.searchTextEntry.RaiseChangeEvents(true);
+		$.RegisterEventHandler('ReadyForDisplay', SettingsMenuSearch.searchTextEntry, function () {
+			SettingsMenuSearch.searchTextEntry.SetFocus();
+			SettingsMenuSearch.searchTextEntry.RaiseChangeEvents(true);
 		});
-		$.RegisterEventHandler('UnreadyForDisplay', this.searchTextEntry, function () {
-			this.searchTextEntry.SetFocus();
-			this.searchTextEntry.RaiseChangeEvents(false);
+		$.RegisterEventHandler('UnreadyForDisplay', SettingsMenuSearch.searchTextEntry, function () {
+			SettingsMenuSearch.searchTextEntry.GetParent().SetFocus();
+			SettingsMenuSearch.searchTextEntry.RaiseChangeEvents(false);
 		});
 
-		this.searchTextEntry.RegisterForReadyEvents(true);
-		this.searchTextEntry.SetReadyForDisplay(true);
+		SettingsMenuSearch.searchTextEntry.RegisterForReadyEvents(true);
+		SettingsMenuSearch.searchTextEntry.SetReadyForDisplay(true);
 
-		this.searchTextEntry.SetPanelEvent('ontextentrychange', this.OnTextEntryChanged);
+		SettingsMenuSearch.searchTextEntry.SetPanelEvent('ontextentrychange', SettingsMenuSearch.OnTextEntryChanged);
 
-		this.clearButton.visible = false;
+		SettingsMenuSearch.clearButton.visible = false;
 	}
 
 	static OnTextEntryChanged() 
