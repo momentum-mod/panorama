@@ -65,6 +65,11 @@ class MainMenuController {
 			return;	// validate that tabs can be opened (GC connection / China free-to-play / etc.)
 		}
 
+		if (MainMenuController.activeTab == tab) {
+			$.DispatchEvent("Activated", $("#HomeButton"), "mouse");
+			return;
+		}
+
 		//$.DispatchEvent('PlayMainMenuMusic', true, false, null );
 
 		// Check to see if tab to show exists.
