@@ -3,13 +3,33 @@
 class MainMenuSettings {
     
     static settingsTabs = {
-        InputSettings: 'settings_input',
-        AudioSettings: 'settings_audio',
-        VideoSettings: 'settings_video',
-        OnlineSettings: 'settings_online',
-        GameplaySettings: 'settings_gameplay',
-        HUDSettings: 'settings_hud',
-        SearchSettings: 'settings_search',
+        InputSettings: {
+			xml: 'settings_input',
+			radioid: 'InputRadio'
+		},
+        AudioSettings: {
+			xml: 'settings_audio',
+			radioid: 'AudioRadio'
+		},
+        VideoSettings: {
+			xml: 'settings_video',
+			radioid: "VideoRadio"
+		},
+        OnlineSettings: {
+			xml: 'settings_online',
+			radioid: 'OnlineRadio'
+		},
+        GameplaySettings: {
+			xml: 'settings_gameplay',
+			radioid: 'GameplayRadio'
+		},
+        HUDSettings: {
+			xml: 'settings_hud',
+			radioid: 'HudRadio'
+		},
+        SearchSettings: {
+			xml: 'settings_search'
+		}
     }
 
 	static activeTab = null;
@@ -23,7 +43,7 @@ class MainMenuSettings {
             const newPanel = $.CreatePanel('Panel', parentPanel, tab);
             $.Msg( 'Created Panel with id: ' + newPanel.id );
 
-            newPanel.LoadLayout('file://{resources}/layout/settings/' + MainMenuSettings.settingsTabs[tab] + '.xml', false, false );
+            newPanel.LoadLayout('file://{resources}/layout/settings/' + MainMenuSettings.settingsTabs[tab].xml + '.xml', false, false );
             
             // Handler that catches OnPropertyTransitionEndEvent event for this panel.  
             // Check if the panel is transparent then collapse it. 
@@ -75,7 +95,7 @@ class MainMenuSettings {
 
     static navigateToSettingPanel( tab, panel )
     {
-        MainMenuSettings.navigateToTab( tab );
+		$.DispatchEvent("Activated", $("#" + MainMenuSettings.settingsTabs[tab].radioid ), "mouse");
         panel.ScrollParentToMakePanelFit( 3, false );
         panel.SetFocus();
         panel.AddClass( 'Highlight' );

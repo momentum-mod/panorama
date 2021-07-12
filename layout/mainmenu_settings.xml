@@ -31,27 +31,27 @@
 
 		<Panel class="content-navbar">
 			<Panel class="content-navbar__tabs tab-group">
-				<RadioButton group="SettingsNavBar" onactivate='MainMenuSettings.navigateToTab("InputSettings")' selected="true">
+				<RadioButton id="InputRadio" group="SettingsNavBar" onactivate='MainMenuSettings.navigateToTab("InputSettings")' selected="true">
 				  <Label text="Input"/>
 				</RadioButton>
 
-				<RadioButton group="SettingsNavBar" onactivate='MainMenuSettings.navigateToTab("AudioSettings")'>
+				<RadioButton id="AudioRadio" group="SettingsNavBar" onactivate='MainMenuSettings.navigateToTab("AudioSettings")'>
 				  <Label text="Audio"/>
 				</RadioButton>
 
-				<RadioButton group="SettingsNavBar" onactivate='MainMenuSettings.navigateToTab("VideoSettings")'>
+				<RadioButton id="VideoRadio" group="SettingsNavBar" onactivate='MainMenuSettings.navigateToTab("VideoSettings")'>
 				  <Label text="Video"/>
 				</RadioButton>
 
-				<RadioButton group="SettingsNavBar" onactivate='MainMenuSettings.navigateToTab("OnlineSettings")'>
+				<RadioButton id="OnlineRadio" group="SettingsNavBar" onactivate='MainMenuSettings.navigateToTab("OnlineSettings")'>
 				  <Label text="Online"/>
 				</RadioButton>
 
-				<RadioButton group="SettingsNavBar" onactivate='MainMenuSettings.navigateToTab("GameplaySettings")'>
+				<RadioButton id="GameplayRadio" group="SettingsNavBar" onactivate='MainMenuSettings.navigateToTab("GameplaySettings")'>
 				  <Label text="Gameplay"/>
 				</RadioButton>
 
-				<RadioButton group="SettingsNavBar" onactivate='MainMenuSettings.navigateToTab("HUDSettings")'>
+				<RadioButton id="HudRadio" group="SettingsNavBar" onactivate='MainMenuSettings.navigateToTab("HUDSettings")'>
 				  <Label text="HUD"/>
 				</RadioButton>
 			</Panel>
