@@ -215,7 +215,10 @@ class MainMenuController {
 		const videoPanel = MainMenuController.videoPanel;
 		const imagePanel = MainMenuController.imagePanel;
 
-		const useVideo = GameInterfaceAPI.GetSettingBool('mom_ui_menu_background_video') && videoPanel && videoPanel.IsValid();
+		if (!(videoPanel && videoPanel.IsValid() && imagePanel && imagePanel.IsValid()))
+			return;
+
+		const useVideo = GameInterfaceAPI.GetSettingBool('mom_ui_menu_background_video');
 
 		videoPanel.visible = useVideo;
 		videoPanel.SetReadyForDisplay(useVideo);
