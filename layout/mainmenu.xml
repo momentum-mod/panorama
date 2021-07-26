@@ -62,7 +62,7 @@
 						<RadioButton id="PlayButton" class="mainmenu-nav-item" onactivate="GameInterfaceAPI.ConsoleCommand('ShowMapSelectionPanel')">
 							<Image src="file://{images}/topnav/playIcon.svg" textureheight="64" />
 						</RadioButton>
-						<RadioButton id="InventoryButton" class="mainmenu-nav-item">
+						<RadioButton id="InventoryButton" class="mainmenu-nav-item" onactivate="MainMenuController.navigateToTab('Inventory', 'mainmenu_inventory')">
 							<Image src="file://{images}/topnav/inventoryIcon.svg" textureheight="64" />
 						</RadioButton>
 						<RadioButton id="ShopButton" class="mainmenu-nav-item" onactivate="MainMenuController.navigateToTab('Shop', 'mainmenu_shop')">
