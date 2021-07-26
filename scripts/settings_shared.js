@@ -111,7 +111,7 @@ class SettingsMenuShared {
 
 	static resetVideoSettings()
 	{
-		$.DispatchEvent( "CSGOVideoSettingsResetDefault" );
+		$.DispatchEvent( "ChaosVideoSettingsResetDefault" );
 		SettingsMenuShared.resetControls();
 		SettingsMenuShared.videoSettingsOnUserInputSubmit();
 	}
