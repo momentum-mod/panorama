@@ -143,4 +143,5 @@ class MainMenuSettings {
     }
 
 	MainMenuSettings.navigateToTab("InputSettings");
+    $.RegisterEventHandler( 'LayoutReloaded', $('#SettingsMenuContent'), () => SettingsMenuShared.newTabOpened( MainMenuSettings.activeTab ) );
 })();
