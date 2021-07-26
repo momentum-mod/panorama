@@ -68,7 +68,7 @@
 						<RadioButton id="ShopButton" class="mainmenu-nav-item">
 							<Image src="file://{images}/topnav/shopIcon.svg" textureheight="64" />
 						</RadioButton>
-						<RadioButton id="LearnButton" class="mainmenu-nav-item">
+						<RadioButton id="LearnButton" class="mainmenu-nav-item" onactivate="MainMenuController.navigateToTab('Learn', 'mainmenu_learn')">
 							<Image src="file://{images}/topnav/learnIcon.svg" textureheight="64" />
 						</RadioButton>
 						<RadioButton id="SettingsButton" class="mainmenu-nav-item" onactivate="MainMenuController.navigateToTab('Settings', 'mainmenu_settings')">
