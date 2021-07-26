@@ -2822,3 +2822,11 @@ EdgeScrollBar.Vertical #MaxButton
 	margin-left: 8px;
 	background-color: gradient( linear, 0% 0%, 0% 100%, from( #3a863d ), to( #2d682f ) );
 }
+
+/* ------------------------------------------------------------------------- */
+/*  ConVarEnabler                                                       */
+/* ------------------------------------------------------------------------- */
+ConVarEnabler
+{
+	width: 100%;
+}
