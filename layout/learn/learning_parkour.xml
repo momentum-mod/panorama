@@ -1,0 +1,12 @@
+<root>
+    <styles>
+        <include src="file://{resources}/styles/chaosstyles.css" />
+    </styles>
+    
+    <scripts>
+    </scripts>
+
+    <Panel>
+        <Label class="header" text="COMING SOON!" />
+    </Panel>
+</root>

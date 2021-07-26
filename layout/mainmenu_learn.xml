@@ -1,0 +1,77 @@
+<!-- MOM_TODO: Localise lots of stuff in here -->
+<root>
+	<styles>
+		<include src="file://{resources}/styles/chaosstyles.css" />
+		<include src="file://{resources}/styles/mainmenu.css"/>
+		<include src="file://{resources}/styles/settings/settings_shared.css"/>
+	</styles>
+	
+	<scripts>
+		<include src="file://{resources}/scripts/mainmenu_learn.js"/>
+	</scripts>
+	
+	<Panel class="mainmenu-content__container" useglobalcontext="true">
+		
+		<Panel class="settings-header full-width">
+			<Label class="header" text="Learn"/>
+
+			<Panel class="settings-search">
+				<Image src="file://{images}/settings/searchIcon.svg" textureheight="64" />
+				<Panel class="settings-search-inner" acceptsfocus="true">
+					<TextEntry id="SettingsSearchTextEntry" maxchars="30" placeholder="Search..." /> 
+					<Button id="SettingsSearchClear" onactivate="SettingsMenuSearch.ClearSearch()">
+						<Image src="file://{images}/settings/searchCloseIcon.svg" textureheight="32" />
+					</Button>
+				</Panel>
+			</Panel>
+		</Panel>
+
+		<Panel class="content-navbar">
+			<Panel class="content-navbar__tabs tab-group">
+				<RadioButton id="SurfRadio" group="LearningNavBar" onactivate='MainMenuLearn.navigateToTab("SurfLearning")' selected="true">
+				  <Label text="Surf"/>
+				</RadioButton>
+
+				<RadioButton id="BhopRadio" group="LearningNavBar" onactivate='MainMenuLearn.navigateToTab("BhopLearning")'>
+				  <Label text="Bhop"/>
+				</RadioButton>
+
+				<RadioButton id="RJRadio" group="LearningNavBar" onactivate='MainMenuLearn.navigateToTab("RJLearning")'>
+				  <Label text="RJ"/>
+				</RadioButton>
+
+				<RadioButton id="SJRadio" group="LearningNavBar" onactivate='MainMenuLearn.navigateToTab("SJLearning")'>
+				  <Label text="SJ"/>
+				</RadioButton>
+
+				<RadioButton id="AhopRadio" group="LearningNavBar" onactivate='MainMenuLearn.navigateToTab("AhopLearning")'>
+				  <Label text="Ahop"/>
+				</RadioButton>
+
+				<RadioButton id="ParkourRadio" group="LearningNavBar" onactivate='MainMenuLearn.navigateToTab("ParkourLearning")'>
+				  <Label text="Parkour"/>
+				</RadioButton>
+
+				<RadioButton id="ConcRadio" group="LearningNavBar" onactivate='MainMenuLearn.navigateToTab("ConcLearning")'>
+				  <Label text="Conc"/>
+				</RadioButton>
+
+				<RadioButton id="ClimbRadio" group="LearningNavBar" onactivate='MainMenuLearn.navigateToTab("ClimbLearning")'>
+				  <Label text="Climb"/>
+				</RadioButton>
+
+				<RadioButton id="TricksurfRadio" group="LearningNavBar" onactivate='MainMenuLearn.navigateToTab("TricksurfLearning")'>
+				  <Label text="Tricksurf"/>
+				</RadioButton>
+				
+				<RadioButton id="DefagRadio" group="LearningNavBar" onactivate='MainMenuLearn.navigateToTab("DefragLearning")'>
+				  <Label text="Defrag"/>
+				</RadioButton>
+			</Panel>
+		</Panel>
+
+		<Panel id="LearningMenuContent" class="full-width full-height">
+
+		</Panel>
+	</Panel>
+</root>
