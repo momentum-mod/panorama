@@ -1,0 +1,37 @@
+<root>
+    <styles>
+        <include src="file://{resources}/styles/chaosstyles.css" />
+        <include src="file://{resources}/styles/mainmenu.css" />
+        <include src="file://{resources}/styles/mainmenu_drawer.css" />
+    </styles>
+    <scripts>
+        <include src="file://{resources}/scripts/mainmenu_drawer.js" />
+    </scripts>
+
+    <Panel class="full-width">
+        <Panel id="MainMenuOptionListRight" class="mainmenu-right-nav-list">
+            <RadioButton id="ProfileButton" class="mainmenu-right-nav-item">
+                <Image src="file://{images}/sidepanel/profileIcon.svg" textureheight="32" />
+                <Image src="file://{images}/barrier.svg" textureheight="32" />
+            </RadioButton>
+            <RadioButton id="LobbyButton" class="mainmenu-right-nav-item" onactivate="MainMenuDrawer.extendAndSwitch('LobbyDrawer')">
+                <Image id="LobbyButtonImage" src="file://{images}/sidepanel/lobbyIcon.svg" textureheight="32" />
+            </RadioButton>
+            <RadioButton id="HostButton" class="mainmenu-right-nav-item">
+                <Image src="file://{images}/sidepanel/wrIcon.svg" textureheight="32" />
+                <Image src="file://{images}/barrier.svg" textureheight="32" />
+            </RadioButton>
+            <RadioButton id="ChangelogButton" class="mainmenu-right-nav-item">
+                <Image src="file://{images}/sidepanel/newsIcon.svg" textureheight="32" />
+                <Image src="file://{images}/barrier.svg" textureheight="32" />
+            </RadioButton>
+            <RadioButton id="SliderButton" class="mainmenu-right-nav-item" onactivate="MainMenuDrawer.toggleDrawer()">
+                <Image src="file://{images}/sidepanel/arrowIcon.svg" textureheight="32" orientation="180" />
+            </RadioButton>
+        </Panel>
+        <Panel id="MainMenuDrawerContent" class="full-width full-height">
+            <!-- Panels get added via JS here -->
+        </Panel>
+    </Panel>
+
+</root>
