@@ -1,0 +1,88 @@
+#LobbyPanel {
+	width: 100%;
+	height: 100%;
+	background-color: #FF0000;
+}
+
+#LobbySearchBar {
+	flow-children: right;
+}
+
+.lobby-list {
+	flow-children: down;
+	width: 100%;
+	margin-left: 4px;
+	margin-right: 4px;
+	overflow: squish scroll;
+}
+
+.hidden {
+	visibility: collapse;
+}
+
+.no-flow {
+	flow-children: none;
+}
+
+.lobby-drawer-tab {
+	flow-children: down;
+}
+
+.lobby-entry {
+	width: 100%;
+	flow-children: right;
+	margin-top: 4px;
+	margin-bottom: 4px;
+	padding: 8px 8px 8px 8px;
+	background-color: gradient(linear, 0% 50%, 100% 50%, from(#000000b3), to(#00000000));
+}
+
+.lobby-entry-avatar {
+	horizontal-align: left;
+	height: 40px;
+	width: 40px;
+	margin-left: 8px;
+	margin-right: 8px;
+}
+
+#LobbyType {
+	horizontal-align: left;
+	vertical-align: center;
+	margin-left: 8px;
+	margin-right: 8px;
+}
+
+#LobbyTitle {
+	horizontal-align: left;
+}
+
+.lobby-entry-text {
+	margin-left: 8px;
+	margin-right: 8px;
+
+}
+
+#LobbyPlayerNumbers {
+	horizontal-align: center;
+}
+
+.lobby-entry-button {
+	vertical-align: center;
+	margin-left: 8px;
+	margin-right: 8px;
+}
+
+/* private */
+.lobby-list-entry-type-0 {
+	background-color: gradient(linear, 0% 50%, 100% 50%, from(#ff6a6ab3), to(#ff6a6a00)) !important;
+}
+
+/* friends only */
+.lobby-list-entry-type-1 {
+	background-color: gradient(linear, 0% 50%, 100% 50%, from(#1896d3b3), to(#1896d300)) !important;
+}
+
+/* public */
+.lobby-list-entry-type-2 {
+	background-color: gradient(linear, 0% 50%, 100% 50%, from(#000000b3), to(#00000000)) !important;
+}
