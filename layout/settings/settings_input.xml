@@ -52,7 +52,7 @@
 			
 			<Panel class="settings-horizontal-separator" />
 			
-			<Panel id="SettingsKeybinds" class="settings-group">
+			<Panel id="SettingsKeybinds" class="settings-group thin">
 				<Label class="header" text="#MOM_Settings_Title_Key" />
 				
 				<Panel class="full-width left-right-flow top-padding-large">

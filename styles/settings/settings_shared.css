@@ -38,6 +38,10 @@
 	horizontal-align: middle;
 }
 
+.settings-group.thin { 
+	width: 60%;
+}
+
 .settings-group > Label {
 	horizontal-align: middle;
 	margin: 10px 0px;
