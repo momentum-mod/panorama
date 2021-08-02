@@ -33,6 +33,7 @@
 }
 
 .settings-group {
+	padding-top: 16px;
 	width: 70%;
 	flow-children: down;
 	horizontal-align: middle;
@@ -177,7 +178,7 @@
 	height: 1px;
 	opacity: .25;
 	background-color: #707070;
-	margin: 20px 0px;
+	margin: 8px 0px 20px 0px;
 }
 
 .settings-dropdown {
