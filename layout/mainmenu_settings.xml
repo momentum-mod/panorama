@@ -18,14 +18,12 @@
 		<Panel class="settings-header full-width">
 			<Label class="header" text="Settings"/>
 
-			<Panel class="settings-search">
-				<Image src="file://{images}/settings/searchIcon.svg" textureheight="64" />
-				<Panel class="settings-search-inner" acceptsfocus="true">
-					<TextEntry id="SettingsSearchTextEntry" maxchars="30" placeholder="Search..." /> 
-					<Button id="SettingsSearchClear" onactivate="SettingsMenuSearch.ClearSearch()">
-						<Image src="file://{images}/settings/searchCloseIcon.svg" textureheight="32" />
-					</Button>
-				</Panel>
+			<Panel class="settings-search" acceptsfocus="true">
+				<Image src="file://{images}/searchIcon.svg" textureheight="64" />
+				<TextEntry id="SettingsSearchTextEntry" maxchars="30" placeholder="Search..." /> 
+				<Button id="SettingsSearchClear" onactivate="SettingsMenuSearch.ClearSearch()">
+					<Image src="file://{images}/closeIcon.svg" textureheight="32" />
+				</Button>
 			</Panel>
 		</Panel>
 
