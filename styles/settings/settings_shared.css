@@ -83,8 +83,9 @@
 }
 
 .settings-search > TextEntry {
-	width: 70%;
+	width: fill-parent-flow(1.0);
 
+	
 	color:  rgba(255, 255, 255, 1);
 	border: 0px;
 	box-shadow: none;
