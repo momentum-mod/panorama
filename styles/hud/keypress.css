@@ -1,0 +1,109 @@
+MomHudKeyPress {
+	flow-children: down;
+}
+
+.key {
+	horizontal-align: center;
+	text-align: center;
+	font-size: 21px;
+	font-family: Roboto;
+	font-weight: bold;
+	text-shadow: 0 3px 6px rgba(0, 0, 0, 0.5);
+	color: #fff;
+}
+
+.key:disabled {
+	opacity: 0.15;
+}
+
+.key.hidden {
+	visibility: collapse;
+}
+
+.key.blocked {
+	wash-color: #f00;
+}
+
+#KeyForward {
+	horizontal-align: middle;
+	vertical-align: top;
+}
+#KeyForwardIcon {
+	transform: rotatez( -90deg );
+}
+
+#KeyBack {
+	horizontal-align: middle;
+	vertical-align: bottom;
+}
+#KeyBackIcon {
+	transform: rotatez( 90deg );
+}
+
+#KeyMoveLeft {
+	horizontal-align: left;
+	vertical-align: bottom;
+}
+#KeyMoveLeftIcon {
+	transform: rotatez( 180deg );
+}
+
+#KeyMoveRight {
+	horizontal-align: right;
+	vertical-align: bottom;
+}
+#KeyMoveRightIcon {
+}
+
+#ArrowKeys {
+	width: 85px;
+	height: 55px;
+	margin: 10px;
+}
+
+.arrow-key {
+	width: 25px;
+	height: 25px;
+	background-color: #fff;
+	border-radius: 4px;
+	box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.45);
+}
+
+.arrow-key:disabled {
+	background-color: rgba(0, 0, 0, 0.5);
+}
+
+.arrow-key.blocked:disabled {
+	background-color: rgba(255, 0, 0, 0.5);
+}
+
+.arrow-key.blocked {
+	wash-color: #f00;
+}
+
+.arrow-key-icon {
+	wash-color: #0f171c;
+	height: 100%;
+	width: height-percentage( 100% );
+	vertical-align: middle;
+}
+
+.arrow-key-icon:parentdisabled {
+	wash-color: #000;
+	opacity: 0.45;
+}
+
+#KeyMouse1 {
+	vertical-align: top;
+	horizontal-align: left;
+}
+#KeyMouse2 {
+	vertical-align: top;
+	horizontal-align: right;
+}
+
+#KeyStrafe,
+#KeyLeft,
+#KeyRight {
+	visibility: collapse; /* TODO: What should we do for these? */
+}

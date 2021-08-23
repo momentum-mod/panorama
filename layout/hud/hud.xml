@@ -47,7 +47,7 @@
 
 		<!-- Anchored on lower-right corner, laid out from top to bottom -->
 		<Panel id="HudBottomRight" hittest="false" hittestchildren="false">
-
+			<MomKeyPress />
 		</Panel>
 
 		<!-- Anchored in top left corner of screen, laid out from top-to-bottom -->

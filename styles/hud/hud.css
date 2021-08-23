@@ -7,6 +7,7 @@ ChaosHud,
 {
 	width: 100%;
 	height: 100%;
+	padding: 25px 35px;
 }
 
 
@@ -55,12 +56,8 @@ ChaosHud,
 	blur: fastgaussian( 5, 5, 4 );
 }
 
-
-
 #HudTopLeft
 {
-	width: 100%;
-	height: 100%;
     horizontal-align: left;
     vertical-align: top;
     flow-children: down;
@@ -70,7 +67,6 @@ ChaosHud,
 {
 	horizontal-align: center;
 	opacity: 1.0;
-	margin-top: 2px;
 	flow-children: down;
 }
 
@@ -81,7 +77,6 @@ ChaosHud,
 	width: 100%;
 	height: 43%;
 	opacity: 1.0;
-	margin-bottom: 2px;
 	flow-children: down;
 }
 
@@ -89,7 +84,7 @@ ChaosHud,
 {
     horizontal-align: left;
     vertical-align: bottom;
-    //flow-children: down; /* flow layout not possible for this section of HUD, the voicestatus and healtharmor elements need to overlap */
+    flow-children: down;
 }
 
 #HudTopRight
@@ -115,7 +110,5 @@ ChaosHud,
 	horizontal-align: right;
 	vertical-align: bottom;
     flow-children: down;
-    height:100%;
-    width:100%;
 }
 
