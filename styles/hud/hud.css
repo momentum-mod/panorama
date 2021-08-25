@@ -112,3 +112,9 @@ ChaosHud,
     flow-children: down;
 }
 
+#HudInWorld,
+#HudReticle
+{
+	width: 100%;
+	height: 100%;
+}

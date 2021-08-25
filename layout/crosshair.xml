@@ -1,0 +1,13 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/chaosstyles.css" />
+		<include src="file://{resources}/styles/crosshair.css" />
+	</styles>
+
+	<MomCrosshair clampfractionalpixelpositions="false">
+		<!-- Only visible when using cl_crosshair_style 1 -->
+		<Panel id="CrosshairContainer">
+			<Image id="CrosshairImage" src="file://{images}/hud/crosshair.vtf" />
+		</Panel>
+	</MomCrosshair>
+</root>
