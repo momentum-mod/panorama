@@ -32,7 +32,7 @@
 			<Panel id="SettingsKeyPresses" class="settings-group">
 				<Label class="header" text="#MOM_Settings_Buttons_Label" />
 				<TooltipPanel class="settings-tooltip" tooltip="#MOM_Settings_User_Input_HUD_TT">
-					<ChaosSettingsEnum text="#MOM_Settings_User_Input_HUD" convar="mom_hud_showkeypresses">
+					<ChaosSettingsEnum text="#MOM_Settings_User_Input_HUD" convar="mom_hud_keypress_enable">
 						<RadioButton group="showkeys" text="Off" value="0" />
 						<RadioButton group="showkeys" text="On" value="1" />
 					</ChaosSettingsEnum>
