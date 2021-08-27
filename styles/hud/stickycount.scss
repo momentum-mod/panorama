@@ -1,0 +1,56 @@
+$armed-gradient: gradient( linear, 0% 0%, 0% 100%, from( darkMomentumBlue ), to( momentumBlue ) );
+$blocked-gradient: gradient( linear, 0% 0%, 0% 100%, from( rgb(167, 55, 55) ), to( rgb(122, 40, 40) ) );
+$sp-bg-color: #273840;
+
+#StickyCountContainer {
+	margin: 6px 0 6px 0;
+}
+
+// keyframe sticky arming over a second to avoid ending the animation before the armed state is set
+// (as that causes color flickering)
+@keyframes stickyArmAnim {
+	from {}
+	70% {
+		background-color: $sp-bg-color;
+	}
+	// 0.8 second arm time
+	80% {
+		background-color: $armed-gradient;
+	}
+	to {}
+}
+
+.sticky-panel {
+	width: 24px;
+	height: 24px;
+	border-radius: 12px;
+	margin: 0 8px 0 8px;
+	align: center center;
+
+	box-shadow: 0 1.5px 6px 0 defaultShadowColor;
+	background-color: $sp-bg-color;
+	border: 0px solid transparent;
+
+	&.no-sticky {
+		background-color: $sp-bg-color;
+		border: 0px solid transparent;
+	}
+	
+	&.sticky-arming {
+		animation-name: stickyArmAnim;
+		animation-duration: 1s;
+	}
+
+	&.sticky-armed {
+		background-color: $armed-gradient;
+	}
+
+	&.sticky-blocked {
+		animation-name: none;
+		background-color: $blocked-gradient;
+		border: 0px solid transparent;
+
+		transition-property: background-color;
+		transition-duration: 0.25s;
+	}
+}

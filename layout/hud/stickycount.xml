@@ -1,0 +1,13 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/chaosstyles.css" />
+		<include src="file://{resources}/styles/hud/stickycount.scss" />
+	</styles>
+	<scripts>
+		<include src="file://{resources}/scripts/hud/stickycount.js" />
+	</scripts>
+
+	<MomHudStickyCharge class="horizontal-align-center">
+		<Panel id="StickyCountContainer" class="horizontal-align-center left-right-flow" />
+	</MomHudStickyCharge>
+</root>
