@@ -1,0 +1,16 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/chaosstyles.css" />
+		<include src="file://{resources}/styles/hud/conccooktime.scss" />
+	</styles>
+	<scripts>
+		<include src="file://{resources}/scripts/hud/conccooktime.js" />
+	</scripts>
+
+	<MomHudConcCooktime class="horizontal-align-center">
+		<Panel id="ConcCooktimeContainer" class="horizontal-align-center">
+			<ProgressBar id="ConcCookMeter" />
+			<Label id="ConcCookTime" text="" />
+		</Panel>
+	</MomHudConcCooktime>
+</root>

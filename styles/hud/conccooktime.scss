@@ -1,0 +1,24 @@
+$cookmeter-bg-color: #273840;
+
+#ConcCooktimeContainer {
+	margin: 100px 0px 6px 0;
+	height: 18px;
+	width: 320px;
+
+	ProgressBar {
+		border-radius: 9px;
+		horizontal-align: center;
+	
+		box-shadow: 0 1.5px 6px 0 defaultShadowColor;
+		background-color: $cookmeter-bg-color;
+	}
+	
+	Label {
+		font-size: 16px;
+		text-shadow: 1px 1px 4px 2.5 defaultShadowColor;
+		text-align: center;
+		align: center center;
+		z-index: 1;
+		visibility: visible;
+	}
+}
