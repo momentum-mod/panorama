@@ -1,5 +1,6 @@
 MomHudKeyPress {
 	flow-children: down;
+	margin: 35px;
 }
 
 .key {
