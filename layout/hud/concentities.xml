@@ -1,0 +1,22 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/chaosstyles.css" />
+		<include src="file://{resources}/styles/hud/concentities.scss" />
+	</styles>
+	<scripts>
+		<include src="file://{resources}/scripts/hud/concentities.js" />
+	</scripts>
+
+	<snippets>
+		<snippet name="conc-ent-panel">
+			<Panel class="conc-ent-panel__cont">
+				<ProgressBar id="ConcTimeMeter" />
+				<Label id="ConcTimeLabel" text="" />
+			</Panel>
+		</snippet>
+	</snippets>
+
+	<MomHudConcEntities class="full-width full-height">
+		<Panel id="ConcEntPanelsContainer" class="full-width full-height" />
+	</MomHudConcEntities>
+</root>

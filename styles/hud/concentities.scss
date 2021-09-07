@@ -1,0 +1,21 @@
+.conc-ent-panel__cont {
+	margin-top: 30px;
+	height: 22px;
+	width: 120px;
+
+	ProgressBar {
+		border-radius: 11px;
+	
+		box-shadow: 0 1.5px 6px 0 defaultShadowColor;
+		background-color: #273840;
+	}
+	
+	Label {
+		font-size: 20px;
+		text-shadow: 1px 1px 4px 2.5 defaultShadowColor;
+		text-align: center;
+		horizontal-align: center;
+		z-index: 1;
+		visibility: visible;
+	}
+}

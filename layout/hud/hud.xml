@@ -9,6 +9,7 @@
 		
 		<!-- In world UI is first to make sure it shows up behind all "screen-looking" UI -->
 		<Panel id="HudInWorld" hittest="false" hittestchildren="false">
+			<MomHudConcEntities />
 			<MomHudReticle />
 		</Panel>
 		
