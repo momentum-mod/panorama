@@ -7,11 +7,11 @@ const UnitsType = {
 };
 
 class StickyCharge {
-	static chargeUnitsType = UnitsType.None;
-
 	static OnChargeUpdate( speed, percentage ) {
+		let chargeUnitType = $.GetContextPanel().stickyChargeUnitType;
+
 		let speedText;
-		switch( StickyCharge.chargeUnitsType ) {
+		switch( chargeUnitType ) {
 			case UnitsType.UPS:
 				speedText = `${ Math.floor( speed ) }u/s`;
 				break;
@@ -22,18 +22,17 @@ class StickyCharge {
 				speedText = '';
 		}
 		$( '#StickyChargeSpeed' ).text = speedText;
-        $( '#StickyChargeMeter' ).value = percentage;
+		$( '#StickyChargeMeter' ).value = percentage;
 	}
 
-    static OnChargeToggled( enabled ) {
-        let chargeMeter = $( '#StickyChargeMeter' );
-        if ( chargeMeter.enabled !== enabled )
-            chargeMeter.enabled = enabled;
-    }
+	static OnChargeToggled( enabled ) {
+		let chargeMeter = $( '#StickyChargeMeter' );
+		if ( chargeMeter.enabled !== enabled )
+			chargeMeter.enabled = enabled;
+	}
 }
 
 ( function() {
 	$.RegisterEventHandler( 'OnChargeUpdate', $( '#StickyChargeContainer' ), StickyCharge.OnChargeUpdate );
 	$.RegisterEventHandler( 'OnChargeToggled', $( '#StickyChargeContainer' ), StickyCharge.OnChargeToggled );
-	$.RegisterForUnhandledEvent( 'OnChargeSpeedUnitsChanged', ( unitType ) => { StickyCharge.chargeUnitsType = unitType; } );
 })();
