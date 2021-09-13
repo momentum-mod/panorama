@@ -45,7 +45,8 @@
 		</Panel>
 
 		<!-- Anchored to the bottom-left corner of the screen, laid out from top to bottom -->
-		<Panel id="HudLowerLeft" hittest="false" hittestchildren="false">
+		<Panel id="HudLowerLeft" hittest="false" hittestchildren="true">
+			<MomHudChat />
 		</Panel>
 
 		<!-- Anchored on lower-right corner, laid out from top to bottom -->

@@ -117,3 +117,8 @@ ChaosHud,
 	width: 100%;
 	height: 100%;
 }
+
+MomHudChat {
+	width: 576px;
+	height: 324px;
+}
