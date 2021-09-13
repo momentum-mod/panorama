@@ -1,0 +1,23 @@
+<!--
+	Purpose: hard-coded layout file for <MomHudChat />
+	Having a RaisedChat MomentumChat and LoweredChat ToastContainer is mandatory
+
+	For snippets, see chat.xml, as we set message panels inside the toast container into that context
+
+	Upon opening the chat, the toast container will be hidden and the chat is shown, taking input focus (away from the game)
+	Upon closing (with escape) it's switched around and focus is returned to where it was before
+
+	We set "thinkwheninvisible" so messages disappear after their showtime even if the chat is kept open
+-->
+<root>
+	<styles>
+		<include src="file://{resources}/styles/chaosstyles.css"/>
+	</styles>
+	<scripts>
+		
+	</scripts>
+	<Panel class="hud_chat_container no-flow" defaultfocus="RaisedChat">
+        <MomentumChat id="RaisedChat" class="full-width full-height" />
+		<ToastContainer id="LoweredChat" class="chat-container full-width full-height bottom-top-flow" thinkwheninvisible="true"/>
+	</Panel>
+</root>
