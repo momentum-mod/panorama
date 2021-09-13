@@ -7,6 +7,8 @@ const UnitsType = {
 };
 
 class StickyCharge {
+	static chargeMeter = $( '#StickyChargeMeter' );
+	static chargeSpeed = $( '#StickyChargeSpeed' );
 	static OnChargeUpdate( speed, percentage ) {
 		let chargeUnitType = $.GetContextPanel().stickyChargeUnitType;
 
@@ -21,14 +23,13 @@ class StickyCharge {
 			default:
 				speedText = '';
 		}
-		$( '#StickyChargeSpeed' ).text = speedText;
-		$( '#StickyChargeMeter' ).value = percentage;
+		StickyCharge.chargeSpeed.text = speedText;
+		StickyCharge.chargeMeter.value = percentage;
 	}
 
 	static OnChargeToggled( enabled ) {
-		let chargeMeter = $( '#StickyChargeMeter' );
-		if ( chargeMeter.enabled !== enabled )
-			chargeMeter.enabled = enabled;
+		if ( StickyCharge.chargeMeter.enabled !== enabled )
+			StickyCharge.chargeMeter.enabled = enabled;
 	}
 }
 
