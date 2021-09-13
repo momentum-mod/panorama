@@ -36,11 +36,11 @@
 			</Panel>
 		</snippet>
 	</snippets>
-	<Panel class="chat-container bottom-top-flow">
+	<Panel class="chat-container bottom-top-flow" defaultfocus="ChatInput">
 		<!-- CAUTION: inverse flow everywhere!!-->
-		<Panel>
+		<ConVarEnabler convar="mom_chat_typing_receive" togglevisibility="true">
 			<Label id="ChatMemberTypingLabel" text=" "/>
-		</Panel>
+		</ConVarEnabler>
 		<Panel class="right-left-flow align-right">
 			<Button class="chat-container__button" onactivate="$('#ChatInput').Submit()">
 				<Label text="SEND"/>
