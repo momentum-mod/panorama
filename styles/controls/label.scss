@@ -1,0 +1,8 @@
+@use '../config' as *;
+@use '../abstract/mixin';
+
+// Default styling for Labels, as used so commonly
+Label {
+	@include mixin.font-styles($use-header: false);
+	font-size: $font-default-size;
+}

@@ -1,0 +1,95 @@
+@use '../config' as *;
+
+VerticalScrollBar,
+HTMLVerticalScrollBar {
+	height: 100%;
+	width: $scrollbar-width;
+	horizontal-align: right;
+	vertical-align: center;
+	margin: 4px, $scrollbar-width;
+	opacity: $scrollbar-opacity;
+	transition-property: transform, opacity;
+
+	&:hover {
+		opacity: $scrollbar-hover-opacity;
+	}
+
+	& .ScrollThumb {
+		width: $scrollbar-width;
+		min-height: 32px;
+		background-color: $scrollbar-color;
+		opacity: $scrollbar-opacity;
+		border-radius: $scrollbar-radius;
+		transition-property: position;
+		transition-property: opacity, transform;
+		transition-duration: 0.1s;
+		transition-timing-function: linear;
+	}
+
+	&:hover .ScrollThumb {
+		opacity: $scrollbar-hover-opacity;
+	}
+
+	&:active .ScrollThumb {
+		opacity: $scrollbar-hover-opacity;
+	}
+}
+
+HorizontalScrollBar,
+HTMLHorizontalScrollBar {
+	height: $scrollbar-width;
+	width: 100%;
+	opacity: $scrollbar-opacity;
+	horizontal-align: left;
+	vertical-align: bottom;
+	transition-property: transform, opacity;
+
+	&:hover {
+		opacity: $scrollbar-hover-opacity;
+	}
+
+	& .ScrollThumb {
+		height: $scrollbar-width;
+		min-width: 32px;
+		background-color: $scrollbar-color;
+		opacity: $scrollbar-opacity;
+		transition-property: position;
+		border-radius: $scrollbar-radius;
+		transition-property: background-color, transform;
+		transition-duration: 0.1s;
+		transition-timing-function: linear;
+	}
+
+	&:hover .ScrollThumb {
+		opacity: $scrollbar-hover-opacity;
+	}
+
+	&:active .ScrollThumb {
+		opacity: $scrollbar-hover-opacity;
+	}
+}
+
+VerticalScrollBar,
+VerticalScrollBar .ScrollThumb,
+HorizontalScrollBar,
+HorizontalScrollBar .ScrollThumb HTMLHorizontalScrollBar,
+HTMLHorizontalScrollBar .ScrollThumb,
+HTMLVerticalScrollBar,
+HTMLVerticalScrollBar .ScrollThumb {
+	/* The transition duration and timing function must match constants used in code: */
+	/* k_flScrollTransitionTime, k_flScrollTransitionFunc, so dont change without talking with a dev */
+	transition-duration: 0.20s;
+	transition-timing-function: ease-in-out;
+}
+
+VerticalScrollBar.MouseDown,
+VerticalScrollBar.MouseDown .ScrollThumb,
+HorizontalScrollBar.MouseDown,
+HorizontalScrollBar.MouseDown .ScrollThumb HTMLHorizontalScrollBar.MouseDown,
+HTMLHorizontalScrollBar.MouseDown .ScrollThumb,
+HTMLVerticalScrollBar.MouseDown,
+HTMLVerticalScrollBar.MouseDown .ScrollThumb {
+	/* Disable the transition when the mouse is dragging the scroll thumb. Note that this must match */
+	/* when IUIScrollBar::IsMouseDown returns true, or else the content will be out of sync */
+	transition-duration: 0.0s;
+}

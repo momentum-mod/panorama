@@ -1,0 +1,16 @@
+@use '../config' as *;
+@use '../abstract/function';
+
+$colors: function.map-collect($colors-primary, $colors-state, $color-grays, $color-light-bgs, $color-dark-bgs);
+
+@each $name, $color in $colors {
+	.color-#{$name} {
+		color: $color;
+	}
+	.wash-color-#{$name} {
+		wash-color: $color;
+	}
+	.bg-#{$name} {
+		background-color: $color;
+	}
+}

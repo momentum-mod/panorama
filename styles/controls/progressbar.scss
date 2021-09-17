@@ -1,0 +1,15 @@
+@use '../config'as *;
+
+.progressbar {
+	width: 320px;
+	height: $progressbar-height;
+	background-color: $progressbar-background;
+
+	.ProgressBarLeft {
+		background-color: $progressbar-background-progress;
+	}
+
+	.ProgressBarRight {
+		background-color: $progressbar-background;
+	}
+}

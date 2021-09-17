@@ -1,0 +1,95 @@
+@use '../config' as *;
+@use '../abstract/function';
+@use '../abstract/mixin';
+@use 'sass:color';
+@use 'sass:list';
+
+.button {
+	background-color: $button-background;
+	box-shadow: $button-shadow;
+	border-radius: $button-radius;
+	color: $button-text-color;
+	horizontal-align: center;
+	text-align: center;
+	flow-children: right;
+	padding: $button-padding;
+	transition: background-color 0.1s ease-in 0s;
+	
+	&:hover {
+		background-color: $button-background-hover;
+	}
+	
+	&:disabled,
+	&:disabled &:hover {
+		background-color: $button-background-disabled-hover;
+	}
+	
+	&:disabled &__text {
+		color: $button-text-disabled;
+	}
+
+	&:disabled &__icon {
+		wash-color: $button-text-disabled;
+	}
+
+	&__text {
+		@include mixin.font-styles($use-header: $button-use-header-font);
+		font-size: $button-font-size;
+		color: $button-text-color;
+		padding: 1px;
+		margin: 0 $button-text-margin-side;
+		text-shadow: $button-text-shadow;
+		vertical-align: middle;
+		horizontal-align: center;
+		text-align: center;
+
+		&:hover {
+			color: $button-text-hover;
+		}
+	}
+	
+	&__icon {
+		height: $button-font-size;
+		width: height-percentage(100%);
+		margin-top: 2px;
+		margin-bottom: 2px;
+		padding: 1px;
+		vertical-align: middle;
+		img-shadow: $button-text-shadow;
+		wash-color: $button-text-color;
+	}
+
+	&__text, 
+	&__icon {
+		&--left {
+			margin-left: $button-text-margin-side;
+			margin-right: $button-icon-text-gap;
+		}
+
+		&--right {
+			margin-left: $button-icon-text-gap;
+			margin-right: $button-text-margin-side;
+		}
+	}
+}
+
+@each $name, $colors in $gradients-primary {
+	.button--#{$name} {
+		background-color: function.gradient-vertical(list.nth($colors, 1), list.nth($colors, 2));
+
+		&:hover {
+			background-color: function.gradient-vertical(
+				color.scale(list.nth($colors, 1), $saturation: list.nth($gradient-hover-transform, 1), $lightness: list.nth($gradient-hover-transform, 2), $alpha: list.nth($gradient-hover-transform, 3)),
+				color.scale(list.nth($colors, 2), $saturation: list.nth($gradient-hover-transform, 1), $lightness: list.nth($gradient-hover-transform, 2), $alpha: list.nth($gradient-hover-transform, 3))
+			);
+		}
+
+		&:disabled,
+		&:disabled:hover  {
+			background-color: function.gradient-vertical(
+				color.scale(list.nth($colors, 1), $saturation: list.nth($gradient-disabled-transform, 1), $lightness: list.nth($gradient-disabled-transform, 2), $alpha: list.nth($gradient-disabled-transform, 3)),
+				color.scale(list.nth($colors, 2), $saturation: list.nth($gradient-disabled-transform, 1), $lightness: list.nth($gradient-disabled-transform, 2), $alpha: list.nth($gradient-disabled-transform, 3))
+			);
+		}
+	}
+}

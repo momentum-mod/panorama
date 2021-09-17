@@ -1,0 +1,67 @@
+@use '../config'as *;
+
+.slider {
+	transition: wash-color 0.1s linear 0s;
+
+	#SliderTrack {
+		align: center center;
+		background-color: $slider-track;
+		box-shadow: $slider-track-shadow;
+		z-index: 2;
+	}
+
+	#SliderTrackProgress {
+		align: center center;
+		z-index: 3;
+	}
+
+	#SliderThumb {
+		width: $slider-thumb-width;
+		height: $slider-thumb-width;
+		align: center center;
+		background-color: $slider-thumb-color;
+		border-radius: $slider-thumb-radius;
+		box-shadow: $slider-thumb-shadow;
+		z-index: 4;
+		transition: background-color 0.1s ease-in-out 0s;
+	}
+
+	&:hover:not(:disabled) #SliderThumb {
+		background-color: $slider-thumb-color-hover;
+	}
+
+	&:parentdisabled,
+	&:disabled {
+		wash-color: $disabled;
+	}
+
+	&.HorizontalSlider {
+		width: fill-parent-flow(1.0);
+		padding: $slider-padding-height 0;
+
+		& #SliderTrack,
+		& #SliderTrackProgress {
+			width: 100%;
+			height: $slider-track-height;
+		}
+
+		& #SliderTrackProgress {
+			background-color: $slider-track-progress-horizontal;
+		}
+	}
+
+	&.VerticalSlider {
+		padding: 0 $slider-padding-height;
+		height: fill-parent-flow(1.0);
+
+		& #SliderTrack,
+		& #SliderTrackProgress {
+			width: $slider-track-height;
+			height: 100%;
+		}
+
+		& #SliderTrackProgress {
+			background-color: $slider-track-progress-vertical;
+		}
+	}
+}

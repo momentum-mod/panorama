@@ -1,0 +1,64 @@
+@use '../config' as *;
+@use '../abstract/mixin';
+@use 'sass:color';
+
+.radiobutton {
+	background-color: none;
+	vertical-align: middle;
+	flow-children: right;
+
+	transition-property: background-color, color;
+	transition-duration: 0.1s;
+	transition-timing-function: ease-in-out;
+
+	.RadioBox {
+		width: $radiobox-width;
+		height: $radiobox-width;
+		margin-right: $radiobutton-gap;
+		border-radius: $radiobox-radius;
+		background-color: gradient(radial, 50% 50%, 0% 0%, 50% 50%, from($radiobutton-background), to($radiobutton-background));
+		box-shadow: $radiobox-shadow;
+		
+		transition-property: background-color;
+		transition-duration: 0.2s;
+		transition-timing-function: ease-in-out;
+	}
+
+	&__text {
+		@include mixin.font-styles($use-header: $radiobutton-use-header-font);
+		vertical-align: middle;
+	}
+
+	&:hover .RadioBox {
+		background-color: gradient(radial, 50% 50%, 0% 0%, 50% 50%, from($radiobutton-background-hover), to($radiobutton-background-hover));
+	}
+
+	&:disabled .RadioBox,
+	&:disabled:hover .RadioBox {
+		background-color: gradient(radial, 50% 50%, 0% 0%, 50% 50%, from($radiobutton-background-disabled), to($radiobutton-background-disabled));
+	}
+
+	&:disabled &__text {
+		color: $radiobutton-text-disabled;
+	}
+	
+	&:selected .RadioBox {
+		background-color: gradient(
+			radial, 50% 50%, 0% 0%, 50% 50%,
+			from($radiobutton-background-selected),
+			color-stop(0.4, $radiobutton-background-selected),
+			color-stop(0.45, $radiobutton-background),
+			to($radiobutton-background)
+		);
+	}
+
+	&:disabled:selected .RadioBox {
+		background-color: gradient(
+			radial, 50% 50%, 0% 0%, 50% 50%,
+			from($radiobutton-background-disabled),
+			color-stop(0.4, $radiobutton-background-disabled),
+			color-stop(0.45, $radiobutton-background-disabled-selected),
+			to($radiobutton-background-disabled-selected)
+		);
+	}
+}

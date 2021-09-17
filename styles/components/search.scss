@@ -1,0 +1,78 @@
+.search {
+	$root: &;
+	flow-children: right;
+	vertical-align: middle;
+	min-width: 420px;
+	min-height: 36px;
+
+	background-color: rgba(255, 255, 255, 0.1);
+	border-radius: 4px;
+	box-shadow: 0 0px 4px 0 rgba(0, 0, 0, 0.2);
+
+	transition-property: background-color, border;
+	transition-duration: 0.2s;
+
+	&:hover {
+		background-color: rgba(255, 255, 255, 0.2);
+	}
+
+	&__icon {
+		width: 32px;
+		height: 32px;
+		opacity: 0.8;
+		vertical-align: middle;
+		margin: 0 4px;
+
+		#{$root}:hover & {
+			opacity: 1;
+		}
+	}
+
+	&__textentry {
+		width: 100%;
+		color: rgba(255, 255, 255, 1);
+		border: 0px;
+		box-shadow: none;
+		vertical-align: middle;
+
+		&.HasInput #PlaceholderText {
+			opacity: 0;
+		}
+
+		#PlaceholderText {
+
+			transition-property: color;
+			transition-duration: 0.2s;
+		}
+		#{$root}:hover & #PlaceholderText {
+			color: rgba(255, 255, 255, 0.8);
+		}
+	}
+
+	&__clearbutton {
+		width: 24px;
+		height: 24px;
+		margin-right: 8px;
+
+		horizontal-align: right;
+		vertical-align: middle;
+
+		background-color: none;
+		border-radius: 0;
+	}
+
+	&__clearicon {
+		vertical-align: middle;
+		opacity: 0.25;
+
+		transition: opacity 0.2s ease-in-out 0s;
+
+		#{$root}:hover & {
+			opacity: 0.5;
+		}
+
+		&:hover {
+			opacity: 1.0;
+		}
+	}
+}

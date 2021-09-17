@@ -1,0 +1,12 @@
+@use '../config' as *;
+@use '../abstract/function';
+@use 'sass:list';
+
+@each $name, $colors in $gradients-primary {
+	.gradient-horizontal-#{$name} {
+		background-color: function.gradient-horizontal(list.nth($colors, 1), list.nth($colors, 2));
+	}
+	.gradient-vertical-#{$name} {
+		background-color: function.gradient-vertical(list.nth($colors, 1), list.nth($colors, 2));
+	}
+}

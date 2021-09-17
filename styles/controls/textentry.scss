@@ -1,0 +1,54 @@
+@use '../config' as *;
+@use '../abstract/mixin';
+@use 'sass:color';
+
+TextEntry {
+	@include mixin.font-styles($use-header: false);
+	font-size: $font-default-size;
+}
+
+.textentry {
+	height: $textentry-height;
+	width: $textentry-width;
+	padding: $textentry-padding;
+	background-color: $textentry-background;
+	border: $textentry-border;
+	border-radius: $textentry-radius;
+	box-shadow: $textentry-shadow;
+	font-size: $textentry-font-size;
+	color: $font-default-color;
+	text-overflow: clip;
+	vertical-align: middle;
+	white-space: nowrap;
+	transition-property: background-color, box-shadow;
+	transition-duration: 0.2s;
+	transition-timing-function: ease-in-out;
+
+	#PlaceholderText {
+		color: $textentry-placeholder-color;
+		font-size: $textentry-placeholder-font-size;
+		horizontal-align: left;
+		vertical-align: middle;
+
+		opacity: 1;
+
+		transition-property: opacity;
+		transition-duration: 0.1s;
+	}
+	
+	&:hover {
+		background-color: $textentry-background-hover;
+		box-shadow: $textentry-shadow-hover;
+	}
+
+	&:focus {
+		background-color: $textentry-background-focus;
+		box-shadow: $textentry-shadow-hover;
+	}
+
+	&:focus #PlaceholderText,
+	&.HasInput #PlaceholderText {
+		opacity: 0;
+	}
+	
+}

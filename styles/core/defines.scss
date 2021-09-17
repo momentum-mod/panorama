@@ -1,0 +1,61 @@
+/* @defines used by Panorama C++ code. Where possible, remove these and convert to Sass variables.
+	According to SCell, the ones used in code are:
+		ContextMenuFadoutTime
+		DragScrollFlickTime
+		GridFocusBumperTimeout
+		mousepanningcursorsize
+		selectedTextBackgroundColor
+		toastExitDuration 
+		
+	However several of those aren't defined here. Removing ContextMenuFadeoutTime will indeed crash contextmenus! */
+
+@define momentumBlue: #1896d3;
+@define lightMomentumBlue: #71f0ff;
+@define steamOnlineColor: #80a438;
+@define blueColor: #3281AC;
+@define blueColorDark: #0D354A;
+@define disabledColor: rgba(90, 90, 90, 1);
+@define negativeColor: #c21b1b;
+@define warningColor: #b1af2d;
+@define positiveColor: #4caf50;
+@define contentPanelBackground: rgba(20, 20, 20, 0.4);
+@define blurBackgroundColor: rgba(40, 40, 40, 0.3);
+@define tileBlurBackgroundColor: rgba(0, 0, 0, 0.5);
+@define itemBackgroundGradient: gradient(linear, 0% 0%, 0% 100%, from(#1e2a38dd), to(#19232fdd));
+@define contextMenuBackground : rgba(44, 44, 44, 0.98);
+@define btnBorderRadius: 2px;
+@define backgroundGradient: gradient(linear, 75% 100%, 0% 0%, from(#14202b), to(#1e2d3d));
+@define textBlueGradient: gradient(linear, 0% 100%, 0% 0%, from(blueColor), to(blueColorDark));
+
+@define baseText: #ffffffff;
+@define baseBorder: #444444ff;
+@define selectedTextBackgroundColor: #0D354Abb;
+
+@define Chaoslevelgradient: gradient(linear, 0% 0%, 0% 100%, from(#BBCAEA), color-stop(0.5, #ffffff), color-stop(0.5, #D9DFEC), to(#BBCAEA));
+@define Chaosplaytimegradient: gradient(linear, 0% 0%, 0% 100%, from(#3db451), color-stop(0.5, #beffc7), color-stop(0.5, #91d69a), to(#3db451));
+
+/* ContextMenu - used in code -- dont rename */
+@define ContextMenuFadoutTime: 0s;
+
+/* Z layers */
+@define contextmenu_zindex: 10000100;
+@define submenu_zindex: 10000100;
+
+@define mousepanningcursorsize: 99px;
+
+@define monospaceFont: notomono-regular;
+@define stratum2Font: Stratum2,
+"Arial Unicode MS";
+@define stratum2monoFont: Stratum2 Regular Monodigit,
+"Arial Unicode MS";
+@define stratum2monoFontBold: Stratum2 Bold Monodigit,
+"Arial Unicode MS";
+
+@define shadowOffset: fill #000000aa 0px 0px 8px 4px;
+
+/* anim times */
+@define subMenuFadoutTime: 0.25s;
+
+/* curves */
+@define curve__ease-out-cubic: cubic-bezier(0.215, 0.61, 0.355, 1);
+@define curve__ease-out-back: cubic-bezier(0.175, 0.885, 0.32, 1.275);

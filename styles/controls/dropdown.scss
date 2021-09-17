@@ -1,0 +1,244 @@
+@use '../config' as *;
+@use '../abstract/mixin';
+@use 'sass:color';
+@use 'sass:list';
+
+// Dropdown behaviour is affected by complex C++ code and requires a lot of inheritance for styling. Yuck!
+
+// @Devs - I can't theme this properly because I need a panel for the downwards facing arrow and its background.
+// A regular panel with the class DropDownIcon is all that's needed.
+.dropdown {
+	//Delete this once new panel is in
+	background-image: url("file://{images}/down-arrow.svg");
+	background-repeat: no-repeat;
+	background-position: right 24px 50%;
+	background-size: 12px 12px;
+
+	flow-children: right;
+	background-color: $dropdown-button-background;
+	border-radius: $dropdown-button-radius;
+	box-shadow: $dropdown-button-shadow;
+	vertical-align: center;
+	horizontal-align: right;
+
+	z-index: 1;
+	transition-property: background-color;
+	transition-duration: 0.1s;
+	transition-timing-function: ease-in-out;
+
+	& .DropDownIcon {
+		border-radius: $button-radius;
+		height: 100%;
+		min-width: 32px;
+
+		background-image: url("file://{images}/down-arrow.svg");
+		background-repeat: no-repeat;
+		background-position: right 22px 50%;
+		background-size: 12px 12px;
+
+		background-color: $dropdown-button-icon-background;
+		border: $dropdown-button-icon-border;
+
+		z-index: 0;
+
+		transition-property: background-color, border;
+		transition-duration: 0.15s;
+		transition-timing-function: ease-in-out;
+	}
+
+	&:hover .DropDownIcon {
+		background-color: $dropdown-button-icon-background-hover;
+		border: list.nth($dropdown-button-icon-border, 1) list.nth($dropdown-button-icon-border, 2) $dropdown-button-icon-border-hover;
+	}
+
+	// Inserted by code
+	&.DropDownMenuVisible {
+		background-color: $dropdown-button-background-menuvisible;
+		transition-duration: 0s;
+	}
+
+	&:hover {
+		background-color: $dropdown-button-background-hover;
+		transition: none 0s linear 0s;
+	}
+
+	&:disabled,
+	&:parentdisabled,
+	&:disabled:hover {
+		background-color: $dropdown-button-background-disabled;
+	}
+
+	// DropDown/DropDropMenu needs a label as its immediate child to function properly.
+	// Don't have a way of determining whether the label has an Image child or not,
+	// so we need to give it an extra class to pad the space for the image properly
+	& Label {
+		@include mixin.font-styles($use-header: $dropdown-button-use-header-font);
+		color: $dropdown-button-color;
+		font-size: $dropdown-button-font-size;
+
+		text-overflow: ellipsis;
+		white-space: nowrap;
+
+		vertical-align: center;
+
+		padding: $dropdown-button-padding;
+
+		// Remove once image panel is possible
+		margin-right: $dropdown-button-icon-width;
+		vertical-align: center;
+	}
+
+	&:disabled Label {
+		color: $dropdown-button-color-disabled;
+	}
+
+	& .IconLabel {
+		padding-left: $dropdown-button-font-size + list.nth($dropdown-button-padding, 2) + 6px;
+	}
+
+	Image {
+		vertical-align: middle;
+		height: $dropdown-button-font-size - 2px;
+		width: height-percentage(100%);
+		transform: translateX($dropdown-button-font-size * -1 + -6px);
+	}
+}
+
+
+// careful merging these back together, lots of changes made to above
+.dropdown-temp {
+	flow-children: right;
+
+	background-color: $dropdown-button-background;
+	border-radius: $dropdown-button-radius;
+	box-shadow: $dropdown-button-shadow;
+
+	vertical-align: center;
+	horizontal-align: right;
+
+	min-height: 32px;
+	min-width: 32px;
+	z-index: 1;
+
+	& .DropDownIcon {
+		border-radius: $button-radius;
+		height: 100%;
+		min-width: 32px;
+
+		background-image: url("file://{images}/down-arrow.svg");
+		background-repeat: no-repeat;
+		background-position: right 22px 50%;
+		background-size: 12px 12px;
+
+		background-color: $dropdown-button-icon-background;
+		border: $dropdown-button-icon-border;
+
+		z-index: 0;
+
+		transition-property: background-color, border;
+		transition-duration: 0.15s;
+		transition-timing-function: ease-in-out;
+	}
+
+	&:hover .DropDownIcon {
+		background-color: $dropdown-button-icon-background-hover;
+		border: list.nth($dropdown-button-icon-border, 1) list.nth($dropdown-button-icon-border, 2) $dropdown-button-icon-border-hover;
+	}
+
+	&>Label {
+		@include mixin.font-styles($use-header: $dropdown-button-use-header-font);
+
+		color: $dropdown-button-color;
+
+		font-size: $dropdown-button-font-size;
+
+		padding: $dropdown-button-padding;
+
+		// Remove once image panel is possible
+		// margin-right: $dropdown-button-icon-width;
+		vertical-align: center;
+	}
+
+	Label {
+		padding-left: $dropdown-button-font-size + list.nth($dropdown-button-padding, 2) + 6px;
+	}
+
+	Image {
+		vertical-align: middle;
+		height: $dropdown-button-font-size - 2px;
+		width: height-percentage(100%);
+		transform: translateX($dropdown-button-font-size * -1 + -6px);
+	}
+}
+
+.dropdown-menu {
+	flow-children: down;
+	overflow: squish scroll;
+	max-height: 665px;
+	padding: $dropdown-menu-padding-y list.nth($dropdown-menu-border, 1) * -1; // Negative horizontal padding to account for dumb Valve code.
+
+	border: $dropdown-menu-border;
+
+	border-radius: $dropdown-menu-radius;
+	background-color: $dropdown-menu-background;
+	box-shadow: $dropdown-menu-shadow;
+
+	z-index: 0;
+
+	visibility: collapse; // Make sure the dropdown menu does not take part in the layout traversal if not shown on the screen
+
+	width: fit-children;
+
+	opacity: 0.0;
+	transition-property: opacity;
+	transition-duration: 0.1s;
+	transition-timing-function: ease-in-out;
+
+	Label {
+		horizontal-align: left;
+		vertical-align: center;
+		padding: $dropdown-item-padding;
+
+		@include mixin.font-styles($use-header: $dropdown-item-use-header-font);
+		font-size: $dropdown-item-font-size;
+		text-shadow: 0 0 0;
+
+		background-color: $dropdown-item-background;
+
+		z-index: 0;
+
+		transition: background-color 0.1s linear 0s;
+
+		&:hover {
+			background-color: $dropdown-item-background-hover;
+			//sound: "UIPanorama.submenu_rollover";
+		}
+
+		&.IconLabel {
+			padding-left: list.nth($dropdown-item-padding, 4) + $dropdown-item-font-size + 6px;
+		}
+	}
+
+	Image {
+		vertical-align: middle;
+		height: $dropdown-item-font-size - 2px;
+		width: height-percentage(100%);
+		transform: translateX($dropdown-item-font-size * -1 - 6px);
+	}
+
+	&.DropDownMenuVisible {
+		opacity: 1.0;
+		visibility: visible;
+		box-shadow: $dropdown-menu-shadow;
+		border-radius: $button-radius;
+
+		max-height: 444px;
+		//sound: "UIPanorama.submenu_dropdown_select";
+	}
+}
+
+// This Panel is inserted by code to span the screen behind the dropdown to catch clicks outside the dropdownmenu
+DropDownMenuBackground {
+	width: 100%;
+	height: 100%;
+}

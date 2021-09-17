@@ -1,0 +1,8 @@
+@use 'sass:color';
+@use 'abstract/function' as *;
+
+// For basic customisation, any variable in config.scss can be overriden here. Then run `panorama_reload` or press F7 ingame to automatically recompile the styles and see your changes!
+// Further details upcoming on docs.momentum-mod.org!
+
+// Example: 
+// $font-primary: Comic Sans MS;

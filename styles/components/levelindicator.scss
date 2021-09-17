@@ -1,0 +1,25 @@
+@use '../config' as *;
+@use '../abstract/mixin';
+
+.levelindicator {
+	&__level {
+		vertical-align: middle;
+		horizontal-align: right;
+		background-color: #47c27c;
+		margin-left: 8px;
+		flow-children: right;
+		padding: 4px;
+	}
+
+	&__icon {
+		vertical-align: middle;
+		margin-right: 3px;
+	}
+
+	&__text {
+		@include mixin.font-styles($use-header: true);
+		font-size: 20px;
+		text-align: center;
+		horizontal-align: center;
+	}
+}
