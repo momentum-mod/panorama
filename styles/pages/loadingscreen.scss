@@ -1,0 +1,74 @@
+.loadingscreen {
+	width: 100%;
+	height: 100%;
+
+	&__details {
+		flow-children: none;
+		width: 100%;
+		height: fill-parent-flow(1.0);
+		margin: 32px 48px 8px 48px;
+	}
+
+	&__left-details {
+		flow-children: down;
+		vertical-align: top;
+		horizontal-align: left;
+	}
+
+	&__right-details {
+		flow-children: down;
+		vertical-align: top;
+		horizontal-align: right;
+	}
+
+	&__right-label {
+		text-align: right;
+		horizontal-align: right;
+	}
+
+	&__tip {
+		vertical-align: bottom;
+		horizontal-align: center;
+		margin-bottom: 100px;
+	}
+
+	&__progressbar {
+		width: 100%;
+		height: 20px;
+	}
+
+	&__status-label {
+		vertical-align: bottom;
+		horizontal-align: left;
+	}
+
+	&__percentage-label {
+		vertical-align: bottom;
+		horizontal-align: right;
+		text-align: right;
+	}
+}
+
+/* NOTE: This class/animation is used by the game code, do not rename/remove! */
+/* If you want to remove the animation, just set duration to 0s instead. */
+.loading-screen--closing {
+	animation-name: loading-screen--closing-animation;
+	animation-duration: 1s;
+	animation-timing-function: ease-in-out;
+	animation-iteration-count: 1;
+	animation-fill-mode: forwards;
+}
+
+@keyframes loading-screen--closing-animation {
+	0% {
+		opacity: 1.0;
+	}
+
+	70% {
+		opacity: 1.0;
+	}
+
+	100% {
+		opacity: 0.0;
+	}
+}

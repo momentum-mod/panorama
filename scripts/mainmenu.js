@@ -123,7 +123,7 @@ class MainMenuController {
 			if( MainMenuController.activeTab )
 			{
 				const panelToHide = $.GetContextPanel().FindChildInLayoutFile(MainMenuController.activeTab);
-				panelToHide.AddClass( 'mainmenu-content--hidden' );
+				panelToHide.AddClass( 'mainmenu__content--hidden' );
 
 				$.Msg( 'HidePanel: ' + MainMenuController.activeTab  );
 			}
@@ -131,7 +131,7 @@ class MainMenuController {
 			//Show selected tab
 			MainMenuController.activeTab = tab;
 			const activePanel = $.GetContextPanel().FindChildInLayoutFile(tab);
-			activePanel.RemoveClass( 'mainmenu-content--hidden' );
+			activePanel.RemoveClass( 'mainmenu__content--hidden' );
 
 			// Force a reload of any resources since we're about to display the panel
 			activePanel.visible = true;
@@ -146,20 +146,20 @@ class MainMenuController {
 
 	static showContentPanel()
 	{
-		if ( MainMenuController.contentPanel.HasClass( 'mainmenu-content--hidden' ) ) {
-			MainMenuController.contentPanel.RemoveClass( 'mainmenu-content--hidden' );
+		if ( MainMenuController.contentPanel.HasClass( 'mainmenu__content--hidden' ) ) {
+			MainMenuController.contentPanel.RemoveClass( 'mainmenu__content--hidden' );
 		}
 
 		$.DispatchEvent( 'ShowContentPanel' );
 		
-		$('#HomeContent').AddClass('hidden');
+		$('#HomeContent').AddClass('homecontent--hidden');
 		
 	}
 
 	static onHideContentPanel()
 	{
 		$.Msg("Hide content panel");
-		MainMenuController.contentPanel.AddClass( 'mainmenu-content--hidden' );
+		MainMenuController.contentPanel.AddClass( 'mainmenu__content--hidden' );
 
 		// Uncheck the active button in the main menu navbar.
 		const elActiveNavBarBtn = MainMenuController.getActiveNavBarButton();
@@ -170,13 +170,13 @@ class MainMenuController {
 		// If the tab exists then hide it
 		if ( MainMenuController.activeTab ) {
 			const panelToHide = $.GetContextPanel().FindChildInLayoutFile(MainMenuController.activeTab);
-			panelToHide.AddClass( 'mainmenu-content--hidden' );
+			panelToHide.AddClass( 'mainmenu__content--hidden' );
 			 $.Msg('HidePanel: ' + MainMenuController.activeTab);
 		}
 
 		MainMenuController.activeTab = '';
 		
-		$('#HomeContent').RemoveClass('hidden');
+		$('#HomeContent').RemoveClass('homecontent--hidden');
 	}
 
 	static getActiveNavBarButton()
@@ -267,13 +267,13 @@ class MainMenuController {
 	{
 		UiToolkitAPI.ShowGenericPopupTwoOptionsBgStyle( 'Quit',
 			'Are you sure you want to quit?',
-			'',
-			'Quit',
-			MainMenuController.quitGame,
+			'quit-popup',
 			'Return',
 			function() {
 			},
-			'dim'
+			'Quit',
+			MainMenuController.quitGame,
+			'blur'
 		);
 	}
 

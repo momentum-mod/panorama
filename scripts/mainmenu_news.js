@@ -41,7 +41,7 @@ class MainMenuNews {
 				const entry = $.CreatePanel( 'Panel', container, 'NewsEntry' + i, {
 					acceptsinput: true,
 					onactivate: 'SteamOverlayAPI.OpenURLModal( "' + item.link + '" );',
-					class: 'news-preview-panel'
+					class: 'news__other-item'
 				} );
 				entry.LoadLayoutSnippet( 'news-update-preview' );
 				entry.FindChildInLayoutFile( 'NewsUpdatePreview' ).SetImage( item.image );

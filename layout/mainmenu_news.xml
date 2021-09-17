@@ -1,7 +1,7 @@
 <root>
 	<styles>
-		<include src="file://{resources}/styles/chaosstyles.css" />
-		<include src="file://{resources}/styles/mainmenu_news.css" />
+		<include src="file://{resources}/styles/main.scss" />
+		<include src="file://{resources}/styles/pages/mainmenu.scss" />
 	</styles>
 	<scripts>
 		<include src="file://{resources}/scripts/mainmenu_news.js" />
@@ -9,30 +9,30 @@
 	<snippets>
 		<snippet name="news-learn-more">
 			<Panel>
-				<Button class="full-width" id="LearnMore">
-					<Label text="Learn More" />
+				<Button class="padding-none button button--blue full-width" id="LearnMore">
+					<Label class="button__text text--m" text="Learn More" />
 				</Button>
 			</Panel>
 		</snippet>
 		<snippet name="news-update-preview">
 			<Panel>
-				<Image id="NewsUpdatePreview" src="" scaling="stretch-to-fit-y-preserve-aspect" horizontalalign="left" class="news-preview-image" />
+				<Image id="NewsUpdatePreview" class="news__other-image" src="" scaling="stretch-to-fit-y-preserve-aspect" horizontalalign="left" />
 			</Panel>
 		</snippet>
 	</snippets>
 
 	<Panel>
-		<Panel id="NewsContainer">
-			<Panel id="LatestUpdate">
-				<Panel id="LatestUpdateDetails">
-					<Label class="news-header" text="Updates" />
-					<Label class="news-subheader" text="{s:title}" />
-					<Label html="true" class="news-description" text="{s:h:description}" />
-					<Panel id="LearnMoreParent" />
+		<Panel class="news">
+			<Panel id="LatestUpdate" class="news__latest">
+				<Panel id="LatestUpdateDetails" class="news__latest-details">
+					<Label class="text--h4" text="Updates" />
+					<Label class="text--h6" text="{s:title}" />
+					<Label html="true" class="news__latest-description" text="{s:h:description}" />
+					<Panel id="LearnMoreParent" class="news__latest-learnmore" />
 				</Panel>
-				<Image id="LatestUpdateImage" scaling="stretch-to-fit-preserve-aspect" src="" />
+				<Image id="LatestUpdateImage" class="news__latest-image" scaling="stretch-to-fit-preserve-aspect" src="" />
 			</Panel>
-			<Panel id="OtherUpdates">
+			<Panel id="OtherUpdates" class="news__other">
 				
 			</Panel>
 		</Panel>
