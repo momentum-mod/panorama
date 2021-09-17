@@ -96,6 +96,9 @@
 										cubemap="cubemaps/cubemap_menu_model_bg.hdr"
 										antialias="true"
 										mouse_rotate="true" />
+								<RadioButton id="ControlsLibraryButton" class="bottombar__button" onactivate="MainMenuController.navigateToTab('ControlsLibrary', 'controlslibrary')">
+									<Image class="bottombar__button-image" src="file://{images}/topnav/quiz.svg" textureheight="64" />
+								</RadioButton>
 						</Panel>
 						<Panel id="JsMainMenuContent" class="mainmenu-content mainmenu-content--hidden">
 							<Panel id="MainMenuContentBlur" class="full-width full-height" />

@@ -208,6 +208,10 @@ class MainMenuController {
 		
 		model.SetDirectionalLightColor(0, 0.5, 0.5, 0.5);
 		model.SetDirectionalLightDirection(0, 1.0, 0.0, 0.0);
+
+		if (GameInterfaceAPI.GetSettingBool('developer')) {
+			$('#ControlsLibraryButton').RemoveClass('hide');
+		}
 	}
 
 	static setMainMenuBackground() 

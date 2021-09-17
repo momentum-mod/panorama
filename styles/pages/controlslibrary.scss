@@ -1,0 +1,18 @@
+.sample-block {
+	min-width: 32px;
+	min-height: 32px;
+}
+
+#ControlsLibraryPanel {
+	transition: transform 0.2s linear 0s;
+}
+
+.very-useful-class {
+	transform: rotateX(180deg);
+}
+
+.more-useful-class {
+	saturation: 5;
+	brightness: 5;
+	contrast: 5;
+}
