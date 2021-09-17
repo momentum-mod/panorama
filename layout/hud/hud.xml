@@ -1,7 +1,7 @@
 <root>
 	<styles>
-		<include src="file://{resources}/styles/chaosstyles.css" />
-		<include src="file://{resources}/styles/hud/hud.css" />
+		<include src="file://{resources}/styles/main.scss" />
+		<include src="file://{resources}/styles/hud/hud.scss" />
 	</styles>
 
 	<ChaosHud hittest="false">

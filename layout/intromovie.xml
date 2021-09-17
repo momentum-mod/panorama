@@ -1,7 +1,7 @@
 <root>
 	<styles>
-		<include src="file://{resources}/styles/chaosstyles.css" />
-		<include src="file://{resources}/styles/intromovie.css" />
+		<include src="file://{resources}/styles/main.scss" />
+		<include src="file://{resources}/styles/pages/intromovie.scss" />
 	</styles>	
 	<scripts>
 		<include src="file://{resources}/scripts/intromovie.js" />

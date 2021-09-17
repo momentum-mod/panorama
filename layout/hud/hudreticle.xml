@@ -1,7 +1,6 @@
 <root>
 	<styles>
-		<include src="file://{resources}/styles/chaosstyles.css" />
-		<include src="file://{resources}/styles/hud/hudreticle.css" />
+		<include src="file://{resources}/styles/hud/hudreticle.scss" />
 	</styles>
 
 	<MomHudReticle hittest="false" hittestchildren="false" >

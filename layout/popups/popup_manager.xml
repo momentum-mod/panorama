@@ -1,7 +1,6 @@
 <root>
 	<styles>
-		<include src="file://{resources}/styles/gamestyles.css" />
-		<include src="file://{resources}/styles/popups/popup_manager.css" />
+		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 
 	<ChaosPopupManager hittest="false">

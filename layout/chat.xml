@@ -16,7 +16,7 @@
 
 <root>
 	<styles>
-		<include src="file://{resources}/styles/chaosstyles.css"/>
+        <include src="file://{resources}/styles/main.scss" />
 		<include src="file://{resources}/styles/chat.css"/>
 	</styles>
 	<scripts>
@@ -31,7 +31,7 @@
 		</snippet>
 		<snippet name="lobby-chat-message-spec">
 			<Panel class="lobby-chat-message__cont">
-				<Image class="lobby-chat-message__spec-icon" src="file://{images}/chat/spectatingIcon.svg" textureheight="16" />
+				<Image class="lobby-chat-message__spec-icon" src="file://{images}/chat/spectating.svg" textureheight="16" />
 				<Label text="&lt;b&gt;{s:author_name}&lt;/b&gt;: {s:message}" html="true"/>
 			</Panel>
 		</snippet>

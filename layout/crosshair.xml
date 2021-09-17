@@ -1,7 +1,7 @@
 <root>
 	<styles>
-		<include src="file://{resources}/styles/chaosstyles.css" />
-		<include src="file://{resources}/styles/crosshair.css" />
+		<include src="file://{resources}/styles/main.scss" />
+		<include src="file://{resources}/styles/hud/crosshair.scss" />
 	</styles>
 
 	<MomCrosshair clampfractionalpixelpositions="false">

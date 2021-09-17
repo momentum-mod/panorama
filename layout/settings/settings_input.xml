@@ -1,6 +1,6 @@
 <root>
 	<styles>
-		<include src="file://{resources}/styles/chaosstyles.css" />
+		<include src="file://{resources}/styles/main.scss" />
 		<include src="file://{resources}/styles/settings/settings_shared.css" />
 	</styles>
 	
@@ -20,7 +20,7 @@
 		
 		<Panel class="settings-scroll-container">
 			<Panel id="SettingsMouseSettings" class="settings-group">
-				<Label class="header" text="#MOM_Settings_Title_Mouse" />
+				<Label class="text--h2" text="#MOM_Settings_Title_Mouse" />
 
 				<ChaosSettingsSlider text="#GameUI_MouseSensitivity" min="0.1" max="10" displayprecision="2" convar="sensitivity" />
 				<ChaosSettingsEnum text="#GameUI_MouseAcceleration" convar="m_customaccel">
@@ -53,11 +53,11 @@
 			<Panel class="settings-horizontal-separator" />
 			
 			<Panel id="SettingsKeybinds" class="settings-group thin">
-				<Label class="header" text="#MOM_Settings_Title_Key" />
+				<Label class="text--h2" text="#MOM_Settings_Title_Key" />
 				
-				<Panel class="full-width left-right-flow top-padding-large">
-					<Label class="subheader horizontal-align-left" text="#Valve_Movement_Title" />
-					<Label class="subheader horizontal-align-right" text="#GameUI_KeyButton" />
+				<Panel class="full-width left-right-flow">
+					<Label class="text--h3 horizontal-align-left" text="#Valve_Movement_Title" />
+					<Label class="text--h3 horizontal-align-right" text="#GameUI_KeyButton" />
 				</Panel>
 				<ChaosSettingsKeyBinder text="#Valve_Move_Forward" bind="+forward" />
 				<ChaosSettingsKeyBinder text="#Valve_Move_Back" bind="+back" />
@@ -75,8 +75,8 @@
 				<ChaosSettingsKeyBinder text="#MOM_Toggle_Walk" bind="toggle_walk" />
 				
 				<Panel class="full-width left-right-flow top-padding-large">
-					<Label class="subheader horizontal-align-left" text="#MOM_Controls_Title" />
-					<Label class="subheader horizontal-align-right" text="#GameUI_KeyButton" />
+					<Label class="text--h3 horizontal-align-left" text="#MOM_Controls_Title" />
+					<Label class="text--h3 horizontal-align-right" text="#GameUI_KeyButton" />
 				</Panel>
 				<ChaosSettingsKeyBinder text="#MOM_Controls_Restart" bind="mom_restart" />
 				<ChaosSettingsKeyBinder text="#MOM_Controls_RestartStage" bind="mom_restart_stage" />
@@ -91,8 +91,8 @@
 				<ChaosSettingsKeyBinder text="#MOM_Controls_ClearStartMark" bind="mom_start_mark_clear" />
 				
 				<Panel class="full-width left-right-flow top-padding-large">
-					<Label class="subheader horizontal-align-left" text="#Valve_Combat_Title" />
-					<Label class="subheader horizontal-align-right" text="#GameUI_KeyButton" />
+					<Label class="text--h3 horizontal-align-left" text="#Valve_Combat_Title" />
+					<Label class="text--h3 horizontal-align-right" text="#GameUI_KeyButton" />
 				</Panel>
 				<ChaosSettingsKeyBinder text="#Valve_Primary_Attack" bind="+attack" />
 				<ChaosSettingsKeyBinder text="#Valve_Secondary_Attack" bind="+attack2" />
@@ -107,8 +107,8 @@
 				<ChaosSettingsKeyBinder text="#Valve_Weapon_Category_5" bind="slot5" />
 				
 				<Panel class="full-width left-right-flow top-padding-large">
-					<Label class="subheader horizontal-align-left" text="#Valve_Miscellaneous_Title" />
-					<Label class="subheader horizontal-align-right" text="#GameUI_KeyButton" />
+					<Label class="text--h3 horizontal-align-left" text="#Valve_Miscellaneous_Title" />
+					<Label class="text--h3 horizontal-align-right" text="#GameUI_KeyButton" />
 				</Panel>
 				<ChaosSettingsKeyBinder text="#Valve_Take_Screen_Shot" bind="jpeg" />
 				<ChaosSettingsKeyBinder text="#Valve_Quit_Game" bind="quit" />

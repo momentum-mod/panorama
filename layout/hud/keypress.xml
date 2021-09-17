@@ -1,7 +1,6 @@
 <root>
 	<styles>
-		<include src="file://{resources}/styles/chaosstyles.css" />
-		<include src="file://{resources}/styles/hud/keypress.css" />
+		<include src="file://{resources}/styles/hud/keypress.scss" />
 	</styles>
 
 	<MomHudKeyPress>

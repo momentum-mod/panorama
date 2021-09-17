@@ -1,33 +1,32 @@
 <root>
 	<styles>
-		<include src="file://{resources}/styles/chaosstyles.css" />
-		<include src="file://{resources}/styles/loadingscreen.css" />
+		<include src="file://{resources}/styles/main.scss" />
+		<include src="file://{resources}/styles/pages/loadingscreen.scss" />
 	</styles>
 
 	<scripts>
 		<include src="file://{resources}/scripts/loadingscreen.js" />
 	</scripts>
 
-	<Panel class="loading-root">
-		<Image id="BackgroundImageDefault" src="file://{images}/bg_00.vtf" />
-		<Image id="BackgroundImage" scaling="stretch-to-cover-preserve-aspect" />
-	
-		<Panel class="full-width full-height top-bottom-flow">
-			<Panel id="DetailsContainer">
-			`	<Panel class="top-left">
-					<Label id="MapName" class="header" text="{s:mapname}" />
-					<Label id="Author" class="subheader" text="By {s:author}" />
-				</Panel>
-			`	<Panel class="top-right">
-					<Label id="TierAndType" class="header" text="Tier {d:tier} - {s:tracktype}" />
-					<Label id="NumZones" class="subheader" text="{d:numzones} zones" />
-				</Panel>
-				<Label id="GameModeTip" text="{s:tip}" />
-				<Label id="ProgressStatusText" class="header horizontal-align-left vertical-align-bottom" text="Loading..." />
-				<Label id="PercentText" class="header horizontal-align-right vertical-align-bottom" text="{d:percent}%" />
-			</Panel>
+	<Panel class="loadingscreen">
+		<Image id="BackgroundImageDefault" class="full" src="file://{images}/bg_00.vtf" />
+		<Image id="BackgroundImage" class="full hide" scaling="stretch-to-cover-preserve-aspect" />
 
-			<ProgressBar id="ProgressBar"/>
+		<Panel class="full top-bottom-flow">
+			<Panel class="loadingscreen__details">
+				<Panel class="loadingscreen__left-details">
+					<Label id="MapName" class="text--h1" text="{s:mapname}" />
+					<Label id="Author" class="text--h2" text="By {s:author}" />
+				</Panel>
+				<Panel class="loadingscreen__right-details">
+					<Label id="TierAndType" class="text--h1 loadingscreen__right-label" text="Tier {d:tier} - {s:tracktype}" />
+					<Label id="NumZones" class="text--h2 loadingscreen__right-label" text="{d:numzones} zones" />
+				</Panel>
+				<Label id="GameModeTip" class="text--l loadingscreen__tip" text="{s:tip}" />
+				<Label id="ProgressStatusText" class="text--h1 loadingscreen__status-label" text="Loading..." />
+				<Label id="PercentText" class="text--h1 loadingscreen__percentage-label" text="{d:percent}%" />
+			</Panel>
+			<ProgressBar id="ProgressBar" class="loadingscreen__progressbar"/>
 		</Panel>
 	</Panel>
 </root>

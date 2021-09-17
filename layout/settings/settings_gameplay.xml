@@ -1,6 +1,6 @@
 <root>
 	<styles>
-		<include src="file://{resources}/styles/chaosstyles.css" />
+		<include src="file://{resources}/styles/main.scss" />
 		<include src="file://{resources}/styles/settings/settings_shared.css" />
 	</styles>
 	
@@ -29,7 +29,7 @@
 		
 		<Panel class="settings-scroll-container">
 			<Panel id="SettingsGeneral" class="settings-group">
-				<Label class="header" text="#MOM_Settings_Title_Gameplay_General" />
+				<Label class="text--h2" text="#MOM_Settings_Title_Gameplay_General" />
 				
 				<TooltipPanel class="settings-tooltip" tooltip="#MOM_Settings_Yaw_Speed_TT">
 					<ChaosSettingsSlider text="#MOM_Settings_Yaw_Speed" min="0" max="360" convar="cl_yawspeed" />
@@ -74,7 +74,7 @@
 			<Panel class="settings-horizontal-separator" />
 			
 			<Panel id="SettingsPaint" class="settings-group">
-				<Label class="header" text="#MOM_Settings_Title_Gameplay_Paint" />
+				<Label class="text--h2" text="#MOM_Settings_Title_Gameplay_Paint" />
 				
 				<ChaosSettingsSlider text="#MOM_Settings_Paint_Scale_Label" min="0.001" max="1" percentage="true" convar="mom_paint_scale" />
 				<ChaosSettingsEnum text="#MOM_Settings_Paint_Apply_Sound" convar="mom_paint_apply_sound">
@@ -92,7 +92,7 @@
 			<Panel class="settings-horizontal-separator" />
 			
 			<Panel id="SettingsRunSafeguards" class="settings-group">
-				<Label class="header" text="#MOM_Settings_Title_Gameplay_Run_Safeguards" />
+				<Label class="text--h2" text="#MOM_Settings_Title_Gameplay_Run_Safeguards" />
 				
 				<ChaosSettingsEnumDropDown text="#MOM_Settings_Run_Safeguard_Practice_Mode" convar="mom_run_safeguard_practicemode">
 					<Label id="colorize1" text="#MOM_Settings_Run_Safeguard_Modes_None" value="0" />
@@ -136,7 +136,7 @@
 			<Panel class="settings-horizontal-separator" />
 			
 			<Panel id="SettingsRocketJump" class="settings-group">
-				<Label class="header" text="#MOM_Settings_Title_Gameplay_RJ" />
+				<Label class="text--h2" text="#MOM_Settings_Title_Gameplay_RJ" />
 				
 				<TooltipPanel class="settings-tooltip" tooltip="#MOM_Settings_RJ_Enable_Trail_Particle_TT">
 					<ChaosSettingsEnum text="#MOM_Settings_RJ_Enable_Trail_Particle" convar="mom_rj_particle_trail_enable">
@@ -188,7 +188,7 @@
 			<Panel class="settings-horizontal-separator" />
 			
 			<Panel id="SettingsStickyJump" class="settings-group">
-				<Label class="header" text="#MOM_Settings_Title_Gameplay_SJ" />
+				<Label class="text--h2" text="#MOM_Settings_Title_Gameplay_SJ" />
 				
 				<TooltipPanel class="settings-tooltip" tooltip="#MOM_Settings_SJ_Enable_Trail_Particle_TT">
 					<ChaosSettingsEnum text="#MOM_Settings_SJ_Enable_Trail_Particle" convar="mom_sj_particle_trail_enable">

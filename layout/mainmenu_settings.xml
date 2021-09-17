@@ -1,8 +1,8 @@
 <!-- MOM_TODO: Localise lots of stuff in here -->
 <root>
 	<styles>
-		<include src="file://{resources}/styles/chaosstyles.css" />
-		<include src="file://{resources}/styles/mainmenu.css"/>
+		<include src="file://{resources}/styles/main.scss" />
+		<include src="file://{resources}/styles/pages/mainmenu.scss"/>
 		<include src="file://{resources}/styles/settings/settings_shared.css"/>
 	</styles>
 	
@@ -13,16 +13,16 @@
 		
 	</scripts>
 	
-	<Panel class="mainmenu-content__container" useglobalcontext="true">
+	<Panel class="mainmenu__pagecontent" useglobalcontext="true">
 		
 		<Panel class="settings-header full-width">
-			<Label class="header" text="Settings"/>
+			<Label class="text--h2" text="Settings"/>
 
 			<Panel class="settings-search" acceptsfocus="true">
-				<Image src="file://{images}/searchIcon.svg" textureheight="64" />
+				<Image src="file://{images}/search.svg" textureheight="64" />
 				<TextEntry id="SettingsSearchTextEntry" maxchars="30" placeholder="Search..." /> 
 				<Button id="SettingsSearchClear" onactivate="SettingsMenuSearch.ClearSearch()">
-					<Image src="file://{images}/closeIcon.svg" textureheight="32" />
+					<Image src="file://{images}/close.svg" textureheight="32" />
 				</Button>
 			</Panel>
 		</Panel>

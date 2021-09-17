@@ -1,6 +1,6 @@
 <root>
 	<styles>		
-		<include src="file://{resources}/styles/chaosstyles.css" />
+		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 
 	<SimpleContextMenu class="ContextMenu" tabindex="auto" selectionpos="auto" >

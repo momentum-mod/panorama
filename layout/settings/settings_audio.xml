@@ -1,6 +1,6 @@
 <root>
 	<styles>
-		<include src="file://{resources}/styles/chaosstyles.css" />
+		<include src="file://{resources}/styles/main.scss" />
 		<include src="file://{resources}/styles/settings/settings_shared.css" />
 	</styles>
 	
@@ -11,7 +11,7 @@
 	<Panel class="settings-tab">
 		<BaseAudioSettings class="settings-scroll-container">
 			<Panel id="SettingsAudioSettings" class="settings-group">
-				<Label class="header" text="#MOM_Settings_Title_Audio" />
+				<Label class="text--h2" text="#MOM_Settings_Title_Audio" />
 				
 				<ChaosSettingsSlider text="#GameUI_SoundEffectVolume" min="0" max="1" percentage="true" convar="volume" />
 				<ChaosSettingsSlider text="#GameUI_MusicVolume" min="0" max="1" percentage="true" convar="snd_musicvolume" />

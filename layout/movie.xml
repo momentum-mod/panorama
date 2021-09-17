@@ -1,7 +1,6 @@
 <root>
 	<styles>
-		<include src="file://{resources}/styles/gamestyles.css" />
-		<include src="file://{resources}/styles/movie.css" />
+		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 	
 	<Movie>

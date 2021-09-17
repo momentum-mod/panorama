@@ -1,6 +1,6 @@
 <root>
 	<styles>
-		<include src="file://{resources}/styles/chaosstyles.css" />
+		<include src="file://{resources}/styles/main.scss" />
 		<include src="file://{resources}/styles/settings/settings_enum_dropdown.css" />
 		<include src="file://{resources}/styles/settings/settings_shared.css" />
 	</styles>
@@ -10,7 +10,7 @@
 			<Label id="Title" />
 		</Panel>
 		<Panel id="InputContainer">
-			<DropDown id="DropDown" />
+			<DropDown id="DropDown" class="dropdown"  menuclass="dropdown-menu" />
 		</Panel>
 	</ChaosSettingsEnumDropDown>
   

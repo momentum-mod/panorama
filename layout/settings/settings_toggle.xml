@@ -1,6 +1,6 @@
 <root>
 	<styles>
-		<include src="file://{resources}/styles/chaosstyles.css" />
+		<include src="file://{resources}/styles/main.scss" />
 		<include src="file://{resources}/styles/settings/settings_toggle.css" />
 		<include src="file://{resources}/styles/settings/settings_shared.css" />
 	</styles>

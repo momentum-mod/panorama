@@ -1,7 +1,7 @@
 <root>
 
 <styles>
-	<include src="file://{resources}/styles/chaosstyles.css" />
+	<include src="file://{resources}/styles/main.scss" />
 	<include src="file://{resources}/styles/settings/settings_shared.css" />
 </styles>
 
@@ -23,7 +23,7 @@
 			<Panel class="settings-scroll-container">
 				<Panel id="Search" class="settings-group">
 				<!-- MOM_TODO: localise -->
-					<Label class="header" text="#MOM_Settings_Search_Results" />
+					<Label class="text--h2" text="#MOM_Settings_Search_Results" />
 					<Panel id="SearchResultsContainer">
 
 					</Panel>
