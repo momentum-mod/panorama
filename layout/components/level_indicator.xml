@@ -1,0 +1,15 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+	<scripts>
+		<include src="file://{resources}/scripts/level_indicator.js" />
+	</scripts>
+
+	<Panel onload="LevelIndicator.onLoad()">
+		<Panel class="levelindicator__level" id="PlayerLevel">
+			<Image class="levelindicator__icon" id="PrestigeIcon" src="" textureheight="18" />
+			<Label class="levelindicator__text" id="LevelText" text="{d:level}" />
+		</Panel>
+	</Panel>
+</root>

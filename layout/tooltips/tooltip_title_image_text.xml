@@ -1,12 +1,13 @@
 <root>
 	<styles>
-    <include src="file://{resources}/styles/gamestyles.css" />
-    <include src="file://{resources}/styles/tooltips/tooltip_title_image_text.css" />
+		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 
-	<TooltipTitleImageText class="TitleImageTextContents">
-		<Label id="TitleLabel" html="true" />
-		<Image id="Image" />
-		<Label id="TextLabel" html="true" />
+	<TooltipTitleImageText class="tooltip__title-image-text-panel">
+		<Label id="TitleLabel" class="tooltip__title" html="true" />
+		<Panel class="tooltip__image-text-panel">
+			<Image id="Image" class="tooltip__image" />
+			<Label id="TextLabel" class="tooltip__text" html="true" />
+		</Panel>
 	</TooltipTitleImageText>
 </root>

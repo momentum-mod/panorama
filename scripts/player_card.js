@@ -22,8 +22,8 @@ class PlayerCard {
 
 		// Add level indicator
 		$.CreatePanel('Frame', $('#XpAndLevel'), '', {
-			class: 'level-indicator',
-			src: 'file://{resources}/layout/level_indicator.xml',
+			class: 'playercard__levelindicator',
+			src: 'file://{resources}/layout/components/level_indicator.xml',
 			level: level,
 			prestige: 0
 		});

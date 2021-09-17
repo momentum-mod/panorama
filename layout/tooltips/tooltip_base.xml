@@ -1,12 +1,9 @@
 <root>
 	<styles>
-    <include src="file://{resources}/styles/gamestyles.css" />
-    <include src="file://{resources}/styles/tooltips/tooltip_base.css" />
+		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 
-  <TooltipBase class="TooltipContainer" hittest="false" hittestchildren="false" >
-    <Panel class="TooltipRow" hittest="false">
-      <TooltipContents id="Contents" hittest="false" />
-    </Panel>
-  </TooltipBase>
+	<TooltipBase class="tooltip" hittest="false" hittestchildren="false">
+		<TooltipContents id="Contents" class="tooltip__contents" hittest="false" />
+	</TooltipBase>
 </root>

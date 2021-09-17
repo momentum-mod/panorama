@@ -1,10 +1,9 @@
 <root>
 	<styles>
-    <include src="file://{resources}/styles/gamestyles.css" />
-    <include src="file://{resources}/styles/tooltips/tooltip_text.css" />
+		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 
-  <TooltipText class="TextContents">   
-    <Label id="TextLabel" class="tooltip-txt-default" html="true" allowrawtext="true" />
-  </TooltipText>
+	<TooltipText class="tooltip__text-panel">
+		<Label id="TextLabel" class="tooltip__text" html="true" allowrawtext="true" />
+	</TooltipText>
 </root>

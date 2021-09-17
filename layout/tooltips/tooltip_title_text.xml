@@ -1,11 +1,10 @@
 <root>
 	<styles>
-    <include src="file://{resources}/styles/gamestyles.css" />
-    <include src="file://{resources}/styles/tooltips/tooltip_title_text.css" />
+		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 
-	<TooltipTitleText class="TitleTextContents">
-		<Label id="TitleLabel" html="true" />
-		<Label id="TextLabel" html="true" />
+	<TooltipTitleText class="tooltip__title-text-panel">
+		<Label id="TitleLabel" class="tooltip__title" html="true" />
+		<Label id="TextLabel" class="tooltip__text" html="true" />
 	</TooltipTitleText>
 </root>

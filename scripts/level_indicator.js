@@ -10,7 +10,7 @@ class LevelIndicator {
 		$('#PrestigeIcon').SetImage(LevelIndicator.getImageForPrestige(level, prestige));
 		if (prestige == 0) {
 			// No icon for prestige 0
-			$('#PrestigeIcon').AddClass('hidden');
+			$('#PrestigeIcon').AddClass('hide');
 		}
 		
 		const textColor = LevelIndicator.getTextColorForLevel(level);
@@ -19,7 +19,7 @@ class LevelIndicator {
 		
 		if (level == 500 && prestige == 5) {
 			// Once user reaches level 500 of 5th prestige, only show icon
-			$('#LevelText').AddClass('hidden');
+			$('#LevelText').AddClass('hide');
 		}
 	}
 	
