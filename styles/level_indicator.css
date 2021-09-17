@@ -1,17 +1,0 @@
-#PlayerLevel {
-	vertical-align: middle;
-	horizontal-align: right;
-	background-color: #47c27c;
-	margin-left: 8px;
-	flow-children: right;
-	height: 200px;
-	padding: 4px;
-}
-#PlayerLevel > Image {
-	vertical-align: middle;	margin-right: 3px;
-}
-#PlayerLevel > Label {
-	font-family: "Bebas Neue";
-	font-size: 20px;
-	text-align: center;
-}.hidden {	visibility: collapse;}
