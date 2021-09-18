@@ -105,6 +105,10 @@
 	color: rgba(255, 255, 255, 0.8);
 }
 
+.settings-search > TextEntry.HasInput #PlaceholderText {
+	opacity: 0;
+}
+
 .settings-search > Button {
 	width: 24px;
 	height: 24px;
@@ -152,6 +156,7 @@
 
 .settings-search-result Label
 {
+	vertical-align: middle;
 	padding-left: 12px;
 	transform: translateX(0);
 	transition: transform 0.2s ease-in-out 0s;
