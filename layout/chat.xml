@@ -16,7 +16,7 @@
 
 <root>
 	<styles>
-        <include src="file://{resources}/styles/main.scss" />
+		<include src="file://{resources}/styles/main.scss" />
 		<include src="file://{resources}/styles/chat.css"/>
 	</styles>
 	<scripts>
