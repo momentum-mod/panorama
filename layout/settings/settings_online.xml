@@ -44,7 +44,7 @@
 					</ChaosSettingsEnum>
 				</TooltipPanel>
 				<TooltipPanel class="settings-tooltip" tooltip="#MOM_Settings_Entity_Panels_TT">
-					<ChaosSettingsEnum text="#MOM_Settings_Entity_Panels" convar="mom_entpanels_enable_avatars">
+					<ChaosSettingsEnum text="#MOM_Settings_Entity_Panels" convar="mom_hud_ghost_entpanels_enable">
 						<RadioButton group="ghostpanels" text="Off" value="0" />
 						<RadioButton group="ghostpanels" text="On" value="1" />
 					</ChaosSettingsEnum>
