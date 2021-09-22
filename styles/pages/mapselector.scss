@@ -1,0 +1,425 @@
+@use '../config' as *;
+@use '../abstract/mixin';
+@use 'sass:map';
+
+$left-width: 808px; 
+
+.mapselector {
+	width: 100%;
+	height: 100%;
+	flow-children: right;
+
+	$root: &;
+
+	&__left {
+		width: $left-width;
+		height: 100%;
+		background-color: rgba(0, 0, 0, 0.2);
+
+		&-wrapper {
+			flow-children: down;
+			width: 100%;
+			height: 100%;
+			box-shadow: 0 0 16px 0 rgba(0, 0, 0, 0.5);
+		}
+	}
+
+	&__right {
+		flow-children: down;
+		horizontal-align: right;
+		width: 50%;
+		height: 100%;
+	}
+
+	&__maps,
+	&__playlists {
+		flow-children: down;
+		padding: 16px;
+	}
+
+	&__maps {
+		visibility: visible;
+		padding-right: 8px;
+	}
+
+	&__playlists {
+		width: $left-width + 24px;
+		height: fill-parent-flow(1);
+		visibility: collapse;
+	}
+
+	&__category-contents {
+		&--playlists {
+			#{$root}__maps {
+				visibility: collapse;
+			}
+			#{$root}__playlists {
+				visibility: visible;
+			}
+		}
+	}
+
+	&__emptywarning {
+		flow-children: down;
+		width: 100%;
+		height: 100%;
+		horizontal-align: center;
+		padding: 50px 100px 50px 100px;
+		margin-right: 8px;
+		background-color: rgba(0, 0, 0, 0.3);
+
+		&--hidden {
+			visibility: collapse;
+		}
+	}
+
+	// Elements are MapEntrys, in mapentry.scss
+	&__list {
+		flow-children: down;
+		height: fill-parent-flow(1);
+		padding-right: 16px;
+		width: 100%;
+		overflow: squish scroll;
+
+		& > VerticalScrollBar .ScrollThumb {
+			opacity: 1;
+		}
+	}
+
+}
+
+.category-tabs {
+	width: 100%;
+	flow-children: right;
+
+	&__tab {
+		width: fill-parent-flow(1);
+		padding: 8px 0;
+		transition: background-color 0.1s ease-in-out 0s;
+
+		&:not(:selected) {
+			background-color: rgba(0, 0, 0, 0.4);
+			&:hover {
+				background-color: rgba(0, 0, 0, 0.18);
+			}
+		}
+	}
+
+	&__image {
+		vertical-align: center;
+		width: 24px;
+		height: 24px;
+		margin-right: 4px;
+	}
+
+	&__text {
+		font-size: 22px;
+	}
+}
+
+.header {
+	flow-children: right;
+	width: 100%;
+	padding-right: 8px;
+
+	&__search {
+		width: fill-parent-flow(1);
+	}
+
+	&__filters {
+		flow-children: right;
+	}
+}
+
+.filters {
+	flow-children: down;
+	height: 0px;
+	padding-right: 8px;
+
+
+	transition: height 0.2s ease-in-out 0s;
+
+	&--filters-extended {
+		height: 84px;
+	}
+
+	&__text {
+		font-size: 20px;
+	}
+
+	&__row {
+		flow-children: right;
+		margin-top: 8px;
+		width: 100%;
+	}
+
+	&__gamemodes {
+		width: fit-children;
+	}
+
+	&__tiers {
+		// width: fill-parent-flow(1);
+		flow-children: right;
+		margin-right: 24px;
+	}
+}
+
+// Be careful with widths here to ensure the numbers align exactly. The SliderThumb must be the same width as the numbers, and the
+// whole panel must be allowed to fit all its children, so make sure some space is left on the right side. Always test on multiple resolutions!
+$notch-width: 12px;
+$notch-gap: 24px;
+.tier-slider {
+	flow-children: none;
+	height: 34px;
+	margin-top: 2px;
+
+	&__numbers {
+		flow-children: right;
+		width: fit-children;
+		padding-top: 0px;
+	}
+
+	&__number {
+		font-size: 14px;
+		text-align: center;
+		text-shadow: 0px 1px 2px 2 rgba(0, 0, 0, 0.5);
+		width: $notch-width;
+		height: 16px;
+
+		&--double-digit {
+			overflow: squish;
+			text-overflow: shrink;
+		}
+	}
+
+	&__gap {
+		width: $notch-gap;
+		height: 100%;
+	}
+
+	&__slider {
+		width: 100%;
+		margin-top: 18px;
+		padding: 0;
+
+		#SliderTrack,
+		#SliderTrackProgress {
+			height: 6px;
+		}
+
+		#SliderThumb {
+			border-radius: 2px;
+			width: $notch-width;
+			height: $notch-width;
+		}
+	}
+}
+
+.sorting {
+	flow-children: right;
+	width: 100%;
+	margin-top: 8px;
+	padding-right: 8px;
+
+
+	&__tabs {
+		flow-children: right;
+		horizontal-align: right;
+		vertical-align: bottom;
+		// height: 100%;
+	}
+
+	&__sort {
+		horizontal-align: right;
+		margin-bottom: 8px;
+	}
+}
+
+.map-info {
+	flow-children: down;
+	vertical-align: bottom;
+	width: 100%;
+
+	&__block {
+		flow-children: right;
+		width: 100%;
+
+		&-left {
+			width: 600px;
+		}
+
+		&-right {
+			margin-left: 16px;
+			width: 290px;
+		}
+	}
+
+	&__content {
+		flow-children: right;
+		height: 270px;
+		width: 100%;
+		margin-top: 8px;
+	}
+
+	&__action {
+		flow-children: none;
+
+		width: fill-parent-flow(1);
+		height: 100%;
+		max-height: 40px;
+	}
+
+	&__favourite {
+		width: 40px;
+		height: 40px;
+		margin: 0 6px;
+	}
+
+	&__top-button {
+		width: 40px;
+		height: 40px;
+		margin-left: 6px;
+	}
+
+	&__description {
+		height: 100%;
+
+		background-color: rgba(0, 0, 0, 0.6);
+		
+
+		&-scroll {
+			flow-children: down;
+			overflow: squish scroll;
+			padding-right: 12px;
+			width: 100%;
+			height: 100%;
+		}
+	}
+
+	&__wrapper {
+		flow-children: down;
+		width: 100%;
+		height: 100%;
+		padding: 12px;
+
+		box-shadow: 0 0 16px 0 rgba(0, 0, 0, 0.5)
+	}
+
+	&__paragraph {
+		font-size: 17px;
+		text-shadow: 1px 1px 2px 1 rgba(0, 0, 0, 0.8);
+	}
+
+	&__leaderboards {
+		width: 100%;
+		margin-top: 8px;
+		height: 40px;
+
+		&-text {
+			font-size: 24px;
+			margin-bottom: 1px;
+		}
+	}
+}
+
+.stats {
+	height: fill-parent-flow(1);
+	width: 100%;
+	background-color: rgba(0, 0, 0, 0.6);
+
+	&__container {
+		width: 100%;
+		height: 100%;
+		flow-children: right;
+	}
+
+	&__column {
+		flow-children: down;
+		width: fill-parent-flow(1);
+		height: 100%;
+
+		margin-left: 4px;
+
+		&--right {
+			margin-left: 12px + 4px;
+		}
+	}
+
+	&__gap {
+		vertical-align: center;
+		width: 1px;
+		height: 80%;
+		// background-color: rgba(0, 0, 0, 0.8);
+	}
+}
+
+.stat {
+	flow-children: right;
+	height: fill-parent-flow(1);
+	width: 100%;
+	margin: 6px 0;
+
+	&__icon {
+		padding: 2px;
+		height: 100%;
+		width: height-percentage(100%);
+		margin-right: 6px;
+		img-shadow: 0 0 3px 1 rgba(0, 0, 0, 1);
+	}
+
+	&__text {
+		vertical-align: center;
+		@include mixin.font-styles($use-header: true, $light-header: true);
+		font-size: 22px;
+		text-shadow: 0px 1px 3px 2 rgba(0, 0, 0, 0.8);
+	}
+}
+
+.action-button {
+	flow-children: none;
+
+	width: 100%;
+	height: 100%;
+
+	@include mixin.button-gradient($color: 'blue');
+
+	transition: background-color 0.1s ease-in-out 0s;
+
+	.action-play {
+		visibility: collapse;
+	}
+	.action-download {
+		visibility: visible;
+	}
+
+	&.playable {
+		// @extend .button--green;
+		@include mixin.button-gradient($color: 'green');
+
+		.action-download {
+			visibility: collapse;
+		}
+		.action-play {
+			visibility: visible;
+		}
+	}
+
+	&__typecontainer {
+		flow-children: right;
+		height: 100%;
+		horizontal-align: center;
+	}
+
+	&__icon {
+		margin-left: 0;
+		padding: 6px;
+	}
+
+	&__text {
+		vertical-align: center;
+		font-size: 24px;
+		margin-left: 0px;
+		margin-right: 10px;
+		padding-bottom: 1px;
+	}
+}

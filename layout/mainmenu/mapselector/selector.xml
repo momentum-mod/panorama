@@ -1,0 +1,293 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+		<include src="file://{resources}/styles/pages/mainmenu.scss" />
+		<include src="file://{resources}/styles/pages/mapselector.scss" />
+	</styles>
+	<scripts>
+		<include src="file://{resources}/scripts/mainmenu_mapselector.js" />
+	</scripts>
+
+	<MomentumMapSelect>
+		<Panel id="MapSelectorContents" class="mapselector">
+			<Panel id="MapSelectorLeft" class="mapselector__left">
+				<Panel class="mapselector__left-wrapper">
+					<Panel class="category-tabs">
+						<RadioButton id="CategoryListMaps" class="category-tabs__tab" group="CategoryListNavBar" selected="true" onactivate='$("#CategoryContents").SetHasClass("mapselector__category-contents--playlists", false)'>
+							<Panel class="flow-right horizontal-align-center">
+								<Image class="category-tabs__image" src="file://{images}/panorama-variant.svg" textureheight="32" style="padding: 1px;"/>
+								<Label class="text-h category-tabs__text" text="Maps"/>
+							</Panel>
+						</RadioButton>
+						<RadioButton id="CategoryListPlaylists" class="category-tabs__tab" group="CategoryListNavBar" onactivate='$("#CategoryContents").SetHasClass("mapselector__category-contents--playlists", true)'>
+							<Panel class="flow-right horizontal-align-center">
+								<Image class="category-tabs__image" src="file://{images}/playlist-play.svg" textureheight="32" />
+								<Label class="text-h category-tabs__text" text="Playlists"/>
+							</Panel>
+						</RadioButton>
+					</Panel>
+
+					<Panel id="CategoryContents" class="mapselector__category-contents">
+						<Panel id="MapSelector" class="mapselector__maps">
+							<Panel class="header">
+								<Panel class="search header__search">
+									<Image class="search__icon" src="file://{images}/search.svg" textureheight="32" />
+									<TextEntry id="MapSearchTextEntry" class="search__textentry" maxchars="30" placeholder="Search Maps"/>
+									<Button id="MapSearchClear" class="search__clearbutton" onactivate="MapSelection.clearSearch()">
+										<Image class="search__clearicon" src="file://{images}/close.svg" textureheight="32" />
+									</Button>
+								</Panel>
+								<Panel class="header__filters">
+									<ToggleButton id="FilterToggle" class="ml-2 button togglebutton togglebutton--blue" selected="false" onactivate="MapSelection.toggleFilters()">
+										<Label class="button__text button__text--left" text="Filters" />
+										<Image class="button__icon button__icon--right" src="file://{images}/filter-menu.svg" textureheight="32" />
+									</ToggleButton>
+									<Button id="FilterErase" class="ml-2 button button--red" onactivate="MapSelection.clearFilters()">
+										<Image class="button__icon" src="file://{images}/filter-remove.svg" textureheight="32" />
+									</Button>
+								</Panel>
+							</Panel>
+							<Panel id="MapFilters" class="filters filters--filters-retracted">
+								<Panel id="GamemodeFilters" class="filters__row filters__gamemodes">
+									<ToggleButton id="SurfFilterButton" class="mr-1 button togglebutton togglebutton--blue" selected="true">
+										<Label class="button__text filters__text" text="Surf" />
+									</ToggleButton>
+									<ToggleButton id="BhopFilterButton" class="mr-1 button togglebutton togglebutton--blue" selected="true">
+										<Label class="button__text filters__text" text="Bhop" />
+									</ToggleButton>
+									<ToggleButton id="ClimbFilterButton" class="mr-1 button togglebutton togglebutton--blue" selected="true">
+										<Label class="button__text filters__text" text="Climb" />
+									</ToggleButton>
+									<ToggleButton id="RJFilterButton" class="mr-1 button togglebutton togglebutton--blue" selected="true">
+										<Label class="button__text filters__text" text="Rocket Jump" />
+									</ToggleButton>
+									<ToggleButton id="SJFilterButton" class="mr-1 button togglebutton togglebutton--blue" selected="true">
+										<Label class="button__text filters__text" text="Sticky Jump" />
+									</ToggleButton>
+									<ToggleButton id="TricksurfFilterButton" class="mr-1 button togglebutton togglebutton--blue" selected="true">
+										<Label class="button__text filters__text" text="Tricksurf" />
+									</ToggleButton>
+									<ToggleButton id="AhopFilterButton" class="mr-1 button togglebutton togglebutton--blue" selected="true">
+										<Label class="button__text filters__text" text="Ahop" />
+									</ToggleButton>
+									<ToggleButton id="ParkourFilterButton" class="mr-1 button togglebutton togglebutton--blue" selected="true">
+										<Label class="button__text filters__text" text="Parkour" />
+									</ToggleButton>
+									<ToggleButton id="ConcFilterButton" class="mr-1 button togglebutton togglebutton--blue" selected="true">
+										<Label class="button__text filters__text" text="Conc" />
+									</ToggleButton>
+									<ToggleButton id="DefragFilterButton" class="button togglebutton togglebutton--blue" selected="true">
+										<Label class="button__text filters__text" text="Defrag" />
+									</ToggleButton>
+								</Panel>
+
+								<Panel class="filters__row">
+									<Panel class="filters__tiers">
+										<Label class="text-h5 mr-2 vertical-align-center" text="Tiers" />
+										<Panel id="TierSliderPanel" class="tier-slider">
+											<Panel class="tier-slider__numbers">
+												<Label class="tier-slider__number" text="0"/>
+												<Panel class="tier-slider__gap"/>
+												<Label class="tier-slider__number" text="1"/>
+												<Panel class="tier-slider__gap"/>
+												<Label class="tier-slider__number" text="2"/>
+												<Panel class="tier-slider__gap"/>
+												<Label class="tier-slider__number" text="3"/>
+												<Panel class="tier-slider__gap"/>
+												<Label class="tier-slider__number" text="4"/>
+												<Panel class="tier-slider__gap"/>
+												<Label class="tier-slider__number" text="5"/>
+												<Panel class="tier-slider__gap"/>
+												<Label class="tier-slider__number" text="6"/>
+												<Panel class="tier-slider__gap"/>
+												<Label class="tier-slider__number" text="7"/>
+												<Panel class="tier-slider__gap"/>
+												<Label class="tier-slider__number" text="8"/>
+												<Panel class="tier-slider__gap"/>
+												<Label class="tier-slider__number" text="9"/>
+												<Panel class="tier-slider__gap"/>
+												<Label class="tier-slider__number tier-slider__number--double-digit" text="10"/>
+											</Panel>
+											<SlottedSlider id="TierSlider" class="slider slider--horizontal tier-slider__slider" notches="11" direction="horizontal" min="0" max="10" increment="1" default="10" value="10" />
+										</Panel>
+									</Panel>
+									<!-- TODO: These need to be tri-state -->
+									<Panel class="horizontal-align-right flow-right">
+										<TooltipPanel tooltip="&lt;b&gt;Filter by&lt;/b&gt;: Completed">
+											<ToggleButton id="MapCompletedFilterButton" class="button togglebutton togglebutton--blue mr-2">
+												<Image class="button__icon" src="file://{images}/mapselector/completedmapIcon.svg" textureheight="32" />
+											</ToggleButton>
+										</TooltipPanel>
+										<TooltipPanel tooltip="&lt;b&gt;Filter by&lt;/b&gt;: Favorited">
+											<ToggleButton id="MapFavoritedFilterButton" class="button togglebutton togglebutton--blue mr-2">
+												<Image class="button__icon" src="file://{images}/mapselector/favoriteIcon.svg" textureheight="32" />
+											</ToggleButton>
+										</TooltipPanel>
+										<TooltipPanel tooltip="&lt;b&gt;Filter by&lt;/b&gt;: Downloaded">
+											<ToggleButton id="MapDownloadedFilterButton" class="button togglebutton togglebutton--blue">
+												<Image class="button__icon" src="file://{images}/download.svg" textureheight="32" />
+											</ToggleButton>
+										</TooltipPanel>
+									</Panel>
+								</Panel>
+							</Panel>
+
+							<Panel id="TabsAndSortBy" class="sorting">
+								<Panel class="sorting__tabs">
+									<RadioButton id="MapListRanked" class="tab sorting__tab" group="MapListNavBar" selected="true">
+										<Label class="tab__text" text="Ranked"/>
+									</RadioButton>
+									<Panel class="tab__gap"/>
+									<RadioButton id="MapListUnranked" class="tab sorting__tab" group="MapListNavBar">
+										<Label class="tab__text" text="Unranked"/>
+									</RadioButton>
+									<Panel class="tab__gap"/>
+									<RadioButton id="MapListBeta" class="tab sorting__tab" group="MapListNavBar">
+										<Label class="tab__text" text="Beta"/>
+									</RadioButton>
+								</Panel>
+								<Panel id="SortBy" class="sorting__sort">
+									<DropDown id="SortByDropdown" class="dropdown sorting__dropdown" menuclass="dropdown-menu">
+										<Label text="Alphabetical (A-Z)" id="alphaAsc" value="0"/>
+										<Label text="Alphabetical (Z-A)" id="alphaDesc" value="1" />
+										<Label text="Tier (1-10)" id="tierAsc" value="2" />
+										<Label text="Tier (10-1)" id="tierDesc" value="3" />
+										<Label text="Last Played (Recent)" id="lastPlayAsc" value="4" />
+										<Label text="Last Played (Oldest)" id="lastPlayDesc" value="5" />
+										<Label text="Date Released (Recent)" id="dateRelAsc" value="6" />
+										<Label text="Date Released (Oldest)" id="dateRelDesc" value="7" />
+										<Label text="Date Created (Recent)" id="dateCreatedAsc" value="8" />
+										<Label text="Date Created (Oldest)" id="dateCreatedDesc" value="9" />
+									</DropDown>
+								</Panel>
+							</Panel>
+
+							<Panel class="full-width">
+								<DelayLoadList id="MapListContainer" class="mapselector__list" itemheight="54px" itemwidth="100%" spacersize="3px" spacerperiod="1">
+									<!-- Populated via MapEntry snippets in code -->
+								</DelayLoadList>
+								<Panel id="MapListEmptyContainer" class="mapselector__emptywarning mapselector__emptywarning--hidden">
+									<Label class="text-h2 horizontal-align-center mb-4" text="No maps found!"/>
+									<Label class="horizontal-align-center text-align-center full-height" text="Nothing matched your search terms! Try expanding your search, or clearing your filters."/>
+								</Panel>
+							</Panel>
+						</Panel>
+
+						<!-- Playlist Selector -->
+						<Panel id="PlaylistSelector" class="mapselector__playlists">
+							<Panel class="full-height full-width">
+								<Label class="text-h1 text-align-center horizontal-align-center mt-5" text="Coming Soon!™" />
+							</Panel>
+						</Panel>
+					</Panel>
+				</Panel>
+			</Panel>
+
+			<Panel class="mapselector__right">
+				<Panel id="MapInfo" class="map-info">
+					<!-- Stacked labels to give double layers of shadow. I don't like it, but I'll have to go along with it. -->
+					<Panel>
+						<Label class="text-h1 text-shadow-outline" text="{s:name}" />
+						<Label class="text-h1 text-shadow-black color-transparent" text="{s:name}" />
+					</Panel>
+					<Panel class="map-info__block">
+						<Panel class="map-info__block-left">
+							<Label class="text-h4 text-shadow-outline" text="Tier {d:tier} | {s:layout} | {d:numZones} Zones" />
+							<Label class="text-h4 text-shadow-bold color-transparent" text="Tier {d:tier} | {s:layout} | {d:numZones} Zones" />
+						</Panel>
+						<Panel class="flow-right map-info__block-right">
+							<Panel class="map-info__action">
+								<Button id="MapInfoAction" class="button action-button">
+									<Panel class="action-button__typecontainer action-play">
+										<Image class="button__icon action-button__icon" src="file://{images}/mapselector/playIcon.svg" textureheight="40" />
+										<Label class="button__text action-button__text" text="Play" />
+									</Panel>
+									<Panel class="action-button__typecontainer action-download">
+										<Image class="button__icon action-button__icon" src="file://{images}/download.svg" textureheight="40" />
+										<Label class="button__text action-button__text" text="Download" />
+									</Panel>
+								</Button>
+								<MapDownloadStatus id="MapInfoDownloadStatus" class="map-download-status" />
+							</Panel>
+							<ToggleButton id="MapInfoFavorite" class="button togglebutton togglebutton--yellow map-info__top-button">
+								<Image class="button__icon" src="file://{images}/mapselector/favoriteIcon.svg" textureheight="40" />
+							</ToggleButton>
+							<Button id="MapInfoGallery" class="button map-info__top-button">
+								<Image class="button__icon" src="file://{images}/mapselector/fullscreenIcon.svg" textureheight="40" />
+							</Button>
+						</Panel>
+					</Panel>
+					<!-- <Panel class="map-info-gallery_container">
+						<Panel class="map-info-gallery" />
+					</Panel> -->
+					<Panel class="map-info__content">
+						<Panel id="MapDescription" class="map-info__block-left map-info__description">
+							<Panel class="map-info__wrapper">
+								<Panel class=" map-info__description-scroll">
+								<Label class="text-h5 mb-1" text="Description" />
+								<Label class="map-info__paragraph" text="{s:description}" html="true" />
+								<Label class="text-h5 mt-4 mb-1" text="Authors" />
+								<Label class="map-info__paragraph" text="{s:authors}" />
+								<Label class="text-h5 mt-4 mb-1" text="Tags" />
+								<Label class="map-info__paragraph" text="{s:tags}" /></Panel>
+							</Panel>
+						</Panel>
+
+						<Panel class="flow-down map-info__block-right">
+							<Panel id="MapInfoStats" class="stats">
+								<Panel class="map-info__wrapper">
+									<Label class="text-h5" text="Statistics" />
+									<Panel class="stats__container">
+										<Panel class="stats__column">
+											<TooltipPanel class="stat" tooltip="Playlists Instances">
+												<Image class="stat__icon" src="file://{images}/mapselector/addplaylistIcon.svg" textureheight="48" />
+												<Label class="stat__text" text="{d:completesUnique}" />
+											</TooltipPanel>
+											<TooltipPanel class="stat" tooltip="Favorites">
+												<Image class="stat__icon" src="file://{images}/mapselector/favoriteIcon.svg" textureheight="48" />
+												<Label class="stat__text" text="{d:favorites}" />
+											</TooltipPanel>
+											<TooltipPanel class="stat" tooltip="Downloads">
+												<Image class="stat__icon" src="file://{images}/download.svg" textureheight="48" />
+												<Label class="stat__text" text="{d:downloads}" />
+											</TooltipPanel>
+											<TooltipPanel class="stat" tooltip="Personal Best">
+												<Image class="stat__icon" src="file://{images}/ranks/pb.svg" textureheight="48" />
+												<Label class="stat__text" text="{s:pb}" />
+											</TooltipPanel>
+										</Panel>
+										<Panel class="vertical-separator mt-3" />
+										<Panel class="stats__column stats__column--right">
+											<TooltipPanel class="stat" tooltip="Map Plays">
+												<Image class="stat__icon" src="file://{images}/mapselector/mapplaysamountIcon.svg" textureheight="48" />
+												<Label class="stat__text" text="{d:plays}" />
+											</TooltipPanel>
+											<TooltipPanel class="stat" tooltip="Completions">
+												<Image class="stat__icon" src="file://{images}/mapselector/flagIcon.svg" textureheight="48" />
+												<Label class="stat__text" text="{d:completes}" />
+											</TooltipPanel>
+											<TooltipPanel class="stat" tooltip="Percent Completions">
+												<Image class="stat__icon" src="file://{images}/percent.svg" textureheight="48" />
+												<Label class="stat__text" text="{s:avgTime}" />
+											</TooltipPanel>
+											<TooltipPanel class="stat" tooltip="World Record">
+												<Image class="stat__icon" src="file://{images}/ranks/wr.svg" textureheight="48" />
+												<Label class="stat__text" text="{s:wr}" />
+											</TooltipPanel>
+										</Panel>
+									</Panel>
+								</Panel>
+							</Panel>
+							<Button id="LeaderboardsBtn" class="button button--blue map-info__leaderboards">
+								<Panel class="flow-right full-height horizontal-align-center">
+									<Image class="button__icon button__icon--left" src="file://{images}/chart-timeline.svg" textureheight="40" />
+									<Label class="button__text button__text--right map-info__leader map-info__leaderboards-text" text="Leaderboards" />
+								</Panel>
+							</Button>
+						</Panel>
+					</Panel>
+				</Panel>
+			</Panel>
+		</Panel>
+	</MomentumMapSelect>
+</root>
