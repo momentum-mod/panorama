@@ -47,14 +47,6 @@ class LoadingScreen {
 		$('#TierAndType').visible = true;
 		$('#NumZones').visible = true;
 		
-		const backgroundImageLoaded = function () {
-			$('#BackgroundImage').visible = true;
-		}
-		$.RegisterEventHandler('ImageLoaded', $('#BackgroundImage'), backgroundImageLoaded.bind(undefined));
-		const backgroundImageFailed = function () {
-			$('#BackgroundImage').visible = false;
-		}
-		$.RegisterEventHandler('ImageFailedLoad', $('#BackgroundImage'), backgroundImageFailed.bind(undefined));
 		$('#BackgroundImage').SetImage(mapData.thumbnail.urlLarge);
 	}
 }
@@ -63,4 +55,7 @@ class LoadingScreen {
 ( function() {
 	$.RegisterForUnhandledEvent( 'MapCache_MapLoad', LoadingScreen.updateLoadingScreenInfo );
 	$.RegisterForUnhandledEvent( 'UnloadLoadingScreenAndReinit', LoadingScreen.init );
+
+	$.RegisterEventHandler( 'PanelLoaded', $( '#BackgroundImage' ), () => { $( '#BackgroundImage' ).visible = true; } );
+	$.RegisterEventHandler( 'ImageFailedLoad', $( '#BackgroundImage' ), () => { $( '#BackgroundImage' ).visible = false; } );
 })();
