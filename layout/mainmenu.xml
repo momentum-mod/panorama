@@ -43,6 +43,10 @@
 				</BaseBlurTarget>
 			</BaseBlurTarget>
 
+			<BaseBlurTarget id="MainMenuBlur" blurrects="JsMainMenuNavBar MainMenuOptionListRight">
+				<Image id="MainMenuBackgroundMapSelectorImage" class="full-width full-height" />
+			</BaseBlurTarget>
+
 			<Panel class="full-width full-height top-bottom-flow">
 				<Panel id="JsMainMenuNavBar" class="topnav">
 					<Panel class="topnav__wrapper">
