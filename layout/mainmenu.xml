@@ -43,7 +43,7 @@
 				</BaseBlurTarget>
 			</BaseBlurTarget>
 
-			<BaseBlurTarget id="MainMenuBlur" blurrects="JsMainMenuNavBar MainMenuOptionListRight">
+			<BaseBlurTarget id="MainMenuBlur" class="mainmenu__blur" blurrects="JsMainMenuNavBar MainMenuOptionListRight">
 				<Image id="MainMenuBackgroundMapSelectorImage" class="full-width full-height" />
 			</BaseBlurTarget>
 
@@ -56,7 +56,7 @@
 						</RadioButton>
 
 						<Panel class="full-height left-right-flow">
-							<RadioButton id="PlayButton" class="topnav__button" onactivate="GameInterfaceAPI.ConsoleCommand('ShowMapSelectionPanel')">
+							<RadioButton id="PlayButton" class="topnav__button" onactivate="MainMenuController.navigateToTab('MapSelection', 'mainmenu_mapselector', false)">
 								<Image class="topnav__button-image" src="file://{images}/topnav/play.svg" textureheight="64" />
 							</RadioButton>
 							<RadioButton id="InventoryButton" class="topnav__button" onactivate="MainMenuController.navigateToTab('Inventory', 'mainmenu_inventory')">
