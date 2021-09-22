@@ -6,7 +6,8 @@
 
 class MainMenuController {
 	static activeTab = '';
-	static contentPanel = $.GetContextPanel().FindChildTraverse('JsMainMenuContent');
+	static contentPanel = $( '#JsMainMenuContent' );
+	static contentBlurPanel = $( '#MainMenuContentBlur' );
 	static videoPanel = '';
 	static imagePanel = '';
 	static playedInitialFadeUp = false;
@@ -44,8 +45,10 @@ class MainMenuController {
 		return true;
 	}
 
-	static navigateToTab(tab, xmlName) {
-		if (!MainMenuController.checkTabCanBeOpenedRightNow(tab)) {
+	static navigateToTab(tab, xmlName, hasBlur = true) {
+		MainMenuController.contentBlurPanel.visible = hasBlur;
+
+		if ( !MainMenuController.checkTabCanBeOpenedRightNow( tab ) ) {
 			MainMenuController.onHomeButtonPressed();
 			return; // validate that tabs can be opened (GC connection / China free-to-play / etc.)
 		}
