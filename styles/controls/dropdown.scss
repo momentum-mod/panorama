@@ -4,52 +4,44 @@
 @use 'sass:list';
 
 // Dropdown behaviour is affected by complex C++ code and requires a lot of inheritance for styling. Yuck!
-
-// @Devs - I can't theme this properly because I need a panel for the downwards facing arrow and its background.
-// A regular panel with the class DropDownIcon is all that's needed.
 .dropdown {
-	//Delete this once new panel is in
-	background-image: url("file://{images}/down-arrow.svg");
-	background-repeat: no-repeat;
-	background-position: right 24px 50%;
-	background-size: 12px 12px;
-
+	height: $dropdown-button-height;
 	flow-children: right;
 	background-color: $dropdown-button-background;
 	border-radius: $dropdown-button-radius;
 	box-shadow: $dropdown-button-shadow;
 	vertical-align: center;
 	horizontal-align: right;
-
 	z-index: 1;
 	transition-property: background-color;
-	transition-duration: 0.1s;
+	transition-duration: 0.15s;
 	transition-timing-function: ease-in-out;
-
-	& .DropDownIcon {
-		border-radius: $button-radius;
-		height: 100%;
-		min-width: 32px;
-
+	
+	&:hover .DropDownIcon {
+		background-color: $dropdown-button-icon-background-hover;
+	}
+	
+	.DropDownIcon {
 		background-image: url("file://{images}/down-arrow.svg");
 		background-repeat: no-repeat;
 		background-position: right 22px 50%;
 		background-size: 12px 12px;
-
+		border-radius: $dropdown-button-radius - 1px;
+		height: 100%;
+		min-width: 32px;
 		background-color: $dropdown-button-icon-background;
 		border: $dropdown-button-icon-border;
-
-		z-index: 0;
-
-		transition-property: background-color, border;
+		box-shadow: $dropdown-button-icon-shadow;
+		z-index: 100;
+		transition-property: background-color;
 		transition-duration: 0.15s;
 		transition-timing-function: ease-in-out;
+
+		&:hover {
+			background-color: $dropdown-button-icon-background-hover2;
+		}
 	}
 
-	&:hover .DropDownIcon {
-		background-color: $dropdown-button-icon-background-hover;
-		border: list.nth($dropdown-button-icon-border, 1) list.nth($dropdown-button-icon-border, 2) $dropdown-button-icon-border-hover;
-	}
 
 	// Inserted by code
 	&.DropDownMenuVisible {
@@ -59,7 +51,6 @@
 
 	&:hover {
 		background-color: $dropdown-button-background-hover;
-		transition: none 0s linear 0s;
 	}
 
 	&:disabled,
@@ -68,23 +59,14 @@
 		background-color: $dropdown-button-background-disabled;
 	}
 
-	// DropDown/DropDropMenu needs a label as its immediate child to function properly.
-	// Don't have a way of determining whether the label has an Image child or not,
-	// so we need to give it an extra class to pad the space for the image properly
-	& Label {
+	Label {
 		@include mixin.font-styles($use-header: $dropdown-button-use-header-font);
 		color: $dropdown-button-color;
 		font-size: $dropdown-button-font-size;
-
 		text-overflow: ellipsis;
 		white-space: nowrap;
-
 		vertical-align: center;
-
 		padding: $dropdown-button-padding;
-
-		// Remove once image panel is possible
-		margin-right: $dropdown-button-icon-width;
 		vertical-align: center;
 	}
 
@@ -92,74 +74,10 @@
 		color: $dropdown-button-color-disabled;
 	}
 
-	& .IconLabel {
-		padding-left: $dropdown-button-font-size + list.nth($dropdown-button-padding, 2) + 6px;
-	}
-
-	Image {
-		vertical-align: middle;
-		height: $dropdown-button-font-size - 2px;
-		width: height-percentage(100%);
-		transform: translateX($dropdown-button-font-size * -1 + -6px);
-	}
-}
-
-
-// careful merging these back together, lots of changes made to above
-.dropdown-temp {
-	flow-children: right;
-
-	background-color: $dropdown-button-background;
-	border-radius: $dropdown-button-radius;
-	box-shadow: $dropdown-button-shadow;
-
-	vertical-align: center;
-	horizontal-align: right;
-
-	min-height: 32px;
-	min-width: 32px;
-	z-index: 1;
-
-	& .DropDownIcon {
-		border-radius: $button-radius;
-		height: 100%;
-		min-width: 32px;
-
-		background-image: url("file://{images}/down-arrow.svg");
-		background-repeat: no-repeat;
-		background-position: right 22px 50%;
-		background-size: 12px 12px;
-
-		background-color: $dropdown-button-icon-background;
-		border: $dropdown-button-icon-border;
-
-		z-index: 0;
-
-		transition-property: background-color, border;
-		transition-duration: 0.15s;
-		transition-timing-function: ease-in-out;
-	}
-
-	&:hover .DropDownIcon {
-		background-color: $dropdown-button-icon-background-hover;
-		border: list.nth($dropdown-button-icon-border, 1) list.nth($dropdown-button-icon-border, 2) $dropdown-button-icon-border-hover;
-	}
-
-	&>Label {
-		@include mixin.font-styles($use-header: $dropdown-button-use-header-font);
-
-		color: $dropdown-button-color;
-
-		font-size: $dropdown-button-font-size;
-
-		padding: $dropdown-button-padding;
-
-		// Remove once image panel is possible
-		// margin-right: $dropdown-button-icon-width;
-		vertical-align: center;
-	}
-
-	Label {
+	// DropDown/DropDropMenu needs a label as its immediate child to function properly so to include images we need to
+	// put them inside the Label. But we on't have a way of determining whether the label has an Image child or not,
+	// so we need to give it the extra class IconLabel when using images to pad the space properly.
+	.IconLabel {
 		padding-left: $dropdown-button-font-size + list.nth($dropdown-button-padding, 2) + 6px;
 	}
 
@@ -176,19 +94,13 @@
 	overflow: squish scroll;
 	max-height: 665px;
 	padding: $dropdown-menu-padding-y list.nth($dropdown-menu-border, 1) * -1; // Negative horizontal padding to account for dumb Valve code.
-
 	border: $dropdown-menu-border;
-
 	border-radius: $dropdown-menu-radius;
 	background-color: $dropdown-menu-background;
 	box-shadow: $dropdown-menu-shadow;
-
 	z-index: 0;
-
 	visibility: collapse; // Make sure the dropdown menu does not take part in the layout traversal if not shown on the screen
-
 	width: fit-children;
-
 	opacity: 0.0;
 	transition-property: opacity;
 	transition-duration: 0.1s;
