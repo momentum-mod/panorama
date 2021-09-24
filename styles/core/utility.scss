@@ -1,4 +1,5 @@
 @use '../config' as *;
+@use 'sass:list';
 
 // ================
 // WIDTH / HEIGHT
@@ -48,74 +49,71 @@
 }
 
 // ================
-// PADDING
+// MARGINS / PADDING
 // ================
 
-@each $name, $var in ("": $padding-default, "-large": $padding-large, "-small": $padding-small, "-none": 0px) {
-	.padding#{$name} {
-		padding: $var;
+$s: list.join((0px), $spacers);
+@each $spacer in $s {
+	$index: list.index($s, $spacer) - 1;
+
+	.m-#{$index} {
+		margin: $spacer;
 	}
 
-	.top-bottom-padding#{$name} {
-		padding-top: $var;
-		padding-bottom: $var;
+	.mx-#{$index} {
+		margin-left: $spacer;
+		margin-right: $spacer;
 	}
 
-	.top-padding#{$name} {
-		padding-top: $var;
+	.my-#{$index} {
+		margin-top: $spacer;
+		margin-bottom: $spacer;
 	}
 
-	.bottom-padding#{$name} {
-		padding-bottom: $var;
+	.mt-#{$index} {
+		margin-top: $spacer;
 	}
 
-	.left-right-padding#{$name} {
-		padding-left: $var;
-		padding-right: $var;
+	.mb-#{$index} {
+		margin-bottom: $spacer;
 	}
 
-	.left-padding#{$name} {
-		padding-left: $var;
+	.mr-#{$index} {
+		margin-right: $spacer;
 	}
 
-	.right-padding#{$name} {
-		padding-right: $var;
-	}
-}
-
-// ================
-// MARGIN
-// ================
-
-@each $name, $var in ("": $margin-default, "-large": $margin-large, "-small": $margin-small, "-none": 0px) {
-	.margin#{$name} {
-		margin: $var;
+	.ml-#{$index} {
+		margin-left: $spacer;
 	}
 
-	.top-bottom-margin#{$name} {
-		margin-top: $var;
-		margin-bottom: $var;
+	.p-#{$index} {
+		padding: $spacer;
 	}
 
-	.top-margin#{$name} {
-		margin-top: $var;
+	.px-#{$index} {
+		padding-left: $spacer;
+		padding-right: $spacer;
 	}
 
-	.bottom-margin#{$name} {
-		margin-bottom: $var;
+	.py-#{$index} {
+		padding-top: $spacer;
+		padding-bottom: $spacer;
 	}
 
-	.left-right-margin#{$name} {
-		margin-left: $var;
-		margin-right: $var;
+	.pt-#{$index} {
+		padding-top: $spacer;
 	}
 
-	.left-margin#{$name} {
-		margin-left: $var;
+	.pb-#{$index} {
+		padding-bottom: $spacer;
+	}
+	
+	.pr-#{$index} {
+		padding-right: $spacer;
 	}
 
-	.right-margin#{$name} {
-		margin-right: $var;
+	.pl-#{$index} {
+		padding-left: $spacer;
 	}
 }
 

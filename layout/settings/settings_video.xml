@@ -29,7 +29,7 @@
 		
 		<ChaosVideoSettings class="settings-scroll-container">
 			<Panel id="SettingsVideoSettings" class="settings-group">
-				<Label class="text--h2" text="#MOM_Settings_Title_Video" />
+				<Label class="text-h2" text="#MOM_Settings_Title_Video" />
 				
 					<TooltipPanel class="settings-tooltip" tooltip="#MOM_Settings_Menu_Movie_TT">
 						<ChaosSettingsEnum text="#MOM_Settings_Menu_Movie" convar="mom_ui_menu_background_video">
@@ -75,7 +75,7 @@
 			<Panel class="settings-horizontal-separator" />
 			
 			<Panel id="SettingsAdvancedSettings" class="settings-group">
-				<Label class="text--h2" text="#MOM_Settings_Title_Video_Render" />
+				<Label class="text-h2" text="#MOM_Settings_Title_Video_Render" />
 
 				<TooltipPanel class="settings-tooltip" tooltip="#SFUI_Settings_Shadow_Quality_Info">
 					<ChaosSettingsEnumDropDown text="#SFUI_Settings_CSM" onuserinputsubmit="SettingsMenuShared.videoSettingsOnUserInputSubmit()" id="CSMQualityLevel">

@@ -23,7 +23,7 @@
 			<Panel class="settings-scroll-container">
 				<Panel id="Search" class="settings-group">
 				<!-- MOM_TODO: localise -->
-					<Label class="text--h2" text="#MOM_Settings_Search_Results" />
+					<Label class="text-h2" text="#MOM_Settings_Search_Results" />
 					<Panel id="SearchResultsContainer">
 
 					</Panel>

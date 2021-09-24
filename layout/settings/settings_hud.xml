@@ -23,14 +23,14 @@
 		
 		<Panel class="settings-scroll-container">
 			<Panel id="SettingsSpeedometer" class="settings-group">
-				<Label class="text--h2" text="#MOM_Settings_Speedometer_Label" />
+				<Label class="text-h2" text="#MOM_Settings_Speedometer_Label" />
 				
 			</Panel>
 			
 			<Panel class="settings-horizontal-separator" />
 			
 			<Panel id="SettingsKeyPresses" class="settings-group">
-				<Label class="text--h2" text="#MOM_Settings_Buttons_Label" />
+				<Label class="text-h2" text="#MOM_Settings_Buttons_Label" />
 				<TooltipPanel class="settings-tooltip" tooltip="#MOM_Settings_User_Input_HUD_TT">
 					<ChaosSettingsEnum text="#MOM_Settings_User_Input_HUD" convar="mom_hud_keypress_enable">
 						<RadioButton group="showkeys" text="Off" value="0" />
@@ -43,7 +43,7 @@
 			
 			<!-- MOM_TODO: Should this go into gamemode specific? -->
 			<Panel id="SettingsStrafeSync" class="settings-group">
-				<Label class="text--h2" text="#MOM_Settings_Sync_Label" />
+				<Label class="text-h2" text="#MOM_Settings_Sync_Label" />
 				
 				<TooltipPanel class="settings-tooltip" tooltip="#MOM_Settings_Sync_Show_TT">
 					<ChaosSettingsEnum text="#MOM_Settings_Sync_Show" convar="mom_hud_strafesync_draw">

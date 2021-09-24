@@ -6,37 +6,41 @@
 	@include mixin.font-styles($use-header: false);
 }
 
+.text-h {
+	@include mixin.font-styles($use-header: true);
+}
+
 @each $name, $size in $font-header-sizes {
-	.text--#{$name} {
+	.text-#{$name} {
 		@include mixin.font-styles($use-header: true);
 		font-size: $size;
 	}
 }
 
 @each $name, $size in $font-sizes {
-	.text--#{$name} {
+	.text-#{$name} {
 		font-size: $size !important;
 	}
 }
 
 @each $weight in $font-weights {
-	.text--weight-#{$weight} {
+	.text-weight-#{$weight} {
 		font-weight: $weight;
 	}
 }
 
 // This is a hack - Bebas Neue Light comes from an older version of Bebas Neue (see https://github.com/dharmatype/Bebas-Neue)
 // so we call the different font-family rather than use font-weight.
-.text--header-light {
+.text-header-light {
 	font-family: $font-header-light;
 }
 
-.text--italic {
+.text-italic {
 	font-style: italic;
 }
 
 @each $name in (uppercase, lowercase, none) {
-	.text--transform-#{$name} {
+	.text-transform-#{$name} {
 		text-transform: $name;
 	}
 }

@@ -11,50 +11,51 @@
 
 	<Panel class="mainmenu__pagecontent" useglobalcontext="false">
 		<Panel id="ControlsLibraryPanel" class="top-bottom-flow width height overflow-vscroll">
-			<Label class="text--h1 top-margin" text="Core" />
 
-			<Label class="text--h3 top-margin" text="Text" />
-			<Panel class="row top-bottom-margin">
+			<Label class="text-h1 mt-3" text="Core" />
+
+			<Label class="text-h3 mt-3" text="Text" />
+			<Panel class="row my-3">
 				<Panel class="col">
-					<Label class="text--h1" text="text--h1" />
-					<Label class="text--h2" text="text--h2" />
-					<Label class="text--h3" text="text--h3" />
-					<Label class="text--h4" text="text--h4" />
-					<Label class="text--h5" text="text--h5" />
-					<Label class="text--h6" text="text--h6" />
+					<Label class="text-h1" text="text-h1" />
+					<Label class="text-h2" text="text-h2" />
+					<Label class="text-h3" text="text-h3" />
+					<Label class="text-h4" text="text-h4" />
+					<Label class="text-h5" text="text-h5" />
+					<Label class="text-h6" text="text-h6" />
 				</Panel>
 				<Panel class="col">
-					<Label class="text--h1 text--header-light" text="text--h1 text--header-light" />
-					<Label class="text--h2 text--header-light" text="text--h2 text--header-light" />
-					<Label class="text--h3 text--header-light" text="text--h3 text--header-light" />
-					<Label class="text--h4 text--header-light" text="text--h4 text--header-light" />
-					<Label class="text--h5 text--header-light" text="text--h5 text--header-light" />
-					<Label class="text--h6 text--header-light" text="text--h6 text--header-light" />
+					<Label class="text-h1 text-header-light" text="text-h1 text-header-light" />
+					<Label class="text-h2 text-header-light" text="text-h2 text-header-light" />
+					<Label class="text-h3 text-header-light" text="text-h3 text-header-light" />
+					<Label class="text-h4 text-header-light" text="text-h4 text-header-light" />
+					<Label class="text-h5 text-header-light" text="text-h5 text-header-light" />
+					<Label class="text-h6 text-header-light" text="text-h6 text-header-light" />
 				</Panel>
 				<Panel class="col">
-					<Label class="text--xxxl" text="text--xxxl" />
-					<Label class="text--xxl" text="text--xxl" />
-					<Label class="text--xl" text="text--xl" />
-					<Label class="text--l" text="text--l" />
-					<Label class="text--m" text="text--m" />
-					<Label class="text--sm" text="text--sm" />
-					<Label class="text--xs" text="text--xs" />
+					<Label class="text-xxxl" text="text-xxxl" />
+					<Label class="text-xxl" text="text-xxl" />
+					<Label class="text-xl" text="text-xl" />
+					<Label class="text-l" text="text-l" />
+					<Label class="text-m" text="text-m" />
+					<Label class="text-sm" text="text-sm" />
+					<Label class="text-xs" text="text-xs" />
 				</Panel>
 				<Panel class="col">
-					<Label class="text--weight-black" text="text--weight-black" />
-					<Label class="text--weight-bold" text="text--weight-bold" />
-					<Label class="text--weight-medium" text="text--weight-medium" />
-					<Label class="text--weight-normal" text="text--weight-normal" />
-					<Label class="text--weight-light" text="text--weight-light" />
-					<Label class="text--weight-thin" text="text--weight-thin" />
-					<Label class="text--weight-italic" text="text--weight-italic" />
-					<Label class="text--weight-bold text--italic" text="text--weight-bold text--italic" />
+					<Label class="text-weight-black" text="text-weight-black" />
+					<Label class="text-weight-bold" text="text-weight-bold" />
+					<Label class="text-weight-medium" text="text-weight-medium" />
+					<Label class="text-weight-normal" text="text-weight-normal" />
+					<Label class="text-weight-light" text="text-weight-light" />
+					<Label class="text-weight-thin" text="text-weight-thin" />
+					<Label class="text-weight-italic" text="text-weight-italic" />
+					<Label class="text-weight-bold text-italic" text="text-weight-bold text-italic" />
 				</Panel>
 			</Panel>
 
-			<Label class="text--h3 top-margin" text="Colors" />
-			<Label class="text--sm" text="wash-color-[color] is also included!" />
-			<Panel class="row top-bottom-margin">
+			<Label class="text-h3 mt-3" text="Colors" />
+			<Label class="text-sm" text="wash-color-[color] is also included!" />
+			<Panel class="row my-3">
 				<Panel class="col">
 					<Label class="color-blue" text="color-blue" />
 					<Label class="color-light-blue" text="color-light-blue" />
@@ -110,290 +111,302 @@
 					<Label class="color-dark-900" text="color-dark-900" />
 				</Panel>
 			</Panel>
-			<Panel class="row top-bottom-margin">
+			<Panel class="row my-3">
 				<Panel class="col">
-					<Label class="bg-blue padding-large text--xs" text="bg-blue" />
-					<Label class="bg-light-blue padding-large text--xs" text="bg-light-blue" />
-					<Label class="bg-purple padding-large text--xs" text="bg-purple" />
-					<Label class="bg-pink padding-large text--xs" text="bg-pink" />
-					<Label class="bg-red padding-large text--xs" text="bg-red" />
-					<Label class="bg-orange padding-large text--xs" text="bg-orange" />
-					<Label class="bg-yellow padding-large text--xs" text="bg-yellow" />
-					<Label class="bg-green padding-large text--xs" text="bg-green" />
+					<Label class="bg-blue p-4 text-xs" text="bg-blue" />
+					<Label class="bg-light-blue p-4 text-xs" text="bg-light-blue" />
+					<Label class="bg-purple p-4 text-xs" text="bg-purple" />
+					<Label class="bg-pink p-4 text-xs" text="bg-pink" />
+					<Label class="bg-red p-4 text-xs" text="bg-red" />
+					<Label class="bg-orange p-4 text-xs" text="bg-orange" />
+					<Label class="bg-yellow p-4 text-xs" text="bg-yellow" />
+					<Label class="bg-green p-4 text-xs" text="bg-green" />
 				</Panel>
 				<Panel class="col">
-					<Label class="bg-disabled padding-large text--xs" text="bg-disabled" />
-					<Label class="bg-error padding-large text--xs" text="bg-error" />
-					<Label class="bg-warning padding-large text--xs" text="bg-warning" />
-					<Label class="bg-positive padding-large text--xs" text="bg-positive" />
-					<Label class="bg-steam-online padding-large text--xs" text="bg-steam-online" />
+					<Label class="bg-disabled p-4 text-xs" text="bg-disabled" />
+					<Label class="bg-error p-4 text-xs" text="bg-error" />
+					<Label class="bg-warning p-4 text-xs" text="bg-warning" />
+					<Label class="bg-positive p-4 text-xs" text="bg-positive" />
+					<Label class="bg-steam-online p-4 text-xs" text="bg-steam-online" />
 				</Panel>
 				<Panel class="col">
-					<Label class="bg-black padding-large text--xs" text="bg-black" />
-					<Label class="bg-white padding-large text--xs" text="bg-white" />
+					<Label class="bg-black p-4 text-xs" text="bg-black" />
+					<Label class="bg-white p-4 text-xs" text="bg-white" />
 				</Panel>
 				<Panel class="col">
-					<Label class="bg-gray-100 padding-large text--xs" text="bg-gray-100" />
-					<Label class="bg-gray-200 padding-large text--xs" text="bg-gray-200" />
-					<Label class="bg-gray-300 padding-large text--xs" text="bg-gray-300" />
-					<Label class="bg-gray-400 padding-large text--xs" text="bg-gray-400" />
-					<Label class="bg-gray-500 padding-large text--xs" text="bg-gray-500" />
-					<Label class="bg-gray-600 padding-large text--xs" text="bg-gray-600" />
-					<Label class="bg-gray-700 padding-large text--xs" text="bg-gray-700" />
-					<Label class="bg-gray-800 padding-large text--xs" text="bg-gray-800" />
-					<Label class="bg-gray-900 padding-large text--xs" text="bg-gray-900" />
+					<Label class="bg-gray-100 p-4 text-xs" text="bg-gray-100" />
+					<Label class="bg-gray-200 p-4 text-xs" text="bg-gray-200" />
+					<Label class="bg-gray-300 p-4 text-xs" text="bg-gray-300" />
+					<Label class="bg-gray-400 p-4 text-xs" text="bg-gray-400" />
+					<Label class="bg-gray-500 p-4 text-xs" text="bg-gray-500" />
+					<Label class="bg-gray-600 p-4 text-xs" text="bg-gray-600" />
+					<Label class="bg-gray-700 p-4 text-xs" text="bg-gray-700" />
+					<Label class="bg-gray-800 p-4 text-xs" text="bg-gray-800" />
+					<Label class="bg-gray-900 p-4 text-xs" text="bg-gray-900" />
 				</Panel>
 				<Panel class="col">
-					<Label class="bg-light-100 padding-large text--xs" text="bg-light-100" />
-					<Label class="bg-light-200 padding-large text--xs" text="bg-light-200" />
-					<Label class="bg-light-300 padding-large text--xs" text="bg-light-300" />
-					<Label class="bg-light-400 padding-large text--xs" text="bg-light-400" />
-					<Label class="bg-light-500 padding-large text--xs" text="bg-light-500" />
-					<Label class="bg-light-600 padding-large text--xs" text="bg-light-600" />
-					<Label class="bg-light-700 padding-large text--xs" text="bg-light-700" />
-					<Label class="bg-light-800 padding-large text--xs" text="bg-light-800" />
-					<Label class="bg-light-900 padding-large text--xs" text="bg-light-900" />
+					<Label class="bg-light-100 p-4 text-xs" text="bg-light-100" />
+					<Label class="bg-light-200 p-4 text-xs" text="bg-light-200" />
+					<Label class="bg-light-300 p-4 text-xs" text="bg-light-300" />
+					<Label class="bg-light-400 p-4 text-xs" text="bg-light-400" />
+					<Label class="bg-light-500 p-4 text-xs" text="bg-light-500" />
+					<Label class="bg-light-600 p-4 text-xs" text="bg-light-600" />
+					<Label class="bg-light-700 p-4 text-xs" text="bg-light-700" />
+					<Label class="bg-light-800 p-4 text-xs" text="bg-light-800" />
+					<Label class="bg-light-900 p-4 text-xs" text="bg-light-900" />
 				</Panel>
 				<Panel class="col">
-					<Label class="bg-dark-100 padding-large text--xs" text="bg-dark-100" />
-					<Label class="bg-dark-200 padding-large text--xs" text="bg-dark-200" />
-					<Label class="bg-dark-300 padding-large text--xs" text="bg-dark-300" />
-					<Label class="bg-dark-400 padding-large text--xs" text="bg-dark-400" />
-					<Label class="bg-dark-500 padding-large text--xs" text="bg-dark-500" />
-					<Label class="bg-dark-600 padding-large text--xs" text="bg-dark-600" />
-					<Label class="bg-dark-700 padding-large text--xs" text="bg-dark-700" />
-					<Label class="bg-dark-800 padding-large text--xs" text="bg-dark-800" />
-					<Label class="bg-dark-900 padding-large text--xs" text="bg-dark-900" />
+					<Label class="bg-dark-100 p-4 text-xs" text="bg-dark-100" />
+					<Label class="bg-dark-200 p-4 text-xs" text="bg-dark-200" />
+					<Label class="bg-dark-300 p-4 text-xs" text="bg-dark-300" />
+					<Label class="bg-dark-400 p-4 text-xs" text="bg-dark-400" />
+					<Label class="bg-dark-500 p-4 text-xs" text="bg-dark-500" />
+					<Label class="bg-dark-600 p-4 text-xs" text="bg-dark-600" />
+					<Label class="bg-dark-700 p-4 text-xs" text="bg-dark-700" />
+					<Label class="bg-dark-800 p-4 text-xs" text="bg-dark-800" />
+					<Label class="bg-dark-900 p-4 text-xs" text="bg-dark-900" />
 				</Panel>
 			</Panel>
 
-			<Label class="text--h3 top-margin" text="Gradients" />
-			<Panel class="row top-bottom-margin">
-					<Label class="gradient-horizontal-blue padding-large text--xs" text="gradient-horizontal-blue" />
-					<Label class="gradient-horizontal-light-blue padding-large text--xs" text="gradient-horizontal-light-blue" />
-					<Label class="gradient-horizontal-purple padding-large text--xs" text="gradient-horizontal-purple" />
-					<Label class="gradient-horizontal-pink padding-large text--xs" text="gradient-horizontal-pink" />
-					<Label class="gradient-horizontal-red padding-large text--xs" text="gradient-horizontal-red" />
-					<Label class="gradient-horizontal-orange padding-large text--xs" text="gradient-horizontal-orange" />
-					<Label class="gradient-horizontal-yellow padding-large text--xs" text="gradient-horizontal-yellow" />
-					<Label class="gradient-horizontal-green padding-large text--xs" text="gradient-horizontal-green" />
+			<Label class="text-h3 mt-3" text="Gradients" />
+			<Panel class="row my-3">
+					<Label class="gradient-horizontal-blue p-4 text-xs" text="gradient-horizontal-blue" />
+					<Label class="gradient-horizontal-light-blue p-4 text-xs" text="gradient-horizontal-light-blue" />
+					<Label class="gradient-horizontal-purple p-4 text-xs" text="gradient-horizontal-purple" />
+					<Label class="gradient-horizontal-pink p-4 text-xs" text="gradient-horizontal-pink" />
+					<Label class="gradient-horizontal-red p-4 text-xs" text="gradient-horizontal-red" />
+					<Label class="gradient-horizontal-orange p-4 text-xs" text="gradient-horizontal-orange" />
+					<Label class="gradient-horizontal-yellow p-4 text-xs" text="gradient-horizontal-yellow" />
+					<Label class="gradient-horizontal-green p-4 text-xs" text="gradient-horizontal-green" />
 			</Panel>
-			<Panel class="row top-bottom-margin">
-					<Label class="gradient-vertical-blue padding-large text--xs" text="gradient-vertical-blue" />
-					<Label class="gradient-vertical-light-blue padding-large text--xs" text="gradient-vertical-light-blue" />
-					<Label class="gradient-vertical-purple padding-large text--xs" text="gradient-vertical-purple" />
-					<Label class="gradient-vertical-pink padding-large text--xs" text="gradient-vertical-pink" />
-					<Label class="gradient-vertical-red padding-large text--xs" text="gradient-vertical-red" />
-					<Label class="gradient-vertical-orange padding-large text--xs" text="gradient-vertical-orange" />
-					<Label class="gradient-vertical-yellow padding-large text--xs" text="gradient-vertical-yellow" />
-					<Label class="gradient-vertical-green padding-large text--xs" text="gradient-vertical-green" />
+			<Panel class="row my-3">
+					<Label class="gradient-vertical-blue p-4 text-xs" text="gradient-vertical-blue" />
+					<Label class="gradient-vertical-light-blue p-4 text-xs" text="gradient-vertical-light-blue" />
+					<Label class="gradient-vertical-purple p-4 text-xs" text="gradient-vertical-purple" />
+					<Label class="gradient-vertical-pink p-4 text-xs" text="gradient-vertical-pink" />
+					<Label class="gradient-vertical-red p-4 text-xs" text="gradient-vertical-red" />
+					<Label class="gradient-vertical-orange p-4 text-xs" text="gradient-vertical-orange" />
+					<Label class="gradient-vertical-yellow p-4 text-xs" text="gradient-vertical-yellow" />
+					<Label class="gradient-vertical-green p-4 text-xs" text="gradient-vertical-green" />
 			</Panel>
 
-			<Label class="text--h3 top-margin" text="Layout" />
-			<Panel class="row top-bottom-margin">
+			<Label class="text-h3 mt-3" text="Layout" />
+			<Panel class="row my-3">
 				<Panel class="col">
-					<Panel class="row padding-large bg-gray-300">
-						<Label class="text--h4" text="row" />
-						<Panel class="col margin bg-gray-600">
-							<Label class="text--h4" text="col" />
+					<Panel class="row p-4 bg-gray-300">
+						<Label class="text-h4" text="row" />
+						<Panel class="col m-3 bg-gray-600">
+							<Label class="text-h4" text="col" />
 						</Panel>
-						<Panel class="col margin bg-gray-600">
-							<Label class="text--h4" text="col" />
+						<Panel class="col m-3 bg-gray-600">
+							<Label class="text-h4" text="col" />
 						</Panel>
-						<Panel class="col margin bg-gray-600">
-							<Label class="text--h4" text="col" />
+						<Panel class="col m-3 bg-gray-600">
+							<Label class="text-h4" text="col" />
 						</Panel>
-						<Panel class="col margin bg-gray-600">
-							<Label class="text--h4" text="col" />
+						<Panel class="col m-3 bg-gray-600">
+							<Label class="text-h4" text="col" />
 						</Panel>
-						<Panel class="col margin bg-gray-600">
-							<Label class="text--h4" text="col" />
+						<Panel class="col m-3 bg-gray-600">
+							<Label class="text-h4" text="col" />
 						</Panel>
 					</Panel>
 				</Panel>
 				<Panel class="col">
-					<Panel class="col full-width"><Label class="text--xs max-width-200 left-margin-large" text="horizontal-separator"/><Panel class="horizontal-separator"/></Panel>
+					<Panel class="col full-width"><Label class="text-xs max-width-200 ml-4" text="horizontal-separator"/><Panel class="horizontal-separator"/></Panel>
 				</Panel>
 				<Panel class="col full-height">
-					<Panel class="row full-height"><Label class="text--xs max-width-200" text="vertical-separator"/><Panel class="vertical-separator"/></Panel>
+					<Panel class="row full-height"><Label class="text-xs max-width-200" text="vertical-separator"/><Panel class="vertical-separator"/></Panel>
 				</Panel>
 			</Panel>
 
-			<Label class="text--h1 top-margin" text="Controls" />
+			<Label class="text-h1 mt-3" text="Controls" />
 
-			<Label class="text--h3 top-margin" text="Buttons" />
-			<Panel class="row top-bottom-margin">
-				<Button class="button">
+			<Label class="text-h3 mt-3" text="Buttons" />
+			<Panel class="row my-3">
+				<Button class="button mr-2" onactivate="$.Msg('onactivated');">
 					<Label class="button__text" text="Button" />
-				</Button>
-				<Button class="button left-margin">
+				</Button>	
+				<Button class="button mr-2">
 					<Image class="button__icon" texturewidth="32" textureheight="32"
 						src="file://{images}/units.svg" />
 				</Button>
-				<Button class="button left-margin">
+				<Button class="button mr-2">
 					<Image class="button__icon button__icon--left" texturewidth="32" textureheight="32"
 						src="file://{images}/units.svg" />
 					<Label class="button__text button__text--right" text="left-icon + text" />
 				</Button>
-				<Button class="button left-margin">
-					<Label class="button__text button__text--left" text="text + right-icon" />
+				<Button class="button mr-2">
+					<Label class="button__text button__text-left" text="text + right-icon" />
 					<Image class="button__icon button__icon--right" texturewidth="32" textureheight="32"
 						src="file://{images}/units.svg" />
 				</Button>
-				<Button class="button button--blue left-margin">
+				<Button class="button mr-2 button--blue">
 					<Label class="button__text" text="blue" />
 				</Button>
-				<Button class="button button--light-blue left-margin">
+				<Button class="button mr-2 button--light-blue">
 					<Label class="button__text" text="light-blue" />
 				</Button>
-				<Button class="button button--green left-margin">
+				<Button class="button mr-2 button--green">
 					<Label class="button__text" text="green" />
 				</Button>
-				<Button class="button button--yellow left-margin">
+				<Button class="button mr-2 button--yellow">
 					<Label class="button__text" text="yellow" />
 				</Button>
-				<Button class="button button--orange left-margin">
+				<Button class="button mr-2 button--orange">
 					<Label class="button__text" text="orange" />
 				</Button>
-				<Button class="button button--red left-margin">
+				<Button class="button mr-2 button--red">
 					<Label class="button__text" text="red" />
 				</Button>
-				<Button class="button button--pink left-margin">
+				<Button class="button mr-2 button--pink">
 					<Label class="button__text" text="pink" />
 				</Button>
-				<Button class="button button--purple left-margin">
+				<Button class="button button--purple">
 					<Label class="button__text" text="purple" />
 				</Button>
 			</Panel>
-			<Panel class="row top-bottom-margin">
-				<Button class="button" disabled="true">
+			<Panel class="row my-3">
+				<Button class="button mr-2" disabled="true">
 					<Label class="button__text" text="Button" />
 				</Button>
-				<Button class="button left-margin" disabled="true">
+				<Button class="button mr-2" disabled="true">
 					<Image class="button__icon" texturewidth="32" textureheight="32"
 						src="file://{images}/units.svg" />
 				</Button>
-				<Button class="button left-margin" disabled="true">
+				<Button class="button mr-2" disabled="true">
 					<Image class="button__icon button__icon--left" texturewidth="32" textureheight="32"
 						src="file://{images}/units.svg" />
 					<Label class="button__text button__text--right" text="left-icon + text" />
 				</Button>
-				<Button class="button left-margin" disabled="true">
-					<Label class="button__text button__text--left" text="text + right-icon" />
+				<Button class="button mr-2" disabled="true">
+					<Label class="button__text button__text-left" text="text + right-icon" />
 					<Image class="button__icon button__icon--right" texturewidth="32" textureheight="32"
 						src="file://{images}/units.svg" />
 				</Button>
-				<Button class="button button--blue left-margin" disabled="true">
+				<Button class="button mr-2 button--blue" disabled="true">
 					<Label class="button__text" text="blue" />
 				</Button>
-				<Button class="button button--light-blue left-margin" disabled="true">
+				<Button class="button mr-2 button--light-blue" disabled="true">
 					<Label class="button__text" text="light-blue" />
 				</Button>
-				<Button class="button button--green left-margin" disabled="true">
+				<Button class="button mr-2 button--green" disabled="true">
 					<Label class="button__text" text="green" />
 				</Button>
-				<Button class="button button--yellow left-margin" disabled="true">
+				<Button class="button mr-2 button--yellow" disabled="true">
 					<Label class="button__text" text="yellow" />
 				</Button>
-				<Button class="button button--orange left-margin" disabled="true">
+				<Button class="button mr-2 button--orange" disabled="true">
 					<Label class="button__text" text="orange" />
 				</Button>
-				<Button class="button button--red left-margin" disabled="true">
+				<Button class="button mr-2 button--red" disabled="true">
 					<Label class="button__text" text="red" />
 				</Button>
-				<Button class="button button--pink left-margin" disabled="true">
+				<Button class="button mr-2 button--pink" disabled="true">
 					<Label class="button__text" text="pink" />
 				</Button>
-				<Button class="button button--purple left-margin" disabled="true">
+				<Button class="button button--purple" disabled="true">
 					<Label class="button__text" text="purple" />
 				</Button>
 			</Panel>
-			<Panel class="row top-bottom-margin">
+			<Panel class="row my-3">
 				<Button class="button">
-					<Label class="button__text text--xs" text="smol button" />
+					<Label class="button__text text-xs" text="smol button" />
 				</Button>
 			</Panel>
 
-			<Label class="text--h3 top-margin" text="Toggle Buttons" />
-			<Panel class="row top-bottom-margin">
-				<ToggleButton class="button togglebutton">
+			<Label class="text-h3 mt-3" text="Toggle Buttons" />
+			<Panel class="row my-3">
+				<ToggleButton class="button mr-2 togglebutton">
 					<Label class="button__text" text="ToggleButton" />
 				</ToggleButton>
-				<ToggleButton class="button togglebutton left-margin">
+				<ToggleButton class="button mr-2 togglebutton">
 					<Image class="button__icon" texturewidth="32" textureheight="32"
 						src="file://{images}/units.svg" />
 				</ToggleButton>
-				<ToggleButton class="button togglebutton left-margin">
+				<ToggleButton class="button mr-2 togglebutton">
 					<Image class="button__icon button__icon--left" texturewidth="32" textureheight="32"
 						src="file://{images}/units.svg" />
 					<Label class="button__text button__text--right" text="icon--left + text" />
 				</ToggleButton>
-				<ToggleButton class="button togglebutton left-margin">
-					<Label class="button__text button__text--left" text="icon--right + text" />
+				<ToggleButton class="button mr-2 togglebutton">
+					<Label class="button__text button__text-left" text="icon--right + text" />
 					<Image class="button__icon button__icon--right" texturewidth="32" textureheight="32"
 						src="file://{images}/units.svg" />
 				</ToggleButton>
-				<ToggleButton class="button togglebutton togglebutton--blue left-margin">
+				<ToggleButton class="button mr-2 togglebutton togglebutton--blue">
 					<Label class="button__text" text="blue" />
 				</ToggleButton>
-				<ToggleButton class="button togglebutton togglebutton--light-blue left-margin">
+				<ToggleButton class="button mr-2 togglebutton togglebutton--light-blue">
 					<Label class="button__text" text="light-blue" />
 				</ToggleButton>
-				<ToggleButton class="button togglebutton togglebutton--green left-margin">
+				<ToggleButton class="button mr-2 togglebutton togglebutton--green">
 					<Label class="button__text" text="green" />
 				</ToggleButton>
-				<ToggleButton class="button togglebutton togglebutton--yellow left-margin">
+				<ToggleButton class="button mr-2 togglebutton togglebutton--yellow">
 					<Label class="button__text" text="yellow" />
 				</ToggleButton>
-				<ToggleButton class="button togglebutton togglebutton--orange left-margin">
+				<ToggleButton class="button mr-2 togglebutton togglebutton--orange">
 					<Label class="button__text" text="orange" />
 				</ToggleButton>
-				<ToggleButton class="button togglebutton togglebutton--red left-margin">
+				<ToggleButton class="button mr-2 togglebutton togglebutton--red">
 					<Label class="button__text" text="red" />
 				</ToggleButton>
-				<ToggleButton class="button togglebutton togglebutton--pink left-margin">
+				<ToggleButton class="button mr-2 togglebutton togglebutton--pink">
 					<Label class="button__text" text="pink" />
 				</ToggleButton>
-				<ToggleButton class="button togglebutton togglebutton--purple left-margin">
+				<ToggleButton class="button togglebutton togglebutton--purple">
 					<Label class="button__text" text="purple" />
 				</ToggleButton>
 			</Panel>
-			<Panel class="row top-bottom-margin">
+			<Panel class="row my-3">
 				<ToggleButton class="checkbox">
 					<Label text="Default checkbox" />
 				</ToggleButton>
-				<ToggleButton class="checkbox left-margin" disabled="true">
+				<ToggleButton class="checkbox checkbox--right ml-3">
+					<Label text="checkbox--right" />
+				</ToggleButton>
+				<ToggleButton class="checkbox ml-3" disabled="true">
 					<Label text="Disabled checkbox" />
 				</ToggleButton>
-				<ToggleButton class="checkbox left-margin" disabled="true" selected="true">
+				<ToggleButton class="checkbox ml-3" disabled="true" selected="true">
 					<Label text="Disabled selected checkbox" />
 				</ToggleButton>
 			</Panel>
 
-			<Label class="text--h3 top-margin" text="Radio Buttons" />
-			<Panel class="row top-bottom-margin">
-				<RadioButton class="radiobutton" id="radio1" group="radiobuttons1">
-					<Label class="radiobutton__text" text="Default Radiobutton" />
+			<Label class="text-h3 mt-3" text="Radio Buttons" />
+			<Panel class="row my-3">
+				<RadioButton class="button radiobutton mr-2">
+					<Label class="button__text" text="Radiobutton" />
 				</RadioButton>
-				<RadioButton class="radiobutton left-margin" id="radio2" group="radiobuttons1">
-					<Label class="radiobutton__text" text="We don't really need these for anything" />
+				<RadioButton class="button radiobutton radiobutton--blue mr-2">
+					<Label class="button__text" text="Radiobutton" />
 				</RadioButton>
-				<RadioButton class="radiobutton left-margin" id="radio3" group="radiobuttons1">
-					<Label class="radiobutton__text" text="So I don't know how to theme them" />
+				<RadioButton class="button radiobutton radiobutton--green mr-2">
+					<Label class="button__text" text="Radiobutton" />
 				</RadioButton>
-				<RadioButton class="radiobutton left-margin" id="radio4" group="radiobuttons2" disabled="true">
-					<Label class="radiobutton__text" text="disabled" />
+			</Panel>
+			<Panel class="row my-3">
+				<RadioButton class="radiobutton-classic">
+					<Label class="radiobutton-classic__text" text="Classic Radiobutton" />
 				</RadioButton>
-				<RadioButton class="radiobutton left-margin" id="radio5" group="radiobuttons2" disabled="true"
+				<RadioButton class="radiobutton-classic ml-3">
+					<Label class="radiobutton-classic__text" text="We don't really need these for anything" />
+				</RadioButton>
+				<RadioButton class="radiobutton-classic ml-3" disabled="true">
+					<Label class="radiobutton-classic__text" text="disabled" />
+				</RadioButton>
+				<RadioButton class="radiobutton-classic ml-3" id="radio4" group="blah" disabled="true"
 					selected="true">
-					<Label class="radiobutton__text" text="disabled selected" />
+					<Label class="radiobutton-classic__text" text="disabled selected" />
 				</RadioButton>
 			</Panel>
 
-			<Label class="text--h3 top-margin" text="Dropdowns" />
-			<Panel class="row top-bottom-margin">
+			<Label class="text-h3 mt-3" text="Dropdowns" />
+			<Panel class="row my-3">
 				<DropDown class="dropdown" menuclass="dropdown-menu">
-					<Label text="Dropdown" id="ControllibDropdown1" value="1" />
+					<!-- <Panel class="DropDownIcon"/> -->
+					<Label text="Dropdaaown" id="ControllibDropdown1" value="1" />
 					<Label text="You can have icons now!" class="IconLabel" id="ControllibDropdown2" value="2">
 						<Image class="wash-color-blue" texturewidth="32" textureheight="32"
 							src="file://{images}/units.svg" />
@@ -404,7 +417,7 @@
 					<Label text="I long for death" id="ControllibDropdown6" value="6" />
 				</DropDown>
 
-				<DropDown class="dropdown left-margin" menuclass="dropdown-menu" style="width: 300px;">
+				<DropDown class="dropdown ml-3" menuclass="dropdown-menu" style="width: 300px;">
 					<Label text="Dropdown fixed width" id="ControllibDropdown2_1" value="1" />
 					<Label text="This is a rare case where you should use inline styling " id="ControllibDropdown2_2"
 						value="2" />
@@ -415,64 +428,63 @@
 					</Label>
 				</DropDown>
 
-				<DropDown class="dropdown left-margin" menuclass="dropdown-menu" disabled="true">
+				<DropDown class="dropdown ml-3" menuclass="dropdown-menu" disabled="true">
 					<Label text="Disabled Dropdown" id="ControllibDrop2Down1" value="1" />>
 				</DropDown>
 
-				<Panel class="dropdown-temp left-margin">
-					<Label
-						text="properly themed dropdown you'll get if you add me a panel to DropDown with .DropDownIcon :)" />
+				<Panel class="dropdown ml-3">
+					<Label text="Properly themed dropdown mockup" />
 					<Panel class="DropDownIcon" />
 				</Panel>
 			</Panel>
 
-			<Label class="text--h3 top-margin" text="TextEntrys" />
-			<Panel class="row top-bottom-margin">
+			<Label class="text-h3 mt-3" text="TextEntrys" />
+			<Panel class="row my-3">
 				<TextEntry class="textentry" placeholder="Default TextEntry" />
 			</Panel>
 
-			<Label class="text--h3 top-margin" text="Sliders" />
-			<Panel class="row top-bottom-margin bottom-margin-none">
+			<Label class="text-h3 mt-3" text="Sliders" />
+			<Panel class="row my-3 mt-3-none">
 				<Panel class="col">
-					<Panel class="row top-bottom-margin">
+					<Panel class="row my-3">
 						<Slider class="slider" direction="horizontal" id="Slider" />
 					</Panel>
-					<Panel class="row top-bottom-margin">
+					<Panel class="row my-3">
 						<Slider class="slider" direction="horizontal" id="Slider2" disabled="true" />
 					</Panel>
 				</Panel>
-				<Panel class="col bottom-margin-none">
-					<Panel class="row top-bottom-margin" style="height:120px;">
+				<Panel class="col mt-3-none">
+					<Panel class="row my-3" style="height:120px;">
 						<Slider class="slider VerticalSlider" direction="vertical" id="Slider3" />
 						<Slider class="slider VerticalSlider" direction="vertical" id="Slider4" disabled="true" />
 					</Panel>
 				</Panel>
 			</Panel>
 
-			<Label class="text--h3" text="ProgressBars" />
-			<Panel class="row top-bottom-margin">
+			<Label class="text-h3" text="ProgressBars" />
+			<Panel class="row my-3">
 				<ProgressBar id="ProgressBar1" class="progressbar" min="0.0" max="1.0" style="width: 400px;" />
 			</Panel>
 
-			<!-- <Label class="text-h3 top-margin" text="Movie (WIP)" /> -->
-			<!-- <Panel class="row top-bottom-margin" style="height:360px;width:1080px;">
+			<!-- <Label class="text-h3 mt-3" text="Movie (WIP)" /> -->
+			<!-- <Panel class="row my-3" style="height:360px;width:1080px;">
 				<Movie src="file://{resources}/videos/backgrounds/MomentumDark.webm" autoplay="onload" controls="full" style="width:540px;"/>
 				<Movie src="file://{resources}/videos/backgrounds/MomentumDark.webm" autoplay="onload" controls="minimal" style="width:540px;"/>
 			</Panel> -->
 
-			<Label class="text--h3 top-margin" text="Context Menus" />
-			<Panel class="row top-bottom-margin">
+			<Label class="text-h3 mt-3" text="Context Menus" />
+			<Panel class="row my-3">
 				<Button class="button" onactivate="ControlsLibrary.OnSimpleContextMenu();">
 					<Label class="button__text" text="Simple Context Menu" />
 				</Button>
 			</Panel>
 
-			<Label class="text--h3 top-margin" text="Popups" />
-			<Panel class="row top-bottom-margin">
+			<Label class="text-h3 mt-3" text="Popups" />
+			<Panel class="row my-3">
 				<Button class="button" onactivate="UiToolkitAPI.ShowGenericPopup('what', 'hELLO?', '');">
 					<Label class="button__text" text="ShowGenericPopup" />
 				</Button>
-				<Button class="button left-margin" onactivate="UiToolkitAPI.ShowGenericPopupYesNoCancelBgStyle('Title', 
+				<Button class="button ml-3" onactivate="UiToolkitAPI.ShowGenericPopupYesNoCancelBgStyle('Title', 
 							'Message', 
 							'', 
 							function() {},
@@ -482,13 +494,13 @@
 						);">
 					<Label class="button__text" text="ShowGenericPopupYesNoCancelBgStyle" />
 				</Button>
-				<Button class="button left-margin" onactivate="UiToolkitAPI.ShowGenericPopupThreeOptionsBgStyle('??????', 
+				<Button class="button ml-3" onactivate="UiToolkitAPI.ShowGenericPopupThreeOptionsBgStyle('??????', 
 							'Are you ok?', 
 							'', 
 							'No', 
-							function(){$('#ControlsLibraryPanel').ToggleClass('very-useful-class');},
-							'No',
 							function(){$('#ControlsLibraryPanel').ToggleClass('more-useful-class');},
+							'No',
+							function(){$('#ControlsLibraryPanel').ToggleClass('very-useful-class');},
 							'No',
 							function(){function a(p){if(typeof p.Children==='function')p.Children().forEach(c=>{if(c.hasOwnProperty('text'))c.text='burger';a(c)})}a($('#ControlsLibraryPanel'))},
 							'blur'
@@ -497,39 +509,39 @@
 				</Button>
 			</Panel>
 
-			<Label class="text--h3 top-margin" text="Tooltips" />
-			<Panel class="row top-bottom-margin">
-				<Panel id="tooltip1" class="button top-bottom-padding-small left-right-padding-small" style="tooltip-position: bottom;"
+			<Label class="text-h3 mt-3" text="Tooltips" />
+			<Panel class="row my-3">
+				<Panel id="tooltip1" class="button py-1 mx-1" style="tooltip-position: bottom;"
 					onmouseover="UiToolkitAPI.ShowTextTooltip('tooltip1', 'Momentum Man, the fabled master of every gamemode, with more records than ever seen. Scientist, lover, source movement legend. But how did he die? Follow in his footsteps, unlock the mystery!');"
 					onmouseout="UiToolkitAPI.HideTextTooltip();">
 					<Label class="button__text" text="Text Tooltip" />
 				</Panel>
-				<Panel id="tooltip2" class="button left-margin top-bottom-padding-small left-right-padding-small" style="tooltip-position: bottom;"
+				<Panel id="tooltip2" class="button ml-3 py-1 mr-1" style="tooltip-position: bottom;"
 					onmouseover="UiToolkitAPI.ShowTitleTextTooltip('tooltip2', 'TitleText Tooltip', 'Momentum Man, легендарный мастер каждого игрового режима, с большим количеством записей, чем когда-либо. Ученый, любитель, источник легенды движения. Но как он умер? Следуйте по его стопам, откройте тайну!');"
 					onmouseout="UiToolkitAPI.HideTitleTextTooltip();">
 					<Label class="button__text" text="TitleImageText Tooltip" />
 				</Panel>
-				<Panel id="tooltip3" class="button left-margin top-bottom-padding-small left-right-padding-small" style="tooltip-position: bottom;"
+				<Panel id="tooltip3" class="button ml-3 py-1 mr-1" style="tooltip-position: bottom;"
 					onmouseover="UiToolkitAPI.ShowTitleImageTextTooltip('tooltip3', 'TitleImageText Tooltip', 'file://{images}/tooltips/positive.svg', 'This displays an image and text with a title.');"
 					onmouseout="UiToolkitAPI.HideTitleImageTextTooltip();">
 					<Label class="button__text" text="TitleImageText Tooltip" />
 				</Panel>
-				<Panel id="tooltip4" class="button left-margin top-bottom-padding-small left-right-padding-small" style="tooltip-position: bottom;"
+				<Panel id="tooltip4" class="button ml-3 py-1 mr-1" style="tooltip-position: bottom;"
 					onmouseover="UiToolkitAPI.ShowTitleImageTextTooltipStyled('tooltip4', 'TitleImageText', 'file://{images}/tooltips/negative.svg', 'We don&quot;t seem to have a ShowImageTextTooltip function, so let&quot;s just the title with the --notitle modifier', 'tooltip--notitle');"
 					onmouseout="UiToolkitAPI.HideTitleImageTextTooltip();">
 					<Label class="button__text" text="TitleImageTextStyled Tooltip without title" />
 				</Panel>
 			</Panel>
 			
-			<Label class="text--h1 top-margin" text="Components" />
+			<Label class="text-h1 mt-3" text="Components" />
 
-			<Label class="text--h3 top-margin" text="Player Card" />
-			<Panel class="row top-bottom-margin">
+			<Label class="text-h3 mt-3" text="Player Card" />
+			<Panel class="row my-3">
 				<Frame src="file://{resources}/layout/components/player_card.xml" />
 			</Panel>
 
-			<Label class="text--h3 top-margin" text="Search" />
-			<Panel class="row top-bottom-margin">
+			<Label class="text-h3 mt-3" text="Search" />
+			<Panel class="row my-3">
 				<Frame src="file://{resources}/layout/components/search.xml" />
 			</Panel>
 		</Panel>

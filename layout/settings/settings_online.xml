@@ -20,7 +20,7 @@
 		
 		<Panel class="settings-scroll-container">
 			<Panel id="SettingsOnlineGhostSettings" class="settings-group">
-				<Label class="text--h2" text="#MOM_Settings_Title_Online_Ghost" />
+				<Label class="text-h2" text="#MOM_Settings_Title_Online_Ghost" />
 				
 				<TooltipPanel class="settings-tooltip" tooltip="#MOM_Settings_Override_Alpha_Enable_TT">
 					<ChaosSettingsEnum text="#MOM_Settings_Override_Alpha_Enable" convar="mom_ghost_online_alpha_override_enable">
@@ -60,7 +60,7 @@
 			<Panel class="settings-horizontal-separator" />
 			
 			<Panel id="SettingsPlayerGhostSettings" class="settings-group">
-				<Label class="text--h2" text="#MOM_Settings_Title_Online_Player" />
+				<Label class="text-h2" text="#MOM_Settings_Title_Online_Player" />
 				<Panel class="full-width left-right-flow">
 					<ModelPanel id="GhostModelPreview" src="models/player/player_shape_base.mdl" mouse_rotate="true" antialias="true" />
 					<Panel class="fill-width top-bottom-flow">

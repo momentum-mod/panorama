@@ -9,8 +9,8 @@
 	<snippets>
 		<snippet name="news-learn-more">
 			<Panel>
-				<Button class="padding-none button button--blue full-width" id="LearnMore">
-					<Label class="button__text text--m" text="Learn More" />
+				<Button class="p-0 button button--blue full-width" id="LearnMore">
+					<Label class="button__text text-m" text="Learn More" />
 				</Button>
 			</Panel>
 		</snippet>
@@ -25,8 +25,8 @@
 		<Panel class="news">
 			<Panel id="LatestUpdate" class="news__latest">
 				<Panel id="LatestUpdateDetails" class="news__latest-details">
-					<Label class="text--h4" text="Updates" />
-					<Label class="text--h6" text="{s:title}" />
+					<Label class="text-h4" text="Updates" />
+					<Label class="text-h6" text="{s:title}" />
 					<Label html="true" class="news__latest-description" text="{s:h:description}" />
 					<Panel id="LearnMoreParent" class="news__latest-learnmore" />
 				</Panel>

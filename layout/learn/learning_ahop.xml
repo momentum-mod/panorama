@@ -7,6 +7,6 @@
     </scripts>
 
     <Panel>
-        <Label class="text--h2" text="COMING SOON!" />
+        <Label class="text-h2" text="COMING SOON!" />
     </Panel>
 </root>

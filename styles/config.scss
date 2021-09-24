@@ -129,20 +129,13 @@ $font-weights: ( "thin", "light", "normal", "medium", "bold", "black" ) !default
 // LAYOUT / UTILITY
 // ================ 
 
-$separator-height           : 1px;
-$separator-vertical-margin  : 8px; // For horizontal, flipped for vertical
-$separator-horizontal-margin: 16px;
-$seperator-radius           : 1px;
-$separator-background       : $light-200;
-$separator-box-shadow       : 0 0px 1px rgba(0, 0, 0, 0.25);
+$separator-height         : 1px;
+$separator-vertical-margin: 8px;
+$seperator-radius         : 1px;
+$separator-background     : $light-200;
+$separator-box-shadow     : 0 0px 1px rgba(0, 0, 0, 0.25);
 
-$padding-small  : 4px !default;
-$padding-default: 8px !default;
-$padding-large  : 16px !default;
-
-$margin-small  : 4px !default;
-$margin-default: 8px !default;
-$margin-large  : 16px !default;
+$spacers: ( 4px, 6px, 8px, 16px, 32px );
 
 // ================
 // BUTTON
