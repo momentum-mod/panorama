@@ -28,11 +28,15 @@
 .generic-popup {
 	&__title {
 		horizontal-align: left;
-		width: 100%;
+		// width: 100%;
 		margin-bottom: 0px;
 		@include mixin.font-styles($use-header: $popup-title-use-header-font, $light-header: false);
 		color: $font-default-color;
 		font-size: $popup-title-font-size;
+	}
+
+	&__close-button {
+		margin-top: 4px;
 	}
 
 	&__message-panel {
@@ -74,8 +78,6 @@
 	}
 }
 
-// PopupManager Classes
-
 #DimBackground {
 	width: 100%;
 	height: 100%;
@@ -98,53 +100,3 @@
 #BlurBackground.Hidden {
 	opacity: 0;
 }
-
-// Might be useful in future, leaving for now
-
-// #Spinner.SpinnerVisible {
-// 	visibility: visible;
-// }
-
-// .ImageContainer {
-// 	flow-children: down;
-// 	vertical-align: center;
-// 	width: fit-children;
-// 	height: fit-children;
-// }
-
-// .Confirmation {
-// 	margin-top: 9px;
-// 	horizontal-align: center;
-// 	flow-children: down;
-// 	visibility: collapse;
-// }
-
-// .PopupPanel.ConfirmationCodeEnabled .Confirmation {
-// 	visibility: visible;
-// }
-
-
-// #ProgressBar.ProgressBarVisible {
-// 	visibility: visible;
-// }
-
-// @keyframes DelayedFadeOpacityIn {
-// 	0% {
-// 		opacity: 0.0;
-// 	}
-
-// 	80% {
-// 		opacity: 0.0;
-// 	}
-
-// 	100% {
-// 		opacity: 1.0;
-// 	}
-// }
-
-// .DelayedButtons #ButtonContainer {
-// 	animation-name: DelayedFadeOpacityIn;
-// 	animation-duration: 2.5s;
-// 	animation-timing-function: ease-in;
-// 	animation-iteration-count: 1;
-// }

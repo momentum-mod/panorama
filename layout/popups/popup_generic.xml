@@ -8,18 +8,8 @@
 		<Panel class="generic-popup__message-panel" >
 			<Label id="MessageLabel" class="generic-popup__message-label" html="true" allowrawtext="true" />
 		</Panel>
-		<!-- <Panel class="Confirmation" >
-			<Label text="#GenericConfirmText_Label" />
-			<TextEntry id="ConfirmationText" oninputsubmit="GenericConfirmFinished()" />
-		</Panel>
-		<Panel id="Spinner" class="Spinner" />
-		<ProgressBar id="ProgressBar" /> -->
 		<Panel id="ButtonContainer" class="generic-popup__button-row">
-			<!-- Populated dynamically at runtime
-			<Button onactivate="UIPopupButtonClicked( <event> )">
-			<Label />
-			</Button>
-			-->
+			<!-- Populated from JS arguments -->
 		</Panel>
   </Panel>
 </root>
