@@ -5,4 +5,8 @@
 Label {
 	@include mixin.font-styles($use-header: false);
 	font-size: $font-default-size;
+
+	&:disabled {
+		color: $font-disabled-color;
+	}
 }

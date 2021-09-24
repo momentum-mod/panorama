@@ -4,6 +4,7 @@
 .tooltip {
 	opacity: 0.0;
 	transition: opacity 0.1s ease-out 0s;
+	margin: $tooltip-margin;
 
 	&.TooltipVisible {
 		opacity: 1.0;

@@ -5,6 +5,7 @@
 @use 'sass:list';
 
 .button {
+	height: $button-height;
 	background-color: $button-background;
 	box-shadow: $button-shadow;
 	border-radius: $button-radius;
@@ -12,7 +13,6 @@
 	horizontal-align: center;
 	text-align: center;
 	flow-children: right;
-	padding: $button-padding;
 	transition: background-color 0.1s ease-in 0s;
 	
 	&:hover {
@@ -36,8 +36,7 @@
 		@include mixin.font-styles($use-header: $button-use-header-font);
 		font-size: $button-font-size;
 		color: $button-text-color;
-		padding: 1px;
-		margin: 0 $button-text-margin-side;
+		margin: 0 $button-text-side-margin;
 		text-shadow: $button-text-shadow;
 		vertical-align: middle;
 		horizontal-align: center;
@@ -46,29 +45,35 @@
 		&:hover {
 			color: $button-text-hover;
 		}
-	}
-	
-	&__icon {
-		height: $button-icon-size;
-		width: height-percentage(100%);
-		margin-top: 2px;
-		margin-bottom: 2px;
-		padding: 1px;
-		vertical-align: middle;
-		img-shadow: $button-text-shadow;
-		wash-color: $button-text-color;
-	}
 
-	&__text, 
-	&__icon {
 		&--left {
-			margin-left: $button-text-margin-side;
+			margin-left: $button-text-side-margin;
 			margin-right: $button-icon-text-gap;
 		}
 
 		&--right {
 			margin-left: $button-icon-text-gap;
-			margin-right: $button-text-margin-side;
+			margin-right: $button-text-side-margin;
+		}
+	}
+	
+	&__icon {
+		height: 100%;
+
+		width: height-percentage(100%);
+		padding: $button-icon-padding;
+		vertical-align: middle;
+		img-shadow: $button-icon-shadow;
+		wash-color: $button-text-color;
+
+		&--left {
+			margin-left: $button-icon-with-text-side-margin;
+			margin-right: $button-icon-text-gap;
+		}
+
+		&--right {
+			margin-left: $button-icon-text-gap;
+			margin-right: $button-icon-with-text-side-margin;
 		}
 	}
 }
@@ -86,10 +91,7 @@
 
 		&:disabled,
 		&:disabled:hover  {
-			background-color: function.gradient-vertical(
-				color.scale(list.nth($colors, 1), $saturation: list.nth($gradient-disabled-transform, 1), $lightness: list.nth($gradient-disabled-transform, 2), $alpha: list.nth($gradient-disabled-transform, 3)),
-				color.scale(list.nth($colors, 2), $saturation: list.nth($gradient-disabled-transform, 1), $lightness: list.nth($gradient-disabled-transform, 2), $alpha: list.nth($gradient-disabled-transform, 3))
-			);
+			background-color: $button-background-disabled-hover;
 		}
 	}
 }

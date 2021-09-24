@@ -17,7 +17,7 @@
 	horizontal-align: center;
 	width: 100%;
 	height: $separator-height;
-	margin: $separator-vertical-margin $separator-horizontal-margin;
+	margin: $separator-vertical-margin 0;
 	border-radius: $seperator-radius;
 	-s2-mix-blend-mode: screen;
 	background-color: $separator-background;
@@ -28,7 +28,7 @@
 	horizontal-align: center;
 	width: $separator-height;
 	height: 100%;
-	margin: $separator-horizontal-margin $separator-vertical-margin;
+	margin: 0 $separator-vertical-margin;
 	border-radius: $seperator-radius;
 	-s2-mix-blend-mode: screen;
 	background-color: $separator-background;

@@ -1,8 +1,32 @@
 @use '../config' as *;
+@use '../abstract/function';
 @use '../abstract/mixin';
 @use 'sass:color';
+@use 'sass:list';
 
 .radiobutton {
+	transition-property: background-color;
+	transition-duration: 0.05s;
+	transition-timing-function: linear;
+	
+	.RadioBox {
+		visibility: collapse;
+	}
+
+	&:selected {
+		background-color: $togglebutton-background-selected;
+	}
+}
+
+@each $name, $colors in $gradients-primary {
+	.radiobutton--#{$name} {
+		&:selected {
+			background-color: function.gradient-vertical(list.nth($colors, 1), list.nth($colors, 2));
+		}
+	}
+}
+
+.radiobutton-classic {
 	background-color: none;
 	vertical-align: middle;
 	flow-children: right;

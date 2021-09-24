@@ -4,15 +4,19 @@
 }
 
 #ControlsLibraryPanel {
-	transition: transform 0.2s linear 0s;
+	transition: transform 1s ease-in-out 0s;
 }
+	
 
 .very-useful-class {
-	transform: rotateX(180deg);
+	transition: transform 1s linear 0s;
+	transform: rotateX(0deg) rotateZ(10deg) rotateY(2deg) scale3d(0.99, -0.9, 1) translateZ(20px);
 }
 
 .more-useful-class {
-	saturation: 5;
-	brightness: 5;
-	contrast: 5;
+	transition: transform 1s linear 0s;
+
+	saturation: 2;
+	brightness: 2;
+	contrast: 2;
 }

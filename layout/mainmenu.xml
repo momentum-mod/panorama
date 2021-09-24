@@ -38,7 +38,7 @@
 			</BaseBlurTarget>
 
 			<Panel class="full-width full-height top-bottom-flow">
-				<Panel id="JsMainMenuNavBar" class="mainmenu__topnav topnav">
+				<Panel id="JsMainMenuNavBar" class="topnav">
 					<Panel class="topnav__wrapper">
 						<!-- This fills the entire width, is aligned to top and is used as the navbar -->
 						<RadioButton id="HomeButton" class="topnav__home" onactivate="MainMenuController.onHomeButtonPressed()">
@@ -93,7 +93,7 @@
 						</Panel>
 					</Panel>
 
-					<Panel id="MainMenuOptionListRight" class="mainmenu__rightnav rightnav">
+					<Panel id="MainMenuOptionListRight" class="rightnav">
 						<RadioButton id="ProfileButton" class="rightnav__button">
 							<Image class="rightnav__button-image" src="file://{images}/sidepanel/profile.svg" textureheight="32" />
 						</RadioButton>

@@ -29,6 +29,7 @@
 
 .checkbox {
 	flow-children: right;
+	height: $checkbox-width;
 	border: 0px solid white;
 	transition-property: background-color;
 	transition-duration: 0.1s;
@@ -36,15 +37,26 @@
 
 	// This gets inserted in code
 	.TickBox {
-		width: $checkbox-width;
-		height: $checkbox-width;
+		height: 100%;
+		width: height-percentage(100%);
 		vertical-align: middle;
 		background-color: $checkbox-background;
 		border-radius: $checkbox-radius;
 		z-index: 1;
-		margin: $checkbox-margin;
+		margin-left: 0;
+		margin-right: $checkbox-gap;
 		box-shadow: $checkbox-shadow;
 		transition: background-color 0.1s ease-in-out 0s;
+	}
+
+	$this:  &;
+	&--right {
+		flow-children: left;
+
+		& .TickBox {
+			margin-right: 0;
+			margin-left: $checkbox-gap;
+		}
 	}
 
 	&:hover .TickBox {
@@ -57,12 +69,13 @@
 	}
 
 	&:selected .TickBox {
+		box-shadow: $checkbox-shadow;
+
 		background-color: $checkbox-background-selected;
 		background-image: url("file://{images}/checkmark.svg");
-		background-size: 75% 75%;
+		background-size: 60% 60%;
 		background-repeat: no-repeat;
 		background-position: center;
-		transition-duration: 0s;
 	}
 
 	&:selected:hover .TickBox {

@@ -5,6 +5,8 @@
 TextEntry {
 	@include mixin.font-styles($use-header: false);
 	font-size: $font-default-size;
+	text-overflow: clip;
+	white-space: nowrap;
 }
 
 .textentry {
@@ -17,9 +19,7 @@ TextEntry {
 	box-shadow: $textentry-shadow;
 	font-size: $textentry-font-size;
 	color: $font-default-color;
-	text-overflow: clip;
 	vertical-align: middle;
-	white-space: nowrap;
 	transition-property: background-color, box-shadow;
 	transition-duration: 0.2s;
 	transition-timing-function: ease-in-out;
@@ -50,5 +50,8 @@ TextEntry {
 	&.HasInput #PlaceholderText {
 		opacity: 0;
 	}
-	
+
+	&:disabled {
+		color: $textentry-text-disabled;
+	}
 }
