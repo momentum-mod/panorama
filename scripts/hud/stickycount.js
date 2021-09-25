@@ -9,10 +9,10 @@ const StickyStateType = {
 
 // in order, according to state types
 const StickyPanelClasses = [
-	'no-sticky',
-	'sticky-arming',
-	'sticky-armed',
-	'sticky-blocked'
+	'sticky-panel--nosticky',
+	'sticky-panel--sticky-arming',
+	'sticky-panel--sticky-armed',
+	'sticky-panel--sticky-blocked'
 ];
 
 class StickyCount {

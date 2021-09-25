@@ -29,21 +29,21 @@
 		background-color: $progressbar-background;
 		border: 0px solid transparent;
 	
-		&.no-sticky {
+		&--nosticky {
 			background-color: $progressbar-background;
 			border: 0px solid transparent;
 		}
 		
-		&.sticky-arming {
+		&--sticky-arming {
 			animation-name: stickyArmAnim;
 			animation-duration: 1s;
 		}
 	
-		&.sticky-armed {
+		&--sticky-armed {
 			background-color: $progressbar-background-progress;
 		}
 	
-		&.sticky-blocked {
+		&--sticky-blocked {
 			animation-name: none;
 			background-color: $progressbar-background-disabled;
 			border: 0px solid transparent;
