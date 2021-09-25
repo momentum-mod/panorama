@@ -1,39 +1,40 @@
 <root>
 	<styles>
+		<include src="file://{resources}/styles/main.scss" />
 		<include src="file://{resources}/styles/hud/keypress.scss" />
 	</styles>
 
-	<MomHudKeyPress>
-		<Panel id="ArrowKeysAndMouse">
-			<Panel id="ArrowKeys">
-				<Panel id="KeyForward" class="arrow-key" text="Forward">
-					<Image id="KeyForwardIcon" class="arrow-key-icon" src="file://{images}/right-arrow.svg" textureheight="32" />
+	<MomHudKeyPress class="keypress">
+		<Panel>
+			<Panel class="keypress__arrows arrows">
+				<Panel id="KeyForward" class="arrows__key key__forward" text="Forward">
+					<Image id="KeyForwardIcon" class="arrows__icon icon__forward" src="file://{images}/right-arrow.svg" textureheight="32" />
 				</Panel>
-				<Panel id="KeyBack" class="arrow-key" text="Back">
-					<Image id="KeyBackIcon" class="arrow-key-icon" src="file://{images}/right-arrow.svg" textureheight="32" />
+				<Panel id="KeyBack" class="arrows__key key__back" text="Back">
+					<Image id="KeyBackIcon" class="arrows__icon icon__back" src="file://{images}/right-arrow.svg" textureheight="32" />
 				</Panel>
-				<Panel id="KeyMoveLeft" class="arrow-key" text="Left">
-					<Image id="KeyMoveLeftIcon" class="arrow-key-icon" src="file://{images}/right-arrow.svg" textureheight="32" />
+				<Panel id="KeyMoveLeft" class="arrows__key key__left" text="Left">
+					<Image id="KeyMoveLeftIcon" class="arrows__icon icon__left" src="file://{images}/right-arrow.svg" textureheight="32" />
 				</Panel>
-				<Panel id="KeyMoveRight" class="arrow-key" text="Right">
-					<Image id="KeyMoveRightIcon" class="arrow-key-icon" src="file://{images}/right-arrow.svg" textureheight="32" />
+				<Panel id="KeyMoveRight" class="arrows__key key__right" text="Right">
+					<Image id="KeyMoveRightIcon" class="arrows__icon icon__right" src="file://{images}/right-arrow.svg" textureheight="32" />
 				</Panel>
 			</Panel>
 
-			<Label id="KeyMouse1" class="key" text="A1" />
-			<Label id="KeyMouse2" class="key" text="A2" />
+			<Label id="KeyMouse1" class="keypress__key key__m1" text="A1" />
+			<Label id="KeyMouse2" class="keypress__key key__m2" text="A2" />
 		</Panel>
 
-		<Label id="KeyJump" class="key" text="JUMP" />
-		<Label id="KeyDuck" class="key" text="DUCK" />
-		<Label id="KeyWalk" class="key" text="WALK" />
-		<Label id="KeyStrafe" class="key" text="STRAFE" />
-		<Label id="KeySprint" class="key" text="SPRINT" />
+		<Label id="KeyJump" class="keypress__key" text="JUMP" />
+		<Label id="KeyDuck" class="keypress__key" text="DUCK" />
+		<Label id="KeyWalk" class="keypress__key" text="WALK" />
+		<Label id="KeyStrafe" class="keypress__key keypress__unimplemented" text="STRAFE" />
+		<Label id="KeySprint" class="keypress__key" text="SPRINT" />
 
-		<Label id="KeyLeft" />
-		<Label id="KeyRight" />
+		<Label id="KeyLeft" class="keypress__key keypress__unimplemented" text="" />
+		<Label id="KeyRight" class="keypress__key keypress__unimplemented" text="" />
 
-		<Label id="CountStrafes" class="key" text="{i:strafes}" />
-		<Label id="CountJumps" class="key" text="{i:jumps}" />
+		<Label id="CountStrafes" class="keypress__key" text="{i:strafes}" />
+		<Label id="CountJumps" class="keypress__key" text="{i:jumps}" />
 	</MomHudKeyPress>
 </root>
