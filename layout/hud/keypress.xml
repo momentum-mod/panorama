@@ -7,21 +7,21 @@
 		<Panel id="ArrowKeysAndMouse">
 			<Panel id="ArrowKeys">
 				<Panel id="KeyForward" class="arrow-key" text="Forward">
-					<Image id="KeyForwardIcon" class="arrow-key-icon" src="file://{images}/icon_arrow_right.svg" textureheight="32" />
+					<Image id="KeyForwardIcon" class="arrow-key-icon" src="file://{images}/right-arrow.svg" textureheight="32" />
 				</Panel>
 				<Panel id="KeyBack" class="arrow-key" text="Back">
-					<Image id="KeyBackIcon" class="arrow-key-icon" src="file://{images}/icon_arrow_right.svg" textureheight="32" />
+					<Image id="KeyBackIcon" class="arrow-key-icon" src="file://{images}/right-arrow.svg" textureheight="32" />
 				</Panel>
 				<Panel id="KeyMoveLeft" class="arrow-key" text="Left">
-					<Image id="KeyMoveLeftIcon" class="arrow-key-icon" src="file://{images}/icon_arrow_right.svg" textureheight="32" />
+					<Image id="KeyMoveLeftIcon" class="arrow-key-icon" src="file://{images}/right-arrow.svg" textureheight="32" />
 				</Panel>
 				<Panel id="KeyMoveRight" class="arrow-key" text="Right">
-					<Image id="KeyMoveRightIcon" class="arrow-key-icon" src="file://{images}/icon_arrow_right.svg" textureheight="32" />
+					<Image id="KeyMoveRightIcon" class="arrow-key-icon" src="file://{images}/right-arrow.svg" textureheight="32" />
 				</Panel>
 			</Panel>
 
-			<Label id="KeyMouse1" class="key" text="M1" />
-			<Label id="KeyMouse2" class="key" text="M2" />
+			<Label id="KeyMouse1" class="key" text="A1" />
+			<Label id="KeyMouse2" class="key" text="A2" />
 		</Panel>
 
 		<Label id="KeyJump" class="key" text="JUMP" />
