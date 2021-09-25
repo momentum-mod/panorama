@@ -1,8 +1,9 @@
 @use '../config'as *;
 
 .progressbar {
-	width: 320px;
+	width: $progressbar-width;
 	height: $progressbar-height;
+	box-shadow: $progressbar-shadow;
 	background-color: $progressbar-background;
 
 	.ProgressBarLeft {
@@ -11,5 +12,11 @@
 
 	.ProgressBarRight {
 		background-color: $progressbar-background;
+	}
+	
+	&:disabled {
+		.progressbar, .ProgressBarRight {
+			background-color: $progressbar-background-disabled;
+		}
 	}
 }

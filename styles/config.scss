@@ -328,9 +328,13 @@ $scrollbar-hover-opacity: 0.6 !default;
 // PROGRESSBAR
 // ================
 
+$progressbar-width              : 320px !default;
 $progressbar-height             : 22px !default;
-$progressbar-background         : color.scale($blue, $saturation: -70%, $lightness: -50%) !default;
+$progressbar-background         : color.scale( $blue, $saturation: -70%, $lightness: -50% ) !default;
+$progressbar-background-disabled: gradient( linear, 0% 0%, 100% 0%, from( color.scale( $red, $saturation: -65%, $lightness: -45% ) ), to( color.scale( $red, $saturation: -55%, $lightness: -35% ) ) );
 $progressbar-background-progress: gradient( linear, 0% 0%, 100% 0%, from( $blue ), to( $light-blue ) ) !default;
+
+$progressbar-shadow: rgba(0, 0, 0, 0.45) 0px 1.5px 3px 0px !default;
 
 // ================
 // TOOLTIPS
