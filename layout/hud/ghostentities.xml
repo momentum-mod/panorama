@@ -1,6 +1,6 @@
 <root>
 	<styles>
-		<include src="file://{resources}/styles/chaosstyles.css" />
+		<include src="file://{resources}/styles/main.scss" />
 		<include src="file://{resources}/styles/hud/ghostentities.scss" />
 	</styles>
 	<scripts>
@@ -13,7 +13,7 @@
 				<ChaosAvatarImage id="GhostAvatar" class="ghost-ent__avatar" />
 				<Panel id="NamePanel" class="ghost-ent__namepanel namepanel">
 					<Image class="full-width full-height" src="file://{images}/card_bg.png" scaling="stretch-to-cover-preserve-aspect" />
-					<Label id="GhostName" class="namepanel__label" text="" />
+					<Label id="GhostName" class="namepanel__label text-l" text="" />
 				</Panel>
 			</Panel>
 		</snippet>
