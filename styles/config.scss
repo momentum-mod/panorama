@@ -336,6 +336,12 @@ $progressbar-background-progress: gradient( linear, 0% 0%, 100% 0%, from( $blue 
 
 $progressbar-shadow: rgba(0, 0, 0, 0.45) 0px 1.5px 3px 0px !default;
 
+$progressbar-hudmeter-width        : 320px !default;
+$progressbar-hudmeter-height       : 18px !default;
+$progressbar-hudmeter-border-radius: 9px !default;
+$progressbar-hudmeter-font-size    : 16px !default;
+$progressbar-hudmeter-text-shadow  : rgba(0, 0, 0, 0.5) 0px 1px 2px 2.5 !default;
+
 // ================
 // TOOLTIPS
 // ================

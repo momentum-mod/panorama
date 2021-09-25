@@ -20,3 +20,16 @@
 		}
 	}
 }
+
+.progressbar-hudmeter {
+	@extend .progressbar;
+	
+	width: $progressbar-hudmeter-width;
+	height: $progressbar-hudmeter-height;
+	border-radius: $progressbar-hudmeter-border-radius;
+
+	&__label {
+		font-size: $progressbar-hudmeter-font-size;
+		text-shadow: $progressbar-hudmeter-text-shadow;
+	}
+}
