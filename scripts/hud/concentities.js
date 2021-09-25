@@ -3,7 +3,7 @@
 class ConcEntities {
 	static entPanelContainer = $( '#ConcEntPanelsContainer' );
 	static onEntPanelThink() {
-		ConcEntities.entPanelContainer.Children().filter( entpanel => entpanel.HasClass( 'conc-ent-panel__cont' ) ).forEach( entpanel => {
+		ConcEntities.entPanelContainer.Children().filter( entpanel => entpanel.HasClass( 'conc-ent' ) ).forEach( entpanel => {
 			let meterEnabled = $.GetContextPanel().concEntPanelProgressBarEnabled;
 			let meter = entpanel.FindChildTraverse( 'ConcTimeMeter' );
 			meter.visible = meterEnabled;

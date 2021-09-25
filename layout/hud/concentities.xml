@@ -1,6 +1,6 @@
 <root>
 	<styles>
-		<include src="file://{resources}/styles/chaosstyles.css" />
+		<include src="file://{resources}/styles/main.scss" />
 		<include src="file://{resources}/styles/hud/concentities.scss" />
 	</styles>
 	<scripts>
@@ -9,9 +9,9 @@
 
 	<snippets>
 		<snippet name="conc-ent-panel">
-			<Panel class="conc-ent-panel__cont">
-				<ProgressBar id="ConcTimeMeter" />
-				<Label id="ConcTimeLabel" text="" />
+			<Panel class="conc-ent">
+				<ProgressBar id="ConcTimeMeter" class="conc-ent__progressbar progressbar-hudmeter" />
+				<Label id="ConcTimeLabel" text="" class="horizontal-align-center vertical-align-center text-align-center conc-ent__label progressbar-hudmeter__label" />
 			</Panel>
 		</snippet>
 	</snippets>
