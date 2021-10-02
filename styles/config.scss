@@ -99,6 +99,7 @@ $font-default-size  : 18px !default;
 $font-primary        : Roboto,           sans-serif !default;
 $font-secondary      : Bebas Neue,       Arial,      sans-serif !default;
 $font-secondary-light: Bebas Neue Light, Bebas Neue, Arial, sans-serif !default;  // Only required for Bebas, for other fonts just use same value as regular
+$font-monospace		 : 'Roboto Mono' !default;
 
 $font-header        : $font-secondary !default;
 $font-header-light  : $font-secondary-light !default;

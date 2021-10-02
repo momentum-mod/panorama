@@ -1,0 +1,22 @@
+@use '../config'as *;
+
+.notify {
+  &__frame {
+	transition-property: opacity;
+	transition-duration: 0.5s;
+	transition-timing-function: linear;
+
+	width: 480px;
+  }
+
+  &__message-target {
+	flow-children: up;
+	margin: 4px;
+
+	& > Label {
+	  text-shadow: 0 2px 3px rgba(0, 0, 0, 1);
+	  font-family: $font-monospace;
+	  font-size: 11px;
+	}
+  }
+}

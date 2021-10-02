@@ -33,7 +33,7 @@
 
 		<!-- HUD anchored to top-left corner of screen, laid out vertically top-to-bottom -->
 		<Panel id="HudTopLeft" hittest="false" hittestchildren="false">
-
+			<Frame src="file://{resources}/layout/hud/consolenotify.xml"/>
 		</Panel>
 
 		<!-- Anchored to below the center of the screen, laid out from top to bottom -->

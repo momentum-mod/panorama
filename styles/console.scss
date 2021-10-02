@@ -1,0 +1,71 @@
+@use 'config'as *;
+
+.console {
+
+	&__outer {
+		width: 1024px;
+		height: 768px;
+		min-width: 200px; /* Used for resize dragging! */
+		min-height: 200px; /* ditto */
+		background-color: rgba(0,0,0,0.99);
+		flow-children: down;
+		border-radius: 4px;
+		padding-left: 8px;
+		padding-right: 8px;
+		padding-bottom: 8px;
+	}
+
+	&__inner {
+		width: 100%;
+		height: fill-parent-flow(1.0);
+		flow-children: down;
+	}
+
+	&__message-target > Label {
+		text-shadow: 0 2px 3px rgba(0, 0, 0, 1);
+		font-family: $font-monospace;
+		font-size: 11px;
+		margin-right: 16px;
+	}
+
+	&__top-splitter {
+		height: $separator-height;
+		min-width: 100%;
+		background-color: gradient(linear, 0% 0%, 100% 0%, from(#d7d7d73f), to(#a0a0a03f), color-stop(0.9, #b4b4b43f));
+	}
+
+	&__message-target {
+		margin-top: 8px;
+		margin-bottom: 8px;
+
+		overflow: squish scroll;
+		height: fill-parent-flow(1.0);
+		flow-children: up;
+	}
+
+	&__move-drag-area {
+		padding-bottom: 8px;
+		width: 100%;
+		flow-children: right;
+		padding-top: 8px;
+	}
+
+	&__resize-drag-knob {
+		margin-top: 8px;
+		margin-left: 8px;
+		horizontal-align: right;
+		vertical-align: bottom;
+	}
+
+	&__header {
+		vertical-align: center;
+		font-size: 30px;
+	}
+
+}
+
+ConsoleInput {
+	font-size: $font-default-size;
+	text-overflow: clip;
+	white-space: nowrap;
+}
