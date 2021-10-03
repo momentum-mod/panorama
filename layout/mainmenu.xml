@@ -2,9 +2,11 @@
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
 		<include src="file://{resources}/styles/pages/mainmenu.scss" />
+		<include src="file://{resources}/styles/pages/drawer.scss" />
 	</styles>
 	<scripts>
 		<include src="file://{resources}/scripts/mainmenu.js" />
+		<include src="file://{resources}/scripts/mainmenu_drawer.js" />
 	</scripts>
 
 	<snippets>
@@ -29,12 +31,14 @@
 		</Panel>
 
 		<Panel id="MainMenuInput" class="mainmenu">
-			<BaseBlurTarget id="MainMenuBlur" class="mainmenu__blur" blurrects="MainMenuContentBlur JsMainMenuNavBar MainMenuOptionListRight MainMenuDrawerContent">
+			<BaseBlurTarget class="mainmenu__blur" blurrects="MainMenuContentBlur JsMainMenuNavBar MainMenuOptionListRight">
+				<BaseBlurTarget class="mainmenu__strongblur" blurrects="MainMenuDrawerContent">
 				<!-- In main menu, show the background, either video or image -->
-				<Panel id="MainMenuMovieParent" class="MainMenuModeOnly" />
-				<Image id="MainMenuBackground" class="full-width full-height MainMenuModeOnly" />
-				<!-- In pause menu, show the existing backbuffer -->
-				<ChaosBackbufferImagePanel class="full-width full-height PauseMenuModeOnly" />
+					<Panel id="MainMenuMovieParent" class="MainMenuModeOnly" />
+					<Image id="MainMenuBackground" class="full-width full-height MainMenuModeOnly" />
+					<!-- In pause menu, show the existing backbuffer -->
+					<ChaosBackbufferImagePanel class="full-width full-height PauseMenuModeOnly" />
+				</BaseBlurTarget>
 			</BaseBlurTarget>
 
 			<Panel class="full-width full-height top-bottom-flow">
@@ -76,7 +80,7 @@
 					<Panel class="topnav__shadow"/>
 				</Panel>
 
-				<Panel class="full-width full-height left-right-flow">
+				<Panel class="full-width full-height">
 					<Panel id="MainMenuContent" class="mainmenu__contentwrapper">
 						<Panel id="HomeContent" class="mainmenu__homecontent homecontent MainMenuModeOnly">
 							<Frame id="NewsPanel" class="homecontent__newspanel" src="file://{resources}/layout/mainmenu_news.xml" />
@@ -93,26 +97,31 @@
 						</Panel>
 					</Panel>
 
-					<Panel id="MainMenuOptionListRight" class="rightnav">
-						<RadioButton id="ProfileButton" class="rightnav__button">
-							<Image class="rightnav__button-image" src="file://{images}/sidepanel/profile.svg" textureheight="32" />
-						</RadioButton>
-						<RadioButton id="LobbyButton" class="rightnav__button">
-							<Image class="rightnav__button-image" src="file://{images}/sidepanel/lobby.svg" textureheight="32" />
-						</RadioButton>
-						<RadioButton id="HostButton" class="rightnav__button">
-							<Image class="rightnav__button-image" src="file://{images}/sidepanel/wr.svg" textureheight="32" />
-						</RadioButton>
-						<RadioButton id="ChangelogButton" class="rightnav__button">
-							<Image class="rightnav__button-image" src="file://{images}/sidepanel/news.svg" textureheight="32" />
-						</RadioButton>
+					<Panel id="MainMenuDrawerPanel" class="drawer">
+						<Panel class="drawer__left-shadow" />
+						<Panel id="MainMenuOptionListRight" class="drawer__rightnav rightnav">
+							<RadioButton id="LobbyButton" class="rightnav__button">
+								<Image id="LobbyButtonImage" class="rightnav__button-image" src="file://{images}/sidepanel/lobby.svg" textureheight="32" />
+							</RadioButton>
+							<RadioButton id="ProfileButton" class="rightnav__button">
+								<Image class="rightnav__button-image" src="file://{images}/sidepanel/profile.svg" textureheight="32" />
+							</RadioButton>
+							<RadioButton id="StatsButton" class="rightnav__button">
+								<Image class="rightnav__button-image" src="file://{images}/sidepanel/wr.svg" textureheight="32" />
+							</RadioButton>
+							<RadioButton id="ChangelogButton" class="rightnav__button">
+								<Image class="rightnav__button-image" src="file://{images}/sidepanel/news.svg" textureheight="32" />
+							</RadioButton>
 
-						<RadioButton id="SliderButton" class="rightnav__button rightnav__drawerbutton" selected="false">
-							<Image class="rightnav__button-image" src="file://{images}/right-arrow.svg" textureheight="32" orientation="180" />
-						</RadioButton>
+							<RadioButton id="SliderButton" class="rightnav__button rightnav__drawerbutton"  onactivate="Drawer.toggle()">
+								<Image class="rightnav__button-image" src="file://{images}/right-arrow.svg" textureheight="32" orientation="180" />
+							</RadioButton>
+						</Panel>
+						<Panel id="MainMenuDrawerContent" class="drawer__content">
+							<!-- Panels get added via JS here -->
+						</Panel>
 					</Panel>
 				</Panel>
-
 			</Panel>
 		</Panel>
 

@@ -40,6 +40,13 @@
 		blur: fastgaussian(4, 4, 3);
 	}
 
+	&__strongblur {
+		width: 105%;
+		height: 105%;
+		overflow: noclip;
+		blur: fastgaussian(8, 8, 5);
+	}
+
 	&__movie {
 		width: 1920px;
 		height: 1080px;
@@ -88,10 +95,10 @@
 	}
 
 	&__pagecontent {
-		padding: 30px 100px;
 		flow-children: down;
 		width: 100%;
 		height: 100%;
+		padding: 30px (100px + $rightnav-width) 30px 100px;
 	}
 }
 
@@ -104,18 +111,7 @@
 		width: 100%;
 		height: 100%;
 		flow-children: right;
-		z-index: 1;
-	}
-
-	&__shadow {
-		// Getting the shadow to reach to the edge of the window has been difficult. transform break the shadowing so
-		// can't stretch it, negative padding/margin values don't work. The only thing that DOES is `width: 2000%; overflow: noclip noclip;`
-		// making the width incredibly high makes stuff suddenly work for some terrible reason. But it's too hacky to include, and I actually
-		// prefer when the shadow doesn't cover the rightnav.
-		width: 100%;
-		height: 100%;
 		box-shadow: 0 0 24px rgba(0, 0, 0, 1);
-		z-index: 0;
 	}
 
 	&__home {
@@ -129,7 +125,6 @@
 		&:hover {
 			background-color: gradient(radial, 50% 100%, 0% 0%, 100% 100%, from(rgba(255, 255, 255, 0.3)), to(rgba(255, 255, 255, 0.2)));
 			box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.2);
-
 		}
 
 		.RadioBox {
@@ -196,12 +191,13 @@
 }
 
 .rightnav {
-	width: 50px;
-	height: 100%;
-	background-color: rgba(0, 0, 0, 0.5);
 	flow-children: down;
 	horizontal-align: right;
-	
+	width: $rightnav-width;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.5);
+
+	$root: &;
 	&__button {
 		width: 100%;
 		height: width-percentage(100%);
@@ -221,19 +217,19 @@
 			transition: opacity 0.1s ease-in-out 0s;
 		}
 
-		$this: &;
+		$button: &;
 		&:hover,
-		&:selected {
+		&:selected:not(#{$root}__drawerbutton) {
 			background-color: rgba(255, 255, 255, 0.15);
 
-			#{$this}-image {
+			#{$button}-image {
 				opacity: 1.0;
 			}
 		}
 	}
 
 	&__drawerbutton {
-		height: fill-parent-flow(1.0);
+		height: 100%;
 	}
 }
 
@@ -246,9 +242,24 @@
 	&__modelpanel {
 		width: 700px;
 		height: 100%;
-		margin-right: 120px;
+		margin-right: 200px;
 		horizontal-align: right;
 		vertical-align: middle;
+
+		opacity: 1;
+		blur: gaussian(0, 0, 0);
+		transition-property: opacity, blur, pre-transform-scale2d, transform;
+		transition-duration: 0.15s;
+		transition-timing-function: ease-in-out;
+
+		&--hidden {
+			opacity: 0;
+			transform: translateY(300px);
+			blur: gaussian(10, 10, 4);
+			pre-transform-scale2d: 0.8;
+			transition-delay: 0.1s;
+			transition-duration: 0.25s;
+		}
 	}
 
 	&__bottombar {
@@ -288,6 +299,7 @@
 		padding-bottom: 4px;
 		text-overflow: ellipsis;
 		font-size: 14px;
+		padding-right: 16px;
 	}
 
 	&__latest-image {
@@ -296,6 +308,7 @@
 	}
 
 	&__latest-learnmore {
+		height: 24px;
 		width: 100%;
 		vertical-align: bottom;
 	}
