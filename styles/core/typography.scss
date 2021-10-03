@@ -19,7 +19,7 @@
 
 @each $name, $size in $font-sizes {
 	.text-#{$name} {
-		font-size: $size !important;
+		font-size: $size;
 	}
 }
 

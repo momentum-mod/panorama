@@ -6,6 +6,7 @@
 	transition: opacity 0.1s ease-out 0s;
 	margin: $tooltip-margin;
 
+	// From C++
 	&.TooltipVisible {
 		opacity: 1.0;
 	}
@@ -23,8 +24,6 @@
 
 	&__text-panel {
 		flow-children: down;
-		min-width: 160px;
-		max-width: 600px;
 	}
 
 	&__title-text-panel {
@@ -35,15 +34,10 @@
 
 	&__title-image-text-panel {
 		flow-children: down;
-		min-width: 200px;
-		max-width: 560px;
 	}
 
 	&__image-text-panel {
 		flow-children: right;
-		min-width: 200px;
-		max-width: 560px;
-		height: fit-children;
 	}
 
 	&__title {
@@ -56,22 +50,22 @@
 	&__text {
 		horizontal-align: left;
 		vertical-align: middle;
-		padding-right: 8px;
 		@include mixin.font-styles($use-header: $tooltip-text-use-header-font);
-		font-size: $tooltip-text-font-size;
+	font-size: $tooltip-text-font-size;
 	}
 
 	&__image {
 		horizontal-align: left;
-		vertical-align: middle;
-		width: $tooltip-image-size;
-		height: $tooltip-image-size;
-		margin-right: 16px;
+		vertical-align: center;
+		height: $tooltip-text-font-size;
+		width: height-percentage(100%);
+		margin-right: 8px;
 	}
 
 	$this: &;
 	&--notitle {
 		#{$this}__title {
+			width: 0;
 			height: 0;
 			margin: 0;
 		}

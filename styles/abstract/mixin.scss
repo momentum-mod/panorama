@@ -1,4 +1,7 @@
 @use '../config' as *;
+@use 'function';
+@use 'sass:map';
+@use 'sass:list';
 
 @mixin font-styles($use-header: false, $light-header: false) {
 	@if $use-header {
@@ -23,4 +26,20 @@
 	color: $font-default-color;
 	font-style: normal;
 	font-weight: normal;
+}
+
+@mixin gradient-themed($color: 'blue', $direction: 'down') {
+	@if (map.has-key($gradients-primary, $color)) {
+		@if ($direction == 'down') {
+			background-color: function.gradient-vertical(list.nth(map.get($gradients-primary, $color), 1), list.nth(map.get($gradients-primary, $color), 2));
+		} @else if ($direction == 'up') {
+			background-color: function.gradient-vertical(list.nth(map.get($gradients-primary, $color), 2), list.nth(map.get($gradients-primary, $color), 1));
+		} @else if ($direction == 'left') {
+			background-color: function.gradient-horizontal(list.nth(map.get($gradients-primary, $color), 2), list.nth(map.get($gradients-primary, $color), 1));
+		} @else if ($direction == 'right') {
+			background-color: function.gradient-horizontal(list.nth(map.get($gradients-primary, $color), 1), list.nth(map.get($gradients-primary, $color), 2));
+		}
+	} @else {
+		@error "Gradient #{$color} not found!"
+	}
 }

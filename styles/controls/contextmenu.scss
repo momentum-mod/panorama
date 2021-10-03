@@ -43,7 +43,7 @@ SimpleContextMenu .ContextMenuBody,
 		horizontal-align: left;
 		vertical-align: center;
 		padding: $dropdown-item-padding;
-		min-width: 240px;
+		min-width: 180px;
 		@include mixin.font-styles($use-header: $contextmenu-item-use-header-font);
 		font-size: $contextmenu-item-font-size;
 		text-shadow: 0 0 0;

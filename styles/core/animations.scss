@@ -1,0 +1,21 @@
+.spin-clockwise {
+	animation-name: SpinClockwise;
+	animation-duration:  0.8s;
+	animation-timing-function: ease-in-out;
+	animation-iteration-count: infinite;
+}
+
+@keyframes SpinClockwise {
+	0% {
+		transform: rotateZ(0deg);
+	}
+	25% {
+		transform: rotateZ(90deg);
+	}
+	50% {
+		transform: rotateZ(180deg);
+	}
+	75% {
+		transform: rotateZ(270deg);
+	}
+}

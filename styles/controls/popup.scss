@@ -28,7 +28,6 @@
 .generic-popup {
 	&__title {
 		horizontal-align: left;
-		// width: 100%;
 		margin-bottom: 0px;
 		@include mixin.font-styles($use-header: $popup-title-use-header-font, $light-header: false);
 		color: $font-default-color;
@@ -41,13 +40,12 @@
 
 	&__message-panel {
 		flow-children: right;
-		width: 100%;
 		margin: 16px 0;
 	}
 
 	&__message-label {
 		horizontal-align: left;
-		text-align: center;
+		text-align: left;
 		margin-left: 4px;
 		@include mixin.font-styles($use-header: $popup-text-use-header-font);
 		vertical-align: center;
@@ -57,7 +55,7 @@
 	&__button-row {
 		flow-children: right;
 		horizontal-align: right;
-		margin-top: 8px;
+		margin-top: 4px;
 	}
 }
 
@@ -73,6 +71,15 @@
 }
 
 .quit-popup {
+	#Button1 {
+		@extend .button--red;
+	}
+}
+
+.ok-cancel-popup {
+	#Button0 {
+		@extend .button--blue;
+	}
 	#Button1 {
 		@extend .button--red;
 	}

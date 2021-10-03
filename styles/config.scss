@@ -1,6 +1,6 @@
 @use 'sass:color';
 @use 'abstract/function'as *;
-@use 'overrides'as *;
+@use 'overrides' as *;
 
 // WARNING: Don't use this file for personal customisation! It's likely to change in future Steam pushes and your 
 // changes will be lost. Instead, take what variables you want and override them overrides.scss, deleting the !default.
@@ -143,12 +143,12 @@ $spacers: ( 4px, 6px, 8px, 16px, 32px );
 // BUTTON
 // ================
 
-$button-background               : $light-200 !default;
-$button-background-disabled      : color.scale($button-background, $lightness: -20%, $alpha: 20%) !default;
-$button-background-hover         : color.scale($button-background, $lightness: 28%, $alpha: 10%) !default;
-$button-background-disabled-hover: color.scale($button-background, $lightness: -30%, $alpha: 20%) !default;
+$button-background               : gradient( linear, 0% 0%, 0% 100%, from( rgba(255, 255, 255, 0.075)), to( rgba(230, 230, 230, 0.075) ) ) !default;
+$button-background-disabled      : color.scale($light-200, $lightness: -20%, $alpha: 20%) !default;
+$button-background-hover         : color.scale($light-200, $lightness: 28%, $alpha: 10%) !default;
+$button-background-disabled-hover: color.scale($light-200, $lightness: -30%, $alpha: 20%) !default;
 
-$togglebutton-background-selected: color.scale($button-background, $lightness: 0%, $alpha: 30%) !default;
+$togglebutton-background-selected: color.scale($light-200, $lightness: 0%, $alpha: 30%) !default;
 
 $button-text-color   : $font-default-color !default;
 $button-text-disabled: $font-disabled-color !default;
@@ -156,6 +156,7 @@ $button-text-hover   : $button-text-color !default;
 
 $button-shadow: fill rgba(0, 0, 0, 0.3) 0px 1px 2px 0px !default;
 $button-radius: 4px !default;
+$button-border: 0px solid white;
 
 $button-height                    : 34px;
 $button-icon-padding              : 6px;
@@ -165,7 +166,6 @@ $button-icon-text-gap             : 0px !default;
 
 $button-use-header-font: true !default;
 $button-font-size      : 21px !default;
-$button-icon-size      : 22px !default;                            // Adjust this for different fonts and sizes to ensure fonts and icons produce buttons of the same size
 $button-text-shadow    : 0 1px 2px 2 rgba(0, 0, 0, 0.4) !default;
 $button-icon-shadow    : 0 1px 2px 1 rgba(0, 0, 0, 1) !default;
 
@@ -348,14 +348,14 @@ $progressbar-hudmeter-text-shadow  : rgba(0, 0, 0, 0.5) 0px 1px 2px 2.5 !default
 // ================
 
 $tooltip-background: $gray-200 !default;
-$tooltip-padding   : 10px 14px !default;
+$tooltip-padding   : 8px 12px !default;
 $tooltip-radius    : 4px !default;
-$tooltip-margin    : 0 8px;
+$tooltip-margin    : 8px 8px;
 
 $tooltip-title-use-header-font: true !default;
 $tooltip-title-font-size      : 36px !default;
 $tooltip-text-use-header-font : false !default;
-$tooltip-text-font-size       : 18px !default;
+$tooltip-text-font-size       : 16px !default;
 $tooltip-image-size           : 48px !default;
 
 
@@ -363,8 +363,8 @@ $tooltip-image-size           : 48px !default;
 // POPUPS
 // ================
 
-$popup-min-width : 480px !default;
-$popup-max-width : 700px !default;
+$popup-min-width : 400px !default;
+$popup-max-width : 480px !default;
 $popup-background: $dark-800 !default;
 $popup-shadow    : rgba(0, 0, 0, 1) -2.5px -2.5px 10px 5px !default;
 $popup-padding   : 24px 32px !default;
@@ -373,5 +373,11 @@ $popup-radius    : 4px !default;
 $popup-title-use-header-font: true !default;
 $popup-title-font-size      : 48px !default;
 $popup-text-use-header-font : false !default;
-$popup-text-font-size       : 24px !default;
+$popup-text-font-size       : 20px !default;
 $popup-button-font-size     : 24px !default;
+
+// ================
+// PAGES
+// ================
+
+$rightnav-width: 50px;

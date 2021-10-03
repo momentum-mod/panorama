@@ -9,10 +9,12 @@
 	background-color: $button-background;
 	box-shadow: $button-shadow;
 	border-radius: $button-radius;
+	border: $button-border;
 	color: $button-text-color;
 	horizontal-align: center;
 	text-align: center;
 	flow-children: right;
+	tooltip-position: bottom;
 	transition: background-color 0.1s ease-in 0s;
 	
 	&:hover {
