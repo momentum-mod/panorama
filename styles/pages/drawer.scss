@@ -1,0 +1,332 @@
+@use '../config' as *;
+@use '../abstract/mixin';
+
+$width: 768px;
+
+.drawer {
+	flow-children: right;
+	horizontal-align: right;
+	height: 100%;
+	
+	transform: translateX($width);
+	transition: transform 0.35s ease-in-out 0s;
+	
+	&__left-shadow {
+		width: 24px;
+		height: 100%;
+		border-right: 1px solid rgba(0, 0, 0, 0.12);
+		background-color: gradient(linear, 0% 0%, 100% 0%, from(rgba(0, 0, 0, 0)), color-stop(0.5, rgba(0, 0, 0, 0.275)), to(rgba(0, 0, 0, 0.7)));
+		transition: border-right 0.35s ease-out 0s;
+	}
+
+	&__rightnav {
+		transition: background-color 0.35s ease-out 0s;
+	}
+
+	&__content {
+		width: $width;
+		height: 100%;
+		background-color: rgba(27, 27, 27, 0.7);
+		// border-left: 1px solid rgba(0, 0, 0, 0.5);
+	}
+	
+	$this: &;
+	&--expanded {
+		transform: translateX(0);
+
+		#{$this}__rightnav {
+			background-color: rgba(27, 27, 27, 0.8);
+		}
+
+		#{$this}__left-shadow {
+			border-right: 1px solid rgba(0, 0, 0, 0.2);
+			background-color: gradient(linear, 0% 0%, 100% 0%, from(rgba(0, 0, 0, 0)), color-stop(0.5, rgba(0, 0, 0, 0.275)), to(rgba(0, 0, 0, 0.8)));
+		}
+
+		.rightnav__drawerbutton {
+			transform: rotateX(180deg) rotateZ(180deg);
+		}
+	}
+}
+
+.drawer-lobby {
+	width: 100%;
+	height: 100%;
+	// flow-children: down;
+	border-left: 1px solid rgba(0, 0, 0, 0.5);
+	box-shadow: 0 0 8px 0 rgba(0, 0 , 0, 0.6);
+	
+	&__lobby-list,
+	&__lobby-details {
+		width: 100%;
+		height: 100%;
+		flow-children: down;
+		opacity: 1;
+		transition-property: opacity, transform, blur;
+		transition-duration: 0.1s;
+		transition-timing-function: ease-out;
+		
+		&--hidden {
+			opacity: 0;
+			transition-duration: 0.15s;
+			transition-timing-function: ease-in;
+		}
+	}
+
+	&__lobby-list {
+		&--hidden {
+			transform: translateX(-200px);
+		}
+	}
+	&__lobby-details {
+		&--hidden {
+			transform: translateX(200px);
+		}
+	}
+}
+
+.lobby-list {
+	&__header {
+		flow-children: down;
+		padding: 24px 24px 20px 24px;
+		tooltip-body-position: 50% 50%;
+		tooltip-position: bottom;
+	}
+
+	&__title-bar {
+		flow-children: right;
+		// height: 72px;
+		margin-top: -4px;
+	}
+
+	&__title-icon {
+		height: 72px;
+		width: height-percentage(100%);
+		margin-right: 16px;
+		// img-shadow: $font-header-shadow; GRRRRRRRRR
+	}
+
+	&__title {
+		font-size: 52px;
+		vertical-align: center;
+		// padding: 7px 0;
+	}
+
+	&__config-bar {
+		flow-children: right;
+	}
+	
+	&__config-item {
+		margin-right: 6px;
+	}
+	
+	&__search {
+		width: fill-parent-flow(1.0);
+		height: 34px;
+		margin-right: 8px;
+	}
+
+	&__hidebox {
+		height: 34px;
+	}
+
+	&__separator {
+		margin: 16px 24px;
+	}
+
+	&__lobby-list {
+		flow-children: down;
+		width: 100%;
+		overflow: squish scroll;
+	}
+}
+
+.lobby-details {
+	&__header {
+		flow-children: right;
+		width: 100%;
+		padding: 24px 24px 20px 24px;
+	}
+	&__header-item {
+		margin-right: 6px;
+		vertical-align: middle;
+	}
+
+	&__title {
+		width: fill-parent-flow(1.0);
+		margin: 0 16px;
+		font-size: 40px;
+		max-height: 48px;
+		overflow: squish clip;
+		text-overflow: shrink;
+	}
+
+	&__type {
+		horizontal-align: right;
+		vertical-align: center;
+		height: 40px;
+		width: height-percentage(100%);
+		margin-right: 8px;
+	}
+
+	&__rightcontainer {
+		flow-children: right;
+		horizontal-align:right;
+		vertical-align: center;
+		width: fit-children;
+	}
+
+	&__playercount {
+		vertical-align: center;
+		font-size: 36px;
+	}
+
+	&__lobby-members {
+		flow-children: down;
+		width: 100%;
+		height: fill-parent-flow(1.0);
+		overflow: squish scroll;
+	}
+
+	&__chat {
+		margin: 4px 4px 0 4px;
+		height: 360px;
+		vertical-align: bottom;
+	}
+}
+
+.lobby-lobbies,
+.lobby-members {
+	&__entry {
+		width: 100%;
+		flow-children: right;
+		margin: 4px 0;
+		padding: 8px 24px;
+		background-color: gradient(linear, 0% 50%, 100% 50%, from(rgba(0, 0, 0, 0.55)), to(rgba(0, 0, 0, 0)));
+		transition: background-color 0.1s linear 0s;
+
+		&:hover {
+			background-color: gradient(linear, 0% 50%, 100% 50%, from(rgba(0, 0, 0, 0.8)), to(rgba(0, 0, 0, 0)));
+		}
+	}
+
+	&__avatar {
+		horizontal-align: left;
+		height: 40px;
+		width: 40px;
+		box-shadow: -1px -1px 4px 3px rgba(0, 0, 0, 0.5);
+		transition-property: brightness, box-shadow;
+		transition-duration: 0.1s;
+		transition-timing-function: ease-in-out;
+
+		&:hover {
+			brightness: 1.1;
+			box-shadow: -1px -1px 4px 3px rgba(0, 0, 0, 1);
+		}
+	}
+
+	&__text {
+		vertical-align: center;
+		margin-left: 8px;
+		margin-right: 8px;
+	}
+}
+
+.lobby-lobbies {
+	&__entry {
+		padding-left: 20px;
+		margin: 0;
+	}
+
+	&__wrapper {
+		flow-children: right;
+		width: 100%;
+		margin: 4px 0;
+	}
+
+	&__origin {
+		width: 2px;
+		height: 100%;
+		opacity: 0.5;
+		border-right: 1px solid rgba(0, 0, 0, 0.5);
+
+		&--current {
+			@include mixin.gradient-themed($color: 'green', $direction: 'down');
+		}
+		&--friends {
+			@include mixin.gradient-themed($color: 'blue', $direction: 'down');
+		}
+		&--global {
+			background-color: rgba(0, 0, 0, 0);
+		}
+	}
+
+	&__title {
+		width: fill-parent-flow(1);
+		horizontal-align: left;
+	}
+	
+	&__type {
+		horizontal-align: left;
+		vertical-align: center;
+		width: 32px;
+		height: 32px;
+		padding: 4px;
+		margin-left: 20px;
+		margin-right: 12px;
+		tooltip-position: bottom;
+	}
+	
+	&__players {
+		width: fill-parent-flow(0.2);
+		horizontal-align: center;
+		text-align: center;
+		font-size: $button-font-size;
+	}
+
+	&__button-container {
+		width: fill-parent-flow(0.25);
+		vertical-align: center;
+		margin-left: 8px;
+		margin-right: 8px;
+	}
+}
+
+.lobby-members {
+	$text-font-size: 18px;
+	&__name {
+		width: fill-parent-flow(1);
+		horizontal-align: left;
+		vertical-align: center;
+		margin-left: 16px;
+		font-size: $text-font-size;
+		max-height: $text-font-size + 8px;
+	}
+
+	&__map-container {
+		width: fill-parent-flow(1);
+		vertical-align: center;
+		// text-align: left;
+	}
+
+	&__map {
+		// text-align: left;
+		overflow: clip clip;
+	}
+
+	&__state {
+		height: $text-font-size;
+		width: height-percentage(100%);
+		vertical-align: center;
+		horizontal-align: center;
+		margin-right: 8px;
+		tooltip-position: bottom;
+	}
+
+	&__button-container {
+		width: fill-parent-flow(0.4);
+		vertical-align: center;
+		margin-left: 8px;
+		margin-right: 8px;
+	}
+}
