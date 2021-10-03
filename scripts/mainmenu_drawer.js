@@ -1,102 +1,84 @@
 "use strict";
 
-class MainMenuDrawer {
+class Drawer {
+	static drawerTabs = {
+		ProfileDrawer: {
+			layout: "profile",
+			button: "ProfileButton"
+		},
+		LobbyDrawer: {
+			layout: "lobby",
+			button: "LobbyButton"
+		},
+		StatsDrawer: {
+			layout: "stats",
+			button: "StatsButton"
+		},
+		ChangelogDrawer: {
+			layout: "changelog",
+			button: "ChangelogButton"
+		}
+	};
 
-    static drawerTabs = {
-        ProfileDrawer: 'drawer_profile',
-        LobbyDrawer: 'drawer_lobby',
-        StatsDrawer: 'drawer_stats',
-        ChangelogDrawer: 'drawer_changelog'
-    }
+	static activeTab;
+	static isExtended = false;
 
-    static activeTab;
+	static navigateToTab(tab) {
+		const parentPanel = $.GetContextPanel().FindChildTraverse("MainMenuDrawerContent");
 
-    static isExtended = false;
+		if (!parentPanel.FindChildInLayoutFile(tab)) {
+			const newPanel = $.CreatePanel("Panel", parentPanel, tab);
+			newPanel.LoadLayout("file://{resources}/layout/drawer/" + Drawer.drawerTabs[tab].layout + ".xml", false, false);
+		}
 
-    static navigateToTab(tab) {
-        const parentPanel = $('#MainMenuDrawerContent');
-        $.Msg('parent: ' + parentPanel.id);
+		if (Drawer.activeTab !== tab) {
+			if (Drawer.activeTab !== undefined) {
+				const panelToHide = $.GetContextPanel().FindChildInLayoutFile(Drawer.activeTab);
+				panelToHide.RemoveClass("Active");
+			}
 
-        // Check to see if tab to show exists.
-        // If not load the xml file.
-        if (!parentPanel.FindChildInLayoutFile(tab)) {
-            const newPanel = $.CreatePanel('Panel', parentPanel, tab);
-            newPanel.LoadLayout('file://{resources}/layout/drawer/' + MainMenuDrawer.drawerTabs[tab] + '.xml', false, false );
-        }
+			Drawer.activeTab = tab;
+			const activePanel = $.GetContextPanel().FindChildInLayoutFile(tab);
+			activePanel.AddClass("Active");
 
-        // UNDONE: Transition?
+			activePanel.visible = true;
+			activePanel.SetReadyForDisplay(true);
+		}
+	}
 
+	static extend() {
+		$.GetContextPanel().FindChildTraverse("MainMenuDrawerPanel").AddClass("drawer--expanded");
+		$.GetContextPanel().FindChildTraverse("MainMenuModel")?.AddClass("homecontent__modelpanel--hidden");
 
-        //If a we have a active tab and it is different from the selected tab hide it.
-        //Then show the selected tab
-        if( MainMenuDrawer.activeTab !== tab ) {
-            // If the tab exists then hide it
-            if( MainMenuDrawer.activeTab !== undefined ) {
-                const panelToHide = $.GetContextPanel().FindChildInLayoutFile( MainMenuDrawer.activeTab );
-                panelToHide.RemoveClass( 'Active' );
-            }
+		Drawer.isExtended = true;
 
-            //Show selected tab
-            MainMenuDrawer.activeTab = tab;
-            const activePanel = $.GetContextPanel().FindChildInLayoutFile( tab );
-            activePanel.AddClass( 'Active' );
+		$.DispatchEvent("RefreshLobbyList");
+	}
 
-            // Force a reload of any resources since we're about to display the panel
-            activePanel.visible = true;
-            activePanel.SetReadyForDisplay( true );
-        }
-    }
+	static retract() {
+		$.GetContextPanel().FindChildTraverse("MainMenuDrawerPanel").RemoveClass("drawer--expanded");
+		$.GetContextPanel().FindChildTraverse("MainMenuModel")?.RemoveClass("homecontent__modelpanel--hidden");
 
-    static extendDrawer()
-    {
-        let panel = $("#MainMenuDrawerPanel");
-        panel.AddClass('LeftMoving')
-        var kfs = panel.CreateCopyOfCSSKeyframes( 'drawer_move_left' );
-        panel.UpdateCurrentAnimationKeyframes(kfs);
-        MainMenuDrawer.isExtended = true;
+		Drawer.isExtended = false;
+	}
 
-        SteamLobbyAPI.RefreshList({'this_is_where_filters_will_go_in_the_future' : 'true'});
-    }
+	static toggle() {
+		Drawer.isExtended ? Drawer.retract() : Drawer.extend();
+	}
 
-    static retractDrawer()
-    {
-        let panel = $("#MainMenuDrawerPanel");
-        panel.AddClass('RightMoving')
-        var kfs = panel.CreateCopyOfCSSKeyframes( 'drawer_move_right' );
-        panel.UpdateCurrentAnimationKeyframes(kfs);
-        MainMenuDrawer.isExtended = false;
-    }
+	static extendAndSwitch(tab) {
+		Drawer.navigateToTab(tab);
 
-    static toggleDrawer()
-    {
-        if (MainMenuDrawer.isExtended)
-        {
-            MainMenuDrawer.retractDrawer();
-        }
-        else
-        {
-            MainMenuDrawer.extendDrawer();
-        }
-    }
+		if (!Drawer.isExtended) Drawer.extend();
+	}
 
-    static extendAndSwitch(tab)
-    {
-        MainMenuDrawer.navigateToTab(tab);
-        if (!MainMenuDrawer.isExtended)
-            MainMenuDrawer.extendDrawer();
-    }
-
-    static setLobbyButtonImage(path)
-    {
-        $('#LobbyButtonImage').SetImage(path);
-    }
-
+	static setLobbyButtonImage(path) {
+		$.GetContextPanel().FindChildTraverse("LobbyButtonImage").SetImage(path);
+	}
 }
 
-//--------------------------------------------------------------------------------------------------
-// Entry point called when panel is created
-//--------------------------------------------------------------------------------------------------
-(function() {
-    MainMenuDrawer.navigateToTab("LobbyDrawer");
-    $.RegisterEventHandler('OnLobbyButtonImageChange', $.GetContextPanel(), MainMenuDrawer.setLobbyButtonImage)
+(function () {
+	Drawer.navigateToTab("LobbyDrawer");
+	$.RegisterEventHandler("OnLobbyButtonImageChange", $.GetContextPanel(), Drawer.setLobbyButtonImage);
+	$.RegisterEventHandler("RetractDrawer", $.GetContextPanel(), Drawer.retract);
 })();

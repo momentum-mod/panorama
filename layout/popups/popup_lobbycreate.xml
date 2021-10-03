@@ -1,0 +1,50 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+
+	<scripts>
+		<include src="file://{resources}/scripts/popup/lobby_create.js" />
+	</scripts>
+
+	<PopupCustomLayout class="PopupPanel Hidden generic-popup" popupbackground="dim" onload="LobbyCreate.init()">
+		<Panel class="row mt-0">
+			<Label id="TitleLabel" class="generic-popup__title" text="Create Lobby" />
+		</Panel>
+		<Panel id="WarningRow" class="row hide my-2">
+			<Label id="WarningLabel" class="generic-popup__text text-sm text-italic color-gray-800"/>
+		</Panel>
+		<Panel class="row horizontal-align-center mt-3">
+			<RadioButton id="LobbyCreatePublicButton" class="button radiobutton radiobutton--blue mr-2"
+				onactivate="LobbyCreate.onChanged()">
+				<Image class="button__icon button__icon--left" src="file://{images}/online/publiclobby.svg"
+					textureheight="32" />
+				<Label class="button__text button__text--right" text="Public" />
+			</RadioButton>
+			<RadioButton id="LobbyCreateFriendsOnlyButton" class="button radiobutton radiobutton--blue mr-2"
+				onactivate="LobbyCreate.onChanged()">
+				<Image class="button__icon button__icon--left" src="file://{images}/online/friendsonlylobby.svg" />
+				<Label class="button__text button__text--right" text="Friends Only" />
+			</RadioButton>
+			<RadioButton id="LobbyCreatePrivateButton" class="button radiobutton radiobutton--blue"
+				onactivate="LobbyCreate.onChanged()">
+				<Image class="button__icon button__icon--left" src="file://{images}/online/privatelobby.svg"
+					textureheight="32" />
+				<Label class="button__text button__text--right" text="Invite Only" />
+			</RadioButton>
+		</Panel>
+		<Panel class="row mt-4">
+			<Label class="mr-3 vertical-align-center" text="Max Player Count" disabled="true" />
+			<TextEntry id="MaxPlayers" class="textentry pl-3 pr-0" maxchars="3"
+				textmode="numeric" style="width: 48px;" ontextentrychange="LobbyCreate.onChanged()" text="16"/>
+		</Panel>
+		<Panel class="row horizontal-align-right">
+			<Button id="UpdateButton" class="button button--green mr-3" disabled="true">
+				<Label class="button__text" text="Create" onactivate="LobbyCreate.create()" />
+			</Button>
+			<Button class="button button--red">
+				<Label class="button__text" text="Cancel" onactivate="LobbyCreate.cancel()" />
+			</Button>
+		</Panel>
+	</PopupCustomLayout>
+</root>
