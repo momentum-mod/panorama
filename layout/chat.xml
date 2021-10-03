@@ -26,14 +26,14 @@
 		<!-- NOTE: html=true does NOT mean that HTML embedded in the dialog variable will get parsed! -->
 		<snippet name="lobby-chat-message">
 			<Panel>
-				<Label text="&lt;b&gt;{s:author_name}:&lt;/b&gt; {s:message}" html="true" acceptsinput="true" />
+				<Label class="chat-entry__message" text="&lt;b&gt;{s:author_name}:&lt;/b&gt; {s:message}" html="true" acceptsinput="true" />
 			</Panel>
 		</snippet>
 
 		<snippet name="lobby-chat-message-spec">
 			<Panel class="left-right-flow">
-				<Image class="chat__spec-icon" src="file://{images}/chat/spectatingIcon.svg" textureheight="16" />
-				<Label text="&lt;b&gt;{s:author_name}&lt;/b&gt;: {s:h:message}" html="true" loadimages="true" />
+				<Image class="chat-entry__icon" src="file://{images}/chat/spectatingIcon.svg" textureheight="16" />
+				<Label class="chat-entry__message chat-entry__message--with-icon" text="&lt;b&gt;{s:author_name}&lt;/b&gt;: {s:message}" html="true" acceptsinput="true" />
 			</Panel>
 		</snippet>
 	</snippets>
@@ -44,14 +44,14 @@
 			<Label id="ChatMemberTypingLabel" class="chat__member-typing" text=" "/>
 		</ConVarEnabler>
 		<Panel class="chat__input-container">
-			<TextEntry id="ChatInput" class="chat__elem chat__input" oninputsubmit="Chat.submitText()" maxchars="1024" clearaftersubmit="true"/>
+			<TextEntry id="ChatInput" class="chat__elem chat__input" oninputsubmit="Chat.submitText()" maxchars="127" clearaftersubmit="true"/>
 			<Button class="chat__elem chat__send" onactivate="$('#ChatInput').Submit()">
 				<Label class="button__text chat__send-text" text="Send"/>
 			</Button>
 		</Panel>
-			<Panel class="chat__elem chat__history-wrapper">
-				<Panel id="ChatHistory" class="chat__history" html="true">
-			<!-- C++ will add messages here! Each child will have the chat-entry class -->
+		<Panel class="chat__elem chat__history-wrapper">
+			<Panel id="ChatHistory" class="chat__history" html="true">
+				<!-- C++ will add messages here! Each child will have the chat-entry class -->
 			</Panel>
 		</Panel>
 	</Panel>

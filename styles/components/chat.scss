@@ -13,7 +13,7 @@
 		height: 100%;
 		width: 100%;
 		margin: 8px;
-		padding: 2px 0;
+		padding: 8px 0;
 
 		&:hover {
 			background-color: rgba(0, 0, 0, 0.82);
@@ -78,10 +78,19 @@
 	flow-children: right;
 	transition: background-color 0.1s ease-in 0s;
 
-	Label {
+	&__message {
 		margin-right: 16px;
 		padding: 2px 12px;
 		text-overflow: clip;
+
+		&--with-icon {
+			padding-left: 6px;
+		}
+	}
+
+	&__icon {
+		padding-left: 12px;
+		vertical-align: center;
 	}
 	
 	&:hover {
