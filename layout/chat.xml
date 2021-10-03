@@ -17,38 +17,42 @@
 <root>
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
-		<include src="file://{resources}/styles/chat.css"/>
 	</styles>
 	<scripts>
 		<include src="file://{resources}/scripts/chat.js"/>
 	</scripts>
+
 	<snippets>
 		<!-- NOTE: html=true does NOT mean that HTML embedded in the dialog variable will get parsed! -->
 		<snippet name="lobby-chat-message">
-			<Panel class="lobby-chat-message__cont">
-				<Label text="&lt;b&gt;{s:author_name}&lt;/b&gt;: {s:message}" html="true"/>
+			<Panel>
+				<Label text="&lt;b&gt;{s:author_name}:&lt;/b&gt; {s:message}" html="true" acceptsinput="true" />
 			</Panel>
 		</snippet>
+
 		<snippet name="lobby-chat-message-spec">
-			<Panel class="lobby-chat-message__cont">
-				<Image class="lobby-chat-message__spec-icon" src="file://{images}/chat/spectating.svg" textureheight="16" />
-				<Label text="&lt;b&gt;{s:author_name}&lt;/b&gt;: {s:message}" html="true"/>
+			<Panel class="left-right-flow">
+				<Image class="chat__spec-icon" src="file://{images}/chat/spectatingIcon.svg" textureheight="16" />
+				<Label text="&lt;b&gt;{s:author_name}&lt;/b&gt;: {s:h:message}" html="true" loadimages="true" />
 			</Panel>
 		</snippet>
 	</snippets>
-	<Panel class="chat-container bottom-top-flow" defaultfocus="ChatInput">
+
+	<Panel class="chat" defaultfocus="ChatInput">
 		<!-- CAUTION: inverse flow everywhere!!-->
 		<ConVarEnabler convar="mom_chat_typing_receive" togglevisibility="true">
-			<Label id="ChatMemberTypingLabel" text=" "/>
+			<Label id="ChatMemberTypingLabel" class="chat__member-typing" text=" "/>
 		</ConVarEnabler>
-		<Panel class="right-left-flow align-right">
-			<Button class="chat-container__button" onactivate="$('#ChatInput').Submit()">
-				<Label text="SEND"/>
+		<Panel class="chat__input-container">
+			<TextEntry id="ChatInput" class="chat__elem chat__input" oninputsubmit="Chat.submitText()" maxchars="1024" clearaftersubmit="true"/>
+			<Button class="chat__elem chat__send" onactivate="$('#ChatInput').Submit()">
+				<Label class="button__text chat__send-text" text="Send"/>
 			</Button>
-			<TextEntry id="ChatInput" oninputsubmit="Chat.submitText()" maxchars="127" clearaftersubmit="true"/>
 		</Panel>
-		<Panel id="ChatHistory" class="bottom-top-flow" html="true">
+			<Panel class="chat__elem chat__history-wrapper">
+				<Panel id="ChatHistory" class="chat__history" html="true">
 			<!-- C++ will add messages here! Each child will have the chat-entry class -->
+			</Panel>
 		</Panel>
 	</Panel>
 </root>

@@ -1,0 +1,90 @@
+.chat {
+	flow-children: up;
+	width: 100%;
+
+	&__elem {
+		background-color: rgba(0, 0, 0, 0.75);
+		border-radius: 4px;
+		box-shadow: 0 0 8px 0px rgb(0, 0, 0, 0.5);
+		transition: background-color 0.2s ease-in-out 0s;
+	}
+
+	&__history-wrapper {
+		height: 100%;
+		width: 100%;
+		margin: 8px;
+		padding: 2px 0;
+
+		&:hover {
+			background-color: rgba(0, 0, 0, 0.82);
+		}
+	}
+
+	&__history {
+		height: fit-children;
+		width: 100%;
+		padding: 0px 0px;
+		flow-children: up;
+		overflow: squish scroll;
+	}
+
+	&__member-typing {
+		margin: 0px 24px 8px 8px;
+		font-size: 16px;
+	}
+
+	&__input-container {
+		width: 100%;
+		margin: 0 8px 6px 8px;
+		flow-children: right;
+	}
+
+	&__input {
+		width: fill-parent-flow(1.0);
+		height: 34px;
+		vertical-align: bottom;
+		horizontal-align: left;
+		padding: 6px 12px;
+
+		& > #PlaceholderText {visibility: collapse;}
+	}
+
+	&__send {
+		height: 100%;
+		margin-left: 8px;
+		padding: 4px;
+	}
+
+	$this: &;
+	&__send-text {
+		color: rgba(255, 255, 255, 0.8);
+		#{$this}:hover {color: rgba(255, 255, 255, 1);
+		}
+
+	}
+
+	&__input:hover, &__send:hover {
+		background-color: rgba(0, 0, 0, 0.85);
+	}
+
+	&__spec-icon {
+		vertical-align: center;
+	}
+}
+
+// lobby-chat-message snippet, inserted by C++ code
+.chat-entry {
+	width: 100%;
+	flow-children: right;
+	transition: background-color 0.1s ease-in 0s;
+
+	Label {
+		margin-right: 16px;
+		padding: 2px 12px;
+		text-overflow: clip;
+	}
+	
+	&:hover {
+		background-color: rgba(0, 0, 0, 0.3);
+	}
+}
