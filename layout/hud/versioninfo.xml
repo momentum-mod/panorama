@@ -1,0 +1,9 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+
+	<MomHudVersionInfo>
+		<Label class="text-h6" text="{s:verLabel} {s:version} {s:mapping} {s:dx11} {s:dev}" />
+	</MomHudVersionInfo>
+</root>
