@@ -12,11 +12,12 @@
 <root>
 	<styles>
 		<include src="file://{resources}/styles/main.scss"/>
+		<include src="file://{resources}/styles/hud/hudchat.scss"/>
 	</styles>
 	<scripts>
 		
 	</scripts>
-	<Panel class="hud_chat_container no-flow" defaultfocus="RaisedChat">
+	<Panel class="hud-chat no-flow" defaultfocus="RaisedChat">
         <MomentumChat id="RaisedChat" class="full-width full-height" />
 		<ToastContainer id="LoweredChat" class="chat-container full-width full-height bottom-top-flow" thinkwheninvisible="true"/>
 	</Panel>

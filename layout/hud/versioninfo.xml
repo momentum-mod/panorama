@@ -1,9 +1,10 @@
 <root>
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
+		<include src="file://{resources}/styles/hud/versioninfo.scss" />
 	</styles>
 
-	<MomHudVersionInfo>
+	<MomHudVersionInfo class="version-info">
 		<Label class="text-h6" text="{s:verLabel} {s:version} {s:mapping} {s:dx11} {s:dev}" />
 	</MomHudVersionInfo>
 </root>
