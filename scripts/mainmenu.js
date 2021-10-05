@@ -1,27 +1,23 @@
-"use strict";
+'use strict';
 
 //--------------------------------------------------------------------------------------------------
 // Header Tab navigation and xml loading
 //--------------------------------------------------------------------------------------------------
 
 class MainMenuController {
-
 	static activeTab = '';
-	static contentPanel = $( '#JsMainMenuContent' );
+	static contentPanel = $.GetContextPanel().FindChildTraverse('JsMainMenuContent');
 	static videoPanel = '';
 	static imagePanel = '';
 	static playedInitialFadeUp = false;
 
-	static onInitFadeUp()
-	{
-		if( !MainMenuController.playedInitialFadeUp )
-		{
+	static onInitFadeUp() {
+		if (!MainMenuController.playedInitialFadeUp) {
 			MainMenuController.playedInitialFadeUp = true;
 		}
 	}
 
-	static onShowMainMenu()
-	{
+	static onShowMainMenu() {
 		MainMenuController.onInitFadeUp();
 
 		MainMenuController.videoPanel = $( '#MainMenuMovie' );
@@ -30,39 +26,28 @@ class MainMenuController {
 		MainMenuController.setMainMenuBackground();
 	}
 
-	static onHideMainMenu()
-	{
-		$.Msg("Hide main menu");
-
+	static onHideMainMenu() {
 		UiToolkitAPI.CloseAllVisiblePopups();
 	}
 
-	static onShowPauseMenu()
-	{
-		$.GetContextPanel().AddClass( 'MainMenuRootPanel--PauseMenuMode' );
+	static onShowPauseMenu() {
+		$.GetContextPanel().AddClass('MainMenuRootPanel--PauseMenuMode');
 	}
 
-	static onHidePauseMenu()
-	{
-		$.GetContextPanel().RemoveClass( 'MainMenuRootPanel--PauseMenuMode' );
+	static onHidePauseMenu() {
+		$.GetContextPanel().RemoveClass('MainMenuRootPanel--PauseMenuMode');
 
 		MainMenuController.onHomeButtonPressed();
 	}
 
-	static checkTabCanBeOpenedRightNow(tab)
-	{
+	static checkTabCanBeOpenedRightNow(tab) {
 		return true;
 	}
 
-	static navigateToTab(tab, xmlName)
-	{
-		$.Msg( 'tabToShow: ' + tab + ' XmlName = ' + xmlName  );
-		$.Msg( 'ContextPANEL: ' + $.GetContextPanel().id );
-
-		if ( !MainMenuController.checkTabCanBeOpenedRightNow( tab ) )
-		{
+	static navigateToTab(tab, xmlName) {
+		if (!MainMenuController.checkTabCanBeOpenedRightNow(tab)) {
 			MainMenuController.onHomeButtonPressed();
-			return;	// validate that tabs can be opened (GC connection / China free-to-play / etc.)
+			return; // validate that tabs can be opened (GC connection / China free-to-play / etc.)
 		}
 
 		if (MainMenuController.activeTab == tab) {
@@ -70,85 +55,65 @@ class MainMenuController {
 			return;
 		}
 
-		//$.DispatchEvent('PlayMainMenuMusic', true, false, null );
-
 		// Check to see if tab to show exists.
 		// If not load the xml file.
-		if( !$.GetContextPanel().FindChildInLayoutFile( tab ) )
-		{
+		if (!$.GetContextPanel().FindChildInLayoutFile(tab)) {
 			const newPanel = $.CreatePanel('Panel', this.contentPanel, tab);
 
 			newPanel.Data().elMainMenuRoot = $.GetContextPanel();
-			$.Msg( 'Created Panel with id: ' + newPanel.id );
+			newPanel.LoadLayout('file://{resources}/layout/' + xmlName + '.xml', false, false);
+			newPanel.RegisterForReadyEvents(true);
 
-			newPanel.LoadLayout('file://{resources}/layout/' + xmlName + '.xml', false, false );
-			newPanel.RegisterForReadyEvents( true );
-			
 			// Handler that catches OnPropertyTransitionEndEvent event for this panel.
-			// Check if the panel is transparent then collapse it. 
-			newPanel.OnPropertyTransitionEndEvent = function ( panelName, propertyName )
-			{
-				if( newPanel.id === panelName && propertyName === 'opacity' )
-				{
+			// Check if the panel is transparent then collapse it.
+			newPanel.OnPropertyTransitionEndEvent = function (panelName, propertyName) {
+				if (newPanel.id === panelName && propertyName === 'opacity') {
 					// Panel is visible and fully transparent
-					if( newPanel.visible === true && newPanel.IsTransparent() )
-					{
+					if (newPanel.visible === true && newPanel.IsTransparent()) {
 						// Set visibility to false and unload resources
 						newPanel.visible = false;
-						newPanel.SetReadyForDisplay( false );
+						newPanel.SetReadyForDisplay(false);
 						return true;
-					}
-					else if ( newPanel.visible === true )
-					{
-						$.DispatchEvent( 'MainMenuTabShown', tab );
-					}
+					} else if (newPanel.visible === true) $.DispatchEvent('MainMenuTabShown', tab);
 				}
-
 				return false;
 			};
 
-			$.RegisterEventHandler( 'PropertyTransitionEnd', newPanel, newPanel.OnPropertyTransitionEndEvent );
+			$.RegisterEventHandler('PropertyTransitionEnd', newPanel, newPanel.OnPropertyTransitionEndEvent);
 		}
-		
+
 		// If a we have a active tab and it is different from the selected tab hide it.
 		// Then show the selected tab
-		if( MainMenuController.activeTab !== tab )
-		{
+		if (MainMenuController.activeTab !== tab) {
 			//Trigger sound event for the new panel
-			if(xmlName) {
-				$.DispatchEvent('PlaySoundEffect', 'tab_' + xmlName.replace('/', '_'), 'MOUSE');
-			}
-			
-			// If the tab exists then hide it
-			if( MainMenuController.activeTab )
-			{
-				const panelToHide = $.GetContextPanel().FindChildInLayoutFile(MainMenuController.activeTab);
-				panelToHide.AddClass( 'mainmenu__content--hidden' );
+			// if (xmlName) {
+			// 	$.DispatchEvent('PlaySoundEffect', 'tab_' + xmlName.replace('/', '_'), 'MOUSE');
+			// }
 
-				$.Msg( 'HidePanel: ' + MainMenuController.activeTab  );
+			// If the tab exists then hide it
+			if (MainMenuController.activeTab) {
+				const panelToHide = $.GetContextPanel().FindChildInLayoutFile(MainMenuController.activeTab);
+				panelToHide.AddClass('mainmenu__content--hidden');
 			}
-			
+
 			//Show selected tab
 			MainMenuController.activeTab = tab;
 			const activePanel = $.GetContextPanel().FindChildInLayoutFile(tab);
-			activePanel.RemoveClass( 'mainmenu__content--hidden' );
+			activePanel.RemoveClass('mainmenu__content--hidden');
 
 			// Force a reload of any resources since we're about to display the panel
 			activePanel.visible = true;
-			activePanel.SetReadyForDisplay( true );
-			$.Msg( 'ShowPanel: ' + MainMenuController.activeTab );
-
+			activePanel.SetReadyForDisplay(true);
 		}
 
 		MainMenuController.showContentPanel();
 	}
 
+	static showContentPanel() {
+		MainMenuController.contentPanel.RemoveClass('mainmenu__content--hidden');
+			
+		// $.GetContextPanel().FindChildTraverse('MainMenuModel').AddClass('homecontent__modelpanel--hidden');
 
-	static showContentPanel()
-	{
-		if ( MainMenuController.contentPanel.HasClass( 'mainmenu__content--hidden' ) ) {
-			MainMenuController.contentPanel.RemoveClass( 'mainmenu__content--hidden' );
-		}
 		$.GetContextPanel().FindChildTraverse("MainMenuDrawerPanel")?.AddClass("drawer--content-panel-open");
 
 		$.DispatchEvent('RetractDrawer');
@@ -157,10 +122,6 @@ class MainMenuController {
 		$.GetContextPanel().FindChildTraverse('HomeContent').AddClass('homecontent--hidden');
 	}
 
-	static onHideContentPanel()
-	{
-		$.Msg("Hide content panel");
-		MainMenuController.contentPanel.AddClass( 'mainmenu__content--hidden' );
 	static onHideContentPanel() {
 		MainMenuController.contentPanel.AddClass('mainmenu__content--hidden');
 
@@ -168,64 +129,58 @@ class MainMenuController {
 
 		// Uncheck the active button in the main menu navbar.
 		const elActiveNavBarBtn = MainMenuController.getActiveNavBarButton();
-		if ( elActiveNavBarBtn && elActiveNavBarBtn.id !== 'HomeButton' ) {
+		if (elActiveNavBarBtn && elActiveNavBarBtn.id !== 'HomeButton') {
 			elActiveNavBarBtn.checked = false;
 		}
-		
+
 		// If the tab exists then hide it
-		if ( MainMenuController.activeTab ) {
+		if (MainMenuController.activeTab) {
 			const panelToHide = $.GetContextPanel().FindChildInLayoutFile(MainMenuController.activeTab);
-			panelToHide.AddClass( 'mainmenu__content--hidden' );
-			 $.Msg('HidePanel: ' + MainMenuController.activeTab);
+			panelToHide.AddClass('mainmenu__content--hidden');
 		}
 
 		MainMenuController.activeTab = '';
-		
-		$('#HomeContent').RemoveClass('homecontent--hidden');
+
+		$.GetContextPanel().FindChildTraverse('HomeContent').RemoveClass('homecontent--hidden');
 	}
 
-	static getActiveNavBarButton()
-	{
-		const elNavBar = $('#JsMainMenuNavBar');
+	static getActiveNavBarButton() {
+		const elNavBar = $.GetContextPanel().FindChildTraverse('JsMainMenuNavBar');
 		const children = elNavBar.Children();
 		const count = children.length;
 
-		for (let i = 0; i < count; i++)
-		{
-			if ( children[i].IsSelected() ) {
-				return children[ i ];
+		for (let i = 0; i < count; i++) {
+			if (children[i].IsSelected()) {
+				return children[i];
 			}
 		}
 	}
-	
-	static onMainMenuLoaded()
-	{
-		const model = $('#MainMenuModel');
-		
+
+	static onMainMenuLoaded() {
+		const model = $.GetContextPanel().FindChildTraverse('MainMenuModel');
+
 		model.SetModelRotation(0.0, 270.0, 0.0); // Get arrow logo facing to the right, looks better
 		model.SetModelRotationSpeedTarget(0.0, 0.2, 0.0);
 		model.SetMouseXRotationScale(0.0, 1.0, 0.0); // By default mouse X will rotate the X axis, but we want it to spin Y axis
 		model.SetMouseYRotationScale(0.0, 0.0, 0.0); // Disable mouse Y movement rotations
-		
+
 		model.LookAtModel();
 		model.SetCameraOffset(-200.0, 0.0, 0.0);
 		model.SetCameraFOV(40.0);
-		
+
 		model.SetDirectionalLightColor(0, 0.5, 0.5, 0.5);
 		model.SetDirectionalLightDirection(0, 1.0, 0.0, 0.0);
 
 		if (GameInterfaceAPI.GetSettingBool('developer')) {
-			$('#ControlsLibraryButton').RemoveClass('hide');
+			$.GetContextPanel().FindChildTraverse('ControlsLibraryButton').RemoveClass('hide');
 		}
 	}
 
-	static setMainMenuBackground() 
-	{
+	static setMainMenuBackground() {
 		const videoPanel = MainMenuController.videoPanel;
 		const imagePanel = MainMenuController.imagePanel;
 
-		if (!(videoPanel && videoPanel.IsValid() && imagePanel && imagePanel.IsValid()))
-			return;
+		if (!(videoPanel && videoPanel.IsValid() && imagePanel && imagePanel.IsValid())) return;
 
 		const useVideo = GameInterfaceAPI.GetSettingBool('mom_ui_menu_background_video');
 
@@ -238,8 +193,7 @@ class MainMenuController {
 		var name = '';
 
 		// Using a switch as we're likely to add more of these in the future
-		switch (GameInterfaceAPI.GetSettingInt('mom_ui_menu_background_type')) 
-		{
+		switch (GameInterfaceAPI.GetSettingInt('mom_ui_menu_background_type')) {
 			case 1:
 				name = 'MomentumDark';
 				break;
@@ -247,15 +201,12 @@ class MainMenuController {
 				name = 'MomentumLight';
 		}
 
-		if (useVideo) 
-		{
+		if (useVideo) {
 			videoPanel.SetMovie('file://{resources}/videos/backgrounds/' + name + '.webm');
 
 			videoPanel.Play();
-		} 
-		else 
-		{
-			imagePanel.SetImage('file://{images}/backgrounds/' + name + '.dds')
+		} else {
+			imagePanel.SetImage('file://{images}/backgrounds/' + name + '.dds');
 		}
 	}
 
@@ -263,47 +214,41 @@ class MainMenuController {
 	// Icon buttons functions
 	//--------------------------------------------------------------------------------------------------
 
-	static onHomeButtonPressed()
-	{
+	static onHomeButtonPressed() {
 		MainMenuController.onHideContentPanel();
 	}
 
-	static onQuitButtonPressed()
-	{
-		UiToolkitAPI.ShowGenericPopupTwoOptionsBgStyle( 'Quit',
+	static onQuitButtonPressed() {
+		UiToolkitAPI.ShowGenericPopupTwoOptionsBgStyle(
+			'Quit',
 			'Are you sure you want to quit?',
 			'quit-popup',
 			'Return',
-			function() {
-			},
+			() => {},
 			'Quit',
 			MainMenuController.quitGame,
 			'blur'
 		);
 	}
 
-	static quitGame()
-	{
+	static quitGame() {
 		GameInterfaceAPI.ConsoleCommand('quit');
 	}
 
-	static onEscapeKeyPressed( eSource, nRepeats, focusPanel )
-	{
+	static onEscapeKeyPressed(eSource, nRepeats, focusPanel) {
 		MainMenuController.onHomeButtonPressed();
-		
+
 		// Resume game (pause menu mode)
-		if ( $.GetContextPanel().HasClass( 'MainMenuRootPanel--PauseMenuMode' ) ) {
-			$.DispatchEvent( 'ChaosMainMenuResumeGame' );
+		if ($.GetContextPanel().HasClass('MainMenuRootPanel--PauseMenuMode')) {
+			$.DispatchEvent('ChaosMainMenuResumeGame');
 		}
 	}
 }
 
-
 //--------------------------------------------------------------------------------------------------
 // Entry point called when panel is created
 //--------------------------------------------------------------------------------------------------
-(function()
-{
+(function () {
 	$.RegisterForUnhandledEvent('ChaosShowMainMenu', MainMenuController.onShowMainMenu);
 	$.RegisterForUnhandledEvent('ChaosHideMainMenu', MainMenuController.onHideMainMenu);
 	$.RegisterForUnhandledEvent('ChaosShowPauseMenu', MainMenuController.onShowPauseMenu);
@@ -311,5 +256,5 @@ class MainMenuController {
 
 	$.RegisterForUnhandledEvent('ReloadBackground', MainMenuController.setMainMenuBackground);
 
-	$.RegisterEventHandler( "Cancelled", $.GetContextPanel(), MainMenuController.onEscapeKeyPressed );
+	$.RegisterEventHandler('Cancelled', $.GetContextPanel(), MainMenuController.onEscapeKeyPressed);
 })();

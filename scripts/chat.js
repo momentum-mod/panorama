@@ -29,7 +29,7 @@ class Chat {
 
 	static onNewChatEntry(panel) {
 		$.Schedule(0.0, () => panel.ScrollParentToMakePanelFit(0, false)); // IDK, ScrollToBottom always just scrolled to the second last msg
-		// TODO: Emote test for BLT to look into
+		// Emote test for BLT to look into
 		// let messageLabel = panel.GetChild(0);
 		// let message = messageLabel.text;
 		// message = message.replace(/dogathan/g, "<img src='file://{images}/emotes/dogathan.png' height='16' width='16'/>");
