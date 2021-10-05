@@ -33,11 +33,11 @@
 		<Panel id="MainMenuInput" class="mainmenu">
 			<BaseBlurTarget class="mainmenu__blur" blurrects="MainMenuContentBlur JsMainMenuNavBar MainMenuOptionListRight">
 				<BaseBlurTarget class="mainmenu__strongblur" blurrects="MainMenuDrawerContent">
-				<!-- In main menu, show the background, either video or image -->
-					<Panel id="MainMenuMovieParent" class="MainMenuModeOnly" />
-					<Image id="MainMenuBackground" class="full-width full-height MainMenuModeOnly" />
+					<!-- In main menu, show the background, either video or image -->
+					<Panel id="MainMenuMovieParent" class="mainmenu__background MainMenuModeOnly" />
+					<Image id="MainMenuBackground" class="mainmenu__background MainMenuModeOnly" />
 					<!-- In pause menu, show the existing backbuffer -->
-					<ChaosBackbufferImagePanel class="full-width full-height PauseMenuModeOnly" />
+					<ChaosBackbufferImagePanel class="mainmenu__background PauseMenuModeOnly" />
 				</BaseBlurTarget>
 			</BaseBlurTarget>
 
@@ -113,7 +113,7 @@
 								<Image class="rightnav__button-image" src="file://{images}/sidepanel/news.svg" textureheight="32" />
 							</RadioButton>
 
-							<RadioButton id="SliderButton" class="rightnav__button rightnav__drawerbutton"  onactivate="Drawer.toggle()">
+							<RadioButton id="SliderButton" class="rightnav__button rightnav__drawerbutton" onactivate="Drawer.toggle()">
 								<Image class="rightnav__button-image" src="file://{images}/right-arrow.svg" textureheight="32" orientation="180" />
 							</RadioButton>
 						</Panel>

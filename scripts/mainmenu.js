@@ -149,17 +149,22 @@ class MainMenuController {
 		if ( MainMenuController.contentPanel.HasClass( 'mainmenu__content--hidden' ) ) {
 			MainMenuController.contentPanel.RemoveClass( 'mainmenu__content--hidden' );
 		}
+		$.GetContextPanel().FindChildTraverse("MainMenuDrawerPanel")?.AddClass("drawer--content-panel-open");
 
-		$.DispatchEvent( 'ShowContentPanel' );
-		
-		$('#HomeContent').AddClass('homecontent--hidden');
-		
+		$.DispatchEvent('RetractDrawer');
+		$.DispatchEvent('ShowContentPanel');
+
+		$.GetContextPanel().FindChildTraverse('HomeContent').AddClass('homecontent--hidden');
 	}
 
 	static onHideContentPanel()
 	{
 		$.Msg("Hide content panel");
 		MainMenuController.contentPanel.AddClass( 'mainmenu__content--hidden' );
+	static onHideContentPanel() {
+		MainMenuController.contentPanel.AddClass('mainmenu__content--hidden');
+
+		$.GetContextPanel().FindChildTraverse("MainMenuDrawerPanel")?.RemoveClass("drawer--content-panel-open");
 
 		// Uncheck the active button in the main menu navbar.
 		const elActiveNavBarBtn = MainMenuController.getActiveNavBarButton();

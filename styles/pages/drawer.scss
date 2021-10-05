@@ -20,14 +20,13 @@ $width: 768px;
 	}
 
 	&__rightnav {
-		transition: background-color 0.35s ease-out 0s;
+		// transition: background-color 0.35s linear 0s;
 	}
 
 	&__content {
 		width: $width;
 		height: 100%;
 		background-color: rgba(27, 27, 27, 0.7);
-		// border-left: 1px solid rgba(0, 0, 0, 0.5);
 	}
 	
 	$this: &;
@@ -35,7 +34,7 @@ $width: 768px;
 		transform: translateX(0);
 
 		#{$this}__rightnav {
-			background-color: rgba(27, 27, 27, 0.8);
+			background-color: rgba(32, 32, 32, 0.8);
 		}
 
 		#{$this}__left-shadow {
@@ -45,6 +44,16 @@ $width: 768px;
 
 		.rightnav__drawerbutton {
 			transform: rotateX(180deg) rotateZ(180deg);
+		}
+	}
+
+	&--content-panel-open {
+		#{$this}__content {
+			background-color: rgb(53, 53, 53)
+		}
+
+		#{$this}__rightnav {
+			background-color: rgb(51, 51, 51);
 		}
 	}
 }
