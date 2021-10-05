@@ -52,6 +52,12 @@
 		overflow: noclip;
 		blur: fastgaussian(8, 8, 5);
 	}
+	
+	&__pauseblur {
+		width: 100%;
+		height: 100%;
+		blur: fastgaussian(3, 3, 3);
+	}
 
 	&__movie {
 		width: 1920px;
@@ -91,6 +97,13 @@
 		&--hidden {
 			opacity: 0;
 		}
+	}
+
+	// BaseBlurTarget needs a translucent background to draw on/over/behind/whatever for some reason
+	&__pausecontentblur {
+		width: 100%;
+		height: 100%;
+		background-color: rgba(0, 0, 0, 0.005);
 	}
 
 	&__contentblur {

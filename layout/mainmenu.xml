@@ -37,7 +37,9 @@
 					<Panel id="MainMenuMovieParent" class="mainmenu__background MainMenuModeOnly" />
 					<Image id="MainMenuBackground" class="mainmenu__background MainMenuModeOnly" />
 					<!-- In pause menu, show the existing backbuffer -->
-					<ChaosBackbufferImagePanel class="mainmenu__background PauseMenuModeOnly" />
+					<BaseBlurTarget id="PauseMenuMainMenuBlur" class="mainmenu__pauseblur" blurrects="PauseMenuMainMenuContent">
+						<ChaosBackbufferImagePanel class="mainmenu__background PauseMenuModeOnly" />
+					</BaseBlurTarget>
 				</BaseBlurTarget>
 			</BaseBlurTarget>
 
@@ -82,6 +84,7 @@
 
 				<Panel class="full-width full-height">
 					<Panel id="MainMenuContent" class="mainmenu__contentwrapper">
+						<Panel id="PauseMenuMainMenuContent" class="mainmenu__pausecontentblur" />
 						<Panel id="HomeContent" class="mainmenu__homecontent homecontent MainMenuModeOnly">
 							<Frame id="NewsPanel" class="homecontent__newspanel" src="file://{resources}/layout/mainmenu_news.xml" />
 							<ModelPanel id="MainMenuModel" class="homecontent__modelpanel" src="models/custom_props/hd_logo.mdl" cubemap="cubemaps/cubemap_menu_model_bg.hdr" antialias="true" mouse_rotate="true" />
