@@ -62,6 +62,15 @@
 		<Panel id="HudTopRight" hittest="false" hittestchildren="false">
 
 		</Panel>
+
+		<ChaosHudBlurTarget id="HudBlur" blurrects="Leaderboards" class="hud-blur" hittest="false" hittestchildren="false">
+			<ChaosBackbufferImagePanel class="full" />
+		</ChaosHudBlurTarget>
+
+		<!-- This container is here so we can move the leaderboard in and out of it during the end-of-match sequence -->
+		<Panel id="LeaderboardsContainer" class="full-width full-height" hittest="false" hittestchildren="true">
+			<HudLeaderboards id="Leaderboards" hittest="true" />
+		</Panel>
 		
 		<!-- Make sure these are at the bottom to get the z-order right -->
 		<ChaosPopupManager id="PopupManager" onpopupsdismissed="" />

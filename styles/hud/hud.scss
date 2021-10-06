@@ -8,48 +8,11 @@ ChaosHud,
 	height: 100%;
 }
 
-
-#HudElemBlur {
-	visibility: collapse;
+.hud-blur {
 	width: 100%;
 	height: 100%;
-	blur: fastgaussian(3, 3, 3);
-	visibility: visible;
-
 	-s2-mix-blend-mode: opaque;
-}
-
-
-.HudBlur {
-	width: 100%;
-	height: 100%;
-
-	-s2-mix-blend-mode: opaque;
-	blur: fastgaussian(2, 2, 3);
-}
-
-
-@keyframes 'blur-fade-in'
-
-	{
-	from {
-		blur: fastanimgaussian(0, 0, 0);
-	}
-
-	to {
-		blur: fastgaussian(5, 5, 4);
-	}
-}
-
-.eom-blur-fade-in {
-
-	animation-name: blur-fade-in;
-	animation-duration: 0.65s;
-	animation-iteration-count: 1;
-	animation-timing-function: ease-in-out;
-
-	-s2-mix-blend-mode: opaque;
-	blur: fastgaussian(5, 5, 4);
+	blur: fastgaussian(4, 4, 5);
 }
 
 #HudTopLeft {
