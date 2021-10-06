@@ -1,0 +1,52 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+		<include src="file://{resources}/styles/hud/hud_leaderboards.scss" />
+	</styles>
+	<scripts>
+		<include src="file://{resources}/scripts/hud/hud_leaderboards.js" />
+	</scripts>
+
+	<snippets>
+	</snippets>
+
+	<HudLeaderboards class="hud-leaderboards" oncancel="HudLeaderboards.close();">
+		<Panel class="hud-leaderboards__wrapper">
+			<Panel id="LeaderboardsHeader" class="hud-leaderboards__header">
+				<Image id="HudLeaderboardsGamemodeImage" class="hud-leaderboards__header-image" textureheight="128" />
+				<Panel class="hud-leaderboards__map-info">
+					<Panel class="hud-leaderboards-map-info__top">
+						<Label class="hud-leaderboards-map-info__map-name" text="{s:map}" />
+						<TooltipPanel tooltip="View showcase run" class="hud-leaderboards-map-info__showcase">
+							<Button class="button full" onactivate="$.Msg('Not yet implemented! Go away!!');">
+								<Image class="button__icon" src="file://{images}/filmstrip.svg" textureheight="64" />
+							</Button>
+						</TooltipPanel>
+					</Panel>
+					<Panel class="hud-leaderboards-map-info__bottom">
+						<Panel id="HudLeaderboardsMapCredits" class="hud-leaderboards-map-info__credits">
+							<Label class="hud-leaderboards-map-info__credits-other-text" text="By" />
+							<!-- Author names inserted by JS -->
+						</Panel>
+						<Panel class="hud-leaderboards-map-info__stats">
+							<Label class="hud-leaderboards-map-info-stats__stat" text="{s:tier}"/>
+							<Panel class="hud-leaderboards-map-info-stats__separator"/>
+							<Label class="hud-leaderboards-map-info-stats__stat" text="{s:type}"/>
+							<Panel class="hud-leaderboards-map-info-stats__separator"/>
+							<Label class="hud-leaderboards-map-info-stats__stat" text="{s:zones}"/>
+							<Panel class="hud-leaderboards-map-info-stats__separator"/>
+							<Label class="hud-leaderboards-map-info-stats__stat" text="{s:numruns}"/>
+						</Panel>
+					</Panel>
+				</Panel>
+			</Panel>
+
+			<Panel class="hud-leaderboards__times" hittestchildren="true">
+				<Leaderboards id="Leaderboards" hittest="true" hittestchildren="true" />
+			</Panel>
+
+			<Panel class="hud-leaderboards__stats">
+			</Panel>
+		</Panel>
+	</HudLeaderboards>
+</root>

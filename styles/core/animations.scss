@@ -1,6 +1,6 @@
 .spin-clockwise {
 	animation-name: SpinClockwise;
-	animation-duration:  0.8s;
+	animation-duration: 0.8s;
 	animation-timing-function: ease-in-out;
 	animation-iteration-count: infinite;
 }
@@ -17,5 +17,25 @@
 	}
 	75% {
 		transform: rotateZ(270deg);
+	}
+}
+
+.blur-fade-in {
+	animation-name: BlurFadeIn;
+	animation-duration: 0.5s;
+	animation-iteration-count: 1;
+	animation-timing-function: ease-in-out;
+
+	-s2-mix-blend-mode: opaque;
+	
+	blur: fastgaussian(4, 4, 4);
+}
+
+@keyframes BlurFadeIn {
+	0% {
+		blur: fastanimgaussian(0, 0, 0);
+	}
+	100% {
+		blur: fastgaussian(4, 4, 4);
 	}
 }
