@@ -337,12 +337,6 @@ $progressbar-background-progress: gradient( linear, 0% 0%, 100% 0%, from( $blue 
 
 $progressbar-shadow: rgba(0, 0, 0, 0.45) 0px 1.5px 3px 0px !default;
 
-$progressbar-hudmeter-width        : 320px !default;
-$progressbar-hudmeter-height       : 18px !default;
-$progressbar-hudmeter-border-radius: 9px !default;
-$progressbar-hudmeter-font-size    : 16px !default;
-$progressbar-hudmeter-text-shadow  : rgba(0, 0, 0, 0.5) 0px 1px 2px 2.5 !default;
-
 // ================
 // TOOLTIPS
 // ================
@@ -381,3 +375,32 @@ $popup-button-font-size     : 24px !default;
 // ================
 
 $rightnav-width: 50px;
+
+// ===================================== HUD =====================================
+
+// ================
+// HUDMETER (Conc timer bar & SJ charge meter)
+// ================
+
+$progressbar-hudmeter-width        : 320px !default;
+$progressbar-hudmeter-height       : 18px !default;
+$progressbar-hudmeter-border-radius: 9px !default;
+$progressbar-hudmeter-font-size    : 16px !default;
+$progressbar-hudmeter-text-shadow  : rgba(0, 0, 0, 0.5) 0px 1px 2px 2.5 !default;
+
+// ================
+// SPEEDOMETER
+// ================
+
+$speedometer-axis-font-weight: black !default;
+$speedometer-axis-font-size: 26px !default;
+$speedometer-axis-comparison-font-weight: bold !default;
+$speedometer-axis-comparison-font-size: 22px !default;
+$speedometer-event-font-weight: medium !default;
+$speedometer-event-font-size: 18px !default;
+$speedometer-event-comparison-font-weight: normal !default;
+$speedometer-event-comparison-font-size: 16px !default;
+$speedometer-event-fadeout-time: 5s !default;
+
+$speedometer-color-increase: $blue !default;
+$speedometer-color-decrease: $red !default;
