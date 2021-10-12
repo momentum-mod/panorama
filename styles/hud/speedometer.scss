@@ -1,0 +1,48 @@
+@use '../config'as *;
+
+.speedometers {
+	margin: 6px 0px 6px 0;
+	align: center center;
+	flow-children: down;
+}
+
+.speedometer {
+	align: center center;
+	flow-children: right;
+
+	&__axis {
+		font-weight: $speedometer-axis-font-weight;
+		font-size: $speedometer-axis-font-size;
+		&__comparison {
+			font-weight: $speedometer-axis-comparison-font-weight;
+			font-size: $speedometer-axis-comparison-font-size;
+		}
+	}
+	&__event {
+		font-weight: $speedometer-event-font-weight;
+		font-size: $speedometer-event-font-size;
+		&__comparison {
+			font-weight: $speedometer-event-comparison-font-weight;
+			font-size: $speedometer-event-comparison-font-size;
+		}
+	}
+
+	&--increase {
+		color: $speedometer-color-increase;
+	}
+	&--decrease {
+		color: $speedometer-color-decrease;
+	}
+	&--hidden {
+		visibility: collapse;
+	}
+	&--fade-start {
+		transition-property: opacity;
+		transition-duration: $speedometer-event-fadeout-time;
+		transition-timing-function: cubic-bezier( 1, 0, 1, 0 );
+	}
+	&--fadeout {
+		transition-duration: 0s;
+		opacity: 0;
+	}
+}

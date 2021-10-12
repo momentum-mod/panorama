@@ -40,6 +40,7 @@
 		<!-- misleading name, not 'bottom-center' but 'below center' -->
 		<Panel id="HudBottomCenter" hittest="false" hittestchildren="false">
 			<!-- Anchored on Bottom-center, laid out from top to bottom -->
+			<MomHudSpeedometer />
 			<MomHudConcCooktime />
 			<MomHudStickyCharge />
 			<MomHudStickyCount />
