@@ -25,4 +25,5 @@
 	$.DefineEvent('ToggleDrawer', 0, 'Toggle the open or closed state of the right side drawer panel');
 	$.DefineEvent('RefreshLobbyList', 0, '', 'Send a refresh request for the lobby list');
 	$.DefineEvent('OnLobbyButtonImageChange', 1);
+	$.DefineEvent('LoadMapSelector', 0);
 })();

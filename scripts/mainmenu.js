@@ -213,6 +213,12 @@ class MainMenuController {
 		}
 	}
 
+
+	static onLoadMapSelector() {
+		$.GetContextPanel().FindChildTraverse('MainMenuBackgroundBlur')?.AddBlurPanel($.GetContextPanel().FindChildTraverse('MapSelectorLeft'));
+		$.GetContextPanel().FindChildTraverse('MainMenuBackgroundBlur')?.AddBlurPanel($.GetContextPanel().FindChildTraverse('MapDescription'));
+		$.GetContextPanel().FindChildTraverse('MainMenuBackgroundBlur')?.AddBlurPanel($.GetContextPanel().FindChildTraverse('MapInfoStats'));
+	}
 	//--------------------------------------------------------------------------------------------------
 	// Icon buttons functions
 	//--------------------------------------------------------------------------------------------------
@@ -256,6 +262,7 @@ class MainMenuController {
 	$.RegisterForUnhandledEvent('ChaosHideMainMenu', MainMenuController.onHideMainMenu);
 	$.RegisterForUnhandledEvent('ChaosShowPauseMenu', MainMenuController.onShowPauseMenu);
 	$.RegisterForUnhandledEvent('ChaosHidePauseMenu', MainMenuController.onHidePauseMenu);
+	$.RegisterForUnhandledEvent('LoadMapSelector', MainMenuController.onLoadMapSelector);
 
 	$.RegisterForUnhandledEvent('ReloadBackground', MainMenuController.setMainMenuBackground);
 
