@@ -214,6 +214,15 @@ $page-transition-timing-func: ease-in-out;
 			background-color: gradient(radial, 50% 100%, 0% 0%, 100% 100%, from(rgba(70, 70, 70, 0.8)), to(rgba(20, 20, 20, 0.8)));
 		}
 	}
+	
+	&__home, &__button {
+		&:hover {
+			sound: "UIPanorama.ButtonRollover";
+		}
+		&:selected {
+			sound: "UIPanorama.ButtonPress";
+		}
+	}
 }
 
 .rightnav {
