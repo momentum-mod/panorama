@@ -11,6 +11,10 @@ $conc-ent-font-size: 20px;
 	&__progressbar {
 		height: $conc-ent-height;
 		border-radius: $conc-ent-border-radius;
+		
+		.ProgressBarLeft {
+			border-radius: $conc-ent-border-radius;
+		}
 	}
 	
 	&__label {
