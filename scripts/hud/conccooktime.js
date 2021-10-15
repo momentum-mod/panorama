@@ -12,8 +12,8 @@ class ConcCook {
 		if ( labelEnabled )
 			ConcCook.cookLabel.text = `${ time.toFixed( 2 ) }s`;
 	}
-}
 
-( function() {
-	$.RegisterEventHandler( 'OnCookUpdate', $( '#ConcCooktimeContainer' ), ConcCook.onCookUpdate );
-})();
+	static {
+		$.RegisterEventHandler( 'OnCookUpdate', $( '#ConcCooktimeContainer' ), ConcCook.onCookUpdate );
+	}
+}

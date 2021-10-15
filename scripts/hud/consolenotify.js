@@ -1,8 +1,8 @@
-class ConsoleNotify
-{
+'use strict';
+
+class ConsoleNotify {
 	static scheduleOpacity = -1;
-	static onNewMessages()
-	{
+	static onNewMessages() {
 		if (ConsoleNotify.scheduleOpacity !== -1) {
 			$.CancelScheduled(ConsoleNotify.scheduleOpacity);
 			ConsoleNotify.scheduleOpacity = -1;
@@ -15,14 +15,12 @@ class ConsoleNotify
 
 	}
 
-	static scheduledHide()
-	{
+	static scheduledHide() {
 		ConsoleNotify.scheduleOpacity = -1;
 		$.GetContextPanel().style.opacity = '0.0';
 	}
-}
 
-(function()
-{
-	$.RegisterEventHandler('NewConsoleMessages', 'NotifyMessageTarget', ConsoleNotify.onNewMessages);
-})();
+	static {
+		$.RegisterEventHandler('NewConsoleMessages', 'NotifyMessageTarget', ConsoleNotify.onNewMessages);
+	}
+}

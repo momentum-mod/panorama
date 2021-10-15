@@ -31,9 +31,10 @@ class StickyCharge {
 		if ( StickyCharge.chargeMeter.enabled !== enabled )
 			StickyCharge.chargeMeter.enabled = enabled;
 	}
-}
 
-( function() {
-	$.RegisterEventHandler( 'OnChargeUpdate', $( '#StickyChargeContainer' ), StickyCharge.OnChargeUpdate );
-	$.RegisterEventHandler( 'OnChargeToggled', $( '#StickyChargeContainer' ), StickyCharge.OnChargeToggled );
-})();
+	static {
+		let container = $( '#StickyChargeContainer' );
+		$.RegisterEventHandler( 'OnChargeUpdate', container, StickyCharge.OnChargeUpdate );
+		$.RegisterEventHandler( 'OnChargeToggled', container, StickyCharge.OnChargeToggled );
+	}
+}

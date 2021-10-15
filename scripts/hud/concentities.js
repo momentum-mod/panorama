@@ -1,9 +1,9 @@
 'use strict';
 
 class ConcEntities {
-	static entPanelContainer = $( '#ConcEntPanelsContainer' );
+	static container = $( '#ConcEntPanelsContainer' );
 	static onEntPanelThink() {
-		ConcEntities.entPanelContainer.Children().filter( entpanel => entpanel.HasClass( 'conc-ent' ) ).forEach( entpanel => {
+		ConcEntities.container.Children().filter( entpanel => entpanel.HasClass( 'conc-ent' ) ).forEach( entpanel => {
 			let meterEnabled = $.GetContextPanel().concEntPanelProgressBarEnabled;
 			let meter = entpanel.FindChildTraverse( 'ConcTimeMeter' );
 			meter.visible = meterEnabled;
@@ -19,8 +19,8 @@ class ConcEntities {
 			entpanel.style.opacity = entpanel.concDistanceFadeAlpha;
 		} );
 	}
-}
 
-( function() {
-	$.RegisterEventHandler( 'OnConcEntityPanelThink', $( '#ConcEntPanelsContainer' ), ConcEntities.onEntPanelThink );
-})();
+	static {
+		$.RegisterEventHandler( 'OnConcEntityPanelThink', ConcEntities.container, ConcEntities.onEntPanelThink );
+	}
+}

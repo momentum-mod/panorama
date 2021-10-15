@@ -17,8 +17,8 @@ class GhostEntities {
 			entpanel.style.transform = `translatex( ${ nameLabel.actuallayoutwidth / nameLabel.actualuiscale_x / 2 }px )`;
 		}
 	}
-}
 
-( function() {
-	$.RegisterEventHandler( 'OnAimOverGhostChange', $( '#GhostEntPanelsContainer' ), GhostEntities.onAimOverGhostChange )
-} )();
+	static {
+		$.RegisterEventHandler( 'OnAimOverGhostChange', $( '#GhostEntPanelsContainer' ), GhostEntities.onAimOverGhostChange );
+	}
+}

@@ -36,8 +36,8 @@ class StickyCount {
 				break;
 		}
 	}
-}
 
-( function() {
-	$.RegisterEventHandler( 'OnStickyPanelStateChanged', $.GetContextPanel(), StickyCount.onStickyPanelStateChanged );
-})();
+	static {
+		$.RegisterEventHandler( 'OnStickyPanelStateChanged', $.GetContextPanel(), StickyCount.onStickyPanelStateChanged );
+	}
+}
