@@ -6,7 +6,7 @@ HTMLVerticalScrollBar {
 	width: $scrollbar-width;
 	horizontal-align: right;
 	vertical-align: center;
-	margin: 4px, $scrollbar-width;
+	margin: 0px, $scrollbar-width;
 	opacity: $scrollbar-opacity;
 	transition-property: transform, opacity;
 

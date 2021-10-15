@@ -9,7 +9,7 @@
 		<include src="file://{resources}/scripts/controlslibrary.js" />
 	</scripts>
 
-	<Panel class="mainmenu__pagecontent" useglobalcontext="false">
+	<Panel class="mainmenu__page" useglobalcontext="false">
 		<Panel id="ControlsLibraryPanel" class="flow-down width height overflow-vscroll">
 
 			<Label class="text-h1 mt-3" text="Core" />
@@ -170,24 +170,24 @@
 
 			<Label class="text-h3 mt-3" text="Gradients" />
 			<Panel class="row my-3">
-					<Label class="gradient-horizontal-blue p-4 text-xs" text="gradient-horizontal-blue" />
-					<Label class="gradient-horizontal-light-blue p-4 text-xs" text="gradient-horizontal-light-blue" />
-					<Label class="gradient-horizontal-purple p-4 text-xs" text="gradient-horizontal-purple" />
-					<Label class="gradient-horizontal-pink p-4 text-xs" text="gradient-horizontal-pink" />
-					<Label class="gradient-horizontal-red p-4 text-xs" text="gradient-horizontal-red" />
-					<Label class="gradient-horizontal-orange p-4 text-xs" text="gradient-horizontal-orange" />
-					<Label class="gradient-horizontal-yellow p-4 text-xs" text="gradient-horizontal-yellow" />
-					<Label class="gradient-horizontal-green p-4 text-xs" text="gradient-horizontal-green" />
+				<Label class="gradient-horizontal-blue p-4 text-xs" text="gradient-horizontal-blue" />
+				<Label class="gradient-horizontal-light-blue p-4 text-xs" text="gradient-horizontal-light-blue" />
+				<Label class="gradient-horizontal-purple p-4 text-xs" text="gradient-horizontal-purple" />
+				<Label class="gradient-horizontal-pink p-4 text-xs" text="gradient-horizontal-pink" />
+				<Label class="gradient-horizontal-red p-4 text-xs" text="gradient-horizontal-red" />
+				<Label class="gradient-horizontal-orange p-4 text-xs" text="gradient-horizontal-orange" />
+				<Label class="gradient-horizontal-yellow p-4 text-xs" text="gradient-horizontal-yellow" />
+				<Label class="gradient-horizontal-green p-4 text-xs" text="gradient-horizontal-green" />
 			</Panel>
 			<Panel class="row my-3">
-					<Label class="gradient-vertical-blue p-4 text-xs" text="gradient-vertical-blue" />
-					<Label class="gradient-vertical-light-blue p-4 text-xs" text="gradient-vertical-light-blue" />
-					<Label class="gradient-vertical-purple p-4 text-xs" text="gradient-vertical-purple" />
-					<Label class="gradient-vertical-pink p-4 text-xs" text="gradient-vertical-pink" />
-					<Label class="gradient-vertical-red p-4 text-xs" text="gradient-vertical-red" />
-					<Label class="gradient-vertical-orange p-4 text-xs" text="gradient-vertical-orange" />
-					<Label class="gradient-vertical-yellow p-4 text-xs" text="gradient-vertical-yellow" />
-					<Label class="gradient-vertical-green p-4 text-xs" text="gradient-vertical-green" />
+				<Label class="gradient-vertical-blue p-4 text-xs" text="gradient-vertical-blue" />
+				<Label class="gradient-vertical-light-blue p-4 text-xs" text="gradient-vertical-light-blue" />
+				<Label class="gradient-vertical-purple p-4 text-xs" text="gradient-vertical-purple" />
+				<Label class="gradient-vertical-pink p-4 text-xs" text="gradient-vertical-pink" />
+				<Label class="gradient-vertical-red p-4 text-xs" text="gradient-vertical-red" />
+				<Label class="gradient-vertical-orange p-4 text-xs" text="gradient-vertical-orange" />
+				<Label class="gradient-vertical-yellow p-4 text-xs" text="gradient-vertical-yellow" />
+				<Label class="gradient-vertical-green p-4 text-xs" text="gradient-vertical-green" />
 			</Panel>
 
 			<Label class="text-h3 mt-3" text="Layout" />
@@ -213,10 +213,16 @@
 					</Panel>
 				</Panel>
 				<Panel class="col">
-					<Panel class="col full-width"><Label class="text-xs max-width-200 ml-4" text="horizontal-separator"/><Panel class="horizontal-separator"/></Panel>
+					<Panel class="col full-width">
+						<Label class="text-xs max-width-200 ml-4" text="horizontal-separator"/>
+						<Panel class="horizontal-separator"/>
+					</Panel>
 				</Panel>
 				<Panel class="col full-height">
-					<Panel class="row full-height"><Label class="text-xs max-width-200" text="vertical-separator"/><Panel class="vertical-separator"/></Panel>
+					<Panel class="row full-height">
+						<Label class="text-xs max-width-200" text="vertical-separator"/>
+						<Panel class="vertical-separator"/>
+					</Panel>
 				</Panel>
 			</Panel>
 
@@ -226,20 +232,17 @@
 			<Panel class="row my-3">
 				<Button class="button mr-2" onactivate="$.Msg('onactivated');">
 					<Label class="button__text" text="Button" />
-				</Button>	
-				<Button class="button mr-2">
-					<Image class="button__icon" texturewidth="32" textureheight="32"
-						src="file://{images}/units.svg" />
 				</Button>
 				<Button class="button mr-2">
-					<Image class="button__icon button__icon--left" texturewidth="32" textureheight="32"
-						src="file://{images}/units.svg" />
+					<Image class="button__icon" texturewidth="32" textureheight="32" src="file://{images}/units.svg" />
+				</Button>
+				<Button class="button mr-2">
+					<Image class="button__icon button__icon--left" texturewidth="32" textureheight="32" src="file://{images}/units.svg" />
 					<Label class="button__text button__text--right" text="left-icon + text" />
 				</Button>
 				<Button class="button mr-2">
 					<Label class="button__text button__text-left" text="text + right-icon" />
-					<Image class="button__icon button__icon--right" texturewidth="32" textureheight="32"
-						src="file://{images}/units.svg" />
+					<Image class="button__icon button__icon--right" texturewidth="32" textureheight="32" src="file://{images}/units.svg" />
 				</Button>
 				<Button class="button mr-2 button--blue">
 					<Label class="button__text" text="blue" />
@@ -271,18 +274,15 @@
 					<Label class="button__text" text="Button" />
 				</Button>
 				<Button class="button mr-2" disabled="true">
-					<Image class="button__icon" texturewidth="32" textureheight="32"
-						src="file://{images}/units.svg" />
+					<Image class="button__icon" texturewidth="32" textureheight="32" src="file://{images}/units.svg" />
 				</Button>
 				<Button class="button mr-2" disabled="true">
-					<Image class="button__icon button__icon--left" texturewidth="32" textureheight="32"
-						src="file://{images}/units.svg" />
+					<Image class="button__icon button__icon--left" texturewidth="32" textureheight="32" src="file://{images}/units.svg" />
 					<Label class="button__text button__text--right" text="left-icon + text" />
 				</Button>
 				<Button class="button mr-2" disabled="true">
 					<Label class="button__text button__text-left" text="text + right-icon" />
-					<Image class="button__icon button__icon--right" texturewidth="32" textureheight="32"
-						src="file://{images}/units.svg" />
+					<Image class="button__icon button__icon--right" texturewidth="32" textureheight="32" src="file://{images}/units.svg" />
 				</Button>
 				<Button class="button mr-2 button--blue" disabled="true">
 					<Label class="button__text" text="blue" />
@@ -321,18 +321,15 @@
 					<Label class="button__text" text="ToggleButton" />
 				</ToggleButton>
 				<ToggleButton class="button mr-2 togglebutton">
-					<Image class="button__icon" texturewidth="32" textureheight="32"
-						src="file://{images}/units.svg" />
+					<Image class="button__icon" texturewidth="32" textureheight="32" src="file://{images}/units.svg" />
 				</ToggleButton>
 				<ToggleButton class="button mr-2 togglebutton">
-					<Image class="button__icon button__icon--left" texturewidth="32" textureheight="32"
-						src="file://{images}/units.svg" />
+					<Image class="button__icon button__icon--left" texturewidth="32" textureheight="32" src="file://{images}/units.svg" />
 					<Label class="button__text button__text--right" text="icon--left + text" />
 				</ToggleButton>
 				<ToggleButton class="button mr-2 togglebutton">
 					<Label class="button__text button__text-left" text="icon--right + text" />
-					<Image class="button__icon button__icon--right" texturewidth="32" textureheight="32"
-						src="file://{images}/units.svg" />
+					<Image class="button__icon button__icon--right" texturewidth="32" textureheight="32" src="file://{images}/units.svg" />
 				</ToggleButton>
 				<ToggleButton class="button mr-2 togglebutton togglebutton--blue">
 					<Label class="button__text" text="blue" />
@@ -396,10 +393,27 @@
 				<RadioButton class="radiobutton-classic ml-3" disabled="true">
 					<Label class="radiobutton-classic__text" text="disabled" />
 				</RadioButton>
-				<RadioButton class="radiobutton-classic ml-3" id="radio4" group="blah" disabled="true"
-					selected="true">
+				<RadioButton class="radiobutton-classic ml-3" id="radio4" group="blah" disabled="true" selected="true">
 					<Label class="radiobutton-classic__text" text="disabled selected" />
 				</RadioButton>
+			</Panel>
+
+			<Label class="text-h3 mt-3" text="Tabs" />
+			<Panel class="row my-3">
+				<Panel class="flow-right">
+					<RadioButton class="tab" group="tabs">
+						<Label class="tab__text" text="Tab 1" />
+					</RadioButton>
+					<RadioButton class="tab" group="tabs">
+						<Label class="tab__text" text="Tab 2" />
+					</RadioButton>
+					<RadioButton class="tab" group="tabs">
+						<Label class="tab__text" text="Tab 3" />
+					</RadioButton>
+					<RadioButton class="tab" group="tabs" disabled="true">
+						<Label class="tab__text" text="Disabled tab" />
+					</RadioButton>
+				</Panel>
 			</Panel>
 
 			<Label class="text-h3 mt-3" text="Dropdowns" />
@@ -408,8 +422,7 @@
 					<!-- <Panel class="DropDownIcon"/> -->
 					<Label text="Dropdaaown" id="ControllibDropdown1" value="1" />
 					<Label text="You can have icons now!" class="IconLabel" id="ControllibDropdown2" value="2">
-						<Image class="wash-color-blue" texturewidth="32" textureheight="32"
-							src="file://{images}/units.svg" />
+						<Image class="wash-color-blue" texturewidth="32" textureheight="32" src="file://{images}/units.svg" />
 					</Label>
 					<Label text="Hello" id="ControllibDropdown3" value="3" />
 					<Label text="How are you" id="ControllibDropdown4" value="4" />
@@ -419,17 +432,15 @@
 
 				<DropDown class="dropdown ml-3" menuclass="dropdown-menu" style="width: 300px;">
 					<Label text="Dropdown fixed width" id="ControllibDropdown2_1" value="1" />
-					<Label text="This is a rare case where you should use inline styling " id="ControllibDropdown2_2"
-						value="2" />
-					<Label text="Do icons here break overflow????????????????????????????????????" class="IconLabel"
-						id="ControllibDropdown2" value="2">
-						<Image class="wash-color-blue" texturewidth="32" textureheight="32"
-							src="file://{images}/units.svg" />
+					<Label text="This is a rare case where you should use inline styling " id="ControllibDropdown2_2" value="2" />
+					<Label text="Do icons here break overflow????????????????????????????????????" class="IconLabel" id="ControllibDropdown2" value="2">
+						<Image class="wash-color-blue" texturewidth="32" textureheight="32" src="file://{images}/units.svg" />
 					</Label>
 				</DropDown>
 
 				<DropDown class="dropdown ml-3" menuclass="dropdown-menu" disabled="true">
-					<Label text="Disabled Dropdown" id="ControllibDrop2Down1" value="1" />>
+					<Label text="Disabled Dropdown" id="ControllibDrop2Down1" value="1" />
+>
 				</DropDown>
 
 				<Panel class="dropdown ml-3">
@@ -447,16 +458,16 @@
 			<Panel class="row my-3 mt-3-none">
 				<Panel class="col">
 					<Panel class="row my-3">
-						<Slider class="slider" direction="horizontal" id="Slider" />
+						<Slider class="slider slider--horizontal" direction="horizontal" id="Slider" />
 					</Panel>
 					<Panel class="row my-3">
-						<Slider class="slider" direction="horizontal" id="Slider2" disabled="true" />
+						<Slider class="slider slider--horizontal" direction="horizontal" id="Slider2" disabled="true" />
 					</Panel>
 				</Panel>
 				<Panel class="col mt-3-none">
 					<Panel class="row my-3" style="height:120px;">
-						<Slider class="slider VerticalSlider" direction="vertical" id="Slider3" />
-						<Slider class="slider VerticalSlider" direction="vertical" id="Slider4" disabled="true" />
+						<Slider class="slider slider--vertical" direction="vertical" id="Slider3" />
+						<Slider class="slider slider--vertical" direction="vertical" id="Slider4" disabled="true" />
 					</Panel>
 				</Panel>
 			</Panel>
@@ -511,28 +522,20 @@
 
 			<Label class="text-h3 mt-3" text="Tooltips" />
 			<Panel class="row my-3">
-				<Panel id="tooltip1" class="button py-1 mx-1" style="tooltip-position: bottom;"
-					onmouseover="UiToolkitAPI.ShowTextTooltip('tooltip1', 'Momentum Man, the fabled master of every gamemode, with more records than ever seen. Scientist, lover, source movement legend. But how did he die? Follow in his footsteps, unlock the mystery!');"
-					onmouseout="UiToolkitAPI.HideTextTooltip();">
+				<Panel id="tooltip1" class="button py-1 mx-1" style="tooltip-position: bottom;" onmouseover="UiToolkitAPI.ShowTextTooltip('tooltip1', 'Momentum Man, the fabled master of every gamemode, with more records than ever seen. Scientist, lover, source movement legend. But how did he die? Follow in his footsteps, unlock the mystery!');" onmouseout="UiToolkitAPI.HideTextTooltip();">
 					<Label class="button__text" text="Text Tooltip" />
 				</Panel>
-				<Panel id="tooltip2" class="button ml-3 py-1 mr-1" style="tooltip-position: bottom;"
-					onmouseover="UiToolkitAPI.ShowTitleTextTooltip('tooltip2', 'TitleText Tooltip', 'Momentum Man, легендарный мастер каждого игрового режима, с большим количеством записей, чем когда-либо. Ученый, любитель, источник легенды движения. Но как он умер? Следуйте по его стопам, откройте тайну!');"
-					onmouseout="UiToolkitAPI.HideTitleTextTooltip();">
+				<Panel id="tooltip2" class="button ml-3 py-1 mr-1" style="tooltip-position: bottom;" onmouseover="UiToolkitAPI.ShowTitleTextTooltip('tooltip2', 'TitleText Tooltip', 'Momentum Man, легендарный мастер каждого игрового режима, с большим количеством записей, чем когда-либо. Ученый, любитель, источник легенды движения. Но как он умер? Следуйте по его стопам, откройте тайну!');" onmouseout="UiToolkitAPI.HideTitleTextTooltip();">
 					<Label class="button__text" text="TitleImageText Tooltip" />
 				</Panel>
-				<Panel id="tooltip3" class="button ml-3 py-1 mr-1" style="tooltip-position: bottom;"
-					onmouseover="UiToolkitAPI.ShowTitleImageTextTooltip('tooltip3', 'TitleImageText Tooltip', 'file://{images}/tooltips/positive.svg', 'This displays an image and text with a title.');"
-					onmouseout="UiToolkitAPI.HideTitleImageTextTooltip();">
+				<Panel id="tooltip3" class="button ml-3 py-1 mr-1" style="tooltip-position: bottom;" onmouseover="UiToolkitAPI.ShowTitleImageTextTooltip('tooltip3', 'TitleImageText Tooltip', 'file://{images}/tooltips/positive.svg', 'This displays an image and text with a title.');" onmouseout="UiToolkitAPI.HideTitleImageTextTooltip();">
 					<Label class="button__text" text="TitleImageText Tooltip" />
 				</Panel>
-				<Panel id="tooltip4" class="button ml-3 py-1 mr-1" style="tooltip-position: bottom;"
-					onmouseover="UiToolkitAPI.ShowTitleImageTextTooltipStyled('tooltip4', 'TitleImageText', 'file://{images}/tooltips/negative.svg', 'We don&quot;t seem to have a ShowImageTextTooltip function, so let&quot;s just the title with the --notitle modifier', 'tooltip--notitle');"
-					onmouseout="UiToolkitAPI.HideTitleImageTextTooltip();">
+				<Panel id="tooltip4" class="button ml-3 py-1 mr-1" style="tooltip-position: bottom;" onmouseover="UiToolkitAPI.ShowTitleImageTextTooltipStyled('tooltip4', 'TitleImageText', 'file://{images}/tooltips/negative.svg', 'We don&quot;t seem to have a ShowImageTextTooltip function, so let&quot;s just the title with the --notitle modifier', 'tooltip--notitle');" onmouseout="UiToolkitAPI.HideTitleImageTextTooltip();">
 					<Label class="button__text" text="TitleImageTextStyled Tooltip without title" />
 				</Panel>
 			</Panel>
-			
+
 			<Label class="text-h1 mt-3" text="Components" />
 
 			<Label class="text-h3 mt-3" text="Player Card" />

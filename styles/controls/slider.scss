@@ -35,7 +35,9 @@
 		wash-color: $disabled;
 	}
 
-	&.HorizontalSlider {
+	// Sliders has an extra .VerticalSlider/HorizontalSlider class added by C++ based on their `direction` attribute,
+	// but we don't actually want to use this to style is it messes with specificity.
+	&--horizontal {
 		width: fill-parent-flow(1.0);
 		padding: $slider-padding-height 0;
 
@@ -50,7 +52,7 @@
 		}
 	}
 
-	&.VerticalSlider {
+	&--vertical {
 		padding: 0 $slider-padding-height;
 		height: fill-parent-flow(1.0);
 

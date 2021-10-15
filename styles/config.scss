@@ -1,5 +1,6 @@
 @use 'sass:color';
-@use 'abstract/function'as *;
+@use 'sass:map';
+@use 'abstract/function' as *;
 @use 'overrides' as *;
 
 // WARNING: Don't use this file for personal customisation! It's likely to change in future Steam pushes and your 
@@ -16,10 +17,10 @@ $purple    : #be71ff !default;
 $pink      : #ffb6dc !default;
 $red       : #ff6a6a !default;
 $orange    : #ffbc00 !default;
-$yellow    : #fff700 !default;
+$yellow    : #ffee00 !default;
 $green     : #7aee7a !default;
 
-$colors-primary: ("blue": $blue, "light-blue": $light-blue, "purple": $purple, "pink": $pink, "red": $red, "orange": $orange, "yellow": $yellow, "green": $green) !default;
+$colors-primary: ("blue": $blue, "mid-blue": $mid-blue, "light-blue": $light-blue, "purple": $purple, "pink": $pink, "red": $red, "orange": $orange, "yellow": $yellow, "green": $green) !default;
 
 $disabled    : #7e7e7e !default;
 $error       : #c21b1b !default;
@@ -29,6 +30,7 @@ $steam-online: #80a438 !default;
 
 $colors-state: ("disabled": $disabled, "error": $error, "warning": $warning, "positive": $positive, "steam-online": $steam-online) !default;
 
+$transparent: #00000000;
 $black   : #000000 !default;
 $white   : #ffffff !default;
 $gray-100: #0f0f0f !default;
@@ -41,7 +43,7 @@ $gray-700: #5f5f5f !default;
 $gray-800: #828282 !default;
 $gray-900: #c8c8c8 !default;
 
-$color-grays: ("white": $white, "gray-100": $gray-100, "gray-200": $gray-200, "gray-300": $gray-300, "gray-400": $gray-400, "gray-500": $gray-500, "gray-600": $gray-600, "gray-700": $gray-700, "gray-800": $gray-800, "gray-900": $gray-900, "black": $black) !default;
+$color-grays: ("transparent": $transparent, "white": $white, "gray-100": $gray-100, "gray-200": $gray-200, "gray-300": $gray-300, "gray-400": $gray-400, "gray-500": $gray-500, "gray-600": $gray-600, "gray-700": $gray-700, "gray-800": $gray-800, "gray-900": $gray-900, "black": $black) !default;
 
 $light-100: rgba(255, 255, 255, 0.05) !default;
 $light-200: rgba(255, 255, 255, 0.075) !default;
@@ -74,23 +76,34 @@ $color-dark-bgs: ("dark-100": $dark-100, "dark-200": $dark-200, "dark-300": $dar
 
 $gradients-primary: (
 	"blue"      : ($mid-blue, $blue),
-	"light-blue": ($light-blue, $mid-blue),
+	"light-blue": ($light-blue, $blue),
 	"purple"    : (#bc57ff, #a210c7),
 	"pink"      : (#fa7ca2, #ab4657),
 	"red"       : (#ff5757, #d31818),
 	"orange"    : (#ffbc00, #dc740d),
-	"yellow"    : (#f1ea04, #e4af02),
-	"green"     : (#5ee65e, #159856)
+	"yellow"    : (#f8de4a, #fca504),
+	"green"     : (#7aee7a, #159856)
 ) !default;
 
 // Saturation-Luminance-Alpha transform, scaling the underlying gradient
-$gradient-hover-transform         : 0%,   28%,  10% !default;
+$gradient-hover-transform         : 10%,   25%,  10% !default;
 $gradient-disabled-transform      : -70%, -20%, 20% !default;
 $gradient-selected-hover-transform: -10%, -10%, 0% !default;
 
 // ================
 // FONTS
-// ================
+// ================#
+
+$font-shadows: (
+	"black"  : 2px 3px 8px 2 rgba(0, 0, 0, 1),
+	"bold"   : 1px 3px 8px 2 rgba(0, 0, 0, 0.35),
+	"medium" : 0px 1px 6px 1 rgba(0, 0, 0, 1),
+	"regular": 0px 1px 3px 1 rgba(0, 0, 0, 1),
+	"light"  : 0px 1px 3px 1 rgba(0, 0, 0, 0.7),
+	"thin"   : 0px 1px 2px rgba(0, 0, 0, 0.5),
+	"outline": 0px 1px 2px 2 rgba(0, 0, 0, 1),
+	"none"   : 0 0 0 0 rgba(0, 0, 0, 0)
+) !default;
 
 $font-default-color : $white !default;
 $font-disabled-color: color.scale($font-default-color, $lightness: -20%) !default;
@@ -103,18 +116,18 @@ $font-monospace		 : 'Roboto Mono' !default;
 
 $font-header        : $font-secondary !default;
 $font-header-light  : $font-secondary-light !default;
-$font-header-shadow : 0px 1px 4px rgba(0, 0, 0, 1) !default;
+$font-header-shadow : map.get($font-shadows, "regular");
 $font-header-spacing: 1px !default;
 $font-header-sizes  : (
 	"h1": 64px,
 	"h2": 50px,
 	"h3": 42px,
 	"h4": 34px,
-	"h5": 28px,
+	"h5": 24px,
 	"h6": 20px) !default;
 
 $font        : $font-primary !default;
-$font-shadow : 0px 1px 2px rgba(0, 0, 0, 0.5) !default;
+$font-shadow : 0px 1px rgba(0, 0, 0, 0.9) !default; // This is a text-shadow-fast
 $font-spacing: 0px !default;
 $font-sizes  : (
 	"xxxl": 48px,
@@ -131,68 +144,72 @@ $font-weights: ( "thin", "light", "normal", "medium", "bold", "black" ) !default
 // LAYOUT / UTILITY
 // ================ 
 
-$separator-height         : 1px;
-$separator-vertical-margin: 8px;
-$seperator-radius         : 1px;
-$separator-background     : $light-200;
-$separator-box-shadow     : 0 0px 1px rgba(0, 0, 0, 0.25);
+$separator-height         : 1px !default;
+$separator-vertical-margin: 8px !default;
+$seperator-radius         : 1px !default;
+$separator-background     : $dark-100 !default;
+$separator-box-shadow     : 0 0px 1px rgba(0, 0, 0, 0.25) !default;
 
-$spacers: ( 4px, 6px, 8px, 16px, 32px );
+$spacers: ( 4px, 6px, 8px, 16px, 32px ) !default;
 
 // ================
 // BUTTON
 // ================
 
-$button-background               : gradient( linear, 0% 0%, 0% 100%, from( rgba(255, 255, 255, 0.075)), to( rgba(230, 230, 230, 0.075) ) ) !default;
-$button-background-disabled      : color.scale($light-200, $lightness: -20%, $alpha: 20%) !default;
-$button-background-hover         : color.scale($light-200, $lightness: 28%, $alpha: 10%) !default;
-$button-background-disabled-hover: color.scale($light-200, $lightness: -30%, $alpha: 20%) !default;
-
-$togglebutton-background-selected: color.scale($light-200, $lightness: 0%, $alpha: 30%) !default;
+$button-background-base          : $light-500 !default;
+$button-background               : gradient-vertical($button-background-base, color.scale($button-background-base, $lightness: -20%)) !default;
+$button-background-hover         : gradient-vertical(color.scale($button-background-base, $lightness: 0%,   $alpha: 15%), color.scale($button-background-base, $lightness: -20%, $alpha: 15%)) !default;
+$button-background-selected      : gradient-vertical(color.scale($button-background-base, $lightness: 0%,   $alpha: 20%), color.scale($button-background-base, $lightness: -20%, $alpha: 20%)) !default; // Used by Radiobuttons + Togglebuttons
+$button-background-disabled      : gradient-vertical(color.scale($button-background-base, $lightness: -50%, $alpha: 20%), color.scale($button-background-base, $lightness: -70%, $alpha: 20%)) !default;
+$button-background-disabled-hover: gradient-vertical(color.scale($button-background-base, $lightness: -30%, $alpha: 20%), color.scale($button-background-base, $lightness: -10%, $alpha: 20%)) !default;
 
 $button-text-color   : $font-default-color !default;
 $button-text-disabled: $font-disabled-color !default;
 $button-text-hover   : $button-text-color !default;
 
-$button-shadow: fill rgba(0, 0, 0, 0.3) 0px 1px 2px 0px !default;
+$button-shadow: fill rgba(0, 0, 0, 0.45) 0px 1px 1px 0px !default;
 $button-radius: 4px !default;
-$button-border: 0px solid white;
+$button-border: 0px solid rgba(61, 61, 61, 0.0) !default;
+$button-colored-border: 0px solid rgba(0, 0, 0, 0.1) !default;
 
-$button-height                    : 34px;
-$button-icon-padding              : 6px;
-$button-text-side-margin          : 10px;
-$button-icon-with-text-side-margin: 4px;
+$button-height                    : 34px !default;
+$button-icon-padding              : 6px !default;
+$button-text-side-margin          : 10px !default;
+$button-icon-with-text-side-margin: 4px !default;
 $button-icon-text-gap             : 0px !default;
 
 $button-use-header-font: true !default;
-$button-font-size      : 21px !default;
-$button-text-shadow    : 0 1px 2px 2 rgba(0, 0, 0, 0.4) !default;
+$button-font-size      : 20px !default;
+$button-light-header-font: false !default;
+$button-text-shadow    : 0 1px 2px 2 rgba(0, 0, 0, 0.35) !default;
 $button-icon-shadow    : 0 1px 2px 1 rgba(0, 0, 0, 1) !default;
 
 // ================
 // DROPDOWN
 // ================
 
-$dropdown-button-background: $light-200 !default;
+$dropdown-button-background: $button-background !default;
 
-$dropdown-button-background-disabled   : color.scale($dropdown-button-background, $lightness: -20%) !default;
-$dropdown-button-background-hover      : color.scale($dropdown-button-background, $lightness: -30%, $alpha: 0%) !default;
-$dropdown-button-background-menuvisible: color.scale($dropdown-button-background, $lightness: -80%, $alpha: 50%) !default;
+$dropdown-button-background-disabled   : $button-background-disabled !default;
+$dropdown-button-background-hover      : gradient-vertical(color.scale($button-background-base, $lightness: 0%,   $alpha: 15%), color.scale($button-background-base, $lightness: -20%, $alpha: 15%)) !default;
+$dropdown-button-background-menuvisible: gradient-vertical(color.scale($button-background-base, $lightness: -60%, $alpha: 50%), color.scale($button-background-base, $lightness: -65%, $alpha: 50%)) !default;
 
-$dropdown-button-icon-background       : $light-300 !default;
-$dropdown-button-icon-background-hover : color.scale($dropdown-button-icon-background, $lightness: -50%, $alpha: 30%) !default;
+$dropdown-button-icon-background       : $light-500 !default;
+$dropdown-button-icon-background-hover : color.scale($dropdown-button-icon-background, $lightness: 0%,   $alpha: 20%) !default;
 $dropdown-button-icon-background-hover2: color.scale($dropdown-button-icon-background, $lightness: -60%, $alpha: 30%) !default;
-$dropdown-button-icon-border           : 1px solid color.scale($light-100, $alpha: -50%) !default;
+$dropdown-button-icon-border           : 0px solid rgba(0, 0, 0, 0) !default;
 $dropdown-button-icon-shadow           : 0 0 2px 0 rgba(0, 0, 0, 0.3) !default;
 
-$dropdown-button-shadow: fill rgba(0, 0, 0, 0.3) 0px 1px 2px 0px !default;
+$dropdown-button-shadow: $button-shadow !default;
 $dropdown-button-radius: 4px !default;
+$dropdown-button-border: $button-border !default;
 
 $dropdown-button-use-header-font: true !default;
 $dropdown-button-font-size      : 21px !default;
 $dropdown-button-height         : 34px !default;
 $dropdown-button-color          : $font-default-color !default;
 $dropdown-button-color-disabled : $font-disabled-color !default;
+$dropdown-button-text-shadow: $button-text-shadow;
 
 $dropdown-button-padding   : 4px 12px !default;
 $dropdown-button-icon-width: 24px !default;
@@ -213,6 +230,7 @@ $dropdown-item-background-hover: $light-400 !default;
 // CONTEXTMENU
 // ================
 
+$contextmenu-width: 300px;
 $contextmenu-padding-y : $dropdown-menu-padding-y !default;
 $contextmenu-background: $dropdown-menu-background !default;
 $contextmenu-radius    : $dropdown-menu-radius !default;
@@ -247,15 +265,6 @@ $checkbox-width : 24px !default;
 $checkbox-gap: 8px !default;
 
 // ================
-// TOGGLEBUTTON
-// ================
-
-$togglebutton-background         : $light-200 !default;
-$togglebutton-background-disabled: color.scale($togglebutton-background, $lightness: -50%, $alpha: 20%) !default;
-$togglebutton-background-hover   : color.scale($togglebutton-background, $lightness: 0%, $alpha: 5%) !default;
-$togglebutton-background-selected: color.scale($togglebutton-background, $lightness: 0%, $alpha: 30%) !default;
-
-// ================
 // RADIOBUTTON
 // ================
 
@@ -273,6 +282,25 @@ $radiobutton-use-header-font: false !default;
 $radiobutton-gap            : 8px !default;
 $radiobutton-text-color     : $font-default-color !default;
 $radiobutton-text-disabled  : $font-disabled-color !default;
+
+// ================
+// TABS
+// ================
+
+$tab-background: gradient-vertical(rgba(235, 235, 235, 0.2), rgba(184, 184, 184, 0.2));
+$tab-background-hover: gradient-vertical(rgba(255, 255, 255, 0.25), rgba(204, 204, 204, 0.25));
+$tab-background-selected: gradient-vertical(rgba(255, 255, 255, 0.3), rgba(204, 204, 204, 0.3));
+$tab-background-disabled: rgba(168, 168, 168, 0.05);
+$tab-gap-width: 1px;
+$tab-gap-background: rgba(0, 0, 0, 0.15);
+$tab-border-bottom: 1px solid rgba(51, 51, 51, 0.7);
+$tab-border-bottom-hover: 1px solid rgba(105, 105, 105, 0.6);
+$tab-border-bottom-selected: 1px solid rgba(255, 255, 255, 0.6);
+$tab-shadow: fill 0 0 3px 0 rgba(0, 0, 0, 0.45);
+$tab-padding: 2px 8px 0px 8px;
+$tab-font-size: 20px;
+$tab-use-header-font:  true;
+$tab-light-header: true;
 
 // ================
 // TEXTENTRY
@@ -310,7 +338,7 @@ $slider-track-progress-horizontal: gradient-horizontal($blue, $mid-blue) !defaul
 $slider-track-progress-vertical  : gradient-vertical($blue, $mid-blue) !default;
 
 $slider-thumb-color      : $white !default;
-$slider-thumb-color-hover: color.scale($slider-thumb-color, $lightness: -25%) !default;
+$slider-thumb-color-hover: color.scale($slider-thumb-color, $lightness: -15%) !default;
 $slider-thumb-width      : 16px !default;
 $slider-thumb-radius     : 4px !default;
 $slider-thumb-shadow     : rgba(0, 0, 0, 0.3) 0px 1px 2px 0px !default;
@@ -349,8 +377,8 @@ $tooltip-margin    : 8px 8px;
 $tooltip-title-use-header-font: true !default;
 $tooltip-title-font-size      : 36px !default;
 $tooltip-text-use-header-font : false !default;
-$tooltip-text-font-size       : 16px !default;
-$tooltip-image-size           : 48px !default;
+$tooltip-text-font-size       : 18px !default;
+$tooltip-image-size           : 24px !default;
 
 
 // ================
@@ -367,7 +395,7 @@ $popup-radius    : 4px !default;
 $popup-title-use-header-font: true !default;
 $popup-title-font-size      : 48px !default;
 $popup-text-use-header-font : false !default;
-$popup-text-font-size       : 20px !default;
+$popup-text-font-size       : 18px !default;
 $popup-button-font-size     : 24px !default;
 
 // ================

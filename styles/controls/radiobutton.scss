@@ -8,13 +8,13 @@
 	transition-property: background-color;
 	transition-duration: 0.05s;
 	transition-timing-function: linear;
-	
+
 	.RadioBox {
 		visibility: collapse;
 	}
 
 	&:selected {
-		background-color: $togglebutton-background-selected;
+		background-color: $button-background-selected;
 	}
 }
 
@@ -22,6 +22,7 @@
 	.radiobutton--#{$name} {
 		&:selected {
 			background-color: function.gradient-vertical(list.nth($colors, 1), list.nth($colors, 2));
+			border: $button-colored-border;
 		}
 	}
 }
@@ -42,7 +43,7 @@
 		border-radius: $radiobox-radius;
 		background-color: gradient(radial, 50% 50%, 0% 0%, 50% 50%, from($radiobutton-background), to($radiobutton-background));
 		box-shadow: $radiobox-shadow;
-		
+
 		transition-property: background-color;
 		transition-duration: 0.2s;
 		transition-timing-function: ease-in-out;
@@ -65,10 +66,13 @@
 	&:disabled &__text {
 		color: $radiobutton-text-disabled;
 	}
-	
+
 	&:selected .RadioBox {
 		background-color: gradient(
-			radial, 50% 50%, 0% 0%, 50% 50%,
+			radial,
+			50% 50%,
+			0% 0%,
+			50% 50%,
 			from($radiobutton-background-selected),
 			color-stop(0.4, $radiobutton-background-selected),
 			color-stop(0.45, $radiobutton-background),
@@ -78,11 +82,75 @@
 
 	&:disabled:selected .RadioBox {
 		background-color: gradient(
-			radial, 50% 50%, 0% 0%, 50% 50%,
+			radial,
+			50% 50%,
+			0% 0%,
+			50% 50%,
 			from($radiobutton-background-disabled),
 			color-stop(0.4, $radiobutton-background-disabled),
 			color-stop(0.45, $radiobutton-background-disabled-selected),
 			to($radiobutton-background-disabled-selected)
 		);
+	}
+}
+
+.tab {
+	text-align: center;
+	background-color: $tab-background;
+
+	box-shadow: $tab-shadow;
+	border-bottom: $tab-border-bottom;
+
+	padding: 2px 8px 0px 8px;
+
+	transition-property: background-color, border;
+	transition-duration: 0.1s;
+	transition-timing-function: ease-in-out;
+
+	&:hover {
+		background-color: $tab-background-hover;
+		border-bottom: $tab-border-bottom-hover;
+	}
+
+	&:selected {
+		background-color: $tab-background-selected;
+		border-bottom: $tab-border-bottom-selected;
+	}
+
+	&:disabled {
+		background-color: $tab-background-disabled;
+	}
+
+	$root: &;
+
+	&__gap {
+		width: $tab-gap-width;
+		height: 100%;
+		background-color: $tab-gap-background;
+		border-bottom: $tab-border-bottom;
+	}
+
+	&__text {
+		@include mixin.font-styles($use-header: $tab-use-header-font, $light-header: $tab-light-header);
+		font-size: $tab-font-size;
+		vertical-align: center;
+		horizontal-align: center;
+		margin: 0px;
+		padding: 4px 10px;
+		color: rgb(236, 236, 236);
+		transition: color 0.1s ease-in-out 0s;
+
+		#{$root}:hover &,
+		#{$root}:selected & {
+			color: rgb(255, 255, 255);
+		}
+
+		#{$root}:disabled & {
+			color: rgb(163, 163, 163);
+		}
+	}
+
+	.RadioBox {
+		visibility: collapse;
 	}
 }

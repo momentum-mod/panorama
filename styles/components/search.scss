@@ -7,20 +7,20 @@
 	min-width: 200px;
 	height: $button-height;
 	padding: 4px 0;
-	background-color: rgba(255, 255, 255, 0.1);
+	background-color: rgba(0, 0, 0, 0.5);
 	border-radius: 4px;
-	box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 3px 0px;
+	box-shadow: fill rgba(255, 255, 255, 0.01) 0px 0px 2px 0px;
 
 	transition-property: background-color, border;
 	transition-duration: 0.2s;
 
 	&:hover {
-		background-color: rgba(255, 255, 255, 0.2);
+		background-color: rgba(0, 0, 0, 0.7);
 	}
 
 	&__icon {
-		width: height-percentage(100%);
 		height: fill-parent-flow(1.0);
+		width: height-percentage(100%);
 		opacity: 0.8;
 		vertical-align: middle;
 		margin: 0 4px;
@@ -33,7 +33,7 @@
 	}
 
 	&__textentry {
-		width: 100%;
+		width: fill-parent-flow(1.0);
 		color: rgba(255, 255, 255, 1);
 		border: 0px;
 		box-shadow: none;
@@ -59,6 +59,7 @@
 		width: 24px;
 		height: 24px;
 		margin-right: 8px;
+		padding: 3px;
 
 		horizontal-align: right;
 		vertical-align: middle;

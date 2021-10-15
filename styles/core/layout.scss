@@ -19,7 +19,6 @@
 	height: $separator-height;
 	margin: $separator-vertical-margin 0;
 	border-radius: $seperator-radius;
-	-s2-mix-blend-mode: screen;
 	background-color: $separator-background;
 	box-shadow: $separator-box-shadow;
 }
@@ -30,7 +29,6 @@
 	height: 100%;
 	margin: 0 $separator-vertical-margin;
 	border-radius: $seperator-radius;
-	-s2-mix-blend-mode: screen;
 	background-color: $separator-background;
 	box-shadow: $separator-box-shadow;
 }

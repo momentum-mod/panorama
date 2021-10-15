@@ -2,24 +2,21 @@
 @use 'function';
 @use 'sass:map';
 @use 'sass:list';
+@use 'sass:color';
 
 @mixin font-styles($use-header: false, $light-header: false) {
 	@if $use-header {
 		@if $light-header {
 			font-family: $font-header-light;
-		}
-
-		@else {
-			font-family: $font-header
+		} @else {
+			font-family: $font-header;
 		}
 
 		text-shadow: $font-header-shadow;
 		letter-spacing: $font-header-spacing;
-	}
-
-	@else {
+	} @else {
 		font-family: $font;
-		text-shadow: $font-shadow;
+		text-shadow-fast: $font-shadow;
 		letter-spacing: $font-spacing;
 	}
 
@@ -40,6 +37,38 @@
 			background-color: function.gradient-horizontal(list.nth(map.get($gradients-primary, $color), 1), list.nth(map.get($gradients-primary, $color), 2));
 		}
 	} @else {
-		@error "Gradient #{$color} not found!"
+		@error "Gradient #{$color} not found!";
+	}
+}
+
+@mixin button-gradient($color: 'blue') {
+	@if (map.has-key($gradients-primary, $color)) {
+		$colors: map.get($gradients-primary, $color);
+		background-color: function.gradient-vertical(list.nth($colors, 1), list.nth($colors, 2));
+		border: $button-colored-border;
+
+		&:hover {
+			background-color: function.gradient-vertical(
+				color.scale(
+					list.nth($colors, 1),
+					$saturation: list.nth($gradient-hover-transform, 1),
+					$lightness: list.nth($gradient-hover-transform, 2),
+					$alpha: list.nth($gradient-hover-transform, 3)
+				),
+				color.scale(
+					list.nth($colors, 2),
+					$saturation: list.nth($gradient-hover-transform, 1),
+					$lightness: list.nth($gradient-hover-transform, 2),
+					$alpha: list.nth($gradient-hover-transform, 3)
+				)
+			);
+		}
+
+		&:disabled,
+		&:disabled:hover {
+			background-color: $button-background-disabled-hover;
+		}
+	} @else {
+		@error "Gradient #{$color} not found!";
 	}
 }

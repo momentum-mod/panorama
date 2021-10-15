@@ -29,6 +29,12 @@
 	}
 }
 
+@each $name, $strength in $font-shadows {
+	.text-shadow-#{$name} {
+		text-shadow: $strength;
+	}
+}
+
 // This is a hack - Bebas Neue Light comes from an older version of Bebas Neue (see https://github.com/dharmatype/Bebas-Neue)
 // so we call the different font-family rather than use font-weight.
 .text-header-light {

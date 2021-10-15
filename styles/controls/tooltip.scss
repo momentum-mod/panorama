@@ -51,15 +51,15 @@
 		horizontal-align: left;
 		vertical-align: middle;
 		@include mixin.font-styles($use-header: $tooltip-text-use-header-font);
-	font-size: $tooltip-text-font-size;
+		font-size: $tooltip-text-font-size;
 	}
 
 	&__image {
 		horizontal-align: left;
 		vertical-align: center;
-		height: $tooltip-text-font-size;
+		height: $tooltip-image-size;
 		width: height-percentage(100%);
-		margin-right: 8px;
+		margin-right: 12px;
 	}
 
 	$this: &;
@@ -70,4 +70,8 @@
 			margin: 0;
 		}
 	}
+}
+
+TooltipPanel {
+	tooltip-position: bottom;
 }

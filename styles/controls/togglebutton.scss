@@ -7,15 +7,19 @@
 
 .togglebutton {
 	transition-property: background-color;
-	transition-duration: 0.05s;
-	transition-timing-function: linear;
+	transition-duration: 0.1s;
+	transition-timing-function: ease-in;
 
 	.TickBox {
 		visibility: collapse;
 	}
 
+	&:hover {
+		background-color: $button-background-hover;
+	}
+
 	&:selected {
-		background-color: $togglebutton-background-selected;
+		background-color: $button-background-selected;
 	}
 }
 
@@ -23,6 +27,14 @@
 	.togglebutton--#{$name} {
 		&:selected {
 			background-color: function.gradient-vertical(list.nth($colors, 1), list.nth($colors, 2));
+			border: $button-colored-border;
+
+			&:hover {
+				background-color: function.gradient-vertical(
+					color.scale(list.nth($colors, 1), $saturation: list.nth($gradient-hover-transform, 1), $lightness: list.nth($gradient-hover-transform, 2), $alpha: list.nth($gradient-hover-transform, 3)),
+					color.scale(list.nth($colors, 2), $saturation: list.nth($gradient-hover-transform, 1), $lightness: list.nth($gradient-hover-transform, 2), $alpha: list.nth($gradient-hover-transform, 3))
+				);
+			}
 		}
 	}
 }

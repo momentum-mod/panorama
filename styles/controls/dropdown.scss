@@ -6,9 +6,10 @@
 // Dropdown behaviour is affected by complex C++ code and requires a lot of inheritance for styling. Yuck!
 .dropdown {
 	height: $dropdown-button-height;
-	flow-children: right;
+	flow-children: left;
 	background-color: $dropdown-button-background;
 	border-radius: $dropdown-button-radius;
+	border: $dropdown-button-border;
 	box-shadow: $dropdown-button-shadow;
 	vertical-align: center;
 	horizontal-align: right;
@@ -68,6 +69,7 @@
 		vertical-align: center;
 		padding: $dropdown-button-padding;
 		vertical-align: center;
+		text-shadow: $dropdown-button-text-shadow;
 	}
 
 	&:disabled Label {
