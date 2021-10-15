@@ -46,6 +46,11 @@ class MainMenuController {
 	}
 
 	static navigateToTab(tab, xmlName, hasBlur = true) {
+		if (tab === 'MapSelection') {
+			$.GetContextPanel().FindChildTraverse('MainMenuBackgroundMapSelectorImage').RemoveClass('mapselector__background--hidden');
+		} else {
+			$.GetContextPanel().FindChildTraverse('MainMenuBackgroundMapSelectorImage').AddClass('mapselector__background--hidden');
+		}
 		MainMenuController.contentBlurPanel.visible = hasBlur;
 
 		if ( !MainMenuController.checkTabCanBeOpenedRightNow( tab ) ) {
@@ -213,6 +218,9 @@ class MainMenuController {
 		}
 	}
 
+	static hideMapSelectorBackground() {
+		$.GetContextPanel().FindChildTraverse('MainMenuBackgroundMapSelectorImage').AddClass('mapselector__background--hidden');
+	}
 
 	static onLoadMapSelector() {
 		$.GetContextPanel().FindChildTraverse('MainMenuBackgroundBlur')?.AddBlurPanel($.GetContextPanel().FindChildTraverse('MapSelectorLeft'));
@@ -225,6 +233,7 @@ class MainMenuController {
 
 	static onHomeButtonPressed() {
 		MainMenuController.onHideContentPanel();
+		MainMenuController.hideMapSelectorBackground();
 	}
 
 	static onQuitButtonPressed() {

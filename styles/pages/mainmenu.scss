@@ -1,6 +1,8 @@
 @use '../config' as *;
 @use '../abstract/function';
 
+$page-transition-duration: 0.15s;
+$page-transition-timing-func: ease-in-out;
 #TooltipManager,
 #ContextMenuManager,
 #PopupManager,
@@ -86,9 +88,6 @@
 	&__contentwrapper {
 		width: fill-parent-flow(1);
 		height: 100%;
-		transition-property: opacity;
-		transition-duration: .25s;
-		transition-timing-function: ease-in-out;
 	}
 
 	&__homecontent,
@@ -97,14 +96,11 @@
 		height: 1080px;
 		opacity: 1;
 		transition-property: opacity;
-		transition-duration: .25s;
-		transition-timing-function: ease-in-out;
+		transition-duration: $page-transition-duration;
+		transition-timing-function: $page-transition-timing-func;
 
 		&--hidden {
 			opacity: 0;
-			transition-property: opacity;
-			transition-duration: .25s;
-			transition-timing-function: ease-in-out;
 		}
 	}
 
@@ -128,7 +124,7 @@
 		padding: 30px (100px + $rightnav-width) 30px 100px;
 		
 		transition-property: opacity;
-		transition-duration: .25s;
+		transition-duration: .0s;
 		transition-timing-function: ease-in-out;
 	}
 }
@@ -385,6 +381,20 @@
 			transition: opacity 0.1s ease-in-out 0s;
 			img-shadow: 0 0 2px 1 rgba(0, 0, 0, 1);
 		}
+	}
+}
+
+.mapselector__background {
+	width: 1920px;
+	height: 1080px;
+	transition-property: opacity;
+	transition-duration: $page-transition-duration;
+	transition-timing-function: $page-transition-timing-func;
+	opacity: 1;
+	z-index: 1;
+
+	&--hidden {
+		opacity: 0;
 	}
 }
 
