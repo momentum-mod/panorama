@@ -26,4 +26,5 @@
 	$.DefineEvent('RefreshLobbyList', 0, '', 'Send a refresh request for the lobby list');
 	$.DefineEvent('OnLobbyButtonImageChange', 1);
 	$.DefineEvent('LoadMapSelector', 0);
+	$.DefineEvent('MapSelector_ShowConfirmCancelDownload', 1);
 })();
