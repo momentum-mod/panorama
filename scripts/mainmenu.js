@@ -101,13 +101,13 @@ class MainMenuController {
 			// If the tab exists then hide it
 			if (MainMenuController.activeTab) {
 				const panelToHide = $.GetContextPanel().FindChildInLayoutFile(MainMenuController.activeTab);
-				panelToHide.AddClass('mainmenu__content--hidden');
+				panelToHide.AddClass('mainmenu__page-container--hidden');
 			}
 
 			//Show selected tab
 			MainMenuController.activeTab = tab;
 			const activePanel = $.GetContextPanel().FindChildInLayoutFile(tab);
-			activePanel.RemoveClass('mainmenu__content--hidden');
+			activePanel.RemoveClass('mainmenu__page-container--hidden');
 
 			// Force a reload of any resources since we're about to display the panel
 			activePanel.visible = true;
@@ -118,22 +118,16 @@ class MainMenuController {
 	}
 
 	static showContentPanel() {
-		MainMenuController.contentPanel.RemoveClass('mainmenu__content--hidden');
-			
-		// $.GetContextPanel().FindChildTraverse('MainMenuModel').AddClass('homecontent__modelpanel--hidden');
-
-		$.GetContextPanel().FindChildTraverse("MainMenuDrawerPanel")?.AddClass("drawer--content-panel-open");
+		MainMenuController.contentPanel.RemoveClass('mainmenu__page-container--hidden');
 
 		$.DispatchEvent('RetractDrawer');
 		$.DispatchEvent('ShowContentPanel');
 
-		$.GetContextPanel().FindChildTraverse('HomeContent').AddClass('homecontent--hidden');
+		$.GetContextPanel().FindChildTraverse('HomeContent').AddClass('home--hidden');
 	}
 
 	static onHideContentPanel() {
-		MainMenuController.contentPanel.AddClass('mainmenu__content--hidden');
-
-		$.GetContextPanel().FindChildTraverse("MainMenuDrawerPanel")?.RemoveClass("drawer--content-panel-open");
+		MainMenuController.contentPanel.AddClass('mainmenu__page-container--hidden');
 
 		// Uncheck the active button in the main menu navbar.
 		const elActiveNavBarBtn = MainMenuController.getActiveNavBarButton();
@@ -144,12 +138,12 @@ class MainMenuController {
 		// If the tab exists then hide it
 		if (MainMenuController.activeTab) {
 			const panelToHide = $.GetContextPanel().FindChildInLayoutFile(MainMenuController.activeTab);
-			panelToHide.AddClass('mainmenu__content--hidden');
+			panelToHide.AddClass('mainmenu__page-container--hidden');
 		}
 
 		MainMenuController.activeTab = '';
 
-		$.GetContextPanel().FindChildTraverse('HomeContent').RemoveClass('homecontent--hidden');
+		$.GetContextPanel().FindChildTraverse('HomeContent').RemoveClass('home--hidden');
 	}
 
 	static getActiveNavBarButton() {

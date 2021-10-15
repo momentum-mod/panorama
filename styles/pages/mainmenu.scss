@@ -3,6 +3,7 @@
 
 $page-transition-duration: 0.15s;
 $page-transition-timing-func: ease-in-out;
+
 #TooltipManager,
 #ContextMenuManager,
 #PopupManager,
@@ -32,33 +33,43 @@ $page-transition-timing-func: ease-in-out;
 	visibility: visible;
 }
 
+$topnav-height: 100px;
+$rightnav-width: 50px;
+$drawer-width: 768px;
+
 .mainmenu {
 	width: 100%;
 	height: 100%;
 
-	&__background {
+	&__container {
 		width: 1920px;
 		height: 1080px;
 	}
 
-	&__blur {
+	&__background {
 		width: 100%;
 		height: 100%;
-		blur: fastgaussian(4, 4, 3);
 	}
 
-	&__strongblur {
-		// Let this panel clip outside the page slightly so the blur applies all the way to the edges
+	&__background-blur {
+		width: 100%;
+		height: 100%;
+		blur: fastgaussian(2, 2, 4);
+	}
+
+	&__content-blur {
+		// Let this panel clip outside the page so the blur applies all the way to the edges
+		// mainmenu__container will constrain all children to 1920x1080
 		width: 110%;
 		height: 110%;
 		overflow: noclip;
 		blur: fastgaussian(8, 8, 5);
 	}
 	
-	&__pauseblur {
+	&__pause-blur {
 		width: 100%;
 		height: 100%;
-		blur: fastgaussian(3, 3, 3);
+		blur: fastgaussian(2, 2, 3);
 	}
 
 	&__movie {
@@ -77,7 +88,7 @@ $page-transition-timing-func: ease-in-out;
 			overflow: noclip;
 		}
 
-		.AspectRatio21x9 {
+	.AspectRatio21x9 {
 			width: 2580px;
 			height: 1080px;
 			transform: scaleY(1.3) translateY(-15%);
@@ -85,15 +96,16 @@ $page-transition-timing-func: ease-in-out;
 		}
 	}
 
-	&__contentwrapper {
+	&__content {
 		width: fill-parent-flow(1);
-		height: 100%;
+		height: fill-parent-flow(1);
+		margin-top: $topnav-height;
 	}
 
-	&__homecontent,
-	&__content {
-		width: 1920px;
-		height: 1080px;
+	&__home-container,
+	&__page-container {
+		width: 100%;
+		height: 100%;
 		opacity: 1;
 		transition-property: opacity;
 		transition-duration: $page-transition-duration;
@@ -105,23 +117,23 @@ $page-transition-timing-func: ease-in-out;
 	}
 
 	// BaseBlurTarget needs a translucent background to draw on/over/behind/whatever for some reason
-	&__pausecontentblur {
+	&__pause-content-blur {
 		width: 100%;
 		height: 100%;
 		background-color: rgba(0, 0, 0, 0.005);
 	}
 
-	&__contentblur {
+	&__page-blur {
 		width: 100%;
 		height: 100%;
 		background-color: rgba(0, 0, 0, 0.875);
 	}
 
-	&__pagecontent {
+	&__page {
 		flow-children: down;
 		width: 100%;
 		height: 100%;
-		padding: 30px (100px + $rightnav-width) 30px 100px;
+		padding: 30px (30px + $rightnav-width) 30px 30px;
 		
 		transition-property: opacity;
 		transition-duration: .0s;
@@ -130,16 +142,11 @@ $page-transition-timing-func: ease-in-out;
 }
 
 .topnav {
-	height: 100px;
+	flow-children: right;
+	height: $topnav-height;
 	width: 100%;
-	background-color: function.gradient-vertical(rgba(95, 95, 95, 0.3), rgba(54, 54, 54, 0.3));
-
-	&__wrapper {
-		width: 100%;
-		height: 100%;
-		flow-children: right;
-		//box-shadow: 0 0 24px rgba(0, 0, 0, 1);
-	}
+	background-color: function.gradient-vertical(rgba(51, 51, 51, 0.3), rgba(20, 20, 20, 0.3));
+	z-index: 1;
 
 	&__home {
 		height: 100%;
@@ -178,14 +185,14 @@ $page-transition-timing-func: ease-in-out;
 		& .RadioBox {
 			visibility: collapse;
 		}
-
+		
 		&-image {
 			width: height-percentage(100%);
 			height: 100%;
 			vertical-align: middle;
 			color: white;
-			opacity: 0.75;
-			// img-shadow: 0px 0px 5px 0 rgba(0, 0, 0, 1);
+			opacity: 0.85;
+			img-shadow: 0px 0px 5px 0 rgba(0, 0, 0, 0.4);
 			transition-property: opacity;
 			transition-duration: 0.1s;
 			transition-timing-function: ease-in;
@@ -200,16 +207,16 @@ $page-transition-timing-func: ease-in-out;
 				opacity: 1;
 			}
 		}
-
+		
 		&:selected {
 			background-color: gradient(radial, 50% 100%, 0% 0%, 100% 100%, from(rgba(88, 88, 88, 0.7)), to(rgba(20, 20, 20, 0.7)));
 			box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.3);
-
+			
 			#{$this}-image {
 				opacity: 1;
 			}
 		}
-
+		
 		&:selected:hover {
 			background-color: gradient(radial, 50% 100%, 0% 0%, 100% 100%, from(rgba(70, 70, 70, 0.8)), to(rgba(20, 20, 20, 0.8)));
 		}
@@ -223,13 +230,22 @@ $page-transition-timing-func: ease-in-out;
 			sound: "UIPanorama.ButtonPress";
 		}
 	}
+
+	&__shadow {
+		z-index: 1;
+		margin-top: $topnav-height;
+		width: 100%;
+		height: 24px;
+		opacity: 0.8;
+		background-color: gradient(linear, 0% 100%, 0% 0%, from(rgba(0, 0, 0, 0)), color-stop(0.5, rgba(0, 0, 0, 0.275)), to(rgba(0, 0, 0, 0.8)));
+	}
 }
 
 .rightnav {
-	flow-children: down;
-	horizontal-align: right;
 	width: $rightnav-width;
 	height: 100%;
+	flow-children: down;
+	horizontal-align: right;
 	background-color: rgba(0, 0, 0, 0.5);
 
 	$root: &;
@@ -266,9 +282,55 @@ $page-transition-timing-func: ease-in-out;
 	&__drawerbutton {
 		height: 100%;
 	}
+
+	&__shadow {
+		z-index: 1;
+		width: 24px;
+		height: 100%;
+		border-right: 1px solid rgba(0, 0, 0, 0.12);
+		opacity: 0.8;
+		background-color: gradient(linear, 0% 0%, 100% 0%, from(rgba(0, 0, 0, 0)), color-stop(0.5, rgba(0, 0, 0, 0.275)), to(rgba(0, 0, 0, 0.7)));
+		transition: border-right 0.35s ease-out 0s;
+	}
 }
 
-.homecontent {
+
+.drawer {
+	z-index: 1;
+	flow-children: right;
+	horizontal-align: right;
+	height: 100%;
+	margin-top: $topnav-height;
+
+	transform: translateX($drawer-width);
+	transition: transform 0.35s ease-in-out 0s;
+
+	&__content {
+		width: $drawer-width;
+		height: 100%;
+		background-color: rgba(27, 27, 27, 0.7);
+	}
+	
+	$this: &;
+	&--expanded {
+		transform: translateX(0);
+
+		#{$this}__rightnav {
+			background-color: rgba(32, 32, 32, 0.8);
+		}
+
+		#{$this}__left-shadow {
+			border-right: 1px solid rgba(0, 0, 0, 0.2);
+			background-color: gradient(linear, 0% 0%, 100% 0%, from(rgba(0, 0, 0, 0)), color-stop(0.5, rgba(0, 0, 0, 0.275)), to(rgba(0, 0, 0, 0.8)));
+		}
+
+		.rightnav__drawerbutton {
+			transform: rotateX(180deg) rotateZ(180deg);
+		}
+	}
+}
+
+.home {
 	&__newspanel {
 		width: 840px;
 		height: 500px;
@@ -331,7 +393,7 @@ $page-transition-timing-func: ease-in-out;
 
 	&__latest-description {
 		height: fill-parent-flow(1);
-		padding-bottom: 4px;
+		padding-bottom: 0px;
 		text-overflow: ellipsis;
 		font-size: 14px;
 		padding-right: 16px;

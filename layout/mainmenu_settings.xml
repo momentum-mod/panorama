@@ -13,7 +13,7 @@
 		
 	</scripts>
 	
-	<Panel class="mainmenu__pagecontent" useglobalcontext="true">
+	<Panel class="mainmenu__page" useglobalcontext="true">
 		
 		<Panel class="settings-header full-width">
 			<Label class="text-h2" text="Settings"/>

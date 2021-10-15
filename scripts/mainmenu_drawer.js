@@ -48,7 +48,7 @@ class Drawer {
 
 	static extend() {
 		$.GetContextPanel().FindChildTraverse('MainMenuDrawerPanel').AddClass('drawer--expanded');
-		$.GetContextPanel().FindChildTraverse('MainMenuModel')?.AddClass('homecontent__modelpanel--hidden');
+		$.GetContextPanel().FindChildTraverse('MainMenuModel')?.AddClass('home__modelpanel--hidden');
 
 		Drawer.isExtended = true;
 
@@ -57,7 +57,7 @@ class Drawer {
 
 	static retract() {
 		$.GetContextPanel().FindChildTraverse('MainMenuDrawerPanel').RemoveClass('drawer--expanded');
-		$.GetContextPanel().FindChildTraverse('MainMenuModel')?.RemoveClass('homecontent__modelpanel--hidden');
+		$.GetContextPanel().FindChildTraverse('MainMenuModel')?.RemoveClass('home__modelpanel--hidden');
 
 		Drawer.isExtended = false;
 	}

@@ -1,63 +1,6 @@
 @use '../config' as *;
 @use '../abstract/mixin';
 
-$width: 768px;
-
-.drawer {
-	flow-children: right;
-	horizontal-align: right;
-	height: 100%;
-	
-	transform: translateX($width);
-	transition: transform 0.35s ease-in-out 0s;
-	
-	&__left-shadow {
-		width: 24px;
-		height: 100%;
-		border-right: 1px solid rgba(0, 0, 0, 0.12);
-		background-color: gradient(linear, 0% 0%, 100% 0%, from(rgba(0, 0, 0, 0)), color-stop(0.5, rgba(0, 0, 0, 0.275)), to(rgba(0, 0, 0, 0.7)));
-		transition: border-right 0.35s ease-out 0s;
-	}
-
-	&__rightnav {
-		// transition: background-color 0.35s linear 0s;
-	}
-
-	&__content {
-		width: $width;
-		height: 100%;
-		background-color: rgba(27, 27, 27, 0.7);
-	}
-	
-	$this: &;
-	&--expanded {
-		transform: translateX(0);
-
-		#{$this}__rightnav {
-			background-color: rgba(32, 32, 32, 0.8);
-		}
-
-		#{$this}__left-shadow {
-			border-right: 1px solid rgba(0, 0, 0, 0.2);
-			background-color: gradient(linear, 0% 0%, 100% 0%, from(rgba(0, 0, 0, 0)), color-stop(0.5, rgba(0, 0, 0, 0.275)), to(rgba(0, 0, 0, 0.8)));
-		}
-
-		.rightnav__drawerbutton {
-			transform: rotateX(180deg) rotateZ(180deg);
-		}
-	}
-
-	&--content-panel-open {
-		#{$this}__content {
-			background-color: rgb(53, 53, 53)
-		}
-
-		#{$this}__rightnav {
-			background-color: rgb(51, 51, 51);
-		}
-	}
-}
-
 .drawer-lobby {
 	width: 100%;
 	height: 100%;

@@ -3,7 +3,7 @@
 		<include src="file://{resources}/styles/main.scss" />
 		<include src="file://{resources}/styles/pages/mainmenu.scss" />
 	</styles>
-	<Panel class="mainmenu__pagecontent">
-		<MomentumMapSelect class="full-width full-height"/>
+	<Panel class="mainmenu__page">
+		<MomentumMapSelect class="full"/>
 	</Panel>
 </root>
