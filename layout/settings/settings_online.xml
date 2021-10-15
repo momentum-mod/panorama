@@ -61,9 +61,9 @@
 			
 			<Panel id="SettingsPlayerGhostSettings" class="settings-group">
 				<Label class="text-h2" text="#MOM_Settings_Title_Online_Player" />
-				<Panel class="full-width left-right-flow">
+				<Panel class="full-width flow-right">
 					<ModelPanel id="GhostModelPreview" src="models/player/player_shape_base.mdl" mouse_rotate="true" antialias="true" />
-					<Panel class="fill-width top-bottom-flow">
+					<Panel class="fill-width flow-down">
 						<ChaosSettingsEnumDropDown text="#MOM_Settings_Ghost_Body"
 													convar="mom_ghost_bodygroup"
 													oninputsubmit="SettingsMenuShared.onlineSettingsUpdateModel()">

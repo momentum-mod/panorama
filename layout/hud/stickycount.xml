@@ -8,6 +8,6 @@
 	</scripts>
 
 	<MomHudStickyCharge class="horizontal-align-center">
-		<Panel id="StickyCountContainer" class="sticky-count horizontal-align-center left-right-flow" />
+		<Panel id="StickyCountContainer" class="sticky-count horizontal-align-center flow-right" />
 	</MomHudStickyCharge>
 </root>

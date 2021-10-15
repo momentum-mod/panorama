@@ -10,7 +10,7 @@
 	</scripts>
 
 	<Panel class="mainmenu__pagecontent" useglobalcontext="false">
-		<Panel id="ControlsLibraryPanel" class="top-bottom-flow width height overflow-vscroll">
+		<Panel id="ControlsLibraryPanel" class="flow-down width height overflow-vscroll">
 
 			<Label class="text-h1 mt-3" text="Core" />
 

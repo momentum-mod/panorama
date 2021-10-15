@@ -12,7 +12,7 @@
 		<Image id="BackgroundImageDefault" class="full" src="file://{images}/bg_00.vtf" />
 		<Image id="BackgroundImage" class="full hide" scaling="stretch-to-cover-preserve-aspect" />
 
-		<Panel class="full top-bottom-flow">
+		<Panel class="full flow-down">
 			<Panel class="loadingscreen__details">
 				<Panel class="loadingscreen__left-details">
 					<Label id="MapName" class="text-h1" text="{s:mapname}" />

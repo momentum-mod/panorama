@@ -17,7 +17,7 @@
 				<Label text="#MOM_Settings_Title_Video_Render" />
 			</RadioButton>
 			
-			<Panel class="horizontal-align-right left-right-flow">
+			<Panel class="horizontal-align-right flow-right">
 				<Button id="BtnApplyVideoSettings" onactivate='SettingsMenuShared.videoSettingsApplyChanges()'>
 					<Label text="#MOM_Settings_Apply" />
 				</Button>

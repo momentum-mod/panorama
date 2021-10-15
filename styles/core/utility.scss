@@ -131,7 +131,7 @@ $s: list.join((0px), $spacers);
 }
 
 .horizontal-align-left {
-	horizontal-align: Left;
+	horizontal-align: left;
 }
 
 .vertical-align-center {
@@ -174,23 +174,23 @@ $s: list.join((0px), $spacers);
 // FLOW
 // ================
 
-.left-right-flow {
+.flow-right {
 	flow-children: right;
 }
 
-.left-right-flow-wrap {
+.flow-right-wrap {
 	flow-children: right-wrap;
 }
 
-.right-left-flow {
+.flow-left {
 	flow-children: left;
 }
 
-.top-bottom-flow {
+.flow-down {
 	flow-children: down;
 }
 
-.bottom-top-flow {
+.flow-top {
 	flow-children: up;
 }
 
