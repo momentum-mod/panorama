@@ -43,6 +43,9 @@
 	}
 
 	&__percentage-label {
+		// Right-aligned items sometimes don't adjust their width properly,
+		// set a static width that'll always be large enough to fit the text
+		width: 300px;
 		vertical-align: bottom;
 		horizontal-align: right;
 		text-align: right;
