@@ -168,7 +168,6 @@ class SettingsMenuShared {
 	static onlineSettingsUpdateModel()
 	{
 		const color = GameInterfaceAPI.GetSettingColor("mom_ghost_color");
-		$.Msg(color);
 		const bodygroup = GameInterfaceAPI.GetSettingInt("mom_ghost_bodygroup");
 		
 		const onlineSettingsPanel = $('#OnlineSettings');

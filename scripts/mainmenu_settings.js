@@ -105,7 +105,7 @@ class MainMenuSettings {
 
     static isSettingsPanel ( panel )
     {
-        return (['ChaosSettingsEnum', 'ChaosSettingsSlider', 'ChaosSettingsEnumDropDown', 'ChaosSettingsKeyBinder', 'ChaosSettingsToggle']
+        return (['ChaosSettingsEnum', 'ChaosSettingsSlider', 'ChaosSettingsEnumDropDown', 'ChaosSettingsKeyBinder', 'ChaosSettingsToggle', 'ConVarColorDisplay']
             .includes( panel.paneltype )); 
     }
     

@@ -84,6 +84,7 @@ class SettingsMenuSearch {
 							parent.paneltype === 'ChaosSettingsSlider' ||
 							parent.paneltype === 'ChaosSettingsEnumDropdown' ||
 							parent.paneltype === 'ChaosSettingsKeyBinder' ||
+							parent.paneltype === 'ConVarColorDisplay' ||
 							parent.parentPanel === 'ChaosSettingsToggle') ? parent : parent.GetParent();
 						arrMatches.push({
 							panel: panel,

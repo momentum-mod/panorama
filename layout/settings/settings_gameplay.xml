@@ -19,6 +19,9 @@
 			<RadioButton group="SettingsInputNavBar" onactivate='SettingsMenuShared.scrollToId("SettingsRunSafeguards")'>
 			  <Label text="#MOM_Settings_Title_Gameplay_Run_Safeguards"/>
 			</RadioButton>
+			<RadioButton group="SettingsInputNavBar" onactivate='SettingsMenuShared.scrollToId("SettingsZones")'>
+				<Label text="Timer Zones"/>
+			</RadioButton>
 			<RadioButton group="SettingsInputNavBar" onactivate='SettingsMenuShared.scrollToId("SettingsRocketJump")'>
 			  <Label text="#MOM_Settings_Title_Gameplay_RJ"/>
 			</RadioButton>
@@ -75,7 +78,7 @@
 			
 			<Panel id="SettingsPaint" class="settings-group">
 				<Label class="text-h2" text="#MOM_Settings_Title_Gameplay_Paint" />
-				
+				<ConVarColorDisplay convar="mom_paint_color" text="#MOM_Settings_Paint_Color_Label" />
 				<ChaosSettingsSlider text="#MOM_Settings_Paint_Scale_Label" min="0.001" max="1" percentage="true" convar="mom_paint_scale" />
 				<ChaosSettingsEnum text="#MOM_Settings_Paint_Apply_Sound" convar="mom_paint_apply_sound">
 					<RadioButton group="paintsound" text="#SFUI_Off" value="0" />
@@ -132,7 +135,47 @@
 					<RadioButton group="safeguardquitgame" text="#SFUI_On" value="1" />
 				</ChaosSettingsEnum>
 			</Panel>
-			
+
+			<Panel class="settings-horizontal-separator" />
+
+
+			<Panel id="SettingsZones" class="settings-group">
+				<Label class="text-h2" text="Timer Zones" />
+				<ConVarColorDisplay text="Start Zone Outline Color" convar="mom_zone_start_draw_color" />
+				<ChaosSettingsEnumDropDown text="Start Zone Outline Style" convar="mom_zone_start_draw_mode">
+					<Label id="colorize1" text="Off" value="0" />
+					<Label id="colorize2" text="Outlines" value="1" />
+					<Label id="colorize3" text="Outlines as overlays" value="2" />
+					<Label id="colorize4" text="Side faces" value="3" />
+					<Label id="colorize5" text="Side faces as overlays" value="4" />
+				</ChaosSettingsEnumDropDown>
+				<ConVarColorDisplay text="Stage Zone Outline Color" convar="mom_zone_stage_draw_color" />
+				<ChaosSettingsEnumDropDown text="Stage Zone Outline Style" convar="mom_zone_stage_draw_mode">
+					<Label id="colorize1" text="Off" value="0" />
+					<Label id="colorize2" text="Outlines" value="1" />
+					<Label id="colorize3" text="Outlines as overlays" value="2" />
+					<Label id="colorize4" text="Side faces" value="3" />
+					<Label id="colorize5" text="Side faces as overlays" value="4" />
+				</ChaosSettingsEnumDropDown>
+				<ConVarColorDisplay text="Checkpoint Zone Outline Color" convar="mom_zone_checkpoint_draw_color" />
+				<ChaosSettingsEnumDropDown text="Checkpoint Zone Outline Style" convar="mom_zone_checkpoint_draw_mode">
+					<Label id="colorize1" text="Off" value="0" />
+					<Label id="colorize2" text="Outlines" value="1" />
+					<Label id="colorize3" text="Outlines as overlays" value="2" />
+					<Label id="colorize4" text="Side faces" value="3" />
+					<Label id="colorize5" text="Side faces as overlays" value="4" />
+				</ChaosSettingsEnumDropDown>
+				<ConVarColorDisplay text="End Zone Outline Color" convar="mom_zone_end_draw_color" />
+				<ChaosSettingsEnumDropDown text="End Zone Outline Style" convar="mom_zone_end_draw_mode">
+					<Label id="colorize1" text="Off" value="0" />
+					<Label id="colorize2" text="Outlines" value="1" />
+					<Label id="colorize3" text="Outlines as overlays" value="2" />
+					<Label id="colorize4" text="Side faces" value="3" />
+					<Label id="colorize5" text="Side faces as overlays" value="4" />
+				</ChaosSettingsEnumDropDown>
+			</Panel>
+
+
 			<Panel class="settings-horizontal-separator" />
 			
 			<Panel id="SettingsRocketJump" class="settings-group">
