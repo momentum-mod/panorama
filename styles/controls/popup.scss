@@ -4,8 +4,6 @@
 
 .PopupPanel {
 	flow-children: down;
-	min-width: $popup-min-width;
-	max-width: $popup-max-width;
 	vertical-align: middle;
 	horizontal-align: center;
 	padding: $popup-padding;
@@ -26,6 +24,8 @@
 }
 
 .generic-popup {
+	min-width: $popup-min-width;
+	max-width: $popup-max-width;
 	&__title {
 		horizontal-align: left;
 		margin-bottom: 0px;
