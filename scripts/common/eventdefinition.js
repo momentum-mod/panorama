@@ -27,4 +27,6 @@
 	$.DefineEvent('OnLobbyButtonImageChange', 1);
 	$.DefineEvent('LoadMapSelector', 0);
 	$.DefineEvent('MapSelector_ShowConfirmCancelDownload', 1);
+	$.DefineEvent('ColorPickerSave', 1, 'color');
+	$.DefineEvent('ColorPickerCancel', 0);
 })();

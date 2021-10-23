@@ -1,0 +1,71 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+		<include src="file://{resources}/styles/components/colorpicker.scss" />
+	</styles>
+	<scripts>
+		<include src="file://{resources}/scripts/colorpicker.js" />
+	</scripts>
+	<snippets>
+		<snippet name="color-plane-indicator">
+			<Panel class="color-plane-indicator" />
+		</snippet>
+		<snippet name="color-axis-indicator">
+			<Panel class="color-axis-indicator" />
+		</snippet>
+	</snippets>
+	<Panel class="colorpicker">
+		<Panel class="colorpicker__plane">
+			<Image enginertsrc="error_gray" class="full-width full-height" />
+			<ColorPickerPlane id="ColorPlane" class="full-width full-height"/>
+		</Panel>
+		<ColorPickerAxis id="ColorAxis" class="colorpicker__axis"/>
+
+		<Panel class="colorpicker__right-bar">
+			<Panel class="colorpicker__right-bar-entry">
+				<Label class="colorpicker__label" text="H" />
+				<NumberEntry id="HueChannel" max="359" />
+			</Panel>
+			<Panel class="colorpicker__right-bar-entry">
+				<Label class="colorpicker__label" text="S" />
+				<NumberEntry id="SaturationChannel" max="100" />
+			</Panel>
+			<Panel class="colorpicker__right-bar-entry">
+				<Label class="colorpicker__label" text="V" />
+				<NumberEntry id="ValueChannel" max="100" />
+			</Panel>
+			<Panel class="colorpicker__right-bar-entry">
+				<Label class="colorpicker__label" text="R" />
+				<NumberEntry id="RedChannel" max="255" />
+			</Panel>
+			<Panel class="colorpicker__right-bar-entry">
+				<Label class="colorpicker__label" text="G" />
+				<NumberEntry id="GreenChannel" max="255" />
+			</Panel>
+			<Panel class="colorpicker__right-bar-entry">
+				<Label class="colorpicker__label" text="B" />
+				<NumberEntry id="BlueChannel" max="255" />
+			</Panel>
+			<Panel class="colorpicker__right-bar-entry">
+				<Label class="colorpicker__label" text="A" />
+				<NumberEntry id="AlphaChannel" max="255" />
+			</Panel>
+			<Panel class="colorpicker__right-bar-entry">
+				<Label class="colorpicker__label" text="♯" html="true" /> <!-- HACK HACK HACK can't put # there due to localization -->
+				<TextEntry id="HexColor" textmode="hex" maxchars="8" class="textentry" />
+			</Panel>
+			<Panel class="colorpicker__right-bar-entry">
+				<Panel id="CurrentColorTarget" class="colorpicker__right-bar-entry colorpicker__color-target"/>
+				<Panel id="LastColorTarget" class="colorpicker__right-bar-entry colorpicker__color-target" acceptsinput="true" acceptsfocus="true" />
+			</Panel>
+			<Panel class="colorpicker__right-bar-entry">
+				<Button class="button button--red" onactivate="ColorPicker.onCancel()">
+					<Label class="button__text" text="CANCEL"  />
+				</Button>
+				<Button class="button colorpicker__button--save" onactivate="ColorPicker.onSave()">
+					<Label class="button__text" text="SAVE" />
+				</Button>
+			</Panel>
+		</Panel>
+	</Panel>
+</root>
