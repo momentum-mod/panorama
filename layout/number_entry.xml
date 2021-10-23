@@ -1,0 +1,14 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+	<Panel class="flow-right">
+		<Button id="DecrementButton" class="button">
+			<Label class="button__text" text="-" />
+		</Button>
+		<TextEntry id="TextEntry" class="textentry" />
+		<Button id="IncrementButton" class="button">
+			<Label class="button__text" text="+" />
+		</Button>
+	</Panel>
+</root>
