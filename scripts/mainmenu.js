@@ -270,4 +270,6 @@ class MainMenuController {
 	$.RegisterForUnhandledEvent('ReloadBackground', MainMenuController.setMainMenuBackground);
 
 	$.RegisterEventHandler('Cancelled', $.GetContextPanel(), MainMenuController.onEscapeKeyPressed);
+
+	$.DispatchEvent( 'ChaosHideIntroMovie' );
 })();
