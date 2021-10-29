@@ -138,7 +138,8 @@ class MainMenuController {
 		// If the tab exists then hide it
 		if (MainMenuController.activeTab) {
 			const panelToHide = $.GetContextPanel().FindChildInLayoutFile(MainMenuController.activeTab);
-			panelToHide.AddClass('mainmenu__page-container--hidden');
+			if ( panelToHide )
+				panelToHide.AddClass('mainmenu__page-container--hidden');
 		}
 
 		MainMenuController.activeTab = '';
