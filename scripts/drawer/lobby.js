@@ -329,7 +329,7 @@ class Lobby {
 
 	static setUserContextMenu(panel, steamID) {
 		panel.SetPanelEvent("oncontextmenu", () =>
-			UiToolkitAPI.ShowSimpleContextMenu(panel, "", [{ label: "Show Steam Profile", jsCallback: () => SteamOverlayAPI.OpenURL("https://steamcommunity.com/profiles/" + steamID) }])
+			UiToolkitAPI.ShowSimpleContextMenu(panel, "", [{ label: "Show Steam Profile", jsCallback: () => SteamOverlayAPI.OpenToProfileID( steamID ) }])
 		);
 	}
 
