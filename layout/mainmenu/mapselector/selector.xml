@@ -183,6 +183,11 @@
 			</Panel>
 
 			<Panel class="mapselector__right">
+				<Panel id="MapTimes" class="map-times">
+					<Panel class="map-times__list-wrapper">
+						<Leaderboards id="Leaderboards" class="map-times__list map-times__list--hidden" />
+					</Panel>
+				</Panel>
 				<Panel id="MapInfo" class="map-info">
 					<!-- Stacked labels to give double layers of shadow. I don't like it, but I'll have to go along with it. -->
 					<Panel>
@@ -277,12 +282,12 @@
 									</Panel>
 								</Panel>
 							</Panel>
-							<Button id="LeaderboardsBtn" class="button button--blue map-info__leaderboards">
+							<ToggleButton id="LeaderboardsBtn" class="button togglebutton togglebutton--blue map-info__leaderboards" onactivate="MapSelection.toggleLeaderboards()">
 								<Panel class="flow-right full-height horizontal-align-center">
 									<Image class="button__icon button__icon--left" src="file://{images}/chart-timeline.svg" textureheight="40" />
 									<Label class="button__text button__text--right map-info__leader map-info__leaderboards-text" text="Leaderboards" />
 								</Panel>
-							</Button>
+							</ToggleButton>
 						</Panel>
 					</Panel>
 				</Panel>

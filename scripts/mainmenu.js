@@ -218,9 +218,9 @@ class MainMenuController {
 	}
 
 	static onLoadMapSelector() {
-		$.GetContextPanel().FindChildTraverse('MainMenuBackgroundBlur')?.AddBlurPanel($.GetContextPanel().FindChildTraverse('MapSelectorLeft'));
-		$.GetContextPanel().FindChildTraverse('MainMenuBackgroundBlur')?.AddBlurPanel($.GetContextPanel().FindChildTraverse('MapDescription'));
-		$.GetContextPanel().FindChildTraverse('MainMenuBackgroundBlur')?.AddBlurPanel($.GetContextPanel().FindChildTraverse('MapInfoStats'));
+		['MapSelectorLeft', 'MapDescription', 'MapInfoStats', 'Leaderboards'].forEach((panel) =>
+			$.GetContextPanel().FindChildTraverse('MainMenuBackgroundBlur')?.AddBlurPanel($.GetContextPanel().FindChildTraverse(panel))
+		);
 	}
 	//--------------------------------------------------------------------------------------------------
 	// Icon buttons functions

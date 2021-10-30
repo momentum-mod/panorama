@@ -239,4 +239,9 @@ class MapSelection {
 			panel.SetHasClass(MapSelNStateClasses[stateIter], state === stateIter);
 		});
 	}
+
+	static toggleLeaderboards() {
+		const leaderboards = $.GetContextPanel().FindChildTraverse('Leaderboards');
+		leaderboards?.ToggleClass('map-times__list--hidden');
+	}
 }
