@@ -1,0 +1,43 @@
+@use '../config'as *;
+
+.strafesync {
+	align: center center;
+	flow-children: down;
+
+	&__bar-wrapper {
+		width: fit-children;
+	}
+
+	&__increase-color {
+		&--fg {
+			color: $strafesync-color-increase;
+		}
+		&--bg {
+			.ProgressBarLeft {
+				background-color: $strafesync-color-increase;
+			}
+		}
+	}
+
+	&__decrease-color {
+		&--fg {
+			color: $strafesync-color-decrease;
+		}
+		&--bg {
+			.ProgressBarLeft {
+				background-color: $strafesync-color-decrease;
+			}
+		}
+	}
+
+	&__default-color {
+		&--fg {
+			color: $strafesync-color-default;
+		}
+		&--bg {
+			.ProgressBarLeft {
+				background-color: $strafesync-color-default;
+			}
+		}
+	}
+}
