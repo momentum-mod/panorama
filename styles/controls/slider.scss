@@ -15,6 +15,14 @@
 		z-index: 3;
 	}
 
+	#SliderDefault, #SliderDefault2 {
+		align: center center;
+		background-color: $slider-default-color;
+		border-radius: $slider-default-radius;
+		box-shadow: $slider-default-shadow;
+		z-index: 4;
+	}
+
 	#SliderThumb, #SliderThumb2 {
 		width: $slider-thumb-width;
 		height: $slider-thumb-height;
@@ -22,7 +30,7 @@
 		background-color: $slider-thumb-color;
 		border-radius: $slider-thumb-radius;
 		box-shadow: $slider-thumb-shadow;
-		z-index: 4;
+		z-index: 5;
 		transition: background-color 0.1s ease-in-out 0s;
 
 		// sliderthumbs are hovered when clicking on the slider will change its value (in code)
@@ -41,6 +49,11 @@
 	&--horizontal {
 		width: fill-parent-flow(1.0);
 		padding: $slider-padding-height 0;
+		
+		#SliderDefault, #SliderDefault2 {
+			width: $slider-default-width;
+			height: $slider-default-height;
+		}
 
 		& #SliderTrack,
 		& #SliderTrackProgress {
@@ -56,6 +69,11 @@
 	&--vertical {
 		padding: 0 $slider-padding-height;
 		height: fill-parent-flow(1.0);
+
+		#SliderDefault, #SliderDefault2 {
+			width: $slider-default-height;
+			height: $slider-default-width;
+		}
 
 		& #SliderTrack,
 		& #SliderTrackProgress {
