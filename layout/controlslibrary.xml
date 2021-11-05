@@ -455,7 +455,7 @@
 			</Panel>
 
 			<Label class="text-h3 mt-3" text="Sliders" />
-			<Panel class="row my-3 mt-3-none">
+			<Panel class="row my-3 mt-3">
 				<Panel class="col">
 					<Panel class="row my-3">
 						<Slider class="slider slider--horizontal" direction="horizontal" id="Slider" />
@@ -464,10 +464,61 @@
 						<Slider class="slider slider--horizontal" direction="horizontal" id="Slider2" disabled="true" />
 					</Panel>
 				</Panel>
-				<Panel class="col mt-3-none">
-					<Panel class="row my-3" style="height:120px;">
+				<Panel class="col mt-3">
+					<Panel class="row" style="height:120px;">
 						<Slider class="slider slider--vertical" direction="vertical" id="Slider3" />
 						<Slider class="slider slider--vertical" direction="vertical" id="Slider4" disabled="true" />
+					</Panel>
+				</Panel>
+			</Panel>
+			<Label class="text-h3 mt-3" text="Dual Sliders" />
+			<Panel class="row my-3 mt-3">
+				<Panel class="col">
+					<Panel class="row my-3">
+						<DualSlider class="slider slider--horizontal" direction="horizontal" id="DualSlider" />
+					</Panel>
+					<Panel class="row my-3">
+						<DualSlider class="slider slider--horizontal" direction="horizontal" id="DualSlider2" disabled="true" />
+					</Panel>
+				</Panel>
+				<Panel class="col mt-3">
+					<Panel class="row" style="height:120px;">
+						<DualSlider class="slider slider--vertical" direction="vertical" id="DualSlider3" />
+						<DualSlider class="slider slider--vertical" direction="vertical" id="DualSlider4" disabled="true" />
+					</Panel>
+				</Panel>
+			</Panel>
+			<Label class="text-h3 mt-3" text="Slotted Sliders" />
+			<Panel class="row my-3 mt-3">
+				<Panel class="col">
+					<Panel class="row my-3">
+						<Slider class="slider slider--horizontal" snaptoincrement="true" increment="1" max="10" direction="horizontal" id="SlottedSlider" />
+					</Panel>
+					<Panel class="row my-3">
+						<Slider class="slider slider--horizontal" snaptoincrement="true" increment="1" max="10" direction="horizontal" id="SlottedSlider2" disabled="true" />
+					</Panel>
+				</Panel>
+				<Panel class="col mt-3">
+					<Panel class="row" style="height:120px;">
+						<Slider class="slider slider--vertical" snaptoincrement="true" increment="1" max="10" direction="vertical" id="SlottedSlider3" />
+						<Slider class="slider slider--vertical" snaptoincrement="true" increment="1" max="10" direction="vertical" id="SlottedSlider4" disabled="true" />
+					</Panel>
+				</Panel>
+			</Panel>
+			<Label class="text-h3 mt-3" text="Dual Slotted Sliders" />
+			<Panel class="row my-3 mt-3">
+				<Panel class="col">
+					<Panel class="row my-3">
+						<DualSlider class="slider slider--horizontal" snaptoincrement="true" increment="1" max="10" direction="horizontal" id="DualSlottedSlider" />
+					</Panel>
+					<Panel class="row my-3">
+						<DualSlider class="slider slider--horizontal" snaptoincrement="true" increment="1" max="10" direction="horizontal" id="DualSlottedSlider2" disabled="true" />
+					</Panel>
+				</Panel>
+				<Panel class="col mt-3">
+					<Panel class="row" style="height:120px;">
+						<DualSlider class="slider slider--vertical" snaptoincrement="true" increment="1" max="10" direction="vertical" id="DualSlottedSlider3" />
+						<DualSlider class="slider slider--vertical" snaptoincrement="true" increment="1" max="10" direction="vertical" id="DualSlottedSlider4" disabled="true" />
 					</Panel>
 				</Panel>
 			</Panel>
