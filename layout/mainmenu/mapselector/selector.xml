@@ -108,7 +108,7 @@
 												<Panel class="tier-slider__gap"/>
 												<Label class="tier-slider__number tier-slider__number--double-digit" text="10"/>
 											</Panel>
-											<SlottedSlider id="TierSlider" class="slider slider--horizontal tier-slider__slider" notches="11" direction="horizontal" min="0" max="10" increment="1" default="10" value="10" />
+											<DualSlider id="TierSlider" class="slider slider--horizontal tier-slider__slider" snaptoincrement="true" direction="horizontal" min="0" max="10" increment="1" default="0" default2="10" value="0" value2="10" />
 										</Panel>
 									</Panel>
 									<!-- TODO: These need to be tri-state -->

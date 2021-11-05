@@ -183,7 +183,7 @@ class MapSelection {
 			}
 		});
 
-		this.tierSlider.value = 10;
+		this.tierSlider.SetValues(0, 10);
 
 		$.GetContextPanel().ApplyFilters();
 	}
