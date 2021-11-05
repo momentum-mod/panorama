@@ -340,6 +340,7 @@ $slider-track-progress-vertical  : gradient-vertical($blue, $mid-blue) !default;
 $slider-thumb-color      : $white !default;
 $slider-thumb-color-hover: color.scale($slider-thumb-color, $lightness: -15%) !default;
 $slider-thumb-width      : 16px !default;
+$slider-thumb-height     : 16px !default;
 $slider-thumb-radius     : 4px !default;
 $slider-thumb-shadow     : rgba(0, 0, 0, 0.3) 0px 1px 2px 0px !default;
 
