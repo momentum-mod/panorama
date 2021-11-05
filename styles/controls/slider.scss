@@ -24,10 +24,11 @@
 		box-shadow: $slider-thumb-shadow;
 		z-index: 4;
 		transition: background-color 0.1s ease-in-out 0s;
-	}
 
-	&:hover:not(:disabled) #SliderThumb {
-		background-color: $slider-thumb-color-hover;
+		// sliderthumbs are hovered when clicking on the slider will change its value (in code)
+		&:hover:not(:disabled) {
+			background-color: $slider-thumb-color-hover;
+		}
 	}
 
 	&:parentdisabled,
