@@ -226,7 +226,21 @@ $notch-gap: 24px;
 		flow-children: right;
 		horizontal-align: right;
 		vertical-align: bottom;
-		// height: 100%;
+		border: 0px none;
+
+	}
+
+	&__tab {
+		padding: 2px 14px;
+		border-bottom: 1px solid $tab-lower-border-color;
+
+		&:hover {
+			border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+		}
+
+		&:selected {
+			border-bottom: 1px solid rgba(255, 255, 255, 0.8);
+		}
 	}
 
 	&__sort {

@@ -94,40 +94,46 @@
 	}
 }
 
-.tab {
-	text-align: center;
-	background-color: $tab-background;
-
-	box-shadow: $tab-shadow;
-	border-bottom: $tab-border-bottom;
-
-	padding: 2px 8px 0px 8px;
-
-	transition-property: background-color, border;
-	transition-duration: 0.1s;
-	transition-timing-function: ease-in-out;
-
-	&:hover {
-		background-color: $tab-background-hover;
-		border-bottom: $tab-border-bottom-hover;
-	}
-
-	&:selected {
-		background-color: $tab-background-selected;
-		border-bottom: $tab-border-bottom-selected;
-	}
-
-	&:disabled {
-		background-color: $tab-background-disabled;
-	}
-
+.tabs {
 	$root: &;
 
+	flow-children: right;
+
+	background-color: $tab-background;
+	box-shadow: $tab-shadow;
+
+	$border: $tab-border-width solid $tab-border-color;
+	border: $border;
+	border-bottom: 0px none;
+
+	&__tab {
+		padding: $tab-padding;
+
+		border-bottom: $tab-lower-border-height solid $tab-lower-border-color;
+
+		transition-property: background-color, border;
+		transition-duration: 0.1s;
+		transition-timing-function: ease-in-out;
+
+		&:hover {
+			background-color: $tab-background-hover;
+			border-bottom: $tab-lower-border-height solid $tab-lower-border-hover-color;
+		}
+
+		&:selected {
+			background-color: $tab-background-selected;
+			border-bottom: $tab-lower-border-height solid $tab-lower-border-selected-color;
+		}
+
+		&:disabled {
+			background-color: $tab-background-disabled;
+		}
+	}
+
 	&__gap {
-		width: $tab-gap-width;
+		width: $tab-border-width;
 		height: 100%;
-		background-color: $tab-gap-background;
-		border-bottom: $tab-border-bottom;
+		background-color: $tab-border-color;
 	}
 
 	&__text {
@@ -136,17 +142,18 @@
 		vertical-align: center;
 		horizontal-align: center;
 		margin: 0px;
-		padding: 4px 10px;
-		color: rgb(236, 236, 236);
-		transition: color 0.1s ease-in-out 0s;
+		padding: $tab-text-padding;
+		opacity: 0.9;
 
-		#{$root}:hover &,
-		#{$root}:selected & {
-			color: rgb(255, 255, 255);
+		transition: opacity 0.1s ease-in-out 0s;
+
+		#{$root}__tab:hover &,
+		#{$root}__tab:selected & {
+			opacity: 1;
 		}
 
-		#{$root}:disabled & {
-			color: rgb(163, 163, 163);
+		#{$root}__tab:disabled & {
+			opacity: 0.2;
 		}
 	}
 

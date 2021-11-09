@@ -298,20 +298,23 @@ $nstatebutton-colors: ("blue", "red") !default;
 // TABS
 // ================
 
-$tab-background: gradient-vertical(rgba(235, 235, 235, 0.2), rgba(184, 184, 184, 0.2));
-$tab-background-hover: gradient-vertical(rgba(255, 255, 255, 0.25), rgba(204, 204, 204, 0.25));
-$tab-background-selected: gradient-vertical(rgba(255, 255, 255, 0.3), rgba(204, 204, 204, 0.3));
-$tab-background-disabled: rgba(168, 168, 168, 0.05);
-$tab-gap-width: 1px;
-$tab-gap-background: rgba(0, 0, 0, 0.15);
-$tab-border-bottom: 1px solid rgba(51, 51, 51, 0.7);
-$tab-border-bottom-hover: 1px solid rgba(105, 105, 105, 0.6);
-$tab-border-bottom-selected: 1px solid rgba(255, 255, 255, 0.6);
-$tab-shadow: fill 0 0 3px 0 rgba(0, 0, 0, 0.45);
-$tab-padding: 2px 8px 0px 8px;
-$tab-font-size: 20px;
-$tab-use-header-font:  true;
-$tab-light-header: true;
+$tab-background                 : gradient-vertical(rgba(148, 148, 148, 0.3), rgba(120, 120, 120, 0.3));
+$tab-background-hover           : rgba(255, 255, 255, 0.05);
+$tab-background-selected        : rgba(0, 0, 0, 0.5);
+$tab-background-disabled        : rgba(0, 0, 0, 0);
+$tab-shadow                     : 0 0 4px 0 rgba(0, 0, 0, 0.5);
+$tab-border-width               : 1px;
+$tab-border-color               : rgba(0, 0, 0, 0.3);
+$tab-lower-border-height        : 2px;
+$tab-lower-border-color         : rgba(0, 0, 0, 0.4);
+$tab-lower-border-hover-color   : rgba(255, 255, 255, 0.4);
+$tab-lower-border-selected-color: rgba(255, 255, 255, 0.6);
+$tab-padding                    : 2px 10px 0px 10px;
+$tab-font-size                  : 20px;
+$tab-text-shadow                : 0 1px 2px rgba(0, 0, 0, 0.5);
+$tab-use-header-font            : true;
+$tab-light-header               : false;
+$tab-text-padding               : 4px 10px;
 
 // ================
 // TEXTENTRY

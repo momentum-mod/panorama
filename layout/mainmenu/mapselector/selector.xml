@@ -132,17 +132,17 @@
 							</Panel>
 
 							<Panel id="TabsAndSortBy" class="sorting">
-								<Panel class="sorting__tabs">
-									<RadioButton id="MapListRanked" class="tab sorting__tab" group="MapListNavBar" selected="true">
-										<Label class="tab__text" text="Ranked"/>
+								<Panel class="tabs sorting__tabs">
+									<RadioButton id="MapListRanked" class="tabs__tab sorting__tab" group="MapListNavBar" selected="true">
+										<Label class="tabs__text" text="Ranked"/>
 									</RadioButton>
-									<Panel class="tab__gap"/>
-									<RadioButton id="MapListUnranked" class="tab sorting__tab" group="MapListNavBar">
-										<Label class="tab__text" text="Unranked"/>
+									<Panel class="tabs__gap sorting__tab-gap"/>
+									<RadioButton id="MapListUnranked" class="tabs__tab sorting__tab" group="MapListNavBar">
+										<Label class="tabs__text" text="Unranked"/>
 									</RadioButton>
-									<Panel class="tab__gap"/>
-									<RadioButton id="MapListBeta" class="tab sorting__tab" group="MapListNavBar">
-										<Label class="tab__text" text="Beta"/>
+									<Panel class="tabs__gap sorting__tab-gap"/>
+									<RadioButton id="MapListBeta" class="tabs__tab sorting__tab" group="MapListNavBar">
+										<Label class="tabs__text" text="Beta"/>
 									</RadioButton>
 								</Panel>
 								<Panel id="SortBy" class="sorting__sort">
