@@ -10,11 +10,24 @@
 	
 	<Panel class="settings-tab">
 		<BaseAudioSettings class="settings-scroll-container">
-			<Panel id="SettingsAudioSettings" class="settings-group">
-				<Label class="text-h2" text="#MOM_Settings_Title_Audio" />
-				
+			<Panel id="SettingsAudioVolumes" class="settings-group">
+				<!-- TODO: Localize -->
+				<Label class="text-h2" text="Volume" />
+
 				<ChaosSettingsSlider text="#GameUI_SoundEffectVolume" min="0" max="1" percentage="true" convar="volume" />
-				<ChaosSettingsSlider text="#GameUI_MusicVolume" min="0" max="1" percentage="true" convar="snd_musicvolume" />
+				<ChaosSettingsSlider text="#GameUI_MusicVolume" min="0" max="1" percentage="true" convar="snd_volume_music" />
+				<!-- TODO: Localize -->
+				<ChaosSettingsSlider text="Ambient Volume" min="0" max="1" percentage="true" convar="snd_volume_ambient" />
+				<ChaosSettingsSlider text="Player Weapon Volume" min="0" max="1" percentage="true" convar="snd_volume_weapon_player" />
+				<ChaosSettingsSlider text="Overall Weapon Volume" min="0" max="1" percentage="true" convar="snd_volume_weapon_overall" />
+				<ChaosSettingsSlider text="UI Volume" min="0" max="1" percentage="true" convar="snd_volume_ui" />
+				<ChaosSettingsSlider text="Physics Volume" min="0" max="1" percentage="true" convar="snd_volume_physics" />
+				<ChaosSettingsSlider text="Footsteps Volume" min="0" max="1" percentage="true" convar="snd_volume_footsteps" />
+			</Panel>
+			<Panel id="SettingsAudioSettings" class="settings-group">
+				<!-- TODO: Localize -->
+				<Label class="text-h2" text="Audio Device Configuration" />
+				
 				<ChaosSettingsEnumDropDown text="#GameUI_SpeakerConfiguration" convar="snd_surround_speakers" oninputsubmit="BaseSpeakerConfigurationChanged()">
 					<Label text="Stereo Headphones" id="speakerconfig1" value="0"/>
 					<Label text="Stereo Speakers" id="speakerconfig2" value="2"/>
