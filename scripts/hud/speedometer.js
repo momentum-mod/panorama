@@ -5,6 +5,10 @@ const UPS_TO_KMH_FACTOR = 0.06858;
 // 1 unit = 0.75", 1 mile = 63360. 0.75 / 63360 ~~> 0.00001184"(/s) ~~> 0.04262MPH
 const UPS_TO_MPH_FACTOR = 0.04262;
 
+// arbitrary value to determine how much speed needs to change to be considered an increase/decrease
+// adjusted by speedometer update delta time
+const COLORIZE_DEADZONE = 2;
+
 const HIDDEN_CLASS = 'speedometer--hidden';
 const INCREASE_CLASS = 'speedometer--increase';
 const DECREASE_CLASS = 'speedometer--decrease';
@@ -137,6 +141,7 @@ const Speedometers = [
 class Speedometer {
 	static container = $('#SpeedometerContainer');
 	static lastZone = 0;
+	static correctedColorizeDeadzone = 0;
 
 	static onLoad() {
 		Speedometer.registerFadeoutEventHandlers();
@@ -156,7 +161,7 @@ class Speedometer {
 		});
 	}
 
-	static onFrameUpdate() {
+	static onSpeedometerUpdate(deltaTime) {
 		const velocity = MomentumPlayerAPI.GetVelocity();
 
 		const xSquared = Math.pow(velocity.x, 2);
@@ -164,6 +169,7 @@ class Speedometer {
 		const absVelocity = Math.sqrt(xSquared + ySquared + Math.pow(velocity.z, 2));
 		const horizVelocity = Math.sqrt(xSquared + ySquared);
 
+		Speedometer.correctedColorizeDeadzone = deltaTime * COLORIZE_DEADZONE;
 		Speedometer.update(SpeedoIDs.Absolute, absVelocity);
 		Speedometer.update(SpeedoIDs.Horizontal, horizVelocity);
 		Speedometer.update(SpeedoIDs.Vertical, Math.abs(velocity.z));
@@ -210,8 +216,8 @@ class Speedometer {
 			const comparisonSpeedHoriz = RunComparisonsAPI.GetLoadedComparisonSpeed(curZone, true);
 			const diffAbs = actualSpeedAbs - comparisonSpeedAbs;
 			const diffHoriz = actualSpeedHoriz - comparisonSpeedHoriz;
-			Speedometer.update(SpeedoIDs.StageAbs, actualSpeedAbs, true, Math.round(diffAbs));
-			Speedometer.update(SpeedoIDs.StageHoriz, actualSpeedHoriz, true, Math.round(diffHoriz));
+			Speedometer.update(SpeedoIDs.StageAbs, actualSpeedAbs, true, diffAbs);
+			Speedometer.update(SpeedoIDs.StageHoriz, actualSpeedHoriz, true, diffHoriz);
 		} else {
 			Speedometer.update(SpeedoIDs.StageAbs, actualSpeedAbs, false);
 			Speedometer.update(SpeedoIDs.StageHoriz, actualSpeedHoriz, false);
@@ -245,8 +251,6 @@ class Speedometer {
 				break;
 		}
 
-		velocity = Math.round(velocity);
-
 		const separateComparison = speedometer.settings.colorizeMode === ColorizeType.ComparisonSep;
 		if (hasComparison && (speedometer.settings.colorizeMode === ColorizeType.Comparison || separateComparison)) {
 			// energy speedometer can be negative!
@@ -255,11 +259,11 @@ class Speedometer {
 
 			let labelToColor = separateComparison ? speedometer.comparisonlabel : speedometer.label;
 			let diffSymbol;
-			if (diff > 0) {
+			if (diff - Speedometer.correctedColorizeDeadzone > 0) {
 				labelToColor.AddClass(INCREASE_CLASS);
 				labelToColor.RemoveClass(DECREASE_CLASS);
 				diffSymbol = '+';
-			} else if (diff < 0) {
+			} else if (diff + Speedometer.correctedColorizeDeadzone < 0) {
 				labelToColor.AddClass(DECREASE_CLASS);
 				labelToColor.RemoveClass(INCREASE_CLASS);
 				diffSymbol = '-';
@@ -270,7 +274,7 @@ class Speedometer {
 			}
 
 			if (separateComparison) {
-				speedometer.comparisonlabel.text = ` ${diffSymbol}${Math.abs(diff)}`;
+				speedometer.comparisonlabel.text = ` ${diffSymbol}${Math.round(Math.abs(diff))}`;
 				speedometer.label.RemoveClass(INCREASE_CLASS);
 				speedometer.label.RemoveClass(DECREASE_CLASS);
 			}
@@ -295,7 +299,7 @@ class Speedometer {
 			}
 		}
 
-		speedometer.label.text = velocity;
+		speedometer.label.text = Math.round(velocity);
 
 		if (speedometer.eventbased) {
 			speedometer.container.AddClass(FADEOUT_START_CLASS);
@@ -362,6 +366,6 @@ class Speedometer {
 		$.RegisterEventHandler('OnRampLeaveSpeedUpdate', Speedometer.container, Speedometer.onRampLeaveSpeedUpdate);
 		$.RegisterForUnhandledEvent('PanoramaComponent_SpeedometerSettings_OnSettingsUpdated', Speedometer.onSettingsUpdate);
 		$.RegisterForUnhandledEvent('PanoramaComponent_Zones_OnZoneChange', Speedometer.onZoneChange);
-		$.RegisterForUnhandledEvent('ChaosFrameUpdate', Speedometer.onFrameUpdate);
+		$.RegisterEventHandler('OnSpeedometerUpdate', Speedometer.container, Speedometer.onSpeedometerUpdate);
 	}
 }
