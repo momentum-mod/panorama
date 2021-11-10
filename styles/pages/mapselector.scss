@@ -85,7 +85,6 @@ $left-width: 808px;
 			opacity: 1;
 		}
 	}
-
 }
 
 .category-tabs {
@@ -136,7 +135,6 @@ $left-width: 808px;
 	height: 0px;
 	padding-right: 8px;
 
-
 	transition: height 0.2s ease-in-out 0s;
 
 	&--filters-extended {
@@ -167,7 +165,7 @@ $left-width: 808px;
 // Be careful with widths here to ensure the numbers align exactly. The SliderThumb must be the same width as the numbers, and the
 // whole panel must be allowed to fit all its children, so make sure some space is left on the right side. Always test on multiple resolutions!
 $notch-width: 12px;
-$notch-gap: 24px;
+$notch-gap: 30px;
 .tier-slider {
 	flow-children: none;
 	height: 34px;
@@ -187,8 +185,9 @@ $notch-gap: 24px;
 		height: 16px;
 
 		&--double-digit {
-			overflow: squish;
-			text-overflow: shrink;
+			width: $notch-width + 4px;
+			margin-right: -4px;
+			transform: translateX(-4px);
 		}
 	}
 
