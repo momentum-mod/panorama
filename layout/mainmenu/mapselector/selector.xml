@@ -147,14 +147,14 @@
 								</Panel>
 								<Panel id="SortBy" class="sorting__sort">
 									<DropDown id="SortByDropdown" class="dropdown sorting__dropdown" menuclass="dropdown-menu">
+										<Label text="Date Released (Recent)" id="dateRelAsc" value="6" />
+										<Label text="Date Released (Oldest)" id="dateRelDesc" value="7" />
 										<Label text="Alphabetical (A-Z)" id="alphaAsc" value="0"/>
 										<Label text="Alphabetical (Z-A)" id="alphaDesc" value="1" />
 										<Label text="Tier (1-10)" id="tierAsc" value="2" />
 										<Label text="Tier (10-1)" id="tierDesc" value="3" />
 										<Label text="Last Played (Recent)" id="lastPlayAsc" value="4" />
 										<Label text="Last Played (Oldest)" id="lastPlayDesc" value="5" />
-										<Label text="Date Released (Recent)" id="dateRelAsc" value="6" />
-										<Label text="Date Released (Oldest)" id="dateRelDesc" value="7" />
 										<Label text="Date Created (Recent)" id="dateCreatedAsc" value="8" />
 										<Label text="Date Created (Oldest)" id="dateCreatedDesc" value="9" />
 									</DropDown>
