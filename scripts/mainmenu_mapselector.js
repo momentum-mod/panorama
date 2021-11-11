@@ -1,5 +1,16 @@
 'use strict';
 
+const MapSelNStateTypes = {
+	OFF: 0,
+	INCLUDE: 1,
+	EXCLUDE: 2
+};
+const MapSelNStateClasses = [
+	'nstatebutton--off',
+	'nstatebutton--include',
+	'nstatebutton--exclude'
+];
+
 class MapSelection {
 	static gameModeData = {
 		0: {
@@ -73,6 +84,10 @@ class MapSelection {
 		$.RegisterForUnhandledEvent('MapSelector_ShowConfirmCancelDownload', MapSelection.showConfirmCancelDownload);
 		$.RegisterForUnhandledEvent('MapSelector_ShowConfirmOverwrite', MapSelection.showConfirmOverwrite);
 		$.RegisterForUnhandledEvent('MapSelector_MapsFiltered', MapSelection.mapsFiltered);
+
+		$.RegisterEventHandler('NStateButtonStateChanged', MapSelection.completedFilterButton, MapSelection.onNStateBtnChanged);
+		$.RegisterEventHandler('NStateButtonStateChanged', MapSelection.favoritesFilterButton, MapSelection.onNStateBtnChanged);
+		$.RegisterEventHandler('NStateButtonStateChanged', MapSelection.downloadedFilterButton, MapSelection.onNStateBtnChanged);
 
 		$.DispatchEvent('LoadMapSelector');
 
@@ -178,9 +193,7 @@ class MapSelection {
 		});
 
 		[this.completedFilterButton, this.favoritesFilterButton, this.downloadedFilterButton].forEach((button) => {
-			if (button.checked) {
-				button.SetSelected(false);
-			}
+			button.currentstate = MapSelNStateTypes.OFF;
 		});
 
 		this.tierSlider.SetValues(0, 10);
@@ -217,5 +230,13 @@ class MapSelection {
 	static mapsFiltered(count) {
 		const emptyContainer = $.GetContextPanel().FindChildTraverse('MapListEmptyContainer');
 		count > 0 ? emptyContainer.AddClass('mapselector__emptywarning--hidden') : emptyContainer.RemoveClass('mapselector__emptywarning--hidden');
+	}
+	
+	static onNStateBtnChanged(panelname, state) {
+		let panel = $(`#${panelname}`);
+		Object.keys(MapSelNStateTypes).forEach((type) => {
+			const stateIter = MapSelNStateTypes[type];
+			panel.SetHasClass(MapSelNStateClasses[stateIter], state === stateIter);
+		});
 	}
 }

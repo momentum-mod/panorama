@@ -111,22 +111,21 @@
 											<DualSlider id="TierSlider" class="slider slider--horizontal tier-slider__slider" snaptoincrement="true" direction="horizontal" min="0" max="10" increment="1" default="0" default2="10" value="0" value2="10" />
 										</Panel>
 									</Panel>
-									<!-- TODO: These need to be tri-state -->
 									<Panel class="horizontal-align-right flow-right">
 										<TooltipPanel tooltip="&lt;b&gt;Filter by&lt;/b&gt;: Completed">
-											<ToggleButton id="MapCompletedFilterButton" class="button togglebutton togglebutton--blue mr-2">
+											<NStateButton id="MapCompletedFilterButton" class="button nstatebutton mr-2">
 												<Image class="button__icon" src="file://{images}/mapselector/completedmapIcon.svg" textureheight="32" />
-											</ToggleButton>
+											</NStateButton>
 										</TooltipPanel>
 										<TooltipPanel tooltip="&lt;b&gt;Filter by&lt;/b&gt;: Favorited">
-											<ToggleButton id="MapFavoritedFilterButton" class="button togglebutton togglebutton--blue mr-2">
+											<NStateButton id="MapFavoritedFilterButton" class="button nstatebutton mr-2">
 												<Image class="button__icon" src="file://{images}/mapselector/favoriteIcon.svg" textureheight="32" />
-											</ToggleButton>
+											</NStateButton>
 										</TooltipPanel>
 										<TooltipPanel tooltip="&lt;b&gt;Filter by&lt;/b&gt;: Downloaded">
-											<ToggleButton id="MapDownloadedFilterButton" class="button togglebutton togglebutton--blue">
+											<NStateButton id="MapDownloadedFilterButton" class="button nstatebutton">
 												<Image class="button__icon" src="file://{images}/download.svg" textureheight="32" />
-											</ToggleButton>
+											</NStateButton>
 										</TooltipPanel>
 									</Panel>
 								</Panel>

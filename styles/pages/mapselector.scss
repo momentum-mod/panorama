@@ -423,3 +423,8 @@ $notch-gap: 24px;
 		padding-bottom: 1px;
 	}
 }
+
+.nstatebutton {
+	@include mixin.nstate-button-state('include', 1);
+	@include mixin.nstate-button-state('exclude', 2);
+}
