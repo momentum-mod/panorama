@@ -1,8 +1,14 @@
-"use strict";
+'use strict';
 
 class MainMenuNews {
 	static feed;
-	
+
+	static {
+		$.RegisterForUnhandledEvent('PanoramaComponent_News_OnRSSFeedReceived', MainMenuNews.onRSSFeedReceived);
+
+		MainMenuNews.getNewsRSS();
+	}
+
 	static getNewsRSS() {
 		NewsAPI.GetRSSFeed();
 	}
@@ -12,52 +18,38 @@ class MainMenuNews {
 	static onRSSFeedReceived(feed) {
 		MainMenuNews.feed = feed;
 		if (feed.items.length > 0) {
-			const item = MainMenuNews.feed.items[0]
-			
+			const item = MainMenuNews.feed.items[0];
+
 			$('#LatestUpdateDetails').SetDialogVariable('title', item.title);
 			$('#LatestUpdateDetails').SetDialogVariable('description', item.description);
 			$('#LatestUpdateDetails').SetDialogVariable('date', item.date);
 			$('#LatestUpdateDetails').SetDialogVariable('author', item.author);
 			$('#LatestUpdateImage').SetImage(item.image);
-			
-			const btn = $.CreatePanel( 'Panel', $.FindChildInContext( '#LearnMoreParent' ), 'LearnMorePanel', {
-				acceptsinput: true,
-				onactivate: 'SteamOverlayAPI.OpenURLModal( "' + item.link + '" );',
-				class: 'full-width'
-			} );
-			btn.LoadLayoutSnippet( 'news-learn-more' );
+			$('#LatestUpdateImage').SetPanelEvent('onactivate', () => SteamOverlayAPI.OpenURLModal(item.link));
+			$('#LearnMore').SetPanelEvent('onactivate', () => SteamOverlayAPI.OpenURLModal(item.link));
 		}
-		
-		if (feed.items.length > 1) {
-			const container = $.GetContextPanel().FindChildInLayoutFile( 'OtherUpdates' );
 
-			if ( container === undefined || container === null )
-				return;
+		if (feed.items.length > 1) {
+			const container = $('#OtherUpdates');
+
+			if (container === undefined || container === null) return;
 
 			container.RemoveAndDeleteChildren();
 
 			// Show max of 10 update previews
-			feed.items.slice(1, 11).forEach( function( item, i ) {
-				const entry = $.CreatePanel( 'Panel', container, 'NewsEntry' + i, {
+			feed.items.slice(1, 11).forEach((item, i) => {
+				const entry = $.CreatePanel('Image', container, 'NewsEntry' + i, {
 					acceptsinput: true,
 					onactivate: 'SteamOverlayAPI.OpenURLModal( "' + item.link + '" );',
-					class: 'news__other-item'
-				} );
-				entry.LoadLayoutSnippet( 'news-update-preview' );
-				entry.FindChildInLayoutFile( 'NewsUpdatePreview' ).SetImage( item.image );
-			} );
+					class: 'news__other-item news__other-image'
+				});
+				// entry.LoadLayoutSnippet('news-update-preview');
+				entry.SetImage(item.image);
+			});
 		}
 	}
-	
-	static setSelectedItem(index) {
+
+	static minimize() {
+		$.GetContextPanel().ToggleClass('news--minimized');
 	}
 }
-
-//--------------------------------------------------------------------------------------------------
-// Entry point called when panel is created
-//--------------------------------------------------------------------------------------------------
-(function() {
-	$.RegisterForUnhandledEvent( 'PanoramaComponent_News_OnRSSFeedReceived', MainMenuNews.onRSSFeedReceived );
-
-	MainMenuNews.getNewsRSS();
-})();
