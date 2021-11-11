@@ -1,0 +1,18 @@
+@use '../config' as *;
+
+.nstatebutton {
+	transition-property: background-color;
+	transition-duration: 0.1s;
+	transition-timing-function: ease-in;
+	background-color: $nstatebutton-0-background;
+
+	&:hover {
+		background-color: $nstatebutton-0-background-hover;
+	}
+	&:disabled {
+		background-color: $nstatebutton-0-background-disabled;
+		&:hover {
+			background-color: $nstatebutton-0-background-disabled-hover;
+		}
+	}
+}

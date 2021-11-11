@@ -284,6 +284,17 @@ $radiobutton-text-color     : $font-default-color !default;
 $radiobutton-text-disabled  : $font-disabled-color !default;
 
 // ================
+// N-STATE BUTTON
+// ================
+
+$nstatebutton-0-background               : $button-background !default;
+$nstatebutton-0-background-hover         : $button-background-hover !default;
+$nstatebutton-0-background-disabled      : $button-background-disabled !default;
+$nstatebutton-0-background-disabled-hover: $button-background-disabled-hover !default;
+
+$nstatebutton-colors: ("blue", "red") !default;
+
+// ================
 // TABS
 // ================
 

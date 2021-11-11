@@ -72,3 +72,9 @@
 		@error "Gradient #{$color} not found!";
 	}
 }
+
+@mixin nstate-button-state($state: 'off', $statenum: 1) {
+	&--#{$state} {
+		@include button-gradient($color: list.nth($nstatebutton-colors, $statenum));
+	}
+}
