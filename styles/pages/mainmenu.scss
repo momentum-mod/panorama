@@ -440,7 +440,7 @@ $drawer-width: 768px;
 
 	&__other-item {
 		width: 200px;
-		height: 200px * 0.5625;
+		height: 200px * 0.5625; // 0.5625 = 1/(16/9). Height needs to be a static value for the animation to interpolate it properly
 		margin-right: 8px;
 	}
 
@@ -480,9 +480,8 @@ $drawer-width: 768px;
 	}
 
 	&__image {
-		$width: 384px;
-		width: $width;
-		height: $width * 0.5625; // 0.5625 = 1/(16/9)
+		width: 384px;
+		height: 384px * 0.5625;
 		box-shadow: 1px 1px 4px 0 rgba(0, 0, 0, 0.8);
 
 		transition: wash-color 0.1s linear 0s;
