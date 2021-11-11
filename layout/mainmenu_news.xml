@@ -6,34 +6,33 @@
 	<scripts>
 		<include src="file://{resources}/scripts/mainmenu_news.js" />
 	</scripts>
-	<snippets>
-		<snippet name="news-learn-more">
-			<Panel>
-				<Button class="p-0 button button--blue full-width" id="LearnMore">
-					<Label class="button__text text-m" text="Learn More" />
+
+	<Panel class="news">
+		<Panel class="news__wrapper">
+			<Panel class="news__header">
+				<Label class="news__title" text="News" />
+				<Button class="news__minimize" onactivate="MainMenuNews.minimize();">
+					<Image class="button__icon horizontal-align-right rot-90" src="file://{images}/mom-arrow.svg" textureheight="32"/>
 				</Button>
 			</Panel>
-		</snippet>
-		<snippet name="news-update-preview">
-			<Panel>
-				<Image id="NewsUpdatePreview" class="news__other-image" src="" scaling="stretch-to-fit-y-preserve-aspect" horizontalalign="left" />
-			</Panel>
-		</snippet>
-	</snippets>
-
-	<Panel>
-		<Panel class="news">
-			<Panel id="LatestUpdate" class="news__latest">
-				<Panel id="LatestUpdateDetails" class="news__latest-details">
-					<Label class="text-h4" text="Updates" />
-					<Label class="text-h6" text="{s:title}" />
-					<Label html="true" class="news__latest-description" text="{s:h:description}" />
-					<Panel id="LearnMoreParent" class="news__latest-learnmore" />
+			<Panel class="news__main">
+				<Panel id="LatestUpdate" class="news__latest">
+					<Panel id="LatestUpdateDetails" class="news-latest__left">
+						<Label class="news-latest__title" text="{s:title}" />
+						<Label class="news-latest__description" text="{s:h:description}" html="true"/>
+					</Panel>
+					<Panel class="news-latest__right">
+						<Image id="LatestUpdateImage" class="news-latest__image" src="" />
+						<Button class="button button--blue news-latest__learnmore" id="LearnMore">
+							<Label class="button__text text-m" text="Read More" />
+						</Button>
+					</Panel>
 				</Panel>
-				<Image id="LatestUpdateImage" class="news__latest-image" scaling="stretch-to-fit-preserve-aspect" src="" />
-			</Panel>
-			<Panel id="OtherUpdates" class="news__other">
-				
+				<Panel class="news__other">
+					<Panel id="OtherUpdates" class="news__horiz-scroll">
+
+					</Panel>
+				</Panel>
 			</Panel>
 		</Panel>
 	</Panel>

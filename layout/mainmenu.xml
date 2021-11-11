@@ -122,7 +122,7 @@
 				<Panel class="mainmenu__container">
 					<!-- Backgrounds -->
 					<!-- Background blur: used to blur the backgrounds behind mainmenu pages -->
-					<BaseBlurTarget id="MainMenuBackgroundBlur" class="mainmenu__background-blur" blurrects="MainMenuContentBlur JsMainMenuNavBar">
+					<BaseBlurTarget id="MainMenuBackgroundBlur" class="mainmenu__background-blur" blurrects="MainMenuContentBlur JsMainMenuNavBar NewsPanel">
 						<!-- Map Selector backgrounds -->
 						<Image id="MainMenuBackgroundMapSelectorImage" class="MainMenuModeOnly mapselector__background"/>
 

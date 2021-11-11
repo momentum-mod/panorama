@@ -1,5 +1,6 @@
 @use '../config' as *;
 @use '../abstract/function';
+@use '../abstract/mixin';
 
 $page-transition-duration: 0.15s;
 $page-transition-timing-func: ease-in-out;
@@ -65,11 +66,11 @@ $drawer-width: 768px;
 		overflow: noclip;
 		blur: fastgaussian(8, 8, 5);
 	}
-	
+
 	&__pause-blur {
 		width: 100%;
 		height: 100%;
-		blur: fastgaussian(2, 2, 3);
+		blur: fastgaussian(1, 1, 2);
 	}
 
 	&__movie {
@@ -88,7 +89,7 @@ $drawer-width: 768px;
 			overflow: noclip;
 		}
 
-	.AspectRatio21x9 {
+		.AspectRatio21x9 {
 			width: 2580px;
 			height: 1080px;
 			transform: scaleY(1.3) translateY(-15%);
@@ -134,9 +135,9 @@ $drawer-width: 768px;
 		width: 100%;
 		height: 100%;
 		padding: 30px (30px + $rightnav-width) 30px 30px;
-		
+
 		transition-property: opacity;
-		transition-duration: .0s;
+		transition-duration: 0s;
 		transition-timing-function: ease-in-out;
 	}
 }
@@ -185,7 +186,7 @@ $drawer-width: 768px;
 		& .RadioBox {
 			visibility: collapse;
 		}
-		
+
 		&-image {
 			width: height-percentage(100%);
 			height: 100%;
@@ -207,27 +208,28 @@ $drawer-width: 768px;
 				opacity: 1;
 			}
 		}
-		
+
 		&:selected {
 			background-color: gradient(radial, 50% 100%, 0% 0%, 100% 100%, from(rgba(88, 88, 88, 0.7)), to(rgba(20, 20, 20, 0.7)));
 			box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.3);
-			
+
 			#{$this}-image {
 				opacity: 1;
 			}
 		}
-		
+
 		&:selected:hover {
 			background-color: gradient(radial, 50% 100%, 0% 0%, 100% 100%, from(rgba(70, 70, 70, 0.8)), to(rgba(20, 20, 20, 0.8)));
 		}
 	}
-	
-	&__home, &__button {
+
+	&__home,
+	&__button {
 		&:hover {
-			sound: "UIPanorama.ButtonRollover";
+			sound: 'UIPanorama.ButtonRollover';
 		}
 		&:selected {
-			sound: "UIPanorama.ButtonPress";
+			sound: 'UIPanorama.ButtonPress';
 		}
 	}
 
@@ -294,7 +296,6 @@ $drawer-width: 768px;
 	}
 }
 
-
 .drawer {
 	z-index: 1;
 	flow-children: right;
@@ -310,7 +311,7 @@ $drawer-width: 768px;
 		height: 100%;
 		background-color: rgba(27, 27, 27, 0.7);
 	}
-	
+
 	$this: &;
 	&--expanded {
 		transform: translateX(0);
@@ -332,8 +333,8 @@ $drawer-width: 768px;
 
 .home {
 	&__newspanel {
-		width: 840px;
-		height: 500px;
+		margin: 24px;
+		background-color: rgba(0, 0, 0, 0.6);
 	}
 
 	&__modelpanel {
@@ -371,57 +372,75 @@ $drawer-width: 768px;
 }
 
 .news {
-	width: 100%;
-	height: 100%;
-	flow-children: down;
-	margin: 24px;
-	padding: 8px;
-	background-color: rgba(0, 0, 0, 0.5);
-	box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.3);
+	$root: &;
+	&--minimized {
+		#{$root}__main {
+			height: 0px; 
+		}
+	}
+
+	&__wrapper {
+		flow-children: down;
+		box-shadow: 0 0 20px 0 rgba(0, 0, 0, 1);
+	}
+
+	&__header {
+		width: 100%;
+		height: 31px;
+		background-color: rgba(0, 0, 0, 0.4);
+		border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+		padding: 2px 4px 1px 8px;
+	}
+
+	&__title {
+		@include mixin.font-styles($use-header: true);
+		font-size: 24px;
+	}
+
+	&__minimize {
+		width: 100%;
+		horizontal-align: right;
+		height: 100%;
+		color: white;
+
+		opacity: 0.5;
+		transition: opacity 0.1s ease-in-out 0s;
+
+		&:hover {
+			opacity: 1;
+		}
+	}
+
+	&__main {
+		// We would use fit-children here but we need a specific height for the anim to interpolate.
+		// Just try on fit-children and grab whatever height the panel is from the debugger.
+		height: 410px;
+		flow-children: down;
+		transition: height 0.15s ease-in-out 0s;
+	}
 
 	&__latest {
-		width: 100%;
-		height: 258px; // This is a magic number because Panorama likes to scale stuff a bunch. Should be equal to the Actual Height Value of latestimage.
+		padding: 8px;
 		flow-children: right;
-	}
-
-	&__latest-details {
-		width: 40%;
-		margin-right: 8px;
-		flow-children: down;
-	}
-
-	&__latest-description {
-		height: fill-parent-flow(1);
-		padding-bottom: 0px;
-		text-overflow: ellipsis;
-		font-size: 14px;
-		padding-right: 16px;
-	}
-
-	&__latest-image {
-		width: 500px;
-		height: width-percentage(56.25%);
-	}
-
-	&__latest-learnmore {
-		height: 24px;
-		width: 100%;
-		vertical-align: bottom;
 	}
 
 	&__other {
 		width: 100%;
-		height: 100%;
-		padding-top: 8px;
-		padding-bottom: 16px;
+		background-color: rgba(0, 0, 0, 0.1);
+		border-top: 1px solid rgba(0, 0, 0, 0.15);
+	}
+
+	&__horiz-scroll {
 		flow-children: right;
+		width: 100%;
 		overflow: scroll squish;
+		margin: 8px;
+		padding-bottom: 16px;
 	}
 
 	&__other-item {
-		height: 100%;
-		width: 274px; // Another alignment magic number, 16/9 * image's actual height
+		width: 200px;
+		height: 200px * 0.5625;
 		margin-right: 8px;
 	}
 
@@ -431,6 +450,52 @@ $drawer-width: 768px;
 		&:hover {
 			wash-color: rgb(222, 222, 222);
 		}
+	}
+}
+
+.news-latest {
+	&__left {
+		flow-children: down;
+		width: 400px;
+		height: 100%;
+		margin-right: 8px;
+		padding-left: 4px;
+	}
+
+	&__right {
+		flow-children: down;
+	}
+
+	&__title {
+		@include mixin.font-styles($use-header: true);
+		font-size: 21px;
+	}
+
+	&__description {
+		height: 100%;
+		margin-top: 4px;
+		padding-right: 16px;
+		font-size: 14px;
+		text-overflow: ellipsis;
+	}
+
+	&__image {
+		$width: 384px;
+		width: $width;
+		height: $width * 0.5625; // 0.5625 = 1/(16/9)
+		box-shadow: 1px 1px 4px 0 rgba(0, 0, 0, 0.8);
+
+		transition: wash-color 0.1s linear 0s;
+
+		&:hover {
+			wash-color: rgb(222, 222, 222);
+		}
+	}
+
+	&__learnmore {
+		height: 28px;
+		width: 100%;
+		margin-top: 4px;
 	}
 }
 
