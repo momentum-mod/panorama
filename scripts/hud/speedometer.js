@@ -307,7 +307,11 @@ class Speedometer {
 		}
 	}
 
-	static onSettingsUpdate() {
+	static onSettingsUpdate(success) {
+		if (!success) {
+			$.Warning('Failed to load speedometer settings from speedometer!');
+			return;
+		}
 		const data = SpeedometerSettingsAPI.GetCurrentGamemodeSettings();
 		if (data === undefined) return;
 
@@ -364,8 +368,13 @@ class Speedometer {
 		$.RegisterEventHandler('OnJumpSpeedUpdate', Speedometer.container, Speedometer.onJumpSpeedUpdate);
 		$.RegisterEventHandler('OnRampBoardSpeedUpdate', Speedometer.container, Speedometer.onRampBoardSpeedUpdate);
 		$.RegisterEventHandler('OnRampLeaveSpeedUpdate', Speedometer.container, Speedometer.onRampLeaveSpeedUpdate);
-		$.RegisterForUnhandledEvent('PanoramaComponent_SpeedometerSettings_OnSettingsUpdated', Speedometer.onSettingsUpdate);
-		$.RegisterForUnhandledEvent('PanoramaComponent_Zones_OnZoneChange', Speedometer.onZoneChange);
 		$.RegisterEventHandler('OnSpeedometerUpdate', Speedometer.container, Speedometer.onSpeedometerUpdate);
+		$.RegisterForUnhandledEvent('PanoramaComponent_Zones_OnZoneChange', Speedometer.onZoneChange);
+		
+		// color profiles load before speedo settings, so this should be enough
+		$.RegisterForUnhandledEvent('OnSpeedometerSettingsLoaded', Speedometer.onSettingsUpdate);
+		// do want to register when color profiles are saved though as that can happen independently
+		$.RegisterForUnhandledEvent('OnSpeedometerSettingsSaved', Speedometer.onSettingsUpdate);
+		$.RegisterForUnhandledEvent('OnRangeColorProfilesSaved', Speedometer.onSettingsUpdate);
 	}
 }
