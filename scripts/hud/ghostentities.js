@@ -19,6 +19,6 @@ class GhostEntities {
 	}
 
 	static {
-		$.RegisterEventHandler( 'OnAimOverGhostChange', $( '#GhostEntPanelsContainer' ), GhostEntities.onAimOverGhostChange );
+		$.RegisterForUnhandledEvent('OnAimOverGhostChange', GhostEntities.onAimOverGhostChange);
 	}
 }
