@@ -327,8 +327,12 @@ class MainMenuSettings {
 
 				if (value === -1) return;
 
+				// 0 if not already set, let the places using the var handle setting a default value
+				// TODO: change this behaviour when scell's changes get in. no need for the gross toString()!
+				const storedValue = $.persistentStorage.getItem(storageKey) ?? '0';
+
 				// Check the button if the value matches the stored value
-				child.checked = $.persistentStorage.getItem(storageKey) === value.toString();
+				child.checked = storedValue === value.toString();
 
 				// Extra attribute to allow us to still specify onactivate events in XML
 				const overrideString = child.GetAttributeString('activateoverride', '');

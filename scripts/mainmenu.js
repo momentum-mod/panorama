@@ -190,9 +190,10 @@ class MainMenuController {
 
 		let useVideo = $.persistentStorage.getItem('settings.mainMenuMovie') == '1';
 
-		if (typeof useVideo == typeof null) {
+		if (typeof $.persistentStorage.getItem('settings.mainMenuMovie') === typeof null) {
 			useVideo = true;
-			$.persistentStorage.setItem('settings.mainMenuMovie', true);
+			// Enable video by default
+			$.persistentStorage.setItem('settings.mainMenuMovie', 1);
 		}
 
 		videoPanel.visible = useVideo;
