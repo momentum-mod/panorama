@@ -1,14 +1,12 @@
 <root>
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
-		<include src="file://{resources}/styles/settings/settings_enum.css" />
-		<include src="file://{resources}/styles/settings/settings_shared.css" />
 	</styles>
 
-	<ChaosSettingsEnum>
-		<Panel id="TitleContainer">
-			<Label id="title" />
+	<ChaosSettingsEnum class="settings-enum">
+		<Panel class="settings-enum__title-container">
+			<Label id="title" class="settings-enum__title" />
 		</Panel>
-		<Panel id="values" />
+		<Panel id="values" class="settings-enum__values"/>
 	</ChaosSettingsEnum>
 </root>

@@ -1,7 +1,10 @@
 .colorpicker {
-	width: 1000px; /* LAYOUT HACK */
-	padding: 36px;
+	// Width behaves very strangely here. The plane height 100% attempts to take up over 1000px, I have no idea why.
+	// Hardcode that and this panel still takes about 100px too much width. WTF is going on here?
+	width: 700px;
+	padding: 16px;
 	flow-children: right;
+	height: fit-children;
 
 	&__plane {
 		height: 100%;
@@ -12,35 +15,46 @@
 	&__axis {
 		height: 100%;
 		width: height-percentage(8%);
-		margin-left: 36px;
-		margin-right: 36px;
+		margin: 0 36px;
 		border-radius: 4px;
 	}
 
-	&__right-bar {
+	&__right {
 		flow-children: down;
 	}
 
-	&__right-bar-entry {
+	&__entry {
 		flow-children: right;
-		margin-bottom: 10px;
+		margin-bottom: 8px;
+	}
+
+	&__numberentry {
+		width: 140px;
+	}
+
+	&__right-item {
+		width: 100%;
+	}
+
+	&__textentry {
+		width: fill-parent-flow(1);
 	}
 
 	&__label {
-		margin-right: 18px;
-		min-width: 20px; /* LAYOUT HACK */
-	}
-
-	&__button--save {
-		margin-left: 8px;
+		vertical-align: middle;
+		margin-right: 12px;
+		width: 16px;
 	}
 
 	&__color-target {
-		width: 50px;
 		height: 32px;
+		width: fill-parent-flow(1);
 		background-color: cyan;
 		border-radius: 4px;
-		margin-left: 10px;
+	}
+
+	&__action-button {
+		width: fill-parent-flow(1);
 	}
 }
 
@@ -49,6 +63,7 @@
 	height: 8px;
 	background-color: white;
 	border: 1px solid black;
+	border-radius: 1px;
 }
 
 .color-axis-indicator {
@@ -57,4 +72,5 @@
 	background-color: white;
 	border-top: 1px solid black;
 	border-bottom: 1px solid black;
+	border-radius: 1px;
 }

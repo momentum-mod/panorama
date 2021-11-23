@@ -17,16 +17,16 @@
 	transition-property: background-color;
 	transition-duration: 0.15s;
 	transition-timing-function: ease-in-out;
-	
+
 	&:hover .DropDownIcon {
 		background-color: $dropdown-button-icon-background-hover;
 	}
-	
+
 	.DropDownIcon {
-		background-image: url("file://{images}/down-arrow.svg");
+		background-image: url('file://{images}/mom-arrow-down.svg');
 		background-repeat: no-repeat;
-		background-position: right 22px 50%;
-		background-size: 12px 12px;
+		background-position: right 50% 50%;
+		background-size: 14px 14px;
 		border-radius: $dropdown-button-radius - 1px;
 		height: 100%;
 		min-width: 32px;
@@ -37,17 +37,17 @@
 		transition-property: background-color;
 		transition-duration: 0.15s;
 		transition-timing-function: ease-in-out;
-
-		&:hover {
-			background-color: $dropdown-button-icon-background-hover2;
-		}
 	}
-
 
 	// Inserted by code
 	&.DropDownMenuVisible {
 		background-color: $dropdown-button-background-menuvisible;
 		transition-duration: 0s;
+
+		& > .DropDownIcon {
+			background-color: $dropdown-button-icon-background-menuvisible;
+			brightness: 0.8;
+		}
 	}
 
 	&:hover {
@@ -103,7 +103,7 @@
 	z-index: 0;
 	visibility: collapse; // Make sure the dropdown menu does not take part in the layout traversal if not shown on the screen
 	width: fit-children;
-	opacity: 0.0;
+	opacity: 0;
 	transition-property: opacity;
 	transition-duration: 0.1s;
 	transition-timing-function: ease-in-out;
@@ -141,7 +141,7 @@
 	}
 
 	&.DropDownMenuVisible {
-		opacity: 1.0;
+		opacity: 1;
 		visibility: visible;
 		box-shadow: $dropdown-menu-shadow;
 		border-radius: $button-radius;

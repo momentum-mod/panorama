@@ -1,0 +1,241 @@
+@use '../config' as *;
+@use '../abstract/mixin';
+@use '../abstract/function';
+@use '../controls/button';
+@use '../controls/radiobutton';
+
+.settings-enum,
+.settings-enum-dropdown,
+.settings-slider,
+.settings-keybinder {
+	flow-children: right;
+	align: center center;
+
+	width: 100%;
+	height: 48px;
+
+	padding: 0 6px 0 12px;
+
+	border-radius: 2px;
+	border: 1px solid rgba(0, 0, 0, 0.5);
+
+	margin-bottom: 4px;
+
+	&.--even {
+		background-color: rgba(255, 255, 255, 0.03);
+	}
+	&.--odd {
+		background-color: rgba(255, 255, 255, 0.02);
+	}
+	&.--even,
+	&.--odd {
+		transition: background-color 0.1s ease-in-out 0s;
+
+		&:hover {
+			background-color: rgba(255, 255, 255, 0.06);
+		}
+
+		&:disabled {
+			background-color: rgba(128, 128, 128, 0.1);
+		}
+	}
+
+	&__title-container {
+		width: 35%;
+		vertical-align: center;
+		margin-right: 10px;
+	}
+
+	&__input-container {
+		flow-children: right;
+		width: 65%;
+		vertical-align: center;
+	}
+
+	&__title-container:parentdisabled,
+	&__input-container:parentdisabled {
+		opacity: 0.5;
+		wash-color: rgba(127, 127, 127, 1);
+	}
+
+	&__title {
+		vertical-align: center;
+		@include mixin.font-styles($use-header: false);
+		font-size: 18px;
+		overflow: squish;
+		text-overflow: shrink;
+	}
+}
+
+.settings-enum {
+	&__values {
+		flow-children: right;
+		horizontal-align: right;
+		// width: fill-parent-flow(1);
+		width: 280px;
+		height: 38px;
+		vertical-align: center;
+
+		& > RadioButton {
+			@extend .button;
+			@extend .radiobutton;
+			@extend .radiobutton--blue;
+			// background-color: function.gradient-vertical(rgba(83, 83, 83, 0.8), rgba(66, 66, 66, 0.8));
+
+			width: fill-parent-flow(1);
+			height: 100%;
+			margin-left: 6px;
+
+			&:hover:not(:selected) {
+				// background-color: function.gradient-vertical(rgba(112, 112, 112, 0.8), rgba(87, 87, 87, 0.8));
+			}
+		}
+
+		& > RadioButton > Label {
+			@extend .button__text;
+			font-size: 22px;
+		}
+	}
+}
+
+.settings-enum-dropdown {
+	&__dropdown {
+		horizontal-align: right;
+	}
+}
+
+.settings-slider {
+	&__slider {
+		width: fill-parent-flow(1);
+		vertical-align: center;
+		margin: 0 12px;
+	}
+
+	&__textentry {
+		width: 80px;
+	}
+}
+
+.settings-keybinder {
+	$root: &;
+
+	transition: background-color 0.1s linear 0s;
+
+	&:hover {
+		background-color: rgba(255, 255, 255, 0.025);
+	}
+
+	&__container {
+		min-width: 32px;
+		height: 32px;
+		padding: 2px 0;
+		align: center center;
+
+		horizontal-align: right;
+		border-radius: 4px;
+		background-color: rgba(255, 255, 255, 0.1);
+		border: 1px solid rgba(255, 255, 255, 0.05);
+		box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.5);
+
+		transition-property: background-color, border;
+		transition-duration: 0.15s;
+		transition-timing-function: ease-in-out;
+
+		&:hover {
+			background-color: rgba($blue, 0.3);
+			border: 1px solid rgba($blue, 0.4);
+		}
+
+		#{$root}:selected & {
+			animation-name: PulseBackgroundBlue;
+			animation-duration: 1.5s;
+			animation-timing-function: linear;
+			animation-iteration-count: infinite;
+		}
+	}
+
+	&__key-container {
+		height: 100%;
+		// min-width: 32px;
+		align: center center;
+
+		&.ActiveBindButton {
+			width: 100%;
+
+			#{$root}:selected & {
+				visibility: collapse;
+			}
+		}
+	}
+
+	&__key {
+		@include mixin.font-styles($use-header: true, $light-header: true);
+		font-size: 25px;
+		margin: 0 6px;
+		align: center center;
+		text-align: center;
+	}
+
+	&__clear {
+		width: 100%;
+		height: 100%;
+		align: center center;
+		margin: 2px 4px;
+		opacity: 0.8;
+
+		background-image: url('file://{images}/close-circle.svg');
+		background-size: 100% 100%;
+		background-repeat: no-repeat;
+		visibility: collapse;
+
+		transition: wash-color 0.1s ease-in-out 0s;
+
+		#{$root}:selected & {
+			visibility: visible;
+		}
+
+		&:hover {
+			wash-color: rgb(175, 175, 175);
+		}
+	}
+}
+
+ConVarEnabler > .settings-enum,
+ConVarEnabler > .settings-enum-dropdown,
+ConVarEnabler > .settings-slider,
+ConVarEnabler > .settings-keybinder,
+ConVarEnabler > .convarcolordisplay {
+	height: 48px;
+	transition: height 0.1s ease-out 0s;
+
+	&:parentdisabled {
+		height: 0px;
+	}
+}
+
+// Toggle - I don't know where this is from or how it's supposed
+// to work so not going to style it
+
+// ChaosSettingsToggle {
+// 	height: 48px;
+// 	flow-children: right;
+// 	padding: 0 4px 0 12px;
+// 	width: 100%;
+// 	vertical-align: middle;
+// }
+
+// ChaosSettingsToggle #TitleContainer {
+// 	vertical-align: middle;
+// 	width: 35%;
+// 	padding-right: 50px;
+// }
+
+// ChaosSettingsToggle #Title {
+// 	vertical-align: middle;
+// 	horizontal-align: left;
+// }
+
+// ChaosSettingsToggle #Toggle {
+// 	vertical-align: middle;
+// 	horizontal-align: right;
+// }

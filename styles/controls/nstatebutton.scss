@@ -11,8 +11,5 @@
 	}
 	&:disabled {
 		background-color: $nstatebutton-0-background-disabled;
-		&:hover {
-			background-color: $nstatebutton-0-background-disabled-hover;
-		}
 	}
 }

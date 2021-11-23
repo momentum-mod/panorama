@@ -1,10 +1,10 @@
 <root>
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
-		<include src="file://{resources}/styles/settings/settings_toggle.css" />
-		<include src="file://{resources}/styles/settings/settings_shared.css" />
 	</styles>
   
+	<!-- Unused, doesn't have styling -->
+
 	<ChaosSettingsToggle>
 		<Panel class="flow-right vertical-align-center full-width">
 			<Panel id="TitleContainer">

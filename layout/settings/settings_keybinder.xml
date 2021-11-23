@@ -1,17 +1,17 @@
 <root>
-  <styles>
+	<styles>
 		<include src="file://{resources}/styles/main.scss" />
-		<include src="file://{resources}/styles/settings/settings_keybinder.css" />
-		<include src="file://{resources}/styles/settings/settings_shared.css" />
-  </styles>
+	</styles>
 
-	<ChaosSettingsKeyBinder class="BindingRow">
-		<Label id="title" text="" class="BindingRowLabel"/>
-		<Panel id="LabelFXContainer">
-			<Panel id="BindingLabelContainer">
-				<Label id="value" text="" class="BindingRowButton"/>
+	<ChaosSettingsKeyBinder class="settings-keybinder">
+		<Panel class="settings-keybinder__title-container">
+			<Label id="title" class="settings-keybinder__title" />
+		</Panel>
+		<Panel class="settings-keybinder__container">
+			<Panel id="BindingLabelContainer" class="settings-keybinder__key-container">
+				<Label id="value" text="" class="settings-keybinder__key"/>
 			</Panel>
-			<Button id="clearkeybinding" class="ClearKeybinding" />
+			<Button id="clearkeybinding" class="settings-keybinder__clear" />
 		</Panel>
 	</ChaosSettingsKeyBinder>
 </root>

@@ -2,13 +2,14 @@
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
-	<Panel class="flow-right">
-		<Button id="DecrementButton" class="button">
-			<Label class="button__text" text="-" />
+
+	<Panel class="numberentry">
+		<Button id="DecrementButton" class="numberentry__button">
+			<Image class="button__icon numberentry__icon" src="file://{images}/subtract.svg" />
 		</Button>
-		<TextEntry id="TextEntry" class="textentry" />
-		<Button id="IncrementButton" class="button">
-			<Label class="button__text" text="+" />
+		<TextEntry id="TextEntry" class="textentry numberentry__textentry" />
+		<Button id="IncrementButton" class="numberentry__button">
+			<Image class="button__icon numberentry__icon" src="file://{images}/add.svg" />
 		</Button>
 	</Panel>
 </root>

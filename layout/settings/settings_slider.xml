@@ -1,17 +1,17 @@
 <root>
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
-		<include src="file://{resources}/styles/settings/settings_slider.css" />
-		<include src="file://{resources}/styles/settings/settings_shared.css" />
 	</styles>
   
-	<ChaosSettingsSlider>
-		<Panel id="TitleContainer">
-			<Label id="Title" />
+
+	<ChaosSettingsSlider class="settings-slider">
+		<Panel class="settings-slider__title-container">
+			<Label class="settings-slider__title" id="Title" />
 		</Panel>
-		<Panel id="InputContainer">
-			<Slider class="HorizontalSlider" direction="horizontal" id="Slider"/>
-			<TextEntry maxchars="4" textmode="numeric" id="Value" />
+		<Panel class="settings-slider__input-container">
+			<!-- TODO: enable showdefault="true" after 1577 done -->
+			<Slider class="slider slider--horizontal settings-slider__slider" direction="horizontal" id="Slider"/>
+			<TextEntry class="textentry settings-slider__textentry" maxchars="4" textmode="numeric" id="Value" />
 		</Panel>
 	</ChaosSettingsSlider>
 </root>

@@ -1,17 +1,14 @@
 <root>
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
-		<include src="file://{resources}/styles/settings/settings_enum_dropdown.css" />
-		<include src="file://{resources}/styles/settings/settings_shared.css" />
 	</styles>
   
-	<ChaosSettingsEnumDropDown>
-		<Panel id="TitleContainer">
-			<Label id="Title" />
+	<ChaosSettingsEnumDropDown class="settings-enum-dropdown">
+		<Panel class="settings-enum-dropdown__title-container">
+			<Label class="settings-enum-dropdown__title" id="Title" />
 		</Panel>
-		<Panel id="InputContainer">
-			<DropDown id="DropDown" class="dropdown"  menuclass="dropdown-menu" />
+		<Panel class="settings-enum-dropdown__input-container">
+			<DropDown id="DropDown" class="dropdown settings-enum-dropdown__dropdown"  menuclass="dropdown-menu" />
 		</Panel>
 	</ChaosSettingsEnumDropDown>
-  
 </root>

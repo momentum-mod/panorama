@@ -1,8 +1,6 @@
 <root>
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
-		<include src="file://{resources}/styles/settings/settings_shared.css" />
-		<include src="file://{resources}/styles/controls/convarcolordisplay.scss" />
 	</styles>
 	<scripts>
 		<include src="file://{resources}/scripts/convarcolordisplay.js"/>

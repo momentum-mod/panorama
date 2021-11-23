@@ -27,7 +27,7 @@
 	.togglebutton--#{$name} {
 		&:selected {
 			background-color: function.gradient-vertical(list.nth($colors, 1), list.nth($colors, 2));
-			border: $button-colored-border;
+			border: $button-border;
 
 			&:hover {
 				background-color: function.gradient-vertical(

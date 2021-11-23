@@ -157,11 +157,10 @@ $spacers: ( 4px, 6px, 8px, 16px, 32px ) !default;
 // ================
 
 $button-background-base          : $light-500 !default;
-$button-background               : gradient-vertical($button-background-base, color.scale($button-background-base, $lightness: -20%)) !default;
+$button-background               : gradient-vertical($button-background-base, color.scale($button-background-base, $lightness: -15%)) !default;
 $button-background-hover         : gradient-vertical(color.scale($button-background-base, $lightness: 0%,   $alpha: 15%), color.scale($button-background-base, $lightness: -20%, $alpha: 15%)) !default;
 $button-background-selected      : gradient-vertical(color.scale($button-background-base, $lightness: 0%,   $alpha: 20%), color.scale($button-background-base, $lightness: -20%, $alpha: 20%)) !default; // Used by Radiobuttons + Togglebuttons
-$button-background-disabled      : gradient-vertical(color.scale($button-background-base, $lightness: -50%, $alpha: 20%), color.scale($button-background-base, $lightness: -70%, $alpha: 20%)) !default;
-$button-background-disabled-hover: gradient-vertical(color.scale($button-background-base, $lightness: -30%, $alpha: 20%), color.scale($button-background-base, $lightness: -10%, $alpha: 20%)) !default;
+$button-background-disabled      : gradient-vertical(color.scale($button-background-base, $lightness: -50%, $alpha: 20%), color.scale($button-background-base, $lightness: -55%, $alpha: 20%)) !default;
 
 $button-text-color   : $font-default-color !default;
 $button-text-disabled: $font-disabled-color !default;
@@ -169,8 +168,7 @@ $button-text-hover   : $button-text-color !default;
 
 $button-shadow: fill rgba(0, 0, 0, 0.45) 0px 1px 1px 0px !default;
 $button-radius: 4px !default;
-$button-border: 0px solid rgba(61, 61, 61, 0.0) !default;
-$button-colored-border: 0px solid rgba(0, 0, 0, 0.1) !default;
+$button-border: 0px solid rgba(255, 255, 255, 0.025) !default;
 
 $button-height                    : 34px !default;
 $button-icon-padding              : 6px !default;
@@ -194,9 +192,9 @@ $dropdown-button-background-disabled   : $button-background-disabled !default;
 $dropdown-button-background-hover      : gradient-vertical(color.scale($button-background-base, $lightness: 0%,   $alpha: 15%), color.scale($button-background-base, $lightness: -20%, $alpha: 15%)) !default;
 $dropdown-button-background-menuvisible: gradient-vertical(color.scale($button-background-base, $lightness: -60%, $alpha: 50%), color.scale($button-background-base, $lightness: -65%, $alpha: 50%)) !default;
 
-$dropdown-button-icon-background       : $light-500 !default;
-$dropdown-button-icon-background-hover : color.scale($dropdown-button-icon-background, $lightness: 0%,   $alpha: 20%) !default;
-$dropdown-button-icon-background-hover2: color.scale($dropdown-button-icon-background, $lightness: -60%, $alpha: 30%) !default;
+$dropdown-button-icon-background       : $light-300 !default;
+$dropdown-button-icon-background-hover : color.scale($dropdown-button-icon-background, $lightness: 0%,   $alpha: 12%) !default;
+$dropdown-button-icon-background-menuvisible: color.scale($dropdown-button-icon-background, $lightness: -40%,   $alpha: 20%) !default;
 $dropdown-button-icon-border           : 0px solid rgba(0, 0, 0, 0) !default;
 $dropdown-button-icon-shadow           : 0 0 2px 0 rgba(0, 0, 0, 0.3) !default;
 
@@ -290,7 +288,6 @@ $radiobutton-text-disabled  : $font-disabled-color !default;
 $nstatebutton-0-background               : $button-background !default;
 $nstatebutton-0-background-hover         : $button-background-hover !default;
 $nstatebutton-0-background-disabled      : $button-background-disabled !default;
-$nstatebutton-0-background-disabled-hover: $button-background-disabled-hover !default;
 
 $nstatebutton-colors: ("blue", "red") !default;
 
@@ -330,7 +327,7 @@ $textentry-padding     : 6px 16px 6px 8px !default;
 $textentry-border      : 0 solid none !default;
 $textentry-radius      : 4px !default;
 $textentry-shadow      : fill rgba(0, 0, 0, 0.3) 0px 0px 3px 0px !default;
-$textentry-shadow-hover: rgba(0, 0, 0, 0.5) 0px 0px 3px 0px !default;
+$textentry-shadow-hover: fill rgba(0, 0, 0, 0.5) 0px 0px 3px 0px !default;
 
 $textentry-font-size              : 18px !default;
 $textentry-placeholder-font-size  : 18px !default;
@@ -360,19 +357,19 @@ $slider-thumb-shadow     : rgba(0, 0, 0, 0.3) 0px 1px 2px 0px !default;
 
 $slider-default-color    : $red !default;
 $slider-default-width    : 4px !default;
-$slider-default-height   : 16px !default;
-$slider-default-radius   : 2px !default;
-$slider-default-shadow   : rgba(0, 0, 0, 0.5) 0px 1px 2px 0px !default;
+$slider-default-height   : 8px !default;
+$slider-default-radius   : 0px !default;
+$slider-default-shadow   : rgba(0, 0, 0, 0) 0px 0px 4px 0px !default;
 
 // ================
 // SCROLLBAR
 // ================
 
-$scrollbar-width        : 8px !default;
+$scrollbar-width        : 6px !default;
 $scrollbar-radius       : 0px !default;
 $scrollbar-color        : $white !default;
-$scrollbar-opacity      : 0.4 !default;
-$scrollbar-hover-opacity: 0.6 !default;
+$scrollbar-opacity      : 0.6 !default;
+$scrollbar-hover-opacity: 0.8 !default;
 
 // ================
 // PROGRESSBAR
@@ -420,7 +417,7 @@ $popup-text-font-size       : 18px !default;
 $popup-button-font-size     : 24px !default;
 
 // ================
-// PAGES
+// MAIN MENU
 // ================
 
 $rightnav-width: 50px;
