@@ -1,0 +1,393 @@
+@use '../config' as *;
+@use '../abstract/mixin';
+@use '../abstract/function' as *;
+
+$page-width: 1920px - $rightnav-width;
+
+.settings {
+	flow-children: right;
+	margin: 8px 8px 16px 32px;
+	width: 100%;
+	height: 100%;
+
+	&__left {
+		flow-children: down;
+		width: 350px;
+
+		height: 100%;
+		padding-right: 16px;
+	}
+
+	&__pages {
+		width: fill-parent-flow(1);
+		height: 100%;
+	}
+
+	&__info {
+		width: 350px;
+
+		height: 100%;
+		padding: 16px;
+	}
+
+	&__search {
+		width: 600px;
+		height: 40px;
+		margin-bottom: 16px;
+		margin-top: 4px;
+	}
+
+	&__crosshair {
+		// transform: scale3d(1.5, 1.5, 1.5);
+		width: 100%;
+		height: 260px;
+		vertical-align: center;
+
+		
+		opacity: 1;
+		transition: opacity 0.2s ease-out 0s;
+		
+		&:parentdisabled{
+			opacity: 0;
+		}
+		
+		&-wrapper {
+			width: 250px;
+			height: 100%;
+			margin-right: 8px;
+			background-color: rgba(255, 255, 255, 0.03);
+			// border-radius: 2px; // Why the FUCK does this stop the crosshair from updating???
+
+			transition: width 0.2s ease-in-out 0s;
+
+			&:disabled {
+				width: 0px;
+				margin-right: 0px;
+			}
+		}
+	}
+
+	&__paint {
+		width: 200px;
+		height: 200px;
+		margin-right: 8px;
+		background-color: rgba(255, 255, 255, 0.03);
+		border: 1px solid rgba(0, 0, 0, 0.5);
+		border-radius: 2px;
+	}
+
+	&__paint-blob {
+		align: center center;
+		border-radius: 50%;
+		// Width set in JS
+		height: width-percentage(100%);
+	}
+
+	&__ghost {
+		width: 300px;
+		height: 300px;
+		margin-right: 16px;
+		background-color: rgba(255, 255, 255, 0.03);
+	}
+}
+
+.settings-nav {
+	$root: &;
+
+	width: 100%;
+	height: fit-children;
+
+	background-color: rgba(0, 0, 0, 0.5);
+	box-shadow: fill rgba(255, 255, 255, 0.01) 0px 0px 2px 0px;
+
+	border-radius: 4px;
+	border: 1px solid rgba(0, 0, 0, 0.5);
+	border-left: 1px solid rgba(0, 0, 0, 0);
+
+	flow-children: none;
+
+	&__main {
+		flow-children: down;
+		width: 100%;
+		height: fit-children;
+		overflow: squish scroll;
+	}
+
+	&__collapse-button {
+		z-index: 2;
+		horizontal-align: right;
+		height: 19px;
+		width: 23px;
+
+		background-color: rgba(0, 0, 0, 0.5);
+
+		margin-right: 12px;
+
+		border-bottom-left-radius: 2px;
+		border-bottom-right-radius: 2px;
+
+		&:hover {
+			#{$root}__collapse-icon {
+				opacity: 1;
+			}
+		}
+	}
+
+	&__collapse-icon {
+		opacity: 1;
+
+		align: center center;
+		padding: 4px;
+		opacity: 0.4;
+		transition: opacity 0.1s ease-in-out 0s;
+	}
+
+	// To animate we need to fixed height values
+	// Get the value that the subitems should be naturally in 1920x1080 and set height here.
+	// It's determined based on font-size which I don't think I can translate automatically into panel height.
+	$subitem-height: 26px;
+
+	&__subsection {
+		flow-children: down;
+
+		width: 100%;
+
+		transition: height 0.1s ease-in-out 0s;
+
+		@each $child-count in (0, 1, 2, 3, 4, 5, 6, 7, 8) {
+			&--#{$child-count} {
+				height: $child-count * $subitem-height;
+			}
+		}
+
+		&--hidden {
+			height: 0px;
+		}
+	}
+
+	&__item,
+	&__subitem {
+		width: 100%;
+
+		transition-property: background-color, opacity, box-shadow, border, height;
+		transition-duration: 0.1s;
+		transition-timing-function: ease-in-out;
+	}
+
+	&__item {
+		flow-children: down;
+
+		padding: 6px 0;
+		border-left: 1px solid rgba(255, 255, 255, 0);
+
+		&:hover {
+			background-color: rgba(255, 255, 255, 0.025);
+
+			border-left: 1px solid rgba(255, 255, 255, 0.25);
+		}
+
+		&:selected {
+			background-color: rgba(255, 255, 255, 0.05);
+
+			border-left: 1px solid rgba(255, 255, 255, 0.5);
+
+			&:hover {
+				background-color: rgba(255, 255, 255, 0.04);
+			}
+
+			& > #{$root}__subitem:hover {
+				background-color: rgba(255, 255, 255, 0.015);
+			}
+		}
+	}
+
+	&__item-label {
+		width: 100%;
+		padding-left: 16px;
+
+		@include mixin.font-styles($use-header: true, $light-header: false);
+		font-size: 38px;
+		opacity: 0.85;
+
+		transition: opacity 0.1s ease-in-out 0s;
+		&:hover {
+			opacity: 1;
+		}
+	}
+
+	&__subitem {
+		background-color: rgba(0, 0, 0, 0);
+		padding: 2px 0;
+
+		height: $subitem-height;
+
+		margin-left: -1px; // Shove it left so the borders overlap
+		border-left: 1px solid rgba(255, 255, 255, 0);
+
+		&:hover {
+			background-color: rgba(255, 255, 255, 0.02);
+
+			border-left: 1px solid rgba(255, 255, 255, 0.7);
+		}
+
+		&:selected {
+			background-color: rgba(255, 255, 255, 0.05);
+
+			&:hover {
+				background-color: rgba(255, 255, 255, 0.1);
+			}
+
+			border-left: 1px solid rgba(255, 255, 255, 0.9);
+		}
+	}
+
+	&__subitem-label {
+		padding-left: 24px;
+
+		@include mixin.font-styles($use-header: true, $light-header: true);
+		font-size: 20px;
+	}
+
+	&__separator {
+		width: 100%;
+		height: 1px;
+		background-color: rgba(0, 0, 0, 0.3);
+	}
+}
+
+.settings-page {
+	width: 100%;
+	height: 100%;
+	flow-children: down;
+
+	opacity: 0;
+
+	transition: opacity 0.1s linear 0s;
+
+	&--active {
+		opacity: 1;
+	}
+
+	&__header {
+		flow-children: right;
+		width: 100%;
+		height: 64px;
+
+		padding-left: 8px;
+		margin-top: -10px;
+		margin-bottom: 5px;
+
+		&-buttons {
+			flow-children: right;
+			horizontal-align: right;
+			vertical-align: center;
+		}
+	}
+
+	&__title {
+		@include mixin.font-styles($use-header: true);
+		font-size: 59px;
+	}
+
+	&__subtitle {
+		@include mixin.font-styles($use-header: true);
+		font-size: 32px;
+		margin-bottom: 8px;
+	}
+
+	&__container {
+		height: 100%;
+		width: 100%;
+		flow-children: down;
+		overflow: squish scroll;
+		padding-right: 16px;
+		border-top-left-radius: 4px;
+		border-bottom-left-radius: 4px;
+	}
+
+	// These are so the page distance scrolled calculations work accurately
+	&__spacer {
+		width: 100%;
+		height: 16px;
+	}
+}
+
+.settings-group {
+	width: 100%;
+	flow-children: down;
+	padding: 16px;
+	padding-top: 12px;
+
+	background-color: rgba(0, 0, 0, 0.5);
+	box-shadow: fill rgba(255, 255, 255, 0.01) 0px 0px 2px 0px;
+
+	border-radius: 4px;
+	border: 1px solid rgba(0, 0, 0, 0.3);
+
+	&--highlight {
+		animation-name: SettingsGroupHighlight;
+		animation-duration: 1s;
+		animation-timing-function: ease-out;
+		animation-iteration-count: 1;
+	}
+
+	&__header {
+		margin: 0px 4px 8px 4px;
+		flow-children: right;
+		width: 100%;
+	}
+
+	&__reset {
+		horizontal-align: right;
+		vertical-align: center;
+	}
+
+	&__title {
+		@include mixin.font-styles($use-header: true);
+		font-size: 42px;
+	}
+
+	&__subtitle {
+		@include mixin.font-styles($use-header: true);
+		font-size: 32px;
+		margin-left: 4px;
+		margin-bottom: 4px;
+		margin-top: 12px;
+	}
+
+	&__combo {
+		flow-children: down;
+
+		width: 100%;
+
+		border-radius: 2px;
+		border: 1px solid rgba(0, 0, 0, 0.5);
+
+		margin-bottom: 4px;
+
+		// TODO: This could use an @extend if Sass was set up better, do during loading refactor
+		& .settings-enum,
+		& .settings-enum-dropdown,
+		& .settings-slider,
+		& .settings-keybinder {
+			border-radius: 0;
+			border: 0px none;
+
+			margin-bottom: 0px;
+		}
+
+		&.--even {
+			background-color: rgba(255, 255, 255, 0.03);
+		}
+		&.--odd {
+			background-color: rgba(255, 255, 255, 0.02);
+		}
+		&.--even,
+		&.--odd {
+			transition: background-color 0.1s ease-in-out 0s;
+			&:hover {
+				background-color: rgba(255, 255, 255, 0.06);
+			}
+		}
+	}
+}

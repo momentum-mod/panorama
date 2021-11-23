@@ -1,0 +1,200 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+		<include src="file://{resources}/styles/pages/settings.scss" />
+	</styles>
+	<scripts>
+		<include src="file://{resources}/scripts/settings_shared.js"/>
+	</scripts>
+
+	<Panel class="settings-page">
+
+		<Panel class="settings-page__header">
+
+			<Label class="settings-page__title" text="Interface Settings" />
+
+			<Panel class="settings-page__header-buttons">
+				<!-- Gamemode Dropdown will go here -->
+			</Panel>
+
+		</Panel>
+
+		<Panel id="SettingsPageContainer" class="settings-page__container">
+
+			<Panel id="UISubSection" class="settings-group">
+
+				<Panel class="settings-group__header">
+
+					<Label class="settings-group__title" text="User Interface" />
+
+					<TooltipPanel class="settings-group__reset" tooltip="Reset">
+						<Button class="button settings-group__reset" onactivate="SettingsShared.resetSettings('UISubSection');">
+							<Image class="button__icon" src="file://{images}/reset.svg" />
+						</Button>
+					</TooltipPanel>
+
+				</Panel>
+
+				<ChaosSettingsEnum text="#GameUI_DeveloperConsoleCheck" convar="con_enable" hasdocspage="false">
+					<RadioButton group="enableconsole" text="#SFUI_Off" value="0" />
+					<RadioButton group="enableconsole" text="#SFUI_On" value="1" />
+				</ChaosSettingsEnum>
+
+				<ChaosSettingsEnum id="test1" text="#MOM_Settings_Menu_Movie" psvar="settings.mainMenuMovie" infomessage="#MOM_Settings_Menu_Movie_TT">
+					<RadioButton group="mainmenuvideo" text="#SFUI_Off" value="0" activateoverride="$.DispatchEvent('ReloadBackground');"/>
+					<RadioButton group="mainmenuvideo" text="#SFUI_On" value="1" activateoverride="$.DispatchEvent('ReloadBackground');"/>
+				</ChaosSettingsEnum>
+
+				<ChaosSettingsEnumDropDown text="#MOM_Settings_Menu_Type" psvar="settings.mainMenuBackground" submitoverride="$.DispatchEvent('ReloadBackground');" infomessage="#MOM_Settings_Menu_Type_TT">
+					<Label text="#MOM_Settings_Menu_Type_0" value="0" id="bgtype0"/>
+					<Label text="#MOM_Settings_Menu_Type_1" value="1" id="bgtype1"/>
+				</ChaosSettingsEnumDropDown>
+
+				<ChaosSettingsEnum id="test2" text="Advanced Settings Tooltips" psvar="settings.infoPanelConvars" infomessage="Display convar for each setting, where available.">
+					<RadioButton group="advancedtooltips" text="#SFUI_Off" value="0"/>
+					<RadioButton group="advancedtooltips" text="#SFUI_On" value="1"/>
+				</ChaosSettingsEnum>
+
+			</Panel>
+
+			<Panel class="settings-page__spacer"/>
+
+			<Panel id="SpeedometerSubSection" class="settings-group">
+
+				<Label class="settings-group__title" text="#MOM_Settings_Speedometer_Label" />
+
+				<Label text="Coming soon!" />
+
+			</Panel>
+
+			<Panel class="settings-page__spacer"/>
+
+			<Panel id="CrosshairSubSection" class="settings-group">
+
+				<Panel class="settings-group__header">
+
+					<Label class="settings-group__title" text="Crosshair" />
+
+					<TooltipPanel class="settings-group__reset" tooltip="Reset">
+						<Button class="button" onactivate="SettingsShared.resetSettings('CrosshairSubSection');">
+							<Image class="button__icon" src="file://{images}/reset.svg" />
+						</Button>
+					</TooltipPanel>
+
+				</Panel>
+
+				<Panel class="full-width flow-right mb-2">
+
+					<ConVarEnabler class="settings__crosshair-wrapper" convar="crosshair">
+						<MomCrosshair id="SettingsCrosshair" class="settings__crosshair" preview="true"/>
+					</ConVarEnabler>
+
+					<Panel class="fill-width flow-down">
+
+						<Panel class="settings-group__combo" style="margin-bottom: 0px;">							<!-- TODO: fix when sass specificity is fixed -->
+
+							<ChaosSettingsEnum text="Enable Crosshair" convar="crosshair" infomessage="" hasdocspage="false">
+								<RadioButton group="xhairenable" text="Off" value="0"/>
+								<RadioButton group="xhairenable" text="On" value="1"/>
+							</ChaosSettingsEnum>
+
+							<ConVarEnabler convar="crosshair" class="flow-down">
+
+								<ConVarColorDisplay text="Color" convar="cl_crosshair_color" infomessage="" hasdocspage="false"/>
+
+								<ChaosSettingsSlider text="Size" min="0" max="20" convar="cl_crosshair_size" displayprecision="2" infomessage="" hasdocspage="false"/>
+
+								<ChaosSettingsSlider text="Gap" min="0" max="10" convar="cl_crosshair_gap" displayprecision="2" infomessage="" hasdocspage="false"/>
+
+								<ChaosSettingsSlider text="Thickness" min="0" max="10" convar="cl_crosshair_thickness" displayprecision="2" infomessage="" hasdocspage="false"/>
+
+								<ChaosSettingsEnum text="Center Dot" convar="cl_crosshair_dot" infomessage="" hasdocspage="false">
+									<RadioButton group="xhairdot" text="Off" value="0" />
+									<RadioButton group="xhairdot" text="On" value="1" />
+								</ChaosSettingsEnum>
+
+
+								<ChaosSettingsEnum text="Outline" convar="cl_crosshair_drawoutline" infomessage="" hasdocspage="false">
+									<RadioButton group="xhairoutline" text="Off" value="0" />
+									<RadioButton group="xhairoutline" text="On" value="1" />
+								</ChaosSettingsEnum>
+
+								<ConVarEnabler convar="cl_crosshair_drawoutline">
+									<ChaosSettingsSlider style="margin-bottom: 0px;" text="Outline Thickness" min="0" max="3" convar="cl_crosshair_outlinethickness" displayprecision="2" infomessage="" hasdocspage="false"/>
+								</ConVarEnabler>
+
+							</ConVarEnabler>
+						</Panel>
+
+					</Panel>
+
+				</Panel>
+
+			</Panel>
+
+			<Panel class="settings-page__spacer"/>
+
+			<Panel id="KeypressSubSection" class="settings-group">
+
+				<Panel class="settings-group__header">
+
+					<Label class="settings-group__title" text="Keypress" />
+
+					<TooltipPanel class="settings-group__reset" tooltip="Reset">
+						<Button class="button" onactivate="SettingsShared.resetSettings('KeypressSubSection');">
+							<Image class="button__icon" src="file://{images}/reset.svg" />
+						</Button>
+					</TooltipPanel>
+
+				</Panel>
+
+				<ChaosSettingsEnum text="#MOM_Settings_User_Input_HUD" convar="mom_hud_keypress_enable" infomessage="#MOM_Settings_User_Input_HUD_TT">
+					<RadioButton group="showkeys" text="Off" value="0" />
+					<RadioButton group="showkeys" text="On" value="1" />
+				</ChaosSettingsEnum>
+
+			</Panel>
+
+			<Panel class="settings-page__spacer"/>
+
+			<Panel id="StrafeSyncSubSection" class="settings-group">
+
+				<Panel class="settings-group__header">
+
+					<Label class="settings-group__title" text="#MOM_Settings_Sync_Label" />
+
+					<TooltipPanel class="settings-group__reset" tooltip="Reset">
+						<Button class="button" onactivate="SettingsShared.resetSettings('StrafeSyncSubSection');">
+							<Image class="button__icon" src="file://{images}/reset.svg" />
+						</Button>
+					</TooltipPanel>
+
+				</Panel>
+
+				<ChaosSettingsEnum text="#MOM_Settings_Sync_Show" convar="mom_hud_strafesync_draw" infomessage="#MOM_Settings_Sync_Show_TT">
+					<RadioButton group="showsyncdata" text="Off" value="0" />
+					<RadioButton group="showsyncdata" text="On" value="1" />
+				</ChaosSettingsEnum>
+
+				<ChaosSettingsEnum text="#MOM_Settings_Sync_Show_Bar" convar="mom_hud_strafesync_drawbar" infomessage="#MOM_Settings_Sync_Show_Bar_TT">
+					<RadioButton group="showsyncbar" text="Off" value="0" />
+					<RadioButton group="showsyncbar" text="On" value="1" />
+				</ChaosSettingsEnum>
+
+				<ChaosSettingsEnumDropDown text="#MOM_Settings_Sync_Type_Label" convar="mom_hud_strafesync_type" infomessage="#MOM_Settings_Sync_Type_TT">
+					<Label id="synctype1" text="#MOM_Settings_Sync_Type_Sync1" value="1" />
+					<Label id="synctype2" text="#MOM_Settings_Sync_Type_Sync2" value="2" />
+				</ChaosSettingsEnumDropDown>
+
+				<ChaosSettingsEnumDropDown text="#MOM_Settings_Sync_Color_Type_Label" convar="mom_hud_strafesync_colorize" infomessage="#MOM_Settings_Sync_Color_Type_TT">
+					<Label id="colorize1" text="#MOM_Settings_Sync_Color_Type_None" value="0" />
+					<Label id="colorize2" text="#MOM_Settings_Sync_Color_Type_1" value="1" />
+					<Label id="colorize3" text="#MOM_Settings_Sync_Color_Type_2" value="2" />
+				</ChaosSettingsEnumDropDown>
+
+			</Panel>
+
+		</Panel>
+
+	</Panel>
+</root>

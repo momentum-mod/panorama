@@ -3,7 +3,7 @@
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
 		<include src="file://{resources}/styles/pages/mainmenu.scss"/>
-		<include src="file://{resources}/styles/settings/settings_shared.css"/>
+		<include src="file://{resources}/styles/pages/settings.scss"/>
 	</styles>
 	
 	<scripts>
@@ -15,14 +15,12 @@
 		<Panel class="settings-header full-width">
 			<Label class="text-h2" text="Learn"/>
 
-			<Panel class="settings-search">
-				<Image src="file://{images}/settings/search.svg" textureheight="64" />
-				<Panel class="settings-search-inner" acceptsfocus="true">
-					<TextEntry id="SettingsSearchTextEntry" maxchars="30" placeholder="Search..." /> 
-					<Button id="SettingsSearchClear" onactivate="SettingsMenuSearch.ClearSearch()">
-						<Image src="file://{images}/close.svg" textureheight="32" />
-					</Button>
-				</Panel>
+			<Panel class="search" acceptsfocus="true">
+				<Image class="search__icon" src="file://{images}/search.svg" textureheight="64" />
+				<TextEntry id="SettingsSearchTextEntry" class="search__textentry" maxchars="30" placeholder="Search..." /> 
+				<Button id="SettingsSearchClear" class="search__clearbutton">
+					<Image class="search__clearicon" src="file://{images}/close.svg" textureheight="32" />
+				</Button>
 			</Panel>
 		</Panel>
 

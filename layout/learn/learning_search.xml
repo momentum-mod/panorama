@@ -2,7 +2,7 @@
 
 <styles>
 	<include src="file://{resources}/styles/main.scss" />
-	<include src="file://{resources}/styles/settings/settings_shared.css" />
+	<include src="file://{resources}/styles/pages/settings.scss" />
 </styles>
 
 	<scripts>

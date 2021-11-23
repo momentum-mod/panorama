@@ -101,6 +101,7 @@ $drawer-width: 768px;
 		width: fill-parent-flow(1);
 		height: fill-parent-flow(1);
 		margin-top: $topnav-height;
+		margin-right: $rightnav-width;
 	}
 
 	&__home-container,
@@ -134,8 +135,8 @@ $drawer-width: 768px;
 		flow-children: down;
 		width: 100%;
 		height: 100%;
-		padding: 30px (30px + $rightnav-width) 30px 30px;
-
+		padding: 30px;
+		
 		transition-property: opacity;
 		transition-duration: 0s;
 		transition-timing-function: ease-in-out;
@@ -239,6 +240,7 @@ $drawer-width: 768px;
 		width: 100%;
 		height: 24px;
 		opacity: 0.8;
+		border-top: 1px solid rgba(0, 0, 0, 0.5);
 		background-color: gradient(linear, 0% 100%, 0% 0%, from(rgba(0, 0, 0, 0)), color-stop(0.5, rgba(0, 0, 0, 0.275)), to(rgba(0, 0, 0, 0.8)));
 	}
 }
@@ -531,18 +533,4 @@ $drawer-width: 768px;
 	&--hidden {
 		opacity: 0;
 	}
-}
-
-// These will get cleaned up in settings converion
-.content-navbar {
-	width: 100%;
-	background-color: rgba(255, 255, 255, 0.05);
-}
-
-.content-navbar__title {
-	padding: 10px 0px;
-}
-
-.content-navbar__tabs {
-	flow-children: right;
 }

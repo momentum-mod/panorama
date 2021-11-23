@@ -45,7 +45,7 @@
 	@if (map.has-key($gradients-primary, $color)) {
 		$colors: map.get($gradients-primary, $color);
 		background-color: function.gradient-vertical(list.nth($colors, 1), list.nth($colors, 2));
-		border: $button-colored-border;
+		border: $button-border;
 
 		&:hover {
 			background-color: function.gradient-vertical(
@@ -64,9 +64,8 @@
 			);
 		}
 
-		&:disabled,
-		&:disabled:hover {
-			background-color: $button-background-disabled-hover;
+		&:disabled {
+			background-color: $button-background-disabled;
 		}
 	} @else {
 		@error "Gradient #{$color} not found!";

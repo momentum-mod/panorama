@@ -1,40 +1,83 @@
 <root>
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
-		<include src="file://{resources}/styles/settings/settings_shared.css" />
+		<include src="file://{resources}/styles/pages/settings.scss" />
 	</styles>
-	
+
 	<scripts>
 		<include src="file://{resources}/scripts/settings_shared.js"/>
 	</scripts>
-	
-	<Panel class="settings-tab">
-		<BaseAudioSettings class="settings-scroll-container">
-			<Panel id="SettingsAudioVolumes" class="settings-group">
-				<!-- TODO: Localize -->
-				<Label class="text-h2" text="Volume" />
 
-				<ChaosSettingsSlider text="#GameUI_SoundEffectVolume" min="0" max="1" percentage="true" convar="volume" />
-				<ChaosSettingsSlider text="#GameUI_MusicVolume" min="0" max="1" percentage="true" convar="snd_volume_music" />
-				<!-- TODO: Localize -->
-				<ChaosSettingsSlider text="Ambient Volume" min="0" max="1" percentage="true" convar="snd_volume_ambient" />
-				<ChaosSettingsSlider text="Player Weapon Volume" min="0" max="1" percentage="true" convar="snd_volume_weapon_player" />
-				<ChaosSettingsSlider text="Overall Weapon Volume" min="0" max="1" percentage="true" convar="snd_volume_weapon_overall" />
-				<ChaosSettingsSlider text="UI Volume" min="0" max="1" percentage="true" convar="snd_volume_ui" />
-				<ChaosSettingsSlider text="Physics Volume" min="0" max="1" percentage="true" convar="snd_volume_physics" />
-				<ChaosSettingsSlider text="Footsteps Volume" min="0" max="1" percentage="true" convar="snd_volume_footsteps" />
+	<Panel class="settings-page">
+
+		<Panel class="settings-page__header">
+
+			<Label class="settings-page__title" text="Audio Settings" />
+
+			<Panel class="settings-page__header-buttons">
+				<!-- Gamemode Dropdown will go here -->
 			</Panel>
-			<Panel id="SettingsAudioSettings" class="settings-group">
-				<!-- TODO: Localize -->
-				<Label class="text-h2" text="Audio Device Configuration" />
-				
-				<ChaosSettingsEnumDropDown text="#GameUI_SpeakerConfiguration" convar="snd_surround_speakers" oninputsubmit="BaseSpeakerConfigurationChanged()">
+
+		</Panel>
+
+		<BaseAudioSettings id="SettingsPageContainer" class="settings-page__container">
+
+			<Panel id="VolumeSubSection" class="settings-group">
+
+				<Panel class="settings-group__header">
+
+					<Label class="settings-group__title" text="Volume" />
+
+					<TooltipPanel class="settings-group__reset" tooltip="Reset">
+						<Button class="button" onactivate="SettingsShared.resetSettings('VolumeSubSection');">
+							<Image class="button__icon" src="file://{images}/reset.svg" />
+						</Button>
+					</TooltipPanel>
+
+				</Panel>
+
+				<ChaosSettingsSlider text="#GameUI_SoundEffectVolume" min="0" max="1" percentage="true" convar="volume" hasdocspage="false"/>
+
+				<ChaosSettingsSlider text="#GameUI_MusicVolume" min="0" max="1" percentage="true" convar="snd_volume_music" hasdocspage="false"/>
+
+				<ChaosSettingsSlider text="Ambient Volume" min="0" max="1" percentage="true" convar="snd_volume_ambient" hasdocspage="false"/>
+
+				<ChaosSettingsSlider text="Player Weapon Volume" min="0" max="1" percentage="true" convar="snd_volume_weapon_player" hasdocspage="false"/>
+
+				<ChaosSettingsSlider text="Overall Weapon Volume" min="0" max="1" percentage="true" convar="snd_volume_weapon_overall" hasdocspage="false"/>
+
+				<ChaosSettingsSlider text="UI Volume" min="0" max="1" percentage="true" convar="snd_volume_ui" hasdocspage="false"/>
+
+				<ChaosSettingsSlider text="Physics Volume" min="0" max="1" percentage="true" convar="snd_volume_physics" hasdocspage="false"/>
+
+				<ChaosSettingsSlider text="Footsteps Volume" min="0" max="1" percentage="true" convar="snd_volume_footsteps" hasdocspage="false"/>
+
+			</Panel>
+
+			<Panel class="settings-page__spacer"/>
+
+			<Panel id="AudioDevicesSubSection" class="settings-group">
+
+				<Panel class="settings-group__header">
+
+					<Label class="settings-group__title" text="Audio Device Configuration" />
+
+					<TooltipPanel class="settings-group__reset" tooltip="Reset">
+						<Button class="button" onactivate="SettingsShared.resetSettings('AudioDevicesSubSection');">
+							<Image class="button__icon" src="file://{images}/reset.svg" />
+						</Button>
+					</TooltipPanel>
+
+				</Panel>
+
+				<ChaosSettingsEnumDropDown text="#GameUI_SpeakerConfiguration" convar="snd_surround_speakers" oninputsubmit="BaseSpeakerConfigurationChanged()" hasdocspage="false">
 					<Label text="Stereo Headphones" id="speakerconfig1" value="0"/>
 					<Label text="Stereo Speakers" id="speakerconfig2" value="2"/>
 					<Label text="Quad Surround Sound" id="speakerconfig3" value="4"/>
 					<Label text="5.1 Surround Sound" id="speakerconfig4" value="5"/>
 				</ChaosSettingsEnumDropDown>
-				<ChaosSettingsEnumDropDown text="#SFUI_Settings_Audio_Device" id="DeviceConfigurationEnum" convar="sound_device_override" oninputsubmit="BaseAudioDeviceConfigurationChanged()">
+
+				<ChaosSettingsEnumDropDown text="#SFUI_Settings_Audio_Device" id="DeviceConfigurationEnum" convar="sound_device_override" oninputsubmit="BaseAudioDeviceConfigurationChanged()" hasdocspage="false">
 					<!--placeholder labels that will be modified in cui_audiosettingsscreen-->
 					<Label id="device1" text="XXXXXX 1" />
 					<Label id="device2" text="XXXXXX 2" />
@@ -45,15 +88,20 @@
 					<Label id="device7" text="XXXXXX 7" />
 					<Label id="device8" text="XXXXXX 8" />
 				</ChaosSettingsEnumDropDown>
-				<ChaosSettingsEnum text="#SFUI_Settings_Enable_Audio_HWCompat" convar="snd_hwcompat">
+
+				<ChaosSettingsEnum text="#SFUI_Settings_Enable_Audio_HWCompat" convar="snd_hwcompat" hasdocspage="false">
 					<RadioButton group="hwcompat" text="Off" value="0" />
 					<RadioButton group="hwcompat" text="On" value="1" />
 				</ChaosSettingsEnum>
-				<ChaosSettingsEnum text="#SFUI_Settings_Enable_Audio_Background" convar="snd_mute_losefocus">
+
+				<ChaosSettingsEnum text="#SFUI_Settings_Enable_Audio_Background" convar="snd_mute_losefocus" hasdocspage="false">
 					<RadioButton group="losefocus" text="Off" value="0" />
 					<RadioButton group="losefocus" text="On" value="1" />
 				</ChaosSettingsEnum>
+
 			</Panel>
+
 		</BaseAudioSettings>
+
 	</Panel>
 </root>
