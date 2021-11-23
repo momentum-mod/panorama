@@ -392,6 +392,51 @@ $page-width: 1920px - $rightnav-width;
 	}
 }
 
+.settings-info {
+	$this: &;
+	&--hidden {
+		#{$this}__wrapper {
+			transform: translateX(-16px);
+			opacity: 0;
+			blur: gaussian(1, 1, 2);
+		}
+	}
+
+	&--switch {
+		animation-name: BlurFadeInOut;
+		animation-duration: 0.1s;
+		animation-timing-function: ease-out;
+		animation-iteration-count: 1;
+	}
+
+	&__wrapper {
+		flow-children: down;
+		margin-top: 36px;
+		opacity: 1;
+		transition-property: opacity, transform, blur, height;
+		transition-duration: 0.1s;
+		transition-timing-function: ease-out;
+	}
+
+	&__title {
+		@include mixin.font-styles($use-header: true, $light-header: false);
+		font-size: 44px;
+		margin-bottom: 8px;
+	}
+
+	&__description {
+		@include mixin.font-styles($use-header: false);
+		font-size: 18px;
+		margin-bottom: 8px;
+	}
+
+	&__cvar {
+		@include mixin.font-styles($use-header: false);
+		font-size: 18px;
+		margin-bottom: 16px;
+	}
+}
+
 .settings-search-result {
 	$root: &;
 

@@ -1,177 +1,137 @@
 'use strict';
 
-class SettingsMenuShared {
-	static resetControlsRecursive( panel )
-	{
-		if ( panel == null ) {
-			return;
-		}
+class SettingsShared {
+	static paintContainer;
 
-		if (panel.GetChildCount == undefined) {
-			// This happens sometimes. Not sure why
-			return;
-		}
-
-		if (panel.paneltype == 'ChaosSettingsSlider' || panel.paneltype == 'ChaosSettingsEnumDropDown') {
-			panel.RestoreCVarDefault();
-		}
-		else if ( panel.paneltype == 'ChaosSettingsKeyBinder' )
-		{
-			// Only need to refresh, as the binds are reset to default using the OptionsMenu component
-			panel.OnShow();
-		}
-		else // We don't have nested settings controls
-		{
-			const nCount = panel.GetChildCount();
-			for ( let i = 0; i < nCount; i++ )
-			{
-				const child = panel.GetChild(i);
-				SettingsMenuShared.resetControlsRecursive(child);
-			}
-		}
-	}
-
-	static resetControls()
-	{
-		SettingsMenuShared.resetControlsRecursive($.GetContextPanel());
-	}
-	
-	static refreshControlsRecursive( panel )
-	{
-		if ( panel == null ) {
-			return;
-		}
-
-		if ( panel.OnShow != undefined ) {
-			panel.OnShow();
-		}
-		
-		if (panel.GetChildCount == undefined) {
-			// This happens sometimes. Not sure why
-			return;
-		}
-		else { // We don't have nested settings controls
-			const nCount = panel.GetChildCount();
-			for ( let i = 0; i < nCount; i++ )
-			{
-				const child = panel.GetChild(i);
-				SettingsMenuShared.refreshControlsRecursive(child);
-			}
-		}
-	}
-
-	static scrollToId( locationId )
-	{
-		const elLocationPanel = $( '#'+locationId );
-
-		if ( elLocationPanel != null )
-		{
-			elLocationPanel.ScrollParentToMakePanelFit(2, false);
-			elLocationPanel.AddClass('Highlight');
-
-			const kfs = elLocationPanel.CreateCopyOfCSSKeyframes( 'settings-highlight' );
-			elLocationPanel.UpdateCurrentAnimationKeyframes( kfs );
-		}
-		else
-		{
-			$.Msg("Failed to scroll to '" + locationId + "'");
-		}
-	}
-	
-	static newTabOpened( newTab )
-	{
-		$.Msg( 'Settings menu new tab: ' + newTab );
-		
-		if ( newTab == 'VideoSettings' )
-		{
+	static onChangedTab(newTab) {
+		if (newTab == 'VideoSettings') {
 			const videoSettingsPanel = $('#VideoSettings');
-			
+
 			// Get the apply and discard buttons on the video settings screen
-			const btnApplyVideoSettings = videoSettingsPanel.FindChildInLayoutFile( "BtnApplyVideoSettings" );
-			const btnDiscardVideoSettingChanges = videoSettingsPanel.FindChildInLayoutFile( "BtnDiscardVideoSettingChanges" );
-			
+			const applyVideoSettingsButton = videoSettingsPanel.FindChildInLayoutFile('ApplyVideoSettingsButton');
+			const discardVideoSettingsButton = videoSettingsPanel.FindChildInLayoutFile('DiscardVideoSettingsButton');
+
 			// disabled as no user changes yet
-			btnApplyVideoSettings.enabled = false;
-			btnDiscardVideoSettingChanges.enabled = false;
+			applyVideoSettingsButton.enabled = false;
+			discardVideoSettingsButton.enabled = false;
 
 			// Tell C++ to init controls from convars
-			$.DispatchEvent( "ChaosVideoSettingsInit" );
+			$.DispatchEvent('ChaosVideoSettingsInit');
+		} else if (newTab == 'OnlineSettings') {
+			this.onlineSettingsUpdateModel();
+		} else if (newTab == 'GameplaySettings') {
+			this.updatePaintPreview();
 		}
-		else if ( newTab == 'OnlineSettings' )
-		{
-			SettingsMenuShared.onlineSettingsUpdateModel();
-		}
-		
-		const newTabPanel = $.GetContextPanel().FindChildInLayoutFile( newTab );
-		SettingsMenuShared.refreshControlsRecursive( newTabPanel );
 
-		// Save any changes made to convars, for tabs that do not have an explicit save
-		GameInterfaceAPI.ConsoleCommand("host_writeconfig");
+		const newTabPanel = $.GetContextPanel().FindChildInLayoutFile(newTab);
+		this.refreshControlsRecursive(newTabPanel);
 	}
 
-	static resetVideoSettings()
-	{
-		$.DispatchEvent( "ChaosVideoSettingsResetDefault" );
-		SettingsMenuShared.resetControls();
-		SettingsMenuShared.videoSettingsOnUserInputSubmit();
+	static refreshControlsRecursive(panel) {
+		if (panel === null) return;
+
+		panel.OnShow?.();
+
+		panel.Children()?.forEach((child) => this.refreshControlsRecursive(child));
 	}
-	
+
+	static resetSettingsRecursive(panel) {
+		// TODO: Add support for Enums and Colours here, then include
+		if (panel.paneltype === 'ChaosSettingsSlider' || panel.paneltype === 'ChaosSettingsEnumDropDown') {
+			panel.RestoreCVarDefault();
+		} else if (panel.paneltype === 'ChaosSettingsKeyBinder') {
+			// OptionsMenuAPI has already handled this, just refresh
+			panel.OnShow?.();
+		} else {
+			panel.Children()?.forEach((child) => this.resetSettingsRecursive(child));
+		}
+	}
+
+	static resetControls(panelID) {
+		this.showConfirmResetSettings('Are you sure you want to reset all controls?', () => {
+			// TODO: remove this out once api is ported
+			typeof OptionsMenuAPI !== typeof undefined
+				? OptionsMenuAPI.RestoreKeybdMouseBindingDefaults()
+				: $.Msg('Keybinds resetting not yet implemented! Gimme the API!! Grr!!!!');
+			this.resetSettingsRecursive($.GetContextPanel().FindChildTraverse(panelID));
+		});
+	}
+
+	static resetSettings(panelID) {
+		this.showConfirmResetSettings('Are you sure you want to reset these settings?', () => {
+			this.resetSettingsRecursive($.GetContextPanel().FindChildTraverse(panelID));
+		});
+	}
+
+	static resetVideoSettings() {
+		// For future: use same localisation string as above
+		this.showConfirmResetSettings('Are you sure you want to reset these settings?', () => {
+			$.DispatchEvent('ChaosVideoSettingsResetDefault');
+			this.resetSettingsRecursive($.GetContextPanel());
+			this.videoSettingsOnUserInputSubmit();
+		});
+	}
+
+	static showConfirmResetSettings(message, resetFn) {
+		UiToolkitAPI.ShowGenericPopupTwoOptionsBgStyle('Confirm', message, 'warning-popup', 'Discard', resetFn, 'Return', () => {}, 'dim');
+	}
+
 	// State logic to tracking if there are changes to apply or discard:
 	// Changes in panel controls -> enable both
 	// Reset button pressed -> enable both
 	// Apply button pressed -> disable both
 	// Discard button pressed -> disable both
 
-	static btnApplyVideoSettings = null;
-	static btnDiscardVideoSettingChanges = null;
-	
-	static videoSettingsOnUserInputSubmit()
-	{
-		const btnApplyVideoSettings = $( "#BtnApplyVideoSettings" );
-		const btnDiscardVideoSettingChanges = $( "#BtnDiscardVideoSettingChanges" );
-		
-		if ( btnApplyVideoSettings != null ) {
-			btnApplyVideoSettings.enabled = true;
-		}
-
-		if ( btnDiscardVideoSettingChanges != null ) {
-			btnDiscardVideoSettingChanges.enabled = true;
-		}
+	static videoSettingsOnUserInputSubmit() {
+		$('#ApplyVideoSettingsButton').enabled = true;
+		$('#DiscardVideoSettingsButton').enabled = true;
 	}
 
-	static videoSettingsResetUserInput()
-	{
-		const btnApplyVideoSettings = $( "#BtnApplyVideoSettings" );
-		const btnDiscardVideoSettingChanges = $( "#BtnDiscardVideoSettingChanges" );
-		
-		if ( btnApplyVideoSettings != null ) {
-			btnApplyVideoSettings.enabled = false;
+	static videoSettingsResetUserInput() {
+		$('#ApplyVideoSettingsButton').enabled = false;
+		$('#DiscardVideoSettingsButton').enabled = false;
+	}
+
+	static videoSettingsDiscardChanges() {
+		// Discard dialogue seems unnecessary here
+		// this.showConfirmResetSettings('Are you sure you want to discard your changes to video settings?', () => {
+		$.DispatchEvent('ChaosVideoSettingsInit');
+		this.videoSettingsResetUserInput();
+		// });
+	}
+
+	static videoSettingsApplyChanges() {
+		$.DispatchEvent('ChaosApplyVideoSettings');
+		this.videoSettingsResetUserInput();
+	}
+
+	static updatePaintPreview() {
+		this.paintContainer ??= $('#GameplaySettings').FindChildInLayoutFile('PaintContainer');
+
+		if (this.paintContainer.actuallayoutwidth === 0) {
+			// Stupid hack. I can't figure out an appropriate event to handle when the panel is actually loaded
+			$.Schedule(0.05, () => this.updatePaintPreview());
+			return;
 		}
 
-		if ( btnDiscardVideoSettingChanges != null ) {
-			btnDiscardVideoSettingChanges.enabled = false;
-		}
+		const width = this.paintContainer.actuallayoutwidth / this.paintContainer.actualuiscale_x;
+
+		const color = GameInterfaceAPI.GetSettingColor('mom_paint_color');
+		const scale = GameInterfaceAPI.GetSettingFloat('mom_paint_scale');
+
+		const paintPanel = this.paintContainer.FindChild('PaintBlob');
+
+		paintPanel.style.backgroundColor = color;
+		paintPanel.style.width = scale * width + 'px';
 	}
 
-	static videoSettingsDiscardChanges()
-	{
-		$.DispatchEvent( "ChaosVideoSettingsInit" );
-		SettingsMenuShared.videoSettingsResetUserInput();
-	}
+	static onlineSettingsUpdateModel() {
+		const color = GameInterfaceAPI.GetSettingColor('mom_ghost_color');
+		const bodygroup = GameInterfaceAPI.GetSettingInt('mom_ghost_bodygroup');
 
-	static videoSettingsApplyChanges()
-	{
-		$.DispatchEvent( "ChaosApplyVideoSettings" );
-		SettingsMenuShared.videoSettingsResetUserInput();
-	}
-	
-	static onlineSettingsUpdateModel()
-	{
-		const color = GameInterfaceAPI.GetSettingColor("mom_ghost_color");
-		const bodygroup = GameInterfaceAPI.GetSettingInt("mom_ghost_bodygroup");
-		
 		const onlineSettingsPanel = $('#OnlineSettings');
 		const ghostPreview = onlineSettingsPanel.FindChildInLayoutFile('GhostModelPreview');
+
 		ghostPreview.SetCameraFOV(60.0);
 		ghostPreview.SetModelRotationBoundsEnabled(true, false, false);
 		ghostPreview.SetModelRotationBoundsX(-90.0, 90.0);
@@ -180,27 +140,4 @@ class SettingsMenuShared {
 		ghostPreview.SetModelColor(color);
 		ghostPreview.SetModelBodygroup(1, bodygroup);
 	}
-
-	static setMainMenuBackgroundType(type)
-	{
-		GameInterfaceAPI.SetSettingInt('mom_ui_menu_background_video', type); 
-		
-		$.DispatchEvent('ReloadBackground');
-	}
-
-	static showConfirmDiscard( discardCall )
-	{
-		UiToolkitAPI.ShowGenericPopupTwoOptionsBgStyle('Confirm',
-			'Are you sure you want to discard current settings?',
-			'',
-			'Discard',
-			function() {
-				discardCall();
-			},
-			'Return',
-			function() {
-			},
-			'dim'
-		);
-	}
-};
+}

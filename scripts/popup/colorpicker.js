@@ -1,7 +1,6 @@
 class ColorPickerPopup {
-
 	static init() {
-		let color = $.GetContextPanel().GetAttributeString('color', 'rgba(0,0,0,255)');
+		let color = $.GetContextPanel().GetAttributeString('color', 'rgba(0,0,0,1)');
 		$('#ColorPicker').prevColor = color;
 		$('#ColorPicker').currColor = color;
 	}
@@ -16,6 +15,6 @@ class ColorPickerPopup {
 
 	static {
 		$.RegisterEventHandler('ColorPickerSave', $.GetContextPanel(), ColorPickerPopup.onSaveColor);
-		$.RegisterEventHandler('ColorPickerCancel', $.GetContextPanel(),ColorPickerPopup.onDiscardColor);
+		$.RegisterEventHandler('ColorPickerCancel', $.GetContextPanel(), ColorPickerPopup.onDiscardColor);
 	}
 }

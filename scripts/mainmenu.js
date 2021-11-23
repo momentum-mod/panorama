@@ -102,6 +102,8 @@ class MainMenuController {
 			if (MainMenuController.activeTab) {
 				const panelToHide = $.GetContextPanel().FindChildInLayoutFile(MainMenuController.activeTab);
 				panelToHide.AddClass('mainmenu__page-container--hidden');
+
+				$.DispatchEvent('MainMenuTabHidden', MainMenuController.activeTab);
 			}
 
 			//Show selected tab
@@ -138,8 +140,9 @@ class MainMenuController {
 		// If the tab exists then hide it
 		if (MainMenuController.activeTab) {
 			const panelToHide = $.GetContextPanel().FindChildInLayoutFile(MainMenuController.activeTab);
-			if ( panelToHide )
-				panelToHide.AddClass('mainmenu__page-container--hidden');
+			if (panelToHide) panelToHide.AddClass('mainmenu__page-container--hidden');
+
+			$.DispatchEvent('MainMenuTabHidden', MainMenuController.activeTab);
 		}
 
 		MainMenuController.activeTab = '';
@@ -183,9 +186,14 @@ class MainMenuController {
 		const videoPanel = MainMenuController.videoPanel;
 		const imagePanel = MainMenuController.imagePanel;
 
-		if (!(videoPanel && videoPanel.IsValid() && imagePanel && imagePanel.IsValid())) return;
+		if (!videoPanel?.IsValid() || !imagePanel?.IsValid()) return;
 
-		const useVideo = GameInterfaceAPI.GetSettingBool('mom_ui_menu_background_video');
+		let useVideo = $.persistentStorage.getItem('settings.mainMenuMovie') == '1';
+
+		if (typeof useVideo == typeof null) {
+			useVideo = true;
+			$.persistentStorage.setItem('settings.mainMenuMovie', true);
+		}
 
 		videoPanel.visible = useVideo;
 		videoPanel.SetReadyForDisplay(useVideo);
@@ -196,7 +204,7 @@ class MainMenuController {
 		var name = '';
 
 		// Using a switch as we're likely to add more of these in the future
-		switch (GameInterfaceAPI.GetSettingInt('mom_ui_menu_background_type')) {
+		switch (parseInt($.persistentStorage.getItem('settings.mainMenuBackground'))) {
 			case 1:
 				name = 'MomentumDark';
 				break;
@@ -232,16 +240,7 @@ class MainMenuController {
 	}
 
 	static onQuitButtonPressed() {
-		UiToolkitAPI.ShowGenericPopupTwoOptionsBgStyle(
-			'Quit',
-			'Are you sure you want to quit?',
-			'quit-popup',
-			'Return',
-			() => {},
-			'Quit',
-			MainMenuController.quitGame,
-			'blur'
-		);
+		UiToolkitAPI.ShowGenericPopupTwoOptionsBgStyle('Quit', 'Are you sure you want to quit?', 'warning-popup', 'Quit', MainMenuController.quitGame, 'Return', () => {}, 'blur');
 	}
 
 	static quitGame() {

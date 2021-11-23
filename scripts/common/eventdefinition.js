@@ -15,11 +15,12 @@
 //--------------------------------------------------------------------------------------------------
 
 (function () {
-	$.DefineEvent('HideContentPanel', 0, 'no args', 'Hide all the content panels and show the default home dashboard');
+	$.DefineEvent('HideContentPanel', 0, 'no args', 'Hide all the main menu content panels and show the default home dashboard');
 	$.DefineEvent('ShowContentPanel', 0, 'no args', 'Show a content panel');
-	$.DefineEvent('MainMenuSettings_navigateToSettingPanel', 2, 'category, settingPanel', 'Navigates to a setting by panel handle');
 	$.DefineEvent('ReloadBackground', 0, '', 'Reloads the main menu background');
 	$.DefineEvent('MainMenuTabShown', 1, 'tabid', 'Alert main menu tabs when they are shown, in case there is a data update needed');
+	$.DefineEvent('MainMenuTabHidden', 1, 'tabid', 'Fired when a main menu tab is closed');
+	$.DefineEvent('SettingsNavigateToPanel', 2, 'category, settingPanel', 'Navigates to a setting by panel handle');
 	$.DefineEvent('ExtendDrawer', 0, 'Open the right side drawer panel');
 	$.DefineEvent('RetractDrawer', 0, 'Close the right side drawer panel');
 	$.DefineEvent('ToggleDrawer', 0, 'Toggle the open or closed state of the right side drawer panel');

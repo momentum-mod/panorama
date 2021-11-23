@@ -105,19 +105,19 @@ class MainMenuLearn {
 
             MainMenuLearn.styleAlternatingItems();
 
-            // SettingsMenuShared.newTabOpened( MainMenuLearn.activeTab );
+            // Settings.newTabOpened( MainMenuLearn.activeTab );
         }	
     }
 
-    static navigateToSettingPanel( tab, panel )
-    {
-        $.DispatchEvent("Activated", $("#" + MainMenuLearn.learnTabs[tab].radioid ), "mouse");
-        panel.ScrollParentToMakePanelFit( 3, false );
-        panel.SetFocus();
-        panel.AddClass( 'Highlight' );
-        var kfs = panel.CreateCopyOfCSSKeyframes( 'settings-highlight' );
-        panel.UpdateCurrentAnimationKeyframes( kfs )
-    }
+    // static navigateToSettingPanel( tab, panel )
+    // {
+    //     $.DispatchEvent("Activated", $("#" + MainMenuLearn.learnTabs[tab].radioid ), "mouse");
+    //     panel.ScrollParentToMakePanelFit( 3, false );
+    //     panel.SetFocus();
+    //     panel.AddClass( 'Highlight' );
+    //     var kfs = panel.CreateCopyOfCSSKeyframes( 'settings-highlight' );
+    //     panel.UpdateCurrentAnimationKeyframes( kfs )
+    // }
 
     static isSettingsPanel ( panel )
     {
