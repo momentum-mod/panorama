@@ -21,8 +21,6 @@
 		box-shadow: fill rgba(0, 0, 0, 0) 0px 0px 3px 0px;
 		border-radius: 0px;
 		background-color: rgba(255, 255, 255, 0.025);
-		border-left: 1px solid rgba(0, 0, 0, 0.5);
-		border-right: 1px solid rgba(0, 0, 0, 0.5);
 	}
 
 	&__button {
@@ -30,10 +28,14 @@
 		width: height-percentage(100%);
 		background-color: rgba(0, 0, 0, 0.4);
 
-		transition: background-color 0.1s ease-in-out 0s;
+		transition-property: background-color, wash-color;
+		transition-duration: 0.1s;
+		transition-timing-function: ease-in-out;
+		wash-color: rgba(0, 0, 0, 0.4);
 
 		&:hover {
-			background-color: rgba(255, 255, 255, 0.05);
+			background-color: rgba(0, 0, 0, 0.6);
+			wash-color: rgba(0, 0, 0, 0.0);
 		}
 	}
 
