@@ -1,152 +1,108 @@
 'use strict';
 
-class SettingsMenuSearch {
-
-	static searchTextEntry = $( '#SettingsSearchTextEntry' );
-	static clearButton = $( '#SettingsSearchClear' );
+class SettingsSearch {
+	static searchTextEntry = $('#SettingsSearchTextEntry');
+	static clearButton = $('#SettingsSearchClear');
 	static results;
 
-	static Init() 
-	{
-		$.RegisterEventHandler('ReadyForDisplay', SettingsMenuSearch.searchTextEntry, function () {
-			SettingsMenuSearch.searchTextEntry.SetFocus();
-			SettingsMenuSearch.searchTextEntry.RaiseChangeEvents(true);
-		});
-		$.RegisterEventHandler('UnreadyForDisplay', SettingsMenuSearch.searchTextEntry, function () {
-			SettingsMenuSearch.searchTextEntry.GetParent().SetFocus();
-			SettingsMenuSearch.searchTextEntry.RaiseChangeEvents(false);
-		});
-
-		SettingsMenuSearch.searchTextEntry.RegisterForReadyEvents(true);
-		SettingsMenuSearch.searchTextEntry.SetReadyForDisplay(true);
-
-		SettingsMenuSearch.searchTextEntry.SetPanelEvent('ontextentrychange', SettingsMenuSearch.OnTextEntryChanged);
-
-		SettingsMenuSearch.clearButton.visible = false;
+	static {
+		SettingsSearch.searchTextEntry.SetPanelEvent('ontextentrychange', SettingsSearch.onTextEntryChanged);
 	}
 
-	static OnTextEntryChanged() 
-	{
-		var hasText = /.*\S.*/;
-		if (!hasText.test(SettingsMenuSearch.searchTextEntry.text)) 
-		{
-			MainMenuSettings.navigateToTab('InputSettings');
+	static onTextEntryChanged() {
+		// Check textentry is not empty
+		if (!/.*\S.*/.test(SettingsSearch.searchTextEntry.text)) {
+			MainMenuSettings.navigateToTab(MainMenuSettings.prevTab);
 
-			SettingsMenuSearch.clearButton.visible = false;
+			SettingsSearch.clearButton.AddClass('search__clearbutton--hidden');
 
 			return;
 		}
 
-		SettingsMenuSearch.clearButton.visible = true;
+		// Show the clear button
+		SettingsSearch.clearButton.RemoveClass('search__clearbutton--hidden');
 
+		// Switch to search tab
 		MainMenuSettings.navigateToTab('SearchSettings');
 
-		SettingsMenuSearch.resultsContainer = $('#SearchResultsContainer');
-
-		const parentPanel = $('#SettingsMenuContent');
+		const parentPanel = $('#SettingsContent');
 		const resultsPanel = parentPanel.FindChildTraverse('SearchResultsContainer');
+
+		// Clear existing results
 		resultsPanel.RemoveAndDeleteChildren();
 
-		SettingsMenuSearch.results = resultsPanel;
+		SettingsSearch.results = resultsPanel;
 
-		var arrStrings = SettingsMenuSearch.searchTextEntry.text.split(/\s/).filter(s => /^\w+$/.test(s));
+		// Split into individual words
+		const arrStrings = SettingsSearch.searchTextEntry.text.split(/\s/).filter((s) => /^\w+$/.test(s));
 
-		var arrMatches = [];
-		var curMenuTab = null;
+		// Initalise matches array
+		let arrMatches = [];
 
-		Object.keys(MainMenuSettings.settingsTabs).forEach(id => {
-			curMenuTab = id;
-			var rootPanel = parentPanel.FindChildTraverse(id);
-
-			TraverseChildren(rootPanel, SearchSettingText);
-
-			function TraverseChildren(root, searchFn) {
-				if (typeof root.Children !== 'function') return;
-				root.Children().forEach(c => {
-					TraverseChildren(c, searchFn);
-					searchFn(c);
+		// Search through each page
+		Object.keys(MainMenuSettings.settingsTabs).forEach((tabID) => {
+			const traverseChildren = (panel) =>
+				panel.Children()?.forEach((child) => {
+					SettingsSearch.searchSettingText(tabID, child, arrMatches, arrStrings);
+					traverseChildren(child);
 				});
-			}
 
-			function SearchSettingText(settingPanel) 
-			{
-				if (ShouldSearchPanelText(settingPanel)) 
-				{
-					var bPass = arrStrings.every(s => {
-						var search = new RegExp(s, "giu");
-						return search.test(settingPanel.text);
-					});
-
-					if (bPass) 
-					{
-						var parent = settingPanel.GetParent();
-						var panel = (parent.paneltype === 'ChaosSettingsEnum' ||
-							parent.paneltype === 'ChaosSettingsSlider' ||
-							parent.paneltype === 'ChaosSettingsEnumDropdown' ||
-							parent.paneltype === 'ChaosSettingsKeyBinder' ||
-							parent.paneltype === 'ConVarColorDisplay' ||
-							parent.parentPanel === 'ChaosSettingsToggle') ? parent : parent.GetParent();
-						arrMatches.push({
-							panel: panel,
-							text: settingPanel.text,
-							menu: curMenuTab
-						});
-					}
-				}
-
-				function ShouldSearchPanelText(setting) 
-				{
-					if (!setting.hasOwnProperty('text'))
-						return false;
-
-					if (setting.paneltype === 'TextEntry')
-						return false;
-
-					if (setting.HasClass('DropDownChild'))
-						return false;
-
-					if (setting.HasClass('BindingRowButton'))
-						return false;
-
-					if (setting.HasClass('header') || setting.HasClass('settings-subheader'))
-						return false;
-
-					if (setting.GetParent().paneltype === ('RadioButton'))
-						return false;
-
-					return true;
-				}
-			}
+			traverseChildren(parentPanel.FindChildTraverse(tabID));
 		});
 
-		arrMatches.forEach(searchResult => {
-			SettingsMenuSearch.CreateSearchResultPanel(searchResult.text, searchResult.menu, searchResult.panel);
-		});
+		// Populate results panel with matches
+		arrMatches.forEach((searchResult) => SettingsSearch.createSearchResultPanel(searchResult.text, searchResult.menu, searchResult.panel));
 	}
 
-	static CreateSearchResultPanel(text, menuid, panel) 
-	{
-		var searchResult = $.CreatePanel("Panel", SettingsMenuSearch.results, '');
-		if (searchResult.LoadLayoutSnippet("SearchResult")) 
-		{
-			searchResult.FindChild("ResultString").SetProceduralTextThatIPromiseIsLocalizedAndEscaped(text, true);
+	static searchSettingText(tabID, settingPanel, arrMatches, arrStrings) {
+		if (SettingsSearch.shouldSearchPanelText(settingPanel)) {
+			// Check every string is in this panel's text value
+			if (arrStrings.every((s) => new RegExp(s, 'giu').test(settingPanel.text))) {
+				const parent = settingPanel.GetParent();
+				// ChaosSettingsEnum has
+				const panel = MainMenuSettings.isSettingsPanel(parent) || parent.paneltype === 'ConVarEnabler' ? parent : parent.GetParent();
+
+				arrMatches.push({
+					panel: panel,
+					text: settingPanel.text,
+					menu: tabID
+				});
+			}
+		}
+	}
+
+	// Only check text on panels that have a text property, ignore dropdowns, headers, keybinder keys, radiobutton text
+	static shouldSearchPanelText(panel) {
+		if (!panel.hasOwnProperty('text')) return false;
+
+		if (panel.paneltype === 'TextEntry') return false;
+
+		if (panel.HasClass('DropDownChild')) return false;
+
+		if (panel.HasClass('settings-keybinder__key')) return false;
+
+		if (panel.HasClass('settings-group__title') || panel.HasClass('settings-group__subtitle') || panel.HasClass('settings-page__title')) return false;
+
+		if (panel.GetParent().paneltype === 'RadioButton') return false;
+
+		return true;
+	}
+
+	// Create a panel for a search result
+	static createSearchResultPanel(text, tabID, panel) {
+		var searchResult = $.CreatePanel('Panel', this.results, '');
+
+		if (searchResult.LoadLayoutSnippet('SearchResult')) {
+			searchResult.FindChild('ResultString').SetProceduralTextThatIPromiseIsLocalizedAndEscaped(text, true);
+
 			searchResult.SetPanelEvent('onactivate', function () {
-				SettingsMenuSearch.ClearSearch();
-				// This is confusing me. I'm not sure why it has to be an event (I'm doing what CSGO does), but just calling navigateToSettingPanel
-				// from here doesn't pass in the arguments 
-				$.DispatchEvent("MainMenuSettings_navigateToSettingPanel", menuid, panel);
+				SettingsSearch.clearSearch();
+				$.DispatchEvent('SettingsNavigateToPanel', tabID, panel);
 			});
 		}
 	}
 
-	static ClearSearch() 
-	{
-		SettingsMenuSearch.searchTextEntry.text = '';
+	static clearSearch() {
+		SettingsSearch.searchTextEntry.text = '';
 	}
 }
-              
-(function ()
-{
-	SettingsMenuSearch.Init();
-	$.RegisterForUnhandledEvent( 'MainMenuSettings_navigateToSettingPanel',  MainMenuSettings.navigateToSettingPanel );
-})();

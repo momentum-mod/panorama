@@ -1,33 +1,25 @@
 <root>
 
-<styles>
-	<include src="file://{resources}/styles/main.scss" />
-	<include src="file://{resources}/styles/settings/settings_shared.css" />
-</styles>
-
-	<scripts>
-		<include src="file://{resources}/scripts/settings_shared.js"/>
-	</scripts>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+		<include src="file://{resources}/styles/pages/settings.scss" />
+	</styles>
 
 	<snippets>
 		<snippet name="SearchResult">
 			<Button class="settings-search-result">
-				<Label id="ResultString"/>
-				<Panel class="IconButton horizontal-align-right vertical-center">
-				</Panel>
+				<Label id="ResultString" class="settings-search-result__text"/>
 			</Button>
 		</snippet>
 	</snippets>
 
-    <Panel class="settings-tab">
-			<Panel class="settings-scroll-container">
-				<Panel id="Search" class="settings-group">
-				<!-- MOM_TODO: localise -->
-					<Label class="text-h2" text="#MOM_Settings_Search_Results" />
-					<Panel id="SearchResultsContainer">
+	<Panel class="settings-page">
+		<Label class="settings-page__title" text="Search Results" />
 
-					</Panel>
-				</Panel>
+		<Panel id="SettingsPageContainer" class="settings-page__container">
+			<Panel id="SearchResultsContainer" class="settings-group">
+
 			</Panel>
-    </Panel>
+		</Panel>
+	</Panel>
 </root>
