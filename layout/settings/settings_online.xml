@@ -113,7 +113,7 @@
 							<Label text="#MOM_Settings_Bodygroup_13" value="13" id="bodygroup13" />
 							<Label text="#MOM_Settings_Bodygroup_14" value="14" id="bodygroup14" />
 						</ChaosSettingsEnumDropDown>
-						<ConVarColorDisplay text="Ghost color" convar="mom_ghost_color" oncolorchange="SettingsMenuShared.onlineSettingsUpdateModel()" infomessage="#MOM_Settings_Pick_Body_Color_TT"/>
+						<ConVarColorDisplay text="Ghost color" convar="mom_ghost_color" oncolorchange="SettingsShared.onlineSettingsUpdateModel()" infomessage="#MOM_Settings_Pick_Body_Color_TT"/>
 
 						<ChaosSettingsEnum text="#MOM_Settings_Enable_Trail" convar="mom_trail_enable" infomessage="#MOM_Settings_Enable_Trail_TT">
 							<RadioButton group="playertrail" text="Off" value="0" />
