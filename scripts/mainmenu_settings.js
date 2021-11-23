@@ -96,7 +96,7 @@ class MainMenuSettings {
 		// Switch to a settings panel - search uses this
 		$.RegisterForUnhandledEvent('SettingsNavigateToPanel', this.navigateToSettingPanel);
 		// Save to file whenever the settings page gets closed
-		$.RegisterForUnhandledEvent('MainMenuTabHidden', this.saveSettings);
+		$.RegisterForUnhandledEvent('MainMenuTabHidden', (tab) => tab === 'Settings' && this.saveSettings());
 
 		// Save settings on close - currently unneeded as pressing esc ingame will close the menu
 		// which handles this, but do we want that behaviour?
