@@ -130,6 +130,8 @@ class MainMenuSettings {
 			// Hide the info panel if it was displaying something on the previous page
 			this.hideInfo();
 
+			this.onPageScrolled(tab, activePanel.FindChildTraverse('SettingsPageContainer'));
+
 			if (tab !== 'SearchSettings') {
 				// Show the nav menu children of the selected tab
 				this.setNavItemCollapsed(tab, false);
@@ -217,7 +219,7 @@ class MainMenuSettings {
 		$.Schedule(duration, () => (MainMenuSettings.shouldLimitScroll = false));
 	}
 
-	static onPageScrolled(page, panel) {
+	static onPageScrolled(tab, panel) {
 		// Panorama can fire this event A LOT, so we throttle it
 		if (MainMenuSettings.shouldLimitScroll) {
 			return;
@@ -237,14 +239,15 @@ class MainMenuSettings {
 		const containerScreenHeight = panel.actuallayoutheight;
 		const proportionScrolled = scrollOffset / (containerHeight - containerScreenHeight);
 
-		// Loop through each group until we find the one that scroll proportion fits within
+		// Loop through each group until we find the one that scroll proportion fits within. If scrollOffset is 0 break in the first case
 		// Think of it of partitioning [0, 1] into sections based on each section's height and seeing which partion bounds the scroll proportion
 		for (let child of panel.FindChildrenWithClassTraverse('settings-group')) {
 			if (
-				child.actualyoffset / containerHeight <= proportionScrolled &&
-				proportionScrolled <= (child.actualyoffset + child.actuallayoutheight + this.spacerHeight) / containerHeight
+				(child.actualyoffset / containerHeight <= proportionScrolled &&
+					proportionScrolled <= (child.actualyoffset + child.actuallayoutheight + this.spacerHeight) / containerHeight) ||
+				scrollOffset === 0
 			) {
-				this.navPanel.FindChildTraverse(this.settingsTabs[page].children[child.id]).checked = true;
+				this.navPanel.FindChildTraverse(this.settingsTabs[tab].children[child.id]).checked = true;
 				break;
 			}
 		}
@@ -282,7 +285,7 @@ class MainMenuSettings {
 
 		// Update all the items
 		Object.keys(this.settingsTabs)
-			.filter((tab) => tab !== 'SearchSettings')
+			.filter((tab) => tab !== 'SearchSettings' && tab !== this.activeTab)
 			.forEach((tab) => this.setNavItemCollapsed(tab, shouldCollapse));
 	}
 
