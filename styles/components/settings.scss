@@ -71,7 +71,6 @@
 	&__values {
 		flow-children: right;
 		horizontal-align: right;
-		// width: fill-parent-flow(1);
 		width: 280px;
 		height: 38px;
 		vertical-align: center;
@@ -80,15 +79,10 @@
 			@extend .button;
 			@extend .radiobutton;
 			@extend .radiobutton--blue;
-			// background-color: function.gradient-vertical(rgba(83, 83, 83, 0.8), rgba(66, 66, 66, 0.8));
 
 			width: fill-parent-flow(1);
 			height: 100%;
 			margin-left: 6px;
-
-			&:hover:not(:selected) {
-				// background-color: function.gradient-vertical(rgba(112, 112, 112, 0.8), rgba(87, 87, 87, 0.8));
-			}
 		}
 
 		& > RadioButton > Label {
@@ -156,7 +150,6 @@
 
 	&__key-container {
 		height: 100%;
-		// min-width: 32px;
 		align: center center;
 
 		&.ActiveBindButton {
