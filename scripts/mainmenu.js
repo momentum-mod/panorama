@@ -188,7 +188,7 @@ class MainMenuController {
 
 		if (!videoPanel?.IsValid() || !imagePanel?.IsValid()) return;
 
-		let useVideo = $.persistentStorage.getItem('settings.mainMenuMovie') == '1';
+		let useVideo = $.persistentStorage.getItem('settings.mainMenuMovie') === '1';
 
 		if (typeof $.persistentStorage.getItem('settings.mainMenuMovie') === typeof null) {
 			useVideo = true;

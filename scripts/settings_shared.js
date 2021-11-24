@@ -4,7 +4,7 @@ class SettingsShared {
 	static paintContainer;
 
 	static onChangedTab(newTab) {
-		if (newTab == 'VideoSettings') {
+		if (newTab === 'VideoSettings') {
 			const videoSettingsPanel = $('#VideoSettings');
 
 			// Get the apply and discard buttons on the video settings screen
@@ -17,9 +17,9 @@ class SettingsShared {
 
 			// Tell C++ to init controls from convars
 			$.DispatchEvent('ChaosVideoSettingsInit');
-		} else if (newTab == 'OnlineSettings') {
+		} else if (newTab === 'OnlineSettings') {
 			this.onlineSettingsUpdateModel();
-		} else if (newTab == 'GameplaySettings') {
+		} else if (newTab === 'GameplaySettings') {
 			this.updatePaintPreview();
 		}
 

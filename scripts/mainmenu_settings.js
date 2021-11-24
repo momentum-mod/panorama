@@ -109,7 +109,7 @@ class MainMenuSettings {
 			// If the tab exists then hide it
 			if (this.activeTab) {
 				// Hide the nav menu children of the active tab if we're in collapse mode
-				if (this.activeTab !== 'SearchSettings') this.setNavItemCollapsed(this.activeTab, $.persistentStorage.getItem('settings.collapseNav') == 'true');
+				if (this.activeTab !== 'SearchSettings') this.setNavItemCollapsed(this.activeTab, $.persistentStorage.getItem('settings.collapseNav') === 'true');
 
 				// Hide the active tab
 				$.GetContextPanel().FindChildInLayoutFile(this.activeTab).RemoveClass('settings-page--active');
@@ -252,7 +252,7 @@ class MainMenuSettings {
 
 	static invertNavCollapse() {
 		// Get state from PS
-		const collapse = $.persistentStorage.getItem('settings.collapseNav') == 'true';
+		const collapse = $.persistentStorage.getItem('settings.collapseNav') === 'true';
 
 		// Invert state
 		$.persistentStorage.setItem('settings.collapseNav', !collapse);
@@ -445,7 +445,7 @@ class MainMenuSettings {
 		// Search all groups on the page
 		page.FindChildrenWithClassTraverse('settings-group').forEach((group) => {
 			let n = 0;
-			const styleItem = (item) => item.AddClass(n++ % 2 == 0 ? '--odd' : '--even');
+			const styleItem = (item) => item.AddClass(n++ % 2 === 0 ? '--odd' : '--even');
 
 			const search = (panel) => {
 				panel.Children?.().forEach((child) => {
