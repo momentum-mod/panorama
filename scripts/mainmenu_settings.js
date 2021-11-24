@@ -109,7 +109,7 @@ class MainMenuSettings {
 			// If the tab exists then hide it
 			if (this.activeTab) {
 				// Hide the nav menu children of the active tab if we're in collapse mode
-				if (this.activeTab !== 'SearchSettings') this.setNavItemCollapsed(this.activeTab, $.persistentStorage.getItem('settings.collapseNav') === 'true');
+				if (this.activeTab !== 'SearchSettings') this.setNavItemCollapsed(this.activeTab, $.persistentStorage.getItem('settings.collapseNav') ?? true);
 
 				// Hide the active tab
 				$.GetContextPanel().FindChildInLayoutFile(this.activeTab).RemoveClass('settings-page--active');
@@ -130,6 +130,7 @@ class MainMenuSettings {
 			// Hide the info panel if it was displaying something on the previous page
 			this.hideInfo();
 
+			// Call onPageScrolled to set the checked nav subsection to the page's scroll position
 			this.onPageScrolled(tab, activePanel.FindChildTraverse('SettingsPageContainer'));
 
 			if (tab !== 'SearchSettings') {
@@ -254,11 +255,8 @@ class MainMenuSettings {
 	}
 
 	static invertNavCollapse() {
-		// Get state from PS
-		const collapse = $.persistentStorage.getItem('settings.collapseNav') === 'true';
-
 		// Invert state
-		$.persistentStorage.setItem('settings.collapseNav', !collapse);
+		$.persistentStorage.setItem('settings.collapseNav', !$.persistentStorage.getItem('settings.collapseNav'));
 
 		// Update the panel
 		this.updateNavCollapse();
@@ -266,17 +264,12 @@ class MainMenuSettings {
 
 	static updateNavCollapse() {
 		// Get state from PS
-		const collapseSetting = $.persistentStorage.getItem('settings.collapseNav');
-
-		let shouldCollapse;
+		let shouldCollapse = $.persistentStorage.getItem('settings.collapseNav');
 
 		// Set to true if not set by user
-		if (typeof collapseSetting === 'null') {
+		if (typeof shouldCollapse === typeof null) {
 			$.persistentStorage.setItem('settings.collapseNav', true);
 			shouldCollapse = true;
-		} else {
-			// Otherwise set the bool from the PS string value
-			shouldCollapse = collapseSetting === 'true';
 		}
 
 		// Show the corresponding button icon
@@ -331,11 +324,10 @@ class MainMenuSettings {
 				if (value === -1) return;
 
 				// 0 if not already set, let the places using the var handle setting a default value
-				// TODO: change this behaviour when scell's changes get in. no need for the gross toString()!
-				const storedValue = $.persistentStorage.getItem(storageKey) ?? '0';
+				const storedValue = $.persistentStorage.getItem(storageKey) ?? 0;
 
 				// Check the button if the value matches the stored value
-				child.checked = storedValue === value.toString();
+				child.checked = storedValue === value;
 
 				// Extra attribute to allow us to still specify onactivate events in XML
 				const overrideString = child.GetAttributeString('activateoverride', '');
@@ -355,8 +347,8 @@ class MainMenuSettings {
 	static initPersistentStorageEnumDropdown(panel, storageKey) {
 		const dropdown = panel.FindChildTraverse('DropDown');
 
-		// Set the selected dropdown to the one stored in PS
-		dropdown.SetSelectedIndex(parseInt($.persistentStorage.getItem(storageKey)));
+		// Set the selected dropdown to the one stored in PS. Same as above, default to 0
+		dropdown.SetSelectedIndex($.persistentStorage.getItem(storageKey) ?? 0);
 
 		// Event overrides, same as above
 		const overrideString = panel.GetAttributeString('submitoverride', '');
@@ -392,7 +384,7 @@ class MainMenuSettings {
 			this.currentInfo = title + message + convar;
 
 			// Get convar display option from PS
-			let showConvar = $.persistentStorage.getItem('settings.infoPanelConvars') === '1' && convar;
+			let showConvar = $.persistentStorage.getItem('settings.infoPanelConvars') === 1 && convar;
 
 			// If the panel has a message OR a convar and the convar display option is on, show the info panel
 			if (message || showConvar) {
