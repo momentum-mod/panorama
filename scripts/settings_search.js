@@ -55,19 +55,19 @@ class SettingsSearch {
 	}
 
 	static searchSettingText(tabID, settingPanel, arrMatches, arrStrings) {
-		if (SettingsSearch.shouldSearchPanelText(settingPanel)) {
-			// Check every string is in this panel's text value
-			if (arrStrings.every((s) => new RegExp(s, 'giu').test(settingPanel.text))) {
-				const parent = settingPanel.GetParent();
-				// ChaosSettingsEnum has
-				const panel = MainMenuSettings.isSettingsPanel(parent) || parent.paneltype === 'ConVarEnabler' ? parent : parent.GetParent();
+		if (!SettingsSearch.shouldSearchPanelText(settingPanel)) return;
 
-				arrMatches.push({
-					panel: panel,
-					text: settingPanel.text,
-					menu: tabID
-				});
-			}
+		// Check every string is in this panel's text value
+		if (arrStrings.every((s) => new RegExp(s, 'giu').test(settingPanel.text))) {
+			const parent = settingPanel.GetParent();
+			// ChaosSettingsEnum has
+			const panel = MainMenuSettings.isSettingsPanel(parent) || parent.paneltype === 'ConVarEnabler' ? parent : parent.GetParent();
+
+			arrMatches.push({
+				panel: panel,
+				text: settingPanel.text,
+				menu: tabID
+			});
 		}
 	}
 

@@ -379,55 +379,55 @@ class MainMenuSettings {
 	}
 
 	static showInfo(title, message, convar, hasDocs) {
-		if (title + message + convar !== this.currentInfo) {
-			// Check we're mousing over a different panel than before, i.e. the title, message and convar aren't all equal
-			this.currentInfo = title + message + convar;
+		// Check we're mousing over a different panel than before, i.e. the title, message and convar aren't all equal
+		if (title + message + convar === this.currentInfo) return;
+		
+		this.currentInfo = title + message + convar;
+		
+		// Get convar display option from PS
+		let showConvar = $.persistentStorage.getItem('settings.infoPanelConvars') === 1 && convar;
 
-			// Get convar display option from PS
-			let showConvar = $.persistentStorage.getItem('settings.infoPanelConvars') === 1 && convar;
+		// If the panel has a message OR a convar and the convar display option is on, show the info panel
+		if (message || showConvar) {
+			let switchDelay = 0;
 
-			// If the panel has a message OR a convar and the convar display option is on, show the info panel
-			if (message || showConvar) {
-				let switchDelay = 0;
+			// If the info panel is closed, open it. If it's already open, play the switch animation
+			if (this.infoPanel.HasClass('settings-info--hidden')) {
+				this.infoPanel.RemoveClass('settings-info--hidden');
+			} else {
+				switchDelay = 0.05; // This should always be half the duration of settings-info--switch
 
-				// If the info panel is closed, open it. If it's already open, play the switch animation
-				if (this.infoPanel.HasClass('settings-info--hidden')) {
-					this.infoPanel.RemoveClass('settings-info--hidden');
+				this.infoPanel.AddClass('settings-info--switch');
+				let kfs = this.infoPanel.CreateCopyOfCSSKeyframes('BlurFadeInOut');
+				this.infoPanel.UpdateCurrentAnimationKeyframes(kfs);
+			}
+
+			// Delay changing the properties even we've just played the switch animation,
+			// to be half the length of animation, so text changes at apex of the animation
+			$.Schedule(switchDelay, () => {
+				if (message) {
+					this.infoPanelTitle.text = $.Localize(title);
+					this.infoPanelMessage.text = $.Localize(message);
+					this.infoPanelTitle.RemoveClass('hide');
+					this.infoPanelMessage.RemoveClass('hide');
 				} else {
-					switchDelay = 0.05; // This should always be half the duration of settings-info--switch
-
-					this.infoPanel.AddClass('settings-info--switch');
-					let kfs = this.infoPanel.CreateCopyOfCSSKeyframes('BlurFadeInOut');
-					this.infoPanel.UpdateCurrentAnimationKeyframes(kfs);
+					this.infoPanelTitle.AddClass('hide');
+					this.infoPanelMessage.AddClass('hide');
 				}
 
-				// Delay changing the properties even we've just played the switch animation,
-				// to be half the length of animation, so text changes at apex of the animation
-				$.Schedule(switchDelay, () => {
-					if (message) {
-						this.infoPanelTitle.text = $.Localize(title);
-						this.infoPanelMessage.text = $.Localize(message);
-						this.infoPanelTitle.RemoveClass('hide');
-						this.infoPanelMessage.RemoveClass('hide');
-					} else {
-						this.infoPanelTitle.AddClass('hide');
-						this.infoPanelMessage.AddClass('hide');
-					}
-
-					if (showConvar) {
-						this.infoPanelConvar.text = `<i>Convar: <b>${convar}</b>`;
-						this.infoPanelConvar.RemoveClass('hide');
-						this.infoPanelDocsButton.SetHasClass('hide', !hasDocs);
-						// Shouldn't need to clear the panel event here as it's hidden or gets overwritten
-						this.infoPanelDocsButton.SetPanelEvent('onactivate', () => SteamOverlayAPI.OpenURL(`https://docs.momentum-mod.org/var/${convar}`));
-					} else {
-						this.infoPanelConvar.AddClass('hide');
-						this.infoPanelDocsButton.AddClass('hide');
-					}
-				});
-			} else {
-				this.hideInfo();
-			}
+				if (showConvar) {
+					this.infoPanelConvar.text = `<i>Convar: <b>${convar}</b>`;
+					this.infoPanelConvar.RemoveClass('hide');
+					this.infoPanelDocsButton.SetHasClass('hide', !hasDocs);
+					// Shouldn't need to clear the panel event here as it's hidden or gets overwritten
+					this.infoPanelDocsButton.SetPanelEvent('onactivate', () => SteamOverlayAPI.OpenURL(`https://docs.momentum-mod.org/var/${convar}`));
+				} else {
+					this.infoPanelConvar.AddClass('hide');
+					this.infoPanelDocsButton.AddClass('hide');
+				}
+			});
+		} else {
+			this.hideInfo();
 		}
 	}
 
