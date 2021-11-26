@@ -117,7 +117,7 @@
 				<ChaosSettingsKeyBinder text="#MOM_Controls_Restart" bind="mom_restart" />
 				<ChaosSettingsKeyBinder text="#MOM_Controls_RestartStage" bind="mom_restart_stage" />
 				<ChaosSettingsKeyBinder text="#MOM_Controls_StopTimer" bind="mom_timer_stop" />
-				<ChaosSettingsKeyBinder text="#MOM_Controls_ToggleSavelocMenu" bind="mom_hud_menu_show savelocmenu" />
+				<ChaosSettingsKeyBinder text="#MOM_Controls_ToggleSavelocMenu" bind="chaos_hud_menu_show savelocmenu" />
 				<ChaosSettingsKeyBinder text="#MOM_Controls_CreateStartMark" bind="mom_start_mark_create" />
 				<ChaosSettingsKeyBinder text="#MOM_Controls_ClearStartMark" bind="mom_start_mark_clear" />
 
@@ -129,8 +129,8 @@
 				<Label class="settings-group__subtitle" text="Utility" />
 
 				<ChaosSettingsKeyBinder text="#MOM_Controls_Practice" bind="mom_practice" />
-				<ChaosSettingsKeyBinder text="Map Commands Menu" bind="mom_hud_menu_show mapcmdsmenu" />
-				<ChaosSettingsKeyBinder text="Ruler Menu" bind="mom_hud_menu_show rulermenu" />
+				<ChaosSettingsKeyBinder text="Map Commands Menu" bind="chaos_hud_menu_show mapcmdsmenu" />
+				<ChaosSettingsKeyBinder text="Ruler Menu" bind="chaos_hud_menu_show rulermenu" />
 				<ChaosSettingsKeyBinder text="#MOM_Controls_Paint" bind="+paint" />
 				<ChaosSettingsKeyBinder text="#Valve_Flashlight" bind="impulse 100" />
 
