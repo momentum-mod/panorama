@@ -49,6 +49,7 @@
 
 		<!-- Anchored to the bottom-left corner of the screen, laid out from top to bottom -->
 		<Panel id="HudLowerLeft" hittest="false" hittestchildren="true">
+			<HudStaticMenu />
 			<MomHudChat />
 			<MomHudVersionInfo />
 		</Panel>
