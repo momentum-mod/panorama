@@ -14,10 +14,12 @@
 	</snippets>
 
 	<Panel class="settings-page">
-		<Label class="settings-page__title" text="Search Results" />
+		<Panel class="settings-page__header">
+			<Label class="settings-page__title" text="Search Results" />
+		</Panel>
 
 		<Panel id="SettingsPageContainer" class="settings-page__container">
-			<Panel id="SearchResultsContainer" class="settings-group">
+			<Panel id="SearchResultsContainer" class="settings-group settings-group--search">
 
 			</Panel>
 		</Panel>

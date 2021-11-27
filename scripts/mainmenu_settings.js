@@ -130,10 +130,10 @@ class MainMenuSettings {
 			// Hide the info panel if it was displaying something on the previous page
 			this.hideInfo();
 
-			// Call onPageScrolled to set the checked nav subsection to the page's scroll position
-			this.onPageScrolled(tab, activePanel.FindChildTraverse('SettingsPageContainer'));
-
 			if (tab !== 'SearchSettings') {
+				// Call onPageScrolled to set the checked nav subsection to the page's scroll position
+				this.onPageScrolled(tab, activePanel.FindChildTraverse('SettingsPageContainer'));
+
 				// Show the nav menu children of the selected tab
 				this.setNavItemCollapsed(tab, false);
 
