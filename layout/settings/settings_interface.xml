@@ -2,10 +2,102 @@
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
 		<include src="file://{resources}/styles/pages/settings.scss" />
+		<include src="file://{resources}/styles/pages/settings_speedometer.scss" />
 	</styles>
 	<scripts>
 		<include src="file://{resources}/scripts/settings_shared.js"/>
+		<include src="file://{resources}/scripts/settings_speedometer.js"/>
 	</scripts>
+	
+	<snippets>
+		<snippet name="speedometer">
+			<Panel class="speedometer">
+				<Panel class="speedometer__header">
+					<Button id="SpeedometerDeleteBtn" class="button button--red speedometer__deletebutton">
+						<Image class="button__icon" src="file://{images}/delete.svg" textureheight="32" />
+					</Button>
+					<Button id="SpeedometerApplyBtn" class="button button--light-blue speedometer__savebutton" >
+						<Label class="button__text" text="Apply" />
+					</Button>
+					<Button id="SpeedometerDiscardBtn" class="button speedometer__discardbutton" >
+						<Label class="button__text" text="Discard" />
+					</Button>
+					<Button id="SpeedometerMoveDownBtn" class="button speedometer__movedownbutton">
+						<Image class="button__icon rot-90" src="file://{images}/mom-arrow.svg" textureheight="32" />
+					</Button>
+					<Button id="SpeedometerMoveUpBtn" class="button speedometer__moveupbutton">
+						<Image class="button__icon rot-270" src="file://{images}/mom-arrow.svg" textureheight="32" />
+					</Button>
+					<ToggleButton id="SpeedometerToggleBtn" class="button togglebutton togglebutton--blue speedometer__togglebutton" selected="false">
+						<Label id="SpeedometerName" class="button__text button__text--left speedometer__name" />
+						<Image class="button__icon button__icon--right horizontal-align-right rot-90" src="file://{images}/mom-arrow.svg" textureheight="32" />
+					</ToggleButton>
+				</Panel>
+				<Panel id="SpeedometerDetailContainer" class="speedometer__detail speedometer__detail--hidden">
+					<Panel id="SpeedometerUnitsContainer" class="speedometer__settingcontainer">
+						<Label class="speedometer__settinglabel" text="Units" />
+						<DropDown id="SpeedometerUnits" class="dropdown horizontal-align-right" menuclass="dropdown-menu">
+							<Label id="units0" text="#MOM_Settings_Speedometer_Units_UPS" value="0" />
+							<Label id="units1" text="#MOM_Settings_Speedometer_Units_KPH" value="1" />
+							<Label id="units2" text="#MOM_Settings_Speedometer_Units_MPH" value="2" />
+						</DropDown>
+					</Panel>
+					<Panel class="speedometer__settingcontainer mt-2">
+						<Label class="speedometer__settinglabel" text="Color Mode" />
+						<DropDown id="SpeedometerColorMode" class="dropdown" menuclass="dropdown-menu">
+							<Label id="colormode0" text="No Color" value="0" />
+							<Label id="colormode1" text="Range Based" value="1" />
+							<Label id="colormode2" text="Comparison Based" value="2" />
+							<Label id="colormode3" text="Comparison Based (Separate Label)" value="3" />
+						</DropDown>
+					</Panel>
+					<Panel id="SpeedometerColorProfileContainer" class="speedometer__settingcontainer mt-2">
+						<Label class="speedometer__settinglabel" text="Color Profile" />
+						<DropDown id="SpeedometerColorProfile" class="dropdown" menuclass="dropdown-menu">
+							<Label id="noprofile" text="No Profile" value="0" />
+							<!--Populated by JS-->
+						</DropDown>
+					</Panel>
+				</Panel>
+			</Panel>
+		</snippet>
+		<snippet name="range-color-display">
+			<Panel class="rangecolordisp">
+				<Button id="RangeColorDisplayDeleteBtn" class="ml-2 button button--red rangecolordisp__deletebutton">
+					<Image class="button__icon" src="file://{images}/delete.svg" textureheight="32" />
+				</Button>
+				<RangeColorDisplay id="RangeColorDisplay" class="rangecolordisp__display" />
+			</Panel>
+		</snippet>
+		<snippet name="range-color-profile">
+			<Panel class="rangecolor">
+				<Panel class="rangecolor__header">
+					<Button id="RangeColorDeleteBtn" class="button button--red rangecolor__deletebutton">
+						<Image class="button__icon" src="file://{images}/delete.svg" textureheight="32" />
+					</Button>
+					<Button id="RangeColorEditNameBtn" class="button rangecolor__editnamebutton">
+						<Image class="button__icon" src="file://{images}/edit.svg" textureheight="32" />
+					</Button>
+					<Button id="RangeColorApplyBtn" class="button button--light-blue rangecolor__savebutton" >
+						<Label class="button__text" text="Apply" />
+					</Button>
+					<Button id="RangeColorDiscardBtn" class="button rangecolor__discardbutton" >
+						<Label class="button__text" text="Discard" />
+					</Button>
+					<ToggleButton id="RangeColorToggleBtn" class="button togglebutton togglebutton--blue rangecolor__togglebutton" selected="false">
+						<Label id="RangeColorName" class="button__text button__text--left rangecolor__name" />
+						<Image class="button__icon button__icon--right horizontal-align-right rot-90" src="file://{images}/mom-arrow.svg" textureheight="32" />
+					</ToggleButton>
+				</Panel>
+				<Panel id="RangeColorDisplaysContainer" class="rangecolor__displayscont rangecolor__displayscont--hidden">
+					<Panel id="RangeColorDisplays" class="rangecolor__displays" />
+					<Button id="RangeColorAddBtn" class="button rangecolor__addbutton" >
+						<Label class="button__text" text="+ Add new range" />
+					</Button>
+				</Panel>
+			</Panel>
+		</snippet>
+	</snippets>
 
 	<Panel class="settings-page">
 
@@ -59,11 +151,65 @@
 
 			<Panel class="settings-page__spacer"/>
 
-			<Panel id="SpeedometerSubSection" class="settings-group">
+			<Panel id="SpeedometerSubSection" class="settings-group" onload="SpeedometerSettings.loadSettings()">
+			
+				<Panel class="settings-group__header">
+					<Label class="settings-group__title" text="#MOM_Settings_Speedometer_Label" />
+					<Panel class="speedometerbtns">
+						<TooltipPanel class="speedometerbtns__save ml-3" tooltip="Save">
+							<Button id="SaveSpeedometersBtn" class="button" onactivate="Speedometers.saveAllSpeedometers();">
+								<Image class="button__icon" src="file://{images}/save.svg" />
+							</Button>
+						</TooltipPanel>
+						<TooltipPanel class="speedometerbtns__discard ml-3" tooltip="Discard">
+							<Button id="DiscardSpeedometersBtn" class="button" onactivate="Speedometers.create();">
+								<Image class="button__icon" src="file://{images}/reset.svg" />
+							</Button>
+						</TooltipPanel>
+						<TooltipPanel class="speedometerbtns__reset ml-3" tooltip="Reset to default">
+							<Button id="ResetSpeedometersBtn" class="button button--red" onactivate="Speedometers.resetToDefault();">
+								<Image class="button__icon" src="file://{images}/reset.svg" />
+							</Button>
+						</TooltipPanel>
+					</Panel>
+				</Panel>
+				
+				<Panel id="Speedometers" class="speedometers">
+					<!--Filled with snippets in JS-->
+				</Panel>
+				
+				<Button id="AddSpeedometerBtn" class="button horizontal-align-center half-width mt-4 mb-4" onactivate="Speedometers.addSpeedometer();">
+					<Label class="button__text" text="+ Add new speedometer" />
+				</Button>
 
-				<Label class="settings-group__title" text="#MOM_Settings_Speedometer_Label" />
+				<Panel class="settings-group__header">
+					<Label class="settings-group__subtitle" text="Range Color Profiles" />
+					<Panel class="speedometerbtns">
+						<TooltipPanel class="speedometerbtns__save ml-3" tooltip="Save">
+							<Button id="SaveColorProfilesBtn" class="button" onactivate="RangeColorProfiles.saveAllProfiles();">
+								<Image class="button__icon" src="file://{images}/save.svg" />
+							</Button>
+						</TooltipPanel>
+						<TooltipPanel class="speedometerbtns__discard ml-3" tooltip="Discard">
+							<Button id="DiscardColorProfilesBtn" class="button" onactivate="RangeColorProfiles.create();">
+								<Image class="button__icon" src="file://{images}/reset.svg" />
+							</Button>
+						</TooltipPanel>
+						<TooltipPanel class="speedometerbtns__reset ml-3" tooltip="Reset to default">
+							<Button id="ResetColorProfilesBtn" class="button button--red" onactivate="RangeColorProfiles.resetToDefault();">
+								<Image class="button__icon" src="file://{images}/reset.svg" />
+							</Button>
+						</TooltipPanel>
+					</Panel>
+				</Panel>
+				
+				<Panel id="SpeedometerColorProfiles" class="rangecolorprofs">
+					<!--Filled with snippets in JS-->
+				</Panel>
 
-				<Label text="Coming soon!" />
+				<Button id="AddColorProfileBtn" class="button horizontal-align-center half-width mt-4 mb-4" onactivate="RangeColorProfiles.addProfile();">
+					<Label class="button__text" text="+ Add new color profile" />
+				</Button>
 
 			</Panel>
 
