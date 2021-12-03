@@ -1,15 +1,14 @@
 @use '../config' as *;
 @use '../abstract/mixin';
+@use '../abstract/function';
+@use 'sass:map';
 
 .tooltip {
-	opacity: 0.0;
+	$root: &;
+	flow-children: down;
+	opacity: 0;
 	transition: opacity 0.1s ease-out 0s;
 	margin: $tooltip-margin;
-
-	// From C++
-	&.TooltipVisible {
-		opacity: 1.0;
-	}
 
 	&__row {
 		flow-children: right;
@@ -69,6 +68,49 @@
 			height: 0;
 			margin: 0;
 		}
+	}
+
+	@each $name, $color in map.merge($colors-primary, $colors-state) {
+		&--#{$name} {
+			#{$this}__text {
+				color: $color;
+			}
+			#{$this}__image {
+				wash-color: $color;
+			}
+		}
+	}
+
+	&__top-arrow,
+	&__bottom-arrow,
+	&__left-arrow,
+	&__right-arrow {
+		background-repeat: no-repeat;
+		background-position: 0px 0px;
+		background-size: contain;
+
+		z-index: 1;
+		visibility: collapse;
+
+		width: 24px;
+		height: 24px;
+		wash-color: $tooltip-background;
+	}
+
+	@each $dir in ('top', 'right', 'bottom', 'right') {
+		&__#{$dir}-arrow {
+			background-image: url('file://{images}/tooltips/#{$dir}-arrow.svg');
+
+			#{$root}.#{function.capitalize($dir)}ArrowVisible & {
+				visibility: visible;
+			}
+
+			margin-#{$dir}: -8px;
+		}
+	}
+
+	&.TooltipVisible {
+		opacity: 1;
 	}
 }
 
