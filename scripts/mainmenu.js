@@ -11,7 +11,7 @@ class MainMenuController {
 	static videoPanel = '';
 	static imagePanel = '';
 	static playedInitialFadeUp = false;
-
+	
 	static onInitFadeUp() {
 		if (!MainMenuController.playedInitialFadeUp) {
 			MainMenuController.playedInitialFadeUp = true;
@@ -273,4 +273,7 @@ class MainMenuController {
 	$.RegisterEventHandler('Cancelled', $.GetContextPanel(), MainMenuController.onEscapeKeyPressed);
 
 	$.DispatchEvent( 'ChaosHideIntroMovie' );
+
+	// Close the map selector when a map is successfully loaded
+	$.RegisterForUnhandledEvent('MapSelector_TryPlayMap_Outcome', (outcome) => outcome && MainMenuController.onHomeButtonPressed());
 })();
