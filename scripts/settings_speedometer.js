@@ -164,7 +164,7 @@ class SpeedometerDetailObject {
 }
 class Speedometers {
 	static mainPanel = $('#Speedometers');
-	static gamemode = 0; // TODO: gamemode dropdown!
+	static gamemode = 0;
 	static keyvalues = null;
 	static objectList = {};
 	
@@ -181,6 +181,11 @@ class Speedometers {
 			$.Warning('Failed to load speedometer settings from settings!');
 			return;
 		}
+		Speedometers.create();
+	}
+
+	static updateGamemode(gamemode) {
+		Speedometers.gamemode = gamemode;
 		Speedometers.create();
 	}
 
@@ -710,10 +715,18 @@ class RangeColorProfiles {
 
 
 class SpeedometerSettings {
+	static gamemodeDropDown = $('#GamemodeDropDown');
+
 	static loadSettings() {
 		// order matches events fired from C++ when speedometer settings are loaded
 		// will not initialize correctly if color profiles are loaded after speedometers
 		RangeColorProfiles.create();
 		Speedometers.create();
+	}
+
+	static updateGamemode() {
+		const gamemodePanel = SpeedometerSettings.gamemodeDropDown.GetSelected();
+		const gamemode = gamemodePanel ? gamemodePanel.GetAttributeInt('value', 0) : 0;
+		Speedometers.updateGamemode(gamemode);
 	}
 }
