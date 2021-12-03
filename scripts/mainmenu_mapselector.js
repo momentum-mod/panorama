@@ -84,6 +84,7 @@ class MapSelection {
 		$.RegisterForUnhandledEvent('MapSelector_ShowConfirmCancelDownload', MapSelection.showConfirmCancelDownload);
 		$.RegisterForUnhandledEvent('MapSelector_ShowConfirmOverwrite', MapSelection.showConfirmOverwrite);
 		$.RegisterForUnhandledEvent('MapSelector_MapsFiltered', MapSelection.mapsFiltered);
+		$.RegisterForUnhandledEvent('MapSelector_SelectedDataUpdate', MapSelection.onSelectedDataUpdated.bind(this));
 
 		$.RegisterEventHandler('NStateButtonStateChanged', MapSelection.completedFilterButton, MapSelection.onNStateBtnChanged);
 		$.RegisterEventHandler('NStateButtonStateChanged', MapSelection.favoritesFilterButton, MapSelection.onNStateBtnChanged);
@@ -238,6 +239,68 @@ class MapSelection {
 			const stateIter = MapSelNStateTypes[type];
 			panel.SetHasClass(MapSelNStateClasses[stateIter], state === stateIter);
 		});
+	/*
+	 *	Set all the map data for the map just selected
+	 */
+	static onSelectedDataUpdated() {
+		const mapData = $.GetContextPanel().selectedMapData;
+
+		if (!mapData) return;
+
+		// Set the description and creation date text
+		$.GetContextPanel().SetDialogVariable('description', mapData.info?.description);
+		this.descriptionContainer.SetHasClass('hide', !mapData.info?.description);
+
+		const dateArray = mapData.info?.creationDate.split('T')[0].split('-');
+
+		$.GetContextPanel().SetDialogVariable('date', `${dateArray[1]}/${dateArray[2]}/${dateArray[0]}`);
+		this.datesContainer.SetHasClass('hide', !mapData.info?.creationDate);
+
+		// Clear the credits from the last map
+		this.creditsPanel.RemoveAndDeleteChildren();
+
+		// Find all authors
+		const authorCredits = mapData.credits.filter((x) => x.type === 'author');
+
+		if (authorCredits.length > 0) {
+			this.creditsContainer.SetHasClass('hide', false);
+
+			// Add them to the panel
+			authorCredits.forEach((credit) => {
+				let namePanel = $.CreatePanel('Label', this.creditsPanel, '', {
+					text: credit.user.alias,
+					class: 'mapselector-credits__text mapselector-credits__name'
+				});
+
+				// This will become a player profile panel in the future
+				if (credit.user.xuid !== '0') {
+					namePanel.AddClass('mapselector-credits__name--steam');
+
+					namePanel.SetPanelEvent('onactivate', () => {
+						UiToolkitAPI.ShowSimpleContextMenu('', '', [
+							{
+								label: 'Show Steam Profile',
+								jsCallback: () => {
+									SteamOverlayAPI.OpenToProfileID(credit.user.xuid);
+								}
+							}
+						]);
+					});
+				}
+
+				if (authorCredits.indexOf(credit) < authorCredits.length - 1) {
+					let commaPanel = $.CreatePanel('Label', this.creditsPanel, '');
+					commaPanel.AddClass('mapselector-credits__text');
+					commaPanel.text = ',  ';
+				}
+			});
+		} else {
+			this.creditsContainer.SetHasClass('hide', true);
+		}
+
+		// Set the website button link
+		this.websiteButton.SetPanelEvent('onactivate', () => SteamOverlayAPI.OpenURL(`https://momentum-mod.org/dashboard/maps/${mapData.id}`));
+	}
 	}
 
 	static toggleLeaderboards() {
