@@ -9,8 +9,7 @@
 			<Label class="settings-slider__title" id="Title" />
 		</Panel>
 		<Panel class="settings-slider__input-container">
-			<!-- TODO: enable showdefault="true" after 1577 done -->
-			<Slider class="slider slider--horizontal settings-slider__slider" direction="horizontal" id="Slider"/>
+			<Slider class="slider slider--horizontal settings-slider__slider" showdefault="true" direction="horizontal" id="Slider"/>
 			<TextEntry class="textentry settings-slider__textentry" maxchars="4" textmode="numeric" id="Value" />
 		</Panel>
 	</ChaosSettingsSlider>
