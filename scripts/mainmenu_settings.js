@@ -420,7 +420,7 @@ class MainMenuSettings {
 					this.infoPanelConvar.RemoveClass('hide');
 					this.infoPanelDocsButton.SetHasClass('hide', !hasDocs);
 					// Shouldn't need to clear the panel event here as it's hidden or gets overwritten
-					this.infoPanelDocsButton.SetPanelEvent('onactivate', () => SteamOverlayAPI.OpenURL(`https://docs.momentum-mod.org/var/${convar}`));
+					this.infoPanelDocsButton.SetPanelEvent('onactivate', () => SteamOverlayAPI.OpenURLModal(`https://docs.momentum-mod.org/var/${convar}`));
 				} else {
 					this.infoPanelConvar.AddClass('hide');
 					this.infoPanelDocsButton.AddClass('hide');
