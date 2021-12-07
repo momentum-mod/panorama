@@ -26,6 +26,11 @@
 .generic-popup {
 	min-width: $popup-min-width;
 	max-width: $popup-max-width;
+
+	&--large {
+		max-width: $popup-large-max-width;
+	}
+
 	&__title {
 		horizontal-align: left;
 		margin-bottom: 0px;

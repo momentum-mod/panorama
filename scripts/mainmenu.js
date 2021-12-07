@@ -187,6 +187,14 @@ class MainMenuController {
 			$.GetContextPanel().FindChildTraverse('ControlsLibraryButton').RemoveClass('hide');
 			$.GetContextPanel().FindChildTraverse('PSDumpButton').RemoveClass('hide');
 		}
+
+		this.showPlaytestWelcomePopup();
+	}
+
+	static showPlaytestWelcomePopup() {
+		if (!$.persistentStorage.getItem('dontShowAgain.playtestWelcome')) {
+			UiToolkitAPI.ShowCustomLayoutPopupParameters('', 'file://{resources}/layout/popups/popup_playtestwelcome.xml', 'storageKey=playtestWelcome');
+		}
 	}
 
 	static setMainMenuBackground() {
