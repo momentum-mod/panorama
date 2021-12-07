@@ -136,7 +136,7 @@ $drawer-width: 768px;
 		width: 100%;
 		height: 100%;
 		padding: 30px;
-		
+
 		transition-property: opacity;
 		transition-duration: 0s;
 		transition-timing-function: ease-in-out;
@@ -171,7 +171,6 @@ $drawer-width: 768px;
 	&__logo {
 		margin: 0 24px;
 		vertical-align: middle;
-		// img-shadow: 1px 1px 8px 1 black;
 	}
 
 	&__button {
@@ -188,24 +187,12 @@ $drawer-width: 768px;
 			visibility: collapse;
 		}
 
-		&-image {
-			width: height-percentage(100%);
-			height: 100%;
-			vertical-align: middle;
-			color: white;
-			opacity: 0.85;
-			img-shadow: 0px 0px 5px 0 rgba(0, 0, 0, 0.4);
-			transition-property: opacity;
-			transition-duration: 0.1s;
-			transition-timing-function: ease-in;
-		}
-
 		$this: &;
 		&:hover {
 			background-color: gradient(radial, 50% 100%, 0% 0%, 100% 100%, from(rgba(255, 255, 255, 0.25)), to(rgba(209, 209, 209, 0.25)));
 			box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.35);
 
-			#{$this}-image {
+			#{$this}__icon {
 				opacity: 1;
 			}
 		}
@@ -214,7 +201,7 @@ $drawer-width: 768px;
 			background-color: gradient(radial, 50% 100%, 0% 0%, 100% 100%, from(rgba(88, 88, 88, 0.7)), to(rgba(20, 20, 20, 0.7)));
 			box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.3);
 
-			#{$this}-image {
+			#{$this}__icon {
 				opacity: 1;
 			}
 		}
@@ -222,6 +209,18 @@ $drawer-width: 768px;
 		&:selected:hover {
 			background-color: gradient(radial, 50% 100%, 0% 0%, 100% 100%, from(rgba(70, 70, 70, 0.8)), to(rgba(20, 20, 20, 0.8)));
 		}
+	}
+
+	&__icon {
+		width: height-percentage(100%);
+		height: 100%;
+		vertical-align: middle;
+		color: white;
+		opacity: 0.85;
+		img-shadow: 0px 0px 5px 0 rgba(0, 0, 0, 0.4);
+		transition-property: opacity;
+		transition-duration: 0.1s;
+		transition-timing-function: ease-in;
 	}
 
 	&__home,
@@ -501,23 +500,52 @@ $drawer-width: 768px;
 }
 
 .bottombar {
+	$root: &;
+	margin: 24px;
+	width: 100%;
+
 	&__button {
-		height: 48px;
-		width: 48px;
-		margin: 16px;
-
-		& .RadioBox {
-			visibility: collapse;
+		width: 60px;
+		height: width-percentage(100%);
+		margin: 4px;
+		transition-property: transform;
+		transition-timing-function: ease-in-out;
+		transition-duration: 0.2s;
+		
+		&:hover {
+			transform: translateY(-6px);
 		}
+	}
+	
+	&__icon {
+		width: 100%;
+		height: width-percentage(100%);
+		padding: 8px;
+		vertical-align: middle;
 
-		&-image {
-			width: 100%;
-			height: width-percentage(100%);
-			vertical-align: middle;
-			opacity: 0.75;
-			transition: opacity 0.1s ease-in-out 0s;
-			img-shadow: 0 0 2px 1 rgba(0, 0, 0, 1);
+		opacity: 0.8;
+		
+		transition-property: opacity, img-shadow;
+		transition-timing-function: ease-out;
+		transition-duration: 0.2s;
+		img-shadow: 0 0 16px 2 black;
+		
+		#{$root}__button:hover & {
+			opacity: 1;
+			img-shadow: 0 0 24px 2 $blue;
 		}
+	}
+
+	&__text {
+		align: center center;
+		text-align: center;
+		@include mixin.font-styles($use-header: true);
+	}
+
+	&__tooltip {
+		tooltip-position: top;
+		tooltip-arrow-position: 50% 50%;
+		tooltip-body-position: 50% 50%;
 	}
 }
 

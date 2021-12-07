@@ -39,35 +39,35 @@
 
 				<Panel class="full-height flow-right">
 					<RadioButton id="PlayButton" class="topnav__button" onactivate="MainMenuController.navigateToTab('MapSelection', 'mainmenu_mapselector', false)">
-						<Image class="topnav__button-image" src="file://{images}/topnav/play.svg" textureheight="64" />
+						<Image class="topnav__icon" src="file://{images}/topnav/play.svg" textureheight="64" />
 					</RadioButton>
 
 					<RadioButton id="InventoryButton" class="topnav__button" onactivate="MainMenuController.navigateToTab('Inventory', 'mainmenu_inventory')">
-						<Image class="topnav__button-image" src="file://{images}/topnav/inventory.svg" textureheight="64" />
+						<Image class="topnav__icon" src="file://{images}/topnav/inventory.svg" textureheight="64" />
 					</RadioButton>
 
 					<RadioButton id="ShopButton" class="topnav__button" onactivate="MainMenuController.navigateToTab('Shop', 'mainmenu_shop')">
-						<Image class="topnav__button-image" src="file://{images}/topnav/shop.svg" textureheight="64" />
+						<Image class="topnav__icon" src="file://{images}/topnav/shop.svg" textureheight="64" />
 					</RadioButton>
 
 					<RadioButton id="LearnButton" class="topnav__button" onactivate="MainMenuController.navigateToTab('Learn', 'mainmenu_learn')">
-						<Image class="topnav__button-image" src="file://{images}/topnav/learn.svg" textureheight="64" />
+						<Image class="topnav__icon" src="file://{images}/topnav/learn.svg" textureheight="64" />
 					</RadioButton>
 
 					<RadioButton id="SettingsButton" class="topnav__button" onactivate="MainMenuController.navigateToTab('Settings', 'mainmenu_settings')">
-						<Image class="topnav__button-image" src="file://{images}/topnav/settings.svg" textureheight="64" />
+						<Image class="topnav__icon" src="file://{images}/topnav/settings.svg" textureheight="64" />
 					</RadioButton>
 				</Panel>
 
 				<Panel class="full-height flow-right horizontal-align-right">
 					<RadioButton id="NotificationsButton" class="topnav__button">
-						<Image class="topnav__button-image" src="file://{images}/topnav/notification.svg" textureheight="64" />
+						<Image class="topnav__icon" src="file://{images}/topnav/notification.svg" textureheight="64" />
 					</RadioButton>
 
 					<Frame class="full-height" src="file://{resources}/layout/components/player_card.xml" />
 
 					<RadioButton id="QuitButton" class="topnav__button" onactivate="MainMenuController.onQuitButtonPressed()">
-						<Image class="topnav__button-image" src="file://{images}/topnav/quit.svg" textureheight="64" />
+						<Image class="topnav__icon" src="file://{images}/topnav/quit.svg" textureheight="64" />
 					</RadioButton>
 				</Panel>
 
@@ -88,23 +88,24 @@
 				<!-- Rightnav -->
 				<Panel id="MainMenuOptionListRight" class="rightnav">
 					<RadioButton id="LobbyButton" class="rightnav__button">
-						<Image id="LobbyButtonImage" class="rightnav__button-image" src="file://{images}/sidepanel/lobby.svg" textureheight="32" />
+						<Image id="LobbyButtonImage" class="rightnav__icon" src="file://{images}/sidepanel/lobby.svg" textureheight="32" />
+						<Label id="LobbyPlayerCountLabel" class="rightnav__button-subtitle rightnav__button-subtitle--hidden" />
 					</RadioButton>
 
 					<RadioButton id="ProfileButton" class="rightnav__button">
-						<Image class="rightnav__button-image" src="file://{images}/sidepanel/profile.svg" textureheight="32" />
+						<Image class="rightnav__icon" src="file://{images}/sidepanel/profile.svg" textureheight="32" />
 					</RadioButton>
 
 					<RadioButton id="StatsButton" class="rightnav__button">
-						<Image class="rightnav__button-image" src="file://{images}/sidepanel/wr.svg" textureheight="32" />
+						<Image class="rightnav__icon" src="file://{images}/sidepanel/wr.svg" textureheight="32" />
 					</RadioButton>
 
 					<RadioButton id="ChangelogButton" class="rightnav__button">
-						<Image class="rightnav__button-image" src="file://{images}/sidepanel/news.svg" textureheight="32" />
+						<Image class="rightnav__icon" src="file://{images}/sidepanel/news.svg" textureheight="32" />
 					</RadioButton>
 
 					<RadioButton id="SliderButton" class="rightnav__button rightnav__drawerbutton" onactivate="Drawer.toggle()">
-						<Image class="rightnav__button-image" src="file://{images}/right-arrow.svg" textureheight="32" orientation="180" />
+						<Image class="rightnav__icon" src="file://{images}/right-arrow.svg" textureheight="32" orientation="180" />
 					</RadioButton>
 				</Panel>
 				<!-- /Rightnav -->
@@ -153,9 +154,49 @@
 
 							<Panel class="home__bottombar bottombar">
 
-								<RadioButton id="ControlsLibraryButton" class="bottombar__button" onactivate="MainMenuController.navigateToTab('ControlsLibrary', 'controlslibrary')">
-									<Image class="bottombar__button-image" src="file://{images}/topnav/quiz.svg" textureheight="64" />
-								</RadioButton>
+								<TooltipPanel class="bottombar__tooltip" tooltip="Main Site">
+									<Button class="bottombar__button" onactivate="SteamOverlayAPI.OpenURLModal('https://momentum-mod.org/')">
+										<Image class="bottombar__icon" src="file://{images}/social/home.svg" textureheight="64" />
+									</Button>
+								</TooltipPanel>
+
+								<TooltipPanel class="bottombar__tooltip" tooltip="Store Page">
+									<Button class="bottombar__button" onactivate="SteamOverlayAPI.OpenURLModal('https://store.steampowered.com/app/669270/Momentum_Mod/')">
+										<Image class="bottombar__icon" src="file://{images}/steam.svg" textureheight="64" />
+									</Button>
+								</TooltipPanel>
+
+								<TooltipPanel class="bottombar__tooltip" tooltip="Discord">
+									<Button class="bottombar__button" onactivate="SteamOverlayAPI.OpenURLModal('https://discord.gg/n4v52uv')">
+										<Image class="bottombar__icon" src="file://{images}/social/discord.svg" textureheight="64" />
+									</Button>
+								</TooltipPanel>
+
+								<TooltipPanel class="bottombar__tooltip" tooltip="Forums">
+									<Button class="bottombar__button" onactivate="SteamOverlayAPI.OpenURLModal('https://forum.momentum-mod.org/')">
+										<Image class="bottombar__icon" src="file://{images}/social/forum.svg" textureheight="64" />
+									</Button>
+								</TooltipPanel>
+
+								<TooltipPanel class="bottombar__tooltip" tooltip="Twitter">
+									<Button class="bottombar__button" onactivate="SteamOverlayAPI.OpenURLModal('https://twitter.com/MomentumMod')">
+										<Image class="bottombar__icon" src="file://{images}/social/twitter.svg" textureheight="64" />
+									</Button>
+								</TooltipPanel>
+
+								<Button id="ControlsLibraryButton" class="bottombar__button hide" onactivate="MainMenuController.navigateToTab('ControlsLibrary', 'controlslibrary')">
+									<Label class="bottombar__text" text="Controls Library" />
+								</Button>
+
+								<Button id="PSDumpButton" class="bottombar__button hide" onactivate="MainMenuController.psdump()">
+									<Label class="bottombar__text" text="dump ps" />
+								</Button>
+
+								<TooltipPanel class="bottombar__tooltip horizontal-align-right" tooltip="Switch background mode">
+									<Button class="bottombar__button" onactivate="MainMenuController.toggleBackgroundLightDark()">
+										<Image class="bottombar__icon" src="file://{images}/theme-light-dark.svg" textureheight="64" />
+									</Button>
+								</TooltipPanel>
 
 							</Panel>
 						</Panel>

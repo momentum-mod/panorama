@@ -12,6 +12,12 @@ class MainMenuController {
 	static imagePanel = '';
 	static playedInitialFadeUp = false;
 	
+	// TODO: Delete me when proper engine support is added!
+	static psdump() {
+		for (let i = 0; i < $.persistentStorage.length; i++) {
+			$.Msg($.persistentStorage.key(i).toString() + ': ' + JSON.stringify($.persistentStorage.getItem($.persistentStorage.key(i))));
+		}
+	}
 	static onInitFadeUp() {
 		if (!MainMenuController.playedInitialFadeUp) {
 			MainMenuController.playedInitialFadeUp = true;
@@ -179,6 +185,7 @@ class MainMenuController {
 
 		if (GameInterfaceAPI.GetSettingBool('developer')) {
 			$.GetContextPanel().FindChildTraverse('ControlsLibraryButton').RemoveClass('hide');
+			$.GetContextPanel().FindChildTraverse('PSDumpButton').RemoveClass('hide');
 		}
 	}
 
