@@ -39,6 +39,7 @@ class MainMenuController {
 			$.Msg($.persistentStorage.key(i).toString() + ': ' + JSON.stringify($.persistentStorage.getItem($.persistentStorage.key(i))));
 		}
 	}
+
 	static onInitFadeUp() {
 		if (!MainMenuController.playedInitialFadeUp) {
 			MainMenuController.playedInitialFadeUp = true;
@@ -301,16 +302,17 @@ class MainMenuController {
 			() => {}
 		);
 	}
+
 	static quitGame() {
 		GameInterfaceAPI.ConsoleCommand('quit');
 	}
 
 	static onEscapeKeyPressed(eSource, nRepeats, focusPanel) {
-		MainMenuController.onHomeButtonPressed();
-
-		// Resume game (pause menu mode)
+		// Resume game in pause menu mode, OTHERWISE close the active menu menu page
 		if ($.GetContextPanel().HasClass('MainMenuRootPanel--PauseMenuMode')) {
 			$.DispatchEvent('ChaosMainMenuResumeGame');
+		} else {
+			MainMenuController.onHomeButtonPressed();
 		}
 	}
 }

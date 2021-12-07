@@ -24,7 +24,7 @@
 		</snippet>
 	</snippets>
 
-	<ChaosMainMenu class="InitialDisplay MainMenuRootPanel" hittest="false" useglobalcontext="true" onload="MainMenuController.onMainMenuLoaded()" oncancel="MainMenuController.onEscapeKeyPressed();">
+	<ChaosMainMenu class="InitialDisplay MainMenuRootPanel" hittest="false" useglobalcontext="true" onload="MainMenuController.onMainMenuLoaded()">
 
 		<!-- Vanity is not used but the engine needs this to exist -->
 		<Panel id="MainMenuVanityParent" />
