@@ -250,6 +250,19 @@ class MainMenuController {
 		}
 	}
 
+	/*
+	 *	Toggles between dark and light mode in the main menu
+	 */
+	static toggleBackgroundLightDark() {
+		const currentType = $.persistentStorage.getItem('settings.mainMenuBackground');
+
+		if (!(currentType === 0 || currentType === 1)) return;
+
+		$.persistentStorage.setItem('settings.mainMenuBackground', currentType === 0 ? 1 : 0);
+
+		this.setMainMenuBackground();
+	}
+
 	static hideMapSelectorBackground() {
 		$.GetContextPanel().FindChildTraverse('MainMenuBackgroundMapSelectorImage').AddClass('mapselector__background--hidden');
 	}
