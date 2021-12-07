@@ -25,8 +25,9 @@
 	$.DefineEvent('RetractDrawer', 0, 'Close the right side drawer panel');
 	$.DefineEvent('ToggleDrawer', 0, 'Toggle the open or closed state of the right side drawer panel');
 	$.DefineEvent('RefreshLobbyList', 0, '', 'Send a refresh request for the lobby list');
-	$.DefineEvent('OnLobbyButtonImageChange', 1);
-	$.DefineEvent('LoadMapSelector', 0);
+	$.DefineEvent('Drawer_UpdateLobbyButton', 2, 'imgsrc', 'playercount', 'Changes the rightnav lobby button with icon and playercount');
+	$.DefineEvent('Lobby_SetMaxPlayers', 1, 'maxplayers', 'Sets the max players of your lobby');
+	$.DefineEvent('MapSelector_OnLoaded', 0);
 	$.DefineEvent('MapSelector_ShowConfirmCancelDownload', 1);
 	$.DefineEvent('ColorPickerSave', 1, 'color');
 	$.DefineEvent('ColorPickerCancel', 0);

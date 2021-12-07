@@ -116,7 +116,7 @@ class MapSelection {
 				$.DispatchEvent('Activated', this.filtersToggleButton, 'mouse');
 			}
 
-			$.DispatchEvent('LoadMapSelector');
+			$.DispatchEvent('MapSelector_OnLoaded');
 		});
 	}
 

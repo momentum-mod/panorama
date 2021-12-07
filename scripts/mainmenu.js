@@ -6,12 +6,33 @@
 
 class MainMenuController {
 	static activeTab = '';
-	static contentPanel = $( '#JsMainMenuContent' );
-	static contentBlurPanel = $( '#MainMenuContentBlur' );
+	static contentPanel = $('#JsMainMenuContent');
+	static contentBlurPanel = $('#MainMenuContentBlur');
 	static videoPanel = '';
 	static imagePanel = '';
 	static playedInitialFadeUp = false;
-	
+
+	static {
+		$.RegisterForUnhandledEvent('ChaosShowMainMenu', MainMenuController.onShowMainMenu);
+		$.RegisterForUnhandledEvent('ChaosHideMainMenu', MainMenuController.onHideMainMenu);
+		$.RegisterForUnhandledEvent('ChaosShowPauseMenu', MainMenuController.onShowPauseMenu);
+		$.RegisterForUnhandledEvent('ChaosHidePauseMenu', MainMenuController.onHidePauseMenu);
+		$.RegisterForUnhandledEvent('MapSelector_OnLoaded', MainMenuController.onMapSelectorLoaded);
+
+		// For Goc: hook up to safeguard system!!
+		// $.RegisterForUnhandledEvent('Safeguard_Disconnect', MainMenuController.onSafeguardDisconnect);
+		// $.RegisterForUnhandledEvent('Safeguard_Quit', MainMenuController.onSafeguardQuit);
+
+		$.RegisterForUnhandledEvent('ReloadBackground', MainMenuController.setMainMenuBackground);
+
+		$.RegisterEventHandler('Cancelled', $.GetContextPanel(), MainMenuController.onEscapeKeyPressed);
+
+		// Close the map selector when a map is successfully loaded
+		$.RegisterForUnhandledEvent('MapSelector_TryPlayMap_Outcome', (outcome) => outcome && MainMenuController.onHomeButtonPressed());
+
+		$.DispatchEvent('ChaosHideIntroMovie');
+	}
+
 	// TODO: Delete me when proper engine support is added!
 	static psdump() {
 		for (let i = 0; i < $.persistentStorage.length; i++) {
@@ -27,8 +48,8 @@ class MainMenuController {
 	static onShowMainMenu() {
 		MainMenuController.onInitFadeUp();
 
-		MainMenuController.videoPanel = $( '#MainMenuMovie' );
-		MainMenuController.imagePanel = $( '#MainMenuBackground' );
+		MainMenuController.videoPanel = $('#MainMenuMovie');
+		MainMenuController.imagePanel = $('#MainMenuBackground');
 
 		MainMenuController.setMainMenuBackground();
 	}
@@ -43,12 +64,6 @@ class MainMenuController {
 
 	static onHidePauseMenu() {
 		$.GetContextPanel().RemoveClass('MainMenuRootPanel--PauseMenuMode');
-
-		MainMenuController.onHomeButtonPressed();
-	}
-
-	static checkTabCanBeOpenedRightNow(tab) {
-		return true;
 	}
 
 	static navigateToTab(tab, xmlName, hasBlur = true) {
@@ -57,15 +72,11 @@ class MainMenuController {
 		} else {
 			$.GetContextPanel().FindChildTraverse('MainMenuBackgroundMapSelectorImage').AddClass('mapselector__background--hidden');
 		}
+
 		MainMenuController.contentBlurPanel.visible = hasBlur;
 
-		if ( !MainMenuController.checkTabCanBeOpenedRightNow( tab ) ) {
-			MainMenuController.onHomeButtonPressed();
-			return; // validate that tabs can be opened (GC connection / China free-to-play / etc.)
-		}
-
 		if (MainMenuController.activeTab == tab) {
-			$.DispatchEvent("Activated", $("#HomeButton"), "mouse");
+			$.DispatchEvent('Activated', $('#HomeButton'), 'mouse');
 			return;
 		}
 
@@ -88,7 +99,9 @@ class MainMenuController {
 						newPanel.visible = false;
 						newPanel.SetReadyForDisplay(false);
 						return true;
-					} else if (newPanel.visible === true) $.DispatchEvent('MainMenuTabShown', tab);
+					} else if (newPanel.visible === true) {
+						$.DispatchEvent('MainMenuTabShown', tab);
+					}
 				}
 				return false;
 			};
@@ -241,14 +254,11 @@ class MainMenuController {
 		$.GetContextPanel().FindChildTraverse('MainMenuBackgroundMapSelectorImage').AddClass('mapselector__background--hidden');
 	}
 
-	static onLoadMapSelector() {
+	static onMapSelectorLoaded() {
 		['MapSelectorLeft', 'MapDescription', 'MapInfoStats', 'Leaderboards'].forEach((panel) =>
 			$.GetContextPanel().FindChildTraverse('MainMenuBackgroundBlur')?.AddBlurPanel($.GetContextPanel().FindChildTraverse(panel))
 		);
 	}
-	//--------------------------------------------------------------------------------------------------
-	// Icon buttons functions
-	//--------------------------------------------------------------------------------------------------
 
 	static onHomeButtonPressed() {
 		MainMenuController.onHideContentPanel();
@@ -272,23 +282,3 @@ class MainMenuController {
 		}
 	}
 }
-
-//--------------------------------------------------------------------------------------------------
-// Entry point called when panel is created
-//--------------------------------------------------------------------------------------------------
-(function () {
-	$.RegisterForUnhandledEvent('ChaosShowMainMenu', MainMenuController.onShowMainMenu);
-	$.RegisterForUnhandledEvent('ChaosHideMainMenu', MainMenuController.onHideMainMenu);
-	$.RegisterForUnhandledEvent('ChaosShowPauseMenu', MainMenuController.onShowPauseMenu);
-	$.RegisterForUnhandledEvent('ChaosHidePauseMenu', MainMenuController.onHidePauseMenu);
-	$.RegisterForUnhandledEvent('LoadMapSelector', MainMenuController.onLoadMapSelector);
-
-	$.RegisterForUnhandledEvent('ReloadBackground', MainMenuController.setMainMenuBackground);
-
-	$.RegisterEventHandler('Cancelled', $.GetContextPanel(), MainMenuController.onEscapeKeyPressed);
-
-	$.DispatchEvent( 'ChaosHideIntroMovie' );
-
-	// Close the map selector when a map is successfully loaded
-	$.RegisterForUnhandledEvent('MapSelector_TryPlayMap_Outcome', (outcome) => outcome && MainMenuController.onHomeButtonPressed());
-})();
