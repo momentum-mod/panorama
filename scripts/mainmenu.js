@@ -282,6 +282,25 @@ class MainMenuController {
 		UiToolkitAPI.ShowGenericPopupTwoOptionsBgStyle('Quit', 'Are you sure you want to quit?', 'warning-popup', 'Quit', MainMenuController.quitGame, 'Return', () => {}, 'blur');
 	}
 
+	static onSafeguardDisconnect() {
+		UiToolkitAPI.ShowGenericPopupOkCancel(
+			'Quit to menu?',
+			"Leaving the map will cancel your timer, are you sure you want to quit?\n\n<span class='text-sm text-italic'>(You can turn this off in Settings → Gameplay → Safeguards)</span>",
+			'warning-popup',
+			() => GameInterfaceAPI.ConsoleCommand('disconnect'), // you can replace this with something like $.DispatchEvent('Safeguard_Response', true)
+			() => {}
+		);
+	}
+
+	static onSafeguardQuit() {
+		UiToolkitAPI.ShowGenericPopupOkCancel(
+			'Quit the game?',
+			"Quitting the game will cancel your timer, are you sure you want to quit?\n\n<span class='text-sm text-italic'>(You can turn this off in Settings → Gameplay → Safeguards)</span>",
+			'warning-popup',
+			() => GameInterfaceAPI.ConsoleCommand('quit'), // you can replace this with something like $.DispatchEvent('Safeguard_Response', true)
+			() => {}
+		);
+	}
 	static quitGame() {
 		GameInterfaceAPI.ConsoleCommand('quit');
 	}
