@@ -13,12 +13,15 @@
 		flow-children: down;
 		vertical-align: top;
 		horizontal-align: left;
+		width: 1200px;
 	}
 
 	&__right-details {
 		flow-children: down;
 		vertical-align: top;
 		horizontal-align: right;
+		width: fill-parent-flow(1.0);
+
 	}
 
 	&__right-label {
