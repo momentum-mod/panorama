@@ -22,6 +22,15 @@ class Drawer {
 
 	static activeTab;
 	static isExtended = false;
+	static lobbyTypeImage = $('#LobbyButtonImage');
+	static lobbyPlayerCountLabel = $('#LobbyPlayerCountLabel');
+
+	static {
+		Drawer.navigateToTab('LobbyDrawer');
+
+		$.RegisterEventHandler('Drawer_UpdateLobbyButton', $.GetContextPanel(), Drawer.updateLobbyButton);
+		$.RegisterEventHandler('RetractDrawer', $.GetContextPanel(), Drawer.retract);
+	}
 
 	static navigateToTab(tab) {
 		const parentPanel = $.GetContextPanel().FindChildTraverse('MainMenuDrawerContent');
@@ -32,7 +41,7 @@ class Drawer {
 		}
 
 		if (Drawer.activeTab !== tab) {
-			if (Drawer.activeTab !== undefined) {
+			if (Drawer.activeTab) {
 				const panelToHide = $.GetContextPanel().FindChildInLayoutFile(Drawer.activeTab);
 				panelToHide.RemoveClass('Active');
 			}
@@ -72,13 +81,14 @@ class Drawer {
 		if (!Drawer.isExtended) Drawer.extend();
 	}
 
-	static setLobbyButtonImage(path) {
-		$.GetContextPanel().FindChildTraverse('LobbyButtonImage').SetImage(path);
+	/**
+	 * Sets the rightnav lobby icon to the path and playercount of the current lobby
+	 * @param {string} imgPath
+	 * @param {number} playerCount
+	 */
+	static updateLobbyButton(imgPath, playerCount) {
+		Drawer.lobbyTypeImage.SetImage(imgPath);
+		Drawer.lobbyPlayerCountLabel.text = playerCount;
+		Drawer.lobbyPlayerCountLabel.SetHasClass('rightnav__button-subtitle--hidden', playerCount <= 1);
 	}
 }
-
-(function () {
-	Drawer.navigateToTab('LobbyDrawer');
-	$.RegisterEventHandler('OnLobbyButtonImageChange', $.GetContextPanel(), Drawer.setLobbyButtonImage);
-	$.RegisterEventHandler('RetractDrawer', $.GetContextPanel(), Drawer.retract);
-})();

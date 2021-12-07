@@ -35,11 +35,17 @@ class LobbySettings {
 
 	static submit() {
 		let type;
-		if ($.GetContextPanel().FindChildTraverse('LobbySettingsPrivateButton').checked) type = 0;
-		else if ($.GetContextPanel().FindChildTraverse('LobbySettingsFriendsOnlyButton').checked) type = 1;
-		else if ($.GetContextPanel().FindChildTraverse('LobbySettingsPublicButton').checked) type = 2;
+		if ($.GetContextPanel().FindChildTraverse('LobbySettingsPrivateButton').checked) {
+			type = 0;
+		} else if ($.GetContextPanel().FindChildTraverse('LobbySettingsFriendsOnlyButton').checked) {
+			type = 1;
+		} else if ($.GetContextPanel().FindChildTraverse('LobbySettingsPublicButton').checked) {
+			type = 2;
+		}
 
 		SteamLobbyAPI.ChangeVisibility(type);
+
+		SteamLobbyAPI.SetMaxPlayers(parseInt($.GetContextPanel().FindChildTraverse('MaxPlayers').text));
 
 		UiToolkitAPI.CloseAllVisiblePopups();
 	}

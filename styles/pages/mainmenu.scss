@@ -255,7 +255,7 @@ $drawer-width: 768px;
 	&__button {
 		width: 100%;
 		height: width-percentage(100%);
-		padding: 12px 12px;
+		padding: 4px;
 		background-color: rgba(255, 255, 255, 0);
 		transition: background-color 0.1s ease-in-out 0s;
 
@@ -263,22 +263,56 @@ $drawer-width: 768px;
 			visibility: collapse;
 		}
 
-		&-image {
-			width: 100%;
-			height: width-percentage(100%);
-			vertical-align: middle;
-			opacity: 0.75;
-			transition: opacity 0.1s ease-in-out 0s;
-		}
-
-		$button: &;
 		&:hover,
 		&:selected:not(#{$root}__drawerbutton) {
 			background-color: rgba(255, 255, 255, 0.15);
 
-			#{$button}-image {
+			#{$root}__icon {
 				opacity: 1;
 			}
+		}
+	}
+
+	&__icon {
+		width: 100%;
+		height: width-percentage(100%);
+		vertical-align: middle;
+		padding: 8px;
+		img-shadow: 0px 0px 2px 0 rgba(0, 0, 0, 0.8);
+
+		opacity: 0.75;
+		transition: opacity 0.1s ease-in-out 0s;
+	}
+
+	&__button-subtitle {
+		@include mixin.font-styles($use-header: true, $light-header: true);
+		background-color: function.gradient-vertical($mid-blue, $blue);
+		border-radius: 6px;
+		border: 1px solid rgba(0, 0, 0, 0.35);
+
+		margin-right: 2px;
+		$size: 18px;
+		width: $size;
+		height: $size;
+
+		align: right bottom;
+		text-align: center;
+
+		overflow: squish;
+		text-overflow: shrink;
+
+		color: rgb(255, 255, 255);
+		font-size: $size;
+		letter-spacing: 0px;
+
+		opacity: 1;
+		transition-property: opacity, transform;
+		transition-duration: 0.15s;
+		transition-timing-function: ease-out;
+
+		&--hidden {
+			opacity: 0;
+			transform: translateX(10px);
 		}
 	}
 
@@ -376,7 +410,7 @@ $drawer-width: 768px;
 	$root: &;
 	&--minimized {
 		#{$root}__main {
-			height: 0px; 
+			height: 0px;
 		}
 	}
 

@@ -6,8 +6,9 @@
 	height: 100%;
 	// flow-children: down;
 	border-left: 1px solid rgba(0, 0, 0, 0.5);
-	box-shadow: 0 0 8px 0 rgba(0, 0 , 0, 0.6);
-	
+	box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.6);
+	margin-right: 6px;
+
 	&__lobby-list,
 	&__lobby-details {
 		width: 100%;
@@ -17,7 +18,7 @@
 		transition-property: opacity, transform, blur;
 		transition-duration: 0.1s;
 		transition-timing-function: ease-out;
-		
+
 		&--hidden {
 			opacity: 0;
 			transition-duration: 0.15s;
@@ -67,13 +68,13 @@
 	&__config-bar {
 		flow-children: right;
 	}
-	
+
 	&__config-item {
 		margin-right: 6px;
 	}
-	
+
 	&__search {
-		width: fill-parent-flow(1.0);
+		width: fill-parent-flow(1);
 		height: 34px;
 		margin-right: 8px;
 	}
@@ -105,7 +106,7 @@
 	}
 
 	&__title {
-		width: fill-parent-flow(1.0);
+		width: fill-parent-flow(1);
 		margin: 0 16px;
 		font-size: 40px;
 		max-height: 48px;
@@ -123,7 +124,7 @@
 
 	&__rightcontainer {
 		flow-children: right;
-		horizontal-align:right;
+		horizontal-align: right;
 		vertical-align: center;
 		width: fit-children;
 	}
@@ -136,7 +137,7 @@
 	&__lobby-members {
 		flow-children: down;
 		width: 100%;
-		height: fill-parent-flow(1.0);
+		height: fill-parent-flow(1);
 		overflow: squish scroll;
 	}
 
@@ -149,6 +150,7 @@
 
 .lobby-lobbies,
 .lobby-members {
+	$root: &;
 	&__entry {
 		width: 100%;
 		flow-children: right;
@@ -160,6 +162,10 @@
 		&:hover {
 			background-color: gradient(linear, 0% 50%, 100% 50%, from(rgba(0, 0, 0, 0.8)), to(rgba(0, 0, 0, 0)));
 		}
+
+		&--muted {
+			opacity: 0.5;
+		}
 	}
 
 	&__avatar {
@@ -167,13 +173,18 @@
 		height: 40px;
 		width: 40px;
 		box-shadow: -1px -1px 4px 3px rgba(0, 0, 0, 0.5);
-		transition-property: brightness, box-shadow;
+		transition-property: brightness, box-shadow, blur;
 		transition-duration: 0.1s;
 		transition-timing-function: ease-in-out;
 
 		&:hover {
 			brightness: 1.1;
 			box-shadow: -1px -1px 4px 3px rgba(0, 0, 0, 1);
+		}
+
+		#{$root}__entry--muted & {
+			blur: fastgaussian(3, 3, 3);
+			brightness: 0.5;
 		}
 	}
 
@@ -217,7 +228,7 @@
 		width: fill-parent-flow(1);
 		horizontal-align: left;
 	}
-	
+
 	&__type {
 		horizontal-align: left;
 		vertical-align: center;
@@ -228,7 +239,7 @@
 		margin-right: 12px;
 		tooltip-position: bottom;
 	}
-	
+
 	&__players {
 		width: fill-parent-flow(0.2);
 		horizontal-align: center;
@@ -242,10 +253,16 @@
 		margin-left: 8px;
 		margin-right: 8px;
 	}
+
+	&__button {
+		horizontal-align: center;
+	}
 }
 
 .lobby-members {
 	$text-font-size: 18px;
+	$root: &;
+
 	&__name {
 		width: fill-parent-flow(1);
 		horizontal-align: left;
@@ -253,6 +270,13 @@
 		margin-left: 16px;
 		font-size: $text-font-size;
 		max-height: $text-font-size + 8px;
+		transition-property: color, opacity;
+		transition-timing-function: ease-in-out;
+		transition-duration: 0.1s;
+
+		#{$root}__entry--muted & {
+			opacity: 0.5;
+		}
 	}
 
 	&__map-container {

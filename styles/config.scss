@@ -23,10 +23,10 @@ $green     : #7aee7a !default;
 $colors-primary: ("blue": $blue, "mid-blue": $mid-blue, "light-blue": $light-blue, "purple": $purple, "pink": $pink, "red": $red, "orange": $orange, "yellow": $yellow, "green": $green) !default;
 
 $disabled    : #7e7e7e !default;
-$error       : #c21b1b !default;
-$warning     : #ce6713 !default;
-$positive    : #4caf50 !default;
-$steam-online: #80a438 !default;
+$error       : #e20b0b !default;
+$warning     : #ff7300 !default;
+$positive    : #7dff82 !default;
+$steam-online: #91c257 !default;
 
 $colors-state: ("disabled": $disabled, "error": $error, "warning": $warning, "positive": $positive, "steam-online": $steam-online) !default;
 

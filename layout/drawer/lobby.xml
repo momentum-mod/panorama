@@ -61,9 +61,9 @@
 					</Button>
 					<Panel class="search lobby-list__search" acceptsfocus="true">
 						<Image class="search__icon" src="file://{images}/search.svg" textureheight="32" />
-						<TextEntry id="LobbySearch" class="search__textentry" maxchars="30" placeholder="Search..." ontextentrychange="Lobby.recreateLobbyListChildren();"/>
-						<Button class="search__clearbutton" onactivate="">
-							<Image class="search__clearicon" src="file://{images}/close.svg" textureheight="32" />
+						<TextEntry id="LobbySearch" class="search__textentry" maxchars="30" placeholder="Search..."/>
+						<Button id="LobbySearchClearButton" class="search__clearbutton" onactivate="">
+							<Image class="search__clearicon search__clearicon--hidden" src="file://{images}/close.svg" textureheight="32" />
 						</Button>
 					</Panel>
 				</Panel>
@@ -75,18 +75,26 @@
 
 		<Panel id="LobbyDetailsContainer" class="drawer-lobby__lobby-details drawer-lobby__lobby-details--hidden lobby-details ">
 			<Panel id="LobbyDetailsHeaderBar" class="lobby-details__header">
-				<Button id="LobbyDetailsBackButton" class="button lobby-details__header-item" onactivate="Lobby.showLobbyList()">
-					<Image class="button__icon" src="file://{images}/backarrow.svg" textureheight="32" orientation="180" />
-				</Button>
-				<Button id="LobbyDetailsSettingsButton" class="button lobby-details__header-item" onactivate="Lobby.showLobbySettings()">
-					<Image class="button__icon" src="file://{images}/topnav/settings.svg" textureheight="32" />
-				</Button>
-				<Button id="LobbyDetailsInviteButton" class="button lobby-details__header-item" onactivate="SteamLobbyAPI.ShowInviteDialog()">
-					<Image class="button__icon" src="file://{images}/online/invite.svg" textureheight="32" />
-				</Button>
-				<Button id="LobbyDetailsLeaveButton" class="button lobby-details__header-item" onactivate="Lobby.leave()">
-					<Image class="button__icon" src="file://{images}/online/exitlobby.svg" textureheight="32" />
-				</Button>
+				<TooltipPanel tooltip="Return to lobby list">
+					<Button id="LobbyDetailsBackButton" class="button lobby-details__header-item" onactivate="Lobby.showLobbyList()">
+						<Image class="button__icon" src="file://{images}/backarrow.svg" textureheight="32" orientation="180" />
+					</Button>
+				</TooltipPanel>
+				<TooltipPanel tooltip="Lobby Settings">
+					<Button id="LobbyDetailsSettingsButton" class="button lobby-details__header-item" onactivate="Lobby.showLobbySettings()">
+						<Image class="button__icon" src="file://{images}/topnav/settings.svg" textureheight="32" />
+					</Button>
+				</TooltipPanel>
+				<TooltipPanel tooltip="Invite Players">
+					<Button id="LobbyDetailsInviteButton" class="button lobby-details__header-item" onactivate="SteamLobbyAPI.ShowInviteDialog()">
+						<Image class="button__icon" src="file://{images}/online/invite.svg" textureheight="32" />
+					</Button>
+				</TooltipPanel>
+				<TooltipPanel tooltip="Leave Lobby">
+					<Button id="LobbyDetailsLeaveButton" class="button lobby-details__header-item" onactivate="Lobby.leave()">
+						<Image class="button__icon" src="file://{images}/online/exitlobby.svg" textureheight="32" />
+					</Button>
+				</TooltipPanel>
 				<Label id="LobbyDetailsTitle" class="text-h lobby-details__header-item lobby-details__title" text="{s:lobbyTitle}" />
 				<Panel class="lobby-details__rightcontainer">
 					<Image id="LobbyDetailsType" class="lobby-details__header-ite lobby-details__type" textureheight="64" />
