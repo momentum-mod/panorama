@@ -451,6 +451,11 @@ $drawer-width: 768px;
 		// Just try on fit-children and grab whatever height the panel is from the debugger.
 		height: 410px;
 		flow-children: down;
+		
+		// Clip the children as we decrease the height
+		overflow: noclip; 
+		clip: rect(0%, 100%, 100%, 0%);
+		
 		transition: height 0.15s ease-in-out 0s;
 	}
 

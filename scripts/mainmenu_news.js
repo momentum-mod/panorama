@@ -1,5 +1,7 @@
 'use strict';
 
+const POST_MAX_CHARS = 1024;
+
 class MainMenuNews {
 	static feed;
 
@@ -18,12 +20,25 @@ class MainMenuNews {
 	static onRSSFeedReceived(feed) {
 		MainMenuNews.feed = feed;
 		if (feed.items.length > 0) {
+			const cp = $.GetContextPanel();
 			const item = MainMenuNews.feed.items[0];
 
-			$('#LatestUpdateDetails').SetDialogVariable('title', item.title);
-			$('#LatestUpdateDetails').SetDialogVariable('description', item.description);
-			$('#LatestUpdateDetails').SetDialogVariable('date', item.date);
-			$('#LatestUpdateDetails').SetDialogVariable('author', item.author);
+			let desc;
+			if (item.description.length > POST_MAX_CHARS) {
+				desc = item.description.slice(0, POST_MAX_CHARS);
+
+				// Check we're not inside a tag
+				if ((desc.includes('<') && desc.match(/\</g)).length !== desc.match(/\>/g).length) {
+					desc = desc.slice(0, desc.lastIndexOf('<'));
+				}
+			} else {
+				desc = item.description;
+			}
+
+			cp.SetDialogVariable('title', item.title);
+			cp.SetDialogVariable('description', desc);
+			cp.SetDialogVariable('date', item.date);
+			cp.SetDialogVariable('author', item.author);
 			$('#LatestUpdateImage').SetImage(item.image);
 			$('#LatestUpdateImage').SetPanelEvent('onactivate', () => SteamOverlayAPI.OpenURLModal(item.link));
 			$('#LearnMore').SetPanelEvent('onactivate', () => SteamOverlayAPI.OpenURLModal(item.link));
