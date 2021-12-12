@@ -329,6 +329,8 @@ class Lobby {
 				])
 			);
 
+			if (!memberMap) return;
+
 			if (isSpectating) {
 				const specTargetName = FriendsAPI.GetNameForXUID(memberData['specTargetID']);
 
@@ -347,9 +349,6 @@ class Lobby {
 				);
 			} else {
 				memberStatePanel.ClearPanelEvent('onmouseover');
-			}
-
-			if (memberMap) {
 				memberStatePanel.SetImage('file://{images}/topnav/play.svg');
 
 				memberStatePanel.RemoveClass('hide');
