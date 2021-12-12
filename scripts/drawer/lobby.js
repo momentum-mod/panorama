@@ -231,7 +231,7 @@ class Lobby {
 					avatarPanel.steamid = ownerSteamID;
 
 					avatarPanel.SetPanelEvent('oncontextmenu', () =>
-						UiToolkitAPI.ShowSimpleContextMenu(panel, '', [
+						UiToolkitAPI.ShowSimpleContextMenu(avatarPanel, '', [
 							{
 								label: 'Steam Profile',
 								icon: 'file://{images}/steam.svg',
