@@ -251,9 +251,6 @@ class MapSelection {
 	 * Clear all the filters, resetting to the default state
 	 */
 	static clearFilters() {
-		// Clear the search textentry
-		this.clearSearch();
-
 		// Uncheck every checked gamemode button
 		Object.keys(MapSelection.gameModeData).forEach((mode) => {
 			let button = MapSelection.gameModeData[mode].filterButton;
