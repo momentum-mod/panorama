@@ -1,10 +1,6 @@
 @use 'sass:color';
 @use 'sass:map';
 @use 'abstract/function' as *;
-@use 'overrides' as *;
-
-// WARNING: Don't use this file for personal customisation! It's likely to change in future Steam pushes and your 
-// changes will be lost. Instead, take what variables you want and override them overrides.scss, deleting the !default.
 
 // ================
 // COLORS
