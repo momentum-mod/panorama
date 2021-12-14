@@ -1,9 +1,24 @@
 'use strict';
 
+const RunSafeguardType =
+{
+	RUN_SAFEGUARD_PRACTICEMODE : 0,
+	RUN_SAFEGUARD_RESTART : 1,
+	RUN_SAFEGUARD_RESTART_STAGE : 2,
+	RUN_SAFEGUARD_SAVELOC_TELE: 3,
+	RUN_SAFEGUARD_CHAT_OPEN : 4,
+	RUN_SAFEGUARD_MAP_CHANGE : 5,
+	RUN_SAFEGUARD_QUIT_TO_MENU : 6,
+	RUN_SAFEGUARD_QUIT_GAME : 7,
+
+	RUN_SAFEGUARD_COUNT : 8,
+
+	RUN_SAFEGUARD_INVALID : -1
+};
+
 //--------------------------------------------------------------------------------------------------
 // Header Tab navigation and xml loading
 //--------------------------------------------------------------------------------------------------
-
 class MainMenuController {
 	static activeTab = '';
 	static contentPanel = $('#JsMainMenuContent');
@@ -19,9 +34,9 @@ class MainMenuController {
 		$.RegisterForUnhandledEvent('ChaosHidePauseMenu', MainMenuController.onHidePauseMenu.bind(this));
 		$.RegisterForUnhandledEvent('MapSelector_OnLoaded', MainMenuController.onMapSelectorLoaded);
 
-		// For Goc: hook up to safeguard system!!
-		// $.RegisterForUnhandledEvent('Safeguard_Disconnect', MainMenuController.onSafeguardDisconnect);
-		// $.RegisterForUnhandledEvent('Safeguard_Quit', MainMenuController.onSafeguardQuit);
+		$.RegisterForUnhandledEvent('Safeguard_Disconnect', MainMenuController.onSafeguardDisconnect);
+		$.RegisterForUnhandledEvent('Safeguard_Quit', MainMenuController.onSafeguardQuit);
+		$.RegisterForUnhandledEvent('Safeguard_ChangeMap', MainMenuController.onSafeguardMapChange);
 
 		$.RegisterForUnhandledEvent('ReloadBackground', MainMenuController.setMainMenuBackground);
 
@@ -296,20 +311,30 @@ class MainMenuController {
 
 	static onSafeguardDisconnect() {
 		UiToolkitAPI.ShowGenericPopupOkCancel(
-			'Quit to menu?',
+			$.Localize( '#MOM_MB_Safeguard_Map_Quit_ToMenu_Title' ),
 			"Leaving the map will cancel your timer, are you sure you want to quit?\n\n<span class='text-sm text-italic'>(You can turn this off in Settings → Gameplay → Safeguards)</span>",
 			'warning-popup',
-			() => GameInterfaceAPI.ConsoleCommand('disconnect'), // you can replace this with something like $.DispatchEvent('Safeguard_Response', true)
+			() => $.DispatchEvent( 'Safeguard_Response', RunSafeguardType.RUN_SAFEGUARD_QUIT_TO_MENU ),
 			() => {}
 		);
 	}
 
 	static onSafeguardQuit() {
 		UiToolkitAPI.ShowGenericPopupOkCancel(
-			'Quit the game?',
+			$.Localize( '#MOM_MB_Safeguard_Map_Quit_Game_Title' ),
 			"Quitting the game will cancel your timer, are you sure you want to quit?\n\n<span class='text-sm text-italic'>(You can turn this off in Settings → Gameplay → Safeguards)</span>",
 			'warning-popup',
-			() => GameInterfaceAPI.ConsoleCommand('quit'), // you can replace this with something like $.DispatchEvent('Safeguard_Response', true)
+			() => $.DispatchEvent( 'Safeguard_Response', RunSafeguardType.RUN_SAFEGUARD_QUIT_GAME ),
+			() => {}
+		);
+	}
+
+	static onSafeguardMapChange( mapName ) {
+		UiToolkitAPI.ShowGenericPopupOkCancel(
+			$.Localize( '#MOM_MB_Safeguard_Map_Change_Title' ),
+			`You are trying to change map to ${mapName} while your timer is still running, do you want to continue?\n\n<span class='text-sm text-italic'>(You can turn this off in Settings → Gameplay → Safeguards)</span>`,
+			'warning-popup',
+			() => GameInterfaceAPI.ConsoleCommand( '__map_change_ok 1;map ' + mapName ),
 			() => {}
 		);
 	}
