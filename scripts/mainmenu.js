@@ -16,7 +16,7 @@ class MainMenuController {
 		$.RegisterForUnhandledEvent('ChaosShowMainMenu', MainMenuController.onShowMainMenu);
 		$.RegisterForUnhandledEvent('ChaosHideMainMenu', MainMenuController.onHideMainMenu);
 		$.RegisterForUnhandledEvent('ChaosShowPauseMenu', MainMenuController.onShowPauseMenu);
-		$.RegisterForUnhandledEvent('ChaosHidePauseMenu', MainMenuController.onHidePauseMenu);
+		$.RegisterForUnhandledEvent('ChaosHidePauseMenu', MainMenuController.onHidePauseMenu.bind(this));
 		$.RegisterForUnhandledEvent('MapSelector_OnLoaded', MainMenuController.onMapSelectorLoaded);
 
 		// For Goc: hook up to safeguard system!!
@@ -65,6 +65,11 @@ class MainMenuController {
 
 	static onHidePauseMenu() {
 		$.GetContextPanel().RemoveClass('MainMenuRootPanel--PauseMenuMode');
+
+		// Save to file whenever the settings page gets closed
+		if (this.activeTab === 'Settings') {
+			$.DispatchEvent('SettingsSave');
+		}
 	}
 
 	static navigateToTab(tab, xmlName, hasBlur = true) {
