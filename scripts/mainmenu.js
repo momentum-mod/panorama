@@ -231,10 +231,16 @@ class MainMenuController {
 		imagePanel.visible = !useVideo;
 		imagePanel.SetReadyForDisplay(!useVideo);
 
-		var name = '';
-
+		const backgroundVar = parseInt($.persistentStorage.getItem('settings.mainMenuBackground'));
+		
+		if (isNaN(backgroundVar)) {
+			// Light mode by default
+			$.persistentStorage.setItem('settings.mainMenuBackground', 0);
+		}
+		
+		let name = '';
 		// Using a switch as we're likely to add more of these in the future
-		switch (parseInt($.persistentStorage.getItem('settings.mainMenuBackground'))) {
+		switch (backgroundVar) {
 			case 1:
 				name = 'MomentumDark';
 				break;
