@@ -18,43 +18,7 @@ class HudLeaderboards {
 	static setMapData(isOfficial) {
 		$.GetContextPanel().SetHasClass('hud-leaderboards--unofficial', !isOfficial);
 
-		let img = '';
-		switch (GameModeAPI.GetCurrentGameMode()) {
-			case 1:
-				img = 'surf';
-				break;
-			case 2:
-				img = 'bhop';
-				break;
-			case 3:
-				img = 'climb';
-				break;
-			case 4:
-				img = 'rj';
-				break;
-			case 5:
-				img = 'sj';
-				break;
-			case 6:
-				img = 'tricksurf';
-				break;
-			case 7:
-				img = 'ahop';
-				break;
-			case 8:
-				img = 'parkour';
-				break;
-			case 9:
-				img = 'conc';
-				break;
-			case 10:
-				img = 'defrag';
-				break;
-			case 0:
-			default:
-				img = 'null';
-				break;
-		}
+		const img = GAMEMODE_WITH_NULL[GameModeAPI.GetCurrentGameMode()].shortName.toLowerCase();
 
 		HudLeaderboards.gamemodeImage.SetImage(`file://{images}/gamemodes/${img}.svg`);
 

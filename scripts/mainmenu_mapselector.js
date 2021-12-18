@@ -6,63 +6,7 @@ const TIER_MAX = 10;
 const MapSelNStateClasses = ['mapselector-filters__nstatebutton--off', 'mapselector-filters__nstatebutton--include', 'mapselector-filters__nstatebutton--exclude'];
 
 class MapSelection {
-	static gameModeData = {
-		0: {
-			name: 'Unknown',
-			prefix: '',
-			filterButton: null
-		},
-		1: {
-			name: 'Surf',
-			prefix: 'surf_',
-			filterButton: $('#SurfFilterButton')
-		},
-		2: {
-			name: 'Bhop',
-			prefix: 'Bhop_',
-			filterButton: $('#BhopFilterButton')
-		},
-		3: {
-			name: 'Climb',
-			prefix: 'climb_',
-			filterButton: $('#ClimbFilterButton')
-		},
-		4: {
-			name: 'Rocket Jump',
-			prefix: 'rj_',
-			filterButton: $('#RJFilterButton')
-		},
-		5: {
-			name: 'Sticky Jump',
-			prefix: 'sj_',
-			filterButton: $('#SJFilterButton')
-		},
-		6: {
-			name: 'Tricksurf',
-			prefix: 'tsurf_',
-			filterButton: $('#TricksurfFilterButton')
-		},
-		7: {
-			name: 'Accelerated Hop',
-			prefix: 'ahop_',
-			filterButton: $('#AhopFilterButton')
-		},
-		8: {
-			name: 'Parkour',
-			prefix: 'pk_',
-			filterButton: $('#ParkourFilterButton')
-		},
-		9: {
-			name: 'Conc',
-			prefix: 'conc_',
-			filterButton: $('#ConcFilterButton')
-		},
-		10: {
-			name: 'Defrag',
-			prefix: 'df_',
-			filterButton: $('#DefragFilterButton')
-		}
-	};
+	static gameModeData = {};
 
 	static searchTextEntry = $('#MapSearchTextEntry');
 	static searchClearButton = $('#MapSearchClear');
@@ -94,6 +38,12 @@ class MapSelection {
 		$.RegisterEventHandler('NStateButtonStateChanged', MapSelection.completedFilterButton, MapSelection.onNStateBtnChanged);
 		$.RegisterEventHandler('NStateButtonStateChanged', MapSelection.favoritesFilterButton, MapSelection.onNStateBtnChanged);
 		$.RegisterEventHandler('NStateButtonStateChanged', MapSelection.downloadedFilterButton, MapSelection.onNStateBtnChanged);
+
+		// Populate the gameModeData object, finding all the filter buttons
+		this.gameModeData = GAMEMODE;
+		Object.values(this.gameModeData).forEach((value) => {
+			value.filterButton = $('#' + value.shortName + 'FilterButton');
+		});
 
 		// Load the saved filters state
 		const filtersChanged = this.loadFilters();
@@ -182,8 +132,7 @@ class MapSelection {
 		const areOthersUnchecked = this.areAllOtherModesUnchecked(selectedMode);
 
 		Object.keys(modes)
-			.slice(1)
-			.filter((mode) => mode !== selectedMode)
+			.filter((mode) => mode !== selectedMode && modes[mode].filterButton !== null)
 			.forEach((mode) => {
 				const filterButton = modes[mode].filterButton;
 				if (areOthersUnchecked) {

@@ -3,6 +3,7 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 	<scripts>
+		<include src="file://{resources}/scripts/common/gamemodes.js" />
 		<include src="file://{resources}/scripts/hud/hud_leaderboards.js" />
 	</scripts>
 
