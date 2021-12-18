@@ -98,7 +98,7 @@ class MainMenuSettings {
 
 		// Save to file whenever the settings page gets closed
 		$.RegisterForUnhandledEvent('MainMenuTabHidden', (tab) => tab === 'Settings' && this.saveSettings());
-		
+
 		// Handle the settings save event
 		$.RegisterForUnhandledEvent('SettingsSave', this.saveSettings);
 	}
@@ -371,20 +371,22 @@ class MainMenuSettings {
 				// If a panel has a specific title use that, if not use the panel's name. Child ID names vary between panel types, blame Valve
 				panel.GetAttributeString('infotitle', '') || panel.FindChildTraverse('Title')?.text || panel.FindChildTraverse('title')?.text,
 				message,
-				panel.convar,
-				hasDocs
+				panel.convar ?? panel.bind,
+				hasDocs,
+				panel.paneltype
 			);
 		});
 	}
 
-	static showInfo(title, message, convar, hasDocs) {
+	static showInfo(title, message, convar, hasDocs, paneltype) {
 		// Check we're mousing over a different panel than before, i.e. the title, message and convar aren't all equal
 		if (title + message + convar === this.currentInfo) return;
-		
+
 		this.currentInfo = title + message + convar;
-		
+
 		// Get convar display option from PS
-		let showConvar = $.persistentStorage.getItem('settings.infoPanelConvars') === 1 && convar;
+		const showConvar = $.persistentStorage.getItem('settings.infoPanelConvars') === 1 && convar;
+		const isKeybinder = paneltype === 'ChaosSettingsKeyBinder';
 
 		// If the panel has a message OR a convar and the convar display option is on, show the info panel
 		if (message || showConvar) {
@@ -415,9 +417,9 @@ class MainMenuSettings {
 				}
 
 				if (showConvar) {
-					this.infoPanelConvar.text = `<i>Convar: <b>${convar}</b>`;
+					this.infoPanelConvar.text = `<i>${isKeybinder ? 'Command' : 'Convar'}: <b>${convar}</b></i>`;
 					this.infoPanelConvar.RemoveClass('hide');
-					this.infoPanelDocsButton.SetHasClass('hide', !hasDocs);
+					this.infoPanelDocsButton.SetHasClass('hide', !hasDocs || isKeybinder);
 					// Shouldn't need to clear the panel event here as it's hidden or gets overwritten
 					this.infoPanelDocsButton.SetPanelEvent('onactivate', () => SteamOverlayAPI.OpenURLModal(`https://docs.momentum-mod.org/var/${convar}`));
 				} else {
