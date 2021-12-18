@@ -35,7 +35,7 @@
 
 				</Panel>
 
-				<ChaosSettingsSlider text="#GameUI_MouseSensitivity" min="0.1" max="10" displayprecision="2" convar="sensitivity" />
+				<ChaosSettingsSlider text="#GameUI_MouseSensitivity" min="0.1" max="10" displayprecision="2" convar="sensitivity" hasdocspage="false" />
 
 				<Panel class="settings-group__combo">
 

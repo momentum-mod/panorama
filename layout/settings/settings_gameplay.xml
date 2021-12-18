@@ -35,9 +35,9 @@
 
 				</Panel>
 
-				<ChaosSettingsSlider text="Yaw Speed" min="0" max="360" convar="cl_yawspeed" infomessage="#MOM_Settings_Yaw_Speed_TT"/>
+				<ChaosSettingsSlider text="Yaw Speed" min="0" max="360" convar="cl_yawspeed" infomessage="#MOM_Settings_Yaw_Speed_TT" hasdocspage="false"/>
 
-				<ChaosSettingsEnum text="#GameUI_FastSwitchCheck" convar="hud_fastswitch">
+				<ChaosSettingsEnum text="#GameUI_FastSwitchCheck" convar="hud_fastswitch" hasdocspage="false">
 					<RadioButton group="fastswitch" text="#SFUI_Off" value="0" />
 					<RadioButton group="fastswitch" text="#SFUI_On" value="1" />
 				</ChaosSettingsEnum>
@@ -57,7 +57,7 @@
 					<RadioButton group="releaseforward" text="#SFUI_On" value="1" />
 				</ChaosSettingsEnum>
 
-				<ChaosSettingsEnum text="#MOM_Settings_Draw_Viewmodel" convar="r_drawviewmodel" infomessage="Show the weapon you are holding in first person.">
+				<ChaosSettingsEnum text="#MOM_Settings_Draw_Viewmodel" convar="r_drawviewmodel" infomessage="Show the weapon you are holding in first person." hasdocspage="false">
 					<RadioButton group="showviewmodel" text="#SFUI_Off" value="0" />
 					<RadioButton group="showviewmodel" text="#SFUI_On" value="1" />
 				</ChaosSettingsEnum>

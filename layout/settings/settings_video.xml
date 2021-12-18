@@ -44,14 +44,14 @@
 
 				</Panel>
 
-				<ChaosSettingsSlider text="#GameUI_FOV" min="50" max="130" convar="fov_desired" />
+				<ChaosSettingsSlider text="#GameUI_FOV" min="50" max="130" convar="fov_desired" hasdocspage="false"/>
 
 				<ChaosSettingsEnumDropDown text="Color Mode" onuserinputsubmit="SettingsShared.videoSettingsOnUserInputSubmit()" id="ColorMode">
 					<Label text="#GameUI_DisplayMonitor" value="0" id="tvmode0" />
 					<Label text="#GameUI_DisplayTV" value="1" id="tvmode1"/>
 				</ChaosSettingsEnumDropDown>
 
-				<ChaosSettingsSlider id="brightness" text="#GameUI_Brightness" min="1.6" max="2.6" percentage="true" invert="true" value100percent="2.0" convar="mat_monitorgamma" infomessage="#SFUI_Settings_Brightness_Info"/>
+				<ChaosSettingsSlider id="brightness" text="#GameUI_Brightness" min="1.6" max="2.6" percentage="true" invert="true" value100percent="2.0" convar="mat_monitorgamma" infomessage="#SFUI_Settings_Brightness_Info" hasdocspage="false"/>
 
 				<ChaosSettingsEnumDropDown text="#SFUI_Settings_Aspect_Ratio" onuserinputsubmit="SettingsShared.videoSettingsOnUserInputSubmit()" id="AspectRatioEnum" oninputsubmit="ChaosAspectRatioSelectionChanged()">
 					<Label text="#SFUI_Settings_Normal" value="0" id="aspectratio0" />

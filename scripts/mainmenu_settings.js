@@ -371,8 +371,7 @@ class MainMenuSettings {
 				// If a panel has a specific title use that, if not use the panel's name. Child ID names vary between panel types, blame Valve
 				panel.GetAttributeString('infotitle', '') || panel.FindChildTraverse('Title')?.text || panel.FindChildTraverse('title')?.text,
 				message,
-				// TODO: This will be changing, see issue 1576
-				panel.GetAttributeString('convar', ''),
+				panel.convar,
 				hasDocs
 			);
 		});
