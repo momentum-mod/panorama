@@ -258,16 +258,24 @@ class MainMenuController {
 			$.persistentStorage.setItem('settings.mainMenuBackground', 0);
 		}
 		
-		let name = '';
-		// Using a switch as we're likely to add more of these in the future
-		switch (backgroundVar) {
-			case 1:
-				name = 'MomentumDark';
-				break;
-			default:
-				name = 'MomentumLight';
-		}
 
+		let name = '';
+
+		// If it's xmas and you're using one of the default backgrounds, replace it with the xmas version
+		const date = new Date();
+		if (date.getMonth() === 11 && date.getDate() >= 25 && backgroundVar <= 1) {
+			name = 'MomentumXmas';
+		} else {
+			// Using a switch as we're likely to add more of these in the future
+			switch (backgroundVar) {
+				case 1:
+					name = 'MomentumDark';
+					break;
+				default:
+					name = 'MomentumLight';
+					break;
+			}
+		}
 		if (useVideo) {
 			videoPanel.SetMovie('file://{resources}/videos/backgrounds/' + name + '.webm');
 
