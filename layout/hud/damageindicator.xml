@@ -1,0 +1,14 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/hud/damageindicator.scss" />
+	</styles>
+
+	<snippets>
+		<snippet name="damage-indicator">
+			<Panel class="damage-indicator" />
+		</snippet>
+	</snippets>
+
+	<MomHudDamageIndicator />
+
+</root>
