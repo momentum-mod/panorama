@@ -168,62 +168,83 @@
 			
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#MOM_Settings_Speedometer_Label" />
-					<Panel class="speedometerbtns">
-						<TooltipPanel class="speedometerbtns__save ml-3" tooltip="Save">
-							<Button id="SaveSpeedometersBtn" class="button" onactivate="Speedometers.saveAllSpeedometers();">
-								<Image class="button__icon" src="file://{images}/save.svg" />
-							</Button>
-						</TooltipPanel>
-						<TooltipPanel class="speedometerbtns__discard ml-3" tooltip="Discard">
-							<Button id="DiscardSpeedometersBtn" class="button" onactivate="Speedometers.create();">
-								<Image class="button__icon" src="file://{images}/reset.svg" />
-							</Button>
-						</TooltipPanel>
-						<TooltipPanel class="speedometerbtns__reset ml-3" tooltip="Reset to default">
-							<Button id="ResetSpeedometersBtn" class="button button--red" onactivate="Speedometers.resetToDefault();">
-								<Image class="button__icon" src="file://{images}/reset.svg" />
-							</Button>
-						</TooltipPanel>
+				</Panel>
+
+				<ChaosSettingsEnum text="Global Speedometer Enable" convar="mom_hud_speedometer_enable" infomessage="Toggles the entire speedometer globally (all gamemodes).">
+					<RadioButton group="speedometer" text="Off" value="0" />
+					<RadioButton group="speedometer" text="On" value="1" />
+				</ChaosSettingsEnum>
+				
+				<ConVarEnabler convar="mom_hud_speedometer_enable" togglevisibility="true" class="flow-down">
+
+					<Panel id="SpeedometersContainer" class="flow-down full-width" infotitle="Speedometers for gamemode" infomessage="Visible speedometers for the specified gamemode.">
+
+						<Panel class="settings-group__header">
+							<Label class="settings-group__subtitle" text="Speedometers for gamemode" />
+							<Panel class="speedometerbtns">
+								<TooltipPanel class="speedometerbtns__save ml-3" tooltip="Save">
+									<Button id="SaveSpeedometersBtn" class="button" onactivate="Speedometers.saveAllSpeedometers();">
+										<Image class="button__icon" src="file://{images}/save.svg" />
+									</Button>
+								</TooltipPanel>
+								<TooltipPanel class="speedometerbtns__discard ml-3" tooltip="Discard">
+									<Button id="DiscardSpeedometersBtn" class="button" onactivate="Speedometers.create();">
+										<Image class="button__icon" src="file://{images}/reset.svg" />
+									</Button>
+								</TooltipPanel>
+								<TooltipPanel class="speedometerbtns__reset ml-3" tooltip="Reset to default">
+									<Button id="ResetSpeedometersBtn" class="button button--red" onactivate="Speedometers.resetToDefault();">
+										<Image class="button__icon" src="file://{images}/reset.svg" />
+									</Button>
+								</TooltipPanel>
+							</Panel>
+						</Panel>
+						
+						<Panel id="Speedometers" class="speedometers">
+							<!--Filled with snippets in JS-->
+						</Panel>
+						
+						<Button id="AddSpeedometerBtn" class="button horizontal-align-center half-width mt-4 mb-4" onactivate="Speedometers.addSpeedometer();">
+							<Label class="button__text" text="+ Add new speedometer" />
+						</Button>
+
 					</Panel>
-				</Panel>
-				
-				<Panel id="Speedometers" class="speedometers">
-					<!--Filled with snippets in JS-->
-				</Panel>
-				
-				<Button id="AddSpeedometerBtn" class="button horizontal-align-center half-width mt-4 mb-4" onactivate="Speedometers.addSpeedometer();">
-					<Label class="button__text" text="+ Add new speedometer" />
-				</Button>
 
-				<Panel class="settings-group__header">
-					<Label class="settings-group__subtitle" text="Range Color Profiles" />
-					<Panel class="speedometerbtns">
-						<TooltipPanel class="speedometerbtns__save ml-3" tooltip="Save">
-							<Button id="SaveColorProfilesBtn" class="button" onactivate="RangeColorProfiles.saveAllProfiles();">
-								<Image class="button__icon" src="file://{images}/save.svg" />
-							</Button>
-						</TooltipPanel>
-						<TooltipPanel class="speedometerbtns__discard ml-3" tooltip="Discard">
-							<Button id="DiscardColorProfilesBtn" class="button" onactivate="RangeColorProfiles.create();">
-								<Image class="button__icon" src="file://{images}/reset.svg" />
-							</Button>
-						</TooltipPanel>
-						<TooltipPanel class="speedometerbtns__reset ml-3" tooltip="Reset to default">
-							<Button id="ResetColorProfilesBtn" class="button button--red" onactivate="RangeColorProfiles.resetToDefault();">
-								<Image class="button__icon" src="file://{images}/reset.svg" />
-							</Button>
-						</TooltipPanel>
+					<Panel id="RangeColorProfilesContainer" class="flow-down full-width" infotitle="Range Color Profiles" infomessage="Range color profiles to be used in speedometer customization. Add to a speedometer with range-based color mode.">
+
+						<Panel class="settings-group__header">
+							<Label class="settings-group__subtitle" text="Range Color Profiles" />
+							<Panel class="speedometerbtns">
+								<TooltipPanel class="speedometerbtns__save ml-3" tooltip="Save">
+									<Button id="SaveColorProfilesBtn" class="button" onactivate="RangeColorProfiles.saveAllProfiles();">
+										<Image class="button__icon" src="file://{images}/save.svg" />
+									</Button>
+								</TooltipPanel>
+								<TooltipPanel class="speedometerbtns__discard ml-3" tooltip="Discard">
+									<Button id="DiscardColorProfilesBtn" class="button" onactivate="RangeColorProfiles.create();">
+										<Image class="button__icon" src="file://{images}/reset.svg" />
+									</Button>
+								</TooltipPanel>
+								<TooltipPanel class="speedometerbtns__reset ml-3" tooltip="Reset to default">
+									<Button id="ResetColorProfilesBtn" class="button button--red" onactivate="RangeColorProfiles.resetToDefault();">
+										<Image class="button__icon" src="file://{images}/reset.svg" />
+									</Button>
+								</TooltipPanel>
+							</Panel>
+						</Panel>
+						
+						<Panel id="SpeedometerColorProfiles" class="rangecolorprofs">
+							<!--Filled with snippets in JS-->
+						</Panel>
+
+						<Button id="AddColorProfileBtn" class="button horizontal-align-center half-width mt-4 mb-4" onactivate="RangeColorProfiles.addProfile();">
+							<Label class="button__text" text="+ Add new color profile" />
+						</Button>
+					
 					</Panel>
-				</Panel>
+
+				</ConVarEnabler>
 				
-				<Panel id="SpeedometerColorProfiles" class="rangecolorprofs">
-					<!--Filled with snippets in JS-->
-				</Panel>
-
-				<Button id="AddColorProfileBtn" class="button horizontal-align-center half-width mt-4 mb-4" onactivate="RangeColorProfiles.addProfile();">
-					<Label class="button__text" text="+ Add new color profile" />
-				</Button>
-
 			</Panel>
 
 			<Panel class="settings-page__spacer"/>

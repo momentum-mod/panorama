@@ -292,7 +292,7 @@ class MainMenuSettings {
 
 	static initPanelsRecursive(panel) {
 		// Initalise info panel event handlers
-		if (this.isSettingsPanel(panel)) {
+		if (this.isSettingsPanel(panel) || this.isSpeedometerPanel(panel)) {
 			this.setPanelInfoEvents(panel);
 		}
 
@@ -469,5 +469,9 @@ class MainMenuSettings {
 
 	static isSettingsPanel(panel) {
 		return ['ChaosSettingsEnum', 'ChaosSettingsSlider', 'ChaosSettingsEnumDropDown', 'ChaosSettingsKeyBinder', 'ChaosSettingsToggle'].includes(panel.paneltype);
+	}
+
+	static isSpeedometerPanel(panel) {
+		return ['SpeedometersContainer', 'RangeColorProfilesContainer'].includes(panel.id);
 	}
 }
