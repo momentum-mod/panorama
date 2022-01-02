@@ -358,6 +358,13 @@ $page-width: 1920px - $rightnav-width;
 		margin-top: 12px;
 	}
 
+	&__dropdown {
+		height: 32px;
+		margin-left: 4px;
+		margin-bottom: 4px;
+		margin-top: 12px;
+	}
+
 	&__combo {
 		flow-children: down;
 

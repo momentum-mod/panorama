@@ -106,20 +106,6 @@
 			<Label class="settings-page__title" text="Interface Settings" />
 
 			<Panel class="settings-page__header-buttons">
-				<!-- TODO: hook this up to some events so it can change when a map is loaded -->
-				<DropDown id="GamemodeDropDown" class="dropdown" menuclass="dropdown-menu" oninputsubmit="SpeedometerSettings.updateGamemode();">
-					<Label id="unknown" text="#MOM_GameType_Unknown" value="0" />
-					<Label id="surf" text="#MOM_GameType_Surf" value="1" />
-					<Label id="bhop" text="#MOM_GameType_Bhop" value="2" />
-					<Label id="kz" text="#MOM_GameType_KZ" value="3" />
-					<Label id="rj" text="#MOM_GameType_RJ" value="4" />
-					<Label id="sj" text="#MOM_GameType_SJ" value="5" />
-					<Label id="tsurf" text="#MOM_GameType_Tricksurf" value="6" />
-					<Label id="ahop" text="#MOM_GameType_Ahop" value="7" />
-					<Label id="pk" text="#MOM_GameType_Parkour" value="8" />
-					<Label id="conc" text="#MOM_GameType_Conc" value="9" />
-					<Label id="df" text="#MOM_GameType_Defrag" value="10" />
-				</DropDown>
 			</Panel>
 
 		</Panel>
@@ -180,7 +166,21 @@
 					<Panel id="SpeedometersContainer" class="flow-down full-width" infotitle="Speedometers for gamemode" infomessage="Visible speedometers for the specified gamemode.">
 
 						<Panel class="settings-group__header">
-							<Label class="settings-group__subtitle" text="Speedometers for gamemode" />
+							<Label class="settings-group__subtitle" text="Speedometers for gamemode " />
+							<!-- TODO: hook this up to some events so it can change when a map is loaded -->
+							<DropDown id="GamemodeDropDown" class="dropdown settings-group__dropdown" menuclass="dropdown-menu" oninputsubmit="SpeedometerSettings.updateGamemode();">
+								<Label id="unknown" text="#MOM_GameType_Unknown" value="0" />
+								<Label id="surf" text="#MOM_GameType_Surf" value="1" />
+								<Label id="bhop" text="#MOM_GameType_Bhop" value="2" />
+								<Label id="kz" text="#MOM_GameType_KZ" value="3" />
+								<Label id="rj" text="#MOM_GameType_RJ" value="4" />
+								<Label id="sj" text="#MOM_GameType_SJ" value="5" />
+								<Label id="tsurf" text="#MOM_GameType_Tricksurf" value="6" />
+								<Label id="ahop" text="#MOM_GameType_Ahop" value="7" />
+								<Label id="pk" text="#MOM_GameType_Parkour" value="8" />
+								<Label id="conc" text="#MOM_GameType_Conc" value="9" />
+								<Label id="df" text="#MOM_GameType_Defrag" value="10" />
+							</DropDown>
 							<Panel class="speedometerbtns">
 								<TooltipPanel class="speedometerbtns__save ml-3" tooltip="Save">
 									<Button id="SaveSpeedometersBtn" class="button" onactivate="Speedometers.saveAllSpeedometers();">
