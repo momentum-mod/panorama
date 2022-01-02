@@ -5,6 +5,7 @@
 	</styles>
 
 	<MomHudVersionInfo class="version-info">
-		<Label class="text-h6" text="{s:verLabel} {s:version} {s:mapping} {s:dx11} {s:dev}" />
+		<!-- This label's text is set in C++ code -->
+		<Label id="VersionLabel" class="text-h6" />
 	</MomHudVersionInfo>
 </root>
