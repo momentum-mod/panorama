@@ -171,7 +171,6 @@
 							<Label class="settings-group__subtitle" text="Speedometers for gamemode " />
 							<!-- TODO: hook this up to some events so it can change when a map is loaded -->
 							<DropDown id="GamemodeDropDown" class="dropdown settings-group__dropdown" menuclass="dropdown-menu" oninputsubmit="SpeedometerSettings.updateGamemode();">
-								<Label id="unknown" text="#MOM_GameType_Unknown" value="0" />
 								<Label id="surf" text="#MOM_GameType_Surf" value="1" />
 								<Label id="bhop" text="#MOM_GameType_Bhop" value="2" />
 								<Label id="kz" text="#MOM_GameType_KZ" value="3" />

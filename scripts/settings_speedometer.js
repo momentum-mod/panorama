@@ -35,6 +35,7 @@ const SpeedoDisplayNames = [ // TODO: localize
 	'Stage Absolute',
 	'Stage Horizontal'
 ];
+const DEFAULT_GAMEMODE = 1; // Surf
 
 
 class SpeedometerDetailObject {
@@ -164,7 +165,7 @@ class SpeedometerDetailObject {
 }
 class Speedometers {
 	static mainPanel = $('#Speedometers');
-	static gamemode = 0;
+	static gamemode = DEFAULT_GAMEMODE;
 	static keyvalues = null;
 	static objectList = {};
 	
@@ -726,7 +727,7 @@ class SpeedometerSettings {
 
 	static updateGamemode() {
 		const gamemodePanel = SpeedometerSettings.gamemodeDropDown.GetSelected();
-		const gamemode = gamemodePanel ? gamemodePanel.GetAttributeInt('value', 0) : 0;
+		const gamemode = gamemodePanel ? gamemodePanel.GetAttributeInt('value', DEFAULT_GAMEMODE) : DEFAULT_GAMEMODE;
 		Speedometers.updateGamemode(gamemode);
 	}
 }
