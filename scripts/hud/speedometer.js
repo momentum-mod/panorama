@@ -188,7 +188,7 @@ class Speedometer {
 		Speedometer.update(SpeedoIDs.RampLeave, rampLeaveVelocity);
 	}
 
-	static onZoneChange(enter, linear, curZone, timerRunning) {
+	static onZoneChange(enter, linear, curZone, _curTrack, timerState) {
 		const startZone = curZone === 1;
 		if (enter && startZone) {
 			Speedometer.lastZone = 0;
@@ -196,7 +196,7 @@ class Speedometer {
 			return;
 		}
 
-		if (!timerRunning) return;
+		if (timerState === 0) return; // timer isnt running
 
 		// return on current or previous zone, on a linear map
 		if (curZone <= Speedometer.lastZone && linear) return;
@@ -369,7 +369,7 @@ class Speedometer {
 		$.RegisterEventHandler('OnRampBoardSpeedUpdate', Speedometer.container, Speedometer.onRampBoardSpeedUpdate);
 		$.RegisterEventHandler('OnRampLeaveSpeedUpdate', Speedometer.container, Speedometer.onRampLeaveSpeedUpdate);
 		$.RegisterEventHandler('OnSpeedometerUpdate', Speedometer.container, Speedometer.onSpeedometerUpdate);
-		$.RegisterForUnhandledEvent('PanoramaComponent_Zones_OnZoneChange', Speedometer.onZoneChange);
+		$.RegisterForUnhandledEvent('OnMomentumZoneChange', Speedometer.onZoneChange);
 		
 		// color profiles load before speedo settings, so this should be enough
 		$.RegisterForUnhandledEvent('OnSpeedometerSettingsLoaded', Speedometer.onSettingsUpdate);
