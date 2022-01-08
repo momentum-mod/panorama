@@ -22,7 +22,7 @@
 	}
 
 	&__message-target > Label {
-		text-shadow: 0 2px 3px rgba(0, 0, 0, 1);
+		text-shadow-fast: none;
 		font-family: $font-monospace;
 		font-size: 11px;
 		margin-right: 16px;
