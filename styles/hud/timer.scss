@@ -1,0 +1,69 @@
+@use '../config'as *;
+@use '../abstract/mixin';
+
+@keyframes timerFailedAnim {
+	from {
+		color: $timer-color-inactive;
+	}
+	35% {
+		color: $timer-color-failed;
+	}
+	to {
+		color: $timer-color-inactive;
+	}
+}
+
+.hudtimer {
+	margin: 6px 0px 6px 0;
+	flow-children: down;
+	align: center center;
+
+	&__time {
+		@include mixin.font-styles($use-header: false);
+
+		font-weight: $timer-font-weight;
+		font-size: $timer-font-size;
+		text-align: center;
+		align: center center;
+		color: $timer-color;
+
+		transition: color 0.15s ease-out 0s;
+
+		&--inactive {
+			color: $timer-color-inactive;
+		}
+		&--failed {
+			animation-name: timerFailedAnim;
+			animation-duration: 1s;
+		}
+		&--finished {
+			color: $timer-color-finished;
+		}
+	}
+
+	&__comparison {
+		@include mixin.font-styles($use-header: false);
+
+		font-weight: $timer-comp-font-weight;
+		font-size: $timer-comp-font-size;
+		text-align: center;
+		align: center center;
+		color: $timer-comp-color;
+
+		&--increase {
+			color: $timer-comp-color-increase;
+		}
+		&--decrease {
+			color: $timer-comp-color-decrease;
+		}
+		&--fade-start {
+			transition-property: opacity;
+			transition-duration: $timer-event-fadeout-time;
+			transition-timing-function: cubic-bezier( 1, 0, 1, 0 );
+		}
+		&--fadeout {
+			transition-duration: 0s;
+			opacity: 0;
+		}
+	}
+}

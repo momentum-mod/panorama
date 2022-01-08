@@ -43,6 +43,7 @@
 			<MomHudConcCooktime />
 			<MomHudStickyCharge />
 			<MomHudStickyCount />
+			<MomHudTimer />
 			<MomHudStrafeSync />
 		</Panel>
 

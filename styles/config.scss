@@ -454,3 +454,20 @@ $speedometer-color-decrease: $red !default;
 $strafesync-color-default: $white !default;
 $strafesync-color-increase: $blue !default;
 $strafesync-color-decrease: $red !default;
+
+// ================
+// TIMER
+// ================
+$timer-font-weight: black !default;
+$timer-font-size: 26px !default;
+$timer-color: $white !default;
+$timer-color-inactive: $gray-900 !default;
+$timer-color-finished: $green !default;
+$timer-color-failed: $red !default;
+
+$timer-comp-color: $white !default;
+$timer-comp-color-increase: $blue !default;
+$timer-comp-color-decrease: $red !default;
+$timer-comp-font-weight: normal !default;
+$timer-comp-font-size: 18px !default;
+$timer-event-fadeout-time: 8s !default;
