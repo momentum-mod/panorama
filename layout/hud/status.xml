@@ -1,0 +1,15 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+		<include src="file://{resources}/styles/hud/status.scss" />
+	</styles>
+	<scripts>
+		<include src="file://{resources}/scripts/hud/status.js" />
+	</scripts>
+
+	<MomHudStatus class="hudstatus">
+		<ConVarEnabler convar="mom_hud_status_enable" togglevisibility="true">
+			<Label id="HudStatusLabel" class="hudstatus__label" text="" />
+		</ConVarEnabler>
+	</MomHudStatus>
+</root>

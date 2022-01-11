@@ -1,0 +1,17 @@
+@use '../config'as *;
+@use '../abstract/mixin';
+
+.hudstatus {
+	flow-children: down;
+	width: 100%;
+	align: center center;
+
+	&__label {
+		@include mixin.font-styles($use-header: false);
+
+		font-size: $timer-hudstatus-font-size;
+		text-align: center;
+		align: center center;
+		color: $timer-hudstatus-color;
+	}
+}
