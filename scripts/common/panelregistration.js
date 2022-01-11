@@ -17,4 +17,5 @@
     UiToolkitAPI.RegisterPanel2d( 'ControlLibTestPanel', 'file://{resources}/layout/tests/controllibtestpanel.xml' );
 
     UiToolkitAPI.RegisterPanel2d('MomHudStatus', 'file://{resources}/layout/hud/status.xml');
+    UiToolkitAPI.RegisterPanel2d('MomHudMapInfo', 'file://{resources}/layout/hud/mapinfo.xml');
 })();

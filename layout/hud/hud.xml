@@ -62,7 +62,7 @@
 
 		<!-- Anchored in top left corner of screen, laid out from top-to-bottom -->
 		<Panel id="HudTopRight" hittest="false" hittestchildren="false">
-
+			<MomHudMapInfo />
 		</Panel>
 
 		<ChaosHudBlurTarget id="HudBlur" blurrects="Leaderboards" class="hud-blur" hittest="false" hittestchildren="false">
