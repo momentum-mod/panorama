@@ -62,6 +62,12 @@
 					<RadioButton group="showviewmodel" text="#SFUI_On" value="1" />
 				</ChaosSettingsEnum>
 
+				<ChaosSettingsEnumDropDown text="Weapon Desirability" convar="mom_player_weapon_spawn_desirability" infomessage="Choose which weapons you want to spawn with. Varies per gamemode based on which weapons are required, recommended, and allowed.">
+					<Label id="wepdes1" text="Required weapons only" value="0" />
+					<Label id="wepdes2" text="Required and recommended weapons" value="1" />
+					<Label id="wepdes3" text="All allowed weapons" value="2" />
+				</ChaosSettingsEnumDropDown>
+
 			</Panel>
 
 			<Panel class="settings-page__spacer"/>
