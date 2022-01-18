@@ -160,9 +160,9 @@
 									</Button>
 								</TooltipPanel>
 
-								<TooltipPanel class="bottombar__tooltip" tooltip="Store Page">
-									<Button class="bottombar__button" onactivate="SteamOverlayAPI.OpenURLModal('https://store.steampowered.com/app/669270/Momentum_Mod/')">
-										<Image class="bottombar__icon" src="file://{images}/steam.svg" textureheight="64" />
+								<TooltipPanel class="bottombar__tooltip" tooltip="GitHub">
+									<Button class="bottombar__button" onactivate="SteamOverlayAPI.OpenURLModal('https://github.com/momentum-mod/game')">
+										<Image class="bottombar__icon" src="file://{images}/social/github.svg" textureheight="64" />
 									</Button>
 								</TooltipPanel>
 
