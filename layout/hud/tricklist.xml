@@ -1,0 +1,12 @@
+<root>
+	<styles>
+		<include src="file://{resource}/styles/main.scss" />
+		<include src="file://{resource}/styles/hud/tricklist.scss" />
+	</styles>
+
+	<TrickList class="tricklist">
+		
+
+	</TrickList>
+
+</root>

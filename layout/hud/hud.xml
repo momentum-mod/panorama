@@ -33,6 +33,8 @@
 		<!-- HUD anchored to top-left corner of screen, laid out vertically top-to-bottom -->
 		<Panel id="HudTopLeft" hittest="false" hittestchildren="false">
 			<Frame src="file://{resources}/layout/hud/consolenotify.xml"/>
+
+			<HudTrickTracker />
 		</Panel>
 
 		<!-- Anchored to below the center of the screen, laid out from top to bottom -->
@@ -60,14 +62,16 @@
 			<MomHudKeyPress />
 		</Panel>
 
-		<!-- Anchored in top left corner of screen, laid out from top-to-bottom -->
+		<!-- Anchored in top right corner of screen, laid out from top-to-bottom -->
 		<Panel id="HudTopRight" hittest="false" hittestchildren="false">
 			<MomHudMapInfo />
 		</Panel>
 
-		<ChaosHudBlurTarget id="HudBlur" blurrects="Leaderboards" class="hud-blur" hittest="false" hittestchildren="false">
+		<ChaosHudBlurTarget id="HudBlur" blurrects="Leaderboards TrickList" class="hud-blur" hittest="false" hittestchildren="false">
 			<ChaosBackbufferImagePanel class="full" />
 		</ChaosHudBlurTarget>
+
+		<TrickList id="TrickList" />
 
 		<!-- This container is here so we can move the leaderboard in and out of it during the end-of-match sequence -->
 		<Panel id="LeaderboardsContainer" class="full-width full-height" hittest="false" hittestchildren="true">
