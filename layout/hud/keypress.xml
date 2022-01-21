@@ -5,23 +5,23 @@
 
 	<MomHudKeyPress class="keypress">
 		<Panel>
-			<Panel class="keypress__arrows arrows">
-				<Panel id="KeyForward" class="arrows__key key__forward" text="Forward">
-					<Image id="KeyForwardIcon" class="arrows__icon icon__forward" src="file://{images}/right-arrow.svg" textureheight="32" />
+			<Panel class="keypress__arrows keypress-arrows">
+				<Panel id="KeyForward" class="keypress-arrows__key keypress-key__forward" text="Forward">
+					<Image id="KeyForwardIcon" class="keypress-arrows__icon keypress-icon__forward" src="file://{images}/right-arrow.svg" textureheight="32" />
 				</Panel>
-				<Panel id="KeyBack" class="arrows__key key__back" text="Back">
-					<Image id="KeyBackIcon" class="arrows__icon icon__back" src="file://{images}/right-arrow.svg" textureheight="32" />
+				<Panel id="KeyBack" class="keypress-arrows__key keypress-key__back" text="Back">
+					<Image id="KeyBackIcon" class="keypress-arrows__icon keypress-icon__back" src="file://{images}/right-arrow.svg" textureheight="32" />
 				</Panel>
-				<Panel id="KeyMoveLeft" class="arrows__key key__left" text="Left">
-					<Image id="KeyMoveLeftIcon" class="arrows__icon icon__left" src="file://{images}/right-arrow.svg" textureheight="32" />
+				<Panel id="KeyMoveLeft" class="keypress-arrows__key keypress-key__left" text="Left">
+					<Image id="KeyMoveLeftIcon" class="keypress-arrows__icon keypress-icon__left" src="file://{images}/right-arrow.svg" textureheight="32" />
 				</Panel>
-				<Panel id="KeyMoveRight" class="arrows__key key__right" text="Right">
-					<Image id="KeyMoveRightIcon" class="arrows__icon icon__right" src="file://{images}/right-arrow.svg" textureheight="32" />
+				<Panel id="KeyMoveRight" class="keypress-arrows__key keypress-key__right" text="Right">
+					<Image id="KeyMoveRightIcon" class="keypress-arrows__icon keypress-icon__right" src="file://{images}/right-arrow.svg" textureheight="32" />
 				</Panel>
 			</Panel>
 
-			<Label id="KeyMouse1" class="keypress__key key__m1" text="A1" />
-			<Label id="KeyMouse2" class="keypress__key key__m2" text="A2" />
+			<Label id="KeyMouse1" class="keypress__key keypress-key__m1" text="A1" />
+			<Label id="KeyMouse2" class="keypress__key keypress-key__m2" text="A2" />
 		</Panel>
 
 		<Label id="KeyJump" class="keypress__key" text="JUMP" />

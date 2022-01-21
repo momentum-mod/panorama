@@ -1,6 +1,6 @@
 @use '../config'as *;
 
-.notify {
+.console-notify {
   &__frame {
 	transition-property: opacity;
 	transition-duration: 0.5s;

@@ -30,7 +30,7 @@
 	}
 }
 
-.arrows {
+.keypress-arrows {
 	width: 85px;
 	height: 55px;
 	margin: 10px;
@@ -67,7 +67,7 @@
 	}
 }
 
-.key {
+.keypress-key {
 	&__m1 {
 		vertical-align: top;
 		horizontal-align: left;
@@ -95,7 +95,7 @@
 	}
 }
 
-.icon {
+.keypress-icon {
 	&__forward {
 		transform: rotatez( -90deg );
 	}

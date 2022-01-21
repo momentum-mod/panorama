@@ -5,10 +5,10 @@
 	<scripts>
 		<include src="file://{resources}/scripts/hud/consolenotify.js"/>
 	</scripts>
-	<Panel class="notify__frame">
+	<Panel class="console-notify__frame">
 		<ConVarEnabler convar="developer" togglevisibility="true">
 			<ConVarEnabler convar="con_drawnotify" togglevisibility="true" >
-				<NotifyConsoleMessageTarget class="notify__message-target" id="NotifyMessageTarget" />
+				<NotifyConsoleMessageTarget class="console-notify__message-target" id="NotifyMessageTarget" />
 			</ConVarEnabler>
 		</ConVarEnabler>
 	</Panel>

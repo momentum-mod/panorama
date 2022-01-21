@@ -103,9 +103,9 @@ class SpeedometerDetailObject {
 			this.unitsDropdown.SetSelectedIndex(speedometerKV['units']);
 			this.unitsDropdown.SetPanelEvent('oninputsubmit', () => Speedometers.markSpeedometerAsModified(this.id));
 		}
-		this.profileSettingContainer.SetHasClass('speedometer__settingcontainer--hidden', this.colorModeDropdown.GetSelected().id !== 'colormode1');
+		this.profileSettingContainer.SetHasClass('settings-speedometer__settingcontainer--hidden', this.colorModeDropdown.GetSelected().id !== 'colormode1');
 
-		this.toggleButton.SetPanelEvent('onactivate', () => { this.detailPanel.SetHasClass('speedometer__detail--hidden', !this.toggleButton.IsSelected()); });
+		this.toggleButton.SetPanelEvent('onactivate', () => { this.detailPanel.SetHasClass('settings-speedometer__detail--hidden', !this.toggleButton.IsSelected()); });
 		this.discardButton.SetPanelEvent('onactivate', () => Speedometers.discardChangesForSpeedometer(this.id, speedometerKV));
 		this.deleteButton.SetPanelEvent('onactivate', () => Speedometers.deleteSpeedometer(this.id));
 		this.moveupButton.SetPanelEvent('onactivate', () => Speedometers.reorderSpeedometer(this.id, true));
@@ -118,7 +118,7 @@ class SpeedometerDetailObject {
 
 		this.colorModeDropdown.SetPanelEvent('oninputsubmit', () => {
 			Speedometers.markSpeedometerAsModified(this.id);
-			this.profileSettingContainer.SetHasClass('speedometer__settingcontainer--hidden', this.colorModeDropdown.GetSelected().id !== 'colormode1');
+			this.profileSettingContainer.SetHasClass('settings-speedometer__settingcontainer--hidden', this.colorModeDropdown.GetSelected().id !== 'colormode1');
 		});
 		this.colorProfileDropdown.SetPanelEvent('oninputsubmit', () => Speedometers.markSpeedometerAsModified(this.id));
 
@@ -504,7 +504,7 @@ class RangeColorProfileObject {
 		
 		this.addButton.SetPanelEvent('onactivate', () => RangeColorProfiles.addRangeDisplayToProfile(this.name, new RangeColorObject(0, 1, '255 255 255 255', 'rgba(255,255,255,1)')));
 		this.discardButton.SetPanelEvent('onactivate', () => RangeColorProfiles.discardChangesForProfile(this.ogName, this.name, profileKV));
-		this.toggleButton.SetPanelEvent('onactivate', () => this.displaysContainer.SetHasClass('rangecolor__displayscont--hidden', !this.toggleButton.IsSelected()));
+		this.toggleButton.SetPanelEvent('onactivate', () => this.displaysContainer.SetHasClass('settings-speedometer-rangecolor__displayscont--hidden', !this.toggleButton.IsSelected()));
 		this.deleteButton.SetPanelEvent('onactivate', () => RangeColorProfiles.deleteProfile(this.name));
 		this.editButton.SetPanelEvent('onactivate', () => RangeColorProfiles.makeColorProfileNamePopup(this.name, 'Edit', (profileName) => RangeColorProfiles.updateProfileName(this.name, profileName)));
 

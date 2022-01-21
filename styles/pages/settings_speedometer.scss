@@ -1,18 +1,18 @@
 @use '../abstract/mixin';
 
-.speedometers {
+.settings-speedometers {
 	flow-children: down;
 	width: 100%;
 }
 
-.speedometerbtns {
+.settings-speedometer-buttons {
 	width: 100%;
 	horizontal-align: right;
 	vertical-align: center;
 	flow-children: left;
 }
 
-.speedometer {
+.settings-speedometer {
 	flow-children: down;
 	width: 100%;
 
@@ -83,12 +83,12 @@
 	}
 }
 
-.rangecolorprofs {
+.settings-speedometer-rangecolorprofs {
 	flow-children: down;
 	width: 100%;
 }
 
-.rangecolor {
+.settings-speedometer-rangecolor {
 	flow-children: down;
 	width: 100%;
 
@@ -153,7 +153,7 @@
 	}
 }
 
-.rangecolordisp {
+.settings-speedometer-rangecolordisp {
 	flow-children: left;
 	width: 100%;
 

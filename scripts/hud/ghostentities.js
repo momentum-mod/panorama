@@ -4,7 +4,7 @@ class GhostEntities {
 	static onAimOverGhostChange(entpanel, aimover) {
 		const nameEnabled = $.GetContextPanel().ghostNamesEnabled && aimover;
 		let namePanel = entpanel.FindChildTraverse('NamePanel');
-		namePanel.SetHasClass('namepanel--hidden', !nameEnabled);
+		namePanel.SetHasClass('ghost-ent-namepanel--hidden', !nameEnabled);
 
 		// always keep centered even when name isnt visible
 		if (nameEnabled)

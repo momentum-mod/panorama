@@ -10,9 +10,9 @@
 		<snippet name="ghost-ent-panel">
 			<Panel class="ghost-ent">
 				<ChaosAvatarImage id="GhostAvatar" class="ghost-ent__avatar" />
-				<Panel id="NamePanel" class="ghost-ent__namepanel namepanel">
+				<Panel id="NamePanel" class="ghost-ent__namepanel ghost-ent-namepanel">
 					<Image class="full-width full-height" src="file://{images}/card_bg.png" scaling="stretch-to-cover-preserve-aspect" />
-					<Label id="GhostName" class="namepanel__label text-l" text="" />
+					<Label id="GhostName" class="ghost-ent-namepanel__label text-l" text="" />
 				</Panel>
 			</Panel>
 		</snippet>

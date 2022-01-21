@@ -3,7 +3,7 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 
-	<MomHudVersionInfo class="version-info">
+	<MomHudVersionInfo class="hud-version-info">
 		<!-- This label's text is set in C++ code -->
 		<Label id="VersionLabel" class="text-h6" />
 	</MomHudVersionInfo>
