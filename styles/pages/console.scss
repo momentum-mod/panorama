@@ -1,13 +1,12 @@
-@use 'config'as *;
+@use '../config' as *;
 
 .console {
-
 	&__outer {
 		width: 1024px;
 		height: 768px;
 		min-width: 200px; /* Used for resize dragging! */
 		min-height: 200px; /* ditto */
-		background-color: rgba(0,0,0,0.99);
+		background-color: rgba(0, 0, 0, 0.99);
 		flow-children: down;
 		border-radius: 4px;
 		padding-left: 8px;
@@ -17,7 +16,7 @@
 
 	&__inner {
 		width: 100%;
-		height: fill-parent-flow(1.0);
+		height: fill-parent-flow(1);
 		flow-children: down;
 	}
 
@@ -39,7 +38,7 @@
 		margin-bottom: 8px;
 
 		overflow: squish scroll;
-		height: fill-parent-flow(1.0);
+		height: fill-parent-flow(1);
 		flow-children: up;
 	}
 
@@ -61,7 +60,6 @@
 		vertical-align: center;
 		font-size: 30px;
 	}
-
 }
 
 ConsoleInput {

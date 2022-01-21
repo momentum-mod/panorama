@@ -1,7 +1,6 @@
 <root>
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
-		<include src="file://{resources}/styles/pages/settings.scss" />
 	</styles>
 	<scripts>
 		<include src="file://{resources}/scripts/settings_shared.js"/>

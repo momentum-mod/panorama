@@ -12,7 +12,6 @@
 <root>
 	<styles>
 		<include src="file://{resources}/styles/main.scss"/>
-		<include src="file://{resources}/styles/hud/hudchat.scss"/>
 	</styles>
 	<scripts>
 		

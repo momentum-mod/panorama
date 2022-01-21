@@ -1,7 +1,6 @@
 <root>
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
-		<include src="file://{resources}/styles/hud/hud_leaderboards.scss" />
 	</styles>
 	<scripts>
 		<include src="file://{resources}/scripts/hud/hud_leaderboards.js" />

@@ -2,7 +2,6 @@
 
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
-		<include src="file://{resources}/styles/pages/settings.scss" />
 	</styles>
 
 	<snippets>

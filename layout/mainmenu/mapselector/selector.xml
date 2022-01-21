@@ -1,8 +1,6 @@
 <root>
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
-		<include src="file://{resources}/styles/pages/mainmenu.scss" />
-		<include src="file://{resources}/styles/pages/mapselector.scss" />
 	</styles>
 	<scripts>
 		<include src="file://{resources}/scripts/mainmenu_mapselector.js" />

@@ -8,7 +8,6 @@
 <root>
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
-		<include src="file://{resources}/styles/console.scss"/>
 	</styles>
 	<scripts>
 		<include src="file://{resources}/scripts/console.js"/>
