@@ -31,7 +31,7 @@ class HudTimer {
 		HudTimer.timeLabel.RemoveClass(FAILED_CLASS); // fail animation could be happening, so force stop
 		HudTimer.timeLabel.RemoveClass(INACTIVE_CLASS);
 
-		if ($.GetContextPanel().IsStartSoundEnabled())
+		if (MomentumTimerAPI.IsStartSoundEnabled())
 			$.PlaySoundEvent("Momentum.StartTimer");
 	}
 	static onTimerFinished() {
@@ -39,7 +39,7 @@ class HudTimer {
 
 		$.GetContextPanel().SetDialogVariableFloat('runtime', MomentumTimerAPI.GetCurrentRunTime());
 
-		if ($.GetContextPanel().IsFinishSoundEnabled())
+		if (MomentumTimerAPI.IsFinishSoundEnabled())
 			$.PlaySoundEvent("Momentum.FinishTimer");
 	}
 	static onTimerStopped() {
@@ -48,7 +48,7 @@ class HudTimer {
 		// if we want special styling for timer artificially running (via savestate), do it here like so
 		// if (MomentumTimerAPI.GetTimerState() === TimerState.PRACTICE) HudTimer.timeLabel.AddClass(PRACTICE_CLASS);
 		
-		if ($.GetContextPanel().IsStopSoundEnabled())
+		if (MomentumTimerAPI.IsStopSoundEnabled())
 			$.PlaySoundEvent("Momentum.StopTimer");
 	}
 	static onTimerFailed() {
@@ -56,8 +56,15 @@ class HudTimer {
 
 		HudTimer.timeLabel.TriggerClass(FAILED_CLASS);
 		
-		if ($.GetContextPanel().IsFailSoundEnabled())
+		if (MomentumTimerAPI.IsFailSoundEnabled())
 			$.PlaySoundEvent("Momentum.FailedStartTimer");
+	}
+
+	static onUpdate() {
+		const timerState = MomentumTimerAPI.GetTimerState();
+		if (timerState === TimerState.NOTRUNNING) return;
+
+		$.GetContextPanel().SetDialogVariableFloat('runtime', MomentumTimerAPI.GetCurrentRunTime());
 	}
 
 	static onZoneChange(enter, linear, curZone, _curTrack, timerState) {
@@ -133,8 +140,11 @@ class HudTimer {
 	}
 
 	static {
+		$.RegisterEventHandler('ChaosHudProcessInput', $.GetContextPanel(), HudTimer.onUpdate);
 		$.RegisterForUnhandledEvent('OnMomentumTimerStateChange', HudTimer.onTimerEvent);
 		$.RegisterForUnhandledEvent('OnMomentumZoneChange', HudTimer.onZoneChange);
 		$.RegisterForUnhandledEvent('OnSaveStateUpdate', HudTimer.onSaveStateChange);
+		
+		$.GetContextPanel().SetDialogVariableFloat('runtime', 0);
 	}
 }
