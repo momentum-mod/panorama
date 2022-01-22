@@ -111,7 +111,7 @@ class HudTimer {
 		HudTimer.prevZone = 0;
 	}
 
-	static onTimerEvent(type) {
+	static onTimerEvent(_ent, type) {
 		switch(type) {
 			case TimerEvent.STARTED:
 				HudTimer.onTimerStarted();
