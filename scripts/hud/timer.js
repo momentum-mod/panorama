@@ -103,11 +103,15 @@ class HudTimer {
 		HudTimer.prevZone = curZone;
 	}
 
+	static forceHideComparison() {
+		HudTimer.compLabel.RemoveClass(FADEOUT_START_CLASS);
+		HudTimer.compLabel.TriggerClass(FADEOUT_CLASS);
+	}
+
 	static resetTimer() {
 		$.GetContextPanel().SetDialogVariableFloat('runtime', 0);
 		HudTimer.timeLabel.AddClass(INACTIVE_CLASS);
-		HudTimer.compLabel.RemoveClass(FADEOUT_START_CLASS);
-		HudTimer.compLabel.TriggerClass(FADEOUT_CLASS);
+		HudTimer.forceHideComparison();
 		HudTimer.prevZone = 0;
 	}
 
@@ -139,11 +143,26 @@ class HudTimer {
 		}
 	}
 
+	static onReplayStopped() {
+		HudTimer.timeLabel.RemoveClass(FINISHED_CLASS);
+
+		const timerState = MomentumTimerAPI.GetTimerState();
+		if (timerState !== TimerState.RUNNING) {
+			HudTimer.resetTimer();
+			return;
+		}
+
+		HudTimer.forceHideComparison();
+		HudTimer.timeLabel.RemoveClass(INACTIVE_CLASS);
+		HudTimer.prevZone = ZonesAPI.GetCurrentZone(); // if curZone === 0 and the timer is running we have big problems
+	}
+
 	static {
 		$.RegisterEventHandler('ChaosHudProcessInput', $.GetContextPanel(), HudTimer.onUpdate);
 		$.RegisterForUnhandledEvent('OnMomentumTimerStateChange', HudTimer.onTimerEvent);
 		$.RegisterForUnhandledEvent('OnMomentumZoneChange', HudTimer.onZoneChange);
 		$.RegisterForUnhandledEvent('OnSaveStateUpdate', HudTimer.onSaveStateChange);
+		$.RegisterForUnhandledEvent('OnMomentumReplayStopped', HudTimer.onReplayStopped);
 		
 		$.GetContextPanel().SetDialogVariableFloat('runtime', 0);
 	}
