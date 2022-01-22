@@ -2,6 +2,7 @@
 @use '../abstract/mixin';
 
 .hudstatus {
+	margin-top: 6px;
 	flow-children: down;
 	width: 100%;
 	align: center center;

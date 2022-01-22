@@ -81,5 +81,7 @@ class HudStatus {
 		$.RegisterForUnhandledEvent('OnMomentumZoneChange', HudStatus.onZoneChange);
 		$.RegisterForUnhandledEvent('OnMomentumPlayerPracticeModeStateChange', HudStatus.onPracticeModeChange);
 		$.RegisterForUnhandledEvent('OnSaveStateUpdate', HudStatus.onSaveStateChange);
+
+		HudStatus.label.text = 'Spawn';
 	}
 }
