@@ -122,10 +122,11 @@ class HudTimer {
 		}
 	}
 
-	static onSaveStateChange(_count, _current, usingmenu) {
-		if (!usingmenu) {
-			// practice savestate was teleported to but now closed, so reset timer
+	static onSaveStateChange(_count, _current, _usingmenu) {
+		const timerState = MomentumTimerAPI.GetTimerState();
+		if (timerState !== TimerState.RUNNING) {
 			HudTimer.resetTimer();
+			HudTimer.timeLabel.RemoveClass(FINISHED_CLASS);
 		}
 	}
 
