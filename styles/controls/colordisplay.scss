@@ -18,6 +18,8 @@
 		height: 32px;
 		border-radius: 4px;
 		margin-left: 10px;
+		background-image: url('file://{images}/transparency-checkerboard.vtf');
+		background-img-opacity: 0;
 
 		&:hover {
 			box-shadow: 0 1px 2px 2px rgba(0, 0, 0, 0.35);
