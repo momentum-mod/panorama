@@ -9,9 +9,8 @@ const TimerState = {
 class HudStatus {
 	static label = $('#HudStatusLabel');
 
-	static numZones = 0;
 	static curZone = -1;
-	static curTrack = 0;
+	static curTrack = -1;
 	static linear = true;
 	static enter = false;
 	static timerState = TimerState.NOTRUNNING;
@@ -28,15 +27,6 @@ class HudStatus {
 		HudStatus.curTrack = curTrack;
 		HudStatus.linear = linear;
 		HudStatus.timerState = timerState;
-
-		HudStatus.updateLabel();
-	}
-
-	static onMapLoad(_mapName) {
-		const mapData = MapCacheAPI.GetCurrentMapData();
-		if (!mapData) return;
-
-		HudStatus.numZones = mapData['mainTrack']['numZones'];
 
 		HudStatus.updateLabel();
 	}
@@ -65,18 +55,18 @@ class HudStatus {
 			text = `SaveState ${HudStatus.saveStateCurrent}/${HudStatus.saveStateCount}`;
 		}
 		else {
-			if (HudStatus.curTrack > 0) {
-				// TODO: on zone refactor properly update number of zones for bonus tracks
-				text = 'Bonus Track'; 
-			}
-			else if (enteredStartZone) {
+			if (enteredStartZone) {
 				text = 'Start Zone';
 			}
 			else if (enteredEndZone) {
 				text = 'End Zone';
 			}
 			else if (HudStatus.curZone >= 0) {
-				text = `${HudStatus.linear ? 'Checkpoint' : 'Stage'} ${HudStatus.curZone}/${HudStatus.numZones}`;
+				text = `${HudStatus.linear ? 'Checkpoint' : 'Stage'} ${HudStatus.curZone}/${ZonesAPI.GetZoneCount(HudStatus.curTrack)}`;
+			}
+			
+			if (HudStatus.curTrack > 0) {
+				text = `Bonus ${HudStatus.curTrack} | ${text}`;
 			}
 		}
 
@@ -89,7 +79,6 @@ class HudStatus {
 
 	static {
 		$.RegisterForUnhandledEvent('OnMomentumZoneChange', HudStatus.onZoneChange);
-		$.RegisterForUnhandledEvent('MapCache_MapLoad', HudStatus.onMapLoad);
 		$.RegisterForUnhandledEvent('OnMomentumPlayerPracticeModeStateChange', HudStatus.onPracticeModeChange);
 		$.RegisterForUnhandledEvent('OnSaveStateUpdate', HudStatus.onSaveStateChange);
 	}
