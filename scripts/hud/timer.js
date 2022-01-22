@@ -37,6 +37,8 @@ class HudTimer {
 	static onTimerFinished() {
 		HudTimer.timeLabel.AddClass(FINISHED_CLASS);
 
+		$.GetContextPanel().SetDialogVariableFloat('runtime', MomentumTimerAPI.GetCurrentRunTime());
+
 		if ($.GetContextPanel().IsFinishSoundEnabled())
 			$.PlaySoundEvent("Momentum.FinishTimer");
 	}
