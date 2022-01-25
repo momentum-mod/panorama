@@ -1,4 +1,4 @@
-'use_strict';
+'use strict';
 
 class HudMapInfo {
 	static cachedInfoContainer = $('#CachedInfoContainer');
@@ -10,7 +10,7 @@ class HudMapInfo {
 
 		const mapData = MapCacheAPI.GetCurrentMapData();
 		if (mapData) {
-			HudMapInfo.cachedInfoContainer.visible = true;
+			this.cachedInfoContainer.visible = true;
 			
 			let authorString = '';
 			mapData['credits'].filter(x => x.type === 'author').forEach((item, i) => (authorString += (i > 0 ? ', ' : '') + item.user.alias));
@@ -22,11 +22,11 @@ class HudMapInfo {
 			$.GetContextPanel().SetDialogVariableInt('numzones', mainTrack['numZones']);
 		}
 		else {
-			HudMapInfo.cachedInfoContainer.visible = false;
+			this.cachedInfoContainer.visible = false;
 		}
 	}
 
 	static {
-		$.RegisterForUnhandledEvent('MapCache_MapLoad', HudMapInfo.onMapLoad);
+		$.RegisterForUnhandledEvent('MapCache_MapLoad', HudMapInfo.onMapLoad.bind(this));
 	}
 }

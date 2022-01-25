@@ -2,16 +2,17 @@
 
 class ConsoleNotify {
 	static scheduleOpacity = -1;
+
 	static onNewMessages() {
-		if (ConsoleNotify.scheduleOpacity !== -1) {
+		if (this.scheduleOpacity !== -1) {
 			$.CancelScheduled(ConsoleNotify.scheduleOpacity);
-			ConsoleNotify.scheduleOpacity = -1;
+			this.scheduleOpacity = -1;
 		}
 		else
 		{
 			$.GetContextPanel().style.opacity = '1.0';
 		}
-		ConsoleNotify.scheduleOpacity = $.Schedule(5.0, ConsoleNotify.scheduledHide);
+		this.scheduleOpacity = $.Schedule(5.0, ConsoleNotify.scheduledHide);
 
 	}
 
@@ -21,6 +22,6 @@ class ConsoleNotify {
 	}
 
 	static {
-		$.RegisterEventHandler('NewConsoleMessages', 'NotifyMessageTarget', ConsoleNotify.onNewMessages);
+		$.RegisterEventHandler('NewConsoleMessages', 'NotifyMessageTarget', this.onNewMessages.bind(this));
 	}
 }

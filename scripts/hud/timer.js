@@ -1,4 +1,4 @@
-'use_strict';
+'use strict';
 
 const TimerEvent = {
 	STARTED: 0,
@@ -28,14 +28,14 @@ class HudTimer {
 	static prevZone = 0;
 
 	static onTimerStarted() {
-		HudTimer.timeLabel.RemoveClass(FAILED_CLASS); // fail animation could be happening, so force stop
-		HudTimer.timeLabel.RemoveClass(INACTIVE_CLASS);
+		this.timeLabel.RemoveClass(FAILED_CLASS); // fail animation could be happening, so force stop
+		this.timeLabel.RemoveClass(INACTIVE_CLASS);
 
 		if (MomentumTimerAPI.IsStartSoundEnabled())
 			$.PlaySoundEvent("Momentum.StartTimer");
 	}
 	static onTimerFinished() {
-		HudTimer.timeLabel.AddClass(FINISHED_CLASS);
+		this.timeLabel.AddClass(FINISHED_CLASS);
 
 		$.GetContextPanel().SetDialogVariableFloat('runtime', MomentumTimerAPI.GetCurrentRunTime());
 
@@ -43,7 +43,7 @@ class HudTimer {
 			$.PlaySoundEvent("Momentum.FinishTimer");
 	}
 	static onTimerStopped() {
-		HudTimer.resetTimer();
+		this.resetTimer();
 
 		// if we want special styling for timer artificially running (via savestate), do it here like so
 		// if (MomentumTimerAPI.GetTimerState() === TimerState.PRACTICE) HudTimer.timeLabel.AddClass(PRACTICE_CLASS);
@@ -54,7 +54,7 @@ class HudTimer {
 	static onTimerFailed() {
 		// failed to start timer, so resetting is not needed
 
-		HudTimer.timeLabel.TriggerClass(FAILED_CLASS);
+		this.timeLabel.TriggerClass(FAILED_CLASS);
 		
 		if (MomentumTimerAPI.IsFailSoundEnabled())
 			$.PlaySoundEvent("Momentum.FailedStartTimer");
@@ -70,8 +70,8 @@ class HudTimer {
 	static onZoneChange(enter, linear, curZone, _curTrack, timerState) {
 		if (timerState === TimerState.NOTRUNNING && enter && curZone === 1) {
 			// timer state is not reset on map finished until entering the start zone again (on reset)
-			HudTimer.resetTimer();
-			HudTimer.timeLabel.RemoveClass(FINISHED_CLASS);
+			this.resetTimer();
+			this.timeLabel.RemoveClass(FINISHED_CLASS);
 			return;
 		}
 		
@@ -80,54 +80,54 @@ class HudTimer {
 
 			let diffSymbol;
 			if (diff > 0) {
-				HudTimer.compLabel.AddClass(DECREASE_CLASS);
-				HudTimer.compLabel.RemoveClass(INCREASE_CLASS);
+				this.compLabel.AddClass(DECREASE_CLASS);
+				this.compLabel.RemoveClass(INCREASE_CLASS);
 				diffSymbol = '+';
 			} else if (diff < 0) {
-				HudTimer.compLabel.AddClass(INCREASE_CLASS);
-				HudTimer.compLabel.RemoveClass(DECREASE_CLASS);
+				this.compLabel.AddClass(INCREASE_CLASS);
+				this.compLabel.RemoveClass(DECREASE_CLASS);
 				diffSymbol = '-';
 			} else {
-				HudTimer.compLabel.RemoveClass(INCREASE_CLASS);
-				HudTimer.compLabel.RemoveClass(DECREASE_CLASS);
+				this.compLabel.RemoveClass(INCREASE_CLASS);
+				this.compLabel.RemoveClass(DECREASE_CLASS);
 				diffSymbol = '±';
 			}
 
 			$.GetContextPanel().SetDialogVariableFloat('runtimediff', Math.abs(diff));
 			$.GetContextPanel().SetDialogVariable('diffSymbol', diffSymbol);
 
-			HudTimer.compLabel.AddClass(FADEOUT_START_CLASS);
-			HudTimer.compLabel.TriggerClass(FADEOUT_CLASS);
+			this.compLabel.AddClass(FADEOUT_START_CLASS);
+			this.compLabel.TriggerClass(FADEOUT_CLASS);
 		}
 
-		HudTimer.prevZone = curZone;
+		this.prevZone = curZone;
 	}
 
 	static forceHideComparison() {
-		HudTimer.compLabel.RemoveClass(FADEOUT_START_CLASS);
-		HudTimer.compLabel.TriggerClass(FADEOUT_CLASS);
+		this.compLabel.RemoveClass(FADEOUT_START_CLASS);
+		this.compLabel.TriggerClass(FADEOUT_CLASS);
 	}
 
 	static resetTimer() {
 		$.GetContextPanel().SetDialogVariableFloat('runtime', 0);
-		HudTimer.timeLabel.AddClass(INACTIVE_CLASS);
-		HudTimer.forceHideComparison();
-		HudTimer.prevZone = 0;
+		this.timeLabel.AddClass(INACTIVE_CLASS);
+		this.forceHideComparison();
+		this.prevZone = 0;
 	}
 
 	static onTimerEvent(_ent, type) {
 		switch(type) {
 			case TimerEvent.STARTED:
-				HudTimer.onTimerStarted();
+				this.onTimerStarted();
 				break;
 			case TimerEvent.FINISHED:
-				HudTimer.onTimerFinished();
+				this.onTimerFinished();
 				break;
 			case TimerEvent.STOPPED:
-				HudTimer.onTimerStopped();
+				this.onTimerStopped();
 				break;
 			case TimerEvent.FAILED:
-				HudTimer.onTimerFailed();
+				this.onTimerFailed();
 				break;
 			default:
 				$.Warning('Unknown timer event given to Momentum hud timer!');
@@ -138,31 +138,31 @@ class HudTimer {
 	static onSaveStateChange(_count, _current, _usingmenu) {
 		const timerState = MomentumTimerAPI.GetTimerState();
 		if (timerState !== TimerState.RUNNING) {
-			HudTimer.resetTimer();
-			HudTimer.timeLabel.RemoveClass(FINISHED_CLASS);
+			this.resetTimer();
+			this.timeLabel.RemoveClass(FINISHED_CLASS);
 		}
 	}
 
 	static onReplayStopped() {
-		HudTimer.timeLabel.RemoveClass(FINISHED_CLASS);
+		this.timeLabel.RemoveClass(FINISHED_CLASS);
 
 		const timerState = MomentumTimerAPI.GetTimerState();
 		if (timerState !== TimerState.RUNNING) {
-			HudTimer.resetTimer();
+			this.resetTimer();
 			return;
 		}
 
-		HudTimer.forceHideComparison();
-		HudTimer.timeLabel.RemoveClass(INACTIVE_CLASS);
-		HudTimer.prevZone = ZonesAPI.GetCurrentZone(); // if curZone === 0 and the timer is running we have big problems
+		this.forceHideComparison();
+		this.timeLabel.RemoveClass(INACTIVE_CLASS);
+		this.prevZone = ZonesAPI.GetCurrentZone(); // if curZone === 0 and the timer is running we have big problems
 	}
 
 	static {
-		$.RegisterEventHandler('ChaosHudProcessInput', $.GetContextPanel(), HudTimer.onUpdate);
-		$.RegisterForUnhandledEvent('OnMomentumTimerStateChange', HudTimer.onTimerEvent);
-		$.RegisterForUnhandledEvent('OnMomentumZoneChange', HudTimer.onZoneChange);
-		$.RegisterForUnhandledEvent('OnSaveStateUpdate', HudTimer.onSaveStateChange);
-		$.RegisterForUnhandledEvent('OnMomentumReplayStopped', HudTimer.onReplayStopped);
+		$.RegisterEventHandler('ChaosHudProcessInput', $.GetContextPanel(), this.onUpdate.bind(this));
+		$.RegisterForUnhandledEvent('OnMomentumTimerStateChange', this.onTimerEvent.bind(this));
+		$.RegisterForUnhandledEvent('OnMomentumZoneChange', this.onZoneChange.bind(this));
+		$.RegisterForUnhandledEvent('OnSaveStateUpdate', this.onSaveStateChange.bind(this));
+		$.RegisterForUnhandledEvent('OnMomentumReplayStopped', this.onReplayStopped.bind(this));
 		
 		$.GetContextPanel().SetDialogVariableFloat('runtime', 0);
 	}

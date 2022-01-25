@@ -1,4 +1,4 @@
-'use_strict';
+'use strict';
 
 const TimerState = {
 	NOTRUNNING: 0,
@@ -22,37 +22,37 @@ class HudStatus {
 	static saveStateUsing = false;
 
 	static onZoneChange(enter, linear, curZone, curTrack, timerState) {
-		HudStatus.enter = enter;
-		HudStatus.curZone = curZone;
-		HudStatus.curTrack = curTrack;
-		HudStatus.linear = linear;
-		HudStatus.timerState = timerState;
+		this.enter = enter;
+		this.curZone = curZone;
+		this.curTrack = curTrack;
+		this.linear = linear;
+		this.timerState = timerState;
 
-		HudStatus.updateLabel();
+		this.updateLabel();
 	}
 
 	static onPracticeModeChange(enabled) {
-		HudStatus.inPracticeMode = enabled;
-		HudStatus.updateLabel();
+		this.inPracticeMode = enabled;
+		this.updateLabel();
 	}
 
 	static onSaveStateChange(count, current, usingmenu) {
-		HudStatus.saveStateCount = count;
-		HudStatus.saveStateCurrent = current + 1; // need 1-indexing for display
-		HudStatus.saveStateUsing = usingmenu;
-		HudStatus.timerState = MomentumTimerAPI.GetTimerState();
+		this.saveStateCount = count;
+		this.saveStateCurrent = current + 1; // need 1-indexing for display
+		this.saveStateUsing = usingmenu;
+		this.timerState = MomentumTimerAPI.GetTimerState();
 
-		HudStatus.updateLabel();
+		this.updateLabel();
 	}
 
 	static updateLabel() {
-		const enteredStartZone = HudStatus.enter && HudStatus.curZone === 1;
-		const enteredEndZone = HudStatus.enter && HudStatus.curZone === 0;
+		const enteredStartZone = this.enter && this.curZone === 1;
+		const enteredEndZone = this.enter && this.curZone === 0;
 
 		let text = 'Spawn';
 
-		if (HudStatus.saveStateUsing && HudStatus.timerState !== TimerState.RUNNING) {
-			text = `SaveState ${HudStatus.saveStateCurrent}/${HudStatus.saveStateCount}`;
+		if (this.saveStateUsing && this.timerState !== TimerState.RUNNING) {
+			text = `SaveState ${this.saveStateCurrent}/${this.saveStateCount}`;
 		}
 		else {
 			if (enteredStartZone) {
@@ -61,27 +61,27 @@ class HudStatus {
 			else if (enteredEndZone) {
 				text = 'End Zone';
 			}
-			else if (HudStatus.curZone >= 0) {
-				text = `${HudStatus.linear ? 'Checkpoint' : 'Stage'} ${HudStatus.curZone}/${ZonesAPI.GetZoneCount(HudStatus.curTrack)}`;
+			else if (this.curZone >= 0) {
+				text = `${this.linear ? 'Checkpoint' : 'Stage'} ${this.curZone}/${ZonesAPI.GetZoneCount(this.curTrack)}`;
 			}
 			
-			if (HudStatus.curTrack > 0) {
-				text = `Bonus ${HudStatus.curTrack} | ${text}`;
+			if (this.curTrack > 0) {
+				text = `Bonus ${this.curTrack} | ${text}`;
 			}
 		}
 
-		if (HudStatus.inPracticeMode) {
+		if (this.inPracticeMode) {
 			text = `Practice Mode | ${text}`;
 		}
 
-		HudStatus.label.text = text;
+		this.label.text = text;
 	}
 
 	static {
-		$.RegisterForUnhandledEvent('OnMomentumZoneChange', HudStatus.onZoneChange);
-		$.RegisterForUnhandledEvent('OnMomentumPlayerPracticeModeStateChange', HudStatus.onPracticeModeChange);
-		$.RegisterForUnhandledEvent('OnSaveStateUpdate', HudStatus.onSaveStateChange);
+		$.RegisterForUnhandledEvent('OnMomentumZoneChange', this.onZoneChange.bind(this));
+		$.RegisterForUnhandledEvent('OnMomentumPlayerPracticeModeStateChange', this.onPracticeModeChange.bind(this));
+		$.RegisterForUnhandledEvent('OnSaveStateUpdate', this.onSaveStateChange.bind(this));
 
-		HudStatus.label.text = 'Spawn';
+		this.label.text = 'Spawn';
 	}
 }

@@ -7,34 +7,34 @@ const UnitsType = {
 };
 
 class StickyCharge {
-	static chargeMeter = $( '#StickyChargeMeter' );
-	static chargeSpeed = $( '#StickyChargeSpeed' );
+	static chargeMeter = $('#StickyChargeMeter');
+	static chargeSpeed = $('#StickyChargeSpeed');
+	static container = $('#StickyChargeContainer');
+
 	static OnChargeUpdate( speed, percentage ) {
-		let chargeUnitType = $.GetContextPanel().stickyChargeUnitType;
+		const chargeUnitType = $.GetContextPanel().stickyChargeUnitType;
 
 		let speedText;
-		switch( chargeUnitType ) {
+		switch(chargeUnitType) {
 			case UnitsType.UPS:
-				speedText = `${ Math.floor( speed ) }u/s`;
+				speedText = `${Math.floor(speed)}u/s`;
 				break;
 			case UnitsType.Percent:
-				speedText = `${ Math.floor( percentage * 100 ) }%`;
+				speedText = `${Math.floor(percentage * 100)}%`;
 				break;
 			default:
 				speedText = '';
 		}
-		StickyCharge.chargeSpeed.text = speedText;
-		StickyCharge.chargeMeter.value = percentage;
+		this.chargeSpeed.text = speedText;
+		this.chargeMeter.value = percentage;
 	}
 
-	static OnChargeToggled( enabled ) {
-		if ( StickyCharge.chargeMeter.enabled !== enabled )
-			StickyCharge.chargeMeter.enabled = enabled;
+	static OnChargeToggled(enabled) {
+		if (this.chargeMeter.enabled !== enabled) this.chargeMeter.enabled = enabled;
 	}
 
 	static {
-		let container = $( '#StickyChargeContainer' );
-		$.RegisterEventHandler( 'OnChargeUpdate', container, StickyCharge.OnChargeUpdate );
-		$.RegisterEventHandler( 'OnChargeToggled', container, StickyCharge.OnChargeToggled );
+		$.RegisterEventHandler('OnChargeUpdate', this.container, this.OnChargeUpdate.bind(this));
+		$.RegisterEventHandler('OnChargeToggled', this.container, this.OnChargeToggled.bind(this));
 	}
 }

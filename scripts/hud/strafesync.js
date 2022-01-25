@@ -1,3 +1,5 @@
+'use strict';
+
 const COLOR_CLASS_FG = {
 	DEFAULT_COLOR	:	'strafesync__default-color--fg',
 	INCREASE_COLOR	: 	'strafesync__increase-color--fg',
@@ -19,15 +21,15 @@ class StrafeSync {
 		const type = $.GetContextPanel().strafesyncType;
 		const value = MomentumPlayerAPI.GetStrafeSync(type);
 		$.GetContextPanel().SetDialogVariable('sync_value', value.toFixed(2));
-		StrafeSync.bar.value = value;
+		this.bar.value = value;
 
 		let colorIndex;
 		switch ( $.GetContextPanel().strafesyncColorize ) {
 			case 1:
-				if (StrafeSync.lastValue === 0)
+				if (this.lastValue === 0)
 					colorIndex = 'DEFAULT_COLOR';
 				else {
-					const diff = value - StrafeSync.lastValue;
+					const diff = value - this.lastValue;
 					if (diff > 0)
 						colorIndex = 'INCREASE_COLOR';
 					else if (diff < 0)
@@ -52,24 +54,24 @@ class StrafeSync {
 				break;
 		}
 
-		StrafeSync.lastValue = value;
+		this.lastValue = value;
 
 		for (let colorclassfgKey in COLOR_CLASS_FG) {
-			StrafeSync.label.RemoveClass(COLOR_CLASS_FG[colorclassfgKey]);
+			this.label.RemoveClass(COLOR_CLASS_FG[colorclassfgKey]);
 		}
-		StrafeSync.label.AddClass(COLOR_CLASS_FG[colorIndex]);
+		this.label.AddClass(COLOR_CLASS_FG[colorIndex]);
 
 		for (let colorclassbgKey in COLOR_CLASS_BG) {
-			StrafeSync.bar.RemoveClass(COLOR_CLASS_BG[colorclassbgKey]);
+			this.bar.RemoveClass(COLOR_CLASS_BG[colorclassbgKey]);
 		}
-		StrafeSync.bar.AddClass(COLOR_CLASS_BG[colorIndex]);
+		this.bar.AddClass(COLOR_CLASS_BG[colorIndex]);
 
 		return true;
 	}
 
 	static {
-		$.RegisterEventHandler('ChaosHudProcessInput', $.GetContextPanel(), StrafeSync.onUpdate);
-		StrafeSync.bar = $('#SyncProgressBar');
-		StrafeSync.label = $('#SyncLabel');
+		$.RegisterEventHandler('ChaosHudProcessInput', $.GetContextPanel(), this.onUpdate.bind(this));
+		this.bar = $('#SyncProgressBar');
+		this.label = $('#SyncLabel');
 	}
 }
