@@ -1,10 +1,9 @@
 <root>
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
-		<include src="file://{resource}/styles/hud/tricktracker.scss" />
+		<include src="file://{resources}/styles/hud/tricktracker.scss" />
 	</styles>
 
 	<HudTrickTracker class="tricktracker" >
-		
 	</HudTrickTracker>
 </root>
