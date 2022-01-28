@@ -16,9 +16,6 @@
 					<Button id="SpeedometerDeleteBtn" class="button button--red speedometer__deletebutton">
 						<Image class="button__icon" src="file://{images}/delete.svg" textureheight="32" />
 					</Button>
-					<Button id="SpeedometerApplyBtn" class="button button--light-blue speedometer__savebutton" >
-						<Label class="button__text" text="Apply" />
-					</Button>
 					<Button id="SpeedometerDiscardBtn" class="button speedometer__discardbutton" >
 						<Label class="button__text" text="Discard" />
 					</Button>
@@ -77,9 +74,6 @@
 					</Button>
 					<Button id="RangeColorEditNameBtn" class="button rangecolor__editnamebutton">
 						<Image class="button__icon" src="file://{images}/edit.svg" textureheight="32" />
-					</Button>
-					<Button id="RangeColorApplyBtn" class="button button--light-blue rangecolor__savebutton" >
-						<Label class="button__text" text="Apply" />
 					</Button>
 					<Button id="RangeColorDiscardBtn" class="button rangecolor__discardbutton" >
 						<Label class="button__text" text="Discard" />
@@ -183,11 +177,6 @@
 								<Label id="df" text="#MOM_GameType_Defrag" value="10" />
 							</DropDown>
 							<Panel class="speedometerbtns">
-								<TooltipPanel class="speedometerbtns__save ml-3" tooltip="Save">
-									<Button id="SaveSpeedometersBtn" class="button" onactivate="Speedometers.saveAllSpeedometers();">
-										<Image class="button__icon" src="file://{images}/save.svg" />
-									</Button>
-								</TooltipPanel>
 								<TooltipPanel class="speedometerbtns__discard ml-3" tooltip="Discard">
 									<Button id="DiscardSpeedometersBtn" class="button" onactivate="Speedometers.create();">
 										<Image class="button__icon" src="file://{images}/reset.svg" />
@@ -216,11 +205,6 @@
 						<Panel class="settings-group__header">
 							<Label class="settings-group__subtitle" text="Range Color Profiles" />
 							<Panel class="speedometerbtns">
-								<TooltipPanel class="speedometerbtns__save ml-3" tooltip="Save">
-									<Button id="SaveColorProfilesBtn" class="button" onactivate="RangeColorProfiles.saveAllProfiles();">
-										<Image class="button__icon" src="file://{images}/save.svg" />
-									</Button>
-								</TooltipPanel>
 								<TooltipPanel class="speedometerbtns__discard ml-3" tooltip="Discard">
 									<Button id="DiscardColorProfilesBtn" class="button" onactivate="RangeColorProfiles.create();">
 										<Image class="button__icon" src="file://{images}/reset.svg" />

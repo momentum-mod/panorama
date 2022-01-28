@@ -48,7 +48,6 @@ class SpeedometerDetailObject {
 		this.colorModeDropdown = null;
 		this.colorProfileDropdown = null;
 		this.toggleButton = null;
-		this.applyButton = null;
 		this.discardButton = null;
 		this.deleteButton = null;
 		this.moveupButton = null;
@@ -70,11 +69,9 @@ class SpeedometerDetailObject {
 	}
 	markAsModified() {
 		this.discardButton.enabled = true;
-		this.applyButton.enabled = true;
 	}
 	markAsUnmodified() {
 		this.discardButton.enabled = false;
-		this.applyButton.enabled = false;
 	}
 	create(id, speedometerKV, orderIndex) {
 		this.id = id;
@@ -87,7 +84,6 @@ class SpeedometerDetailObject {
 		this.unitsSettingContainer = this.detailPanel.FindChildInLayoutFile('SpeedometerUnitsContainer');
 		this.profileSettingContainer = this.detailPanel.FindChildInLayoutFile('SpeedometerColorProfileContainer');
 		this.toggleButton = this.containingPanel.FindChildInLayoutFile('SpeedometerToggleBtn');
-		this.applyButton = this.containingPanel.FindChildInLayoutFile('SpeedometerApplyBtn');
 		this.discardButton = this.containingPanel.FindChildInLayoutFile('SpeedometerDiscardBtn');
 		this.deleteButton = this.containingPanel.FindChildInLayoutFile('SpeedometerDeleteBtn');
 		this.unitsDropdown = this.detailPanel.FindChildInLayoutFile('SpeedometerUnits');
@@ -111,7 +107,6 @@ class SpeedometerDetailObject {
 
 		this.toggleButton.SetPanelEvent('onactivate', () => { this.detailPanel.SetHasClass('speedometer__detail--hidden', !this.toggleButton.IsSelected()); });
 		this.discardButton.SetPanelEvent('onactivate', () => Speedometers.discardChangesForSpeedometer(this.id, speedometerKV));
-		this.applyButton.SetPanelEvent('onactivate', () => Speedometers.saveSpeedometer(this.id));
 		this.deleteButton.SetPanelEvent('onactivate', () => Speedometers.deleteSpeedometer(this.id));
 		this.moveupButton.SetPanelEvent('onactivate', () => Speedometers.reorderSpeedometer(this.id, true));
 		this.movedownButton.SetPanelEvent('onactivate', () => Speedometers.reorderSpeedometer(this.id, false));
@@ -172,7 +167,6 @@ class Speedometers {
 	static addButton = $('#AddSpeedometerBtn');
 	static resetButton = $('#ResetSpeedometersBtn');
 	static discardButton = $('#DiscardSpeedometersBtn');
-	static saveButton = $('#SaveSpeedometersBtn');
 
 	static {
 		$.RegisterForUnhandledEvent('OnSpeedometerSettingsLoaded', Speedometers.settingsLoaded);
@@ -230,15 +224,6 @@ class Speedometers {
 		}
 		speedometerObject.markAsModified();
 		Speedometers.markAsModified();
-	}
-	static saveSpeedometer(id) {
-		let speedoName = Object.keys(SpeedoIDs)[id];
-		Speedometers.keyvalues[speedoName] = {};
-		let speedoObject = Speedometers.objectList[id];
-		speedoObject.saveToKV(Speedometers.keyvalues[speedoName]);
-		speedoObject.markAsUnmodified();
-		if (!SpeedometerSettingsAPI.SaveSpeedometersFromJS(Speedometers.gamemode, Speedometers.keyvalues))
-			$.Warning(`Failed to write speedometer of gamemode ${Speedometers.gamemode} to disk`);
 	}
 	static reorderSpeedometer(id, moveup) {
 		let speedometerObject = Speedometers.objectList[id];
@@ -314,11 +299,9 @@ class Speedometers {
 
 	static markAsModified() {
 		Speedometers.discardButton.enabled = true;
-		Speedometers.saveButton.enabled = true;
 	}
 	static markAsUnmodified() {
 		Speedometers.discardButton.enabled = false;
-		Speedometers.saveButton.enabled = false;
 	}
 	static updateProfileDropdowns() {
 		Object.keys(Speedometers.objectList).forEach(id => Speedometers.objectList[id]?.updateProfileDropdown());
@@ -400,7 +383,6 @@ class RangeColorProfileObject {
 		this.displaysContainer = null;
 		this.displaysPanel = null;
 		this.discardButton = null;
-		this.applyButton = null;
 		this.addButton = null;
 		this.deleteButton = null;
 		this.editButton = null;
@@ -511,7 +493,6 @@ class RangeColorProfileObject {
 	
 		this.addButton = this.displaysContainer.FindChildInLayoutFile('RangeColorAddBtn');
 		this.discardButton = this.profilePanel.FindChildInLayoutFile('RangeColorDiscardBtn');
-		this.applyButton = this.profilePanel.FindChildInLayoutFile('RangeColorApplyBtn');
 		this.deleteButton = this.profilePanel.FindChildInLayoutFile('RangeColorDeleteBtn');
 		this.editButton = this.profilePanel.FindChildInLayoutFile('RangeColorEditNameBtn');
 		this.toggleButton = this.profilePanel.FindChildInLayoutFile('RangeColorToggleBtn');
@@ -523,7 +504,6 @@ class RangeColorProfileObject {
 		
 		this.addButton.SetPanelEvent('onactivate', () => RangeColorProfiles.addRangeDisplayToProfile(this.name, new RangeColorObject(0, 1, '255 255 255 255', 'rgba(255,255,255,1)')));
 		this.discardButton.SetPanelEvent('onactivate', () => RangeColorProfiles.discardChangesForProfile(this.ogName, this.name, profileKV));
-		this.applyButton.SetPanelEvent('onactivate', () => RangeColorProfiles.saveProfile(this.ogName, this.name));
 		this.toggleButton.SetPanelEvent('onactivate', () => this.displaysContainer.SetHasClass('rangecolor__displayscont--hidden', !this.toggleButton.IsSelected()));
 		this.deleteButton.SetPanelEvent('onactivate', () => RangeColorProfiles.deleteProfile(this.name));
 		this.editButton.SetPanelEvent('onactivate', () => RangeColorProfiles.makeColorProfileNamePopup(this.name, 'Edit', (profileName) => RangeColorProfiles.updateProfileName(this.name, profileName)));
@@ -532,12 +512,10 @@ class RangeColorProfileObject {
 	}
 	markAsModified() {
 		this.discardButton.enabled = true;
-		this.applyButton.enabled = true;
 	}
 	markAsUnmodified() {
 		this.ogName = this.name;
 		this.discardButton.enabled = false;
-		this.applyButton.enabled = false;
 	}
 	saveToKV(profileKV) {
 		Object.keys(this.displayObjectList).forEach((id) => {
@@ -554,7 +532,6 @@ class RangeColorProfiles {
 	static addButton = $('#AddColorProfileBtn');
 	static resetButton = $('#ResetColorProfilesBtn');
 	static discardButton = $('#DiscardColorProfilesBtn');
-	static saveButton = $('#SaveColorProfilesBtn');
 
 	static {
 		$.RegisterForUnhandledEvent('OnRangeColorProfilesLoaded', RangeColorProfiles.profilesLoaded);
@@ -580,7 +557,6 @@ class RangeColorProfiles {
 			return;
 		}
 		let profileObject = new RangeColorProfileObject(profileName, {});
-		profileObject.applyButton.enabled = true; // kind of a hack, but only want apply button to be enabled in this case
 		RangeColorProfiles.objectList[profileName] = profileObject;
 		RangeColorProfiles.markAsModified();
 	}
@@ -640,23 +616,6 @@ class RangeColorProfiles {
 		profileObject.discardChanges(profileKV);
 		RangeColorProfiles.markAsUnmodified();
 	}
-	static saveProfile(originalName, profileName) {
-		let profileObject = RangeColorProfiles.objectList[profileName];
-		if (!profileObject) {
-			$.Warning(`Saving profile ${profileName} which doesnt exist!`);
-		}
-		delete RangeColorProfiles.keyvalues[originalName];
-		RangeColorProfiles.keyvalues[profileName] = {};
-		profileObject.saveToKV(RangeColorProfiles.keyvalues[profileName]);
-		// TODO: check if every object is unmodified?
-		if (SpeedometerSettingsAPI.SaveColorProfilesFromJS(RangeColorProfiles.keyvalues)) {
-			profileObject.markAsUnmodified();
-			Speedometers.updateProfileDropdowns();
-		}
-		else
-			$.Warning('Failed to write color profiles to disk');
-		
-	}
 
 	static recreate() {
 		RangeColorProfiles.create();
@@ -700,11 +659,9 @@ class RangeColorProfiles {
 
 	static markAsModified() {
 		RangeColorProfiles.discardButton.enabled = true;
-		RangeColorProfiles.saveButton.enabled = true;
 	}
 	static markAsUnmodified() {
 		RangeColorProfiles.discardButton.enabled = false;
-		RangeColorProfiles.saveButton.enabled = false;
 	}
 
 	static makeColorProfileNamePopup(prefilledText, OKBtnText, callback) {
