@@ -730,4 +730,16 @@ class SpeedometerSettings {
 		const gamemode = gamemodePanel ? gamemodePanel.GetAttributeInt('value', DEFAULT_GAMEMODE) : DEFAULT_GAMEMODE;
 		Speedometers.updateGamemode(gamemode);
 	}
+
+	static saveSettings() {
+		RangeColorProfiles.saveAllProfiles();
+		Speedometers.saveAllSpeedometers();
+	}
+
+	static {
+		$.RegisterForUnhandledEvent('SettingsSave', this.saveSettings);
+		
+		// Save to file whenever the settings page gets closed as well
+		$.RegisterForUnhandledEvent('MainMenuTabHidden', (tab) => tab === 'Settings' && this.saveSettings());
+	}
 }
