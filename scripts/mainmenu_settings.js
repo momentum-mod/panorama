@@ -57,7 +57,8 @@ class MainMenuSettings {
 				CrosshairSubSection: 'CrosshairRadio',
 				TimerSubSection: 'TimerRadio',
 				KeypressSubSection: 'KeypressRadio',
-				StrafeSyncSubSection: 'StrafeSyncRadio'
+				StrafeSyncSubSection: 'StrafeSyncRadio',
+				MapInfoSubSection: 'MapInfoRadio'
 			}
 		},
 		SearchSettings: {
