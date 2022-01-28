@@ -17,7 +17,7 @@
 						<Image class="button__icon" src="file://{images}/delete.svg" textureheight="32" />
 					</Button>
 					<Button id="SpeedometerDiscardBtn" class="button speedometer__discardbutton" >
-						<Label class="button__text" text="Discard" />
+						<Image class="button__icon" src="file://{images}/reset.svg" />
 					</Button>
 					<Button id="SpeedometerMoveDownBtn" class="button speedometer__movedownbutton">
 						<Image class="button__icon rot-90" src="file://{images}/mom-arrow.svg" textureheight="32" />
@@ -76,7 +76,7 @@
 						<Image class="button__icon" src="file://{images}/edit.svg" textureheight="32" />
 					</Button>
 					<Button id="RangeColorDiscardBtn" class="button rangecolor__discardbutton" >
-						<Label class="button__text" text="Discard" />
+						<Image class="button__icon" src="file://{images}/reset.svg" />
 					</Button>
 					<ToggleButton id="RangeColorToggleBtn" class="button togglebutton togglebutton--blue rangecolor__togglebutton" selected="false">
 						<Label id="RangeColorName" class="button__text button__text--left rangecolor__name" />
