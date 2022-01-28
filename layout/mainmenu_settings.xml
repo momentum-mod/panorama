@@ -188,7 +188,7 @@
 
 							<Label class="settings-nav__item-label" text="Interface"/>
 
-							<Panel class="settings-nav__subsection settings-nav__subsection--7 settings-nav__subsection--hidden">
+							<Panel class="settings-nav__subsection settings-nav__subsection--8 settings-nav__subsection--hidden">
 
 								<RadioButton id="UIRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="MainMenuSettings.navigateToSubsection('InterfaceSettings', 'UISubSection')">
 									<Label class="settings-nav__subitem-label" text="User Interface"/>
@@ -204,6 +204,10 @@
 								
 								<RadioButton id="TimerRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="MainMenuSettings.navigateToSubsection('InterfaceSettings', 'TimerSubSection')">
 									<Label class="settings-nav__subitem-label" text="Timer"/>
+								</RadioButton>
+								
+								<RadioButton id="PlayerStatusRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="MainMenuSettings.navigateToSubsection('InterfaceSettings', 'PlayerStatusSubSection')">
+									<Label class="settings-nav__subitem-label" text="Player Status"/>
 								</RadioButton>
 
 								<RadioButton id="KeypressRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="MainMenuSettings.navigateToSubsection('InterfaceSettings', 'KeypressSubSection')">

@@ -56,6 +56,7 @@ class MainMenuSettings {
 				SpeedometerSubSection: 'SpeedometerRadio',
 				CrosshairSubSection: 'CrosshairRadio',
 				TimerSubSection: 'TimerRadio',
+				PlayerStatusSubSection: 'PlayerStatusRadio',
 				KeypressSubSection: 'KeypressRadio',
 				StrafeSyncSubSection: 'StrafeSyncRadio',
 				MapInfoSubSection: 'MapInfoRadio'

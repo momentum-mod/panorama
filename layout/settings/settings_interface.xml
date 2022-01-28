@@ -341,6 +341,29 @@
 			</Panel>
 			
 			<Panel class="settings-page__spacer"/>
+			
+			<Panel id="PlayerStatusSubSection" class="settings-group">
+
+				<Panel class="settings-group__header">
+
+					<Label class="settings-group__title" text="Player Status" />
+
+					<TooltipPanel class="settings-group__reset" tooltip="Reset">
+						<Button class="button" onactivate="SettingsShared.resetSettings('PlayerStatusSubSection');">
+							<Image class="button__icon" src="file://{images}/reset.svg" />
+						</Button>
+					</TooltipPanel>
+
+				</Panel>
+
+				<ChaosSettingsEnum text="Display player status" convar="mom_hud_status_enable" infomessage="Show zone, savestate, and other player status' on the HUD.">
+					<RadioButton group="playerstatusenable" text="Off" value="0" />
+					<RadioButton group="playerstatusenable" text="On" value="1" />
+				</ChaosSettingsEnum>
+
+			</Panel>
+			
+			<Panel class="settings-page__spacer"/>
 
 			<Panel id="KeypressSubSection" class="settings-group">
 
