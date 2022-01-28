@@ -179,39 +179,19 @@
 
 			<Panel class="settings-page__spacer"/>
 
-			<Panel id="TimerSubSection" class="settings-group">
+			<Panel id="ZonesSubSection" class="settings-group">
 
 				<Panel class="settings-group__header">
 
-					<Label class="settings-group__title" text="Timer" />
+					<Label class="settings-group__title" text="Zones" />
 
 					<TooltipPanel class="settings-group__reset" tooltip="Reset">
-						<Button class="button" onactivate="SettingsShared.resetSettings('TimerSubSection');">
+						<Button class="button" onactivate="SettingsShared.resetSettings('ZonesSubSection');">
 							<Image class="button__icon" src="file://{images}/reset.svg" />
 						</Button>
 					</TooltipPanel>
 
 				</Panel>
-
-				<ChaosSettingsEnum text="Start sound" convar="mom_timer_sound_start_enable">
-					<RadioButton group="timerstartsound" text="#SFUI_Off" value="0" />
-					<RadioButton group="timerstartsound" text="#SFUI_On" value="1" />
-				</ChaosSettingsEnum>
-
-				<ChaosSettingsEnum text="Finish sound" convar="mom_timer_sound_finish_enable">
-					<RadioButton group="timerfinishsound" text="#SFUI_Off" value="0" />
-					<RadioButton group="timerfinishsound" text="#SFUI_On" value="1" />
-				</ChaosSettingsEnum>
-
-				<ChaosSettingsEnum text="Stop sound" convar="mom_timer_sound_stop_enable">
-					<RadioButton group="timerstopsound" text="#SFUI_Off" value="0" />
-					<RadioButton group="timerstopsound" text="#SFUI_On" value="1" />
-				</ChaosSettingsEnum>
-
-				<ChaosSettingsEnum text="Fail sound" convar="mom_timer_sound_fail_enable">
-					<RadioButton group="timerfailsound" text="#SFUI_Off" value="0" />
-					<RadioButton group="timerfailsound" text="#SFUI_On" value="1" />
-				</ChaosSettingsEnum>
 
 				<ConVarColorDisplay text="Start Zone Outline Color" convar="mom_zone_start_draw_color" />
 

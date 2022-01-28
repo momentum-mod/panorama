@@ -42,7 +42,7 @@ class MainMenuSettings {
 				GameplayGeneralSubSection: 'GameplayGeneralRadio',
 				PaintSubSection: 'PaintRadio',
 				SafeguardsSubSection: 'SafeguardsRadio',
-				TimerSubSection: 'TimerRadio',
+				ZonesSubSection: 'ZonesRadio',
 				RocketJumpSubSection: 'RocketJumpRadio',
 				StickyJumpSubSection: 'StickyJumpRadio',
 				ConcSubSection: 'ConcRadio'
@@ -55,6 +55,7 @@ class MainMenuSettings {
 				UISubSection: 'UIRadio',
 				SpeedometerSubSection: 'SpeedometerRadio',
 				CrosshairSubSection: 'CrosshairRadio',
+				TimerSubSection: 'TimerRadio',
 				KeypressSubSection: 'KeypressRadio',
 				StrafeSyncSubSection: 'StrafeSyncRadio'
 			}

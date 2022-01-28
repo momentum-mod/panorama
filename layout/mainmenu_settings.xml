@@ -160,8 +160,8 @@
 								</RadioButton>
 
 								<!-- TODO: Rename -->
-								<RadioButton id="TimerRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="MainMenuSettings.navigateToSubsection('GameplaySettings', 'TimerSubSection')">
-									<Label class="settings-nav__subitem-label" text="Timer"/>
+								<RadioButton id="ZonesRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="MainMenuSettings.navigateToSubsection('GameplaySettings', 'ZonesSubSection')">
+									<Label class="settings-nav__subitem-label" text="Zones"/>
 								</RadioButton>
 
 								<RadioButton id="RocketJumpRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="MainMenuSettings.navigateToSubsection('GameplaySettings', 'RocketJumpSubSection')">
@@ -188,7 +188,7 @@
 
 							<Label class="settings-nav__item-label" text="Interface"/>
 
-							<Panel class="settings-nav__subsection settings-nav__subsection--5 settings-nav__subsection--hidden">
+							<Panel class="settings-nav__subsection settings-nav__subsection--6 settings-nav__subsection--hidden">
 
 								<RadioButton id="UIRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="MainMenuSettings.navigateToSubsection('InterfaceSettings', 'UISubSection')">
 									<Label class="settings-nav__subitem-label" text="User Interface"/>
@@ -200,6 +200,10 @@
 
 								<RadioButton id="CrosshairRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="MainMenuSettings.navigateToSubsection('InterfaceSettings', 'CrosshairSubSection')">
 									<Label class="settings-nav__subitem-label" text="Crosshair"/>
+								</RadioButton>
+								
+								<RadioButton id="TimerRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="MainMenuSettings.navigateToSubsection('InterfaceSettings', 'TimerSubSection')">
+									<Label class="settings-nav__subitem-label" text="Timer"/>
 								</RadioButton>
 
 								<RadioButton id="KeypressRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="MainMenuSettings.navigateToSubsection('InterfaceSettings', 'KeypressSubSection')">
