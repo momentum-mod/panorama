@@ -477,3 +477,14 @@ $timer-event-fadeout-time: 8s !default;
 // ================
 $timer-hudstatus-font-size: 18px !default;
 $timer-hudstatus-color: $white !default;
+
+// ================
+// WEAPON SELECTION
+// ================
+$weapsel-name-color: $white !default;
+$weapsel-name-font-size: 24px !default;
+$weapsel-deployed-background-color: gradient-horizontal(rgba($blue,0), rgba($blue, 0.5)) !default;
+$weapsel-deployed-name-color: $light-blue !default;
+$weapsel-deployed-notch-color: $light-blue !default;
+$weapsel-notch-width: 4px !default;
+$weapsel-notch-color: $white !default;

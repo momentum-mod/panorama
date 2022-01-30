@@ -1,0 +1,81 @@
+@use '../config'as *;
+@use '../abstract/mixin';
+
+.weaponselection {
+	$root: &;
+
+	// TODO: heavy top margin to separate from mapinfo, as we dont have a center-right hud space.
+	// Ideally this should be absolute layouted.
+	margin: 250px 0 5px 0;
+	flow-children: up;
+	width: 350px;
+	height: fit-children;
+	align: right center;
+
+	opacity: 1;
+	transition: opacity 0.3s ease-out 3.5s;
+	
+	&--fadeout {
+		transition-duration: 0s;
+		opacity: 0;
+	}
+
+	&__wrapper {
+		flow-children: left;
+		margin-top: 4px;
+		margin-bottom: 4px;
+		width: fit-children;
+		height: fit-children;
+		align: right center;
+		padding-left: 8px; // some extra padding for deployed gradient
+
+		transform: translatex($weapsel-notch-width); // hide notch till deployed
+		transition: transform 0.15s ease-out 0s;
+
+		&--deployed {
+			background-color: $weapsel-deployed-background-color;
+			transform: translatex(0);
+
+			& #{$root}__weplabel {
+				color: $weapsel-deployed-name-color;
+			}
+			& #{$root}__notch {
+				background-color: $weapsel-deployed-notch-color;
+			}
+		}
+	}
+
+	&__weplabel {
+		@include mixin.font-styles($use-header: true);
+		font-size: $weapsel-name-font-size;
+		text-align: right;
+		text-overflow: clip;
+		color: $weapsel-name-color;
+
+		padding: 6px;
+	}
+
+	&__keybind {
+		@include mixin.font-styles($use-header: $button-use-header-font, $light-header: $button-light-header-font);
+		font-size: $button-font-size;
+		text-align: center;
+		align: center center;
+		text-overflow: ellipsis;
+		width: height-percentage(100%);
+
+		color: $button-text-color;
+		background-color: $button-background;
+		border: $button-border;
+		border-radius: $button-radius;
+		text-shadow: $button-text-shadow;
+		box-shadow: $button-shadow;
+
+		margin-right: 6px;
+	}
+
+	&__notch {
+		background-color: $weapsel-notch-color;
+		width: $weapsel-notch-width;
+		height: 100%;
+	}
+}
