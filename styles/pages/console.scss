@@ -60,10 +60,11 @@
 		vertical-align: center;
 		font-size: 30px;
 	}
-}
 
-ConsoleInput {
-	font-size: $font-default-size;
-	text-overflow: clip;
-	white-space: nowrap;
+	&__input {
+		font-family: $font-monospace;
+		font-size: $font-default-size;
+		text-overflow: clip;
+		white-space: nowrap;
+	}
 }

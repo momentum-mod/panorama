@@ -65,7 +65,7 @@ TextEntryAutocomplete
 	overflow: squish scroll;
 	z-index: 0;
 	opacity: 1.0;
-	max-height: 200px;
+	max-height: 220px;
 
 	box-shadow: fill #00000066 -3px -3px 6px 6px;
 
@@ -77,6 +77,7 @@ TextEntryAutocomplete
 		color: #ffffff99;
 		background-color: #3d4448;
 
+		font-family: $font-monospace;
 		font-size: $textentry-font-size;
 		font-weight: normal;
 		z-index: 0;
