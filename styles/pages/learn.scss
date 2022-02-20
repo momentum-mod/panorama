@@ -1,0 +1,235 @@
+@use '../config' as *;
+@use '../abstract/mixin';
+@use 'sass:color';
+
+.learn {
+	flow-children: down;
+	padding: 30px 100px; // I can't decide how to do page padding, would probs like 100px horiz everywhere
+	// but map sel, but map sel padding is stupid so
+
+	&__header {
+		width: fit-children;
+		flow-children: down;
+		margin-bottom: 16px;
+	}
+
+	&__main {
+		flow-children: right;
+		width: 100%;
+		height: 100%;
+	}
+
+	&__left {
+		flow-children: down;
+		width: 50%;
+		border-right: 1px solid rgba(255, 255, 255, 0.05);
+	}
+
+	&__right {
+		flow-children: down;
+		width: 50%;
+
+		padding-left: 16px;
+
+		&--hidden {
+			visibility: collapse;
+		}
+	}
+
+	&__list-container {
+		width: 100%;
+		height: fill-parent-flow(1);
+	}
+}
+
+.learn-header {
+	&__title-bar {
+		width: 100%;
+		flow-children: right;
+		margin-bottom: 12px;
+	}
+
+	&__modes-bar {
+		flow-children: right;
+	}
+
+	&__modes-tab {
+		padding-left: 2px;
+		padding-right: 2px;
+	}
+
+	&__title {
+		@include mixin.font-styles($use-header: true);
+		font-size: 36px;
+
+		margin-right: 16px;
+	}
+
+	&__search {
+		width: fill-parent-flow(1);
+	}
+}
+
+.learn-list {
+	flow-children: down;
+
+	width: 100%;
+	height: 100%;
+	padding-right: 16px;
+	overflow: squish scroll;
+	visibility: collapse;
+
+	& VerticalScrollBar {
+		width: 2px;
+	}
+
+	&--active {
+		visibility: visible;
+	}
+
+	&__section {
+		flow-children: down;
+		width: 100%;
+		height: fit-children;
+		margin-bottom: 16px;
+	}
+
+	&__header {
+		@include mixin.font-styles($use-header: true);
+		font-size: 30px;
+		margin-bottom: 4px;
+	}
+
+	&__lesson {
+		flow-children: right;
+		width: 100%;
+		padding: 6px;
+		margin-bottom: 4px;
+		border-radius: 2px;
+
+		transition: background-color 0.1s ease-in-out 0s;
+
+		.RadioBox {
+			visibility: collapse;
+		}
+
+		&:hover {
+			background-color: rgba(255, 255, 255, 0.07);
+		}
+
+		&:selected {
+			background-color: rgba($mid-blue, 0.3);
+
+			&:hover {
+				background-color: color.scale(rgba($mid-blue, 0.3), $lightness: 30%);
+			}
+		}
+
+		&--odd {
+			background-color: rgba(255, 255, 255, 0.04);
+		}
+
+		&--even {
+			background-color: rgba(202, 202, 202, 0.04);
+		}
+	}
+
+	&__name {
+		font-size: 16px;
+		padding: 4px;
+
+		vertical-align: center;
+	}
+
+	&__completion-icon {
+		height: 100%;
+		width: height-percentage(100%);
+		padding: 4px;
+		horizontal-align: right;
+
+		&--hidden {
+			visibility: collapse;
+		}
+	}
+}
+
+.learn-info,
+.learn-guide {
+	padding: 16px;
+	background-color: rgba(109, 110, 112, 0.3);
+	box-shadow: 0 0 16px rgba(0, 0, 0, 0.25);
+}
+
+.learn-info {
+	flow-children: right;
+
+	&__left {
+		flow-children: down;
+		width: fill-parent-flow(1);
+		margin-right: 4px;
+	}
+
+	&__right {
+		flow-children: down;
+		width: fit-children;
+		margin-left: 4px;
+	}
+
+	&__title {
+		@include mixin.font-styles($use-header: true);
+		font-size: 28px;
+	}
+
+	&__completion-status {
+		horizontal-align: right;
+		vertical-align: center;
+		color: $green;
+		padding-right: 8px;
+		visibility: collapse;
+
+		&--complete {
+			color: $green;
+			visibility: visible;
+		}
+	}
+
+	&__description {
+		margin-top: 8px;
+		width: 400px;
+	}
+
+	&__image {
+		height: 280px;
+		width: height-percentage(133.333%);
+		background-color: rgba(202, 202, 202, 0.04);
+		margin-bottom: 8px;
+	}
+
+	&__play-button {
+		height: 40px;
+		width: 100%;
+	}
+}
+
+.learn-guide {
+	flow-children: down;
+	width: 100%;
+	margin-top: 16px;
+
+	&--hidden {
+		visibility: collapse;
+	}
+	&__title {
+		@include mixin.font-styles($use-header: true);
+		font-size: 28px;
+	}
+	&__description {
+		margin-top: 8px;
+		overflow: squish scroll;
+		padding-right: 4px;
+
+		& VerticalScrollBar {
+			width: 2px;
+		}
+	}
+}
