@@ -21,8 +21,15 @@ ChaosHud,
 	flow-children: down;
 }
 
+#HudNotify {
+	horizontal-align: left;
+	vertical-align: top;
+	flow-children: down;
+}
+
 #HudTopCenter {
 	horizontal-align: center;
+	width: 100%;
 	opacity: 1.0;
 	flow-children: down;
 }

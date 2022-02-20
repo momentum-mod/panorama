@@ -5,7 +5,7 @@
 
 	<ChaosHud hittest="false">
 		<!-- Non-interactive HUD elements have hit test disabled for efficiency -->
-		
+
 		<!-- In world UI is first to make sure it shows up behind all "screen-looking" UI -->
 		<Panel id="HudInWorld" hittest="false" hittestchildren="false">
 			<MomHudGhostEntities />
@@ -19,20 +19,8 @@
 
 		</Panel>
 
-		<!-- HUD anchored to top center of screen, laid out vertically top-to-bottom
-		-  NOTE: Not really set up properly - HudTeamCounter should dynamically move
-		-        between HudTopCenter and HudBottomCenter, but instead it just moves
-		-        itself via code.  So nothing can go in here that should appear
-		-        while HudTeamCounter is visible
-		-->
-		<Panel id="HudTopCenter" hittest="false" hittestchildren="false">
-
-		</Panel>
-
 		<!-- HUD anchored to top-left corner of screen, laid out vertically top-to-bottom -->
 		<Panel id="HudTopLeft" hittest="false" hittestchildren="false">
-			<Frame src="file://{resources}/layout/hud/consolenotify.xml"/>
-
 			<HudTrickTracker />
 		</Panel>
 
@@ -71,17 +59,32 @@
 			<ChaosBackbufferImagePanel class="full" />
 		</ChaosHudBlurTarget>
 
+		<!-- HUD anchored to top center of screen, laid out vertically top-to-bottom
+		-  NOTE: Not really set up properly - HudTeamCounter should dynamically move
+		-        between HudTopCenter and HudBottomCenter, but instead it just moves
+		-        itself via code.  So nothing can go in here that should appear
+		-        while HudTeamCounter is visible
+		-->
+		<Panel id="HudTopCenter" hittest="false">
+			<MomHudSpectate id="Spectator" />
+		</Panel>
+
 		<TrickList id="TrickList" />
 
 		<!-- This container is here so we can move the leaderboard in and out of it during the end-of-match sequence -->
 		<Panel id="LeaderboardsContainer" class="full-width full-height" hittest="false" hittestchildren="true">
 			<HudLeaderboards id="Leaderboards" hittest="true" />
 		</Panel>
-		
+
 		<!-- Make sure these are at the bottom to get the z-order right -->
 		<ChaosPopupManager id="PopupManager" onpopupsdismissed="" />
 		<ContextMenuManager id="ContextMenuManager" />
 		<ChaosTooltipManager id="TooltipManager" hittest="false" />
+
+		<!-- Console notifications should always draw above anything else! -->
+		<Panel id="HudNotify" hittest="false" hittestchildren="false">
+			<Frame src="file://{resources}/layout/hud/consolenotify.xml"/>
+		</Panel>
 
 	</ChaosHud>
 </root>
