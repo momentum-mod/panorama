@@ -134,6 +134,7 @@
 		width: $tab-border-width;
 		height: 100%;
 		background-color: $tab-border-color;
+		border-bottom: $tab-lower-border-height solid $tab-lower-gap-color;
 	}
 
 	&__text {
