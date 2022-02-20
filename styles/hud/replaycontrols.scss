@@ -1,0 +1,49 @@
+@use '../config' as *;
+@use '../abstract/mixin';
+
+.replaycontrols {
+	transition: opacity 0.5s ease-in-out 0s;
+	opacity: 0.5;
+	padding: 12px;
+	background-color: rgba(0,0,0,0.6);
+	width: 480px;
+	margin: 40px;
+	flow-children: down;
+
+	&:hover {
+		opacity: 1;
+	}
+
+	&__bigbutton {
+		width: fill-parent-flow( 1.0 );
+		flow-children: none;
+	}
+
+	&__playicon {
+		visibility: visible;
+		ToggleButton:selected > & {
+			visibility: collapse;
+		}
+	}
+
+	&__pauseicon {
+		visibility: collapse;
+		ToggleButton:selected > & {
+			visibility: visible;
+		}
+	}
+
+	&__holdbutton:active {
+		@include mixin.button-gradient($color: 'blue');
+	}
+
+	&__gototick {
+		width: 120px;
+		horizontal-align: right;
+	}
+
+	& #SliderThumb, #SliderThumb2 {
+		width: 0.33 * $slider-thumb-width;
+		border-radius: 0.5 * $slider-thumb-radius;
+	}
+}
