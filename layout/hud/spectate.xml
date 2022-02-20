@@ -1,0 +1,50 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss"/>
+	</styles>
+	<scripts>
+		<include src="file://{resources}/scripts/hud/spectate.js" />
+	</scripts>
+	<MomHudSpectate class="full-width flow-down">
+		<Panel class="spectate">
+			<Panel class="spectate__status">
+				<Panel class="horizontal-align-left flow-right" id="IndicatorSpectating">
+					<Image src="file://{images}/chat/spectatingIcon.svg" textureheight="64" scaling="stretch-to-cover-preserve-aspect" />
+					<Label class="text-h4" text="SPECTATING" />
+				</Panel>
+				<Panel class="horizontal-align-left flow-right" id="IndicatorWatchingReplay">
+					<Image src="file://{images}/replay-open.svg" textureheight="64" scaling="stretch-to-cover-preserve-aspect" />
+					<Label class="text-h4" text="WATCHING REPLAY" />
+				</Panel>
+			</Panel>
+			<Panel class="spectate__playerinfo">
+				<Panel class="horizontal-align-center" >
+					<Label class="text-h4" text="{s:spec_target}" id="TargetName" />
+				</Panel>
+				<!-- TODO: Put playercard here somehow -->
+			</Panel>
+			<Panel class="spectate__interface">
+				<Panel class="flow-right horizontal-align-right">
+					<Label class="text-h6 vertical-align-center" text="Press CTRL to toggle mouse input!" />
+					<Button class="button ml-3" onactivate="GameInterfaceAPI.ConsoleCommand('spec_mode');">
+						<Label class="button__text" text="{s:next_spec_mode}" />
+					</Button>
+					<Button class="button ml-3" id="PrevPlayer" onactivate="GameInterfaceAPI.ConsoleCommand('spec_prev');">
+						<Image class="button__icon" src="file://{images}/right-arrow.svg" textureheight="32" orientation="180" />
+					</Button>
+					<Button class="button ml-3" id="NextPlayer" onactivate="GameInterfaceAPI.ConsoleCommand('spec_next');">
+						<Image class="button__icon" src="file://{images}/right-arrow.svg" textureheight="32" />
+					</Button>
+					<Button class="button ml-3" id="ToggleReplayControls" onactivate="HudSpectate.panels.replayControls.ToggleHiddenState()" >
+						<Image class="button__icon" src="file://{images}/topnav/settings.svg" textureheight="32" />
+					</Button>
+					<Button class="button button--red ml-3" onactivate="GameInterfaceAPI.ConsoleCommand('mom_spectate_stop');">
+						<Image class="button__icon" src="file://{images}/close.svg"/>
+					</Button>
+				</Panel>
+			</Panel>
+		</Panel>
+		<MomHudReplayControls id="ReplayControls" />
+	</MomHudSpectate>
+
+</root>
