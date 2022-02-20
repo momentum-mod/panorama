@@ -1,7 +1,9 @@
 'use_strict';
 
 class RangeColorProfileNamePopup {
+	/** @type {TextEntry} @static */
 	static textEntry = $('#RangeColorProfileName');
+	/** @type {Label} @static */
 	static invalidNameLabel = $('#InvalidNameLabel');
 	static profileNames = [];
 

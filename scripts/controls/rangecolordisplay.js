@@ -2,7 +2,9 @@
 
 class RangeColorDisplay {
     static colorDisplay = $('#ColorDisplay');
+	/** @type {TextEntry} @static */
     static minEntry = $('#MinEntry');
+	/** @type {TextEntry} @static */
     static maxEntry = $('#MaxEntry');
 
     // need to forward the colordisplay panelevent to parent

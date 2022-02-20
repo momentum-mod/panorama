@@ -24,15 +24,24 @@ class Lobby {
 
 	static isRefreshHovered;
 
+	/** @type {TextEntry} @static */
 	static lobbySearch = $('#LobbySearch');
+	/** @type {Button} @static */
 	static lobbySearchClearButton = $('#LobbySearchClearButton');
+	/** @type {Panel} @static */
 	static lobbyList = $('#LobbyList');
+	/** @type {Panel} @static */
 	static listContainer = $('#LobbyListContainer');
+	/** @type {Panel} @static */
 	static detailsContainer = $('#LobbyDetailsContainer');
 	static lobbyDetailsType = $('#LobbyDetailsType');
+	/** @type {Label} @static */
 	static lobbyDetailsTitle = $('#LobbyDetailsTitle');
+	/** @type {Label} @static */
 	static lobbyDetailsPlayerCount = $('#LobbyDetailsPlayerCount');
+	/** @type {Button} @static */
 	static lobbyDetailsSettingsButton = $('#LobbyDetailsSettingsButton');
+	/** @type {Panel} @static */
 	static lobbyDetailsMemberList = $('#LobbyDetailsMemberList');
 
 	static {

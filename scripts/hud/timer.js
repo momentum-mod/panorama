@@ -22,7 +22,9 @@ const FADEOUT_CLASS = 'hudtimer__comparison--fadeout';
 const FADEOUT_START_CLASS = 'hudtimer__comparison--fade-start';
 
 class HudTimer {
+	/** @type {Label} @static */
 	static timeLabel = $('#HudTimerTime');
+	/** @type {Label} @static */
 	static compLabel = $('#HudTimerComparison');
 
 	static prevZone = 0;

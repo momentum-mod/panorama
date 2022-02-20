@@ -159,13 +159,17 @@ class SpeedometerDetailObject {
 	}
 }
 class Speedometers {
+	/** @type {Panel} @static */
 	static mainPanel = $('#Speedometers');
 	static gamemode = DEFAULT_GAMEMODE;
 	static keyvalues = null;
 	static objectList = {};
 	
+	/** @type {Button} @static */
 	static addButton = $('#AddSpeedometerBtn');
+	/** @type {Button} @static */
 	static resetButton = $('#ResetSpeedometersBtn');
+	/** @type {Button} @static */
 	static discardButton = $('#DiscardSpeedometersBtn');
 
 	static {
@@ -525,12 +529,16 @@ class RangeColorProfileObject {
 	}
 }
 class RangeColorProfiles {
+	/** @type {Panel} @static */
 	static mainPanel = $('#SpeedometerColorProfiles');
 	static keyvalues = null;
 	static objectList = {};
 	
+	/** @type {Button} @static */
 	static addButton = $('#AddColorProfileBtn');
+	/** @type {Button} @static */
 	static resetButton = $('#ResetColorProfilesBtn');
+	/** @type {Button} @static */
 	static discardButton = $('#DiscardColorProfilesBtn');
 
 	static {

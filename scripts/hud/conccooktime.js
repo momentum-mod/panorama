@@ -1,7 +1,9 @@
 'use strict';
 
 class ConcCook {
+	/** @type {ProgressBar} @static */
 	static cookMeter = $('#ConcCookMeter');
+	/** @type {Label} @static */
 	static cookLabel = $('#ConcCookTime');
 
 	static onCookUpdate(time, percentage) {

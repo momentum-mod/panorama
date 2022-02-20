@@ -71,7 +71,10 @@ class StrafeSync {
 
 	static {
 		$.RegisterEventHandler('ChaosHudProcessInput', $.GetContextPanel(), this.onUpdate.bind(this));
+		
+		/** @type {ProgressBar} @static */
 		this.bar = $('#SyncProgressBar');
+		/** @type {Label} @static */
 		this.label = $('#SyncLabel');
 	}
 }

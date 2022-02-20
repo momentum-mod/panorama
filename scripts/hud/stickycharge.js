@@ -7,8 +7,11 @@ const UnitsType = {
 };
 
 class StickyCharge {
+	/** @type {ProgressBar} @static */
 	static chargeMeter = $('#StickyChargeMeter');
+	/** @type {Label} @static */
 	static chargeSpeed = $('#StickyChargeSpeed');
+	/** @type {Panel} @static */
 	static container = $('#StickyChargeContainer');
 
 	static OnChargeUpdate( speed, percentage ) {

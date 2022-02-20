@@ -2,25 +2,24 @@
 
 class Console
 {
-	static onMoveDragStart(source, callback)
-	{
+	/** @type {StaticConsoleMessageTarget} @static */
+	static messageTarget = $('#ConsoleMessageTarget');
+
+	static onMoveDragStart(_source, callback) {
 		callback.displayPanel = $.GetContextPanel();
 		callback.removePositionBeforeDrop = false;
 	}
 
-	static toggle()
-	{
+	static toggle() {
 		$.DispatchEvent('ToggleConsole');
 	}
 
-	static onNewMessages()
-	{
-		$('#ConsoleMessageTarget').ScrollToBottom();
+	static onNewMessages() {
+		this.messageTarget.ScrollToBottom();
+	}
+
+	static {
+		$.RegisterEventHandler('DragStart', $('#MoveDragArea'), Console.onMoveDragStart);
+		$.RegisterEventHandler('NewConsoleMessages', 'ConsoleMessageTarget', Console.onNewMessages.bind(this));
 	}
 }
-
-(function()
-{
-	$.RegisterEventHandler('DragStart', $('#MoveDragArea'), Console.onMoveDragStart);
-	$.RegisterEventHandler('NewConsoleMessages', 'ConsoleMessageTarget', Console.onNewMessages);
-})();

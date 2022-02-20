@@ -7,6 +7,7 @@ const TimerState = {
 };
 
 class HudStatus {
+	/** @type {Label} @static */
 	static label = $('#HudStatusLabel');
 
 	static curZone = -1;
