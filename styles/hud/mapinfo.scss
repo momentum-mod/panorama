@@ -2,7 +2,7 @@
 @use '../abstract/mixin';
 
 .hudmapinfo {
-	margin: 5px;
+	margin: 0 5px 5px 5px;
 	flow-children: down;
 	width: 350px;
 	height: fit-children;

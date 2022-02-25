@@ -53,7 +53,6 @@
 		<Panel id="HudLowerLeft" hittest="false" hittestchildren="true">
 			<HudStaticMenu />
 			<MomHudChat />
-			<MomHudVersionInfo />
 		</Panel>
 
 		<!-- Anchored on lower-right corner, laid out from top to bottom -->
@@ -63,6 +62,7 @@
 
 		<!-- Anchored in top right corner of screen, laid out from top-to-bottom -->
 		<Panel id="HudTopRight" hittest="false" hittestchildren="false">
+			<MomHudVersionInfo />
 			<MomHudMapInfo />
 			<MomHudWeaponSelection />
 		</Panel>
