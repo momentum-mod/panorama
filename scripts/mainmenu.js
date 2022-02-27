@@ -1,19 +1,18 @@
 'use strict';
 
-const RunSafeguardType =
-{
-	RUN_SAFEGUARD_PRACTICEMODE : 0,
-	RUN_SAFEGUARD_RESTART : 1,
-	RUN_SAFEGUARD_RESTART_STAGE : 2,
-	RUN_SAFEGUARD_SAVELOC_TELE: 3,
-	RUN_SAFEGUARD_CHAT_OPEN : 4,
-	RUN_SAFEGUARD_MAP_CHANGE : 5,
-	RUN_SAFEGUARD_QUIT_TO_MENU : 6,
-	RUN_SAFEGUARD_QUIT_GAME : 7,
+const RunSafeguardType = {
+	PRACTICEMODE : 0,
+	RESTART : 1,
+	RESTART_STAGE : 2,
+	SAVELOC_TELE: 3,
+	CHAT_OPEN : 4,
+	MAP_CHANGE : 5,
+	QUIT_TO_MENU : 6,
+	QUIT_GAME : 7,
 
-	RUN_SAFEGUARD_COUNT : 8,
+	COUNT : 8,
 
-	RUN_SAFEGUARD_INVALID : -1
+	INVALID : -1
 };
 
 //--------------------------------------------------------------------------------------------------
@@ -319,20 +318,20 @@ class MainMenuController {
 
 	static onSafeguardDisconnect() {
 		UiToolkitAPI.ShowGenericPopupOkCancel(
-			$.Localize( '#MOM_MB_Safeguard_Map_Quit_ToMenu_Title' ),
+			$.Localize('#MOM_MB_Safeguard_Map_Quit_ToMenu_Title'),
 			"Leaving the map will cancel your timer, are you sure you want to quit?\n\n<span class='text-sm text-italic'>(You can turn this off in Settings → Gameplay → Safeguards)</span>",
 			'warning-popup',
-			() => $.DispatchEvent( 'Safeguard_Response', RunSafeguardType.RUN_SAFEGUARD_QUIT_TO_MENU ),
+			() => $.DispatchEvent('Safeguard_Response', RunSafeguardType.QUIT_TO_MENU),
 			() => {}
 		);
 	}
 
 	static onSafeguardQuit() {
 		UiToolkitAPI.ShowGenericPopupOkCancel(
-			$.Localize( '#MOM_MB_Safeguard_Map_Quit_Game_Title' ),
+			$.Localize('#MOM_MB_Safeguard_Map_Quit_Game_Title'),
 			"Quitting the game will cancel your timer, are you sure you want to quit?\n\n<span class='text-sm text-italic'>(You can turn this off in Settings → Gameplay → Safeguards)</span>",
 			'warning-popup',
-			() => $.DispatchEvent( 'Safeguard_Response', RunSafeguardType.RUN_SAFEGUARD_QUIT_GAME ),
+			() => $.DispatchEvent('Safeguard_Response', RunSafeguardType.QUIT_GAME),
 			() => {}
 		);
 	}
