@@ -15,6 +15,15 @@ const RunSafeguardType = {
 	INVALID : -1
 };
 
+const GameUIState = {
+	INVALID: 0,
+	LOADINGSCREEN: 1,
+	INGAME: 2,
+	MAINMENU: 3,
+	PAUSEMENU: 4,
+	INTROMOVIE: 5
+};
+
 //--------------------------------------------------------------------------------------------------
 // Header Tab navigation and xml loading
 //--------------------------------------------------------------------------------------------------
@@ -313,6 +322,11 @@ class MainMenuController {
 	}
 
 	static onQuitButtonPressed() {
+		if (GameInterfaceAPI.GetGameUIState() === GameUIState.PAUSEMENU) {
+			GameInterfaceAPI.ConsoleCommand('disconnect');
+			this.onHomeButtonPressed();
+			return;
+		}
 		UiToolkitAPI.ShowGenericPopupTwoOptionsBgStyle('Quit', 'Are you sure you want to quit?', 'warning-popup', 'Quit', MainMenuController.quitGame, 'Return', () => {}, 'blur');
 	}
 
