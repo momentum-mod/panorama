@@ -364,9 +364,9 @@ class MainMenuController {
 		GameInterfaceAPI.ConsoleCommand('quit');
 	}
 
-	static onEscapeKeyPressed(eSource, nRepeats, focusPanel) {
+	static onEscapeKeyPressed(_eSource, _nRepeats, _focusPanel) {
 		// Resume game in pause menu mode, OTHERWISE close the active menu menu page
-		if ($.GetContextPanel().HasClass('MainMenuRootPanel--PauseMenuMode')) {
+		if (GameInterfaceAPI.GetGameUIState() === GameUIState.PAUSEMENU) {
 			$.DispatchEvent('ChaosMainMenuResumeGame');
 		} else {
 			MainMenuController.onHomeButtonPressed();
