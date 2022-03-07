@@ -135,15 +135,14 @@ class Learn {
 
 	static launchMapThenTeleport() {
 		const onMapLoad = () => {
-			$.UnregisterForUnhandledEvent('ChaosHudProcessInput', onLoadHandle);
+			$.UnregisterForUnhandledEvent('ChaosLevelInitPostEntity', onLoadHandle);
 
 			if (MapCacheAPI.GetMapName() !== this.currentLessonData['Map'])
 				$.Warning(`Learn: This is not the right map... we meant to load ${this.currentLessonData['Map']}, got ${MapCacheAPI.GetMapName()}!`);
 			else this.teleportToLessonStart();
 		};
 
-		// Not the ideal event for this, but it works, since it gets unregister as soon as it gets called once.
-		const onLoadHandle = $.RegisterForUnhandledEvent('ChaosHudProcessInput', onMapLoad);
+		const onLoadHandle = $.RegisterForUnhandledEvent('ChaosLevelInitPostEntity', onMapLoad);
 
 		const map = this.currentLessonData['Map'];
 
