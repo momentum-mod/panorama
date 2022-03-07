@@ -1,7 +1,7 @@
 'use strict';
 
 // File to use if loading normally
-const LEARN_FILE_PATH = 'resource/learn.kv';
+const LEARN_FILE_PATH = 'resource/learn.vdf';
 
 // Spreadsheet URL to use if loading in -dev
 const DATA_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTlH08v-dqtGl49T0Eslb56o-Y-xp6kOwhEo4Bwx387AxbpGHFw7AUBeBQMQdwEBI9g4gBBnGmUZ5EW/pub?output=csv';
@@ -196,7 +196,7 @@ class Learn {
 	}
 
 	static loadFromKVFile() {
-		this.lessonData = $.LoadKeyValuesFile('resource/learn.kv');
+		this.lessonData = $.LoadKeyValuesFile(LEARN_FILE_PATH);
 	}
 
 	// Everything below here can be removed after we're done with loading from sheet
