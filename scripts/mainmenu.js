@@ -24,6 +24,8 @@ class MainMenuController {
 
 		$.RegisterForUnhandledEvent('ReloadBackground', MainMenuController.setMainMenuBackground);
 
+		$.RegisterForUnhandledEvent('OnMomentumQuitPrompt', MainMenuController.onQuitPrompt.bind(this));
+
 		$.RegisterEventHandler('Cancelled', $.GetContextPanel(), MainMenuController.onEscapeKeyPressed);
 
 		// Close the map selector when a map is successfully loaded
@@ -295,7 +297,13 @@ class MainMenuController {
 			this.onHomeButtonPressed();
 			return;
 		}
-		UiToolkitAPI.ShowGenericPopupTwoOptionsBgStyle('Quit', 'Are you sure you want to quit?', 'warning-popup', 'Quit', MainMenuController.quitGame, 'Return', () => {}, 'blur');
+		this.onQuitPrompt();
+	}
+
+	static onQuitPrompt(toDesktop = true) {
+		if (!toDesktop) return; // currently dont handle disconnect prompts
+		$.DispatchEvent('ChaosMainMenuPauseGame'); // make sure game is paused so we can see the popup if hit from a keybind in-game
+		UiToolkitAPI.ShowGenericPopupTwoOptionsBgStyle('Quit', 'Are you sure you want to quit?', 'warning-popup', 'Quit', this.quitGame, 'Return', () => {}, 'blur');
 	}
 
 	static onSafeguardDisconnect() {
