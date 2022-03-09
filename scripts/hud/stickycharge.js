@@ -1,9 +1,9 @@
 'use strict';
 
-const UnitsType = {
-	None: 0,
+const STICKY_CHARGE_UNITS_TYPE = {
+	NONE: 0,
 	UPS: 1,
-	Percent: 2
+	PERCENT: 2
 };
 
 class StickyCharge {
@@ -19,10 +19,10 @@ class StickyCharge {
 
 		let speedText;
 		switch(chargeUnitType) {
-			case UnitsType.UPS:
+			case STICKY_CHARGE_UNITS_TYPE.UPS:
 				speedText = `${Math.floor(speed)}u/s`;
 				break;
-			case UnitsType.Percent:
+			case STICKY_CHARGE_UNITS_TYPE.PERCENT:
 				speedText = `${Math.floor(percentage * 100)}%`;
 				break;
 			default:

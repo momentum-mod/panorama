@@ -1,6 +1,6 @@
 'use strict';
 
-const LeaderboardEntryType = {
+const LEADERBOARD_ENTRY_TYPE = {
 	INVALID: -1,
 	LOCAL: 0,
 	ONLINE: 1,
@@ -19,14 +19,14 @@ class LeaderboardEntry {
 
 		if (!timeData) return;
 
-		if (timeData.type === LeaderboardEntryType.LOCAL || timeData.type === LeaderboardEntryType.ONLINE_CACHED) {
+		if (timeData.type === LEADERBOARD_ENTRY_TYPE.LOCAL || timeData.type === LEADERBOARD_ENTRY_TYPE.ONLINE_CACHED) {
 			const index = $.GetContextPanel().GetAttributeInt('item_index', 0);
 			$.GetContextPanel().SetDialogVariableInt('rank', index + 1);
 		}
 
 		LeaderboardEntry.avatarPanel.steamid = timeData.steamID;
 
-		$.GetContextPanel().SetHasClass('leaderboard-entry--localplayer', timeData.steamID === UserAPI.GetXUID() && timeData.type === LeaderboardEntryType.ONLINE);
+		$.GetContextPanel().SetHasClass('leaderboard-entry--localplayer', timeData.steamID === UserAPI.GetXUID() && timeData.type === LEADERBOARD_ENTRY_TYPE.ONLINE);
 	}
 
 	static tryDeleteReplay(index) {
@@ -45,7 +45,7 @@ class LeaderboardEntry {
 
 		let items = [];
 		const index = $.GetContextPanel().GetAttributeInt('item_index', 0);
-		const isValid = timeData.type !== LeaderboardEntryType.INVALID;
+		const isValid = timeData.type !== LEADERBOARD_ENTRY_TYPE.INVALID;
 		if (isValid) {
 			items.push({
 				label: $.Localize('#MOM_Leaderboards_WatchReplay'),
@@ -57,7 +57,7 @@ class LeaderboardEntry {
 			});
 		}
 
-		if (timeData.type === LeaderboardEntryType.LOCAL || timeData.type === LeaderboardEntryType.ONLINE_CACHED) {
+		if (timeData.type === LEADERBOARD_ENTRY_TYPE.LOCAL || timeData.type === LEADERBOARD_ENTRY_TYPE.ONLINE_CACHED) {
 			$.GetContextPanel().SetDialogVariableInt('rank', index + 1);
 			items.push({
 				label: $.Localize('#MOM_Leaderboards_DeleteReplay'),
@@ -69,7 +69,7 @@ class LeaderboardEntry {
 			});
 		}
 
-		if (timeData.type === LeaderboardEntryType.ONLINE || timeData.type == LeaderboardEntryType.ONLINE_CACHED || !isValid) {
+		if (timeData.type === LEADERBOARD_ENTRY_TYPE.ONLINE || timeData.type == LEADERBOARD_ENTRY_TYPE.ONLINE_CACHED || !isValid) {
 			items.push({
 				label: 'Steam Profile',
 				icon: 'file://{images}/steam.svg',

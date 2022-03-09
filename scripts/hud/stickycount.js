@@ -1,10 +1,10 @@
 'use strict';
 
-const StickyStateType = {
-	NoSticky: 0,
-	Arming: 1,
-	Armed: 2,
-	Blocked: 3
+const STICKY_STATE_TYPE = {
+	NOSTICKY: 0,
+	ARMING: 1,
+	ARMED: 2,
+	BLOCKED: 3
 };
 
 // in order, according to state types
@@ -20,16 +20,16 @@ class StickyCount {
 	static onStickyPanelStateChanged(stickyPanel, state, prevstate) {
         stickyPanel.AddClass(StickyPanelClasses[state]);
 		switch(state) {
-			case StickyStateType.Armed:
+			case STICKY_STATE_TYPE.ARMED:
 				// keep arming class to have a smooth transition
-				if (prevstate !== StickyStateType.Arming)
+				if (prevstate !== STICKY_STATE_TYPE.ARMING)
 					stickyPanel.RemoveClass(StickyPanelClasses[prevstate]);
 				break;
-			case StickyStateType.Arming:
-			case StickyStateType.Blocked:
+			case STICKY_STATE_TYPE.ARMING:
+			case STICKY_STATE_TYPE.BLOCKED:
 				stickyPanel.RemoveClass(StickyPanelClasses[prevstate]);
 				break;
-			case StickyStateType.NoSticky:
+			case STICKY_STATE_TYPE.NOSTICKY:
 			default:
                 // remove all classes except the no sticky one
 				StickyPanelClasses.filter(spClass => spClass !== StickyPanelClasses[0])

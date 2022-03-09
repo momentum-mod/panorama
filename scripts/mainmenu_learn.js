@@ -27,7 +27,7 @@ class Learn {
 	static modes = {};
 	static {
 		// Create modes obj in form
-		Object.values(GameModes).forEach((modeData) => {
+		Object.values(GAMEMODE).forEach((modeData) => {
 			this.modes[modeData.shortName] = {
 				button: $(`#${modeData.shortName}Radio`),
 				list: $.CreatePanel('Panel', this.panels.listContainer, `${modeData.shortName}List`, { class: 'learn-list' })

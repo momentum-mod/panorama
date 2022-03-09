@@ -11,34 +11,34 @@
 	<Leaderboards class="leaderboards" acceptsinput="true" acceptsfocus="true" hittest="true" hittestchildren="true">
 		<Panel class="leaderboard-filter-buttons online">
 			<Panel class="tabs">
-				<RadioButton id="TimesListGlobal" class="tabs__tab" group="TimeTypeBar" selected="true" onactivate="Leaderboards.setSelectedTimesList(TimesLists.LIST_GLOBAL);">
+				<RadioButton id="TimesListGlobal" class="tabs__tab" group="TimeTypeBar" selected="true" onactivate="Leaderboards.setSelectedTimesList(TIME_LIST_TYPE.LIST_GLOBAL);">
 					<Label class="tabs__text" text="Global"/>
 				</RadioButton>
-				<RadioButton id="TimesListLocal" class="tabs__tab" group="TimeTypeBar" onactivate="Leaderboards.setSelectedTimesList(TimesLists.LIST_LOCAL);">
+				<RadioButton id="TimesListLocal" class="tabs__tab" group="TimeTypeBar" onactivate="Leaderboards.setSelectedTimesList(TIME_LIST_TYPE.LIST_LOCAL);">
 					<Label class="tabs__text" text="Local"/>
 				</RadioButton>
-				<RadioButton id="TimesListLobby" class="tabs__tab" group="TimeTypeBar" onactivate="Leaderboards.setSelectedTimesList(TimesLists.LIST_LOBBY);" onmouseover="Leaderboards.showLobbyTooltip();" onmouseout="UiToolkitAPI.HideTextTooltip();">
+				<RadioButton id="TimesListLobby" class="tabs__tab" group="TimeTypeBar" onactivate="Leaderboards.setSelectedTimesList(TIME_LIST_TYPE.LIST_LOBBY);" onmouseover="Leaderboards.showLobbyTooltip();" onmouseout="UiToolkitAPI.HideTextTooltip();">
 					<Label class="tabs__text" text="Lobby"/>
 				</RadioButton>
 			</Panel>
 
 			<Panel id="FilterButtonsSubtype" class="leaderboard-filter-buttons__subtypes">
 				<Panel class="leaderboard-filter-buttons__local tabs">
-					<RadioButton id="LocalTypeRuns" class="tabs__tab" group="LocalTimeTypeBar" selected="true" onactivate="Leaderboards.setSelectedListType(TimesLists.LIST_LOCAL, ListTypes.TIMES_LOCAL);">
+					<RadioButton id="LocalTypeRuns" class="tabs__tab" group="LocalTimeTypeBar" selected="true" onactivate="Leaderboards.setSelectedListType(TIME_LIST_TYPE.LIST_LOCAL, LEADERBOARD_TYPE.TIMES_LOCAL);">
 						<Label class="tabs__text" text="Your Runs"/>
 					</RadioButton>
-					<RadioButton id="LocalTypeDownloaded" class="tabs__tab" group="LocalTimeTypeBar" onactivate="Leaderboards.setSelectedListType(TimesLists.LIST_LOCAL, ListTypes.TIMES_LOCAL_DOWNLOADED);">
+					<RadioButton id="LocalTypeDownloaded" class="tabs__tab" group="LocalTimeTypeBar" onactivate="Leaderboards.setSelectedListType(TIME_LIST_TYPE.LIST_LOCAL, LEADERBOARD_TYPE.TIMES_LOCAL_DOWNLOADED);">
 						<Label class="tabs__text" text="Downloaded"/>
 					</RadioButton>
 				</Panel>
 				<Panel class="leaderboard-filter-buttons__online tabs">
-					<RadioButton id="OnlineTypeTop10" class="tabs__tab" group="OnlineTimeTypeBar" selected="true" onactivate="Leaderboards.setSelectedListType(TimesLists.LIST_GLOBAL, ListTypes.TIMES_TOP10);">
+					<RadioButton id="OnlineTypeTop10" class="tabs__tab" group="OnlineTimeTypeBar" selected="true" onactivate="Leaderboards.setSelectedListType(TIME_LIST_TYPE.LIST_GLOBAL, LEADERBOARD_TYPE.TIMES_TOP10);">
 						<Label class="tabs__text" text="Top 10"/>
 					</RadioButton>
-					<RadioButton id="OnlineTypeAround" class="tabs__tab" group="OnlineTimeTypeBar" onactivate="Leaderboards.setSelectedListType(TimesLists.LIST_GLOBAL, ListTypes.TIMES_AROUND);">
+					<RadioButton id="OnlineTypeAround" class="tabs__tab" group="OnlineTimeTypeBar" onactivate="Leaderboards.setSelectedListType(TIME_LIST_TYPE.LIST_GLOBAL, LEADERBOARD_TYPE.TIMES_AROUND);">
 						<Label class="tabs__text" text="Around"/>
 					</RadioButton>
-					<RadioButton id="OnlineTypeFriends" class="tabs__tab" group="OnlineTimeTypeBar" onactivate="Leaderboards.setSelectedListType(TimesLists.LIST_GLOBAL, ListTypes.TIMES_FRIENDS);">
+					<RadioButton id="OnlineTypeFriends" class="tabs__tab" group="OnlineTimeTypeBar" onactivate="Leaderboards.setSelectedListType(TIME_LIST_TYPE.LIST_GLOBAL, LEADERBOARD_TYPE.TIMES_FRIENDS);">
 						<Label class="tabs__text" text="Friends"/>
 					</RadioButton>
 				</Panel>
