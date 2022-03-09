@@ -3,6 +3,7 @@
 		<include src="file://{resources}/styles/main.scss"/>
 	</styles>
 	<scripts>
+		<include src="file://{resources}/scripts/common/runentity.js" />
 		<include src="file://{resources}/scripts/hud/spectate.js" />
 	</scripts>
 	<MomHudSpectate class="full-width flow-down">

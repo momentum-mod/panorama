@@ -1,13 +1,5 @@
 'use strict';
 
-// This is mirrored from C++ code! Do not change whimsically!
-const RUN_ENT_TYPE = {
-	RUN_ENT_PLAYER: 0,
-	RUN_ENT_GHOST: 1,
-	RUN_ENT_REPLAY: 2,
-	RUN_ENT_ONLINE: 3,
-};
-
 class HudSpectate {
 	static panels = {
 		indicatorSpectating: $('#IndicatorSpectating'),
@@ -20,8 +12,8 @@ class HudSpectate {
 	}
 
 	static onSpectatorChanged( type ) {
-		if (type >= RUN_ENT_TYPE.RUN_ENT_GHOST) {
-			const bReplay = type === RUN_ENT_TYPE.RUN_ENT_REPLAY;
+		if (type >= RUN_ENT_TYPE.GHOST) {
+			const bReplay = type === RUN_ENT_TYPE.REPLAY;
 
 			// TODO: this needs to be done more dynamically, you can switch off replay to real players and back
 			//this.panels.prevPlayer.visible = !bReplay;

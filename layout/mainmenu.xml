@@ -3,6 +3,8 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 	<scripts>
+		<include src="file://{resources}/scripts/common/gameui.js" />
+		<include src="file://{resources}/scripts/common/safeguards.js" />
 		<include src="file://{resources}/scripts/mainmenu.js" />
 		<include src="file://{resources}/scripts/mainmenu_drawer.js" />
 	</scripts>

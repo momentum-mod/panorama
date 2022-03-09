@@ -1,18 +1,5 @@
 'use_strict';
 
-const SpeedoDisplayNames = [ // TODO: localize
-	'Absolute',
-	'Horizontal',
-	'Vertical',
-	'Energy',
-	'Explosive Jump',
-	'Jump',
-	'Ramp Board',
-	'Ramp Leave',
-	'Stage Absolute',
-	'Stage Horizontal'
-];
-
 class SpeedometerSelectPopup {
 	static container = $('#SpeedometerSelectContainer');
 	static selected = 0;
@@ -29,7 +16,7 @@ class SpeedometerSelectPopup {
 		disabledIDs.forEach((id, index) => {
 			let speedometer = $.CreatePanel('Panel', SpeedometerSelectPopup.container, '');
 			speedometer.LoadLayoutSnippet('speedometer-radiobutton');
-			speedometer.FindChildInLayoutFile('SpeedometerBtnLabel').text = SpeedoDisplayNames[id];
+			speedometer.FindChildInLayoutFile('SpeedometerBtnLabel').text = SPEEDOMETER_DISP_NAMES[id];
 
 			let radioBtn = speedometer.FindChildInLayoutFile('SpeedometerRadioBtn');
 			radioBtn.SetPanelEvent('onactivate', () => { SpeedometerSelectPopup.selected = id; });

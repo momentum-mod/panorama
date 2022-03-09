@@ -1,29 +1,5 @@
 'use strict';
 
-const RunSafeguardType = {
-	PRACTICEMODE : 0,
-	RESTART : 1,
-	RESTART_STAGE : 2,
-	SAVELOC_TELE: 3,
-	CHAT_OPEN : 4,
-	MAP_CHANGE : 5,
-	QUIT_TO_MENU : 6,
-	QUIT_GAME : 7,
-
-	COUNT : 8,
-
-	INVALID : -1
-};
-
-const GameUIState = {
-	INVALID: 0,
-	LOADINGSCREEN: 1,
-	INGAME: 2,
-	MAINMENU: 3,
-	PAUSEMENU: 4,
-	INTROMOVIE: 5
-};
-
 //--------------------------------------------------------------------------------------------------
 // Header Tab navigation and xml loading
 //--------------------------------------------------------------------------------------------------
@@ -322,7 +298,7 @@ class MainMenuController {
 	}
 
 	static onQuitButtonPressed() {
-		if (GameInterfaceAPI.GetGameUIState() === GameUIState.PAUSEMENU) {
+		if (GameInterfaceAPI.GetGameUIState() === GAME_UI_STATE.PAUSEMENU) {
 			GameInterfaceAPI.ConsoleCommand('disconnect');
 			this.onHomeButtonPressed();
 			return;
@@ -335,7 +311,7 @@ class MainMenuController {
 			$.Localize('#MOM_MB_Safeguard_Map_Quit_ToMenu_Title'),
 			"Leaving the map will cancel your timer, are you sure you want to quit?\n\n<span class='text-sm text-italic'>(You can turn this off in Settings → Gameplay → Safeguards)</span>",
 			'warning-popup',
-			() => $.DispatchEvent('Safeguard_Response', RunSafeguardType.QUIT_TO_MENU),
+			() => $.DispatchEvent('Safeguard_Response', RUN_SAFEGUARD_TYPE.QUIT_TO_MENU),
 			() => {}
 		);
 	}
@@ -345,7 +321,7 @@ class MainMenuController {
 			$.Localize('#MOM_MB_Safeguard_Map_Quit_Game_Title'),
 			"Quitting the game will cancel your timer, are you sure you want to quit?\n\n<span class='text-sm text-italic'>(You can turn this off in Settings → Gameplay → Safeguards)</span>",
 			'warning-popup',
-			() => $.DispatchEvent('Safeguard_Response', RunSafeguardType.QUIT_GAME),
+			() => $.DispatchEvent('Safeguard_Response', RUN_SAFEGUARD_TYPE.QUIT_GAME),
 			() => {}
 		);
 	}
@@ -366,7 +342,7 @@ class MainMenuController {
 
 	static onEscapeKeyPressed(_eSource, _nRepeats, _focusPanel) {
 		// Resume game in pause menu mode, OTHERWISE close the active menu menu page
-		if (GameInterfaceAPI.GetGameUIState() === GameUIState.PAUSEMENU) {
+		if (GameInterfaceAPI.GetGameUIState() === GAME_UI_STATE.PAUSEMENU) {
 			$.DispatchEvent('ChaosMainMenuResumeGame');
 		} else {
 			MainMenuController.onHomeButtonPressed();

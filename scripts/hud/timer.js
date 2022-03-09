@@ -1,17 +1,5 @@
 'use strict';
 
-const TimerEvent = {
-	STARTED: 0,
-	FINISHED: 1,
-	STOPPED: 2,
-	FAILED: 3
-};
-const TimerState = {
-	NOTRUNNING: 0,
-	RUNNING: 1,
-	PRACTICE: 2
-};
-
 const INACTIVE_CLASS = 'hudtimer__time--inactive';
 const FINISHED_CLASS = 'hudtimer__time--finished';
 const FAILED_CLASS = 'hudtimer__time--failed';
@@ -48,7 +36,7 @@ class HudTimer {
 		this.resetTimer();
 
 		// if we want special styling for timer artificially running (via savestate), do it here like so
-		// if (MomentumTimerAPI.GetTimerState() === TimerState.PRACTICE) HudTimer.timeLabel.AddClass(PRACTICE_CLASS);
+		// if (MomentumTimerAPI.GetTimerState() === TIMER_STATE.PRACTICE) HudTimer.timeLabel.AddClass(PRACTICE_CLASS);
 		
 		if (MomentumTimerAPI.IsStopSoundEnabled())
 			$.PlaySoundEvent("Momentum.StopTimer");
@@ -64,20 +52,20 @@ class HudTimer {
 
 	static onUpdate() {
 		const timerState = MomentumTimerAPI.GetTimerState();
-		if (timerState === TimerState.NOTRUNNING) return;
+		if (timerState === TIMER_STATE.NOTRUNNING) return;
 
 		$.GetContextPanel().SetDialogVariableFloat('runtime', MomentumTimerAPI.GetCurrentRunTime());
 	}
 
 	static onZoneChange(enter, linear, curZone, _curTrack, timerState) {
-		if (timerState === TimerState.NOTRUNNING && enter && curZone === 1) {
+		if (timerState === TIMER_STATE.NOTRUNNING && enter && curZone === 1) {
 			// timer state is not reset on map finished until entering the start zone again (on reset)
 			this.resetTimer();
 			this.timeLabel.RemoveClass(FINISHED_CLASS);
 			return;
 		}
 		
-		if (timerState === TimerState.RUNNING && curZone > 1 && enter === linear && HudTimer.prevZone !== curZone) {
+		if (timerState === TIMER_STATE.RUNNING && curZone > 1 && enter === linear && HudTimer.prevZone !== curZone) {
 			const diff = RunComparisonsAPI.GetLoadedComparisonOverallDiff(curZone);
 
 			let diffSymbol;
@@ -119,16 +107,16 @@ class HudTimer {
 
 	static onTimerEvent(_ent, type) {
 		switch(type) {
-			case TimerEvent.STARTED:
+			case TIMER_EVENT.STARTED:
 				this.onTimerStarted();
 				break;
-			case TimerEvent.FINISHED:
+			case TIMER_EVENT.FINISHED:
 				this.onTimerFinished();
 				break;
-			case TimerEvent.STOPPED:
+			case TIMER_EVENT.STOPPED:
 				this.onTimerStopped();
 				break;
-			case TimerEvent.FAILED:
+			case TIMER_EVENT.FAILED:
 				this.onTimerFailed();
 				break;
 			default:
@@ -139,7 +127,7 @@ class HudTimer {
 
 	static onSaveStateChange(_count, _current, _usingmenu) {
 		const timerState = MomentumTimerAPI.GetTimerState();
-		if (timerState !== TimerState.RUNNING) {
+		if (timerState !== TIMER_STATE.RUNNING) {
 			this.resetTimer();
 			this.timeLabel.RemoveClass(FINISHED_CLASS);
 		}
@@ -149,7 +137,7 @@ class HudTimer {
 		this.timeLabel.RemoveClass(FINISHED_CLASS);
 
 		const timerState = MomentumTimerAPI.GetTimerState();
-		if (timerState !== TimerState.RUNNING) {
+		if (timerState !== TIMER_STATE.RUNNING) {
 			this.resetTimer();
 			return;
 		}

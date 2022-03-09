@@ -1,61 +1,26 @@
 'use strict';
 
-const WeaponStateChangeMode = {
-	SWITCH: 0,
-	PICKUP: 1,
-	DROP: 2
-};
-const WeaponID = {
-	NONE: 0,
-
-	PISTOL: 1,
-	SHOTGUN: 2,
-	MACHINEGUN: 3,
-	SNIPER: 4,
-	GRENADE: 5,
-	CONC: 6,
-	KNIFE: 7,
-	ROCKETLAUNCHER: 8,
-	STICKYLAUNCHER: 9,
-	CUBEMAP: 10,
-	
-	MAX: 11,
-	FIRST: 1
-};
-const WeaponNames = [
-	'Pistol',
-	'Shotgun',
-	'Machinegun',
-	'Sniper',
-	'Grenade',
-	'Conc',
-	'Knife',
-	'RocketLauncher',
-	'StickyLauncher',
-	'Cubemap'
-];
-
 const DEPLOYED_CLASS = 'weaponselection__wrapper--deployed';
 const FADEOUT_CLASS = 'weaponselection--fadeout';
 
 class WeaponSelection {
 	static container = $('#WeaponSelection');
 	static wepSnippets = [];
-	static lastDeployed = WeaponID.NONE;
+	static lastDeployed = WEAPON_ID.NONE;
 
 	static onWeaponStateChange(mode, id) {
 		switch(mode) {
-			case WeaponStateChangeMode.SWITCH:
-				if (this.lastDeployed !== WeaponID.NONE)
+			case WEAPON_STATE_CHANGE_MODE.SWITCH:
+				if (this.lastDeployed !== WEAPON_ID.NONE)
 					this.wepSnippets[this.lastDeployed-1]?.RemoveClass(DEPLOYED_CLASS);
 				this.lastDeployed = id;
 				this.wepSnippets[id-1]?.AddClass(DEPLOYED_CLASS);
 				break;
-			case WeaponStateChangeMode.PICKUP:
+			case WEAPON_STATE_CHANGE_MODE.PICKUP:
 				this.createWeaponPanel(id);
 				this.container.SortChildrenOnAttribute('slot_index', false);
 				break;
-			case WeaponStateChangeMode.DROP:
+			case WEAPON_STATE_CHANGE_MODE.DROP:
 				this.destroyWeaponPanel(id);
 				break;
 			default:
@@ -67,7 +32,7 @@ class WeaponSelection {
 	}
 
 	static onAllWeaponsDropped() {
-		for (let id=WeaponID.FIRST; id<WeaponID.MAX; id++) {
+		for (let id=WEAPON_ID.FIRST; id<WEAPON_ID.MAX; id++) {
 			this.destroyWeaponPanel(id);
 		}
 	}
@@ -76,7 +41,7 @@ class WeaponSelection {
 		if (this.wepSnippets[id-1]) return;
 
 		const weaponPanel = $.CreatePanel('Panel', this.container, ''); // Create the new panel
-		weaponPanel.SetDialogVariable('weapon', WeaponNames[id-1]);
+		weaponPanel.SetDialogVariable('weapon', WEAPON_NAMES[id-1]);
 		weaponPanel.LoadLayoutSnippet('Weapon');
 		
 		const weaponSlot = MomentumWeaponAPI.GetWeaponSlot(id) + 1;

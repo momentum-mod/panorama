@@ -1,42 +1,6 @@
 'use_strict';
 
-const UnitsType = {
-	UPS: 0,
-	KMH: 1,
-	MPH: 2
-};
-const ColormodeType = {
-	None: 0,
-	Range: 1,
-	Comparison: 2,
-	ComparisonSep: 3
-};
-const SpeedoIDs = {
-	AbsSpeedometer: 0,
-	HorizSpeedometer: 1,
-	VertSpeedometer: 2,
-	EnergySpeedometer: 3,
-	ExplosiveJumpVelocity: 4,
-	LastJumpVelocity: 5,
-	RampBoardVelocity: 6,
-	RampLeaveVelocity: 7,
-	StageEnterExitAbsVelocity: 8,
-	StageEnterExitHorizVelocity: 9
-};
-const SpeedoDisplayNames = [ // TODO: localize
-	'Absolute',
-	'Horizontal',
-	'Vertical',
-	'Energy',
-	'Explosive Jump',
-	'Jump',
-	'Ramp Board',
-	'Ramp Leave',
-	'Stage Absolute',
-	'Stage Horizontal'
-];
 const DEFAULT_GAMEMODE = 1; // Surf
-
 
 class SpeedometerDetailObject {
 	constructor(id, speedometerKV, orderIndex) {
@@ -59,7 +23,7 @@ class SpeedometerDetailObject {
 		this.containingPanel.DeleteAsync(0.0);
 	}
 	discardChanges(speedometerKV) {
-		if (this.id !== SpeedoIDs.EnergySpeedometer)
+		if (this.id !== SPEEDOMETER_ID.EnergySpeedometer)
 			this.unitsDropdown.SetSelectedIndex(speedometerKV['units']);
 		this.colorModeDropdown.SetSelectedIndex(speedometerKV['colorize']);
 		const colorProfile = speedometerKV['color_profile'];
@@ -92,11 +56,11 @@ class SpeedometerDetailObject {
 		this.moveupButton = this.containingPanel.FindChildInLayoutFile('SpeedometerMoveUpBtn');
 		this.movedownButton = this.containingPanel.FindChildInLayoutFile('SpeedometerMoveDownBtn');
 		this.nameLabel = this.toggleButton.FindChildInLayoutFile('SpeedometerName');
-		this.nameLabel.text = SpeedoDisplayNames[id];
+		this.nameLabel.text = SPEEDOMETER_DISP_NAMES[id];
 
 		this.colorModeDropdown.SetSelectedIndex(speedometerKV['colorize']);
 
-		if (id === SpeedoIDs.EnergySpeedometer) {
+		if (id === SPEEDOMETER_ID.EnergySpeedometer) {
 			this.unitsSettingContainer.visible = false;
 		}
 		else {
@@ -141,18 +105,18 @@ class SpeedometerDetailObject {
 			this.colorProfileDropdown.SetSelected(selColorProfile);
 	}
 	saveToKV(speedometerKV) {
-		if (this.id !== SpeedoIDs.EnergySpeedometer) {
+		if (this.id !== SPEEDOMETER_ID.EnergySpeedometer) {
 			const selUnitsPanel = this.unitsDropdown.GetSelected();
-			const selUnits = selUnitsPanel ? selUnitsPanel.GetAttributeInt('value', UnitsType.UPS) : UnitsType.UPS;
+			const selUnits = selUnitsPanel ? selUnitsPanel.GetAttributeInt('value', SPEEDOMETER_UNITS_TYPE.UPS) : SPEEDOMETER_UNITS_TYPE.UPS;
 			speedometerKV['units'] = selUnits;
 		}
 		const selColorModePanel = this.colorModeDropdown.GetSelected();
-		const selColorMode = selColorModePanel ? selColorModePanel.GetAttributeInt('value', ColormodeType.None) : ColormodeType.None;
+		const selColorMode = selColorModePanel ? selColorModePanel.GetAttributeInt('value', SPEEDOMETER_COLOR_MODE.NONE) : SPEEDOMETER_COLOR_MODE.NONE;
 		const selColorProfilePanel = this.colorProfileDropdown.GetSelected();
 
 		speedometerKV['visible'] = this.containingPanel.visible;
 		speedometerKV['colorize'] = selColorMode;
-		if (selColorMode === ColormodeType.Range)
+		if (selColorMode === SPEEDOMETER_COLOR_MODE.RANGE)
 			speedometerKV['color_profile'] = selColorProfilePanel?.text;
 		else
 			delete speedometerKV['color_profile'];
@@ -199,17 +163,17 @@ class Speedometers {
 	}
 	static addSpeedometer() {
 		let disabledIDs = [];
-		Object.keys(SpeedoIDs).filter(speedoName => Speedometers.objectList[SpeedoIDs[speedoName]] === undefined).forEach(speedoName => disabledIDs.push(SpeedoIDs[speedoName]));
+		Object.keys(SPEEDOMETER_ID).filter(speedoName => Speedometers.objectList[SPEEDOMETER_ID[speedoName]] === undefined).forEach(speedoName => disabledIDs.push(SPEEDOMETER_ID[speedoName]));
 		if (disabledIDs.length === 0) return; // nothing is disabled, dont bother showing popup
 		UiToolkitAPI.ShowCustomLayoutPopupParameters('', 'file://{resources}/layout/popups/popup_speedometerselect.xml',
 			`disabledIDs=${disabledIDs}&callback=${UiToolkitAPI.RegisterJSCallback(id => Speedometers.addSpeedometerByID(id))}`);
 	}
 	static addSpeedometerByID(id) {
-		let speedoName = Object.keys(SpeedoIDs)[id];
+		let speedoName = Object.keys(SPEEDOMETER_ID)[id];
 		let speedoKV = Speedometers.keyvalues[speedoName];
 		speedoKV['visible'] = true;
 
-		Speedometers.objectList[id] = new SpeedometerDetailObject(id, speedoKV, Object.keys(SpeedoIDs).length - 1);
+		Speedometers.objectList[id] = new SpeedometerDetailObject(id, speedoKV, Object.keys(SPEEDOMETER_ID).length - 1);
 		Speedometers.markAsModified();
 	}
 	static discardChangesForSpeedometer(id, speedometerKV) {
@@ -260,7 +224,7 @@ class Speedometers {
 			let speedoKV = Speedometers.keyvalues[speedoName];
 			if (speedoKV['visible'] === 0) return;
 
-			let id = SpeedoIDs[speedoName];
+			let id = SPEEDOMETER_ID[speedoName];
 			Speedometers.objectList[id] = new SpeedometerDetailObject(id, speedoKV, Speedometers.keyvalues['order'][speedoName]);
 		});
 
@@ -269,7 +233,7 @@ class Speedometers {
 	}
 	static saveAllSpeedometers() {
 		Object.keys(Speedometers.objectList).forEach(id => {
-			let speedoName = Object.keys(SpeedoIDs)[id];
+			let speedoName = Object.keys(SPEEDOMETER_ID)[id];
 			Speedometers.keyvalues[speedoName] = {};
 			let speedoObject = Speedometers.objectList[id];
 			Speedometers.keyvalues['order'][speedoName] = Speedometers.mainPanel.GetChildIndex(speedoObject.containingPanel);
@@ -278,7 +242,7 @@ class Speedometers {
 		});
 
 		let orderCtr = Speedometers.mainPanel.GetChildCount();
-		Object.keys(SpeedoIDs).filter(speedoName => Speedometers.objectList[SpeedoIDs[speedoName]] === undefined).forEach(speedoName => {
+		Object.keys(SPEEDOMETER_ID).filter(speedoName => Speedometers.objectList[SPEEDOMETER_ID[speedoName]] === undefined).forEach(speedoName => {
 			// make sure speedometers that arent visible (their panels are deleted) have an ordering that's above
 			// the speedometers that are actually visible
 			Speedometers.keyvalues['order'][speedoName] = orderCtr++;

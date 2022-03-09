@@ -4,6 +4,7 @@
 	</styles>
 	<scripts>
 		<include src="file://{resources}/scripts/settings_shared.js"/>
+		<include src="file://{resources}/scripts/common/speedometer.js"/>
 		<include src="file://{resources}/scripts/settings_speedometer.js"/>
 	</scripts>
 	

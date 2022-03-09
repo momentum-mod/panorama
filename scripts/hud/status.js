@@ -1,11 +1,5 @@
 'use strict';
 
-const TimerState = {
-	NOTRUNNING: 0,
-	RUNNING: 1,
-	PRACTICE: 2
-};
-
 class HudStatus {
 	/** @type {Label} @static */
 	static label = $('#HudStatusLabel');
@@ -14,7 +8,7 @@ class HudStatus {
 	static curTrack = -1;
 	static linear = true;
 	static enter = false;
-	static timerState = TimerState.NOTRUNNING;
+	static timerState = TIMER_STATE.NOTRUNNING;
 
 	static inPracticeMode = false;
 
@@ -52,7 +46,7 @@ class HudStatus {
 
 		let text = 'Spawn';
 
-		if (this.saveStateUsing && this.timerState !== TimerState.RUNNING) {
+		if (this.saveStateUsing && this.timerState !== TIMER_STATE.RUNNING) {
 			text = `SaveState ${this.saveStateCurrent}/${this.saveStateCount}`;
 		}
 		else {

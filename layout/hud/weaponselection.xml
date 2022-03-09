@@ -4,6 +4,7 @@
 		<include src="file://{resources}/styles/hud/weaponselection.scss" />
 	</styles>
 	<scripts>
+		<include src="file://{resources}/scripts/common/weapon.js" />
 		<include src="file://{resources}/scripts/hud/weaponselection.js" />
 	</scripts>
 
