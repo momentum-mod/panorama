@@ -116,7 +116,12 @@
 				<ChaosSettingsKeyBinder text="#MOM_Controls_Restart" bind="mom_restart" />
 				<ChaosSettingsKeyBinder text="#MOM_Controls_RestartStage" bind="mom_restart_stage" />
 				<ChaosSettingsKeyBinder text="#MOM_Controls_StopTimer" bind="mom_timer_stop" />
-				<ChaosSettingsKeyBinder text="#MOM_Controls_ToggleSavelocMenu" bind="chaos_hud_menu_show savelocmenu" />
+				
+				<Label class="settings-group__subtitle" text="Savestates" />
+
+				<ChaosSettingsKeyBinder text="Create savestate" bind="mom_saveloc_create" />
+				<ChaosSettingsKeyBinder text="Go to current savestate" bind="+mom_saveloc_current" />
+				<ChaosSettingsKeyBinder text="Toggle showing savestate menu" bind="chaos_hud_menu_show savelocmenu" />
 				<ChaosSettingsKeyBinder text="#MOM_Controls_CreateStartMark" bind="mom_start_mark_create" />
 				<ChaosSettingsKeyBinder text="#MOM_Controls_ClearStartMark" bind="mom_start_mark_clear" />
 
