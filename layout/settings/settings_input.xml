@@ -142,6 +142,7 @@
 
 				<ChaosSettingsKeyBinder text="#Valve_Console_Toggle" bind="toggleconsole" />
 				<ChaosSettingsKeyBinder text="#Valve_Take_Screen_Shot" bind="jpeg" />
+				<ChaosSettingsKeyBinder text="Quit game with prompt" bind="quit_prompt" />
 				<ChaosSettingsKeyBinder text="#Valve_Quit_Game" bind="quit" />
 
 			</Panel>
