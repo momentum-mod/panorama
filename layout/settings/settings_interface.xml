@@ -383,6 +383,41 @@
 				</ChaosSettingsEnum>
 
 			</Panel>
+			
+			<Panel class="settings-page__spacer"/>
+			
+			<Panel id="WeaponSelSubSection" class="settings-group">
+
+				<Panel class="settings-group__header">
+
+					<Label class="settings-group__title" text="Weapon Selection" />
+
+					<TooltipPanel class="settings-group__reset" tooltip="Reset">
+						<Button class="button" onactivate="SettingsShared.resetSettings('WeaponSelSubSection');">
+							<Image class="button__icon" src="file://{images}/reset.svg" />
+						</Button>
+					</TooltipPanel>
+
+				</Panel>
+
+				<ChaosSettingsEnum text="Display weapon selection" convar="mom_hud_weaponselection_enable" infomessage="Toggles displaying the weapon selection HUD.">
+					<RadioButton group="showwepsel" text="Off" value="0" />
+					<RadioButton group="showwepsel" text="On" value="1" />
+				</ChaosSettingsEnum>
+				
+				<ConVarEnabler convar="mom_hud_weaponselection_enable" togglevisibility="true" class="flow-down">
+					<ChaosSettingsEnum text="Display weapon keybind" convar="mom_hud_weaponselection_keybind_enable" infomessage="Displays the keybind for each weapon in the weapon selection HUD.">
+						<RadioButton group="showwepselkb" text="Off" value="0" />
+						<RadioButton group="showwepselkb" text="On" value="1" />
+					</ChaosSettingsEnum>
+				</ConVarEnabler>
+
+				<ChaosSettingsEnum text="Play weapon selection sound" convar="mom_hud_weaponselection_sound_enable" infomessage="Toggles the sound emitted on weapon selection, which is also effected by UI volume.">
+					<RadioButton group="showwepselsound" text="Off" value="0" />
+					<RadioButton group="showwepselsound" text="On" value="1" />
+				</ChaosSettingsEnum>
+
+			</Panel>
 
 			<Panel class="settings-page__spacer"/>
 

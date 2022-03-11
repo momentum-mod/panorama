@@ -212,6 +212,10 @@
 									<Label class="settings-nav__subitem-label" text="Key Presses"/>
 								</RadioButton>
 
+								<RadioButton id="WeaponSelRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="MainMenuSettings.navigateToSubsection('InterfaceSettings', 'WeaponSelSubSection')">
+									<Label class="settings-nav__subitem-label" text="Weapon Selection"/>
+								</RadioButton>
+
 								<RadioButton id="StrafeSyncRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="MainMenuSettings.navigateToSubsection('InterfaceSettings', 'StrafeSyncSubSection')">
 									<Label class="settings-nav__subitem-label" text="Strafe Sync"/>
 								</RadioButton>

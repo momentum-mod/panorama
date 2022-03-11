@@ -58,6 +58,7 @@ class MainMenuSettings {
 				TimerSubSection: 'TimerRadio',
 				PlayerStatusSubSection: 'PlayerStatusRadio',
 				KeypressSubSection: 'KeypressRadio',
+				WeaponSelSubSection: 'WeaponSelRadio',
 				StrafeSyncSubSection: 'StrafeSyncRadio',
 				MapInfoSubSection: 'MapInfoRadio'
 			}
