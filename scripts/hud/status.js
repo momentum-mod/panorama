@@ -72,6 +72,10 @@ class HudStatus {
 		this.label.text = text;
 	}
 
+	static onLoad() {
+		$.GetContextPanel().hiddenHUDBits = HIDEHUD.LEADERBOARDS;
+	}
+
 	static {
 		$.RegisterForUnhandledEvent('OnMomentumZoneChange', this.onZoneChange.bind(this));
 		$.RegisterForUnhandledEvent('OnMomentumPlayerPracticeModeStateChange', this.onPracticeModeChange.bind(this));

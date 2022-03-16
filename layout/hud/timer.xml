@@ -3,11 +3,12 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 	<scripts>
+		<include src="file://{resources}/scripts/common/hud_misc.js" />
 		<include src="file://{resources}/scripts/common/timer.js" />
 		<include src="file://{resources}/scripts/hud/timer.js" />
 	</scripts>
 
-	<MomHudTimer class="full-width">
+	<MomHudTimer class="full-width" onload="HudTimer.onLoad()">
 		<ConVarEnabler class="hudtimer" convar="mom_hud_timer_enable" togglevisibility="true">
 			<Label id="HudTimerTime" class="hudtimer__time hudtimer__time--inactive" text="{g:time:runtime}" />
 			<Label id="HudTimerComparison" class="hudtimer__comparison hudtimer__comparison--fadeout" text="{s:diffSymbol}{g:time:runtimediff}" visible="false" />

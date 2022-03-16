@@ -147,6 +147,10 @@ class HudTimer {
 		this.prevZone = ZonesAPI.GetCurrentZone(); // if curZone === 0 and the timer is running we have big problems
 	}
 
+	static onLoad() {
+		$.GetContextPanel().hiddenHUDBits = HIDEHUD.LEADERBOARDS;
+	}
+
 	static {
 		$.RegisterEventHandler('ChaosHudProcessInput', $.GetContextPanel(), this.onUpdate.bind(this));
 		$.RegisterForUnhandledEvent('OnMomentumTimerStateChange', this.onTimerEvent.bind(this));
