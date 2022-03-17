@@ -282,10 +282,11 @@
 					<RadioButton group="rjdecals" text="#SFUI_On" value="1" />
 				</ChaosSettingsEnum>
 
-				<ChaosSettingsEnum text="#MOM_Settings_RJ_Enable_Center_Fire" convar="mom_rj_center_fire" infomessage="#MOM_Settings_RJ_Enable_Center_Fire_TT">
-					<RadioButton group="rjcenterfire" text="#SFUI_Off" value="0" />
-					<RadioButton group="rjcenterfire" text="#SFUI_On" value="1" />
-				</ChaosSettingsEnum>
+				<ChaosSettingsEnumDropDown text="Rocket launcher fire angle" convar="mom_rj_fire_angle" infomessage="Changes the angle of which rockets are fired. 0 is from the center (TF2 Original), 1 is from the side (TF2 Stock), and 2 is a hybrid of the two (TF2 Cow Mangler).">
+					<Label id="rjfireangle1" text="Center" value="0" />
+					<Label id="rjfireangle2" text="Side" value="1" />
+					<Label id="rjfireangle3" text="Hybrid" value="2" />
+				</ChaosSettingsEnumDropDown>
 
 				<ChaosSettingsSlider text="#MOM_Settings_RJ_RocketDrawDelayEntry_Label" min="0" max="1" displayprecision="1" convar="mom_rj_rocket_drawdelay" infomessage="#MOM_Settings_RJ_RocketDrawDelayEntry_TT"/>
 
