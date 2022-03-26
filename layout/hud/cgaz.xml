@@ -1,0 +1,52 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+		<include src="file://{resources}/styles/hud/cgaz.scss" />
+	</styles>
+	<scripts>
+		<include src="file://{resources}/scripts/hud/cgaz.js" />
+	</scripts>
+
+	<MomHudCgaz class="full-width full-height">
+		<Panel id="AccelContainer" class="cgaz__container">
+			<ConVarEnabler class="cgaz" convar="mom_df_hud_accel_enable" togglevisibility="true">
+				<Panel id="LeftTurnZone" />
+				<Panel id="LeftFastZone" />
+				<Panel id="LeftSlowZone" />
+				<Panel id="DeadZone" />
+				<Panel id="RightSlowZone" />
+				<Panel id="RightFastZone" />
+				<Panel id="RightTurnZone" />
+				<Panel id="AccelSplitZone" />
+				<Panel id="LeftMirrorZone" />
+				<Panel id="RightMirrorZone" />
+				<Panel id="MirrorSplitZone" />
+				<Panel id="WindicatorZone" />
+			</ConVarEnabler>
+		</Panel>
+		<Panel id="SnapContainer" class="cgaz__container">
+			<ConVarEnabler class="cgaz" convar="mom_df_hud_snap_enable" togglevisibility="true">
+				<Panel id="SnapZone0" />
+				<Panel id="SnapZone1" />
+				<Panel id="SnapZone2" />
+				<Panel id="SnapZone3" />
+				<Panel id="SnapZone4" />
+				<Panel id="SnapZone5" />
+				<Panel id="SnapZone6" />
+				<Panel id="SnapZone7" />
+				<Panel id="SnapZone8" />
+				<Panel id="SnapZone9" />
+				<Panel id="SnapZone10" />
+				<Panel id="SnapZone11" />
+				<Panel id="SnapSplitZone" />
+			</ConVarEnabler>
+		</Panel>
+		<Panel id="VelocityArrow">
+			<Image id="VelocityArrowIcon" class="arrow__up" src="file://{images}/hud/cgaz-arrow.svg" textureheight="48" />
+		</Panel>
+		<Panel id="WindicatorArrow">
+			<Image id="WindicatorArrowIcon" class="arrow__down" src="file://{images}/hud/cgaz-arrow.svg" textureheight="48" />
+		</Panel>
+	</MomHudCgaz>
+
+</root>

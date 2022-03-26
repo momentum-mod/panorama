@@ -1,0 +1,20 @@
+@use '../config'as *;
+
+.cgaz {
+	vertical-align: middle;
+
+	&__container {
+		width: 100%;
+		horizontal-align: left;
+	}
+}
+
+.arrow {
+	&__up {
+		transform: rotatez( 0deg ) translatex( -50% );
+	}
+
+	&__down {
+		transform: rotatez( 180deg ) translatex( -50% );
+	}
+}
