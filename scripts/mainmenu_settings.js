@@ -45,7 +45,8 @@ class MainMenuSettings {
 				ZonesSubSection: 'ZonesRadio',
 				RocketJumpSubSection: 'RocketJumpRadio',
 				StickyJumpSubSection: 'StickyJumpRadio',
-				ConcSubSection: 'ConcRadio'
+				ConcSubSection: 'ConcRadio',
+				DefragSubSection: 'DefragRadio'
 			}
 		},
 		InterfaceSettings: {

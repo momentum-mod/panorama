@@ -431,6 +431,120 @@
 				</ChaosSettingsEnum>
 
 			</Panel>
+
+			<Panel class="settings-page__spacer"/>
+
+			<Panel id="DefragSubSection" class="settings-group">
+
+				<Panel class="settings-group__header">
+
+					<Label class="settings-group__title" text="Defrag" />
+
+					<TooltipPanel class="settings-group__reset" tooltip="Reset">
+						<Button class="button" onactivate="SettingsShared.resetSettings('DefragSubSection');">
+							<Image class="button__icon" src="file://{images}/reset.svg" />
+						</Button>
+					</TooltipPanel>
+
+				</Panel>
+
+				<ChaosSettingsEnum text="Display accel zones" convar="mom_df_hud_accel_enable" infomessage="Provides an on-screen indicator to the angle to aim your cursor to gain speed based on current velocity and movement inputs. This tool originated from CampingGaz's CgazHUD for Defrag, for more info on its use, check the Defrag learn section.">
+					<RadioButton group="accelenable" text="#SFUI_Off" value="0" />
+					<RadioButton group="accelenable" text="#SFUI_On" value="1" />
+				</ChaosSettingsEnum>
+
+				<ChaosSettingsSlider text="Minimum accel speed" min="1" max="1000" convar="mom_df_hud_accel_min_speed" displayprecision="0" infomessage="Minimum speed required to draw CGAZ acceleration zones"/>
+
+				<ChaosSettingsEnum text="Display mirrored accel zones" convar="mom_df_hud_accel_mirror_enable" infomessage="Show CGAZ acceleration zones for mirrored input.">
+					<RadioButton group="accelmirrorenable" text="#SFUI_Off" value="0" />
+					<RadioButton group="accelmirrorenable" text="#SFUI_On" value="1" />
+				</ChaosSettingsEnum>
+
+				<ChaosSettingsEnum text="Display true accel zones" convar="mom_df_hud_accel_scale_enable" infomessage="Show zones for jump/duck scaled inputs. When enabled, CGAZ zones show true angles for speed-gain based on current movement inputs.">
+					<RadioButton group="accelscaleenable" text="#SFUI_Off" value="0" />
+					<RadioButton group="accelscaleenable" text="#SFUI_On" value="1" />
+				</ChaosSettingsEnum>
+
+				<ChaosSettingsSlider text="Accel zone height" min="1" max="50" convar="mom_df_cgaz_height" displayprecision="0" infomessage="Height of CGAZ acceleration zones in pixels @1080p."/>
+
+				<ChaosSettingsSlider text="Accel zone offset" min="-200" max="200" convar="mom_df_cgaz_offset" displayprecision="0" infomessage="Vertical offset from center screen in pixels @1080p. Up is positive."/>
+
+				<ConVarColorDisplay text="Slow color" convar="mom_df_hud_accel_slow_color" infomessage="Color for CGAZ partial-acceleration zone. Forward speedgain is reduced in this portion of the CGAZ bar."/>
+
+				<ConVarColorDisplay text="Fast color" convar="mom_df_hud_accel_fast_color" infomessage="Color for CGAZ full-acceleration zone. Maximum forward speed-gain potential occurs in this portion of the CGAZ bar."/>
+
+				<ConVarColorDisplay text="Turn color" convar="mom_df_hud_accel_turn_color" infomessage="Color for CGAZ turn zone. In this portion of the CGAZ bar, more speed is gained orthogonal to the current velocity direction than the forward direction."/>
+
+				<ConVarColorDisplay text="Deadzone color" convar="mom_df_hud_accel_dz_color" infomessage="Color for CGAZ no-acceleration zone."/>
+
+				<ChaosSettingsEnum text="Display snap zones" convar="mom_df_hud_snap_enable" infomessage="Display snap zones on strafe hud. Snap zones show areas where any acceleration happens in the same direction. This is a side-effect of the rounding (velocity snapping) utilized in the original Quake III arena code.">
+					<RadioButton group="snapenable" text="#SFUI_Off" value="0" />
+					<RadioButton group="snapenable" text="#SFUI_On" value="1" />
+				</ChaosSettingsEnum>
+
+				<ChaosSettingsSlider text="Minimum snap speed" min="0" max="1000" convar="mom_df_hud_snap_min_speed" displayprecision="0" infomessage="Minimum speed required to draw snap zones."/>
+
+				<ChaosSettingsEnum text="Highlight active snap zone" convar="mom_df_hud_snap_hl_enable" infomessage="When enabled, the snap zone behind the crosshair is highlighted. When velocity snapping is significant, the higlighted zone contributes speed gain.">
+					<RadioButton group="snaphlenable" text="#SFUI_Off" value="0" />
+					<RadioButton group="snaphlenable" text="#SFUI_On" value="1" />
+				</ChaosSettingsEnum>
+
+				<ChaosSettingsEnum text="Color snap zones by accel" convar="mom_df_hud_snap_color_mode" infomessage="When enabled, snap zones are colored to indicate speed-gain potential. Color is blended between slow and fast snap colors.">
+					<RadioButton group="snapcolormode" text="#SFUI_Off" value="0" />
+					<RadioButton group="snapcolormode" text="#SFUI_On" value="1" />
+				</ChaosSettingsEnum>
+
+				<ChaosSettingsEnum text="Size snap zones by accel" convar="mom_df_hud_snap_heightgain_enable" infomessage="When enabled, snap zones are drawn with heights proportional to their speed-gain potential.">
+					<RadioButton group="snapheightenable" text="#SFUI_Off" value="0" />
+					<RadioButton group="snapheightenable" text="#SFUI_On" value="1" />
+				</ChaosSettingsEnum>
+
+				<ChaosSettingsSlider text="Snap zone height" min="1" max="50" convar="mom_df_hud_snap_height" displayprecision="0" infomessage="Height of snap zones in pixels @1080p."/>
+
+				<ChaosSettingsSlider text="Snap zone offset" min="-200" max="200" convar="mom_df_hud_snap_offset" displayprecision="0" infomessage="Vertical offset from top of CGAZ acceleration zones in pixels @1080p. Up is positive."/>
+
+				<ConVarColorDisplay text="Snap zone color" convar="mom_df_hud_snap_color" infomessage="Color for colored snap zones."/>
+
+				<ConVarColorDisplay text="Snap highlight color" convar="mom_df_hud_snap_hl_color" infomessage="Color for highlighted colored snap zones."/>
+
+				<ConVarColorDisplay text="Snap highlight alt color" convar="mom_df_hud_snap_hl_alt_color" infomessage="Color for highlighted uncolored snap zones."/>
+
+				<ConVarColorDisplay text="Snap slow color" convar="mom_df_hud_snap_slow_color" infomessage="Color for minimum speed gain potential."/>
+
+				<ConVarColorDisplay text="Snap fast color" convar="mom_df_hud_snap_fast_color" infomessage="Color for maximum speed gain potential."/>
+
+				<ChaosSettingsEnumDropDown text="Projection mode" convar="mom_df_hud_projection" infomessage="Projection method used to map angles to the screen.">
+					<Label id="projection0" text="Perspective" value="0" />
+					<Label id="projection1" text="Arc length" value="1" />
+					<Label id="projection2" text="Panoramic" value="2" />
+				</ChaosSettingsEnumDropDown>
+
+				<ChaosSettingsEnum text="Use custom HUD field of view" convar="mom_df_hud_fov_override_enable" infomessage="Use a value other than camera field of view when computing projection.">
+					<RadioButton group="hudfovenable" text="#SFUI_Off" value="0" />
+					<RadioButton group="hudfovenable" text="#SFUI_On" value="1" />
+				</ChaosSettingsEnum>
+
+				<ChaosSettingsSlider text="HUD field of view" min="50" max="130" convar="mom_df_hud_fov" displayprecision="0" infomessage="Field of view value used to compute projection."/>
+
+				<ChaosSettingsEnum text="Display velocity direction" convar="mom_df_hud_velocity_enable" infomessage="Display current velocity direction. Draws an arrow on the strafe hud indicating angle of forward momentum.">
+					<RadioButton group="velocityenable" text="#SFUI_Off" value="0" />
+					<RadioButton group="velocityenable" text="#SFUI_On" value="1" />
+				</ChaosSettingsEnum>
+
+				<ChaosSettingsSlider text="Velocity arrow size" min="0" max="25" convar="mom_df_hud_velocity_size" displayprecision="0" infomessage="Arrow half-height in pixels @1080p."/>
+
+				<ConVarColorDisplay text="Velocity arrow color" convar="mom_df_hud_velocity_color" infomessage="Color for velocity arrow."/>
+
+				<ChaosSettingsEnum text="Display w-turn indicator" convar="mom_df_hud_windicator_enable" infomessage="Display w-turn indicator. Draws an arrow on the strafe hud indicating angle for tightest w-turn. While using air control, a box is drawn showing distance between crosshair and optimal angle.">
+					<RadioButton group="windicatorenable" text="#SFUI_Off" value="0" />
+					<RadioButton group="windicatorenable" text="#SFUI_On" value="1" />
+				</ChaosSettingsEnum>
+
+				<ChaosSettingsSlider text="Windicator arrow size" min="0" max="25" convar="mom_df_hud_windicator_size" displayprecision="0" infomessage="Arrow half-height in pixels @1080p."/>
+
+				<ConVarColorDisplay text="Windicator arrow color" convar="mom_df_hud_windicator_color" infomessage="Color for w-indicator arrow."/>
+
+			</Panel>
 		</Panel>
 	</Panel>
 </root>

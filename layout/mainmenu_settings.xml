@@ -143,7 +143,7 @@
 
 							<Label class="settings-nav__item-label" text="Gameplay"/>
 
-							<Panel class="settings-nav__subsection settings-nav__subsection--7 settings-nav__subsection--hidden">
+							<Panel class="settings-nav__subsection settings-nav__subsection--8 settings-nav__subsection--hidden">
 
 								<RadioButton id="GameplayGeneralRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="MainMenuSettings.navigateToSubsection('GameplaySettings', 'GameplayGeneralSubSection')">
 									<Label class="settings-nav__subitem-label" text="#MOM_Settings_Title_Gameplay_General"/>
@@ -172,6 +172,10 @@
 
 								<RadioButton id="ConcRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="MainMenuSettings.navigateToSubsection('GameplaySettings', 'ConcSubSection')">
 									<Label class="settings-nav__subitem-label" text="Conc"/>
+								</RadioButton>
+
+								<RadioButton id="DefragRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="MainMenuSettings.navigateToSubsection('GameplaySettings', 'DefragSubSection')">
+									<Label class="settings-nav__subitem-label" text="Defrag"/>
 								</RadioButton>
 
 							</Panel>
