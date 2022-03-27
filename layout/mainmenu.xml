@@ -37,7 +37,7 @@
 					<Image class="topnav__logo" src="file://{images}/topnav/momentumLogo.svg" textureheight="64" />
 				</RadioButton>
 
-				<Panel class="full-height flow-right">
+				<Panel id="MainMenuTopButtons" class="full-height flow-right">
 					<RadioButton id="PlayButton" class="topnav__button" onactivate="MainMenuController.navigateToTab('MapSelection', 'mainmenu_mapselector', false)">
 						<Image class="topnav__icon" src="file://{images}/topnav/play.svg" textureheight="64" />
 					</RadioButton>

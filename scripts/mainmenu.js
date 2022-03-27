@@ -175,7 +175,7 @@ class MainMenuController {
 	}
 
 	static getActiveNavBarButton() {
-		const elNavBar = $.GetContextPanel().FindChildTraverse('JsMainMenuNavBar');
+		const elNavBar = $.GetContextPanel().FindChildTraverse('MainMenuTopButtons');
 		const children = elNavBar.Children();
 		const count = children.length;
 
