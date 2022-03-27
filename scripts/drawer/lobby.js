@@ -362,7 +362,7 @@ class Lobby {
 
 				memberStatePanel.RemoveClass('hide');
 
-				if (memberMap === localMap && memberMap && localMap) {
+				if (memberMap && localMap && memberMap.toUpperCase() === localMap.toUpperCase()) {
 					joinButton.SetDialogVariable('memberJoinLabel', 'Spectate');
 					joinButton.RemoveClass('hide');
 
