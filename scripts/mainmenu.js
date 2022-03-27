@@ -175,15 +175,7 @@ class MainMenuController {
 	}
 
 	static getActiveNavBarButton() {
-		const elNavBar = $.GetContextPanel().FindChildTraverse('MainMenuTopButtons');
-		const children = elNavBar.Children();
-		const count = children.length;
-
-		for (let i = 0; i < count; i++) {
-			if (children[i].IsSelected()) {
-				return children[i];
-			}
-		}
+		return $.GetContextPanel().FindChildTraverse('MainMenuTopButtons').Children().find(panel => panel.IsSelected());
 	}
 
 	static onMainMenuLoaded() {
