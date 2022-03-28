@@ -2,14 +2,15 @@
 
 class SettingsShared {
 	static paintContainer;
+	static videoSettingsPanel;
 
 	static onChangedTab(newTab) {
 		if (newTab === 'VideoSettings') {
-			const videoSettingsPanel = $('#VideoSettings');
+			this.videoSettingsPanel ??= $('#VideoSettings');
 
 			// Get the apply and discard buttons on the video settings screen
-			const applyVideoSettingsButton = videoSettingsPanel.FindChildInLayoutFile('ApplyVideoSettingsButton');
-			const discardVideoSettingsButton = videoSettingsPanel.FindChildInLayoutFile('DiscardVideoSettingsButton');
+			const applyVideoSettingsButton = this.videoSettingsPanel.FindChildInLayoutFile('ApplyVideoSettingsButton');
+			const discardVideoSettingsButton = this.videoSettingsPanel.FindChildInLayoutFile('DiscardVideoSettingsButton');
 
 			// disabled as no user changes yet
 			applyVideoSettingsButton.enabled = false;
@@ -17,6 +18,8 @@ class SettingsShared {
 
 			// Tell C++ to init controls from convars
 			$.DispatchEvent('ChaosVideoSettingsInit');
+
+			this.initTextureReplacementDropdown();
 		} else if (newTab === 'OnlineSettings') {
 			this.onlineSettingsUpdateModel();
 		} else if (newTab === 'GameplaySettings') {
@@ -139,5 +142,64 @@ class SettingsShared {
 		ghostPreview.SetCameraOffset(-100.0, 0.0, 0.0);
 		ghostPreview.SetModelColor(color);
 		ghostPreview.SetModelBodygroup(1, bodygroup);
+	}
+
+	static requireMapReload() {
+		// No point showing the popup if we're on the main menu
+		// TODO: This doesn't work for some reason
+		//if (GameInterfaceAPI.GetGameUIState() === GAME_UI_STATE.MAINMENU) {
+		//	return;
+		//}
+
+		UiToolkitAPI.ShowGenericPopupTwoOptions('This options requires you to restart your map!', 
+			'This options requires you to restart your map!', 
+			'',
+			'Restart Map',
+			function() {
+				GameInterfaceAPI.ConsoleCommand('restart');
+			},
+			'Close',
+			function() {}
+		);
+	}
+
+	static initTextureReplacementDropdown() {
+		const textures = {
+			"None": "",
+			"Noise": "error_replacement/noise_basecolor",
+			"Grid": "error_replacement/grid_basecolor",
+			"Grid with Noise": "error_replacement/grid-noise_basecolor"
+		}
+
+		/** @type {Image} @static */
+		const imagePanel = this.videoSettingsPanel.FindChildTraverse('TextureReplacePreview');
+
+		/** @type {Dropdown} @static */
+		const dropdown = this.videoSettingsPanel.FindChildTraverse('MatErrorReplaceTexture').FindChildTraverse('DropDown');
+
+		const updatePanel = (override) => {
+			const selected = dropdown.GetSelected();
+
+			let path = '';
+			if (override) {
+				path = Object.entries(textures).find(([_, textureName]) => override === textureName)[1];
+			} else {
+				// Panorama won't let me store the texturePath value in the panel, so find it again based on the name.
+				path = Object.entries(textures).find(([textureName, _]) => selected.text === textureName)[1];
+			}
+
+			imagePanel.SetHasClass('hide', !path);
+			if (path) imagePanel.SetImage(`file://{materials}/${path}.vtf`);
+		}
+		
+		dropdown.SetPanelEvent('onuserinputsubmit', updatePanel)
+
+		Object.entries(textures).forEach(([textureName, texturePath], i) => {
+			const item = $.CreatePanel('Label', dropdown, `Texture${i}`, { text: textureName, value: texturePath });
+			dropdown.AddOption(item);
+		});
+
+		// Update the panel on init so it loads our texture
+		updatePanel(GameInterfaceAPI.GetSettingString('mat_error_texture_advanced_basetexture'));
 	}
 }

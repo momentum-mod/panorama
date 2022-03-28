@@ -23,7 +23,8 @@ class MainMenuSettings {
 			radioid: 'VideoRadio',
 			children: {
 				VideoSubSection: 'VideoSubRadio',
-				AdvancedVideoSubSection: 'AdvancedVideoRadio'
+				AdvancedVideoSubSection: 'AdvancedVideoRadio',
+				TextureReplaceSubSection: 'TextureReplaceRadio'
 			}
 		},
 		OnlineSettings: {

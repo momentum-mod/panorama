@@ -95,7 +95,7 @@
 
 							<Label class="settings-nav__item-label" text="Video"/>
 
-							<Panel class="settings-nav__subsection settings-nav__subsection--2 settings-nav__subsection--hidden">
+							<Panel class="settings-nav__subsection settings-nav__subsection--3 settings-nav__subsection--hidden">
 
 								<RadioButton id="VideoSubRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="MainMenuSettings.navigateToSubsection('VideoSettings', 'VideoSubSection')">
 									<Label class="settings-nav__subitem-label" text="#MOM_Settings_Title_Video" />
@@ -103,6 +103,10 @@
 
 								<RadioButton id="AdvancedVideoRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="MainMenuSettings.navigateToSubsection('VideoSettings', 'AdvancedVideoSubSection')">
 									<Label class="settings-nav__subitem-label" text="#MOM_Settings_Title_Video_Render" />
+								</RadioButton>
+
+								<RadioButton id="TextureReplaceRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="MainMenuSettings.navigateToSubsection('VideoSettings', 'TextureReplaceSubSection')">
+									<Label class="settings-nav__subitem-label" text="#MOM_Settings_Title_Texture_Replace" />
 								</RadioButton>
 
 							</Panel>

@@ -91,6 +91,15 @@ $page-width: 1920px - $rightnav-width;
 		margin-right: 16px;
 		background-color: rgba(255, 255, 255, 0.03);
 	}
+
+	&__texturereplace {
+		width: 150px;
+		height: 150px;
+		margin-right: 8px;
+		background-color: rgba(255, 255, 255, 0.03);
+		border: 1px solid rgba(0, 0, 0, 0.5);
+		border-radius: 2px;
+	}
 }
 
 .settings-nav {
