@@ -4,6 +4,7 @@
 		<include src="file://{resources}/styles/hud/cgaz.scss" />
 	</styles>
 	<scripts>
+		<include src="file://{resources}/scripts/common/gamemodes.js" />
 		<include src="file://{resources}/scripts/hud/cgaz.js" />
 	</scripts>
 

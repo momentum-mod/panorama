@@ -465,9 +465,9 @@
 					<RadioButton group="accelscaleenable" text="#SFUI_On" value="1" />
 				</ChaosSettingsEnum>
 
-				<ChaosSettingsSlider text="Accel zone height" min="1" max="50" convar="mom_df_cgaz_height" displayprecision="0" infomessage="Height of CGAZ acceleration zones in pixels @1080p."/>
+				<ChaosSettingsSlider text="Accel zone height" min="1" max="50" convar="mom_df_hud_accel_height" displayprecision="0" infomessage="Height of CGAZ acceleration zones in pixels @1080p."/>
 
-				<ChaosSettingsSlider text="Accel zone offset" min="-200" max="200" convar="mom_df_cgaz_offset" displayprecision="0" infomessage="Vertical offset from center screen in pixels @1080p. Up is positive."/>
+				<ChaosSettingsSlider text="Accel zone offset" min="-200" max="200" convar="mom_df_hud_accel_offset" displayprecision="0" infomessage="Vertical offset from center screen in pixels @1080p. Up is positive."/>
 
 				<ConVarColorDisplay text="Slow color" convar="mom_df_hud_accel_slow_color" infomessage="Color for CGAZ partial-acceleration zone. Forward speedgain is reduced in this portion of the CGAZ bar."/>
 
@@ -513,7 +513,7 @@
 
 				<ConVarColorDisplay text="Snap fast color" convar="mom_df_hud_snap_fast_color" infomessage="Color for maximum speed gain potential."/>
 
-				<ChaosSettingsEnumDropDown text="Projection mode" convar="mom_df_hud_projection" infomessage="Projection method used to map angles to the screen.">
+				<ChaosSettingsEnumDropDown text="Projection mode" convar="mom_df_hud_projection" infomessage="Projection method used to map angles to the screen.&#xA;0: Perspective mode uses the same projection calculation as the game camera.&#xA;1: Arc-length projection uses a uniform distribution of angles across the screen space to reduce distortion.&#xA;2: Panoramic projection uses a different method for reducing distortion.">
 					<Label id="projection0" text="Perspective" value="0" />
 					<Label id="projection1" text="Arc length" value="1" />
 					<Label id="projection2" text="Panoramic" value="2" />
@@ -524,7 +524,7 @@
 					<RadioButton group="hudfovenable" text="#SFUI_On" value="1" />
 				</ChaosSettingsEnum>
 
-				<ChaosSettingsSlider text="HUD field of view" min="50" max="130" convar="mom_df_hud_fov" displayprecision="0" infomessage="Field of view value used to compute projection."/>
+				<ChaosSettingsSlider text="HUD field of view" min="50" max="130" convar="mom_df_hud_fov" displayprecision="0" infomessage="Field of view value used to compute projection. Must toggle 'Use custom HUD field of view'"/>
 
 				<ChaosSettingsEnum text="Display velocity direction" convar="mom_df_hud_velocity_enable" infomessage="Display current velocity direction. Draws an arrow on the strafe hud indicating angle of forward momentum.">
 					<RadioButton group="velocityenable" text="#SFUI_Off" value="0" />

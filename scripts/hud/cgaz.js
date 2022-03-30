@@ -59,13 +59,13 @@ class Cgaz {
 	static rightTurnZone = $('#RightTurnZone');
 
 	static accelZones = [
-		this.leftTurnZone,
-		this.leftFastZone,
-		this.leftTurnZone,
-		this.deadZone,
-		this.rightSlowZone,
-		this.rightFastZone,
-		this.rightTurnZone
+		$('#LeftTurnZone'),
+		$('#LeftFastZone'),
+		$('#LeftSlowZone'),
+		$('#DeadZone'),
+		$('#RightSlowZone'),
+		$('#RightFastZone'),
+		$('#RightTurnZone')
 	];
 
 	static leftMirrorZone = $('#LeftMirrorZone');
@@ -110,6 +110,15 @@ class Cgaz {
 	static bShouldUpdateStyles = false;
 
 	static onLoad() {
+		if (GAMEMODE[GameModeAPI.GetCurrentGameMode()].name === 'Defrag') {
+		    this.updateEventHandle ??= $.RegisterEventHandler('ChaosHudProcessInput', $.GetContextPanel(), this.onUpdate.bind(this));
+		} else {
+			if (this.updateEventHandle) $.UnregisterEventHandler('ChaosHudProcessInput', this.updateEventHandle);
+			this.velocityArrow.visible = false;
+			this.windicatorArrow.visible = false;
+		    return;
+		}
+
 		this.onAccelConfigChange();
 		this.onProjectionChange();
 		this.onHudFovChange();
@@ -341,6 +350,8 @@ class Cgaz {
 				this.updateZone(this.leftMirrorZone, -maxMirrorAngle, -minMirrorAngle, mirrorOffset, MIRROR_CLASS, this.mirrorSplitZone);
 				this.updateZone(this.rightMirrorZone, minMirrorAngle, maxMirrorAngle, mirrorOffset, MIRROR_CLASS, this.mirrorSplitZone);
 			}
+		} else {
+			this.clearZones([this.leftMirrorZone, this.rightMirrorZone], 0);
 		}
 
 		if (!this.snapAccel) {
@@ -359,12 +370,15 @@ class Cgaz {
 			} else {
 				this.clearZones(this.snapZones, 0);
 			}
+		} else {
+			this.clearZones(this.snapZones, 0);
 		}
 
 		// arrows
 		let velocityAngle = this.remapAngle(viewDir - velDir);
 		// draw velocity direction
 		if (this.velocity_enable && speed >= this.accel_min_speed) {
+			this.velocityArrow.visible = true;
 			if (Math.abs(velocityAngle) < this.hFov) {
 				this.velocityArrowIcon.RemoveClass('arrow__down');
 				this.velocityArrowIcon.AddClass('arrow__up');
@@ -376,12 +390,13 @@ class Cgaz {
 			this.velocityArrow.style.marginLeft = this.mapToScreenSpace(velocityAngle) + 'px';
 		} else {
 			// hide arrow
-			this.velocityArrow.style.marginLeft = -this.screenX + 'px';
+			this.velocityArrow.visible = false;
 		}
 
 		const wTurnAngle = velocityAngle > 0 ? velocityAngle + this.theta : velocityAngle - this.theta;
 		// draw w-turn indicator
 		if (this.windicator_enable && Math.abs(wTurnAngle) < this.hFov && speed >= this.accel_min_speed) {
+			this.windicatorArrow.visible = true;
 			this.windicatorArrow.style.marginLeft = this.mapToScreenSpace(wTurnAngle) + 'px';
 
 			const minAngle = Math.min(wTurnAngle, 0);
@@ -394,7 +409,7 @@ class Cgaz {
 			}
 		} else {
 			// hide arrow & box
-			this.windicatorArrow.style.marginLeft = -this.screenX + 'px';
+			this.windicatorArrow.visible = false;
 			this.windicatorZone.style.width = '0px';
 		}
 	}
@@ -653,7 +668,7 @@ class Cgaz {
 	}
 
 	static splitColorString(string) {
-		return string.slice(5, -1).split(' ').map((c, i) => i == 3 ? parseInt(c * 255) : parseInt(c));
+		return string.slice(5, -1).split(',').map((c, i) => i == 3 ? parseInt(c * 255) : parseInt(c));
     }
 
 	static colorLerp(A, B, alpha) {
