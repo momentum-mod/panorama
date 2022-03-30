@@ -50,13 +50,6 @@ class StyleObject {
 
 class Cgaz {
 	static accelContainer = $('#AccelContainer');
-	static leftTurnZone = $('#LeftTurnZone');
-	static leftFastZone = $('#LeftFastZone');
-	static leftSlowZone = $('#LeftSlowZone');
-	static deadZone = $('#DeadZone');
-	static rightSlowZone = $('#RightSlowZone');
-	static rightFastZone = $('#RightFastZone');
-	static rightTurnZone = $('#RightTurnZone');
 
 	static accelZones = [
 		$('#LeftTurnZone'),
@@ -67,6 +60,14 @@ class Cgaz {
 		$('#RightFastZone'),
 		$('#RightTurnZone')
 	];
+
+	static leftTurnZone = this.accelZones[0];
+	static leftFastZone = this.accelZones[1];
+	static leftSlowZone = this.accelZones[2];
+	static deadZone = this.accelZones[3];
+	static rightSlowZone = this.accelZones[4];
+	static rightFastZone = this.accelZones[5];
+	static rightTurnZone = this.accelZones[6];
 
 	static leftMirrorZone = $('#LeftMirrorZone');
 	static rightMirrorZone = $('#RightMirrorZone');
