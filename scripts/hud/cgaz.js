@@ -111,7 +111,7 @@ class Cgaz {
 	static bShouldUpdateStyles = false;
 
 	static onLoad() {
-		if (GAMEMODE[GameModeAPI.GetCurrentGameMode()].name === 'Defrag') {
+		if (GAMEMODE_WITH_NULL[GameModeAPI.GetCurrentGameMode()].name === 'Defrag') {
 		    this.updateEventHandle ??= $.RegisterEventHandler('ChaosHudProcessInput', $.GetContextPanel(), this.onUpdate.bind(this));
 		} else {
 			if (this.updateEventHandle) $.UnregisterEventHandler('ChaosHudProcessInput', this.updateEventHandle);
