@@ -174,6 +174,10 @@
 			<Panel id="TextureReplaceSubSection" class="settings-group">
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#MOM_Settings_Title_Texture_Replace" />
+
+					<Panel id="TextureReplaceWarningPanel" class="settings-group__reset flow-right">
+						<Label class="button__text" text="Reload map for changes to take effect!" />
+					</Panel>
 				</Panel>
 
 				<Panel class="flow-right">
@@ -182,12 +186,13 @@
 					</Panel>
 
 					<Panel class="fill-width flow-down">
-						<ChaosSettingsEnumDropDown text="#MOM_Settings_MatError_Type" onuserinputsubmit="SettingsShared.requireMapReload()" convar="mat_error_texture_type" id="MatErrorType" infomessage="#MOM_Settings_MatError_Type_Info">
+						<ChaosSettingsEnumDropDown text="#MOM_Settings_MatError_Type" convar="mat_error_texture_type" id="MatErrorType" infomessage="#MOM_Settings_MatError_Type_Info">
 							<Label text="#MOM_Settings_MatError_Type_0" id="materrortype0" value="0"/>
 							<Label text="#MOM_Settings_MatError_Type_1" id="materrortype1" value="1"/>
 						</ChaosSettingsEnumDropDown>
 
 						<!--
+						https://github.com/ChaosInitiative/Chaos-Source/issues/368
 						<ChaosSettingsEnumDropDown text="#MOM_Settings_MatError_TypeCubemap" convar="mat_error_texture_type_cubemap" infomessage="#MOM_Settings_MatError_TypeCubemap_Info">
 							<Label text="#MOM_Settings_MatError_TypeCubemap_0" id="materrortypecubemap0" value="0"/>
 							<Label text="#MOM_Settings_MatError_TypeCubemap_1" id="materrortypecubemap1" value="1"/>
@@ -195,7 +200,7 @@
 						</ChaosSettingsEnumDropDown>
 						-->
 
-						<ChaosSettingsEnumDropDown text="#MOM_Settings_MatError_Advanced" onuserinputsubmit="SettingsShared.requireMapReload()" convar="mat_error_texture_advanced" infomessage="#MOM_Settings_MatError_Advanced_Info">
+						<ChaosSettingsEnumDropDown text="#MOM_Settings_MatError_Advanced" convar="mat_error_texture_advanced" infomessage="#MOM_Settings_MatError_Advanced_Info">
 							<Label text="#MOM_Settings_MatError_Advanced_0" id="materroradv0" value="0"/>
 							<Label text="#MOM_Settings_MatError_Advanced_1" id="materroradv1" value="1"/>
 							<!--<Label text="#MOM_Settings_MatError_Advanced_2" id="materroradv2" value="2"/>-->

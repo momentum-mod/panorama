@@ -144,25 +144,6 @@ class SettingsShared {
 		ghostPreview.SetModelBodygroup(1, bodygroup);
 	}
 
-	static requireMapReload() {
-		// No point showing the popup if we're on the main menu
-		// TODO: This doesn't work for some reason
-		//if (GameInterfaceAPI.GetGameUIState() === GAME_UI_STATE.MAINMENU) {
-		//	return;
-		//}
-
-		UiToolkitAPI.ShowGenericPopupTwoOptions('This options requires you to restart your map!', 
-			'This options requires you to restart your map!', 
-			'',
-			'Restart Map',
-			function() {
-				GameInterfaceAPI.ConsoleCommand('restart');
-			},
-			'Close',
-			function() {}
-		);
-	}
-
 	static initTextureReplacementDropdown() {
 		const textures = {
 			"None": "",
