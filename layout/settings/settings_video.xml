@@ -203,7 +203,7 @@
 						<ChaosSettingsEnumDropDown text="#MOM_Settings_MatError_Advanced" convar="mat_error_texture_advanced" infomessage="#MOM_Settings_MatError_Advanced_Info">
 							<Label text="#MOM_Settings_MatError_Advanced_0" id="materroradv0" value="0"/>
 							<Label text="#MOM_Settings_MatError_Advanced_1" id="materroradv1" value="1"/>
-							<!--<Label text="#MOM_Settings_MatError_Advanced_2" id="materroradv2" value="2"/>-->
+							<Label text="#MOM_Settings_MatError_Advanced_2" id="materroradv2" value="2"/>
 						</ChaosSettingsEnumDropDown>
 
 						<ChaosSettingsEnumDropDown text="#MOM_Settings_MatError_ReplaceTexture" id="MatErrorReplaceTexture" convar="mat_error_texture_advanced_basetexture" infomessage="#MOM_Settings_MatError_ReplaceTexture_Info">
