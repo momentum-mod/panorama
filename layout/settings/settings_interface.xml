@@ -156,7 +156,7 @@
 				
 				<ConVarEnabler convar="mom_hud_speedometer_enable" togglevisibility="true" class="flow-down">
 				
-					<ChaosSettingsSlider text="Speedometer FPS" min="0" max="300" convar="mom_hud_speedometer_fps" infomessage="" hasdocspage="true"/>
+					<ChaosSettingsSlider text="Speedometer FPS" min="0" max="400" convar="mom_hud_speedometer_fps" infomessage="FPS of the speedometer. For no limit, set to 0." hasdocspage="true"/>
 
 					<Panel id="SpeedometersContainer" class="flow-down full-width" infotitle="Speedometers for gamemode" infomessage="Visible speedometers for the specified gamemode.">
 
