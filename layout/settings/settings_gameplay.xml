@@ -524,7 +524,7 @@
 					<RadioButton group="hudfovenable" text="#SFUI_On" value="1" />
 				</ChaosSettingsEnum>
 
-				<ChaosSettingsSlider text="HUD field of view" min="50" max="130" convar="mom_df_hud_fov" displayprecision="0" infomessage="Field of view value used to compute projection. Must toggle 'Use custom HUD field of view'"/>
+				<ChaosSettingsSlider text="HUD field of view" min="50" max="130" convar="mom_df_hud_fov_override" displayprecision="0" infomessage="Field of view value used to compute projection. Must toggle 'Use custom HUD field of view'"/>
 
 				<ChaosSettingsEnum text="Display velocity direction" convar="mom_df_hud_velocity_enable" infomessage="Display current velocity direction. Draws an arrow on the strafe hud indicating angle of forward momentum.">
 					<RadioButton group="velocityenable" text="#SFUI_Off" value="0" />
