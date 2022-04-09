@@ -44,6 +44,8 @@
 				</Panel>
 
 				<ChaosSettingsSlider text="#GameUI_FOV" min="50" max="130" convar="fov_desired" hasdocspage="false"/>
+				
+				<ChaosSettingsSlider text="Max FPS" min="0" max="400" convar="fps_max" infomessage="FPS limiter. Set to 0 for no limit." hasdocspage="false"/>
 
 				<ChaosSettingsEnumDropDown text="Color Mode" onuserinputsubmit="SettingsShared.videoSettingsOnUserInputSubmit()" id="ColorMode">
 					<Label text="#GameUI_DisplayMonitor" value="0" id="tvmode0" />
