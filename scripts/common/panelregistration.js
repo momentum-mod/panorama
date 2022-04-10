@@ -21,4 +21,5 @@
     UiToolkitAPI.RegisterHUDPanel2d('MomHudMapInfo', 'file://{resources}/layout/hud/mapinfo.xml');
     UiToolkitAPI.RegisterHUDPanel2d('MomHudWeaponSelection', 'file://{resources}/layout/hud/weaponselection.xml');
     UiToolkitAPI.RegisterHUDPanel2d('MomHudCgaz', 'file://{resources}/layout/hud/cgaz.xml');
+    UiToolkitAPI.RegisterHUDPanel2d('MomHudSpecInfo', 'file://{resources}/layout/hud/specinfo.xml');
 })();

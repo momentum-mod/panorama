@@ -1,0 +1,35 @@
+@use '../config'as *;
+@use '../abstract/mixin';
+
+.hudspecinfo {
+	margin: 25px 15px 15px 0;
+	flow-children: down;
+	width: 350px;
+	height: fit-children;
+	align: right center;
+
+	&__count {
+		@include mixin.font-styles($use-header: false);
+		font-size: 20px;
+		text-align: right;
+		text-overflow: ellipsis;
+		color: $white;
+	}
+}
+
+.specinfo-list-entry {
+	margin: 2px 15px 0 0;
+	flow-children: down;
+	width: 350px;
+	height: fit-children;
+	align: right center;
+
+	&__name {
+		@include mixin.font-styles($use-header: false);
+		align: right center;
+		font-size: 20px;
+		text-align: right;
+		text-overflow: ellipsis;
+		color: $white;
+	}
+}

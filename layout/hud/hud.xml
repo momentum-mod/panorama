@@ -53,6 +53,7 @@
 		<Panel id="HudTopRight" hittest="false" hittestchildren="false">
 			<MomHudVersionInfo />
 			<MomHudMapInfo />
+			<MomHudSpecInfo />
 			<MomHudWeaponSelection />
 		</Panel>
 
