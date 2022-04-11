@@ -409,6 +409,16 @@ $page-width: 1920px - $rightnav-width;
 			}
 		}
 	}
+
+	&__combo-header {
+		width: 100%;
+		padding: 8px 12px 7px 12px;;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.01);
+		background-color: gradient-horizontal(rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+
+		@include mixin.font-styles($use-header: true);
+		font-size: 26px;
+	}
 }
 
 .settings-info {
