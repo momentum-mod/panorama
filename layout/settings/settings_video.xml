@@ -152,6 +152,21 @@
 					<Label text="#SFUI_MotionBlur_Enabled" value="1" id="motionblur1"/>
 				</ChaosSettingsEnumDropDown>
 
+				<ChaosSettingsEnumDropDown text="#SFUI_Settings_DynamicTonemapping" onuserinputsubmit="SettingsShared.videoSettingsOnUserInputSubmit()" id ="DynamicTonemapping" infomessage="#SFUI_Settings_Dynamic_Tonemapping_Info">
+					<Label text="#SFUI_Settings_Disabled" value="0" id="dynamictonemapping0" />
+					<Label text="#SFUI_Settings_Enabled" value="1" id="dynamictonemapping1"/>
+				</ChaosSettingsEnumDropDown>
+
+				<ChaosSettingsEnumDropDown text="#SFUI_Settings_DisableBloom" onuserinputsubmit="SettingsShared.videoSettingsOnUserInputSubmit()" id ="DisableBloom" infomessage="#SFUI_Settings_Disable_Bloom_Info">
+					<Label text="#SFUI_Settings_Disabled" value="1" id="disablebloom0" />
+					<Label text="#SFUI_Settings_Enabled" value="0" id="disablebloom1"/>
+				</ChaosSettingsEnumDropDown>
+
+				<ChaosSettingsEnumDropDown text="#SFUI_Settings_ColorCorrection" onuserinputsubmit="SettingsShared.videoSettingsOnUserInputSubmit()" id ="ColorCorrection" infomessage="#SFUI_Settings_Color_Correction_Info">
+					<Label text="#SFUI_Settings_Disabled" value="0" id="colorcorrection0" />
+					<Label text="#SFUI_Settings_Enabled" value="1" id="colorcorrection1"/>
+				</ChaosSettingsEnumDropDown>
+
 			</Panel>
 
 		</ChaosVideoSettings>
