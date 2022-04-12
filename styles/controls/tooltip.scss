@@ -17,7 +17,7 @@
 	&__contents {
 		flow-children: down;
 		padding: $tooltip-padding;
-		border-radius: 4px;
+		border-radius: $tooltip-radius;
 		background-color: $tooltip-background;
 	}
 
