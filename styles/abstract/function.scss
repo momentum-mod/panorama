@@ -26,3 +26,7 @@
 @function gradient-vertical($color1, $color2) {
 	@return gradient(linear, 0% 0%, 0% 100%, from($color1), to($color2));
 }
+
+@function gradient-radial($color1, $color2) {
+	@return gradient(radial, 50% 50%, 0% 0%, 50% 50%, from($color1), to($color2));
+}
