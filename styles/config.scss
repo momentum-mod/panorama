@@ -225,6 +225,7 @@ $dropdown-button-icon-background-hover : color.scale($dropdown-button-icon-backg
 $dropdown-button-icon-background-menuvisible: color.scale($dropdown-button-icon-background, $lightness: -40%,   $alpha: 20%) !default;
 $dropdown-button-icon-border           : 0px solid rgba(0, 0, 0, 0) !default;
 $dropdown-button-icon-shadow           : 0 0 2px 0 rgba(0, 0, 0, 0.3) !default;
+$dropdown-button-icon-icon-shadow	   : 0 0 3px 0 rgba(0, 0, 0, 0.5) !default;
 
 $dropdown-button-shadow: $button-shadow !default;
 $dropdown-button-radius: 4px !default;
