@@ -49,7 +49,7 @@ class LeaderboardEntry {
 		if (isValid) {
 			items.push({
 				label: $.Localize('#MOM_Leaderboards_WatchReplay'),
-				icon: 'file://{images}/replay-open.svg',
+				icon: 'file://{images}/movie-open-outline.svg',
 				style: 'icon-color-mid-blue',
 				jsCallback: () => {
 					$.DispatchEvent('LeaderboardEntry_PlayReplay', index);
