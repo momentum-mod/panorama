@@ -1,12 +1,10 @@
-"use strict";
+'use strict';
 
 //--------------------------------------------------------------------------------------------------
 // Purpose: Common place to register new panel type with panorama
 //--------------------------------------------------------------------------------------------------
 
-(function()
-{  
-    $.Msg( '---------- Registering new panel types with Panorama ----------' );
+	UiToolkitAPI.RegisterPanel2d('LineGraph', 'file://{resources}/layout/components/graphs/linegraph.xml');
 
     // Perf tests
     UiToolkitAPI.RegisterPanel2d( 'ChaosPerfTestsJsMultipleContexts', 'file://{resources}/layout/tests/perf/perf_jsmultiplecontexts.xml' );

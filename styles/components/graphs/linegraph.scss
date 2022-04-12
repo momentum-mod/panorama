@@ -1,0 +1,178 @@
+@use '../../config' as *;
+@use '../../abstract/mixin';
+@use '../../abstract/function';
+@use 'sass:math';
+
+.linegraph {
+	$root: &;
+	flow-children: down;
+
+	&__main {
+		width: 100%;
+		height: 100%;
+
+		background-color: function.gradient-vertical(rgba(49, 49, 49, 0.5), rgba(0, 0, 0, 0.7));
+		border: 1px solid rgba(0, 0, 0, 0.05);
+		margin: -1px;
+	}
+
+	&__canvas {
+		width: 100%;
+		height: 100%;
+	}
+
+	&__points {
+		width: 100%;
+		height: 100%;
+	}
+
+	&__graphcontainer {
+		width: 100%;
+		height: 100%;
+	}
+
+	&__point-wrapper {
+	}
+
+	&__point {
+		z-index: 5;
+		background-color: white;
+		border-radius: 50% 50%;
+		box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+		align: center center;
+		width: 7px;
+		height: 7px;
+
+		transition-property: background-color, box-shadow, width, height;
+		transition-duration: 0.1s;
+		transition-timing-function: ease-in-out;
+
+		#{$root}__point-wrapper:hover & {
+			background-color: $mid-blue;
+			box-shadow: 0 0 4px rgba(0, 0, 0, 1);
+		}
+
+		&--hidden {
+			visibility: collapse;
+		}
+	}
+
+	&__grid {
+		z-index: -1;
+		width: 100%;
+		height: 100%;
+		overflow: clip;
+	}
+
+	&__gridline {
+		z-index: 2;
+		background-color: rgba(255, 255, 255, 0.05);
+
+		&--axis {
+			background-color: rgba(255, 255, 255, 0.3);
+		}
+
+		&--x {
+			width: 1px;
+			height: 100%;
+		}
+
+		&--y {
+			width: 100%;
+			height: 1px;
+		}
+	}
+
+	&__axis {
+		opacity: 0.5;
+
+		&--y {
+			height: 100%;
+			width: $linegraph-axis-width;
+			horizontal-align: left;
+		}
+
+		&--x {
+			width: 100%;
+			height: $linegraph-axis-width;
+			vertical-align: bottom;
+			margin-left: $linegraph-axis-width;
+		}
+	}
+
+	&__axis-name {
+		font-size: 26px;
+		@include mixin.font-styles($use-header: true);
+		opacity: 0.5;
+		text-shadow: none;
+
+		&--x {
+			width: 100%;
+			text-align: center;
+			vertical-align: bottom;
+			padding-bottom: 4px;
+		}
+
+		&--y {
+			// Getting the rotation to work nicely like this is a nightmare, these properties are all essential.
+			// The panel needs to be allowed to noclip and centered exactly, that way rotating about the center
+			// will actually get positioned correctly on the axis.
+			transform-origin: 50% 50%;
+			horizontal-align: center;
+			vertical-align: center;
+			overflow: noclip;
+			text-align: center;
+			// This might break for graphs of different heights. If they're needed we may need to rethink some styling here.
+			// It's just very hard to get perfect, this will do for now.
+			width: 300%;
+			height: 32px;
+			margin-right: 8px;
+			text-overflow: shrink;
+			transform: rotateZ(-90deg) translateX(8px);
+		}
+	}
+
+	// These needs wrapping in a container so it can position the inside stuff
+	&__axis-y-container {
+		width: 40px;
+		height: 100%;
+		horizontal-align: left;
+	}
+
+	&__y-markers {
+		width: $linegraph-axis-width;
+		height: 100%;
+		overflow: noclip;
+		// transform: translateX(-6px)
+	}
+
+	&__x-markers {
+		width: 100%;
+		height: $linegraph-axis-width;
+		padding-top: 4px;
+		margin-left: $linegraph-axis-width;
+		overflow: noclip;
+	}
+
+	&__marker {
+		font-size: 12px;
+		@include mixin.font-styles($use-header: true, $light-header: true);
+		overflow: squish;
+		text-overflow: shrink;
+
+		&--x {
+			height: 100%;
+			width: 20px;
+			transform: translateX(-10px);
+			text-align: center;
+		}
+
+		&--y {
+			horizontal-align: right;
+			height: 16px;
+			transform: translateY(-6px) translateX(-6px);
+			text-align: right;
+			max-width: 20px;
+		}
+	}
+}
