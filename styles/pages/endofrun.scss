@@ -1,0 +1,462 @@
+@use '../config' as *;
+@use '../abstract/mixin';
+@use 'sass:color';
+@use '../abstract/function';
+
+.endofrun {
+	$root: &;
+	flow-children: down;
+	width: 100%;
+	background-color: rgba(0, 0, 0, 0.6);
+
+	&__header {
+		// flow-children: right;
+		border-top: 1px solid rgba(0, 0, 0, 0.3);
+		border-bottom: 1px solid rgba(0, 0, 0, 0.6);
+		width: 100%;
+
+		#{$root}--ahead & {
+			background-color: rgba($comparison-ahead-gain-background, 0.3);
+		}
+		#{$root}--behind & {
+			background-color: rgba($comparison-behind-loss-background, 0.3);
+		}
+		#{$root}--first & {
+			background-color: rgba($comparison-neutral-background, 0.4);
+		}
+	}
+
+	&__times {
+		padding: 16px 16px;
+
+		flow-children: right;
+		horizontal-align: center;
+	}
+
+	&__time,
+	&__diff {
+		@include mixin.font-styles($use-header: true);
+		vertical-align: center;
+	}
+
+	&__time {
+		font-size: 64px;
+		margin-right: 16px;
+	}
+
+	&__diff {
+		font-size: 32px;
+
+		#{$root}--ahead & {
+			color: $comparison-ahead-gain;
+		}
+		#{$root}--behind & {
+			color: $comparison-behind-loss;
+		}
+		#{$root}--first & {
+			visibility: collapse;
+		}
+	}
+
+	&__header-left {
+		height: 100%;
+	}
+
+	&__header-right {
+		flow-children: right;
+		height: 100%;
+		horizontal-align: right;
+	}
+
+	&__run-status-indicators {
+		flow-children: down;
+		vertical-align: center;
+		margin-right: 16px;
+
+		&--hidden {
+			visibility: collapse;
+		}
+	}
+
+	&__run-status-indicator {
+		vertical-align: center;
+		width: 36px;
+		height: 36px;
+		opacity: 0.9;
+		img-shadow: 0 0 4px rgba(0, 0, 0, 0.7);
+		tooltip-position: bottom;
+
+		&--progress {
+			padding: 2px;
+		}
+
+		&--success {
+			wash-color: $positive;
+		}
+
+		&--error {
+			wash-color: $error;
+		}
+	}
+
+	&__header-buttons {
+		flow-children: down;
+		height: 100%;
+		border-left: 1px solid rgba(0, 0, 0, 0.3);
+	}
+
+	&__header-button {
+		flow-children: right;
+		vertical-align: center;
+		width: 160px;
+		height: fill-parent-flow(1);
+		padding: 2px 4px;
+		background-color: function.gradient-vertical(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.3));
+		border-bottom: 0px solid rgba(0, 0, 0, 0.2);
+		box-shadow: 0 0 16px 0 rgba(0, 0, 0, 0.1);
+		transition: background-color 0.1s ease-in-out 0s;
+
+		&:hover {
+			background-color: function.gradient-vertical(rgba(80, 80, 80, 0.2), rgba(80, 80, 80, 0.3));
+		}
+
+		&--back-button {
+			width: 64px;
+		}
+
+		&--last {
+			border-bottom: 0px solid rgba(0, 0, 0, 0);
+		}
+
+		& .button__icon {
+			height: 36px;
+		}
+
+		& .button__text {
+			overflow: squish;
+			text-overflow: shrink;
+		}
+	}
+
+	&__comparison {
+		flow-children: down;
+		width: 100%;
+		background-color: rgba(0, 0, 0, 0.1);
+	}
+
+	&__splits-container {
+		width: 100%;
+		padding-top: 8px;
+		background-color: rgba(0, 0, 0, 0.5);
+	}
+
+	&__splits {
+		flow-children: right;
+		horizontal-align: center;
+		overflow: scroll clip;
+		padding: 0 8px;
+		padding-bottom: 10px;
+
+		& > HorizontalScrollBar {
+			height: 2px;
+			border-radius: 0;
+			opacity: 0.2;
+		}
+	}
+
+	&__split {
+		margin: 0 2px;
+		box-shadow: 1px 1px 12px 0 rgba(0, 0, 0, 1);
+		border: 1px solid rgba(0, 0, 0, 0.7);
+	}
+
+	&__split-button {
+		margin: 0 2px;
+		box-shadow: 1px 1px 12px 0 rgba(0, 0, 0, 1);
+		border: 1px solid rgba(0, 0, 0, 0.7);
+
+		transition-property: border, brightness;
+		transition-duration: 0.08s;
+		transition-timing-function: ease-in-out;
+
+		&:selected {
+			border: 1px solid rgba(255, 255, 255, 1);
+			& > .split {
+				brightness: 1.2;
+			}
+		}
+
+		&:hover {
+			border: 1px solid rgba(255, 255, 255, 0.3);
+			& > .split {
+				brightness: 1.1;
+			}
+		}
+	}
+
+	&__stats {
+		flow-children: right;
+		width: 100%;
+
+		&--hidden {
+			visibility: collapse;
+		}
+	}
+
+	&__xp {
+		background-color: rgba(0, 0, 0, 0.3);
+
+		height: 200px;
+		width: 100%;
+	}
+
+	&__comparison-dropdown {
+		height: 24px;
+		& > .DropDownChild {
+			font-size: 16px;
+		}
+		& > .DropDownIcon {
+			min-width: 24px;
+		}
+	}
+}
+
+.endofrun-graph {
+	height: 180px + $linegraph-axis-width;
+	width: 560px + $linegraph-axis-width;
+	padding: 12px 16px 8px 4px;
+
+	&--hidden {
+		visibility: collapse;
+	}
+
+	&__positive {
+		background-color: color.scale(rgba($comparison-behind, 0.15), $lightness: 0%);
+	}
+	&__negative {
+		background-color: color.scale(rgba($comparison-ahead, 0.15), $lightness: 0%);
+	}
+
+	&__point {
+		&--selected {
+			& > .linegraph__point {
+				width: 11px;
+				height: 11px;
+				box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+				background-color: color.scale($mid-blue, $saturation: 100%, $lightness: -30%);
+				animation: PointScalePulse 1.25s ease-in-out 0s infinite normal forwards;
+			}
+		}
+	}
+}
+
+@keyframes PointScalePulse {
+	0% {
+		transform: scale3d(1, 1, 1);
+	}
+	50% {
+		transform: scale3d(1.1, 1.1, 1);
+	}
+	100% {
+		transform: scale3d(1, 1, 1);
+	}
+}
+
+.endofrun-stats {
+	$root: &;
+
+	flow-children: down;
+	width: fill-parent-flow(1);
+	height: 100%;
+	overflow: squish scroll;
+	padding-right: 12px;
+	padding-left: 0px;
+	padding-bottom: 12px;
+	margin-bottom: 24px;
+
+	& VerticalScrollBar {
+		width: 2px;
+	}
+
+	&__header {
+		flow-children: right;
+		width: 100%;
+		padding-top: 10px;
+	}
+
+	&__title {
+		width: 25%;
+		font-size: 16px;
+	}
+
+	&__title,
+	&__comparison-pre {
+		@include mixin.font-styles($use-header: true, $light-header: true);
+	}
+
+	&__comparison-pre {
+		font-size: 16px;
+	}
+
+	&__comparison {
+		margin-left: 6px;
+		font-size: 16px;
+		@include mixin.font-styles($use-header: true, $light-header: true);
+		color: $mid-blue;
+	}
+
+	&__row-container {
+		padding-bottom: 6px;
+	}
+
+	&__row {
+		flow-children: right;
+		padding: 2px 4px 2px 0px;
+		border-left: 1px solid rgba(0, 0, 0, 0);
+
+		transition-property: background-color, border;
+		transition-timing-function: ease-out;
+		transition-duration: 0.1s;
+
+		&--odd {
+			background-color: rgba(0, 0, 0, 0.2);
+		}
+
+		&:not(&--header) {
+			padding-left: 2px;
+			&:hover {
+				border-left: 1px solid rgba(255, 255, 255, 0.05);
+				background-color: rgba(255, 255, 255, 0.01);
+
+				& #{$root}__name {
+					transform: translateX(2px);
+				}
+			}
+
+			&:selected {
+				background-color: rgba(255, 255, 255, 0.02);
+				border-left: 1px solid rgba(255, 255, 255, 0.1);
+
+				& #{$root}__name {
+					transform: translateX(4px);
+				}
+			}
+		}
+	}
+
+	&__name {
+		width: fill-parent-flow(1.8);
+		font-size: 12px;
+		text-align: left;
+		text-overflow: shrink;
+
+		transition: transform 0.1s ease-out 0s;
+	}
+
+	&__value {
+		width: fill-parent-flow(1);
+		font-size: 12px;
+		text-align: right;
+	}
+
+	&__table-header-text {
+		font-weight: bold;
+		font-size: 12px;
+	}
+}
+
+.endofrun-xp {
+	$root: &;
+	flow-children: down;
+	padding: 12px 16px;
+	border-top: 1px solid rgba(0, 0, 0, 0.3);
+	height: 64px;
+
+	transition-property: height;
+	transition-duration: 0s;
+	transition-timing-function: ease-out;
+
+	&--hidden {
+		transition-duration: 0.2s;
+		height: 0px;
+	}
+
+	&__levelindicator {
+		padding: 3px 9px;
+		max-width: 140px;
+		border-radius: 2px;
+		box-shadow: fill 1px 3px 8px 0px rgba(0, 0, 0, 0.5);
+
+		& .levelindicator__icon {
+			height: 28px;
+		}
+		& .levelindicator__text {
+			font-size: 28px;
+		}
+	}
+
+	&__wide-container {
+		flow-children: down;
+		width: fill-parent-flow(1);
+		height: 100%;
+		margin-left: 16px;
+	}
+
+	&__xp-info {
+		flow-children: right;
+		width: 100%;
+		vertical-align: bottom;
+	}
+
+	&__xp-counter {
+		font-size: 20px;
+		margin-bottom: -2px;
+		@include mixin.font-styles($use-header: true, $light-header: false);
+	}
+
+	&__new-stat-container {
+		flow-children: right;
+		horizontal-align: right;
+		margin-bottom: -2px;
+		transform: translateX(0px);
+
+		transition-property: transform;
+		transition-duration: 0s;
+		transition-timing-function: ease-out;
+
+		#{$root}--hidden & {
+			transform: translateX(100px);
+
+			transition-duration: 0.5s;
+		}
+	}
+
+	&__new-stat {
+		font-size: 20px;
+		@include mixin.font-styles($use-header: true, $light-header: false);
+		color: $mid-blue;
+	}
+}
+
+.endofrun-xp-bar {
+	flow-children: right;
+	width: 100%;
+	height: 10px;
+
+	margin-bottom: 6px;
+
+	background-color: $progressbar-background;
+	box-shadow: fill 1px 3px 8px 0px rgba(0, 0, 0, 0.5);
+
+	&__primary {
+		height: 100%;
+		@include mixin.gradient-themed($color: 'blue', $direction: 'left');
+		transition-timing-function: ease-in-out;
+	}
+
+	&__secondary {
+		height: 100%;
+		@include mixin.gradient-themed($color: 'green', $direction: 'left');
+		transition-property: width;
+	}
+}
