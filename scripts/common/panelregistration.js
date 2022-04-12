@@ -4,6 +4,8 @@
 // Purpose: Common place to register new panel type with panorama
 //--------------------------------------------------------------------------------------------------
 
+(function () {
+	UiToolkitAPI.RegisterPanel2d('Split', 'file://{resources}/layout/components/split.xml');
 	UiToolkitAPI.RegisterPanel2d('LineGraph', 'file://{resources}/layout/components/graphs/linegraph.xml');
 
     // Perf tests

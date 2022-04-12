@@ -1,0 +1,26 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+
+	<scripts>
+		<include src="file://{resources}/scripts/components/split.js" />
+	</scripts>
+
+	<Panel class="split" onload="Split.onLoad()">
+		<Panel class="split__left">
+			<Label id="Name" class="split__name" text="{s:name}"/>
+			<Panel class="split__diff-container">
+				<Label class="split__time transparent" text="{s:diff_sign}"/>
+				<Label class="split__diff-sign" text="{s:diff_sign}"/>
+			</Panel>
+		</Panel>
+		<Panel class="split__right">
+			<Label id="Time" class="split__time" text="{g:time:time}"/>
+			<Panel class="flow-right">
+				<Label class="split__diff-prefix" text="{s:diff_sign}"/>
+				<Label class="split__diff" text="{g:time:diff}"/>
+			</Panel>
+		</Panel>
+	</Panel>
+</root>
