@@ -378,7 +378,8 @@ class Cgaz {
 				this.velocityArrowIcon.AddClass('arrow__down');
 				velocityAngle = this.remapAngle(velocityAngle - Math.PI);
 			}
-			this.velocityArrow.style.marginLeft = this.mapToScreenSpace(velocityAngle) + 'px';
+			const leftEdge = this.mapToScreenSpace(velocityAngle);
+			this.velocityArrow.style.marginLeft = (isNaN(leftEdge) ? 0 : leftEdge) + 'px';
 		} else {
 			// hide arrow
 			this.velocityArrow.visible = false;
@@ -388,7 +389,8 @@ class Cgaz {
 		// draw w-turn indicator
 		if (this.windicator_enable && Math.abs(wTurnAngle) < this.hFov && speed >= this.accel_min_speed) {
 			this.windicatorArrow.visible = true;
-			this.windicatorArrow.style.marginLeft = this.mapToScreenSpace(wTurnAngle) + 'px';
+			const leftEdge = this.mapToScreenSpace(wTurnAngle);
+			this.windicatorArrow.style.marginLeft = (isNaN(leftEdge) ? 0 : leftEdge) + 'px';
 
 			const minAngle = Math.min(wTurnAngle, 0);
 			const maxAngle = Math.max(wTurnAngle, 0);
