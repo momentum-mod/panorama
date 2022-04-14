@@ -1,0 +1,18 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+
+	<script>
+		const onLoad = () => $.GetContextPanel().SetDialogVariable('test', $.GetContextPanel().GetAttributeString('testParam', ''));
+	</script>
+
+	<Panel class="toast flow-right p-3 bg-gray-100" onload="onLoad()">
+		<ChaosAvatarImage class="vertical-align-center mr-5" style="width: 32px; height: 32px;" steamid="local"/>
+		<Panel class="flow-down">
+			<Label class="toast__title" text="Custom Toast Example"/>
+			<Label class="toast__message" text="you can put whatever stupid panels in here"/>
+			<Label class="toast__message" text="this is being set by param: {s:test}"/>
+		</Panel>
+	</Panel>
+</root>

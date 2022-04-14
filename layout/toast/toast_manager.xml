@@ -1,0 +1,16 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+
+	<scripts>
+		<include src="file://{resources}/scripts/common/gameui.js" />
+		<include src="file://{resources}/scripts/toastmanager.js" />
+	</scripts>
+
+	<Panel class="toast-manager" hittest="false" hittestchildren="false">
+		<Panel id="Center" class ="toast-manager__center"/>
+		<Panel id="Left" class ="toast-manager__left"/>
+		<Panel id="Right" class ="toast-manager__right"/>
+	</Panel>
+</root>

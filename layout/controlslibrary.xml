@@ -586,6 +586,73 @@
 				</Panel>
 			</Panel>
 
+			<Label class="text-h3 mt-3" text="Toasts" />
+			<Panel class="row my-3">
+				<Button class="button" onactivate="$.DispatchEvent('Toast_Show', '', 'Toast', 'Test Toast!', 'left', '', '', '')">
+					<Label class="button__text" text="Left" />
+				</Button>
+				<Button class="button ml-3" onactivate="$.DispatchEvent('Toast_Show', '', 'Toast', 'Test Toast!', 'center', '', '', '')">
+					<Label class="button__text" text="Center" />
+				</Button>
+				<Button class="button ml-3" onactivate="$.DispatchEvent('Toast_Show', '', 'Toast', 'Test Toast! Test Toast! Test Toast! Test Toast!', 'right', '', '', '')">
+					<Label class="button__text" text="Right" />
+				</Button>
+				<Button class="button ml-3" onactivate="$.DispatchEvent('Toast_Show', '', 'Toast', 'Toast!!', 'right', '', 'white', '')">
+					<Label class="button__text" text="White" />
+				</Button>
+				<Button class="button ml-3" onactivate="$.DispatchEvent('Toast_Show', '', 'Toast', 'Toast!!', 'right', '', 'blue', '')">
+					<Label class="button__text" text="Blue" />
+				</Button>
+				<Button class="button ml-3" onactivate="$.DispatchEvent('Toast_Show', '', 'Toast', 'Toast!!', 'right', '', 'red', '')">
+					<Label class="button__text" text="Red" />
+				</Button>
+				<Button class="button ml-3" onactivate="$.DispatchEvent('Toast_Show', '', 'Toast', 'Toast!!', 'right', '', 'green', '')">
+					<Label class="button__text" text="Green" />
+				</Button>
+				<Button class="button ml-3" onactivate="$.DispatchEvent('Toast_Show', '', 'Toast', 'Toast!!', 'right', '', '', 'play')">
+					<Label class="button__text" text="Icon" />
+				</Button>
+				<Button class="button ml-3" onactivate="$.DispatchEvent('Toast_ShowCustom', '', 'file://{resources}/layout/toast/toast_custom_layout_example.xml', 'center', '', 'testParam=horse')">
+					<Label class="button__text" text="Custom Layout" />
+				</Button>
+				<Button class="button ml-3" onactivate="$.DispatchEvent('Toast_Show', '', 'Toast', Math.random().toString(36), 'center', '', '', '')">
+					<Label class="button__text" text="Random Text" />
+				</Button>
+				<Button class="button ml-3" onactivate="$.DispatchEvent('Toast_Show', '', 'Toast', 'A toast with a very long message that should hopefully wrap properly, and then the JS will handle the heights so it still animates well! Wow! It still suffers from that fucking text wrapping issue though!', 'center', '', '', '')">
+					<Label class="button__text" text="Long Guy" />
+				</Button>
+				<Button class="button ml-3" onactivate="$.DispatchEvent('Toast_Show', '', 'Toast', 'im gonna expire very fast!!', 'center', 1, '', '')">
+					<Label class="button__text" text="1 second duration" />
+				</Button>
+				<Button class="button ml-3" onactivate="$.DispatchEvent('Toast_Show', '', 'Toast', 'I should never expire!', 'center', -1, '', '')">
+					<Label class="button__text" text="No Expire" />
+				</Button>
+				<Button class="button ml-3" onactivate="$.DispatchEvent('Toast_Show', '', 'Toast', 'I should never expire!', 'center', 'this is not a time', '', '')">
+					<Label class="button__text" text="Toast That Errors" />
+				</Button>
+			</Panel>
+			<Panel class="row my-3">
+				<Button class="button ml-3" onactivate="$.DispatchEvent('Toast_Clear', 'left')">
+					<Label class="button__text" text="Clear Toasts Left" />
+				</Button>
+				<Button class="button ml-3" onactivate="$.DispatchEvent('Toast_Clear', 'center')">
+					<Label class="button__text" text="Clear Toasts Center" />
+				</Button>
+				<Button class="button ml-3" onactivate="$.DispatchEvent('Toast_Clear', 'right')">
+					<Label class="button__text" text="Clear Toasts Right" />
+				</Button>
+				<Button class="button ml-3" onactivate="$.DispatchEvent('Toast_Clear', 'all')">
+					<Label class="button__text" text="Clear Toasts All" />
+				</Button>
+				<Button class="button ml-3" onactivate="$.DispatchEvent('Toast_Show', 'TestToast', 'Toast', 'i should be deleteable!', 'center', '', '', '')">
+					<Label class="button__text" text="Create Toast with ID" />
+				</Button>
+				<Button class="button ml-3" onactivate="$.DispatchEvent('Toast_Delete', 'TestToast')">
+					<Label class="button__text" text="Clear Toast with ID" />
+				</Button>
+			</Panel>
+
+
 			<Label class="text-h1 mt-3" text="Components" />
 
 			<Label class="text-h3 mt-3" text="Player Card" />
