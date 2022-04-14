@@ -91,7 +91,6 @@ class Cgaz {
 		if (GAMEMODE_WITH_NULL[GameModeAPI.GetCurrentGameMode()].name === 'Defrag') {
 			this.updateEventHandle ??= $.RegisterEventHandler('ChaosHudProcessInput', $.GetContextPanel(), this.onUpdate.bind(this));
 		} else {
-			if (this.updateEventHandle) $.UnregisterEventHandler('ChaosHudProcessInput', this.updateEventHandle);
 			this.velocityArrow.visible = false;
 			this.windicatorArrow.visible = false;
 		  return;
