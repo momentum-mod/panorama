@@ -79,6 +79,7 @@
 		</Panel>
 
 		<!-- Make sure these are at the bottom to get the z-order right -->
+		<ToastManager />
 		<ChaosPopupManager id="PopupManager" onpopupsdismissed="" />
 		<ContextMenuManager id="ContextMenuManager" />
 		<ChaosTooltipManager id="TooltipManager" hittest="false" />
@@ -87,6 +88,5 @@
 		<Panel id="HudNotify" hittest="false" hittestchildren="false">
 			<Frame src="file://{resources}/layout/hud/consolenotify.xml"/>
 		</Panel>
-
 	</ChaosHud>
 </root>
