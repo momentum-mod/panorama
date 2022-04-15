@@ -1,6 +1,6 @@
 'use strict';
 
-const TOAST_DURATION = 5;
+const TOAST_DURATION = 10;
 const MAX_ACTIVE_TOASTS = 10;
 const LOCATIONS = ['left', 'center', 'right'];
 const HIDE_TRANSITION_DURATION = 0.3; // This should match transition-duration properties in toast.scss
