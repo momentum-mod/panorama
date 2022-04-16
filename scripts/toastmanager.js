@@ -46,10 +46,8 @@ class Toast {
 				this.style === toast.style)
 		);
 	}
-}
 
-const ToastFactory = {
-	create(obj) {
+	static createToast(obj) {
 		try {
 			return new Toast(obj);
 		} catch (e) {
@@ -57,7 +55,7 @@ const ToastFactory = {
 			return null;
 		}
 	}
-};
+}
 
 class ToastManager {
 	// { left: [], ...}
@@ -80,7 +78,7 @@ class ToastManager {
 	static {
 		$.RegisterForUnhandledEvent('Toast_Show', (id, title, message, location, duration, style, icon) =>
 			this.queueToast(
-				ToastFactory.create({
+				Toast.createToast({
 					id: id,
 					title: title,
 					message: message,
@@ -94,7 +92,7 @@ class ToastManager {
 
 		$.RegisterForUnhandledEvent('Toast_ShowCustom', (id, layoutFile, location, duration, parameters) =>
 			this.queueToast(
-				ToastFactory.create({
+				Toast.createToast({
 					id: id,
 					customLayout: layoutFile,
 					location: location,
