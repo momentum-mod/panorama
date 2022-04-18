@@ -1,0 +1,35 @@
+@use '../config' as *;
+@use '../abstract/mixin';
+@use '../abstract/function';
+@use 'sass:color';
+
+.hud-comparisons {
+	flow-children: down;
+
+	margin: 20px;
+	margin-top: 28px;
+
+	&__splits {
+		flow-children: up;
+		height: 380px;
+		// padding-bottom: 80px;
+
+		// Panorama won't let the topmost items clip out, letting them squish together kind of works.
+		// Just bump the topmost stuff upwards a bit and clip it.
+		transform: translateY(-36px);
+	}
+
+	&__split {
+		margin-top: 6px;
+
+		overflow: noclip;
+
+		transition-property: height;
+		transition-timing-function: ease-in-out;
+		transition-duration: 2s;
+	}
+
+	&__compare {
+		flow-children: down;
+	}
+}
