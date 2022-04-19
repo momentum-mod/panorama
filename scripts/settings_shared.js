@@ -163,16 +163,32 @@ class SettingsShared {
 
 			let path = '';
 			if (override) {
-				path = Object.entries(textures).find(([_, textureName]) => override === textureName)[1];
+				const isInList = Object.values(textures).find((textureName) => override === textureName);
+
+				if (isInList) {
+					path = isInList;
+				} else {
+					// If we don't have the texture in the list, set the path directly to the override
+					path = override;
+					// Create our label so we can make it look nice
+					$.CreatePanel('Label', dropdown, 'cvar-value', { text: `${path} (Custom)`, value: path });
+				}
+
 			} else {
 				// Panorama won't let me store the texturePath value in the panel, so find it again based on the name.
 				path = Object.entries(textures).find(([textureName, _]) => selected.text === textureName)[1];
 			}
 
+			// Find and destroy the label because it's not a real option
+			const cvarLabel = dropdown.FindChild('cvar-value');
+			if (cvarLabel && selected && selected.text !== `${path} (Custom)`) {
+				cvarLabel.DeleteAsync(0);
+			}
+
 			imagePanel.SetHasClass('hide', !path);
 			if (path) imagePanel.SetImage(`file://{materials}/${path}.vtf`);
 		}
-		
+
 		dropdown.SetPanelEvent('onuserinputsubmit', updatePanel)
 
 		Object.entries(textures).forEach(([textureName, texturePath], i) => {
