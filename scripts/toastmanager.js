@@ -11,16 +11,9 @@ class Toast {
 			this.customLayout = obj.customLayout;
 			this.parameters = obj.parameters;
 		} else {
-			if (!obj.title && !obj.message) {
-				throw 'Invalid Toast object without title, message, or custom layout.';
-			}
 			this.title = obj.title;
 			this.message = obj.message;
 			this.icon = obj.icon;
-		}
-
-		if (obj.duration && obj.duration !== '' && isNaN(obj.duration)) {
-			throw `Toast object created with invalid duration: value "${obj.duration}" type "${typeof obj.duration}".`;
 		}
 
 		this.duration = obj.duration && obj.duration !== '' ? obj.duration : TOAST_DURATION;
@@ -48,12 +41,16 @@ class Toast {
 	}
 
 	static createToast(obj) {
-		try {
-			return new Toast(obj);
-		} catch (e) {
-			$.Warning('Toast Manager ' + e);
+		if (!obj.customLayout && !obj.title && !obj.message) {
+			$.Warning('Toast Manager: Invalid Toast object without title, message, or custom layout.');
 			return null;
 		}
+		if (obj.duration && obj.duration !== '' && isNaN(obj.duration)) {
+			$.Warning(`ToastManager: Toast object created with invalid duration: value "${obj.duration}" type "${typeof obj.duration}".`);
+			return null;
+		}
+
+		return new Toast(obj);
 	}
 }
 
