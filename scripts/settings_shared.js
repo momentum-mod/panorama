@@ -158,6 +158,9 @@ class SettingsShared {
 		/** @type {Dropdown} @static */
 		const dropdown = this.videoSettingsPanel.FindChildTraverse('MatErrorReplaceTexture').FindChildTraverse('DropDown');
 
+		// Clear the dropdown
+		dropdown.RemoveAllOptions();
+		
 		const updatePanel = (override) => {
 			const selected = dropdown.GetSelected();
 
