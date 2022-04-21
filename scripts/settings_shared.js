@@ -176,15 +176,14 @@ class SettingsShared {
 					// Create our label so we can make it look nice
 					$.CreatePanel('Label', dropdown, 'cvar-value', { text: `${path} (Custom)`, value: path });
 				}
-
 			} else {
 				// Panorama won't let me store the texturePath value in the panel, so find it again based on the name.
-				path = Object.entries(textures).find(([textureName, _]) => selected.text === textureName)[1];
+				path = Object.entries(textures).find(([textureName, _]) => selected?.text === textureName)[1];
 			}
 
 			// Find and destroy the label because it's not a real option
 			const cvarLabel = dropdown.FindChild('cvar-value');
-			if (cvarLabel && selected && selected.text !== `${path} (Custom)`) {
+			if (cvarLabel && selected && selected?.text !== `${path} (Custom)`) {
 				cvarLabel.DeleteAsync(0);
 			}
 
@@ -199,7 +198,7 @@ class SettingsShared {
 			dropdown.AddOption(item);
 		});
 
-		// Update the panel on init so it loads our texture
-		updatePanel(GameInterfaceAPI.GetSettingString('mat_error_texture_advanced_basetexture'));
+		// Update the panel once it's loaded so it loads our texture
+		$.RegisterEventHandler('PanelLoaded', dropdown.id, () => updatePanel(GameInterfaceAPI.GetSettingString('mat_error_texture_advanced_basetexture')));
 	}
 }
