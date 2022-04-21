@@ -331,9 +331,10 @@ class Cgaz {
 				const maxMirrorAngle = this.findStopAngle(mirrorAccel, speedSquared, dropSpeed, dropSpeedSquared, turnMirrorAngle);
 
 				let mirrorOffset = this.remapAngle(velAngle - viewAngle);
+				const inputAngle = this.remapAngle(viewAngle - wishAngle);
 
-				if (this.floatEquals(Math.abs(this.remapAngle(viewAngle - wishAngle)), 0.25 * Math.PI, 0.001)) {
-					mirrorOffset += (mirrorOffset > 0 ? -1 : 1) * Math.PI * 0.25;
+				if (this.floatEquals(Math.abs(inputAngle), 0.25 * Math.PI, 0.001)) {
+					mirrorOffset += (inputAngle > 0 ? -1 : 1) * Math.PI * 0.25;
 					this.updateZone(this.leftMirrorZone, -maxMirrorAngle, -minMirrorAngle, mirrorOffset, MIRROR_CLASS, this.mirrorSplitZone);
 					this.updateZone(this.rightMirrorZone, minMirrorAngle, maxMirrorAngle, mirrorOffset, MIRROR_CLASS, this.mirrorSplitZone);
 				} else {
