@@ -299,7 +299,7 @@ class Cgaz {
 
 		const bIsFalling = lastMoveData.moveStatus == 0;
 		const bHasAirControl = phyMode && this.floatEquals(wishAngle, viewAngle, 0.001) && bIsFalling;
-		const bSnapShift = this.floatEquals(Math.abs(forwardMove), Math.abs(rightMove), 0.001) && !(phyMode && bIsFalling);
+		const bSnapShift = !this.floatEquals(Math.abs(forwardMove), Math.abs(rightMove), 0.001) && !(phyMode && bIsFalling);
 
 		if (this.accel_enable) {
 			// find cgaz angles
