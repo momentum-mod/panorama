@@ -32,9 +32,4 @@
 	$.DefineEvent('MapSelector_ShowConfirmCancelDownload', 1);
 	$.DefineEvent('ColorPickerSave', 1, 'color');
 	$.DefineEvent('ColorPickerCancel', 0);
-
-	$.DefineEvent('Toast_Show', 7, 'id', 'title', 'message', 'location', 'duration', 'style', 'icon', 'Show a regular toast notification');
-	$.DefineEvent('Toast_ShowCustom', 5, 'id', 'layoutFile', 'location', 'duration', 'parameters', 'Show a custom toast notification');
-	$.DefineEvent('Toast_Delete', 1, 'id', 'Delete an existing toast by ID');
-	$.DefineEvent('Toast_Clear', 1, 'location', 'Clear toasts, either all or by section');
 })();

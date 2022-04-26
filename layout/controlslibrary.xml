@@ -588,66 +588,63 @@
 
 			<Label class="text-h3 mt-3" text="Toasts" />
 			<Panel class="row my-3">
-				<Button class="button" onactivate="$.DispatchEvent('Toast_Show', '', 'Toast', 'Test Toast!', 'left', '', '', '')">
+				<Button class="button" onactivate="ToastAPI.CreateToast('', 'Toast', 'Test Toast!', 0, 10, '', '')">
 					<Label class="button__text" text="Left" />
 				</Button>
-				<Button class="button ml-3" onactivate="$.DispatchEvent('Toast_Show', '', 'Toast', 'Test Toast!', 'center', '', '', '')">
+				<Button class="button ml-3" onactivate="ToastAPI.CreateToast('', 'Toast', 'Test Toast!', 1, 10, '', '')">
 					<Label class="button__text" text="Center" />
 				</Button>
-				<Button class="button ml-3" onactivate="$.DispatchEvent('Toast_Show', '', 'Toast', 'Test Toast! Test Toast! Test Toast! Test Toast!', 'right', '', '', '')">
+				<Button class="button ml-3" onactivate="ToastAPI.CreateToast('', 'Toast', 'Test Toast! Test Toast! Test Toast! Test Toast!', 2, 10, '', '')">
 					<Label class="button__text" text="Right" />
 				</Button>
-				<Button class="button ml-3" onactivate="$.DispatchEvent('Toast_Show', '', 'Toast', 'Toast!!', 'right', '', 'white', '')">
+				<Button class="button ml-3" onactivate="ToastAPI.CreateToast('', 'Toast', 'Toast!!', 2, 10, '', 'white')">
 					<Label class="button__text" text="White" />
 				</Button>
-				<Button class="button ml-3" onactivate="$.DispatchEvent('Toast_Show', '', 'Toast', 'Toast!!', 'right', '', 'blue', '')">
+				<Button class="button ml-3" onactivate="ToastAPI.CreateToast('', 'Toast', 'Toast!!', 2, 10, '', 'blue')">
 					<Label class="button__text" text="Blue" />
 				</Button>
-				<Button class="button ml-3" onactivate="$.DispatchEvent('Toast_Show', '', 'Toast', 'Toast!!', 'right', '', 'red', '')">
+				<Button class="button ml-3" onactivate="ToastAPI.CreateToast('', 'Toast', 'Toast!!', 2, 10, '', 'red')">
 					<Label class="button__text" text="Red" />
 				</Button>
-				<Button class="button ml-3" onactivate="$.DispatchEvent('Toast_Show', '', 'Toast', 'Toast!!', 'right', '', 'green', '')">
+				<Button class="button ml-3" onactivate="ToastAPI.CreateToast('', 'Toast', 'Toast!!', 2, 10, '', 'green')">
 					<Label class="button__text" text="Green" />
 				</Button>
-				<Button class="button ml-3" onactivate="$.DispatchEvent('Toast_Show', '', 'Toast', 'Toast!!', 'right', '', '', 'play')">
+				<Button class="button ml-3" onactivate="ToastAPI.CreateToast('', 'Toast', 'Toast!!', 2, 10, 'play', '')">
 					<Label class="button__text" text="Icon" />
 				</Button>
-				<Button class="button ml-3" onactivate="$.DispatchEvent('Toast_ShowCustom', '', 'file://{resources}/layout/toast/toast_custom_layout_example.xml', 'center', '', 'testParam=horse')">
+				<Button class="button ml-3" onactivate="ToastAPI.CreateToast_Custom( '', 'file://{resources}/layout/toast/toast_custom_layout_example.xml', 1, 10, {testParam: 'horse'})">
 					<Label class="button__text" text="Custom Layout" />
 				</Button>
-				<Button class="button ml-3" onactivate="$.DispatchEvent('Toast_Show', '', 'Toast', Math.random().toString(36), 'center', '', '', '')">
+				<Button class="button ml-3" onactivate="ToastAPI.CreateToast('', 'Toast', Math.random().toString(36), 1, 10, '', '')">
 					<Label class="button__text" text="Random Text" />
 				</Button>
-				<Button class="button ml-3" onactivate="$.DispatchEvent('Toast_Show', '', 'Toast', 'A toast with a very long message that should hopefully wrap properly, and then the JS will handle the heights so it still animates well! Wow! It still suffers from that fucking text wrapping issue though!', 'center', '', '', '')">
+				<Button class="button ml-3" onactivate="ToastAPI.CreateToast('', 'Toast', 'A toast with a very long message that should hopefully wrap properly, and then the JS will handle the heights so it still animates well! Wow! It still suffers from that fucking text wrapping issue though!', 1, '', '', '')">
 					<Label class="button__text" text="Long Guy" />
 				</Button>
-				<Button class="button ml-3" onactivate="$.DispatchEvent('Toast_Show', '', 'Toast', 'im gonna expire very fast!!', 'center', 1, '', '')">
+				<Button class="button ml-3" onactivate="ToastAPI.CreateToast('', 'Toast', 'im gonna expire very fast!!', 1, 1, '', '')">
 					<Label class="button__text" text="1 second duration" />
 				</Button>
-				<Button class="button ml-3" onactivate="$.DispatchEvent('Toast_Show', '', 'Toast', 'I should never expire!', 'center', -1, '', '')">
+				<Button class="button ml-3" onactivate="ToastAPI.CreateToast('', 'Toast', 'I should never expire!', 1, -1, '', '')">
 					<Label class="button__text" text="No Expire" />
-				</Button>
-				<Button class="button ml-3" onactivate="$.DispatchEvent('Toast_Show', '', 'Toast', 'I should never expire!', 'center', 'this is not a time', '', '')">
-					<Label class="button__text" text="Toast That Errors" />
 				</Button>
 			</Panel>
 			<Panel class="row my-3">
-				<Button class="button ml-3" onactivate="$.DispatchEvent('Toast_Clear', 'left')">
+				<Button class="button ml-3" onactivate="ToastAPI.ClearToasts(0)">
 					<Label class="button__text" text="Clear Toasts Left" />
 				</Button>
-				<Button class="button ml-3" onactivate="$.DispatchEvent('Toast_Clear', 'center')">
+				<Button class="button ml-3" onactivate="ToastAPI.ClearToasts(1)">
 					<Label class="button__text" text="Clear Toasts Center" />
 				</Button>
-				<Button class="button ml-3" onactivate="$.DispatchEvent('Toast_Clear', 'right')">
+				<Button class="button ml-3" onactivate="ToastAPI.ClearToasts(2)">
 					<Label class="button__text" text="Clear Toasts Right" />
 				</Button>
-				<Button class="button ml-3" onactivate="$.DispatchEvent('Toast_Clear', 'all')">
+				<Button class="button ml-3" onactivate="ToastAPI.ClearToasts(-1)">
 					<Label class="button__text" text="Clear Toasts All" />
 				</Button>
-				<Button class="button ml-3" onactivate="$.DispatchEvent('Toast_Show', 'TestToast', 'Toast', 'i should be deleteable!', 'center', '', '', '')">
+				<Button class="button ml-3" onactivate="ToastAPI.CreateToast('TestToast', 'Toast', 'i should be deleteable!', 1, 10, '', '')">
 					<Label class="button__text" text="Create Toast with ID" />
 				</Button>
-				<Button class="button ml-3" onactivate="$.DispatchEvent('Toast_Delete', 'TestToast')">
+				<Button class="button ml-3" onactivate="ToastAPI.DeleteToast('TestToast');">
 					<Label class="button__text" text="Clear Toast with ID" />
 				</Button>
 			</Panel>
