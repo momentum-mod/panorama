@@ -140,15 +140,8 @@ class ToastManager {
 		const locationClass = `toast--${toast.location}`;
 
 		if (toast.customLayout) {
-			toast.panel = $.CreatePanel('Panel', container, toast.id, { class: locationClass });
+			toast.panel = $.CreatePanel('Panel', container, toast.id, {class: locationClass, ...toast.parameters});
 			toast.panel.LoadLayout(toast.customLayout, false, false);
-
-			if (toast.parameters) {
-				toast.parameters.split('&').forEach((param) => {
-					const split = param.split('=');
-					toast.panel.SetAttributeString(split[0], split[1]);
-				});
-			}
 		} else {
 			toast.panel = $.CreatePanel('ToastGeneric', container, toast.id, { class: locationClass });
 
