@@ -3,6 +3,15 @@
 const TOAST_DURATION = 10;
 const MAX_ACTIVE_TOASTS = 10;
 const LOCATIONS = ['left', 'center', 'right'];
+const convertLocationNum = (locationNum) => {
+	if (locationNum === -1)
+		return 'all';
+
+	if (locationNum < 0 || locationNum > LOCATIONS.length - 1)
+		return LOCATIONS[2];
+
+	return LOCATIONS[locationNum];
+}
 const HIDE_TRANSITION_DURATION = 0.3; // This should match transition-duration properties in toast.scss
 
 class Toast {
@@ -73,13 +82,13 @@ class ToastManager {
 	}, {});
 
 	static {
-		$.RegisterForUnhandledEvent('Toast_Show', (id, title, message, location, duration, style, icon) =>
+		$.RegisterForUnhandledEvent('Toast_Show', (id, title, message, locationNum, duration, icon, style) =>
 			this.queueToast(
 				Toast.createToast({
 					id: id,
 					title: title,
 					message: message,
-					location: location,
+					location: convertLocationNum(locationNum),
 					duration: duration,
 					style: style,
 					icon: icon
@@ -87,12 +96,12 @@ class ToastManager {
 			)
 		);
 
-		$.RegisterForUnhandledEvent('Toast_ShowCustom', (id, layoutFile, location, duration, parameters) =>
+		$.RegisterForUnhandledEvent('Toast_ShowCustom', (id, layoutFile, locationNum, duration, parameters) =>
 			this.queueToast(
 				Toast.createToast({
 					id: id,
 					customLayout: layoutFile,
-					location: location,
+					location: convertLocationNum(locationNum),
 					duration: duration,
 					parameters: parameters
 				})
@@ -223,7 +232,9 @@ class ToastManager {
 		this.toastExpire(toast);
 	}
 
-	static clearToasts(location) {
+	static clearToasts(locationNum) {
+		const location = convertLocationNum(locationNum);
+
 		// Panorama/JS doesn't run this syncronously for some reason, so put a slight delay between deletions. Also looks kinda cool!
 		let delay = 0;
 		if (location && location !== 'all') {
