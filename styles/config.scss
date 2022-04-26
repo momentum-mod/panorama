@@ -456,7 +456,10 @@ $toast-red       : rgba(211, 36, 36, 0.975) !default;
 $toast-orange    : rgba(255, 123, 0, 0.975) !default;
 $toast-green     : rgba(88, 170, 11, 0.975) !default;
 
-$toast-colors: ("blue": $toast-blue, "red": $toast-red, "orange": $toast-orange, "green": $toast-green) !default;
+$toast-colors: ("blue": $toast-blue, "info": $toast-blue,
+				"red": $toast-red, "error": $toast-red,
+				"orange": $toast-orange, "warning": $toast-orange,
+				"green": $toast-green, "success": $toast-green) !default;
 
 
 // ================
