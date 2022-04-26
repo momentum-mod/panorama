@@ -8,9 +8,11 @@
 		<include src="file://{resources}/scripts/toastmanager.js" />
 	</scripts>
 
-	<Panel class="toast-manager" hittest="false" hittestchildren="false">
-		<Panel id="Center" class ="toast-manager__center"/>
-		<Panel id="Left" class ="toast-manager__left"/>
-		<Panel id="Right" class ="toast-manager__right"/>
+	<Panel class="full-width full-height">
+		<ConVarEnabler class="toast-manager" hittest="false" hittestchildren="false" convar="mom_ui_toasts_enable" togglevisibility="true">
+			<Panel id="Center" class ="toast-manager__center"/>
+			<Panel id="Left" class ="toast-manager__left"/>
+			<Panel id="Right" class ="toast-manager__right"/>
+		</ConVarEnabler>
 	</Panel>
 </root>
