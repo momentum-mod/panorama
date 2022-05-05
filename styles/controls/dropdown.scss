@@ -29,7 +29,7 @@
 		background-size: 14px 14px;
 		border-radius: $dropdown-button-radius - 1px;
 		height: 100%;
-		min-width: 32px;
+		width: height-percentage(100%);
 		background-color: $dropdown-button-icon-background;
 		border: $dropdown-button-icon-border;
 		box-shadow: $dropdown-button-icon-shadow;
