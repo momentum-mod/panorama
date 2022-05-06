@@ -77,3 +77,13 @@
 		@include button-gradient($color: list.nth($nstatebutton-colors, $statenum));
 	}
 }
+
+@mixin level-indicator-size($size) {
+	& .levelindicator__icon:not(.levelindicator__icon--hidden) {
+		width: #{$size};
+		height: #{$size};
+	}
+	& .levelindicator__text:not(.levelindicator__icon--hidden) {
+		font-size: #{$size};
+	}
+}

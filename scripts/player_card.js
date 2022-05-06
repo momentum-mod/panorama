@@ -1,7 +1,22 @@
-"use strict";
+'use strict';
 
 class PlayerCard {
+	static panels = {
+		progressBar: $('#XpProgressBar'),
+		levelIndicator: $('#LevelIndicator')
+	};
+
+	static {
+		$.GetContextPanel().jsClass = this;
+	}
+
 	static onLoad() {
+		this.update();
+	}
+
+	static update() {
+		const cp = $.GetContextPanel();
+
 		const level = MomentumAPI.GetPlayerLevel();
 		const xp = MomentumAPI.GetPlayerXp();
 		const currLevelXp = MomentumAPI.GetCosmeticXpForLevel(level);
@@ -9,23 +24,17 @@ class PlayerCard {
 		const money = MomentumAPI.GetPlayerMoney();
 
 		// Set the dialog variables so this can be used in label
-		$.GetContextPanel().SetDialogVariable("name", FriendsAPI.GetLocalPlayerName());
-		$.GetContextPanel().SetDialogVariableInt("level", level);
-		$.GetContextPanel().SetDialogVariableInt("xp", xp - currLevelXp);
-		$.GetContextPanel().SetDialogVariableInt("totalxp", nextLevelXp - currLevelXp);
-		$.GetContextPanel().SetDialogVariableInt("money", money);
+		cp.SetDialogVariable('name', FriendsAPI.GetLocalPlayerName());
+		cp.SetDialogVariableInt('level', level);
+		cp.SetDialogVariableInt('xp', xp - currLevelXp);
+		cp.SetDialogVariableInt('totalxp', nextLevelXp - currLevelXp);
+		cp.SetDialogVariableInt('money', money);
 
 		// Update the progress bar
-		$('#XpProgressBar').value = xp;
-		$('#XpProgressBar').min = currLevelXp;
-		$('#XpProgressBar').max = nextLevelXp;
+		this.panels.progressBar.value = xp;
+		this.panels.progressBar.min = currLevelXp;
+		this.panels.progressBar.max = nextLevelXp;
 
-		// Add level indicator
-		$.CreatePanel('Frame', $('#XpAndLevel'), '', {
-			class: 'playercard__levelindicator',
-			src: 'file://{resources}/layout/components/level_indicator.xml',
-			level: level,
-			prestige: 0
-		});
+		this.panels.levelIndicator.jsClass.setLevel(level);
 	}
 }

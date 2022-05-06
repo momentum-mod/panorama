@@ -1,81 +1,89 @@
-"use strict";
+'use strict';
 
 class LevelIndicator {
+	static totalLevel;
+	static panels = {
+		icon: $('#PrestigeIcon'),
+		iconIncrement: $('#PrestigeIconIncrement')
+	};
+
+	static {
+		$.GetContextPanel().jsClass = this;
+	}
+
 	static onLoad() {
-		const level = $.GetContextPanel().GetAttributeInt("level", 0);
-		$('#PlayerLevel').style.backgroundColor = LevelIndicator.getColorForLevel(level);
-		$.GetContextPanel().SetDialogVariableInt("level", level);
-		
-		const prestige = $.GetContextPanel().GetAttributeInt("prestige", 0);
-		$('#PrestigeIcon').SetImage(LevelIndicator.getImageForPrestige(level, prestige));
-		if (prestige == 0) {
-			// No icon for prestige 0
-			$('#PrestigeIcon').AddClass('hide');
-		}
-		
-		const textColor = LevelIndicator.getTextColorForLevel(level);
-		$('#PrestigeIcon').style.washColor = textColor;
-		$('#LevelText').style.color = textColor;
-		
-		if (level == 500 && prestige == 5) {
-			// Once user reaches level 500 of 5th prestige, only show icon
-			$('#LevelText').AddClass('hide');
-		}
-	}
-	
-	static getColorForLevel(level) {
-		if (level < 50) {
-			return '#5d5d5d';
-		}
-		else if (level < 100) {
-			return '#e84855';
-		}
-		else if (level < 150) {
-			return '#ff8645';
-		}
-		else if (level < 200) {
-			return '#f9dc5c';
-		}
-		else if (level < 250) {
-			return '#47c27c';
-		}
-		else if (level < 300) {
-			return '#3f4aca';
-		}
-		else if (level < 350) {
-			return '#873de1';
-		}
-		else if (level < 400) {
-			return '#d34a8d';
-		}
-		else if (level < 450) {
-			return '#3185fc';
-		}
-		else { // 450+
-			return '#000000';
-		}
-	}
-	
-	static getImageForPrestige(level, prestige) {
-		if (prestige <= 0)
-			return '';
+		// Load the level from the context panel
+		const level = $.GetContextPanel().GetAttributeInt('level', 0);
 
-		if (prestige > 5) {
-			prestige = 5;
+		if (level > 0) this.setLevel(level);
+	}
+
+	static setLevel(level) {
+		const cp = $.GetContextPanel();
+
+		const innerLevel = this.getInnerLevel(level);
+		const prestige = this.getPrestige(level);
+
+		for (let i = 1; i <= 11; i++) {
+			cp.SetHasClass('levelindicator--' + i, i == this.getLevelColor(level));
 		}
 
-		let imageName = 'prestige' + prestige + '.svg';
-		if (prestige == 5 && level == 500) {
-			imageName = 'max_level.svg';
-		}
+		cp.SetDialogVariableInt('level', innerLevel);
+
+		this.panels.icon.SetImage(this.getImageForPrestige(prestige));
+
+		// No icon for prestige 0
+		this.panels.icon.SetHasClass('levelindicator__icon--hidden', prestige == 0);
+		this.panels.iconIncrement.SetHasClass('levelindicator__icon--hidden', prestige == 0);
+
+		// Max level gets special styling
+		cp.SetHasClass('levelindicator--max', level > 3000);
+
+		this.totalLevel = level;
+	}
+
+	static incrementLevel(animDuration) {
+		// TODO: anims still fucky ESPECIALLY icons
+		if (!this.totalLevel) return;
+
+		const newLevel = this.totalLevel + 1;
+
+		const cp = $.GetContextPanel();
+		[cp, cp.FindChild('Container'), cp.FindChild('IncrementContainer')].forEach((panel) => (panel.style.animationDuration = `${animDuration}s`));
+
+		cp.SetDialogVariableInt('level_incr', this.getInnerLevel(newLevel));
+		this.panels.iconIncrement.SetHasClass('levelindicator__icon--hidden', this.getPrestige(newLevel) == 0);
+		this.panels.iconIncrement.SetImage(this.getImageForPrestige(this.getPrestige(newLevel)));
+
+		cp.AddClass('levelindicator--incrementing');
+		cp.SetHasClass('levelindicator--bg-incrementing', this.getLevelColor(newLevel) != this.getLevelColor(this.totalLevel));
+
+		$.Schedule(animDuration, () => {
+			cp.RemoveClass('levelindicator--incrementing');
+			cp.RemoveClass('levelindicator--bg-incrementing');
+			this.setLevel(newLevel);
+		});
+	}
+
+	static getLevelColor(level) {
+		if (level > 500) level = this.getInnerLevel(level); // Bound to 500
+		if (level % 500 === 0) return 11; // The special 500th level class
+		return Math.min(Math.max(Math.ceil((level + 1) / 50), 1), 10);
+	}
+
+	static getPrestige(totalLevel) {
+		return Math.floor(Math.max(totalLevel - 1, 0) / 500);
+	}
+
+	static getInnerLevel(totalLevel) {
+		return ((totalLevel - 1) % 500) + 1;
+	}
+
+	static getImageForPrestige(prestige) {
+		if (prestige <= 0) return '';
+
+		const imageName = prestige <= 5 ? 'prestige' + prestige + '.svg' : 'max_level.svg';
 
 		return 'file://{images}/prestige/' + imageName;
-	}
-	
-	static getTextColorForLevel(level) {
-		if (level >= 150 && level < 200) {
-			return '#000000';
-		}
-		return '#ffffff';
 	}
 }

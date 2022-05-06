@@ -64,7 +64,7 @@
 						<Image class="topnav__icon" src="file://{images}/topnav/notification.svg" textureheight="64" />
 					</RadioButton>
 
-					<Frame class="full-height" src="file://{resources}/layout/components/player_card.xml" />
+					<PlayerCard class="full-height" />
 
 					<RadioButton id="QuitButton" class="topnav__button" onactivate="MainMenuController.onQuitButtonPressed()">
 						<Image class="topnav__icon" src="file://{images}/topnav/quit.svg" textureheight="64" />

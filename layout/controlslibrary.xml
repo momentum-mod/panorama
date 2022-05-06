@@ -654,12 +654,96 @@
 
 			<Label class="text-h3 mt-3" text="Player Card" />
 			<Panel class="row my-3">
-				<Frame src="file://{resources}/layout/components/player_card.xml" />
+				<PlayerCard />
 			</Panel>
 
-			<Label class="text-h3 mt-3" text="Search" />
+			<Label class="text-h3 mt-3" text="Level Indicator" />
 			<Panel class="row my-3">
-				<Frame src="file://{resources}/layout/components/search.xml" />
+				<Panel class="col">
+					<LevelIndicator level="1"/>
+					<LevelIndicator level="49"/>
+					<LevelIndicator level="50"/>
+					<LevelIndicator level="99"/>
+					<LevelIndicator level="100"/>
+					<LevelIndicator level="149"/>
+					<LevelIndicator level="150"/>
+					<LevelIndicator level="199"/>
+					<LevelIndicator level="200"/>
+					<LevelIndicator level="249"/>
+					<LevelIndicator level="250"/>
+					<LevelIndicator level="299"/>
+					<LevelIndicator level="300"/>
+					<LevelIndicator level="349"/>
+					<LevelIndicator level="350"/>
+					<LevelIndicator level="399"/>
+					<LevelIndicator level="400"/>
+					<LevelIndicator level="449"/>
+					<LevelIndicator level="450"/>
+					<LevelIndicator level="499"/>
+					<LevelIndicator level="500"/>
+				</Panel>
+				<Panel class="col">
+					<LevelIndicator level="550"/>
+					<LevelIndicator level="600"/>
+					<LevelIndicator level="650"/>
+					<LevelIndicator level="700"/>
+					<LevelIndicator level="750"/>
+					<LevelIndicator level="800"/>
+					<LevelIndicator level="850"/>
+					<LevelIndicator level="900"/>
+					<LevelIndicator level="950"/>
+					<LevelIndicator level="1000"/>
+				</Panel>
+				<Panel class="col">
+					<LevelIndicator level="1050"/>
+					<LevelIndicator level="1100"/>
+					<LevelIndicator level="1150"/>
+					<LevelIndicator level="1200"/>
+					<LevelIndicator level="1250"/>
+					<LevelIndicator level="1300"/>
+					<LevelIndicator level="1350"/>
+					<LevelIndicator level="1400"/>
+					<LevelIndicator level="1450"/>
+					<LevelIndicator level="1500"/>
+				</Panel>
+				<Panel class="col">
+					<LevelIndicator level="1550"/>
+					<LevelIndicator level="1600"/>
+					<LevelIndicator level="1650"/>
+					<LevelIndicator level="1700"/>
+					<LevelIndicator level="1750"/>
+					<LevelIndicator level="1800"/>
+					<LevelIndicator level="1850"/>
+					<LevelIndicator level="1900"/>
+					<LevelIndicator level="1950"/>
+					<LevelIndicator level="2000"/>
+				</Panel>
+
+				<Panel class="col">
+					<LevelIndicator level="2050"/>
+					<LevelIndicator level="2100"/>
+					<LevelIndicator level="2150"/>
+					<LevelIndicator level="2200"/>
+					<LevelIndicator level="2250"/>
+					<LevelIndicator level="2300"/>
+					<LevelIndicator level="2350"/>
+					<LevelIndicator level="2400"/>
+					<LevelIndicator level="2450"/>
+					<LevelIndicator level="2500"/>
+				</Panel>
+				<Panel class="col">
+					<LevelIndicator level="2550"/>
+					<LevelIndicator level="2600"/>
+					<LevelIndicator level="2650"/>
+					<LevelIndicator level="2700"/>
+					<LevelIndicator level="2750"/>
+					<LevelIndicator level="2800"/>
+					<LevelIndicator level="2850"/>
+					<LevelIndicator level="2900"/>
+					<LevelIndicator level="2950"/>
+					<LevelIndicator level="3000"/>
+					<LevelIndicator level="3001"/>
+				</Panel>
 			</Panel>
 
 			<Label class="text-h3 mt-3" text="Settings" />

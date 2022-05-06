@@ -1,25 +1,175 @@
 @use '../config' as *;
 @use '../abstract/mixin';
+@use 'sass:map';
 
 .levelindicator {
-	&__level {
-		vertical-align: middle;
-		horizontal-align: right;
-		background-color: #47c27c;
-		margin-left: 8px;
+	$root: &;
+
+	padding: 1px 7px;
+	width: fit-children;
+	overflow: clip;
+	border-radius: 2px;
+
+	@each $level in (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11) {
+		&--#{$level} {
+			$new-level: ($level + 1) % 11;
+			@if $new-level == 0 {
+				$new-level: 11;
+			}
+
+			$color: map.get($levels, $level);
+			$color-incr: map.get($levels, $new-level);
+
+			background-color: $color;
+
+			&#{$root}--bg-incrementing {
+				animation-name: LevelIndicatorColorIncrementing#{$level}#{$new-level};
+				animation-timing-function: linear;
+				animation-iteration-count: 1;
+			}
+
+			@at-root {
+				@keyframes LevelIndicatorColorIncrementing#{$level}#{$new-level} {
+					0% {
+						background-color: $color;
+					}
+					0.1% {
+						background-color: gradient(linear, 0% 0%, 100% 100%, from($color-incr), color-stop(0, $color-incr), color-stop(0, $color), to($color));
+					}
+
+					99.9% {
+						background-color: gradient(linear, 0% 0%, 100% 100%, from($color-incr), color-stop(1, $color-incr), color-stop(1, $color), to($color));
+					}
+					100% {
+						background-color: gradient(linear, 0% 0%, 100% 100%, from($color-incr), to($color-incr));
+					}
+				}
+			}
+		}
+	}
+
+	&--11 {
+		& #{$root}__icon,
+		& #{$root}__text {
+			wash-color: black;
+		}
+	}
+
+	&--max {
+		background-color: map.get($levels, 11);
+		padding: 1px 3px;
+
+		#{$root}__icon {
+			margin-right: -2px;
+			wash-color: black;
+		}
+
+		#{$root}__text {
+			visibility: collapse;
+		}
+	}
+
+	&--min {
+		background-color: map.get($levels, 1);
+		padding: 1px 3px;
+
+		#{$root}__icon {
+			margin-right: -2px;
+		}
+
+		#{$root}__text {
+			visibility: collapse;
+		}
+	}
+
+	&--incrementing {
+		& #{$root}__container {
+			animation-name: LevelIndicatorContainer1Incrementing;
+			animation-timing-function: linear;
+			animation-iteration-count: 1;
+		}
+		& #{$root}__increment-container {
+			visibility: visible;
+			animation-name: LevelIndicatorContainer2Incrementing;
+			animation-timing-function: linear;
+			animation-iteration-count: 1;
+		}
+	}
+
+	&__container,
+	&__increment-container {
 		flow-children: right;
-		padding: 4px;
+		align: center center;
+	}
+
+	&__increment-container {
+		visibility: collapse;
 	}
 
 	&__icon {
-		vertical-align: middle;
-		margin-right: 3px;
+		vertical-align: center;
+		// We can't use a height-percentage(100%) cus of some weird Pano bug causing it to have a ridiculous large desired width in cases like context menus.
+		// Use the level-indicator-size mixin for override level indicator sizes.
+		height: 20px;
+		width: 20px;
+		padding: 2px;
+		margin: 0 -2px;
+		img-shadow: none;
+		margin-right: 2px;
+		wash-color: white;
+		// transition: width 0.1s ease-in-out 0s;
+
+		&--hidden {
+			width: 0px;
+		}
 	}
 
 	&__text {
 		@include mixin.font-styles($use-header: true);
 		font-size: 20px;
-		text-align: center;
+		vertical-align: center;
 		horizontal-align: center;
+		text-align: center;
+		text-shadow: 0px 0px 0px 0 rgba(0, 0, 0, 0);
+	}
+}
+
+@keyframes LevelIndicatorContainer1Incrementing {
+	0% {
+		pre-transform-scale2d: 1;
+		opacity: 1;
+	}
+
+	70% {
+		blur: fastgaussian(3, 3, 2);
+		pre-transform-scale2d: 1.1;
+		opacity: 0;
+	}
+
+	100% {
+		blur: fastgaussian(3, 3, 2);
+		pre-transform-scale2d: 1.1;
+		opacity: 0;
+	}
+}
+
+@keyframes LevelIndicatorContainer2Incrementing {
+	0% {
+		pre-transform-scale2d: 0.5;
+		opacity: 0;
+	}
+
+	30% {
+		pre-transform-scale2d: 0.5;
+		opacity: 0;
+	}
+
+	99.9% {
+		pre-transform-scale2d: 1;
+		opacity: 1;
+	}
+
+	100% {
+		opacity: 0;
 	}
 }

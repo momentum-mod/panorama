@@ -1,19 +1,40 @@
+@use '../config' as *;
+
 .playercard {
-	flow-children: right;
-	height: 100px;
-	width: 500px;
-	
+	$root: &;
+
+	flow-children: none;
+
+	&__main {
+		flow-children: right;
+		height: 100%;
+		width: 500px;
+	}
+
 	&__background-image {
 		width: 100%;
 		height: 100%;
 		wash-color: rgba(0, 0, 0, 0.6);
+
+		transition: wash-color 0.15s ease-in-out 0s;
+
+		#{$root}:hover & {
+			wash-color: rgba(85, 85, 85, 0.4);
+		}
 	}
 
 	&__player-avatar {
 		margin: 8px;
 		height: 100%;
 		width: height-percentage(100%);
-		border: 1px solid rgba(255, 255, 255, 0.06);
+		box-shadow: 0 0 4px rgb(0, 0, 0);
+		border-radius: 1px;
+		transition: brightness 0.15s ease-in-out 0s;
+
+		#{$root}:hover & {
+			brightness: 1.1;
+		}
+		// border: 1px solid rgba(255, 255, 255, 0.06);
 	}
 
 	&__details-panel {
@@ -32,41 +53,47 @@
 	}
 
 	&__units-label {
-		font-size: 20px;
+		font-size: 18px;
 		vertical-align: middle;
 	}
 
 	&__units-icon {
 		margin-right: 4px;
-		wash-color: #f9dc5c;
+		width: 16px;
+		height: 16px;
+		wash-color: $units;
 		vertical-align: middle;
 	}
 
 	&__xp-level-container {
 		flow-children: right;
 		vertical-align: bottom;
-		height: fill-parent-flow(1.0);
+		height: fill-parent-flow(1);
 		width: 100%;
 	}
 
 	&__xp-container {
-		width: fill-parent-flow(1.0);
+		width: fill-parent-flow(1);
 		flow-children: down;
 		vertical-align: bottom;
 	}
 
 	&__xp-progress-bar {
 		margin-top: 5px;
+		margin-right: 8px;
 		height: 10px;
 		width: 100%;
+		box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+
 	}
 
 	&__xp {
-		font-size: 14px;
+		font-size: 12px;
 	}
 
 	&__levelindicator {
-		height: 100%;
 		horizontal-align: right;
+		vertical-align: bottom;
+		box-shadow: 0 0 4px rgba(0, 0, 0, 1);
 	}
 }

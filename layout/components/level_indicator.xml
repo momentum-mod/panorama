@@ -6,10 +6,14 @@
 		<include src="file://{resources}/scripts/level_indicator.js" />
 	</scripts>
 
-	<Panel onload="LevelIndicator.onLoad()">
-		<Panel class="levelindicator__level" id="PlayerLevel">
-			<Image class="levelindicator__icon" id="PrestigeIcon" src="" textureheight="18" />
-			<Label class="levelindicator__text" id="LevelText" text="{d:level}" />
+	<Panel class="levelindicator" onload="LevelIndicator.onLoad()">
+		<Panel id="Container" class="levelindicator__container">
+			<Image id="PrestigeIcon" class="levelindicator__icon" src="" textureheight="32" />
+			<Label class="levelindicator__text" text="{d:level}" />
+		</Panel>
+		<Panel id="IncrementContainer" class="levelindicator__increment-container">
+			<Image id="PrestigeIconIncrement" class="levelindicator__icon" src="" textureheight="32" />
+			<Label class="levelindicator__text" text="{d:level_incr}" />
 		</Panel>
 	</Panel>
 </root>

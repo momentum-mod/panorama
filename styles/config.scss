@@ -66,8 +66,22 @@ $dark-900: rgba(0, 0, 0, 0.99) !default;
 
 $color-dark-bgs: ("dark-100": $dark-100, "dark-200": $dark-200, "dark-300": $dark-300, "dark-400": $dark-400, "dark-500": $dark-500, "dark-600": $dark-600, "dark-700": $dark-700, "dark-800": $dark-800, "dark-900": $dark-900) !default;
 
+$levels: (
+	1 : #5d5d5d,
+	2 : #e84855,
+	3 : #ff8645,
+	4 : #ffd000,
+	5 : #47c27c,
+	6 : #3f4aca,
+	7 : #873de1,
+	8 : #d34a8d,
+	9 : #3185fc,
+	10: #161616,
+	11: #ffffff,
+);
 
 
+$units: $yellow;
 
 // ================
 // GRADIENTS

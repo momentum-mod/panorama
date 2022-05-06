@@ -7,6 +7,8 @@
 (function () {
 	UiToolkitAPI.RegisterPanel2d('Split', 'file://{resources}/layout/components/split.xml');
 	UiToolkitAPI.RegisterPanel2d('LineGraph', 'file://{resources}/layout/components/graphs/linegraph.xml');
+	UiToolkitAPI.RegisterPanel2d('LevelIndicator', 'file://{resources}/layout/components/level_indicator.xml');
+	UiToolkitAPI.RegisterPanel2d('PlayerCard', 'file://{resources}/layout/components/player_card.xml');
 
     // Perf tests
     UiToolkitAPI.RegisterPanel2d( 'ChaosPerfTestsJsMultipleContexts', 'file://{resources}/layout/tests/perf/perf_jsmultiplecontexts.xml' );
