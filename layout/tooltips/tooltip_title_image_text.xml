@@ -6,7 +6,7 @@
 	<TooltipTitleImageText class="tooltip__title-image-text-panel">
 		<Label id="TitleLabel" class="tooltip__title" html="true" />
 		<Panel class="tooltip__image-text-panel">
-			<Image id="Image" class="tooltip__image" />
+			<Image id="Image" class="tooltip__image" textureheight="128" texturewidth="128" />
 			<Label id="TextLabel" class="tooltip__text" html="true" />
 		</Panel>
 	</TooltipTitleImageText>

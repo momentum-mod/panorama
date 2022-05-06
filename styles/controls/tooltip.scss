@@ -58,13 +58,12 @@
 		vertical-align: center;
 		height: $tooltip-image-size;
 		width: height-percentage(100%);
-		margin-right: 12px;
+		margin-right: 8px;
 	}
 
 	$this: &;
 	&--notitle {
 		#{$this}__title {
-			width: 0;
 			height: 0;
 			margin: 0;
 		}
@@ -77,6 +76,22 @@
 			}
 			#{$this}__image {
 				wash-color: $color;
+			}
+		}
+
+		// ShowTitleImageTextTooltipStyled only takes one class so we have to do this double modifier shit
+		&--notitle {
+			&--#{$name} {
+				#{$this}__title {
+					height: 0;
+					margin: 0;
+				}
+				#{$this}__text {
+					color: $color;
+				}
+				#{$this}__image {
+					wash-color: $color;
+				}
 			}
 		}
 	}
@@ -106,6 +121,11 @@
 			}
 
 			margin-#{$dir}: -8px;
+			@if $dir == 'left' or $dir == 'right' {
+				margin: $tooltip-radius * 2 0px;
+			} @else {
+				margin: 0px $tooltip-radius * 2;
+			}
 		}
 	}
 
