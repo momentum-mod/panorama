@@ -5,6 +5,7 @@
 	</styles>
 
 	<scripts>
+		<include src="file://{resources}/scripts/common/run.js" />
 		<include src="file://{resources}/scripts/components/leaderboards.js" />
 	</scripts>
 
@@ -43,6 +44,12 @@
 					</RadioButton>
 				</Panel>
 			</Panel>
+
+			<TooltipPanel class="horizontal-align-right width-fit-children height-fit-children" tooltip="View last run stats">
+				<Button id="EndOfRunButton" class="button" onactivate="Leaderboards.showEndOfRun();">
+					<Image class="button__icon button__icon--left" src="file://{images}/backarrow.svg" textureheight="64"/>
+				</Button>
+			</TooltipPanel>
 		</Panel>
 		<Panel class="leaderboard-times">
 			<Panel class="leaderboard-times__header">

@@ -10,7 +10,7 @@
 	horizontal-align: center;
 	vertical-align: center;
 	visibility: visible;
-	background-color: rgba(0, 0, 0, 0.1);
+	background-color: rgba(0, 0, 0, 0.01); // Very slight background so the blur works
 
 	&--unofficial {
 		.hud-leaderboards-map-info__bottom,
@@ -22,29 +22,22 @@
 	&__wrapper {
 		flow-children: down;
 		width: 100%;
-		box-shadow: 0 0 40px 0 rgba(0, 0, 0, 1);
+		box-shadow: 0 0 20px 0 rgba(0, 0, 0, 1);
+		border: 1px solid rgba(0, 0, 0, 0.65);
 	}
 
 	&__header {
 		flow-children: right;
 		width: 100%;
-		padding: 24px;
-		background-color: rgba(0, 0, 0, 0.3);
+		background-color: rgba(0, 0, 0, 0.5);
 	}
 
 	&__header-image {
 		height: 100%;
 		width: height-percentage(100%);
-		margin-right: 16px;
+		margin: 24px 16px 24px 24px;
 		padding: -4px; // >:)
 		img-shadow: 0 1px 3px rgba(0, 0, 0, 1);
-	}
-
-	&__times {
-		width: 100%;
-		padding: 24px;
-		padding-top: 16px;
-		background-color: rgba(0, 0, 0, 0.6);
 	}
 
 	&__stats {
@@ -55,18 +48,40 @@
 
 	&__map-info {
 		flow-children: down;
+		margin: 24px 24px 24px 0px;
+	}
+
+	&__leaderboards {
+		width: 100%;
+		padding: 24px;
+		padding-top: 16px;
+		background-color: rgba(0, 0, 0, 0.6);
+
+		&--hidden {
+			visibility: collapse;
+		}
+	}
+
+	&__endofrun {
+		width: 100%;
+
+		&--hidden {
+			visibility: collapse;
+		}
 	}
 }
 
 .hud-leaderboards-map-info {
 	&__top {
 		flow-children: right;
+		width: fill-parent-flow(1);
 	}
 
 	&__bottom {
 		flow-children: right;
 		width: 100%;
-		height: 28px;
+		margin-bottom: 4px;
+		// height: 28px;
 	}
 
 	&__map-name {
@@ -115,10 +130,11 @@
 
 	&__stats {
 		flow-children: right;
-		margin-left: 16px;
 		horizontal-align: right;
 		vertical-align: center;
-		height: 100%;
+
+		@include mixin.font-styles($use-header: true);
+		font-size: 24px;
 	}
 }
 

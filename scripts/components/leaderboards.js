@@ -30,14 +30,23 @@ class Leaderboards {
 	static selectedGlobalListType;
 	static selectedLocalListType;
 
-	static subtypeButtons = $('#FilterButtonsSubtype');
-	static lobbyButton = $('#TimesListLobby');
-	static localButton = $('#TimesListLocal');
-	static timesContainer = $('#LeaderboardTimesContainer');
-	static emptyWarningText = $('#LeaderboardEmptyWarningText');
+	static panels = {
+		/** @type {Panel} @static */
+		subtypeButtons: $('#FilterButtonsSubtype'),
+		/** @type {Button} @static */
+		lobbyButton: $('#TimesListLobby'),
+		/** @type {Panel} @static */
+		timesContainer: $('#LeaderboardTimesContainer'),
+		/** @type {Label} @static */
+		emptyWarningText: $('#LeaderboardEmptyWarningText'),
+		/** @type {Button} @static */
+		endOfRunButton: $('#EndOfRunButton')
+	};
 
 	static {
-		$.RegisterEventHandler( 'Leaderboards_TimesFiltered', $.GetContextPanel(), Leaderboards.onTimesUpdated );
+		$.RegisterEventHandler('Leaderboards_TimesFiltered', $.GetContextPanel(), this.onTimesUpdated.bind(this));
+		$.RegisterForUnhandledEvent('EndOfRun_Show', this.onShowEndOfRun.bind(this));
+		$.RegisterForUnhandledEvent('Leaderboards_MapDataSet', this.onMapLoad.bind(this));
 
 		// Default to Top 10
 		this.setSelectedTimesList(TIME_LIST_TYPE.LIST_GLOBAL);
@@ -46,69 +55,65 @@ class Leaderboards {
 	}
 
 	static onTimesUpdated(count) {
-		const currentListType = Leaderboards.getSelectedListType();
+		const currentListType = this.getSelectedListType();
 
 		let statusType = null;
-		if ( currentListType ) {
+		if (currentListType) {
 			statusType = $.GetContextPanel().getTimesListStatus(currentListType);
-		}
-		else {
-			$.Msg('Warning: Current leaderboard list type is undefined!!');
+		} else {
+			$.Warning('Warning: Current leaderboard list type is undefined!');
 		}
 
-		Leaderboards.timesContainer.RemoveClass('leaderboard-times__main--loading');
-		Leaderboards.timesContainer.RemoveClass('leaderboard-times__main--empty');
+		this.panels.timesContainer.RemoveClass('leaderboard-times__main--loading');
+		this.panels.timesContainer.RemoveClass('leaderboard-times__main--empty');
 
 		if (statusType == LEADERBOARD_STATUS_TYPE.STATUS_TIMES_LOADING) {
-			Leaderboards.timesContainer.AddClass('leaderboard-times__main--loading');
+			this.panels.timesContainer.AddClass('leaderboard-times__main--loading');
 		} else if (count == 0) {
+			// TODO: Use dialog vars here! Christ!
 			switch (statusType) {
 				case LEADERBOARD_STATUS_TYPE.STATUS_NO_TIMES_RETURNED:
-					if (Leaderboards.getSelectedListType() == LEADERBOARD_TYPE.TIMES_FRIENDS) {
-						Leaderboards.emptyWarningText.text = 'None of your friends have set times on this map!';
+					if (this.getSelectedListType() == LEADERBOARD_TYPE.TIMES_FRIENDS) {
+						this.panels.emptyWarningText.text = 'None of your friends have set times on this map!';
+					} else if (this.getSelectedListType() == LEADERBOARD_TYPE.TIMES_LOCAL) {
+						this.panels.emptyWarningText.text = 'You have no local replays of this map!';
+					} else if (this.getSelectedListType() == LEADERBOARD_TYPE.TIMES_LOCAL_DOWNLOADED) {
+						this.panels.emptyWarningText.text = 'You have no downloaded replays of this map!';
+					} else if (this.getSelectedListType() == LEADERBOARD_TYPE.TIMES_LOBBY) {
+						this.panels.emptyWarningText.text = 'Nobody in the lobby has set a time on this map!';
+					} else {
+						this.panels.emptyWarningText.text = 'This map has no completions!';
 					}
-					else if (Leaderboards.getSelectedListType() == LEADERBOARD_TYPE.TIMES_LOCAL) {
-						Leaderboards.emptyWarningText.text = 'You have no local replays of this map!';
-					}
-					else if (Leaderboards.getSelectedListType() == LEADERBOARD_TYPE.TIMES_LOCAL_DOWNLOADED) {
-						Leaderboards.emptyWarningText.text = 'You have no downloaded replays of this map!';
-					}
-					else if (Leaderboards.getSelectedListType() == LEADERBOARD_TYPE.TIMES_LOBBY) {
-						Leaderboards.emptyWarningText.text = 'Nobody in the lobby has set a time on this map!';
-					}
-					else {
-						Leaderboards.emptyWarningText.text = 'This map has no completions!';
-					}
-					Leaderboards.timesContainer.AddClass('leaderboard-times__main--empty');
+					this.panels.timesContainer.AddClass('leaderboard-times__main--empty');
 					break;
 				case LEADERBOARD_STATUS_TYPE.STATUS_NO_PB_SET:
-					Leaderboards.emptyWarningText.text = "You don't have any completions of this map!";
-					Leaderboards.timesContainer.AddClass('leaderboard-times__main--empty');
+					this.panels.emptyWarningText.text = "You don't have any completions of this map!";
+					this.panels.timesContainer.AddClass('leaderboard-times__main--empty');
 					break;
 				case LEADERBOARD_STATUS_TYPE.STATUS_NO_FRIENDS:
-					Leaderboards.emptyWarningText.text = "You don't have any friends, precious...";
-					Leaderboards.timesContainer.AddClass('leaderboard-times__main--empty');
+					this.panels.emptyWarningText.text = "You don't have any friends, precious...";
+					this.panels.timesContainer.AddClass('leaderboard-times__main--empty');
 					break;
 				case LEADERBOARD_STATUS_TYPE.STATUS_UNAUTHORIZED_FRIENDS_LIST:
-					Leaderboards.emptyWarningText.text = 'Your friends list is private!';
-					Leaderboards.timesContainer.AddClass('leaderboard-times__main--empty');
+					this.panels.emptyWarningText.text = 'Your friends list is private!';
+					this.panels.timesContainer.AddClass('leaderboard-times__main--empty');
 					break;
 				case LEADERBOARD_STATUS_TYPE.STATUS_SERVER_ERROR:
-					Leaderboards.emptyWarningText.text = 'Error fetching map times! Shit!!';
-					Leaderboards.timesContainer.AddClass('leaderboard-times__main--empty');
+					this.panels.emptyWarningText.text = 'Error fetching map times! Shit!!';
+					this.panels.timesContainer.AddClass('leaderboard-times__main--empty');
 					break;
 				case LEADERBOARD_STATUS_TYPE.STATUS_TIMES_LOADED:
-					$.Msg('Error: getTimesListStatus returned STATUS_TIMES_LOADED, with no times!!');
+					$.Warning('Error: getTimesListStatus returned STATUS_TIMES_LOADED, with no times!');
 					break;
 				default:
-					$.Msg('Error: getTimesListStatus returned unknown StatusType ' + statusType);
+					$.Warning('Error: getTimesListStatus returned unknown StatusType ' + statusType);
 			}
 		}
 	}
 
 	static setSelectedTimesList(timesList) {
-		this.subtypeButtons.SetHasClass('leaderboard-filter-buttons__subtypes--online', timesList === TIME_LIST_TYPE.LIST_GLOBAL);
-		this.subtypeButtons.SetHasClass('leaderboard-filter-buttons__subtypes--lobby', timesList === TIME_LIST_TYPE.LIST_LOBBY);
+		this.panels.subtypeButtons.SetHasClass('leaderboard-filter-buttons__subtypes--online', timesList === TIME_LIST_TYPE.LIST_GLOBAL);
+		this.panels.subtypeButtons.SetHasClass('leaderboard-filter-buttons__subtypes--lobby', timesList === TIME_LIST_TYPE.LIST_LOBBY);
 
 		this.selectedTimesList = timesList;
 	}
@@ -132,8 +137,30 @@ class Leaderboards {
 	}
 
 	static showLobbyTooltip() {
-		if (!this.lobbyButton.enabled) {
-			UiToolkitAPI.ShowTextTooltip(this.lobbyButton.id, 'Join a Lobby to see Lobby times!');
+		if (!this.panels.lobbyButton.enabled) {
+			UiToolkitAPI.ShowTextTooltip(this.panels.lobbyButton.id, 'Join a Lobby to see Lobby times!');
 		}
+	}
+
+	static showEndOfRun() {
+		$.DispatchEvent('EndOfRun_Show', EOR_SHOW_REASON.MANUALLY_SHOWN);
+	}
+
+	/**
+	 * Show the button to go to the end of run page.
+	 * Should only be shown if you're completing a run in the current session on the current map.
+	 * @param {EOR_SHOW_REASON} showReason - Why the end of run panel is being shown. See EOR_SHOW_REASON for reasons.
+	 */
+	static onShowEndOfRun(showReason) {
+		if (showReason === EOR_SHOW_REASON.PLAYER_FINISHED_RUN) {
+			this.panels.endOfRunButton.visible = true;
+		}
+	}
+
+	/**
+	 * Hide the button to go to the end of run page.
+	 */
+	static onMapLoad(_isOfficial) {
+		this.panels.endOfRunButton.visible = false;
 	}
 }

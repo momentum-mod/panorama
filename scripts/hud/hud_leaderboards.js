@@ -1,18 +1,38 @@
 'use strict';
 
+/**
+ * Class for the HUD leaderboards panel, which contains the leaderboards and end of run.
+ */
 class HudLeaderboards {
-	static gamemodeImage = $('#HudLeaderboardsGamemodeImage');
-	static creditsPanel = $('#HudLeaderboardsMapCredits');
-	static statsPanelPB = $('#HudLeaderboardsInfoPB');
-	static statsPanelTier = $('#HudLeaderboardsInfoTier');
-	static statsPanelStagedLinear = $('#HudLeaderboardsInfoStagedLinear');
-	static statsPanelZones = $('#HudLeaderboardsInfoZones');
-	static statsPanelNumRuns = $('#HudLeaderboardsInfoNumRuns');
+	static panels = {
+		/** @type {Panel} @static */
+		leaderboardsContainer: $('#LeaderboardsContainer'),
+		/** @type {Panel} @static */
+		endOfRunContainer: $('#EndOfRunContainer'),
+		/** @type {Image} @static */
+		gamemodeImage: $('#HudLeaderboardsGamemodeImage'),
+		/** @type {Panel} @static */
+		credits: $('#HudLeaderboardsMapCredits')
+	};
 
 	static {
-		$.RegisterForUnhandledEvent('Leaderboards_MapDataSet', HudLeaderboards.setMapData);
-		// $.RegisterForUnhandledEvent('HudLeaderboards_Opened', HudLeaderboards.onOpened);
-		// $.RegisterForUnhandledEvent('HudLeaderboards_Closed', HudLeaderboards.onClosed);
+		$.RegisterForUnhandledEvent('Leaderboards_MapDataSet', this.setMapData.bind(this));
+		$.RegisterForUnhandledEvent('HudLeaderboards_ForceClose', this.close.bind(this));
+		$.RegisterForUnhandledEvent('EndOfRun_Show', this.showEndOfRun.bind(this));
+		$.RegisterForUnhandledEvent('EndOfRun_Hide', this.hideEndOfRun.bind(this));
+
+		//$.RegisterForUnhandledEvent('HudLeaderboards_Opened', this.onOpened);
+		//$.RegisterForUnhandledEvent('HudLeaderboards_Closed', this.onClosed);
+	}
+
+	static showEndOfRun(_showReason) {
+		this.panels.leaderboardsContainer.AddClass('hud-leaderboards__leaderboards--hidden');
+		this.panels.endOfRunContainer.RemoveClass('hud-leaderboards__endofrun--hidden');
+	}
+
+	static hideEndOfRun() {
+		this.panels.leaderboardsContainer.RemoveClass('hud-leaderboards__leaderboards--hidden');
+		this.panels.endOfRunContainer.AddClass('hud-leaderboards__endofrun--hidden');
 	}
 
 	static setMapData(isOfficial) {
@@ -20,19 +40,19 @@ class HudLeaderboards {
 
 		const img = GAMEMODE_WITH_NULL[GameModeAPI.GetCurrentGameMode()].shortName.toLowerCase();
 
-		HudLeaderboards.gamemodeImage.SetImage(`file://{images}/gamemodes/${img}.svg`);
+		this.panels.gamemodeImage.SetImage(`file://{images}/gamemodes/${img}.svg`);
 
 		const mapData = MapCacheAPI.GetCurrentMapData();
 
 		if (mapData && isOfficial) {
-			HudLeaderboards.setMapStats(mapData);
-			HudLeaderboards.setMapAuthorCredits(mapData.credits);
+			this.setMapStats(mapData);
+			this.setMapAuthorCredits(mapData.credits);
 		}
 	}
 
 	static setMapAuthorCredits(credits) {
 		// Delete existing name labels
-		HudLeaderboards.creditsPanel
+		this.panels.credits
 			.Children()
 			.slice(1) // Keep the "by" label
 			?.forEach((child) => child.DeleteAsync(0.0));
@@ -40,7 +60,7 @@ class HudLeaderboards {
 		const authorCredits = credits.filter((x) => x.type === 'author');
 
 		authorCredits.forEach((credit) => {
-			let namePanel = $.CreatePanel('Label', HudLeaderboards.creditsPanel, '', {
+			let namePanel = $.CreatePanel('Label', this.panels.credits, '', {
 				text: credit.user.alias
 			});
 
@@ -63,7 +83,7 @@ class HudLeaderboards {
 
 			// hoped this would make contextmenu work but it dont
 			if (authorCredits.indexOf(credit) < authorCredits.length - 1) {
-				let commaPanel = $.CreatePanel('Label', HudLeaderboards.creditsPanel, '');
+				let commaPanel = $.CreatePanel('Label', this.panels.credits, '');
 				commaPanel.AddClass('hud-leaderboards-map-info__credits-other-text');
 				commaPanel.text = ',';
 			}
@@ -71,10 +91,12 @@ class HudLeaderboards {
 	}
 
 	static setMapStats(data) {
-		$.GetContextPanel().SetDialogVariable('tier', 'Tier ' + data.mainTrack?.difficulty);
-		$.GetContextPanel().SetDialogVariable('type', data.mainTrack?.isLinear ? 'Linear' : 'Staged');
-		$.GetContextPanel().SetDialogVariable('zones', data.mainTrack?.numZones + ' Zones');
-		$.GetContextPanel().SetDialogVariable('numruns', data.stats?.completes + ' Runs');
+		const cp = $.GetContextPanel();
+
+		cp.SetDialogVariable('tier', 'Tier ' + data.mainTrack?.difficulty);
+		cp.SetDialogVariable('type', data.mainTrack?.isLinear ? 'Linear' : 'Staged');
+		cp.SetDialogVariable('zones', data.mainTrack?.numZones + ' Zones');
+		cp.SetDialogVariable('numruns', data.stats?.completes + ' Runs');
 	}
 
 	static close() {

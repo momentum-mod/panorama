@@ -21,7 +21,7 @@
 	$.DefineEvent('MainMenuTabShown', 1, 'tabid', 'Alert main menu tabs when they are shown, in case there is a data update needed');
 	$.DefineEvent('MainMenuTabHidden', 1, 'tabid', 'Fired when a main menu tab is closed');
 	$.DefineEvent('SettingsNavigateToPanel', 2, 'category, settingPanel', 'Navigates to a setting by panel handle');
-	$.DefineEvent('SettingsSave', 0, 'Save the settings out to file (host_writeconfig)')
+	$.DefineEvent('SettingsSave', 0, 'Save the settings out to file (host_writeconfig)');
 	$.DefineEvent('ExtendDrawer', 0, 'Open the right side drawer panel');
 	$.DefineEvent('RetractDrawer', 0, 'Close the right side drawer panel');
 	$.DefineEvent('ToggleDrawer', 0, 'Toggle the open or closed state of the right side drawer panel');
@@ -30,6 +30,7 @@
 	$.DefineEvent('Lobby_SetMaxPlayers', 1, 'maxplayers', 'Sets the max players of your lobby');
 	$.DefineEvent('MapSelector_OnLoaded', 0);
 	$.DefineEvent('MapSelector_ShowConfirmCancelDownload', 1);
+	$.DefineEvent('HudLeaderboards_ForceClose', 0, '', 'Force close the leaderboards');
 	$.DefineEvent('ColorPickerSave', 1, 'color');
 	$.DefineEvent('ColorPickerCancel', 0);
 })();
