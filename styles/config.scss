@@ -19,9 +19,9 @@ $green     : #7aee7a !default;
 $colors-primary: ("blue": $blue, "mid-blue": $mid-blue, "light-blue": $light-blue, "purple": $purple, "pink": $pink, "red": $red, "orange": $orange, "yellow": $yellow, "green": $green) !default;
 
 $disabled    : #7e7e7e !default;
-$error       : #e20b0b !default;
+$error       : #f32424 !default;
 $warning     : #ff7300 !default;
-$positive    : #7dff82 !default;
+$positive    : #63fd68 !default;
 $steam-online: #91c257 !default;
 
 $colors-state: ("disabled": $disabled, "error": $error, "warning": $warning, "positive": $positive, "steam-online": $steam-online) !default;
@@ -198,7 +198,7 @@ $spacers: ( 4px, 6px, 8px, 16px, 32px ) !default;
 // BUTTON
 // ================
 
-$button-background-base          : $light-500 !default;
+$button-background-base          : $light-700 !default;
 $button-background               : gradient-vertical($button-background-base, color.scale($button-background-base, $lightness: -15%)) !default;
 $button-background-hover         : gradient-vertical(color.scale($button-background-base, $lightness: 0%,   $alpha: 15%), color.scale($button-background-base, $lightness: -20%, $alpha: 15%)) !default;
 $button-background-selected      : gradient-vertical(color.scale($button-background-base, $lightness: 0%,   $alpha: 20%), color.scale($button-background-base, $lightness: -20%, $alpha: 20%)) !default; // Used by Radiobuttons + Togglebuttons
@@ -208,8 +208,8 @@ $button-text-color   : $font-default-color !default;
 $button-text-disabled: $font-disabled-color !default;
 $button-text-hover   : $button-text-color !default;
 
-$button-shadow: fill rgba(0, 0, 0, 0.45) 0px 1px 1px 0px !default;
-$button-radius: 4px !default;
+$button-shadow: fill rgba(0, 0, 0, 0.6) 0px 1px 1px 0px !default;
+$button-radius: 2px !default;
 $button-border: 0px solid rgba(255, 255, 255, 0.025) !default;
 
 $button-height                    : 34px !default;
@@ -242,7 +242,7 @@ $dropdown-button-icon-shadow           : 0 0 2px 0 rgba(0, 0, 0, 0.3) !default;
 $dropdown-button-icon-icon-shadow	   : 0 0 3px 0 rgba(0, 0, 0, 0.5) !default;
 
 $dropdown-button-shadow: $button-shadow !default;
-$dropdown-button-radius: 4px !default;
+$dropdown-button-radius: 2px !default;
 $dropdown-button-border: $button-border !default;
 
 $dropdown-button-use-header-font: true !default;
@@ -425,7 +425,7 @@ $progressbar-background         : color.scale( $blue, $saturation: -70%, $lightn
 $progressbar-background-disabled: gradient( linear, 0% 0%, 100% 0%, from( color.scale( $red, $saturation: -65%, $lightness: -45% ) ), to( color.scale( $red, $saturation: -55%, $lightness: -35% ) ) );
 $progressbar-background-progress: gradient( linear, 0% 0%, 100% 0%, from( $blue ), to( $light-blue ) ) !default;
 
-$progressbar-shadow: rgba(0, 0, 0, 0.45) 0px 1.5px 3px 0px !default;
+$progressbar-shadow: rgba(0, 0, 0, 0.5) 0px 0px 3px 0px !default;
 
 // ================
 // TOOLTIPS
@@ -551,7 +551,7 @@ $strafesync-color-decrease: $red !default;
 // TIMER
 // ================
 $timer-font-weight: black !default;
-$timer-font-size: 26px !default;
+$timer-font-size: 30px !default;
 $timer-color: $white !default;
 $timer-color-inactive: $gray-900 !default;
 $timer-color-finished: $green !default;
@@ -560,9 +560,9 @@ $timer-color-failed: $red !default;
 $timer-comp-color: $white !default;
 $timer-comp-color-increase: $blue !default;
 $timer-comp-color-decrease: $red !default;
-$timer-comp-font-weight: normal !default;
-$timer-comp-font-size: 18px !default;
-$timer-event-fadeout-time: 8s !default;
+$timer-comp-font-weight: bold !default;
+$timer-comp-font-size: 24px !default;
+$timer-event-fadeout-time: 10s !default;
 
 // ================
 // STATUS
