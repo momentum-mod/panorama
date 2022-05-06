@@ -40,7 +40,7 @@ class MapSelection {
 		$.RegisterEventHandler('NStateButtonStateChanged', MapSelection.downloadedFilterButton, MapSelection.onNStateBtnChanged);
 
 		// Populate the gameModeData object, finding all the filter buttons
-		this.gameModeData = GAMEMODE;
+		this.gameModeData = GAMEMODE_WITH_NULL;
 		Object.values(this.gameModeData).forEach((value) => {
 			value.filterButton = $('#' + value.shortName + 'FilterButton');
 		});
