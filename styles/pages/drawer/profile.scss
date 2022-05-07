@@ -1,0 +1,196 @@
+@use '../../config' as *;
+@use '../../abstract/mixin';
+@use '../../abstract/function';
+@use 'sass:map';
+@use 'sass:math';
+
+.profile {
+	flow-children: down;
+	width: 100%;
+	height: 100%;
+
+	&__global,
+	&__gamemodes,
+	&__activity {
+		width: 100%;
+		flow-children: down;
+	}
+
+	&__row {
+		flow-children: right;
+		margin-bottom: 8px;
+	}
+}
+
+.profile-global {
+	flow-children: right;
+	padding: 16px 20px 26px 26px;
+	background-color: function.gradient-vertical(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2));
+
+	&__left {
+		padding-top: 6px;
+		flow-children: down;
+		width: fill-parent-flow(1);
+		margin-right: 16px;
+	}
+
+	&__right {
+		flow-children: down;
+		width: fit-children;
+		width: 300px;
+	}
+
+	&__right-row {
+		margin-right: 6px;
+		horizontal-align: right;
+	}
+
+	&__name {
+		@include mixin.font-styles($use-header: false);
+		font-size: 32px;
+		text-shadow: 0px 1px 3px rgba(0, 0, 0, 1);
+		font-weight: medium;
+	}
+
+	&__units-icon {
+		margin-right: 6px;
+		height: 20px;
+		width: height-percentage(100%);
+		wash-color: $units;
+		vertical-align: center;
+	}
+
+	&__units-label {
+		vertical-align: center;
+		font-size: 20px;
+	}
+
+	&__avatar {
+		height: 100px;
+		border: 1px solid rgba(0, 0, 0, 0.5);
+		width: height-percentage(100%);
+		box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 1);
+		margin-right: 12px;
+	}
+
+	&__stat {
+		font-size: 16px;
+	}
+}
+
+.profile-level-indicators {
+	$root: &;
+	$info-button-offset: 6px;
+
+	flow-children: right;
+	padding: 6px 4px 0px 4px;
+	margin-bottom: 8px;
+	border-radius: 2px;
+
+	@each $level in (1, 2, 3, 4, 5, 6, 7, 8, 9, 10) {
+		&--#{$level} {
+			$color: map.get($levels, $level);
+
+			background-color: $color;
+		}
+	}
+
+	// I can't get overflow: noclip to work to position the lil button how I want
+	// so had to tweak paddings in above panels in some deranged ways
+	&__wrapper {
+		horizontal-align: right;
+		padding-right: $info-button-offset;
+		padding-top: $info-button-offset + 2;
+	}
+
+	&__col {
+		flow-children: down;
+		width: 56px;
+
+		&--first {
+			margin-right: 4px;
+		}
+
+		&--prestige {
+			#{$root}--no-prestige & {
+				visibility: collapse;
+			}
+		}
+
+		&--level {
+		}
+	}
+
+	&__title {
+		@include mixin.font-styles($use-header: true, $light-header: true);
+		font-size: 12px;
+		// horizontal-align: center;
+		// padding-left: 4px;
+		text-shadow: 0px 1px 4px rgba(0, 0, 0, 0.5);
+
+		&--prestige {
+			horizontal-align: center;
+			padding-left: 1px;
+		}
+
+		&--level {
+			horizontal-align: center;
+			padding-left: 0px;
+
+			#{$root}--no-prestige & {
+				padding-left: 4px;
+			}
+		}
+	}
+
+	&__prestige-indicator {
+		background-color: none;
+		padding: 0;
+		margin: 0;
+
+		horizontal-align: center;
+
+		& .levelindicator__icon {
+			width: 36px;
+			height: 36px;
+			margin: 0px;
+		}
+
+		& .levelindicator__text {
+			visibility: collapse;
+		}
+	}
+
+	&__level-indicator {
+		background-color: none;
+		horizontal-align: center;
+		padding: 1px 0;
+
+		& .levelindicator__icon {
+			visibility: collapse;
+		}
+
+		& .levelindicator__text {
+			font-size: 36px;
+			padding-top: -2px; // Some negative padding to remove empty space,
+			padding-right: 3px; // plus some right-padding as Bebas doesn't centre well
+
+			#{$root}--no-prestige & {
+				padding-right: 0px;
+			}
+		}
+	}
+
+	&__info-button {
+		height: fit-children;
+		align: right top;
+		// background-color: rgba(204, 204, 204, 0.5);
+		transform: translate3d(6px, -6px, 0);
+	}
+
+	&__info-button-icon {
+		width: 18px;
+		height: 18px;
+		padding: 2px;
+	}
+}

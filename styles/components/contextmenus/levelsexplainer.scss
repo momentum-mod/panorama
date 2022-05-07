@@ -1,0 +1,44 @@
+@use '../../abstract/mixin';
+
+.levels-explainer {
+	flow-children: down;
+	padding: 16px;
+
+	&__title {
+		@include mixin.font-styles($use-header: true);
+		font-size: 30px;
+		// horizontal-align: center;
+		margin-bottom: 16px;
+	}
+
+	&__paragraph {
+		max-width: 600px;
+		font-size: 14px;
+	}
+
+	&__showcase-row {
+		flow-children: right;
+		// horizontal-align: center;
+	}
+
+	&__level-indicator {
+		@include mixin.level-indicator-size($size: 28px);
+	}
+
+	&__prestige-col {
+		flow-children: down;
+		margin: 0 8px;
+	}
+
+	&__prestige-title {
+		@include mixin.font-styles($use-header: true, $light-header: true);
+		font-size: 14px;
+		horizontal-align: center;
+	}
+
+	&__prestige-icon {
+		width: 48px;
+		height: 48px;
+		horizontal-align: center;
+	}
+}
