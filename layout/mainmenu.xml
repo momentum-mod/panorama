@@ -33,28 +33,28 @@
 			<!-- Topnav -->
 			<Panel id="JsMainMenuNavBar" class="topnav" style="z-index: 10;">
 
-				<RadioButton id="HomeButton" class="topnav__home" onactivate="MainMenuController.onHomeButtonPressed()">
+				<RadioButton id="HomeButton" group="TopNavRadio" class="topnav__home" onactivate="MainMenuController.onHomeButtonPressed()">
 					<Image class="topnav__logo" src="file://{images}/topnav/momentumLogo.svg" textureheight="64" />
 				</RadioButton>
 
 				<Panel id="MainMenuTopButtons" class="full-height flow-right">
-					<RadioButton id="PlayButton" class="topnav__button" onactivate="MainMenuController.navigateToTab('MapSelection', 'mainmenu_mapselector', false)">
+					<RadioButton id="PlayButton" group="TopNavRadio" class="topnav__button" onactivate="MainMenuController.navigateToTab('MapSelection', 'mainmenu_mapselector', false)">
 						<Image class="topnav__icon" src="file://{images}/topnav/play.svg" textureheight="64" />
 					</RadioButton>
 
-					<RadioButton id="InventoryButton" class="topnav__button" onactivate="MainMenuController.navigateToTab('Inventory', 'mainmenu_inventory')">
+					<RadioButton id="InventoryButton" group="TopNavRadio" class="topnav__button" onactivate="MainMenuController.navigateToTab('Inventory', 'mainmenu_inventory')">
 						<Image class="topnav__icon" src="file://{images}/topnav/inventory.svg" textureheight="64" />
 					</RadioButton>
 
-					<RadioButton id="ShopButton" class="topnav__button" onactivate="MainMenuController.navigateToTab('Shop', 'mainmenu_shop')">
+					<RadioButton id="ShopButton" group="TopNavRadio" class="topnav__button" onactivate="MainMenuController.navigateToTab('Shop', 'mainmenu_shop')">
 						<Image class="topnav__icon" src="file://{images}/topnav/shop.svg" textureheight="64" />
 					</RadioButton>
 
-					<RadioButton id="LearnButton" class="topnav__button" onactivate="MainMenuController.navigateToTab('Learn', 'mainmenu_learn')">
+					<RadioButton id="LearnButton" group="TopNavRadio" class="topnav__button" onactivate="MainMenuController.navigateToTab('Learn', 'mainmenu_learn')">
 						<Image class="topnav__icon" src="file://{images}/topnav/learn.svg" textureheight="64" />
 					</RadioButton>
 
-					<RadioButton id="SettingsButton" class="topnav__button" onactivate="MainMenuController.navigateToTab('Settings', 'mainmenu_settings')">
+					<RadioButton id="SettingsButton" group="TopNavRadio" class="topnav__button" onactivate="MainMenuController.navigateToTab('Settings', 'mainmenu_settings')">
 						<Image class="topnav__icon" src="file://{images}/topnav/settings.svg" textureheight="64" />
 					</RadioButton>
 				</Panel>
@@ -64,7 +64,7 @@
 						<Image class="topnav__icon" src="file://{images}/topnav/notification.svg" textureheight="64" />
 					</RadioButton>
 
-					<PlayerCard class="full-height" />
+					<PlayerCard class="full-height" onactivate="Drawer.onPlayerCardPressed();" />
 
 					<RadioButton id="QuitButton" class="topnav__button" onactivate="MainMenuController.onQuitButtonPressed()">
 						<Image class="topnav__icon" src="file://{images}/topnav/quit.svg" textureheight="64" />
@@ -87,26 +87,28 @@
 
 				<!-- Rightnav -->
 				<Panel id="MainMenuOptionListRight" class="rightnav">
-					<RadioButton id="LobbyButton" class="rightnav__button">
-						<Image id="LobbyButtonImage" class="rightnav__icon" src="file://{images}/sidepanel/lobby.svg" textureheight="32" />
-						<Label id="LobbyPlayerCountLabel" class="rightnav__button-subtitle rightnav__button-subtitle--hidden" />
-					</RadioButton>
+					<Panel class="rightnav__wrapper">
+						<RadioButton id="LobbyButton" group="RightNavRadio" class="rightnav__button" onactivate="Drawer.extendAndNavigateToTab('LobbyDrawer')">
+							<Image id="LobbyButtonImage" class="rightnav__icon" src="file://{images}/lobby.svg" textureheight="32" />
+							<Label id="LobbyPlayerCountLabel" class="rightnav__button-subtitle rightnav__button-subtitle--hidden" />
+						</RadioButton>
 
-					<RadioButton id="ProfileButton" class="rightnav__button">
-						<Image class="rightnav__icon" src="file://{images}/sidepanel/profile.svg" textureheight="32" />
-					</RadioButton>
+						<RadioButton id="ProfileButton" group="RightNavRadio" class="rightnav__button" onactivate="Drawer.extendAndNavigateToTab('ProfileDrawer')">
+							<Image class="rightnav__icon" src="file://{images}/profile.svg" textureheight="32" />
+						</RadioButton>
 
-					<RadioButton id="StatsButton" class="rightnav__button">
-						<Image class="rightnav__icon" src="file://{images}/sidepanel/wr.svg" textureheight="32" />
-					</RadioButton>
+						<RadioButton id="ChallengesButton" group="RightNavRadio" class="rightnav__button" onactivate="Drawer.extendAndNavigateToTab('ChallengesDrawer')">
+							<Image class="rightnav__icon" src="file://{images}/crown.svg" textureheight="32"/>
+						</RadioButton>
 
-					<RadioButton id="ChangelogButton" class="rightnav__button">
-						<Image class="rightnav__icon" src="file://{images}/sidepanel/news.svg" textureheight="32" />
-					</RadioButton>
+						<RadioButton id="ChangelogButton" group="RightNavRadio" class="rightnav__button" onactivate="Drawer.extendAndNavigateToTab('AboutDrawer')">
+							<Image class="rightnav__icon" src="file://{images}/news.svg" textureheight="32" />
+						</RadioButton>
 
-					<RadioButton id="SliderButton" class="rightnav__button rightnav__drawerbutton" onactivate="Drawer.toggle()">
-						<Image class="rightnav__icon" src="file://{images}/right-arrow.svg" textureheight="32" orientation="180" />
-					</RadioButton>
+						<Button id="SliderButton" group="RightNavRadio" class="rightnav__button rightnav__drawerbutton" onactivate="Drawer.toggle()">
+							<Image class="rightnav__icon" src="file://{images}/right-arrow.svg" textureheight="32" orientation="180" />
+						</Button>
+					</Panel>
 				</Panel>
 				<!-- /Rightnav -->
 

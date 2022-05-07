@@ -159,7 +159,7 @@ $drawer-width: 768px;
 		transition-timing-function: ease-in-out;
 
 		&:hover {
-			background-color: gradient(radial, 50% 100%, 0% 0%, 100% 100%, from(rgba(255, 255, 255, 0.3)), to(rgba(255, 255, 255, 0.2)));
+			background-color: function.gradient-radial-button(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.2));
 			box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.2);
 		}
 
@@ -176,9 +176,10 @@ $drawer-width: 768px;
 	&__button {
 		height: 100%;
 		vertical-align: middle;
-		padding: 25px;
-		background-color: gradient(radial, 50% 100%, 0% 0%, 100% 100%, from(rgba(128, 128, 128, 0)), to(rgba(128, 128, 128, 0))); //
+		padding: 24px;
+		background-color: function.gradient-radial-button(rgba(128, 128, 128, 0), rgba(128, 128, 128, 0));
 		box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+
 		transition-property: background-color, box-shadow;
 		transition-duration: 0.1s;
 		transition-timing-function: ease-out;
@@ -189,8 +190,12 @@ $drawer-width: 768px;
 
 		$this: &;
 		&:hover {
-			background-color: gradient(radial, 50% 100%, 0% 0%, 100% 100%, from(rgba(255, 255, 255, 0.25)), to(rgba(209, 209, 209, 0.25)));
+			background-color: function.gradient-radial-button(rgba(255, 255, 255, 0.25), rgba(209, 209, 209, 0.25));
 			box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.35);
+
+			&:disabled {
+				background-color: function.gradient-radial-button(rgba(75, 75, 75, 0.25), rgba(83, 83, 83, 0.21));
+			}
 
 			#{$this}__icon {
 				opacity: 1;
@@ -198,7 +203,7 @@ $drawer-width: 768px;
 		}
 
 		&:selected {
-			background-color: gradient(radial, 50% 100%, 0% 0%, 100% 100%, from(rgba(88, 88, 88, 0.7)), to(rgba(20, 20, 20, 0.7)));
+			background-color: function.gradient-radial-button(rgba(88, 88, 88, 0.7), rgba(20, 20, 20, 0.7));
 			box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.3);
 
 			#{$this}__icon {
@@ -207,7 +212,7 @@ $drawer-width: 768px;
 		}
 
 		&:selected:hover {
-			background-color: gradient(radial, 50% 100%, 0% 0%, 100% 100%, from(rgba(70, 70, 70, 0.8)), to(rgba(20, 20, 20, 0.8)));
+			background-color: function.gradient-radial-button(rgba(70, 70, 70, 0.8), rgba(20, 20, 20, 0.8));
 		}
 	}
 
@@ -245,30 +250,55 @@ $drawer-width: 768px;
 }
 
 .rightnav {
+	$root: &;
 	width: $rightnav-width;
 	height: 100%;
-	flow-children: down;
 	horizontal-align: right;
 	background-color: rgba(0, 0, 0, 0.5);
 
-	$root: &;
+	// Wrapper class needed because borders around parent can crash randomly ¯\_(ツ)_/¯
+	&__wrapper {
+		flow-children: down;
+		width: 100%;
+		height: 100%;
+		border-right: 1px solid rgba(0, 0, 0, 0.6);
+		border-left: 1px solid rgba(0, 0, 0, 0.4);
+	}
+
 	&__button {
+		$button: &;
 		width: 100%;
 		height: width-percentage(100%);
 		padding: 4px;
 		background-color: rgba(255, 255, 255, 0);
-		transition: background-color 0.1s ease-in-out 0s;
+		border: 1px solid rgba(0, 0, 0, 0);
 
-		& .RadioBox {
-			visibility: collapse;
+		transition-property: background-color, border;
+		transition-duration: 0.1s;
+		transition-timing-function: ease-in-out;
+
+		&:hover {
+			background-color: function.gradient-radial-button(rgba(255, 255, 255, 0.15), rgba(179, 179, 179, 0.15));
+			border-top: 1px solid rgba(255, 255, 255, 0.02);
+			border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+			#{$root}__icon {
+				opacity: 1;
+			}
 		}
 
-		&:hover,
-		&:selected:not(#{$root}__drawerbutton) {
-			background-color: rgba(255, 255, 255, 0.15);
+		&:selected {
+			background-color: function.gradient-radial-button(rgba(77, 77, 77, 0.4), rgba(0, 0, 0, 0.4));
+			border-top: 1px solid rgba(0, 0, 0, 0.3);
+			border-bottom: 1px solid rgba(0, 0, 0, 0.3);
 
 			#{$root}__icon {
 				opacity: 1;
+			}
+
+			&:hover {
+				background-color: function.gradient-radial-button(rgba(24, 24, 24, 0.5), rgba(0, 0, 0, 0.5));
+				border-top: 1px solid rgba(0, 0, 0, 0.35);
+				border-bottom: 1px solid rgba(0, 0, 0, 0.35);
 			}
 		}
 	}
@@ -277,7 +307,7 @@ $drawer-width: 768px;
 		width: 100%;
 		height: width-percentage(100%);
 		vertical-align: middle;
-		padding: 8px;
+		padding: 7px;
 		img-shadow: 0px 0px 2px 0 rgba(0, 0, 0, 0.8);
 
 		opacity: 0.75;
@@ -339,13 +369,7 @@ $drawer-width: 768px;
 	margin-top: $topnav-height;
 
 	transform: translateX($drawer-width);
-	transition: transform 0.35s ease-in-out 0s;
-
-	&__content {
-		width: $drawer-width;
-		height: 100%;
-		background-color: rgba(27, 27, 27, 0.7);
-	}
+	transition: transform 0.35s $easeOutQuart 0s;
 
 	$this: &;
 	&--expanded {
@@ -362,6 +386,37 @@ $drawer-width: 768px;
 
 		.rightnav__drawerbutton {
 			transform: rotateX(180deg) rotateZ(180deg);
+		}
+	}
+
+	&__content {
+		width: $drawer-width;
+		height: 100%;
+		background-color: rgba(27, 27, 27, 0.7);
+	}
+
+	&__wrapper {
+		width: 100%;
+		height: 100%;
+		border-left: 1px solid rgba(0, 0, 0, 0.5);
+		box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.6);
+	}
+
+	&__tab {
+		width: 100%;
+		height: 100%;
+		// margin-right: 6px;
+
+		opacity: 0;
+		transform: translateX(-100px);
+
+		transition-property: opacity, transform;
+		transition-duration: 0.1s;
+		transition-timing-function: ease-out;
+
+		&--active {
+			opacity: 1;
+			transform: translateX(0px);
 		}
 	}
 }
@@ -451,11 +506,11 @@ $drawer-width: 768px;
 		// Just try on fit-children and grab whatever height the panel is from the debugger.
 		height: 410px;
 		flow-children: down;
-		
+
 		// Clip the children as we decrease the height
-		overflow: noclip; 
+		overflow: noclip;
 		clip: rect(0%, 100%, 100%, 0%);
-		
+
 		transition: height 0.15s ease-in-out 0s;
 	}
 
@@ -546,16 +601,16 @@ $drawer-width: 768px;
 	&__button {
 		width: 60px;
 		height: width-percentage(100%);
-		margin: 4px;
+		margin: 0 2px;
 		transition-property: transform;
 		transition-timing-function: ease-in-out;
 		transition-duration: 0.2s;
-		
+
 		&:hover {
 			transform: translateY(-6px);
 		}
 	}
-	
+
 	&__icon {
 		width: 100%;
 		height: width-percentage(100%);
@@ -563,12 +618,12 @@ $drawer-width: 768px;
 		vertical-align: middle;
 
 		opacity: 0.8;
-		
+
 		transition-property: opacity, img-shadow;
 		transition-timing-function: ease-out;
 		transition-duration: 0.2s;
 		img-shadow: 0 0 16px 2 black;
-		
+
 		#{$root}__button:hover & {
 			opacity: 1;
 			img-shadow: 0 0 24px 2 $blue;

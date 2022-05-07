@@ -42,8 +42,8 @@
 		</snippet>
 	</snippets>
 
-	<Panel class="drawer-lobby" acceptsfocus="true">
-		<Panel id="LobbyListContainer" class="drawer-lobby__lobby-list lobby-list">
+	<Panel class="drawer__tab lobby" acceptsfocus="true">
+		<Panel id="LobbyListContainer" class="lobby__lobby-list lobby-list">
 			<Panel id="LobbyListHeader" class="lobby-list__header">
 				<Panel class="lobby-list__title-bar">
 					<Image class="lobby-list__title-icon" src="file://{images}/lobby.svg" textureheight="96" />
@@ -72,7 +72,7 @@
 			</Panel>
 		</Panel>
 
-		<Panel id="LobbyDetailsContainer" class="drawer-lobby__lobby-details drawer-lobby__lobby-details--hidden lobby-details ">
+		<Panel id="LobbyDetailsContainer" class="lobby__lobby-details lobby__lobby-details--hidden lobby-details ">
 			<Panel id="LobbyDetailsHeaderBar" class="lobby-details__header">
 				<TooltipPanel tooltip="Return to lobby list">
 					<Button id="LobbyDetailsBackButton" class="button lobby-details__header-item" onactivate="Lobby.showLobbyList()">

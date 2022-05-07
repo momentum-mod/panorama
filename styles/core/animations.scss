@@ -70,14 +70,58 @@
 	}
 }
 
-// TODO: Once sass file loading is better move this to pages/settings.scss 
+@keyframes AnimOutLeft {
+	0% {
+		transform: translateX(0px);
+		opacity: 1;
+	}
+	100% {
+		transform: translateX(-300px);
+		opacity: 0;
+	}
+}
+
+@keyframes AnimOutRight {
+	0% {
+		transform: translateX(0px);
+		opacity: 1;
+	}
+	100% {
+		transform: translateX(300px);
+		opacity: 0;
+	}
+}
+
+@keyframes AnimInLeft {
+	0% {
+		transform: translateX(-300px);
+		opacity: 0;
+	}
+	100% {
+		transform: translateX(0px);
+		opacity: 1;
+	}
+}
+
+@keyframes AnimInRight {
+	0% {
+		transform: translateX(300px);
+		opacity: 0;
+	}
+	100% {
+		transform: translateX(0px);
+		opacity: 1;
+	}
+}
+
+// TODO: Once sass file loading is better move this to pages/settings.scss
 
 @keyframes SettingsGroupHighlight {
 	0% {
 		// This is silly, we're just using a box-shadow as a kind of highlight as
 		// background-color would require us animate back to the correct background,
 		// which varies between different panels that use this
-		box-shadow: fill 0 0 0 0 rgba(255, 255, 255, 0.2);
+		box-shadow: fill 0 0 0 0 rgba(255, 255, 255, 0.1);
 	}
 
 	100% {

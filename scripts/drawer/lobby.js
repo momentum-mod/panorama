@@ -2,60 +2,68 @@
 
 const REFRESH_COOLDOWN = 10.0;
 
-class Lobby {
-	static lobbyTypes = {
-		0: {
-			name: 'Private Lobby',
-			icon: 'privatelobby'
-		},
-		1: {
-			name: 'Friends Only Lobby',
-			icon: 'friendsonlylobby'
-		},
-		2: {
-			name: 'Public Lobby',
-			icon: 'publiclobby'
-		}
-	};
+const LOBBY_TYPES = {
+	0: {
+		name: 'Private Lobby',
+		icon: 'privatelobby'
+	},
+	1: {
+		name: 'Friends Only Lobby',
+		icon: 'friendsonlylobby'
+	},
+	2: {
+		name: 'Public Lobby',
+		icon: 'publiclobby'
+	}
+};
 
+class Lobby {
+	// Typedefs for these would be good in future
 	static lobbyCurrentData = {};
 	static lobbyListData = {};
 	static lobbyMemberData = {};
 
 	static isRefreshHovered;
 
-	/** @type {TextEntry} @static */
-	static lobbySearch = $('#LobbySearch');
-	/** @type {Button} @static */
-	static lobbySearchClearButton = $('#LobbySearchClearButton');
-	/** @type {Panel} @static */
-	static lobbyList = $('#LobbyList');
-	/** @type {Panel} @static */
-	static listContainer = $('#LobbyListContainer');
-	/** @type {Panel} @static */
-	static detailsContainer = $('#LobbyDetailsContainer');
-	static lobbyDetailsType = $('#LobbyDetailsType');
-	/** @type {Label} @static */
-	static lobbyDetailsTitle = $('#LobbyDetailsTitle');
-	/** @type {Label} @static */
-	static lobbyDetailsPlayerCount = $('#LobbyDetailsPlayerCount');
-	/** @type {Button} @static */
-	static lobbyDetailsSettingsButton = $('#LobbyDetailsSettingsButton');
-	/** @type {Panel} @static */
-	static lobbyDetailsMemberList = $('#LobbyDetailsMemberList');
+	static panels = {
+		/** @type {TextEntry} @static */
+		search: $('#LobbySearch'),
+		/** @type {Button} @static */
+		searchClearButton: $('#LobbySearchClearButton'),
+		/** @type {Button} @static */
+		refreshButton: $('#LobbyRefreshButton'),
+		/** @type {Image} @static */
+		refreshIcon: $('#LobbyRefreshIcon'),
+		/** @type {Panel} @static */
+		list: $('#LobbyList'),
+		/** @type {Panel} @static */
+		listContainer: $('#LobbyListContainer'),
+		/** @type {Panel} @static */
+		details: $('#LobbyDetailsContainer'),
+		/** @type {Image} @static */
+		detailsType: $('#LobbyDetailsType'),
+		/** @type {Label} @static */
+		detailsTitle: $('#LobbyDetailsTitle'),
+		/** @type {Label} @static */
+		detailsPlayerCount: $('#LobbyDetailsPlayerCount'),
+		/** @type {Button} @static */
+		detailsSettingsButton: $('#LobbyDetailsSettingsButton'),
+		/** @type {Panel} @static */
+		detailsMemberList: $('#LobbyDetailsMemberList')
+	};
 
 	static {
 		// Watch out: these callbacks work a bit different to Steamworks: We will only receive data for our own lobby automatically
 		// And only the list update will give us anything else via OnListUpdated
-		$.RegisterForUnhandledEvent('PanoramaComponent_SteamLobby_OnListUpdated', Lobby.onSteamLobbyListUpdated.bind(this));
-		$.RegisterForUnhandledEvent('PanoramaComponent_SteamLobby_OnDataUpdated', Lobby.onSteamLobbyDataUpdated.bind(this));
-		$.RegisterForUnhandledEvent('PanoramaComponent_SteamLobby_OnMemberDataUpdated', Lobby.onSteamLobbyMemberDataUpdated.bind(this));
-		$.RegisterForUnhandledEvent('PanoramaComponent_SteamLobby_OnMemberStateChanged', Lobby.onSteamLobbyMemberStateChanged.bind(this));
-		$.RegisterForUnhandledEvent('PanoramaComponent_SteamLobby_OnLobbyStateChanged', Lobby.onSteamLobbyStateChanged.bind(this));
-		$.RegisterForUnhandledEvent('PanoramaComponent_Chat_OnPlayerMuted', Lobby.onPlayerMuted.bind(this));
-		$.RegisterForUnhandledEvent('RefreshLobbyList', Lobby.refreshLobbyList.bind(this));
+		$.RegisterForUnhandledEvent('PanoramaComponent_SteamLobby_OnListUpdated', this.onSteamLobbyListUpdated.bind(this));
+		$.RegisterForUnhandledEvent('PanoramaComponent_SteamLobby_OnDataUpdated', this.onSteamLobbyDataUpdated.bind(this));
+		$.RegisterForUnhandledEvent('PanoramaComponent_SteamLobby_OnMemberDataUpdated', this.onSteamLobbyMemberDataUpdated.bind(this));
+		$.RegisterForUnhandledEvent('PanoramaComponent_SteamLobby_OnMemberStateChanged', this.onSteamLobbyMemberStateChanged.bind(this));
+		$.RegisterForUnhandledEvent('PanoramaComponent_SteamLobby_OnLobbyStateChanged', this.onSteamLobbyStateChanged.bind(this));
+		$.RegisterForUnhandledEvent('PanoramaComponent_Chat_OnPlayerMuted', this.onPlayerMuted.bind(this));
+		$.RegisterForUnhandledEvent('RefreshLobbyList', this.refreshLobbyList.bind(this));
 
-		this.lobbySearch.SetPanelEvent('ontextentrychanged', Lobby.recreateLobbyListChildren.bind(this));
+		this.panels.search.SetPanelEvent('ontextentrychanged', this.recreateLobbyListChildren.bind(this));
 	}
 
 	/**
@@ -119,7 +127,7 @@ class Lobby {
 	 * Show the lobby settings popup
 	 */
 	static showLobbySettings() {
-		const lobbyData = this.getFirstLobbyObj(this.lobbyCurrentData);
+		const lobbyData = this.getFirstInObj(this.lobbyCurrentData);
 
 		UiToolkitAPI.ShowCustomLayoutPopupParameters(
 			'',
@@ -132,16 +140,16 @@ class Lobby {
 	 * Switch to the lobby details panel
 	 */
 	static showLobbyDetails() {
-		this.detailsContainer.RemoveClass('drawer-lobby__lobby-details--hidden');
-		this.listContainer.AddClass('drawer-lobby__lobby-list--hidden');
+		this.panels.details.RemoveClass('lobby__lobby-details--hidden');
+		this.panels.listContainer.AddClass('lobby__lobby-list--hidden');
 	}
 
 	/**
 	 * Switch to the lobby list panel
 	 */
 	static showLobbyList() {
-		this.listContainer.RemoveClass('drawer-lobby__lobby-list--hidden');
-		this.detailsContainer.AddClass('drawer-lobby__lobby-details--hidden');
+		this.panels.listContainer.RemoveClass('lobby__lobby-list--hidden');
+		this.panels.details.AddClass('lobby__lobby-details--hidden');
 
 		this.recreateLobbyListChildren();
 	}
@@ -150,29 +158,27 @@ class Lobby {
 	 * Request a lobby refresh, then put the button on cooldown
 	 */
 	static refreshLobbyList() {
-		const refreshButton = $.GetContextPanel().FindChildTraverse('LobbyRefreshButton');
-
 		if (SteamLobbyAPI.RefreshList({ this_is_where_filters_will_go_in_the_future: 'true' })) {
-			$.GetContextPanel().FindChildTraverse('LobbyRefreshIcon').AddClass('spin-clockwise'); // Removed when onSteamLobbyListUpdated is called
+			this.panels.refreshIcon.AddClass('spin-clockwise'); // Removed when onSteamLobbyListUpdated is called
 
-			refreshButton.enabled = false;
+			this.panels.refreshButton.enabled = false;
 
-			$.Schedule(REFRESH_COOLDOWN, () => (refreshButton.enabled = true));
+			$.Schedule(REFRESH_COOLDOWN, () => (this.panels.refreshButton.enabled = true));
 
 			let cooldown = REFRESH_COOLDOWN;
 			let isRefreshHovered;
 
-			const cooldownMessage = () => UiToolkitAPI.ShowTextTooltip(refreshButton.id, `Refresh is on cooldown, please wait ${cooldown} seconds.`);
+			const cooldownMessage = () => UiToolkitAPI.ShowTextTooltip(this.panels.refreshButton.id, `Refresh is on cooldown, please wait ${cooldown} seconds.`);
 
-			const cooldownTimer = function () {
+			const cooldownTimer = () => {
 				if (isRefreshHovered) cooldownMessage();
 
-				refreshButton.SetPanelEvent('onmouseover', () => {
+				this.panels.refreshButton.SetPanelEvent('onmouseover', () => {
 					isRefreshHovered = true;
 					cooldownMessage();
 				});
 
-				refreshButton.SetPanelEvent('onmouseout', () => {
+				this.panels.refreshButton.SetPanelEvent('onmouseout', () => {
 					isRefreshHovered = false;
 					UiToolkitAPI.HideTextTooltip();
 				});
@@ -181,8 +187,8 @@ class Lobby {
 
 				if (cooldown >= 0) $.Schedule(1.0, () => cooldownTimer());
 				else {
-					refreshButton.ClearPanelEvent('onmouseover');
-					refreshButton.ClearPanelEvent('onmouseout');
+					this.panels.refreshButton.ClearPanelEvent('onmouseover');
+					this.panels.refreshButton.ClearPanelEvent('onmouseout');
 					if (isRefreshHovered) UiToolkitAPI.HideTextTooltip();
 				}
 			};
@@ -196,10 +202,10 @@ class Lobby {
 	 * This should probably be a DelayLoadList??
 	 */
 	static recreateLobbyListChildren() {
-		this.lobbySearchClearButton.SetHasClass('search__clearicon--hidden', this.lobbySearch.text === '');
+		this.panels.searchClearButton.SetHasClass('search__clearicon--hidden', this.panels.search.text === '');
 
 		// Clear the current list
-		this.lobbyList.RemoveAndDeleteChildren();
+		this.panels.list.RemoveAndDeleteChildren();
 
 		const data = this.lobbyListData;
 
@@ -218,9 +224,9 @@ class Lobby {
 					const lobbyType = lobbyObj['type'];
 					const lobbyName = FriendsAPI.GetNameForXUID(ownerSteamID) + "'s Lobby";
 
-					if (!lobbyName.includes($.GetContextPanel().FindChildTraverse('LobbySearch').text)) return; // Only show items that match the search. Always true if search is empty
+					if (!lobbyName.includes(this.panels.search.text)) return; // Only show items that match the search. Always true if search is empty
 
-					const newPanel = $.CreatePanel('Panel', $.GetContextPanel().FindChildTraverse('LobbyList'), ''); // Create the new panel
+					const newPanel = $.CreatePanel('Panel', this.panels.list, ''); // Create the new panel
 
 					newPanel.LoadLayoutSnippet('lobby-list-entry');
 
@@ -230,10 +236,10 @@ class Lobby {
 					newPanel.FindChildTraverse('LobbyJoinButton').SetPanelEvent('onactivate', joinCallback);
 
 					const typePanel = newPanel.FindChildTraverse('LobbyType');
-					const typeIcon = 'file://{images}/online/' + this.lobbyTypes[lobbyType].icon + '.svg';
+					const typeIcon = `file://{images}/online/${LOBBY_TYPES[lobbyType].icon}.svg`;
 					typePanel.SetImage(typeIcon);
 					typePanel.SetPanelEvent('onmouseover', () =>
-						UiToolkitAPI.ShowTitleImageTextTooltipStyled(typePanel.id, '', typeIcon, this.lobbyTypes[lobbyType].name, 'tooltip--notitle')
+						UiToolkitAPI.ShowTitleImageTextTooltipStyled(typePanel.id, '', typeIcon, LOBBY_TYPES[lobbyType].name, 'tooltip--notitle')
 					);
 
 					const avatarPanel = newPanel.FindChildTraverse('LobbyPlayerAvatar');
@@ -251,7 +257,7 @@ class Lobby {
 					);
 
 					newPanel.SetDialogVariable('lobbyTitle', lobbyName);
-					newPanel.SetDialogVariable('lobbyPlayerCount', lobbyObj['members'] + '/' + lobbyObj['members_limit']);
+					newPanel.SetDialogVariable('lobbyPlayerCount', `${lobbyObj['members']}/${lobbyObj['members_limit']}`);
 					newPanel.SetDialogVariable('lobbyJoinLabel', origin === 'current' ? 'Details' : 'Join');
 
 					const originPanel = newPanel.FindChildTraverse('LobbyOrigin');
@@ -266,27 +272,33 @@ class Lobby {
 			});
 	}
 
+	/**
+	 * Update the lobbies details view based on current lobby state
+	 */
 	static updateCurrentLobbyDetails() {
-		const lobbyData = this.getFirstLobbyObj(this.lobbyCurrentData);
+		const lobbyData = this.getFirstInObj(this.lobbyCurrentData);
 		const owner = lobbyData['owner'];
 		const type = lobbyData['type'];
 
-		this.lobbyDetailsType.SetImage('file://{images}/online/' + this.lobbyTypes[type].icon + '.svg');
+		this.panels.detailsType.SetImage(`file://{images}/online/${LOBBY_TYPES[type].icon}.svg`);
 
 		// Only enable settings if you're lobby owner
-		this.lobbyDetailsSettingsButton.enabled = UserAPI.GetXUID() === owner;
+		this.panels.detailsSettingsButton.enabled = UserAPI.GetXUID() === owner;
 
-		$.GetContextPanel().SetDialogVariable('lobbyTitle', FriendsAPI.GetNameForXUID(owner) + "'s Lobby");
-
-		$.GetContextPanel().SetDialogVariable('lobbyPlayerCount', lobbyData['members'] + '/' + lobbyData['members_limit']);
+		$.GetContextPanel().SetDialogVariable('lobbyTitle', `${FriendsAPI.GetNameForXUID(owner)}'s Lobby`);
+		$.GetContextPanel().SetDialogVariable('lobbyPlayerCount', `${lobbyData['members']}/${lobbyData['members_limit']}`);
 	}
 
+	/**
+	 * Update the panel for a specific lobby member
+	 * @param {number} memberSteamID
+	 */
 	static updateMemberListItem(memberSteamID) {
 		let memberData = this.lobbyMemberData[memberSteamID];
 		let panel = memberData['panel'];
 
-		if (panel === undefined) {
-			panel = $.CreatePanel('Panel', $.GetContextPanel().FindChildTraverse('LobbyDetailsMemberList'), '');
+		if (!panel) {
+			panel = $.CreatePanel('Panel', this.panels.detailsMemberList, '');
 			panel.LoadLayoutSnippet('lobby-member-entry');
 			this.lobbyMemberData[memberSteamID]['panel'] = panel;
 		}
@@ -304,7 +316,7 @@ class Lobby {
 		const localSteamID = UserAPI.GetXUID();
 		const localMap = this.lobbyMemberData[localSteamID]?.['map'];
 
-		panel.SetDialogVariable('memberMap', isMuted ? 'Muted Map' : memberMap ? memberMap : 'In main menu');
+		panel.SetDialogVariable('memberMap', isMuted ? '' : memberMap ? memberMap : 'In main menu');
 
 		const memberStatePanel = panel.FindChildTraverse('MemberState');
 		const isSpectating = memberData['isSpectating'];
@@ -314,70 +326,70 @@ class Lobby {
 		joinButton.AddClass('hide');
 		memberStatePanel.AddClass('hide');
 
-		if (memberSteamID !== localSteamID) {
-			panel.SetPanelEvent('oncontextmenu', () =>
-				UiToolkitAPI.ShowSimpleContextMenu(panel, '', [
-					{
-						label: isMuted ? 'Unmute Player' : 'Mute Player',
-						icon: 'file://{images}/volume-' + (isMuted ? 'high' : 'mute') + '.svg',
-						style: 'icon-color-' + (isMuted ? 'green' : 'red'),
-						jsCallback: () => {
-							ChatAPI.ChangeMuteState(memberSteamID, !isMuted);
-							if (isMuted) {
-								memberData['isMuted'] = false;
-							}
-							this.updateMemberListItem(memberSteamID);
+		if (memberSteamID === localSteamID) return;
+
+		panel.SetPanelEvent('oncontextmenu', () =>
+			UiToolkitAPI.ShowSimpleContextMenu(panel, '', [
+				{
+					label: isMuted ? 'Unmute Player' : 'Mute Player',
+					icon: 'file://{images}/volume-' + (isMuted ? 'high' : 'mute') + '.svg',
+					style: 'icon-color-' + (isMuted ? 'green' : 'red'),
+					jsCallback: () => {
+						ChatAPI.ChangeMuteState(memberSteamID, !isMuted);
+						if (isMuted) {
+							memberData['isMuted'] = false;
 						}
-					},
-					{
-						label: 'Steam Profile',
-						icon: 'file://{images}/steam.svg',
-						style: 'icon-color-steam-online',
-						jsCallback: () => SteamOverlayAPI.OpenToProfileID(memberSteamID)
+						this.updateMemberListItem(memberSteamID);
 					}
-				])
-			);
-
-			if (!memberMap) return;
-
-			if (isSpectating) {
-				const specTargetName = FriendsAPI.GetNameForXUID(memberData['specTargetID']);
-
-				memberStatePanel.SetImage('file://{images}/chat/spectatingIcon.svg');
-
-				memberStatePanel.RemoveClass('hide');
-
-				memberStatePanel.SetPanelEvent('onmouseover', () =>
-					UiToolkitAPI.ShowTitleImageTextTooltipStyled(
-						memberStatePanel.id,
-						'',
-						'file://{images}/chat/spectatingIcon.svg',
-						`Specating <b>${specTargetName}</b>`,
-						'tooltip--notitle'
-					)
-				);
-			} else {
-				memberStatePanel.ClearPanelEvent('onmouseover');
-				memberStatePanel.SetImage('file://{images}/topnav/play.svg');
-
-				memberStatePanel.RemoveClass('hide');
-
-				if (memberMap && localMap && memberMap.toUpperCase() === localMap.toUpperCase()) {
-					joinButton.SetDialogVariable('memberJoinLabel', 'Spectate');
-					joinButton.RemoveClass('hide');
-
-					const joinCallback = () => GameInterfaceAPI.ConsoleCommand('mom_spectate ' + memberSteamID);
-
-					panel.SetPanelEvent('ondblclick', joinCallback);
-					panel.FindChildTraverse('MemberJoinButton').SetPanelEvent('onactivate', joinCallback);
-				} else {
-					// if (MapCacheAPI.GetMapData ... needs web and C++ work
-					// joinButton.SetDialogVariable('memberJoinLabel', 'Join Map');
-					// joinButton.RemoveClass('hide');
-					// const joinCallback = () => $.DispatchEvent('MapSelector_TryPlayMap', memberMap);
-					// panel.SetPanelEvent('ondblclick', joinCallback);
-					// panel.FindChildTraverse('MemberJoinButton').SetPanelEvent('onactivate', joinCallback);
+				},
+				{
+					label: 'Steam Profile',
+					icon: 'file://{images}/steam.svg',
+					style: 'icon-color-steam-online',
+					jsCallback: () => SteamOverlayAPI.OpenToProfileID(memberSteamID)
 				}
+			])
+		);
+
+		if (!memberMap) return;
+
+		if (isSpectating) {
+			const specTargetName = FriendsAPI.GetNameForXUID(memberData['specTargetID']);
+
+			memberStatePanel.SetImage('file://{images}/chat/spectatingIcon.svg');
+
+			memberStatePanel.RemoveClass('hide');
+
+			memberStatePanel.SetPanelEvent('onmouseover', () =>
+				UiToolkitAPI.ShowTitleImageTextTooltipStyled(
+					memberStatePanel.id,
+					'',
+					'file://{images}/chat/spectatingIcon.svg',
+					`Specating <b>${specTargetName}</b>`,
+					'tooltip--notitle'
+				)
+			);
+		} else {
+			memberStatePanel.ClearPanelEvent('onmouseover');
+			memberStatePanel.SetImage('file://{images}/topnav/play.svg');
+
+			memberStatePanel.RemoveClass('hide');
+
+			if (memberMap === localMap && memberMap && localMap) {
+				joinButton.SetDialogVariable('memberJoinLabel', 'Spectate');
+				joinButton.RemoveClass('hide');
+
+				const joinCallback = () => GameInterfaceAPI.ConsoleCommand('mom_spectate ' + memberSteamID);
+
+				panel.SetPanelEvent('ondblclick', joinCallback);
+				panel.FindChildTraverse('MemberJoinButton').SetPanelEvent('onactivate', joinCallback);
+			} else {
+				// if (MapCacheAPI.GetMapData ... needs web and C++ work
+				// joinButton.SetDialogVariable('memberJoinLabel', 'Join Map');
+				// joinButton.RemoveClass('hide');
+				// const joinCallback = () => $.DispatchEvent('MapSelector_TryPlayMap', memberMap);
+				// panel.SetPanelEvent('ondblclick', joinCallback);
+				// panel.FindChildTraverse('MemberJoinButton').SetPanelEvent('onactivate', joinCallback);
 			}
 		}
 	}
@@ -387,43 +399,45 @@ class Lobby {
 			this.lobbyMemberData = {};
 			this.lobbyCurrentData = {};
 
-			this.lobbyDetailsMemberList.RemoveAndDeleteChildren();
+			this.panels.detailsMemberList.RemoveAndDeleteChildren();
 
 			delete this.lobbyListData['current'];
 
-			$.DispatchEvent('Drawer_UpdateLobbyButton', 'file://{images}/sidepanel/lobby.svg', 0);
+			$.DispatchEvent('Drawer_UpdateLobbyButton', 'file://{images}/lobby.svg', 0);
 
 			this.showLobbyList();
 		} else if (newState === 'join') {
 			this.showLobbyDetails();
+
+			$.DispatchEvent('ExtendDrawer');
 		}
 	}
 
 	static onSteamLobbyListUpdated(data) {
-		if (data === undefined) return;
+		if (!data) return;
 
 		// This is either friends or global
 		const origin = Object.keys(data)[0];
 		this.lobbyListData[origin] = data[origin];
 
 		this.recreateLobbyListChildren();
-		$.GetContextPanel().FindChildTraverse('LobbyRefreshIcon').RemoveClass('spin-clockwise');
+		this.panels.refreshIcon.RemoveClass('spin-clockwise');
 	}
 
 	static onSteamLobbyDataUpdated(data) {
-		if (data !== this.lobbyCurrentData) {
-			const oldType = this.getFirstLobbyObj(this.lobbyCurrentData)?.['type'];
-			const newType = this.getFirstLobbyObj(data)['type'];
+		if (data === this.lobbyCurrentData) return;
 
-			if (oldType !== newType) {
-				$.DispatchEvent('Drawer_UpdateLobbyButton', 'file://{images}/online/' + this.lobbyTypes[newType].icon + '.svg', this.getFirstLobbyObj(data)['members']);
-			}
+		const oldType = this.getFirstInObj(this.lobbyCurrentData)?.['type'];
+		const newType = this.getFirstInObj(data)['type'];
 
-			this.lobbyListData['current'] = data;
-			this.lobbyCurrentData = data;
-
-			this.updateCurrentLobbyDetails();
+		if (oldType !== newType) {
+			$.DispatchEvent('Drawer_UpdateLobbyButton', `file://{images}/online/${LOBBY_TYPES[newType].icon}.svg`, this.getFirstInObj(data)['members']);
 		}
+
+		this.lobbyListData['current'] = data;
+		this.lobbyCurrentData = data;
+
+		this.updateCurrentLobbyDetails();
 	}
 
 	static onSteamLobbyMemberDataUpdated(data) {
@@ -467,14 +481,14 @@ class Lobby {
 	}
 
 	static isLobbyOwner() {
-		return this.isInLobby() ? this.getFirstLobbyObj(this.lobbyListData['current'])['owner'] == UserAPI.GetXUID() : false;
+		return this.isInLobby() && this.getFirstInObj(this.lobbyListData['current'])['owner'] === UserAPI.GetXUID();
 	}
 
 	static getLobbyMemberCount() {
-		return this.getFirstLobbyObj(this.lobbyCurrentData)?.['members'];
+		return this.getFirstInObj(this.lobbyCurrentData)?.['members'];
 	}
 
-	static getFirstLobbyObj(data) {
-		return data[Object.keys(data)[0]];
+	static getFirstInObj(data) {
+		return Object.values(data)[0];
 	}
 }

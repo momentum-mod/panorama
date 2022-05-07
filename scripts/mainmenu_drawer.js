@@ -1,84 +1,140 @@
 'use strict';
 
-class Drawer {
-	static drawerTabs = {
-		ProfileDrawer: {
-			layout: 'profile',
-			button: 'ProfileButton'
-		},
-		LobbyDrawer: {
-			layout: 'lobby',
-			button: 'LobbyButton'
-		},
-		StatsDrawer: {
-			layout: 'stats',
-			button: 'StatsButton'
-		},
-		ChangelogDrawer: {
-			layout: 'changelog',
-			button: 'ChangelogButton'
-		}
-	};
+const TABS = {
+	LobbyDrawer: {
+		layout: 'lobby',
+		button: $('#LobbyButton')
+	},
+	ProfileDrawer: {
+		layout: 'profile',
+		button: $('#ProfileButton')
+	},
+	ChallengesDrawer: {
+		layout: 'challenges',
+		button: $('#ChallengesButton')
+	},
+	AboutDrawer: {
+		layout: 'about',
+		button: $('#AboutButton')
+	}
+};
 
+class Drawer {
 	static activeTab;
 	static isExtended = false;
-	static lobbyTypeImage = $('#LobbyButtonImage');
-	static lobbyPlayerCountLabel = $('#LobbyPlayerCountLabel');
+
+	static panels = {
+		/** @type {Panel} @static */
+		drawer: $('#MainMenuDrawerPanel'),
+		/** @type {Panel} @static */
+		content: $('#MainMenuDrawerContent'),
+		/** @type {ModelPanel} @static */
+		mainMenuModel: $('#MainMenuModel'),
+		/** @type {Image} @static */
+		lobbyTypeImage: $('#LobbyButtonImage'),
+		/** @type {Label} @static */
+		lobbyPlayerCountLabel: $('#LobbyPlayerCountLabel')
+	};
 
 	static {
-		Drawer.navigateToTab('LobbyDrawer');
+		Object.keys(TABS).forEach((tab) => this.loadTab(tab));
 
-		$.RegisterEventHandler('Drawer_UpdateLobbyButton', $.GetContextPanel(), Drawer.updateLobbyButton);
-		$.RegisterEventHandler('RetractDrawer', $.GetContextPanel(), Drawer.retract);
+		$.RegisterForUnhandledEvent('Drawer_UpdateLobbyButton', this.updateLobbyButton.bind(this));
+		$.RegisterForUnhandledEvent('Drawer_NavigateToTab', this.navigateToTab.bind(this));
+		$.RegisterForUnhandledEvent('Drawer_ExtendAndNavigateToTab', this.extendAndNavigateToTab.bind(this));
+		$.RegisterForUnhandledEvent('ExtendDrawer', this.extend.bind(this));
+		$.RegisterForUnhandledEvent('RetractDrawer', this.retract.bind(this));
+		$.RegisterForUnhandledEvent('ToggleDrawer', this.toggle.bind(this));
 	}
 
-	static navigateToTab(tab) {
-		const parentPanel = $.GetContextPanel().FindChildTraverse('MainMenuDrawerContent');
+	/**
+	 * Load a drawer tab
+	 * @param {Object} tab The tab to load
+	 */
+	static loadTab(tab) {
+		const newPanel = $.CreatePanel('Panel', this.panels.content, tab);
 
-		if (!parentPanel.FindChildInLayoutFile(tab)) {
-			const newPanel = $.CreatePanel('Panel', parentPanel, tab);
-			newPanel.LoadLayout('file://{resources}/layout/drawer/' + Drawer.drawerTabs[tab].layout + '.xml', false, false);
-		}
+		newPanel.LoadLayout('file://{resources}/layout/drawer/' + TABS[tab].layout + '.xml', false, false);
 
-		if (Drawer.activeTab !== tab) {
-			if (Drawer.activeTab) {
-				const panelToHide = $.GetContextPanel().FindChildInLayoutFile(Drawer.activeTab);
-				panelToHide.RemoveClass('Active');
+		$.RegisterEventHandler('PropertyTransitionEnd', this.panels.content, (panelName, propertyName) => {
+			if (newPanel.id === panelName && propertyName === 'opacity') {
+				if (newPanel.visible === true && newPanel.IsTransparent()) {
+					newPanel.visible = false;
+					newPanel.SetReadyForDisplay(false);
+					return true;
+				}
 			}
+			return false;
+		});
+	}
 
-			Drawer.activeTab = tab;
-			const activePanel = $.GetContextPanel().FindChildInLayoutFile(tab);
-			activePanel.AddClass('Active');
+	/**
+	 * Switch to a drawer tab
+	 * @param {Object} tab The TABS object to switch to
+	 */
+	static navigateToTab(tab) {
+		if (this.activeTab === tab) return;
 
-			activePanel.visible = true;
-			activePanel.SetReadyForDisplay(true);
+		if (this.activeTab) {
+			this.panels.drawer.FindChildInLayoutFile(this.activeTab).RemoveClass('drawer__tab--active');
+		}
+
+		this.activeTab = tab;
+
+		const activePanel = $.GetContextPanel().FindChildInLayoutFile(tab);
+
+		activePanel.AddClass('drawer__tab--active');
+		activePanel.visible = true;
+		activePanel.SetReadyForDisplay(true);
+	}
+
+	/**
+	 * Switch to drawer tab and open it
+	 * @param {Object} tab The Tabs object to switch to
+	 */
+	static extendAndNavigateToTab(tab) {
+		this.navigateToTab(tab);
+
+		if (!this.isExtended) this.extend();
+	}
+
+	/**
+	 * Extend the drawer
+	 */
+	static extend() {
+		if (this.isExtended) return;
+
+		this.panels.drawer.AddClass('drawer--expanded');
+		this.panels.mainMenuModel?.AddClass('home__modelpanel--hidden');
+
+		this.isExtended = true;
+
+		if (!this.activeTab) {
+			$.DispatchEvent('Activated', TABS.LobbyDrawer.button, 'mouse');
+		}
+
+		if (this.activeTab === 'LobbyDrawer') {
+			$.DispatchEvent('RefreshLobbyList');
 		}
 	}
 
-	static extend() {
-		$.GetContextPanel().FindChildTraverse('MainMenuDrawerPanel').AddClass('drawer--expanded');
-		$.GetContextPanel().FindChildTraverse('MainMenuModel')?.AddClass('home__modelpanel--hidden');
-
-		Drawer.isExtended = true;
-
-		$.DispatchEvent('RefreshLobbyList');
-	}
-
+	/**
+	 * Retract the drawer
+	 */
 	static retract() {
-		$.GetContextPanel().FindChildTraverse('MainMenuDrawerPanel').RemoveClass('drawer--expanded');
-		$.GetContextPanel().FindChildTraverse('MainMenuModel')?.RemoveClass('home__modelpanel--hidden');
+		if (!this.isExtended) return;
 
-		Drawer.isExtended = false;
+		this.panels.drawer.RemoveClass('drawer--expanded');
+		this.panels.mainMenuModel?.RemoveClass('home__modelpanel--hidden');
+
+		this.isExtended = false;
 	}
 
+	/**
+	 * Toggle the drawer
+	 */
 	static toggle() {
-		Drawer.isExtended ? Drawer.retract() : Drawer.extend();
-	}
-
-	static extendAndSwitch(tab) {
-		Drawer.navigateToTab(tab);
-
-		if (!Drawer.isExtended) Drawer.extend();
+		this.isExtended ? this.retract() : this.extend();
 	}
 
 	/**
@@ -87,8 +143,19 @@ class Drawer {
 	 * @param {number} playerCount
 	 */
 	static updateLobbyButton(imgPath, playerCount) {
-		Drawer.lobbyTypeImage.SetImage(imgPath);
-		Drawer.lobbyPlayerCountLabel.text = playerCount;
-		Drawer.lobbyPlayerCountLabel.SetHasClass('rightnav__button-subtitle--hidden', playerCount <= 1);
+		this.panels.lobbyTypeImage.SetImage(imgPath);
+		this.panels.lobbyPlayerCountLabel.text = playerCount;
+		this.panels.lobbyPlayerCountLabel.SetHasClass('rightnav__button-subtitle--hidden', playerCount <= 1);
+	}
+
+	/**
+	 * Open the profile tab when the main menu player card is pressed
+	 */
+	static onPlayerCardPressed() {
+		this.extend();
+
+		if (this.activeTab !== 'ProfileDrawer') {
+			$.DispatchEvent('Activated', TABS.ProfileDrawer.button, 'mouse');
+		}
 	}
 }
