@@ -51,7 +51,7 @@
 							</Panel>
 							<Panel id="MapFilters" class="mapselector-filters mapselector-filters--filters-retracted">
 								<Panel id="GamemodeFilters" class="mapselector-filters__row mapselector-filters__gamemodes">
-									<ToggleButton id="SurfFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button" selected="true" onmouseover="UiToolkitAPI.ShowCustomLayoutTooltip('SurfFilterButton', '', 'file://{resources}/layout/tooltips/tooltip_test.xml')">
+									<ToggleButton id="SurfFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button" selected="true">
 										<Label class="button__text mapselector-filters__text" text="Surf" />
 									</ToggleButton>
 									<ToggleButton id="BhopFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button" selected="true">
