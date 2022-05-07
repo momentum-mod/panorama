@@ -1,0 +1,12 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+
+	<scripts>
+	</scripts>
+
+	<Panel class="drawer__tab" acceptsfocus="true">
+		<Label class="text-h1" text="Coming soon!" />
+	</Panel>
+</root>
