@@ -1,0 +1,34 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+
+	<scripts>
+		<include src="file://{resources}/scripts/drawer/about.js" />
+	</scripts>
+
+	<Panel class="drawer__tab about" acceptsfocus="true" onload="About.onLoad()">
+		<Panel class="about__header">
+			<Panel class="about__logo-container">
+				<Image class="about__logo" src="file://{images}/topnav/momentumLogo.svg" textureheight="64" />
+				<Label id="Version" class="about__version" text="{s:version}" />
+			</Panel>
+			<Label class="about__description" html="true" text="Momentum Mod has always been a community-led project, made by and for lovers of Source movement. We are indebted to the numerous contributors to the project, be it programmers, artists, mappers, playtesters and others.\n\nWhile team members and any contributors we could credit are listed in the section below, we are also enormously thankful to everyone who has been a regular part of the community; those that believed in the project and support us in various far-reaching ways, such as spreading the game through word-of-mouth and/or offering advice and one-off feedback. Thank you all so very much, we would not have gotten this far without all of you!\n\n Please note: Contributor credits are not currently finalised and will be added in the lead up to 1.0.0!"/>
+		</Panel>
+		<Panel class="about__main">
+			<Panel class="about__tabs tabs ">
+				<RadioButton id="CreditsButton" class="about__tab tabs__tab" group="AboutSections" selected="true" onactivate="About.switchSection('credits')">
+					<Label class="tabs__text" text="Credits"/>
+				</RadioButton>
+				<RadioButton id="ChangelogButton" class="about__tab tabs__tab" group="AboutSections" onactivate="About.switchSection('changelog')">
+					<Label class="tabs__text" text="Changelog"/>
+				</RadioButton>
+			</Panel>
+			<Panel class="about__section-container">
+				<Frame id="Credits" src="file://{resources}/layout/drawer/credits.xml" class="about__section about-credits about__section--hidden"/>
+				<Panel id="Changelog" class="about__section about__section--hidden">
+				</Panel>
+			</Panel>
+		</Panel>
+	</Panel>
+</root>

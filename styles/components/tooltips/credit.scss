@@ -1,0 +1,91 @@
+@use '../../config' as *;
+@use '../../abstract/mixin';
+@use 'sass:map';
+
+.credit {
+	$root: &;
+
+	flow-children: down;
+	padding: 24px;
+
+	max-width: 600px;
+
+	&__header {
+		flow-children: down;
+		horizontal-align: center;
+		margin-bottom: 4px;
+	}
+
+	&__name {
+		font-size: 28px;
+		@include mixin.font-styles($use-header: true);
+		vertical-align: bottom;
+
+		#{$root}--contributor & {
+			font-size: 22px;
+		}
+	}
+
+	&__username {
+		font-size: 48px;
+		margin-bottom: -4px;
+		@include mixin.font-styles($use-header: true);
+
+		padding: 0 8px;
+
+		#{$root}--no-name & {
+			padding: 0px;
+		}
+
+		#{$root}--lead & {
+			color: map.get($roles, 'lead');
+		}
+
+		#{$root}--dept-head & {
+			color: map.get($roles, 'dept-head');
+		}
+
+		#{$root}--team & {
+			color: map.get($roles, 'team');
+		}
+
+		#{$root}--contributor & {
+			color: map.get($roles, 'contributor');
+			font-size: 32px;
+			margin-bottom: -2px;
+
+		}
+	}
+
+	// of course you have blue hair and pronouns
+	&__pronouns {
+		font-style: italics;
+		font-size: 12px;
+		horizontal-align: right;
+	}
+
+	&__roles {
+		font-weight: bold;
+		font-style: italics;
+		margin-bottom: 8px;
+	}
+
+	&__bio {
+		font-size: 14px;
+		margin-bottom: 8px;
+	}
+
+	&__item {
+		flow-children: right;
+	}
+
+	&__icon {
+		margin-right: 8px;
+		padding: 2px;
+	}
+
+	&__text {
+		font-size: 16px;
+		vertical-align: center;
+	}
+}
