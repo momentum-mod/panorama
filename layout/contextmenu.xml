@@ -1,17 +1,15 @@
 <root>
-	<styles>		
+	<styles>
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 
-	<SimpleContextMenu class="ContextMenu" tabindex="auto" selectionpos="auto" >
-		<Panel id="ContextMenuBody" class="ContextMenuBody" childfocusonhover="true" >
-
-		<!-- Button panels containing labels will be added by code, like this:
-		<Button onactivate="ContextMenuEvent( DoMyAction() )">
-			<Label text="#MyActionText" />
-		</Button>		
-		-->
-
+	<SimpleContextMenu class="contextmenu-fullscreen-container" tabindex="auto" selectionpos="auto">
+		<Panel id="ContextMenuBody" class="contextmenu simplecontextmenu" childfocusonhover="true">
+			<!-- Button panels containing labels will be added by code, like this:
+			<Button onactivate="ContextMenuEvent( DoMyAction() )">
+				<Label text="#MyActionText" />
+			</Button>		
+			-->
 		</Panel>
 	</SimpleContextMenu>
 </root>

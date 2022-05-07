@@ -1,21 +1,17 @@
 <root>
 	<styles>
-    <include src="file://{resources}/styles/main.scss" />
+		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 
-  <ContextMenuBase class="ContextMenu" tabindex="auto" selectionpos="auto">
-    <Panel id="ContextMenuBody">
-
-      <Panel id="TopArrow" arroworigin="50% 0%" />
-
-      <Panel class="ContextMenuBodyRow">
-        <Panel id="LeftArrow" arroworigin="0% 50%"  />
-        <Panel id="Contents" />
-        <Panel id="RightArrow" arroworigin="100% 50%" />
-      </Panel>
-
-      <Panel id="BottomArrow" arroworigin="50% 100%" />
-    </Panel>
-
-  </ContextMenuBase>
+	<ContextMenuBase class="contextmenu-fullscreen-container" tabindex="auto" selectionpos="auto">
+		<Panel id="ContextMenuBody" class="contextmenu-wrapper">
+			<Panel id="TopArrow" arroworigin="50% 0%" />
+			<Panel class="contextmenu-wrapper__row">
+				<Panel id="LeftArrow" arroworigin="0% 50%" />
+				<Panel id="Contents" />
+				<Panel id="RightArrow" arroworigin="100% 50%" />
+			</Panel>
+			<Panel id="BottomArrow" arroworigin="50% 100%" />
+		</Panel>
+	</ContextMenuBase>
 </root>
