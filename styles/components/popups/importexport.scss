@@ -1,0 +1,23 @@
+.importexport {
+	flow-children: down;
+	max-width: 1200px;
+	width: 1200px;
+
+	&__textentry {
+		width: 100%;
+		height: 400px;
+		color: white;
+		overflow: squish scroll;
+		white-space: normal;
+	}
+
+	&__selectall {
+		margin: 8px 14px;
+		align: right bottom;
+		background-color: rgba(0, 0, 0, 0.7);
+
+		&:hover {
+			background-color: rgba(148, 148, 148, 0.7);
+		}
+	}
+}

@@ -1,0 +1,47 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+
+	<scripts>
+		<include src="file://{resources}/scripts/popup/importexportsettings.js" />
+	</scripts>
+
+	<PopupCustomLayout class="PopupPanel Hidden generic-popup importexport" popupbackground="blur" onload="ImportExportSettings.onLoad()">
+		<Panel class="flow-down full-width">
+			<Panel class="flow-down horizontal-align-center full-width">
+				<Label class="text-h1 mb-3 full-width text-align-center" text="{s:title}" />
+				<Panel class="flow-right horizontal-align-right mb-3">
+					<Label id="Base64ModeWarning" class="text-xs text-italic vertical-align-center mr-3" text="Note: Base64 strings may be broken by updates. Use regular mode if you want it to last!"/>
+					<ToggleButton id="Base64ModeButton" class="checkbox checkbox--right" onactivate="ImportExportSettings.toggleBase64Mode()">
+						<Label text="Base 64 Mode"/>
+					</ToggleButton>
+				</Panel>
+			</Panel>
+			<Panel class="flow-right full-width">
+				<Panel class="flow-down fill-width pr-1">
+					<Label class="text-h4 full-width text-align-center mb-2" text="Export" />
+					<Panel class="full-width">
+						<TextEntry id="ExportCode" class="textentry importexport__textentry" multiline="true" ontextentrychange="ImportExportSettings.blockExportEntryInput()"/>
+						<Button class="button importexport__selectall" onactivate="ImportExportSettings.exportSelectAll()">
+							<Label class="button__text" text="Select All"/>
+						</Button>
+					</Panel>
+				</Panel>
+				<Panel class="flow-down fill-width pl-1">
+					<Label class="text-h4 full-width text-align-center mb-2" text="Import" />
+					<TextEntry id="ImportCode" class="textentry importexport__textentry" multiline="true"/>
+				</Panel>
+			</Panel>
+		</Panel>
+		<Panel class="flow-right horizontal-align-right mt-3">
+			<Label id="ImportStatus" class="vertical-align-center mr-3" text="{s:import_warning}"/>
+			<Button class="button horizontal-align-right mr-3" onactivate="ImportExportSettings.importSettings()">
+				<Label class="button__text" text="Import Settings"/>
+			</Button>
+			<Button class="button button--red horizontal-align-right" onactivate="UiToolkitAPI.CloseAllVisiblePopups()">
+				<Label class="button__text" text="Close" />
+			</Button>
+		</Panel>
+	</PopupCustomLayout>
+</root>

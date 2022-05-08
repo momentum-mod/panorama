@@ -108,6 +108,23 @@ class SettingsShared {
 		this.videoSettingsResetUserInput();
 	}
 
+	static showImportExportDialogue(name, panelID) {
+		const section = $.GetContextPanel().FindChildTraverse(panelID);
+
+		let cvars = [];
+
+		const findCvarsRecursive = (panel) => {
+			if (panel.paneltype && this.isSettingsPanel(panel) && panel.convar) cvars.push(panel.convar);
+			panel?.Children().forEach((child) => findCvarsRecursive(child));
+		};
+
+		findCvarsRecursive(section);
+
+		const cvarParams = cvars.reduce((str, cvar, index) => (str += (index != 0 ? '&' : '') + 'cvar' + (index + 1) + '=' + cvar), '');
+
+		UiToolkitAPI.ShowCustomLayoutPopupParameters('', 'file://{resources}/layout/popups/popup_importexportsettings.xml', `${cvarParams}&name=${name}`);
+	}
+
 	static updatePaintPreview() {
 		this.paintContainer ??= $('#GameplaySettings').FindChildInLayoutFile('PaintContainer');
 
@@ -203,5 +220,11 @@ class SettingsShared {
 			const item = $.CreatePanel('Label', dropdown, `Texture${i}`, { text: textureName, value: texturePath });
 			dropdown.AddOption(item);
 		});
+	}
+
+	static isSettingsPanel(panel) {
+		return ['ChaosSettingsEnum', 'ChaosSettingsSlider', 'ChaosSettingsEnumDropDown', 'ChaosSettingsKeyBinder', 'ChaosSettingsToggle', 'ConVarColorDisplay'].includes(
+			panel.paneltype
+		);
 	}
 }
