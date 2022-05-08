@@ -27,11 +27,19 @@
 
 					<Label class="settings-group__title" text="Volume" />
 
-					<TooltipPanel class="settings-group__reset" tooltip="Reset">
-						<Button class="button" onactivate="SettingsShared.resetSettings('VolumeSubSection');">
-							<Image class="button__icon" src="file://{images}/reset.svg" />
+					<Panel class="flow-right horizontal-align-right">
+
+						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Volume', 'VolumeSubSection')">
+							<Label class="button__text" text="Import/Export" />
 						</Button>
-					</TooltipPanel>
+
+						<TooltipPanel class="settings-group__reset" tooltip="Reset">
+							<Button class="button" onactivate="SettingsShared.resetSettings('VolumeSubSection');">
+								<Image class="button__icon" src="file://{images}/reset.svg" />
+							</Button>
+						</TooltipPanel>
+
+					</Panel>
 
 				</Panel>
 

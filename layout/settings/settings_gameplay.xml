@@ -26,11 +26,19 @@
 
 					<Label class="settings-group__title" text="#MOM_Settings_Title_Gameplay_General" />
 
-					<TooltipPanel class="settings-group__reset" tooltip="Reset">
-						<Button class="button" onactivate="SettingsShared.resetSettings('GameplayGeneralSubSection');">
-							<Image class="button__icon" src="file://{images}/reset.svg" />
+					<Panel class="flow-right horizontal-align-right">
+
+						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Gameplay', 'GameplayGeneralSubSection')">
+							<Label class="button__text" text="Import/Export"/>
 						</Button>
-					</TooltipPanel>
+
+						<TooltipPanel class="settings-group__reset" tooltip="Reset">
+							<Button class="button" onactivate="SettingsShared.resetSettings('GameplayGeneralSubSection');">
+								<Image class="button__icon" src="file://{images}/reset.svg" />
+							</Button>
+						</TooltipPanel>
+
+					</Panel>
 
 				</Panel>
 
@@ -77,11 +85,19 @@
 
 					<Label class="settings-group__title" text="#MOM_Settings_Title_Gameplay_Paint" />
 
-					<TooltipPanel class="settings-group__reset" tooltip="Reset">
-						<Button class="button" onactivate="SettingsShared.resetSettings('PaintSubSection');">
-							<Image class="button__icon" src="file://{images}/reset.svg" />
+					<Panel class="flow-right horizontal-align-right">
+
+						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Paint', 'PaintSubSection')">
+							<Label class="button__text" text="Import/Export"/>
 						</Button>
-					</TooltipPanel>
+
+						<TooltipPanel class="settings-group__reset" tooltip="Reset">
+							<Button class="button" onactivate="SettingsShared.resetSettings('PaintSubSection');">
+								<Image class="button__icon" src="file://{images}/reset.svg" />
+							</Button>
+						</TooltipPanel>
+
+					</Panel>
 
 				</Panel>
 
@@ -121,11 +137,19 @@
 
 					<Label class="settings-group__title" text="#MOM_Settings_Title_Gameplay_Run_Safeguards" />
 
-					<TooltipPanel class="settings-group__reset" tooltip="Reset">
-						<Button class="button" onactivate="SettingsShared.resetSettings('SafeguardsSubSection');">
-							<Image class="button__icon" src="file://{images}/reset.svg" />
+					<Panel class="flow-right horizontal-align-right">
+
+						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Safeguards', 'SafeguardsSubSection')">
+							<Label class="button__text" text="Import/Export"/>
 						</Button>
-					</TooltipPanel>
+
+						<TooltipPanel class="settings-group__reset" tooltip="Reset">
+							<Button class="button" onactivate="SettingsShared.resetSettings('SafeguardsSubSection');">
+								<Image class="button__icon" src="file://{images}/reset.svg" />
+							</Button>
+						</TooltipPanel>
+
+					</Panel>
 
 				</Panel>
 
@@ -184,11 +208,19 @@
 
 					<Label class="settings-group__title" text="Zones" />
 
-					<TooltipPanel class="settings-group__reset" tooltip="Reset">
-						<Button class="button" onactivate="SettingsShared.resetSettings('ZonesSubSection');">
-							<Image class="button__icon" src="file://{images}/reset.svg" />
+					<Panel class="flow-right horizontal-align-right">
+
+						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Zones', 'ZonesSubSection')">
+							<Label class="button__text" text="Import/Export"/>
 						</Button>
-					</TooltipPanel>
+
+						<TooltipPanel class="settings-group__reset" tooltip="Reset">
+							<Button class="button" onactivate="SettingsShared.resetSettings('ZonesSubSection');">
+								<Image class="button__icon" src="file://{images}/reset.svg" />
+							</Button>
+						</TooltipPanel>
+
+					</Panel>
 
 				</Panel>
 
@@ -244,11 +276,19 @@
 
 					<Label class="settings-group__title" text="#MOM_Settings_Title_Gameplay_RJ" />
 
-					<TooltipPanel class="settings-group__reset" tooltip="Reset">
-						<Button class="button" onactivate="SettingsShared.resetSettings('RocketJumpSubSection');">
-							<Image class="button__icon" src="file://{images}/reset.svg" />
+					<Panel class="flow-right horizontal-align-right">
+
+						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Rocket Jump', 'RocketJumpSubSection')">
+							<Label class="button__text" text="Import/Export"/>
 						</Button>
-					</TooltipPanel>
+
+						<TooltipPanel class="settings-group__reset" tooltip="Reset">
+							<Button class="button" onactivate="SettingsShared.resetSettings('RocketJumpSubSection');">
+								<Image class="button__icon" src="file://{images}/reset.svg" />
+							</Button>
+						</TooltipPanel>
+
+					</Panel>
 
 				</Panel>
 
@@ -300,11 +340,19 @@
 
 					<Label class="settings-group__title" text="#MOM_Settings_Title_Gameplay_SJ" />
 
-					<TooltipPanel class="settings-group__reset" tooltip="Reset">
-						<Button class="button" onactivate="SettingsShared.resetSettings('StickyJumpSubSection');">
-							<Image class="button__icon" src="file://{images}/reset.svg" />
+					<Panel class="flow-right horizontal-align-right">
+
+						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Sticky Jump', 'StickyJumpSubSection')">
+							<Label class="button__text" text="Import/Export"/>
 						</Button>
-					</TooltipPanel>
+
+						<TooltipPanel class="settings-group__reset" tooltip="Reset">
+							<Button class="button" onactivate="SettingsShared.resetSettings('StickyJumpSubSection');">
+								<Image class="button__icon" src="file://{images}/reset.svg" />
+							</Button>
+						</TooltipPanel>
+
+					</Panel>
 
 				</Panel>
 
@@ -377,11 +425,19 @@
 
 					<Label class="settings-group__title" text="Conc" />
 
-					<TooltipPanel class="settings-group__reset" tooltip="Reset">
-						<Button class="button" onactivate="SettingsShared.resetSettings('ConcSubSection');">
-							<Image class="button__icon" src="file://{images}/reset.svg" />
+					<Panel class="flow-right horizontal-align-right">
+
+						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Conc', 'ConcSubSection')">
+							<Label class="button__text" text="Import/Export"/>
 						</Button>
-					</TooltipPanel>
+
+						<TooltipPanel class="settings-group__reset" tooltip="Reset">
+							<Button class="button" onactivate="SettingsShared.resetSettings('ConcSubSection');">
+								<Image class="button__icon" src="file://{images}/reset.svg" />
+							</Button>
+						</TooltipPanel>
+
+					</Panel>
 
 				</Panel>
 
@@ -440,11 +496,19 @@
 
 					<Label class="settings-group__title" text="Defrag" />
 
-					<TooltipPanel class="settings-group__reset" tooltip="Reset">
-						<Button class="button" onactivate="SettingsShared.resetSettings('DefragSubSection');">
-							<Image class="button__icon" src="file://{images}/reset.svg" />
+					<Panel class="flow-right horizontal-align-right">
+
+						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Defrag', 'DefragSubSection')">
+							<Label class="button__text" text="Import/Export"/>
 						</Button>
-					</TooltipPanel>
+
+						<TooltipPanel class="settings-group__reset" tooltip="Reset">
+							<Button class="button" onactivate="SettingsShared.resetSettings('DefragSubSection');">
+								<Image class="button__icon" src="file://{images}/reset.svg" />
+							</Button>
+						</TooltipPanel>
+
+					</Panel>
 
 				</Panel>
 

@@ -239,11 +239,19 @@
 
 					<Label class="settings-group__title" text="Crosshair" />
 
-					<TooltipPanel class="settings-group__reset" tooltip="Reset">
-						<Button class="button" onactivate="SettingsShared.resetSettings('CrosshairSubSection');">
-							<Image class="button__icon" src="file://{images}/reset.svg" />
+					<Panel class="flow-right horizontal-align-right">
+
+						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Crosshair', 'CrosshairSubSection')">
+							<Label class="button__text" text="Import/Export"/>
 						</Button>
-					</TooltipPanel>
+
+						<TooltipPanel class="settings-group__reset" tooltip="Reset">
+							<Button class="button" onactivate="SettingsShared.resetSettings('CrosshairSubSection');">
+								<Image class="button__icon" src="file://{images}/reset.svg" />
+							</Button>
+						</TooltipPanel>
+
+					</Panel>
 
 				</Panel>
 
@@ -304,11 +312,19 @@
 
 					<Label class="settings-group__title" text="Timer" />
 
-					<TooltipPanel class="settings-group__reset" tooltip="Reset">
-						<Button class="button" onactivate="SettingsShared.resetSettings('TimerSubSection');">
-							<Image class="button__icon" src="file://{images}/reset.svg" />
+					<Panel class="flow-right horizontal-align-right">
+
+						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Timer', 'TimerSubSection')">
+							<Label class="button__text" text="Import/Export"/>
 						</Button>
-					</TooltipPanel>
+
+						<TooltipPanel class="settings-group__reset" tooltip="Reset">
+							<Button class="button" onactivate="SettingsShared.resetSettings('TimerSubSection');">
+								<Image class="button__icon" src="file://{images}/reset.svg" />
+							</Button>
+						</TooltipPanel>
+
+					</Panel>
 
 				</Panel>
 
@@ -393,11 +409,19 @@
 
 					<Label class="settings-group__title" text="Weapon Selection" />
 
-					<TooltipPanel class="settings-group__reset" tooltip="Reset">
-						<Button class="button" onactivate="SettingsShared.resetSettings('WeaponSelSubSection');">
-							<Image class="button__icon" src="file://{images}/reset.svg" />
+					<Panel class="flow-right horizontal-align-right">
+
+						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Weapon Selection', 'WeaponSelSubSection')">
+							<Label class="button__text" text="Import/Export"/>
 						</Button>
-					</TooltipPanel>
+
+						<TooltipPanel class="settings-group__reset" tooltip="Reset">
+							<Button class="button" onactivate="SettingsShared.resetSettings('WeaponSelSubSection');">
+								<Image class="button__icon" src="file://{images}/reset.svg" />
+							</Button>
+						</TooltipPanel>
+
+					</Panel>
 
 				</Panel>
 
@@ -428,11 +452,19 @@
 
 					<Label class="settings-group__title" text="#MOM_Settings_Sync_Label" />
 
-					<TooltipPanel class="settings-group__reset" tooltip="Reset">
-						<Button class="button" onactivate="SettingsShared.resetSettings('StrafeSyncSubSection');">
-							<Image class="button__icon" src="file://{images}/reset.svg" />
+					<Panel class="flow-right horizontal-align-right">
+
+						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Strafe Sync', 'StrafeSyncSubSection')">
+							<Label class="button__text" text="Import/Export"/>
 						</Button>
-					</TooltipPanel>
+
+						<TooltipPanel class="settings-group__reset" tooltip="Reset">
+							<Button class="button" onactivate="SettingsShared.resetSettings('StrafeSyncSubSection');">
+								<Image class="button__icon" src="file://{images}/reset.svg" />
+							</Button>
+						</TooltipPanel>
+
+					</Panel>
 
 				</Panel>
 
@@ -467,11 +499,19 @@
 
 					<Label class="settings-group__title" text="Map Info" />
 
-					<TooltipPanel class="settings-group__reset" tooltip="Reset">
-						<Button class="button" onactivate="SettingsShared.resetSettings('MapInfoSubSection');">
-							<Image class="button__icon" src="file://{images}/reset.svg" />
+					<Panel class="flow-right horizontal-align-right">
+
+						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Map Info', 'MapInfoSubSection')">
+							<Label class="button__text" text="Import/Export"/>
 						</Button>
-					</TooltipPanel>
+
+						<TooltipPanel class="settings-group__reset" tooltip="Reset">
+							<Button class="button" onactivate="SettingsShared.resetSettings('MapInfoSubSection');">
+								<Image class="button__icon" src="file://{images}/reset.svg" />
+							</Button>
+						</TooltipPanel>
+
+					</Panel>
 
 				</Panel>
 
