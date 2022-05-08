@@ -146,39 +146,39 @@ class SettingsShared {
 
 	static initTextureReplacementDropdown() {
 		const textures = {
-			"None": "",
-			"Noise": "error_replacement/noise_basecolor",
-			"Grid": "error_replacement/grid_basecolor",
-			"Grid with Noise": "error_replacement/grid-noise_basecolor"
-		}
+			None: '',
+			Noise: 'error_replacement/noise_basecolor',
+			Grid: 'error_replacement/grid_basecolor',
+			'Grid with Noise': 'error_replacement/grid-noise_basecolor'
+		};
 
 		/** @type {Image} @static */
 		const imagePanel = this.videoSettingsPanel.FindChildTraverse('TextureReplacePreview');
 
-		/** @type {Dropdown} @static */
+		/** @type {DropDown} @static */
 		const dropdown = this.videoSettingsPanel.FindChildTraverse('MatErrorReplaceTexture').FindChildTraverse('DropDown');
 
 		// Clear the dropdown
 		dropdown.RemoveAllOptions();
-		
+
 		const updatePanel = (override) => {
 			const selected = dropdown.GetSelected();
 
 			let path = '';
 			if (override) {
-				const isInList = Object.values(textures).find((textureName) => override === textureName);
+				const valueIfInList = Object.values(textures).find((textureName) => override === textureName);
 
-				if (isInList) {
-					path = isInList;
+				if (valueIfInList) {
+					path = valueIfInList;
 				} else {
 					// If we don't have the texture in the list, set the path directly to the override
 					path = override;
 					// Create our label so we can make it look nice
 					$.CreatePanel('Label', dropdown, 'cvar-value', { text: `${path} (Custom)`, value: path });
 				}
-			} else {
+			} else if (selected) {
 				// Panorama won't let me store the texturePath value in the panel, so find it again based on the name.
-				path = Object.entries(textures).find(([textureName, _]) => selected?.text === textureName)[1];
+				path = Object.entries(textures).find(([textureName, _]) => selected.text === textureName)[1];
 			}
 
 			// Find and destroy the label because it's not a real option
@@ -189,16 +189,19 @@ class SettingsShared {
 
 			imagePanel.SetHasClass('hide', !path);
 			if (path) imagePanel.SetImage(`file://{materials}/${path}.vtf`);
-		}
+		};
 
-		dropdown.SetPanelEvent('onuserinputsubmit', updatePanel)
+		dropdown.SetPanelEvent('onuserinputsubmit', updatePanel);
+
+		// Update the panel the first time it gets loaded, passing in an override. This will ensure
+		// the correct texture is set, even if the dropdown hasn't been populated yet.
+		if (dropdown.AccessDropDownMenu().GetChildCount() === 0) {
+			updatePanel(GameInterfaceAPI.GetSettingString('mat_error_texture_advanced_basetexture'));
+		}
 
 		Object.entries(textures).forEach(([textureName, texturePath], i) => {
 			const item = $.CreatePanel('Label', dropdown, `Texture${i}`, { text: textureName, value: texturePath });
 			dropdown.AddOption(item);
 		});
-
-		// Update the panel once it's loaded so it loads our texture
-		$.RegisterEventHandler('PanelLoaded', dropdown.id, () => updatePanel(GameInterfaceAPI.GetSettingString('mat_error_texture_advanced_basetexture')));
 	}
 }
