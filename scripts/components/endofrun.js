@@ -37,29 +37,21 @@ class EndOfRun {
 	static selectedSplit;
 
 	static {
-		$.RegisterForUnhandledEvent('EndOfRun_CompareRuns', (baseRun, compareRun) => this.showNewEndOfRun(baseRun, compareRun));
+		$.RegisterForUnhandledEvent('EndOfRun_CompareRuns', this.setComparison.bind(this));
 		$.RegisterForUnhandledEvent('Leaderboards_MapDataSet', this.initOnMapLoad.bind(this));
-		$.RegisterForUnhandledEvent('EndOfRun_Show', this.onShowEndOfRun.bind(this));
+		$.RegisterForUnhandledEvent('EndOfRun_Show', this.showNewEndOfRun.bind(this));
 		$.RegisterForUnhandledEvent('EndOfRun_Result_RunUpload', this.updateRunUploadStatus.bind(this));
 		$.RegisterForUnhandledEvent('EndOfRun_Result_RunSave', this.updateRunSavedStatus.bind(this));
 	}
 
 	/**
-	 * Fired when either when the local player's run ends, a replay run ends,
-	 * you go back to a last EoR from leaderboards, or in the future when the player compares two runs.
-	 * @param {EndOfRunShowReason} showReason - Why the end of run panel is being shown. See EndOfRunShowReason for reasons.
+	 * Set the current base run and comparison run
+	 * @param {Object} runObj 				- The base run
+	 * @param {Object} comparisonRunObj		- The comparison run
 	 */
-	static onShowEndOfRun(showReason) {
-		if (showReason === EndOfRunShowReason.PLAYER_FINISHED_RUN) {
-			this.panels.runStatusIndicators.visible = true;
-			this.panels.actionButtons.visible = true;
-			this.updateRunStatusIndicator(RUN_STATUS_STATES.PROGRESS, RUN_STATUS_TYPES.SAVE);
-			this.updateRunStatusIndicator(RUN_STATUS_STATES.PROGRESS, RUN_STATUS_TYPES.UPLOAD);
-		}
-		else {
-			this.panels.runStatusIndicators.visible = false;
-			this.panels.actionButtons.visible = false;
-		}
+	static setComparison(runObj, comparisonRunObj) {
+		this.baseRun = runObj ? new Run(runObj) : null;
+		this.comparisonRun = comparisonRunObj ? new Run(comparisonRunObj) : null;
 	}
 
 	/**
@@ -143,17 +135,30 @@ class EndOfRun {
 
 		if (hideLeaderboards) $.DispatchEvent('HudLeaderboards_ForceClose');
 	}
-
 	/**
 	 * Reset and determine how to generate the end of run panel.
 	 * The comparision run can be null, in which case we don't show splits or the graph.
-	 * @param {Object} runObj 				- The run to show end of run for
-	 * @param {Object} comparisonRunObj		- The comparison run
+	 * Fired when either when the local player's run ends, a replay run ends,
+	 * you go back to a last EoR from leaderboards, or in the future when the player compares two runs.
+	 * @param {EOR_SHOW_REASON} showReason - Why the end of run panel is being shown. See EOR_SHOW_REASON for reasons.
 	 */
-	static showNewEndOfRun(runObj, comparisonRunObj) {
-		if (!runObj) return;
+	static showNewEndOfRun(showReason) {
+		if (!this.baseRun) return;
 
-		const run = new Run(runObj);
+		if (showReason === EOR_SHOW_REASON.PLAYER_FINISHED_RUN) {
+			this.panels.runStatusIndicators.visible = true;
+			this.panels.actionButtons.visible = true;
+			this.updateRunStatusIndicator(RUN_STATUS_STATES.PROGRESS, RUN_STATUS_TYPES.SAVE);
+			this.updateRunStatusIndicator(RUN_STATUS_STATES.PROGRESS, RUN_STATUS_TYPES.UPLOAD);
+		} else {
+			this.panels.runStatusIndicators.visible = false;
+			this.panels.actionButtons.visible = false;
+
+			if (showReason === EOR_SHOW_REASON.MANUALLY_SHOWN) {
+				// If it's a manual show we don't need to redo anything, just return out
+				return;
+			}
+		}
 
 		// Remove the previous splits, if any
 		this.panels.splits.RemoveAndDeleteChildren();
@@ -163,20 +168,22 @@ class EndOfRun {
 		this.panels.cp.RemoveClass('endofrun--ahead');
 		this.panels.cp.RemoveClass('endofrun--behind');
 
-		this.panels.cp.SetDialogVariableFloat('run_time', runObj.runTime);
+		this.panels.cp.SetDialogVariableFloat('run_time', this.baseRun.time);
 
 		// If we have a comparison, make the full stats, otherwise just simple page without graph
-		if (comparisonRunObj) {
-			this.setComparisionStats(run, new Run(comparisonRunObj));
+		if (this.comparisonRun) {
+			this.setComparisionStats();
 		} else {
-			this.setSingleRunStats(run);
+			this.setSingleRunStats();
 		}
 	}
+
 	/**
-	 * Generate the end of run panel for a run with no comparison.
-	 * @param {Run} run	- The run to show end of run for
+	 * Generate the end of run panel for the current base run, with no comparison.
 	 */
-	static setSingleRunStats(run) {
+	static setSingleRunStats() {
+		const run = this.baseRun;
+
 		// Clear the diff string, we don't have one
 		this.panels.cp.SetDialogVariable('run_diff_prefix', '');
 		this.panels.cp.SetDialogVariableFloat('run_diff', 0);
@@ -205,18 +212,12 @@ class EndOfRun {
 	}
 
 	/**
-	 * Generate the end of run panel comparisions from two runs.
-	 * @param {Run} run 			- The run to show end of run for
-	 * @param {Run} comparisonRun	- The comparison run
+	 * Generate the end of run panel comparisions from the two active runs.
 	 */
-	static setComparisionStats(run, comparisonRun) {
-		// Generate a comparison
-		if (run.numZones !== comparisonRun.numZones) {
-			$.Warning('Comparison: Base run and comparison run have different number of zones!');
-			return;
-		}
+	static setComparisionStats() {
+		if (!this.baseRun || !this.comparisonRun) return;
 
-		const comparison = new Comparison(run, comparisonRun);
+		const comparison = new Comparison(this.baseRun, this.comparisonRun);
 
 		// Are we ahead? Probably don't need a class for if you're exactly identical
 		const isAhead = comparison.diff < 0;
@@ -264,7 +265,7 @@ class EndOfRun {
 		this.updateGraph(comparison, null);
 
 		// Set the comparison name to appear in the stats bit
-		$.GetContextPanel().SetDialogVariable('comparison_name', comparisonRun.playerName);
+		$.GetContextPanel().SetDialogVariable('comparison_name', this.comparisonRun.playerName);
 
 		// Default to overall
 		this.setSelectedSplit(comparison.overallSplit, comparison);
@@ -275,6 +276,7 @@ class EndOfRun {
 	/**
 	 * Generate a graph for the given comparison
 	 * @param {Comparison} comparison
+	 * @param {number?} statIndex
 	 */
 	static updateGraph(comparison, statIndex = null) {
 		// Grab the actual LineGraph class attached to the panel
@@ -311,8 +313,8 @@ class EndOfRun {
 			],
 			color: '#ffffffaa',
 			thickness: 2,
-			shadeBelowToOriginColor: '#ffffff33',
-			shadeAboveToOriginColor: '#ffffff33'
+			shadeBelowToOriginColor: '#ffffff66',
+			shadeAboveToOriginColor: '#ffffff66'
 		};
 
 		let max = 0;
