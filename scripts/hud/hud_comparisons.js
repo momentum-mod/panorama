@@ -4,7 +4,9 @@ const MAX_ACTIVE_SPLITS = 12;
 const NEW_SPLIT_TRANSITION_DURATION = 2;
 
 class HudComparisons {
-	static currentZoneIndex = 0;
+	static runFinished = false;
+	static currentZone = 0;
+	static runStatsZoneIndex = 0;
 
 	static panels = {
 		splits: $('#Splits')
@@ -20,7 +22,8 @@ class HudComparisons {
 		// this.panels.compare.RemoveAndDeleteChildren();
 		this.panels.splits.RemoveAndDeleteChildren();
 		this.runFinished = false;
-		this.currentZoneIndex = 0;
+		this.currentZone = 0;
+		this.runStatsZoneIndex = 0;
 	}
 
 	static onTimerEvent(_ent, eventType) {
@@ -40,12 +43,17 @@ class HudComparisons {
 			return;
 		}
 
+		// Here, this.currentZone tracks how far into the run we are, so we can compare against currentData.currentZone,
+		// so we don't fire on stage we've already hit.
+		// this.runStatsZoneIndex tracks the correct index into the runStats array
+
 		if (currentData.timerState === TIMER_STATE.NOTRUNNING) {
 			// The only time we care about comparisons when timer is not running is if you just
 			// hit the end zone *for the first time*
 			if (!this.runFinished && currentData.currentZone === 0) {
 				// We're at the last zone, set index to last in the RunStats zone array
-				this.currentZoneIndex = currentStats.numZones + 1;
+				this.runStatsZoneIndex = currentStats.numZones - 1;
+				this.currentZone = 0;
 
 				// Track that we've finished so this never runs again
 				this.runFinished = true;
@@ -54,15 +62,14 @@ class HudComparisons {
 			}
 		} else {
 			// Return out if you went back a zone
-			if (currentData.currentZone <= this.currentZoneIndex) {
+			if (currentData.currentZone <= this.currentZone) {
 				return;
 			} else {
 				// This is the first time you hit this zone
-				this.currentZoneIndex = currentData.currentZone;
+				this.currentZone = currentData.currentZone;
+				this.runStatsZoneIndex = currentData.currentZone - 2; // -2 but currentZone is offset by the end and start zones
 			}
 		}
-		//$.Msg(`after cdcz: ${currentData.currentZone}`);
-		//$.Msg(`cdi: ${this.currentZoneIndex}`);
 
 		const splitPanels = this.panels.splits.Children().reverse();
 		if (splitPanels.length > MAX_ACTIVE_SPLITS) {
@@ -73,15 +80,15 @@ class HudComparisons {
 			? Comparison.generateSplits(
 					new RunStats(currentStats, currentData.tickRate),
 					new RunStats(comparisonRun.compareRun.stats, currentData.tickRate),
-					this.currentZoneIndex - 1
-			  )[this.currentZoneIndex - 2]
-			: new RunStats(currentStats, currentData.tickRate, this.currentZoneIndex - 1).zones[this.currentZoneIndex - 2];
+					this.runStatsZoneIndex + 1
+			  )[this.runStatsZoneIndex]
+			: new RunStats(currentStats, currentData.tickRate, this.runStatsZoneIndex + 1).zones[this.runStatsZoneIndex];
 
 		const wrapper = $.CreatePanel('Panel', this.panels.splits, `Split${data.name}`, {
 			class: 'hud-comparisons__split'
 		});
 
-		if (this.currentZoneIndex - 2 > 0) {
+		if (this.runStatsZoneIndex > 0) {
 			const lastSplit = this.panels.splits.GetFirstChild().GetFirstChild();
 			lastSplit?.RemoveClass('split--latest');
 		}
