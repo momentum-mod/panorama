@@ -7,7 +7,7 @@
 	</scripts>
 
 	<Panel class="playercard" onload="PlayerCard.onLoad()">
-		<Image class="playercard__background-image" src="file://{images}/card_bg.png" scaling="stretch-to-cover-preserve-aspect" />
+		<Image class="playercard__background-image" src="file://{images}/raster/card_bg.png" scaling="stretch-to-cover-preserve-aspect" />
 		<!-- <Panel class="playercard__black-overlay" /> 50% opacity black overlay to make the white text readable -->
 		<Panel class="playercard__main">
 			<ChaosAvatarImage class="playercard__player-avatar" steamid="local" />

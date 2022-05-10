@@ -17,7 +17,7 @@
 		<snippet name="learn-list-lesson">
 			<Panel class="learn-list__lesson">
 				<Label class="learn-list__name" text="{s:learn_lesson_name}"/>
-				<Image id="CompletionIcon" class="learn-list__completion-icon" src="file://{images}/mapselector/completedMapIcon.svg"/>
+				<Image id="CompletionIcon" class="learn-list__completion-icon" src="file://{images}/flag.svg"/>
 			</Panel>
 		</snippet>
 	</snippets>
@@ -98,7 +98,7 @@
 						</Image>
 						<Button class="button button--blue learn-info__play-button" onactivate="Learn.startCurrentLesson();">
 							<Panel class="flow-right full-height horizontal-align-center">
-								<Image class="button__icon button__icon--left" src="file://{images}/mapselector/playIcon.svg" textureheight="64"/>
+								<Image class="button__icon button__icon--left" src="file://{images}/play-circle.svg" textureheight="64"/>
 								<Label class="button__text button__text--right learn-info__playbutton-text" text="Practice"/>
 							</Panel>
 						</Button>

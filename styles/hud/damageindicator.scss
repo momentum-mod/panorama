@@ -5,5 +5,5 @@ MomHudDamageIndicator {
 
 // Do not set any size values, those are all controlled by convars
 .damage-indicator {
-	opacity-mask: url( "file://{images}/damageindicator-mask.png" );
+	opacity-mask: url('file://{images}/masks/damageindicator-mask.png');
 }

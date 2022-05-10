@@ -76,12 +76,12 @@
 			<Panel id="LobbyDetailsHeaderBar" class="lobby-details__header">
 				<TooltipPanel tooltip="Return to lobby list">
 					<Button id="LobbyDetailsBackButton" class="button lobby-details__header-item" onactivate="Lobby.showLobbyList()">
-						<Image class="button__icon" src="file://{images}/backarrow.svg" textureheight="32" orientation="180" />
+						<Image class="button__icon" src="file://{images}/arrow-thick-right.svg" textureheight="32" orientation="180" />
 					</Button>
 				</TooltipPanel>
 				<TooltipPanel tooltip="Lobby Settings">
 					<Button id="LobbyDetailsSettingsButton" class="button lobby-details__header-item" onactivate="Lobby.showLobbySettings()">
-						<Image class="button__icon" src="file://{images}/topnav/settings.svg" textureheight="32" />
+						<Image class="button__icon" src="file://{images}/settings.svg" textureheight="32" />
 					</Button>
 				</TooltipPanel>
 				<TooltipPanel tooltip="Invite Players">

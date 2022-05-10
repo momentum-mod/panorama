@@ -55,11 +55,26 @@ class Lobby {
 	static {
 		// Watch out: these callbacks work a bit different to Steamworks: We will only receive data for our own lobby automatically
 		// And only the list update will give us anything else via OnListUpdated
-		$.RegisterForUnhandledEvent('PanoramaComponent_SteamLobby_OnListUpdated', this.onSteamLobbyListUpdated.bind(this));
-		$.RegisterForUnhandledEvent('PanoramaComponent_SteamLobby_OnDataUpdated', this.onSteamLobbyDataUpdated.bind(this));
-		$.RegisterForUnhandledEvent('PanoramaComponent_SteamLobby_OnMemberDataUpdated', this.onSteamLobbyMemberDataUpdated.bind(this));
-		$.RegisterForUnhandledEvent('PanoramaComponent_SteamLobby_OnMemberStateChanged', this.onSteamLobbyMemberStateChanged.bind(this));
-		$.RegisterForUnhandledEvent('PanoramaComponent_SteamLobby_OnLobbyStateChanged', this.onSteamLobbyStateChanged.bind(this));
+		$.RegisterForUnhandledEvent(
+			'PanoramaComponent_SteamLobby_OnListUpdated',
+			this.onSteamLobbyListUpdated.bind(this)
+		);
+		$.RegisterForUnhandledEvent(
+			'PanoramaComponent_SteamLobby_OnDataUpdated',
+			this.onSteamLobbyDataUpdated.bind(this)
+		);
+		$.RegisterForUnhandledEvent(
+			'PanoramaComponent_SteamLobby_OnMemberDataUpdated',
+			this.onSteamLobbyMemberDataUpdated.bind(this)
+		);
+		$.RegisterForUnhandledEvent(
+			'PanoramaComponent_SteamLobby_OnMemberStateChanged',
+			this.onSteamLobbyMemberStateChanged.bind(this)
+		);
+		$.RegisterForUnhandledEvent(
+			'PanoramaComponent_SteamLobby_OnLobbyStateChanged',
+			this.onSteamLobbyStateChanged.bind(this)
+		);
 		$.RegisterForUnhandledEvent('PanoramaComponent_Chat_OnPlayerMuted', this.onPlayerMuted.bind(this));
 		$.RegisterForUnhandledEvent('RefreshLobbyList', this.refreshLobbyList.bind(this));
 
@@ -86,7 +101,9 @@ class Lobby {
 
 		if (this.isInLobby()) {
 			if (this.isLobbyOwner() && this.getLobbyMemberCount() > 1) {
-				leaveAndJoinCheck('You are currently the owner of a lobby, are you sure you want to leave and transfer its ownership?');
+				leaveAndJoinCheck(
+					'You are currently the owner of a lobby, are you sure you want to leave and transfer its ownership?'
+				);
 			} else {
 				leaveAndJoinCheck('Are you sure you want to leave your current lobby?');
 			}
@@ -168,7 +185,11 @@ class Lobby {
 			let cooldown = REFRESH_COOLDOWN;
 			let isRefreshHovered;
 
-			const cooldownMessage = () => UiToolkitAPI.ShowTextTooltip(this.panels.refreshButton.id, `Refresh is on cooldown, please wait ${cooldown} seconds.`);
+			const cooldownMessage = () =>
+				UiToolkitAPI.ShowTextTooltip(
+					this.panels.refreshButton.id,
+					`Refresh is on cooldown, please wait ${cooldown} seconds.`
+				);
 
 			const cooldownTimer = () => {
 				if (isRefreshHovered) cooldownMessage();
@@ -230,7 +251,8 @@ class Lobby {
 
 					newPanel.LoadLayoutSnippet('lobby-list-entry');
 
-					const joinCallback = () => (origin === 'current' ? this.showLobbyDetails() : this.join(lobbySteamID));
+					const joinCallback = () =>
+						origin === 'current' ? this.showLobbyDetails() : this.join(lobbySteamID);
 
 					newPanel.SetPanelEvent('ondblclick', joinCallback);
 					newPanel.FindChildTraverse('LobbyJoinButton').SetPanelEvent('onactivate', joinCallback);
@@ -239,7 +261,13 @@ class Lobby {
 					const typeIcon = `file://{images}/online/${LOBBY_TYPES[lobbyType].icon}.svg`;
 					typePanel.SetImage(typeIcon);
 					typePanel.SetPanelEvent('onmouseover', () =>
-						UiToolkitAPI.ShowTitleImageTextTooltipStyled(typePanel.id, '', typeIcon, LOBBY_TYPES[lobbyType].name, 'tooltip--notitle')
+						UiToolkitAPI.ShowTitleImageTextTooltipStyled(
+							typePanel.id,
+							'',
+							typeIcon,
+							LOBBY_TYPES[lobbyType].name,
+							'tooltip--notitle'
+						)
 					);
 
 					const avatarPanel = newPanel.FindChildTraverse('LobbyPlayerAvatar');
@@ -249,7 +277,7 @@ class Lobby {
 						UiToolkitAPI.ShowSimpleContextMenu(avatarPanel, '', [
 							{
 								label: 'Steam Profile',
-								icon: 'file://{images}/steam.svg',
+								icon: 'file://{images}/social/steam.svg',
 								style: 'icon-color-steam-online',
 								jsCallback: () => SteamOverlayAPI.OpenToProfileID(ownerSteamID)
 							}
@@ -257,7 +285,10 @@ class Lobby {
 					);
 
 					newPanel.SetDialogVariable('lobbyTitle', lobbyName);
-					newPanel.SetDialogVariable('lobbyPlayerCount', `${lobbyObj['members']}/${lobbyObj['members_limit']}`);
+					newPanel.SetDialogVariable(
+						'lobbyPlayerCount',
+						`${lobbyObj['members']}/${lobbyObj['members_limit']}`
+					);
 					newPanel.SetDialogVariable('lobbyJoinLabel', origin === 'current' ? 'Details' : 'Join');
 
 					const originPanel = newPanel.FindChildTraverse('LobbyOrigin');
@@ -286,7 +317,10 @@ class Lobby {
 		this.panels.detailsSettingsButton.enabled = UserAPI.GetXUID() === owner;
 
 		$.GetContextPanel().SetDialogVariable('lobbyTitle', `${FriendsAPI.GetNameForXUID(owner)}'s Lobby`);
-		$.GetContextPanel().SetDialogVariable('lobbyPlayerCount', `${lobbyData['members']}/${lobbyData['members_limit']}`);
+		$.GetContextPanel().SetDialogVariable(
+			'lobbyPlayerCount',
+			`${lobbyData['members']}/${lobbyData['members_limit']}`
+		);
 	}
 
 	/**
@@ -371,7 +405,7 @@ class Lobby {
 			);
 		} else {
 			memberStatePanel.ClearPanelEvent('onmouseover');
-			memberStatePanel.SetImage('file://{images}/topnav/play.svg');
+			memberStatePanel.SetImage('file://{images}/play.svg');
 
 			memberStatePanel.RemoveClass('hide');
 
@@ -431,7 +465,11 @@ class Lobby {
 		const newType = this.getFirstInObj(data)['type'];
 
 		if (oldType !== newType) {
-			$.DispatchEvent('Drawer_UpdateLobbyButton', `file://{images}/online/${LOBBY_TYPES[newType].icon}.svg`, this.getFirstInObj(data)['members']);
+			$.DispatchEvent(
+				'Drawer_UpdateLobbyButton',
+				`file://{images}/online/${LOBBY_TYPES[newType].icon}.svg`,
+				this.getFirstInObj(data)['members']
+			);
 		}
 
 		this.lobbyListData['current'] = data;
@@ -448,7 +486,9 @@ class Lobby {
 			const newMap = data[memberSteamID]['map'];
 
 			if (memberSteamID in this.lobbyMemberData) {
-				Object.keys(data[memberSteamID]).forEach((item) => (this.lobbyMemberData[memberSteamID][item] = data[memberSteamID][item]));
+				Object.keys(data[memberSteamID]).forEach(
+					(item) => (this.lobbyMemberData[memberSteamID][item] = data[memberSteamID][item])
+				);
 			} else {
 				this.lobbyMemberData[memberSteamID] = data[memberSteamID];
 			}

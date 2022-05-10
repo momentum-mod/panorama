@@ -119,7 +119,7 @@ class MapEntry {
 		} else {
 			items.push({
 				label: $.Localize('MOM_MapSelector_AddToFavorites'),
-				icon: 'file://{images}/mapselector/favoriteIcon.svg',
+				icon: 'file://{images}/star.svg',
 				style: 'icon-color-yellow',
 				jsCallback: () => {
 					$.DispatchEvent('MapSelector_ToggleMapStatus', mapID, false, true);
@@ -148,7 +148,7 @@ class MapEntry {
 			if (mapData.pr.rank <= 10) {
 				icon = 'file://{images}/ranks/top10.svg';
 			} else {
-				icon = 'file://{images}/mapselector/completedMapIcon.svg';
+				icon = 'file://{images}/flag.svg';
 			}
 
 			pbIcon.SetImage(icon);

@@ -10,7 +10,7 @@
 		<Panel class="spectate">
 			<Panel class="spectate__status">
 				<Panel class="horizontal-align-left flow-right" id="IndicatorSpectating">
-					<Image src="file://{images}/chat/spectatingIcon.svg" textureheight="64" scaling="stretch-to-cover-preserve-aspect" />
+					<Image src="file://{images}/spectating.svg" textureheight="64" scaling="stretch-to-cover-preserve-aspect" />
 					<Label class="text-h4" text="SPECTATING" />
 				</Panel>
 				<Panel class="horizontal-align-left flow-right" id="IndicatorWatchingReplay">
@@ -19,7 +19,7 @@
 				</Panel>
 			</Panel>
 			<Panel class="spectate__playerinfo">
-				<Panel class="horizontal-align-center" >
+				<Panel class="horizontal-align-center">
 					<Label class="text-h4" text="{s:spec_target}" id="TargetName" />
 				</Panel>
 				<!-- TODO: Put playercard here somehow -->
@@ -36,8 +36,8 @@
 					<Button class="button ml-3" id="NextPlayer" onactivate="GameInterfaceAPI.ConsoleCommand('spec_next');">
 						<Image class="button__icon" src="file://{images}/right-arrow.svg" textureheight="32" />
 					</Button>
-					<Button class="button ml-3" id="ToggleReplayControls" onactivate="HudSpectate.panels.replayControls.ToggleHiddenState()" >
-						<Image class="button__icon" src="file://{images}/topnav/settings.svg" textureheight="32" />
+					<Button class="button ml-3" id="ToggleReplayControls" onactivate="HudSpectate.panels.replayControls.ToggleHiddenState()">
+						<Image class="button__icon" src="file://{images}/settings.svg" textureheight="32" />
 					</Button>
 					<Button class="button button--red ml-3" onactivate="GameInterfaceAPI.ConsoleCommand('mom_spectate_stop');">
 						<Image class="button__icon" src="file://{images}/close.svg"/>

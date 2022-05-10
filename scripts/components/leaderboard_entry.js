@@ -72,7 +72,7 @@ class LeaderboardEntry {
 		if (timeData.type === LEADERBOARD_ENTRY_TYPE.ONLINE || timeData.type == LEADERBOARD_ENTRY_TYPE.ONLINE_CACHED || !isValid) {
 			items.push({
 				label: 'Steam Profile',
-				icon: 'file://{images}/steam.svg',
+				icon: 'file://{images}/social/steam.svg',
 				style: 'icon-color-steam-online',
 				jsCallback: () => {
 					SteamOverlayAPI.OpenToProfileID(timeData.steamID);

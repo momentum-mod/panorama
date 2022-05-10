@@ -12,7 +12,7 @@
 		<Panel class="endofrun__header">
 			<Panel class="endofrun__header-left">
 				<Button class="endofrun__header-button endofrun__header-button--back-button" onactivate="EndOfRun.hideEndOfRun();">
-					<Image class="button__icon button__icon--left" src="file://{images}/backarrow.svg" orientation="180" textureheight="64"/>
+					<Image class="button__icon button__icon--left" src="file://{images}/arrow-thick-right.svg" orientation="180" textureheight="64"/>
 				</Button>
 			</Panel>
 			<Panel class="endofrun__times">

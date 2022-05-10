@@ -177,7 +177,10 @@ class MainMenuController {
 	}
 
 	static getActiveNavBarButton() {
-		return $.GetContextPanel().FindChildTraverse('MainMenuTopButtons').Children().find(panel => panel.IsSelected());
+		return $.GetContextPanel()
+			.FindChildTraverse('MainMenuTopButtons')
+			.Children()
+			.find((panel) => panel.IsSelected());
 	}
 
 	static onMainMenuLoaded() {
@@ -230,12 +233,11 @@ class MainMenuController {
 		imagePanel.SetReadyForDisplay(!useVideo);
 
 		const backgroundVar = parseInt($.persistentStorage.getItem('settings.mainMenuBackground'));
-		
+
 		if (isNaN(backgroundVar)) {
 			// Light mode by default
 			$.persistentStorage.setItem('settings.mainMenuBackground', 0);
 		}
-		
 
 		let name = '';
 
@@ -326,12 +328,12 @@ class MainMenuController {
 		);
 	}
 
-	static onSafeguardMapChange( mapName ) {
+	static onSafeguardMapChange(mapName) {
 		UiToolkitAPI.ShowGenericPopupOkCancel(
-			$.Localize( '#MOM_MB_Safeguard_Map_Change_Title' ),
+			$.Localize('#MOM_MB_Safeguard_Map_Change_Title'),
 			`You are trying to change map to ${mapName} while your timer is still running, do you want to continue?\n\n<span class='text-sm text-italic'>(You can turn this off in Settings → Gameplay → Safeguards)</span>`,
 			'warning-popup',
-			() => GameInterfaceAPI.ConsoleCommand( '__map_change_ok 1;map ' + mapName ),
+			() => GameInterfaceAPI.ConsoleCommand('__map_change_ok 1;map ' + mapName),
 			() => {}
 		);
 	}

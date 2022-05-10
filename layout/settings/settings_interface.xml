@@ -7,7 +7,7 @@
 		<include src="file://{resources}/scripts/common/speedometer.js"/>
 		<include src="file://{resources}/scripts/settings_speedometer.js"/>
 	</scripts>
-	
+
 	<snippets>
 		<snippet name="speedometer">
 			<Panel class="settings-speedometer">
@@ -15,18 +15,18 @@
 					<Button id="SpeedometerDeleteBtn" class="button button--red settings-speedometer__deletebutton">
 						<Image class="button__icon" src="file://{images}/delete.svg" textureheight="32" />
 					</Button>
-					<Button id="SpeedometerDiscardBtn" class="button settings-speedometer__discardbutton" >
+					<Button id="SpeedometerDiscardBtn" class="button settings-speedometer__discardbutton">
 						<Image class="button__icon" src="file://{images}/reset.svg" />
 					</Button>
 					<Button id="SpeedometerMoveDownBtn" class="button settings-speedometer__movedownbutton">
-						<Image class="button__icon rot-90" src="file://{images}/mom-arrow.svg" textureheight="32" />
+						<Image class="button__icon rot-90" src="file://{images}/mom-arrow-right.svg" textureheight="32" />
 					</Button>
 					<Button id="SpeedometerMoveUpBtn" class="button settings-speedometer__moveupbutton">
-						<Image class="button__icon rot-270" src="file://{images}/mom-arrow.svg" textureheight="32" />
+						<Image class="button__icon rot-270" src="file://{images}/mom-arrow-right.svg" textureheight="32" />
 					</Button>
 					<ToggleButton id="SpeedometerToggleBtn" class="button togglebutton togglebutton--blue settings-speedometer__togglebutton" selected="false">
 						<Label id="SpeedometerName" class="button__text button__text--left settings-speedometer__name" />
-						<Image class="button__icon button__icon--right horizontal-align-right rot-90" src="file://{images}/mom-arrow.svg" textureheight="32" />
+						<Image class="button__icon button__icon--right horizontal-align-right rot-90" src="file://{images}/mom-arrow-right.svg" textureheight="32" />
 					</ToggleButton>
 				</Panel>
 				<Panel id="SpeedometerDetailContainer" class="settings-speedometer__detail settings-speedometer__detail--hidden">
@@ -74,17 +74,17 @@
 					<Button id="RangeColorEditNameBtn" class="button settings-speedometer-rangecolor__editnamebutton">
 						<Image class="button__icon" src="file://{images}/edit.svg" textureheight="32" />
 					</Button>
-					<Button id="RangeColorDiscardBtn" class="button settings-speedometer-rangecolor__discardbutton" >
+					<Button id="RangeColorDiscardBtn" class="button settings-speedometer-rangecolor__discardbutton">
 						<Image class="button__icon" src="file://{images}/reset.svg" />
 					</Button>
 					<ToggleButton id="RangeColorToggleBtn" class="button togglebutton togglebutton--blue settings-speedometer-rangecolor__togglebutton" selected="false">
 						<Label id="RangeColorName" class="button__text button__text--left settings-speedometer-rangecolor__name" />
-						<Image class="button__icon button__icon--right horizontal-align-right rot-90" src="file://{images}/mom-arrow.svg" textureheight="32" />
+						<Image class="button__icon button__icon--right horizontal-align-right rot-90" src="file://{images}/mom-arrow-right.svg" textureheight="32" />
 					</ToggleButton>
 				</Panel>
 				<Panel id="RangeColorDisplaysContainer" class="settings-speedometer-rangecolor__displayscont settings-speedometer-rangecolor__displayscont--hidden">
 					<Panel id="RangeColorDisplays" class="settings-speedometer-rangecolor__displays" />
-					<Button id="RangeColorAddBtn" class="button settings-speedometer-rangecolor__addbutton" >
+					<Button id="RangeColorAddBtn" class="button settings-speedometer-rangecolor__addbutton">
 						<Label class="button__text" text="+ Add new range" />
 					</Button>
 				</Panel>
@@ -144,7 +144,7 @@
 			<Panel class="settings-page__spacer"/>
 
 			<Panel id="SpeedometerSubSection" class="settings-group" onload="SpeedometerSettings.loadSettings()">
-			
+
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#MOM_Settings_Speedometer_Label" />
 				</Panel>
@@ -153,9 +153,9 @@
 					<RadioButton group="speedometer" text="Off" value="0" />
 					<RadioButton group="speedometer" text="On" value="1" />
 				</ChaosSettingsEnum>
-				
+
 				<ConVarEnabler convar="mom_hud_speedometer_enable" togglevisibility="true" class="flow-down">
-				
+
 					<ChaosSettingsSlider text="Speedometer FPS" min="0" max="400" convar="mom_hud_speedometer_fps" infomessage="FPS of the speedometer. For no limit, set to 0." hasdocspage="true"/>
 
 					<Panel id="SpeedometersContainer" class="flow-down full-width" infotitle="Speedometers for gamemode" infomessage="Visible speedometers for the specified gamemode.">
@@ -188,11 +188,11 @@
 								</TooltipPanel>
 							</Panel>
 						</Panel>
-						
+
 						<Panel id="Speedometers" class="settings-speedometers">
 							<!--Filled with snippets in JS-->
 						</Panel>
-						
+
 						<Button id="AddSpeedometerBtn" class="button horizontal-align-center half-width mt-4 mb-4" onactivate="Speedometers.addSpeedometer();">
 							<Label class="button__text" text="+ Add new speedometer" />
 						</Button>
@@ -216,7 +216,7 @@
 								</TooltipPanel>
 							</Panel>
 						</Panel>
-						
+
 						<Panel id="SpeedometerColorProfiles" class="settings-speedometer-rangecolorprofs">
 							<!--Filled with snippets in JS-->
 						</Panel>
@@ -224,11 +224,11 @@
 						<Button id="AddColorProfileBtn" class="button horizontal-align-center half-width mt-4 mb-4" onactivate="RangeColorProfiles.addProfile();">
 							<Label class="button__text" text="+ Add new color profile" />
 						</Button>
-					
+
 					</Panel>
 
 				</ConVarEnabler>
-				
+
 			</Panel>
 
 			<Panel class="settings-page__spacer"/>
@@ -354,9 +354,9 @@
 				</ChaosSettingsEnum>
 
 			</Panel>
-			
+
 			<Panel class="settings-page__spacer"/>
-			
+
 			<Panel id="PlayerStatusSubSection" class="settings-group">
 
 				<Panel class="settings-group__header">
@@ -377,7 +377,7 @@
 				</ChaosSettingsEnum>
 
 			</Panel>
-			
+
 			<Panel class="settings-page__spacer"/>
 
 			<Panel id="KeypressSubSection" class="settings-group">
@@ -400,9 +400,9 @@
 				</ChaosSettingsEnum>
 
 			</Panel>
-			
+
 			<Panel class="settings-page__spacer"/>
-			
+
 			<Panel id="WeaponSelSubSection" class="settings-group">
 
 				<Panel class="settings-group__header">
@@ -429,7 +429,7 @@
 					<RadioButton group="showwepsel" text="Off" value="0" />
 					<RadioButton group="showwepsel" text="On" value="1" />
 				</ChaosSettingsEnum>
-				
+
 				<ConVarEnabler convar="mom_hud_weaponselection_enable" togglevisibility="true" class="flow-down">
 					<ChaosSettingsEnum text="Display weapon keybind" convar="mom_hud_weaponselection_keybind_enable" infomessage="Displays the keybind for each weapon in the weapon selection HUD.">
 						<RadioButton group="showwepselkb" text="Off" value="0" />
@@ -521,27 +521,27 @@
 				</ChaosSettingsEnum>
 
 				<ConVarEnabler convar="mom_hud_mapinfo_enable" togglevisibility="true" class="flow-down">
-				
+
 					<ChaosSettingsEnum text="Display map name" convar="mom_hud_mapinfo_mapname_enable" infomessage="Display the current map's name on the HUD.">
 						<RadioButton group="mapinfonameenable" text="Off" value="0" />
 						<RadioButton group="mapinfonameenable" text="On" value="1" />
 					</ChaosSettingsEnum>
-					
+
 					<ChaosSettingsEnum text="Display map author(s)" convar="mom_hud_mapinfo_author_enable" infomessage="Display the current map's author(s) on the HUD.">
 						<RadioButton group="mapinfoauthorenable" text="Off" value="0" />
 						<RadioButton group="mapinfoauthorenable" text="On" value="1" />
 					</ChaosSettingsEnum>
-					
+
 					<ChaosSettingsEnum text="Display map tier" convar="mom_hud_mapinfo_tier_enable" infomessage="Display the current map's tier (difficulty) on the HUD.">
 						<RadioButton group="mapinfotierenable" text="Off" value="0" />
 						<RadioButton group="mapinfotierenable" text="On" value="1" />
 					</ChaosSettingsEnum>
-					
+
 					<ChaosSettingsEnum text="Display map zone type" convar="mom_hud_mapinfo_zonetype_enable" infomessage="Display the current map's zone type (staged or linear) on the HUD.">
 						<RadioButton group="mapinfozonetypeenable" text="Off" value="0" />
 						<RadioButton group="mapinfozonetypeenable" text="On" value="1" />
 					</ChaosSettingsEnum>
-					
+
 					<ChaosSettingsEnum text="Display map number of zones" convar="mom_hud_mapinfo_numzones_enable" infomessage="Display the current map's number of zones on the HUD.">
 						<RadioButton group="mapinfonumzonesenable" text="Off" value="0" />
 						<RadioButton group="mapinfonumzonesenable" text="On" value="1" />

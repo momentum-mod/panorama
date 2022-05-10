@@ -578,10 +578,10 @@
 				<Panel id="tooltip2" class="button ml-3 py-1 mr-1" style="tooltip-position: bottom;" onmouseover="UiToolkitAPI.ShowTitleTextTooltip('tooltip2', 'TitleText Tooltip', 'Momentum Man, легендарный мастер каждого игрового режима, с большим количеством записей, чем когда-либо. Ученый, любитель, источник легенды движения. Но как он умер? Следуйте по его стопам, откройте тайну!');" onmouseout="UiToolkitAPI.HideTitleTextTooltip();">
 					<Label class="button__text" text="TitleImageText Tooltip" />
 				</Panel>
-				<Panel id="tooltip3" class="button ml-3 py-1 mr-1" style="tooltip-position: bottom;" onmouseover="UiToolkitAPI.ShowTitleImageTextTooltip('tooltip3', 'TitleImageText Tooltip', 'file://{images}/tooltips/positive.svg', 'This displays an image and text with a title.');" onmouseout="UiToolkitAPI.HideTitleImageTextTooltip();">
+				<Panel id="tooltip3" class="button ml-3 py-1 mr-1" style="tooltip-position: bottom;" onmouseover="UiToolkitAPI.ShowTitleImageTextTooltip('tooltip3', 'TitleImageText Tooltip', 'file://{images}/positive.svg', 'This displays an image and text with a title.');" onmouseout="UiToolkitAPI.HideTitleImageTextTooltip();">
 					<Label class="button__text" text="TitleImageText Tooltip" />
 				</Panel>
-				<Panel id="tooltip4" class="button ml-3 py-1 mr-1" style="tooltip-position: bottom;" onmouseover="UiToolkitAPI.ShowTitleImageTextTooltipStyled('tooltip4', 'TitleImageText', 'file://{images}/tooltips/negative.svg', 'We don&quot;t seem to have a ShowImageTextTooltip function, so let&quot;s just the title with the --notitle modifier', 'tooltip--notitle');" onmouseout="UiToolkitAPI.HideTitleImageTextTooltip();">
+				<Panel id="tooltip4" class="button ml-3 py-1 mr-1" style="tooltip-position: bottom;" onmouseover="UiToolkitAPI.ShowTitleImageTextTooltipStyled('tooltip4', 'TitleImageText', 'file://{images}/negative.svg', 'We don&quot;t seem to have a ShowImageTextTooltip function, so let&quot;s just the title with the --notitle modifier', 'tooltip--notitle');" onmouseout="UiToolkitAPI.HideTitleImageTextTooltip();">
 					<Label class="button__text" text="TitleImageTextStyled Tooltip without title" />
 				</Panel>
 			</Panel>

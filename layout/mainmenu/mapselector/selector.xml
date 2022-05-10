@@ -114,12 +114,12 @@
 									<Panel class="horizontal-align-right flow-right">
 										<TooltipPanel tooltip="&lt;b&gt;Filter by&lt;/b&gt;: Completed">
 											<NStateButton id="MapCompletedFilterButton" class="button nstatebutton mapselector-filters__nstatebutton mr-2">
-												<Image class="button__icon" src="file://{images}/mapselector/completedmapIcon.svg" textureheight="32" />
+												<Image class="button__icon" src="file://{images}/flag.svg" textureheight="32" />
 											</NStateButton>
 										</TooltipPanel>
 										<TooltipPanel tooltip="&lt;b&gt;Filter by&lt;/b&gt;: Favorited">
 											<NStateButton id="MapFavoritedFilterButton" class="button nstatebutton mapselector-filters__nstatebutton mr-2">
-												<Image class="button__icon" src="file://{images}/mapselector/favoriteIcon.svg" textureheight="32" />
+												<Image class="button__icon" src="file://{images}/star.svg" textureheight="32" />
 											</NStateButton>
 										</TooltipPanel>
 										<TooltipPanel tooltip="&lt;b&gt;Filter by&lt;/b&gt;: Downloaded">
@@ -203,7 +203,7 @@
 							<Panel class="mapselector-map-info__action">
 								<Button id="MapInfoAction" class="button mapselector-action-button">
 									<Panel class="mapselector-action-button__typecontainer action-play">
-										<Image class="button__icon mapselector-action-button__icon" src="file://{images}/mapselector/playIcon.svg" textureheight="40" />
+										<Image class="button__icon mapselector-action-button__icon" src="file://{images}/play-circle.svg" textureheight="40" />
 										<Label class="button__text mapselector-action-button__text" text="Play" />
 									</Panel>
 									<Panel class="mapselector-action-button__typecontainer action-download">
@@ -257,12 +257,12 @@
 								</ToggleButton>
 								<TooltipPanel tooltip="Favorite">
 									<ToggleButton id="MapInfoFavorite" class="button togglebutton togglebutton--yellow mapselector-map-info__square-button">
-										<Image class="button__icon" src="file://{images}/mapselector/favoriteIcon.svg" textureheight="40" />
+										<Image class="button__icon" src="file://{images}/star.svg" textureheight="40" />
 									</ToggleButton>
 								</TooltipPanel>
 								<TooltipPanel tooltip="Gallery (Coming soon!)">
 									<Button id="MapInfoGallery" class="button mapselector-map-info__square-button">
-										<Image class="button__icon" src="file://{images}/mapselector/fullscreenIcon.svg" textureheight="40" />
+										<Image class="button__icon" src="file://{images}/fullscreen.svg" textureheight="40" />
 									</Button>
 								</TooltipPanel>
 							</Panel>
@@ -272,11 +272,11 @@
 									<Panel class="mapselector-stats__container">
 										<Panel class="mapselector-stats__column">
 											<TooltipPanel class="mapselector-stat" tooltip="Playlists Instances">
-												<Image class="mapselector-stat__icon" src="file://{images}/mapselector/addplaylistIcon.svg" textureheight="48" />
+												<Image class="mapselector-stat__icon" src="file://{images}/playlist-plus.svg" textureheight="48" />
 												<Label class="mapselector-stat__text" text="{d:completesUnique}" />
 											</TooltipPanel>
 											<TooltipPanel class="mapselector-stat" tooltip="Favorites">
-												<Image class="mapselector-stat__icon" src="file://{images}/mapselector/favoriteIcon.svg" textureheight="48" />
+												<Image class="mapselector-stat__icon" src="file://{images}/star.svg" textureheight="48" />
 												<Label class="mapselector-stat__text" text="{d:favorites}" />
 											</TooltipPanel>
 											<TooltipPanel class="mapselector-stat" tooltip="Downloads">
@@ -291,11 +291,11 @@
 										<Panel class="vertical-separator mt-3" />
 										<Panel class="mapselector-stats__column mapselector-stats__column--right">
 											<TooltipPanel class="mapselector-stat" tooltip="Map Plays">
-												<Image class="mapselector-stat__icon" src="file://{images}/mapselector/mapplaysamountIcon.svg" textureheight="48" />
+												<Image class="mapselector-stat__icon" src="file://{images}/play.svg" textureheight="48" />
 												<Label class="mapselector-stat__text" text="{d:plays}" />
 											</TooltipPanel>
 											<TooltipPanel class="mapselector-stat" tooltip="Completions">
-												<Image class="mapselector-stat__icon" src="file://{images}/mapselector/flagIcon.svg" textureheight="48" />
+												<Image class="mapselector-stat__icon" src="file://{images}/flag.svg" textureheight="48" />
 												<Label class="mapselector-stat__text" text="{d:completes}" />
 											</TooltipPanel>
 											<TooltipPanel class="mapselector-stat" tooltip="Percent Completions">

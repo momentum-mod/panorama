@@ -8,17 +8,17 @@
 
 	&__title {
 		vertical-align: middle;
-		width: fill-parent-flow(1.0);
+		width: fill-parent-flow(1);
 		margin-right: 10px;
 	}
 
 	&__display {
 		vertical-align: middle;
-		width: fill-parent-flow(1.0);
+		width: fill-parent-flow(1);
 		height: 32px;
 		border-radius: 4px;
 		margin-left: 10px;
-		background-image: url('file://{images}/transparency-checkerboard.vtf');
+		background-image: url('file://{materials}/panorama/transparency-checkerboard.vtf');
 		background-img-opacity: 0;
 
 		&:hover {
