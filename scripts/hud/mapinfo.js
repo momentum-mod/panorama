@@ -11,17 +11,18 @@ class HudMapInfo {
 		const mapData = MapCacheAPI.GetCurrentMapData();
 		if (mapData) {
 			this.cachedInfoContainer.visible = true;
-			
+
 			let authorString = '';
-			mapData['credits'].filter(x => x.type === 'author').forEach((item, i) => (authorString += (i > 0 ? ', ' : '') + item.user.alias));
+			mapData['credits']
+				.filter((x) => x.type === 'author')
+				.forEach((item, i) => (authorString += (i > 0 ? ', ' : '') + item.user.alias));
 			$.GetContextPanel().SetDialogVariable('author', authorString);
 
 			const mainTrack = mapData['mainTrack'];
 			$.GetContextPanel().SetDialogVariableInt('tier', mainTrack['difficulty']);
 			$.GetContextPanel().SetDialogVariable('zonetype', mainTrack['isLinear'] ? 'Linear' : 'Staged');
 			$.GetContextPanel().SetDialogVariableInt('numzones', mainTrack['numZones']);
-		}
-		else {
+		} else {
 			this.cachedInfoContainer.visible = false;
 		}
 	}

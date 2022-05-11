@@ -7,7 +7,7 @@
 	<snippets>
 		<snippet name="SearchResult">
 			<Button class="settings-search-result">
-				<Label id="ResultString" class="settings-search-result__text"/>
+				<Label id="ResultString" class="settings-search-result__text" />
 			</Button>
 		</snippet>
 	</snippets>

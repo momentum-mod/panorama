@@ -7,13 +7,10 @@ class ConsoleNotify {
 		if (this.scheduleOpacity !== -1) {
 			$.CancelScheduled(ConsoleNotify.scheduleOpacity);
 			this.scheduleOpacity = -1;
-		}
-		else
-		{
+		} else {
 			$.GetContextPanel().style.opacity = '1.0';
 		}
 		this.scheduleOpacity = $.Schedule(5.0, ConsoleNotify.scheduledHide);
-
 	}
 
 	static scheduledHide() {

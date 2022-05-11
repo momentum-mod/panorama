@@ -18,7 +18,10 @@ class LobbySettings {
 		}
 
 		$.GetContextPanel().FindChildTraverse(button).checked = true;
-		$.GetContextPanel().FindChildTraverse('MaxPlayers').text = $.GetContextPanel().GetAttributeInt('maxplayers', -1);
+		$.GetContextPanel().FindChildTraverse('MaxPlayers').text = $.GetContextPanel().GetAttributeInt(
+			'maxplayers',
+			-1
+		);
 		$.GetContextPanel().FindChildTraverse('UpdateButton').enabled = false; // Above is gonna call onChanged
 	}
 
@@ -26,7 +29,10 @@ class LobbySettings {
 		UiToolkitAPI.HideTextTooltip();
 
 		if (parseInt($.GetContextPanel().FindChildTraverse('MaxPlayers').text) > this.lobbyMaxPlayers) {
-			UiToolkitAPI.ShowTextTooltip('MaxPlayers', 'Player limit is too high! Maximum value is ' + this.lobbyMaxPlayers + '.');
+			UiToolkitAPI.ShowTextTooltip(
+				'MaxPlayers',
+				'Player limit is too high! Maximum value is ' + this.lobbyMaxPlayers + '.'
+			);
 			$.GetContextPanel().FindChildTraverse('UpdateButton').enabled = false;
 		} else {
 			$.GetContextPanel().FindChildTraverse('UpdateButton').enabled = true;

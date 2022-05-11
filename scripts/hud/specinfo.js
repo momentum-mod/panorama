@@ -21,18 +21,17 @@ class HudSpecInfo {
 		if (specCount > 0) {
 			this.container.visible = true;
 			$.GetContextPanel().SetDialogVariableInt('numspec', specCount);
-		}
-		else this.container.visible = false;
+		} else this.container.visible = false;
 
 		// 0 max names means there is no max
 		const maxDisplayNames = this.maxNames > specCount || this.maxNames === 0 ? specCount : this.maxNames;
 
 		this.namesContainer.RemoveAndDeleteChildren();
-		for(let i=0; i < maxDisplayNames; i++) {
+		for (let i = 0; i < maxDisplayNames; i++) {
 			const steamID = specList[i];
 			const friendlyName = FriendsAPI.GetNameForXUID(steamID);
 			// perhaps display more info than just the friendly name
-			
+
 			this.createSpecNameLabel(friendlyName);
 		}
 
@@ -65,7 +64,7 @@ class HudSpecInfo {
 		$.RegisterForUnhandledEvent('MomentumSpectatorTargetChanged', this.onSpectatorTargetChanged.bind(this));
 		$.RegisterForUnhandledEvent('MomentumSpectatorUpdate', this.onSpectatorChanged.bind(this));
 		$.RegisterForUnhandledEvent('MomentumSpecListMaxNamesUpdate', this.onMaxNamesChanged.bind(this));
-		
+
 		$.GetContextPanel().SetDialogVariableInt('numspec', 0);
 		this.container.visible = false;
 	}

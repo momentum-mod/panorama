@@ -40,7 +40,11 @@ class ImportExportSettings {
 
 	static exportSettings() {
 		this.exportString = Object.values(this.cvars)
-			.map((cvar) => (this.base64Mode ? GameInterfaceAPI.GetSettingString(cvar) : cvar + ' ' + GameInterfaceAPI.GetSettingString(cvar)))
+			.map((cvar) =>
+				this.base64Mode
+					? GameInterfaceAPI.GetSettingString(cvar)
+					: cvar + ' ' + GameInterfaceAPI.GetSettingString(cvar)
+			)
 			.join('\n');
 
 		if (this.base64Mode) this.exportString = $.CompressString(this.exportString);
@@ -71,7 +75,8 @@ class ImportExportSettings {
 
 					if (!Object.values(this.cvars).includes(cvarArray[0])) {
 						foundInvalidInput = true;
-						if (!cvar.startsWith('[')) this.panels.import.text = this.panels.import.text.replace(cvar, `[Invalid] ${cvar}`);
+						if (!cvar.startsWith('['))
+							this.panels.import.text = this.panels.import.text.replace(cvar, `[Invalid] ${cvar}`);
 
 						return;
 					}
@@ -82,7 +87,10 @@ class ImportExportSettings {
 
 			this.panels.importStatus.AddClass('color-positive');
 			this.panels.importStatus.RemoveClass('color-error');
-			$.GetContextPanel().SetDialogVariable('import_warning', 'Import successful!' + (foundInvalidInput ? ' Some invalid cvars were excluded.' : ''));
+			$.GetContextPanel().SetDialogVariable(
+				'import_warning',
+				'Import successful!' + (foundInvalidInput ? ' Some invalid cvars were excluded.' : '')
+			);
 		} catch (e) {
 			this.panels.importStatus.RemoveClass('color-positive');
 			this.panels.importStatus.AddClass('color-error');

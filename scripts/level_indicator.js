@@ -49,14 +49,19 @@ class LevelIndicator {
 		const newLevel = this.totalLevel + 1;
 
 		const cp = $.GetContextPanel();
-		[cp, cp.FindChild('Container'), cp.FindChild('IncrementContainer')].forEach((panel) => (panel.style.animationDuration = `${animDuration}s`));
+		[cp, cp.FindChild('Container'), cp.FindChild('IncrementContainer')].forEach(
+			(panel) => (panel.style.animationDuration = `${animDuration}s`)
+		);
 
 		cp.SetDialogVariableInt('level_incr', this.getInnerLevel(newLevel));
 		this.panels.iconIncrement.SetHasClass('levelindicator__icon--hidden', this.getPrestige(newLevel) == 0);
 		this.panels.iconIncrement.SetImage(this.getImageForPrestige(this.getPrestige(newLevel)));
 
 		cp.AddClass('levelindicator--incrementing');
-		cp.SetHasClass('levelindicator--bg-incrementing', this.getLevelColor(newLevel) != this.getLevelColor(this.totalLevel));
+		cp.SetHasClass(
+			'levelindicator--bg-incrementing',
+			this.getLevelColor(newLevel) != this.getLevelColor(this.totalLevel)
+		);
 
 		$.Schedule(animDuration, () => {
 			cp.RemoveClass('levelindicator--incrementing');

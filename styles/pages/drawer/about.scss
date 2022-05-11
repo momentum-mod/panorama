@@ -51,17 +51,16 @@
 		flow-children: down;
 		overflow: squish scroll;
 		padding: 16px 24px;
-		
+
 		&--hidden {
 			visibility: collapse;
 		}
 	}
 }
 
-
 .about-credits {
 	&__row {
-		flow-children: right;											
+		flow-children: right;
 		margin-bottom: 16px;
 	}
 

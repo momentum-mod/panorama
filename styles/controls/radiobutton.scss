@@ -41,7 +41,14 @@
 		height: $radiobox-width;
 		margin-right: $radiobutton-gap;
 		border-radius: $radiobox-radius;
-		background-color: gradient(radial, 50% 50%, 0% 0%, 50% 50%, from($radiobutton-background), to($radiobutton-background));
+		background-color: gradient(
+			radial,
+			50% 50%,
+			0% 0%,
+			50% 50%,
+			from($radiobutton-background),
+			to($radiobutton-background)
+		);
 		box-shadow: $radiobox-shadow;
 
 		transition-property: background-color;
@@ -55,12 +62,26 @@
 	}
 
 	&:hover .RadioBox {
-		background-color: gradient(radial, 50% 50%, 0% 0%, 50% 50%, from($radiobutton-background-hover), to($radiobutton-background-hover));
+		background-color: gradient(
+			radial,
+			50% 50%,
+			0% 0%,
+			50% 50%,
+			from($radiobutton-background-hover),
+			to($radiobutton-background-hover)
+		);
 	}
 
 	&:disabled .RadioBox,
 	&:disabled:hover .RadioBox {
-		background-color: gradient(radial, 50% 50%, 0% 0%, 50% 50%, from($radiobutton-background-disabled), to($radiobutton-background-disabled));
+		background-color: gradient(
+			radial,
+			50% 50%,
+			0% 0%,
+			50% 50%,
+			from($radiobutton-background-disabled),
+			to($radiobutton-background-disabled)
+		);
 	}
 
 	&:disabled &__text {

@@ -4,6 +4,6 @@
 		<include src="file://{resources}/styles/hud/tricktracker.scss" />
 	</styles>
 
-	<HudTrickTracker class="tricktracker" >
+	<HudTrickTracker class="tricktracker">
 	</HudTrickTracker>
 </root>

@@ -1,102 +1,87 @@
 // This is mostly Valve styling, we'll probably want to theme this for the learn
 // section videos but quite a bit of work, so leaving for now.
 
-Movie
-{
+Movie {
 }
 
-MoviePanel
-{
+MoviePanel {
 	width: 100%;
 	height: 100%;
 	background-color: black;
 }
 
-#PlayIndicator
-{
+#PlayIndicator {
 	width: 40%;
 	height: 40%;
 	align: center center;
 
-	opacity: 0.0;
+	opacity: 0;
 
 	transition-property: opacity;
 	transition-duration: 0.75s;
 	transition-timing-function: ease-in-out;
 }
 
-
-.MoviePaused #PlayIndicator
-{
-
-	background-image: url( "file://{images}/transport_controls/icon_play_large.png" );
+.MoviePaused #PlayIndicator {
+	background-image: url('file://{images}/transport_controls/icon_play_large.png');
 	background-position: center;
 	background-repeat: no-repeat;
 
-	opacity: 1.0;
+	opacity: 1;
 }
 
-
-.MovieBuffering #PlayIndicator
-{
-	opacity: 0.0;
+.MovieBuffering #PlayIndicator {
+	opacity: 0;
 }
 
-#ErrorMessage
-{
+#ErrorMessage {
 	width: 80%;
 	font-size: 32px;
 	color: white;
 	align: center center;
 	text-align: center;
 
-	opacity: 0.0;
+	opacity: 0;
 
 	transition-property: opacity;
 	transition-duration: 0.75s;
 	transition-timing-function: ease-in-out;
 }
 
-.MovieError #ErrorMessage
-{
-	opacity: 1.0;
+.MovieError #ErrorMessage {
+	opacity: 1;
 }
 
-.MovieError #PlayIndicator
-{
-	opacity: 0.0;
+.MovieError #PlayIndicator {
+	opacity: 0;
 }
 
 //
 // Title section
 //
-#PlaybackTitleAndControls
-{
+#PlaybackTitleAndControls {
 	width: 100%;
 	flow-children: down;
 	vertical-align: bottom;
 
-	transform: translatey( 327px );
+	transform: translatey(327px);
 
 	transition-property: transform;
 	transition-duration: 0.5s;
 	transition-timing-function: ease-in-out;
 }
 
-.ShowTitle #PlaybackTitleAndControls
-{
-	transform: translatey( 0px );
+.ShowTitle #PlaybackTitleAndControls {
+	transform: translatey(0px);
 }
 
-.TitleImmediatelyVisible #PlaybackTitleAndControls
-{
-	transform: translatey( 0px );
+.TitleImmediatelyVisible #PlaybackTitleAndControls {
+	transform: translatey(0px);
 	transition-property: transform;
-	transition-duration: 0.0s;
+	transition-duration: 0s;
 }
 
-.PlaybackTitleGlow
-{
+.PlaybackTitleGlow {
 	width: 100%;
 	height: 77px;
 	vertical-align: top;
@@ -104,8 +89,7 @@ MoviePanel
 	background-color: none;
 }
 
-.PlaybackTitleBackground
-{
+.PlaybackTitleBackground {
 	width: 100%;
 	height: 250px;
 	vertical-align: bottom;
@@ -113,8 +97,7 @@ MoviePanel
 	flow-children: down;
 }
 
-#PlaybackTitle
-{
+#PlaybackTitle {
 	font-size: 58px;
 	color: white;
 	font-weight: light;
@@ -123,32 +106,27 @@ MoviePanel
 	margin: 20px 104px 10px 104px;
 }
 
-
 //
 // Playback controls
 //
-#PlaybackControls
-{
+#PlaybackControls {
 	align: center top;
 	flow-children: down;
 }
 
-.PlaybackControl
-{
-	opacity: 0.0;
+.PlaybackControl {
+	opacity: 0;
 
 	transition-property: opacity;
 	transition-duration: 0.4s;
 	transition-timing-function: ease-in-out;
 }
 
-.PlaybackControl.Visible
-{
-	opacity: 1.0;
+.PlaybackControl.Visible {
+	opacity: 1;
 }
 
-#Timeline
-{
+#Timeline {
 	width: 547px;
 	height: 20px;
 
@@ -159,14 +137,12 @@ MoviePanel
 	border-radius: 4px;
 }
 
-.ProgressBarWrapper
-{
+.ProgressBarWrapper {
 	width: 100%;
 	height: 100%;
 }
 
-#PlaybackProgress
-{
+#PlaybackProgress {
 	width: 100%;
 	height: 100%;
 
@@ -174,8 +150,7 @@ MoviePanel
 	background-color: blue;
 }
 
-#ControlBarRow
-{
+#ControlBarRow {
 	// padding to allow glow & scaling of buttons
 	margin-top: 3px;
 	padding: 6px;
@@ -183,25 +158,21 @@ MoviePanel
 	align: center top;
 }
 
-#ControlBar
-{
+#ControlBar {
 }
 
-.ControlBarBackground
-{
+.ControlBarBackground {
 	width: 300px;
 	height: 50px;
 	background-color: black;
 	border-radius: 6px;
 }
 
-.ControlBarButtons
-{
+.ControlBarButtons {
 	flow-children: right;
 }
 
-.ControlBarButton
-{
+.ControlBarButton {
 	width: 60px;
 	height: 50px;
 	border: 2px solid #00000000;
@@ -211,16 +182,14 @@ MoviePanel
 	transition-timing-function: linear;
 }
 
-.ControlBarButton:focus
-{
-	background-color: gradient( linear, -0% 0%, 0% 100%, from( #f0f0f0 ), to( #c2c2c2 ) );
-	pre-transform-scale2d: 1.0;
+.ControlBarButton:focus {
+	background-color: gradient(linear, -0% 0%, 0% 100%, from(#f0f0f0), to(#c2c2c2));
+	pre-transform-scale2d: 1;
 	border-color: rgba(blue, 0.5);
 }
 
 .ControlBarButton Image,
-#VolumeControl .VolumeImage
-{
+#VolumeControl .VolumeImage {
 	width: 37px;
 	height: 37px;
 	align: center center;
@@ -228,33 +197,27 @@ MoviePanel
 }
 
 .ControlBarButton:focus Image,
-#VolumeControl:focus .VolumeImage
-{
+#VolumeControl:focus .VolumeImage {
 	wash-color: #000000ff;
 }
 
-#VolumeControl .VolumeImage
-{
-	background-image: url( "file://{images}/transport_controls/icon_volume_04.png" );
+#VolumeControl .VolumeImage {
+	background-image: url('file://{images}/transport_controls/icon_volume_04.png');
 }
 
-#VolumeControl.AudioVolumeMuted .VolumeImage
-{
-	background-image: url( "file://{images}/transport_controls/icon_volume_01.png" );
+#VolumeControl.AudioVolumeMuted .VolumeImage {
+	background-image: url('file://{images}/transport_controls/icon_volume_01.png');
 }
 
-#VolumeControl.AudioVolumeUnder33 .VolumeImage
-{
-	background-image: url( "file://{images}/transport_controls/icon_volume_02.png" );
+#VolumeControl.AudioVolumeUnder33 .VolumeImage {
+	background-image: url('file://{images}/transport_controls/icon_volume_02.png');
 }
 
-#VolumeControl.AudioVolumeUnder66 .VolumeImage
-{
-	background-image: url( "file://{images}/transport_controls/icon_volume_03.png" );
+#VolumeControl.AudioVolumeUnder66 .VolumeImage {
+	background-image: url('file://{images}/transport_controls/icon_volume_03.png');
 }
 
-#PlayPause .TickBox
-{
+#PlayPause .TickBox {
 	width: 37px;
 	height: 37px;
 	pre-transform-scale2d: 0.8;
@@ -263,136 +226,115 @@ MoviePanel
 	box-shadow: none;
 	margin: 0px;
 	background-color: none;
-	background-image: url( "file://{images}/transport_controls/icon_pause.png" );
+	background-image: url('file://{images}/transport_controls/icon_pause.png');
 }
 
-#PlayPause:selected .TickBox
-{
-	background-image: url( "file://{images}/transport_controls/icon_play.png" );
+#PlayPause:selected .TickBox {
+	background-image: url('file://{images}/transport_controls/icon_play.png');
 }
 
-#PlayPause:descendantfocus .TickBox
-{
+#PlayPause:descendantfocus .TickBox {
 	wash-color: #000000ff;
 	background-color: none;
 }
 
-#JumpBack
-{
+#JumpBack {
 	border-radius: 6px 0px 0px 6px;
 }
 
-#VolumeControl
-{
+#VolumeControl {
 	border-radius: 0px 6px 6px 0px;
 }
 
-#PlaybackSpeed
-{
+#PlaybackSpeed {
 	align: center center;
 	font-size: 26px;
 	margin-bottom: 4px;
-	color: gradient( linear, 0% 0%, 0% 100%, from( #ffffffff ), to( #999999ff ) );
+	color: gradient(linear, 0% 0%, 0% 100%, from(#ffffffff), to(#999999ff));
 }
 
-#VideoQualityCurrent
-{
+#VideoQualityCurrent {
 	align: center center;
 	font-size: 18px;
 	margin-bottom: 4px;
-	color: gradient( linear, 0% 0%, 0% 100%, from( #ffffffff ), to( #999999ff ) );
+	color: gradient(linear, 0% 0%, 0% 100%, from(#ffffffff), to(#999999ff));
 }
 
-#VideoQualityBtn:focus #VideoQualityCurrent
-{
+#VideoQualityBtn:focus #VideoQualityCurrent {
 	color: black;
 }
 
-#FullscreenControl
-{
+#FullscreenControl {
 	visibility: collapse;
 }
-
 
 //
 // VolumeSliderPopup
 //
-VolumeSliderPopup
-{
+VolumeSliderPopup {
 	width: 100%;
 	height: 100%;
 }
 
-VolumeSliderPopup .PopupWrapper
-{
+VolumeSliderPopup .PopupWrapper {
 	width: 60px;
 	height: 150px;
 
-	background-color: gradient( linear, -0% 0%, 0% 100%, from( #f0f0f0 ), to( #c2c2c2 ) );
+	background-color: gradient(linear, -0% 0%, 0% 100%, from(#f0f0f0), to(#c2c2c2));
 	border: 2px solid #fdfefef0;
 	border-radius: 4px;
 
-	transform: translatey( -10px );
+	transform: translatey(-10px);
 }
 
-VolumeSliderPopup Slider
-{
+VolumeSliderPopup Slider {
 	align: center center;
 }
 
 //
 // VideoQualityPopup
 //
-VideoQualityPopup
-{
+VideoQualityPopup {
 	width: 100%;
 	height: 100%;
-	transform: translatex( -10px );
+	transform: translatex(-10px);
 }
 
-VideoQualityPopup .PopupWrapper
-{
+VideoQualityPopup .PopupWrapper {
 	min-width: 80px;
 	flow-children: down;
 	padding: 0px 6px;
 
-	background-color: gradient( linear, -0% 0%, 0% 100%, from( #f0f0f0 ), to( #c2c2c2 ) );
+	background-color: gradient(linear, -0% 0%, 0% 100%, from(#f0f0f0), to(#c2c2c2));
 	border: 2px solid #fdfefef0;
 	border-radius: 4px;
 
-	transform: translatey( -10px );
+	transform: translatey(-10px);
 }
 
-VideoQualityPopup #CenterColumn
-{
+VideoQualityPopup #CenterColumn {
 	horizontal-align: center;
 	flow-children: down;
 }
 
-
 //
 // Video Quality Popup Buttons
 //
-VideoQualityPopup Label
-{
+VideoQualityPopup Label {
 	font-size: 24px;
 	font-weight: bold;
 	color: #2a3d4b;
 }
 
-VideoQualityPopup Button:focus Label
-{
+VideoQualityPopup Button:focus Label {
 	color: #5490ac;
 }
 
-VideoQualityPopup Button:hover Label
-{
+VideoQualityPopup Button:hover Label {
 	color: #78cdf5;
 }
 
-
-VideoQualityPopup Button
-{
+VideoQualityPopup Button {
 	horizontal-align: right;
 	margin: 2px 0px 2px 0px;
 }
@@ -400,27 +342,23 @@ VideoQualityPopup Button
 //
 // Debug
 //
-MovieDebug
-{
+MovieDebug {
 	width: 100%;
 	height: 100%;
 }
 
-MovieDebug Label
-{
+MovieDebug Label {
 	font-size: 24px;
 	color: white;
 }
 
-.debug-background
-{
+.debug-background {
 	padding: 10px;
 	background-color: #000000a0;
 	flow-children: right;
 }
 
-.DebugColumn
-{
+.DebugColumn {
 	flow-children: down;
 	margin-right: 10px;
 }

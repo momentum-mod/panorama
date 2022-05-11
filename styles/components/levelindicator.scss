@@ -34,11 +34,27 @@
 						background-color: $color;
 					}
 					0.1% {
-						background-color: gradient(linear, 0% 0%, 100% 100%, from($color-incr), color-stop(0, $color-incr), color-stop(0, $color), to($color));
+						background-color: gradient(
+							linear,
+							0% 0%,
+							100% 100%,
+							from($color-incr),
+							color-stop(0, $color-incr),
+							color-stop(0, $color),
+							to($color)
+						);
 					}
 
 					99.9% {
-						background-color: gradient(linear, 0% 0%, 100% 100%, from($color-incr), color-stop(1, $color-incr), color-stop(1, $color), to($color));
+						background-color: gradient(
+							linear,
+							0% 0%,
+							100% 100%,
+							from($color-incr),
+							color-stop(1, $color-incr),
+							color-stop(1, $color),
+							to($color)
+						);
 					}
 					100% {
 						background-color: gradient(linear, 0% 0%, 100% 100%, from($color-incr), to($color-incr));

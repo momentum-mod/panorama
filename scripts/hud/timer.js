@@ -21,33 +21,29 @@ class HudTimer {
 		this.timeLabel.RemoveClass(FAILED_CLASS); // fail animation could be happening, so force stop
 		this.timeLabel.RemoveClass(INACTIVE_CLASS);
 
-		if (MomentumTimerAPI.IsStartSoundEnabled())
-			$.PlaySoundEvent("Momentum.StartTimer");
+		if (MomentumTimerAPI.IsStartSoundEnabled()) $.PlaySoundEvent('Momentum.StartTimer');
 	}
 	static onTimerFinished() {
 		this.timeLabel.AddClass(FINISHED_CLASS);
 
 		$.GetContextPanel().SetDialogVariableFloat('runtime', MomentumTimerAPI.GetCurrentRunTime());
 
-		if (MomentumTimerAPI.IsFinishSoundEnabled())
-			$.PlaySoundEvent("Momentum.FinishTimer");
+		if (MomentumTimerAPI.IsFinishSoundEnabled()) $.PlaySoundEvent('Momentum.FinishTimer');
 	}
 	static onTimerStopped() {
 		this.resetTimer();
 
 		// if we want special styling for timer artificially running (via savestate), do it here like so
 		// if (MomentumTimerAPI.GetTimerState() === TIMER_STATE.PRACTICE) HudTimer.timeLabel.AddClass(PRACTICE_CLASS);
-		
-		if (MomentumTimerAPI.IsStopSoundEnabled())
-			$.PlaySoundEvent("Momentum.StopTimer");
+
+		if (MomentumTimerAPI.IsStopSoundEnabled()) $.PlaySoundEvent('Momentum.StopTimer');
 	}
 	static onTimerFailed() {
 		// failed to start timer, so resetting is not needed
 
 		this.timeLabel.TriggerClass(FAILED_CLASS);
-		
-		if (MomentumTimerAPI.IsFailSoundEnabled())
-			$.PlaySoundEvent("Momentum.FailedStartTimer");
+
+		if (MomentumTimerAPI.IsFailSoundEnabled()) $.PlaySoundEvent('Momentum.FailedStartTimer');
 	}
 
 	static onUpdate() {
@@ -64,7 +60,7 @@ class HudTimer {
 			this.timeLabel.RemoveClass(FINISHED_CLASS);
 			return;
 		}
-		
+
 		if (timerState === TIMER_STATE.RUNNING && curZone > 1 && enter === linear && HudTimer.prevZone !== curZone) {
 			const diff = RunComparisonsAPI.GetLoadedComparisonOverallDiff(curZone);
 
@@ -106,7 +102,7 @@ class HudTimer {
 	}
 
 	static onTimerEvent(_ent, type) {
-		switch(type) {
+		switch (type) {
 			case TIMER_EVENT.STARTED:
 				this.onTimerStarted();
 				break;
@@ -157,7 +153,7 @@ class HudTimer {
 		$.RegisterForUnhandledEvent('OnMomentumZoneChange', this.onZoneChange.bind(this));
 		$.RegisterForUnhandledEvent('OnSaveStateUpdate', this.onSaveStateChange.bind(this));
 		$.RegisterForUnhandledEvent('OnMomentumReplayStopped', this.onReplayStopped.bind(this));
-		
+
 		$.GetContextPanel().SetDialogVariableFloat('runtime', 0);
 	}
 }

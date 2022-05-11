@@ -45,14 +45,13 @@ $page-width: 1920px - $rightnav-width;
 		height: 260px;
 		vertical-align: center;
 
-		
 		opacity: 1;
 		transition: opacity 0.2s ease-out 0s;
-		
-		&:parentdisabled{
+
+		&:parentdisabled {
 			opacity: 0;
 		}
-		
+
 		&-wrapper {
 			width: 250px;
 			height: 100%;
@@ -412,7 +411,7 @@ $page-width: 1920px - $rightnav-width;
 
 	&__combo-header {
 		width: 100%;
-		padding: 8px 12px 7px 12px;;
+		padding: 8px 12px 7px 12px;
 		border-bottom: 1px solid rgba(255, 255, 255, 0.01);
 		background-color: gradient-horizontal(rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
 

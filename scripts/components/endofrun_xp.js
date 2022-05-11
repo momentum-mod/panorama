@@ -30,7 +30,8 @@ class EndOfRunXP {
 
 		this.panels.levelIndicator.jsClass.setLevel(this.xpData.level);
 
-		this.primaryWidth = ((this.xpData.xp - this.xpData.currLevelXP) / (this.xpData.nextLevelXP - this.xpData.currLevelXP)) * 100;
+		this.primaryWidth =
+			((this.xpData.xp - this.xpData.currLevelXP) / (this.xpData.nextLevelXP - this.xpData.currLevelXP)) * 100;
 		this.panels.primaryBar.style.width = `${this.primaryWidth}%`;
 		this.panels.secondaryBar.style.width = '0%';
 
@@ -58,7 +59,8 @@ class EndOfRunXP {
 		};
 
 		const endLevelUpAnimation = (isLevelUp) => {
-			const lerp = (newXP.xp - (isLevelUp ? newXP.currLevelXP : oldXP.xp)) / (newXP.nextLevelXP - newXP.currLevelXP);
+			const lerp =
+				(newXP.xp - (isLevelUp ? newXP.currLevelXP : oldXP.xp)) / (newXP.nextLevelXP - newXP.currLevelXP);
 			const duration = BASE_LEVELUP_TIME;
 
 			setTimingFunction('ease-out');
@@ -72,7 +74,12 @@ class EndOfRunXP {
 
 			for (let i = 0; i <= iterations; i++) {
 				// Could use a dialog variable here, but I'm guessing setting the text directly is faster?
-				$.Schedule(i / XP_COUNTER_TICKS, () => this.panels.xpCounter.SetDialogVariableInt('xp_counter', Math.round((i / iterations) * range + startXP)));
+				$.Schedule(i / XP_COUNTER_TICKS, () =>
+					this.panels.xpCounter.SetDialogVariableInt(
+						'xp_counter',
+						Math.round((i / iterations) * range + startXP)
+					)
+				);
 			}
 		};
 
@@ -114,7 +121,9 @@ class EndOfRunXP {
 					endLevelUpAnimation(true);
 				});
 			} else {
-				let chain = widthAnimation(100 - this.primaryWidth, initialDuration).then(() => setTimingFunction('ease-in-out'));
+				let chain = widthAnimation(100 - this.primaryWidth, initialDuration).then(() =>
+					setTimingFunction('ease-in-out')
+				);
 				for (let i = 1; i < levelDiff; i++)
 					chain = chain.then(() => {
 						// Smallest fraction of BASE_LEVELUP_TIME a level up duration can be
@@ -122,7 +131,9 @@ class EndOfRunXP {
 						// Quatratic passing 0 and leveldiff at BASE_LEVELUP_TIME, phi adjusts curviness
 						// Doesn't work great but hard to get right without a bunch more maths or being able to time all the levels in one
 						// animation, maybe that's possible with some very creative CSS?
-						const duration = ((4 * BASE_LEVELUP_TIME) / levelDiff ** 2) * (1 - 1 / phi) * (i ** 2 - levelDiff * i) + BASE_LEVELUP_TIME;
+						const duration =
+							((4 * BASE_LEVELUP_TIME) / levelDiff ** 2) * (1 - 1 / phi) * (i ** 2 - levelDiff * i) +
+							BASE_LEVELUP_TIME;
 
 						levelUp(Math.min(duration / 2, LEVEL_INDICATOR_MAX_TRANSITION_TIME));
 

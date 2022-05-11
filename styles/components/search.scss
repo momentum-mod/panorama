@@ -19,7 +19,7 @@
 	}
 
 	&__icon {
-		height: fill-parent-flow(1.0);
+		height: fill-parent-flow(1);
 		width: height-percentage(100%);
 		opacity: 0.8;
 		vertical-align: middle;
@@ -33,7 +33,7 @@
 	}
 
 	&__textentry {
-		width: fill-parent-flow(1.0);
+		width: fill-parent-flow(1);
 		color: rgba(255, 255, 255, 1);
 		border: 0px;
 		box-shadow: none;
@@ -86,7 +86,7 @@
 		}
 
 		&:hover {
-			opacity: 1.0;
+			opacity: 1;
 		}
 	}
 }

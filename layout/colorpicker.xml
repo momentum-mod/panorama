@@ -16,10 +16,10 @@
 	<Panel class="colorpicker">
 		<Panel class="colorpicker__plane">
 			<Image enginertsrc="error_gray" class="full-width full-height" />
-			<ColorPickerPlane id="ColorPlane" class="full-width full-height"/>
+			<ColorPickerPlane id="ColorPlane" class="full-width full-height" />
 		</Panel>
 
-		<ColorPickerAxis id="ColorAxis" class="colorpicker__axis"/>
+		<ColorPickerAxis id="ColorAxis" class="colorpicker__axis" />
 
 		<Panel class="colorpicker__right">
 			<Panel class="colorpicker__entry">
@@ -51,11 +51,15 @@
 				<NumberEntry id="AlphaChannel" class="colorpicker__numberentry" max="255" />
 			</Panel>
 			<Panel class="colorpicker__entry colorpicker__right-item">
-				<Label id="ColorPickerLabel" class="colorpicker__label" onload="$('#ColorPickerLabel').SetProceduralTextThatIPromiseIsLocalizedAndEscaped('#', false)" />
+				<Label
+					id="ColorPickerLabel"
+					class="colorpicker__label"
+					onload="$('#ColorPickerLabel').SetProceduralTextThatIPromiseIsLocalizedAndEscaped('#', false)"
+				/>
 				<TextEntry id="HexColor" textmode="hex" maxchars="8" class="textentry colorpicker__textentry" />
 			</Panel>
 			<Panel class="colorpicker__entry colorpicker__right-item">
-				<Panel id="CurrentColorTarget" class="colorpicker__color-target mr-1"/>
+				<Panel id="CurrentColorTarget" class="colorpicker__color-target mr-1" />
 				<Panel id="LastColorTarget" class="colorpicker__color-target ml-1" acceptsinput="true" acceptsfocus="true" />
 			</Panel>
 			<Panel class="flow-right colorpicker__right-item">

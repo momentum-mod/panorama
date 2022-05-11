@@ -7,16 +7,36 @@
 		<Panel>
 			<Panel class="keypress__arrows keypress-arrows">
 				<Panel id="KeyForward" class="keypress-arrows__key keypress-key__forward" text="Forward">
-					<Image id="KeyForwardIcon" class="keypress-arrows__icon keypress-icon__forward" src="file://{images}/right-arrow.svg" textureheight="32" />
+					<Image
+						id="KeyForwardIcon"
+						class="keypress-arrows__icon keypress-icon__forward"
+						src="file://{images}/right-arrow.svg"
+						textureheight="32"
+					/>
 				</Panel>
 				<Panel id="KeyBack" class="keypress-arrows__key keypress-key__back" text="Back">
-					<Image id="KeyBackIcon" class="keypress-arrows__icon keypress-icon__back" src="file://{images}/right-arrow.svg" textureheight="32" />
+					<Image
+						id="KeyBackIcon"
+						class="keypress-arrows__icon keypress-icon__back"
+						src="file://{images}/right-arrow.svg"
+						textureheight="32"
+					/>
 				</Panel>
 				<Panel id="KeyMoveLeft" class="keypress-arrows__key keypress-key__left" text="Left">
-					<Image id="KeyMoveLeftIcon" class="keypress-arrows__icon keypress-icon__left" src="file://{images}/right-arrow.svg" textureheight="32" />
+					<Image
+						id="KeyMoveLeftIcon"
+						class="keypress-arrows__icon keypress-icon__left"
+						src="file://{images}/right-arrow.svg"
+						textureheight="32"
+					/>
 				</Panel>
 				<Panel id="KeyMoveRight" class="keypress-arrows__key keypress-key__right" text="Right">
-					<Image id="KeyMoveRightIcon" class="keypress-arrows__icon keypress-icon__right" src="file://{images}/right-arrow.svg" textureheight="32" />
+					<Image
+						id="KeyMoveRightIcon"
+						class="keypress-arrows__icon keypress-icon__right"
+						src="file://{images}/right-arrow.svg"
+						textureheight="32"
+					/>
 				</Panel>
 			</Panel>
 

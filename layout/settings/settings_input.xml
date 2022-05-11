@@ -3,7 +3,7 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 	<scripts>
-		<include src="file://{resources}/scripts/settings_shared.js"/>
+		<include src="file://{resources}/scripts/settings_shared.js" />
 	</scripts>
 
 	<Panel class="settings-page">
@@ -29,7 +29,7 @@
 					<Panel class="flow-right horizontal-align-right">
 
 						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Mouse', 'MouseSubSection')">
-							<Label class="button__text" text="Import/Export"/>
+							<Label class="button__text" text="Import/Export" />
 						</Button>
 
 						<TooltipPanel class="settings-group__reset" tooltip="Reset">
@@ -42,7 +42,14 @@
 
 				</Panel>
 
-				<ChaosSettingsSlider text="#GameUI_MouseSensitivity" min="0.1" max="10" displayprecision="2" convar="sensitivity" hasdocspage="false" />
+				<ChaosSettingsSlider
+					text="#GameUI_MouseSensitivity"
+					min="0.1"
+					max="10"
+					displayprecision="2"
+					convar="sensitivity"
+					hasdocspage="false"
+				/>
 
 				<Panel class="settings-group__combo">
 
@@ -62,19 +69,29 @@
 					<RadioButton group="rawinput" text="#SFUI_On" value="1" />
 				</ChaosSettingsEnum>
 
-				<ChaosSettingsEnum text="#GameUI_ReverseMouse" convar="m_pitch_inverse" infomessage="#GameUI_ReverseMouseLabel" hasdocspage="false">
+				<ChaosSettingsEnum
+					text="#GameUI_ReverseMouse"
+					convar="m_pitch_inverse"
+					infomessage="#GameUI_ReverseMouseLabel"
+					hasdocspage="false"
+				>
 					<RadioButton group="reverse" text="#SFUI_Off" value="0" />
 					<RadioButton group="reverse" text="#SFUI_On" value="1" />
 				</ChaosSettingsEnum>
 
-				<ChaosSettingsEnum text="#GameUI_MouseFilter" convar="m_filter" infomessage="#GameUI_MouseFilterLabel" hasdocspage="false">
+				<ChaosSettingsEnum
+					text="#GameUI_MouseFilter"
+					convar="m_filter"
+					infomessage="#GameUI_MouseFilterLabel"
+					hasdocspage="false"
+				>
 					<RadioButton group="filter" text="#SFUI_Off" value="0" />
 					<RadioButton group="filter" text="#SFUI_On" value="1" />
 				</ChaosSettingsEnum>
 
 			</Panel>
 
-			<Panel class="settings-page__spacer"/>
+			<Panel class="settings-page__spacer" />
 
 			<Panel id="KeybindSubSection" class="settings-group">
 

@@ -3,9 +3,9 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 	<scripts>
-		<include src="file://{resources}/scripts/settings_shared.js"/>
-		<include src="file://{resources}/scripts/common/speedometer.js"/>
-		<include src="file://{resources}/scripts/settings_speedometer.js"/>
+		<include src="file://{resources}/scripts/settings_shared.js" />
+		<include src="file://{resources}/scripts/common/speedometer.js" />
+		<include src="file://{resources}/scripts/settings_speedometer.js" />
 	</scripts>
 
 	<snippets>
@@ -24,9 +24,17 @@
 					<Button id="SpeedometerMoveUpBtn" class="button settings-speedometer__moveupbutton">
 						<Image class="button__icon rot-270" src="file://{images}/mom-arrow-right.svg" textureheight="32" />
 					</Button>
-					<ToggleButton id="SpeedometerToggleBtn" class="button togglebutton togglebutton--blue settings-speedometer__togglebutton" selected="false">
+					<ToggleButton
+						id="SpeedometerToggleBtn"
+						class="button togglebutton togglebutton--blue settings-speedometer__togglebutton"
+						selected="false"
+					>
 						<Label id="SpeedometerName" class="button__text button__text--left settings-speedometer__name" />
-						<Image class="button__icon button__icon--right horizontal-align-right rot-90" src="file://{images}/mom-arrow-right.svg" textureheight="32" />
+						<Image
+							class="button__icon button__icon--right horizontal-align-right rot-90"
+							src="file://{images}/mom-arrow-right.svg"
+							textureheight="32"
+						/>
 					</ToggleButton>
 				</Panel>
 				<Panel id="SpeedometerDetailContainer" class="settings-speedometer__detail settings-speedometer__detail--hidden">
@@ -59,7 +67,10 @@
 		</snippet>
 		<snippet name="range-color-display">
 			<Panel class="settings-speedometer-rangecolordisp">
-				<Button id="RangeColorDisplayDeleteBtn" class="ml-2 button button--red settings-speedometer-rangecolordisp__deletebutton">
+				<Button
+					id="RangeColorDisplayDeleteBtn"
+					class="ml-2 button button--red settings-speedometer-rangecolordisp__deletebutton"
+				>
 					<Image class="button__icon" src="file://{images}/delete.svg" textureheight="32" />
 				</Button>
 				<RangeColorDisplay id="RangeColorDisplay" class="settings-speedometer-rangecolordisp__display" />
@@ -77,12 +88,23 @@
 					<Button id="RangeColorDiscardBtn" class="button settings-speedometer-rangecolor__discardbutton">
 						<Image class="button__icon" src="file://{images}/reset.svg" />
 					</Button>
-					<ToggleButton id="RangeColorToggleBtn" class="button togglebutton togglebutton--blue settings-speedometer-rangecolor__togglebutton" selected="false">
+					<ToggleButton
+						id="RangeColorToggleBtn"
+						class="button togglebutton togglebutton--blue settings-speedometer-rangecolor__togglebutton"
+						selected="false"
+					>
 						<Label id="RangeColorName" class="button__text button__text--left settings-speedometer-rangecolor__name" />
-						<Image class="button__icon button__icon--right horizontal-align-right rot-90" src="file://{images}/mom-arrow-right.svg" textureheight="32" />
+						<Image
+							class="button__icon button__icon--right horizontal-align-right rot-90"
+							src="file://{images}/mom-arrow-right.svg"
+							textureheight="32"
+						/>
 					</ToggleButton>
 				</Panel>
-				<Panel id="RangeColorDisplaysContainer" class="settings-speedometer-rangecolor__displayscont settings-speedometer-rangecolor__displayscont--hidden">
+				<Panel
+					id="RangeColorDisplaysContainer"
+					class="settings-speedometer-rangecolor__displayscont settings-speedometer-rangecolor__displayscont--hidden"
+				>
 					<Panel id="RangeColorDisplays" class="settings-speedometer-rangecolor__displays" />
 					<Button id="RangeColorAddBtn" class="button settings-speedometer-rangecolor__addbutton">
 						<Label class="button__text" text="+ Add new range" />
@@ -124,24 +146,39 @@
 					<RadioButton group="enableconsole" text="#SFUI_On" value="1" />
 				</ChaosSettingsEnum>
 
-				<ChaosSettingsEnum id="test1" text="#MOM_Settings_Menu_Movie" psvar="settings.mainMenuMovie" infomessage="#MOM_Settings_Menu_Movie_TT">
-					<RadioButton group="mainmenuvideo" text="#SFUI_Off" value="0" activateoverride="$.DispatchEvent('ReloadBackground');"/>
-					<RadioButton group="mainmenuvideo" text="#SFUI_On" value="1" activateoverride="$.DispatchEvent('ReloadBackground');"/>
+				<ChaosSettingsEnum
+					id="test1"
+					text="#MOM_Settings_Menu_Movie"
+					psvar="settings.mainMenuMovie"
+					infomessage="#MOM_Settings_Menu_Movie_TT"
+				>
+					<RadioButton group="mainmenuvideo" text="#SFUI_Off" value="0" activateoverride="$.DispatchEvent('ReloadBackground');" />
+					<RadioButton group="mainmenuvideo" text="#SFUI_On" value="1" activateoverride="$.DispatchEvent('ReloadBackground');" />
 				</ChaosSettingsEnum>
 
-				<ChaosSettingsEnumDropDown text="#MOM_Settings_Menu_Type" psvar="settings.mainMenuBackground" submitoverride="$.DispatchEvent('ReloadBackground');" infomessage="#MOM_Settings_Menu_Type_TT">
-					<Label text="#MOM_Settings_Menu_Type_0" value="0" id="bgtype0"/>
-					<Label text="#MOM_Settings_Menu_Type_1" value="1" id="bgtype1"/>
+				<ChaosSettingsEnumDropDown
+					text="#MOM_Settings_Menu_Type"
+					psvar="settings.mainMenuBackground"
+					submitoverride="$.DispatchEvent('ReloadBackground');"
+					infomessage="#MOM_Settings_Menu_Type_TT"
+				>
+					<Label text="#MOM_Settings_Menu_Type_0" value="0" id="bgtype0" />
+					<Label text="#MOM_Settings_Menu_Type_1" value="1" id="bgtype1" />
 				</ChaosSettingsEnumDropDown>
 
-				<ChaosSettingsEnum id="test2" text="Advanced Settings Tooltips" psvar="settings.infoPanelConvars" infomessage="Display convar for each setting, where available.">
-					<RadioButton group="advancedtooltips" text="#SFUI_Off" value="0"/>
-					<RadioButton group="advancedtooltips" text="#SFUI_On" value="1"/>
+				<ChaosSettingsEnum
+					id="test2"
+					text="Advanced Settings Tooltips"
+					psvar="settings.infoPanelConvars"
+					infomessage="Display convar for each setting, where available."
+				>
+					<RadioButton group="advancedtooltips" text="#SFUI_Off" value="0" />
+					<RadioButton group="advancedtooltips" text="#SFUI_On" value="1" />
 				</ChaosSettingsEnum>
 
 			</Panel>
 
-			<Panel class="settings-page__spacer"/>
+			<Panel class="settings-page__spacer" />
 
 			<Panel id="SpeedometerSubSection" class="settings-group" onload="SpeedometerSettings.loadSettings()">
 
@@ -149,21 +186,42 @@
 					<Label class="settings-group__title" text="#MOM_Settings_Speedometer_Label" />
 				</Panel>
 
-				<ChaosSettingsEnum text="Global Speedometer Enable" convar="mom_hud_speedometer_enable" infomessage="Toggles the entire speedometer globally (all gamemodes).">
+				<ChaosSettingsEnum
+					text="Global Speedometer Enable"
+					convar="mom_hud_speedometer_enable"
+					infomessage="Toggles the entire speedometer globally (all gamemodes)."
+				>
 					<RadioButton group="speedometer" text="Off" value="0" />
 					<RadioButton group="speedometer" text="On" value="1" />
 				</ChaosSettingsEnum>
 
 				<ConVarEnabler convar="mom_hud_speedometer_enable" togglevisibility="true" class="flow-down">
 
-					<ChaosSettingsSlider text="Speedometer FPS" min="0" max="400" convar="mom_hud_speedometer_fps" infomessage="FPS of the speedometer. For no limit, set to 0." hasdocspage="true"/>
+					<ChaosSettingsSlider
+						text="Speedometer FPS"
+						min="0"
+						max="400"
+						convar="mom_hud_speedometer_fps"
+						infomessage="FPS of the speedometer. For no limit, set to 0."
+						hasdocspage="true"
+					/>
 
-					<Panel id="SpeedometersContainer" class="flow-down full-width" infotitle="Speedometers for gamemode" infomessage="Visible speedometers for the specified gamemode.">
+					<Panel
+						id="SpeedometersContainer"
+						class="flow-down full-width"
+						infotitle="Speedometers for gamemode"
+						infomessage="Visible speedometers for the specified gamemode."
+					>
 
 						<Panel class="settings-group__header">
 							<Label class="settings-group__subtitle" text="Speedometers for gamemode " />
 							<!-- TODO: hook this up to some events so it can change when a map is loaded -->
-							<DropDown id="GamemodeDropDown" class="dropdown settings-group__dropdown" menuclass="dropdown-menu" oninputsubmit="SpeedometerSettings.updateGamemode();">
+							<DropDown
+								id="GamemodeDropDown"
+								class="dropdown settings-group__dropdown"
+								menuclass="dropdown-menu"
+								oninputsubmit="SpeedometerSettings.updateGamemode();"
+							>
 								<Label id="surf" text="#MOM_GameType_Surf" value="1" />
 								<Label id="bhop" text="#MOM_GameType_Bhop" value="2" />
 								<Label id="kz" text="#MOM_GameType_KZ" value="3" />
@@ -193,13 +251,22 @@
 							<!--Filled with snippets in JS-->
 						</Panel>
 
-						<Button id="AddSpeedometerBtn" class="button horizontal-align-center half-width mt-4 mb-4" onactivate="Speedometers.addSpeedometer();">
+						<Button
+							id="AddSpeedometerBtn"
+							class="button horizontal-align-center half-width mt-4 mb-4"
+							onactivate="Speedometers.addSpeedometer();"
+						>
 							<Label class="button__text" text="+ Add new speedometer" />
 						</Button>
 
 					</Panel>
 
-					<Panel id="RangeColorProfilesContainer" class="flow-down full-width" infotitle="Range Color Profiles" infomessage="Range color profiles to be used in speedometer customization. Add to a speedometer with range-based color mode.">
+					<Panel
+						id="RangeColorProfilesContainer"
+						class="flow-down full-width"
+						infotitle="Range Color Profiles"
+						infomessage="Range color profiles to be used in speedometer customization. Add to a speedometer with range-based color mode."
+					>
 
 						<Panel class="settings-group__header">
 							<Label class="settings-group__subtitle" text="Range Color Profiles" />
@@ -221,7 +288,11 @@
 							<!--Filled with snippets in JS-->
 						</Panel>
 
-						<Button id="AddColorProfileBtn" class="button horizontal-align-center half-width mt-4 mb-4" onactivate="RangeColorProfiles.addProfile();">
+						<Button
+							id="AddColorProfileBtn"
+							class="button horizontal-align-center half-width mt-4 mb-4"
+							onactivate="RangeColorProfiles.addProfile();"
+						>
 							<Label class="button__text" text="+ Add new color profile" />
 						</Button>
 
@@ -231,7 +302,7 @@
 
 			</Panel>
 
-			<Panel class="settings-page__spacer"/>
+			<Panel class="settings-page__spacer" />
 
 			<Panel id="CrosshairSubSection" class="settings-group">
 
@@ -242,7 +313,7 @@
 					<Panel class="flow-right horizontal-align-right">
 
 						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Crosshair', 'CrosshairSubSection')">
-							<Label class="button__text" text="Import/Export"/>
+							<Label class="button__text" text="Import/Export" />
 						</Button>
 
 						<TooltipPanel class="settings-group__reset" tooltip="Reset">
@@ -258,7 +329,7 @@
 				<Panel class="full-width flow-right mb-2">
 
 					<ConVarEnabler class="settings__crosshair-wrapper" convar="crosshair">
-						<MomCrosshair id="SettingsCrosshair" class="settings__crosshair" preview="true"/>
+						<MomCrosshair id="SettingsCrosshair" class="settings__crosshair" preview="true" />
 					</ConVarEnabler>
 
 					<Panel class="fill-width flow-down">
@@ -266,19 +337,43 @@
 						<Panel class="settings-group__combo" style="margin-bottom: 0px;">							<!-- TODO: fix when sass specificity is fixed -->
 
 							<ChaosSettingsEnum text="Enable Crosshair" convar="crosshair" infomessage="" hasdocspage="false">
-								<RadioButton group="xhairenable" text="Off" value="0"/>
-								<RadioButton group="xhairenable" text="On" value="1"/>
+								<RadioButton group="xhairenable" text="Off" value="0" />
+								<RadioButton group="xhairenable" text="On" value="1" />
 							</ChaosSettingsEnum>
 
 							<ConVarEnabler convar="crosshair" class="flow-down">
 
-								<ConVarColorDisplay text="Color" convar="cl_crosshair_color" infomessage="" hasdocspage="false"/>
+								<ConVarColorDisplay text="Color" convar="cl_crosshair_color" infomessage="" hasdocspage="false" />
 
-								<ChaosSettingsSlider text="Size" min="0" max="20" convar="cl_crosshair_size" displayprecision="2" infomessage="" hasdocspage="false"/>
+								<ChaosSettingsSlider
+									text="Size"
+									min="0"
+									max="20"
+									convar="cl_crosshair_size"
+									displayprecision="2"
+									infomessage=""
+									hasdocspage="false"
+								/>
 
-								<ChaosSettingsSlider text="Gap" min="0" max="10" convar="cl_crosshair_gap" displayprecision="2" infomessage="" hasdocspage="false"/>
+								<ChaosSettingsSlider
+									text="Gap"
+									min="0"
+									max="10"
+									convar="cl_crosshair_gap"
+									displayprecision="2"
+									infomessage=""
+									hasdocspage="false"
+								/>
 
-								<ChaosSettingsSlider text="Thickness" min="0" max="10" convar="cl_crosshair_thickness" displayprecision="2" infomessage="" hasdocspage="false"/>
+								<ChaosSettingsSlider
+									text="Thickness"
+									min="0"
+									max="10"
+									convar="cl_crosshair_thickness"
+									displayprecision="2"
+									infomessage=""
+									hasdocspage="false"
+								/>
 
 								<ChaosSettingsEnum text="Center Dot" convar="cl_crosshair_dot" infomessage="" hasdocspage="false">
 									<RadioButton group="xhairdot" text="Off" value="0" />
@@ -292,7 +387,16 @@
 								</ChaosSettingsEnum>
 
 								<ConVarEnabler convar="cl_crosshair_drawoutline">
-									<ChaosSettingsSlider style="margin-bottom: 0px;" text="Outline Thickness" min="0" max="3" convar="cl_crosshair_outlinethickness" displayprecision="2" infomessage="" hasdocspage="false"/>
+									<ChaosSettingsSlider
+										style="margin-bottom: 0px;"
+										text="Outline Thickness"
+										min="0"
+										max="3"
+										convar="cl_crosshair_outlinethickness"
+										displayprecision="2"
+										infomessage=""
+										hasdocspage="false"
+									/>
 								</ConVarEnabler>
 
 							</ConVarEnabler>
@@ -304,7 +408,7 @@
 
 			</Panel>
 
-			<Panel class="settings-page__spacer"/>
+			<Panel class="settings-page__spacer" />
 
 			<Panel id="TimerSubSection" class="settings-group">
 
@@ -315,7 +419,7 @@
 					<Panel class="flow-right horizontal-align-right">
 
 						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Timer', 'TimerSubSection')">
-							<Label class="button__text" text="Import/Export"/>
+							<Label class="button__text" text="Import/Export" />
 						</Button>
 
 						<TooltipPanel class="settings-group__reset" tooltip="Reset">
@@ -355,7 +459,7 @@
 
 			</Panel>
 
-			<Panel class="settings-page__spacer"/>
+			<Panel class="settings-page__spacer" />
 
 			<Panel id="PlayerStatusSubSection" class="settings-group">
 
@@ -371,14 +475,18 @@
 
 				</Panel>
 
-				<ChaosSettingsEnum text="Display player status" convar="mom_hud_status_enable" infomessage="Show zone, savestate, and other player status' on the HUD.">
+				<ChaosSettingsEnum
+					text="Display player status"
+					convar="mom_hud_status_enable"
+					infomessage="Show zone, savestate, and other player status' on the HUD."
+				>
 					<RadioButton group="playerstatusenable" text="Off" value="0" />
 					<RadioButton group="playerstatusenable" text="On" value="1" />
 				</ChaosSettingsEnum>
 
 			</Panel>
 
-			<Panel class="settings-page__spacer"/>
+			<Panel class="settings-page__spacer" />
 
 			<Panel id="KeypressSubSection" class="settings-group">
 
@@ -394,14 +502,18 @@
 
 				</Panel>
 
-				<ChaosSettingsEnum text="#MOM_Settings_User_Input_HUD" convar="mom_hud_keypress_enable" infomessage="#MOM_Settings_User_Input_HUD_TT">
+				<ChaosSettingsEnum
+					text="#MOM_Settings_User_Input_HUD"
+					convar="mom_hud_keypress_enable"
+					infomessage="#MOM_Settings_User_Input_HUD_TT"
+				>
 					<RadioButton group="showkeys" text="Off" value="0" />
 					<RadioButton group="showkeys" text="On" value="1" />
 				</ChaosSettingsEnum>
 
 			</Panel>
 
-			<Panel class="settings-page__spacer"/>
+			<Panel class="settings-page__spacer" />
 
 			<Panel id="WeaponSelSubSection" class="settings-group">
 
@@ -411,8 +523,11 @@
 
 					<Panel class="flow-right horizontal-align-right">
 
-						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Weapon Selection', 'WeaponSelSubSection')">
-							<Label class="button__text" text="Import/Export"/>
+						<Button
+							class="button mr-3"
+							onactivate="SettingsShared.showImportExportDialogue('Weapon Selection', 'WeaponSelSubSection')"
+						>
+							<Label class="button__text" text="Import/Export" />
 						</Button>
 
 						<TooltipPanel class="settings-group__reset" tooltip="Reset">
@@ -425,26 +540,38 @@
 
 				</Panel>
 
-				<ChaosSettingsEnum text="Display weapon selection" convar="mom_hud_weaponselection_enable" infomessage="Toggles displaying the weapon selection HUD.">
+				<ChaosSettingsEnum
+					text="Display weapon selection"
+					convar="mom_hud_weaponselection_enable"
+					infomessage="Toggles displaying the weapon selection HUD."
+				>
 					<RadioButton group="showwepsel" text="Off" value="0" />
 					<RadioButton group="showwepsel" text="On" value="1" />
 				</ChaosSettingsEnum>
 
 				<ConVarEnabler convar="mom_hud_weaponselection_enable" togglevisibility="true" class="flow-down">
-					<ChaosSettingsEnum text="Display weapon keybind" convar="mom_hud_weaponselection_keybind_enable" infomessage="Displays the keybind for each weapon in the weapon selection HUD.">
+					<ChaosSettingsEnum
+						text="Display weapon keybind"
+						convar="mom_hud_weaponselection_keybind_enable"
+						infomessage="Displays the keybind for each weapon in the weapon selection HUD."
+					>
 						<RadioButton group="showwepselkb" text="Off" value="0" />
 						<RadioButton group="showwepselkb" text="On" value="1" />
 					</ChaosSettingsEnum>
 				</ConVarEnabler>
 
-				<ChaosSettingsEnum text="Play weapon selection sound" convar="mom_hud_weaponselection_sound_enable" infomessage="Toggles the sound emitted on weapon selection, which is also effected by UI volume.">
+				<ChaosSettingsEnum
+					text="Play weapon selection sound"
+					convar="mom_hud_weaponselection_sound_enable"
+					infomessage="Toggles the sound emitted on weapon selection, which is also effected by UI volume."
+				>
 					<RadioButton group="showwepselsound" text="Off" value="0" />
 					<RadioButton group="showwepselsound" text="On" value="1" />
 				</ChaosSettingsEnum>
 
 			</Panel>
 
-			<Panel class="settings-page__spacer"/>
+			<Panel class="settings-page__spacer" />
 
 			<Panel id="StrafeSyncSubSection" class="settings-group">
 
@@ -455,7 +582,7 @@
 					<Panel class="flow-right horizontal-align-right">
 
 						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Strafe Sync', 'StrafeSyncSubSection')">
-							<Label class="button__text" text="Import/Export"/>
+							<Label class="button__text" text="Import/Export" />
 						</Button>
 
 						<TooltipPanel class="settings-group__reset" tooltip="Reset">
@@ -468,22 +595,38 @@
 
 				</Panel>
 
-				<ChaosSettingsEnum text="#MOM_Settings_Sync_Show" convar="mom_hud_strafesync_draw" infomessage="#MOM_Settings_Sync_Show_TT">
+				<ChaosSettingsEnum
+					text="#MOM_Settings_Sync_Show"
+					convar="mom_hud_strafesync_draw"
+					infomessage="#MOM_Settings_Sync_Show_TT"
+				>
 					<RadioButton group="showsyncdata" text="Off" value="0" />
 					<RadioButton group="showsyncdata" text="On" value="1" />
 				</ChaosSettingsEnum>
 
-				<ChaosSettingsEnum text="#MOM_Settings_Sync_Show_Bar" convar="mom_hud_strafesync_drawbar" infomessage="#MOM_Settings_Sync_Show_Bar_TT">
+				<ChaosSettingsEnum
+					text="#MOM_Settings_Sync_Show_Bar"
+					convar="mom_hud_strafesync_drawbar"
+					infomessage="#MOM_Settings_Sync_Show_Bar_TT"
+				>
 					<RadioButton group="showsyncbar" text="Off" value="0" />
 					<RadioButton group="showsyncbar" text="On" value="1" />
 				</ChaosSettingsEnum>
 
-				<ChaosSettingsEnumDropDown text="#MOM_Settings_Sync_Type_Label" convar="mom_hud_strafesync_type" infomessage="#MOM_Settings_Sync_Type_TT">
+				<ChaosSettingsEnumDropDown
+					text="#MOM_Settings_Sync_Type_Label"
+					convar="mom_hud_strafesync_type"
+					infomessage="#MOM_Settings_Sync_Type_TT"
+				>
 					<Label id="synctype1" text="#MOM_Settings_Sync_Type_Sync1" value="1" />
 					<Label id="synctype2" text="#MOM_Settings_Sync_Type_Sync2" value="2" />
 				</ChaosSettingsEnumDropDown>
 
-				<ChaosSettingsEnumDropDown text="#MOM_Settings_Sync_Color_Type_Label" convar="mom_hud_strafesync_colorize" infomessage="#MOM_Settings_Sync_Color_Type_TT">
+				<ChaosSettingsEnumDropDown
+					text="#MOM_Settings_Sync_Color_Type_Label"
+					convar="mom_hud_strafesync_colorize"
+					infomessage="#MOM_Settings_Sync_Color_Type_TT"
+				>
 					<Label id="colorize1" text="#MOM_Settings_Sync_Color_Type_None" value="0" />
 					<Label id="colorize2" text="#MOM_Settings_Sync_Color_Type_1" value="1" />
 					<Label id="colorize3" text="#MOM_Settings_Sync_Color_Type_2" value="2" />
@@ -491,7 +634,7 @@
 
 			</Panel>
 
-			<Panel class="settings-page__spacer"/>
+			<Panel class="settings-page__spacer" />
 
 			<Panel id="MapInfoSubSection" class="settings-group">
 
@@ -502,7 +645,7 @@
 					<Panel class="flow-right horizontal-align-right">
 
 						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Map Info', 'MapInfoSubSection')">
-							<Label class="button__text" text="Import/Export"/>
+							<Label class="button__text" text="Import/Export" />
 						</Button>
 
 						<TooltipPanel class="settings-group__reset" tooltip="Reset">
@@ -515,34 +658,58 @@
 
 				</Panel>
 
-				<ChaosSettingsEnum text="Display map info" convar="mom_hud_mapinfo_enable" infomessage="Display the current map's information on the HUD.">
+				<ChaosSettingsEnum
+					text="Display map info"
+					convar="mom_hud_mapinfo_enable"
+					infomessage="Display the current map's information on the HUD."
+				>
 					<RadioButton group="mapinfoenable" text="Off" value="0" />
 					<RadioButton group="mapinfoenable" text="On" value="1" />
 				</ChaosSettingsEnum>
 
 				<ConVarEnabler convar="mom_hud_mapinfo_enable" togglevisibility="true" class="flow-down">
 
-					<ChaosSettingsEnum text="Display map name" convar="mom_hud_mapinfo_mapname_enable" infomessage="Display the current map's name on the HUD.">
+					<ChaosSettingsEnum
+						text="Display map name"
+						convar="mom_hud_mapinfo_mapname_enable"
+						infomessage="Display the current map's name on the HUD."
+					>
 						<RadioButton group="mapinfonameenable" text="Off" value="0" />
 						<RadioButton group="mapinfonameenable" text="On" value="1" />
 					</ChaosSettingsEnum>
 
-					<ChaosSettingsEnum text="Display map author(s)" convar="mom_hud_mapinfo_author_enable" infomessage="Display the current map's author(s) on the HUD.">
+					<ChaosSettingsEnum
+						text="Display map author(s)"
+						convar="mom_hud_mapinfo_author_enable"
+						infomessage="Display the current map's author(s) on the HUD."
+					>
 						<RadioButton group="mapinfoauthorenable" text="Off" value="0" />
 						<RadioButton group="mapinfoauthorenable" text="On" value="1" />
 					</ChaosSettingsEnum>
 
-					<ChaosSettingsEnum text="Display map tier" convar="mom_hud_mapinfo_tier_enable" infomessage="Display the current map's tier (difficulty) on the HUD.">
+					<ChaosSettingsEnum
+						text="Display map tier"
+						convar="mom_hud_mapinfo_tier_enable"
+						infomessage="Display the current map's tier (difficulty) on the HUD."
+					>
 						<RadioButton group="mapinfotierenable" text="Off" value="0" />
 						<RadioButton group="mapinfotierenable" text="On" value="1" />
 					</ChaosSettingsEnum>
 
-					<ChaosSettingsEnum text="Display map zone type" convar="mom_hud_mapinfo_zonetype_enable" infomessage="Display the current map's zone type (staged or linear) on the HUD.">
+					<ChaosSettingsEnum
+						text="Display map zone type"
+						convar="mom_hud_mapinfo_zonetype_enable"
+						infomessage="Display the current map's zone type (staged or linear) on the HUD."
+					>
 						<RadioButton group="mapinfozonetypeenable" text="Off" value="0" />
 						<RadioButton group="mapinfozonetypeenable" text="On" value="1" />
 					</ChaosSettingsEnum>
 
-					<ChaosSettingsEnum text="Display map number of zones" convar="mom_hud_mapinfo_numzones_enable" infomessage="Display the current map's number of zones on the HUD.">
+					<ChaosSettingsEnum
+						text="Display map number of zones"
+						convar="mom_hud_mapinfo_numzones_enable"
+						infomessage="Display the current map's number of zones on the HUD."
+					>
 						<RadioButton group="mapinfonumzonesenable" text="Off" value="0" />
 						<RadioButton group="mapinfonumzonesenable" text="On" value="1" />
 					</ChaosSettingsEnum>

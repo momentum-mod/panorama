@@ -1,9 +1,5 @@
 exports.xmlFrameTop =
-	'<root>\n' +
-	'	<styles>\n' +
-	'		<include src="file://{resources}/styles/main.scss" />\n' +
-	'	</styles>\n\n' +
-	'	<Panel>';
+	'<root>\n' + '	<styles>\n' + '		<include src="file://{resources}/styles/main.scss" />\n' + '	</styles>\n\n' + '	<Panel>';
 
 exports.xmlFrameBottom = '	</Panel>\n' + '</root>';
 

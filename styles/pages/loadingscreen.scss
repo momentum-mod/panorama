@@ -5,7 +5,7 @@
 	&__details {
 		flow-children: none;
 		width: 100%;
-		height: fill-parent-flow(1.0);
+		height: fill-parent-flow(1);
 		margin: 32px 48px 8px 48px;
 	}
 
@@ -20,8 +20,7 @@
 		flow-children: down;
 		vertical-align: top;
 		horizontal-align: right;
-		width: fill-parent-flow(1.0);
-
+		width: fill-parent-flow(1);
 	}
 
 	&__right-label {
@@ -68,14 +67,14 @@
 
 @keyframes loading-screen--closing-animation {
 	0% {
-		opacity: 1.0;
+		opacity: 1;
 	}
 
 	70% {
-		opacity: 1.0;
+		opacity: 1;
 	}
 
 	100% {
-		opacity: 0.0;
+		opacity: 0;
 	}
 }

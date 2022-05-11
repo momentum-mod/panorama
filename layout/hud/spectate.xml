@@ -1,6 +1,6 @@
 <root>
 	<styles>
-		<include src="file://{resources}/styles/main.scss"/>
+		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 	<scripts>
 		<include src="file://{resources}/scripts/common/runentity.js" />
@@ -36,11 +36,15 @@
 					<Button class="button ml-3" id="NextPlayer" onactivate="GameInterfaceAPI.ConsoleCommand('spec_next');">
 						<Image class="button__icon" src="file://{images}/right-arrow.svg" textureheight="32" />
 					</Button>
-					<Button class="button ml-3" id="ToggleReplayControls" onactivate="HudSpectate.panels.replayControls.ToggleHiddenState()">
+					<Button
+						class="button ml-3"
+						id="ToggleReplayControls"
+						onactivate="HudSpectate.panels.replayControls.ToggleHiddenState()"
+					>
 						<Image class="button__icon" src="file://{images}/settings.svg" textureheight="32" />
 					</Button>
 					<Button class="button button--red ml-3" onactivate="GameInterfaceAPI.ConsoleCommand('mom_spectate_stop');">
-						<Image class="button__icon" src="file://{images}/close.svg"/>
+						<Image class="button__icon" src="file://{images}/close.svg" />
 					</Button>
 				</Panel>
 			</Panel>

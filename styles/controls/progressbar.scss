@@ -1,4 +1,4 @@
-@use '../config'as *;
+@use '../config' as *;
 
 .progressbar {
 	width: $progressbar-width;
@@ -13,9 +13,10 @@
 	.ProgressBarRight {
 		background-color: $progressbar-background;
 	}
-	
+
 	&:disabled {
-		.progressbar, .ProgressBarRight {
+		.progressbar,
+		.ProgressBarRight {
 			background-color: $progressbar-background-disabled;
 		}
 	}
@@ -23,7 +24,7 @@
 
 .progressbar-hudmeter {
 	@extend .progressbar;
-	
+
 	width: $progressbar-hudmeter-width;
 	height: $progressbar-hudmeter-height;
 	border-radius: $progressbar-hudmeter-border-radius;

@@ -89,11 +89,15 @@ class Cgaz {
 
 	static onLoad() {
 		if (GAMEMODE_WITH_NULL[GameModeAPI.GetCurrentGameMode()].name === 'Defrag') {
-			this.updateEventHandle ??= $.RegisterEventHandler('ChaosHudProcessInput', $.GetContextPanel(), this.onUpdate.bind(this));
+			this.updateEventHandle ??= $.RegisterEventHandler(
+				'ChaosHudProcessInput',
+				$.GetContextPanel(),
+				this.onUpdate.bind(this)
+			);
 		} else {
 			this.velocityArrow.visible = false;
 			this.windicatorArrow.visible = false;
-		  return;
+			return;
 		}
 
 		this.onAccelConfigChange();
@@ -259,7 +263,7 @@ class Cgaz {
 		if (this.bShouldUpdateStyles) this.applyStyles();
 
 		// clear last frame's split zones
-		this.clearZones([this.accelSplitZone, this.snapSplitZone, this.mirrorSplitZone])
+		this.clearZones([this.accelSplitZone, this.snapSplitZone, this.mirrorSplitZone]);
 
 		this.screenY = $.GetContextPanel().actuallayoutheight;
 		this.screenX = $.GetContextPanel().actuallayoutwidth;
@@ -292,14 +296,15 @@ class Cgaz {
 		const viewDir = {
 			x: Math.cos(viewAngle),
 			y: Math.sin(viewAngle)
-		}
+		};
 
 		let forwardMove = this.getDot(viewDir, wishDir).toFixed();
 		let rightMove = this.getCross(viewDir, wishDir).toFixed();
 
 		const bIsFalling = lastMoveData.moveStatus == 0;
 		const bHasAirControl = phyMode && this.floatEquals(wishAngle, viewAngle, 0.001) && bIsFalling;
-		const bSnapShift = !this.floatEquals(Math.abs(forwardMove), Math.abs(rightMove), 0.001) && !(phyMode && bIsFalling);
+		const bSnapShift =
+			!this.floatEquals(Math.abs(forwardMove), Math.abs(rightMove), 0.001) && !(phyMode && bIsFalling);
 
 		if (this.accel_enable) {
 			// find cgaz angles
@@ -307,17 +312,72 @@ class Cgaz {
 			const slowCgazAngle = this.findSlowAngle(dropSpeed, dropSpeedSquared, speedSquared, maxSpeed);
 			const fastCgazAngle = this.findFastAngle(dropSpeed, maxSpeed, maxAccel);
 			const turnCgazAngle = this.findTurnAngle(speed, dropSpeed, maxAccel, fastCgazAngle);
-			const stopCgazAngle = this.findStopAngle(maxAccel, speedSquared, dropSpeed, dropSpeedSquared, turnCgazAngle);
+			const stopCgazAngle = this.findStopAngle(
+				maxAccel,
+				speedSquared,
+				dropSpeed,
+				dropSpeedSquared,
+				turnCgazAngle
+			);
 
 			// draw accel zones
 			if (speed >= this.accel_min_speed) {
-				this.updateZone(this.leftTurnZone, -stopCgazAngle, -turnCgazAngle, angleOffset, TURN_CLASS, this.accelSplitZone);
-				this.updateZone(this.leftFastZone, -turnCgazAngle, -fastCgazAngle, angleOffset, FAST_CLASS, this.accelSplitZone);
-				this.updateZone(this.leftSlowZone, -fastCgazAngle, -slowCgazAngle, angleOffset, SLOW_CLASS, this.accelSplitZone);
-				this.updateZone(this.deadZone, -slowCgazAngle, slowCgazAngle, angleOffset, NEUTRAL_CLASS, this.accelSplitZone);
-				this.updateZone(this.rightSlowZone, slowCgazAngle, fastCgazAngle, angleOffset, SLOW_CLASS, this.accelSplitZone);
-				this.updateZone(this.rightFastZone, fastCgazAngle, turnCgazAngle, angleOffset, FAST_CLASS, this.accelSplitZone);
-				this.updateZone(this.rightTurnZone, turnCgazAngle, stopCgazAngle, angleOffset, TURN_CLASS, this.accelSplitZone);
+				this.updateZone(
+					this.leftTurnZone,
+					-stopCgazAngle,
+					-turnCgazAngle,
+					angleOffset,
+					TURN_CLASS,
+					this.accelSplitZone
+				);
+				this.updateZone(
+					this.leftFastZone,
+					-turnCgazAngle,
+					-fastCgazAngle,
+					angleOffset,
+					FAST_CLASS,
+					this.accelSplitZone
+				);
+				this.updateZone(
+					this.leftSlowZone,
+					-fastCgazAngle,
+					-slowCgazAngle,
+					angleOffset,
+					SLOW_CLASS,
+					this.accelSplitZone
+				);
+				this.updateZone(
+					this.deadZone,
+					-slowCgazAngle,
+					slowCgazAngle,
+					angleOffset,
+					NEUTRAL_CLASS,
+					this.accelSplitZone
+				);
+				this.updateZone(
+					this.rightSlowZone,
+					slowCgazAngle,
+					fastCgazAngle,
+					angleOffset,
+					SLOW_CLASS,
+					this.accelSplitZone
+				);
+				this.updateZone(
+					this.rightFastZone,
+					fastCgazAngle,
+					turnCgazAngle,
+					angleOffset,
+					FAST_CLASS,
+					this.accelSplitZone
+				);
+				this.updateZone(
+					this.rightTurnZone,
+					turnCgazAngle,
+					stopCgazAngle,
+					angleOffset,
+					TURN_CLASS,
+					this.accelSplitZone
+				);
 			} else {
 				this.clearZones(this.accelZones);
 			}
@@ -328,18 +388,52 @@ class Cgaz {
 				const minMirrorAngle = this.findSlowAngle(dropSpeed, dropSpeedSquared, speedSquared, MAX_GROUND_SPEED);
 				const fastMirrorAngle = this.findFastAngle(dropSpeed, MAX_GROUND_SPEED, mirrorAccel);
 				const turnMirrorAngle = this.findTurnAngle(speed, dropSpeed, mirrorAccel, fastMirrorAngle);
-				const maxMirrorAngle = this.findStopAngle(mirrorAccel, speedSquared, dropSpeed, dropSpeedSquared, turnMirrorAngle);
+				const maxMirrorAngle = this.findStopAngle(
+					mirrorAccel,
+					speedSquared,
+					dropSpeed,
+					dropSpeedSquared,
+					turnMirrorAngle
+				);
 
 				let mirrorOffset = this.remapAngle(velAngle - viewAngle);
 				const inputAngle = this.remapAngle(viewAngle - wishAngle);
 
 				if (this.floatEquals(Math.abs(inputAngle), 0.25 * Math.PI, 0.001)) {
 					mirrorOffset += (inputAngle > 0 ? -1 : 1) * Math.PI * 0.25;
-					this.updateZone(this.leftMirrorZone, -maxMirrorAngle, -minMirrorAngle, mirrorOffset, MIRROR_CLASS, this.mirrorSplitZone);
-					this.updateZone(this.rightMirrorZone, minMirrorAngle, maxMirrorAngle, mirrorOffset, MIRROR_CLASS, this.mirrorSplitZone);
+					this.updateZone(
+						this.leftMirrorZone,
+						-maxMirrorAngle,
+						-minMirrorAngle,
+						mirrorOffset,
+						MIRROR_CLASS,
+						this.mirrorSplitZone
+					);
+					this.updateZone(
+						this.rightMirrorZone,
+						minMirrorAngle,
+						maxMirrorAngle,
+						mirrorOffset,
+						MIRROR_CLASS,
+						this.mirrorSplitZone
+					);
 				} else {
-					this.updateZone(this.leftMirrorZone, -maxMirrorAngle, -minMirrorAngle, mirrorOffset - Math.PI*0.25, MIRROR_CLASS, this.mirrorSplitZone);
-					this.updateZone(this.rightMirrorZone, minMirrorAngle, maxMirrorAngle, mirrorOffset + Math.PI*0.25, MIRROR_CLASS, this.mirrorSplitZone);
+					this.updateZone(
+						this.leftMirrorZone,
+						-maxMirrorAngle,
+						-minMirrorAngle,
+						mirrorOffset - Math.PI * 0.25,
+						MIRROR_CLASS,
+						this.mirrorSplitZone
+					);
+					this.updateZone(
+						this.rightMirrorZone,
+						minMirrorAngle,
+						maxMirrorAngle,
+						mirrorOffset + Math.PI * 0.25,
+						MIRROR_CLASS,
+						this.mirrorSplitZone
+					);
 				}
 			}
 		} else {
@@ -348,7 +442,7 @@ class Cgaz {
 
 		if (!this.snapAccel) {
 			this.snapAccel = maxSpeed * tickInterval;
-	}
+		}
 
 		if (this.snap_enable && this.snapAccel) {
 			// find snap zone borders
@@ -590,7 +684,7 @@ class Cgaz {
 	}
 
 	static clearZones(zones) {
-		zones.map((zone) => zone.style.width = '0px');
+		zones.map((zone) => (zone.style.width = '0px'));
 	}
 
 	static mapToScreenSpace(angle) {
@@ -661,7 +755,10 @@ class Cgaz {
 	}
 
 	static splitColorString(string) {
-		return string.slice(5, -1).split(',').map((c, i) => i == 3 ? parseInt(c * 255) : parseInt(c));
+		return string
+			.slice(5, -1)
+			.split(',')
+			.map((c, i) => (i == 3 ? parseInt(c * 255) : parseInt(c)));
 	}
 
 	static colorLerp(A, B, alpha) {

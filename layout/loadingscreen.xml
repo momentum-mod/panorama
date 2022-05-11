@@ -25,7 +25,7 @@
 				<Label id="ProgressStatusText" class="text-h1 loadingscreen__status-label" text="Loading..." />
 				<Label id="PercentText" class="text-h1 loadingscreen__percentage-label" text="{d:percent}%" />
 			</Panel>
-			<ProgressBar id="ProgressBar" class="loadingscreen__progressbar progressbar"/>
+			<ProgressBar id="ProgressBar" class="loadingscreen__progressbar progressbar" />
 		</Panel>
 	</Panel>
 </root>

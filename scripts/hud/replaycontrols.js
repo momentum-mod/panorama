@@ -5,7 +5,7 @@ class ReplayControls {
 		timeSlider: $('#ReplayControlsTimeSlider'),
 		pausePlayButton: $('#ReplayControlsPausePlay'),
 		gotoTick: $('#ReplayControlsGotoTick')
-	}
+	};
 
 	static toggleHiddenState() {
 		$.GetContextPanel().ToggleHiddenState();
@@ -17,13 +17,11 @@ class ReplayControls {
 		const totalTicks = MomentumReplayAPI.GetTotalTicks();
 		const flProgress = currentTick / totalTicks;
 		// Don't interfere with the slider while the user is dragging it
-		if (!this.panels.timeSlider.dragging)
-			this.panels.timeSlider.SetValueNoEvents(flProgress);
+		if (!this.panels.timeSlider.dragging) this.panels.timeSlider.SetValueNoEvents(flProgress);
 
 		// Deal with pause/play -- play == selected
 		const bPlaying = !MomentumReplayAPI.IsPaused();
-		if (this.panels.pausePlayButton.checked != bPlaying)
-			this.panels.pausePlayButton.checked = bPlaying ;
+		if (this.panels.pausePlayButton.checked != bPlaying) this.panels.pausePlayButton.checked = bPlaying;
 
 		$.GetContextPanel().SetDialogVariableInt('curr_tick', currentTick);
 		$.GetContextPanel().SetDialogVariableInt('total_ticks', totalTicks);

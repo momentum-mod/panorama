@@ -4,8 +4,8 @@
 	</styles>
 
 	<Panel class="PopupPanel Hidden generic-popup" defaultfocus="Button0" popupbackground="blur">
-		<Label id="TitleLabel" class="generic-popup__title" allowrawtext="true"/>
-		<Panel class="generic-popup__message-panel" >
+		<Label id="TitleLabel" class="generic-popup__title" allowrawtext="true" />
+		<Panel class="generic-popup__message-panel">
 			<Label id="MessageLabel" class="generic-popup__message-label" html="true" allowrawtext="true" />
 		</Panel>
 		<Panel id="ButtonContainer" class="generic-popup__button-row">

@@ -48,18 +48,17 @@ class HudStatus {
 
 		if (this.saveStateUsing && this.timerState !== TIMER_STATE.RUNNING) {
 			text = `SaveState ${this.saveStateCurrent}/${this.saveStateCount}`;
-		}
-		else {
+		} else {
 			if (enteredStartZone) {
 				text = 'Start Zone';
-			}
-			else if (enteredEndZone) {
+			} else if (enteredEndZone) {
 				text = 'End Zone';
+			} else if (this.curZone >= 0) {
+				text = `${this.linear ? 'Checkpoint' : 'Stage'} ${this.curZone}/${ZonesAPI.GetZoneCount(
+					this.curTrack
+				)}`;
 			}
-			else if (this.curZone >= 0) {
-				text = `${this.linear ? 'Checkpoint' : 'Stage'} ${this.curZone}/${ZonesAPI.GetZoneCount(this.curTrack)}`;
-			}
-			
+
 			if (this.curTrack > 0) {
 				text = `Bonus ${this.curTrack} | ${text}`;
 			}

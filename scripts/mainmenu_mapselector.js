@@ -3,7 +3,11 @@
 const TIER_MIN = 1;
 const TIER_MAX = 10;
 
-const MapSelNStateClasses = ['mapselector-filters__nstatebutton--off', 'mapselector-filters__nstatebutton--include', 'mapselector-filters__nstatebutton--exclude'];
+const MapSelNStateClasses = [
+	'mapselector-filters__nstatebutton--off',
+	'mapselector-filters__nstatebutton--include',
+	'mapselector-filters__nstatebutton--exclude'
+];
 
 class MapSelection {
 	static gameModeData = {};
@@ -35,9 +39,21 @@ class MapSelection {
 		$.RegisterForUnhandledEvent('MapSelector_MapsFiltered', MapSelection.onMapsFiltered.bind(this));
 		$.RegisterForUnhandledEvent('MapSelector_SelectedDataUpdate', MapSelection.onSelectedDataUpdated.bind(this));
 
-		$.RegisterEventHandler('NStateButtonStateChanged', MapSelection.completedFilterButton, MapSelection.onNStateBtnChanged);
-		$.RegisterEventHandler('NStateButtonStateChanged', MapSelection.favoritesFilterButton, MapSelection.onNStateBtnChanged);
-		$.RegisterEventHandler('NStateButtonStateChanged', MapSelection.downloadedFilterButton, MapSelection.onNStateBtnChanged);
+		$.RegisterEventHandler(
+			'NStateButtonStateChanged',
+			MapSelection.completedFilterButton,
+			MapSelection.onNStateBtnChanged
+		);
+		$.RegisterEventHandler(
+			'NStateButtonStateChanged',
+			MapSelection.favoritesFilterButton,
+			MapSelection.onNStateBtnChanged
+		);
+		$.RegisterEventHandler(
+			'NStateButtonStateChanged',
+			MapSelection.downloadedFilterButton,
+			MapSelection.onNStateBtnChanged
+		);
 
 		// Populate the gameModeData object, finding all the filter buttons
 		this.gameModeData = GAMEMODE_WITH_NULL;
@@ -168,7 +184,11 @@ class MapSelection {
 
 			// Show tooltip if times unchecked equal to all the modes minus the last remaining mode and the null mode
 			if (this.timesModeButtonsUnchecked === Object.keys(MapSelection.gameModeData).length - 2) {
-				UiToolkitAPI.ShowTextTooltipStyled(button.id, 'Tip: Use right-click to deselect all other modes!', 'tooltip--positive');
+				UiToolkitAPI.ShowTextTooltipStyled(
+					button.id,
+					'Tip: Use right-click to deselect all other modes!',
+					'tooltip--positive'
+				);
 				$.Schedule(3.0, () => UiToolkitAPI.HideTextTooltip());
 				this.timesModeButtonsUnchecked = 0; // Reset the counter
 			}
@@ -320,7 +340,9 @@ class MapSelection {
 	 */
 	static setFilterData(panel, data) {
 		if (panel.paneltype !== data.paneltype) {
-			$.Msg(`MapSelection:setFilterData: paneltype mismatch. ${panel.id} was ${panel.paneltype}, ${data.id} was ${data.paneltype}.`); // TODO: this can be $.Warning
+			$.Msg(
+				`MapSelection:setFilterData: paneltype mismatch. ${panel.id} was ${panel.paneltype}, ${data.id} was ${data.paneltype}.`
+			); // TODO: this can be $.Warning
 
 			// If the paneltypes are off we're in a weird state where the panel type got changed in the XML (say ToggleButton to NStateButton), so just clear the data and return
 			this.filtersState[Object.keys(this.filtersState).find((key) => this.filtersState[key] === data)] = null;
@@ -345,8 +367,8 @@ class MapSelection {
 				wasEqual = panel.lowerValue === data.lowerValue && panel.upperValue === data.upperValue;
 				panel.SetValues(data.lowerValue, data.upperValue);
 				break;
-			default:
-				$.Msg('MapSelection:setFilterData: unknown paneltype ' + panel.paneltype); // TODO: this can be $.Warning
+			default: // TODO: this can be $.Warning
+				$.Msg('MapSelection:setFilterData: unknown paneltype ' + panel.paneltype);
 				return true;
 		}
 		return wasEqual;
@@ -366,8 +388,8 @@ class MapSelection {
 				return { paneltype: panel.paneltype, currentstate: panel.currentstate };
 			case 'DualSlider':
 				return { paneltype: panel.paneltype, lowerValue: panel.lowerValue, upperValue: panel.upperValue };
-			default:
-				$.Msg('MapSelection:getFilterData: unknown paneltype'); // TODO: this can be $.Warning
+			default: // TODO: this can be $.Warning
+				$.Msg('MapSelection:getFilterData: unknown paneltype');
 				return null;
 		}
 	}
@@ -478,7 +500,9 @@ class MapSelection {
 		}
 
 		// Set the website button link
-		this.websiteButton.SetPanelEvent('onactivate', () => SteamOverlayAPI.OpenURL(`https://momentum-mod.org/dashboard/maps/${mapData.id}`));
+		this.websiteButton.SetPanelEvent('onactivate', () =>
+			SteamOverlayAPI.OpenURL(`https://momentum-mod.org/dashboard/maps/${mapData.id}`)
+		);
 	}
 
 	/**

@@ -14,7 +14,7 @@ const SPEEDOMETER_COLOR_MODE = {
 };
 
 // these key names match the names of speedometers in the .vdf files
-const SPEEDOMETER_ID = { 
+const SPEEDOMETER_ID = {
 	AbsSpeedometer: 0,
 	HorizSpeedometer: 1,
 	VertSpeedometer: 2,

@@ -8,7 +8,7 @@
 			<Label class="settings-enum-dropdown__title" id="Title" />
 		</Panel>
 		<Panel class="settings-enum-dropdown__input-container">
-			<DropDown id="DropDown" class="dropdown settings-enum-dropdown__dropdown"  menuclass="dropdown-menu" />
+			<DropDown id="DropDown" class="dropdown settings-enum-dropdown__dropdown" menuclass="dropdown-menu" />
 		</Panel>
 	</ChaosSettingsEnumDropDown>
 </root>

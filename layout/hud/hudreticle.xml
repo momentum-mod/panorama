@@ -3,7 +3,7 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 
-	<MomHudReticle hittest="false" hittestchildren="false" >
+	<MomHudReticle hittest="false" hittestchildren="false">
 		<MomCrosshair id="Crosshair" />
 	</MomHudReticle>
 </root>

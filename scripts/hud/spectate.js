@@ -9,9 +9,9 @@ class HudSpectate {
 		//nextPlayer: $('#NextPlayer'),
 		replayControls: $('#ReplayControls'),
 		toggleReplayControls: $('#ToggleReplayControls')
-	}
+	};
 
-	static onSpectatorChanged( type ) {
+	static onSpectatorChanged(type) {
 		if (type >= RUN_ENT_TYPE.GHOST) {
 			const bReplay = type === RUN_ENT_TYPE.REPLAY;
 
@@ -22,7 +22,6 @@ class HudSpectate {
 
 			this.panels.toggleReplayControls.visible = bReplay;
 			this.panels.indicatorWatchingReplay.visible = bReplay;
-
 		}
 	}
 

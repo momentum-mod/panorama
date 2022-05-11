@@ -11,7 +11,11 @@ class LeaderboardEntry {
 	static avatarPanel = $('#LeaderboardEntryAvatarPanel');
 
 	static {
-		$.RegisterEventHandler('LeaderboardEntry_TimeDataUpdated', $.GetContextPanel(), LeaderboardEntry.timeDataUpdate);
+		$.RegisterEventHandler(
+			'LeaderboardEntry_TimeDataUpdated',
+			$.GetContextPanel(),
+			LeaderboardEntry.timeDataUpdate
+		);
 	}
 
 	static timeDataUpdate() {
@@ -26,7 +30,10 @@ class LeaderboardEntry {
 
 		LeaderboardEntry.avatarPanel.steamid = timeData.steamID;
 
-		$.GetContextPanel().SetHasClass('leaderboard-entry--localplayer', timeData.steamID === UserAPI.GetXUID() && timeData.type === LEADERBOARD_ENTRY_TYPE.ONLINE);
+		$.GetContextPanel().SetHasClass(
+			'leaderboard-entry--localplayer',
+			timeData.steamID === UserAPI.GetXUID() && timeData.type === LEADERBOARD_ENTRY_TYPE.ONLINE
+		);
 	}
 
 	static tryDeleteReplay(index) {
@@ -69,7 +76,11 @@ class LeaderboardEntry {
 			});
 		}
 
-		if (timeData.type === LEADERBOARD_ENTRY_TYPE.ONLINE || timeData.type == LEADERBOARD_ENTRY_TYPE.ONLINE_CACHED || !isValid) {
+		if (
+			timeData.type === LEADERBOARD_ENTRY_TYPE.ONLINE ||
+			timeData.type == LEADERBOARD_ENTRY_TYPE.ONLINE_CACHED ||
+			!isValid
+		) {
 			items.push({
 				label: 'Steam Profile',
 				icon: 'file://{images}/social/steam.svg',

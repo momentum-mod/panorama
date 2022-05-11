@@ -1,76 +1,54 @@
-                     
-
 @define backgroundgray : #383635ff;
 @define foregroundgray : #A6A4A1ff;
 @define platformfont: "Motiva Sans";
 @define monospacefont: "Courier New";
 
-
-  
-                    
-  
-VerticalScrollBar
-{
+VerticalScrollBar {
 	width: 6px;
 	margin: 3px, 0px, 12px 3px;
 	border-radius: 0px;
 	height: 100%;
-	background-color: gradient( linear, 0% 0%, 0% 100%, from( #c2c2c230 ), to( #d2d2d230 ) );
+	background-color: gradient(linear, 0% 0%, 0% 100%, from(#c2c2c230), to(#d2d2d230));
 	horizontal-align: right;
 	vertical-align: center;
 
-	                                                                                       
-	                                                                                                
 	transition-property: transform;
-	transition-duration: 0.20s;
+	transition-duration: 0.2s;
 	transition-timing-function: ease-in-out;
 }
 
-VerticalScrollBar .ScrollThumb
-{
+VerticalScrollBar .ScrollThumb {
 	background-color: #d2d2d2dd;
 
-	                                                                                       
-	                                                                                                
 	transition-property: position;
-	transition-duration: 0.20s;
+	transition-duration: 0.2s;
 	transition-timing-function: ease-in-out;
 }
 
-HorizontalScrollBar
-{
+HorizontalScrollBar {
 	height: 6px;
 	margin: 3px;
 	width: 100%;
-	background-color: gradient( linear, 0% 0%, 0% 100%, from( #c2c2c290 ), to( #d2d2d290 ) );
+	background-color: gradient(linear, 0% 0%, 0% 100%, from(#c2c2c290), to(#d2d2d290));
 	border-radius: 4px;
 	horizontal-align: left;
 	vertical-align: bottom;
 
-	                                                                                       
-	                                                                                                
 	transition-property: transform;
 	transition-duration: 0.25s;
 	transition-timing-function: ease-in-out;
 }
 
-HorizontalScrollBar .ScrollThumb
-{
+HorizontalScrollBar .ScrollThumb {
 	background-color: #d2d2d2dd;
 
-	                                                                                       
-	                                                                                                
 	transition-property: position;
-	transition-duration: 0.20s;
+	transition-duration: 0.2s;
 	transition-timing-function: ease-in-out;
 }
 
-  
-          
-   
-DebugTextTooltip
-{
-	background-color: gradient( linear, 0% 0%, 0% 100%, from( white ), to( #e4e5f0 ) );
+DebugTextTooltip {
+	background-color: gradient(linear, 0% 0%, 0% 100%, from(white), to(#e4e5f0));
 	border-radius: 2.5px;
 	border: 1px solid #767676ff;
 	box-shadow: #80808090 4px 4px 4px 0px;
@@ -80,16 +58,14 @@ DebugTextTooltip
 	font-size: 18px;
 	color: #111111ff;
 
-    visibility: collapse;
+	visibility: collapse;
 }
 
-DebugTextTooltip.TooltipVisible
-{
-    visibility: visible;
+DebugTextTooltip.TooltipVisible {
+	visibility: visible;
 }
 
-DebugTextTooltip Label
-{
+DebugTextTooltip Label {
 	horizontal-align: left;
 	color: black;
 	transform: translatex(0px);
@@ -97,11 +73,7 @@ DebugTextTooltip Label
 	text-overflow: ellipsis;
 }
 
-  
-           
-  
-Debugger
-{
+Debugger {
 	perspective-origin: 50% 50%;
 	position: 0px 0px 0px;
 	width: 100%;
@@ -115,37 +87,31 @@ Debugger
 	font-size: 18px;
 }
 
-.DebugBody
-{
+.DebugBody {
 	flow-children: down;
-	height: fill-parent-flow( 1.0 );
-	                          
+	height: fill-parent-flow(1);
 }
 
-.DebugBodyTop
-{
-	height: fill-parent-flow( 0.8 );
+.DebugBodyTop {
+	height: fill-parent-flow(0.8);
 	flow-children: right;
 	width: 100%;
 }
 
-VerticalSplitter
-{
+VerticalSplitter {
 	width: 5px;
 	min-height: 100%;
-	background-color: gradient( linear, 0% 0%, 100% 0%, from( #d7d7d7), to( #a0a0a0 ), color-stop( 0.9, #b4b4b4 ) );
+	background-color: gradient(linear, 0% 0%, 100% 0%, from(#d7d7d7), to(#a0a0a0), color-stop(0.9, #b4b4b4));
 }
 
-HorizontalSplitter
-{
+HorizontalSplitter {
 	height: 5px;
 	min-width: 100%;
-	background-color: gradient( linear, 0% 0%, 100% 0%, from( #d7d7d7), to( #a0a0a0 ), color-stop( 0.9, #b4b4b4 ) );
+	background-color: gradient(linear, 0% 0%, 100% 0%, from(#d7d7d7), to(#a0a0a0), color-stop(0.9, #b4b4b4));
 }
 
-.DebugJSConsole
-{
-	height: fill-parent-flow( 0.2 );
+.DebugJSConsole {
+	height: fill-parent-flow(0.2);
 	min-height: 10px;
 	background-color: white;
 	width: 100%;
@@ -153,9 +119,8 @@ HorizontalSplitter
 	flow-children: down;
 }
 
-#JSConsoleText
-{
-	height: fill-parent-flow( 1.0 );
+#JSConsoleText {
+	height: fill-parent-flow(1);
 	background-color: white;
 	color: #000000ff;
 	font-size: 18px;
@@ -165,25 +130,21 @@ HorizontalSplitter
 	overflow: squish scroll;
 }
 
-#JSConsoleText
-{
+#JSConsoleText {
 	margin: 0px 3px;
 }
 
-#JSConsoleText Label
-{
+#JSConsoleText Label {
 	width: 100%;
 	min-height: 100%;
 }
 
-
-#JSConsoleInput
-{
+#JSConsoleInput {
 	width: 100%;
 	height: 28px;
 	font-family: Courier New;
 	font-size: 16px;
-	background-color: gradient( linear, 0% 0%, 0% 100%, from( #aaaaaaff ), to( #dededeff ) );
+	background-color: gradient(linear, 0% 0%, 0% 100%, from(#aaaaaaff), to(#dededeff));
 	color: #000000ff;
 
 	padding: 3px 5px;
@@ -191,12 +152,8 @@ HorizontalSplitter
 	white-space: nowrap;
 }
 
-  
-                                     
-  
-.DebugToolbar
-{
-	background-color: gradient( linear, 0% 0%, 0% 100%, from( #F0ECEC ), to( #D0CFCF ), color-stop( 0.8, #F0ECEC ) );
+.DebugToolbar {
+	background-color: gradient(linear, 0% 0%, 0% 100%, from(#f0ecec), to(#d0cfcf), color-stop(0.8, #f0ecec));
 	width: 100%;
 	padding: 5px;
 
@@ -205,57 +162,45 @@ HorizontalSplitter
 }
 
 .DebugToolbar Button,
-.DebugToolbar ToggleButton
-{
-	background-color: #B9D1F4;
+.DebugToolbar ToggleButton {
+	background-color: #b9d1f4;
 	padding: 5px;
 	margin-right: 4px;
 }
 
 .DebugToolbar Button:hover,
-.DebugToolbar ToggleButton:hover
-{
-	background-color: #9EB9DF;
+.DebugToolbar ToggleButton:hover {
+	background-color: #9eb9df;
 }
 
 .DebugToolbar Button:active,
-.DebugToolbar ToggleButton:active
-{
-	background-color: #5081C5;
+.DebugToolbar ToggleButton:active {
+	background-color: #5081c5;
 }
 
 .DebugToolbar Button:disabled,
-.DebugToolbar ToggleButton:disabled
-{
-	background-color: #686E78;
+.DebugToolbar ToggleButton:disabled {
+	background-color: #686e78;
 }
 
-.DebugToolbar ToggleButton:selected
-{
+.DebugToolbar ToggleButton:selected {
 	background-color: #71a4ea;
 }
 
-#InMemoryButtons
-{
+#InMemoryButtons {
 	horizontal-align: right;
 	flow-children: right;
 }
 
-#DebugSize
-{
+#DebugSize {
 	flow-children: right;
 	margin-left: 15px;
 	margin-right: 15px;
 }
 
-  
-                    
-  
-
-DebugLayout
-{
+DebugLayout {
 	background-color: white;
-	width: fill-parent-flow( 0.6 );
+	width: fill-parent-flow(0.6);
 	height: fit-children;
 	min-height: 100%;
 	padding: 10px;
@@ -264,86 +209,71 @@ DebugLayout
 	overflow: squish scroll;
 }
 
-.DebugLabelPanelRow
-{
+.DebugLabelPanelRow {
 	width: 100%;
 	flow-children: right;
 }
 
-.DebugLayoutPanelOpen
-{
+.DebugLayoutPanelOpen {
 	color: #000088;
 	text-overflow: ellipsis;
 	white-space: nowrap;
-	width: fill-parent-flow( 1.0 );
+	width: fill-parent-flow(1);
 }
 
-.DebugLabelPanelRow:hover #DebugLayoutPanelOpen
-{
-	background-color: #66CCFF;
+.DebugLabelPanelRow:hover #DebugLayoutPanelOpen {
+	background-color: #66ccff;
 }
 
-#DebugLayoutPanelClose
-{
+#DebugLayoutPanelClose {
 	color: #000088;
 }
 
-.DebugLabelPanelRow:hover #DebugLayoutPanelClose
-{
-	background-color: #66CCFF;
+.DebugLabelPanelRow:hover #DebugLayoutPanelClose {
+	background-color: #66ccff;
 }
 
-.DebugLayoutPanelRowSelected
-{
-	background-color: #C6E2FF;
+.DebugLayoutPanelRowSelected {
+	background-color: #c6e2ff;
 }
 
-.DebugLayoutElementText
-{
-	color: #0000FF;
+.DebugLayoutElementText {
+	color: #0000ff;
 }
 
-.DebugLayoutElementPropName
-{
+.DebugLayoutElementPropName {
 	color: #000088;
 }
 
-.DebugLayoutElementPropValue
-{
-	color: #FF0000;
+.DebugLayoutElementPropValue {
+	color: #ff0000;
 }
 
-a.DebugLayoutElementPropValue:hover
-{
-	color: #1111DD;
+a.DebugLayoutElementPropValue:hover {
+	color: #1111dd;
 	text-decoration: underline;
 }
 
-.DebugLabelPanelRow .StyleLink
-{
+.DebugLabelPanelRow .StyleLink {
 	horizontal-align: right;
 	visibility: collapse;
 }
 
-.DebugLayoutPanelRowSelected .StyleLink
-{
+.DebugLayoutPanelRowSelected .StyleLink {
 	visibility: visible;
 }
 
-.DebugLabelPanelRow #Indent
-{
-	                                                                                      
+.DebugLabelPanelRow #Indent {
 	margin-top: 1px;
 }
 
-#DebugLabelToggle
-{
+#DebugLabelToggle {
 	margin-right: 4px;
 	margin-top: 2px;
 	padding: 0px;
 	width: 9px;
 	height: 9px;
-	background-image: url("file://{images}/collapse.vtf");
+	background-image: url('file://{images}/collapse.vtf');
 
 	vertical-align: center;
 	horizontal-align: right;
@@ -351,112 +281,83 @@ a.DebugLayoutElementPropValue:hover
 	visibility: collapse;
 }
 
-#DebugLabelToggle:selected
-{
-	background-image: url("file://{images}/expand.vtf");
+#DebugLabelToggle:selected {
+	background-image: url('file://{images}/expand.vtf');
 }
 
-.DebugLabelPanelRow.ShowChildren #DebugLabelToggle
-{
+.DebugLabelPanelRow.ShowChildren #DebugLabelToggle {
 	visibility: visible;
 }
 
-
-  
-                                 
-  
-DebugPanelParents
-{
+DebugPanelParents {
 	width: 100%;
 	padding: 5px;
-	background-color: gradient( linear, 0% 0%, 0% 100%, from( #ECF2F9 ), to( #9DBCDE ) );
+	background-color: gradient(linear, 0% 0%, 0% 100%, from(#ecf2f9), to(#9dbcde));
 	flow-children: right-wrap;
 	font-size: 16px;
 }
 
-DebugPanelParents #SelectedPanelName
-{
+DebugPanelParents #SelectedPanelName {
 	font-weight: bold;
 }
 
-                                                                           
-DebugPanelParents Label
-{
+DebugPanelParents Label {
 	padding: 4px;
 }
 
-DebugPanelParents Button
-{
+DebugPanelParents Button {
 	background-color: transparent;
 	padding: 4px;
 }
 
-DebugPanelParents Button Label
-{
+DebugPanelParents Button Label {
 	padding: 0px;
 }
 
-DebugPanelParents Button:hover
-{
-	background-color: #66CCFF;
+DebugPanelParents Button:hover {
+	background-color: #66ccff;
 }
 
-DebugPanelParents Button:active
-{
-	background-color: #5081C5;
+DebugPanelParents Button:active {
+	background-color: #5081c5;
 }
 
-  
-                         
-  
-
-DebugPanel
-{
-	width: fill-parent-flow( 0.4 );
+DebugPanel {
+	width: fill-parent-flow(0.4);
 	height: 100%;
 
 	flow-children: down;
 }
 
-.DebugPanelToolbar
-{
-	background-color: gradient( linear, 0% 0%, 0% 100%, from( #F0ECEC ), to( #D0CFCF ), color-stop( 0.8, #F0ECEC ) );
+.DebugPanelToolbar {
+	background-color: gradient(linear, 0% 0%, 0% 100%, from(#f0ecec), to(#d0cfcf), color-stop(0.8, #f0ecec));
 	width: 100%;
 	padding: 5px 5px 0px 5px;
 
 	flow-children: right;
 }
 
-.DebugPanelToolbar Button
-{
-	background-color: #B9D1F4;
+.DebugPanelToolbar Button {
+	background-color: #b9d1f4;
 	padding: 5px;
 	margin-right: 4px;
 }
 
-.DebugPanelToolbar Button:hover
-{
-	background-color: #9EB9DF;
+.DebugPanelToolbar Button:hover {
+	background-color: #9eb9df;
 }
 
-.DebugPanelToolbar Button:active
-{
-	background-color: #5081C5;
+.DebugPanelToolbar Button:active {
+	background-color: #5081c5;
 }
 
-#DebugPanelPages
-{
+#DebugPanelPages {
 	flow-children: down;
 	height: 100%;
 	width: 100%;
 }
 
-  
-                            
-  
-
-DebugPanelComputed
-{
+DebugPanelComputed {
 	background-color: white;
 
 	padding: 10px;
@@ -468,51 +369,37 @@ DebugPanelComputed
 	overflow: squish scroll;
 }
 
-#ComputedMeasurementsHeader, #ComputedMiscHeader
-{
+#ComputedMeasurementsHeader,
+#ComputedMiscHeader {
 	margin-top: 15px;
 }
 
-.DebugComputedRow
-{
+.DebugComputedRow {
 	margin-left: 20px;
 	margin-top: 2px;
 	margin-bottom: 2px;
 	flow-children: right;
 }
 
-.DebugComputedName
-{
+.DebugComputedName {
 	color: #6b8e23;
 	width: 170px;
 }
 
-.DebugComputedValue
-{
+.DebugComputedValue {
 	color: black;
 }
 
-  
-            
-  
-
-.StyleLink
-{
+.StyleLink {
 	color: blue;
 	vertical-align: top;
 }
 
-.StyleLink:hover
-{
+.StyleLink:hover {
 	color: red;
 }
 
-  
-                                           
-  
-
-DebugPanelStyle
-{
+DebugPanelStyle {
 	background-color: white;
 
 	padding: 10px 0px 10px 0px;
@@ -524,19 +411,16 @@ DebugPanelStyle
 	overflow: squish scroll;
 }
 
-DebugIndividualStyle
-{
+DebugIndividualStyle {
 	width: 100%;
 	padding: 0px 10px 10px 10px;
 }
 
-DebugIndividualStyle .StyleLink
-{
+DebugIndividualStyle .StyleLink {
 	horizontal-align: right;
 }
 
-#DebugPanelStyleInvalid
-{
+#DebugPanelStyleInvalid {
 	color: black;
 	background-color: red;
 	font-weight: bold;
@@ -546,98 +430,74 @@ DebugIndividualStyle .StyleLink
 	padding: 2px 4px 2px 4px;
 }
 
-
-  
-                      
-  
-DebugStyleAnimation
-{
+DebugStyleAnimation {
 	width: 100%;
 	padding: 0px 10px 10px 10px;
 }
 
-DebugStyleAnimation .StyleLink
-{
+DebugStyleAnimation .StyleLink {
 	horizontal-align: right;
 }
 
-.DebugKeyFrameSection
-{
+.DebugKeyFrameSection {
 	flow-children: down;
 }
 
-.DebugKeyFrameRow
-{
+.DebugKeyFrameRow {
 	flow-children: right;
 }
 
-.DebugFrameRow
-{
+.DebugFrameRow {
 	flow-children: right;
 }
 
-.DebugFrameLeftMargin
-{
+.DebugFrameLeftMargin {
 	width: 32px;
 	flow-children: right;
 }
 
-  
-                  
-  
-
-DebugStyleBlock
-{
+DebugStyleBlock {
 	width: 100%;
 	flow-children: down;
 }
 
-DebugStyleBlock TextEntry
-{
+DebugStyleBlock TextEntry {
 	padding: 1px 1px 1px 1px;
 	min-width: 15px;
 }
 
-DebugStyleBlock #PropertySection Label
-{
+DebugStyleBlock #PropertySection Label {
 	padding: 1px 0px 1px 0px;
 }
 
-DebugStyleBlock TextEntry:hover
-{
+DebugStyleBlock TextEntry:hover {
 	background-color: #97c3f0;
 }
 
-DebugStyleBlock TextEntry:focus
-{
+DebugStyleBlock TextEntry:focus {
 	background-color: #3399ff;
 	color: white;
 }
 
-#Selector
-{
+#Selector {
 	color: black;
 }
 
-.DebugPropertySection
-{
+.DebugPropertySection {
 	flow-children: down;
 }
 
-.DebugPropertyRow
-{
+.DebugPropertyRow {
 	flow-children: right;
-    tooltip-position: bottom;
+	tooltip-position: bottom;
 }
 
-.DebugPropertyLeftMargin
-{
+.DebugPropertyLeftMargin {
 	width: 46px;
 	flow-children: right;
 }
 
-.DebugPropertyErrorBox
-{
+.DebugPropertyErrorBox {
 	background-color: red;
 	width: 14px;
 	height: 14px;
@@ -647,8 +507,7 @@ DebugStyleBlock TextEntry:focus
 	border-radius: 50%;
 }
 
-.DebugPropRowButton
-{
+.DebugPropRowButton {
 	margin-top: 3px;
 	margin-right: 2px;
 	width: 12px;
@@ -657,145 +516,112 @@ DebugStyleBlock TextEntry:focus
 	visibility: collapse;
 }
 
-.DebugPropRowButton Label
-{
-
+.DebugPropRowButton Label {
 	horizontal-align: center;
 	vertical-align: top;
 	line-height: 10px;
 	font-size: 12px;
 }
 
-.DebugPropertyRow:hover .DebugPropRowButton, .DebugFrameRow:hover #InsertFrameRowButton, .DebugFrameRow:hover #DeleteFrameRowButton
-{
+.DebugPropertyRow:hover .DebugPropRowButton,
+.DebugFrameRow:hover #InsertFrameRowButton,
+.DebugFrameRow:hover #DeleteFrameRowButton {
 	visibility: visible;
 }
 
-.DebugPropRowButton:hover
-{
-	background-color: #C6E2FF;
+.DebugPropRowButton:hover {
+	background-color: #c6e2ff;
 }
 
-.DebugPropertyName
-{
+.DebugPropertyName {
 	color: #6b8e23;
 }
 
-.DebugPropertyValue
-{
+.DebugPropertyValue {
 	color: black;
 }
 
-.DebugPropertyColon
-{
+.DebugPropertyColon {
 	margin-right: 4px;
 	color: blue;
 }
 
-.DebugPropertySemicolon
-{
+.DebugPropertySemicolon {
 	color: blue;
 }
 
-.DebugPropertyRowNotUsed .DebugPropertyName, .DebugPropertyRowNotUsed .DebugPropertyColon, .DebugPropertyRowNotUsed .DebugPropertyValue, .DebugPropertyRowNotUsed .DebugPropertySemicolon
-{
-	color: #C0C0C0;
+.DebugPropertyRowNotUsed .DebugPropertyName,
+.DebugPropertyRowNotUsed .DebugPropertyColon,
+.DebugPropertyRowNotUsed .DebugPropertyValue,
+.DebugPropertyRowNotUsed .DebugPropertySemicolon {
+	color: #c0c0c0;
 }
 
-  
-                            
-  
-
-DebugAutoComplete
-{
+DebugAutoComplete {
 	background-color: white;
 	padding: 4px;
 	border: 1px solid #333333dd;
-	
+
 	flow-children: down;
 	color: black;
 }
 
-DebugAutoComplete Label:focus
-{
-	background-color: #66CCFF;
+DebugAutoComplete Label:focus {
+	background-color: #66ccff;
 }
 
-  
-                             
-  
-DebugInheritedStylesHeader
-{
+DebugInheritedStylesHeader {
 	width: 100%;
-	background-color: gradient( linear, 0% 0%, 0% 100%, from( #ECF2F9 ), to( #9DBCDE ) );
+	background-color: gradient(linear, 0% 0%, 0% 100%, from(#ecf2f9), to(#9dbcde));
 	padding: 4px;
 	margin-bottom: 10px;
 
 	flow-children: right;
 }
 
-DebugInheritedStylesHeader .StyleLink
-{
+DebugInheritedStylesHeader .StyleLink {
 	margin-left: 4px;
 }
 
-  
-                      
-   
-DebugStyleSeparator
-{
+DebugStyleSeparator {
 	width: 100%;
-	background-color: gradient( linear, 0% 0%, 0% 100%, from( #ECF2F9 ), to( #9DBCDE ) );
+	background-color: gradient(linear, 0% 0%, 0% 100%, from(#ecf2f9), to(#9dbcde));
 	padding: 4px;
 	margin-bottom: 10px;
 }
 
-
-  
-                             
-  
-
-a
-{
+a {
 	color: blue;
 }
 
-a:hover
-{
+a:hover {
 	text-decoration: underline;
 }
 
-b
-{
+b {
 	font-weight: bold;
 }
 
-i
-{
+i {
 	font-style: italics;
 }
 
-strong
-{
+strong {
 	font-weight: bold;
 }
 
-em
-{
+em {
 	font-style: italics;
 }
 
-h1
-{
+h1 {
 	font-weight: bold;
 }
 
-h2
-{
+h2 {
 	font-weight: bold;
 }
 
-pre
-{
+pre {
 	font-family: monospacefont;
 }

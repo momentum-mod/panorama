@@ -10,14 +10,21 @@
 			<Label id="TitleLabel" class="generic-popup__title" text="Enter New Range Color Profile Name" />
 		</Panel>
 		<Panel class="row horizontal-align-center mt-4">
-			<TextEntry id="RangeColorProfileName" class="textentry" maxchars="255" placeholder="Range Color Profile Name..." text="" ontextentrysubmit="RangeColorProfileNamePopup.onTextSubmitted()" />
+			<TextEntry
+				id="RangeColorProfileName"
+				class="textentry"
+				maxchars="255"
+				placeholder="Range Color Profile Name..."
+				text=""
+				ontextentrysubmit="RangeColorProfileNamePopup.onTextSubmitted()"
+			/>
 		</Panel>
 		<Label id="InvalidNameLabel" class="text-m horizontal-align-center" text="Invalid profile name!" />
 		<Panel class="row horizontal-align-center mt-4 generic-popup__button-row">
 			<Button id="CancelButton" class="button mr-4" onactivate="UiToolkitAPI.CloseAllVisiblePopups()">
 				<Label class="button__text" text="Cancel" />
 			</Button>
-			<Button id="OKButton" class="button button--green" onactivate="RangeColorProfileNamePopup.onOKPressed()" >
+			<Button id="OKButton" class="button button--green" onactivate="RangeColorProfileNamePopup.onOKPressed()">
 				<Label class="button__text" text="{s:OKBtnText}" />
 			</Button>
 		</Panel>

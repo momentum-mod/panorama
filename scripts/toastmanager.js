@@ -4,14 +4,12 @@ const TOAST_DURATION = 10;
 const MAX_ACTIVE_TOASTS = 10;
 const LOCATIONS = ['left', 'center', 'right'];
 const convertLocationNum = (locationNum) => {
-	if (locationNum === -1)
-		return 'all';
+	if (locationNum === -1) return 'all';
 
-	if (locationNum < 0 || locationNum > LOCATIONS.length - 1)
-		return LOCATIONS[2];
+	if (locationNum < 0 || locationNum > LOCATIONS.length - 1) return LOCATIONS[2];
 
 	return LOCATIONS[locationNum];
-}
+};
 const HIDE_TRANSITION_DURATION = 0.3; // This should match transition-duration properties in toast.scss
 
 class Toast {
@@ -55,7 +53,11 @@ class Toast {
 			return null;
 		}
 		if (obj.duration && obj.duration !== '' && isNaN(obj.duration)) {
-			$.Warning(`ToastManager: Toast object created with invalid duration: value "${obj.duration}" type "${typeof obj.duration}".`);
+			$.Warning(
+				`ToastManager: Toast object created with invalid duration: value "${
+					obj.duration
+				}" type "${typeof obj.duration}".`
+			);
 			return null;
 		}
 
@@ -121,7 +123,10 @@ class ToastManager {
 				$.CancelScheduled(existingToast.schedulerHandle);
 			}
 
-			this.activeToasts[existingToast.location].splice(this.activeToasts[existingToast.location].indexOf(existingToast), 1);
+			this.activeToasts[existingToast.location].splice(
+				this.activeToasts[existingToast.location].indexOf(existingToast),
+				1
+			);
 
 			existingToast.panel.TriggerClass('toast--wiggle');
 
@@ -140,7 +145,7 @@ class ToastManager {
 		const locationClass = `toast--${toast.location}`;
 
 		if (toast.customLayout) {
-			toast.panel = $.CreatePanel('Panel', container, toast.id, {class: locationClass, ...toast.parameters});
+			toast.panel = $.CreatePanel('Panel', container, toast.id, { class: locationClass, ...toast.parameters });
 			toast.panel.LoadLayout(toast.customLayout, false, false);
 		} else {
 			toast.panel = $.CreatePanel('ToastGeneric', container, toast.id, { class: locationClass });

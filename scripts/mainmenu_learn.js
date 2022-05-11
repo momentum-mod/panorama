@@ -4,7 +4,8 @@
 const LEARN_FILE_PATH = 'panorama/data/learn.vdf';
 
 // Spreadsheet URL to use if loading in -dev
-const DATA_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTlH08v-dqtGl49T0Eslb56o-Y-xp6kOwhEo4Bwx387AxbpGHFw7AUBeBQMQdwEBI9g4gBBnGmUZ5EW/pub?output=csv';
+const DATA_URL =
+	'https://docs.google.com/spreadsheets/d/e/2PACX-1vTlH08v-dqtGl49T0Eslb56o-Y-xp6kOwhEo4Bwx387AxbpGHFw7AUBeBQMQdwEBI9g4gBBnGmUZ5EW/pub?output=csv';
 
 class Learn {
 	static panels = {
@@ -30,7 +31,9 @@ class Learn {
 		Object.values(GAMEMODE).forEach((modeData) => {
 			this.modes[modeData.shortName] = {
 				button: $(`#${modeData.shortName}Radio`),
-				list: $.CreatePanel('Panel', this.panels.listContainer, `${modeData.shortName}List`, { class: 'learn-list' })
+				list: $.CreatePanel('Panel', this.panels.listContainer, `${modeData.shortName}List`, {
+					class: 'learn-list'
+				})
 			};
 
 			this.lessonData[modeData.shortName] = {};
@@ -87,7 +90,9 @@ class Learn {
 
 			// Populate with entries
 			Object.entries(this.lessonData[modeName]).forEach(([lessonKey, lessonData]) => {
-				const panel = $.CreatePanel('RadioButton', sections[lessonData['Difficulty']], lessonKey, { group: `${modeName}LearnButtons` });
+				const panel = $.CreatePanel('RadioButton', sections[lessonData['Difficulty']], lessonKey, {
+					group: `${modeName}LearnButtons`
+				});
 
 				panel.LoadLayoutSnippet('learn-list-lesson');
 				panel.SetDialogVariable('learn_lesson_name', lessonData['Name']);
@@ -96,7 +101,13 @@ class Learn {
 			});
 
 			Object.values(sections).forEach((section) =>
-				section.Children().forEach((child, i) => child.paneltype === 'RadioButton' && child.AddClass(`learn-list__lesson--${i % 2 == 0 ? 'even' : 'odd'}`))
+				section
+					.Children()
+					.forEach(
+						(child, i) =>
+							child.paneltype === 'RadioButton' &&
+							child.AddClass(`learn-list__lesson--${i % 2 == 0 ? 'even' : 'odd'}`)
+					)
 			);
 		});
 	}
@@ -149,7 +160,11 @@ class Learn {
 			$.UnregisterForUnhandledEvent('ChaosLevelInitPostEntity', onLoadHandle);
 
 			if (MapCacheAPI.GetMapName() !== this.currentLessonData['Map'])
-				$.Warning(`Learn: This is not the right map... we meant to load ${this.currentLessonData['Map']}, got ${MapCacheAPI.GetMapName()}!`);
+				$.Warning(
+					`Learn: This is not the right map... we meant to load ${
+						this.currentLessonData['Map']
+					}, got ${MapCacheAPI.GetMapName()}!`
+				);
 			else this.teleportToLessonStart();
 		};
 
@@ -180,7 +195,9 @@ class Learn {
 			GameInterfaceAPI.ConsoleCommand(`setang ${angles}`);
 			$.Msg(`Learn: Teleporting to Position ${pos}, Angles ${angles} `);
 		} else {
-			$.Warning(`Learn: Error loading lesson ${this.currentLessonData['Name']}, both teleport target and position were unspecified!`);
+			$.Warning(
+				`Learn: Error loading lesson ${this.currentLessonData['Name']}, both teleport target and position were unspecified!`
+			);
 			return;
 		}
 	}
@@ -249,7 +266,8 @@ class Learn {
 		return new Promise((resolve, reject) => {
 			$.AsyncWebRequest(DATA_URL, {
 				type: 'GET',
-				complete: (data) => (data.statusText === 'success' ? resolve(data.responseText) : reject(data.statusText))
+				complete: (data) =>
+					data.statusText === 'success' ? resolve(data.responseText) : reject(data.statusText)
 			});
 		});
 	}

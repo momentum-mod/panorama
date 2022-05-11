@@ -35,7 +35,10 @@ class Credit {
 		} while (curBioSection.length >= 255);
 
 		// If the name contains a comma, split around it, for names like "Blah von Blah"
-		cp.SetDialogVariable('first_names', name.includes(',') ? name.split(',')[0] : name.split(' ').slice(0, -1).join(' '));
+		cp.SetDialogVariable(
+			'first_names',
+			name.includes(',') ? name.split(',')[0] : name.split(' ').slice(0, -1).join(' ')
+		);
 		cp.SetDialogVariable('last_name', name.includes(',') ? name.split(',')[1] : name.split(' ').slice(-1));
 		cp.SetDialogVariable('username', username);
 		cp.SetDialogVariable('roles', roles);

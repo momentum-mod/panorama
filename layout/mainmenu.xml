@@ -14,7 +14,15 @@
 			<Panel>
 				<!-- Source is set in script. -->
 				<!-- Set what you want the movie to be using the data-type example 'nuke' the .webm is appended in script. -->
-				<Movie class="mainmenu__movie MainMenuModeOnly" id="MainMenuMovie" src="" sound="" controls="none" repeat="true" hittest="false">
+				<Movie
+					class="mainmenu__movie MainMenuModeOnly"
+					id="MainMenuMovie"
+					src=""
+					sound=""
+					controls="none"
+					repeat="true"
+					hittest="false"
+				>
 				</Movie>
 			</Panel>
 		</snippet>
@@ -24,7 +32,12 @@
 		</snippet>
 	</snippets>
 
-	<ChaosMainMenu class="InitialDisplay MainMenuRootPanel" hittest="false" useglobalcontext="true" onload="MainMenuController.onMainMenuLoaded()">
+	<ChaosMainMenu
+		class="InitialDisplay MainMenuRootPanel"
+		hittest="false"
+		useglobalcontext="true"
+		onload="MainMenuController.onMainMenuLoaded()"
+	>
 
 		<!-- Vanity is not used but the engine needs this to exist -->
 		<Panel id="MainMenuVanityParent" />
@@ -33,28 +46,58 @@
 			<!-- Topnav -->
 			<Panel id="JsMainMenuNavBar" class="topnav" style="z-index: 10;">
 
-				<RadioButton id="HomeButton" group="TopNavRadio" class="topnav__home" onactivate="MainMenuController.onHomeButtonPressed()">
+				<RadioButton
+					id="HomeButton"
+					group="TopNavRadio"
+					class="topnav__home"
+					onactivate="MainMenuController.onHomeButtonPressed()"
+				>
 					<Image class="topnav__logo" src="file://{images}/momentumLogo.svg" textureheight="64" />
 				</RadioButton>
 
 				<Panel id="MainMenuTopButtons" class="full-height flow-right">
-					<RadioButton id="PlayButton" group="TopNavRadio" class="topnav__button" onactivate="MainMenuController.navigateToTab('MapSelection', 'mainmenu_mapselector', false)">
+					<RadioButton
+						id="PlayButton"
+						group="TopNavRadio"
+						class="topnav__button"
+						onactivate="MainMenuController.navigateToTab('MapSelection', 'mainmenu_mapselector', false)"
+					>
 						<Image class="topnav__icon" src="file://{images}/play-circle.svg" textureheight="64" />
 					</RadioButton>
 
-					<RadioButton id="InventoryButton" group="TopNavRadio" class="topnav__button" onactivate="MainMenuController.navigateToTab('Inventory', 'mainmenu_inventory')">
+					<RadioButton
+						id="InventoryButton"
+						group="TopNavRadio"
+						class="topnav__button"
+						onactivate="MainMenuController.navigateToTab('Inventory', 'mainmenu_inventory')"
+					>
 						<Image class="topnav__icon" src="file://{images}/inventory.svg" textureheight="64" />
 					</RadioButton>
 
-					<RadioButton id="ShopButton" group="TopNavRadio" class="topnav__button" onactivate="MainMenuController.navigateToTab('Shop', 'mainmenu_shop')">
+					<RadioButton
+						id="ShopButton"
+						group="TopNavRadio"
+						class="topnav__button"
+						onactivate="MainMenuController.navigateToTab('Shop', 'mainmenu_shop')"
+					>
 						<Image class="topnav__icon" src="file://{images}/shop.svg" textureheight="64" />
 					</RadioButton>
 
-					<RadioButton id="LearnButton" group="TopNavRadio" class="topnav__button" onactivate="MainMenuController.navigateToTab('Learn', 'mainmenu_learn')">
+					<RadioButton
+						id="LearnButton"
+						group="TopNavRadio"
+						class="topnav__button"
+						onactivate="MainMenuController.navigateToTab('Learn', 'mainmenu_learn')"
+					>
 						<Image class="topnav__icon" src="file://{images}/learn.svg" textureheight="64" />
 					</RadioButton>
 
-					<RadioButton id="SettingsButton" group="TopNavRadio" class="topnav__button" onactivate="MainMenuController.navigateToTab('Settings', 'mainmenu_settings')">
+					<RadioButton
+						id="SettingsButton"
+						group="TopNavRadio"
+						class="topnav__button"
+						onactivate="MainMenuController.navigateToTab('Settings', 'mainmenu_settings')"
+					>
 						<Image class="topnav__icon" src="file://{images}/settings.svg" textureheight="64" />
 					</RadioButton>
 				</Panel>
@@ -75,7 +118,7 @@
 			<!-- /Topnav -->
 
 			<!-- Topnav Shadow -->
-			<Panel class="topnav__shadow"/>
+			<Panel class="topnav__shadow" />
 			<!-- /Topnav Shadow -->
 
 			<!-- Drawer -->
@@ -88,24 +131,49 @@
 				<!-- Rightnav -->
 				<Panel id="MainMenuOptionListRight" class="rightnav">
 					<Panel class="rightnav__wrapper">
-						<RadioButton id="LobbyButton" group="RightNavRadio" class="rightnav__button" onactivate="Drawer.extendAndNavigateToTab('LobbyDrawer')">
+						<RadioButton
+							id="LobbyButton"
+							group="RightNavRadio"
+							class="rightnav__button"
+							onactivate="Drawer.extendAndNavigateToTab('LobbyDrawer')"
+						>
 							<Image id="LobbyButtonImage" class="rightnav__icon" src="file://{images}/lobby.svg" textureheight="32" />
 							<Label id="LobbyPlayerCountLabel" class="rightnav__button-subtitle rightnav__button-subtitle--hidden" />
 						</RadioButton>
 
-						<RadioButton id="ProfileButton" group="RightNavRadio" class="rightnav__button" onactivate="Drawer.extendAndNavigateToTab('ProfileDrawer')">
+						<RadioButton
+							id="ProfileButton"
+							group="RightNavRadio"
+							class="rightnav__button"
+							onactivate="Drawer.extendAndNavigateToTab('ProfileDrawer')"
+						>
 							<Image class="rightnav__icon" src="file://{images}/profile.svg" textureheight="32" />
 						</RadioButton>
 
-						<RadioButton id="ChallengesButton" group="RightNavRadio" class="rightnav__button" onactivate="Drawer.extendAndNavigateToTab('ChallengesDrawer')">
-							<Image class="rightnav__icon" src="file://{images}/crown.svg" textureheight="32"/>
+						<RadioButton
+							id="ChallengesButton"
+							group="RightNavRadio"
+							class="rightnav__button"
+							onactivate="Drawer.extendAndNavigateToTab('ChallengesDrawer')"
+						>
+							<Image class="rightnav__icon" src="file://{images}/crown.svg" textureheight="32" />
 						</RadioButton>
 
-						<RadioButton id="ChangelogButton" group="RightNavRadio" class="rightnav__button" onactivate="Drawer.extendAndNavigateToTab('AboutDrawer')">
+						<RadioButton
+							id="ChangelogButton"
+							group="RightNavRadio"
+							class="rightnav__button"
+							onactivate="Drawer.extendAndNavigateToTab('AboutDrawer')"
+						>
 							<Image class="rightnav__icon" src="file://{images}/news.svg" textureheight="32" />
 						</RadioButton>
 
-						<Button id="SliderButton" group="RightNavRadio" class="rightnav__button rightnav__drawerbutton" onactivate="Drawer.toggle()">
+						<Button
+							id="SliderButton"
+							group="RightNavRadio"
+							class="rightnav__button rightnav__drawerbutton"
+							onactivate="Drawer.toggle()"
+						>
 							<Image class="rightnav__icon" src="file://{images}/right-arrow.svg" textureheight="32" orientation="180" />
 						</Button>
 					</Panel>
@@ -121,13 +189,21 @@
 			<!-- /Drawer -->
 
 			<!-- Full page blur: used to blur everything below the drawer -->
-			<BaseBlurTarget id="MainMenuFullBlur" class="mainmenu__content-blur" blurrects="MainMenuDrawerContent MainMenuOptionListRight">
+			<BaseBlurTarget
+				id="MainMenuFullBlur"
+				class="mainmenu__content-blur"
+				blurrects="MainMenuDrawerContent MainMenuOptionListRight"
+			>
 				<Panel class="mainmenu__container">
 					<!-- Backgrounds -->
 					<!-- Background blur: used to blur the backgrounds behind mainmenu pages -->
-					<BaseBlurTarget id="MainMenuBackgroundBlur" class="mainmenu__background-blur" blurrects="MainMenuContentBlur JsMainMenuNavBar NewsPanel">
+					<BaseBlurTarget
+						id="MainMenuBackgroundBlur"
+						class="mainmenu__background-blur"
+						blurrects="MainMenuContentBlur JsMainMenuNavBar NewsPanel"
+					>
 						<!-- Map Selector backgrounds -->
-						<Image id="MainMenuBackgroundMapSelectorImage" class="MainMenuModeOnly mapselector__background"/>
+						<Image id="MainMenuBackgroundMapSelectorImage" class="MainMenuModeOnly mapselector__background" />
 
 						<!-- Movie background -->
 						<Panel id="MainMenuMovieParent" class="mainmenu__background MainMenuModeOnly" />
@@ -152,7 +228,14 @@
 
 							<Frame id="NewsPanel" class="home__newspanel" src="file://{resources}/layout/mainmenu_news.xml" />
 
-							<ModelPanel id="MainMenuModel" class="home__modelpanel" src="models/custom_props/hd_logo.mdl" cubemap="cubemaps/cubemap_menu_model_bg.hdr" antialias="true" mouse_rotate="true" />
+							<ModelPanel
+								id="MainMenuModel"
+								class="home__modelpanel"
+								src="models/custom_props/hd_logo.mdl"
+								cubemap="cubemaps/cubemap_menu_model_bg.hdr"
+								antialias="true"
+								mouse_rotate="true"
+							/>
 
 							<Panel class="home__bottombar bottombar">
 
@@ -186,7 +269,11 @@
 									</Button>
 								</TooltipPanel>
 
-								<Button id="ControlsLibraryButton" class="bottombar__button hide" onactivate="MainMenuController.navigateToTab('ControlsLibrary', 'controlslibrary')">
+								<Button
+									id="ControlsLibraryButton"
+									class="bottombar__button hide"
+									onactivate="MainMenuController.navigateToTab('ControlsLibrary', 'controlslibrary')"
+								>
 									<Label class="bottombar__text" text="Controls Library" />
 								</Button>
 

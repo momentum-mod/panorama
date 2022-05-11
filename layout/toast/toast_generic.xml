@@ -4,10 +4,10 @@
 	</styles>
 
 	<Panel class="toast toast-generic">
-		<Image id="Icon" class="toast-generic__icon" textureheight="64"/>
+		<Image id="Icon" class="toast-generic__icon" textureheight="64" />
 		<Panel class="toast-generic__text-container">
-			<Label id="Title" class="toast-generic__title" text="{s:toast_title}"/>
-			<Label class="toast-generic__message" text="{s:toast_message}"/>
+			<Label id="Title" class="toast-generic__title" text="{s:toast_title}" />
+			<Label class="toast-generic__message" text="{s:toast_message}" />
 		</Panel>
 	</Panel>
 </root>

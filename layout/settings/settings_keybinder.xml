@@ -9,7 +9,7 @@
 		</Panel>
 		<Panel class="settings-keybinder__container">
 			<Panel id="BindingLabelContainer" class="settings-keybinder__key-container">
-				<Label id="value" text="" class="settings-keybinder__key"/>
+				<Label id="value" text="" class="settings-keybinder__key" />
 			</Panel>
 			<Button id="clearkeybinding" class="settings-keybinder__clear" />
 		</Panel>
