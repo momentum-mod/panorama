@@ -1,0 +1,19 @@
+{
+    "name": "momentum-panorama",
+    "version": "1.0.0",
+    "description": "Simple scripts for handling Momentum Panorama files",
+    "config": {
+        "baseDir": "./"
+    },
+    "scripts": {
+        "get-learn": "node tools/get_learn.js",
+        "get-credits": "node tools/get_credits.js"
+    },
+    "author": "Momentum Team",
+    "license": "ISC",
+    "dependencies": {
+        "axios": "^0.26.0",
+        "papaparse": "^5.3.1",
+        "prettier": "^2.5.1"
+    }
+}

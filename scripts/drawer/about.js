@@ -1,6 +1,6 @@
 'use strict';
 
-const CHANGELOG_FILE_PATH = 'resource/changelog.vdf';
+const CHANGELOG_FILE_PATH = 'panorama/data/changelog.vdf';
 
 class About {
 	static sections = {
@@ -76,12 +76,21 @@ class About {
 		const changelogData = $.LoadKeyValuesFile(CHANGELOG_FILE_PATH);
 
 		Object.entries(changelogData).forEach(([version, versionData]) => {
-			$.CreatePanel('Label', this.sections.changelog, '', { class: 'about-changelog__version', text: version });
+			$.CreatePanel('Label', this.sections.changelog, '', {
+				class: 'about-changelog__version',
+				text: version
+			});
 
 			Object.entries(versionData).forEach(([category, categoryData]) => {
-				$.CreatePanel('Label', this.sections.changelog, '', { class: 'about-changelog__category', text: category });
+				$.CreatePanel('Label', this.sections.changelog, '', {
+					class: 'about-changelog__category',
+					text: category
+				});
 
-				$.CreatePanel('Label', this.sections.changelog, '', { class: 'about-changelog__item', text: ' • ' + Object.values(categoryData).join('\n • ') });
+				$.CreatePanel('Label', this.sections.changelog, '', {
+					class: 'about-changelog__item',
+					text: ' • ' + Object.values(categoryData).join('\n • ')
+				});
 			});
 		});
 	}

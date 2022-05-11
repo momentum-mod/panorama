@@ -1,7 +1,7 @@
 'use strict';
 
 // File to use if loading normally
-const LEARN_FILE_PATH = 'resource/learn.vdf';
+const LEARN_FILE_PATH = 'panorama/data/learn.vdf';
 
 // Spreadsheet URL to use if loading in -dev
 const DATA_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTlH08v-dqtGl49T0Eslb56o-Y-xp6kOwhEo4Bwx387AxbpGHFw7AUBeBQMQdwEBI9g4gBBnGmUZ5EW/pub?output=csv';
@@ -219,10 +219,21 @@ class Learn {
 
 		this.updateSpinnerStatus('Retrieved successfully!');
 
-		const dataArray = Papa.parse(data, { header: true, dynamicTyping: true }).data;
+		const dataArray = Papa.parse(data, {
+			header: true,
+			dynamicTyping: true
+		}).data;
 
 		Object.keys(this.modes).forEach((mode) =>
-			dataArray.filter((lesson) => lesson['Mode'] === mode).forEach((lesson, index) => (this.lessonData[mode] = { ...this.lessonData[mode], [mode + (index + 1)]: lesson }))
+			dataArray
+				.filter((lesson) => lesson['Mode'] === mode)
+				.forEach(
+					(lesson, index) =>
+						(this.lessonData[mode] = {
+							...this.lessonData[mode],
+							[mode + (index + 1)]: lesson
+						})
+				)
 		);
 
 		this.initLearnPanels();

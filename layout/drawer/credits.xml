@@ -27,7 +27,9 @@
 		<Panel class="about-credits__row">
 			<Label
 				id="CreditDepartmentHead1"
-				class="about-credits__col about-credits__name about-credits__name--dept-head"
+				class="
+					about-credits__col about-credits__name about-credits__name--dept-head
+				"
 				text="Aux"
 				username="Aux"
 				name="Martin H. Laursen"
@@ -42,7 +44,9 @@
 			/>
 			<Label
 				id="CreditDepartmentHead2"
-				class="about-credits__col about-credits__name about-credits__name--dept-head"
+				class="
+					about-credits__col about-credits__name about-credits__name--dept-head
+				"
 				text="burrito"
 				username="burrito"
 				name=""
@@ -57,7 +61,9 @@
 			/>
 			<Label
 				id="CreditDepartmentHead3"
-				class="about-credits__col about-credits__name about-credits__name--dept-head"
+				class="
+					about-credits__col about-credits__name about-credits__name--dept-head
+				"
 				text="False_"
 				username="False_"
 				name="Ethan Vuong"
@@ -74,7 +80,9 @@
 		<Panel class="about-credits__row">
 			<Label
 				id="CreditDepartmentHead4"
-				class="about-credits__col about-credits__name about-credits__name--dept-head"
+				class="
+					about-credits__col about-credits__name about-credits__name--dept-head
+				"
 				text="Monolith"
 				username="Monolith"
 				name=""
@@ -89,7 +97,9 @@
 			/>
 			<Label
 				id="CreditDepartmentHead5"
-				class="about-credits__col about-credits__name about-credits__name--dept-head"
+				class="
+					about-credits__col about-credits__name about-credits__name--dept-head
+				"
 				text="TraZox"
 				username="TraZox"
 				name="Alexandre Declos"
@@ -104,7 +114,9 @@
 			/>
 			<Label
 				id="CreditDepartmentHead6"
-				class="about-credits__col about-credits__name about-credits__name--dept-head"
+				class="
+					about-credits__col about-credits__name about-credits__name--dept-head
+				"
 				text="Zopha"
 				username="Zopha"
 				name="Tyler Shobe"
@@ -337,6 +349,23 @@
 			<Label
 				id="CreditTeam15"
 				class="about-credits__col about-credits__name about-credits__name--team"
+				text="jjl77"
+				username="jjl77"
+				name="Jeremy Lorelli"
+				section="team"
+				roles="Engine Programmer, Tooling"
+				pronouns="he/him"
+				bio="Linux nerd, Source engine and tools programmer. Obsessed with improving software and playing around with experimental features."
+				steamID="76561198132780615"
+				discord="JJl77#6673"
+				email="jeremy.lorelli.1337@gmail.com"
+				github="JJL772"
+			/>
+		</Panel>
+		<Panel class="about-credits__row">
+			<Label
+				id="CreditTeam16"
+				class="about-credits__col about-credits__name about-credits__name--team"
 				text="Kevin"
 				username="Kevin"
 				name=""
@@ -349,10 +378,8 @@
 				email=""
 				github=""
 			/>
-		</Panel>
-		<Panel class="about-credits__row">
 			<Label
-				id="CreditTeam16"
+				id="CreditTeam17"
 				class="about-credits__col about-credits__name about-credits__name--team"
 				text="Lumia"
 				username="Lumia"
@@ -367,7 +394,7 @@
 				github=""
 			/>
 			<Label
-				id="CreditTeam17"
+				id="CreditTeam18"
 				class="about-credits__col about-credits__name about-credits__name--team"
 				text="Mac"
 				username="Mac"
@@ -382,7 +409,7 @@
 				github=""
 			/>
 			<Label
-				id="CreditTeam18"
+				id="CreditTeam19"
 				class="about-credits__col about-credits__name about-credits__name--team"
 				text="TheNerdMan"
 				username="TheNerdMan"
@@ -397,7 +424,7 @@
 				github="TheNerdMan"
 			/>
 			<Label
-				id="CreditTeam19"
+				id="CreditTeam20"
 				class="about-credits__col about-credits__name about-credits__name--team"
 				text="Ninja Cookie"
 				username="Ninja Cookie"
@@ -411,8 +438,10 @@
 				email=""
 				github="Ninja-Cookie"
 			/>
+		</Panel>
+		<Panel class="about-credits__row">
 			<Label
-				id="CreditTeam20"
+				id="CreditTeam21"
 				class="about-credits__col about-credits__name about-credits__name--team"
 				text="PeenScreeker"
 				username="PeenScreeker"
@@ -426,10 +455,8 @@
 				email=""
 				github=""
 			/>
-		</Panel>
-		<Panel class="about-credits__row">
 			<Label
-				id="CreditTeam21"
+				id="CreditTeam22"
 				class="about-credits__col about-credits__name about-credits__name--team"
 				text="pbjpie"
 				username="pbjpie"
@@ -444,7 +471,7 @@
 				github=""
 			/>
 			<Label
-				id="CreditTeam22"
+				id="CreditTeam23"
 				class="about-credits__col about-credits__name about-credits__name--team"
 				text="rio"
 				username="rio"
@@ -459,22 +486,22 @@
 				github="jason-e"
 			/>
 			<Label
-				id="CreditTeam23"
+				id="CreditTeam24"
 				class="about-credits__col about-credits__name about-credits__name--team"
 				text="SCell555"
 				username="SCell555"
-				name=""
+				name="Jakub Rusnák"
 				section="team"
-				roles=""
-				pronouns=""
+				roles="Engine Programmer"
+				pronouns="he/him"
 				bio=""
-				steamID=""
-				discord=""
-				email=""
-				github=""
+				steamID="76561198114725103"
+				discord="SCell555#4853"
+				email="scell@momentum-mod.org"
+				github="SCell555"
 			/>
 			<Label
-				id="CreditTeam24"
+				id="CreditTeam25"
 				class="about-credits__col about-credits__name about-credits__name--team"
 				text="Shegetz"
 				username="Shegetz"
@@ -488,8 +515,10 @@
 				email="dylan.fogle@gmail.com"
 				github="Shegetz"
 			/>
+		</Panel>
+		<Panel class="about-credits__row">
 			<Label
-				id="CreditTeam25"
+				id="CreditTeam26"
 				class="about-credits__col about-credits__name about-credits__name--team"
 				text="SlidyBat"
 				username="SlidyBat"
@@ -503,10 +532,8 @@
 				email="slidybat@momentum-mod.org"
 				github="SlidyBat"
 			/>
-		</Panel>
-		<Panel class="about-credits__row">
 			<Label
-				id="CreditTeam26"
+				id="CreditTeam27"
 				class="about-credits__col about-credits__name about-credits__name--team"
 				text="SpringScale"
 				username="SpringScale"
@@ -521,7 +548,7 @@
 				github=""
 			/>
 			<Label
-				id="CreditTeam27"
+				id="CreditTeam28"
 				class="about-credits__col about-credits__name about-credits__name--team"
 				text="VortexPDX"
 				username="VortexPDX"
@@ -536,7 +563,7 @@
 				github=""
 			/>
 			<Label
-				id="CreditTeam28"
+				id="CreditTeam29"
 				class="about-credits__col about-credits__name about-credits__name--team"
 				text="Xbmann"
 				username="Xbmann"
@@ -551,7 +578,7 @@
 				github=""
 			/>
 			<Label
-				id="CreditTeam29"
+				id="CreditTeam30"
 				class="about-credits__col about-credits__name about-credits__name--team"
 				text="xen"
 				username="xen"
@@ -565,8 +592,10 @@
 				email="xen@momentum-mod.org"
 				github=""
 			/>
+		</Panel>
+		<Panel class="about-credits__row">
 			<Label
-				id="CreditTeam30"
+				id="CreditTeam31"
 				class="about-credits__col about-credits__name about-credits__name--team"
 				text="Xtra_Festive"
 				username="Xtra_Festive"
