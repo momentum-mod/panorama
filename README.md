@@ -1,3 +1,6 @@
+![Momentum Mod](images/momentumLogo.svg)
+> *Momentum Mod is a standalone game built on the Source Engine, aiming to centralize movement gametypes found in CS:S, CS:GO, and TF2.*
+
 # Momentum Mod Panorama
 
 This repo contains all of our core game UI files used by Source's Panorama UI framework.
