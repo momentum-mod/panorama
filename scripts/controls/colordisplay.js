@@ -5,7 +5,11 @@ class ColorDisplay {
 
 	static showPopup() {
 		const color = $.GetContextPanel().color;
-		const popup = UiToolkitAPI.ShowCustomLayoutPopupParameters('', 'file://{resources}/layout/popups/popup_colorpicker.xml', 'color=' + color);
+		const popup = UiToolkitAPI.ShowCustomLayoutPopupParameters(
+			'',
+			'file://{resources}/layout/popups/popup_colorpicker.xml',
+			'color=' + color
+		);
 		$.RegisterEventHandler('ColorPickerSave', popup, this.saveColor.bind(this));
 	}
 

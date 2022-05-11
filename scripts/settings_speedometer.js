@@ -23,12 +23,10 @@ class SpeedometerDetailObject {
 		this.containingPanel.DeleteAsync(0.0);
 	}
 	discardChanges(speedometerKV) {
-		if (this.id !== SPEEDOMETER_ID.EnergySpeedometer)
-			this.unitsDropdown.SetSelectedIndex(speedometerKV['units']);
+		if (this.id !== SPEEDOMETER_ID.EnergySpeedometer) this.unitsDropdown.SetSelectedIndex(speedometerKV['units']);
 		this.colorModeDropdown.SetSelectedIndex(speedometerKV['colorize']);
 		const colorProfile = speedometerKV['color_profile'];
-		if (colorProfile)
-			this.colorProfileDropdown.SetSelected(colorProfile);
+		if (colorProfile) this.colorProfileDropdown.SetSelected(colorProfile);
 		this.markAsUnmodified();
 	}
 	markAsModified() {
@@ -62,27 +60,35 @@ class SpeedometerDetailObject {
 
 		if (id === SPEEDOMETER_ID.EnergySpeedometer) {
 			this.unitsSettingContainer.visible = false;
-		}
-		else {
+		} else {
 			this.unitsDropdown.SetSelectedIndex(speedometerKV['units']);
 			this.unitsDropdown.SetPanelEvent('oninputsubmit', () => Speedometers.markSpeedometerAsModified(this.id));
 		}
-		this.profileSettingContainer.SetHasClass('settings-speedometer__settingcontainer--hidden', this.colorModeDropdown.GetSelected().id !== 'colormode1');
+		this.profileSettingContainer.SetHasClass(
+			'settings-speedometer__settingcontainer--hidden',
+			this.colorModeDropdown.GetSelected().id !== 'colormode1'
+		);
 
-		this.toggleButton.SetPanelEvent('onactivate', () => { this.detailPanel.SetHasClass('settings-speedometer__detail--hidden', !this.toggleButton.IsSelected()); });
-		this.discardButton.SetPanelEvent('onactivate', () => Speedometers.discardChangesForSpeedometer(this.id, speedometerKV));
+		this.toggleButton.SetPanelEvent('onactivate', () => {
+			this.detailPanel.SetHasClass('settings-speedometer__detail--hidden', !this.toggleButton.IsSelected());
+		});
+		this.discardButton.SetPanelEvent('onactivate', () =>
+			Speedometers.discardChangesForSpeedometer(this.id, speedometerKV)
+		);
 		this.deleteButton.SetPanelEvent('onactivate', () => Speedometers.deleteSpeedometer(this.id));
 		this.moveupButton.SetPanelEvent('onactivate', () => Speedometers.reorderSpeedometer(this.id, true));
 		this.movedownButton.SetPanelEvent('onactivate', () => Speedometers.reorderSpeedometer(this.id, false));
 
 		this.updateProfileDropdown();
 		const colProfileName = speedometerKV['color_profile'];
-		if (colProfileName)
-			this.colorProfileDropdown.SetSelected(colProfileName);
+		if (colProfileName) this.colorProfileDropdown.SetSelected(colProfileName);
 
 		this.colorModeDropdown.SetPanelEvent('oninputsubmit', () => {
 			Speedometers.markSpeedometerAsModified(this.id);
-			this.profileSettingContainer.SetHasClass('settings-speedometer__settingcontainer--hidden', this.colorModeDropdown.GetSelected().id !== 'colormode1');
+			this.profileSettingContainer.SetHasClass(
+				'settings-speedometer__settingcontainer--hidden',
+				this.colorModeDropdown.GetSelected().id !== 'colormode1'
+			);
 		});
 		this.colorProfileDropdown.SetPanelEvent('oninputsubmit', () => Speedometers.markSpeedometerAsModified(this.id));
 
@@ -93,8 +99,9 @@ class SpeedometerDetailObject {
 		this.colorProfileDropdown.SetSelectedIndex(0);
 
 		let profilesKV = SpeedometerSettingsAPI.GetColorProfiles();
-		for (let i = 1; i < this.colorProfileDropdown.AccessDropDownMenu().GetChildCount(); i++) this.colorProfileDropdown.RemoveOptionIndex(i);
-		Object.keys(profilesKV).forEach(profileName => {
+		for (let i = 1; i < this.colorProfileDropdown.AccessDropDownMenu().GetChildCount(); i++)
+			this.colorProfileDropdown.RemoveOptionIndex(i);
+		Object.keys(profilesKV).forEach((profileName) => {
 			let optionPanel = $.CreatePanel('Label', this.colorProfileDropdown.AccessDropDownMenu(), profileName);
 			optionPanel.text = profileName;
 			this.colorProfileDropdown.AddOption(optionPanel);
@@ -107,19 +114,21 @@ class SpeedometerDetailObject {
 	saveToKV(speedometerKV) {
 		if (this.id !== SPEEDOMETER_ID.EnergySpeedometer) {
 			const selUnitsPanel = this.unitsDropdown.GetSelected();
-			const selUnits = selUnitsPanel ? selUnitsPanel.GetAttributeInt('value', SPEEDOMETER_UNITS_TYPE.UPS) : SPEEDOMETER_UNITS_TYPE.UPS;
+			const selUnits = selUnitsPanel
+				? selUnitsPanel.GetAttributeInt('value', SPEEDOMETER_UNITS_TYPE.UPS)
+				: SPEEDOMETER_UNITS_TYPE.UPS;
 			speedometerKV['units'] = selUnits;
 		}
 		const selColorModePanel = this.colorModeDropdown.GetSelected();
-		const selColorMode = selColorModePanel ? selColorModePanel.GetAttributeInt('value', SPEEDOMETER_COLOR_MODE.NONE) : SPEEDOMETER_COLOR_MODE.NONE;
+		const selColorMode = selColorModePanel
+			? selColorModePanel.GetAttributeInt('value', SPEEDOMETER_COLOR_MODE.NONE)
+			: SPEEDOMETER_COLOR_MODE.NONE;
 		const selColorProfilePanel = this.colorProfileDropdown.GetSelected();
 
 		speedometerKV['visible'] = this.containingPanel.visible;
 		speedometerKV['colorize'] = selColorMode;
-		if (selColorMode === SPEEDOMETER_COLOR_MODE.RANGE)
-			speedometerKV['color_profile'] = selColorProfilePanel?.text;
-		else
-			delete speedometerKV['color_profile'];
+		if (selColorMode === SPEEDOMETER_COLOR_MODE.RANGE) speedometerKV['color_profile'] = selColorProfilePanel?.text;
+		else delete speedometerKV['color_profile'];
 	}
 }
 class Speedometers {
@@ -128,7 +137,7 @@ class Speedometers {
 	static gamemode = DEFAULT_GAMEMODE;
 	static keyvalues = null;
 	static objectList = {};
-	
+
 	/** @type {Button} @static */
 	static addButton = $('#AddSpeedometerBtn');
 	/** @type {Button} @static */
@@ -163,10 +172,17 @@ class Speedometers {
 	}
 	static addSpeedometer() {
 		let disabledIDs = [];
-		Object.keys(SPEEDOMETER_ID).filter(speedoName => Speedometers.objectList[SPEEDOMETER_ID[speedoName]] === undefined).forEach(speedoName => disabledIDs.push(SPEEDOMETER_ID[speedoName]));
+		Object.keys(SPEEDOMETER_ID)
+			.filter((speedoName) => Speedometers.objectList[SPEEDOMETER_ID[speedoName]] === undefined)
+			.forEach((speedoName) => disabledIDs.push(SPEEDOMETER_ID[speedoName]));
 		if (disabledIDs.length === 0) return; // nothing is disabled, dont bother showing popup
-		UiToolkitAPI.ShowCustomLayoutPopupParameters('', 'file://{resources}/layout/popups/popup_speedometerselect.xml',
-			`disabledIDs=${disabledIDs}&callback=${UiToolkitAPI.RegisterJSCallback(id => Speedometers.addSpeedometerByID(id))}`);
+		UiToolkitAPI.ShowCustomLayoutPopupParameters(
+			'',
+			'file://{resources}/layout/popups/popup_speedometerselect.xml',
+			`disabledIDs=${disabledIDs}&callback=${UiToolkitAPI.RegisterJSCallback((id) =>
+				Speedometers.addSpeedometerByID(id)
+			)}`
+		);
 	}
 	static addSpeedometerByID(id) {
 		let speedoName = Object.keys(SPEEDOMETER_ID)[id];
@@ -203,16 +219,27 @@ class Speedometers {
 		if (moveup) {
 			childIndex--;
 			if (childIndex < 0)
-				Speedometers.mainPanel.MoveChildAfter(speedometerObject.containingPanel, Speedometers.mainPanel.GetLastChild());
+				Speedometers.mainPanel.MoveChildAfter(
+					speedometerObject.containingPanel,
+					Speedometers.mainPanel.GetLastChild()
+				);
 			else
-				Speedometers.mainPanel.MoveChildBefore(speedometerObject.containingPanel, Speedometers.mainPanel.GetChild(childIndex));
-		}
-		else {
+				Speedometers.mainPanel.MoveChildBefore(
+					speedometerObject.containingPanel,
+					Speedometers.mainPanel.GetChild(childIndex)
+				);
+		} else {
 			childIndex++;
 			if (childIndex < Speedometers.mainPanel.GetChildCount())
-				Speedometers.mainPanel.MoveChildAfter(speedometerObject.containingPanel, Speedometers.mainPanel.GetChild(childIndex));
+				Speedometers.mainPanel.MoveChildAfter(
+					speedometerObject.containingPanel,
+					Speedometers.mainPanel.GetChild(childIndex)
+				);
 			else
-				Speedometers.mainPanel.MoveChildBefore(speedometerObject.containingPanel, Speedometers.mainPanel.GetFirstChild());
+				Speedometers.mainPanel.MoveChildBefore(
+					speedometerObject.containingPanel,
+					Speedometers.mainPanel.GetFirstChild()
+				);
 		}
 		Speedometers.markAsModified();
 	}
@@ -220,34 +247,44 @@ class Speedometers {
 	static create() {
 		Speedometers.clearSpeedometers();
 		Speedometers.keyvalues = SpeedometerSettingsAPI.GetSettings(Speedometers.gamemode);
-		Object.keys(Speedometers.keyvalues).filter(speedoName => speedoName !== 'order').forEach(speedoName => {
-			let speedoKV = Speedometers.keyvalues[speedoName];
-			if (speedoKV['visible'] === 0) return;
+		Object.keys(Speedometers.keyvalues)
+			.filter((speedoName) => speedoName !== 'order')
+			.forEach((speedoName) => {
+				let speedoKV = Speedometers.keyvalues[speedoName];
+				if (speedoKV['visible'] === 0) return;
 
-			let id = SPEEDOMETER_ID[speedoName];
-			Speedometers.objectList[id] = new SpeedometerDetailObject(id, speedoKV, Speedometers.keyvalues['order'][speedoName]);
-		});
+				let id = SPEEDOMETER_ID[speedoName];
+				Speedometers.objectList[id] = new SpeedometerDetailObject(
+					id,
+					speedoKV,
+					Speedometers.keyvalues['order'][speedoName]
+				);
+			});
 
 		Speedometers.mainPanel.SortChildrenOnAttribute('order_index', true);
 		Speedometers.markAsUnmodified();
 	}
 	static saveAllSpeedometers() {
-		Object.keys(Speedometers.objectList).forEach(id => {
+		Object.keys(Speedometers.objectList).forEach((id) => {
 			let speedoName = Object.keys(SPEEDOMETER_ID)[id];
 			Speedometers.keyvalues[speedoName] = {};
 			let speedoObject = Speedometers.objectList[id];
-			Speedometers.keyvalues['order'][speedoName] = Speedometers.mainPanel.GetChildIndex(speedoObject.containingPanel);
+			Speedometers.keyvalues['order'][speedoName] = Speedometers.mainPanel.GetChildIndex(
+				speedoObject.containingPanel
+			);
 			speedoObject.saveToKV(Speedometers.keyvalues[speedoName]);
 			speedoObject.markAsUnmodified();
 		});
 
 		let orderCtr = Speedometers.mainPanel.GetChildCount();
-		Object.keys(SPEEDOMETER_ID).filter(speedoName => Speedometers.objectList[SPEEDOMETER_ID[speedoName]] === undefined).forEach(speedoName => {
-			// make sure speedometers that arent visible (their panels are deleted) have an ordering that's above
-			// the speedometers that are actually visible
-			Speedometers.keyvalues['order'][speedoName] = orderCtr++;
-			Speedometers.keyvalues[speedoName]['visible'] = false;
-		});
+		Object.keys(SPEEDOMETER_ID)
+			.filter((speedoName) => Speedometers.objectList[SPEEDOMETER_ID[speedoName]] === undefined)
+			.forEach((speedoName) => {
+				// make sure speedometers that arent visible (their panels are deleted) have an ordering that's above
+				// the speedometers that are actually visible
+				Speedometers.keyvalues['order'][speedoName] = orderCtr++;
+				Speedometers.keyvalues[speedoName]['visible'] = false;
+			});
 		Speedometers.markAsUnmodified();
 		if (!SpeedometerSettingsAPI.SaveSpeedometersFromJS(Speedometers.gamemode, Speedometers.keyvalues))
 			$.Warning(`Failed to write speedometer of gamemode ${Speedometers.gamemode} to disk`);
@@ -272,10 +309,9 @@ class Speedometers {
 		Speedometers.discardButton.enabled = false;
 	}
 	static updateProfileDropdowns() {
-		Object.keys(Speedometers.objectList).forEach(id => Speedometers.objectList[id]?.updateProfileDropdown());
+		Object.keys(Speedometers.objectList).forEach((id) => Speedometers.objectList[id]?.updateProfileDropdown());
 	}
 }
-
 
 class RangeColorObject {
 	constructor(min, max, kvcolor, csscolor) {
@@ -334,14 +370,26 @@ class RangeColorRangeDisplayObject {
 
 		this.displayPanel.SetPanelEvent('onrangechange', () => {
 			const color = this.displayPanel.color;
-			const colorRangeObject = new RangeColorObject(this.displayPanel.min, this.displayPanel.max, RangeColorObject.convertCSSToKV(color), color);
+			const colorRangeObject = new RangeColorObject(
+				this.displayPanel.min,
+				this.displayPanel.max,
+				RangeColorObject.convertCSSToKV(color),
+				color
+			);
 			RangeColorProfiles.updateRangeInProfile(profileObject.name, this.id, colorRangeObject);
 		});
-		this.deleteButton.SetPanelEvent('onactivate', () => RangeColorProfiles.deleteRangeFromProfile(profileObject.name, this.id));
+		this.deleteButton.SetPanelEvent('onactivate', () =>
+			RangeColorProfiles.deleteRangeFromProfile(profileObject.name, this.id)
+		);
 	}
 	saveToKV(rangeKV) {
 		const csscolor = this.displayPanel.color;
-		let rangeObject = new RangeColorObject(this.displayPanel.min, this.displayPanel.max, RangeColorObject.convertCSSToKV(csscolor), csscolor);
+		let rangeObject = new RangeColorObject(
+			this.displayPanel.min,
+			this.displayPanel.max,
+			RangeColorObject.convertCSSToKV(csscolor),
+			csscolor
+		);
 		rangeObject.saveToKV(rangeKV);
 	}
 }
@@ -386,20 +434,17 @@ class RangeColorProfileObject {
 		let found = false;
 		Object.keys(this.displayObjectList).every((id) => {
 			let dispObj = this.displayObjectList[id];
-			if (dispObj.isEqualTo(displayObject))
-				return true;
+			if (dispObj.isEqualTo(displayObject)) return true;
 
 			const otherMin = dispObj.getMin();
 			if (rangeObject.min === otherMin) {
 				if (displayObject.getMax() < dispObj.getMax())
 					this.displaysPanel.MoveChildBefore(displayObject.containingPanel, dispObj.containingPanel);
-				else
-					this.displaysPanel.MoveChildAfter(displayObject.containingPanel, dispObj.containingPanel);
+				else this.displaysPanel.MoveChildAfter(displayObject.containingPanel, dispObj.containingPanel);
 
 				found = true;
 				return false;
-			}
-			else if (rangeObject.min < otherMin) {
+			} else if (rangeObject.min < otherMin) {
 				this.displaysPanel.MoveChildBefore(displayObject.containingPanel, dispObj.containingPanel);
 				found = true;
 				return false;
@@ -415,7 +460,7 @@ class RangeColorProfileObject {
 	updateRange(profileName, id, rangeObject) {
 		let displayObject = this.displayObjectList[id];
 		if (!displayObject) {
-			$.Warning(`Updating nonexistent range ${id} in profile ${profileName}!`)
+			$.Warning(`Updating nonexistent range ${id} in profile ${profileName}!`);
 			return;
 		}
 		// it would be nice to enforce no gaps in bounds, but it is painful to even think about the functionality of that UI/UX wise
@@ -443,7 +488,12 @@ class RangeColorProfileObject {
 		Object.keys(profileKV).forEach((id) => {
 			let rangeKV = profileKV[id];
 			let kvcolor = rangeKV['color'];
-			let rangeObject = new RangeColorObject(rangeKV['min'], rangeKV['max'], kvcolor, RangeColorObject.convertKVToCSS(kvcolor));
+			let rangeObject = new RangeColorObject(
+				rangeKV['min'],
+				rangeKV['max'],
+				kvcolor,
+				RangeColorObject.convertKVToCSS(kvcolor)
+			);
 			this.displayObjectList[id] = new RangeColorRangeDisplayObject(id, rangeObject, this);
 			this.reorderDisplayPanels(this.displayObjectList[id], rangeObject); // TODO: this is expensive!!!
 		});
@@ -458,7 +508,7 @@ class RangeColorProfileObject {
 
 		this.displaysContainer = this.profilePanel.FindChildInLayoutFile('RangeColorDisplaysContainer');
 		this.displaysPanel = this.displaysContainer.FindChildInLayoutFile('RangeColorDisplays');
-	
+
 		this.addButton = this.displaysContainer.FindChildInLayoutFile('RangeColorAddBtn');
 		this.discardButton = this.profilePanel.FindChildInLayoutFile('RangeColorDiscardBtn');
 		this.deleteButton = this.profilePanel.FindChildInLayoutFile('RangeColorDeleteBtn');
@@ -467,14 +517,30 @@ class RangeColorProfileObject {
 
 		this.nameLabel = this.toggleButton.FindChildInLayoutFile('RangeColorName');
 		this.nameLabel.text = this.name;
-		
+
 		this.markAsUnmodified();
-		
-		this.addButton.SetPanelEvent('onactivate', () => RangeColorProfiles.addRangeDisplayToProfile(this.name, new RangeColorObject(0, 1, '255 255 255 255', 'rgba(255,255,255,1)')));
-		this.discardButton.SetPanelEvent('onactivate', () => RangeColorProfiles.discardChangesForProfile(this.ogName, this.name, profileKV));
-		this.toggleButton.SetPanelEvent('onactivate', () => this.displaysContainer.SetHasClass('settings-speedometer-rangecolor__displayscont--hidden', !this.toggleButton.IsSelected()));
+
+		this.addButton.SetPanelEvent('onactivate', () =>
+			RangeColorProfiles.addRangeDisplayToProfile(
+				this.name,
+				new RangeColorObject(0, 1, '255 255 255 255', 'rgba(255,255,255,1)')
+			)
+		);
+		this.discardButton.SetPanelEvent('onactivate', () =>
+			RangeColorProfiles.discardChangesForProfile(this.ogName, this.name, profileKV)
+		);
+		this.toggleButton.SetPanelEvent('onactivate', () =>
+			this.displaysContainer.SetHasClass(
+				'settings-speedometer-rangecolor__displayscont--hidden',
+				!this.toggleButton.IsSelected()
+			)
+		);
 		this.deleteButton.SetPanelEvent('onactivate', () => RangeColorProfiles.deleteProfile(this.name));
-		this.editButton.SetPanelEvent('onactivate', () => RangeColorProfiles.makeColorProfileNamePopup(this.name, 'Edit', (profileName) => RangeColorProfiles.updateProfileName(this.name, profileName)));
+		this.editButton.SetPanelEvent('onactivate', () =>
+			RangeColorProfiles.makeColorProfileNamePopup(this.name, 'Edit', (profileName) =>
+				RangeColorProfiles.updateProfileName(this.name, profileName)
+			)
+		);
 
 		this.createDisplayPanels(profileKV);
 	}
@@ -497,7 +563,7 @@ class RangeColorProfiles {
 	static mainPanel = $('#SpeedometerColorProfiles');
 	static keyvalues = null;
 	static objectList = {};
-	
+
 	/** @type {Button} @static */
 	static addButton = $('#AddColorProfileBtn');
 	/** @type {Button} @static */
@@ -519,9 +585,11 @@ class RangeColorProfiles {
 	static clearProfiles() {
 		RangeColorProfiles.mainPanel.RemoveAndDeleteChildren();
 		RangeColorProfiles.objectList = {};
-	};
+	}
 	static addProfile() {
-		RangeColorProfiles.makeColorProfileNamePopup('', 'Create', (profileName) => RangeColorProfiles.addEmptyProfile(profileName));
+		RangeColorProfiles.makeColorProfileNamePopup('', 'Create', (profileName) =>
+			RangeColorProfiles.addEmptyProfile(profileName)
+		);
 	}
 	static addEmptyProfile(profileName) {
 		if (RangeColorProfiles.objectList[profileName]) {
@@ -545,7 +613,11 @@ class RangeColorProfiles {
 		}
 		if (profileObject.name === profileName) return;
 		profileObject.updateName(profileName);
-		Object.defineProperty(RangeColorProfiles.objectList, profileName, Object.getOwnPropertyDescriptor(RangeColorProfiles.objectList, oldProfileName)); // rename key
+		Object.defineProperty(
+			RangeColorProfiles.objectList,
+			profileName,
+			Object.getOwnPropertyDescriptor(RangeColorProfiles.objectList, oldProfileName)
+		); // rename key
 		delete RangeColorProfiles.objectList[oldProfileName];
 		RangeColorProfiles.markAsModified();
 	}
@@ -556,7 +628,10 @@ class RangeColorProfiles {
 			return;
 		}
 		// avoid id clashing by using one above the highest ID
-		let id = Object.keys(profileObject.displayObjectList).length === 0 ? 0 : Math.max.apply(null, Object.keys(profileObject.displayObjectList)) + 1;
+		let id =
+			Object.keys(profileObject.displayObjectList).length === 0
+				? 0
+				: Math.max.apply(null, Object.keys(profileObject.displayObjectList)) + 1;
 		profileObject.addRange(profileName, id, rangeObject);
 		RangeColorProfiles.markAsModified();
 	}
@@ -598,7 +673,10 @@ class RangeColorProfiles {
 		RangeColorProfiles.markAsUnmodified();
 		RangeColorProfiles.keyvalues = SpeedometerSettingsAPI.GetColorProfiles();
 		Object.keys(RangeColorProfiles.keyvalues).forEach((profileName) => {
-			RangeColorProfiles.objectList[profileName] = new RangeColorProfileObject(profileName, RangeColorProfiles.keyvalues[profileName]);
+			RangeColorProfiles.objectList[profileName] = new RangeColorProfileObject(
+				profileName,
+				RangeColorProfiles.keyvalues[profileName]
+			);
 		});
 	}
 	static saveAllProfiles() {
@@ -612,9 +690,7 @@ class RangeColorProfiles {
 		if (SpeedometerSettingsAPI.SaveColorProfilesFromJS(keyvalues)) {
 			RangeColorProfiles.markAsUnmodified();
 			Speedometers.updateProfileDropdowns();
-		}
-		else
-			$.Warning('Failed to write color profiles to disk');
+		} else $.Warning('Failed to write color profiles to disk');
 	}
 	static resetToDefault() {
 		UiToolkitAPI.ShowGenericPopupOkCancel(
@@ -638,11 +714,16 @@ class RangeColorProfiles {
 
 	static makeColorProfileNamePopup(prefilledText, OKBtnText, callback) {
 		let profileNames = [];
-		Object.keys(RangeColorProfiles.objectList).forEach(profileName => profileNames.push(profileName));
-		UiToolkitAPI.ShowCustomLayoutPopupParameters('', 'file://{resources}/layout/popups/popup_rangecolorprofilename.xml', `profileNames=${profileNames}&prefilledText=${prefilledText}&OKBtnText=${OKBtnText}&callback=${UiToolkitAPI.RegisterJSCallback(callback)}`);
+		Object.keys(RangeColorProfiles.objectList).forEach((profileName) => profileNames.push(profileName));
+		UiToolkitAPI.ShowCustomLayoutPopupParameters(
+			'',
+			'file://{resources}/layout/popups/popup_rangecolorprofilename.xml',
+			`profileNames=${profileNames}&prefilledText=${prefilledText}&OKBtnText=${OKBtnText}&callback=${UiToolkitAPI.RegisterJSCallback(
+				callback
+			)}`
+		);
 	}
 }
-
 
 class SpeedometerSettings {
 	static gamemodeDropDown = $('#GamemodeDropDown');
@@ -667,7 +748,7 @@ class SpeedometerSettings {
 
 	static {
 		$.RegisterForUnhandledEvent('SettingsSave', this.saveSettings);
-		
+
 		// Save to file whenever the settings page gets closed as well
 		$.RegisterForUnhandledEvent('MainMenuTabHidden', (tab) => tab === 'Settings' && this.saveSettings());
 	}

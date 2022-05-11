@@ -6,29 +6,45 @@
 // COLORS
 // ================
 
-$blue      : #1896d3 !default;
-$mid-blue  : #57c8ff !default;
+$blue: #1896d3 !default;
+$mid-blue: #57c8ff !default;
 $light-blue: #71f0ff !default;
-$purple    : #be71ff !default;
-$pink      : #ffb6dc !default;
-$red       : #ff6a6a !default;
-$orange    : #ffbc00 !default;
-$yellow    : #ffee00 !default;
-$green     : #7aee7a !default;
+$purple: #be71ff !default;
+$pink: #ffb6dc !default;
+$red: #ff6a6a !default;
+$orange: #ffbc00 !default;
+$yellow: #ffee00 !default;
+$green: #7aee7a !default;
 
-$colors-primary: ("blue": $blue, "mid-blue": $mid-blue, "light-blue": $light-blue, "purple": $purple, "pink": $pink, "red": $red, "orange": $orange, "yellow": $yellow, "green": $green) !default;
+$colors-primary: (
+	'blue': $blue,
+	'mid-blue': $mid-blue,
+	'light-blue': $light-blue,
+	'purple': $purple,
+	'pink': $pink,
+	'red': $red,
+	'orange': $orange,
+	'yellow': $yellow,
+	'green': $green
+) !default;
 
-$disabled    : #7e7e7e !default;
-$error       : #f32424 !default;
-$warning     : #ff7300 !default;
-$positive    : #63fd68 !default;
+$disabled: #7e7e7e !default;
+$error: #f32424 !default;
+$warning: #ff7300 !default;
+$positive: #63fd68 !default;
 $steam-online: #91c257 !default;
 
-$colors-state: ("disabled": $disabled, "error": $error, "warning": $warning, "positive": $positive, "steam-online": $steam-online) !default;
+$colors-state: (
+	'disabled': $disabled,
+	'error': $error,
+	'warning': $warning,
+	'positive': $positive,
+	'steam-online': $steam-online
+) !default;
 
 $transparent: #00000000;
-$black   : #000000 !default;
-$white   : #ffffff !default;
+$black: #000000 !default;
+$white: #ffffff !default;
 $gray-100: #0f0f0f !default;
 $gray-200: #141414 !default;
 $gray-300: #2a2a2a !default;
@@ -39,7 +55,20 @@ $gray-700: #5f5f5f !default;
 $gray-800: #828282 !default;
 $gray-900: #c8c8c8 !default;
 
-$color-grays: ("transparent": $transparent, "white": $white, "gray-100": $gray-100, "gray-200": $gray-200, "gray-300": $gray-300, "gray-400": $gray-400, "gray-500": $gray-500, "gray-600": $gray-600, "gray-700": $gray-700, "gray-800": $gray-800, "gray-900": $gray-900, "black": $black) !default;
+$color-grays: (
+	'transparent': $transparent,
+	'white': $white,
+	'gray-100': $gray-100,
+	'gray-200': $gray-200,
+	'gray-300': $gray-300,
+	'gray-400': $gray-400,
+	'gray-500': $gray-500,
+	'gray-600': $gray-600,
+	'gray-700': $gray-700,
+	'gray-800': $gray-800,
+	'gray-900': $gray-900,
+	'black': $black
+) !default;
 
 $light-100: rgba(255, 255, 255, 0.05) !default;
 $light-200: rgba(255, 255, 255, 0.075) !default;
@@ -51,8 +80,17 @@ $light-700: rgba(255, 255, 255, 0.25) !default;
 $light-800: rgba(255, 255, 255, 0.3) !default;
 $light-900: rgba(255, 255, 255, 0.4) !default;
 
-$color-light-bgs: ("light-100": $light-100, "light-200": $light-200, "light-300": $light-300, "light-400": $light-400, "light-500": $light-500, "light-600": $light-600, "light-700": $light-700, "light-800": $light-800, "light-900": $light-900) !default;
-
+$color-light-bgs: (
+	'light-100': $light-100,
+	'light-200': $light-200,
+	'light-300': $light-300,
+	'light-400': $light-400,
+	'light-500': $light-500,
+	'light-600': $light-600,
+	'light-700': $light-700,
+	'light-800': $light-800,
+	'light-900': $light-900
+) !default;
 
 $dark-100: rgba(0, 0, 0, 0.6) !default;
 $dark-200: rgba(0, 0, 0, 0.7) !default;
@@ -64,20 +102,30 @@ $dark-700: rgba(0, 0, 0, 0.95) !default;
 $dark-800: rgba(0, 0, 0, 0.975) !default;
 $dark-900: rgba(0, 0, 0, 0.99) !default;
 
-$color-dark-bgs: ("dark-100": $dark-100, "dark-200": $dark-200, "dark-300": $dark-300, "dark-400": $dark-400, "dark-500": $dark-500, "dark-600": $dark-600, "dark-700": $dark-700, "dark-800": $dark-800, "dark-900": $dark-900) !default;
+$color-dark-bgs: (
+	'dark-100': $dark-100,
+	'dark-200': $dark-200,
+	'dark-300': $dark-300,
+	'dark-400': $dark-400,
+	'dark-500': $dark-500,
+	'dark-600': $dark-600,
+	'dark-700': $dark-700,
+	'dark-800': $dark-800,
+	'dark-900': $dark-900
+) !default;
 
 $levels: (
-	1 : #5d5d5d,
-	2 : #e84855,
-	3 : #ff8645,
-	4 : #ffd000,
-	5 : #47c27c,
-	6 : #3f4aca,
-	7 : #873de1,
-	8 : #d34a8d,
-	9 : #3185fc,
+	1: #5d5d5d,
+	2: #e84855,
+	3: #ff8645,
+	4: #ffd000,
+	5: #47c27c,
+	6: #3f4aca,
+	7: #873de1,
+	8: #d34a8d,
+	9: #3185fc,
 	10: #161616,
-	11: #ffffff,
+	11: #ffffff
 );
 
 $roles: (
@@ -96,19 +144,43 @@ $units: $yellow;
 // ================
 
 $gradients-primary: (
-	"blue"      : ($mid-blue, $blue),
-	"light-blue": ($light-blue, $blue),
-	"purple"    : (#bc57ff, #a210c7),
-	"pink"      : (#fa7ca2, #ab4657),
-	"red"       : (#ff5757, #d31818),
-	"orange"    : (#ffbc00, #dc740d),
-	"yellow"    : (#f8de4a, #fca504),
-	"green"     : (#7aee7a, #159856)
+	'blue': (
+		$mid-blue,
+		$blue
+	),
+	'light-blue': (
+		$light-blue,
+		$blue
+	),
+	'purple': (
+		#bc57ff,
+		#a210c7
+	),
+	'pink': (
+		#fa7ca2,
+		#ab4657
+	),
+	'red': (
+		#ff5757,
+		#d31818
+	),
+	'orange': (
+		#ffbc00,
+		#dc740d
+	),
+	'yellow': (
+		#f8de4a,
+		#fca504
+	),
+	'green': (
+		#7aee7a,
+		#159856
+	)
 ) !default;
 
 // Saturation-Luminance-Alpha transform, scaling the underlying gradient
-$gradient-hover-transform         : 10%,   25%,  10% !default;
-$gradient-disabled-transform      : -70%, -20%, 20% !default;
+$gradient-hover-transform: 10%, 25%, 10% !default;
+$gradient-disabled-transform: -70%, -20%, 20% !default;
 $gradient-selected-hover-transform: -10%, -10%, 0% !default;
 
 // ================
@@ -116,54 +188,56 @@ $gradient-selected-hover-transform: -10%, -10%, 0% !default;
 // ================#
 
 $font-shadows: (
-	"black"  : 2px 3px 8px 2 rgba(0, 0, 0, 1),
-	"bold"   : 1px 3px 8px 2 rgba(0, 0, 0, 0.35),
-	"medium" : 0px 1px 6px 1 rgba(0, 0, 0, 1),
-	"regular": 0px 1px 3px 1 rgba(0, 0, 0, 1),
-	"light"  : 0px 1px 3px 1 rgba(0, 0, 0, 0.7),
-	"thin"   : 0px 1px 2px rgba(0, 0, 0, 0.5),
-	"outline": 0px 1px 2px 2 rgba(0, 0, 0, 1),
-	"none"   : 0 0 0 0 rgba(0, 0, 0, 0)
+	'black': 2px 3px 8px 2 rgba(0, 0, 0, 1),
+	'bold': 1px 3px 8px 2 rgba(0, 0, 0, 0.35),
+	'medium': 0px 1px 6px 1 rgba(0, 0, 0, 1),
+	'regular': 0px 1px 3px 1 rgba(0, 0, 0, 1),
+	'light': 0px 1px 3px 1 rgba(0, 0, 0, 0.7),
+	'thin': 0px 1px 2px rgba(0, 0, 0, 0.5),
+	'outline': 0px 1px 2px 2 rgba(0, 0, 0, 1),
+	'none': 0 0 0 0 rgba(0, 0, 0, 0)
 ) !default;
 
-$font-default-color : $white !default;
+$font-default-color: $white !default;
 $font-disabled-color: color.scale($font-default-color, $lightness: -20%) !default;
-$font-default-size  : 18px !default;
+$font-default-size: 18px !default;
 
-$font-primary        : Roboto,           sans-serif !default;
-$font-secondary      : Bebas Neue,       Arial,      sans-serif !default;
-$font-secondary-light: Bebas Neue Light, Bebas Neue, Arial, sans-serif !default;  // Only required for Bebas, for other fonts just use same value as regular
-$font-monospace		 : 'Roboto Mono' !default;
+$font-primary: Roboto, sans-serif !default;
+$font-secondary: Bebas Neue, Arial, sans-serif !default;
+$font-secondary-light: Bebas Neue Light, Bebas Neue, Arial, sans-serif !default; // Only required for Bebas, for other fonts just use same value as regular
+$font-monospace: 'Roboto Mono' !default;
 
-$font-header        : $font-secondary !default;
-$font-header-light  : $font-secondary-light !default;
-$font-header-shadow : map.get($font-shadows, "regular");
+$font-header: $font-secondary !default;
+$font-header-light: $font-secondary-light !default;
+$font-header-shadow: map.get($font-shadows, 'regular');
 $font-header-spacing: 1px !default;
-$font-header-sizes  : (
-	"h1": 64px,
-	"h2": 50px,
-	"h3": 42px,
-	"h4": 34px,
-	"h5": 24px,
-	"h6": 20px) !default;
+$font-header-sizes: (
+	'h1': 64px,
+	'h2': 50px,
+	'h3': 42px,
+	'h4': 34px,
+	'h5': 24px,
+	'h6': 20px
+) !default;
 
-$font        : $font-primary !default;
-$font-shadow : 0px 1px rgba(0, 0, 0, 0.9) !default; // This is a text-shadow-fast
+$font: $font-primary !default;
+$font-shadow: 0px 1px rgba(0, 0, 0, 0.9) !default; // This is a text-shadow-fast
 $font-spacing: 0px !default;
-$font-sizes  : (
-	"xxxl": 48px,
-	"xxl" : 36px,
-	"xl"  : 28px,
-	"l"   : 24px,
-	"m"   : $font-default-size,
-	"sm"  : 14px,
-	"xs"  : 12px) !default;
+$font-sizes: (
+	'xxxl': 48px,
+	'xxl': 36px,
+	'xl': 28px,
+	'l': 24px,
+	'm': $font-default-size,
+	'sm': 14px,
+	'xs': 12px
+) !default;
 
-$font-weights: ( "thin", "light", "normal", "medium", "bold", "black" ) !default;
+$font-weights: ('thin', 'light', 'normal', 'medium', 'bold', 'black') !default;
 
 // ================
 // EASINGS (see https://easings.net/ for previews)
-// ================ 
+// ================
 
 $easeInSine: cubic-bezier(0.47, 0, 0.745, 0.715);
 $easeOutSine: cubic-bezier(0.39, 0.575, 0.565, 1);
@@ -192,45 +266,57 @@ $easeInOutBack: cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
 // ================
 // LAYOUT / UTILITY
-// ================ 
+// ================
 
-$separator-height         : 1px !default;
+$separator-height: 1px !default;
 $separator-vertical-margin: 8px !default;
-$seperator-radius         : 1px !default;
-$separator-background     : $dark-100 !default;
-$separator-box-shadow     : 0 0px 1px rgba(0, 0, 0, 0.25) !default;
+$seperator-radius: 1px !default;
+$separator-background: $dark-100 !default;
+$separator-box-shadow: 0 0px 1px rgba(0, 0, 0, 0.25) !default;
 
-$spacers: ( 4px, 6px, 8px, 16px, 32px ) !default;
+$spacers: (4px, 6px, 8px, 16px, 32px) !default;
 
 // ================
 // BUTTON
 // ================
 
-$button-background-base          : $light-700 !default;
-$button-background               : gradient-vertical($button-background-base, color.scale($button-background-base, $lightness: -15%)) !default;
-$button-background-hover         : gradient-vertical(color.scale($button-background-base, $lightness: 0%,   $alpha: 15%), color.scale($button-background-base, $lightness: -20%, $alpha: 15%)) !default;
-$button-background-selected      : gradient-vertical(color.scale($button-background-base, $lightness: 0%,   $alpha: 20%), color.scale($button-background-base, $lightness: -20%, $alpha: 20%)) !default; // Used by Radiobuttons + Togglebuttons
-$button-background-disabled      : gradient-vertical(color.scale($button-background-base, $lightness: -50%, $alpha: 20%), color.scale($button-background-base, $lightness: -55%, $alpha: 20%)) !default;
+$button-background-base: $light-700 !default;
+$button-background: gradient-vertical(
+	$button-background-base,
+	color.scale($button-background-base, $lightness: -15%)
+) !default;
+$button-background-hover: gradient-vertical(
+	color.scale($button-background-base, $lightness: 0%, $alpha: 15%),
+	color.scale($button-background-base, $lightness: -20%, $alpha: 15%)
+) !default;
+$button-background-selected: gradient-vertical(
+	color.scale($button-background-base, $lightness: 0%, $alpha: 20%),
+	color.scale($button-background-base, $lightness: -20%, $alpha: 20%)
+) !default; // Used by Radiobuttons + Togglebuttons
+$button-background-disabled: gradient-vertical(
+	color.scale($button-background-base, $lightness: -50%, $alpha: 20%),
+	color.scale($button-background-base, $lightness: -55%, $alpha: 20%)
+) !default;
 
-$button-text-color   : $font-default-color !default;
+$button-text-color: $font-default-color !default;
 $button-text-disabled: $font-disabled-color !default;
-$button-text-hover   : $button-text-color !default;
+$button-text-hover: $button-text-color !default;
 
 $button-shadow: fill rgba(0, 0, 0, 0.6) 0px 1px 1px 0px !default;
 $button-radius: 2px !default;
 $button-border: 0px solid rgba(255, 255, 255, 0.025) !default;
 
-$button-height                    : 34px !default;
-$button-icon-padding              : 6px !default;
-$button-text-side-margin          : 10px !default;
+$button-height: 34px !default;
+$button-icon-padding: 6px !default;
+$button-text-side-margin: 10px !default;
 $button-icon-with-text-side-margin: 4px !default;
-$button-icon-text-gap             : 0px !default;
+$button-icon-text-gap: 0px !default;
 
 $button-use-header-font: true !default;
-$button-font-size      : 20px !default;
+$button-font-size: 20px !default;
 $button-light-header-font: false !default;
-$button-text-shadow    : 0 1px 2px 2 rgba(0, 0, 0, 0.35) !default;
-$button-icon-shadow    : 0 1px 2px 1 rgba(0, 0, 0, 1) !default;
+$button-text-shadow: 0 1px 2px 2 rgba(0, 0, 0, 0.35) !default;
+$button-icon-shadow: 0 1px 2px 1 rgba(0, 0, 0, 1) !default;
 
 // ================
 // DROPDOWN
@@ -238,41 +324,55 @@ $button-icon-shadow    : 0 1px 2px 1 rgba(0, 0, 0, 1) !default;
 
 $dropdown-button-background: $button-background !default;
 
-$dropdown-button-background-disabled   : $button-background-disabled !default;
-$dropdown-button-background-hover      : gradient-vertical(color.scale($button-background-base, $lightness: 0%,   $alpha: 15%), color.scale($button-background-base, $lightness: -20%, $alpha: 15%)) !default;
-$dropdown-button-background-menuvisible: gradient-vertical(color.scale($button-background-base, $lightness: -60%, $alpha: 50%), color.scale($button-background-base, $lightness: -65%, $alpha: 50%)) !default;
+$dropdown-button-background-disabled: $button-background-disabled !default;
+$dropdown-button-background-hover: gradient-vertical(
+	color.scale($button-background-base, $lightness: 0%, $alpha: 15%),
+	color.scale($button-background-base, $lightness: -20%, $alpha: 15%)
+) !default;
+$dropdown-button-background-menuvisible: gradient-vertical(
+	color.scale($button-background-base, $lightness: -60%, $alpha: 50%),
+	color.scale($button-background-base, $lightness: -65%, $alpha: 50%)
+) !default;
 
-$dropdown-button-icon-background       : $light-300 !default;
-$dropdown-button-icon-background-hover : color.scale($dropdown-button-icon-background, $lightness: 0%,   $alpha: 12%) !default;
-$dropdown-button-icon-background-menuvisible: color.scale($dropdown-button-icon-background, $lightness: -40%,   $alpha: 20%) !default;
-$dropdown-button-icon-border           : 0px solid rgba(0, 0, 0, 0) !default;
-$dropdown-button-icon-shadow           : 0 0 2px 0 rgba(0, 0, 0, 0.3) !default;
-$dropdown-button-icon-icon-shadow	   : 0 0 3px 0 rgba(0, 0, 0, 0.5) !default;
+$dropdown-button-icon-background: $light-300 !default;
+$dropdown-button-icon-background-hover: color.scale(
+	$dropdown-button-icon-background,
+	$lightness: 0%,
+	$alpha: 12%
+) !default;
+$dropdown-button-icon-background-menuvisible: color.scale(
+	$dropdown-button-icon-background,
+	$lightness: -40%,
+	$alpha: 20%
+) !default;
+$dropdown-button-icon-border: 0px solid rgba(0, 0, 0, 0) !default;
+$dropdown-button-icon-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.3) !default;
+$dropdown-button-icon-icon-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.5) !default;
 
 $dropdown-button-shadow: $button-shadow !default;
 $dropdown-button-radius: 2px !default;
 $dropdown-button-border: $button-border !default;
 
 $dropdown-button-use-header-font: true !default;
-$dropdown-button-font-size      : 21px !default;
-$dropdown-button-height         : 34px !default;
-$dropdown-button-color          : $font-default-color !default;
-$dropdown-button-color-disabled : $font-disabled-color !default;
+$dropdown-button-font-size: 21px !default;
+$dropdown-button-height: 34px !default;
+$dropdown-button-color: $font-default-color !default;
+$dropdown-button-color-disabled: $font-disabled-color !default;
 $dropdown-button-text-shadow: $button-text-shadow;
 
-$dropdown-button-padding   : 4px 12px !default;
+$dropdown-button-padding: 4px 12px !default;
 $dropdown-button-icon-width: 24px !default;
 
 $dropdown-menu-background: $gray-100 !default;
-$dropdown-menu-padding-y : 8px !default;
-$dropdown-menu-shadow    : fill rgba(0, 0, 0, 0.9) 0px 3px 6px 0px !default;
-$dropdown-menu-border    : 1px solid rgba(0, 0, 0, 0.9) !default;
-$dropdown-menu-radius    : 4px !default;
+$dropdown-menu-padding-y: 8px !default;
+$dropdown-menu-shadow: fill rgba(0, 0, 0, 0.9) 0px 3px 6px 0px !default;
+$dropdown-menu-border: 1px solid rgba(0, 0, 0, 0.9) !default;
+$dropdown-menu-radius: 4px !default;
 
-$dropdown-item-use-header-font : true !default;
-$dropdown-item-font-size       : 20px !default;
-$dropdown-item-padding         : 4px 16px 4px 16px !default;
-$dropdown-item-background      : rgba(0, 0, 0, 0) !default;
+$dropdown-item-use-header-font: true !default;
+$dropdown-item-font-size: 20px !default;
+$dropdown-item-padding: 4px 16px 4px 16px !default;
+$dropdown-item-background: rgba(0, 0, 0, 0) !default;
 $dropdown-item-background-hover: $light-400 !default;
 
 // ================
@@ -280,15 +380,15 @@ $dropdown-item-background-hover: $light-400 !default;
 // ================
 
 $contextmenu-width: 300px;
-$contextmenu-padding-y : $dropdown-menu-padding-y !default;
+$contextmenu-padding-y: $dropdown-menu-padding-y !default;
 $contextmenu-background: $dropdown-menu-background !default;
-$contextmenu-radius    : $dropdown-menu-radius !default;
-$contextmenu-shadow    : $dropdown-menu-shadow !default;
+$contextmenu-radius: $dropdown-menu-radius !default;
+$contextmenu-shadow: $dropdown-menu-shadow !default;
 
-$contextmenu-item-use-header-font : $dropdown-item-use-header-font !default;
-$contextmenu-item-font-size       : $dropdown-item-font-size !default;
-$contextmenu-item-padding         : $dropdown-item-padding !default;
-$contextmenu-item-background      : $dropdown-item-background !default;
+$contextmenu-item-use-header-font: $dropdown-item-use-header-font !default;
+$contextmenu-item-font-size: $dropdown-item-font-size !default;
+$contextmenu-item-padding: $dropdown-item-padding !default;
+$contextmenu-item-background: $dropdown-item-background !default;
 $contextmenu-item-background-hover: $dropdown-item-background-hover !default;
 
 $contextmenu-separator: 1px solid $gray-300 !default;
@@ -297,19 +397,19 @@ $contextmenu-separator: 1px solid $gray-300 !default;
 // CHECKBOX
 // ================
 
-$checkbox-background                  : $light-600 !default;
-$checkbox-background-disabled         : color.scale($checkbox-background, $lightness: -50%, $alpha: 20%) !default;
+$checkbox-background: $light-600 !default;
+$checkbox-background-disabled: color.scale($checkbox-background, $lightness: -50%, $alpha: 20%) !default;
 $checkbox-background-disabled-selected: color.scale($checkbox-background-disabled, $alpha: 50%) !default;
-$checkbox-background-hover            : color.scale($checkbox-background, $alpha: 20%) !default;
-$checkbox-background-selected         : $blue !default;
-$checkbox-background-selected-hover   : color.scale($checkbox-background-selected, $lightness: -10%) !default;
+$checkbox-background-hover: color.scale($checkbox-background, $alpha: 20%) !default;
+$checkbox-background-selected: $blue !default;
+$checkbox-background-selected-hover: color.scale($checkbox-background-selected, $lightness: -10%) !default;
 
 $checkbox-use-header-font: false !default;
 
 $checkbox-shadow: rgba(0, 0, 0, 0.45) 0px 0px 2px 0px !default;
 
 $checkbox-radius: 4px !default;
-$checkbox-width : 24px !default;
+$checkbox-width: 24px !default;
 
 $checkbox-gap: 8px !default;
 
@@ -317,75 +417,79 @@ $checkbox-gap: 8px !default;
 // RADIOBUTTON
 // ================
 
-$radiobutton-background                  : $checkbox-background !default;
-$radiobutton-background-disabled         : $checkbox-background-disabled !default;
-$radiobutton-background-disabled-selected: color.scale($radiobutton-background-disabled, $lightness: -50%, $alpha: 20%) !default;
-$radiobutton-background-hover            : $checkbox-background-hover !default;
-$radiobutton-background-selected         : $white !default;
+$radiobutton-background: $checkbox-background !default;
+$radiobutton-background-disabled: $checkbox-background-disabled !default;
+$radiobutton-background-disabled-selected: color.scale(
+	$radiobutton-background-disabled,
+	$lightness: -50%,
+	$alpha: 20%
+) !default;
+$radiobutton-background-hover: $checkbox-background-hover !default;
+$radiobutton-background-selected: $white !default;
 
-$radiobox-width : 24px !default;
+$radiobox-width: 24px !default;
 $radiobox-radius: 50% !default;
 $radiobox-shadow: rgba(0, 0, 0, 0.45) 0px 1px 2px 0px !default;
 
 $radiobutton-use-header-font: false !default;
-$radiobutton-gap            : 8px !default;
-$radiobutton-text-color     : $font-default-color !default;
-$radiobutton-text-disabled  : $font-disabled-color !default;
+$radiobutton-gap: 8px !default;
+$radiobutton-text-color: $font-default-color !default;
+$radiobutton-text-disabled: $font-disabled-color !default;
 
 // ================
 // N-STATE BUTTON
 // ================
 
-$nstatebutton-0-background               : $button-background !default;
-$nstatebutton-0-background-hover         : $button-background-hover !default;
-$nstatebutton-0-background-disabled      : $button-background-disabled !default;
+$nstatebutton-0-background: $button-background !default;
+$nstatebutton-0-background-hover: $button-background-hover !default;
+$nstatebutton-0-background-disabled: $button-background-disabled !default;
 
-$nstatebutton-colors: ("blue", "red") !default;
+$nstatebutton-colors: ('blue', 'red') !default;
 
 // ================
 // TABS
 // ================
 
-$tab-background                 : gradient-vertical(rgba(148, 148, 148, 0.3), rgba(120, 120, 120, 0.3));
-$tab-background-hover           : rgba(255, 255, 255, 0.05);
-$tab-background-selected        : rgba(0, 0, 0, 0.5);
-$tab-background-disabled        : rgba(0, 0, 0, 0);
-$tab-shadow                     : 0 0 4px 0 rgba(0, 0, 0, 0.5);
-$tab-border-width               : 1px;
-$tab-border-color               : rgba(0, 0, 0, 0.3);
-$tab-lower-border-height        : 2px;
-$tab-lower-border-color         : rgba(0, 0, 0, 0.4);
-$tab-lower-gap-color            : rgba(0, 0, 0, 0.075);
-$tab-lower-border-hover-color   : rgba(255, 255, 255, 0.4);
+$tab-background: gradient-vertical(rgba(148, 148, 148, 0.3), rgba(120, 120, 120, 0.3));
+$tab-background-hover: rgba(255, 255, 255, 0.05);
+$tab-background-selected: rgba(0, 0, 0, 0.5);
+$tab-background-disabled: rgba(0, 0, 0, 0);
+$tab-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.5);
+$tab-border-width: 1px;
+$tab-border-color: rgba(0, 0, 0, 0.3);
+$tab-lower-border-height: 2px;
+$tab-lower-border-color: rgba(0, 0, 0, 0.4);
+$tab-lower-gap-color: rgba(0, 0, 0, 0.075);
+$tab-lower-border-hover-color: rgba(255, 255, 255, 0.4);
 $tab-lower-border-selected-color: rgba(255, 255, 255, 0.6);
-$tab-padding                    : 2px 8px 0px 8px;
-$tab-font-size                  : 20px;
-$tab-text-shadow                : 0 1px 2px rgba(0, 0, 0, 0.5);
-$tab-use-header-font            : true;
-$tab-light-header               : false;
-$tab-text-padding               : 4px 10px;
+$tab-padding: 2px 8px 0px 8px;
+$tab-font-size: 20px;
+$tab-text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+$tab-use-header-font: true;
+$tab-light-header: false;
+$tab-text-padding: 4px 10px;
 
 // ================
 // TEXTENTRY
 // ================
 
-$textentry-background      : $light-200 !default;
+$textentry-background: $light-200 !default;
 $textentry-background-hover: color.scale($textentry-background, $alpha: 10%) !default;
 $textentry-background-focus: color.scale($textentry-background, $alpha: 8%) !default;
 
-$textentry-height      : 32px !default;
-$textentry-width       : 256px !default;
-$textentry-padding     : 6px 16px 6px 8px !default;
-$textentry-border      : 0 solid none !default;
-$textentry-radius      : 4px !default;
-$textentry-shadow      : fill rgba(0, 0, 0, 0.3) 0px 0px 3px 0px !default;
+$textentry-height: 32px !default;
+$textentry-width: 256px !default;
+$textentry-padding: 6px 16px 6px 8px !default;
+$textentry-border: 0 solid none !default;
+$textentry-radius: 4px !default;
+$textentry-shadow: fill rgba(0, 0, 0, 0.3) 0px 0px 3px 0px !default;
 $textentry-shadow-hover: fill rgba(0, 0, 0, 0.5) 0px 0px 3px 0px !default;
 
-$textentry-font-size              : 18px !default;
-$textentry-placeholder-font-size  : 18px !default;
-$textentry-text-color             : $font-default-color !default;
-$textentry-text-disabled          : $font-disabled-color !default;
-$textentry-placeholder-color      : color.scale($textentry-text-color, $alpha: -40%) !default;
+$textentry-font-size: 18px !default;
+$textentry-placeholder-font-size: 18px !default;
+$textentry-text-color: $font-default-color !default;
+$textentry-text-disabled: $font-disabled-color !default;
+$textentry-placeholder-color: color.scale($textentry-text-color, $alpha: -40%) !default;
 $textentry-placeholder-hover-color: color.scale($textentry-text-color, $alpha: 30%) !default;
 
 // ================
@@ -393,45 +497,51 @@ $textentry-placeholder-hover-color: color.scale($textentry-text-color, $alpha: 3
 // ================
 
 $slider-padding-height: 8px !default;
-$slider-track-height  : 8px !default;
+$slider-track-height: 8px !default;
 
-$slider-track                    : $gray-900 !default;
-$slider-track-shadow             : rgba(0, 0, 0, 0.2) 0px 0px 8px 0px !default;
+$slider-track: $gray-900 !default;
+$slider-track-shadow: rgba(0, 0, 0, 0.2) 0px 0px 8px 0px !default;
 $slider-track-progress-horizontal: gradient-horizontal($blue, $mid-blue) !default;
-$slider-track-progress-vertical  : gradient-vertical($blue, $mid-blue) !default;
+$slider-track-progress-vertical: gradient-vertical($blue, $mid-blue) !default;
 
-$slider-thumb-color      : $white !default;
+$slider-thumb-color: $white !default;
 $slider-thumb-color-hover: color.scale($slider-thumb-color, $lightness: -15%) !default;
-$slider-thumb-width      : 16px !default;
-$slider-thumb-height     : 16px !default;
-$slider-thumb-radius     : 4px !default;
-$slider-thumb-shadow     : rgba(0, 0, 0, 0.3) 0px 1px 2px 0px !default;
+$slider-thumb-width: 16px !default;
+$slider-thumb-height: 16px !default;
+$slider-thumb-radius: 4px !default;
+$slider-thumb-shadow: rgba(0, 0, 0, 0.3) 0px 1px 2px 0px !default;
 
-$slider-default-color    : $red !default;
-$slider-default-width    : 4px !default;
-$slider-default-height   : 8px !default;
-$slider-default-radius   : 0px !default;
-$slider-default-shadow   : rgba(0, 0, 0, 0) 0px 0px 4px 0px !default;
+$slider-default-color: $red !default;
+$slider-default-width: 4px !default;
+$slider-default-height: 8px !default;
+$slider-default-radius: 0px !default;
+$slider-default-shadow: rgba(0, 0, 0, 0) 0px 0px 4px 0px !default;
 
 // ================
 // SCROLLBAR
 // ================
 
-$scrollbar-width        : 6px !default;
-$scrollbar-radius       : 0px !default;
-$scrollbar-color        : $white !default;
-$scrollbar-opacity      : 0.6 !default;
+$scrollbar-width: 6px !default;
+$scrollbar-radius: 0px !default;
+$scrollbar-color: $white !default;
+$scrollbar-opacity: 0.6 !default;
 $scrollbar-hover-opacity: 0.8 !default;
 
 // ================
 // PROGRESSBAR
 // ================
 
-$progressbar-width              : 320px !default;
-$progressbar-height             : 22px !default;
-$progressbar-background         : color.scale( $blue, $saturation: -70%, $lightness: -50% ) !default;
-$progressbar-background-disabled: gradient( linear, 0% 0%, 100% 0%, from( color.scale( $red, $saturation: -65%, $lightness: -45% ) ), to( color.scale( $red, $saturation: -55%, $lightness: -35% ) ) );
-$progressbar-background-progress: gradient( linear, 0% 0%, 100% 0%, from( $blue ), to( $light-blue ) ) !default;
+$progressbar-width: 320px !default;
+$progressbar-height: 22px !default;
+$progressbar-background: color.scale($blue, $saturation: -70%, $lightness: -50%) !default;
+$progressbar-background-disabled: gradient(
+	linear,
+	0% 0%,
+	100% 0%,
+	from(color.scale($red, $saturation: -65%, $lightness: -45%)),
+	to(color.scale($red, $saturation: -55%, $lightness: -35%))
+);
+$progressbar-background-progress: gradient(linear, 0% 0%, 100% 0%, from($blue), to($light-blue)) !default;
 
 $progressbar-shadow: rgba(0, 0, 0, 0.5) 0px 0px 3px 0px !default;
 
@@ -440,36 +550,34 @@ $progressbar-shadow: rgba(0, 0, 0, 0.5) 0px 0px 3px 0px !default;
 // ================
 
 $tooltip-background: $gray-200 !default;
-$tooltip-padding   : 8px 12px !default;
-$tooltip-radius    : 4px !default;
-$tooltip-margin    : 0px;
+$tooltip-padding: 8px 12px !default;
+$tooltip-radius: 4px !default;
+$tooltip-margin: 0px;
 
 $tooltip-title-use-header-font: true !default;
-$tooltip-title-font-size      : 36px !default;
-$tooltip-text-use-header-font : false !default;
-$tooltip-text-font-size       : 14px !default;
-$tooltip-image-size           : 20px !default;
-
+$tooltip-title-font-size: 36px !default;
+$tooltip-text-use-header-font: false !default;
+$tooltip-text-font-size: 14px !default;
+$tooltip-image-size: 20px !default;
 
 // ================
 // POPUPS
 // ================
 
-$popup-min-width : 400px !default;
-$popup-max-width : 480px !default;
-$popup-wide      : 960px !default;
-$popup-large-max-width : 720px !default;
+$popup-min-width: 400px !default;
+$popup-max-width: 480px !default;
+$popup-wide: 960px !default;
+$popup-large-max-width: 720px !default;
 $popup-background: $dark-800 !default;
-$popup-shadow    : rgba(0, 0, 0, 1) -2.5px -2.5px 10px 5px !default;
-$popup-padding   : 24px 32px !default;
-$popup-radius    : 4px !default;
+$popup-shadow: rgba(0, 0, 0, 1) -2.5px -2.5px 10px 5px !default;
+$popup-padding: 24px 32px !default;
+$popup-radius: 4px !default;
 
 $popup-title-use-header-font: true !default;
-$popup-title-font-size      : 48px !default;
-$popup-text-use-header-font : false !default;
-$popup-text-font-size       : 18px !default;
-$popup-button-font-size     : 24px !default;
-
+$popup-title-font-size: 48px !default;
+$popup-text-use-header-font: false !default;
+$popup-text-font-size: 18px !default;
+$popup-button-font-size: 24px !default;
 
 // ================
 // LINEGRAPH
@@ -481,19 +589,24 @@ $linegraph-axis-width: 24px;
 // TOAST
 // ================
 
-$toast-default   : rgba(25, 25, 25, 0.975) !default;
-$toast-white     : rgba(240, 240, 240, 0.975) !default;
+$toast-default: rgba(25, 25, 25, 0.975) !default;
+$toast-white: rgba(240, 240, 240, 0.975) !default;
 
-$toast-blue      : rgba(24, 150, 211, 0.975) !default;
-$toast-red       : rgba(211, 36, 36, 0.975) !default;
-$toast-orange    : rgba(255, 123, 0, 0.975) !default;
-$toast-green     : rgba(88, 170, 11, 0.975) !default;
+$toast-blue: rgba(24, 150, 211, 0.975) !default;
+$toast-red: rgba(211, 36, 36, 0.975) !default;
+$toast-orange: rgba(255, 123, 0, 0.975) !default;
+$toast-green: rgba(88, 170, 11, 0.975) !default;
 
-$toast-colors: ("blue": $toast-blue, "info": $toast-blue,
-				"red": $toast-red, "error": $toast-red,
-				"orange": $toast-orange, "warning": $toast-orange,
-				"green": $toast-green, "success": $toast-green) !default;
-
+$toast-colors: (
+	'blue': $toast-blue,
+	'info': $toast-blue,
+	'red': $toast-red,
+	'error': $toast-red,
+	'orange': $toast-orange,
+	'warning': $toast-orange,
+	'green': $toast-green,
+	'success': $toast-green
+) !default;
 
 // ================
 // MAIN MENU
@@ -510,26 +623,26 @@ $rightnav-width: 50px;
 $comparison-neutral-background: rgb(93, 122, 155);
 
 $comparison-ahead: $blue;
-$comparison-ahead-gain: 			color.scale($comparison-ahead, 				$lightness: 	10%, 	$saturation: 	0%);
-$comparison-ahead-gain-background: 	color.scale(rgba($comparison-ahead, 0.5), 	$lightness: 	-15%, 	$saturation: 	50%);
-$comparison-ahead-loss: 			color.scale($comparison-ahead, 				$lightness: 	50%, 	$saturation: 	-50%);
-$comparison-ahead-loss-background: 	color.scale(rgba($comparison-ahead, 0.5), 	$lightness: 	15%, 	$saturation:	-60%);
+$comparison-ahead-gain: color.scale($comparison-ahead, $lightness: 10%, $saturation: 0%);
+$comparison-ahead-gain-background: color.scale(rgba($comparison-ahead, 0.5), $lightness: -15%, $saturation: 50%);
+$comparison-ahead-loss: color.scale($comparison-ahead, $lightness: 50%, $saturation: -50%);
+$comparison-ahead-loss-background: color.scale(rgba($comparison-ahead, 0.5), $lightness: 15%, $saturation: -60%);
 
-$comparison-behind: $red; 
-$comparison-behind-loss: 			color.scale($comparison-behind, 			$lightness: 	0%, 	$saturation: 	0%);
-$comparison-behind-loss-background: color.scale(rgba($comparison-behind, 0.5), 	$lightness: 	-35%, 	$saturation: 	-40%);
-$comparison-behind-gain: 			color.scale($comparison-behind, 			$lightness: 	35%, 	$saturation: 	0%);
-$comparison-behind-gain-background: color.scale(rgba($comparison-behind, 0.5), 	$lightness: 	-20%, 	$saturation:	-60%);
+$comparison-behind: $red;
+$comparison-behind-loss: color.scale($comparison-behind, $lightness: 0%, $saturation: 0%);
+$comparison-behind-loss-background: color.scale(rgba($comparison-behind, 0.5), $lightness: -35%, $saturation: -40%);
+$comparison-behind-gain: color.scale($comparison-behind, $lightness: 35%, $saturation: 0%);
+$comparison-behind-gain-background: color.scale(rgba($comparison-behind, 0.5), $lightness: -20%, $saturation: -60%);
 
 // ================
 // HUDMETER (Conc timer bar & SJ charge meter)
 // ================
 
-$progressbar-hudmeter-width        : 320px !default;
-$progressbar-hudmeter-height       : 18px !default;
+$progressbar-hudmeter-width: 320px !default;
+$progressbar-hudmeter-height: 18px !default;
 $progressbar-hudmeter-border-radius: 9px !default;
-$progressbar-hudmeter-font-size    : 16px !default;
-$progressbar-hudmeter-text-shadow  : rgba(0, 0, 0, 0.5) 0px 1px 2px 2.5 !default;
+$progressbar-hudmeter-font-size: 16px !default;
+$progressbar-hudmeter-text-shadow: rgba(0, 0, 0, 0.5) 0px 1px 2px 2.5 !default;
 
 // ================
 // SPEEDOMETER
@@ -583,7 +696,7 @@ $timer-hudstatus-color: $white !default;
 // ================
 $weapsel-name-color: $white !default;
 $weapsel-name-font-size: 24px !default;
-$weapsel-deployed-background-color: gradient-horizontal(rgba($blue,0), rgba($blue, 0.5)) !default;
+$weapsel-deployed-background-color: gradient-horizontal(rgba($blue, 0), rgba($blue, 0.5)) !default;
 $weapsel-deployed-name-color: $light-blue !default;
 $weapsel-deployed-notch-color: $light-blue !default;
 $weapsel-notch-width: 4px !default;

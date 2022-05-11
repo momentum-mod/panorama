@@ -12,7 +12,7 @@ const EOR_SHOW_REASON = {
 	PLAYER_FINISHED_RUN: 0,
 	REPLAY_FINISHED_RUN: 1,
 	MANUALLY_SHOWN: 2
-}
+};
 
 /**
  * Enum for different run submission states
@@ -165,7 +165,9 @@ class Comparison {
 			baseRun.stats.overallZone.accumulateTime,
 			baseRun.stats.overallZone.accumulateTime - comparisonRun.stats.overallZone.accumulateTime,
 			baseRun.stats.overallZone.accumulateTime - comparisonRun.stats.overallZone.accumulateTime,
-			baseRun.stats.overallZone.stats.map((stat, j) => new RunStatsComparison(stat, comparisonRun.stats.overallZone.stats[j]))
+			baseRun.stats.overallZone.stats.map(
+				(stat, j) => new RunStatsComparison(stat, comparisonRun.stats.overallZone.stats[j])
+			)
 		);
 	}
 
@@ -224,9 +226,9 @@ class RunStat {
 
 class RunStatsComparison {
 	/**
-	 * 
-	 * @param {*} baseStat 
-	 * @param {*} comparisonStat 
+	 *
+	 * @param {*} baseStat
+	 * @param {*} comparisonStat
 	 */
 	constructor(baseStat, comparisonStat) {
 		this.name = baseStat.name;

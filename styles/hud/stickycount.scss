@@ -1,9 +1,10 @@
-@use '../config'as *;
+@use '../config' as *;
 
 // keyframe sticky arming over a second to avoid ending the animation before the armed state is set
 // (as that causes color flickering)
 @keyframes stickyArmAnim {
-	from {}
+	from {
+	}
 	70% {
 		background-color: $progressbar-background;
 	}
@@ -11,7 +12,8 @@
 	80% {
 		background-color: $progressbar-background-progress;
 	}
-	to {}
+	to {
+	}
 }
 
 .sticky-count {
@@ -24,30 +26,30 @@
 		height: 24px;
 		border-radius: 12px;
 		align: center center;
-	
+
 		box-shadow: $progressbar-shadow;
 		background-color: $progressbar-background;
 		border: 0px solid transparent;
-	
+
 		&--nosticky {
 			background-color: $progressbar-background;
 			border: 0px solid transparent;
 		}
-		
+
 		&--sticky-arming {
 			animation-name: stickyArmAnim;
 			animation-duration: 1s;
 		}
-	
+
 		&--sticky-armed {
 			background-color: $progressbar-background-progress;
 		}
-	
+
 		&--sticky-blocked {
 			animation-name: none;
 			background-color: $progressbar-background-disabled;
 			border: 0px solid transparent;
-	
+
 			transition-property: background-color;
 			transition-duration: 0.25s;
 		}

@@ -1,4 +1,4 @@
-@use '../config'  as *;
+@use '../config' as *;
 @use '../abstract/function';
 @use '../abstract/mixin';
 @use 'button';
@@ -31,8 +31,18 @@
 
 			&:hover {
 				background-color: function.gradient-vertical(
-					color.scale(list.nth($colors, 1), $saturation: list.nth($gradient-hover-transform, 1), $lightness: list.nth($gradient-hover-transform, 2), $alpha: list.nth($gradient-hover-transform, 3)),
-					color.scale(list.nth($colors, 2), $saturation: list.nth($gradient-hover-transform, 1), $lightness: list.nth($gradient-hover-transform, 2), $alpha: list.nth($gradient-hover-transform, 3))
+					color.scale(
+						list.nth($colors, 1),
+						$saturation: list.nth($gradient-hover-transform, 1),
+						$lightness: list.nth($gradient-hover-transform, 2),
+						$alpha: list.nth($gradient-hover-transform, 3)
+					),
+					color.scale(
+						list.nth($colors, 2),
+						$saturation: list.nth($gradient-hover-transform, 1),
+						$lightness: list.nth($gradient-hover-transform, 2),
+						$alpha: list.nth($gradient-hover-transform, 3)
+					)
 				);
 			}
 		}
@@ -61,7 +71,7 @@
 		transition: background-color 0.1s ease-in-out 0s;
 	}
 
-	$this:  &;
+	$this: &;
 	&--right {
 		flow-children: left;
 
@@ -84,7 +94,7 @@
 		box-shadow: $checkbox-shadow;
 
 		background-color: $checkbox-background-selected;
-		background-image: url("file://{images}/checkmark.svg");
+		background-image: url('file://{images}/checkmark.svg');
 		background-size: 60% 60%;
 		background-repeat: no-repeat;
 		background-position: center;

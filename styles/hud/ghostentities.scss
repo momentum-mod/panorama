@@ -1,6 +1,6 @@
-@use '../config'as *;
+@use '../config' as *;
 
-$ghost-ent-shadow: 0 1.5px 6px 0 rgba( 0, 0, 0, 0.5 );
+$ghost-ent-shadow: 0 1.5px 6px 0 rgba(0, 0, 0, 0.5);
 
 .ghost-ent {
 	height: 34px;
@@ -11,8 +11,8 @@ $ghost-ent-shadow: 0 1.5px 6px 0 rgba( 0, 0, 0, 0.5 );
 
 	&__avatar {
 		height: 100%;
-		width: height-percentage( 100% );
-		border: 1px solid rgba( 255, 255, 255, 0.25 );
+		width: height-percentage(100%);
+		border: 1px solid rgba(255, 255, 255, 0.25);
 		box-shadow: $ghost-ent-shadow;
 	}
 }
@@ -24,7 +24,7 @@ $ghost-ent-shadow: 0 1.5px 6px 0 rgba( 0, 0, 0, 0.5 );
 	transition: transform 0.2s ease-in-out 0s;
 	transform-origin: 0% 50%;
 	&--hidden {
-		transform: scale3d( 0, 1, 1 );
+		transform: scale3d(0, 1, 1);
 	}
 
 	&__label {

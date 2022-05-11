@@ -6,7 +6,10 @@ class Chat {
 
 	static {
 		$.RegisterEventHandler('OnNewChatEntry', $.GetContextPanel(), Chat.onNewChatEntry);
-		$.RegisterForUnhandledEvent('PanoramaComponent_SteamLobby_OnMemberDataUpdated', Chat.onSteamLobbyMemberDataUpdated);
+		$.RegisterForUnhandledEvent(
+			'PanoramaComponent_SteamLobby_OnMemberDataUpdated',
+			Chat.onSteamLobbyMemberDataUpdated
+		);
 	}
 
 	static submitText() {
@@ -50,7 +53,7 @@ class Chat {
 
 		// TODO: Would be good to let you mute players from the specific chat message esp in large lobbies
 		// where it's hard to find them in the lobby list, but we need the steam id passed in somewhere
-		
+
 		// panel.SetPanelEvent('oncontextmenu', () => {
 		// 	UiToolkitAPI.ShowSimpleContextMenu(panel, '', [
 		// 		{

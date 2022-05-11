@@ -15,7 +15,7 @@ class RangeColorProfileNamePopup {
 		}
 
 		let passed = true;
-		RangeColorProfileNamePopup.profileNames.every(profileName => {
+		RangeColorProfileNamePopup.profileNames.every((profileName) => {
 			if (text === profileName) {
 				passed = false;
 				return false;
@@ -28,8 +28,7 @@ class RangeColorProfileNamePopup {
 		}
 
 		const callbackHandle = $.GetContextPanel().GetAttributeInt('callback', -1);
-		if ( callbackHandle !== -1 )
-			UiToolkitAPI.InvokeJSCallback( callbackHandle, text );
+		if (callbackHandle !== -1) UiToolkitAPI.InvokeJSCallback(callbackHandle, text);
 		UiToolkitAPI.CloseAllVisiblePopups();
 	}
 

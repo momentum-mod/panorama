@@ -9,12 +9,12 @@ class WeaponSelection {
 	static lastDeployed = WEAPON_ID.NONE;
 
 	static onWeaponStateChange(mode, id) {
-		switch(mode) {
+		switch (mode) {
 			case WEAPON_STATE_CHANGE_MODE.SWITCH:
 				if (this.lastDeployed !== WEAPON_ID.NONE)
-					this.wepSnippets[this.lastDeployed-1]?.RemoveClass(DEPLOYED_CLASS);
+					this.wepSnippets[this.lastDeployed - 1]?.RemoveClass(DEPLOYED_CLASS);
 				this.lastDeployed = id;
-				this.wepSnippets[id-1]?.AddClass(DEPLOYED_CLASS);
+				this.wepSnippets[id - 1]?.AddClass(DEPLOYED_CLASS);
 				break;
 			case WEAPON_STATE_CHANGE_MODE.PICKUP:
 				this.createWeaponPanel(id);
@@ -27,38 +27,36 @@ class WeaponSelection {
 				$.Warning('Unknown weapon state change mode given to panorama weapon selection HUD!');
 				break;
 		}
-		
+
 		this.container.TriggerClass(FADEOUT_CLASS);
 	}
 
 	static onAllWeaponsDropped() {
-		for (let id=WEAPON_ID.FIRST; id<WEAPON_ID.MAX; id++) {
+		for (let id = WEAPON_ID.FIRST; id < WEAPON_ID.MAX; id++) {
 			this.destroyWeaponPanel(id);
 		}
 	}
 
 	static createWeaponPanel(id) {
-		if (this.wepSnippets[id-1]) return;
+		if (this.wepSnippets[id - 1]) return;
 
 		const weaponPanel = $.CreatePanel('Panel', this.container, ''); // Create the new panel
-		weaponPanel.SetDialogVariable('weapon', WEAPON_NAMES[id-1]);
+		weaponPanel.SetDialogVariable('weapon', WEAPON_NAMES[id - 1]);
 		weaponPanel.LoadLayoutSnippet('Weapon');
-		
+
 		const weaponSlot = MomentumWeaponAPI.GetWeaponSlot(id) + 1;
 		let keybindPanel = weaponPanel.FindChildTraverse('WeaponKeyBind');
-		if (weaponSlot >= 0)
-			keybindPanel.SetTextWithDialogVariables(`{v:csgo_bind:e:bind_slot${weaponSlot}}`);
-		else
-			keybindPanel.visible = false;
+		if (weaponSlot >= 0) keybindPanel.SetTextWithDialogVariables(`{v:csgo_bind:e:bind_slot${weaponSlot}}`);
+		else keybindPanel.visible = false;
 
 		weaponPanel.SetAttributeInt('slot_index', weaponSlot);
 
-		this.wepSnippets[id-1] = weaponPanel;
+		this.wepSnippets[id - 1] = weaponPanel;
 	}
 
 	static destroyWeaponPanel(id) {
-		this.wepSnippets[id-1]?.DeleteAsync(0.0);
-		delete this.wepSnippets[id-1];
+		this.wepSnippets[id - 1]?.DeleteAsync(0.0);
+		delete this.wepSnippets[id - 1];
 	}
 
 	static {

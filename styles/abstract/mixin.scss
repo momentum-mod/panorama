@@ -28,13 +28,25 @@
 @mixin gradient-themed($color: 'blue', $direction: 'down') {
 	@if (map.has-key($gradients-primary, $color)) {
 		@if ($direction == 'down') {
-			background-color: function.gradient-vertical(list.nth(map.get($gradients-primary, $color), 1), list.nth(map.get($gradients-primary, $color), 2));
+			background-color: function.gradient-vertical(
+				list.nth(map.get($gradients-primary, $color), 1),
+				list.nth(map.get($gradients-primary, $color), 2)
+			);
 		} @else if ($direction == 'up') {
-			background-color: function.gradient-vertical(list.nth(map.get($gradients-primary, $color), 2), list.nth(map.get($gradients-primary, $color), 1));
+			background-color: function.gradient-vertical(
+				list.nth(map.get($gradients-primary, $color), 2),
+				list.nth(map.get($gradients-primary, $color), 1)
+			);
 		} @else if ($direction == 'left') {
-			background-color: function.gradient-horizontal(list.nth(map.get($gradients-primary, $color), 2), list.nth(map.get($gradients-primary, $color), 1));
+			background-color: function.gradient-horizontal(
+				list.nth(map.get($gradients-primary, $color), 2),
+				list.nth(map.get($gradients-primary, $color), 1)
+			);
 		} @else if ($direction == 'right') {
-			background-color: function.gradient-horizontal(list.nth(map.get($gradients-primary, $color), 1), list.nth(map.get($gradients-primary, $color), 2));
+			background-color: function.gradient-horizontal(
+				list.nth(map.get($gradients-primary, $color), 1),
+				list.nth(map.get($gradients-primary, $color), 2)
+			);
 		}
 	} @else {
 		@error "Gradient #{$color} not found!";

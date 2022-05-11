@@ -2,11 +2,11 @@
 	width: 100%;
 	height: 50px;
 	padding: 4px 8px;
-	background-color: rgba(0,0,0,0.6);
+	background-color: rgba(0, 0, 0, 0.6);
 	flow-children: right;
 
 	&__status {
-		width: fill-parent-flow(1.0);
+		width: fill-parent-flow(1);
 		vertical-align: center;
 	}
 
@@ -16,7 +16,7 @@
 	}
 
 	&__interface {
-		width: fill-parent-flow(1.0);
+		width: fill-parent-flow(1);
 		vertical-align: center;
 	}
 }

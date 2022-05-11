@@ -55,7 +55,7 @@ $transition: 0.125s ease-out 0s;
 		height: 100%;
 
 		margin-left: $image-width;
-		
+
 		border-radius: 4px;
 
 		box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.3);
@@ -65,7 +65,7 @@ $transition: 0.125s ease-out 0s;
 		#{$root}:hover & {
 			background-color: rgba(129, 129, 129, 0.05);
 		}
-		
+
 		#{$root}:selected & {
 			background-color: rgba(0, 0, 0, 0.8);
 		}
@@ -75,7 +75,7 @@ $transition: 0.125s ease-out 0s;
 			vertical-align: middle;
 			horizontal-align: right;
 			height: 100%;
-			width:55%;
+			width: 55%;
 		}
 	}
 
@@ -197,17 +197,17 @@ $transition: 0.125s ease-out 0s;
 
 		&-text {
 			align: center center;
-			
+
 			@include mixin.font-styles($use-header: true, $light-header: true);
 			font-size: 14px;
-	
+
 			height: 16px;
 		}
-	
+
 		&--beta {
 			@include mixin.gradient-themed($color: 'purple', $direction: 'down');
 		}
-	
+
 		&--new {
 			@include mixin.gradient-themed($color: 'red', $direction: 'down');
 		}

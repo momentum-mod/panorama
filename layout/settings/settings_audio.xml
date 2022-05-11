@@ -4,7 +4,7 @@
 	</styles>
 
 	<scripts>
-		<include src="file://{resources}/scripts/settings_shared.js"/>
+		<include src="file://{resources}/scripts/settings_shared.js" />
 	</scripts>
 
 	<Panel class="settings-page">
@@ -43,25 +43,74 @@
 
 				</Panel>
 
-				<ChaosSettingsSlider text="#GameUI_SoundEffectVolume" min="0" max="1" percentage="true" convar="volume" hasdocspage="false"/>
+				<ChaosSettingsSlider
+					text="#GameUI_SoundEffectVolume"
+					min="0"
+					max="1"
+					percentage="true"
+					convar="volume"
+					hasdocspage="false"
+				/>
 
-				<ChaosSettingsSlider text="#GameUI_MusicVolume" min="0" max="1" percentage="true" convar="snd_volume_music" hasdocspage="false"/>
+				<ChaosSettingsSlider
+					text="#GameUI_MusicVolume"
+					min="0"
+					max="1"
+					percentage="true"
+					convar="snd_volume_music"
+					hasdocspage="false"
+				/>
 
-				<ChaosSettingsSlider text="Ambient Volume" min="0" max="1" percentage="true" convar="snd_volume_ambient" hasdocspage="false"/>
+				<ChaosSettingsSlider
+					text="Ambient Volume"
+					min="0"
+					max="1"
+					percentage="true"
+					convar="snd_volume_ambient"
+					hasdocspage="false"
+				/>
 
-				<ChaosSettingsSlider text="Player Weapon Volume" min="0" max="1" percentage="true" convar="snd_volume_weapon_player" hasdocspage="false"/>
+				<ChaosSettingsSlider
+					text="Player Weapon Volume"
+					min="0"
+					max="1"
+					percentage="true"
+					convar="snd_volume_weapon_player"
+					hasdocspage="false"
+				/>
 
-				<ChaosSettingsSlider text="Overall Weapon Volume" min="0" max="1" percentage="true" convar="snd_volume_weapon_overall" hasdocspage="false"/>
+				<ChaosSettingsSlider
+					text="Overall Weapon Volume"
+					min="0"
+					max="1"
+					percentage="true"
+					convar="snd_volume_weapon_overall"
+					hasdocspage="false"
+				/>
 
-				<ChaosSettingsSlider text="UI Volume" min="0" max="1" percentage="true" convar="snd_volume_ui" hasdocspage="false"/>
+				<ChaosSettingsSlider text="UI Volume" min="0" max="1" percentage="true" convar="snd_volume_ui" hasdocspage="false" />
 
-				<ChaosSettingsSlider text="Physics Volume" min="0" max="1" percentage="true" convar="snd_volume_physics" hasdocspage="false"/>
+				<ChaosSettingsSlider
+					text="Physics Volume"
+					min="0"
+					max="1"
+					percentage="true"
+					convar="snd_volume_physics"
+					hasdocspage="false"
+				/>
 
-				<ChaosSettingsSlider text="Footsteps Volume" min="0" max="1" percentage="true" convar="snd_volume_footsteps" hasdocspage="false"/>
+				<ChaosSettingsSlider
+					text="Footsteps Volume"
+					min="0"
+					max="1"
+					percentage="true"
+					convar="snd_volume_footsteps"
+					hasdocspage="false"
+				/>
 
 			</Panel>
 
-			<Panel class="settings-page__spacer"/>
+			<Panel class="settings-page__spacer" />
 
 			<Panel id="AudioDevicesSubSection" class="settings-group">
 
@@ -77,14 +126,25 @@
 
 				</Panel>
 
-				<ChaosSettingsEnumDropDown text="#GameUI_SpeakerConfiguration" convar="snd_surround_speakers" oninputsubmit="BaseSpeakerConfigurationChanged()" hasdocspage="false">
-					<Label text="Stereo Headphones" id="speakerconfig1" value="0"/>
-					<Label text="Stereo Speakers" id="speakerconfig2" value="2"/>
-					<Label text="Quad Surround Sound" id="speakerconfig3" value="4"/>
-					<Label text="5.1 Surround Sound" id="speakerconfig4" value="5"/>
+				<ChaosSettingsEnumDropDown
+					text="#GameUI_SpeakerConfiguration"
+					convar="snd_surround_speakers"
+					oninputsubmit="BaseSpeakerConfigurationChanged()"
+					hasdocspage="false"
+				>
+					<Label text="Stereo Headphones" id="speakerconfig1" value="0" />
+					<Label text="Stereo Speakers" id="speakerconfig2" value="2" />
+					<Label text="Quad Surround Sound" id="speakerconfig3" value="4" />
+					<Label text="5.1 Surround Sound" id="speakerconfig4" value="5" />
 				</ChaosSettingsEnumDropDown>
 
-				<ChaosSettingsEnumDropDown text="#SFUI_Settings_Audio_Device" id="DeviceConfigurationEnum" convar="sound_device_override" oninputsubmit="BaseAudioDeviceConfigurationChanged()" hasdocspage="false">
+				<ChaosSettingsEnumDropDown
+					text="#SFUI_Settings_Audio_Device"
+					id="DeviceConfigurationEnum"
+					convar="sound_device_override"
+					oninputsubmit="BaseAudioDeviceConfigurationChanged()"
+					hasdocspage="false"
+				>
 					<!--placeholder labels that will be modified in cui_audiosettingsscreen-->
 					<Label id="device1" text="XXXXXX 1" />
 					<Label id="device2" text="XXXXXX 2" />

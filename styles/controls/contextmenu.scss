@@ -82,7 +82,7 @@
 			margin-right: 8px;
 		}
 	}
-	
+
 	@each $name, $color in map.merge($colors-primary, $colors-state) {
 		& .icon-color-#{$name} Image {
 			wash-color: $color;

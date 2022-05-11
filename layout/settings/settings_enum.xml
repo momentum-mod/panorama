@@ -7,6 +7,6 @@
 		<Panel class="settings-enum__title-container">
 			<Label id="title" class="settings-enum__title" />
 		</Panel>
-		<Panel id="values" class="settings-enum__values"/>
+		<Panel id="values" class="settings-enum__values" />
 	</ChaosSettingsEnum>
 </root>

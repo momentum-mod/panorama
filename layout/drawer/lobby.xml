@@ -8,10 +8,15 @@
 	<snippets>
 		<snippet name="lobby-list-entry">
 			<Panel class="lobby-lobbies__wrapper" acceptsinput="true">
-				<Panel id="LobbyOrigin" class="lobby-lobbies__origin"/>
+				<Panel id="LobbyOrigin" class="lobby-lobbies__origin" />
 				<Panel class="lobby-lobbies__entry">
-					<ChaosAvatarImage id="LobbyPlayerAvatar" class="lobby-lobbies__avatar" acceptsinput="true"/>
-					<Image id="LobbyType" class="lobby-lobbies__type" textureheight="64" onmouseout="UiToolkitAPI.HideTitleImageTextTooltip();"/>
+					<ChaosAvatarImage id="LobbyPlayerAvatar" class="lobby-lobbies__avatar" acceptsinput="true" />
+					<Image
+						id="LobbyType"
+						class="lobby-lobbies__type"
+						textureheight="64"
+						onmouseout="UiToolkitAPI.HideTitleImageTextTooltip();"
+					/>
 					<Label id="LobbyTitle" class="lobby-lobbies__text lobby-lobbies__title" text="{s:lobbyTitle}" />
 					<Label id="LobbyPlayerNumbers" class="text-h lobby-lobbies__text lobby-lobbies__players" text="{s:lobbyPlayerCount}" />
 					<Panel class="lobby-lobbies__button-container">
@@ -30,7 +35,12 @@
 				<Panel class="lobby-members__map-container">
 					<Panel class="flow-right horizontal-align-center">
 						<Label id="MemberMap" class="lobby-members__text lobby-members__map" text="{s:memberMap}" />
-						<Image id="MemberState" class="lobby-members__state" textureheight="32" onmouseout="UiToolkitAPI.HideTitleImageTextTooltip();" />
+						<Image
+							id="MemberState"
+							class="lobby-members__state"
+							textureheight="32"
+							onmouseout="UiToolkitAPI.HideTitleImageTextTooltip();"
+						/>
 					</Panel>
 				</Panel>
 				<Panel class="lobby-members__button-container">
@@ -51,16 +61,26 @@
 				</Panel>
 				<Panel class="lobby-list__config-bar">
 					<Button class="button lobby-list__config-item" onactivate="Lobby.create()">
-						<Image class="button__icon button__icon--left" src="file://{images}/add.svg" textureheight="32"/>
+						<Image class="button__icon button__icon--left" src="file://{images}/add.svg" textureheight="32" />
 						<Label class="button__text button__text--right" text="Create" />
 					</Button>
-					<Button id="LobbyRefreshButton" class="button lobby-list__config-item" onactivate="$.DispatchEvent('RefreshLobbyList');" onmouseout="UiToolkitAPI.HideTextTooltip();">
-						<Image id="LobbyRefreshIcon" class="button__icon button__icon--left" src="file://{images}/refresh.svg" textureheight="32" />
+					<Button
+						id="LobbyRefreshButton"
+						class="button lobby-list__config-item"
+						onactivate="$.DispatchEvent('RefreshLobbyList');"
+						onmouseout="UiToolkitAPI.HideTextTooltip();"
+					>
+						<Image
+							id="LobbyRefreshIcon"
+							class="button__icon button__icon--left"
+							src="file://{images}/refresh.svg"
+							textureheight="32"
+						/>
 						<Label class="button__text button__text--right" text="Refresh" />
 					</Button>
 					<Panel class="search lobby-list__search" acceptsfocus="true">
 						<Image class="search__icon" src="file://{images}/search.svg" textureheight="32" />
-						<TextEntry id="LobbySearch" class="search__textentry" maxchars="30" placeholder="Search..."/>
+						<TextEntry id="LobbySearch" class="search__textentry" maxchars="30" placeholder="Search..." />
 						<Button id="LobbySearchClearButton" class="search__clearbutton" onactivate="">
 							<Image class="search__clearicon search__clearicon--hidden" src="file://{images}/close.svg" textureheight="32" />
 						</Button>
@@ -80,12 +100,20 @@
 					</Button>
 				</TooltipPanel>
 				<TooltipPanel tooltip="Lobby Settings">
-					<Button id="LobbyDetailsSettingsButton" class="button lobby-details__header-item" onactivate="Lobby.showLobbySettings()">
+					<Button
+						id="LobbyDetailsSettingsButton"
+						class="button lobby-details__header-item"
+						onactivate="Lobby.showLobbySettings()"
+					>
 						<Image class="button__icon" src="file://{images}/settings.svg" textureheight="32" />
 					</Button>
 				</TooltipPanel>
 				<TooltipPanel tooltip="Invite Players">
-					<Button id="LobbyDetailsInviteButton" class="button lobby-details__header-item" onactivate="SteamLobbyAPI.ShowInviteDialog()">
+					<Button
+						id="LobbyDetailsInviteButton"
+						class="button lobby-details__header-item"
+						onactivate="SteamLobbyAPI.ShowInviteDialog()"
+					>
 						<Image class="button__icon" src="file://{images}/online/invite.svg" textureheight="32" />
 					</Button>
 				</TooltipPanel>
@@ -97,13 +125,17 @@
 				<Label id="LobbyDetailsTitle" class="text-h lobby-details__header-item lobby-details__title" text="{s:lobbyTitle}" />
 				<Panel class="lobby-details__rightcontainer">
 					<Image id="LobbyDetailsType" class="lobby-details__header-ite lobby-details__type" textureheight="64" />
-					<Label id="LobbyDetailsPlayerCount" class="text-h lobby-details__header-item lobby-details__playercount" text="{s:lobbyPlayerCount}"/>
+					<Label
+						id="LobbyDetailsPlayerCount"
+						class="text-h lobby-details__header-item lobby-details__playercount"
+						text="{s:lobbyPlayerCount}"
+					/>
 				</Panel>
 			</Panel>
 			<Panel id="LobbyDetailsMemberList" class="lobby-details__lobby-members">
 				<!-- Panels get added via JS here -->
 			</Panel>
-			<MomentumChat class="lobby-details__chat"/>
+			<MomentumChat class="lobby-details__chat" />
 		</Panel>
 	</Panel>
 </root>

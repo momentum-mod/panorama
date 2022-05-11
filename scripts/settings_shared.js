@@ -10,7 +10,8 @@ class SettingsShared {
 
 			// Get the apply and discard buttons on the video settings screen
 			const applyVideoSettingsButton = this.videoSettingsPanel.FindChildInLayoutFile('ApplyVideoSettingsButton');
-			const discardVideoSettingsButton = this.videoSettingsPanel.FindChildInLayoutFile('DiscardVideoSettingsButton');
+			const discardVideoSettingsButton =
+				this.videoSettingsPanel.FindChildInLayoutFile('DiscardVideoSettingsButton');
 
 			// disabled as no user changes yet
 			applyVideoSettingsButton.enabled = false;
@@ -76,7 +77,16 @@ class SettingsShared {
 	}
 
 	static showConfirmResetSettings(message, resetFn) {
-		UiToolkitAPI.ShowGenericPopupTwoOptionsBgStyle('Confirm', message, 'warning-popup', 'Discard', resetFn, 'Return', () => {}, 'dim');
+		UiToolkitAPI.ShowGenericPopupTwoOptionsBgStyle(
+			'Confirm',
+			message,
+			'warning-popup',
+			'Discard',
+			resetFn,
+			'Return',
+			() => {},
+			'dim'
+		);
 	}
 
 	// State logic to tracking if there are changes to apply or discard:
@@ -120,9 +130,16 @@ class SettingsShared {
 
 		findCvarsRecursive(section);
 
-		const cvarParams = cvars.reduce((str, cvar, index) => (str += (index != 0 ? '&' : '') + 'cvar' + (index + 1) + '=' + cvar), '');
+		const cvarParams = cvars.reduce(
+			(str, cvar, index) => (str += (index != 0 ? '&' : '') + 'cvar' + (index + 1) + '=' + cvar),
+			''
+		);
 
-		UiToolkitAPI.ShowCustomLayoutPopupParameters('', 'file://{resources}/layout/popups/popup_importexportsettings.xml', `${cvarParams}&name=${name}`);
+		UiToolkitAPI.ShowCustomLayoutPopupParameters(
+			'',
+			'file://{resources}/layout/popups/popup_importexportsettings.xml',
+			`${cvarParams}&name=${name}`
+		);
 	}
 
 	static updatePaintPreview() {
@@ -173,7 +190,9 @@ class SettingsShared {
 		const imagePanel = this.videoSettingsPanel.FindChildTraverse('TextureReplacePreview');
 
 		/** @type {DropDown} @static */
-		const dropdown = this.videoSettingsPanel.FindChildTraverse('MatErrorReplaceTexture').FindChildTraverse('DropDown');
+		const dropdown = this.videoSettingsPanel
+			.FindChildTraverse('MatErrorReplaceTexture')
+			.FindChildTraverse('DropDown');
 
 		// Clear the dropdown
 		dropdown.RemoveAllOptions();
@@ -223,8 +242,13 @@ class SettingsShared {
 	}
 
 	static isSettingsPanel(panel) {
-		return ['ChaosSettingsEnum', 'ChaosSettingsSlider', 'ChaosSettingsEnumDropDown', 'ChaosSettingsKeyBinder', 'ChaosSettingsToggle', 'ConVarColorDisplay'].includes(
-			panel.paneltype
-		);
+		return [
+			'ChaosSettingsEnum',
+			'ChaosSettingsSlider',
+			'ChaosSettingsEnumDropDown',
+			'ChaosSettingsKeyBinder',
+			'ChaosSettingsToggle',
+			'ConVarColorDisplay'
+		].includes(panel.paneltype);
 	}
 }

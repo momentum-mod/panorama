@@ -1,4 +1,4 @@
-@use '../config'as *;
+@use '../config' as *;
 
 .slider {
 	transition: wash-color 0.1s linear 0s;
@@ -15,7 +15,8 @@
 		z-index: 3;
 	}
 
-	#SliderDefault, #SliderDefault2 {
+	#SliderDefault,
+	#SliderDefault2 {
 		align: center center;
 		background-color: $slider-default-color;
 		border-radius: $slider-default-radius;
@@ -23,7 +24,8 @@
 		z-index: 4;
 	}
 
-	#SliderThumb, #SliderThumb2 {
+	#SliderThumb,
+	#SliderThumb2 {
 		width: $slider-thumb-width;
 		height: $slider-thumb-height;
 		align: center center;
@@ -47,10 +49,11 @@
 	// Sliders has an extra .VerticalSlider/HorizontalSlider class added by C++ based on their `direction` attribute,
 	// but we don't actually want to use this to style is it messes with specificity.
 	&--horizontal {
-		width: fill-parent-flow(1.0);
+		width: fill-parent-flow(1);
 		padding: $slider-padding-height 0;
-		
-		#SliderDefault, #SliderDefault2 {
+
+		#SliderDefault,
+		#SliderDefault2 {
 			width: $slider-default-width;
 			height: $slider-default-height;
 		}
@@ -68,9 +71,10 @@
 
 	&--vertical {
 		padding: 0 $slider-padding-height;
-		height: fill-parent-flow(1.0);
+		height: fill-parent-flow(1);
 
-		#SliderDefault, #SliderDefault2 {
+		#SliderDefault,
+		#SliderDefault2 {
 			width: $slider-default-height;
 			height: $slider-default-width;
 		}

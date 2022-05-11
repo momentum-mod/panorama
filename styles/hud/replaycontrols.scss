@@ -5,7 +5,7 @@
 	transition: opacity 0.5s ease-in-out 0s;
 	opacity: 0.5;
 	padding: 12px;
-	background-color: rgba(0,0,0,0.6);
+	background-color: rgba(0, 0, 0, 0.6);
 	width: 480px;
 	margin: 40px;
 	flow-children: down;
@@ -15,7 +15,7 @@
 	}
 
 	&__bigbutton {
-		width: fill-parent-flow( 1.0 );
+		width: fill-parent-flow(1);
 		flow-children: none;
 	}
 
@@ -42,7 +42,8 @@
 		horizontal-align: right;
 	}
 
-	& #SliderThumb, #SliderThumb2 {
+	& #SliderThumb,
+	#SliderThumb2 {
 		width: 0.33 * $slider-thumb-width;
 		border-radius: 0.5 * $slider-thumb-radius;
 	}

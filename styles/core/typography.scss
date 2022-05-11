@@ -46,7 +46,7 @@
 }
 
 .text-monospace {
-	font-family: $font-monospace
+	font-family: $font-monospace;
 }
 
 @each $name in (uppercase, lowercase, none) {

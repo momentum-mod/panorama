@@ -6,8 +6,7 @@ class SpeedometerSelectPopup {
 
 	static onAddButtonPressed() {
 		const callbackHandle = $.GetContextPanel().GetAttributeInt('callback', -1);
-		if ( callbackHandle !== -1 )
-			UiToolkitAPI.InvokeJSCallback(callbackHandle, SpeedometerSelectPopup.selected);
+		if (callbackHandle !== -1) UiToolkitAPI.InvokeJSCallback(callbackHandle, SpeedometerSelectPopup.selected);
 		UiToolkitAPI.CloseAllVisiblePopups();
 	}
 
@@ -19,10 +18,11 @@ class SpeedometerSelectPopup {
 			speedometer.FindChildInLayoutFile('SpeedometerBtnLabel').text = SPEEDOMETER_DISP_NAMES[id];
 
 			let radioBtn = speedometer.FindChildInLayoutFile('SpeedometerRadioBtn');
-			radioBtn.SetPanelEvent('onactivate', () => { SpeedometerSelectPopup.selected = id; });
+			radioBtn.SetPanelEvent('onactivate', () => {
+				SpeedometerSelectPopup.selected = id;
+			});
 
-			if (index === 0)
-				radioBtn.selected = true;
+			if (index === 0) radioBtn.selected = true;
 		});
 	}
 }

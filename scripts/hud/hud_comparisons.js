@@ -39,7 +39,13 @@ class HudComparisons {
 
 		const hasCompare = !!comparisonRun.compareRun;
 
-		if (!currentData || !currentData.isInZone || !currentStats || currentData.currentZone === 1 || currentData.timerState === TIMER_STATE.PRACTICE) {
+		if (
+			!currentData ||
+			!currentData.isInZone ||
+			!currentStats ||
+			currentData.currentZone === 1 ||
+			currentData.timerState === TIMER_STATE.PRACTICE
+		) {
 			return;
 		}
 
@@ -73,7 +79,9 @@ class HudComparisons {
 
 		const splitPanels = this.panels.splits.Children().reverse();
 		if (splitPanels.length > MAX_ACTIVE_SPLITS) {
-			splitPanels.filter((_, i) => splitPanels.length - i > MAX_ACTIVE_SPLITS).forEach((panel) => panel.RemoveAndDeleteChildren());
+			splitPanels
+				.filter((_, i) => splitPanels.length - i > MAX_ACTIVE_SPLITS)
+				.forEach((panel) => panel.RemoveAndDeleteChildren());
 		}
 
 		const data = hasCompare
@@ -82,7 +90,9 @@ class HudComparisons {
 					new RunStats(comparisonRun.compareRun.stats, currentData.tickRate),
 					this.runStatsZoneIndex + 1
 			  )[this.runStatsZoneIndex]
-			: new RunStats(currentStats, currentData.tickRate, this.runStatsZoneIndex + 1).zones[this.runStatsZoneIndex];
+			: new RunStats(currentStats, currentData.tickRate, this.runStatsZoneIndex + 1).zones[
+					this.runStatsZoneIndex
+			  ];
 
 		const wrapper = $.CreatePanel('Panel', this.panels.splits, `Split${data.name}`, {
 			class: 'hud-comparisons__split'

@@ -14,11 +14,11 @@ class StickyCharge {
 	/** @type {Panel} @static */
 	static container = $('#StickyChargeContainer');
 
-	static OnChargeUpdate( speed, percentage ) {
+	static OnChargeUpdate(speed, percentage) {
 		const chargeUnitType = $.GetContextPanel().stickyChargeUnitType;
 
 		let speedText;
-		switch(chargeUnitType) {
+		switch (chargeUnitType) {
 			case STICKY_CHARGE_UNITS_TYPE.UPS:
 				speedText = `${Math.floor(speed)}u/s`;
 				break;

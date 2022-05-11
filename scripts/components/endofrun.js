@@ -84,8 +84,13 @@ class EndOfRun {
 				icon = `file://{images}/${RUN_STATUS_ICONS.PROGRESS}.svg`;
 				break;
 			case RUN_STATUS_STATES.SUCCESS:
-				icon = `file://{images}/${type === RUN_STATUS_TYPES.UPLOAD ? RUN_STATUS_ICONS.UPLOAD : RUN_STATUS_ICONS.SAVE}.svg`;
-				text = type === RUN_STATUS_TYPES.UPLOAD ? 'Your run has been uploaded to the submission server!' : 'Your run has been saved locally!';
+				icon = `file://{images}/${
+					type === RUN_STATUS_TYPES.UPLOAD ? RUN_STATUS_ICONS.UPLOAD : RUN_STATUS_ICONS.SAVE
+				}.svg`;
+				text =
+					type === RUN_STATUS_TYPES.UPLOAD
+						? 'Your run has been uploaded to the submission server!'
+						: 'Your run has been saved locally!';
 				style = 'positive';
 				break;
 			case RUN_STATUS_STATES.ERROR:
@@ -101,18 +106,32 @@ class EndOfRun {
 		statusPanel.SetImage(icon);
 
 		if (text) {
-			statusPanel.SetPanelEvent('onmouseover', () => UiToolkitAPI.ShowTitleImageTextTooltipStyled(statusPanel.id, '', icon, text, `tooltip--notitle--${style}`));
+			statusPanel.SetPanelEvent('onmouseover', () =>
+				UiToolkitAPI.ShowTitleImageTextTooltipStyled(
+					statusPanel.id,
+					'',
+					icon,
+					text,
+					`tooltip--notitle--${style}`
+				)
+			);
 		} else {
 			statusPanel.ClearPanelEvent('onmouseover');
 		}
 	}
 
 	static updateRunSavedStatus(saved) {
-		this.updateRunStatusIndicator(saved ? RUN_STATUS_STATES.SUCCESS : RUN_STATUS_STATES.ERROR, RUN_STATUS_TYPES.SAVE);
+		this.updateRunStatusIndicator(
+			saved ? RUN_STATUS_STATES.SUCCESS : RUN_STATUS_STATES.ERROR,
+			RUN_STATUS_TYPES.SAVE
+		);
 	}
 
 	static updateRunUploadStatus(uploaded, _cosXp, _rankXp, _lvlGain) {
-		this.updateRunStatusIndicator(uploaded ? RUN_STATUS_STATES.SUCCESS : RUN_STATUS_STATES.ERROR, RUN_STATUS_TYPES.UPLOAD);
+		this.updateRunStatusIndicator(
+			uploaded ? RUN_STATUS_STATES.SUCCESS : RUN_STATUS_STATES.ERROR,
+			RUN_STATUS_TYPES.UPLOAD
+		);
 	}
 
 	static watchReplay() {
@@ -231,7 +250,9 @@ class EndOfRun {
 		this.panels.cp.SetHasClass('endofrun--behind', !isAhead);
 
 		// Create an empty Radiobutton with no styling for overall, so we have something to remove selection from when deselecting another split
-		const overallSplitPanel = $.CreatePanel('RadioButton', this.panels.splits, 'Split0', { group: 'end-of-run-split-buttons' });
+		const overallSplitPanel = $.CreatePanel('RadioButton', this.panels.splits, 'Split0', {
+			group: 'end-of-run-split-buttons'
+		});
 
 		// Create splits for every comparison
 		comparison.splits.forEach((split, i) => {
@@ -395,7 +416,8 @@ class EndOfRun {
 			const diffStyle = compareVal < 0 ? 'split--ahead ' : compareVal > 0 ? 'split--behind ' : '';
 			if (isTimeComparison) {
 				const deltaStyle =
-					(data.diff < 0 ? 'split--ahead ' : data.diff > 0 ? 'split--behind ' : '') + (data.delta < 0 ? 'split--gain' : data.delta > 0 ? 'split--loss' : '');
+					(data.diff < 0 ? 'split--ahead ' : data.diff > 0 ? 'split--behind ' : '') +
+					(data.delta < 0 ? 'split--gain' : data.delta > 0 ? 'split--loss' : '');
 
 				tooltipString =
 					`Total Time: <b>{g:time:total_time}</b>\n` +
@@ -404,7 +426,10 @@ class EndOfRun {
 					`Delta: <b class='${deltaStyle}'>${diffSign(data.delta)}{g:time:time_delta}</b>`;
 			} else {
 				// Using string instead of float here, floats add a shitton of floating point imprecision e.g. 90.00000000128381273
-				tooltipString = `{s:name}: <b>{s:base_value}</b>\n` + `Comparison: <b>{s:compare_value}</b>\n` + `Diff: <b class='${diffStyle}'>${diffSign(data.diff)}{s:diff}</b>`;
+				tooltipString =
+					`{s:name}: <b>{s:base_value}</b>\n` +
+					`Comparison: <b>{s:compare_value}</b>\n` +
+					`Diff: <b class='${diffStyle}'>${diffSign(data.diff)}{s:diff}</b>`;
 			}
 
 			line.points.push({
@@ -536,7 +561,16 @@ class EndOfRun {
 
 		// Time data is stored directly in the Split, bit different from  RunStatsComparison. So just construct one in the format
 		// of a RunStatComparison so createRow can handle it. index as null, so updateGraph will use the Split time rather than a stat.
-		createRow({ name: 'Time', unit: 's', baseValue: split.time, comparisonValue: split.time + split.diff, diff: split.diff }, null);
+		createRow(
+			{
+				name: 'Time',
+				unit: 's',
+				baseValue: split.time,
+				comparisonValue: split.time + split.diff,
+				diff: split.diff
+			},
+			null
+		);
 
 		split.statsComparisons.forEach((statComparison, i) => createRow(statComparison, i));
 	}

@@ -58,7 +58,13 @@
 			<MomHudWeaponSelection />
 		</Panel>
 
-		<ChaosHudBlurTarget id="HudBlur" blurrects="Leaderboards TrickList" class="hud-blur" hittest="false" hittestchildren="false">
+		<ChaosHudBlurTarget
+			id="HudBlur"
+			blurrects="Leaderboards TrickList"
+			class="hud-blur"
+			hittest="false"
+			hittestchildren="false"
+		>
 			<ChaosBackbufferImagePanel class="full" />
 		</ChaosHudBlurTarget>
 
@@ -87,7 +93,7 @@
 
 		<!-- Console notifications should always draw above anything else! -->
 		<Panel id="HudNotify" hittest="false" hittestchildren="false">
-			<Frame src="file://{resources}/layout/hud/consolenotify.xml"/>
+			<Frame src="file://{resources}/layout/hud/consolenotify.xml" />
 		</Panel>
 	</ChaosHud>
 </root>

@@ -51,7 +51,9 @@ class LoadingScreen {
 		$.GetContextPanel().SetDialogVariable('tracktype', mapData.mainTrack.isLinear ? 'Linear' : 'Staged');
 
 		let authorString = '';
-		mapData.credits.filter((x) => x.type === 'author').forEach((item, i) => (authorString += (i > 0 ? ', ' : '') + item.user.alias));
+		mapData.credits
+			.filter((x) => x.type === 'author')
+			.forEach((item, i) => (authorString += (i > 0 ? ', ' : '') + item.user.alias));
 		$.GetContextPanel().SetDialogVariable('author', authorString);
 
 		$('#MapName').visible = true;

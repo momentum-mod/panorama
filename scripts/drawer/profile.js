@@ -38,7 +38,10 @@ class Profile {
 	static updateLevelIndicators(level) {
 		const indicatorClass = this.panels.prestigeIndicator.jsClass;
 		for (let i = 1; i <= 10; i++) {
-			this.panels.levelIndicatorsContainer.SetHasClass('profile-level-indicators--' + i, i == indicatorClass.getLevelColor(level));
+			this.panels.levelIndicatorsContainer.SetHasClass(
+				'profile-level-indicators--' + i,
+				i == indicatorClass.getLevelColor(level)
+			);
 		}
 
 		this.panels.levelIndicatorsContainer.SetHasClass('profile-level-indicators--no-prestige', level < 500);
@@ -51,7 +54,11 @@ class Profile {
 	 * Show the levels explainer contextmenu
 	 */
 	static showLevelExplainers() {
-		UiToolkitAPI.ShowCustomLayoutContextMenu(this.panels.levelInfo.id, '', 'file://{resources}/layout/context_menus/context_menu_levels_explainer.xml');
+		UiToolkitAPI.ShowCustomLayoutContextMenu(
+			this.panels.levelInfo.id,
+			'',
+			'file://{resources}/layout/context_menus/context_menu_levels_explainer.xml'
+		);
 	}
 
 	static openWebsiteProfile() {

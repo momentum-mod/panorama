@@ -16,14 +16,12 @@ const StickyPanelClasses = [
 ];
 
 class StickyCount {
-
 	static onStickyPanelStateChanged(stickyPanel, state, prevstate) {
-        stickyPanel.AddClass(StickyPanelClasses[state]);
-		switch(state) {
+		stickyPanel.AddClass(StickyPanelClasses[state]);
+		switch (state) {
 			case STICKY_STATE_TYPE.ARMED:
 				// keep arming class to have a smooth transition
-				if (prevstate !== STICKY_STATE_TYPE.ARMING)
-					stickyPanel.RemoveClass(StickyPanelClasses[prevstate]);
+				if (prevstate !== STICKY_STATE_TYPE.ARMING) stickyPanel.RemoveClass(StickyPanelClasses[prevstate]);
 				break;
 			case STICKY_STATE_TYPE.ARMING:
 			case STICKY_STATE_TYPE.BLOCKED:
@@ -31,9 +29,10 @@ class StickyCount {
 				break;
 			case STICKY_STATE_TYPE.NOSTICKY:
 			default:
-                // remove all classes except the no sticky one
-				StickyPanelClasses.filter(spClass => spClass !== StickyPanelClasses[0])
-					.forEach(spClass => stickyPanel.RemoveClass(spClass));
+				// remove all classes except the no sticky one
+				StickyPanelClasses.filter((spClass) => spClass !== StickyPanelClasses[0]).forEach((spClass) =>
+					stickyPanel.RemoveClass(spClass)
+				);
 				break;
 		}
 	}

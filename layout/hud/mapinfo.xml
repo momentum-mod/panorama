@@ -15,26 +15,50 @@
 
 			<Panel id="CachedInfoContainer" class="flow-down width-fit-children horizontal-align-right vertical-align-center">
 
-				<ConVarEnabler class="flow-right width-fit-children horizontal-align-right" convar="mom_hud_mapinfo_author_enable" togglevisibility="true">
+				<ConVarEnabler
+					class="flow-right width-fit-children horizontal-align-right"
+					convar="mom_hud_mapinfo_author_enable"
+					togglevisibility="true"
+				>
 					<Label class="hudmapinfo__label" text="By: {s:author}" />
 				</ConVarEnabler>
 
 				<Panel class="flow-left width-fit-children horizontal-align-right vertical-align-center">
-					<ConVarEnabler class="flow-right width-fit-children horizontal-align-right" convar="mom_hud_mapinfo_numzones_enable" togglevisibility="true">
-						<ConVarEnabler class="width-fit-children horizontal-align-right" convar="mom_hud_mapinfo_zonetype_enable" togglevisibility="true">
+					<ConVarEnabler
+						class="flow-right width-fit-children horizontal-align-right"
+						convar="mom_hud_mapinfo_numzones_enable"
+						togglevisibility="true"
+					>
+						<ConVarEnabler
+							class="width-fit-children horizontal-align-right"
+							convar="mom_hud_mapinfo_zonetype_enable"
+							togglevisibility="true"
+						>
 							<Label class="hudmapinfo__label" text=" " />
 						</ConVarEnabler>
 						<Label id="NumzonesLabel" class="hudmapinfo__label" text="({d:numzones} Zones)" />
 					</ConVarEnabler>
 
-					<ConVarEnabler class="flow-right width-fit-children horizontal-align-right" convar="mom_hud_mapinfo_zonetype_enable" togglevisibility="true">
-						<ConVarEnabler class="width-fit-children horizontal-align-right" convar="mom_hud_mapinfo_tier_enable" togglevisibility="true">
+					<ConVarEnabler
+						class="flow-right width-fit-children horizontal-align-right"
+						convar="mom_hud_mapinfo_zonetype_enable"
+						togglevisibility="true"
+					>
+						<ConVarEnabler
+							class="width-fit-children horizontal-align-right"
+							convar="mom_hud_mapinfo_tier_enable"
+							togglevisibility="true"
+						>
 							<Label class="hudmapinfo__label" text=" - " />
 						</ConVarEnabler>
 						<Label id="ZonetypeLabel" class="hudmapinfo__label" text="{s:zonetype}" />
 					</ConVarEnabler>
 
-					<ConVarEnabler class="flow-right width-fit-children horizontal-align-right" convar="mom_hud_mapinfo_tier_enable" togglevisibility="true">
+					<ConVarEnabler
+						class="flow-right width-fit-children horizontal-align-right"
+						convar="mom_hud_mapinfo_tier_enable"
+						togglevisibility="true"
+					>
 						<Label id="TierLabel" class="hudmapinfo__label" text="Tier {d:tier}" />
 					</ConVarEnabler>
 				</Panel>

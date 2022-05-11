@@ -15,11 +15,11 @@
 		font-weight: bold;
 		text-shadow: 0 3px 6px rgba(0, 0, 0, 0.5);
 		color: #fff;
-		
+
 		&:disabled {
 			opacity: 0.15;
 		}
-		
+
 		// set in code
 		&.hidden {
 			visibility: collapse;
@@ -57,7 +57,7 @@
 	&__icon {
 		wash-color: #0f171c;
 		height: 100%;
-		width: height-percentage( 100% );
+		width: height-percentage(100%);
 		vertical-align: middle;
 
 		&:parentdisabled {
@@ -97,12 +97,12 @@
 
 .keypress-icon {
 	&__forward {
-		transform: rotatez( -90deg );
+		transform: rotatez(-90deg);
 	}
 	&__back {
-		transform: rotatez( 90deg );
+		transform: rotatez(90deg);
 	}
 	&__left {
-		transform: rotatez( 180deg );
+		transform: rotatez(180deg);
 	}
 }

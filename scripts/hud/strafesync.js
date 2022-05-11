@@ -1,16 +1,16 @@
 'use strict';
 
 const COLOR_CLASS_FG = {
-	DEFAULT_COLOR	:	'strafesync__default-color--fg',
-	INCREASE_COLOR	: 	'strafesync__increase-color--fg',
-	DECREASE_COLOR	:	'strafesync__decrease-color--fg'
-}
+	DEFAULT_COLOR: 'strafesync__default-color--fg',
+	INCREASE_COLOR: 'strafesync__increase-color--fg',
+	DECREASE_COLOR: 'strafesync__decrease-color--fg'
+};
 
 const COLOR_CLASS_BG = {
-	DEFAULT_COLOR	:	'strafesync__default-color--bg',
-	INCREASE_COLOR	: 	'strafesync__increase-color--bg',
-	DECREASE_COLOR	:	'strafesync__decrease-color--bg'
-}
+	DEFAULT_COLOR: 'strafesync__default-color--bg',
+	INCREASE_COLOR: 'strafesync__increase-color--bg',
+	DECREASE_COLOR: 'strafesync__decrease-color--bg'
+};
 
 class StrafeSync {
 	static lastValue = 0;
@@ -24,29 +24,21 @@ class StrafeSync {
 		this.bar.value = value;
 
 		let colorIndex;
-		switch ( $.GetContextPanel().strafesyncColorize ) {
+		switch ($.GetContextPanel().strafesyncColorize) {
 			case 1:
-				if (this.lastValue === 0)
-					colorIndex = 'DEFAULT_COLOR';
+				if (this.lastValue === 0) colorIndex = 'DEFAULT_COLOR';
 				else {
 					const diff = value - this.lastValue;
-					if (diff > 0)
-						colorIndex = 'INCREASE_COLOR';
-					else if (diff < 0)
-						colorIndex = 'DECREASE_COLOR';
-					else
-						colorIndex = 'DEFAULT_COLOR';
+					if (diff > 0) colorIndex = 'INCREASE_COLOR';
+					else if (diff < 0) colorIndex = 'DECREASE_COLOR';
+					else colorIndex = 'DEFAULT_COLOR';
 				}
 				break;
 			case 2:
-				if (value === 0)
-					colorIndex = 'DEFAULT_COLOR';
-				else if (value > 90)
-					colorIndex = 'INCREASE_COLOR';
-				else if (value < 75)
-					colorIndex = 'DECREASE_COLOR';
-				else
-					colorIndex = 'DEFAULT_COLOR';
+				if (value === 0) colorIndex = 'DEFAULT_COLOR';
+				else if (value > 90) colorIndex = 'INCREASE_COLOR';
+				else if (value < 75) colorIndex = 'DECREASE_COLOR';
+				else colorIndex = 'DEFAULT_COLOR';
 				break;
 			case 0:
 			default:
@@ -71,7 +63,7 @@ class StrafeSync {
 
 	static {
 		$.RegisterEventHandler('ChaosHudProcessInput', $.GetContextPanel(), this.onUpdate.bind(this));
-		
+
 		/** @type {ProgressBar} @static */
 		this.bar = $('#SyncProgressBar');
 		/** @type {Label} @static */

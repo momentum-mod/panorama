@@ -10,13 +10,13 @@
 	border-radius: $popup-radius;
 	background-color: $popup-background;
 	box-shadow: $popup-shadow;
-	opacity: 1.0;
+	opacity: 1;
 	transition-property: pre-transform-scale2d, opacity;
 	transition-duration: 0.15s;
 	transition-timing-function: ease-in-out;
 
 	&.Hidden {
-		opacity: 0.0;
+		opacity: 0;
 		pre-transform-scale2d: 1.05;
 		transition-duration: 0.2s;
 		// sound: "ui_custom_lobby_dialog_slide";

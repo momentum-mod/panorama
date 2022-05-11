@@ -51,7 +51,9 @@ class SettingsSearch {
 		});
 
 		// Populate results panel with matches
-		arrMatches.forEach((searchResult) => SettingsSearch.createSearchResultPanel(searchResult.text, searchResult.menu, searchResult.panel));
+		arrMatches.forEach((searchResult) =>
+			SettingsSearch.createSearchResultPanel(searchResult.text, searchResult.menu, searchResult.panel)
+		);
 	}
 
 	static searchSettingText(tabID, settingPanel, arrMatches, arrStrings) {
@@ -61,7 +63,10 @@ class SettingsSearch {
 		if (arrStrings.every((s) => new RegExp(s, 'giu').test(settingPanel.text))) {
 			const parent = settingPanel.GetParent();
 			// ChaosSettingsEnum has
-			const panel = MainMenuSettings.isSettingsPanel(parent) || parent.paneltype === 'ConVarEnabler' ? parent : parent.GetParent();
+			const panel =
+				MainMenuSettings.isSettingsPanel(parent) || parent.paneltype === 'ConVarEnabler'
+					? parent
+					: parent.GetParent();
 
 			arrMatches.push({
 				panel: panel,
@@ -81,7 +86,12 @@ class SettingsSearch {
 
 		if (panel.HasClass('settings-keybinder__key')) return false;
 
-		if (panel.HasClass('settings-group__title') || panel.HasClass('settings-group__subtitle') || panel.HasClass('settings-page__title')) return false;
+		if (
+			panel.HasClass('settings-group__title') ||
+			panel.HasClass('settings-group__subtitle') ||
+			panel.HasClass('settings-page__title')
+		)
+			return false;
 
 		if (panel.GetParent().paneltype === 'RadioButton') return false;
 

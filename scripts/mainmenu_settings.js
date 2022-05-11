@@ -115,7 +115,11 @@ class MainMenuSettings {
 			// If the tab exists then hide it
 			if (this.activeTab) {
 				// Hide the nav menu children of the active tab if we're in collapse mode
-				if (this.activeTab !== 'SearchSettings') this.setNavItemCollapsed(this.activeTab, $.persistentStorage.getItem('settings.collapseNav') ?? true);
+				if (this.activeTab !== 'SearchSettings')
+					this.setNavItemCollapsed(
+						this.activeTab,
+						$.persistentStorage.getItem('settings.collapseNav') ?? true
+					);
 
 				// Hide the active tab
 				$.GetContextPanel().FindChildInLayoutFile(this.activeTab).RemoveClass('settings-page--active');
@@ -237,7 +241,8 @@ class MainMenuSettings {
 
 		// This is 0 on initial load for some reason
 		if (!this.spacerHeight > 0) {
-			this.spacerHeight = $.GetContextPanel().FindChildrenWithClassTraverse('settings-page__spacer')[0].actuallayoutheight;
+			this.spacerHeight =
+				$.GetContextPanel().FindChildrenWithClassTraverse('settings-page__spacer')[0].actuallayoutheight;
 		}
 
 		// Calculate proportion of the way scrolled down the page
@@ -251,7 +256,8 @@ class MainMenuSettings {
 		for (let child of panel.FindChildrenWithClassTraverse('settings-group')) {
 			if (
 				(child.actualyoffset / containerHeight <= proportionScrolled &&
-					proportionScrolled <= (child.actualyoffset + child.actuallayoutheight + this.spacerHeight) / containerHeight) ||
+					proportionScrolled <=
+						(child.actualyoffset + child.actuallayoutheight + this.spacerHeight) / containerHeight) ||
 				scrollOffset === 0
 			) {
 				this.navPanel.FindChildTraverse(this.settingsTabs[tab].children[child.id]).checked = true;
@@ -375,7 +381,9 @@ class MainMenuSettings {
 			// Set onmouseover events for all settings panels
 			MainMenuSettings.showInfo(
 				// If a panel has a specific title use that, if not use the panel's name. Child ID names vary between panel types, blame Valve
-				panel.GetAttributeString('infotitle', '') || panel.FindChildTraverse('Title')?.text || panel.FindChildTraverse('title')?.text,
+				panel.GetAttributeString('infotitle', '') ||
+					panel.FindChildTraverse('Title')?.text ||
+					panel.FindChildTraverse('title')?.text,
 				message,
 				panel.convar ?? panel.bind,
 				hasDocs,
@@ -427,7 +435,9 @@ class MainMenuSettings {
 					this.infoPanelConvar.RemoveClass('hide');
 					this.infoPanelDocsButton.SetHasClass('hide', !hasDocs || isKeybinder);
 					// Shouldn't need to clear the panel event here as it's hidden or gets overwritten
-					this.infoPanelDocsButton.SetPanelEvent('onactivate', () => SteamOverlayAPI.OpenURLModal(`https://docs.momentum-mod.org/var/${convar}`));
+					this.infoPanelDocsButton.SetPanelEvent('onactivate', () =>
+						SteamOverlayAPI.OpenURLModal(`https://docs.momentum-mod.org/var/${convar}`)
+					);
 				} else {
 					this.infoPanelConvar.AddClass('hide');
 					this.infoPanelDocsButton.AddClass('hide');
@@ -474,9 +484,14 @@ class MainMenuSettings {
 	}
 
 	static isSettingsPanel(panel) {
-		return ['ChaosSettingsEnum', 'ChaosSettingsSlider', 'ChaosSettingsEnumDropDown', 'ChaosSettingsKeyBinder', 'ChaosSettingsToggle', 'ConVarColorDisplay'].includes(
-			panel.paneltype
-		);
+		return [
+			'ChaosSettingsEnum',
+			'ChaosSettingsSlider',
+			'ChaosSettingsEnumDropDown',
+			'ChaosSettingsKeyBinder',
+			'ChaosSettingsToggle',
+			'ConVarColorDisplay'
+		].includes(panel.paneltype);
 	}
 
 	static isSpeedometerPanel(panel) {

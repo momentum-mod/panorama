@@ -116,7 +116,10 @@ class LineGraph {
 				if (dist !== 0 && dist !== panelLength)
 					$.CreatePanel('Panel', this.panels.grid, '', {
 						// Add extra class for the line on the Y axis, if one sits there. Maybe a bit weird, could generalise in the future.
-						class: 'linegraph__gridline linegraph__gridline--' + axisName + (!isX && markerValue == 0 ? ' linegraph__gridline--axis' : ''),
+						class:
+							'linegraph__gridline linegraph__gridline--' +
+							axisName +
+							(!isX && markerValue == 0 ? ' linegraph__gridline--axis' : ''),
 						style: offset
 					});
 			}
@@ -164,7 +167,10 @@ class LineGraph {
 				});
 
 				// Register any events the point, binding the ID of the point panel in the first argument place.
-				if (point.events) Object.entries(point.events).forEach(([name, fn]) => panel.SetPanelEvent(name, fn.bind(undefined, id)));
+				if (point.events)
+					Object.entries(point.events).forEach(([name, fn]) =>
+						panel.SetPanelEvent(name, fn.bind(undefined, id))
+					);
 			});
 
 			// Draw the line on the canvas
@@ -181,11 +187,17 @@ class LineGraph {
 				const drawPoly = (isAbove) => {
 					let formattedArray = [];
 					polyPoints.forEach((_, i) => {
-						const relativedPoints = this.#getRelativisedPosition(polyPoints[isAbove ? i : polyPoints.length - i - 1]);
+						const relativedPoints = this.#getRelativisedPosition(
+							polyPoints[isAbove ? i : polyPoints.length - i - 1]
+						);
 						formattedArray.push(relativedPoints.x * 2);
 						formattedArray.push(relativedPoints.y * 2);
 					});
-					graph.DrawPoly(polyPoints.length, formattedArray, isAbove ? line.shadeAboveToOriginColor : line.shadeBelowToOriginColor);
+					graph.DrawPoly(
+						polyPoints.length,
+						formattedArray,
+						isAbove ? line.shadeAboveToOriginColor : line.shadeBelowToOriginColor
+					);
 					polyPoints = [];
 				};
 
@@ -209,7 +221,8 @@ class LineGraph {
 							} else {
 								// Previous point was somewhere BELOW the axis, so find point where line between last point and this one intersect the axis,
 								// make a triangle between that point, current point, and current point's x at y = 0.
-								const xIntersect = lastPoint.x - lastPoint.y * ((point.x - lastPoint.x) / (point.y - lastPoint.y));
+								const xIntersect =
+									lastPoint.x - lastPoint.y * ((point.x - lastPoint.x) / (point.y - lastPoint.y));
 								polyPoints.push({ x: xIntersect, y: 0 });
 								polyPoints.push(point);
 								polyPoints.push({ x: point.x, y: 0 });

@@ -112,8 +112,14 @@ class Leaderboards {
 	}
 
 	static setSelectedTimesList(timesList) {
-		this.panels.subtypeButtons.SetHasClass('leaderboard-filter-buttons__subtypes--online', timesList === TIME_LIST_TYPE.LIST_GLOBAL);
-		this.panels.subtypeButtons.SetHasClass('leaderboard-filter-buttons__subtypes--lobby', timesList === TIME_LIST_TYPE.LIST_LOBBY);
+		this.panels.subtypeButtons.SetHasClass(
+			'leaderboard-filter-buttons__subtypes--online',
+			timesList === TIME_LIST_TYPE.LIST_GLOBAL
+		);
+		this.panels.subtypeButtons.SetHasClass(
+			'leaderboard-filter-buttons__subtypes--lobby',
+			timesList === TIME_LIST_TYPE.LIST_LOBBY
+		);
 
 		this.selectedTimesList = timesList;
 	}

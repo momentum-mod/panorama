@@ -35,7 +35,7 @@ TextEntry {
 		transition-property: opacity;
 		transition-duration: 0.1s;
 	}
-	
+
 	&:hover {
 		background-color: $textentry-background-hover;
 		box-shadow: $textentry-shadow-hover;
@@ -56,15 +56,14 @@ TextEntry {
 	}
 }
 
-TextEntryAutocomplete
-{
+TextEntryAutocomplete {
 	width: 480px;
 	flow-children: down;
 	background-color: #3d4448;
 	color: #e1e1e1;
 	overflow: squish scroll;
 	z-index: 0;
-	opacity: 1.0;
+	opacity: 1;
 	max-height: 220px;
 
 	box-shadow: fill #00000066 -3px -3px 6px 6px;

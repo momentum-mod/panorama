@@ -12,28 +12,41 @@
 			<Label id="TitleLabel" class="generic-popup__title" text="Lobby Settings" />
 		</Panel>
 		<Panel class="row horizontal-align-center my-3">
-			<RadioButton id="LobbySettingsPublicButton" class="button radiobutton radiobutton--blue mr-2"
-				onactivate="LobbySettings.onChanged()">
-				<Image class="button__icon button__icon--left" src="file://{images}/online/publiclobby.svg"
-					textureheight="32" />
+			<RadioButton
+				id="LobbySettingsPublicButton"
+				class="button radiobutton radiobutton--blue mr-2"
+				onactivate="LobbySettings.onChanged()"
+			>
+				<Image class="button__icon button__icon--left" src="file://{images}/online/publiclobby.svg" textureheight="32" />
 				<Label class="button__text button__text--right" text="Public" />
 			</RadioButton>
-			<RadioButton id="LobbySettingsFriendsOnlyButton" class="button radiobutton radiobutton--blue mr-2"
-				onactivate="LobbySettings.onChanged()">
+			<RadioButton
+				id="LobbySettingsFriendsOnlyButton"
+				class="button radiobutton radiobutton--blue mr-2"
+				onactivate="LobbySettings.onChanged()"
+			>
 				<Image class="button__icon button__icon--left" src="file://{images}/online/friendsonlylobby.svg" />
 				<Label class="button__text button__text--right" text="Friends Only" />
 			</RadioButton>
-			<RadioButton id="LobbySettingsPrivateButton" class="button radiobutton radiobutton--blue"
-				onactivate="LobbySettings.onChanged()">
-				<Image class="button__icon button__icon--left" src="file://{images}/online/privatelobby.svg"
-					textureheight="32" />
+			<RadioButton
+				id="LobbySettingsPrivateButton"
+				class="button radiobutton radiobutton--blue"
+				onactivate="LobbySettings.onChanged()"
+			>
+				<Image class="button__icon button__icon--left" src="file://{images}/online/privatelobby.svg" textureheight="32" />
 				<Label class="button__text button__text--right" text="Invite Only" />
 			</RadioButton>
 		</Panel>
 		<Panel class="row mt-1">
 			<Label class="mr-3 vertical-align-center" text="Max Player Count" disabled="true" />
-			<TextEntry id="MaxPlayers" class="textentry text-align-center horizontal-align-center px-3" maxchars="3"
-				textmode="numeric" style="width: 52px;" ontextentrychange="LobbySettings.onChanged()" />
+			<TextEntry
+				id="MaxPlayers"
+				class="textentry text-align-center horizontal-align-center px-3"
+				maxchars="3"
+				textmode="numeric"
+				style="width: 52px;"
+				ontextentrychange="LobbySettings.onChanged()"
+			/>
 		</Panel>
 		<Panel class="row horizontal-align-right">
 			<Button id="UpdateButton" class="button button--green mr-3" disabled="true">

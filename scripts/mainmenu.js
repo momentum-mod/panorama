@@ -29,7 +29,10 @@ class MainMenuController {
 		$.RegisterEventHandler('Cancelled', $.GetContextPanel(), MainMenuController.onEscapeKeyPressed);
 
 		// Close the map selector when a map is successfully loaded
-		$.RegisterForUnhandledEvent('MapSelector_TryPlayMap_Outcome', (outcome) => outcome && MainMenuController.onHomeButtonPressed());
+		$.RegisterForUnhandledEvent(
+			'MapSelector_TryPlayMap_Outcome',
+			(outcome) => outcome && MainMenuController.onHomeButtonPressed()
+		);
 
 		$.DispatchEvent('ChaosHideIntroMovie');
 	}
@@ -37,7 +40,11 @@ class MainMenuController {
 	// TODO: Delete me when proper engine support is added!
 	static psdump() {
 		for (let i = 0; i < $.persistentStorage.length; i++) {
-			$.Msg($.persistentStorage.key(i).toString() + ': ' + JSON.stringify($.persistentStorage.getItem($.persistentStorage.key(i))));
+			$.Msg(
+				$.persistentStorage.key(i).toString() +
+					': ' +
+					JSON.stringify($.persistentStorage.getItem($.persistentStorage.key(i)))
+			);
 		}
 	}
 
@@ -75,9 +82,13 @@ class MainMenuController {
 
 	static navigateToTab(tab, xmlName, hasBlur = true) {
 		if (tab === 'MapSelection') {
-			$.GetContextPanel().FindChildTraverse('MainMenuBackgroundMapSelectorImage').RemoveClass('mapselector__background--hidden');
+			$.GetContextPanel()
+				.FindChildTraverse('MainMenuBackgroundMapSelectorImage')
+				.RemoveClass('mapselector__background--hidden');
 		} else {
-			$.GetContextPanel().FindChildTraverse('MainMenuBackgroundMapSelectorImage').AddClass('mapselector__background--hidden');
+			$.GetContextPanel()
+				.FindChildTraverse('MainMenuBackgroundMapSelectorImage')
+				.AddClass('mapselector__background--hidden');
 		}
 
 		MainMenuController.contentBlurPanel.visible = hasBlur;
@@ -208,7 +219,11 @@ class MainMenuController {
 
 	static showPlaytestWelcomePopup() {
 		if (!$.persistentStorage.getItem('dontShowAgain.playtestWelcome')) {
-			UiToolkitAPI.ShowCustomLayoutPopupParameters('', 'file://{resources}/layout/popups/popup_playtestwelcome.xml', 'storageKey=playtestWelcome');
+			UiToolkitAPI.ShowCustomLayoutPopupParameters(
+				'',
+				'file://{resources}/layout/popups/popup_playtestwelcome.xml',
+				'storageKey=playtestWelcome'
+			);
 		}
 	}
 
@@ -279,12 +294,16 @@ class MainMenuController {
 	}
 
 	static hideMapSelectorBackground() {
-		$.GetContextPanel().FindChildTraverse('MainMenuBackgroundMapSelectorImage').AddClass('mapselector__background--hidden');
+		$.GetContextPanel()
+			.FindChildTraverse('MainMenuBackgroundMapSelectorImage')
+			.AddClass('mapselector__background--hidden');
 	}
 
 	static onMapSelectorLoaded() {
 		['MapSelectorLeft', 'MapDescription', 'MapInfoStats', 'Leaderboards'].forEach((panel) =>
-			$.GetContextPanel().FindChildTraverse('MainMenuBackgroundBlur')?.AddBlurPanel($.GetContextPanel().FindChildTraverse(panel))
+			$.GetContextPanel()
+				.FindChildTraverse('MainMenuBackgroundBlur')
+				?.AddBlurPanel($.GetContextPanel().FindChildTraverse(panel))
 		);
 	}
 
@@ -305,7 +324,16 @@ class MainMenuController {
 	static onQuitPrompt(toDesktop = true) {
 		if (!toDesktop) return; // currently dont handle disconnect prompts
 		$.DispatchEvent('ChaosMainMenuPauseGame'); // make sure game is paused so we can see the popup if hit from a keybind in-game
-		UiToolkitAPI.ShowGenericPopupTwoOptionsBgStyle('Quit', 'Are you sure you want to quit?', 'warning-popup', 'Quit', this.quitGame, 'Return', () => {}, 'blur');
+		UiToolkitAPI.ShowGenericPopupTwoOptionsBgStyle(
+			'Quit',
+			'Are you sure you want to quit?',
+			'warning-popup',
+			'Quit',
+			this.quitGame,
+			'Return',
+			() => {},
+			'blur'
+		);
 	}
 
 	static onSafeguardDisconnect() {

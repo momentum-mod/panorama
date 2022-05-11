@@ -47,70 +47,90 @@ const Speedometers = [
 		$('#AbsSpeedometerContainer'),
 		$('#AbsSpeedometer'),
 		$('#AbsSpeedometerComparison'),
-		null, false, 0
+		null,
+		false,
+		0
 	),
 	new SpeedometerObject(
 		'HorizSpeedometer',
 		$('#HorizSpeedometerContainer'),
 		$('#HorizSpeedometer'),
 		$('#HorizSpeedometerComparison'),
-		null, false, 0
+		null,
+		false,
+		0
 	),
 	new SpeedometerObject(
 		'VertSpeedometer',
 		$('#VertSpeedometerContainer'),
 		$('#VertSpeedometer'),
 		$('#VertSpeedometerComparison'),
-		null, false, 0
+		null,
+		false,
+		0
 	),
 	new SpeedometerObject(
 		'EnergySpeedometer',
 		$('#EnergySpeedometerContainer'),
 		$('#EnergySpeedometer'),
 		$('#EnergySpeedometerComparison'),
-		null, false, 0
+		null,
+		false,
+		0
 	),
 	new SpeedometerObject(
 		'ExplosiveJumpVelocity',
 		$('#ExplosiveJumpVelocityContainer'),
 		$('#ExplosiveJumpVelocity'),
 		$('#ExplosiveJumpVelocityComparison'),
-		null, true, 0
+		null,
+		true,
+		0
 	),
 	new SpeedometerObject(
 		'LastJumpVelocity',
 		$('#LastJumpVelocityContainer'),
 		$('#LastJumpVelocity'),
 		$('#LastJumpVelocityComparison'),
-		null, true, 0
+		null,
+		true,
+		0
 	),
 	new SpeedometerObject(
 		'RampBoardVelocity',
 		$('#RampBoardVelocityContainer'),
 		$('#RampBoardVelocity'),
 		$('#RampBoardVelocityComparison'),
-		null, true, 0
+		null,
+		true,
+		0
 	),
 	new SpeedometerObject(
 		'RampLeaveVelocity',
 		$('#RampLeaveVelocityContainer'),
 		$('#RampLeaveVelocity'),
 		$('#RampLeaveVelocityComparison'),
-		null, true, 0
+		null,
+		true,
+		0
 	),
 	new SpeedometerObject(
 		'StageEnterExitAbsVelocity',
 		$('#StageEnterExitAbsVelocityContainer'),
 		$('#StageEnterExitAbsVelocity'),
 		$('#StageEnterExitAbsVelocityComparison'),
-		null, true, 0
+		null,
+		true,
+		0
 	),
 	new SpeedometerObject(
 		'StageEnterExitHorizVelocity',
 		$('#StageEnterExitHorizVelocityContainer'),
 		$('#StageEnterExitHorizVelocity'),
 		$('#StageEnterExitHorizVelocityComparison'),
-		null, true, 0
+		null,
+		true,
+		0
 	)
 ];
 
@@ -126,13 +146,13 @@ class Speedometer {
 		// reset previous value on fadeout
 		if (styleName !== 'opacity') return;
 
-		const filteredSpeedos = Speedometers.filter(speedometer => speedometer.container.id === panelName);
+		const filteredSpeedos = Speedometers.filter((speedometer) => speedometer.container.id === panelName);
 		if (!filteredSpeedos[0]) return;
 
 		filteredSpeedos[0].prevVal = 0;
 	}
 	static registerFadeoutEventHandlers() {
-		Speedometers.forEach(speedometer => {
+		Speedometers.forEach((speedometer) => {
 			$.RegisterEventHandler('PropertyTransitionEnd', speedometer.container, this.onFadeoutEvent);
 		});
 	}
@@ -228,7 +248,10 @@ class Speedometer {
 		}
 
 		const separateComparison = speedometer.settings.colorizeMode === SPEEDOMETER_COLOR_MODE.COMPARISON_SEP;
-		if (hasComparison && (speedometer.settings.colorizeMode === SPEEDOMETER_COLOR_MODE.COMPARISON || separateComparison)) {
+		if (
+			hasComparison &&
+			(speedometer.settings.colorizeMode === SPEEDOMETER_COLOR_MODE.COMPARISON || separateComparison)
+		) {
 			// energy speedometer can be negative!
 			const speed = speedoID === SPEEDOMETER_ID.EnergySpeedometer ? velocity : Math.abs(velocity);
 			const diff = !customdiff ? speed - speedometer.prevVal : customdiff;
@@ -261,7 +284,7 @@ class Speedometer {
 			speedometer.label.RemoveClass(DECREASE_CLASS);
 			if (speedometer.settings.colorizeMode === SPEEDOMETER_COLOR_MODE.RANGE && speedometer.settings.ranges) {
 				let found = false;
-				speedometer.settings.ranges.forEach(range => {
+				speedometer.settings.ranges.forEach((range) => {
 					if (velocity >= range.min && velocity <= range.max) {
 						speedometer.label.style.color = range.color;
 						found = true;
@@ -310,7 +333,9 @@ class Speedometer {
 						const rangeKV = rangesKV[range];
 						if (rangeKV) {
 							const splitColor = rangeKV['color'].split(' ');
-							const color = `rgba(${splitColor[0]}, ${splitColor[1]}, ${splitColor[2]}, ${splitColor[3] / 255})`;
+							const color = `rgba(${splitColor[0]}, ${splitColor[1]}, ${splitColor[2]}, ${
+								splitColor[3] / 255
+							})`;
 							rangeList.push(new RangeObject(rangeKV['min'], rangeKV['max'], color));
 						}
 					});
@@ -321,7 +346,10 @@ class Speedometer {
 			speedometer.label.SetHasClass(HIDDEN_CLASS, !visible);
 
 			const colorizeMode = speedoSetting['colorize'];
-			speedometer.comparisonlabel.SetHasClass(HIDDEN_CLASS, !visible || colorizeMode !== SPEEDOMETER_COLOR_MODE.COMPARISON_SEP);
+			speedometer.comparisonlabel.SetHasClass(
+				HIDDEN_CLASS,
+				!visible || colorizeMode !== SPEEDOMETER_COLOR_MODE.COMPARISON_SEP
+			);
 
 			speedometer.settings = new SpeedoSettingsObject(visible, colorizeMode, speedoSetting['units'], rangeList);
 			speedometer.prevVal = 0;
@@ -346,7 +374,7 @@ class Speedometer {
 		$.RegisterEventHandler('OnRampLeaveSpeedUpdate', this.container, this.onRampLeaveSpeedUpdate.bind(this));
 		$.RegisterEventHandler('OnSpeedometerUpdate', this.container, this.onSpeedometerUpdate.bind(this));
 		$.RegisterForUnhandledEvent('OnMomentumZoneChange', this.onZoneChange.bind(this));
-		
+
 		// color profiles load before speedo settings, so this should be enough
 		$.RegisterForUnhandledEvent('OnSpeedometerSettingsLoaded', this.onSettingsUpdate.bind(this));
 		// do want to register when color profiles are saved though as that can happen independently

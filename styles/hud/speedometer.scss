@@ -1,4 +1,4 @@
-@use '../config'as *;
+@use '../config' as *;
 
 .speedometers {
 	margin: 6px 0px 6px 0;
@@ -39,7 +39,7 @@
 	&--fade-start {
 		transition-property: opacity;
 		transition-duration: $speedometer-event-fadeout-time;
-		transition-timing-function: cubic-bezier( 1, 0, 1, 0 );
+		transition-timing-function: cubic-bezier(1, 0, 1, 0);
 	}
 	&--fadeout {
 		transition-duration: 0s;

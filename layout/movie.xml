@@ -19,7 +19,7 @@
 
 				<Panel id="PlaybackControls">
 					<Label id="PlaybackSpeed" class="PlaybackControl" />
-					<Panel id="Timeline" class="PlaybackControl" >
+					<Panel id="Timeline" class="PlaybackControl">
 						<!-- Add bar for buffered data -->
 						
 						<!-- Wrap progress bar so transforms can be easily used to scale on animation thread -->
@@ -36,18 +36,48 @@
 								<Button id="JumpBack" class="ControlBarButton" tabindex="auto" selectionpos="auto" onactivate="MoviePlayerJumpBack();">
 									<Image src="file://{images}/transport_controls/icon_jump_back.png" />
 								</Button>
-								<ToggleButton id="PlayPause" class="ControlBarButton" tabindex="auto" selectionpos="auto" onactivate="MoviePlayerTogglePlayPause();">
+								<ToggleButton
+									id="PlayPause"
+									class="ControlBarButton"
+									tabindex="auto"
+									selectionpos="auto"
+									onactivate="MoviePlayerTogglePlayPause();"
+								>
 								</ToggleButton>
-								<Button id="FastForward" class="ControlBarButton" tabindex="auto" selectionpos="auto" onactivate="MoviePlayerFastForward();">
+								<Button
+									id="FastForward"
+									class="ControlBarButton"
+									tabindex="auto"
+									selectionpos="auto"
+									onactivate="MoviePlayerFastForward();"
+								>
 									<Image src="file://{images}/transport_controls/icon_ffwd.png" />
 								</Button>
-								<Button id="VideoQualityBtn" class="ControlBarButton" tabindex="auto" selectionpos="auto" onactivate="MoviePlayerSelectVideoQuality();">
+								<Button
+									id="VideoQualityBtn"
+									class="ControlBarButton"
+									tabindex="auto"
+									selectionpos="auto"
+									onactivate="MoviePlayerSelectVideoQuality();"
+								>
 									<Image src="file://{images}/transport_controls/icon_quality.png" />
 								</Button>
-								<Button id="VolumeControl" class="ControlBarButton" tabindex="auto" selectionpos="auto" onactivate="MoviePlayerVolumeControl();">
+								<Button
+									id="VolumeControl"
+									class="ControlBarButton"
+									tabindex="auto"
+									selectionpos="auto"
+									onactivate="MoviePlayerVolumeControl();"
+								>
 									<Panel class="VolumeImage" />
 								</Button>
-								<Button id="FullscreenControl" class="ControlBarButton" tabindex="auto" selectionpos="auto" onactivate="MoviePlayerFullscreenControl();">
+								<Button
+									id="FullscreenControl"
+									class="ControlBarButton"
+									tabindex="auto"
+									selectionpos="auto"
+									onactivate="MoviePlayerFullscreenControl();"
+								>
 									<Image src="file://{images}/transport_controls/icon_fullscreen.png" />
 								</Button>
 							</Panel>

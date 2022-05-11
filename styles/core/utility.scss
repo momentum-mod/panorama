@@ -23,11 +23,11 @@
 }
 
 .fill-width {
-	width: fill-parent-flow(1.0);
+	width: fill-parent-flow(1);
 }
 
 .fill-height {
-	height: fill-parent-flow(1.0);
+	height: fill-parent-flow(1);
 }
 
 .height-fit-children {
@@ -38,7 +38,7 @@
 	width: fit-children;
 }
 
-@each $name, $width in ("200": 200px, "250": 250px, "300": 300px, "350": 350px, "400": 400px) {
+@each $name, $width in ('200': 200px, '250': 250px, '300': 300px, '350': 350px, '400': 400px) {
 	.max-width-#{$width} {
 		max-width: $width;
 	}
@@ -107,7 +107,7 @@ $s: list.join((0px), $spacers);
 	.pb-#{$index} {
 		padding-bottom: $spacer;
 	}
-	
+
 	.pr-#{$index} {
 		padding-right: $spacer;
 	}
@@ -116,7 +116,6 @@ $s: list.join((0px), $spacers);
 		padding-left: $spacer;
 	}
 }
-
 
 // ================
 // ALIGNMENT

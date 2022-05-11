@@ -3,7 +3,7 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 	<scripts>
-		<include src="file://{resources}/scripts/settings_shared.js"/>
+		<include src="file://{resources}/scripts/settings_shared.js" />
 	</scripts>
 
 	<Panel class="settings-page">
@@ -28,8 +28,11 @@
 
 					<Panel class="flow-right horizontal-align-right">
 
-						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Gameplay', 'GameplayGeneralSubSection')">
-							<Label class="button__text" text="Import/Export"/>
+						<Button
+							class="button mr-3"
+							onactivate="SettingsShared.showImportExportDialogue('Gameplay', 'GameplayGeneralSubSection')"
+						>
+							<Label class="button__text" text="Import/Export" />
 						</Button>
 
 						<TooltipPanel class="settings-group__reset" tooltip="Reset">
@@ -42,34 +45,62 @@
 
 				</Panel>
 
-				<ChaosSettingsSlider text="Yaw Speed" min="0" max="360" convar="cl_yawspeed" infomessage="#MOM_Settings_Yaw_Speed_TT" hasdocspage="false"/>
+				<ChaosSettingsSlider
+					text="Yaw Speed"
+					min="0"
+					max="360"
+					convar="cl_yawspeed"
+					infomessage="#MOM_Settings_Yaw_Speed_TT"
+					hasdocspage="false"
+				/>
 
 				<ChaosSettingsEnum text="#GameUI_FastSwitchCheck" convar="hud_fastswitch" hasdocspage="false">
 					<RadioButton group="fastswitch" text="#SFUI_Off" value="0" />
 					<RadioButton group="fastswitch" text="#SFUI_On" value="1" />
 				</ChaosSettingsEnum>
 
-				<ChaosSettingsEnum text="#MOM_Settings_Save_Checkpoints" convar="mom_saveloc_save_between_sessions" infomessage="#MOM_Settings_Save_Checkpoints_TT">
+				<ChaosSettingsEnum
+					text="#MOM_Settings_Save_Checkpoints"
+					convar="mom_saveloc_save_between_sessions"
+					infomessage="#MOM_Settings_Save_Checkpoints_TT"
+				>
 					<RadioButton group="savesavelocs" text="#SFUI_Off" value="0" />
 					<RadioButton group="savesavelocs" text="#SFUI_On" value="1" />
 				</ChaosSettingsEnum>
 
-				<ChaosSettingsEnum text="#MOM_Settings_Overlapping_Keys" convar="mom_enable_overlapping_keys" infomessage="#MOM_Settings_Overlapping_Keys_TT">
+				<ChaosSettingsEnum
+					text="#MOM_Settings_Overlapping_Keys"
+					convar="mom_enable_overlapping_keys"
+					infomessage="#MOM_Settings_Overlapping_Keys_TT"
+				>
 					<RadioButton group="allowoverlap" text="#SFUI_Off" value="0" />
 					<RadioButton group="allowoverlap" text="#SFUI_On" value="1" />
 				</ChaosSettingsEnum>
 
-				<ChaosSettingsEnum text="#MOM_Settings_Release_Forward_On_Jump" convar="mom_release_forward_on_jump" infomessage="#MOM_Settings_Release_Forward_On_Jump_TT">
+				<ChaosSettingsEnum
+					text="#MOM_Settings_Release_Forward_On_Jump"
+					convar="mom_release_forward_on_jump"
+					infomessage="#MOM_Settings_Release_Forward_On_Jump_TT"
+				>
 					<RadioButton group="releaseforward" text="#SFUI_Off" value="0" />
 					<RadioButton group="releaseforward" text="#SFUI_On" value="1" />
 				</ChaosSettingsEnum>
 
-				<ChaosSettingsEnum text="#MOM_Settings_Draw_Viewmodel" convar="r_drawviewmodel" infomessage="Show the weapon you are holding in first person." hasdocspage="false">
+				<ChaosSettingsEnum
+					text="#MOM_Settings_Draw_Viewmodel"
+					convar="r_drawviewmodel"
+					infomessage="Show the weapon you are holding in first person."
+					hasdocspage="false"
+				>
 					<RadioButton group="showviewmodel" text="#SFUI_Off" value="0" />
 					<RadioButton group="showviewmodel" text="#SFUI_On" value="1" />
 				</ChaosSettingsEnum>
 
-				<ChaosSettingsEnumDropDown text="Weapon Desirability" convar="mom_player_weapon_spawn_desirability" infomessage="Choose which weapons you want to spawn with. Varies per gamemode based on which weapons are required, recommended, and allowed.">
+				<ChaosSettingsEnumDropDown
+					text="Weapon Desirability"
+					convar="mom_player_weapon_spawn_desirability"
+					infomessage="Choose which weapons you want to spawn with. Varies per gamemode based on which weapons are required, recommended, and allowed."
+				>
 					<Label id="wepdes1" text="Required weapons only" value="0" />
 					<Label id="wepdes2" text="Required and recommended weapons" value="1" />
 					<Label id="wepdes3" text="All allowed weapons" value="2" />
@@ -77,7 +108,7 @@
 
 			</Panel>
 
-			<Panel class="settings-page__spacer"/>
+			<Panel class="settings-page__spacer" />
 
 			<Panel id="PaintSubSection" class="settings-group">
 
@@ -88,7 +119,7 @@
 					<Panel class="flow-right horizontal-align-right">
 
 						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Paint', 'PaintSubSection')">
-							<Label class="button__text" text="Import/Export"/>
+							<Label class="button__text" text="Import/Export" />
 						</Button>
 
 						<TooltipPanel class="settings-group__reset" tooltip="Reset">
@@ -109,16 +140,31 @@
 
 					<Panel class="fill-width flow-down">
 
-						<ConVarColorDisplay convar="mom_paint_color" text="#MOM_Settings_Paint_Color_Label" oncolorchange="SettingsShared.updatePaintPreview();"/>
+						<ConVarColorDisplay
+							convar="mom_paint_color"
+							text="#MOM_Settings_Paint_Color_Label"
+							oncolorchange="SettingsShared.updatePaintPreview();"
+						/>
 
-						<ChaosSettingsSlider text="#MOM_Settings_Paint_Scale_Label" min="0.001" max="1" percentage="true" convar="mom_paint_scale" onvaluechanged="SettingsShared.updatePaintPreview();"/>
+						<ChaosSettingsSlider
+							text="#MOM_Settings_Paint_Scale_Label"
+							min="0.001"
+							max="1"
+							percentage="true"
+							convar="mom_paint_scale"
+							onvaluechanged="SettingsShared.updatePaintPreview();"
+						/>
 
 						<ChaosSettingsEnum text="#MOM_Settings_Paint_Apply_Sound" convar="mom_paint_apply_sound">
 							<RadioButton group="paintsound" text="#SFUI_Off" value="0" />
 							<RadioButton group="paintsound" text="#SFUI_On" value="1" />
 						</ChaosSettingsEnum>
 
-						<ChaosSettingsEnum text="#MOM_Settings_Paint_Limit_To_World" convar="mom_paint_limit_to_world" infomessage="#MOM_Settings_Paint_Limit_To_World_TT">
+						<ChaosSettingsEnum
+							text="#MOM_Settings_Paint_Limit_To_World"
+							convar="mom_paint_limit_to_world"
+							infomessage="#MOM_Settings_Paint_Limit_To_World_TT"
+						>
 							<RadioButton group="paintlimit" text="#SFUI_Off" value="0" />
 							<RadioButton group="paintlimit" text="#SFUI_On" value="1" />
 						</ChaosSettingsEnum>
@@ -129,7 +175,7 @@
 
 			</Panel>
 
-			<Panel class="settings-page__spacer"/>
+			<Panel class="settings-page__spacer" />
 
 			<Panel id="SafeguardsSubSection" class="settings-group">
 
@@ -140,7 +186,7 @@
 					<Panel class="flow-right horizontal-align-right">
 
 						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Safeguards', 'SafeguardsSubSection')">
-							<Label class="button__text" text="Import/Export"/>
+							<Label class="button__text" text="Import/Export" />
 						</Button>
 
 						<TooltipPanel class="settings-group__reset" tooltip="Reset">
@@ -200,7 +246,7 @@
 
 			</Panel>
 
-			<Panel class="settings-page__spacer"/>
+			<Panel class="settings-page__spacer" />
 
 			<Panel id="ZonesSubSection" class="settings-group">
 
@@ -211,7 +257,7 @@
 					<Panel class="flow-right horizontal-align-right">
 
 						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Zones', 'ZonesSubSection')">
-							<Label class="button__text" text="Import/Export"/>
+							<Label class="button__text" text="Import/Export" />
 						</Button>
 
 						<TooltipPanel class="settings-group__reset" tooltip="Reset">
@@ -268,7 +314,7 @@
 
 			</Panel>
 
-			<Panel class="settings-page__spacer"/>
+			<Panel class="settings-page__spacer" />
 
 			<Panel id="RocketJumpSubSection" class="settings-group">
 
@@ -279,7 +325,7 @@
 					<Panel class="flow-right horizontal-align-right">
 
 						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Rocket Jump', 'RocketJumpSubSection')">
-							<Label class="button__text" text="Import/Export"/>
+							<Label class="button__text" text="Import/Export" />
 						</Button>
 
 						<TooltipPanel class="settings-group__reset" tooltip="Reset">
@@ -292,47 +338,82 @@
 
 				</Panel>
 
-				<ChaosSettingsEnum text="#MOM_Settings_RJ_Enable_Trail_Particle" convar="mom_rj_particle_trail_enable" infomessage="#MOM_Settings_RJ_Enable_Trail_Particle_TT">
+				<ChaosSettingsEnum
+					text="#MOM_Settings_RJ_Enable_Trail_Particle"
+					convar="mom_rj_particle_trail_enable"
+					infomessage="#MOM_Settings_RJ_Enable_Trail_Particle_TT"
+				>
 					<RadioButton group="rjtrailparticle" text="#SFUI_Off" value="0" />
 					<RadioButton group="rjtrailparticle" text="#SFUI_On" value="1" />
 				</ChaosSettingsEnum>
 
-				<ChaosSettingsEnum text="#MOM_Settings_RJ_Enable_Explosion_Particle" convar="mom_rj_particle_explosion_enable" infomessage="#MOM_Settings_RJ_Enable_Explosion_Particle_TT">
+				<ChaosSettingsEnum
+					text="#MOM_Settings_RJ_Enable_Explosion_Particle"
+					convar="mom_rj_particle_explosion_enable"
+					infomessage="#MOM_Settings_RJ_Enable_Explosion_Particle_TT"
+				>
 					<RadioButton group="rjexplodeparticle" text="#SFUI_Off" value="0" />
 					<RadioButton group="rjexplodeparticle" text="#SFUI_On" value="1" />
 				</ChaosSettingsEnum>
 
-				<ChaosSettingsEnum text="#MOM_Settings_RJ_Enable_Shoot_Sound" convar="mom_rj_sound_shoot_enable" infomessage="#MOM_Settings_RJ_Enable_Shoot_Sound_TT">
+				<ChaosSettingsEnum
+					text="#MOM_Settings_RJ_Enable_Shoot_Sound"
+					convar="mom_rj_sound_shoot_enable"
+					infomessage="#MOM_Settings_RJ_Enable_Shoot_Sound_TT"
+				>
 					<RadioButton group="rjshootsound" text="#SFUI_Off" value="0" />
 					<RadioButton group="rjshootsound" text="#SFUI_On" value="1" />
 				</ChaosSettingsEnum>
 
-				<ChaosSettingsEnum text="#MOM_Settings_RJ_Enable_Trail_Sound" convar="mom_rj_sound_trail_enable" infomessage="#MOM_Settings_RJ_Enable_Trail_Sound_TT">
+				<ChaosSettingsEnum
+					text="#MOM_Settings_RJ_Enable_Trail_Sound"
+					convar="mom_rj_sound_trail_enable"
+					infomessage="#MOM_Settings_RJ_Enable_Trail_Sound_TT"
+				>
 					<RadioButton group="rjtrailsound" text="#SFUI_Off" value="0" />
 					<RadioButton group="rjtrailsound" text="#SFUI_On" value="1" />
 				</ChaosSettingsEnum>
 
-				<ChaosSettingsEnum text="#MOM_Settings_RJ_Enable_Explosion_Sound" convar="mom_rj_sound_explosion_enable" infomessage="#MOM_Settings_RJ_Enable_Explosion_Sound_TT">
+				<ChaosSettingsEnum
+					text="#MOM_Settings_RJ_Enable_Explosion_Sound"
+					convar="mom_rj_sound_explosion_enable"
+					infomessage="#MOM_Settings_RJ_Enable_Explosion_Sound_TT"
+				>
 					<RadioButton group="rjexplosionsoud" text="#SFUI_Off" value="0" />
 					<RadioButton group="rjexplosionsoud" text="#SFUI_On" value="1" />
 				</ChaosSettingsEnum>
 
-				<ChaosSettingsEnum text="#MOM_Settings_RJ_Enable_Rocket_Decals" convar="mom_rj_decals_enable" infomessage="#MOM_Settings_RJ_Enable_Rocket_Decals_TT">
+				<ChaosSettingsEnum
+					text="#MOM_Settings_RJ_Enable_Rocket_Decals"
+					convar="mom_rj_decals_enable"
+					infomessage="#MOM_Settings_RJ_Enable_Rocket_Decals_TT"
+				>
 					<RadioButton group="rjdecals" text="#SFUI_Off" value="0" />
 					<RadioButton group="rjdecals" text="#SFUI_On" value="1" />
 				</ChaosSettingsEnum>
 
-				<ChaosSettingsEnumDropDown text="Rocket launcher fire angle" convar="mom_rj_fire_angle" infomessage="Changes the angle of which rockets are fired. 0 is from the center (TF2 Original), 1 is from the side (TF2 Stock), and 2 is a hybrid of the two (TF2 Cow Mangler).">
+				<ChaosSettingsEnumDropDown
+					text="Rocket launcher fire angle"
+					convar="mom_rj_fire_angle"
+					infomessage="Changes the angle of which rockets are fired. 0 is from the center (TF2 Original), 1 is from the side (TF2 Stock), and 2 is a hybrid of the two (TF2 Cow Mangler)."
+				>
 					<Label id="rjfireangle1" text="Center" value="0" />
 					<Label id="rjfireangle2" text="Side" value="1" />
 					<Label id="rjfireangle3" text="Hybrid" value="2" />
 				</ChaosSettingsEnumDropDown>
 
-				<ChaosSettingsSlider text="#MOM_Settings_RJ_RocketDrawDelayEntry_Label" min="0" max="1" displayprecision="1" convar="mom_rj_rocket_drawdelay" infomessage="#MOM_Settings_RJ_RocketDrawDelayEntry_TT"/>
+				<ChaosSettingsSlider
+					text="#MOM_Settings_RJ_RocketDrawDelayEntry_Label"
+					min="0"
+					max="1"
+					displayprecision="1"
+					convar="mom_rj_rocket_drawdelay"
+					infomessage="#MOM_Settings_RJ_RocketDrawDelayEntry_TT"
+				/>
 
 			</Panel>
 
-			<Panel class="settings-page__spacer"/>
+			<Panel class="settings-page__spacer" />
 
 			<Panel id="StickyJumpSubSection" class="settings-group">
 
@@ -343,7 +424,7 @@
 					<Panel class="flow-right horizontal-align-right">
 
 						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Sticky Jump', 'StickyJumpSubSection')">
-							<Label class="button__text" text="Import/Export"/>
+							<Label class="button__text" text="Import/Export" />
 						</Button>
 
 						<TooltipPanel class="settings-group__reset" tooltip="Reset">
@@ -356,54 +437,101 @@
 
 				</Panel>
 
-				<ChaosSettingsEnum text="#MOM_Settings_SJ_Enable_Trail_Particle" convar="mom_sj_particle_trail_enable" infomessage="#MOM_Settings_SJ_Enable_Trail_Particle_TT">
+				<ChaosSettingsEnum
+					text="#MOM_Settings_SJ_Enable_Trail_Particle"
+					convar="mom_sj_particle_trail_enable"
+					infomessage="#MOM_Settings_SJ_Enable_Trail_Particle_TT"
+				>
 					<RadioButton group="sjtrailparticle" text="#SFUI_Off" value="0" />
 					<RadioButton group="sjtrailparticle" text="#SFUI_On" value="1" />
 				</ChaosSettingsEnum>
 
-				<ChaosSettingsEnum text="#MOM_Settings_SJ_Enable_Explosion_Particle" convar="mom_sj_particle_explosion_enable" infomessage="#MOM_Settings_SJ_Enable_Explosion_Particle_TT">
+				<ChaosSettingsEnum
+					text="#MOM_Settings_SJ_Enable_Explosion_Particle"
+					convar="mom_sj_particle_explosion_enable"
+					infomessage="#MOM_Settings_SJ_Enable_Explosion_Particle_TT"
+				>
 					<RadioButton group="sjexplodeparticle" text="#SFUI_Off" value="0" />
 					<RadioButton group="sjexplodeparticle" text="#SFUI_On" value="1" />
 				</ChaosSettingsEnum>
 
-				<ChaosSettingsEnum text="#MOM_Settings_SJ_Enable_Stickybomb_Decals" convar="mom_sj_decals_enable" infomessage="#MOM_Settings_SJ_Enable_Stickybomb_Decals_TT">
+				<ChaosSettingsEnum
+					text="#MOM_Settings_SJ_Enable_Stickybomb_Decals"
+					convar="mom_sj_decals_enable"
+					infomessage="#MOM_Settings_SJ_Enable_Stickybomb_Decals_TT"
+				>
 					<RadioButton group="sjdecals" text="#SFUI_Off" value="0" />
 					<RadioButton group="sjdecals" text="#SFUI_On" value="1" />
 				</ChaosSettingsEnum>
 
-				<ChaosSettingsEnum text="#MOM_Settings_SJ_Enable_Explosion_Sound" convar="mom_sj_sound_explosion_enable" infomessage="#MOM_Settings_SJ_Enable_Explosion_Sound_TT">
+				<ChaosSettingsEnum
+					text="#MOM_Settings_SJ_Enable_Explosion_Sound"
+					convar="mom_sj_sound_explosion_enable"
+					infomessage="#MOM_Settings_SJ_Enable_Explosion_Sound_TT"
+				>
 					<RadioButton group="sjexplodesound" text="#SFUI_Off" value="0" />
 					<RadioButton group="sjexplodesound" text="#SFUI_On" value="1" />
 				</ChaosSettingsEnum>
 
-				<ChaosSettingsEnum text="#MOM_Settings_SJ_Enable_Detonation_Fail_Sound" convar="mom_sj_sound_detonate_fail_enable" infomessage="#MOM_Settings_SJ_Enable_Detonation_Fail_Sound_TT">
+				<ChaosSettingsEnum
+					text="#MOM_Settings_SJ_Enable_Detonation_Fail_Sound"
+					convar="mom_sj_sound_detonate_fail_enable"
+					infomessage="#MOM_Settings_SJ_Enable_Detonation_Fail_Sound_TT"
+				>
 					<RadioButton group="sjfailsound" text="#SFUI_Off" value="0" />
 					<RadioButton group="sjfailsound" text="#SFUI_On" value="1" />
 				</ChaosSettingsEnum>
 
-				<ChaosSettingsEnum text="#MOM_Settings_SJ_Enable_Detonation_Success_Sound" convar="mom_sj_sound_detonate_success_enable" infomessage="#MOM_Settings_SJ_Enable_Detonation_Success_Sound_TT">
+				<ChaosSettingsEnum
+					text="#MOM_Settings_SJ_Enable_Detonation_Success_Sound"
+					convar="mom_sj_sound_detonate_success_enable"
+					infomessage="#MOM_Settings_SJ_Enable_Detonation_Success_Sound_TT"
+				>
 					<RadioButton group="sjsuccesssound" text="#SFUI_Off" value="0" />
 					<RadioButton group="sjsuccesssound" text="#SFUI_On" value="1" />
 				</ChaosSettingsEnum>
 
-				<ChaosSettingsEnum text="#MOM_Settings_SJ_Enable_Charge_Sound" convar="mom_sj_sound_charge_enable" infomessage="#MOM_Settings_SJ_Enable_Charge_Sound_TT">
+				<ChaosSettingsEnum
+					text="#MOM_Settings_SJ_Enable_Charge_Sound"
+					convar="mom_sj_sound_charge_enable"
+					infomessage="#MOM_Settings_SJ_Enable_Charge_Sound_TT"
+				>
 					<RadioButton group="sjchargesound" text="#SFUI_Off" value="0" />
 					<RadioButton group="sjchargesound" text="#SFUI_On" value="1" />
 				</ChaosSettingsEnum>
 
-				<ChaosSettingsEnum text="#MOM_Settings_SJ_Enable_Shoot_Sound" convar="mom_sj_sound_shot_enable" infomessage="#MOM_Settings_SJ_Enable_Shoot_Sound_TT">
+				<ChaosSettingsEnum
+					text="#MOM_Settings_SJ_Enable_Shoot_Sound"
+					convar="mom_sj_sound_shot_enable"
+					infomessage="#MOM_Settings_SJ_Enable_Shoot_Sound_TT"
+				>
 					<RadioButton group="sjshootsound" text="#SFUI_Off" value="0" />
 					<RadioButton group="sjshootsound" text="#SFUI_On" value="1" />
 				</ChaosSettingsEnum>
 
-				<ChaosSettingsSlider text="#MOM_Settings_SJ_ChargedShotSoundTheshold_Label" min="0" max="5" displayprecision="1" convar="mom_sj_sound_shot_charged_threshold" infomessage="#MOM_Settings_SJ_ChargedShotSoundTheshold_TT"/>
+				<ChaosSettingsSlider
+					text="#MOM_Settings_SJ_ChargedShotSoundTheshold_Label"
+					min="0"
+					max="5"
+					displayprecision="1"
+					convar="mom_sj_sound_shot_charged_threshold"
+					infomessage="#MOM_Settings_SJ_ChargedShotSoundTheshold_TT"
+				/>
 
-				<ChaosSettingsEnum text="#MOM_Settings_SJ_Enable_ChargeMeter" convar="mom_hud_sj_chargemeter_enable" infomessage="#MOM_Settings_SJ_Enable_Chargemeter_TT">
+				<ChaosSettingsEnum
+					text="#MOM_Settings_SJ_Enable_ChargeMeter"
+					convar="mom_hud_sj_chargemeter_enable"
+					infomessage="#MOM_Settings_SJ_Enable_Chargemeter_TT"
+				>
 					<RadioButton group="chargemeter" text="#SFUI_Off" value="0" />
 					<RadioButton group="chargemeter" text="#SFUI_On" value="1" />
 				</ChaosSettingsEnum>
 
-				<ChaosSettingsEnum text="#MOM_Settings_SJ_Enable_Sticky_Counter" convar="mom_hud_sj_stickycount_enable" infomessage="#MOM_Settings_SJ_Enable_Sticky_Counter_TT">
+				<ChaosSettingsEnum
+					text="#MOM_Settings_SJ_Enable_Sticky_Counter"
+					convar="mom_hud_sj_stickycount_enable"
+					infomessage="#MOM_Settings_SJ_Enable_Sticky_Counter_TT"
+				>
 					<RadioButton group="stickycounter" text="#SFUI_Off" value="0" />
 					<RadioButton group="stickycounter" text="#SFUI_On" value="1" />
 				</ChaosSettingsEnum>
@@ -414,10 +542,17 @@
 					<Label id="sjunits3" text="#MOM_Settings_SJ_ChargeMeter_Units_Type_2" value="2" />
 				</ChaosSettingsEnumDropDown>
 
-				<ChaosSettingsSlider text="#MOM_Settings_SJ_DrawDelayEntry_Label" min="0" max="1" displayprecision="1" convar="mom_sj_stickybomb_drawdelay" infomessage="#MOM_Settings_SJ_DrawDelayEntry_TT"/>
+				<ChaosSettingsSlider
+					text="#MOM_Settings_SJ_DrawDelayEntry_Label"
+					min="0"
+					max="1"
+					displayprecision="1"
+					convar="mom_sj_stickybomb_drawdelay"
+					infomessage="#MOM_Settings_SJ_DrawDelayEntry_TT"
+				/>
 			</Panel>
 
-			<Panel class="settings-page__spacer"/>
+			<Panel class="settings-page__spacer" />
 
 			<Panel id="ConcSubSection" class="settings-group">
 
@@ -428,7 +563,7 @@
 					<Panel class="flow-right horizontal-align-right">
 
 						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Conc', 'ConcSubSection')">
-							<Label class="button__text" text="Import/Export"/>
+							<Label class="button__text" text="Import/Export" />
 						</Button>
 
 						<TooltipPanel class="settings-group__reset" tooltip="Reset">
@@ -441,54 +576,90 @@
 
 				</Panel>
 
-				<ChaosSettingsEnum text="Trail particles" convar="mom_conc_particle_trail_enable" infomessage="Concs emit a trail of particles behind them when thrown.">
+				<ChaosSettingsEnum
+					text="Trail particles"
+					convar="mom_conc_particle_trail_enable"
+					infomessage="Concs emit a trail of particles behind them when thrown."
+				>
 					<RadioButton group="conctrailparticle" text="#SFUI_Off" value="0" />
 					<RadioButton group="conctrailparticle" text="#SFUI_On" value="1" />
 				</ChaosSettingsEnum>
 
-				<ChaosSettingsEnum text="Explosion particles" convar="mom_conc_particle_explosion_enable" infomessage="Concs emit particles effects on explosion.">
+				<ChaosSettingsEnum
+					text="Explosion particles"
+					convar="mom_conc_particle_explosion_enable"
+					infomessage="Concs emit particles effects on explosion."
+				>
 					<RadioButton group="concexplodeparticle" text="#SFUI_Off" value="0" />
 					<RadioButton group="concexplodeparticle" text="#SFUI_On" value="1" />
 				</ChaosSettingsEnum>
 
-				<ChaosSettingsEnum text="Bounce sound" convar="mom_conc_sound_bounce_enable" infomessage="Concs emit a sound when bouncing.">
+				<ChaosSettingsEnum
+					text="Bounce sound"
+					convar="mom_conc_sound_bounce_enable"
+					infomessage="Concs emit a sound when bouncing."
+				>
 					<RadioButton group="concshootsound" text="#SFUI_Off" value="0" />
 					<RadioButton group="concshootsound" text="#SFUI_On" value="1" />
 				</ChaosSettingsEnum>
 
-				<ChaosSettingsEnum text="Explosion sound" convar="mom_conc_sound_explosion_enable" infomessage="Concs emit a sound on detonation.">
+				<ChaosSettingsEnum
+					text="Explosion sound"
+					convar="mom_conc_sound_explosion_enable"
+					infomessage="Concs emit a sound on detonation."
+				>
 					<RadioButton group="concexplosionsoud" text="#SFUI_Off" value="0" />
 					<RadioButton group="concexplosionsoud" text="#SFUI_On" value="1" />
 				</ChaosSettingsEnum>
 
-				<ChaosSettingsEnum text="Timer sound" convar="mom_conc_sound_timer_enable" infomessage="Conc timers emit a sound. Beep!">
+				<ChaosSettingsEnum
+					text="Timer sound"
+					convar="mom_conc_sound_timer_enable"
+					infomessage="Conc timers emit a sound. Beep!"
+				>
 					<RadioButton group="conctrailsound" text="#SFUI_Off" value="0" />
 					<RadioButton group="conctrailsound" text="#SFUI_On" value="1" />
 				</ChaosSettingsEnum>
 
-				<ChaosSettingsEnum text="Fizzle sound" convar="mom_conc_sound_fizzle_enable" infomessage="Concs emit a sound on fizzle.">
+				<ChaosSettingsEnum
+					text="Fizzle sound"
+					convar="mom_conc_sound_fizzle_enable"
+					infomessage="Concs emit a sound on fizzle."
+				>
 					<RadioButton group="concfizzlesound" text="#SFUI_Off" value="0" />
 					<RadioButton group="concfizzlesound" text="#SFUI_On" value="1" />
 				</ChaosSettingsEnum>
 
-				<ChaosSettingsEnum text="Draw conc timer bar" convar="mom_hud_conc_timer_enable" infomessage="Show a timer bar on the HUD for the fuse of your currently held conc.">
+				<ChaosSettingsEnum
+					text="Draw conc timer bar"
+					convar="mom_hud_conc_timer_enable"
+					infomessage="Show a timer bar on the HUD for the fuse of your currently held conc."
+				>
 					<RadioButton group="conctimerpanel" text="#SFUI_Off" value="0" />
 					<RadioButton group="conctimerpanel" text="#SFUI_On" value="1" />
 				</ChaosSettingsEnum>
 
-				<ChaosSettingsEnum text="Draw fuse timer panels" convar="mom_hud_conc_entpanels_enable" infomessage="Concs display a fuse timer panel above them.">
+				<ChaosSettingsEnum
+					text="Draw fuse timer panels"
+					convar="mom_hud_conc_entpanels_enable"
+					infomessage="Concs display a fuse timer panel above them."
+				>
 					<RadioButton group="conccountdown" text="#SFUI_Off" value="0" />
 					<RadioButton group="conccountdown" text="#SFUI_On" value="1" />
 				</ChaosSettingsEnum>
 
-				<ChaosSettingsEnum text="Show numerical countdown" convar="mom_hud_conc_timer_countdown" infomessage="Show a numerical timer alongside the timer bar for concs.">
+				<ChaosSettingsEnum
+					text="Show numerical countdown"
+					convar="mom_hud_conc_timer_countdown"
+					infomessage="Show a numerical timer alongside the timer bar for concs."
+				>
 					<RadioButton group="concentpanels" text="#SFUI_Off" value="0" />
 					<RadioButton group="concentpanels" text="#SFUI_On" value="1" />
 				</ChaosSettingsEnum>
 
 			</Panel>
 
-			<Panel class="settings-page__spacer"/>
+			<Panel class="settings-page__spacer" />
 
 			<Panel id="DefragSubSection" class="settings-group">
 
@@ -499,7 +670,7 @@
 					<Panel class="flow-right horizontal-align-right">
 
 						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Defrag', 'DefragSubSection')">
-							<Label class="button__text" text="Import/Export"/>
+							<Label class="button__text" text="Import/Export" />
 						</Button>
 
 						<TooltipPanel class="settings-group__reset" tooltip="Reset">
@@ -516,32 +687,81 @@
 
 					<Label class="settings-group__combo-header" text="Strafe HUD / CGAZHUD" />
 
-					<ChaosSettingsEnum text="Display accel zones" convar="mom_df_hud_accel_enable" infomessage="Provides an on-screen indicator to the angle to aim your cursor to gain speed based on current velocity and movement inputs. This tool originated from CampingGaz's CgazHUD for Defrag, for more info on its use, check the Defrag learn section.">
+					<ChaosSettingsEnum
+						text="Display accel zones"
+						convar="mom_df_hud_accel_enable"
+						infomessage="Provides an on-screen indicator to the angle to aim your cursor to gain speed based on current velocity and movement inputs. This tool originated from CampingGaz's CgazHUD for Defrag, for more info on its use, check the Defrag learn section."
+					>
 						<RadioButton group="accelenable" text="#SFUI_Off" value="0" />
 						<RadioButton group="accelenable" text="#SFUI_On" value="1" />
 					</ChaosSettingsEnum>
 
 					<ConVarEnabler convar="mom_df_hud_accel_enable" class="flow-down">
-						<ChaosSettingsSlider text="Accel zone height" min="1" max="50" convar="mom_df_hud_accel_height" displayprecision="0" infomessage="Height of CGAZ acceleration zones in pixels @1080p."/>
+						<ChaosSettingsSlider
+							text="Accel zone height"
+							min="1"
+							max="50"
+							convar="mom_df_hud_accel_height"
+							displayprecision="0"
+							infomessage="Height of CGAZ acceleration zones in pixels @1080p."
+						/>
 
-						<ChaosSettingsSlider text="Accel zone offset" min="-200" max="200" convar="mom_df_hud_accel_offset" displayprecision="0" infomessage="Vertical offset from center screen in pixels @1080p. Up is positive."/>
+						<ChaosSettingsSlider
+							text="Accel zone offset"
+							min="-200"
+							max="200"
+							convar="mom_df_hud_accel_offset"
+							displayprecision="0"
+							infomessage="Vertical offset from center screen in pixels @1080p. Up is positive."
+						/>
 
-						<ChaosSettingsSlider text="Minimum accel speed" min="1" max="1000" convar="mom_df_hud_accel_min_speed" displayprecision="0" infomessage="Minimum speed required to draw CGAZ acceleration zones"/>
+						<ChaosSettingsSlider
+							text="Minimum accel speed"
+							min="1"
+							max="1000"
+							convar="mom_df_hud_accel_min_speed"
+							displayprecision="0"
+							infomessage="Minimum speed required to draw CGAZ acceleration zones"
+						/>
 
-						<ConVarColorDisplay text="Slow color" convar="mom_df_hud_accel_slow_color" infomessage="Color for CGAZ partial-acceleration zone. Forward speedgain is reduced in this portion of the CGAZ bar."/>
+						<ConVarColorDisplay
+							text="Slow color"
+							convar="mom_df_hud_accel_slow_color"
+							infomessage="Color for CGAZ partial-acceleration zone. Forward speedgain is reduced in this portion of the CGAZ bar."
+						/>
 
-						<ConVarColorDisplay text="Fast color" convar="mom_df_hud_accel_fast_color" infomessage="Color for CGAZ full-acceleration zone. Maximum forward speed-gain potential occurs in this portion of the CGAZ bar."/>
+						<ConVarColorDisplay
+							text="Fast color"
+							convar="mom_df_hud_accel_fast_color"
+							infomessage="Color for CGAZ full-acceleration zone. Maximum forward speed-gain potential occurs in this portion of the CGAZ bar."
+						/>
 
-						<ConVarColorDisplay text="Turn color" convar="mom_df_hud_accel_turn_color" infomessage="Color for CGAZ turn zone. In this portion of the CGAZ bar, more speed is gained in the turning direction than the forward direction."/>
+						<ConVarColorDisplay
+							text="Turn color"
+							convar="mom_df_hud_accel_turn_color"
+							infomessage="Color for CGAZ turn zone. In this portion of the CGAZ bar, more speed is gained in the turning direction than the forward direction."
+						/>
 
-						<ConVarColorDisplay text="Deadzone color" convar="mom_df_hud_accel_dz_color" infomessage="Color for CGAZ no-acceleration zone."/>
+						<ConVarColorDisplay
+							text="Deadzone color"
+							convar="mom_df_hud_accel_dz_color"
+							infomessage="Color for CGAZ no-acceleration zone."
+						/>
 
-						<ChaosSettingsEnum text="Display mirrored accel zones" convar="mom_df_hud_accel_mirror_enable" infomessage="Show CGAZ acceleration zones for mirrored input.">
+						<ChaosSettingsEnum
+							text="Display mirrored accel zones"
+							convar="mom_df_hud_accel_mirror_enable"
+							infomessage="Show CGAZ acceleration zones for mirrored input."
+						>
 							<RadioButton group="accelmirrorenable" text="#SFUI_Off" value="0" />
 							<RadioButton group="accelmirrorenable" text="#SFUI_On" value="1" />
 						</ChaosSettingsEnum>
 
-						<ChaosSettingsEnum text="Display true accel zones" convar="mom_df_hud_accel_scale_enable" infomessage="Show zones for jump/duck scaled inputs. When enabled, CGAZ zones show true angles for speed-gain based on current movement inputs.">
+						<ChaosSettingsEnum
+							text="Display true accel zones"
+							convar="mom_df_hud_accel_scale_enable"
+							infomessage="Show zones for jump/duck scaled inputs. When enabled, CGAZ zones show true angles for speed-gain based on current movement inputs."
+						>
 							<RadioButton group="accelscaleenable" text="#SFUI_Off" value="0" />
 							<RadioButton group="accelscaleenable" text="#SFUI_On" value="1" />
 						</ChaosSettingsEnum>
@@ -553,43 +773,96 @@
 
 					<Label class="settings-group__combo-header" text="Snap HUD" />
 
-					<ChaosSettingsEnum text="Display snap zones" convar="mom_df_hud_snap_enable" infomessage="Display snap zones on strafe hud. Snap zones show areas where any acceleration happens in the same direction. This is a side-effect of the rounding (velocity snapping) utilized in the original Quake III arena code.">
+					<ChaosSettingsEnum
+						text="Display snap zones"
+						convar="mom_df_hud_snap_enable"
+						infomessage="Display snap zones on strafe hud. Snap zones show areas where any acceleration happens in the same direction. This is a side-effect of the rounding (velocity snapping) utilized in the original Quake III arena code."
+					>
 						<RadioButton group="snapenable" text="#SFUI_Off" value="0" />
 						<RadioButton group="snapenable" text="#SFUI_On" value="1" />
 					</ChaosSettingsEnum>
 
 					<ConVarEnabler convar="mom_df_hud_snap_enable" class="flow-down">
-						<ChaosSettingsSlider text="Snap zone height" min="1" max="50" convar="mom_df_hud_snap_height" displayprecision="0" infomessage="Height of snap zones in pixels @1080p."/>
+						<ChaosSettingsSlider
+							text="Snap zone height"
+							min="1"
+							max="50"
+							convar="mom_df_hud_snap_height"
+							displayprecision="0"
+							infomessage="Height of snap zones in pixels @1080p."
+						/>
 
-						<ChaosSettingsSlider text="Snap zone offset" min="-200" max="200" convar="mom_df_hud_snap_offset" displayprecision="0" infomessage="Vertical offset from top of CGAZ acceleration zones in pixels @1080p. Up is positive."/>
+						<ChaosSettingsSlider
+							text="Snap zone offset"
+							min="-200"
+							max="200"
+							convar="mom_df_hud_snap_offset"
+							displayprecision="0"
+							infomessage="Vertical offset from top of CGAZ acceleration zones in pixels @1080p. Up is positive."
+						/>
 
-						<ChaosSettingsSlider text="Minimum snap speed" min="0" max="1000" convar="mom_df_hud_snap_min_speed" displayprecision="0" infomessage="Minimum speed required to draw snap zones."/>
+						<ChaosSettingsSlider
+							text="Minimum snap speed"
+							min="0"
+							max="1000"
+							convar="mom_df_hud_snap_min_speed"
+							displayprecision="0"
+							infomessage="Minimum speed required to draw snap zones."
+						/>
 
-						<ConVarColorDisplay text="Snap zone color" convar="mom_df_hud_snap_color" infomessage="Color for colored snap zones."/>
+						<ConVarColorDisplay text="Snap zone color" convar="mom_df_hud_snap_color" infomessage="Color for colored snap zones." />
 
-						<ChaosSettingsEnum text="Highlight active snap zone" convar="mom_df_hud_snap_hl_enable" infomessage="When enabled, the snap zone behind the crosshair is highlighted. When velocity snapping is significant, the higlighted zone contributes speed gain.">
+						<ChaosSettingsEnum
+							text="Highlight active snap zone"
+							convar="mom_df_hud_snap_hl_enable"
+							infomessage="When enabled, the snap zone behind the crosshair is highlighted. When velocity snapping is significant, the higlighted zone contributes speed gain."
+						>
 							<RadioButton group="snaphlenable" text="#SFUI_Off" value="0" />
 							<RadioButton group="snaphlenable" text="#SFUI_On" value="1" />
 						</ChaosSettingsEnum>
 
 						<ConVarEnabler convar="mom_df_hud_snap_hl_enable" class="flow-down">
-							<ConVarColorDisplay text="Snap highlight color" convar="mom_df_hud_snap_hl_color" infomessage="Color for highlighted colored snap zones."/>
+							<ConVarColorDisplay
+								text="Snap highlight color"
+								convar="mom_df_hud_snap_hl_color"
+								infomessage="Color for highlighted colored snap zones."
+							/>
 
-							<ConVarColorDisplay text="Snap highlight alt color" convar="mom_df_hud_snap_hl_alt_color" infomessage="Color for highlighted uncolored snap zones."/>
+							<ConVarColorDisplay
+								text="Snap highlight alt color"
+								convar="mom_df_hud_snap_hl_alt_color"
+								infomessage="Color for highlighted uncolored snap zones."
+							/>
 						</ConVarEnabler>
 
-						<ChaosSettingsEnum text="Color snap zones by accel" convar="mom_df_hud_snap_color_mode" infomessage="When enabled, snap zones are colored to indicate speed-gain potential. Color is blended between slow and fast snap colors.">
+						<ChaosSettingsEnum
+							text="Color snap zones by accel"
+							convar="mom_df_hud_snap_color_mode"
+							infomessage="When enabled, snap zones are colored to indicate speed-gain potential. Color is blended between slow and fast snap colors."
+						>
 							<RadioButton group="snapcolormode" text="#SFUI_Off" value="0" />
 							<RadioButton group="snapcolormode" text="#SFUI_On" value="1" />
 						</ChaosSettingsEnum>
 
 						<ConVarEnabler convar="mom_df_hud_snap_color_mode" class="flow-down">
-							<ConVarColorDisplay text="Snap slow color" convar="mom_df_hud_snap_slow_color" infomessage="Color for minimum speed gain potential."/>
+							<ConVarColorDisplay
+								text="Snap slow color"
+								convar="mom_df_hud_snap_slow_color"
+								infomessage="Color for minimum speed gain potential."
+							/>
 
-							<ConVarColorDisplay text="Snap fast color" convar="mom_df_hud_snap_fast_color" infomessage="Color for maximum speed gain potential."/>
+							<ConVarColorDisplay
+								text="Snap fast color"
+								convar="mom_df_hud_snap_fast_color"
+								infomessage="Color for maximum speed gain potential."
+							/>
 						</ConVarEnabler>
 
-						<ChaosSettingsEnum text="Size snap zones by accel" convar="mom_df_hud_snap_heightgain_enable" infomessage="When enabled, snap zones are drawn with heights proportional to their speed-gain potential.">
+						<ChaosSettingsEnum
+							text="Size snap zones by accel"
+							convar="mom_df_hud_snap_heightgain_enable"
+							infomessage="When enabled, snap zones are drawn with heights proportional to their speed-gain potential."
+						>
 							<RadioButton group="snapheightenable" text="#SFUI_Off" value="0" />
 							<RadioButton group="snapheightenable" text="#SFUI_On" value="1" />
 						</ChaosSettingsEnum>
@@ -598,7 +871,11 @@
 				</Panel>
 
 
-				<ChaosSettingsEnumDropDown text="Projection mode" convar="mom_df_hud_projection" infomessage="Projection method used to map angles to the screen.&#xA;0: Perspective mode uses the same projection calculation as the game camera.&#xA;1: Arc-length projection uses a uniform distribution of angles across the screen space to reduce distortion.&#xA;2: Panoramic projection uses a different method for reducing distortion.">
+				<ChaosSettingsEnumDropDown
+					text="Projection mode"
+					convar="mom_df_hud_projection"
+					infomessage="Projection method used to map angles to the screen.&#xA;0: Perspective mode uses the same projection calculation as the game camera.&#xA;1: Arc-length projection uses a uniform distribution of angles across the screen space to reduce distortion.&#xA;2: Panoramic projection uses a different method for reducing distortion."
+				>
 					<Label id="projection0" text="Perspective" value="0" />
 					<Label id="projection1" text="Arc length" value="1" />
 					<Label id="projection2" text="Panoramic" value="2" />
@@ -606,43 +883,84 @@
 
 				<Panel class="settings-group__combo">
 
-					<ChaosSettingsEnum text="Use custom HUD field of view" convar="mom_df_hud_fov_override_enable" infomessage="Use a value other than camera field of view when computing projection.">
+					<ChaosSettingsEnum
+						text="Use custom HUD field of view"
+						convar="mom_df_hud_fov_override_enable"
+						infomessage="Use a value other than camera field of view when computing projection."
+					>
 						<RadioButton group="hudfovenable" text="#SFUI_Off" value="0" />
 						<RadioButton group="hudfovenable" text="#SFUI_On" value="1" />
 					</ChaosSettingsEnum>
 
 					<ConVarEnabler convar="mom_df_hud_fov_override_enable">
-						<ChaosSettingsSlider text="HUD field of view" min="50" max="130" convar="mom_df_hud_fov_override" displayprecision="0" infomessage="Field of view value used to compute projection. Must toggle 'Use custom HUD field of view'"/>
+						<ChaosSettingsSlider
+							text="HUD field of view"
+							min="50"
+							max="130"
+							convar="mom_df_hud_fov_override"
+							displayprecision="0"
+							infomessage="Field of view value used to compute projection. Must toggle 'Use custom HUD field of view'"
+						/>
 					</ConVarEnabler>
 
 				</Panel>
 
 				<Panel class="settings-group__combo">
 
-					<ChaosSettingsEnum text="Display velocity direction" convar="mom_df_hud_velocity_enable" infomessage="Display current velocity direction. Draws an arrow on the strafe hud indicating angle of forward momentum.">
+					<ChaosSettingsEnum
+						text="Display velocity direction"
+						convar="mom_df_hud_velocity_enable"
+						infomessage="Display current velocity direction. Draws an arrow on the strafe hud indicating angle of forward momentum."
+					>
 						<RadioButton group="velocityenable" text="#SFUI_Off" value="0" />
 						<RadioButton group="velocityenable" text="#SFUI_On" value="1" />
 					</ChaosSettingsEnum>
 
 					<ConVarEnabler convar="mom_df_hud_velocity_enable" class="flow-down">
-						<ChaosSettingsSlider text="Velocity arrow size" min="0" max="25" convar="mom_df_hud_velocity_size" displayprecision="0" infomessage="Arrow half-height in pixels @1080p."/>
+						<ChaosSettingsSlider
+							text="Velocity arrow size"
+							min="0"
+							max="25"
+							convar="mom_df_hud_velocity_size"
+							displayprecision="0"
+							infomessage="Arrow half-height in pixels @1080p."
+						/>
 
-						<ConVarColorDisplay text="Velocity arrow color" convar="mom_df_hud_velocity_color" infomessage="Color for velocity arrow."/>
+						<ConVarColorDisplay
+							text="Velocity arrow color"
+							convar="mom_df_hud_velocity_color"
+							infomessage="Color for velocity arrow."
+						/>
 					</ConVarEnabler>
 
 				</Panel>
 
 				<Panel class="settings-group__combo">
 
-					<ChaosSettingsEnum text="Display w-turn indicator" convar="mom_df_hud_windicator_enable" infomessage="Display w-turn indicator. Draws an arrow on the strafe hud indicating angle for tightest w-turn. While using air control, a box is drawn showing distance between crosshair and optimal angle.">
+					<ChaosSettingsEnum
+						text="Display w-turn indicator"
+						convar="mom_df_hud_windicator_enable"
+						infomessage="Display w-turn indicator. Draws an arrow on the strafe hud indicating angle for tightest w-turn. While using air control, a box is drawn showing distance between crosshair and optimal angle."
+					>
 						<RadioButton group="windicatorenable" text="#SFUI_Off" value="0" />
 						<RadioButton group="windicatorenable" text="#SFUI_On" value="1" />
 					</ChaosSettingsEnum>
 
 					<ConVarEnabler convar="mom_df_hud_windicator_enable" class="flow-down">
-						<ChaosSettingsSlider text="Windicator arrow size" min="0" max="25" convar="mom_df_hud_windicator_size" displayprecision="0" infomessage="Arrow half-height in pixels @1080p."/>
+						<ChaosSettingsSlider
+							text="Windicator arrow size"
+							min="0"
+							max="25"
+							convar="mom_df_hud_windicator_size"
+							displayprecision="0"
+							infomessage="Arrow half-height in pixels @1080p."
+						/>
 
-						<ConVarColorDisplay text="Windicator arrow color" convar="mom_df_hud_windicator_color" infomessage="Color for w-indicator arrow."/>
+						<ConVarColorDisplay
+							text="Windicator arrow color"
+							convar="mom_df_hud_windicator_color"
+							infomessage="Color for w-indicator arrow."
+						/>
 					</ConVarEnabler>
 
 				</Panel>

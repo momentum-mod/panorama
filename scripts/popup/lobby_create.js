@@ -10,7 +10,8 @@ class LobbyCreate {
 				'Warning: You are currently the owner of a lobby! Creating a new lobby will transfer ownership of your current lobby to another player.';
 		} else if ($.GetContextPanel().GetAttributeInt('isinlobby', -1)) {
 			$.GetContextPanel().FindChildTraverse('WarningRow').RemoveClass('hide');
-			$.GetContextPanel().FindChildTraverse('WarningLabel').text = 'Warning: This will cause you to leave you current lobby!';
+			$.GetContextPanel().FindChildTraverse('WarningLabel').text =
+				'Warning: This will cause you to leave you current lobby!';
 		}
 
 		$.GetContextPanel().FindChildTraverse('UpdateButton').enabled = false; // Above is gonna call onChanged
@@ -20,11 +21,16 @@ class LobbyCreate {
 		UiToolkitAPI.HideTextTooltip();
 
 		if (parseInt($.GetContextPanel().FindChildTraverse('MaxPlayers').text) > this.lobbyMaxPlayers) {
-			UiToolkitAPI.ShowTextTooltip('MaxPlayers', 'Player limit is too high! Maximum value is ' + this.lobbyMaxPlayers + '.');
+			UiToolkitAPI.ShowTextTooltip(
+				'MaxPlayers',
+				'Player limit is too high! Maximum value is ' + this.lobbyMaxPlayers + '.'
+			);
 			$.GetContextPanel().FindChildTraverse('UpdateButton').enabled = false;
 		} else {
 			$.GetContextPanel().FindChildTraverse('UpdateButton').enabled =
-				this.isChecked('LobbyCreatePrivateButton') || this.isChecked('LobbyCreateFriendsOnlyButton') || this.isChecked('LobbyCreatePublicButton');
+				this.isChecked('LobbyCreatePrivateButton') ||
+				this.isChecked('LobbyCreateFriendsOnlyButton') ||
+				this.isChecked('LobbyCreatePublicButton');
 		}
 	}
 

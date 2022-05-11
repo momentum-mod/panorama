@@ -245,7 +245,14 @@ $drawer-width: 768px;
 		height: 24px;
 		opacity: 0.8;
 		border-top: 1px solid rgba(0, 0, 0, 0.5);
-		background-color: gradient(linear, 0% 100%, 0% 0%, from(rgba(0, 0, 0, 0)), color-stop(0.5, rgba(0, 0, 0, 0.275)), to(rgba(0, 0, 0, 0.8)));
+		background-color: gradient(
+			linear,
+			0% 100%,
+			0% 0%,
+			from(rgba(0, 0, 0, 0)),
+			color-stop(0.5, rgba(0, 0, 0, 0.275)),
+			to(rgba(0, 0, 0, 0.8))
+		);
 	}
 }
 
@@ -356,7 +363,14 @@ $drawer-width: 768px;
 		height: 100%;
 		border-right: 1px solid rgba(0, 0, 0, 0.12);
 		opacity: 0.8;
-		background-color: gradient(linear, 0% 0%, 100% 0%, from(rgba(0, 0, 0, 0)), color-stop(0.5, rgba(0, 0, 0, 0.275)), to(rgba(0, 0, 0, 0.7)));
+		background-color: gradient(
+			linear,
+			0% 0%,
+			100% 0%,
+			from(rgba(0, 0, 0, 0)),
+			color-stop(0.5, rgba(0, 0, 0, 0.275)),
+			to(rgba(0, 0, 0, 0.7))
+		);
 		transition: border-right 0.35s ease-out 0s;
 	}
 }
@@ -381,7 +395,14 @@ $drawer-width: 768px;
 
 		#{$this}__left-shadow {
 			border-right: 1px solid rgba(0, 0, 0, 0.2);
-			background-color: gradient(linear, 0% 0%, 100% 0%, from(rgba(0, 0, 0, 0)), color-stop(0.5, rgba(0, 0, 0, 0.275)), to(rgba(0, 0, 0, 0.8)));
+			background-color: gradient(
+				linear,
+				0% 0%,
+				100% 0%,
+				from(rgba(0, 0, 0, 0)),
+				color-stop(0.5, rgba(0, 0, 0, 0.275)),
+				to(rgba(0, 0, 0, 0.8))
+			);
 		}
 
 		.rightnav__drawerbutton {
