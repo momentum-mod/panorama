@@ -1,19 +1,32 @@
 {
-    "name": "momentum-panorama",
-    "version": "1.0.0",
-    "description": "Simple scripts for handling Momentum Panorama files",
-    "config": {
-        "baseDir": "./"
-    },
-    "scripts": {
-        "get-learn": "node tools/get_learn.js",
-        "get-credits": "node tools/get_credits.js"
-    },
-    "author": "Momentum Team",
-    "license": "ISC",
-    "dependencies": {
-        "axios": "^0.26.0",
-        "papaparse": "^5.3.1",
-        "prettier": "^2.5.1"
-    }
+	"name": "momentum-panorama",
+	"version": "1.0.0",
+	"description": "Scripts for handling Momentum Panorama files",
+	"config": {
+		"baseDir": "./"
+	},
+	"scripts": {
+		"prettier:check": "prettier --check **/*.{js,xml,scss,css,md}",
+		"prettier:format": "prettier --write **/*.{js,xml,scss,css,md}",
+		"prepare": "husky install",
+		"pre-commit": "lint-staged",
+		"get-learn": "node tools/get_learn.js",
+		"get-credits": "node tools/get_credits.js"
+	},
+	"author": "Momentum Team",
+	"license": "MIT",
+	"dependencies": {},
+	"devDependencies": {
+		"husky": "^8.0.1",
+		"lint-staged": "^12.4.1",
+		"prettier": "^2.6.2",
+		"@prettier/plugin-xml": "^2.1.0",
+		"axios": "^0.26.0",
+		"papaparse": "^5.3.1"
+	},
+	"lint-staged": {
+		"**/*.{js,xml,scss,css,md}": [
+			"prettier --write"
+		]
+	}
 }
