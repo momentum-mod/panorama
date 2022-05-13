@@ -1,49 +1,40 @@
 'use strict';
 
 class ControlsLibrary {
+	static progressBar1 = $('#ProgressBar1');
 	static updatingProgressBars;
-	static Init() {
-		$.Msg($('#ControlsLibraryPanel'));
-		ControlsLibrary.updatingProgressBars = true;
-		if (ControlsLibrary.updatingProgressBars) ControlsLibrary.updateProgressBars();
+
+	static {
+		this.updatingProgressBars = true;
+
+		this.updateProgressBars();
 	}
 
 	static updateProgressBars() {
-		const progressBar1 = $('#ProgressBar1');
+		if (this.progressBar1.value <= this.progressBar1.max) this.progressBar1.value += 0.01;
+		else this.progressBar1.value = this.progressBar1.min;
 
-		if (progressBar1.value <= progressBar1.max) progressBar1.value += 0.01;
-		else progressBar1.value = progressBar1.min;
-
-		if (ControlsLibrary.updatingProgressBars) {
-			$.Schedule(0.1, ControlsLibrary.updateProgressBars);
+		if (this.updatingProgressBars) {
+			$.Schedule(0.1, () => this.updateProgressBars());
 		}
 	}
 
-	static OnSimpleContextMenu() {
-		var items = [];
-		items.push({
-			label: 'Item 1',
-			jsCallback: function () {
-				$.Msg('Item 1 pressed');
+	static onSimpleContextMenu() {
+		const items = [
+			{
+				label: 'Item 1',
+				jsCallback: () => $.Msg('Item 1 pressed')
+			},
+			{
+				label: 'Item 2',
+				jsCallback: () => $.Msg('Item 2 pressed')
+			},
+			{
+				label: 'Item 3 w/ top separator',
+				style: 'TopSeparator',
+				jsCallback: () => $.Msg('Item 3 pressed')
 			}
-		});
-		items.push({
-			label: 'Item 2',
-			jsCallback: function () {
-				$.Msg('Item 2 pressed');
-			}
-		});
-		items.push({
-			label: 'Item 3 w/ top separator',
-			style: 'TopSeparator',
-			jsCallback: function () {
-				$.Msg('Item 3 pressed');
-			}
-		});
-		UiToolkitAPI.ShowSimpleContextMenu('', 'ControlsLibSimpleContextMenu', items);
+		];
+		UiToolkitAPI.ShowSimpleContextMenu('', '', items);
 	}
 }
-
-(function () {
-	ControlsLibrary.Init();
-})();
