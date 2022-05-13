@@ -1,30 +1,52 @@
 'use strict';
 
 class LoadingScreen {
-	static {
-		$.RegisterForUnhandledEvent('MapCache_MapLoad', LoadingScreen.updateLoadingScreenInfo);
-		$.RegisterForUnhandledEvent('UnloadLoadingScreenAndReinit', LoadingScreen.init);
+	static panels = {
+		/** @type {Panel} @static */
+		cp: $.GetContextPanel(),
+		/** @type {Image} @static */
+		backgroundImage: $('#BackgroundImage'),
+		/** @type {ProgressBar} @static */
+		progressBar: $('#ProgressBar'),
+		/** @type {Label} @static */
+		mapName: $('#MapName'),
+		/** @type {Label} @static */
+		author: $('#Author'),
+		/** @type {Label} @static */
+		tierAndType: $('#TierAndType'),
+		/** @type {Label} @static */
+		numZones: $('#NumZones')
+	};
 
-		$.RegisterEventHandler('PanelLoaded', $('#BackgroundImage'), () => {
-			$('#BackgroundImage').visible = true;
-		});
-		$.RegisterEventHandler('ImageFailedLoad', $('#BackgroundImage'), () => {
-			$('#BackgroundImage').visible = false;
-		});
+	static {
+		$.RegisterForUnhandledEvent('MapCache_MapLoad', this.updateLoadingScreenInfo.bind(this));
+		$.RegisterForUnhandledEvent('UnloadLoadingScreenAndReinit', this.init.bind(this));
+
+		$.RegisterEventHandler(
+			'PanelLoaded',
+			this.panels.backgroundImage,
+			() => (this.panels.backgroundImage.visible = true)
+		);
+		$.RegisterEventHandler(
+			'ImageFailedLoad',
+			this.panels.backgroundImage,
+			() => (this.panels.backgroundImage.visible = false)
+		);
 	}
 
 	static init() {
-		$('#ProgressBar').value = 0;
+		this.panels.progressBar.value = 0;
 
 		const gamemode = GameModeAPI.GetCurrentGameMode();
 		const tip = GameModeAPI.GetRandomTipForGameMode(gamemode);
-		$.GetContextPanel().SetDialogVariable('tip', $.LocalizeSafe(tip));
 
-		$('#MapName').visible = false;
-		$('#Author').visible = false;
-		$('#TierAndType').visible = false;
-		$('#NumZones').visible = false;
-		$('#BackgroundImage').visible = false;
+		this.panels.cp.SetDialogVariable('tip', $.LocalizeSafe(tip));
+
+		this.panels.mapName.visible = false;
+		this.panels.author.visible = false;
+		this.panels.tierAndType.visible = false;
+		this.panels.numZones.visible = false;
+		this.panels.backgroundImage.visible = false;
 	}
 
 	static updateLoadingScreenInfo(mapName) {
@@ -34,33 +56,33 @@ class LoadingScreen {
 
 		if (!mapData) {
 			// No data to go off of, just set the map name and hide the rest
-			$.GetContextPanel().SetDialogVariable('mapname', mapName);
-			$('#MapName').visible = true;
+			this.panels.cp.SetDialogVariable('mapname', mapName);
+			this.panels.mapName.visible = true;
 
-			$('#Author').visible = false;
-			$('#TierAndType').visible = false;
-			$('#NumZones').visible = false;
-			$('#BackgroundImage').SetImage('');
+			this.panels.author.visible = false;
+			this.panels.tierAndType.visible = false;
+			this.panels.numZones.visible = false;
+			this.panels.backgroundImage.SetImage('');
 
 			return;
 		}
 
-		$.GetContextPanel().SetDialogVariable('mapname', mapData.name);
-		$.GetContextPanel().SetDialogVariableInt('tier', mapData.mainTrack.difficulty);
-		$.GetContextPanel().SetDialogVariableInt('numzones', mapData.mainTrack.numZones);
-		$.GetContextPanel().SetDialogVariable('tracktype', mapData.mainTrack.isLinear ? 'Linear' : 'Staged');
+		this.panels.cp.SetDialogVariable('mapname', mapData.name);
+		this.panels.cp.SetDialogVariableInt('tier', mapData.mainTrack.difficulty);
+		this.panels.cp.SetDialogVariableInt('numzones', mapData.mainTrack.numZones);
+		this.panels.cp.SetDialogVariable('tracktype', mapData.mainTrack.isLinear ? 'Linear' : 'Staged');
 
 		let authorString = '';
 		mapData.credits
 			.filter((x) => x.type === 'author')
 			.forEach((item, i) => (authorString += (i > 0 ? ', ' : '') + item.user.alias));
-		$.GetContextPanel().SetDialogVariable('author', authorString);
+		this.panels.cp.SetDialogVariable('author', authorString);
 
-		$('#MapName').visible = true;
-		$('#Author').visible = true;
-		$('#TierAndType').visible = true;
-		$('#NumZones').visible = true;
+		this.panels.mapName.visible = true;
+		this.panels.author.visible = true;
+		this.panels.tierAndType.visible = true;
+		this.panels.numZones.visible = true;
 
-		$('#BackgroundImage').SetImage(mapData.thumbnail.urlLarge);
+		this.panels.backgroundImage.SetImage(mapData.thumbnail.urlLarge);
 	}
 }
