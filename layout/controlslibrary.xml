@@ -4,11 +4,10 @@
 	</styles>
 
 	<scripts>
-		<include src="file://{resources}/scripts/mainmenu.js" />
 		<include src="file://{resources}/scripts/controlslibrary.js" />
 	</scripts>
 
-	<Panel class="mainmenu__page" useglobalcontext="false">
+	<Panel class="mainmenu__page" useglobalcontext="true">
 		<Panel id="ControlsLibraryPanel" class="flow-down width height overflow-vscroll">
 
 			<Label class="text-h1 mt-3" text="Core" />
