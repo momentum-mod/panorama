@@ -1,96 +1,106 @@
 'use strict';
 
-class MainMenuSettings {
-	static settingsTabs = {
-		InputSettings: {
-			xml: 'settings_input',
-			radioid: 'InputRadio',
-			children: {
-				MouseSubSection: 'MouseRadio',
-				KeybindSubSection: 'KeybindRadio'
-			}
-		},
-		AudioSettings: {
-			xml: 'settings_audio',
-			radioid: 'AudioRadio',
-			children: {
-				VolumeSubSection: 'VolumeRadio',
-				AudioDeviceSubSection: 'AudioDeviceRadio'
-			}
-		},
-		VideoSettings: {
-			xml: 'settings_video',
-			radioid: 'VideoRadio',
-			children: {
-				VideoSubSection: 'VideoSubRadio',
-				AdvancedVideoSubSection: 'AdvancedVideoRadio',
-				TextureReplaceSubSection: 'TextureReplaceRadio'
-			}
-		},
-		OnlineSettings: {
-			xml: 'settings_online',
-			radioid: 'OnlineRadio',
-			children: {
-				OnlineGhostSubSection: 'OnlineGhostRadio',
-				GhostSubSection: 'GhostRadio',
-				RichPresenceSubSection: 'RichPresenceRadio'
-			}
-		},
-		GameplaySettings: {
-			xml: 'settings_gameplay',
-			radioid: 'GameplayRadio',
-			children: {
-				GameplayGeneralSubSection: 'GameplayGeneralRadio',
-				PaintSubSection: 'PaintRadio',
-				SafeguardsSubSection: 'SafeguardsRadio',
-				ZonesSubSection: 'ZonesRadio',
-				RocketJumpSubSection: 'RocketJumpRadio',
-				StickyJumpSubSection: 'StickyJumpRadio',
-				ConcSubSection: 'ConcRadio',
-				DefragSubSection: 'DefragRadio'
-			}
-		},
-		InterfaceSettings: {
-			xml: 'settings_interface',
-			radioid: 'InterfaceRadio',
-			children: {
-				UISubSection: 'UIRadio',
-				SpeedometerSubSection: 'SpeedometerRadio',
-				CrosshairSubSection: 'CrosshairRadio',
-				TimerSubSection: 'TimerRadio',
-				PlayerStatusSubSection: 'PlayerStatusRadio',
-				KeypressSubSection: 'KeypressRadio',
-				WeaponSelSubSection: 'WeaponSelRadio',
-				StrafeSyncSubSection: 'StrafeSyncRadio',
-				MapInfoSubSection: 'MapInfoRadio'
-			}
-		},
-		SearchSettings: {
-			xml: 'settings_search'
+const SETTINGS_TABS = {
+	InputSettings: {
+		xml: 'settings_input',
+		radioid: 'InputRadio',
+		children: {
+			MouseSubSection: 'MouseRadio',
+			KeybindSubSection: 'KeybindRadio'
 		}
-	};
+	},
+	AudioSettings: {
+		xml: 'settings_audio',
+		radioid: 'AudioRadio',
+		children: {
+			VolumeSubSection: 'VolumeRadio',
+			AudioDeviceSubSection: 'AudioDeviceRadio'
+		}
+	},
+	VideoSettings: {
+		xml: 'settings_video',
+		radioid: 'VideoRadio',
+		children: {
+			VideoSubSection: 'VideoSubRadio',
+			AdvancedVideoSubSection: 'AdvancedVideoRadio',
+			TextureReplaceSubSection: 'TextureReplaceRadio'
+		}
+	},
+	OnlineSettings: {
+		xml: 'settings_online',
+		radioid: 'OnlineRadio',
+		children: {
+			OnlineGhostSubSection: 'OnlineGhostRadio',
+			GhostSubSection: 'GhostRadio',
+			RichPresenceSubSection: 'RichPresenceRadio'
+		}
+	},
+	GameplaySettings: {
+		xml: 'settings_gameplay',
+		radioid: 'GameplayRadio',
+		children: {
+			GameplayGeneralSubSection: 'GameplayGeneralRadio',
+			PaintSubSection: 'PaintRadio',
+			SafeguardsSubSection: 'SafeguardsRadio',
+			ZonesSubSection: 'ZonesRadio',
+			RocketJumpSubSection: 'RocketJumpRadio',
+			StickyJumpSubSection: 'StickyJumpRadio',
+			ConcSubSection: 'ConcRadio',
+			DefragSubSection: 'DefragRadio'
+		}
+	},
+	InterfaceSettings: {
+		xml: 'settings_interface',
+		radioid: 'InterfaceRadio',
+		children: {
+			UISubSection: 'UIRadio',
+			SpeedometerSubSection: 'SpeedometerRadio',
+			CrosshairSubSection: 'CrosshairRadio',
+			TimerSubSection: 'TimerRadio',
+			PlayerStatusSubSection: 'PlayerStatusRadio',
+			KeypressSubSection: 'KeypressRadio',
+			WeaponSelSubSection: 'WeaponSelRadio',
+			StrafeSyncSubSection: 'StrafeSyncRadio',
+			MapInfoSubSection: 'MapInfoRadio'
+		}
+	},
+	SearchSettings: {
+		xml: 'settings_search'
+	}
+};
 
+class MainMenuSettings {
 	static activeTab = null;
 	static prevTab = null;
-	static contentPanel = $('#SettingsContent');
 
-	static navPanel = $('#SettingsNav');
-	static navExpand = $('#SettingsNavCollapseIcon');
-	static navCollapse = $('#SettingsNavExpandIcon');
+	static panels = {
+		/** @type {Panel} @static */
+		content: $('#SettingsContent'),
+		/** @type {Panel} @static */
+		nav: $('#SettingsNav'),
+		/** @type {Image} @static */
+		navExpand: $('#SettingsNavCollapseIcon'),
+		/** @type {Image} @static */
+		navCollapse: $('#SettingsNavExpandIcon'),
+		/** @type {Panel} @static */
+		info: $('#SettingsInfo'),
+		/** @type {Label} @static */
+		infoTitle: $('#SettingsInfoTitle'),
+		/** @type {Label} @static */
+		infoMessage: $('#SettingsInfoMessage'),
+		/** @type {Label} @static */
+		infoConvar: $('#SettingsInfoConvar'),
+		/** @type {Button} @static */
+		infoDocsButton: $('#SettingsInfoDocsButton')
+	};
 
-	static infoPanel = $('#SettingsInfo');
-	static infoPanelTitle = $('#SettingsInfoTitle');
-	static infoPanelMessage = $('#SettingsInfoMessage');
-	static infoPanelConvar = $('#SettingsInfoConvar');
-	static infoPanelDocsButton = $('#SettingsInfoDocsButton');
 	static currentInfo = null;
-
 	static spacerHeight = null;
 	static shouldLimitScroll = false;
 
 	static {
 		// Load every tab immediately, otherwise search won't be guaranteed to find everything.
-		Object.keys(this.settingsTabs).forEach((tab) => this.loadTab(tab));
+		Object.keys(SETTINGS_TABS).forEach((tab) => this.loadTab(tab));
 
 		// Default to input settings page
 		this.navigateToTab('InputSettings');
@@ -100,13 +110,13 @@ class MainMenuSettings {
 
 		// Set up event listeners
 		// Switch to a settings panel - search uses this
-		$.RegisterForUnhandledEvent('SettingsNavigateToPanel', this.navigateToSettingPanel);
+		$.RegisterForUnhandledEvent('SettingsNavigateToPanel', this.navigateToSettingPanel.bind(this));
 
 		// Save to file whenever the settings page gets closed
 		$.RegisterForUnhandledEvent('MainMenuTabHidden', (tab) => tab === 'Settings' && this.saveSettings());
 
 		// Handle the settings save event
-		$.RegisterForUnhandledEvent('SettingsSave', this.saveSettings);
+		$.RegisterForUnhandledEvent('SettingsSave', this.saveSettings.bind(this));
 	}
 
 	static navigateToTab(tab) {
@@ -148,7 +158,7 @@ class MainMenuSettings {
 				this.setNavItemCollapsed(tab, false);
 
 				// Check the radiobutton for cases where this is called from JS. CSGO Panorama fires an Activated event to the radiobutton instead but I hate that.
-				$.GetContextPanel().FindChildTraverse(MainMenuSettings.settingsTabs[tab].radioid).checked = true;
+				$.GetContextPanel().FindChildTraverse(SETTINGS_TABS[tab].radioid).checked = true;
 			}
 
 			SettingsShared.onChangedTab(this.activeTab);
@@ -156,10 +166,10 @@ class MainMenuSettings {
 	}
 
 	static loadTab(tab) {
-		const newPanel = $.CreatePanel('Panel', this.contentPanel, tab);
+		const newPanel = $.CreatePanel('Panel', this.panels.content, tab);
 
 		// Load XML file for the page
-		newPanel.LoadLayout('file://{resources}/layout/settings/' + this.settingsTabs[tab].xml + '.xml', false, false);
+		newPanel.LoadLayout('file://{resources}/layout/settings/' + SETTINGS_TABS[tab].xml + '.xml', false, false);
 
 		// Set the --odd/--even classes all the children
 		this.styleAlternatingItems(newPanel);
@@ -207,32 +217,32 @@ class MainMenuSettings {
 	static navigateToSettingPanel(tab, panel) {
 		// Switch to the page containing the setting
 		if (tab !== this.activeTab) {
-			MainMenuSettings.navigateToTab(tab);
+			this.navigateToTab(tab);
 		}
 
 		// Scroll to the location of the setting
 		panel.ScrollParentToMakePanelFit(1, false);
 
 		// Don't run the scroll position detection until scrolling has definitely finished - there may be an event for this...
-		MainMenuSettings.limitScrollCheck(1.0);
+		this.limitScrollCheck(1.0);
 
 		// Apply highlight anim
 		panel.AddClass('settings-group--highlight');
 
 		// I really hate this way of animating, but it ensures the --highlight class gets removed
-		let kfs = panel.CreateCopyOfCSSKeyframes('SettingsGroupHighlight');
+		const kfs = panel.CreateCopyOfCSSKeyframes('SettingsGroupHighlight');
 		panel.UpdateCurrentAnimationKeyframes(kfs);
 	}
 
 	// Set the shouldLimitScroll bool for a specific amount of time
 	static limitScrollCheck(duration) {
-		MainMenuSettings.shouldLimitScroll = true;
-		$.Schedule(duration, () => (MainMenuSettings.shouldLimitScroll = false));
+		this.shouldLimitScroll = true;
+		$.Schedule(duration, () => (this.shouldLimitScroll = false));
 	}
 
 	static onPageScrolled(tab, panel) {
 		// Panorama can fire this event A LOT, so we throttle it
-		if (MainMenuSettings.shouldLimitScroll) {
+		if (this.shouldLimitScroll) {
 			return;
 		} else {
 			// Don't run again for 0.05 seconds
@@ -260,7 +270,7 @@ class MainMenuSettings {
 						(child.actualyoffset + child.actuallayoutheight + this.spacerHeight) / containerHeight) ||
 				scrollOffset === 0
 			) {
-				this.navPanel.FindChildTraverse(this.settingsTabs[tab].children[child.id]).checked = true;
+				this.panels.nav.FindChildTraverse(SETTINGS_TABS[tab].children[child.id]).checked = true;
 				break;
 			}
 		}
@@ -285,19 +295,19 @@ class MainMenuSettings {
 		}
 
 		// Show the corresponding button icon
-		this.navExpand.SetHasClass('hide', !shouldCollapse);
-		this.navCollapse.SetHasClass('hide', shouldCollapse);
+		this.panels.navExpand.SetHasClass('hide', !shouldCollapse);
+		this.panels.navCollapse.SetHasClass('hide', shouldCollapse);
 
 		// Update all the items
-		Object.keys(this.settingsTabs)
+		Object.keys(SETTINGS_TABS)
 			.filter((tab) => tab !== 'SearchSettings' && tab !== this.activeTab)
 			.forEach((tab) => this.setNavItemCollapsed(tab, shouldCollapse));
 	}
 
 	// Set the collapsed state of a nav item
 	static setNavItemCollapsed(tab, shouldCollapse) {
-		this.navPanel
-			.FindChild(this.settingsTabs[tab].radioid)
+		this.panels.nav
+			.FindChild(SETTINGS_TABS[tab].radioid)
 			.FindChildrenWithClassTraverse('settings-nav__subsection')[0]
 			.SetHasClass('settings-nav__subsection--hidden', shouldCollapse);
 	}
@@ -379,7 +389,7 @@ class MainMenuSettings {
 		const hasDocs = !(panel.GetAttributeString('hasdocspage', '') === 'false');
 		panel.SetPanelEvent('onmouseover', () => {
 			// Set onmouseover events for all settings panels
-			MainMenuSettings.showInfo(
+			this.showInfo(
 				// If a panel has a specific title use that, if not use the panel's name. Child ID names vary between panel types, blame Valve
 				panel.GetAttributeString('infotitle', '') ||
 					panel.FindChildTraverse('Title')?.text ||
@@ -407,40 +417,40 @@ class MainMenuSettings {
 			let switchDelay = 0;
 
 			// If the info panel is closed, open it. If it's already open, play the switch animation
-			if (this.infoPanel.HasClass('settings-info--hidden')) {
-				this.infoPanel.RemoveClass('settings-info--hidden');
+			if (this.panels.info.HasClass('settings-info--hidden')) {
+				this.panels.info.RemoveClass('settings-info--hidden');
 			} else {
 				switchDelay = 0.05; // This should always be half the duration of settings-info--switch
 
-				this.infoPanel.AddClass('settings-info--switch');
-				let kfs = this.infoPanel.CreateCopyOfCSSKeyframes('BlurFadeInOut');
-				this.infoPanel.UpdateCurrentAnimationKeyframes(kfs);
+				this.panels.info.AddClass('settings-info--switch');
+				const kfs = this.panels.info.CreateCopyOfCSSKeyframes('BlurFadeInOut');
+				this.panels.info.UpdateCurrentAnimationKeyframes(kfs);
 			}
 
 			// Delay changing the properties even we've just played the switch animation,
 			// to be half the length of animation, so text changes at apex of the animation
 			$.Schedule(switchDelay, () => {
 				if (message) {
-					this.infoPanelTitle.text = $.Localize(title);
-					this.infoPanelMessage.text = $.Localize(message);
-					this.infoPanelTitle.RemoveClass('hide');
-					this.infoPanelMessage.RemoveClass('hide');
+					this.panels.infoTitle.text = $.Localize(title);
+					this.panels.infoMessage.text = $.Localize(message);
+					this.panels.infoTitle.RemoveClass('hide');
+					this.panels.infoMessage.RemoveClass('hide');
 				} else {
-					this.infoPanelTitle.AddClass('hide');
-					this.infoPanelMessage.AddClass('hide');
+					this.panels.infoTitle.AddClass('hide');
+					this.panels.infoMessage.AddClass('hide');
 				}
 
 				if (showConvar) {
-					this.infoPanelConvar.text = `<i>${isKeybinder ? 'Command' : 'Convar'}: <b>${convar}</b></i>`;
-					this.infoPanelConvar.RemoveClass('hide');
-					this.infoPanelDocsButton.SetHasClass('hide', !hasDocs || isKeybinder);
+					this.panels.infoConvar.text = `<i>${isKeybinder ? 'Command' : 'Convar'}: <b>${convar}</b></i>`;
+					this.panels.infoConvar.RemoveClass('hide');
+					this.panels.infoDocsButton.SetHasClass('hide', !hasDocs || isKeybinder);
 					// Shouldn't need to clear the panel event here as it's hidden or gets overwritten
-					this.infoPanelDocsButton.SetPanelEvent('onactivate', () =>
+					this.panels.infoDocsButton.SetPanelEvent('onactivate', () =>
 						SteamOverlayAPI.OpenURLModal(`https://docs.momentum-mod.org/var/${convar}`)
 					);
 				} else {
-					this.infoPanelConvar.AddClass('hide');
-					this.infoPanelDocsButton.AddClass('hide');
+					this.panels.infoConvar.AddClass('hide');
+					this.panels.infoDocsButton.AddClass('hide');
 				}
 			});
 		} else {
@@ -450,7 +460,7 @@ class MainMenuSettings {
 
 	static hideInfo() {
 		// Hide the info panel
-		this.infoPanel.AddClass('settings-info--hidden');
+		this.panels.info.AddClass('settings-info--hidden');
 	}
 
 	static styleAlternatingItems(page) {
