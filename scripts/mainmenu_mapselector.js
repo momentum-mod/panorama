@@ -11,49 +11,51 @@ const MapSelNStateClasses = [
 
 class MapSelection {
 	static gameModeData = {};
-
-	static searchTextEntry = $('#MapSearchTextEntry');
-	static searchClearButton = $('#MapSearchClear');
-	static filtersPanel = $('#MapFilters');
-	static filtersToggleButton = $('#FilterToggle');
-	static completedFilterButton = $('#MapCompletedFilterButton');
-	static favoritesFilterButton = $('#MapFavoritedFilterButton');
-	static downloadedFilterButton = $('#MapDownloadedFilterButton');
-	static emptyContainer = $('#MapListEmptyContainer');
-	static tierSlider = $('#TierSlider');
-
-	static descriptionContainer = $('#MapDescriptionContainer');
-	static creditsContainer = $('#MapCreditsContainer');
-	static datesContainer = $('#MapDatesContainer');
-
-	static creditsPanel = $('#MapCredits');
-	static websiteButton = $('#MapInfoWebsiteButton');
-	static tagsPanel = $('#MapTags');
-
 	static filtersState = {};
 	static timesModeButtonsUnchecked = 0;
 
-	static {
-		$.RegisterForUnhandledEvent('MapSelector_ShowConfirmCancelDownload', MapSelection.showConfirmCancelDownload);
-		$.RegisterForUnhandledEvent('MapSelector_ShowConfirmOverwrite', MapSelection.showConfirmOverwrite);
-		$.RegisterForUnhandledEvent('MapSelector_MapsFiltered', MapSelection.onMapsFiltered.bind(this));
-		$.RegisterForUnhandledEvent('MapSelector_SelectedDataUpdate', MapSelection.onSelectedDataUpdated.bind(this));
+	static panels = {
+		/** @type {TextEntry} @static */
+		searchText: $('#MapSearchTextEntry'),
+		/** @type {Button} @static */
+		searchClear: $('#MapSearchClear'),
+		/** @type {Panel} @static */
+		filtersPanel: $('#MapFilters'),
+		/** @type {Button} @static */
+		filtersToggle: $('#FilterToggle'),
+		/** @type {Button} @static */
+		completedFilterButton: $('#MapCompletedFilterButton'),
+		/** @type {Button} @static */
+		favoritesFilterButton: $('#MapFavoritedFilterButton'),
+		/** @type {Button} @static */
+		downloadedFilterButton: $('#MapDownloadedFilterButton'),
+		/** @type {Panel} @static */
+		emptyContainer: $('#MapListEmptyContainer'),
+		/** @type {DualSlider} @static */
+		tierSlider: $('#TierSlider'),
+		/** @type {Panel} @static */
+		descriptionContainer: $('#MapDescriptionContainer'),
+		/** @type {Panel} @static */
+		creditsContainer: $('#MapCreditsContainer'),
+		/** @type {Panel} @static */
+		datesContainer: $('#MapDatesContainer'),
+		/** @type {Panel} @static */
+		credits: $('#MapCredits'),
+		/** @type {Button} @static */
+		websiteButton: $('#MapInfoWebsiteButton'),
+		/** @type {Label} @static */
+		tags: $('#MapTags')
+	};
 
-		$.RegisterEventHandler(
-			'NStateButtonStateChanged',
-			MapSelection.completedFilterButton,
-			MapSelection.onNStateBtnChanged
-		);
-		$.RegisterEventHandler(
-			'NStateButtonStateChanged',
-			MapSelection.favoritesFilterButton,
-			MapSelection.onNStateBtnChanged
-		);
-		$.RegisterEventHandler(
-			'NStateButtonStateChanged',
-			MapSelection.downloadedFilterButton,
-			MapSelection.onNStateBtnChanged
-		);
+	static {
+		$.RegisterForUnhandledEvent('MapSelector_ShowConfirmCancelDownload', this.showConfirmCancelDownload.bind(this));
+		$.RegisterForUnhandledEvent('MapSelector_ShowConfirmOverwrite', this.showConfirmOverwrite.bind(this));
+		$.RegisterForUnhandledEvent('MapSelector_MapsFiltered', this.onMapsFiltered.bind(this));
+		$.RegisterForUnhandledEvent('MapSelector_SelectedDataUpdate', this.onSelectedDataUpdated.bind(this));
+
+		$.RegisterEventHandler('NStateButtonStateChanged', this.panels.completedFilterButton, this.onNStateBtnChanged);
+		$.RegisterEventHandler('NStateButtonStateChanged', this.panels.favoritesFilterButton, this.onNStateBtnChanged);
+		$.RegisterEventHandler('NStateButtonStateChanged', this.panels.downloadedFilterButton, this.onNStateBtnChanged);
 
 		// Populate the gameModeData object, finding all the filter buttons
 		this.gameModeData = GAMEMODE_WITH_NULL;
@@ -65,7 +67,7 @@ class MapSelection {
 		const filtersChanged = this.loadFilters();
 
 		// Initialise all the filters events
-		this.initFilterSaveEventsRecursive(this.filtersPanel);
+		this.initFilterSaveEventsRecursive(this.panels.filtersPanel);
 
 		this.timesModeButtonsUnchecked = 0;
 
@@ -73,13 +75,13 @@ class MapSelection {
 		this.initGamemodeButtons();
 
 		// Set this event here rather than XML to avoid error on reload (???)
-		this.searchTextEntry.SetPanelEvent('ontextentrychange', this.onSearchChanged.bind(this));
+		this.panels.searchText.SetPanelEvent('ontextentrychange', this.onSearchChanged.bind(this));
 
 		$.RegisterEventHandler('PanelLoaded', $.GetContextPanel(), () => {
 			$.GetContextPanel().ApplyFilters();
 
 			if (($.persistentStorage.getItem('mapSelector.filtersToggled') ?? false) || filtersChanged) {
-				$.DispatchEvent('Activated', this.filtersToggleButton, 'mouse');
+				$.DispatchEvent('Activated', this.panels.filtersToggle, 'mouse');
 			}
 
 			$.DispatchEvent('MapSelector_OnLoaded');
@@ -90,7 +92,7 @@ class MapSelection {
 	 * Temporary way of requesting a map list update
 	 */
 	static requestMapUpdate() {
-		MapSelection.searchTextEntry.Submit();
+		this.panels.searchText.Submit();
 		UiToolkitAPI.ShowCustomLayoutTooltip('MapFilters', '', 'file://{resources}/layout/tooltips/tooltip_test.xml');
 	}
 
@@ -102,7 +104,7 @@ class MapSelection {
 			const filterButton = this.gameModeData[mode].filterButton;
 			if (filterButton === null) return;
 
-			filterButton.SetPanelEvent('oncontextmenu', () => MapSelection.clearOtherModes(mode));
+			filterButton.SetPanelEvent('oncontextmenu', () => this.clearOtherModes(mode));
 			filterButton.SetPanelEvent('onactivate', () => {
 				this.onModeButtonPressed(mode);
 				this.filterSaveEvent(filterButton);
@@ -136,7 +138,7 @@ class MapSelection {
 		// Set unchecked counter to -1, if you're using this you've got the hang of it, no more popups for you!
 		this.timesModeButtonsUnchecked = -1;
 
-		const modes = MapSelection.gameModeData;
+		const modes = this.gameModeData;
 
 		const selectedModeButton = modes[selectedMode].filterButton;
 
@@ -177,13 +179,13 @@ class MapSelection {
 			// They've already right clicked
 			return;
 
-		const button = MapSelection.gameModeData[mode].filterButton;
+		const button = this.gameModeData[mode].filterButton;
 		// If button was unchecked then increment the counter
 		if (!button.checked) {
 			this.timesModeButtonsUnchecked++;
 
 			// Show tooltip if times unchecked equal to all the modes minus the last remaining mode and the null mode
-			if (this.timesModeButtonsUnchecked === Object.keys(MapSelection.gameModeData).length - 2) {
+			if (this.timesModeButtonsUnchecked === Object.keys(this.gameModeData).length - 2) {
 				UiToolkitAPI.ShowTextTooltipStyled(
 					button.id,
 					'Tip: Use right-click to deselect all other modes!',
@@ -202,7 +204,7 @@ class MapSelection {
 	 * Clear the search bar.
 	 */
 	static clearSearch() {
-		this.searchTextEntry.text = '';
+		this.panels.searchText.text = '';
 	}
 
 	/**
@@ -213,7 +215,7 @@ class MapSelection {
 
 		$.persistentStorage.setItem('mapSelector.filtersToggled', this.filtersToggled);
 
-		this.filtersPanel.SetHasClass('mapselector-filters--filters-extended', this.filtersToggled);
+		this.panels.filtersPanel.SetHasClass('mapselector-filters--filters-extended', this.filtersToggled);
 	}
 
 	/**
@@ -221,20 +223,22 @@ class MapSelection {
 	 */
 	static clearFilters() {
 		// Uncheck every checked gamemode button
-		Object.keys(MapSelection.gameModeData).forEach((mode) => {
-			let button = MapSelection.gameModeData[mode].filterButton;
+		Object.keys(this.gameModeData).forEach((mode) => {
+			let button = this.gameModeData[mode].filterButton;
 			if (button && !button.checked) {
 				button.SetSelected(true);
 			}
 		});
 
 		// Reset every NState button
-		[this.completedFilterButton, this.favoritesFilterButton, this.downloadedFilterButton].forEach((button) => {
-			button.currentstate = 0;
-		});
+		[
+			this.panels.completedFilterButton,
+			this.panels.favoritesFilterButton,
+			this.panels.downloadedFilterButton
+		].forEach((button) => (button.currentstate = 0));
 
 		// Reset tier slider
-		this.tierSlider.SetValues(TIER_MIN, TIER_MAX);
+		this.panels.tierSlider.SetValues(TIER_MIN, TIER_MAX);
 
 		this.timesModeButtonsUnchecked = 0;
 
@@ -435,7 +439,7 @@ class MapSelection {
 	static onMapsFiltered(count) {
 		const isZero = count === 0;
 
-		this.emptyContainer.SetHasClass('mapselector__emptywarning--hidden', !isZero);
+		this.panels.emptyContainer.SetHasClass('mapselector__emptywarning--hidden', !isZero);
 
 		$.persistentStorage.setItem('mapSelector.mapsFiltersYieldEmptyResults', isZero);
 	}
@@ -450,27 +454,27 @@ class MapSelection {
 
 		// Set the description and creation date text
 		$.GetContextPanel().SetDialogVariable('description', mapData.info?.description);
-		this.descriptionContainer.SetHasClass('hide', !mapData.info?.description);
+		this.panels.descriptionContainer.SetHasClass('hide', !mapData.info?.description);
 
 		const date = new Date(mapData.info?.creationDate);
 
 		$.GetContextPanel().SetDialogVariable('date', date.toLocaleDateString());
-		this.datesContainer.SetHasClass('hide', !mapData.info?.creationDate);
+		this.panels.datesContainer.SetHasClass('hide', !mapData.info?.creationDate);
 
 		// Clear the credits from the last map
-		this.creditsPanel.RemoveAndDeleteChildren();
+		this.panels.credits.RemoveAndDeleteChildren();
 
 		// Find all authors
 		const authorCredits = mapData.credits.filter((x) => x.type === 'author');
 
 		const hasCredits = authorCredits.length > 0;
 
-		this.creditsContainer.SetHasClass('hide', !hasCredits);
+		this.panels.creditsContainer.SetHasClass('hide', !hasCredits);
 
 		if (hasCredits) {
 			// Add them to the panel
 			authorCredits.forEach((credit, i) => {
-				let namePanel = $.CreatePanel('Label', this.creditsPanel, '', {
+				let namePanel = $.CreatePanel('Label', this.panels.credits, '', {
 					text: credit.user.alias,
 					class: 'mapselector-credits__text mapselector-credits__name'
 				});
@@ -483,16 +487,14 @@ class MapSelection {
 						UiToolkitAPI.ShowSimpleContextMenu(namePanel.id, '', [
 							{
 								label: 'Show Steam Profile',
-								jsCallback: () => {
-									SteamOverlayAPI.OpenToProfileID(credit.user.xuid);
-								}
+								jsCallback: () => SteamOverlayAPI.OpenToProfileID(credit.user.xuid)
 							}
 						]);
 					});
 				}
 
 				if (i < authorCredits.length - 1) {
-					let commaPanel = $.CreatePanel('Label', this.creditsPanel, '');
+					let commaPanel = $.CreatePanel('Label', this.panels.credits, '');
 					commaPanel.AddClass('mapselector-credits__text');
 					commaPanel.text = ',  ';
 				}
@@ -500,7 +502,7 @@ class MapSelection {
 		}
 
 		// Set the website button link
-		this.websiteButton.SetPanelEvent('onactivate', () =>
+		this.panels.websiteButton.SetPanelEvent('onactivate', () =>
 			SteamOverlayAPI.OpenURL(`https://momentum-mod.org/dashboard/maps/${mapData.id}`)
 		);
 	}
@@ -513,16 +515,14 @@ class MapSelection {
 	static onNStateBtnChanged(panelID, state) {
 		const panel = $.GetContextPanel().FindChildTraverse(panelID);
 
-		for (let type of Array(3).keys()) {
-			panel.SetHasClass(MapSelNStateClasses[type], state === type);
-		}
+		for (let type of Array(3).keys()) panel.SetHasClass(MapSelNStateClasses[type], state === type);
 	}
 
 	/**
 	 * Only show the clear button if the search is not empty
 	 */
 	static onSearchChanged() {
-		MapSelection.searchClearButton.SetHasClass('search__clearbutton--hidden', this.searchTextEntry.text === '');
+		this.panels.searchText.SetHasClass('search__clearbutton--hidden', this.panels.searchText.text === '');
 	}
 
 	/**

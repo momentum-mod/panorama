@@ -2,7 +2,7 @@
 
 class MapEntry {
 	static {
-		$.RegisterEventHandler('MapEntry_MapDataUpdate', $.GetContextPanel(), MapEntry.onMapDataUpdate);
+		$.RegisterEventHandler('MapEntry_MapDataUpdate', $.GetContextPanel(), this.onMapDataUpdate.bind(this));
 	}
 
 	static showGameModeOverrideMenu() {
@@ -42,27 +42,21 @@ class MapEntry {
 						icon: 'file://{images}/cancel.svg',
 						style: 'icon-color-red',
 
-						jsCallback: () => {
-							$.DispatchEvent('MapSelector_ShowConfirmCancelDownload', mapID);
-						}
+						jsCallback: () => $.DispatchEvent('MapSelector_ShowConfirmCancelDownload', mapID)
 					});
 				} else if (MapCacheAPI.MapQueuedForDownload(mapID)) {
 					items.push({
 						label: $.Localize('MOM_MapSelector_RemoveFromQueue'),
 						icon: 'file://{images}/playlist-remove.svg',
 						style: 'icon-color-red',
-						jsCallback: () => {
-							$.DispatchEvent('MapSelector_RemoveMapFromDownloadQueue', mapID);
-						}
+						jsCallback: () => $.DispatchEvent('MapSelector_RemoveMapFromDownloadQueue', mapID)
 					});
 				} else {
 					items.push({
 						label: $.Localize('MOM_MapSelector_DownloadMap'),
 						icon: 'file://{images}/play.svg',
 						style: 'icon-color-mid-blue',
-						jsCallback: () => {
-							$.DispatchEvent('MapSelector_TryPlayMap', mapID);
-						}
+						jsCallback: () => $.DispatchEvent('MapSelector_TryPlayMap', mapID)
 					});
 				}
 			} else {
@@ -71,9 +65,7 @@ class MapEntry {
 					icon: 'file://{images}/play.svg',
 					style: 'icon-color-green',
 
-					jsCallback: () => {
-						$.DispatchEvent('MapSelector_TryPlayMap', mapID);
-					}
+					jsCallback: () => $.DispatchEvent('MapSelector_TryPlayMap', mapID)
 				});
 
 				// Gamemode override submenu
@@ -81,9 +73,7 @@ class MapEntry {
 					label: $.Localize('MOM_MapSelector_StartMapOverride'),
 					icon: 'file://{images}/alternative-mode.svg',
 					style: 'icon-color-green',
-					jsCallback: () => {
-						this.showGameModeOverrideMenu();
-					}
+					jsCallback: () => this.showGameModeOverrideMenu()
 				});
 			}
 
@@ -91,18 +81,14 @@ class MapEntry {
 				label: 'Delete Map',
 				icon: 'file://{images}/delete.svg',
 				style: 'icon-color-red',
-				jsCallback: () => {
-					$.DispatchEvent('MapSelector_ToggleMapStatus', mapID, true, false);
-				}
+				jsCallback: () => $.DispatchEvent('MapSelector_ToggleMapStatus', mapID, true, false)
 			});
 		} else {
 			items.push({
 				label: $.Localize('MOM_MapSelector_DownloadMap'),
 				icon: 'file://{images}/download.svg',
 				style: 'icon-color-mid-blue',
-				jsCallback: () => {
-					$.DispatchEvent('MapSelector_TryPlayMap', mapID);
-				}
+				jsCallback: () => $.DispatchEvent('MapSelector_TryPlayMap', mapID)
 			});
 		}
 
@@ -112,18 +98,14 @@ class MapEntry {
 				icon: 'file://{images}/favorite-remove.svg',
 				style: 'icon-color-yellow',
 
-				jsCallback: () => {
-					$.DispatchEvent('MapSelector_ToggleMapStatus', mapID, false, false);
-				}
+				jsCallback: () => $.DispatchEvent('MapSelector_ToggleMapStatus', mapID, false, false)
 			});
 		} else {
 			items.push({
 				label: $.Localize('MOM_MapSelector_AddToFavorites'),
 				icon: 'file://{images}/star.svg',
 				style: 'icon-color-yellow',
-				jsCallback: () => {
-					$.DispatchEvent('MapSelector_ToggleMapStatus', mapID, false, true);
-				}
+				jsCallback: () => $.DispatchEvent('MapSelector_ToggleMapStatus', mapID, false, true)
 			});
 		}
 
