@@ -15,8 +15,8 @@
 				<!-- Source is set in script. -->
 				<!-- Set what you want the movie to be using the data-type example 'nuke' the .webm is appended in script. -->
 				<Movie
-					class="mainmenu__movie MainMenuModeOnly"
 					id="MainMenuMovie"
+					class="mainmenu__movie MainMenuModeOnly"
 					src=""
 					sound=""
 					controls="none"
@@ -44,7 +44,7 @@
 
 		<Panel id="MainMenuInput" class="mainmenu">
 			<!-- Topnav -->
-			<Panel id="JsMainMenuNavBar" class="topnav" style="z-index: 10;">
+			<Panel id="MainMenuNavBar" class="topnav" style="z-index: 10;">
 
 				<RadioButton
 					id="HomeButton"
@@ -60,7 +60,7 @@
 						id="PlayButton"
 						group="TopNavRadio"
 						class="topnav__button"
-						onactivate="MainMenuController.navigateToTab('MapSelection', 'mainmenu_mapselector', false)"
+						onactivate="MainMenuController.navigateToPage('MapSelection', 'mainmenu_mapselector', false)"
 					>
 						<Image class="topnav__icon" src="file://{images}/play-circle.svg" textureheight="64" />
 					</RadioButton>
@@ -69,25 +69,19 @@
 						id="InventoryButton"
 						group="TopNavRadio"
 						class="topnav__button"
-						onactivate="MainMenuController.navigateToTab('Inventory', 'mainmenu_inventory')"
+						disabled="true"
+						onmouseover="UiToolkitAPI.ShowTextTooltip('InventoryButton', 'Coming soon!')"
+						onmouseout="UiToolkitAPI.HideTextTooltip()"
+						style="tooltip-position: bottom;"
 					>
 						<Image class="topnav__icon" src="file://{images}/inventory.svg" textureheight="64" />
-					</RadioButton>
-
-					<RadioButton
-						id="ShopButton"
-						group="TopNavRadio"
-						class="topnav__button"
-						onactivate="MainMenuController.navigateToTab('Shop', 'mainmenu_shop')"
-					>
-						<Image class="topnav__icon" src="file://{images}/shop.svg" textureheight="64" />
 					</RadioButton>
 
 					<RadioButton
 						id="LearnButton"
 						group="TopNavRadio"
 						class="topnav__button"
-						onactivate="MainMenuController.navigateToTab('Learn', 'mainmenu_learn')"
+						onactivate="MainMenuController.navigateToPage('Learn', 'mainmenu_learn')"
 					>
 						<Image class="topnav__icon" src="file://{images}/learn.svg" textureheight="64" />
 					</RadioButton>
@@ -96,7 +90,7 @@
 						id="SettingsButton"
 						group="TopNavRadio"
 						class="topnav__button"
-						onactivate="MainMenuController.navigateToTab('Settings', 'mainmenu_settings')"
+						onactivate="MainMenuController.navigateToPage('Settings', 'mainmenu_settings')"
 					>
 						<Image class="topnav__icon" src="file://{images}/settings.svg" textureheight="64" />
 					</RadioButton>
@@ -200,7 +194,7 @@
 					<BaseBlurTarget
 						id="MainMenuBackgroundBlur"
 						class="mainmenu__background-blur"
-						blurrects="MainMenuContentBlur JsMainMenuNavBar NewsPanel"
+						blurrects="MainMenuContentBlur MainMenuNavBar NewsPanel"
 					>
 						<!-- Map Selector backgrounds -->
 						<Image id="MainMenuBackgroundMapSelectorImage" class="MainMenuModeOnly mapselector__background" />
@@ -220,7 +214,7 @@
 					</BaseBlurTarget>
 					<!-- /Backgrounds -->
 
-					<Panel id="MainMenuContent" class="mainmenu__content">
+					<Panel class="mainmenu__content">
 
 						<Panel id="PauseMenuMainMenuContent" class="mainmenu__pause-content-blur" />
 
@@ -269,13 +263,14 @@
 									</Button>
 								</TooltipPanel>
 
-								<Button
+								<RadioButton
 									id="ControlsLibraryButton"
 									class="bottombar__button hide"
-									onactivate="MainMenuController.navigateToTab('ControlsLibrary', 'controlslibrary')"
+									group="TopNavRadio"
+									onactivate="MainMenuController.navigateToPage('ControlsLibrary', 'controlslibrary')"
 								>
 									<Label class="bottombar__text" text="Controls Library" />
-								</Button>
+								</RadioButton>
 
 								<Button id="PSDumpButton" class="bottombar__button hide" onactivate="MainMenuController.psdump()">
 									<Label class="bottombar__text" text="dump ps" />
@@ -290,7 +285,7 @@
 							</Panel>
 						</Panel>
 
-						<Panel id="JsMainMenuContent" class="mainmenu__page-container mainmenu__page-container--hidden">
+						<Panel id="PageContent" class="mainmenu__page-container mainmenu__page-container--hidden">
 
 							<Panel id="MainMenuContentBlur" class="mainmenu__page-blur" />
 							<!-- A panel gets inserted here dynamically from js, depending on which tab we click -->
