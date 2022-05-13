@@ -5,6 +5,13 @@ const UPS_TO_KMH_FACTOR = 0.06858;
 // 1 unit = 0.75", 1 mile = 63360. 0.75 / 63360 ~~> 0.00001184"(/s) ~~> 0.04262MPH
 const UPS_TO_MPH_FACTOR = 0.04262;
 
+const hueShift = 110;
+const invis = 'rgba(0, 0, 0, 0)';
+const firstColor = 'rgba(178, 178, 178, 0.8)';
+
+// Global used to test speed bar settings
+const bUseSpeedBar = true; // should be accounted for in settings passed to SpeedometerObject
+
 // arbitrary value to determine how much speed needs to change to be considered an increase/decrease
 // adjusted by speedometer update delta time
 const COLORIZE_DEADZONE = 2;
@@ -31,10 +38,11 @@ class SpeedoSettingsObject {
 	}
 }
 class SpeedometerObject {
-	constructor(name, container, label, comparisonlabel, settings, eventbased, prevVal) {
+	constructor(name, container, label, bar, comparisonlabel, settings, eventbased, prevVal) {
 		this.name = name;
 		this.container = container;
 		this.label = label;
+		this.bar = bar;
 		this.comparisonlabel = comparisonlabel;
 		this.settings = settings;
 		this.eventbased = eventbased;
@@ -46,6 +54,7 @@ const Speedometers = [
 		'AbsSpeedometer',
 		$('#AbsSpeedometerContainer'),
 		$('#AbsSpeedometer'),
+		$('#AbsSpeedBar'),
 		$('#AbsSpeedometerComparison'),
 		null,
 		false,
@@ -55,6 +64,7 @@ const Speedometers = [
 		'HorizSpeedometer',
 		$('#HorizSpeedometerContainer'),
 		$('#HorizSpeedometer'),
+		$('#HorizSpeedBar'),
 		$('#HorizSpeedometerComparison'),
 		null,
 		false,
@@ -64,6 +74,7 @@ const Speedometers = [
 		'VertSpeedometer',
 		$('#VertSpeedometerContainer'),
 		$('#VertSpeedometer'),
+		$('#VertSpeedBar'),
 		$('#VertSpeedometerComparison'),
 		null,
 		false,
@@ -73,6 +84,7 @@ const Speedometers = [
 		'EnergySpeedometer',
 		$('#EnergySpeedometerContainer'),
 		$('#EnergySpeedometer'),
+		$('#EnergySpeedBar'),
 		$('#EnergySpeedometerComparison'),
 		null,
 		false,
@@ -82,6 +94,7 @@ const Speedometers = [
 		'ExplosiveJumpVelocity',
 		$('#ExplosiveJumpVelocityContainer'),
 		$('#ExplosiveJumpVelocity'),
+		$('#ExplosiveJumpSpeedBar'),
 		$('#ExplosiveJumpVelocityComparison'),
 		null,
 		true,
@@ -91,6 +104,7 @@ const Speedometers = [
 		'LastJumpVelocity',
 		$('#LastJumpVelocityContainer'),
 		$('#LastJumpVelocity'),
+		$('#LastJumpSpeedBar'),
 		$('#LastJumpVelocityComparison'),
 		null,
 		true,
@@ -100,6 +114,7 @@ const Speedometers = [
 		'RampBoardVelocity',
 		$('#RampBoardVelocityContainer'),
 		$('#RampBoardVelocity'),
+		$('#RampBoardSpeedBar'),
 		$('#RampBoardVelocityComparison'),
 		null,
 		true,
@@ -109,6 +124,7 @@ const Speedometers = [
 		'RampLeaveVelocity',
 		$('#RampLeaveVelocityContainer'),
 		$('#RampLeaveVelocity'),
+		$('#RampLeaveSpeedBar'),
 		$('#RampLeaveVelocityComparison'),
 		null,
 		true,
@@ -118,6 +134,7 @@ const Speedometers = [
 		'StageEnterExitAbsVelocity',
 		$('#StageEnterExitAbsVelocityContainer'),
 		$('#StageEnterExitAbsVelocity'),
+		$('#StageEnterExitAbsSpeedBar'),
 		$('#StageEnterExitAbsVelocityComparison'),
 		null,
 		true,
@@ -127,6 +144,7 @@ const Speedometers = [
 		'StageEnterExitHorizVelocity',
 		$('#StageEnterExitHorizVelocityContainer'),
 		$('#StageEnterExitHorizVelocity'),
+		$('#StageEnterExitHorizSpeedBar'),
 		$('#StageEnterExitHorizVelocityComparison'),
 		null,
 		true,
@@ -247,6 +265,26 @@ class Speedometer {
 				break;
 		}
 
+		// find speed bar colors
+		const walkSpeed = GameInterfaceAPI.GetSettingFloat('sv_maxspeed');
+		const denominator = walkSpeed ? walkSpeed : 320;
+		const speedRatio = velocity / denominator;
+		const wrap = Math.trunc(speedRatio);
+		let fillPercent = (speedRatio - wrap) * 100;
+
+		const hue = this.normalize360(hueShift * wrap);
+		const saturation = 100;
+		const lightness = 50;
+
+		let FGcolor = wrap > 0 ? this.makeColorFromHSLA(hue, saturation, lightness, 0.8) : firstColor;
+		let BGcolor = firstColor;
+
+		if (wrap > 1) {
+			BGcolor = this.makeColorFromHSLA(this.normalize360(hue - hueShift), saturation, lightness, 0.8);
+		} else {
+			BGcolor = wrap ? firstColor : invis;
+		}
+
 		const separateComparison = speedometer.settings.colorizeMode === SPEEDOMETER_COLOR_MODE.COMPARISON_SEP;
 		if (
 			hasComparison &&
@@ -284,11 +322,17 @@ class Speedometer {
 			speedometer.label.RemoveClass(DECREASE_CLASS);
 			if (speedometer.settings.colorizeMode === SPEEDOMETER_COLOR_MODE.RANGE && speedometer.settings.ranges) {
 				let found = false;
-				speedometer.settings.ranges.forEach((range) => {
-					if (velocity >= range.min && velocity <= range.max) {
-						speedometer.label.style.color = range.color;
+				let BGMaxValue = 0;
+				speedometer.settings.ranges.forEach((range, i) => {
+					if (range.max < velocity && range.max > BGMaxValue) {
+						BGcolor = range.color;
+						BGMaxValue = range.max;
+					} else if (velocity >= range.min && velocity <= range.max) {
+						speedometer.label.style.color = bUseSpeedBar ? 'rgba(255, 255, 255, 1)' : range.color;
+						FGcolor = range.color;
+						fillPercent = (velocity - range.min) / (range.max - range.min) * 100;
 						found = true;
-						return;
+						//return;
 					}
 				});
 				if (!found) {
@@ -298,6 +342,12 @@ class Speedometer {
 			}
 		}
 
+		// fill in speed bar & label
+		if (bUseSpeedBar && speedometer.bar) {
+			speedometer.bar.value = fillPercent;
+			speedometer.bar.GetChild(0).style.backgroundColor = this.makeGradientFromRGBA(FGcolor); //left bar is child 0
+			speedometer.bar.style.backgroundColor = this.makeGradientFromRGBA(BGcolor);
+		}
 		speedometer.label.text = Math.round(velocity);
 
 		if (speedometer.eventbased) {
@@ -329,7 +379,7 @@ class Speedometer {
 			if (colorProf) {
 				const rangesKV = colorProfData[colorProf];
 				if (rangesKV) {
-					Object.keys(rangesKV).forEach((range) => {
+					Object.keys(rangesKV).forEach(range => {
 						const rangeKV = rangesKV[range];
 						if (rangeKV) {
 							const splitColor = rangeKV['color'].split(' ');
@@ -365,6 +415,54 @@ class Speedometer {
 
 		// sorts using speedo_index attribute numbers
 		$.GetContextPanel().SortSpeedometers();
+	}
+
+	static makeColorFromHSLA(hue, saturation, lightness, alpha) {
+		const hueRatio = hue / 60;
+		const hueRatio_Whole = Math.trunc(hueRatio);
+		const hueRatio_Fraction = hueRatio - hueRatio_Whole;
+
+		const RGBArray = [
+			lightness,
+			lightness * (1 - saturation),
+			lightness * (1 - (hueRatio_Fraction * saturation)),
+			lightness * (1 - ((1 - hueRatio_Fraction) * saturation))
+		];
+		const RGBSelector = [
+			[0, 3, 1],
+			[2, 0, 1],
+			[1, 0, 3],
+			[1, 2, 0],
+			[3, 1, 0],
+			[0, 1, 2]
+		];
+		const index = hueRatio_Whole % 6;
+
+		const red = RGBArray[RGBSelector[index][0]];
+		const green = RGBArray[RGBSelector[index][1]];
+		const blue = RGBArray[RGBSelector[index][2]];
+
+		return `rgba(${red * 255}, ${green * 255}, ${blue * 255}, ${alpha})`;
+	}
+
+	static makeGradientFromRGBA(inColor) {
+		const colorArray = this.splitColorString(inColor);
+		const topColor = this.getColorStringFromArray(colorArray.map((c, i) => i == 3 ? c : 0.5 * (c + 255)));
+		const bottomrColor = this.getColorStringFromArray(colorArray.map((c, i) => i == 3 ? c : 0.5 * c));;
+		return `gradient(linear, 0% 0%, 0% 100%, from(${bottomrColor}), color-stop(0.25, ${inColor}), color-stop(0.75, ${inColor}), to(${topColor}))`;
+	}
+
+	static getColorStringFromArray(color) {
+		return `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${color[3] / 255})`;
+	}
+
+	static splitColorString(string) {
+		return string.slice(5, -1).split(',').map((c, i) => i == 3 ? parseInt(c * 255) : parseInt(c));
+	}
+
+	static normalize360(angle) {
+		const newAngle = angle - Math.sign(angle) * Math.trunc(angle / 360) * 360;
+		return newAngle < 0 ? newAngle + 360 : newAngle;
 	}
 
 	static {

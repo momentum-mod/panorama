@@ -10,44 +10,74 @@
 	<MomHudSpeedometer class="horizontal-align-center" onload="Speedometer.onLoad()">
 		<Panel id="SpeedometerContainer" class="speedometers">
 			<Panel id="AbsSpeedometerContainer" class="speedometer">
-				<Label id="AbsSpeedometer" text="" class="text-align-center speedometer__axis" />
-				<Label id="AbsSpeedometerComparison" text="" class="speedometer__axis__comparison" />
+				<ProgressBar id="AbsSpeedBar" min="0" max="100" class="horizontal-align-center progressbar-hudmeter speedbar" />
+				<Panel id="AbsLabelContainer" class="speedometer__label-container">
+					<Label id="AbsSpeedometer" text="" class="text-align-center speedometer__axis" />
+					<Label id="AbsSpeedometerComparison" text="" class="speedometer__axis__comparison" />
+				</Panel>
 			</Panel>
 			<Panel id="HorizSpeedometerContainer" class="speedometer">
-				<Label id="HorizSpeedometer" text="" class="text-align-center speedometer__axis" />
-				<Label id="HorizSpeedometerComparison" text="" class="speedometer__axis__comparison" />
+				<ProgressBar id="HorizSpeedBar" min="0" max="100" class="horizontal-align-center progressbar-hudmeter speedbar" />
+				<Panel id="HorizLabelContainer" class="speedometer__label-container">
+					<Label id="HorizSpeedometer" text="" class="text-align-center speedometer__axis" />
+					<Label id="HorizSpeedometerComparison" text="" class="speedometer__axis__comparison" />
+				</Panel>
 			</Panel>
 			<Panel id="VertSpeedometerContainer" class="speedometer">
-				<Label id="VertSpeedometer" text="" class="text-align-center speedometer__axis" />
-				<Label id="VertSpeedometerComparison" text="" class="speedometer__axis__comparison" />
+				<ProgressBar id="VertSpeedBar" min="0" max="100" class="horizontal-align-center progressbar-hudmeter speedbar" />
+				<Panel id="VertLabelContainer" class="speedometer__label-container">
+					<Label id="VertSpeedometer" text="" class="text-align-center speedometer__axis" />
+					<Label id="VertSpeedometerComparison" text="" class="speedometer__axis__comparison" />
+				</Panel>
 			</Panel>
 			<Panel id="EnergySpeedometerContainer" class="speedometer">
-				<Label id="EnergySpeedometer" text="" class="text-align-center speedometer__axis" />
-				<Label id="EnergySpeedometerComparison" text="" class="speedometer__axis__comparison" />
+				<ProgressBar id="EnergySpeedBar" min="0" max="100" class="horizontal-align-center progressbar-hudmeter speedbar" />
+				<Panel id="EnergyLabelContainer" class="speedometer__label-container">
+					<Label id="EnergySpeedometer" text="" class="text-align-center speedometer__axis" />
+					<Label id="EnergySpeedometerComparison" text="" class="speedometer__axis__comparison" />
+				</Panel>
 			</Panel>
 			<Panel id="ExplosiveJumpVelocityContainer" class="speedometer">
-				<Label id="ExplosiveJumpVelocity" text="" class="text-align-center speedometer__event" />
-				<Label id="ExplosiveJumpVelocityComparison" text="" class="speedometer__event__comparison" />
+				<ProgressBar id="ExplosiveJumpSpeedBar" min="0" max="100" class="horizontal-align-center progressbar-hudmeter speedbar" />
+				<Panel id="ExplosiveJumpLabelContainer" class="speedometer__label-container">
+					<Label id="ExplosiveJumpVelocity" text="" class="text-align-center speedometer__event" />
+					<Label id="ExplosiveJumpVelocityComparison" text="" class="speedometer__event__comparison" />
+				</Panel>
 			</Panel>
 			<Panel id="LastJumpVelocityContainer" class="speedometer">
-				<Label id="LastJumpVelocity" text="" class="text-align-center speedometer__event" />
-				<Label id="LastJumpVelocityComparison" text="" class="speedometer__event__comparison" />
+				<ProgressBar id="LastJumpSpeedBar" min="0" max="100" class="horizontal-align-center progressbar-hudmeter speedbar" />
+				<Panel id="LastJumpLabelContainer" class="speedometer__label-container">
+					<Label id="LastJumpVelocity" text="" class="text-align-center speedometer__event" />
+					<Label id="LastJumpVelocityComparison" text="" class="speedometer__event__comparison" />
+				</Panel>
 			</Panel>
 			<Panel id="RampBoardVelocityContainer" class="speedometer">
-				<Label id="RampBoardVelocity" text="" class="text-align-center speedometer__event" />
-				<Label id="RampBoardVelocityComparison" text="" class="speedometer__event__comparison" />
+				<ProgressBar id="RampBoardSpeedBar" min="0" max="100" class="horizontal-align-center progressbar-hudmeter speedbar" />
+				<Panel id="RampBoardLabelContainer" class="speedometer__label-container">
+					<Label id="RampBoardVelocity" text="" class="text-align-center speedometer__event" />
+					<Label id="RampBoardVelocityComparison" text="" class="speedometer__event__comparison" />
+				</Panel>
 			</Panel>
 			<Panel id="RampLeaveVelocityContainer" class="speedometer">
-				<Label id="RampLeaveVelocity" text="" class="text-align-center speedometer__event" />
-				<Label id="RampLeaveVelocityComparison" text="" class="speedometer__event__comparison" />
+				<ProgressBar id="RampLeaveSpeedBar" min="0" max="100" class="horizontal-align-center progressbar-hudmeter speedbar" />
+				<Panel id="RampLeaveLabelContainer" class="speedometer__label-container">
+					<Label id="RampLeaveVelocity" text="" class="text-align-center speedometer__event" />
+					<Label id="RampLeaveVelocityComparison" text="" class="speedometer__event__comparison" />
+				</Panel>
 			</Panel>
 			<Panel id="StageEnterExitAbsVelocityContainer" class="speedometer">
-				<Label id="StageEnterExitAbsVelocity" text="" class="text-align-center speedometer__event" />
-				<Label id="StageEnterExitAbsVelocityComparison" text="" class="speedometer__event__comparison" />
+				<ProgressBar id="StageEnterExitAbsSpeedBar" min="0" max="100" class="horizontal-align-center progressbar-hudmeter speedbar" />
+				<Panel id="StageEnterExitAbsLabelContainer" class="speedometer__label-container">
+					<Label id="StageEnterExitAbsVelocity" text="" class="text-align-center speedometer__event" />
+					<Label id="StageEnterExitAbsVelocityComparison" text="" class="speedometer__event__comparison" />
+				</Panel>
 			</Panel>
 			<Panel id="StageEnterExitHorizVelocityContainer" class="speedometer">
-				<Label id="StageEnterExitHorizVelocity" text="" class="text-align-center speedometer__event" />
-				<Label id="StageEnterExitHorizVelocityComparison" text="" class="speedometer__event__comparison" />
+				<ProgressBar id="StageEnterExitHorizSpeedBar" min="0" max="100" class="horizontal-align-center progressbar-hudmeter speedbar" />
+				<Panel id="StageEnterExitHorizLabelContainer" class="speedometer__label-container">
+					<Label id="StageEnterExitHorizVelocity" text="" class="text-align-center speedometer__event" />
+					<Label id="StageEnterExitHorizVelocityComparison" text="" class="speedometer__event__comparison" />
+				</Panel>
 			</Panel>
 		</Panel>
 	</MomHudSpeedometer>

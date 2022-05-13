@@ -8,7 +8,7 @@
 
 .speedometer {
 	align: center center;
-	flow-children: right;
+	flow-children: none;
 
 	&__axis {
 		font-weight: $speedometer-axis-font-weight;
@@ -27,6 +27,10 @@
 		}
 	}
 
+	&__label-container {
+		align: center center;
+		flow-children: right;
+	}
 	&--increase {
 		color: $speedometer-color-increase;
 	}
@@ -44,5 +48,21 @@
 	&--fadeout {
 		transition-duration: 0s;
 		opacity: 0;
+	}
+}
+
+.speedbar {
+	height: 100%;
+	border-radius: 2px 2px;
+	background-color: rgba(0, 0, 0, 0);
+	box-shadow: rgba(0,0,0,0) 0px 0px 0px 0px;
+
+	.ProgressBarLeft {
+		border-radius: 2px 2px;
+	}
+
+	.ProgressBarRight {
+		border-radius: 2px 2px;
+		background-color: rgba(0, 0, 0, 0);
 	}
 }
