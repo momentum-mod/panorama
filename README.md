@@ -34,13 +34,23 @@ JavaScript communicates with the game via events and APIs exposed by the game, a
 
 ## Setup
 
-TODO
-(reference https://github.com/panorama-languages-support/vscode-panorama-css)
+The easiest way to develop for Momentum Mod Panorama is to fork this repository and mount it in your `momentum/custom/` folder, for example:
+
+```
+cd <Your Steam Momentum Mod or Momentum Mod Playtest install location>\momentum\custom\
+mkdir PanoramaDev
+cd PanoramaDev
+git clone https://github.com/<your github account>/panorama.git
+```
+
+You should end up with `momentum/custom/PanoramaDev/panorama`, containing the contents of this repository.
+
+This will be mounted on game launch and override the files in your `momentum/panorama/` folder. To avoid nasty overlaps (such as if your dev branch renames or moves a file, both files will be mounted), we recommend temporarily renaming your `momentum/panorama/` folder (you'll need to do this after each Steam update).
+
+Once up and running, if you're on VSCode, we highly recommend the tools at [panorama-languages-support](https://github.com/panorama-languages-support) made by one of our team members, brae. Also, the `get_latest_js_types` scripts in `momentum/tools/` will generate a JS file containing type information for all the Panorama panels and APIs, just keeping that file open in VSCode/WebStorm should provide you with type info.
 
 ## Contributing
 
 Most of our larger systems and components require significant work with (closed-source) game code and thus requires licensed access or working tandem licensed dev. Thus, our work until now has been done internally by the core team. By the time of the release of 0.9.1 however, we have exposed enough events and APIs that non-team developers should be able to work on areas like HUD components (for an example of non-licensed HUD work, we recommend `scripts/hud/cgaz.js`).
 
 Those looking to contribute should look for issues not marked with "Needs C++". See also the #panorama channel in our [Discord](https://discord.gg/momentummod) - whilst Panorama itself is poorly documented, we are happy to help any potential contributors there.
-
-One of our team members, brae, also maintains various tools at [panorama-languages-support](https://github.com/panorama-languages-support) which we highly recommend.
