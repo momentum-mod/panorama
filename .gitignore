@@ -4,3 +4,5 @@ node_modules
 workspace.code-workspace
 
 .idea
+
+__types_momentum.js
