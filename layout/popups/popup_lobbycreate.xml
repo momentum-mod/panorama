@@ -7,17 +7,18 @@
 		<include src="file://{resources}/scripts/popup/lobby_create.js" />
 	</scripts>
 
-	<PopupCustomLayout class="PopupPanel Hidden generic-popup" popupbackground="dim" onload="LobbyCreate.init()">
+	<PopupCustomLayout class="PopupPanel Hidden generic-popup" popupbackground="dim" onload="LobbyCreate.onLoad()">
 		<Panel class="row mt-0">
-			<Label id="TitleLabel" class="generic-popup__title" text="Create Lobby" />
+			<Label class="generic-popup__title" text="Create Lobby" />
 		</Panel>
-		<Panel id="WarningRow" class="row hide my-2">
-			<Label id="WarningLabel" class="generic-popup__text text-sm text-italic color-gray-800" />
+		<Panel id="WarningRow" class="row my-2">
+			<Label id="WarningLabel" class="generic-popup__text text-sm text-italic color-gray-800" text="{s:warning}" />
 		</Panel>
 		<Panel class="row horizontal-align-center mt-3">
 			<RadioButton
 				id="LobbyCreatePublicButton"
 				class="button radiobutton radiobutton--blue mr-2"
+				selected="true"
 				onactivate="LobbyCreate.onChanged()"
 			>
 				<Image class="button__icon button__icon--left" src="file://{images}/online/publiclobby.svg" textureheight="32" />
@@ -41,23 +42,23 @@
 			</RadioButton>
 		</Panel>
 		<Panel class="row mt-4">
-			<Label class="mr-3 vertical-align-center" text="Max Player Count" disabled="true" />
+			<Label class="mr-3 vertical-align-center" text="Max Player Count" />
 			<TextEntry
 				id="MaxPlayers"
 				class="textentry pl-3 pr-0"
 				maxchars="3"
 				textmode="numeric"
-				style="width: 48px;"
+				style="width: 48px; tooltip-position: bottom;"
 				ontextentrychange="LobbyCreate.onChanged()"
 				text="16"
 			/>
 		</Panel>
 		<Panel class="row horizontal-align-right">
-			<Button id="UpdateButton" class="button button--green mr-3" disabled="true">
-				<Label class="button__text" text="Create" onactivate="LobbyCreate.create()" />
+			<Button id="UpdateButton" class="button button--green mr-3" disabled="true" onactivate="LobbyCreate.create()">
+				<Label class="button__text" text="Create" />
 			</Button>
-			<Button class="button button--red">
-				<Label class="button__text" text="Cancel" onactivate="LobbyCreate.cancel()" />
+			<Button class="button button--red" onactivate="LobbyCreate.cancel()">
+				<Label class="button__text" text="Cancel" />
 			</Button>
 		</Panel>
 	</PopupCustomLayout>

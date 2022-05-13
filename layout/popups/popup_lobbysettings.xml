@@ -49,11 +49,11 @@
 			/>
 		</Panel>
 		<Panel class="row horizontal-align-right">
-			<Button id="UpdateButton" class="button button--green mr-3" disabled="true">
-				<Label class="button__text" text="Update" onactivate="LobbySettings.submit()" />
+			<Button id="UpdateButton" class="button button--green mr-3" disabled="true" onactivate="LobbySettings.submit()">
+				<Label class="button__text" text="Update" />
 			</Button>
-			<Button class="button button--red">
-				<Label class="button__text" text="Cancel" onactivate="LobbySettings.cancel()" />
+			<Button class="button button--red" onactivate="LobbySettings.cancel()">
+				<Label class="button__text" text="Cancel" />
 			</Button>
 		</Panel>
 	</PopupCustomLayout>
