@@ -26,7 +26,7 @@
 					</Panel>
 					<Panel class="news-latest__right">
 						<Image id="LatestUpdateImage" class="news-latest__image" src="" />
-						<Button class="button button--blue news-latest__learnmore" id="LearnMore">
+						<Button id="LearnMore" class="button button--blue news-latest__learnmore">
 							<Label class="button__text text-m" text="Read More" />
 						</Button>
 					</Panel>
