@@ -7,7 +7,7 @@
 		<include src="file://{resources}/scripts/popup/lobby_settings.js" />
 	</scripts>
 
-	<PopupCustomLayout class="PopupPanel Hidden generic-popup" popupbackground="dim" onload="LobbySettings.init()">
+	<PopupCustomLayout class="PopupPanel Hidden generic-popup" popupbackground="dim" onload="LobbySettings.onLoad()">
 		<Panel class="row mt-0">
 			<Label id="TitleLabel" class="generic-popup__title" text="Lobby Settings" />
 		</Panel>
