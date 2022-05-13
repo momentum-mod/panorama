@@ -151,7 +151,7 @@
 								<Panel class="mapselector-filters__row">
 									<Panel class="mapselector-filters__tiers">
 										<Label class="text-h5 mr-2 vertical-align-center" text="Tiers" />
-										<Panel id="TierSliderPanel" class="mapselector-tier-slider">
+										<Panel class="mapselector-tier-slider">
 											<Panel class="mapselector-tier-slider__numbers">
 												<Label class="mapselector-tier-slider__number" text="1" />
 												<Panel class="mapselector-tier-slider__gap" />
