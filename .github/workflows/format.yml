@@ -1,8 +1,6 @@
 name: Formatting
 
 on:
-  push:
-    branches: [ master ]
   pull_request:
     branches: [ master ]
 
@@ -11,10 +9,33 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - name: Use Node.js 18
+
+    - name: Setup Node.js 18
       uses: actions/setup-node@v3
       with:
         node-version: '18'
         cache: 'npm'
-    - run: npm ci
-    - run: npm run prettier:check
+
+    - name: Cache node modules
+      id: cache-npm
+      uses: actions/cache@v3
+      env:
+        cache-name: cache-node-modules
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-build-${{ env.cache-name }}-
+          ${{ runner.os }}-build-
+          ${{ runner.os }}-
+
+    - if: ${{ steps.cache-npm.outputs.cache-hit == false }}
+      name: List the state of node modules
+      continue-on-error: true
+      run: npm list
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Formatting Checks
+      run: npm run prettier:check
