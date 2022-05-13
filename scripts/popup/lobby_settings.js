@@ -1,11 +1,24 @@
 'use strict';
 
 class LobbySettings {
+	static panels = {
+		/** @type {Panel} @static */
+		cp: $.GetContextPanel(),
+		/** @type {Panel} @static */
+		warningRow: $('#WarningRow'),
+		/** @type {Label} @static */
+		warningRow: $('#WarningLabel'),
+		/** @type {Button} @static */
+		updateButton: $('#UpdateButton'),
+		/** @type {TextEntry} @static */
+		maxPlayers: $('#MaxPlayers')
+	};
+
 	static lobbyMaxPlayers = 250;
 
-	static init() {
+	static onLoad() {
 		let button;
-		switch ($.GetContextPanel().GetAttributeInt('type', -1)) {
+		switch (this.panels.cp.GetAttributeInt('type', 0)) {
 			case 0:
 				button = 'LobbySettingsPrivateButton';
 				break;
@@ -17,25 +30,23 @@ class LobbySettings {
 				break;
 		}
 
-		$.GetContextPanel().FindChildTraverse(button).checked = true;
-		$.GetContextPanel().FindChildTraverse('MaxPlayers').text = $.GetContextPanel().GetAttributeInt(
-			'maxplayers',
-			-1
-		);
-		$.GetContextPanel().FindChildTraverse('UpdateButton').enabled = false; // Above is gonna call onChanged
+		this.panels.cp.FindChildTraverse(button).checked = true;
+		this.panels.maxPlayers.text = $.GetContextPanel().GetAttributeInt('maxplayers', -1);
+
+		this.panels.updateButton.enabled = false;
 	}
 
 	static onChanged() {
 		UiToolkitAPI.HideTextTooltip();
 
-		if (parseInt($.GetContextPanel().FindChildTraverse('MaxPlayers').text) > this.lobbyMaxPlayers) {
+		if (this.getMaxPlayersEntered() > this.lobbyMaxPlayers) {
 			UiToolkitAPI.ShowTextTooltip(
 				'MaxPlayers',
-				'Player limit is too high! Maximum value is ' + this.lobbyMaxPlayers + '.'
+				`Player limit is too high! Maximum value is ${this.lobbyMaxPlayers}`
 			);
-			$.GetContextPanel().FindChildTraverse('UpdateButton').enabled = false;
+			this.panels.updateButton.enabled = false;
 		} else {
-			$.GetContextPanel().FindChildTraverse('UpdateButton').enabled = true;
+			this.panels.updateButton.enabled = true;
 		}
 	}
 
@@ -51,12 +62,16 @@ class LobbySettings {
 
 		SteamLobbyAPI.ChangeVisibility(type);
 
-		SteamLobbyAPI.SetMaxPlayers(parseInt($.GetContextPanel().FindChildTraverse('MaxPlayers').text));
+		SteamLobbyAPI.SetMaxPlayers(this.getMaxPlayersEntered());
 
 		UiToolkitAPI.CloseAllVisiblePopups();
 	}
 
 	static cancel() {
 		UiToolkitAPI.CloseAllVisiblePopups();
+	}
+
+	static getMaxPlayersEntered() {
+		return parseInt(this.panels.maxPlayers.text);
 	}
 }

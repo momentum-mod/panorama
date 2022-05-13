@@ -1,33 +1,49 @@
 'use strict';
 
 class LobbyCreate {
+	static panels = {
+		/** @type {Panel} @static */
+		cp: $.GetContextPanel(),
+		/** @type {Panel} @static */
+		warningRow: $('#WarningRow'),
+		/** @type {Label} @static */
+		warningRow: $('#WarningLabel'),
+		/** @type {Button} @static */
+		updateButton: $('#UpdateButton'),
+		/** @type {TextEntry} @static */
+		maxPlayers: $('#MaxPlayers')
+	};
+
 	static lobbyMaxPlayers = 250;
 
-	static init() {
-		if ($.GetContextPanel().GetAttributeInt('islobbyowner', -1)) {
-			$.GetContextPanel().FindChildTraverse('WarningRow').RemoveClass('hide');
-			$.GetContextPanel().FindChildTraverse('WarningLabel').text =
-				'Warning: You are currently the owner of a lobby! Creating a new lobby will transfer ownership of your current lobby to another player.';
-		} else if ($.GetContextPanel().GetAttributeInt('isinlobby', -1)) {
-			$.GetContextPanel().FindChildTraverse('WarningRow').RemoveClass('hide');
-			$.GetContextPanel().FindChildTraverse('WarningLabel').text =
-				'Warning: This will cause you to leave you current lobby!';
+	static onLoad() {
+		if (this.panels.cp.GetAttributeInt('islobbyowner', 0)) {
+			this.panels.warningRow.visible = true;
+			this.panels.cp.SetDialogVariable(
+				'warning',
+				'Warning: You are currently the owner of a lobby! Creating a new lobby will transfer ownership of your current lobby to another player.'
+			);
+		} else if (this.panels.cp.GetAttributeInt('isinlobby', 0)) {
+			this.panels.warningRow.visible = true;
+			this.panels.cp.SetDialogVariable('warning', 'Warning: This will cause you to leave you current lobby!');
+		} else {
+			this.panels.warningRow.visible = false;
 		}
 
-		$.GetContextPanel().FindChildTraverse('UpdateButton').enabled = false; // Above is gonna call onChanged
+		this.onChanged();
 	}
 
 	static onChanged() {
 		UiToolkitAPI.HideTextTooltip();
 
-		if (parseInt($.GetContextPanel().FindChildTraverse('MaxPlayers').text) > this.lobbyMaxPlayers) {
+		if (this.getMaxPlayersEntered() > this.lobbyMaxPlayers) {
 			UiToolkitAPI.ShowTextTooltip(
 				'MaxPlayers',
-				'Player limit is too high! Maximum value is ' + this.lobbyMaxPlayers + '.'
+				`Player limit is too high! Maximum value is ${this.lobbyMaxPlayers}.`
 			);
-			$.GetContextPanel().FindChildTraverse('UpdateButton').enabled = false;
+			this.panels.updateButton.enabled = false;
 		} else {
-			$.GetContextPanel().FindChildTraverse('UpdateButton').enabled =
+			this.panels.updateButton.enabled =
 				this.isChecked('LobbyCreatePrivateButton') ||
 				this.isChecked('LobbyCreateFriendsOnlyButton') ||
 				this.isChecked('LobbyCreatePublicButton');
@@ -44,20 +60,18 @@ class LobbyCreate {
 			type = 2;
 		}
 
-		if ($.GetContextPanel().GetAttributeInt('isinlobby', -1)) {
+		if (this.panels.cp.GetAttributeInt('isinlobby', -1)) {
 			SteamLobbyAPI.Leave();
 		}
 
 		SteamLobbyAPI.Create(type);
-
-		const players = parseInt($.GetContextPanel().FindChildTraverse('MaxPlayers').text);
 
 		// The order of this is currently wrong, it should go leave -> set max players -> create. but for some reason
 		// the new lobby data then has the wrong max players (from the previous lobby).
 		// so for now, create the new lobby first, then set the max players. if you fail to create a lobby this popup is gonna just sit around
 		// until you press cancel though.
 		$.RegisterForUnhandledEvent('SteamLobby_Enter', () => {
-			SteamLobbyAPI.SetMaxPlayers(players);
+			SteamLobbyAPI.SetMaxPlayers(this.getMaxPlayersEntered());
 
 			UiToolkitAPI.CloseAllVisiblePopups();
 		});
@@ -67,7 +81,11 @@ class LobbyCreate {
 		UiToolkitAPI.CloseAllVisiblePopups();
 	}
 
+	static getMaxPlayersEntered() {
+		return parseInt(this.panels.maxPlayers.text);
+	}
+
 	static isChecked(button) {
-		return $.GetContextPanel().FindChildTraverse(button).checked;
+		return this.panels.cp.FindChildTraverse(button).checked;
 	}
 }
