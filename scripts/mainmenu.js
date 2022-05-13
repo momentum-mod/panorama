@@ -1,78 +1,115 @@
 'use strict';
 
-//--------------------------------------------------------------------------------------------------
-// Header Tab navigation and xml loading
-//--------------------------------------------------------------------------------------------------
 class MainMenuController {
+	static panels = {
+		/** @type {Panel} @static */
+		cp: $.GetContextPanel(),
+		/** @type {Panel} @static */
+		pageContent: $('#PageContent'),
+		/** @type {Panel} @static */
+		homeContent: $('#HomeContent'),
+		/** @type {Panel} @static */
+		contentBlur: $('#MainMenuContentBlur'),
+		/** @type {Panel} @static */
+		backgroundBlur: $('#MainMenuBackgroundBlur'),
+		/** @type {Movie} @static */
+		movie: null,
+		/** @type {Image} @static */
+		image: $('#MainMenuBackground'),
+		/** @type {ModelPanel} @static */
+		model: $('#MainMenuModel'),
+		/** @type {Image} @static */
+		mapSelectorBackground: $('#MainMenuBackgroundMapSelectorImage'),
+		/** @type {Panel} @static */
+		topButtons: $('#MainMenuTopButtons'),
+		/** @type {RadioButton} @static */
+		homeButton: $('#HomeButton')
+	};
+
 	static activeTab = '';
-	static contentPanel = $('#JsMainMenuContent');
-	static contentBlurPanel = $('#MainMenuContentBlur');
-	static videoPanel = '';
-	static imagePanel = '';
-	static playedInitialFadeUp = false;
 
 	static {
-		$.RegisterForUnhandledEvent('ChaosShowMainMenu', MainMenuController.onShowMainMenu);
-		$.RegisterForUnhandledEvent('ChaosHideMainMenu', MainMenuController.onHideMainMenu);
-		$.RegisterForUnhandledEvent('ChaosShowPauseMenu', MainMenuController.onShowPauseMenu);
-		$.RegisterForUnhandledEvent('ChaosHidePauseMenu', MainMenuController.onHidePauseMenu.bind(this));
-		$.RegisterForUnhandledEvent('MapSelector_OnLoaded', MainMenuController.onMapSelectorLoaded);
-
-		$.RegisterForUnhandledEvent('Safeguard_Disconnect', MainMenuController.onSafeguardDisconnect);
-		$.RegisterForUnhandledEvent('Safeguard_Quit', MainMenuController.onSafeguardQuit);
-		$.RegisterForUnhandledEvent('Safeguard_ChangeMap', MainMenuController.onSafeguardMapChange);
-
-		$.RegisterForUnhandledEvent('ReloadBackground', MainMenuController.setMainMenuBackground);
-
-		$.RegisterForUnhandledEvent('OnMomentumQuitPrompt', MainMenuController.onQuitPrompt.bind(this));
-
-		$.RegisterEventHandler('Cancelled', $.GetContextPanel(), MainMenuController.onEscapeKeyPressed);
+		$.RegisterForUnhandledEvent('ChaosShowMainMenu', this.onShowMainMenu.bind(this));
+		$.RegisterForUnhandledEvent('ChaosHideMainMenu', this.onHideMainMenu.bind(this));
+		$.RegisterForUnhandledEvent('ChaosShowPauseMenu', this.onShowPauseMenu.bind(this));
+		$.RegisterForUnhandledEvent('ChaosHidePauseMenu', this.onHidePauseMenu.bind(this));
+		$.RegisterForUnhandledEvent('MapSelector_OnLoaded', this.onMapSelectorLoaded.bind(this));
+		$.RegisterForUnhandledEvent('Safeguard_Disconnect', this.onSafeguardDisconnect.bind(this));
+		$.RegisterForUnhandledEvent('Safeguard_Quit', this.onSafeguardQuit.bind(this));
+		$.RegisterForUnhandledEvent('Safeguard_ChangeMap', this.onSafeguardMapChange.bind(this));
+		$.RegisterForUnhandledEvent('ReloadBackground', this.setMainMenuBackground.bind(this));
+		$.RegisterForUnhandledEvent('OnMomentumQuitPrompt', this.onQuitPrompt.bind(this));
+		$.RegisterEventHandler('Cancelled', $.GetContextPanel(), this.onEscapeKeyPressed.bind(this));
 
 		// Close the map selector when a map is successfully loaded
 		$.RegisterForUnhandledEvent(
 			'MapSelector_TryPlayMap_Outcome',
-			(outcome) => outcome && MainMenuController.onHomeButtonPressed()
+			(outcome) => outcome && this.onHomeButtonPressed()
 		);
 
 		$.DispatchEvent('ChaosHideIntroMovie');
 	}
 
-	// TODO: Delete me when proper engine support is added!
-	static psdump() {
-		for (let i = 0; i < $.persistentStorage.length; i++) {
-			$.Msg(
-				$.persistentStorage.key(i).toString() +
-					': ' +
-					JSON.stringify($.persistentStorage.getItem($.persistentStorage.key(i)))
-			);
+	/**
+	 * General onLoad initialisations.
+	 * Fired when ChaosMainMenu fires its onload event.
+	 */
+	static onMainMenuLoaded() {
+		// These aren't accessible until the page has loaded fully, find them now
+		this.panels.movie = $('#MainMenuMovie');
+		this.panels.model = $('#MainMenuModel');
+
+		this.panels.model.SetModelRotation(0.0, 270.0, 0.0); // Get arrow logo facing to the right, looks better
+		this.panels.model.SetModelRotationSpeedTarget(0.0, 0.2, 0.0);
+		this.panels.model.SetMouseXRotationScale(0.0, 1.0, 0.0); // By default mouse X will rotate the X axis, but we want it to spin Y axis
+		this.panels.model.SetMouseYRotationScale(0.0, 0.0, 0.0); // Disable mouse Y movement rotations
+
+		this.panels.model.LookAtModel();
+		this.panels.model.SetCameraOffset(-200.0, 0.0, 0.0);
+		this.panels.model.SetCameraFOV(40.0);
+
+		this.panels.model.SetDirectionalLightColor(0, 0.5, 0.5, 0.5);
+		this.panels.model.SetDirectionalLightDirection(0, 1.0, 0.0, 0.0);
+
+		if (GameInterfaceAPI.GetSettingBool('developer')) {
+			$('#ControlsLibraryButton').RemoveClass('hide');
+			$('#PSDumpButton').RemoveClass('hide');
 		}
+
+		this.setMainMenuBackground();
+
+		this.showPlaytestWelcomePopup();
 	}
 
-	static onInitFadeUp() {
-		if (!MainMenuController.playedInitialFadeUp) {
-			MainMenuController.playedInitialFadeUp = true;
-		}
-	}
-
+	/**
+	 * Fired by C++ whenever main menu is switched to.
+	 */
 	static onShowMainMenu() {
-		MainMenuController.onInitFadeUp();
+		this.panels.movie = $('#MainMenuMovie');
+		this.panels.image = $('#MainMenuBackground');
 
-		MainMenuController.videoPanel = $('#MainMenuMovie');
-		MainMenuController.imagePanel = $('#MainMenuBackground');
-
-		MainMenuController.setMainMenuBackground();
+		this.setMainMenuBackground();
 	}
 
+	/**
+	 * Fired by C++ whenever main menu is switched from.
+	 */
 	static onHideMainMenu() {
 		UiToolkitAPI.CloseAllVisiblePopups();
 	}
 
+	/**
+	 * Fired by C++ whenever pause menu (i.e. main menu when in a map) is switched to.
+	 */
 	static onShowPauseMenu() {
-		$.GetContextPanel().AddClass('MainMenuRootPanel--PauseMenuMode');
+		this.panels.cp.AddClass('MainMenuRootPanel--PauseMenuMode');
 	}
 
+	/**
+	 * Fired by C++ whenever pause menu is switched from.
+	 */
 	static onHidePauseMenu() {
-		$.GetContextPanel().RemoveClass('MainMenuRootPanel--PauseMenuMode');
+		this.panels.cp.RemoveClass('MainMenuRootPanel--PauseMenuMode');
 
 		// Save to file whenever the settings page gets closed
 		if (this.activeTab === 'Settings') {
@@ -80,36 +117,30 @@ class MainMenuController {
 		}
 	}
 
-	static navigateToTab(tab, xmlName, hasBlur = true) {
-		if (tab === 'MapSelection') {
-			$.GetContextPanel()
-				.FindChildTraverse('MainMenuBackgroundMapSelectorImage')
-				.RemoveClass('mapselector__background--hidden');
-		} else {
-			$.GetContextPanel()
-				.FindChildTraverse('MainMenuBackgroundMapSelectorImage')
-				.AddClass('mapselector__background--hidden');
-		}
+	/**
+	 * Switch main menu page
+	 */
+	static navigateToPage(tab, xmlName, hasBlur = true) {
+		this.panels.mapSelectorBackground.SetHasClass('mapselector__background--hidden', tab !== 'MapSelection');
 
-		MainMenuController.contentBlurPanel.visible = hasBlur;
+		this.panels.contentBlur.visible = hasBlur;
 
-		if (MainMenuController.activeTab == tab) {
-			$.DispatchEvent('Activated', $('#HomeButton'), 'mouse');
+		if (this.activeTab === tab) {
+			$.DispatchEvent('Activated', this.panels.homeButton, 'mouse');
 			return;
 		}
 
 		// Check to see if tab to show exists.
 		// If not load the xml file.
-		if (!$.GetContextPanel().FindChildInLayoutFile(tab)) {
-			const newPanel = $.CreatePanel('Panel', this.contentPanel, tab);
+		if (!this.panels.cp.FindChildInLayoutFile(tab)) {
+			const newPanel = $.CreatePanel('Panel', this.panels.pageContent, tab);
 
-			newPanel.Data().elMainMenuRoot = $.GetContextPanel();
-			newPanel.LoadLayout('file://{resources}/layout/' + xmlName + '.xml', false, false);
+			newPanel.LoadLayout(`file://{resources}/layout/${xmlName}.xml`, false, false);
 			newPanel.RegisterForReadyEvents(true);
 
-			// Handler that catches OnPropertyTransitionEndEvent event for this panel.
+			// Handler that catches PropertyTransitionEndEvent event for this panel.
 			// Check if the panel is transparent then collapse it.
-			newPanel.OnPropertyTransitionEndEvent = function (panelName, propertyName) {
+			$.RegisterEventHandler('PropertyTransitionEnd', newPanel, (panelName, propertyName) => {
 				if (newPanel.id === panelName && propertyName === 'opacity') {
 					// Panel is visible and fully transparent
 					if (newPanel.visible === true && newPanel.IsTransparent()) {
@@ -122,30 +153,28 @@ class MainMenuController {
 					}
 				}
 				return false;
-			};
-
-			$.RegisterEventHandler('PropertyTransitionEnd', newPanel, newPanel.OnPropertyTransitionEndEvent);
+			});
 		}
 
 		// If a we have a active tab and it is different from the selected tab hide it.
 		// Then show the selected tab
-		if (MainMenuController.activeTab !== tab) {
-			//Trigger sound event for the new panel
+		if (this.activeTab !== tab) {
+			// Trigger sound event for the new panel
 			// if (xmlName) {
 			// 	$.DispatchEvent('PlaySoundEffect', 'tab_' + xmlName.replace('/', '_'), 'MOUSE');
 			// }
 
 			// If the tab exists then hide it
-			if (MainMenuController.activeTab) {
-				const panelToHide = $.GetContextPanel().FindChildInLayoutFile(MainMenuController.activeTab);
+			if (this.activeTab) {
+				const panelToHide = this.panels.cp.FindChildInLayoutFile(this.activeTab);
 				panelToHide.AddClass('mainmenu__page-container--hidden');
 
-				$.DispatchEvent('MainMenuTabHidden', MainMenuController.activeTab);
+				$.DispatchEvent('MainMenuTabHidden', this.activeTab);
 			}
 
-			//Show selected tab
-			MainMenuController.activeTab = tab;
-			const activePanel = $.GetContextPanel().FindChildInLayoutFile(tab);
+			// Show selected tab
+			this.activeTab = tab;
+			const activePanel = this.panels.cp.FindChildInLayoutFile(tab);
 			activePanel.RemoveClass('mainmenu__page-container--hidden');
 
 			// Force a reload of any resources since we're about to display the panel
@@ -153,70 +182,49 @@ class MainMenuController {
 			activePanel.SetReadyForDisplay(true);
 		}
 
-		MainMenuController.showContentPanel();
+		this.showContentPanel();
 	}
 
+	/**
+	 * Show the main menu page container and retract the drawer.
+	 */
 	static showContentPanel() {
-		MainMenuController.contentPanel.RemoveClass('mainmenu__page-container--hidden');
+		this.panels.pageContent.RemoveClass('mainmenu__page-container--hidden');
 
 		$.DispatchEvent('RetractDrawer');
 		$.DispatchEvent('ShowContentPanel');
 
-		$.GetContextPanel().FindChildTraverse('HomeContent').AddClass('home--hidden');
+		this.panels.homeContent.AddClass('home--hidden');
 	}
 
+	/**
+	 * Hide the main menu page container and active page, and display the home page content.
+	 */
 	static onHideContentPanel() {
-		MainMenuController.contentPanel.AddClass('mainmenu__page-container--hidden');
+		this.panels.pageContent.AddClass('mainmenu__page-container--hidden');
 
 		// Uncheck the active button in the main menu navbar.
-		const elActiveNavBarBtn = MainMenuController.getActiveNavBarButton();
-		if (elActiveNavBarBtn && elActiveNavBarBtn.id !== 'HomeButton') {
-			elActiveNavBarBtn.checked = false;
+		const activeButton = this.panels.topButtons.Children().find((panel) => panel.IsSelected());
+		if (activeButton && activeButton.id !== 'HomeButton') {
+			activeButton.checked = false;
 		}
 
 		// If the tab exists then hide it
-		if (MainMenuController.activeTab) {
-			const panelToHide = $.GetContextPanel().FindChildInLayoutFile(MainMenuController.activeTab);
+		if (this.activeTab) {
+			const panelToHide = this.panels.cp.FindChildInLayoutFile(this.activeTab);
 			if (panelToHide) panelToHide.AddClass('mainmenu__page-container--hidden');
 
-			$.DispatchEvent('MainMenuTabHidden', MainMenuController.activeTab);
+			$.DispatchEvent('MainMenuTabHidden', this.activeTab);
 		}
 
-		MainMenuController.activeTab = '';
+		this.activeTab = '';
 
-		$.GetContextPanel().FindChildTraverse('HomeContent').RemoveClass('home--hidden');
+		this.panels.homeContent.RemoveClass('home--hidden');
 	}
 
-	static getActiveNavBarButton() {
-		return $.GetContextPanel()
-			.FindChildTraverse('MainMenuTopButtons')
-			.Children()
-			.find((panel) => panel.IsSelected());
-	}
-
-	static onMainMenuLoaded() {
-		const model = $.GetContextPanel().FindChildTraverse('MainMenuModel');
-
-		model.SetModelRotation(0.0, 270.0, 0.0); // Get arrow logo facing to the right, looks better
-		model.SetModelRotationSpeedTarget(0.0, 0.2, 0.0);
-		model.SetMouseXRotationScale(0.0, 1.0, 0.0); // By default mouse X will rotate the X axis, but we want it to spin Y axis
-		model.SetMouseYRotationScale(0.0, 0.0, 0.0); // Disable mouse Y movement rotations
-
-		model.LookAtModel();
-		model.SetCameraOffset(-200.0, 0.0, 0.0);
-		model.SetCameraFOV(40.0);
-
-		model.SetDirectionalLightColor(0, 0.5, 0.5, 0.5);
-		model.SetDirectionalLightDirection(0, 1.0, 0.0, 0.0);
-
-		if (GameInterfaceAPI.GetSettingBool('developer')) {
-			$.GetContextPanel().FindChildTraverse('ControlsLibraryButton').RemoveClass('hide');
-			$.GetContextPanel().FindChildTraverse('PSDumpButton').RemoveClass('hide');
-		}
-
-		this.showPlaytestWelcomePopup();
-	}
-
+	/**
+	 * Temporary method to show the playtest welcome thingy
+	 */
 	static showPlaytestWelcomePopup() {
 		if (!$.persistentStorage.getItem('dontShowAgain.playtestWelcome')) {
 			UiToolkitAPI.ShowCustomLayoutPopupParameters(
@@ -227,25 +235,25 @@ class MainMenuController {
 		}
 	}
 
+	/**
+	 * Set the video background based on persistent storage settings
+	 */
 	static setMainMenuBackground() {
-		const videoPanel = MainMenuController.videoPanel;
-		const imagePanel = MainMenuController.imagePanel;
+		if (!this.panels.movie?.IsValid() || !this.panels.image?.IsValid()) return;
 
-		if (!videoPanel?.IsValid() || !imagePanel?.IsValid()) return;
+		const useVideo = $.persistentStorage.getItem('settings.mainMenuMovie');
 
-		let useVideo = $.persistentStorage.getItem('settings.mainMenuMovie') === 1;
-
-		if (typeof $.persistentStorage.getItem('settings.mainMenuMovie') === typeof null) {
-			useVideo = true;
+		if (useVideo === null) {
 			// Enable video by default
-			$.persistentStorage.setItem('settings.mainMenuMovie', 1);
+			useVideo = true;
+			$.persistentStorage.setItem('settings.mainMenuMovie', true);
 		}
 
-		videoPanel.visible = useVideo;
-		videoPanel.SetReadyForDisplay(useVideo);
+		this.panels.movie.visible = useVideo;
+		this.panels.movie.SetReadyForDisplay(useVideo);
 
-		imagePanel.visible = !useVideo;
-		imagePanel.SetReadyForDisplay(!useVideo);
+		this.panels.image.visible = !useVideo;
+		this.panels.image.SetReadyForDisplay(!useVideo);
 
 		const backgroundVar = parseInt($.persistentStorage.getItem('settings.mainMenuBackground'));
 
@@ -271,12 +279,12 @@ class MainMenuController {
 					break;
 			}
 		}
-		if (useVideo) {
-			videoPanel.SetMovie('file://{resources}/videos/backgrounds/' + name + '.webm');
 
-			videoPanel.Play();
+		if (useVideo) {
+			this.panels.movie.SetMovie(`file://{resources}/videos/backgrounds/${name}.webm`);
+			this.panels.movie.Play();
 		} else {
-			imagePanel.SetImage('file://{images}/backgrounds/' + name + '.dds');
+			this.panels.image.SetImage(`file://{images}/backgrounds/${name}.dds`);
 		}
 	}
 
@@ -284,34 +292,43 @@ class MainMenuController {
 	 *	Toggles between dark and light mode in the main menu
 	 */
 	static toggleBackgroundLightDark() {
-		const currentType = $.persistentStorage.getItem('settings.mainMenuBackground');
-
-		if (!(currentType === 0 || currentType === 1)) return;
-
-		$.persistentStorage.setItem('settings.mainMenuBackground', currentType === 0 ? 1 : 0);
+		$.persistentStorage.setItem(
+			'settings.mainMenuBackground',
+			!$.persistentStorage.getItem('settings.mainMenuBackground')
+		);
 
 		this.setMainMenuBackground();
 	}
 
+	/**
+	 * Hide the map selector background
+	 */
 	static hideMapSelectorBackground() {
-		$.GetContextPanel()
-			.FindChildTraverse('MainMenuBackgroundMapSelectorImage')
-			.AddClass('mapselector__background--hidden');
+		this.panels.mapSelectorBackground.AddClass('mapselector__background--hidden');
 	}
 
+	/**
+	 * Handles the map selector load event to add blurs to some of the map selector panels.
+	 * Necessary to handle in here because map selector background is a part of the main menu background section.
+	 */
 	static onMapSelectorLoaded() {
 		['MapSelectorLeft', 'MapDescription', 'MapInfoStats', 'Leaderboards'].forEach((panel) =>
-			$.GetContextPanel()
-				.FindChildTraverse('MainMenuBackgroundBlur')
-				?.AddBlurPanel($.GetContextPanel().FindChildTraverse(panel))
+			this.panels.backgroundBlur?.AddBlurPanel($.GetContextPanel().FindChildTraverse(panel))
 		);
 	}
 
+	/**
+	 * Handles home button getting pressed.
+	 */
 	static onHomeButtonPressed() {
-		MainMenuController.onHideContentPanel();
-		MainMenuController.hideMapSelectorBackground();
+		this.onHideContentPanel();
+		this.hideMapSelectorBackground();
 	}
 
+	/**
+	 * Handles quit button getting pressed, deciding whether to `disconnect` or `quit`
+	 * based on if we're ingame or not.
+	 */
 	static onQuitButtonPressed() {
 		if (GameInterfaceAPI.GetGameUIState() === GAME_UI_STATE.PAUSEMENU) {
 			GameInterfaceAPI.ConsoleCommand('disconnect');
@@ -321,9 +338,15 @@ class MainMenuController {
 		this.onQuitPrompt();
 	}
 
+	/**
+	 * Handles when the quit button is shown, either from button getting pressed or event fired from C++.
+	 * @param {boolean} toDesktop
+	 */
 	static onQuitPrompt(toDesktop = true) {
 		if (!toDesktop) return; // currently dont handle disconnect prompts
+
 		$.DispatchEvent('ChaosMainMenuPauseGame'); // make sure game is paused so we can see the popup if hit from a keybind in-game
+
 		UiToolkitAPI.ShowGenericPopupTwoOptionsBgStyle(
 			'Quit',
 			'Are you sure you want to quit?',
@@ -336,26 +359,35 @@ class MainMenuController {
 		);
 	}
 
+	/**
+	 * Shows a safeguard popup when disconnect is pressed during a run and safeguard is on
+	 */
 	static onSafeguardDisconnect() {
 		UiToolkitAPI.ShowGenericPopupOkCancel(
 			$.Localize('#MOM_MB_Safeguard_Map_Quit_ToMenu_Title'),
-			"Leaving the map will cancel your timer, are you sure you want to quit?\n\n<span class='text-sm text-italic'>(You can turn this off in Settings → Gameplay → Safeguards)</span>",
+			"Leaving the map will cancel your timer, are you sure you want to quit?\n<span class='text-sm text-italic'>(You can turn this off in Settings → Gameplay → Safeguards)</span>",
 			'warning-popup',
 			() => $.DispatchEvent('Safeguard_Response', RUN_SAFEGUARD_TYPE.QUIT_TO_MENU),
 			() => {}
 		);
 	}
 
+	/**
+	 * Shows a safeguard popup when quit is pressed during a run and safeguard is on
+	 */
 	static onSafeguardQuit() {
 		UiToolkitAPI.ShowGenericPopupOkCancel(
 			$.Localize('#MOM_MB_Safeguard_Map_Quit_Game_Title'),
-			"Quitting the game will cancel your timer, are you sure you want to quit?\n\n<span class='text-sm text-italic'>(You can turn this off in Settings → Gameplay → Safeguards)</span>",
+			"Quitting the game will cancel your timer, are you sure you want to quit?\n<span class='text-sm text-italic'>(You can turn this off in Settings → Gameplay → Safeguards)</span>",
 			'warning-popup',
 			() => $.DispatchEvent('Safeguard_Response', RUN_SAFEGUARD_TYPE.QUIT_GAME),
 			() => {}
 		);
 	}
 
+	/**
+	 * Shows a safeguard popup when map change is triggered during a run and safeguard is on
+	 */
 	static onSafeguardMapChange(mapName) {
 		UiToolkitAPI.ShowGenericPopupOkCancel(
 			$.Localize('#MOM_MB_Safeguard_Map_Change_Title'),
@@ -366,16 +398,35 @@ class MainMenuController {
 		);
 	}
 
+	/** Quits the game. Bye! */
 	static quitGame() {
 		GameInterfaceAPI.ConsoleCommand('quit');
 	}
 
+	/**
+	 * Handles the escape key getting pressed
+	 * @param {unknown} _eSource - C++ dev needs to explain what these params do. Pressing in main menu returns "MainMenuInput"
+	 * @param {unknown} _nRepeats - Pressing in main menu returns "keyboard"
+	 * @param {unknown} _focusPanel - Pressing in main menu returns undefined
+	 */
 	static onEscapeKeyPressed(_eSource, _nRepeats, _focusPanel) {
 		// Resume game in pause menu mode, OTHERWISE close the active menu menu page
 		if (GameInterfaceAPI.GetGameUIState() === GAME_UI_STATE.PAUSEMENU) {
 			$.DispatchEvent('ChaosMainMenuResumeGame');
 		} else {
-			MainMenuController.onHomeButtonPressed();
+			this.onHomeButtonPressed();
 		}
+	}
+
+	/**
+	 * TODO: Delete me when proper engine support is added!
+	 */
+	static PSDump() {
+		for (let i = 0; i < $.persistentStorage.length; i++)
+			$.Msg(
+				$.persistentStorage.key(i).toString() +
+					': ' +
+					JSON.stringify($.persistentStorage.getItem($.persistentStorage.key(i)))
+			);
 	}
 }
