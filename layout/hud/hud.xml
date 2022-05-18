@@ -3,6 +3,10 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 
+	<scripts>
+		<include src="file://{resources}/scripts/hud/hud.js" />
+	</scripts> 
+
 	<ChaosHud hittest="false">
 		<!-- Non-interactive HUD elements have hit test disabled for efficiency -->
 
@@ -64,8 +68,9 @@
 			class="hud-blur"
 			hittest="false"
 			hittestchildren="false"
+			style="wash-color: green;"
 		>
-			<ChaosBackbufferImagePanel class="full" />
+			<ChaosBackbufferImagePanel id="HudBackBuffer" class="full" />
 		</ChaosHudBlurTarget>
 
 		<!-- HUD anchored to top center of screen, laid out vertically top-to-bottom
