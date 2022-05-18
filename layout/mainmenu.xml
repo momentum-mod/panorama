@@ -252,7 +252,7 @@
 								</TooltipPanel>
 
 								<TooltipPanel class="bottombar__tooltip" tooltip="Discord">
-									<Button class="bottombar__button" onactivate="SteamOverlayAPI.OpenURLModal('https://discord.gg/n4v52uv')">
+									<Button class="bottombar__button" onactivate="SteamOverlayAPI.OpenURLModal('https://discord.gg/momentummod')">
 										<Image class="bottombar__icon" src="file://{images}/social/discord.svg" textureheight="64" />
 									</Button>
 								</TooltipPanel>
