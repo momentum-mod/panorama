@@ -5,4 +5,6 @@ workspace.code-workspace
 
 .idea
 
+# Specific files
+learn.vdf
 __types_momentum.js
