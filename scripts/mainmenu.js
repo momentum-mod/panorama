@@ -294,7 +294,7 @@ class MainMenuController {
 	static toggleBackgroundLightDark() {
 		$.persistentStorage.setItem(
 			'settings.mainMenuBackground',
-			!$.persistentStorage.getItem('settings.mainMenuBackground')
+			$.persistentStorage.getItem('settings.mainMenuBackground') === 0 ? 1 : 0
 		);
 
 		this.setMainMenuBackground();
