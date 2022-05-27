@@ -241,7 +241,7 @@ class MainMenuController {
 	static setMainMenuBackground() {
 		if (!this.panels.movie?.IsValid() || !this.panels.image?.IsValid()) return;
 
-		const useVideo = $.persistentStorage.getItem('settings.mainMenuMovie');
+		let useVideo = $.persistentStorage.getItem('settings.mainMenuMovie');
 
 		if (useVideo === null) {
 			// Enable video by default
