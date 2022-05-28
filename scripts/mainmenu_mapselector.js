@@ -522,7 +522,7 @@ class MapSelection {
 	 * Only show the clear button if the search is not empty
 	 */
 	static onSearchChanged() {
-		this.panels.searchText.SetHasClass('search__clearbutton--hidden', this.panels.searchText.text === '');
+		this.panels.searchClear.SetHasClass('search__clearbutton--hidden', this.panels.searchText.text === '');
 	}
 
 	/**
