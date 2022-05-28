@@ -4,6 +4,7 @@
 	</styles>
 
 	<scripts>
+		<include src="file://{resources}/scripts/common/settings.js" />
 		<include src="file://{resources}/scripts/settings_shared.js" />
 		<include src="file://{resources}/scripts/mainmenu_settings.js" />
 		<include src="file://{resources}/scripts/settings_search.js" />
