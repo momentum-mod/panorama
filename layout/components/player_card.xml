@@ -9,7 +9,7 @@
 	<Panel class="playercard" onload="PlayerCard.onLoad()">
 		<Image
 			class="playercard__background-image"
-			src="file://{images}/raster/card_bg.png"
+			src="file://{images}/playercards/card_bg.png"
 			scaling="stretch-to-cover-preserve-aspect"
 		/>
 		<!-- <Panel class="playercard__black-overlay" /> 50% opacity black overlay to make the white text readable -->
