@@ -40,7 +40,7 @@ class SettingsSearch {
 		let arrMatches = [];
 
 		// Search through each page
-		Object.keys(MainMenuSettings.settingsTabs).forEach((tabID) => {
+		Object.keys(SETTINGS_TABS).forEach((tabID) => {
 			const traverseChildren = (panel) =>
 				panel.Children()?.forEach((child) => {
 					SettingsSearch.searchSettingText(tabID, child, arrMatches, arrStrings);
