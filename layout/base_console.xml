@@ -1,8 +1,0 @@
-<root>
-     <styles>
-         <include src="file://{resources}/styles/base.css" />
-     </styles>
-     <Panel class="WindowRoot" hittest="false">
-            <Console id="Console" />
-     </Panel>
- </root>
