@@ -1,0 +1,19 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+	<scripts>
+		<include src="file://{resources}/scripts/common/gamemodes.js" />
+		<include src="file://{resources}/scripts/hud/synchronizer.js" />
+	</scripts>
+	<MomHudSynchronizer class="synchronizer" alternateTicks="false">
+		<Panel id="Container" class="synchronizer__container">
+			<Panel id="Segment0" class="synchronizer__segment" />
+			<Panel id="Segment1" class="synchronizer__segment" />
+			<Panel id="Segment2" class="synchronizer__segment" />
+			<Panel id="Segment3" class="synchronizer__segment" />
+			<Panel id="Segment4" class="synchronizer__segment" />
+		</Panel>
+		<Panel id="Needle" class="synchronizer__needle" />
+	</MomHudSynchronizer>
+</root>
