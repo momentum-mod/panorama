@@ -61,6 +61,7 @@ const SETTINGS_TABS = {
 			KeypressSubSection: 'KeypressRadio',
 			WeaponSelSubSection: 'WeaponSelRadio',
 			StrafeSyncSubSection: 'StrafeSyncRadio',
+			SynchronizerSubSection: 'SynchronizerRadio',
 			MapInfoSubSection: 'MapInfoRadio'
 		}
 	},

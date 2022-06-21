@@ -320,7 +320,7 @@
 
 							<Label class="settings-nav__item-label" text="Interface" />
 
-							<Panel class="settings-nav__subsection settings-nav__subsection--8 settings-nav__subsection--hidden">
+							<Panel class="settings-nav__subsection settings-nav__subsection--10 settings-nav__subsection--hidden">
 
 								<RadioButton
 									id="UIRadio"
@@ -393,7 +393,16 @@
 								>
 									<Label class="settings-nav__subitem-label" text="Strafe Sync" />
 								</RadioButton>
-								
+
+								<RadioButton
+									id="SynchronizerRadio"
+									class="settings-nav__subitem"
+									group="SettingsSubNav"
+									onactivate="MainMenuSettings.navigateToSubsection('InterfaceSettings', 'SynchronizerSubSection')"
+								>
+									<Label class="settings-nav__subitem-label" text="Synchronizer" />
+								</RadioButton>
+
 								<RadioButton
 									id="MapInfoRadio"
 									class="settings-nav__subitem"
