@@ -8,7 +8,7 @@
 		<include src="file://{resources}/scripts/hud/cgaz.js" />
 	</scripts>
 
-	<MomHudCgaz class="full-width full-height">
+	<MomHudCgaz class="full-width full-height" alternateTicks="false">
 		<Panel id="AccelContainer" class="cgaz__container">
 			<ConVarEnabler class="cgaz" convar="mom_df_hud_accel_enable" togglevisibility="true">
 				<Panel id="LeftTurnZone" />
