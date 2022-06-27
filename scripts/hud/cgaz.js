@@ -88,17 +88,7 @@ class Cgaz {
 	static bShouldUpdateStyles = false;
 
 	static onLoad() {
-		if (GAMEMODE_WITH_NULL[GameModeAPI.GetCurrentGameMode()].name === 'Defrag') {
-			this.updateEventHandle ??= $.RegisterEventHandler(
-				'ChaosHudProcessInput',
-				$.GetContextPanel(),
-				this.onUpdate.bind(this)
-			);
-		} else {
-			this.velocityArrow.visible = false;
-			this.windicatorArrow.visible = false;
-			return;
-		}
+		if (GAMEMODE_WITH_NULL[GameModeAPI.GetCurrentGameMode()].name !== 'Defrag') return;
 
 		this.onAccelConfigChange();
 		this.onProjectionChange();
@@ -460,45 +450,46 @@ class Cgaz {
 			this.clearZones(this.snapZones);
 		}
 
-		// arrows
-		let velocityAngle = this.remapAngle(viewAngle - velAngle);
-		// draw velocity direction
-		if (this.velocity_enable && speed >= this.accel_min_speed) {
-			this.velocityArrow.visible = true;
-			if (Math.abs(velocityAngle) < this.hFov) {
-				this.velocityArrowIcon.RemoveClass('arrow__down');
-				this.velocityArrowIcon.AddClass('arrow__up');
+			// arrows
+			let velocityAngle = this.remapAngle(viewAngle - velAngle);
+			// draw velocity direction
+			if (this.velocity_enable && speed >= this.accel_min_speed) {
+				this.velocityArrow.visible = true;
+				if (Math.abs(velocityAngle) < this.hFov) {
+					this.velocityArrowIcon.RemoveClass('arrow__down');
+					this.velocityArrowIcon.AddClass('arrow__up');
+				} else {
+					this.velocityArrowIcon.RemoveClass('arrow__up');
+					this.velocityArrowIcon.AddClass('arrow__down');
+					velocityAngle = this.remapAngle(velocityAngle - Math.PI);
+				}
+				const leftEdge = this.mapToScreenSpace(velocityAngle) - this.velocity_size;
+				this.velocityArrow.style.marginLeft = (isNaN(leftEdge) ? 0 : leftEdge) + 'px';
 			} else {
-				this.velocityArrowIcon.RemoveClass('arrow__up');
-				this.velocityArrowIcon.AddClass('arrow__down');
-				velocityAngle = this.remapAngle(velocityAngle - Math.PI);
+				// hide arrow
+				this.velocityArrow.visible = false;
 			}
-			const leftEdge = this.mapToScreenSpace(velocityAngle);
-			this.velocityArrow.style.marginLeft = (isNaN(leftEdge) ? 0 : leftEdge) + 'px';
-		} else {
-			// hide arrow
-			this.velocityArrow.visible = false;
-		}
 
-		const wTurnAngle = velocityAngle > 0 ? velocityAngle + this.theta : velocityAngle - this.theta;
-		// draw w-turn indicator
-		if (this.windicator_enable && Math.abs(wTurnAngle) < this.hFov && speed >= this.accel_min_speed) {
-			this.windicatorArrow.visible = true;
-			const leftEdge = this.mapToScreenSpace(wTurnAngle);
-			this.windicatorArrow.style.marginLeft = (isNaN(leftEdge) ? 0 : leftEdge) + 'px';
+			const wTurnAngle = velocityAngle > 0 ? velocityAngle + this.theta : velocityAngle - this.theta;
+			// draw w-turn indicator
+			if (this.windicator_enable && Math.abs(wTurnAngle) < this.hFov && speed >= this.accel_min_speed) {
+				this.windicatorArrow.visible = true;
+				const leftEdge = this.mapToScreenSpace(wTurnAngle) - this.windicator_size;
+				this.windicatorArrow.style.marginLeft = (isNaN(leftEdge) ? 0 : leftEdge) + 'px';
 
-			const minAngle = Math.min(wTurnAngle, 0);
-			const maxAngle = Math.max(wTurnAngle, 0);
+				const minAngle = Math.min(wTurnAngle, 0);
+				const maxAngle = Math.max(wTurnAngle, 0);
 
-			if (bHasAirControl) {
-				this.updateZone(this.windicatorZone, minAngle, maxAngle, 0, WIN_ZONE_CLASS);
+				if (bHasAirControl) {
+					this.updateZone(this.windicatorZone, minAngle, maxAngle, 0, WIN_ZONE_CLASS);
+				} else {
+					this.windicatorZone.style.width = '0px';
+				}
 			} else {
+				// hide arrow & box
+				this.windicatorArrow.visible = false;
 				this.windicatorZone.style.width = '0px';
 			}
-		} else {
-			// hide arrow & box
-			this.windicatorArrow.visible = false;
-			this.windicatorZone.style.width = '0px';
 		}
 	}
 
