@@ -11,10 +11,10 @@
 
 .arrow {
 	&__up {
-		transform: rotatez(0deg) translatex(-50%);
+		transform: rotatez( 0deg );
 	}
 
 	&__down {
-		transform: rotatez(180deg) translatex(-50%);
+		transform: rotatez( 180deg );
 	}
 }

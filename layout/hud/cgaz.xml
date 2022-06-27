@@ -10,7 +10,7 @@
 
 	<MomHudCgaz class="full-width full-height" alternateTicks="false">
 		<Panel id="AccelContainer" class="cgaz__container">
-			<ConVarEnabler class="cgaz" convar="mom_df_hud_accel_enable" togglevisibility="true">
+			<ConVarEnabler convar="mom_df_hud_accel_enable" togglevisibility="true">
 				<Panel id="LeftTurnZone" />
 				<Panel id="LeftFastZone" />
 				<Panel id="LeftSlowZone" />
@@ -26,7 +26,7 @@
 			</ConVarEnabler>
 		</Panel>
 		<Panel id="SnapContainer" class="cgaz__container">
-			<ConVarEnabler class="cgaz" convar="mom_df_hud_snap_enable" togglevisibility="true">
+			<ConVarEnabler convar="mom_df_hud_snap_enable" togglevisibility="true">
 				<Panel id="SnapZone0" />
 				<Panel id="SnapZone1" />
 				<Panel id="SnapZone2" />
@@ -42,12 +42,16 @@
 				<Panel id="SnapSplitZone" />
 			</ConVarEnabler>
 		</Panel>
-		<Panel id="VelocityArrow">
-			<Image id="VelocityArrowIcon" class="arrow__up" src="file://{images}/hud/cgaz-arrow.svg" textureheight="48" />
-		</Panel>
+    <Panel id="VelocityArrow">
+      <ConVarEnabler class="full-height" convar="mom_df_hud_velocity_enable" togglevisibility="true">
+        <Image id="VelocityArrowIcon" class="arrow__up" src="file://{images}/hud/cgaz-arrow.svg" textureheight="48" />
+      </ConVarEnabler>
+    </Panel>
 		<Panel id="WindicatorArrow">
-			<Image id="WindicatorArrowIcon" class="arrow__down" src="file://{images}/hud/cgaz-arrow.svg" textureheight="48" />
-		</Panel>
+      <ConVarEnabler class="full-height" convar="mom_df_hud_windicator_enable" togglevisibility="true">
+        <Image id="WindicatorArrowIcon" class="arrow__down" src="file://{images}/hud/cgaz-arrow.svg" textureheight="48" />
+      </ConVarEnabler>
+    </Panel>
 	</MomHudCgaz>
 
 </root>
