@@ -1,7 +1,7 @@
 'use strict';
 
 // TODO: remove these globals
-const MAX_GROUND_SPEED = 320;
+let MAX_GROUND_SPEED = 320;
 const AIR_ACCEL = 1;
 
 let NEUTRAL_CLASS;
@@ -134,11 +134,12 @@ class Cgaz {
 		this.snap_height = snapConfig.height;
 		this.snap_offset = snapConfig.offset;
 		this.snap_color = snapConfig.color;
+		this.snap_alt_color = snapConfig.altColor;
 		this.snap_fast_color = snapConfig.fastColor;
 		this.snap_slow_color = snapConfig.slowColor;
 		this.snap_hl_color = snapConfig.highlightColor;
 		this.snap_hl_alt_color = snapConfig.altHighlightColor;
-		this.snap_hl_enable = snapConfig.highlightEnable;
+		this.snap_hl_mode = snapConfig.highlightMode;
 		this.snap_color_mode = snapConfig.colorMode;
 		this.snap_heightgain_enable = snapConfig.enableHeightGain;
 
@@ -197,7 +198,7 @@ class Cgaz {
 		offset = 0.5 * this.accel_height + this.accel_offset + this.snap_offset;
 		align = 'middle';
 		COLORED_SNAP_CLASS = new StyleObject(height, offset, align, this.snap_color);
-		UNCOLORED_SNAP_CLASS = new StyleObject(height, offset, align, this.getColorStringFromArray([0, 0, 0, 0]));
+		UNCOLORED_SNAP_CLASS = new StyleObject(height, offset, align, this.snap_alt_color);
 		HIGHLIGHTED_SNAP_CLASS = new StyleObject(height, offset, align, this.snap_hl_color);
 		HIGHLIGHTED_ALT_SNAP_CLASS = new StyleObject(height, offset, align, this.snap_hl_alt_color);
 
@@ -223,28 +224,6 @@ class Cgaz {
 		this.setupArrow(this.windicatorArrow, this.windicatorArrowIcon, height, width, offset, align, color);
 
 		this.bShouldUpdateStyles = false;
-	}
-
-	static applyAccelStyle(height, offset, slowColor, fastColor, turnColor, dzColor) {
-		let align = 'middle';
-		NEUTRAL_CLASS = new StyleObject(height, offset, align, dzColor);
-		SLOW_CLASS = new StyleObject(height, offset, align, slowColor);
-		FAST_CLASS = new StyleObject(height, offset, align, fastColor);
-		TURN_CLASS = new StyleObject(height, offset, align, turnColor);
-		MIRROR_CLASS = new StyleObject(height, offset, align, slowColor);
-
-		this.setupContainer(this.accelContainer, this.accel_offset, align);
-		this.applyClass(this.leftTurnZone, TURN_CLASS);
-		this.applyClass(this.leftFastZone, FAST_CLASS);
-		this.applyClass(this.leftSlowZone, SLOW_CLASS);
-		this.applyClass(this.deadZone, NEUTRAL_CLASS);
-		this.applyClass(this.rightSlowZone, SLOW_CLASS);
-		this.applyClass(this.rightFastZone, FAST_CLASS);
-		this.applyClass(this.rightTurnZone, TURN_CLASS);
-		this.applyClass(this.accelSplitZone, NEUTRAL_CLASS);
-		this.applyClassBorder(this.leftMirrorZone, MIRROR_CLASS);
-		this.applyClassBorder(this.rightMirrorZone, MIRROR_CLASS);
-		this.applyClassBorder(this.mirrorSplitZone, MIRROR_CLASS);
 	}
 
 	static onUpdate() {
@@ -279,9 +258,9 @@ class Cgaz {
 		const dropSpeedSquared = dropSpeed * dropSpeed;
 
 		const velDir = this.getNormal(velocity, 0.001);
-		const velAngle = Math.atan2(velocity.y / speed, velocity.x / speed);
+		const velAngle = Math.atan2(velocity.y, velocity.x);
 		const wishDir = lastMoveData.wishdir;
-		const wishAngle = Math.atan2(wishDir.y, wishDir.x);
+		const wishAngle = this.getSizeSquared(wishDir) > 0.0001 ? Math.atan2(wishDir.y, wishDir.x) : 0;
 		const viewAngle = (MomentumPlayerAPI.GetAngles().y * Math.PI) / 180;
 		const viewDir = {
 			x: Math.cos(viewAngle),
@@ -310,145 +289,165 @@ class Cgaz {
 				turnCgazAngle
 			);
 
-			// draw accel zones
-			if (speed >= this.accel_min_speed) {
-				this.updateZone(
-					this.leftTurnZone,
-					-stopCgazAngle,
-					-turnCgazAngle,
-					angleOffset,
-					TURN_CLASS,
-					this.accelSplitZone
-				);
-				this.updateZone(
-					this.leftFastZone,
-					-turnCgazAngle,
-					-fastCgazAngle,
-					angleOffset,
-					FAST_CLASS,
-					this.accelSplitZone
-				);
-				this.updateZone(
-					this.leftSlowZone,
-					-fastCgazAngle,
-					-slowCgazAngle,
-					angleOffset,
-					SLOW_CLASS,
-					this.accelSplitZone
-				);
-				this.updateZone(
-					this.deadZone,
-					-slowCgazAngle,
-					slowCgazAngle,
-					angleOffset,
-					NEUTRAL_CLASS,
-					this.accelSplitZone
-				);
-				this.updateZone(
-					this.rightSlowZone,
-					slowCgazAngle,
-					fastCgazAngle,
-					angleOffset,
-					SLOW_CLASS,
-					this.accelSplitZone
-				);
-				this.updateZone(
-					this.rightFastZone,
-					fastCgazAngle,
-					turnCgazAngle,
-					angleOffset,
-					FAST_CLASS,
-					this.accelSplitZone
-				);
-				this.updateZone(
-					this.rightTurnZone,
-					turnCgazAngle,
-					stopCgazAngle,
-					angleOffset,
-					TURN_CLASS,
-					this.accelSplitZone
-				);
-			} else {
-				this.clearZones(this.accelZones);
-			}
-
-			// draw mirrored strafe zones
-			if (this.accel_mirror_enable) {
-				const mirrorAccel = (bIsFalling ? AIR_ACCEL : accel) * MAX_GROUND_SPEED * tickInterval;
-				const minMirrorAngle = this.findSlowAngle(dropSpeed, dropSpeedSquared, speedSquared, MAX_GROUND_SPEED);
-				const fastMirrorAngle = this.findFastAngle(dropSpeed, MAX_GROUND_SPEED, mirrorAccel);
-				const turnMirrorAngle = this.findTurnAngle(speed, dropSpeed, mirrorAccel, fastMirrorAngle);
-				const maxMirrorAngle = this.findStopAngle(
-					mirrorAccel,
-					speedSquared,
-					dropSpeed,
-					dropSpeedSquared,
-					turnMirrorAngle
-				);
-
-				let mirrorOffset = this.remapAngle(velAngle - viewAngle);
-				const inputAngle = this.remapAngle(viewAngle - wishAngle);
-
-				if (this.floatEquals(Math.abs(inputAngle), 0.25 * Math.PI, 0.001)) {
-					mirrorOffset += (inputAngle > 0 ? -1 : 1) * Math.PI * 0.25;
+			if (this.accel_enable) {
+				// draw accel zones
+				if (speed >= this.accel_min_speed) {
 					this.updateZone(
-						this.leftMirrorZone,
-						-maxMirrorAngle,
-						-minMirrorAngle,
-						mirrorOffset,
-						MIRROR_CLASS,
-						this.mirrorSplitZone
+						this.leftTurnZone,
+						-stopCgazAngle,
+						-turnCgazAngle,
+						angleOffset,
+						TURN_CLASS,
+						this.accelSplitZone
 					);
 					this.updateZone(
-						this.rightMirrorZone,
-						minMirrorAngle,
-						maxMirrorAngle,
-						mirrorOffset,
-						MIRROR_CLASS,
-						this.mirrorSplitZone
+						this.leftFastZone,
+						-turnCgazAngle,
+						-fastCgazAngle,
+						angleOffset,
+						FAST_CLASS,
+						this.accelSplitZone
+					);
+					this.updateZone(
+						this.leftSlowZone,
+						-fastCgazAngle,
+						-slowCgazAngle,
+						angleOffset,
+						SLOW_CLASS,
+						this.accelSplitZone
+					);
+					this.updateZone(
+						this.deadZone,
+						-slowCgazAngle,
+						slowCgazAngle,
+						angleOffset,
+						NEUTRAL_CLASS,
+						this.accelSplitZone
+					);
+					this.updateZone(
+						this.rightSlowZone,
+						slowCgazAngle,
+						fastCgazAngle,
+						angleOffset,
+						SLOW_CLASS,
+						this.accelSplitZone
+					);
+					this.updateZone(
+						this.rightFastZone,
+						fastCgazAngle,
+						turnCgazAngle,
+						angleOffset,
+						FAST_CLASS,
+						this.accelSplitZone
+					);
+					this.updateZone(
+						this.rightTurnZone,
+						turnCgazAngle,
+						stopCgazAngle,
+						angleOffset,
+						TURN_CLASS,
+						this.accelSplitZone
 					);
 				} else {
-					this.updateZone(
-						this.leftMirrorZone,
-						-maxMirrorAngle,
-						-minMirrorAngle,
-						mirrorOffset - Math.PI * 0.25,
-						MIRROR_CLASS,
-						this.mirrorSplitZone
+					this.clearZones(this.accelZones);
+				}
+
+				// draw mirrored strafe zones
+				if (speed >= this.accel_min_speed && this.accel_mirror_enable) {
+					const mirrorAccel = (bIsFalling ? AIR_ACCEL : accel) * MAX_GROUND_SPEED * tickInterval;
+					const minMirrorAngle = this.findSlowAngle(
+						dropSpeed,
+						dropSpeedSquared,
+						speedSquared,
+						MAX_GROUND_SPEED
 					);
-					this.updateZone(
-						this.rightMirrorZone,
-						minMirrorAngle,
-						maxMirrorAngle,
-						mirrorOffset + Math.PI * 0.25,
-						MIRROR_CLASS,
-						this.mirrorSplitZone
+					const fastMirrorAngle = this.findFastAngle(dropSpeed, MAX_GROUND_SPEED, mirrorAccel);
+					const turnMirrorAngle = this.findTurnAngle(speed, dropSpeed, mirrorAccel, fastMirrorAngle);
+					const maxMirrorAngle = this.findStopAngle(
+						mirrorAccel,
+						speedSquared,
+						dropSpeed,
+						dropSpeedSquared,
+						turnMirrorAngle
 					);
+
+					let mirrorOffset = this.remapAngle(velAngle - viewAngle);
+					const inputAngle = this.remapAngle(viewAngle - wishAngle);
+
+					if (this.floatEquals(Math.abs(inputAngle), 0.25 * Math.PI, 0.001)) {
+						mirrorOffset += (inputAngle > 0 ? -1 : 1) * Math.PI * 0.25;
+						this.updateZone(
+							this.leftMirrorZone,
+							-maxMirrorAngle,
+							-minMirrorAngle,
+							mirrorOffset,
+							MIRROR_CLASS,
+							this.mirrorSplitZone
+						);
+						this.updateZone(
+							this.rightMirrorZone,
+							minMirrorAngle,
+							maxMirrorAngle,
+							mirrorOffset,
+							MIRROR_CLASS,
+							this.mirrorSplitZone
+						);
+					} else {
+						this.updateZone(
+							this.leftMirrorZone,
+							-maxMirrorAngle,
+							-minMirrorAngle,
+							mirrorOffset - Math.PI * 0.25,
+							MIRROR_CLASS,
+							this.mirrorSplitZone
+						);
+						this.updateZone(
+							this.rightMirrorZone,
+							minMirrorAngle,
+							maxMirrorAngle,
+							mirrorOffset + Math.PI * 0.25,
+							MIRROR_CLASS,
+							this.mirrorSplitZone
+						);
+					}
+				} else {
+					this.clearZones([this.leftMirrorZone, this.rightMirrorZone]);
 				}
 			}
-		} else {
-			this.clearZones([this.leftMirrorZone, this.rightMirrorZone]);
-		}
 
-		if (!this.snapAccel) {
-			this.snapAccel = maxSpeed * tickInterval;
-		}
+			if (!this.snapAccel) {
+				MAX_GROUND_SPEED = maxSpeed;
+				this.snapAccel = maxSpeed * tickInterval;
+			}
 
-		if (this.snap_enable && this.snapAccel) {
-			// find snap zone borders
-			const snapAngles = this.findSnapAngles(this.snapAccel);
-			const snapGains = this.findSnapGains(snapAngles, this.snapAccel);
-			const snapOffset = (bSnapShift ? 0 : Math.PI * 0.25) - viewAngle;
+			if (this.snap_enable && this.snapAccel) {
+				// find snap zone borders
+				const snapAngles = this.findSnapAngles(this.snapAccel);
+				const snapGains = this.findSnapGains(snapAngles, this.snapAccel);
+				const snapOffset = (bSnapShift ? 0 : Math.PI * 0.25) - viewAngle;
 
-			// draw snap zones
-			if (speed >= this.snap_min_speed) {
-				this.updateSnaps(this.snapZones, snapAngles, snapGains, snapOffset, 0);
+				const targetOffset = this.remapAngle(velAngle - viewAngle);
+				const targetAngle = this.findFastAngle(dropSpeed, MAX_GROUND_SPEED, MAX_GROUND_SPEED * tickInterval);
+				let leftTarget = -targetAngle - targetOffset + Math.PI * 0.25;
+				let rightTarget = targetAngle - targetOffset - Math.PI * 0.25;
+
+				if (forwardMove > 0) {
+					if (rightMove < 0) {
+						leftTarget = rightTarget;
+					} else if (rightMove > 0) {
+						rightTarget = leftTarget;
+					}
+				}
+
+				// draw snap zones
+				if (speed >= this.snap_min_speed) {
+					this.updateSnaps(this.snapZones, snapAngles, snapGains, snapOffset, leftTarget, rightTarget);
+				} else {
+					this.clearZones(this.snapZones);
+				}
 			} else {
 				this.clearZones(this.snapZones);
 			}
-		} else {
-			this.clearZones(this.snapZones);
-		}
 
 			// arrows
 			let velocityAngle = this.remapAngle(viewAngle - velAngle);
@@ -591,18 +590,36 @@ class Cgaz {
 		}
 	}
 
-	static updateSnaps(zones, snapAngles, snapGains, snapOffset) {
+	static updateSnaps(zones, snapAngles, snapGains, snapOffset, leftTarget, rightTarget) {
 		for (let i = 0; i < zones.length; ++i) {
 			// wrap the angles to only [-pi/2, pi/2]
 			const left = this.wrapToHalfPi(snapAngles[i] - snapOffset);
 			const right = this.wrapToHalfPi(snapAngles[(i + 1) % zones.length] - snapOffset);
 			const bUseUncolored = !this.snap_heightgain_enable && !this.snap_color_mode && i % 2;
-			const bHighlight = this.snap_hl_enable && left < 0 && right > 0;
 
-			let snapColor = bUseUncolored ? this.getColorStringFromArray([0, 0, 0, 0]) : this.snap_color;
+			let bHighlight = false;
+			switch (this.snap_hl_mode) {
+				case 0:
+					bHighlight = false;
+					break;
+				case 1:
+					bHighlight = left < 0 && right > 0;
+					break;
+				case 2:
+					// "target" zones only highlight when moving
+					if (this.getSize(MomentumPlayerAPI.GetVelocity()) > this.accel_min_speed) {
+						if (left - leftTarget < 0 && right - leftTarget > 0) {
+							bHighlight = true;
+						} else if (left - rightTarget < 0 && right - rightTarget > 0) {
+							bHighlight = true;
+						}
+					}
+					break;
+			}
+
+			let snapColor = bUseUncolored ? this.snap_alt_color : this.snap_color;
 			const hlSnapColor = bUseUncolored ? this.snap_hl_alt_color : this.snap_hl_color;
 			const snapClass = bUseUncolored ? UNCOLORED_SNAP_CLASS : COLORED_SNAP_CLASS;
-			//const hlSnapClass = bUseUncolored ? HIGHLIGHTED_ALT_SNAP_CLASS : HIGHLIGHTED_SNAP_CLASS;
 
 			const minGain = this.snapGainRange[0];
 			const maxGain = this.snapGainRange[1];
@@ -709,7 +726,7 @@ class Cgaz {
 
 	static getNormal(vec, threshold) {
 		const mag = this.getSize(vec);
-		let vecNormal = {
+		const vecNormal = {
 			x: vec.x,
 			y: vec.y
 		};

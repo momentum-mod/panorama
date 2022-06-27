@@ -812,16 +812,23 @@
 
 						<ConVarColorDisplay text="Snap zone color" convar="mom_df_hud_snap_color" infomessage="Color for colored snap zones." />
 
-						<ChaosSettingsEnum
+						<ConVarColorDisplay
+							text="Snap zone alt color"
+							convar="mom_df_hud_snap_alt_color"
+							infomessage="Color for uncolored snap zones."
+						/>
+
+						<ChaosSettingsEnumDropDown
 							text="Highlight active snap zone"
-							convar="mom_df_hud_snap_hl_enable"
+							convar="mom_df_hud_snap_hl_mode"
 							infomessage="When enabled, the snap zone behind the crosshair is highlighted. When velocity snapping is significant, the higlighted zone contributes speed gain."
 						>
-							<RadioButton group="snaphlenable" text="#SFUI_Off" value="0" />
-							<RadioButton group="snaphlenable" text="#SFUI_On" value="1" />
-						</ChaosSettingsEnum>
+							<Label id="highlight1" text="None" value="0" />
+							<Label id="highlight2" text="Active" value="1" />
+							<Label id="highlight3" text="Target" value="2" />
+						</ChaosSettingsEnumDropDown>
 
-						<ConVarEnabler convar="mom_df_hud_snap_hl_enable" class="flow-down">
+						<ConVarEnabler convar="mom_df_hud_snap_hl_mode" class="flow-down">
 							<ConVarColorDisplay
 								text="Snap highlight color"
 								convar="mom_df_hud_snap_hl_color"
