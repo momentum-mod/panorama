@@ -617,7 +617,7 @@ class Cgaz {
 			const maxGain = this.snapGainRange[1];
 			const diffGain = snapGains[i % snapGains.length];
 			const alpha = (diffGain - minGain) / (maxGain - minGain);
-			const heightFactor = alpha + 0.5;
+			const heightFactor = 0.8 * alpha + 0.2;
 
 			if (this.snap_color_mode) {
 				const A = this.splitColorString(this.snap_slow_color);
@@ -628,7 +628,7 @@ class Cgaz {
 
 			if (this.snap_heightgain_enable) {
 				zones[i].style.height = heightFactor * this.snap_height + 'px';
-				zones[i].style.marginBottom = 1.5 * this.snap_height + 'px';
+				zones[i].style.marginBottom = this.snap_height + 'px';
 				zones[i].style.verticalAlign = 'bottom';
 			} else {
 				zones[i].style.height = this.snap_height + 'px';
