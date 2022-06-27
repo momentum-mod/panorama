@@ -709,17 +709,19 @@ class Cgaz {
 
 	static getNormal(vec, threshold) {
 		const mag = this.getSize(vec);
+		let vecNormal = {
+			x: vec.x,
+			y: vec.y
+		};
 		if (mag < threshold * threshold) {
-			vec.x = 0;
-			vec.y = 0;
-			vec.z = 0;
+			vecNormal.x = 0;
+			vecNormal.y = 0;
 		} else {
 			const inv = 1 / mag;
-			vec.x *= inv;
-			vec.y *= inv;
-			vec.z = 0;
+			vecNormal.x *= inv;
+			vecNormal.y *= inv;
 		}
-		return vec;
+		return vecNormal;
 	}
 
 	static getDot(vec1, vec2) {
