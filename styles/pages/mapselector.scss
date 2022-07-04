@@ -3,7 +3,7 @@
 @use 'sass:map';
 @use 'sass:color';
 
-$left-width: 808px;
+$left-width: 831px;
 
 .mapselector {
 	width: 100%;
@@ -13,8 +13,10 @@ $left-width: 808px;
 	$root: &;
 
 	&__left {
-		min-width: $left-width;
+		width: 50%;
+		max-width: $left-width;
 		height: 100%;
+		margin-right: 8px;
 		background-color: rgba(0, 0, 0, 0.3);
 
 		&-wrapper {
@@ -29,6 +31,7 @@ $left-width: 808px;
 		horizontal-align: right;
 		width: 50%;
 		height: 100%;
+		margin-left: 8px;
 	}
 
 	&__maps,
@@ -165,6 +168,9 @@ $left-width: 808px;
 
 	&__gamemodes {
 		width: fit-children;
+		padding-bottom: 7px;
+		margin-bottom: -7px;
+		overflow: scroll squish;
 	}
 
 	&__tiers {
@@ -235,7 +241,7 @@ $notch-gap: 30px;
 .mapselector-sorting {
 	flow-children: right;
 	width: 100%;
-	margin-top: 8px;
+	margin-top: 10px;
 	padding-right: 8px;
 
 	&__tabs {
@@ -297,12 +303,15 @@ $notch-gap: 30px;
 		width: 100%;
 
 		&-left {
-			width: 600px;
+			width: 66%;
+			min-width: 450px;
+			margin-right: 8px;
 		}
 
 		&-right {
-			margin-left: 8px;
-			width: 290px;
+			width: 33%;
+			max-width: 290px;
+			horizontal-align: left;
 		}
 	}
 
@@ -354,7 +363,6 @@ $notch-gap: 30px;
 		overflow: squish scroll;
 		padding: 12px;
 		width: 100%;
-		height: 100%;
 
 		& > VerticalScrollBar {
 			width: 4px;
@@ -366,6 +374,8 @@ $notch-gap: 30px;
 		flow-children: down;
 		// For some reason (maybe a bug?) when a panel has overflow: scroll its children
 		// can't be positioned with align. This is a hack to force the See More button to the bottom.
+		width: 100%;
+		height: fit-children;
 		min-height: 210px;
 	}
 
@@ -404,6 +414,7 @@ $notch-gap: 30px;
 	}
 
 	&__paragraph {
+		width: 100%;
 		font-size: 17px;
 		text-shadow: 1px 1px 2px 1 rgba(0, 0, 0, 0.8);
 	}
@@ -487,6 +498,7 @@ $notch-gap: 30px;
 		vertical-align: center;
 		@include mixin.font-styles($use-header: true, $light-header: true);
 		font-size: 22px;
+		text-overflow: shrink;
 		text-shadow: 0px 1px 3px 2 rgba(0, 0, 0, 0.8);
 	}
 }
