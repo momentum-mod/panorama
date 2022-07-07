@@ -64,6 +64,17 @@ class LeaderboardEntry {
 			});
 		}
 
+		if (timeData.type === LEADERBOARD_ENTRY_TYPE.ONLINE || timeData.type === LEADERBOARD_ENTRY_TYPE.ONLINE_CACHED) {
+			items.push({
+				label: 'View on website',
+				icon: 'file://{images}/online/publiclobby.svg',
+				style: 'icon-color-blue',
+				jsCallback: () => {
+					SteamOverlayAPI.OpenURLModal(`https://momentum-mod.org/dashboard/runs/${timeData.replayID}`);
+				}
+			});
+		}
+
 		if (timeData.type === LEADERBOARD_ENTRY_TYPE.LOCAL || timeData.type === LEADERBOARD_ENTRY_TYPE.ONLINE_CACHED) {
 			$.GetContextPanel().SetDialogVariableInt('rank', index + 1);
 			items.push({
