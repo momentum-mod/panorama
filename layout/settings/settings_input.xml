@@ -64,10 +64,16 @@
 
 				</Panel>
 
-				<ChaosSettingsEnum text="#GameUI_MouseRaw" convar="m_rawinput" infomessage="#GameUI_MouseRaw_Hint" hasdocspage="false">
-					<RadioButton group="rawinput" text="#SFUI_Off" value="0" />
-					<RadioButton group="rawinput" text="#SFUI_On" value="1" />
-				</ChaosSettingsEnum>
+				<ChaosSettingsEnumDropDown
+					text="#GameUI_MouseRaw"
+					convar="m_rawinput"
+					infomessage="Raw input reads mouse movement directly from the device, bypassing control panel mouse settings, and providing more reliable mouse movement. A value of 1 is raw input with frame-aligned samples, which is what other source games use. With 2, samples are interpolated, leading to even more reliable mouse movement."
+					hasdocspage="false"
+				>
+					<Label id="rawinput0" text="#SFUI_Off" value="0" />
+					<Label id="rawinput1" text="On (Frame-aligned)" value="1" />
+					<Label id="rawinput2" text="On (Interpolated)" value="2" />
+				</ChaosSettingsEnumDropDown>
 
 				<ChaosSettingsEnum
 					text="#GameUI_ReverseMouse"
