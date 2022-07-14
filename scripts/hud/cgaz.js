@@ -1,5 +1,28 @@
 'use strict';
 
+const BUTTONS = {
+	ATTACK: 1 << 0,
+	JUMP: 1 << 1,
+	DUCK: 1 << 2,
+	FORWARD: 1 << 3,
+	BACK: 1 << 4,
+	USE: 1 << 5,
+	CANCEL: 1 << 6,
+	LEFT: 1 << 7,
+	RIGHT: 1 << 8,
+	MOVELEFT: 1 << 9,
+	MOVERIGHT: 1 << 10,
+	ATTACK2: 1 << 11,
+	SCORE: 1 << 16,
+	SPEED: 1 << 17,
+	WALK: 1 << 18,
+	ZOOM: 1 << 19,
+	LOOKSPIN: 1 << 25,
+	BHOPDISABLED: 1 << 29,
+	PAINT: 1 << 30,
+	STRAFE: 1 << 31
+};
+
 // TODO: remove these globals
 const MAX_GROUND_SPEED = 320;
 const AIR_ACCEL = 1;
@@ -274,6 +297,9 @@ class Cgaz {
 		this.hFov = Math.atan((this.vFov_tangent * this.screenX) / this.screenY);
 
 		const phyMode = DefragAPI.GetDFPhysicsMode();
+		const allButtons = MomentumInputAPI.GetButtons().buttons;
+		const forwardMove = (allButtons & BUTTONS.FORWARD ? 1 : 0) - (allButtons & BUTTONS.BACK ? 1 : 0);
+		const rightMove = (allButtons & BUTTONS.MOVERIGHT ? 1 : 0) - (allButtons & BUTTONS.MOVELEFT ? 1 : 0);
 		const lastMoveData = MomentumMovementAPI.GetLastMoveData();
 
 		const tickInterval = MomentumMovementAPI.GetTickInterval();
@@ -290,16 +316,16 @@ class Cgaz {
 
 		const velDir = this.getNormal(velocity, 0.001);
 		const velAngle = Math.atan2(velocity.y / speed, velocity.x / speed);
-		const wishDir = lastMoveData.wishdir;
-		const wishAngle = Math.atan2(wishDir.y, wishDir.x);
 		const viewAngle = (MomentumPlayerAPI.GetAngles().y * Math.PI) / 180;
 		const viewDir = {
 			x: Math.cos(viewAngle),
 			y: Math.sin(viewAngle)
 		};
+		const wishDir = lastMoveData.wishdir;
+		const wishAngle = viewAngle - Math.atan2(rightMove, forwardMove); //Math.atan2(wishDir.y, wishDir.x);
 
-		let forwardMove = this.getDot(viewDir, wishDir).toFixed();
-		let rightMove = this.getCross(viewDir, wishDir).toFixed();
+		//let forwardMove = this.getDot(viewDir, wishDir).toFixed();
+		//let rightMove = this.getCross(viewDir, wishDir).toFixed();
 
 		const bIsFalling = lastMoveData.moveStatus == 0;
 		const bHasAirControl = phyMode && this.floatEquals(wishAngle, viewAngle, 0.001) && bIsFalling;
