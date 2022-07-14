@@ -38,6 +38,7 @@
 			<MomHudStatus />
 			<MomHudTimer />
 			<MomHudStrafeSync />
+			<ChaosHudHintText id="HudHintText" />
 		</Panel>
 
 		<!-- Anchored to the bottom-left corner of the screen, laid out from top to bottom -->

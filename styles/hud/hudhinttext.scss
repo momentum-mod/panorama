@@ -1,0 +1,35 @@
+.hud-hint {
+	width: 750px;
+	flow-children: none;
+	opacity: 0;
+	horizontal-align: center;
+	background-color: black;
+
+	&--visible {
+		opacity: 1;
+	}
+
+	&--priority {
+	}
+
+	&__label {
+		horizontal-align: center;
+		height: fit-children;
+		color: #ffffff;
+
+		font-size: 20px;
+		font-weight: bold;
+		text-shadow-fast: 1px 1px #00000088;
+		text-overflow: shrink;
+	}
+
+	&__text {
+		flow-children: down;
+
+		vertical-align: middle;
+		horizontal-align: center;
+		height: fit-children;
+		padding-top: 8px;
+		padding-bottom: 8px;
+	}
+}
