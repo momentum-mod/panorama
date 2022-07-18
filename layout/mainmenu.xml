@@ -220,16 +220,20 @@
 
 						<Panel id="HomeContent" class="mainmenu__home-container home MainMenuModeOnly">
 
-							<Frame id="NewsPanel" class="home__newspanel" src="file://{resources}/layout/mainmenu_news.xml" />
+							<Panel id="NewsModelWrapper" class="home__wrapper">
 
-							<ModelPanel
-								id="MainMenuModel"
-								class="home__modelpanel"
-								src="models/custom_props/hd_logo.mdl"
-								cubemap="cubemaps/cubemap_menu_model_bg.hdr"
-								antialias="true"
-								mouse_rotate="true"
-							/>
+								<Frame id="NewsPanel" class="home__newspanel" src="file://{resources}/layout/mainmenu_news.xml" />
+
+								<ModelPanel
+									id="MainMenuModel"
+									class="home__modelpanel"
+									src="models/custom_props/hd_logo.mdl"
+									cubemap="cubemaps/cubemap_menu_model_bg.hdr"
+									antialias="true"
+									mouse_rotate="true"
+								/>
+
+							</Panel>
 
 							<Panel class="home__bottombar bottombar">
 
