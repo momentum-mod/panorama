@@ -310,7 +310,7 @@
 							<Panel class="mapselector-map-info__wrapper mapselector-map-info__wrapper--unpadded">
 								<Panel class="mapselector-map-info__description-scroll">
 									<Panel class="mapselector-map-info__description-main-elements">
-										<Panel id="MapDescriptionContainer" class="flow-down">
+										<Panel id="MapDescriptionContainer" class="flow-down full-width">
 											<Label class="text-h5 mb-1" text="Description" />
 											<Label class="mapselector-map-info__paragraph" text="{s:description}" />
 										</Panel>
