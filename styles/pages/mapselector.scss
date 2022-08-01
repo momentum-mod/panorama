@@ -303,13 +303,13 @@ $notch-gap: 30px;
 		width: 100%;
 
 		&-left {
-			width: 66%;
+			width: fill-parent-flow(1);
 			min-width: 450px;
 			margin-right: 8px;
 		}
 
 		&-right {
-			width: 33%;
+			width: fill-parent-flow(0.5);
 			max-width: 290px;
 			horizontal-align: left;
 		}
