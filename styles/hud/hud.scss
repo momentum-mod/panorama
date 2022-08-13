@@ -1,9 +1,21 @@
-Hud,
+.hud {
+	width: 100%;
+	height: 100%;
+	flow-children: none;
+
+	&__in-world,
+	&__reticle {
+		width: 100%;
+		height: 100%;
+	}
+}
+
 #PopupManager,
 #TooltipManager,
 #ContextMenuManager {
 	width: 100%;
 	height: 100%;
+	flow-children: none;
 }
 
 .hud-blur {
