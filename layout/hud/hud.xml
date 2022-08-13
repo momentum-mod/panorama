@@ -3,11 +3,16 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 
-	<ChaosHud hittest="false">
+	<scripts>
+		<include src="file://{resources}/scripts/hud/customizer.js" />
+
+	</scripts>
+
+	<ChaosHud class="hud" onload="HudCustomizer.load()" hittest="false">
 		<!-- Non-interactive HUD elements have hit test disabled for efficiency -->
 
 		<!-- In world UI is first to make sure it shows up behind all "screen-looking" UI -->
-		<Panel id="HudInWorld" hittest="false" hittestchildren="false">
+		<Panel class="hud__in-world" hittest="false" hittestchildren="false">
 			<MomHudGhostEntities />
 			<MomHudConcEntities />
 			<MomHudDamageIndicator />
@@ -15,72 +20,39 @@
 			<MomHudReticle />
 		</Panel>
 
-		<!-- Center of screen HUD laid out vertically top-to-bottom -->
-		<Panel id="HudCenter" hittest="false" hittestchildren="false">
+		<Panel id="HudCustomizer" class="hud-customizer hud-customizer--disabled" hittest="false" hittestchildren="false" />
 
-		</Panel>
-
-		<!-- HUD anchored to top-left corner of screen, laid out vertically top-to-bottom -->
-		<Panel id="HudTopLeft" hittest="false" hittestchildren="false">
-			<HudTrickTracker />
-			<HudComparisons />
-		</Panel>
-
-		<!-- Anchored to below the center of the screen, laid out from top to bottom -->
-		<!-- misleading name, not 'bottom-center' but 'below center' -->
-		<Panel id="HudBottomCenter" hittest="false" hittestchildren="false">
-			<!-- Anchored on Bottom-center, laid out from top to bottom -->
-			<MomHudSynchronizer />
-			<MomHudSpeedometer />
-			<MomHudConcCooktime />
-			<MomHudStickyCharge />
-			<MomHudStickyCount />
-			<MomHudStatus />
-			<MomHudTimer />
-			<MomHudStrafeSync />
-			<MomHudGroundboost />
-			<ChaosHudHintText id="HudHintText" />
-		</Panel>
-
-		<!-- Anchored to the bottom-left corner of the screen, laid out from top to bottom -->
-		<Panel id="HudLowerLeft" hittest="false" hittestchildren="true">
-			<HudStaticMenu />
-			<MomHudChat />
-		</Panel>
-
-		<!-- Anchored on lower-right corner, laid out from top to bottom -->
-		<Panel id="HudBottomRight" hittest="false" hittestchildren="false">
-			<MomHudDFJump />
-			<MomHudAmmo />
-			<MomHudKeyPress />
-		</Panel>
-
-		<!-- Anchored in top right corner of screen, laid out from top-to-bottom -->
-		<Panel id="HudTopRight" hittest="false" hittestchildren="false">
-			<MomHudVersionInfo />
-			<MomHudMapInfo />
-			<MomHudSpecInfo />
-			<MomHudWeaponSelection />
-		</Panel>
+		<!-- These all need IDs, otherwise customizer can't reference them properly. (Not possible to set in JS) -->
+		<HudTrickTracker id="TrickTracker" custom="{ 'draggable': true }" />
+		<HudComparisons id="Comparisons" custom="{ 'draggable': true }" />
+		<MomHudSynchronizer id="Syncronizer" custom="{ 'draggable': true }" />
+		<MomHudSpeedometer id="Speedometer" custom="{ 'draggable': true }" />
+		<MomHudConcCooktime id="ConcCooktime" custom="{ 'draggable': true }" />
+		<MomHudStickyCharge id="StickyCharge" custom="{ 'draggable': true }" />
+		<MomHudStickyCount id="StickyCount" custom="{ 'draggable': true }" />
+		<MomHudStatus id="Status" custom="{ 'draggable': true }" />
+		<MomHudTimer id="Timer" custom="{ 'draggable': true }" />
+		<MomHudStrafeSync id="StrafeSync" custom="{ 'draggable': true }" />
+		<MomHudGroundboost id="GroundBoost" custom="{ 'draggable': true }" />
+		<ChaosHudHintText id="HudHintText" custom="{ 'draggable': true }" />
+		<HudStaticMenu id="StaticMenu" custom="{ 'draggable': true }" />
+		<MomHudChat id="Chat" draggable="true" custom="{ 'draggable': true }" />
+		<MomHudDFJump id="DFJump" custom="{ 'draggable': true }" />
+		<MomHudAmmo id="KeyPress" custom="{ 'draggable': true }" />
+		<MomHudKeyPress id="KeyPress" custom="{ 'draggable': true }" />
+		<MomHudVersionInfo id="VersionInfo" custom="{ 'draggable': true }" />
+		<MomHudMapInfo id="MapInfo" custom="{ 'draggable': true }" />
+		<MomHudSpecInfo id="SpecInfo" custom="{ 'draggable': true }" />
+		<MomHudWeaponSelection id="WeaponSelection" custom="{ 'draggable': true }" />
+		<MomHudJumpStats id="JumpStats" custom="{ 'draggable': true }"/>
+		<TrickList id="TrickList" custom="" />
+		<ChaosHudShowPos id="ShowPos" custom="{ 'draggable': true }"/>
+		<ChaosHudBoneCounts id="BoneCount" />
+		<MomHudSpectate id="Spectator" />
 
 		<ChaosHudBlurTarget id="HudBlur" blurrects="Leaderboards TrickList" class="hud-blur" hittest="false" hittestchildren="false">
 			<ChaosBackbufferImagePanel class="full" />
 		</ChaosHudBlurTarget>
-
-		<!-- HUD anchored to top center of screen, laid out vertically top-to-bottom
-		-  NOTE: Not really set up properly - HudTeamCounter should dynamically move
-		-        between HudTopCenter and HudBottomCenter, but instead it just moves
-		-        itself via code.  So nothing can go in here that should appear
-		-        while HudTeamCounter is visible
-		-->
-		<Panel id="HudTopCenter" hittest="false">
-			<ChaosHudShowPos />
-			<ChaosHudBoneCounts />
-			<MomHudSpectate id="Spectator" />
-			<MomHudJumpStats />
-		</Panel>
-
-		<TrickList id="TrickList" />
 
 		<!-- This container is here so we can move the leaderboard in and out of it during the end-of-match sequence -->
 		<Panel id="LeaderboardsContainer" class="full-width full-height" hittest="false" hittestchildren="true">
