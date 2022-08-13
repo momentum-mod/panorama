@@ -32,10 +32,14 @@
 
 	&__gridline {
 		$this: &;
-		$color: rgb(192, 192, 192);
+		$color: rgb(255, 255, 255);
 
-		background-color: rgba($color, 0.1);
+		background-color: rgba(255, 255, 255, 0.02);
 		transition: background-color 0.05s ease-out 0s;
+
+		&--edge {
+			background-color: none;
+		}
 
 		&--x {
 			width: 1.5px;
@@ -48,13 +52,13 @@
 		}
 
 		&--highlight {
-			background-color: rgba($color, 0.7);
+			background-color: rgba($color, 0.4);
 		}
 
 		&--center {
-			background-color: rgba($color, 0.3);
+			background-color: rgba($color, 0.2);
 
-			& #{$this}--highlight {
+			&#{$this}--highlight {
 				background-color: rgba($color, 1);
 			}
 		}

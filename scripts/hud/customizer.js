@@ -7,7 +7,18 @@
  * @property {Object} properties - TODO
  * @property {boolean} oldHitTest - Stores hittest state before panel was made draggable
  * @property {boolean} oldHitTestChildren - - Stores hittestchildren state before panel was made draggable
- *
+ */
+
+/**
+ * @typedef {Object} GridAxis
+ * @property {GridLine[]} lines
+ * @property {number} interval
+ */
+
+/**
+ * @typedef {Object} GridLine
+ * @property {Panel} panel,
+ * @property {number} offset
  */
 
 class HudCustomizer {
@@ -15,15 +26,12 @@ class HudCustomizer {
 		customizer: $('#HudCustomizer')
 	};
 
-	/** @type Component[] */
 	static components;
-	static gridlines = {
-		x: [],
-		y: []
-	};
+	static gridAxis;
+	static activeGridlines;
 
 	static snapPrecision = 8;
-	static gridDensity = 4;
+	static gridDensity = 6;
 
 	static scaleX = $.GetContextPanel().actualuiscale_x;
 	static scaleY = $.GetContextPanel().actualuiscale_y;
@@ -34,7 +42,9 @@ class HudCustomizer {
 	}
 
 	static load() {
+		$.Msg('ive been loaded!');
 		this.components = [];
+		this.gridAxis = [];
 
 		for (const panel of $.GetContextPanel().Children()) {
 			const customiserString = panel.GetAttributeString('custom', '');
@@ -51,6 +61,8 @@ class HudCustomizer {
 	}
 
 	static enableEditing() {
+		this.activeGridlines = [null, null];
+
 		// TODO: onload calls load() too early so have to do this
 		if (!this.components || this.components.length === 0) this.load();
 
@@ -102,6 +114,8 @@ class HudCustomizer {
 
 		component.callback = callback;
 
+		$.Msg('what');
+
 		component.onThinkHandle = $.RegisterEventHandler(
 			'ChaosHudThink',
 			component.panel,
@@ -116,76 +130,145 @@ class HudCustomizer {
 	}
 
 	static onDragThink(component) {
-		this.gridlines.x.forEach((line) =>
-			line.SetHasClass(
-				'hud-customizer__gridline--highlight',
-				Math.abs(line.actualxoffset - (component.panel.actualxoffset + component.panel.actuallayoutwidth / 2)) <
-					this.snapPrecision
-			)
-		);
+		$.Msg('hewwo??');
+		this.getNearestGridLines(component).forEach((line, i) => {
+			const activeGridline = this.activeGridlines[i];
 
-		this.gridlines.y.forEach((line) =>
-			line.SetHasClass(
-				'hud-customizer__gridline--highlight',
-				Math.abs(
-					line.actualyoffset - (component.panel.actualyoffset + component.panel.actuallayoutheight / 2)
-				) < this.snapPrecision
-			)
-		);
+			if (line !== activeGridline) {
+				if (activeGridline) activeGridline.panel.RemoveClass('hud-customizer__gridline--highlight');
+
+				if (!line) return;
+
+				line.panel.AddClass('hud-customizer__gridline--highlight');
+				this.activeGridlines[i] = line;
+			}
+		});
 	}
 
 	static onEndDrag(component, source, callback) {
 		$.UnregisterEventHandler('DragEnd', component.panel, component.dragEndHandle);
 		$.UnregisterEventHandler('ChaosHudThink', component.panel, component.onThinkHandle);
 
-		const xSnapLine = this.gridlines.x.find((line) => line.HasClass('hud-customizer__gridline--highlight'));
-		const ySnapLine = this.gridlines.y.find((line) => line.HasClass('hud-customizer__gridline--highlight'));
+		component.dragEndHandle = null;
+		component.onThinkHandle = null;
 
-		const xPos =
-			(xSnapLine
-				? xSnapLine.actualxoffset - component.panel.actuallayoutwidth / 2
-				: component.panel.actualxoffset) / this.scaleX;
-		const yPos =
-			(ySnapLine
-				? ySnapLine.actualyoffset - component.panel.actuallayoutheight / 2
-				: component.panel.actualyoffset) / this.scaleY;
+		const gridlines = this.getNearestGridLines(component);
+		this.setPosition(
+			component.panel,
+			// gridlines[0].offset - component.panel.actuallayoutwidth / 2 / this.scaleX,
+			// gridlines[1].offset - component.panel.actuallayoutheight / 2 / this.scaleY
+			gridlines[0].offset,
+			gridlines[1].offset
+		);
 
-		component.panel.style.position = `${xPos}px ${yPos}px 0px`;
+		// If this is working, these gridlines will be the currently highlighted ones
+		gridlines.forEach((line) => line.panel.RemoveClass('hud-customizer__gridline--highlight'));
+		this.activeGridlines = [null, null];
+
+		// const xSnapLine = this.gridlines.x.find((line) => line.panel.HasClass('hud-customizer__gridline--highlight'));
+		// const ySnapLine = this.gridlines.y.find((line) => line.panel.HasClass('hud-customizer__gridline--highlight'));
+
+		// const xPos =
+		// 	(xSnapLine
+		// 		? xSnapLine.actualxoffset - component.panel.actuallayoutwidth / 2
+		// 		: component.panel.actualxoffset) / this.scaleX;
+		// const yPos =
+		// 	(ySnapLine
+		// 		? ySnapLine.actualyoffset - component.panel.actuallayoutheight / 2
+		// 		: component.panel.actualyoffset) / this.scaleY;
+
+		// component.panel.style.position = `${xPos}px ${yPos}px 0px`;
+	}
+
+	/**
+	 * @param {Component} component
+	 * @returns {[GridLine | null, GridLine | null] } X then Y GridLine, or null if at edge
+	 */
+	static getNearestGridLines(component) {
+		return this.gridAxis.map((axis, i) => {
+			const isX = i === 0;
+			const panelOffset = isX ? component.panel.actualxoffset : component.panel.actualyoffset;
+
+			// const relativePanelOffset = isX
+			// 	? (component.panel.actualxoffset + component.panel.actuallayoutwidth / 2) / this.scaleX
+			// 	: (component.panel.actualyoffset + component.panel.actuallayoutheight / 2) / this.scaleY;
+
+			const relativePanelOffsetLeft = isX
+				? Math.max(0, Math.min(1920, component.panel.actualxoffset / this.scaleX))
+				: Math.max(0, Math.min(1080, component.panel.actualyoffset / this.scaleY));
+
+			const distLeft = (relativePanelOffsetLeft / (isX ? 1920 : 1080)) * axis.lines.length;
+
+			const relativePanelOffsetRight = isX
+				? Math.max(
+						0,
+						Math.min(
+							1920,
+							(component.panel.actualxoffset + component.panel.actuallayoutwidth) / this.scaleX
+						)
+				  )
+				: Math.max(
+						0,
+						Math.min(
+							1080,
+							(component.panel.actualyoffset + component.panel.actuallayoutheight) / this.scaleY
+						)
+				  );
+
+			const distRight = (relativePanelOffsetRight / (isX ? 1920 : 1080)) * axis.lines.length;
+
+			const glIndex =
+				Math.abs(distLeft) + 1000 > Math.abs(distRight) ? Math.round(distLeft) : Math.round(distRight);
+
+			if (i === 0) $.Msg(panelOffset, ' ', glIndex, ' ', axis.lines.length);
+
+			return axis.lines[glIndex];
+		});
 	}
 
 	static createGridLines() {
 		this.panels.customizer.RemoveAndDeleteChildren();
 
-		this.gridlines.x = [];
-		this.gridlines.y = [];
+		const numXLines = 2 ** this.gridDensity; // Math.floor(1920 / this.gridDensity);
+		const numYLines = Math.floor(numXLines * (9 / 16));
 
-		const numYLines = 2 ** this.gridDensity; // Math.floor(1920 / this.gridDensity);
-		const numXLines = numYLines * (this.scaleX / this.scaleY) * (16 / 9);
+		this.gridAxis = [0, 1].map((i) => {
+			const isX = i === 0;
+			const numLines = isX ? numXLines : numYLines;
+			const totalLength = isX ? 1920 : 1080;
+			const interval = totalLength * (1 / numLines);
 
-		for (let i = 1; i < numXLines; i++) {
-			const offset = 1920 * (i / numXLines);
-			this.gridlines.x.push(
-				$.CreatePanel('Panel', this.panels.customizer, '', {
-					class:
-						'hud-customizer__gridline hud-customizer__gridline--x' +
-						(i === numXLines / 2 ? ' hud-customizer__gridline--center' : ''),
-					style: `position: ${offset}px 0px 0px`,
+			const lines = Array.from({ length: numLines }, (_, i) => {
+				const offset = totalLength * (i / numLines);
+
+				let cssClass = `hud-customizer__gridline hud-customizer__gridline--${isX ? 'x' : 'y'}`;
+				if (i === numLines / 2) cssClass += ' hud-customizer__gridline--center';
+				if (i === 0 || i === numLines) cssClass += 'hud-customizer__gridline--edge';
+
+				const gridline = $.CreatePanel('Panel', this.panels.customizer, '', { class: cssClass });
+
+				isX ? this.setPosition(gridline, offset, 0) : this.setPosition(gridline, 0, offset);
+
+				return {
+					panel: gridline,
 					offset: offset
-				})
-			);
-		}
+				};
+			});
 
-		for (let i = 1; i < numYLines; i++) {
-			const offset = 1080 * (i / numYLines);
-			this.gridlines.y.push(
-				$.CreatePanel('Panel', this.panels.customizer, '', {
-					class:
-						'hud-customizer__gridline hud-customizer__gridline--y' +
-						(i === numYLines / 2 ? ' hud-customizer__gridline--center' : ''),
-					style: `position: 0px ${offset}px 0px`,
-					offset: offset
-				})
-			);
-		}
+			return {
+				lines: lines,
+				interval: interval
+			};
+		});
+	}
+
+	/**
+	 * Set panel pos relative to 1920x1080 pano layout
+	 * @param {Panel} panel
+	 * @param {number} x
+	 * @param {number} y
+	 */
+	static setPosition(panel, x = 0, y = 0) {
+		panel.style.position = `${x}px ${y}px 0px`;
 	}
 }
