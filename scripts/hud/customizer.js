@@ -1,12 +1,33 @@
 'use strict';
 
+/** @typedef {number} SnapMode */
+
+const AXIS = [0, 1];
+
+/*** @enum {SnapMode} */
+const SNAP_MODE = {
+	OFF: 0,
+	CENTER: 1,
+	MIN: 2,
+	MAX: 3
+};
+
 /**
  * A customisable HUD component
  * @typedef {Object} Component
  * @property {Panel} panel
+ * @property {Snaps} snaps
  * @property {Object} properties - TODO
- * @property {boolean} oldHitTest - Stores hittest state before panel was made draggable
- * @property {boolean} oldHitTestChildren - - Stores hittestchildren state before panel was made draggable
+ */
+
+/**
+ * @typedef {number[]} position
+ */
+
+/**
+ * @typedef {Object} Snaps
+ * @property {SnapMode} x - Horizontal snapping mode
+ * @property {SnapMode} y - Vertical snapping mode
  */
 
 /**
@@ -23,15 +44,36 @@
 
 class HudCustomizer {
 	static panels = {
-		customizer: $('#HudCustomizer')
+		customizer: $('#HudCustomizer'),
+		virtual: $('#HudCustomizerVirtual'),
+		snaps: {
+			horiz: {
+				min: $('#HudCustomizerSnapsHorizLeft'),
+				max: $('#HudCustomizerSnapsHorizRight'),
+				center: $('#HudCustomizerSnapsHorizCenter'),
+				off: $('#HudCustomizerSnapsHorizOff')
+			},
+			vert: {
+				min: $('#HudCustomizerSnapsVertLeft'),
+				max: $('#HudCustomizerSnapsVertRight'),
+				center: $('#HudCustomizerSnapsVertCenter'),
+				off: $('#HudCustomizerSnapsVertOff')
+			}
+		},
+		grid: $('#HudCustomizerGrid')
 	};
 
 	static components;
 	static gridAxis;
+	/** @type {Component} activeComponent */
+	static activeComponent;
 	static activeGridlines;
 
-	static snapPrecision = 8;
-	static gridDensity = 6;
+	static dragStartHandle;
+	static dragEndHandle;
+	static onThinkHandle;
+
+	static gridDensity = 5;
 
 	static scaleX = $.GetContextPanel().actualuiscale_x;
 	static scaleY = $.GetContextPanel().actualuiscale_y;
@@ -42,192 +84,260 @@ class HudCustomizer {
 	}
 
 	static load() {
-		$.Msg('ive been loaded!');
 		this.components = [];
 		this.gridAxis = [];
+		this.activeGridlines = [];
+		this.activeComponent = null;
+
+		this.createGridLines();
 
 		for (const panel of $.GetContextPanel().Children()) {
-			const customiserString = panel.GetAttributeString('custom', '');
-			if (customiserString && panel.id)
+			const customizerString = panel.GetAttributeString('custom', '');
+
+			if (customizerString) {
+				const width = panel.actuallayoutwidth / this.scaleX;
+				const height = panel.actuallayoutheight / this.scaleY;
+				const position = [panel.actualxoffset / this.scaleX, panel.actualyoffset / this.scaleY];
+
+				if ([width, height, ...position].some((x) => x > 2000)) {
+					$.Warning(
+						`HUD Customizer: Panel ${panel.paneltype} is stupid big, ignoring.\n` +
+							`\tWidth: ${width}\tHeight: ${height}\tPosition: [${position.join(', ')}]).`
+					);
+					continue;
+				}
+
+				const snaps = [SNAP_MODE.OFF, SNAP_MODE.OFF];
+
 				try {
+					const properties = JSON.parse(customizerString.replace(/'/g, '"'));
+
 					this.components.push({
 						panel: panel,
-						properties: JSON.parse(customiserString.replace(/'/g, '"'))
+						snaps: snaps,
+						properties: properties
 					});
 				} catch {
 					$.Warning(`Failed to parse customizer settings for panel ${panel.paneltype}`);
 				}
+			}
 		}
 	}
 
 	static enableEditing() {
-		this.activeGridlines = [null, null];
-
 		// TODO: onload calls load() too early so have to do this
 		if (!this.components || this.components.length === 0) this.load();
 
-		// TODO: move to onload in future
-		this.createGridLines();
-
 		this.panels.customizer.RemoveClass('hud-customizer--disabled');
 
-		for (const component of this.components) {
-			component.panel.AddClass('hud__item--active');
-
-			component.panel.SetDraggable(true);
-
-			component.oldHitTest = component.panel.hittest;
-			component.oldHitTestChildren = component.panel.hittestchildren;
-			component.panel.hittest = true;
-			component.panel.hittestchildren = false;
-
-			component.dragStartHandle = $.RegisterEventHandler(
-				'DragStart',
-				component.panel,
-				this.onStartDrag.bind(this, component)
-			);
-		}
+		for (const component of this.components)
+			component.panel.SetPanelEvent('onmouseover', this.onComponentMouseOver.bind(this, component));
 	}
 
 	static disableEditing() {
+		for (const component of this.components) component.panel.ClearPanelEvent('onmouseover');
+
+		$.UnregisterEventHandler('DragStart', this.panels.virtual, this.dragStartHandle);
+
 		this.panels.customizer.AddClass('hud-customizer--disabled');
-
-		for (const component of this.components) {
-			component.panel.RemoveClass('hud__item--active');
-
-			component.panel.SetDraggable(false);
-
-			component.panel.hittest = component.oldHitTest;
-			component.panel.hittestchildren = component.oldHitTestChildren;
-
-			$.UnregisterEventHandler('DragStart', component.panel, component.dragStartHandle);
-		}
 	}
 
-	/**
-	 * Fired when a panel starts to be dragged
-	 * @param {Component} component
-	 */
-	static onStartDrag(component, source, callback) {
-		callback.displayPanel = component.panel;
+	static onComponentMouseOver(component) {
+		//if (this.activeComponent && this.activeComponent === component) return;
+
+		this.activeComponent = component;
+
+		const width = component.panel.actuallayoutwidth / this.scaleX;
+		const height = component.panel.actuallayoutheight / this.scaleY;
+		const position = [component.panel.actualxoffset / this.scaleX, component.panel.actualyoffset / this.scaleY];
+
+		Object.assign(this.panels.virtual.style, {
+			width: `${width}px;`,
+			height: `${height}px;`,
+			position: `${position[0]}px ${position[1]}px 0px;`
+		});
+
+		let horizSnap;
+		switch (component.snaps[0]) {
+			default:
+			case SNAP_MODE.OFF:
+				horizSnap = this.panels.snaps.horiz.off;
+				break;
+			case SNAP_MODE.CENTER:
+				horizSnap = this.panels.snaps.horiz.center;
+				break;
+			case SNAP_MODE.MIN:
+				horizSnap = this.panels.snaps.horiz.min;
+				break;
+			case SNAP_MODE.MAX:
+				horizSnap = this.panels.snaps.horiz.max;
+				break;
+		}
+
+		let vertSnap;
+		switch (component.snaps[1]) {
+			default:
+			case SNAP_MODE.OFF:
+				vertSnap = this.panels.snaps.vert.off;
+				break;
+			case SNAP_MODE.CENTER:
+				vertSnap = this.panels.snaps.vert.center;
+				break;
+			case SNAP_MODE.MIN:
+				vertSnap = this.panels.snaps.vert.min;
+				break;
+			case SNAP_MODE.MAX:
+				vertSnap = this.panels.snaps.vert.max;
+				break;
+		}
+
+		if (this.dragStartHandle) {
+			$.UnregisterEventHandler('DragStart', this.panels.virtual, this.dragStartHandle);
+		}
+
+		this.dragStartHandle = $.RegisterEventHandler('DragStart', this.panels.virtual, this.onStartDrag.bind(this));
+
+		// This will cause the event to fire but doesn't matter
+		//$.DispatchEvent('Activated', horizSnap, 'mouse');
+		//$.DispatchEvent('Activated', vertSnap, 'mouse');
+	}
+
+	static setSnapMode(axis, mode) {
+		this.activeComponent.snaps[axis] = mode;
+		$.Msg(this.activeComponent.snaps);
+	}
+
+	static onStartDrag(_source, callback) {
+		callback.displayPanel = this.panels.virtual;
 		callback.removePositionBeforeDrop = false;
 
-		component.callback = callback;
+		this.panels.virtual.AddClass('hud-customizer-virtual--dragging');
 
-		$.Msg('what');
+		$.UnregisterEventHandler('DragStart', this.panels.virtual, this.dragStartHandle);
 
-		component.onThinkHandle = $.RegisterEventHandler(
-			'ChaosHudThink',
-			component.panel,
-			this.onDragThink.bind(this, component)
-		);
+		this.onThinkHandle = $.RegisterEventHandler('ChaosHudThink', $.GetContextPanel(), this.onDragThink.bind(this));
 
-		component.dragEndHandle = $.RegisterEventHandler(
-			'DragEnd',
-			component.panel,
-			this.onEndDrag.bind(this, component)
-		);
+		this.dragEndHandle = $.RegisterEventHandler('DragEnd', this.panels.virtual, this.onEndDrag.bind(this));
 	}
 
-	static onDragThink(component) {
-		$.Msg('hewwo??');
-		this.getNearestGridLines(component).forEach((line, i) => {
-			const activeGridline = this.activeGridlines[i];
+	static onDragThink() {
+		let oldPosition = [0, 0];
+		let newPosition = [0, 0];
 
-			if (line !== activeGridline) {
-				if (activeGridline) activeGridline.panel.RemoveClass('hud-customizer__gridline--highlight');
+		AXIS.forEach((axis) => {
+			if (this.activeComponent.snaps[axis] === SNAP_MODE.OFF) {
+				newPosition[axis] =
+					axis === 0
+						? this.panels.virtual.actualxoffset / this.scaleX
+						: this.panels.virtual.actualyoffset / this.scaleY;
+			} else {
+				const gridline = this.getNearestGridLine(axis);
+				const activeGridline = this.activeGridlines[axis];
 
-				if (!line) return;
+				// this is completely fucking wrong lol
+				let widthFactor;
+				switch (this.activeComponent.snaps[axis]) {
+					case SNAP_MODE.MIN:
+						widthFactor = 0;
+						break;
+					case SNAP_MODE.MAX:
+						widthFactor = 1;
+						break;
+					case SNAP_MODE.CENTER:
+						widthFactor = 0.5;
+						break;
+				}
 
-				line.panel.AddClass('hud-customizer__gridline--highlight');
-				this.activeGridlines[i] = line;
+				const offset =
+					(this.activeComponent.panel.actuallayoutwidth +
+						this.activeComponent.panel.actuallayoutwidth * widthFactor) /
+					this.scaleX;
+
+				if (activeGridline) oldPosition[axis] = activeGridline.offset + offset;
+				if (gridline) newPosition[axis] = gridline.offset + offset;
+
+				if (gridline !== activeGridline) {
+					if (activeGridline) activeGridline.panel.RemoveClass('hud-customizer__gridline--highlight');
+					if (gridline) {
+						gridline.panel.AddClass('hud-customizer__gridline--highlight');
+						this.activeGridlines[axis] = gridline;
+					}
+				}
 			}
 		});
+
+		if (newPosition !== oldPosition) this.setPosition(this.activeComponent.panel, newPosition);
 	}
 
-	static onEndDrag(component, source, callback) {
-		$.UnregisterEventHandler('DragEnd', component.panel, component.dragEndHandle);
-		$.UnregisterEventHandler('ChaosHudThink', component.panel, component.onThinkHandle);
+	static onEndDrag() {
+		$.UnregisterEventHandler('DragEnd', this.panels.virtual, this.dragEndHandle);
+		$.UnregisterEventHandler('ChaosHudThink', $.GetContextPanel(), this.onThinkHandle);
 
-		component.dragEndHandle = null;
-		component.onThinkHandle = null;
+		this.dragStartHandle = $.RegisterEventHandler('DragStart', this.panels.virtual, this.onStartDrag.bind(this));
 
-		const gridlines = this.getNearestGridLines(component);
+		this.dragEndHandle = null;
+		this.onThinkHandle = null;
+
+		this.panels.virtual.RemoveClass('hud-customizer-virtual--dragging');
+
+		// If this is all working, these gridlines will be the currently highlighted ones
 		this.setPosition(
-			component.panel,
-			// gridlines[0].offset - component.panel.actuallayoutwidth / 2 / this.scaleX,
-			// gridlines[1].offset - component.panel.actuallayoutheight / 2 / this.scaleY
-			gridlines[0].offset,
-			gridlines[1].offset
+			this.panels.virtual,
+			AXIS.map((axis) => {
+				if (this.activeComponent.snaps[axis] === SNAP_MODE.OFF) {
+					return axis === 0
+						? this.panels.virtual.actualxoffset / this.scaleX
+						: this.panels.virtual.actualyoffset / this.scaleY;
+				} else {
+					const line = this.getNearestGridLine(axis, this.activeComponent.snaps[axis]);
+					line.panel.RemoveClass('hud-customizer__gridline--highlight');
+					return line.offset;
+				}
+			})
 		);
 
-		// If this is working, these gridlines will be the currently highlighted ones
-		gridlines.forEach((line) => line.panel.RemoveClass('hud-customizer__gridline--highlight'));
 		this.activeGridlines = [null, null];
-
-		// const xSnapLine = this.gridlines.x.find((line) => line.panel.HasClass('hud-customizer__gridline--highlight'));
-		// const ySnapLine = this.gridlines.y.find((line) => line.panel.HasClass('hud-customizer__gridline--highlight'));
-
-		// const xPos =
-		// 	(xSnapLine
-		// 		? xSnapLine.actualxoffset - component.panel.actuallayoutwidth / 2
-		// 		: component.panel.actualxoffset) / this.scaleX;
-		// const yPos =
-		// 	(ySnapLine
-		// 		? ySnapLine.actualyoffset - component.panel.actuallayoutheight / 2
-		// 		: component.panel.actualyoffset) / this.scaleY;
-
-		// component.panel.style.position = `${xPos}px ${yPos}px 0px`;
 	}
 
-	/**
-	 * @param {Component} component
-	 * @returns {[GridLine | null, GridLine | null] } X then Y GridLine, or null if at edge
-	 */
-	static getNearestGridLines(component) {
-		return this.gridAxis.map((axis, i) => {
-			const isX = i === 0;
-			const panelOffset = isX ? component.panel.actualxoffset : component.panel.actualyoffset;
+	static getNearestGridLine(axis) {
+		const isX = axis === 0;
+		const snapMode = this.activeComponent.snaps[axis];
 
-			// const relativePanelOffset = isX
-			// 	? (component.panel.actualxoffset + component.panel.actuallayoutwidth / 2) / this.scaleX
-			// 	: (component.panel.actualyoffset + component.panel.actuallayoutheight / 2) / this.scaleY;
+		let widthFactor;
+		switch (snapMode) {
+			case SNAP_MODE.MIN:
+				widthFactor = 0;
+				break;
+			case SNAP_MODE.MAX:
+				widthFactor = 1;
+				break;
+			case SNAP_MODE.CENTER:
+				widthFactor = 0.5;
+				break;
+		}
 
-			const relativePanelOffsetLeft = isX
-				? Math.max(0, Math.min(1920, component.panel.actualxoffset / this.scaleX))
-				: Math.max(0, Math.min(1080, component.panel.actualyoffset / this.scaleY));
-
-			const distLeft = (relativePanelOffsetLeft / (isX ? 1920 : 1080)) * axis.lines.length;
-
-			const relativePanelOffsetRight = isX
-				? Math.max(
-						0,
-						Math.min(
-							1920,
-							(component.panel.actualxoffset + component.panel.actuallayoutwidth) / this.scaleX
-						)
+		const relativeOffset = Math.max(
+			0,
+			isX
+				? Math.min(
+						1920,
+						(this.panels.virtual.actualxoffset + this.panels.virtual.actuallayoutwidth * widthFactor) /
+							this.scaleX
 				  )
-				: Math.max(
-						0,
-						Math.min(
-							1080,
-							(component.panel.actualyoffset + component.panel.actuallayoutheight) / this.scaleY
-						)
-				  );
+				: Math.min(
+						1080,
+						(this.panels.virtual.actualyoffset + this.panels.virtual.actuallayoutheight * widthFactor) /
+							this.scaleY
+				  )
+		);
 
-			const distRight = (relativePanelOffsetRight / (isX ? 1920 : 1080)) * axis.lines.length;
+		const glIndex = Math.round((relativeOffset / (isX ? 1920 : 1080)) * this.gridAxis[axis].lines.length);
 
-			const glIndex =
-				Math.abs(distLeft) + 1000 > Math.abs(distRight) ? Math.round(distLeft) : Math.round(distRight);
-
-			if (i === 0) $.Msg(panelOffset, ' ', glIndex, ' ', axis.lines.length);
-
-			return axis.lines[glIndex];
-		});
+		return this.gridAxis[axis].lines[glIndex];
 	}
 
 	static createGridLines() {
-		this.panels.customizer.RemoveAndDeleteChildren();
+		this.panels.grid.RemoveAndDeleteChildren();
 
 		const numXLines = 2 ** this.gridDensity; // Math.floor(1920 / this.gridDensity);
 		const numYLines = Math.floor(numXLines * (9 / 16));
@@ -236,6 +346,8 @@ class HudCustomizer {
 			const isX = i === 0;
 			const numLines = isX ? numXLines : numYLines;
 			const totalLength = isX ? 1920 : 1080;
+
+			// TODO: don't think interval is needed. this simplifies a lot in that case!
 			const interval = totalLength * (1 / numLines);
 
 			const lines = Array.from({ length: numLines }, (_, i) => {
@@ -245,9 +357,9 @@ class HudCustomizer {
 				if (i === numLines / 2) cssClass += ' hud-customizer__gridline--center';
 				if (i === 0 || i === numLines) cssClass += 'hud-customizer__gridline--edge';
 
-				const gridline = $.CreatePanel('Panel', this.panels.customizer, '', { class: cssClass });
+				const gridline = $.CreatePanel('Panel', this.panels.grid, '', { class: cssClass });
 
-				isX ? this.setPosition(gridline, offset, 0) : this.setPosition(gridline, 0, offset);
+				isX ? this.setPosition(gridline, [offset, 0]) : this.setPosition(gridline, [0, offset]);
 
 				return {
 					panel: gridline,
@@ -265,10 +377,9 @@ class HudCustomizer {
 	/**
 	 * Set panel pos relative to 1920x1080 pano layout
 	 * @param {Panel} panel
-	 * @param {number} x
-	 * @param {number} y
+	 * @param {Position} position
 	 */
-	static setPosition(panel, x = 0, y = 0) {
+	static setPosition(panel, [x, y]) {
 		panel.style.position = `${x}px ${y}px 0px`;
 	}
 }

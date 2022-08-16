@@ -5,10 +5,9 @@
 
 	<scripts>
 		<include src="file://{resources}/scripts/hud/customizer.js" />
-
 	</scripts>
 
-	<ChaosHud class="hud" onload="HudCustomizer.load()" hittest="false">
+	<ChaosHud class="hud" hittest="false">
 		<!-- Non-interactive HUD elements have hit test disabled for efficiency -->
 
 		<!-- In world UI is first to make sure it shows up behind all "screen-looking" UI -->
@@ -19,44 +18,79 @@
 			<MomHudCgaz />
 			<MomHudReticle />
 		</Panel>
+		
+		<Panel id="HudCustomizer" class="hud-customizer hud-customizer--disabled" hittest="false">
+			<Panel id="HudCustomizerGrid" class="hud-customizer__grid" hittest="false" hittestchildren="false" />
+		</Panel>
 
-		<Panel id="HudCustomizer" class="hud-customizer hud-customizer--disabled" hittest="false" hittestchildren="false" />
-
+		<!-- TODO:below probs no longer true  -->
 		<!-- These all need IDs, otherwise customizer can't reference them properly. (Not possible to set in JS) -->
-		<HudTrickTracker id="TrickTracker" custom="{ 'draggable': true }" />
-		<HudComparisons id="Comparisons" custom="{ 'draggable': true }" />
-		<MomHudSynchronizer id="Syncronizer" custom="{ 'draggable': true }" />
-		<MomHudSpeedometer id="Speedometer" custom="{ 'draggable': true }" />
-		<MomHudConcCooktime id="ConcCooktime" custom="{ 'draggable': true }" />
-		<MomHudStickyCharge id="StickyCharge" custom="{ 'draggable': true }" />
-		<MomHudStickyCount id="StickyCount" custom="{ 'draggable': true }" />
-		<MomHudStatus id="Status" custom="{ 'draggable': true }" />
-		<MomHudTimer id="Timer" custom="{ 'draggable': true }" />
-		<MomHudStrafeSync id="StrafeSync" custom="{ 'draggable': true }" />
-		<MomHudGroundboost id="GroundBoost" custom="{ 'draggable': true }" />
-		<ChaosHudHintText id="HudHintText" custom="{ 'draggable': true }" />
-		<HudStaticMenu id="StaticMenu" custom="{ 'draggable': true }" />
-		<MomHudChat id="Chat" draggable="true" custom="{ 'draggable': true }" />
-		<MomHudDFJump id="DFJump" custom="{ 'draggable': true }" />
-		<MomHudAmmo id="KeyPress" custom="{ 'draggable': true }" />
-		<MomHudKeyPress id="KeyPress" custom="{ 'draggable': true }" />
-		<MomHudVersionInfo id="VersionInfo" custom="{ 'draggable': true }" />
-		<MomHudMapInfo id="MapInfo" custom="{ 'draggable': true }" />
-		<MomHudSpecInfo id="SpecInfo" custom="{ 'draggable': true }" />
-		<MomHudWeaponSelection id="WeaponSelection" custom="{ 'draggable': true }" />
-		<MomHudJumpStats id="JumpStats" custom="{ 'draggable': true }"/>
+		<HudTrickTracker id="TrickTracker" />
+		<HudComparisons id="Comparisons" />
+		<MomHudSynchronizer id="Syncronizer" />
+		<MomHudSpeedometer id="Speedometer" />
+		<MomHudConcCooktime id="ConcCooktime" />
+		<MomHudStickyCharge id="StickyCharge" />
+		<MomHudStickyCount id="StickyCount" />
+		<MomHudStatus id="Status" />
+		<MomHudTimer id="Timer" />
+		<MomHudStrafeSync id="StrafeSync" />
+		<HudStaticMenu id="StaticMenu" />
+		<MomHudChat id="Chat" custom="{ 'draggable': true }" />
+		<MomHudKeyPress id="KeyPress" />
+		<MomHudVersionInfo id="VersionInfo" />
+		<MomHudMapInfo id="MapInfo" />
+		<MomHudSpecInfo id="SpecInfo" />
+		<MomHudWeaponSelection id="WeaponSelection" />
 		<TrickList id="TrickList" custom="" />
 		<ChaosHudShowPos id="ShowPos" custom="{ 'draggable': true }"/>
 		<ChaosHudBoneCounts id="BoneCount" />
 		<MomHudSpectate id="Spectator" />
 
-		<ChaosHudBlurTarget id="HudBlur" blurrects="Leaderboards TrickList" class="hud-blur" hittest="false" hittestchildren="false">
+		<ChaosHudBlurTarget
+			id="HudBlur"
+			blurrects="Leaderboards TrickList"
+			class="hud-blur"
+			hittest="false"
+			hittestchildren="false"
+		>
 			<ChaosBackbufferImagePanel class="full" />
 		</ChaosHudBlurTarget>
 
 		<!-- This container is here so we can move the leaderboard in and out of it during the end-of-match sequence -->
 		<Panel id="LeaderboardsContainer" class="full-width full-height" hittest="false" hittestchildren="true">
 			<HudLeaderboards id="Leaderboards" hittest="true" />
+		</Panel>
+
+		<Panel id="HudCustomizerVirtual" class="hud-customizer-virtual" draggable="true">
+			<Panel id="HudCustomizerSnaps" class="hud-customizer-virtual-snaps">
+				<Panel class="hud-customizer-virtual-snaps__row">
+					<RadioButton
+						id="HudCustomizerSnapsHorizLeft"
+						class="hud-customizer-virtual-snaps__button"
+						onactivate="HudCustomizer.setSnapMode(0, 2);"
+						group="SnapHoriz"
+					/>
+					<RadioButton
+						id="HudCustomizerSnapsHorizRight"
+						class="hud-customizer-virtual-snaps__button"
+						onactivate="HudCustomizer.setSnapMode(0, 3);"
+						group="SnapHoriz"
+					/>
+					<RadioButton
+						id="HudCustomizerSnapsHorizCenter"
+						class="hud-customizer-virtual-snaps__button"
+						onactivate="HudCustomizer.setSnapMode(0, 1);"
+						group="SnapHoriz"
+					/>
+					<RadioButton
+						id="HudCustomizerSnapsHorizOff"
+						class="hud-customizer-virtual-snaps__button"
+						onactivate="HudCustomizer.setSnapMode(0, 0);"
+						group="SnapHoriz"
+					/>
+				</Panel>
+			</Panel>
 		</Panel>
 
 		<!-- Make sure these are at the bottom to get the z-order right -->
