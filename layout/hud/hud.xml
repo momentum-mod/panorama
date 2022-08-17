@@ -4,6 +4,7 @@
 	</styles>
 
 	<scripts>
+		<include src="file://{resources}/scripts/common/layout.js" />
 		<include src="file://{resources}/scripts/hud/customizer.js" />
 	</scripts>
 
@@ -18,7 +19,7 @@
 			<MomHudCgaz />
 			<MomHudReticle />
 		</Panel>
-		
+
 		<Panel id="HudCustomizer" class="hud-customizer hud-customizer--disabled" hittest="false">
 			<Panel id="HudCustomizerGrid" class="hud-customizer__grid" hittest="false" hittestchildren="false" />
 		</Panel>
@@ -63,32 +64,119 @@
 		</Panel>
 
 		<Panel id="HudCustomizerVirtual" class="hud-customizer-virtual" draggable="true">
-			<Panel id="HudCustomizerSnaps" class="hud-customizer-virtual-snaps">
+			<Panel
+				id="HudCustomizerSnaps"
+				class="hud-customizer-virtual-snaps"
+				onmouseover="HudCustomizer.showSnapTooltip();"
+				onmouseout="HudCustomizer.hideSnapTooltip();"
+			>
 				<Panel class="hud-customizer-virtual-snaps__row">
 					<RadioButton
-						id="HudCustomizerSnapsHorizLeft"
-						class="hud-customizer-virtual-snaps__button"
-						onactivate="HudCustomizer.setSnapMode(0, 2);"
-						group="SnapHoriz"
-					/>
-					<RadioButton
-						id="HudCustomizerSnapsHorizRight"
-						class="hud-customizer-virtual-snaps__button"
-						onactivate="HudCustomizer.setSnapMode(0, 3);"
-						group="SnapHoriz"
-					/>
-					<RadioButton
-						id="HudCustomizerSnapsHorizCenter"
+						id="HudCustomizerSnapsXMin"
 						class="hud-customizer-virtual-snaps__button"
 						onactivate="HudCustomizer.setSnapMode(0, 1);"
-						group="SnapHoriz"
-					/>
+						group="SnapX"
+					>
+						<Image
+							class="hud-customizer-virtual-snaps__icon"
+							src="file://{images}/hudcustomizer/snap-x-min.svg"
+							texturewidth="32"
+							textureheight="32"
+						/>
+					</RadioButton>
 					<RadioButton
-						id="HudCustomizerSnapsHorizOff"
+						id="HudCustomizerSnapsXMid"
 						class="hud-customizer-virtual-snaps__button"
-						onactivate="HudCustomizer.setSnapMode(0, 0);"
-						group="SnapHoriz"
-					/>
+						onactivate="HudCustomizer.setSnapMode(0, 2);"
+						group="SnapX"
+					>
+						<Image
+							class="hud-customizer-virtual-snaps__icon"
+							src="file://{images}/hudcustomizer/snap-x-mid.svg"
+							texturewidth="32"
+							textureheight="32"
+						/>
+					</RadioButton>
+					<RadioButton
+						id="HudCustomizerSnapsXMax"
+						class="hud-customizer-virtual-snaps__button"
+						onactivate="HudCustomizer.setSnapMode(0, 3);"
+						group="SnapX"
+					>
+						<Image
+							class="hud-customizer-virtual-snaps__icon"
+							src="file://{images}/hudcustomizer/snap-x-max.svg"
+							texturewidth="32"
+							textureheight="32"
+						/>
+					</RadioButton>
+					<RadioButton
+						id="HudCustomizerSnapsXOff"
+						class="hud-customizer-virtual-snaps__button"
+						onactivate="HudCustomizer.setSnapMode(0, 4);"
+						group="SnapX"
+					>
+						<Image
+							class="hud-customizer-virtual-snaps__icon"
+							src="file://{images}/hudcustomizer/snap-off.svg"
+							texturewidth="32"
+							textureheight="32"
+						/>
+					</RadioButton>
+				</Panel>
+				<Panel class="hud-customizer-virtual-snaps__row">
+					<RadioButton
+						id="HudCustomizerSnapsYMin"
+						class="hud-customizer-virtual-snaps__button"
+						onactivate="HudCustomizer.setSnapMode(1, 1);"
+						group="SnapY"
+					>
+						<Image
+							class="hud-customizer-virtual-snaps__icon"
+							src="file://{images}/hudcustomizer/snap-y-min.svg"
+							texturewidth="32"
+							textureheight="32"
+						/>
+					</RadioButton>
+					<RadioButton
+						id="HudCustomizerSnapsYMid"
+						class="hud-customizer-virtual-snaps__button"
+						onactivate="HudCustomizer.setSnapMode(1, 2);"
+						group="SnapY"
+					>
+						<Image
+							class="hud-customizer-virtual-snaps__icon"
+							src="file://{images}/hudcustomizer/snap-y-mid.svg"
+							texturewidth="32"
+							textureheight="32"
+						/>
+					</RadioButton>
+					<RadioButton
+						id="HudCustomizerSnapsYMax"
+						class="hud-customizer-virtual-snaps__button"
+						onactivate="HudCustomizer.setSnapMode(1, 3);"
+						group="SnapY"
+					>
+						<Image
+							class="hud-customizer-virtual-snaps__icon"
+							src="file://{images}/hudcustomizer/snap-y-max.svg"
+							texturewidth="32"
+							textureheight="32"
+						/>
+					</RadioButton>
+					<RadioButton
+						id="HudCustomizerSnapsYOff"
+						class="hud-customizer-virtual-snaps__button"
+						onactivate="HudCustomizer.setSnapMode(1, 4);"
+						group="SnapY"
+					>
+						<Image
+							class="hud-customizer-virtual-snaps__icon"
+							src="file://{images}/hudcustomizer/snap-off.svg"
+							texturewidth="32"
+							textureheight="32"
+						/>
+					</RadioButton>
 				</Panel>
 			</Panel>
 		</Panel>

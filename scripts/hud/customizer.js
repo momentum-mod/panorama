@@ -6,10 +6,10 @@ const AXIS = [0, 1];
 
 /*** @enum {SnapMode} */
 const SNAP_MODE = {
-	OFF: 0,
-	CENTER: 1,
-	MIN: 2,
-	MAX: 3
+	MIN: 1,
+	MID: 2,
+	MAX: 3,
+	OFF: 4
 };
 
 /**
@@ -21,10 +21,6 @@ const SNAP_MODE = {
  */
 
 /**
- * @typedef {number[]} position
- */
-
-/**
  * @typedef {Object} Snaps
  * @property {SnapMode} x - Horizontal snapping mode
  * @property {SnapMode} y - Vertical snapping mode
@@ -32,8 +28,8 @@ const SNAP_MODE = {
 
 /**
  * @typedef {Object} GridAxis
- * @property {GridLine[]} lines
- * @property {number} interval
+ * @property {GridLine} x
+ * @property {GridLine} y
  */
 
 /**
@@ -43,23 +39,57 @@ const SNAP_MODE = {
  */
 
 class HudCustomizer {
+	static snaps = {
+		0: {
+			[SNAP_MODE.MIN]: {
+				name: 'Left',
+				button: $('#HudCustomizerSnapsXMin'),
+				widthFactor: 0
+			},
+			[SNAP_MODE.MID]: {
+				name: 'Center',
+				button: $('#HudCustomizerSnapsXMid'),
+				widthFactor: 0.5
+			},
+			[SNAP_MODE.MAX]: {
+				name: 'Right',
+				button: $('#HudCustomizerSnapsXMax'),
+				widthFactor: 1
+			},
+			[SNAP_MODE.OFF]: {
+				name: 'None',
+				button: $('#HudCustomizerSnapsXOff'),
+				widthFactor: null
+			}
+		},
+		1: {
+			[SNAP_MODE.MIN]: {
+				name: 'Top',
+				button: $('#HudCustomizerSnapsYMin'),
+				widthFactor: 0
+			},
+			[SNAP_MODE.MID]: {
+				name: 'Center',
+				button: $('#HudCustomizerSnapsYMid'),
+				widthFactor: 0.5
+			},
+			[SNAP_MODE.MAX]: {
+				name: 'Bottom',
+				button: $('#HudCustomizerSnapsYMax'),
+				widthFactor: 1
+			},
+			[SNAP_MODE.OFF]: {
+				name: 'None',
+				button: $('#HudCustomizerSnapsYOff'),
+				widthFactor: null
+			}
+		}
+	};
+
 	static panels = {
 		customizer: $('#HudCustomizer'),
 		virtual: $('#HudCustomizerVirtual'),
-		snaps: {
-			horiz: {
-				min: $('#HudCustomizerSnapsHorizLeft'),
-				max: $('#HudCustomizerSnapsHorizRight'),
-				center: $('#HudCustomizerSnapsHorizCenter'),
-				off: $('#HudCustomizerSnapsHorizOff')
-			},
-			vert: {
-				min: $('#HudCustomizerSnapsVertLeft'),
-				max: $('#HudCustomizerSnapsVertRight'),
-				center: $('#HudCustomizerSnapsVertCenter'),
-				off: $('#HudCustomizerSnapsVertOff')
-			}
-		},
+		snaps: $('#HudCustomizerSnaps'),
 		grid: $('#HudCustomizerGrid')
 	};
 
@@ -95,9 +125,9 @@ class HudCustomizer {
 			const customizerString = panel.GetAttributeString('custom', '');
 
 			if (customizerString) {
-				const width = panel.actuallayoutwidth / this.scaleX;
-				const height = panel.actuallayoutheight / this.scaleY;
-				const position = [panel.actualxoffset / this.scaleX, panel.actualyoffset / this.scaleY];
+				const width = LayoutUtil.getWidth(panel);
+				const height = LayoutUtil.getHeight(panel);
+				const position = LayoutUtil.getPosition(panel);
 
 				if ([width, height, ...position].some((x) => x > 2000)) {
 					$.Warning(
@@ -147,64 +177,20 @@ class HudCustomizer {
 
 		this.activeComponent = component;
 
-		const width = component.panel.actuallayoutwidth / this.scaleX;
-		const height = component.panel.actuallayoutheight / this.scaleY;
-		const position = [component.panel.actualxoffset / this.scaleX, component.panel.actualyoffset / this.scaleY];
+		// Set the virtual panel's position and size to the component we just hovered over
+		LayoutUtil.copyPositionAndSize(component.panel, this.panels.virtual);
 
-		Object.assign(this.panels.virtual.style, {
-			width: `${width}px;`,
-			height: `${height}px;`,
-			position: `${position[0]}px ${position[1]}px 0px;`
-		});
+		// const xSnap = this.snaps.x[component.snaps.x].panel;
+		// const ySnap = this.snaps.x[component.snaps.x].panel;
 
-		let horizSnap;
-		switch (component.snaps[0]) {
-			default:
-			case SNAP_MODE.OFF:
-				horizSnap = this.panels.snaps.horiz.off;
-				break;
-			case SNAP_MODE.CENTER:
-				horizSnap = this.panels.snaps.horiz.center;
-				break;
-			case SNAP_MODE.MIN:
-				horizSnap = this.panels.snaps.horiz.min;
-				break;
-			case SNAP_MODE.MAX:
-				horizSnap = this.panels.snaps.horiz.max;
-				break;
-		}
-
-		let vertSnap;
-		switch (component.snaps[1]) {
-			default:
-			case SNAP_MODE.OFF:
-				vertSnap = this.panels.snaps.vert.off;
-				break;
-			case SNAP_MODE.CENTER:
-				vertSnap = this.panels.snaps.vert.center;
-				break;
-			case SNAP_MODE.MIN:
-				vertSnap = this.panels.snaps.vert.min;
-				break;
-			case SNAP_MODE.MAX:
-				vertSnap = this.panels.snaps.vert.max;
-				break;
-		}
+		// $.DispatchEvent('Activated', xSnap, 'mouse');
+		// $.DispatchEvent('Activated', ySnap, 'mouse');
 
 		if (this.dragStartHandle) {
 			$.UnregisterEventHandler('DragStart', this.panels.virtual, this.dragStartHandle);
 		}
 
 		this.dragStartHandle = $.RegisterEventHandler('DragStart', this.panels.virtual, this.onStartDrag.bind(this));
-
-		// This will cause the event to fire but doesn't matter
-		//$.DispatchEvent('Activated', horizSnap, 'mouse');
-		//$.DispatchEvent('Activated', vertSnap, 'mouse');
-	}
-
-	static setSnapMode(axis, mode) {
-		this.activeComponent.snaps[axis] = mode;
-		$.Msg(this.activeComponent.snaps);
 	}
 
 	static onStartDrag(_source, callback) {
@@ -225,36 +211,23 @@ class HudCustomizer {
 		let newPosition = [0, 0];
 
 		AXIS.forEach((axis) => {
+			const isX = axis === 0;
+
 			if (this.activeComponent.snaps[axis] === SNAP_MODE.OFF) {
-				newPosition[axis] =
-					axis === 0
-						? this.panels.virtual.actualxoffset / this.scaleX
-						: this.panels.virtual.actualyoffset / this.scaleY;
+				newPosition[axis] = isX ? LayoutUtil.getX(this.panels.virtual) : LayoutUtil.getY(this.panels.virtual);
 			} else {
-				const gridline = this.getNearestGridLine(axis);
+				const widthFactor = this.snaps[axis][this.activeComponent.snaps[axis]].widthFactor;
+
+				const gridline = this.getNearestGridLine(axis, widthFactor);
 				const activeGridline = this.activeGridlines[axis];
 
-				// this is completely fucking wrong lol
-				let widthFactor;
-				switch (this.activeComponent.snaps[axis]) {
-					case SNAP_MODE.MIN:
-						widthFactor = 0;
-						break;
-					case SNAP_MODE.MAX:
-						widthFactor = 1;
-						break;
-					case SNAP_MODE.CENTER:
-						widthFactor = 0.5;
-						break;
-				}
+				const offset = isX
+					? (this.activeComponent.panel.actuallayoutwidth * widthFactor) / this.scaleX
+					: (this.activeComponent.panel.actuallayoutheight * widthFactor) / this.scaleY;
 
-				const offset =
-					(this.activeComponent.panel.actuallayoutwidth +
-						this.activeComponent.panel.actuallayoutwidth * widthFactor) /
-					this.scaleX;
-
-				if (activeGridline) oldPosition[axis] = activeGridline.offset + offset;
-				if (gridline) newPosition[axis] = gridline.offset + offset;
+				// this can maybe simplfiy to just checking if this changed, collecting both values then if neither did, dont change position
+				if (activeGridline) oldPosition[axis] = activeGridline.offset - offset;
+				if (gridline) newPosition[axis] = gridline.offset - offset;
 
 				if (gridline !== activeGridline) {
 					if (activeGridline) activeGridline.panel.RemoveClass('hud-customizer__gridline--highlight');
@@ -266,7 +239,7 @@ class HudCustomizer {
 			}
 		});
 
-		if (newPosition !== oldPosition) this.setPosition(this.activeComponent.panel, newPosition);
+		if (newPosition !== oldPosition) LayoutUtil.setPosition(this.activeComponent.panel, newPosition);
 	}
 
 	static onEndDrag() {
@@ -280,41 +253,15 @@ class HudCustomizer {
 
 		this.panels.virtual.RemoveClass('hud-customizer-virtual--dragging');
 
-		// If this is all working, these gridlines will be the currently highlighted ones
-		this.setPosition(
-			this.panels.virtual,
-			AXIS.map((axis) => {
-				if (this.activeComponent.snaps[axis] === SNAP_MODE.OFF) {
-					return axis === 0
-						? this.panels.virtual.actualxoffset / this.scaleX
-						: this.panels.virtual.actualyoffset / this.scaleY;
-				} else {
-					const line = this.getNearestGridLine(axis, this.activeComponent.snaps[axis]);
-					line.panel.RemoveClass('hud-customizer__gridline--highlight');
-					return line.offset;
-				}
-			})
-		);
+		LayoutUtil.copyPositionAndSize(this.activeComponent.panel, this.panels.virtual);
+
+		this.activeGridlines?.forEach((line) => line?.panel.RemoveClass('hud-customizer__gridline--highlight'));
 
 		this.activeGridlines = [null, null];
 	}
 
-	static getNearestGridLine(axis) {
+	static getNearestGridLine(axis, widthFactor) {
 		const isX = axis === 0;
-		const snapMode = this.activeComponent.snaps[axis];
-
-		let widthFactor;
-		switch (snapMode) {
-			case SNAP_MODE.MIN:
-				widthFactor = 0;
-				break;
-			case SNAP_MODE.MAX:
-				widthFactor = 1;
-				break;
-			case SNAP_MODE.CENTER:
-				widthFactor = 0.5;
-				break;
-		}
 
 		const relativeOffset = Math.max(
 			0,
@@ -331,35 +278,33 @@ class HudCustomizer {
 				  )
 		);
 
-		const glIndex = Math.round((relativeOffset / (isX ? 1920 : 1080)) * this.gridAxis[axis].lines.length);
+		const glIndex = Math.round((relativeOffset / (isX ? 1920 : 1080)) * this.gridAxis[axis].length);
 
-		return this.gridAxis[axis].lines[glIndex];
+		return this.gridAxis[axis][glIndex];
 	}
 
 	static createGridLines() {
 		this.panels.grid.RemoveAndDeleteChildren();
 
-		const numXLines = 2 ** this.gridDensity; // Math.floor(1920 / this.gridDensity);
+		const numXLines = 2 ** this.gridDensity;
 		const numYLines = Math.floor(numXLines * (9 / 16));
 
-		this.gridAxis = [0, 1].map((i) => {
-			const isX = i === 0;
+		this.gridAxis = [];
+		AXIS.forEach((axis) => {
+			const isX = axis === 0;
 			const numLines = isX ? numXLines : numYLines;
 			const totalLength = isX ? 1920 : 1080;
-
-			// TODO: don't think interval is needed. this simplifies a lot in that case!
-			const interval = totalLength * (1 / numLines);
 
 			const lines = Array.from({ length: numLines }, (_, i) => {
 				const offset = totalLength * (i / numLines);
 
 				let cssClass = `hud-customizer__gridline hud-customizer__gridline--${isX ? 'x' : 'y'}`;
-				if (i === numLines / 2) cssClass += ' hud-customizer__gridline--center';
+				if (i === numLines / 2) cssClass += ' hud-customizer__gridline--mid';
 				if (i === 0 || i === numLines) cssClass += 'hud-customizer__gridline--edge';
 
 				const gridline = $.CreatePanel('Panel', this.panels.grid, '', { class: cssClass });
 
-				isX ? this.setPosition(gridline, [offset, 0]) : this.setPosition(gridline, [0, offset]);
+				LayoutUtil.setPosition(gridline, isX ? [offset, 0] : [0, offset]);
 
 				return {
 					panel: gridline,
@@ -367,19 +312,25 @@ class HudCustomizer {
 				};
 			});
 
-			return {
-				lines: lines,
-				interval: interval
-			};
+			this.gridAxis[axis] = lines;
 		});
 	}
 
-	/**
-	 * Set panel pos relative to 1920x1080 pano layout
-	 * @param {Panel} panel
-	 * @param {Position} position
-	 */
-	static setPosition(panel, [x, y]) {
-		panel.style.position = `${x}px ${y}px 0px`;
+	static setSnapMode(axis, mode) {
+		this.activeComponent.snaps[axis] = mode;
+		this.showSnapTooltip();
+	}
+
+	static showSnapTooltip() {
+		UiToolkitAPI.ShowTextTooltip(
+			this.panels.snaps.id,
+			`<b><i>Snapping Mode</i></b>\n` +
+				`Horizontal: <b>${this.snaps[0][this.activeComponent.snaps[0]].name}</b>\n` +
+				`Vertical: <b>${this.snaps[1][this.activeComponent.snaps[1]].name}</b>`
+		);
+	}
+
+	static hideSnapTooltip() {
+		UiToolkitAPI.HideTextTooltip();
 	}
 }

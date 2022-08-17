@@ -47,21 +47,21 @@
 		}
 
 		&--x {
-			width: 1.5px;
+			width: 2px;
 			height: 100%;
 		}
 
 		&--y {
 			width: 100%;
-			height: 1.5px;
+			height: 2px;
 		}
 
 		&--highlight {
-			background-color: rgba($color, 0.1);
+			background-color: rgba($color, 0.3);
 		}
 
 		&--center {
-			background-color: rgba($color, 0.2);
+			background-color: rgba($color, 0.1);
 
 			&#{$this}--highlight {
 				background-color: rgba($color, 1);
@@ -71,31 +71,29 @@
 }
 
 .hud-customizer-virtual {
-	border: 2px solid rgb(0, 255, 0);
-
-	&:hover {
-		& > .hud-customizer-snaps {
-			opacity: 1;
-		}
-	}
+	// border: 1px solid rgba(255, 255, 255, 0.1);
 
 	&--dragging {
-		// opacity: 0;
-	}
-
-	&--selected {
-		border: 1px solid rgba($blue, 1);
+		& > .hud-customizer-virtual-snaps {
+			opacity: 0;
+		}
 	}
 }
 
 .hud-customizer-virtual-snaps {
+	$root: &;
 	width: fit-children;
 	height: fit-children;
 
 	horizontal-align: right;
 	flow-children: down;
 
-	transition: opacity 0.05s ease-in-out 0s;
+	margin: 2px;
+	border-radius: 2px;
+
+	tooltip-position: bottom;
+
+	// transition: opacity 0.05s ease-in-out 0s;
 
 	&__row {
 		width: fit-children;
@@ -104,10 +102,10 @@
 	}
 
 	&__button {
-		width: 32px;
-		height: 32px;
-		border: 1px solid rgba(0, 0, 0, 0.1);
-		background-color: rgba(0, 0, 0, 0.4);
+		width: 24px;
+		height: 24px;
+		border: 1px solid rgba(0, 0, 0, 0);
+		background-color: rgba(0, 0, 0, 0.5);
 
 		transition: background-color 0.075s ease-in-out 0s;
 
@@ -116,12 +114,23 @@
 		}
 
 		&:selected {
-			background-color: rgba(131, 131, 131, 0.9);
+			background-color: rgba(90, 90, 90, 0.5);
+
+			& > #{$root}__icon {
+				opacity: 1;
+			}
 		}
 
 		&:hover {
-			background-color: rgba(99, 99, 99, 0.9);
+			background-color: rgba(99, 99, 99, 0.5);
 		}
+	}
+
+	&__icon {
+		width: 100%;
+		height: 100%;
+		padding: 2px;
+		opacity: 0.3;
 	}
 }
 
