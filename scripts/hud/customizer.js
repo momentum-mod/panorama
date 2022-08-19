@@ -1,19 +1,25 @@
 'use strict';
 
-/** @typedef {number} SnapMode */
-
+// Code is simplest and cheapest if just treat X, Y axis as 0, 1 so we can use an indices.
 const AXIS = [0, 1];
 
-/*** @enum {SnapMode} */
+/** @typedef {number} SnapMode */
+
+/**
+ * The four different snapping behaviours
+ * For a horizontal panel, min and max are left and right respectively, for vertical, top and bottom
+ * @enum {SnapMode}
+ */
 const SNAP_MODE = {
 	MIN: 1,
 	MID: 2,
 	MAX: 3,
 	OFF: 4
 };
+const DEFAULT_SNAP_MODES = [SNAP_MODE.OFF, SNAP_MODE.OFF];
 
 /**
- * A customisable HUD component
+ * A customisable, saveable HUD component
  * @typedef {Object} Component
  * @property {Panel} panel
  * @property {Snaps} snaps
@@ -21,15 +27,9 @@ const SNAP_MODE = {
  */
 
 /**
- * @typedef {Object} Snaps
+ * @typedef {[SnapMode, SnapMode]} Snaps
  * @property {SnapMode} x - Horizontal snapping mode
  * @property {SnapMode} y - Vertical snapping mode
- */
-
-/**
- * @typedef {Object} GridAxis
- * @property {GridLine} x
- * @property {GridLine} y
  */
 
 /**
@@ -37,6 +37,8 @@ const SNAP_MODE = {
  * @property {Panel} panel,
  * @property {number} offset
  */
+
+/** @typedef {[GridLine, GridLine]} GridAxis */
 
 class HudCustomizer {
 	static snaps = {
@@ -109,11 +111,33 @@ class HudCustomizer {
 	static scaleY = $.GetContextPanel().actualuiscale_y;
 
 	static {
-		$.RegisterForUnhandledEvent('Chat_Show', this.enableEditing.bind(this));
-		$.RegisterForUnhandledEvent('Chat_Hide', this.disableEditing.bind(this));
+		$.RegisterForUnhandledEvent('HudChat_Show', this.enableEditing.bind(this));
+		$.RegisterForUnhandledEvent('HudChat_Hide', this.disableEditing.bind(this));
+	}
+
+	/**  @typedef {Object.<string, StoredComponentData>} StoredData */
+
+	/**
+	 * @typedef {Object} StoredComponentData
+	 * @property {Snaps} snaps
+	 * @property {Position} position
+	 */
+
+	static save() {
+		const saveData = Object.entries(this.components).reduce((obj, [id, data]) => {
+			obj[id] = {
+				position: [data.panel.actualxoffset / this.scaleX, data.panel.actualyoffset / this.scaleY],
+				snaps: data.snaps
+			};
+			return obj;
+		}, {});
+
+		HudCustomizerAPI.SaveHudLayout(saveData);
 	}
 
 	static load() {
+		HudCustomizerAPI.SaveHudLayout({ burger: 'burger' });
+
 		this.components = [];
 		this.gridAxis = [];
 		this.activeGridlines = [];
@@ -121,35 +145,64 @@ class HudCustomizer {
 
 		this.createGridLines();
 
+		/** @type {StoredData} */
+		const storedLayout = HudCustomizerAPI.LoadHudLayout() ?? {};
+
 		for (const panel of $.GetContextPanel().Children()) {
-			const customizerString = panel.GetAttributeString('custom', '');
+			if (panel.GetAttributeString('customisable', '') !== 'true') continue;
 
-			if (customizerString) {
-				const width = LayoutUtil.getWidth(panel);
-				const height = LayoutUtil.getHeight(panel);
-				const position = LayoutUtil.getPosition(panel);
+			const storedPanelData = storedLayout[panel.id];
 
-				if ([width, height, ...position].some((x) => x > 2000)) {
+			if (storedPanelData) {
+				let snaps = storedPanelData.snaps;
+				snaps.forEach((snap, i) => {
+					if (!Object.values(SNAP_MODE).includes(snap)) {
+						$.Warning(`HudCustomizer: Invalid snap values ${snap}, setting to default.`);
+						snaps[i] = DEFAULT_SNAP_MODES;
+					}
+				});
+
+				let position = storedPanelData.position;
+				position.forEach((pos, i) => {
+					const max = i === 0 ? 1920 : 1080;
+					// TODO: stronger version of this once position+snapping setup i invented when down the shops is done
+					if (pos < 0 || pos >= max) {
+						$.Warning(
+							`HudCustomizer: Invalid position value ${pos}, should be in [0, ${max}) interval, setting to default.`
+						);
+						pos[i] = 0;
+					}
+				});
+
+				// next handle storage object better
+			} else {
+				const [position, size] = LayoutUtil.getPositionAndSize(panel);
+
+				// TODO: can probs get rid of this
+				if ([position, size].flat().some((x) => x > 2000)) {
 					$.Warning(
-						`HUD Customizer: Panel ${panel.paneltype} is stupid big, ignoring.\n` +
-							`\tWidth: ${width}\tHeight: ${height}\tPosition: [${position.join(', ')}]).`
+						`HudCustomizer: Panel ${panel.paneltype} is stupid big, ignoring.\n` +
+							`\tWidth: ${size[0]}\tHeight: ${size[1]}\tPosition: [${position.join(', ')}]).`
 					);
 					continue;
 				}
 
-				const snaps = [SNAP_MODE.OFF, SNAP_MODE.OFF];
+				const storedCompData = storedLayout[panel.id];
 
-				try {
-					const properties = JSON.parse(customizerString.replace(/'/g, '"'));
-
-					this.components.push({
-						panel: panel,
-						snaps: snaps,
-						properties: properties
-					});
-				} catch {
-					$.Warning(`Failed to parse customizer settings for panel ${panel.paneltype}`);
+				let snaps;
+				if (storedCompData) {
+					snaps = storedCompData.snaps;
+					LayoutUtil.setPosition(panel, storedCompData.position);
+				} else {
+					snaps = [SNAP_MODE.OFF, SNAP_MODE.OFF];
 				}
+
+				AXIS.forEach((axis) => this.snaps[axis][snaps[axis]].button.SetSelected(true));
+
+				this.components[panel.id] = {
+					panel: panel,
+					snaps: snaps
+				};
 			}
 		}
 	}
@@ -180,11 +233,11 @@ class HudCustomizer {
 		// Set the virtual panel's position and size to the component we just hovered over
 		LayoutUtil.copyPositionAndSize(component.panel, this.panels.virtual);
 
-		// const xSnap = this.snaps.x[component.snaps.x].panel;
-		// const ySnap = this.snaps.x[component.snaps.x].panel;
+		const xSnap = this.snaps[0][component.snaps[0]].button;
+		const ySnap = this.snaps[1][component.snaps[1]].button;
 
-		// $.DispatchEvent('Activated', xSnap, 'mouse');
-		// $.DispatchEvent('Activated', ySnap, 'mouse');
+		$.DispatchEvent('Activated', xSnap.id, 'mouse');
+		ySnap.SetSelected(true);
 
 		if (this.dragStartHandle) {
 			$.UnregisterEventHandler('DragStart', this.panels.virtual, this.dragStartHandle);
@@ -196,6 +249,8 @@ class HudCustomizer {
 	static onStartDrag(_source, callback) {
 		callback.displayPanel = this.panels.virtual;
 		callback.removePositionBeforeDrop = false;
+
+		this.panels.virtual.SetParent(null);
 
 		this.panels.virtual.AddClass('hud-customizer-virtual--dragging');
 
@@ -218,14 +273,13 @@ class HudCustomizer {
 			} else {
 				const widthFactor = this.snaps[axis][this.activeComponent.snaps[axis]].widthFactor;
 
-				const gridline = this.getNearestGridLine(axis, widthFactor);
-				const activeGridline = this.activeGridlines[axis];
-
 				const offset = isX
 					? (this.activeComponent.panel.actuallayoutwidth * widthFactor) / this.scaleX
 					: (this.activeComponent.panel.actuallayoutheight * widthFactor) / this.scaleY;
 
-				// this can maybe simplfiy to just checking if this changed, collecting both values then if neither did, dont change position
+				const gridline = this.getNearestGridLine(axis, widthFactor);
+				const activeGridline = this.activeGridlines[axis];
+
 				if (activeGridline) oldPosition[axis] = activeGridline.offset - offset;
 				if (gridline) newPosition[axis] = gridline.offset - offset;
 
@@ -234,6 +288,8 @@ class HudCustomizer {
 					if (gridline) {
 						gridline.panel.AddClass('hud-customizer__gridline--highlight');
 						this.activeGridlines[axis] = gridline;
+
+						newPosition[axis] = gridline.offset - offset;
 					}
 				}
 			}
@@ -258,25 +314,31 @@ class HudCustomizer {
 		this.activeGridlines?.forEach((line) => line?.panel.RemoveClass('hud-customizer__gridline--highlight'));
 
 		this.activeGridlines = [null, null];
+
+		// TODO: this is just for testing
+		this.save();
 	}
 
 	static getNearestGridLine(axis, widthFactor) {
 		const isX = axis === 0;
 
-		const relativeOffset = Math.max(
-			0,
-			isX
-				? Math.min(
+		const relativeOffset = isX
+			? Math.max(
+					0,
+					Math.min(
 						1920,
 						(this.panels.virtual.actualxoffset + this.panels.virtual.actuallayoutwidth * widthFactor) /
 							this.scaleX
-				  )
-				: Math.min(
+					)
+			  )
+			: Math.max(
+					0,
+					Math.min(
 						1080,
 						(this.panels.virtual.actualyoffset + this.panels.virtual.actuallayoutheight * widthFactor) /
 							this.scaleY
-				  )
-		);
+					)
+			  );
 
 		const glIndex = Math.round((relativeOffset / (isX ? 1920 : 1080)) * this.gridAxis[axis].length);
 
@@ -319,6 +381,7 @@ class HudCustomizer {
 	static setSnapMode(axis, mode) {
 		this.activeComponent.snaps[axis] = mode;
 		this.showSnapTooltip();
+		$.Msg('setsafdsdf');
 	}
 
 	static showSnapTooltip() {

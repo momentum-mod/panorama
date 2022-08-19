@@ -25,6 +25,7 @@
 		</Panel>
 
 		<!-- TODO:below probs no longer true  -->
+			<!-- its being used. if we ever want two instances of a hud element, it's helpfult o distinguish by ID -->
 		<!-- These all need IDs, otherwise customizer can't reference them properly. (Not possible to set in JS) -->
 		<HudTrickTracker id="TrickTracker" />
 		<HudComparisons id="Comparisons" />
@@ -37,7 +38,7 @@
 		<MomHudTimer id="Timer" />
 		<MomHudStrafeSync id="StrafeSync" />
 		<HudStaticMenu id="StaticMenu" />
-		<MomHudChat id="Chat" custom="{ 'draggable': true }" />
+		<MomHudChat id="Chat" customisable="true" />
 		<MomHudKeyPress id="KeyPress" />
 		<MomHudVersionInfo id="VersionInfo" />
 		<MomHudMapInfo id="MapInfo" />

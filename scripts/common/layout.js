@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * @typedef {[number, number]} Position - Tuple of x,y coordinates
+ * @typedef {[number, number]} Position - Tuple of x, y coordinates
  * @typedef {[number, number]} Size - Tuple of width, height values
  */
 
