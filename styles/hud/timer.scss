@@ -1,7 +1,7 @@
 @use '../config' as *;
 @use '../abstract/mixin';
 
-@keyframes timerFailedAnim {
+@keyframes TimerFailedAnim {
 	from {
 		color: $timer-color-inactive;
 	}
@@ -13,11 +13,10 @@
 	}
 }
 
-.hudtimer {
-	margin: 6px 0px 6px 0;
+.hud-timer {
 	flow-children: down;
-	width: 100%;
-	align: center center;
+	width: fit-children;
+	height: fit-children;
 
 	&__time {
 		@include mixin.font-styles($use-header: false);
@@ -33,10 +32,12 @@
 		&--inactive {
 			color: $timer-color-inactive;
 		}
+
 		&--failed {
-			animation-name: timerFailedAnim;
+			animation-name: TimerFailedAnim;
 			animation-duration: 1s;
 		}
+
 		&--finished {
 			color: $timer-color-finished;
 		}

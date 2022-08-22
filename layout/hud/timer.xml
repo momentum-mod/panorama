@@ -8,10 +8,15 @@
 		<include src="file://{scripts}/hud/timer.js" />
 	</scripts>
 
-	<MomHudTimer class="full-width" onload="HudTimer.onLoad()">
-		<ConVarEnabler class="hudtimer" convar="mom_hud_timer_enable" togglevisibility="true">
-			<Label id="HudTimerTime" class="hudtimer__time hudtimer__time--inactive" text="{g:time:runtime}" />
-			<Label id="HudTimerComparison" class="hudtimer__comparison hudtimer__comparison--fadeout" text="{s:diffSymbol}{g:time:runtimediff}" visible="false" />
+	<MomHudTimer onload="HudTimer.onLoad()">
+		<ConVarEnabler class="hud-timer" convar="mom_hud_timer_enable" togglevisibility="true">
+			<Label id="HudTimerTime" class="hud-timer__time hud-timer__time--inactive" text="{g:time:runtime}" />
+			<Label
+				id="HudTimerComparison"
+				class="hud-timer__comparison hud-timer__comparison--fadeout"
+				text="{s:diffSymbol}{g:time:runtimediff}"
+				visible="false"
+			/>
 		</ConVarEnabler>
 	</MomHudTimer>
 </root>

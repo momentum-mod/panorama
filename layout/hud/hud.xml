@@ -28,22 +28,22 @@
 			<!-- its being used. if we ever want two instances of a hud element, it's helpfult o distinguish by ID -->
 		<!-- These all need IDs, otherwise customizer can't reference them properly. (Not possible to set in JS) -->
 		<HudTrickTracker id="TrickTracker" />
-		<HudComparisons id="Comparisons" />
-		<MomHudSynchronizer id="Syncronizer" />
-		<MomHudSpeedometer id="Speedometer" />
-		<MomHudConcCooktime id="ConcCooktime" />
-		<MomHudStickyCharge id="StickyCharge" />
-		<MomHudStickyCount id="StickyCount" />
-		<MomHudStatus id="Status" />
-		<MomHudTimer id="Timer" />
-		<MomHudStrafeSync id="StrafeSync" />
-		<HudStaticMenu id="StaticMenu" />
+		<HudComparisons id="Comparisons" customisable="true" />
+		<MomHudSynchronizer id="Syncronizer" customisable="true" />
+		<MomHudSpeedometer id="Speedometer" customisable="true" />
+		<MomHudConcCooktime id="ConcCooktime" customisable="true" />
+		<MomHudStickyCharge id="StickyCharge" customisable="true" />
+		<MomHudStickyCount id="StickyCount" customisable="true" />
+		<MomHudStatus id="Status" customisable="true" />
+		<MomHudTimer id="Timer" customisable="true" />
+		<MomHudStrafeSync id="StrafeSync" customisable="true" />
+		<HudStaticMenu id="StaticMenu" customisable="true" />
 		<MomHudChat id="Chat" customisable="true" />
-		<MomHudKeyPress id="KeyPress" />
-		<MomHudVersionInfo id="VersionInfo" />
-		<MomHudMapInfo id="MapInfo" />
+		<MomHudKeyPress id="KeyPress" customisable="true" />
+		<MomHudVersionInfo id="VersionInfo" customisable="true" />
+		<MomHudMapInfo id="MapInfo" customisable="true" />
+		<MomHudWeaponSelection id="WeaponSelection" customisable="true" />
 		<MomHudSpecInfo id="SpecInfo" />
-		<MomHudWeaponSelection id="WeaponSelection" />
 		<TrickList id="TrickList" custom="" />
 		<ChaosHudShowPos id="ShowPos" custom="{ 'draggable': true }"/>
 		<ChaosHudBoneCounts id="BoneCount" />
@@ -65,6 +65,7 @@
 		</Panel>
 
 		<Panel id="HudCustomizerVirtual" class="hud-customizer-virtual" draggable="true">
+			<Label id="HudCustomizerVirtualName" class="hud-customizer-virtual__name" />
 			<Panel
 				id="HudCustomizerSnaps"
 				class="hud-customizer-virtual-snaps"
@@ -113,7 +114,7 @@
 					</RadioButton>
 					<RadioButton
 						id="HudCustomizerSnapsXOff"
-						class="hud-customizer-virtual-snaps__button"
+						class="hud-customizer-virtual-snaps__button hud-customizer-virtual-snaps__button--last"
 						onactivate="HudCustomizer.setSnapMode(0, 4);"
 						group="SnapX"
 					>
@@ -125,7 +126,7 @@
 						/>
 					</RadioButton>
 				</Panel>
-				<Panel class="hud-customizer-virtual-snaps__row">
+				<Panel class="hud-customizer-virtual-snaps__row hud-customizer-virtual-snaps__row--last">
 					<RadioButton
 						id="HudCustomizerSnapsYMin"
 						class="hud-customizer-virtual-snaps__button"
@@ -167,7 +168,7 @@
 					</RadioButton>
 					<RadioButton
 						id="HudCustomizerSnapsYOff"
-						class="hud-customizer-virtual-snaps__button"
+						class="hud-customizer-virtual-snaps__button hud-customizer-virtual-snaps__button--last"
 						onactivate="HudCustomizer.setSnapMode(1, 4);"
 						group="SnapY"
 					>

@@ -1,4 +1,6 @@
 @use '../config' as *;
+@use '../abstract/mixin';
+@use 'sass:color';
 
 .hud {
 	width: 100%;
@@ -10,14 +12,48 @@
 		width: 100%;
 		height: 100%;
 	}
+}
 
-	&__item {
-		&--active {
-			border: 1px solid rgba($blue, 0.7);
+.hud-customizable {
+	$border-len: 1px;
+	border: $border-len solid rgba($blue, 0.7);
+	box-shadow: 0px 0px 16px 0px rgba(0, 0, 0, 0.7);
+
+	&--active {
+		animation: HudCustomizableActivePulse 1s ease-in-out 0s infinite normal forwards;
+
+		box-shadow: 0px 0px 16px 0px rgba(0, 0, 0, 1);
+
+		@at-root {
+			@keyframes HudCustomizableActivePulse {
+				0% {
+					border: $border-len solid rgba($green, 0.7);
+				}
+				50% {
+					border: $border-len solid rgba($green, 1);
+				}
+				100% {
+					border: $border-len solid rgba($green, 0.7);
+				}
+			}
 		}
+	}
 
-		&--selected {
-			border: 1px solid rgba($blue, 1);
+	&--dragging {
+		animation: HudCustomizableDraggingPulse 1s ease-in-out 0s infinite normal forwards;
+
+		@at-root {
+			@keyframes HudCustomizableDraggingPulse {
+				0% {
+					border: $border-len solid rgba($red, 1);
+				}
+				50% {
+					border: $border-len solid rgba(color.scale($red, $saturation: 20%, $lightness: -10%), 1);
+				}
+				100% {
+					border: $border-len solid rgba($red, 1);
+				}
+			}
 		}
 	}
 }
@@ -26,8 +62,10 @@
 	width: 100%;
 	height: 100%;
 
-	&--disabled {
-		visibility: collapse;
+	visibility: collapse;
+
+	&--enabled {
+		visibility: visible;
 	}
 
 	&__grid {
@@ -47,11 +85,13 @@
 		}
 
 		&--x {
+			margin-left: -1px;
 			width: 2px;
 			height: 100%;
 		}
 
 		&--y {
+			margin-top: -1px;
 			width: 100%;
 			height: 2px;
 		}
@@ -71,11 +111,23 @@
 }
 
 .hud-customizer-virtual {
-	// border: 1px solid rgba(255, 255, 255, 0.1);
+	$root: &;
 
 	&--dragging {
 		& > .hud-customizer-virtual-snaps {
 			opacity: 0;
+			transition: opacity 0.05s ease-in 0s;
+		}
+	}
+
+	&__name {
+		align: center center;
+		@include mixin.font-styles($use-header: true);
+		opacity: 0.3;
+
+		#{$root}--dragging & {
+			opacity: 0;
+			transition: opacity 0.05s ease-in 0s;
 		}
 	}
 }
@@ -88,29 +140,39 @@
 	horizontal-align: right;
 	flow-children: down;
 
-	margin: 6px;
+	margin: 2px;
 	border-radius: 2px;
+	border: 1px solid rgba(0, 0, 0, 0.9);
+
+	opacity: 0.7;
+	transition: opacity 0.1s ease-in-out 0s;
+
+	&:hover {
+		opacity: 1;
+	}
 
 	tooltip-position: bottom;
-
-	// transition: opacity 0.05s ease-in-out 0s;
 
 	&__row {
 		width: fit-children;
 		height: fit-children;
 		flow-children: right;
+		border-bottom: 1px solid rgba(0, 0, 0, 0.95);
+
+		&--last {
+			border-bottom: 0px solid none;
+		}
 	}
 
 	&__button {
-		width: 24px;
-		height: 24px;
-		border: 1px solid rgba(0, 0, 0, 0);
-		background-color: rgba(0, 0, 0, 0.5);
+		width: 18px;
+		height: 18px;
+		background-color: rgba(0, 0, 0, 0.8);
 
 		transition: background-color 0.075s ease-in-out 0s;
 
 		&--last {
-			border-left: 0px solid none;
+			border-right: 0px solid none;
 		}
 
 		&:selected {
@@ -129,8 +191,8 @@
 	&__icon {
 		width: 100%;
 		height: 100%;
-		padding: 2px;
-		opacity: 0.3;
+		padding: 0px;
+		opacity: 0.5;
 	}
 }
 
