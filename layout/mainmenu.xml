@@ -272,10 +272,6 @@
 									<Label class="bottombar__text" text="Controls Library" />
 								</RadioButton>
 
-								<Button id="PSDumpButton" class="bottombar__button hide" onactivate="MainMenuController.psdump()">
-									<Label class="bottombar__text" text="dump ps" />
-								</Button>
-
 								<TooltipPanel class="bottombar__tooltip horizontal-align-right" tooltip="Switch background mode">
 									<Button class="bottombar__button" onactivate="MainMenuController.toggleBackgroundLightDark()">
 										<Image class="bottombar__icon" src="file://{images}/theme-light-dark.svg" textureheight="64" />

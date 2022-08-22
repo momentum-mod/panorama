@@ -71,10 +71,7 @@ class MainMenuController {
 		this.panels.model.SetDirectionalLightColor(0, 0.5, 0.5, 0.5);
 		this.panels.model.SetDirectionalLightDirection(0, 1.0, 0.0, 0.0);
 
-		if (GameInterfaceAPI.GetSettingBool('developer')) {
-			$('#ControlsLibraryButton').RemoveClass('hide');
-			$('#PSDumpButton').RemoveClass('hide');
-		}
+		if (GameInterfaceAPI.GetSettingBool('developer')) $('#ControlsLibraryButton').RemoveClass('hide');
 
 		this.setMainMenuBackground();
 
@@ -416,17 +413,5 @@ class MainMenuController {
 		} else {
 			this.onHomeButtonPressed();
 		}
-	}
-
-	/**
-	 * TODO: Delete me when proper engine support is added!
-	 */
-	static PSDump() {
-		for (let i = 0; i < $.persistentStorage.length; i++)
-			$.Msg(
-				$.persistentStorage.key(i).toString() +
-					': ' +
-					JSON.stringify($.persistentStorage.getItem($.persistentStorage.key(i)))
-			);
 	}
 }
