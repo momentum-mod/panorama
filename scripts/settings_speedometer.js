@@ -54,7 +54,7 @@ class SpeedometerDetailObject {
 		this.moveupButton = this.containingPanel.FindChildInLayoutFile('SpeedometerMoveUpBtn');
 		this.movedownButton = this.containingPanel.FindChildInLayoutFile('SpeedometerMoveDownBtn');
 		this.nameLabel = this.toggleButton.FindChildInLayoutFile('SpeedometerName');
-		this.nameLabel.text = SPEEDOMETER_DISP_NAMES[id];
+		this.nameLabel.text = $.Localize(SPEEDOMETER_DISP_NAMES[id]);
 
 		this.colorModeDropdown.SetSelectedIndex(speedometerKV['colorize']);
 
@@ -537,7 +537,7 @@ class RangeColorProfileObject {
 		);
 		this.deleteButton.SetPanelEvent('onactivate', () => RangeColorProfiles.deleteProfile(this.name));
 		this.editButton.SetPanelEvent('onactivate', () =>
-			RangeColorProfiles.makeColorProfileNamePopup(this.name, 'Edit', (profileName) =>
+			RangeColorProfiles.makeColorProfileNamePopup(this.name, $.Localize('#Common_Edit'), (profileName) =>
 				RangeColorProfiles.updateProfileName(this.name, profileName)
 			)
 		);
@@ -587,7 +587,7 @@ class RangeColorProfiles {
 		RangeColorProfiles.objectList = {};
 	}
 	static addProfile() {
-		RangeColorProfiles.makeColorProfileNamePopup('', 'Create', (profileName) =>
+		RangeColorProfiles.makeColorProfileNamePopup('', $.Localize('#Common_Create'), (profileName) =>
 			RangeColorProfiles.addEmptyProfile(profileName)
 		);
 	}

@@ -10,7 +10,7 @@
 
 		<Panel class="settings-page__header">
 
-			<Label class="settings-page__title" text="Online Settings" />
+			<Label class="settings-page__title" text="#Settings_Online_Title" />
 
 			<Panel class="settings-page__header-buttons">
 				<!-- Gamemode Dropdown will go here -->
@@ -24,18 +24,18 @@
 
 				<Panel class="settings-group__header">
 
-					<Label class="settings-group__title" text="#MOM_Settings_Title_Online_Ghost" />
+					<Label class="settings-group__title" text="#Settings_OnlineGhost_Title" />
 
 					<Panel class="flow-right horizontal-align-right">
 
 						<Button
 							class="button mr-3"
-							onactivate="SettingsShared.showImportExportDialogue('Online Ghosts', 'OnlineGhostSubSection')"
+							onactivate="SettingsShared.showImportExportDialogue('Settings_OnlineGhost_Title', 'OnlineGhostSubSection')"
 						>
-							<Label class="button__text" text="Import/Export" />
+							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
 
-						<TooltipPanel class="settings-group__reset" tooltip="Reset">
+						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
 							<Button class="button" onactivate="SettingsShared.resetSettings('OnlineGhostSubSection');">
 								<Image class="button__icon" src="file://{images}/reset.svg" />
 							</Button>
@@ -48,12 +48,12 @@
 				<Panel class="settings-group__combo">
 
 					<ChaosSettingsEnum
-						text="#MOM_Settings_Override_Alpha_Enable"
+						text="#Settings_OnlineGhost_OverrideAlphaEnable"
 						convar="mom_ghost_online_alpha_override_enable"
-						infomessage="#MOM_Settings_Override_Alpha_Enable_TT"
+						infomessage="#Settings_OnlineGhost_OverrideAlphaEnable_Info"
 					>
-						<RadioButton group="ghostalpha" text="Off" value="0" />
-						<RadioButton group="ghostalpha" text="On" value="1" />
+						<RadioButton group="ghostalpha" text="#Common_Off" value="0" />
+						<RadioButton group="ghostalpha" text="#Common_On" value="1" />
 					</ChaosSettingsEnum>
 
 					<ConVarEnabler convar="mom_ghost_online_alpha_override_enable">
@@ -63,65 +63,71 @@
 							max="255"
 							percentage="true"
 							convar="mom_ghost_online_alpha_override"
-							infotitle="#MOM_Settings_Override_Alpha_Enable"
-							infomessage="#MOM_Settings_Override_Alpha_Amount_TT"
+							infotitle="#Settings_OnlineGhost_OverrideAlphaEnable"
+							infomessage="#Settings_OnlineGhost_OverrideAlphaAmount_Info"
 						/>
 					</ConVarEnabler>
 
 				</Panel>
 
 				<ChaosSettingsEnum
-					text="#MOM_Settings_Online_Rotations"
+					text="#Settings_OnlineGhost_Rotations"
 					convar="mom_ghost_online_rotations"
-					infomessage="#MOM_Settings_Online_Rotations_TT"
+					infomessage="#Settings_OnlineGhost_Rotations_Info"
 				>
-					<RadioButton group="ghostrotation" text="Off" value="0" />
-					<RadioButton group="ghostrotation" text="On" value="1" />
+					<RadioButton group="ghostrotation" text="#Common_Off" value="0" />
+					<RadioButton group="ghostrotation" text="#Common_On" value="1" />
 				</ChaosSettingsEnum>
 
 				<ChaosSettingsEnum
-					text="#MOM_Settings_Online_Sounds"
+					text="#Settings_OnlineGhost_Sounds"
 					convar="mom_ghost_online_flashlights_enable"
-					infomessage="#MOM_Settings_Online_Sounds_TT"
+					infomessage="#Settings_OnlineGhost_Sounds_Info"
 				>
-					<RadioButton group="ghostsounds" text="Off" value="0" />
-					<RadioButton group="ghostsounds" text="On" value="1" />
+					<RadioButton group="ghostsounds" text="#Common_Off" value="0" />
+					<RadioButton group="ghostsounds" text="#Common_On" value="1" />
 				</ChaosSettingsEnum>
 
 				<ChaosSettingsEnum
-					text="#MOM_Settings_Entity_Panels"
+					text="#Settings_OnlineGhost_Panels"
 					convar="mom_hud_ghost_entpanels_enable"
-					infomessage="#MOM_Settings_Entity_Panels_TT"
+					infomessage="#Settings_OnlineGhost_Panels_Info"
 				>
-					<RadioButton group="ghostpanels" text="Off" value="0" />
-					<RadioButton group="ghostpanels" text="On" value="1" />
+					<RadioButton group="ghostpanels" text="#Common_Off" value="0" />
+					<RadioButton group="ghostpanels" text="#Common_On" value="1" />
 				</ChaosSettingsEnum>
 
 				<ChaosSettingsEnum
-					text="#MOM_Settings_Online_Trails"
+					text="#Settings_OnlineGhost_Trails"
 					convar="mom_ghost_online_trail_enable"
-					infomessage="#MOM_Settings_Online_Trails_TT"
+					infomessage="#Settings_OnlineGhost_Trails_Info"
 				>
-					<RadioButton group="ghosttrail" text="Off" value="0" />
-					<RadioButton group="ghosttrail" text="On" value="1" />
+					<RadioButton group="ghosttrail" text="#Common_Off" value="0" />
+					<RadioButton group="ghosttrail" text="#Common_On" value="1" />
 				</ChaosSettingsEnum>
+
+				<!--
+				TODO: We should probably merge these two at some point.
+				I've added Settings_OnlineGhost_ExplosiveAlpha and Settings_OnlineGhost_ExplosiveAlpha_Info
+				to localisation preemptively. - Tom
+				-->
 
 				<ChaosSettingsSlider
-					text="Ghost stickybomb alpha"
+					text="#Settings_OnlineGhost_StickyAlpha"
 					min="10"
 					max="255"
 					percentage="false"
 					convar="mom_ghost_online_sticky_alpha"
-					infomessage="Sets the alpha (translucency) of ghost player's sticky bombs."
+					infomessage="#Settings_OnlineGhost_StickyAlpha_Info"
 				/>
 
 				<ChaosSettingsSlider
-					text="Ghost conc alpha"
+					text="#Settings_OnlineGhost_ConcAlpha"
 					min="10"
 					max="255"
 					percentage="false"
 					convar="mom_ghost_online_conc_alpha"
-					infomessage="Sets the alpha (translucency) of ghost player's sticky bombs."
+					infomessage="#Settings_OnlineGhost_ConcAlpha_Info"
 				/>
 
 			</Panel>
@@ -132,15 +138,18 @@
 
 				<Panel class="settings-group__header">
 
-					<Label class="settings-group__title" text="#MOM_Settings_Title_Online_Player" />
+					<Label class="settings-group__title" text="#Settings_OnlinePlayer_Title" />
 
 					<Panel class="flow-right horizontal-align-right">
 
-						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Online Player', 'GhostSubSection')">
-							<Label class="button__text" text="Import/Export" />
+						<Button
+							class="button mr-3"
+							onactivate="SettingsShared.showImportExportDialogue('Settings_Player_Title', 'GhostSubSection')"
+						>
+							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
 
-						<TooltipPanel class="settings-group__reset" tooltip="Reset">
+						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
 							<Button class="button" onactivate="SettingsShared.resetSettings('GhostSubSection');">
 								<Image class="button__icon" src="file://{images}/reset.svg" />
 							</Button>
@@ -163,51 +172,53 @@
 					<Panel class="fill-width flow-down">
 
 						<ChaosSettingsEnumDropDown
-							text="#MOM_Settings_Ghost_Body"
+							text="#Settings_Player_Body"
 							convar="mom_ghost_bodygroup"
 							oninputsubmit="SettingsShared.onlineSettingsUpdateModel()"
+							infomessage="#Settings_Player_Body_Info"
 						>
-							<Label text="#MOM_Settings_Bodygroup_0" value="0" id="bodygroup0" />
-							<Label text="#MOM_Settings_Bodygroup_1" value="1" id="bodygroup1" />
-							<Label text="#MOM_Settings_Bodygroup_2" value="2" id="bodygroup2" />
-							<Label text="#MOM_Settings_Bodygroup_3" value="3" id="bodygroup3" />
-							<Label text="#MOM_Settings_Bodygroup_4" value="4" id="bodygroup4" />
-							<Label text="#MOM_Settings_Bodygroup_5" value="5" id="bodygroup5" />
-							<Label text="#MOM_Settings_Bodygroup_6" value="6" id="bodygroup6" />
-							<Label text="#MOM_Settings_Bodygroup_7" value="7" id="bodygroup7" />
-							<Label text="#MOM_Settings_Bodygroup_8" value="8" id="bodygroup8" />
-							<Label text="#MOM_Settings_Bodygroup_9" value="9" id="bodygroup9" />
-							<Label text="#MOM_Settings_Bodygroup_10" value="10" id="bodygroup10" />
-							<Label text="#MOM_Settings_Bodygroup_11" value="11" id="bodygroup11" />
-							<Label text="#MOM_Settings_Bodygroup_12" value="12" id="bodygroup12" />
-							<Label text="#MOM_Settings_Bodygroup_13" value="13" id="bodygroup13" />
-							<Label text="#MOM_Settings_Bodygroup_14" value="14" id="bodygroup14" />
+							<Label text="#Settings_Player_Bodygroup_0" value="0" id="bodygroup0" />
+							<Label text="#Settings_Player_Bodygroup_1" value="1" id="bodygroup1" />
+							<Label text="#Settings_Player_Bodygroup_2" value="2" id="bodygroup2" />
+							<Label text="#Settings_Player_Bodygroup_3" value="3" id="bodygroup3" />
+							<Label text="#Settings_Player_Bodygroup_4" value="4" id="bodygroup4" />
+							<Label text="#Settings_Player_Bodygroup_5" value="5" id="bodygroup5" />
+							<Label text="#Settings_Player_Bodygroup_6" value="6" id="bodygroup6" />
+							<Label text="#Settings_Player_Bodygroup_7" value="7" id="bodygroup7" />
+							<Label text="#Settings_Player_Bodygroup_8" value="8" id="bodygroup8" />
+							<Label text="#Settings_Player_Bodygroup_9" value="9" id="bodygroup9" />
+							<Label text="#Settings_Player_Bodygroup_10" value="10" id="bodygroup10" />
+							<Label text="#Settings_Player_Bodygroup_11" value="11" id="bodygroup11" />
+							<Label text="#Settings_Player_Bodygroup_12" value="12" id="bodygroup12" />
+							<Label text="#Settings_Player_Bodygroup_13" value="13" id="bodygroup13" />
+							<Label text="#Settings_Player_Bodygroup_14" value="14" id="bodygroup14" />
 						</ChaosSettingsEnumDropDown>
+
 						<ConVarColorDisplay
-							text="Ghost color"
+							text="#Settings_Player_Color"
 							convar="mom_ghost_color"
 							oncolorchange="SettingsShared.onlineSettingsUpdateModel()"
-							infomessage="#MOM_Settings_Pick_Body_Color_TT"
+							infomessage="#Settings_Player_Color_Info"
 						/>
 
-						<ChaosSettingsEnum
-							text="#MOM_Settings_Enable_Trail"
-							convar="mom_trail_enable"
-							infomessage="#MOM_Settings_Enable_Trail_TT"
-						>
-							<RadioButton group="playertrail" text="Off" value="0" />
-							<RadioButton group="playertrail" text="On" value="1" />
+						<ChaosSettingsEnum text="#Settings_Player_Trail" convar="mom_trail_enable" infomessage="#Settings_Player_Trail_Info">
+							<RadioButton group="playertrail" text="#Common_Off" value="0" />
+							<RadioButton group="playertrail" text="#Common_On" value="1" />
 						</ChaosSettingsEnum>
 
-						<ConVarColorDisplay text="Trail color" convar="mom_trail_color" infomessage="#MOM_Settings_Pick_Trail_Color_TT" />
+						<ConVarColorDisplay
+							text="#Settings_Player_TrailColor"
+							convar="mom_trail_color"
+							infomessage="#Settings_Player_TrailColor_Info"
+						/>
 
 						<ChaosSettingsSlider
-							text="#MOM_Settings_Trail_Length"
+							text="#Settings_Player_TrailLength"
 							min="0.1"
 							max="10"
 							displayprecision="1"
 							convar="mom_trail_length"
-							infomessage="#MOM_Settings_Trail_Length_TT"
+							infomessage="#Settings_Player_TrailLength_Info"
 						/>
 
 					</Panel>
@@ -222,9 +233,9 @@
 
 				<Panel class="settings-group__header">
 
-					<Label class="settings-group__title" text="Rich Presence" />
+					<Label class="settings-group__title" text="#Settings_RichPresence_Title" />
 
-					<TooltipPanel class="settings-group__reset" tooltip="Reset">
+					<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
 						<Button class="button" onactivate="SettingsShared.resetSettings('RichPresenceSubSection');">
 							<Image class="button__icon" src="file://{images}/reset.svg" />
 						</Button>
@@ -233,21 +244,21 @@
 				</Panel>
 
 				<ChaosSettingsEnum
-					text="Discord Rich Presence"
+					text="#Settings_RichPresence_Discord"
 					convar="mom_discord_enable"
-					infomessage="Displays your current map and run as your Discord profile."
+					infomessage="#Settings_RichPresence_Discord_Info"
 				>
-					<RadioButton group="enablediscordrp" text="#SFUI_Off" value="0" />
-					<RadioButton group="enablediscordrp" text="#SFUI_On" value="1" />
+					<RadioButton group="enablediscordrp" text="#Common_Off" value="0" />
+					<RadioButton group="enablediscordrp" text="#Common_On" value="1" />
 				</ChaosSettingsEnum>
 
 				<ChaosSettingsEnum
-					text="Steam Rich Presence"
+					text="#Settings_RichPresence_Steam"
 					convar="mom_steam_rich_presence"
-					infomessage="Displays your map and run status to your Steam friends."
+					infomessage="#Settings_RichPresence_Steam_Info"
 				>
-					<RadioButton group="steamrichpresence" text="#SFUI_Off" value="0" />
-					<RadioButton group="steamrichpresence" text="#SFUI_On" value="1" />
+					<RadioButton group="steamrichpresence" text="#Common_Off" value="0" />
+					<RadioButton group="steamrichpresence" text="#Common_On" value="1" />
 				</ChaosSettingsEnum>
 
 			</Panel>

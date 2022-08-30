@@ -23,7 +23,10 @@ class ImportExportSettings {
 
 		const sectionName = cp.GetAttributeString('name', '');
 
-		cp.SetDialogVariable('title', `Import/Export ${sectionName} Settings`);
+		cp.SetDialogVariable(
+			'title',
+			$.Localize('#Settings_ImportExport_Title').replace('%thing%', $.Localize(sectionName))
+		);
 		cp.SetDialogVariable('import_warning', '');
 
 		this.cvars = {};
@@ -61,14 +64,15 @@ class ImportExportSettings {
 			const cvars = input.split(/\n|;/);
 			let foundInvalidInput = false;
 
-			if (cvars.length === 0 || (cvars.length === 1 && !cvars[0])) throw 'No settings input!';
+			if (cvars.length === 0 || (cvars.length === 1 && !cvars[0]))
+				throw '#Settings_ImportExport_Error_NoSettings';
 
 			if (this.base64Mode) {
-				if (Object.keys(this.cvars).length !== cvars.length) throw 'Code is likely outdated.';
+				if (Object.keys(this.cvars).length !== cvars.length) throw '#Settings_ImportExport_Error_Outdated';
 
 				cvars.forEach((cvarValue, index) => GameInterfaceAPI.SetSettingString(this.cvars[index], cvarValue));
 			} else {
-				if (!cvars[0].includes(' ')) throw 'Input contains no cvars. Are you trying to convert base64?';
+				if (!cvars[0].includes(' ')) throw '#Settings_ImportExport_Error_NoCvars';
 
 				cvars.forEach((cvar) => {
 					const cvarArray = cvar.split(' ');
@@ -76,7 +80,10 @@ class ImportExportSettings {
 					if (!Object.values(this.cvars).includes(cvarArray[0])) {
 						foundInvalidInput = true;
 						if (!cvar.startsWith('['))
-							this.panels.import.text = this.panels.import.text.replace(cvar, `[Invalid] ${cvar}`);
+							this.panels.import.text = this.panels.import.text.replace(
+								cvar,
+								`[${$.Localize('#Settings_ImportExport_Invalid')}] ${cvar}`
+							);
 
 						return;
 					}
@@ -89,13 +96,17 @@ class ImportExportSettings {
 			this.panels.importStatus.RemoveClass('color-error');
 			$.GetContextPanel().SetDialogVariable(
 				'import_warning',
-				'Import successful!' + (foundInvalidInput ? ' Some invalid cvars were excluded.' : '')
+				$.Localize('#Settings_ImportExport_Success') +
+					(foundInvalidInput ? ' ' + $.Localize('#Settings_ImportExport_Success_Excluded') : '')
 			);
 		} catch (e) {
 			this.panels.importStatus.RemoveClass('color-positive');
 			this.panels.importStatus.AddClass('color-error');
-			$.GetContextPanel().SetDialogVariable('import_warning', 'Import failed! ' + e);
-			$.Warning('Settings import parser failed! ' + e);
+			$.GetContextPanel().SetDialogVariable(
+				'import_warning',
+				$.Localize('#Settings_ImportExport_Failure') + ' ' + $.Localize(e)
+			);
+			$.Warning($.Localize('#Settings import parser failed!') + ' ' + e);
 		}
 
 		this.exportSettings();

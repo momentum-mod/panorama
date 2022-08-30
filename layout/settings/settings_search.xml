@@ -14,7 +14,7 @@
 
 	<Panel class="settings-page">
 		<Panel class="settings-page__header">
-			<Label class="settings-page__title" text="Search Results" />
+			<Label class="settings-page__title" text="#Settings_General_Search_Results" />
 		</Panel>
 
 		<Panel id="SettingsPageContainer" class="settings-page__container">

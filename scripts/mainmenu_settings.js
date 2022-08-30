@@ -372,7 +372,9 @@ class MainMenuSettings {
 				}
 
 				if (showConvar) {
-					this.panels.infoConvar.text = `<i>${isKeybinder ? 'Command' : 'Convar'}: <b>${convar}</b></i>`;
+					this.panels.infoConvar.text = `<i>${
+						isKeybinder ? $.Localize('#Settings_General_Command') : $.Localize('#Convar')
+					}: <b>${convar}</b></i>`;
 					this.panels.infoConvar.RemoveClass('hide');
 					this.panels.infoDocsButton.SetHasClass('hide', !hasDocs || isKeybinder);
 					// Shouldn't need to clear the panel event here as it's hidden or gets overwritten
