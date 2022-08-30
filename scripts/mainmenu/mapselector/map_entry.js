@@ -38,7 +38,7 @@ class MapEntry {
 			if (mapData.mapFileNeedsUpdate) {
 				if (isDownloading) {
 					items.push({
-						label: $.Localize('MOM_MapSelector_CancelDownload'),
+						label: $.Localize('#Action_CancelDownload'),
 						icon: 'file://{images}/cancel.svg',
 						style: 'icon-color-red',
 
@@ -46,14 +46,14 @@ class MapEntry {
 					});
 				} else if (MapCacheAPI.MapQueuedForDownload(mapID)) {
 					items.push({
-						label: $.Localize('MOM_MapSelector_RemoveFromQueue'),
+						label: $.Localize('#Action_RemoveFromQueue'),
 						icon: 'file://{images}/playlist-remove.svg',
 						style: 'icon-color-red',
 						jsCallback: () => $.DispatchEvent('MapSelector_RemoveMapFromDownloadQueue', mapID)
 					});
 				} else {
 					items.push({
-						label: $.Localize('MOM_MapSelector_DownloadMap'),
+						label: $.Localize('#Action_DownloadMap'),
 						icon: 'file://{images}/play.svg',
 						style: 'icon-color-mid-blue',
 						jsCallback: () => $.DispatchEvent('MapSelector_TryPlayMap', mapID)
@@ -61,7 +61,7 @@ class MapEntry {
 				}
 			} else {
 				items.push({
-					label: $.Localize('MOM_MapSelector_StartMap'),
+					label: $.Localize('#Action_StartMap'),
 					icon: 'file://{images}/play.svg',
 					style: 'icon-color-green',
 
@@ -70,7 +70,7 @@ class MapEntry {
 
 				// Gamemode override submenu
 				items.push({
-					label: $.Localize('MOM_MapSelector_StartMapOverride'),
+					label: $.Localize('#Action_StartMapOverride'),
 					icon: 'file://{images}/alternative-mode.svg',
 					style: 'icon-color-green',
 					jsCallback: () => this.showGameModeOverrideMenu()
@@ -78,14 +78,14 @@ class MapEntry {
 			}
 
 			items.push({
-				label: 'Delete Map',
+				label: $.Localize('#Action_DeleteMap'),
 				icon: 'file://{images}/delete.svg',
 				style: 'icon-color-red',
 				jsCallback: () => $.DispatchEvent('MapSelector_ToggleMapStatus', mapID, true, false)
 			});
 		} else {
 			items.push({
-				label: $.Localize('MOM_MapSelector_DownloadMap'),
+				label: $.Localize('#Action_DownloadMap'),
 				icon: 'file://{images}/download.svg',
 				style: 'icon-color-mid-blue',
 				jsCallback: () => $.DispatchEvent('MapSelector_TryPlayMap', mapID)
@@ -94,7 +94,7 @@ class MapEntry {
 
 		if (mapData.isFavorited) {
 			items.push({
-				label: $.Localize('MOM_MapSelector_RemoveFromFavorites'),
+				label: $.Localize('#Action_RemoveFromFavorites'),
 				icon: 'file://{images}/favorite-remove.svg',
 				style: 'icon-color-yellow',
 
@@ -102,7 +102,7 @@ class MapEntry {
 			});
 		} else {
 			items.push({
-				label: $.Localize('MOM_MapSelector_AddToFavorites'),
+				label: $.Localize('#Action_AddToFavorites'),
 				icon: 'file://{images}/star.svg',
 				style: 'icon-color-yellow',
 				jsCallback: () => $.DispatchEvent('MapSelector_ToggleMapStatus', mapID, false, true)
@@ -146,7 +146,9 @@ class MapEntry {
 			pbPanel.SetPanelEvent('onmouseover', () => {
 				UiToolkitAPI.ShowTextTooltip(
 					pbPanel.id,
-					`<b>PB</b>: ${time}\n<b>Rank</b>: ${mapData.pr.rank}`
+					`<b>${$.Localize('#Common_PersonalBest')}</b>: ${time}\n<b>${$.Localize('#Common_Rank')}</b>: ${
+						mapData.pr.rank
+					}`
 					// `Last Played: ${new Date(mapData.lastPlayed).toDateString()}` +
 				);
 			});

@@ -9,12 +9,12 @@
 	<snippets>
 		<snippet name="MapBannerBeta">
 			<Panel class="map-entry__banner map-entry__banner--beta">
-				<Label class="map-entry__banner-text" text="Beta" />
+				<Label class="map-entry__banner-text" text="#MapSelector_Banner_Beta" />
 			</Panel>
 		</snippet>
 		<snippet name="MapBannerNew">
 			<Panel class="map-entry__banner map-entry__banner--new">
-				<Label class="map-entry__banner-text" text="New" />
+				<Label class="map-entry__banner-text" text="#MapSelector_Banner_New" />
 			</Panel>
 		</snippet>
 	</snippets>
