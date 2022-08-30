@@ -55,14 +55,6 @@
 				/>
 
 
-				<ChaosSettingsEnum
-					text="#MOM_Settings_Save_Checkpoints"
-					convar="mom_saveloc_save_between_sessions"
-					infomessage="#MOM_Settings_Save_Checkpoints_TT"
-				>
-					<RadioButton group="savesavelocs" text="#SFUI_Off" value="0" />
-					<RadioButton group="savesavelocs" text="#SFUI_On" value="1" />
-				</ChaosSettingsEnum>
 
 				<ChaosSettingsEnum
 					text="#MOM_Settings_Overlapping_Keys"
