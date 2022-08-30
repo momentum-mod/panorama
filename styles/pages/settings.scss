@@ -24,7 +24,7 @@ $page-width: 1920px - $rightnav-width;
 	}
 
 	&__info {
-		width: 350px;
+		width: 400px;
 
 		height: 100%;
 		padding: 16px;
@@ -456,6 +456,12 @@ $page-width: 1920px - $rightnav-width;
 		@include mixin.font-styles($use-header: false);
 		font-size: 18px;
 		margin-bottom: 8px;
+
+		& h2 {
+			// I wish we could use margin-top here to avoid needing \n chars in the string,
+			// but Panorama just ignores that and similar properties
+			font-weight: medium;
+		}
 	}
 
 	&__cvar {
