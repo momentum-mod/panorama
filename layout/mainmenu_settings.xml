@@ -20,7 +20,12 @@
 
 					<Image class="search__icon" src="file://{images}/search.svg" textureheight="64" />
 
-					<TextEntry id="SettingsSearchTextEntry" class="search__textentry" maxchars="30" placeholder="Search Settings..." />
+					<TextEntry
+						id="SettingsSearchTextEntry"
+						class="search__textentry"
+						maxchars="30"
+						placeholder="#Settings_General_Search_Prompt"
+					/>
 
 					<Button
 						id="SettingsSearchClear"
@@ -58,7 +63,7 @@
 							<Panel class="full-width">
 
 
-								<Label class="settings-nav__item-label" text="Input" />
+								<Label class="settings-nav__item-label" text="#Settings_Input_Title" />
 
 							</Panel>
 
@@ -70,7 +75,7 @@
 									group="SettingsSubNav"
 									onactivate="MainMenuSettings.navigateToSubsection('InputSettings', 'MouseSubSection')"
 								>
-									<Label class="settings-nav__subitem-label" text="#MOM_Settings_Title_Mouse" />
+									<Label class="settings-nav__subitem-label" text="#Settings_Mouse_Title" />
 								</RadioButton>
 
 								<RadioButton
@@ -79,7 +84,7 @@
 									group="SettingsSubNav"
 									onactivate="MainMenuSettings.navigateToSubsection('InputSettings', 'KeybindSubSection')"
 								>
-									<Label class="settings-nav__subitem-label" text="#MOM_Settings_Title_Key" />
+									<Label class="settings-nav__subitem-label" text="#Settings_Keybinds_Title" />
 								</RadioButton>
 
 							</Panel>
@@ -97,7 +102,7 @@
 							onactivate="MainMenuSettings.navigateToTab('AudioSettings')"
 						>
 
-							<Label class="settings-nav__item-label" text="Audio" />
+							<Label class="settings-nav__item-label" text="#Settings_Audio_Title" />
 
 							<Panel class="settings-nav__subsection settings-nav__subsection--2 settings-nav__subsection--hidden">
 
@@ -107,7 +112,7 @@
 									group="SettingsSubNav"
 									onactivate="MainMenuSettings.navigateToSubsection('AudioSettings', 'VolumeSubSection')"
 								>
-									<Label class="settings-nav__subitem-label" text="Volume" />
+									<Label class="settings-nav__subitem-label" text="#Settings_Volume_Title" />
 								</RadioButton>
 
 								<RadioButton
@@ -116,7 +121,7 @@
 									group="SettingsSubNav"
 									onactivate="MainMenuSettings.navigateToSubsection('AudioSettings', 'AudioDevicesSubSection')"
 								>
-									<Label class="settings-nav__subitem-label" text="Devices" />
+									<Label class="settings-nav__subitem-label" text="#Settings_AudioDevices_Title" />
 								</RadioButton>
 
 							</Panel>
@@ -134,7 +139,7 @@
 							onactivate="MainMenuSettings.navigateToTab('VideoSettings')"
 						>
 
-							<Label class="settings-nav__item-label" text="Video" />
+							<Label class="settings-nav__item-label" text="#Settings_Video_Title" />
 
 							<Panel class="settings-nav__subsection settings-nav__subsection--3 settings-nav__subsection--hidden">
 
@@ -144,7 +149,7 @@
 									group="SettingsSubNav"
 									onactivate="MainMenuSettings.navigateToSubsection('VideoSettings', 'VideoSubSection')"
 								>
-									<Label class="settings-nav__subitem-label" text="#MOM_Settings_Title_Video" />
+									<Label class="settings-nav__subitem-label" text="#Settings_Video_Title" />
 								</RadioButton>
 
 								<RadioButton
@@ -153,7 +158,7 @@
 									group="SettingsSubNav"
 									onactivate="MainMenuSettings.navigateToSubsection('VideoSettings', 'AdvancedVideoSubSection')"
 								>
-									<Label class="settings-nav__subitem-label" text="#MOM_Settings_Title_Video_Render" />
+									<Label class="settings-nav__subitem-label" text="#Settings_Render_Title" />
 								</RadioButton>
 
 								<RadioButton
@@ -162,7 +167,7 @@
 									group="SettingsSubNav"
 									onactivate="MainMenuSettings.navigateToSubsection('VideoSettings', 'TextureReplaceSubSection')"
 								>
-									<Label class="settings-nav__subitem-label" text="#MOM_Settings_Title_Texture_Replace" />
+									<Label class="settings-nav__subitem-label" text="#Settings_TextureReplace_Title" />
 								</RadioButton>
 
 							</Panel>
@@ -180,8 +185,7 @@
 							onactivate="MainMenuSettings.navigateToTab('OnlineSettings')"
 						>
 
-							<Label class="settings-nav__item-label" text="Online" />
-
+							<Label class="settings-nav__item-label" text="#Settings_Online_Title" />
 							<Panel class="settings-nav__subsection settings-nav__subsection--3 settings-nav__subsection--hidden">
 
 								<RadioButton
@@ -190,7 +194,7 @@
 									group="SettingsSubNav"
 									onactivate="MainMenuSettings.navigateToSubsection('OnlineSettings', 'OnlineGhostSubSection')"
 								>
-									<Label class="settings-nav__subitem-label" text="Online Ghosts" />
+									<Label class="settings-nav__subitem-label" text="#Settings_OnlineGhost_Title" />
 								</RadioButton>
 
 								<RadioButton
@@ -199,7 +203,7 @@
 									group="SettingsSubNav"
 									onactivate="MainMenuSettings.navigateToSubsection('OnlineSettings', 'GhostSubSection')"
 								>
-									<Label class="settings-nav__subitem-label" text="Player Ghost" />
+									<Label class="settings-nav__subitem-label" text="#Settings_OnlinePlayer_Title" />
 								</RadioButton>
 
 								<RadioButton
@@ -208,7 +212,7 @@
 									group="SettingsSubNav"
 									onactivate="MainMenuSettings.navigateToSubsection('OnlineSettings', 'RichPresenceSubSection')"
 								>
-									<Label class="settings-nav__subitem-label" text="Rich Presence" />
+									<Label class="settings-nav__subitem-label" text="#Settings_RichPresence_Title" />
 								</RadioButton>
 
 							</Panel>
@@ -226,7 +230,7 @@
 							onactivate="MainMenuSettings.navigateToTab('GameplaySettings')"
 						>
 
-							<Label class="settings-nav__item-label" text="Gameplay" />
+							<Label class="settings-nav__item-label" text="#Settings_Gameplay_Title" />
 
 							<Panel class="settings-nav__subsection settings-nav__subsection--8 settings-nav__subsection--hidden">
 
@@ -236,7 +240,7 @@
 									group="SettingsSubNav"
 									onactivate="MainMenuSettings.navigateToSubsection('GameplaySettings', 'GameplayGeneralSubSection')"
 								>
-									<Label class="settings-nav__subitem-label" text="#MOM_Settings_Title_Gameplay_General" />
+									<Label class="settings-nav__subitem-label" text="#Settings_Gameplay" />
 								</RadioButton>
 
 								<RadioButton
@@ -245,7 +249,7 @@
 									group="SettingsSubNav"
 									onactivate="MainMenuSettings.navigateToSubsection('GameplaySettings', 'PaintSubSection')"
 								>
-									<Label class="settings-nav__subitem-label" text="#MOM_Settings_Title_Gameplay_Paint" />
+									<Label class="settings-nav__subitem-label" text="#Settings_Paint_Title" />
 								</RadioButton>
 
 								<RadioButton
@@ -254,7 +258,7 @@
 									group="SettingsSubNav"
 									onactivate="MainMenuSettings.navigateToSubsection('GameplaySettings', 'SafeguardsSubSection')"
 								>
-									<Label class="settings-nav__subitem-label" text="#MOM_Settings_Title_Gameplay_Run_Safeguards" />
+									<Label class="settings-nav__subitem-label" text="#Settings_Safeguards_Title" />
 								</RadioButton>
 
 								<!-- TODO: Rename -->
@@ -264,7 +268,7 @@
 									group="SettingsSubNav"
 									onactivate="MainMenuSettings.navigateToSubsection('GameplaySettings', 'ZonesSubSection')"
 								>
-									<Label class="settings-nav__subitem-label" text="Zones" />
+									<Label class="settings-nav__subitem-label" text="#Settings_Zones_Title" />
 								</RadioButton>
 
 								<RadioButton
@@ -273,7 +277,7 @@
 									group="SettingsSubNav"
 									onactivate="MainMenuSettings.navigateToSubsection('GameplaySettings', 'RocketJumpSubSection')"
 								>
-									<Label class="settings-nav__subitem-label" text="#MOM_Settings_Title_Gameplay_RJ" />
+									<Label class="settings-nav__subitem-label" text="#Settings_RJ_Title" />
 								</RadioButton>
 
 								<RadioButton
@@ -282,7 +286,7 @@
 									group="SettingsSubNav"
 									onactivate="MainMenuSettings.navigateToSubsection('GameplaySettings', 'StickyJumpSubSection')"
 								>
-									<Label class="settings-nav__subitem-label" text="#MOM_Settings_Title_Gameplay_SJ" />
+									<Label class="settings-nav__subitem-label" text="#Settings_SJ_Title" />
 								</RadioButton>
 
 								<RadioButton
@@ -291,7 +295,7 @@
 									group="SettingsSubNav"
 									onactivate="MainMenuSettings.navigateToSubsection('GameplaySettings', 'ConcSubSection')"
 								>
-									<Label class="settings-nav__subitem-label" text="Conc" />
+									<Label class="settings-nav__subitem-label" text="#Settings_Conc_Title" />
 								</RadioButton>
 
 								<RadioButton
@@ -300,7 +304,7 @@
 									group="SettingsSubNav"
 									onactivate="MainMenuSettings.navigateToSubsection('GameplaySettings', 'DefragSubSection')"
 								>
-									<Label class="settings-nav__subitem-label" text="Defrag" />
+									<Label class="settings-nav__subitem-label" text="#Settings_Defrag_Title" />
 								</RadioButton>
 
 							</Panel>
@@ -318,7 +322,7 @@
 							onactivate="MainMenuSettings.navigateToTab('InterfaceSettings')"
 						>
 
-							<Label class="settings-nav__item-label" text="Interface" />
+							<Label class="settings-nav__item-label" text="#Settings_Interface" />
 
 							<Panel class="settings-nav__subsection settings-nav__subsection--10 settings-nav__subsection--hidden">
 
@@ -328,7 +332,7 @@
 									group="SettingsSubNav"
 									onactivate="MainMenuSettings.navigateToSubsection('InterfaceSettings', 'UISubSection')"
 								>
-									<Label class="settings-nav__subitem-label" text="User Interface" />
+									<Label class="settings-nav__subitem-label" text="#Settings_Menu_Title" />
 								</RadioButton>
 
 								<RadioButton
@@ -337,7 +341,7 @@
 									group="SettingsSubNav"
 									onactivate="MainMenuSettings.navigateToSubsection('InterfaceSettings', 'SpeedometerSubSection')"
 								>
-									<Label class="settings-nav__subitem-label" text="#MOM_Settings_Speedometer_Label" />
+									<Label class="settings-nav__subitem-label" text="#Settings_Speedometer_Title" />
 								</RadioButton>
 
 								<RadioButton
@@ -346,7 +350,7 @@
 									group="SettingsSubNav"
 									onactivate="MainMenuSettings.navigateToSubsection('InterfaceSettings', 'CrosshairSubSection')"
 								>
-									<Label class="settings-nav__subitem-label" text="Crosshair" />
+									<Label class="settings-nav__subitem-label" text="#Settings_Crosshair_Title" />
 								</RadioButton>
 								
 								<RadioButton
@@ -355,7 +359,7 @@
 									group="SettingsSubNav"
 									onactivate="MainMenuSettings.navigateToSubsection('InterfaceSettings', 'TimerSubSection')"
 								>
-									<Label class="settings-nav__subitem-label" text="Timer" />
+									<Label class="settings-nav__subitem-label" text="#Settings_Timer_Title" />
 								</RadioButton>
 								
 								<RadioButton
@@ -364,7 +368,7 @@
 									group="SettingsSubNav"
 									onactivate="MainMenuSettings.navigateToSubsection('InterfaceSettings', 'PlayerStatusSubSection')"
 								>
-									<Label class="settings-nav__subitem-label" text="Player Status" />
+									<Label class="settings-nav__subitem-label" text="#Settings_HUDStatus_Title" />
 								</RadioButton>
 
 								<RadioButton
@@ -373,7 +377,7 @@
 									group="SettingsSubNav"
 									onactivate="MainMenuSettings.navigateToSubsection('InterfaceSettings', 'KeypressSubSection')"
 								>
-									<Label class="settings-nav__subitem-label" text="Key Presses" />
+									<Label class="settings-nav__subitem-label" text="#Settings_KeypressHUD_Title" />
 								</RadioButton>
 
 								<RadioButton
@@ -382,7 +386,7 @@
 									group="SettingsSubNav"
 									onactivate="MainMenuSettings.navigateToSubsection('InterfaceSettings', 'WeaponSelSubSection')"
 								>
-									<Label class="settings-nav__subitem-label" text="Weapon Selection" />
+									<Label class="settings-nav__subitem-label" text="#Settings_WeaponSelection_Title" />
 								</RadioButton>
 
 								<RadioButton
@@ -391,7 +395,7 @@
 									group="SettingsSubNav"
 									onactivate="MainMenuSettings.navigateToSubsection('InterfaceSettings', 'StrafeSyncSubSection')"
 								>
-									<Label class="settings-nav__subitem-label" text="Strafe Sync" />
+									<Label class="settings-nav__subitem-label" text="#Settings_TotalSync_Title" />
 								</RadioButton>
 
 								<RadioButton
@@ -400,7 +404,7 @@
 									group="SettingsSubNav"
 									onactivate="MainMenuSettings.navigateToSubsection('InterfaceSettings', 'SynchronizerSubSection')"
 								>
-									<Label class="settings-nav__subitem-label" text="Synchronizer" />
+									<Label class="settings-nav__subitem-label" text="#Settings_Synchronizer_Title" />
 								</RadioButton>
 
 								<RadioButton
@@ -409,7 +413,7 @@
 									group="SettingsSubNav"
 									onactivate="MainMenuSettings.navigateToSubsection('InterfaceSettings', 'MapInfoSubSection')"
 								>
-									<Label class="settings-nav__subitem-label" text="Map Info" />
+									<Label class="settings-nav__subitem-label" text="#Settings_MapInfo_Title" />
 								</RadioButton>
 
 							</Panel>
@@ -429,12 +433,12 @@
 
 					<Label id="SettingsInfoTitle" class="settings-info__title" />
 
-					<Label id="SettingsInfoMessage" class="settings-info__description" />
+					<Label id="SettingsInfoMessage" html="true" class="settings-info__description" />
 
 					<Label id="SettingsInfoConvar" html="true" class="settings-info__cvar" />
 
 					<Button id="SettingsInfoDocsButton" class="button">
-						<Label class="button__text" text="View Docs Page" />
+						<Label class="button__text" text="#Settings_General_ViewDocs" />
 					</Button>
 				</Panel>
 

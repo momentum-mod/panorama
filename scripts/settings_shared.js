@@ -52,7 +52,7 @@ class SettingsShared {
 	}
 
 	static resetControls(panelID) {
-		this.showConfirmResetSettings('Are you sure you want to reset all controls?', () => {
+		this.showConfirmResetSettings($.Localize('#Settings_General_ResetControls'), () => {
 			// TODO: remove this out once api is ported
 			typeof OptionsMenuAPI !== typeof undefined
 				? OptionsMenuAPI.RestoreKeybdMouseBindingDefaults()
@@ -62,14 +62,14 @@ class SettingsShared {
 	}
 
 	static resetSettings(panelID) {
-		this.showConfirmResetSettings('Are you sure you want to reset these settings?', () => {
+		this.showConfirmResetSettings($.Localize('#Settings_General_ResetSomething'), () => {
 			this.resetSettingsRecursive($.GetContextPanel().FindChildTraverse(panelID));
 		});
 	}
 
 	static resetVideoSettings() {
 		// For future: use same localisation string as above
-		this.showConfirmResetSettings('Are you sure you want to reset these settings?', () => {
+		this.showConfirmResetSettings($.Localize('#Settings_General_ResetSomething'), () => {
 			$.DispatchEvent('ChaosVideoSettingsResetDefault');
 			this.resetSettingsRecursive($.GetContextPanel());
 			this.videoSettingsOnUserInputSubmit();
@@ -78,12 +78,12 @@ class SettingsShared {
 
 	static showConfirmResetSettings(message, resetFn) {
 		UiToolkitAPI.ShowGenericPopupTwoOptionsBgStyle(
-			'Confirm',
+			$.Localize('#Settings_General_Apply'),
 			message,
 			'warning-popup',
-			'Discard',
+			$.Localize('#Settings_General_Discard'),
 			resetFn,
-			'Return',
+			$.Localize('#Settings_General_Return'),
 			() => {},
 			'dim'
 		);
@@ -118,7 +118,7 @@ class SettingsShared {
 		this.videoSettingsResetUserInput();
 	}
 
-	static showImportExportDialogue(name, panelID) {
+	static showImportExportDialogue(localeString, panelID) {
 		const section = $.GetContextPanel().FindChildTraverse(panelID);
 
 		let cvars = [];
@@ -138,7 +138,7 @@ class SettingsShared {
 		UiToolkitAPI.ShowCustomLayoutPopupParameters(
 			'',
 			'file://{resources}/layout/popups/popup_importexportsettings.xml',
-			`${cvarParams}&name=${name}`
+			`${cvarParams}&name=${localeString}`
 		);
 	}
 
@@ -180,10 +180,10 @@ class SettingsShared {
 
 	static initTextureReplacementDropdown() {
 		const textures = {
-			None: '',
-			Noise: 'error_replacement/noise_basecolor',
-			Grid: 'error_replacement/grid_basecolor',
-			'Grid with Noise': 'error_replacement/grid-noise_basecolor'
+			'#Settings_TextureReplace_Texture_None': '',
+			'#Settings_TextureReplace_Texture_Noise': 'error_replacement/noise_basecolor',
+			'#Settings_TextureReplace_Texture_Grid': 'error_replacement/grid_basecolor',
+			'#Settings_TextureReplace_Texture_GridWithNoise': 'error_replacement/grid-noise_basecolor'
 		};
 
 		/** @type {Image} @static */
@@ -210,11 +210,19 @@ class SettingsShared {
 					// If we don't have the texture in the list, set the path directly to the override
 					path = override;
 					// Create our label so we can make it look nice
-					$.CreatePanel('Label', dropdown, 'cvar-value', { text: `${path} (Custom)`, value: path });
+					$.CreatePanel('Label', dropdown, 'cvar-value', {
+						text: `${path} (${$.Localize('#Settings_TextureReplace_Texture_Custom')})`,
+						value: path
+					});
 				}
 			} else if (selected) {
 				// Panorama won't let me store the texturePath value in the panel, so find it again based on the name.
-				path = Object.entries(textures).find(([textureName, _]) => selected.text === textureName)[1];
+				// The $.Localize() is rather silly but once the panel's text has been set to a localised string, it differs
+				// for the token `texturename`. We could localize the object keys in `textures` themselves, but I'm worried
+				// V8 would have issues with weird chars in there.
+				path = Object.entries(textures).find(
+					([textureName, _]) => selected.text === $.Localize(textureName)
+				)[1];
 			}
 
 			// Find and destroy the label because it's not a real option
@@ -236,7 +244,10 @@ class SettingsShared {
 		}
 
 		Object.entries(textures).forEach(([textureName, texturePath], i) => {
-			const item = $.CreatePanel('Label', dropdown, `Texture${i}`, { text: textureName, value: texturePath });
+			const item = $.CreatePanel('Label', dropdown, `Texture${i}`, {
+				text: $.Localize(textureName),
+				value: texturePath
+			});
 			dropdown.AddOption(item);
 		});
 	}

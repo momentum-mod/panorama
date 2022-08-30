@@ -9,7 +9,7 @@ class RangeColorProfileNamePopup {
 
 	static onTextSubmitted() {
 		const text = this.textEntry.text;
-		if (text === '' || text === 'No Profile' || text.includes(',')) {
+		if (text === '' || text === $.Localize('Settings_Speedometer_ColorProfile_Type0') || text.includes(',')) {
 			RangeColorProfileNamePopup.invalidNameSubmitted();
 			return;
 		}

@@ -17,16 +17,16 @@
 	</snippets>
 	<PopupCustomLayout class="PopupPanel Hidden" popupbackground="dim" onload="SpeedometerSelectPopup.init();">
 		<Panel class="row horizontal-align-center mt-0">
-			<Label id="TitleLabel" class="generic-popup__title" text="Pick a speedometer to add" />
+			<Label id="TitleLabel" class="generic-popup__title" text="#Settings_Speedometer_Pick" />
 		</Panel>
 		<Panel id="SpeedometerSelectContainer" class="flow-down horizontal-align-center">
 		</Panel>
 		<Panel class="row horizontal-align-center mt-4 generic-popup__button-row">
 			<Button id="CancelButton" class="button mr-4" onactivate="UiToolkitAPI.CloseAllVisiblePopups();">
-				<Label class="button__text" text="Cancel" />
+				<Label class="button__text" text="#Common_Cancel" />
 			</Button>
 			<Button class="button button--green" onactivate="SpeedometerSelectPopup.onAddButtonPressed();">
-				<Label class="button__text" text="Add" />
+				<Label class="button__text" text="#Common_Add" />
 			</Button>
 		</Panel>
 	</PopupCustomLayout>
