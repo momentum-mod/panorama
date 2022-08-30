@@ -220,6 +220,11 @@ $font-header-sizes: (
 	'h6': 20px
 ) !default;
 
+$html-font-header-sizes: (
+	'h1': 24px,
+	'h2': 20px
+) !default;
+
 $font: $font-primary !default;
 $font-shadow: 0px 1px rgba(0, 0, 0, 0.9) !default; // This is a text-shadow-fast
 $font-spacing: 0px !default;

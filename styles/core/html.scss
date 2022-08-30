@@ -1,4 +1,5 @@
 @use '../config' as *;
+@use '../abstract/mixin';
 
 a:hover {
 	text-decoration: underline;
@@ -22,4 +23,10 @@ em {
 
 pre {
 	font-family: $font-monospace;
+}
+
+@each $name, $size in $html-font-header-sizes {
+	#{$name} {
+		font-size: $size;
+	}
 }
