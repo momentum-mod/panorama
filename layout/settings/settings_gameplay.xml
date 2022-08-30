@@ -54,10 +54,6 @@
 					hasdocspage="false"
 				/>
 
-				<ChaosSettingsEnum text="#GameUI_FastSwitchCheck" convar="hud_fastswitch" hasdocspage="false">
-					<RadioButton group="fastswitch" text="#SFUI_Off" value="0" />
-					<RadioButton group="fastswitch" text="#SFUI_On" value="1" />
-				</ChaosSettingsEnum>
 
 				<ChaosSettingsEnum
 					text="#MOM_Settings_Save_Checkpoints"
