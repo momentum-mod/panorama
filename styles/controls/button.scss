@@ -43,6 +43,8 @@
 		vertical-align: middle;
 		horizontal-align: center;
 		text-align: center;
+		overflow: squish;
+		text-overflow: shrink;
 
 		&:hover {
 			color: $button-text-hover;
