@@ -71,7 +71,7 @@
 	&__values {
 		flow-children: right;
 		horizontal-align: right;
-		width: 280px;
+		width: fit-children;
 		height: 38px;
 		vertical-align: center;
 
@@ -80,7 +80,8 @@
 			@extend .radiobutton;
 			@extend .radiobutton--blue;
 
-			width: fill-parent-flow(1);
+			width: fit-children;
+			min-width: 140px;
 			height: 100%;
 			margin-left: 6px;
 		}
