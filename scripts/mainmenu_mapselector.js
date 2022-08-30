@@ -188,7 +188,7 @@ class MapSelection {
 			if (this.timesModeButtonsUnchecked === Object.keys(this.gameModeData).length - 2) {
 				UiToolkitAPI.ShowTextTooltipStyled(
 					button.id,
-					'Tip: Use right-click to deselect all other modes!',
+					$.Localize('#MapSelector_Filters_RightClickTip'),
 					'tooltip--positive'
 				);
 				$.Schedule(3.0, () => UiToolkitAPI.HideTextTooltip());
@@ -404,8 +404,8 @@ class MapSelection {
 	 */
 	static showConfirmOverwrite(mapID) {
 		UiToolkitAPI.ShowGenericPopupOkCancel(
-			$.Localize('#MOM_MapSelector_ConfirmOverwrite'),
-			$.Localize('#MOM_MapSelector_ConfirmOverwriteMsg'),
+			$.Localize('#Action_ConfirmOverwrite'),
+			$.Localize('#Action_ConfirmOverwrite_Message'),
 			'ok-cancel-popup',
 			() => $.DispatchEvent('MapSelector_ConfirmOverwrite', mapID),
 			() => {}
@@ -421,8 +421,8 @@ class MapSelection {
 
 		if (GameInterfaceAPI.GetSettingBool('mom_map_download_cancel_confirm')) {
 			UiToolkitAPI.ShowGenericPopupOkCancel(
-				$.Localize('#MOM_MapSelector_ConfirmCancel'),
-				$.Localize('#MOM_MapSelector_ConfirmCancelMsg'),
+				$.Localize('#Action_ConfirmCancel'),
+				$.Localize('#Action_ConfirmCancel_Message'),
 				'ok-cancel-popup',
 				cancel,
 				() => {}
@@ -486,7 +486,7 @@ class MapSelection {
 					namePanel.SetPanelEvent('onactivate', () => {
 						UiToolkitAPI.ShowSimpleContextMenu(namePanel.id, '', [
 							{
-								label: 'Show Steam Profile',
+								label: $.Localize('#Action_ShowSteamProfile'),
 								jsCallback: () => SteamOverlayAPI.OpenToProfileID(credit.user.xuid)
 							}
 						]);
