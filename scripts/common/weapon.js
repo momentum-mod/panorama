@@ -25,14 +25,14 @@ const WEAPON_ID = {
 };
 
 const WEAPON_NAMES = [
-	'Pistol',
-	'Shotgun',
-	'Machinegun',
-	'Sniper',
-	'Grenade',
-	'Conc',
-	'Knife',
-	'RocketLauncher',
-	'StickyLauncher',
-	'Cubemap'
+	'#Weapon_Pistol',
+	'#Weapon_Shotgun',
+	'#Weapon_MachineGun',
+	'#Weapon_Sniper',
+	'#Weapon_Grenade',
+	'#Weapon_ConcGrenade',
+	'#Weapon_Knife',
+	'#Weapon_RocketLauncher',
+	'#Weapon_StickybombLauncher',
+	'#Weapon_Cubemap'
 ];

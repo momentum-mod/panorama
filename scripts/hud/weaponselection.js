@@ -41,7 +41,7 @@ class WeaponSelection {
 		if (this.wepSnippets[id - 1]) return;
 
 		const weaponPanel = $.CreatePanel('Panel', this.container, ''); // Create the new panel
-		weaponPanel.SetDialogVariable('weapon', WEAPON_NAMES[id - 1]);
+		weaponPanel.SetDialogVariable('weapon', $.Localize(WEAPON_NAMES[id - 1]));
 		weaponPanel.LoadLayoutSnippet('Weapon');
 
 		const weaponSlot = MomentumWeaponAPI.GetWeaponSlot(id) + 1;
