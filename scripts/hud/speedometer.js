@@ -269,7 +269,7 @@ class Speedometer {
 			} else {
 				labelToColor.RemoveClass(INCREASE_CLASS);
 				labelToColor.RemoveClass(DECREASE_CLASS);
-				diffSymbol = '±';
+				diffSymbol = '';
 			}
 
 			if (separateComparison) {

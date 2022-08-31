@@ -18,7 +18,7 @@ class Split {
 		cp.SetDialogVariableFloat('time', time);
 
 		if (!isFirst) {
-			cp.SetDialogVariable('diff_sign', diff > 0 ? '+' : diff == 0 ? '±' : '-');
+			cp.SetDialogVariable('diff_sign', diff > 0 ? '+' : diff == 0 ? '' : '-');
 			cp.SetDialogVariableFloat('diff', Math.abs(diff));
 		}
 
