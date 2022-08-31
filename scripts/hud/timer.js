@@ -76,7 +76,7 @@ class HudTimer {
 			} else {
 				this.compLabel.RemoveClass(INCREASE_CLASS);
 				this.compLabel.RemoveClass(DECREASE_CLASS);
-				diffSymbol = '±';
+				diffSymbol = '';
 			}
 
 			$.GetContextPanel().SetDialogVariableFloat('runtimediff', Math.abs(diff));

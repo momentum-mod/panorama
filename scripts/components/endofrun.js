@@ -409,7 +409,7 @@ class EndOfRun {
 			const isTimeComparison = !useStat || data.unit === 's';
 
 			const round = (n) => n.toFixed(2);
-			const diffSign = (diff) => (diff > 0 ? '+' : diff == 0 ? '±' : '');
+			const diffSign = (diff) => (diff > 0 ? '+' : '');
 
 			let tooltipString;
 			const compareVal = isPositiveGood(data) ? -data.diff : data.diff;
