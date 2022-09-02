@@ -1,0 +1,82 @@
+@use '../config' as *;
+
+.dfjump {
+	align: center center;
+
+	&__container {
+		width: fit-children;
+		height: $dfjump-height;
+		flow-children: right;
+	}
+
+	&__bar-wrapper {
+		width: $dfjump-width;
+		height: $dfjump-height;
+		border: 1px solid $white;
+		border-radius: 3px;
+		opacity: $dfjump-opacity;
+	}
+
+	&__release {
+		width: 100%;
+		height: 50%;
+		horizontal-align: center;
+		vertical-align: top;
+		flow-children: up;
+		border-radius: 0px;
+		background-color: rgba(0, 0, 0, 0); //$progressbar-background;
+
+		.ProgressBarLeft {
+			background-color: $dfjump-color-release;
+		}
+
+		.ProgressBarRight {
+			background-color: $dfjump-color-background;
+		}
+	}
+
+	&__press {
+		width: 100%;
+		height: 50%;
+		horizontal-align: center;
+		vertical-align: bottom;
+		flow-children: down;
+		border-radius: 0px;
+		background-color: rgba(0, 0, 0, 0); //$progressbar-background;
+
+		&--air {
+			.ProgressBarLeft {
+				background-color: $dfjump-color-press-air;
+			}
+		}
+
+		&--ground {
+			.ProgressBarLeft {
+				background-color: $dfjump-color-press-ground;
+			}
+		}
+
+		.ProgressBarRight {
+			background-color: $dfjump-color-background;
+		}
+	}
+
+	&__text-wrapper {
+		width: fit-children;
+		height: $dfjump-height;
+		font-size: $dfjump-font-size;
+		padding-left: $dfjump-padding;
+
+		&--release {
+			vertical-align: top;
+		}
+
+		&--press {
+			vertical-align: bottom;
+		}
+
+		&--total {
+			vertical-align: middle;
+		}
+	}
+}

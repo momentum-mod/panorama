@@ -29,6 +29,7 @@
 	UiToolkitAPI.RegisterHUDPanel2d('MomHudMapInfo', 'file://{resources}/layout/hud/mapinfo.xml');
 	UiToolkitAPI.RegisterHUDPanel2d('MomHudWeaponSelection', 'file://{resources}/layout/hud/weaponselection.xml');
 	UiToolkitAPI.RegisterHUDPanel2d('MomHudCgaz', 'file://{resources}/layout/hud/cgaz.xml');
+	UiToolkitAPI.RegisterHUDPanel2d('MomHudDFJump', 'file://{resources}/layout/hud/dfjump.xml');
 	UiToolkitAPI.RegisterHUDPanel2d('MomHudSpecInfo', 'file://{resources}/layout/hud/specinfo.xml');
 	UiToolkitAPI.RegisterHUDPanel2d('MomHudSynchronizer', 'file://{resources}/layout/hud/synchronizer.xml');
 
