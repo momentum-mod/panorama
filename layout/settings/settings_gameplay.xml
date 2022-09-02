@@ -972,6 +972,39 @@
 
 				</Panel>
 
+				<Panel class="settings-group__combo">
+
+					<ChaosSettingsEnum
+						text="Display jump visualizer"
+						convar="mom_df_hud_jump_enable"
+						infomessage="Display jump visualizer. Draws an upward bar to show how long +jump was held after leaving the ground, and a downward bar to show how early/late +jump was pressed before jumping."
+					>
+						<RadioButton group="dfjumpenable" text="#SFUI_Off" value="0" />
+						<RadioButton group="dfjumpenable" text="#SFUI_On" value="1" />
+					</ChaosSettingsEnum>
+
+					<ConVarEnabler convar="mom_df_hud_jump_enable" class="flow-down">
+						<ChaosSettingsSlider
+							text="Maximum delay time (ms)"
+							min="50"
+							max="1000"
+							convar="mom_df_hud_jump_max_delay"
+							displayprecision="0"
+							infomessage="Length of time (in milliseconds) corresponding to 100% full press or release bars"
+						/>
+
+						<ChaosSettingsEnum
+							text="Display time labels"
+							convar="mom_df_hud_jump_text_enable"
+							infomessage="Display times (in milliseconds) next to jump sync bars. At the top is late release time, at the bottom early/late press time, and in the middle is combined time for a single jump."
+						>
+							<RadioButton group="dfjumptextenable" text="#SFUI_Off" value="0" />
+							<RadioButton group="dfjumptextenable" text="#SFUI_On" value="1" />
+						</ChaosSettingsEnum>
+					</ConVarEnabler>
+
+				</Panel>
+
 			</Panel>
 		</Panel>
 	</Panel>
