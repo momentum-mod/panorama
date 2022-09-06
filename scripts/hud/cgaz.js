@@ -3,6 +3,8 @@
 // TODO: remove these globals
 let MAX_GROUND_SPEED = 320;
 const AIR_ACCEL = 1;
+const DEFAULT_ACCEL = 2.56;
+const HASTE_ACCEL = 3.328; // (max speed) * (air accel = 1) * (tick interval) * (haste factor)
 
 let NEUTRAL_CLASS;
 let SLOW_CLASS;
@@ -250,6 +252,12 @@ class Cgaz {
 		const accel = lastMoveData.acceleration;
 		const maxAccel = accel * maxSpeed * tickInterval;
 
+		if (lastMoveData.hasteEndTime < 0 || lastMoveData.hasteEndTime > MomentumMovementAPI.GetCurrentTime()) {
+			this.snapAccel = HASTE_ACCEL;
+		} else {
+			this.snapAccel = DEFAULT_ACCEL;
+		}
+
 		const velocity = MomentumPlayerAPI.GetVelocity();
 		const speed = this.getSize(velocity);
 		const stopSpeed = Math.max(speed, MomentumMovementAPI.GetStopspeed());
@@ -413,11 +421,6 @@ class Cgaz {
 				} else {
 					this.clearZones([this.leftMirrorZone, this.rightMirrorZone]);
 				}
-			}
-
-			if (!this.snapAccel) {
-				MAX_GROUND_SPEED = maxSpeed;
-				this.snapAccel = maxSpeed * tickInterval;
 			}
 
 			if (this.snap_enable && this.snapAccel) {
