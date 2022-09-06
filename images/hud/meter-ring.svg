@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" height="100px" width="100px" viewBox="0 0 100 100">
+  <g>
+    <path
+          d="
+          M 50, 50
+          m 0, -48
+          a 48,48 0 0,1 0,96
+          a 48,48 0 0,1 0,-96
+          z
+          m 0, 16
+          a 32,32 0 0,0 0,64
+          a 32,32 0 0,0 0,-64
+          z
+          "
+          style="fill:#fff"
+    />
+  </g>
+</svg>
