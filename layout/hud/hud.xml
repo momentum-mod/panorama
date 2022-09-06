@@ -38,6 +38,7 @@
 			<MomHudStatus />
 			<MomHudTimer />
 			<MomHudStrafeSync />
+			<MomHudGroundboost />
 			<ChaosHudHintText id="HudHintText" />
 		</Panel>
 
