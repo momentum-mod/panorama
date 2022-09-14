@@ -147,7 +147,7 @@ $left-width: 831px;
 
 		#{$this}__text {
 			overflow: squish;
-			text-overflow: shrink;
+			text-overflow: ellipsis;
 		}
 	}
 
