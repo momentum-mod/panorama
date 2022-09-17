@@ -148,6 +148,7 @@
 		height: 84px; // Hardcoded value so height can transition
 
 		#{$this}__text {
+			vertical-align: middle;
 			overflow: squish;
 			text-overflow: shrink;
 		}
@@ -176,7 +177,7 @@
 	}
 
 	&__tiers {
-		// width: fill-parent-flow(1);
+		width: fill-parent-flow(1);
 		flow-children: right;
 		margin-right: 24px;
 	}
@@ -189,16 +190,16 @@
 
 // Be careful with widths here to ensure the numbers align exactly. The SliderThumb must be the same width as the numbers, and the
 // whole panel must be allowed to fit all its children, so make sure some space is left on the right side. Always test on multiple resolutions!
-$notch-width: 12px;
-$notch-gap: 30px;
+$notch-width: 16px;
 .mapselector-tier-slider {
 	flow-children: none;
+	width: 100%;
 	height: 34px;
 	margin-top: 2px;
 
 	&__numbers {
 		flow-children: right;
-		width: fit-children;
+		width: 100%;
 		padding-top: 0px;
 	}
 
@@ -211,13 +212,12 @@ $notch-gap: 30px;
 
 		&--double-digit {
 			width: $notch-width + 4px;
-			margin-right: -4px;
-			transform: translateX(-4px);
+			horizontal-align: right;
 		}
 	}
 
 	&__gap {
-		width: $notch-gap;
+		width: fill-parent-flow(1);
 		height: 100%;
 	}
 
