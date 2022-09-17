@@ -12,7 +12,8 @@ $page-width: 1920px - $rightnav-width;
 
 	&__left {
 		flow-children: down;
-		width: 350px;
+		width: fill-parent-flow(0.3);
+		min-width: 210px;
 
 		height: 100%;
 		padding-right: 16px;
@@ -27,7 +28,7 @@ $page-width: 1920px - $rightnav-width;
 		width: 400px;
 
 		height: 100%;
-		padding: 16px;
+		padding: 16px 0px 16px 32px;
 	}
 
 	&__search {
