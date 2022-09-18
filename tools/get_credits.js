@@ -12,7 +12,7 @@ const CREDITS_CLASS = 'about-credits';
 
 const TYPES = {
 	team: {
-		title: 'Momentum Team',
+		title: '#Credits_MomentumTeam',
 		sheetName: 'Team',
 		maxColumns: 5
 	}
@@ -25,9 +25,9 @@ const TYPES = {
 };
 
 const SECTION_STYLES = {
-	'Project Lead': 'lead',
-	'Department Head': 'dept-head',
-	Team: 'team'
+	'#Credits_ProjectLead': 'lead',
+	'#Credits_DepartmentHead': 'dept-head',
+	'#Credits_Team': 'team'
 };
 
 class xmlStringBuilder {

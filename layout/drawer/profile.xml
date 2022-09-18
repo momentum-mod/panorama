@@ -25,11 +25,11 @@
 				<Panel class="profile-global__level profile-level-indicators__wrapper">
 					<Panel id="ProfileLevelIndicators" class="profile-level-indicators">
 						<Panel class="profile-level-indicators__col profile-level-indicators__col--prestige">
-							<Label class="profile-level-indicators__title profile-level-indicators__title--prestige" text="Prestige" />
+							<Label class="profile-level-indicators__title profile-level-indicators__title--prestige" text="#Profile_Prestige" />
 							<LevelIndicator id="ProfileLevelIndicatorPrestige" class="profile-level-indicators__prestige-indicator" />
 						</Panel>
 						<Panel class="profile-level-indicators__col profile-level-indicators__col--level">
-							<Label class="profile-level-indicators__title profile-level-indicators__title--level" text="Level" />
+							<Label class="profile-level-indicators__title profile-level-indicators__title--level" text="#Profile_Level" />
 							<LevelIndicator id="ProfileLevelIndicatorLevel" class="profile-level-indicators__level-indicator" />
 						</Panel>
 					</Panel>

@@ -7,6 +7,6 @@
 	</scripts>
 
 	<Panel class="drawer__tab" acceptsfocus="true">
-		<Label class="text-h1" text="Coming soon!" />
+		<Label class="text-h1" text="#Common_ComingSoon" />
 	</Panel>
 </root>

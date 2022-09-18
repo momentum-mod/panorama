@@ -19,13 +19,10 @@ class LobbyCreate {
 	static onLoad() {
 		if (this.panels.cp.GetAttributeInt('islobbyowner', 0)) {
 			this.panels.warningRow.visible = true;
-			this.panels.cp.SetDialogVariable(
-				'warning',
-				'Warning: You are currently the owner of a lobby! Creating a new lobby will transfer ownership of your current lobby to another player.'
-			);
+			this.panels.cp.SetDialogVariable('warning', '#Lobby_Create_TransferWarning');
 		} else if (this.panels.cp.GetAttributeInt('isinlobby', 0)) {
 			this.panels.warningRow.visible = true;
-			this.panels.cp.SetDialogVariable('warning', 'Warning: This will cause you to leave you current lobby!');
+			this.panels.cp.SetDialogVariable('warning', '#Lobby_Create_LeaveWarning');
 		} else {
 			this.panels.warningRow.visible = false;
 		}
@@ -39,7 +36,7 @@ class LobbyCreate {
 		if (this.getMaxPlayersEntered() > this.lobbyMaxPlayers) {
 			UiToolkitAPI.ShowTextTooltip(
 				'MaxPlayers',
-				`Player limit is too high! Maximum value is ${this.lobbyMaxPlayers}.`
+				$.Localize('Lobby_MaxPlayers_Warning').replace('%max%', this.lobbyMaxPlayers)
 			);
 			this.panels.updateButton.enabled = false;
 		} else {
