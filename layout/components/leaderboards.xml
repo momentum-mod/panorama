@@ -19,7 +19,7 @@
 					selected="true"
 					onactivate="Leaderboards.setSelectedTimesList(TIME_LIST_TYPE.LIST_GLOBAL);"
 				>
-					<Label class="tabs__text" text="Global" />
+					<Label class="tabs__text" text="#Leaderboards_Category_Global" />
 				</RadioButton>
 				<RadioButton
 					id="TimesListLocal"
@@ -27,7 +27,7 @@
 					group="TimeTypeBar"
 					onactivate="Leaderboards.setSelectedTimesList(TIME_LIST_TYPE.LIST_LOCAL);"
 				>
-					<Label class="tabs__text" text="Local" />
+					<Label class="tabs__text" text="#Leaderboards_Category_Local" />
 				</RadioButton>
 				<RadioButton
 					id="TimesListLobby"
@@ -37,7 +37,7 @@
 					onmouseover="Leaderboards.showLobbyTooltip();"
 					onmouseout="UiToolkitAPI.HideTextTooltip();"
 				>
-					<Label class="tabs__text" text="Lobby" />
+					<Label class="tabs__text" text="#Leaderboards_Category_Lobby" />
 				</RadioButton>
 			</Panel>
 
@@ -50,7 +50,7 @@
 						selected="true"
 						onactivate="Leaderboards.setSelectedListType(TIME_LIST_TYPE.LIST_LOCAL, LEADERBOARD_TYPE.TIMES_LOCAL);"
 					>
-						<Label class="tabs__text" text="Your Runs" />
+						<Label class="tabs__text" text="#Leaderboards_Category_YourRuns" />
 					</RadioButton>
 					<RadioButton
 						id="LocalTypeDownloaded"
@@ -58,7 +58,7 @@
 						group="LocalTimeTypeBar"
 						onactivate="Leaderboards.setSelectedListType(TIME_LIST_TYPE.LIST_LOCAL, LEADERBOARD_TYPE.TIMES_LOCAL_DOWNLOADED);"
 					>
-						<Label class="tabs__text" text="Downloaded" />
+						<Label class="tabs__text" text="#Leaderboards_Category_Downloaded" />
 					</RadioButton>
 				</Panel>
 				<Panel class="leaderboard-filter-buttons__online tabs">
@@ -69,7 +69,7 @@
 						selected="true"
 						onactivate="Leaderboards.setSelectedListType(TIME_LIST_TYPE.LIST_GLOBAL, LEADERBOARD_TYPE.TIMES_TOP10);"
 					>
-						<Label class="tabs__text" text="Top 10" />
+						<Label class="tabs__text" text="#Leaderboards_Category_Top10" />
 					</RadioButton>
 					<RadioButton
 						id="OnlineTypeAround"
@@ -77,7 +77,7 @@
 						group="OnlineTimeTypeBar"
 						onactivate="Leaderboards.setSelectedListType(TIME_LIST_TYPE.LIST_GLOBAL, LEADERBOARD_TYPE.TIMES_AROUND);"
 					>
-						<Label class="tabs__text" text="Around" />
+						<Label class="tabs__text" text="#Leaderboards_Category_Around" />
 					</RadioButton>
 					<RadioButton
 						id="OnlineTypeFriends"
@@ -85,12 +85,15 @@
 						group="OnlineTimeTypeBar"
 						onactivate="Leaderboards.setSelectedListType(TIME_LIST_TYPE.LIST_GLOBAL, LEADERBOARD_TYPE.TIMES_FRIENDS);"
 					>
-						<Label class="tabs__text" text="Friends" />
+						<Label class="tabs__text" text="#Leaderboards_Category_Friends" />
 					</RadioButton>
 				</Panel>
 			</Panel>
 
-			<TooltipPanel class="horizontal-align-right width-fit-children height-fit-children" tooltip="View last run stats">
+			<TooltipPanel
+				class="horizontal-align-right width-fit-children height-fit-children"
+				tooltip="#Leaderboards_EndOfRunButton"
+			>
 				<Button id="EndOfRunButton" class="button" onactivate="Leaderboards.showEndOfRun();">
 					<Image class="button__icon button__icon--left" src="file://{images}/arrow-thick-right.svg" textureheight="64" />
 				</Button>
@@ -98,10 +101,10 @@
 		</Panel>
 		<Panel class="leaderboard-times">
 			<Panel class="leaderboard-times__header">
-				<Label class="leaderboard-entry__rank leaderboard-times__header-item" text="Rank" />
-				<Label class="leaderboard-entry__player leaderboard-times__header-item" text="Player" />
-				<Label class="leaderboard-entry__time leaderboard-times__header-item" text="Time" />
-				<Label class="leaderboard-entry__achieved leaderboard-times__header-item" text="Date Achieved" />
+				<Label class="leaderboard-entry__rank leaderboard-times__header-item" text="#Leaderboards_Column_Rank" />
+				<Label class="leaderboard-entry__player leaderboard-times__header-item" text="#Leaderboards_Column_Player" />
+				<Label class="leaderboard-entry__time leaderboard-times__header-item" text="#Leaderboards_Column_Time" />
+				<Label class="leaderboard-entry__achieved leaderboard-times__header-item" text="#Leaderboards_Column_Date" />
 			</Panel>
 			<Panel id="LeaderboardTimesContainer" class="leaderboard-times__main">
 				<DelayLoadList
@@ -116,8 +119,12 @@
 				</DelayLoadList>
 				<Panel class="leaderboard-times__empty">
 					<Panel class="vertical-align-center horizontal-align-center flow-down">
-						<Label id="LeaderboardEmptyWarningTitle" class="text-h3 horizontal-align-center mb-3" text="No runs found" />
-						<Label id="LeaderboardEmptyWarningText" class="horizontal-align-center" />
+						<Label
+							id="LeaderboardEmptyWarningTitle"
+							class="text-h3 horizontal-align-center mb-3"
+							text="#Leaderboards_NoRunsFound"
+						/>
+						<Label id="LeaderboardEmptyWarningText" class="horizontal-align-center" text="{s:empty-warning}" />
 					</Panel>
 				</Panel>
 				<Panel class="leaderboard-times__loading">
@@ -127,7 +134,7 @@
 							src="file://{images}/refresh.svg"
 							textureheight="128"
 						/>
-						<Label class="text-h5 horizontal-align-center" text="Requesting leaderboard data..." />
+						<Label class="text-h5 horizontal-align-center" text="#Leaderboards_RequestingData" />
 					</Panel>
 				</Panel>
 			</Panel>

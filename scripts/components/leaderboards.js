@@ -70,43 +70,50 @@ class Leaderboards {
 		if (statusType == LEADERBOARD_STATUS_TYPE.STATUS_TIMES_LOADING) {
 			this.panels.timesContainer.AddClass('leaderboard-times__main--loading');
 		} else if (count == 0) {
-			// TODO: Use dialog vars here! Christ!
+			let warningText = null;
 			switch (statusType) {
 				case LEADERBOARD_STATUS_TYPE.STATUS_NO_TIMES_RETURNED:
-					if (this.getSelectedListType() == LEADERBOARD_TYPE.TIMES_FRIENDS) {
-						this.panels.emptyWarningText.text = 'None of your friends have set times on this map!';
-					} else if (this.getSelectedListType() == LEADERBOARD_TYPE.TIMES_LOCAL) {
-						this.panels.emptyWarningText.text = 'You have no local replays of this map!';
-					} else if (this.getSelectedListType() == LEADERBOARD_TYPE.TIMES_LOCAL_DOWNLOADED) {
-						this.panels.emptyWarningText.text = 'You have no downloaded replays of this map!';
-					} else if (this.getSelectedListType() == LEADERBOARD_TYPE.TIMES_LOBBY) {
-						this.panels.emptyWarningText.text = 'Nobody in the lobby has set a time on this map!';
-					} else {
-						this.panels.emptyWarningText.text = 'This map has no completions!';
+					switch (this.getSelectedListType()) {
+						case LEADERBOARD_TYPE.TIMES_FRIENDS:
+							warningText = '#Leaderboards_Error_NoFriendTimes';
+							break;
+						case LEADERBOARD_TYPE.TIMES_LOCAL:
+							warningText = '#Leaderboards_Error_NoLocalReplays';
+							break;
+						case LEADERBOARD_TYPE.TIMES_LOCAL_DOWNLOADED:
+							warningText = '#Leaderboards_Error_NoDownloadedReplays';
+							break;
+						case LEADERBOARD_TYPE.TIMES_LOBBY:
+							warningText = '#Leaderboards_Error_NoLobbyTimes';
+							break;
+						default:
+							warningText = '#Leaderboards_Error_NoCompletions';
+							break;
 					}
-					this.panels.timesContainer.AddClass('leaderboard-times__main--empty');
 					break;
 				case LEADERBOARD_STATUS_TYPE.STATUS_NO_PB_SET:
-					this.panels.emptyWarningText.text = "You don't have any completions of this map!";
-					this.panels.timesContainer.AddClass('leaderboard-times__main--empty');
+					warningText = '#Leaderboards_Error_NoPB';
 					break;
 				case LEADERBOARD_STATUS_TYPE.STATUS_NO_FRIENDS:
-					this.panels.emptyWarningText.text = "You don't have any friends, precious...";
-					this.panels.timesContainer.AddClass('leaderboard-times__main--empty');
+					warningText = '#Leaderboards_Error_NoFriends';
 					break;
 				case LEADERBOARD_STATUS_TYPE.STATUS_UNAUTHORIZED_FRIENDS_LIST:
-					this.panels.emptyWarningText.text = 'Your friends list is private!';
-					this.panels.timesContainer.AddClass('leaderboard-times__main--empty');
+					warningText = '#Leaderboards_Error_FriendsPrivate';
 					break;
 				case LEADERBOARD_STATUS_TYPE.STATUS_SERVER_ERROR:
-					this.panels.emptyWarningText.text = 'Error fetching map times! Shit!!';
-					this.panels.timesContainer.AddClass('leaderboard-times__main--empty');
+					warningText = '#Leaderboards_Error_ServerError';
 					break;
 				case LEADERBOARD_STATUS_TYPE.STATUS_TIMES_LOADED:
 					$.Warning('Error: getTimesListStatus returned STATUS_TIMES_LOADED, with no times!');
 					break;
 				default:
 					$.Warning('Error: getTimesListStatus returned unknown StatusType ' + statusType);
+					break;
+			}
+			$.Msg(statusType);
+			if (warningText) {
+				$.GetContextPanel().SetDialogVariable('empty-warning', $.Localize(warningText));
+				this.panels.timesContainer.AddClass('leaderboard-times__main--empty');
 			}
 		}
 	}
@@ -144,7 +151,7 @@ class Leaderboards {
 
 	static showLobbyTooltip() {
 		if (!this.panels.lobbyButton.enabled) {
-			UiToolkitAPI.ShowTextTooltip(this.panels.lobbyButton.id, 'Join a Lobby to see Lobby times!');
+			UiToolkitAPI.ShowTextTooltip(this.panels.lobbyButton.id, $.Localize('#Leaderboards_JoinLobbyTooltip'));
 		}
 	}
 

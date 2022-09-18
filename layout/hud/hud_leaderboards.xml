@@ -29,7 +29,7 @@
 					</Panel>
 					<Panel class="hud-leaderboards-map-info__bottom">
 						<Panel id="HudLeaderboardsMapCredits" class="hud-leaderboards-map-info__credits">
-							<Label class="hud-leaderboards-map-info__credits-other-text" text="By" />
+							<Label class="hud-leaderboards-map-info__credits-other-text" text="#Common_By" />
 							<!-- Author names inserted by JS -->
 						</Panel>
 						<Panel class="hud-leaderboards-map-info__stats">
