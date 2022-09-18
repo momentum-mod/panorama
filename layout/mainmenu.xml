@@ -233,31 +233,31 @@
 
 							<Panel class="home__bottombar bottombar">
 
-								<TooltipPanel class="bottombar__tooltip" tooltip="Main Site">
+								<TooltipPanel class="bottombar__tooltip" tooltip="#MainMenu_Button_MainSite">
 									<Button class="bottombar__button" onactivate="SteamOverlayAPI.OpenURLModal('https://momentum-mod.org/')">
 										<Image class="bottombar__icon" src="file://{images}/social/home.svg" textureheight="64" />
 									</Button>
 								</TooltipPanel>
 
-								<TooltipPanel class="bottombar__tooltip" tooltip="GitHub">
+								<TooltipPanel class="bottombar__tooltip" tooltip="#MainMenu_Button_Github">
 									<Button class="bottombar__button" onactivate="SteamOverlayAPI.OpenURLModal('https://github.com/momentum-mod/game')">
 										<Image class="bottombar__icon" src="file://{images}/social/github.svg" textureheight="64" />
 									</Button>
 								</TooltipPanel>
 
-								<TooltipPanel class="bottombar__tooltip" tooltip="Discord">
+								<TooltipPanel class="bottombar__tooltip" tooltip="#MainMenu_Button_Discord">
 									<Button class="bottombar__button" onactivate="SteamOverlayAPI.OpenURLModal('https://discord.gg/momentummod')">
 										<Image class="bottombar__icon" src="file://{images}/social/discord.svg" textureheight="64" />
 									</Button>
 								</TooltipPanel>
 
-								<TooltipPanel class="bottombar__tooltip" tooltip="Forums">
+								<TooltipPanel class="bottombar__tooltip" tooltip="#MainMenu_Button_Forums">
 									<Button class="bottombar__button" onactivate="SteamOverlayAPI.OpenURLModal('https://forum.momentum-mod.org/')">
 										<Image class="bottombar__icon" src="file://{images}/social/forum.svg" textureheight="64" />
 									</Button>
 								</TooltipPanel>
 
-								<TooltipPanel class="bottombar__tooltip" tooltip="Twitter">
+								<TooltipPanel class="bottombar__tooltip" tooltip="#MainMenu_Button_Twitter">
 									<Button class="bottombar__button" onactivate="SteamOverlayAPI.OpenURLModal('https://twitter.com/MomentumMod')">
 										<Image class="bottombar__icon" src="file://{images}/social/twitter.svg" textureheight="64" />
 									</Button>
@@ -272,7 +272,7 @@
 									<Label class="bottombar__text" text="Controls Library" />
 								</RadioButton>
 
-								<TooltipPanel class="bottombar__tooltip horizontal-align-right" tooltip="Switch background mode">
+								<TooltipPanel class="bottombar__tooltip horizontal-align-right" tooltip="#MainMenu_SwitchBackground">
 									<Button class="bottombar__button" onactivate="MainMenuController.toggleBackgroundLightDark()">
 										<Image class="bottombar__icon" src="file://{images}/theme-light-dark.svg" textureheight="64" />
 									</Button>

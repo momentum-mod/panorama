@@ -34,11 +34,11 @@
 		<Panel class="flow-right full-width">
 
 			<ToggleButton id="DontShowAgainCheckbox" class="checkbox vertical-align-center mr-4">
-				<Label text="Don't show again" />
+				<Label text="#Common_DontShowAgain" />
 			</ToggleButton>
 
 			<Button class="button button--blue horizontal-align-right" onactivate="DontShowAgainPopup.onSubmit()">
-				<Label class="button__text" text="I Understand" />
+				<Label class="button__text" text="#Common_IUnderstand" />
 			</Button>
 
 		</Panel>

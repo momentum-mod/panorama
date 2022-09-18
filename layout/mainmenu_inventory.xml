@@ -6,6 +6,6 @@
     </scripts>
 
     <Panel>
-        <Label class="text-h2" text="Coming Soon!" />
+        <Label class="text-h2" text="#Common_ComingSoon" />
     </Panel>
 </root>

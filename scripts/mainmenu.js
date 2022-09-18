@@ -345,10 +345,10 @@ class MainMenuController {
 		$.DispatchEvent('ChaosMainMenuPauseGame'); // make sure game is paused so we can see the popup if hit from a keybind in-game
 
 		UiToolkitAPI.ShowGenericPopupTwoOptionsBgStyle(
-			'Quit',
-			'Are you sure you want to quit?',
+			$.Localize('#Action_Quit'),
+			$.Localize('#Action_Quit_Message'),
 			'warning-popup',
-			'Quit',
+			$.Localize('#Action_Quit'),
 			this.quitGame,
 			'Return',
 			() => {},
@@ -361,8 +361,8 @@ class MainMenuController {
 	 */
 	static onSafeguardDisconnect() {
 		UiToolkitAPI.ShowGenericPopupOkCancel(
-			$.Localize('#MOM_MB_Safeguard_Map_Quit_ToMenu_Title'),
-			"Leaving the map will cancel your timer, are you sure you want to quit?\n<span class='text-sm text-italic'>(You can turn this off in Settings → Gameplay → Safeguards)</span>",
+			$.Localize('#Safeguard_MapQuitToMenu'),
+			$.Localize('#Safeguard_MapQuitToMenu_Message'),
 			'warning-popup',
 			() => $.DispatchEvent('Safeguard_Response', RUN_SAFEGUARD_TYPE.QUIT_TO_MENU),
 			() => {}
@@ -374,8 +374,8 @@ class MainMenuController {
 	 */
 	static onSafeguardQuit() {
 		UiToolkitAPI.ShowGenericPopupOkCancel(
-			$.Localize('#MOM_MB_Safeguard_Map_Quit_Game_Title'),
-			"Quitting the game will cancel your timer, are you sure you want to quit?\n<span class='text-sm text-italic'>(You can turn this off in Settings → Gameplay → Safeguards)</span>",
+			$.Localize('#Safeguard_MapQuitGame'),
+			$.Localize('#Safeguard_MapQuitGame_Message'),
 			'warning-popup',
 			() => $.DispatchEvent('Safeguard_Response', RUN_SAFEGUARD_TYPE.QUIT_GAME),
 			() => {}
@@ -387,8 +387,8 @@ class MainMenuController {
 	 */
 	static onSafeguardMapChange(mapName) {
 		UiToolkitAPI.ShowGenericPopupOkCancel(
-			$.Localize('#MOM_MB_Safeguard_Map_Change_Title'),
-			`You are trying to change map to ${mapName} while your timer is still running, do you want to continue?\n\n<span class='text-sm text-italic'>(You can turn this off in Settings → Gameplay → Safeguards)</span>`,
+			$.Localize('#Safeguard_MapChange'),
+			$.Localize('#Safeguard_MapChange_Message').replace('%map%', mapName),
 			'warning-popup',
 			() => GameInterfaceAPI.ConsoleCommand('__map_change_ok 1;map ' + mapName),
 			() => {}
