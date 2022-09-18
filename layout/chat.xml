@@ -51,7 +51,7 @@
 			<Panel>
 				<Label
 					class="chat-entry__message"
-					text="&lt;b class=&quot;color-blue&quot;&gt;GAME&lt;/b&gt;: {s:message}"
+					text="&lt;b class=&quot;color-blue&quot;&gt;#Common_GameUpper&lt;/b&gt;: {s:message}"
 					html="true"
 					acceptsinput="true"
 				/>
@@ -73,7 +73,7 @@
 				clearaftersubmit="true"
 			/>
 			<Button class="chat__elem chat__send" onactivate="$('#ChatInput').Submit()">
-				<Label class="button__text chat__send-text" text="Send" />
+				<Label class="button__text chat__send-text" text="#Chat_Send" />
 			</Button>
 		</Panel>
 		<Panel class="chat__elem chat__history-wrapper">

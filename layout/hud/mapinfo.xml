@@ -20,7 +20,7 @@
 					convar="mom_hud_mapinfo_author_enable"
 					togglevisibility="true"
 				>
-					<Label class="hudmapinfo__label" text="By: {s:author}" />
+					<Label class="hudmapinfo__label" text="#MapInfo_Author" />
 				</ConVarEnabler>
 
 				<Panel class="flow-left width-fit-children horizontal-align-right vertical-align-center">
@@ -36,7 +36,7 @@
 						>
 							<Label class="hudmapinfo__label" text=" " />
 						</ConVarEnabler>
-						<Label id="NumzonesLabel" class="hudmapinfo__label" text="({d:numzones} Zones)" />
+						<Label id="NumzonesLabel" class="hudmapinfo__label" text="(#MapInfo_Zones)" />
 					</ConVarEnabler>
 
 					<ConVarEnabler
@@ -59,7 +59,7 @@
 						convar="mom_hud_mapinfo_tier_enable"
 						togglevisibility="true"
 					>
-						<Label id="TierLabel" class="hudmapinfo__label" text="Tier {d:tier}" />
+						<Label id="TierLabel" class="hudmapinfo__label" text="#MapInfo_Tier" />
 					</ConVarEnabler>
 				</Panel>
 

@@ -70,7 +70,7 @@ class HudLeaderboards {
 				namePanel.SetPanelEvent('oncontextmenu', () => {
 					UiToolkitAPI.ShowSimpleContextMenu('', '', [
 						{
-							label: 'Show Steam Profile',
+							label: $.Localize('#Action_ShowSteamProfile'),
 							jsCallback: () => {
 								SteamOverlayAPI.OpenToProfileID(credit.user.xuid);
 							}
@@ -93,10 +93,13 @@ class HudLeaderboards {
 	static setMapStats(data) {
 		const cp = $.GetContextPanel();
 
-		cp.SetDialogVariable('tier', 'Tier ' + data.mainTrack?.difficulty);
-		cp.SetDialogVariable('type', data.mainTrack?.isLinear ? 'Linear' : 'Staged');
-		cp.SetDialogVariable('zones', data.mainTrack?.numZones + ' Zones');
-		cp.SetDialogVariable('numruns', data.stats?.completes + ' Runs');
+		cp.SetDialogVariableInt('tier', data.mainTrack?.difficulty);
+		cp.SetDialogVariable(
+			'type',
+			$.Localize(data.mainTrack?.isLinear ? '#MapInfo_Type_Linear' : '#MapInfo_Type_Staged')
+		);
+		cp.SetDialogVariableInt('zones', data.mainTrack?.numZones);
+		cp.SetDialogVariableInt('numruns', data.stats?.completes);
 	}
 
 	static close() {

@@ -16,12 +16,16 @@ class HudMapInfo {
 			mapData['credits']
 				.filter((x) => x.type === 'author')
 				.forEach((item, i) => (authorString += (i > 0 ? ', ' : '') + item.user.alias));
-			$.GetContextPanel().SetDialogVariable('author', authorString);
+			const cp = $.GetContextPanel();
+			cp.SetDialogVariable('author', authorString);
 
 			const mainTrack = mapData['mainTrack'];
-			$.GetContextPanel().SetDialogVariableInt('tier', mainTrack['difficulty']);
-			$.GetContextPanel().SetDialogVariable('zonetype', mainTrack['isLinear'] ? 'Linear' : 'Staged');
-			$.GetContextPanel().SetDialogVariableInt('numzones', mainTrack['numZones']);
+			cp.SetDialogVariableInt('tier', mainTrack['difficulty']);
+			cp.SetDialogVariable(
+				'zonetype',
+				$.Localize(mainTrack['isLinear'] ? '#MapInfo_Type_Linear' : '#MapInfo_Type_Staged')
+			);
+			cp.SetDialogVariableInt('numzones', mainTrack['numZones']);
 		} else {
 			this.cachedInfoContainer.visible = false;
 		}

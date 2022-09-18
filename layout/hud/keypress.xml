@@ -6,7 +6,7 @@
 	<MomHudKeyPress class="keypress">
 		<Panel>
 			<Panel class="keypress__arrows keypress-arrows">
-				<Panel id="KeyForward" class="keypress-arrows__key keypress-key__forward" text="Forward">
+				<Panel id="KeyForward" class="keypress-arrows__key keypress-key__forward" text="#KeyPress_Forward">
 					<Image
 						id="KeyForwardIcon"
 						class="keypress-arrows__icon keypress-icon__forward"
@@ -14,7 +14,7 @@
 						textureheight="32"
 					/>
 				</Panel>
-				<Panel id="KeyBack" class="keypress-arrows__key keypress-key__back" text="Back">
+				<Panel id="KeyBack" class="keypress-arrows__key keypress-key__back" text="#KeyPress_Back">
 					<Image
 						id="KeyBackIcon"
 						class="keypress-arrows__icon keypress-icon__back"
@@ -22,7 +22,7 @@
 						textureheight="32"
 					/>
 				</Panel>
-				<Panel id="KeyMoveLeft" class="keypress-arrows__key keypress-key__left" text="Left">
+				<Panel id="KeyMoveLeft" class="keypress-arrows__key keypress-key__left" text="#KeyPress_Left">
 					<Image
 						id="KeyMoveLeftIcon"
 						class="keypress-arrows__icon keypress-icon__left"
@@ -30,7 +30,7 @@
 						textureheight="32"
 					/>
 				</Panel>
-				<Panel id="KeyMoveRight" class="keypress-arrows__key keypress-key__right" text="Right">
+				<Panel id="KeyMoveRight" class="keypress-arrows__key keypress-key__right" text="#KeyPress_Right">
 					<Image
 						id="KeyMoveRightIcon"
 						class="keypress-arrows__icon keypress-icon__right"
@@ -40,15 +40,15 @@
 				</Panel>
 			</Panel>
 
-			<Label id="KeyMouse1" class="keypress__key keypress-key__m1" text="A1" />
-			<Label id="KeyMouse2" class="keypress__key keypress-key__m2" text="A2" />
+			<Label id="KeyMouse1" class="keypress__key keypress-key__m1" text="#Keypress_Attack1" />
+			<Label id="KeyMouse2" class="keypress__key keypress-key__m2" text="#Keypress_Attack2" />
 		</Panel>
 
-		<Label id="KeyJump" class="keypress__key" text="JUMP" />
-		<Label id="KeyDuck" class="keypress__key" text="DUCK" />
-		<Label id="KeyWalk" class="keypress__key" text="WALK" />
-		<Label id="KeyStrafe" class="keypress__key keypress__unimplemented" text="STRAFE" />
-		<Label id="KeySprint" class="keypress__key" text="SPRINT" />
+		<Label id="KeyJump" class="keypress__key" text="#Keypress_Jump" />
+		<Label id="KeyDuck" class="keypress__key" text="#Keypress_Duck" />
+		<Label id="KeyWalk" class="keypress__key" text="#Keypress_Walk" />
+		<Label id="KeyStrafe" class="keypress__key keypress__unimplemented" text="#Keypress_Strafe" />
+		<Label id="KeySprint" class="keypress__key" text="#Keypress_Sprint" />
 
 		<Label id="KeyLeft" class="keypress__key keypress__unimplemented" text="" />
 		<Label id="KeyRight" class="keypress__key keypress__unimplemented" text="" />

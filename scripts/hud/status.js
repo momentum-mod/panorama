@@ -44,28 +44,28 @@ class HudStatus {
 		const enteredStartZone = this.enter && this.curZone === 1;
 		const enteredEndZone = this.enter && this.curZone === 0;
 
-		let text = 'Spawn';
+		let text = $.Localize('#HudStatus_Spawn');
 
 		if (this.saveStateUsing && this.timerState !== TIMER_STATE.RUNNING) {
-			text = `SaveState ${this.saveStateCurrent}/${this.saveStateCount}`;
+			text = `${$.Localize('#HudStatus_SaveState')} ${this.saveStateCurrent}/${this.saveStateCount}`;
 		} else {
 			if (enteredStartZone) {
-				text = 'Start Zone';
+				text = $.Localize('#HudStatus_StartZone');
 			} else if (enteredEndZone) {
-				text = 'End Zone';
+				text = $.Localize('#HudStatus_EndZone');
 			} else if (this.curZone >= 0) {
-				text = `${this.linear ? 'Checkpoint' : 'Stage'} ${this.curZone}/${ZonesAPI.GetZoneCount(
-					this.curTrack
-				)}`;
+				text = `${$.Localize(this.linear ? '#HudStatus_Checkpoint' : '#HudStatus_Stage')} ${
+					this.curZone
+				}/${ZonesAPI.GetZoneCount(this.curTrack)}`;
 			}
 
 			if (this.curTrack > 0) {
-				text = `Bonus ${this.curTrack} | ${text}`;
+				text = `${$.Localize('#HudStatus_Bonus')} ${this.curTrack} | ${text}`;
 			}
 		}
 
 		if (this.inPracticeMode) {
-			text = `Practice Mode | ${text}`;
+			text = `${$.Localize('#HudStatus_PracticeMode')} | ${text}`;
 		}
 
 		this.label.text = text;
@@ -80,6 +80,6 @@ class HudStatus {
 		$.RegisterForUnhandledEvent('OnMomentumPlayerPracticeModeStateChange', this.onPracticeModeChange.bind(this));
 		$.RegisterForUnhandledEvent('OnSaveStateUpdate', this.onSaveStateChange.bind(this));
 
-		this.label.text = 'Spawn';
+		this.label.text = $.Localize('#HudStatus_Spawn');
 	}
 }
