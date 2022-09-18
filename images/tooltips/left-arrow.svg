@@ -1,1 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48"><g><path d="M22,24L12,12L2,24H22z" transform="scale(2)" style="fill:#fff"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
+    <g>
+		<path d="M0,44l24-20L0,4V44z" transform="scale(2)" style="fill:#FFFFFF"/>
+	</g>
+</svg>
