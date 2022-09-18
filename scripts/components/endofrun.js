@@ -87,19 +87,17 @@ class EndOfRun {
 				icon = `file://{images}/${
 					type === RUN_STATUS_TYPES.UPLOAD ? RUN_STATUS_ICONS.UPLOAD : RUN_STATUS_ICONS.SAVE
 				}.svg`;
-				text =
-					type === RUN_STATUS_TYPES.UPLOAD
-						? 'Your run has been uploaded to the submission server!'
-						: 'Your run has been saved locally!';
+				text = $.Localize(
+					type === RUN_STATUS_TYPES.UPLOAD ? 'EndOfRun_Status_UploadSuccess' : 'EndOfRun_Status_SaveSuccess'
+				);
 				style = 'positive';
 				break;
 			case RUN_STATUS_STATES.ERROR:
 			default:
 				icon = `file://{images}/${RUN_STATUS_ICONS.ERROR}.svg`;
-				text =
-					type === RUN_STATUS_TYPES.UPLOAD
-						? 'Error: Your run failed to upload! You may be offline, or the submission server may be down.'
-						: 'Error: Your run failed to save to disk!';
+				text = $.Localize(
+					type === RUN_STATUS_TYPES.UPLOAD ? 'EndOfRun_Status_UploadFail' : 'EndOfRun_Status_SaveFail'
+				);
 				style = 'error';
 		}
 
@@ -347,7 +345,7 @@ class EndOfRun {
 		const numZones = comparisonSplits.length;
 
 		const useStat = statIndex !== null;
-		const isPositiveGood = (s) => useStat && (s.unit === 'units/sec' || s.name.includes('Strafe Sync'));
+		const isPositiveGood = (s) => useStat && (s.unit.includes('UnitsPerSecond') || s.name.includes('StrafeSync'));
 
 		// Find max and min diff for the run
 		comparisonSplits.forEach((split) => {
@@ -397,7 +395,7 @@ class EndOfRun {
 			{
 				min: min,
 				max: max,
-				name: useStat ? comparisonSplits[0].statsComparisons[statIndex].name : 'Time',
+				name: useStat ? comparisonSplits[0].statsComparisons[statIndex].name : $.Localize('#Common_Time'),
 				interval: yInterval
 			}
 		];
@@ -406,7 +404,7 @@ class EndOfRun {
 		comparisonSplits.forEach((split, i) => {
 			const splitName = split.name;
 			const data = useStat ? { ...split.statsComparisons[statIndex], time: 0, delta: 0 } : split;
-			const isTimeComparison = !useStat || data.unit === 's';
+			const isTimeComparison = !useStat || data.unit === $.Localize('#Run_Stat_Unit_Second');
 
 			const round = (n) => n.toFixed(2);
 			const diffSign = (diff) => (diff > 0 ? '+' : '');
@@ -419,17 +417,18 @@ class EndOfRun {
 					(data.diff < 0 ? 'split--ahead ' : data.diff > 0 ? 'split--behind ' : '') +
 					(data.delta < 0 ? 'split--gain' : data.delta > 0 ? 'split--loss' : '');
 
+				//prettier-ignore
 				tooltipString =
-					`Total Time: <b>{g:time:total_time}</b>\n` +
-					`Zone Time: <b>{g:time:zone_time}</b>\n` +
-					`Diff: <b class='${diffStyle}'>${diffSign(data.diff)}{g:time:time_diff}</b>\n` +
-					`Delta: <b class='${deltaStyle}'>${diffSign(data.delta)}{g:time:time_delta}</b>`;
+					`${$.Localize('#Run_Comparison_TotalTime')}: <b>{g:time:total_time}</b>\n` +
+					`${$.Localize('#Run_Comparison_ZoneTime')}: <b>{g:time:zone_time}</b>\n` +
+					`${$.Localize('#Run_Comparison_Diff')}: <b class='${diffStyle}'>${diffSign(data.diff)}{g:time:time_diff}</b>\n` +
+					`${$.Localize('#Run_Comparison_Delta')}: <b class='${deltaStyle}'>${diffSign(data.delta)}{g:time:time_delta}</b>`;
 			} else {
 				// Using string instead of float here, floats add a shitton of floating point imprecision e.g. 90.00000000128381273
 				tooltipString =
 					`{s:name}: <b>{s:base_value}</b>\n` +
-					`Comparison: <b>{s:compare_value}</b>\n` +
-					`Diff: <b class='${diffStyle}'>${diffSign(data.diff)}{s:diff}</b>`;
+					`${$.Localize('#Run_Comparison')}: <b>{s:compare_value}</b>\n` +
+					`${$.Localize('#Run_Comparison_Diff')}: <b class='${diffStyle}'>${diffSign(data.diff)}{s:diff}</b>`;
 			}
 
 			line.points.push({
@@ -448,7 +447,7 @@ class EndOfRun {
 							this.panels.cp.SetDialogVariableFloat('time_diff', data.diff);
 							this.panels.cp.SetDialogVariableFloat('time_delta', data.delta);
 						} else {
-							this.panels.cp.SetDialogVariable('name', data.name);
+							this.panels.cp.SetDialogVariable('name', $.Localize(data.name));
 							this.panels.cp.SetDialogVariable('base_value', round(data.baseValue));
 							this.panels.cp.SetDialogVariable('compare_value', round(data.comparisonValue));
 							this.panels.cp.SetDialogVariable('diff', round(data.diff));
@@ -511,10 +510,10 @@ class EndOfRun {
 	static setSelectedSplit(split, comparison) {
 		this.selectedSplit = split;
 
-		this.panels.cp.SetDialogVariable('selected_zone', split.name);
+		this.panels.cp.SetDialogVariable('selected_zone', isNaN(split.name) ? split.name : $.Localize(split.name));
 
 		// Don't scroll for the overall split
-		if (split.name !== 'Overall') {
+		if (split.name !== 'Run_Comparison_Split_Overall') {
 			this.panels.splits.FindChildTraverse(`Split${split.name}`).ScrollParentToMakePanelFit(3, false);
 		}
 
@@ -539,7 +538,7 @@ class EndOfRun {
 			});
 
 			$.CreatePanel('Label', row, '', {
-				text: statComparison.name,
+				text: $.Localize('#statComparison.name'),
 				class: 'endofrun-stats__name'
 			});
 
@@ -584,7 +583,7 @@ class EndOfRun {
 		if (!split) return;
 
 		// Don't scroll for the overall split
-		if (split.name !== 'Overall') {
+		if (split.name !== 'Run_Comparison_Split_Overall') {
 			// Style graph node
 			const selectedGraphPoint = this.panels.graph.FindChildTraverse(`Point${split.name}`);
 			if (selectedGraphPoint) {

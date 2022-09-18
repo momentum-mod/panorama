@@ -19,11 +19,11 @@
 				<Panel id="XPInfoBar" class="endofrun-xp__xp-info">
 					<Panel class="flow-right">
 						<Label id="XPCounter" class="endofrun-xp__xp-counter " text="{d:xp_counter} / {d:total_xp}" />
-						<Label class="endofrun-xp__xp-counter text-header-light" text=" XP" />
+						<Label class="endofrun-xp__xp-counter text-header-light" text=" #Common_XP" />
 					</Panel>
 					<Panel id="NewXP" class="endofrun-xp__new-stat-container">
 						<Label class="endofrun-xp__new-stat" text="+ {d:new_xp}" />
-						<Label class="endofrun-xp__new-stat text-header-light" text=" XP" />
+						<Label class="endofrun-xp__new-stat text-header-light" text=" #Common_XP" />
 					</Panel>
 				</Panel>
 			</Panel>
