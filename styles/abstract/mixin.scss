@@ -84,6 +84,34 @@
 	}
 }
 
+@mixin grid($rows, $cols, $name: 'grid') {
+	.#{$name}#{$rows}x#{$cols} {
+		// So default height, width, x, y are 1 grid unit
+		width: math.percentage(math.div(1, $rows));
+		height: math.percentage(math.div(1, $cols));
+
+		@for $x from 1 through $rows {
+			&--w#{$x} {
+				width: math.percentage(math.div(1, $rows) * $x);
+			}
+
+			&--x#{$x} {
+				x: math.percentage(math.div(1, $rows) * ($x - 1));
+			}
+		}
+
+		@for $y from 1 through $cols {
+			&--h#{$y} {
+				height: math.percentage(math.div(1, $cols) * $y);
+			}
+
+			&--y#{$y} {
+				y: math.percentage(math.div(1, $cols) * ($y - 1));
+			}
+		}
+	}
+}
+
 @mixin nstate-button-state($state: 'off', $statenum: 1) {
 	&--#{$state} {
 		@include button-gradient($color: list.nth($nstatebutton-colors, $statenum));
