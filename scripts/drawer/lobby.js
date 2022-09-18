@@ -88,7 +88,7 @@ class Lobby {
 	static join(steamid) {
 		const leaveAndJoinCheck = (message) => {
 			UiToolkitAPI.ShowGenericPopupOkCancel(
-				'Leave current lobby?',
+				$.Localize('#Lobby_Leave'),
 				message,
 				'ok-cancel-popup',
 				() => {
@@ -101,11 +101,9 @@ class Lobby {
 
 		if (this.isInLobby()) {
 			if (this.isLobbyOwner() && this.getLobbyMemberCount() > 1) {
-				leaveAndJoinCheck(
-					'You are currently the owner of a lobby, are you sure you want to leave and transfer its ownership?'
-				);
+				leaveAndJoinCheck($.Localize('#Lobby_TransferWarning'));
 			} else {
-				leaveAndJoinCheck('Are you sure you want to leave your current lobby?');
+				leaveAndJoinCheck($.Localize('#Lobby_LeaveWarning'));
 			}
 		} else {
 			SteamLobbyAPI.Join(steamid);
@@ -118,8 +116,8 @@ class Lobby {
 	static leave() {
 		if (this.isLobbyOwner() && this.getLobbyMemberCount() > 1) {
 			UiToolkitAPI.ShowGenericPopupOkCancel(
-				'Leave current lobby?',
-				'You are currently owner of this lobby! Leaving will transfer ownership to another player. Are you sure you want to leave?',
+				$.Localize('#Lobby_Leave'),
+				'Lobby_TransferWarning',
 				'ok-cancel-popup',
 				() => SteamLobbyAPI.Leave(),
 				() => {}
@@ -188,7 +186,7 @@ class Lobby {
 			const cooldownMessage = () =>
 				UiToolkitAPI.ShowTextTooltip(
 					this.panels.refreshButton.id,
-					`Refresh is on cooldown, please wait ${cooldown} seconds.`
+					$.Localize('#Lobby_RefreshCooldown').replace('%cooldown%', cooldown)
 				);
 
 			const cooldownTimer = () => {
@@ -243,7 +241,10 @@ class Lobby {
 					const lobbyObj = data[origin][lobbySteamID];
 					const ownerSteamID = lobbyObj['owner'];
 					const lobbyType = lobbyObj['type'];
-					const lobbyName = FriendsAPI.GetNameForXUID(ownerSteamID) + "'s Lobby";
+					const lobbyName = $.Localize('#Lobby_Owner').replace(
+						'%owner%',
+						FriendsAPI.GetNameForXUID(ownerSteamID)
+					);
 
 					if (!lobbyName.includes(this.panels.search.text)) return; // Only show items that match the search. Always true if search is empty
 
@@ -276,7 +277,7 @@ class Lobby {
 					avatarPanel.SetPanelEvent('oncontextmenu', () =>
 						UiToolkitAPI.ShowSimpleContextMenu(avatarPanel, '', [
 							{
-								label: 'Steam Profile',
+								label: $.Localize('#Action_ShowSteamProfile'),
 								icon: 'file://{images}/social/steam.svg',
 								style: 'icon-color-steam-online',
 								jsCallback: () => SteamOverlayAPI.OpenToProfileID(ownerSteamID)
@@ -289,7 +290,10 @@ class Lobby {
 						'lobbyPlayerCount',
 						`${lobbyObj['members']}/${lobbyObj['members_limit']}`
 					);
-					newPanel.SetDialogVariable('lobbyJoinLabel', origin === 'current' ? 'Details' : 'Join');
+					newPanel.SetDialogVariable(
+						'lobbyJoinLabel',
+						$.Localize(origin === 'current' ? '#Lobby_Details' : '#Lobby_Join')
+					);
 
 					const originPanel = newPanel.FindChildTraverse('LobbyOrigin');
 					if (origin === 'global') {
@@ -316,7 +320,10 @@ class Lobby {
 		// Only enable settings if you're lobby owner
 		this.panels.detailsSettingsButton.enabled = UserAPI.GetXUID() === owner;
 
-		$.GetContextPanel().SetDialogVariable('lobbyTitle', `${FriendsAPI.GetNameForXUID(owner)}'s Lobby`);
+		$.GetContextPanel().SetDialogVariable(
+			'lobbyTitle',
+			$.Localize('#Lobby_Owner').replace('%owner%', FriendsAPI.GetNameForXUID(owner))
+		);
 		$.GetContextPanel().SetDialogVariable(
 			'lobbyPlayerCount',
 			`${lobbyData['members']}/${lobbyData['members_limit']}`
@@ -344,13 +351,16 @@ class Lobby {
 
 		panel.FindChildTraverse('MemberAvatar').steamid = memberSteamID;
 
-		panel.SetDialogVariable('memberName', isMuted ? 'Muted Player' : FriendsAPI.GetNameForXUID(memberSteamID));
+		panel.SetDialogVariable(
+			'memberName',
+			isMuted ? $.Localize('#Lobby_MutedPlayer') : FriendsAPI.GetNameForXUID(memberSteamID)
+		);
 
 		const memberMap = memberData['map'];
 		const localSteamID = UserAPI.GetXUID();
 		const localMap = this.lobbyMemberData[localSteamID]?.['map'];
 
-		panel.SetDialogVariable('memberMap', isMuted ? '' : memberMap ? memberMap : 'In main menu');
+		panel.SetDialogVariable('memberMap', isMuted ? '' : memberMap ? memberMap : $.Localize('#Lobby_InMainMenu'));
 
 		const memberStatePanel = panel.FindChildTraverse('MemberState');
 		const isSpectating = memberData['isSpectating'];
@@ -365,7 +375,7 @@ class Lobby {
 		panel.SetPanelEvent('oncontextmenu', () =>
 			UiToolkitAPI.ShowSimpleContextMenu(panel, '', [
 				{
-					label: isMuted ? 'Unmute Player' : 'Mute Player',
+					label: $.Localize(isMuted ? '#Lobby_UnmutePlayer' : '#Lobby_MutePlayer'),
 					icon: 'file://{images}/volume-' + (isMuted ? 'high' : 'mute') + '.svg',
 					style: 'icon-color-' + (isMuted ? 'green' : 'red'),
 					jsCallback: () => {
@@ -377,7 +387,7 @@ class Lobby {
 					}
 				},
 				{
-					label: 'Steam Profile',
+					label: $.Localize('#Action_ShowSteamProfile'),
 					icon: 'file://{images}/steam.svg',
 					style: 'icon-color-steam-online',
 					jsCallback: () => SteamOverlayAPI.OpenToProfileID(memberSteamID)
@@ -410,7 +420,7 @@ class Lobby {
 			memberStatePanel.RemoveClass('hide');
 
 			if (memberMap === localMap && memberMap && localMap) {
-				joinButton.SetDialogVariable('memberJoinLabel', 'Spectate');
+				joinButton.SetDialogVariable('memberJoinLabel', '#Lobby_Spectate');
 				joinButton.RemoveClass('hide');
 
 				const joinCallback = () => GameInterfaceAPI.ConsoleCommand('mom_spectate ' + memberSteamID);

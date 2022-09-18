@@ -42,7 +42,7 @@ class LobbySettings {
 		if (this.getMaxPlayersEntered() > this.lobbyMaxPlayers) {
 			UiToolkitAPI.ShowTextTooltip(
 				'MaxPlayers',
-				`Player limit is too high! Maximum value is ${this.lobbyMaxPlayers}`
+				$.Localize('Lobby_MaxPlayers_Warning').replace('%max%', this.lobbyMaxPlayers)
 			);
 			this.panels.updateButton.enabled = false;
 		} else {
