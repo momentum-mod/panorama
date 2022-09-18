@@ -38,8 +38,8 @@ class LeaderboardEntry {
 
 	static tryDeleteReplay(index) {
 		UiToolkitAPI.ShowGenericPopupOkCancel(
-			$.Localize('#MOM_Leaderboards_DeleteReplay'),
-			$.Localize('#MOM_MB_DeleteRunConfirmation'),
+			$.Localize('#Action_DeleteReplay'),
+			$.Localize('#Action_DeleteReplay_Confirm'),
 			'ok-cancel-popup',
 			() => $.DispatchEvent('LeaderboardEntry_DeleteReplay', index),
 			() => {}
@@ -55,7 +55,7 @@ class LeaderboardEntry {
 		const isValid = timeData.type !== LEADERBOARD_ENTRY_TYPE.INVALID;
 		if (isValid) {
 			items.push({
-				label: $.Localize('#MOM_Leaderboards_WatchReplay'),
+				label: $.Localize('#Action_WatchReplay'),
 				icon: 'file://{images}/movie-open-outline.svg',
 				style: 'icon-color-mid-blue',
 				jsCallback: () => {
@@ -66,7 +66,7 @@ class LeaderboardEntry {
 
 		if (timeData.type === LEADERBOARD_ENTRY_TYPE.ONLINE || timeData.type === LEADERBOARD_ENTRY_TYPE.ONLINE_CACHED) {
 			items.push({
-				label: 'View on website',
+				label: $.Localize('#Action_ViewOnWebsite'),
 				icon: 'file://{images}/online/publiclobby.svg',
 				style: 'icon-color-blue',
 				jsCallback: () => {
@@ -78,7 +78,7 @@ class LeaderboardEntry {
 		if (timeData.type === LEADERBOARD_ENTRY_TYPE.LOCAL || timeData.type === LEADERBOARD_ENTRY_TYPE.ONLINE_CACHED) {
 			$.GetContextPanel().SetDialogVariableInt('rank', index + 1);
 			items.push({
-				label: $.Localize('#MOM_Leaderboards_DeleteReplay'),
+				label: $.Localize('#Action_DeleteReplay'),
 				icon: 'file://{images}/delete.svg',
 				style: 'icon-color-red',
 				jsCallback: () => {
@@ -93,7 +93,7 @@ class LeaderboardEntry {
 			!isValid
 		) {
 			items.push({
-				label: 'Steam Profile',
+				label: $.Localize('#Action_ShowSteamProfile'),
 				icon: 'file://{images}/social/steam.svg',
 				style: 'icon-color-steam-online',
 				jsCallback: () => {
