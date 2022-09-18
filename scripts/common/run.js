@@ -160,7 +160,8 @@ class Comparison {
 		this.splits = Comparison.generateSplits(baseRun.stats, comparisonRun.stats);
 
 		this.overallSplit = new Split(
-			'Overall',
+			// This gets used as a panel ID, so don't include the hash. $.Localize call works fine without it.
+			'Run_Comparison_Split_Overall',
 			baseRun.stats.overallZone.accumulateTime,
 			baseRun.stats.overallZone.accumulateTime,
 			baseRun.stats.overallZone.accumulateTime - comparisonRun.stats.overallZone.accumulateTime,

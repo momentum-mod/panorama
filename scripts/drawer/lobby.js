@@ -117,7 +117,7 @@ class Lobby {
 		if (this.isLobbyOwner() && this.getLobbyMemberCount() > 1) {
 			UiToolkitAPI.ShowGenericPopupOkCancel(
 				$.Localize('#Lobby_Leave'),
-				'Lobby_TransferWarning',
+				$.Localize('#Lobby_TransferWarning'),
 				'ok-cancel-popup',
 				() => SteamLobbyAPI.Leave(),
 				() => {}
