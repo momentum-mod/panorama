@@ -8,7 +8,7 @@
 	</scripts>
 
 	<Panel class="mainmenu__page" useglobalcontext="true">
-		<Panel id="ControlsLibraryPanel" class="flow-down width height overflow-vscroll">
+		<Panel id="ControlsLibraryPanel" class="flow-down full overflow-vscroll">
 
 			<Label class="text-h1 mt-3" text="Core" />
 
