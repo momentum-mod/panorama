@@ -20,20 +20,23 @@ class Chat {
 		let strTyping = '';
 		let typingLen = users.length;
 
-		// Just some simplified logic for the time being. TODO: do it properly
+		// TODO: We may run into issues with this in localisation, this seems like it may be specific to English
 		if (typingLen > 0) {
 			if (typingLen < 3) {
 				Chat.arrMembersTyping.forEach(function (memberSteamID, i) {
 					if (i !== 0 && i !== typingLen - 1) {
 						strTyping += ', ';
 					} else if (i !== 0 && i === typingLen - 1) {
-						strTyping += ' and ';
+						strTyping += ` ${Localize('#Chat_Typing_Conjugate')} `;
 					}
 					strTyping += FriendsAPI.GetNameForXUID(memberSteamID);
 				});
-				strTyping += typingLen === 1 ? ' is typing' : ' are typing';
+				strTyping +=
+					typingLen === 1
+						? ' ' + $.Localize('#Chat_Typing_Specific')
+						: ' ' + $.Localize('#Chat_Typing_Multiple');
 			} else {
-				strTyping += typingLen + ' people are typing';
+				strTyping += typingLen + ' ' + $.Localize('#Chat_Typing_Many');
 			}
 		} else {
 			strTyping += ' ';

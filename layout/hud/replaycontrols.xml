@@ -10,7 +10,7 @@
 
 	<MomHudReplayControls class="replaycontrols">
 		<Panel class="flow-right full-width pb-4">
-			<Label class="text-h4" text="REPLAY CONTROLS" />
+			<Label class="text-h4" text="#Replay_Controls" />
 			<Button class="button button--blue horizontal-align-right ml-3" onactivate="ReplayControls.toggleHiddenState();">
 				<Image class="button__icon" src="file://{images}/mom-arrow-down.svg" />
 			</Button>
@@ -28,7 +28,7 @@
 			</Panel>
 			<Label text="Time: {g:time:curr_time}/{g:time:total_time}" />
 			<ChaosSettingsSlider
-				text="Timescale"
+				text="#Replay_Timescale"
 				min="0"
 				max="10"
 				percentage="true"

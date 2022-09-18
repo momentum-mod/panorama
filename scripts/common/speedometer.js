@@ -27,16 +27,15 @@ const SPEEDOMETER_ID = {
 	StageEnterExitHorizVelocity: 9
 };
 
-// TODO: localize
 const SPEEDOMETER_DISP_NAMES = [
-	'Absolute',
-	'Horizontal',
-	'Vertical',
-	'Energy',
-	'Explosive Jump',
-	'Jump',
-	'Ramp Board',
-	'Ramp Leave',
-	'Stage Absolute',
-	'Stage Horizontal'
+	'#Speedometer_Type_Absolute',
+	'#Speedometer_Type_Horizonal',
+	'#Speedometer_Type_Vertical',
+	'#Speedometer_Type_Energy',
+	'#Speedometer_Type_ExplosiveJump',
+	'#Speedometer_Type_Jump',
+	'#Speedometer_Type_RampBoard',
+	'#Speedometer_Type_RampLeave',
+	'#Speedometer_Type_StageAbsolute',
+	'#Speedometer_Type_StageHorizontal'
 ];

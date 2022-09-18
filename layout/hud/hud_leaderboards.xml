@@ -33,13 +33,13 @@
 							<!-- Author names inserted by JS -->
 						</Panel>
 						<Panel class="hud-leaderboards-map-info__stats">
-							<Label class="hud-leaderboards-map-info-stats__stat" text="{s:tier}" />
+							<Label class="hud-leaderboards-map-info-stats__stat" text="#MapInfo_Tier" />
 							<Panel class="hud-leaderboards-map-info-stats__separator" />
-							<Label class="hud-leaderboards-map-info-stats__stat" text="{s:type}" />
+							<Label class="hud-leaderboards-map-info-stats__stat" text="#MapInfo_Type_Linear" />
 							<Panel class="hud-leaderboards-map-info-stats__separator" />
-							<Label class="hud-leaderboards-map-info-stats__stat" text="{s:zones}" />
+							<Label class="hud-leaderboards-map-info-stats__stat" text="#MapInfo_Zones" />
 							<Panel class="hud-leaderboards-map-info-stats__separator" />
-							<Label class="hud-leaderboards-map-info-stats__stat" text="{s:numruns}" />
+							<Label class="hud-leaderboards-map-info-stats__stat" text="#MapInfo_Runs" />
 						</Panel>
 					</Panel>
 				</Panel>
