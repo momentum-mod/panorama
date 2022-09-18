@@ -9,7 +9,7 @@
 	<Panel class="news">
 		<Panel class="news__wrapper">
 			<Panel class="news__header">
-				<Label class="news__title" text="News" />
+				<Label class="news__title" text="#MainMenu_News_Title" />
 				<Button class="news__minimize" onactivate="MainMenuNews.minimize();">
 					<Image
 						class="button__icon horizontal-align-right rot-90"
@@ -27,7 +27,7 @@
 					<Panel class="news-latest__right">
 						<Image id="LatestUpdateImage" class="news-latest__image" src="" />
 						<Button id="LearnMore" class="button button--blue news-latest__learnmore">
-							<Label class="button__text text-m" text="Read More" />
+							<Label class="button__text text-m" text="#MainMenu_News_ReadMore" />
 						</Button>
 					</Panel>
 				</Panel>
