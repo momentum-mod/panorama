@@ -20,7 +20,7 @@
 		flow-children: down;
 	}
 
-	&__message-target > Label {
+	&__message-target > MultiselectLabel {
 		text-shadow-fast: none;
 		font-family: $font-monospace;
 		font-size: 11px;
