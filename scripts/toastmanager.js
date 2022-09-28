@@ -154,8 +154,8 @@ class ToastManager {
 				toast.panel.AddClass(`toast-generic--${toast.style}`);
 			}
 
-			toast.panel.SetDialogVariable('toast_title', toast.title);
-			toast.panel.SetDialogVariable('toast_message', toast.message);
+			toast.panel.SetDialogVariable('toast_title', $.Localize(toast.title));
+			toast.panel.SetDialogVariable('toast_message', $.Localize(toast.message));
 
 			toast.panel.FindChildInLayoutFile('Title').SetHasClass('hide', !toast.title);
 
