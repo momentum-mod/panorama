@@ -78,6 +78,7 @@
 		-        while HudTeamCounter is visible
 		-->
 		<Panel id="HudTopCenter" hittest="false">
+			<ChaosHudShowPos />
 			<MomHudSpectate id="Spectator" />
 		</Panel>
 
