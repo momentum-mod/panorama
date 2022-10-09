@@ -1,0 +1,10 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+
+	<ChaosHudBoneCounts class="bonecounts">
+		<Label class="bonecounts__label" text="All computed bones: {d:bones}" />
+		<Label class="bonecounts__label" text="Blending rules only: {d:blendingonly}" />
+	</ChaosHudBoneCounts>
+</root>

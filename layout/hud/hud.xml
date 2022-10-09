@@ -79,6 +79,7 @@
 		-->
 		<Panel id="HudTopCenter" hittest="false">
 			<ChaosHudShowPos />
+			<ChaosHudBoneCounts />
 			<MomHudSpectate id="Spectator" />
 		</Panel>
 
