@@ -1,0 +1,17 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+
+	<snippets>
+		<snippet name="showpos-snippet">
+			<Panel class="showpos-entry">
+				<Label class="showpos-entry__label" text="Pos: {s:origin}" />
+				<Label class="showpos-entry__label" text="Ang: {s:angle}" />
+			</Panel>
+		</snippet>
+	</snippets>
+
+	<ChaosHudShowPos class="showpos">
+	</ChaosHudShowPos>
+</root>
