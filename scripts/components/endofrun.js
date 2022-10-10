@@ -538,7 +538,7 @@ class EndOfRun {
 			});
 
 			$.CreatePanel('Label', row, '', {
-				text: $.Localize('#statComparison.name'),
+				text: $.Localize(statComparison.name),
 				class: 'endofrun-stats__name'
 			});
 
@@ -562,8 +562,8 @@ class EndOfRun {
 		// of a RunStatComparison so createRow can handle it. index as null, so updateGraph will use the Split time rather than a stat.
 		createRow(
 			{
-				name: 'Time',
-				unit: 's',
+				name: '#Run_Stat_Name_Time',
+				unit: '#Run_Stat_Unit_Second',
 				baseValue: split.time,
 				comparisonValue: split.time + split.diff,
 				diff: split.diff
