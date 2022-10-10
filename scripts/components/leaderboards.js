@@ -110,7 +110,6 @@ class Leaderboards {
 					$.Warning('Error: getTimesListStatus returned unknown StatusType ' + statusType);
 					break;
 			}
-			$.Msg(statusType);
 			if (warningText) {
 				$.GetContextPanel().SetDialogVariable('empty-warning', $.Localize(warningText));
 				this.panels.timesContainer.AddClass('leaderboard-times__main--empty');
