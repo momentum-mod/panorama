@@ -387,7 +387,7 @@ class EndOfRun {
 			{
 				min: 0,
 				max: numZones,
-				name: 'Zone',
+				name: $.Localize('#Common_Zone'),
 				// Limit max zones we draw an axis for to 30
 				// todo: find interval equiv to this: lineCount: Math.min(numZones, 30),
 				interval: 1
@@ -395,7 +395,7 @@ class EndOfRun {
 			{
 				min: min,
 				max: max,
-				name: useStat ? comparisonSplits[0].statsComparisons[statIndex].name : $.Localize('#Common_Time'),
+				name: $.Localize(useStat ? comparisonSplits[0].statsComparisons[statIndex].name : '#Common_Time'),
 				interval: yInterval
 			}
 		];
@@ -510,7 +510,7 @@ class EndOfRun {
 	static setSelectedSplit(split, comparison) {
 		this.selectedSplit = split;
 
-		this.panels.cp.SetDialogVariable('selected_zone', isNaN(split.name) ? split.name : $.Localize(split.name));
+		this.panels.cp.SetDialogVariable('selected_zone', $.Localize(split.name));
 
 		// Don't scroll for the overall split
 		if (split.name !== 'Run_Comparison_Split_Overall') {
