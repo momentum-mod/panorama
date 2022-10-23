@@ -45,14 +45,18 @@
 		<Panel id="MainMenuInput" class="mainmenu">
 			<!-- Topnav -->
 			<Panel id="MainMenuNavBar" class="topnav" style="z-index: 10;">
-
 				<RadioButton
 					id="HomeButton"
 					group="TopNavRadio"
 					class="topnav__home"
 					onactivate="MainMenuController.onHomeButtonPressed()"
 				>
-					<Image class="topnav__logo" src="file://{images}/momentumLogo.svg" textureheight="64" />
+					<Image
+						class="topnav__logo"
+						src="file://{images}/momentumLogo.svg"
+						textureheight="64"
+						scaling="stretch-to-fit-preserve-aspect"
+					/>
 				</RadioButton>
 
 				<Panel id="MainMenuTopButtons" class="full-height flow-right">
