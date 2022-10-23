@@ -36,7 +36,7 @@
 								group="CategoryListNavBar"
 								onactivate='$("#CategoryContents").SetHasClass("mapselector__category-contents--playlists", true)'
 							>
-<Panel class="flow-right horizontal-align-center">
+						<Panel class="flow-right horizontal-align-center">
 							<Image class="mapselector-category-tabs__image" src="file://{images}/playlist-play.svg" textureheight="32" />
 							<Label class="text-h mapselector-category-tabs__text" text="#MapSelector_Playlists" />
 						</Panel>
@@ -76,77 +76,79 @@
 							</Panel>
 						</Panel>
 						<Panel id="MapFilters" class="mapselector-filters mapselector-filters--filters-retracted">
-							<Panel id="GamemodeFilters" class="mapselector-filters__row mapselector-filters__gamemodes">
-								<ToggleButton
-											id="SurfFilterButton"
-											class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button"
-											selected="true"
-										>
-									<Label class="button__text mapselector-filters__text" text="#Gamemode_Surf" />
-								</ToggleButton>
-								<ToggleButton
-											id="BhopFilterButton"
-											class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button"
-											selected="true"
-										>
-									<Label class="button__text mapselector-filters__text" text="#Gamemode_Bhop" />
-								</ToggleButton>
-								<ToggleButton
-											id="ClimbFilterButton"
-											class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button"
-											selected="true"
-										>
-									<Label class="button__text mapselector-filters__text" text="#Gamemode_Climb" />
-								</ToggleButton>
-								<ToggleButton
-											id="RJFilterButton"
-											class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button"
-											selected="true"
-										>
-									<Label class="button__text mapselector-filters__text" text="#Gamemode_RJ" />
-								</ToggleButton>
-								<ToggleButton
-											id="SJFilterButton"
-											class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button"
-											selected="true"
-										>
-									<Label class="button__text mapselector-filters__text" text="#Gamemode_SJ" />
-								</ToggleButton>
-								<ToggleButton
-											id="TricksurfFilterButton"
-											class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button"
-											selected="true"
-										>
-									<Label class="button__text mapselector-filters__text" text="#Gamemode_Tricksurf" />
-								</ToggleButton>
-								<ToggleButton
-											id="AhopFilterButton"
-											class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button"
-											selected="true"
-										>
-									<Label class="button__text mapselector-filters__text" text="#Gamemode_Ahop" />
-								</ToggleButton>
-								<ToggleButton
-											id="ParkourFilterButton"
-											class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button"
-											selected="true"
-										>
-									<Label class="button__text mapselector-filters__text" text="#Gamemode_Parkour" />
-								</ToggleButton>
-								<ToggleButton
-											id="ConcFilterButton"
-											class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button"
-											selected="true"
-										>
-									<Label class="button__text mapselector-filters__text" text="#Gamemode_Conc" />
-								</ToggleButton>
-								<ToggleButton
-											id="DefragFilterButton"
-											class="button togglebutton togglebutton--blue mapselector-filters__button"
-											selected="true"
-										>
-									<Label class="button__text mapselector-filters__text" text="#Gamemode_Defrag" />
-								</ToggleButton>
+							<Panel class="full-width">
+								<Panel id="GamemodeFilters" class="mapselector-filters__row mapselector-filters__gamemodes">
+									<ToggleButton
+												id="SurfFilterButton"
+												class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button"
+												selected="true"
+											>
+										<Label class="button__text mapselector-filters__text" text="#Gamemode_Surf" />
+									</ToggleButton>
+									<ToggleButton
+												id="BhopFilterButton"
+												class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button"
+												selected="true"
+											>
+										<Label class="button__text mapselector-filters__text" text="#Gamemode_Bhop" />
+									</ToggleButton>
+									<ToggleButton
+												id="ClimbFilterButton"
+												class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button"
+												selected="true"
+											>
+										<Label class="button__text mapselector-filters__text" text="#Gamemode_Climb" />
+									</ToggleButton>
+									<ToggleButton
+												id="RJFilterButton"
+												class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button"
+												selected="true"
+											>
+										<Label class="button__text mapselector-filters__text" text="#Gamemode_RJ" />
+									</ToggleButton>
+									<ToggleButton
+												id="SJFilterButton"
+												class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button"
+												selected="true"
+											>
+										<Label class="button__text mapselector-filters__text" text="#Gamemode_SJ" />
+									</ToggleButton>
+									<ToggleButton
+												id="TricksurfFilterButton"
+												class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button"
+												selected="true"
+											>
+										<Label class="button__text mapselector-filters__text" text="#Gamemode_Tricksurf" />
+									</ToggleButton>
+									<ToggleButton
+												id="AhopFilterButton"
+												class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button"
+												selected="true"
+											>
+										<Label class="button__text mapselector-filters__text" text="#Gamemode_Ahop" />
+									</ToggleButton>
+									<ToggleButton
+												id="ParkourFilterButton"
+												class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button"
+												selected="true"
+											>
+										<Label class="button__text mapselector-filters__text" text="#Gamemode_Parkour" />
+									</ToggleButton>
+									<ToggleButton
+												id="ConcFilterButton"
+												class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button"
+												selected="true"
+											>
+										<Label class="button__text mapselector-filters__text" text="#Gamemode_Conc" />
+									</ToggleButton>
+									<ToggleButton
+												id="DefragFilterButton"
+												class="button togglebutton togglebutton--blue mapselector-filters__button"
+												selected="true"
+											>
+										<Label class="button__text mapselector-filters__text" text="#Gamemode_Defrag" />
+									</ToggleButton>
+								</Panel>
 							</Panel>
 
 							<Panel class="mapselector-filters__row">
