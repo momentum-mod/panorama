@@ -150,8 +150,8 @@ class LineGraph {
 				const size = point.selectionSize;
 				const offset = size / 2;
 
-				canvasPoints.push(position.x * 2);
-				canvasPoints.push(position.y * 2);
+				canvasPoints.push(position.x);
+				canvasPoints.push(position.y);
 
 				// Outer panel, no styling, just to we attach events to
 				const panel = $.CreatePanel('Panel', pointsContainer, id, {
@@ -190,8 +190,8 @@ class LineGraph {
 						const relativedPoints = this.#getRelativisedPosition(
 							polyPoints[isAbove ? i : polyPoints.length - i - 1]
 						);
-						formattedArray.push(relativedPoints.x * 2);
-						formattedArray.push(relativedPoints.y * 2);
+						formattedArray.push(relativedPoints.x);
+						formattedArray.push(relativedPoints.y);
 					});
 					graph.DrawPoly(
 						polyPoints.length,
