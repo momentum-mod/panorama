@@ -30,7 +30,7 @@ class Synchronizer {
 	static onLoad() {
 		this.initializeSettings();
 
-		this.bIsDefragging = GAMEMODE_WITH_NULL[GameModeAPI.GetCurrentGameMode()].name === 'Defrag';
+		this.bIsDefragging = GameModeAPI.GetCurrentGameMode() === GameMode.DEFRAG;
 
 		this.maxSpeed = 30; // bhop max air speed
 		this.syncGain = 1; // scale how fast the bars move

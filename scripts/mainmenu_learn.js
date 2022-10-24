@@ -27,16 +27,16 @@ class Learn {
 	static lessonData = {};
 	static modes = {};
 	static {
-		// Create modes obj in form
-		Object.values(GAMEMODE).forEach((modeData) => {
-			this.modes[modeData.shortName] = {
-				button: $(`#${modeData.shortName}Radio`),
-				list: $.CreatePanel('Panel', this.panels.listContainer, `${modeData.shortName}List`, {
+		// Create modes obj in form { [GameMode.SURF]: { button: ..., list: ... } }
+		Object.values(GameModeInfo).forEach((modeData) => {
+			this.modes[modeData.idName] = {
+				button: $(`#${modeData.idName}Radio`),
+				list: $.CreatePanel('Panel', this.panels.listContainer, `${modeData.idName}List`, {
 					class: 'learn-list'
 				})
 			};
 
-			this.lessonData[modeData.shortName] = {};
+			this.lessonData[modeData.idName] = {};
 		});
 	}
 
