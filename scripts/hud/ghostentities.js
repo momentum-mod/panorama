@@ -1,17 +1,19 @@
 'use strict';
 
 class GhostEntities {
-	static onAimOverGhostChange(entpanel, aimover) {
-		const nameEnabled = $.GetContextPanel().ghostNamesEnabled && aimover;
-		let namePanel = entpanel.FindChildTraverse('NamePanel');
+	static onAimOverGhostChange(entPanel, aimOver) {
+		const nameEnabled = $.GetContextPanel().ghostNamesEnabled && aimOver;
+		const namePanel = entPanel.FindChildTraverse('NamePanel');
 		namePanel.SetHasClass('ghost-ent-namepanel--hidden', !nameEnabled);
 
-		// always keep centered even when name isnt visible
+		// Always keep centered even when name isnt visible
 		if (nameEnabled) {
-			entpanel.style.transform = 'translatex(0)';
+			entPanel.style.transform = 'translatex(0)';
+			entPanel.style.zIndex = 1;
 		} else {
 			const nameLabel = namePanel.FindChildTraverse('GhostName');
-			entpanel.style.transform = `translatex(${nameLabel.actuallayoutwidth / nameLabel.actualuiscale_x / 2}px)`;
+			entPanel.style.transform = `translatex(${nameLabel.actuallayoutwidth / nameLabel.actualuiscale_x / 2}px)`;
+			entPanel.style.zIndex = 0;
 		}
 	}
 
