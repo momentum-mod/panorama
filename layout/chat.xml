@@ -51,7 +51,7 @@
 			<Panel>
 				<Label
 					class="chat-entry__message"
-					text="&lt;b class=&quot;color-blue&quot;&gt;#Common_GameUpper&lt;/b&gt;: {s:message}"
+					text="&lt;b class=&quot;color-blue text-uppercase&quot;&gt;#Common_Game&lt;/b&gt;: {s:message}"
 					html="true"
 					acceptsinput="true"
 				/>
