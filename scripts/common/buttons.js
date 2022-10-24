@@ -1,6 +1,6 @@
 'use strict';
 
-const BUTTONS = {
+const Buttons = {
 	ATTACK: 1 << 0,
 	JUMP: 1 << 1,
 	DUCK: 1 << 2,

@@ -31,7 +31,7 @@ class MainMenuSettings {
 
 	static {
 		// Load every tab immediately, otherwise search won't be guaranteed to find everything.
-		Object.keys(SETTINGS_TABS).forEach((tab) => this.loadTab(tab));
+		Object.keys(SettingsTabs).forEach((tab) => this.loadTab(tab));
 
 		// Default to input settings page
 		this.navigateToTab('InputSettings');
@@ -89,7 +89,7 @@ class MainMenuSettings {
 				this.setNavItemCollapsed(tab, false);
 
 				// Check the radiobutton for cases where this is called from JS. CSGO Panorama fires an Activated event to the radiobutton instead but I hate that.
-				$.GetContextPanel().FindChildTraverse(SETTINGS_TABS[tab].radioid).checked = true;
+				$.GetContextPanel().FindChildTraverse(SettingsTabs[tab].radioid).checked = true;
 			}
 
 			SettingsShared.onChangedTab(this.activeTab);
@@ -100,7 +100,7 @@ class MainMenuSettings {
 		const newPanel = $.CreatePanel('Panel', this.panels.content, tab);
 
 		// Load XML file for the page
-		newPanel.LoadLayout('file://{resources}/layout/settings/' + SETTINGS_TABS[tab].xml + '.xml', false, false);
+		newPanel.LoadLayout('file://{resources}/layout/settings/' + SettingsTabs[tab].xml + '.xml', false, false);
 
 		// Set the --odd/--even classes all the children
 		this.styleAlternatingItems(newPanel);
@@ -201,7 +201,7 @@ class MainMenuSettings {
 						(child.actualyoffset + child.actuallayoutheight + this.spacerHeight) / containerHeight) ||
 				scrollOffset === 0
 			) {
-				this.panels.nav.FindChildTraverse(SETTINGS_TABS[tab].children[child.id]).checked = true;
+				this.panels.nav.FindChildTraverse(SettingsTabs[tab].children[child.id]).checked = true;
 				break;
 			}
 		}
@@ -230,7 +230,7 @@ class MainMenuSettings {
 		this.panels.navCollapse.SetHasClass('hide', shouldCollapse);
 
 		// Update all the items
-		Object.keys(SETTINGS_TABS)
+		Object.keys(SettingsTabs)
 			.filter((tab) => tab !== 'SearchSettings' && tab !== this.activeTab)
 			.forEach((tab) => this.setNavItemCollapsed(tab, shouldCollapse));
 	}
@@ -238,7 +238,7 @@ class MainMenuSettings {
 	// Set the collapsed state of a nav item
 	static setNavItemCollapsed(tab, shouldCollapse) {
 		this.panels.nav
-			.FindChild(SETTINGS_TABS[tab].radioid)
+			.FindChild(SettingsTabs[tab].radioid)
 			.FindChildrenWithClassTraverse('settings-nav__subsection')[0]
 			.SetHasClass('settings-nav__subsection--hidden', shouldCollapse);
 	}

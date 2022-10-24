@@ -155,16 +155,16 @@ class Leaderboards {
 	}
 
 	static showEndOfRun() {
-		$.DispatchEvent('EndOfRun_Show', EOR_SHOW_REASON.MANUALLY_SHOWN);
+		$.DispatchEvent('EndOfRun_Show', EorShowReason.MANUALLY_SHOWN);
 	}
 
 	/**
 	 * Show the button to go to the end of run page.
 	 * Should only be shown if you're completing a run in the current session on the current map.
-	 * @param {EOR_SHOW_REASON} showReason - Why the end of run panel is being shown. See EOR_SHOW_REASON for reasons.
+	 * @param {EorShowReason} showReason - Why the end of run panel is being shown. See EorShowReason for reasons.
 	 */
 	static onShowEndOfRun(showReason) {
-		if (showReason === EOR_SHOW_REASON.PLAYER_FINISHED_RUN) {
+		if (showReason === EorShowReason.PLAYER_FINISHED_RUN) {
 			this.panels.endOfRunButton.visible = true;
 		}
 	}

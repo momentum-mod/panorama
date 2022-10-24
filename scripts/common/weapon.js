@@ -1,12 +1,12 @@
 'use strict';
 
-const WEAPON_STATE_CHANGE_MODE = {
+const WeaponStateChangeMode = {
 	SWITCH: 0,
 	PICKUP: 1,
 	DROP: 2
 };
 
-const WEAPON_ID = {
+const WeaponID = {
 	NONE: 0,
 
 	PISTOL: 1,
@@ -24,7 +24,7 @@ const WEAPON_ID = {
 	FIRST: 1
 };
 
-const WEAPON_NAMES = [
+const WeaponNames = [
 	'#Weapon_Pistol',
 	'#Weapon_Shotgun',
 	'#Weapon_MachineGun',

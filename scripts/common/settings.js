@@ -1,6 +1,6 @@
 'use strict';
 
-const SETTINGS_TABS = {
+const SettingsTabs = {
 	InputSettings: {
 		xml: 'settings_input',
 		radioid: 'InputRadio',

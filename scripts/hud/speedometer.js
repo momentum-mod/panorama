@@ -166,22 +166,22 @@ class Speedometer {
 		const horizVelocity = Math.sqrt(xSquared + ySquared);
 
 		this.correctedColorizeDeadzone = deltaTime * COLORIZE_DEADZONE;
-		this.update(SPEEDOMETER_ID.AbsSpeedometer, absVelocity);
-		this.update(SPEEDOMETER_ID.HorizSpeedometer, horizVelocity);
-		this.update(SPEEDOMETER_ID.VertSpeedometer, Math.abs(velocity.z));
-		this.update(SPEEDOMETER_ID.EnergySpeedometer, MomentumPlayerAPI.GetEnergy());
+		this.update(SpeedometerIDs.AbsSpeedometer, absVelocity);
+		this.update(SpeedometerIDs.HorizSpeedometer, horizVelocity);
+		this.update(SpeedometerIDs.VertSpeedometer, Math.abs(velocity.z));
+		this.update(SpeedometerIDs.EnergySpeedometer, MomentumPlayerAPI.GetEnergy());
 	}
 	static onExplosiveHitSpeedUpdate(hitVelocity) {
-		this.update(SPEEDOMETER_ID.ExplosiveJumpVelocity, hitVelocity);
+		this.update(SpeedometerIDs.ExplosiveJumpVelocity, hitVelocity);
 	}
 	static onJumpSpeedUpdate(jumpVelocity) {
-		this.update(SPEEDOMETER_ID.LastJumpVelocity, jumpVelocity);
+		this.update(SpeedometerIDs.LastJumpVelocity, jumpVelocity);
 	}
 	static onRampBoardSpeedUpdate(rampBoardVelocity) {
-		this.update(SPEEDOMETER_ID.RampBoardVelocity, rampBoardVelocity);
+		this.update(SpeedometerIDs.RampBoardVelocity, rampBoardVelocity);
 	}
 	static onRampLeaveSpeedUpdate(rampLeaveVelocity) {
-		this.update(SPEEDOMETER_ID.RampLeaveVelocity, rampLeaveVelocity);
+		this.update(SpeedometerIDs.RampLeaveVelocity, rampLeaveVelocity);
 	}
 
 	static onZoneChange(enter, linear, curZone, _curTrack, timerState) {
@@ -212,11 +212,11 @@ class Speedometer {
 			const comparisonSpeedHoriz = RunComparisonsAPI.GetLoadedComparisonSpeed(curZone, true);
 			const diffAbs = actualSpeedAbs - comparisonSpeedAbs;
 			const diffHoriz = actualSpeedHoriz - comparisonSpeedHoriz;
-			this.update(SPEEDOMETER_ID.StageEnterExitAbsVelocity, actualSpeedAbs, true, diffAbs);
-			this.update(SPEEDOMETER_ID.StageEnterExitHorizVelocity, actualSpeedHoriz, true, diffHoriz);
+			this.update(SpeedometerIDs.StageEnterExitAbsVelocity, actualSpeedAbs, true, diffAbs);
+			this.update(SpeedometerIDs.StageEnterExitHorizVelocity, actualSpeedHoriz, true, diffHoriz);
 		} else {
-			this.update(SPEEDOMETER_ID.StageEnterExitAbsVelocity, actualSpeedAbs, false);
-			this.update(SPEEDOMETER_ID.StageEnterExitHorizVelocity, actualSpeedHoriz, false);
+			this.update(SpeedometerIDs.StageEnterExitAbsVelocity, actualSpeedAbs, false);
+			this.update(SpeedometerIDs.StageEnterExitHorizVelocity, actualSpeedHoriz, false);
 		}
 	}
 
@@ -237,23 +237,23 @@ class Speedometer {
 		if (!speedometer.settings || !speedometer.settings.visible) return;
 
 		switch (speedometer.settings.units) {
-			case SPEEDOMETER_UNITS_TYPE.KMH:
+			case SpeedometerUnitsType.KMH:
 				velocity *= UPS_TO_KMH_FACTOR;
 				break;
-			case SPEEDOMETER_UNITS_TYPE.MPH:
+			case SpeedometerUnitsType.MPH:
 				velocity *= UPS_TO_MPH_FACTOR;
 				break;
 			default:
 				break;
 		}
 
-		const separateComparison = speedometer.settings.colorizeMode === SPEEDOMETER_COLOR_MODE.COMPARISON_SEP;
+		const separateComparison = speedometer.settings.colorizeMode === SpeedometerColorMode.COMPARISON_SEP;
 		if (
 			hasComparison &&
-			(speedometer.settings.colorizeMode === SPEEDOMETER_COLOR_MODE.COMPARISON || separateComparison)
+			(speedometer.settings.colorizeMode === SpeedometerColorMode.COMPARISON || separateComparison)
 		) {
 			// energy speedometer can be negative!
-			const speed = speedoID === SPEEDOMETER_ID.EnergySpeedometer ? velocity : Math.abs(velocity);
+			const speed = speedoID === SpeedometerIDs.EnergySpeedometer ? velocity : Math.abs(velocity);
 			const diff = !customdiff ? speed - speedometer.prevVal : customdiff;
 
 			let labelToColor = separateComparison ? speedometer.comparisonlabel : speedometer.label;
@@ -282,7 +282,7 @@ class Speedometer {
 		} else {
 			speedometer.label.RemoveClass(INCREASE_CLASS);
 			speedometer.label.RemoveClass(DECREASE_CLASS);
-			if (speedometer.settings.colorizeMode === SPEEDOMETER_COLOR_MODE.RANGE && speedometer.settings.ranges) {
+			if (speedometer.settings.colorizeMode === SpeedometerColorMode.RANGE && speedometer.settings.ranges) {
 				let found = false;
 				speedometer.settings.ranges.forEach((range) => {
 					if (velocity >= range.min && velocity <= range.max) {
@@ -348,7 +348,7 @@ class Speedometer {
 			const colorizeMode = speedoSetting['colorize'];
 			speedometer.comparisonlabel.SetHasClass(
 				HIDDEN_CLASS,
-				!visible || colorizeMode !== SPEEDOMETER_COLOR_MODE.COMPARISON_SEP
+				!visible || colorizeMode !== SpeedometerColorMode.COMPARISON_SEP
 			);
 
 			speedometer.settings = new SpeedoSettingsObject(visible, colorizeMode, speedoSetting['units'], rangeList);

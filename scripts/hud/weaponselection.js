@@ -6,21 +6,21 @@ const FADEOUT_CLASS = 'weaponselection--fadeout';
 class WeaponSelection {
 	static container = $('#WeaponSelection');
 	static wepSnippets = [];
-	static lastDeployed = WEAPON_ID.NONE;
+	static lastDeployed = WeaponID.NONE;
 
 	static onWeaponStateChange(mode, id) {
 		switch (mode) {
-			case WEAPON_STATE_CHANGE_MODE.SWITCH:
-				if (this.lastDeployed !== WEAPON_ID.NONE)
+			case WeaponStateChangeMode.SWITCH:
+				if (this.lastDeployed !== WeaponID.NONE)
 					this.wepSnippets[this.lastDeployed - 1]?.RemoveClass(DEPLOYED_CLASS);
 				this.lastDeployed = id;
 				this.wepSnippets[id - 1]?.AddClass(DEPLOYED_CLASS);
 				break;
-			case WEAPON_STATE_CHANGE_MODE.PICKUP:
+			case WeaponStateChangeMode.PICKUP:
 				this.createWeaponPanel(id);
 				this.container.SortChildrenOnAttribute('slot_index', false);
 				break;
-			case WEAPON_STATE_CHANGE_MODE.DROP:
+			case WeaponStateChangeMode.DROP:
 				this.destroyWeaponPanel(id);
 				break;
 			default:
@@ -32,7 +32,7 @@ class WeaponSelection {
 	}
 
 	static onAllWeaponsDropped() {
-		for (let id = WEAPON_ID.FIRST; id < WEAPON_ID.MAX; id++) {
+		for (let id = WeaponID.FIRST; id < WeaponID.MAX; id++) {
 			this.destroyWeaponPanel(id);
 		}
 	}
@@ -41,7 +41,7 @@ class WeaponSelection {
 		if (this.wepSnippets[id - 1]) return;
 
 		const weaponPanel = $.CreatePanel('Panel', this.container, ''); // Create the new panel
-		weaponPanel.SetDialogVariable('weapon', $.Localize(WEAPON_NAMES[id - 1]));
+		weaponPanel.SetDialogVariable('weapon', $.Localize(WeaponNames[id - 1]));
 		weaponPanel.LoadLayoutSnippet('Weapon');
 
 		const weaponSlot = MomentumWeaponAPI.GetWeaponSlot(id) + 1;

@@ -1,6 +1,6 @@
 'use strict';
 
-const GAMEMODE = {
+const Gamemodes = {
 	1: {
 		name: '#Gamemode_Surf',
 		shortName: '#Gamemode_Surf_Short',
@@ -53,11 +53,11 @@ const GAMEMODE = {
 	}
 };
 
-const GAMEMODE_WITH_NULL = {
+const GamemodesWithNull = {
 	0: {
 		name: '#Gamemode_Unknown',
 		shortName: '#Unknown',
 		prefix: ''
 	},
-	...GAMEMODE
+	...Gamemodes
 };
