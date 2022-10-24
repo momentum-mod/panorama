@@ -36,7 +36,7 @@
 						>
 							<Label class="hudmapinfo__label" text=" " />
 						</ConVarEnabler>
-						<Label id="NumzonesLabel" class="hudmapinfo__label" text="(#MapInfo_Zones)" />
+						<Label id="NumzonesLabel" class="hudmapinfo__label" text="#MapInfo_Zones" />
 					</ConVarEnabler>
 
 					<ConVarEnabler

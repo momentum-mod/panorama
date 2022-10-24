@@ -219,7 +219,7 @@
 					>
 
 						<Panel class="settings-group__header">
-							<Label class="settings-group__subtitle" text="#Settings_Speedometer_Gamemode_Long " />
+							<Label class="settings-group__subtitle" text="#Settings_Speedometer_Gamemode_Long" />
 							<!-- TODO: hook this up to some events so it can change when a map is loaded -->
 							<DropDown
 								id="GamemodeDropDown"

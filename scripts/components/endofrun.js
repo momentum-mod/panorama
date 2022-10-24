@@ -395,7 +395,9 @@ class EndOfRun {
 			{
 				min: min,
 				max: max,
-				name: $.Localize(useStat ? comparisonSplits[0].statsComparisons[statIndex].name : '#Common_Time'),
+				name: $.Localize(
+					useStat ? comparisonSplits[0].statsComparisons[statIndex].name : '#Run_Stat_Name_Time'
+				),
 				interval: yInterval
 			}
 		];
