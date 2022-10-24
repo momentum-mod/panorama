@@ -2,13 +2,13 @@
 
 const TOAST_DURATION = 10;
 const MAX_ACTIVE_TOASTS = 10;
-const LOCATIONS = ['left', 'center', 'right'];
+const Locations = ['left', 'center', 'right'];
 const convertLocationNum = (locationNum) => {
 	if (locationNum === -1) return 'all';
 
-	if (locationNum < 0 || locationNum > LOCATIONS.length - 1) return LOCATIONS[2];
+	if (locationNum < 0 || locationNum > Locations.length - 1) return Locations[2];
 
-	return LOCATIONS[locationNum];
+	return Locations[locationNum];
 };
 const HIDE_TRANSITION_DURATION = 0.3; // This should match transition-duration properties in toast.scss
 
@@ -24,7 +24,7 @@ class Toast {
 		}
 
 		this.duration = obj.duration && obj.duration !== '' ? obj.duration : TOAST_DURATION;
-		this.location = LOCATIONS.includes(obj.location) ? obj.location : 'center';
+		this.location = Locations.includes(obj.location) ? obj.location : 'center';
 		this.style = obj.style;
 		this.id = obj.id ?? '';
 
@@ -67,18 +67,18 @@ class Toast {
 
 class ToastManager {
 	// { left: [], ...}
-	static activeToasts = LOCATIONS.reduce((obj, loc) => {
+	static activeToasts = Locations.reduce((obj, loc) => {
 		obj[loc] = [];
 		return obj;
 	}, {});
 
-	static queuedToasts = LOCATIONS.reduce((obj, loc) => {
+	static queuedToasts = Locations.reduce((obj, loc) => {
 		obj[loc] = [];
 		return obj;
 	}, {});
 
 	// { left: $('#Left'), ...}
-	static containers = LOCATIONS.reduce((obj, loc) => {
+	static containers = Locations.reduce((obj, loc) => {
 		obj[loc] = $('#' + loc[0].toUpperCase() + loc.substring(1));
 		return obj;
 	}, {});
@@ -219,7 +219,7 @@ class ToastManager {
 	static deleteToastByID(toastID) {
 		if (!toastID) return;
 
-		LOCATIONS.forEach((loc) => this.deleteToast(this.activeToasts[loc].find((t) => t.id === toastID)));
+		Locations.forEach((loc) => this.deleteToast(this.activeToasts[loc].find((t) => t.id === toastID)));
 	}
 
 	static deleteToast(toast) {
@@ -236,7 +236,7 @@ class ToastManager {
 		// Panorama/JS doesn't run this syncronously for some reason, so put a slight delay between deletions. Also looks kinda cool!
 		let delay = 0;
 		if (location && location !== 'all') {
-			if (!LOCATIONS.includes(location)) return;
+			if (!Locations.includes(location)) return;
 
 			this.activeToasts[location].forEach((toast) => {
 				$.Schedule(delay, () => this.deleteToast(toast));
@@ -245,7 +245,7 @@ class ToastManager {
 
 			this.queuedToasts[location] = [];
 		} else {
-			LOCATIONS.forEach((l) => {
+			Locations.forEach((l) => {
 				this.activeToasts[l].forEach((toast) => {
 					$.Schedule(delay, () => this.deleteToast(toast));
 					delay += 0.05;

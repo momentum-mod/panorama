@@ -1,12 +1,12 @@
 'use strict';
 
-const SPEEDOMETER_UNITS_TYPE = {
+const SpeedometerUnitsType = {
 	UPS: 0,
 	KMH: 1,
 	MPH: 2
 };
 
-const SPEEDOMETER_COLOR_MODE = {
+const SpeedometerColorMode = {
 	NONE: 0,
 	RANGE: 1,
 	COMPARISON: 2,
@@ -14,7 +14,7 @@ const SPEEDOMETER_COLOR_MODE = {
 };
 
 // these key names match the names of speedometers in the .vdf files
-const SPEEDOMETER_ID = {
+const SpeedometerIDs = {
 	AbsSpeedometer: 0,
 	HorizSpeedometer: 1,
 	VertSpeedometer: 2,
@@ -27,7 +27,7 @@ const SPEEDOMETER_ID = {
 	StageEnterExitHorizVelocity: 9
 };
 
-const SPEEDOMETER_DISP_NAMES = [
+const SpeedometerDispNames = [
 	'#Speedometer_Type_Absolute',
 	'#Speedometer_Type_Horizonal',
 	'#Speedometer_Type_Vertical',

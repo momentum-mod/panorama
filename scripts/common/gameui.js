@@ -1,6 +1,6 @@
 'use strict';
 
-const GAME_UI_STATE = {
+const GameUIState = {
 	INVALID: 0,
 	LOADINGSCREEN: 1,
 	INGAME: 2,

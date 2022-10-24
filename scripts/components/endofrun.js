@@ -66,37 +66,37 @@ class EndOfRun {
 
 	/**
 	 * Update a status indicator
-	 * @param {RUN_STATUS_STATES} status
-	 * @param {RUN_STATUS_TYPES} type
+	 * @param {RunStatusStates} status
+	 * @param {RunStatusTypes} type
 	 */
 	static updateRunStatusIndicator(status, type) {
-		const statusPanel = type === RUN_STATUS_TYPES.UPLOAD ? this.panels.uploadStatus : this.panels.saveStatus;
+		const statusPanel = type === RunStatusTypes.UPLOAD ? this.panels.uploadStatus : this.panels.saveStatus;
 
-		statusPanel.SetHasClass('spin-clockwise', status === RUN_STATUS_STATES.PROGRESS);
-		statusPanel.SetHasClass('endofrun__run-status-indicator--progress', status === RUN_STATUS_STATES.PROGRESS);
-		statusPanel.SetHasClass('endofrun__run-status-indicator--success', status === RUN_STATUS_STATES.SUCCESS);
-		statusPanel.SetHasClass('endofrun__run-status-indicator--error', status === RUN_STATUS_STATES.ERROR);
+		statusPanel.SetHasClass('spin-clockwise', status === RunStatusStates.PROGRESS);
+		statusPanel.SetHasClass('endofrun__run-status-indicator--progress', status === RunStatusStates.PROGRESS);
+		statusPanel.SetHasClass('endofrun__run-status-indicator--success', status === RunStatusStates.SUCCESS);
+		statusPanel.SetHasClass('endofrun__run-status-indicator--error', status === RunStatusStates.ERROR);
 
 		let icon, text, style;
 
 		switch (status) {
-			case RUN_STATUS_STATES.PROGRESS:
-				icon = `file://{images}/${RUN_STATUS_ICONS.PROGRESS}.svg`;
+			case RunStatusStates.PROGRESS:
+				icon = `file://{images}/${RunStatusIcons.PROGRESS}.svg`;
 				break;
-			case RUN_STATUS_STATES.SUCCESS:
+			case RunStatusStates.SUCCESS:
 				icon = `file://{images}/${
-					type === RUN_STATUS_TYPES.UPLOAD ? RUN_STATUS_ICONS.UPLOAD : RUN_STATUS_ICONS.SAVE
+					type === RunStatusTypes.UPLOAD ? RunStatusIcons.UPLOAD : RunStatusIcons.SAVE
 				}.svg`;
 				text = $.Localize(
-					type === RUN_STATUS_TYPES.UPLOAD ? 'EndOfRun_Status_UploadSuccess' : 'EndOfRun_Status_SaveSuccess'
+					type === RunStatusTypes.UPLOAD ? 'EndOfRun_Status_UploadSuccess' : 'EndOfRun_Status_SaveSuccess'
 				);
 				style = 'positive';
 				break;
-			case RUN_STATUS_STATES.ERROR:
+			case RunStatusStates.ERROR:
 			default:
-				icon = `file://{images}/${RUN_STATUS_ICONS.ERROR}.svg`;
+				icon = `file://{images}/${RunStatusIcons.ERROR}.svg`;
 				text = $.Localize(
-					type === RUN_STATUS_TYPES.UPLOAD ? 'EndOfRun_Status_UploadFail' : 'EndOfRun_Status_SaveFail'
+					type === RunStatusTypes.UPLOAD ? 'EndOfRun_Status_UploadFail' : 'EndOfRun_Status_SaveFail'
 				);
 				style = 'error';
 		}
@@ -119,16 +119,13 @@ class EndOfRun {
 	}
 
 	static updateRunSavedStatus(saved) {
-		this.updateRunStatusIndicator(
-			saved ? RUN_STATUS_STATES.SUCCESS : RUN_STATUS_STATES.ERROR,
-			RUN_STATUS_TYPES.SAVE
-		);
+		this.updateRunStatusIndicator(saved ? RunStatusStates.SUCCESS : RunStatusStates.ERROR, RunStatusTypes.SAVE);
 	}
 
 	static updateRunUploadStatus(uploaded, _cosXp, _rankXp, _lvlGain) {
 		this.updateRunStatusIndicator(
-			uploaded ? RUN_STATUS_STATES.SUCCESS : RUN_STATUS_STATES.ERROR,
-			RUN_STATUS_TYPES.UPLOAD
+			uploaded ? RunStatusStates.SUCCESS : RunStatusStates.ERROR,
+			RunStatusTypes.UPLOAD
 		);
 	}
 
@@ -157,21 +154,21 @@ class EndOfRun {
 	 * The comparision run can be null, in which case we don't show splits or the graph.
 	 * Fired when either when the local player's run ends, a replay run ends,
 	 * you go back to a last EoR from leaderboards, or in the future when the player compares two runs.
-	 * @param {EOR_SHOW_REASON} showReason - Why the end of run panel is being shown. See EOR_SHOW_REASON for reasons.
+	 * @param {EorShowReason} showReason - Why the end of run panel is being shown. See EorShowReason for reasons.
 	 */
 	static showNewEndOfRun(showReason) {
 		if (!this.baseRun) return;
 
-		if (showReason === EOR_SHOW_REASON.PLAYER_FINISHED_RUN) {
+		if (showReason === EorShowReason.PLAYER_FINISHED_RUN) {
 			this.panels.runStatusIndicators.visible = true;
 			this.panels.actionButtons.visible = true;
-			this.updateRunStatusIndicator(RUN_STATUS_STATES.PROGRESS, RUN_STATUS_TYPES.SAVE);
-			this.updateRunStatusIndicator(RUN_STATUS_STATES.PROGRESS, RUN_STATUS_TYPES.UPLOAD);
+			this.updateRunStatusIndicator(RunStatusStates.PROGRESS, RunStatusTypes.SAVE);
+			this.updateRunStatusIndicator(RunStatusStates.PROGRESS, RunStatusTypes.UPLOAD);
 		} else {
 			this.panels.runStatusIndicators.visible = false;
 			this.panels.actionButtons.visible = false;
 
-			if (showReason === EOR_SHOW_REASON.MANUALLY_SHOWN) {
+			if (showReason === EorShowReason.MANUALLY_SHOWN) {
 				// If it's a manual show we don't need to redo anything, just return out
 				return;
 			}

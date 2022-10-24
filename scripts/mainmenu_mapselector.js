@@ -59,7 +59,7 @@ class MapSelection {
 
 		$.RegisterEventHandler('PanelLoaded', $.GetContextPanel(), () => {
 			// Populate the gameModeData object, finding all the filter buttons
-			this.gameModeData = { ...GAMEMODE_WITH_NULL };
+			this.gameModeData = { ...GamemodesWithNull };
 
 			Object.keys(this.gameModeData).forEach(
 				(mode) => (this.gameModeData[mode].filterButton = $(`#${this.gameModeData[mode].idName}FilterButton`))

@@ -15,7 +15,7 @@ class SpeedometerSelectPopup {
 		disabledIDs.forEach((id, index) => {
 			let speedometer = $.CreatePanel('Panel', SpeedometerSelectPopup.container, '');
 			speedometer.LoadLayoutSnippet('speedometer-radiobutton');
-			speedometer.FindChildInLayoutFile('SpeedometerBtnLabel').text = SPEEDOMETER_DISP_NAMES[id];
+			speedometer.FindChildInLayoutFile('SpeedometerBtnLabel').text = SpeedometerDispNames[id];
 
 			let radioBtn = speedometer.FindChildInLayoutFile('SpeedometerRadioBtn');
 			radioBtn.SetPanelEvent('onactivate', () => {

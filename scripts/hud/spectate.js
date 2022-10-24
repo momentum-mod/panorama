@@ -12,8 +12,8 @@ class HudSpectate {
 	};
 
 	static onSpectatorChanged(type) {
-		if (type >= RUN_ENT_TYPE.GHOST) {
-			const bReplay = type === RUN_ENT_TYPE.REPLAY;
+		if (type >= RunEntType.GHOST) {
+			const bReplay = type === RunEntType.REPLAY;
 
 			// TODO: this needs to be done more dynamically, you can switch off replay to real players and back
 			//this.panels.prevPlayer.visible = !bReplay;

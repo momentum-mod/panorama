@@ -1,6 +1,6 @@
 'use strict';
 
-const RUN_SAFEGUARD_TYPE = {
+const RunSafeguardType = {
 	PRACTICEMODE: 0,
 	RESTART: 1,
 	RESTART_STAGE: 2,

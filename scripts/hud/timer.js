@@ -34,7 +34,7 @@ class HudTimer {
 		this.resetTimer();
 
 		// if we want special styling for timer artificially running (via savestate), do it here like so
-		// if (MomentumTimerAPI.GetTimerState() === TIMER_STATE.PRACTICE) HudTimer.timeLabel.AddClass(PRACTICE_CLASS);
+		// if (MomentumTimerAPI.GetTimerState() === TimerState.PRACTICE) HudTimer.timeLabel.AddClass(PRACTICE_CLASS);
 
 		if (MomentumTimerAPI.IsStopSoundEnabled()) $.PlaySoundEvent('Momentum.StopTimer');
 	}
@@ -48,20 +48,20 @@ class HudTimer {
 
 	static onUpdate() {
 		const timerState = MomentumTimerAPI.GetTimerState();
-		if (timerState === TIMER_STATE.NOTRUNNING) return;
+		if (timerState === TimerState.NOTRUNNING) return;
 
 		$.GetContextPanel().SetDialogVariableFloat('runtime', MomentumTimerAPI.GetCurrentRunTime());
 	}
 
 	static onZoneChange(enter, linear, curZone, _curTrack, timerState) {
-		if (timerState === TIMER_STATE.NOTRUNNING && enter && curZone === 1) {
+		if (timerState === TimerState.NOTRUNNING && enter && curZone === 1) {
 			// timer state is not reset on map finished until entering the start zone again (on reset)
 			this.resetTimer();
 			this.timeLabel.RemoveClass(FINISHED_CLASS);
 			return;
 		}
 
-		if (timerState === TIMER_STATE.RUNNING && curZone > 1 && enter === linear && HudTimer.prevZone !== curZone) {
+		if (timerState === TimerState.RUNNING && curZone > 1 && enter === linear && HudTimer.prevZone !== curZone) {
 			const diff = RunComparisonsAPI.GetLoadedComparisonOverallDiff(curZone);
 
 			let diffSymbol;
@@ -103,16 +103,16 @@ class HudTimer {
 
 	static onTimerEvent(_ent, type) {
 		switch (type) {
-			case TIMER_EVENT.STARTED:
+			case TimerEvent.STARTED:
 				this.onTimerStarted();
 				break;
-			case TIMER_EVENT.FINISHED:
+			case TimerEvent.FINISHED:
 				this.onTimerFinished();
 				break;
-			case TIMER_EVENT.STOPPED:
+			case TimerEvent.STOPPED:
 				this.onTimerStopped();
 				break;
-			case TIMER_EVENT.FAILED:
+			case TimerEvent.FAILED:
 				this.onTimerFailed();
 				break;
 			default:
@@ -123,7 +123,7 @@ class HudTimer {
 
 	static onSaveStateChange(_count, _current, _usingmenu) {
 		const timerState = MomentumTimerAPI.GetTimerState();
-		if (timerState !== TIMER_STATE.RUNNING) {
+		if (timerState !== TimerState.RUNNING) {
 			this.resetTimer();
 			this.timeLabel.RemoveClass(FINISHED_CLASS);
 		}
@@ -133,7 +133,7 @@ class HudTimer {
 		this.timeLabel.RemoveClass(FINISHED_CLASS);
 
 		const timerState = MomentumTimerAPI.GetTimerState();
-		if (timerState !== TIMER_STATE.RUNNING) {
+		if (timerState !== TimerState.RUNNING) {
 			this.resetTimer();
 			return;
 		}
@@ -144,7 +144,7 @@ class HudTimer {
 	}
 
 	static onLoad() {
-		$.GetContextPanel().hiddenHUDBits = HIDEHUD.LEADERBOARDS;
+		$.GetContextPanel().hiddenHUDBits = HideHud.LEADERBOARDS;
 	}
 
 	static {

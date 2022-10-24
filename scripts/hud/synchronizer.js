@@ -63,8 +63,8 @@ class Synchronizer {
 
 		const allButtons = MomentumInputAPI.GetButtons().buttons;
 		const strafeRight =
-			!(allButtons & BUTTONS.FORWARD || allButtons & BUTTONS.BACK) &&
-			(allButtons & BUTTONS.MOVERIGHT ? 1 : 0) - (allButtons & BUTTONS.MOVELEFT ? 1 : 0);
+			!(allButtons & Buttons.FORWARD || allButtons & Buttons.BACK) &&
+			(allButtons & Buttons.MOVERIGHT ? 1 : 0) - (allButtons & Buttons.MOVELEFT ? 1 : 0);
 
 		const idealDelta =
 			lastMoveData.moveStatus === 0 ? Math.atan2(nextVelocity.y, nextVelocity.x) * this.rad2deg : 0;

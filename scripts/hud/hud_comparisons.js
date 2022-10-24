@@ -27,7 +27,7 @@ class HudComparisons {
 	}
 
 	static onTimerEvent(_ent, eventType) {
-		if (eventType === TIMER_EVENT.STARTED) {
+		if (eventType === TimerEvent.STARTED) {
 			this.clearComparisons();
 		}
 	}
@@ -44,7 +44,7 @@ class HudComparisons {
 			!currentData.isInZone ||
 			!currentStats ||
 			currentData.currentZone === 1 ||
-			currentData.timerState === TIMER_STATE.PRACTICE
+			currentData.timerState === TimerState.PRACTICE
 		) {
 			return;
 		}
@@ -53,7 +53,7 @@ class HudComparisons {
 		// so we don't fire on stage we've already hit.
 		// this.runStatsZoneIndex tracks the correct index into the runStats array
 
-		if (currentData.timerState === TIMER_STATE.NOTRUNNING) {
+		if (currentData.timerState === TimerState.NOTRUNNING) {
 			// The only time we care about comparisons when timer is not running is if you just
 			// hit the end zone *for the first time*
 			if (!this.runFinished && currentData.currentZone === 0) {

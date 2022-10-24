@@ -327,7 +327,7 @@ class MainMenuController {
 	 * based on if we're ingame or not.
 	 */
 	static onQuitButtonPressed() {
-		if (GameInterfaceAPI.GetGameUIState() === GAME_UI_STATE.PAUSEMENU) {
+		if (GameInterfaceAPI.GetGameUIState() === GameUIState.PAUSEMENU) {
 			GameInterfaceAPI.ConsoleCommand('disconnect');
 			this.onHomeButtonPressed();
 			return;
@@ -364,7 +364,7 @@ class MainMenuController {
 			$.Localize('#Safeguard_MapQuitToMenu'),
 			$.Localize('#Safeguard_MapQuitToMenu_Message'),
 			'warning-popup',
-			() => $.DispatchEvent('Safeguard_Response', RUN_SAFEGUARD_TYPE.QUIT_TO_MENU),
+			() => $.DispatchEvent('Safeguard_Response', RunSafeguardType.QUIT_TO_MENU),
 			() => {}
 		);
 	}
@@ -377,7 +377,7 @@ class MainMenuController {
 			$.Localize('#Safeguard_MapQuitGame'),
 			$.Localize('#Safeguard_MapQuitGame_Message'),
 			'warning-popup',
-			() => $.DispatchEvent('Safeguard_Response', RUN_SAFEGUARD_TYPE.QUIT_GAME),
+			() => $.DispatchEvent('Safeguard_Response', RunSafeguardType.QUIT_GAME),
 			() => {}
 		);
 	}
@@ -408,7 +408,7 @@ class MainMenuController {
 	 */
 	static onEscapeKeyPressed(_eSource, _nRepeats, _focusPanel) {
 		// Resume game in pause menu mode, OTHERWISE close the active menu menu page
-		if (GameInterfaceAPI.GetGameUIState() === GAME_UI_STATE.PAUSEMENU) {
+		if (GameInterfaceAPI.GetGameUIState() === GameUIState.PAUSEMENU) {
 			$.DispatchEvent('ChaosMainMenuResumeGame');
 		} else {
 			this.onHomeButtonPressed();

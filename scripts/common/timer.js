@@ -1,13 +1,13 @@
 'use strict';
 
-const TIMER_EVENT = {
+const TimerEvent = {
 	STARTED: 0,
 	FINISHED: 1,
 	STOPPED: 2,
 	FAILED: 3
 };
 
-const TIMER_STATE = {
+const TimerState = {
 	NOTRUNNING: 0,
 	RUNNING: 1,
 	PRACTICE: 2

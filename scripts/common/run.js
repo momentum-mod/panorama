@@ -8,7 +8,7 @@
  * Enum for why end of run is being shown
  * @enum {number}
  */
-const EOR_SHOW_REASON = {
+const EorShowReason = {
 	PLAYER_FINISHED_RUN: 0,
 	REPLAY_FINISHED_RUN: 1,
 	MANUALLY_SHOWN: 2
@@ -18,7 +18,7 @@ const EOR_SHOW_REASON = {
  * Enum for different run submission states
  * @enum {number}
  */
-const RUN_STATUS_STATES = {
+const RunStatusStates = {
 	PROGRESS: 0,
 	SUCCESS: 1,
 	ERROR: 2
@@ -28,7 +28,7 @@ const RUN_STATUS_STATES = {
  * Enum for types of submission status
  * @enum {number}
  */
-const RUN_STATUS_TYPES = {
+const RunStatusTypes = {
 	PROGRESS: 0,
 	UPLOAD: 1,
 	SAVE: 2,
@@ -39,7 +39,7 @@ const RUN_STATUS_TYPES = {
  * Enum settings the icons for run statuses
  * @enum {string}
  */
-const RUN_STATUS_ICONS = {
+const RunStatusIcons = {
 	PROGRESS: 'refresh',
 	UPLOAD: 'cloud-upload',
 	SAVE: 'content-save-check',

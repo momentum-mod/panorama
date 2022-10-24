@@ -38,7 +38,7 @@ class HudLeaderboards {
 	static setMapData(isOfficial) {
 		$.GetContextPanel().SetHasClass('hud-leaderboards--unofficial', !isOfficial);
 
-		const img = GAMEMODE_WITH_NULL[GameModeAPI.GetCurrentGameMode()].shortName.toLowerCase();
+		const img = GamemodesWithNull[GameModeAPI.GetCurrentGameMode()].shortName.toLowerCase();
 
 		this.panels.gamemodeImage.SetImage(`file://{images}/gamemodes/${img}.svg`);
 

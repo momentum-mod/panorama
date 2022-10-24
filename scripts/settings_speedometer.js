@@ -23,7 +23,7 @@ class SpeedometerDetailObject {
 		this.containingPanel.DeleteAsync(0.0);
 	}
 	discardChanges(speedometerKV) {
-		if (this.id !== SPEEDOMETER_ID.EnergySpeedometer) this.unitsDropdown.SetSelectedIndex(speedometerKV['units']);
+		if (this.id !== SpeedometerIDs.EnergySpeedometer) this.unitsDropdown.SetSelectedIndex(speedometerKV['units']);
 		this.colorModeDropdown.SetSelectedIndex(speedometerKV['colorize']);
 		const colorProfile = speedometerKV['color_profile'];
 		if (colorProfile) this.colorProfileDropdown.SetSelected(colorProfile);
@@ -54,11 +54,11 @@ class SpeedometerDetailObject {
 		this.moveupButton = this.containingPanel.FindChildInLayoutFile('SpeedometerMoveUpBtn');
 		this.movedownButton = this.containingPanel.FindChildInLayoutFile('SpeedometerMoveDownBtn');
 		this.nameLabel = this.toggleButton.FindChildInLayoutFile('SpeedometerName');
-		this.nameLabel.text = $.Localize(SPEEDOMETER_DISP_NAMES[id]);
+		this.nameLabel.text = $.Localize(SpeedometerDispNames[id]);
 
 		this.colorModeDropdown.SetSelectedIndex(speedometerKV['colorize']);
 
-		if (id === SPEEDOMETER_ID.EnergySpeedometer) {
+		if (id === SpeedometerIDs.EnergySpeedometer) {
 			this.unitsSettingContainer.visible = false;
 		} else {
 			this.unitsDropdown.SetSelectedIndex(speedometerKV['units']);
@@ -112,22 +112,22 @@ class SpeedometerDetailObject {
 			this.colorProfileDropdown.SetSelected(selColorProfile);
 	}
 	saveToKV(speedometerKV) {
-		if (this.id !== SPEEDOMETER_ID.EnergySpeedometer) {
+		if (this.id !== SpeedometerIDs.EnergySpeedometer) {
 			const selUnitsPanel = this.unitsDropdown.GetSelected();
 			const selUnits = selUnitsPanel
-				? selUnitsPanel.GetAttributeInt('value', SPEEDOMETER_UNITS_TYPE.UPS)
-				: SPEEDOMETER_UNITS_TYPE.UPS;
+				? selUnitsPanel.GetAttributeInt('value', SpeedometerUnitsType.UPS)
+				: SpeedometerUnitsType.UPS;
 			speedometerKV['units'] = selUnits;
 		}
 		const selColorModePanel = this.colorModeDropdown.GetSelected();
 		const selColorMode = selColorModePanel
-			? selColorModePanel.GetAttributeInt('value', SPEEDOMETER_COLOR_MODE.NONE)
-			: SPEEDOMETER_COLOR_MODE.NONE;
+			? selColorModePanel.GetAttributeInt('value', SpeedometerColorMode.NONE)
+			: SpeedometerColorMode.NONE;
 		const selColorProfilePanel = this.colorProfileDropdown.GetSelected();
 
 		speedometerKV['visible'] = this.containingPanel.visible;
 		speedometerKV['colorize'] = selColorMode;
-		if (selColorMode === SPEEDOMETER_COLOR_MODE.RANGE) speedometerKV['color_profile'] = selColorProfilePanel?.text;
+		if (selColorMode === SpeedometerColorMode.RANGE) speedometerKV['color_profile'] = selColorProfilePanel?.text;
 		else delete speedometerKV['color_profile'];
 	}
 }
@@ -172,9 +172,9 @@ class Speedometers {
 	}
 	static addSpeedometer() {
 		let disabledIDs = [];
-		Object.keys(SPEEDOMETER_ID)
-			.filter((speedoName) => Speedometers.objectList[SPEEDOMETER_ID[speedoName]] === undefined)
-			.forEach((speedoName) => disabledIDs.push(SPEEDOMETER_ID[speedoName]));
+		Object.keys(SpeedometerIDs)
+			.filter((speedoName) => Speedometers.objectList[SpeedometerIDs[speedoName]] === undefined)
+			.forEach((speedoName) => disabledIDs.push(SpeedometerIDs[speedoName]));
 		if (disabledIDs.length === 0) return; // nothing is disabled, dont bother showing popup
 		UiToolkitAPI.ShowCustomLayoutPopupParameters(
 			'',
@@ -185,11 +185,11 @@ class Speedometers {
 		);
 	}
 	static addSpeedometerByID(id) {
-		let speedoName = Object.keys(SPEEDOMETER_ID)[id];
+		let speedoName = Object.keys(SpeedometerIDs)[id];
 		let speedoKV = Speedometers.keyvalues[speedoName];
 		speedoKV['visible'] = true;
 
-		Speedometers.objectList[id] = new SpeedometerDetailObject(id, speedoKV, Object.keys(SPEEDOMETER_ID).length - 1);
+		Speedometers.objectList[id] = new SpeedometerDetailObject(id, speedoKV, Object.keys(SpeedometerIDs).length - 1);
 		Speedometers.markAsModified();
 	}
 	static discardChangesForSpeedometer(id, speedometerKV) {
@@ -253,7 +253,7 @@ class Speedometers {
 				let speedoKV = Speedometers.keyvalues[speedoName];
 				if (speedoKV['visible'] === 0) return;
 
-				let id = SPEEDOMETER_ID[speedoName];
+				let id = SpeedometerIDs[speedoName];
 				Speedometers.objectList[id] = new SpeedometerDetailObject(
 					id,
 					speedoKV,
@@ -266,7 +266,7 @@ class Speedometers {
 	}
 	static saveAllSpeedometers() {
 		Object.keys(Speedometers.objectList).forEach((id) => {
-			let speedoName = Object.keys(SPEEDOMETER_ID)[id];
+			let speedoName = Object.keys(SpeedometerIDs)[id];
 			Speedometers.keyvalues[speedoName] = {};
 			let speedoObject = Speedometers.objectList[id];
 			Speedometers.keyvalues['order'][speedoName] = Speedometers.mainPanel.GetChildIndex(
@@ -277,8 +277,8 @@ class Speedometers {
 		});
 
 		let orderCtr = Speedometers.mainPanel.GetChildCount();
-		Object.keys(SPEEDOMETER_ID)
-			.filter((speedoName) => Speedometers.objectList[SPEEDOMETER_ID[speedoName]] === undefined)
+		Object.keys(SpeedometerIDs)
+			.filter((speedoName) => Speedometers.objectList[SpeedometerIDs[speedoName]] === undefined)
 			.forEach((speedoName) => {
 				// make sure speedometers that arent visible (their panels are deleted) have an ordering that's above
 				// the speedometers that are actually visible
