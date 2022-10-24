@@ -90,7 +90,7 @@ class Cgaz {
 	static bShouldUpdateStyles = false;
 
 	static onLoad() {
-		if (GAMEMODE_WITH_NULL[GameModeAPI.GetCurrentGameMode()].name !== 'Defrag') return;
+		if (GameModeAPI.GetCurrentGameMode() !== GameMode.DEFRAG) return;
 
 		this.onAccelConfigChange();
 		this.onProjectionChange();
