@@ -282,7 +282,8 @@ class Speedometers {
 			.forEach((speedoName) => {
 				// make sure speedometers that arent visible (their panels are deleted) have an ordering that's above
 				// the speedometers that are actually visible
-				Speedometers.keyvalues['order'][speedoName] = orderCtr++;
+				if (Speedometers.keyvalues?.['order']?.[speedoName])
+					Speedometers.keyvalues['order'][speedoName] = orderCtr++;
 				Speedometers.keyvalues[speedoName]['visible'] = false;
 			});
 		Speedometers.markAsUnmodified();
