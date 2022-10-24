@@ -57,27 +57,28 @@ class MapSelection {
 		$.RegisterEventHandler('NStateButtonStateChanged', this.panels.favoritesFilterButton, this.onNStateBtnChanged);
 		$.RegisterEventHandler('NStateButtonStateChanged', this.panels.downloadedFilterButton, this.onNStateBtnChanged);
 
-		// Populate the gameModeData object, finding all the filter buttons
-		this.gameModeData = GAMEMODE_WITH_NULL;
-		Object.values(this.gameModeData).forEach((value) => {
-			value.filterButton = $('#' + value.shortName + 'FilterButton');
-		});
-
-		// Load the saved filters state
-		const filtersChanged = this.loadFilters();
-
-		// Initialise all the filters events
-		this.initFilterSaveEventsRecursive(this.panels.filtersPanel);
-
-		this.timesModeButtonsUnchecked = 0;
-
-		// Initialise the gamemode button events
-		this.initGamemodeButtons();
-
-		// Set this event here rather than XML to avoid error on reload (???)
-		this.panels.searchText.SetPanelEvent('ontextentrychange', this.onSearchChanged.bind(this));
-
 		$.RegisterEventHandler('PanelLoaded', $.GetContextPanel(), () => {
+			// Populate the gameModeData object, finding all the filter buttons
+			this.gameModeData = { ...GAMEMODE_WITH_NULL };
+
+			Object.keys(this.gameModeData).forEach(
+				(mode) => (this.gameModeData[mode].filterButton = $(`#${this.gameModeData[mode].idName}FilterButton`))
+			);
+
+			// Load the saved filters state
+			const filtersChanged = this.loadFilters();
+
+			// Initialise all the filters events
+			this.initFilterSaveEventsRecursive(this.panels.filtersPanel);
+
+			this.timesModeButtonsUnchecked = 0;
+
+			// Set this event here rather than XML to avoid error on reload (???)
+			this.panels.searchText.SetPanelEvent('ontextentrychange', this.onSearchChanged.bind(this));
+
+			// Initialise the gamemode button events
+			this.initGamemodeButtons();
+
 			$.GetContextPanel().ApplyFilters();
 
 			if (($.persistentStorage.getItem('mapSelector.filtersToggled') ?? false) || filtersChanged) {
@@ -100,8 +101,8 @@ class MapSelection {
 	 *  Set the panel events for gamemode buttons
 	 */
 	static initGamemodeButtons() {
-		Object.keys(this.gameModeData).forEach((mode) => {
-			const filterButton = this.gameModeData[mode].filterButton;
+		Object.entries(this.gameModeData).forEach(([mode, values]) => {
+			const filterButton = values.filterButton;
 			if (filterButton === null) return;
 
 			filterButton.SetPanelEvent('oncontextmenu', () => this.clearOtherModes(mode));
@@ -118,14 +119,9 @@ class MapSelection {
 	 * @returns {Boolean} If all other modes are unchecked
 	 */
 	static areAllOtherModesUnchecked(selectedMode) {
-		const modes = this.gameModeData;
-		for (let i = 0; i < Object.keys(modes).length; i++) {
-			const curMode = modes[i];
-			if (curMode.filterButton !== null) {
-				if (curMode.filterButton.checked && curMode !== modes[selectedMode]) return false;
-			}
-		}
-		return true;
+		return Object.entries(this.gameModeData)
+			.filter(([mode, _]) => mode !== selectedMode)
+			.every(([_, modeData]) => !(modeData.filterButton && modeData.filterButton.checked));
 	}
 
 	/**
@@ -138,9 +134,7 @@ class MapSelection {
 		// Set unchecked counter to -1, if you're using this you've got the hang of it, no more popups for you!
 		this.timesModeButtonsUnchecked = -1;
 
-		const modes = this.gameModeData;
-
-		const selectedModeButton = modes[selectedMode].filterButton;
+		const selectedModeButton = this.gameModeData[selectedMode].filterButton;
 
 		// No matter what, we want our selected button to be checked
 		if (!selectedModeButton.checked) {
@@ -149,10 +143,10 @@ class MapSelection {
 
 		const areOthersUnchecked = this.areAllOtherModesUnchecked(selectedMode);
 
-		Object.keys(modes)
-			.filter((mode) => mode !== selectedMode && modes[mode].filterButton !== null)
-			.forEach((mode) => {
-				const filterButton = modes[mode].filterButton;
+		Object.entries(this.gameModeData)
+			.filter(([mode, modeData]) => mode !== selectedMode && modeData.filterButton)
+			.forEach(([_, modeData]) => {
+				const filterButton = modeData.filterButton;
 				if (areOthersUnchecked) {
 					// Others ARE all unchecked, so let's toggle them all back on
 					filterButton.SetSelected(true);
@@ -180,6 +174,7 @@ class MapSelection {
 			return;
 
 		const button = this.gameModeData[mode].filterButton;
+
 		// If button was unchecked then increment the counter
 		if (!button.checked) {
 			this.timesModeButtonsUnchecked++;
@@ -223,11 +218,9 @@ class MapSelection {
 	 */
 	static clearFilters() {
 		// Uncheck every checked gamemode button
-		Object.keys(this.gameModeData).forEach((mode) => {
-			let button = this.gameModeData[mode].filterButton;
-			if (button && !button.checked) {
-				button.SetSelected(true);
-			}
+		Object.values(this.gameModeData).forEach((modeData) => {
+			const button = modeData.filterButton;
+			if (button && !button.checked) button.SetSelected(true);
 		});
 
 		// Reset every NState button
@@ -295,9 +288,7 @@ class MapSelection {
 		Object.keys(this.filtersState).forEach((panelID) => {
 			const panel = $.GetContextPanel().FindChildTraverse(panelID);
 
-			if (panel) {
-				this.filtersState[panelID] = this.getFilterData(panel);
-			}
+			if (panel) this.filtersState[panelID] = this.getFilterData(panel);
 		});
 
 		this.saveFilters();
@@ -344,9 +335,9 @@ class MapSelection {
 	 */
 	static setFilterData(panel, data) {
 		if (panel.paneltype !== data.paneltype) {
-			$.Msg(
+			$.Warning(
 				`MapSelection:setFilterData: paneltype mismatch. ${panel.id} was ${panel.paneltype}, ${data.id} was ${data.paneltype}.`
-			); // TODO: this can be $.Warning
+			);
 
 			// If the paneltypes are off we're in a weird state where the panel type got changed in the XML (say ToggleButton to NStateButton), so just clear the data and return
 			this.filtersState[Object.keys(this.filtersState).find((key) => this.filtersState[key] === data)] = null;
@@ -371,8 +362,8 @@ class MapSelection {
 				wasEqual = panel.lowerValue === data.lowerValue && panel.upperValue === data.upperValue;
 				panel.SetValues(data.lowerValue, data.upperValue);
 				break;
-			default: // TODO: this can be $.Warning
-				$.Msg('MapSelection:setFilterData: unknown paneltype ' + panel.paneltype);
+			default:
+				$.Warning('MapSelection:setFilterData: unknown paneltype ' + panel.paneltype);
 				return true;
 		}
 		return wasEqual;
@@ -392,8 +383,8 @@ class MapSelection {
 				return { paneltype: panel.paneltype, currentstate: panel.currentstate };
 			case 'DualSlider':
 				return { paneltype: panel.paneltype, lowerValue: panel.lowerValue, upperValue: panel.upperValue };
-			default: // TODO: this can be $.Warning
-				$.Msg('MapSelection:getFilterData: unknown paneltype');
+			default:
+				$.Warning('MapSelection:getFilterData: unknown paneltype');
 				return null;
 		}
 	}
