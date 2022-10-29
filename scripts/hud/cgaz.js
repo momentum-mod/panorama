@@ -12,6 +12,7 @@ let FAST_CLASS;
 let TURN_CLASS;
 let WIN_ZONE_CLASS;
 let MIRROR_CLASS;
+let COMPASS_CLASS;
 
 let COLORED_SNAP_CLASS;
 let UNCOLORED_SNAP_CLASS;
@@ -71,8 +72,15 @@ class Cgaz {
 		$('#SnapZone11')
 	];
 
-	static velocityArrow = $('#VelocityArrow');
-	static velocityArrowIcon = $('#VelocityArrowIcon');
+	static compassArrow = $('#CompassArrow');
+	static compassArrowIcon = $('#CompassArrowIcon');
+	static tickContainer = $('#CompassTicks');
+	static compassTickFull = $('#FullTick');
+	static compassTickHalf = $('#HalfTick');
+	static pitchLine = $('#PitchLine');
+	static pitchStat = $('#PitchStat');
+	static yawStat = $('#YawStat');
+
 	static windicatorArrow = $('#WindicatorArrow');
 	static windicatorArrowIcon = $('#WindicatorArrowIcon');
 	static windicatorZone = $('#WindicatorZone');
@@ -85,6 +93,7 @@ class Cgaz {
 	static vFov = Math.atan(this.vFov_tangent);
 	static hFov = Math.atan((this.vFov_tangent * this.screenX) / this.screenY);
 	static theta = Math.PI * 0.5 - 2 * Math.atan(Math.sqrt(2 + Math.sqrt(3)));
+	static halfPi = 0.5 * Math.PI;
 	static snapGainRange = []; // stored as [min, max]
 	static snapAccel = 0;
 	static bShouldUpdateStyles = false;
@@ -96,8 +105,8 @@ class Cgaz {
 		this.onProjectionChange();
 		this.onHudFovChange();
 		this.onSnapConfigChange();
-		this.onVelocityConfigChange();
 		this.onWindicatorConfigChange();
+		this.onCompassConfigChange();
 
 		this.applyStyles();
 	}
@@ -125,7 +134,6 @@ class Cgaz {
 		this.accel_scale_enable = accelConfig.scaleEnable;
 		this.accel_mirror_enable = accelConfig.mirrorEnable;
 
-		// TODO: apply accel config
 		this.bShouldUpdateStyles = true;
 	}
 
@@ -145,17 +153,6 @@ class Cgaz {
 		this.snap_color_mode = snapConfig.colorMode;
 		this.snap_heightgain_enable = snapConfig.enableHeightGain;
 
-		// TODO: apply snap config
-		this.bShouldUpdateStyles = true;
-	}
-
-	static onVelocityConfigChange() {
-		const velocityArrowConfig = DefragAPI.GetHUDVelocityCFG();
-		this.velocity_enable = velocityArrowConfig.enable;
-		this.velocity_size = velocityArrowConfig.size;
-		this.velocity_color = velocityArrowConfig.color;
-
-		// TODO: apply arrow config
 		this.bShouldUpdateStyles = true;
 	}
 
@@ -165,7 +162,19 @@ class Cgaz {
 		this.windicator_size = windicatorArrowConfig.size;
 		this.windicator_color = windicatorArrowConfig.color;
 
-		// TODO: apply arrow config
+		this.bShouldUpdateStyles = true;
+	}
+
+	static onCompassConfigChange() {
+		const compassConfig = DefragAPI.GetHUDCompassCFG();
+		this.compass_mode = compassConfig.compassMode;
+		this.compass_size = compassConfig.compassSize;
+		this.compass_pitch_enable = compassConfig.pitchEnable;
+		this.compass_pitch_target = compassConfig.pitchTarget;
+		this.compass_stat_mode = compassConfig.statMode;
+		this.compass_color = compassConfig.color;
+		this.compass_hl_color = compassConfig.highlightColor;
+
 		this.bShouldUpdateStyles = true;
 	}
 
@@ -209,13 +218,20 @@ class Cgaz {
 			this.applyClass(this.snapZones[i], i % 2 ? UNCOLORED_SNAP_CLASS : COLORED_SNAP_CLASS);
 		}
 
-		// velocity arrow classes
-		let color = this.velocity_color;
-		let width = 2 * this.velocity_size;
+		// compass ticks
+		offset = this.accel_offset - 0.5 * (this.accel_height + this.compass_size);
+		align = 'middle';
+		this.setupContainer(this.tickContainer, offset, align);
+		this.compassTickFull.style.height = this.compass_size + 'px';
+		this.compassTickHalf.style.height = this.compass_size * 0.5 + 'px';
+
+		// compass arrow classes
+		let color = this.compass_color;
+		let width = 2 * this.compass_size;
 		height = this.accel_height + 2 * width;
 		offset = this.accel_offset;
 		align = 'bottom';
-		this.setupArrow(this.velocityArrow, this.velocityArrowIcon, height, width, offset, align, color);
+		this.setupArrow(this.compassArrow, this.compassArrowIcon, height, width, offset, align, color);
 
 		// windicator arrow classes
 		color = this.windicator_color;
@@ -452,31 +468,84 @@ class Cgaz {
 				this.clearZones(this.snapZones);
 			}
 
-			// arrows
 			let velocityAngle = this.remapAngle(viewAngle - velAngle);
-			// draw velocity direction
-			if (this.velocity_enable && speed >= this.accel_min_speed) {
-				this.velocityArrow.visible = true;
+			// compass
+			if (this.compass_mode) {
+				const bShouldHighlight =
+					Math.abs(this.remapAngle(8 * velAngle) * 0.125) < 0.01 && speed >= this.accel_min_speed;
+				const color = bShouldHighlight ? this.compass_hl_color : this.compass_color;
+
+				// ticks
+				const fullTickLeftEdge = this.findCompassTick(viewAngle);
+				const fullTickRightEdge = fullTickLeftEdge + this.halfPi;
+				const halfTickLeftEdge = this.findCompassTick(viewAngle - 0.5 * this.halfPi);
+				const halfTickRightEdge = halfTickLeftEdge + this.halfPi;
+
+				this.drawZone(
+					this.compassTickFull,
+					this.mapToScreenWidth(fullTickLeftEdge) - 1, // -1 balances the 2px border across the compass tick
+					this.mapToScreenWidth(fullTickRightEdge) + 1
+				);
+				this.drawZone(
+					this.compassTickHalf,
+					this.mapToScreenWidth(halfTickLeftEdge) - 1, // -1 balances the 2px border across the compass tick
+					this.mapToScreenWidth(halfTickRightEdge) + 1
+				);
+
+				this.compassTickFull.style.borderColor = color;
+				this.compassTickHalf.style.borderColor = color;
+
+				// arrow
 				if (Math.abs(velocityAngle) < this.hFov) {
-					this.velocityArrowIcon.RemoveClass('arrow__down');
-					this.velocityArrowIcon.AddClass('arrow__up');
+					this.compassArrowIcon.RemoveClass('arrow__down');
+					this.compassArrowIcon.AddClass('arrow__up');
 				} else {
-					this.velocityArrowIcon.RemoveClass('arrow__up');
-					this.velocityArrowIcon.AddClass('arrow__down');
+					this.compassArrowIcon.RemoveClass('arrow__up');
+					this.compassArrowIcon.AddClass('arrow__down');
 					velocityAngle = this.remapAngle(velocityAngle - Math.PI);
 				}
-				const leftEdge = this.mapToScreenSpace(velocityAngle) - this.velocity_size;
-				this.velocityArrow.style.marginLeft = (isNaN(leftEdge) ? 0 : leftEdge) + 'px';
-			} else {
-				// hide arrow
-				this.velocityArrow.visible = false;
+				const leftEdge = this.mapToScreenWidth(velocityAngle) - this.compass_size;
+				this.compassArrow.style.marginLeft = (isNaN(leftEdge) ? 0 : leftEdge) + 'px';
+				this.compassArrowIcon.style.washColor = color;
 			}
+			this.compassArrow.visible = this.compass_mode % 2 && speed >= this.accel_min_speed;
+			this.tickContainer.visible = this.compass_mode > 1;
+
+			// pitch line
+			if (this.compass_pitch_enable) {
+				let pitchDelta = this.mapToScreenHeight(
+					((MomentumPlayerAPI.GetAngles().x - this.compass_pitch_target) * Math.PI) / 180
+				);
+				this.pitchLine.style.height = (isNaN(pitchDelta) ? 0 : pitchDelta) + 'px';
+				this.pitchLine.style.borderColor =
+					Math.abs(MomentumPlayerAPI.GetAngles().x - this.compass_pitch_target) > 0.1
+						? this.compass_color
+						: this.compass_hl_color;
+			}
+			this.pitchLine.visible = this.compass_pitch_enable;
+
+			// compass stats
+			if (this.compass_stat_mode) {
+				this.yawStat.text = MomentumPlayerAPI.GetAngles().y.toFixed();
+				this.yawStat.style.color =
+					Math.abs(this.distToNearestTick(velAngle)) < 0.01 && speed >= this.accel_min_speed
+						? this.compass_hl_color
+						: this.compass_color;
+
+				this.pitchStat.text = MomentumPlayerAPI.GetAngles().x.toFixed(1);
+				this.pitchStat.style.color =
+					Math.abs(MomentumPlayerAPI.GetAngles().x - this.compass_pitch_target) > 0.1
+						? this.compass_color
+						: this.compass_hl_color;
+			}
+			this.pitchStat.visible = this.compass_stat_mode % 2;
+			this.yawStat.visible = this.compass_stat_mode > 1;
 
 			const wTurnAngle = velocityAngle > 0 ? velocityAngle + this.theta : velocityAngle - this.theta;
 			// draw w-turn indicator
 			if (this.windicator_enable && Math.abs(wTurnAngle) < this.hFov && speed >= this.accel_min_speed) {
 				this.windicatorArrow.visible = true;
-				const leftEdge = this.mapToScreenSpace(wTurnAngle) - this.windicator_size;
+				const leftEdge = this.mapToScreenWidth(wTurnAngle) - this.windicator_size;
 				this.windicatorArrow.style.marginLeft = (isNaN(leftEdge) ? 0 : leftEdge) + 'px';
 
 				const minAngle = Math.min(wTurnAngle, 0);
@@ -579,15 +648,15 @@ class Cgaz {
 		wrap = right > left ? !wrap : wrap;
 
 		// map angles to screen
-		left = this.mapToScreenSpace(left);
-		right = this.mapToScreenSpace(right);
+		left = this.mapToScreenWidth(left);
+		right = this.mapToScreenWidth(right);
 
 		if (wrap) {
-			this.drawZone(zone, this.mapToScreenSpace(-this.hFov), right);
+			this.drawZone(zone, this.mapToScreenWidth(-this.hFov), right);
 
 			// draw second part of split zone
 			this.applyClass(splitZone, zoneClass);
-			this.drawZone(splitZone, left, this.mapToScreenSpace(this.hFov));
+			this.drawZone(splitZone, left, this.mapToScreenWidth(this.hFov));
 		} else {
 			this.drawZone(zone, left, right);
 		}
@@ -653,10 +722,21 @@ class Cgaz {
 	static drawZone(zone, left, right) {
 		// assign widths
 		const width = right - left;
-		zone.style.width = (isNaN(width) ? 0 : width) + 'px';
+		zone.style.width = (isNaN(width) ? 0 : Number(width).toFixed()) + 'px';
 
 		// assign position via margin (center screen at 0)
-		zone.style.marginLeft = (isNaN(left) ? 0 : left) + 'px';
+		zone.style.marginLeft = (isNaN(left) ? 0 : Number(left).toFixed()) + 'px';
+	}
+
+	static findCompassTick(angle) {
+		//return this.mapToScreenWidth(1 * this.remapAngle(1 * angle));
+		while (angle > 0) {
+			angle -= this.halfPi;
+		}
+		while (angle <= -this.hFov) {
+			angle += this.halfPi;
+		}
+		return angle;
 	}
 
 	static setupContainer(container, offset, align) {
@@ -698,11 +778,12 @@ class Cgaz {
 		zones.map((zone) => (zone.style.width = '0px'));
 	}
 
-	static mapToScreenSpace(angle) {
+	static mapToScreenWidth(angle) {
 		const screenWidth = this.screenX / this.scale;
 
-		if (Math.abs(angle) >= this.hFov) {
-			return Math.sign(angle) > 0 ? screenWidth : 0;
+		const overhang = 1.1;
+		if (Math.abs(angle) >= overhang * this.hFov) {
+			return (Math.sign(angle) > 0 ? overhang : 1 - overhang) * screenWidth;
 		}
 
 		switch (this.projection) {
@@ -712,6 +793,23 @@ class Cgaz {
 				return ((1 + angle / this.hFov) * screenWidth * 0.5).toFixed();
 			case 2:
 				return ((1 + Math.tan(angle * 0.5) / Math.tan(this.hFov * 0.5)) * screenWidth * 0.5).toFixed();
+		}
+	}
+
+	static mapToScreenHeight(angle) {
+		const screenHeight = this.screenY / this.scale;
+
+		if (Math.abs(angle) >= this.vFov) {
+			return Math.sign(angle) > 0 ? screenHeight : 0;
+		}
+
+		switch (this.projection) {
+			case 0:
+				return ((1 + Math.tan(angle) / Math.tan(this.vFov)) * screenHeight * 0.5).toFixed();
+			case 1:
+				return ((1 + angle / this.vFov) * screenHeight * 0.5).toFixed();
+			case 2:
+				return ((1 + Math.tan(angle * 0.5) / Math.tan(this.vFov * 0.5)) * screenHeight * 0.5).toFixed();
 		}
 	}
 
@@ -756,11 +854,19 @@ class Cgaz {
 		return Math.abs(A - B) < threshold;
 	}
 
+	// Converts [0, 2Pi) to [-Pi, Pi]
 	static remapAngle(angle) {
 		angle += Math.PI;
 		const integer = Math.trunc(angle / (2 * Math.PI));
 		angle -= integer * 2 * Math.PI;
 		return angle < 0 ? angle + Math.PI : angle - Math.PI;
+	}
+
+	static distToNearestTick(angle) {
+		angle += Math.PI * 0.125;
+		const integer = Math.trunc((angle * 4) / Math.PI);
+		angle -= integer * 0.25 * Math.PI;
+		return angle < 0 ? angle + 0.125 * Math.PI : angle - 0.125 * Math.PI;
 	}
 
 	static getColorStringFromArray(color) {
@@ -786,7 +892,7 @@ class Cgaz {
 		$.RegisterForUnhandledEvent('OnDefragHUDFOVChange', this.onHudFovChange.bind(this));
 		$.RegisterForUnhandledEvent('OnDefragHUDAccelChange', this.onAccelConfigChange.bind(this));
 		$.RegisterForUnhandledEvent('OnDefragHUDSnapChange', this.onSnapConfigChange.bind(this));
-		$.RegisterForUnhandledEvent('OnDefragHUDVelocityChange', this.onVelocityConfigChange.bind(this));
 		$.RegisterForUnhandledEvent('OnDefragHUDWIndicatorChange', this.onWindicatorConfigChange.bind(this));
+		$.RegisterForUnhandledEvent('OnDefragHUDCompassChange', this.onCompassConfigChange.bind(this));
 	}
 }
