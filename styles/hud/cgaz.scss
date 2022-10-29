@@ -6,6 +6,7 @@
 	&__container {
 		width: 100%;
 		horizontal-align: left;
+		overflow: noclip noclip;
 	}
 }
 
@@ -16,5 +17,56 @@
 
 	&__down {
 		transform: rotatez(180deg);
+	}
+}
+
+.cgaz-line {
+	width: 100px;
+	margin-top: -1px;
+	border-top: 2px solid;
+	horizontal-align: center;
+	vertical-align: bottom;
+	overflow: noclip noclip;
+}
+
+.cgaz-tick {
+	border-left: 2px solid black;
+	border-right: 2px solid black;
+	//margin-left set in js for positioning
+	margin-right: -1px;
+	vertical-align: top;
+	overflow: noclip noclip;
+
+	&__full {
+		height: 6px;
+	}
+
+	&__half {
+		height: 3px;
+	}
+}
+
+.cgaz-stats {
+	width: 50px;
+	height: 24px;
+	font-size: 20px;
+	text-align: right;
+
+	&__container {
+		width: 200px;
+		height: 100px;
+		horizontal-align: center;
+		vertical-align: center;
+		overflow: noclip;
+	}
+
+	&__pitch {
+		horizontal-align: left;
+		transform: translatex(-40px);
+	}
+
+	&__yaw {
+		horizontal-align: left;
+		transform: translatex(175px);
 	}
 }

@@ -42,21 +42,32 @@
 				<Panel id="SnapSplitZone" />
 			</ConVarEnabler>
 		</Panel>
-    <Panel id="VelocityArrow">
-      <ConVarEnabler class="full-height" convar="mom_df_hud_velocity_enable" togglevisibility="true">
-        <Image id="VelocityArrowIcon" class="arrow__up" src="file://{images}/hud/cgaz-arrow.svg" textureheight="48" />
-      </ConVarEnabler>
-    </Panel>
+		<Panel id="CompassArrow">
+			<ConVarEnabler class="full-height" convar="mom_df_hud_compass_mode" togglevisibility="true">
+				<Image id="CompassArrowIcon" class="arrow__up" src="file://{images}/hud/cgaz-arrow.svg" textureheight="48" />
+			</ConVarEnabler>
+		</Panel>
+		<Panel id="PitchLine" class="cgaz-line" />
+		<ConVarEnabler class="full-height" convar="mom_df_hud_compass_stat_mode" togglevisibility="true">
+			<Panel id="StatsBox" class="cgaz-stats__container">
+				<Label id="PitchStat" class="cgaz-stats cgaz-stats__pitch" />
+				<Label id="YawStat" class="cgaz-stats cgaz-stats__yaw" />
+			</Panel>
+		</ConVarEnabler>
+		<Panel id="CompassTicks" class="cgaz__container">
+				<Panel id="FullTick" class="cgaz-tick cgaz-tick__full" />
+				<Panel id="HalfTick" class="cgaz-tick cgaz-tick__half" />
+		</Panel>
 		<Panel id="WindicatorArrow">
-      <ConVarEnabler class="full-height" convar="mom_df_hud_windicator_enable" togglevisibility="true">
-        <Image
+      		<ConVarEnabler class="full-height" convar="mom_df_hud_windicator_enable" togglevisibility="true">
+        		<Image
 					id="WindicatorArrowIcon"
 					class="arrow__down"
 					src="file://{images}/hud/cgaz-arrow.svg"
 					textureheight="48"
 				/>
-      </ConVarEnabler>
-    </Panel>
+      		</ConVarEnabler>
+    	</Panel>
 	</MomHudCgaz>
 
 </root>
