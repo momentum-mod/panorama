@@ -889,7 +889,6 @@
 
 				</Panel>
 
-
 				<ChaosSettingsEnumDropDown
 					text="#Settings_Defrag_ProjectionMode"
 					convar="mom_df_hud_projection"
@@ -926,31 +925,76 @@
 
 				<Panel class="settings-group__combo">
 
-					<ChaosSettingsEnum
-						text="#Settings_Defrag_Velocity"
-						convar="mom_df_hud_velocity_enable"
-						infomessage="#Settings_Defrag_Velocity_Info"
-					>
-						<RadioButton group="velocityenable" text="#Common_Off" value="0" />
-						<RadioButton group="velocityenable" text="#Common_On" value="1" />
-					</ChaosSettingsEnum>
+					<Label class="settings-group__combo-header" text="#Settings_Defrag_Compass_Title" />
 
-					<ConVarEnabler convar="mom_df_hud_velocity_enable" class="flow-down">
+					<ChaosSettingsEnumDropDown
+						text="#Settings_Defrag_Compass"
+						convar="mom_df_hud_compass_mode"
+						infomessage="#Settings_Defrag_Compass_Info"
+					>
+						<Label id="compass0" text="#Settings_Defrag_CompassMode_Type0" value="0" />
+						<Label id="compass1" text="#Settings_Defrag_CompassMode_Type1" value="1" />
+						<Label id="compass2" text="#Settings_Defrag_CompassMode_Type2" value="2" />
+						<Label id="compass3" text="#Settings_Defrag_CompassMode_Type3" value="3" />
+					</ChaosSettingsEnumDropDown>
+
+					<ConVarEnabler convar="mom_df_hud_compass_mode" class="flow-down">
 						<ChaosSettingsSlider
-							text="#Settings_Defrag_VelocityArrowSize"
+							text="#Settings_Defrag_CompassSize"
 							min="0"
 							max="25"
-							convar="mom_df_hud_velocity_size"
+							convar="mom_df_hud_compass_size"
 							displayprecision="0"
-							infomessage="#Settings_Defrag_VelocityArrowSize_Info"
+							infomessage="#Settings_Defrag_CompassSize_Info"
 						/>
 
-						<ConVarColorDisplay
-							text="#Settings_Defrag_VelocityArrowColor"
-							convar="mom_df_hud_velocity_color"
-							infomessage="#Settings_Defrag_VelocityArrowColor_Info"
-						/>
+						<!-- Stats Enable -->
 					</ConVarEnabler>
+
+					<ChaosSettingsEnum
+						text="#Settings_Defrag_Pitch"
+						convar="mom_df_hud_pitch_enable"
+						infomessage="#Settings_Defrag_Pitch_Info"
+					>
+						<RadioButton group="pitchenable" text="#Common_Off" value="0" />
+						<RadioButton group="pitchenable" text="#Common_On" value="1" />
+					</ChaosSettingsEnum>
+
+					<ConVarEnabler convar="mom_df_hud_pitch_enable" class="flow-down">
+						<ChaosSettingsSlider
+							text="#Settings_Defrag_PitchTarget"
+							min="-90"
+							max="90"
+							convar="mom_df_hud_pitch_target"
+							displayprecision="1"
+							infomessage="#Settings_Defrag_PitchTarget_Info"
+						/>
+
+						<!-- Stats Enable -->
+					</ConVarEnabler>
+
+					<ChaosSettingsEnumDropDown
+						text="#Settings_Defrag_Compass_Stat_Mode"
+						convar="mom_df_hud_compass_stat_mode"
+						infomessage="#Settings_Defrag_Compass_Stat_Mode_Info"
+					>
+						<Label id="stat0" text="#Settings_Defrag_Compass_StatMode_Type0" value="0" />
+						<Label id="stat1" text="#Settings_Defrag_Compass_StatMode_Type1" value="1" />
+						<Label id="stat2" text="#Settings_Defrag_Compass_StatMode_Type2" value="2" />
+						<Label id="stat3" text="#Settings_Defrag_Compass_StatMode_Type3" value="3" />
+					</ChaosSettingsEnumDropDown>
+
+					<ConVarColorDisplay
+						text="#Settings_Defrag_CompassColor"
+						convar="mom_df_hud_compass_color"
+						infomessage="#Settings_Defrag_CompassColor_Info"
+					/>
+
+					<ConVarColorDisplay
+						text="#Settings_Defrag_Compass_Highlight_Color"
+						convar="mom_df_hud_compass_hl_color"
+						infomessage="#Settings_Defrag_Compass_Highlight_Color_Info"
+					/>
 
 				</Panel>
 
