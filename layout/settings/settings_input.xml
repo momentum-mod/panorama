@@ -172,7 +172,7 @@
 				<ChaosSettingsKeyBinder text="#Keybind_Paint" bind="+paint" />
 				<ChaosSettingsKeyBinder text="#Keybind_Flashlight" bind="impulse 100" />
 
-				<Label class="settings-group__subtitle" text="#Settings_Keybinds_Misc" />
+				<Label class="settings-group__subtitle" text="#Settings_Input_Keybinds_Misc" />
 
 				<ChaosSettingsKeyBinder text="#Keybind_Console" bind="toggleconsole" />
 				<ChaosSettingsKeyBinder text="#Keybind_Screenshot" bind="jpeg" />
