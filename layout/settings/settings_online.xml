@@ -10,7 +10,7 @@
 
 		<Panel class="settings-page__header">
 
-			<Label class="settings-page__title" text="#Settings_Online_Title" />
+			<Label class="settings-page__title" text="#Settings_Online" />
 
 			<Panel class="settings-page__header-buttons">
 				<!-- Gamemode Dropdown will go here -->
