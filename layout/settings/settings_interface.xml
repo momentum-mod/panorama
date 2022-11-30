@@ -118,7 +118,7 @@
 
 		<Panel class="settings-page__header">
 
-			<Label class="settings-page__title" text="#Settings_Interface_Title" />
+			<Label class="settings-page__title" text="#Settings_Interface" />
 
 			<Panel class="settings-page__header-buttons">
 			</Panel>

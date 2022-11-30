@@ -102,7 +102,7 @@
 							onactivate="MainMenuSettings.navigateToTab('AudioSettings')"
 						>
 
-							<Label class="settings-nav__item-label" text="#Settings_Audio_Title" />
+							<Label class="settings-nav__item-label" text="#Settings_Audio" />
 
 							<Panel class="settings-nav__subsection settings-nav__subsection--2 settings-nav__subsection--hidden">
 
@@ -139,7 +139,7 @@
 							onactivate="MainMenuSettings.navigateToTab('VideoSettings')"
 						>
 
-							<Label class="settings-nav__item-label" text="#Settings_Video_Title" />
+							<Label class="settings-nav__item-label" text="#Settings_Video" />
 
 							<Panel class="settings-nav__subsection settings-nav__subsection--3 settings-nav__subsection--hidden">
 
@@ -185,7 +185,7 @@
 							onactivate="MainMenuSettings.navigateToTab('OnlineSettings')"
 						>
 
-							<Label class="settings-nav__item-label" text="#Settings_Online_Title" />
+							<Label class="settings-nav__item-label" text="#Settings_Online" />
 							<Panel class="settings-nav__subsection settings-nav__subsection--3 settings-nav__subsection--hidden">
 
 								<RadioButton
@@ -230,7 +230,7 @@
 							onactivate="MainMenuSettings.navigateToTab('GameplaySettings')"
 						>
 
-							<Label class="settings-nav__item-label" text="#Settings_Gameplay_Title" />
+							<Label class="settings-nav__item-label" text="#Settings_Gameplay" />
 
 							<Panel class="settings-nav__subsection settings-nav__subsection--8 settings-nav__subsection--hidden">
 

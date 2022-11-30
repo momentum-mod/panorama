@@ -11,7 +11,7 @@
 
 		<Panel class="settings-page__header">
 
-			<Label class="settings-page__title" text="#Settings_Video_Title" />
+			<Label class="settings-page__title" text="#Settings_Video" />
 
 			<Panel class="settings-page__header-buttons">
 

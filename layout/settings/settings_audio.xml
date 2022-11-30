@@ -11,7 +11,7 @@
 
 		<Panel class="settings-page__header">
 
-			<Label class="settings-page__title" text="#Settings_Audio_Title" />
+			<Label class="settings-page__title" text="#Settings_Audio" />
 
 			<Panel class="settings-page__header-buttons">
 				<!-- Gamemode Dropdown will go here -->
