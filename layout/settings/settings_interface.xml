@@ -171,16 +171,6 @@
 					<Label text="#Settings_Menu_Type1" value="1" id="bgtype1" />
 				</ChaosSettingsEnumDropDown>
 
-				<!-- TODO: Remove this!! -->
-				<ChaosSettingsEnum
-					text="Advanced Settings Tooltips"
-					psvar="settings.infoPanelConvars"
-					infomessage="Display convar for each setting, where available."
-				>
-					<RadioButton group="advancedtooltips" text="#Common_Off" value="0" />
-					<RadioButton group="advancedtooltips" text="#Common_On" value="1" />
-				</ChaosSettingsEnum>
-
 			</Panel>
 
 			<Panel class="settings-page__spacer" />

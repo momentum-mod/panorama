@@ -340,7 +340,7 @@ class MainMenuSettings {
 		this.currentInfo = title + message + convar;
 
 		// Get convar display option from PS
-		const showConvar = $.persistentStorage.getItem('settings.infoPanelConvars') === 1 && convar;
+		const showConvar = Boolean(convar);
 		const isKeybinder = paneltype === 'ChaosSettingsKeyBinder';
 
 		// If the panel has a message OR a convar and the convar display option is on, show the info panel
