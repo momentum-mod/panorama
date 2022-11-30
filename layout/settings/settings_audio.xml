@@ -25,7 +25,7 @@
 
 				<Panel class="settings-group__header">
 
-					<Label class="settings-group__title" text="#Settings_Volume_Title" />
+					<Label class="settings-group__title" text="#Settings_Volume_Title" tags="volume,sound" />
 
 					<Panel class="flow-right horizontal-align-right">
 
@@ -61,6 +61,7 @@
 					max="1"
 					percentage="true"
 					convar="snd_volume_music"
+					tags="music"
 					hasdocspage="false"
 				/>
 
@@ -70,6 +71,7 @@
 					max="1"
 					percentage="true"
 					convar="snd_volume_ambient"
+					tags="ambient"
 					hasdocspage="false"
 				/>
 
@@ -79,6 +81,7 @@
 					max="1"
 					percentage="true"
 					convar="snd_volume_weapon_player"
+					tags="weapon"
 					hasdocspage="false"
 				/>
 
@@ -88,6 +91,7 @@
 					max="1"
 					percentage="true"
 					convar="snd_volume_weapon_overall"
+					tags="overall"
 					hasdocspage="false"
 				/>
 
@@ -97,6 +101,7 @@
 					max="1"
 					percentage="true"
 					convar="snd_volume_ui"
+					tags="ui,interface"
 					hasdocspage="false"
 				/>
 
@@ -106,6 +111,7 @@
 					max="1"
 					percentage="true"
 					convar="snd_volume_physics"
+					tags="physics"
 					hasdocspage="false"
 				/>
 
@@ -115,6 +121,7 @@
 					max="1"
 					percentage="true"
 					convar="snd_volume_footsteps"
+					tags="footsteps"
 					hasdocspage="false"
 				/>
 
@@ -126,7 +133,7 @@
 
 				<Panel class="settings-group__header">
 
-					<Label class="settings-group__title" text="#Settings_AudioDevices_Title" />
+					<Label class="settings-group__title" text="#Settings_AudioDevices_Title" tags="audio,sound,devices" />
 
 					<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
 						<Button class="button" onactivate="SettingsShared.resetSettings('AudioDevicesSubSection');">
@@ -166,7 +173,7 @@
 					<Label id="device8" text="XXXXXX 8" />
 				</ChaosSettingsEnumDropDown>
 
-				<ChaosSettingsEnum text="#Settings_AudioDevides_HWCompat" convar="snd_hwcompat" hasdocspage="false">
+				<ChaosSettingsEnum text="#Settings_AudioDevices_HWCompat" convar="snd_hwcompat" hasdocspage="false">
 					<RadioButton group="hwcompat" text="#Common_Off" value="0" />
 					<RadioButton group="hwcompat" text="#Common_On" value="1" />
 				</ChaosSettingsEnum>

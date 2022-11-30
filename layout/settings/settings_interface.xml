@@ -131,7 +131,7 @@
 
 				<Panel class="settings-group__header">
 
-					<Label class="settings-group__title" text="#Settings_Menu_Title" />
+					<Label class="settings-group__title" text="#Settings_Menu_Title" tags="menu,ui" />
 
 					<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
 						<Button class="button settings-group__reset" onactivate="SettingsShared.resetSettings('UISubSection');">
@@ -141,12 +141,17 @@
 
 				</Panel>
 
-				<ChaosSettingsEnum text="#Settings_Menu_Console" convar="con_enable" hasdocspage="false">
+				<ChaosSettingsEnum text="#Settings_Menu_Console" convar="con_enable" hasdocspage="false" tags="console">
 					<RadioButton group="enableconsole" text="#Common_Off" value="0" />
 					<RadioButton group="enableconsole" text="#Common_On" value="1" />
 				</ChaosSettingsEnum>
 
-				<ChaosSettingsEnum text="#Settings_Menu_Movie" psvar="settings.mainMenuMovie" infomessage="#Settings_Menu_Movie_Info">
+				<ChaosSettingsEnum
+					text="#Settings_Menu_Movie"
+					psvar="settings.mainMenuMovie"
+					infomessage="#Settings_Menu_Movie_Info"
+					tags="background,video,movie"
+				>
 					<RadioButton
 						group="mainmenuvideo"
 						text="#Common_Off"
@@ -166,6 +171,7 @@
 					psvar="settings.mainMenuBackground"
 					submitoverride="$.DispatchEvent('ReloadBackground');"
 					infomessage="#Settings_Menu_Type_Info"
+					tags="background,video,movie"
 				>
 					<Label text="#Settings_Menu_Type0" value="0" id="bgtype0" />
 					<Label text="#Settings_Menu_Type1" value="1" id="bgtype1" />
@@ -178,13 +184,14 @@
 			<Panel id="SpeedometerSubSection" class="settings-group" onload="SpeedometerSettings.loadSettings()">
 
 				<Panel class="settings-group__header">
-					<Label class="settings-group__title" text="#Settings_Speedometer_Title" />
+					<Label class="settings-group__title" text="#Settings_Speedometer_Title" tags="speedometer" />
 				</Panel>
 
 				<ChaosSettingsEnum
 					text="#Settings_Speedometer_Enable"
 					convar="mom_hud_speedometer_enable"
 					infomessage="#Settings_Speedometer_Enable_Info"
+					tags="speedometer"
 				>
 					<RadioButton group="speedometer" text="#Common_Off" value="0" />
 					<RadioButton group="speedometer" text="#Common_On" value="1" />
@@ -199,6 +206,7 @@
 						convar="mom_hud_speedometer_fps"
 						infomessage="#Settings_Speedometer_FPS_Info"
 						hasdocspage="true"
+						tags="speedometer"
 					/>
 
 					<Panel
@@ -206,6 +214,7 @@
 						class="flow-down full-width"
 						infotitle="#Settings_Speedometer_Gamemode_Long"
 						infomessage="#Settings_Speedometer_Container_Info"
+						tags="speedometer"
 					>
 
 						<Panel class="settings-group__header">
@@ -303,7 +312,7 @@
 
 				<Panel class="settings-group__header">
 
-					<Label class="settings-group__title" text="#Settings_Crosshair_Title" />
+					<Label class="settings-group__title" text="#Settings_Crosshair_Title" tags="crosshair" />
 
 					<Panel class="flow-right horizontal-align-right">
 
@@ -351,6 +360,7 @@
 									displayprecision="2"
 									infomessage=""
 									hasdocspage="false"
+									tags="color,size"
 								/>
 
 								<ChaosSettingsSlider
@@ -361,6 +371,7 @@
 									displayprecision="2"
 									infomessage=""
 									hasdocspage="false"
+									tags="gap"
 								/>
 
 								<ChaosSettingsSlider
@@ -371,9 +382,15 @@
 									displayprecision="2"
 									infomessage=""
 									hasdocspage="false"
+									tags="thickness,tasteful"
 								/>
 
-								<ChaosSettingsEnum text="#Settings_Crosshair_CenterDot" convar="cl_crosshair_dot" hasdocspage="false">
+								<ChaosSettingsEnum
+									text="#Settings_Crosshair_CenterDot"
+									convar="cl_crosshair_dot"
+									hasdocspage="false"
+									tags="center,centre"
+								>
 									<RadioButton group="xhairdot" text="#Common_Off" value="0" />
 									<RadioButton group="xhairdot" text="#Common_On" value="1" />
 								</ChaosSettingsEnum>
@@ -384,6 +401,7 @@
 									convar="cl_crosshair_drawoutline"
 									infomessage=""
 									hasdocspage="false"
+									tags="outline"
 								>
 									<RadioButton group="xhairoutline" text="#Common_Off" value="0" />
 									<RadioButton group="xhairoutline" text="#Common_On" value="1" />
@@ -399,6 +417,7 @@
 										displayprecision="2"
 										infomessage=""
 										hasdocspage="false"
+										tags="outline"
 									/>
 								</ConVarEnabler>
 
@@ -417,7 +436,7 @@
 
 				<Panel class="settings-group__header">
 
-					<Label class="settings-group__title" text="#Settings_Timer_Title" />
+					<Label class="settings-group__title" text="#Settings_Timer_Title" tags="timer" />
 
 					<Panel class="flow-right horizontal-align-right">
 
@@ -447,6 +466,7 @@
 					text="#Settings_Timer_SoundStart"
 					convar="mom_hud_timer_sound_start_enable"
 					infomessage="#Settings_Timer_SoundStart_Info"
+					tags="sound"
 				>
 					<RadioButton group="timerstartsound" text="#Common_Off" value="0" />
 					<RadioButton group="timerstartsound" text="#Common_On" value="1" />
@@ -456,6 +476,7 @@
 					text="#Settings_Timer_SoundFinish"
 					convar="mom_hud_timer_sound_finish_enable"
 					infomessage="#Settings_Timer_SoundStop_Info"
+					tags="sound"
 				>
 					<RadioButton group="timerfinishsound" text="#Common_Off" value="0" />
 					<RadioButton group="timerfinishsound" text="#Common_On" value="1" />
@@ -465,6 +486,7 @@
 					text="#Settings_Timer_SoundFinish"
 					convar="mom_hud_timer_sound_stop_enable"
 					infomessage="#Settings_Timer_SoundFinish_Info"
+					tags="sound"
 				>
 					<RadioButton group="timerstopsound" text="#Common_Off" value="0" />
 					<RadioButton group="timerstopsound" text="#Common_On" value="1" />
@@ -474,6 +496,7 @@
 					text="#Settings_Timer_SoundFail"
 					convar="mom_hud_timer_sound_fail_enable"
 					infomessage="#Settings_Timer_SoundFail_Info"
+					tags="sound"
 				>
 					<RadioButton group="timerfailsound" text="#Common_Off" value="0" />
 					<RadioButton group="timerfailsound" text="#Common_On" value="1" />
@@ -487,7 +510,7 @@
 
 				<Panel class="settings-group__header">
 
-					<Label class="settings-group__title" text="#Settings_HUDStatus_Title" />
+					<Label class="settings-group__title" text="#Settings_HUDStatus_Title" tags="hud,info,status" />
 
 					<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
 						<Button class="button" onactivate="SettingsShared.resetSettings('PlayerStatusSubSection');">
@@ -514,7 +537,7 @@
 
 				<Panel class="settings-group__header">
 
-					<Label class="settings-group__title" text="#Settings_KeypressHUD_Title" />
+					<Label class="settings-group__title" text="#Settings_KeypressHUD_Title" tags="keypress,showkeys,hud" />
 
 					<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
 						<Button class="button" onactivate="SettingsShared.resetSettings('KeypressSubSection');">
@@ -541,7 +564,7 @@
 
 				<Panel class="settings-group__header">
 
-					<Label class="settings-group__title" text="#Settings_WeaponSelection_Title" />
+					<Label class="settings-group__title" text="#Settings_WeaponSelection_Title" tags="weapon,hud" />
 
 					<Panel class="flow-right horizontal-align-right">
 
@@ -586,6 +609,7 @@
 					text="#Settings_WeaponSelection_Sound"
 					convar="mom_hud_weaponselection_sound_enable"
 					infomessage="#Settings_WeaponSelection_Sound_Info"
+					tags="sound"
 				>
 					<RadioButton group="showwepselsound" text="#Common_Off" value="0" />
 					<RadioButton group="showwepselsound" text="#Common_On" value="1" />
@@ -599,7 +623,7 @@
 
 				<Panel class="settings-group__header">
 
-					<Label class="settings-group__title" text="#Settings_TotalSync_Title" />
+					<Label class="settings-group__title" text="#Settings_TotalSync_Title" tags="sync,strafe" />
 
 					<Panel class="flow-right horizontal-align-right">
 
@@ -665,7 +689,7 @@
 
 				<Panel class="settings-group__header">
 
-					<Label class="settings-group__title" text="#Settings_Synchronizer_Title" />
+					<Label class="settings-group__title" text="#Settings_Synchronizer_Title" tags="sync,strafe,trainer" />
 
 					<Panel class="flow-right horizontal-align-right">
 
@@ -704,6 +728,7 @@
 						text="#Settings_Synchronizer_Color"
 						convar="mom_hud_synchro_color_enable"
 						infomessage="#Settings_Synchronizer_Color_Info"
+						tags="color"
 					>
 						<RadioButton group="synchrocolor" text="#Common_Off" value="0" />
 						<RadioButton group="synchrocolor" text="#Common_On" value="1" />
@@ -738,7 +763,7 @@
 
 				<Panel class="settings-group__header">
 
-					<Label class="settings-group__title" text="#Settings_MapInfo_Title" />
+					<Label class="settings-group__title" text="#Settings_MapInfo_Title" tags="info,hud" />
 
 					<Panel class="flow-right horizontal-align-right">
 

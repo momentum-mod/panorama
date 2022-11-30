@@ -24,7 +24,7 @@
 
 				<Panel class="settings-group__header">
 
-					<Label class="settings-group__title" text="#Settings_OnlineGhost_Title" />
+					<Label class="settings-group__title" text="#Settings_OnlineGhost_Title" tags="online,ghost,multiplayer" />
 
 					<Panel class="flow-right horizontal-align-right">
 
@@ -51,6 +51,7 @@
 						text="#Settings_OnlineGhost_OverrideAlphaEnable"
 						convar="mom_ghost_online_alpha_override_enable"
 						infomessage="#Settings_OnlineGhost_OverrideAlphaEnable_Info"
+						tags="alpha,transparency"
 					>
 						<RadioButton group="ghostalpha" text="#Common_Off" value="0" />
 						<RadioButton group="ghostalpha" text="#Common_On" value="1" />
@@ -65,6 +66,7 @@
 							convar="mom_ghost_online_alpha_override"
 							infotitle="#Settings_OnlineGhost_OverrideAlphaEnable"
 							infomessage="#Settings_OnlineGhost_OverrideAlphaAmount_Info"
+							tags="alpha,transparency"
 						/>
 					</ConVarEnabler>
 
@@ -83,6 +85,7 @@
 					text="#Settings_OnlineGhost_Sounds"
 					convar="mom_ghost_online_flashlights_enable"
 					infomessage="#Settings_OnlineGhost_Sounds_Info"
+					tags="sound"
 				>
 					<RadioButton group="ghostsounds" text="#Common_Off" value="0" />
 					<RadioButton group="ghostsounds" text="#Common_On" value="1" />
@@ -92,6 +95,7 @@
 					text="#Settings_OnlineGhost_Panels"
 					convar="mom_hud_ghost_entpanels_enable"
 					infomessage="#Settings_OnlineGhost_Panels_Info"
+					tags="panel"
 				>
 					<RadioButton group="ghostpanels" text="#Common_Off" value="0" />
 					<RadioButton group="ghostpanels" text="#Common_On" value="1" />
@@ -101,6 +105,7 @@
 					text="#Settings_OnlineGhost_Trails"
 					convar="mom_ghost_online_trail_enable"
 					infomessage="#Settings_OnlineGhost_Trails_Info"
+					tags="trail"
 				>
 					<RadioButton group="ghosttrail" text="#Common_Off" value="0" />
 					<RadioButton group="ghosttrail" text="#Common_On" value="1" />
@@ -119,6 +124,7 @@
 					percentage="false"
 					convar="mom_ghost_online_sticky_alpha"
 					infomessage="#Settings_OnlineGhost_StickyAlpha_Info"
+					tags="alpha,transparency"
 				/>
 
 				<ChaosSettingsSlider
@@ -128,6 +134,7 @@
 					percentage="false"
 					convar="mom_ghost_online_conc_alpha"
 					infomessage="#Settings_OnlineGhost_ConcAlpha_Info"
+					tags="alpha,transparency"
 				/>
 
 			</Panel>
@@ -176,6 +183,7 @@
 							convar="mom_ghost_bodygroup"
 							oninputsubmit="SettingsShared.onlineSettingsUpdateModel()"
 							infomessage="#Settings_OnlinePlayer_Body_Info"
+							tags="shape,model"
 						>
 							<Label text="#Settings_OnlinePlayer_Bodygroup_0" value="0" id="bodygroup0" />
 							<Label text="#Settings_OnlinePlayer_Bodygroup_1" value="1" id="bodygroup1" />
@@ -199,12 +207,14 @@
 							convar="mom_ghost_color"
 							oncolorchange="SettingsShared.onlineSettingsUpdateModel()"
 							infomessage="#Settings_OnlinePlayer_Color_Info"
+							tags="model,color"
 						/>
 
 						<ChaosSettingsEnum
 							text="#Settings_OnlinePlayer_Trail"
 							convar="mom_trail_enable"
 							infomessage="#Settings_OnlinePlayer_Trail_Info"
+							tags="trail"
 						>
 							<RadioButton group="playertrail" text="#Common_Off" value="0" />
 							<RadioButton group="playertrail" text="#Common_On" value="1" />
@@ -214,6 +224,7 @@
 							text="#Settings_OnlinePlayer_TrailColor"
 							convar="mom_trail_color"
 							infomessage="#Settings_OnlinePlayer_TrailColor_Info"
+							tags="trail,color"
 						/>
 
 						<ChaosSettingsSlider
@@ -223,6 +234,7 @@
 							displayprecision="1"
 							convar="mom_trail_length"
 							infomessage="#Settings_OnlinePlayer_TrailLength_Info"
+							tags="trail,length"
 						/>
 
 					</Panel>
@@ -251,6 +263,7 @@
 					text="#Settings_RichPresence_Discord"
 					convar="mom_discord_enable"
 					infomessage="#Settings_RichPresence_Discord_Info"
+					tags="discord,richard,presence"
 				>
 					<RadioButton group="enablediscordrp" text="#Common_Off" value="0" />
 					<RadioButton group="enablediscordrp" text="#Common_On" value="1" />
@@ -260,6 +273,7 @@
 					text="#Settings_RichPresence_Steam"
 					convar="mom_steam_rich_presence"
 					infomessage="#Settings_RichPresence_Steam_Info"
+					tags="steam,richard,presence"
 				>
 					<RadioButton group="steamrichpresence" text="#Common_Off" value="0" />
 					<RadioButton group="steamrichpresence" text="#Common_On" value="1" />

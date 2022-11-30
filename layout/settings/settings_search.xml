@@ -5,9 +5,26 @@
 	</styles>
 
 	<snippets>
-		<snippet name="SearchResult">
+		<snippet name="FullSearchResult">
 			<Button class="settings-search-result">
-				<Label id="ResultString" class="settings-search-result__text" />
+				<Label class="settings-search-result__text settings-search-result__text--tab" text="{s:tab_name}" />
+				<Image class="settings-search-result__chevron" src="file://{images}/chevron.svg" texturewidth="32" textureheight="32" />
+				<Label id="Group" class="settings-search-result__text settings-search-result__text--group" html="true" />
+				<Image class="settings-search-result__chevron" src="file://{images}/chevron.svg" texturewidth="32" textureheight="32" />
+				<Label id="Text" class="settings-search-result__text" html="true" />
+				<Label id="Tags" class="settings-search-result__tags" html="true" />
+			</Button>
+		</snippet>
+		<snippet name="GroupSearchResult">
+			<Button class="settings-search-result">
+				<Label class="settings-search-result__text settings-search-result__text--tab" text="{s:tab_name}" />
+				<Image class="settings-search-result__chevron" src="file://{images}/chevron.svg" texturewidth="32" textureheight="32" />
+				<Label
+					id="Group"
+					class="settings-search-result__text settings-search-result__text--group settings-search-result__text--group-only"
+					html="true"
+				/>
+				<Label id="Tags" class="settings-search-result__tags" html="true" />
 			</Button>
 		</snippet>
 	</snippets>
@@ -17,10 +34,8 @@
 			<Label class="settings-page__title" text="#Settings_General_Search_Results" />
 		</Panel>
 
-		<Panel id="SettingsPageContainer" class="settings-page__container">
-			<Panel id="SearchResultsContainer" class="settings-group settings-group--search">
-
-			</Panel>
+		<Panel id="SettingsPageContainer" class="settings-page__container settings-search">
+			<Panel id="SearchResultsContainer" class="settings-group settings-group--search" />
 		</Panel>
 	</Panel>
 </root>
