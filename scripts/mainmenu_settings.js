@@ -373,7 +373,7 @@ class MainMenuSettings {
 
 				if (showConvar) {
 					this.panels.infoConvar.text = `<i>${
-						isKeybinder ? $.Localize('#Settings_General_Command') : $.Localize('#Convar')
+						isKeybinder ? $.Localize('#Settings_General_Command') : $.Localize('#Settings_General_Convar')
 					}: <b>${convar}</b></i>`;
 					this.panels.infoConvar.RemoveClass('hide');
 					this.panels.infoDocsButton.SetHasClass('hide', !hasDocs || isKeybinder);

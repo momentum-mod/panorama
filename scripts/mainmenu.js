@@ -350,7 +350,7 @@ class MainMenuController {
 			'warning-popup',
 			$.Localize('#Action_Quit'),
 			this.quitGame,
-			'Return',
+			$.Localize('#Action_Return'),
 			() => {},
 			'blur'
 		);

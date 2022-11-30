@@ -74,7 +74,7 @@
 						group="TopNavRadio"
 						class="topnav__button"
 						disabled="true"
-						onmouseover="UiToolkitAPI.ShowTextTooltip('InventoryButton', 'Coming soon!')"
+						onmouseover="UiToolkitAPI.ShowTextTooltip('InventoryButton', $.Localize('#Common_ComingSoon'))"
 						onmouseout="UiToolkitAPI.HideTextTooltip()"
 						style="tooltip-position: bottom;"
 					>
@@ -280,7 +280,7 @@
 									<Label class="bottombar__text" text="Controls Library" />
 								</RadioButton>
 
-								<TooltipPanel class="bottombar__tooltip horizontal-align-right" tooltip="#MainMenu_SwitchBackground">
+								<TooltipPanel class="bottombar__tooltip horizontal-align-right" tooltip="#MainMenu_Button_SwitchBackground">
 									<Button class="bottombar__button" onactivate="MainMenuController.toggleBackgroundLightDark()">
 										<Image class="bottombar__icon" src="file://{images}/theme-light-dark.svg" textureheight="64" />
 									</Button>

@@ -28,7 +28,7 @@
 					id="DiscardVideoSettingsButton"
 					onactivate='SettingsShared.videoSettingsDiscardChanges();'
 				>
-					<Label class="button__text" text="#Settings_General_Discard" />
+					<Label class="button__text" text="#Action_Discard" />
 				</Button>
 
 				<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
@@ -52,7 +52,7 @@
 				</Panel>
 
 				<ChaosSettingsSlider text="#Settings_Video_FOV" min="50" max="130" convar="fov_desired" hasdocspage="false" />
-				
+			
 				<ChaosSettingsSlider
 					text="#Settings_Video_MaxFPS"
 					min="0"

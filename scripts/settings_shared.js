@@ -81,9 +81,9 @@ class SettingsShared {
 			$.Localize('#Settings_General_Apply'),
 			message,
 			'warning-popup',
-			$.Localize('#Settings_General_Discard'),
+			$.Localize('#Action_Discard'),
 			resetFn,
-			$.Localize('#Settings_General_Return'),
+			$.Localize('#Action_Return'),
 			() => {},
 			'dim'
 		);
