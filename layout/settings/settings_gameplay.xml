@@ -1000,7 +1000,7 @@
 
 					<ChaosSettingsEnum
 						text="#Settings_Defrag_HUDFOVEnable"
-						convar="Settings_Defrag_HUDFOVEnable_Info"
+						convar="mom_df_hud_fov_override_enable"
 						infomessage="#Settings_Defrag_HUDFOV_Info"
 						tags="fov"
 					>
