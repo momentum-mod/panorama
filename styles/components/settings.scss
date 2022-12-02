@@ -110,6 +110,19 @@
 	&__textentry {
 		width: 80px;
 	}
+
+	&__outofbounds {
+		visibility: collapse;
+
+		.OutOfBounds & {
+			visibility: visible;
+			wash-color: $red;
+			width: 24px;
+			height: 24px;
+			vertical-align: middle;
+			margin-right: 8px;
+		}
+	}
 }
 
 .settings-keybinder {
