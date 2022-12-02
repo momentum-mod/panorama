@@ -86,6 +86,17 @@
 					<RadioButton group="showviewmodel" text="#Common_On" value="1" />
 				</ChaosSettingsEnum>
 
+				<ConVarEnabler convar="r_drawviewmodel" class="flow-down">
+					<ChaosSettingsSlider
+						text="#Settings_Gameplay_ViewmodelFOV"
+						convar="fov_viewmodel"
+						infomessage="#Settings_Gameplay_ViewmodelFOV_Info"
+						tags="viewmodel,weaponmodel,fov"
+						min="45"
+						max="135"
+					/>
+				</ConVarEnabler>
+
 				<ChaosSettingsEnumDropDown
 					text="#Settings_Gameplay_WeaponDesirability"
 					convar="mom_player_weapon_spawn_desirability"
