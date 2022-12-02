@@ -363,7 +363,9 @@ class MainMenuSettings {
 			$.Schedule(switchDelay, () => {
 				if (message) {
 					this.panels.infoTitle.text = $.Localize(title);
-					this.panels.infoMessage.text = $.Localize(message);
+					// I don't want localisation people having to fuss with HTML tags too much so replacing newlines with <br>
+					// does linebreaks for us without requiring any <p> tags.
+					this.panels.infoMessage.text = $.Localize(message).replace(/(?:\r\n|\r|\n)/g, '<br><br>');
 					this.panels.infoTitle.RemoveClass('hide');
 					this.panels.infoMessage.RemoveClass('hide');
 				} else {
