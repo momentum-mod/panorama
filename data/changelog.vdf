@@ -1,5 +1,31 @@
 "Changelog"
 {
+	"0.9.3"
+	{
+		"Fixed (13)"
+		{
+			"1"		"+strafe ignores limit movement trigger"
+			"2"		"Ahop s-tap buffer not subtracting speed properly"
+			"3"		"Brightness can be set to a value of 1000"
+			"4"		"Field of view can be set to broken numbers"
+			"5"		"Game not using language set inside game properties"
+			"6"		"Missing Strings in Settings"
+			"7"		"Players joining the map gives you their weapons"
+			"8"		"Savestates have incorrect angles"
+			"9"		"Sidebar covers menu items when 4:3 resolutions are used"
+			"10"		"[DX11] Game is out of focus after tabbing back in while on a map"
+			"11"		"mom_gamemode_override gamemode completions no longer localised"
+			"12"		"point_worldtext render origin doesn't update correctly"
+			"13"		"postprocess_controller Vignette acts incorrectly if you've changed resolution on maps with no light"
+		}
+		"Improved (4)"
+		{
+			"1"		"Add viewmodel fov to settings"
+			"2"		"Fit mainmenu background video to 21:9"
+			"3"		"Panorama non-16x9 Aspect Ratios"
+			"4"		"When searching in settings, index the current language's results as well as english"
+		}
+	}
 	"0.9.2"
 	{
 		"Added (28)"
