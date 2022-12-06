@@ -24,7 +24,7 @@ class Credit {
 		const email = cp.GetAttributeString('email', '');
 		const github = cp.GetAttributeString('github', '');
 
-		// Reconstrct full bio strings
+		// Reconstruct full bio strings
 		let bio = '';
 		let i = 1;
 		let curBioSection;

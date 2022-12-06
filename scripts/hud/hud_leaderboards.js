@@ -81,7 +81,7 @@ class HudLeaderboards {
 				namePanel.AddClass('hud-leaderboards-map-info__credits-name--no-steam');
 			}
 
-			// hoped this would make contextmenu work but it dont
+			// hoped this would make contextmenu work but it doesn't
 			if (authorCredits.indexOf(credit) < authorCredits.length - 1) {
 				let commaPanel = $.CreatePanel('Label', this.panels.credits, '');
 				commaPanel.AddClass('hud-leaderboards-map-info__credits-other-text');

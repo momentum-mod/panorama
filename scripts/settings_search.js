@@ -53,7 +53,7 @@ class SettingsSearch {
 		// Don't bother show anything if we only have one char words, can spawn hundreds of panels.
 		if (!this.strings.some((str) => str.length > 1)) return;
 
-		// Initalise matches array
+		// Initialise matches array
 		this.matches = [];
 
 		// Search through each page
@@ -202,7 +202,7 @@ class SettingsSearch {
 
 		var searchResult = $.CreatePanel('Panel', this.panels.results, '');
 
-		// If the text property is set, we're targetting an individual setting. Otherwise, a group.
+		// If the text property is set, we're targeting an individual setting. Otherwise, a group.
 		const isGroupPanel = !matches.text;
 
 		if (!searchResult.LoadLayoutSnippet(isGroupPanel ? 'GroupSearchResult' : 'FullSearchResult')) return;

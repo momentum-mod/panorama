@@ -192,7 +192,7 @@ class Speedometer {
 			return;
 		}
 
-		if (timerState === 0) return; // timer isnt running
+		if (timerState === 0) return; // timer isn't running
 
 		// return on current or previous zone, on a linear map
 		if (curZone <= this.lastZone && linear) return;

@@ -193,7 +193,7 @@ class MainMenuSettings {
 		const proportionScrolled = scrollOffset / (containerHeight - containerScreenHeight);
 
 		// Loop through each group until we find the one that scroll proportion fits within. If scrollOffset is 0 break in the first case
-		// Think of it of partitioning [0, 1] into sections based on each section's height and seeing which partion bounds the scroll proportion
+		// Think of it of partitioning [0, 1] into sections based on each section's height and seeing which partition bounds the scroll proportion
 		for (let child of panel.FindChildrenWithClassTraverse('settings-group')) {
 			if (
 				(child.actualyoffset / containerHeight <= proportionScrolled &&
@@ -244,7 +244,7 @@ class MainMenuSettings {
 	}
 
 	static initPanelsRecursive(panel) {
-		// Initalise info panel event handlers
+		// Initialise info panel event handlers
 		if (this.isSettingsPanel(panel) || this.isSpeedometerPanel(panel)) {
 			this.setPanelInfoEvents(panel);
 		}

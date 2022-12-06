@@ -151,7 +151,7 @@ class EndOfRun {
 	}
 	/**
 	 * Reset and determine how to generate the end of run panel.
-	 * The comparision run can be null, in which case we don't show splits or the graph.
+	 * The comparison run can be null, in which case we don't show splits or the graph.
 	 * Fired when either when the local player's run ends, a replay run ends,
 	 * you go back to a last EoR from leaderboards, or in the future when the player compares two runs.
 	 * @param {EorShowReason} showReason - Why the end of run panel is being shown. See EorShowReason for reasons.
@@ -202,7 +202,7 @@ class EndOfRun {
 		this.panels.cp.SetDialogVariable('run_diff_prefix', '');
 		this.panels.cp.SetDialogVariableFloat('run_diff', 0);
 
-		// Give the styling for a first/no comparsion set run
+		// Give the styling for a first/no comparison set run
 		this.panels.cp.AddClass('endofrun--first');
 
 		// Loop through each zone in the run and create a neutral Split panel with no diff/delta
@@ -226,7 +226,7 @@ class EndOfRun {
 	}
 
 	/**
-	 * Generate the end of run panel comparisions from the two active runs.
+	 * Generate the end of run panel comparisons from the two active runs.
 	 */
 	static setComparisionStats() {
 		if (!this.baseRun || !this.comparisonRun) return;
@@ -423,7 +423,7 @@ class EndOfRun {
 					`${$.Localize('#Run_Comparison_Diff')}: <b class='${diffStyle}'>${diffSign(data.diff)}{g:time:time_diff}</b>\n` +
 					`${$.Localize('#Run_Comparison_Delta')}: <b class='${deltaStyle}'>${diffSign(data.delta)}{g:time:time_delta}</b>`;
 			} else {
-				// Using string instead of float here, floats add a shitton of floating point imprecision e.g. 90.00000000128381273
+				// Using string instead of float here, floats add a shit ton of floating point imprecision e.g. 90.00000000128381273
 				tooltipString =
 					`{s:name}: <b>{s:base_value}</b>\n` +
 					`${$.Localize('#Run_Comparison')}: <b>{s:compare_value}</b>\n` +

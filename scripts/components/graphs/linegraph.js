@@ -102,7 +102,7 @@ class LineGraph {
 				// String to pass to Panorama styling
 				const offset = 'position: ' + (isX ? `${dist}px 0px 0px;` : `0px ${dist}px 0px;`);
 
-				// Linear interpolate to determine marker text, backwards for Y. Then round to precison and cast back to Number.
+				// Linear interpolate to determine marker text, backwards for Y. Then round to precision and cast back to Number.
 				const markerValue = +(isX ? lineMin + j : lineMax + lineMin - j).toFixed(precision);
 
 				// Create the marker label

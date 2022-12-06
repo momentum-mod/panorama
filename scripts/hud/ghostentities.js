@@ -6,7 +6,7 @@ class GhostEntities {
 		const namePanel = entPanel.FindChildTraverse('NamePanel');
 		namePanel.SetHasClass('ghost-ent-namepanel--hidden', !nameEnabled);
 
-		// Always keep centered even when name isnt visible
+		// Always keep centered even when name isn't visible
 		if (nameEnabled) {
 			entPanel.style.transform = 'translatex(0)';
 			entPanel.style.zIndex = 1;
