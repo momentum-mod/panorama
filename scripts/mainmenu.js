@@ -340,7 +340,7 @@ class MainMenuController {
 	 * @param {boolean} toDesktop
 	 */
 	static onQuitPrompt(toDesktop = true) {
-		if (!toDesktop) return; // currently dont handle disconnect prompts
+		if (!toDesktop) return; // currently don't handle disconnect prompts
 
 		$.DispatchEvent('ChaosMainMenuPauseGame'); // make sure game is paused so we can see the popup if hit from a keybind in-game
 

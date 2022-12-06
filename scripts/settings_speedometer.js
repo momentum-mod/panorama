@@ -175,7 +175,7 @@ class Speedometers {
 		Object.keys(SpeedometerIDs)
 			.filter((speedoName) => Speedometers.objectList[SpeedometerIDs[speedoName]] === undefined)
 			.forEach((speedoName) => disabledIDs.push(SpeedometerIDs[speedoName]));
-		if (disabledIDs.length === 0) return; // nothing is disabled, dont bother showing popup
+		if (disabledIDs.length === 0) return; // nothing is disabled, don't bother showing popup
 		UiToolkitAPI.ShowCustomLayoutPopupParameters(
 			'',
 			'file://{resources}/layout/popups/popup_speedometerselect.xml',
@@ -280,7 +280,7 @@ class Speedometers {
 		Object.keys(SpeedometerIDs)
 			.filter((speedoName) => Speedometers.objectList[SpeedometerIDs[speedoName]] === undefined)
 			.forEach((speedoName) => {
-				// make sure speedometers that arent visible (their panels are deleted) have an ordering that's above
+				// make sure speedometers that aren't visible (their panels are deleted) have an ordering that's above
 				// the speedometers that are actually visible
 				if (Speedometers.keyvalues?.['order']?.[speedoName])
 					Speedometers.keyvalues['order'][speedoName] = orderCtr++;

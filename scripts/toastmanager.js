@@ -233,7 +233,7 @@ class ToastManager {
 	static clearToasts(locationNum) {
 		const location = convertLocationNum(locationNum);
 
-		// Panorama/JS doesn't run this syncronously for some reason, so put a slight delay between deletions. Also looks kinda cool!
+		// Panorama/JS doesn't run this synchronously for some reason, so put a slight delay between deletions. Also looks kinda cool!
 		let delay = 0;
 		if (location && location !== 'all') {
 			if (!Locations.includes(location)) return;

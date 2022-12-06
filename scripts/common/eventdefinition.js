@@ -4,8 +4,8 @@
 // Purpose: Common place to define new events with panorama. This file is only include by
 //          layout/mainmenu.xml ensuring that new events are only registered once with panorama
 //
-// Usage:   $.DefineEvent( eventName, NumArguments, [optional] ArgumentsDescripton, [optional] Description )
-//          $.DefinePanelEvent( eventName, NumArguments, [optional] ArgumentsDescripton, [optional] Description )
+// Usage:   $.DefineEvent( eventName, NumArguments, [optional] ArgumentsDescription, [optional] Description )
+//          $.DefinePanelEvent( eventName, NumArguments, [optional] ArgumentsDescription, [optional] Description )
 //
 // Example: $.DefineEvent( 'MyCustomEvent', 2, 'args1, args2', 'Event defined in javascript' )
 //

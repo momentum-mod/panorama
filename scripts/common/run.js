@@ -47,7 +47,7 @@ const RunStatusIcons = {
 };
 
 /**
- * Friendly JavaScript represention of a C++ Run object.
+ * Friendly JavaScript representation of a C++ Run object.
  * @property {string} mapName - Name of the map
  * @property {string} mapHash - Alphanumeric hash unique to the map
  * @property {string} playerName - Steam name of the local player

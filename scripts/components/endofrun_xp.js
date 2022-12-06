@@ -128,7 +128,7 @@ class EndOfRunXP {
 					chain = chain.then(() => {
 						// Smallest fraction of BASE_LEVELUP_TIME a level up duration can be
 						const phi = 5;
-						// Quatratic passing 0 and leveldiff at BASE_LEVELUP_TIME, phi adjusts curviness
+						// Quadratic passing 0 and leveldiff at BASE_LEVELUP_TIME, phi adjusts curviness
 						// Doesn't work great but hard to get right without a bunch more maths or being able to time all the levels in one
 						// animation, maybe that's possible with some very creative CSS?
 						const duration =
