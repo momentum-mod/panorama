@@ -221,9 +221,10 @@ class Cgaz {
 		// compass ticks
 		offset = this.accel_offset - 0.5 * (this.accel_height + this.compass_size);
 		align = 'middle';
+		const size = isNaN(this.compass_size) ? 0 : this.compass_size;
 		this.setupContainer(this.tickContainer, offset, align);
-		this.compassTickFull.style.height = this.compass_size + 'px';
-		this.compassTickHalf.style.height = this.compass_size * 0.5 + 'px';
+		this.compassTickFull.style.height = size + 'px';
+		this.compassTickHalf.style.height = size * 0.5 + 'px';
 
 		// compass arrow classes
 		let color = this.compass_color;
@@ -698,6 +699,7 @@ class Cgaz {
 			const diffGain = snapGains[i % snapGains.length];
 			const alpha = (diffGain - minGain) / (maxGain - minGain);
 			const heightFactor = 0.8 * alpha + 0.2;
+			const height = isNaN(this.snap_height) ? 0 : this.snap_height;
 
 			if (this.snap_color_mode) {
 				const A = this.splitColorString(this.snap_slow_color);
@@ -707,12 +709,12 @@ class Cgaz {
 			zones[i].style.backgroundColor = bHighlight ? hlSnapColor : snapColor;
 
 			if (this.snap_heightgain_enable) {
-				zones[i].style.height = heightFactor * this.snap_height + 'px';
-				zones[i].style.marginBottom = this.snap_height + 'px';
+				zones[i].style.height = heightFactor * height + 'px';
+				zones[i].style.marginBottom = height + 'px';
 				zones[i].style.verticalAlign = 'bottom';
 			} else {
-				zones[i].style.height = this.snap_height + 'px';
-				zones[i].style.marginBottom = this.snap_height + 'px';
+				zones[i].style.height = height + 'px';
+				zones[i].style.marginBottom = height + 'px';
 			}
 
 			this.updateZone(zones[i], left, right, 0, snapClass, this.snapSplitZone);
@@ -741,19 +743,19 @@ class Cgaz {
 
 	static setupContainer(container, offset, align) {
 		container.style.verticalAlign = align;
-		container.style.transform = `translatey( ${-offset}px )`;
+		container.style.transform = `translatey( ${isNaN(offset) ? 0 : -offset}px )`;
 		container.style.overflow = 'noclip noclip';
 	}
 
 	static applyClass(zone, zoneClass) {
-		zone.style.height = zoneClass.height + 'px';
+		zone.style.height = isNaN(zoneClass.height) ? 0 : zoneClass.height + 'px';
 		zone.style.verticalAlign = zoneClass.align;
 		zone.style.backgroundColor = zoneClass.color;
 		zone.style.overflow = 'noclip noclip';
 	}
 
 	static applyClassBorder(zone, zoneClass) {
-		zone.style.height = zoneClass.height + 'px';
+		zone.style.height = isNaN(zoneClass.height) ? 0 : zoneClass.height + 'px';
 		zone.style.border = `2px solid ${zoneClass.color}`;
 		zone.style.padding = '-2px';
 		zone.style.verticalAlign = zoneClass.align;
@@ -761,14 +763,14 @@ class Cgaz {
 	}
 
 	static setupArrow(arrow, arrowIcon, height, width, offset, align, color) {
-		arrow.style.height = height + 'px';
-		arrow.style.width = width + 'px';
+		arrow.style.height = isNaN(height) ? 0 : height + 'px';
+		arrow.style.width = isNaN(width) ? 0 : width + 'px';
 		arrow.style.verticalAlign = 'middle';
-		arrow.style.transform = `translatey( ${-offset}px )`;
+		arrow.style.transform = `translatey( ${isNaN(offset) ? 0 : -offset}px )`;
 		arrow.style.overflow = 'noclip noclip';
 
-		arrowIcon.style.height = width + 'px';
-		arrowIcon.style.width = width + 'px';
+		arrowIcon.style.height = isNaN(width) ? 0 : width + 'px';
+		arrowIcon.style.width = isNaN(width) ? 0 : width + 'px';
 		arrowIcon.style.washColor = color;
 		arrowIcon.style.overflow = 'noclip noclip';
 		arrowIcon.style.verticalAlign = align;
