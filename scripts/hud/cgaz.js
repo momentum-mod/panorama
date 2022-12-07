@@ -300,268 +300,255 @@ class Cgaz {
 		const bSnapShift =
 			!this.floatEquals(Math.abs(forwardMove), Math.abs(rightMove), 0.001) && !(phyMode && bIsFalling);
 
+		// find cgaz angles
+		const angleOffset = this.remapAngle(velAngle - wishAngle);
+		const slowCgazAngle = this.findSlowAngle(dropSpeed, dropSpeedSquared, speedSquared, maxSpeed);
+		const fastCgazAngle = this.findFastAngle(dropSpeed, maxSpeed, maxAccel);
+		const turnCgazAngle = this.findTurnAngle(speed, dropSpeed, maxAccel, fastCgazAngle);
+		const stopCgazAngle = this.findStopAngle(maxAccel, speedSquared, dropSpeed, dropSpeedSquared, turnCgazAngle);
+
 		if (this.accel_enable) {
-			// find cgaz angles
-			const angleOffset = this.remapAngle(velAngle - wishAngle);
-			const slowCgazAngle = this.findSlowAngle(dropSpeed, dropSpeedSquared, speedSquared, maxSpeed);
-			const fastCgazAngle = this.findFastAngle(dropSpeed, maxSpeed, maxAccel);
-			const turnCgazAngle = this.findTurnAngle(speed, dropSpeed, maxAccel, fastCgazAngle);
-			const stopCgazAngle = this.findStopAngle(
-				maxAccel,
-				speedSquared,
-				dropSpeed,
-				dropSpeedSquared,
-				turnCgazAngle
-			);
+			// draw accel zones
+			if (speed >= this.accel_min_speed) {
+				this.updateZone(
+					this.leftTurnZone,
+					-stopCgazAngle,
+					-turnCgazAngle,
+					angleOffset,
+					TURN_CLASS,
+					this.accelSplitZone
+				);
+				this.updateZone(
+					this.leftFastZone,
+					-turnCgazAngle,
+					-fastCgazAngle,
+					angleOffset,
+					FAST_CLASS,
+					this.accelSplitZone
+				);
+				this.updateZone(
+					this.leftSlowZone,
+					-fastCgazAngle,
+					-slowCgazAngle,
+					angleOffset,
+					SLOW_CLASS,
+					this.accelSplitZone
+				);
+				this.updateZone(
+					this.deadZone,
+					-slowCgazAngle,
+					slowCgazAngle,
+					angleOffset,
+					NEUTRAL_CLASS,
+					this.accelSplitZone
+				);
+				this.updateZone(
+					this.rightSlowZone,
+					slowCgazAngle,
+					fastCgazAngle,
+					angleOffset,
+					SLOW_CLASS,
+					this.accelSplitZone
+				);
+				this.updateZone(
+					this.rightFastZone,
+					fastCgazAngle,
+					turnCgazAngle,
+					angleOffset,
+					FAST_CLASS,
+					this.accelSplitZone
+				);
+				this.updateZone(
+					this.rightTurnZone,
+					turnCgazAngle,
+					stopCgazAngle,
+					angleOffset,
+					TURN_CLASS,
+					this.accelSplitZone
+				);
+			} else {
+				this.clearZones(this.accelZones);
+			}
 
-			if (this.accel_enable) {
-				// draw accel zones
-				if (speed >= this.accel_min_speed) {
+			// draw mirrored strafe zones
+			if (speed >= this.accel_min_speed && this.accel_mirror_enable) {
+				const mirrorAccel = (bIsFalling ? AIR_ACCEL : accel) * MAX_GROUND_SPEED * tickInterval;
+				const minMirrorAngle = this.findSlowAngle(dropSpeed, dropSpeedSquared, speedSquared, MAX_GROUND_SPEED);
+				const fastMirrorAngle = this.findFastAngle(dropSpeed, MAX_GROUND_SPEED, mirrorAccel);
+				const turnMirrorAngle = this.findTurnAngle(speed, dropSpeed, mirrorAccel, fastMirrorAngle);
+				const maxMirrorAngle = this.findStopAngle(
+					mirrorAccel,
+					speedSquared,
+					dropSpeed,
+					dropSpeedSquared,
+					turnMirrorAngle
+				);
+
+				let mirrorOffset = this.remapAngle(velAngle - viewAngle);
+				const inputAngle = this.remapAngle(viewAngle - wishAngle);
+
+				if (this.floatEquals(Math.abs(inputAngle), 0.25 * Math.PI, 0.001)) {
+					mirrorOffset += (inputAngle > 0 ? -1 : 1) * Math.PI * 0.25;
 					this.updateZone(
-						this.leftTurnZone,
-						-stopCgazAngle,
-						-turnCgazAngle,
-						angleOffset,
-						TURN_CLASS,
-						this.accelSplitZone
+						this.leftMirrorZone,
+						-maxMirrorAngle,
+						-minMirrorAngle,
+						mirrorOffset,
+						MIRROR_CLASS,
+						this.mirrorSplitZone
 					);
 					this.updateZone(
-						this.leftFastZone,
-						-turnCgazAngle,
-						-fastCgazAngle,
-						angleOffset,
-						FAST_CLASS,
-						this.accelSplitZone
-					);
-					this.updateZone(
-						this.leftSlowZone,
-						-fastCgazAngle,
-						-slowCgazAngle,
-						angleOffset,
-						SLOW_CLASS,
-						this.accelSplitZone
-					);
-					this.updateZone(
-						this.deadZone,
-						-slowCgazAngle,
-						slowCgazAngle,
-						angleOffset,
-						NEUTRAL_CLASS,
-						this.accelSplitZone
-					);
-					this.updateZone(
-						this.rightSlowZone,
-						slowCgazAngle,
-						fastCgazAngle,
-						angleOffset,
-						SLOW_CLASS,
-						this.accelSplitZone
-					);
-					this.updateZone(
-						this.rightFastZone,
-						fastCgazAngle,
-						turnCgazAngle,
-						angleOffset,
-						FAST_CLASS,
-						this.accelSplitZone
-					);
-					this.updateZone(
-						this.rightTurnZone,
-						turnCgazAngle,
-						stopCgazAngle,
-						angleOffset,
-						TURN_CLASS,
-						this.accelSplitZone
+						this.rightMirrorZone,
+						minMirrorAngle,
+						maxMirrorAngle,
+						mirrorOffset,
+						MIRROR_CLASS,
+						this.mirrorSplitZone
 					);
 				} else {
-					this.clearZones(this.accelZones);
+					this.updateZone(
+						this.leftMirrorZone,
+						-maxMirrorAngle,
+						-minMirrorAngle,
+						mirrorOffset - Math.PI * 0.25,
+						MIRROR_CLASS,
+						this.mirrorSplitZone
+					);
+					this.updateZone(
+						this.rightMirrorZone,
+						minMirrorAngle,
+						maxMirrorAngle,
+						mirrorOffset + Math.PI * 0.25,
+						MIRROR_CLASS,
+						this.mirrorSplitZone
+					);
 				}
+			} else {
+				this.clearZones([this.leftMirrorZone, this.rightMirrorZone]);
+			}
+		}
 
-				// draw mirrored strafe zones
-				if (speed >= this.accel_min_speed && this.accel_mirror_enable) {
-					const mirrorAccel = (bIsFalling ? AIR_ACCEL : accel) * MAX_GROUND_SPEED * tickInterval;
-					const minMirrorAngle = this.findSlowAngle(
-						dropSpeed,
-						dropSpeedSquared,
-						speedSquared,
-						MAX_GROUND_SPEED
-					);
-					const fastMirrorAngle = this.findFastAngle(dropSpeed, MAX_GROUND_SPEED, mirrorAccel);
-					const turnMirrorAngle = this.findTurnAngle(speed, dropSpeed, mirrorAccel, fastMirrorAngle);
-					const maxMirrorAngle = this.findStopAngle(
-						mirrorAccel,
-						speedSquared,
-						dropSpeed,
-						dropSpeedSquared,
-						turnMirrorAngle
-					);
+		if (this.snap_enable && this.snapAccel) {
+			// find snap zone borders
+			const snapAngles = this.findSnapAngles(this.snapAccel);
+			const snapGains = this.findSnapGains(snapAngles, this.snapAccel);
+			const snapOffset = (bSnapShift ? 0 : Math.PI * 0.25) - viewAngle;
 
-					let mirrorOffset = this.remapAngle(velAngle - viewAngle);
-					const inputAngle = this.remapAngle(viewAngle - wishAngle);
+			const targetOffset = this.remapAngle(velAngle - viewAngle);
+			const targetAngle = this.findFastAngle(dropSpeed, MAX_GROUND_SPEED, MAX_GROUND_SPEED * tickInterval);
+			let leftTarget = -targetAngle - targetOffset + Math.PI * 0.25;
+			let rightTarget = targetAngle - targetOffset - Math.PI * 0.25;
 
-					if (this.floatEquals(Math.abs(inputAngle), 0.25 * Math.PI, 0.001)) {
-						mirrorOffset += (inputAngle > 0 ? -1 : 1) * Math.PI * 0.25;
-						this.updateZone(
-							this.leftMirrorZone,
-							-maxMirrorAngle,
-							-minMirrorAngle,
-							mirrorOffset,
-							MIRROR_CLASS,
-							this.mirrorSplitZone
-						);
-						this.updateZone(
-							this.rightMirrorZone,
-							minMirrorAngle,
-							maxMirrorAngle,
-							mirrorOffset,
-							MIRROR_CLASS,
-							this.mirrorSplitZone
-						);
-					} else {
-						this.updateZone(
-							this.leftMirrorZone,
-							-maxMirrorAngle,
-							-minMirrorAngle,
-							mirrorOffset - Math.PI * 0.25,
-							MIRROR_CLASS,
-							this.mirrorSplitZone
-						);
-						this.updateZone(
-							this.rightMirrorZone,
-							minMirrorAngle,
-							maxMirrorAngle,
-							mirrorOffset + Math.PI * 0.25,
-							MIRROR_CLASS,
-							this.mirrorSplitZone
-						);
-					}
-				} else {
-					this.clearZones([this.leftMirrorZone, this.rightMirrorZone]);
+			if (forwardMove > 0) {
+				if (rightMove < 0) {
+					leftTarget = rightTarget;
+				} else if (rightMove > 0) {
+					rightTarget = leftTarget;
 				}
 			}
 
-			if (this.snap_enable && this.snapAccel) {
-				// find snap zone borders
-				const snapAngles = this.findSnapAngles(this.snapAccel);
-				const snapGains = this.findSnapGains(snapAngles, this.snapAccel);
-				const snapOffset = (bSnapShift ? 0 : Math.PI * 0.25) - viewAngle;
-
-				const targetOffset = this.remapAngle(velAngle - viewAngle);
-				const targetAngle = this.findFastAngle(dropSpeed, MAX_GROUND_SPEED, MAX_GROUND_SPEED * tickInterval);
-				let leftTarget = -targetAngle - targetOffset + Math.PI * 0.25;
-				let rightTarget = targetAngle - targetOffset - Math.PI * 0.25;
-
-				if (forwardMove > 0) {
-					if (rightMove < 0) {
-						leftTarget = rightTarget;
-					} else if (rightMove > 0) {
-						rightTarget = leftTarget;
-					}
-				}
-
-				// draw snap zones
-				if (speed >= this.snap_min_speed) {
-					this.updateSnaps(this.snapZones, snapAngles, snapGains, snapOffset, leftTarget, rightTarget);
-				} else {
-					this.clearZones(this.snapZones);
-				}
+			// draw snap zones
+			if (speed >= this.snap_min_speed) {
+				this.updateSnaps(this.snapZones, snapAngles, snapGains, snapOffset, leftTarget, rightTarget);
 			} else {
 				this.clearZones(this.snapZones);
 			}
+		} else {
+			this.clearZones(this.snapZones);
+		}
 
-			let velocityAngle = this.remapAngle(viewAngle - velAngle);
-			// compass
-			if (this.compass_mode) {
-				const bShouldHighlight =
-					Math.abs(this.remapAngle(8 * velAngle) * 0.125) < 0.01 && speed >= this.accel_min_speed;
-				const color = bShouldHighlight ? this.compass_hl_color : this.compass_color;
+		let velocityAngle = this.remapAngle(viewAngle - velAngle);
+		// compass
+		if (this.compass_mode) {
+			const bShouldHighlight =
+				Math.abs(this.remapAngle(8 * velAngle) * 0.125) < 0.01 && speed >= this.accel_min_speed;
+			const color = bShouldHighlight ? this.compass_hl_color : this.compass_color;
 
-				// ticks
-				const fullTickLeftEdge = this.findCompassTick(viewAngle);
-				const fullTickRightEdge = fullTickLeftEdge + this.halfPi;
-				const halfTickLeftEdge = this.findCompassTick(viewAngle - 0.5 * this.halfPi);
-				const halfTickRightEdge = halfTickLeftEdge + this.halfPi;
+			// ticks
+			const fullTickLeftEdge = this.findCompassTick(viewAngle);
+			const fullTickRightEdge = fullTickLeftEdge + this.halfPi;
+			const halfTickLeftEdge = this.findCompassTick(viewAngle - 0.5 * this.halfPi);
+			const halfTickRightEdge = halfTickLeftEdge + this.halfPi;
 
-				this.drawZone(
-					this.compassTickFull,
-					this.mapToScreenWidth(fullTickLeftEdge) - 1, // -1 balances the 2px border across the compass tick
-					this.mapToScreenWidth(fullTickRightEdge) + 1
-				);
-				this.drawZone(
-					this.compassTickHalf,
-					this.mapToScreenWidth(halfTickLeftEdge) - 1, // -1 balances the 2px border across the compass tick
-					this.mapToScreenWidth(halfTickRightEdge) + 1
-				);
+			this.drawZone(
+				this.compassTickFull,
+				this.mapToScreenWidth(fullTickLeftEdge) - 1, // -1 balances the 2px border across the compass tick
+				this.mapToScreenWidth(fullTickRightEdge) + 1
+			);
+			this.drawZone(
+				this.compassTickHalf,
+				this.mapToScreenWidth(halfTickLeftEdge) - 1, // -1 balances the 2px border across the compass tick
+				this.mapToScreenWidth(halfTickRightEdge) + 1
+			);
 
-				this.compassTickFull.style.borderColor = color;
-				this.compassTickHalf.style.borderColor = color;
+			this.compassTickFull.style.borderColor = color;
+			this.compassTickHalf.style.borderColor = color;
 
-				// arrow
-				if (Math.abs(velocityAngle) < this.hFov) {
-					this.compassArrowIcon.RemoveClass('arrow__down');
-					this.compassArrowIcon.AddClass('arrow__up');
-				} else {
-					this.compassArrowIcon.RemoveClass('arrow__up');
-					this.compassArrowIcon.AddClass('arrow__down');
-					velocityAngle = this.remapAngle(velocityAngle - Math.PI);
-				}
-				const leftEdge = this.mapToScreenWidth(velocityAngle) - this.compass_size;
-				this.compassArrow.style.marginLeft = (isNaN(leftEdge) ? 0 : leftEdge) + 'px';
-				this.compassArrowIcon.style.washColor = color;
-			}
-			this.compassArrow.visible = this.compass_mode % 2 && speed >= this.accel_min_speed;
-			this.tickContainer.visible = this.compass_mode > 1;
-
-			// pitch line
-			if (this.compass_pitch_enable) {
-				let pitchDelta = this.mapToScreenHeight(
-					((MomentumPlayerAPI.GetAngles().x - this.compass_pitch_target) * Math.PI) / 180
-				);
-				this.pitchLine.style.height = (isNaN(pitchDelta) ? 0 : pitchDelta) + 'px';
-				this.pitchLine.style.borderColor =
-					Math.abs(MomentumPlayerAPI.GetAngles().x - this.compass_pitch_target) > 0.1
-						? this.compass_color
-						: this.compass_hl_color;
-			}
-			this.pitchLine.visible = this.compass_pitch_enable;
-
-			// compass stats
-			if (this.compass_stat_mode) {
-				this.yawStat.text = MomentumPlayerAPI.GetAngles().y.toFixed();
-				this.yawStat.style.color =
-					Math.abs(this.distToNearestTick(velAngle)) < 0.01 && speed >= this.accel_min_speed
-						? this.compass_hl_color
-						: this.compass_color;
-
-				this.pitchStat.text = MomentumPlayerAPI.GetAngles().x.toFixed(1);
-				this.pitchStat.style.color =
-					Math.abs(MomentumPlayerAPI.GetAngles().x - this.compass_pitch_target) > 0.1
-						? this.compass_color
-						: this.compass_hl_color;
-			}
-			this.pitchStat.visible = this.compass_stat_mode % 2;
-			this.yawStat.visible = this.compass_stat_mode > 1;
-
-			const wTurnAngle = velocityAngle > 0 ? velocityAngle + this.theta : velocityAngle - this.theta;
-			// draw w-turn indicator
-			if (this.windicator_enable && Math.abs(wTurnAngle) < this.hFov && speed >= this.accel_min_speed) {
-				this.windicatorArrow.visible = true;
-				const leftEdge = this.mapToScreenWidth(wTurnAngle) - this.windicator_size;
-				this.windicatorArrow.style.marginLeft = (isNaN(leftEdge) ? 0 : leftEdge) + 'px';
-
-				const minAngle = Math.min(wTurnAngle, 0);
-				const maxAngle = Math.max(wTurnAngle, 0);
-
-				if (bHasAirControl) {
-					this.updateZone(this.windicatorZone, minAngle, maxAngle, 0, WIN_ZONE_CLASS);
-				} else {
-					this.windicatorZone.style.width = '0px';
-				}
+			// arrow
+			if (Math.abs(velocityAngle) < this.hFov) {
+				this.compassArrowIcon.RemoveClass('arrow__down');
+				this.compassArrowIcon.AddClass('arrow__up');
 			} else {
-				// hide arrow & box
-				this.windicatorArrow.visible = false;
+				this.compassArrowIcon.RemoveClass('arrow__up');
+				this.compassArrowIcon.AddClass('arrow__down');
+				velocityAngle = this.remapAngle(velocityAngle - Math.PI);
+			}
+			const leftEdge = this.mapToScreenWidth(velocityAngle) - this.compass_size;
+			this.compassArrow.style.marginLeft = (isNaN(leftEdge) ? 0 : leftEdge) + 'px';
+			this.compassArrowIcon.style.washColor = color;
+		}
+		this.compassArrow.visible = this.compass_mode % 2 && speed >= this.accel_min_speed;
+		this.tickContainer.visible = this.compass_mode > 1;
+
+		// pitch line
+		if (this.compass_pitch_enable) {
+			let pitchDelta = this.mapToScreenHeight(
+				((MomentumPlayerAPI.GetAngles().x - this.compass_pitch_target) * Math.PI) / 180
+			);
+			this.pitchLine.style.height = (isNaN(pitchDelta) ? 0 : pitchDelta) + 'px';
+			this.pitchLine.style.borderColor =
+				Math.abs(MomentumPlayerAPI.GetAngles().x - this.compass_pitch_target) > 0.1
+					? this.compass_color
+					: this.compass_hl_color;
+		}
+		this.pitchLine.visible = this.compass_pitch_enable;
+
+		// compass stats
+		if (this.compass_stat_mode) {
+			this.yawStat.text = MomentumPlayerAPI.GetAngles().y.toFixed();
+			this.yawStat.style.color =
+				Math.abs(this.distToNearestTick(velAngle)) < 0.01 && speed >= this.accel_min_speed
+					? this.compass_hl_color
+					: this.compass_color;
+
+			this.pitchStat.text = MomentumPlayerAPI.GetAngles().x.toFixed(1);
+			this.pitchStat.style.color =
+				Math.abs(MomentumPlayerAPI.GetAngles().x - this.compass_pitch_target) > 0.1
+					? this.compass_color
+					: this.compass_hl_color;
+		}
+		this.pitchStat.visible = this.compass_stat_mode % 2;
+		this.yawStat.visible = this.compass_stat_mode > 1;
+
+		const wTurnAngle = velocityAngle > 0 ? velocityAngle + this.theta : velocityAngle - this.theta;
+		// draw w-turn indicator
+		if (this.windicator_enable && Math.abs(wTurnAngle) < this.hFov && speed >= this.accel_min_speed) {
+			this.windicatorArrow.visible = true;
+			const leftEdge = this.mapToScreenWidth(wTurnAngle) - this.windicator_size;
+			this.windicatorArrow.style.marginLeft = (isNaN(leftEdge) ? 0 : leftEdge) + 'px';
+
+			const minAngle = Math.min(wTurnAngle, 0);
+			const maxAngle = Math.max(wTurnAngle, 0);
+
+			if (bHasAirControl) {
+				this.updateZone(this.windicatorZone, minAngle, maxAngle, 0, WIN_ZONE_CLASS);
+			} else {
 				this.windicatorZone.style.width = '0px';
 			}
+		} else {
+			// hide arrow & box
+			this.windicatorArrow.visible = false;
+			this.windicatorZone.style.width = '0px';
 		}
 	}
 
