@@ -1,5 +1,23 @@
 "Changelog"
 {
+	"0.9.4"
+	{
+		"Fixed (7)"
+		{
+			"1"		"Fixed `4088 bytes` memory allocation issue on certain maps"
+			"2"		"Fixed crashes when loading maps with portals in them"
+			"3"		"Fixed defrag HUD elements not updating when `mom_df_hud_accel_enable` is OFF."
+			"4"		"Fixed incorrect output from texture conversion"
+			"5"		"Fixed js error caused by attempting to set css values to `NaN`px."
+			"6"		"Fixed water rendering in skybox, for maps like ahop_coast"
+			"7"		"Water fog value for `watercheap` shader is properly fetched"
+		}
+		"Improved (2)"
+		{
+			"1"		"BSP v25 edges raised from 256,000 to 4,096,000 (16x)"
+			"2"		"BSP v25 surfedges raised from 512,000 to 8,192,000 (16x)"
+		}
+	}
 	"0.9.3"
 	{
 		"Fixed (13)"
