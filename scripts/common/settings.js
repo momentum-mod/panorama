@@ -59,6 +59,7 @@ const SettingsTabs = {
 			TimerSubSection: 'TimerRadio',
 			PlayerStatusSubSection: 'PlayerStatusRadio',
 			KeypressSubSection: 'KeypressRadio',
+			JumpStatsSubSection: 'JumpStatsRadio',
 			WeaponSelSubSection: 'WeaponSelRadio',
 			StrafeSyncSubSection: 'StrafeSyncRadio',
 			SynchronizerSubSection: 'SynchronizerRadio',
