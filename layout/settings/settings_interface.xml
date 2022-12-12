@@ -893,6 +893,15 @@
 					</ChaosSettingsEnum>
 
 					<ChaosSettingsEnum
+						text="Settings_Synchronizer_Dynamic_Mode"
+						convar="mom_hud_synchro_dynamic_enable"
+						infomessage="#Settings_Synchronizer_Dynamic_Mode_Info"
+					>
+						<RadioButton group="synchrodynamic" text="#Common_Off" value="0" />
+						<RadioButton group="synchrodynamic" text="#Common_On" value="1" />
+					</ChaosSettingsEnum>
+
+					<ChaosSettingsEnum
 						text="#Settings_Synchronizer_Direction"
 						convar="mom_hud_synchro_flip_enable"
 						infomessage="#Settings_Synchronizer_Direction_Info"

@@ -23,120 +23,75 @@ class Synchronizer {
 		stats: [$('#StatsUpper'), $('#StatsLower')]
 	};
 
-	static lastSpeed = 0;
-	static lastAngle = 0;
 	static rad2deg = 180 / Math.PI;
 	static deg2rad = 1 / this.rad2deg;
 	static indicatorPercentage = 90; // this value shows ~90% gain or better when strafe indicator touches needle
 	static bIsFirstPanelColored = true; // gets toggled in wrapValueToRange()
 	static maxSegmentWidth = 25; // percentage of total element width
 	static firstPanelWidth = this.maxSegmentWidth;
+	static syncGain = 10; // scale how fast the bars move
 	static altColor = 'rgba(0, 0, 0, 0.0)';
 
 	static onLoad() {
 		this.initializeSettings();
 
-		this.bIsDefragging = GameModeAPI.GetCurrentGameMode() === GameMode.DEFRAG;
-
-		this.maxSpeed = 30; // bhop max air speed
-		this.syncGain = 1; // scale how fast the bars move
-		this.syncRatio = 0;
-
-		if (this.bIsDefragging) {
-			this.maxAccel = 16.8; // 70 * 30 * 0.008
-		} else {
-			this.maxAccel = 30; // 1000 * 30 * 0.01 caps to this value
-		}
 		if (this.mom_hud_synchro_stat_mode) this.onJumpEnded(); // show stats if enabled
 	}
 
 	static onUpdate() {
 		const lastMoveData = MomentumMovementAPI.GetLastMoveData();
-		const viewAngle = MomentumPlayerAPI.GetAngles().y;
-		let nextVelocity;
+		const lastTickStats = MomentumMovementAPI.GetLastTickStats();
+		const wishDir = lastMoveData.wishdir;
+		const velDir = this.getNormal(MomentumPlayerAPI.GetVelocity(), 0.001);
 
-		if (this.bIsDefragging) {
-			const fastAngle = this.findFastAngle(this.lastSpeed, this.maxSpeed, this.maxAccel);
-			nextVelocity = {
-				x: this.lastSpeed + this.maxAccel * Math.cos(fastAngle),
-				y: this.maxAccel * Math.sin(fastAngle)
-			};
-		} else {
-			nextVelocity = {
-				x: this.lastSpeed,
-				y: this.maxAccel
-			};
-		}
+		const bValidWishMove = this.getSize(wishDir) * this.getSize(velDir) > 0.001;
+		const strafeRight = (bValidWishMove ? 1 : 0) * lastTickStats.strafeRight;
+		const direction = this.mom_hud_synchro_dynamic_enable === 1 ? strafeRight : 1;
+		const flip = this.mom_hud_synchro_flip_enable === 1 ? -1 : 1;
 
-		const allButtons = MomentumInputAPI.GetButtons().buttons;
-		const strafeRight =
-			!(allButtons & Buttons.FORWARD || allButtons & Buttons.BACK) &&
-			(allButtons & Buttons.MOVERIGHT ? 1 : 0) - (allButtons & Buttons.MOVELEFT ? 1 : 0);
-
-		const idealDelta =
-			lastMoveData.moveStatus === 0 ? Math.atan2(nextVelocity.y, nextVelocity.x) * this.rad2deg : 0;
-		const angleDelta = this.wrapValueToRange(this.lastAngle - viewAngle, -180, 180);
-		const syncDelta = strafeRight * idealDelta - angleDelta;
-		this.addToBuffer(this.syncDeltaHistory, this.sampleWeight * syncDelta);
-		const direction = strafeRight * angleDelta > idealDelta ? -strafeRight : strafeRight;
-
-		const speed = this.getSize(MomentumPlayerAPI.GetVelocity());
-		const idealSpeed = this.getSize(nextVelocity);
-		this.gainRatioHistory.push((this.sampleWeight * (speed - this.lastSpeed)) / (idealSpeed - this.lastSpeed));
-		this.gainRatioHistory.shift();
+		this.addToBuffer(
+			this.gainRatioHistory,
+			this.sampleWeight * this.NaNCheck(lastTickStats.speedGain / lastTickStats.idealGain, 0)
+		);
 		const gainRatio = this.getBufferedSum(this.gainRatioHistory);
-		this.lastAngle = viewAngle;
-		this.lastSpeed = speed;
+
+		const ratio = this.mom_hud_synchro_mode > 2 ? 1 - lastTickStats.strafeRatio : lastTickStats.strafeRatio;
+		this.addToBuffer(this.strafeRatioHistory, this.sampleWeight * this.NaNCheck(ratio, 0));
+		const strafeRatio = this.getBufferedSum(this.strafeRatioHistory);
 
 		const colorTuple = this.mom_hud_synchro_color_enable
-			? this.getColorTuple(gainRatio, strafeRight * angleDelta > idealDelta)
+			? this.getColorTuple(gainRatio, false) //strafeRight * strafeRatio > 1)
 			: COLORS.NEUTRAL;
 		const color = `gradient(linear, 0% 0%, 0% 100%, from(${colorTuple[0]}), to(${colorTuple[1]}))`;
 		let flow;
 
 		switch (this.mom_hud_synchro_mode) {
 			case 1: // "Half-width throttle"
-				flow = strafeRight * (this.mom_hud_synchro_flip_enable === 1 ? -1 : 1);
+				flow = direction * flip;
 				this.panels.container.style.flowChildren = flow < 0 ? 'left' : 'right';
-
-				const deltaRatio = (strafeRight * angleDelta) / idealDelta;
-				this.addToBuffer(this.strafeRatioHistory, this.sampleWeight * deltaRatio);
-				const strafeRatio = (0.5 * this.getBufferedSum(this.strafeRatioHistory)).toFixed(3);
-
 				this.panels.segments[0].style.backgroundColor = color;
-				this.panels.segments[0].style.width = strafeRatio * 100 + '%';
+				this.panels.segments[0].style.width = (strafeRatio * 50).toFixed(3) + '%';
 				break;
 			case 2: // "Full-width throttle"
-				const absRatio = Math.abs(gainRatio).toFixed(3);
-				flow = direction * (this.mom_hud_synchro_flip_enable === 1 ? -1 : 1);
+				const absRatio = Math.abs(gainRatio);
+				flow = direction * (strafeRatio > 1 ? -1 : 1) * flip;
 				this.panels.container.style.flowChildren = flow < 0 ? 'left' : 'right';
-
 				this.panels.segments[0].style.backgroundColor = color;
-				this.panels.segments[0].style.width = absRatio * 100 + '%';
+				this.panels.segments[0].style.width = (absRatio * 100).toFixed(3) + '%';
 				break;
 			case 3: // "Strafe indicator"
-				const offset =
-					this.sampleWeight *
-					Math.min(
-						Math.max(
-							0.5 - ((0.5 * syncDelta) / idealDelta) * (this.mom_hud_synchro_flip_enable === 1 ? -1 : 1),
-							0
-						),
-						1
-					);
-				this.addToBuffer(this.offsetHistory, offset);
-				this.panels.segments[0].style.width =
-					(this.getBufferedSum(this.offsetHistory) * this.indicatorPercentage).toFixed(3) + '%';
+				this.panels.container.style.flowChildren = flip < 0 ? 'left' : 'right';
+				//const offset = Math.min(Math.max(0.5 - (0.5 * direction * syncDelta) / idealDelta, 0), 1);
+				const offset = Math.min(Math.max(0.5 - 0.5 * direction * strafeRatio, 0), 1);
+				this.panels.segments[0].style.width = (offset * this.indicatorPercentage).toFixed(3) + '%';
 				this.panels.segments[1].style.backgroundColor = color;
 				break;
 			case 4: // "Synchronizer"
-				this.firstPanelWidth +=
-					this.syncGain *
-					this.getBufferedSum(this.syncDeltaHistory) *
-					(this.mom_hud_synchro_flip_enable === 1 ? -1 : 1);
+				this.panels.container.style.flowChildren = flip < 0 ? 'left' : 'right';
+				this.firstPanelWidth += this.syncGain * direction * strafeRatio * lastTickStats.idealGain;
 				this.firstPanelWidth = this.wrapValueToRange(this.firstPanelWidth, 0, this.maxSegmentWidth, true);
 				this.panels.segments[0].style.width =
-					(isNaN(this.firstPanelWidth) ? this.maxSegmentWidth : this.firstPanelWidth.toFixed(3)) + '%';
+					this.NaNCheck(this.firstPanelWidth.toFixed(3), this.maxSegmentWidth) + '%';
 				this.panels.segments.forEach((segment, i) => {
 					let index = i + (this.bIsFirstPanelColored ? 1 : 0);
 					segment.style.backgroundColor = index % 2 ? color : this.altColor;
@@ -219,6 +174,27 @@ class Synchronizer {
 		return vec.x * vec.x + vec.y * vec.y;
 	}
 
+	static getNormal(vec, threshold) {
+		const mag = this.getSize(vec);
+		const vecNormal = {
+			x: vec.x,
+			y: vec.y
+		};
+		if (mag < threshold * threshold) {
+			vecNormal.x = 0;
+			vecNormal.y = 0;
+		} else {
+			const inv = 1 / mag;
+			vecNormal.x *= inv;
+			vecNormal.y *= inv;
+		}
+		return vecNormal;
+	}
+
+	static getCross(vec1, vec2) {
+		return vec1.x * vec2.y - vec1.y * vec2.x;
+	}
+
 	static initializeBuffer(size) {
 		return Array(size).fill(0);
 	}
@@ -254,7 +230,7 @@ class Synchronizer {
 	}
 
 	static setSynchroMode(newMode) {
-		this.mom_hud_synchro_mode = newMode === null ? 0 : newMode;
+		this.mom_hud_synchro_mode = newMode ?? 0;
 		switch (this.mom_hud_synchro_mode) {
 			case 1: // "Half-width throttle"
 				this.panels.segments.forEach((segment) => (segment.style.backgroundColor = this.altColor));
@@ -265,7 +241,6 @@ class Synchronizer {
 				this.panels.needle.style.visibility = 'collapse';
 				break;
 			case 3: // "Strafe indicator"
-				this.panels.container.style.flowChildren = 'right';
 				this.panels.segments[1].style.width = 100 - this.indicatorPercentage + '%';
 				this.panels.segments[2].style.width = 50 + '%';
 				this.panels.segments[3].style.width = 50 + '%';
@@ -273,7 +248,6 @@ class Synchronizer {
 				this.panels.needle.style.visibility = 'visible';
 				break;
 			case 4: // "Synchronizer"
-				this.panels.container.style.flowChildren = 'right';
 				this.panels.segments.forEach((segment) => {
 					segment.style.width = this.maxSegmentWidth + '%';
 				});
@@ -283,20 +257,22 @@ class Synchronizer {
 	}
 
 	static setSynchroColorMode(newColorMode) {
-		this.mom_hud_synchro_color_enable = newColorMode === null ? 0 : newColorMode;
+		this.mom_hud_synchro_color_enable = newColorMode ?? DEFAULT_SETTING_OFF;
+	}
+
+	static setSynchroDynamicMode(newDynamicMode) {
+		this.mom_hud_synchro_dynamic_enable = newDynamicMode ?? DEFAULT_SETTING_ON;
 	}
 
 	static setSynchroDirection(newDirection) {
-		this.mom_hud_synchro_flip_enable = newDirection === null ? 0 : newDirection;
+		this.mom_hud_synchro_flip_enable = newDirection ?? DEFAULT_SETTING_OFF;
 	}
 
 	static setSynchroBufferLength(newBufferLength) {
-		this.interpFrames = newBufferLength === null ? 10 : newBufferLength;
+		this.interpFrames = newBufferLength ?? DEFAULT_BUFFER_LENGTH;
 		this.sampleWeight = 1 / this.interpFrames;
 
-		this.offsetHistory = this.initializeBuffer(this.interpFrames);
 		this.gainRatioHistory = this.initializeBuffer(this.interpFrames);
-		this.syncDeltaHistory = this.initializeBuffer(this.interpFrames);
 		this.strafeRatioHistory = this.initializeBuffer(this.interpFrames);
 	}
 
@@ -304,9 +280,15 @@ class Synchronizer {
 		this.mom_hud_synchro_stat_mode = newStatMode ?? 0;
 		this.panels.wrapper.style.visibility = newStatMode === 2 ? 'collapse' : 'visible';
 	}
+
+	static NaNCheck(val, def) {
+		return isNaN(val) ? def : val;
+	}
+
 	static initializeSettings() {
 		this.setSynchroMode(GameInterfaceAPI.GetSettingFloat('mom_hud_synchro_mode'));
 		this.setSynchroColorMode(GameInterfaceAPI.GetSettingFloat('mom_hud_synchro_color_enable'));
+		this.setSynchroDynamicMode(GameInterfaceAPI.GetSettingFloat('mom_hud_synchro_dynamic_enable'));
 		this.setSynchroDirection(GameInterfaceAPI.GetSettingFloat('mom_hud_synchro_flip_enable'));
 		this.setSynchroBufferLength(GameInterfaceAPI.GetSettingFloat('mom_hud_synchro_buffer_size'));
 		this.setSynchroStatMode(GameInterfaceAPI.GetSettingFloat('mom_hud_synchro_stat_mode'));
@@ -317,6 +299,7 @@ class Synchronizer {
 
 		$.RegisterForUnhandledEvent('OnSynchroModeChanged', this.setSynchroMode.bind(this));
 		$.RegisterForUnhandledEvent('OnSynchroColorModeChanged', this.setSynchroColorMode.bind(this));
+		$.RegisterForUnhandledEvent('OnSynchroDynamicModeChanged', this.setSynchroDynamicMode.bind(this));
 		$.RegisterForUnhandledEvent('OnSynchroDirectionChanged', this.setSynchroDirection.bind(this));
 		$.RegisterForUnhandledEvent('OnSynchroBufferChanged', this.setSynchroBufferLength.bind(this));
 		$.RegisterForUnhandledEvent('OnSynchroStatModeChanged', this.setSynchroStatMode.bind(this));
