@@ -8,15 +8,21 @@
 		<include src="file://{resources}/scripts/hud/synchronizer.js" />
 	</scripts>
 	<MomHudSynchronizer class="synchronizer" alternateTicks="false">
-		<ConVarEnabler class="synchronizer__background" convar="mom_hud_synchronizer_mode" togglevisibility="true">
-			<Panel id="Container" class="synchronizer__container">
-				<Panel id="Segment0" class="synchronizer__segment" />
-				<Panel id="Segment1" class="synchronizer__segment" />
-				<Panel id="Segment2" class="synchronizer__segment" />
-				<Panel id="Segment3" class="synchronizer__segment" />
-				<Panel id="Segment4" class="synchronizer__segment" />
-			</Panel>
-			<Panel id="Needle" class="synchronizer__needle" />
+		<Panel id="BarWrapper" class="synchronizer__bar-wrapper">
+			<ConVarEnabler class="synchronizer__background" convar="mom_hud_synchro_mode" togglevisibility="true">
+				<Panel id="Container" class="synchronizer__container">
+					<Panel id="Segment0" class="synchronizer__segment" />
+					<Panel id="Segment1" class="synchronizer__segment" />
+					<Panel id="Segment2" class="synchronizer__segment" />
+					<Panel id="Segment3" class="synchronizer__segment" />
+					<Panel id="Segment4" class="synchronizer__segment" />
+				</Panel>
+				<Panel id="Needle" class="synchronizer__needle" />
+			</ConVarEnabler>
+		</Panel>
+		<ConVarEnabler class="synchronizer__stats" convar="mom_hud_synchro_stat_mode" togglevisibility="true">
+			<Label id="StatsUpper" class="synchronizer__stats--upper" />
+			<Label id="StatsLower" class="synchronizer__stats--lower" />
 		</ConVarEnabler>
 	</MomHudSynchronizer>
 </root>

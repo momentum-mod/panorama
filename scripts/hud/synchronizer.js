@@ -10,11 +10,17 @@ const COLORS = {
 	STOP: ['rgba(211, 24, 24, 1)', 'rgba(255, 87, 87, 1)']
 };
 
+const DEFAULT_BUFFER_LENGTH = 10;
+const DEFAULT_SETTING_ON = 1;
+const DEFAULT_SETTING_OFF = 0;
+
 class Synchronizer {
 	static panels = {
+		wrapper: $('#BarWrapper'),
 		segments: [$('#Segment0'), $('#Segment1'), $('#Segment2'), $('#Segment3'), $('#Segment4')],
 		container: $('#Container'),
-		needle: $('#Needle')
+		needle: $('#Needle'),
+		stats: [$('#StatsUpper'), $('#StatsLower')]
 	};
 
 	static lastSpeed = 0;
@@ -41,6 +47,7 @@ class Synchronizer {
 		} else {
 			this.maxAccel = 30; // 1000 * 30 * 0.01 caps to this value
 		}
+		if (this.mom_hud_synchro_stat_mode) this.onJumpEnded(); // show stats if enabled
 	}
 
 	static onUpdate() {
@@ -136,6 +143,22 @@ class Synchronizer {
 				});
 				break;
 		}
+	}
+
+	static onJumpEnded() {
+		const lastJumpStats = MomentumMovementAPI.GetLastJumpStats();
+		this.panels.stats[0].text =
+			`${lastJumpStats.jumpCount}: `.padStart(6, ' ') +
+			`${lastJumpStats.takeoffSpeed.toFixed()} `.padStart(6, ' ') +
+			`(${(lastJumpStats.strafeRatio * 100).toFixed(2)}%)`.padStart(10, ' ');
+		this.panels.stats[1].text = (lastJumpStats.speedGain * 100).toFixed(2);
+		/*
+		const colorTuple = this.mom_hud_synchro_color_enable
+			? this.getColorTuple(lastJumpStats.speedGain, lastJumpStats.strafeRatio > 0)
+			: COLORS.NEUTRAL;
+		const color = `gradient(linear, 0% 0%, 0% 100%, from(${colorTuple[0]}), to(${colorTuple[1]}))`;
+		this.panels.stats.forEach((stat) => (stat.style.color = color));
+		*/
 	}
 
 	static getColorTuple(ratio, bOverStrafing) {
@@ -277,11 +300,16 @@ class Synchronizer {
 		this.strafeRatioHistory = this.initializeBuffer(this.interpFrames);
 	}
 
+	static setSynchroStatMode(newStatMode) {
+		this.mom_hud_synchro_stat_mode = newStatMode ?? 0;
+		this.panels.wrapper.style.visibility = newStatMode === 2 ? 'collapse' : 'visible';
+	}
 	static initializeSettings() {
 		this.setSynchroMode(GameInterfaceAPI.GetSettingFloat('mom_hud_synchro_mode'));
 		this.setSynchroColorMode(GameInterfaceAPI.GetSettingFloat('mom_hud_synchro_color_enable'));
 		this.setSynchroDirection(GameInterfaceAPI.GetSettingFloat('mom_hud_synchro_flip_enable'));
 		this.setSynchroBufferLength(GameInterfaceAPI.GetSettingFloat('mom_hud_synchro_buffer_size'));
+		this.setSynchroStatMode(GameInterfaceAPI.GetSettingFloat('mom_hud_synchro_stat_mode'));
 	}
 
 	static {
@@ -291,6 +319,8 @@ class Synchronizer {
 		$.RegisterForUnhandledEvent('OnSynchroColorModeChanged', this.setSynchroColorMode.bind(this));
 		$.RegisterForUnhandledEvent('OnSynchroDirectionChanged', this.setSynchroDirection.bind(this));
 		$.RegisterForUnhandledEvent('OnSynchroBufferChanged', this.setSynchroBufferLength.bind(this));
+		$.RegisterForUnhandledEvent('OnSynchroStatModeChanged', this.setSynchroStatMode.bind(this));
+		$.RegisterForUnhandledEvent('OnJumpEnded', this.onJumpEnded.bind(this));
 		$.RegisterForUnhandledEvent('ChaosLevelInitPostEntity', this.onLoad.bind(this));
 	}
 }
