@@ -5,14 +5,19 @@
 $border-color: rgba(255, 255, 255, 0.3);
 
 .synchronizer {
+	height: 80px;
 	horizontal-align: center;
-	margin-bottom: 32px;
+	overflow: noclip;
+
+	&__bar-wrapper {
+		margin-bottom: 32px;
+		transform: translateY(32px);
+	}
 
 	&__background {
 		height: 16px;
 		width: 300px;
 		background-color: color.scale(rgba($progressbar-background, 1), $lightness: 2%);
-		box-shadow: fill 0px 1px 3px 1px rgba(0, 0, 0, 0.9);
 		border-radius: 8px;
 	}
 
@@ -33,5 +38,25 @@ $border-color: rgba(255, 255, 255, 0.3);
 		width: 2px;
 		horizontal-align: center;
 		background-color: rgba(0, 0, 0, 1);
+	}
+
+	&__stats {
+		height: 100%;
+		width: 300px;
+		padding: 2px;
+		vertical-align: center;
+		horizontal-align: center;
+
+		&--upper {
+			align: center top;
+			font-size: 20px;
+			font-weight: bold;
+		}
+
+		&--lower {
+			align: center bottom;
+			font-size: 20px;
+			font-weight: bold;
+		}
 	}
 }
