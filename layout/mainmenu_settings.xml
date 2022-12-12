@@ -324,7 +324,7 @@
 
 							<Label class="settings-nav__item-label" text="#Settings_Interface" />
 
-							<Panel class="settings-nav__subsection settings-nav__subsection--10 settings-nav__subsection--hidden">
+							<Panel class="settings-nav__subsection settings-nav__subsection--11 settings-nav__subsection--hidden">
 
 								<RadioButton
 									id="UIRadio"
@@ -387,6 +387,15 @@
 									onactivate="MainMenuSettings.navigateToSubsection('InterfaceSettings', 'WeaponSelSubSection')"
 								>
 									<Label class="settings-nav__subitem-label" text="#Settings_WeaponSelection_Title" />
+								</RadioButton>
+								
+								<RadioButton
+									id="JumpStatsRadio"
+									class="settings-nav__subitem"
+									group="SettingsSubNav"
+									onactivate="MainMenuSettings.navigateToSubsection('InterfaceSettings', 'JumpStatsSubSection')"
+								>
+									<Label class="settings-nav__subitem-label" text="Jump Stats" />
 								</RadioButton>
 
 								<RadioButton

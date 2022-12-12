@@ -687,6 +687,16 @@ $strafesync-color-increase: $blue !default;
 $strafesync-color-decrease: $red !default;
 
 // ================
+// JUMP STATS
+// ================
+$jump-stats-width: 600px !default;
+$jump-stats-height: 200px !default;
+$jump-stats-font-size: 16px !default;
+$jump-stats-color-default: $white !default;
+$jump-stats-color-increase: $blue !default;
+$jump-stats-color-decrease: $red !default;
+
+// ================
 // TIMER
 // ================
 $timer-font-weight: black !default;

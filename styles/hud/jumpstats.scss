@@ -1,0 +1,92 @@
+@use '../config' as *;
+@use '../abstract/mixin';
+
+.jumpstats {
+	align: center top;
+
+	&__container {
+		width: fit-children; //$jump-stats-width;
+		height: fit-children; //$jump-stats-height;
+		flow-children: right;
+		padding: 5px;
+		background-color: rgba(0, 0, 0, 0.3);
+	}
+
+	&__label {
+		@include mixin.font-styles($use-header: false);
+		align: center bottom;
+		margin: 5px;
+		flow-children: up;
+		vertical-align: top;
+		color: $jump-stats-color-default;
+
+		&--name {
+			width: 100%;
+			font-size: $jump-stats-font-size;
+			text-align: center;
+			border-top: 1px solid white;
+		}
+
+		&--values {
+			horizontal-align: center;
+			font-size: $jump-stats-font-size;
+			text-align: right;
+		}
+
+		&--increase {
+			color: $jump-stats-color-increase;
+		}
+
+		&--decrease {
+			color: $jump-stats-color-decrease;
+		}
+
+		&--count {
+			max-width: 60px;
+		}
+
+		&--speed {
+			width: 60px;
+		}
+
+		&--speed-delta {
+			width: 60px;
+		}
+
+		&--time {
+			width: 100px;
+		}
+
+		&--time-delta {
+			width: 60px;
+		}
+
+		&--strafes {
+			width: 60px;
+		}
+
+		&--sync {
+			width: 60px;
+		}
+
+		&--gain {
+			width: 60px;
+		}
+
+		&--strafe-ratio {
+			width: 80px;
+		}
+
+		&--height-delta {
+			width: 80px;
+		}
+
+		&--distance {
+			width: 80px;
+		}
+
+		&--efficiency {
+			width: 60px;
+		}
+	}
+}

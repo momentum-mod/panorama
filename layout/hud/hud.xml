@@ -82,6 +82,7 @@
 			<ChaosHudShowPos />
 			<ChaosHudBoneCounts />
 			<MomHudSpectate id="Spectator" />
+			<MomHudJumpStats />
 		</Panel>
 
 		<TrickList id="TrickList" />
