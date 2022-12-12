@@ -246,8 +246,6 @@ class Cgaz {
 	}
 
 	static onUpdate() {
-		if (!this.accel_enable && !this.snap_enable) return;
-
 		if (this.bShouldUpdateStyles) this.applyStyles();
 
 		// clear last frame's split zones
@@ -511,7 +509,7 @@ class Cgaz {
 					? this.compass_color
 					: this.compass_hl_color;
 		}
-		this.pitchLine.visible = this.compass_pitch_enable;
+		this.pitchLine.visible = this.compass_pitch_enable === 1;
 
 		// compass stats
 		if (this.compass_stat_mode) {
