@@ -623,15 +623,15 @@
 
 				<Panel class="settings-group__header">
 
-					<Label class="settings-group__title" text="Jump Stats" />
+					<Label class="settings-group__title" text="#Settings_JumpStats_Title" />
 
 					<Panel class="flow-right horizontal-align-right">
 
 						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Jump Stats', 'JumpStatsSubSection')">
-							<Label class="button__text" text="Import/Export" />
+							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
 
-						<TooltipPanel class="settings-group__reset" tooltip="Reset">
+						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
 							<Button class="button" onactivate="SettingsShared.resetSettings('JumpStatsSubSection');">
 								<Image class="button__icon" src="file://{images}/reset.svg" />
 							</Button>
@@ -641,125 +641,143 @@
 
 				</Panel>
 
-					<ChaosSettingsEnum text="Show jump stats" convar="mom_hud_jstats_enable" infomessage="When enabled, the .">
-						<RadioButton group="jumpstatsenable" text="Off" value="0" />
-						<RadioButton group="jumpstatsenable" text="On" value="1" />
+					<ChaosSettingsEnum
+					text="#Settings_JumpStats_Enable"
+					convar="mom_hud_jstats_enable"
+					infomessage="#Settings_JumpStats_Enable_Info"
+				>
+						<RadioButton group="jumpstatsenable" text="#Common_Off" value="0" />
+						<RadioButton group="jumpstatsenable" text="#Common_On" value="1" />
 					</ChaosSettingsEnum>
 
 				<ConVarEnabler convar="mom_hud_jstats_enable" class="flow-down">
 					<ChaosSettingsSlider
-						text="First"
+						text="#Settings_JumpStats_First"
 						min="0"
 						max="10"
 						convar="mom_hud_jstats_first"
 						displayprecision="0"
-						infomessage="First jump to print jump stats."
+						infomessage="#Settings_JumpStats_First_Info"
 						hasdocspage="false"
 					/>
 				
 					<ChaosSettingsSlider
-						text="Interval"
+						text="#Settings_JumpStats_Interval"
 						min="1"
 						max="10"
 						convar="mom_hud_jstats_interval"
 						displayprecision="0"
-						infomessage="Number of jumps between jump stat messages. Setting -1 prevents printing recurring jump stats (only first data is displayed)."
+						infomessage="#Settings_JumpStats_Interval_Info"
+						hasdocspage="false"
+					/>
+				
+					<ChaosSettingsSlider
+						text="#Settings_JumpStats_Log"
+						min="1"
+						max="10"
+						convar="mom_hud_jstats_log"
+						displayprecision="0"
+						infomessage="#Settings_JumpStats_Log_Info"
 						hasdocspage="false"
 					/>
 				
 					<ChaosSettingsEnum
-						text="Takeoff speed"
+						text="#Settings_JumpStats_TakeoffSpeed"
 						convar="mom_hud_jstats_takeoff_speed_enable"
-						infomessage="Show jump takeoff speed in jump stats."
+						infomessage="#Settings_JumpStats_TakeoffSpeed_Info"
 					>
-						<RadioButton group="takeoffspeed" text="Off" value="0" />
-						<RadioButton group="takeoffspeed" text="On" value="1" />
+						<RadioButton group="takeoffspeed" text="#Common_Off" value="0" />
+						<RadioButton group="takeoffspeed" text="#Common_On" value="1" />
 					</ChaosSettingsEnum>
 
 					<ChaosSettingsEnum
-						text="Speed Delta"
+						text="#Settings_JumpStats_SpeedDelta"
 						convar="mom_hud_jstats_speed_delta_enable"
-						infomessage="Show jump speed delta in jump stats."
+						infomessage="#Settings_JumpStats_SpeedDelta_Info"
 					>
-						<RadioButton group="deltaspeed" text="Off" value="0" />
-						<RadioButton group="deltaspeed" text="On" value="1" />
+						<RadioButton group="deltaspeed" text="#Common_Off" value="0" />
+						<RadioButton group="deltaspeed" text="#Common_On" value="1" />
 					</ChaosSettingsEnum>
 
 					<ChaosSettingsEnum
-						text="Takeoff time"
+						text="#Settings_JumpStats_TakeoffTime"
 						convar="mom_hud_jstats_takeoff_time_enable"
-						infomessage="Show jump takeoff time in jump stats."
+						infomessage="#Settings_JumpStats_TakeoffTime_Info"
 					>
-						<RadioButton group="jumptime" text="Off" value="0" />
-						<RadioButton group="jumptime" text="On" value="1" />
+						<RadioButton group="jumptime" text="#Common_Off" value="0" />
+						<RadioButton group="jumptime" text="#Common_On" value="1" />
 					</ChaosSettingsEnum>
 
 					<ChaosSettingsEnum
-						text="Jump time delta"
+						text="#Settings_JumpStats_TimeDelta"
 						convar="mom_hud_jstats_time_delta_enable"
-						infomessage="Show jump time delta in jump stats."
+						infomessage="#Settings_JumpStats_TimeDelta_Info"
 					>
-						<RadioButton group="jumptimedelta" text="Off" value="0" />
-						<RadioButton group="jumptimedelta" text="On" value="1" />
+						<RadioButton group="jumptimedelta" text="#Common_Off" value="0" />
+						<RadioButton group="jumptimedelta" text="#Common_On" value="1" />
 					</ChaosSettingsEnum>
 
 					<ChaosSettingsEnum
-						text="Strafe sync"
+						text="#Settings_JumpStats_StrafeSync"
 						convar="mom_hud_jstats_strafe_sync_enable"
-						infomessage="Show ratio of speed gain ticks to jump ticks in jump stats."
+						infomessage="#Settings_JumpStats_StrafeSync_Info"
 					>
-						<RadioButton group="syncratio" text="Off" value="0" />
-						<RadioButton group="syncratio" text="On" value="1" />
+						<RadioButton group="syncratio" text="#Common_Off" value="0" />
+						<RadioButton group="syncratio" text="#Common_On" value="1" />
 					</ChaosSettingsEnum>
 
 					<ChaosSettingsEnum
-						text="Strafe count"
+						text="#Settings_JumpStats_StrafeCount"
 						convar="mom_hud_jstats_strafe_count_enable"
-						infomessage="Show number of strafes in jump stats."
+						infomessage="#Settings_JumpStats_StrafeCount_Info"
 					>
-						<RadioButton group="jumpstrafes" text="Off" value="0" />
-						<RadioButton group="jumpstrafes" text="On" value="1" />
+						<RadioButton group="jumpstrafes" text="#Common_Off" value="0" />
+						<RadioButton group="jumpstrafes" text="#Common_On" value="1" />
 					</ChaosSettingsEnum>
 
 					<ChaosSettingsEnum
-						text="Speed Gain"
+						text="#Settings_JumpStats_SpeedGain"
 						convar="mom_hud_jstats_speed_gain_enable"
-						infomessage="Show speed gain ratio in jump stats. Speed gain is calculated as the ratio of actual speed gained from strafing to ideal maximum speed gain."
+						infomessage="#Settings_JumpStats_SpeedGain_Info"
 					>
-						<RadioButton group="speedgain" text="Off" value="0" />
-						<RadioButton group="speedgain" text="On" value="1" />
+						<RadioButton group="speedgain" text="#Common_Off" value="0" />
+						<RadioButton group="speedgain" text="#Common_On" value="1" />
 					</ChaosSettingsEnum>
 
 					<ChaosSettingsEnum
-						text="Strafe ratio (JSS)"
+						text="#Settings_JumpStats_StrafeRatio"
 						convar="mom_hud_jstats_strafe_ratio_enable"
-						infomessage="Strafe ratio is calculated as the ratio of actual strafe angle to ideal strafe angle."
+						infomessage="#Settings_JumpStats_StrafeRatio_Info"
 					>
-						<RadioButton group="straferatio" text="Off" value="0" />
-						<RadioButton group="straferatio" text="On" value="1" />
+						<RadioButton group="yawratio" text="#Common_Off" value="0" />
+						<RadioButton group="yawratio" text="#Common_On" value="1" />
 					</ChaosSettingsEnum>
 
 					<ChaosSettingsEnum
-						text="Height delta"
+						text="#Settings_JumpStats_HeightDelta"
 						convar="mom_hud_jstats_height_delta_enable"
-						infomessage="Show height delta in jump stats."
+						infomessage="#Settings_JumpStats_HeightDelta_Info"
 					>
-						<RadioButton group="heightdelta" text="Off" value="0" />
-						<RadioButton group="heightdelta" text="On" value="1" />
-					</ChaosSettingsEnum>
-
-					<ChaosSettingsEnum text="Distance" convar="mom_hud_jstats_distance_enable" infomessage="Show traveled jump distance.">
-						<RadioButton group="distance" text="Off" value="0" />
-						<RadioButton group="distance" text="On" value="1" />
+						<RadioButton group="heightdelta" text="#Common_Off" value="0" />
+						<RadioButton group="heightdelta" text="#Common_On" value="1" />
 					</ChaosSettingsEnum>
 
 					<ChaosSettingsEnum
-						text="Jump efficiency"
-						convar="mom_hud_jstats_efficiency_enable"
-						infomessage="Show jump efficiency in jump stats. Jump efficiency is calculated as the ratio of displacement to distance travelled."
+						text="#Settings_JumpStats_Distance"
+						convar="mom_hud_jstats_distance_enable"
+						infomessage="#Settings_JumpStats_Distance_Info"
 					>
-						<RadioButton group="efficiency" text="Off" value="0" />
-						<RadioButton group="efficiency" text="On" value="1" />
+						<RadioButton group="distance" text="#Common_Off" value="0" />
+						<RadioButton group="distance" text="#Common_On" value="1" />
+					</ChaosSettingsEnum>
+
+					<ChaosSettingsEnum
+						text="#Settings_JumpStats_Efficiency"
+						convar="mom_hud_jstats_efficiency_enable"
+						infomessage="#Settings_JumpStats_Efficiency"
+					>
+						<RadioButton group="efficiency" text="#Common_Off" value="0" />
+						<RadioButton group="efficiency" text="#Common_On" value="1" />
 					</ChaosSettingsEnum>
 				</ConVarEnabler>
 
@@ -877,7 +895,7 @@
 						convar="mom_hud_synchro_stat_mode"
 						infomessage="#Settings_Synchronizer_Stats_Mode_Info"
 					>
-						<Label id="mode0" text="#Settings_Synchronizer_StatsMode_Mode0" value="0" />
+						<Label id="mode0" text="#Common_Off" value="0" />
 						<Label id="mode1" text="#Settings_Synchronizer_StatsMode_Mode1" value="1" />
 						<Label id="mode2" text="#Settings_Synchronizer_StatsMode_Mode2" value="2" />
 					</ChaosSettingsEnumDropDown>

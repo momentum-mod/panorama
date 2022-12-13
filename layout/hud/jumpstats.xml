@@ -25,7 +25,7 @@
 				convar="mom_hud_jstats_takeoff_speed_enable"
 				togglevisibility="true"
 			>
-				<Label text="Speed" class="jumpstats__label--name" />
+				<Label text="#JumpStats_Label_Speed" class="jumpstats__label--name" />
 				<Label text="{s:speed}" id="SpeedLabel" class="jumpstats__label--values" />
 			</ConVarEnabler>
 			<ConVarEnabler
@@ -34,7 +34,7 @@
 				convar="mom_hud_jstats_speed_delta_enable"
 				togglevisibility="true"
 			>
-				<Label text="ΔS" class="jumpstats__label--name" />
+				<Label text="#JumpStats_Label_DeltaSpeed" class="jumpstats__label--name" />
 				<Label text="{s:speed_delta}" id="SpeedDeltaLabel" class="jumpstats__label--values" />
 			</ConVarEnabler>
 			<ConVarEnabler
@@ -43,7 +43,7 @@
 				convar="mom_hud_jstats_takeoff_time_enable"
 				togglevisibility="true"
 			>
-				<Label text="Time" class="jumpstats__label--name" />
+				<Label text="#JumpStats_Label_Time" class="jumpstats__label--name" />
 				<Label text="{s:time}" id="TimeLabel" class="jumpstats__label--values" />
 			</ConVarEnabler>
 			<ConVarEnabler
@@ -52,7 +52,7 @@
 				convar="mom_hud_jstats_time_delta_enable"
 				togglevisibility="true"
 			>
-				<Label text="ΔT" class="jumpstats__label--name" />
+				<Label text="JumpStats_Label_DeltaTime" class="jumpstats__label--name" />
 				<Label text="{s:time_delta}" id="TimeDeltaLabel" class="jumpstats__label--values" />
 			</ConVarEnabler>
 			<ConVarEnabler
@@ -61,7 +61,7 @@
 				convar="mom_hud_jstats_strafe_count_enable"
 				togglevisibility="true"
 			>
-				<Label text="Strafes" class="jumpstats__label--name" />
+				<Label text="#JumpStats_Label_Strafes" class="jumpstats__label--name" />
 				<Label text="{s:strafes}" id="StrafesLabel" class="jumpstats__label--values" />
 			</ConVarEnabler>
 			<ConVarEnabler
@@ -70,7 +70,7 @@
 				convar="mom_hud_jstats_strafe_sync_enable"
 				togglevisibility="true"
 			>
-				<Label text="Sync" class="jumpstats__label--name" />
+				<Label text="#JumpStats_Label_Sync" class="jumpstats__label--name" />
 				<Label text="{s:sync}" id="SyncLabel" class="jumpstats__label--values" />
 			</ConVarEnabler>
 			<ConVarEnabler
@@ -79,7 +79,7 @@
 				convar="mom_hud_jstats_speed_gain_enable"
 				togglevisibility="true"
 			>
-				<Label text="Gain" class="jumpstats__label--name" />
+				<Label text="#JumpStats_Label_Gain" class="jumpstats__label--name" />
 				<Label text="{s:gain}" id="GainLabel" class="jumpstats__label--values" />
 			</ConVarEnabler>
 			<ConVarEnabler
@@ -88,16 +88,16 @@
 				convar="mom_hud_jstats_strafe_ratio_enable"
 				togglevisibility="true"
 			>
-				<Label text="SRatio" class="jumpstats__label--name" />
+				<Label text="#JumpStats_Label_StrafeRatio" class="jumpstats__label--name" />
 				<Label text="{s:strafe_ratio}" id="StrafeRatioLabel" class="jumpstats__label--values" />
 			</ConVarEnabler>
 			<ConVarEnabler
-				id="HeightContainer"
+				id="HeightDeltaContainer"
 				class="jumpstats__label jumpstats__label--height-delta"
 				convar="mom_hud_jstats_height_delta_enable"
 				togglevisibility="true"
 			>
-				<Label text="ΔZ" class="jumpstats__label--name" />
+				<Label text="#JumpStats_Label_HeightDelta" class="jumpstats__label--name" />
 				<Label text="{s:height_delta}" id="HeightDeltaLabel" class="jumpstats__label--values" />
 			</ConVarEnabler>
 			<ConVarEnabler
@@ -106,7 +106,7 @@
 				convar="mom_hud_jstats_distance_enable"
 				togglevisibility="true"
 			>
-				<Label text="Dist" class="jumpstats__label--name" />
+				<Label text="#JumpStats_Label_Distance" class="jumpstats__label--name" />
 				<Label text="{s:distance}" id="DistanceLabel" class="jumpstats__label--values" />
 			</ConVarEnabler>
 			<ConVarEnabler
@@ -115,7 +115,7 @@
 				convar="mom_hud_jstats_efficiency_enable"
 				togglevisibility="true"
 			>
-				<Label text="Eff" class="jumpstats__label--name" />
+				<Label text="#JumpStats_Label_Efficiency" class="jumpstats__label--name" />
 				<Label text="{s:efficiency}" id="EfficiencyLabel" class="jumpstats__label--values" />
 			</ConVarEnabler>
 		</ConVarEnabler>

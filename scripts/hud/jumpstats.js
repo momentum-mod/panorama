@@ -8,15 +8,15 @@ class JumpStats {
 	/** @type {Panel} @static */
 	static panel = $.GetContextPanel();
 
-	static bufferLength = 10;
-
 	static onJumpEnded() {
 		const lastJumpStats = MomentumMovementAPI.GetLastJumpStats();
 		if (lastJumpStats.jumpCount < this.jumpStatsConfig.statsFirstPrint) {
 			return;
 		}
 
-		if (
+		if (this.jumpStatsConfig.statsInterval === 0) {
+			if (lastJumpStats.jumpCount !== this.jumpStatsConfig.statsFirstPrint) return;
+		} else if (
 			(lastJumpStats.jumpCount - this.jumpStatsConfig.statsFirstPrint) % this.jumpStatsConfig.statsInterval !==
 			0
 		) {
@@ -40,7 +40,9 @@ class JumpStats {
 	}
 
 	static initializeBuffer(size) {
-		return Array(size).fill('');
+		let buffer = Array(size).fill('\n');
+		buffer[buffer.length - 1] = '';
+		return buffer;
 	}
 
 	static addToBuffer(buffer, value) {
@@ -56,10 +58,19 @@ class JumpStats {
 
 	static onConfigChange() {
 		this.jumpStatsConfig = this.panel.jumpStatsCFG;
+		if (this.jumpStatsConfig.statsLog !== this.bufferLength) {
+			this.bufferLength = this.jumpStatsConfig.statsLog;
+			this.initializeStats();
+		}
 	}
 
 	static onLoad() {
 		this.onConfigChange();
+		this.initializeStats();
+		this.setText();
+	}
+
+	static initializeStats() {
 		this.countBuffer = this.initializeBuffer(this.bufferLength);
 		this.takeoffSpeedBuffer = this.initializeBuffer(this.bufferLength);
 		this.speedDeltaBuffer = this.initializeBuffer(this.bufferLength);
@@ -72,8 +83,6 @@ class JumpStats {
 		this.heightDeltaBuffer = this.initializeBuffer(this.bufferLength);
 		this.distanceBuffer = this.initializeBuffer(this.bufferLength);
 		this.efficiencyBuffer = this.initializeBuffer(this.bufferLength);
-
-		this.setText();
 	}
 
 	static setText() {
