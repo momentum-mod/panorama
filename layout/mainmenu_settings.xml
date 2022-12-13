@@ -395,7 +395,7 @@
 									group="SettingsSubNav"
 									onactivate="MainMenuSettings.navigateToSubsection('InterfaceSettings', 'JumpStatsSubSection')"
 								>
-									<Label class="settings-nav__subitem-label" text="Jump Stats" />
+									<Label class="settings-nav__subitem-label" text="#Settings_JumpStats_Title" />
 								</RadioButton>
 
 								<RadioButton
