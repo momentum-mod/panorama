@@ -745,9 +745,9 @@
 					</ChaosSettingsEnum>
 
 					<ChaosSettingsEnum
-						text="#Settings_JumpStats_StrafeRatio"
-						convar="mom_hud_jstats_strafe_ratio_enable"
-						infomessage="#Settings_JumpStats_StrafeRatio_Info"
+						text="#Settings_JumpStats_YawRatio"
+						convar="mom_hud_jstats_yaw_ratio_enable"
+						infomessage="#Settings_JumpStats_YawRatio_Info"
 					>
 						<RadioButton group="yawratio" text="#Common_Off" value="0" />
 						<RadioButton group="yawratio" text="#Common_On" value="1" />

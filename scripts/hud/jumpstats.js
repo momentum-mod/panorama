@@ -31,8 +31,11 @@ class JumpStats {
 		this.addToBuffer(this.strafesBuffer, lastJumpStats.strafeCount);
 		this.addToBuffer(this.syncBuffer, lastJumpStats.strafeSync.toFixed(2));
 		this.addToBuffer(this.gainBuffer, lastJumpStats.speedGain.toFixed(2));
-		this.addToBuffer(this.strafeRatioBuffer, lastJumpStats.strafeRatio.toFixed(2));
-		this.addToBuffer(this.heightDeltaBuffer, lastJumpStats.heightDelta.toFixed(1));
+		this.addToBuffer(this.yawRatioBuffer, lastJumpStats.yawRatio.toFixed(2));
+		this.addToBuffer(
+			this.heightDeltaBuffer,
+			(Math.abs(lastJumpStats.heightDelta) < 0.1 ? 0 : lastJumpStats.heightDelta).toFixed(1)
+		);
 		this.addToBuffer(this.distanceBuffer, lastJumpStats.distance.toFixed(1));
 		this.addToBuffer(this.efficiencyBuffer, lastJumpStats.efficiency.toFixed(2));
 
@@ -79,7 +82,7 @@ class JumpStats {
 		this.strafesBuffer = this.initializeBuffer(this.bufferLength);
 		this.syncBuffer = this.initializeBuffer(this.bufferLength);
 		this.gainBuffer = this.initializeBuffer(this.bufferLength);
-		this.strafeRatioBuffer = this.initializeBuffer(this.bufferLength);
+		this.yawRatioBuffer = this.initializeBuffer(this.bufferLength);
 		this.heightDeltaBuffer = this.initializeBuffer(this.bufferLength);
 		this.distanceBuffer = this.initializeBuffer(this.bufferLength);
 		this.efficiencyBuffer = this.initializeBuffer(this.bufferLength);
@@ -94,7 +97,7 @@ class JumpStats {
 		this.panel.SetDialogVariable('strafes', this.getBufferedSum(this.strafesBuffer));
 		this.panel.SetDialogVariable('sync', this.getBufferedSum(this.syncBuffer));
 		this.panel.SetDialogVariable('gain', this.getBufferedSum(this.gainBuffer));
-		this.panel.SetDialogVariable('strafe_ratio', this.getBufferedSum(this.strafeRatioBuffer));
+		this.panel.SetDialogVariable('yaw_ratio', this.getBufferedSum(this.yawRatioBuffer));
 		this.panel.SetDialogVariable('height_delta', this.getBufferedSum(this.heightDeltaBuffer));
 		this.panel.SetDialogVariable('distance', this.getBufferedSum(this.distanceBuffer));
 		this.panel.SetDialogVariable('efficiency', this.getBufferedSum(this.efficiencyBuffer));
