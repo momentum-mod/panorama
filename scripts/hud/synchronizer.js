@@ -55,12 +55,12 @@ class Synchronizer {
 		);
 		const gainRatio = this.getBufferedSum(this.gainRatioHistory);
 
-		const ratio = this.mom_hud_synchro_mode > 2 ? 1 - lastTickStats.strafeRatio : lastTickStats.strafeRatio;
-		this.addToBuffer(this.strafeRatioHistory, this.sampleWeight * this.NaNCheck(ratio, 0));
-		const strafeRatio = this.getBufferedSum(this.strafeRatioHistory);
+		const ratio = this.mom_hud_synchro_mode > 2 ? 1 - lastTickStats.yawRatio : lastTickStats.yawRatio;
+		this.addToBuffer(this.yawRatioHistory, this.sampleWeight * this.NaNCheck(ratio, 0));
+		const yawRatio = this.getBufferedSum(this.yawRatioHistory);
 
 		const colorTuple = this.mom_hud_synchro_color_enable
-			? this.getColorTuple(gainRatio, false) //strafeRight * strafeRatio > 1)
+			? this.getColorTuple(gainRatio, false) //strafeRight * yawRatio > 1)
 			: COLORS.NEUTRAL;
 		const color = `gradient(linear, 0% 0%, 0% 100%, from(${colorTuple[0]}), to(${colorTuple[1]}))`;
 		let flow;
@@ -70,11 +70,11 @@ class Synchronizer {
 				flow = direction * flip;
 				this.panels.container.style.flowChildren = flow < 0 ? 'left' : 'right';
 				this.panels.segments[0].style.backgroundColor = color;
-				this.panels.segments[0].style.width = (strafeRatio * 50).toFixed(3) + '%';
+				this.panels.segments[0].style.width = (yawRatio * 50).toFixed(3) + '%';
 				break;
 			case 2: // "Full-width throttle"
 				const absRatio = Math.abs(gainRatio);
-				flow = direction * (strafeRatio > 1 ? -1 : 1) * flip;
+				flow = direction * (yawRatio > 1 ? -1 : 1) * flip;
 				this.panels.container.style.flowChildren = flow < 0 ? 'left' : 'right';
 				this.panels.segments[0].style.backgroundColor = color;
 				this.panels.segments[0].style.width = (absRatio * 100).toFixed(3) + '%';
@@ -82,13 +82,13 @@ class Synchronizer {
 			case 3: // "Strafe indicator"
 				this.panels.container.style.flowChildren = flip < 0 ? 'left' : 'right';
 				//const offset = Math.min(Math.max(0.5 - (0.5 * direction * syncDelta) / idealDelta, 0), 1);
-				const offset = Math.min(Math.max(0.5 - 0.5 * direction * strafeRatio, 0), 1);
+				const offset = Math.min(Math.max(0.5 - 0.5 * direction * yawRatio, 0), 1);
 				this.panels.segments[0].style.width = (offset * this.indicatorPercentage).toFixed(3) + '%';
 				this.panels.segments[1].style.backgroundColor = color;
 				break;
 			case 4: // "Synchronizer"
 				this.panels.container.style.flowChildren = flip < 0 ? 'left' : 'right';
-				this.firstPanelWidth += this.syncGain * direction * strafeRatio * lastTickStats.idealGain;
+				this.firstPanelWidth += this.syncGain * direction * yawRatio * lastTickStats.idealGain;
 				this.firstPanelWidth = this.wrapValueToRange(this.firstPanelWidth, 0, this.maxSegmentWidth, true);
 				this.panels.segments[0].style.width =
 					this.NaNCheck(this.firstPanelWidth.toFixed(3), this.maxSegmentWidth) + '%';
@@ -105,11 +105,11 @@ class Synchronizer {
 		this.panels.stats[0].text =
 			`${lastJumpStats.jumpCount}: `.padStart(6, ' ') +
 			`${lastJumpStats.takeoffSpeed.toFixed()} `.padStart(6, ' ') +
-			`(${(lastJumpStats.strafeRatio * 100).toFixed(2)}%)`.padStart(10, ' ');
+			`(${(lastJumpStats.yawRatio * 100).toFixed(2)}%)`.padStart(10, ' ');
 		this.panels.stats[1].text = (lastJumpStats.speedGain * 100).toFixed(2);
 		/*
 		const colorTuple = this.mom_hud_synchro_color_enable
-			? this.getColorTuple(lastJumpStats.speedGain, lastJumpStats.strafeRatio > 0)
+			? this.getColorTuple(lastJumpStats.speedGain, lastJumpStats.yawRatio > 0)
 			: COLORS.NEUTRAL;
 		const color = `gradient(linear, 0% 0%, 0% 100%, from(${colorTuple[0]}), to(${colorTuple[1]}))`;
 		this.panels.stats.forEach((stat) => (stat.style.color = color));
@@ -273,7 +273,7 @@ class Synchronizer {
 		this.sampleWeight = 1 / this.interpFrames;
 
 		this.gainRatioHistory = this.initializeBuffer(this.interpFrames);
-		this.strafeRatioHistory = this.initializeBuffer(this.interpFrames);
+		this.yawRatioHistory = this.initializeBuffer(this.interpFrames);
 	}
 
 	static setSynchroStatMode(newStatMode) {

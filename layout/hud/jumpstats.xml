@@ -83,13 +83,13 @@
 				<Label text="{s:gain}" id="GainLabel" class="jumpstats__label--values" />
 			</ConVarEnabler>
 			<ConVarEnabler
-				id="StrafeRatioContainer"
-				class="jumpstats__label jumpstats__label--strafe-ratio"
-				convar="mom_hud_jstats_strafe_ratio_enable"
+				id="YawRatioContainer"
+				class="jumpstats__label jumpstats__label--yaw-ratio"
+				convar="mom_hud_jstats_yaw_ratio_enable"
 				togglevisibility="true"
 			>
-				<Label text="#JumpStats_Label_StrafeRatio" class="jumpstats__label--name" />
-				<Label text="{s:strafe_ratio}" id="StrafeRatioLabel" class="jumpstats__label--values" />
+				<Label text="#JumpStats_Label_YawRatio" class="jumpstats__label--name" />
+				<Label text="{s:yaw_ratio}" id="YawRatioLabel" class="jumpstats__label--values" />
 			</ConVarEnabler>
 			<ConVarEnabler
 				id="HeightDeltaContainer"
