@@ -1,5 +1,22 @@
 "Changelog"
 {
+	"0.9.5"
+	{
+		"Added (2)"
+		{
+			"1"		"Jump Stats Panorama API initial implementation"
+			"2"		"Make F13-F24 keys bindable"
+		}
+		"Fixed (2)"
+		{
+			"1"		"Crash when firing burst pistol in lobbies"
+			"2"		"Various crash fixes in map loading & physics objects"
+		}
+		"Improved (1)"
+		{
+			"1"		"VRAD -textureshadows various improvements"
+		}
+	}
 	"0.9.4"
 	{
 		"Fixed (7)"
