@@ -4,6 +4,6 @@
 	</styles>
 
 	<MomHudAmmo class="full-width">
-		<Label class="ammo__label" id="AmmoCount" />
+		<Label class="ammo__label" text="{i:ammoCount}" />
 	</MomHudAmmo>
 </root>
