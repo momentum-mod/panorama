@@ -888,18 +888,7 @@
 					<Label id="mode4" text="#Settings_Synchronizer_DisplayMode_Mode4" value="4" />
 				</ChaosSettingsEnumDropDown>
 
-
 				<ConVarEnabler convar="mom_hud_synchro_mode" class="flow-down">
-					<ChaosSettingsEnumDropDown
-						text="#Settings_Synchronizer_Stats_Mode"
-						convar="mom_hud_synchro_stat_mode"
-						infomessage="#Settings_Synchronizer_Stats_Mode_Info"
-					>
-						<Label id="mode0" text="#Common_Off" value="0" />
-						<Label id="mode1" text="#Settings_Synchronizer_StatsMode_Mode1" value="1" />
-						<Label id="mode2" text="#Settings_Synchronizer_StatsMode_Mode2" value="2" />
-					</ChaosSettingsEnumDropDown>
-				
 					<ChaosSettingsEnum
 						text="#Settings_Synchronizer_Color"
 						convar="mom_hud_synchro_color_enable"
@@ -938,6 +927,26 @@
 						<Label text="#Settings_Synchronizer_AveragingWindow_Mode3" value="10" id="buffer2" />
 						<Label text="#Settings_Synchronizer_AveragingWindow_Mode4" value="20" id="buffer3" />
 					</ChaosSettingsEnumDropDown>
+
+					<ChaosSettingsEnumDropDown
+						text="#Settings_Synchronizer_Stats_Mode"
+						convar="mom_hud_synchro_stat_mode"
+						infomessage="#Settings_Synchronizer_Stats_Mode_Info"
+					>
+						<Label id="mode0" text="#Common_Off" value="0" />
+						<Label id="mode1" text="#Settings_Synchronizer_StatsMode_Mode1" value="1" />
+						<Label id="mode2" text="#Settings_Synchronizer_StatsMode_Mode2" value="2" />
+					</ChaosSettingsEnumDropDown>
+
+					<ChaosSettingsEnum
+						text="#Settings_Synchronizer_StatColor"
+						convar="mom_hud_synchro_stat_color_enable"
+						infomessage="#Settings_Synchronizer_StatColor_Info"
+						tags="color"
+					>
+						<RadioButton group="synchrostatcolor" text="#Common_Off" value="0" />
+						<RadioButton group="synchrostatcolor" text="#Common_On" value="1" />
+					</ChaosSettingsEnum>
 				</ConVarEnabler>
 
 			</Panel>
