@@ -107,13 +107,11 @@ class Synchronizer {
 			`${lastJumpStats.takeoffSpeed.toFixed()} `.padStart(6, ' ') +
 			`(${(lastJumpStats.yawRatio * 100).toFixed(2)}%)`.padStart(10, ' ');
 		this.panels.stats[1].text = (lastJumpStats.speedGain * 100).toFixed(2);
-		/*
-		const colorTuple = this.mom_hud_synchro_color_enable
+
+		const colorTuple = this.mom_hud_synchro_stat_color_enable
 			? this.getColorTuple(lastJumpStats.speedGain, lastJumpStats.yawRatio > 0)
 			: COLORS.NEUTRAL;
-		const color = `gradient(linear, 0% 0%, 0% 100%, from(${colorTuple[0]}), to(${colorTuple[1]}))`;
-		this.panels.stats.forEach((stat) => (stat.style.color = color));
-		*/
+		this.panels.stats.forEach((stat) => (stat.style.color = colorTuple[1]));
 	}
 
 	static getColorTuple(ratio, bOverStrafing) {
@@ -281,6 +279,10 @@ class Synchronizer {
 		this.panels.wrapper.style.visibility = newStatMode === 2 ? 'collapse' : 'visible';
 	}
 
+	static setSynchroStatColorMode(newColorMode) {
+		this.mom_hud_synchro_stat_color_enable = newColorMode ?? DEFAULT_SETTING_OFF;
+	}
+
 	static NaNCheck(val, def) {
 		return isNaN(val) ? def : val;
 	}
@@ -292,6 +294,7 @@ class Synchronizer {
 		this.setSynchroDirection(GameInterfaceAPI.GetSettingFloat('mom_hud_synchro_flip_enable'));
 		this.setSynchroBufferLength(GameInterfaceAPI.GetSettingFloat('mom_hud_synchro_buffer_size'));
 		this.setSynchroStatMode(GameInterfaceAPI.GetSettingFloat('mom_hud_synchro_stat_mode'));
+		this.setSynchroColorMode(GameInterfaceAPI.GetSettingFloat('mom_hud_synchro_stat_color_enable'));
 	}
 
 	static {
@@ -303,6 +306,7 @@ class Synchronizer {
 		$.RegisterForUnhandledEvent('OnSynchroDirectionChanged', this.setSynchroDirection.bind(this));
 		$.RegisterForUnhandledEvent('OnSynchroBufferChanged', this.setSynchroBufferLength.bind(this));
 		$.RegisterForUnhandledEvent('OnSynchroStatModeChanged', this.setSynchroStatMode.bind(this));
+		$.RegisterForUnhandledEvent('OnSynchroStatColorModeChanged', this.setSynchroStatColorMode.bind(this));
 		$.RegisterForUnhandledEvent('OnJumpEnded', this.onJumpEnded.bind(this));
 		$.RegisterForUnhandledEvent('ChaosLevelInitPostEntity', this.onLoad.bind(this));
 	}
