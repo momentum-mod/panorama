@@ -27,7 +27,7 @@ class Chat {
 					if (i !== 0 && i !== typingLen - 1) {
 						strTyping += ', ';
 					} else if (i !== 0 && i === typingLen - 1) {
-						strTyping += ` ${Localize('#Chat_Typing_Conjugate')} `;
+						strTyping += ` ${$.Localize('#Chat_Typing_Conjugate')} `;
 					}
 					strTyping += FriendsAPI.GetNameForXUID(memberSteamID);
 				});
