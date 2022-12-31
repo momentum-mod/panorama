@@ -26,18 +26,18 @@ class JumpStats {
 		this.addToBuffer(this.countBuffer, lastJumpStats.jumpCount + ':');
 		this.addToBuffer(this.takeoffSpeedBuffer, lastJumpStats.takeoffSpeed.toFixed());
 		this.addToBuffer(this.speedDeltaBuffer, lastJumpStats.jumpSpeedDelta.toFixed());
-		this.addToBuffer(this.takeoffTimeBuffer, this.makeTime(lastJumpStats.takeoffTime.toFixed(3)));
+		this.addToBuffer(this.takeoffTimeBuffer, this.makeTime(lastJumpStats.takeoffTime));
 		this.addToBuffer(this.timeDeltaBuffer, lastJumpStats.timeDelta.toFixed(3));
 		this.addToBuffer(this.strafesBuffer, lastJumpStats.strafeCount);
-		this.addToBuffer(this.syncBuffer, lastJumpStats.strafeSync.toFixed(2));
-		this.addToBuffer(this.gainBuffer, lastJumpStats.speedGain.toFixed(2));
-		this.addToBuffer(this.yawRatioBuffer, lastJumpStats.yawRatio.toFixed(2));
+		this.addToBuffer(this.syncBuffer, this.makePercentage(lastJumpStats.strafeSync));
+		this.addToBuffer(this.gainBuffer, this.makePercentage(lastJumpStats.speedGain));
+		this.addToBuffer(this.yawRatioBuffer, this.makePercentage(lastJumpStats.yawRatio));
 		this.addToBuffer(
 			this.heightDeltaBuffer,
 			(Math.abs(lastJumpStats.heightDelta) < 0.1 ? 0 : lastJumpStats.heightDelta).toFixed(1)
 		);
 		this.addToBuffer(this.distanceBuffer, lastJumpStats.distance.toFixed(1));
-		this.addToBuffer(this.efficiencyBuffer, lastJumpStats.efficiency.toFixed(2));
+		this.addToBuffer(this.efficiencyBuffer, this.makePercentage(lastJumpStats.efficiency));
 
 		this.setText();
 	}
@@ -108,6 +108,10 @@ class JumpStats {
 		const minutes = (Math.floor(value / 60) % 60).toFixed().padStart(2, '0');
 		const seconds = (value % 60).toFixed(3).padStart(6, '0');
 		return `${hours}:${minutes}:${seconds}`;
+	}
+
+	static makePercentage(ratio) {
+		return (ratio * 100).toFixed(1) + '%';
 	}
 
 	static {
