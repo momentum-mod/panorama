@@ -5,10 +5,10 @@ class Chat {
 	static typingLabel = $('#ChatMemberTypingLabel');
 
 	static {
-		$.RegisterEventHandler('OnNewChatEntry', $.GetContextPanel(), Chat.onNewChatEntry);
+		$.RegisterEventHandler('OnNewChatEntry', $.GetContextPanel(), this.onNewChatEntry.bind(this));
 		$.RegisterForUnhandledEvent(
 			'PanoramaComponent_SteamLobby_OnMemberDataUpdated',
-			Chat.onSteamLobbyMemberDataUpdated
+			this.onSteamLobbyMemberDataUpdated.bind(this)
 		);
 	}
 
@@ -23,7 +23,7 @@ class Chat {
 		// TODO: We may run into issues with this in localisation, this seems like it may be specific to English
 		if (typingLen > 0) {
 			if (typingLen < 3) {
-				Chat.arrMembersTyping.forEach(function (memberSteamID, i) {
+				this.arrMembersTyping.forEach((memberSteamID, i) => {
 					if (i !== 0 && i !== typingLen - 1) {
 						strTyping += ', ';
 					} else if (i !== 0 && i === typingLen - 1) {
@@ -70,22 +70,20 @@ class Chat {
 	}
 
 	static onSteamLobbyMemberDataUpdated(data) {
-		if (!Chat.typingLabel || !Chat.typingLabel.visible) return;
+		if (!this.typingLabel || !this.typingLabel.visible) return;
 
-		Object.keys(data).forEach((memberSteamID) => {
-			if (memberSteamID === UserAPI.GetXUID()) {
-				return;
-			}
+		for (const memberSteamID of Object.keys(data)) {
+			if (memberSteamID === UserAPI.GetXUID()) return;
 
-			const index = Chat.arrMembersTyping.indexOf(memberSteamID);
+			const index = this.arrMembersTyping.indexOf(memberSteamID);
 
 			if (index === -1 && data[memberSteamID]['isTyping'] === 'y') {
-				Chat.arrMembersTyping.push(memberSteamID);
+				this.arrMembersTyping.push(memberSteamID);
 			} else if (index !== -1) {
-				Chat.arrMembersTyping.splice(index, 1);
+				this.arrMembersTyping.splice(index, 1);
 			}
-		});
+		}
 
-		Chat.typingLabel.text = Chat.createUsersTypingString(Chat.arrMembersTyping);
+		this.typingLabel.text = this.createUsersTypingString(this.arrMembersTyping);
 	}
 }
