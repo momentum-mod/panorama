@@ -1,5 +1,29 @@
 "Changelog"
 {
+	"0.9.6"
+	{
+		"Fixed (10)"
+		{
+			"1"		"Fixed crash at surf_mesa spawn"
+			"2"		"Fixed crash when building cubemaps if none are present in the map"
+			"3"		"Fixed crashes observed on surf_classics"
+			"4"		"Fixed crashes observed when mounting CS:S"
+			"5"		"Fixed fog being inconsistent in PBR shader"
+			"6"		"Fixed mat_showcamerarendertarget not working"
+			"7"		"Fixed screenshots not working with antialiaising enabled"
+			"8"		"Fixed text in Hammer being blurry"
+			"9"		"JS Exception in chat.js"
+			"10"		"Visual artifacts in surf_summer spawn area (resulting from incorrect depth blur)"
+		}
+		"Improved (5)"
+		{
+			"1"		"Ammo HUD: Use dialog variable"
+			"2"		"Depth resolve (and r_depthoverlay) implemented in DX11"
+			"3"		"Devices that do not support DX11 will no longer try to boot the game (and crash)"
+			"4"		"Linux loading performance should be greatly improved"
+			"5"		"Port Depth of Field shader to dx11"
+		}
+	}
 	"0.9.5"
 	{
 		"Added (2)"
