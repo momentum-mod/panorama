@@ -35,7 +35,7 @@ class Synchronizer {
 	static onLoad() {
 		this.initializeSettings();
 
-		if (this.mom_hud_synchro_stat_mode) this.onJumpEnded(); // show stats if enabled
+		if (this.mom_hud_synchro_stat_mode) this.onJump(); // show stats if enabled
 	}
 
 	static onUpdate() {
@@ -100,7 +100,7 @@ class Synchronizer {
 		}
 	}
 
-	static onJumpEnded() {
+	static onJump() {
 		const lastJumpStats = MomentumMovementAPI.GetLastJumpStats();
 		this.panels.stats[0].text =
 			`${lastJumpStats.jumpCount}: `.padStart(6, ' ') +
@@ -307,7 +307,7 @@ class Synchronizer {
 		$.RegisterForUnhandledEvent('OnSynchroBufferChanged', this.setSynchroBufferLength.bind(this));
 		$.RegisterForUnhandledEvent('OnSynchroStatModeChanged', this.setSynchroStatMode.bind(this));
 		$.RegisterForUnhandledEvent('OnSynchroStatColorModeChanged', this.setSynchroStatColorMode.bind(this));
-		$.RegisterForUnhandledEvent('OnJumpEnded', this.onJumpEnded.bind(this));
+		$.RegisterForUnhandledEvent('OnJumpStarted', this.onJump.bind(this));
 		$.RegisterForUnhandledEvent('ChaosLevelInitPostEntity', this.onLoad.bind(this));
 	}
 }

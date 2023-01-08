@@ -8,7 +8,7 @@ class JumpStats {
 	/** @type {Panel} @static */
 	static panel = $.GetContextPanel();
 
-	static onJumpEnded() {
+	static onJump() {
 		const lastJumpStats = MomentumMovementAPI.GetLastJumpStats();
 		if (lastJumpStats.jumpCount < this.jumpStatsConfig.statsFirstPrint) {
 			return;
@@ -115,7 +115,7 @@ class JumpStats {
 	}
 
 	static {
-		$.RegisterEventHandler('OnJumpEnded', this.container, this.onJumpEnded.bind(this));
+		$.RegisterEventHandler('OnJumpStarted', this.container, this.onJump.bind(this));
 
 		$.RegisterForUnhandledEvent('ChaosLevelInitPostEntity', this.onLoad.bind(this));
 		$.RegisterForUnhandledEvent('OnJumpStatsCFGChange', this.onConfigChange.bind(this));
