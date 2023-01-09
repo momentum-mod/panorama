@@ -4,7 +4,9 @@
 let MAX_GROUND_SPEED = 320;
 const AIR_ACCEL = 1;
 const DEFAULT_ACCEL = 2.56;
+const DEFAULT_SPEED = 320;
 const HASTE_ACCEL = 3.328; // (max speed) * (air accel = 1) * (tick interval) * (haste factor)
+const HASTE_SPEED = 416;
 
 let NEUTRAL_CLASS;
 let SLOW_CLASS;
@@ -269,8 +271,10 @@ class Cgaz {
 
 		if (lastMoveData.hasteEndTime < 0 || lastMoveData.hasteEndTime > MomentumMovementAPI.GetCurrentTime()) {
 			this.snapAccel = HASTE_ACCEL;
+			MAX_GROUND_SPEED = HASTE_SPEED;
 		} else {
 			this.snapAccel = DEFAULT_ACCEL;
+			MAX_GROUND_SPEED = DEFAULT_SPEED;
 		}
 
 		const velocity = MomentumPlayerAPI.GetVelocity();
