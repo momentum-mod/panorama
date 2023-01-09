@@ -283,7 +283,7 @@ class Cgaz {
 		const velDir = this.getNormal(velocity, 0.001);
 		const velAngle = Math.atan2(velocity.y, velocity.x);
 		const wishDir = lastMoveData.wishdir;
-		const wishAngle = this.getSizeSquared(wishDir) > 0.0001 ? Math.atan2(wishDir.y, wishDir.x) : 0;
+		const wishAngle = this.getSizeSquared(wishDir) > 0.001 ? Math.atan2(wishDir.y, wishDir.x) : 0;
 		const viewAngle = (MomentumPlayerAPI.GetAngles().y * Math.PI) / 180;
 		const viewDir = {
 			x: Math.cos(viewAngle),
@@ -294,9 +294,9 @@ class Cgaz {
 		let rightMove = this.getCross(viewDir, wishDir).toFixed();
 
 		const bIsFalling = lastMoveData.moveStatus == 0;
-		const bHasAirControl = phyMode && this.floatEquals(wishAngle, viewAngle, 0.001) && bIsFalling;
+		const bHasAirControl = phyMode && this.floatEquals(wishAngle, viewAngle, 0.01) && bIsFalling;
 		const bSnapShift =
-			!this.floatEquals(Math.abs(forwardMove), Math.abs(rightMove), 0.001) && !(phyMode && bIsFalling);
+			!this.floatEquals(Math.abs(forwardMove), Math.abs(rightMove), 0.01) && !(phyMode && bIsFalling);
 
 		// find cgaz angles
 		const angleOffset = this.remapAngle(velAngle - wishAngle);
@@ -385,7 +385,7 @@ class Cgaz {
 				let mirrorOffset = this.remapAngle(velAngle - viewAngle);
 				const inputAngle = this.remapAngle(viewAngle - wishAngle);
 
-				if (this.floatEquals(Math.abs(inputAngle), 0.25 * Math.PI, 0.001)) {
+				if (this.floatEquals(Math.abs(inputAngle), 0.25 * Math.PI, 0.01)) {
 					mirrorOffset += (inputAngle > 0 ? -1 : 1) * Math.PI * 0.25;
 					this.updateZone(
 						this.leftMirrorZone,
