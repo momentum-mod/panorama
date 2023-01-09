@@ -116,6 +116,15 @@
 				</ChaosSettingsEnumDropDown>
 
 				<ChaosSettingsEnumDropDown
+					text="#Settings_Video_TripleMonitor"
+					convar="triple_monitor_mode"
+					infomessage="#Settings_Video_TripleMonitor_Info"
+				>
+					<Label text="#Settings_General_Disabled" value="0" id="triplemonitor0" />
+					<Label text="#Settings_General_Enabled" value="1" id="triplemonitor1" />
+				</ChaosSettingsEnumDropDown>
+
+				<ChaosSettingsEnumDropDown
 					text="#Settings_Video_LaptopPower"
 					onuserinputsubmit="SettingsShared.videoSettingsOnUserInputSubmit()"
 					id="PowerSavingsMode"
