@@ -913,8 +913,8 @@
 						convar="mom_hud_synchro_flip_enable"
 						infomessage="#Settings_Synchronizer_Direction_Info"
 					>
-						<RadioButton group="synchrodirection" text="Normal" value="0" />
-						<RadioButton group="synchrodirection" text="Flipped" value="1" />
+						<RadioButton group="synchrodirection" text="#Settings_Synchronizer_Direction_Normal" value="0" />
+						<RadioButton group="synchrodirection" text="#Settings_Synchronizer_Direction_Flipped" value="1" />
 					</ChaosSettingsEnum>
 
 					<ChaosSettingsEnumDropDown
