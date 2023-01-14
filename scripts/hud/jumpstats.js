@@ -23,21 +23,38 @@ class JumpStats {
 			return;
 		}
 
-		this.addToBuffer(this.countBuffer, lastJumpStats.jumpCount + ':');
-		this.addToBuffer(this.takeoffSpeedBuffer, lastJumpStats.takeoffSpeed.toFixed());
-		this.addToBuffer(this.speedDeltaBuffer, lastJumpStats.jumpSpeedDelta.toFixed());
-		this.addToBuffer(this.takeoffTimeBuffer, this.makeTime(lastJumpStats.takeoffTime));
-		this.addToBuffer(this.timeDeltaBuffer, lastJumpStats.timeDelta.toFixed(3));
-		this.addToBuffer(this.strafesBuffer, lastJumpStats.strafeCount);
-		this.addToBuffer(this.syncBuffer, this.makePercentage(lastJumpStats.strafeSync));
-		this.addToBuffer(this.gainBuffer, this.makePercentage(lastJumpStats.speedGain));
-		this.addToBuffer(this.yawRatioBuffer, this.makePercentage(lastJumpStats.yawRatio));
-		this.addToBuffer(
-			this.heightDeltaBuffer,
-			(Math.abs(lastJumpStats.heightDelta) < 0.1 ? 0 : lastJumpStats.heightDelta).toFixed(1)
-		);
-		this.addToBuffer(this.distanceBuffer, lastJumpStats.distance.toFixed(1));
-		this.addToBuffer(this.efficiencyBuffer, this.makePercentage(lastJumpStats.efficiency));
+		if (lastJumpStats.jumpCount === 1) {
+			// Most stats are noise on the first jump when tracking jumps like css
+			// Only show takeoff speed
+			this.addToBuffer(this.countBuffer, lastJumpStats.jumpCount + ':');
+			this.addToBuffer(this.takeoffSpeedBuffer, lastJumpStats.takeoffSpeed.toFixed());
+			this.addToBuffer(this.speedDeltaBuffer, '');
+			this.addToBuffer(this.takeoffTimeBuffer, '');
+			this.addToBuffer(this.timeDeltaBuffer, '');
+			this.addToBuffer(this.strafesBuffer, '');
+			this.addToBuffer(this.syncBuffer, '');
+			this.addToBuffer(this.gainBuffer, '');
+			this.addToBuffer(this.yawRatioBuffer, '');
+			this.addToBuffer(this.heightDeltaBuffer, '');
+			this.addToBuffer(this.distanceBuffer, '');
+			this.addToBuffer(this.efficiencyBuffer, '');
+		} else {
+			this.addToBuffer(this.countBuffer, lastJumpStats.jumpCount + ':');
+			this.addToBuffer(this.takeoffSpeedBuffer, lastJumpStats.takeoffSpeed.toFixed());
+			this.addToBuffer(this.speedDeltaBuffer, lastJumpStats.jumpSpeedDelta.toFixed());
+			this.addToBuffer(this.takeoffTimeBuffer, this.makeTime(lastJumpStats.takeoffTime));
+			this.addToBuffer(this.timeDeltaBuffer, lastJumpStats.timeDelta.toFixed(3));
+			this.addToBuffer(this.strafesBuffer, lastJumpStats.strafeCount);
+			this.addToBuffer(this.syncBuffer, this.makePercentage(lastJumpStats.strafeSync));
+			this.addToBuffer(this.gainBuffer, this.makePercentage(lastJumpStats.speedGain));
+			this.addToBuffer(this.yawRatioBuffer, this.makePercentage(lastJumpStats.yawRatio));
+			this.addToBuffer(
+				this.heightDeltaBuffer,
+				(Math.abs(lastJumpStats.heightDelta) < 0.1 ? 0 : lastJumpStats.heightDelta).toFixed(1)
+			);
+			this.addToBuffer(this.distanceBuffer, lastJumpStats.distance.toFixed(1));
+			this.addToBuffer(this.efficiencyBuffer, this.makePercentage(lastJumpStats.efficiency));
+		}
 
 		this.setText();
 	}

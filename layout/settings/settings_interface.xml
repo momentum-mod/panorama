@@ -653,7 +653,7 @@
 				<ConVarEnabler convar="mom_hud_jstats_enable" class="flow-down">
 					<ChaosSettingsSlider
 						text="#Settings_JumpStats_First"
-						min="0"
+						min="1"
 						max="10"
 						convar="mom_hud_jstats_first"
 						displayprecision="0"
@@ -663,7 +663,7 @@
 				
 					<ChaosSettingsSlider
 						text="#Settings_JumpStats_Interval"
-						min="1"
+						min="0"
 						max="10"
 						convar="mom_hud_jstats_interval"
 						displayprecision="0"
