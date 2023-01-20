@@ -10,7 +10,7 @@
 		<Panel class="spectate">
 			<Panel class="spectate__status">
 				<Panel class="horizontal-align-left flow-right" id="IndicatorSpectating">
-					<Image src="file://{images}/spectating.svg" textureheight="64" scaling="stretch-to-cover-preserve-aspect" />
+					<Image src="file://{images}/spectatingIcon.svg" textureheight="64" scaling="stretch-to-cover-preserve-aspect" />
 					<Label class="text-h4" text="#Spectate_Status_Spectating" />
 				</Panel>
 				<Panel class="horizontal-align-left flow-right" id="IndicatorWatchingReplay">

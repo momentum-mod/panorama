@@ -400,7 +400,7 @@ class Lobby {
 		if (isSpectating) {
 			const specTargetName = FriendsAPI.GetNameForXUID(memberData['specTargetID']);
 
-			memberStatePanel.SetImage('file://{images}/chat/spectatingIcon.svg');
+			memberStatePanel.SetImage('file://{images}/spectatingIcon.svg');
 
 			memberStatePanel.RemoveClass('hide');
 
@@ -408,7 +408,7 @@ class Lobby {
 				UiToolkitAPI.ShowTitleImageTextTooltipStyled(
 					memberStatePanel.id,
 					'',
-					'file://{images}/chat/spectatingIcon.svg',
+					'file://{images}/spectatingIcon.svg',
 					`Specating <b>${specTargetName}</b>`,
 					'tooltip--notitle'
 				)
