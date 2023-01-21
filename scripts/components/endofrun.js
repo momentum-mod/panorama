@@ -317,7 +317,7 @@ class EndOfRun {
 		}
 
 		// Start the comparison line
-		let line = {
+		const line = {
 			// First point is just 0 on the "0" stage
 			points: [
 				{

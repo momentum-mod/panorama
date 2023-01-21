@@ -294,8 +294,8 @@ class Cgaz {
 			y: Math.sin(viewAngle)
 		};
 
-		let forwardMove = this.getDot(viewDir, wishDir).toFixed(0);
-		let rightMove = this.getCross(viewDir, wishDir).toFixed(0);
+		const forwardMove = this.getDot(viewDir, wishDir).toFixed(0);
+		const rightMove = this.getCross(viewDir, wishDir).toFixed(0);
 
 		const bIsFalling = lastMoveData.moveStatus == 0;
 		const bHasAirControl = phyMode && this.floatEquals(wishAngle, viewAngle, 0.01) && bIsFalling;
@@ -504,7 +504,7 @@ class Cgaz {
 
 		// pitch line
 		if (this.compass_pitch_enable) {
-			let pitchDelta = this.mapToScreenHeight(
+			const pitchDelta = this.mapToScreenHeight(
 				((MomentumPlayerAPI.GetAngles().x - this.compass_pitch_target) * Math.PI) / 180
 			);
 			this.pitchLine.style.height = (Number.isNaN(pitchDelta) ? 0 : pitchDelta) + 'px';

@@ -52,7 +52,7 @@ class LoadingScreen {
 	static updateLoadingScreenInfo(mapName) {
 		if (!mapName) return;
 
-		let mapData = MapCacheAPI.GetCurrentMapData();
+		const mapData = MapCacheAPI.GetCurrentMapData();
 
 		if (!mapData) {
 			// No data to go off of, just set the map name and hide the rest

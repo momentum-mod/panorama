@@ -60,7 +60,7 @@ class JumpStats {
 	}
 
 	static initializeBuffer(size) {
-		let buffer = new Array(size).fill('\n');
+		const buffer = new Array(size).fill('\n');
 		buffer[buffer.length - 1] = '';
 		return buffer;
 	}

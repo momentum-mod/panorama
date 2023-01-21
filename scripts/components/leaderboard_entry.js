@@ -50,7 +50,7 @@ class LeaderboardEntry {
 		const timeData = $.GetContextPanel().timeData;
 		if (!timeData) return;
 
-		let items = [];
+		const items = [];
 		const index = $.GetContextPanel().GetAttributeInt('item_index', 0);
 		const isValid = timeData.type !== LEADERBOARD_ENTRY_TYPE.INVALID;
 		if (isValid) {

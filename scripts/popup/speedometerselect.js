@@ -13,11 +13,11 @@ class SpeedometerSelectPopup {
 	static init() {
 		const disabledIDs = $.GetContextPanel().GetAttributeString('disabledIDs', '').split(',');
 		for (const [index, id] of disabledIDs.entries()) {
-			let speedometer = $.CreatePanel('Panel', SpeedometerSelectPopup.container, '');
+			const speedometer = $.CreatePanel('Panel', SpeedometerSelectPopup.container, '');
 			speedometer.LoadLayoutSnippet('speedometer-radiobutton');
 			speedometer.FindChildInLayoutFile('SpeedometerBtnLabel').text = SpeedometerDispNames[id];
 
-			let radioBtn = speedometer.FindChildInLayoutFile('SpeedometerRadioBtn');
+			const radioBtn = speedometer.FindChildInLayoutFile('SpeedometerRadioBtn');
 			radioBtn.SetPanelEvent('onactivate', () => {
 				SpeedometerSelectPopup.selected = id;
 			});

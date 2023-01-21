@@ -133,7 +133,7 @@ class SettingsShared {
 	static showImportExportDialogue(localeString, panelID) {
 		const section = $.GetContextPanel().FindChildTraverse(panelID);
 
-		let cvars = [];
+		const cvars = [];
 
 		const findCvarsRecursive = (panel) => {
 			if (panel.paneltype && this.isSettingsPanel(panel) && panel.convar) cvars.push(panel.convar);

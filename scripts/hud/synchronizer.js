@@ -93,7 +93,7 @@ class Synchronizer {
 				this.panels.segments[0].style.width =
 					this.NaNCheck(this.firstPanelWidth.toFixed(3), this.maxSegmentWidth) + '%';
 				for (const [i, segment] of this.panels.segments.entries()) {
-					let index = i + (this.bIsFirstPanelColored ? 1 : 0);
+					const index = i + (this.bIsFirstPanelColored ? 1 : 0);
 					segment.style.backgroundColor = index % 2 ? color : this.altColor;
 				}
 				break;

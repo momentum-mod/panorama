@@ -98,11 +98,11 @@ class SpeedometerDetailObject {
 		const selColorProfile = this.colorProfileDropdown.GetSelected()?.text;
 		this.colorProfileDropdown.SetSelectedIndex(0);
 
-		let profilesKV = SpeedometerSettingsAPI.GetColorProfiles();
+		const profilesKV = SpeedometerSettingsAPI.GetColorProfiles();
 		for (let i = 1; i < this.colorProfileDropdown.AccessDropDownMenu().GetChildCount(); i++)
 			this.colorProfileDropdown.RemoveOptionIndex(i);
 		for (const profileName of Object.keys(profilesKV)) {
-			let optionPanel = $.CreatePanel('Label', this.colorProfileDropdown.AccessDropDownMenu(), profileName);
+			const optionPanel = $.CreatePanel('Label', this.colorProfileDropdown.AccessDropDownMenu(), profileName);
 			optionPanel.text = profileName;
 			this.colorProfileDropdown.AddOption(optionPanel);
 		}
@@ -171,7 +171,7 @@ class Speedometers {
 		Speedometers.markAsModified();
 	}
 	static addSpeedometer() {
-		let disabledIDs = [];
+		const disabledIDs = [];
 		for (const speedoName of Object.keys(SpeedometerIDs).filter(
 			(speedoName) => Speedometers.objectList[SpeedometerIDs[speedoName]] === undefined
 		))
@@ -186,15 +186,15 @@ class Speedometers {
 		);
 	}
 	static addSpeedometerByID(id) {
-		let speedoName = Object.keys(SpeedometerIDs)[id];
-		let speedoKV = Speedometers.keyvalues[speedoName];
+		const speedoName = Object.keys(SpeedometerIDs)[id];
+		const speedoKV = Speedometers.keyvalues[speedoName];
 		speedoKV['visible'] = true;
 
 		Speedometers.objectList[id] = new SpeedometerDetailObject(id, speedoKV, Object.keys(SpeedometerIDs).length - 1);
 		Speedometers.markAsModified();
 	}
 	static discardChangesForSpeedometer(id, speedometerKV) {
-		let speedometerObject = Speedometers.objectList[id];
+		const speedometerObject = Speedometers.objectList[id];
 		if (!speedometerKV || !speedometerObject) {
 			$.Warning(`Discarding changes for speedometer ${id} which doesnt exist!`);
 			return;
@@ -202,7 +202,7 @@ class Speedometers {
 		speedometerObject.discardChanges(speedometerKV);
 	}
 	static markSpeedometerAsModified(id) {
-		let speedometerObject = Speedometers.objectList[id];
+		const speedometerObject = Speedometers.objectList[id];
 		if (!speedometerObject) {
 			$.Warning(`Changing speedometer ${id} which doesnt exist!`);
 			return;
@@ -211,7 +211,7 @@ class Speedometers {
 		Speedometers.markAsModified();
 	}
 	static reorderSpeedometer(id, moveup) {
-		let speedometerObject = Speedometers.objectList[id];
+		const speedometerObject = Speedometers.objectList[id];
 		if (!speedometerObject) {
 			$.Warning(`Reordering speedometer ${id} which doesnt exist!`);
 			return;
@@ -249,10 +249,10 @@ class Speedometers {
 		Speedometers.clearSpeedometers();
 		Speedometers.keyvalues = SpeedometerSettingsAPI.GetSettings(Speedometers.gamemode);
 		for (const speedoName of Object.keys(Speedometers.keyvalues).filter((speedoName) => speedoName !== 'order')) {
-			let speedoKV = Speedometers.keyvalues[speedoName];
+			const speedoKV = Speedometers.keyvalues[speedoName];
 			if (speedoKV['visible'] === 0) continue;
 
-			let id = SpeedometerIDs[speedoName];
+			const id = SpeedometerIDs[speedoName];
 			Speedometers.objectList[id] = new SpeedometerDetailObject(
 				id,
 				speedoKV,
@@ -265,9 +265,9 @@ class Speedometers {
 	}
 	static saveAllSpeedometers() {
 		for (const id of Object.keys(Speedometers.objectList)) {
-			let speedoName = Object.keys(SpeedometerIDs)[id];
+			const speedoName = Object.keys(SpeedometerIDs)[id];
 			Speedometers.keyvalues[speedoName] = {};
-			let speedoObject = Speedometers.objectList[id];
+			const speedoObject = Speedometers.objectList[id];
 			Speedometers.keyvalues['order'][speedoName] = Speedometers.mainPanel.GetChildIndex(
 				speedoObject.containingPanel
 			);
@@ -384,7 +384,7 @@ class RangeColorRangeDisplayObject {
 	}
 	saveToKV(rangeKV) {
 		const csscolor = this.displayPanel.color;
-		let rangeObject = new RangeColorObject(
+		const rangeObject = new RangeColorObject(
 			this.displayPanel.min,
 			this.displayPanel.max,
 			RangeColorObject.convertCSSToKV(csscolor),
@@ -420,7 +420,7 @@ class RangeColorProfileObject {
 		this.markAsModified();
 	}
 	deleteRange(profileName, id) {
-		let displayObject = this.displayObjectList[id];
+		const displayObject = this.displayObjectList[id];
 		if (!displayObject) {
 			$.Warning(`Deleting non-existant range ${id} from profile ${profileName}!`);
 			return;
@@ -433,7 +433,7 @@ class RangeColorProfileObject {
 	reorderDisplayPanels(displayObject, rangeObject) {
 		let found = false;
 		Object.keys(this.displayObjectList).every((id) => {
-			let dispObj = this.displayObjectList[id];
+			const dispObj = this.displayObjectList[id];
 			if (dispObj.isEqualTo(displayObject)) return true;
 
 			const otherMin = dispObj.getMin();
@@ -458,7 +458,7 @@ class RangeColorProfileObject {
 		this.displaysPanel.MoveChildAfter(displayObject.containingPanel, lastChildPanel);
 	}
 	updateRange(profileName, id, rangeObject) {
-		let displayObject = this.displayObjectList[id];
+		const displayObject = this.displayObjectList[id];
 		if (!displayObject) {
 			$.Warning(`Updating nonexistent range ${id} in profile ${profileName}!`);
 			return;
@@ -472,7 +472,7 @@ class RangeColorProfileObject {
 			$.Warning(`Adding range ${id} which already exists in profile ${profileName}`);
 			return;
 		}
-		let displayObject = new RangeColorRangeDisplayObject(id, rangeObject, this);
+		const displayObject = new RangeColorRangeDisplayObject(id, rangeObject, this);
 		this.displayObjectList[id] = displayObject;
 		this.reorderDisplayPanels(displayObject, rangeObject);
 		this.markAsModified();
@@ -488,9 +488,9 @@ class RangeColorProfileObject {
 		this.displayObjectList = {};
 
 		for (const id of Object.keys(profileKV)) {
-			let rangeKV = profileKV[id];
-			let kvcolor = rangeKV['color'];
-			let rangeObject = new RangeColorObject(
+			const rangeKV = profileKV[id];
+			const kvcolor = rangeKV['color'];
+			const rangeObject = new RangeColorObject(
 				rangeKV['min'],
 				rangeKV['max'],
 				kvcolor,
@@ -598,7 +598,7 @@ class RangeColorProfiles {
 			$.Warning(`Adding profile ${profileName} that already exists!`);
 			return;
 		}
-		let profileObject = new RangeColorProfileObject(profileName, {});
+		const profileObject = new RangeColorProfileObject(profileName, {});
 		RangeColorProfiles.objectList[profileName] = profileObject;
 		RangeColorProfiles.markAsModified();
 	}
@@ -608,7 +608,7 @@ class RangeColorProfiles {
 		RangeColorProfiles.markAsModified();
 	}
 	static updateProfileName(oldProfileName, profileName) {
-		let profileObject = RangeColorProfiles.objectList[oldProfileName];
+		const profileObject = RangeColorProfiles.objectList[oldProfileName];
 		if (!profileObject) {
 			$.Warning(`Updating old profile name ${oldProfileName} which doesnt exist!`);
 			return;
@@ -624,13 +624,13 @@ class RangeColorProfiles {
 		RangeColorProfiles.markAsModified();
 	}
 	static addRangeDisplayToProfile(profileName, rangeObject) {
-		let profileObject = RangeColorProfiles.objectList[profileName];
+		const profileObject = RangeColorProfiles.objectList[profileName];
 		if (!profileObject) {
 			$.Warning(`Adding range to profile ${profileName} which doesnt exist!`);
 			return;
 		}
 		// avoid id clashing by using one above the highest ID
-		let id =
+		const id =
 			Object.keys(profileObject.displayObjectList).length === 0
 				? 0
 				: Math.max.apply(null, Object.keys(profileObject.displayObjectList)) + 1;
@@ -638,7 +638,7 @@ class RangeColorProfiles {
 		RangeColorProfiles.markAsModified();
 	}
 	static deleteRangeFromProfile(profileName, id) {
-		let profileObject = RangeColorProfiles.objectList[profileName];
+		const profileObject = RangeColorProfiles.objectList[profileName];
 		if (!profileObject) {
 			$.Warning(`Deleting range from profile ${profileName} which doesnt exist!`);
 			return;
@@ -647,7 +647,7 @@ class RangeColorProfiles {
 		RangeColorProfiles.markAsModified();
 	}
 	static updateRangeInProfile(profileName, id, rangeObject) {
-		let profileObject = RangeColorProfiles.objectList[profileName];
+		const profileObject = RangeColorProfiles.objectList[profileName];
 		if (!profileObject) {
 			$.Warning(`Changing range in profile ${profileName} which doesnt exist!`);
 			return;
@@ -656,7 +656,7 @@ class RangeColorProfiles {
 		RangeColorProfiles.markAsModified();
 	}
 	static discardChangesForProfile(originalName, profileName, profileKV) {
-		let profileObject = RangeColorProfiles.objectList[profileName];
+		const profileObject = RangeColorProfiles.objectList[profileName];
 		if (!profileKV || !profileObject) {
 			$.Warning(`Discarding profile ${profileName} which doesnt exist!`);
 			return;
@@ -682,10 +682,10 @@ class RangeColorProfiles {
 		}
 	}
 	static saveAllProfiles() {
-		let keyvalues = {};
+		const keyvalues = {};
 		for (const profileName of Object.keys(RangeColorProfiles.objectList)) {
 			keyvalues[profileName] = {};
-			let profileObject = RangeColorProfiles.objectList[profileName];
+			const profileObject = RangeColorProfiles.objectList[profileName];
 			profileObject.saveToKV(keyvalues[profileName]);
 			profileObject.markAsUnmodified();
 		}
@@ -715,7 +715,7 @@ class RangeColorProfiles {
 	}
 
 	static makeColorProfileNamePopup(prefilledText, OKBtnText, callback) {
-		let profileNames = [];
+		const profileNames = [];
 		for (const profileName of Object.keys(RangeColorProfiles.objectList)) profileNames.push(profileName);
 		UiToolkitAPI.ShowCustomLayoutPopupParameters(
 			'',

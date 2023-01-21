@@ -57,7 +57,7 @@ class HudLeaderboards {
 		const authorCredits = credits.filter((x) => x.type === 'author');
 
 		for (const credit of authorCredits) {
-			let namePanel = $.CreatePanel('Label', this.panels.credits, '', {
+			const namePanel = $.CreatePanel('Label', this.panels.credits, '', {
 				text: credit.user.alias
 			});
 
@@ -80,7 +80,7 @@ class HudLeaderboards {
 
 			// hoped this would make contextmenu work but it doesn't
 			if (authorCredits.indexOf(credit) < authorCredits.length - 1) {
-				let commaPanel = $.CreatePanel('Label', this.panels.credits, '');
+				const commaPanel = $.CreatePanel('Label', this.panels.credits, '');
 				commaPanel.AddClass('hud-leaderboards-map-info__credits-other-text');
 				commaPanel.text = ',';
 			}

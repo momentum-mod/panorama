@@ -233,7 +233,7 @@ class Speedometer {
 	}
 
 	static update(speedoID, velocity, hasComparison = true, customdiff) {
-		let speedometer = Speedometers[speedoID];
+		const speedometer = Speedometers[speedoID];
 		if (!speedometer.settings || !speedometer.settings.visible) return;
 
 		switch (speedometer.settings.units) {
@@ -256,7 +256,7 @@ class Speedometer {
 			const speed = speedoID === SpeedometerIDs.EnergySpeedometer ? velocity : Math.abs(velocity);
 			const diff = !customdiff ? speed - speedometer.prevVal : customdiff;
 
-			let labelToColor = separateComparison ? speedometer.comparisonlabel : speedometer.label;
+			const labelToColor = separateComparison ? speedometer.comparisonlabel : speedometer.label;
 			let diffSymbol;
 			if (diff - this.correctedColorizeDeadzone > 0) {
 				labelToColor.AddClass(INCREASE_CLASS);
