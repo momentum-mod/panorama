@@ -31,7 +31,7 @@ exports.jsonToKV1 = (jsonData, header) => {
 		tabDepth--;
 	};
 
-	let output = `\"${header}\" \n{\n`;
+	let output = `"${header}" \n{\n`;
 	doObject(jsonData);
 	out('}');
 	return output;
