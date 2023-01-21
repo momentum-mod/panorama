@@ -48,12 +48,12 @@ class StrafeSync {
 
 		this.lastValue = value;
 
-		for (let colorclassfgKey in COLOR_CLASS_FG) {
+		for (const colorclassfgKey in COLOR_CLASS_FG) {
 			this.label.RemoveClass(COLOR_CLASS_FG[colorclassfgKey]);
 		}
 		this.label.AddClass(COLOR_CLASS_FG[colorIndex]);
 
-		for (let colorclassbgKey in COLOR_CLASS_BG) {
+		for (const colorclassbgKey in COLOR_CLASS_BG) {
 			this.bar.RemoveClass(COLOR_CLASS_BG[colorclassbgKey]);
 		}
 		this.bar.AddClass(COLOR_CLASS_BG[colorIndex]);

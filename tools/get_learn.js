@@ -16,7 +16,7 @@ axios
 			delete dataArray[i]['Ignore Me!'];
 			delete dataArray[i]['Shippable'];
 		}
-		let data = {};
+		const data = {};
 		for (const mode of ['Surf', 'Bhop', 'Climb', 'RJ', 'SJ', 'Tricksurf', 'Ahop', 'Parkour', 'Conc', 'Defrag'])
 			for (const [index, lesson] of dataArray.filter((lesson) => lesson['Mode'] === mode).entries())
 				data[mode] = {

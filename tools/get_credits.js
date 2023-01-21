@@ -112,7 +112,7 @@ class xmlStringBuilder {
 			data[key] = value;
 		}
 
-		let xmlString = new xmlStringBuilder();
+		const xmlString = new xmlStringBuilder();
 
 		for (const type of Object.values(TYPES)) {
 			xmlString.openPanel('Label', { class: `${CREDITS_CLASS}__header`, text: type.title }, true);

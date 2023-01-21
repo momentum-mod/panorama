@@ -465,7 +465,7 @@ class MapSelection {
 		if (hasCredits) {
 			// Add them to the panel
 			for (const [i, credit] of authorCredits.entries()) {
-				let namePanel = $.CreatePanel('Label', this.panels.credits, '', {
+				const namePanel = $.CreatePanel('Label', this.panels.credits, '', {
 					text: credit.user.alias,
 					class: 'mapselector-credits__text mapselector-credits__name'
 				});
@@ -485,7 +485,7 @@ class MapSelection {
 				}
 
 				if (i < authorCredits.length - 1) {
-					let commaPanel = $.CreatePanel('Label', this.panels.credits, '');
+					const commaPanel = $.CreatePanel('Label', this.panels.credits, '');
 					commaPanel.AddClass('mapselector-credits__text');
 					commaPanel.text = ',  ';
 				}
@@ -506,7 +506,8 @@ class MapSelection {
 	static onNStateBtnChanged(panelID, state) {
 		const panel = $.GetContextPanel().FindChildTraverse(panelID);
 
-		for (let type of Array.from({ length: 3 }).keys()) panel.SetHasClass(MapSelNStateClasses[type], state === type);
+		for (const type of Array.from({ length: 3 }).keys())
+			panel.SetHasClass(MapSelNStateClasses[type], state === type);
 	}
 
 	/**

@@ -12,7 +12,7 @@ class MapEntry {
 		}
 
 		const mapID = mapData.id;
-		let items = [];
+		const items = [];
 
 		for (let i = 1; i < GameModeAPI.GetGameModeCount(); i++) {
 			items.push({
@@ -30,7 +30,7 @@ class MapEntry {
 		const mapData = $.GetContextPanel().mapData;
 		if (!mapData) return;
 
-		let items = [];
+		const items = [];
 		const isDownloading = $.GetContextPanel().isDownloading;
 		const mapID = mapData.id;
 
@@ -125,9 +125,8 @@ class MapEntry {
 		if (mapData.isCompleted) {
 			pbPanel.RemoveClass('hide');
 
-			let icon;
 			// Do G1-6 here when it's hooked up
-			icon = mapData.pr.rank <= 10 ? 'file://{images}/ranks/top10.svg' : 'file://{images}/flag.svg';
+			const icon = mapData.pr.rank <= 10 ? 'file://{images}/ranks/top10.svg' : 'file://{images}/flag.svg';
 
 			pbIcon.SetImage(icon);
 

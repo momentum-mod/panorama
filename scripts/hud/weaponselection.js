@@ -45,7 +45,7 @@ class WeaponSelection {
 		weaponPanel.LoadLayoutSnippet('Weapon');
 
 		const weaponSlot = MomentumWeaponAPI.GetWeaponSlot(id) + 1;
-		let keybindPanel = weaponPanel.FindChildTraverse('WeaponKeyBind');
+		const keybindPanel = weaponPanel.FindChildTraverse('WeaponKeyBind');
 		if (weaponSlot >= 0) keybindPanel.SetTextWithDialogVariables(`{v:csgo_bind:e:bind_slot${weaponSlot}}`);
 		else keybindPanel.visible = false;
 

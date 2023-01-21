@@ -140,7 +140,7 @@ class LineGraph {
 			if (!line.points) continue;
 
 			// Array to send to the canvas
-			let canvasPoints = [];
+			const canvasPoints = [];
 
 			// Loop through all the points in the class creating the panels for each, and generating an array of points in a format
 			// that UICanvas likes.
@@ -185,7 +185,7 @@ class LineGraph {
 
 				// Draw a polygon in the polyPoints array, then clear it
 				const drawPoly = (isAbove) => {
-					let formattedArray = [];
+					const formattedArray = [];
 					for (const [i, _] of polyPoints.entries()) {
 						const relativedPoints = this.#getRelativisedPosition(
 							polyPoints[isAbove ? i : polyPoints.length - i - 1]
@@ -238,8 +238,8 @@ class LineGraph {
 					}
 				};
 
-				let isDoingAbovePoly = false;
-				let isDoingBelowPoly = false;
+				const isDoingAbovePoly = false;
+				const isDoingBelowPoly = false;
 
 				if (line.shadeAboveToOriginColor) findPoly(true, isDoingAbovePoly);
 				if (line.shadeBelowToOriginColor) findPoly(false, isDoingBelowPoly);

@@ -18,7 +18,7 @@ class Chat {
 
 	static createUsersTypingString(users) {
 		let strTyping = '';
-		let typingLen = users.length;
+		const typingLen = users.length;
 
 		// TODO: We may run into issues with this in localisation, this seems like it may be specific to English
 		if (typingLen > 0) {

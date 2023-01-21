@@ -228,7 +228,7 @@ class Lobby {
 
 		const data = this.lobbyListData;
 
-		let known_ids = [];
+		const known_ids = [];
 		// The sort actually works out how we want it (current < friends < global)
 		// TODO: Sort based on other orderings e.g. player count
 		for (const origin of Object.keys(data).sort()) {
@@ -329,7 +329,7 @@ class Lobby {
 	 * @param {number} memberSteamID
 	 */
 	static updateMemberListItem(memberSteamID) {
-		let memberData = this.lobbyMemberData[memberSteamID];
+		const memberData = this.lobbyMemberData[memberSteamID];
 		let panel = memberData['panel'];
 
 		if (!panel) {
