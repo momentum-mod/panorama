@@ -133,10 +133,7 @@ class MapEntry {
 			pbIcon.SetImage(icon);
 
 			let time = mapData.pr.run.time;
-
-			if (!time.includes(':')) {
-				Number.parseInt(time) >= 10 ? (time = '0:' + time) : (time = '0:0' + time);
-			}
+			if (!time.includes(':')) time = Number.parseInt(time) >= 10 ? '0:' + time : '0:0' + time;
 
 			pbLabel.text = time.split('.')[0];
 
