@@ -297,7 +297,7 @@ class Cgaz {
 		const forwardMove = this.getDot(viewDir, wishDir).toFixed(0);
 		const rightMove = this.getCross(viewDir, wishDir).toFixed(0);
 
-		const bIsFalling = lastMoveData.moveStatus == 0;
+		const bIsFalling = lastMoveData.moveStatus === 0;
 		const bHasAirControl = phyMode && this.floatEquals(wishAngle, viewAngle, 0.01) && bIsFalling;
 		const bSnapShift =
 			!this.floatEquals(Math.abs(forwardMove), Math.abs(rightMove), 0.01) && !(phyMode && bIsFalling);
@@ -868,7 +868,7 @@ class Cgaz {
 		return string
 			.slice(5, -1)
 			.split(',')
-			.map((c, i) => (i == 3 ? Number.parseInt(c * 255) : Number.parseInt(c)));
+			.map((c, i) => (i === 3 ? Number.parseInt(c * 255) : Number.parseInt(c)));
 	}
 
 	static colorLerp(A, B, alpha) {

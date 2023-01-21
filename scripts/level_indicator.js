@@ -25,7 +25,7 @@ class LevelIndicator {
 		const prestige = this.getPrestige(level);
 
 		for (let i = 1; i <= 11; i++) {
-			cp.SetHasClass('levelindicator--' + i, i == this.getLevelColor(level));
+			cp.SetHasClass('levelindicator--' + i, i === this.getLevelColor(level));
 		}
 
 		cp.SetDialogVariableInt('level', innerLevel);
@@ -33,8 +33,8 @@ class LevelIndicator {
 		this.panels.icon.SetImage(this.getImageForPrestige(prestige));
 
 		// No icon for prestige 0
-		this.panels.icon.SetHasClass('levelindicator__icon--hidden', prestige == 0);
-		this.panels.iconIncrement.SetHasClass('levelindicator__icon--hidden', prestige == 0);
+		this.panels.icon.SetHasClass('levelindicator__icon--hidden', prestige === 0);
+		this.panels.iconIncrement.SetHasClass('levelindicator__icon--hidden', prestige === 0);
 
 		// Max level gets special styling
 		cp.SetHasClass('levelindicator--max', level > 3000);
@@ -53,13 +53,13 @@ class LevelIndicator {
 			panel.style.animationDuration = `${animDuration}s`;
 
 		cp.SetDialogVariableInt('level_incr', this.getInnerLevel(newLevel));
-		this.panels.iconIncrement.SetHasClass('levelindicator__icon--hidden', this.getPrestige(newLevel) == 0);
+		this.panels.iconIncrement.SetHasClass('levelindicator__icon--hidden', this.getPrestige(newLevel) === 0);
 		this.panels.iconIncrement.SetImage(this.getImageForPrestige(this.getPrestige(newLevel)));
 
 		cp.AddClass('levelindicator--incrementing');
 		cp.SetHasClass(
 			'levelindicator--bg-incrementing',
-			this.getLevelColor(newLevel) != this.getLevelColor(this.totalLevel)
+			this.getLevelColor(newLevel) !== this.getLevelColor(this.totalLevel)
 		);
 
 		$.Schedule(animDuration, () => {

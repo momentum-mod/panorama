@@ -103,7 +103,7 @@ class EndOfRunXP {
 
 		this.panels.cp.SetDialogVariableInt('new_xp', newXP.xp - oldXP.xp);
 
-		if (levelDiff == 0) {
+		if (levelDiff === 0) {
 			runXPCounter(oldXP.xp, newXP.xp, newXP.nextLevelXP, BASE_LEVELUP_TIME);
 			endLevelUpAnimation(false);
 		} else {
@@ -114,7 +114,7 @@ class EndOfRunXP {
 
 			runXPCounter(oldXP.xp, oldXP.nextLevelXP, oldXP.nextLevelXP, initialDuration);
 
-			if (levelDiff == 1) {
+			if (levelDiff === 1) {
 				widthAnimation(100 - this.primaryWidth, lerp * initialDuration).then(() => {
 					levelUp(LEVEL_INDICATOR_MAX_TRANSITION_TIME);
 					runXPCounter(newXP.currLevelXP, newXP.xp, newXP.nextLevelXP, BASE_LEVELUP_TIME);

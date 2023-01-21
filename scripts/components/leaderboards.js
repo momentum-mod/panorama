@@ -67,9 +67,9 @@ class Leaderboards {
 		this.panels.timesContainer.RemoveClass('leaderboard-times__main--loading');
 		this.panels.timesContainer.RemoveClass('leaderboard-times__main--empty');
 
-		if (statusType == LEADERBOARD_STATUS_TYPE.STATUS_TIMES_LOADING) {
+		if (statusType === LEADERBOARD_STATUS_TYPE.STATUS_TIMES_LOADING) {
 			this.panels.timesContainer.AddClass('leaderboard-times__main--loading');
-		} else if (count == 0) {
+		} else if (count === 0) {
 			let warningText = null;
 			switch (statusType) {
 				case LEADERBOARD_STATUS_TYPE.STATUS_NO_TIMES_RETURNED:

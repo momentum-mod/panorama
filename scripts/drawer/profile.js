@@ -40,7 +40,7 @@ class Profile {
 		for (let i = 1; i <= 10; i++) {
 			this.panels.levelIndicatorsContainer.SetHasClass(
 				'profile-level-indicators--' + i,
-				i == indicatorClass.getLevelColor(level)
+				i === indicatorClass.getLevelColor(level)
 			);
 		}
 

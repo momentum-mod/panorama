@@ -89,7 +89,7 @@ class LeaderboardEntry {
 
 		if (
 			timeData.type === LEADERBOARD_ENTRY_TYPE.ONLINE ||
-			timeData.type == LEADERBOARD_ENTRY_TYPE.ONLINE_CACHED ||
+			timeData.type === LEADERBOARD_ENTRY_TYPE.ONLINE_CACHED ||
 			!isValid
 		) {
 			items.push({

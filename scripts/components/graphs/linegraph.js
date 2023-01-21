@@ -73,7 +73,7 @@ class LineGraph {
 		// Loop through each axis and draw gridlines, axis names, and markers
 		for (const [i, axisName] of ['x', 'y'].entries()) {
 			const cp = $.GetContextPanel();
-			const isX = i == 0;
+			const isX = i === 0;
 			const axis = this.axis[i];
 			const markers = cp.FindChildTraverse(axisName.toUpperCase() + 'Markers');
 
@@ -121,7 +121,7 @@ class LineGraph {
 						class:
 							'linegraph__gridline linegraph__gridline--' +
 							axisName +
-							(!isX && markerValue == 0 ? ' linegraph__gridline--axis' : ''),
+							(!isX && markerValue === 0 ? ' linegraph__gridline--axis' : ''),
 						style: offset
 					});
 			}
@@ -208,7 +208,7 @@ class LineGraph {
 							trackingBool = true;
 
 							// Ignore 0 zero, next iteration handles it.
-							if (i == 0) continue;
+							if (i === 0) continue;
 
 							const lastPoint = line.points[i - 1];
 							if (isAbove ? lastPoint.y > 0 : lastPoint.y < 0) {
