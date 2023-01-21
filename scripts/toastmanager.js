@@ -131,7 +131,7 @@ class ToastManager {
 			existingToast.panel.TriggerClass('toast--wiggle');
 
 			this.initToastBehaviour(existingToast);
-		} else if (this.queuedToasts[toast.location].find((t) => t.isIdenticalTo(toast))) {
+		} else if (this.queuedToasts[toast.location].some((t) => t.isIdenticalTo(toast))) {
 			return;
 		} else if (this.activeToasts[toast.location].length <= MAX_ACTIVE_TOASTS) {
 			this.createToast(toast);
