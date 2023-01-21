@@ -60,21 +60,23 @@ class MapEntry {
 					});
 				}
 			} else {
-				items.push({
-					label: $.Localize('#Action_StartMap'),
-					icon: 'file://{images}/play.svg',
-					style: 'icon-color-green',
+				items.push(
+					{
+						label: $.Localize('#Action_StartMap'),
+						icon: 'file://{images}/play.svg',
+						style: 'icon-color-green',
 
-					jsCallback: () => $.DispatchEvent('MapSelector_TryPlayMap', mapID)
-				});
+						jsCallback: () => $.DispatchEvent('MapSelector_TryPlayMap', mapID)
+					},
 
-				// Gamemode override submenu
-				items.push({
-					label: $.Localize('#Action_StartMapOverride'),
-					icon: 'file://{images}/alternative-mode.svg',
-					style: 'icon-color-green',
-					jsCallback: () => this.showGameModeOverrideMenu()
-				});
+					// Gamemode override submenu
+					{
+						label: $.Localize('#Action_StartMapOverride'),
+						icon: 'file://{images}/alternative-mode.svg',
+						style: 'icon-color-green',
+						jsCallback: () => this.showGameModeOverrideMenu()
+					}
+				);
 			}
 
 			items.push({

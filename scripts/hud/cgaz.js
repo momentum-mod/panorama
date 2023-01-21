@@ -591,11 +591,12 @@ class Cgaz {
 		const points = breakPoints.length;
 
 		// mirror angles to fill [-Pi/2, Pi/2]
-		for (let i = 0; i < points; ++i) {
-			snapAngles.push(-breakPoints[i]);
-			snapAngles.push(this.remapAngle(Math.PI * 0.5 - breakPoints[i]));
-			snapAngles.push(this.remapAngle(breakPoints[i] - Math.PI * 0.5));
-		}
+		for (let i = 0; i < points; ++i)
+			snapAngles.push(
+				-breakPoints[i],
+				this.remapAngle(Math.PI * 0.5 - breakPoints[i]),
+				this.remapAngle(breakPoints[i] - Math.PI * 0.5)
+			);
 
 		return snapAngles.sort((a, b) => a - b);
 	}
