@@ -60,7 +60,9 @@ class LineGraph {
 
 		// If either axis is undefined or 0 range we're gonna get Infinity/NaNs flying around everywhere
 		if (
-			!this.axis.every((axis) => !isNaN(Number.parseInt(axis.min)) && !isNaN(Number.parseInt(axis.max))) ||
+			!this.axis.every(
+				(axis) => !Number.isNaN(Number.parseInt(axis.min)) && !Number.isNaN(Number.parseInt(axis.max))
+			) ||
 			this.axis[0].min === this.axis[0].max ||
 			this.axis[1].min === this.axis[1].max
 		) {

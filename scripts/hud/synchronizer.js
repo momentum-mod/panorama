@@ -284,7 +284,7 @@ class Synchronizer {
 	}
 
 	static NaNCheck(val, def) {
-		return isNaN(val) ? def : val;
+		return Number.isNaN(val) ? def : val;
 	}
 
 	static initializeSettings() {

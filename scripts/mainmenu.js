@@ -254,7 +254,7 @@ class MainMenuController {
 
 		const backgroundVar = Number.parseInt($.persistentStorage.getItem('settings.mainMenuBackground'));
 
-		if (isNaN(backgroundVar)) {
+		if (Number.isNaN(backgroundVar)) {
 			// Light mode by default
 			$.persistentStorage.setItem('settings.mainMenuBackground', 0);
 		}
