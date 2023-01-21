@@ -67,23 +67,17 @@ class Toast {
 
 class ToastManager {
 	// { left: [], ...}
-	static activeToasts = Locations.reduce((obj, loc) => {
-		obj[loc] = [];
-		return obj;
-	}, {});
-
-	static queuedToasts = Locations.reduce((obj, loc) => {
-		obj[loc] = [];
-		return obj;
-	}, {});
-
+	static activeToasts = this.makeToastLocationsArray();
+	// { left: [], ...}
+	static queuedToasts = this.makeToastLocationsArray();
 	// { left: $('#Left'), ...}
-	static containers = Locations.reduce((obj, loc) => {
-		obj[loc] = $('#' + loc[0].toUpperCase() + loc.slice(1));
-		return obj;
-	}, {});
+	static containers;
 
 	static {
+		this.containers = {};
+		// Sets to { left: $('#Left'), ...}
+		for (const loc of Locations) this.containers[loc] = $('#' + loc[0].toUpperCase() + loc.slice(1));
+
 		$.RegisterForUnhandledEvent('Toast_Show', (id, title, message, locationNum, duration, icon, style) =>
 			this.queueToast(
 				Toast.createToast({
@@ -112,6 +106,12 @@ class ToastManager {
 
 		$.RegisterForUnhandledEvent('Toast_Delete', this.deleteToastByID.bind(this));
 		$.RegisterForUnhandledEvent('Toast_Clear', this.clearToasts.bind(this));
+	}
+
+	static makeToastLocationsArray() {
+		const toasts = {};
+		for (const loc of Locations) toasts[loc] = [];
+		return toasts;
 	}
 
 	static queueToast(toast) {

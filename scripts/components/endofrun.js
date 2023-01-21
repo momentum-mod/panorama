@@ -405,9 +405,6 @@ class EndOfRun {
 			const data = useStat ? { ...split.statsComparisons[statIndex], time: 0, delta: 0 } : split;
 			const isTimeComparison = !useStat || data.unit === $.Localize('#Run_Stat_Unit_Second');
 
-			const round = (n) => n.toFixed(2);
-			const diffSign = (diff) => (diff > 0 ? '+' : '');
-
 			let tooltipString;
 			const compareVal = isPositiveGood(data) ? -data.diff : data.diff;
 			const diffStyle = compareVal < 0 ? 'split--ahead ' : compareVal > 0 ? 'split--behind ' : '';
@@ -420,14 +417,16 @@ class EndOfRun {
 				tooltipString =
 					`${$.Localize('#Run_Comparison_TotalTime')}: <b>{g:time:total_time}</b>\n` +
 					`${$.Localize('#Run_Comparison_ZoneTime')}: <b>{g:time:zone_time}</b>\n` +
-					`${$.Localize('#Run_Comparison_Diff')}: <b class='${diffStyle}'>${diffSign(data.diff)}{g:time:time_diff}</b>\n` +
-					`${$.Localize('#Run_Comparison_Delta')}: <b class='${deltaStyle}'>${diffSign(data.delta)}{g:time:time_delta}</b>`;
+					`${$.Localize('#Run_Comparison_Diff')}: <b class='${diffStyle}'>${this.getDiffSign(data.diff)}{g:time:time_diff}</b>\n` +
+					`${$.Localize('#Run_Comparison_Delta')}: <b class='${deltaStyle}'>${this.getDiffSign(data.delta)}{g:time:time_delta}</b>`;
 			} else {
 				// Using string instead of float here, floats add a shit ton of floating point imprecision e.g. 90.00000000128381273
 				tooltipString =
 					`{s:name}: <b>{s:base_value}</b>\n` +
 					`${$.Localize('#Run_Comparison')}: <b>{s:compare_value}</b>\n` +
-					`${$.Localize('#Run_Comparison_Diff')}: <b class='${diffStyle}'>${diffSign(data.diff)}{s:diff}</b>`;
+					`${$.Localize('#Run_Comparison_Diff')}: <b class='${diffStyle}'>${this.getDiffSign(
+						data.diff
+					)}{s:diff}</b>`;
 			}
 
 			line.points.push({
@@ -447,9 +446,9 @@ class EndOfRun {
 							this.panels.cp.SetDialogVariableFloat('time_delta', data.delta);
 						} else {
 							this.panels.cp.SetDialogVariable('name', $.Localize(data.name));
-							this.panels.cp.SetDialogVariable('base_value', round(data.baseValue));
-							this.panels.cp.SetDialogVariable('compare_value', round(data.comparisonValue));
-							this.panels.cp.SetDialogVariable('diff', round(data.diff));
+							this.panels.cp.SetDialogVariable('base_value', this.roundFloat(data.baseValue, 2));
+							this.panels.cp.SetDialogVariable('compare_value', this.roundFloat(data.comparisonValue, 2));
+							this.panels.cp.SetDialogVariable('diff', this.roundFloat(data.diff, 2));
 						}
 						UiToolkitAPI.ShowTextTooltip(id, tooltipString);
 					},
@@ -524,8 +523,6 @@ class EndOfRun {
 
 		// Function to create row for each stat passed in
 		const createRow = (statComparison, index) => {
-			const round = (n) => Number.parseFloat(n.toFixed(2));
-
 			const row = $.CreatePanel('RadioButton', this.panels.zoneStats, '', {
 				class: `endofrun-stats__row ${(index + 1) % 2 === 0 ? ' endofrun-stats__row--odd' : ''}`, // +1 to account for Times row
 				selected: index === null
@@ -542,17 +539,17 @@ class EndOfRun {
 			});
 
 			$.CreatePanel('Label', row, '', {
-				text: `${round(statComparison.baseValue)}`,
+				text: `${this.roundFloat(statComparison.baseValue, 2)}`,
 				class: 'endofrun-stats__value'
 			});
 
 			$.CreatePanel('Label', row, '', {
-				text: `${round(statComparison.comparisonValue)}`,
+				text: `${this.roundFloat(statComparison.comparisonValue, 2)}`,
 				class: 'endofrun-stats__value'
 			});
 
 			$.CreatePanel('Label', row, '', {
-				text: `${round(statComparison.diff)}`,
+				text: `${this.roundFloat(statComparison.diff, 2)}`,
 				class: 'endofrun-stats__value'
 			});
 		};
@@ -594,5 +591,13 @@ class EndOfRun {
 			this.panels.selectedGraphPoint?.RemoveClass('endofrun-graph__point--selected');
 			this.panels.selectedGraphPoint = null;
 		}
+	}
+
+	static roundFloat(n, precision) {
+		return Number.parseFloat(n.toFixed(precision));
+	}
+
+	static getDiffSign(diff) {
+		return diff > 0 ? '+' : '';
 	}
 }

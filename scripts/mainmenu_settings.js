@@ -396,17 +396,21 @@ class MainMenuSettings {
 		this.panels.info.AddClass('settings-info--hidden');
 	}
 
+	static styleItem(item, n) {
+		item.AddClass(n % 2 === 0 ? '--odd' : '--even');
+	}
+
 	static styleAlternatingItems(page) {
 		// Search all groups on the page
 		for (const group of page.FindChildrenWithClassTraverse('settings-group')) {
-			let n = 0;
-			const styleItem = (item) => item.AddClass(n++ % 2 === 0 ? '--odd' : '--even');
+			let n = 1; // Start odd
 
 			const search = (panel) => {
 				for (const child of panel.Children?.()) {
 					// If it's a settings panel or a combo panel, style it
 					if (this.isSettingsPanel(child) || child.HasClass('settings-group__combo')) {
-						styleItem(child);
+						this.styleItem(child, n);
+						n++;
 					}
 					// Otherwise if it's a ConVarEnabler search all its children
 					else if (child.paneltype === 'ConVarEnabler') {
