@@ -364,8 +364,8 @@ class EndOfRun {
 		max = Math.ceil(max / scaleFactor) * scaleFactor;
 		min = Math.floor(min / scaleFactor) * scaleFactor;
 
-		if (isNaN(max)) max = 0;
-		if (isNaN(min)) min = 0;
+		if (Number.isNaN(max)) max = 0;
+		if (Number.isNaN(min)) min = 0;
 
 		// Occasionally stats have no diff at all so range = 0. Set to arbitrary sensible values to avoid division by 0 in the graph.
 		if (max === 0 && min === 0) {

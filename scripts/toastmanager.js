@@ -52,7 +52,7 @@ class Toast {
 			$.Warning('Toast Manager: Invalid Toast object without title, message, or custom layout.');
 			return null;
 		}
-		if (obj.duration && obj.duration !== '' && isNaN(obj.duration)) {
+		if (obj.duration && obj.duration !== '' && Number.isNaN(obj.duration)) {
 			$.Warning(
 				`ToastManager: Toast object created with invalid duration: value "${
 					obj.duration
