@@ -174,7 +174,7 @@ class SettingsSearch {
 	// Only check text on panels that have a text property, ignore dropdowns, headers, keybinder keys, radiobutton text
 	static shouldSearchPanelText(panel) {
 		return (
-			panel.hasOwnProperty('text') &&
+			Object.prototype.hasOwnProperty.call(panel, 'text') &&
 			panel.paneltype !== 'TextEntry' &&
 			panel.GetParent().paneltype !== 'Button' &&
 			!panel.HasClass('DropDownChild') &&
