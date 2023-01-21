@@ -33,7 +33,8 @@
 	},
 	"lint-staged": {
 		"**/*.{js,xml,scss,css,md}": [
-			"prettier --write"
+			"prettier --write",
+			"eslint -v"
 		]
 	}
 }
