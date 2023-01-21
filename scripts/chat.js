@@ -23,14 +23,14 @@ class Chat {
 		// TODO: We may run into issues with this in localisation, this seems like it may be specific to English
 		if (typingLen > 0) {
 			if (typingLen < 3) {
-				this.arrMembersTyping.forEach((memberSteamID, i) => {
+				for (const [i, memberSteamID] of this.arrMembersTyping.entries()) {
 					if (i !== 0 && i !== typingLen - 1) {
 						strTyping += ', ';
 					} else if (i !== 0 && i === typingLen - 1) {
 						strTyping += ` ${$.Localize('#Chat_Typing_Conjugate')} `;
 					}
 					strTyping += FriendsAPI.GetNameForXUID(memberSteamID);
-				});
+				}
 				strTyping +=
 					typingLen === 1
 						? ' ' + $.Localize('#Chat_Typing_Specific')
@@ -46,7 +46,7 @@ class Chat {
 	}
 
 	static onNewChatEntry(panel) {
-		$.Schedule(0.0, () => panel.ScrollParentToMakePanelFit(0, false)); // IDK, ScrollToBottom always just scrolled to the second last msg
+		$.Schedule(0, () => panel.ScrollParentToMakePanelFit(0, false)); // IDK, ScrollToBottom always just scrolled to the second last msg
 		// Emote test for BLT to look into
 		// let messageLabel = panel.GetChild(0);
 		// let message = messageLabel.text;

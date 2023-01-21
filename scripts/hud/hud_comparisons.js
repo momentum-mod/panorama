@@ -79,9 +79,8 @@ class HudComparisons {
 
 		const splitPanels = this.panels.splits.Children().reverse();
 		if (splitPanels.length > MAX_ACTIVE_SPLITS) {
-			splitPanels
-				.filter((_, i) => splitPanels.length - i > MAX_ACTIVE_SPLITS)
-				.forEach((panel) => panel.RemoveAndDeleteChildren());
+			for (const panel of splitPanels.filter((_, i) => splitPanels.length - i > MAX_ACTIVE_SPLITS))
+				panel.RemoveAndDeleteChildren();
 		}
 
 		const data = hasCompare

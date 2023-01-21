@@ -24,7 +24,7 @@ class EndOfRunXP {
 	}
 
 	static initialize() {
-		Object.values(this.panels.newStats).forEach((panel) => panel.AddClass('endofrun-xp__new-stat--hidden'));
+		for (const panel of Object.values(this.panels.newStats)) panel.AddClass('endofrun-xp__new-stat--hidden');
 
 		this.xpData = this.getXPData();
 

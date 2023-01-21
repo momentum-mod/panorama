@@ -30,9 +30,8 @@ class StickyCount {
 			case STICKY_STATE_TYPE.NOSTICKY:
 			default:
 				// remove all classes except the no sticky one
-				StickyPanelClasses.filter((spClass) => spClass !== StickyPanelClasses[0]).forEach((spClass) =>
-					stickyPanel.RemoveClass(spClass)
-				);
+				for (const spClass of StickyPanelClasses.filter((spClass) => spClass !== StickyPanelClasses[0]))
+					stickyPanel.RemoveClass(spClass);
 				break;
 		}
 	}

@@ -5,26 +5,38 @@ class SettingsShared {
 	static videoSettingsPanel;
 
 	static onChangedTab(newTab) {
-		if (newTab === 'VideoSettings') {
-			this.videoSettingsPanel ??= $('#VideoSettings');
+		switch (newTab) {
+			case 'VideoSettings': {
+				this.videoSettingsPanel ??= $('#VideoSettings');
 
-			// Get the apply and discard buttons on the video settings screen
-			const applyVideoSettingsButton = this.videoSettingsPanel.FindChildInLayoutFile('ApplyVideoSettingsButton');
-			const discardVideoSettingsButton =
-				this.videoSettingsPanel.FindChildInLayoutFile('DiscardVideoSettingsButton');
+				// Get the apply and discard buttons on the video settings screen
+				const applyVideoSettingsButton =
+					this.videoSettingsPanel.FindChildInLayoutFile('ApplyVideoSettingsButton');
+				const discardVideoSettingsButton =
+					this.videoSettingsPanel.FindChildInLayoutFile('DiscardVideoSettingsButton');
 
-			// disabled as no user changes yet
-			applyVideoSettingsButton.enabled = false;
-			discardVideoSettingsButton.enabled = false;
+				// disabled as no user changes yet
+				applyVideoSettingsButton.enabled = false;
+				discardVideoSettingsButton.enabled = false;
 
-			// Tell C++ to init controls from convars
-			$.DispatchEvent('ChaosVideoSettingsInit');
+				// Tell C++ to init controls from convars
+				$.DispatchEvent('ChaosVideoSettingsInit');
 
-			this.initTextureReplacementDropdown();
-		} else if (newTab === 'OnlineSettings') {
-			this.onlineSettingsUpdateModel();
-		} else if (newTab === 'GameplaySettings') {
-			this.updatePaintPreview();
+				this.initTextureReplacementDropdown();
+
+				break;
+			}
+			case 'OnlineSettings': {
+				this.onlineSettingsUpdateModel();
+
+				break;
+			}
+			case 'GameplaySettings': {
+				this.updatePaintPreview();
+
+				break;
+			}
+			// No default
 		}
 
 		const newTabPanel = $.GetContextPanel().FindChildInLayoutFile(newTab);
@@ -125,7 +137,7 @@ class SettingsShared {
 
 		const findCvarsRecursive = (panel) => {
 			if (panel.paneltype && this.isSettingsPanel(panel) && panel.convar) cvars.push(panel.convar);
-			panel?.Children().forEach((child) => findCvarsRecursive(child));
+			for (const child of panel?.Children()) findCvarsRecursive(child);
 		};
 
 		findCvarsRecursive(section);
@@ -169,11 +181,11 @@ class SettingsShared {
 		const onlineSettingsPanel = $('#OnlineSettings');
 		const ghostPreview = onlineSettingsPanel.FindChildInLayoutFile('GhostModelPreview');
 
-		ghostPreview.SetCameraFOV(60.0);
+		ghostPreview.SetCameraFOV(60);
 		ghostPreview.SetModelRotationBoundsEnabled(true, false, false);
-		ghostPreview.SetModelRotationBoundsX(-90.0, 90.0);
+		ghostPreview.SetModelRotationBoundsX(-90, 90);
 		ghostPreview.LookAtModel();
-		ghostPreview.SetCameraOffset(-100.0, 0.0, 0.0);
+		ghostPreview.SetCameraOffset(-100, 0, 0);
 		ghostPreview.SetModelColor(color);
 		ghostPreview.SetModelBodygroup(1, bodygroup);
 	}
@@ -243,13 +255,13 @@ class SettingsShared {
 			updatePanel(GameInterfaceAPI.GetSettingString('mat_error_texture_advanced_basetexture'));
 		}
 
-		Object.entries(textures).forEach(([textureName, texturePath], i) => {
+		for (const [i, [textureName, texturePath]] of Object.entries(textures).entries()) {
 			const item = $.CreatePanel('Label', dropdown, `Texture${i}`, {
 				text: $.Localize(textureName),
 				value: texturePath
 			});
 			dropdown.AddOption(item);
-		});
+		}
 	}
 
 	static isSettingsPanel(panel) {

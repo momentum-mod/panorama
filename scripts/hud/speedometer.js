@@ -146,15 +146,15 @@ class Speedometer {
 		// reset previous value on fadeout
 		if (styleName !== 'opacity') return;
 
-		const filteredSpeedos = Speedometers.filter((speedometer) => speedometer.container.id === panelName);
-		if (!filteredSpeedos[0]) return;
+		const filteredSpeedo = Speedometers.find((speedometer) => speedometer.container.id === panelName);
+		if (!filteredSpeedo) return;
 
-		filteredSpeedos[0].prevVal = 0;
+		filteredSpeedo.prevVal = 0;
 	}
 	static registerFadeoutEventHandlers() {
-		Speedometers.forEach((speedometer) => {
+		for (const speedometer of Speedometers) {
 			$.RegisterEventHandler('PropertyTransitionEnd', speedometer.container, this.onFadeoutEvent);
-		});
+		}
 	}
 
 	static onSpeedometerUpdate(deltaTime) {
@@ -221,9 +221,9 @@ class Speedometer {
 	}
 
 	static resetEventSpeedometers() {
-		Speedometers.filter((speedometer) => speedometer.eventbased).forEach((speedometer) => {
+		for (const speedometer of Speedometers.filter((speedometer) => speedometer.eventbased)) {
 			this.resetEventSpeedometer(speedometer);
-		});
+		}
 	}
 	static resetEventSpeedometer(speedometer) {
 		// forcibly fade out immediately
@@ -284,13 +284,13 @@ class Speedometer {
 			speedometer.label.RemoveClass(DECREASE_CLASS);
 			if (speedometer.settings.colorizeMode === SpeedometerColorMode.RANGE && speedometer.settings.ranges) {
 				let found = false;
-				speedometer.settings.ranges.forEach((range) => {
+				for (const range of speedometer.settings.ranges) {
 					if (velocity >= range.min && velocity <= range.max) {
 						speedometer.label.style.color = range.color;
 						found = true;
-						return;
+						continue;
 					}
-				});
+				}
 				if (!found) {
 					// backup to white
 					speedometer.label.style.color = 'rgba(255, 255, 255, 1)';
@@ -318,7 +318,7 @@ class Speedometer {
 		if (!colorProfData) return;
 
 		const orderKV = data['order'];
-		Speedometers.forEach((speedometer) => {
+		for (const speedometer of Speedometers) {
 			const orderIndex = orderKV[`${speedometer.name}`];
 			speedometer.container.SetAttributeInt('speedo_index', orderIndex);
 
@@ -329,7 +329,7 @@ class Speedometer {
 			if (colorProf) {
 				const rangesKV = colorProfData[colorProf];
 				if (rangesKV) {
-					Object.keys(rangesKV).forEach((range) => {
+					for (const range of Object.keys(rangesKV)) {
 						const rangeKV = rangesKV[range];
 						if (rangeKV) {
 							const splitColor = rangeKV['color'].split(' ');
@@ -338,7 +338,7 @@ class Speedometer {
 							})`;
 							rangeList.push(new RangeObject(rangeKV['min'], rangeKV['max'], color));
 						}
-					});
+					}
 				}
 			}
 
@@ -361,7 +361,7 @@ class Speedometer {
 			speedometer.label.RemoveClass(INCREASE_CLASS);
 			speedometer.comparisonlabel.RemoveClass(DECREASE_CLASS);
 			speedometer.comparisonlabel.RemoveClass(INCREASE_CLASS);
-		});
+		}
 
 		// sorts using speedo_index attribute numbers
 		$.GetContextPanel().SortSpeedometers();

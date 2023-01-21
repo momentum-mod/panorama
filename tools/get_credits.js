@@ -1,7 +1,7 @@
 const lib = require('./lib.js');
 const csvParser = require('papaparse');
 const axios = require('axios');
-const fs = require('fs');
+const fs = require('node:fs');
 const prettier = require('prettier');
 
 const DATA_URL =
@@ -73,7 +73,7 @@ class xmlStringBuilder {
 					xmlString.openPanel(
 						'Label',
 						{
-							id: `Credit${sectionName.replace(/[^a-zA-Z0-9]/g, '')}${personIndex + 1}`,
+							id: `Credit${sectionName.replace(/[^\dA-Za-z]/g, '')}${personIndex + 1}`,
 							class:
 								`${CREDITS_CLASS}__col ${CREDITS_CLASS}__name` +
 								(style ? ` ${CREDITS_CLASS}__name--${style}` : ''),
@@ -108,27 +108,25 @@ class xmlStringBuilder {
 			header: true
 		}).data;
 
-		Object.entries(data).forEach(([key, value]) => {
+		for (const [key, value] of Object.entries(data)) {
 			delete value['Readme'];
 			data[key] = value;
-		});
+		}
 
 		let xmlString = new xmlStringBuilder();
 
-		Object.values(TYPES).forEach((type) => {
+		for (const type of Object.values(TYPES)) {
 			xmlString.openPanel('Label', { class: `${CREDITS_CLASS}__header`, text: type.title }, true);
 
-			[
-				...new Set(
-					data.filter((person) => person['Type'] === type.sheetName).map((person) => person['Section'])
-				)
-			].forEach((section) => {
+			for (const section of new Set(
+				data.filter((person) => person['Type'] === type.sheetName).map((person) => person['Section'])
+			)) {
 				makeSection(
 					data.filter((x) => x['Section'] === section),
 					type.maxColumns
 				);
-			});
-		});
+			}
+		}
 
 		const outString = prettier
 			.format(lib.xmlFrameTop + '\n' + xmlString.output + '\n' + lib.xmlFrameBottom, {
@@ -141,7 +139,7 @@ class xmlStringBuilder {
 		fs.writeFileSync(PATH, outString);
 
 		console.log(`Wrote ${PATH} successfully.`);
-	} catch (e) {
-		console.log(e);
+	} catch (error) {
+		console.log(error);
 	}
 })();

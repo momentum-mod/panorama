@@ -1,6 +1,6 @@
 'use strict';
 
-const REFRESH_COOLDOWN = 10.0;
+const REFRESH_COOLDOWN = 10;
 
 const LOBBY_TYPES = {
 	0: {
@@ -202,9 +202,9 @@ class Lobby {
 					UiToolkitAPI.HideTextTooltip();
 				});
 
-				cooldown -= 1.0;
+				cooldown -= 1;
 
-				if (cooldown >= 0) $.Schedule(1.0, () => cooldownTimer());
+				if (cooldown >= 0) $.Schedule(1, () => cooldownTimer());
 				else {
 					this.panels.refreshButton.ClearPanelEvent('onmouseover');
 					this.panels.refreshButton.ClearPanelEvent('onmouseout');
@@ -231,80 +231,74 @@ class Lobby {
 		let known_ids = [];
 		// The sort actually works out how we want it (current < friends < global)
 		// TODO: Sort based on other orderings e.g. player count
-		Object.keys(data)
-			.sort()
-			.forEach((origin) => {
-				Object.keys(data[origin]).forEach((lobbySteamID) => {
-					if (known_ids.includes(lobbySteamID)) return; // Prevent duplicate lobbies; we don't have duplicates for the same origin, but we might get the same lobby from 2 origins
+		for (const origin of Object.keys(data).sort()) {
+			for (const lobbySteamID of Object.keys(data[origin])) {
+				if (known_ids.includes(lobbySteamID)) continue; // Prevent duplicate lobbies; we don't have duplicates for the same origin, but we might get the same lobby from 2 origins
 
-					known_ids.push(lobbySteamID);
-					const lobbyObj = data[origin][lobbySteamID];
-					const ownerSteamID = lobbyObj['owner'];
-					const lobbyType = lobbyObj['type'];
-					const lobbyName = $.Localize('#Lobby_Owner').replace(
-						'%owner%',
-						FriendsAPI.GetNameForXUID(ownerSteamID)
-					);
+				known_ids.push(lobbySteamID);
+				const lobbyObj = data[origin][lobbySteamID];
+				const ownerSteamID = lobbyObj['owner'];
+				const lobbyType = lobbyObj['type'];
+				const lobbyName = $.Localize('#Lobby_Owner').replace(
+					'%owner%',
+					FriendsAPI.GetNameForXUID(ownerSteamID)
+				);
 
-					if (!lobbyName.includes(this.panels.search.text)) return; // Only show items that match the search. Always true if search is empty
+				if (!lobbyName.includes(this.panels.search.text)) continue; // Only show items that match the search. Always true if search is empty
 
-					const newPanel = $.CreatePanel('Panel', this.panels.list, ''); // Create the new panel
+				const newPanel = $.CreatePanel('Panel', this.panels.list, ''); // Create the new panel
 
-					newPanel.LoadLayoutSnippet('lobby-list-entry');
+				newPanel.LoadLayoutSnippet('lobby-list-entry');
 
-					const joinCallback = () =>
-						origin === 'current' ? this.showLobbyDetails() : this.join(lobbySteamID);
+				const joinCallback = () => (origin === 'current' ? this.showLobbyDetails() : this.join(lobbySteamID));
 
-					newPanel.SetPanelEvent('ondblclick', joinCallback);
-					newPanel.FindChildTraverse('LobbyJoinButton').SetPanelEvent('onactivate', joinCallback);
+				newPanel.SetPanelEvent('ondblclick', joinCallback);
+				newPanel.FindChildTraverse('LobbyJoinButton').SetPanelEvent('onactivate', joinCallback);
 
-					const typePanel = newPanel.FindChildTraverse('LobbyType');
-					const typeIcon = `file://{images}/online/${LOBBY_TYPES[lobbyType].icon}.svg`;
-					typePanel.SetImage(typeIcon);
-					typePanel.SetPanelEvent('onmouseover', () =>
-						UiToolkitAPI.ShowTitleImageTextTooltipStyled(
-							typePanel.id,
-							'',
-							typeIcon,
-							LOBBY_TYPES[lobbyType].name,
-							'tooltip--notitle'
-						)
-					);
+				const typePanel = newPanel.FindChildTraverse('LobbyType');
+				const typeIcon = `file://{images}/online/${LOBBY_TYPES[lobbyType].icon}.svg`;
+				typePanel.SetImage(typeIcon);
+				typePanel.SetPanelEvent('onmouseover', () =>
+					UiToolkitAPI.ShowTitleImageTextTooltipStyled(
+						typePanel.id,
+						'',
+						typeIcon,
+						LOBBY_TYPES[lobbyType].name,
+						'tooltip--notitle'
+					)
+				);
 
-					const avatarPanel = newPanel.FindChildTraverse('LobbyPlayerAvatar');
-					avatarPanel.steamid = ownerSteamID;
+				const avatarPanel = newPanel.FindChildTraverse('LobbyPlayerAvatar');
+				avatarPanel.steamid = ownerSteamID;
 
-					avatarPanel.SetPanelEvent('oncontextmenu', () =>
-						UiToolkitAPI.ShowSimpleContextMenu(avatarPanel, '', [
-							{
-								label: $.Localize('#Action_ShowSteamProfile'),
-								icon: 'file://{images}/social/steam.svg',
-								style: 'icon-color-steam-online',
-								jsCallback: () => SteamOverlayAPI.OpenToProfileID(ownerSteamID)
-							}
-						])
-					);
+				avatarPanel.SetPanelEvent('oncontextmenu', () =>
+					UiToolkitAPI.ShowSimpleContextMenu(avatarPanel, '', [
+						{
+							label: $.Localize('#Action_ShowSteamProfile'),
+							icon: 'file://{images}/social/steam.svg',
+							style: 'icon-color-steam-online',
+							jsCallback: () => SteamOverlayAPI.OpenToProfileID(ownerSteamID)
+						}
+					])
+				);
 
-					newPanel.SetDialogVariable('lobbyTitle', lobbyName);
-					newPanel.SetDialogVariable(
-						'lobbyPlayerCount',
-						`${lobbyObj['members']}/${lobbyObj['members_limit']}`
-					);
-					newPanel.SetDialogVariable(
-						'lobbyJoinLabel',
-						$.Localize(origin === 'current' ? '#Lobby_Details' : '#Lobby_Join')
-					);
+				newPanel.SetDialogVariable('lobbyTitle', lobbyName);
+				newPanel.SetDialogVariable('lobbyPlayerCount', `${lobbyObj['members']}/${lobbyObj['members_limit']}`);
+				newPanel.SetDialogVariable(
+					'lobbyJoinLabel',
+					$.Localize(origin === 'current' ? '#Lobby_Details' : '#Lobby_Join')
+				);
 
-					const originPanel = newPanel.FindChildTraverse('LobbyOrigin');
-					if (origin === 'global') {
-						originPanel.AddClass('lobby-lobbies__origin--global');
-					} else if (origin === 'friends') {
-						originPanel.AddClass('lobby-lobbies__origin--friends');
-					} else {
-						originPanel.AddClass('lobby-lobbies__origin--current');
-					}
-				});
-			});
+				const originPanel = newPanel.FindChildTraverse('LobbyOrigin');
+				if (origin === 'global') {
+					originPanel.AddClass('lobby-lobbies__origin--global');
+				} else if (origin === 'friends') {
+					originPanel.AddClass('lobby-lobbies__origin--friends');
+				} else {
+					originPanel.AddClass('lobby-lobbies__origin--current');
+				}
+			}
+		}
 	}
 
 	/**
@@ -489,32 +483,31 @@ class Lobby {
 	}
 
 	static onSteamLobbyMemberDataUpdated(data) {
-		Object.keys(data).forEach((memberSteamID) => {
+		for (const memberSteamID of Object.keys(data)) {
 			const localID = UserAPI.GetXUID();
 
 			const oldMap = this.lobbyMemberData[localID]?.['map'];
 			const newMap = data[memberSteamID]['map'];
 
 			if (memberSteamID in this.lobbyMemberData) {
-				Object.keys(data[memberSteamID]).forEach(
-					(item) => (this.lobbyMemberData[memberSteamID][item] = data[memberSteamID][item])
-				);
+				for (const item of Object.keys(data[memberSteamID]))
+					this.lobbyMemberData[memberSteamID][item] = data[memberSteamID][item];
 			} else {
 				this.lobbyMemberData[memberSteamID] = data[memberSteamID];
 			}
 
 			// If local player has just joined a new map, update the join/spectate buttons for all other player panels
 			if (memberSteamID === localID && oldMap !== newMap) {
-				Object.keys(this.lobbyMemberData).forEach((member) => this.updateMemberListItem(member));
+				for (const member of Object.keys(this.lobbyMemberData)) this.updateMemberListItem(member);
 			} else {
 				this.updateMemberListItem(memberSteamID);
 			}
-		});
+		}
 	}
 
 	static onSteamLobbyMemberStateChanged(memberSteamID, changeType) {
 		if (changeType === 'leave') {
-			this.lobbyMemberData[memberSteamID]['panel'].DeleteAsync(0.0);
+			this.lobbyMemberData[memberSteamID]['panel'].DeleteAsync(0);
 			delete this.lobbyMemberData[memberSteamID];
 		}
 	}

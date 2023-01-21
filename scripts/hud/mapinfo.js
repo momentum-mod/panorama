@@ -13,9 +13,8 @@ class HudMapInfo {
 			this.cachedInfoContainer.visible = true;
 
 			let authorString = '';
-			mapData['credits']
-				.filter((x) => x.type === 'author')
-				.forEach((item, i) => (authorString += (i > 0 ? ', ' : '') + item.user.alias));
+			for (const [i, item] of mapData['credits'].filter((x) => x.type === 'author').entries())
+				authorString += (i > 0 ? ', ' : '') + item.user.alias;
 			const cp = $.GetContextPanel();
 			cp.SetDialogVariable('author', authorString);
 

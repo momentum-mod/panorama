@@ -17,6 +17,6 @@ class RangeColorDisplay {
 	static onFocusLost(_panel) {
 		if (this.minEntry.HasKeyFocus() || this.maxEntry.HasKeyFocus() || this.colorDisplay.HasKeyFocus()) return;
 
-		$.GetContextPanel().SetBounds(parseFloat(this.minEntry.text), parseFloat(this.maxEntry.text));
+		$.GetContextPanel().SetBounds(Number.parseFloat(this.minEntry.text), Number.parseFloat(this.maxEntry.text));
 	}
 }

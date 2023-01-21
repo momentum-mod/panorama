@@ -55,7 +55,7 @@ class WeaponSelection {
 	}
 
 	static destroyWeaponPanel(id) {
-		this.wepSnippets[id - 1]?.DeleteAsync(0.0);
+		this.wepSnippets[id - 1]?.DeleteAsync(0);
 		delete this.wepSnippets[id - 1];
 	}
 

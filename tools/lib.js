@@ -16,7 +16,7 @@ exports.jsonToKV1 = (jsonData, header) => {
 
 	const doObject = (obj) => {
 		tabDepth++;
-		Object.entries(obj).forEach(([k, v]) => {
+		for (const [k, v] of Object.entries(obj)) {
 			if (typeof v == 'string') {
 				out(`${JSON.stringify(k.replace(/ /g, ''))}    ${JSON.stringify(v.replace(/"/g, "'"))}\n`);
 			} else if (typeof v == 'object') {
@@ -25,7 +25,7 @@ exports.jsonToKV1 = (jsonData, header) => {
 				doObject(v);
 				out('}\n');
 			}
-		});
+		}
 		tabDepth--;
 	};
 

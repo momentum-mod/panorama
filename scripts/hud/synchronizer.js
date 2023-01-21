@@ -92,10 +92,10 @@ class Synchronizer {
 				this.firstPanelWidth = this.wrapValueToRange(this.firstPanelWidth, 0, this.maxSegmentWidth, true);
 				this.panels.segments[0].style.width =
 					this.NaNCheck(this.firstPanelWidth.toFixed(3), this.maxSegmentWidth) + '%';
-				this.panels.segments.forEach((segment, i) => {
+				for (const [i, segment] of this.panels.segments.entries()) {
 					let index = i + (this.bIsFirstPanelColored ? 1 : 0);
 					segment.style.backgroundColor = index % 2 ? color : this.altColor;
-				});
+				}
 				break;
 		}
 	}
@@ -104,14 +104,14 @@ class Synchronizer {
 		const lastJumpStats = MomentumMovementAPI.GetLastJumpStats();
 		this.panels.stats[0].text =
 			`${lastJumpStats.jumpCount}: `.padStart(6, ' ') +
-			`${lastJumpStats.takeoffSpeed.toFixed()} `.padStart(6, ' ') +
+			`${lastJumpStats.takeoffSpeed.toFixed(0)} `.padStart(6, ' ') +
 			`(${(lastJumpStats.yawRatio * 100).toFixed(2)}%)`.padStart(10, ' ');
 		this.panels.stats[1].text = (lastJumpStats.speedGain * 100).toFixed(2);
 
 		const colorTuple = this.mom_hud_synchro_stat_color_enable
 			? this.getColorTuple(lastJumpStats.speedGain, lastJumpStats.yawRatio > 0)
 			: COLORS.NEUTRAL;
-		this.panels.stats.forEach((stat) => (stat.style.color = colorTuple[1]));
+		for (const stat of this.panels.stats) stat.style.color = colorTuple[1];
 	}
 
 	static getColorTuple(ratio, bOverStrafing) {
@@ -119,7 +119,7 @@ class Synchronizer {
 		if (ratio > 1.02) return COLORS.EXTRA;
 		else if (ratio > 0.99) return COLORS.PERFECT;
 		else if (ratio > 0.95) return COLORS.GOOD;
-		else if (ratio <= -5.0) return COLORS.STOP;
+		else if (ratio <= -5) return COLORS.STOP;
 
 		const lerpColorTuples = (c1, c2, alpha) => {
 			return [
@@ -133,12 +133,12 @@ class Synchronizer {
 			if (ratio > 0.85) return lerpColorTuples(COLORS.SLOW, COLORS.GOOD, (ratio - 0.85) / 0.1);
 			else if (ratio > 0.75) return COLORS.SLOW;
 			else if (ratio > 0.5) return lerpColorTuples(COLORS.NEUTRAL, COLORS.SLOW, (ratio - 0.5) / 0.25);
-			else if (ratio > 0.0) return COLORS.NEUTRAL;
-			else if (ratio > -5.0) return lerpColorTuples(COLORS.NEUTRAL, COLORS.STOP, Math.abs(ratio) / 5.0);
+			else if (ratio > 0) return COLORS.NEUTRAL;
+			else if (ratio > -5) return lerpColorTuples(COLORS.NEUTRAL, COLORS.STOP, Math.abs(ratio) / 5);
 		} else {
 			if (ratio > 0.8) return lerpColorTuples(COLORS.SLOW, COLORS.GOOD, (ratio - 0.8) / 0.15);
-			else if (ratio > 0.0) return lerpColorTuples(COLORS.LOSS, COLORS.SLOW, (ratio - 0.25) / 0.55);
-			else if (ratio > -5.0) return lerpColorTuples(COLORS.LOSS, COLORS.STOP, Math.abs(ratio) / 5.0);
+			else if (ratio > 0) return lerpColorTuples(COLORS.LOSS, COLORS.SLOW, (ratio - 0.25) / 0.55);
+			else if (ratio > -5) return lerpColorTuples(COLORS.LOSS, COLORS.STOP, Math.abs(ratio) / 5);
 		}
 	}
 
@@ -194,7 +194,7 @@ class Synchronizer {
 	}
 
 	static initializeBuffer(size) {
-		return Array(size).fill(0);
+		return new Array(size).fill(0);
 	}
 
 	static addToBuffer(buffer, value) {
@@ -231,24 +231,24 @@ class Synchronizer {
 		this.mom_hud_synchro_mode = newMode ?? 0;
 		switch (this.mom_hud_synchro_mode) {
 			case 1: // "Half-width throttle"
-				this.panels.segments.forEach((segment) => (segment.style.backgroundColor = this.altColor));
+				for (const segment of this.panels.segments) segment.style.backgroundColor = this.altColor;
 				this.panels.needle.style.visibility = 'visible';
 				break;
 			case 2: // "Full-width throttle"
-				this.panels.segments.forEach((segment) => (segment.style.backgroundColor = this.altColor));
+				for (const segment of this.panels.segments) segment.style.backgroundColor = this.altColor;
 				this.panels.needle.style.visibility = 'collapse';
 				break;
 			case 3: // "Strafe indicator"
 				this.panels.segments[1].style.width = 100 - this.indicatorPercentage + '%';
 				this.panels.segments[2].style.width = 50 + '%';
 				this.panels.segments[3].style.width = 50 + '%';
-				this.panels.segments.forEach((segment) => (segment.style.backgroundColor = this.altColor));
+				for (const segment of this.panels.segments) segment.style.backgroundColor = this.altColor;
 				this.panels.needle.style.visibility = 'visible';
 				break;
 			case 4: // "Synchronizer"
-				this.panels.segments.forEach((segment) => {
+				for (const segment of this.panels.segments) {
 					segment.style.width = this.maxSegmentWidth + '%';
-				});
+				}
 				this.panels.needle.style.visibility = 'collapse';
 				break;
 		}

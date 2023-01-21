@@ -41,7 +41,7 @@ class MainMenuNews {
 				desc = item.description.slice(0, POST_MAX_CHARS);
 
 				// Check we're not inside a tag
-				if ((desc.includes('<') && desc.match(/\</g)).length !== desc.match(/\>/g).length) {
+				if ((desc.includes('<') && desc.match(/</g)).length !== desc.match(/>/g).length) {
 					desc = desc.slice(0, desc.lastIndexOf('<'));
 				}
 			} else {
@@ -62,7 +62,7 @@ class MainMenuNews {
 			this.panels.otherUpdates.RemoveAndDeleteChildren();
 
 			// Show max of 10 update previews
-			feed.items.slice(1, 11).forEach((item, i) => {
+			for (const [i, item] of feed.items.slice(1, 11).entries()) {
 				const entry = $.CreatePanel('Image', this.panels.otherUpdates, 'NewsEntry' + i, {
 					acceptsinput: true,
 					class: 'news__other-item news__other-image'
@@ -70,7 +70,7 @@ class MainMenuNews {
 				entry.SetPanelEvent('onactivate', () => SteamOverlayAPI.OpenURLModal(item.link));
 				// entry.LoadLayoutSnippet('news-update-preview');
 				entry.SetImage(item.image);
-			});
+			}
 		}
 	}
 

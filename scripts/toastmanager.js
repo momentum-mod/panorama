@@ -79,7 +79,7 @@ class ToastManager {
 
 	// { left: $('#Left'), ...}
 	static containers = Locations.reduce((obj, loc) => {
-		obj[loc] = $('#' + loc[0].toUpperCase() + loc.substring(1));
+		obj[loc] = $('#' + loc[0].toUpperCase() + loc.slice(1));
 		return obj;
 	}, {});
 
@@ -204,7 +204,7 @@ class ToastManager {
 
 		$.RegisterEventHandler('PropertyTransitionEnd', toast.panel, (_, propertyName) => {
 			if (propertyName === 'opacity') {
-				toast.panel.DeleteAsync(0.0);
+				toast.panel.DeleteAsync(0);
 			}
 		});
 	}
@@ -219,7 +219,7 @@ class ToastManager {
 	static deleteToastByID(toastID) {
 		if (!toastID) return;
 
-		Locations.forEach((loc) => this.deleteToast(this.activeToasts[loc].find((t) => t.id === toastID)));
+		for (const loc of Locations) this.deleteToast(this.activeToasts[loc].find((t) => t.id === toastID));
 	}
 
 	static deleteToast(toast) {
@@ -238,20 +238,20 @@ class ToastManager {
 		if (location && location !== 'all') {
 			if (!Locations.includes(location)) return;
 
-			this.activeToasts[location].forEach((toast) => {
+			for (const toast of this.activeToasts[location]) {
 				$.Schedule(delay, () => this.deleteToast(toast));
 				delay += 0.05;
-			});
+			}
 
 			this.queuedToasts[location] = [];
 		} else {
-			Locations.forEach((l) => {
-				this.activeToasts[l].forEach((toast) => {
+			for (const l of Locations) {
+				for (const toast of this.activeToasts[l]) {
 					$.Schedule(delay, () => this.deleteToast(toast));
 					delay += 0.05;
-				});
+				}
 				this.queuedToasts[location] = [];
-			});
+			}
 		}
 	}
 }

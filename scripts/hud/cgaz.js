@@ -294,8 +294,8 @@ class Cgaz {
 			y: Math.sin(viewAngle)
 		};
 
-		let forwardMove = this.getDot(viewDir, wishDir).toFixed();
-		let rightMove = this.getCross(viewDir, wishDir).toFixed();
+		let forwardMove = this.getDot(viewDir, wishDir).toFixed(0);
+		let rightMove = this.getCross(viewDir, wishDir).toFixed(0);
 
 		const bIsFalling = lastMoveData.moveStatus == 0;
 		const bHasAirControl = phyMode && this.floatEquals(wishAngle, viewAngle, 0.01) && bIsFalling;
@@ -517,7 +517,7 @@ class Cgaz {
 
 		// compass stats
 		if (this.compass_stat_mode) {
-			this.yawStat.text = MomentumPlayerAPI.GetAngles().y.toFixed();
+			this.yawStat.text = MomentumPlayerAPI.GetAngles().y.toFixed(0);
 			this.yawStat.style.color =
 				Math.abs(this.distToNearestTick(velAngle)) < 0.01 && speed >= this.accel_min_speed
 					? this.compass_hl_color
@@ -583,7 +583,7 @@ class Cgaz {
 	}
 
 	static findSnapAngles(snapAccel) {
-		const singleAxisMax = snapAccel.toFixed();
+		const singleAxisMax = snapAccel.toFixed(0);
 		let breakPoints = [];
 		breakPoints = this.findBreakPoints(snapAccel, singleAxisMax, breakPoints);
 
@@ -618,8 +618,8 @@ class Cgaz {
 			const right = snapAngles[i + 1];
 			const angle = 0.5 * (left + right);
 
-			const xGain = (snapAccel * Math.cos(angle)).toFixed();
-			const yGain = (snapAccel * Math.sin(angle)).toFixed();
+			const xGain = (snapAccel * Math.cos(angle)).toFixed(0);
+			const yGain = (snapAccel * Math.sin(angle)).toFixed(0);
 			const gainDiff = Math.sqrt(xGain * xGain + yGain * yGain) - snapAccel;
 			snapGains.push(gainDiff);
 
@@ -713,10 +713,10 @@ class Cgaz {
 	static drawZone(zone, left, right) {
 		// assign widths
 		const width = right - left;
-		zone.style.width = (isNaN(width) ? 0 : Number(width).toFixed()) + 'px';
+		zone.style.width = (isNaN(width) ? 0 : Number(width).toFixed(0)) + 'px';
 
 		// assign position via margin (center screen at 0)
-		zone.style.marginLeft = (isNaN(left) ? 0 : Number(left).toFixed()) + 'px';
+		zone.style.marginLeft = (isNaN(left) ? 0 : Number(left).toFixed(0)) + 'px';
 	}
 
 	static findCompassTick(angle) {
@@ -779,11 +779,11 @@ class Cgaz {
 
 		switch (this.projection) {
 			case 0:
-				return ((1 + Math.tan(angle) / Math.tan(this.hFov)) * screenWidth * 0.5).toFixed();
+				return ((1 + Math.tan(angle) / Math.tan(this.hFov)) * screenWidth * 0.5).toFixed(0);
 			case 1:
-				return ((1 + angle / this.hFov) * screenWidth * 0.5).toFixed();
+				return ((1 + angle / this.hFov) * screenWidth * 0.5).toFixed(0);
 			case 2:
-				return ((1 + Math.tan(angle * 0.5) / Math.tan(this.hFov * 0.5)) * screenWidth * 0.5).toFixed();
+				return ((1 + Math.tan(angle * 0.5) / Math.tan(this.hFov * 0.5)) * screenWidth * 0.5).toFixed(0);
 		}
 	}
 
@@ -796,11 +796,11 @@ class Cgaz {
 
 		switch (this.projection) {
 			case 0:
-				return ((1 + Math.tan(angle) / Math.tan(this.vFov)) * screenHeight * 0.5).toFixed();
+				return ((1 + Math.tan(angle) / Math.tan(this.vFov)) * screenHeight * 0.5).toFixed(0);
 			case 1:
-				return ((1 + angle / this.vFov) * screenHeight * 0.5).toFixed();
+				return ((1 + angle / this.vFov) * screenHeight * 0.5).toFixed(0);
 			case 2:
-				return ((1 + Math.tan(angle * 0.5) / Math.tan(this.vFov * 0.5)) * screenHeight * 0.5).toFixed();
+				return ((1 + Math.tan(angle * 0.5) / Math.tan(this.vFov * 0.5)) * screenHeight * 0.5).toFixed(0);
 		}
 	}
 
@@ -868,7 +868,7 @@ class Cgaz {
 		return string
 			.slice(5, -1)
 			.split(',')
-			.map((c, i) => (i == 3 ? parseInt(c * 255) : parseInt(c)));
+			.map((c, i) => (i == 3 ? Number.parseInt(c * 255) : Number.parseInt(c)));
 	}
 
 	static colorLerp(A, B, alpha) {

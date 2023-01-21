@@ -31,7 +31,7 @@ class MainMenuSettings {
 
 	static {
 		// Load every tab immediately, otherwise search won't be guaranteed to find everything.
-		Object.keys(SettingsTabs).forEach((tab) => this.loadTab(tab));
+		for (const tab of Object.keys(SettingsTabs)) this.loadTab(tab);
 
 		// Default to input settings page
 		this.navigateToTab('InputSettings');
@@ -124,14 +124,16 @@ class MainMenuSettings {
 		// This ensures the panel is unloaded when it's done animating
 		$.RegisterEventHandler('PropertyTransitionEnd', newPanel, (panelName, propertyName) => {
 			// Only handle the opacity transition
-			if (newPanel.id === panelName && propertyName === 'opacity') {
-				// Panel is visible and fully transparent
-				if (newPanel.visible === true && newPanel.IsTransparent()) {
-					// Set visibility to false and unload resources
-					newPanel.visible = false;
-					newPanel.SetReadyForDisplay(false);
-					return true;
-				}
+			if (
+				newPanel.id === panelName &&
+				propertyName === 'opacity' && // Panel is visible and fully transparent
+				newPanel.visible === true &&
+				newPanel.IsTransparent()
+			) {
+				// Set visibility to false and unload resources
+				newPanel.visible = false;
+				newPanel.SetReadyForDisplay(false);
+				return true;
 			}
 			return false;
 		});
@@ -155,7 +157,7 @@ class MainMenuSettings {
 		panel.ScrollParentToMakePanelFit(1, false);
 
 		// Don't run the scroll position detection until scrolling has definitely finished - there may be an event for this...
-		this.limitScrollCheck(1.0);
+		this.limitScrollCheck(1);
 
 		// Apply highlight anim
 		panel.AddClass('settings-group--highlight');
@@ -230,9 +232,8 @@ class MainMenuSettings {
 		this.panels.navCollapse.SetHasClass('hide', shouldCollapse);
 
 		// Update all the items
-		Object.keys(SettingsTabs)
-			.filter((tab) => tab !== 'SearchSettings' && tab !== this.activeTab)
-			.forEach((tab) => this.setNavItemCollapsed(tab, shouldCollapse));
+		for (const tab of Object.keys(SettingsTabs).filter((tab) => tab !== 'SearchSettings' && tab !== this.activeTab))
+			this.setNavItemCollapsed(tab, shouldCollapse);
 	}
 
 	// Set the collapsed state of a nav item
@@ -261,40 +262,37 @@ class MainMenuSettings {
 		}
 
 		// Search all children
-		panel.Children?.().forEach((child) => {
+		for (const child of panel.Children?.()) {
 			this.initPanelsRecursive(child);
-		});
+		}
 	}
 
 	static initPersistentStorageEnum(panel, storageKey) {
-		panel
-			.FindChildTraverse('values')
-			.Children()
-			.forEach((child) => {
-				// Get the value of enum (usually 0: off, 1: on but they can have more values)
-				const value = child.GetAttributeInt('value', -1);
+		for (const child of panel.FindChildTraverse('values').Children()) {
+			// Get the value of enum (usually 0: off, 1: on but they can have more values)
+			const value = child.GetAttributeInt('value', -1);
 
-				if (value === -1) return;
+			if (value === -1) continue;
 
-				// 0 if not already set, let the places using the var handle setting a default value
-				const storedValue = $.persistentStorage.getItem(storageKey) ?? 0;
+			// 0 if not already set, let the places using the var handle setting a default value
+			const storedValue = $.persistentStorage.getItem(storageKey) ?? 0;
 
-				// Check the button if the value matches the stored value
-				child.checked = storedValue === value;
+			// Check the button if the value matches the stored value
+			child.checked = storedValue === value;
 
-				// Extra attribute to allow us to still specify onactivate events in XML
-				const overrideString = child.GetAttributeString('activateoverride', '');
+			// Extra attribute to allow us to still specify onactivate events in XML
+			const overrideString = child.GetAttributeString('activateoverride', '');
 
-				// Create function from XML string
-				const activateFn = new Function(overrideString);
+			// Create function from XML string
+			const activateFn = new Function(overrideString);
 
-				// Setter
-				child.SetPanelEvent('onactivate', () => {
-					$.persistentStorage.setItem(storageKey, value);
-					// Call override function if it exists
-					if (overrideString) activateFn();
-				});
+			// Setter
+			child.SetPanelEvent('onactivate', () => {
+				$.persistentStorage.setItem(storageKey, value);
+				// Call override function if it exists
+				if (overrideString) activateFn();
 			});
+		}
 	}
 
 	static initPersistentStorageEnumDropdown(panel, storageKey) {
@@ -365,7 +363,7 @@ class MainMenuSettings {
 					this.panels.infoTitle.text = $.Localize(title);
 					// I don't want localisation people having to fuss with HTML tags too much so replacing newlines with <br>
 					// does linebreaks for us without requiring any <p> tags.
-					this.panels.infoMessage.text = $.Localize(message).replace(/(?:\r\n|\r|\n)/g, '<br><br>');
+					this.panels.infoMessage.text = $.Localize(message).replace(/\r\n|\r|\n/g, '<br><br>');
 					this.panels.infoTitle.RemoveClass('hide');
 					this.panels.infoMessage.RemoveClass('hide');
 				} else {
@@ -400,27 +398,27 @@ class MainMenuSettings {
 
 	static styleAlternatingItems(page) {
 		// Search all groups on the page
-		page.FindChildrenWithClassTraverse('settings-group').forEach((group) => {
+		for (const group of page.FindChildrenWithClassTraverse('settings-group')) {
 			let n = 0;
 			const styleItem = (item) => item.AddClass(n++ % 2 === 0 ? '--odd' : '--even');
 
 			const search = (panel) => {
-				panel.Children?.().forEach((child) => {
+				for (const child of panel.Children?.()) {
 					// If it's a settings panel or a combo panel, style it
 					if (this.isSettingsPanel(child) || child.HasClass('settings-group__combo')) {
 						styleItem(child);
 					}
 					// Otherwise if it's a ConVarEnabler search all its children
 					else if (child.paneltype === 'ConVarEnabler') {
-						child.Children().forEach((grandchild) => search(grandchild));
+						for (const grandchild of child.Children()) search(grandchild);
 					} else {
 						search(child);
 					}
-				});
+				}
 			};
 
 			search(group);
-		});
+		}
 	}
 
 	static saveSettings() {
