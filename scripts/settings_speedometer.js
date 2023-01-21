@@ -483,8 +483,10 @@ class RangeColorProfileObject {
 	}
 
 	createDisplayPanels(profileKV) {
-		Object.keys(this.displayObjectList)?.forEach((id) => this.displayObjectList[id]?.destroy());
+		for (const id of Object.keys(this.displayObjectList) || []) this.displayObjectList[id]?.destroy();
+
 		this.displayObjectList = {};
+
 		for (const id of Object.keys(profileKV)) {
 			let rangeKV = profileKV[id];
 			let kvcolor = rangeKV['color'];
