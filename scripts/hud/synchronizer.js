@@ -194,7 +194,7 @@ class Synchronizer {
 	}
 
 	static initializeBuffer(size) {
-		return new Array(size).fill(0);
+		return Array.from({ length: size }).fill(0);
 	}
 
 	static addToBuffer(buffer, value) {
