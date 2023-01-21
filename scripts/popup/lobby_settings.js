@@ -7,7 +7,7 @@ class LobbySettings {
 		/** @type {Panel} @static */
 		warningRow: $('#WarningRow'),
 		/** @type {Label} @static */
-		warningRow: $('#WarningLabel'),
+		warningLabel: $('#WarningLabel'),
 		/** @type {Button} @static */
 		updateButton: $('#UpdateButton'),
 		/** @type {TextEntry} @static */
