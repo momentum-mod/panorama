@@ -1,4 +1,4 @@
-'use_strict';
+'use strict';
 
 const DEFAULT_GAMEMODE = 1; // Surf
 

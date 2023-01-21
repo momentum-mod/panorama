@@ -1,3 +1,5 @@
+'use strict';
+
 class ColorPickerPopup {
 	static init() {
 		const color = $.GetContextPanel().GetAttributeString('color', 'rgba(0,0,0,1)');
