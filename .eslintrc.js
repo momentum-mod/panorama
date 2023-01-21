@@ -13,6 +13,10 @@ module.exports = {
 		'class-methods-use-this': ['error'],
 		camelcase: ['warn'],
 		eqeqeq: ['error', 'smart'],
+		'no-var': ['error'],
+		'no-useless-constructor': ['error'],
+		'no-unused-expressions': ['error', { allowTernary: true }],
+		'prefer-arrow-callback': ['error'],
 		strict: ['error', 'global'],
 		// Terrible for us, gets confused by $. and stuff defined in other files that are in same context
 		// due being in the same <imports> block.
@@ -39,8 +43,6 @@ module.exports = {
 		// the cases with and without static ctors. May as well just use everywhere, even if the JS nerds are
 		// correct that a static only class (without static ctor) can just be an Object.
 		'unicorn/no-static-only-class': ['off'],
-		// Who cares
-		'unicorn/filename-case': ['off'],
 		// Fuck you I wanna
 		'unicorn/no-abusive-eslint-disable': ['off'],
 		// Terrible rule, it's often practically useful to explicitly state what's happening in cases
