@@ -137,7 +137,7 @@ class SettingsShared {
 
 		const findCvarsRecursive = (panel) => {
 			if (panel.paneltype && this.isSettingsPanel(panel) && panel.convar) cvars.push(panel.convar);
-			for (const child of panel?.Children()) findCvarsRecursive(child);
+			for (const child of panel?.Children() || []) findCvarsRecursive(child);
 		};
 
 		findCvarsRecursive(section);

@@ -264,7 +264,7 @@ class MapSelection {
 
 			panel.SetPanelEvent(eventType, () => this.filterSaveEvent(panel));
 		} else {
-			for (const child of panel.Children?.()) this.initFilterSaveEventsRecursive(child);
+			for (const child of panel?.Children() || []) this.initFilterSaveEventsRecursive(child);
 		}
 	}
 

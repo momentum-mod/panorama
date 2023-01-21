@@ -262,7 +262,7 @@ class MainMenuSettings {
 		}
 
 		// Search all children
-		for (const child of panel.Children?.()) {
+		for (const child of panel?.Children() ?? []) {
 			this.initPanelsRecursive(child);
 		}
 	}
@@ -406,7 +406,7 @@ class MainMenuSettings {
 			let n = 1; // Start odd
 
 			const search = (panel) => {
-				for (const child of panel.Children?.()) {
+				for (const child of panel?.Children() || []) {
 					// If it's a settings panel or a combo panel, style it
 					if (this.isSettingsPanel(child) || child.HasClass('settings-group__combo')) {
 						this.styleItem(child, n);
