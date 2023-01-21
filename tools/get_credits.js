@@ -36,10 +36,9 @@ class xmlStringBuilder {
 	}
 
 	openPanel(type, data, unnested = false) {
-		this.output +=
-			Object.entries(data).reduce((str, [k, v]) => (str += ` ${k}="${v}"`), `<${type}`) +
-			(unnested ? '/>' : '>') +
-			'\n';
+		let str = `<${type}`;
+		for (const [k, v] of Object.entries(data)) str += ` ${k}="${v}"`;
+		this.output += str + (unnested ? '/>' : '>') + '\n';
 		return type;
 	}
 
