@@ -104,8 +104,8 @@ class Learn {
 
 			for (const section of Object.values(sections))
 				for (const [i, child] of section.Children().entries())
-					child.paneltype === 'RadioButton' &&
-						child.AddClass(`learn-list__lesson--${i % 2 == 0 ? 'even' : 'odd'}`);
+					if (child.paneltype === 'RadioButton')
+						child.AddClass(`learn-list__lesson--${i % 2 === 0 ? 'even' : 'odd'}`);
 		}
 	}
 

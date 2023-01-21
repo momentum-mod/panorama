@@ -48,7 +48,7 @@ class SettingsShared {
 
 		panel.OnShow?.();
 
-		panel.Children()?.forEach((child) => this.refreshControlsRecursive(child));
+		for (const child of panel.Children() || []) this.refreshControlsRecursive(child);
 	}
 
 	static resetSettingsRecursive(panel) {
@@ -59,7 +59,7 @@ class SettingsShared {
 			// OptionsMenuAPI has already handled this, just refresh
 			panel.OnShow?.();
 		} else {
-			panel.Children()?.forEach((child) => this.resetSettingsRecursive(child));
+			for (const child of panel?.Children() || []) this.resetSettingsRecursive(child);
 		}
 	}
 

@@ -52,10 +52,7 @@ class HudLeaderboards {
 
 	static setMapAuthorCredits(credits) {
 		// Delete existing name labels
-		this.panels.credits
-			.Children()
-			.slice(1) // Keep the "by" label
-			?.forEach((child) => child.DeleteAsync(0));
+		for (const label of this.panels.credits.Children().slice(1) || []) label.DeleteAsync(0);
 
 		const authorCredits = credits.filter((x) => x.type === 'author');
 
