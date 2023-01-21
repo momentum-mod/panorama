@@ -12,7 +12,7 @@ class SpeedometerSelectPopup {
 
 	static init() {
 		const disabledIDs = $.GetContextPanel().GetAttributeString('disabledIDs', '').split(',');
-		disabledIDs.forEach((id, index) => {
+		for (const [index, id] of disabledIDs.entries()) {
 			let speedometer = $.CreatePanel('Panel', SpeedometerSelectPopup.container, '');
 			speedometer.LoadLayoutSnippet('speedometer-radiobutton');
 			speedometer.FindChildInLayoutFile('SpeedometerBtnLabel').text = SpeedometerDispNames[id];
@@ -23,6 +23,6 @@ class SpeedometerSelectPopup {
 			});
 
 			if (index === 0) radioBtn.selected = true;
-		});
+		}
 	}
 }

@@ -61,9 +61,8 @@ class MapSelection {
 			// Populate the gameModeData object, finding all the filter buttons
 			this.gameModeData = { ...GameModeInfoWithNull };
 
-			Object.keys(this.gameModeData).forEach(
-				(mode) => (this.gameModeData[mode].filterButton = $(`#${this.gameModeData[mode].idName}FilterButton`))
-			);
+			for (const mode of Object.keys(this.gameModeData))
+				this.gameModeData[mode].filterButton = $(`#${this.gameModeData[mode].idName}FilterButton`);
 
 			// Load the saved filters state
 			const filtersChanged = this.loadFilters();
@@ -101,16 +100,16 @@ class MapSelection {
 	 *  Set the panel events for gamemode buttons
 	 */
 	static initGamemodeButtons() {
-		Object.entries(this.gameModeData).forEach(([mode, values]) => {
+		for (const [mode, values] of Object.entries(this.gameModeData)) {
 			const filterButton = values.filterButton;
-			if (filterButton === null) return;
+			if (filterButton === null) continue;
 
 			filterButton.SetPanelEvent('oncontextmenu', () => this.clearOtherModes(mode));
 			filterButton.SetPanelEvent('onactivate', () => {
 				this.onModeButtonPressed(mode);
 				this.filterSaveEvent(filterButton);
 			});
-		});
+		}
 	}
 
 	/**
@@ -143,20 +142,20 @@ class MapSelection {
 
 		const areOthersUnchecked = this.areAllOtherModesUnchecked(selectedMode);
 
-		Object.entries(this.gameModeData)
-			.filter(([mode, modeData]) => mode !== selectedMode && modeData.filterButton)
-			.forEach(([_, modeData]) => {
-				const filterButton = modeData.filterButton;
-				if (areOthersUnchecked) {
-					// Others ARE all unchecked, so let's toggle them all back on
-					filterButton.SetSelected(true);
-				} else {
-					// Others are NOT all unchecked, so we want to uncheck them if not already
-					if (filterButton.checked) {
-						filterButton.SetSelected(false);
-					}
+		for (const [_, modeData] of Object.entries(this.gameModeData).filter(
+			([mode, modeData]) => mode !== selectedMode && modeData.filterButton
+		)) {
+			const filterButton = modeData.filterButton;
+			if (areOthersUnchecked) {
+				// Others ARE all unchecked, so let's toggle them all back on
+				filterButton.SetSelected(true);
+			} else {
+				// Others are NOT all unchecked, so we want to uncheck them if not already
+				if (filterButton.checked) {
+					filterButton.SetSelected(false);
 				}
-			});
+			}
+		}
 
 		$.GetContextPanel().ApplyFilters();
 
@@ -186,7 +185,7 @@ class MapSelection {
 					$.Localize('#MapSelector_Filters_RightClickTip'),
 					'tooltip--positive'
 				);
-				$.Schedule(3.0, () => UiToolkitAPI.HideTextTooltip());
+				$.Schedule(3, () => UiToolkitAPI.HideTextTooltip());
 				this.timesModeButtonsUnchecked = 0; // Reset the counter
 			}
 			// If a mode was just checked, reset the counter (bound to >= 0, counter can be negative when unchecked through code done asyncronously)
@@ -218,17 +217,18 @@ class MapSelection {
 	 */
 	static clearFilters() {
 		// Uncheck every checked gamemode button
-		Object.values(this.gameModeData).forEach((modeData) => {
+		for (const modeData of Object.values(this.gameModeData)) {
 			const button = modeData.filterButton;
 			if (button && !button.checked) button.SetSelected(true);
-		});
+		}
 
 		// Reset every NState button
-		[
+		for (const button of [
 			this.panels.completedFilterButton,
 			this.panels.favoritesFilterButton,
 			this.panels.downloadedFilterButton
-		].forEach((button) => (button.currentstate = 0));
+		])
+			button.currentstate = 0;
 
 		// Reset tier slider
 		this.panels.tierSlider.SetValues(TIER_MIN, TIER_MAX);
@@ -264,7 +264,7 @@ class MapSelection {
 
 			panel.SetPanelEvent(eventType, () => this.filterSaveEvent(panel));
 		} else {
-			panel.Children?.().forEach((child) => this.initFilterSaveEventsRecursive(child));
+			for (const child of panel.Children?.()) this.initFilterSaveEventsRecursive(child);
 		}
 	}
 
@@ -285,11 +285,11 @@ class MapSelection {
 	static saveAllFilters() {
 		if (!this.filtersState) return;
 
-		Object.keys(this.filtersState).forEach((panelID) => {
+		for (const panelID of Object.keys(this.filtersState)) {
 			const panel = $.GetContextPanel().FindChildTraverse(panelID);
 
 			if (panel) this.filtersState[panelID] = this.getFilterData(panel);
-		});
+		}
 
 		this.saveFilters();
 	}
@@ -315,14 +315,14 @@ class MapSelection {
 		this.filtersState = $.persistentStorage.getItem('mapSelector.filtersState') ?? {};
 
 		let filtersChanged = false;
-		Object.keys(this.filtersState).forEach((panelID) => {
+		for (const panelID of Object.keys(this.filtersState)) {
 			const panel = $.GetContextPanel().FindChildTraverse(panelID);
 
 			// Set the filter's state, and if it returns that it the state changed set the value to true
 			if (panel && !this.setFilterData(panel, this.filtersState[panelID])) {
 				filtersChanged = true;
 			}
-		});
+		}
 
 		return filtersChanged;
 	}
@@ -464,7 +464,7 @@ class MapSelection {
 
 		if (hasCredits) {
 			// Add them to the panel
-			authorCredits.forEach((credit, i) => {
+			for (const [i, credit] of authorCredits.entries()) {
 				let namePanel = $.CreatePanel('Label', this.panels.credits, '', {
 					text: credit.user.alias,
 					class: 'mapselector-credits__text mapselector-credits__name'
@@ -489,7 +489,7 @@ class MapSelection {
 					commaPanel.AddClass('mapselector-credits__text');
 					commaPanel.text = ',  ';
 				}
-			});
+			}
 		}
 
 		// Set the website button link
@@ -506,7 +506,7 @@ class MapSelection {
 	static onNStateBtnChanged(panelID, state) {
 		const panel = $.GetContextPanel().FindChildTraverse(panelID);
 
-		for (let type of Array(3).keys()) panel.SetHasClass(MapSelNStateClasses[type], state === type);
+		for (let type of Array.from({ length: 3 }).keys()) panel.SetHasClass(MapSelNStateClasses[type], state === type);
 	}
 
 	/**

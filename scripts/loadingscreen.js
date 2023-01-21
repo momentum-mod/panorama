@@ -73,9 +73,8 @@ class LoadingScreen {
 		this.panels.cp.SetDialogVariable('tracktype', mapData.mainTrack.isLinear ? 'Linear' : 'Staged');
 
 		let authorString = '';
-		mapData.credits
-			.filter((x) => x.type === 'author')
-			.forEach((item, i) => (authorString += (i > 0 ? ', ' : '') + item.user.alias));
+		for (const [i, item] of mapData.credits.filter((x) => x.type === 'author').entries())
+			authorString += (i > 0 ? ', ' : '') + item.user.alias;
 		this.panels.cp.SetDialogVariable('author', authorString);
 
 		this.panels.mapName.visible = true;

@@ -37,13 +37,13 @@ class DFJump {
 		this.pressBar.AddClass(newPressColorClass);
 		this.colorClass = newPressColorClass;
 
-		this.releaseLabel.text = releaseDelay.toFixed();
-		this.pressLabel.text = pressDelay.toFixed();
-		this.totalLabel.text = totalDelay.toFixed();
+		this.releaseLabel.text = releaseDelay.toFixed(0);
+		this.pressLabel.text = pressDelay.toFixed(0);
+		this.totalLabel.text = totalDelay.toFixed(0);
 	}
 
 	static setMaxDelay(newDelay) {
-		this.inverseMaxDelay = 1.0 / (newDelay ?? DEFAULT_DELAY);
+		this.inverseMaxDelay = 1 / (newDelay ?? DEFAULT_DELAY);
 	}
 
 	static initializeSettings() {

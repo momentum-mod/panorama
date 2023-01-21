@@ -20,7 +20,7 @@ class SpeedometerDetailObject {
 		this.create(id, speedometerKV, orderIndex);
 	}
 	destroy() {
-		this.containingPanel.DeleteAsync(0.0);
+		this.containingPanel.DeleteAsync(0);
 	}
 	discardChanges(speedometerKV) {
 		if (this.id !== SpeedometerIDs.EnergySpeedometer) this.unitsDropdown.SetSelectedIndex(speedometerKV['units']);
@@ -101,11 +101,11 @@ class SpeedometerDetailObject {
 		let profilesKV = SpeedometerSettingsAPI.GetColorProfiles();
 		for (let i = 1; i < this.colorProfileDropdown.AccessDropDownMenu().GetChildCount(); i++)
 			this.colorProfileDropdown.RemoveOptionIndex(i);
-		Object.keys(profilesKV).forEach((profileName) => {
+		for (const profileName of Object.keys(profilesKV)) {
 			let optionPanel = $.CreatePanel('Label', this.colorProfileDropdown.AccessDropDownMenu(), profileName);
 			optionPanel.text = profileName;
 			this.colorProfileDropdown.AddOption(optionPanel);
-		});
+		}
 
 		// attempt to restore the old selection
 		if (selColorProfile && this.colorProfileDropdown.HasOption(selColorProfile))
@@ -172,9 +172,10 @@ class Speedometers {
 	}
 	static addSpeedometer() {
 		let disabledIDs = [];
-		Object.keys(SpeedometerIDs)
-			.filter((speedoName) => Speedometers.objectList[SpeedometerIDs[speedoName]] === undefined)
-			.forEach((speedoName) => disabledIDs.push(SpeedometerIDs[speedoName]));
+		for (const speedoName of Object.keys(SpeedometerIDs).filter(
+			(speedoName) => Speedometers.objectList[SpeedometerIDs[speedoName]] === undefined
+		))
+			disabledIDs.push(SpeedometerIDs[speedoName]);
 		if (disabledIDs.length === 0) return; // nothing is disabled, don't bother showing popup
 		UiToolkitAPI.ShowCustomLayoutPopupParameters(
 			'',
@@ -247,25 +248,23 @@ class Speedometers {
 	static create() {
 		Speedometers.clearSpeedometers();
 		Speedometers.keyvalues = SpeedometerSettingsAPI.GetSettings(Speedometers.gamemode);
-		Object.keys(Speedometers.keyvalues)
-			.filter((speedoName) => speedoName !== 'order')
-			.forEach((speedoName) => {
-				let speedoKV = Speedometers.keyvalues[speedoName];
-				if (speedoKV['visible'] === 0) return;
+		for (const speedoName of Object.keys(Speedometers.keyvalues).filter((speedoName) => speedoName !== 'order')) {
+			let speedoKV = Speedometers.keyvalues[speedoName];
+			if (speedoKV['visible'] === 0) continue;
 
-				let id = SpeedometerIDs[speedoName];
-				Speedometers.objectList[id] = new SpeedometerDetailObject(
-					id,
-					speedoKV,
-					Speedometers.keyvalues['order'][speedoName]
-				);
-			});
+			let id = SpeedometerIDs[speedoName];
+			Speedometers.objectList[id] = new SpeedometerDetailObject(
+				id,
+				speedoKV,
+				Speedometers.keyvalues['order'][speedoName]
+			);
+		}
 
 		Speedometers.mainPanel.SortChildrenOnAttribute('order_index', true);
 		Speedometers.markAsUnmodified();
 	}
 	static saveAllSpeedometers() {
-		Object.keys(Speedometers.objectList).forEach((id) => {
+		for (const id of Object.keys(Speedometers.objectList)) {
 			let speedoName = Object.keys(SpeedometerIDs)[id];
 			Speedometers.keyvalues[speedoName] = {};
 			let speedoObject = Speedometers.objectList[id];
@@ -274,18 +273,18 @@ class Speedometers {
 			);
 			speedoObject.saveToKV(Speedometers.keyvalues[speedoName]);
 			speedoObject.markAsUnmodified();
-		});
+		}
 
 		let orderCtr = Speedometers.mainPanel.GetChildCount();
-		Object.keys(SpeedometerIDs)
-			.filter((speedoName) => Speedometers.objectList[SpeedometerIDs[speedoName]] === undefined)
-			.forEach((speedoName) => {
-				// make sure speedometers that aren't visible (their panels are deleted) have an ordering that's above
-				// the speedometers that are actually visible
-				if (Speedometers.keyvalues?.['order']?.[speedoName])
-					Speedometers.keyvalues['order'][speedoName] = orderCtr++;
-				Speedometers.keyvalues[speedoName]['visible'] = false;
-			});
+		for (const speedoName of Object.keys(SpeedometerIDs).filter(
+			(speedoName) => Speedometers.objectList[SpeedometerIDs[speedoName]] === undefined
+		)) {
+			// make sure speedometers that aren't visible (their panels are deleted) have an ordering that's above
+			// the speedometers that are actually visible
+			if (Speedometers.keyvalues?.['order']?.[speedoName])
+				Speedometers.keyvalues['order'][speedoName] = orderCtr++;
+			Speedometers.keyvalues[speedoName]['visible'] = false;
+		}
 		Speedometers.markAsUnmodified();
 		if (!SpeedometerSettingsAPI.SaveSpeedometersFromJS(Speedometers.gamemode, Speedometers.keyvalues))
 			$.Warning(`Failed to write speedometer of gamemode ${Speedometers.gamemode} to disk`);
@@ -310,7 +309,7 @@ class Speedometers {
 		Speedometers.discardButton.enabled = false;
 	}
 	static updateProfileDropdowns() {
-		Object.keys(Speedometers.objectList).forEach((id) => Speedometers.objectList[id]?.updateProfileDropdown());
+		for (const id of Object.keys(Speedometers.objectList)) Speedometers.objectList[id]?.updateProfileDropdown();
 	}
 }
 
@@ -327,7 +326,7 @@ class RangeColorObject {
 		rangeKV['color'] = this.kvcolor;
 	}
 	static convertCSSToKV(color) {
-		const splitColor = color.replace(/[^\d|,]/g, '').split(',');
+		const splitColor = color.replace(/[^\d,|]/g, '').split(',');
 		return `${splitColor[0]} ${splitColor[1]} ${splitColor[2]} ${splitColor[3] * 255}`;
 	}
 	static convertKVToCSS(color) {
@@ -353,7 +352,7 @@ class RangeColorRangeDisplayObject {
 		return this.displayPanel ? this.displayPanel.max : -1;
 	}
 	destroy() {
-		this.containingPanel.DeleteAsync(0.0);
+		this.containingPanel.DeleteAsync(0);
 	}
 	clearDisplay() {
 		this.containingPanel?.RemoveAndDeleteChildren();
@@ -409,7 +408,7 @@ class RangeColorProfileObject {
 		this.create(name, profileKV);
 	}
 	destroy() {
-		this.profilePanel.DeleteAsync(0.0);
+		this.profilePanel.DeleteAsync(0);
 	}
 	clearDisplays() {
 		this.displaysPanel?.RemoveAndDeleteChildren();
@@ -486,7 +485,7 @@ class RangeColorProfileObject {
 	createDisplayPanels(profileKV) {
 		Object.keys(this.displayObjectList)?.forEach((id) => this.displayObjectList[id]?.destroy());
 		this.displayObjectList = {};
-		Object.keys(profileKV).forEach((id) => {
+		for (const id of Object.keys(profileKV)) {
 			let rangeKV = profileKV[id];
 			let kvcolor = rangeKV['color'];
 			let rangeObject = new RangeColorObject(
@@ -497,7 +496,7 @@ class RangeColorProfileObject {
 			);
 			this.displayObjectList[id] = new RangeColorRangeDisplayObject(id, rangeObject, this);
 			this.reorderDisplayPanels(this.displayObjectList[id], rangeObject); // TODO: this is expensive!!!
-		});
+		}
 	}
 	create(profileName, profileKV) {
 		this.clearDisplays();
@@ -553,10 +552,10 @@ class RangeColorProfileObject {
 		this.discardButton.enabled = false;
 	}
 	saveToKV(profileKV) {
-		Object.keys(this.displayObjectList).forEach((id) => {
+		for (const id of Object.keys(this.displayObjectList)) {
 			profileKV[id] = {};
 			this.displayObjectList[id].saveToKV(profileKV[id]);
-		});
+		}
 	}
 }
 class RangeColorProfiles {
@@ -673,21 +672,21 @@ class RangeColorProfiles {
 		RangeColorProfiles.clearProfiles();
 		RangeColorProfiles.markAsUnmodified();
 		RangeColorProfiles.keyvalues = SpeedometerSettingsAPI.GetColorProfiles();
-		Object.keys(RangeColorProfiles.keyvalues).forEach((profileName) => {
+		for (const profileName of Object.keys(RangeColorProfiles.keyvalues)) {
 			RangeColorProfiles.objectList[profileName] = new RangeColorProfileObject(
 				profileName,
 				RangeColorProfiles.keyvalues[profileName]
 			);
-		});
+		}
 	}
 	static saveAllProfiles() {
 		let keyvalues = {};
-		Object.keys(RangeColorProfiles.objectList).forEach((profileName) => {
+		for (const profileName of Object.keys(RangeColorProfiles.objectList)) {
 			keyvalues[profileName] = {};
 			let profileObject = RangeColorProfiles.objectList[profileName];
 			profileObject.saveToKV(keyvalues[profileName]);
 			profileObject.markAsUnmodified();
-		});
+		}
 		if (SpeedometerSettingsAPI.SaveColorProfilesFromJS(keyvalues)) {
 			RangeColorProfiles.markAsUnmodified();
 			Speedometers.updateProfileDropdowns();
@@ -715,7 +714,7 @@ class RangeColorProfiles {
 
 	static makeColorProfileNamePopup(prefilledText, OKBtnText, callback) {
 		let profileNames = [];
-		Object.keys(RangeColorProfiles.objectList).forEach((profileName) => profileNames.push(profileName));
+		for (const profileName of Object.keys(RangeColorProfiles.objectList)) profileNames.push(profileName);
 		UiToolkitAPI.ShowCustomLayoutPopupParameters(
 			'',
 			'file://{resources}/layout/popups/popup_rangecolorprofilename.xml',

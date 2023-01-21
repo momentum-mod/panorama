@@ -206,7 +206,7 @@ class EndOfRun {
 		this.panels.cp.AddClass('endofrun--first');
 
 		// Loop through each zone in the run and create a neutral Split panel with no diff/delta
-		run.stats.zones.forEach((zone, i) => {
+		for (const [i, zone] of run.stats.zones.entries()) {
 			const splitWrapper = $.CreatePanel('Panel', this.panels.splits, `Split${zone.name}`, {
 				class: 'endofrun__split'
 			});
@@ -218,7 +218,7 @@ class EndOfRun {
 			});
 
 			if (i === run.numZones - 1) splitWrapper.ScrollParentToMakePanelFit(3, false);
-		});
+		}
 
 		this.panels.cp.SetDialogVariable('comparison_name', '');
 
@@ -250,7 +250,7 @@ class EndOfRun {
 		});
 
 		// Create splits for every comparison
-		comparison.splits.forEach((split, i) => {
+		for (const [i, split] of comparison.splits.entries()) {
 			// Create radiobutton rather than regular panel to wrap the split in
 			const button = $.CreatePanel('RadioButton', this.panels.splits, `Split${split.name}`, {
 				class: 'endofrun__split-button',
@@ -275,7 +275,7 @@ class EndOfRun {
 
 			// Scroll the rightmost split
 			if (i === comparison.splits.length - 1) button.ScrollParentToMakePanelFit(3, false);
-		});
+		}
 
 		// Make the graph
 		this.updateGraph(comparison, null);
@@ -345,10 +345,10 @@ class EndOfRun {
 		const isPositiveGood = (s) => useStat && (s.unit.includes('UnitsPerSecond') || s.name.includes('StrafeSync'));
 
 		// Find max and min diff for the run
-		comparisonSplits.forEach((split) => {
+		for (const split of comparisonSplits) {
 			max = Math.max(max, useStat ? split.statsComparisons[statIndex].diff : split.diff);
 			min = Math.min(min, useStat ? split.statsComparisons[statIndex].diff : split.diff);
-		});
+		}
 
 		// Add some vertical spacing to the graph
 		const spacing = (max - min) / 10;
@@ -400,7 +400,7 @@ class EndOfRun {
 		];
 
 		// Make our points
-		comparisonSplits.forEach((split, i) => {
+		for (const [i, split] of comparisonSplits.entries()) {
 			const splitName = split.name;
 			const data = useStat ? { ...split.statsComparisons[statIndex], time: 0, delta: 0 } : split;
 			const isTimeComparison = !useStat || data.unit === $.Localize('#Run_Stat_Unit_Second');
@@ -456,7 +456,7 @@ class EndOfRun {
 					onmouseout: (_) => UiToolkitAPI.HideTextTooltip()
 				}
 			});
-		});
+		}
 
 		// Add our line to the lines array
 		lineGraph.lines = [line];
@@ -524,7 +524,7 @@ class EndOfRun {
 
 		// Function to create row for each stat passed in
 		const createRow = (statComparison, index) => {
-			const round = (n) => parseFloat(n.toFixed(2));
+			const round = (n) => Number.parseFloat(n.toFixed(2));
 
 			const row = $.CreatePanel('RadioButton', this.panels.zoneStats, '', {
 				class: `endofrun-stats__row ${(index + 1) % 2 == 0 ? ' endofrun-stats__row--odd' : ''}`, // +1 to account for Times row
@@ -570,7 +570,7 @@ class EndOfRun {
 			null
 		);
 
-		split.statsComparisons.forEach((statComparison, i) => createRow(statComparison, i));
+		for (const [i, statComparison] of split.statsComparisons.entries()) createRow(statComparison, i);
 	}
 
 	/**

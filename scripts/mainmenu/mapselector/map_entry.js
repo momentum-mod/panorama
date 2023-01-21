@@ -127,18 +127,14 @@ class MapEntry {
 
 			let icon;
 			// Do G1-6 here when it's hooked up
-			if (mapData.pr.rank <= 10) {
-				icon = 'file://{images}/ranks/top10.svg';
-			} else {
-				icon = 'file://{images}/flag.svg';
-			}
+			icon = mapData.pr.rank <= 10 ? 'file://{images}/ranks/top10.svg' : 'file://{images}/flag.svg';
 
 			pbIcon.SetImage(icon);
 
 			let time = mapData.pr.run.time;
 
 			if (!time.includes(':')) {
-				parseInt(time) >= 10 ? (time = '0:' + time) : (time = '0:0' + time);
+				Number.parseInt(time) >= 10 ? (time = '0:' + time) : (time = '0:0' + time);
 			}
 
 			pbLabel.text = time.split('.')[0];

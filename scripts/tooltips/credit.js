@@ -48,7 +48,7 @@ class Credit {
 		cp.SetDialogVariable('discord', discord);
 		cp.SetDialogVariable('github', github);
 
-		SECTIONS.forEach((s) => cp.SetHasClass(`credit--${s.toLowerCase()}`, s === section));
+		for (const s of SECTIONS) cp.SetHasClass(`credit--${s.toLowerCase()}`, s === section);
 
 		cp.SetHasClass('credit--no-name', name === '');
 		this.panels.pronouns.SetHasClass('hide', pronouns === '');

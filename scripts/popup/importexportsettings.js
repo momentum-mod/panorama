@@ -70,11 +70,12 @@ class ImportExportSettings {
 			if (this.base64Mode) {
 				if (Object.keys(this.cvars).length !== cvars.length) throw '#Settings_ImportExport_Error_Outdated';
 
-				cvars.forEach((cvarValue, index) => GameInterfaceAPI.SetSettingString(this.cvars[index], cvarValue));
+				for (const [index, cvarValue] of cvars.entries())
+					GameInterfaceAPI.SetSettingString(this.cvars[index], cvarValue);
 			} else {
 				if (!cvars[0].includes(' ')) throw '#Settings_ImportExport_Error_NoCvars';
 
-				cvars.forEach((cvar) => {
+				for (const cvar of cvars) {
 					const cvarArray = cvar.split(' ');
 
 					if (!Object.values(this.cvars).includes(cvarArray[0])) {
@@ -85,11 +86,11 @@ class ImportExportSettings {
 								`[${$.Localize('#Settings_ImportExport_Invalid')}] ${cvar}`
 							);
 
-						return;
+						continue;
 					}
 
 					GameInterfaceAPI.SetSettingString(cvarArray[0], cvarArray.slice(1).join(' '));
-				});
+				}
 			}
 
 			this.panels.importStatus.AddClass('color-positive');
@@ -99,14 +100,14 @@ class ImportExportSettings {
 				$.Localize('#Settings_ImportExport_Success') +
 					(foundInvalidInput ? ' ' + $.Localize('#Settings_ImportExport_Success_Excluded') : '')
 			);
-		} catch (e) {
+		} catch (error) {
 			this.panels.importStatus.RemoveClass('color-positive');
 			this.panels.importStatus.AddClass('color-error');
 			$.GetContextPanel().SetDialogVariable(
 				'import_warning',
-				$.Localize('#Settings_ImportExport_Failure') + ' ' + $.Localize(e)
+				$.Localize('#Settings_ImportExport_Failure') + ' ' + $.Localize(error)
 			);
-			$.Warning($.Localize('#Settings import parser failed!') + ' ' + e);
+			$.Warning($.Localize('#Settings import parser failed!') + ' ' + error);
 		}
 
 		this.exportSettings();

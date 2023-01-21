@@ -10,7 +10,7 @@ class ConsoleNotify {
 		} else {
 			$.GetContextPanel().style.opacity = '1.0';
 		}
-		this.scheduleOpacity = $.Schedule(5.0, ConsoleNotify.scheduledHide);
+		this.scheduleOpacity = $.Schedule(5, ConsoleNotify.scheduledHide);
 	}
 
 	static scheduledHide() {

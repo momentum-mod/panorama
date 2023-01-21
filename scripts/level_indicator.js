@@ -49,9 +49,8 @@ class LevelIndicator {
 		const newLevel = this.totalLevel + 1;
 
 		const cp = $.GetContextPanel();
-		[cp, cp.FindChild('Container'), cp.FindChild('IncrementContainer')].forEach(
-			(panel) => (panel.style.animationDuration = `${animDuration}s`)
-		);
+		for (const panel of [cp, cp.FindChild('Container'), cp.FindChild('IncrementContainer')])
+			panel.style.animationDuration = `${animDuration}s`;
 
 		cp.SetDialogVariableInt('level_incr', this.getInnerLevel(newLevel));
 		this.panels.iconIncrement.SetHasClass('levelindicator__icon--hidden', this.getPrestige(newLevel) == 0);

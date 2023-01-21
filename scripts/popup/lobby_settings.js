@@ -72,6 +72,6 @@ class LobbySettings {
 	}
 
 	static getMaxPlayersEntered() {
-		return parseInt(this.panels.maxPlayers.text);
+		return Number.parseInt(this.panels.maxPlayers.text);
 	}
 }

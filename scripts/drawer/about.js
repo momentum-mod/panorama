@@ -33,19 +33,19 @@ class About {
 	}
 
 	static initCreditEvents() {
-		this.sections.credits.FindChildrenWithClassTraverse('about-credits__name').forEach((panel) => {
+		for (const panel of this.sections.credits.FindChildrenWithClassTraverse('about-credits__name')) {
 			const name = panel.GetAttributeString('name', '');
 			const roles = panel.GetAttributeString('roles', '');
 			const bio = panel.GetAttributeString('bio', '');
 			const section = panel.GetAttributeString('section', '');
 
 			// Don't bother with tooltips for contributors that don't have any extra stuff set
-			if (!name && !roles && !bio && section === 'contributor') return;
+			if (!name && !roles && !bio && section === 'contributor') continue;
 
 			// Attribute strings seem to be limited to 256 chars, this breaks up bios into multiple strings when required.
 			const maxLength = 255;
 			const constructedBioString = bio
-				? Array(Math.ceil(bio.length / maxLength))
+				? Array.from({ length: Math.ceil(bio.length / maxLength) })
 						.fill(0)
 						.map((_, i) => `&bio${i + 1}=${bio.slice(i * maxLength, (i + 1) * maxLength)}`)
 						.join('')
@@ -69,19 +69,19 @@ class About {
 				)
 			);
 			panel.SetPanelEvent('onmouseout', () => UiToolkitAPI.HideCustomLayoutTooltip('CreditsTooltip'));
-		});
+		}
 	}
 
 	static loadChangelog() {
 		const changelogData = $.LoadKeyValuesFile(CHANGELOG_FILE_PATH);
 
-		Object.entries(changelogData).forEach(([version, versionData]) => {
+		for (const [version, versionData] of Object.entries(changelogData)) {
 			$.CreatePanel('Label', this.sections.changelog, '', {
 				class: 'about-changelog__version',
 				text: version
 			});
 
-			Object.entries(versionData).forEach(([category, categoryData]) => {
+			for (const [category, categoryData] of Object.entries(versionData)) {
 				$.CreatePanel('Label', this.sections.changelog, '', {
 					class: 'about-changelog__category',
 					text: category
@@ -91,7 +91,7 @@ class About {
 					class: 'about-changelog__item',
 					text: ' • ' + Object.values(categoryData).join('\n • ')
 				});
-			});
-		});
+			}
+		}
 	}
 }

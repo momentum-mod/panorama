@@ -55,11 +55,11 @@ class HudLeaderboards {
 		this.panels.credits
 			.Children()
 			.slice(1) // Keep the "by" label
-			?.forEach((child) => child.DeleteAsync(0.0));
+			?.forEach((child) => child.DeleteAsync(0));
 
 		const authorCredits = credits.filter((x) => x.type === 'author');
 
-		authorCredits.forEach((credit) => {
+		for (const credit of authorCredits) {
 			let namePanel = $.CreatePanel('Label', this.panels.credits, '', {
 				text: credit.user.alias
 			});
@@ -87,7 +87,7 @@ class HudLeaderboards {
 				commaPanel.AddClass('hud-leaderboards-map-info__credits-other-text');
 				commaPanel.text = ',';
 			}
-		});
+		}
 	}
 
 	static setMapStats(data) {

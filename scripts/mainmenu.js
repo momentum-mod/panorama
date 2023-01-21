@@ -59,17 +59,17 @@ class MainMenuController {
 		this.panels.movie = $('#MainMenuMovie');
 		this.panels.model = $('#MainMenuModel');
 
-		this.panels.model.SetModelRotation(0.0, 270.0, 0.0); // Get arrow logo facing to the right, looks better
-		this.panels.model.SetModelRotationSpeedTarget(0.0, 0.2, 0.0);
-		this.panels.model.SetMouseXRotationScale(0.0, 1.0, 0.0); // By default mouse X will rotate the X axis, but we want it to spin Y axis
-		this.panels.model.SetMouseYRotationScale(0.0, 0.0, 0.0); // Disable mouse Y movement rotations
+		this.panels.model.SetModelRotation(0, 270, 0); // Get arrow logo facing to the right, looks better
+		this.panels.model.SetModelRotationSpeedTarget(0, 0.2, 0);
+		this.panels.model.SetMouseXRotationScale(0, 1, 0); // By default mouse X will rotate the X axis, but we want it to spin Y axis
+		this.panels.model.SetMouseYRotationScale(0, 0, 0); // Disable mouse Y movement rotations
 
 		this.panels.model.LookAtModel();
-		this.panels.model.SetCameraOffset(-200.0, 0.0, 0.0);
-		this.panels.model.SetCameraFOV(40.0);
+		this.panels.model.SetCameraOffset(-200, 0, 0);
+		this.panels.model.SetCameraFOV(40);
 
 		this.panels.model.SetDirectionalLightColor(0, 0.5, 0.5, 0.5);
-		this.panels.model.SetDirectionalLightDirection(0, 1.0, 0.0, 0.0);
+		this.panels.model.SetDirectionalLightDirection(0, 1, 0, 0);
 
 		if (GameInterfaceAPI.GetSettingBool('developer')) $('#ControlsLibraryButton').RemoveClass('hide');
 
@@ -252,7 +252,7 @@ class MainMenuController {
 		this.panels.image.visible = !useVideo;
 		this.panels.image.SetReadyForDisplay(!useVideo);
 
-		const backgroundVar = parseInt($.persistentStorage.getItem('settings.mainMenuBackground'));
+		const backgroundVar = Number.parseInt($.persistentStorage.getItem('settings.mainMenuBackground'));
 
 		if (isNaN(backgroundVar)) {
 			// Light mode by default
@@ -309,9 +309,8 @@ class MainMenuController {
 	 * Necessary to handle in here because map selector background is a part of the main menu background section.
 	 */
 	static onMapSelectorLoaded() {
-		['MapSelectorLeft', 'MapDescription', 'MapInfoStats', 'Leaderboards'].forEach((panel) =>
-			this.panels.backgroundBlur?.AddBlurPanel($.GetContextPanel().FindChildTraverse(panel))
-		);
+		for (const panel of ['MapSelectorLeft', 'MapDescription', 'MapInfoStats', 'Leaderboards'])
+			this.panels.backgroundBlur?.AddBlurPanel($.GetContextPanel().FindChildTraverse(panel));
 	}
 
 	/**

@@ -37,7 +37,7 @@ class Drawer {
 	};
 
 	static {
-		Object.keys(TABS).forEach((tab) => this.loadTab(tab));
+		for (const tab of Object.keys(TABS)) this.loadTab(tab);
 
 		$.RegisterForUnhandledEvent('Drawer_UpdateLobbyButton', this.updateLobbyButton.bind(this));
 		$.RegisterForUnhandledEvent('Drawer_NavigateToTab', this.navigateToTab.bind(this));
@@ -57,12 +57,15 @@ class Drawer {
 		newPanel.LoadLayout('file://{resources}/layout/drawer/' + TABS[tab].layout + '.xml', false, false);
 
 		$.RegisterEventHandler('PropertyTransitionEnd', this.panels.content, (panelName, propertyName) => {
-			if (newPanel.id === panelName && propertyName === 'opacity') {
-				if (newPanel.visible === true && newPanel.IsTransparent()) {
-					newPanel.visible = false;
-					newPanel.SetReadyForDisplay(false);
-					return true;
-				}
+			if (
+				newPanel.id === panelName &&
+				propertyName === 'opacity' &&
+				newPanel.visible === true &&
+				newPanel.IsTransparent()
+			) {
+				newPanel.visible = false;
+				newPanel.SetReadyForDisplay(false);
+				return true;
 			}
 			return false;
 		});

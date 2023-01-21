@@ -27,7 +27,7 @@ class JumpStats {
 			// Most stats are noise on the first jump when tracking jumps like css
 			// Only show takeoff speed
 			this.addToBuffer(this.countBuffer, lastJumpStats.jumpCount + ':');
-			this.addToBuffer(this.takeoffSpeedBuffer, lastJumpStats.takeoffSpeed.toFixed());
+			this.addToBuffer(this.takeoffSpeedBuffer, lastJumpStats.takeoffSpeed.toFixed(0));
 			this.addToBuffer(this.speedDeltaBuffer, '');
 			this.addToBuffer(this.takeoffTimeBuffer, '');
 			this.addToBuffer(this.timeDeltaBuffer, '');
@@ -40,8 +40,8 @@ class JumpStats {
 			this.addToBuffer(this.efficiencyBuffer, '');
 		} else {
 			this.addToBuffer(this.countBuffer, lastJumpStats.jumpCount + ':');
-			this.addToBuffer(this.takeoffSpeedBuffer, lastJumpStats.takeoffSpeed.toFixed());
-			this.addToBuffer(this.speedDeltaBuffer, lastJumpStats.jumpSpeedDelta.toFixed());
+			this.addToBuffer(this.takeoffSpeedBuffer, lastJumpStats.takeoffSpeed.toFixed(0));
+			this.addToBuffer(this.speedDeltaBuffer, lastJumpStats.jumpSpeedDelta.toFixed(0));
 			this.addToBuffer(this.takeoffTimeBuffer, this.makeTime(lastJumpStats.takeoffTime));
 			this.addToBuffer(this.timeDeltaBuffer, lastJumpStats.timeDelta.toFixed(3));
 			this.addToBuffer(this.strafesBuffer, lastJumpStats.strafeCount);
@@ -60,7 +60,7 @@ class JumpStats {
 	}
 
 	static initializeBuffer(size) {
-		let buffer = Array(size).fill('\n');
+		let buffer = new Array(size).fill('\n');
 		buffer[buffer.length - 1] = '';
 		return buffer;
 	}
@@ -121,8 +121,8 @@ class JumpStats {
 	}
 
 	static makeTime(value) {
-		const hours = (value / 3600).toFixed().padStart(2, '0');
-		const minutes = (Math.floor(value / 60) % 60).toFixed().padStart(2, '0');
+		const hours = (value / 3600).toFixed(0).padStart(2, '0');
+		const minutes = (Math.floor(value / 60) % 60).toFixed(0).padStart(2, '0');
 		const seconds = (value % 60).toFixed(3).padStart(6, '0');
 		return `${hours}:${minutes}:${seconds}`;
 	}

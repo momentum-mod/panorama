@@ -60,7 +60,7 @@ class LineGraph {
 
 		// If either axis is undefined or 0 range we're gonna get Infinity/NaNs flying around everywhere
 		if (
-			!this.axis.every((axis) => !isNaN(parseInt(axis.min)) && !isNaN(parseInt(axis.max))) ||
+			!this.axis.every((axis) => !isNaN(Number.parseInt(axis.min)) && !isNaN(Number.parseInt(axis.max))) ||
 			this.axis[0].min === this.axis[0].max ||
 			this.axis[1].min === this.axis[1].max
 		) {
@@ -69,7 +69,7 @@ class LineGraph {
 		}
 
 		// Loop through each axis and draw gridlines, axis names, and markers
-		['x', 'y'].forEach((axisName, i) => {
+		for (const [i, axisName] of ['x', 'y'].entries()) {
 			const cp = $.GetContextPanel();
 			const isX = i == 0;
 			const axis = this.axis[i];
@@ -95,7 +95,7 @@ class LineGraph {
 			// Loop through all the gridlines and markers we want to draw
 			for (let j = lineMin; j <= lineMax; j += axis.interval) {
 				// Round out any floating point imprecision errors
-				j = parseFloat(j.toPrecision(7));
+				j = Number.parseFloat(j.toPrecision(7));
 				// Lerp for distance along the axis
 				const dist = Math.round(((j - axis.min) / (axis.max - axis.min)) * panelLength);
 
@@ -123,10 +123,10 @@ class LineGraph {
 						style: offset
 					});
 			}
-		});
+		}
 
 		// Create our lines!
-		this.lines.forEach((line, lineIndex) => {
+		for (const [lineIndex, line] of this.lines.entries()) {
 			const panel = $.CreatePanel('Panel', this.panels.graphContainer, `Graph${lineIndex}`);
 
 			// Make a graph container, a canvas panel for the lines and a panel for the points.
@@ -135,14 +135,14 @@ class LineGraph {
 			const graph = panel.FindChild('Graph');
 			const pointsContainer = panel.FindChild('Points');
 
-			if (!line.points) return;
+			if (!line.points) continue;
 
 			// Array to send to the canvas
 			let canvasPoints = [];
 
 			// Loop through all the points in the class creating the panels for each, and generating an array of points in a format
 			// that UICanvas likes.
-			line.points.forEach((point) => {
+			for (const point of line.points) {
 				const id = point.id;
 				// Get their relative positions on the graph panel
 				const position = this.#getRelativisedPosition(point);
@@ -150,8 +150,7 @@ class LineGraph {
 				const size = point.selectionSize;
 				const offset = size / 2;
 
-				canvasPoints.push(position.x);
-				canvasPoints.push(position.y);
+				canvasPoints.push(position.x, position.y);
 
 				// Outer panel, no styling, just to we attach events to
 				const panel = $.CreatePanel('Panel', pointsContainer, id, {
@@ -168,10 +167,9 @@ class LineGraph {
 
 				// Register any events the point, binding the ID of the point panel in the first argument place.
 				if (point.events)
-					Object.entries(point.events).forEach(([name, fn]) =>
-						panel.SetPanelEvent(name, fn.bind(undefined, id))
-					);
-			});
+					for (const [name, fn] of Object.entries(point.events))
+						panel.SetPanelEvent(name, fn.bind(undefined, id));
+			}
 
 			// Draw the line on the canvas
 			graph.DrawLinePoints(canvasPoints.length / 2, canvasPoints, line.thickness, line.color);
@@ -186,13 +184,12 @@ class LineGraph {
 				// Draw a polygon in the polyPoints array, then clear it
 				const drawPoly = (isAbove) => {
 					let formattedArray = [];
-					polyPoints.forEach((_, i) => {
+					for (const [i, _] of polyPoints.entries()) {
 						const relativedPoints = this.#getRelativisedPosition(
 							polyPoints[isAbove ? i : polyPoints.length - i - 1]
 						);
-						formattedArray.push(relativedPoints.x);
-						formattedArray.push(relativedPoints.y);
-					});
+						formattedArray.push(relativedPoints.x, relativedPoints.y);
+					}
 					graph.DrawPoly(
 						polyPoints.length,
 						formattedArray,
@@ -203,29 +200,24 @@ class LineGraph {
 
 				// Search through all the space below or above the axis (comments are written for the "below" case)
 				const findPoly = (isAbove, trackingBool) => {
-					line.points.forEach((point, i) => {
+					for (const [i, point] of line.points.entries()) {
 						if (isAbove ? point.y > 0 : point.y < 0) {
 							// If this point is below, the next iteration is going to be finishing a poly
 							trackingBool = true;
 
 							// Ignore 0 zero, next iteration handles it.
-							if (i == 0) return;
+							if (i == 0) continue;
 
 							const lastPoint = line.points[i - 1];
 							if (isAbove ? lastPoint.y > 0 : lastPoint.y < 0) {
 								// Last point ABOVE origin, so make a trapezoid.
-								polyPoints.push({ x: lastPoint.x, y: 0 });
-								polyPoints.push(lastPoint);
-								polyPoints.push(point);
-								polyPoints.push({ x: point.x, y: 0 });
+								polyPoints.push({ x: lastPoint.x, y: 0 }, lastPoint, point, { x: point.x, y: 0 });
 							} else {
 								// Previous point was somewhere BELOW the axis, so find point where line between last point and this one intersect the axis,
 								// make a triangle between that point, current point, and current point's x at y = 0.
 								const xIntersect =
 									lastPoint.x - lastPoint.y * ((point.x - lastPoint.x) / (point.y - lastPoint.y));
-								polyPoints.push({ x: xIntersect, y: 0 });
-								polyPoints.push(point);
-								polyPoints.push({ x: point.x, y: 0 });
+								polyPoints.push({ x: xIntersect, y: 0 }, point, { x: point.x, y: 0 });
 							}
 							drawPoly(isAbove);
 						} else if (trackingBool) {
@@ -234,12 +226,14 @@ class LineGraph {
 							trackingBool = false;
 							const lastPoint = line.points[i - 1];
 							const xIntersect = point.x - point.y * ((lastPoint.x - point.x) / (lastPoint.y - point.y));
-							polyPoints.push({ x: lastPoint.x, y: 0 });
-							polyPoints.push({ x: lastPoint.x, y: lastPoint.y });
-							polyPoints.push({ x: xIntersect, y: 0 });
+							polyPoints.push(
+								{ x: lastPoint.x, y: 0 },
+								{ x: lastPoint.x, y: lastPoint.y },
+								{ x: xIntersect, y: 0 }
+							);
 							drawPoly(isAbove);
 						}
-					});
+					}
 				};
 
 				let isDoingAbovePoly = false;
@@ -248,7 +242,7 @@ class LineGraph {
 				if (line.shadeAboveToOriginColor) findPoly(true, isDoingAbovePoly);
 				if (line.shadeBelowToOriginColor) findPoly(false, isDoingBelowPoly);
 			}
-		});
+		}
 	}
 
 	/**
