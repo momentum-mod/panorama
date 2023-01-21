@@ -200,7 +200,7 @@ class SettingsSearch {
 			return;
 		}
 
-		var searchResult = $.CreatePanel('Panel', this.panels.results, '');
+		const searchResult = $.CreatePanel('Panel', this.panels.results, '');
 
 		// If the text property is set, we're targeting an individual setting. Otherwise, a group.
 		const isGroupPanel = !matches.text;
