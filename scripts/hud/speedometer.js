@@ -254,7 +254,7 @@ class Speedometer {
 		) {
 			// energy speedometer can be negative!
 			const speed = speedoID === SpeedometerIDs.EnergySpeedometer ? velocity : Math.abs(velocity);
-			const diff = !customdiff ? speed - speedometer.prevVal : customdiff;
+			const diff = customdiff ?? speed - speedometer.prevVal;
 
 			const labelToColor = separateComparison ? speedometer.comparisonlabel : speedometer.label;
 			let diffSymbol;

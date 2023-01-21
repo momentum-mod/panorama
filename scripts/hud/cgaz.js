@@ -256,7 +256,7 @@ class Cgaz {
 		this.screenY = $.GetContextPanel().actuallayoutheight;
 		this.screenX = $.GetContextPanel().actuallayoutwidth;
 		this.scale = $.GetContextPanel().actualuiscale_y;
-		this.fov4_3 = this.hud_fov ? this.hud_fov : GameInterfaceAPI.GetSettingFloat('fov_desired'); //source uses 4:3 for fov setting
+		this.fov4_3 = this.hud_fov || GameInterfaceAPI.GetSettingFloat('fov_desired'); //source uses 4:3 for fov setting
 		this.vFov_tangent = 0.75 * Math.tan((0.5 * this.fov4_3 * Math.PI) / 180);
 		this.vFov = Math.atan(this.vFov_tangent);
 		this.hFov = Math.atan((this.vFov_tangent * this.screenX) / this.screenY);
