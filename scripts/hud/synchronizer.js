@@ -72,20 +72,24 @@ class Synchronizer {
 				this.panels.segments[0].style.backgroundColor = color;
 				this.panels.segments[0].style.width = (yawRatio * 50).toFixed(3) + '%';
 				break;
-			case 2: // "Full-width throttle"
+			case 2: {
+				// "Full-width throttle"
 				const absRatio = Math.abs(gainRatio);
 				flow = direction * (yawRatio > 1 ? -1 : 1) * flip;
 				this.panels.container.style.flowChildren = flow < 0 ? 'left' : 'right';
 				this.panels.segments[0].style.backgroundColor = color;
 				this.panels.segments[0].style.width = (absRatio * 100).toFixed(3) + '%';
 				break;
-			case 3: // "Strafe indicator"
+			}
+			case 3: {
+				// "Strafe indicator"
 				this.panels.container.style.flowChildren = flip < 0 ? 'left' : 'right';
 				//const offset = Math.min(Math.max(0.5 - (0.5 * direction * syncDelta) / idealDelta, 0), 1);
 				const offset = Math.min(Math.max(0.5 - 0.5 * direction * yawRatio, 0), 1);
 				this.panels.segments[0].style.width = (offset * this.indicatorPercentage).toFixed(3) + '%';
 				this.panels.segments[1].style.backgroundColor = color;
 				break;
+			}
 			case 4: // "Synchronizer"
 				this.panels.container.style.flowChildren = flip < 0 ? 'left' : 'right';
 				this.firstPanelWidth += this.syncGain * direction * yawRatio * lastTickStats.idealGain;
