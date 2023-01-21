@@ -1,3 +1,5 @@
+'use strict';
+
 const lib = require('./lib.js');
 const csvParser = require('papaparse');
 const axios = require('axios');

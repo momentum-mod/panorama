@@ -2,8 +2,10 @@ module.exports = {
 	plugins: ['unicorn', 'prettier'],
 	extends: ['eslint:recommended', 'plugin:unicorn/recommended', 'prettier'],
 	root: true,
-	env: {
-		es2022: true
+	parserOptions: {
+		ecmaVersion: 'latest',
+		sourceType: 'script',
+		impliedStrict: 'true'
 	},
 	ignorePatterns: ['.eslintrc.js', 'node_modules', '__types_momentum.js'],
 	rules: {
@@ -11,6 +13,7 @@ module.exports = {
 		'class-methods-use-this': ['error'],
 		camelcase: ['warn'],
 		eqeqeq: ['error', 'smart'],
+		strict: ['error', 'global'],
 		// Terrible for us, gets confused by $. and stuff defined in other files that are in same context
 		// due being in the same <imports> block.
 		'no-undef': ['off'],

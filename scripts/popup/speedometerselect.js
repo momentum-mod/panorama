@@ -1,4 +1,4 @@
-'use_strict';
+'use strict';
 
 class SpeedometerSelectPopup {
 	static container = $('#SpeedometerSelectContainer');
