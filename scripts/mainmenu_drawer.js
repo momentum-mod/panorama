@@ -137,7 +137,7 @@ class Drawer {
 	 * Toggle the drawer
 	 */
 	static toggle() {
-		this.isExtended ? this.retract() : this.extend();
+		return this.isExtended ? this.retract() : this.extend();
 	}
 
 	/**
