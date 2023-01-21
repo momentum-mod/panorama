@@ -143,7 +143,7 @@ class SettingsShared {
 		findCvarsRecursive(section);
 
 		const cvarParams = cvars.reduce(
-			(str, cvar, index) => (str += (index != 0 ? '&' : '') + 'cvar' + (index + 1) + '=' + cvar),
+			(str, cvar, index) => (str += (index !== 0 ? '&' : '') + 'cvar' + (index + 1) + '=' + cvar),
 			''
 		);
 

@@ -352,8 +352,8 @@ class EndOfRun {
 
 		// Add some vertical spacing to the graph
 		const spacing = (max - min) / 10;
-		if (max > 0 && max != comparisonSplits.at(-1).diff) max += spacing;
-		if (min < 0 && min != comparisonSplits.at(-1).diff) min -= spacing;
+		if (max > 0 && max !== comparisonSplits.at(-1).diff) max += spacing;
+		if (min < 0 && min !== comparisonSplits.at(-1).diff) min -= spacing;
 
 		const range = max - min;
 
@@ -527,7 +527,7 @@ class EndOfRun {
 			const round = (n) => Number.parseFloat(n.toFixed(2));
 
 			const row = $.CreatePanel('RadioButton', this.panels.zoneStats, '', {
-				class: `endofrun-stats__row ${(index + 1) % 2 == 0 ? ' endofrun-stats__row--odd' : ''}`, // +1 to account for Times row
+				class: `endofrun-stats__row ${(index + 1) % 2 === 0 ? ' endofrun-stats__row--odd' : ''}`, // +1 to account for Times row
 				selected: index === null
 			});
 

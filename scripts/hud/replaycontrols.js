@@ -21,7 +21,7 @@ class ReplayControls {
 
 		// Deal with pause/play -- play == selected
 		const bPlaying = !MomentumReplayAPI.IsPaused();
-		if (this.panels.pausePlayButton.checked != bPlaying) this.panels.pausePlayButton.checked = bPlaying;
+		if (this.panels.pausePlayButton.checked !== bPlaying) this.panels.pausePlayButton.checked = bPlaying;
 
 		$.GetContextPanel().SetDialogVariableInt('curr_tick', currentTick);
 		$.GetContextPanel().SetDialogVariableInt('total_ticks', totalTicks);
