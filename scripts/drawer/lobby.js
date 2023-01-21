@@ -354,7 +354,7 @@ class Lobby {
 		const localSteamID = UserAPI.GetXUID();
 		const localMap = this.lobbyMemberData[localSteamID]?.['map'];
 
-		panel.SetDialogVariable('memberMap', isMuted ? '' : memberMap ? memberMap : $.Localize('#Lobby_InMainMenu'));
+		panel.SetDialogVariable('memberMap', isMuted ? '' : memberMap ?? $.Localize('#Lobby_InMainMenu'));
 
 		const memberStatePanel = panel.FindChildTraverse('MemberState');
 		const isSpectating = memberData['isSpectating'];
