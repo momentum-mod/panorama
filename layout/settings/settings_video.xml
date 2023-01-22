@@ -133,6 +133,18 @@
 					<Label text="#Settings_General_Disabled" value="0" id="laptoppower0" />
 					<Label text="#Settings_General_Enabled" value="1" id="laptoppower1" />
 				</ChaosSettingsEnumDropDown>
+
+				<ChaosSettingsEnumDropDown
+					text="#Settings_Video_PreventThreadSleep"
+					onuserinputsubmit="SettingsShared.videoSettingsOnUserInputSubmit()"
+					id="PreventThreadSleep"
+					convar="sleep_when_meeting_framerate"
+					infomessage="#Settings_Video_PreventThreadSleep_Info"
+				>
+					<Label text="#Settings_General_Disabled" value="1" id="preventthreadsleep1" />
+					<Label text="#Settings_General_Enabled" value="0" id="preventthreadsleep0" />
+				</ChaosSettingsEnumDropDown>
+				
 			</Panel>
 
 			<Panel class="settings-page__spacer" />
