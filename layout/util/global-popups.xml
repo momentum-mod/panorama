@@ -1,0 +1,14 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>	
+
+	<ChaosGlobalPopups hittest="false">
+		<ChaosPopupManager id="PopupManager" onpopupsdismissed="" />
+		<ContextMenuManager id="ContextMenuManager" />
+		<ChaosTooltipManager id="TooltipManager" hittest="false" />
+
+		<!-- Doesn't actually include the notifications, but we use its position to figure out where to show them -->
+		<Panel id="SteamNotificationsPlaceholder" hittest="false" />
+	</ChaosGlobalPopups>
+</root>

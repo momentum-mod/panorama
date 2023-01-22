@@ -1,0 +1,368 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+
+	<scripts>
+		<include src="file://{resources}/scripts/pages/settings/page.js" />
+	</scripts>
+
+	<Panel class="settings-page">
+
+		<Panel class="settings-page__header">
+
+			<Label class="settings-page__title" text="#Settings_Video" />
+
+			<Panel class="settings-page__header-buttons">
+
+				<Button
+					class="button button--blue"
+					id="ApplyVideoSettingsButton"
+					onactivate='SettingsShared.videoSettingsApplyChanges();'
+				>
+					<Label class="button__text" text="#Settings_General_Apply" />
+				</Button>
+
+				<Button
+					class="button button--red ml-2"
+					id="DiscardVideoSettingsButton"
+					onactivate='SettingsShared.videoSettingsDiscardChanges();'
+				>
+					<Label class="button__text" text="#Action_Discard" />
+				</Button>
+
+				<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
+					<Button class="button ml-2" onactivate="SettingsShared.resetVideoSettings();">
+						<Image class="button__icon" src="file://{images}/reset.svg" />
+					</Button>
+				</TooltipPanel>
+
+			</Panel>
+
+		</Panel>
+
+		<ChaosVideoSettings id="SettingsPageContainer" class="settings-page__container">
+
+			<Panel id="VideoSubSection" class="settings-group">
+
+				<Panel class="settings-group__header">
+
+					<Label class="settings-group__title" text="#Settings_Video" />
+
+				</Panel>
+
+				<ChaosSettingsSlider text="#Settings_Video_FOV" min="50" max="130" convar="fov_desired" hasdocspage="false" />
+			
+				<ChaosSettingsSlider
+					text="#Settings_Video_MaxFPS"
+					min="0"
+					max="400"
+					convar="fps_max"
+					infomessage="#Settings_Video_MaxFPS_Info"
+					hasdocspage="false"
+				/>
+
+				<ChaosSettingsEnumDropDown
+					text="#Settings_Video_ColorMode"
+					onuserinputsubmit="SettingsShared.videoSettingsOnUserInputSubmit()"
+					id="ColorMode"
+				>
+					<Label text="#Settings_Video_ColorMode_Monitor" value="0" id="tvmode0" />
+					<Label text="#Settings_Video_ColorMode_TV" value="1" id="tvmode1" />
+				</ChaosSettingsEnumDropDown>
+
+				<ChaosSettingsSlider
+					id="brightness"
+					text="#Settings_Video_Brightness"
+					min="0.7"
+					max="1.3"
+					percentage="true"
+					invert="false"
+					value100percent="1.0"
+					convar="mat_brightness"
+					infomessage="#Settings_Video_Brightness_Info"
+					hasdocspage="false"
+				/>
+
+				<ChaosSettingsEnumDropDown
+					text="#Settings_Video_AspectRatio"
+					onuserinputsubmit="SettingsShared.videoSettingsOnUserInputSubmit()"
+					id="AspectRatioEnum"
+					oninputsubmit="ChaosAspectRatioSelectionChanged()"
+				>
+					<Label text="#Settings_Video_AspectRatio_Normal" value="0" id="aspectratio0" />
+					<Label text="#Settings_Video_AspectRatio_16x9" value="1" id="aspectratio1" />
+					<Label text="#Settings_Video_AspectRatio_16x10" value="2" id="aspectratio2" />
+				</ChaosSettingsEnumDropDown>
+
+				<ChaosSettingsEnumDropDown
+					text="#Settings_Video_Resolution"
+					onuserinputsubmit="SettingsShared.videoSettingsOnUserInputSubmit()"
+					id="ResolutionEnum"
+					oninputsubmit="ChaosResolutionSelectionChanged()"
+				>
+					<Label value="0" id="resolution0" />
+				</ChaosSettingsEnumDropDown>
+
+				<ChaosSettingsEnumDropDown
+					text="#Settings_Video_DisplayMode"
+					onuserinputsubmit="SettingsShared.videoSettingsOnUserInputSubmit()"
+					id="DisplayModeEnum"
+					oninputsubmit="ChaosDisplayModeSelectionChanged()"
+				>
+					<Label text="#Settings_Video_DisplayMode_Windowed" value="0" id="displaymode0" />
+					<Label text="#Settings_Video_DisplayMode_Fullscreen" value="1" id="displaymode1" />
+					<Label text="#Settings_Video_DisplayMode_FullscreenWindowed" value="2" id="displaymode2" />
+				</ChaosSettingsEnumDropDown>
+
+				<ChaosSettingsEnumDropDown
+					text="#Settings_Video_TripleMonitor"
+					convar="triple_monitor_mode"
+					infomessage="#Settings_Video_TripleMonitor_Info"
+				>
+					<Label text="#Settings_General_Disabled" value="0" id="triplemonitor0" />
+					<Label text="#Settings_General_Enabled" value="1" id="triplemonitor1" />
+				</ChaosSettingsEnumDropDown>
+
+				<ChaosSettingsEnumDropDown
+					text="#Settings_Video_LaptopPower"
+					onuserinputsubmit="SettingsShared.videoSettingsOnUserInputSubmit()"
+					id="PowerSavingsMode"
+					infomessage="#Settings_Video_LaptopPower_Info"
+				>
+					<Label text="#Settings_General_Disabled" value="0" id="laptoppower0" />
+					<Label text="#Settings_General_Enabled" value="1" id="laptoppower1" />
+				</ChaosSettingsEnumDropDown>
+
+				<ChaosSettingsEnumDropDown
+					text="#Settings_Video_PreventThreadSleep"
+					onuserinputsubmit="SettingsShared.videoSettingsOnUserInputSubmit()"
+					id="PreventThreadSleep"
+					convar="sleep_when_meeting_framerate"
+					infomessage="#Settings_Video_PreventThreadSleep_Info"
+				>
+					<Label text="#Settings_General_Disabled" value="1" id="preventthreadsleep1" />
+					<Label text="#Settings_General_Enabled" value="0" id="preventthreadsleep0" />
+				</ChaosSettingsEnumDropDown>
+				
+			</Panel>
+
+			<Panel class="settings-page__spacer" />
+
+			<Panel id="AdvancedVideoSubSection" class="settings-group">
+
+				<Panel class="settings-group__header">
+
+					<Label class="settings-group__title" text="#Settings_Render_Title" />
+
+				</Panel>
+
+				<ChaosSettingsEnumDropDown
+					text="#Settings_Render_ShadowQuality"
+					onuserinputsubmit="SettingsShared.videoSettingsOnUserInputSubmit()"
+					id="CSMQualityLevel"
+					infomessage="#Settings_Render_ShadowQuality_Info"
+				>
+					<Label text="#Settings_General_Low" value="0" id="csmqualitylevel0" />
+					<Label text="#Settings_General_Medium" value="1" id="csmqualitylevel1" />
+					<Label text="#Settings_General_High" value="2" id="csmqualitylevel2" />
+					<Label text="#Settings_General_VeryHigh" value="3" id="csmqualitylevel3" />
+					<Label text="#Settings_General_Autodetect" value="9999999" id="csmqualitylevel4" />
+				</ChaosSettingsEnumDropDown>
+
+				<ChaosSettingsEnumDropDown
+					text="#Settings_Render_ModelTexture"
+					onuserinputsubmit="SettingsShared.videoSettingsOnUserInputSubmit()"
+					id="ModelTextureDetail"
+					infomessage="#Settings_Render_ModelTexture_Info"
+				>
+					<Label text="#Settings_General_Low" value="0" id="gpumemlevel0" />
+					<Label text="#Settings_General_Medium" value="1" id="gpumemlevel1" />
+					<Label text="#Settings_General_High" value="2" id="gpumemlevel2" />
+					<Label text="#Settings_General_Autodetect" value="9999999" id="gpumemlevel3" />
+				</ChaosSettingsEnumDropDown>
+
+				<ChaosSettingsEnumDropDown
+					text="#Settings_Render_EffectDetail"
+					onuserinputsubmit="SettingsShared.videoSettingsOnUserInputSubmit()"
+					id="EffectDetail"
+					infomessage="#Settings_Render_EffectDetail_Info"
+				>
+					<Label text="#Settings_General_Low" value="0" id="cpulevel0" />
+					<Label text="#Settings_General_Medium" value="1" id="cpulevel1" />
+					<Label text="#Settings_General_High" value="2" id="cpulevel2" />
+					<Label text="#Settings_General_Autodetect" value="9999999" id="cpulevel3" />
+				</ChaosSettingsEnumDropDown>
+
+				<ChaosSettingsEnumDropDown
+					text="#Settings_Render_ShaderDetail"
+					onuserinputsubmit="SettingsShared.videoSettingsOnUserInputSubmit()"
+					id="ShaderDetail"
+					infomessage="#Settings_Render_ShaderDetail_Info"
+				>
+					<Label text="#Settings_General_Low" value="0" id="gpulevel0" />
+					<Label text="#Settings_General_Medium" value="1" id="gpulevel1" />
+					<Label text="#Settings_General_High" value="2" id="gpulevel2" />
+					<Label text="#Settings_General_VeryHigh" value="3" id="gpulevel3" />
+					<Label text="#Settings_General_Autodetect" value="9999999" id="gpulevel4" />
+				</ChaosSettingsEnumDropDown>
+
+				<ChaosSettingsEnumDropDown
+					text="#Settings_Render_Multicore"
+					onuserinputsubmit="SettingsShared.videoSettingsOnUserInputSubmit()"
+					id="MatQueueMode"
+					infomessage="#Settings_Render_Multicore_Info"
+				>
+					<Label text="#Settings_General_Disabled" value="0" id="multicore0" />
+					<Label text="#Settings_General_Enabled" value="-1" id="multicore1" />
+				</ChaosSettingsEnumDropDown>
+
+				<ChaosSettingsEnumDropDown
+					text="#Settings_Render_AntialiasingMode"
+					onuserinputsubmit="SettingsShared.videoSettingsOnUserInputSubmit()"
+					id="AAMode"
+					infomessage="#Settings_Render_AntialiasingMode_Info"
+				>
+					<Label value="#Settings_General_Disabled" id="antialisaing0" />
+					<Label value="#Settings_General_Enabled" id="antialiasing1" />
+				</ChaosSettingsEnumDropDown>
+
+				<ChaosSettingsEnumDropDown
+					text="#Settings_Render_FXAA"
+					onuserinputsubmit="SettingsShared.videoSettingsOnUserInputSubmit()"
+					id="FXAA"
+					infomessage="#Settings_Render_FXAA_Info"
+				>
+					<Label text="#Settings_General_Disabled" value="0" id="fxaa0" />
+					<Label text="#Settings_General_Enabled" value="1" id="fxaa1" />
+				</ChaosSettingsEnumDropDown>
+
+				<ChaosSettingsEnumDropDown
+					text="#Settings_Render_FilteringMode"
+					onuserinputsubmit="SettingsShared.videoSettingsOnUserInputSubmit()"
+					id="FilteringMode"
+					infomessage="#Settings_Render_FilteringMode_Info"
+				>
+					<Label text="#Settings_Render_FilteringMode_Bilinear" value="0" id="matforceaniso0" />
+					<Label text="#Settings_Render_FilteringMode_Trilinear" value="1" id="matforceaniso1" />
+					<Label text="#Settings_Render_FilteringMode_Aniso2X" value="2" id="matforceaniso2" />
+					<Label text="#Settings_Render_FilteringMode_Aniso4X" value="4" id="matforceaniso3" />
+					<Label text="#Settings_Render_FilteringMode_Aniso8X" value="8" id="matforceaniso4" />
+					<Label text="#Settings_Render_FilteringMode_Aniso16X" value="16" id="matforceaniso5" />
+					<Label text="#Settings_General_Autodetect" value="9999999" id="matforceaniso6" />
+				</ChaosSettingsEnumDropDown>
+
+				<ChaosSettingsEnumDropDown
+					text="#Settings_Render_VSync"
+					onuserinputsubmit="SettingsShared.videoSettingsOnUserInputSubmit()"
+					id="VSync"
+					infomessage="#Settings_Render_VSync_Info"
+				>
+					<Label text="#Settings_General_Disabled" value="0" id="vsync0" />
+					<Label text="#Settings_Render_VSync_Double" value="1" id="vsync1" />
+					<Label text="#Settings_Render_VSync_Triple" value="2" id="vsync2" />
+				</ChaosSettingsEnumDropDown>
+
+				<ChaosSettingsEnumDropDown
+					text="#Settings_Render_MotionBlur"
+					onuserinputsubmit="SettingsShared.videoSettingsOnUserInputSubmit()"
+					id="MotionBlur"
+					infomessage="#Settings_Render_MotionBlur_Info"
+				>
+					<Label text="#Settings_General_Disabled" value="0" id="motionblur0" />
+					<Label text="#Settings_General_Enabled" value="1" id="motionblur1" />
+				</ChaosSettingsEnumDropDown>
+
+				<ChaosSettingsEnumDropDown
+					text="#Settings_Render_DynamicTonemapping"
+					onuserinputsubmit="SettingsShared.videoSettingsOnUserInputSubmit()"
+					id="DynamicTonemapping"
+					infomessage="#Settings_Render_DynamicTonemapping_Info"
+				>
+					<Label text="#Settings_General_Disabled" value="0" id="dynamictonemapping0" />
+					<Label text="#Settings_General_Enabled" value="1" id="dynamictonemapping1" />
+				</ChaosSettingsEnumDropDown>
+
+				<ChaosSettingsEnumDropDown
+					text="#Settings_Render_Bloom"
+					onuserinputsubmit="SettingsShared.videoSettingsOnUserInputSubmit()"
+					id="DisableBloom"
+					infomessage="#Settings_Render_Bloom_Info"
+				>
+					<Label text="#Settings_General_Disabled" value="1" id="disablebloom0" />
+					<Label text="#Settings_General_Enabled" value="0" id="disablebloom1" />
+				</ChaosSettingsEnumDropDown>
+
+				<ChaosSettingsEnumDropDown
+					text="#Settings_Render_ColorCorrection"
+					onuserinputsubmit="SettingsShared.videoSettingsOnUserInputSubmit()"
+					id="ColorCorrection"
+					infomessage="#Settings_Render_ColorCorrection_Info"
+				>
+					<Label text="#Settings_General_Disabled" value="0" id="colorcorrection0" />
+					<Label text="#Settings_General_Enabled" value="1" id="colorcorrection1" />
+				</ChaosSettingsEnumDropDown>
+
+			</Panel>
+
+			<Panel class="settings-page__spacer" />
+
+			<Panel id="TextureReplaceSubSection" class="settings-group">
+				<Panel class="settings-group__header">
+					<Label class="settings-group__title" text="#Settings_TextureReplace_Title" />
+
+					<Panel id="TextureReplaceWarningPanel" class="settings-group__reset flow-right">
+						<Label class="button__text" text="#Settings_General_MapReload" />
+					</Panel>
+				</Panel>
+
+				<Panel class="flow-right">
+					<Panel id="TextureReplacePreviewContainer" class="settings__texturereplace">
+						<Image id="TextureReplacePreview" />
+					</Panel>
+
+					<Panel class="fill-width flow-down">
+						<ChaosSettingsEnumDropDown
+							text="#Settings_TextureReplace_Type"
+							convar="mat_error_texture_type"
+							id="MatErrorType"
+							infomessage="#Settings_TextureReplace_Type_Info"
+						>
+							<Label text="#Settings_TextureReplace_0" id="materrortype0" value="0" />
+							<Label text="#Settings_TextureReplace_1" id="materrortype1" value="1" />
+						</ChaosSettingsEnumDropDown>
+
+						<!--
+						https://github.com/ChaosInitiative/Chaos-Source/issues/368
+						<ChaosSettingsEnumDropDown text="#Settings_TextureReplace_TypeCubemap" convar="mat_error_texture_type_cubemap" infomessage="#Settings_TextureReplace_TypeCubemap_Info">
+							<Label text="#Settings_TextureReplace_TypeCubemap_0" id="materrortypecubemap0" value="0"/>
+							<Label text="#Settings_TextureReplace_TypeCubemap_1" id="materrortypecubemap1" value="1"/>
+							<Label text="#Settings_TextureReplace_TypeCubemap_2" id="materrortypecubemap2" value="2"/>
+						</ChaosSettingsEnumDropDown>
+						-->
+
+						<ChaosSettingsEnumDropDown
+							text="#Settings_TextureReplace_Advanced"
+							convar="mat_error_texture_advanced"
+							infomessage="#Settings_TextureReplace_Advanced_Info"
+						>
+							<Label text="#Settings_TextureReplace_Advanced_0" id="materroradv0" value="0" />
+							<Label text="#Settings_TextureReplace_Advanced_1" id="materroradv1" value="1" />
+							<Label text="#Settings_TextureReplace_Advanced_2" id="materroradv2" value="2" />
+						</ChaosSettingsEnumDropDown>
+
+						<ChaosSettingsEnumDropDown
+							text="#Settings_TextureReplace_ReplaceTexture"
+							id="MatErrorReplaceTexture"
+							convar="mat_error_texture_advanced_basetexture"
+							infomessage="#Settings_TextureReplace_ReplaceTexture_Info"
+						>
+						</ChaosSettingsEnumDropDown>
+					</Panel>
+				</Panel>
+			</Panel>
+
+		</ChaosVideoSettings>
+
+	</Panel>
+</root>

@@ -1,0 +1,141 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+	<scripts>
+		<include src="file://{resources}/scripts/pages/drawer/lobby.js" />
+	</scripts>
+	<snippets>
+		<snippet name="lobby-list-entry">
+			<Panel class="lobby-lobbies__wrapper" acceptsinput="true">
+				<Panel id="LobbyOrigin" class="lobby-lobbies__origin" />
+				<Panel class="lobby-lobbies__entry">
+					<ChaosAvatarImage id="LobbyPlayerAvatar" class="lobby-lobbies__avatar" acceptsinput="true" />
+					<Image
+						id="LobbyType"
+						class="lobby-lobbies__type"
+						textureheight="64"
+						onmouseout="UiToolkitAPI.HideTitleImageTextTooltip();"
+					/>
+					<Label id="LobbyTitle" class="lobby-lobbies__text lobby-lobbies__title" text="{s:lobbyTitle}" />
+					<Label id="LobbyPlayerNumbers" class="text-h lobby-lobbies__text lobby-lobbies__players" text="{s:lobbyPlayerCount}" />
+					<Panel class="lobby-lobbies__button-container">
+						<Button id="LobbyJoinButton" class="button lobby-lobbies__button">
+							<Label id="LobbyJoinButtonLabel" class="button__text" text="{s:lobbyJoinLabel}" />
+						</Button>
+					</Panel>
+				</Panel>
+			</Panel>
+		</snippet>
+		<snippet name="lobby-member-entry">
+			<Panel class="lobby-members__entry" acceptsinput="true">
+				<ChaosAvatarImage id="MemberAvatar" class="lobby-members__avatar" />
+				<Label id="MemberName" class="lobby-members__text lobby-members__name" text="{s:memberName}" />
+				<!--<Label id="MemberPrestige" /> -->
+				<Panel class="lobby-members__map-container">
+					<Panel class="flow-right horizontal-align-center">
+						<Label id="MemberMap" class="lobby-members__text lobby-members__map" text="{s:memberMap}" />
+						<Image
+							id="MemberState"
+							class="lobby-members__state"
+							textureheight="32"
+							onmouseout="UiToolkitAPI.HideTitleImageTextTooltip();"
+						/>
+					</Panel>
+				</Panel>
+				<Panel class="lobby-members__button-container">
+					<Button id="MemberJoinButton" class="button">
+						<Label id="MemberJoinButtonLabel" class="button__text" text="{s:memberJoinLabel}" />
+					</Button>
+				</Panel>
+			</Panel>
+		</snippet>
+	</snippets>
+
+	<Panel class="drawer__tab lobby" acceptsfocus="true">
+		<Panel id="LobbyListContainer" class="lobby__lobby-list lobby-list">
+			<Panel id="LobbyListHeader" class="lobby-list__header">
+				<Panel class="lobby-list__title-bar">
+					<Image class="lobby-list__title-icon" src="file://{images}/lobby.svg" textureheight="96" />
+					<Label class="text-h lobby-list__title" text="#Lobby_List_Title" />
+				</Panel>
+				<Panel class="lobby-list__config-bar">
+					<Button class="button lobby-list__config-item" onactivate="Lobby.create()">
+						<Image class="button__icon button__icon--left" src="file://{images}/add.svg" textureheight="32" />
+						<Label class="button__text button__text--right" text="#Common_Create" />
+					</Button>
+					<Button
+						id="LobbyRefreshButton"
+						class="button lobby-list__config-item"
+						onactivate="$.DispatchEvent('RefreshLobbyList');"
+						onmouseout="UiToolkitAPI.HideTextTooltip();"
+					>
+						<Image
+							id="LobbyRefreshIcon"
+							class="button__icon button__icon--left"
+							src="file://{images}/refresh.svg"
+							textureheight="32"
+						/>
+						<Label class="button__text button__text--right" text="#Common_Refresh" />
+					</Button>
+					<Panel class="search lobby-list__search" acceptsfocus="true">
+						<Image class="search__icon" src="file://{images}/search.svg" textureheight="32" />
+						<TextEntry id="LobbySearch" class="search__textentry" maxchars="30" placeholder="#Common_SearchEllipsis" />
+						<Button id="LobbySearchClearButton" class="search__clearbutton" onactivate="">
+							<Image class="search__clearicon search__clearicon--hidden" src="file://{images}/close.svg" textureheight="32" />
+						</Button>
+					</Panel>
+				</Panel>
+			</Panel>
+			<Panel id="LobbyList" class="lobby-list__lobby-list lobby-list">
+				<!-- Panels get added via JS here -->
+			</Panel>
+		</Panel>
+
+		<Panel id="LobbyDetailsContainer" class="lobby__lobby-details lobby__lobby-details--hidden lobby-details ">
+			<Panel id="LobbyDetailsHeaderBar" class="lobby-details__header">
+				<TooltipPanel tooltip="#Lobby_Tooltip_ReturnToList">
+					<Button id="LobbyDetailsBackButton" class="button lobby-details__header-item" onactivate="Lobby.showLobbyList()">
+						<Image class="button__icon" src="file://{images}/arrow-thick-right.svg" textureheight="32" orientation="180" />
+					</Button>
+				</TooltipPanel>
+				<TooltipPanel tooltip="#Lobby_Settings">
+					<Button
+						id="LobbyDetailsSettingsButton"
+						class="button lobby-details__header-item"
+						onactivate="Lobby.showLobbySettings()"
+					>
+						<Image class="button__icon" src="file://{images}/settings.svg" textureheight="32" />
+					</Button>
+				</TooltipPanel>
+				<TooltipPanel tooltip="#Lobby_Tooltip_Invite">
+					<Button
+						id="LobbyDetailsInviteButton"
+						class="button lobby-details__header-item"
+						onactivate="SteamLobbyAPI.ShowInviteDialog()"
+					>
+						<Image class="button__icon" src="file://{images}/online/invite.svg" textureheight="32" />
+					</Button>
+				</TooltipPanel>
+				<TooltipPanel tooltip="#Lobby_Tooltip_Leave">
+					<Button id="LobbyDetailsLeaveButton" class="button lobby-details__header-item" onactivate="Lobby.leave()">
+						<Image class="button__icon" src="file://{images}/online/exitlobby.svg" textureheight="32" />
+					</Button>
+				</TooltipPanel>
+				<Label id="LobbyDetailsTitle" class="text-h lobby-details__header-item lobby-details__title" text="{s:lobbyTitle}" />
+				<Panel class="lobby-details__rightcontainer">
+					<Image id="LobbyDetailsType" class="lobby-details__header-ite lobby-details__type" textureheight="64" />
+					<Label
+						id="LobbyDetailsPlayerCount"
+						class="text-h lobby-details__header-item lobby-details__playercount"
+						text="{s:lobbyPlayerCount}"
+					/>
+				</Panel>
+			</Panel>
+			<Panel id="LobbyDetailsMemberList" class="lobby-details__lobby-members">
+				<!-- Panels get added via JS here -->
+			</Panel>
+			<MomentumChat class="lobby-details__chat" />
+		</Panel>
+	</Panel>
+</root>

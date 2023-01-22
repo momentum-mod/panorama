@@ -1,0 +1,19 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+	<scripts>
+		<include src="file://{resources}/scripts/components/range-color-display.js" />
+	</scripts>
+	<Panel class="rangecolordisplay">
+		<TextEntry id="MinEntry" textmode="numeric" maxchars="8" class="textentry rangecolordisplay__minentry" />
+		<Image
+			class="rangecolordisplay__arrowicon"
+			src="file://{images}/arrow-thick-right.svg"
+			orientation="180"
+			textureheight="32"
+		/>
+		<TextEntry id="MaxEntry" textmode="numeric" maxchars="8" class="textentry rangecolordisplay__maxentry" />
+		<ColorDisplay id="ColorDisplay" class="rangecolordisplay__display" oncolorchange="RangeColorDisplay.onColorChange();" />
+	</Panel>
+</root>

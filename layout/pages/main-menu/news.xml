@@ -1,0 +1,42 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+	<scripts>
+		<include src="file://{resources}/scripts/pages/main-menu/news.js" />
+	</scripts>
+
+	<Panel class="news">
+		<Panel class="news__wrapper">
+			<Panel class="news__header">
+				<Label class="news__title" text="#MainMenu_News_Title" />
+				<Button class="news__minimize" onactivate="MainMenuNews.minimize();">
+					<Image
+						class="button__icon horizontal-align-right rot-90"
+						src="file://{images}/mom-arrow-right.svg"
+						textureheight="32"
+					/>
+				</Button>
+			</Panel>
+			<Panel class="news__main">
+				<Panel id="LatestUpdate" class="news__latest">
+					<Panel id="LatestUpdateDetails" class="news-latest__left">
+						<Label class="news-latest__title" text="{s:title}" />
+						<Label class="news-latest__description" text="{s:h:description}" html="true" />
+					</Panel>
+					<Panel class="news-latest__right">
+						<Image id="LatestUpdateImage" class="news-latest__image" src="" />
+						<Button id="LearnMore" class="button button--blue news-latest__learnmore">
+							<Label class="button__text text-m" text="#MainMenu_News_ReadMore" />
+						</Button>
+					</Panel>
+				</Panel>
+				<Panel class="news__other">
+					<Panel id="OtherUpdates" class="news__horiz-scroll">
+
+					</Panel>
+				</Panel>
+			</Panel>
+		</Panel>
+	</Panel>
+</root>

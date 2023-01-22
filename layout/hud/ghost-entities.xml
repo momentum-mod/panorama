@@ -1,0 +1,28 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+	<scripts>
+		<include src="file://{resources}/scripts/hud/ghost-entities.js" />
+	</scripts>
+
+	<snippets>
+		<snippet name="ghost-ent-panel">
+			<Panel class="ghost-ent">
+				<ChaosAvatarImage id="GhostAvatar" class="ghost-ent__avatar" />
+				<Panel id="NamePanel" class="ghost-ent__namepanel ghost-ent-namepanel">
+					<Image
+						class="full-width full-height"
+						src="file://{images}/playercards/card_bg.png"
+						scaling="stretch-to-cover-preserve-aspect"
+					/>
+					<Label id="GhostName" class="ghost-ent-namepanel__label text-l" text="" />
+				</Panel>
+			</Panel>
+		</snippet>
+	</snippets>
+
+	<MomHudGhostEntities class="full-width full-height">
+		<Panel id="GhostEntPanelsContainer" class="full-width full-height" />
+	</MomHudGhostEntities>
+</root>

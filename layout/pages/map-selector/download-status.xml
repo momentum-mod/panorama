@@ -1,0 +1,17 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+
+	<scripts>
+		<include src="file://{resources}/scripts/pages/map-selector/download-status.js" />
+	</scripts>
+
+	<MapDownloadStatus>
+		<ProgressBar id="DownloadProgressBar" class="progressbar map-download-status__progressbar" min="0" max="100" />
+		<Label id="ProgressPct" class="map-download-status__progress-percentage" text="{d:progress}%" />
+		<Button id="CancelButton" class="map-download-status__cancel" onactivate="MapDownloadStatus.cancelDownload()">
+			<Image src="file://{images}/cancel.svg" class="button__icon" textureheight="40" />
+		</Button>
+	</MapDownloadStatus>
+</root>

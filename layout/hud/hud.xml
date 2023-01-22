@@ -100,7 +100,7 @@
 
 		<!-- Console notifications should always draw above anything else! -->
 		<Panel id="HudNotify" hittest="false" hittestchildren="false">
-			<Frame src="file://{resources}/layout/hud/consolenotify.xml" />
+			<Frame src="file://{resources}/layout/hud/console-notify.xml" />
 		</Panel>
 	</ChaosHud>
 </root>

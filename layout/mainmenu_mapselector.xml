@@ -1,8 +1,0 @@
-<root>
-	<styles>
-		<include src="file://{resources}/styles/main.scss" />
-	</styles>
-	<Panel class="mainmenu__page">
-		<MomentumMapSelect class="full" />
-	</Panel>
-</root>

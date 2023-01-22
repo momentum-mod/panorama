@@ -1,0 +1,23 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+
+	<scripts>
+		<include src="file://{resources}/scripts/hud/static-menu.js" />
+	</scripts>
+
+	<snippets>
+		<snippet name="static-menu-entry">
+			<Panel class="static-hud-menu__entry flow-right">
+				<!-- Don't even think about removing these! -->
+				<Label class="static-hud-menu__keybind" id="Keybind" />
+				<Label class="static-hud-menu__description" id="Description" />
+			</Panel>
+		</snippet>
+	</snippets>
+
+	<Panel class="static-hud-menu flow-down">
+		<!-- snippets get added here -->
+	</Panel>
+</root>

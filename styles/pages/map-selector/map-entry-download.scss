@@ -1,0 +1,54 @@
+@use '../../config' as *;
+@use '../../abstract/mixin';
+@use '../../controls/button';
+
+.map-download-status {
+	$root: &;
+
+	flow-children: none;
+	width: 100%;
+	height: 100%;
+
+	@extend .button;
+	background-color: rgba(0, 0, 0, 0);
+	border-radius: $button-radius;
+
+	visibility: collapse;
+
+	&.queued {
+		visibility: visible;
+	}
+
+	&__progressbar {
+		width: 100%;
+		height: 100%;
+	}
+
+	&__progress-percentage {
+		align: center center;
+		// width: 100%;
+		// height: 100%;
+
+		@include mixin.font-styles($use-header: true);
+		font-size: 26px;
+		visibility: visible;
+
+		#{$root}:hover & {
+			opacity: 0.5;
+		}
+	}
+
+	&__cancel {
+		align: center center;
+		height: 100%;
+		width: 100%;
+		opacity: 0;
+		transition: opacity 0.1s ease-in-out 0s;
+		wash-color: red;
+		padding: 2px;
+
+		#{$root}:hover & {
+			opacity: 1;
+		}
+	}
+}

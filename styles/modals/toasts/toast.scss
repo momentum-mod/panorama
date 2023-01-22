@@ -1,0 +1,226 @@
+@use '../../config' as *;
+@use '../../abstract/mixin';
+@use 'sass:map';
+@use 'sass:color';
+
+.toast-manager {
+	flow-children: none;
+	width: 100%;
+	height: 100%;
+
+	&__left,
+	&__center,
+	&__right {
+		flow-children: down;
+		vertical-align: top;
+
+		width: 30%;
+		height: 100%;
+	}
+
+	&__left {
+		horizontal-align: left;
+		padding-top: 16px;
+	}
+
+	&__center {
+		horizontal-align: center;
+		padding: 96px 0;
+	}
+
+	&__right {
+		horizontal-align: right;
+		padding-top: 16px;
+	}
+}
+
+.toast {
+	$hide-transition-duration: 0.3s; // This should match HIDE_TRANSITION_DURATION in toastmanager.js.
+
+	margin: 0 16px 6px 16px;
+
+	&.toast--center {
+		horizontal-align: center;
+
+		pre-transform-scale2d: 0.9;
+		transform: translateY(20px);
+
+		opacity: 0;
+
+		transition-property: opacity, transform, pre-transform-scale2d, height;
+		transition-timing-function: $easeInBack;
+		transition-duration: $hide-transition-duration;
+
+		&.toast--show {
+			pre-transform-scale2d: 1;
+			transform: translateY(0px);
+			opacity: 1;
+		}
+
+		&.toast--hide {
+			pre-transform-scale2d: 0.8;
+			transform: translateY(-100px);
+			z-index: 0;
+			opacity: 0;
+		}
+	}
+
+	&.toast--left {
+		horizontal-align: left;
+
+		pre-transform-scale2d: 0.9;
+		transform: translateX(-40px);
+		opacity: 0;
+
+		transition-property: opacity, transform, pre-transform-scale2d, height;
+		transition-timing-function: $easeInBack;
+		transition-duration: $hide-transition-duration;
+
+		&.toast--show {
+			pre-transform-scale2d: 1;
+			transform: translateX(0px);
+			opacity: 1;
+		}
+
+		&.toast--hide {
+			pre-transform-scale2d: 0.8;
+			transform: translateX(-40px);
+			opacity: 0;
+			z-index: 0;
+		}
+	}
+
+	&.toast--right {
+		horizontal-align: right;
+
+		pre-transform-scale2d: 0.9;
+		transform: translateX(40px);
+
+		opacity: 0;
+
+		transition-property: opacity, transform, pre-transform-scale2d, height;
+		transition-timing-function: $easeInBack;
+		transition-duration: $hide-transition-duration;
+
+		&.toast--show {
+			pre-transform-scale2d: 1;
+			transform: translateX(0px);
+			opacity: 1;
+		}
+
+		&.toast--hide {
+			pre-transform-scale2d: 0.8;
+			transform: translateX(40px);
+			opacity: 0;
+			z-index: 0;
+		}
+	}
+
+	&--wiggle {
+		animation-name: ToastWiggle;
+		animation-duration: 0.3s;
+		animation-timing-function: ease-in-out;
+		animation-iteration-count: 1;
+	}
+}
+
+.toast-generic {
+	$this: &;
+
+	flow-children: right;
+
+	background-color: $toast-default;
+	box-shadow: 1px 1px 8px 1px rgba(0, 0, 0, 0.8);
+	z-index: 1;
+	border-radius: 2px;
+	border: 1px solid rgba(0, 0, 0, 0.25);
+
+	@each $name, $color in $toast-colors {
+		&--#{$name} {
+			background-color: $color;
+		}
+	}
+
+	&--white {
+		background-color: $toast-white;
+
+		& #{$this}__message,
+		& #{$this}__title {
+			color: black;
+			text-shadow: none;
+		}
+	}
+
+	&__text-container {
+		flow-children: right;
+		padding: 6px 14px;
+		vertical-align: center;
+	}
+
+	&__title {
+		@include mixin.font-styles($use-header: true);
+		vertical-align: center;
+		font-size: 26px;
+		margin-right: 8px;
+	}
+
+	&__message {
+		@include mixin.font-styles($use-header: false);
+		vertical-align: center;
+		font-size: 22px;
+	}
+
+	&__icon {
+		height: 32px;
+		width: 32px;
+		vertical-align: center;
+		img-shadow: 0 1px 1px rgba(0, 0, 0, 1);
+		margin-left: 8px;
+		padding: 4px;
+
+		// Proper styling for once height-percentage bug is fixed
+		// height: 100%;
+		// width: height-percentage(100%);
+		// padding: 8px;
+		// background-color: rgba(0, 0, 0, 0.4);
+		// img-shadow: 0 1px 1px rgba(0, 0, 0, 1);
+		// border-right: 1px solid rgba(0, 0, 0, 0.3);
+	}
+}
+
+@keyframes ToastWiggle {
+	$ang: 5deg;
+	0% {
+		transform: scale3d(1, 1, 1) translate3d(0px, 0px, 0px) rotateZ(0deg);
+	}
+	10% {
+		transform: scale3d(1.05, 1.05, 1) translate3d(-1px, -1px, 0px) rotateZ(-5deg);
+	}
+	20% {
+		transform: scale3d(1.06, 1.07, 1) translate3d(-1px, 0px, 0px) rotateZ(3deg);
+	}
+	30% {
+		transform: scale3d(1.1, 1.1, 1) translate3d(1px, 1px, 0px) rotateZ(0deg);
+	}
+	40% {
+		transform: scale3d(1.17, 1.17, 1) translate3d(1px, -1px, 0px) rotateZ(2deg);
+	}
+	50% {
+		transform: scale3d(1.2, 1.2, 1) translate3d(-1px, 1px, 0px) rotateZ(-3deg);
+	}
+	60% {
+		transform: scale3d(1.25, 1.25, 1) translate3d(-1px, 1px, 0px) rotateZ(0deg);
+	}
+	70% {
+		transform: scale3d(1.2, 1.2, 1) translate3d(1px, 1px, 0px) rotateZ(-5deg);
+	}
+	80% {
+		transform: scale3d(1.12, 1.12, 1) translate3d(-1px, -1px, 0px) rotateZ(1deg);
+	}
+	90% {
+		transform: scale3d(1.06, 1.06, 1) translate3d(1px, 1px, 0px) rotateZ(-2deg);
+	}
+	100% {
+		transform: scale3d(1, 1, 1) translate3d(0px, 0px, 0px) rotateZ(0deg);
+	}
+}

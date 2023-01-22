@@ -1,0 +1,33 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+	<scripts>
+		<include src="file://{resources}/scripts/common/speedometer.js" />
+		<include src="file://{resources}/scripts/modals/popups/speedometer-select.js" />
+	</scripts>
+	<snippets>
+		<snippet name="speedometer-radiobutton">
+			<Panel class="row my-3 horizontal-align-center">
+				<RadioButton id="SpeedometerRadioBtn" class="button radiobutton radiobutton--blue mr-2">
+					<Label id="SpeedometerBtnLabel" class="button__text" />
+				</RadioButton>
+			</Panel>
+		</snippet>
+	</snippets>
+	<PopupCustomLayout class="PopupPanel Hidden" popupbackground="dim" onload="SpeedometerSelectPopup.init();">
+		<Panel class="row horizontal-align-center mt-0">
+			<Label id="TitleLabel" class="generic-popup__title" text="#Settings_Speedometer_Pick" />
+		</Panel>
+		<Panel id="SpeedometerSelectContainer" class="flow-down horizontal-align-center">
+		</Panel>
+		<Panel class="row horizontal-align-center mt-4 generic-popup__button-row">
+			<Button id="CancelButton" class="button mr-4" onactivate="UiToolkitAPI.CloseAllVisiblePopups();">
+				<Label class="button__text" text="#Common_Cancel" />
+			</Button>
+			<Button class="button button--green" onactivate="SpeedometerSelectPopup.onAddButtonPressed();">
+				<Label class="button__text" text="#Common_Add" />
+			</Button>
+		</Panel>
+	</PopupCustomLayout>
+</root>

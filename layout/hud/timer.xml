@@ -3,7 +3,7 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 	<scripts>
-		<include src="file://{resources}/scripts/common/hud_misc.js" />
+		<include src="file://{resources}/scripts/common/hud-misc.js" />
 		<include src="file://{resources}/scripts/common/timer.js" />
 		<include src="file://{resources}/scripts/hud/timer.js" />
 	</scripts>

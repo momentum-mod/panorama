@@ -1,0 +1,13 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>	
+	<scripts>
+		<include src="file://{resources}/scripts/pages/intro-movie.js" />
+	</scripts>
+
+	<ChaosIntroMovie hittest="false">
+		<!-- Doesn't actually include the notifications, but we use its position to figure out where to show them -->
+		<Panel id="SteamNotificationsPlaceholder" hittest="false" />
+	</ChaosIntroMovie>
+</root>

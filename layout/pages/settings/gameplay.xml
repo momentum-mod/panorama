@@ -1,0 +1,1265 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+	<scripts>
+		<include src="file://{resources}/scripts/pages/settings/page.js" />
+	</scripts>
+
+	<Panel class="settings-page">
+
+		<Panel class="settings-page__header">
+
+			<Label class="settings-page__title" text="#Settings_Gameplay" />
+
+			<Panel class="settings-page__header-buttons">
+				<!-- Gamemode Dropdown will go here -->
+			</Panel>
+
+		</Panel>
+
+		<Panel id="SettingsPageContainer" class="settings-page__container">
+
+			<Panel id="GameplayGeneralSubSection" class="settings-group">
+
+				<Panel class="settings-group__header">
+
+					<Label class="settings-group__title" text="#Settings_Gameplay_General_Title" tags="gameplay" />
+
+					<Panel class="flow-right horizontal-align-right">
+
+						<Button
+							class="button mr-3"
+							onactivate="SettingsShared.showImportExportDialogue('Settings_Gameplay', 'GameplayGeneralSubSection')"
+						>
+							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
+						</Button>
+
+						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
+							<Button class="button" onactivate="SettingsShared.resetSettings('GameplayGeneralSubSection');">
+								<Image class="button__icon" src="file://{images}/reset.svg" />
+							</Button>
+						</TooltipPanel>
+
+					</Panel>
+
+				</Panel>
+
+				<ChaosSettingsSlider
+					text="#Settings_Gameplay_YawSpeed"
+					min="0"
+					max="360"
+					convar="cl_yawspeed"
+					tags="yawspeed,turnbind,spin"
+					infomessage="#Settings_Gameplay_YawSpeed_Info"
+					hasdocspage="false"
+				/>
+
+				<ChaosSettingsEnum
+					text="#Settings_Gameplay_OverlappingKeys"
+					convar="mom_enable_overlapping_keys"
+					infomessage="#Settings_Gameplay_OverlappingKeys_Info"
+					tags="overlapping,nulls"
+				>
+					<RadioButton group="allowoverlap" text="#Settings_Gameplay_OverlappingKeys_Off" value="0" />
+					<RadioButton group="allowoverlap" text="#Settings_Gameplay_OverlappingKeys_On" value="1" />
+				</ChaosSettingsEnum>
+
+				<ChaosSettingsEnum
+					text="#Settings_Gameplay_ReleaseForwardOnJump"
+					convar="mom_release_forward_on_jump"
+					infomessage="#Settings_Gameplay_ReleaseForwardOnJump_Info"
+					tags="jump,forward"
+				>
+					<RadioButton group="releaseforward" text="#Common_Off" value="0" />
+					<RadioButton group="releaseforward" text="#Common_On" value="1" />
+				</ChaosSettingsEnum>
+
+				<ChaosSettingsEnum
+					text="#Settings_Gameplay_DrawViewmodel"
+					convar="r_drawviewmodel"
+					hasdocspage="false"
+					infomessage="#Settings_Gameplay_DrawViewmodel_Info"
+					tags="viewmodel,weaponmodel"
+				>
+					<RadioButton group="showviewmodel" text="#Common_Off" value="0" />
+					<RadioButton group="showviewmodel" text="#Common_On" value="1" />
+				</ChaosSettingsEnum>
+
+				<ConVarEnabler convar="r_drawviewmodel" class="flow-down">
+					<ChaosSettingsSlider
+						text="#Settings_Gameplay_ViewmodelFOV"
+						convar="fov_viewmodel"
+						infomessage="#Settings_Gameplay_ViewmodelFOV_Info"
+						tags="viewmodel,weaponmodel,fov"
+						min="45"
+						max="135"
+					/>
+				</ConVarEnabler>
+
+				<ChaosSettingsEnumDropDown
+					text="#Settings_Gameplay_WeaponDesirability"
+					convar="mom_player_weapon_spawn_desirability"
+					infomessage="#Settings_Gameplay_WeaponDesirability_Info"
+					tags="weapon,spawn,desirability"
+				>
+					<Label id="wepdes1" text="#Settings_Gameplay_WeaponDesirability_Required" value="0" />
+					<Label id="wepdes2" text="#Settings_Gameplay_WeaponDesirability_Recommended" value="1" />
+					<Label id="wepdes3" text="#Settings_Gameplay_WeaponDesirability_All" value="2" />
+				</ChaosSettingsEnumDropDown>
+
+			</Panel>
+
+			<Panel class="settings-page__spacer" />
+
+			<Panel id="PaintSubSection" class="settings-group">
+
+				<Panel class="settings-group__header">
+
+					<Label class="settings-group__title" text="#Settings_Paint_Title" tags="paint,spray" />
+
+					<Panel class="flow-right horizontal-align-right">
+
+						<Button
+							class="button mr-3"
+							onactivate="SettingsShared.showImportExportDialogue('Settings_Paint_Title', 'PaintSubSection')"
+						>
+							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
+						</Button>
+
+						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
+							<Button class="button" onactivate="SettingsShared.resetSettings('PaintSubSection');">
+								<Image class="button__icon" src="file://{images}/reset.svg" />
+							</Button>
+						</TooltipPanel>
+
+					</Panel>
+
+				</Panel>
+
+				<Panel class="flow-right">
+
+					<Panel id="PaintContainer" class="settings__paint">
+						<Panel id="PaintBlob" class="settings__paint-blob" />
+					</Panel>
+
+					<Panel class="fill-width flow-down">
+
+						<ConVarColorDisplay
+							convar="mom_paint_color"
+							text="#Settings_Paint_Color"
+							oncolorchange="SettingsShared.updatePaintPreview();"
+							tags="color"
+						/>
+
+						<ChaosSettingsSlider
+							text="#Settings_Paint_Scale"
+							min="0.001"
+							max="1"
+							percentage="true"
+							convar="mom_paint_scale"
+							tags="color,size,scale"
+							onvaluechanged="SettingsShared.updatePaintPreview();"
+						/>
+
+						<ChaosSettingsEnum text="#Settings_Paint_ApplySound" convar="mom_paint_apply_sound" tags="paint,sound,noise">
+							<RadioButton group="paintsound" text="#Common_Off" value="0" />
+							<RadioButton group="paintsound" text="#Common_On" value="1" />
+						</ChaosSettingsEnum>
+
+						<ChaosSettingsEnum
+							text="#Settings_Paint_LimitToWorld"
+							convar="mom_paint_limit_to_world"
+							infomessage="#Settings_Paint_LimitToWorld_Info"
+							tags="world"
+						>
+							<RadioButton group="paintlimit" text="#Common_Off" value="0" />
+							<RadioButton group="paintlimit" text="#Common_On" value="1" />
+						</ChaosSettingsEnum>
+
+					</Panel>
+
+				</Panel>
+
+			</Panel>
+
+			<Panel class="settings-page__spacer" />
+
+			<Panel id="SafeguardsSubSection" class="settings-group">
+
+				<Panel class="settings-group__header">
+
+					<Label class="settings-group__title" text="#Settings_Safeguards_Title" tags="safeguards" />
+
+					<Panel class="flow-right horizontal-align-right">
+
+						<Button
+							class="button mr-3"
+							onactivate="SettingsShared.showImportExportDialogue('Settings_Safeguards_Title', 'SafeguardsSubSection')"
+						>
+							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
+						</Button>
+
+						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
+							<Button class="button" onactivate="SettingsShared.resetSettings('SafeguardsSubSection');">
+								<Image class="button__icon" src="file://{images}/reset.svg" />
+							</Button>
+						</TooltipPanel>
+
+					</Panel>
+
+				</Panel>
+
+				<!-- TODO: infomessages here in the future. Not doing now because of future safeguard changes -->
+
+				<ChaosSettingsEnumDropDown
+					text="#Settings_Safeguards_PracticeMode"
+					convar="mom_run_safeguard_practicemode"
+					tags="practice"
+				>
+					<Label id="colorize1" text="#Settings_Safeguards_ModesNone" value="0" />
+					<Label id="colorize2" text="#Settings_Safeguards_Modes1" value="1" />
+					<Label id="colorize3" text="#Settings_Safeguards_Modes2" value="2" />
+				</ChaosSettingsEnumDropDown>
+
+				<ChaosSettingsEnumDropDown text="#Settings_Safeguards_RestartMap" convar="mom_run_safeguard_restart" tags="restart">
+					<Label id="colorize1" text="#Settings_Safeguards_ModesNone" value="0" />
+					<Label id="colorize2" text="#Settings_Safeguards_Modes1" value="1" />
+					<Label id="colorize3" text="#Settings_Safeguards_Modes2" value="2" />
+				</ChaosSettingsEnumDropDown>
+
+				<ChaosSettingsEnumDropDown
+					text="#Settings_Safeguards_SavestateTele"
+					convar="mom_run_safeguard_saveloc_tele"
+					tags="teleport"
+				>
+					<Label id="colorize1" text="#Settings_Safeguards_ModesNone" value="0" />
+					<Label id="colorize2" text="#Settings_Safeguards_Modes1" value="1" />
+					<Label id="colorize3" text="#Settings_Safeguards_Modes2" value="2" />
+				</ChaosSettingsEnumDropDown>
+
+				<ChaosSettingsEnumDropDown text="#Settings_Safeguards_OpenChat" convar="mom_run_safeguard_chat_open" tags="chat">
+					<Label id="colorize1" text="#Settings_Safeguards_ModesNone" value="0" />
+					<Label id="colorize2" text="#Settings_Safeguards_Modes1" value="1" />
+					<Label id="colorize3" text="#Settings_Safeguards_Modes2" value="2" />
+				</ChaosSettingsEnumDropDown>
+
+				<ChaosSettingsEnumDropDown
+					text="#Settings_Safeguards_RestartStage"
+					convar="mom_run_safeguard_restart_stage"
+					tags="stage"
+				>
+					<Label id="colorize1" text="#Settings_Safeguards_ModesNone" value="0" />
+					<Label id="colorize2" text="#Settings_Safeguards_Modes1" value="1" />
+					<Label id="colorize3" text="#Settings_Safeguards_Modes2" value="2" />
+				</ChaosSettingsEnumDropDown>
+
+				<ChaosSettingsEnum text="#Settings_Safeguards_ChangeMap" convar="mom_run_safeguard_change_map" tags="change,level,map">
+					<RadioButton group="safeguardchangemap" text="#Common_Off" value="0" />
+					<RadioButton group="safeguardchangemap" text="#Common_On" value="1" />
+				</ChaosSettingsEnum>
+
+				<ChaosSettingsEnum text="#Settings_Safeguards_QuitMap" convar="mom_run_safeguard_quit_map" tags="map,level,quit">
+					<RadioButton group="safeguardquitmap" text="#Common_Off" value="0" />
+					<RadioButton group="safeguardquitmap" text="#Common_On" value="1" />
+				</ChaosSettingsEnum>
+
+				<ChaosSettingsEnum text="#Settings_Safeguards_QuitGame" convar="mom_run_safeguard_quit_game" tags="quit,exit">
+					<RadioButton group="safeguardquitgame" text="#Common_Off" value="0" />
+					<RadioButton group="safeguardquitgame" text="#Common_On" value="1" />
+				</ChaosSettingsEnum>
+
+			</Panel>
+
+			<Panel class="settings-page__spacer" />
+
+			<Panel id="ZonesSubSection" class="settings-group">
+
+				<Panel class="settings-group__header">
+
+					<Label class="settings-group__title" text="#Settings_Zones_Title" tags="zones" />
+
+					<Panel class="flow-right horizontal-align-right">
+
+						<Button
+							class="button mr-3"
+							onactivate="SettingsShared.showImportExportDialogue('Settings_Zones_Title', 'ZonesSubSection')"
+						>
+							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
+						</Button>
+
+						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
+							<Button class="button" onactivate="SettingsShared.resetSettings('ZonesSubSection');">
+								<Image class="button__icon" src="file://{images}/reset.svg" />
+							</Button>
+						</TooltipPanel>
+
+					</Panel>
+
+				</Panel>
+
+				<ConVarColorDisplay text="#Settings_Zones_StartOutlineColor" convar="mom_zone_start_draw_color" />
+
+				<ChaosSettingsEnumDropDown
+					text="#Settings_Zones_StartOutlineStyle"
+					convar="mom_zone_start_draw_mode"
+					tags="color,outline,edge"
+				>
+
+					<Label id="colorize1" text="#Common_Off" value="0" />
+					<Label id="colorize2" text="#Settings_Zones_Style_Outlines" value="1" />
+					<Label id="colorize3" text="#Settings_Zones_Style_OutlineOverlays" value="2" />
+					<Label id="colorize4" text="#Settings_Zones_Style_Sides" value="3" />
+					<Label id="colorize5" text="#Settings_Zones_Style_SideOverlays" value="4" />
+				</ChaosSettingsEnumDropDown>
+
+				<ConVarColorDisplay
+					text="#Settings_Zones_StageOutlineColor"
+					convar="mom_zone_stage_draw_color"
+					tags="color,outline,edge"
+				/>
+
+				<ChaosSettingsEnumDropDown
+					text="#Settings_Zones_StageOutlineStyle"
+					convar="mom_zone_stage_draw_mode"
+					tags="color,outline,edge"
+				>
+					<Label id="colorize1" text="#Common_Off" value="0" />
+					<Label id="colorize2" text="#Settings_Zones_Style_Outlines" value="1" />
+					<Label id="colorize3" text="#Settings_Zones_Style_OutlineOverlays" value="2" />
+					<Label id="colorize4" text="#Settings_Zones_Style_Sides" value="3" />
+					<Label id="colorize5" text="#Settings_Zones_Style_SideOverlays" value="4" />
+				</ChaosSettingsEnumDropDown>
+
+				<ConVarColorDisplay
+					text="#Settings_Zones_CheckpointOutlineColor"
+					convar="mom_zone_checkpoint_draw_color"
+					tags="color,outline,edge"
+				/>
+
+				<ChaosSettingsEnumDropDown
+					text="#Settings_Zones_CheckpointOutlineStyle"
+					convar="mom_zone_checkpoint_draw_mode"
+					tags="color,outline,edge"
+				>
+					<Label id="colorize1" text="#Common_Off" value="0" />
+					<Label id="colorize2" text="#Settings_Zones_Style_Outlines" value="1" />
+					<Label id="colorize3" text="#Settings_Zones_Style_OutlineOverlays" value="2" />
+					<Label id="colorize4" text="#Settings_Zones_Style_Sides" value="3" />
+					<Label id="colorize5" text="#Settings_Zones_Style_SideOverlays" value="4" />
+
+				</ChaosSettingsEnumDropDown>
+
+				<ConVarColorDisplay text="#Settings_Zones_EndOutlineColor" convar="mom_zone_end_draw_color" tags="color,outline,edge" />
+
+				<ChaosSettingsEnumDropDown
+					text="#Settings_Zones_EndOutlineStyle"
+					convar="mom_zone_end_draw_mode"
+					tags="color,outline,edge"
+				>
+					<Label id="colorize1" text="#Common_Off" value="0" />
+					<Label id="colorize2" text="#Settings_Zones_Style_Outlines" value="1" />
+					<Label id="colorize3" text="#Settings_Zones_Style_OutlineOverlays" value="2" />
+					<Label id="colorize4" text="#Settings_Zones_Style_Sides" value="3" />
+					<Label id="colorize5" text="#Settings_Zones_Style_SideOverlays" value="4" />
+				</ChaosSettingsEnumDropDown>
+
+			</Panel>
+
+			<Panel class="settings-page__spacer" />
+
+			<Panel id="RocketJumpSubSection" class="settings-group">
+
+				<Panel class="settings-group__header">
+
+					<Label class="settings-group__title" text="#Settings_RJ_Title" tags="rj,rocketjump,soldier" />
+
+					<Panel class="flow-right horizontal-align-right">
+
+						<Button
+							class="button mr-3"
+							onactivate="SettingsShared.showImportExportDialogue('Settings_RJ_Title', 'RocketJumpSubSection')"
+						>
+							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
+						</Button>
+
+						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
+							<Button class="button" onactivate="SettingsShared.resetSettings('RocketJumpSubSection');">
+								<Image class="button__icon" src="file://{images}/reset.svg" />
+							</Button>
+						</TooltipPanel>
+
+					</Panel>
+
+				</Panel>
+
+				<ChaosSettingsEnum
+					text="#Settings_RJ_TrailParticle"
+					convar="mom_rj_particle_trail_enable"
+					infomessage="#Settings_RJ_TrailParticle_Info"
+					tags="particle,trail"
+				>
+					<RadioButton group="rjtrailparticle" text="#Common_Off" value="0" tags="particle" />
+					<RadioButton group="rjtrailparticle" text="#Common_On" value="1" />
+				</ChaosSettingsEnum>
+
+				<ChaosSettingsEnum
+					text="#Settings_RJ_ExplosionParticle"
+					convar="mom_rj_particle_explosion_enable"
+					infomessage="#Settings_RJ_ExplosionParticle_Info"
+					tags="particle,explosion"
+				>
+					<RadioButton group="rjexplodeparticle" text="#Common_Off" value="0" />
+					<RadioButton group="rjexplodeparticle" text="#Common_On" value="1" />
+				</ChaosSettingsEnum>
+
+				<ChaosSettingsEnum
+					text="#Settings_RJ_ShootSound"
+					convar="mom_rj_sound_shoot_enable"
+					infomessage="#Settings_RJ_ShootSound_Info"
+					tags="sound"
+				>
+					<RadioButton group="rjshootsound" text="#Common_Off" value="0" />
+					<RadioButton group="rjshootsound" text="#Common_On" value="1" />
+				</ChaosSettingsEnum>
+
+				<ChaosSettingsEnum
+					text="#Settings_RJ_TrailSound"
+					convar="mom_rj_sound_trail_enable"
+					infomessage="#Settings_RJ_TrailSound_Info"
+					tags="sound,trail"
+				>
+					<RadioButton group="rjtrailsound" text="#Common_Off" value="0" />
+					<RadioButton group="rjtrailsound" text="#Common_On" value="1" />
+				</ChaosSettingsEnum>
+
+				<ChaosSettingsEnum
+					text="#Settings_RJ_ExplosionSound"
+					convar="mom_rj_sound_explosion_enable"
+					infomessage="#Settings_RJ_ExplosionSound_Info"
+					tags="explosion,sound"
+				>
+					<RadioButton group="rjexplosionsoud" text="#Common_Off" value="0" />
+					<RadioButton group="rjexplosionsoud" text="#Common_On" value="1" />
+				</ChaosSettingsEnum>
+
+				<ChaosSettingsEnum
+					text="#Settings_RJ_RocketDecals"
+					convar="mom_rj_decals_enable"
+					infomessage="#Settings_RJ_RocketDecals_Info"
+					tags="decals,explosion"
+				>
+					<RadioButton group="rjdecals" text="#Common_Off" value="0" />
+					<RadioButton group="rjdecals" text="#Common_On" value="1" />
+				</ChaosSettingsEnum>
+
+				<ChaosSettingsEnumDropDown
+					text="#Settings_RJ_CenterFire"
+					convar="mom_rj_fire_angle"
+					infomessage="#Settings_RJ_CenterFire_Info"
+					tags="center,centre,middle,original"
+				>
+					<Label id="rjfireangle1" text="#Settings_RJ_CenterFire_Type_1" value="0" />
+					<Label id="rjfireangle2" text="#Settings_RJ_CenterFire_Type_2" value="1" />
+					<Label id="rjfireangle3" text="#Settings_RJ_CenterFire_Type_3" value="2" />
+				</ChaosSettingsEnumDropDown>
+
+				<ChaosSettingsSlider
+					text="#Settings_RJ_RocketDrawDelayEntry"
+					min="0"
+					max="1"
+					displayprecision="2"
+					convar="mom_rj_rocket_drawdelay"
+					infomessage="#Settings_RJ_RocketDrawDelayEntry_Info"
+				/>
+
+			</Panel>
+
+			<Panel class="settings-page__spacer" />
+
+			<Panel id="StickyJumpSubSection" class="settings-group">
+
+				<Panel class="settings-group__header">
+
+					<Label class="settings-group__title" text="#Settings_SJ_Title" tags="sj,stickyjump,demoman" />
+
+					<Panel class="flow-right horizontal-align-right">
+
+						<Button
+							class="button mr-3"
+							onactivate="SettingsShared.showImportExportDialogue('Settings_SJ_Title', 'StickyJumpSubSection')"
+						>
+							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
+						</Button>
+
+						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
+							<Button class="button" onactivate="SettingsShared.resetSettings('StickyJumpSubSection');">
+								<Image class="button__icon" src="file://{images}/reset.svg" />
+							</Button>
+						</TooltipPanel>
+
+					</Panel>
+
+				</Panel>
+
+				<ChaosSettingsEnum
+					text="#Settings_SJ_TrailParticle"
+					convar="mom_sj_particle_trail_enable"
+					infomessage="#Settings_SJ_TrailParticle_Info"
+					tags="particle,trail"
+				>
+					<RadioButton group="sjtrailparticle" text="#Common_Off" value="0" />
+					<RadioButton group="sjtrailparticle" text="#Common_On" value="1" />
+				</ChaosSettingsEnum>
+
+				<ChaosSettingsEnum
+					text="#Settings_SJ_ExplosionParticle"
+					convar="mom_sj_particle_explosion_enable"
+					infomessage="#Settings_SJ_ExplosionParticle_Info"
+					tags="particle,explosion"
+				>
+					<RadioButton group="sjexplodeparticle" text="#Common_Off" value="0" />
+					<RadioButton group="sjexplodeparticle" text="#Common_On" value="1" />
+				</ChaosSettingsEnum>
+
+				<ChaosSettingsEnum
+					text="#Settings_SJ_StickybombDecals"
+					convar="mom_sj_decals_enable"
+					infomessage="#Settings_SJ_StickybombDecals_Info"
+					tags="decal,explosion"
+				>
+					<RadioButton group="sjdecals" text="#Common_Off" value="0" />
+					<RadioButton group="sjdecals" text="#Common_On" value="1" />
+				</ChaosSettingsEnum>
+
+				<ChaosSettingsEnum
+					text="#Settings_SJ_ExplosionSound"
+					convar="mom_sj_sound_explosion_enable"
+					infomessage="#Settings_SJ_ExplosionSound_Info"
+					tags="explosion,sound"
+				>
+					<RadioButton group="sjexplodesound" text="#Common_Off" value="0" />
+					<RadioButton group="sjexplodesound" text="#Common_On" value="1" />
+				</ChaosSettingsEnum>
+
+				<ChaosSettingsEnum
+					text="#Settings_SJ_DetonationFailSound"
+					convar="mom_sj_sound_detonate_fail_enable"
+					infomessage="#Settings_SJ_DetonationFailSound_Info"
+					tags="detonation,sound"
+				>
+					<RadioButton group="sjfailsound" text="#Common_Off" value="0" />
+					<RadioButton group="sjfailsound" text="#Common_On" value="1" />
+				</ChaosSettingsEnum>
+
+				<ChaosSettingsEnum
+					text="#Settings_SJ_DetonationSuccessSound"
+					convar="mom_sj_sound_detonate_success_enable"
+					infomessage="#Settings_SJ_DetonationSuccessSound_Info"
+					tags="detonation,sound"
+				>
+					<RadioButton group="sjsuccesssound" text="#Common_Off" value="0" />
+					<RadioButton group="sjsuccesssound" text="#Common_On" value="1" />
+				</ChaosSettingsEnum>
+
+				<ChaosSettingsEnum
+					text="#Settings_SJ_ChargeSound"
+					convar="mom_sj_sound_charge_enable"
+					infomessage="#Settings_SJ_ChargeSound_Info"
+					tags="charge,sound"
+				>
+					<RadioButton group="sjchargesound" text="#Common_Off" value="0" />
+					<RadioButton group="sjchargesound" text="#Common_On" value="1" />
+				</ChaosSettingsEnum>
+
+				<ChaosSettingsEnum
+					text="#Settings_SJ_ShootSound"
+					convar="mom_sj_sound_shot_enable"
+					infomessage="#Settings_SJ_ShootSound_Info"
+					tags="shoot,sound"
+				>
+					<RadioButton group="sjshootsound" text="#Common_Off" value="0" />
+					<RadioButton group="sjshootsound" text="#Common_On" value="1" />
+				</ChaosSettingsEnum>
+
+				<ChaosSettingsSlider
+					text="#Settings_SJ_ChargedShotSoundTheshold"
+					min="0"
+					max="5"
+					displayprecision="1"
+					convar="mom_sj_sound_shot_charged_threshold"
+					infomessage="#Settings_SJ_ChargedShotSoundTheshold_Info"
+					tags="charge,sound"
+				/>
+
+				<ChaosSettingsEnum
+					text="#Settings_SJ_ChargeMeter"
+					convar="mom_hud_sj_chargemeter_enable"
+					infomessage="#Settings_SJ_ChargeMeter_Info"
+					tags="charge,meter"
+				>
+					<RadioButton group="chargemeter" text="#Common_Off" value="0" />
+					<RadioButton group="chargemeter" text="#Common_On" value="1" />
+				</ChaosSettingsEnum>
+
+				<ChaosSettingsEnum
+					text="#Settings_SJ_StickyCounter"
+					convar="mom_hud_sj_stickycount_enable"
+					infomessage="#Settings_SJ_StickyCounter_Info"
+					tags="counter"
+				>
+					<RadioButton group="stickycounter" text="#Common_Off" value="0" />
+					<RadioButton group="stickycounter" text="#Common_On" value="1" />
+				</ChaosSettingsEnum>
+
+				<ChaosSettingsEnumDropDown
+					text="#Settings_SJ_ChargeMeterUnits"
+					convar="mom_hud_sj_chargemeter_units"
+					tags="charge,meter"
+				>
+					<Label id="sjunits1" text="#Settings_SJ_ChargeMeterUnits_Type_None" value="0" />
+					<Label id="sjunits2" text="#Settings_SJ_ChargeMeterUnits_Type_1" value="1" />
+					<Label id="sjunits3" text="#Settings_SJ_ChargeMeterUnits_Type_2" value="2" />
+				</ChaosSettingsEnumDropDown>
+
+				<ChaosSettingsSlider
+					text="#Settings_SJ_DrawDelayEntry"
+					min="0"
+					max="1"
+					displayprecision="2"
+					convar="mom_sj_stickybomb_drawdelay"
+					infomessage="#Settings_SJ_DrawDelayEntry_Info"
+					tags="delay"
+				/>
+			</Panel>
+
+			<Panel class="settings-page__spacer" />
+
+			<Panel id="ConcSubSection" class="settings-group">
+
+				<Panel class="settings-group__header">
+
+					<Label class="settings-group__title" text="#Settings_Conc_Title" tags="conc,concussion,grenade" />
+
+					<Panel class="flow-right horizontal-align-right">
+
+						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Conc', 'ConcSubSection')">
+							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
+						</Button>
+
+						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
+							<Button class="button" onactivate="SettingsShared.resetSettings('ConcSubSection');">
+								<Image class="button__icon" src="file://{images}/reset.svg" />
+							</Button>
+						</TooltipPanel>
+
+					</Panel>
+
+				</Panel>
+
+				<ChaosSettingsEnum
+					text="#Settings_Conc_TrailParticle"
+					convar="mom_conc_particle_trail_enable"
+					infomessage="#Settings_Conc_TrailParticle_Info"
+					tags="trail,particle"
+				>
+					<RadioButton group="conctrailparticle" text="#Common_Off" value="0" />
+					<RadioButton group="conctrailparticle" text="#Common_On" value="1" />
+				</ChaosSettingsEnum>
+
+				<ChaosSettingsEnum
+					text="#Settings_Conc_ExplosionParticle"
+					convar="mom_conc_particle_explosion_enable"
+					infomessage="#Settings_Conc_ExplosionParticle_Info"
+					tags="explosion,particle"
+				>
+					<RadioButton group="concexplodeparticle" text="#Common_Off" value="0" />
+					<RadioButton group="concexplodeparticle" text="#Common_On" value="1" />
+				</ChaosSettingsEnum>
+
+				<ChaosSettingsEnum
+					text="#Settings_Conc_BounceSound"
+					convar="mom_conc_sound_bounce_enable"
+					infomessage="#Settings_Conc_BounceSound_Info"
+					tags="bounce,sound"
+				>
+					<RadioButton group="concshootsound" text="#Common_Off" value="0" />
+					<RadioButton group="concshootsound" text="#Common_On" value="1" />
+				</ChaosSettingsEnum>
+
+				<ChaosSettingsEnum
+					text="#Settings_Conc_ExplosionSound"
+					convar="mom_conc_sound_explosion_enable"
+					infomessage="#Settings_Conc_ExplosionSound_Info"
+					tags="explosion,sound"
+				>
+					<RadioButton group="concexplosionsoud" text="#Common_Off" value="0" />
+					<RadioButton group="concexplosionsoud" text="#Common_On" value="1" />
+				</ChaosSettingsEnum>
+
+				<ChaosSettingsEnum
+					text="#Settings_Conc_TimerSound"
+					convar="mom_conc_sound_timer_enable"
+					infomessage="#Settings_Conc_TimerSound_Info"
+					tags="timer,sound"
+				>
+					<RadioButton group="conctrailsound" text="#Common_Off" value="0" />
+					<RadioButton group="conctrailsound" text="#Common_On" value="1" />
+				</ChaosSettingsEnum>
+
+				<ChaosSettingsEnum
+					text="#Settings_Conc_FizzleSound"
+					convar="mom_conc_sound_fizzle_enable"
+					infomessage="#Settings_Conc_FizzleSound_Info"
+					tags="fizzle,sound"
+				>
+					<RadioButton group="concfizzlesound" text="#Common_Off" value="0" />
+					<RadioButton group="concfizzlesound" text="#Common_On" value="1" />
+				</ChaosSettingsEnum>
+
+				<ChaosSettingsEnum
+					text="#Settings_Conc_TimerBar"
+					convar="mom_hud_conc_timer_enable"
+					infomessage="#Settings_Conc_TimerBar_Info"
+					tags="timer,bar"
+				>
+					<RadioButton group="conctimerpanel" text="#Common_Off" value="0" />
+					<RadioButton group="conctimerpanel" text="#Common_On" value="1" />
+				</ChaosSettingsEnum>
+
+				<ChaosSettingsEnum
+					text="#Settings_Conc_IngameTimer"
+					convar="mom_hud_conc_entpanels_enable"
+					infomessage="#Settings_Conc_IngameTimer_Info"
+					tags="timer"
+				>
+					<RadioButton group="conccountdown" text="#Common_Off" value="0" />
+					<RadioButton group="conccountdown" text="#Common_On" value="1" />
+				</ChaosSettingsEnum>
+
+				<ChaosSettingsEnum
+					text="#Settings_Conc_NumericalTimer"
+					convar="mom_hud_conc_timer_countdown"
+					infomessage="#Settings_Conc_NumericalTimer_Info"
+					tags="timer"
+				>
+					<RadioButton group="concentpanels" text="#Common_Off" value="0" />
+					<RadioButton group="concentpanels" text="#Common_On" value="1" />
+				</ChaosSettingsEnum>
+
+			</Panel>
+
+			<Panel class="settings-page__spacer" />
+
+			<Panel id="DefragSubSection" class="settings-group">
+
+				<Panel class="settings-group__header">
+
+					<Label class="settings-group__title" text="#Settings_Defrag_Title" tags="defrag,quake" />
+
+					<Panel class="flow-right horizontal-align-right">
+
+						<Button
+							class="button mr-3"
+							onactivate="SettingsShared.showImportExportDialogue('Settings_Defrag_Title', 'DefragSubSection')"
+						>
+							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
+						</Button>
+
+						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
+							<Button class="button" onactivate="SettingsShared.resetSettings('DefragSubSection');">
+								<Image class="button__icon" src="file://{images}/reset.svg" />
+							</Button>
+						</TooltipPanel>
+
+					</Panel>
+
+				</Panel>
+				
+				<ChaosSettingsEnum
+					text="#Settings_DefragShootSound"
+					convar="mom_df_sound_shoot_enable"
+					infomessage="#Settings_DefragShootSound_Info"
+					tags="sound,shoot"
+				>
+					<RadioButton group="defragshootsound" text="#Common_Off" value="0" />
+					<RadioButton group="defragshootsound" text="#Common_On" value="1" />
+				</ChaosSettingsEnum>
+				
+				<ChaosSettingsEnum
+					text="#Settings_DefragTrailSound"
+					convar="mom_df_sound_trail_enable"
+					infomessage="#Settings_DefragTrailSound_Info"
+					tags="sound,trail"
+				>
+					<RadioButton group="defragtrailsound" text="#Common_Off" value="0" />
+					<RadioButton group="defragtrailsound" text="#Common_On" value="1" />
+				</ChaosSettingsEnum>
+				
+				<ChaosSettingsEnum
+					text="#Settings_DefragFizzleSound"
+					convar="mom_df_sound_fizzle_enable"
+					infomessage="#Settings_DefragFizzleSound_Info"
+					tags="sound,fizzle"
+				>
+					<RadioButton group="defragfizzlesound" text="#Common_Off" value="0" />
+					<RadioButton group="defragfizzlesound" text="#Common_On" value="1" />
+				</ChaosSettingsEnum>
+				
+				<ChaosSettingsEnum
+					text="#Settings_DefragExplosionSound"
+					convar="mom_df_sound_explosion_enable"
+					infomessage="#Settings_DefragExlosionSound_Info"
+					tags="sound,explosion"
+				>
+					<RadioButton group="defragexplosionsound" text="#Common_Off" value="0" />
+					<RadioButton group="defragexplosionsound" text="#Common_On" value="1" />
+				</ChaosSettingsEnum>
+				
+				<ChaosSettingsEnum
+					text="#Settings_DefragExplosionParticle"
+					convar="mom_df_particle_explosion_enable"
+					infomessage="#Settings_DefragExplosionParticle_Info"
+					tags="explosion,particle"
+				>
+					<RadioButton group="defragexplosionparticle" text="#Common_Off" value="0" />
+					<RadioButton group="defragexplosionparticle" text="#Common_On" value="1" />
+				</ChaosSettingsEnum>
+				
+				<ChaosSettingsEnum
+					text="#Settings_DefragWeaponDecals"
+					convar="mom_df_decals_enable"
+					infomessage="#Settings_DefragWeaponDecals_Info"
+					tags="decal"
+				>
+					<RadioButton group="defragweapondecals" text="#Common_Off" value="0" />
+					<RadioButton group="defragweapondecals" text="#Common_On" value="1" />
+				</ChaosSettingsEnum>
+				
+				<ChaosSettingsEnum
+					text="#Settings_DefragProjectileTrail"
+					convar="mom_df_particle_trail_enable"
+					infomessage="#Settings_DefragProjectileTrail_Info"
+					tags="particle,trail"
+				>
+					<RadioButton group="defragprojectiletrail" text="#Common_Off" value="0" />
+					<RadioButton group="defragprojectiletrail" text="#Common_On" value="1" />
+				</ChaosSettingsEnum>
+				
+				<ChaosSettingsEnumDropDown
+					text="#Settings_DefragAutoswitch"
+					convar="mom_df_autoswitch"
+					infomessage="#Settings_DefragAutoswitch_Info"
+					tags="weapon,autoswitch"
+				>
+						<Label id="autoswitch0" text="#Settings_Defrag_AutoswitchMode_Type0" value="0" />
+						<Label id="autoswitch1" text="#Settings_Defrag_AutoswitchMode_Type1" value="1" />
+						<Label id="autoswitch2" text="#Settings_Defrag_AutoswitchMode_Type2" value="2" />
+					</ChaosSettingsEnumDropDown>
+
+				<Panel class="settings-group__combo">
+
+					<Label class="settings-group__combo-header" text="#Settings_Defrag_CGAZ_Title" />
+
+					<ChaosSettingsEnum
+						text="#Settings_Defrag_CGAZ_Enable"
+						convar="mom_df_hud_accel_enable"
+						infomessage="#Settings_Defrag_CGAZ_Enable_Info"
+						tags="cgaz"
+					>
+						<RadioButton group="accelenable" text="#Common_Off" value="0" />
+						<RadioButton group="accelenable" text="#Common_On" value="1" />
+					</ChaosSettingsEnum>
+
+					<ConVarEnabler convar="mom_df_hud_accel_enable" class="flow-down">
+						<ChaosSettingsSlider
+							text="#Settings_Defrag_CGAZ_Height"
+							min="1"
+							max="50"
+							convar="mom_df_hud_accel_height"
+							displayprecision="0"
+							infomessage="#Settings_Defrag_CGAZ_Height_Info"
+							tags="cgaz"
+						/>
+
+						<ChaosSettingsSlider
+							text="#Settings_Defrag_CGAZ_Offset"
+							min="-200"
+							max="200"
+							convar="mom_df_hud_accel_offset"
+							displayprecision="0"
+							infomessage="#Settings_Defrag_CGAZ_Offset_Info"
+							tags="cgaz"
+						/>
+
+						<ChaosSettingsSlider
+							text="#Settings_Defrag_CGAZ_MinSpeed"
+							min="1"
+							max="1000"
+							convar="mom_df_hud_accel_min_speed"
+							displayprecision="0"
+							infomessage="#Settings_Defrag_CGAZ_MinSpeed_Info"
+							tags="cgaz"
+						/>
+
+						<ConVarColorDisplay
+							text="#Settings_Defrag_CGAZ_SlowColor"
+							convar="mom_df_hud_accel_slow_color"
+							infomessage="#Settings_Defrag_CGAZ_SlowColor_Info"
+							tags="cgaz"
+						/>
+
+						<ConVarColorDisplay
+							text="#Settings_Defrag_CGAZ_FastColor"
+							convar="mom_df_hud_accel_fast_color"
+							infomessage="#Settings_Defrag_CGAZ_FastColor_Info"
+							tags="cgaz"
+						/>
+
+						<ConVarColorDisplay
+							text="#Settings_Defrag_CGAZ_TurnColor"
+							convar="mom_df_hud_accel_turn_color"
+							infomessage="#Settings_Defrag_CGAZ_TurnColor_Info"
+							tags="cgaz"
+						/>
+
+						<ConVarColorDisplay
+							text="#Settings_Defrag_CGAZ_DeadzoneColor"
+							convar="mom_df_hud_accel_dz_color"
+							infomessage="#Settings_Defrag_CGAZ_DeadzoneColor_Info"
+							tags="cgaz"
+						/>
+
+						<ChaosSettingsEnum
+							text="#Settings_Defrag_CGAZ_Mirrored"
+							convar="mom_df_hud_accel_mirror_enable"
+							infomessage="#Settings_Defrag_CGAZ_Mirrored_Info"
+							tags="cgaz"
+						>
+							<RadioButton group="accelmirrorenable" text="#Common_Off" value="0" />
+							<RadioButton group="accelmirrorenable" text="#Common_On" value="1" />
+						</ChaosSettingsEnum>
+
+						<ChaosSettingsEnum
+							text="#Settings_Defrag_CGAZ_True"
+							convar="mom_df_hud_accel_scale_enable"
+							infomessage="#Settings_Defrag_CGAZ_True_Info"
+							tags="cgaz"
+						>
+							<RadioButton group="accelscaleenable" text="#Common_Off" value="0" />
+							<RadioButton group="accelscaleenable" text="#Common_On" value="1" />
+						</ChaosSettingsEnum>
+					</ConVarEnabler>
+
+				</Panel>
+
+				<Panel class="settings-group__combo">
+
+					<Label class="settings-group__combo-header" text="#Settings_Defrag_Snaps_Title" />
+
+					<ChaosSettingsEnum
+						text="#Settings_Defrag_Snaps_Enable"
+						convar="mom_df_hud_snap_enable"
+						infomessage="#Settings_Defrag_Snaps_Enable_Info"
+						tags="snaps"
+					>
+						<RadioButton group="snapenable" text="#Common_Off" value="0" />
+						<RadioButton group="snapenable" text="#Common_On" value="1" />
+					</ChaosSettingsEnum>
+
+					<ConVarEnabler convar="mom_df_hud_snap_enable" class="flow-down">
+						<ChaosSettingsSlider
+							text="#Settings_Defrag_Snaps_Height"
+							min="1"
+							max="50"
+							convar="mom_df_hud_snap_height"
+							displayprecision="0"
+							infomessage="#Settings_Defrag_Snaps_Height_Info"
+							tags="snaps"
+						/>
+
+						<ChaosSettingsSlider
+							text="#Settings_Defrag_Snaps_Offset"
+							min="-200"
+							max="200"
+							convar="mom_df_hud_snap_offset"
+							displayprecision="0"
+							infomessage="#Settings_Defrag_Snaps_Offset_Info"
+							tags="snaps"
+						/>
+
+						<ChaosSettingsSlider
+							text="#Settings_Defrag_Snaps_MinSpeed"
+							min="0"
+							max="1000"
+							convar="mom_df_hud_snap_min_speed"
+							displayprecision="0"
+							infomessage="#Settings_Defrag_Snaps_MinSpeed_Info"
+							tags="snaps"
+						/>
+
+						<ConVarColorDisplay
+							text="#Settings_Defrag_Snaps_Color"
+							convar="mom_df_hud_snap_color"
+							infomessage="#Settings_Defrag_Snaps_Color_Info"
+							tags="snaps"
+						/>
+
+						<ConVarColorDisplay
+							text="#Settings_Defrag_Snaps_AltColor"
+							convar="mom_df_hud_snap_alt_color"
+							infomessage="#Settings_Defrag_Snaps_AltColor_Info"
+							tags="snaps"
+						/>
+
+						<ChaosSettingsEnumDropDown
+							text="#Settings_Defrag_Snaps_Highlight"
+							convar="mom_df_hud_snap_hl_mode"
+							infomessage="#Settings_Defrag_Snaps_Highlight_Info"
+							tags="snaps"
+						>
+							<Label id="highlight1" text="#Settings_Defrag_Snaps_Highlight_Mode0" value="0" />
+							<Label id="highlight2" text="#Settings_Defrag_Snaps_Highlight_Type1" value="1" />
+							<Label id="highlight3" text="#Settings_Defrag_Snaps_Highlight_Type2" value="2" />
+						</ChaosSettingsEnumDropDown>
+
+						<ConVarEnabler convar="mom_df_hud_snap_hl_mode" class="flow-down">
+							<ConVarColorDisplay
+								text="#Settings_Defrag_Snaps_HighlightColor"
+								convar="mom_df_hud_snap_hl_color"
+								infomessage="#Settings_Defrag_Snaps_HighlightColor_Info"
+								tags="snaps"
+							/>
+
+							<ConVarColorDisplay
+								text="#Settings_Defrag_Snaps_HighlightAltColor"
+								convar="mom_df_hud_snap_hl_alt_color"
+								infomessage="#Settings_Defrag_Snaps_HighlightAltColor_Info"
+								tags="snaps"
+							/>
+						</ConVarEnabler>
+
+						<ChaosSettingsEnum
+							text="#Settings_Defrag_Snaps_ColorByAccel"
+							convar="mom_df_hud_snap_color_mode"
+							infomessage="#Settings_Defrag_Snaps_ColorByAccel_Info"
+							tags="snaps"
+						>
+							<RadioButton group="snapcolormode" text="#Common_Off" value="0" />
+							<RadioButton group="snapcolormode" text="#Common_On" value="1" />
+						</ChaosSettingsEnum>
+
+						<ConVarEnabler convar="mom_df_hud_snap_color_mode" class="flow-down">
+							<ConVarColorDisplay
+								text="#Settings_Defrag_Snaps_SlowColor"
+								convar="mom_df_hud_snap_slow_color"
+								infomessage="#Settings_Defrag_Snaps_SlowColor_Info"
+								tags="snaps"
+							/>
+
+							<ConVarColorDisplay
+								text="#Settings_Defrag_Snaps_FastColor"
+								convar="mom_df_hud_snap_fast_color"
+								infomessage="#Settings_Defrag_Snaps_FastColor_Info"
+								tags="snaps"
+							/>
+						</ConVarEnabler>
+
+						<ChaosSettingsEnum
+							text="#Settings_Defrag_Snaps_SizeByAccel"
+							convar="mom_df_hud_snap_heightgain_enable"
+							infomessage="#Settings_Defrag_Snaps_SizeByAccel_Info"
+							tags="snaps"
+						>
+							<RadioButton group="snapheightenable" text="#Common_Off" value="0" />
+							<RadioButton group="snapheightenable" text="#Common_On" value="1" />
+						</ChaosSettingsEnum>
+					</ConVarEnabler>
+
+				</Panel>
+
+				<ChaosSettingsEnumDropDown
+					text="#Settings_Defrag_ProjectionMode"
+					convar="mom_df_hud_projection"
+					infomessage="#Settings_Defrag_ProjectionMode_Info"
+				>
+					<Label id="projection0" text="#Settings_Defrag_ProjectionMode_Type0" value="0" />
+					<Label id="projection1" text="#Settings_Defrag_ProjectionMode_Type1" value="1" />
+					<Label id="projection2" text="#Settings_Defrag_ProjectionMode_Type2" value="2" />
+				</ChaosSettingsEnumDropDown>
+
+				<Panel class="settings-group__combo">
+
+					<ChaosSettingsEnum
+						text="#Settings_Defrag_HUDFOVEnable"
+						convar="mom_df_hud_fov_override_enable"
+						infomessage="#Settings_Defrag_HUDFOV_Info"
+						tags="fov"
+					>
+						<RadioButton group="hudfovenable" text="#Common_Off" value="0" />
+						<RadioButton group="hudfovenable" text="#Common_On" value="1" />
+					</ChaosSettingsEnum>
+
+					<ConVarEnabler convar="mom_df_hud_fov_override_enable">
+						<ChaosSettingsSlider
+							text="#Settings_Defrag_HUDFOV"
+							min="50"
+							max="130"
+							convar="mom_df_hud_fov_override"
+							displayprecision="0"
+							infomessage="#Settings_Defrag_HUDFOV_Info"
+						/>
+					</ConVarEnabler>
+
+				</Panel>
+
+				<Panel class="settings-group__combo">
+
+					<Label class="settings-group__combo-header" text="#Settings_Defrag_Compass_Title" />
+
+					<ChaosSettingsEnumDropDown
+						text="#Settings_Defrag_Compass"
+						convar="mom_df_hud_compass_mode"
+						infomessage="#Settings_Defrag_Compass_Info"
+						tags="compass"
+					>
+						<Label id="compass0" text="#Settings_Defrag_CompassMode_Type0" value="0" />
+						<Label id="compass1" text="#Settings_Defrag_CompassMode_Type1" value="1" />
+						<Label id="compass2" text="#Settings_Defrag_CompassMode_Type2" value="2" />
+						<Label id="compass3" text="#Settings_Defrag_CompassMode_Type3" value="3" />
+					</ChaosSettingsEnumDropDown>
+
+					<ConVarEnabler convar="mom_df_hud_compass_mode" class="flow-down">
+						<ChaosSettingsSlider
+							text="#Settings_Defrag_CompassSize"
+							min="0"
+							max="25"
+							convar="mom_df_hud_compass_size"
+							displayprecision="0"
+							infomessage="#Settings_Defrag_CompassSize_Info"
+							tags="compass"
+						/>
+
+						<!-- Stats Enable -->
+					</ConVarEnabler>
+
+					<ChaosSettingsEnum
+						text="#Settings_Defrag_Pitch"
+						convar="mom_df_hud_pitch_enable"
+						infomessage="#Settings_Defrag_Pitch_Info"
+						tags="pitch"
+					>
+						<RadioButton group="pitchenable" text="#Common_Off" value="0" />
+						<RadioButton group="pitchenable" text="#Common_On" value="1" />
+					</ChaosSettingsEnum>
+
+					<ConVarEnabler convar="mom_df_hud_pitch_enable" class="flow-down">
+						<ChaosSettingsSlider
+							text="#Settings_Defrag_PitchTarget"
+							min="-90"
+							max="90"
+							convar="mom_df_hud_pitch_target"
+							displayprecision="1"
+							infomessage="#Settings_Defrag_PitchTarget_Info"
+							tags="compass,pitch"
+						/>
+
+						<!-- Stats Enable -->
+					</ConVarEnabler>
+
+					<ChaosSettingsEnumDropDown
+						text="#Settings_Defrag_Compass_Stat_Mode"
+						convar="mom_df_hud_compass_stat_mode"
+						infomessage="#Settings_Defrag_Compass_Stat_Mode_Info"
+						tags="compass"
+					>
+						<Label id="stat0" text="#Settings_Defrag_Compass_StatMode_Type0" value="0" />
+						<Label id="stat1" text="#Settings_Defrag_Compass_StatMode_Type1" value="1" />
+						<Label id="stat2" text="#Settings_Defrag_Compass_StatMode_Type2" value="2" />
+						<Label id="stat3" text="#Settings_Defrag_Compass_StatMode_Type3" value="3" />
+					</ChaosSettingsEnumDropDown>
+
+					<ConVarColorDisplay
+						text="#Settings_Defrag_CompassColor"
+						convar="mom_df_hud_compass_color"
+						infomessage="#Settings_Defrag_CompassColor_Info"
+						tags="compass"
+					/>
+
+					<ConVarColorDisplay
+						text="#Settings_Defrag_Compass_Highlight_Color"
+						convar="mom_df_hud_compass_hl_color"
+						infomessage="#Settings_Defrag_Compass_Highlight_Color_Info"
+						tags="compass"
+					/>
+
+				</Panel>
+
+				<Panel class="settings-group__combo">
+
+					<ChaosSettingsEnum
+						text="#Settings_Defrag_WIndicator"
+						convar="mom_df_hud_windicator_enable"
+						infomessage="#Settings_Defrag_WIndicator_Info"
+					>
+						<RadioButton group="windicatorenable" text="#Common_Off" value="0" />
+						<RadioButton group="windicatorenable" text="#Common_On" value="1" />
+					</ChaosSettingsEnum>
+
+					<ConVarEnabler convar="mom_df_hud_windicator_enable" class="flow-down">
+						<ChaosSettingsSlider
+							text="#Settings_Defrag_WIndicatorArrowSize"
+							min="0"
+							max="25"
+							convar="mom_df_hud_windicator_size"
+							displayprecision="0"
+							infomessage="#Settings_Defrag_WIndicatorArrowSize_Info"
+						/>
+
+						<ConVarColorDisplay
+							text="#Settings_Defrag_WIndicatorArrowColor"
+							convar="mom_df_hud_windicator_color"
+							infomessage="#Settings_Defrag_WIndicatorArrowColor_Info"
+						/>
+					</ConVarEnabler>
+
+				</Panel>
+
+				<Panel class="settings-group__combo">
+
+					<ChaosSettingsEnum
+						text="Display jump visualizer"
+						convar="mom_df_hud_jump_enable"
+						infomessage="Display jump visualizer. Draws an upward bar to show how long +jump was held after leaving the ground, and a downward bar to show how early/late +jump was pressed before jumping."
+					>
+						<RadioButton group="dfjumpenable" text="#Common_Off" value="0" />
+						<RadioButton group="dfjumpenable" text="#Common_On" value="1" />
+					</ChaosSettingsEnum>
+
+					<ConVarEnabler convar="mom_df_hud_jump_enable" class="flow-down">
+						<ChaosSettingsSlider
+							text="Maximum delay time (ms)"
+							min="50"
+							max="1000"
+							convar="mom_df_hud_jump_max_delay"
+							displayprecision="0"
+							infomessage="Length of time (in milliseconds) corresponding to 100% full press or release bars"
+						/>
+
+						<ChaosSettingsEnum
+							text="Display time labels"
+							convar="mom_df_hud_jump_text_enable"
+							infomessage="Display times (in milliseconds) next to jump sync bars. At the top is late release time, at the bottom early/late press time, and in the middle is combined time for a single jump."
+						>
+							<RadioButton group="dfjumptextenable" text="#Common_Off" value="0" />
+							<RadioButton group="dfjumptextenable" text="#Common_On" value="1" />
+						</ChaosSettingsEnum>
+					</ConVarEnabler>
+
+				</Panel>
+				
+
+			</Panel>
+		</Panel>
+	</Panel>
+</root>

@@ -1,0 +1,54 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+
+	<scripts>
+		<include src="file://{resources}/scripts/modals/context-menus/levels-explainer.js" />
+	</scripts>
+
+	<ContextMenuCustomLayout class="contextmenu levels-explainer" onload="LevelsExplainer.fixLevelIndicators()">
+		<Label class="levels-explainer__title" text="#Profile_LevelsExplainer_Title" />
+		<Label class="levels-explainer__paragraph" text="#Profile_LevelsExplainer_Desc1" />
+		<Panel class="levels-explainer__showcase-row my-4">
+			<LevelIndicator class="levels-explainer__level-indicator mr-1" level="1" />
+			<LevelIndicator class="levels-explainer__level-indicator mr-1" level="50" />
+			<LevelIndicator class="levels-explainer__level-indicator mr-1" level="100" />
+			<LevelIndicator class="levels-explainer__level-indicator mr-1" level="150" />
+			<LevelIndicator class="levels-explainer__level-indicator mr-1" level="200" />
+			<LevelIndicator class="levels-explainer__level-indicator mr-1" level="250" />
+			<LevelIndicator class="levels-explainer__level-indicator mr-1" level="300" />
+			<LevelIndicator class="levels-explainer__level-indicator mr-1" level="350" />
+			<LevelIndicator class="levels-explainer__level-indicator mr-1" level="400" />
+			<LevelIndicator class="levels-explainer__level-indicator mr-1" level="450" />
+			<LevelIndicator class="levels-explainer__level-indicator" level="500" />
+		</Panel>
+		<Label class="levels-explainer__paragraph" text="#Profile_LevelsExplainer_Desc2" />
+		<Panel class="levels-explainer__showcase-row mt-4">
+			<Panel class="levels-explainer__prestige-col">
+				<Label class="levels-explainer__prestige-title" text="#Profile_Prestige_1" />
+				<Image class="levels-explainer__prestige-icon" src="file://{images}/prestige/prestige1.svg" textureheight="64" />
+			</Panel>
+			<Panel class="levels-explainer__prestige-col">
+				<Label class="levels-explainer__prestige-title" text="#Profile_Prestige_2" />
+				<Image class="levels-explainer__prestige-icon" src="file://{images}/prestige/prestige2.svg" textureheight="64" />
+			</Panel>
+			<Panel class="levels-explainer__prestige-col">
+				<Label class="levels-explainer__prestige-title" text="#Profile_Prestige_3" />
+				<Image class="levels-explainer__prestige-icon" src="file://{images}/prestige/prestige3.svg" textureheight="64" />
+			</Panel>
+			<Panel class="levels-explainer__prestige-col">
+				<Label class="levels-explainer__prestige-title" text="#Profile_Prestige_4" />
+				<Image class="levels-explainer__prestige-icon" src="file://{images}/prestige/prestige4.svg" textureheight="64" />
+			</Panel>
+			<Panel class="levels-explainer__prestige-col">
+				<Label class="levels-explainer__prestige-title" text="#Profile_Prestige_5" />
+				<Image class="levels-explainer__prestige-icon" src="file://{images}/prestige/prestige5.svg" textureheight="64" />
+			</Panel>
+			<Panel class="levels-explainer__prestige-col">
+				<Label class="levels-explainer__prestige-title" text="#Profile_Prestige_Max" />
+				<Image class="levels-explainer__prestige-icon" src="file://{images}/prestige/max_level.svg" textureheight="64" />
+			</Panel>
+		</Panel>
+	</ContextMenuCustomLayout>
+</root>

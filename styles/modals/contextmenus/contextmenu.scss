@@ -1,0 +1,91 @@
+@use '../../config' as *;
+@use '../../abstract/mixin';
+@use '../../abstract/function';
+@use 'sass:map';
+
+// Note: Context Menus have support for target panel arrows like tooltips but we don't
+// have a reason to do styling for them yet. If need at some point, see the tooltips files.
+
+.contextmenu-fullscreen-container {
+	width: 100%;
+	height: 100%;
+	opacity: 1;
+	z-index: 10000;
+}
+
+// Wrapper class for the currently unused arrows bits and the menu itself
+.contextmenu-wrapper {
+	flow-children: down;
+
+	width: fit-children;
+	height: fit-children;
+
+	&__row {
+		flow-children: right;
+	}
+}
+
+.contextmenu {
+	flow-children: down;
+
+	width: fit-children;
+	height: fit-children;
+
+	padding: $contextmenu-padding-y 0;
+	background-color: $contextmenu-background;
+	box-shadow: $contextmenu-shadow;
+	border-radius: $contextmenu-radius;
+
+	opacity: 1;
+}
+
+.simplecontextmenu {
+	& > Button {
+		flow-children: left;
+		horizontal-align: left;
+		background-color: $dropdown-item-background;
+		width: $contextmenu-width;
+		padding: $dropdown-item-padding;
+
+		&.TopSeparator {
+			border-top: $contextmenu-separator;
+		}
+
+		&.BottomSeparator {
+			border-bottom: $contextmenu-separator;
+		}
+
+		&:hover {
+			background-color: $contextmenu-item-background-hover;
+		}
+
+		& > Label {
+			horizontal-align: left;
+			vertical-align: center;
+			// min-width: 180px;
+			@include mixin.font-styles($use-header: $contextmenu-item-use-header-font);
+			font-size: $contextmenu-item-font-size;
+			text-shadow: 0 0 0;
+			width: fill-parent-flow(1);
+			height: $contextmenu-item-font-size + 2px;
+
+			background-color: $contextmenu-item-background;
+
+			transition: background-color 0.1s linear 0s;
+		}
+
+		& > Image {
+			vertical-align: middle;
+			height: $contextmenu-item-font-size;
+			width: height-percentage(100%);
+			margin-left: -4px;
+			margin-right: 8px;
+		}
+	}
+
+	@each $name, $color in map.merge($colors-primary, $colors-state) {
+		& .icon-color-#{$name} Image {
+			wash-color: $color;
+		}
+	}
+}
