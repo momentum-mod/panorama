@@ -775,6 +775,87 @@
 					</Panel>
 
 				</Panel>
+				
+				<ChaosSettingsEnum
+					text="#Settings_DefragShootSound"
+					convar="mom_df_sound_shoot_enable"
+					infomessage="#Settings_DefragShootSound_Info"
+					tags="sound,shoot"
+				>
+					<RadioButton group="defragshootsound" text="#Common_Off" value="0" />
+					<RadioButton group="defragshootsound" text="#Common_On" value="1" />
+				</ChaosSettingsEnum>
+				
+				<ChaosSettingsEnum
+					text="#Settings_DefragTrailSound"
+					convar="mom_df_sound_trail_enable"
+					infomessage="#Settings_DefragTrailSound_Info"
+					tags="sound,trail"
+				>
+					<RadioButton group="defragtrailsound" text="#Common_Off" value="0" />
+					<RadioButton group="defragtrailsound" text="#Common_On" value="1" />
+				</ChaosSettingsEnum>
+				
+				<ChaosSettingsEnum
+					text="#Settings_DefragFizzleSound"
+					convar="mom_df_sound_fizzle_enable"
+					infomessage="#Settings_DefragFizzleSound_Info"
+					tags="sound,fizzle"
+				>
+					<RadioButton group="defragfizzlesound" text="#Common_Off" value="0" />
+					<RadioButton group="defragfizzlesound" text="#Common_On" value="1" />
+				</ChaosSettingsEnum>
+				
+				<ChaosSettingsEnum
+					text="#Settings_DefragExplosionSound"
+					convar="mom_df_sound_explosion_enable"
+					infomessage="#Settings_DefragExlosionSound_Info"
+					tags="sound,explosion"
+				>
+					<RadioButton group="defragexplosionsound" text="#Common_Off" value="0" />
+					<RadioButton group="defragexplosionsound" text="#Common_On" value="1" />
+				</ChaosSettingsEnum>
+				
+				<ChaosSettingsEnum
+					text="#Settings_DefragExplosionParticle"
+					convar="mom_df_particle_explosion_enable"
+					infomessage="#Settings_DefragExplosionParticle_Info"
+					tags="explosion,particle"
+				>
+					<RadioButton group="defragexplosionparticle" text="#Common_Off" value="0" />
+					<RadioButton group="defragexplosionparticle" text="#Common_On" value="1" />
+				</ChaosSettingsEnum>
+				
+				<ChaosSettingsEnum
+					text="#Settings_DefragWeaponDecals"
+					convar="mom_df_decals_enable"
+					infomessage="#Settings_DefragWeaponDecals_Info"
+					tags="decal"
+				>
+					<RadioButton group="defragweapondecals" text="#Common_Off" value="0" />
+					<RadioButton group="defragweapondecals" text="#Common_On" value="1" />
+				</ChaosSettingsEnum>
+				
+				<ChaosSettingsEnum
+					text="#Settings_DefragProjectileTrail"
+					convar="mom_df_particle_trail_enable"
+					infomessage="#Settings_DefragProjectileTrail_Info"
+					tags="particle,trail"
+				>
+					<RadioButton group="defragprojectiletrail" text="#Common_Off" value="0" />
+					<RadioButton group="defragprojectiletrail" text="#Common_On" value="1" />
+				</ChaosSettingsEnum>
+				
+				<ChaosSettingsEnumDropDown
+					text="#Settings_DefragAutoswitch"
+					convar="mom_df_autoswitch"
+					infomessage="#Settings_DefragAutoswitch_Info"
+					tags="weapon,autoswitch"
+				>
+						<Label id="autoswitch0" text="#Settings_Defrag_AutoswitchMode_Type0" value="0" />
+						<Label id="autoswitch1" text="#Settings_Defrag_AutoswitchMode_Type1" value="1" />
+						<Label id="autoswitch2" text="#Settings_Defrag_AutoswitchMode_Type2" value="2" />
+					</ChaosSettingsEnumDropDown>
 
 				<Panel class="settings-group__combo">
 
@@ -1176,6 +1257,7 @@
 					</ConVarEnabler>
 
 				</Panel>
+				
 
 			</Panel>
 		</Panel>
