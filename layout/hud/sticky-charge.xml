@@ -1,0 +1,19 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+	<scripts>
+		<include src="file://{resources}/scripts/hud/sticky-charge.js" />
+	</scripts>
+
+	<MomHudStickyCharge class="horizontal-align-center">
+		<Panel id="StickyChargeContainer" class="stickycharge horizontal-align-center">
+			<ProgressBar id="StickyChargeMeter" class="horizontal-align-center progressbar-hudmeter" />
+			<Label
+				id="StickyChargeSpeed"
+				text=""
+				class="horizontal-align-center vertical-align-center text-align-center progressbar-hudmeter__label"
+			/>
+		</Panel>
+	</MomHudStickyCharge>
+</root>

@@ -1,0 +1,13 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+	<scripts>
+		<include src="file://{resources}/scripts/components/color-display.js" />
+	</scripts>
+	<Panel class="colordisplay" onload="ColorDisplay.updateDisplayOpacity();">
+		<Label id="Title" class="colordisplay__title" />
+		<Panel id="Display" class="colordisplay__display" onactivate="ColorDisplay.showPopup()" acceptsinput="true" />
+		<TextEntry id="Hex" class="textentry colordisplay__hexentry" textmode="hex" maxchars="8" />
+	</Panel>
+</root>

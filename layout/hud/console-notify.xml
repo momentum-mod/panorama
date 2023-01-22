@@ -1,0 +1,15 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+	<scripts>
+		<include src="file://{resources}/scripts/hud/console-notify.js" />
+	</scripts>
+	<Panel class="console-notify__frame">
+		<ConVarEnabler convar="developer" togglevisibility="true">
+			<ConVarEnabler convar="con_drawnotify" togglevisibility="true">
+				<NotifyConsoleMessageTarget class="console-notify__message-target" id="NotifyMessageTarget" />
+			</ConVarEnabler>
+		</ConVarEnabler>
+	</Panel>
+</root>

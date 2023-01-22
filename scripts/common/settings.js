@@ -2,7 +2,7 @@
 
 const SettingsTabs = {
 	InputSettings: {
-		xml: 'settings_input',
+		xml: 'input',
 		radioid: 'InputRadio',
 		children: {
 			MouseSubSection: 'MouseRadio',
@@ -10,7 +10,7 @@ const SettingsTabs = {
 		}
 	},
 	AudioSettings: {
-		xml: 'settings_audio',
+		xml: 'audio',
 		radioid: 'AudioRadio',
 		children: {
 			VolumeSubSection: 'VolumeRadio',
@@ -18,7 +18,7 @@ const SettingsTabs = {
 		}
 	},
 	VideoSettings: {
-		xml: 'settings_video',
+		xml: 'video',
 		radioid: 'VideoRadio',
 		children: {
 			VideoSubSection: 'VideoSubRadio',
@@ -27,7 +27,7 @@ const SettingsTabs = {
 		}
 	},
 	OnlineSettings: {
-		xml: 'settings_online',
+		xml: 'online',
 		radioid: 'OnlineRadio',
 		children: {
 			OnlineGhostSubSection: 'OnlineGhostRadio',
@@ -36,7 +36,7 @@ const SettingsTabs = {
 		}
 	},
 	GameplaySettings: {
-		xml: 'settings_gameplay',
+		xml: 'gameplay',
 		radioid: 'GameplayRadio',
 		children: {
 			GameplayGeneralSubSection: 'GameplayGeneralRadio',
@@ -50,7 +50,7 @@ const SettingsTabs = {
 		}
 	},
 	InterfaceSettings: {
-		xml: 'settings_interface',
+		xml: 'interface',
 		radioid: 'InterfaceRadio',
 		children: {
 			UISubSection: 'UIRadio',
@@ -67,6 +67,6 @@ const SettingsTabs = {
 		}
 	},
 	SearchSettings: {
-		xml: 'settings_search'
+		xml: 'search'
 	}
 };

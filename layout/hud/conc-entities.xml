@@ -1,0 +1,25 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+	<scripts>
+		<include src="file://{resources}/scripts/hud/conc-entities.js" />
+	</scripts>
+
+	<snippets>
+		<snippet name="conc-ent-panel">
+			<Panel class="conc-ent">
+				<ProgressBar id="ConcTimeMeter" class="conc-ent__progressbar progressbar-hudmeter" />
+				<Label
+					id="ConcTimeLabel"
+					text=""
+					class="horizontal-align-center vertical-align-center text-align-center conc-ent__label progressbar-hudmeter__label"
+				/>
+			</Panel>
+		</snippet>
+	</snippets>
+
+	<MomHudConcEntities class="full-width full-height">
+		<Panel id="ConcEntPanelsContainer" class="full-width full-height" />
+	</MomHudConcEntities>
+</root>

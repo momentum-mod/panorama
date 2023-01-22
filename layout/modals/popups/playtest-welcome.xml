@@ -1,0 +1,48 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+
+	<scripts>
+		<include src="file://{resources}/scripts/modals/popups/dont-show-again.js" />
+	</scripts>
+
+	<PopupCustomLayout class="PopupPanel Hidden generic-popup generic-popup--large" popupbackground="blur">
+
+		<Panel class="flow-down">
+
+			<Label class="text-h1 mb-4 full-width text-align-center" text="Welcome to the\nMomentum Mod Playtest!" />
+
+			<Label class="mb-2" text="Congratulations on gaining access to the Momentum Mod playtest!" />
+			<Label
+				class="mb-3"
+				text="Please note this build is a work in progress, not a final copy of the game. You should expect to encounter bugs and unfinished features, and most importantly..."
+			/>
+			<Label
+				class="color-error mb-3 full-width text-align-center"
+				text="Times you submit to the leaderboards will be wiped before the 1.0.0 release!!"
+			/>
+			<Label
+				class="mb-2"
+				text="Whilst we don't want to discourage people from enjoying the game, no times submitted or XP gained will be permanent. Additionally, the game is only available in English, and anti-cheat hasn't been added yet, meaning you may come across glitched runs. This is to be expected, in fact we encourage you to try to break the game in whatever ways you can find! Just please make sure to let us know how you do in our Discord (links on the bottom left of this page) as well sending us any suggestions you might have."
+			/>
+			<Label class="mb-4" text="All that being said, thanks for your interest, and we hope you enjoy the game!" />
+			<Label class="ml-4 mb-4 text-italic" text="   - Momentum Mod Team" />
+
+		</Panel>
+
+		<Panel class="flow-right full-width">
+
+			<ToggleButton id="DontShowAgainCheckbox" class="checkbox vertical-align-center mr-4">
+				<Label text="#Common_DontShowAgain" />
+			</ToggleButton>
+
+			<Button class="button button--blue horizontal-align-right" onactivate="DontShowAgainPopup.onSubmit()">
+				<Label class="button__text" text="#Common_IUnderstand" />
+			</Button>
+
+		</Panel>
+
+	</PopupCustomLayout>
+
+</root>

@@ -1,0 +1,164 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+
+	<scripts>
+		<include src="file://{resources}/scripts/common/gamemodes.js" />
+		<include src="file://{resources}/scripts/pages/learn.js" />
+	</scripts>
+
+	<snippets>
+		<snippet name="learn-list-section">
+			<Panel class="learn-list__section">
+				<Label class="learn-list__header" text="{s:learn_section_header}" />
+			</Panel>
+		</snippet>
+		<snippet name="learn-list-lesson">
+			<Panel class="learn-list__lesson">
+				<Label class="learn-list__name" text="{s:learn_lesson_name}" />
+				<Image id="CompletionIcon" class="learn-list__completion-icon" src="file://{images}/flag.svg" />
+			</Panel>
+		</snippet>
+	</snippets>
+
+	<Panel class="mainmenu__page learn" onload="Learn.onLoad()">
+		<Panel class="learn__header learn-header">
+			<Panel class="learn-header__title-bar">
+				<Button id="RefreshButton" class="button mr-4" onactivate="Learn.loadFromGoogleSheet();">
+					<Image class="button__icon" src="file://{images}/refresh.svg" />
+				</Button>
+				<Label class="learn-header__title" text="#Learn_Title" />
+				<Panel class="search learn-header__search" acceptsfocus="true">
+					<Image class="search__icon" src="file://{images}/search.svg" textureheight="32" />
+					<TextEntry class="search__textentry" maxchars="30" placeholder="Search..." />
+					<Button class="search__clearbutton">
+						<Image class="search__clearicon" src="file://{images}/close.svg" textureheight="32" />
+					</Button>
+				</Panel>
+			</Panel>
+			<Panel class="learn-header__modes-bar tabs">
+				<RadioButton
+					id="SurfRadio"
+					class="tabs__tab learn-header__modes-tab"
+					group="LearningNavBar"
+					onactivate='Learn.onModeButtonPressed("Surf")'
+				>
+					<Label class="tabs__text" text="#Gamemode_Surf" />
+				</RadioButton>
+				<Panel class="tabs__gap" />
+				<RadioButton
+					id="BhopRadio"
+					class="tabs__tab learn-header__modes-tab"
+					group="LearningNavBar"
+					onactivate='Learn.onModeButtonPressed("Bhop")'
+				>
+					<Label class="tabs__text" text="#Gamemode_Bhop" />
+				</RadioButton>
+				<Panel class="tabs__gap" />
+				<RadioButton
+					id="ClimbRadio"
+					class="tabs__tab learn-header__modes-tab"
+					group="LearningNavBar"
+					onactivate='Learn.onModeButtonPressed("Climb")'
+				>
+					<Label class="tabs__text" text="#Gamemode_Climb" />
+				</RadioButton>
+				<Panel class="tabs__gap" />
+				<RadioButton
+					id="RJRadio"
+					class="tabs__tab learn-header__modes-tab"
+					group="LearningNavBar"
+					onactivate='Learn.onModeButtonPressed("RJ")'
+				>
+					<Label class="tabs__text" text="#Gamemode_RJ" />
+				</RadioButton>
+				<Panel class="tabs__gap" />
+				<RadioButton
+					id="SJRadio"
+					class="tabs__tab learn-header__modes-tab"
+					group="LearningNavBar"
+					onactivate='Learn.onModeButtonPressed("SJ")'
+				>
+					<Label class="tabs__text" text="#Gamemode_SJ" />
+				</RadioButton>
+				<Panel class="tabs__gap" />
+				<RadioButton
+					id="TricksurfRadio"
+					class="tabs__tab learn-header__modes-tab"
+					group="LearningNavBar"
+					onactivate='Learn.onModeButtonPressed("Tricksurf")'
+				>
+					<Label class="tabs__text" text="#Gamemode_Tricksurf" />
+				</RadioButton>
+				<Panel class="tabs__gap" />
+				<RadioButton
+					id="AhopRadio"
+					class="tabs__tab learn-header__modes-tab"
+					group="LearningNavBar"
+					onactivate='Learn.onModeButtonPressed("Ahop")'
+				>
+					<Label class="tabs__text" text="#Gamemode_Ahop" />
+				</RadioButton>
+				<Panel class="tabs__gap" />
+				<RadioButton
+					id="ParkourRadio"
+					class="tabs__tab learn-header__modes-tab"
+					group="LearningNavBar"
+					onactivate='Learn.onModeButtonPressed("Parkour")'
+				>
+					<Label class="tabs__text" text="#Gamemode_Parkour" />
+				</RadioButton>
+				<Panel class="tabs__gap" />
+				<RadioButton
+					id="ConcRadio"
+					class="tabs__tab learn-header__modes-tab"
+					group="LearningNavBar"
+					onactivate='Learn.onModeButtonPressed("Conc")'
+				>
+					<Label class="tabs__text" text="#Gamemode_Conc" />
+				</RadioButton>
+				<Panel class="tabs__gap" />
+				<RadioButton
+					id="DefragRadio"
+					class="tabs__tab learn-header__modes-tab"
+					group="LearningNavBar"
+					onactivate='Learn.onModeButtonPressed("Defrag")'
+				>
+					<Label class="tabs__text" text="#Gamemode_Defrag" />
+				</RadioButton>
+			</Panel>
+		</Panel>
+		<Panel class="learn__main">
+			<Panel class="learn__left">
+				<Panel id="LearnListContainer" class="learn__list-container" />
+			</Panel>
+			<Panel id="RightPanel" class="learn__right">
+				<Panel class="learn__info learn-info">
+					<Panel class="learn-info__left">
+						<Panel class="flow-right full-width">
+							<Label class="learn-info__title" text="{s:selected_lesson_title}" />
+							<Label id="LessonCompletionStatus" class="learn-info__completion-status" text="#Learn_Completed" />
+						</Panel>
+						<Label class="learn-info__description" text="{s:selected_lesson_description}" html="true" />
+					</Panel>
+					<Panel class="learn-info__right">
+						<Image id="LessonImage" class="learn-info__image">
+							<Label text="Image Goes Here" style="align: center center; opacity: 0.1" />
+						</Image>
+						<Button class="button button--blue learn-info__play-button" onactivate="Learn.startCurrentLesson();">
+							<Panel class="flow-right full-height horizontal-align-center">
+								<Image class="button__icon button__icon--left" src="file://{images}/play-circle.svg" textureheight="64" />
+								<Label class="button__text button__text--right learn-info__playbutton-text" text="#Learn_Practice" />
+							</Panel>
+						</Button>
+					</Panel>
+				</Panel>
+				<Panel id="Guide" class="learn__guide learn-guide">
+					<Label class="learn-guide__title" text="#Learn_Guide" />
+					<Label class="learn-guide__description" text="{s:selected_lesson_guide}" />
+				</Panel>
+			</Panel>
+		</Panel>
+	</Panel>
+</root>

@@ -1,0 +1,146 @@
+@use '../../abstract/function';
+
+.leaderboards {
+	$root: &;
+
+	flow-children: down;
+	width: 100%;
+
+	&__filters {
+		flow-children: right;
+		horizontal-align: center;
+		width: 100%;
+	}
+}
+
+.leaderboard-times {
+	$root: &;
+
+	width: 100%;
+	margin-top: 16px;
+	flow-children: down;
+
+	&__header {
+		flow-children: right;
+		width: 100%;
+		padding: 4px 8px;
+
+		background-color: rgba(0, 0, 0, 0.4);
+		border: 1px solid rgba(0, 0, 0, 0.4);
+		border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+	}
+
+	&__header-item {
+		font-size: 14px;
+	}
+
+	&__main {
+		width: 100%;
+		height: 300px;
+		vertical-align: top;
+
+		&--empty {
+			#{$root}__list {
+				opacity: 0;
+			}
+
+			#{$root}__loading {
+				opacity: 0;
+			}
+
+			#{$root}__empty {
+				opacity: 1;
+			}
+		}
+
+		&--loading {
+			#{$root}__list {
+				opacity: 0;
+			}
+
+			#{$root}__loading {
+				opacity: 1;
+				transition: opacity 0.05s ease-in 0s;
+			}
+
+			#{$root}__empty {
+				opacity: 0;
+			}
+		}
+	}
+
+	&__list {
+		flow-children: down;
+		width: 100%;
+		height: 100%;
+		background-color: rgba(0, 0, 0, 0.4);
+		border: 1px solid rgba(0, 0, 0, 0.4);
+		border-top: 0px none;
+		& > VerticalScrollBar .ScrollThumb {
+			opacity: 1;
+		}
+		transition: opacity 0.1s ease-in-out 0s;
+		opacity: 1;
+	}
+
+	&__empty {
+		width: 100%;
+		height: fill-parent-flow(1);
+		background-color: rgba(0, 0, 0, 0.4);
+		padding-bottom: 36px;
+
+		transition: opacity 0.1s ease-in-out 0s;
+		opacity: 0;
+	}
+
+	&__loading {
+		width: 100%;
+		height: fill-parent-flow(1);
+		background-color: rgba(0, 0, 0, 0.4);
+		padding-bottom: 36px;
+
+		transition: opacity 0.3s ease-in-out 0s;
+		opacity: 0;
+
+		&-spinner {
+			width: 64px;
+			height: 64px;
+			margin-bottom: 4px;
+		}
+	}
+}
+
+.leaderboard-filter-buttons {
+	$root: &;
+	flow-children: right;
+	width: 100%;
+
+	&__local {
+		visibility: visible;
+	}
+
+	&__online {
+		visibility: collapse;
+	}
+
+	&__subtypes {
+		margin-left: 8px;
+		flow-children: right;
+
+		&--online > #{$root}__local {
+			visibility: collapse;
+		}
+
+		&--online > #{$root}__online {
+			visibility: visible;
+		}
+
+		&--lobby > #{$root}__local {
+			visibility: collapse;
+		}
+
+		&--lobby > #{$root}__online {
+			visibility: collapse;
+		}
+	}
+}

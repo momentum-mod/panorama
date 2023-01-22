@@ -1,0 +1,35 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+
+	<scripts>
+		<include src="file://{resources}/scripts/modals/tooltips/credit.js" />
+
+	</scripts>
+
+	<Panel class="credit" ontooltiploaded="Credit.onShow()">
+		<Panel class="credit__header">
+			<Panel class="flow-right">
+				<Label class="credit__name" text="{s:first_names}" />
+				<Label class="credit__username" text="{s:username}" />
+				<Label class="credit__name" text="{s:last_name}" />
+			</Panel>
+			<Label id="Pronouns" class="credit__pronouns" text="{s:pronouns}" />
+		</Panel>
+		<Label id="Roles" class="credit__roles" text="{s:roles}" />
+		<Label id="Bio" class="credit__bio" text="{s:bio}" />
+		<Panel id="Email" class="credit__item">
+			<Image class="credit__icon" src="file://{images}/social/email.svg" />
+			<Label class="credit__text" text="{s:email}" />
+		</Panel>
+		<Panel id="Discord" class="credit__item">
+			<Image class="credit__icon" src="file://{images}/social/discord.svg" />
+			<Label class="credit__text" text="{s:discord}" />
+		</Panel>
+		<Panel id="Github" class="credit__item">
+			<Image class="credit__icon" src="file://{images}/social/github.svg" />
+			<Label class="credit__text" text="{s:github}" />
+		</Panel>
+	</Panel>
+</root>

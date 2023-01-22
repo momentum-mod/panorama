@@ -1,0 +1,139 @@
+@use '../../config' as *;
+@use '../../abstract/mixin';
+@use '../../abstract/function';
+@use 'sass:map';
+
+.tooltip {
+	$root: &;
+	flow-children: down;
+	opacity: 0;
+	transition: opacity 0.1s ease-out 0s;
+	margin: $tooltip-margin;
+
+	&__row {
+		flow-children: right;
+	}
+
+	&__contents {
+		flow-children: down;
+		padding: $tooltip-padding;
+		border-radius: $tooltip-radius;
+		background-color: $tooltip-background;
+	}
+
+	&__text-panel {
+		flow-children: down;
+	}
+
+	&__title-text-panel {
+		flow-children: down;
+		min-width: 360px;
+		max-width: 600px;
+	}
+
+	&__title-image-text-panel {
+		flow-children: down;
+	}
+
+	&__image-text-panel {
+		flow-children: right;
+	}
+
+	&__title {
+		horizontal-align: left;
+		margin-bottom: 4px;
+		@include mixin.font-styles($use-header: $tooltip-title-use-header-font);
+		font-size: $tooltip-title-font-size;
+	}
+
+	&__text {
+		horizontal-align: left;
+		vertical-align: middle;
+		@include mixin.font-styles($use-header: $tooltip-text-use-header-font);
+		font-size: $tooltip-text-font-size;
+	}
+
+	&__image {
+		horizontal-align: left;
+		vertical-align: center;
+		height: $tooltip-image-size;
+		width: height-percentage(100%);
+		margin-right: 8px;
+	}
+
+	$this: &;
+	&--notitle {
+		#{$this}__title {
+			height: 0;
+			margin: 0;
+		}
+	}
+
+	@each $name, $color in map.merge($colors-primary, $colors-state) {
+		&--#{$name} {
+			#{$this}__text {
+				color: $color;
+			}
+			#{$this}__image {
+				wash-color: $color;
+			}
+		}
+
+		// ShowTitleImageTextTooltipStyled only takes one class so we have to do this double modifier shit
+		&--notitle {
+			&--#{$name} {
+				#{$this}__title {
+					height: 0;
+					margin: 0;
+				}
+				#{$this}__text {
+					color: $color;
+				}
+				#{$this}__image {
+					wash-color: $color;
+				}
+			}
+		}
+	}
+
+	&__top-arrow,
+	&__bottom-arrow,
+	&__left-arrow,
+	&__right-arrow {
+		background-repeat: no-repeat;
+		background-position: 0px 0px;
+		background-size: contain;
+
+		z-index: 1;
+		visibility: collapse;
+
+		width: 24px;
+		height: 24px;
+		wash-color: $tooltip-background;
+	}
+
+	@each $dir in ('top', 'right', 'bottom', 'right') {
+		&__#{$dir}-arrow {
+			background-image: url('file://{images}/tooltips/#{$dir}-arrow.svg');
+
+			#{$root}.#{function.capitalize($dir)}ArrowVisible & {
+				visibility: visible;
+			}
+
+			margin-#{$dir}: -8px;
+			@if $dir == 'left' or $dir == 'right' {
+				margin: $tooltip-radius * 2 0px;
+			} @else {
+				margin: 0px $tooltip-radius * 2;
+			}
+		}
+	}
+
+	&.TooltipVisible {
+		opacity: 1;
+	}
+}
+
+TooltipPanel {
+	tooltip-position: bottom;
+}

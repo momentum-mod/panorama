@@ -1,0 +1,118 @@
+@use '../../config' as *;
+@use '../../abstract/mixin';
+@use '../../controls/button';
+
+.PopupPanel {
+	flow-children: down;
+	vertical-align: middle;
+	horizontal-align: center;
+	padding: $popup-padding;
+	border-radius: $popup-radius;
+	background-color: $popup-background;
+	box-shadow: $popup-shadow;
+	opacity: 1;
+	transition-property: pre-transform-scale2d, opacity;
+	transition-duration: 0.15s;
+	transition-timing-function: ease-in-out;
+
+	&.Hidden {
+		opacity: 0;
+		pre-transform-scale2d: 1.05;
+		transition-duration: 0.2s;
+		// sound: "ui_custom_lobby_dialog_slide";
+	}
+}
+
+.generic-popup {
+	min-width: $popup-min-width;
+	max-width: $popup-max-width;
+
+	&--large {
+		max-width: $popup-large-max-width;
+	}
+
+	&__title {
+		horizontal-align: left;
+		margin-bottom: 0px;
+		@include mixin.font-styles($use-header: $popup-title-use-header-font, $light-header: false);
+		color: $font-default-color;
+		font-size: $popup-title-font-size;
+	}
+
+	&__close-button {
+		margin-top: 4px;
+	}
+
+	&__message-panel {
+		flow-children: right;
+		margin: 16px 0;
+	}
+
+	&__message-label {
+		horizontal-align: left;
+		text-align: left;
+		margin-left: 4px;
+		@include mixin.font-styles($use-header: $popup-text-use-header-font);
+		vertical-align: center;
+		font-size: $popup-text-font-size;
+	}
+
+	&__button-row {
+		flow-children: right;
+		horizontal-align: right;
+		margin-top: 4px;
+	}
+}
+
+.PopupButton {
+	// Popup buttons get inserted by C++ with the "PopupButton" class, so we have to do this...
+	@extend .button;
+	margin-left: 8px;
+
+	& Label {
+		@extend .button__text;
+		font-size: $popup-button-font-size;
+	}
+}
+
+.warning-popup {
+	#Button0 {
+		@extend .button--red;
+	}
+}
+
+.ok-cancel-popup {
+	#Button0 {
+		@extend .button--blue;
+	}
+	#Button1 {
+		@extend .button--red;
+	}
+}
+
+.wide-popup {
+	max-width: $popup-wide;
+}
+
+#DimBackground {
+	width: 100%;
+	height: 100%;
+	background-color: $dark-200;
+	transition-property: opacity;
+	transition-duration: 0.3s;
+	transition-timing-function: ease-in;
+}
+
+#BlurBackground {
+	width: 100%;
+	height: 100%;
+	background-color: $dark-200;
+	transition-property: background-color, opacity;
+	transition-duration: 0.3s;
+	transition-timing-function: ease-in-out;
+}
+
+#DimBackground.Hidden,
+#BlurBackground.Hidden {
+	opacity: 0;
+}

@@ -1,0 +1,15 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+
+	<TooltipBase class="tooltip" hittest="false" hittestchildren="false">
+		<Panel id="TopArrow" class="tooltip__top-arrow" arroworigin="50% 0%" hittest="false" />
+		<Panel class="flow-right">
+			<Panel id="LeftArrow" class="tooltip__left-arrow" arroworigin="0% 50%" hittest="false" />
+			<TooltipContents id="Contents" class="tooltip__contents" hittest="false" />
+			<Panel id="RightArrow" class="tooltip__right-arrow" arroworigin="100% 50%" hittest="false" />
+		</Panel>
+		<Panel id="BottomArrow" class="tooltip__bottom-arrow" arroworigin="50% 100%" hittest="false" />
+	</TooltipBase>
+</root>

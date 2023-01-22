@@ -1,0 +1,84 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+
+	<scripts>
+		<include src="file://{resources}/scripts/common/run.js" />
+		<include src="file://{resources}/scripts/pages/end-of-run/end-of-run.js" />
+	</scripts>
+
+	<Panel class="endofrun" acceptsinput="true" acceptsfocus="true">
+		<Panel class="endofrun__header">
+			<Panel class="endofrun__header-left">
+				<Button class="endofrun__header-button endofrun__header-button--back-button" onactivate="EndOfRun.hideEndOfRun();">
+					<Image
+						class="button__icon button__icon--left"
+						src="file://{images}/arrow-thick-right.svg"
+						orientation="180"
+						textureheight="64"
+					/>
+				</Button>
+			</Panel>
+			<Panel class="endofrun__times">
+				<Label id="RunTime" class="endofrun__time" text="{g:time:run_time}" />
+				<Label id="RunDiff" class="endofrun__diff" text="{s:run_diff_prefix}{g:time:run_diff}" />
+			</Panel>
+			<Panel class="endofrun__header-right">
+				<Panel id="RunStatusIndicators" class="endofrun__run-status-indicators">
+					<Image
+						id="SaveStatus"
+						class="endofrun__run-status-indicator mb-2"
+						textureheight="64"
+						onmouseout="UiToolkitAPI.HideTitleImageTextTooltip();"
+					/>
+					<Image
+						id="UploadStatus"
+						class="endofrun__run-status-indicator"
+						textureheight="64"
+						onmouseout="UiToolkitAPI.HideTitleImageTextTooltip();"
+					/>
+				</Panel>
+				<Panel id="EndOfRunActionButtons" class="endofrun__header-buttons">
+					<Button class="endofrun__header-button" onactivate="EndOfRun.watchReplay();">
+						<Panel class="flow-right horizontal-align-center vertical-align-center">
+							<Image class="button__icon button__icon--left" src="file://{images}/movie-open-play-outline.svg" textureheight="64" />
+							<Label class="button__text button__text--right" text="#Action_WatchReplay" />
+						</Panel>
+					</Button>
+					<Button class="endofrun__header-button endofrun__header-button--last" onactivate="EndOfRun.restartMap();">
+						<Panel class="flow-right horizontal-align-center  vertical-align-center">
+							<Image class="button__icon button__icon--left" src="file://{images}/reset.svg" textureheight="64" />
+							<Label class="button__text button__text--right" text="#Action_RestartMap" />
+						</Panel>
+					</Button>
+				</Panel>
+			</Panel>
+		</Panel>
+		<Panel class="endofrun__comparison">
+			<Panel class="endofrun__splits-container">
+				<Panel id="Splits" class="endofrun__splits" />
+			</Panel>
+			<Panel id="DetailedStats" class="endofrun__stats">
+				<LineGraph id="SplitsGraph" class="endofrun-graph" />
+				<Panel class="endofrun-stats">
+					<Panel class="endofrun-stats__header">
+						<Label class="endofrun-stats__title" text="#EndOfRun_Comparison_ZoneTitle" />
+						<Panel class="flow-right horizontal-align-right">
+							<Label class="endofrun-stats__comparison-pre" text="#EndOfRun_Comparison" />
+							<Label class="endofrun-stats__comparison" text="{s:comparison_name}" />
+						</Panel>
+					</Panel>
+					<Panel class="endofrun-stats__row endofrun-stats__row--header">
+						<Label class="endofrun-stats__name endofrun-stats__table-header-text" text="#EndOfRun_Stats" />
+						<Label class="endofrun-stats__value endofrun-stats__table-header-text" text="#EndOfRun_Stats_Base" />
+						<Label class="endofrun-stats__value endofrun-stats__table-header-text" text="#EndOfRun_Stats_Comparison" />
+						<Label class="endofrun-stats__value endofrun-stats__table-header-text" text="#EndOfRun_Stats_Difference" />
+					</Panel>
+					<Panel id="ZoneStats" class="flow-down endofrun-stats__row-container" />
+				</Panel>
+			</Panel>
+		</Panel>
+		<Frame src="file://{resources}/layout/pages/end-of-run/xp.xml" />
+	</Panel>
+</root>

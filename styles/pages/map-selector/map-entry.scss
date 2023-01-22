@@ -1,0 +1,215 @@
+@use '../../config' as *;
+@use '../../abstract/mixin';
+@use '../../abstract/function';
+
+$image-width: 95px;
+$transition: 0.125s ease-out 0s;
+
+.map-entry {
+	$root: &;
+
+	width: 100%;
+	height: 54px;
+
+	// &:hover {
+	// 	sound: "UIPanorama.ButtonRollover";
+	// }
+
+	// &:selected {
+	// 	sound: "UIPanorama.ButtonPress";
+	// }
+
+	&--odd &__right {
+		background-color: rgba(0, 0, 0, 0.4);
+	}
+
+	&--even &__right {
+		background-color: rgba(0, 0, 0, 0.3);
+	}
+
+	&__left {
+		z-index: 1;
+
+		flow-children: right;
+		horizontal-align: left;
+		vertical-align: middle;
+
+		height: 100%;
+
+		transform: translateX(0px);
+		transition: transform $transition;
+
+		#{$root}:hover & {
+			transform: translateX(16px);
+		}
+
+		#{$root}:selected & {
+			transform: translateX(24px);
+		}
+	}
+
+	&__right {
+		z-index: 0;
+
+		width: 100%;
+		height: 100%;
+
+		margin-left: $image-width;
+
+		border-radius: 4px;
+
+		box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.3);
+
+		transition: background-color $transition;
+
+		#{$root}:hover & {
+			background-color: rgba(129, 129, 129, 0.05);
+		}
+
+		#{$root}:selected & {
+			background-color: rgba(0, 0, 0, 0.8);
+		}
+
+		&-content {
+			flow-children: left;
+			vertical-align: middle;
+			horizontal-align: right;
+			height: 100%;
+			width: fit-children;
+		}
+	}
+
+	&__text {
+		vertical-align: middle;
+		@include mixin.font-styles($use-header: true);
+		font-size: 26px;
+	}
+
+	&__state {
+		width: 4px;
+		border-right: 1px solid rgba(0, 0, 0, 0.5);
+		height: 100%;
+		background-color: function.gradient-vertical(rgba(255, 255, 255, 0.5), rgba(182, 182, 182, 0.5));
+		transition: background-color $transition;
+
+		#{$root}--completed & {
+			@include mixin.gradient-themed($color: 'green', $direction: 'down');
+		}
+	}
+
+	&__image {
+		width: $image-width;
+		height: 100%;
+	}
+
+	&__name {
+		margin-left: 24px;
+		font-size: 24px;
+	}
+
+	&__pb {
+		flow-children: left;
+		vertical-align: middle;
+		height: 100%;
+		tooltip-position: right;
+		tooltip-body-position: 50% 50%;
+
+		&-icon {
+			vertical-align: middle;
+			width: 20px;
+			height: 20px;
+			margin-right: 6px;
+			img-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.5);
+
+			&--hidden {
+				visibility: collapse;
+			}
+		}
+
+		&-text {
+			horizontal-align: center;
+			font-size: 18px;
+		}
+	}
+
+	&__tier {
+		text-align: center;
+		@include mixin.font-styles($use-header: true);
+		font-size: 26px;
+		margin-left: 60px;
+	}
+
+	&__favorite {
+		width: fit-children;
+		height: 100%;
+		vertical-align: middle;
+		padding: 6px 4px 6px 10px;
+		margin-left: 36px;
+
+		&-button {
+			height: 100%;
+			width: height-percentage(100%);
+		}
+	}
+
+	&-action {
+		width: 80px;
+		height: 100%;
+		vertical-align: middle;
+		padding: 6px 6px 6px 0;
+
+		&__button {
+			flow-children: none;
+			width: 100%;
+			height: 100%;
+
+			transition: background-color 0.1s ease-in-out 0s;
+
+			.icon-play {
+				visibility: collapse;
+			}
+			.icon-download {
+				visibility: visible;
+			}
+
+			&.playable {
+				@include mixin.button-gradient($color: 'green');
+
+				.icon-download {
+					visibility: collapse;
+				}
+				.icon-play {
+					visibility: visible;
+				}
+			}
+
+			&.queued {
+				visibility: collapse;
+			}
+		}
+	}
+
+	&__banner {
+		width: 100px;
+		height: 20px;
+		align: center center;
+		transform: translate3d(-14px, -32px, 0) rotateZ(-45deg);
+
+		&-text {
+			align: center center;
+
+			@include mixin.font-styles($use-header: true, $light-header: true);
+			font-size: 14px;
+
+			height: 16px;
+		}
+
+		&--beta {
+			@include mixin.gradient-themed($color: 'purple', $direction: 'down');
+		}
+
+		&--new {
+			@include mixin.gradient-themed($color: 'red', $direction: 'down');
+		}
+	}
+}

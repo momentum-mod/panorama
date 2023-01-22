@@ -1,0 +1,32 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+	<scripts>
+		<include src="file://{resources}/scripts/modals/popups/range-color-profile-name.js" />
+	</scripts>
+	<PopupCustomLayout class="PopupPanel Hidden" popupbackground="dim" onload="RangeColorProfileNamePopup.init()">
+		<Panel class="row horizontal-align-center mt-0">
+			<Label id="TitleLabel" class="generic-popup__title" text="#Settings_RangeColorProfile_Prompt" />
+		</Panel>
+		<Panel class="row horizontal-align-center mt-4">
+			<TextEntry
+				id="RangeColorProfileName"
+				class="textentry"
+				maxchars="255"
+				placeholder="#Settings_RangeColorProfile_Placeholder"
+				text=""
+				ontextentrysubmit="RangeColorProfileNamePopup.onTextSubmitted()"
+			/>
+		</Panel>
+		<Label id="InvalidNameLabel" class="text-m horizontal-align-center" text="#Settings_RangeColorProfile_InvalidName" />
+		<Panel class="row horizontal-align-center mt-4 generic-popup__button-row">
+			<Button id="CancelButton" class="button mr-4" onactivate="UiToolkitAPI.CloseAllVisiblePopups()">
+				<Label class="button__text" text="#Common_Cancel" />
+			</Button>
+			<Button id="OKButton" class="button button--green" onactivate="RangeColorProfileNamePopup.onOKPressed()">
+				<Label class="button__text" text="{s:OKBtnText}" />
+			</Button>
+		</Panel>
+	</PopupCustomLayout>
+</root>

@@ -1,0 +1,18 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+	<scripts>
+		<include src="file://{resources}/scripts/hud/strafe-sync.js" />
+	</scripts>
+	<Panel class="strafesync">
+		<Label
+			text="{s:sync_value}"
+			id="SyncLabel"
+			class="horizontal-align-center vertical-align-center text-align-center progressbar-hudmeter__label"
+		/>
+		<ConVarEnabler class="strafesync__bar-wrapper" convar="mom_hud_strafesync_drawbar" togglevisibility="true">
+			<ProgressBar id="SyncProgressBar" min="0" max="100" class="horizontal-align-center progressbar-hudmeter" />
+		</ConVarEnabler>
+	</Panel>
+</root>

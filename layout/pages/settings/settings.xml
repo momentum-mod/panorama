@@ -1,0 +1,457 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+
+	<scripts>
+		<include src="file://{resources}/scripts/common/settings.js" />
+		<include src="file://{resources}/scripts/pages/settings/page.js" />
+		<include src="file://{resources}/scripts/pages/settings/settings.js" />
+		<include src="file://{resources}/scripts/pages/settings/search.js" />
+	</scripts>
+
+	<Panel class="mainmenu__page" useglobalcontext="true">
+
+		<Panel class="settings">
+
+			<Panel class="settings__left">
+
+				<Panel class="search settings__search" acceptsfocus="true">
+
+					<Image class="search__icon" src="file://{images}/search.svg" textureheight="64" />
+
+					<TextEntry
+						id="SettingsSearchTextEntry"
+						class="search__textentry"
+						maxchars="30"
+						placeholder="#Settings_General_Search_Prompt"
+					/>
+
+					<Button
+						id="SettingsSearchClear"
+						class="search__clearbutton search__clearbutton--hidden"
+						onactivate="SettingsSearch.clearSearch()"
+					>
+
+						<Image class="search__clearicon search__clearicon" src="file://{images}/close.svg" textureheight="32" />
+
+					</Button>
+
+				</Panel>
+
+				<Panel class="settings__nav settings-nav">
+
+					<Button class="settings-nav__collapse-button" onactivate="MainMenuSettings.invertNavCollapse();">
+
+						<Image id="SettingsNavCollapseIcon" class="button__icon settings-nav__collapse-icon" src="file://{images}/add.svg" />
+
+						<Image id="SettingsNavExpandIcon" class="button__icon settings-nav__collapse-icon" src="file://{images}/subtract.svg" />
+
+					</Button>
+
+					<Panel id="SettingsNav" class="settings-nav__main">
+
+						<!-- INPUT -->
+						<RadioButton
+							id="InputRadio"
+							class="settings-nav__item"
+							group="SettingsNav"
+							onactivate="MainMenuSettings.navigateToTab('InputSettings')"
+							selected="true"
+						>
+
+							<Panel class="full-width">
+
+
+								<Label class="settings-nav__item-label" text="#Settings_Input_Title" />
+
+							</Panel>
+
+							<Panel class="settings-nav__subsection settings-nav__subsection--2 settings-nav__subsection--hidden">
+
+								<RadioButton
+									id="MouseRadio"
+									class="settings-nav__subitem"
+									group="SettingsSubNav"
+									onactivate="MainMenuSettings.navigateToSubsection('InputSettings', 'MouseSubSection')"
+								>
+									<Label class="settings-nav__subitem-label" text="#Settings_Mouse_Title" />
+								</RadioButton>
+
+								<RadioButton
+									id="KeybindRadio"
+									class="settings-nav__subitem"
+									group="SettingsSubNav"
+									onactivate="MainMenuSettings.navigateToSubsection('InputSettings', 'KeybindSubSection')"
+								>
+									<Label class="settings-nav__subitem-label" text="#Settings_Keybinds_Title" />
+								</RadioButton>
+
+							</Panel>
+
+						</RadioButton>
+
+						<Panel class="settings-nav__separator" />
+
+						<!-- AUDIO -->
+
+						<RadioButton
+							id="AudioRadio"
+							class="settings-nav__item"
+							group="SettingsNav"
+							onactivate="MainMenuSettings.navigateToTab('AudioSettings')"
+						>
+
+							<Label class="settings-nav__item-label" text="#Settings_Audio" />
+
+							<Panel class="settings-nav__subsection settings-nav__subsection--2 settings-nav__subsection--hidden">
+
+								<RadioButton
+									id="VolumeRadio"
+									class="settings-nav__subitem"
+									group="SettingsSubNav"
+									onactivate="MainMenuSettings.navigateToSubsection('AudioSettings', 'VolumeSubSection')"
+								>
+									<Label class="settings-nav__subitem-label" text="#Settings_Volume_Title" />
+								</RadioButton>
+
+								<RadioButton
+									id="AudioDeviceRadio"
+									class="settings-nav__subitem"
+									group="SettingsSubNav"
+									onactivate="MainMenuSettings.navigateToSubsection('AudioSettings', 'AudioDevicesSubSection')"
+								>
+									<Label class="settings-nav__subitem-label" text="#Settings_AudioDevices_Title" />
+								</RadioButton>
+
+							</Panel>
+
+						</RadioButton>
+
+						<Panel class="settings-nav__separator" />
+
+						<!-- VIDEO -->
+
+						<RadioButton
+							id="VideoRadio"
+							class="settings-nav__item"
+							group="SettingsNav"
+							onactivate="MainMenuSettings.navigateToTab('VideoSettings')"
+						>
+
+							<Label class="settings-nav__item-label" text="#Settings_Video" />
+
+							<Panel class="settings-nav__subsection settings-nav__subsection--3 settings-nav__subsection--hidden">
+
+								<RadioButton
+									id="VideoSubRadio"
+									class="settings-nav__subitem"
+									group="SettingsSubNav"
+									onactivate="MainMenuSettings.navigateToSubsection('VideoSettings', 'VideoSubSection')"
+								>
+									<Label class="settings-nav__subitem-label" text="#Settings_Video_Title" />
+								</RadioButton>
+
+								<RadioButton
+									id="AdvancedVideoRadio"
+									class="settings-nav__subitem"
+									group="SettingsSubNav"
+									onactivate="MainMenuSettings.navigateToSubsection('VideoSettings', 'AdvancedVideoSubSection')"
+								>
+									<Label class="settings-nav__subitem-label" text="#Settings_Render_Title" />
+								</RadioButton>
+
+								<RadioButton
+									id="TextureReplaceRadio"
+									class="settings-nav__subitem"
+									group="SettingsSubNav"
+									onactivate="MainMenuSettings.navigateToSubsection('VideoSettings', 'TextureReplaceSubSection')"
+								>
+									<Label class="settings-nav__subitem-label" text="#Settings_TextureReplace_Title" />
+								</RadioButton>
+
+							</Panel>
+
+						</RadioButton>
+
+						<Panel class="settings-nav__separator" />
+
+						<!-- ONLINE -->
+
+						<RadioButton
+							id="OnlineRadio"
+							class="settings-nav__item"
+							group="SettingsNav"
+							onactivate="MainMenuSettings.navigateToTab('OnlineSettings')"
+						>
+
+							<Label class="settings-nav__item-label" text="#Settings_Online" />
+							<Panel class="settings-nav__subsection settings-nav__subsection--3 settings-nav__subsection--hidden">
+
+								<RadioButton
+									id="OnlineGhostRadio"
+									class="settings-nav__subitem"
+									group="SettingsSubNav"
+									onactivate="MainMenuSettings.navigateToSubsection('OnlineSettings', 'OnlineGhostSubSection')"
+								>
+									<Label class="settings-nav__subitem-label" text="#Settings_OnlineGhost_Title" />
+								</RadioButton>
+
+								<RadioButton
+									id="GhostRadio"
+									class="settings-nav__subitem"
+									group="SettingsSubNav"
+									onactivate="MainMenuSettings.navigateToSubsection('OnlineSettings', 'GhostSubSection')"
+								>
+									<Label class="settings-nav__subitem-label" text="#Settings_OnlinePlayer_Title" />
+								</RadioButton>
+
+								<RadioButton
+									id="RichPresenceRadio"
+									class="settings-nav__subitem"
+									group="SettingsSubNav"
+									onactivate="MainMenuSettings.navigateToSubsection('OnlineSettings', 'RichPresenceSubSection')"
+								>
+									<Label class="settings-nav__subitem-label" text="#Settings_RichPresence_Title" />
+								</RadioButton>
+
+							</Panel>
+
+						</RadioButton>
+
+						<Panel class="settings-nav__separator" />
+
+						<!-- GAMEPLAY -->
+
+						<RadioButton
+							id="GameplayRadio"
+							class="settings-nav__item"
+							group="SettingsNav"
+							onactivate="MainMenuSettings.navigateToTab('GameplaySettings')"
+						>
+
+							<Label class="settings-nav__item-label" text="#Settings_Gameplay" />
+
+							<Panel class="settings-nav__subsection settings-nav__subsection--8 settings-nav__subsection--hidden">
+
+								<RadioButton
+									id="GameplayGeneralRadio"
+									class="settings-nav__subitem"
+									group="SettingsSubNav"
+									onactivate="MainMenuSettings.navigateToSubsection('GameplaySettings', 'GameplayGeneralSubSection')"
+								>
+									<Label class="settings-nav__subitem-label" text="#Settings_Gameplay" />
+								</RadioButton>
+
+								<RadioButton
+									id="PaintRadio"
+									class="settings-nav__subitem"
+									group="SettingsSubNav"
+									onactivate="MainMenuSettings.navigateToSubsection('GameplaySettings', 'PaintSubSection')"
+								>
+									<Label class="settings-nav__subitem-label" text="#Settings_Paint_Title" />
+								</RadioButton>
+
+								<RadioButton
+									id="SafeguardsRadio"
+									class="settings-nav__subitem"
+									group="SettingsSubNav"
+									onactivate="MainMenuSettings.navigateToSubsection('GameplaySettings', 'SafeguardsSubSection')"
+								>
+									<Label class="settings-nav__subitem-label" text="#Settings_Safeguards_Title" />
+								</RadioButton>
+
+								<!-- TODO: Rename -->
+								<RadioButton
+									id="ZonesRadio"
+									class="settings-nav__subitem"
+									group="SettingsSubNav"
+									onactivate="MainMenuSettings.navigateToSubsection('GameplaySettings', 'ZonesSubSection')"
+								>
+									<Label class="settings-nav__subitem-label" text="#Settings_Zones_Title" />
+								</RadioButton>
+
+								<RadioButton
+									id="RocketJumpRadio"
+									class="settings-nav__subitem"
+									group="SettingsSubNav"
+									onactivate="MainMenuSettings.navigateToSubsection('GameplaySettings', 'RocketJumpSubSection')"
+								>
+									<Label class="settings-nav__subitem-label" text="#Settings_RJ_Title" />
+								</RadioButton>
+
+								<RadioButton
+									id="StickyJumpRadio"
+									class="settings-nav__subitem"
+									group="SettingsSubNav"
+									onactivate="MainMenuSettings.navigateToSubsection('GameplaySettings', 'StickyJumpSubSection')"
+								>
+									<Label class="settings-nav__subitem-label" text="#Settings_SJ_Title" />
+								</RadioButton>
+
+								<RadioButton
+									id="ConcRadio"
+									class="settings-nav__subitem"
+									group="SettingsSubNav"
+									onactivate="MainMenuSettings.navigateToSubsection('GameplaySettings', 'ConcSubSection')"
+								>
+									<Label class="settings-nav__subitem-label" text="#Settings_Conc_Title" />
+								</RadioButton>
+
+								<RadioButton
+									id="DefragRadio"
+									class="settings-nav__subitem"
+									group="SettingsSubNav"
+									onactivate="MainMenuSettings.navigateToSubsection('GameplaySettings', 'DefragSubSection')"
+								>
+									<Label class="settings-nav__subitem-label" text="#Settings_Defrag_Title" />
+								</RadioButton>
+
+							</Panel>
+
+						</RadioButton>
+
+						<Panel class="settings-nav__separator" />
+
+						<!-- INTERFACE -->
+
+						<RadioButton
+							id="InterfaceRadio"
+							class="settings-nav__item"
+							group="SettingsNav"
+							onactivate="MainMenuSettings.navigateToTab('InterfaceSettings')"
+						>
+
+							<Label class="settings-nav__item-label" text="#Settings_Interface" />
+
+							<Panel class="settings-nav__subsection settings-nav__subsection--11 settings-nav__subsection--hidden">
+
+								<RadioButton
+									id="UIRadio"
+									class="settings-nav__subitem"
+									group="SettingsSubNav"
+									onactivate="MainMenuSettings.navigateToSubsection('InterfaceSettings', 'UISubSection')"
+								>
+									<Label class="settings-nav__subitem-label" text="#Settings_Menu_Title" />
+								</RadioButton>
+
+								<RadioButton
+									id="SpeedometerRadio"
+									class="settings-nav__subitem"
+									group="SettingsSubNav"
+									onactivate="MainMenuSettings.navigateToSubsection('InterfaceSettings', 'SpeedometerSubSection')"
+								>
+									<Label class="settings-nav__subitem-label" text="#Settings_Speedometer_Title" />
+								</RadioButton>
+
+								<RadioButton
+									id="CrosshairRadio"
+									class="settings-nav__subitem"
+									group="SettingsSubNav"
+									onactivate="MainMenuSettings.navigateToSubsection('InterfaceSettings', 'CrosshairSubSection')"
+								>
+									<Label class="settings-nav__subitem-label" text="#Settings_Crosshair_Title" />
+								</RadioButton>
+								
+								<RadioButton
+									id="TimerRadio"
+									class="settings-nav__subitem"
+									group="SettingsSubNav"
+									onactivate="MainMenuSettings.navigateToSubsection('InterfaceSettings', 'TimerSubSection')"
+								>
+									<Label class="settings-nav__subitem-label" text="#Settings_Timer_Title" />
+								</RadioButton>
+								
+								<RadioButton
+									id="PlayerStatusRadio"
+									class="settings-nav__subitem"
+									group="SettingsSubNav"
+									onactivate="MainMenuSettings.navigateToSubsection('InterfaceSettings', 'PlayerStatusSubSection')"
+								>
+									<Label class="settings-nav__subitem-label" text="#Settings_HUDStatus_Title" />
+								</RadioButton>
+
+								<RadioButton
+									id="KeypressRadio"
+									class="settings-nav__subitem"
+									group="SettingsSubNav"
+									onactivate="MainMenuSettings.navigateToSubsection('InterfaceSettings', 'KeypressSubSection')"
+								>
+									<Label class="settings-nav__subitem-label" text="#Settings_KeypressHUD_Title" />
+								</RadioButton>
+
+								<RadioButton
+									id="WeaponSelRadio"
+									class="settings-nav__subitem"
+									group="SettingsSubNav"
+									onactivate="MainMenuSettings.navigateToSubsection('InterfaceSettings', 'WeaponSelSubSection')"
+								>
+									<Label class="settings-nav__subitem-label" text="#Settings_WeaponSelection_Title" />
+								</RadioButton>
+								
+								<RadioButton
+									id="JumpStatsRadio"
+									class="settings-nav__subitem"
+									group="SettingsSubNav"
+									onactivate="MainMenuSettings.navigateToSubsection('InterfaceSettings', 'JumpStatsSubSection')"
+								>
+									<Label class="settings-nav__subitem-label" text="#Settings_JumpStats_Title" />
+								</RadioButton>
+
+								<RadioButton
+									id="StrafeSyncRadio"
+									class="settings-nav__subitem"
+									group="SettingsSubNav"
+									onactivate="MainMenuSettings.navigateToSubsection('InterfaceSettings', 'StrafeSyncSubSection')"
+								>
+									<Label class="settings-nav__subitem-label" text="#Settings_TotalSync_Title" />
+								</RadioButton>
+
+								<RadioButton
+									id="SynchronizerRadio"
+									class="settings-nav__subitem"
+									group="SettingsSubNav"
+									onactivate="MainMenuSettings.navigateToSubsection('InterfaceSettings', 'SynchronizerSubSection')"
+								>
+									<Label class="settings-nav__subitem-label" text="#Settings_Synchronizer_Title" />
+								</RadioButton>
+
+								<RadioButton
+									id="MapInfoRadio"
+									class="settings-nav__subitem"
+									group="SettingsSubNav"
+									onactivate="MainMenuSettings.navigateToSubsection('InterfaceSettings', 'MapInfoSubSection')"
+								>
+									<Label class="settings-nav__subitem-label" text="#Settings_MapInfo_Title" />
+								</RadioButton>
+
+							</Panel>
+
+						</RadioButton>
+
+					</Panel>
+
+				</Panel>
+			</Panel>
+
+			<Panel id="SettingsContent" class="settings__pages" />
+
+			<Panel id="SettingsInfo" class="settings__info settings-info">
+
+				<Panel class="settings-info__wrapper">
+
+					<Label id="SettingsInfoTitle" class="settings-info__title" />
+
+					<Label id="SettingsInfoMessage" html="true" class="settings-info__description" />
+
+					<Label id="SettingsInfoConvar" html="true" class="settings-info__cvar" />
+
+					<Button id="SettingsInfoDocsButton" class="button">
+						<Label class="button__text" text="#Settings_General_ViewDocs" />
+					</Button>
+				</Panel>
+
+			</Panel>
+		</Panel>
+	</Panel>
+</root>

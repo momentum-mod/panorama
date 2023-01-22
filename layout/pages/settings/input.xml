@@ -1,0 +1,202 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+	<scripts>
+		<include src="file://{resources}/scripts/pages/settings/page.js" />
+	</scripts>
+
+	<Panel class="settings-page">
+
+		<Panel class="settings-page__header">
+
+			<Label class="settings-page__title" text="#Settings_Input" />
+
+			<Panel class="settings-page__header-buttons">
+				<!-- Gamemode Dropdown will go here -->
+			</Panel>
+
+		</Panel>
+
+		<Panel id="SettingsPageContainer" class="settings-page__container">
+
+			<Panel id="MouseSubSection" class="settings-group">
+
+				<Panel class="settings-group__header">
+
+					<Label class="settings-group__title" text="#Settings_Mouse_Title" tags="mouse,cursor,aim,look,input" />
+
+					<Panel class="flow-right horizontal-align-right">
+
+						<Button
+							class="button mr-3"
+							onactivate="SettingsShared.showImportExportDialogue('Settings_Mouse_Title', 'MouseSubSection')"
+						>
+							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
+						</Button>
+
+						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
+							<Button class="button" onactivate="SettingsShared.resetSettings('MouseSubSection');">
+								<Image class="button__icon" src="file://{images}/reset.svg" />
+							</Button>
+						</TooltipPanel>
+
+					</Panel>
+
+				</Panel>
+
+				<ChaosSettingsSlider
+					text="#Settings_Mouse_Sens"
+					min="0.1"
+					max="10"
+					displayprecision="2"
+					convar="sensitivity"
+					tags="sensitivity"
+					hasdocspage="false"
+				/>
+
+				<Panel class="settings-group__combo">
+
+					<ChaosSettingsEnum text="#Settings_Mouse_Accel" convar="m_customaccel" hasdocspage="false" tags="acceleration">
+						<RadioButton group="maccel" text="#Common_Off" value="0" />
+						<RadioButton group="maccel" text="#Common_On" value="3" />
+					</ChaosSettingsEnum>
+
+					<ConVarEnabler convar="m_customaccel" hasdocspage="false">
+						<ChaosSettingsSlider
+							text=""
+							min="0.1"
+							max="10"
+							displayprecision="2"
+							convar="m_customaccel_exponent"
+							tags="acceleration"
+						/>
+					</ConVarEnabler>
+
+				</Panel>
+
+				<ChaosSettingsEnumDropDown
+					text="#Settings_Mouse_Raw"
+					convar="m_rawinput"
+					infomessage="#Settings_Mouse_Raw_Info"
+					hasdocspage="false"
+					tags="raw,direct"
+				>
+					<Label id="rawinput0" text="#Common_Off" value="0" />
+					<Label id="rawinput1" text="#Settings_Mouse_Raw_On_Old" value="1" />
+					<Label id="rawinput2" text="#Settings_Mouse_Raw_On_New" value="2" />
+				</ChaosSettingsEnumDropDown>
+
+				<ChaosSettingsEnum
+					text="#Settings_Mouse_Reverse"
+					convar="m_pitch_inverse"
+					infomessage="#Settings_Mouse_Reverse_Info"
+					hasdocspage="false"
+					tags="inverse"
+				>
+					<RadioButton group="reverse" text="#Common_Off" value="0" />
+					<RadioButton group="reverse" text="#Common_On" value="1" />
+				</ChaosSettingsEnum>
+
+				<ChaosSettingsEnum
+					text="#Settings_Mouse_Filter"
+					convar="m_filter"
+					infomessage="#Settings_Mouse_Filter_Info"
+					hasdocspage="false"
+					tags="filter"
+				>
+					<RadioButton group="filter" text="#Common_Off" value="0" />
+					<RadioButton group="filter" text="#Common_On" value="1" />
+				</ChaosSettingsEnum>
+
+			</Panel>
+
+			<Panel class="settings-page__spacer" />
+
+			<Panel id="KeybindSubSection" class="settings-group">
+
+				<Panel class="settings-group__header">
+
+					<Label class="settings-group__title" text="#Settings_Keybinds_Title" tags="keyboard,keybind,controls,input" />
+
+					<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
+						<Button class="button" onactivate="SettingsShared.resetControls('KeybindSubSection');">
+							<Image class="button__icon" src="file://{images}/reset.svg" />
+						</Button>
+					</TooltipPanel>
+
+				</Panel>
+
+				<Label class="settings-group__subtitle" text="#Settings_Keybinds_Movement" />
+
+				<ChaosSettingsKeyBinder text="#Keybind_Move_Forward" bind="+forward" tags="forward" />
+				<ChaosSettingsKeyBinder text="#Keybind_Move_Back" bind="+back" tags="backwards" />
+				<ChaosSettingsKeyBinder text="#Keybind_Move_Left" bind="+moveleft" tags="left,strafe" />
+				<ChaosSettingsKeyBinder text="#Keybind_Move_Right" bind="+moveright" tags="right,strafe" />
+				<ChaosSettingsKeyBinder text="#Keybind_Turn_Right" bind="+right" tags="right,turnbind" />
+				<ChaosSettingsKeyBinder text="#Keybind_Turn_Left" bind="+left" tags="left,turnbind" />
+				<ChaosSettingsKeyBinder text="#Keybind_Jump" bind="+jump" tags="jump" />
+				<ChaosSettingsKeyBinder text="#Keybind_Toggle_Jump" bind="toggle_jump" tags="toggle,jump" />
+				<ChaosSettingsKeyBinder text="#Keybind_Duck" bind="+duck" tags="duck,crouch" />
+				<ChaosSettingsKeyBinder text="#Keybind_Toggle_Duck" bind="toggle_duck" tags="toggle,duck,crouch" />
+				<ChaosSettingsKeyBinder text="#Keybind_Sprint" bind="+speed" tags="sprint,run,speed" />
+				<ChaosSettingsKeyBinder text="#Keybind_Toggle_Sprint" bind="toggle_speed" tags="toggle,sprint,run,speed" />
+				<ChaosSettingsKeyBinder text="#Keybind_Walk" bind="+walk" tags="walk" />
+				<ChaosSettingsKeyBinder text="#Keybind_Toggle_Walk" bind="toggle_walk" tags="toggle,walk" />
+
+				<Label class="settings-group__subtitle" text="#Settings_Keybinds_Weapons" />
+
+				<ChaosSettingsKeyBinder text="#Keybind_Attack_Primary" bind="+attack" tags="attack,primary,fire" />
+				<ChaosSettingsKeyBinder text="#Keybind_Attack_Secondary" bind="+attack2" tags="secondary,fire" />
+				<ChaosSettingsKeyBinder text="#Keybind_Use_Items" bind="+use" tags="use,interact" />
+				<ChaosSettingsKeyBinder text="#Keybind_Drop" bind="drop" tags="drop" />
+				<ChaosSettingsKeyBinder text="#Keybind_Weapon_Category_1" bind="slot1" tags="slot1" />
+				<ChaosSettingsKeyBinder text="#Keybind_Weapon_Category_2" bind="slot2" tags="slot2" />
+				<ChaosSettingsKeyBinder text="#Keybind_Weapon_Category_3" bind="slot3" tags="slot3" />
+				<ChaosSettingsKeyBinder text="#Keybind_Weapon_Category_4" bind="slot4" tags="slot4" />
+				<ChaosSettingsKeyBinder text="#Keybind_Weapon_Category_5" bind="slot5" tags="slot5" />
+
+				<Label class="settings-group__subtitle" text="#Common_Timer" />
+
+				<ChaosSettingsKeyBinder text="#Keybind_Restart" bind="mom_restart" tags="restart,reset" />
+				<ChaosSettingsKeyBinder text="#Keybind_RestartStage" bind="mom_restart_stage" tags="restart,reset,stage" />
+				<ChaosSettingsKeyBinder text="#Keybind_StopTimer" bind="mom_timer_stop" tags="stop" />
+				
+				<Label class="settings-group__subtitle" text="#Settings_Keybinds_Savestates" />
+
+				<ChaosSettingsKeyBinder text="#Keybind_Savestate_Create" bind="mom_saveloc_create" tags="saveloc,savestate" />
+				<ChaosSettingsKeyBinder text="#Keybind_Savestate_Goto" bind="+mom_saveloc_current" tags="saveloc,savestate" />
+				<ChaosSettingsKeyBinder
+					text="#Keybind_Savestate_Menu"
+					bind="chaos_hud_menu_show savelocmenu"
+					tags="saveloc,savestate"
+				/>
+				<ChaosSettingsKeyBinder text="#Keybind_StartMark_Create" bind="mom_start_mark_create" tags="saveloc,savestate" />
+				<ChaosSettingsKeyBinder text="#Keybind_StartMark_Clear" bind="mom_start_mark_clear" tags="saveloc,savestate" />
+
+				<Label class="settings-group__subtitle" text="#Common_Multiplayer" />
+
+				<ChaosSettingsKeyBinder text="#Keybind_ToggleTimes" bind="+showtimes" tags="leaderboard,tab,times" />
+				<ChaosSettingsKeyBinder text="#Keybind_Chat_Message" bind="chat_open" tags="chat,talk" />
+
+				<Label class="settings-group__subtitle" text="#Settings_Keybinds_Utility" />
+
+				<ChaosSettingsKeyBinder text="#Keybind_Practice" bind="mom_practice" tags="practice,noclip" />
+				<ChaosSettingsKeyBinder text="#Keybind_MapCommands" bind="chaos_hud_menu_show mapcmdsmenu" />
+				<ChaosSettingsKeyBinder text="#Keybind_Ruler" bind="chaos_hud_menu_show rulermenu" tags="ruler,measure,distance" />
+				<ChaosSettingsKeyBinder text="#Keybind_Paint" bind="+paint" tags="paint" />
+				<ChaosSettingsKeyBinder text="#Keybind_Flashlight" bind="impulse 100" tags="flashlight" />
+
+				<Label class="settings-group__subtitle" text="#Settings_Input_Keybinds_Misc" />
+
+				<ChaosSettingsKeyBinder text="#Keybind_Console" bind="toggleconsole" tags="console" />
+				<ChaosSettingsKeyBinder text="#Keybind_Screenshot" bind="jpeg" tags="screenshot" />
+				<ChaosSettingsKeyBinder text="#Keybind_Quit_Prompt" bind="quit_prompt" tags="quit,close" />
+				<ChaosSettingsKeyBinder text="#Keybind_Quit" bind="quit" tags="quit,close" />
+
+			</Panel>
+
+		</Panel>
+
+	</Panel>
+</root>

@@ -1,0 +1,85 @@
+<!--
+	Purpose: Hard-coded layout file for <MomentumChat />
+	Having a ChatHistory panel and ChatInput textentry is mandatory
+
+	This panel will require a specific snippet, which are currently:
+		lobby-chat-message: Message you receive from other players in your lobby
+		lobby-chat-message-spec: Same as above, user is spectating someone
+		usermessage-textmsg: Serverside messages that are to be printed to chat
+
+	Common dialog variables set for these snippets in-code are (depending on type):
+		message: Raw or localized message string
+		author_name: Name of the author
+		author_xuid: Steam ID of the author
+
+	Fair Warning: Exceeding the 127 character limit will get your messages rejected!
+-->
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+	<scripts>
+		<include src="file://{resources}/scripts/components/chat.js" />
+	</scripts>
+
+	<snippets>
+		<!-- NOTE: html=true does NOT mean that HTML embedded in the dialog variable will get parsed! -->
+		<snippet name="lobby-chat-message">
+			<Panel>
+				<Label
+					class="chat-entry__message"
+					text="&lt;b&gt;{s:author_name}:&lt;/b&gt; {s:message}"
+					html="true"
+					acceptsinput="true"
+				/>
+			</Panel>
+		</snippet>
+
+		<snippet name="lobby-chat-message-spec">
+			<Panel class="flow-right">
+				<Image class="chat-entry__icon" src="file://{images}/spectatingIcon.svg" textureheight="16" />
+				<Label
+					class="chat-entry__message chat-entry__message--with-icon"
+					text="&lt;b&gt;{s:author_name}&lt;/b&gt;: {s:message}"
+					html="true"
+					acceptsinput="true"
+				/>
+			</Panel>
+		</snippet>
+
+		<snippet name="usermessage-textmsg">
+			<Panel>
+				<Label
+					class="chat-entry__message"
+					text="&lt;b class=&quot;color-blue text-uppercase&quot;&gt;#Common_Game&lt;/b&gt;: {s:message}"
+					html="true"
+					acceptsinput="true"
+				/>
+			</Panel>
+		</snippet>
+	</snippets>
+
+	<Panel class="chat" defaultfocus="ChatInput">
+		<!-- CAUTION: inverse flow everywhere!!-->
+		<ConVarEnabler convar="mom_chat_typing_receive" togglevisibility="true">
+			<Label id="ChatMemberTypingLabel" class="chat__member-typing" text=" " />
+		</ConVarEnabler>
+		<Panel class="chat__input-container">
+			<TextEntry
+				id="ChatInput"
+				class="chat__elem chat__input"
+				oninputsubmit="Chat.submitText()"
+				maxchars="127"
+				clearaftersubmit="true"
+			/>
+			<Button class="chat__elem chat__send" onactivate="$('#ChatInput').Submit()">
+				<Label class="button__text chat__send-text" text="#Chat_Send" />
+			</Button>
+		</Panel>
+		<Panel class="chat__elem chat__history-wrapper">
+			<Panel id="ChatHistory" class="chat__history" html="true">
+				<!-- C++ will add messages here! Each child will have the chat-entry class -->
+			</Panel>
+		</Panel>
+	</Panel>
+</root>
