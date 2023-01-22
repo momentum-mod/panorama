@@ -34,7 +34,7 @@ module.exports = {
 		'unicorn/prefer-top-level-await': ['off'],
 		// Even though unicorn has a rule for no nested ternaries, it's insisting I make them due to this rule.
 		'unicorn/prefer-ternary': ['error', 'only-single-line'],
-		// Better parity with other langauges, we use `1 << 0` frequently next to other shifts when defining bitflags.
+		// Better parity with other languages, we use `1 << 0` frequently next to other shifts when defining bitflags.
 		'unicorn/prefer-math-trunc': ['off'],
 		// Why???
 		'unicorn/switch-case-braces': ['off'],

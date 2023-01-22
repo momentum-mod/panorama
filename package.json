@@ -6,14 +6,14 @@
 		"baseDir": "./"
 	},
 	"scripts": {
-		"prettier:check": "prettier --check **/*.{js,xml,scss,css,md}",
-		"prettier:format": "prettier --write **/*.{js,xml,scss,css,md}",
+		"format:fix": "prettier --write **/*.{js,xml,scss,css,md}",
+		"format:check": "prettier --check **/*.{js,xml,scss,css,md}",
 		"lint:fix": "eslint \"**/*.js\" --fix",
 		"lint:check": "eslint \"**/*.js\"",
 		"prepare": "husky install",
 		"pre-commit": "lint-staged",
-		"get-learn": "node tools/get_learn.js",
-		"get-credits": "node tools/get_credits.js"
+		"get-learn": "node tools/get-learn.js",
+		"get-credits": "node tools/get-credits.js"
 	},
 	"author": "Momentum Team",
 	"license": "MIT",
@@ -33,8 +33,8 @@
 	},
 	"lint-staged": {
 		"**/*.{js,xml,scss,css,md}": [
-			"prettier --write",
-			"eslint -v"
-		]
+			"prettier --write"
+		],
+		"**/*.js": "eslint --fix"
 	}
 }
