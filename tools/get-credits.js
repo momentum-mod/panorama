@@ -27,9 +27,9 @@ const TYPES = {
 };
 
 const SECTION_STYLES = {
-	'#Credits_ProjectLead': 'lead',
-	'#Credits_DepartmentHead': 'dept-head',
-	'#Credits_Team': 'team'
+	'Project Lead': 'lead',
+	'Department Head': 'dept-head',
+	Team: 'team'
 };
 
 class xmlStringBuilder {
@@ -54,7 +54,11 @@ class xmlStringBuilder {
 		const makeSection = (sectionArray, columns) => {
 			const sectionName = sectionArray[0]['Section'];
 
-			xmlString.openPanel('Label', { class: `${CREDITS_CLASS}__subheader`, text: sectionName }, true);
+			xmlString.openPanel(
+				'Label',
+				{ class: `${CREDITS_CLASS}__subheader`, text: `#Credits_${sectionName.replace(' ', '')}` },
+				true
+			);
 
 			let personIndex = 0;
 			const style = SECTION_STYLES[sectionName];
