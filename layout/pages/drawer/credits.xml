@@ -4,8 +4,8 @@
 	</styles>
 
 	<Panel>
-		<Label class="about-credits__header" text="Momentum Team" />
-		<Label class="about-credits__subheader" text="Project Lead" />
+		<Label class="about-credits__header" text="#Credits_MomentumTeam" />
+		<Label class="about-credits__subheader" text="#Credits_ProjectLead" />
 		<Panel class="about-credits__row">
 			<Label
 				id="CreditProjectLead1"
@@ -23,13 +23,11 @@
 				github="Gocnak"
 			/>
 		</Panel>
-		<Label class="about-credits__subheader" text="Department Head" />
+		<Label class="about-credits__subheader" text="#Credits_DepartmentHead" />
 		<Panel class="about-credits__row">
 			<Label
 				id="CreditDepartmentHead1"
-				class="
-					about-credits__col about-credits__name about-credits__name--dept-head
-				"
+				class="about-credits__col about-credits__name about-credits__name--dept-head"
 				text="Aux"
 				username="Aux"
 				name="Martin H. Laursen"
@@ -44,31 +42,27 @@
 			/>
 			<Label
 				id="CreditDepartmentHead2"
-				class="
-					about-credits__col about-credits__name about-credits__name--dept-head
-				"
+				class="about-credits__col about-credits__name about-credits__name--dept-head"
 				text="burrito"
 				username="burrito"
 				name=""
 				section="dept-head"
-				roles=""
+				roles="Sound Design"
 				pronouns=""
 				bio=""
 				steamID=""
-				discord=""
+				discord="burrito#8596"
 				email=""
 				github=""
 			/>
 			<Label
 				id="CreditDepartmentHead3"
-				class="
-					about-credits__col about-credits__name about-credits__name--dept-head
-				"
+				class="about-credits__col about-credits__name about-credits__name--dept-head"
 				text="False_"
 				username="False_"
 				name="Ethan Vuong"
 				section="dept-head"
-				roles="Lead 3D Artist, Campaign Lead (Jump), Mapper"
+				roles="Lead 3D Artist, Campaign Lead (Jump), Mapper, Weapon Design, Character Design"
 				pronouns="he/him"
 				bio="Designer of most of the weapons, player model, and general art direction // stickyjump speedrunner and mapper // team member since 0.8.3!"
 				steamID="76561198044272896"
@@ -76,30 +70,41 @@
 				email="ethanvuong3d@gmail.com"
 				github="EthanV-3D"
 			/>
+			<Label
+				id="CreditDepartmentHead4"
+				class="about-credits__col about-credits__name about-credits__name--dept-head"
+				text="fingerprince"
+				username="fingerprince"
+				name="Tom Ashford"
+				section="dept-head"
+				roles="UI Design and Programming, Writing, Media"
+				pronouns="they/them"
+				bio="Philosopher and dispassionate lover. Work in lots and lots of different areas from UI, web API, texture design and media. I'm most proud of the work I've done on our UI (including this page!), where I've strived to reach a level of polish uncommon for a free game."
+				steamID="76561198039308694"
+				discord="fingerprince#1312"
+				email="tom@momentum-mod.org"
+				github="tsa96"
+			/>
 		</Panel>
 		<Panel class="about-credits__row">
 			<Label
-				id="CreditDepartmentHead4"
-				class="
-					about-credits__col about-credits__name about-credits__name--dept-head
-				"
+				id="CreditDepartmentHead5"
+				class="about-credits__col about-credits__name about-credits__name--dept-head"
 				text="Monolith"
 				username="Monolith"
-				name=""
+				name="Nikolai L."
 				section="dept-head"
-				roles=""
-				pronouns=""
+				roles="Lead Sound Design"
+				pronouns="he/him"
 				bio=""
 				steamID=""
-				discord=""
+				discord="Monolith#5043"
 				email=""
 				github=""
 			/>
 			<Label
-				id="CreditDepartmentHead5"
-				class="
-					about-credits__col about-credits__name about-credits__name--dept-head
-				"
+				id="CreditDepartmentHead6"
+				class="about-credits__col about-credits__name about-credits__name--dept-head"
 				text="TraZox"
 				username="TraZox"
 				name="Alexandre Declos"
@@ -110,27 +115,25 @@
 				steamID="76561198039266977"
 				discord="TraZox#6981"
 				email="hello@declos.ca"
-				github="TraZox"
+				github="decl0s"
 			/>
 			<Label
-				id="CreditDepartmentHead6"
-				class="
-					about-credits__col about-credits__name about-credits__name--dept-head
-				"
+				id="CreditDepartmentHead7"
+				class="about-credits__col about-credits__name about-credits__name--dept-head"
 				text="Zopha"
 				username="Zopha"
 				name="Tyler Shobe"
 				section="dept-head"
-				roles="Production Designer"
+				roles="Production Designer, 3D Artist"
 				pronouns="he/him"
 				bio=""
-				steamID=""
+				steamID="76561197998011101"
 				discord="Zopha#7787"
 				email="tylershobe@gmail.com"
-				github=""
+				github="zopha91"
 			/>
 		</Panel>
-		<Label class="about-credits__subheader" text="Team" />
+		<Label class="about-credits__subheader" text="#Credits_Team" />
 		<Panel class="about-credits__row">
 			<Label
 				id="CreditTeam1"
@@ -150,9 +153,24 @@
 			<Label
 				id="CreditTeam2"
 				class="about-credits__col about-credits__name about-credits__name--team"
+				text="BIRD"
+				username="BIRD"
+				name=""
+				section="team"
+				roles=""
+				pronouns=""
+				bio=""
+				steamID=""
+				discord=""
+				email=""
+				github=""
+			/>
+			<Label
+				id="CreditTeam3"
+				class="about-credits__col about-credits__name about-credits__name--team"
 				text="BLT"
 				username="BLT"
-				name="León van Eß"
+				name="León,van Eß"
 				section="team"
 				roles="Linux, UI, Engine Development"
 				pronouns="he/him"
@@ -163,7 +181,7 @@
 				github=""
 			/>
 			<Label
-				id="CreditTeam3"
+				id="CreditTeam4"
 				class="about-credits__col about-credits__name about-credits__name--team"
 				text="BlueRaven"
 				username="BlueRaven"
@@ -178,13 +196,13 @@
 				github=""
 			/>
 			<Label
-				id="CreditTeam4"
+				id="CreditTeam5"
 				class="about-credits__col about-credits__name about-credits__name--team"
 				text="bonjorno7"
 				username="bonjorno7"
 				name="Jorijn,de Graaf"
 				section="team"
-				roles="Shader Programming, Tooling"
+				roles="Shader Programming, Tooling, Documentation"
 				pronouns="he/him"
 				bio="I'm mainly a Blender addon developer (SourceOps especially), but I've also dabbled with shader programming (fixing bugs in the PBR shader)."
 				steamID="76561198062264385"
@@ -192,8 +210,10 @@
 				email="bonjorno7.momentum@gmail.com"
 				github="bonjorno7"
 			/>
+		</Panel>
+		<Panel class="about-credits__row">
 			<Label
-				id="CreditTeam5"
+				id="CreditTeam6"
 				class="about-credits__col about-credits__name about-credits__name--team"
 				text="brae"
 				username="brae"
@@ -207,10 +227,8 @@
 				email="brae@momentum-mod.org"
 				github="braem"
 			/>
-		</Panel>
-		<Panel class="about-credits__row">
 			<Label
-				id="CreditTeam6"
+				id="CreditTeam7"
 				class="about-credits__col about-credits__name about-credits__name--team"
 				text="cowboyana"
 				username="cowboyana"
@@ -225,7 +243,7 @@
 				github="harryjah"
 			/>
 			<Label
-				id="CreditTeam7"
+				id="CreditTeam8"
 				class="about-credits__col about-credits__name about-credits__name--team"
 				text="Erin"
 				username="Erin"
@@ -240,37 +258,7 @@
 				github="awilderin"
 			/>
 			<Label
-				id="CreditTeam8"
-				class="about-credits__col about-credits__name about-credits__name--team"
-				text="EskiM0J0J0"
-				username="EskiM0J0J0"
-				name=""
-				section="team"
-				roles=""
-				pronouns=""
-				bio=""
-				steamID=""
-				discord=""
-				email=""
-				github=""
-			/>
-			<Label
 				id="CreditTeam9"
-				class="about-credits__col about-credits__name about-credits__name--team"
-				text="fingerprince"
-				username="fingerprince"
-				name="Tom Ashford"
-				section="team"
-				roles="UI Design and Programming, Writing, Environment Art, Media, Moderation"
-				pronouns="they/them"
-				bio="Philosopher and dispassionate lover. Work in lots and lots of different areas from UI, web API, texture design and media. I'm most proud of the work I've done on our UI (including this page!), where I've strived to reach a level of polish uncommon for a free game."
-				steamID="76561198039308694"
-				discord="fingerprince#1312"
-				email="tom@trumpetdust.org"
-				github="tsa96"
-			/>
-			<Label
-				id="CreditTeam10"
 				class="about-credits__col about-credits__name about-credits__name--team"
 				text="granis"
 				username="granis"
@@ -284,10 +272,8 @@
 				email=""
 				github=""
 			/>
-		</Panel>
-		<Panel class="about-credits__row">
 			<Label
-				id="CreditTeam11"
+				id="CreditTeam10"
 				class="about-credits__col about-credits__name about-credits__name--team"
 				text="happy"
 				username="happy"
@@ -301,8 +287,10 @@
 				email="spartackgonch84@gmail.com"
 				github=""
 			/>
+		</Panel>
+		<Panel class="about-credits__row">
 			<Label
-				id="CreditTeam12"
+				id="CreditTeam11"
 				class="about-credits__col about-credits__name about-credits__name--team"
 				text="hex"
 				username="hex"
@@ -310,44 +298,14 @@
 				section="team"
 				roles="Documentation, Learn Section, Internal QA"
 				pronouns="he/him"
-				bio="QA and tutorial work for Momentum Mod, as well as a decent amount of documentation efforts. Outside of Momentum mostly TF2 jump mapping. Won't stop talking about computer networking."
+				bio="QA and tutorial work for Momentum Mod, as well as a decent amount of documentation efforts. Outside of Momentum mostly TF2 jump mapping. "
 				steamID="76561198181342094"
 				discord="hex#7113"
 				email=""
 				github="hexaflexahexagon"
 			/>
 			<Label
-				id="CreditTeam13"
-				class="about-credits__col about-credits__name about-credits__name--team"
-				text="Hona"
-				username="Hona"
-				name=""
-				section="team"
-				roles=""
-				pronouns=""
-				bio=""
-				steamID=""
-				discord=""
-				email=""
-				github=""
-			/>
-			<Label
-				id="CreditTeam14"
-				class="about-credits__col about-credits__name about-credits__name--team"
-				text="ijre"
-				username="ijre"
-				name="Paige Seivertson"
-				section="team"
-				roles="Web Dev"
-				pronouns="she/her"
-				bio="Been playing TF2 for quite some time, and have always loved the movement, especially rocket jumping. I do also sometimes shoot people in the video game. Shoutouts to SimpleFlips."
-				steamID="76561198400214295"
-				discord="ijre🦌#2036"
-				email=""
-				github="ijre"
-			/>
-			<Label
-				id="CreditTeam15"
+				id="CreditTeam12"
 				class="about-credits__col about-credits__name about-credits__name--team"
 				text="jjl77"
 				username="jjl77"
@@ -361,10 +319,8 @@
 				email="jeremy.lorelli.1337@gmail.com"
 				github="JJL772"
 			/>
-		</Panel>
-		<Panel class="about-credits__row">
 			<Label
-				id="CreditTeam16"
+				id="CreditTeam13"
 				class="about-credits__col about-credits__name about-credits__name--team"
 				text="Kevin"
 				username="Kevin"
@@ -374,12 +330,12 @@
 				pronouns=""
 				bio=""
 				steamID=""
-				discord=""
+				discord="KevinIsPwn#1337"
 				email=""
 				github=""
 			/>
 			<Label
-				id="CreditTeam17"
+				id="CreditTeam14"
 				class="about-credits__col about-credits__name about-credits__name--team"
 				text="Lumia"
 				username="Lumia"
@@ -389,12 +345,12 @@
 				pronouns=""
 				bio=""
 				steamID=""
-				discord=""
+				discord="Lumia#7424"
 				email=""
 				github=""
 			/>
 			<Label
-				id="CreditTeam18"
+				id="CreditTeam15"
 				class="about-credits__col about-credits__name about-credits__name--team"
 				text="Mac"
 				username="Mac"
@@ -404,27 +360,14 @@
 				pronouns="he/him"
 				bio=""
 				steamID=""
-				discord=""
+				discord="Mac#2870"
 				email=""
 				github=""
 			/>
+		</Panel>
+		<Panel class="about-credits__row">
 			<Label
-				id="CreditTeam19"
-				class="about-credits__col about-credits__name about-credits__name--team"
-				text="TheNerdMan"
-				username="TheNerdMan"
-				name="Alex Wilson"
-				section="team"
-				roles="Full Stack Web Development"
-				pronouns="he/him"
-				bio="I started playing combat surf back in CS:S when I was younger. Found momentum mod when it was in early development and kept my eye on it. One day there was a call for web developers to the project (Video games need web devs?) and the rest is history!"
-				steamID="76561198097576111"
-				discord="TheNerdMan#2357"
-				email="thenerdman@momentum-mod.org"
-				github="TheNerdMan"
-			/>
-			<Label
-				id="CreditTeam20"
+				id="CreditTeam16"
 				class="about-credits__col about-credits__name about-credits__name--team"
 				text="Ninja Cookie"
 				username="Ninja Cookie"
@@ -438,14 +381,12 @@
 				email=""
 				github="Ninja-Cookie"
 			/>
-		</Panel>
-		<Panel class="about-credits__row">
 			<Label
-				id="CreditTeam21"
+				id="CreditTeam17"
 				class="about-credits__col about-credits__name about-credits__name--team"
 				text="PeenScreeker"
 				username="PeenScreeker"
-				name="Ellis K"
+				name="Ellis K."
 				section="team"
 				roles="UI/UX Programming, HUD tools/helpers"
 				pronouns=""
@@ -456,37 +397,37 @@
 				github=""
 			/>
 			<Label
-				id="CreditTeam22"
+				id="CreditTeam18"
 				class="about-credits__col about-credits__name about-credits__name--team"
-				text="pbjpie"
-				username="pbjpie"
-				name="Ben W."
+				text="Panzer"
+				username="Panzer"
+				name="Tyler Befferman"
 				section="team"
-				roles="Web Developer"
-				pronouns="he/him"
-				bio="Source surfer since 2016 and programmer for much longer; Momentum Mod was the perfect project to blend both my interests! Primarily worked on the web portions of Momentum Mod."
-				steamID="76561198052949819"
-				discord="pbjpie#9545"
-				email="pbjpie@outlook.com"
-				github=""
+				roles="Tooling, Mapper"
+				pronouns=""
+				bio="Former Turbo Force developer and creator of surf_utopia and bhop_arcane. I love skiing, rock climbing, trail running and all movement related activities."
+				steamID="76561197978843815"
+				discord="Panzer#8359"
+				email="panzer@momentum-mod.org"
+				github="Panzerhandschuh"
 			/>
 			<Label
-				id="CreditTeam23"
+				id="CreditTeam19"
 				class="about-credits__col about-credits__name about-credits__name--team"
 				text="rio"
 				username="rio"
 				name="Jason E."
 				section="team"
-				roles="Game Programmer"
+				roles="Game/Engine Programmer"
 				pronouns="he/him"
-				bio="Discovered surf and bhop on CS:GO in 2015 and became the primary developer for Horizon Servers not long after. Deeply invested in the movement mechanics/code of Source games. Decent bhopper."
+				bio="[⌐■_■]"
 				steamID="76561197990727912"
 				discord="rio#8825"
 				email="rio@momentum-mod.org"
 				github="jason-e"
 			/>
 			<Label
-				id="CreditTeam24"
+				id="CreditTeam20"
 				class="about-credits__col about-credits__name about-credits__name--team"
 				text="SCell555"
 				username="SCell555"
@@ -500,8 +441,10 @@
 				email="scell@momentum-mod.org"
 				github="SCell555"
 			/>
+		</Panel>
+		<Panel class="about-credits__row">
 			<Label
-				id="CreditTeam25"
+				id="CreditTeam21"
 				class="about-credits__col about-credits__name about-credits__name--team"
 				text="Shegetz"
 				username="Shegetz"
@@ -515,10 +458,8 @@
 				email="dylan.fogle@gmail.com"
 				github="Shegetz"
 			/>
-		</Panel>
-		<Panel class="about-credits__row">
 			<Label
-				id="CreditTeam26"
+				id="CreditTeam22"
 				class="about-credits__col about-credits__name about-credits__name--team"
 				text="SlidyBat"
 				username="SlidyBat"
@@ -533,7 +474,7 @@
 				github="SlidyBat"
 			/>
 			<Label
-				id="CreditTeam27"
+				id="CreditTeam23"
 				class="about-credits__col about-credits__name about-credits__name--team"
 				text="SpringScale"
 				username="SpringScale"
@@ -548,22 +489,22 @@
 				github=""
 			/>
 			<Label
-				id="CreditTeam28"
+				id="CreditTeam24"
 				class="about-credits__col about-credits__name about-credits__name--team"
 				text="VortexPDX"
 				username="VortexPDX"
-				name=""
+				name="It's a secret to everybody"
 				section="team"
-				roles=""
-				pronouns=""
-				bio=""
-				steamID=""
-				discord=""
-				email=""
-				github=""
+				roles="Animator, VFX, Rigging Artist, General 3D Artist, Weapon Design, Media Design"
+				pronouns="It's a secret to everybody"
+				bio="Allan please add details"
+				steamID="76561198259136519"
+				discord="VortexPDX#0215"
+				email="vxpdx@momentum-mod.org"
+				github="VortexParadox"
 			/>
 			<Label
-				id="CreditTeam29"
+				id="CreditTeam25"
 				class="about-credits__col about-credits__name about-credits__name--team"
 				text="Xbmann"
 				username="Xbmann"
@@ -577,8 +518,10 @@
 				email="patrickdmockler@gmail.com"
 				github=""
 			/>
+		</Panel>
+		<Panel class="about-credits__row">
 			<Label
-				id="CreditTeam30"
+				id="CreditTeam26"
 				class="about-credits__col about-credits__name about-credits__name--team"
 				text="xen"
 				username="xen"
@@ -592,10 +535,8 @@
 				email="xen@momentum-mod.org"
 				github=""
 			/>
-		</Panel>
-		<Panel class="about-credits__row">
 			<Label
-				id="CreditTeam31"
+				id="CreditTeam27"
 				class="about-credits__col about-credits__name about-credits__name--team"
 				text="Xtra_Festive"
 				username="Xtra_Festive"
@@ -605,7 +546,7 @@
 				pronouns=""
 				bio=""
 				steamID=""
-				discord=""
+				discord="Xtra_Festive#8021"
 				email=""
 				github=""
 			/>
