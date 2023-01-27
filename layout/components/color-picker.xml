@@ -14,12 +14,11 @@
 		</snippet>
 	</snippets>
 	<Panel class="colorpicker">
-		<Panel class="colorpicker__plane">
-			<Image enginertsrc="error_gray" class="full-width full-height" />
-			<ColorPickerPlane id="ColorPlane" class="full-width full-height" />
-		</Panel>
+		<ColorPickerPlane id="ColorPlane" class="colorpicker__plane" />
 
 		<ColorPickerAxis id="ColorAxis" class="colorpicker__axis" />
+		
+		<ColorPickerAlphaAxis id="AlphaAxis" class="colorpicker__axis" />
 
 		<Panel class="colorpicker__right">
 			<Panel class="colorpicker__entry">

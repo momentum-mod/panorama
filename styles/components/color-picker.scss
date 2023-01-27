@@ -1,7 +1,7 @@
 .colorpicker {
 	// Width behaves very strangely here. The plane height 100% attempts to take up over 1000px, I have no idea why.
 	// Hardcode that and this panel still takes about 100px too much width. WTF is going on here?
-	width: 700px;
+	width: 760px;
 	padding: 16px;
 	flow-children: right;
 	height: fit-children;
@@ -9,13 +9,14 @@
 	&__plane {
 		height: 100%;
 		width: height-percentage(100%);
+		margin-right: 36px;
 		border-radius: 4px;
 	}
 
 	&__axis {
 		height: 100%;
 		width: height-percentage(8%);
-		margin: 0 36px;
+		margin-right: 36px;
 		border-radius: 4px;
 	}
 
