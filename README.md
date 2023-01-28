@@ -41,7 +41,7 @@ You should end up with `momentum/custom/PanoramaDev/panorama` containing the con
 
 This will be mounted on game launch and override the files in your `momentum/panorama/` folder. To avoid any overlaps (e.g. if your branch renames or moves a file, the original file will still be mounted), we recommend temporarily renaming your `momentum/panorama/` folder. (_NOTE: you'll need to do this after each Momentum Mod Steam update!_)
 
-Once up and running, if you're on VSCode, we highly recommend the tools at [panorama-languages-support](https://github.com/panorama-languages-support) made by one of our team members, @braem . Also, the `get_latest_js_types` scripts in `momentum/tools/` will generate a JS file containing type information for all the Panorama panels and APIs, just keeping that file open in VSCode/WebStorm should provide you with type info.
+Once up and running, if you're on VSCode, we highly recommend the tools at [panorama-languages-support](https://github.com/panorama-languages-support) made by one of our team members, @braem . Also, the `get_latest_js_types` scripts in `panorama/tools/` will generate a JS file in `panorama/scripts/` containing type information for all the Panorama panels and APIs, just keeping that file open in VSCode/WebStorm should provide you with type info.
 
 # Contributing
 
