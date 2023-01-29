@@ -632,7 +632,7 @@
 							'No',
 							function(){$('#ControlsLibraryPanel').ToggleClass('very-useful-class');},
 							'No',
-							function(){function a(p){if(typeof p.Children==='function')p.Children().forEach(c=>{if(c.hasOwnProperty(text))c.text='burger';a(c)})}a($('#ControlsLibraryPanel'))},
+							function(){function a(p){if(typeof p.Children==='function')p.Children().forEach(c=>{if(Object.hasOwn(c,'text'))c.text='burger';a(c)})}a($('#ControlsLibraryPanel'))},
 							'blur'
 						);"
 				>
