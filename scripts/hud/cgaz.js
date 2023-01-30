@@ -513,7 +513,7 @@ class Cgaz {
 					? this.compass_color
 					: this.compass_hl_color;
 		}
-		this.pitchLine.visible = this.compass_pitch_enable === 1;
+		this.pitchLine.visible = this.compass_pitch_enable === true;
 
 		// compass stats
 		if (this.compass_stat_mode) {
