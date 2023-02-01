@@ -223,7 +223,7 @@ class Cgaz {
 		// compass ticks
 		offset = this.accel_offset - 0.5 * (this.accel_height + this.compass_size);
 		align = 'middle';
-		const size = Number.isNaN(this.compass_size) ? 0 : this.compass_size;
+		const size = this.NaNCheck(this.compass_size, 0);
 		this.setupContainer(this.tickContainer, offset, align);
 		this.compassTickFull.style.height = size + 'px';
 		this.compassTickHalf.style.height = size * 0.5 + 'px';
@@ -496,7 +496,7 @@ class Cgaz {
 				velocityAngle = this.remapAngle(velocityAngle - Math.PI);
 			}
 			const leftEdge = this.mapToScreenWidth(velocityAngle) - this.compass_size;
-			this.compassArrow.style.marginLeft = (Number.isNaN(leftEdge) ? 0 : leftEdge) + 'px';
+			this.compassArrow.style.marginLeft = this.NaNCheck(leftEdge, 0) + 'px';
 			this.compassArrowIcon.style.washColor = color;
 		}
 		this.compassArrow.visible = this.compass_mode % 2 && speed >= this.accel_min_speed;
@@ -507,7 +507,7 @@ class Cgaz {
 			const pitchDelta = this.mapToScreenHeight(
 				((MomentumPlayerAPI.GetAngles().x - this.compass_pitch_target) * Math.PI) / 180
 			);
-			this.pitchLine.style.height = (Number.isNaN(pitchDelta) ? 0 : pitchDelta) + 'px';
+			this.pitchLine.style.height = this.NaNCheck(pitchDelta, 0) + 'px';
 			this.pitchLine.style.borderColor =
 				Math.abs(MomentumPlayerAPI.GetAngles().x - this.compass_pitch_target) > 0.1
 					? this.compass_color
@@ -537,7 +537,7 @@ class Cgaz {
 		if (this.windicator_enable && Math.abs(wTurnAngle) < this.hFov && speed >= this.accel_min_speed) {
 			this.windicatorArrow.visible = true;
 			const leftEdge = this.mapToScreenWidth(wTurnAngle) - this.windicator_size;
-			this.windicatorArrow.style.marginLeft = (Number.isNaN(leftEdge) ? 0 : leftEdge) + 'px';
+			this.windicatorArrow.style.marginLeft = this.NaNCheck(leftEdge, 0) + 'px';
 
 			const minAngle = Math.min(wTurnAngle, 0);
 			const maxAngle = Math.max(wTurnAngle, 0);
@@ -689,7 +689,7 @@ class Cgaz {
 			const diffGain = snapGains[i % snapGains.length];
 			const alpha = (diffGain - minGain) / (maxGain - minGain);
 			const heightFactor = 0.8 * alpha + 0.2;
-			const height = Number.isNaN(this.snap_height) ? 0 : this.snap_height;
+			const height = this.NaNCheck(this.snap_height, 0);
 
 			if (this.snap_color_mode) {
 				const A = this.splitColorString(this.snap_slow_color);
@@ -714,10 +714,10 @@ class Cgaz {
 	static drawZone(zone, left, right) {
 		// assign widths
 		const width = right - left;
-		zone.style.width = (Number.isNaN(width) ? 0 : Number(width).toFixed(0)) + 'px';
+		zone.style.width = this.NaNCheck(Number(width).toFixed(0), 0) + 'px';
 
 		// assign position via margin (center screen at 0)
-		zone.style.marginLeft = (Number.isNaN(left) ? 0 : Number(left).toFixed(0)) + 'px';
+		zone.style.marginLeft = this.NaNCheck(Number(left).toFixed(0), 0) + 'px';
 	}
 
 	static findCompassTick(angle) {
@@ -733,19 +733,19 @@ class Cgaz {
 
 	static setupContainer(container, offset, align) {
 		container.style.verticalAlign = align;
-		container.style.transform = `translatey( ${Number.isNaN(offset) ? 0 : -offset}px )`;
+		container.style.transform = `translatey( ${this.NaNCheck(-offset, 0)}px )`;
 		container.style.overflow = 'noclip noclip';
 	}
 
 	static applyClass(zone, zoneClass) {
-		zone.style.height = Number.isNaN(zoneClass.height) ? 0 : zoneClass.height + 'px';
+		zone.style.height = this.NaNCheck(zoneClass.height, 0) + 'px';
 		zone.style.verticalAlign = zoneClass.align;
 		zone.style.backgroundColor = zoneClass.color;
 		zone.style.overflow = 'noclip noclip';
 	}
 
 	static applyClassBorder(zone, zoneClass) {
-		zone.style.height = Number.isNaN(zoneClass.height) ? 0 : zoneClass.height + 'px';
+		zone.style.height = this.NaNCheck(zoneClass.height, 0) + 'px';
 		zone.style.border = `2px solid ${zoneClass.color}`;
 		zone.style.padding = '-2px';
 		zone.style.verticalAlign = zoneClass.align;
@@ -753,14 +753,14 @@ class Cgaz {
 	}
 
 	static setupArrow(arrow, arrowIcon, height, width, offset, align, color) {
-		arrow.style.height = Number.isNaN(height) ? 0 : height + 'px';
-		arrow.style.width = Number.isNaN(width) ? 0 : width + 'px';
+		arrow.style.height = this.NaNCheck(height, 0) + 'px';
+		arrow.style.width = this.NaNCheck(width, 0) + 'px';
 		arrow.style.verticalAlign = 'middle';
-		arrow.style.transform = `translatey( ${Number.isNaN(offset) ? 0 : -offset}px )`;
+		arrow.style.transform = `translatey( ${this.NaNCheck(-offset, 0)}px )`;
 		arrow.style.overflow = 'noclip noclip';
 
-		arrowIcon.style.height = Number.isNaN(width) ? 0 : width + 'px';
-		arrowIcon.style.width = Number.isNaN(width) ? 0 : width + 'px';
+		arrowIcon.style.height = this.NaNCheck(width, 0) + 'px';
+		arrowIcon.style.width = this.NaNCheck(width, 0) + 'px';
 		arrowIcon.style.washColor = color;
 		arrowIcon.style.overflow = 'noclip noclip';
 		arrowIcon.style.verticalAlign = align;
@@ -844,6 +844,10 @@ class Cgaz {
 
 	static floatEquals(A, B, threshold) {
 		return Math.abs(A - B) < threshold;
+	}
+
+	static NaNCheck(val, def) {
+		return Number.isNaN(Number(val)) ? def : val;
 	}
 
 	// Converts [0, 2Pi) to [-Pi, Pi]
