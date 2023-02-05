@@ -382,7 +382,7 @@ class Lobby {
 				},
 				{
 					label: $.Localize('#Action_ShowSteamProfile'),
-					icon: 'file://{images}/steam.svg',
+					icon: 'file://{images}/social/steam.svg',
 					style: 'icon-color-steam-online',
 					jsCallback: () => SteamOverlayAPI.OpenToProfileID(memberSteamID)
 				}
