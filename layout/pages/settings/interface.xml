@@ -774,7 +774,7 @@
 					<ChaosSettingsEnum
 						text="#Settings_JumpStats_Efficiency"
 						convar="mom_hud_jstats_efficiency_enable"
-						infomessage="#Settings_JumpStats_Efficiency"
+						infomessage="#Settings_JumpStats_Efficiency_Info"
 					>
 						<RadioButton group="efficiency" text="#Common_Off" value="0" />
 						<RadioButton group="efficiency" text="#Common_On" value="1" />
