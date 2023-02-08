@@ -7,6 +7,7 @@
 		<include src="file://{resources}/scripts/common/safeguards.js" />
 		<include src="file://{resources}/scripts/pages/main-menu/main-menu.js" />
 		<include src="file://{resources}/scripts/pages/drawer/drawer.js" />
+		<include src="file://{resources}/scripts/util/dont-show-again.js" />"
 	</scripts>
 
 	<snippets>

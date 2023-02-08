@@ -229,13 +229,12 @@ class MainMenu {
 	 * Temporary method to show the playtest welcome thingy
 	 */
 	static showPlaytestWelcomePopup() {
-		if (!$.persistentStorage.getItem('dontShowAgain.playtestWelcome')) {
+		if (!DosaHandler.checkDosa('playtestWelcome'))
 			UiToolkitAPI.ShowCustomLayoutPopupParameters(
 				'',
 				'file://{resources}/layout/modals/popups/playtest-welcome.xml',
-				'storageKey=playtestWelcome'
+				'dosaKey=playtestWelcome&dosaNameToken=Dosa_PlaytestWelcome'
 			);
-		}
 	}
 
 	/**
