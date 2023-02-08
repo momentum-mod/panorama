@@ -4,7 +4,7 @@
 	</styles>
 
 	<scripts>
-		<include src="file://{resources}/scripts/modals/popups/dont-show-again.js" />
+		<include src="file://{resources}/scripts/util/dont-show-again.js" />
 	</scripts>
 
 	<PopupCustomLayout class="PopupPanel Hidden generic-popup generic-popup--large" popupbackground="blur">
@@ -37,7 +37,7 @@
 				<Label text="#Common_DontShowAgain" />
 			</ToggleButton>
 
-			<Button class="button button--blue horizontal-align-right" onactivate="DontShowAgainPopup.onSubmit()">
+			<Button class="button button--blue horizontal-align-right" onactivate="DosaPopup.onSubmit()">
 				<Label class="button__text" text="#Common_IUnderstand" />
 			</Button>
 
