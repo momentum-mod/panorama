@@ -296,6 +296,7 @@
 		</Panel>
 
 		<!-- Make sure these are at the bottom to get the z-order right -->
+		<ToastManager />
 		<ChaosPopupManager id="PopupManager" onpopupsdismissed="" />
 		<ContextMenuManager id="ContextMenuManager" />
 		<ChaosTooltipManager id="TooltipManager" hittest="false" />

@@ -1,9 +1,10 @@
 <root>
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
-	</styles>	
+	</styles>
 
 	<ChaosGlobalPopups hittest="false">
+		<ToastManager />
 		<ChaosPopupManager id="PopupManager" onpopupsdismissed="" />
 		<ContextMenuManager id="ContextMenuManager" />
 		<ChaosTooltipManager id="TooltipManager" hittest="false" />
