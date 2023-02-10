@@ -14,29 +14,13 @@
 		<snippet name="MainMenuMovieSnippet">
 			<Panel>
 				<!-- Source is set in script. -->
-				<!-- Set what you want the movie to be using the data-type example 'nuke' the .webm is appended in script. -->
-				<Movie
-					id="MainMenuMovie"
-					class="mainmenu__movie MainMenuModeOnly"
-					src=""
-					sound=""
-					controls="none"
-					repeat="true"
-					hittest="false"
-				>
+				<Movie id="MainMenuMovie" class="mainmenu__movie MainMenuModeOnly" controls="none" repeat="true" hittest="false">
 				</Movie>
-			</Panel>
-		</snippet>
-		<snippet name="MainMenuVanitySnippet">
-			<Panel>
 			</Panel>
 		</snippet>
 	</snippets>
 
 	<ChaosMainMenu class="InitialDisplay MainMenuRootPanel" hittest="false" onload="MainMenu.onMainMenuLoaded()">
-
-		<!-- Vanity is not used but the engine needs this to exist -->
-		<Panel id="MainMenuVanityParent" />
 
 		<Panel id="MainMenuInput" class="mainmenu">
 			<!-- Topnav -->
@@ -215,8 +199,8 @@
 
 						<Panel id="HomeContent" class="mainmenu__home-container home MainMenuModeOnly">
 
-							<Panel id="NewsModelWrapper" class="home__wrapper">
 
+							<Panel class="home__wrapper">
 								<Frame id="NewsPanel" class="home__newspanel" src="file://{resources}/layout/pages/main-menu/news.xml" />
 
 								<ModelPanel
