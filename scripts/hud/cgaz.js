@@ -120,8 +120,6 @@ class Cgaz {
 		this.onSnapConfigChange();
 		this.onWindicatorConfigChange();
 		this.onCompassConfigChange();
-
-		this.applyStyles();
 	}
 
 	static onProjectionChange() {
@@ -444,20 +442,14 @@ class Cgaz {
 		if (this.snapEnable && this.snapAccel) {
 			// find snap zone borders
 			const snapAngles = this.findSnapAngles(this.snapAccel);
-			const snapOffset = (bSnapShift ? 0 : Math.PI * 0.25) - viewAngle;
+			const snapOffset = this.remapAngle(
+				(bSnapShift ? 0 : Math.PI * 0.25 * (rightMove > 0 ? -1 : 1)) - viewAngle
+			);
 
 			const targetOffset = this.remapAngle(velAngle - viewAngle);
 			const targetAngle = this.findFastAngle(dropSpeed, MAX_GROUND_SPEED, MAX_GROUND_SPEED * tickInterval);
-			let leftTarget = -targetAngle - targetOffset + Math.PI * 0.25;
-			let rightTarget = targetAngle - targetOffset - Math.PI * 0.25;
-
-			if (forwardMove > 0) {
-				if (rightMove < 0) {
-					leftTarget = rightTarget;
-				} else if (rightMove > 0) {
-					rightTarget = leftTarget;
-				}
-			}
+			const leftTarget = -targetAngle - targetOffset + Math.PI * 0.25;
+			const rightTarget = targetAngle - targetOffset - Math.PI * 0.25;
 
 			// draw snap zones
 			if (speed >= this.snapMinSpeed) {
@@ -677,7 +669,7 @@ class Cgaz {
 			const right = this.wrapToHalfPi(snapAngles[(i + 1) % zones.length] - snapOffset);
 			const bUseUncolored = !this.snapHeightgainEnable && !this.snapColorMode && i % 2;
 			let snapColor = bUseUncolored ? this.snapAltColor : this.snapColor;
-			const hlSnapColor = bUseUncolored ? this.snapHlAltColor : this.snapHlColor;
+			let hlSnapColor = bUseUncolored ? this.snapHlAltColor : this.snapHlColor;
 			const snapClass = bUseUncolored ? UNCOLORED_SNAP_CLASS : COLORED_SNAP_CLASS;
 
 			const minGain = this.snapGainRange[0];
@@ -715,10 +707,34 @@ class Cgaz {
 				case 2:
 					// "target" zones only highlight when moving
 					if (this.getSize(MomentumPlayerAPI.GetVelocity()) > this.accelMinSpeed) {
+						let stopPoint, direction;
 						if (left - leftTarget < 0 && right - leftTarget > 0) {
+							stopPoint = this.floatEquals(zones[i].rightPx, zones[i].leftPx)
+								? 0
+								: this.NaNCheck(
+										(
+											(this.mapToScreenWidth(leftTarget) - zones[i].leftPx) /
+											(zones[i].rightPx - zones[i].leftPx)
+										).toFixed(3),
+										0
+								  );
+							direction = '0% 0%, 100% 0%';
 							bHighlight = true;
 						} else if (left - rightTarget < 0 && right - rightTarget > 0) {
+							stopPoint = this.floatEquals(zones[i].rightPx - zones[i].leftPx)
+								? 0
+								: this.NaNCheck(
+										(
+											(zones[i].rightPx - this.mapToScreenWidth(rightTarget)) /
+											(zones[i].rightPx - zones[i].leftPx)
+										).toFixed(3),
+										0
+								  );
+							direction = '100% 0%, 0% 0%';
 							bHighlight = true;
+						}
+						if (bHighlight) {
+							hlSnapColor = `gradient(linear, ${direction}, from(${hlSnapColor}), color-stop( ${stopPoint}, ${hlSnapColor} ), color-stop( ${stopPoint}, ${snapColor} ), to(${snapColor}))`;
 						}
 					}
 					break;
