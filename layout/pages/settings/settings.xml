@@ -10,7 +10,7 @@
 		<include src="file://{resources}/scripts/pages/settings/search.js" />
 	</scripts>
 
-	<Panel class="mainmenu__page" useglobalcontext="true">
+	<Panel class="mainmenu__page">
 
 		<Panel class="settings">
 
