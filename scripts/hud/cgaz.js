@@ -30,18 +30,30 @@ class StyleObject {
 	}
 }
 
+function initZonePanel(panel) {
+	return Object.assign(panel, {
+		leftAngle: 0,
+		rightAngle: 0,
+		leftPx: 0,
+		rightPx: 0
+	});
+}
+
 class Cgaz {
 	static accelContainer = $('#AccelContainer');
-
 	static accelZones = [
-		$('#LeftTurnZone'),
-		$('#LeftFastZone'),
-		$('#LeftSlowZone'),
-		$('#DeadZone'),
-		$('#RightSlowZone'),
-		$('#RightFastZone'),
-		$('#RightTurnZone')
-	];
+		'LeftTurnZone',
+		'LeftFastZone',
+		'LeftSlowZone',
+		'DeadZone',
+		'RightSlowZone',
+		'RightFastZone',
+		'RightTurnZone',
+		'AccelSplitZone',
+		'LeftMirrorZone',
+		'RightMirrorZone',
+		'MirrorSplitZone'
+	].map((id) => initZonePanel($('#' + id)));
 
 	static leftTurnZone = this.accelZones[0];
 	static leftFastZone = this.accelZones[1];
@@ -50,29 +62,28 @@ class Cgaz {
 	static rightSlowZone = this.accelZones[4];
 	static rightFastZone = this.accelZones[5];
 	static rightTurnZone = this.accelZones[6];
+	static accelSplitZone = this.accelZones[7];
 
-	static leftMirrorZone = $('#LeftMirrorZone');
-	static rightMirrorZone = $('#RightMirrorZone');
-
-	static accelSplitZone = $('#AccelSplitZone');
-	static snapSplitZone = $('#SnapSplitZone');
-	static mirrorSplitZone = $('#MirrorSplitZone');
+	static leftMirrorZone = this.accelZones[8];
+	static rightMirrorZone = this.accelZones[9];
+	static mirrorSplitZone = this.accelZones[10];
 
 	static snapContainer = $('#SnapContainer');
 	static snapZones = [
-		$('#SnapZone0'),
-		$('#SnapZone1'),
-		$('#SnapZone2'),
-		$('#SnapZone3'),
-		$('#SnapZone4'),
-		$('#SnapZone5'),
-		$('#SnapZone6'),
-		$('#SnapZone7'),
-		$('#SnapZone8'),
-		$('#SnapZone9'),
-		$('#SnapZone10'),
-		$('#SnapZone11')
+		initZonePanel($('#SnapZone0')),
+		initZonePanel($('#SnapZone1')),
+		initZonePanel($('#SnapZone2')),
+		initZonePanel($('#SnapZone3')),
+		initZonePanel($('#SnapZone4')),
+		initZonePanel($('#SnapZone5')),
+		initZonePanel($('#SnapZone6')),
+		initZonePanel($('#SnapZone7')),
+		initZonePanel($('#SnapZone8')),
+		initZonePanel($('#SnapZone9')),
+		initZonePanel($('#SnapZone10')),
+		initZonePanel($('#SnapZone11'))
 	];
+	static snapSplitZone = initZonePanel($('#SnapSplitZone'));
 
 	static compassArrow = $('#CompassArrow');
 	static compassArrowIcon = $('#CompassArrowIcon');
@@ -85,7 +96,7 @@ class Cgaz {
 
 	static windicatorArrow = $('#WindicatorArrow');
 	static windicatorArrowIcon = $('#WindicatorArrowIcon');
-	static windicatorZone = $('#WindicatorZone');
+	static windicatorZone = initZonePanel($('#WindicatorZone'));
 
 	static screenY = $.GetContextPanel().actuallayoutheight;
 	static screenX = $.GetContextPanel().actuallayoutwidth;
@@ -192,7 +203,7 @@ class Cgaz {
 		MIRROR_CLASS = new StyleObject(height, offset, align, this.accel_slow_color);
 		WIN_ZONE_CLASS = new StyleObject(height, offset, align, this.windicator_color);
 
-		this.setupContainer(this.accelContainer, this.accel_offset, align);
+		this.setupContainer(this.accelContainer, this.accelOffset, align);
 		this.applyClass(this.leftTurnZone, TURN_CLASS);
 		this.applyClass(this.leftFastZone, FAST_CLASS);
 		this.applyClass(this.leftSlowZone, SLOW_CLASS);
@@ -433,7 +444,6 @@ class Cgaz {
 		if (this.snap_enable && this.snapAccel) {
 			// find snap zone borders
 			const snapAngles = this.findSnapAngles(this.snapAccel);
-			const snapGains = this.findSnapGains(snapAngles, this.snapAccel);
 			const snapOffset = (bSnapShift ? 0 : Math.PI * 0.25) - viewAngle;
 
 			const targetOffset = this.remapAngle(velAngle - viewAngle);
@@ -451,7 +461,7 @@ class Cgaz {
 
 			// draw snap zones
 			if (speed >= this.snap_min_speed) {
-				this.updateSnaps(this.snapZones, snapAngles, snapGains, snapOffset, leftTarget, rightTarget);
+				this.updateSnaps(this.snapZones, snapAngles, snapOffset, leftTarget, rightTarget);
 			} else {
 				this.clearZones(this.snapZones);
 			}
@@ -611,7 +621,7 @@ class Cgaz {
 		return breakPoints;
 	}
 
-	static findSnapGains(snapAngles, snapAccel) {
+	static findSnapGains(snapAngles) {
 		const snapGains = [];
 		this.snapGainRange = [0, 0];
 		for (let i = 0; i < 0.5 * snapAngles.length; ++i) {
@@ -619,9 +629,9 @@ class Cgaz {
 			const right = snapAngles[i + 1];
 			const angle = 0.5 * (left + right);
 
-			const xGain = (snapAccel * Math.cos(angle)).toFixed(0);
-			const yGain = (snapAccel * Math.sin(angle)).toFixed(0);
-			const gainDiff = Math.sqrt(xGain * xGain + yGain * yGain) - snapAccel;
+			const xGain = (this.snapAccel * Math.cos(angle)).toFixed(0);
+			const yGain = (this.snapAccel * Math.sin(angle)).toFixed(0);
+			const gainDiff = Math.sqrt(xGain * xGain + yGain * yGain) - this.snapAccel;
 			snapGains.push(gainDiff);
 
 			this.snapGainRange[0] = Math.min(gainDiff, this.snapGainRange[0]);
@@ -633,32 +643,66 @@ class Cgaz {
 	static updateZone(zone, left, right, offset, zoneClass, splitZone) {
 		let wrap = right > left;
 
-		left = this.remapAngle(left - offset);
-		right = this.remapAngle(right - offset);
+		zone.leftAngle = this.remapAngle(left - offset);
+		zone.rightAngle = this.remapAngle(right - offset);
 
-		wrap = right > left ? !wrap : wrap;
+		wrap = zone.rightAngle > zone.leftAngle ? !wrap : wrap;
 
 		// map angles to screen
-		left = this.mapToScreenWidth(left);
-		right = this.mapToScreenWidth(right);
+		zone.leftPx = this.mapToScreenWidth(zone.leftAngle);
+		zone.rightPx = this.mapToScreenWidth(zone.rightAngle);
 
 		if (wrap) {
-			this.drawZone(zone, this.mapToScreenWidth(-this.hFov), right);
-
 			// draw second part of split zone
 			this.applyClass(splitZone, zoneClass);
-			this.drawZone(splitZone, left, this.mapToScreenWidth(this.hFov));
-		} else {
-			this.drawZone(zone, left, right);
+			splitZone.leftAngle = -this.hFov;
+			splitZone.rightAngle = zone.rightAngle;
+			splitZone.leftPx = this.mapToScreenWidth(this.accelSplitZone.leftAngle);
+			splitZone.rightPx = this.mapToScreenWidth(this.accelSplitZone.rightAngle);
+			//this.drawZone(splitZone, left, this.mapToScreenWidth(this.hFov));
+			this.drawZone(splitZone);
+
+			zone.rightAngle = this.hFov;
+			zone.rightPx = this.mapToScreenWidth(zone.rightAngle);
 		}
+		this.drawZone(zone);
 	}
 
-	static updateSnaps(zones, snapAngles, snapGains, snapOffset, leftTarget, rightTarget) {
+	static updateSnaps(zones, snapAngles, snapOffset, leftTarget, rightTarget) {
+		const snapGains = this.findSnapGains(snapAngles);
+
 		for (let i = 0; i < zones.length; ++i) {
 			// wrap the angles to only [-pi/2, pi/2]
 			const left = this.wrapToHalfPi(snapAngles[i] - snapOffset);
 			const right = this.wrapToHalfPi(snapAngles[(i + 1) % zones.length] - snapOffset);
-			const bUseUncolored = !this.snap_heightgain_enable && !this.snap_color_mode && i % 2;
+			const bUseUncolored = !this.snapHeightgainEnable && !this.snapColorMode && i % 2;
+			let snapColor = bUseUncolored ? this.snapAltColor : this.snapColor;
+			const hlSnapColor = bUseUncolored ? this.snapHlAltColor : this.snapHlColor;
+			const snapClass = bUseUncolored ? UNCOLORED_SNAP_CLASS : COLORED_SNAP_CLASS;
+
+			const minGain = this.snapGainRange[0];
+			const maxGain = this.snapGainRange[1];
+			const diffGain = snapGains[i % snapGains.length];
+			const alpha = maxGain === minGain ? 1 : (diffGain - minGain) / (maxGain - minGain);
+			const heightFactor = 0.8 * alpha + 0.2;
+			const height = this.NaNCheck(this.snapHeight, 0);
+
+			if (this.snapHeightgainEnable && !Number.isNaN(heightFactor)) {
+				zones[i].style.height = heightFactor * height + 'px';
+				zones[i].style.marginBottom = height + 'px';
+				zones[i].style.verticalAlign = 'bottom';
+			} else {
+				zones[i].style.height = height + 'px';
+				zones[i].style.marginBottom = height + 'px';
+			}
+
+			this.updateZone(zones[i], left, right, 0, snapClass, this.snapSplitZone);
+
+			if (this.snapColorMode) {
+				const A = this.splitColorString(this.snapSlowColor);
+				const B = this.splitColorString(this.snapFastColor);
+				snapColor = this.getColorStringFromArray(this.colorLerp(A, B, alpha));
+			}
 
 			let bHighlight = false;
 			switch (this.snap_hl_mode) {
@@ -680,44 +724,17 @@ class Cgaz {
 					break;
 			}
 
-			let snapColor = bUseUncolored ? this.snap_alt_color : this.snap_color;
-			const hlSnapColor = bUseUncolored ? this.snap_hl_alt_color : this.snap_hl_color;
-			const snapClass = bUseUncolored ? UNCOLORED_SNAP_CLASS : COLORED_SNAP_CLASS;
-
-			const minGain = this.snapGainRange[0];
-			const maxGain = this.snapGainRange[1];
-			const diffGain = snapGains[i % snapGains.length];
-			const alpha = (diffGain - minGain) / (maxGain - minGain);
-			const heightFactor = 0.8 * alpha + 0.2;
-			const height = this.NaNCheck(this.snap_height, 0);
-
-			if (this.snap_color_mode) {
-				const A = this.splitColorString(this.snap_slow_color);
-				const B = this.splitColorString(this.snap_fast_color);
-				snapColor = this.getColorStringFromArray(this.colorLerp(A, B, alpha));
-			}
 			zones[i].style.backgroundColor = bHighlight ? hlSnapColor : snapColor;
-
-			if (this.snap_heightgain_enable) {
-				zones[i].style.height = heightFactor * height + 'px';
-				zones[i].style.marginBottom = height + 'px';
-				zones[i].style.verticalAlign = 'bottom';
-			} else {
-				zones[i].style.height = height + 'px';
-				zones[i].style.marginBottom = height + 'px';
-			}
-
-			this.updateZone(zones[i], left, right, 0, snapClass, this.snapSplitZone);
 		}
 	}
 
-	static drawZone(zone, left, right) {
+	static drawZone(zone) {
 		// assign widths
-		const width = right - left;
+		const width = zone.rightPx - zone.leftPx;
 		zone.style.width = this.NaNCheck(Number(width).toFixed(0), 0) + 'px';
 
 		// assign position via margin (center screen at 0)
-		zone.style.marginLeft = this.NaNCheck(Number(left).toFixed(0), 0) + 'px';
+		zone.style.marginLeft = this.NaNCheck(Number(zone.leftPx).toFixed(0), 0) + 'px';
 	}
 
 	static findCompassTick(angle) {
@@ -737,19 +754,19 @@ class Cgaz {
 		container.style.overflow = 'noclip noclip';
 	}
 
-	static applyClass(zone, zoneClass) {
-		zone.style.height = this.NaNCheck(zoneClass.height, 0) + 'px';
-		zone.style.verticalAlign = zoneClass.align;
-		zone.style.backgroundColor = zoneClass.color;
-		zone.style.overflow = 'noclip noclip';
+	static applyClass(panel, zoneClass) {
+		panel.style.height = this.NaNCheck(zoneClass.height, 0) + 'px';
+		panel.style.verticalAlign = zoneClass.align;
+		panel.style.backgroundColor = zoneClass.color;
+		panel.style.overflow = 'noclip noclip';
 	}
 
-	static applyClassBorder(zone, zoneClass) {
-		zone.style.height = this.NaNCheck(zoneClass.height, 0) + 'px';
-		zone.style.border = `2px solid ${zoneClass.color}`;
-		zone.style.padding = '-2px';
-		zone.style.verticalAlign = zoneClass.align;
-		zone.style.overflow = 'noclip noclip';
+	static applyClassBorder(panel, zoneClass) {
+		panel.style.height = this.NaNCheck(zoneClass.height, 0) + 'px';
+		panel.style.border = `2px solid ${zoneClass.color}`;
+		panel.style.padding = '-2px';
+		panel.style.verticalAlign = zoneClass.align;
+		panel.style.overflow = 'noclip noclip';
 	}
 
 	static setupArrow(arrow, arrowIcon, height, width, offset, align, color) {
@@ -767,7 +784,11 @@ class Cgaz {
 	}
 
 	static clearZones(zones) {
-		zones.map((zone) => (zone.style.width = '0px'));
+		for (const zone of zones) {
+			zone.leftPx = 0;
+			zone.rightPx = 0;
+			this.drawZone(zone);
+		}
 	}
 
 	static mapToScreenWidth(angle) {
