@@ -56,19 +56,14 @@
 			</Panel>
 		</ConVarEnabler>
 		<Panel id="CompassTicks" class="cgaz__container">
-				<Panel id="FullTick" class="cgaz-tick cgaz-tick__full" />
-				<Panel id="HalfTick" class="cgaz-tick cgaz-tick__half" />
+			<Panel id="FullTick" class="cgaz-tick cgaz-tick__full" />
+			<Panel id="HalfTick" class="cgaz-tick cgaz-tick__half" />
 		</Panel>
 		<Panel id="WindicatorArrow">
-      		<ConVarEnabler class="full-height" convar="mom_df_hud_windicator_enable" togglevisibility="true">
-        		<Image
-					id="WindicatorArrowIcon"
-					class="arrow__down"
-					src="file://{images}/hud/cgaz-arrow.svg"
-					textureheight="48"
-				/>
-      		</ConVarEnabler>
-    	</Panel>
+			<ConVarEnabler class="full-height" convar="mom_df_hud_windicator_enable" togglevisibility="true">
+				<Image id="WindicatorArrowIcon" class="arrow__down" src="file://{images}/hud/cgaz-arrow.svg" textureheight="48" />
+			</ConVarEnabler>
+		</Panel>
 	</MomHudCgaz>
 
 </root>

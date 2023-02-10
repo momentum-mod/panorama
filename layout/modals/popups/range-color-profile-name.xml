@@ -10,14 +10,7 @@
 			<Label id="TitleLabel" class="generic-popup__title" text="#Settings_RangeColorProfile_Prompt" />
 		</Panel>
 		<Panel class="row horizontal-align-center mt-4">
-			<TextEntry
-				id="RangeColorProfileName"
-				class="textentry"
-				maxchars="255"
-				placeholder="#Settings_RangeColorProfile_Placeholder"
-				text=""
-				ontextentrysubmit="RangeColorProfileNamePopup.onTextSubmitted()"
-			/>
+			<TextEntry id="RangeColorProfileName" class="textentry" maxchars="255" placeholder="#Settings_RangeColorProfile_Placeholder" text="" ontextentrysubmit="RangeColorProfileNamePopup.onTextSubmitted()" />
 		</Panel>
 		<Label id="InvalidNameLabel" class="text-m horizontal-align-center" text="#Settings_RangeColorProfile_InvalidName" />
 		<Panel class="row horizontal-align-center mt-4 generic-popup__button-row">

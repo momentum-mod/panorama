@@ -1,7 +1,7 @@
 <root>
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
-	</styles>	
+	</styles>
 	<scripts>
 		<include src="file://{resources}/scripts/pages/intro-movie.js" />
 	</scripts>

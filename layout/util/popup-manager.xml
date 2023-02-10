@@ -6,7 +6,7 @@
 	<ChaosPopupManager hittest="false">
 		<Button id="DimBackground" onactivate="PopupBackgroundClicked()" />
 		<Button id="BlurBackground" onactivate="PopupBackgroundClicked()" />
-    
+
 		<!-- Popups are added here dynamically -->
 	</ChaosPopupManager>
 </root>

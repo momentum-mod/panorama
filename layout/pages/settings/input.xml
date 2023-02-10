@@ -7,104 +7,54 @@
 	</scripts>
 
 	<Panel class="settings-page">
-
 		<Panel class="settings-page__header">
-
 			<Label class="settings-page__title" text="#Settings_Input" />
-
 			<Panel class="settings-page__header-buttons">
 				<!-- Gamemode Dropdown will go here -->
 			</Panel>
-
 		</Panel>
 
 		<Panel id="SettingsPageContainer" class="settings-page__container">
-
 			<Panel id="MouseSubSection" class="settings-group">
-
 				<Panel class="settings-group__header">
-
 					<Label class="settings-group__title" text="#Settings_Mouse_Title" tags="mouse,cursor,aim,look,input" />
-
 					<Panel class="flow-right horizontal-align-right">
-
-						<Button
-							class="button mr-3"
-							onactivate="SettingsShared.showImportExportDialogue('Settings_Mouse_Title', 'MouseSubSection')"
-						>
+						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Settings_Mouse_Title', 'MouseSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
-
 						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
 							<Button class="button" onactivate="SettingsShared.resetSettings('MouseSubSection');">
 								<Image class="button__icon" src="file://{images}/reset.svg" />
 							</Button>
 						</TooltipPanel>
-
 					</Panel>
-
 				</Panel>
 
-				<ChaosSettingsSlider
-					text="#Settings_Mouse_Sens"
-					min="0.1"
-					max="10"
-					displayprecision="2"
-					convar="sensitivity"
-					tags="sensitivity"
-					hasdocspage="false"
-				/>
+				<ChaosSettingsSlider text="#Settings_Mouse_Sens" min="0.1" max="10" displayprecision="2" convar="sensitivity" tags="sensitivity" hasdocspage="false" />
 
 				<Panel class="settings-group__combo">
-
 					<ChaosSettingsEnum text="#Settings_Mouse_Accel" convar="m_customaccel" hasdocspage="false" tags="acceleration">
 						<RadioButton group="maccel" text="#Common_Off" value="0" />
 						<RadioButton group="maccel" text="#Common_On" value="3" />
 					</ChaosSettingsEnum>
 
 					<ConVarEnabler convar="m_customaccel" hasdocspage="false">
-						<ChaosSettingsSlider
-							text=""
-							min="0.1"
-							max="10"
-							displayprecision="2"
-							convar="m_customaccel_exponent"
-							tags="acceleration"
-						/>
+						<ChaosSettingsSlider text="" min="0.1" max="10" displayprecision="2" convar="m_customaccel_exponent" tags="acceleration" />
 					</ConVarEnabler>
-
 				</Panel>
 
-				<ChaosSettingsEnumDropDown
-					text="#Settings_Mouse_Raw"
-					convar="m_rawinput"
-					infomessage="#Settings_Mouse_Raw_Info"
-					hasdocspage="false"
-					tags="raw,direct"
-				>
+				<ChaosSettingsEnumDropDown text="#Settings_Mouse_Raw" convar="m_rawinput" infomessage="#Settings_Mouse_Raw_Info" hasdocspage="false" tags="raw,direct">
 					<Label id="rawinput0" text="#Common_Off" value="0" />
 					<Label id="rawinput1" text="#Settings_Mouse_Raw_On_Old" value="1" />
 					<Label id="rawinput2" text="#Settings_Mouse_Raw_On_New" value="2" />
 				</ChaosSettingsEnumDropDown>
 
-				<ChaosSettingsEnum
-					text="#Settings_Mouse_Reverse"
-					convar="m_pitch_inverse"
-					infomessage="#Settings_Mouse_Reverse_Info"
-					hasdocspage="false"
-					tags="inverse"
-				>
+				<ChaosSettingsEnum text="#Settings_Mouse_Reverse" convar="m_pitch_inverse" infomessage="#Settings_Mouse_Reverse_Info" hasdocspage="false" tags="inverse">
 					<RadioButton group="reverse" text="#Common_Off" value="0" />
 					<RadioButton group="reverse" text="#Common_On" value="1" />
 				</ChaosSettingsEnum>
 
-				<ChaosSettingsEnum
-					text="#Settings_Mouse_Filter"
-					convar="m_filter"
-					infomessage="#Settings_Mouse_Filter_Info"
-					hasdocspage="false"
-					tags="filter"
-				>
+				<ChaosSettingsEnum text="#Settings_Mouse_Filter" convar="m_filter" infomessage="#Settings_Mouse_Filter_Info" hasdocspage="false" tags="filter">
 					<RadioButton group="filter" text="#Common_Off" value="0" />
 					<RadioButton group="filter" text="#Common_On" value="1" />
 				</ChaosSettingsEnum>
@@ -114,11 +64,8 @@
 			<Panel class="settings-page__spacer" />
 
 			<Panel id="KeybindSubSection" class="settings-group">
-
 				<Panel class="settings-group__header">
-
 					<Label class="settings-group__title" text="#Settings_Keybinds_Title" tags="keyboard,keybind,controls,input" />
-
 					<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
 						<Button class="button" onactivate="SettingsShared.resetControls('KeybindSubSection');">
 							<Image class="button__icon" src="file://{images}/reset.svg" />
@@ -161,16 +108,12 @@
 				<ChaosSettingsKeyBinder text="#Keybind_Restart" bind="mom_restart" tags="restart,reset" />
 				<ChaosSettingsKeyBinder text="#Keybind_RestartStage" bind="mom_restart_stage" tags="restart,reset,stage" />
 				<ChaosSettingsKeyBinder text="#Keybind_StopTimer" bind="mom_timer_stop" tags="stop" />
-				
+
 				<Label class="settings-group__subtitle" text="#Settings_Keybinds_Savestates" />
 
 				<ChaosSettingsKeyBinder text="#Keybind_Savestate_Create" bind="mom_saveloc_create" tags="saveloc,savestate" />
 				<ChaosSettingsKeyBinder text="#Keybind_Savestate_Goto" bind="+mom_saveloc_current" tags="saveloc,savestate" />
-				<ChaosSettingsKeyBinder
-					text="#Keybind_Savestate_Menu"
-					bind="chaos_hud_menu_show savelocmenu"
-					tags="saveloc,savestate"
-				/>
+				<ChaosSettingsKeyBinder text="#Keybind_Savestate_Menu" bind="chaos_hud_menu_show savelocmenu" tags="saveloc,savestate" />
 				<ChaosSettingsKeyBinder text="#Keybind_StartMark_Create" bind="mom_start_mark_create" tags="saveloc,savestate" />
 				<ChaosSettingsKeyBinder text="#Keybind_StartMark_Clear" bind="mom_start_mark_clear" tags="saveloc,savestate" />
 
@@ -195,8 +138,6 @@
 				<ChaosSettingsKeyBinder text="#Keybind_Quit" bind="quit" tags="quit,close" />
 
 			</Panel>
-
 		</Panel>
-
 	</Panel>
 </root>

@@ -17,7 +17,7 @@
 		<ColorPickerPlane id="ColorPlane" class="colorpicker__plane" />
 
 		<ColorPickerAxis id="ColorAxis" class="colorpicker__axis" />
-		
+
 		<ColorPickerAlphaAxis id="AlphaAxis" class="colorpicker__axis" />
 
 		<Panel class="colorpicker__right">
@@ -50,11 +50,7 @@
 				<NumberEntry id="AlphaChannel" class="colorpicker__numberentry" max="255" />
 			</Panel>
 			<Panel class="colorpicker__entry colorpicker__right-item">
-				<Label
-					id="ColorPickerLabel"
-					class="colorpicker__label"
-					onload="$('#ColorPickerLabel').SetProceduralTextThatIPromiseIsLocalizedAndEscaped('#', false)"
-				/>
+				<Label id="ColorPickerLabel" class="colorpicker__label" onload="$('#ColorPickerLabel').SetProceduralTextThatIPromiseIsLocalizedAndEscaped('#', false)" />
 				<TextEntry id="HexColor" textmode="hex" maxchars="8" class="textentry colorpicker__textentry" />
 			</Panel>
 			<Panel class="colorpicker__entry colorpicker__right-item">

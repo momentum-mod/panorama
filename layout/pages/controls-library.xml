@@ -431,12 +431,7 @@
 				<DropDown class="dropdown ml-3" menuclass="dropdown-menu" style="width: 300px;">
 					<Label text="Dropdown fixed width" id="ControllibDropdown2_1" value="1" />
 					<Label text="This is a rare case where you should use inline styling " id="ControllibDropdown2_2" value="2" />
-					<Label
-						text="Do icons here break overflow????????????????????????????????????"
-						class="IconLabel"
-						id="ControllibDropdown2"
-						value="2"
-					>
+					<Label text="Do icons here break overflow????????????????????????????????????" class="IconLabel" id="ControllibDropdown2" value="2">
 						<Image class="wash-color-blue" texturewidth="32" textureheight="32" src="file://{images}/units.svg" />
 					</Label>
 				</DropDown>
@@ -495,46 +490,16 @@
 			<Panel class="row my-3 mt-3">
 				<Panel class="col">
 					<Panel class="row my-3">
-						<Slider
-							class="slider slider--horizontal"
-							snaptoincrement="true"
-							increment="1"
-							max="10"
-							direction="horizontal"
-							id="SlottedSlider"
-						/>
+						<Slider class="slider slider--horizontal" snaptoincrement="true" increment="1" max="10" direction="horizontal" id="SlottedSlider" />
 					</Panel>
 					<Panel class="row my-3">
-						<Slider
-							class="slider slider--horizontal"
-							snaptoincrement="true"
-							increment="1"
-							max="10"
-							direction="horizontal"
-							id="SlottedSlider2"
-							disabled="true"
-						/>
+						<Slider class="slider slider--horizontal" snaptoincrement="true" increment="1" max="10" direction="horizontal" id="SlottedSlider2" disabled="true" />
 					</Panel>
 				</Panel>
 				<Panel class="col mt-3">
 					<Panel class="row" style="height:120px;">
-						<Slider
-							class="slider slider--vertical"
-							snaptoincrement="true"
-							increment="1"
-							max="10"
-							direction="vertical"
-							id="SlottedSlider3"
-						/>
-						<Slider
-							class="slider slider--vertical"
-							snaptoincrement="true"
-							increment="1"
-							max="10"
-							direction="vertical"
-							id="SlottedSlider4"
-							disabled="true"
-						/>
+						<Slider class="slider slider--vertical" snaptoincrement="true" increment="1" max="10" direction="vertical" id="SlottedSlider3" />
+						<Slider class="slider slider--vertical" snaptoincrement="true" increment="1" max="10" direction="vertical" id="SlottedSlider4" disabled="true" />
 					</Panel>
 				</Panel>
 			</Panel>
@@ -542,46 +507,16 @@
 			<Panel class="row my-3 mt-3">
 				<Panel class="col">
 					<Panel class="row my-3">
-						<DualSlider
-							class="slider slider--horizontal"
-							snaptoincrement="true"
-							increment="1"
-							max="10"
-							direction="horizontal"
-							id="DualSlottedSlider"
-						/>
+						<DualSlider class="slider slider--horizontal" snaptoincrement="true" increment="1" max="10" direction="horizontal" id="DualSlottedSlider" />
 					</Panel>
 					<Panel class="row my-3">
-						<DualSlider
-							class="slider slider--horizontal"
-							snaptoincrement="true"
-							increment="1"
-							max="10"
-							direction="horizontal"
-							id="DualSlottedSlider2"
-							disabled="true"
-						/>
+						<DualSlider class="slider slider--horizontal" snaptoincrement="true" increment="1" max="10" direction="horizontal" id="DualSlottedSlider2" disabled="true" />
 					</Panel>
 				</Panel>
 				<Panel class="col mt-3">
 					<Panel class="row" style="height:120px;">
-						<DualSlider
-							class="slider slider--vertical"
-							snaptoincrement="true"
-							increment="1"
-							max="10"
-							direction="vertical"
-							id="DualSlottedSlider3"
-						/>
-						<DualSlider
-							class="slider slider--vertical"
-							snaptoincrement="true"
-							increment="1"
-							max="10"
-							direction="vertical"
-							id="DualSlottedSlider4"
-							disabled="true"
-						/>
+						<DualSlider class="slider slider--vertical" snaptoincrement="true" increment="1" max="10" direction="vertical" id="DualSlottedSlider3" />
+						<DualSlider class="slider slider--vertical" snaptoincrement="true" increment="1" max="10" direction="vertical" id="DualSlottedSlider4" disabled="true" />
 					</Panel>
 				</Panel>
 			</Panel>
@@ -609,22 +544,17 @@
 				<Button class="button" onactivate="UiToolkitAPI.ShowGenericPopup('what', 'hELLO?', '');">
 					<Label class="button__text" text="ShowGenericPopup" />
 				</Button>
-				<Button
-					class="button ml-3"
-					onactivate="UiToolkitAPI.ShowGenericPopupYesNoCancelBgStyle('Title', 
+				<Button class="button ml-3" onactivate="UiToolkitAPI.ShowGenericPopupYesNoCancelBgStyle('Title', 
 							'Message', 
 							'', 
 							function() {},
 							function() {},
 							function() {},
 							'blur'
-						);"
-				>
+						);">
 					<Label class="button__text" text="ShowGenericPopupYesNoCancelBgStyle" />
 				</Button>
-				<Button
-					class="button ml-3"
-					onactivate="UiToolkitAPI.ShowGenericPopupThreeOptionsBgStyle('??????', 
+				<Button class="button ml-3" onactivate="UiToolkitAPI.ShowGenericPopupThreeOptionsBgStyle('??????', 
 							'Are you ok?', 
 							'', 
 							'No', 
@@ -634,48 +564,23 @@
 							'No',
 							function(){function a(p){if(typeof p.Children==='function')p.Children().forEach(c=>{if(Object.hasOwn(c,'text'))c.text='burger';a(c)})}a($('#ControlsLibraryPanel'))},
 							'blur'
-						);"
-				>
+						);">
 					<Label class="button__text" text="???" />
 				</Button>
 			</Panel>
 
 			<Label class="text-h3 mt-3" text="Tooltips" />
 			<Panel class="row my-3">
-				<Panel
-					id="tooltip1"
-					class="button py-1 mx-1"
-					style="tooltip-position: bottom;"
-					onmouseover="UiToolkitAPI.ShowTextTooltip('tooltip1', 'Momentum Man, the fabled master of every gamemode, with more records than ever seen. Scientist, lover, source movement legend. But how did he die? Follow in his footsteps, unlock the mystery!');"
-					onmouseout="UiToolkitAPI.HideTextTooltip();"
-				>
+				<Panel id="tooltip1" class="button py-1 mx-1" style="tooltip-position: bottom;" onmouseover="UiToolkitAPI.ShowTextTooltip('tooltip1', 'Momentum Man, the fabled master of every gamemode, with more records than ever seen. Scientist, lover, source movement legend. But how did he die? Follow in his footsteps, unlock the mystery!');" onmouseout="UiToolkitAPI.HideTextTooltip();">
 					<Label class="button__text" text="Text Tooltip" />
 				</Panel>
-				<Panel
-					id="tooltip2"
-					class="button ml-3 py-1 mr-1"
-					style="tooltip-position: bottom;"
-					onmouseover="UiToolkitAPI.ShowTitleTextTooltip('tooltip2', 'TitleText Tooltip', 'Momentum Man, легендарный мастер каждого игрового режима, с большим количеством записей, чем когда-либо. Ученый, любитель, источник легенды движения. Но как он умер? Следуйте по его стопам, откройте тайну!');"
-					onmouseout="UiToolkitAPI.HideTitleTextTooltip();"
-				>
+				<Panel id="tooltip2" class="button ml-3 py-1 mr-1" style="tooltip-position: bottom;" onmouseover="UiToolkitAPI.ShowTitleTextTooltip('tooltip2', 'TitleText Tooltip', 'Momentum Man, легендарный мастер каждого игрового режима, с большим количеством записей, чем когда-либо. Ученый, любитель, источник легенды движения. Но как он умер? Следуйте по его стопам, откройте тайну!');" onmouseout="UiToolkitAPI.HideTitleTextTooltip();">
 					<Label class="button__text" text="TitleImageText Tooltip" />
 				</Panel>
-				<Panel
-					id="tooltip3"
-					class="button ml-3 py-1 mr-1"
-					style="tooltip-position: bottom;"
-					onmouseover="UiToolkitAPI.ShowTitleImageTextTooltip('tooltip3', 'TitleImageText Tooltip', 'file://{images}/positive.svg', 'This displays an image and text with a title.');"
-					onmouseout="UiToolkitAPI.HideTitleImageTextTooltip();"
-				>
+				<Panel id="tooltip3" class="button ml-3 py-1 mr-1" style="tooltip-position: bottom;" onmouseover="UiToolkitAPI.ShowTitleImageTextTooltip('tooltip3', 'TitleImageText Tooltip', 'file://{images}/positive.svg', 'This displays an image and text with a title.');" onmouseout="UiToolkitAPI.HideTitleImageTextTooltip();">
 					<Label class="button__text" text="TitleImageText Tooltip" />
 				</Panel>
-				<Panel
-					id="tooltip4"
-					class="button ml-3 py-1 mr-1"
-					style="tooltip-position: bottom;"
-					onmouseover="UiToolkitAPI.ShowTitleImageTextTooltipStyled('tooltip4', 'TitleImageText', 'file://{images}/negative.svg', 'We don&quot;t seem to have a ShowImageTextTooltip function, so let&quot;s just the title with the --notitle modifier', 'tooltip--notitle');"
-					onmouseout="UiToolkitAPI.HideTitleImageTextTooltip();"
-				>
+				<Panel id="tooltip4" class="button ml-3 py-1 mr-1" style="tooltip-position: bottom;" onmouseover="UiToolkitAPI.ShowTitleImageTextTooltipStyled('tooltip4', 'TitleImageText', 'file://{images}/negative.svg', 'We don&quot;t seem to have a ShowImageTextTooltip function, so let&quot;s just the title with the --notitle modifier', 'tooltip--notitle');" onmouseout="UiToolkitAPI.HideTitleImageTextTooltip();">
 					<Label class="button__text" text="TitleImageTextStyled Tooltip without title" />
 				</Panel>
 			</Panel>
@@ -688,10 +593,7 @@
 				<Button class="button ml-3" onactivate="ToastAPI.CreateToast('', 'Toast', 'Test Toast!', 1, 10, '', '')">
 					<Label class="button__text" text="Center" />
 				</Button>
-				<Button
-					class="button ml-3"
-					onactivate="ToastAPI.CreateToast('', 'Toast', 'Test Toast! Test Toast! Test Toast! Test Toast!', 2, 10, '', '')"
-				>
+				<Button class="button ml-3" onactivate="ToastAPI.CreateToast('', 'Toast', 'Test Toast! Test Toast! Test Toast! Test Toast!', 2, 10, '', '')">
 					<Label class="button__text" text="Right" />
 				</Button>
 				<Button class="button ml-3" onactivate="ToastAPI.CreateToast('', 'Toast', 'Toast!!', 2, 10, '', 'white')">
@@ -709,19 +611,13 @@
 				<Button class="button ml-3" onactivate="ToastAPI.CreateToast('', 'Toast', 'Toast!!', 2, 10, 'play', '')">
 					<Label class="button__text" text="Icon" />
 				</Button>
-				<Button
-					class="button ml-3"
-					onactivate="ToastAPI.CreateToast_Custom( '', 'file://{resources}/layout/modals/toasts/custom-layout-example.xml', 1, 10, {testParam: 'horse'})"
-				>
+				<Button class="button ml-3" onactivate="ToastAPI.CreateToast_Custom( '', 'file://{resources}/layout/modals/toasts/custom-layout-example.xml', 1, 10, {testParam: 'horse'})">
 					<Label class="button__text" text="Custom Layout" />
 				</Button>
 				<Button class="button ml-3" onactivate="ToastAPI.CreateToast('', 'Toast', Math.random().toString(36), 1, 10, '', '')">
 					<Label class="button__text" text="Random Text" />
 				</Button>
-				<Button
-					class="button ml-3"
-					onactivate="ToastAPI.CreateToast('', 'Toast', 'A toast with a very long message that should hopefully wrap properly, and then the JS will handle the heights so it still animates well! Wow! It still suffers from that fucking text wrapping issue though!', 1, '', '', '')"
-				>
+				<Button class="button ml-3" onactivate="ToastAPI.CreateToast('', 'Toast', 'A toast with a very long message that should hopefully wrap properly, and then the JS will handle the heights so it still animates well! Wow! It still suffers from that fucking text wrapping issue though!', 1, '', '', '')">
 					<Label class="button__text" text="Long Guy" />
 				</Button>
 				<Button class="button ml-3" onactivate="ToastAPI.CreateToast('', 'Toast', 'im gonna expire very fast!!', 1, 1, '', '')">
@@ -744,10 +640,7 @@
 				<Button class="button ml-3" onactivate="ToastAPI.ClearToasts(-1)">
 					<Label class="button__text" text="Clear Toasts All" />
 				</Button>
-				<Button
-					class="button ml-3"
-					onactivate="ToastAPI.CreateToast('TestToast', 'Toast', 'i should be deleteable!', 1, 10, '', '')"
-				>
+				<Button class="button ml-3" onactivate="ToastAPI.CreateToast('TestToast', 'Toast', 'i should be deleteable!', 1, 10, '', '')">
 					<Label class="button__text" text="Create Toast with ID" />
 				</Button>
 				<Button class="button ml-3" onactivate="ToastAPI.DeleteToast('TestToast');">
