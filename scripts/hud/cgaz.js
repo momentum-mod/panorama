@@ -101,10 +101,10 @@ class Cgaz {
 	static screenY = $.GetContextPanel().actuallayoutheight;
 	static screenX = $.GetContextPanel().actuallayoutwidth;
 	static scale = $.GetContextPanel().actualuiscale_y;
-	static fov4_3 = GameInterfaceAPI.GetSettingFloat('fov_desired'); //source uses 4:3 for fov setting
-	static vFov_tangent = 0.75 * Math.tan((0.5 * this.fov4_3 * Math.PI) / 180);
-	static vFov = Math.atan(this.vFov_tangent);
-	static hFov = Math.atan((this.vFov_tangent * this.screenX) / this.screenY);
+	static fov4By3 = GameInterfaceAPI.GetSettingFloat('fov_desired'); //source uses 4:3 for fov setting
+	static vFovTangent = 0.75 * Math.tan((0.5 * this.fov4By3 * Math.PI) / 180);
+	static vFov = Math.atan(this.vFovTangent);
+	static hFov = Math.atan((this.vFovTangent * this.screenX) / this.screenY);
 	static theta = Math.PI * 0.5 - 2 * Math.atan(Math.sqrt(2 + Math.sqrt(3)));
 	static halfPi = 0.5 * Math.PI;
 	static snapGainRange = []; // stored as [min, max]
@@ -130,78 +130,78 @@ class Cgaz {
 	}
 
 	static onHudFovChange() {
-		this.hud_fov = DefragAPI.GetHUDFOV();
+		this.hudFov = DefragAPI.GetHUDFOV();
 		this.bShouldUpdateStyles = true;
 	}
 
 	static onAccelConfigChange() {
 		const accelConfig = DefragAPI.GetHUDAccelCFG();
-		this.accel_enable = accelConfig.enable;
-		this.accel_min_speed = accelConfig.minSpeed;
-		this.accel_height = accelConfig.height;
-		this.accel_offset = accelConfig.offset;
-		this.accel_slow_color = accelConfig.slowColor;
-		this.accel_fast_color = accelConfig.fastColor;
-		this.accel_turn_color = accelConfig.turnColor;
-		this.accel_dz_color = accelConfig.dzColor;
-		this.accel_scale_enable = accelConfig.scaleEnable;
-		this.accel_mirror_enable = accelConfig.mirrorEnable;
+		this.accelEnable = accelConfig.enable;
+		this.accelMinSpeed = accelConfig.minSpeed;
+		this.accelHeight = accelConfig.height;
+		this.accelOffset = accelConfig.offset;
+		this.accelSlowColor = accelConfig.slowColor;
+		this.accelFastColor = accelConfig.fastColor;
+		this.accelTurnColor = accelConfig.turnColor;
+		this.accelDzColor = accelConfig.dzColor;
+		this.accelScaleEnable = accelConfig.scaleEnable;
+		this.accelMirrorEnable = accelConfig.mirrorEnable;
 
 		this.bShouldUpdateStyles = true;
 	}
 
 	static onSnapConfigChange() {
 		const snapConfig = DefragAPI.GetHUDSnapCFG();
-		this.snap_enable = snapConfig.enable;
-		this.snap_min_speed = snapConfig.minSpeed;
-		this.snap_height = snapConfig.height;
-		this.snap_offset = snapConfig.offset;
-		this.snap_color = snapConfig.color;
-		this.snap_alt_color = snapConfig.altColor;
-		this.snap_fast_color = snapConfig.fastColor;
-		this.snap_slow_color = snapConfig.slowColor;
-		this.snap_hl_color = snapConfig.highlightColor;
-		this.snap_hl_alt_color = snapConfig.altHighlightColor;
-		this.snap_hl_mode = snapConfig.highlightMode;
-		this.snap_color_mode = snapConfig.colorMode;
-		this.snap_heightgain_enable = snapConfig.enableHeightGain;
+		this.snapEnable = snapConfig.enable;
+		this.snapMinSpeed = snapConfig.minSpeed;
+		this.snapHeight = snapConfig.height;
+		this.snapOffset = snapConfig.offset;
+		this.snapColor = snapConfig.color;
+		this.snapAltColor = snapConfig.altColor;
+		this.snapFastColor = snapConfig.fastColor;
+		this.snapSlowColor = snapConfig.slowColor;
+		this.snapHlColor = snapConfig.highlightColor;
+		this.snapHlAltColor = snapConfig.altHighlightColor;
+		this.snapHlMode = snapConfig.highlightMode;
+		this.snapColorMode = snapConfig.colorMode;
+		this.snapHeightgainEnable = snapConfig.enableHeightGain;
 
 		this.bShouldUpdateStyles = true;
 	}
 
 	static onWindicatorConfigChange() {
 		const windicatorArrowConfig = DefragAPI.GetHUDWIndicatorCFG();
-		this.windicator_enable = windicatorArrowConfig.enable;
-		this.windicator_size = windicatorArrowConfig.size;
-		this.windicator_color = windicatorArrowConfig.color;
+		this.windicatorEnable = windicatorArrowConfig.enable;
+		this.windicatorSize = windicatorArrowConfig.size;
+		this.windicatorColor = windicatorArrowConfig.color;
 
 		this.bShouldUpdateStyles = true;
 	}
 
 	static onCompassConfigChange() {
 		const compassConfig = DefragAPI.GetHUDCompassCFG();
-		this.compass_mode = compassConfig.compassMode;
-		this.compass_size = compassConfig.compassSize;
-		this.compass_pitch_enable = compassConfig.pitchEnable;
-		this.compass_pitch_target = compassConfig.pitchTarget;
-		this.compass_stat_mode = compassConfig.statMode;
-		this.compass_color = compassConfig.color;
-		this.compass_hl_color = compassConfig.highlightColor;
+		this.compassMode = compassConfig.compassMode;
+		this.compassSize = compassConfig.compassSize;
+		this.compassPitchEnable = compassConfig.pitchEnable;
+		this.compassPitchTarget = compassConfig.pitchTarget;
+		this.compassStatMode = compassConfig.statMode;
+		this.compassColor = compassConfig.color;
+		this.compassHlColor = compassConfig.highlightColor;
 
 		this.bShouldUpdateStyles = true;
 	}
 
 	static applyStyles() {
 		// accel zone classes
-		let height = this.accel_height;
+		let height = this.accelHeight;
 		let offset = 0;
 		let align = 'middle';
-		NEUTRAL_CLASS = new StyleObject(height, offset, align, this.accel_dz_color);
-		SLOW_CLASS = new StyleObject(height, offset, align, this.accel_slow_color);
-		FAST_CLASS = new StyleObject(height, offset, align, this.accel_fast_color);
-		TURN_CLASS = new StyleObject(height, offset, align, this.accel_turn_color);
-		MIRROR_CLASS = new StyleObject(height, offset, align, this.accel_slow_color);
-		WIN_ZONE_CLASS = new StyleObject(height, offset, align, this.windicator_color);
+		NEUTRAL_CLASS = new StyleObject(height, offset, align, this.accelDzColor);
+		SLOW_CLASS = new StyleObject(height, offset, align, this.accelSlowColor);
+		FAST_CLASS = new StyleObject(height, offset, align, this.accelFastColor);
+		TURN_CLASS = new StyleObject(height, offset, align, this.accelTurnColor);
+		MIRROR_CLASS = new StyleObject(height, offset, align, this.accelSlowColor);
+		WIN_ZONE_CLASS = new StyleObject(height, offset, align, this.windicatorColor);
 
 		this.setupContainer(this.accelContainer, this.accelOffset, align);
 		this.applyClass(this.leftTurnZone, TURN_CLASS);
@@ -218,13 +218,13 @@ class Cgaz {
 		this.applyClassBorder(this.windicatorZone, WIN_ZONE_CLASS);
 
 		// snap zone classes
-		height = this.snap_height;
-		offset = 0.5 * this.accel_height + this.accel_offset + this.snap_offset;
+		height = this.snapHeight;
+		offset = 0.5 * this.accelHeight + this.accelOffset + this.snapOffset;
 		align = 'middle';
-		COLORED_SNAP_CLASS = new StyleObject(height, offset, align, this.snap_color);
-		UNCOLORED_SNAP_CLASS = new StyleObject(height, offset, align, this.snap_alt_color);
-		HIGHLIGHTED_SNAP_CLASS = new StyleObject(height, offset, align, this.snap_hl_color);
-		HIGHLIGHTED_ALT_SNAP_CLASS = new StyleObject(height, offset, align, this.snap_hl_alt_color);
+		COLORED_SNAP_CLASS = new StyleObject(height, offset, align, this.snapColor);
+		UNCOLORED_SNAP_CLASS = new StyleObject(height, offset, align, this.snapAltColor);
+		HIGHLIGHTED_SNAP_CLASS = new StyleObject(height, offset, align, this.snapHlColor);
+		HIGHLIGHTED_ALT_SNAP_CLASS = new StyleObject(height, offset, align, this.snapHlAltColor);
 
 		this.setupContainer(this.snapContainer, offset, align);
 		for (let i = 0; i < this.snapZones.length; ++i) {
@@ -232,26 +232,26 @@ class Cgaz {
 		}
 
 		// compass ticks
-		offset = this.accel_offset - 0.5 * (this.accel_height + this.compass_size);
+		offset = this.accelOffset - 0.5 * (this.accelHeight + this.compassSize);
 		align = 'middle';
-		const size = this.NaNCheck(this.compass_size, 0);
+		const size = this.NaNCheck(this.compassSize, 0);
 		this.setupContainer(this.tickContainer, offset, align);
 		this.compassTickFull.style.height = size + 'px';
 		this.compassTickHalf.style.height = size * 0.5 + 'px';
 
 		// compass arrow classes
-		let color = this.compass_color;
-		let width = 2 * this.compass_size;
-		height = this.accel_height + 2 * width;
-		offset = this.accel_offset;
+		let color = this.compassColor;
+		let width = 2 * this.compassSize;
+		height = this.accelHeight + 2 * width;
+		offset = this.accelOffset;
 		align = 'bottom';
 		this.setupArrow(this.compassArrow, this.compassArrowIcon, height, width, offset, align, color);
 
 		// windicator arrow classes
-		color = this.windicator_color;
-		width = 2 * this.windicator_size;
-		height = this.accel_height + 2 * width;
-		offset = this.accel_offset;
+		color = this.windicatorColor;
+		width = 2 * this.windicatorSize;
+		height = this.accelHeight + 2 * width;
+		offset = this.accelOffset;
 		align = 'top';
 		this.setupArrow(this.windicatorArrow, this.windicatorArrowIcon, height, width, offset, align, color);
 
@@ -267,16 +267,16 @@ class Cgaz {
 		this.screenY = $.GetContextPanel().actuallayoutheight;
 		this.screenX = $.GetContextPanel().actuallayoutwidth;
 		this.scale = $.GetContextPanel().actualuiscale_y;
-		this.fov4_3 = this.hud_fov || GameInterfaceAPI.GetSettingFloat('fov_desired'); //source uses 4:3 for fov setting
-		this.vFov_tangent = 0.75 * Math.tan((0.5 * this.fov4_3 * Math.PI) / 180);
-		this.vFov = Math.atan(this.vFov_tangent);
-		this.hFov = Math.atan((this.vFov_tangent * this.screenX) / this.screenY);
+		this.fov4By3 = this.hudFov || GameInterfaceAPI.GetSettingFloat('fov_desired'); //source uses 4:3 for fov setting
+		this.vFovTangent = 0.75 * Math.tan((0.5 * this.fov4By3 * Math.PI) / 180);
+		this.vFov = Math.atan(this.vFovTangent);
+		this.hFov = Math.atan((this.vFovTangent * this.screenX) / this.screenY);
 
 		const phyMode = DefragAPI.GetDFPhysicsMode();
 		const lastMoveData = MomentumMovementAPI.GetLastMoveData();
 
 		const tickInterval = MomentumMovementAPI.GetTickInterval();
-		const maxSpeed = this.accel_scale_enable ? lastMoveData.wishspeed : lastMoveData.maxspeed;
+		const maxSpeed = this.accelScaleEnable ? lastMoveData.wishspeed : lastMoveData.maxspeed;
 		const accel = lastMoveData.acceleration;
 		const maxAccel = accel * maxSpeed * tickInterval;
 
@@ -320,9 +320,9 @@ class Cgaz {
 		const turnCgazAngle = this.findTurnAngle(speed, dropSpeed, maxAccel, fastCgazAngle);
 		const stopCgazAngle = this.findStopAngle(maxAccel, speedSquared, dropSpeed, dropSpeedSquared, turnCgazAngle);
 
-		if (this.accel_enable) {
+		if (this.accelEnable) {
 			// draw accel zones
-			if (speed >= this.accel_min_speed) {
+			if (speed >= this.accelMinSpeed) {
 				this.updateZone(
 					this.leftTurnZone,
 					-stopCgazAngle,
@@ -384,7 +384,7 @@ class Cgaz {
 			}
 
 			// draw mirrored strafe zones
-			if (speed >= this.accel_min_speed && this.accel_mirror_enable) {
+			if (speed >= this.accelMinSpeed && this.accelMirrorEnable) {
 				const mirrorAccel = (bIsFalling ? AIR_ACCEL : accel) * MAX_GROUND_SPEED * tickInterval;
 				const minMirrorAngle = this.findSlowAngle(dropSpeed, dropSpeedSquared, speedSquared, MAX_GROUND_SPEED);
 				const fastMirrorAngle = this.findFastAngle(dropSpeed, MAX_GROUND_SPEED, mirrorAccel);
@@ -441,7 +441,7 @@ class Cgaz {
 			}
 		}
 
-		if (this.snap_enable && this.snapAccel) {
+		if (this.snapEnable && this.snapAccel) {
 			// find snap zone borders
 			const snapAngles = this.findSnapAngles(this.snapAccel);
 			const snapOffset = (bSnapShift ? 0 : Math.PI * 0.25) - viewAngle;
@@ -460,7 +460,7 @@ class Cgaz {
 			}
 
 			// draw snap zones
-			if (speed >= this.snap_min_speed) {
+			if (speed >= this.snapMinSpeed) {
 				this.updateSnaps(this.snapZones, snapAngles, snapOffset, leftTarget, rightTarget);
 			} else {
 				this.clearZones(this.snapZones);
@@ -471,10 +471,10 @@ class Cgaz {
 
 		let velocityAngle = this.remapAngle(viewAngle - velAngle);
 		// compass
-		if (this.compass_mode) {
+		if (this.compassMode) {
 			const bShouldHighlight =
-				Math.abs(this.remapAngle(8 * velAngle) * 0.125) < 0.01 && speed >= this.accel_min_speed;
-			const color = bShouldHighlight ? this.compass_hl_color : this.compass_color;
+				Math.abs(this.remapAngle(8 * velAngle) * 0.125) < 0.01 && speed >= this.accelMinSpeed;
+			const color = bShouldHighlight ? this.compassHlColor : this.compassColor;
 
 			// ticks
 			const fullTickLeftEdge = this.findCompassTick(viewAngle);
@@ -505,48 +505,48 @@ class Cgaz {
 				this.compassArrowIcon.AddClass('arrow__down');
 				velocityAngle = this.remapAngle(velocityAngle - Math.PI);
 			}
-			const leftEdge = this.mapToScreenWidth(velocityAngle) - this.compass_size;
+			const leftEdge = this.mapToScreenWidth(velocityAngle) - this.compassSize;
 			this.compassArrow.style.marginLeft = this.NaNCheck(leftEdge, 0) + 'px';
 			this.compassArrowIcon.style.washColor = color;
 		}
-		this.compassArrow.visible = this.compass_mode % 2 && speed >= this.accel_min_speed;
-		this.tickContainer.visible = this.compass_mode > 1;
+		this.compassArrow.visible = this.compassMode % 2 && speed >= this.accelMinSpeed;
+		this.tickContainer.visible = this.compassMode > 1;
 
 		// pitch line
-		if (this.compass_pitch_enable) {
+		if (this.compassPitchEnable) {
 			const pitchDelta = this.mapToScreenHeight(
-				((MomentumPlayerAPI.GetAngles().x - this.compass_pitch_target) * Math.PI) / 180
+				((MomentumPlayerAPI.GetAngles().x - this.compassPitchTarget) * Math.PI) / 180
 			);
 			this.pitchLine.style.height = this.NaNCheck(pitchDelta, 0) + 'px';
 			this.pitchLine.style.borderColor =
-				Math.abs(MomentumPlayerAPI.GetAngles().x - this.compass_pitch_target) > 0.1
-					? this.compass_color
-					: this.compass_hl_color;
+				Math.abs(MomentumPlayerAPI.GetAngles().x - this.compassPitchTarget) > 0.1
+					? this.compassColor
+					: this.compassHlColor;
 		}
-		this.pitchLine.visible = this.compass_pitch_enable === true;
+		this.pitchLine.visible = this.compassPitchEnable === true;
 
 		// compass stats
-		if (this.compass_stat_mode) {
+		if (this.compassStatMode) {
 			this.yawStat.text = MomentumPlayerAPI.GetAngles().y.toFixed(0);
 			this.yawStat.style.color =
-				Math.abs(this.distToNearestTick(velAngle)) < 0.01 && speed >= this.accel_min_speed
-					? this.compass_hl_color
-					: this.compass_color;
+				Math.abs(this.distToNearestTick(velAngle)) < 0.01 && speed >= this.accelMinSpeed
+					? this.compassHlColor
+					: this.compassColor;
 
 			this.pitchStat.text = MomentumPlayerAPI.GetAngles().x.toFixed(1);
 			this.pitchStat.style.color =
-				Math.abs(MomentumPlayerAPI.GetAngles().x - this.compass_pitch_target) > 0.1
-					? this.compass_color
-					: this.compass_hl_color;
+				Math.abs(MomentumPlayerAPI.GetAngles().x - this.compassPitchTarget) > 0.1
+					? this.compassColor
+					: this.compassHlColor;
 		}
-		this.pitchStat.visible = this.compass_stat_mode % 2;
-		this.yawStat.visible = this.compass_stat_mode > 1;
+		this.pitchStat.visible = this.compassStatMode % 2;
+		this.yawStat.visible = this.compassStatMode > 1;
 
 		const wTurnAngle = velocityAngle > 0 ? velocityAngle + this.theta : velocityAngle - this.theta;
 		// draw w-turn indicator
-		if (this.windicator_enable && Math.abs(wTurnAngle) < this.hFov && speed >= this.accel_min_speed) {
+		if (this.windicatorEnable && Math.abs(wTurnAngle) < this.hFov && speed >= this.accelMinSpeed) {
 			this.windicatorArrow.visible = true;
-			const leftEdge = this.mapToScreenWidth(wTurnAngle) - this.windicator_size;
+			const leftEdge = this.mapToScreenWidth(wTurnAngle) - this.windicatorSize;
 			this.windicatorArrow.style.marginLeft = this.NaNCheck(leftEdge, 0) + 'px';
 
 			const minAngle = Math.min(wTurnAngle, 0);
@@ -705,7 +705,7 @@ class Cgaz {
 			}
 
 			let bHighlight = false;
-			switch (this.snap_hl_mode) {
+			switch (this.snapHlMode) {
 				case 0:
 					bHighlight = false;
 					break;
@@ -714,7 +714,7 @@ class Cgaz {
 					break;
 				case 2:
 					// "target" zones only highlight when moving
-					if (this.getSize(MomentumPlayerAPI.GetVelocity()) > this.accel_min_speed) {
+					if (this.getSize(MomentumPlayerAPI.GetVelocity()) > this.accelMinSpeed) {
 						if (left - leftTarget < 0 && right - leftTarget > 0) {
 							bHighlight = true;
 						} else if (left - rightTarget < 0 && right - rightTarget > 0) {
