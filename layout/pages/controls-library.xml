@@ -7,7 +7,7 @@
 		<include src="file://{resources}/scripts/pages/controls-library.js" />
 	</scripts>
 
-	<Panel class="mainmenu__page" useglobalcontext="true">
+	<Panel class="mainmenu__page">
 		<Panel id="ControlsLibraryPanel" class="flow-down full overflow-vscroll">
 
 			<Label class="text-h1 mt-3" text="Core" />
