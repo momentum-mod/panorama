@@ -2,7 +2,7 @@
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
-  
+
 	<ChaosSettingsEnumDropDown class="settings-enum-dropdown">
 		<Panel class="settings-enum-dropdown__title-container">
 			<Label class="settings-enum-dropdown__title" id="Title" />

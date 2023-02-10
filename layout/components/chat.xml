@@ -26,35 +26,20 @@
 		<!-- NOTE: html=true does NOT mean that HTML embedded in the dialog variable will get parsed! -->
 		<snippet name="lobby-chat-message">
 			<Panel>
-				<Label
-					class="chat-entry__message"
-					text="&lt;b&gt;{s:author_name}:&lt;/b&gt; {s:message}"
-					html="true"
-					acceptsinput="true"
-				/>
+				<Label class="chat-entry__message" text="&lt;b&gt;{s:author_name}:&lt;/b&gt; {s:message}" html="true" acceptsinput="true" />
 			</Panel>
 		</snippet>
 
 		<snippet name="lobby-chat-message-spec">
 			<Panel class="flow-right">
 				<Image class="chat-entry__icon" src="file://{images}/spectatingIcon.svg" textureheight="16" />
-				<Label
-					class="chat-entry__message chat-entry__message--with-icon"
-					text="&lt;b&gt;{s:author_name}&lt;/b&gt;: {s:message}"
-					html="true"
-					acceptsinput="true"
-				/>
+				<Label class="chat-entry__message chat-entry__message--with-icon" text="&lt;b&gt;{s:author_name}&lt;/b&gt;: {s:message}" html="true" acceptsinput="true" />
 			</Panel>
 		</snippet>
 
 		<snippet name="usermessage-textmsg">
 			<Panel>
-				<Label
-					class="chat-entry__message"
-					text="&lt;b class=&quot;color-blue text-uppercase&quot;&gt;#Common_Game&lt;/b&gt;: {s:message}"
-					html="true"
-					acceptsinput="true"
-				/>
+				<Label class="chat-entry__message" text="&lt;b class=&quot;color-blue text-uppercase&quot;&gt;#Common_Game&lt;/b&gt;: {s:message}" html="true" acceptsinput="true" />
 			</Panel>
 		</snippet>
 	</snippets>
@@ -65,13 +50,7 @@
 			<Label id="ChatMemberTypingLabel" class="chat__member-typing" text=" " />
 		</ConVarEnabler>
 		<Panel class="chat__input-container">
-			<TextEntry
-				id="ChatInput"
-				class="chat__elem chat__input"
-				oninputsubmit="Chat.submitText()"
-				maxchars="127"
-				clearaftersubmit="true"
-			/>
+			<TextEntry id="ChatInput" class="chat__elem chat__input" oninputsubmit="Chat.submitText()" maxchars="127" clearaftersubmit="true" />
 			<Button class="chat__elem chat__send" onactivate="$('#ChatInput').Submit()">
 				<Label class="button__text chat__send-text" text="#Chat_Send" />
 			</Button>

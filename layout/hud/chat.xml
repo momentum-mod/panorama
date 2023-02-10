@@ -14,10 +14,10 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 	<scripts>
-		
+
 	</scripts>
 	<Panel class="hud-chat no-flow">
-        <MomentumChat id="RaisedChat" class="full-width full-height" />
+		<MomentumChat id="RaisedChat" class="full-width full-height" />
 		<ToastContainer id="LoweredChat" class="toast-chat" thinkwheninvisible="true" />
 	</Panel>
 </root>

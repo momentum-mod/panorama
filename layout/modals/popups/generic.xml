@@ -11,5 +11,5 @@
 		<Panel id="ButtonContainer" class="generic-popup__button-row">
 			<!-- Populated from JS arguments -->
 		</Panel>
-  </Panel>
+	</Panel>
 </root>

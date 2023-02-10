@@ -38,93 +38,43 @@
 				</Panel>
 			</Panel>
 			<Panel class="learn-header__modes-bar tabs">
-				<RadioButton
-					id="SurfRadio"
-					class="tabs__tab learn-header__modes-tab"
-					group="LearningNavBar"
-					onactivate='Learn.onModeButtonPressed("Surf")'
-				>
+				<RadioButton id="SurfRadio" class="tabs__tab learn-header__modes-tab" group="LearningNavBar" onactivate='Learn.onModeButtonPressed("Surf")'>
 					<Label class="tabs__text" text="#Gamemode_Surf" />
 				</RadioButton>
 				<Panel class="tabs__gap" />
-				<RadioButton
-					id="BhopRadio"
-					class="tabs__tab learn-header__modes-tab"
-					group="LearningNavBar"
-					onactivate='Learn.onModeButtonPressed("Bhop")'
-				>
+				<RadioButton id="BhopRadio" class="tabs__tab learn-header__modes-tab" group="LearningNavBar" onactivate='Learn.onModeButtonPressed("Bhop")'>
 					<Label class="tabs__text" text="#Gamemode_Bhop" />
 				</RadioButton>
 				<Panel class="tabs__gap" />
-				<RadioButton
-					id="ClimbRadio"
-					class="tabs__tab learn-header__modes-tab"
-					group="LearningNavBar"
-					onactivate='Learn.onModeButtonPressed("Climb")'
-				>
+				<RadioButton id="ClimbRadio" class="tabs__tab learn-header__modes-tab" group="LearningNavBar" onactivate='Learn.onModeButtonPressed("Climb")'>
 					<Label class="tabs__text" text="#Gamemode_Climb" />
 				</RadioButton>
 				<Panel class="tabs__gap" />
-				<RadioButton
-					id="RJRadio"
-					class="tabs__tab learn-header__modes-tab"
-					group="LearningNavBar"
-					onactivate='Learn.onModeButtonPressed("RJ")'
-				>
+				<RadioButton id="RJRadio" class="tabs__tab learn-header__modes-tab" group="LearningNavBar" onactivate='Learn.onModeButtonPressed("RJ")'>
 					<Label class="tabs__text" text="#Gamemode_RJ" />
 				</RadioButton>
 				<Panel class="tabs__gap" />
-				<RadioButton
-					id="SJRadio"
-					class="tabs__tab learn-header__modes-tab"
-					group="LearningNavBar"
-					onactivate='Learn.onModeButtonPressed("SJ")'
-				>
+				<RadioButton id="SJRadio" class="tabs__tab learn-header__modes-tab" group="LearningNavBar" onactivate='Learn.onModeButtonPressed("SJ")'>
 					<Label class="tabs__text" text="#Gamemode_SJ" />
 				</RadioButton>
 				<Panel class="tabs__gap" />
-				<RadioButton
-					id="TricksurfRadio"
-					class="tabs__tab learn-header__modes-tab"
-					group="LearningNavBar"
-					onactivate='Learn.onModeButtonPressed("Tricksurf")'
-				>
+				<RadioButton id="TricksurfRadio" class="tabs__tab learn-header__modes-tab" group="LearningNavBar" onactivate='Learn.onModeButtonPressed("Tricksurf")'>
 					<Label class="tabs__text" text="#Gamemode_Tricksurf" />
 				</RadioButton>
 				<Panel class="tabs__gap" />
-				<RadioButton
-					id="AhopRadio"
-					class="tabs__tab learn-header__modes-tab"
-					group="LearningNavBar"
-					onactivate='Learn.onModeButtonPressed("Ahop")'
-				>
+				<RadioButton id="AhopRadio" class="tabs__tab learn-header__modes-tab" group="LearningNavBar" onactivate='Learn.onModeButtonPressed("Ahop")'>
 					<Label class="tabs__text" text="#Gamemode_Ahop" />
 				</RadioButton>
 				<Panel class="tabs__gap" />
-				<RadioButton
-					id="ParkourRadio"
-					class="tabs__tab learn-header__modes-tab"
-					group="LearningNavBar"
-					onactivate='Learn.onModeButtonPressed("Parkour")'
-				>
+				<RadioButton id="ParkourRadio" class="tabs__tab learn-header__modes-tab" group="LearningNavBar" onactivate='Learn.onModeButtonPressed("Parkour")'>
 					<Label class="tabs__text" text="#Gamemode_Parkour" />
 				</RadioButton>
 				<Panel class="tabs__gap" />
-				<RadioButton
-					id="ConcRadio"
-					class="tabs__tab learn-header__modes-tab"
-					group="LearningNavBar"
-					onactivate='Learn.onModeButtonPressed("Conc")'
-				>
+				<RadioButton id="ConcRadio" class="tabs__tab learn-header__modes-tab" group="LearningNavBar" onactivate='Learn.onModeButtonPressed("Conc")'>
 					<Label class="tabs__text" text="#Gamemode_Conc" />
 				</RadioButton>
 				<Panel class="tabs__gap" />
-				<RadioButton
-					id="DefragRadio"
-					class="tabs__tab learn-header__modes-tab"
-					group="LearningNavBar"
-					onactivate='Learn.onModeButtonPressed("Defrag")'
-				>
+				<RadioButton id="DefragRadio" class="tabs__tab learn-header__modes-tab" group="LearningNavBar" onactivate='Learn.onModeButtonPressed("Defrag")'>
 					<Label class="tabs__text" text="#Gamemode_Defrag" />
 				</RadioButton>
 			</Panel>

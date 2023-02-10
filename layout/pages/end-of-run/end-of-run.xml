@@ -12,12 +12,7 @@
 		<Panel class="endofrun__header">
 			<Panel class="endofrun__header-left">
 				<Button class="endofrun__header-button endofrun__header-button--back-button" onactivate="EndOfRun.hideEndOfRun();">
-					<Image
-						class="button__icon button__icon--left"
-						src="file://{images}/arrow-thick-right.svg"
-						orientation="180"
-						textureheight="64"
-					/>
+					<Image class="button__icon button__icon--left" src="file://{images}/arrow-thick-right.svg" orientation="180" textureheight="64" />
 				</Button>
 			</Panel>
 			<Panel class="endofrun__times">
@@ -26,18 +21,8 @@
 			</Panel>
 			<Panel class="endofrun__header-right">
 				<Panel id="RunStatusIndicators" class="endofrun__run-status-indicators">
-					<Image
-						id="SaveStatus"
-						class="endofrun__run-status-indicator mb-2"
-						textureheight="64"
-						onmouseout="UiToolkitAPI.HideTitleImageTextTooltip();"
-					/>
-					<Image
-						id="UploadStatus"
-						class="endofrun__run-status-indicator"
-						textureheight="64"
-						onmouseout="UiToolkitAPI.HideTitleImageTextTooltip();"
-					/>
+					<Image id="SaveStatus" class="endofrun__run-status-indicator mb-2" textureheight="64" onmouseout="UiToolkitAPI.HideTitleImageTextTooltip();" />
+					<Image id="UploadStatus" class="endofrun__run-status-indicator" textureheight="64" onmouseout="UiToolkitAPI.HideTitleImageTextTooltip();" />
 				</Panel>
 				<Panel id="EndOfRunActionButtons" class="endofrun__header-buttons">
 					<Button class="endofrun__header-button" onactivate="EndOfRun.watchReplay();">

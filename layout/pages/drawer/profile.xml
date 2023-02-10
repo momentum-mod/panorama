@@ -33,16 +33,8 @@
 							<LevelIndicator id="ProfileLevelIndicatorLevel" class="profile-level-indicators__level-indicator" />
 						</Panel>
 					</Panel>
-					<Button
-						id="LevelInfoButton"
-						class="button profile-level-indicators__info-button"
-						onactivate="Profile.showLevelExplainers();"
-					>
-						<Image
-							class="button__icon profile-level-indicators__info-button-icon"
-							src="file://{images}/info.svg"
-							textureheight="24"
-						/>
+					<Button id="LevelInfoButton" class="button profile-level-indicators__info-button" onactivate="Profile.showLevelExplainers();">
+						<Image class="button__icon profile-level-indicators__info-button-icon" src="file://{images}/info.svg" textureheight="24" />
 					</Button>
 				</Panel>
 				<Panel class="profile__row profile-global__right-row">

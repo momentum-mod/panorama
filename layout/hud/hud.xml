@@ -62,13 +62,7 @@
 			<MomHudWeaponSelection />
 		</Panel>
 
-		<ChaosHudBlurTarget
-			id="HudBlur"
-			blurrects="Leaderboards TrickList"
-			class="hud-blur"
-			hittest="false"
-			hittestchildren="false"
-		>
+		<ChaosHudBlurTarget id="HudBlur" blurrects="Leaderboards TrickList" class="hud-blur" hittest="false" hittestchildren="false">
 			<ChaosBackbufferImagePanel class="full" />
 		</ChaosHudBlurTarget>
 

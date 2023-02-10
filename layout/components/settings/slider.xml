@@ -9,12 +9,7 @@
 			<Label class="settings-slider__title" id="Title" />
 		</Panel>
 		<Panel class="settings-slider__input-container">
-			<Slider
-				class="slider slider--horizontal settings-slider__slider"
-				showdefault="true"
-				direction="horizontal"
-				id="Slider"
-			/>
+			<Slider class="slider slider--horizontal settings-slider__slider" showdefault="true" direction="horizontal" id="Slider" />
 			<TooltipPanel tooltip="#Settings_General_OutOfBounds" class="full-height">
 				<Image class="settings-slider__outofbounds" src="file://{images}/alert-octagon.svg" texturewidth="32" />
 			</TooltipPanel>

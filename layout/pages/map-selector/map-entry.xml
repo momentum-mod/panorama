@@ -33,18 +33,8 @@
 				<!-- Flows left -->
 				<Panel class="map-entry-action">
 					<Button id="MapEntryAction" class="button map-entry-action__button">
-						<Image
-							id="MapEntryActionPlay"
-							class="button__icon icon-play"
-							src="file://{images}/play-circle.svg"
-							textureheight="40"
-						/>
-						<Image
-							id="MapEntryActionDownload"
-							class="button__icon icon-download"
-							src="file://{images}/download.svg"
-							textureheight="40"
-						/>
+						<Image id="MapEntryActionPlay" class="button__icon icon-play" src="file://{images}/play-circle.svg" textureheight="40" />
+						<Image id="MapEntryActionDownload" class="button__icon icon-download" src="file://{images}/download.svg" textureheight="40" />
 					</Button>
 					<MapDownloadStatus id="MapEntryDownloadStatus" class="map-download-status" />
 				</Panel>

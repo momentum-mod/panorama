@@ -19,11 +19,7 @@
 			<Button class="settings-search-result">
 				<Label class="settings-search-result__text settings-search-result__text--tab" text="{s:tab_name}" />
 				<Image class="settings-search-result__chevron" src="file://{images}/chevron.svg" texturewidth="32" textureheight="32" />
-				<Label
-					id="Group"
-					class="settings-search-result__text settings-search-result__text--group settings-search-result__text--group-only"
-					html="true"
-				/>
+				<Label id="Group" class="settings-search-result__text settings-search-result__text--group settings-search-result__text--group-only" html="true" />
 				<Label id="Tags" class="settings-search-result__tags" html="true" />
 			</Button>
 		</snippet>
