@@ -90,6 +90,10 @@ class MainMenuSettings {
 
 				// Check the radiobutton for cases where this is called from JS. CSGO Panorama fires an Activated event to the radiobutton instead but I hate that.
 				$.GetContextPanel().FindChildTraverse(SettingsTabs[tab].radioid).checked = true;
+
+				// Fix for bug where first press of this panel scroll you to the top. Totally unclear why this is happening,
+				// we never set an onactivate event for this panel.
+				activePanel.FindChildTraverse('SettingsPageContainer').SetPanelEvent('onactivate', () => {});
 			}
 
 			SettingsShared.onChangedTab(this.activeTab);
