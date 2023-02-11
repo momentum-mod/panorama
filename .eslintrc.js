@@ -46,6 +46,8 @@ module.exports = {
 		// Fuck you I wanna
 		'unicorn/no-abusive-eslint-disable': ['off'],
 		// Terrible rule, it's often practically useful to explicitly state what's happening in cases
-		'unicorn/no-useless-switch-case': ['off']
+		'unicorn/no-useless-switch-case': ['off'],
+		// //In certain cases this matters, but often completely redundant as V8 optimises it fine. Worth flagging potential cases in code review, but annoying as a linting rule
+		'unicorn/consistent-function-scoping': ['off']
 	}
 };
