@@ -13,6 +13,7 @@
 	&__right {
 		flow-children: down;
 		vertical-align: top;
+		overflow: noclip;
 
 		width: 30%;
 		height: 100%;
