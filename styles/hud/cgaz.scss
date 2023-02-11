@@ -27,6 +27,12 @@
 	horizontal-align: center;
 	vertical-align: bottom;
 	overflow: noclip noclip;
+
+	&__container {
+		width: 100%;
+		height: 100%;
+		horizontal-align: center;
+	}
 }
 
 .cgaz-tick {

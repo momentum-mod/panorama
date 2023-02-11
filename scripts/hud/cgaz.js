@@ -90,7 +90,7 @@ class Cgaz {
 	static tickContainer = $('#CompassTicks');
 	static compassTickFull = $('#FullTick');
 	static compassTickHalf = $('#HalfTick');
-	static pitchLine = $('#PitchLine');
+	static pitchLineContainer = $('#PitchLines');
 	static pitchStat = $('#PitchStat');
 	static yawStat = $('#YawStat');
 
@@ -181,11 +181,24 @@ class Cgaz {
 		this.compassMode = compassConfig.compassMode;
 		this.compassSize = compassConfig.compassSize;
 		this.compassPitchEnable = compassConfig.pitchEnable;
-		this.compassPitchTarget = compassConfig.pitchTarget;
+		this.compassPitchTarget = String(compassConfig.pitchTarget).split(' ');
 		this.compassStatMode = compassConfig.statMode;
 		this.compassColor = compassConfig.color;
 		this.compassHlColor = compassConfig.highlightColor;
 
+		const pitchLines = this.pitchLineContainer?.Children();
+		if (this.compassPitchTarget.length > pitchLines?.length) {
+			for (let i = pitchLines?.length; i < this.compassPitchTarget.length; ++i) {
+				$.CreatePanel('Panel', this.pitchLineContainer, `PitchTarget${i}`, {
+					class: 'cgaz-line'
+				});
+			}
+		}
+		if (this.compassPitchTarget.length < pitchLines?.length) {
+			for (let i = this.compassPitchTarget.length; i < pitchLines?.length; ++i) {
+				pitchLines[i].DeleteAsync(0);
+			}
+		}
 		this.bShouldUpdateStyles = true;
 	}
 
@@ -506,16 +519,16 @@ class Cgaz {
 
 		// pitch line
 		if (this.compassPitchEnable) {
-			const pitchDelta = this.mapToScreenHeight(
-				((MomentumPlayerAPI.GetAngles().x - this.compassPitchTarget) * Math.PI) / 180
-			);
-			this.pitchLine.style.height = this.NaNCheck(pitchDelta, 0) + 'px';
-			this.pitchLine.style.borderColor =
-				Math.abs(MomentumPlayerAPI.GetAngles().x - this.compassPitchTarget) > 0.1
-					? this.compassColor
-					: this.compassHlColor;
+			const pitchLines = this.pitchLineContainer.Children();
+			for (let i = 0; i < pitchLines?.length; ++i) {
+				const viewPitch = MomentumPlayerAPI.GetAngles().x;
+				const pitchDelta = viewPitch - this.compassPitchTarget[i];
+				const pitchDeltaPx = this.mapToScreenHeight((pitchDelta * Math.PI) / 180);
+				pitchLines[i].style.height = this.NaNCheck(pitchDeltaPx, 0) + 'px';
+				pitchLines[i].style.borderColor =
+					Math.abs(viewPitch - this.compassPitchTarget[i]) > 0.1 ? this.compassColor : this.compassHlColor;
+			}
 		}
-		this.pitchLine.visible = this.compassPitchEnable === true;
 
 		// compass stats
 		if (this.compassStatMode) {
@@ -526,10 +539,12 @@ class Cgaz {
 					: this.compassColor;
 
 			this.pitchStat.text = MomentumPlayerAPI.GetAngles().x.toFixed(1);
-			this.pitchStat.style.color =
-				Math.abs(MomentumPlayerAPI.GetAngles().x - this.compassPitchTarget) > 0.1
-					? this.compassColor
-					: this.compassHlColor;
+			let bShouldHighlight = false;
+			const viewPitch = MomentumPlayerAPI.GetAngles().x;
+			for (const target of this.compassPitchTarget) {
+				if (Math.abs(viewPitch - target) <= 0.1) bShouldHighlight = true;
+			}
+			this.pitchStat.style.color = bShouldHighlight ? this.compassHlColor : this.compassColor;
 		}
 		this.pitchStat.visible = this.compassStatMode % 2;
 		this.yawStat.visible = this.compassStatMode > 1;
