@@ -37,13 +37,13 @@ class Toast {
 		return (
 			(this.id && this.id === toast.id) ||
 			(this.customLayout === toast.customLayout &&
-				this.parameters === toast.parameters &&
 				this.title === toast.title &&
 				this.message === toast.message &&
 				this.icon === toast.icon &&
 				this.duration === toast.duration &&
 				this.location === toast.location &&
-				this.style === toast.style)
+				this.style === toast.style &&
+				(!this.parameters || !toast.parameters || compareDeep(this.parameters, toast.parameters)))
 		);
 	}
 
