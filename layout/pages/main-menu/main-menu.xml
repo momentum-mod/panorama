@@ -103,7 +103,7 @@
 					<PlayerCard class="full-height" onactivate="Drawer.onPlayerCardPressed();" />
 
 					<RadioButton id="QuitButton" class="topnav__button" onactivate="MainMenu.onQuitButtonPressed()">
-						<Image class="topnav__icon" src="file://{images}/quit.svg" textureheight="64" />
+						<Image id="QuitButtonImage" class="topnav__icon" src="file://{images}/quit.svg" textureheight="64" />
 					</RadioButton>
 				</Panel>
 
