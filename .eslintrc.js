@@ -9,6 +9,7 @@ module.exports = {
 	},
 	ignorePatterns: ['.eslintrc.js', 'node_modules', '__types_momentum.js'],
 	rules: {
+		quotes: ['error', 'single', { avoidEscape: true }],
 		'prefer-const': ['error'],
 		'class-methods-use-this': ['error'],
 		camelcase: ['warn'],
