@@ -590,6 +590,7 @@ $drawer-width: 768px;
 		padding-right: 16px;
 		font-size: 14px;
 		text-overflow: ellipsis;
+		overflow: squish scroll;
 	}
 
 	&__image {
