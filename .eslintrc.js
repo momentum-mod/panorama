@@ -50,6 +50,8 @@ module.exports = {
 		// Terrible rule, it's often practically useful to explicitly state what's happening in cases
 		'unicorn/no-useless-switch-case': ['off'],
 		// In certain cases this matters, but often completely redundant as V8 optimises it fine. Worth flagging potential cases in code review, but annoying as a linting rule
-		'unicorn/consistent-function-scoping': ['off']
+		'unicorn/consistent-function-scoping': ['off'],
+		// This is an annoying rule. Often you want to handle negated a condition first as some edge-case.
+		'unicorn/no-negated-condition': ['off']
 	}
 };
