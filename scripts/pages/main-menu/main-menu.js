@@ -23,7 +23,9 @@ class MainMenu {
 		/** @type {Panel} @static */
 		topButtons: $('#MainMenuTopButtons'),
 		/** @type {RadioButton} @static */
-		homeButton: $('#HomeButton')
+		homeButton: $('#HomeButton'),
+		/** @type {Image} @static */
+		quitButtonIcon: $('#QuitButtonImage')
 	};
 
 	static activeTab = '';
@@ -85,6 +87,8 @@ class MainMenu {
 		this.panels.movie = $('#MainMenuMovie');
 		this.panels.image = $('#MainMenuBackground');
 
+		this.panels.quitButtonIcon.SetImage('file://{images}/quit.svg');
+
 		this.setMainMenuBackground();
 	}
 
@@ -100,6 +104,8 @@ class MainMenu {
 	 */
 	static onShowPauseMenu() {
 		this.panels.cp.AddClass('MainMenuRootPanel--PauseMenuMode');
+
+		this.panels.quitButtonIcon.SetImage('file://{images}/exit-door.svg');
 	}
 
 	/**
