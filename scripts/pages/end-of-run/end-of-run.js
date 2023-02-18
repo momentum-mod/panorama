@@ -422,7 +422,7 @@ class EndOfRun {
 			} else {
 				// Using string instead of float here, floats add a shit ton of floating point imprecision e.g. 90.00000000128381273
 				tooltipString =
-					`{s:name}: <b>{s:base_value}</b>\n` +
+					'{s:name}: <b>{s:base_value}</b>\n' +
 					`${$.Localize('#Run_Comparison')}: <b>{s:compare_value}</b>\n` +
 					`${$.Localize('#Run_Comparison_Diff')}: <b class='${diffStyle}'>${this.getDiffSign(
 						data.diff

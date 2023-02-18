@@ -183,7 +183,7 @@ class Learn {
 		if (this.currentLessonData['TeleTarget']) {
 			const target = this.currentLessonData['TeleTarget'];
 			GameInterfaceAPI.ConsoleCommand(`ent_fire teleport_send_player addoutput "target ${target}"`);
-			$.Schedule(0.05, () => GameInterfaceAPI.ConsoleCommand(`mom_restart`));
+			$.Schedule(0.05, () => GameInterfaceAPI.ConsoleCommand('mom_restart'));
 			$.Msg(`Learn: Teleporting to TeleTarget ${target}`);
 		} else if (this.currentLessonData['Position']) {
 			const pos = this.currentLessonData['Position'];
