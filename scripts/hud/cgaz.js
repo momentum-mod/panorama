@@ -292,11 +292,21 @@ class Cgaz {
 		const maxAccel = accel * maxSpeed * tickInterval;
 
 		if (lastMoveData.hasteEndTime < 0 || lastMoveData.hasteEndTime > MomentumMovementAPI.GetCurrentTime()) {
-			this.snapAccel = HASTE_ACCEL;
-			MAX_GROUND_SPEED = HASTE_SPEED;
+			if (this.snapAccel !== HASTE_ACCEL) {
+				this.snapAccel = HASTE_ACCEL;
+				MAX_GROUND_SPEED = HASTE_SPEED;
+
+				// find snap zone borders with haste
+				this.findSnapAngles(this.snapAccel);
+            }
 		} else {
-			this.snapAccel = DEFAULT_ACCEL;
-			MAX_GROUND_SPEED = DEFAULT_SPEED;
+			if (this.snapAccel !== DEFAULT_ACCEL) {
+				this.snapAccel = DEFAULT_ACCEL;
+				MAX_GROUND_SPEED = DEFAULT_SPEED;
+
+				// find snap zone borders without haste
+				this.findSnapAngles(this.snapAccel);
+			}
 		}
 
 		const velocity = MomentumPlayerAPI.GetVelocity();
@@ -453,8 +463,6 @@ class Cgaz {
 		}
 
 		if (this.snapEnable && this.snapAccel) {
-			// find snap zone borders
-			const snapAngles = this.findSnapAngles(this.snapAccel);
 			const snapOffset = this.remapAngle(
 				(bSnapShift ? 0 : Math.PI * 0.25 * (rightMove > 0 ? -1 : 1)) - viewAngle
 			);
@@ -466,7 +474,7 @@ class Cgaz {
 
 			// draw snap zones
 			if (speed >= this.snapMinSpeed) {
-				this.updateSnaps(this.snapZones, snapAngles, snapOffset, leftTarget, rightTarget);
+				this.updateSnaps(snapOffset, leftTarget, rightTarget);
 			} else {
 				this.clearZones(this.snapZones);
 			}
@@ -604,18 +612,18 @@ class Cgaz {
 		let breakPoints = [];
 		breakPoints = this.findBreakPoints(snapAccel, singleAxisMax, breakPoints);
 
-		const snapAngles = breakPoints;
+		const angles = breakPoints;
 		const points = breakPoints.length;
 
 		// mirror angles to fill [-Pi/2, Pi/2]
 		for (let i = 0; i < points; ++i)
-			snapAngles.push(
+			angles.push(
 				-breakPoints[i],
 				this.remapAngle(Math.PI * 0.5 - breakPoints[i]),
 				this.remapAngle(breakPoints[i] - Math.PI * 0.5)
 			);
 
-		return snapAngles.sort((a, b) => a - b);
+		this.snapAngles = angles.sort((a, b) => a - b);
 	}
 
 	static findBreakPoints(accel, value, breakPoints) {
@@ -628,12 +636,12 @@ class Cgaz {
 		return breakPoints;
 	}
 
-	static findSnapGains(snapAngles) {
+	static findSnapGains() {
 		const snapGains = [];
 		this.snapGainRange = [0, 0];
-		for (let i = 0; i < 0.5 * snapAngles.length; ++i) {
-			const left = snapAngles[i];
-			const right = snapAngles[i + 1];
+		for (let i = 0; i < 0.5 * this.snapAngles.length; ++i) {
+			const left = this.snapAngles[i];
+			const right = this.snapAngles[i + 1];
 			const angle = 0.5 * (left + right);
 
 			const xGain = (this.snapAccel * Math.cos(angle)).toFixed(0);
@@ -675,13 +683,14 @@ class Cgaz {
 		this.drawZone(zone);
 	}
 
-	static updateSnaps(zones, snapAngles, snapOffset, leftTarget, rightTarget) {
-		const snapGains = this.findSnapGains(snapAngles);
+	static updateSnaps(snapOffset, leftTarget, rightTarget) {
+		const snapGains = this.findSnapGains(this.snapAngles);
+		const zones = this.snapZones;
 
 		for (let i = 0; i < zones.length; ++i) {
 			// wrap the angles to only [-pi/2, pi/2]
-			const left = this.wrapToHalfPi(snapAngles[i] - snapOffset);
-			const right = this.wrapToHalfPi(snapAngles[(i + 1) % zones.length] - snapOffset);
+			const left = this.wrapToHalfPi(this.snapAngles[i] - snapOffset);
+			const right = this.wrapToHalfPi(this.snapAngles[(i + 1) % zones.length] - snapOffset);
 			const bUseUncolored = !this.snapHeightgainEnable && !this.snapColorMode && i % 2;
 			let snapColor = bUseUncolored ? this.snapAltColor : this.snapColor;
 			let hlSnapColor = bUseUncolored ? this.snapHlAltColor : this.snapHlColor;
