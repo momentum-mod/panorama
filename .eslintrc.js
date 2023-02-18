@@ -11,6 +11,7 @@ module.exports = {
 	rules: {
 		quotes: ['error', 'single', { avoidEscape: true }],
 		'prefer-const': ['error'],
+		'no-empty': ['error', { allowEmptyCatch: true }],
 		'class-methods-use-this': ['error'],
 		camelcase: ['warn'],
 		eqeqeq: ['error', 'smart'],
@@ -48,7 +49,7 @@ module.exports = {
 		'unicorn/no-abusive-eslint-disable': ['off'],
 		// Terrible rule, it's often practically useful to explicitly state what's happening in cases
 		'unicorn/no-useless-switch-case': ['off'],
-		// //In certain cases this matters, but often completely redundant as V8 optimises it fine. Worth flagging potential cases in code review, but annoying as a linting rule
+		// In certain cases this matters, but often completely redundant as V8 optimises it fine. Worth flagging potential cases in code review, but annoying as a linting rule
 		'unicorn/consistent-function-scoping': ['off']
 	}
 };
