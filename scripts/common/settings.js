@@ -63,7 +63,8 @@ const SettingsTabs = {
 			WeaponSelSubSection: 'WeaponSelRadio',
 			StrafeSyncSubSection: 'StrafeSyncRadio',
 			SynchronizerSubSection: 'SynchronizerRadio',
-			MapInfoSubSection: 'MapInfoRadio'
+			MapInfoSubSection: 'MapInfoRadio',
+			DamageIndicatorSubSection: 'DamageIndicatorRadio'
 		}
 	},
 	SearchSettings: {

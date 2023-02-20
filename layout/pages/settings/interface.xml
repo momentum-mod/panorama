@@ -504,6 +504,55 @@
 					<Label id="colorize3" text="#Settings_TotalSync_Color_Type2" value="2" />
 				</ChaosSettingsEnumDropDown>
 			</Panel>
+			<Panel class="settings-page__spacer" />
+
+			<Panel id="DamageIndicatorSubSection" class="settings-group">
+
+				<Panel class="settings-group__header">
+
+					<Label class="settings-group__title" text="#Settings_DamageIndicator_Title" />
+
+					<Panel class="flow-right horizontal-align-right">
+
+						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Damage Indicator', 'DamageIndicatorSubSection')">
+							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
+						</Button>
+
+						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
+							<Button class="button" onactivate="SettingsShared.resetSettings('DamageIndicatorSubSection');">
+								<Image class="button__icon" src="file://{images}/reset.svg" />
+							</Button>
+						</TooltipPanel>
+
+					</Panel>
+
+				</Panel>
+
+				<ChaosSettingsEnum text="#Settings_DamageIndicator_Enable" convar="mom_hud_damageindicator_enable" infomessage="#Settings_DamageIndicator_Enable_Info">
+					<RadioButton group="damageindicatorenable" text="#Common_Off" value="0" />
+					<RadioButton group="damageindicatorenable" text="#Common_On" value="1" />
+				</ChaosSettingsEnum>
+
+				<ConVarEnabler convar="mom_hud_damageindicator_enable" class="flow-down">
+
+					<ConVarColorDisplay convar="mom_hud_damageindicator_color" text="#Settings_DamageIndicator_Color" tags="color" />
+
+					<ChaosSettingsSlider text="#Settings_DamageIndicator_MinHeight" min="1" max="500" convar="mom_hud_damageindicator_minheight" displayprecision="0" infomessage="#Settings_DamageIndicator_MinHeight_Info" hasdocspage="false" />
+
+					<ChaosSettingsSlider text="#Settings_DamageIndicator_MaxHeight" min="1" max="500" convar="mom_hud_damageindicator_maxheight" displayprecision="0" infomessage="#Settings_DamageIndicator_MaxHeight_Info" hasdocspage="false" />
+
+					<ChaosSettingsSlider text="#Settings_DamageIndicator_MinWidth" min="1" max="500" convar="mom_hud_damageindicator_minwidth" displayprecision="0" infomessage="#Settings_DamageIndicator_MinWidth_Info" hasdocspage="false" />
+
+					<ChaosSettingsSlider text="#Settings_DamageIndicator_MaxWidth" min="1" max="500" convar="mom_hud_damageindicator_maxwidth" displayprecision="0" infomessage="#Settings_DamageIndicator_MaxWidth_Info" hasdocspage="false" />
+
+					<ChaosSettingsSlider text="#Settings_DamageIndicator_MinLifetime" min="1" max="5" convar="mom_hud_damageindicator_minlifetime" displayprecision="1" infomessage="#Settings_DamageIndicator_MinLifetime_Info" hasdocspage="false" />
+
+					<ChaosSettingsSlider text="#Settings_DamageIndicator_MaxLifetime" min="1" max="5" convar="mom_hud_damageindicator_maxlifetime" displayprecision="1" infomessage="#Settings_DamageIndicator_MaxLifetime_Info" hasdocspage="false" />
+
+					<ChaosSettingsSlider text="#Settings_DamageIndicator_Radius" min="0" max="500" convar="mom_hud_damageindicator_radius" displayprecision="0" infomessage="#Settings_DamageIndicator_Radius_Info" hasdocspage="false" />
+
+				</ConVarEnabler>
+			</Panel>
 
 			<Panel class="settings-page__spacer" />
 
