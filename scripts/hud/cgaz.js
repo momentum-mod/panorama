@@ -724,7 +724,7 @@ class Cgaz {
 					if (this.getSize(MomentumPlayerAPI.GetVelocity()) > this.accelMinSpeed) {
 						let stopPoint, direction;
 						if (left - leftTarget < 0 && right - leftTarget > 0) {
-							stopPoint = this.floatEquals(zones[i].rightPx, zones[i].leftPx)
+							stopPoint = this.floatEquals(zones[i].rightPx, zones[i].leftPx, 1)
 								? 0
 								: this.NaNCheck(
 										(
@@ -736,7 +736,7 @@ class Cgaz {
 							direction = '0% 0%, 100% 0%';
 							bHighlight = true;
 						} else if (left - rightTarget < 0 && right - rightTarget > 0) {
-							stopPoint = this.floatEquals(zones[i].rightPx - zones[i].leftPx)
+							stopPoint = this.floatEquals(zones[i].rightPx, zones[i].leftPx, 1)
 								? 0
 								: this.NaNCheck(
 										(
