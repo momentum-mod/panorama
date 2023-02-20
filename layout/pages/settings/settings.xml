@@ -164,6 +164,9 @@
 								<RadioButton id="JumpStatsRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="MainMenuSettings.navigateToSubsection('InterfaceSettings', 'JumpStatsSubSection')">
 									<Label class="settings-nav__subitem-label" text="#Settings_JumpStats_Title" />
 								</RadioButton>
+								<RadioButton id="DamageIndicatorRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="MainMenuSettings.navigateToSubsection('InterfaceSettings', 'DamageIndicatorSubSection')">
+									<Label class="settings-nav__subitem-label" text="#Settings_DamageIndicator_Title" />
+								</RadioButton>
 								<RadioButton id="StrafeSyncRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="MainMenuSettings.navigateToSubsection('InterfaceSettings', 'StrafeSyncSubSection')">
 									<Label class="settings-nav__subitem-label" text="#Settings_TotalSync_Title" />
 								</RadioButton>
