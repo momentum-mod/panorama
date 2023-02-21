@@ -55,6 +55,7 @@
 		width: 100%;
 		padding: 24px;
 		padding-top: 16px;
+		padding-bottom: 14px;
 		background-color: rgba(0, 0, 0, 0.6);
 
 		&--hidden {
@@ -68,6 +69,20 @@
 		&--hidden {
 			visibility: collapse;
 		}
+	}
+
+	&__enable-cursor {
+		border-top: 1px solid rgba(0, 0, 0, 0.4);
+		width: 100%;
+		padding: 12px 24px 12px 0;
+		vertical-align: bottom;
+		background-color: rgba(0, 0, 0, 0.6);
+	}
+
+	&__enable-cursor-tip {
+		font-size: 11px;
+		color: rgba(255, 255, 255, 0.6);
+		horizontal-align: right;
 	}
 }
 
