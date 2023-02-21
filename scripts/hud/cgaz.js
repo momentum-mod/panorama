@@ -69,21 +69,8 @@ class Cgaz {
 	static mirrorSplitZone = this.accelZones[10];
 
 	static snapContainer = $('#SnapContainer');
-	static snapZones = [
-		initZonePanel($('#SnapZone0')),
-		initZonePanel($('#SnapZone1')),
-		initZonePanel($('#SnapZone2')),
-		initZonePanel($('#SnapZone3')),
-		initZonePanel($('#SnapZone4')),
-		initZonePanel($('#SnapZone5')),
-		initZonePanel($('#SnapZone6')),
-		initZonePanel($('#SnapZone7')),
-		initZonePanel($('#SnapZone8')),
-		initZonePanel($('#SnapZone9')),
-		initZonePanel($('#SnapZone10')),
-		initZonePanel($('#SnapZone11'))
-	];
-	static snapSplitZone = initZonePanel($('#SnapSplitZone'));
+	static snapZones = [];
+	static snapSplitZone = initZonePanel($.CreatePanel('Panel', this.snapContainer, 'SnapSplitZone'));
 
 	static compassArrow = $('#CompassArrow');
 	static compassArrowIcon = $('#CompassArrowIcon');
@@ -309,6 +296,22 @@ class Cgaz {
 				// find snap zone borders without haste
 				this.findSnapAngles(this.snapAccel);
 			}
+		}
+
+		if (this.snapAngles.length > this.snapZones?.length) {
+			const start = this.snapZones?.length;
+			const end = this.snapAngles.length;
+			for (let i = start; i < end; ++i) {
+				this.snapZones.push(initZonePanel($.CreatePanel('Panel', this.snapContainer, `SnapZone${i}`)));
+			}
+			this.onSnapConfigChange();
+		} else if (this.snapAngles.length < this.snapZones?.length) {
+			const start = this.snapZones?.length;
+			const end = this.snapAngles.length;
+			for (let i = start; i < end; ++i) {
+				this.snapZones.pop().DeleteAsync(0);
+			}
+			this.onSnapConfigChange();
 		}
 
 		const velocity = MomentumPlayerAPI.GetVelocity();
