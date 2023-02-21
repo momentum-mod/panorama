@@ -52,6 +52,10 @@
 
 			<Panel class="hud-leaderboards__stats">
 			</Panel>
+			
+			<Panel class="hud-leaderboards__enable-cursor">
+				<Label class="hud-leaderboards__enable-cursor-tip" text="#HudLeaderboards_EnableCursorTip"/> 
+			</Panel>
 		</Panel>
 	</HudLeaderboards>
 </root>
