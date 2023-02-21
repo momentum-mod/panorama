@@ -115,6 +115,7 @@ class Cgaz {
 		if (GameModeAPI.GetCurrentGameMode() !== GameMode.DEFRAG) return;
 
 		this.onAccelConfigChange();
+		this.onSnapConfigChange();
 		this.onProjectionChange();
 		this.onHudFovChange();
 		this.onSnapConfigChange();
@@ -145,7 +146,34 @@ class Cgaz {
 		this.accelScaleEnable = accelConfig.scaleEnable;
 		this.accelMirrorEnable = accelConfig.mirrorEnable;
 
-		this.bShouldUpdateStyles = true;
+		NEUTRAL_CLASS = new StyleObject(this.accelHeight, this.accelOffset, 'middle', this.accelDzColor);
+		SLOW_CLASS = new StyleObject(this.accelHeight, this.accelOffset, 'middle', this.accelSlowColor);
+		FAST_CLASS = new StyleObject(this.accelHeight, this.accelOffset, 'middle', this.accelFastColor);
+		TURN_CLASS = new StyleObject(this.accelHeight, this.accelOffset, 'middle', this.accelTurnColor);
+		MIRROR_CLASS = new StyleObject(this.accelHeight, this.accelOffset, 'middle', this.accelSlowColor);
+
+		this.setupContainer(this.accelContainer, this.accelOffset, 'middle');
+		this.applyClass(this.leftTurnZone, TURN_CLASS);
+		this.applyClass(this.leftFastZone, FAST_CLASS);
+		this.applyClass(this.leftSlowZone, SLOW_CLASS);
+		this.applyClass(this.deadZone, NEUTRAL_CLASS);
+		this.applyClass(this.rightSlowZone, SLOW_CLASS);
+		this.applyClass(this.rightFastZone, FAST_CLASS);
+		this.applyClass(this.rightTurnZone, TURN_CLASS);
+		this.applyClass(this.accelSplitZone, NEUTRAL_CLASS);
+		this.applyClassBorder(this.leftMirrorZone, MIRROR_CLASS);
+		this.applyClassBorder(this.rightMirrorZone, MIRROR_CLASS);
+		this.applyClassBorder(this.mirrorSplitZone, MIRROR_CLASS);
+
+		if (this.snapEnable) {
+			this.onSnapConfigChange();
+		}
+		if (this.windicatorEnable) {
+			this.onWindicatorConfigChange();
+		}
+		if (this.compassPitchEnable || this.compassMode) {
+			this.onCompassConfigChange();
+		}
 	}
 
 	static onSnapConfigChange() {
@@ -164,7 +192,17 @@ class Cgaz {
 		this.snapColorMode = snapConfig.colorMode;
 		this.snapHeightgainEnable = snapConfig.enableHeightGain;
 
-		this.bShouldUpdateStyles = true;
+		const accelConfig = DefragAPI.GetHUDAccelCFG(); // needed for aligning snaps to top of cgaz bar by default
+		const offset = this.snapOffset + accelConfig.enable ? 0.5 * accelConfig.height + accelConfig.offset : 0;
+		COLORED_SNAP_CLASS = new StyleObject(this.snapHeight, offset, 'middle', this.snapColor);
+		UNCOLORED_SNAP_CLASS = new StyleObject(this.snapHeight, offset, 'middle', this.snapAltColor);
+		HIGHLIGHTED_SNAP_CLASS = new StyleObject(this.snapHeight, offset, 'middle', this.snapHlColor);
+		HIGHLIGHTED_ALT_SNAP_CLASS = new StyleObject(this.snapHeight, offset, 'middle', this.snapHlAltColor);
+
+		this.setupContainer(this.snapContainer, offset, 'middle');
+		for (let i = 0; i < this.snapZones?.length; ++i) {
+			this.applyClass(this.snapZones[i], i % 2 ? UNCOLORED_SNAP_CLASS : COLORED_SNAP_CLASS);
+		}
 	}
 
 	static onWindicatorConfigChange() {
@@ -173,7 +211,22 @@ class Cgaz {
 		this.windicatorSize = windicatorArrowConfig.size;
 		this.windicatorColor = windicatorArrowConfig.color;
 
-		this.bShouldUpdateStyles = true;
+		const accelConfig = DefragAPI.GetHUDAccelCFG();
+		const width = 2 * this.windicatorSize;
+		const height = accelConfig.height + 2 * width;
+		const offset = accelConfig.enable ? accelConfig.offset : 0;
+		this.setupArrow(
+			this.windicatorArrow,
+			this.windicatorArrowIcon,
+			height,
+			width,
+			offset,
+			'top',
+			this.windicatorColor
+		);
+
+		WIN_ZONE_CLASS = new StyleObject(accelConfig.height, accelConfig.offset, 'middle', this.windicatorColor);
+		this.applyClassBorder(this.windicatorZone, WIN_ZONE_CLASS);
 	}
 
 	static onCompassConfigChange() {
@@ -199,79 +252,28 @@ class Cgaz {
 				pitchLines[i].DeleteAsync(0);
 			}
 		}
-		this.bShouldUpdateStyles = true;
-	}
 
-	static applyStyles() {
-		// accel zone classes
-		let height = this.accelHeight;
-		let offset = 0;
-		let align = 'middle';
-		NEUTRAL_CLASS = new StyleObject(height, offset, align, this.accelDzColor);
-		SLOW_CLASS = new StyleObject(height, offset, align, this.accelSlowColor);
-		FAST_CLASS = new StyleObject(height, offset, align, this.accelFastColor);
-		TURN_CLASS = new StyleObject(height, offset, align, this.accelTurnColor);
-		MIRROR_CLASS = new StyleObject(height, offset, align, this.accelSlowColor);
-		WIN_ZONE_CLASS = new StyleObject(height, offset, align, this.windicatorColor);
-
-		this.setupContainer(this.accelContainer, this.accelOffset, align);
-		this.applyClass(this.leftTurnZone, TURN_CLASS);
-		this.applyClass(this.leftFastZone, FAST_CLASS);
-		this.applyClass(this.leftSlowZone, SLOW_CLASS);
-		this.applyClass(this.deadZone, NEUTRAL_CLASS);
-		this.applyClass(this.rightSlowZone, SLOW_CLASS);
-		this.applyClass(this.rightFastZone, FAST_CLASS);
-		this.applyClass(this.rightTurnZone, TURN_CLASS);
-		this.applyClass(this.accelSplitZone, NEUTRAL_CLASS);
-		this.applyClassBorder(this.leftMirrorZone, MIRROR_CLASS);
-		this.applyClassBorder(this.rightMirrorZone, MIRROR_CLASS);
-		this.applyClassBorder(this.mirrorSplitZone, MIRROR_CLASS);
-		this.applyClassBorder(this.windicatorZone, WIN_ZONE_CLASS);
-
-		// snap zone classes
-		height = this.snapHeight;
-		offset = 0.5 * this.accelHeight + this.accelOffset + this.snapOffset;
-		align = 'middle';
-		COLORED_SNAP_CLASS = new StyleObject(height, offset, align, this.snapColor);
-		UNCOLORED_SNAP_CLASS = new StyleObject(height, offset, align, this.snapAltColor);
-		HIGHLIGHTED_SNAP_CLASS = new StyleObject(height, offset, align, this.snapHlColor);
-		HIGHLIGHTED_ALT_SNAP_CLASS = new StyleObject(height, offset, align, this.snapHlAltColor);
-
-		this.setupContainer(this.snapContainer, offset, align);
-		for (let i = 0; i < this.snapZones.length; ++i) {
-			this.applyClass(this.snapZones[i], i % 2 ? UNCOLORED_SNAP_CLASS : COLORED_SNAP_CLASS);
-		}
-
-		// compass ticks
-		offset = this.accelOffset - 0.5 * (this.accelHeight + this.compassSize);
-		align = 'middle';
+		const accelConfig = DefragAPI.GetHUDAccelCFG();
+		const offset = accelConfig.offset - 0.5 * (accelConfig.height + this.compassSize);
 		const size = this.NaNCheck(this.compassSize, 0);
-		this.setupContainer(this.tickContainer, offset, align);
+		this.setupContainer(this.tickContainer, offset, 'middle');
 		this.compassTickFull.style.height = size + 'px';
 		this.compassTickHalf.style.height = size * 0.5 + 'px';
 
-		// compass arrow classes
-		let color = this.compassColor;
-		let width = 2 * this.compassSize;
-		height = this.accelHeight + 2 * width;
-		offset = this.accelOffset;
-		align = 'bottom';
-		this.setupArrow(this.compassArrow, this.compassArrowIcon, height, width, offset, align, color);
-
-		// windicator arrow classes
-		color = this.windicatorColor;
-		width = 2 * this.windicatorSize;
-		height = this.accelHeight + 2 * width;
-		offset = this.accelOffset;
-		align = 'top';
-		this.setupArrow(this.windicatorArrow, this.windicatorArrowIcon, height, width, offset, align, color);
-
-		this.bShouldUpdateStyles = false;
+		const width = 2 * this.compassSize;
+		const height = accelConfig.height + 2 * width;
+		this.setupArrow(
+			this.compassArrow,
+			this.compassArrowIcon,
+			height,
+			width,
+			accelConfig.offset,
+			'bottom',
+			this.compassColor
+		);
 	}
 
 	static onUpdate() {
-		if (this.bShouldUpdateStyles) this.applyStyles();
-
 		// clear last frame's split zones
 		this.clearZones([this.accelSplitZone, this.snapSplitZone, this.mirrorSplitZone]);
 
@@ -298,7 +300,7 @@ class Cgaz {
 
 				// find snap zone borders with haste
 				this.findSnapAngles(this.snapAccel);
-            }
+			}
 		} else {
 			if (this.snapAccel !== DEFAULT_ACCEL) {
 				this.snapAccel = DEFAULT_ACCEL;
