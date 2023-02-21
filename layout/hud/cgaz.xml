@@ -24,23 +24,7 @@
 				<Panel id="WindicatorZone" />
 			</ConVarEnabler>
 		</Panel>
-		<Panel id="SnapContainer" class="cgaz__container">
-			<ConVarEnabler convar="mom_df_hud_snap_enable" togglevisibility="true">
-				<Panel id="SnapZone0" />
-				<Panel id="SnapZone1" />
-				<Panel id="SnapZone2" />
-				<Panel id="SnapZone3" />
-				<Panel id="SnapZone4" />
-				<Panel id="SnapZone5" />
-				<Panel id="SnapZone6" />
-				<Panel id="SnapZone7" />
-				<Panel id="SnapZone8" />
-				<Panel id="SnapZone9" />
-				<Panel id="SnapZone10" />
-				<Panel id="SnapZone11" />
-				<Panel id="SnapSplitZone" />
-			</ConVarEnabler>
-		</Panel>
+		<ConVarEnabler id="SnapContainer" class="cgaz__container" convar="mom_df_hud_snap_enable" togglevisibility="true" />
 		<Panel id="CompassArrow">
 			<ConVarEnabler class="full-height" convar="mom_df_hud_compass_mode" togglevisibility="true">
 				<Image id="CompassArrowIcon" class="arrow__up" src="file://{images}/hud/cgaz-arrow.svg" textureheight="48" />
