@@ -24,6 +24,7 @@
 		<Panel id="HudTopLeft" hittest="false" hittestchildren="false">
 			<HudTrickTracker />
 			<HudComparisons />
+			<MomHudSafeGuard />
 		</Panel>
 
 		<!-- Anchored to below the center of the screen, laid out from top to bottom -->

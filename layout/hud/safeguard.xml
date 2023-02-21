@@ -1,0 +1,9 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+
+	<MomHudSafeGuard class="safeguard">
+		<Label id="HoldTimeRemaining" class="safeguard__time" text="{i:holdTimeRemaining}" />
+	</MomHudSafeGuard>
+</root>

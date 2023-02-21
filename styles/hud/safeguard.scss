@@ -1,0 +1,31 @@
+.safeguard {
+	flow-children: down;
+	margin: 35px;
+
+	&__unimplemented {
+		visibility: collapse;
+	}
+
+	&__time {
+		horizontal-align: center;
+		text-align: center;
+		font-size: 21px;
+		font-family: Roboto;
+		font-weight: bold;
+		text-shadow: 0 3px 6px rgba(0, 0, 0, 0.5);
+		color: #fff;
+
+		&:disabled {
+			opacity: 0.15;
+		}
+
+		// set in code
+		&.hidden {
+			visibility: collapse;
+		}
+		&.blocked {
+			wash-color: #f00;
+		}
+	}
+}
+
