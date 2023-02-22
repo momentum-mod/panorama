@@ -1,4 +1,4 @@
-Closes #<!--(issue number here)-->
+Closes momentum-mod/game/issues/<!--(issue number here)-->
 
 <!-- Describe what your pull request is doing here -->
 
