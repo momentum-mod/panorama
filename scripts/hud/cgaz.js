@@ -75,8 +75,8 @@ class Cgaz {
 	static compassArrow = $('#CompassArrow');
 	static compassArrowIcon = $('#CompassArrowIcon');
 	static tickContainer = $('#CompassTicks');
-	static compassTickFull = $('#FullTick');
-	static compassTickHalf = $('#HalfTick');
+	static compassTickFull = initZonePanel($('#FullTick'));
+	static compassTickHalf = initZonePanel($('#HalfTick'));
 	static pitchLineContainer = $('#PitchLines');
 	static pitchStat = $('#PitchStat');
 	static yawStat = $('#YawStat');
@@ -495,21 +495,19 @@ class Cgaz {
 			const color = bShouldHighlight ? this.compassHlColor : this.compassColor;
 
 			// ticks
-			const fullTickLeftEdge = this.findCompassTick(viewAngle);
-			const fullTickRightEdge = fullTickLeftEdge + this.halfPi;
-			const halfTickLeftEdge = this.findCompassTick(viewAngle - 0.5 * this.halfPi);
-			const halfTickRightEdge = halfTickLeftEdge + this.halfPi;
+			this.compassTickFull.leftAngle = this.findCompassTick(viewAngle);
+			this.compassTickFull.rightAngle = this.compassTickFull.leftAngle + this.halfPi;
+			this.compassTickHalf.leftAngle = this.findCompassTick(viewAngle - 0.5 * this.halfPi);
+			this.compassTickHalf.rightAngle = this.compassTickHalf.leftAngle + this.halfPi;
 
-			this.drawZone(
-				this.compassTickFull,
-				this.mapToScreenWidth(fullTickLeftEdge) - 1, // -1 balances the 2px border across the compass tick
-				this.mapToScreenWidth(fullTickRightEdge) + 1
-			);
-			this.drawZone(
-				this.compassTickHalf,
-				this.mapToScreenWidth(halfTickLeftEdge) - 1, // -1 balances the 2px border across the compass tick
-				this.mapToScreenWidth(halfTickRightEdge) + 1
-			);
+			// -1/+1 balances the 2px border across the compass tick
+			this.compassTickFull.leftPx = this.mapToScreenWidth(this.compassTickFull.leftAngle) - 1;
+			this.compassTickFull.rightPx = this.mapToScreenWidth(this.compassTickFull.rightAngle) + 1;
+			this.compassTickHalf.leftPx = this.mapToScreenWidth(this.compassTickHalf.leftAngle) - 1;
+			this.compassTickHalf.rightPx = this.mapToScreenWidth(this.compassTickHalf.rightAngle) + 1;
+
+			this.drawZone(this.compassTickFull);
+			this.drawZone(this.compassTickHalf);
 
 			this.compassTickFull.style.borderColor = color;
 			this.compassTickHalf.style.borderColor = color;
