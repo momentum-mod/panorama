@@ -8,22 +8,20 @@
 	</scripts>
 
 	<MomHudCgaz class="full-width full-height" alternateTicks="false">
-		<Panel id="AccelContainer" class="cgaz__container">
-			<ConVarEnabler convar="mom_df_hud_accel_enable" togglevisibility="true">
-				<Panel id="LeftTurnZone" />
-				<Panel id="LeftFastZone" />
-				<Panel id="LeftSlowZone" />
-				<Panel id="DeadZone" />
-				<Panel id="RightSlowZone" />
-				<Panel id="RightFastZone" />
-				<Panel id="RightTurnZone" />
-				<Panel id="AccelSplitZone" />
-				<Panel id="LeftMirrorZone" />
-				<Panel id="RightMirrorZone" />
-				<Panel id="MirrorSplitZone" />
-				<Panel id="WindicatorZone" />
-			</ConVarEnabler>
-		</Panel>
+		<ConVarEnabler id="AccelContainer" class="cgaz__container" convar="mom_df_hud_accel_enable" togglevisibility="true">
+			<Panel id="LeftTurnZone" />
+			<Panel id="LeftFastZone" />
+			<Panel id="LeftSlowZone" />
+			<Panel id="DeadZone" />
+			<Panel id="RightSlowZone" />
+			<Panel id="RightFastZone" />
+			<Panel id="RightTurnZone" />
+			<Panel id="AccelSplitZone" />
+			<Panel id="LeftMirrorZone" />
+			<Panel id="RightMirrorZone" />
+			<Panel id="MirrorSplitZone" />
+			<Panel id="WindicatorZone" />
+		</ConVarEnabler>
 		<ConVarEnabler id="SnapContainer" class="cgaz__container" convar="mom_df_hud_snap_enable" togglevisibility="true" />
 		<Panel id="CompassArrow">
 			<ConVarEnabler class="full-height" convar="mom_df_hud_compass_mode" togglevisibility="true">
