@@ -22,10 +22,10 @@ let HIGHLIGHTED_SNAP_CLASS;
 let HIGHLIGHTED_ALT_SNAP_CLASS;
 
 class StyleObject {
-	constructor(height, offset, align, color) {
+	constructor(height, offset, color) {
 		this.height = height;
 		this.offset = offset;
-		this.align = align;
+		this.align = 'middle';
 		this.color = color;
 	}
 }
@@ -133,13 +133,13 @@ class Cgaz {
 		this.accelScaleEnable = accelConfig.scaleEnable;
 		this.accelMirrorEnable = accelConfig.mirrorEnable;
 
-		NEUTRAL_CLASS = new StyleObject(this.accelHeight, this.accelOffset, 'middle', this.accelDzColor);
-		SLOW_CLASS = new StyleObject(this.accelHeight, this.accelOffset, 'middle', this.accelSlowColor);
-		FAST_CLASS = new StyleObject(this.accelHeight, this.accelOffset, 'middle', this.accelFastColor);
-		TURN_CLASS = new StyleObject(this.accelHeight, this.accelOffset, 'middle', this.accelTurnColor);
-		MIRROR_CLASS = new StyleObject(this.accelHeight, this.accelOffset, 'middle', this.accelSlowColor);
+		NEUTRAL_CLASS = new StyleObject(this.accelHeight, this.accelOffset, this.accelDzColor);
+		SLOW_CLASS = new StyleObject(this.accelHeight, this.accelOffset, this.accelSlowColor);
+		FAST_CLASS = new StyleObject(this.accelHeight, this.accelOffset, this.accelFastColor);
+		TURN_CLASS = new StyleObject(this.accelHeight, this.accelOffset, this.accelTurnColor);
+		MIRROR_CLASS = new StyleObject(this.accelHeight, this.accelOffset, this.accelSlowColor);
 
-		this.setupContainer(this.accelContainer, this.accelOffset, 'middle');
+		this.setupContainer(this.accelContainer, this.accelOffset);
 		this.applyClass(this.leftTurnZone, TURN_CLASS);
 		this.applyClass(this.leftFastZone, FAST_CLASS);
 		this.applyClass(this.leftSlowZone, SLOW_CLASS);
@@ -181,12 +181,12 @@ class Cgaz {
 
 		const accelConfig = DefragAPI.GetHUDAccelCFG(); // needed for aligning snaps to top of cgaz bar by default
 		const offset = this.snapOffset + accelConfig.enable ? 0.5 * accelConfig.height + accelConfig.offset : 0;
-		COLORED_SNAP_CLASS = new StyleObject(this.snapHeight, offset, 'middle', this.snapColor);
-		UNCOLORED_SNAP_CLASS = new StyleObject(this.snapHeight, offset, 'middle', this.snapAltColor);
-		HIGHLIGHTED_SNAP_CLASS = new StyleObject(this.snapHeight, offset, 'middle', this.snapHlColor);
-		HIGHLIGHTED_ALT_SNAP_CLASS = new StyleObject(this.snapHeight, offset, 'middle', this.snapHlAltColor);
+		COLORED_SNAP_CLASS = new StyleObject(this.snapHeight, offset, this.snapColor);
+		UNCOLORED_SNAP_CLASS = new StyleObject(this.snapHeight, offset, this.snapAltColor);
+		HIGHLIGHTED_SNAP_CLASS = new StyleObject(this.snapHeight, offset, this.snapHlColor);
+		HIGHLIGHTED_ALT_SNAP_CLASS = new StyleObject(this.snapHeight, offset, this.snapHlAltColor);
 
-		this.setupContainer(this.snapContainer, offset, 'middle');
+		this.setupContainer(this.snapContainer, offset);
 		for (let i = 0; i < this.snapZones?.length; ++i) {
 			this.applyClass(this.snapZones[i], i % 2 ? UNCOLORED_SNAP_CLASS : COLORED_SNAP_CLASS);
 		}
@@ -212,7 +212,7 @@ class Cgaz {
 			this.windicatorColor
 		);
 
-		WIN_ZONE_CLASS = new StyleObject(accelConfig.height, accelConfig.offset, 'middle', this.windicatorColor);
+		WIN_ZONE_CLASS = new StyleObject(accelConfig.height, accelConfig.offset, this.windicatorColor);
 		this.applyClassBorder(this.windicatorZone, WIN_ZONE_CLASS);
 	}
 
@@ -243,7 +243,7 @@ class Cgaz {
 		const accelConfig = DefragAPI.GetHUDAccelCFG();
 		const offset = accelConfig.offset - 0.5 * (accelConfig.height + this.compassSize);
 		const size = this.NaNCheck(this.compassSize, 0);
-		this.setupContainer(this.tickContainer, offset, 'middle');
+		this.setupContainer(this.tickContainer, offset);
 		this.compassTickFull.style.height = size + 'px';
 		this.compassTickHalf.style.height = size * 0.5 + 'px';
 
@@ -791,8 +791,8 @@ class Cgaz {
 		return angle;
 	}
 
-	static setupContainer(container, offset, align) {
-		container.style.verticalAlign = align;
+	static setupContainer(container, offset) {
+		container.style.verticalAlign = 'middle';
 		container.style.transform = `translatey( ${this.NaNCheck(-offset, 0)}px )`;
 		container.style.overflow = 'noclip noclip';
 	}
