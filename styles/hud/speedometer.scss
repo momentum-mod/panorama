@@ -22,6 +22,7 @@
 		font-weight: $speedometer-event-font-weight;
 		font-size: $speedometer-event-font-size;
 		&__comparison {
+			margin-left: 2px;
 			font-weight: $speedometer-event-comparison-font-weight;
 			font-size: $speedometer-event-comparison-font-size;
 		}
