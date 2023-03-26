@@ -469,6 +469,11 @@
 						<RadioButton group="efficiency" text="#Common_Off" value="0" />
 						<RadioButton group="efficiency" text="#Common_On" value="1" />
 					</ChaosSettingsEnum>
+
+					<ChaosSettingsEnum text="#Settings_JumpStats_Bonk" convar="mom_hud_jstats_bonk_enable" infomessage="#Settings_JumpStats_Bonk_Info">
+						<RadioButton group="bonk" text="#Common_Off" value="0" />
+						<RadioButton group="bonk" text="#Common_On" value="1" />
+					</ChaosSettingsEnum>
 				</ConVarEnabler>
 			</Panel>
 

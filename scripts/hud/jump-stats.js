@@ -38,6 +38,7 @@ class JumpStats {
 			this.addToBuffer(this.heightDeltaBuffer, '');
 			this.addToBuffer(this.distanceBuffer, '');
 			this.addToBuffer(this.efficiencyBuffer, '');
+			this.addToBuffer(this.bonkBuffer, '');
 		} else {
 			this.addToBuffer(this.countBuffer, lastJumpStats.jumpCount + ':');
 			this.addToBuffer(this.takeoffSpeedBuffer, lastJumpStats.takeoffSpeed.toFixed(0));
@@ -54,6 +55,7 @@ class JumpStats {
 			);
 			this.addToBuffer(this.distanceBuffer, lastJumpStats.distance.toFixed(1));
 			this.addToBuffer(this.efficiencyBuffer, this.makePercentage(lastJumpStats.efficiency));
+			this.addToBuffer(this.bonkBuffer, lastJumpStats.bonkSpeed.toFixed(0));
 		}
 
 		this.setText();
@@ -103,6 +105,7 @@ class JumpStats {
 		this.heightDeltaBuffer = this.initializeBuffer(this.bufferLength);
 		this.distanceBuffer = this.initializeBuffer(this.bufferLength);
 		this.efficiencyBuffer = this.initializeBuffer(this.bufferLength);
+		this.bonkBuffer = this.initializeBuffer(this.bufferLength);
 	}
 
 	static setText() {
@@ -118,6 +121,7 @@ class JumpStats {
 		this.panel.SetDialogVariable('height_delta', this.getBufferedSum(this.heightDeltaBuffer));
 		this.panel.SetDialogVariable('distance', this.getBufferedSum(this.distanceBuffer));
 		this.panel.SetDialogVariable('efficiency', this.getBufferedSum(this.efficiencyBuffer));
+		this.panel.SetDialogVariable('bonk', this.getBufferedSum(this.bonkBuffer));
 	}
 
 	static makeTime(value) {
@@ -136,5 +140,6 @@ class JumpStats {
 
 		$.RegisterForUnhandledEvent('ChaosLevelInitPostEntity', this.onLoad.bind(this));
 		$.RegisterForUnhandledEvent('OnJumpStatsCFGChange', this.onConfigChange.bind(this));
+		$.RegisterForUnhandledEvent('OnBonkSpeedUpdate', this.onBonk.bind(this));
 	}
 }

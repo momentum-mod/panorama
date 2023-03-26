@@ -54,6 +54,10 @@
 				<Label text="#JumpStats_Label_Efficiency" class="jumpstats__label--name" />
 				<Label text="{s:efficiency}" id="EfficiencyLabel" class="jumpstats__label--values" />
 			</ConVarEnabler>
+			<ConVarEnabler id="BonkContainer" class="jumpstats__label jumpstats__label--bonk" convar="mom_hud_jstats_bonk_enable" togglevisibility="true">
+				<Label text="#JumpStats_Label_Bonk" class="jumpstats__label--name" />
+				<Label text="{s:bonk}" id="BonkLabel" class="jumpstats__label--values" />
+			</ConVarEnabler>
 		</ConVarEnabler>
 	</MomHudJumpStats>
 </root>
