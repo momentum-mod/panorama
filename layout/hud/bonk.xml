@@ -1,0 +1,14 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+	<scripts>
+		<include src="file://{resources}/scripts/common/buttons.js" />
+		<include src="file://{resources}/scripts/hud/bonk.js" />
+	</scripts>
+	<MomHudBonk>
+		<ConVarEnabler id="BonkContainer" class="bonk__container" convar="mom_hud_bonk_enable" togglevisibility="true">
+			
+		</ConVarEnabler>
+	</MomHudBonk>
+</root>
