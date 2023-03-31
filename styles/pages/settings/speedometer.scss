@@ -52,6 +52,12 @@
 		width: 100%;
 		height: 32px;
 	}
+	&__axestogglebuttoncontainer {
+		horizontal-align: right;
+		vertical-align: center;
+		flow-children: right;
+		width: fit-children;
+	}
 	&__movedownbutton {
 		height: 32px;
 		margin-left: 4px;

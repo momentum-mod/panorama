@@ -30,13 +30,19 @@
 					</ToggleButton>
 				</Panel>
 				<Panel id="SpeedometerDetailContainer" class="settings-speedometer__detail settings-speedometer__detail--hidden">
-					<Panel id="SpeedometerUnitsContainer" class="settings-speedometer__settingcontainer">
-						<Label class="settings-speedometer__settinglabel" text="#Settings_Speedometer_Units" />
-						<DropDown id="SpeedometerUnits" class="dropdown horizontal-align-right" menuclass="dropdown-menu">
-							<Label id="units0" text="#Settings_Speedometer_Units_UPS" value="0" />
-							<Label id="units1" text="#Settings_Speedometer_Units_KPH" value="1" />
-							<Label id="units2" text="#Settings_Speedometer_Units_MPH" value="2" />
-						</DropDown>
+					<Panel class="settings-speedometer__settingcontainer mt-2">
+						<Label class="settings-speedometer__settinglabel" text="#Settings_Speedometer_EnabledAxes" />
+						<Panel id="SpeedometerAxesContainer" class="settings-speedometer__axestogglebuttoncontainer">
+							<ToggleButton id="SpeedometerXAxisToggleButton" class="button togglebutton togglebutton--blue mr-2" >
+								<Label class="button__text" text="X" />
+							</ToggleButton>
+							<ToggleButton id="SpeedometerYAxisToggleButton" class="button togglebutton togglebutton--blue mr-2" >
+								<Label class="button__text" text="Y" />
+							</ToggleButton>
+							<ToggleButton id="SpeedometerZAxisToggleButton" class="button togglebutton togglebutton--blue" >
+								<Label class="button__text" text="Z" />
+							</ToggleButton>
+						</Panel>
 					</Panel>
 					<Panel class="settings-speedometer__settingcontainer mt-2">
 						<Label class="settings-speedometer__settinglabel" text="#Settings_Speedometer_Colorize_Type" />
