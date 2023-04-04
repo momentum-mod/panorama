@@ -659,6 +659,11 @@
 					</ConVarEnabler>
 
 				</Panel>
+				
+				<ChaosSettingsEnum text="#Settings_Defrag_Groundboost" convar="mom_df_hud_groundboost_enable" infomessage="#Settings_Defrag_Groundboost_Info" tags="groundboost">
+					<RadioButton group="groundboostenable" text="#Common_Off" value="0" />
+					<RadioButton group="groundboostenable" text="#Common_On" value="1" />
+				</ChaosSettingsEnum>
 			</Panel>
 		</Panel>
 	</Panel>
