@@ -180,7 +180,7 @@ class Cgaz {
 		this.snapHeightgainEnable = snapConfig.enableHeightGain;
 
 		const accelConfig = DefragAPI.GetHUDAccelCFG(); // needed for aligning snaps to top of cgaz bar by default
-		const offset = this.snapOffset + accelConfig.enable ? 0.5 * accelConfig.height + accelConfig.offset : 0;
+		const offset = this.snapOffset + (accelConfig.enable ? 0.5 * accelConfig.height + accelConfig.offset : 0);
 		COLORED_SNAP_CLASS = new StyleObject(this.snapHeight, offset, this.snapColor);
 		UNCOLORED_SNAP_CLASS = new StyleObject(this.snapHeight, offset, this.snapAltColor);
 		HIGHLIGHTED_SNAP_CLASS = new StyleObject(this.snapHeight, offset, this.snapHlColor);
