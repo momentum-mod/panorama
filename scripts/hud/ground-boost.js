@@ -8,11 +8,12 @@ const TimerFlags = {
 };
 
 const ColorClass = {
-	KB: 'groundboost__meter--knockback',
-	GB: 'groundboost__meter--groundboost'
+	FRICTION: 'groundboost__meter--friction',
+	SLICK: 'groundboost__meter--slick'
 };
 
-const MS_2_DEG = 360 / 250;
+const MAX_TIMER_MS = 250;
+const MS_2_DEG = 360 / MAX_TIMER_MS;
 
 class Groundboost {
 	/** @type {Panel} @static */
@@ -23,42 +24,66 @@ class Groundboost {
 	static container = $('#GroundboostContainer');
 
 	static onLoad() {
-		this.colorClass = ColorClass.KB;
+		this.colorClass = ColorClass.FRICTION;
 		this.groundboostMeter.AddClass(this.colorClass);
 
 		this.container.AddClass('groundboost__container--hide');
 		this.visible = false;
+		this.missedJumpTimer = 0;
 	}
 
 	static onUpdate() {
 		const lastMoveData = MomentumMovementAPI.GetLastMoveData();
 		const timer = lastMoveData.defragTimer;
 		const timerFlags = lastMoveData.defragTimerFlags;
-		const newColor = timerFlags & TimerFlags.LANDING ? ColorClass.GB : ColorClass.KB;
+		const curTime = MomentumMovementAPI.GetCurrentTime();
 
-		//knockback is what causes no-friction condition, so only display meter when the player has this flag
-		if (timerFlags & TimerFlags.KNOCKBACK) {
-			this.groundboostTime.text = timer;
+		// Only toggle visibility on if the player is grounded
+		if (lastMoveData.moveStatus === 1) {
+			if (timerFlags & TimerFlags.KNOCKBACK) {
+				// Knockback is what causes no-friction condition
+				this.setColor(ColorClass.SLICK);
+				const fill = Math.min(timer * MS_2_DEG, 360).toFixed(2) - 360;
 
-			const fill = Math.min(timer * MS_2_DEG, 360).toFixed(2) - 360;
-			this.groundboostMeter.style.clip = `radial(50% 50%, 0deg, ${fill}deg)`;
+				this.missedJumpTimer = 0;
+				this.groundboostTime.text = timer;
+				this.groundboostMeter.style.clip = `radial(50% 50%, 0deg, ${fill}deg)`;
 
-			if (this.colorClass !== newColor) {
-				this.groundboostMeter.RemoveClass(this.colorClass);
-				this.colorClass = newColor;
-				this.groundboostMeter.AddClass(this.colorClass);
+				if (!this.visible) {
+					this.container.RemoveClass('groundboost__container--hide');
+					this.visible = true;
+				}
+			} else if (this.visible) {
+				// Player is grounded and no longer has the friction flag
+				if (this.missedJumpTimer === 0) {
+					this.missedJumpTimer = curTime;
+					this.setColor(ColorClass.FRICTION);
+				}
+
+				const val = Math.min(MAX_TIMER_MS, Math.round(1000 * (curTime - this.missedJumpTimer)));
+				const fill = Math.min(val * MS_2_DEG, 360).toFixed(2) - 360;
+
+				this.groundboostTime.text = val;
+				this.groundboostMeter.style.clip = `radial(50% 50%, ${-fill}deg, ${fill}deg)`;
+				if (val === MAX_TIMER_MS) this.fadeOut();
 			}
-
-			if (!this.visible) {
-				this.container.RemoveClass('groundboost__container--hide');
-				this.visible = true;
-			}
-		} else if (this.visible) {
-			this.groundboostTime.text = '';
-			this.groundboostMeter.style.clip = 'radial(50% 50%, 0deg, 360deg)';
-			this.container.AddClass('groundboost__container--hide');
-			this.visible = false;
+		} else if (this.visible && !(timerFlags & TimerFlags.KNOCKBACK)) {
+			// Player no longer grounded, freeze meter and fade out
+			this.fadeOut();
 		}
+	}
+
+	static setColor(color) {
+		if (this.colorClass === color) return;
+
+		this.groundboostMeter.RemoveClass(this.colorClass);
+		this.colorClass = color;
+		this.groundboostMeter.AddClass(this.colorClass);
+	}
+
+	static fadeOut() {
+		this.container.AddClass('groundboost__container--hide');
+		this.visible = false;
 	}
 
 	static {
