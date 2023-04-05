@@ -615,10 +615,10 @@
 					</ConVarEnabler>
 
 					<ChaosSettingsEnumDropDown text="#Settings_Defrag_Compass_Stat_Mode" convar="mom_df_hud_compass_stat_mode" infomessage="#Settings_Defrag_Compass_Stat_Mode_Info" tags="compass">
-						<Label id="stat0" text="#Settings_Defrag_Compass_StatMode_Type0" value="0" />
-						<Label id="stat1" text="#Settings_Defrag_Compass_StatMode_Type1" value="1" />
-						<Label id="stat2" text="#Settings_Defrag_Compass_StatMode_Type2" value="2" />
-						<Label id="stat3" text="#Settings_Defrag_Compass_StatMode_Type3" value="3" />
+						<Label id="compassstat0" text="#Settings_Defrag_Compass_StatMode_Type0" value="0" />
+						<Label id="compassstat1" text="#Settings_Defrag_Compass_StatMode_Type1" value="1" />
+						<Label id="compassstat2" text="#Settings_Defrag_Compass_StatMode_Type2" value="2" />
+						<Label id="compassstat3" text="#Settings_Defrag_Compass_StatMode_Type3" value="3" />
 					</ChaosSettingsEnumDropDown>
 
 					<ConVarColorDisplay text="#Settings_Defrag_CompassColor" convar="mom_df_hud_compass_color" infomessage="#Settings_Defrag_CompassColor_Info" tags="compass" />
@@ -659,11 +659,43 @@
 					</ConVarEnabler>
 
 				</Panel>
-				
-				<ChaosSettingsEnum text="#Settings_Defrag_Groundboost" convar="mom_df_hud_groundboost_enable" infomessage="#Settings_Defrag_Groundboost_Info" tags="groundboost">
-					<RadioButton group="groundboostenable" text="#Common_Off" value="0" />
-					<RadioButton group="groundboostenable" text="#Common_On" value="1" />
-				</ChaosSettingsEnum>
+
+				<Panel class="settings-group__combo">
+
+					<Label class="settings-group__combo-header" text="#Settings_Defrag_Groundboost_Title" />
+
+					<ChaosSettingsEnum text="#Settings_Defrag_Groundboost" convar="mom_df_hud_gb_enable" infomessage="#Settings_Defrag_Groundboost_Info" tags="groundboost">
+						<RadioButton group="gbenable" text="#Common_Off" value="0" />
+						<RadioButton group="gbenable" text="#Common_On" value="1" />
+					</ChaosSettingsEnum>
+
+					<ConVarEnabler convar="mom_df_hud_gb_enable" class="flow-down">
+						<ChaosSettingsEnumDropDown text="#Settings_Defrag_Groundboost_TextMode" convar="mom_df_hud_gb_text_mode" infomessage="#Settings_Defrag_Groundboost_TextMode_Info" tags="groundboost">
+							<Label id="gblabel0" text="#Settings_Defrag_Groundboost_TextMode_Type0" value="0" />
+							<Label id="gblabel1" text="#Settings_Defrag_Groundboost_TextMode_Type1" value="1" />
+							<Label id="gblabel2" text="#Settings_Defrag_Groundboost_TextMode_Type2" value="2" />
+						</ChaosSettingsEnumDropDown>
+						
+						<ConVarEnabler convar="mom_df_hud_gb_text_mode" class="flow-down">
+							<ChaosSettingsEnumDropDown text="#Settings_Defrag_Groundboost_TextColorMode" convar="mom_df_hud_gb_text_color_mode" infomessage="#Settings_Defrag_Groundboost_TextColorMode_Info" tags="groundboost">
+								<Label id="gbcolor0" text="#Settings_Defrag_Groundboost_TextColorMode_Type0" value="0" />
+								<Label id="gbcolor1" text="#Settings_Defrag_Groundboost_TextColorMode_Type1" value="1" />
+								<Label id="gbcolor2" text="#Settings_Defrag_Groundboost_TextColorMode_Type2" value="2" />
+							</ChaosSettingsEnumDropDown>
+						</ConVarEnabler>
+						
+						<ChaosSettingsEnum text="#Settings_Defrag_Groundboost_Overshoot" convar="mom_df_hud_gb_overshoot_enable" infomessage="#Settings_Defrag_Groundboost_Overshoot_Info" tags="groundboost">
+							<RadioButton group="gbovershootenable" text="#Common_Off" value="0" />
+							<RadioButton group="gbovershootenable" text="#Common_On" value="1" />
+						</ChaosSettingsEnum>
+						
+						<ChaosSettingsEnum text="#Settings_Defrag_Groundboost_CrashHighlight" convar="mom_df_hud_gb_crash_hl_enable" infomessage="#Settings_Defrag_Groundboost_CrashHighlight_Info" tags="groundboost">
+							<RadioButton group="gbcrashhlenable" text="#Common_Off" value="0" />
+							<RadioButton group="gbcrashhlenable" text="#Common_On" value="1" />
+						</ChaosSettingsEnum>
+					</ConVarEnabler>
+
+				</Panel>
 			</Panel>
 		</Panel>
 	</Panel>

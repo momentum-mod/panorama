@@ -10,7 +10,7 @@
 		<ConVarEnabler id="GroundboostContainer" class="groundboost__container groundboost__container--hide" convar="mom_df_hud_groundboost_enable" togglevisibility="true">
 			<Image id="GroundboostBackground" class="groundboost__background-meter" src="file://{images}/hud/meter-ring.svg" textureheight="100" />
 			<Image id="GroundboostMeter" class="groundboost__meter" src="file://{images}/hud/meter-ring.svg" textureheight="100" />
-			<Label id="GroundboostTime" text="" class="groundboost__label" />
+			<Label id="GroundboostLabel" text="" class="groundboost__label" />
 		</ConVarEnabler>
 	</MomHudGroundboost>
 </root>
