@@ -23,6 +23,12 @@
 			<Panel id="WindicatorZone" />
 		</ConVarEnabler>
 		<ConVarEnabler id="SnapContainer" class="cgaz__container" convar="mom_df_hud_snap_enable" togglevisibility="true" />
+		<ConVarEnabler id="PrimeContainer" class="cgaz__container" convar="mom_df_hud_prime_enable" togglevisibility="true" />
+		<Panel id="PrimeArrow">
+			<ConVarEnabler class="full-height" convar="mom_df_hud_prime_arrow_enable" togglevisibility="true">
+				<Image id="PrimeArrowIcon" class="arrow__down" src="file://{images}/hud/cgaz-arrow.svg" textureheight="48" />
+			</ConVarEnabler>
+		</Panel>
 		<Panel id="CompassArrow">
 			<ConVarEnabler class="full-height" convar="mom_df_hud_compass_mode" togglevisibility="true">
 				<Image id="CompassArrowIcon" class="arrow__up" src="file://{images}/hud/cgaz-arrow.svg" textureheight="48" />

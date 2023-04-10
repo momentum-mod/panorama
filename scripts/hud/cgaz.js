@@ -1,12 +1,27 @@
 'use strict';
 
 // TODO: remove these globals
-let MAX_GROUND_SPEED = 320;
+let MAX_GROUND_SPEED = 320; // initialized to 320. Changes with haste status.
 const AIR_ACCEL = 1;
 const DEFAULT_ACCEL = 2.56;
 const DEFAULT_SPEED = 320;
 const HASTE_ACCEL = 3.328; // (max speed) * (air accel = 1) * (tick interval) * (haste factor)
 const HASTE_SPEED = 416;
+
+const TruenessMode = {
+	GROUND: 1 << 0, // show ground zones
+	PROJECTED: 1 << 1, // show zones scaled by +jump/+crouch
+	CPM_TURN: 1 << 2 // show a/d and ground zones
+};
+
+const InputMode = {
+	NONE: 0,
+	AIR_CONTROL: 1,
+	STRAFE_LEFT: 2,
+	STRAFE_RIGHT: 3,
+	TURN_LEFT: 4,
+	TURN_RIGHT: 5
+};
 
 let NEUTRAL_CLASS;
 let SLOW_CLASS;
@@ -15,11 +30,14 @@ let TURN_CLASS;
 let WIN_ZONE_CLASS;
 let MIRROR_CLASS;
 let COMPASS_CLASS;
+let HIGHLIGHT_CLASS;
 
 let COLORED_SNAP_CLASS;
 let UNCOLORED_SNAP_CLASS;
 let HIGHLIGHTED_SNAP_CLASS;
 let HIGHLIGHTED_ALT_SNAP_CLASS;
+
+let PRIME_SIGHT_CLASS;
 
 class StyleObject {
 	constructor(height, offset, color) {
@@ -72,6 +90,15 @@ class Cgaz {
 	static snapZones = [];
 	static snapSplitZone = initZonePanel($.CreatePanel('Panel', this.snapContainer, 'SnapSplitZone'));
 
+	static primeContainer = $('#PrimeContainer');
+	static primeZones = [];
+	static primeFirstZoneLeft = initZonePanel($.CreatePanel('Panel', this.primeContainer, 'PrimeFirstZoneLeft'));
+	static primeFirstZoneRight = initZonePanel($.CreatePanel('Panel', this.primeContainer, 'PrimeFirstZoneRight'));
+	static primeSplitZone = initZonePanel($.CreatePanel('Panel', this.primeContainer, 'PrimeSplitZone'));
+	static primeHighlightZone = initZonePanel($.CreatePanel('Panel', this.primeContainer, 'PrimeHighlightZone'));
+	static primeArrow = $('#PrimeArrow');
+	static primeArrowIcon = $('#PrimeArrowIcon');
+
 	static compassArrow = $('#CompassArrow');
 	static compassArrowIcon = $('#CompassArrowIcon');
 	static tickContainer = $('#CompassTicks');
@@ -103,6 +130,7 @@ class Cgaz {
 
 		this.onAccelConfigChange();
 		this.onSnapConfigChange();
+		this.onPrimeConfigChange();
 		this.onProjectionChange();
 		this.onHudFovChange();
 		this.onSnapConfigChange();
@@ -192,6 +220,61 @@ class Cgaz {
 		}
 	}
 
+	static onPrimeConfigChange() {
+		const primeConfig = DefragAPI.GetHUDPrimeCFG();
+		this.primeEnable = primeConfig.enable;
+		this.primeTruenessMode = primeConfig.truenessMode;
+		this.primeShowInactive = primeConfig.inactiveEnable;
+		this.primeMinSpeed = primeConfig.minSpeed;
+		this.primeHeight = primeConfig.height;
+		this.primeOffset = primeConfig.offset;
+		this.primeGainColor = primeConfig.gainColor;
+		this.primeLossColor = primeConfig.lossColor;
+		this.primeAltColor = primeConfig.altColor;
+		this.primeHlEnable = primeConfig.highlightEnable;
+		this.primeHlBorder = Math.round(primeConfig.highlightBorder);
+		this.primeHlColor = primeConfig.highlightColor;
+		this.primeHeightgainEnable = primeConfig.scaleHeightEnable;
+		this.primeColorgainEnable = primeConfig.scaleColorEnable;
+		this.primeArrowEnable = primeConfig.arrowEnable;
+		this.primeArrowSize = primeConfig.arrowSize;
+		this.primeArrowColor = primeConfig.arrowColor;
+
+		PRIME_SIGHT_CLASS = new StyleObject(this.primeHeight, this.primeOffset, this.primeAltColor);
+		HIGHLIGHT_CLASS = new StyleObject(this.primeHeight, this.primeOffset, this.primeHlColor);
+
+		this.setupContainer(this.primeContainer, this.primeOffset);
+		this.primeContainer.style.verticalAlign = 'middle';
+		this.primeContainer.style.height = 2 * this.primeHeight + 'px';
+		for (const zone of this.primeZones) {
+			this.applyClass(zone, PRIME_SIGHT_CLASS);
+			zone.style.verticalAlign = 'top';
+		}
+		this.applyClass(this.primeFirstZoneLeft, PRIME_SIGHT_CLASS);
+		this.primeFirstZoneLeft.style.verticalAlign = 'top';
+		this.applyClass(this.primeFirstZoneRight, PRIME_SIGHT_CLASS);
+		this.primeFirstZoneRight.style.verticalAlign = 'top';
+		this.applyClass(this.primeSplitZone, PRIME_SIGHT_CLASS);
+		this.primeSplitZone.style.verticalAlign = 'top';
+
+		this.applyClassBorder(this.primeHighlightZone, this.primeHlBorder, HIGHLIGHT_CLASS);
+		this.primeHighlightZone.style.verticalAlign = 'top';
+		this.primeHighlightZone.style.zIndex = 1;
+
+		const containerHeight = 2 * this.primeHeight;
+		const width = 2 * this.primeArrowSize;
+		const height = containerHeight + 2 * width;
+		this.setupArrow(
+			this.primeArrow,
+			this.primeArrowIcon,
+			height,
+			width,
+			this.primeOffset,
+			'top',
+			this.primeArrowColor
+		);
+	}
+
 	static onWindicatorConfigChange() {
 		const windicatorArrowConfig = DefragAPI.GetHUDWIndicatorCFG();
 		this.windicatorEnable = windicatorArrowConfig.enable;
@@ -261,8 +344,16 @@ class Cgaz {
 	}
 
 	static onUpdate() {
-		// clear last frame's split zones
-		this.clearZones([this.accelSplitZone, this.snapSplitZone, this.mirrorSplitZone]);
+		// clear last frame's special zones
+		this.clearZones([
+			this.accelSplitZone,
+			this.snapSplitZone,
+			this.mirrorSplitZone,
+			this.primeSplitZone,
+			this.primeFirstZoneLeft,
+			this.primeFirstZoneRight,
+			this.primeHighlightZone
+		]);
 
 		this.screenY = $.GetContextPanel().actuallayoutheight;
 		this.screenX = $.GetContextPanel().actuallayoutwidth;
@@ -286,7 +377,7 @@ class Cgaz {
 				MAX_GROUND_SPEED = HASTE_SPEED;
 
 				// find snap zone borders with haste
-				this.findSnapAngles(this.snapAccel);
+				this.snapAngles = this.findSnapAngles(this.snapAccel);
 			}
 		} else {
 			if (this.snapAccel !== DEFAULT_ACCEL) {
@@ -294,7 +385,7 @@ class Cgaz {
 				MAX_GROUND_SPEED = DEFAULT_SPEED;
 
 				// find snap zone borders without haste
-				this.findSnapAngles(this.snapAccel);
+				this.snapAngles = this.findSnapAngles(this.snapAccel);
 			}
 		}
 
@@ -331,8 +422,8 @@ class Cgaz {
 			y: Math.sin(viewAngle)
 		};
 
-		const forwardMove = this.getDot(viewDir, wishDir).toFixed(0);
-		const rightMove = this.getCross(viewDir, wishDir).toFixed(0);
+		const forwardMove = Math.round(this.getDot(viewDir, wishDir));
+		const rightMove = Math.round(this.getCross(viewDir, wishDir));
 
 		const bIsFalling = lastMoveData.moveStatus === 0;
 		const bHasAirControl = phyMode && this.floatEquals(wishAngle, viewAngle, 0.01) && bIsFalling;
@@ -472,19 +563,95 @@ class Cgaz {
 				(bSnapShift ? 0 : Math.PI * 0.25 * (rightMove > 0 ? -1 : 1)) - viewAngle
 			);
 
-			const targetOffset = this.remapAngle(velAngle - viewAngle);
-			const targetAngle = this.findFastAngle(dropSpeed, MAX_GROUND_SPEED, MAX_GROUND_SPEED * tickInterval);
-			const leftTarget = -targetAngle - targetOffset + Math.PI * 0.25;
-			const rightTarget = targetAngle - targetOffset - Math.PI * 0.25;
-
 			// draw snap zones
 			if (speed >= this.snapMinSpeed) {
+				const targetOffset = this.remapAngle(velAngle - viewAngle);
+				const targetAngle = this.findFastAngle(dropSpeed, MAX_GROUND_SPEED, MAX_GROUND_SPEED * tickInterval);
+				const leftTarget = -targetAngle - targetOffset + Math.PI * 0.25;
+				const rightTarget = targetAngle - targetOffset - Math.PI * 0.25;
 				this.updateSnaps(snapOffset, leftTarget, rightTarget);
 			} else {
 				this.clearZones(this.snapZones);
 			}
 		} else {
 			this.clearZones(this.snapZones);
+		}
+
+		this.clearZones(this.primeZones);
+
+		if (this.primeEnable) {
+			const snapOffset = this.remapAngle(
+				(bSnapShift ? 0 : Math.PI * 0.25 * (rightMove > 0 ? -1 : 1)) - viewAngle
+			);
+
+			if (speed > this.primeMinSpeed) {
+				const primeMaxSpeed =
+					this.primeTruenessMode & TruenessMode.PROJECTED ? lastMoveData.wishspeed : lastMoveData.maxspeed;
+				const primeMaxAccel = lastMoveData.acceleration * maxSpeed * tickInterval;
+				const primeSightSpeed =
+					this.primeTruenessMode & TruenessMode.CPM_TURN ? primeMaxSpeed : MAX_GROUND_SPEED;
+				const primeSightAccel = this.primeTruenessMode & TruenessMode.CPM_TURN ? primeMaxAccel : this.snapAccel;
+
+				if (this.primeAccel !== primeSightAccel) {
+					this.primeAccel = primeSightAccel;
+
+					this.primeAngles = this.findSnapAngles(this.primeAccel);
+				}
+
+				if (this.primeAngles.length > this.primeZones?.length) {
+					const start = this.primeZones?.length;
+					const end = this.primeAngles.length;
+					for (let i = start; i < end; ++i) {
+						const panel = initZonePanel($.CreatePanel('Panel', this.primeContainer, `PrimeZone${i}`));
+						panel.style.verticalAlign = 'top';
+						panel.color = this.primeAltColor; // add color property to the zone object, used for highlight
+						this.primeZones.push(panel);
+					}
+					this.onPrimeConfigChange();
+				} else if (this.primeAngles.length < this.primeZones?.length) {
+					const start = this.primeAngles.length;
+					const end = this.primeZones?.length;
+					for (let i = start; i < end; ++i) {
+						this.primeZones.pop().DeleteAsync(0);
+					}
+					this.onPrimeConfigChange();
+				}
+
+				const targetAngle = Math.max(this.findFastAngle(dropSpeed, primeSightSpeed, primeSightAccel), 0);
+				const boundaryAngle = this.findStopAngle(
+					primeSightAccel,
+					speedSquared,
+					dropSpeed,
+					dropSpeedSquared,
+					targetAngle
+				);
+				this.updatePrimeSight(viewDir, viewAngle, targetAngle, boundaryAngle, velAngle, wishDir, wishAngle);
+
+				// arrow
+				if (this.primeArrowEnable) {
+					if (this.getSizeSquared(wishDir) > 0) {
+						let arrowAngle =
+							wishAngle -
+							Math.atan2(
+								Math.round(this.primeAccel * wishDir.y),
+								Math.round(this.primeAccel * wishDir.x)
+							);
+						if (Math.abs(arrowAngle) < this.hFov) {
+							this.compassArrowIcon.RemoveClass('arrow__down');
+							this.compassArrowIcon.AddClass('arrow__up');
+						} else {
+							this.compassArrowIcon.RemoveClass('arrow__up');
+							this.compassArrowIcon.AddClass('arrow__down');
+							arrowAngle = this.remapAngle(arrowAngle + Math.PI);
+						}
+						const leftEdge = this.mapToScreenWidth(arrowAngle) - this.primeArrowSize;
+						this.primeArrow.style.marginLeft = this.NaNCheck(leftEdge, 0) + 'px';
+						this.primeArrow.visible = true;
+					} else {
+						this.primeArrow.visible = false;
+					}
+				}
+			}
 		}
 
 		let velocityAngle = this.remapAngle(viewAngle - velAngle);
@@ -523,7 +690,7 @@ class Cgaz {
 			}
 			const leftEdge = this.mapToScreenWidth(velocityAngle) - this.compassSize;
 			this.compassArrow.style.marginLeft = this.NaNCheck(leftEdge, 0) + 'px';
-			this.compassArrowIcon.style.washColor = color;
+			this.compassArrowIcon.style.washColor = this.getRgbFromRgba(color);
 		}
 		this.compassArrow.visible = this.compassMode % 2 && speed >= this.accelMinSpeed;
 		this.tickContainer.visible = this.compassMode > 1;
@@ -611,7 +778,7 @@ class Cgaz {
 	}
 
 	static findSnapAngles(snapAccel) {
-		const singleAxisMax = snapAccel.toFixed(0);
+		const singleAxisMax = Math.round(snapAccel);
 		let breakPoints = [];
 		breakPoints = this.findBreakPoints(snapAccel, singleAxisMax, breakPoints);
 
@@ -626,7 +793,7 @@ class Cgaz {
 				this.remapAngle(breakPoints[i] - Math.PI * 0.5)
 			);
 
-		this.snapAngles = angles.sort((a, b) => a - b);
+		return angles.sort((a, b) => a - b);
 	}
 
 	static findBreakPoints(accel, value, breakPoints) {
@@ -647,8 +814,8 @@ class Cgaz {
 			const right = this.snapAngles[i + 1];
 			const angle = 0.5 * (left + right);
 
-			const xGain = (this.snapAccel * Math.cos(angle)).toFixed(0);
-			const yGain = (this.snapAccel * Math.sin(angle)).toFixed(0);
+			const xGain = Math.round(this.snapAccel * Math.cos(angle));
+			const yGain = Math.round(this.snapAccel * Math.sin(angle));
 			const gainDiff = Math.sqrt(xGain * xGain + yGain * yGain) - this.snapAccel;
 			snapGains.push(gainDiff);
 
@@ -769,6 +936,218 @@ class Cgaz {
 		}
 	}
 
+	static updatePrimeSight(viewDir, viewAngle, targetAngle, boundaryAngle, velAngle, wishDir, wishAngle) {
+		const cross = this.getCross(wishDir, viewDir);
+		const inputMode =
+			Math.round(this.getSize(wishDir)) * (1 << Math.round(2 * Math.pow(cross, 2))) +
+			(Math.round(cross) > 0 ? 1 : 0);
+
+		const targetOffset = this.remapAngle(velAngle - viewAngle);
+		const inputAngle = this.remapAngle(viewAngle - wishAngle) * this.getSizeSquared(wishDir);
+		const velocity = MomentumPlayerAPI.GetVelocity();
+		const gainZonesMap = new Map();
+
+		let speedGain = 0;
+		let gainMax = -this.primeAccel;
+		let fillLeftZones = false;
+		let fillRightZones = false;
+
+		switch (inputMode) {
+			case InputMode.NONE: // Fall-through
+			default:
+				break;
+
+			case InputMode.AIR_CONTROL: // Fall-through
+			case InputMode.TURN_LEFT:
+			case InputMode.TURN_RIGHT: {
+				targetAngle = Math.max(Math.abs(targetAngle), Math.PI * 0.25);
+				break;
+			}
+			case InputMode.STRAFE_LEFT: {
+				fillLeftZones = true;
+				break;
+			}
+			case InputMode.STRAFE_RIGHT: {
+				fillRightZones = true;
+				break;
+			}
+		}
+
+		const leftOffset = -Math.PI * 0.25 - viewAngle;
+		const leftTarget = this.wrapToHalfPi(-targetAngle - velAngle);
+		const leftAngles = fillLeftZones ? this.primeAngles : this.snapAngles;
+		const rightOffset = Math.PI * 0.25 - viewAngle;
+		const rightTarget = this.wrapToHalfPi(targetAngle - velAngle);
+		const rightAngles = fillRightZones ? this.primeAngles : this.snapAngles;
+
+		const iLeft = this.updateFirstPrimeZone(leftTarget, leftOffset, this.primeFirstZoneLeft, leftAngles);
+		const iRight = this.updateFirstPrimeZone(rightTarget, rightOffset, this.primeFirstZoneRight, rightAngles);
+
+		if (fillLeftZones || this.primeShowInactive) {
+			this.primeFirstZoneLeft.rightPx = this.mapToScreenWidth(this.wrapToHalfPi(leftTarget - leftOffset));
+			this.primeFirstZoneLeft.style.backgroundColor = this.primeAltColor;
+			this.drawZone(this.primeFirstZoneLeft);
+			this.primeFirstZoneLeft.isInactive = !fillLeftZones;
+		} else {
+			this.clearZones([this.primeFirstZoneLeft]);
+		}
+
+		speedGain = this.findPrimeGain(this.primeFirstZoneLeft, velocity, this.rotateVector(viewDir, 0.25 * Math.PI));
+		gainZonesMap.set(this.primeFirstZoneLeft, speedGain);
+		if (speedGain > gainMax) gainMax = speedGain;
+
+		if (fillRightZones || this.primeShowInactive) {
+			this.primeFirstZoneRight.leftPx = this.mapToScreenWidth(this.wrapToHalfPi(rightTarget - rightOffset));
+			this.primeFirstZoneRight.style.backgroundColor = this.primeAltColor;
+			this.drawZone(this.primeFirstZoneRight);
+			this.primeFirstZoneRight.isInactive = !fillRightZones;
+		} else {
+			this.clearZones([this.primeFirstZoneRight]);
+		}
+
+		speedGain = this.findPrimeGain(this.primeFirstZoneRight, velocity, this.rotateVector(viewDir, -0.25 * Math.PI));
+		gainZonesMap.set(this.primeFirstZoneRight, speedGain);
+		if (speedGain > gainMax) gainMax = speedGain;
+
+		if (fillLeftZones) {
+			const leftBoundary = this.wrapToHalfPi(-boundaryAngle - velAngle);
+			const jLeft = this.findArrayInfimum(this.primeAngles, leftBoundary);
+			const zoneRange = {
+				start: iLeft,
+				end: jLeft,
+				direction: -1
+			};
+			this.fillActivePrimeZones(zoneRange, leftOffset, gainZonesMap, gainMax, velocity, wishDir);
+		}
+
+		if (fillRightZones) {
+			const rightBoundary = this.wrapToHalfPi(boundaryAngle - velAngle);
+			const jRight = this.findArrayInfimum(this.primeAngles, rightBoundary);
+			const zoneRange = {
+				start: iRight,
+				end: jRight,
+				direction: 1
+			};
+			this.fillActivePrimeZones(zoneRange, rightOffset, gainZonesMap, gainMax, velocity, wishDir);
+		}
+
+		const scale = 1 / (gainMax > 0 ? gainMax : this.primeAccel);
+		for (const [zone, gain] of gainZonesMap.entries()) {
+			const gainFactor = Math.min(Math.abs(gain * scale), 1);
+			const height = this.NaNCheck(this.primeHeight * (this.primeHeightgainEnable ? gainFactor : 1), 0);
+			const margin = gain < 0 ? this.primeHeight : this.primeHeight - height;
+			zone.style.height = Number(height).toFixed(0) + 'px';
+			zone.style.marginTop = Number(margin).toFixed(0) + 'px';
+			zone.style.marginBottom = Number(gain < 0 ? this.primeHeight - height : this.primeHeight).toFixed(0) + 'px';
+
+			if (zone.isInactive) continue;
+
+			if (gain < 0) {
+				zone.color = this.primeLossColor;
+			} else if (this.primeColorgainEnable) {
+				zone.color = this.colorLerp(this.primeAltColor, this.primeGainColor, gainFactor);
+			} else {
+				zone.color = this.primeGainColor;
+			}
+
+			if (this.primeHlEnable && this.shouldHighlight(zone)) {
+				this.zoneCopy(this.primeHighlightZone, zone);
+				this.drawZone(this.primeHighlightZone);
+				this.primeHighlightZone.style.marginTop = (gain < 0 ? this.primeHeight : 0) + 'px';
+				zone.color = this.enhanceAlpha(zone.color);
+			}
+
+			zone.style.backgroundColor = zone.color;
+		}
+	}
+
+	/**
+	 * Updates zones that overlap cgaz zones. Returns the max potential gain from updated zones.
+	 * @param {Object} zoneRange
+	 * @param {Number} offset
+	 * @param {String} color
+	 * @param {Map<Object,Number>} gainZonesMap
+	 * @param {Number} gainMax
+	 * @param {Object} velocity
+	 * @param {Object} wishDir
+	 * @returns {Number}
+	 */
+	static fillActivePrimeZones(zoneRange, offset, gainZonesMap, gainMax, velocity, wishDir) {
+		const angleCount = this.primeAngles.length;
+		let count = (zoneRange.direction * (zoneRange.end - zoneRange.start) + angleCount) % angleCount;
+		let index = zoneRange.start;
+		let zone;
+		while (count-- >= 0) {
+			index = (index + zoneRange.direction + angleCount) % angleCount;
+			zone = this.primeZones[index];
+
+			const left = this.wrapToHalfPi(this.primeAngles[index] - offset);
+			const right = this.wrapToHalfPi(this.primeAngles[(index + 1) % angleCount] - offset);
+			this.updateZone(zone, left, right, 0, PRIME_SIGHT_CLASS, this.primeSplitZone);
+			const speedGain = this.findPrimeGain(zone, velocity, wishDir);
+			gainZonesMap.set(zone, speedGain);
+			if (speedGain < 0) break;
+			if (speedGain > gainMax) gainMax = speedGain;
+		}
+	}
+
+	/**
+	 * Get the index of the largest entry less than (or equal to) the target value - Greatest Lower Bound
+	 * Array argument assumed to be sorted.
+	 * @param {Array} arr
+	 * @param {Number} val
+	 * @returns {Number}
+	 */
+	static findArrayInfimum(arr, val) {
+		let lower = 0;
+		let upper = arr.length - 1;
+		if (val < arr[0]) return upper;
+
+		while (lower < upper) {
+			const i = Math.floor(0.5 * (lower + upper));
+			if (val > arr[i]) {
+				lower = i + 1;
+			} else {
+				upper = i;
+			}
+		}
+		return lower - 1;
+	}
+
+	/**
+	 * Check whether center screen falls between zone left and right edge (inclusive).
+	 * @param {Object} zone
+	 * @returns {Boolean}
+	 */
+	static shouldHighlight(zone) {
+		const center = 0.5 * this.screenX;
+		return zone.rightPx - center >= 0 && zone.leftPx - center <= 0;
+	}
+
+	static findPrimeGain(zone, velocity, wishDir) {
+		const avgAngle = -0.5 * (zone.leftAngle + zone.rightAngle);
+		const zoneVector = this.rotateVector(wishDir, avgAngle);
+		const snapProject = {
+			x: Math.round(zoneVector.x * this.primeAccel),
+			y: Math.round(zoneVector.y * this.primeAccel)
+		};
+
+		const newSpeed = this.getSize({
+			x: Number(velocity.x) + Number(snapProject.x),
+			y: Number(velocity.y) + Number(snapProject.y)
+		});
+
+		return newSpeed - this.getSize(velocity);
+	}
+
+	static updateFirstPrimeZone(target, offset, zone, angles) {
+		const i = this.findArrayInfimum(angles, target);
+		const left = this.wrapToHalfPi(angles[i] - offset);
+		const right = this.wrapToHalfPi(angles[(i + 1) % angles.length] - offset);
+		this.updateZone(zone, left, right, 0, PRIME_SIGHT_CLASS, this.primeSplitZone);
+		return i;
+	}
+
 	static drawZone(zone) {
 		// assign widths
 		const width = zone.rightPx - zone.leftPx;
@@ -778,8 +1157,14 @@ class Cgaz {
 		zone.style.marginLeft = this.NaNCheck(Number(zone.leftPx).toFixed(0), 0) + 'px';
 	}
 
+	static zoneCopy(pasteZone, copyZone) {
+		pasteZone.leftAngle = copyZone.leftAngle;
+		pasteZone.rightAngle = copyZone.rightAngle;
+		pasteZone.leftPx = copyZone.leftPx;
+		pasteZone.rightPx = copyZone.rightPx;
+	}
+
 	static findCompassTick(angle) {
-		//return this.mapToScreenWidth(1 * this.remapAngle(1 * angle));
 		while (angle > 0) {
 			angle -= this.halfPi;
 		}
@@ -819,7 +1204,7 @@ class Cgaz {
 
 		arrowIcon.style.height = this.NaNCheck(width, 0) + 'px';
 		arrowIcon.style.width = this.NaNCheck(width, 0) + 'px';
-		arrowIcon.style.washColor = color;
+		arrowIcon.style.washColor = this.getRgbFromRgba(color);
 		arrowIcon.style.overflow = 'noclip noclip';
 		arrowIcon.style.verticalAlign = align;
 	}
@@ -842,11 +1227,11 @@ class Cgaz {
 
 		switch (this.projection) {
 			case 0:
-				return ((1 + Math.tan(angle) / Math.tan(this.hFov)) * screenWidth * 0.5).toFixed(0);
+				return Math.round((1 + Math.tan(angle) / Math.tan(this.hFov)) * screenWidth * 0.5);
 			case 1:
-				return ((1 + angle / this.hFov) * screenWidth * 0.5).toFixed(0);
+				return Math.round((1 + angle / this.hFov) * screenWidth * 0.5);
 			case 2:
-				return ((1 + Math.tan(angle * 0.5) / Math.tan(this.hFov * 0.5)) * screenWidth * 0.5).toFixed(0);
+				return Math.round((1 + Math.tan(angle * 0.5) / Math.tan(this.hFov * 0.5)) * screenWidth * 0.5);
 		}
 	}
 
@@ -859,11 +1244,11 @@ class Cgaz {
 
 		switch (this.projection) {
 			case 0:
-				return ((1 + Math.tan(angle) / Math.tan(this.vFov)) * screenHeight * 0.5).toFixed(0);
+				return Math.round((1 + Math.tan(angle) / Math.tan(this.vFov)) * screenHeight * 0.5);
 			case 1:
-				return ((1 + angle / this.vFov) * screenHeight * 0.5).toFixed(0);
+				return Math.round((1 + angle / this.vFov) * screenHeight * 0.5);
 			case 2:
-				return ((1 + Math.tan(angle * 0.5) / Math.tan(this.vFov * 0.5)) * screenHeight * 0.5).toFixed(0);
+				return Math.round((1 + Math.tan(angle * 0.5) / Math.tan(this.vFov * 0.5)) * screenHeight * 0.5);
 		}
 	}
 
@@ -920,6 +1305,16 @@ class Cgaz {
 		return angle < 0 ? angle + Math.PI : angle - Math.PI;
 	}
 
+	static rotateVector(vector, angle) {
+		const cos = Math.cos(angle);
+		const sin = Math.sin(angle);
+
+		return {
+			x: vector.x * cos - vector.y * sin,
+			y: vector.y * cos + vector.x * sin
+		};
+	}
+
 	static distToNearestTick(angle) {
 		angle += Math.PI * 0.125;
 		const integer = Math.trunc((angle * 4) / Math.PI);
@@ -946,6 +1341,16 @@ class Cgaz {
 		return this.getColorStringFromArray(arrayA.map((Ai, i) => Ai + alpha * (arrayB[i] - Ai)));
 	}
 
+	static getRgbFromRgba(colorString) {
+		const [r, g, b] = this.splitColorString(colorString);
+		return `rgb(${r}, ${g}, ${b})`;
+	}
+
+	static enhanceAlpha(colorString) {
+		const [r, g, b, a] = this.splitColorString(colorString);
+		return this.getColorStringFromArray([r, g, b, 0.25 * a + 192]);
+	}
+
 	static {
 		$.RegisterEventHandler('ChaosHudProcessInput', $.GetContextPanel(), this.onUpdate.bind(this));
 
@@ -954,6 +1359,7 @@ class Cgaz {
 		$.RegisterForUnhandledEvent('OnDefragHUDFOVChange', this.onHudFovChange.bind(this));
 		$.RegisterForUnhandledEvent('OnDefragHUDAccelChange', this.onAccelConfigChange.bind(this));
 		$.RegisterForUnhandledEvent('OnDefragHUDSnapChange', this.onSnapConfigChange.bind(this));
+		$.RegisterForUnhandledEvent('OnDefragHUDPrimeChange', this.onPrimeConfigChange.bind(this));
 		$.RegisterForUnhandledEvent('OnDefragHUDWIndicatorChange', this.onWindicatorConfigChange.bind(this));
 		$.RegisterForUnhandledEvent('OnDefragHUDCompassChange', this.onCompassConfigChange.bind(this));
 	}
