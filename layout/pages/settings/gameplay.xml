@@ -567,6 +567,72 @@
 
 				</Panel>
 
+				<Panel class="settings-group__combo">
+
+					<Label class="settings-group__combo-header" text="#Settings_Defrag_PrimeSight_Title" />
+
+					<ChaosSettingsEnum text="#Settings_Defrag_PrimeSight_Enable" convar="mom_df_hud_prime_enable" infomessage="#Settings_Defrag_PrimeSight_Enable_Info" tags="prime,sight">
+						<RadioButton group="primeenable" text="#Common_Off" value="0" />
+						<RadioButton group="primeenable" text="#Common_On" value="1" />
+					</ChaosSettingsEnum>
+
+					<ConVarEnabler convar="mom_df_hud_prime_enable"  class="flow-down">
+						<ChaosSettingsSlider text="#Settings_Defrag_PrimeSight_Height" min="1" max="50" convar="mom_df_hud_prime_height" displayprecision="0" infomessage="#Settings_Defrag_PrimeSight_Height_Info" tags="prime,sight" />
+
+						<ChaosSettingsSlider text="#Settings_Defrag_PrimeSight_Offset" min="-200" max="200" convar="mom_df_hud_prime_offset" displayprecision="0" infomessage="#Settings_Defrag_PrimeSight_Offset_Info" tags="prime,sight" />
+
+						<ChaosSettingsSlider text="#Settings_Defrag_PrimeSight_MinSpeed" min="1" max="1000" convar="mom_df_hud_prime_min_speed" displayprecision="0" infomessage="#Settings_Defrag_PrimeSight_MinSpeed_Info" tags="prime,sight" />
+
+						<ChaosSettingsEnum text="#Settings_Defrag_PrimeSight_SizeByGain" convar="mom_df_hud_prime_heightgain_enable" infomessage="#Settings_Defrag_PrimeSight_SizeByGain_Info" tags="prime,sight">
+							<RadioButton group="primeheightgain" text="#Common_Off" value="0" />
+							<RadioButton group="primeheightgain" text="#Common_On" value="1" />
+						</ChaosSettingsEnum>
+
+						<ChaosSettingsEnum text="#Settings_Defrag_PrimeSight_ColorByGain" convar="mom_df_hud_prime_colorgain_enable" infomessage="#Settings_Defrag_PrimeSight_ColorByGain_Info" tags="prime,sight">
+							<RadioButton group="primecolorgain" text="#Common_Off" value="0" />
+							<RadioButton group="primecolorgain" text="#Common_On" value="1" />
+						</ChaosSettingsEnum>
+
+						<ChaosSettingsEnum text="#Settings_Defrag_PrimeSight_HighlightEnable" convar="mom_df_hud_prime_hl_enable" infomessage="#Settings_Defrag_PrimeSight_HighlightEnable_Info" tags="prime,sight">
+							<RadioButton group="primehlenable" text="#Common_Off" value="0" />
+							<RadioButton group="primehlenable" text="#Common_On" value="1" />
+						</ChaosSettingsEnum>
+
+						<ConVarEnabler convar="mom_df_hud_prime_hl_enable" class="flow-down">
+							<ConVarColorDisplay text="#Settings_Defrag_PrimeSight_HighlightColor" convar="mom_df_hud_prime_hl_color" infomessage="#Settings_Defrag_PrimeSight_HighlightColor_Info" tags="prime,sight" />
+
+							<ChaosSettingsSlider text="#Settings_Defrag_PrimeSight_HighlightBorder" min="0" max="10" convar="mom_df_hud_prime_hl_border" displayprecision="0" infomessage="#Settings_Defrag_PrimeSight_HighlightBorder_Info" tags="prime,sight" />
+						</ConVarEnabler>
+
+						<ChaosSettingsEnum text="#Settings_Defrag_PrimeSight_InactiveEnable" convar="mom_df_hud_prime_inactive_enable" infomessage="#Settings_Defrag_PrimeSight_InactiveEnable_Info" tags="prime,sight">
+							<RadioButton group="primeinactiveenable" text="#Common_Off" value="0" />
+							<RadioButton group="primeinactiveenable" text="#Common_On" value="1" />
+						</ChaosSettingsEnum>
+
+						<ConVarEnabler convar="mom_df_hud_prime_inactive_enable">
+							<ConVarColorDisplay text="#Settings_Defrag_PrimeSight_AltColor" convar="mom_df_hud_prime_alt_color" infomessage="#Settings_Defrag_PrimeSight_AltColor_Info" tags="prime,sight" />
+						</ConVarEnabler>
+
+						<ConVarColorDisplay text="#Settings_Defrag_PrimeSight_GainColor" convar="mom_df_hud_prime_gain_color" infomessage="#Settings_Defrag_PrimeSight_GainColor_Info" tags="prime,sight" />
+
+						<ConVarColorDisplay text="#Settings_Defrag_PrimeSight_LossColor" convar="mom_df_hud_prime_loss_color" infomessage="#Settings_Defrag_PrimeSight_LossColor_Info" tags="prime,sight" />
+
+						<ChaosSettingsEnum text="#Settings_Defrag_PrimeSight_ArrowEnable" convar="mom_df_hud_prime_arrow_enable" infomessage="#Settings_Defrag_PrimeSight_ArrowEnable_Info" tags="prime,sight">
+							<RadioButton group="primearrowenable" text="#Common_Off" value="0" />
+							<RadioButton group="primearrowenable" text="#Common_On" value="1" />
+						</ChaosSettingsEnum>
+						
+						<ConVarEnabler convar="mom_df_hud_prime_arrow_enable"  class="flow-down">
+							<ChaosSettingsSlider text="#Settings_Defrag_PrimeSight_ArrowSize" min="1" max="10" convar="mom_df_hud_prime_arrow_size" displayprecision="0" infomessage="#Settings_Defrag_PrimeSight_ArrowSize_Info" tags="prime,sight" />
+
+							<ConVarColorDisplay text="#Settings_Defrag_PrimeSight_ArrowColor" convar="mom_df_hud_prime_arrow_color" infomessage="#Settings_Defrag_PrimeSight_ArrowColor_Info" tags="prime,sight" />
+						</ConVarEnabler>
+
+						<!-- Trueness Mode -->
+					</ConVarEnabler>
+
+				</Panel>
+
 				<ChaosSettingsEnumDropDown text="#Settings_Defrag_ProjectionMode" convar="mom_df_hud_projection" infomessage="#Settings_Defrag_ProjectionMode_Info">
 					<Label id="projection0" text="#Settings_Defrag_ProjectionMode_Type0" value="0" />
 					<Label id="projection1" text="#Settings_Defrag_ProjectionMode_Type1" value="1" />
