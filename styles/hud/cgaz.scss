@@ -22,11 +22,9 @@
 
 .cgaz-line {
 	width: 100px;
-	margin-top: -1px;
-	border-top: 2px solid;
-	horizontal-align: center;
-	vertical-align: bottom;
-	overflow: noclip noclip;
+	height: 2px;
+	align: center top;
+	transform: translatey(-1px);
 
 	&__container {
 		width: 100%;

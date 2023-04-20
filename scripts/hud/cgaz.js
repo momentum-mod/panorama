@@ -533,11 +533,11 @@ class Cgaz {
 			const pitchLines = this.pitchLineContainer.Children();
 			for (let i = 0; i < pitchLines?.length; ++i) {
 				const viewPitch = MomentumPlayerAPI.GetAngles().x;
-				const pitchDelta = viewPitch - this.compassPitchTarget[i];
+				const pitchDelta = this.compassPitchTarget[i] - viewPitch;
 				const pitchDeltaPx = this.mapToScreenHeight((pitchDelta * Math.PI) / 180);
-				pitchLines[i].style.height = this.NaNCheck(pitchDeltaPx, 0) + 'px';
-				pitchLines[i].style.borderColor =
-					Math.abs(viewPitch - this.compassPitchTarget[i]) > 0.1 ? this.compassColor : this.compassHlColor;
+				pitchLines[i].style.position = `0px ${this.NaNCheck(pitchDeltaPx, 0)}px 0px`;
+				pitchLines[i].style.backgroundColor =
+					Math.abs(pitchDelta) > 0.15 ? this.compassColor : this.compassHlColor;
 			}
 		}
 
@@ -553,7 +553,7 @@ class Cgaz {
 			let bShouldHighlight = false;
 			const viewPitch = MomentumPlayerAPI.GetAngles().x;
 			for (const target of this.compassPitchTarget) {
-				if (Math.abs(viewPitch - target) <= 0.1) bShouldHighlight = true;
+				if (Math.abs(viewPitch - target) <= 0.15) bShouldHighlight = true;
 			}
 			this.pitchStat.style.color = bShouldHighlight ? this.compassHlColor : this.compassColor;
 		}
