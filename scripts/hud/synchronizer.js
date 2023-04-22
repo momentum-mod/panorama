@@ -31,23 +31,46 @@ class Synchronizer {
 	static firstPanelWidth = this.maxSegmentWidth;
 	static syncGain = 10; // scale how fast the bars move
 	static altColor = 'rgba(0, 0, 0, 0.0)';
+	static lastVel = { x: 0, y: 0 };
+	static lastYaw = 0;
 
 	static onLoad() {
 		this.initializeSettings();
 
 		if (this.mom_hud_synchro_stat_mode) this.onJump(); // show stats if enabled
+
+		this.airSpeed = 30;
+		this.runSpeed = GameInterfaceAPI.GetSettingFloat('sv_maxspeed');
+		this.acceleration = GameInterfaceAPI.GetSettingFloat('sv_accelerate');
+		this.airAcceleration = GameInterfaceAPI.GetSettingFloat('sv_airaccelerate');
+		this.stopSpeed = GameInterfaceAPI.GetSettingFloat('sv_stopspeed');
+		this.friction = GameInterfaceAPI.GetSettingFloat('sv_friction');
+		this.tickInterval = MomentumMovementAPI.GetTickInterval();
+		this.maxGroundSpeed = this.getMaxGroundSpeed();
 	}
 
 	static onUpdate() {
 		const lastMoveData = MomentumMovementAPI.GetLastMoveData();
 		const lastTickStats = MomentumMovementAPI.GetLastTickStats();
 		const wishDir = lastMoveData.wishdir;
-		const velDir = this.getNormal(MomentumPlayerAPI.GetVelocity(), 0.001);
+
+		const vel = MomentumPlayerAPI.GetVelocity();
+		const velDir = this.getNormal(vel, 0.001);
+		const lastSpeed = this.getSize(this.lastVel);
+		this.lastVel = vel;
 
 		const bValidWishMove = this.getSize(wishDir) * this.getSize(velDir) > 0.001;
 		const strafeRight = (bValidWishMove ? 1 : 0) * lastTickStats.strafeRight;
 		const direction = this.mom_hud_synchro_dynamic_enable === 1 ? strafeRight : 1;
 		const flip = this.mom_hud_synchro_flip_enable === 1 ? -1 : 1;
+
+		const yaw = MomentumPlayerAPI.GetAngles().y;
+		const yawDelta = bValidWishMove ? this.wrapValueToRange(this.lastYaw - yaw, -180, 180) * this.deg2rad : 0;
+		this.lastYaw = yaw;
+
+		const onGround = lastMoveData.acceleration !== this.airAcceleration;
+		const effectiveSpeed = onGround ? this.applyFriction(this.maxGroundSpeed) : lastSpeed;
+		const optimalDelta = this.findOptimalDelta(effectiveSpeed, onGround);
 
 		this.addToBuffer(
 			this.gainRatioHistory,
@@ -55,8 +78,9 @@ class Synchronizer {
 		);
 		const gainRatio = this.getBufferedSum(this.gainRatioHistory);
 
-		const ratio = this.mom_hud_synchro_mode > 2 ? 1 - lastTickStats.yawRatio : lastTickStats.yawRatio;
-		this.addToBuffer(this.yawRatioHistory, this.sampleWeight * this.NaNCheck(ratio, 0));
+		const ratio =
+			this.mom_hud_synchro_mode > 2 ? 1 - Math.abs(yawDelta) / optimalDelta : Math.abs(yawDelta) / optimalDelta;
+		this.addToBuffer(this.yawRatioHistory, this.sampleWeight * (Number.isFinite(ratio) ? ratio : 0));
 		const yawRatio = this.getBufferedSum(this.yawRatioHistory);
 
 		const colorTuple = this.mom_hud_synchro_color_enable
@@ -144,6 +168,30 @@ class Synchronizer {
 			else if (ratio > 0) return lerpColorTuples(COLORS.LOSS, COLORS.SLOW, (ratio - 0.25) / 0.55);
 			else if (ratio > -5) return lerpColorTuples(COLORS.LOSS, COLORS.STOP, Math.abs(ratio) / 5);
 		}
+	}
+
+	static getMaxGroundSpeed() {
+		const numerator = this.acceleration * (2 - this.acceleration * this.tickInterval);
+		const denominator = this.friction * (2 - this.friction * this.tickInterval);
+		return this.runSpeed * Math.sqrt(numerator / denominator);
+	}
+
+	static applyFriction(speed) {
+		return speed >= this.stopSpeed
+			? speed * (1 - this.friction * this.tickInterval)
+			: Math.max(0, speed - this.friction * this.stopSpeed * this.tickInterval);
+	}
+
+	static findOptimalDelta(speed, onGround) {
+		const acceleration = onGround ? this.acceleration : this.airAcceleration;
+		const maxSpeed = onGround ? this.runSpeed : this.airSpeed;
+
+		const maxAccel = Math.min(maxSpeed, acceleration * this.runSpeed * this.tickInterval);
+
+		const y = maxAccel * Math.sqrt(Math.pow(speed, 2) - Math.pow(maxSpeed - maxAccel, 2));
+		const x = Math.pow(speed, 2) + maxAccel * (maxSpeed - maxAccel);
+
+		return Math.atan2(y, x);
 	}
 
 	static wrapValueToRange(value, min, max, bShouldTrackWrap) {
