@@ -35,7 +35,7 @@ class Synchronizer {
 	static onLoad() {
 		this.initializeSettings();
 
-		if (this.mom_hud_synchro_stat_mode) this.onJump(); // show stats if enabled
+		if (this.statMode) this.onJump(); // show stats if enabled
 	}
 
 	static onUpdate() {
@@ -46,8 +46,8 @@ class Synchronizer {
 
 		const bValidWishMove = this.getSize(wishDir) * this.getSize(velDir) > 0.001;
 		const strafeRight = (bValidWishMove ? 1 : 0) * lastTickStats.strafeRight;
-		const direction = this.mom_hud_synchro_dynamic_enable === 1 ? strafeRight : 1;
-		const flip = this.mom_hud_synchro_flip_enable === 1 ? -1 : 1;
+		const direction = this.dynamicEnable === 1 ? strafeRight : 1;
+		const flip = this.flipEnable === 1 ? -1 : 1;
 
 		this.addToBuffer(
 			this.gainRatioHistory,
@@ -55,17 +55,17 @@ class Synchronizer {
 		);
 		const gainRatio = this.getBufferedSum(this.gainRatioHistory);
 
-		const ratio = this.mom_hud_synchro_mode > 2 ? 1 - lastTickStats.yawRatio : lastTickStats.yawRatio;
+		const ratio = this.displayMode > 2 ? 1 - lastTickStats.yawRatio : lastTickStats.yawRatio;
 		this.addToBuffer(this.yawRatioHistory, this.sampleWeight * this.NaNCheck(ratio, 0));
 		const yawRatio = this.getBufferedSum(this.yawRatioHistory);
 
-		const colorTuple = this.mom_hud_synchro_color_enable
+		const colorTuple = this.colorEnable
 			? this.getColorTuple(gainRatio, false) //strafeRight * yawRatio > 1)
 			: COLORS.NEUTRAL;
 		const color = `gradient(linear, 0% 0%, 0% 100%, from(${colorTuple[0]}), to(${colorTuple[1]}))`;
 		let flow;
 
-		switch (this.mom_hud_synchro_mode) {
+		switch (this.displayMode) {
 			case 1: // "Half-width throttle"
 				flow = direction * flip;
 				this.panels.container.style.flowChildren = flow < 0 ? 'left' : 'right';
@@ -112,7 +112,7 @@ class Synchronizer {
 			`(${(lastJumpStats.yawRatio * 100).toFixed(2)}%)`.padStart(10, ' ');
 		this.panels.stats[1].text = (lastJumpStats.speedGain * 100).toFixed(2);
 
-		const colorTuple = this.mom_hud_synchro_stat_color_enable
+		const colorTuple = this.StatColorEnable
 			? this.getColorTuple(lastJumpStats.speedGain, lastJumpStats.yawRatio > 0)
 			: COLORS.NEUTRAL;
 		for (const stat of this.panels.stats) stat.style.color = colorTuple[1];
@@ -231,9 +231,9 @@ class Synchronizer {
 		return A.map((Ai, i) => Ai + alpha * (B[i] - Ai));
 	}
 
-	static setSynchroMode(newMode) {
-		this.mom_hud_synchro_mode = newMode ?? 0;
-		switch (this.mom_hud_synchro_mode) {
+	static setDisplayMode(newMode) {
+		this.displayMode = newMode ?? 0;
+		switch (this.displayMode) {
 			case 1: // "Half-width throttle"
 				for (const segment of this.panels.segments) segment.style.backgroundColor = this.altColor;
 				this.panels.needle.style.visibility = 'visible';
@@ -258,19 +258,19 @@ class Synchronizer {
 		}
 	}
 
-	static setSynchroColorMode(newColorMode) {
-		this.mom_hud_synchro_color_enable = newColorMode ?? DEFAULT_SETTING_OFF;
+	static setColorMode(newColorMode) {
+		this.colorEnable = newColorMode ?? DEFAULT_SETTING_OFF;
 	}
 
-	static setSynchroDynamicMode(newDynamicMode) {
-		this.mom_hud_synchro_dynamic_enable = newDynamicMode ?? DEFAULT_SETTING_ON;
+	static setDynamicMode(newDynamicMode) {
+		this.dynamicEnable = newDynamicMode ?? DEFAULT_SETTING_ON;
 	}
 
-	static setSynchroDirection(newDirection) {
-		this.mom_hud_synchro_flip_enable = newDirection ?? DEFAULT_SETTING_OFF;
+	static setDirection(newDirection) {
+		this.flipEnable = newDirection ?? DEFAULT_SETTING_OFF;
 	}
 
-	static setSynchroBufferLength(newBufferLength) {
+	static setBufferLength(newBufferLength) {
 		this.interpFrames = newBufferLength ?? DEFAULT_BUFFER_LENGTH;
 		this.sampleWeight = 1 / this.interpFrames;
 
@@ -278,13 +278,13 @@ class Synchronizer {
 		this.yawRatioHistory = this.initializeBuffer(this.interpFrames);
 	}
 
-	static setSynchroStatMode(newStatMode) {
-		this.mom_hud_synchro_stat_mode = newStatMode ?? 0;
+	static setStatMode(newStatMode) {
+		this.statMode = newStatMode ?? 0;
 		this.panels.wrapper.style.visibility = newStatMode === 2 ? 'collapse' : 'visible';
 	}
 
-	static setSynchroStatColorMode(newColorMode) {
-		this.mom_hud_synchro_stat_color_enable = newColorMode ?? DEFAULT_SETTING_OFF;
+	static setStatColorMode(newColorMode) {
+		this.StatColorEnable = newColorMode ?? DEFAULT_SETTING_OFF;
 	}
 
 	static NaNCheck(val, def) {
@@ -292,25 +292,25 @@ class Synchronizer {
 	}
 
 	static initializeSettings() {
-		this.setSynchroMode(GameInterfaceAPI.GetSettingFloat('mom_hud_synchro_mode'));
-		this.setSynchroColorMode(GameInterfaceAPI.GetSettingFloat('mom_hud_synchro_color_enable'));
-		this.setSynchroDynamicMode(GameInterfaceAPI.GetSettingFloat('mom_hud_synchro_dynamic_enable'));
-		this.setSynchroDirection(GameInterfaceAPI.GetSettingFloat('mom_hud_synchro_flip_enable'));
-		this.setSynchroBufferLength(GameInterfaceAPI.GetSettingFloat('mom_hud_synchro_buffer_size'));
-		this.setSynchroStatMode(GameInterfaceAPI.GetSettingFloat('mom_hud_synchro_stat_mode'));
-		this.setSynchroColorMode(GameInterfaceAPI.GetSettingFloat('mom_hud_synchro_stat_color_enable'));
+		this.setDisplayMode(GameInterfaceAPI.GetSettingFloat('mom_hud_synchro_mode'));
+		this.setColorMode(GameInterfaceAPI.GetSettingFloat('mom_hud_synchro_color_enable'));
+		this.setDynamicMode(GameInterfaceAPI.GetSettingFloat('mom_hud_synchro_dynamic_enable'));
+		this.setDirection(GameInterfaceAPI.GetSettingFloat('mom_hud_synchro_flip_enable'));
+		this.setBufferLength(GameInterfaceAPI.GetSettingFloat('mom_hud_synchro_buffer_size'));
+		this.setStatMode(GameInterfaceAPI.GetSettingFloat('mom_hud_synchro_stat_mode'));
+		this.setStatColorMode(GameInterfaceAPI.GetSettingFloat('mom_hud_synchro_stat_color_enable'));
 	}
 
 	static {
 		$.RegisterEventHandler('ChaosHudProcessInput', $.GetContextPanel(), this.onUpdate.bind(this));
 
-		$.RegisterForUnhandledEvent('OnSynchroModeChanged', this.setSynchroMode.bind(this));
-		$.RegisterForUnhandledEvent('OnSynchroColorModeChanged', this.setSynchroColorMode.bind(this));
-		$.RegisterForUnhandledEvent('OnSynchroDynamicModeChanged', this.setSynchroDynamicMode.bind(this));
-		$.RegisterForUnhandledEvent('OnSynchroDirectionChanged', this.setSynchroDirection.bind(this));
-		$.RegisterForUnhandledEvent('OnSynchroBufferChanged', this.setSynchroBufferLength.bind(this));
-		$.RegisterForUnhandledEvent('OnSynchroStatModeChanged', this.setSynchroStatMode.bind(this));
-		$.RegisterForUnhandledEvent('OnSynchroStatColorModeChanged', this.setSynchroStatColorMode.bind(this));
+		$.RegisterForUnhandledEvent('OnSynchroModeChanged', this.setDisplayMode.bind(this));
+		$.RegisterForUnhandledEvent('OnSynchroColorModeChanged', this.setColorMode.bind(this));
+		$.RegisterForUnhandledEvent('OnSynchroDynamicModeChanged', this.setDynamicMode.bind(this));
+		$.RegisterForUnhandledEvent('OnSynchroDirectionChanged', this.setDirection.bind(this));
+		$.RegisterForUnhandledEvent('OnSynchroBufferChanged', this.setBufferLength.bind(this));
+		$.RegisterForUnhandledEvent('OnSynchroStatModeChanged', this.setStatMode.bind(this));
+		$.RegisterForUnhandledEvent('OnSynchroStatColorModeChanged', this.setStatColorMode.bind(this));
 		$.RegisterForUnhandledEvent('OnJumpStarted', this.onJump.bind(this));
 		$.RegisterForUnhandledEvent('ChaosLevelInitPostEntity', this.onLoad.bind(this));
 	}
