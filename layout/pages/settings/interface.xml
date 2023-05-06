@@ -608,6 +608,8 @@
 						<Label text="#Settings_Synchronizer_AveragingWindow_Mode4" value="20" id="buffer3" />
 					</ChaosSettingsEnumDropDown>
 
+					<ChaosSettingsSlider text="#Settings_Synchronizer_MinSpeed" min="50" max="250" convar="mom_hud_synchro_min_speed" displayprecision="0" infomessage="#Settings_Synchronizer_MinSpeed_Info" />
+
 					<ChaosSettingsEnumDropDown text="#Settings_Synchronizer_Stats_Mode" convar="mom_hud_synchro_stat_mode" infomessage="#Settings_Synchronizer_Stats_Mode_Info">
 						<Label id="mode0" text="#Common_Off" value="0" />
 						<Label id="mode1" text="#Settings_Synchronizer_StatsMode_Mode1" value="1" />
