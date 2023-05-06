@@ -11,6 +11,7 @@ const COLORS = {
 };
 
 const DEFAULT_BUFFER_LENGTH = 10;
+const DEFAULT_MIN_SPEED = 200;
 const DEFAULT_SETTING_ON = 1;
 const DEFAULT_SETTING_OFF = 0;
 
@@ -41,22 +42,25 @@ class Synchronizer {
 	static onUpdate() {
 		const lastMoveData = MomentumMovementAPI.GetLastMoveData();
 		const lastTickStats = MomentumMovementAPI.GetLastTickStats();
-		const wishDir = lastMoveData.wishdir;
-		const velDir = this.getNormal(MomentumPlayerAPI.GetVelocity(), 0.001);
 
-		const bValidWishMove = this.getSize(wishDir) * this.getSize(velDir) > 0.001;
+		//zero buffers
+		this.addToBuffer(this.gainRatioHistory, 0);
+		this.addToBuffer(this.yawRatioHistory, 0);
+
+		const bValidWishMove = this.getSize(lastMoveData.wishdir) > 0.1;
 		const strafeRight = (bValidWishMove ? 1 : 0) * lastTickStats.strafeRight;
 		const direction = this.dynamicEnable === 1 ? strafeRight : 1;
 		const flip = this.flipEnable === 1 ? -1 : 1;
 
-		this.addToBuffer(
-			this.gainRatioHistory,
-			this.sampleWeight * this.NaNCheck(lastTickStats.speedGain / lastTickStats.idealGain, 0)
-		);
-		const gainRatio = this.getBufferedSum(this.gainRatioHistory);
+		if (bValidWishMove && this.getSizeSquared(MomentumPlayerAPI.GetVelocity()) > Math.pow(this.minSpeed, 2)) {
+			this.gainRatioHistory[this.interpFrames - 1] =
+				this.sampleWeight * this.NaNCheck(lastTickStats.speedGain / lastTickStats.idealGain, 0);
 
-		const ratio = this.displayMode > 2 ? 1 - lastTickStats.yawRatio : lastTickStats.yawRatio;
-		this.addToBuffer(this.yawRatioHistory, this.sampleWeight * this.NaNCheck(ratio, 0));
+			const ratio = this.displayMode > 2 ? 1 - lastTickStats.yawRatio : lastTickStats.yawRatio;
+			this.yawRatioHistory[this.interpFrames - 1] = this.sampleWeight * this.NaNCheck(ratio, 0);
+		}
+
+		const gainRatio = this.getBufferedSum(this.gainRatioHistory);
 		const yawRatio = this.getBufferedSum(this.yawRatioHistory);
 
 		const colorTuple = this.colorEnable
@@ -278,6 +282,10 @@ class Synchronizer {
 		this.yawRatioHistory = this.initializeBuffer(this.interpFrames);
 	}
 
+	static setMinSpeed(newMinSpeed) {
+		this.minSpeed = newMinSpeed ?? DEFAULT_MIN_SPEED;
+	}
+
 	static setStatMode(newStatMode) {
 		this.statMode = newStatMode ?? 0;
 		this.panels.wrapper.style.visibility = newStatMode === 2 ? 'collapse' : 'visible';
@@ -297,6 +305,7 @@ class Synchronizer {
 		this.setDynamicMode(GameInterfaceAPI.GetSettingFloat('mom_hud_synchro_dynamic_enable'));
 		this.setDirection(GameInterfaceAPI.GetSettingFloat('mom_hud_synchro_flip_enable'));
 		this.setBufferLength(GameInterfaceAPI.GetSettingFloat('mom_hud_synchro_buffer_size'));
+		this.setMinSpeed(GameInterfaceAPI.GetSettingFloat('mom_hud_synchro_min_speed'));
 		this.setStatMode(GameInterfaceAPI.GetSettingFloat('mom_hud_synchro_stat_mode'));
 		this.setStatColorMode(GameInterfaceAPI.GetSettingFloat('mom_hud_synchro_stat_color_enable'));
 	}
@@ -309,6 +318,7 @@ class Synchronizer {
 		$.RegisterForUnhandledEvent('OnSynchroDynamicModeChanged', this.setDynamicMode.bind(this));
 		$.RegisterForUnhandledEvent('OnSynchroDirectionChanged', this.setDirection.bind(this));
 		$.RegisterForUnhandledEvent('OnSynchroBufferChanged', this.setBufferLength.bind(this));
+		$.RegisterForUnhandledEvent('OnSynchroMinSpeedChanged', this.setMinSpeed.bind(this));
 		$.RegisterForUnhandledEvent('OnSynchroStatModeChanged', this.setStatMode.bind(this));
 		$.RegisterForUnhandledEvent('OnSynchroStatColorModeChanged', this.setStatColorMode.bind(this));
 		$.RegisterForUnhandledEvent('OnJumpStarted', this.onJump.bind(this));
