@@ -1,6 +1,6 @@
 ![Momentum Mod](images/momentumLogo.svg)
 
-> _Momentum Mod's game User Interface files used by the Chaos Source Engine's Panorama UI framework._
+> _Momentum Mod's game User Interface files used by the Strata Source Engine's Panorama UI framework._
 
 # Structure
 
