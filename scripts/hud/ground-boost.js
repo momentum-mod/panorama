@@ -65,15 +65,19 @@ class Groundboost {
 					this.startGB(timerFlags & TimerFlags.LANDING);
 				}
 				bUpdateMeter = true;
-			} else if (this.overshootEnable && this.visible) {
-				// Player is grounded and no longer has the friction flag
-				if (this.missedJumpTimer === 0) {
-					this.missedJumpTimer = curTime;
-					this.setMeterColor(ColorClass.FRICTION);
-				}
+			} else if (this.visible) {
 				bUpdateMeter = true;
-				timer = Math.min(MAX_TIMER_MS, Math.round(1000 * (curTime - this.missedJumpTimer)));
-				if (timer === MAX_TIMER_MS) this.fadeOut();
+				if (this.overshootEnable) {
+					// Player is grounded and no longer has the friction flag
+					if (this.missedJumpTimer === 0) {
+						this.missedJumpTimer = curTime;
+						this.setMeterColor(ColorClass.FRICTION);
+					}
+					timer = Math.min(MAX_TIMER_MS, Math.round(1000 * (curTime - this.missedJumpTimer)));
+					if (timer === MAX_TIMER_MS) this.fadeOut();
+				} else if (!timer) {
+					this.fadeOut();
+				}
 			}
 			if (bUpdateMeter) {
 				const fill = Math.min(timer * MS_2_DEG, 360).toFixed(2) - 360;
