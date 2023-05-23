@@ -280,7 +280,7 @@ class Cgaz {
 		const accel = lastMoveData.acceleration;
 		const maxAccel = accel * maxSpeed * tickInterval;
 
-		if (lastMoveData.hasteEndTime < 0 || lastMoveData.hasteEndTime > MomentumMovementAPI.GetCurrentTime()) {
+		if (lastMoveData.hasteTime) {
 			if (this.snapAccel !== HASTE_ACCEL) {
 				this.snapAccel = HASTE_ACCEL;
 				MAX_GROUND_SPEED = HASTE_SPEED;
