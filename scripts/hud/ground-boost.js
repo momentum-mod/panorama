@@ -53,7 +53,7 @@ class Groundboost {
 		const timerFlags = lastMoveData.defragTimerFlags;
 		const curTime = MomentumMovementAPI.GetCurrentTime();
 		const speed = this.getSize(MomentumPlayerAPI.GetVelocity());
-		const deltaSpeed = speed - this.peakSpeed;
+		const deltaSpeed = speed - this.startSpeed;
 		let bUpdateMeter = false;
 
 		// Only toggle visibility on if the player is grounded
@@ -98,7 +98,7 @@ class Groundboost {
 	static startGB(bCrashLand) {
 		this.visible = true;
 		this.startSpeed = this.getSize(MomentumPlayerAPI.GetVelocity());
-		this.peakSpeed = 0;
+		this.peakSpeed = this.startSpeed;
 		this.missedJumpTimer = 0;
 		this.container.RemoveClass('groundboost__container--hide');
 		this.setMeterColor(this.crashHlEnable && !bCrashLand ? ColorClass.SLICK : ColorClass.CRASH);
