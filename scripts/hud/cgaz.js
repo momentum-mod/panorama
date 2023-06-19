@@ -718,9 +718,7 @@ class Cgaz {
 			this.updateZone(zones[i], left, right, 0, snapClass, this.snapSplitZone);
 
 			if (this.snapColorMode) {
-				const A = this.splitColorString(this.snapSlowColor);
-				const B = this.splitColorString(this.snapFastColor);
-				snapColor = this.getColorStringFromArray(this.colorLerp(A, B, alpha));
+				snapColor = this.colorLerp(this.snapSlowColor, this.snapFastColor, alpha);
 			}
 
 			let bHighlight = false;
@@ -940,8 +938,12 @@ class Cgaz {
 			.map((c, i) => (i === 3 ? Number.parseInt(c * 255) : Number.parseInt(c)));
 	}
 
-	static colorLerp(A, B, alpha) {
-		return A.map((Ai, i) => Ai + alpha * (B[i] - Ai));
+	static colorLerp(stringA, stringB, alpha) {
+		const arrayA = this.splitColorString(stringA);
+		const arrayB = this.splitColorString(stringB);
+		if (arrayA.length === 3) arrayA.push(255);
+		if (arrayB.length === 3) arrayB.push(255);
+		return this.getColorStringFromArray(arrayA.map((Ai, i) => Ai + alpha * (arrayB[i] - Ai)));
 	}
 
 	static {
