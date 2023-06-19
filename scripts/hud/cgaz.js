@@ -148,9 +148,9 @@ class Cgaz {
 		this.applyClass(this.rightFastZone, FAST_CLASS);
 		this.applyClass(this.rightTurnZone, TURN_CLASS);
 		this.applyClass(this.accelSplitZone, NEUTRAL_CLASS);
-		this.applyClassBorder(this.leftMirrorZone, MIRROR_CLASS);
-		this.applyClassBorder(this.rightMirrorZone, MIRROR_CLASS);
-		this.applyClassBorder(this.mirrorSplitZone, MIRROR_CLASS);
+		this.applyClassBorder(this.leftMirrorZone, 2, MIRROR_CLASS);
+		this.applyClassBorder(this.rightMirrorZone, 2, MIRROR_CLASS);
+		this.applyClassBorder(this.mirrorSplitZone, 2, MIRROR_CLASS);
 
 		if (this.snapEnable) {
 			this.onSnapConfigChange();
@@ -213,7 +213,7 @@ class Cgaz {
 		);
 
 		WIN_ZONE_CLASS = new StyleObject(accelConfig.height, accelConfig.offset, this.windicatorColor);
-		this.applyClassBorder(this.windicatorZone, WIN_ZONE_CLASS);
+		this.applyClassBorder(this.windicatorZone, 2, WIN_ZONE_CLASS);
 	}
 
 	static onCompassConfigChange() {
@@ -804,10 +804,10 @@ class Cgaz {
 		panel.style.overflow = 'noclip noclip';
 	}
 
-	static applyClassBorder(panel, zoneClass) {
+	static applyClassBorder(panel, thickness, zoneClass) {
 		panel.style.height = this.NaNCheck(zoneClass.height, 0) + 'px';
-		panel.style.border = `2px solid ${zoneClass.color}`;
-		panel.style.padding = '-2px';
+		panel.style.border = `${thickness}px solid ${zoneClass.color}`;
+		panel.style.padding = `-${thickness}px`;
 		panel.style.verticalAlign = zoneClass.align;
 		panel.style.overflow = 'noclip noclip';
 	}
