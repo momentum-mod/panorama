@@ -1120,7 +1120,7 @@ class Cgaz {
 	 * @returns {Boolean}
 	 */
 	static shouldHighlight(zone) {
-		const center = 0.5 * this.screenX;
+		const center = (0.5 * this.screenX) / this.scale;
 		return zone.rightPx - center >= 0 && zone.leftPx - center <= 0;
 	}
 
