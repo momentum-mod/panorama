@@ -293,13 +293,19 @@ class Cgaz {
 	static onCompassConfigChange() {
 		const compassConfig = DefragAPI.GetHUDCompassCFG();
 		this.compassMode = compassConfig.compassMode;
-		this.compassSize = compassConfig.compassSize;
+		this.compassArrowSize = compassConfig.compassArrowSize;
+		this.compassTickSize = compassConfig.compassTickSize;
 		this.compassOffset = compassConfig.compassOffset;
 		this.compassPitchEnable = compassConfig.pitchEnable;
 		this.compassPitchTarget = String(compassConfig.pitchTarget).split(' ');
+		this.compassPitchWidth = compassConfig.pitchWidth;
+		this.compassPitchOffset = compassConfig.pitchOffset;
 		this.compassStatMode = compassConfig.statMode;
 		this.compassColor = compassConfig.color;
 		this.compassHlColor = compassConfig.highlightColor;
+
+		this.pitchLineContainer.style.width = this.compassPitchWidth + 'px';
+		this.pitchLineContainer.style.transform = `translatex( ${this.compassPitchOffset}px )`;
 
 		const pitchLines = this.pitchLineContainer?.Children();
 		if (this.compassPitchTarget.length > pitchLines?.length) {
@@ -315,12 +321,13 @@ class Cgaz {
 			}
 		}
 
-		const size = this.NaNCheck(this.compassSize, 0);
-		this.setupContainer(this.tickContainer, this.compassOffset);
+		const size = this.NaNCheck(this.compassTickSize, 0);
+		const offset = this.compassOffset - 0.5 * this.compassTickSize;
+		this.setupContainer(this.tickContainer, offset);
 		this.compassTickFull.style.height = size + 'px';
 		this.compassTickHalf.style.height = size * 0.5 + 'px';
 
-		const width = 2 * this.compassSize;
+		const width = 2 * this.compassArrowSize;
 		const height = 2 * width;
 		this.setupArrow(
 			this.compassArrow,
@@ -678,7 +685,7 @@ class Cgaz {
 				this.compassArrowIcon.AddClass('arrow__down');
 				velocityAngle = this.remapAngle(velocityAngle - Math.PI);
 			}
-			const leftEdge = this.mapToScreenWidth(velocityAngle) - this.compassSize;
+			const leftEdge = this.mapToScreenWidth(velocityAngle) - this.compassArrowSize;
 			this.compassArrow.style.marginLeft = this.NaNCheck(leftEdge, 0) + 'px';
 			this.compassArrowIcon.style.washColor = this.getRgbFromRgba(color);
 		}

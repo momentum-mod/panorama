@@ -668,11 +668,12 @@
 					</ChaosSettingsEnumDropDown>
 
 					<ConVarEnabler convar="mom_df_hud_compass_mode" class="flow-down">
-						<ChaosSettingsSlider text="#Settings_Defrag_CompassSize" min="0" max="25" convar="mom_df_hud_compass_size" displayprecision="0" infomessage="#Settings_Defrag_CompassSize_Info" tags="compass" />
+						<ChaosSettingsSlider text="#Settings_Defrag_CompassArrowSize" min="0" max="25" convar="mom_df_hud_compass_arrow_size" displayprecision="0" infomessage="#Settings_Defrag_CompassArrowSize_Info" tags="compass" />
 
+						<ChaosSettingsSlider text="#Settings_Defrag_CompassTickSize" min="0" max="50" convar="mom_df_hud_compass_tick_size" displayprecision="0" infomessage="#Settings_Defrag_CompassTickSize_Info" tags="compass" />
+						
 						<ChaosSettingsSlider text="#Settings_Defrag_CompassOffset" min="-200" max="200" convar="mom_df_hud_compass_offset" displayprecision="0" infomessage="#Settings_Defrag_CompassOffset_Info" tags="compass" />
-					
-						<!-- Stats Enable -->
+
 					</ConVarEnabler>
 
 					<ChaosSettingsEnum text="#Settings_Defrag_Pitch" convar="mom_df_hud_pitch_enable" infomessage="#Settings_Defrag_Pitch_Info" tags="pitch">
@@ -683,7 +684,9 @@
 					<ConVarEnabler convar="mom_df_hud_pitch_enable" class="flow-down">
 						<ChaosSettingsSlider text="#Settings_Defrag_PitchTarget" min="-90" max="90" convar="mom_df_hud_pitch_target" displayprecision="1" infomessage="#Settings_Defrag_PitchTarget_Info" tags="compass,pitch" />
 
-						<!-- Stats Enable -->
+						<ChaosSettingsSlider text="#Settings_Defrag_PitchWidth" min="10" max="200" convar="mom_df_hud_pitch_width" displayprecision="1" infomessage="#Settings_Defrag_PitchWidth_Info" tags="compass,pitch" />
+
+						<ChaosSettingsSlider text="#Settings_Defrag_PitchOffset" min="-200" max="200" convar="mom_df_hud_pitch_offset" displayprecision="1" infomessage="#Settings_Defrag_PitchOffset_Info" tags="compass,pitch" />
 					</ConVarEnabler>
 
 					<ChaosSettingsEnumDropDown text="#Settings_Defrag_Compass_Stat_Mode" convar="mom_df_hud_compass_stat_mode" infomessage="#Settings_Defrag_Compass_Stat_Mode_Info" tags="compass">
