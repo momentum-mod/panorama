@@ -666,6 +666,8 @@
 					<ConVarEnabler convar="mom_df_hud_compass_mode" class="flow-down">
 						<ChaosSettingsSlider text="#Settings_Defrag_CompassSize" min="0" max="25" convar="mom_df_hud_compass_size" displayprecision="0" infomessage="#Settings_Defrag_CompassSize_Info" tags="compass" />
 
+						<ChaosSettingsSlider text="#Settings_Defrag_CompassOffset" min="-200" max="200" convar="mom_df_hud_compass_offset" displayprecision="0" infomessage="#Settings_Defrag_CompassOffset_Info" tags="compass" />
+					
 						<!-- Stats Enable -->
 					</ConVarEnabler>
 
@@ -701,6 +703,10 @@
 					</ChaosSettingsEnum>
 
 					<ConVarEnabler convar="mom_df_hud_windicator_enable" class="flow-down">
+						<ChaosSettingsSlider text="#Settings_Defrag_WIndicatorZoneHeight" min="0" max="50" convar="mom_df_hud_windicator_height" displayprecision="0" infomessage="#Settings_Defrag_WIndicatorZoneHeight_Info" />
+
+						<ChaosSettingsSlider text="#Settings_Defrag_WIndicatorZoneOffset" min="-200" max="200" convar="mom_df_hud_windicator_offset" displayprecision="0" infomessage="#Settings_Defrag_WIndicatorZoneOffset_Info" />
+
 						<ChaosSettingsSlider text="#Settings_Defrag_WIndicatorArrowSize" min="0" max="25" convar="mom_df_hud_windicator_size" displayprecision="0" infomessage="#Settings_Defrag_WIndicatorArrowSize_Info" />
 
 						<ConVarColorDisplay text="#Settings_Defrag_WIndicatorArrowColor" convar="mom_df_hud_windicator_color" infomessage="#Settings_Defrag_WIndicatorArrowColor_Info" />

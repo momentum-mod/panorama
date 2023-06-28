@@ -179,16 +179,6 @@ class Cgaz {
 		this.applyClassBorder(this.leftMirrorZone, 2, MIRROR_CLASS);
 		this.applyClassBorder(this.rightMirrorZone, 2, MIRROR_CLASS);
 		this.applyClassBorder(this.mirrorSplitZone, 2, MIRROR_CLASS);
-
-		if (this.snapEnable) {
-			this.onSnapConfigChange();
-		}
-		if (this.windicatorEnable) {
-			this.onWindicatorConfigChange();
-		}
-		if (this.compassPitchEnable || this.compassMode) {
-			this.onCompassConfigChange();
-		}
 	}
 
 	static onSnapConfigChange() {
@@ -207,14 +197,12 @@ class Cgaz {
 		this.snapColorMode = snapConfig.colorMode;
 		this.snapHeightgainEnable = snapConfig.enableHeightGain;
 
-		const accelConfig = DefragAPI.GetHUDAccelCFG(); // needed for aligning snaps to top of cgaz bar by default
-		const offset = this.snapOffset + (accelConfig.enable ? 0.5 * accelConfig.height + accelConfig.offset : 0);
-		COLORED_SNAP_CLASS = new StyleObject(this.snapHeight, offset, this.snapColor);
-		UNCOLORED_SNAP_CLASS = new StyleObject(this.snapHeight, offset, this.snapAltColor);
-		HIGHLIGHTED_SNAP_CLASS = new StyleObject(this.snapHeight, offset, this.snapHlColor);
-		HIGHLIGHTED_ALT_SNAP_CLASS = new StyleObject(this.snapHeight, offset, this.snapHlAltColor);
+		COLORED_SNAP_CLASS = new StyleObject(this.snapHeight, this.snapOffset, this.snapColor);
+		UNCOLORED_SNAP_CLASS = new StyleObject(this.snapHeight, this.snapOffset, this.snapAltColor);
+		HIGHLIGHTED_SNAP_CLASS = new StyleObject(this.snapHeight, this.snapOffset, this.snapHlColor);
+		HIGHLIGHTED_ALT_SNAP_CLASS = new StyleObject(this.snapHeight, this.snapOffset, this.snapHlAltColor);
 
-		this.setupContainer(this.snapContainer, offset);
+		this.setupContainer(this.snapContainer, this.snapOffset);
 		for (let i = 0; i < this.snapZones?.length; ++i) {
 			this.applyClass(this.snapZones[i], i % 2 ? UNCOLORED_SNAP_CLASS : COLORED_SNAP_CLASS);
 		}
@@ -276,26 +264,27 @@ class Cgaz {
 	}
 
 	static onWindicatorConfigChange() {
-		const windicatorArrowConfig = DefragAPI.GetHUDWIndicatorCFG();
-		this.windicatorEnable = windicatorArrowConfig.enable;
-		this.windicatorSize = windicatorArrowConfig.size;
-		this.windicatorColor = windicatorArrowConfig.color;
+		const windicatorConfig = DefragAPI.GetHUDWIndicatorCFG();
+		this.windicatorEnable = windicatorConfig.enable;
+		this.windicatorHeight = windicatorConfig.height;
+		this.windicatorOffset = windicatorConfig.offset;
+		this.windicatorSize = windicatorConfig.size;
+		this.windicatorOffset = windicatorConfig.offset;
+		this.windicatorColor = windicatorConfig.color;
 
-		const accelConfig = DefragAPI.GetHUDAccelCFG();
-		const width = 2 * this.windicatorSize;
-		const height = accelConfig.height + 2 * width;
-		const offset = accelConfig.enable ? accelConfig.offset : 0;
+		const arrowWidth = 2 * this.windicatorSize;
+		const arrowHeight = 2 * arrowWidth;
 		this.setupArrow(
 			this.windicatorArrow,
 			this.windicatorArrowIcon,
-			height,
-			width,
-			offset,
+			arrowHeight,
+			arrowWidth,
+			this.windicatorOffset,
 			'top',
 			this.windicatorColor
 		);
 
-		WIN_ZONE_CLASS = new StyleObject(accelConfig.height, accelConfig.offset, this.windicatorColor);
+		WIN_ZONE_CLASS = new StyleObject(this.windicatorHeight, this.windicatorOffset, this.windicatorColor);
 		this.applyClassBorder(this.windicatorZone, 2, WIN_ZONE_CLASS);
 	}
 
@@ -303,6 +292,7 @@ class Cgaz {
 		const compassConfig = DefragAPI.GetHUDCompassCFG();
 		this.compassMode = compassConfig.compassMode;
 		this.compassSize = compassConfig.compassSize;
+		this.compassOffset = compassConfig.compassOffset;
 		this.compassPitchEnable = compassConfig.pitchEnable;
 		this.compassPitchTarget = String(compassConfig.pitchTarget).split(' ');
 		this.compassStatMode = compassConfig.statMode;
@@ -323,21 +313,19 @@ class Cgaz {
 			}
 		}
 
-		const accelConfig = DefragAPI.GetHUDAccelCFG();
-		const offset = accelConfig.offset - 0.5 * (accelConfig.height + this.compassSize);
 		const size = this.NaNCheck(this.compassSize, 0);
-		this.setupContainer(this.tickContainer, offset);
+		this.setupContainer(this.tickContainer, this.compassOffset);
 		this.compassTickFull.style.height = size + 'px';
 		this.compassTickHalf.style.height = size * 0.5 + 'px';
 
 		const width = 2 * this.compassSize;
-		const height = accelConfig.height + 2 * width;
+		const height = 2 * width;
 		this.setupArrow(
 			this.compassArrow,
 			this.compassArrowIcon,
 			height,
 			width,
-			accelConfig.offset,
+			this.compassOffset,
 			'bottom',
 			this.compassColor
 		);
