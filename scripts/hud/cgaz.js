@@ -160,6 +160,7 @@ class Cgaz {
 		this.accelDzColor = accelConfig.dzColor;
 		this.accelScaleEnable = accelConfig.scaleEnable;
 		this.accelMirrorEnable = accelConfig.mirrorEnable;
+		this.accelMirrorBorder = Math.round(accelConfig.mirrorBorder);
 
 		NEUTRAL_CLASS = new StyleObject(this.accelHeight, this.accelOffset, this.accelDzColor);
 		SLOW_CLASS = new StyleObject(this.accelHeight, this.accelOffset, this.accelSlowColor);
@@ -176,9 +177,9 @@ class Cgaz {
 		this.applyClass(this.rightFastZone, FAST_CLASS);
 		this.applyClass(this.rightTurnZone, TURN_CLASS);
 		this.applyClass(this.accelSplitZone, NEUTRAL_CLASS);
-		this.applyClassBorder(this.leftMirrorZone, 2, MIRROR_CLASS);
-		this.applyClassBorder(this.rightMirrorZone, 2, MIRROR_CLASS);
-		this.applyClassBorder(this.mirrorSplitZone, 2, MIRROR_CLASS);
+		this.applyClassBorder(this.leftMirrorZone, this.accelMirrorBorder, MIRROR_CLASS);
+		this.applyClassBorder(this.rightMirrorZone, this.accelMirrorBorder, MIRROR_CLASS);
+		this.applyClassBorder(this.mirrorSplitZone, this.accelMirrorBorder, MIRROR_CLASS);
 	}
 
 	static onSnapConfigChange() {
@@ -271,6 +272,7 @@ class Cgaz {
 		this.windicatorSize = windicatorConfig.size;
 		this.windicatorOffset = windicatorConfig.offset;
 		this.windicatorColor = windicatorConfig.color;
+		this.windicatorBorder = Math.round(windicatorConfig.border);
 
 		const arrowWidth = 2 * this.windicatorSize;
 		const arrowHeight = 2 * arrowWidth;
@@ -285,7 +287,7 @@ class Cgaz {
 		);
 
 		WIN_ZONE_CLASS = new StyleObject(this.windicatorHeight, this.windicatorOffset, this.windicatorColor);
-		this.applyClassBorder(this.windicatorZone, 2, WIN_ZONE_CLASS);
+		this.applyClassBorder(this.windicatorZone, this.windicatorBorder, WIN_ZONE_CLASS);
 	}
 
 	static onCompassConfigChange() {
