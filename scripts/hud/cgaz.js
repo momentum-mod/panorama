@@ -214,6 +214,7 @@ class Cgaz {
 		this.primeEnable = primeConfig.enable;
 		this.primeTruenessMode = primeConfig.truenessMode;
 		this.primeShowInactive = primeConfig.inactiveEnable;
+		this.primeLockOneLine = primeConfig.oneLineEnable;
 		this.primeMinSpeed = primeConfig.minSpeed;
 		this.primeHeight = primeConfig.height;
 		this.primeOffset = primeConfig.offset;
@@ -1032,11 +1033,13 @@ class Cgaz {
 		const scale = 1 / (gainMax > 0 ? gainMax : this.primeAccel);
 		for (const [zone, gain] of gainZonesMap.entries()) {
 			const gainFactor = Math.min(Math.abs(gain * scale), 1);
+			const secondLine = gain < 0 && !this.primeLockOneLine;
 			const height = this.NaNCheck(this.primeHeight * (this.primeHeightgainEnable ? gainFactor : 1), 0);
-			const margin = gain < 0 ? this.primeHeight : this.primeHeight - height;
+			const margin = secondLine ? this.primeHeight : this.primeHeight - height;
 			zone.style.height = Number(height).toFixed(0) + 'px';
 			zone.style.marginTop = Number(margin).toFixed(0) + 'px';
-			zone.style.marginBottom = Number(gain < 0 ? this.primeHeight - height : this.primeHeight).toFixed(0) + 'px';
+			zone.style.marginBottom =
+				Number(secondLine ? this.primeHeight - height : this.primeHeight).toFixed(0) + 'px';
 
 			if (zone.isInactive) continue;
 

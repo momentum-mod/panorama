@@ -633,6 +633,11 @@
 						</ConVarEnabler>
 
 						<!-- Trueness Mode -->
+
+						<ChaosSettingsEnum text="#Settings_Defrag_PrimeSight_OneLineEnable" convar="mom_df_hud_prime_one_line_enable" infomessage="#Settings_Defrag_PrimeSight_OneLineEnable_Info" tags="prime,sight">
+							<RadioButton group="primeonelineenable" text="#Common_Off" value="0" />
+							<RadioButton group="primeonelineenable" text="#Common_On" value="1" />
+						</ChaosSettingsEnum>
 					</ConVarEnabler>
 
 				</Panel>
