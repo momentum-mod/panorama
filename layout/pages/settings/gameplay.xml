@@ -508,6 +508,10 @@
 							<RadioButton group="accelmirrorenable" text="#Common_On" value="1" />
 						</ChaosSettingsEnum>
 
+						<ConVarEnabler convar="mom_df_hud_accel_mirror_enable" class="flow-down">
+							<ChaosSettingsSlider text="#Settings_Defrag_CGAZ_MirrorBorder" min="0" max="10" convar="mom_df_hud_accel_mirror_border" displayprecision="0" infomessage="#Settings_Defrag_CGAZ_MirrorBorder_Info" tags="cgaz" />
+						</ConVarEnabler>
+
 						<ChaosSettingsEnum text="#Settings_Defrag_CGAZ_True" convar="mom_df_hud_accel_scale_enable" infomessage="#Settings_Defrag_CGAZ_True_Info" tags="cgaz">
 							<RadioButton group="accelscaleenable" text="#Common_Off" value="0" />
 							<RadioButton group="accelscaleenable" text="#Common_On" value="1" />
@@ -710,6 +714,8 @@
 						<ChaosSettingsSlider text="#Settings_Defrag_WIndicatorArrowSize" min="0" max="25" convar="mom_df_hud_windicator_size" displayprecision="0" infomessage="#Settings_Defrag_WIndicatorArrowSize_Info" />
 
 						<ConVarColorDisplay text="#Settings_Defrag_WIndicatorArrowColor" convar="mom_df_hud_windicator_color" infomessage="#Settings_Defrag_WIndicatorArrowColor_Info" />
+					
+						<ChaosSettingsSlider text="#Settings_Defrag_WIndicatorBorder" min="0" max="10" convar="mom_df_hud_windicator_border" displayprecision="0" infomessage="#Settings_Defrag_WIndicatorBorder_Info" />
 					</ConVarEnabler>
 
 				</Panel>
