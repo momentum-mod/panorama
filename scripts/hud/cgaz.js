@@ -617,7 +617,7 @@ class Cgaz {
 					this.onPrimeConfigChange();
 				}
 
-				const targetAngle = Math.max(this.findFastAngle(dropSpeed, primeSightSpeed, primeSightAccel), 0);
+				const targetAngle = this.findFastAngle(dropSpeed, primeSightSpeed, primeSightAccel);
 				const boundaryAngle = this.findStopAngle(
 					primeSightAccel,
 					speedSquared,
@@ -942,6 +942,7 @@ class Cgaz {
 			Math.round(this.getSize(wishDir)) * (1 << Math.round(2 * Math.pow(cross, 2))) +
 			(Math.round(cross) > 0 ? 1 : 0);
 
+		const angleOffset = this.remapAngle(velAngle - wishAngle);
 		const targetOffset = this.remapAngle(velAngle - viewAngle);
 		const inputAngle = this.remapAngle(viewAngle - wishAngle) * this.getSizeSquared(wishDir);
 		const velocity = MomentumPlayerAPI.GetVelocity();
@@ -1101,7 +1102,7 @@ class Cgaz {
 	static findArrayInfimum(arr, val) {
 		let lower = 0;
 		let upper = arr.length - 1;
-		if (val < arr[0]) return upper;
+		if (val < arr[lower] || val > arr[upper]) return upper;
 
 		while (lower < upper) {
 			const i = Math.floor(0.5 * (lower + upper));
@@ -1111,7 +1112,7 @@ class Cgaz {
 				upper = i;
 			}
 		}
-		return lower - 1;
+		return (lower - 1 + arr.length) % arr.length;
 	}
 
 	/**
@@ -1125,8 +1126,8 @@ class Cgaz {
 	}
 
 	static findPrimeGain(zone, velocity, wishDir) {
-		const avgAngle = -0.5 * (zone.leftAngle + zone.rightAngle);
-		const zoneVector = this.rotateVector(wishDir, avgAngle);
+		const avgAngle = 0.5 * (zone.leftAngle + zone.rightAngle);
+		const zoneVector = this.rotateVector(wishDir, -avgAngle);
 		const snapProject = {
 			x: Math.round(zoneVector.x * this.primeAccel),
 			y: Math.round(zoneVector.y * this.primeAccel)
