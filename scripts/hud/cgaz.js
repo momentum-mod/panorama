@@ -1219,39 +1219,37 @@ class Cgaz {
 	}
 
 	static mapToScreenWidth(angle) {
-		const sigFigs = 1000;
-		const num = sigFigs * this.screenX * 0.5;
-		const den = sigFigs * this.scale;
+		const screenWidth = this.screenX / this.scale;
+
 		const overhang = 1.1;
 		if (Math.abs(angle) >= overhang * this.hFov) {
-			return ((Math.sign(angle) > 0 ? overhang : 1 - overhang) * this.screenX) / this.scale;
+			return (Math.sign(angle) > 0 ? overhang : 1 - overhang) * screenWidth;
 		}
 
 		switch (this.projection) {
 			case 0:
-				return Math.round((1 + Math.tan(angle) / Math.tan(this.hFov)) * num) / den;
+				return Math.round((1 + Math.tan(angle) / Math.tan(this.hFov)) * screenWidth * 0.5);
 			case 1:
-				return Math.round((1 + angle / this.hFov) * num) / den;
+				return Math.round((1 + angle / this.hFov) * screenWidth * 0.5);
 			case 2:
-				return Math.round((1 + Math.tan(angle * 0.5) / Math.tan(this.hFov * 0.5)) * num) / den;
+				return Math.round((1 + Math.tan(angle * 0.5) / Math.tan(this.hFov * 0.5)) * screenWidth * 0.5);
 		}
 	}
 
 	static mapToScreenHeight(angle) {
-		const sigFigs = 1000;
-		const num = sigFigs * this.screenY * 0.5;
-		const den = sigFigs * this.scale;
+		const screenHeight = this.screenY / this.scale;
+
 		if (Math.abs(angle) >= this.vFov) {
-			return Math.sign(angle) > 0 ? this.screenY / this.scale : 0;
+			return Math.sign(angle) > 0 ? screenHeight : 0;
 		}
 
 		switch (this.projection) {
 			case 0:
-				return Math.round((1 + Math.tan(angle) / Math.tan(this.vFov)) * num) / den;
+				return Math.round((1 + Math.tan(angle) / Math.tan(this.vFov)) * screenHeight * 0.5);
 			case 1:
-				return Math.round((1 + angle / this.vFov) * num) / den;
+				return Math.round((1 + angle / this.vFov) * screenHeight * 0.5);
 			case 2:
-				return Math.round((1 + Math.tan(angle * 0.5) / Math.tan(this.vFov * 0.5)) * num) / den;
+				return Math.round((1 + Math.tan(angle * 0.5) / Math.tan(this.vFov * 0.5)) * screenHeight * 0.5);
 		}
 	}
 
