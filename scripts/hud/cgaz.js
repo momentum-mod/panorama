@@ -119,7 +119,7 @@ class Cgaz {
 	static vFovTangent = 0.75 * Math.tan((0.5 * this.fov4By3 * Math.PI) / 180);
 	static vFov = Math.atan(this.vFovTangent);
 	static hFov = Math.atan((this.vFovTangent * this.screenX) / this.screenY);
-	static theta = Math.PI * 0.5 - 2 * Math.atan(Math.sqrt(2 + Math.sqrt(3)));
+	static theta = 2 * Math.atan(Math.sqrt(5 - Math.sqrt(6)));
 	static halfPi = 0.5 * Math.PI;
 	static snapGainRange = []; // stored as [min, max]
 	static snapAccel = 0;
