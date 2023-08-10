@@ -64,9 +64,9 @@ TextEntryAutocomplete {
 	overflow: squish scroll;
 	z-index: 0;
 	opacity: 1;
-	max-height: 220px;
+	max-height: 250px;
 
-	box-shadow: fill #00000066 -3px -3px 6px 6px;
+	box-shadow: fill #00000066 2px 2px 4px 4px;
 
 	& Label {
 		width: 100%;
@@ -83,16 +83,12 @@ TextEntryAutocomplete {
 		border-top: 1px solid #00000066;
 		border-bottom: 1px solid #00000066;
 
-		transition-property: background-color;
-		transition-duration: 0.2s;
-		transition-timing-function: ease-in-out;
+		&:focus {
+			background-color: #585e62;
+		}
 
 		&:hover {
 			background-color: #018eec;
-		}
-
-		&:focus {
-			background-color: #585e62;
 		}
 	}
 }
