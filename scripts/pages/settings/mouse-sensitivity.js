@@ -47,7 +47,7 @@ class MouseSensitivity {
 	}
 
 	static loadSettings() {
-		this.panels.dpi.text = $.persistentStorage.getItem('settings.mouseDPI');
+		this.panels.dpi.text = $.persistentStorage.getItem('settings.mouseDPI') ?? '';
 		this.panels.unitSelection.SetSelected($.persistentStorage.getItem('settings.mouseUnitSelector'));
 		this.calculateSensitivity();
 	}
