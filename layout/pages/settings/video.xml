@@ -183,14 +183,11 @@
 							<Label text="#Settings_TextureReplace_1" id="materrortype1" value="1" />
 						</ChaosSettingsEnumDropDown>
 
-						<!--
-						https://github.com/ChaosInitiative/Chaos-Source/issues/368
 						<ChaosSettingsEnumDropDown text="#Settings_TextureReplace_TypeCubemap" convar="mat_error_texture_type_cubemap" infomessage="#Settings_TextureReplace_TypeCubemap_Info">
 							<Label text="#Settings_TextureReplace_TypeCubemap_0" id="materrortypecubemap0" value="0"/>
 							<Label text="#Settings_TextureReplace_TypeCubemap_1" id="materrortypecubemap1" value="1"/>
 							<Label text="#Settings_TextureReplace_TypeCubemap_2" id="materrortypecubemap2" value="2"/>
 						</ChaosSettingsEnumDropDown>
-						-->
 
 						<ChaosSettingsEnumDropDown text="#Settings_TextureReplace_Advanced" convar="mat_error_texture_advanced" infomessage="#Settings_TextureReplace_Advanced_Info">
 							<Label text="#Settings_TextureReplace_Advanced_0" id="materroradv0" value="0" />
