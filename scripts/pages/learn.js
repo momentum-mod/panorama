@@ -99,6 +99,10 @@ class Learn {
 				panel.LoadLayoutSnippet('learn-list-lesson');
 				panel.SetDialogVariable('learn_lesson_name', lessonData['Name']);
 				panel.SetPanelEvent('onactivate', () => this.setSelectedLesson(modeName, lessonKey));
+				panel.SetPanelEvent('ondblclick', () => {
+					this.setSelectedLesson(modeName, lessonKey);
+					this.startCurrentLesson();
+				});
 				panel.FindChild('CompletionIcon').AddClass('learn-list__completion-icon--hidden'); // We can do these in the future
 			}
 
