@@ -34,19 +34,22 @@
 }
 
 .cgaz-tick {
-	border-left: 2px solid black;
-	border-right: 2px solid black;
-	//margin-left set in js for positioning
-	margin-right: -1px;
+	width: 2px;
+	transform: translatex(-1px);
 	vertical-align: top;
-	overflow: noclip noclip;
 
 	&__full {
-		height: 6px;
+		height: 100%;
 	}
 
 	&__half {
-		height: 3px;
+		height: 50%;
+	}
+
+	&__container {
+		//height set in js
+		width: 100%;
+		vertical-align: center;
 	}
 }
 
