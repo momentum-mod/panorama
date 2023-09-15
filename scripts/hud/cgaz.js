@@ -102,8 +102,6 @@ class Cgaz {
 	static compassArrow = $('#CompassArrow');
 	static compassArrowIcon = $('#CompassArrowIcon');
 	static tickContainer = $('#CompassTicks');
-	static compassTickFull = initZonePanel($('#FullTick'));
-	static compassTickHalf = initZonePanel($('#HalfTick'));
 	static pitchLineContainer = $('#PitchLines');
 	static pitchStat = $('#PitchStat');
 	static yawStat = $('#YawStat');
@@ -322,11 +320,20 @@ class Cgaz {
 			}
 		}
 
-		const size = this.NaNCheck(this.compassTickSize, 0);
-		const offset = this.compassOffset - 0.5 * this.compassTickSize;
-		this.setupContainer(this.tickContainer, offset);
-		this.compassTickFull.style.height = size + 'px';
-		this.compassTickHalf.style.height = size * 0.5 + 'px';
+		this.tickContainer.style.height = this.compassTickSize + 'px';
+		this.tickContainer.style.transform = `translatey( ${this.compassOffset - 0.5 * this.compassTickSize}px )`;
+
+		const compassTicks = this.tickContainer?.Children();
+		if (compassTicks?.length < 4) {
+			// only up to 180 degrees are ever shown, so  only 4 ticks are
+			// needed to represent all potentially visible 45-degree marks
+			for (let i = compassTicks?.length; i < 4; ++i) {
+				const newTick = $.CreatePanel('Panel', this.tickContainer, `CompassTick${i}`, {
+					class: 'cgaz-tick'
+				});
+				newTick.AddClass(i % 2 ? 'cgaz-tick__half' : 'cgaz-tick__full');
+			}
+		}
 
 		const width = 2 * this.compassArrowSize;
 		const height = 2 * width;
@@ -655,27 +662,19 @@ class Cgaz {
 		let velocityAngle = this.remapAngle(viewAngle - velAngle);
 		// compass
 		if (this.compassMode) {
+			const ticks = this.tickContainer.Children();
+
 			const bShouldHighlight =
 				Math.abs(this.remapAngle(8 * velAngle) * 0.125) < 0.01 && speed >= this.accelMinSpeed;
 			const color = bShouldHighlight ? this.compassHlColor : this.compassColor;
 
 			// ticks
-			this.compassTickFull.leftAngle = this.findCompassTick(viewAngle);
-			this.compassTickFull.rightAngle = this.compassTickFull.leftAngle + this.halfPi;
-			this.compassTickHalf.leftAngle = this.findCompassTick(viewAngle - 0.5 * this.halfPi);
-			this.compassTickHalf.rightAngle = this.compassTickHalf.leftAngle + this.halfPi;
-
-			// -1/+1 balances the 2px border across the compass tick
-			this.compassTickFull.leftPx = this.mapToScreenWidth(this.compassTickFull.leftAngle) - 1;
-			this.compassTickFull.rightPx = this.mapToScreenWidth(this.compassTickFull.rightAngle) + 1;
-			this.compassTickHalf.leftPx = this.mapToScreenWidth(this.compassTickHalf.leftAngle) - 1;
-			this.compassTickHalf.rightPx = this.mapToScreenWidth(this.compassTickHalf.rightAngle) + 1;
-
-			this.drawZone(this.compassTickFull);
-			this.drawZone(this.compassTickHalf);
-
-			this.compassTickFull.style.borderColor = color;
-			this.compassTickHalf.style.borderColor = color;
+			for (const [i, tick] of ticks.entries()) {
+				const tickAngle = this.NaNCheck(this.wrapToHalfPi(viewAngle + i * 0.25 * Math.PI), 0);
+				const tickPx = this.NaNCheck(this.mapToScreenWidth(tickAngle), 0);
+				tick.style.position = `${tickPx}px 0px 0px`;
+				tick.style.backgroundColor = color;
+			}
 
 			// arrow
 			if (Math.abs(velocityAngle) < this.hFov) {
@@ -710,7 +709,7 @@ class Cgaz {
 		if (this.compassStatMode) {
 			this.yawStat.text = MomentumPlayerAPI.GetAngles().y.toFixed(0);
 			this.yawStat.style.color =
-				Math.abs(this.distToNearestTick(velAngle)) < 0.01 && speed >= this.accelMinSpeed
+				Math.abs(this.remapAngle(8 * velAngle) * 0.125) < 0.01 && speed >= this.accelMinSpeed
 					? this.compassHlColor
 					: this.compassColor;
 
@@ -1165,16 +1164,6 @@ class Cgaz {
 		pasteZone.rightPx = copyZone.rightPx;
 	}
 
-	static findCompassTick(angle) {
-		while (angle > 0) {
-			angle -= this.halfPi;
-		}
-		while (angle <= -this.hFov) {
-			angle += this.halfPi;
-		}
-		return angle;
-	}
-
 	static setupContainer(container, offset) {
 		container.style.verticalAlign = 'middle';
 		container.style.transform = `translatey( ${this.NaNCheck(-offset, 0)}px )`;
@@ -1314,13 +1303,6 @@ class Cgaz {
 			x: vector.x * cos - vector.y * sin,
 			y: vector.y * cos + vector.x * sin
 		};
-	}
-
-	static distToNearestTick(angle) {
-		angle += Math.PI * 0.125;
-		const integer = Math.trunc((angle * 4) / Math.PI);
-		angle -= integer * 0.25 * Math.PI;
-		return angle < 0 ? angle + 0.125 * Math.PI : angle - 0.125 * Math.PI;
 	}
 
 	static getColorStringFromArray(color) {
