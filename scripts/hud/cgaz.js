@@ -211,8 +211,8 @@ class Cgaz {
 		HIGHLIGHTED_ALT_SNAP_CLASS = new StyleObject(this.snapHeight, this.snapOffset, this.snapHlAltColor);
 
 		this.setupContainer(this.snapContainer, this.snapOffset);
-		for (let i = 0; i < this.snapZones?.length; ++i) {
-			this.applyClass(this.snapZones[i], i % 2 ? UNCOLORED_SNAP_CLASS : COLORED_SNAP_CLASS);
+		for (const [i, snapZone] of this.snapZones.entries()) {
+			this.applyClass(snapZone, i % 2 ? UNCOLORED_SNAP_CLASS : COLORED_SNAP_CLASS);
 		}
 	}
 
@@ -857,7 +857,7 @@ class Cgaz {
 		const snapGains = this.findSnapGains(this.snapAngles);
 		const zones = this.snapZones;
 
-		for (let i = 0; i < zones.length; ++i) {
+		for (const [i, zone] of zones.entries()) {
 			// wrap the angles to only [-pi/2, pi/2]
 			const left = wrapToHalfPi(this.snapAngles[i] - snapOffset);
 			const right = wrapToHalfPi(this.snapAngles[(i + 1) % zones.length] - snapOffset);
@@ -874,15 +874,15 @@ class Cgaz {
 			const height = this.NaNCheck(this.snapHeight, 0);
 
 			if (this.snapHeightgainEnable && !Number.isNaN(heightFactor)) {
-				zones[i].style.height = heightFactor * height + 'px';
-				zones[i].style.marginBottom = height + 'px';
-				zones[i].style.verticalAlign = 'bottom';
+				zone.style.height = heightFactor * height + 'px';
+				zone.style.marginBottom = height + 'px';
+				zone.style.verticalAlign = 'bottom';
 			} else {
-				zones[i].style.height = height + 'px';
-				zones[i].style.marginBottom = height + 'px';
+				zone.style.height = height + 'px';
+				zone.style.marginBottom = height + 'px';
 			}
 
-			this.updateZone(zones[i], left, right, 0, snapClass, this.snapSplitZone);
+			this.updateZone(zone, left, right, 0, snapClass, this.snapSplitZone);
 
 			if (this.snapColorMode) {
 				snapColor = colorLerp(this.snapSlowColor, this.snapFastColor, alpha);
@@ -901,24 +901,24 @@ class Cgaz {
 					if (getSize(MomentumPlayerAPI.GetVelocity()) > this.accelMinSpeed) {
 						let stopPoint, direction;
 						if (left - leftTarget <= 0 && right - leftTarget >= 0) {
-							stopPoint = floatEquals(zones[i].rightPx, zones[i].leftPx, 1)
+							stopPoint = floatEquals(zone.rightPx, zone.leftPx, 1)
 								? 0
 								: this.NaNCheck(
 										(
-											(this.mapToScreenWidth(leftTarget) - zones[i].leftPx) /
-											(zones[i].rightPx - zones[i].leftPx)
+											(this.mapToScreenWidth(leftTarget) - zone.leftPx) /
+											(zone.rightPx - zone.leftPx)
 										).toFixed(3),
 										0
 								  );
 							direction = '0% 0%, 100% 0%';
 							bHighlight = true;
 						} else if (left - rightTarget <= 0 && right - rightTarget >= 0) {
-							stopPoint = floatEquals(zones[i].rightPx, zones[i].leftPx, 1)
+							stopPoint = floatEquals(zone.rightPx, zone.leftPx, 1)
 								? 0
 								: this.NaNCheck(
 										(
-											(zones[i].rightPx - this.mapToScreenWidth(rightTarget)) /
-											(zones[i].rightPx - zones[i].leftPx)
+											(zone.rightPx - this.mapToScreenWidth(rightTarget)) /
+											(zone.rightPx - zone.leftPx)
 										).toFixed(3),
 										0
 								  );
@@ -932,7 +932,7 @@ class Cgaz {
 					break;
 			}
 
-			zones[i].style.backgroundColor = bHighlight ? hlSnapColor : snapColor;
+			zone.style.backgroundColor = bHighlight ? hlSnapColor : snapColor;
 		}
 	}
 
