@@ -1,0 +1,11 @@
+// Bypass restricting web requests to this list of domains by adding the "-unrestrictedwebrequests" launch argument
+{
+	domains =
+	[
+		"localhost",
+		"127.0.0.1",
+
+		// Temporarily added for Learn
+		"docs.google.com",
+	]
+}
