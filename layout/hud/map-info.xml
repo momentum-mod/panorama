@@ -3,7 +3,7 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 	<scripts>
-		<include src="file://{resources}/scripts/hud/map-info.js" />
+		<include src="file://{scripts}/hud/map-info.js" />
 	</scripts>
 
 	<MomHudMapInfo class="hudmapinfo">

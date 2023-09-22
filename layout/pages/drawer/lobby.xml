@@ -3,7 +3,7 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 	<scripts>
-		<include src="file://{resources}/scripts/pages/drawer/lobby.js" />
+		<include src="file://{scripts}/pages/drawer/lobby.js" />
 	</scripts>
 	<snippets>
 		<snippet name="lobby-list-entry">

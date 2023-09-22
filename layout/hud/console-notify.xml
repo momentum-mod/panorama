@@ -3,7 +3,7 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 	<scripts>
-		<include src="file://{resources}/scripts/hud/console-notify.js" />
+		<include src="file://{scripts}/hud/console-notify.js" />
 	</scripts>
 	<Panel class="console-notify__frame">
 		<ConVarEnabler convar="developer" togglevisibility="true">

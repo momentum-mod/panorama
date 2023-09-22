@@ -3,7 +3,7 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 	<scripts>
-		<include src="file://{resources}/scripts/pages/leaderboards/entry.js" />
+		<include src="file://{scripts}/pages/leaderboards/entry.js" />
 	</scripts>
 
 	<LeaderboardEntry class="leaderboard-entry" oncontextmenu="LeaderboardEntry.showContextMenu()">

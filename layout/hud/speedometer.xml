@@ -3,8 +3,8 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 	<scripts>
-		<include src="file://{resources}/scripts/common/speedometer.js" />
-		<include src="file://{resources}/scripts/hud/speedometer.js" />
+		<include src="file://{scripts}/common/speedometer.js" />
+		<include src="file://{scripts}/hud/speedometer.js" />
 	</scripts>
 
 	<snippets>

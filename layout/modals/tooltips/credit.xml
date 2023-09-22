@@ -4,7 +4,7 @@
 	</styles>
 
 	<scripts>
-		<include src="file://{resources}/scripts/modals/tooltips/credit.js" />
+		<include src="file://{scripts}/modals/tooltips/credit.js" />
 
 	</scripts>
 

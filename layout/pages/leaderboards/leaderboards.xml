@@ -5,8 +5,8 @@
 	</styles>
 
 	<scripts>
-		<include src="file://{resources}/scripts/common/run.js" />
-		<include src="file://{resources}/scripts/pages/leaderboards/leaderboards.js" />
+		<include src="file://{scripts}/common/run.js" />
+		<include src="file://{scripts}/pages/leaderboards/leaderboards.js" />
 	</scripts>
 
 	<Leaderboards class="leaderboards" acceptsinput="true" acceptsfocus="true" hittest="true" hittestchildren="true">

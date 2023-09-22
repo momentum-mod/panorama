@@ -3,9 +3,9 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 	<scripts>
-		<include src="file://{resources}/scripts/common/gamemodes.js" />
-		<include src="file://{resources}/scripts/common/buttons.js" />
-		<include src="file://{resources}/scripts/hud/synchronizer.js" />
+		<include src="file://{scripts}/common/gamemodes.js" />
+		<include src="file://{scripts}/common/buttons.js" />
+		<include src="file://{scripts}/hud/synchronizer.js" />
 	</scripts>
 	<MomHudSynchronizer class="synchronizer" alternateTicks="false">
 		<Panel id="BarWrapper" class="synchronizer__bar-wrapper">

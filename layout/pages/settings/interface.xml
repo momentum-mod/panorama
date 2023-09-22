@@ -3,9 +3,9 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 	<scripts>
-		<include src="file://{resources}/scripts/common/speedometer.js" />
-		<include src="file://{resources}/scripts/pages/settings/page.js" />
-		<include src="file://{resources}/scripts/pages/settings/speedometer.js" />
+		<include src="file://{scripts}/common/speedometer.js" />
+		<include src="file://{scripts}/pages/settings/page.js" />
+		<include src="file://{scripts}/pages/settings/speedometer.js" />
 	</scripts>
 
 	<snippets>

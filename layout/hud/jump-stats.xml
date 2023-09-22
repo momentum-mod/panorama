@@ -3,7 +3,7 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 	<scripts>
-		<include src="file://{resources}/scripts/hud/jump-stats.js" />
+		<include src="file://{scripts}/hud/jump-stats.js" />
 	</scripts>
 
 	<MomHudJumpStats class="jumpstats">
