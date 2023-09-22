@@ -3,7 +3,7 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 	<scripts>
-		<include src="file://{resources}/scripts/components/color-picker.js" />
+		<include src="file://{scripts}/components/color-picker.js" />
 	</scripts>
 	<snippets>
 		<snippet name="color-plane-indicator">

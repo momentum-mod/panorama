@@ -4,8 +4,8 @@
 	</styles>
 
 	<scripts>
-		<include src="file://{resources}/scripts/util/dont-show-again.js" />
-		<include src="file://{resources}/scripts/modals/popups/dont-show-again-settings.js" />
+		<include src="file://{scripts}/util/dont-show-again.js" />
+		<include src="file://{scripts}/modals/popups/dont-show-again-settings.js" />
 	</scripts>
 
 	<snippets>

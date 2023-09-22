@@ -4,8 +4,8 @@
 	</styles>
 
 	<scripts>
-		<include src="file://{resources}/scripts/util/functions.js" />
-		<include src="file://{resources}/scripts/util/toast-manager.js" />
+		<include src="file://{scripts}/util/functions.js" />
+		<include src="file://{scripts}/util/toast-manager.js" />
 	</scripts>
 
 	<Panel class="full-width full-height" hittest="false" hittestchildren="false">

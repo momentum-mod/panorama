@@ -3,7 +3,7 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 	<scripts>
-		<include src="file://{resources}/scripts/pages/intro-movie.js" />
+		<include src="file://{scripts}/pages/intro-movie.js" />
 	</scripts>
 
 	<ChaosIntroMovie hittest="false">

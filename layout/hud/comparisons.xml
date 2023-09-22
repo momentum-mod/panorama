@@ -3,9 +3,9 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 	<scripts>
-		<include src="file://{resources}/scripts/common/run.js" />
-		<include src="file://{resources}/scripts/common/timer.js" />
-		<include src="file://{resources}/scripts/hud/comparisons.js" />
+		<include src="file://{scripts}/common/run.js" />
+		<include src="file://{scripts}/common/timer.js" />
+		<include src="file://{scripts}/hud/comparisons.js" />
 	</scripts>
 
 	<HudComparisons class="hud-comparisons">

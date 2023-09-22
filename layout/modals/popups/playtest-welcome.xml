@@ -4,7 +4,7 @@
 	</styles>
 
 	<scripts>
-		<include src="file://{resources}/scripts/util/dont-show-again.js" />
+		<include src="file://{scripts}/util/dont-show-again.js" />
 	</scripts>
 
 	<PopupCustomLayout class="PopupPanel Hidden generic-popup generic-popup--large" popupbackground="blur">

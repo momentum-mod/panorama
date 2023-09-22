@@ -3,7 +3,7 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 	<scripts>
-		<include src="file://{resources}/scripts/modals/popups/range-color-profile-name.js" />
+		<include src="file://{scripts}/modals/popups/range-color-profile-name.js" />
 	</scripts>
 	<PopupCustomLayout class="PopupPanel Hidden" popupbackground="dim" onload="RangeColorProfileNamePopup.init()">
 		<Panel class="row horizontal-align-center mt-0">

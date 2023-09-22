@@ -3,7 +3,7 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 	<scripts>
-		<include src="file://{resources}/scripts/components/level-indicator.js" />
+		<include src="file://{scripts}/components/level-indicator.js" />
 	</scripts>
 
 	<Panel class="levelindicator" onload="LevelIndicator.onLoad()">

@@ -3,7 +3,7 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 	<scripts>
-		<include src="file://{resources}/scripts/hud/spec-info.js" />
+		<include src="file://{scripts}/hud/spec-info.js" />
 	</scripts>
 
 	<snippets>

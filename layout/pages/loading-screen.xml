@@ -4,7 +4,7 @@
 	</styles>
 
 	<scripts>
-		<include src="file://{resources}/scripts/pages/loading-screen.js" />
+		<include src="file://{scripts}/pages/loading-screen.js" />
 	</scripts>
 
 	<Panel class="loadingscreen">

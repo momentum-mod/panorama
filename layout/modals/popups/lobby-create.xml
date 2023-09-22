@@ -4,7 +4,7 @@
 	</styles>
 
 	<scripts>
-		<include src="file://{resources}/scripts/modals/popups/lobby-create.js" />
+		<include src="file://{scripts}/modals/popups/lobby-create.js" />
 	</scripts>
 
 	<PopupCustomLayout class="PopupPanel Hidden generic-popup" popupbackground="dim" onload="LobbyCreate.onLoad()">

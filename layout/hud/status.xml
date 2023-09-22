@@ -3,9 +3,9 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 	<scripts>
-		<include src="file://{resources}/scripts/common/hud-misc.js" />
-		<include src="file://{resources}/scripts/common/timer.js" />
-		<include src="file://{resources}/scripts/hud/status.js" />
+		<include src="file://{scripts}/common/hud-misc.js" />
+		<include src="file://{scripts}/common/timer.js" />
+		<include src="file://{scripts}/hud/status.js" />
 	</scripts>
 
 	<MomHudStatus class="full-width" onload="HudStatus.onLoad();">

@@ -3,11 +3,11 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 	<scripts>
-		<include src="file://{resources}/scripts/common/game-ui.js" />
-		<include src="file://{resources}/scripts/common/safeguards.js" />
-		<include src="file://{resources}/scripts/pages/main-menu/main-menu.js" />
-		<include src="file://{resources}/scripts/pages/drawer/drawer.js" />
-		<include src="file://{resources}/scripts/util/dont-show-again.js" />
+		<include src="file://{scripts}/common/game-ui.js" />
+		<include src="file://{scripts}/common/safeguards.js" />
+		<include src="file://{scripts}/pages/main-menu/main-menu.js" />
+		<include src="file://{scripts}/pages/drawer/drawer.js" />
+		<include src="file://{scripts}/util/dont-show-again.js" />
 "
 	</scripts>
 

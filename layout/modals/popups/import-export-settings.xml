@@ -4,7 +4,7 @@
 	</styles>
 
 	<scripts>
-		<include src="file://{resources}/scripts/modals/popups/import-export-settings.js" />
+		<include src="file://{scripts}/modals/popups/import-export-settings.js" />
 	</scripts>
 
 	<PopupCustomLayout class="PopupPanel Hidden generic-popup importexport" popupbackground="blur" onload="ImportExportSettings.onLoad()">

@@ -3,7 +3,7 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 	<scripts>
-		<include src="file://{resources}/scripts/hud/ghost-entities.js" />
+		<include src="file://{scripts}/hud/ghost-entities.js" />
 	</scripts>
 
 	<snippets>

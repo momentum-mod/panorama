@@ -3,7 +3,7 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 	<scripts>
-		<include src="file://{resources}/scripts/components/color-display.js" />
+		<include src="file://{scripts}/components/color-display.js" />
 	</scripts>
 	<Panel class="colordisplay" onload="ColorDisplay.updateDisplayOpacity();">
 		<Label id="Title" class="colordisplay__title" />

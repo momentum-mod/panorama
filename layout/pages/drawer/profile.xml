@@ -4,8 +4,8 @@
 	</styles>
 
 	<scripts>
-		<include src="file://{resources}/scripts/common/gamemodes.js" />
-		<include src="file://{resources}/scripts/pages/drawer/profile.js" />
+		<include src="file://{scripts}/common/gamemodes.js" />
+		<include src="file://{scripts}/pages/drawer/profile.js" />
 	</scripts>
 
 	<Panel class="drawer__tab profile" acceptsfocus="true" onload="Profile.onLoad()">

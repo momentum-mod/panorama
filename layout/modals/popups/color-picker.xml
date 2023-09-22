@@ -1,6 +1,6 @@
 <root>
 	<scripts>
-		<include src="file://{resources}/scripts/modals/popups/color-picker.js" />
+		<include src="file://{scripts}/modals/popups/color-picker.js" />
 	</scripts>
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />

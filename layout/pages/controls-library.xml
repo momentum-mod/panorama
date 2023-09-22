@@ -4,7 +4,7 @@
 	</styles>
 
 	<scripts>
-		<include src="file://{resources}/scripts/pages/controls-library.js" />
+		<include src="file://{scripts}/pages/controls-library.js" />
 	</scripts>
 
 	<Panel class="mainmenu__page">

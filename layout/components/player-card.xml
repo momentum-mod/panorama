@@ -3,7 +3,7 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 	<scripts>
-		<include src="file://{resources}/scripts/components/player-card.js" />
+		<include src="file://{scripts}/components/player-card.js" />
 	</scripts>
 
 	<Panel class="playercard" onload="PlayerCard.onLoad()">

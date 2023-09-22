@@ -4,8 +4,8 @@
 	</styles>
 
 	<scripts>
-		<include src="file://{resources}/scripts/common/gamemodes.js" />
-		<include src="file://{resources}/scripts/pages/learn.js" />
+		<include src="file://{scripts}/common/gamemodes.js" />
+		<include src="file://{scripts}/pages/learn.js" />
 	</scripts>
 
 	<snippets>

@@ -4,7 +4,7 @@
 	</styles>
 
 	<scripts>
-		<include src="file://{resources}/scripts/components/split.js" />
+		<include src="file://{scripts}/components/split.js" />
 	</scripts>
 
 	<Panel class="split" onload="Split.onLoad()">

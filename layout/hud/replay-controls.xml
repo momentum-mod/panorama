@@ -5,7 +5,7 @@
 	</styles>
 
 	<scripts>
-		<include src="file://{resources}/scripts/hud/replay-controls.js" />
+		<include src="file://{scripts}/hud/replay-controls.js" />
 	</scripts>
 
 	<MomHudReplayControls class="replaycontrols">
