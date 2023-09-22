@@ -1,5 +1,3 @@
-'use strict';
-
 const POST_MAX_CHARS = 1024;
 
 class MainMenuNews {

@@ -1,5 +1,3 @@
-'use strict';
-
 // This is mirrored from C++ code! Do not change whimsically!
 const RunEntType = {
 	PLAYER: 0,

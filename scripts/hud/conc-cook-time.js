@@ -1,5 +1,3 @@
-'use strict';
-
 class ConcCook {
 	/** @type {ProgressBar} @static */
 	static cookMeter = $('#ConcCookMeter');

@@ -1,5 +1,3 @@
-'use strict';
-
 const INACTIVE_CLASS = 'hudtimer__time--inactive';
 const FINISHED_CLASS = 'hudtimer__time--finished';
 const FAILED_CLASS = 'hudtimer__time--failed';

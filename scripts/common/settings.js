@@ -1,5 +1,3 @@
-'use strict';
-
 const SettingsTabs = {
 	InputSettings: {
 		xml: 'input',

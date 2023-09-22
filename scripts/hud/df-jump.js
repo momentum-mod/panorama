@@ -1,5 +1,3 @@
-'use strict';
-
 const COLOR_CLASS = {
 	AIR: 'dfjump__press--air',
 	GROUND: 'dfjump__press--ground'

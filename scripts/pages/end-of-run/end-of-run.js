@@ -1,5 +1,3 @@
-'use strict';
-
 class EndOfRun {
 	/**
 	 * @property {object} panels - Collection of cached panels.

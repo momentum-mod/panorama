@@ -1,5 +1,3 @@
-'use strict';
-
 class MainMenu {
 	static panels = {
 		/** @type {Panel} @static */

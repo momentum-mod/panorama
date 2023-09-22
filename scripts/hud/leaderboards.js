@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Class for the HUD leaderboards panel, which contains the leaderboards and end of run.
  */

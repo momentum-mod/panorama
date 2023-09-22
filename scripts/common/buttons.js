@@ -1,5 +1,3 @@
-'use strict';
-
 const Buttons = {
 	ATTACK: 1 << 0,
 	JUMP: 1 << 1,

@@ -1,5 +1,3 @@
-'use strict';
-
 const CHANGELOG_FILE_PATH = 'panorama/data/changelog.vdf';
 
 class About {

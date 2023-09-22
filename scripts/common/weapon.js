@@ -1,5 +1,3 @@
-'use strict';
-
 const WeaponStateChangeMode = {
 	SWITCH: 0,
 	PICKUP: 1,

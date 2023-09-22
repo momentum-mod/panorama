@@ -1,5 +1,3 @@
-'use strict';
-
 class RangeColorDisplay {
 	static colorDisplay = $('#ColorDisplay');
 	/** @type {TextEntry} @static */

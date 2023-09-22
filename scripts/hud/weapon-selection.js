@@ -1,5 +1,3 @@
-'use strict';
-
 const DEPLOYED_CLASS = 'weaponselection__wrapper--deployed';
 const FADEOUT_CLASS = 'weaponselection--fadeout';
 

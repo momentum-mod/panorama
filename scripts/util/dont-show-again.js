@@ -1,5 +1,3 @@
-'use strict';
-
 const PS_OJBECT_KEY = 'dosa';
 
 /**

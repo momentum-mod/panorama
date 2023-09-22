@@ -1,5 +1,3 @@
-'use strict';
-
 const TIER_MIN = 1;
 const TIER_MAX = 10;
 

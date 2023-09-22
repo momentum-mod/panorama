@@ -1,5 +1,3 @@
-'use strict';
-
 const RunSafeguardType = {
 	PRACTICEMODE: 0,
 	RESTART: 1,
