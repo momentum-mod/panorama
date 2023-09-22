@@ -1,5 +1,3 @@
-'use strict';
-
 class IntroMovie {
 	static {
 		$.RegisterForUnhandledEvent('ChaosShowIntroMovie', this.showIntroMovie.bind(this));

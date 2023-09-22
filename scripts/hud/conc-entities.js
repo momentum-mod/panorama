@@ -1,5 +1,3 @@
-'use strict';
-
 class ConcEntities {
 	static container = $('#ConcEntPanelsContainer');
 

@@ -1,5 +1,3 @@
-'use strict';
-
 const REFRESH_COOLDOWN = 10;
 
 const LOBBY_TYPES = {

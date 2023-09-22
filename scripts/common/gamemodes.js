@@ -1,5 +1,3 @@
-'use strict';
-
 const GameMode = {
 	SURF: 1,
 	BHOP: 2,

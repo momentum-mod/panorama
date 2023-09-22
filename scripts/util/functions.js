@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Utility functions for Javascript.
  * Could be ported to C++ and exposed globally in the future.

@@ -1,5 +1,3 @@
-'use strict';
-
 class ConsoleNotify {
 	static scheduleOpacity = -1;
 

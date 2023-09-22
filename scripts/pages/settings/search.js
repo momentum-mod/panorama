@@ -1,5 +1,3 @@
-'use strict';
-
 const MAX_MATCHES = 16;
 
 class SettingsSearch {

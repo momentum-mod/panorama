@@ -1,5 +1,3 @@
-'use strict';
-
 class PlayerCard {
 	static panels = {
 		progressBar: $('#XpProgressBar'),

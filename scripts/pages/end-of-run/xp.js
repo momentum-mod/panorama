@@ -1,5 +1,3 @@
-'use strict';
-
 const BASE_LEVELUP_TIME = 3;
 const LEVEL_INDICATOR_MAX_TRANSITION_TIME = 0.7;
 const XP_COUNTER_TICKS = 100;

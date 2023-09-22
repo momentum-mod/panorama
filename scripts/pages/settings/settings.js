@@ -1,5 +1,3 @@
-'use strict';
-
 class MainMenuSettings {
 	static activeTab = null;
 	static prevTab = null;

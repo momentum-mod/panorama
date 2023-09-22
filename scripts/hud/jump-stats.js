@@ -1,5 +1,3 @@
-'use strict';
-
 class JumpStats {
 	/** @type {Label} @static */
 	static label = $('#JumpStatsLabel');

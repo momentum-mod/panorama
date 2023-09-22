@@ -19,8 +19,8 @@ module.exports = {
 		'no-useless-constructor': ['error'],
 		'no-unused-expressions': ['error', { allowTernary: true }],
 		'prefer-arrow-callback': ['error'],
-		strict: ['error', 'global'],
-		// Terrible for us, gets confused by $. and stuff defined in other files that are in same context
+		// `tsc` adds this automatically.
+		strict: ['off'],
 		// due being in the same <imports> block.
 		'no-undef': ['off'],
 		'no-unused-vars': ['off'],

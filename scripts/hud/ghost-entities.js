@@ -1,5 +1,3 @@
-'use strict';
-
 class GhostEntities {
 	static onAimOverGhostChange(entPanel, aimOver) {
 		const nameEnabled = $.GetContextPanel().ghostNamesEnabled && aimOver;

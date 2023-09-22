@@ -1,5 +1,3 @@
-'use strict';
-
 class ImportExportSettings {
 	static panels = {
 		/** @type {TextEntry} @static */

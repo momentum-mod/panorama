@@ -1,5 +1,3 @@
-'use strict';
-
 const TimerEvent = {
 	STARTED: 0,
 	FINISHED: 1,

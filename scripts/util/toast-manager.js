@@ -1,5 +1,3 @@
-'use strict';
-
 const TOAST_DURATION = 10;
 const MAX_ACTIVE_TOASTS = 10;
 const Locations = ['left', 'center', 'right'];

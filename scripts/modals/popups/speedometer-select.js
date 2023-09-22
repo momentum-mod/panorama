@@ -1,5 +1,3 @@
-'use strict';
-
 class SpeedometerSelectPopup {
 	/** @static @type {Panel} */
 	static container = $('#SpeedometerSelectContainer');
