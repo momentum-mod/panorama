@@ -1,0 +1,3 @@
+[submodule "scripts/types"]
+	path = scripts/types
+	url = https://github.com/StrataSource/pano-typed
