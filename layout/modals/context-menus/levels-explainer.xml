@@ -4,7 +4,7 @@
 	</styles>
 
 	<scripts>
-		<include src="file://{resources}/scripts/modals/context-menus/levels-explainer.js" />
+		<include src="file://{scripts}/modals/context-menus/levels-explainer.js" />
 	</scripts>
 
 	<ContextMenuCustomLayout class="contextmenu levels-explainer" onload="LevelsExplainer.fixLevelIndicators()">

@@ -4,7 +4,7 @@
 	</styles>
 
 	<scripts>
-		<include src="file://{resources}/scripts/pages/drawer/about.js" />
+		<include src="file://{scripts}/pages/drawer/about.js" />
 	</scripts>
 
 	<Panel class="drawer__tab about" acceptsfocus="true" onload="About.onLoad()">

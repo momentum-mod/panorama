@@ -3,7 +3,7 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 	<scripts>
-		<include src="file://{resources}/scripts/components/range-color-display.js" />
+		<include src="file://{scripts}/components/range-color-display.js" />
 	</scripts>
 	<Panel class="rangecolordisplay">
 		<TextEntry id="MinEntry" textmode="numeric" maxchars="8" class="textentry rangecolordisplay__minentry" />

@@ -3,7 +3,7 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 	<scripts>
-		<include src="file://{resources}/scripts/hud/strafe-sync.js" />
+		<include src="file://{scripts}/hud/strafe-sync.js" />
 	</scripts>
 	<Panel class="strafesync">
 		<Label text="{s:sync_value}" id="SyncLabel" class="horizontal-align-center vertical-align-center text-align-center progressbar-hudmeter__label" />

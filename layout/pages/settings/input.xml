@@ -3,8 +3,8 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 	<scripts>
-		<include src="file://{resources}/scripts/pages/settings/page.js" />
-		<include src="file://{resources}/scripts/pages/settings/mouse-sensitivity.js" />
+		<include src="file://{scripts}/pages/settings/page.js" />
+		<include src="file://{scripts}/pages/settings/mouse-sensitivity.js" />
 	</scripts>
 
 	<Panel class="settings-page">

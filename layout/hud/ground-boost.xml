@@ -3,7 +3,7 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 	<scripts>
-		<include src="file://{resources}/scripts/hud/ground-boost.js" />
+		<include src="file://{scripts}/hud/ground-boost.js" />
 	</scripts>
 
 	<MomHudGroundboost class="horizontal-align-center" alternateTicks="false">

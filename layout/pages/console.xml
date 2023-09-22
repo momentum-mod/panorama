@@ -10,7 +10,7 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 	<scripts>
-		<include src="file://{resources}/scripts/pages/console.js" />
+		<include src="file://{scripts}/pages/console.js" />
 	</scripts>
 	<Panel class="console__outer" hittest="true" defaultfocus="ConsoleInput">
 		<Panel id="MoveDragArea" class="console__move-drag-area vertical-align-center" draggable="true">

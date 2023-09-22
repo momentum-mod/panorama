@@ -3,9 +3,9 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 	<scripts>
-		<include src="file://{resources}/scripts/common/gamemodes.js" />
-		<include src="file://{resources}/scripts/common/run.js" />
-		<include src="file://{resources}/scripts/hud/leaderboards.js" />
+		<include src="file://{scripts}/common/gamemodes.js" />
+		<include src="file://{scripts}/common/run.js" />
+		<include src="file://{scripts}/hud/leaderboards.js" />
 	</scripts>
 
 	<snippets>

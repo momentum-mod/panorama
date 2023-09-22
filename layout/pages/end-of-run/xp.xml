@@ -4,7 +4,7 @@
 	</styles>
 
 	<scripts>
-		<include src="file://{resources}/scripts/pages/end-of-run/xp.js" />
+		<include src="file://{scripts}/pages/end-of-run/xp.js" />
 	</scripts>
 
 	<!-- IL End of Run page is gonna use this as well so splitting it up -->

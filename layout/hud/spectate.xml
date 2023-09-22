@@ -3,8 +3,8 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 	<scripts>
-		<include src="file://{resources}/scripts/common/run-entity.js" />
-		<include src="file://{resources}/scripts/hud/spectate.js" />
+		<include src="file://{scripts}/common/run-entity.js" />
+		<include src="file://{scripts}/hud/spectate.js" />
 	</scripts>
 	<MomHudSpectate class="full-width flow-down">
 		<Panel class="spectate">

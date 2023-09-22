@@ -3,7 +3,7 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 	<scripts>
-		<include src="file://{resources}/scripts/pages/main-menu/news.js" />
+		<include src="file://{scripts}/pages/main-menu/news.js" />
 	</scripts>
 
 	<Panel class="news">

@@ -3,7 +3,7 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 	<scripts>
-		<include src="file://{resources}/scripts/hud/sticky-count.js" />
+		<include src="file://{scripts}/hud/sticky-count.js" />
 	</scripts>
 
 	<MomHudStickyCharge class="horizontal-align-center">
