@@ -17,18 +17,17 @@
 	},
 	"author": "Momentum Team",
 	"license": "MIT",
-	"dependencies": {},
 	"devDependencies": {
-		"husky": "^8.0.3",
-		"lint-staged": "^13.1.2",
-		"prettier": "^2.8.4",
-		"axios": "^1.3.3",
-		"papaparse": "^5.3.2",
-		"eslint": "^8.34.0",
-		"prettier-eslint": "^15.0.1",
-		"eslint-config-prettier": "^8.6.0",
-		"eslint-plugin-prettier": "^4.2.1",
-		"eslint-plugin-unicorn": "^45.0.2"
+		"axios": "1.5.0",
+		"eslint": "8.49.0",
+		"eslint-config-prettier": "9.0.0",
+		"eslint-plugin-prettier": "5.0.0",
+		"eslint-plugin-unicorn": "48.0.1",
+		"husky": "8.0.3",
+		"lint-staged": "14.0.1",
+		"papaparse": "5.4.1",
+		"prettier": "3.0.3",
+		"prettier-eslint": "15.0.1",
 	},
 	"lint-staged": {
 		"**/*.{js,scss,css,md}": [
