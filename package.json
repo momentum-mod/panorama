@@ -20,6 +20,7 @@
 	"author": "Momentum Team",
 	"license": "MIT",
 	"devDependencies": {
+		"@typescript-eslint/eslint-plugin": "6.7.2",
 		"axios": "1.5.0",
 		"eslint": "8.49.0",
 		"eslint-config-prettier": "9.0.0",
