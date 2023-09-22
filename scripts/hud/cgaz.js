@@ -811,7 +811,7 @@ class Cgaz {
 
 			const xGain = Math.round(this.snapAccel * Math.cos(angle));
 			const yGain = Math.round(this.snapAccel * Math.sin(angle));
-			const gainDiff = Math.sqrt(xGain * xGain + yGain * yGain) - this.snapAccel;
+			const gainDiff = Math.hypot(xGain, yGain) - this.snapAccel;
 			snapGains.push(gainDiff);
 
 			this.snapGainRange[0] = Math.min(gainDiff, this.snapGainRange[0]);
