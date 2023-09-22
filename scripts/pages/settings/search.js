@@ -213,14 +213,14 @@ class SettingsSearch {
 		for (const [inputString, m] of Object.entries(matches.matches ?? {}))
 			for (const match of m) {
 				if (match.type === MatchType.GROUP_TEXT)
-					groupName = groupName.replace(
-						new RegExp(`(${inputString})`, 'ig'),
+					groupName = groupName.replaceAll(
+						new RegExp(`(${inputString})`, 'gi'),
 						'<font class="settings-search-result__text--match">$1</font>'
 					);
 
 				if (match.type === MatchType.SETTING_TEXT)
-					name = name.replace(
-						new RegExp(`(${inputString})`, 'ig'),
+					name = name.replaceAll(
+						new RegExp(`(${inputString})`, 'gi'),
 						'<font class="settings-search-result__text--match">$1</font>'
 					);
 
@@ -228,7 +228,7 @@ class SettingsSearch {
 					$.Msg(`matches.tags: ${matches.tags}, tagindex: ${match.tagIndex}, inptustring: ${inputString}`);
 					tags.push(
 						matches.tags[match.tagIndex]?.replace(
-							new RegExp(`(${inputString})`, 'ig'),
+							new RegExp(`(${inputString})`, 'gi'),
 							'<font class="settings-search-result__tags--match">$1</font>'
 						)
 					);
@@ -237,7 +237,7 @@ class SettingsSearch {
 				if (match.type === MatchType.GROUP_TAG)
 					groupTags.push(
 						matches.groupTags[match.tagIndex]?.replace(
-							new RegExp(`(${inputString})`, 'ig'),
+							new RegExp(`(${inputString})`, 'gi'),
 							'<font class="settings-search-result__tags--match">$1</font>'
 						)
 					);

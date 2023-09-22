@@ -78,7 +78,7 @@ class xmlStringBuilder {
 					xmlString.openPanel(
 						'Label',
 						{
-							id: `Credit${sectionName.replace(/[^\dA-Za-z]/g, '')}${personIndex + 1}`,
+							id: `Credit${sectionName.replaceAll(/[^\dA-Za-z]/g, '')}${personIndex + 1}`,
 							class:
 								`${CREDITS_CLASS}__col ${CREDITS_CLASS}__name` +
 								(style ? ` ${CREDITS_CLASS}__name--${style}` : ''),
@@ -138,8 +138,8 @@ class xmlStringBuilder {
 				parser: 'html',
 				useTabs: true
 			})
-			.replace(/<label/g, '<Label')
-			.replace(/&/g, 'and');
+			.replaceAll('<label', '<Label')
+			.replaceAll('&', 'and');
 
 		fs.writeFileSync(PATH, outString);
 
