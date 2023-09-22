@@ -1,5 +1,3 @@
-'use strict';
-
 class HudSpecInfo {
 	/** @type {Panel} @static */
 	static container = $('#SpecInfoContainer');

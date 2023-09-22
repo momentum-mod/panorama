@@ -1,5 +1,3 @@
-'use strict';
-
 const LEADERBOARD_ENTRY_TYPE = {
 	INVALID: -1,
 	LOCAL: 0,

@@ -1,5 +1,3 @@
-'use strict';
-
 const GameUIState = {
 	INVALID: 0,
 	LOADINGSCREEN: 1,

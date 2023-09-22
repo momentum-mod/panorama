@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * JS classes and enums for handling runs, comparisons, etc.
  */

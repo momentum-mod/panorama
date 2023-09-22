@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * @typedef {Object} Point - A point on a line on the LineGraph
  * @property {number} x - X Coordinate
@@ -213,13 +211,19 @@ class LineGraph {
 							const lastPoint = line.points[i - 1];
 							if (isAbove ? lastPoint.y > 0 : lastPoint.y < 0) {
 								// Last point ABOVE origin, so make a trapezoid.
-								polyPoints.push({ x: lastPoint.x, y: 0 }, lastPoint, point, { x: point.x, y: 0 });
+								polyPoints.push({ x: lastPoint.x, y: 0 }, lastPoint, point, {
+									x: point.x,
+									y: 0
+								});
 							} else {
 								// Previous point was somewhere BELOW the axis, so find point where line between last point and this one intersect the axis,
 								// make a triangle between that point, current point, and current point's x at y = 0.
 								const xIntersect =
 									lastPoint.x - lastPoint.y * ((point.x - lastPoint.x) / (point.y - lastPoint.y));
-								polyPoints.push({ x: xIntersect, y: 0 }, point, { x: point.x, y: 0 });
+								polyPoints.push({ x: xIntersect, y: 0 }, point, {
+									x: point.x,
+									y: 0
+								});
 							}
 							drawPoly(isAbove);
 						} else if (trackingBool) {
@@ -269,6 +273,11 @@ class LineGraph {
 		const x = xLerp * this.width;
 		const y = (1 - yLerp) * this.height;
 
-		return { x: x, y: y, class: point?.class, selectionSize: point?.selectionSize };
+		return {
+			x: x,
+			y: y,
+			class: point?.class,
+			selectionSize: point?.selectionSize
+		};
 	}
 }

@@ -1,5 +1,3 @@
-'use strict';
-
 class HudSpectate {
 	static panels = {
 		indicatorSpectating: $('#IndicatorSpectating'),

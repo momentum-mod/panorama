@@ -1,5 +1,3 @@
-'use strict';
-
 const SpeedometerTypes = {
 	OVERALL_VELOCITY: 0,
 	EXPLOSION_VELOCITY: 1,

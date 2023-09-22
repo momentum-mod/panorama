@@ -1,5 +1,3 @@
-'use strict';
-
 class Console {
 	/** @type {StaticConsoleMessageTarget} @static */
 	static messageTarget = $('#ConsoleMessageTarget');

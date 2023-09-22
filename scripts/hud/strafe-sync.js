@@ -1,5 +1,3 @@
-'use strict';
-
 const COLOR_CLASS_FG = {
 	DEFAULT_COLOR: 'strafesync__default-color--fg',
 	INCREASE_COLOR: 'strafesync__increase-color--fg',

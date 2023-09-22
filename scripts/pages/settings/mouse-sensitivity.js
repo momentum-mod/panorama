@@ -1,5 +1,3 @@
-'use strict';
-
 const CM_CONVERSION_FACTOR = 2.54;
 
 class MouseSensitivity {

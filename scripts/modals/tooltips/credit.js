@@ -1,5 +1,3 @@
-'use strict';
-
 const SECTIONS = ['lead', 'dept-head', 'team', 'contributor'];
 
 class Credit {

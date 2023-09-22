@@ -1,5 +1,3 @@
-'use strict';
-
 // arbitrary value to determine how much speed needs to change to be considered an increase/decrease
 // adjusted by speedometer update delta time
 const COLORIZE_DEADZONE = 2;

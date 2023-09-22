@@ -1,5 +1,3 @@
-'use strict';
-
 class LevelIndicator {
 	static totalLevel;
 	static panels = {

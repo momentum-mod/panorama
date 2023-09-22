@@ -1,5 +1,3 @@
-'use strict';
-
 const TIME_LIST_TYPE = {
 	LIST_LOCAL: 0,
 	LIST_GLOBAL: 1,

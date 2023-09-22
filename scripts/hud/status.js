@@ -1,5 +1,3 @@
-'use strict';
-
 class HudStatus {
 	/** @type {Label} @static */
 	static label = $('#HudStatusLabel');

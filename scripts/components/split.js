@@ -1,5 +1,3 @@
-'use strict';
-
 class Split {
 	static onLoad() {
 		this.update();

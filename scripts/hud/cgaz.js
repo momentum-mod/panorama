@@ -1,5 +1,3 @@
-'use strict';
-
 // TODO: remove these globals
 let MAX_GROUND_SPEED = 320; // initialized to 320. Changes with haste status.
 const AIR_ACCEL = 1;

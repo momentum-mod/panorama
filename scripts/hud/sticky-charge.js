@@ -1,5 +1,3 @@
-'use strict';
-
 const STICKY_CHARGE_UNITS_TYPE = {
 	NONE: 0,
 	UPS: 1,

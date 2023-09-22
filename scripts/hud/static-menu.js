@@ -1,5 +1,3 @@
-'use strict';
-
 class HudStaticMenu {
 	static onEntrySelected(panel) {
 		panel.AddClass('static-hud-menu__entry--highlight');

@@ -1,5 +1,3 @@
-'use strict';
-
 class MapEntry {
 	static {
 		$.RegisterEventHandler('MapEntry_MapDataUpdate', $.GetContextPanel(), this.onMapDataUpdate.bind(this));

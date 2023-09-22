@@ -1,5 +1,3 @@
-'use strict';
-
 class RangeColorProfileNamePopup {
 	/** @type {TextEntry} @static */
 	static textEntry = $('#RangeColorProfileName');

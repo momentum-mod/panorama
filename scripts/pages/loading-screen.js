@@ -1,5 +1,3 @@
-'use strict';
-
 class LoadingScreen {
 	static panels = {
 		/** @type {Panel} @static */

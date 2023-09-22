@@ -1,5 +1,3 @@
-'use strict';
-
 const TimerFlags = {
 	NONE: 0,
 	LANDING: 1 << 0,

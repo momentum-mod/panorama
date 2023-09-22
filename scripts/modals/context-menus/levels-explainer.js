@@ -1,5 +1,3 @@
-'use strict';
-
 class LevelsExplainer {
 	static fixLevelIndicators() {
 		// When these panels are first created, for some godforsaken reason they don't have the correct class until you

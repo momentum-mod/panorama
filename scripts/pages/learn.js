@@ -1,5 +1,3 @@
-'use strict';
-
 // File to use if loading normally
 const LEARN_FILE_PATH = 'panorama/data/learn.vdf';
 

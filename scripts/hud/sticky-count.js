@@ -1,5 +1,3 @@
-'use strict';
-
 const STICKY_STATE_TYPE = {
 	NOSTICKY: 0,
 	ARMING: 1,

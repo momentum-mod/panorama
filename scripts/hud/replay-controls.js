@@ -1,5 +1,3 @@
-'use strict';
-
 class ReplayControls {
 	static panels = {
 		timeSlider: $('#ReplayControlsTimeSlider'),

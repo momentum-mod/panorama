@@ -1,5 +1,3 @@
-'use strict';
-
 const MAX_ACTIVE_SPLITS = 12;
 const NEW_SPLIT_TRANSITION_DURATION = 2;
 

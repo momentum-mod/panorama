@@ -1,5 +1,3 @@
-'use strict';
-
 class ColorDisplay {
 	static display = $('#Display');
 

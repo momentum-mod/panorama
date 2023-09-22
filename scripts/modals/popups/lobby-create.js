@@ -1,5 +1,3 @@
-'use strict';
-
 class LobbyCreate {
 	static panels = {
 		/** @type {Panel} @static */

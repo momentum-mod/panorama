@@ -1,5 +1,3 @@
-'use strict';
-
 class HudMapInfo {
 	static cachedInfoContainer = $('#CachedInfoContainer');
 

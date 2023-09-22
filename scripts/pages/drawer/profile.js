@@ -1,5 +1,3 @@
-'use strict';
-
 class Profile {
 	static panels = {
 		levelIndicatorsContainer: $('#ProfileLevelIndicators'),
