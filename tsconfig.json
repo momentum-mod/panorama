@@ -1,0 +1,17 @@
+{
+	"compilerOptions": {
+		"target": "ESNext",
+		"lib": ["ESNext"],
+		"module": "None",
+		"rootDir": "scripts/",
+		"outDir": "scripts_dist/",
+		"alwaysStrict": true,
+		"isolatedModules": true,
+		"allowJs": true,
+		"strict": true,
+		"noImplicitAny": false,
+		"typeRoots": ["./types/"]
+	},
+	"include": ["scripts/"],
+	"exclude": ["*.d.ts"]
+}

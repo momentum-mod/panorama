@@ -1,11 +1,13 @@
 {
 	"name": "momentum-panorama",
-	"version": "1.0.0",
+	"version": "2.0.0",
 	"description": "Scripts for handling Momentum Panorama files",
 	"config": {
 		"baseDir": "./"
 	},
 	"scripts": {
+		"build": "tsc",
+		"watch": "tsc --watch",
 		"format:fix": "prettier --write **/*.{js,scss,css,md}",
 		"format:check": "prettier --check **/*.{js,scss,css,md}",
 		"lint:fix": "eslint \"**/*.js\" --fix",
@@ -28,11 +30,12 @@
 		"papaparse": "5.4.1",
 		"prettier": "3.0.3",
 		"prettier-eslint": "15.0.1",
+		"typescript": "5.2.2"
 	},
 	"lint-staged": {
-		"**/*.{js,scss,css,md}": [
+		"**/*.{js,ts,scss,css,md}": [
 			"prettier --write"
 		],
-		"**/*.js": "eslint --fix"
+		"**/*.{js,ts}": "eslint --fix"
 	}
 }
