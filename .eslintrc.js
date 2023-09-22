@@ -21,6 +21,7 @@ module.exports = {
 		'prefer-arrow-callback': ['error'],
 		// `tsc` adds this automatically.
 		strict: ['off'],
+		// Terrible for us, gets confused by stuff defined in other files that are in same context
 		// due being in the same <imports> block.
 		'no-undef': ['off'],
 		'no-unused-vars': ['off'],
@@ -53,5 +54,91 @@ module.exports = {
 		'unicorn/consistent-function-scoping': ['off'],
 		// This is an annoying rule. Often you want to handle negated a condition first as some edge-case.
 		'unicorn/no-negated-condition': ['off']
-	}
+	},
+	overrides: [
+		{
+			files: ['*.ts'],
+			parserOptions: { project: 'tsconfig.json', sourceType: 'script', impliedStrict: 'true' },
+			extends: [
+				'eslint:recommended',
+				'plugin:@typescript-eslint/recommended',
+				'plugin:unicorn/recommended',
+				'prettier'
+			],
+			rules: {
+				'@typescript-eslint/no-empty-function': [
+					'error',
+					{
+						allow: ['arrowFunctions']
+					}
+				],
+				'@typescript-eslint/naming-convention': [
+					'error',
+					{
+						selector: 'variable',
+						types: ['boolean', 'string', 'number'],
+						modifiers: ['global'],
+						format: ['UPPER_CASE']
+					},
+					{
+						selector: 'variable',
+						types: ['boolean', 'string', 'number'],
+						modifiers: ['exported'],
+						format: ['strictCamelCase', 'UPPER_CASE']
+					},
+					{
+						selector: 'class',
+						format: ['PascalCase']
+					},
+					{
+						selector: 'enumMember',
+						format: ['UPPER_CASE']
+					},
+					{
+						selector: 'typeParameter',
+						format: ['PascalCase']
+					},
+					{
+						selector: 'interface',
+						format: ['PascalCase'],
+						custom: {
+							regex: '^I[A-Z]',
+							match: false
+						}
+					}
+				],
+				'@typescript-eslint/explicit-function-return-type': 'off',
+				'@typescript-eslint/explicit-module-boundary-types': 'off',
+				'@typescript-eslint/no-explicit-any': 'off',
+				'@typescript-eslint/no-inferrable-types': ['warn', { ignoreParameters: true }],
+				'@typescript-eslint/no-unused-vars': ['off'],
+				quotes: ['error', 'single', { avoidEscape: true }],
+				'prefer-const': ['error'],
+				'no-empty': ['error', { allowEmptyCatch: true }],
+				'class-methods-use-this': ['error'],
+				camelcase: ['warn'],
+				eqeqeq: ['error', 'smart'],
+				'no-var': ['error'],
+				'no-useless-constructor': ['error'],
+				'no-unused-expressions': ['error', { allowTernary: true }],
+				'prefer-arrow-callback': ['error'],
+				strict: ['off'],
+				'no-undef': ['off'],
+				'no-unused-vars': ['off'],
+				'unicorn/no-null': ['off'],
+				'unicorn/prevent-abbreviations': ['off'],
+				'unicorn/numeric-separators-style': ['warn', { onlyIfContainsSeparator: true }],
+				'unicorn/prefer-module': ['off'],
+				'unicorn/prefer-top-level-await': ['off'],
+				'unicorn/prefer-ternary': ['error', 'only-single-line'],
+				'unicorn/prefer-math-trunc': ['off'],
+				'unicorn/switch-case-braces': ['off'],
+				'unicorn/no-static-only-class': ['off'],
+				'unicorn/no-abusive-eslint-disable': ['off'],
+				'unicorn/no-useless-switch-case': ['off'],
+				'unicorn/consistent-function-scoping': ['off'],
+				'unicorn/no-negated-condition': ['off']
+			}
+		}
+	]
 };
