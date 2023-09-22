@@ -137,7 +137,7 @@ class HudCustomizer {
 			};
 		}
 
-		HudCustomizerAPI.SaveHudLayout(saveData);
+		HudCustomizerAPI.SaveLayoutFromJS(saveData);
 	}
 
 	static load() {
@@ -147,7 +147,7 @@ class HudCustomizer {
 
 		this.createGridLines();
 
-		const layout = HudCustomizerAPI.LoadHudLayout();
+		const layout = HudCustomizerAPI.GetLayout();
 
 		this.components = {};
 
@@ -165,12 +165,12 @@ class HudCustomizer {
 
 		$.GetContextPanel()
 			.Children()
-			.filter((panel) => panel.GetAttributeString('customisable', '') === 'true')
+			.filter((panel) => panel.GetAttributeString('customizable', '') === 'true')
 			.forEach((panel) => this.loadComponentPanel(panel));
 	}
 
 	static loadComponentPanel(panel) {
-		let component = this.components[panel.id];
+		const component = this.components[panel.id];
 
 		if (component) {
 			const snaps = component.snaps;
@@ -182,7 +182,7 @@ class HudCustomizer {
 			});
 
 			const layoutPos = component.position.map((len, i) => {
-				if (isNaN(len)) {
+				if (Number.isNaN(len)) {
 					$.Warning(`HudCustomizer: Loaded invalid position ${len}, setting to 0.`);
 					len = 0;
 				}
@@ -232,7 +232,7 @@ class HudCustomizer {
 			}
 
 			$.Msg(
-				`HudCustomizer: Found a customizable HUD element that isn't stored, initialising with default values.`
+				"HudCustomizer: Found a customizable HUD element that isn't stored, initialising with default values."
 			);
 
 			this.components[panel.id] = {
@@ -248,19 +248,19 @@ class HudCustomizer {
 
 		this.panels.customizer.AddClass('hud-customizer--enabled');
 
-		Object.values(this.components).forEach((component) => {
+		for (const component of Object.values(this.components)) {
 			component.panel.AddClass('hud-customizable');
 			component.panel.SetPanelEvent('onmouseover', this.onComponentMouseOver.bind(this, component));
-		});
+		}
 	}
 
 	static disableEditing() {
 		this.panels.customizer.RemoveClass('hud-customizer--enabled');
 
-		Object.values(this.components).forEach((component) => {
+		for (const component of Object.values(this.components)) {
 			component.panel.RemoveClass('hud-customizable');
 			component.panel.ClearPanelEvent('onmouseover');
-		});
+		}
 
 		$.UnregisterEventHandler('DragStart', this.panels.virtual, this.dragStartHandle);
 	}
@@ -313,8 +313,8 @@ class HudCustomizer {
 	}
 
 	static onDragThink() {
-		let oldPosition = [0, 0];
-		let newPosition = [0, 0];
+		const oldPosition = [0, 0];
+		const newPosition = [0, 0];
 
 		AXIS.forEach((axis) => {
 			const isX = axis === 0;
@@ -404,7 +404,7 @@ class HudCustomizer {
 		const numYLines = Math.floor(numXLines * (9 / 16));
 
 		this.gridAxis = [];
-		AXIS.forEach((axis) => {
+		for (const axis of AXIS) {
 			const isX = axis === 0;
 			const numLines = isX ? numXLines : numYLines;
 			const totalLength = isX ? 1920 : 1080;
@@ -427,7 +427,7 @@ class HudCustomizer {
 			});
 
 			this.gridAxis[axis] = lines;
-		});
+		}
 	}
 
 	static setSnapMode(axis, mode) {
@@ -438,7 +438,7 @@ class HudCustomizer {
 	static showSnapTooltip() {
 		UiToolkitAPI.ShowTextTooltip(
 			this.panels.snaps.id,
-			`<b><i>Snapping Mode</i></b>\n` +
+			'<b><i>Snapping Mode</i></b>\n' +
 				`Horizontal: <b>${this.snaps[0][this.activeComponent.snaps[0]].name}</b>\n` +
 				`Vertical: <b>${this.snaps[1][this.activeComponent.snaps[1]].name}</b>`
 		);

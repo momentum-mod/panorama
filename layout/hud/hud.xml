@@ -28,21 +28,21 @@
 			<!-- its being used. if we ever want two instances of a hud element, it's helpfult o distinguish by ID -->
 		<!-- These all need IDs, otherwise customizer can't reference them properly. (Not possible to set in JS) -->
 		<HudTrickTracker id="TrickTracker" />
-		<HudComparisons id="Comparisons" customisable="true" />
-		<MomHudSynchronizer id="Syncronizer" customisable="true" />
-		<MomHudSpeedometer id="Speedometer" customisable="true" />
-		<MomHudConcCooktime id="ConcCooktime" customisable="true" />
-		<MomHudStickyCharge id="StickyCharge" customisable="true" />
-		<MomHudStickyCount id="StickyCount" customisable="true" />
-		<MomHudStatus id="Status" customisable="true" />
-		<MomHudTimer id="Timer" customisable="true" />
-		<MomHudStrafeSync id="StrafeSync" customisable="true" />
-		<HudStaticMenu id="StaticMenu" customisable="true" />
-		<MomHudChat id="Chat" customisable="true" />
-		<MomHudKeyPress id="KeyPress" customisable="true" />
-		<MomHudVersionInfo id="VersionInfo" customisable="true" />
-		<MomHudMapInfo id="MapInfo" customisable="true" />
-		<MomHudWeaponSelection id="WeaponSelection" customisable="true" />
+		<HudComparisons id="Comparisons" customizable="true" />
+		<MomHudSynchronizer id="Syncronizer" customizable="true" />
+		<MomHudSpeedometer id="Speedometer" customizable="true" />
+		<MomHudConcCooktime id="ConcCooktime" customizable="true" />
+		<MomHudStickyCharge id="StickyCharge" customizable="true" />
+		<MomHudStickyCount id="StickyCount" customizable="true" />
+		<MomHudStatus id="Status" customizable="true" />
+		<MomHudTimer id="Timer" customizable="true" />
+		<MomHudStrafeSync id="StrafeSync" customizable="true" />
+		<HudStaticMenu id="StaticMenu" customizable="true" />
+		<MomHudChat id="Chat" customizable="true" />
+		<MomHudKeyPress id="KeyPress" customizable="true" />
+		<MomHudVersionInfo id="VersionInfo" customizable="true" />
+		<MomHudMapInfo id="MapInfo" customizable="true" />
+		<MomHudWeaponSelection id="WeaponSelection" customizable="true" />
 		<MomHudSpecInfo id="SpecInfo" />
 		<TrickList id="TrickList" custom="" />
 		<ChaosHudShowPos id="ShowPos" custom="{ 'draggable': true }"/>

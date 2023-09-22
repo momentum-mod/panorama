@@ -53,7 +53,9 @@ module.exports = {
 		// In certain cases this matters, but often completely redundant as V8 optimises it fine. Worth flagging potential cases in code review, but annoying as a linting rule
 		'unicorn/consistent-function-scoping': ['off'],
 		// This is an annoying rule. Often you want to handle negated a condition first as some edge-case.
-		'unicorn/no-negated-condition': ['off']
+		'unicorn/no-negated-condition': ['off'],
+		// Fuck you, I want it
+		'unicorn/no-array-for-each': ['off']
 	},
 	overrides: [
 		{
@@ -137,7 +139,8 @@ module.exports = {
 				'unicorn/no-abusive-eslint-disable': ['off'],
 				'unicorn/no-useless-switch-case': ['off'],
 				'unicorn/consistent-function-scoping': ['off'],
-				'unicorn/no-negated-condition': ['off']
+				'unicorn/no-negated-condition': ['off'],
+				'unicorn/no-array-for-each': ['off']
 			}
 		}
 	]
