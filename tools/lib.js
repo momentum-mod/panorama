@@ -20,7 +20,7 @@ exports.jsonToKV1 = (jsonData, header) => {
 		tabDepth++;
 		for (const [k, v] of Object.entries(obj)) {
 			if (typeof v == 'string') {
-				out(`${JSON.stringify(k.replace(/ /g, ''))}    ${JSON.stringify(v.replace(/"/g, "'"))}\n`);
+				out(`${JSON.stringify(k.replaceAll(' ', ''))}    ${JSON.stringify(v.replaceAll('"', "'"))}\n`);
 			} else if (typeof v == 'object') {
 				out(`"${k}"\n`);
 				out('{\n');
