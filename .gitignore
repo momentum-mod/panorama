@@ -8,3 +8,4 @@ node_modules
 # Specific files
 learn.vdf
 __types_momentum.js
+scripts_dist/
