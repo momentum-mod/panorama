@@ -94,6 +94,11 @@
 							<RadioButton group="paintlimit" text="#Common_Off" value="0" />
 							<RadioButton group="paintlimit" text="#Common_On" value="1" />
 						</ChaosSettingsEnum>
+
+						<ChaosSettingsEnum text="#Settings_Paint_ColorFromNormal" convar="mom_paint_color_from_normal" infomessage="#Settings_Paint_ColorFromNormal_Info" tags="color,angle">
+							<RadioButton group="paintanglecolor" text="#Common_Off" value="0" />
+							<RadioButton group="paintanglecolor" text="#Common_On" value="1" />
+						</ChaosSettingsEnum>
 					</Panel>
 				</Panel>
 			</Panel>
