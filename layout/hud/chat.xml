@@ -17,6 +17,8 @@
 
 	</scripts>
 	<Panel class="hud-chat">
+		<Button onactivate="HudCustomizer.enableEditing()">Enable customizer</Button>
+		<Button onactivate="HudCustomizer.disableEditing()">Disable customizer</Button>
         <MomentumChat id="RaisedChat" class="full-width full-height" />
 		<ToastContainer id="LoweredChat" class="toast-chat" thinkwheninvisible="true" />
 	</Panel>

@@ -214,13 +214,13 @@ class SettingsSearch {
 			for (const match of m) {
 				if (match.type === MatchType.GROUP_TEXT)
 					groupName = groupName.replaceAll(
-						new RegExp(`(${inputString})`, 'i'),
+						new RegExp(`(${inputString})`, 'gi'),
 						'<font class="settings-search-result__text--match">$1</font>'
 					);
 
 				if (match.type === MatchType.SETTING_TEXT)
 					name = name.replaceAll(
-						new RegExp(`(${inputString})`, 'i'),
+						new RegExp(`(${inputString})`, 'gi'),
 						'<font class="settings-search-result__text--match">$1</font>'
 					);
 
@@ -228,7 +228,7 @@ class SettingsSearch {
 					$.Msg(`matches.tags: ${matches.tags}, tagindex: ${match.tagIndex}, inptustring: ${inputString}`);
 					tags.push(
 						matches.tags[match.tagIndex]?.replace(
-							new RegExp(`(${inputString})`, 'i'),
+							new RegExp(`(${inputString})`, 'gi'),
 							'<font class="settings-search-result__tags--match">$1</font>'
 						)
 					);
@@ -237,7 +237,7 @@ class SettingsSearch {
 				if (match.type === MatchType.GROUP_TAG)
 					groupTags.push(
 						matches.groupTags[match.tagIndex]?.replace(
-							new RegExp(`(${inputString})`, 'i'),
+							new RegExp(`(${inputString})`, 'gi'),
 							'<font class="settings-search-result__tags--match">$1</font>'
 						)
 					);
