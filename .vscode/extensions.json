@@ -1,0 +1,7 @@
+{
+  "recommendations": [
+    "braemie.panorama-css",
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint"
+  ]
+}
