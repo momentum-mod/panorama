@@ -180,8 +180,14 @@ $gradients-primary: (
 
 // Saturation-Luminance-Alpha transform, scaling the underlying gradient
 $gradient-hover-transform: 10%, 25%, 10% !default;
-$gradient-disabled-transform: -70%, -20%, 20% !default;
-$gradient-selected-hover-transform: -10%, -10%, 0% !default;
+$gradient-disabled-transform:
+	-70%,
+	-20%,
+	20% !default;
+$gradient-selected-hover-transform:
+	-10%,
+	-10%,
+	0% !default;
 
 // ================
 // FONTS
@@ -203,8 +209,15 @@ $font-disabled-color: color.scale($font-default-color, $lightness: -20%) !defaul
 $font-default-size: 18px !default;
 
 $font-primary: Roboto, sans-serif !default;
-$font-secondary: Bebas Neue, Arial, sans-serif !default;
-$font-secondary-light: Bebas Neue Light, Bebas Neue, Arial, sans-serif !default; // Only required for Bebas, for other fonts just use same value as regular
+$font-secondary:
+	Bebas Neue,
+	Arial,
+	sans-serif !default;
+$font-secondary-light:
+	Bebas Neue Light,
+	Bebas Neue,
+	Arial,
+	sans-serif !default; // Only required for Bebas, for other fonts just use same value as regular
 $font-monospace: 'Roboto Mono' !default;
 
 $font-header: $font-secondary !default;
