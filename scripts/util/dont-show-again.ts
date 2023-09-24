@@ -1,31 +1,28 @@
-const PS_OJBECT_KEY = 'dosa';
+const PS_OBJECT_KEY = 'dosa';
 
 /**
  * A utility of handling anything with DOn't Show Again behaviour (not rice-based pancakes).
  */
 class DosaHandler {
 	/**
-	 * Store a DoSA.
-	 * @param {String} key
-	 * @param {String} nameToken
+	 * Store a DoSA
 	 */
-	static addDosa(key, nameToken) {
-		const dosas = this.#getPSObject();
+	static addDosa(key: string, nameToken: string) {
+		const dosas = this.getPSObject();
 		dosas[key] = nameToken;
-		this.#setPSObject(dosas);
+		this.setPSObject(dosas);
 	}
 
 	/**
-	 * Remove a stored DoSA.
-	 * @param {String} key
-	 * @returns {Boolean} Whether the DoSA was deleted
+	 * Remove a stored DoSA
 	 */
-	static removeDosa(key) {
-		const dosas = this.#getPSObject();
+	static removeDosa(key: string): boolean {
+		const dosas = this.getPSObject();
+		if (!dosas) return false;
 
 		if (dosas[key]) {
 			delete dosas[key];
-			this.#setPSObject(dosas);
+			this.setPSObject(dosas);
 			return true;
 		}
 
@@ -34,29 +31,25 @@ class DosaHandler {
 
 	/**
 	 * Check whether a DoSA is stored.
-	 * @param {String} key
-	 */
-	static checkDosa(key) {
-		const dosas = this.#getPSObject();
+	 * */
+	static checkDosa(key: string): boolean {
+		const dosas = this.getPSObject();
 
-		return !!dosas[key];
+		return !!dosas?.[key];
 	}
 
 	/**
 	 * Get all DoSAs as [key, nameToken] tuples
-	 * @returns {[string, string]}
 	 */
-	static getAll() {
-		return Object.entries(this.#getPSObject()).map(([key, nameToken]) => [key, nameToken]);
+	static getAll(): [string, string][] {
+		return Object.entries(this.getPSObject() ?? []).map(([key, nameToken]) => [key, nameToken]);
 	}
 
 	/**
-	 * Get the corresponding name token for a DoSA, if exists.
-	 * @param {String} key
-	 * @returns {String | undefined}
+	 * Get the corresponding name token for a DoSA, if exists
 	 */
-	static getNameToken(key) {
-		const dosas = this.#getPSObject();
+	static getNameToken(key: string): string | undefined {
+		const dosas = this.getPSObject();
 
 		return dosas?.[key];
 	}
@@ -69,7 +62,7 @@ class DosaHandler {
 	 * @param {String} nameToken
 	 * @returns {Boolean} Whether a DoSA was added
 	 */
-	static handleDosaCheckbox(panel, key, nameToken) {
+	static handleDosaCheckbox<P extends Panel>(panel: P, key: string, nameToken: string): boolean {
 		key ??= panel.GetAttributeString('dosaKey', '');
 		nameToken ??= panel.GetAttributeString('dosaNameToken', '');
 
@@ -84,12 +77,12 @@ class DosaHandler {
 		return false;
 	}
 
-	static #getPSObject() {
-		return $.persistentStorage.getItem(PS_OJBECT_KEY) ?? {};
+	private static getPSObject(): Record<string, string> {
+		return $.persistentStorage.getItem(PS_OBJECT_KEY) ?? {};
 	}
 
-	static #setPSObject(obj) {
-		return $.persistentStorage.setItem(PS_OJBECT_KEY, obj);
+	private static setPSObject(obj: Record<string, string>) {
+		return $.persistentStorage.setItem(PS_OBJECT_KEY, obj);
 	}
 }
 
@@ -101,10 +94,8 @@ class DosaPopup {
 	 * Traverses the popup for a DontShowAgainCheckbox ToggleButton and adds a DoSA if checked.
 	 * The arguments may be omitted and instead passed to the popup as params to
 	 * ShowCustomLayoutPopupParameters, and they'll be read from the popup's contextpanel's attributes.
-	 * @param {String} [dosaKey]
-	 * @param {String} [dosaNameToken]
 	 */
-	static onSubmit(dosaKey, dosaNameToken) {
+	static onSubmit(dosaKey: string, dosaNameToken: string) {
 		DosaHandler.handleDosaCheckbox($.GetContextPanel(), dosaKey, dosaNameToken);
 
 		UiToolkitAPI.CloseAllVisiblePopups();
