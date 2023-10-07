@@ -4,7 +4,7 @@
 		"lib": ["ESNext"],
 		"module": "None",
 		"rootDir": "scripts/",
-		"outDir": "scripts_dist/",
+		"outDir": "script_dist/",
 		"alwaysStrict": true,
 		"isolatedModules": true,
 		"allowJs": true,
