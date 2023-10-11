@@ -328,7 +328,7 @@ class RangeColorObject {
 
 	static convertCSSToKV(color) {
 		const kvColor = color
-			.replaceAll(/[^\d,|]/, '')
+			.replaceAll(/[^\d,|]/g, '')
 			.split(',')
 			.map((x) => Number.parseInt(x));
 		kvColor[3] *= 255;
