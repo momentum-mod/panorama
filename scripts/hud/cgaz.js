@@ -121,17 +121,28 @@ class Cgaz {
 	static snapAccel = 0;
 	static bShouldUpdateStyles = false;
 
-	static onLoad() {
-		if (GameModeAPI.GetCurrentGameMode() !== GameMode.DEFRAG) return;
+	static updateHandle = null;
 
-		this.onAccelConfigChange();
-		this.onSnapConfigChange();
-		this.onPrimeConfigChange();
-		this.onProjectionChange();
-		this.onHudFovChange();
-		this.onSnapConfigChange();
-		this.onWindicatorConfigChange();
-		this.onCompassConfigChange();
+	static onLoad() {
+		if (GameModeAPI.GetCurrentGameMode() === GameMode.DEFRAG) {
+			this.updateHandle = $.RegisterEventHandler(
+				'ChaosHudProcessInput',
+				$.GetContextPanel(),
+				this.onUpdate.bind(this)
+			);
+
+			this.onAccelConfigChange();
+			this.onSnapConfigChange();
+			this.onPrimeConfigChange();
+			this.onProjectionChange();
+			this.onHudFovChange();
+			this.onSnapConfigChange();
+			this.onWindicatorConfigChange();
+			this.onCompassConfigChange();
+		} else if (this.updateHandle) {
+			$.UnregisterEventHandler('ChaosHudProcessInput', $.GetContextPanel(), this.updateHandle);
+			this.updateHandle = null;
+		}
 	}
 
 	static onProjectionChange() {
@@ -1333,8 +1344,6 @@ class Cgaz {
 	}
 
 	static {
-		$.RegisterEventHandler('ChaosHudProcessInput', $.GetContextPanel(), this.onUpdate.bind(this));
-
 		$.RegisterForUnhandledEvent('ChaosLevelInitPostEntity', this.onLoad.bind(this));
 		$.RegisterForUnhandledEvent('OnDefragHUDProjectionChange', this.onProjectionChange.bind(this));
 		$.RegisterForUnhandledEvent('OnDefragHUDFOVChange', this.onHudFovChange.bind(this));
