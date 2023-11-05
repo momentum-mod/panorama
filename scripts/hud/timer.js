@@ -15,6 +15,8 @@ class HudTimer {
 
 	static prevZone = 0;
 
+	static USENEWTIMER = false;
+
 	static onTimerStarted() {
 		this.timeLabel.RemoveClass(FAILED_CLASS); // fail animation could be happening, so force stop
 		this.timeLabel.RemoveClass(INACTIVE_CLASS);
@@ -45,6 +47,11 @@ class HudTimer {
 	}
 
 	static onUpdate() {
+		if (this.USENEWTIMER) {
+			$.GetContextPanel().SetDialogVariableFloat('runtime', MomentumTimerAPI.GetObservedTimerStatus().runTime);
+			return;
+		}
+
 		const timerState = MomentumTimerAPI.GetTimerState();
 		if (timerState === TimerState.NOTRUNNING) return;
 
@@ -141,8 +148,71 @@ class HudTimer {
 		this.prevZone = ZonesAPI.GetCurrentZone(); // if curZone === 0 and the timer is running we have big problems
 	}
 
+	static onTimerStateChange() {
+		this.USENEWTIMER = true;
+		this.updateFullState();
+		this.playStateSound();
+	}
+
+	static onTimerReplaced() {
+		this.USENEWTIMER = true;
+		this.updateFullState();
+	}
+
+	static updateFullState() {
+		const timerStatus = MomentumTimerAPI.GetObservedTimerStatus();
+
+		switch (timerStatus.state) {
+			// TODO winging class toggling for now
+			case TimerStateNEW.DISABLED:
+				this.timeLabel.AddClass(INACTIVE_CLASS);
+				this.timeLabel.RemoveClass(FINISHED_CLASS);
+				break;
+			case TimerStateNEW.RUNNING:
+				this.timeLabel.RemoveClass(INACTIVE_CLASS);
+				this.timeLabel.RemoveClass(FINISHED_CLASS);
+				break;
+			case TimerStateNEW.FINISHED:
+				this.timeLabel.AddClass(FINISHED_CLASS);
+				this.timeLabel.RemoveClass(INACTIVE_CLASS);
+				break;
+			case TimerStateNEW.PRIMED:
+				this.timeLabel.AddClass(INACTIVE_CLASS);
+				this.timeLabel.RemoveClass(FINISHED_CLASS);
+				break;
+			default:
+				$.Warning('Unknown timer state');
+				break;
+		}
+
+		$.GetContextPanel().SetDialogVariableFloat('runtime', MomentumTimerAPI.GetObservedTimerStatus().runTime);
+	}
+
+	static playStateSound() {
+		const timerStatus = MomentumTimerAPI.GetObservedTimerStatus();
+
+		switch (timerStatus.state) {
+			case TimerStateNEW.DISABLED:
+				if (MomentumTimerAPI.IsStartSoundEnabled()) $.PlaySoundEvent('Momentum.StopTimer');
+				break;
+			case TimerStateNEW.RUNNING:
+				if (MomentumTimerAPI.IsStartSoundEnabled()) $.PlaySoundEvent('Momentum.StartTimer');
+				break;
+			case TimerStateNEW.FINISHED:
+				if (MomentumTimerAPI.IsStartSoundEnabled()) $.PlaySoundEvent('Momentum.FinishTimer');
+				break;
+			case TimerStateNEW.PRIMED:
+				// no sound
+				break;
+			default:
+				$.Warning('Unknown timer state');
+				break;
+		}
+	}
+
 	static onLoad() {
 		$.GetContextPanel().hiddenHUDBits = HideHud.TABMENU;
+		this.USENEWTIMER = false;
 	}
 
 	static {
@@ -153,5 +223,9 @@ class HudTimer {
 		$.RegisterForUnhandledEvent('OnMomentumReplayStopped', this.onReplayStopped.bind(this));
 
 		$.GetContextPanel().SetDialogVariableFloat('runtime', 0);
+
+		// NEW
+		$.RegisterForUnhandledEvent('OnObservedTimerStateChange', this.onTimerStateChange.bind(this));
+		$.RegisterForUnhandledEvent('OnObservedTimerReplaced', this.onTimerReplaced.bind(this));
 	}
 }
