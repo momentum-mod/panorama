@@ -358,6 +358,8 @@ class Speedometer {
 		$.RegisterEventHandler('OnSpeedometerUpdate', this.container, this.onSpeedometerUpdate.bind(this));
 		$.RegisterForUnhandledEvent('OnMomentumZoneChange', this.onZoneChange.bind(this));
 
+		$.RegisterForUnhandledEvent('OnMomentumZoneChange', this.onZoneChange.bind(this));
+
 		// color profiles load before speedo settings, so listening to just the speedo settings load event should be enough
 		$.RegisterForUnhandledEvent('OnSpeedometerSettingsLoaded', this.onSettingsUpdate.bind(this));
 		// do want to register when color profiles are saved though as that can happen independently

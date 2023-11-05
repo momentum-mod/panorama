@@ -14,6 +14,10 @@ class HudComparisons {
 	static {
 		$.RegisterEventHandler('HudCompare_Update', $.GetContextPanel(), this.updateComparisons.bind(this));
 		$.RegisterForUnhandledEvent('OnMomentumTimerStateChange', this.onTimerEvent.bind(this));
+
+		$.RegisterForUnhandledEvent('ChaosLevelInitPostEntity', this.updateComparisonsNEWTIMER.bind(this));
+		$.RegisterForUnhandledEvent('OnObservedTimerStateChange', this.updateComparisonsNEWTIMER.bind(this));
+		$.RegisterForUnhandledEvent('OnObservedTimerCheckpointChange', this.updateComparisonsNEWTIMER.bind(this));
 	}
 
 	static clearComparisons() {
@@ -134,5 +138,11 @@ class HudComparisons {
 						isFirst: true
 				  }
 		);
+	}
+
+	static updateComparisonsNEWTIMER() {
+		// TODO
+		// need to sort out new run stats format
+		// this will otherwise function the same as the old function, but without maintaining any timer state itself
 	}
 }
