@@ -653,7 +653,9 @@ class Cgaz {
 							this.compassArrowIcon.AddClass('arrow__down');
 							arrowAngle = remapAngle(arrowAngle + Math.PI);
 						}
-						const leftEdge = this.mapToScreenWidth(arrowAngle) - this.primeArrowSize;
+						const leftEdge =
+							mapAngleToScreenDist(arrowAngle, this.hFov, this.screenX, this.scale, this.projection) -
+							this.primeArrowSize;
 						this.primeArrow.style.marginLeft = this.NaNCheck(leftEdge, 0) + 'px';
 						this.primeArrow.visible = true;
 					} else {
@@ -674,7 +676,10 @@ class Cgaz {
 			// ticks
 			for (const [i, tick] of ticks.entries()) {
 				const tickAngle = this.NaNCheck(wrapToHalfPi(viewAngle + i * 0.25 * Math.PI), 0);
-				const tickPx = this.NaNCheck(this.mapToScreenWidth(tickAngle), 0);
+				const tickPx = this.NaNCheck(
+					mapAngleToScreenDist(tickAngle, this.hFov, this.screenX, this.scale, this.projection),
+					0
+				);
 				tick.style.position = `${tickPx}px 0px 0px`;
 				tick.style.backgroundColor = color;
 			}
@@ -688,7 +693,9 @@ class Cgaz {
 				this.compassArrowIcon.AddClass('arrow__down');
 				velocityAngle = remapAngle(velocityAngle - Math.PI);
 			}
-			const leftEdge = this.mapToScreenWidth(velocityAngle) - this.compassArrowSize;
+			const leftEdge =
+				mapAngleToScreenDist(velocityAngle, this.hFov, this.screenX, this.scale, this.projection) -
+				this.compassArrowSize;
 			this.compassArrow.style.marginLeft = this.NaNCheck(leftEdge, 0) + 'px';
 			this.compassArrowIcon.style.washColor = getRgbFromRgba(color);
 		}
@@ -701,7 +708,13 @@ class Cgaz {
 			for (let i = 0; i < pitchLines?.length; ++i) {
 				const viewPitch = MomentumPlayerAPI.GetAngles().x;
 				const pitchDelta = this.compassPitchTarget[i] - viewPitch;
-				const pitchDeltaPx = this.mapToScreenHeight((pitchDelta * Math.PI) / 180);
+				const pitchDeltaPx = mapAngleToScreenDist(
+					(pitchDelta * Math.PI) / 180,
+					this.vFov,
+					this.screenY,
+					this.scale,
+					this.projection
+				);
 				pitchLines[i].style.position = `0px ${this.NaNCheck(pitchDeltaPx, 0)}px 0px`;
 				pitchLines[i].style.backgroundColor =
 					Math.abs(pitchDelta) > 0.15 ? this.compassColor : this.compassHlColor;
@@ -731,7 +744,9 @@ class Cgaz {
 		// draw w-turn indicator
 		if (this.windicatorEnable && Math.abs(wTurnAngle) < this.hFov && speed >= this.accelMinSpeed) {
 			this.windicatorArrow.visible = true;
-			const leftEdge = this.mapToScreenWidth(wTurnAngle) - this.windicatorSize;
+			const leftEdge =
+				mapAngleToScreenDist(wTurnAngle, this.hFov, this.screenX, this.scale, this.projection) -
+				this.windicatorSize;
 			this.windicatorArrow.style.marginLeft = this.NaNCheck(leftEdge, 0) + 'px';
 
 			const minAngle = Math.min(wTurnAngle, 0);
@@ -834,21 +849,32 @@ class Cgaz {
 		wrap = zone.rightAngle > zone.leftAngle ? !wrap : wrap;
 
 		// map angles to screen
-		zone.leftPx = this.mapToScreenWidth(zone.leftAngle);
-		zone.rightPx = this.mapToScreenWidth(zone.rightAngle);
+		zone.leftPx = mapAngleToScreenDist(zone.leftAngle, this.hFov, this.screenX, this.scale, this.projection);
+		zone.rightPx = mapAngleToScreenDist(zone.rightAngle, this.hFov, this.screenX, this.scale, this.projection);
 
 		if (wrap) {
 			// draw second part of split zone
 			this.applyClass(splitZone, zoneClass);
 			splitZone.leftAngle = -this.hFov;
 			splitZone.rightAngle = zone.rightAngle;
-			splitZone.leftPx = this.mapToScreenWidth(this.accelSplitZone.leftAngle);
-			splitZone.rightPx = this.mapToScreenWidth(this.accelSplitZone.rightAngle);
-			//this.drawZone(splitZone, left, this.mapToScreenWidth(this.hFov));
+			splitZone.leftPx = mapAngleToScreenDist(
+				this.accelSplitZone.leftAngle,
+				this.hFov,
+				this.screenX,
+				this.scale,
+				this.projection
+			);
+			splitZone.rightPx = mapAngleToScreenDist(
+				this.accelSplitZone.rightAngle,
+				this.hFov,
+				this.screenX,
+				this.scale,
+				this.projection
+			);
 			this.drawZone(splitZone);
 
 			zone.rightAngle = this.hFov;
-			zone.rightPx = this.mapToScreenWidth(zone.rightAngle);
+			zone.rightPx = mapAngleToScreenDist(zone.rightAngle, this.hFov, this.screenX, this.scale, this.projection);
 		}
 		this.drawZone(zone);
 	}
@@ -905,7 +931,14 @@ class Cgaz {
 								? 0
 								: this.NaNCheck(
 										(
-											(this.mapToScreenWidth(leftTarget) - zone.leftPx) /
+											(mapAngleToScreenDist(
+												leftTarget,
+												this.hFov,
+												this.screenX,
+												this.scale,
+												this.projection
+											) -
+												zone.leftPx) /
 											(zone.rightPx - zone.leftPx)
 										).toFixed(3),
 										0
@@ -917,7 +950,14 @@ class Cgaz {
 								? 0
 								: this.NaNCheck(
 										(
-											(zone.rightPx - this.mapToScreenWidth(rightTarget)) /
+											(zone.rightPx -
+												mapAngleToScreenDist(
+													rightTarget,
+													this.hFov,
+													this.screenX,
+													this.scale,
+													this.projection
+												)) /
 											(zone.rightPx - zone.leftPx)
 										).toFixed(3),
 										0
@@ -984,7 +1024,13 @@ class Cgaz {
 		const iRight = this.updateFirstPrimeZone(rightTarget, rightOffset, this.primeFirstZoneRight, rightAngles);
 
 		if (fillLeftZones || this.primeShowInactive) {
-			this.primeFirstZoneLeft.rightPx = this.mapToScreenWidth(wrapToHalfPi(leftTarget - leftOffset));
+			this.primeFirstZoneLeft.rightPx = mapAngleToScreenDist(
+				wrapToHalfPi(leftTarget - leftOffset),
+				this.hFov,
+				this.screenX,
+				this.scale,
+				this.projection
+			);
 			this.primeFirstZoneLeft.style.backgroundColor = this.primeAltColor;
 			this.drawZone(this.primeFirstZoneLeft);
 			this.primeFirstZoneLeft.isInactive = !fillLeftZones;
@@ -997,7 +1043,13 @@ class Cgaz {
 		if (speedGain > gainMax) gainMax = speedGain;
 
 		if (fillRightZones || this.primeShowInactive) {
-			this.primeFirstZoneRight.leftPx = this.mapToScreenWidth(wrapToHalfPi(rightTarget - rightOffset));
+			this.primeFirstZoneRight.leftPx = mapAngleToScreenDist(
+				wrapToHalfPi(rightTarget - rightOffset),
+				this.hFov,
+				this.screenX,
+				this.scale,
+				this.projection
+			);
 			this.primeFirstZoneRight.style.backgroundColor = this.primeAltColor;
 			this.drawZone(this.primeFirstZoneRight);
 			this.primeFirstZoneRight.isInactive = !fillRightZones;
@@ -1206,41 +1258,6 @@ class Cgaz {
 			zone.leftPx = 0;
 			zone.rightPx = 0;
 			this.drawZone(zone);
-		}
-	}
-
-	static mapToScreenWidth(angle) {
-		const screenWidth = this.screenX / this.scale;
-
-		const overhang = 1.1;
-		if (Math.abs(angle) >= overhang * this.hFov) {
-			return (Math.sign(angle) > 0 ? overhang : 1 - overhang) * screenWidth;
-		}
-
-		switch (this.projection) {
-			case 0:
-				return Math.round((1 + Math.tan(angle) / Math.tan(this.hFov)) * screenWidth * 0.5);
-			case 1:
-				return Math.round((1 + angle / this.hFov) * screenWidth * 0.5);
-			case 2:
-				return Math.round((1 + Math.tan(angle * 0.5) / Math.tan(this.hFov * 0.5)) * screenWidth * 0.5);
-		}
-	}
-
-	static mapToScreenHeight(angle) {
-		const screenHeight = this.screenY / this.scale;
-
-		if (Math.abs(angle) >= this.vFov) {
-			return Math.sign(angle) > 0 ? screenHeight : 0;
-		}
-
-		switch (this.projection) {
-			case 0:
-				return Math.round((1 + Math.tan(angle) / Math.tan(this.vFov)) * screenHeight * 0.5);
-			case 1:
-				return Math.round((1 + angle / this.vFov) * screenHeight * 0.5);
-			case 2:
-				return Math.round((1 + Math.tan(angle * 0.5) / Math.tan(this.vFov * 0.5)) * screenHeight * 0.5);
 		}
 	}
 

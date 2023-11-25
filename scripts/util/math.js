@@ -113,3 +113,29 @@ function remapAngle(angle) {
 	angle -= integer * 2 * Math.PI;
 	return angle < 0 ? angle + Math.PI : angle - Math.PI;
 }
+
+/**
+ * Convert an angle to a projected screen length in pixels.
+ * @param {number} angle
+ * @param {number} fov
+ * @param {number} distance
+ * @param {number} [scale=1] scale
+ * @param {number} [projection=0] projection
+ * @returns {number}
+ */
+function mapAngleToScreenDist(angle, fov, length, scale = 1, projection = 0) {
+	const screenDist = length / scale;
+
+	if (Math.abs(angle) >= fov) {
+		return Math.sign(angle) > 0 ? screenDist + 1 : -1;
+	}
+
+	switch (projection) {
+		case 0:
+			return Math.round((1 + Math.tan(angle) / Math.tan(fov)) * screenDist * 0.5);
+		case 1:
+			return Math.round((1 + angle / fov) * screenDist * 0.5);
+		case 2:
+			return Math.round((1 + Math.tan(angle * 0.5) / Math.tan(fov * 0.5)) * screenDist * 0.5);
+	}
+}
