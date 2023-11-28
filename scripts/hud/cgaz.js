@@ -656,7 +656,7 @@ class Cgaz {
 						const leftEdge =
 							mapAngleToScreenDist(arrowAngle, this.hFov, this.screenX, this.scale, this.projection) -
 							this.primeArrowSize;
-						this.primeArrow.style.marginLeft = this.NaNCheck(leftEdge, 0) + 'px';
+						this.primeArrow.style.position = `${this.NaNCheck(leftEdge, 0)}px 0px 0px`;
 						this.primeArrow.visible = true;
 					} else {
 						this.primeArrow.visible = false;
@@ -696,7 +696,7 @@ class Cgaz {
 			const leftEdge =
 				mapAngleToScreenDist(velocityAngle, this.hFov, this.screenX, this.scale, this.projection) -
 				this.compassArrowSize;
-			this.compassArrow.style.marginLeft = this.NaNCheck(leftEdge, 0) + 'px';
+			this.compassArrow.style.position = `${this.NaNCheck(leftEdge, 0)}px 0px 0px`;
 			this.compassArrowIcon.style.washColor = getRgbFromRgba(color);
 		}
 		this.compassArrow.visible = this.compassMode % 2 && speed >= this.accelMinSpeed;
@@ -747,7 +747,7 @@ class Cgaz {
 			const leftEdge =
 				mapAngleToScreenDist(wTurnAngle, this.hFov, this.screenX, this.scale, this.projection) -
 				this.windicatorSize;
-			this.windicatorArrow.style.marginLeft = this.NaNCheck(leftEdge, 0) + 'px';
+			this.windicatorArrow.style.position = `${this.NaNCheck(leftEdge, 0)}px 0px 0px`;
 
 			const minAngle = Math.min(wTurnAngle, 0);
 			const maxAngle = Math.max(wTurnAngle, 0);
@@ -1207,8 +1207,8 @@ class Cgaz {
 		const width = zone.rightPx - zone.leftPx;
 		zone.style.width = this.NaNCheck(Number(width).toFixed(0), 0) + 'px';
 
-		// assign position via margin (center screen at 0)
-		zone.style.marginLeft = this.NaNCheck(Number(zone.leftPx).toFixed(0), 0) + 'px';
+		// assign position via position (center screen at 0)
+		zone.style.position = `${this.NaNCheck(Number(zone.leftPx).toFixed(0), 0)}px 0px 0px`;
 	}
 
 	static zoneCopy(pasteZone, copyZone) {
