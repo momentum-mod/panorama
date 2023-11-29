@@ -697,7 +697,7 @@ class Cgaz {
 				mapAngleToScreenDist(velocityAngle, this.hFov, this.screenX, this.scale, this.projection) -
 				this.compassArrowSize;
 			this.compassArrow.style.position = `${this.NaNCheck(leftEdge, 0)}px 0px 0px`;
-			this.compassArrowIcon.style.washColor = getRgbFromRgba(color);
+			this.compassArrowIcon.style.washColor = rgbaStringToRgb(color);
 		}
 		this.compassArrow.visible = this.compassMode % 2 && speed >= this.accelMinSpeed;
 		this.tickContainer.visible = this.compassMode > 1;
@@ -911,7 +911,7 @@ class Cgaz {
 			this.updateZone(zone, left, right, 0, snapClass, this.snapSplitZone);
 
 			if (this.snapColorMode) {
-				snapColor = colorLerp(this.snapSlowColor, this.snapFastColor, alpha);
+				snapColor = rgbaStringLerp(this.snapSlowColor, this.snapFastColor, alpha);
 			}
 
 			let bHighlight = false;
@@ -1099,7 +1099,7 @@ class Cgaz {
 			if (gain < 0) {
 				zone.color = this.primeLossColor;
 			} else if (this.primeColorgainEnable) {
-				zone.color = colorLerp(this.primeAltColor, this.primeGainColor, gainFactor);
+				zone.color = rgbaStringLerp(this.primeAltColor, this.primeGainColor, gainFactor);
 			} else {
 				zone.color = this.primeGainColor;
 			}
@@ -1248,7 +1248,7 @@ class Cgaz {
 
 		arrowIcon.style.height = this.NaNCheck(width, 0) + 'px';
 		arrowIcon.style.width = this.NaNCheck(width, 0) + 'px';
-		arrowIcon.style.washColor = getRgbFromRgba(color);
+		arrowIcon.style.washColor = rgbaStringToRgb(color);
 		arrowIcon.style.overflow = 'noclip noclip';
 		arrowIcon.style.verticalAlign = align;
 	}
