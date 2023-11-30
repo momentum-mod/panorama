@@ -420,24 +420,24 @@ class Cgaz {
 		}
 
 		const velocity = MomentumPlayerAPI.GetVelocity();
-		const speed = getSize(velocity);
+		const speed = getSize2D(velocity);
 		const stopSpeed = Math.max(speed, MomentumMovementAPI.GetStopspeed());
 		const dropSpeed = Math.max(speed - stopSpeed * lastMoveData.friction * tickInterval, 0);
 		const speedSquared = speed * speed;
 		const dropSpeedSquared = dropSpeed * dropSpeed;
 
-		const velDir = getNormal(velocity, 0.001);
+		const velDir = getNormal2D(velocity, 0.001);
 		const velAngle = Math.atan2(velocity.y, velocity.x);
 		const wishDir = lastMoveData.wishdir;
-		const wishAngle = getSizeSquared(wishDir) > 0.001 ? Math.atan2(wishDir.y, wishDir.x) : 0;
+		const wishAngle = getSizeSquared2D(wishDir) > 0.001 ? Math.atan2(wishDir.y, wishDir.x) : 0;
 		const viewAngle = (MomentumPlayerAPI.GetAngles().y * Math.PI) / 180;
 		const viewDir = {
 			x: Math.cos(viewAngle),
 			y: Math.sin(viewAngle)
 		};
 
-		const forwardMove = Math.round(getDot(viewDir, wishDir));
-		const rightMove = Math.round(getCross(viewDir, wishDir));
+		const forwardMove = Math.round(getDot2D(viewDir, wishDir));
+		const rightMove = Math.round(getCross2D(viewDir, wishDir));
 
 		const bIsFalling = lastMoveData.moveStatus === 0;
 		const bHasAirControl = phyMode && floatEquals(wishAngle, viewAngle, 0.01) && bIsFalling;
@@ -638,7 +638,7 @@ class Cgaz {
 
 				// arrow
 				if (this.primeArrowEnable) {
-					if (getSizeSquared(wishDir) > 0) {
+					if (getSizeSquared2D(wishDir) > 0) {
 						let arrowAngle =
 							wishAngle -
 							Math.atan2(
@@ -924,7 +924,7 @@ class Cgaz {
 					break;
 				case 2:
 					// "target" zones only highlight when moving
-					if (getSize(MomentumPlayerAPI.GetVelocity()) > this.accelMinSpeed) {
+					if (getSize2D(MomentumPlayerAPI.GetVelocity()) > this.accelMinSpeed) {
 						let stopPoint, direction;
 						if (left - leftTarget <= 0 && right - leftTarget >= 0) {
 							stopPoint = floatEquals(zone.rightPx, zone.leftPx, 1)
@@ -977,13 +977,14 @@ class Cgaz {
 	}
 
 	static updatePrimeSight(viewDir, viewAngle, targetAngle, boundaryAngle, velAngle, wishDir, wishAngle) {
-		const cross = getCross(wishDir, viewDir);
+		const cross = getCross2D(wishDir, viewDir);
 		const inputMode =
-			Math.round(getSize(wishDir)) * (1 << Math.round(2 * Math.pow(cross, 2))) + (Math.round(cross) > 0 ? 1 : 0);
+			Math.round(getSize2D(wishDir)) * (1 << Math.round(2 * Math.pow(cross, 2))) +
+			(Math.round(cross) > 0 ? 1 : 0);
 
 		const angleOffset = remapAngle(velAngle - wishAngle);
 		const targetOffset = remapAngle(velAngle - viewAngle);
-		const inputAngle = remapAngle(viewAngle - wishAngle) * getSizeSquared(wishDir);
+		const inputAngle = remapAngle(viewAngle - wishAngle) * getSizeSquared2D(wishDir);
 		const velocity = MomentumPlayerAPI.GetVelocity();
 		const gainZonesMap = new Map();
 
@@ -1038,7 +1039,7 @@ class Cgaz {
 			this.clearZones([this.primeFirstZoneLeft]);
 		}
 
-		speedGain = this.findPrimeGain(this.primeFirstZoneLeft, velocity, rotateVector(viewDir, 0.25 * Math.PI));
+		speedGain = this.findPrimeGain(this.primeFirstZoneLeft, velocity, rotateVector2D(viewDir, 0.25 * Math.PI));
 		gainZonesMap.set(this.primeFirstZoneLeft, speedGain);
 		if (speedGain > gainMax) gainMax = speedGain;
 
@@ -1057,7 +1058,7 @@ class Cgaz {
 			this.clearZones([this.primeFirstZoneRight]);
 		}
 
-		speedGain = this.findPrimeGain(this.primeFirstZoneRight, velocity, rotateVector(viewDir, -0.25 * Math.PI));
+		speedGain = this.findPrimeGain(this.primeFirstZoneRight, velocity, rotateVector2D(viewDir, -0.25 * Math.PI));
 		gainZonesMap.set(this.primeFirstZoneRight, speedGain);
 		if (speedGain > gainMax) gainMax = speedGain;
 
@@ -1180,18 +1181,18 @@ class Cgaz {
 
 	static findPrimeGain(zone, velocity, wishDir) {
 		const avgAngle = 0.5 * (zone.leftAngle + zone.rightAngle);
-		const zoneVector = rotateVector(wishDir, -avgAngle);
+		const zoneVector = rotateVector2D(wishDir, -avgAngle);
 		const snapProject = {
 			x: Math.round(zoneVector.x * this.primeAccel),
 			y: Math.round(zoneVector.y * this.primeAccel)
 		};
 
-		const newSpeed = getSize({
+		const newSpeed = getSize2D({
 			x: Number(velocity.x) + Number(snapProject.x),
 			y: Number(velocity.y) + Number(snapProject.y)
 		});
 
-		return newSpeed - getSize(velocity);
+		return newSpeed - getSize2D(velocity);
 	}
 
 	static updateFirstPrimeZone(target, offset, zone, angles) {
