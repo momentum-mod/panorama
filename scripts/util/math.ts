@@ -4,20 +4,27 @@
  */
 
 /**
- * 2D length of input vector
- * @param {object} vec
- * @returns {number}
+ * 2D vector object with x and y member variables
  */
-function getSize(vec) {
-	return Math.sqrt(getSizeSquared(vec));
+type Vec2D = { x: number; y: number };
+
+/**
+ * 3D vector object with x, y, and z member variables
+ */
+type Vec3D = { x: number; y: number; z: number };
+type Vector = Vec2D | Vec3D;
+
+/**
+ * 2D length of input vector
+ */
+function getSize2D(vec: Vector): number {
+	return Math.sqrt(getSizeSquared2D(vec));
 }
 
 /**
  * 2D length squared of input vector
- * @param {object} vec
- * @returns {number}
  */
-function getSizeSquared(vec) {
+function getSizeSquared2D(vec: Vector): number {
 	return vec.x * vec.x + vec.y * vec.y;
 }
 
@@ -25,11 +32,9 @@ function getSizeSquared(vec) {
  * Returns copy of input vector scaled to length 1.
  * If input vector length is less than threshold,
  * the zero vector is returned.
- * @param {object} vec
- * @returns {object}
  */
-function getNormal(vec, threshold) {
-	const mag = getSize(vec);
+function getNormal2D(vec: Vector, threshold: number): Vec2D {
+	const mag = getSize2D(vec);
 	const vecNormal = {
 		x: vec.x,
 		y: vec.y
@@ -47,67 +52,50 @@ function getNormal(vec, threshold) {
 
 /**
  * Dot product of two vectors.
- * @param {object} vec1
- * @param {object} vec2
- * @returns {number}
  */
-function getDot(vec1, vec2) {
+function getDot2D(vec1: Vector, vec2: Vector): number {
 	return vec1.x * vec2.x + vec1.y * vec2.y;
 }
 
 /**
  * Cross product of two 2D vectors.
  * Defined as Z-component of resultant vector.
- * @param {object} vec1
- * @param {object} vec2
- * @returns {number}
  */
-function getCross(vec1, vec2) {
+function getCross2D(vec1: Vector, vec2: Vector): number {
 	return vec1.x * vec2.y - vec1.y * vec2.x;
 }
 
 /**
- * Rotate 2D vector anti-clockwise by specified angle (in radians).
- * @param {object} vector
- * @param {number} angle
- * @returns {object}
+ * Returns 2D copy of input vector rotated anti-clockwise by specified angle (in radians).
  */
-function rotateVector(vector, angle) {
+function rotateVector2D(vec: Vector, angle: number): Vec2D {
 	const cos = Math.cos(angle);
 	const sin = Math.sin(angle);
 
 	return {
-		x: vector.x * cos - vector.y * sin,
-		y: vector.y * cos + vector.x * sin
+		x: vec.x * cos - vec.y * sin,
+		y: vec.y * cos + vec.x * sin
 	};
 }
 
 /**
  * Float equals check with threshold.
- * @param {number} A
- * @param {number} B
- * @param {number} threshold
- * @returns {boolean}
  */
-function floatEquals(A, B, threshold) {
+function floatEquals(A: number, B: number, threshold: number): boolean {
 	return Math.abs(A - B) < threshold;
 }
 
 /**
  * Clamp angle to range [-Pi/2, Pi/2] by wrapping
- * @param {number} angle
- * @returns {number}
  */
-function wrapToHalfPi(angle) {
+function wrapToHalfPi(angle: number): number {
 	return Math.abs(angle) > Math.PI * 0.5 ? wrapToHalfPi(angle - Math.sign(angle) * Math.PI) : angle;
 }
 
 /**
  * Converts [0, 2Pi) to [-Pi, Pi]
- * @param {number} angle
- * @returns {number}
  */
-function remapAngle(angle) {
+function remapAngle(angle: number): number {
 	angle += Math.PI;
 	const integer = Math.trunc(angle / (2 * Math.PI));
 	angle -= integer * 2 * Math.PI;
@@ -116,14 +104,8 @@ function remapAngle(angle) {
 
 /**
  * Convert an angle to a projected screen length in pixels.
- * @param {number} angle
- * @param {number} fov
- * @param {number} distance
- * @param {number} [scale=1] scale
- * @param {number} [projection=0] projection
- * @returns {number}
  */
-function mapAngleToScreenDist(angle, fov, length, scale = 1, projection = 0) {
+function mapAngleToScreenDist(angle: number, fov: number, length: number, scale: number = 1, projection: number = 0) {
 	const screenDist = length / scale;
 
 	if (Math.abs(angle) >= fov) {
