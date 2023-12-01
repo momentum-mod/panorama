@@ -22,7 +22,6 @@ function tupleToRgbaString([r, g, b, a = 255]: RgbaTuple): string {
  *
  * For performance, this function does not check the input string.
  */
-
 function rgbStringToTuple(str: string): RgbaTuple {
 	return [
 		...str
@@ -37,10 +36,7 @@ function rgbStringToTuple(str: string): RgbaTuple {
  * Returns a corresponding RGBA tuple for an RGBA string.
  * Input string must be formatted as `rgb(R, G, B, A)`, where `R`, `G`, `B`
  * are values ranged `[0, 255]`, `A` ranged `[0, 1]`.
- *
- * For performance, this function does not check the input string.
  */
-
 function rgbaStringToTuple(str: string): RgbaTuple {
 	if (str[3] !== 'a') return rgbStringToTuple(str);
 
@@ -49,22 +45,97 @@ function rgbaStringToTuple(str: string): RgbaTuple {
 		.split(',')
 		.map((c, i) => (i === 3 ? Math.round(Number.parseFloat(c) * 255) : Number.parseInt(c))) as RgbaTuple;
 }
+
 /**
- * Blends two colors linearly (not HSV lerp).
+ * Blends two tuples linearly by alpha value.
  */
 function rgbaTupleLerp(colorA: RgbaTuple, colorB: RgbaTuple, alpha: number): RgbaTuple {
-	const interp = Math.max(Math.min(alpha, 1), 0);
+	const interp: number = Math.max(Math.min(alpha, 1), 0);
 	return (colorA as number[]).map((Ai, i) => Math.round(Ai + interp * (colorB[i] - Ai))) as RgbaTuple;
 }
 
 /**
- * Blends two colors linearly (not HSV lerp).
+ * Blends two strings linearly by alpha.
  * RGB inputs are converted to RGBA with A value of 1.
  */
-function rgbaStringLerp(colorA: string, colorB: string, alpha: number): string {
-	const arrayA = rgbaStringToTuple(colorA);
-	const arrayB = rgbaStringToTuple(colorB);
-	return tupleToRgbaString(rgbaTupleLerp(arrayA, arrayB, alpha));
+function rgbaStringLerp(colorA: string, colorB: string, alpha: number, useHsv: boolean = false): string {
+	const arrayA: RgbaTuple = rgbaStringToTuple(colorA);
+	const arrayB: RgbaTuple = rgbaStringToTuple(colorB);
+	if (!useHsv) return tupleToRgbaString(rgbaTupleLerp(arrayA, arrayB, alpha));
+
+	const fromHsv: RgbaTuple = rgbaToHsva(arrayA) as RgbaTuple;
+	const toHsv: RgbaTuple = rgbaToHsva(arrayB) as RgbaTuple;
+
+	// Take the shortest path to the new hue
+	if (Math.abs(fromHsv[0] - toHsv[0]) > 180) {
+		if (toHsv[0] > fromHsv[0]) {
+			fromHsv[0] += 360;
+		} else {
+			toHsv[0] += 360;
+		}
+	}
+	const newHsv = rgbaTupleLerp(fromHsv, toHsv, alpha);
+
+	newHsv[0] = newHsv[0] % 360;
+	if (newHsv[0] < 0) {
+		newHsv[0] += 360;
+	}
+
+	const newRgb: RgbaTuple = hsvaToRgba(newHsv) as RgbaTuple;
+
+	return tupleToRgbaString(newRgb);
+}
+
+/**
+ * Converts HSVA tuple to RGBA tuple
+ */
+function hsvaToRgba([h, s, v, a]: RgbaTuple): RgbaTuple {
+	const hueDir: number = h / 60; // divide color wheel into Red, Yellow, Green, Cyan, Blue, Magenta
+	const hueDirFloor: number = Math.floor(hueDir); // see which of the six regions holds the color to be converted
+	const hueDirFraction: number = hueDir - hueDirFloor;
+
+	const rgbValues: RgbaTuple = [v, v * (1 - s), v * (1 - hueDirFraction * s), v * (1 - (1 - hueDirFraction) * s)];
+	const rgbSwizzle: number[][] = [
+		[0, 3, 1],
+		[2, 0, 1],
+		[1, 0, 3],
+		[1, 2, 0],
+		[3, 1, 0],
+		[0, 1, 2]
+	];
+	const swizzleIndex: number = hueDirFloor % 6;
+
+	return [
+		rgbValues[rgbSwizzle[swizzleIndex][0]] * 255,
+		rgbValues[rgbSwizzle[swizzleIndex][1]] * 255,
+		rgbValues[rgbSwizzle[swizzleIndex][2]] * 255,
+		a
+	] as RgbaTuple;
+}
+
+/**
+ * Converts RGBA tuple to HSVA tuple
+ */
+function rgbaToHsva([r, g, b, a]: RgbaTuple): RgbaTuple {
+	const rgbMin: number = Math.min(r, g, b);
+	const rgbMax: number = Math.max(r, g, b);
+	const rgbRange: number = rgbMax - rgbMin;
+
+	const h: number =
+		rgbMax === rgbMin
+			? 0
+			: rgbMax === r
+			? (((g - b) / rgbRange) * 60 + 360) % 360
+			: rgbMax === g
+			? ((b - r) / rgbRange) * 60 + 120
+			: rgbMax === b
+			? ((r - g) / rgbRange) * 60 + 240
+			: 0;
+
+	const s: number = rgbMax === 0 ? 0 : rgbRange / rgbMax;
+	const v: number = rgbMax / 255;
+
+	return [h, s, v, a] as RgbaTuple;
 }
 
 /**
