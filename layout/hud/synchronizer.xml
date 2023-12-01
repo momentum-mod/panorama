@@ -4,7 +4,8 @@
 	</styles>
 	<scripts>
 		<include src="file://{scripts}/common/gamemodes.js" />
-		<include src="file://{scripts}/common/buttons.js" />
+		<include src="file://{scripts}/util/math.js" />
+		<include src="file://{scripts}/util/colors.js" />
 		<include src="file://{scripts}/hud/synchronizer.js" />
 	</scripts>
 	<MomHudSynchronizer class="synchronizer" alternateTicks="false">

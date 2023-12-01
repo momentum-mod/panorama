@@ -45,12 +45,12 @@ class Synchronizer {
 		this.addToBuffer(this.gainRatioHistory, 0);
 		this.addToBuffer(this.yawRatioHistory, 0);
 
-		const bValidWishMove = this.getSize(lastMoveData.wishdir) > 0.1;
+		const bValidWishMove = getSize2D(lastMoveData.wishdir) > 0.1;
 		const strafeRight = (bValidWishMove ? 1 : 0) * lastTickStats.strafeRight;
 		const direction = this.dynamicEnable === 1 ? strafeRight : 1;
 		const flip = this.flipEnable === 1 ? -1 : 1;
 
-		if (bValidWishMove && this.getSizeSquared(MomentumPlayerAPI.GetVelocity()) > Math.pow(this.minSpeed, 2)) {
+		if (bValidWishMove && getSizeSquared2D(MomentumPlayerAPI.GetVelocity()) > Math.pow(this.minSpeed, 2)) {
 			this.gainRatioHistory[this.interpFrames - 1] =
 				this.sampleWeight * this.NaNCheck(lastTickStats.speedGain / lastTickStats.idealGain, 0);
 
@@ -62,7 +62,7 @@ class Synchronizer {
 		const yawRatio = this.getBufferedSum(this.yawRatioHistory);
 
 		const colorTuple = this.colorEnable
-			? this.getColorTuple(gainRatio, false) //strafeRight * yawRatio > 1)
+			? this.getColorPair(gainRatio, false) //strafeRight * yawRatio > 1)
 			: COLORS.NEUTRAL;
 		const color = `gradient(linear, 0% 0%, 0% 100%, from(${colorTuple[0]}), to(${colorTuple[1]}))`;
 		let flow;
@@ -114,37 +114,34 @@ class Synchronizer {
 			`(${(lastJumpStats.yawRatio * 100).toFixed(2)}%)`.padStart(10, ' ');
 		this.panels.stats[1].text = (lastJumpStats.speedGain * 100).toFixed(2);
 
-		const colorTuple = this.StatColorEnable
-			? this.getColorTuple(lastJumpStats.speedGain, lastJumpStats.yawRatio > 0)
+		const colorPair = this.StatColorEnable
+			? this.getColorPair(lastJumpStats.speedGain, lastJumpStats.yawRatio > 0)
 			: COLORS.NEUTRAL;
-		for (const stat of this.panels.stats) stat.style.color = colorTuple[1];
+		for (const stat of this.panels.stats) stat.style.color = colorPair[1];
 	}
 
-	static getColorTuple(ratio, bOverStrafing) {
+	static getColorPair(ratio, bOverStrafing) {
 		// cases where gain effectiveness is >90%
 		if (ratio > 1.02) return COLORS.EXTRA;
 		else if (ratio > 0.99) return COLORS.PERFECT;
 		else if (ratio > 0.95) return COLORS.GOOD;
 		else if (ratio <= -5) return COLORS.STOP;
 
-		const lerpColorTuples = (c1, c2, alpha) => {
-			return [
-				this.lerpColorStrings(c1[0], c2[0], alpha.toFixed(3)),
-				this.lerpColorStrings(c1[1], c2[1], alpha.toFixed(3))
-			];
+		const lerpColorPairs = (c1, c2, alpha) => {
+			return [rgbaStringLerp(c1[0], c2[0], alpha.toFixed(3)), rgbaStringLerp(c1[1], c2[1], alpha.toFixed(3))];
 		};
 
 		// cases where gain effectiveness is <90%
 		if (!bOverStrafing) {
-			if (ratio > 0.85) return lerpColorTuples(COLORS.SLOW, COLORS.GOOD, (ratio - 0.85) / 0.1);
+			if (ratio > 0.85) return lerpColorPairs(COLORS.SLOW, COLORS.GOOD, (ratio - 0.85) / 0.1);
 			else if (ratio > 0.75) return COLORS.SLOW;
-			else if (ratio > 0.5) return lerpColorTuples(COLORS.NEUTRAL, COLORS.SLOW, (ratio - 0.5) / 0.25);
+			else if (ratio > 0.5) return lerpColorPairs(COLORS.NEUTRAL, COLORS.SLOW, (ratio - 0.5) / 0.25);
 			else if (ratio > 0) return COLORS.NEUTRAL;
-			else if (ratio > -5) return lerpColorTuples(COLORS.NEUTRAL, COLORS.STOP, Math.abs(ratio) / 5);
+			else if (ratio > -5) return lerpColorPairs(COLORS.NEUTRAL, COLORS.STOP, Math.abs(ratio) / 5);
 		} else {
-			if (ratio > 0.8) return lerpColorTuples(COLORS.SLOW, COLORS.GOOD, (ratio - 0.8) / 0.15);
-			else if (ratio > 0) return lerpColorTuples(COLORS.LOSS, COLORS.SLOW, (ratio - 0.25) / 0.55);
-			else if (ratio > -5) return lerpColorTuples(COLORS.LOSS, COLORS.STOP, Math.abs(ratio) / 5);
+			if (ratio > 0.8) return lerpColorPairs(COLORS.SLOW, COLORS.GOOD, (ratio - 0.8) / 0.15);
+			else if (ratio > 0) return lerpColorPairs(COLORS.LOSS, COLORS.SLOW, (ratio - 0.25) / 0.55);
+			else if (ratio > -5) return lerpColorPairs(COLORS.LOSS, COLORS.STOP, Math.abs(ratio) / 5);
 		}
 	}
 
@@ -170,35 +167,6 @@ class Synchronizer {
 		return Math.acos(speed < threshold ? 1 : threshold / speed);
 	}
 
-	static getSize(vec) {
-		return Math.sqrt(this.getSizeSquared(vec));
-	}
-
-	static getSizeSquared(vec) {
-		return vec.x * vec.x + vec.y * vec.y;
-	}
-
-	static getNormal(vec, threshold) {
-		const mag = this.getSize(vec);
-		const vecNormal = {
-			x: vec.x,
-			y: vec.y
-		};
-		if (mag < threshold * threshold) {
-			vecNormal.x = 0;
-			vecNormal.y = 0;
-		} else {
-			const inv = 1 / mag;
-			vecNormal.x *= inv;
-			vecNormal.y *= inv;
-		}
-		return vecNormal;
-	}
-
-	static getCross(vec1, vec2) {
-		return vec1.x * vec2.y - vec1.y * vec2.x;
-	}
-
 	static initializeBuffer(size) {
 		return Array.from({ length: size }).fill(0);
 	}
@@ -210,27 +178,6 @@ class Synchronizer {
 
 	static getBufferedSum(history) {
 		return history.reduce((sum, element) => sum + element, 0);
-	}
-
-	static getColorStringFromArray(color) {
-		return `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${color[3] / 255})`;
-	}
-
-	static splitColorString(string) {
-		return string
-			.slice(5, -1)
-			.split(',')
-			.map((c, i) => (i === 3 ? +c * 255 : +c));
-	}
-
-	static lerpColorStrings(stringA, stringB, alpha) {
-		const colorA = this.splitColorString(stringA);
-		const colorB = this.splitColorString(stringB);
-		return this.getColorStringFromArray(this.lerpColorArrays(colorA, colorB, alpha));
-	}
-
-	static lerpColorArrays(A, B, alpha) {
-		return A.map((Ai, i) => Ai + alpha * (B[i] - Ai));
 	}
 
 	static setDisplayMode(newMode) {
