@@ -3,7 +3,7 @@
 @use '../abstract/function';
 @use 'sass:color';
 
-.hud-leaderboards {
+.hud-tab-menu {
 	$root: &;
 
 	width: 50%;
@@ -13,10 +13,15 @@
 	background-color: rgba(0, 0, 0, 0.01); // Very slight background so the blur works
 
 	&--unofficial {
-		.hud-leaderboards-map-info__bottom,
-		.hud-leaderboards-map-info__showcase {
+		.hud-tab-menu-map-info__bottom,
+		.hud-tab-menu-map-info__showcase {
 			visibility: collapse;
 		}
+	}
+
+	&--offset {
+		width: 30%;
+		horizontal-align: left;
 	}
 
 	&__wrapper {
@@ -71,6 +76,16 @@
 		}
 	}
 
+	&__zoning {
+		width: 100%;
+
+		background-color: rgba(0, 0, 0, 0.5);
+
+		&--hidden {
+			visibility: collapse;
+		}
+	}
+
 	&__enable-cursor {
 		border-top: 1px solid rgba(0, 0, 0, 0.4);
 		width: 100%;
@@ -86,7 +101,7 @@
 	}
 }
 
-.hud-leaderboards-map-info {
+.hud-tab-menu-map-info {
 	&__top {
 		flow-children: right;
 		width: fill-parent-flow(1);
@@ -153,7 +168,7 @@
 	}
 }
 
-.hud-leaderboards-map-info-stats {
+.hud-tab-menu-map-info-stats {
 	&__stat {
 		@include mixin.font-styles($use-header: true);
 		font-size: 24px;

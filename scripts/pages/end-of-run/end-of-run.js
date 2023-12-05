@@ -140,12 +140,12 @@ class EndOfRun {
 	/**
 	 *
 	 * @param {boolean} hideEndOfRun
-	 * @param {boolean} hideLeaderboards
+	 * @param {boolean} hideTabMenu
 	 */
-	static hideEndOfRun(hideEndOfRun = true, hideLeaderboards = false) {
+	static hideEndOfRun(hideEndOfRun = true, hideTabMenu = false) {
 		if (hideEndOfRun) $.DispatchEvent('EndOfRun_Hide');
 
-		if (hideLeaderboards) $.DispatchEvent('HudLeaderboards_ForceClose');
+		if (hideTabMenu) $.DispatchEvent('HudTabMenu_ForceClose');
 	}
 	/**
 	 * Reset and determine how to generate the end of run panel.

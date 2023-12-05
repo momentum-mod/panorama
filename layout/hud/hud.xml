@@ -63,7 +63,7 @@
 			<MomHudWeaponSelection />
 		</Panel>
 
-		<HudBlurTarget id="HudBlur" blurrects="Leaderboards TrickList" class="hud-blur" hittest="false" hittestchildren="false">
+		<HudBlurTarget id="HudBlur" blurrects="TabMenu TrickList" class="hud-blur" hittest="false" hittestchildren="false">
 			<BackbufferImagePanel class="full" />
 		</HudBlurTarget>
 
@@ -83,8 +83,8 @@
 		<TrickList id="TrickList" />
 
 		<!-- This container is here so we can move the leaderboard in and out of it during the end-of-match sequence -->
-		<Panel id="LeaderboardsContainer" class="full-width full-height" hittest="false" hittestchildren="true">
-			<HudLeaderboards id="Leaderboards" hittest="true" />
+		<Panel id="TabMenuContainer" class="full-width full-height" hittest="false" hittestchildren="true">
+			<HudTabMenu id="TabMenu" hittest="true" />
 		</Panel>
 
 		<!-- Make sure these are at the bottom to get the z-order right -->
