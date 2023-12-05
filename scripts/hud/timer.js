@@ -142,7 +142,7 @@ class HudTimer {
 	}
 
 	static onLoad() {
-		$.GetContextPanel().hiddenHUDBits = HideHud.LEADERBOARDS;
+		$.GetContextPanel().hiddenHUDBits = HideHud.TABMENU;
 	}
 
 	static {

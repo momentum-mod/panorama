@@ -52,6 +52,6 @@ $.DefineEvent('Lobby_SetMaxPlayers', 1, 'maxplayers', 'Sets the max players of y
 
 $.DefineEvent('MapSelector_OnLoaded', 0);
 $.DefineEvent('MapSelector_ShowConfirmCancelDownload', 1);
-$.DefineEvent('HudLeaderboards_ForceClose', 0, '', 'Force close the leaderboards');
+$.DefineEvent('HudTabMenu_ForceClose', 0, '', 'Force close the tab menu');
 $.DefineEvent('ColorPickerSave', 1, 'color');
 $.DefineEvent('ColorPickerCancel', 0);
