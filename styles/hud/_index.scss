@@ -11,7 +11,6 @@
 @use 'ground-boost';
 @use 'hud';
 @use 'comparisons';
-@use 'leaderboards';
 @use 'chat';
 @use 'hint-text';
 @use 'reticle';
@@ -29,6 +28,7 @@
 @use 'sticky-count';
 @use 'strafe-sync';
 @use 'synchronizer';
+@use 'tab-menu';
 @use 'timer';
 @use 'version-info';
 @use 'weapon-selection';

@@ -1,40 +1,39 @@
 /**
- * Class for the HUD leaderboards panel, which contains the leaderboards and end of run.
+ * Class for the HUD tab menu panel, which contains the leaderboards, end of run, and zoning.
  */
-class HudLeaderboards {
+class HudTabMenu {
 	static panels = {
+		/** @type {Panel} @static */
+		tabMenu: $.GetContextPanel(),
 		/** @type {Panel} @static */
 		leaderboardsContainer: $('#LeaderboardsContainer'),
 		/** @type {Panel} @static */
 		endOfRunContainer: $('#EndOfRunContainer'),
 		/** @type {Image} @static */
-		gamemodeImage: $('#HudLeaderboardsGamemodeImage'),
+		gamemodeImage: $('#HudTabMenuGamemodeImage'),
 		/** @type {Panel} @static */
-		credits: $('#HudLeaderboardsMapCredits')
+		credits: $('#HudTabMenuMapCredits')
 	};
 
 	static {
 		$.RegisterForUnhandledEvent('Leaderboards_MapDataSet', this.setMapData.bind(this));
-		$.RegisterForUnhandledEvent('HudLeaderboards_ForceClose', this.close.bind(this));
+		$.RegisterForUnhandledEvent('HudTabMenu_ForceClose', this.close.bind(this));
 		$.RegisterForUnhandledEvent('EndOfRun_Show', this.showEndOfRun.bind(this));
 		$.RegisterForUnhandledEvent('EndOfRun_Hide', this.hideEndOfRun.bind(this));
-
-		//$.RegisterForUnhandledEvent('HudLeaderboards_Opened', this.onOpened);
-		//$.RegisterForUnhandledEvent('HudLeaderboards_Closed', this.onClosed);
 	}
 
 	static showEndOfRun(_showReason) {
-		this.panels.leaderboardsContainer.AddClass('hud-leaderboards__leaderboards--hidden');
-		this.panels.endOfRunContainer.RemoveClass('hud-leaderboards__endofrun--hidden');
+		this.panels.leaderboardsContainer.AddClass('hud-tab-menu__leaderboards--hidden');
+		this.panels.endOfRunContainer.RemoveClass('hud-tab-menu__endofrun--hidden');
 	}
 
 	static hideEndOfRun() {
-		this.panels.leaderboardsContainer.RemoveClass('hud-leaderboards__leaderboards--hidden');
-		this.panels.endOfRunContainer.AddClass('hud-leaderboards__endofrun--hidden');
+		this.panels.leaderboardsContainer.RemoveClass('hud-tab-menu__leaderboards--hidden');
+		this.panels.endOfRunContainer.AddClass('hud-tab-menu__endofrun--hidden');
 	}
 
 	static setMapData(isOfficial) {
-		$.GetContextPanel().SetHasClass('hud-leaderboards--unofficial', !isOfficial);
+		$.GetContextPanel().SetHasClass('hud-tab-menu--unofficial', !isOfficial);
 
 		const img = GameModeInfoWithNull[GameModeAPI.GetCurrentGameMode()].shortName.toLowerCase();
 
@@ -59,7 +58,7 @@ class HudLeaderboards {
 				text: credit.user.alias
 			});
 
-			namePanel.AddClass('hud-leaderboards-map-info__credits-name');
+			namePanel.AddClass('hud-tab-menu-map-info__credits-name');
 
 			if (credit.user.xuid !== '0') {
 				namePanel.SetPanelEvent('oncontextmenu', () => {
@@ -73,13 +72,13 @@ class HudLeaderboards {
 					]);
 				});
 			} else {
-				namePanel.AddClass('hud-leaderboards-map-info__credits-name--no-steam');
+				namePanel.AddClass('hud-tab-menu-map-info__credits-name--no-steam');
 			}
 
 			// hoped this would make contextmenu work but it doesn't
 			if (authorCredits.indexOf(credit) < authorCredits.length - 1) {
 				const commaPanel = $.CreatePanel('Label', this.panels.credits, '');
-				commaPanel.AddClass('hud-leaderboards-map-info__credits-other-text');
+				commaPanel.AddClass('hud-tab-menu-map-info__credits-other-text');
 				commaPanel.text = ',';
 			}
 		}
@@ -98,7 +97,7 @@ class HudLeaderboards {
 	}
 
 	static close() {
-		$.GetContextPanel().forceCloseLeaderboards();
+		$.GetContextPanel().forceCloseTabMenu();
 		return true;
 	}
 }
