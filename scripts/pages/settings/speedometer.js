@@ -737,7 +737,9 @@ class RangeColorProfiles {
 		UiToolkitAPI.ShowCustomLayoutPopupParameters(
 			'',
 			'file://{resources}/layout/modals/popups/range-color-profile-name.xml',
-			`profileNames=${this.profileObjectMap.keys()}&prefilledText=${prefilledText}&OKBtnText=${OKBtnText}&callback=${UiToolkitAPI.RegisterJSCallback(
+			`profileNames=${[
+				...this.profileObjectMap.keys()
+			]}&prefilledText=${prefilledText}&OKBtnText=${OKBtnText}&callback=${UiToolkitAPI.RegisterJSCallback(
 				callback
 			)}`
 		);
