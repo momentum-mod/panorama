@@ -14,7 +14,7 @@ class RangeColorProfileNamePopup {
 
 		let passed = true;
 		RangeColorProfileNamePopup.profileNames.every((profileName) => {
-			if (text === profileName) {
+			if (text.toUpperCase() === profileName.toUpperCase()) {
 				passed = false;
 				return false;
 			}
