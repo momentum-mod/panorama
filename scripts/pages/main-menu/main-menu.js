@@ -266,7 +266,7 @@ class MainMenu {
 
 		// If it's xmas and you're using one of the default backgrounds, replace it with the xmas version
 		const date = new Date();
-		if (date.getMonth() === 11 && date.getDate() >= 25 && backgroundVar <= 1) {
+		if (date.getMonth() === 11 && date.getDate() >= 18 && backgroundVar <= 1) {
 			name = 'MomentumXmas';
 		} else {
 			// Using a switch as we're likely to add more of these in the future
