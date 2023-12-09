@@ -218,7 +218,11 @@ class Speedometers {
 		UiToolkitAPI.ShowCustomLayoutPopupParameters(
 			'',
 			'file://{resources}/layout/modals/popups/speedometer-select.xml',
-			`callback=${UiToolkitAPI.RegisterJSCallback((type, name) => this.addSpeedometerByType(type, name))}`
+			`speedometerNames=${this.detailObjectList
+				.map((x) => x.name)
+				.join(',')}&callback=${UiToolkitAPI.RegisterJSCallback((type, name) =>
+				this.addSpeedometerByType(type, name)
+			)}`
 		);
 	}
 
