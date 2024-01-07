@@ -139,7 +139,7 @@
 
 						<RadioButton id="InterfaceRadio" class="settings-nav__item" group="SettingsNav" onactivate="MainMenuSettings.navigateToTab('InterfaceSettings')">
 							<Label class="settings-nav__item-label" text="#Settings_Interface" />
-							<Panel class="settings-nav__subsection settings-nav__subsection--11 settings-nav__subsection--hidden">
+							<Panel class="settings-nav__subsection settings-nav__subsection--13 settings-nav__subsection--hidden">
 								<RadioButton id="UIRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="MainMenuSettings.navigateToSubsection('InterfaceSettings', 'UISubSection')">
 									<Label class="settings-nav__subitem-label" text="#Settings_Menu_Title" />
 								</RadioButton>
@@ -157,6 +157,9 @@
 								</RadioButton>
 								<RadioButton id="KeypressRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="MainMenuSettings.navigateToSubsection('InterfaceSettings', 'KeypressSubSection')">
 									<Label class="settings-nav__subitem-label" text="#Settings_KeypressHUD_Title" />
+								</RadioButton>
+								<RadioButton id="ComparisonsRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="MainMenuSettings.navigateToSubsection('InterfaceSettings', 'ComparisonsSubSection')">
+									<Label class="settings-nav__subitem-label" text="#Settings_ComparisonsHUD_Title" />
 								</RadioButton>
 								<RadioButton id="WeaponSelRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="MainMenuSettings.navigateToSubsection('InterfaceSettings', 'WeaponSelSubSection')">
 									<Label class="settings-nav__subitem-label" text="#Settings_WeaponSelection_Title" />

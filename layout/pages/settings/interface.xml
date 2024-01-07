@@ -351,6 +351,24 @@
 			</Panel>
 
 			<Panel class="settings-page__spacer" />
+			
+			<Panel id="ComparisonsSubSection" class="settings-group">
+				<Panel class="settings-group__header">
+					<Label class="settings-group__title" text="#Settings_ComparisonsHUD_Title" tags="comparisons,stages,checkpoints,time,hud" />
+					<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
+						<Button class="button" onactivate="SettingsShared.resetSettings('ComparisonsSubSection');">
+							<Image class="button__icon" src="file://{images}/reset.svg" />
+						</Button>
+					</TooltipPanel>
+				</Panel>
+
+				<ChaosSettingsEnum text="#Settings_ComparisonsHUD_Enable" convar="mom_hud_comparisons_enable" infomessage="#Settings_ComparisonsHUD_Enable_Info">
+					<RadioButton group="showcomparisons" text="#Common_Off" value="0" />
+					<RadioButton group="showcomparisons" text="#Common_On" value="1" />
+				</ChaosSettingsEnum>
+			</Panel>
+
+			<Panel class="settings-page__spacer" />
 
 			<Panel id="WeaponSelSubSection" class="settings-group">
 				<Panel class="settings-group__header">
