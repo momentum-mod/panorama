@@ -141,8 +141,7 @@ class SettingsShared {
 		findCvarsRecursive(section);
 
 		let cvarParams = '';
-		for (const [i, cvar] in cvars.entries())
-			cvarParams += (index !== 0 ? '&' : '') + 'cvar' + (index + 1) + '=' + cvar;
+		for (const [i, cvar] of cvars.entries()) cvarParams += (i !== 0 ? '&' : '') + 'cvar' + (i + 1) + '=' + cvar;
 
 		UiToolkitAPI.ShowCustomLayoutPopupParameters(
 			'',
