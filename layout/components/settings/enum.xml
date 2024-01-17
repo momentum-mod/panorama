@@ -3,10 +3,10 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 
-	<ChaosSettingsEnum class="settings-enum">
+	<SettingsEnum class="settings-enum">
 		<Panel class="settings-enum__title-container">
 			<Label id="title" class="settings-enum__title" />
 		</Panel>
 		<Panel id="values" class="settings-enum__values" />
-	</ChaosSettingsEnum>
+	</SettingsEnum>
 </root>

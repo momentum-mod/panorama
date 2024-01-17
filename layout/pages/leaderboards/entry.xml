@@ -10,7 +10,7 @@
 		<Label class="leaderboard-entry__item leaderboard-entry__rank" text="{d:rank}" />
 
 		<Panel class="leaderboard-entry__item leaderboard-entry__item leaderboard-entry__player">
-			<ChaosAvatarImage id="LeaderboardEntryAvatarPanel" class="leaderboard-entry__item leaderboard-entry__avatar" />
+			<AvatarImage id="LeaderboardEntryAvatarPanel" class="leaderboard-entry__item leaderboard-entry__avatar" />
 			<Label class="leaderboard-entry__item leaderboard-entry__name" text="{s:player}" />
 		</Panel>
 

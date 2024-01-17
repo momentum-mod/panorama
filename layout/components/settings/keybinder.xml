@@ -3,7 +3,7 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 
-	<ChaosSettingsKeyBinder class="settings-keybinder">
+	<SettingsKeyBinder class="settings-keybinder">
 		<Panel class="settings-keybinder__title-container">
 			<Label id="title" class="settings-keybinder__title" />
 		</Panel>
@@ -13,5 +13,5 @@
 			</Panel>
 			<Button id="clearkeybinding" class="settings-keybinder__clear" />
 		</Panel>
-	</ChaosSettingsKeyBinder>
+	</SettingsKeyBinder>
 </root>

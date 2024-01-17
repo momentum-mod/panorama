@@ -156,7 +156,7 @@ class Learn {
 
 	static launchMapThenTeleport() {
 		const onMapLoad = () => {
-			$.UnregisterForUnhandledEvent('ChaosLevelInitPostEntity', onLoadHandle);
+			$.UnregisterForUnhandledEvent('LevelInitPostEntity', onLoadHandle);
 
 			if (MapCacheAPI.GetMapName() !== this.currentLessonData['Map'])
 				$.Warning(
@@ -167,7 +167,7 @@ class Learn {
 			else this.teleportToLessonStart();
 		};
 
-		const onLoadHandle = $.RegisterForUnhandledEvent('ChaosLevelInitPostEntity', onMapLoad);
+		const onLoadHandle = $.RegisterForUnhandledEvent('LevelInitPostEntity', onMapLoad);
 
 		const map = this.currentLessonData['Map'];
 

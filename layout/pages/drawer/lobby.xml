@@ -10,7 +10,7 @@
 			<Panel class="lobby-lobbies__wrapper" acceptsinput="true">
 				<Panel id="LobbyOrigin" class="lobby-lobbies__origin" />
 				<Panel class="lobby-lobbies__entry">
-					<ChaosAvatarImage id="LobbyPlayerAvatar" class="lobby-lobbies__avatar" acceptsinput="true" />
+					<AvatarImage id="LobbyPlayerAvatar" class="lobby-lobbies__avatar" acceptsinput="true" />
 					<Image id="LobbyType" class="lobby-lobbies__type" textureheight="64" onmouseout="UiToolkitAPI.HideTitleImageTextTooltip();" />
 					<Label id="LobbyTitle" class="lobby-lobbies__text lobby-lobbies__title" text="{s:lobbyTitle}" />
 					<Label id="LobbyPlayerNumbers" class="text-h lobby-lobbies__text lobby-lobbies__players" text="{s:lobbyPlayerCount}" />
@@ -24,7 +24,7 @@
 		</snippet>
 		<snippet name="lobby-member-entry">
 			<Panel class="lobby-members__entry" acceptsinput="true">
-				<ChaosAvatarImage id="MemberAvatar" class="lobby-members__avatar" />
+				<AvatarImage id="MemberAvatar" class="lobby-members__avatar" />
 				<Label id="MemberName" class="lobby-members__text lobby-members__name" text="{s:memberName}" />
 				<!--<Label id="MemberPrestige" /> -->
 				<Panel class="lobby-members__map-container">

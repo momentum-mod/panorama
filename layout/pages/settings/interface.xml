@@ -116,20 +116,20 @@
 					</TooltipPanel>
 				</Panel>
 
-				<ChaosSettingsEnum text="#Settings_Menu_Console" convar="con_enable" hasdocspage="false" tags="console">
+				<SettingsEnum text="#Settings_Menu_Console" convar="con_enable" hasdocspage="false" tags="console">
 					<RadioButton group="enableconsole" text="#Common_Off" value="0" />
 					<RadioButton group="enableconsole" text="#Common_On" value="1" />
-				</ChaosSettingsEnum>
+				</SettingsEnum>
 
-				<ChaosSettingsEnum text="#Settings_Menu_Movie" psvar="settings.mainMenuMovie" infomessage="#Settings_Menu_Movie_Info" tags="background,video,movie">
+				<SettingsEnum text="#Settings_Menu_Movie" psvar="settings.mainMenuMovie" infomessage="#Settings_Menu_Movie_Info" tags="background,video,movie">
 					<RadioButton group="mainmenuvideo" text="#Common_Off" value="0" activateoverride="$.DispatchEvent('ReloadBackground');" />
 					<RadioButton group="mainmenuvideo" text="#Common_On" value="1" activateoverride="$.DispatchEvent('ReloadBackground');" />
-				</ChaosSettingsEnum>
+				</SettingsEnum>
 
-				<ChaosSettingsEnumDropDown text="#Settings_Menu_Type" psvar="settings.mainMenuBackground" submitoverride="$.DispatchEvent('ReloadBackground');" infomessage="#Settings_Menu_Type_Info" tags="background,video,movie">
+				<SettingsEnumDropDown text="#Settings_Menu_Type" psvar="settings.mainMenuBackground" submitoverride="$.DispatchEvent('ReloadBackground');" infomessage="#Settings_Menu_Type_Info" tags="background,video,movie">
 					<Label text="#Settings_Menu_Type0" value="0" id="bgtype0" />
 					<Label text="#Settings_Menu_Type1" value="1" id="bgtype1" />
-				</ChaosSettingsEnumDropDown>
+				</SettingsEnumDropDown>
 
 				<Panel class="settings-group__combo">
 					<Button class="horizontal-align-center button my-2" onactivate="UiToolkitAPI.ShowCustomLayoutPopup('', 'file://{resources}/layout/modals/popups/dont-show-again-settings.xml')">
@@ -144,13 +144,13 @@
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_Speedometer_Title" tags="speedometer" />
 				</Panel>
-				<ChaosSettingsEnum text="#Settings_Speedometer_Enable" convar="mom_hud_speedometer_enable" infomessage="#Settings_Speedometer_Enable_Info" tags="speedometer">
+				<SettingsEnum text="#Settings_Speedometer_Enable" convar="mom_hud_speedometer_enable" infomessage="#Settings_Speedometer_Enable_Info" tags="speedometer">
 					<RadioButton group="speedometer" text="#Common_Off" value="0" />
 					<RadioButton group="speedometer" text="#Common_On" value="1" />
-				</ChaosSettingsEnum>
+				</SettingsEnum>
 
 				<ConVarEnabler convar="mom_hud_speedometer_enable" togglevisibility="true" class="flow-down">
-					<ChaosSettingsSlider text="#Settings_Speedometer_FPS" min="0" max="400" convar="mom_hud_speedometer_fps" infomessage="#Settings_Speedometer_FPS_Info" hasdocspage="true" tags="speedometer" />
+					<SettingsSlider text="#Settings_Speedometer_FPS" min="0" max="400" convar="mom_hud_speedometer_fps" infomessage="#Settings_Speedometer_FPS_Info" hasdocspage="true" tags="speedometer" />
 
 					<Panel id="SpeedometersContainer" class="flow-down full-width" infotitle="#Settings_Speedometer_Gamemode_Long" infomessage="#Settings_Speedometer_Container_Info" tags="speedometer">
 						<Panel class="settings-group__header">
@@ -239,32 +239,32 @@
 					</ConVarEnabler>
 					<Panel class="fill-width flow-down">
 						<Panel class="settings-group__combo" style="margin-bottom: 0px;">							<!-- TODO: fix when sass specificity is fixed -->
-							<ChaosSettingsEnum text="#Settings_Crosshair_Enable" convar="crosshair" hasdocspage="false">
+							<SettingsEnum text="#Settings_Crosshair_Enable" convar="crosshair" hasdocspage="false">
 								<RadioButton group="xhairenable" text="#Common_Off" value="0" />
 								<RadioButton group="xhairenable" text="#Common_On" value="1" />
-							</ChaosSettingsEnum>
+							</SettingsEnum>
 
 							<ConVarEnabler convar="crosshair" class="flow-down">
 								<ConVarColorDisplay text="#Settings_Crosshair_Color" convar="cl_crosshair_color" hasdocspage="false" />
 
-								<ChaosSettingsSlider text="#Settings_Crosshair_Size" min="0" max="20" convar="cl_crosshair_size" displayprecision="2" infomessage="" hasdocspage="false" tags="color,size" />
+								<SettingsSlider text="#Settings_Crosshair_Size" min="0" max="20" convar="cl_crosshair_size" displayprecision="2" infomessage="" hasdocspage="false" tags="color,size" />
 
-								<ChaosSettingsSlider text="#Settings_Crosshair_Gap" min="0" max="10" convar="cl_crosshair_gap" displayprecision="2" infomessage="" hasdocspage="false" tags="gap" />
+								<SettingsSlider text="#Settings_Crosshair_Gap" min="0" max="10" convar="cl_crosshair_gap" displayprecision="2" infomessage="" hasdocspage="false" tags="gap" />
 
-								<ChaosSettingsSlider text="#Settings_Crosshair_Thickness" min="0" max="10" convar="cl_crosshair_thickness" displayprecision="2" infomessage="" hasdocspage="false" tags="thickness,tasteful" />
+								<SettingsSlider text="#Settings_Crosshair_Thickness" min="0" max="10" convar="cl_crosshair_thickness" displayprecision="2" infomessage="" hasdocspage="false" tags="thickness,tasteful" />
 
-								<ChaosSettingsEnum text="#Settings_Crosshair_CenterDot" convar="cl_crosshair_dot" hasdocspage="false" tags="center,centre">
+								<SettingsEnum text="#Settings_Crosshair_CenterDot" convar="cl_crosshair_dot" hasdocspage="false" tags="center,centre">
 									<RadioButton group="xhairdot" text="#Common_Off" value="0" />
 									<RadioButton group="xhairdot" text="#Common_On" value="1" />
-								</ChaosSettingsEnum>
+								</SettingsEnum>
 
-								<ChaosSettingsEnum text="#Settings_Crosshair_Outline" convar="cl_crosshair_drawoutline" infomessage="" hasdocspage="false" tags="outline">
+								<SettingsEnum text="#Settings_Crosshair_Outline" convar="cl_crosshair_drawoutline" infomessage="" hasdocspage="false" tags="outline">
 									<RadioButton group="xhairoutline" text="#Common_Off" value="0" />
 									<RadioButton group="xhairoutline" text="#Common_On" value="1" />
-								</ChaosSettingsEnum>
+								</SettingsEnum>
 
 								<ConVarEnabler convar="cl_crosshair_drawoutline">
-									<ChaosSettingsSlider style="margin-bottom: 0px;" text="#Settings_Crosshair_OutlineThickness" min="0" max="3" convar="cl_crosshair_outlinethickness" displayprecision="2" infomessage="" hasdocspage="false" tags="outline" />
+									<SettingsSlider style="margin-bottom: 0px;" text="#Settings_Crosshair_OutlineThickness" min="0" max="3" convar="cl_crosshair_outlinethickness" displayprecision="2" infomessage="" hasdocspage="false" tags="outline" />
 								</ConVarEnabler>
 							</ConVarEnabler>
 						</Panel>
@@ -289,30 +289,30 @@
 					</Panel>
 				</Panel>
 
-				<ChaosSettingsEnum text="#Settings_Timer_Show" convar="mom_hud_timer_enable" infomessage="#Settings_Timer_Show_Info">
+				<SettingsEnum text="#Settings_Timer_Show" convar="mom_hud_timer_enable" infomessage="#Settings_Timer_Show_Info">
 					<RadioButton group="timerenable" text="#Common_Off" value="0" />
 					<RadioButton group="timerenable" text="#Common_On" value="1" />
-				</ChaosSettingsEnum>
+				</SettingsEnum>
 
-				<ChaosSettingsEnum text="#Settings_Timer_SoundStart" convar="mom_hud_timer_sound_start_enable" infomessage="#Settings_Timer_SoundStart_Info" tags="sound">
+				<SettingsEnum text="#Settings_Timer_SoundStart" convar="mom_hud_timer_sound_start_enable" infomessage="#Settings_Timer_SoundStart_Info" tags="sound">
 					<RadioButton group="timerstartsound" text="#Common_Off" value="0" />
 					<RadioButton group="timerstartsound" text="#Common_On" value="1" />
-				</ChaosSettingsEnum>
+				</SettingsEnum>
 
-				<ChaosSettingsEnum text="#Settings_Timer_SoundFinish" convar="mom_hud_timer_sound_finish_enable" infomessage="#Settings_Timer_SoundStop_Info" tags="sound">
+				<SettingsEnum text="#Settings_Timer_SoundFinish" convar="mom_hud_timer_sound_finish_enable" infomessage="#Settings_Timer_SoundStop_Info" tags="sound">
 					<RadioButton group="timerfinishsound" text="#Common_Off" value="0" />
 					<RadioButton group="timerfinishsound" text="#Common_On" value="1" />
-				</ChaosSettingsEnum>
+				</SettingsEnum>
 
-				<ChaosSettingsEnum text="#Settings_Timer_SoundFinish" convar="mom_hud_timer_sound_stop_enable" infomessage="#Settings_Timer_SoundFinish_Info" tags="sound">
+				<SettingsEnum text="#Settings_Timer_SoundFinish" convar="mom_hud_timer_sound_stop_enable" infomessage="#Settings_Timer_SoundFinish_Info" tags="sound">
 					<RadioButton group="timerstopsound" text="#Common_Off" value="0" />
 					<RadioButton group="timerstopsound" text="#Common_On" value="1" />
-				</ChaosSettingsEnum>
+				</SettingsEnum>
 
-				<ChaosSettingsEnum text="#Settings_Timer_SoundFail" convar="mom_hud_timer_sound_fail_enable" infomessage="#Settings_Timer_SoundFail_Info" tags="sound">
+				<SettingsEnum text="#Settings_Timer_SoundFail" convar="mom_hud_timer_sound_fail_enable" infomessage="#Settings_Timer_SoundFail_Info" tags="sound">
 					<RadioButton group="timerfailsound" text="#Common_Off" value="0" />
 					<RadioButton group="timerfailsound" text="#Common_On" value="1" />
-				</ChaosSettingsEnum>
+				</SettingsEnum>
 			</Panel>
 
 			<Panel class="settings-page__spacer" />
@@ -326,10 +326,10 @@
 						</Button>
 					</TooltipPanel>
 				</Panel>
-				<ChaosSettingsEnum text="#Settings_HUDStatus_Enable" convar="mom_hud_status_enable" infomessage="#Settings_HUDStatus_Enable_Info">
+				<SettingsEnum text="#Settings_HUDStatus_Enable" convar="mom_hud_status_enable" infomessage="#Settings_HUDStatus_Enable_Info">
 					<RadioButton group="playerstatusenable" text="#Common_Off" value="0" />
 					<RadioButton group="playerstatusenable" text="#Common_On" value="1" />
-				</ChaosSettingsEnum>
+				</SettingsEnum>
 			</Panel>
 
 			<Panel class="settings-page__spacer" />
@@ -344,10 +344,10 @@
 					</TooltipPanel>
 				</Panel>
 
-				<ChaosSettingsEnum text="#Settings_KeypressHUD_Enable" convar="mom_hud_keypress_enable" infomessage="#Settings_KeypressHUD_Enable_Info">
+				<SettingsEnum text="#Settings_KeypressHUD_Enable" convar="mom_hud_keypress_enable" infomessage="#Settings_KeypressHUD_Enable_Info">
 					<RadioButton group="showkeys" text="#Common_Off" value="0" />
 					<RadioButton group="showkeys" text="#Common_On" value="1" />
-				</ChaosSettingsEnum>
+				</SettingsEnum>
 			</Panel>
 
 			<Panel class="settings-page__spacer" />
@@ -362,10 +362,10 @@
 					</TooltipPanel>
 				</Panel>
 
-				<ChaosSettingsEnum text="#Settings_ComparisonsHUD_Enable" convar="mom_hud_comparisons_enable" infomessage="#Settings_ComparisonsHUD_Enable_Info">
+				<SettingsEnum text="#Settings_ComparisonsHUD_Enable" convar="mom_hud_comparisons_enable" infomessage="#Settings_ComparisonsHUD_Enable_Info">
 					<RadioButton group="showcomparisons" text="#Common_Off" value="0" />
 					<RadioButton group="showcomparisons" text="#Common_On" value="1" />
-				</ChaosSettingsEnum>
+				</SettingsEnum>
 			</Panel>
 
 			<Panel class="settings-page__spacer" />
@@ -386,22 +386,22 @@
 					</Panel>
 				</Panel>
 
-				<ChaosSettingsEnum text="#Settings_WeaponSelection_Enable" convar="mom_hud_weaponselection_enable" infomessage="#Settings_WeaponSelection_Enable_Info">
+				<SettingsEnum text="#Settings_WeaponSelection_Enable" convar="mom_hud_weaponselection_enable" infomessage="#Settings_WeaponSelection_Enable_Info">
 					<RadioButton group="showwepsel" text="#Common_Off" value="0" />
 					<RadioButton group="showwepsel" text="#Common_On" value="1" />
-				</ChaosSettingsEnum>
+				</SettingsEnum>
 
 				<ConVarEnabler convar="mom_hud_weaponselection_enable" togglevisibility="true" class="flow-down">
-					<ChaosSettingsEnum text="#Settings_WeaponSelection_ShowKeybind" convar="mom_hud_weaponselection_keybind_enable" infomessage="#Settings_WeaponSelection_ShowKeybind_Info">
+					<SettingsEnum text="#Settings_WeaponSelection_ShowKeybind" convar="mom_hud_weaponselection_keybind_enable" infomessage="#Settings_WeaponSelection_ShowKeybind_Info">
 						<RadioButton group="showwepselkb" text="#Common_Off" value="0" />
 						<RadioButton group="showwepselkb" text="#Common_On" value="1" />
-					</ChaosSettingsEnum>
+					</SettingsEnum>
 				</ConVarEnabler>
 
-				<ChaosSettingsEnum text="#Settings_WeaponSelection_Sound" convar="mom_hud_weaponselection_sound_enable" infomessage="#Settings_WeaponSelection_Sound_Info" tags="sound">
+				<SettingsEnum text="#Settings_WeaponSelection_Sound" convar="mom_hud_weaponselection_sound_enable" infomessage="#Settings_WeaponSelection_Sound_Info" tags="sound">
 					<RadioButton group="showwepselsound" text="#Common_Off" value="0" />
 					<RadioButton group="showwepselsound" text="#Common_On" value="1" />
-				</ChaosSettingsEnum>
+				</SettingsEnum>
 			</Panel>
 
 			<Panel class="settings-page__spacer" />
@@ -421,72 +421,72 @@
 					</Panel>
 				</Panel>
 
-				<ChaosSettingsEnum text="#Settings_JumpStats_Enable" convar="mom_hud_jstats_enable" infomessage="#Settings_JumpStats_Enable_Info">
+				<SettingsEnum text="#Settings_JumpStats_Enable" convar="mom_hud_jstats_enable" infomessage="#Settings_JumpStats_Enable_Info">
 					<RadioButton group="jumpstatsenable" text="#Common_Off" value="0" />
 					<RadioButton group="jumpstatsenable" text="#Common_On" value="1" />
-				</ChaosSettingsEnum>
+				</SettingsEnum>
 
 				<ConVarEnabler convar="mom_hud_jstats_enable" class="flow-down">
-					<ChaosSettingsSlider text="#Settings_JumpStats_First" min="1" max="10" convar="mom_hud_jstats_first" displayprecision="0" infomessage="#Settings_JumpStats_First_Info" hasdocspage="false" />
+					<SettingsSlider text="#Settings_JumpStats_First" min="1" max="10" convar="mom_hud_jstats_first" displayprecision="0" infomessage="#Settings_JumpStats_First_Info" hasdocspage="false" />
 
-					<ChaosSettingsSlider text="#Settings_JumpStats_Interval" min="0" max="10" convar="mom_hud_jstats_interval" displayprecision="0" infomessage="#Settings_JumpStats_Interval_Info" hasdocspage="false" />
+					<SettingsSlider text="#Settings_JumpStats_Interval" min="0" max="10" convar="mom_hud_jstats_interval" displayprecision="0" infomessage="#Settings_JumpStats_Interval_Info" hasdocspage="false" />
 
-					<ChaosSettingsSlider text="#Settings_JumpStats_Log" min="1" max="10" convar="mom_hud_jstats_log" displayprecision="0" infomessage="#Settings_JumpStats_Log_Info" hasdocspage="false" />
+					<SettingsSlider text="#Settings_JumpStats_Log" min="1" max="10" convar="mom_hud_jstats_log" displayprecision="0" infomessage="#Settings_JumpStats_Log_Info" hasdocspage="false" />
 
-					<ChaosSettingsEnum text="#Settings_JumpStats_TakeoffSpeed" convar="mom_hud_jstats_takeoff_speed_enable" infomessage="#Settings_JumpStats_TakeoffSpeed_Info">
+					<SettingsEnum text="#Settings_JumpStats_TakeoffSpeed" convar="mom_hud_jstats_takeoff_speed_enable" infomessage="#Settings_JumpStats_TakeoffSpeed_Info">
 						<RadioButton group="takeoffspeed" text="#Common_Off" value="0" />
 						<RadioButton group="takeoffspeed" text="#Common_On" value="1" />
-					</ChaosSettingsEnum>
+					</SettingsEnum>
 
-					<ChaosSettingsEnum text="#Settings_JumpStats_SpeedDelta" convar="mom_hud_jstats_speed_delta_enable" infomessage="#Settings_JumpStats_SpeedDelta_Info">
+					<SettingsEnum text="#Settings_JumpStats_SpeedDelta" convar="mom_hud_jstats_speed_delta_enable" infomessage="#Settings_JumpStats_SpeedDelta_Info">
 						<RadioButton group="deltaspeed" text="#Common_Off" value="0" />
 						<RadioButton group="deltaspeed" text="#Common_On" value="1" />
-					</ChaosSettingsEnum>
+					</SettingsEnum>
 
-					<ChaosSettingsEnum text="#Settings_JumpStats_TakeoffTime" convar="mom_hud_jstats_takeoff_time_enable" infomessage="#Settings_JumpStats_TakeoffTime_Info">
+					<SettingsEnum text="#Settings_JumpStats_TakeoffTime" convar="mom_hud_jstats_takeoff_time_enable" infomessage="#Settings_JumpStats_TakeoffTime_Info">
 						<RadioButton group="jumptime" text="#Common_Off" value="0" />
 						<RadioButton group="jumptime" text="#Common_On" value="1" />
-					</ChaosSettingsEnum>
+					</SettingsEnum>
 
-					<ChaosSettingsEnum text="#Settings_JumpStats_TimeDelta" convar="mom_hud_jstats_time_delta_enable" infomessage="#Settings_JumpStats_TimeDelta_Info">
+					<SettingsEnum text="#Settings_JumpStats_TimeDelta" convar="mom_hud_jstats_time_delta_enable" infomessage="#Settings_JumpStats_TimeDelta_Info">
 						<RadioButton group="jumptimedelta" text="#Common_Off" value="0" />
 						<RadioButton group="jumptimedelta" text="#Common_On" value="1" />
-					</ChaosSettingsEnum>
+					</SettingsEnum>
 
-					<ChaosSettingsEnum text="#Settings_JumpStats_StrafeSync" convar="mom_hud_jstats_strafe_sync_enable" infomessage="#Settings_JumpStats_StrafeSync_Info">
+					<SettingsEnum text="#Settings_JumpStats_StrafeSync" convar="mom_hud_jstats_strafe_sync_enable" infomessage="#Settings_JumpStats_StrafeSync_Info">
 						<RadioButton group="syncratio" text="#Common_Off" value="0" />
 						<RadioButton group="syncratio" text="#Common_On" value="1" />
-					</ChaosSettingsEnum>
+					</SettingsEnum>
 
-					<ChaosSettingsEnum text="#Settings_JumpStats_StrafeCount" convar="mom_hud_jstats_strafe_count_enable" infomessage="#Settings_JumpStats_StrafeCount_Info">
+					<SettingsEnum text="#Settings_JumpStats_StrafeCount" convar="mom_hud_jstats_strafe_count_enable" infomessage="#Settings_JumpStats_StrafeCount_Info">
 						<RadioButton group="jumpstrafes" text="#Common_Off" value="0" />
 						<RadioButton group="jumpstrafes" text="#Common_On" value="1" />
-					</ChaosSettingsEnum>
+					</SettingsEnum>
 
-					<ChaosSettingsEnum text="#Settings_JumpStats_SpeedGain" convar="mom_hud_jstats_speed_gain_enable" infomessage="#Settings_JumpStats_SpeedGain_Info">
+					<SettingsEnum text="#Settings_JumpStats_SpeedGain" convar="mom_hud_jstats_speed_gain_enable" infomessage="#Settings_JumpStats_SpeedGain_Info">
 						<RadioButton group="speedgain" text="#Common_Off" value="0" />
 						<RadioButton group="speedgain" text="#Common_On" value="1" />
-					</ChaosSettingsEnum>
+					</SettingsEnum>
 
-					<ChaosSettingsEnum text="#Settings_JumpStats_YawRatio" convar="mom_hud_jstats_yaw_ratio_enable" infomessage="#Settings_JumpStats_YawRatio_Info">
+					<SettingsEnum text="#Settings_JumpStats_YawRatio" convar="mom_hud_jstats_yaw_ratio_enable" infomessage="#Settings_JumpStats_YawRatio_Info">
 						<RadioButton group="yawratio" text="#Common_Off" value="0" />
 						<RadioButton group="yawratio" text="#Common_On" value="1" />
-					</ChaosSettingsEnum>
+					</SettingsEnum>
 
-					<ChaosSettingsEnum text="#Settings_JumpStats_HeightDelta" convar="mom_hud_jstats_height_delta_enable" infomessage="#Settings_JumpStats_HeightDelta_Info">
+					<SettingsEnum text="#Settings_JumpStats_HeightDelta" convar="mom_hud_jstats_height_delta_enable" infomessage="#Settings_JumpStats_HeightDelta_Info">
 						<RadioButton group="heightdelta" text="#Common_Off" value="0" />
 						<RadioButton group="heightdelta" text="#Common_On" value="1" />
-					</ChaosSettingsEnum>
+					</SettingsEnum>
 
-					<ChaosSettingsEnum text="#Settings_JumpStats_Distance" convar="mom_hud_jstats_distance_enable" infomessage="#Settings_JumpStats_Distance_Info">
+					<SettingsEnum text="#Settings_JumpStats_Distance" convar="mom_hud_jstats_distance_enable" infomessage="#Settings_JumpStats_Distance_Info">
 						<RadioButton group="distance" text="#Common_Off" value="0" />
 						<RadioButton group="distance" text="#Common_On" value="1" />
-					</ChaosSettingsEnum>
+					</SettingsEnum>
 
-					<ChaosSettingsEnum text="#Settings_JumpStats_Efficiency" convar="mom_hud_jstats_efficiency_enable" infomessage="#Settings_JumpStats_Efficiency_Info">
+					<SettingsEnum text="#Settings_JumpStats_Efficiency" convar="mom_hud_jstats_efficiency_enable" infomessage="#Settings_JumpStats_Efficiency_Info">
 						<RadioButton group="efficiency" text="#Common_Off" value="0" />
 						<RadioButton group="efficiency" text="#Common_On" value="1" />
-					</ChaosSettingsEnum>
+					</SettingsEnum>
 				</ConVarEnabler>
 			</Panel>
 
@@ -507,26 +507,26 @@
 					</Panel>
 				</Panel>
 
-				<ChaosSettingsEnum text="#Settings_TotalSync_Enable" convar="mom_hud_strafesync_draw" infomessage="#Settings_TotalSync_Enable_Info">
+				<SettingsEnum text="#Settings_TotalSync_Enable" convar="mom_hud_strafesync_draw" infomessage="#Settings_TotalSync_Enable_Info">
 					<RadioButton group="showsyncdata" text="#Common_Off" value="0" />
 					<RadioButton group="showsyncdata" text="#Common_On" value="1" />
-				</ChaosSettingsEnum>
+				</SettingsEnum>
 
-				<ChaosSettingsEnum text="#Settings_TotalSync_Bar" convar="mom_hud_strafesync_drawbar" infomessage="#Settings_TotalSync_Bar_Info">
+				<SettingsEnum text="#Settings_TotalSync_Bar" convar="mom_hud_strafesync_drawbar" infomessage="#Settings_TotalSync_Bar_Info">
 					<RadioButton group="showsyncbar" text="#Common_Off" value="0" />
 					<RadioButton group="showsyncbar" text="#Common_On" value="1" />
-				</ChaosSettingsEnum>
+				</SettingsEnum>
 
-				<ChaosSettingsEnumDropDown text="#Settings_TotalSync_Type" convar="mom_hud_strafesync_type" infomessage="#Settings_TotalSync_Type_Info">
+				<SettingsEnumDropDown text="#Settings_TotalSync_Type" convar="mom_hud_strafesync_type" infomessage="#Settings_TotalSync_Type_Info">
 					<Label id="synctype1" text="#Settings_TotalSync_Type1" value="1" />
 					<Label id="synctype2" text="#Settings_TotalSync_Type2" value="2" />
-				</ChaosSettingsEnumDropDown>
+				</SettingsEnumDropDown>
 
-				<ChaosSettingsEnumDropDown text="#Settings_TotalSync_ColorType" convar="mom_hud_strafesync_colorize" infomessage="#Settings_TotalSync_ColorType_Info">
+				<SettingsEnumDropDown text="#Settings_TotalSync_ColorType" convar="mom_hud_strafesync_colorize" infomessage="#Settings_TotalSync_ColorType_Info">
 					<Label id="colorize1" text="#Settings_TotalSync_Color_Type0" value="0" />
 					<Label id="colorize2" text="#Settings_TotalSync_Color_Type1" value="1" />
 					<Label id="colorize3" text="#Settings_TotalSync_Color_Type2" value="2" />
-				</ChaosSettingsEnumDropDown>
+				</SettingsEnumDropDown>
 			</Panel>
 			<Panel class="settings-page__spacer" />
 
@@ -552,28 +552,28 @@
 
 				</Panel>
 
-				<ChaosSettingsEnum text="#Settings_DamageIndicator_Enable" convar="mom_hud_damageindicator_enable" infomessage="#Settings_DamageIndicator_Enable_Info">
+				<SettingsEnum text="#Settings_DamageIndicator_Enable" convar="mom_hud_damageindicator_enable" infomessage="#Settings_DamageIndicator_Enable_Info">
 					<RadioButton group="damageindicatorenable" text="#Common_Off" value="0" />
 					<RadioButton group="damageindicatorenable" text="#Common_On" value="1" />
-				</ChaosSettingsEnum>
+				</SettingsEnum>
 
 				<ConVarEnabler convar="mom_hud_damageindicator_enable" class="flow-down">
 
 					<ConVarColorDisplay convar="mom_hud_damageindicator_color" text="#Settings_DamageIndicator_Color" tags="color" />
 
-					<ChaosSettingsSlider text="#Settings_DamageIndicator_MinHeight" min="1" max="500" convar="mom_hud_damageindicator_minheight" displayprecision="0" infomessage="#Settings_DamageIndicator_MinHeight_Info" hasdocspage="false" />
+					<SettingsSlider text="#Settings_DamageIndicator_MinHeight" min="1" max="500" convar="mom_hud_damageindicator_minheight" displayprecision="0" infomessage="#Settings_DamageIndicator_MinHeight_Info" hasdocspage="false" />
 
-					<ChaosSettingsSlider text="#Settings_DamageIndicator_MaxHeight" min="1" max="500" convar="mom_hud_damageindicator_maxheight" displayprecision="0" infomessage="#Settings_DamageIndicator_MaxHeight_Info" hasdocspage="false" />
+					<SettingsSlider text="#Settings_DamageIndicator_MaxHeight" min="1" max="500" convar="mom_hud_damageindicator_maxheight" displayprecision="0" infomessage="#Settings_DamageIndicator_MaxHeight_Info" hasdocspage="false" />
 
-					<ChaosSettingsSlider text="#Settings_DamageIndicator_MinWidth" min="1" max="500" convar="mom_hud_damageindicator_minwidth" displayprecision="0" infomessage="#Settings_DamageIndicator_MinWidth_Info" hasdocspage="false" />
+					<SettingsSlider text="#Settings_DamageIndicator_MinWidth" min="1" max="500" convar="mom_hud_damageindicator_minwidth" displayprecision="0" infomessage="#Settings_DamageIndicator_MinWidth_Info" hasdocspage="false" />
 
-					<ChaosSettingsSlider text="#Settings_DamageIndicator_MaxWidth" min="1" max="500" convar="mom_hud_damageindicator_maxwidth" displayprecision="0" infomessage="#Settings_DamageIndicator_MaxWidth_Info" hasdocspage="false" />
+					<SettingsSlider text="#Settings_DamageIndicator_MaxWidth" min="1" max="500" convar="mom_hud_damageindicator_maxwidth" displayprecision="0" infomessage="#Settings_DamageIndicator_MaxWidth_Info" hasdocspage="false" />
 
-					<ChaosSettingsSlider text="#Settings_DamageIndicator_MinLifetime" min="1" max="5" convar="mom_hud_damageindicator_minlifetime" displayprecision="1" infomessage="#Settings_DamageIndicator_MinLifetime_Info" hasdocspage="false" />
+					<SettingsSlider text="#Settings_DamageIndicator_MinLifetime" min="1" max="5" convar="mom_hud_damageindicator_minlifetime" displayprecision="1" infomessage="#Settings_DamageIndicator_MinLifetime_Info" hasdocspage="false" />
 
-					<ChaosSettingsSlider text="#Settings_DamageIndicator_MaxLifetime" min="1" max="5" convar="mom_hud_damageindicator_maxlifetime" displayprecision="1" infomessage="#Settings_DamageIndicator_MaxLifetime_Info" hasdocspage="false" />
+					<SettingsSlider text="#Settings_DamageIndicator_MaxLifetime" min="1" max="5" convar="mom_hud_damageindicator_maxlifetime" displayprecision="1" infomessage="#Settings_DamageIndicator_MaxLifetime_Info" hasdocspage="false" />
 
-					<ChaosSettingsSlider text="#Settings_DamageIndicator_Radius" min="0" max="500" convar="mom_hud_damageindicator_radius" displayprecision="0" infomessage="#Settings_DamageIndicator_Radius_Info" hasdocspage="false" />
+					<SettingsSlider text="#Settings_DamageIndicator_Radius" min="0" max="500" convar="mom_hud_damageindicator_radius" displayprecision="0" infomessage="#Settings_DamageIndicator_Radius_Info" hasdocspage="false" />
 
 				</ConVarEnabler>
 			</Panel>
@@ -595,49 +595,49 @@
 					</Panel>
 				</Panel>
 
-				<ChaosSettingsEnumDropDown text="#Settings_Synchronizer_DisplayMode" convar="mom_hud_synchro_mode" infomessage="#Settings_Synchronizer_DisplayMode_Info">
+				<SettingsEnumDropDown text="#Settings_Synchronizer_DisplayMode" convar="mom_hud_synchro_mode" infomessage="#Settings_Synchronizer_DisplayMode_Info">
 					<Label id="mode0" text="#Settings_Synchronizer_DisplayMode_Mode0" value="0" />
 					<Label id="mode1" text="#Settings_Synchronizer_DisplayMode_Mode1" value="1" />
 					<Label id="mode2" text="#Settings_Synchronizer_DisplayMode_Mode2" value="2" />
 					<Label id="mode3" text="#Settings_Synchronizer_DisplayMode_Mode3" value="3" />
 					<Label id="mode4" text="#Settings_Synchronizer_DisplayMode_Mode4" value="4" />
-				</ChaosSettingsEnumDropDown>
+				</SettingsEnumDropDown>
 
 				<ConVarEnabler convar="mom_hud_synchro_mode" class="flow-down">
-					<ChaosSettingsEnum text="#Settings_Synchronizer_Color" convar="mom_hud_synchro_color_enable" infomessage="#Settings_Synchronizer_Color_Info" tags="color">
+					<SettingsEnum text="#Settings_Synchronizer_Color" convar="mom_hud_synchro_color_enable" infomessage="#Settings_Synchronizer_Color_Info" tags="color">
 						<RadioButton group="synchrocolor" text="#Common_Off" value="0" />
 						<RadioButton group="synchrocolor" text="#Common_On" value="1" />
-					</ChaosSettingsEnum>
+					</SettingsEnum>
 
-					<ChaosSettingsEnum text="Settings_Synchronizer_Dynamic_Mode" convar="mom_hud_synchro_dynamic_enable" infomessage="#Settings_Synchronizer_Dynamic_Mode_Info">
+					<SettingsEnum text="Settings_Synchronizer_Dynamic_Mode" convar="mom_hud_synchro_dynamic_enable" infomessage="#Settings_Synchronizer_Dynamic_Mode_Info">
 						<RadioButton group="synchrodynamic" text="#Common_Off" value="0" />
 						<RadioButton group="synchrodynamic" text="#Common_On" value="1" />
-					</ChaosSettingsEnum>
+					</SettingsEnum>
 
-					<ChaosSettingsEnum text="#Settings_Synchronizer_Direction" convar="mom_hud_synchro_flip_enable" infomessage="#Settings_Synchronizer_Direction_Info">
+					<SettingsEnum text="#Settings_Synchronizer_Direction" convar="mom_hud_synchro_flip_enable" infomessage="#Settings_Synchronizer_Direction_Info">
 						<RadioButton group="synchrodirection" text="#Settings_Synchronizer_Direction_Normal" value="0" />
 						<RadioButton group="synchrodirection" text="#Settings_Synchronizer_Direction_Flipped" value="1" />
-					</ChaosSettingsEnum>
+					</SettingsEnum>
 
-					<ChaosSettingsEnumDropDown text="#Settings_Synchronizer_AveragingWindow" convar="mom_hud_synchro_buffer_size" infomessage="#Settings_Synchronizer_AveragingWindow_Info">
+					<SettingsEnumDropDown text="#Settings_Synchronizer_AveragingWindow" convar="mom_hud_synchro_buffer_size" infomessage="#Settings_Synchronizer_AveragingWindow_Info">
 						<Label text="#Settings_Synchronizer_AveragingWindow_Mode1" value="1" id="buffer0" />
 						<Label text="#Settings_Synchronizer_AveragingWindow_Mode2" value="5" id="buffer1" />
 						<Label text="#Settings_Synchronizer_AveragingWindow_Mode3" value="10" id="buffer2" />
 						<Label text="#Settings_Synchronizer_AveragingWindow_Mode4" value="20" id="buffer3" />
-					</ChaosSettingsEnumDropDown>
+					</SettingsEnumDropDown>
 
-					<ChaosSettingsSlider text="#Settings_Synchronizer_MinSpeed" min="50" max="250" convar="mom_hud_synchro_min_speed" displayprecision="0" infomessage="#Settings_Synchronizer_MinSpeed_Info" />
+					<SettingsSlider text="#Settings_Synchronizer_MinSpeed" min="50" max="250" convar="mom_hud_synchro_min_speed" displayprecision="0" infomessage="#Settings_Synchronizer_MinSpeed_Info" />
 
-					<ChaosSettingsEnumDropDown text="#Settings_Synchronizer_Stats_Mode" convar="mom_hud_synchro_stat_mode" infomessage="#Settings_Synchronizer_Stats_Mode_Info">
+					<SettingsEnumDropDown text="#Settings_Synchronizer_Stats_Mode" convar="mom_hud_synchro_stat_mode" infomessage="#Settings_Synchronizer_Stats_Mode_Info">
 						<Label id="mode0" text="#Common_Off" value="0" />
 						<Label id="mode1" text="#Settings_Synchronizer_StatsMode_Mode1" value="1" />
 						<Label id="mode2" text="#Settings_Synchronizer_StatsMode_Mode2" value="2" />
-					</ChaosSettingsEnumDropDown>
+					</SettingsEnumDropDown>
 
-					<ChaosSettingsEnum text="#Settings_Synchronizer_StatColor" convar="mom_hud_synchro_stat_color_enable" infomessage="#Settings_Synchronizer_StatColor_Info" tags="color">
+					<SettingsEnum text="#Settings_Synchronizer_StatColor" convar="mom_hud_synchro_stat_color_enable" infomessage="#Settings_Synchronizer_StatColor_Info" tags="color">
 						<RadioButton group="synchrostatcolor" text="#Common_Off" value="0" />
 						<RadioButton group="synchrostatcolor" text="#Common_On" value="1" />
-					</ChaosSettingsEnum>
+					</SettingsEnum>
 				</ConVarEnabler>
 
 			</Panel>
@@ -659,37 +659,37 @@
 					</Panel>
 				</Panel>
 
-				<ChaosSettingsEnum text="#Settings_MapInfo_Enable" convar="mom_hud_mapinfo_enable" infomessage="#Settings_MapInfo_Enable_Info">
+				<SettingsEnum text="#Settings_MapInfo_Enable" convar="mom_hud_mapinfo_enable" infomessage="#Settings_MapInfo_Enable_Info">
 					<RadioButton group="mapinfoenable" text="#Common_Off" value="0" />
 					<RadioButton group="mapinfoenable" text="#Common_On" value="1" />
-				</ChaosSettingsEnum>
+				</SettingsEnum>
 
 				<ConVarEnabler convar="mom_hud_mapinfo_enable" togglevisibility="true" class="flow-down">
 
-					<ChaosSettingsEnum text="#Settings_MapInfo_MapName" convar="mom_hud_mapinfo_mapname_enable" infomessage="#Settings_MapInfo_MapName_Info">
+					<SettingsEnum text="#Settings_MapInfo_MapName" convar="mom_hud_mapinfo_mapname_enable" infomessage="#Settings_MapInfo_MapName_Info">
 						<RadioButton group="mapinfonameenable" text="#Common_Off" value="0" />
 						<RadioButton group="mapinfonameenable" text="#Common_On" value="1" />
-					</ChaosSettingsEnum>
+					</SettingsEnum>
 
-					<ChaosSettingsEnum text="#Settings_MapInfo_MapAuthor" convar="mom_hud_mapinfo_author_enable" infomessage="#Settings_MapInfo_MapAuthor_Info">
+					<SettingsEnum text="#Settings_MapInfo_MapAuthor" convar="mom_hud_mapinfo_author_enable" infomessage="#Settings_MapInfo_MapAuthor_Info">
 						<RadioButton group="mapinfoauthorenable" text="#Common_Off" value="0" />
 						<RadioButton group="mapinfoauthorenable" text="#Common_On" value="1" />
-					</ChaosSettingsEnum>
+					</SettingsEnum>
 
-					<ChaosSettingsEnum text="#Settings_MapInfo_MapDifficulty" convar="mom_hud_mapinfo_tier_enable" infomessage="#Settings_MapInfo_MapDifficulty_Info">
+					<SettingsEnum text="#Settings_MapInfo_MapDifficulty" convar="mom_hud_mapinfo_tier_enable" infomessage="#Settings_MapInfo_MapDifficulty_Info">
 						<RadioButton group="mapinfotierenable" text="#Common_Off" value="0" />
 						<RadioButton group="mapinfotierenable" text="#Common_On" value="1" />
-					</ChaosSettingsEnum>
+					</SettingsEnum>
 
-					<ChaosSettingsEnum text="#Settings_MapInfo_ZoneType" convar="mom_hud_mapinfo_zonetype_enable" infomessage="#Settings_MapInfo_ZoneType_Info">
+					<SettingsEnum text="#Settings_MapInfo_ZoneType" convar="mom_hud_mapinfo_zonetype_enable" infomessage="#Settings_MapInfo_ZoneType_Info">
 						<RadioButton group="mapinfozonetypeenable" text="#Common_Off" value="0" />
 						<RadioButton group="mapinfozonetypeenable" text="#Common_On" value="1" />
-					</ChaosSettingsEnum>
+					</SettingsEnum>
 
-					<ChaosSettingsEnum text="#Settings_MapInfo_ZoneNum" convar="mom_hud_mapinfo_numzones_enable" infomessage="#Settings_MapInfo_ZoneNum_Info">
+					<SettingsEnum text="#Settings_MapInfo_ZoneNum" convar="mom_hud_mapinfo_numzones_enable" infomessage="#Settings_MapInfo_ZoneNum_Info">
 						<RadioButton group="mapinfonumzonesenable" text="#Common_Off" value="0" />
 						<RadioButton group="mapinfonumzonesenable" text="#Common_On" value="1" />
-					</ChaosSettingsEnum>
+					</SettingsEnum>
 
 				</ConVarEnabler>
 			</Panel>

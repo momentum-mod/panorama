@@ -51,7 +51,7 @@ class DFJump {
 	static {
 		$.RegisterEventHandler('DFJumpDataUpdate', this.container, this.onDFJumpUpdate.bind(this));
 
-		$.RegisterForUnhandledEvent('ChaosLevelInitPostEntity', this.onLoad.bind(this));
+		$.RegisterForUnhandledEvent('LevelInitPostEntity', this.onLoad.bind(this));
 		$.RegisterForUnhandledEvent('DFJumpMaxDelayChanged', this.setMaxDelay.bind(this));
 	}
 }

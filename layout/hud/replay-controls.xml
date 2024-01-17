@@ -21,7 +21,7 @@
 				<TextEntry class="textentry replaycontrols__gototick" id="ReplayControlsGotoTick" placeholder="Goto tick" oninputsubmit="ReplayControls.gotoTick()" clearaftersubmit="true" />
 			</Panel>
 			<Label text="Time: {g:time:curr_time}/{g:time:total_time}" />
-			<ChaosSettingsSlider text="#Replay_Timescale" min="0" max="10" percentage="true" value100percent="1" convar="mom_replay_timescale" />
+			<SettingsSlider text="#Replay_Timescale" min="0" max="10" percentage="true" value100percent="1" convar="mom_replay_timescale" />
 		</Panel>
 		<Panel class="flow-right">
 			<Button class="button" onactivate="GameInterfaceAPI.ConsoleCommand('mom_replay_restart');">

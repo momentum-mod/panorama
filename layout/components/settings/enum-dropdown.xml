@@ -3,12 +3,12 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 
-	<ChaosSettingsEnumDropDown class="settings-enum-dropdown">
+	<SettingsEnumDropDown class="settings-enum-dropdown">
 		<Panel class="settings-enum-dropdown__title-container">
 			<Label class="settings-enum-dropdown__title" id="Title" />
 		</Panel>
 		<Panel class="settings-enum-dropdown__input-container">
 			<DropDown id="DropDown" class="dropdown settings-enum-dropdown__dropdown" menuclass="dropdown-menu" />
 		</Panel>
-	</ChaosSettingsEnumDropDown>
+	</SettingsEnumDropDown>
 </root>

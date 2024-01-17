@@ -37,7 +37,7 @@ class ReplayControls {
 	}
 
 	static {
-		$.RegisterEventHandler('ChaosHudProcessInput', $.GetContextPanel(), this.onProcessInput.bind(this));
+		$.RegisterEventHandler('HudProcessInput', $.GetContextPanel(), this.onProcessInput.bind(this));
 		$.RegisterEventHandler('SliderValueChanged', $.GetContextPanel(), this.onSliderValueChanged.bind(this));
 	}
 }

@@ -1,5 +1,5 @@
 <!--
-	Purpose: hard-coded layout file for <ChaosHudHintText />
+	Purpose: hard-coded layout file for <HudHintText />
 
 	Label with id HintLabel is required
 	.hud-hint-\-visible class will be set when the panel should be visible, otherwise it should be invisible
@@ -10,11 +10,11 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 
-	<ChaosHudHintText hittest="false" class="hud-hint">
+	<HudHintText hittest="false" class="hud-hint">
 		<Panel class="hud-hint__text">
 			<Panel class="vertical-center top-bottom-flow">
 				<Label id="HintLabel" html="true" class="hud-hint__label mono-spaced-font-bold" />
 			</Panel>
 		</Panel>
-	</ChaosHudHintText>
+	</HudHintText>
 </root>

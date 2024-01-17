@@ -3,7 +3,7 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 
-	<ChaosFPSMeter class="fpsmeter">
+	<FPSMeter class="fpsmeter">
 		<Label id="FPSLabel" class="fpsmeter__label" />
-	</ChaosFPSMeter>
+	</FPSMeter>
 </root>

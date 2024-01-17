@@ -12,6 +12,6 @@
 		</snippet>
 	</snippets>
 
-	<ChaosHudShowPos class="showpos">
-	</ChaosHudShowPos>
+	<HudShowPos class="showpos">
+	</HudShowPos>
 </root>

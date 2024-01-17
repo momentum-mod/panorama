@@ -172,8 +172,8 @@ class Groundboost {
 	}
 
 	static {
-		$.RegisterEventHandler('ChaosHudProcessInput', $.GetContextPanel(), this.onUpdate.bind(this));
-		$.RegisterForUnhandledEvent('ChaosLevelInitPostEntity', this.onLoad.bind(this));
+		$.RegisterEventHandler('HudProcessInput', $.GetContextPanel(), this.onUpdate.bind(this));
+		$.RegisterForUnhandledEvent('LevelInitPostEntity', this.onLoad.bind(this));
 		$.RegisterForUnhandledEvent('OnDefragHUDGroundboostChange', this.onConfigChange.bind(this));
 	}
 }

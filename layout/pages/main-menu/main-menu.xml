@@ -21,7 +21,7 @@
 		</snippet>
 	</snippets>
 
-	<ChaosMainMenu class="InitialDisplay MainMenuRootPanel" hittest="false" onload="MainMenu.onMainMenuLoaded()">
+	<MainMenu class="InitialDisplay MainMenuRootPanel" hittest="false" onload="MainMenu.onMainMenuLoaded()">
 
 		<Panel id="MainMenuInput" class="mainmenu">
 			<!-- Topnav -->
@@ -115,7 +115,7 @@
 						<!-- Backbuffer blur: used to blur the backbuffer in the pause menu -->
 						<BaseBlurTarget id="PauseMenuMainMenuBlur" class="mainmenu__pause-blur" blurrects="PauseMenuMainMenuContent">
 							<!-- Backbuffer background -->
-							<ChaosBackbufferImagePanel class="mainmenu__background PauseMenuModeOnly" />
+							<BackbufferImagePanel class="mainmenu__background PauseMenuModeOnly" />
 						</BaseBlurTarget>
 					</BaseBlurTarget>
 					<!-- /Backgrounds -->
@@ -174,12 +174,12 @@
 
 		<!-- Make sure these are at the bottom to get the z-order right -->
 		<ToastManager />
-		<ChaosPopupManager id="PopupManager" onpopupsdismissed="" />
+		<PopupManager id="PopupManager" onpopupsdismissed="" />
 		<ContextMenuManager id="ContextMenuManager" />
-		<ChaosTooltipManager id="TooltipManager" hittest="false" />
+		<TooltipManager id="TooltipManager" hittest="false" />
 
 		<!-- Doesn't actually include the notifications, but we use its position to figure out where to show them -->
 		<Panel id="SteamNotificationsPlaceholder" hittest="false" />
 
-	</ChaosMainMenu>
+	</MainMenu>
 </root>
