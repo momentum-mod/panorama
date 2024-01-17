@@ -747,15 +747,15 @@
 
 			<Label class="text-h3 mt-3" text="Settings" />
 			<Panel class="flow-down half-width">
-				<ChaosSettingsEnum text="ChaosSettingsEnum">
+				<SettingsEnum text="SettingsEnum">
 					<RadioButton group="settingsenum" text="1" value="0" />
 					<RadioButton group="settingsenum" text="2" value="1" />
-				</ChaosSettingsEnum>
-				<ChaosSettingsEnumDropDown text="ChaosSettingsEnumDropDown">
+				</SettingsEnum>
+				<SettingsEnumDropDown text="SettingsEnumDropDown">
 					<Label text="1" value="0" id="settingsenumdropdown1" />
 					<Label text="2" value="1" id="settingsenumdropdown2" />
-				</ChaosSettingsEnumDropDown>
-				<ChaosSettingsSlider text="ChaosSettingsSlider" min="0.1" max="10" />
+				</SettingsEnumDropDown>
+				<SettingsSlider text="SettingsSlider" min="0.1" max="10" />
 			</Panel>
 
 			<Label class="text-h1 mt-3 overflow-noclip" text="THIS LETS ME SEE THE STUFF AT THE BOTTOM IN WINDOWED MODE :)" />

@@ -3,7 +3,7 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 
-	<ChaosHud hittest="false">
+	<Hud hittest="false">
 		<!-- Non-interactive HUD elements have hit test disabled for efficiency -->
 
 		<!-- In world UI is first to make sure it shows up behind all "screen-looking" UI -->
@@ -39,7 +39,7 @@
 			<MomHudTimer />
 			<MomHudStrafeSync />
 			<MomHudGroundboost />
-			<ChaosHudHintText id="HudHintText" />
+			<HudHintText id="HudHintText" />
 		</Panel>
 
 		<!-- Anchored to the bottom-left corner of the screen, laid out from top to bottom -->
@@ -63,9 +63,9 @@
 			<MomHudWeaponSelection />
 		</Panel>
 
-		<ChaosHudBlurTarget id="HudBlur" blurrects="Leaderboards TrickList" class="hud-blur" hittest="false" hittestchildren="false">
-			<ChaosBackbufferImagePanel class="full" />
-		</ChaosHudBlurTarget>
+		<HudBlurTarget id="HudBlur" blurrects="Leaderboards TrickList" class="hud-blur" hittest="false" hittestchildren="false">
+			<BackbufferImagePanel class="full" />
+		</HudBlurTarget>
 
 		<!-- HUD anchored to top center of screen, laid out vertically top-to-bottom
 		-  NOTE: Not really set up properly - HudTeamCounter should dynamically move
@@ -74,8 +74,8 @@
 		-        while HudTeamCounter is visible
 		-->
 		<Panel id="HudTopCenter" hittest="false">
-			<ChaosHudShowPos />
-			<ChaosHudBoneCounts />
+			<HudShowPos />
+			<HudBoneCounts />
 			<MomHudSpectate id="Spectator" />
 			<MomHudJumpStats />
 		</Panel>
@@ -89,13 +89,13 @@
 
 		<!-- Make sure these are at the bottom to get the z-order right -->
 		<ToastManager />
-		<ChaosPopupManager id="PopupManager" onpopupsdismissed="" />
+		<PopupManager id="PopupManager" onpopupsdismissed="" />
 		<ContextMenuManager id="ContextMenuManager" />
-		<ChaosTooltipManager id="TooltipManager" hittest="false" />
+		<TooltipManager id="TooltipManager" hittest="false" />
 
 		<!-- Console notifications should always draw above anything else! -->
 		<Panel id="HudNotify" hittest="false" hittestchildren="false">
 			<Frame src="file://{resources}/layout/hud/console-notify.xml" />
 		</Panel>
-	</ChaosHud>
+	</Hud>
 </root>

@@ -31,19 +31,19 @@
 					</Panel>
 				</Panel>
 
-				<ChaosSettingsSlider text="#Settings_Volume_Master" min="0" max="1" percentage="true" convar="volume" hasdocspage="false" />
+				<SettingsSlider text="#Settings_Volume_Master" min="0" max="1" percentage="true" convar="volume" hasdocspage="false" />
 
-				<ChaosSettingsSlider text="#Settings_Volume_Music" min="0" max="1" percentage="true" convar="snd_volume_music" tags="music" hasdocspage="false" />
+				<SettingsSlider text="#Settings_Volume_Music" min="0" max="1" percentage="true" convar="snd_volume_music" tags="music" hasdocspage="false" />
 
-				<ChaosSettingsSlider text="#Settings_Volume_Ambient" min="0" max="1" percentage="true" convar="snd_volume_ambient" tags="ambient" hasdocspage="false" />
+				<SettingsSlider text="#Settings_Volume_Ambient" min="0" max="1" percentage="true" convar="snd_volume_ambient" tags="ambient" hasdocspage="false" />
 
-				<ChaosSettingsSlider text="#Settings_Volume_Weapon" min="0" max="1" percentage="true" convar="snd_volume_weapon" tags="weapon" hasdocspage="false" />
+				<SettingsSlider text="#Settings_Volume_Weapon" min="0" max="1" percentage="true" convar="snd_volume_weapon" tags="weapon" hasdocspage="false" />
 
-				<ChaosSettingsSlider text="#Settings_Volume_Movement" min="0" max="1" percentage="true" convar="snd_volume_footsteps" tags="movement,footsteps" hasdocspage="false" />
+				<SettingsSlider text="#Settings_Volume_Movement" min="0" max="1" percentage="true" convar="snd_volume_footsteps" tags="movement,footsteps" hasdocspage="false" />
 
-				<ChaosSettingsSlider text="#Settings_Volume_Ghosts" min="0" max="1" percentage="true" convar="mom_snd_volume_ghosts" infomessage="#Settings_Volume_Ghost_Info" tags="ghosts" hasdocspage="false" />
+				<SettingsSlider text="#Settings_Volume_Ghosts" min="0" max="1" percentage="true" convar="mom_snd_volume_ghosts" infomessage="#Settings_Volume_Ghost_Info" tags="ghosts" hasdocspage="false" />
 
-				<ChaosSettingsSlider text="#Settings_Volume_UI" min="0" max="1" percentage="true" convar="snd_volume_ui" tags="ui,interface" hasdocspage="false" />
+				<SettingsSlider text="#Settings_Volume_UI" min="0" max="1" percentage="true" convar="snd_volume_ui" tags="ui,interface" hasdocspage="false" />
 
 			</Panel>
 
@@ -59,14 +59,14 @@
 					</TooltipPanel>
 				</Panel>
 
-				<ChaosSettingsEnumDropDown text="#Settings_AudioDevices_Speaker" convar="snd_surround_speakers" oninputsubmit="BaseSpeakerConfigurationChanged()" hasdocspage="false">
+				<SettingsEnumDropDown text="#Settings_AudioDevices_Speaker" convar="snd_surround_speakers" oninputsubmit="BaseSpeakerConfigurationChanged()" hasdocspage="false">
 					<Label text="#Settings_AudioDevices_Speaker_StereoHeadphones" id="speakerconfig1" value="0" />
 					<Label text="#Settings_AudioDevices_Speaker_StereoSpeakers" id="speakerconfig2" value="2" />
 					<Label text="#Settings_AudioDevices_Speaker_Quad" id="speakerconfig3" value="4" />
 					<Label text="#Settings_AudioDevices_Speaker_51" id="speakerconfig4" value="5" />
-				</ChaosSettingsEnumDropDown>
+				</SettingsEnumDropDown>
 
-				<ChaosSettingsEnumDropDown text="#Settings_AudioDevices_Device" id="DeviceConfigurationEnum" convar="sound_device_override" oninputsubmit="BaseAudioDeviceConfigurationChanged()" hasdocspage="false">
+				<SettingsEnumDropDown text="#Settings_AudioDevices_Device" id="DeviceConfigurationEnum" convar="sound_device_override" oninputsubmit="BaseAudioDeviceConfigurationChanged()" hasdocspage="false">
 					<!--placeholder labels that will be modified in cui_audiosettingsscreen-->
 					<Label id="device1" text="XXXXXX 1" />
 					<Label id="device2" text="XXXXXX 2" />
@@ -76,17 +76,17 @@
 					<Label id="device6" text="XXXXXX 6" />
 					<Label id="device7" text="XXXXXX 7" />
 					<Label id="device8" text="XXXXXX 8" />
-				</ChaosSettingsEnumDropDown>
+				</SettingsEnumDropDown>
 
-				<ChaosSettingsEnum text="#Settings_AudioDevices_HWCompat" convar="snd_hwcompat" hasdocspage="false">
+				<SettingsEnum text="#Settings_AudioDevices_HWCompat" convar="snd_hwcompat" hasdocspage="false">
 					<RadioButton group="hwcompat" text="#Common_Off" value="0" />
 					<RadioButton group="hwcompat" text="#Common_On" value="1" />
-				</ChaosSettingsEnum>
+				</SettingsEnum>
 
-				<ChaosSettingsEnum text="#Settings_AudioDevices_Background" convar="snd_mute_losefocus" hasdocspage="false">
+				<SettingsEnum text="#Settings_AudioDevices_Background" convar="snd_mute_losefocus" hasdocspage="false">
 					<RadioButton group="losefocus" text="#Common_Off" value="0" />
 					<RadioButton group="losefocus" text="#Common_On" value="1" />
-				</ChaosSettingsEnum>
+				</SettingsEnum>
 
 			</Panel>
 		</BaseAudioSettings>

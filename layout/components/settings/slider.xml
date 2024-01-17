@@ -4,7 +4,7 @@
 	</styles>
 
 
-	<ChaosSettingsSlider class="settings-slider">
+	<SettingsSlider class="settings-slider">
 		<Panel class="settings-slider__title-container">
 			<Label class="settings-slider__title" id="Title" />
 		</Panel>
@@ -15,5 +15,5 @@
 			</TooltipPanel>
 			<TextEntry class="textentry settings-slider__textentry" maxchars="6" textmode="numeric" id="Value" />
 		</Panel>
-	</ChaosSettingsSlider>
+	</SettingsSlider>
 </root>

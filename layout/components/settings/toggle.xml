@@ -5,13 +5,13 @@
 
 	<!-- Unused, doesn't have styling -->
 
-	<ChaosSettingsToggle>
+	<SettingsToggle>
 		<Panel class="flow-right vertical-align-center full-width">
 			<Panel id="TitleContainer">
 				<Label id="Title" />
 			</Panel>
 			<ToggleButton id="Toggle" />
 		</Panel>
-	</ChaosSettingsToggle>
+	</SettingsToggle>
 
 </root>

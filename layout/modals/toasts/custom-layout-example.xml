@@ -8,7 +8,7 @@
 	</script>
 
 	<Panel class="toast flow-right p-3 bg-gray-100" onload="onLoad()">
-		<ChaosAvatarImage class="vertical-align-center mr-5" style="width: 32px; height: 32px;" steamid="local" />
+		<AvatarImage class="vertical-align-center mr-5" style="width: 32px; height: 32px;" steamid="local" />
 		<Panel class="flow-down">
 			<Label class="toast__title" text="Custom Toast Example" />
 			<Label class="toast__message" text="you can put whatever stupid panels in here" />

@@ -126,7 +126,7 @@ class Cgaz {
 	static onLoad() {
 		if (GameModeAPI.GetCurrentGameMode() === GameMode.DEFRAG) {
 			this.updateHandle = $.RegisterEventHandler(
-				'ChaosHudProcessInput',
+				'HudProcessInput',
 				$.GetContextPanel(),
 				this.onUpdate.bind(this)
 			);
@@ -140,7 +140,7 @@ class Cgaz {
 			this.onWindicatorConfigChange();
 			this.onCompassConfigChange();
 		} else if (this.updateHandle) {
-			$.UnregisterEventHandler('ChaosHudProcessInput', $.GetContextPanel(), this.updateHandle);
+			$.UnregisterEventHandler('HudProcessInput', $.GetContextPanel(), this.updateHandle);
 			this.updateHandle = null;
 		}
 	}
@@ -1267,7 +1267,7 @@ class Cgaz {
 	}
 
 	static {
-		$.RegisterForUnhandledEvent('ChaosLevelInitPostEntity', this.onLoad.bind(this));
+		$.RegisterForUnhandledEvent('LevelInitPostEntity', this.onLoad.bind(this));
 		$.RegisterForUnhandledEvent('OnDefragHUDProjectionChange', this.onProjectionChange.bind(this));
 		$.RegisterForUnhandledEvent('OnDefragHUDFOVChange', this.onHudFovChange.bind(this));
 		$.RegisterForUnhandledEvent('OnDefragHUDAccelChange', this.onAccelConfigChange.bind(this));

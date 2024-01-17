@@ -252,9 +252,9 @@ class MainMenuSettings {
 		// Only Enum and EnumDropDown are currently supported, others can be added when/if needed
 		const psVar = panel.GetAttributeString('psvar', '');
 		if (psVar) {
-			if (panel.paneltype === 'ChaosSettingsEnum') {
+			if (panel.paneltype === 'SettingsEnum') {
 				this.initPersistentStorageEnum(panel, psVar);
-			} else if (panel.paneltype === 'ChaosSettingsEnumDropDown') {
+			} else if (panel.paneltype === 'SettingsEnumDropDown') {
 				this.initPersistentStorageEnumDropdown(panel, psVar);
 			}
 		}
@@ -337,7 +337,7 @@ class MainMenuSettings {
 
 		// Get convar display option from PS
 		const showConvar = Boolean(convar);
-		const isKeybinder = paneltype === 'ChaosSettingsKeyBinder';
+		const isKeybinder = paneltype === 'SettingsKeyBinder';
 
 		// If the panel has a message OR a convar and the convar display option is on, show the info panel
 		if (message || showConvar) {
@@ -430,11 +430,11 @@ class MainMenuSettings {
 
 	static isSettingsPanel(panel) {
 		return [
-			'ChaosSettingsEnum',
-			'ChaosSettingsSlider',
-			'ChaosSettingsEnumDropDown',
-			'ChaosSettingsKeyBinder',
-			'ChaosSettingsToggle',
+			'SettingsEnum',
+			'SettingsSlider',
+			'SettingsEnumDropDown',
+			'SettingsKeyBinder',
+			'SettingsToggle',
 			'ConVarColorDisplay'
 		].includes(panel.paneltype);
 	}

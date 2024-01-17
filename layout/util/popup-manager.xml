@@ -3,10 +3,10 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 
-	<ChaosPopupManager hittest="false">
+	<PopupManager hittest="false">
 		<Button id="DimBackground" onactivate="PopupBackgroundClicked()" />
 		<Button id="BlurBackground" onactivate="PopupBackgroundClicked()" />
 
 		<!-- Popups are added here dynamically -->
-	</ChaosPopupManager>
+	</PopupManager>
 </root>

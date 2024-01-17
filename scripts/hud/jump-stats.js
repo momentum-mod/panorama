@@ -132,7 +132,7 @@ class JumpStats {
 	static {
 		$.RegisterEventHandler('OnJumpStarted', this.container, this.onJump.bind(this));
 
-		$.RegisterForUnhandledEvent('ChaosLevelInitPostEntity', this.onLoad.bind(this));
+		$.RegisterForUnhandledEvent('LevelInitPostEntity', this.onLoad.bind(this));
 		$.RegisterForUnhandledEvent('OnJumpStatsCFGChange', this.onConfigChange.bind(this));
 	}
 }
