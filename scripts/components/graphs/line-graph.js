@@ -23,6 +23,7 @@
  * @property {number} min - The minimum value on the axis
  * @property {number} interval - The intervals upon which to draw gridlines
  * @property {string} name - The name to draw on the side of the axis
+ * @property {boolean} timeBased - Whether or not the axis represents a length of time
  */
 
 /**
@@ -103,7 +104,26 @@ class LineGraph {
 				const offset = 'position: ' + (isX ? `${dist}px 0px 0px;` : `0px ${dist}px 0px;`);
 
 				// Linear interpolate to determine marker text, backwards for Y. Then round to precision and cast back to Number.
-				const markerValue = +(isX ? lineMin + j : lineMax + lineMin - j).toFixed(precision);
+				let markerValue = +(isX ? lineMin + j : lineMax + lineMin - j).toFixed(precision);
+				if (axis.timeBased) {
+					const extreme = Math.max(Math.abs(axis.min), Math.abs(axis.max));
+					const time = Math.abs(markerValue);
+
+					const sign = markerValue > 0 ? '+' : markerValue < 0 ? '-' : '';
+
+					const hours = Math.floor(time / 3600);
+					let minutes = Math.floor((time % 3600) / 60);
+					let seconds = (time % 3600) % 60;
+
+					if (time < 10 && extreme < 10) seconds = seconds.toFixed(precision);
+
+					markerValue = `${sign}${seconds}`;
+					if (extreme >= 60) {
+						if (extreme >= 3600 && minutes < 10) minutes = '0' + minutes;
+						if (seconds < 10) seconds = '0' + seconds;
+						markerValue = extreme >= 3600 ? `${sign}${hours}:${minutes}` : `${sign}${minutes}:${seconds}`;
+					}
+				}
 
 				// Create the marker label
 				$.CreatePanel('Label', markers, axisName + j, {

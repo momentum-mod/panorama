@@ -385,7 +385,8 @@ class EndOfRun {
 				name: $.Localize('#Common_Zone'),
 				// Limit max zones we draw an axis for to 30
 				// todo: find interval equiv to this: lineCount: Math.min(numZones, 30),
-				interval: 1
+				interval: 1,
+				timeBased: false
 			},
 			{
 				min: min,
@@ -393,7 +394,8 @@ class EndOfRun {
 				name: $.Localize(
 					useStat ? comparisonSplits[0].statsComparisons[statIndex].name : '#Run_Stat_Name_Time'
 				),
-				interval: yInterval
+				interval: yInterval,
+				timeBased: !useStat
 			}
 		];
 
