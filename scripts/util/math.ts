@@ -12,19 +12,19 @@ type Vec2D = { x: number; y: number };
  * 3D vector object with x, y, and z member variables
  */
 type Vec3D = { x: number; y: number; z: number };
-type Vector = Vec2D | Vec3D;
+type VecXY = Vec2D | Vec3D;
 
 /**
  * 2D length of input vector
  */
-function getSize2D(vec: Vector): number {
+function getSize2D(vec: VecXY): number {
 	return Math.sqrt(getSizeSquared2D(vec));
 }
 
 /**
  * 2D length squared of input vector
  */
-function getSizeSquared2D(vec: Vector): number {
+function getSizeSquared2D(vec: VecXY): number {
 	return vec.x * vec.x + vec.y * vec.y;
 }
 
@@ -33,7 +33,7 @@ function getSizeSquared2D(vec: Vector): number {
  * If input vector length is less than threshold,
  * the zero vector is returned.
  */
-function getNormal2D(vec: Vector, threshold: number): Vec2D {
+function getNormal2D(vec: VecXY, threshold: number): Vec2D {
 	const mag = getSize2D(vec);
 	const vecNormal = {
 		x: vec.x,
@@ -53,7 +53,7 @@ function getNormal2D(vec: Vector, threshold: number): Vec2D {
 /**
  * Dot product of two vectors.
  */
-function getDot2D(vec1: Vector, vec2: Vector): number {
+function getDot2D(vec1: VecXY, vec2: VecXY): number {
 	return vec1.x * vec2.x + vec1.y * vec2.y;
 }
 
@@ -61,14 +61,14 @@ function getDot2D(vec1: Vector, vec2: Vector): number {
  * Cross product of two 2D vectors.
  * Defined as Z-component of resultant vector.
  */
-function getCross2D(vec1: Vector, vec2: Vector): number {
+function getCross2D(vec1: VecXY, vec2: VecXY): number {
 	return vec1.x * vec2.y - vec1.y * vec2.x;
 }
 
 /**
  * Returns 2D copy of input vector rotated anti-clockwise by specified angle (in radians).
  */
-function rotateVector2D(vec: Vector, angle: number): Vec2D {
+function rotateVector2D(vec: VecXY, angle: number): Vec2D {
 	const cos = Math.cos(angle);
 	const sin = Math.sin(angle);
 
