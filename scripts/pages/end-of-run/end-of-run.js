@@ -327,8 +327,8 @@ class EndOfRun {
 			],
 			color: '#ffffffaa',
 			thickness: 2,
-			shadeBelowToOriginColor: '#ffffff66',
-			shadeAboveToOriginColor: '#ffffff66'
+			shadeBelowToOriginColor: '#ffffff33',
+			shadeAboveToOriginColor: '#ffffff33'
 		};
 
 		let max = 0;
