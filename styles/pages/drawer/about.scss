@@ -51,10 +51,6 @@
 		flow-children: down;
 		overflow: squish scroll;
 		padding: 16px 24px;
-
-		&--hidden {
-			visibility: collapse;
-		}
 	}
 }
 
@@ -122,24 +118,5 @@
 				color: color.scale(map.get($roles, 'team'), $lightness: 50%);
 			}
 		}
-	}
-}
-
-.about-changelog {
-	&__version {
-		@include mixin.font-styles($use-header: true);
-		font-size: 36px;
-		margin-bottom: 6px;
-	}
-
-	&__category {
-		font-size: 18px;
-		font-weight: bold;
-		margin-left: 4px;
-	}
-
-	&__item {
-		font-size: 14px;
-		margin-bottom: 8px;
 	}
 }
