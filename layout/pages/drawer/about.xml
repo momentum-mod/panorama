@@ -16,18 +16,8 @@
 			<Label class="about__description" html="true" text="#About_Description" />
 		</Panel>
 		<Panel class="about__main">
-			<Panel class="about__tabs tabs ">
-				<RadioButton id="CreditsButton" class="about__tab tabs__tab" group="AboutSections" selected="true" onactivate="About.switchSection('credits')">
-					<Label class="tabs__text" text="#About_Credits_Title" />
-				</RadioButton>
-				<RadioButton id="ChangelogButton" class="about__tab tabs__tab" group="AboutSections" onactivate="About.switchSection('changelog')">
-					<Label class="tabs__text" text="#About_Changelog_Title" />
-				</RadioButton>
-			</Panel>
 			<Panel class="about__section-container">
-				<Frame id="Credits" src="file://{resources}/layout/pages/drawer/credits.xml" class="about__section about-credits about__section--hidden" />
-				<Panel id="Changelog" class="about__section about__section--hidden">
-				</Panel>
+				<Frame id="Credits" src="file://{resources}/layout/pages/drawer/credits.xml" class="about__section about-credits" />
 			</Panel>
 		</Panel>
 	</Panel>
