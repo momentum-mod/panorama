@@ -93,8 +93,8 @@ class HudLeaderboards {
 			'type',
 			$.Localize(data.mainTrack?.isLinear ? '#MapInfo_Type_Linear' : '#MapInfo_Type_Staged')
 		);
-		cp.SetDialogVariableInt('zones', data.mainTrack?.numZones);
-		cp.SetDialogVariableInt('numruns', data.stats?.completes);
+		cp.SetDialogVariableInt('numzones', data.mainTrack?.numZones);
+		cp.SetDialogVariableInt('runs', data.stats?.completes);
 	}
 
 	static close() {
