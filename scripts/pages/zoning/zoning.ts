@@ -15,7 +15,7 @@ class ZoneMenu {
 		/** @type {Panel} @static */
 		trackList: $('#TrackList') as Panel,
 		/** @type {Panel} @static */
-		selectedZone: null,
+
 		/** @type {DropDown} @static */
 		filterSelect: $('#FilterSelect'),
 		/** @type {DropDown} @static */
@@ -39,6 +39,7 @@ class ZoneMenu {
 		regionTPDest: $('#RegionTPDest')
 	};
 
+	static selectedZone: Panel | null;
 	static mapZoneData: MapZones | null;
 
 	static {
@@ -182,6 +183,11 @@ class ZoneMenu {
 			this.toggleCollapse(listContainer, expandIcon, collapseIcon);
 		}
 
+		const selectButton = newTracklistPanel.FindChildTraverse('SelectButton') as Panel;
+		if (selectButton) {
+			selectButton.SetPanelEvent('onactivate', () => ZoneMenu.updateZoneSelection(selectButton as ToggleButton));
+		}
+
 		return listContainer;
 	}
 
@@ -191,6 +197,15 @@ class ZoneMenu {
 		optionPanel.SetAttributeInt('value', index);
 		optionPanel.text = labelString;
 		parent.AddOption(optionPanel);
+	}
+
+	static updateZoneSelection(newSelectedZone: ToggleButton) {
+		//this.selectedZone?.RemoveClass('zoning__tracklist--active');
+		//newSelectedZone.AddClass('zoning__tracklist--active');
+		this.selectedZone = newSelectedZone;
+
+		$.Msg(`Zone ${newSelectedZone.GetParent()?.GetParent()?.id} selected`);
+		//update zone properties
 	}
 
 	static updatePropertyFields(updatedControl: Panel) {
@@ -245,16 +260,16 @@ class ZoneMenu {
 
 			return {
 				points: [
-					{x: x, y: y} as Vec2D,
-					{x: x + zoneWidth, y: y} as Vec2D,
-					{x: x + zoneWidth, y: y + zoneWidth} as Vec2D,
-					{x: x, y: y + zoneWidth} as Vec2D
+					{ x: x, y: y } as Vec2D,
+					{ x: x + zoneWidth, y: y } as Vec2D,
+					{ x: x + zoneWidth, y: y + zoneWidth } as Vec2D,
+					{ x: x, y: y + zoneWidth } as Vec2D
 				],
 				bottom: 0,
 				height: 960,
-				teleportPos: {x: x + zoneWidth / 2, y: y + zoneWidth / 2, z: 0} as Vec3D,
+				teleportPos: { x: x + zoneWidth / 2, y: y + zoneWidth / 2, z: 0 } as Vec3D,
 				teleportYaw: 0,
-				safeHeight: 0,
+				safeHeight: 0
 			} as Region;
 		};
 
