@@ -27,9 +27,7 @@
 						<Image id="TracklistCollapseIcon" class="button__icon zoning__collapse-icon zoning__icon-green" src="file://{images}/add.svg" />
 						<Image id="TracklistExpandIcon" class="button__icon zoning__collapse-icon zoning__icon-red hide" src="file://{images}/subtract.svg" />
 					</Button>
-					<RadioButton id="SelectButton" class="zoning__tracklist-button" group="tracklist">
-						<Label  id="Name" class="zoning__tracklist-label" />
-					</RadioButton>
+					<Label  id="Name" class="zoning__tracklist-label" />
 					<ToggleButton id="SyncButton" class="checkbox checkbox--right zoning__sync-button" />
 				</Panel>
 				<Panel id="ListContainer" class="zoning__list-container" />

@@ -67,10 +67,7 @@ class ZoneMenu {
 		$.Msg(volumes.length + ' volumes');
 		$.Msg(volumes[0].regions.length + ' regions');
 
-		this.panels.volumeSelect.RemoveAllOptions();
-		for (const [i, volume] of volumes.entries()) {
-			this.addOptionToDropdown($.Localize('#Zoning_Volume') as string, this.panels.volumeSelect, i);
-		}
+		this.populateDropdown(volumes, this.panels.volumeSelect, $.Localize('#Zoning_Volume') as string);
 		this.panels.volumeSelect.SetSelectedIndex($.persistentStorage.getItem('zoning.volume') ?? 0);
 		this.panels.volumeSelect.SetPanelEvent('oninputsubmit', () => {
 			$.persistentStorage.setItem(
@@ -80,12 +77,13 @@ class ZoneMenu {
 			ZoneMenu.updatePropertyFields(this.panels.volumeSelect);
 		});
 
-		this.panels.regionSelect.RemoveAllOptions();
 		const selectedVolume: number = $.persistentStorage.getItem('zoning.volume') ?? 0;
 		if (volumes.length > 0) {
-			for (const [i, region] of volumes[selectedVolume].regions.entries()) {
-				this.addOptionToDropdown($.Localize('#Zoning_Region') as string, this.panels.regionSelect, i);
-			}
+			this.populateDropdown(
+				volumes[selectedVolume].regions,
+				this.panels.regionSelect,
+				$.Localize('#Zoning_Region') as string
+			);
 		}
 		this.panels.regionSelect.SetSelectedIndex($.persistentStorage.getItem('zoning.region') ?? 0);
 		this.panels.regionSelect.SetPanelEvent('oninputsubmit', () => {
@@ -199,6 +197,13 @@ class ZoneMenu {
 		parent.AddOption(optionPanel);
 	}
 
+	static populateDropdown(array: any[], dropdown: DropDown, optionType: string) {
+		dropdown.RemoveAllOptions();
+		for (const [i, _] of array.entries()) {
+			this.addOptionToDropdown(optionType, dropdown, i);
+		}
+	}
+
 	static updateZoneSelection(newSelectedZone: Zone) {
 		//this.selectedZone?.RemoveClass('zoning__tracklist--active');
 		//newSelectedZone.AddClass('zoning__tracklist--active');
@@ -206,6 +211,10 @@ class ZoneMenu {
 
 		$.Msg(`Zone selected. Volume: ${newSelectedZone.volumeIndex}, Filter: ${newSelectedZone.filterName}`);
 		//update zone properties
+		const index = newSelectedZone.volumeIndex;
+		this.panels.volumeSelect.SetSelectedIndex(index);
+		const volume = this.mapZoneData?.volumes[index];
+		this.panels.regionSelect.SetSelectedIndex(0);
 	}
 
 	static updatePropertyFields(updatedControl: Panel) {
