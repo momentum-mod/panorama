@@ -39,7 +39,7 @@ class ZoneMenu {
 		regionTPDest: $('#RegionTPDest')
 	};
 
-	static selectedZone: Panel | null;
+	static selectedZone: Zone | null;
 	static mapZoneData: MapZones | null;
 
 	static {
@@ -138,7 +138,7 @@ class ZoneMenu {
 	}
 
 	static createDeepEntry(parent: Panel, entry: TrackEx) {
-		const trackContainer = this.addTracklistEntry(parent, entry.name, TracklistSnippet.TRACK);
+		const trackContainer = this.addTracklistEntry(parent, entry.name, TracklistSnippet.TRACK, null);
 		if (trackContainer === null) return;
 		if (entry.zones.segments.length === 0) {
 			trackContainer.RemoveAndDeleteChildren();
@@ -148,7 +148,7 @@ class ZoneMenu {
 
 		for (const [i, segment] of entry.zones.segments.entries()) {
 			const majorId = `Segment ${i + 1}`;
-			const majorListContainer = this.addTracklistEntry(trackContainer, majorId, TracklistSnippet.MAJOR);
+			const majorListContainer = this.addTracklistEntry(trackContainer, majorId, TracklistSnippet.MAJOR, null);
 			if (majorListContainer === null) continue;
 			if (segment.checkpoints.length === 0) {
 				majorListContainer.RemoveAndDeleteChildren();
@@ -158,13 +158,13 @@ class ZoneMenu {
 
 			for (const [j, zone] of segment.checkpoints.entries()) {
 				const minorId = `Minor checkpoint ${j + 1}`;
-				this.addTracklistEntry(majorListContainer, minorId, TracklistSnippet.MINOR);
+				this.addTracklistEntry(majorListContainer, minorId, TracklistSnippet.MINOR, zone);
 			}
 			$.Msg(majorId + ' created in ' + entry.name + 'track, ' + segment.checkpoints.length + ' checkpoints.\n');
 		}
 	}
 
-	static addTracklistEntry(parent: Panel, name: string, snippet: string): Panel | null {
+	static addTracklistEntry(parent: Panel, name: string, snippet: string, zone: Zone | null): Panel | null {
 		const newTracklistPanel = $.CreatePanel('Panel', parent, name);
 		newTracklistPanel.LoadLayoutSnippet(snippet);
 
@@ -184,8 +184,8 @@ class ZoneMenu {
 		}
 
 		const selectButton = newTracklistPanel.FindChildTraverse('SelectButton') as Panel;
-		if (selectButton) {
-			selectButton.SetPanelEvent('onactivate', () => ZoneMenu.updateZoneSelection(selectButton as ToggleButton));
+		if (selectButton && zone) {
+			selectButton.SetPanelEvent('onactivate', () => ZoneMenu.updateZoneSelection(zone));
 		}
 
 		return listContainer;
@@ -199,12 +199,12 @@ class ZoneMenu {
 		parent.AddOption(optionPanel);
 	}
 
-	static updateZoneSelection(newSelectedZone: ToggleButton) {
+	static updateZoneSelection(newSelectedZone: Zone) {
 		//this.selectedZone?.RemoveClass('zoning__tracklist--active');
 		//newSelectedZone.AddClass('zoning__tracklist--active');
 		this.selectedZone = newSelectedZone;
 
-		$.Msg(`Zone ${newSelectedZone.GetParent()?.GetParent()?.id} selected`);
+		$.Msg(`Zone selected. Volume: ${newSelectedZone.volumeIndex}, Filter: ${newSelectedZone.filterName}`);
 		//update zone properties
 	}
 
