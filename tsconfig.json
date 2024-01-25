@@ -11,7 +11,7 @@
 		"strict": true,
 		"noImplicitAny": false,
 		"typeRoots": ["./scripts/types/"],
-		"types": ["momentum"]
+		"types": ["momentum"] // If you error here, you don't have the submodule installed! (git submodule update --init --recursive)
 	},
 	"include": ["scripts/"],
 	"exclude": ["*.d.ts"]
