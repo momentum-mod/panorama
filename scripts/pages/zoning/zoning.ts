@@ -215,6 +215,7 @@ class ZoneMenu {
 		this.panels.volumeSelect.SetSelectedIndex(index);
 		const volume = this.mapZoneData?.volumes[index];
 		this.panels.regionSelect.SetSelectedIndex(0);
+		this.panels.regionSafeHeight.text = volume?.regions[0].safeHeight.toFixed(2) as string;
 	}
 
 	static updatePropertyFields(updatedControl: Panel) {
