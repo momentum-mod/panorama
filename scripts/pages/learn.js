@@ -42,7 +42,6 @@ class Learn {
 		UiToolkitAPI.ShowGenericPopup(
 			'Learn Section - Very early alpha!',
 			'Welcome to the beginnings of the Learn section!\n\n' +
-				'Please note: for this section to work, you *MUST* launch the game with the -mapping launch option. This will change in the near future!\n\n' +
 				"This is in an early testing phase, with each mode's maps at differing levels of completion.\n\n" +
 				"They'll be being updated regularly through Steam updates, so make sure to check back in every now and then!\n\n" +
 				"Feedback is GREATLY appreciated, especially if you're brand new to a mode, so be sure to let us know your thoughts in the new learn channels in the Discord.\n\n" +
@@ -131,16 +130,6 @@ class Learn {
 
 	static startCurrentLesson() {
 		if (!this.currentLessonData) return;
-
-		if (!MomentumAPI.GetVersionInfo().isInMappingMode) {
-			UiToolkitAPI.ShowGenericPopup(
-				'Please launch in mapping mode!',
-				'Apologies for the inconvenience, but you must launch the game in -mapping mode to use the Learn section for now. Close the game, then select Momentum in your Steam library, go to Properties, and in Launch Options add -mapping. Then relaunch and this annoying popup will go away!',
-				''
-			);
-
-			return;
-		}
 
 		if (!this.currentLessonData['Map']) {
 			$.Warning(`Learn: No map specified for lesson ${this.currentLessonData['Name']}`);
