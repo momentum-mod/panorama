@@ -1,5 +1,6 @@
 import csv
 import requests
+from pathlib import Path
 
 CSV_FILE = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTlH08v-dqtGl49T0Eslb56o-Y-xp6kOwhEo4Bwx387AxbpGHFw7AUBeBQMQdwEBI9g4gBBnGmUZ5EW/pub?output=csv'
 
@@ -13,6 +14,7 @@ for row in reader:
 	else:
 		learnDataMap[row['Mode']] = [row]
 
+Path('../data').mkdir(exist_ok=True)
 with open( '../data/learn.vdf', 'w' ) as output:
 	output.write( '"Learn"\n' )
 	output.write( '{\n' )
