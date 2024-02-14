@@ -45,6 +45,19 @@
 				</Panel>
 			</Panel>
 
+			<Panel class="settings-enum-dropdown__input-container">
+				<DropDown id="TracksDropdown" class="dropdown sorting__dropdown" menuclass="dropdown-menu">
+					<Label text="Main Track" id="alphaAsc" value="0" />
+					<Label text="Stage 1" id="alphaDesc" value="1" />
+					<Label text="Stage 2" id="tierAsc" value="2" />
+					<Label text="Stage 3" id="tierDesc" value="3" />
+					<Label text="Stage 4" id="lastPlayAsc" value="4" />
+					<Label text="Stage 5" id="lastPlayDesc" value="5" />
+					<Label text="Bonus 1" id="dateCreatedAsc" value="8" />
+					<Label text="Bonus 2" id="dateCreatedDesc" value="9" />
+				</DropDown>
+			</Panel>
+
 			<TooltipPanel class="horizontal-align-right width-fit-children height-fit-children" tooltip="#Leaderboards_EndOfRunButton">
 				<Button id="EndOfRunButton" class="button" onactivate="Leaderboards.showEndOfRun();">
 					<Image class="button__icon button__icon--left" src="file://{images}/arrow-thick-right.svg" textureheight="64" />

@@ -38,18 +38,33 @@ class Leaderboards {
 		/** @type {Label} @static */
 		emptyWarningText: $('#LeaderboardEmptyWarningText'),
 		/** @type {Button} @static */
-		endOfRunButton: $('#EndOfRunButton')
+		endOfRunButton: $('#EndOfRunButton'),
+		/** @type {DropDown} @static */
+		tracksDropdown: $('#TracksDropdown')
 	};
 
 	static {
 		$.RegisterEventHandler('Leaderboards_TimesFiltered', $.GetContextPanel(), this.onTimesUpdated.bind(this));
 		$.RegisterForUnhandledEvent('EndOfRun_Show', this.onShowEndOfRun.bind(this));
 		$.RegisterForUnhandledEvent('Leaderboards_MapDataSet', this.onMapLoad.bind(this));
+		$.RegisterForUnhandledEvent('Leaderboards_MapInfoLoaded', this.onMapInfoLoad.bind(this));
 
 		// Default to Top 10
 		this.setSelectedTimesList(TIME_LIST_TYPE.LIST_GLOBAL);
 		this.setSelectedListType(TIME_LIST_TYPE.LIST_GLOBAL, LEADERBOARD_TYPE.TIMES_TOP10);
 		this.setSelectedListType(TIME_LIST_TYPE.LIST_LOCAL, LEADERBOARD_TYPE.TIMES_LOCAL);
+
+		// const labelString = 'Stage 1';
+		// const optionPanel = $.CreatePanel('Label', this.panels.tracksDropdown.AccessDropDownMenu(), labelString);
+		// optionPanel.SetAttributeInt('value', 0);
+		// optionPanel.text = labelString;
+		// this.panels.tracksDropdown.AddOption(optionPanel);
+
+		// const item = $.CreatePanel('Label', this.panels.tracksDropdown, 'Stage 1', {
+		// 	text: 'Stage 1',
+		// 	value: '0'
+		// });
+		// this.panels.tracksDropdown.AddOption(item);
 	}
 
 	static onTimesUpdated(count) {
@@ -172,5 +187,22 @@ class Leaderboards {
 	 */
 	static onMapLoad(_isOfficial) {
 		this.panels.endOfRunButton.visible = false;
+	}
+
+	static onMapInfoLoad(map) {
+		// Test dropdown code
+		// this.panels.tracksDropdown.RemoveAllOptions();
+
+		for (const leaderboard of map.leaderboards) {
+			if (leaderboard.gamemode === GameModeAPI.GetCurrentGameMode()) {
+				$.Msg(`${JSON.stringify(leaderboard)}`);
+			}
+		}
+
+		const item = $.CreatePanel('Label', this.panels.tracksDropdown, 'Stage 1', {
+			text: 'Test - Zones',
+			value: '0'
+		});
+		this.panels.tracksDropdown.AddOption(item);
 	}
 }
