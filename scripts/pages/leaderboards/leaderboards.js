@@ -38,13 +38,16 @@ class Leaderboards {
 		/** @type {Label} @static */
 		emptyWarningText: $('#LeaderboardEmptyWarningText'),
 		/** @type {Button} @static */
-		endOfRunButton: $('#EndOfRunButton')
+		endOfRunButton: $('#EndOfRunButton'),
+		/** @type {DropDown} @static */
+		tracksDropdown: $('#TracksDropdown')
 	};
 
 	static {
 		$.RegisterEventHandler('Leaderboards_TimesFiltered', $.GetContextPanel(), this.onTimesUpdated.bind(this));
 		$.RegisterForUnhandledEvent('EndOfRun_Show', this.onShowEndOfRun.bind(this));
 		$.RegisterForUnhandledEvent('Leaderboards_MapDataSet', this.onMapLoad.bind(this));
+		$.RegisterForUnhandledEvent('Leaderboards_MapLeaderboardsLoaded', this.onMapLeaderboardsLoad.bind(this));
 
 		// Default to Top 10
 		this.setSelectedTimesList(TIME_LIST_TYPE.LIST_GLOBAL);
@@ -172,5 +175,40 @@ class Leaderboards {
 	 */
 	static onMapLoad(_isOfficial) {
 		this.panels.endOfRunButton.visible = false;
+	}
+
+	static onMapLeaderboardsLoad(map) {
+		this.panels.tracksDropdown.RemoveAllOptions();
+
+		const currentMode = GameModeAPI.GetCurrentGameMode();
+		map.leaderboards
+			.filter(leaderboard => leaderboard.gamemode === currentMode)
+			.forEach((leaderboard, index) => {
+				let trackStr;
+				if (leaderboard.trackType === 0) {
+					trackStr = $.Localize('#Leaderboards_Tracks_Main');
+				} else if (leaderboard.trackType === 1) {
+					trackStr = `${$.Localize('#Leaderboards_Tracks_Stage')} ${leaderboard.trackNum + 1}`;
+				} else {
+					trackStr = `${$.Localize('#Leaderboards_Tracks_Bonus')} ${leaderboard.trackNum + 1}`;
+				}
+
+				const item = $.CreatePanel('Label', this.panels.tracksDropdown, trackStr, {
+					text: trackStr,
+					value: index
+				});
+				item.SetAttributeInt('trackNum', leaderboard.trackNum);
+				item.SetAttributeInt('trackType', leaderboard.trackType);
+
+				this.panels.tracksDropdown.AddOption(item);
+		});
+
+		this.panels.tracksDropdown.SetSelectedIndex(0);
+		this.panels.tracksDropdown.SetPanelEvent('onuserinputsubmit', () => {
+			const selected = this.panels.tracksDropdown.GetSelected();
+			$.GetContextPanel().selectTrack(
+				selected.GetAttributeInt('trackType', 0),
+				selected.GetAttributeInt('trackNum', 0));
+		});
 	}
 }

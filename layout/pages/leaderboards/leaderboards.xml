@@ -45,6 +45,12 @@
 				</Panel>
 			</Panel>
 
+			<Panel class="leaderboard-dropdown__input-container">
+				<DropDown id="TracksDropdown" class="dropdown sorting__dropdown" menuclass="dropdown-menu">
+					<Panel id="placeholder" /> <!-- This is needed to unfuck the dynamic dropdown -->
+				</DropDown>
+			</Panel>
+
 			<TooltipPanel class="horizontal-align-right width-fit-children height-fit-children" tooltip="#Leaderboards_EndOfRunButton">
 				<Button id="EndOfRunButton" class="button" onactivate="Leaderboards.showEndOfRun();">
 					<Image class="button__icon button__icon--left" src="file://{images}/arrow-thick-right.svg" textureheight="64" />
