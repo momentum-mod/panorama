@@ -17,6 +17,7 @@
 
 		<!-- Center of screen HUD laid out vertically top-to-bottom -->
 		<Panel id="HudCenter" hittest="false" hittestchildren="false">
+			<MomHudKeypressNew />
 
 		</Panel>
 
@@ -50,7 +51,6 @@
 
 		<!-- Anchored on lower-right corner, laid out from top to bottom -->
 		<Panel id="HudBottomRight" hittest="false" hittestchildren="false">
-			<MomHudKeypressNew />
 			<MomHudDFJump />
 			<MomHudAmmo />
 			<MomHudKeyPress />

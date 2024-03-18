@@ -1,11 +1,14 @@
 MomHudKeypressNew {
 	flow-children: none;
+	align: center center;
 
-	margin-right: 100px;
+	// transform: translateX(120px);
 	& Image {
-		padding: 2px;
+		align: center center;
+		// padding: 4px;
 		wash-color: #111;
 		opacity: 0;
+		img-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
 
 		&.always-visible {
 			opacity: 0.8;
@@ -13,7 +16,7 @@ MomHudKeypressNew {
 
 		&.pressed {
 			wash-color: #eee;
-			opacity: 1;
+			opacity: 0.8;
 		}
 
 		&.blocked {

@@ -32,80 +32,80 @@ interface KeyPanel {
 }
 
 const BASE_SIZE = 32;
-const SCALE_FACTOR = 1.5;
+const SCALE_FACTOR = 1;
 
 const KEYS: KeyPanel[] = [
 	{
 		input: InputButton.FORWARD,
-		icon: 'chevron-down',
+		icon: 'chevron-down-rounded',
 		rotate: 180,
-		position: { x: 32, y: 16 },
+		position: { x: 0, y: -32 },
 		size: 32,
-		alwaysVisible: true
+		alwaysVisible: false
 	},
 	{
 		input: InputButton.SPEED,
-		icon: 'chevron-down',
+		icon: 'chevron-down-rounded',
 		rotate: 180,
-		position: { x: 36, y: 0 },
+		position: { x: 0, y: -48 },
 		size: 24
 	},
 	{
 		input: InputButton.BACK,
-		icon: 'chevron-down',
+		icon: 'chevron-down-rounded',
 		rotate: 0,
-		position: { x: 32, y: 48 },
-		alwaysVisible: true
+		position: { x: 0, y: 32 },
+		alwaysVisible: false
 	},
 	{
 		input: InputButton.WALK,
-		icon: 'chevron-down',
+		icon: 'chevron-down-rounded',
 		rotate: 0,
-		position: { x: 36, y: 72 },
+		position: { x: 0, y: 48 },
 		size: 24
 	},
 	{
 		input: InputButton.MOVELEFT,
-		icon: 'chevron-down',
+		icon: 'chevron-down-rounded',
 		rotate: 90,
-		position: { x: 0, y: 48 },
+		position: { x: -32, y: 0 },
 		size: 32,
-		alwaysVisible: true
+		alwaysVisible: false
 	},
 	{
 		input: InputButton.LEFT,
-		icon: 'chevron-down',
+		icon: 'chevron-down-rounded',
 		rotate: 90,
-		position: { x: 0, y: 48 },
+		position: { x: -48, y: 0 },
 		size: 24
 	},
 	{
 		input: InputButton.MOVERIGHT,
-		icon: 'chevron-down',
+		icon: 'chevron-down-rounded',
 		rotate: -90,
-		position: { x: 64, y: 48 },
+		position: { x: 32, y: 0 },
 		size: 32,
-		alwaysVisible: true
+		alwaysVisible: false
 	},
 	{
 		input: InputButton.RIGHT,
-		icon: 'chevron-down',
+		icon: 'chevron-down-rounded',
 		rotate: -90,
-		position: { x: 64, y: 48 },
+		position: { x: 48, y: 0 },
 		size: 24
 	},
 	{
 		input: InputButton.JUMP,
 		icon: 'jump',
 		rotate: 0,
-		position: { x: 20, y: 88 },
+		position: { x: -24, y: 64 },
 		size: 24
 	},
 	{
 		input: InputButton.DUCK,
 		icon: 'jump',
 		rotate: 180,
-		position: { x: 52, y: 88 },
+		position: { x: 24, y: 64 },
 		size: 24
 	}
 ];
@@ -117,10 +117,24 @@ class KeyPress {
 	static keys: Map<InputButton, { panel: Image; state: boolean }> = new Map();
 
 	static createPanels() {
+		const cp = $.GetContextPanel();
+		// Find the furthest any panel will be positioned away from origin.
+		// We want this component to center properly, so multiply by 2.
+		//  -------
+		//  |  ^  |   On x axis, either < or > will be the max, * 2 gives you width.
+		//  |     |   On y the bottom duck/jump keys are further down than the top arrow,
+		//  <  x  >   but we don't want unbalanced otherwise it'd centre wrong.
+		//  |     |   So max - min wouldn't work, instead take the max of abs then multiply by 2.
+		//  |  v  |
+		//  --d-j--
 		const bounds = (axis: 'x' | 'y') =>
-			(Math.max(...KEYS.map(({ position }) => position[axis])) + BASE_SIZE) * SCALE_FACTOR + 'px';
-		$.GetContextPanel().style.width = bounds('x');
-		$.GetContextPanel().style.height = bounds('y');
+			`${
+				Math.max(...KEYS.map(({ position, size }) => Math.abs(position[axis]) + (size ?? BASE_SIZE) / 2)) *
+				SCALE_FACTOR *
+				2
+			}px`;
+		cp.style.width = bounds('x');
+		cp.style.height = bounds('y');
 
 		for (const key of KEYS) {
 			const size = (key.size ?? BASE_SIZE) * SCALE_FACTOR;
@@ -129,9 +143,11 @@ class KeyPress {
 				style: `
 					width: ${size}px;
 					height: ${size}px;
-					transform: rotatez(${key.rotate}deg)
-							translatex(${key.position.x * SCALE_FACTOR}px)
-							translatey(${key.position.y * SCALE_FACTOR}px);`,
+					transform:
+						rotatez(${key.rotate}deg)
+						translatex(${key.position.x * SCALE_FACTOR}px)
+						translatey(${key.position.y * SCALE_FACTOR}px);
+				`,
 				textureheight: size * 2
 			});
 
