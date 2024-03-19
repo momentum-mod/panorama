@@ -10,7 +10,6 @@ const MapSelNStateClasses = [
 class MapSelection {
 	static gameModeData = {};
 	static filtersState = {};
-	static timesModeButtonsUnchecked = 0;
 
 	static panels = {
 		/** @type {TextEntry} @static */
@@ -68,13 +67,8 @@ class MapSelection {
 			// Initialise all the filters events
 			this.initFilterSaveEventsRecursive(this.panels.filtersPanel);
 
-			this.timesModeButtonsUnchecked = 0;
-
 			// Set this event here rather than XML to avoid error on reload (???)
 			this.panels.searchText.SetPanelEvent('ontextentrychange', this.onSearchChanged.bind(this));
-
-			// Initialise the gamemode button events
-			this.initGamemodeButtons();
 
 			$.GetContextPanel().ApplyFilters();
 
@@ -92,104 +86,6 @@ class MapSelection {
 	static requestMapUpdate() {
 		this.panels.searchText.Submit();
 		UiToolkitAPI.ShowCustomLayoutTooltip('MapFilters', '', 'file://{resources}/layout/modals/tooltips/test.xml');
-	}
-
-	/**
-	 *  Set the panel events for gamemode buttons
-	 */
-	static initGamemodeButtons() {
-		for (const [mode, values] of Object.entries(this.gameModeData)) {
-			const filterButton = values.filterButton;
-			if (filterButton === null) continue;
-
-			filterButton.SetPanelEvent('oncontextmenu', () => this.clearOtherModes(mode));
-			filterButton.SetPanelEvent('onactivate', () => {
-				this.onModeButtonPressed(mode);
-				this.filterSaveEvent(filterButton);
-			});
-		}
-	}
-
-	/**
-	 * Check whether all the other gamemode buttons are unchecked
-	 * @param {Object} selectedMode A gamemodeData Object
-	 * @returns {Boolean} If all other modes are unchecked
-	 */
-	static areAllOtherModesUnchecked(selectedMode) {
-		return Object.entries(this.gameModeData)
-			.filter(([mode, _]) => mode !== selectedMode)
-			.every(([_, modeData]) => !(modeData.filterButton && modeData.filterButton.checked));
-	}
-
-	/**
-	 * The behaviour when right-clicking gamemode buttons.
-	 * Right-clicking a checked button will clear all other buttons, and right-clicking a checked button
-	 * will activate all other buttons.
-	 * @param {Object} selectedMode A gamemodeData Object
-	 */
-	static clearOtherModes(selectedMode) {
-		// Set unchecked counter to -1, if you're using this you've got the hang of it, no more popups for you!
-		this.timesModeButtonsUnchecked = -1;
-
-		const selectedModeButton = this.gameModeData[selectedMode].filterButton;
-
-		// No matter what, we want our selected button to be checked
-		if (!selectedModeButton.checked) {
-			selectedModeButton.SetSelected(true);
-		}
-
-		const areOthersUnchecked = this.areAllOtherModesUnchecked(selectedMode);
-
-		for (const [_, modeData] of Object.entries(this.gameModeData).filter(
-			([mode, modeData]) => mode !== selectedMode && modeData.filterButton
-		)) {
-			const filterButton = modeData.filterButton;
-			if (areOthersUnchecked) {
-				// Others ARE all unchecked, so let's toggle them all back on
-				filterButton.SetSelected(true);
-			} else {
-				// Others are NOT all unchecked, so we want to uncheck them if not already
-				if (filterButton.checked) {
-					filterButton.SetSelected(false);
-				}
-			}
-		}
-
-		$.GetContextPanel().ApplyFilters();
-
-		this.saveAllFilters();
-	}
-
-	/**
-	 * Fired when a gamemode button is pressed. Tracks the number of presses
-	 * and shows a tooltip if you manually unchecked too many.
-	 * @param {Object} selectedMode A gamemodeData Object
-	 */
-	static onModeButtonPressed(mode) {
-		if (this.timesModeButtonsUnchecked === -1)
-			// They've already right clicked
-			return;
-
-		const button = this.gameModeData[mode].filterButton;
-
-		// If button was unchecked then increment the counter
-		if (!button.checked) {
-			this.timesModeButtonsUnchecked++;
-
-			// Show tooltip if times unchecked equal to all the modes minus the last remaining mode and the null mode
-			if (this.timesModeButtonsUnchecked === Object.keys(this.gameModeData).length - 2) {
-				UiToolkitAPI.ShowTextTooltipStyled(
-					button.id,
-					$.Localize('#MapSelector_Filters_RightClickTip'),
-					'tooltip--positive'
-				);
-				$.Schedule(3, () => UiToolkitAPI.HideTextTooltip());
-				this.timesModeButtonsUnchecked = 0; // Reset the counter
-			}
-			// If a mode was just checked, reset the counter (bound to >= 0, counter can be negative when unchecked through code done asyncronously)
-			// } else if (this.timesModeButtonsUnchecked > 0) {
-			// 	this.timesModeButtonsUnchecked = 0;
-		} else this.timesModeButtonsUnchecked--;
 	}
 
 	/**
@@ -214,12 +110,6 @@ class MapSelection {
 	 * Clear all the filters, resetting to the default state
 	 */
 	static clearFilters() {
-		// Uncheck every checked gamemode button
-		for (const modeData of Object.values(this.gameModeData)) {
-			const button = modeData.filterButton;
-			if (button && !button.checked) button.SetSelected(true);
-		}
-
 		// Reset every NState button
 		for (const button of [
 			this.panels.completedFilterButton,
@@ -230,8 +120,6 @@ class MapSelection {
 
 		// Reset tier slider
 		this.panels.tierSlider.SetValues(TIER_MIN, TIER_MAX);
-
-		this.timesModeButtonsUnchecked = 0;
 
 		// Apply the changes
 		$.GetContextPanel().ApplyFilters();
@@ -247,6 +135,9 @@ class MapSelection {
 	 * @param {Panel} panel The top-level panel to search
 	 */
 	static initFilterSaveEventsRecursive(panel) {
+		// Ignore game mode buttons for now. They will be removed in the future.
+		if (panel.id === 'GamemodeFilters') return;
+
 		if (['ToggleButton', 'RadioButton', 'NStateButton', 'DualSlider'].includes(panel.paneltype)) {
 			let eventType;
 			switch (panel.paneltype) {
