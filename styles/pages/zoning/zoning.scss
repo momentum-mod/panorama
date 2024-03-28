@@ -18,6 +18,12 @@ $medium: 28px;
 		//height: 50px;
 	}
 
+	&__button-box {
+		margin: 2px 0px;
+		horizontal-align: right;
+		flow-children: right;
+	}
+
 	&__menu-section {
 		//height: fill-parent-flow(0.5);
 		width: 100%;

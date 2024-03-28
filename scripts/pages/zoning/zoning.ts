@@ -250,6 +250,45 @@ class ZoneMenu {
 		);
 	}
 
+	static createNewZone() {
+		// create new volume and add to MapZones opbjet
+		// Note: this should use point picker (c++)
+		const x1: number = Math.random(); // fix random
+		const x2: number = Math.random(); // fix random
+		const y1: number = Math.random(); // fix random
+		const y2: number = Math.random(); // fix random
+		const b = 0;
+		const h = 960;
+		const newRegion: Region = {
+			points: [
+				{ x: x1, y: y1 },
+				{ x: x1, y: y2 },
+				{ x: x2, y: y2 },
+				{ x: x2, y: y1 }
+			],
+			bottom: b,
+			height: h,
+			teleportPos: { x: 0.5 * (x1 + x2), y: 0.5 * (y1 + y2), z: b }, // TODO: This below are required if region is part of a volume used by stafe or major checkpoint zone
+			teleportYaw: 0, // See convo in mom red 25/09/23 02:00 GMT
+			safeHeight: 0
+		};
+
+		const lastSegmentIndex = (this.mapZoneData?.tracks.main.zones.segments.length as number) - 1;
+		const lastSegment = this.mapZoneData?.tracks.main.zones.segments[lastSegmentIndex] as Segment;
+		const volumeCount: number = this.mapZoneData?.volumes.length as number;
+		const newVolume: Volume = { regions: [newRegion] };
+		this.mapZoneData?.volumes.push(newVolume);
+		lastSegment.checkpoints.push({ volumeIndex: volumeCount } as Zone);
+
+		// add to tracklist tree
+		const mainTrack: Panel = this.panels.trackList.Children()[0];
+		const segmentList = mainTrack.FindChildTraverse('ListContainer');
+		const segmentPanel: Panel = segmentList?.Children()[lastSegmentIndex] as Panel;
+		const checkpointList: Panel = segmentPanel.FindChildTraverse('ListContainer') as Panel;
+		const id = `Minor checkpoint ${lastSegment.checkpoints.length}`;
+		this.addTracklistEntry(checkpointList, id, TracklistSnippet.MINOR, { volumeIndex: volumeCount } as Zone);
+	}
+
 	//this is here to simulate fetching map data
 	static generateRandomMapZones(
 		majorCheckpoints: number,

@@ -86,7 +86,11 @@
             <Panel id="TrackList" class="zoning__track-list">
                 <!-- Populated in js -->
             </Panel>
-            <Button text="#Zoning_NewZone" />
+		</Panel>
+		<Panel class="zoning__button-box">
+			<Button class="button button--blue ml-2 horizontal-align-right" onactivate="ZoneMenu.createNewZone()">
+				<Label class="button__text" text="#Zoning_NewZone" />
+			</Button>
 		</Panel>
 		<Label id="PropertiesLabel" class="zoning__header" text="#Zoning_PropertiesLabel" />
 		<Panel id="PropertiesContainer" class="zoning__menu-section">
