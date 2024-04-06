@@ -250,6 +250,10 @@ class ZoneMenu {
 		);
 	}
 
+	static createNewStage() {
+		$.Msg('Add new stage!');
+	}
+
 	static createNewZone() {
 		// create new volume and add to MapZones opbjet
 		// Note: this should use point picker (c++)

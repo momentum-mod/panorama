@@ -88,6 +88,9 @@
             </Panel>
 		</Panel>
 		<Panel class="zoning__button-box">
+			<Button class="button button--green ml-2 horizontal-align-right" onactivate="ZoneMenu.createNewStage()">
+				<Label class="button__text" text="#Zoning_NewStage" />
+			</Button>
 			<Button class="button button--blue ml-2 horizontal-align-right" onactivate="ZoneMenu.createNewZone()">
 				<Label class="button__text" text="#Zoning_NewZone" />
 			</Button>
