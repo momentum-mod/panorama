@@ -139,5 +139,10 @@
 				</Panel>
 			</Panel>
 		</Panel>
+		<Panel class="zoning__button-box">
+			<Button class="button button--red ml-2 horizontal-align-right" onactivate="ZoneMenu.showDeletePopup()">
+				<Label class="button__text" text="#Zoning_DeleteZone" />
+			</Button>
+		</Panel>
 	</Panel>
 </root>

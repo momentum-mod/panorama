@@ -289,6 +289,35 @@ class ZoneMenu {
 		this.addTracklistEntry(checkpointList, id, TracklistSnippet.MINOR, { volumeIndex: volumeCount } as Zone);
 	}
 
+	static showDeletePopup() {
+		UiToolkitAPI.ShowGenericPopupTwoOptionsBgStyle(
+			$.Localize('#Zoning_Delete') as string,
+			$.Localize('#Zoning_Delete_Message') as string,
+			'warning-popup',
+			$.Localize('#Zoning_Delete') as string,
+			() => {
+				this.deleteLastZone();
+			},
+			$.Localize('#Zoning_Cancel') as string,
+			() => {},
+			'none'
+		);
+	}
+
+	static deleteLastZone() {
+		// delete checkpoint from MapZones object
+		const lastSegmentIndex = (this.mapZoneData?.tracks.main.zones.segments.length as number) - 1;
+		const lastSegment = this.mapZoneData?.tracks.main.zones.segments[lastSegmentIndex] as Segment;
+		lastSegment.checkpoints.pop();
+
+		// delete checkpoint from tracklist tree
+		const mainTrack: Panel = this.panels.trackList.Children()[0];
+		const segmentList = mainTrack.FindChildTraverse('ListContainer');
+		const segmentPanel: Panel = segmentList?.Children()[lastSegmentIndex] as Panel;
+		const checkpointList: Panel = segmentPanel.FindChildTraverse('ListContainer') as Panel;
+		checkpointList.Children()[lastSegment.checkpoints.length]?.DeleteAsync(0);
+	}
+
 	//this is here to simulate fetching map data
 	static generateRandomMapZones(
 		majorCheckpoints: number,
