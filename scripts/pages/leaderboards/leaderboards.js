@@ -182,7 +182,7 @@ class Leaderboards {
 
 		const currentMode = GameModeAPI.GetCurrentGameMode();
 		map.leaderboards
-			.filter(leaderboard => leaderboard.gamemode === currentMode)
+			.filter((leaderboard) => leaderboard.gamemode === currentMode)
 			.forEach((leaderboard, index) => {
 				let trackStr;
 				if (leaderboard.trackType === 0) {
@@ -201,14 +201,15 @@ class Leaderboards {
 				item.SetAttributeInt('trackType', leaderboard.trackType);
 
 				this.panels.tracksDropdown.AddOption(item);
-		});
+			});
 
 		this.panels.tracksDropdown.SetSelectedIndex(0);
 		this.panels.tracksDropdown.SetPanelEvent('onuserinputsubmit', () => {
 			const selected = this.panels.tracksDropdown.GetSelected();
 			$.GetContextPanel().selectTrack(
 				selected.GetAttributeInt('trackType', 0),
-				selected.GetAttributeInt('trackNum', 0));
+				selected.GetAttributeInt('trackNum', 0)
+			);
 		});
 	}
 }
