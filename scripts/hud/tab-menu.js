@@ -35,7 +35,7 @@ class HudTabMenu {
 	static setMapData(isOfficial) {
 		$.GetContextPanel().SetHasClass('hud-tab-menu--unofficial', !isOfficial);
 
-		const img = GameModeInfoWithNull[GameModeAPI.GetCurrentGameMode()].shortName.toLowerCase();
+		const img = GameModeInfoWithNull[GameModeAPI.GetCurrentGameMode()].idName.toLowerCase();
 
 		this.panels.gamemodeImage.SetImage(`file://{images}/gamemodes/${img}.svg`);
 
@@ -51,7 +51,7 @@ class HudTabMenu {
 		// Delete existing name labels
 		for (const label of this.panels.credits.Children().slice(1) || []) label.DeleteAsync(0);
 
-		const authorCredits = credits.filter((x) => x.type === 'author');
+		const authorCredits = credits.filter((x) => x.type === MapCreditType.AUTHOR);
 
 		for (const credit of authorCredits) {
 			const namePanel = $.CreatePanel('Label', this.panels.credits, '', {
@@ -87,13 +87,13 @@ class HudTabMenu {
 	static setMapStats(data) {
 		const cp = $.GetContextPanel();
 
-		cp.SetDialogVariableInt('tier', data.mainTrack?.difficulty);
-		cp.SetDialogVariable(
-			'type',
-			$.Localize(data.mainTrack?.isLinear ? '#MapInfo_Type_Linear' : '#MapInfo_Type_Staged')
-		);
-		cp.SetDialogVariableInt('numzones', data.mainTrack?.numZones);
-		cp.SetDialogVariableInt('runs', data.stats?.completes);
+		const mainTrack = GetMainTrack(data, GameModeAPI.GetCurrentGameMode());
+		const numZones = GetNumZones(data);
+
+		cp.SetDialogVariableInt('tier', mainTrack?.tier ?? 0);
+		cp.SetDialogVariable('type', $.Localize(mainTrack?.isLinear ? '#MapInfo_Type_Linear' : '#MapInfo_Type_Staged'));
+		cp.SetDialogVariableInt('numzones', numZones);
+		cp.SetDialogVariableInt('runs', data.stats?.completions);
 	}
 
 	static close() {

@@ -4,6 +4,7 @@
 	</styles>
 	<scripts>
 		<include src="file://{scripts}/common/gamemodes.js" />
+		<include src="file://{scripts}/common/map-cache.js" />
 		<include src="file://{scripts}/pages/map-selector/map-selector.js" />
 	</scripts>
 
