@@ -51,6 +51,10 @@
 				<Frame src="file://{resources}/layout/pages/end-of-run/end-of-run.xml" hittest="true" hittestchildren="true" />
 			</Panel>
 
+			<Panel id="ZoningContainer" class="hud-tab-menu__zoning" hittestchildren="true">
+				<Frame src="file://{resources}/layout/pages/zoning/zoning.xml" hittest="true" hittestchildren="true" />
+			</Panel>
+
 			<Panel class="hud-tab-menu__stats">
 			</Panel>
 			

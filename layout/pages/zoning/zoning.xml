@@ -1,0 +1,139 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+
+	<scripts>
+		<include src="file://{scripts}/pages/zoning/zoning.js" />
+	</scripts>
+
+	<snippets>
+		<snippet name="tracklist-track">
+			<Panel class="zoning__tracklist-track">
+				<Panel id="Entry" class="zoning__tracklist-course-entry">
+					<Button id="CollapseButton" class="zoning__collapse-button">
+						<Image id="TracklistCollapseIcon" class="button__icon zoning__collapse-icon zoning__icon-green" src="file://{images}/add.svg" />
+						<Image id="TracklistExpandIcon" class="button__icon zoning__collapse-icon zoning__icon-red hide" src="file://{images}/subtract.svg" />
+					</Button>
+					<Label id="Name" class="zoning__tracklist-label" />
+				</Panel>
+				<Panel id="ListContainer" class="zoning__list-container" />
+			</Panel>
+		</snippet>
+		<snippet name="tracklist-major">
+			<Panel class="zoning__tracklist-major">
+				<Panel id="Entry" class="zoning__tracklist-course-entry">
+					<Button id="CollapseButton" class="zoning__collapse-button">
+						<Image id="TracklistCollapseIcon" class="button__icon zoning__collapse-icon zoning__icon-green" src="file://{images}/add.svg" />
+						<Image id="TracklistExpandIcon" class="button__icon zoning__collapse-icon zoning__icon-red hide" src="file://{images}/subtract.svg" />
+					</Button>
+					<Label  id="Name" class="zoning__tracklist-label" />
+					<ToggleButton id="SyncButton" class="checkbox checkbox--right zoning__sync-button" />
+				</Panel>
+				<Panel id="ListContainer" class="zoning__list-container" />
+			</Panel>
+		</snippet>
+		<snippet name="tracklist-minor">
+			<Panel class="zoning__tracklist-minor">
+				<Panel id="Entry" class="zoning__tracklist-course-entry">
+					<RadioButton id="SelectButton" class="zoning__tracklist-button" group="tracklist">
+						<Label  id="Name" class="zoning__tracklist-label" />
+					</RadioButton>
+				</Panel>
+			</Panel>
+		</snippet>
+		<snippet name="tracklist-region-points">
+			<Panel>
+				<Panel class="zoning__property">
+					<Panel class="zoning__region-corner">
+						<TextEntry id="Point0X" class="textentry settings-slider__textentry zoning__textentry" maxchars="6" textmode="numeric" />
+						<TextEntry id="Point0Y" class="textentry settings-slider__textentry zoning__textentry" maxchars="6" textmode="numeric" />
+					</Panel>
+				</Panel>
+				<Panel class="zoning__property">
+					<Panel class="zoning__region-corner">
+						<TextEntry id="Point1X" class="textentry settings-slider__textentry zoning__textentry" maxchars="6" textmode="numeric" />
+						<TextEntry id="Point1Y" class="textentry settings-slider__textentry zoning__textentry" maxchars="6" textmode="numeric" />
+					</Panel>
+				</Panel>
+				<Panel class="zoning__property">
+					<Panel class="zoning__region-corner">
+						<TextEntry id="Point2X" class="textentry settings-slider__textentry zoning__textentry" maxchars="6" textmode="numeric" />
+						<TextEntry id="Point2Y" class="textentry settings-slider__textentry zoning__textentry" maxchars="6" textmode="numeric" />
+					</Panel>
+				</Panel>
+				<Panel class="zoning__property">
+					<Panel class="zoning__region-corner">
+						<TextEntry id="Point3X" class="textentry settings-slider__textentry zoning__textentry" maxchars="6" textmode="numeric" />
+						<TextEntry id="Point3Y" class="textentry settings-slider__textentry zoning__textentry" maxchars="6" textmode="numeric" />
+					</Panel>
+				</Panel>
+				<Panel class="zoning__property">
+					<Label class="zoning__property-label" text="#Zoning_RegionDetails_Bottom" />
+					<TextEntry id="RegionBottom" class="textentry settings-slider__textentry zoning__textentry" maxchars="8" textmode="numeric" />
+				</Panel>
+				<Panel class="zoning__property">
+					<Label class="zoning__property-label" text="#Zoning_RegionDetails_Top" />
+					<TextEntry id="RegionTop" class="textentry settings-slider__textentry zoning__textentry" maxchars="8" textmode="numeric" />
+				</Panel>
+			</Panel>
+		</snippet>
+	</snippets>
+
+	<Panel class="zoning" acceptsinput="true" acceptsfocus="true">
+		<Label id="TrackListLabel" class="zoning__header" text="#Zoning_TrackListLabel" />
+		<Panel id="TrackListContainer" class="zoning__menu-section">
+            <Panel id="TrackList" class="zoning__track-list">
+                <!-- Populated in js -->
+            </Panel>
+            <Button text="#Zoning_NewZone" />
+		</Panel>
+		<Label id="PropertiesLabel" class="zoning__header" text="#Zoning_PropertiesLabel" />
+		<Panel id="PropertiesContainer" class="zoning__menu-section">
+			<Panel class="zoning__menu-separator">
+				<Panel id="Filter" class="zoning__property">
+					<Label class="zoning__property-label" text="#Zoning_Filter" />
+					<DropDown id="FilterSelect" class="dropdown zoning__dropdown" menuclass="dropdown-menu">
+						<!-- Populated in js -->
+						<Label text="Debug1" />
+					</DropDown>
+				</Panel>
+				<Panel id="Volume" class="zoning__property">
+					<Label class="zoning__property-label" text="#Zoning_Volume" />
+					<DropDown id="VolumeSelect" class="dropdown zoning__dropdown" menuclass="dropdown-menu">
+						<!-- Populated in js -->
+						<Label text="Debug2" />
+					</DropDown>
+				</Panel>
+			</Panel>
+			<Panel class="zoning__menu-separator zoning__menu-separator--dark">
+				<Panel id="Region" class="zoning__property">
+						<Label class="zoning__property-label" text="#Zoning_Region" />
+						<DropDown id="RegionSelect" class="dropdown zoning__dropdown" menuclass="dropdown-menu">
+							<!-- Populated in js -->
+							<Label text="Debug3" />
+						</DropDown>
+				</Panel>
+				<Panel id="RegionDetails" class="zoning__menu-separator">
+					<Panel id="RegionPoints" class="zoning__property">
+						<Label class="zoning__property-label" text="#Zoning_RegionDetails_Points" />
+						<Button class="button zoning__property-button" onactivate="ZoneMenu.showPointsMenu()">
+							<Label class="button__text" text="#Zoning_EditPoints" />
+						</Button>
+					</Panel>
+					<Panel class="zoning__property">
+						<Label class="zoning__property-label" text="#Zoning_RegionDetails_SafeHeight" />
+						<TextEntry id="RegionSafeHeight" class="textentry settings-slider__textentry zoning__textentry" maxchars="8" textmode="numeric" />
+					</Panel>
+					<Panel class="zoning__property">
+						<Label class="zoning__property-label" text="#Zoning_RegionDetails_TPDest" />
+						<DropDown id="RegionTPDest" class="dropdown zoning__dropdown" menuclass="dropdown-menu">
+							<!-- Populated in js -->
+							<Label text="Debug4" />
+						</DropDown>
+					</Panel>
+				</Panel>
+			</Panel>
+		</Panel>
+	</Panel>
+</root>

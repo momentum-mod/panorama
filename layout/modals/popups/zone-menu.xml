@@ -1,0 +1,41 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+
+	<scripts>
+		<include src="file://{scripts}/modals/popups/zone-menu.js" />
+	</scripts>
+
+	<PopupCustomLayout class="PopupPanel Hidden generic-popup" popupbackground="dim">
+		<Panel class="row mt-0">
+			<Label id="TitleLabel" class="generic-popup__title" text="#ZoneMenu_Title" />
+		</Panel>
+		<Panel class="row horizontal-align-center my-3">
+			<RadioButton id="LobbySettingsPublicButton" class="button radiobutton radiobutton--blue mr-2" onactivate="LobbySettings.onChanged()">
+				<Image class="button__icon button__icon--left" src="file://{images}/online/publiclobby.svg" textureheight="32" />
+				<Label class="button__text button__text--right" text="#Lobby_Type_Public" />
+			</RadioButton>
+			<RadioButton id="LobbySettingsFriendsOnlyButton" class="button radiobutton radiobutton--blue mr-2" onactivate="LobbySettings.onChanged()">
+				<Image class="button__icon button__icon--left" src="file://{images}/online/friendsonlylobby.svg" />
+				<Label class="button__text button__text--right" text="#Lobby_Type_FriendsOnly" />
+			</RadioButton>
+			<RadioButton id="LobbySettingsPrivateButton" class="button radiobutton radiobutton--blue" onactivate="LobbySettings.onChanged()">
+				<Image class="button__icon button__icon--left" src="file://{images}/online/privatelobby.svg" textureheight="32" />
+				<Label class="button__text button__text--right" text="#Lobby_Type_Private" />
+			</RadioButton>
+		</Panel>
+		<Panel class="row mt-1">
+			<Label class="mr-3 vertical-align-center" text="#Lobby_MaxPlayers#" disabled="true" />
+			<TextEntry id="MaxPlayers" class="textentry text-align-center horizontal-align-center px-3" maxchars="3" textmode="numeric" style="width: 52px;" ontextentrychange="LobbySettings.onChanged()" />
+		</Panel>
+		<Panel class="row horizontal-align-right">
+			<Button id="UpdateButton" class="button button--green mr-3" disabled="true" onactivate="LobbySettings.submit()">
+				<Label class="button__text" text="#Common_Update" />
+			</Button>
+			<Button class="button button--red" onactivate="LobbySettings.cancel()">
+				<Label class="button__text" text="#Common_Cancel" />
+			</Button>
+		</Panel>
+	</PopupCustomLayout>
+</root>

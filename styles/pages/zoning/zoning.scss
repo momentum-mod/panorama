@@ -1,0 +1,200 @@
+@use '../../config' as *;
+@use 'sass:color';
+
+$small: 18px;
+$medium: 28px;
+
+.zoning {
+	//height: 100%;
+	width: 100%;
+	padding: 2px 6px;
+	//background-color: aqua;
+	flow-children: down;
+	overflow: squish;
+
+	&__header {
+		color: white;
+		font-size: $medium;
+		//height: 50px;
+	}
+
+	&__menu-section {
+		//height: fill-parent-flow(0.5);
+		width: 100%;
+		background-color: $dark-200;
+		margin: 2px 0px;
+		padding: 6px 0px;
+		border-radius: 6px;
+		flow-children: down;
+		overflow: squish scroll;
+	}
+
+	&__menu-separator {
+		width: 100%;
+		padding: 0px 6px;
+		border-radius: 4px;
+		flow-children: down;
+
+		&--dark {
+			margin: 0px 6px;
+			padding: 0px;
+			background-color: $dark-700;
+		}
+	}
+
+	&__track-list {
+		width: 100%;
+		height: 274px;
+		padding: 0px 6px;
+		margin-right: 6px;
+		flow-children: down;
+		overflow: squish scroll;
+
+		& > VerticalScrollBar .ScrollThumb {
+			border-radius: 2px;
+		}
+	}
+
+	&__tracklist-button {
+		padding: 3px 5px;
+
+		&:selected {
+			padding: 2px 4px;
+			background-color: $light-200;
+			border: 1px solid $gray-800;
+			border-radius: 6px;
+		}
+
+		&:hover {
+			padding: 2px 4px;
+			border: 1px solid $gray-800;
+			border-radius: 6px;
+		}
+	}
+
+	&__tracklist-track {
+		width: 100%;
+		margin-bottom: 1px;
+		padding: 2px 6px;
+		flow-children: down;
+	}
+
+	&__tracklist-major {
+		width: 100%;
+		margin-bottom: 1px;
+		padding: 2px 4px;
+		border-radius: 6px;
+		flow-children: down;
+
+		&--dark {
+			//margin-left: 6px;
+			background-color: $dark-700;
+		}
+	}
+
+	&__tracklist-minor {
+		width: 100%;
+		margin: 2px 0px;
+		flow-children: down;
+		margin-left: 8px;
+	}
+
+	&__tracklist-course-entry {
+		width: 100%;
+		flow-children: right;
+	}
+
+	&__list-container {
+		width: 100%;
+		margin-left: 12px;
+		padding-left: 8px;
+		flow-children: down;
+	}
+
+	&__collapse-button {
+		z-index: 2;
+		horizontal-align: right;
+		vertical-align: center;
+		height: 14px;
+		width: 14px;
+
+		background-color: $light-400;
+
+		margin-right: 4px;
+
+		border-bottom-left-radius: 1px;
+		border-bottom-right-radius: 1px;
+
+		&:hover {
+			opacity: 1;
+		}
+	}
+
+	&__collapse-icon {
+		//opacity: 1;
+
+		align: center center;
+		padding: 2px;
+		opacity: 0.4;
+		transition: opacity 0.1s ease-in-out 0s;
+	}
+
+	&__icon-green {
+		wash-color: $green;
+	}
+
+	&__icon-red {
+		wash-color: $red;
+	}
+
+	&__sync-button {
+		horizontal-align: right;
+	}
+
+	&__property {
+		margin: 2px;
+		padding: 4px;
+		width: 100%;
+	}
+
+	&__property-label {
+		horizontal-align: left;
+		vertical-align: center;
+		color: white;
+		text-align: center;
+		font-size: $small;
+	}
+
+	&__property-entry {
+		horizontal-align: right;
+		flow-children: down;
+	}
+
+	&__property-button {
+		horizontal-align: right;
+	}
+
+	&__region-details {
+		background-color: $dark-300;
+		padding: 4px;
+		border-radius: 3px;
+		flow-children: down;
+	}
+
+	&__region-corner {
+		width: 192px;
+		horizontal-align: right;
+		flow-children: right;
+	}
+
+	&__dropdown {
+		//width: 300px;
+		//flow-children: left;
+	}
+
+	&__textentry {
+		horizontal-align: right;
+		margin-left: 16px;
+		width: 80px;
+	}
+}
