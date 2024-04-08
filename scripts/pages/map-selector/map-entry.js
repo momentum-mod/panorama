@@ -25,14 +25,12 @@ class MapEntry {
 	}
 
 	static showContextMenu() {
-		const mapData = $.GetContextPanel().mapData;
-		if (!mapData) return;
-
-		const userMapData = $.GetContextPanel().userMapData;
-		if (!userMapData) return;
+		const { mapData, userMapData, isDownloading } = $.GetContextPanel();
+		if (!mapData || !userMapData) {
+			return;
+		}
 
 		const items = [];
-		const isDownloading = $.GetContextPanel().isDownloading;
 		const mapID = mapData.id;
 
 		if (userMapData.mapFileExists) {
