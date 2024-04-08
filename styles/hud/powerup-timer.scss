@@ -1,0 +1,35 @@
+@use '../config' as *;
+@use '../abstract/mixin';
+
+.powerup-timer {
+	margin: 10px;
+	flow-children: down;
+	padding-left: 16px;
+
+	&__item {
+		flow-children: right;
+	}
+
+	&__label {
+		@include mixin.font-styles($use-header: true);
+		font-size: 64px;
+		padding-left: 16px;
+		horizontal-align: left;
+		vertical-align: center;
+		color: $white;
+	}
+
+	&__icon {
+		vertical-align: center;
+		height: 48px;
+		width: 48px;
+
+		&--haste {
+			wash-color: $orange;
+		}
+
+		&--damageboost {
+			wash-color: $light-blue;
+		}
+	}
+}
