@@ -16,8 +16,8 @@ class HudMapInfo {
 			const cp = $.GetContextPanel();
 			cp.SetDialogVariable('author', authorString);
 
-			const mainTrack = GetMainTrack(mapData, GameModeAPI.GetCurrentGameMode());
-			const numZones = GetNumZones(mapData);
+			const mainTrack = getMainTrack(mapData, GameModeAPI.GetCurrentGameMode());
+			const numZones = getNumZones(mapData);
 
 			cp.SetDialogVariableInt('tier', mainTrack?.tier ?? 0);
 			cp.SetDialogVariable(

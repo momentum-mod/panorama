@@ -20,13 +20,13 @@ const MapCreditType = {
 	SPECIAL_THANKS: 3
 };
 
-function GetMainTrack(mapData, gamemode) {
+function getMainTrack(mapData, gamemode) {
 	return mapData.leaderboards.find(
 		(leaderboard) =>
 			leaderboard.gamemode === gamemode && leaderboard.trackType === TrackType.MAIN && leaderboard.style === 0
 	);
 }
 
-function GetNumZones(mapData) {
+function getNumZones(mapData) {
 	return mapData.leaderboards.filter((leaderboard) => leaderboard.trackType === TrackType.STAGE).length;
 }

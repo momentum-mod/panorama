@@ -65,8 +65,8 @@ class LoadingScreen {
 			return;
 		}
 
-		const mainTrack = GetMainTrack(mapData, GameModeAPI.GetCurrentGameMode());
-		const numZones = GetNumZones(mapData);
+		const mainTrack = getMainTrack(mapData, GameModeAPI.GetCurrentGameMode());
+		const numZones = getNumZones(mapData);
 
 		this.panels.cp.SetDialogVariable('mapname', mapData.name);
 		this.panels.cp.SetDialogVariableInt('tier', mainTrack?.tier ?? 0);
