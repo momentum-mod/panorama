@@ -345,7 +345,7 @@ class MapSelection {
 		this.panels.credits.RemoveAndDeleteChildren();
 
 		// Find all authors
-		const authorCredits = mapData.credits.filter((x) => x.type === 'author');
+		const authorCredits = mapData.credits.filter((x) => x.type === MapCreditType.AUTHOR);
 
 		const hasCredits = authorCredits.length > 0;
 

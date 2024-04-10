@@ -11,18 +11,20 @@ class HudMapInfo {
 			this.cachedInfoContainer.visible = true;
 
 			let authorString = '';
-			for (const [i, item] of mapData['credits'].filter((x) => x.type === 'author').entries())
+			for (const [i, item] of mapData['credits'].filter((x) => x.type === MapCreditType.AUTHOR).entries())
 				authorString += (i > 0 ? ', ' : '') + item.user.alias;
 			const cp = $.GetContextPanel();
 			cp.SetDialogVariable('author', authorString);
 
-			const mainTrack = mapData['mainTrack'];
-			cp.SetDialogVariableInt('tier', mainTrack['difficulty']);
+			const mainTrack = getMainTrack(mapData, GameModeAPI.GetCurrentGameMode());
+			const numZones = getNumZones(mapData);
+
+			cp.SetDialogVariableInt('tier', mainTrack?.tier ?? 0);
 			cp.SetDialogVariable(
 				'zonetype',
-				$.Localize(mainTrack['isLinear'] ? '#MapInfo_Type_Linear' : '#MapInfo_Type_Staged')
+				$.Localize(mainTrack?.isLinear ? '#MapInfo_Type_Linear' : '#MapInfo_Type_Staged')
 			);
-			cp.SetDialogVariableInt('numzones', mainTrack['numZones']);
+			cp.SetDialogVariableInt('numzones', numZones);
 		} else {
 			this.cachedInfoContainer.visible = false;
 		}

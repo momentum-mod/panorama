@@ -65,13 +65,16 @@ class LoadingScreen {
 			return;
 		}
 
+		const mainTrack = getMainTrack(mapData, GameModeAPI.GetCurrentGameMode());
+		const numZones = getNumZones(mapData);
+
 		this.panels.cp.SetDialogVariable('mapname', mapData.name);
-		this.panels.cp.SetDialogVariableInt('tier', mapData.mainTrack.difficulty);
-		this.panels.cp.SetDialogVariableInt('numzones', mapData.mainTrack.numZones);
-		this.panels.cp.SetDialogVariable('tracktype', mapData.mainTrack.isLinear ? 'Linear' : 'Staged');
+		this.panels.cp.SetDialogVariableInt('tier', mainTrack?.tier ?? 0);
+		this.panels.cp.SetDialogVariableInt('numzones', numZones);
+		this.panels.cp.SetDialogVariable('tracktype', mainTrack?.isLinear ? 'Linear' : 'Staged');
 
 		let authorString = '';
-		for (const [i, item] of mapData.credits.filter((x) => x.type === 'author').entries())
+		for (const [i, item] of mapData.credits.filter((x) => x.type === MapCreditType.AUTHOR).entries())
 			authorString += (i > 0 ? ', ' : '') + item.user.alias;
 		this.panels.cp.SetDialogVariable('author', authorString);
 
@@ -80,6 +83,6 @@ class LoadingScreen {
 		this.panels.tierAndType.visible = true;
 		this.panels.numZones.visible = true;
 
-		this.panels.backgroundImage.SetImage(mapData.thumbnail.urlLarge);
+		this.panels.backgroundImage.SetImage(mapData.thumbnail.large);
 	}
 }

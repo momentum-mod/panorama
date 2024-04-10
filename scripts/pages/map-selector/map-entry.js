@@ -25,87 +25,74 @@ class MapEntry {
 	}
 
 	static showContextMenu() {
-		const mapData = $.GetContextPanel().mapData;
-		if (!mapData) return;
-
-		const items = [];
-		const isDownloading = $.GetContextPanel().isDownloading;
-		const mapID = mapData.id;
-
-		if (mapData.inLibrary) {
-			if (mapData.mapFileNeedsUpdate) {
-				if (isDownloading) {
-					items.push({
-						label: $.Localize('#Action_CancelDownload'),
-						icon: 'file://{images}/cancel.svg',
-						style: 'icon-color-red',
-
-						jsCallback: () => $.DispatchEvent('MapSelector_ShowConfirmCancelDownload', mapID)
-					});
-				} else if (MapCacheAPI.MapQueuedForDownload(mapID)) {
-					items.push({
-						label: $.Localize('#Action_RemoveFromQueue'),
-						icon: 'file://{images}/playlist-remove.svg',
-						style: 'icon-color-red',
-						jsCallback: () => $.DispatchEvent('MapSelector_RemoveMapFromDownloadQueue', mapID)
-					});
-				} else {
-					items.push({
-						label: $.Localize('#Action_DownloadMap'),
-						icon: 'file://{images}/play.svg',
-						style: 'icon-color-mid-blue',
-						jsCallback: () => $.DispatchEvent('MapSelector_TryPlayMap', mapID)
-					});
-				}
-			} else {
-				items.push(
-					{
-						label: $.Localize('#Action_StartMap'),
-						icon: 'file://{images}/play.svg',
-						style: 'icon-color-green',
-
-						jsCallback: () => $.DispatchEvent('MapSelector_TryPlayMap', mapID)
-					},
-
-					// Gamemode override submenu
-					{
-						label: $.Localize('#Action_StartMapOverride'),
-						icon: 'file://{images}/alternative-mode.svg',
-						style: 'icon-color-green',
-						jsCallback: () => this.showGameModeOverrideMenu()
-					}
-				);
-			}
-
-			items.push({
-				label: $.Localize('#Action_DeleteMap'),
-				icon: 'file://{images}/delete.svg',
-				style: 'icon-color-red',
-				jsCallback: () => $.DispatchEvent('MapSelector_ToggleMapStatus', mapID, true, false)
-			});
-		} else {
-			items.push({
-				label: $.Localize('#Action_DownloadMap'),
-				icon: 'file://{images}/download.svg',
-				style: 'icon-color-mid-blue',
-				jsCallback: () => $.DispatchEvent('MapSelector_TryPlayMap', mapID)
-			});
+		const { mapData, userMapData, isDownloading } = $.GetContextPanel();
+		if (!mapData || !userMapData) {
+			return;
 		}
 
-		if (mapData.isFavorited) {
+		const items = [];
+		const mapID = mapData.id;
+
+		if (userMapData.mapFileExists) {
+			items.push(
+				{
+					label: $.Localize('#Action_StartMap'),
+					icon: 'file://{images}/play.svg',
+					style: 'icon-color-green',
+					jsCallback: () => $.DispatchEvent('MapSelector_TryPlayMap', mapID)
+				},
+				// Gamemode override submenu
+				{
+					label: $.Localize('#Action_StartMapOverride'),
+					icon: 'file://{images}/alternative-mode.svg',
+					style: 'icon-color-green',
+					jsCallback: () => this.showGameModeOverrideMenu()
+				},
+				{
+					label: $.Localize('#Action_DeleteMap'),
+					icon: 'file://{images}/delete.svg',
+					style: 'icon-color-red',
+					jsCallback: () => $.DispatchEvent('MapSelector_DeleteMap', mapID)
+				}
+			);
+		} else {
+			if (isDownloading) {
+				items.push({
+					label: $.Localize('#Action_CancelDownload'),
+					icon: 'file://{images}/cancel.svg',
+					style: 'icon-color-red',
+					jsCallback: () => $.DispatchEvent('MapSelector_ShowConfirmCancelDownload', mapID)
+				});
+			} else if (MapCacheAPI.MapQueuedForDownload(mapID)) {
+				items.push({
+					label: $.Localize('#Action_RemoveFromQueue'),
+					icon: 'file://{images}/playlist-remove.svg',
+					style: 'icon-color-red',
+					jsCallback: () => $.DispatchEvent('MapSelector_RemoveMapFromDownloadQueue', mapID)
+				});
+			} else {
+				items.push({
+					label: $.Localize('#Action_DownloadMap'),
+					icon: 'file://{images}/play.svg',
+					style: 'icon-color-mid-blue',
+					jsCallback: () => $.DispatchEvent('MapSelector_TryPlayMap', mapID)
+				});
+			}
+		}
+
+		if (userMapData.isFavorited) {
 			items.push({
 				label: $.Localize('#Action_RemoveFromFavorites'),
 				icon: 'file://{images}/favorite-remove.svg',
 				style: 'icon-color-yellow',
-
-				jsCallback: () => $.DispatchEvent('MapSelector_ToggleMapStatus', mapID, false, false)
+				jsCallback: () => $.DispatchEvent('MapSelector_ToggleMapStatus', mapID, false)
 			});
 		} else {
 			items.push({
 				label: $.Localize('#Action_AddToFavorites'),
 				icon: 'file://{images}/star.svg',
 				style: 'icon-color-yellow',
-				jsCallback: () => $.DispatchEvent('MapSelector_ToggleMapStatus', mapID, false, true)
+				jsCallback: () => $.DispatchEvent('MapSelector_ToggleMapStatus', mapID, true)
 			});
 		}
 
