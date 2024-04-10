@@ -4,8 +4,8 @@
 
 const TracklistSnippet = {
 	TRACK: 'tracklist-track',
-	MAJOR: 'tracklist-major',
-	MINOR: 'tracklist-minor'
+	SEGMENT: 'tracklist-segment',
+	CHECKPOINT: 'tracklist-checkpoint'
 };
 
 class ZoneMenu {
@@ -40,7 +40,7 @@ class ZoneMenu {
 	};
 
 	static selectedZone: Zone | null;
-	static mapZoneData: MapZones | null;
+	static mapZoneData: Base | null;
 
 	static {
 		$.RegisterForUnhandledEvent('ZoneMenu_Show', this.showZoneMenu.bind(this));
@@ -130,12 +130,12 @@ class ZoneMenu {
 		expandIcon.SetHasClass('hide', !shouldExpand);
 		collapseIcon.SetHasClass('hide', shouldExpand);
 		const parent = container.GetParent();
-		if (parent && parent.HasClass('zoning__tracklist-major')) {
-			parent.SetHasClass('zoning__tracklist-major--dark', shouldExpand);
+		if (parent && parent.HasClass('zoning__tracklist-segment')) {
+			parent.SetHasClass('zoning__tracklist-segment--dark', shouldExpand);
 		}
 	}
 
-	static createDeepEntry(parent: Panel, entry: TrackEx) {
+	static createDeepEntry(parent: Panel, entry: TrackBase) {
 		const trackContainer = this.addTracklistEntry(parent, entry.name, TracklistSnippet.TRACK, null);
 		if (trackContainer === null) return;
 		if (entry.zones.segments.length === 0) {
@@ -146,7 +146,7 @@ class ZoneMenu {
 
 		for (const [i, segment] of entry.zones.segments.entries()) {
 			const majorId = `Segment ${i + 1}`;
-			const majorListContainer = this.addTracklistEntry(trackContainer, majorId, TracklistSnippet.MAJOR, null);
+			const majorListContainer = this.addTracklistEntry(trackContainer, majorId, TracklistSnippet.SEGMENT, null);
 			if (majorListContainer === null) continue;
 			if (segment.checkpoints.length === 0) {
 				majorListContainer.RemoveAndDeleteChildren();
@@ -155,8 +155,8 @@ class ZoneMenu {
 			}
 
 			for (const [j, zone] of segment.checkpoints.entries()) {
-				const minorId = `Minor checkpoint ${j + 1}`;
-				this.addTracklistEntry(majorListContainer, minorId, TracklistSnippet.MINOR, zone);
+				const minorId = `Checkpoint ${j + 1}`;
+				this.addTracklistEntry(majorListContainer, minorId, TracklistSnippet.CHECKPOINT, zone);
 			}
 			$.Msg(majorId + ' created in ' + entry.name + 'track, ' + segment.checkpoints.length + ' checkpoints.\n');
 		}
@@ -272,8 +272,9 @@ class ZoneMenu {
 			],
 			bottom: b,
 			height: h,
-			teleportPos: { x: 0.5 * (x1 + x2), y: 0.5 * (y1 + y2), z: b }, // TODO: This below are required if region is part of a volume used by stafe or major checkpoint zone
-			teleportYaw: 0, // See convo in mom red 25/09/23 02:00 GMT
+			teleDestPos: { x: 0.5 * (x1 + x2), y: 0.5 * (y1 + y2), z: b }, // TODO: This below are required if region is part of a volume used by stafe or major checkpoint zone
+			teleDestYaw: 0, // See convo in mom red 25/09/23 02:00 GMT
+			teleDestTargetName: '',
 			safeHeight: 0
 		};
 
@@ -289,8 +290,8 @@ class ZoneMenu {
 		const segmentList = mainTrack.FindChildTraverse('ListContainer');
 		const segmentPanel: Panel = segmentList?.Children()[lastSegmentIndex] as Panel;
 		const checkpointList: Panel = segmentPanel.FindChildTraverse('ListContainer') as Panel;
-		const id = `Minor checkpoint ${lastSegment.checkpoints.length}`;
-		this.addTracklistEntry(checkpointList, id, TracklistSnippet.MINOR, { volumeIndex: volumeCount } as Zone);
+		const id = `Checkpoint ${lastSegment.checkpoints.length}`;
+		this.addTracklistEntry(checkpointList, id, TracklistSnippet.CHECKPOINT, { volumeIndex: volumeCount } as Zone);
 	}
 
 	static showDeletePopup() {
@@ -330,7 +331,7 @@ class ZoneMenu {
 		maxWidth: number,
 		zoneWidth: number,
 		height: number
-	): MapZones {
+	): Base {
 		if (majorCheckpoints !== minorCheckpoints.length) throw new Error('Fuck you');
 
 		const safeWidth = maxWidth - zoneWidth;
@@ -349,8 +350,8 @@ class ZoneMenu {
 				],
 				bottom: 0,
 				height: 960,
-				teleportPos: { x: x + zoneWidth / 2, y: y + zoneWidth / 2, z: 0 } as Vec3D,
-				teleportYaw: 0,
+				teleDestPos: { x: x + zoneWidth / 2, y: y + zoneWidth / 2, z: 0 } as Vec3D,
+				teleDestYaw: 0,
 				safeHeight: 0
 			} as Region;
 		};
@@ -366,20 +367,25 @@ class ZoneMenu {
 
 		const doSegment = (numCPs: number): Segment => ({
 			limitStartGroundSpeed: false,
+			checkpointsRequired: true,
+			checkpointsOrdered: false,
 			checkpoints: Array.from(Array.from({ length: numCPs }), (_, i) => randomZone(i === 0)) as Zone[]
 		});
 
 		const volumes: Volume[] = [];
-		const tracks: Tracks = {
+		const tracks: MapTracks = {
 			main: {
 				name: 'Main',
-				majorOrdered: true,
-				minorRequired: true,
+				movementParams: {
+					maxVelocity: 0,
+					defragFlags: 0
+				},
 				zones: {
-					end: randomZone(),
+					segmentsOrdered: true,
 					segments: Array.from(Array.from({ length: majorCheckpoints }), (_, i) =>
 						doSegment(minorCheckpoints[i])
 					) as Segment[],
+					end: randomZone(),
 					cancel: []
 				},
 				maxVelocity: 0,
@@ -391,25 +397,27 @@ class ZoneMenu {
 					end: randomZone(),
 					segments: [doSegment(Math.ceil(Math.random() * 4))]
 				}
-			})) as TrackEx[],
+			})) as BonusTrack[],
 			stages: []
 		};
 
 		for (const [i, segment] of tracks.main.zones.segments.entries()) {
 			tracks.stages.push({
 				name: `Stage ${i}`,
-				majorOrdered: true,
-				minorRequired: true,
 				zones: {
-					end: tracks.main.zones.segments[i + 1]?.checkpoints[0] ?? tracks.main.zones.end,
+					segmentsOrdered: true,
 					segments: [
 						{
 							limitStartGroundSpeed: segment.limitStartGroundSpeed,
+							checkpointsRequired: segment.checkpointsRequired,
+							checkpointsOrdered: false,
 							checkpoints: segment.checkpoints
 						}
 					],
+					end: tracks.main.zones.segments[i + 1]?.checkpoints[0] ?? tracks.main.zones.end,
 					cancel: []
-				}
+				},
+				syncWithMain: false
 			});
 		}
 

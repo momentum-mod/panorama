@@ -85,7 +85,7 @@ $medium: 28px;
 		flow-children: down;
 	}
 
-	&__tracklist-major {
+	&__tracklist-segment {
 		width: 100%;
 		margin-bottom: 1px;
 		padding: 2px 4px;
@@ -98,7 +98,7 @@ $medium: 28px;
 		}
 	}
 
-	&__tracklist-minor {
+	&__tracklist-checkpoint {
 		width: 100%;
 		margin: 2px 0px;
 		flow-children: down;

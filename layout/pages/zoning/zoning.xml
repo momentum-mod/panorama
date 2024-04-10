@@ -20,8 +20,8 @@
 				<Panel id="ListContainer" class="zoning__list-container" />
 			</Panel>
 		</snippet>
-		<snippet name="tracklist-major">
-			<Panel class="zoning__tracklist-major">
+		<snippet name="tracklist-segment">
+			<Panel class="zoning__tracklist-segment">
 				<Panel id="Entry" class="zoning__tracklist-course-entry">
 					<Button id="CollapseButton" class="zoning__collapse-button">
 						<Image id="TracklistCollapseIcon" class="button__icon zoning__collapse-icon zoning__icon-green" src="file://{images}/add.svg" />
@@ -33,8 +33,8 @@
 				<Panel id="ListContainer" class="zoning__list-container" />
 			</Panel>
 		</snippet>
-		<snippet name="tracklist-minor">
-			<Panel class="zoning__tracklist-minor">
+		<snippet name="tracklist-checkpoint">
+			<Panel class="zoning__tracklist-checkpoint">
 				<Panel id="Entry" class="zoning__tracklist-course-entry">
 					<RadioButton id="SelectButton" class="zoning__tracklist-button" group="tracklist">
 						<Label  id="Name" class="zoning__tracklist-label" />
