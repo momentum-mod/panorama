@@ -33,6 +33,11 @@ class PowerupTimer {
 	}
 
 	static {
-		RegisterEventForGamemodes([GameMode.DEFRAG], 'HudProcessInput', $.GetContextPanel(), this.onUpdate.bind(this));
+		RegisterHUDPanelForGamemode({
+			gamemodes: [GameMode.DEFRAG],
+			context: this,
+			contextPanel: $.GetContextPanel(),
+			handledEvents: [{ event: 'HudProcessInput', contextPanel: $.GetContextPanel(), callback: this.onUpdate }]
+		});
 	}
 }
