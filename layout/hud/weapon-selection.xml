@@ -19,7 +19,7 @@
 		</snippet>
 	</snippets>
 
-	<MomHudWeaponSelection class="w-full">
+	<MomHudWeaponSelection>
 		<ConVarEnabler id="WeaponSelection" class="weaponselection" convar="mom_hud_weapon_select" togglevisibility="true">
 		</ConVarEnabler>
 	</MomHudWeaponSelection>
