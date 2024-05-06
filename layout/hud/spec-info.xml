@@ -14,7 +14,7 @@
 		</snippet>
 	</snippets>
 
-	<MomHudSpecInfo class="full-width flow-down" onload="HudSpecInfo.onLoad();">
+	<MomHudSpecInfo onload="HudSpecInfo.onLoad();">
 
 		<!-- So we can toggle visibility for the whole panel -->
 		<Panel id="SpecInfoContainer" class="hudspecinfo">
