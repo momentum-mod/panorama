@@ -7,7 +7,7 @@
 		<include type="module" src="file://{scripts}/hud/sticky-count.ts" />
 	</scripts>
 
-	<MomHudStickyCharge class="h-align-center">
-		<Panel id="StickyCountContainer" class="sticky-count h-align-center flow-right" />
+	<MomHudStickyCharge>
+		<Panel id="StickyCountContainer" class="sticky-count horizontal-align-center flow-right" />
 	</MomHudStickyCharge>
 </root>
