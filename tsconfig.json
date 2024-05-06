@@ -6,7 +6,7 @@
 		"rootDir": "scripts/",
 		"outDir": "script_dist/",
 		"alwaysStrict": true,
-		"isolatedModules": true,
+		"isolatedModules": false,
 		"allowJs": true,
 		"strict": true,
 		"noImplicitAny": false,

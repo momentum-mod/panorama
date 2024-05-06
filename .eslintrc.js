@@ -100,6 +100,11 @@ module.exports = {
 		// We don't need to be that petty about using types well in a repo like this.
 		'@typescript-eslint/explicit-function-return-type': 'off',
 		'@typescript-eslint/no-explicit-any': 'off',
-		'@typescript-eslint/no-inferrable-types': ['warn', { ignoreParameters: true }]
+		'@typescript-eslint/no-inferrable-types': ['warn', { ignoreParameters: true }],
+		// We don't have ESM modules! At all!! Namespaces are a nice alternative.
+		'@typescript-eslint/no-namespace': 'off',
+		// Applies when directly inside a namespace.
+		// Also we use strict mode so fucky scoping behaviour doesn't apply.
+		'no-inner-declarations': 'off'
 	}
 };
