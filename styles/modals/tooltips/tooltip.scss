@@ -113,7 +113,7 @@
 	}
 
 	@each $dir in ('top', 'right', 'bottom', 'right') {
-		&__#{$dir}-arrow {
+		#{$root}--arrow &__#{$dir}-arrow {
 			background-image: url('file://{images}/tooltips/#{$dir}-arrow.svg');
 
 			#{$root}.#{function.capitalize($dir)}ArrowVisible & {

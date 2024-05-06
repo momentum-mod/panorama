@@ -6,7 +6,7 @@
 		<include src="file://{scripts}/hud/sticky-count.js" />
 	</scripts>
 
-	<MomHudStickyCharge class="horizontal-align-center">
+	<MomHudStickyCharge>
 		<Panel id="StickyCountContainer" class="sticky-count horizontal-align-center flow-right" />
 	</MomHudStickyCharge>
 </root>

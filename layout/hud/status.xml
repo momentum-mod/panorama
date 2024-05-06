@@ -8,7 +8,7 @@
 		<include src="file://{scripts}/hud/status.js" />
 	</scripts>
 
-	<MomHudStatus class="full-width" onload="HudStatus.onLoad();">
+	<MomHudStatus onload="HudStatus.onLoad();">
 		<ConVarEnabler class="hudstatus" convar="mom_hud_status_enable" togglevisibility="true">
 			<Label id="HudStatusLabel" class="hudstatus__label" text="" />
 		</ConVarEnabler>

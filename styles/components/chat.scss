@@ -12,7 +12,7 @@
 	&__history-wrapper {
 		height: 100%;
 		width: 100%;
-		margin: 8px;
+		margin-bottom: 8px;
 		padding: 8px 0;
 
 		&:hover {
@@ -35,7 +35,7 @@
 
 	&__input-container {
 		width: 100%;
-		margin: 0 8px 6px 8px;
+		margin-bottom: 6px;
 		flow-children: right;
 	}
 
