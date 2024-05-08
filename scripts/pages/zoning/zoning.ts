@@ -52,14 +52,14 @@ class ZoneMenu {
 	static initMenu() {
 		this.mapZoneData = this.generateRandomMapZones(4, [2, 1, 2, 3], 3, 1280, 960, 720);
 
-		this.createDeepEntry(this.panels.trackList, this.mapZoneData.tracks.main);
+		this.createTrackEntry(this.panels.trackList, this.mapZoneData.tracks.main);
 
 		for (const [_, stage] of this.mapZoneData.tracks.stages.entries()) {
-			this.createDeepEntry(this.panels.trackList, stage);
+			this.createTrackEntry(this.panels.trackList, stage);
 		}
 
 		for (const [_, bonus] of this.mapZoneData.tracks.bonuses.entries()) {
-			this.createDeepEntry(this.panels.trackList, bonus);
+			this.createTrackEntry(this.panels.trackList, bonus);
 		}
 
 		const mainTrack = this.mapZoneData.tracks.main;
@@ -139,7 +139,7 @@ class ZoneMenu {
 		}
 	}
 
-	static createDeepEntry(parent: Panel, entry: TrackBase) {
+	static createTrackEntry(parent: Panel, entry: TrackBase) {
 		const trackContainer = this.addTracklistEntry(parent, entry.name, TracklistSnippet.TRACK, null);
 		if (trackContainer === null) return;
 		if (entry.zones.segments.length === 0) {
