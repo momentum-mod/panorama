@@ -1,7 +1,7 @@
 @use '../../config' as *;
 @use 'sass:color';
 
-$small: 18px;
+$small: 16px;
 $medium: 28px;
 
 .zoning {
@@ -83,6 +83,10 @@ $medium: 28px;
 		margin-bottom: 1px;
 		padding: 2px 6px;
 		flow-children: down;
+	}
+
+	&__tracklist-label {
+		font-size: $small;
 	}
 
 	&__tracklist-segment {
