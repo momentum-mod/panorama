@@ -15,7 +15,9 @@
 						<Image id="TracklistCollapseIcon" class="button__icon zoning__collapse-icon zoning__icon-green" src="file://{images}/add.svg" />
 						<Image id="TracklistExpandIcon" class="button__icon zoning__collapse-icon zoning__icon-red hide" src="file://{images}/subtract.svg" />
 					</Button>
-					<Label id="Name" class="zoning__tracklist-label" />
+					<RadioButton id="SelectButton" class="zoning__tracklist-button" group="tracklist">
+						<Label  id="Name" class="zoning__tracklist-label" />
+					</RadioButton>
 				</Panel>
 				<Panel id="ListContainer" class="zoning__list-container" />
 			</Panel>
@@ -27,7 +29,9 @@
 						<Image id="TracklistCollapseIcon" class="button__icon zoning__collapse-icon zoning__icon-green" src="file://{images}/add.svg" />
 						<Image id="TracklistExpandIcon" class="button__icon zoning__collapse-icon zoning__icon-red hide" src="file://{images}/subtract.svg" />
 					</Button>
-					<Label  id="Name" class="zoning__tracklist-label" />
+					<RadioButton id="SelectButton" class="zoning__tracklist-button" group="tracklist">
+						<Label  id="Name" class="zoning__tracklist-label" />
+					</RadioButton>
 					<ToggleButton id="SyncButton" class="checkbox checkbox--right zoning__sync-button" />
 				</Panel>
 				<Panel id="ListContainer" class="zoning__list-container" />
