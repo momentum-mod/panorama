@@ -54,7 +54,8 @@ class ZoneMenu {
 	}
 
 	static initMenu() {
-		this.mapZoneData = this.generateRandomMapZones(4, [2, 1, 2, 3], 3, 1280, 960, 720);
+		//@ts-expect-error API name
+		this.mapZoneData = MomentumTimerAPI.GetActiveZoneDefs() as Base; //this.generateRandomMapZones(4, [2, 1, 2, 3], 3, 1280, 960, 720);
 
 		this.createTrackEntry(this.panels.trackList, this.mapZoneData.tracks.main);
 
@@ -128,6 +129,9 @@ class ZoneMenu {
 				child.RemoveAndDeleteChildren();
 			}
 		}
+
+		//@ts-expect-error API name
+		MomentumTimerAPI.SetActiveZoneDefs(this.mapZoneData);
 		this.mapZoneData = null;
 	}
 
