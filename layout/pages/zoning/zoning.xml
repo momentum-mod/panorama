@@ -18,7 +18,6 @@
 					<RadioButton id="SelectButton" class="zoning__tracklist-button" group="tracklist">
 						<Label  id="Name" class="zoning__tracklist-label" />
 					</RadioButton>
-					<ToggleButton id="SyncButton" class="checkbox checkbox--right zoning__checkbox" />
 				</Panel>
 				<Panel id="ListContainer" class="zoning__list-container" />
 			</Panel>

@@ -59,10 +59,6 @@ class ZoneMenu {
 
 		this.createTrackEntry(this.panels.trackList, this.mapZoneData.tracks.main);
 
-		for (const [_, stage] of this.mapZoneData.tracks.stages.entries()) {
-			this.createTrackEntry(this.panels.trackList, stage);
-		}
-
 		for (const [_, bonus] of this.mapZoneData.tracks.bonuses.entries()) {
 			this.createTrackEntry(this.panels.trackList, bonus);
 		}
@@ -154,13 +150,6 @@ class ZoneMenu {
 			trackContainer.RemoveAndDeleteChildren();
 			parent.FindChildTraverse('CollapseButton')?.DeleteAsync(0);
 			return;
-		}
-
-		if ('syncWithMain' in entry) {
-			const syncButton = trackContainer.GetParent()?.FindChild('Entry')?.FindChildTraverse('SyncButton');
-			syncButton?.SetPanelEvent('onactivate', () => ((entry as StageTrack).syncWithMain = syncButton.checked));
-		} else {
-			trackContainer.GetParent()?.FindChild('Entry')?.FindChildTraverse('SyncButton')?.DeleteAsync(0);
 		}
 
 		for (const [i, segment] of entry.zones.segments.entries()) {
@@ -458,7 +447,7 @@ class ZoneMenu {
 			stages: []
 		};
 
-		for (const [i, segment] of tracks.main.zones.segments.entries()) {
+		/*for (const [i, segment] of tracks.main.zones.segments.entries()) {
 			tracks.stages.push({
 				name: 'Stage ' + (i > 9 ? '' : '0') + (i + 1),
 				zones: {
@@ -476,7 +465,7 @@ class ZoneMenu {
 				},
 				syncWithMain: false
 			});
-		}
+		}*/
 
 		const mapID = Math.random();
 
