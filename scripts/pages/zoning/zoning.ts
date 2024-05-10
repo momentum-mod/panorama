@@ -15,7 +15,11 @@ class ZoneMenu {
 		/** @type {Panel} @static */
 		trackList: $('#TrackList') as Panel,
 		/** @type {Panel} @static */
-
+		propertiesTrack: $('#TrackProperties') as Panel,
+		/** @type {Panel} @static */
+		propertiesSegment: $('#SegmentProperties') as Panel,
+		/** @type {Panel} @static */
+		propertiesZone: $('#ZoneProperties') as Panel,
 		/** @type {DropDown} @static */
 		filterSelect: $('#FilterSelect'),
 		/** @type {DropDown} @static */
@@ -39,7 +43,7 @@ class ZoneMenu {
 		regionTPDest: $('#RegionTPDest')
 	};
 
-	static selectedZone: Zone | null;
+	static selectedZone: TrackBase | Segment | Zone | null;
 	static mapZoneData: Base | null;
 
 	static {
@@ -140,7 +144,7 @@ class ZoneMenu {
 	}
 
 	static createTrackEntry(parent: Panel, entry: TrackBase) {
-		const trackContainer = this.addTracklistEntry(parent, entry.name, TracklistSnippet.TRACK, null);
+		const trackContainer = this.addTracklistEntry(parent, entry.name, TracklistSnippet.TRACK, entry);
 		if (trackContainer === null) return;
 		if (entry.zones.segments.length === 0) {
 			trackContainer.RemoveAndDeleteChildren();
@@ -157,7 +161,12 @@ class ZoneMenu {
 
 		for (const [i, segment] of entry.zones.segments.entries()) {
 			const majorId = `Segment ${i + 1}`;
-			const majorListContainer = this.addTracklistEntry(trackContainer, majorId, TracklistSnippet.SEGMENT, null);
+			const majorListContainer = this.addTracklistEntry(
+				trackContainer,
+				majorId,
+				TracklistSnippet.SEGMENT,
+				segment
+			);
 			if (majorListContainer === null) continue;
 			if (segment.checkpoints.length === 0) {
 				majorListContainer.RemoveAndDeleteChildren();
@@ -173,7 +182,12 @@ class ZoneMenu {
 		}
 	}
 
-	static addTracklistEntry(parent: Panel, name: string, snippet: string, zone: Zone | null): Panel | null {
+	static addTracklistEntry(
+		parent: Panel,
+		name: string,
+		snippet: string,
+		zone: TrackBase | Segment | Zone | null
+	): Panel | null {
 		const newTracklistPanel = $.CreatePanel('Panel', parent, name);
 		newTracklistPanel.LoadLayoutSnippet(snippet);
 
@@ -194,7 +208,7 @@ class ZoneMenu {
 
 		const selectButton = newTracklistPanel.FindChildTraverse('SelectButton') as Panel;
 		if (selectButton && zone) {
-			selectButton.SetPanelEvent('onactivate', () => ZoneMenu.updateZoneSelection(zone));
+			selectButton.SetPanelEvent('onactivate', () => ZoneMenu.updateSelection(zone));
 		}
 
 		return listContainer;
@@ -215,18 +229,41 @@ class ZoneMenu {
 		}
 	}
 
-	static updateZoneSelection(newSelectedZone: Zone) {
+	static updateSelection(newSelection: TrackBase | Segment | Zone) {
 		//this.selectedZone?.RemoveClass('zoning__tracklist--active');
 		//newSelectedZone.AddClass('zoning__tracklist--active');
-		this.selectedZone = newSelectedZone;
+		this.selectedZone = newSelection;
 
-		$.Msg(`Zone selected. Volume: ${newSelectedZone.volumeIndex}, Filter: ${newSelectedZone.filterName}`);
-		//update zone properties
-		const index = newSelectedZone.volumeIndex;
-		this.panels.volumeSelect.SetSelectedIndex(index);
-		const volume = this.mapZoneData?.volumes[index];
-		this.panels.regionSelect.SetSelectedIndex(0);
-		this.panels.regionSafeHeight.text = volume?.regions[0].safeHeight.toFixed(2) as string;
+		if (!newSelection) {
+			this.panels.propertiesTrack.style.visibility = 'collapse';
+			this.panels.propertiesSegment.style.visibility = 'collapse';
+			this.panels.propertiesZone.style.visibility = 'collapse';
+		} else if ('volumeIndex' in newSelection) {
+			$.Msg(`Zone selected. Volume: ${newSelection.volumeIndex}, Filter: ${newSelection.filterName}`);
+			this.panels.propertiesTrack.style.visibility = 'collapse';
+			this.panels.propertiesSegment.style.visibility = 'collapse';
+			this.panels.propertiesZone.style.visibility = 'visible';
+			//update zone properties
+			const index = (newSelection as Zone).volumeIndex;
+			this.panels.volumeSelect.SetSelectedIndex(index);
+			const volume = this.mapZoneData?.volumes[index];
+			this.panels.regionSelect.SetSelectedIndex(0);
+			this.panels.regionSafeHeight.text = volume?.regions[0].safeHeight.toFixed(2) as string;
+		} else if ('checkpoints' in newSelection) {
+			$.Msg(
+				`Segment selected. limitStartGroundSpeed: ${newSelection.limitStartGroundSpeed}, checkpointsRequired: ${newSelection.checkpointsRequired}, checkpointsOrdered: ${newSelection.checkpointsOrdered};`
+			);
+			this.panels.propertiesTrack.style.visibility = 'collapse';
+			this.panels.propertiesSegment.style.visibility = 'visible';
+			this.panels.propertiesZone.style.visibility = 'collapse';
+			//update segment properties
+		} else if ('zones' in newSelection) {
+			$.Msg(`Track selected. Name: ${newSelection.name}`);
+			this.panels.propertiesTrack.style.visibility = 'visible';
+			this.panels.propertiesSegment.style.visibility = 'collapse';
+			this.panels.propertiesZone.style.visibility = 'collapse';
+			//update track properties
+		}
 	}
 
 	static updatePropertyFields(updatedControl: Panel) {
@@ -259,6 +296,11 @@ class ZoneMenu {
 			'RegionPointsMenu',
 			'tracklist-region-points'
 		);
+	}
+
+	static onTextSubmitted() {
+		$.Msg('Updated track name!');
+		//grab this.something.textentry.text
 	}
 
 	static createNewStage() {

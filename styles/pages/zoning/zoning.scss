@@ -157,7 +157,7 @@ $medium: 28px;
 		wash-color: $red;
 	}
 
-	&__sync-button {
+	&__checkbox {
 		horizontal-align: right;
 	}
 
@@ -165,6 +165,13 @@ $medium: 28px;
 		margin: 2px;
 		padding: 4px;
 		width: 100%;
+	}
+
+	&__property-container {
+		//height: 100%;
+		width: 100%;
+		flow-children: down;
+		overflow: squish scroll;
 	}
 
 	&__property-label {
