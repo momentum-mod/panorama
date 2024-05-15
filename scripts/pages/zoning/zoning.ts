@@ -49,18 +49,25 @@ class ZoneMenu {
 	static {
 		$.RegisterForUnhandledEvent('ZoneMenu_Show', this.showZoneMenu.bind(this));
 		$.RegisterForUnhandledEvent('ZoneMenu_Hide', this.hideZoneMenu.bind(this));
+		$.RegisterForUnhandledEvent('OnRegionPointAdded', this.addRegionPoint.bind(this));
 
 		$.RegisterForUnhandledEvent('LevelInitPostEntity', this.initMenu.bind(this));
 	}
 
 	static initMenu() {
-		//@ts-expect-error API name
-		this.mapZoneData = MomentumTimerAPI.GetActiveZoneDefs() as Base; //this.generateRandomMapZones(4, [2, 1, 2, 3], 3, 1280, 960, 720);
+		this.mapZoneData = /*MomentumTimerAPI.GetActiveZoneDefs() as Base;*/ this.generateRandomMapZones(
+			4,
+			[2, 1, 2, 3],
+			3,
+			1280,
+			960,
+			720
+		);
 
-		this.createTrackEntry(this.panels.trackList, this.mapZoneData.tracks.main);
+		this.createTrackEntry(this.panels.trackList, this.mapZoneData.tracks.main, 'Main');
 
-		for (const [_, bonus] of this.mapZoneData.tracks.bonuses.entries()) {
-			this.createTrackEntry(this.panels.trackList, bonus);
+		for (const [i, bonus] of this.mapZoneData.tracks.bonuses.entries()) {
+			this.createTrackEntry(this.panels.trackList, bonus, `Bonus ${i}`);
 		}
 
 		const mainTrack = this.mapZoneData.tracks.main;
@@ -126,8 +133,7 @@ class ZoneMenu {
 			}
 		}
 
-		//@ts-expect-error API name
-		MomentumTimerAPI.SetActiveZoneDefs(this.mapZoneData);
+		//MomentumTimerAPI.SetActiveZoneDefs(this.mapZoneData);
 		this.mapZoneData = null;
 	}
 
@@ -143,8 +149,8 @@ class ZoneMenu {
 		}
 	}
 
-	static createTrackEntry(parent: Panel, entry: TrackBase) {
-		const trackContainer = this.addTracklistEntry(parent, entry.name, TracklistSnippet.TRACK, entry);
+	static createTrackEntry(parent: Panel, entry: TrackBase, name: string) {
+		const trackContainer = this.addTracklistEntry(parent, name, TracklistSnippet.TRACK, entry);
 		if (trackContainer === null) return;
 		if (entry.zones.segments.length === 0) {
 			trackContainer.RemoveAndDeleteChildren();
@@ -153,7 +159,7 @@ class ZoneMenu {
 		}
 
 		for (const [i, segment] of entry.zones.segments.entries()) {
-			const majorId = `Segment ${i + 1}`;
+			const majorId = segment.name ?? `Segment ${i + 1}`;
 			const majorListContainer = this.addTracklistEntry(
 				trackContainer,
 				majorId,
@@ -284,11 +290,17 @@ class ZoneMenu {
 	}
 
 	static showPointsMenu() {
-		const pointsMenu = UiToolkitAPI.ShowCustomLayoutContextMenu(
+		/*const pointsMenu = UiToolkitAPI.ShowCustomLayoutContextMenu(
 			'RegionPoints',
 			'RegionPointsMenu',
 			'tracklist-region-points'
-		);
+		);*/
+		//@ts-expect-error method doesn't exist on 'Panel'
+		$.GetContextPanel().regionPointsEdit();
+	}
+
+	static addRegionPoint(point) {
+		$.Msg({ point });
 	}
 
 	static onTextSubmitted() {
@@ -415,13 +427,14 @@ class ZoneMenu {
 			limitStartGroundSpeed: false,
 			checkpointsRequired: true,
 			checkpointsOrdered: false,
-			checkpoints: Array.from(Array.from({ length: numCPs }), (_, i) => randomZone(i === 0)) as Zone[]
+			checkpoints: Array.from(Array.from({ length: numCPs }), (_, i) => randomZone(i === 0)) as Zone[],
+			cancel: [],
+			name: ''
 		});
 
 		const volumes: Volume[] = [];
 		const tracks: MapTracks = {
 			main: {
-				name: 'Main',
 				movementParams: {
 					maxVelocity: 0,
 					defragFlags: 0
@@ -434,17 +447,14 @@ class ZoneMenu {
 					end: randomZone(),
 					cancel: []
 				},
-				maxVelocity: 0,
-				defragFlags: 0
+				stagesEndAtStageStarts: true
 			},
 			bonuses: Array.from(Array.from({ length: numBonuses }), (_, i) => ({
-				name: 'Bonus ' + (i > 9 ? '' : '0') + (i + 1),
 				zones: {
 					end: randomZone(),
 					segments: [doSegment(Math.ceil(Math.random() * 4))]
 				}
-			})) as BonusTrack[],
-			stages: []
+			})) as BonusTrack[]
 		};
 
 		/*for (const [i, segment] of tracks.main.zones.segments.entries()) {
