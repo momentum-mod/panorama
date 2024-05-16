@@ -295,8 +295,9 @@ class ZoneMenu {
 			'RegionPointsMenu',
 			'tracklist-region-points'
 		);*/
+		$.Msg('Start editing points');
 		//@ts-expect-error method doesn't exist on 'Panel'
-		$.GetContextPanel().regionPointsEdit();
+		$.GetContextPanel().StartRegionEdit();
 	}
 
 	static addRegionPoint(point) {
