@@ -297,7 +297,7 @@ class ZoneMenu {
 		);*/
 		$.Msg('Start editing points');
 		//@ts-expect-error method doesn't exist on 'Panel'
-		$.GetContextPanel().StartRegionEdit();
+		$.GetContextPanel().regionPointsEdit();
 	}
 
 	static addRegionPoint(point) {
