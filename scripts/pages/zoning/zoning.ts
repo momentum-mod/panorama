@@ -159,7 +159,7 @@ class ZoneMenu {
 		}
 
 		for (const [i, segment] of entry.zones.segments.entries()) {
-			const majorId = segment.name ?? `Segment ${i + 1}`;
+			const majorId = segment.name || `Segment ${i + 1}`;
 			const majorListContainer = this.addTracklistEntry(
 				trackContainer,
 				majorId,
