@@ -74,10 +74,6 @@
 		<Panel id="PropertiesContainer" class="zoning__menu-section">
 			<Panel id="TrackProperties" class="zoning__property-container">
 				<Panel class="zoning__menu-separator">
-					<Panel id="Name" class="zoning__property">
-						<Label class="zoning__property-label" text="#Zoning_Name" />
-						<TextEntry id="TrackName" class="textentry zoning__textentry" maxchars="255" placeholder="#Zoning_TrackName_Placeholder" text="" ontextentrysubmit="ZoneMenu.onTextSubmitted()" />
-					</Panel>
 					<Panel id="SegmentsOrdered" class="zoning__property">
 						<Label class="zoning__property-label" text="#Zoning_SegmentsOrdered" />
 						<ToggleButton id="CheckBox" class="checkbox checkbox--right zoning__checkbox" />
@@ -95,6 +91,10 @@
 							<ToggleButton id="Flag0" class="checkbox checkbox--right zoning__checkbox" />
 						</Panel>
 					</Panel>
+					<Panel id="SegmentsEndAtStageStarts" class="zoning__property">
+						<Label class="zoning__property-label" text="#Zoning_SegmentsEndAtStageStarts" />
+						<ToggleButton id="CheckBox" class="checkbox checkbox--right zoning__checkbox" />
+					</Panel>
 				</Panel>
 			</Panel>
 			<Panel id="SegmentProperties" class="zoning__property-container">
@@ -111,22 +111,24 @@
 						<Label class="zoning__property-label" text="#Zoning_CheckpointsOrdered" />
 						<ToggleButton id="CheckBox" class="checkbox checkbox--right zoning__checkbox" />
 					</Panel>
+					<Panel id="Name" class="zoning__property">
+						<Label class="zoning__property-label" text="#Zoning_Name" />
+						<TextEntry id="SegmentName" class="textentry zoning__textentry" maxchars="255" placeholder="#Zoning_TrackName_Placeholder" text="" ontextentrysubmit="ZoneMenu.onTextSubmitted()" />
+					</Panel>
 				</Panel>
 			</Panel>
 			<Panel id="ZoneProperties" class="zoning__property-container">
 				<Panel class="zoning__menu-separator">
-					<Panel id="Filter" class="zoning__property">
-						<Label class="zoning__property-label" text="#Zoning_Filter" />
-						<DropDown id="FilterSelect" class="dropdown zoning__dropdown" menuclass="dropdown-menu">
-							<!-- Populated in js -->
-							<Label text="Debug1" />
-						</DropDown>
-					</Panel>
 					<Panel id="Volume" class="zoning__property">
 						<Label class="zoning__property-label" text="#Zoning_Volume" />
 						<DropDown id="VolumeSelect" class="dropdown zoning__dropdown" menuclass="dropdown-menu">
 							<!-- Populated in js -->
-							<Label text="Debug2" />
+						</DropDown>
+					</Panel>
+					<Panel id="Filter" class="zoning__property">
+						<Label class="zoning__property-label" text="#Zoning_Filter" />
+						<DropDown id="FilterSelect" class="dropdown zoning__dropdown" menuclass="dropdown-menu">
+							<!-- Populated in js -->
 						</DropDown>
 					</Panel>
 				</Panel>
@@ -135,7 +137,6 @@
 							<Label class="zoning__property-label" text="#Zoning_Region" />
 							<DropDown id="RegionSelect" class="dropdown zoning__dropdown" menuclass="dropdown-menu">
 								<!-- Populated in js -->
-								<Label text="Debug3" />
 							</DropDown>
 					</Panel>
 					<Panel id="RegionDetails" class="zoning__menu-separator">
@@ -154,15 +155,15 @@
 							<TextEntry id="RegionHeight" class="textentry settings-slider__textentry zoning__textentry" maxchars="8" textmode="numeric" />
 						</Panel>
 						<Panel class="zoning__property">
-							<Label class="zoning__property-label" text="#Zoning_RegionDetails_SafeHeight" />
-							<TextEntry id="RegionSafeHeight" class="textentry settings-slider__textentry zoning__textentry" maxchars="8" textmode="numeric" />
-						</Panel>
-						<Panel class="zoning__property">
 							<Label class="zoning__property-label" text="#Zoning_RegionDetails_TPDest" />
 							<DropDown id="RegionTPDest" class="dropdown zoning__dropdown" menuclass="dropdown-menu">
 								<!-- Populated in js -->
-								<Label text="Debug4" />
+								<Label text="#Zoning_MakeNewDest" />
 							</DropDown>
+						</Panel>
+						<Panel class="zoning__property">
+							<Label class="zoning__property-label" text="#Zoning_RegionDetails_SafeHeight" />
+							<TextEntry id="RegionSafeHeight" class="textentry settings-slider__textentry zoning__textentry" maxchars="8" textmode="numeric" />
 						</Panel>
 					</Panel>
 				</Panel>
