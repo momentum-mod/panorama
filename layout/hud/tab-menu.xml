@@ -52,7 +52,7 @@
 			</Panel>
 
 			<Panel id="ZoningContainer" class="hud-tab-menu__zoning" hittestchildren="true">
-				<ZoneMenu src="file://{resources}/layout/pages/zoning/zoning.xml" hittest="true" hittestchildren="true" />
+				<ZoneMenu id="ZoneMenu" hittest="true" hittestchildren="true" />
 			</Panel>
 
 			<Panel class="hud-tab-menu__stats">

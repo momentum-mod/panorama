@@ -50,6 +50,7 @@ class ZoneMenu {
 		$.RegisterForUnhandledEvent('ZoneMenu_Show', this.showZoneMenu.bind(this));
 		$.RegisterForUnhandledEvent('ZoneMenu_Hide', this.hideZoneMenu.bind(this));
 		$.RegisterForUnhandledEvent('OnRegionPointAdded', this.addRegionPoint.bind(this));
+		$.RegisterForUnhandledEvent('OnRegionSave', this.onRegionSave.bind(this));
 
 		$.RegisterForUnhandledEvent('LevelInitPostEntity', this.initMenu.bind(this));
 	}
@@ -63,6 +64,8 @@ class ZoneMenu {
 			960,
 			720
 		);
+
+		this.updateSelection(this.mapZoneData.tracks.main);
 
 		this.createTrackEntry(this.panels.trackList, this.mapZoneData.tracks.main, 'Main');
 
@@ -302,6 +305,10 @@ class ZoneMenu {
 
 	static addRegionPoint(point) {
 		$.Msg({ point });
+	}
+
+	static onRegionSave() {
+		$.Msg('Save region!');
 	}
 
 	static onTextSubmitted() {
