@@ -76,30 +76,9 @@ class ZoneMenu {
 		const mainTrack = this.mapZoneData.tracks.main;
 		$.Msg(mainTrack.zones.segments.length + ' segments');
 		$.Msg(mainTrack.zones.segments[0].checkpoints.length + ' checkpoints');
-		//const volumeIndex = mainTrack.zones.segments[0].checkpoints[0].volumeIndex;
-		const volumes = this.mapZoneData.volumes as Volume[];
-		const region = volumes[0].regions[0];
-		$.Msg(volumes.length + ' volumes');
-		$.Msg(volumes[0].regions.length + ' regions');
+		const region = mainTrack.zones.segments[0].checkpoints[0].regions[0];
+		$.Msg(mainTrack.zones.segments[0].checkpoints[0].regions.length + ' regions');
 
-		this.populateDropdown(volumes, this.panels.volumeSelect, $.Localize('#Zoning_Volume') as string);
-		this.panels.volumeSelect.SetSelectedIndex($.persistentStorage.getItem('zoning.volume') ?? 0);
-		this.panels.volumeSelect.SetPanelEvent('oninputsubmit', () => {
-			$.persistentStorage.setItem(
-				'zoning.volume',
-				this.panels.volumeSelect.GetSelected()?.GetAttributeUInt32('value', 0) ?? 0
-			);
-			ZoneMenu.updatePropertyFields(this.panels.volumeSelect);
-		});
-
-		const selectedVolume: number = $.persistentStorage.getItem('zoning.volume') ?? 0;
-		if (volumes.length > 0) {
-			this.populateDropdown(
-				volumes[selectedVolume].regions,
-				this.panels.regionSelect,
-				$.Localize('#Zoning_Region') as string
-			);
-		}
 		this.panels.regionSelect.SetSelectedIndex($.persistentStorage.getItem('zoning.region') ?? 0);
 		this.panels.regionSelect.SetPanelEvent('oninputsubmit', () => {
 			$.persistentStorage.setItem(
@@ -240,17 +219,14 @@ class ZoneMenu {
 			this.panels.propertiesTrack.style.visibility = 'collapse';
 			this.panels.propertiesSegment.style.visibility = 'collapse';
 			this.panels.propertiesZone.style.visibility = 'collapse';
-		} else if ('volumeIndex' in newSelection) {
-			$.Msg(`Zone selected. Volume: ${newSelection.volumeIndex}, Filter: ${newSelection.filterName}`);
+		} else if ('regions' in newSelection) {
+			$.Msg(`Zone selected. Regions: ${newSelection.regions}, Filter: ${newSelection.filterName}`);
 			this.panels.propertiesTrack.style.visibility = 'collapse';
 			this.panels.propertiesSegment.style.visibility = 'collapse';
 			this.panels.propertiesZone.style.visibility = 'visible';
 			//update zone properties
-			const index = (newSelection as Zone).volumeIndex;
-			this.panels.volumeSelect.SetSelectedIndex(index);
-			const volume = this.mapZoneData?.volumes[index];
 			this.panels.regionSelect.SetSelectedIndex(0);
-			this.panels.regionSafeHeight.text = volume?.regions[0].safeHeight.toFixed(2) as string;
+			this.panels.regionSafeHeight.text = (newSelection.regions as Region[])[0].safeHeight.toFixed(2) as string;
 		} else if ('checkpoints' in newSelection) {
 			$.Msg(
 				`Segment selected. limitStartGroundSpeed: ${newSelection.limitStartGroundSpeed}, checkpointsRequired: ${newSelection.checkpointsRequired}, checkpointsOrdered: ${newSelection.checkpointsOrdered};`
@@ -346,10 +322,7 @@ class ZoneMenu {
 
 		const lastSegmentIndex = (this.mapZoneData?.tracks.main.zones.segments.length as number) - 1;
 		const lastSegment = this.mapZoneData?.tracks.main.zones.segments[lastSegmentIndex] as Segment;
-		const volumeCount: number = this.mapZoneData?.volumes.length as number;
-		const newVolume: Volume = { regions: [newRegion] };
-		this.mapZoneData?.volumes.push(newVolume);
-		lastSegment.checkpoints.push({ volumeIndex: volumeCount } as Zone);
+		lastSegment.checkpoints.push({ regions: [newRegion] } as Zone);
 
 		// add to tracklist tree
 		const mainTrack: Panel = this.panels.trackList.Children()[0];
@@ -357,7 +330,7 @@ class ZoneMenu {
 		const segmentPanel: Panel = segmentList?.Children()[lastSegmentIndex] as Panel;
 		const checkpointList: Panel = segmentPanel.FindChildTraverse('ListContainer') as Panel;
 		const id = `Checkpoint ${lastSegment.checkpoints.length}`;
-		this.addTracklistEntry(checkpointList, id, TracklistSnippet.CHECKPOINT, { volumeIndex: volumeCount } as Zone);
+		this.addTracklistEntry(checkpointList, id, TracklistSnippet.CHECKPOINT, { regions: [newRegion] } as Zone);
 	}
 
 	static showDeletePopup() {
@@ -422,13 +395,8 @@ class ZoneMenu {
 			} as Region;
 		};
 
-		const randomVolume = (isMajor?: boolean): Volume => ({
-			regions: [randomRegion(isMajor)]
-		});
-
 		const randomZone = (isMajor = false): Zone => {
-			volumes.push(randomVolume(isMajor));
-			return { volumeIndex: volumes.length - 1 } as Zone;
+			return { regions: [randomRegion(isMajor)] } as Zone;
 		};
 
 		const doSegment = (numCPs: number): Segment => ({
@@ -440,7 +408,6 @@ class ZoneMenu {
 			name: ''
 		});
 
-		const volumes: Volume[] = [];
 		const tracks: MapTracks = {
 			main: {
 				movementParams: {
@@ -465,28 +432,8 @@ class ZoneMenu {
 			})) as BonusTrack[]
 		};
 
-		/*for (const [i, segment] of tracks.main.zones.segments.entries()) {
-			tracks.stages.push({
-				name: 'Stage ' + (i > 9 ? '' : '0') + (i + 1),
-				zones: {
-					segmentsOrdered: true,
-					segments: [
-						{
-							limitStartGroundSpeed: segment.limitStartGroundSpeed,
-							checkpointsRequired: segment.checkpointsRequired,
-							checkpointsOrdered: false,
-							checkpoints: segment.checkpoints
-						}
-					],
-					end: tracks.main.zones.segments[i + 1]?.checkpoints[0] ?? tracks.main.zones.end,
-					cancel: []
-				},
-				syncWithMain: false
-			});
-		}*/
-
 		const mapID = Math.random();
 
-		return { mapID, tracks, volumes, formatVersion: 1, dataTimestamp: Date.now() };
+		return { mapID, tracks, formatVersion: 1, dataTimestamp: Date.now() };
 	}
 }
