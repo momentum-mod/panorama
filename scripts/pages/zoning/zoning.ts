@@ -48,8 +48,8 @@ class ZoneMenu {
 		segment: null as Segment | null,
 		zone: null as Zone | null
 	};
-	static mapZoneData: Base | null;
-	static backupZoneData: Base | null;
+	static mapZoneData: ZoneDef | null;
+	static backupZoneData: ZoneDef | null;
 	static teleDestList: string[] | null;
 
 	static {
@@ -63,7 +63,7 @@ class ZoneMenu {
 
 	static initMenu() {
 		//@ts-expect-error API name not recognized
-		this.mapZoneData = MomentumTimerAPI.GetActiveZoneDefs() as Base;
+		this.mapZoneData = MomentumTimerAPI.GetActiveZoneDefs() as ZoneDef;
 
 		this.updateSelection(this.mapZoneData.tracks.main, null, null);
 
