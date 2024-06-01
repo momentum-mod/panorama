@@ -43,8 +43,14 @@ class ZoneMenu {
 		regionTPDest: $('#RegionTPDest')
 	};
 
-	static selectedZone: TrackBase | Segment | Zone | null;
+	static selectedZone = {
+		track: null as TrackBase | null,
+		segment: null as Segment | null,
+		zone: null as Zone | null
+	};
 	static mapZoneData: Base | null;
+	static backupZoneData: Base | null;
+	static teleDestList: string[] | null;
 
 	static {
 		$.RegisterForUnhandledEvent('ZoneMenu_Show', this.showZoneMenu.bind(this));
@@ -56,16 +62,10 @@ class ZoneMenu {
 	}
 
 	static initMenu() {
-		this.mapZoneData = /*MomentumTimerAPI.GetActiveZoneDefs() as Base;*/ this.generateRandomMapZones(
-			4,
-			[2, 1, 2, 3],
-			3,
-			1280,
-			960,
-			720
-		);
+		//@ts-expect-error API name not recognized
+		this.mapZoneData = MomentumTimerAPI.GetActiveZoneDefs() as Base;
 
-		this.updateSelection(this.mapZoneData.tracks.main);
+		this.updateSelection(this.mapZoneData.tracks.main, null, null);
 
 		this.createTrackEntry(this.panels.trackList, this.mapZoneData.tracks.main, 'Main');
 
@@ -96,8 +96,8 @@ class ZoneMenu {
 			}
 		}
 		this.panels.regionBottom.text = region.bottom.toFixed(2);
-		this.panels.regionTop.text = (region.bottom + region.height).toFixed(2);*/
-		this.panels.regionSafeHeight.text = region.safeHeight.toFixed(2);
+		this.panels.regionTop.text = (region.bottom + region.height).toFixed(2);
+		this.panels.regionSafeHeight.text = (region.safeHeight || 0).toFixed(2);*/
 	}
 
 	static showZoneMenu() {
@@ -115,7 +115,6 @@ class ZoneMenu {
 			}
 		}
 
-		//MomentumTimerAPI.SetActiveZoneDefs(this.mapZoneData);
 		this.mapZoneData = null;
 	}
 
@@ -132,7 +131,11 @@ class ZoneMenu {
 	}
 
 	static createTrackEntry(parent: Panel, entry: TrackBase, name: string) {
-		const trackContainer = this.addTracklistEntry(parent, name, TracklistSnippet.TRACK, entry);
+		const trackContainer = this.addTracklistEntry(parent, name, TracklistSnippet.TRACK, {
+			track: entry,
+			segment: null,
+			zone: null
+		});
 		if (trackContainer === null) return;
 		if (entry.zones.segments.length === 0) {
 			trackContainer.RemoveAndDeleteChildren();
@@ -142,12 +145,11 @@ class ZoneMenu {
 
 		for (const [i, segment] of entry.zones.segments.entries()) {
 			const majorId = segment.name || `Segment ${i + 1}`;
-			const majorListContainer = this.addTracklistEntry(
-				trackContainer,
-				majorId,
-				TracklistSnippet.SEGMENT,
-				segment
-			);
+			const majorListContainer = this.addTracklistEntry(trackContainer, majorId, TracklistSnippet.SEGMENT, {
+				track: entry,
+				segment: segment,
+				zone: null
+			});
 			if (majorListContainer === null) continue;
 			if (segment.checkpoints.length === 0) {
 				majorListContainer.RemoveAndDeleteChildren();
@@ -157,18 +159,17 @@ class ZoneMenu {
 
 			for (const [j, zone] of segment.checkpoints.entries()) {
 				const minorId = `Checkpoint ${j + 1}`;
-				this.addTracklistEntry(majorListContainer, minorId, TracklistSnippet.CHECKPOINT, zone);
+				this.addTracklistEntry(majorListContainer, minorId, TracklistSnippet.CHECKPOINT, {
+					track: entry,
+					segment: segment,
+					zone: zone
+				});
 			}
 			$.Msg(majorId + ' created in ' + entry.name + 'track, ' + segment.checkpoints.length + ' checkpoints.\n');
 		}
 	}
 
-	static addTracklistEntry(
-		parent: Panel,
-		name: string,
-		snippet: string,
-		zone: TrackBase | Segment | Zone | null
-	): Panel | null {
+	static addTracklistEntry(parent: Panel, name: string, snippet: string, object): Panel | null {
 		const newTracklistPanel = $.CreatePanel('Panel', parent, name);
 		newTracklistPanel.LoadLayoutSnippet(snippet);
 
@@ -188,70 +189,78 @@ class ZoneMenu {
 		}
 
 		const selectButton = newTracklistPanel.FindChildTraverse('SelectButton') as Panel;
-		if (selectButton && zone) {
-			selectButton.SetPanelEvent('onactivate', () => ZoneMenu.updateSelection(zone));
+		if (selectButton && object) {
+			selectButton.SetPanelEvent('onactivate', () =>
+				ZoneMenu.updateSelection(object.track, object.segment, object.zone)
+			);
 		}
 
 		return listContainer;
 	}
 
-	static addOptionToDropdown(optionType: string, parent: DropDown, index: number) {
-		const labelString = optionType + ` ${index}`;
+	static addOptionToDropdown(optionType: string, parent: DropDown, index: number, useIndex: boolean = true) {
+		const labelString = optionType + (useIndex ? ` ${index}` : '');
 		const optionPanel = $.CreatePanel('Label', parent.AccessDropDownMenu(), labelString);
 		optionPanel.SetAttributeInt('value', index);
 		optionPanel.text = labelString;
 		parent.AddOption(optionPanel);
 	}
 
-	static populateDropdown(array: any[], dropdown: DropDown, optionType: string) {
-		dropdown.RemoveAllOptions();
+	static populateDropdown(array: any[], dropdown: DropDown, optionType: string, clearDropdown: boolean = false) {
+		if (clearDropdown) dropdown.RemoveAllOptions();
+
 		for (const [i, _] of array.entries()) {
 			this.addOptionToDropdown(optionType, dropdown, i);
 		}
 	}
 
-	static updateSelection(newSelection: TrackBase | Segment | Zone) {
+	static updateSelection(
+		selectedTrack: TrackBase | null,
+		selectedSegment: Segment | null,
+		selectedZone: Zone | null
+	) {
 		//this.selectedZone?.RemoveClass('zoning__tracklist--active');
 		//newSelectedZone.AddClass('zoning__tracklist--active');
-		this.selectedZone = newSelection;
 
-		if (!newSelection) {
+		if (!selectedTrack) {
 			this.panels.propertiesTrack.style.visibility = 'collapse';
 			this.panels.propertiesSegment.style.visibility = 'collapse';
 			this.panels.propertiesZone.style.visibility = 'collapse';
-		} else if ('regions' in newSelection) {
-			$.Msg(`Zone selected. Regions: ${newSelection.regions}, Filter: ${newSelection.filterName}`);
+			return;
+		}
+		if (selectedZone !== null) {
+			$.Msg(`Zone selected. Regions: ${selectedZone.regions}, Filter: ${selectedZone.filterName}`);
 			this.panels.propertiesTrack.style.visibility = 'collapse';
 			this.panels.propertiesSegment.style.visibility = 'collapse';
 			this.panels.propertiesZone.style.visibility = 'visible';
 			//update zone properties
 			this.panels.regionSelect.SetSelectedIndex(0);
-			this.panels.regionSafeHeight.text = (newSelection.regions as Region[])[0].safeHeight.toFixed(2) as string;
-		} else if ('checkpoints' in newSelection) {
+			this.panels.regionSafeHeight.text = (selectedZone.regions[0].safeHeight ?? 0).toFixed(2) as string;
+			this.populateDropdown(selectedZone.regions, this.panels.regionSelect, '', true);
+		} else if (selectedSegment !== null) {
 			$.Msg(
-				`Segment selected. limitStartGroundSpeed: ${newSelection.limitStartGroundSpeed}, checkpointsRequired: ${newSelection.checkpointsRequired}, checkpointsOrdered: ${newSelection.checkpointsOrdered};`
+				`Segment selected. limitStartGroundSpeed: ${selectedSegment.limitStartGroundSpeed}, checkpointsRequired: ${selectedSegment.checkpointsRequired}, checkpointsOrdered: ${selectedSegment.checkpointsOrdered};`
 			);
 			this.panels.propertiesTrack.style.visibility = 'collapse';
 			this.panels.propertiesSegment.style.visibility = 'visible';
 			this.panels.propertiesZone.style.visibility = 'collapse';
 			//update segment properties
-		} else if ('zones' in newSelection) {
-			$.Msg(`Track selected. Name: ${newSelection.name}`);
+		} else if (selectedTrack !== null) {
+			$.Msg(`Track selected. Name: ${selectedTrack.name}`);
 			this.panels.propertiesTrack.style.visibility = 'visible';
 			this.panels.propertiesSegment.style.visibility = 'collapse';
 			this.panels.propertiesZone.style.visibility = 'collapse';
 			//update track properties
 		}
+
+		this.selectedZone.track = selectedTrack as TrackBase;
+		this.selectedZone.segment = selectedSegment as Segment;
+		this.selectedZone.zone = selectedZone as Zone;
 	}
 
 	static updatePropertyFields(updatedControl: Panel) {
 		// filter
-		// volume
-		if (updatedControl === this.panels.volumeSelect) {
-			$.Msg(
-				`Updated selected zone (${this.panels.volumeSelect.GetSelected()?.GetAttributeInt('value', -1) ?? -1})`
-			);
-		}
+
 		// region
 
 		if (updatedControl === this.panels.regionSelect) {
@@ -340,7 +349,7 @@ class ZoneMenu {
 			'warning-popup',
 			$.Localize('#Zoning_Delete') as string,
 			() => {
-				this.deleteLastZone();
+				this.deleteSelection();
 			},
 			$.Localize('#Zoning_Cancel') as string,
 			() => {},
@@ -348,7 +357,7 @@ class ZoneMenu {
 		);
 	}
 
-	static deleteLastZone() {
+	static deleteSelection() {
 		// delete checkpoint from MapZones object
 		const lastSegmentIndex = (this.mapZoneData?.tracks.main.zones.segments.length as number) - 1;
 		const lastSegment = this.mapZoneData?.tracks.main.zones.segments[lastSegmentIndex] as Segment;
@@ -360,80 +369,46 @@ class ZoneMenu {
 		const segmentPanel: Panel = segmentList?.Children()[lastSegmentIndex] as Panel;
 		const checkpointList: Panel = segmentPanel.FindChildTraverse('ListContainer') as Panel;
 		checkpointList.Children()[lastSegment.checkpoints.length]?.DeleteAsync(0);
+
+		if (!this.selectedZone || !this.mapZoneData) return;
+
+		if (this.selectedZone.zone) {
+			$.Msg(
+				`Zone deleted. Regions: ${this.selectedZone.zone.regions as Region[]}, Filter: ${
+					this.selectedZone.zone.filterName
+				}`
+			);
+			const index = this.mapZoneData.tracks.main.zones.segments[0].checkpoints.indexOf(this.selectedZone.zone);
+			this.mapZoneData.tracks.bonuses.splice(index as number, 1);
+		} else if (this.selectedZone.segment) {
+			$.Msg(
+				`Segment deleted. limitStartGroundSpeed: ${this.selectedZone.segment.limitStartGroundSpeed}, checkpointsRequired: ${this.selectedZone.segment.checkpointsRequired}, checkpointsOrdered: ${this.selectedZone.segment.checkpointsOrdered};`
+			);
+			const index = this.mapZoneData.tracks.main.zones.segments.indexOf(this.selectedZone.segment);
+			this.mapZoneData.tracks.main.zones.segments.splice(index as number, 1);
+		} else if (this.selectedZone.track) {
+			$.Msg(`Track deleted. Movement params: ${this.selectedZone.track.movementParams}`);
+			if ('stagesEndAtStageStarts' in this.selectedZone.track) {
+				$.Msg("Can't delete Main track!!!");
+			} else {
+				const index = this.mapZoneData.tracks.bonuses.indexOf(this.selectedZone.track);
+				this.mapZoneData.tracks.bonuses.splice(index as number, 1);
+			}
+		}
 	}
 
-	//this is here to simulate fetching map data
-	static generateRandomMapZones(
-		majorCheckpoints: number,
-		minorCheckpoints: number[],
-		numBonuses: number,
-		maxWidth: number,
-		zoneWidth: number,
-		height: number
-	): Base {
-		if (majorCheckpoints !== minorCheckpoints.length) throw new Error('Fuck you');
+	static saveZones() {
+		//@ts-expect-error API name not recognized
+		MomentumTimerAPI.SetActiveZoneDefs(this.mapZoneData);
+	}
 
-		const safeWidth = maxWidth - zoneWidth;
-		const randomBoundedPos = () => Math.floor(Math.random() * safeWidth * 2 - safeWidth);
-
-		const randomRegion = (isMajor = true): Region => {
-			const x = randomBoundedPos();
-			const y = randomBoundedPos();
-
-			return {
-				points: [
-					{ x: x, y: y } as Vec2D,
-					{ x: x + zoneWidth, y: y } as Vec2D,
-					{ x: x + zoneWidth, y: y + zoneWidth } as Vec2D,
-					{ x: x, y: y + zoneWidth } as Vec2D
-				],
-				bottom: 0,
-				height: 960,
-				teleDestPos: { x: x + zoneWidth / 2, y: y + zoneWidth / 2, z: 0 } as Vec3D,
-				teleDestYaw: 0,
-				safeHeight: 0
-			} as Region;
-		};
-
-		const randomZone = (isMajor = false): Zone => {
-			return { regions: [randomRegion(isMajor)] } as Zone;
-		};
-
-		const doSegment = (numCPs: number): Segment => ({
-			limitStartGroundSpeed: false,
-			checkpointsRequired: true,
-			checkpointsOrdered: false,
-			checkpoints: Array.from(Array.from({ length: numCPs }), (_, i) => randomZone(i === 0)) as Zone[],
-			cancel: [],
-			name: ''
-		});
-
-		const tracks: MapTracks = {
-			main: {
-				movementParams: {
-					maxVelocity: 0,
-					defragFlags: 0
-				},
-				zones: {
-					segmentsOrdered: true,
-					segments: Array.from(Array.from({ length: majorCheckpoints }), (_, i) =>
-						doSegment(minorCheckpoints[i])
-					) as Segment[],
-					end: randomZone(),
-					cancel: []
-				},
-				stagesEndAtStageStarts: true
-			},
-			bonuses: Array.from(Array.from({ length: numBonuses }), (_, i) => ({
-				zones: {
-					end: randomZone(),
-					segments: [doSegment(Math.ceil(Math.random() * 4))]
-				}
-			})) as BonusTrack[]
-		};
-
-		const mapID = Math.random();
-
-		return { mapID, tracks, formatVersion: 1, dataTimestamp: Date.now() };
+	static cancelEdit() {
+		/*@ts-expect-error API name not recognized
+		//this.mapZoneData = MomentumTimerAPI.GetActiveZoneDefs() as Base;*/
+		for (const [_, child] of this.panels.trackList.Children().entries()) {
+			child.RemoveAndDeleteChildren();
+			child.DeleteAsync(0);
+		}
+		this.initMenu();
 	}
 }

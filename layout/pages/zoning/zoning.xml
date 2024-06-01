@@ -69,6 +69,9 @@
 			<Button class="button button--blue ml-2 horizontal-align-right" onactivate="ZoneMenu.createNewZone()">
 				<Label class="button__text" text="#Zoning_NewZone" />
 			</Button>
+			<Button class="button button--red ml-2 horizontal-align-right" onactivate="ZoneMenu.showDeletePopup()">
+				<Label class="button__text" text="#Zoning_Delete" />
+			</Button>
 		</Panel>
 		<Label id="PropertiesLabel" class="zoning__header" text="#Zoning_PropertiesLabel" />
 		<Panel id="PropertiesContainer" class="zoning__menu-section">
@@ -119,15 +122,10 @@
 			</Panel>
 			<Panel id="ZoneProperties" class="zoning__property-container">
 				<Panel class="zoning__menu-separator">
-					<Panel id="Volume" class="zoning__property">
-						<Label class="zoning__property-label" text="#Zoning_Volume" />
-						<DropDown id="VolumeSelect" class="dropdown zoning__dropdown" menuclass="dropdown-menu">
-							<!-- Populated in js -->
-						</DropDown>
-					</Panel>
 					<Panel id="Filter" class="zoning__property">
 						<Label class="zoning__property-label" text="#Zoning_Filter" />
 						<DropDown id="FilterSelect" class="dropdown zoning__dropdown" menuclass="dropdown-menu">
+							<Label text="#Zoning_Filter_None" />
 							<!-- Populated in js -->
 						</DropDown>
 					</Panel>
@@ -170,8 +168,11 @@
 			</Panel>
 		</Panel>
 		<Panel class="zoning__button-box">
-			<Button class="button button--red ml-2 horizontal-align-right" onactivate="ZoneMenu.showDeletePopup()">
-				<Label class="button__text" text="#Zoning_DeleteZone" />
+			<Button class="button button--blue ml-2 horizontal-align-right" onactivate="ZoneMenu.saveZones()">
+				<Label class="button__text" text="#Zoning_Save" />
+			</Button>
+			<Button class="button ml-2 horizontal-align-right" onactivate="ZoneMenu.cancelEdit()">
+				<Label class="button__text" text="#Zoning_Cancel" />
 			</Button>
 		</Panel>
 	</Panel>
