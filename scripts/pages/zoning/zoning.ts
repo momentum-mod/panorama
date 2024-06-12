@@ -44,7 +44,7 @@ class ZoneMenu {
 	};
 
 	static selectedZone = {
-		track: null as TrackBase | null,
+		track: null as MainTrack | BonusTrack | null,
 		segment: null as Segment | null,
 		zone: null as Zone | null
 	};
@@ -130,7 +130,7 @@ class ZoneMenu {
 		}
 	}
 
-	static createTrackEntry(parent: Panel, entry: TrackBase, name: string) {
+	static createTrackEntry(parent: Panel, entry: MainTrack | BonusTrack, name: string) {
 		const trackContainer = this.addTracklistEntry(parent, name, TracklistSnippet.TRACK, {
 			track: entry,
 			segment: null,
@@ -215,7 +215,7 @@ class ZoneMenu {
 	}
 
 	static updateSelection(
-		selectedTrack: TrackBase | null,
+		selectedTrack: MainTrack | BonusTrack | null,
 		selectedSegment: Segment | null,
 		selectedZone: Zone | null
 	) {
@@ -253,7 +253,7 @@ class ZoneMenu {
 			//update track properties
 		}
 
-		this.selectedZone.track = selectedTrack as TrackBase;
+		this.selectedZone.track = selectedTrack as MainTrack | BonusTrack;
 		this.selectedZone.segment = selectedSegment as Segment;
 		this.selectedZone.zone = selectedZone as Zone;
 	}
