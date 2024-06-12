@@ -65,6 +65,29 @@ class ZoneMenu {
 		//@ts-expect-error API name not recognized
 		this.mapZoneData = MomentumTimerAPI.GetActiveZoneDefs() as ZoneDef;
 
+		if (!this.mapZoneData) {
+			const segment: Segment = {
+				limitStartGroundSpeed: false,
+				checkpointsRequired: true,
+				checkpointsOrdered: true,
+				checkpoints: [] as Zone[],
+				cancel: [] as Zone[],
+				name: ''
+			} as Segment;
+			const tracks: MapTracks = {
+				main: {
+					zones: {
+						segments: [] as Segment[] //[segment]
+					},
+					stagesEndAtStageStarts: true
+				},
+				bonuses: [] as BonusTrack[]
+			} as MapTracks;
+
+			this.mapZoneData = {} as ZoneDef;
+			this.mapZoneData.tracks = tracks;
+		}
+
 		this.updateSelection(this.mapZoneData.tracks.main, null, null);
 
 		this.createTrackEntry(this.panels.trackList, this.mapZoneData.tracks.main, 'Main');
@@ -74,10 +97,10 @@ class ZoneMenu {
 		}
 
 		const mainTrack = this.mapZoneData.tracks.main;
-		$.Msg(mainTrack.zones.segments.length + ' segments');
-		$.Msg(mainTrack.zones.segments[0].checkpoints.length + ' checkpoints');
-		const region = mainTrack.zones.segments[0].checkpoints[0].regions[0];
-		$.Msg(mainTrack.zones.segments[0].checkpoints[0].regions.length + ' regions');
+		$.Msg(mainTrack.zones?.segments?.length + ' segments');
+		$.Msg(mainTrack.zones?.segments[0]?.checkpoints?.length + ' checkpoints');
+		const region = mainTrack.zones?.segments[0]?.checkpoints[0]?.regions[0];
+		$.Msg(mainTrack.zones?.segments[0]?.checkpoints[0]?.regions?.length + ' regions');
 
 		this.panels.regionSelect.SetSelectedIndex($.persistentStorage.getItem('zoning.region') ?? 0);
 		this.panels.regionSelect.SetPanelEvent('oninputsubmit', () => {
