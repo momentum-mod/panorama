@@ -62,22 +62,14 @@ class ZoneMenu {
 	}
 
 	static initMenu() {
-		//@ts-expect-error API name not recognized
-		this.mapZoneData = MomentumTimerAPI.GetActiveZoneDefs() as ZoneDef;
+		/*@ts-expect-error API name not recognized
+		//this.mapZoneData = MomentumTimerAPI.GetActiveZoneDefs() as ZoneDef;*/
 
 		if (!this.mapZoneData) {
-			const segment: Segment = {
-				limitStartGroundSpeed: false,
-				checkpointsRequired: true,
-				checkpointsOrdered: true,
-				checkpoints: [] as Zone[],
-				cancel: [] as Zone[],
-				name: ''
-			} as Segment;
 			const tracks: MapTracks = {
 				main: {
 					zones: {
-						segments: [] as Segment[] //[segment]
+						segments: [this.createSegment()]
 					},
 					stagesEndAtStageStarts: true
 				},
@@ -95,6 +87,8 @@ class ZoneMenu {
 		for (const [i, bonus] of this.mapZoneData.tracks.bonuses.entries()) {
 			this.createTrackEntry(this.panels.trackList, bonus, `Bonus ${i}`);
 		}
+
+		$.Msg(this.mapZoneData);
 
 		const mainTrack = this.mapZoneData.tracks.main;
 		$.Msg(mainTrack.zones?.segments?.length + ' segments');
@@ -188,11 +182,13 @@ class ZoneMenu {
 					zone: zone
 				});
 			}
-			$.Msg(majorId + ' created in ' + entry.name + 'track, ' + segment.checkpoints.length + ' checkpoints.\n');
+			$.Msg(majorId + ' created in ' + name + 'track, ' + segment.checkpoints.length + ' checkpoints.\n');
 		}
 	}
 
 	static addTracklistEntry(parent: Panel, name: string, snippet: string, object): Panel | null {
+		$.Msg('Making ', name);
+
 		const newTracklistPanel = $.CreatePanel('Panel', parent, name);
 		newTracklistPanel.LoadLayoutSnippet(snippet);
 
@@ -219,6 +215,43 @@ class ZoneMenu {
 		}
 
 		return listContainer;
+	}
+
+	static createBonusTrack() {
+		return {
+			zones: {
+				segments: [this.createSegment()],
+				end: {} as Zone
+			} as TrackZones,
+			defragFlags: 0
+		} as BonusTrack;
+	}
+
+	static createSegment() {
+		return {
+			limitStartGroundSpeed: false,
+			checkpointsRequired: true,
+			checkpointsOrdered: true,
+			checkpoints: [this.createZone()],
+			cancel: [] as Zone[],
+			name: ''
+		} as Segment;
+	}
+
+	static createZone() {
+		return {
+			regions: [this.createRegion()],
+			filtername: ''
+		} as Zone;
+	}
+
+	static createRegion() {
+		return {
+			points: [] as Vec2D[],
+			bottom: Number.MAX_SAFE_INTEGER,
+			height: 0,
+			teleDestTargetName: ''
+		} as Region;
 	}
 
 	static addOptionToDropdown(optionType: string, parent: DropDown, index: number, useIndex: boolean = true) {
@@ -269,7 +302,7 @@ class ZoneMenu {
 			this.panels.propertiesZone.style.visibility = 'collapse';
 			//update segment properties
 		} else if (selectedTrack !== null) {
-			$.Msg(`Track selected. Name: ${selectedTrack.name}`);
+			$.Msg(`Track selected. Name: ${'stagesEndAtStageStarts' in selectedTrack ? 'Main' : 'Bonus'}`);
 			this.panels.propertiesTrack.style.visibility = 'visible';
 			this.panels.propertiesSegment.style.visibility = 'collapse';
 			this.panels.propertiesZone.style.visibility = 'collapse';
