@@ -122,54 +122,28 @@
 
 				<!-- TODO: infomessages here in the future. Not doing now because of future safeguard changes -->
 
-				<SettingsEnumDropDown text="#Settings_Safeguards_PracticeMode" convar="mom_run_safeguard_practicemode" tags="practice">
+				<SettingsEnumDropDown text="#Settings_Safeguards_RestartMap" convar="mom_run_safeguard_run" tags="restart">
 					<Label id="colorize1" text="#Settings_Safeguards_ModesNone" value="0" />
 					<Label id="colorize2" text="#Settings_Safeguards_Modes1" value="1" />
 					<Label id="colorize3" text="#Settings_Safeguards_Modes2" value="2" />
 					<Label id="colorize4" text="#Settings_Safeguards_Modes3" value="3" />
 				</SettingsEnumDropDown>
 
-				<SettingsEnumDropDown text="#Settings_Safeguards_RestartMap" convar="mom_run_safeguard_restart" tags="restart">
+				<SettingsEnumDropDown text="#Settings_Safeguards_RestartStage" convar="mom_run_safeguard_stage" tags="restart">
 					<Label id="colorize1" text="#Settings_Safeguards_ModesNone" value="0" />
 					<Label id="colorize2" text="#Settings_Safeguards_Modes1" value="1" />
 					<Label id="colorize3" text="#Settings_Safeguards_Modes2" value="2" />
 					<Label id="colorize4" text="#Settings_Safeguards_Modes3" value="3" />
 				</SettingsEnumDropDown>
 
-				<SettingsEnumDropDown text="#Settings_Safeguards_SavestateTele" convar="mom_run_safeguard_saveloc_tele" tags="teleport">
-					<Label id="colorize1" text="#Settings_Safeguards_ModesNone" value="0" />
-					<Label id="colorize2" text="#Settings_Safeguards_Modes1" value="1" />
-					<Label id="colorize3" text="#Settings_Safeguards_Modes2" value="2" />
-					<Label id="colorize4" text="#Settings_Safeguards_Modes3" value="3" />
-				</SettingsEnumDropDown>
+				<!-- TODO: enable if one of the above is 3 -->
+				<SettingsSlider text="#Settings_Gameplay_SafeguardHoldtimeMax" convar="mom_run_safeguard_holdtime_max" infomessage="#Settings_Gameplay_SafeguardHoldtimeMax_Info" tags="hold" min="0" max="10" displayprecision="2"/>
+				<SettingsSlider text="#Settings_Gameplay_SafeguardHoldtimeRunmin" convar="mom_run_safeguard_holdtime_runmin" infomessage="#Settings_Gameplay_SafeguardHoldtimeRunmin_Info" tags="hold" min="0" max="30" displayprecision="2"/>
+				<SettingsSlider text="#Settings_Gameplay_SafeguardHoldtimeScale" convar="mom_run_safeguard_holdtime_scale" infomessage="#Settings_Gameplay_SafeguardHoldtimeScale_Info" tags="hold" min="0" max="10" displayprecision="2"/>
 
-				<SettingsEnumDropDown text="#Settings_Safeguards_OpenChat" convar="mom_run_safeguard_chat_open" tags="chat">
-					<Label id="colorize1" text="#Settings_Safeguards_ModesNone" value="0" />
-					<Label id="colorize2" text="#Settings_Safeguards_Modes1" value="1" />
-					<Label id="colorize3" text="#Settings_Safeguards_Modes2" value="2" />
-					<Label id="colorize4" text="#Settings_Safeguards_Modes3" value="3" />
-				</SettingsEnumDropDown>
-
-				<SettingsEnumDropDown text="#Settings_Safeguards_RestartStage" convar="mom_run_safeguard_restart_stage" tags="stage">
-					<Label id="colorize1" text="#Settings_Safeguards_ModesNone" value="0" />
-					<Label id="colorize2" text="#Settings_Safeguards_Modes1" value="1" />
-					<Label id="colorize3" text="#Settings_Safeguards_Modes2" value="2" />
-					<Label id="colorize4" text="#Settings_Safeguards_Modes3" value="3" />
-				</SettingsEnumDropDown>
-
-				<SettingsEnum text="#Settings_Safeguards_ChangeMap" convar="mom_run_safeguard_change_map" tags="change,level,map">
-					<RadioButton group="safeguardchangemap" text="#Common_Off" value="0" />
-					<RadioButton group="safeguardchangemap" text="#Common_On" value="1" />
-				</SettingsEnum>
-
-				<SettingsEnum text="#Settings_Safeguards_QuitMap" convar="mom_run_safeguard_quit_map" tags="map,level,quit">
+				<SettingsEnum text="#Settings_Safeguards_Quit" convar="mom_run_safeguard_quit" tags="map,level,quit">
 					<RadioButton group="safeguardquitmap" text="#Common_Off" value="0" />
 					<RadioButton group="safeguardquitmap" text="#Common_On" value="1" />
-				</SettingsEnum>
-
-				<SettingsEnum text="#Settings_Safeguards_QuitGame" convar="mom_run_safeguard_quit_game" tags="quit,exit">
-					<RadioButton group="safeguardquitgame" text="#Common_Off" value="0" />
-					<RadioButton group="safeguardquitgame" text="#Common_On" value="1" />
 				</SettingsEnum>
 			</Panel>
 
