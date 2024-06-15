@@ -51,6 +51,7 @@ class ZoneMenu {
 	static mapZoneData: ZoneDef | null;
 	static backupZoneData: ZoneDef | null;
 	static teleDestList: string[] | null;
+	static newObjectType: string | null;
 
 	static {
 		$.RegisterForUnhandledEvent('ZoneMenu_Show', this.showZoneMenu.bind(this));
@@ -357,12 +358,18 @@ class ZoneMenu {
 		//grab this.something.textentry.text
 	}
 
-	static createNewStage() {
+	static createNewBonus() {
+		$.Msg('Add new Bonus!');
+	}
+
+	static createNewSegment() {
 		$.Msg('Add new stage!');
 	}
 
 	static createNewZone() {
-		// create new volume and add to MapZones opbjet
+		$.Msg('Add new zone!');
+
+		/*// create new volume and add to MapZones opbjet
 		// Note: this should use point picker (c++)
 		const x1: number = Math.random(); // fix random
 		const x2: number = Math.random(); // fix random
@@ -395,7 +402,11 @@ class ZoneMenu {
 		const segmentPanel: Panel = segmentList?.Children()[lastSegmentIndex] as Panel;
 		const checkpointList: Panel = segmentPanel.FindChildTraverse('ListContainer') as Panel;
 		const id = `Checkpoint ${lastSegment.checkpoints.length}`;
-		this.addTracklistEntry(checkpointList, id, TracklistSnippet.CHECKPOINT, { regions: [newRegion] } as Zone);
+		this.addTracklistEntry(checkpointList, id, TracklistSnippet.CHECKPOINT, { regions: [newRegion] } as Zone);*/
+	}
+
+	static showNewPopup() {
+		UiToolkitAPI.ShowCustomLayoutPopup('NewZonePopup', 'file://{resources}/layout/popups/zoning-new.xml');
 	}
 
 	static showDeletePopup() {
@@ -411,6 +422,42 @@ class ZoneMenu {
 			() => {},
 			'none'
 		);
+	}
+
+	static setNewObjectType(newType: string) {
+		this.newObjectType = newType;
+	}
+
+	static addObjectToMapZones() {
+		if (!this.newObjectType) return;
+
+		switch (this.newObjectType) {
+			case 'Bonus': {
+				this.createNewBonus();
+				//add to tracklist tree
+				break;
+			}
+			case 'Segment': {
+				this.createNewSegment();
+				//add to tracklist tree
+				break;
+			}
+			case 'Checkpoint': {
+				this.createNewZone();
+				//add to tracklist tree
+				break;
+			}
+			case 'End': {
+				this.createNewZone();
+				//add to tracklist tree
+				break;
+			}
+			case 'Cancel': {
+				this.createNewZone();
+				//add to tracklist tree
+				break;
+			}
+		}
 	}
 
 	static deleteSelection() {
