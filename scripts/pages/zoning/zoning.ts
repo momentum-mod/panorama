@@ -239,9 +239,9 @@ class ZoneMenu {
 		} as Segment;
 	}
 
-	static createZone() {
+	static createZone(withRegion: boolean = false) {
 		return {
-			regions: [this.createRegion()],
+			regions: withRegion ? [this.createRegion()] : [] as Region[],
 			filtername: ''
 		} as Zone;
 	}
@@ -358,12 +358,39 @@ class ZoneMenu {
 		//grab this.something.textentry.text
 	}
 
-	static createNewBonus() {
+	static addBonus() {
 		$.Msg('Add new Bonus!');
+		if (!this.mapZoneData)
+			return;
+		this.mapZoneData.tracks.bonuses.push(this.createBonusTrack());
 	}
 
-	static createNewSegment() {
+	static addSegment() {
 		$.Msg('Add new stage!');
+		if (!this.mapZoneData)
+			return;
+		this.mapZoneData.tracks.main.zones.segments.push(this.createSegment());
+	}
+
+	static addCheckpoint() {
+		$.Msg('Add checkpoint to selected zone (' + this.selectedZone.segment + ')');
+		if (!this.mapZoneData || !this.selectedZone || !this.selectedZone.segment)
+			return;
+		this.selectedZone.segment.checkpoints.push(this.createZone());
+	}
+
+	static addEndZone() {
+		$.Msg('Add end zone to selected track (' + this.selectedZone.track + ')');
+		if (!this.mapZoneData || !this.selectedZone || !this.selectedZone.track)
+			return;
+		this.selectedZone.track.zones.end = this.createZone();
+	}
+
+	static addCancelZone() {
+		$.Msg('Add cancel zone to selected segment (' + this.selectedZone.segment + ')');
+		if (!this.mapZoneData || !this.selectedZone || !this.selectedZone.segment)
+			return;
+		this.selectedZone.segment.cancel.push(this.createZone());
 	}
 
 	static createNewZone() {
@@ -433,27 +460,27 @@ class ZoneMenu {
 
 		switch (this.newObjectType) {
 			case 'Bonus': {
-				this.createNewBonus();
+				this.addBonus();
 				//add to tracklist tree
 				break;
 			}
 			case 'Segment': {
-				this.createNewSegment();
+				this.addSegment();
 				//add to tracklist tree
 				break;
 			}
 			case 'Checkpoint': {
-				this.createNewZone();
+				this.addCheckpoint();
 				//add to tracklist tree
 				break;
 			}
 			case 'End': {
-				this.createNewZone();
+				this.addEndZone();
 				//add to tracklist tree
 				break;
 			}
 			case 'Cancel': {
-				this.createNewZone();
+				this.addCancelZone();
 				//add to tracklist tree
 				break;
 			}
