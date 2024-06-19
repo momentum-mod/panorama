@@ -279,6 +279,8 @@ class ZoneMenu {
 		//this.selectedZone?.RemoveClass('zoning__tracklist--active');
 		//newSelectedZone.AddClass('zoning__tracklist--active');
 
+		$.Msg(selectedTrack, selectedSegment, selectedZone);
+
 		if (!selectedTrack) {
 			this.panels.propertiesTrack.style.visibility = 'collapse';
 			this.panels.propertiesSegment.style.visibility = 'collapse';
@@ -292,7 +294,7 @@ class ZoneMenu {
 			this.panels.propertiesZone.style.visibility = 'visible';
 			//update zone properties
 			this.panels.regionSelect.SetSelectedIndex(0);
-			this.panels.regionSafeHeight.text = (selectedZone.regions[0].safeHeight ?? 0).toFixed(2) as string;
+			this.panels.regionSafeHeight.text = (selectedZone?.regions[0]?.safeHeight ?? 0).toFixed(2) as string;
 			this.populateDropdown(selectedZone.regions, this.panels.regionSelect, '', true);
 		} else if (selectedSegment !== null) {
 			$.Msg(
@@ -458,6 +460,8 @@ class ZoneMenu {
 	static addObjectToMapZones() {
 		if (!this.newObjectType) return;
 
+		const parent: Panel = $.CreatePanel('Panel', $.GetContextPanel(), '');
+
 		switch (this.newObjectType) {
 			case 'Bonus': {
 				this.addBonus();
@@ -485,6 +489,15 @@ class ZoneMenu {
 				break;
 			}
 		}
+
+		//tech debt?
+		const track = this.selectedZone.track;
+		const segment = this.selectedZone.segment;
+		const zone = this.selectedZone.zone;
+
+		this.initMenu();
+
+		this.updateSelection(track, segment, zone);
 	}
 
 	static deleteSelection() {
