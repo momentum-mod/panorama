@@ -62,6 +62,26 @@ class ZoneMenu {
 		$.RegisterForUnhandledEvent('LevelInitPostEntity', this.initMenu.bind(this));
 	}
 
+	static onLoad() {
+		//@ts-expect-error API name not recognized
+		this.mapZoneData = MomentumTimerAPI.GetActiveZoneDefs() as ZoneDef;
+
+		if (!this.mapZoneData) {
+			const tracks: MapTracks = {
+				main: {
+					zones: {
+						segments: [this.createSegment()]
+					},
+					stagesEndAtStageStarts: true
+				},
+				bonuses: [] as BonusTrack[]
+			} as MapTracks;
+
+			this.mapZoneData = {} as ZoneDef;
+			this.mapZoneData.tracks = tracks;
+		}
+	}
+
 	static initMenu() {
 		/*@ts-expect-error API name not recognized
 		//this.mapZoneData = MomentumTimerAPI.GetActiveZoneDefs() as ZoneDef;*/
