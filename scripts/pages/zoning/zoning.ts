@@ -376,6 +376,15 @@ class ZoneMenu {
 
 	static onRegionSave() {
 		$.Msg('Save region!');
+		const index = this.panels.regionSelect.GetSelected()?.GetAttributeInt('value', -1) ?? -1;
+		if (index > -1) {
+			const corners = this.selectedZone.zone?.regions[index].points.length ?? 0;
+			if (corners < 3) {
+				$.Msg('Region needs more points!');
+				//@ts-expect-error method doesn't exist on 'Panel'
+				$.GetContextPanel().regionPointsEdit();
+			}
+		}
 	}
 
 	static onTextSubmitted() {
