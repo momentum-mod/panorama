@@ -257,7 +257,7 @@ class ZoneMenu {
 		} as Segment;
 	}
 
-	static createZone(withRegion: boolean = false) {
+	static createZone(withRegion: boolean = true) {
 		return {
 			regions: withRegion ? [this.createRegion()] : ([] as Region[]),
 			filtername: ''
@@ -367,6 +367,11 @@ class ZoneMenu {
 
 	static addRegionPoint(point) {
 		$.Msg({ point });
+		const index = this.panels.regionSelect.GetSelected()?.GetAttributeInt('value', -1) ?? -1;
+		if (index > -1) {
+			this.selectedZone.zone?.regions[index].points.push(point);
+			$.Msg(this.selectedZone.zone?.regions[index].points);
+		}
 	}
 
 	static onRegionSave() {
