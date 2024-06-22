@@ -259,7 +259,7 @@ class ZoneMenu {
 
 	static createZone(withRegion: boolean = false) {
 		return {
-			regions: withRegion ? [this.createRegion()] : [] as Region[],
+			regions: withRegion ? [this.createRegion()] : ([] as Region[]),
 			filtername: ''
 		} as Zone;
 	}
@@ -380,36 +380,31 @@ class ZoneMenu {
 
 	static addBonus() {
 		$.Msg('Add new Bonus!');
-		if (!this.mapZoneData)
-			return;
+		if (!this.mapZoneData) return;
 		this.mapZoneData.tracks.bonuses.push(this.createBonusTrack());
 	}
 
 	static addSegment() {
 		$.Msg('Add new stage!');
-		if (!this.mapZoneData)
-			return;
+		if (!this.mapZoneData) return;
 		this.mapZoneData.tracks.main.zones.segments.push(this.createSegment());
 	}
 
 	static addCheckpoint() {
 		$.Msg('Add checkpoint to selected zone (' + this.selectedZone.segment + ')');
-		if (!this.mapZoneData || !this.selectedZone || !this.selectedZone.segment)
-			return;
+		if (!this.mapZoneData || !this.selectedZone || !this.selectedZone.segment) return;
 		this.selectedZone.segment.checkpoints.push(this.createZone());
 	}
 
 	static addEndZone() {
 		$.Msg('Add end zone to selected track (' + this.selectedZone.track + ')');
-		if (!this.mapZoneData || !this.selectedZone || !this.selectedZone.track)
-			return;
+		if (!this.mapZoneData || !this.selectedZone || !this.selectedZone.track) return;
 		this.selectedZone.track.zones.end = this.createZone();
 	}
 
 	static addCancelZone() {
 		$.Msg('Add cancel zone to selected segment (' + this.selectedZone.segment + ')');
-		if (!this.mapZoneData || !this.selectedZone || !this.selectedZone.segment)
-			return;
+		if (!this.mapZoneData || !this.selectedZone || !this.selectedZone.segment) return;
 		this.selectedZone.segment.cancel.push(this.createZone());
 	}
 
