@@ -148,9 +148,7 @@ class ZoneMenu {
 	static hideZoneMenu() {
 		// hide zone menu
 		if (this.panels.trackList?.Children().length) {
-			for (const child of this.panels.trackList.Children()) {
-				child.RemoveAndDeleteChildren();
-			}
+			this.panels.trackList.RemoveAndDeleteChildren();
 		}
 
 		this.mapZoneData = null;

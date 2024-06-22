@@ -59,10 +59,10 @@
 			</Panel>
 			
 			<Panel class="hud-tab-menu__enable-cursor">
-				<Button id="ZoningOpen" class="button ml-5 horizontal-align-left" onactivate="GameInterfaceAPI.ConsoleCommand('mom_zone_edit 1');HudTabMenu.showZoneMenu();">
+				<Button id="ZoningOpen" class="button ml-5 horizontal-align-left" onactivate="GameInterfaceAPI.ConsoleCommand('mom_zone_edit 1');$.DispatchEvent('ZoneMenu_Show');">
 					<Label class="button__text" text="#Zoning_Edit_Zones" />
 				</Button>
-				<Button id="ZoningClose" class="button ml-2 horizontal-align-left" onactivate="GameInterfaceAPI.ConsoleCommand('mom_zone_edit 0');HudTabMenu.hideZoneMenu();">
+				<Button id="ZoningClose" class="button ml-2 horizontal-align-left" onactivate="GameInterfaceAPI.ConsoleCommand('mom_zone_edit 0');$.DispatchEvent('ZoneMenu_Hide');">
 					<Label class="button__text" text="#Zoning_Close" />
 				</Button>
 				<Label class="hud-tab-menu__enable-cursor-tip" text="#HudTabMenu_EnableCursorTip"/> 
