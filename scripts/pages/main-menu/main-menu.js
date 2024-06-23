@@ -255,11 +255,12 @@ class MainMenu {
 		this.panels.image.visible = !useVideo;
 		this.panels.image.SetReadyForDisplay(!useVideo);
 
-		const backgroundVar = Number.parseInt($.persistentStorage.getItem('settings.mainMenuBackground'));
+		let backgroundVar = Number.parseInt($.persistentStorage.getItem('settings.mainMenuBackground'));
 
 		if (Number.isNaN(backgroundVar)) {
-			// Light mode by default
-			$.persistentStorage.setItem('settings.mainMenuBackground', 0);
+			// Set color mode by system preference
+			backgroundVar = $.SystemInDarkMode() ? 1 : 0;
+			$.persistentStorage.setItem('settings.mainMenuBackground', backgroundVar);
 		}
 
 		let name = '';
