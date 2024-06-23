@@ -17,6 +17,8 @@ class ZoneMenu {
 		/** @type {Panel} @static */
 		propertiesTrack: $('#TrackProperties') as Panel,
 		/** @type {Panel} @static */
+		defragFlags: $('#DefragFlags') as Panel,
+		/** @type {Panel} @static */
 		propertiesSegment: $('#SegmentProperties') as Panel,
 		/** @type {Panel} @static */
 		propertiesZone: $('#ZoneProperties') as Panel,
@@ -328,6 +330,7 @@ class ZoneMenu {
 			this.panels.propertiesSegment.style.visibility = 'collapse';
 			this.panels.propertiesZone.style.visibility = 'collapse';
 			//update track properties
+			this.panels.defragFlags.style.visibility = 'defragFlags' in selectedTrack ? 'visible' : 'collapse';
 		}
 
 		this.selectedZone.track = selectedTrack as MainTrack | BonusTrack;
