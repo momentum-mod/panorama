@@ -84,12 +84,9 @@
 					</Panel>
 					<Panel id="DefragFlags" class="zoning__property">
 						<Label class="zoning__property-label" text="#Zoning_DefragFlags" />
-						<Panel class="zoning__button-box">
-							<ToggleButton id="Flag3" class="checkbox checkbox--right zoning__checkbox" />
-							<ToggleButton id="Flag2" class="checkbox checkbox--right zoning__checkbox" />
-							<ToggleButton id="Flag1" class="checkbox checkbox--right zoning__checkbox" />
-							<ToggleButton id="Flag0" class="checkbox checkbox--right zoning__checkbox" />
-						</Panel>
+						<Button id="DefragFlagsButton" class="button zoning__property-button" onactivate="ZoneMenu.editDefragFlags()">
+							<Label text="#Zoning_DefragFlags_Edit" />
+						</Button>
 					</Panel>
 					<Panel id="SegmentsEndAtStageStarts" class="zoning__property">
 						<Label class="zoning__property-label" text="#Zoning_SegmentsEndAtStageStarts" />

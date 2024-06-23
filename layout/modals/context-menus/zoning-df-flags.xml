@@ -1,0 +1,32 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+
+	<scripts>
+		<include src="file://{scripts}/pages/zoning/zoning.js" />
+	</scripts>
+
+	<ContextMenuCustomLayout class="contextmenu" tabindex="auto" selectionpos="auto">
+		<Panel id="ContextMenuBody" class="contextmenu simplecontextmenu" childfocusonhover="true">
+			<ToggleButton id="FlagHaste" class="checkbox checkbox--right zoning__checkbox" onactivate="ZoneMenu.updateDefragFlags('HASTE')">
+                <Label text="#Zoning_DFFlags_Haste"/>
+            </ToggleButton>
+            <ToggleButton id="FlagSlick" class="checkbox checkbox--right zoning__checkbox" onactivate="ZoneMenu.updateDefragFlags('SLICK')">
+                <Label text="#Zoning_DFFlags_Slick"/>
+            </ToggleButton>
+            <ToggleButton id="FlagDamageBoost" class="checkbox checkbox--right zoning__checkbox" onactivate="ZoneMenu.updateDefragFlags('DAMAGEBOOST')">
+                <Label text="#Zoning_DFFlags_DamageBoost"/>
+            </ToggleButton>
+            <ToggleButton id="FlagRockets" class="checkbox checkbox--right zoning__checkbox" onactivate="ZoneMenu.updateDefragFlags('ROCKETS')">
+                <Label text="#Zoning_DFFlags_Rockets"/>
+            </ToggleButton>
+            <ToggleButton id="FlagPlasma" class="checkbox checkbox--right zoning__checkbox" onactivate="ZoneMenu.updateDefragFlags('PLASMA')">
+                <Label text="#Zoning_DFFlags_Plasma"/>
+            </ToggleButton>
+            <ToggleButton id="FlagBFG" class="checkbox checkbox--right zoning__checkbox" onactivate="ZoneMenu.updateDefragFlags('BFG')">
+                <Label text="#Zoning_DFFlags_BFG"/>
+            </ToggleButton>
+		</Panel>
+	</ContextMenuCustomLayout>
+</root>
