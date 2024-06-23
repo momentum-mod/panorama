@@ -117,12 +117,12 @@ class ZoneMenu {
 		const region = mainTrack.zones?.segments[0]?.checkpoints[0]?.regions[0];
 		$.Msg(mainTrack.zones?.segments[0]?.checkpoints[0]?.regions?.length + ' regions');
 
-		this.panels.regionSelect.SetSelectedIndex($.persistentStorage.getItem('zoning.region') ?? 0);
+		//this.panels.regionSelect.SetSelectedIndex($.persistentStorage.getItem('zoning.region') ?? 0);
 		this.panels.regionSelect.SetPanelEvent('oninputsubmit', () => {
-			$.persistentStorage.setItem(
+			/*$.persistentStorage.setItem(
 				'zoning.region',
-				this.panels.regionSelect.GetSelected()?.GetAttributeUInt32('value', 0) ?? 0
-			);
+				this.panels.regionSelect.GetSelected()?.GetAttributeInt('value', 0) ?? 0
+			);*/
 			ZoneMenu.updatePropertyFields(this.panels.regionSelect);
 		});
 
@@ -311,9 +311,9 @@ class ZoneMenu {
 			this.panels.propertiesSegment.style.visibility = 'collapse';
 			this.panels.propertiesZone.style.visibility = 'visible';
 			//update zone properties
+			this.populateDropdown(selectedZone.regions, this.panels.regionSelect, 'Region', true);
 			this.panels.regionSelect.SetSelectedIndex(0);
 			this.panels.regionSafeHeight.text = (selectedZone?.regions[0]?.safeHeight ?? 0).toFixed(2) as string;
-			this.populateDropdown(selectedZone.regions, this.panels.regionSelect, '', true);
 		} else if (selectedSegment !== null) {
 			$.Msg(
 				`Segment selected. limitStartGroundSpeed: ${selectedSegment.limitStartGroundSpeed}, checkpointsRequired: ${selectedSegment.checkpointsRequired}, checkpointsOrdered: ${selectedSegment.checkpointsOrdered};`
@@ -343,7 +343,7 @@ class ZoneMenu {
 		if (updatedControl === this.panels.regionSelect) {
 			$.Msg(
 				`Updated selected region (${
-					this.panels.regionSelect.GetSelected()?.GetAttributeInt('value', -1) ?? -1
+					this.panels.regionSelect.GetSelected()?.GetAttributeInt('value', -1)
 				})`
 			);
 		}
@@ -367,7 +367,7 @@ class ZoneMenu {
 
 	static addRegionPoint(point) {
 		$.Msg({ point });
-		const index = this.panels.regionSelect.GetSelected()?.GetAttributeInt('value', -1) ?? -1;
+		const index = this.panels.regionSelect.GetSelected()?.GetAttributeInt('value', -1);
 		if (index > -1) {
 			this.selectedZone.zone?.regions[index].points.push(point);
 			$.Msg(this.selectedZone.zone?.regions[index].points);
@@ -376,13 +376,16 @@ class ZoneMenu {
 
 	static onRegionSave() {
 		$.Msg('Save region!');
-		const index = this.panels.regionSelect.GetSelected()?.GetAttributeInt('value', -1) ?? -1;
+		const index = this.panels.regionSelect.GetSelected()?.GetAttributeInt('value', -1);
 		if (index > -1) {
 			const corners = this.selectedZone.zone?.regions[index].points.length ?? 0;
 			if (corners < 3) {
 				$.Msg('Region needs more points!');
 				//@ts-expect-error method doesn't exist on 'Panel'
 				$.GetContextPanel().regionPointsEdit();
+				// show acknowledge/place points dialog
+			} else {
+				$.Msg('corners at ', this.selectedZone.zone?.regions[index].points)
 			}
 		}
 	}
