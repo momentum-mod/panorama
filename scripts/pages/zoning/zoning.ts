@@ -85,7 +85,7 @@ class ZoneMenu {
 					},
 					stagesEndAtStageStarts: true
 				},
-				bonuses: [] as BonusTrack[]
+				bonuses: [this.createBonusTrack(), this.createBonusTrack(), this.createBonusTrack()] /*as BonusTrack[]*/
 			} as MapTracks;
 
 			this.mapZoneData = {} as ZoneDef;
@@ -94,8 +94,8 @@ class ZoneMenu {
 	}
 
 	static initMenu() {
-		/*@ts-expect-error API name not recognized
-		//this.mapZoneData = MomentumTimerAPI.GetActiveZoneDefs() as ZoneDef;*/
+		//@ts-expect-error API name not recognized
+		this.mapZoneData = MomentumTimerAPI.GetActiveZoneDefs() as ZoneDef;
 
 		if (!this.mapZoneData) {
 			const tracks: MapTracks = {
@@ -105,12 +105,18 @@ class ZoneMenu {
 					},
 					stagesEndAtStageStarts: true
 				},
-				bonuses: [] as BonusTrack[]
+				bonuses: [this.createBonusTrack(), this.createBonusTrack(), this.createBonusTrack()] /*as BonusTrack[]*/
 			} as MapTracks;
 
 			this.mapZoneData = {} as ZoneDef;
 			this.mapZoneData.tracks = tracks;
 		}
+
+		this.mapZoneData.tracks.bonuses[0].defragFlags = 31;
+		this.mapZoneData.tracks.bonuses[1].defragFlags = 6;
+		this.mapZoneData.tracks.bonuses[2].defragFlags = 11;
+
+		//this.onLoad();
 
 		this.updateSelection(this.mapZoneData.tracks.main, null, null);
 
@@ -345,6 +351,8 @@ class ZoneMenu {
 		this.selectedZone.track = selectedTrack as MainTrack | BonusTrack;
 		this.selectedZone.segment = selectedSegment as Segment;
 		this.selectedZone.zone = selectedZone as Zone;
+
+		$.Msg(this.selectedZone);
 	}
 
 	static updatePropertyFields(updatedControl: Panel) {
@@ -410,7 +418,10 @@ class ZoneMenu {
 	static addBonus() {
 		$.Msg('Add new Bonus!');
 		if (!this.mapZoneData) return;
-		this.mapZoneData.tracks.bonuses.push(this.createBonusTrack());
+		const bonus = this.createBonusTrack();
+		this.mapZoneData.tracks.bonuses.push(bonus);
+
+		this.createTrackEntry(this.panels.trackList, bonus, `Bonus ${this.mapZoneData.tracks.bonuses.length}`);
 	}
 
 	static addSegment() {
@@ -537,9 +548,10 @@ class ZoneMenu {
 		const segment = this.selectedZone.segment;
 		const zone = this.selectedZone.zone;
 
-		this.initMenu();
+		//this.initMenu();
 
-		this.updateSelection(track, segment, zone);
+		//this.updateSelection(track, segment, zone);
+		$.Msg(this.mapZoneData);
 	}
 
 	static deleteSelection() {
@@ -583,6 +595,8 @@ class ZoneMenu {
 	}
  
 	static editDefragFlags() {
+		$.Msg(this.selectedZone.track);
+
 		const flagEditMenu = UiToolkitAPI.ShowCustomLayoutContextMenu(
 			this.panels.defragFlags.id,
 			'',
@@ -598,6 +612,7 @@ class ZoneMenu {
 	}
 
 	static updateDefragFlags(flag: string) {
+		$.Msg(this.selectedZone.track);
 		$.Msg('Attempting to toggle ', flag, ' on track', this.selectedZone.track);
 		if (this.selectedZone.track === null) return;
 		(this.selectedZone.track.defragFlags as number) ^= DefragFlags[flag];
