@@ -109,7 +109,7 @@ class ZoneMenu {
 			} as MapTracks;
 
 			this.mapZoneData = {} as ZoneDef;
-			this.mapZoneData.tracks = tracks;
+			this.mapZoneData.tracks = JSON.parse(JSON.stringify(tracks));
 		}
 
 		this.mapZoneData.tracks.bonuses[0].defragFlags = 31;
@@ -551,7 +551,7 @@ class ZoneMenu {
 		//this.initMenu();
 
 		//this.updateSelection(track, segment, zone);
-		$.Msg(this.mapZoneData);
+		$.Msg('MapZones currently looks like this:\n',this.mapZoneData?.tracks);
 	}
 
 	static deleteSelection() {
