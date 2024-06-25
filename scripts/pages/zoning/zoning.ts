@@ -15,7 +15,7 @@ const DefragFlags = {
 	ROCKETS: 1 << 3,
 	PLASMA: 1 << 4,
 	BFG: 1 << 5
-}
+};
 
 class ZoneMenu {
 	static panels = {
@@ -323,7 +323,7 @@ class ZoneMenu {
 			return;
 		}
 		if (selectedZone !== null) {
-			$.Msg(`Zone selected. Regions: ${selectedZone.regions}, Filter: ${selectedZone.filterName}`);
+			$.Msg(`Zone selected. Regions: ${selectedZone.regions}, Filter: ${selectedZone.filtername}`);
 			this.panels.propertiesTrack.style.visibility = 'collapse';
 			this.panels.propertiesSegment.style.visibility = 'collapse';
 			this.panels.propertiesZone.style.visibility = 'visible';
@@ -361,11 +361,7 @@ class ZoneMenu {
 		// region
 
 		if (updatedControl === this.panels.regionSelect) {
-			$.Msg(
-				`Updated selected region (${
-					this.panels.regionSelect.GetSelected()?.GetAttributeInt('value', -1)
-				})`
-			);
+			$.Msg(`Updated selected region (${this.panels.regionSelect.GetSelected()?.GetAttributeInt('value', -1)})`);
 		}
 		// 	points
 		// 	bottom
@@ -405,7 +401,7 @@ class ZoneMenu {
 				$.GetContextPanel().regionPointsEdit();
 				// show acknowledge/place points dialog
 			} else {
-				$.Msg('corners at ', this.selectedZone.zone?.regions[index].points)
+				$.Msg('corners at ', this.selectedZone.zone?.regions[index].points);
 			}
 		}
 	}
@@ -551,7 +547,7 @@ class ZoneMenu {
 		//this.initMenu();
 
 		//this.updateSelection(track, segment, zone);
-		$.Msg('MapZones currently looks like this:\n',this.mapZoneData?.tracks);
+		$.Msg('MapZones currently looks like this:\n', this.mapZoneData?.tracks);
 	}
 
 	static deleteSelection() {
@@ -572,7 +568,7 @@ class ZoneMenu {
 		if (this.selectedZone.zone) {
 			$.Msg(
 				`Zone deleted. Regions: ${this.selectedZone.zone.regions as Region[]}, Filter: ${
-					this.selectedZone.zone.filterName
+					this.selectedZone.zone.filtername
 				}`
 			);
 			const index = this.mapZoneData.tracks.main.zones.segments[0].checkpoints.indexOf(this.selectedZone.zone);
@@ -584,7 +580,7 @@ class ZoneMenu {
 			const index = this.mapZoneData.tracks.main.zones.segments.indexOf(this.selectedZone.segment);
 			this.mapZoneData.tracks.main.zones.segments.splice(index as number, 1);
 		} else if (this.selectedZone.track) {
-			$.Msg(`Track deleted. Movement params: ${this.selectedZone.track.movementParams}`);
+			$.Msg(`Track deleted. Zones: ${this.selectedZone.track.zones}`);
 			if ('stagesEndAtStageStarts' in this.selectedZone.track) {
 				$.Msg("Can't delete Main track!!!");
 			} else {
@@ -593,31 +589,42 @@ class ZoneMenu {
 			}
 		}
 	}
- 
+
 	static editDefragFlags() {
 		$.Msg(this.selectedZone.track);
+
+		if (this.selectedZone.track === null || !('defragFlags' in this.selectedZone.track)) return;
 
 		const flagEditMenu = UiToolkitAPI.ShowCustomLayoutContextMenu(
 			this.panels.defragFlags.id,
 			'',
 			'file://{resources}/layout/modals/context-menus/zoning-df-flags.xml'
 		) as Panel;
-		
-		(flagEditMenu.FindChildTraverse('FlagHaste') as Panel).checked = ((this.selectedZone.track?.defragFlags as number) & DefragFlags['HASTE']) > 0;
-		(flagEditMenu.FindChildTraverse('FlagSlick') as Panel).checked = ((this.selectedZone.track?.defragFlags as number) & DefragFlags['SLICK']) > 0;
-		(flagEditMenu.FindChildTraverse('FlagDamageBoost') as Panel).checked = ((this.selectedZone.track?.defragFlags as number) & DefragFlags['DAMAGEBOOST']) > 0;
-		(flagEditMenu.FindChildTraverse('FlagRockets') as Panel).checked = ((this.selectedZone.track?.defragFlags as number) & DefragFlags['ROCKETS']) > 0;
-		(flagEditMenu.FindChildTraverse('FlagPlasma') as Panel).checked = ((this.selectedZone.track?.defragFlags as number) & DefragFlags['PLASMA']) > 0;
-		(flagEditMenu.FindChildTraverse('FlagBFG') as Panel).checked = ((this.selectedZone.track?.defragFlags as number) & DefragFlags['BFG']) > 0;
+
+		(flagEditMenu.FindChildTraverse('FlagHaste') as Panel).checked =
+			((this.selectedZone.track.defragFlags as number) & DefragFlags['HASTE']) > 0;
+		(flagEditMenu.FindChildTraverse('FlagSlick') as Panel).checked =
+			((this.selectedZone.track.defragFlags as number) & DefragFlags['SLICK']) > 0;
+		(flagEditMenu.FindChildTraverse('FlagDamageBoost') as Panel).checked =
+			((this.selectedZone.track.defragFlags as number) & DefragFlags['DAMAGEBOOST']) > 0;
+		(flagEditMenu.FindChildTraverse('FlagRockets') as Panel).checked =
+			((this.selectedZone.track.defragFlags as number) & DefragFlags['ROCKETS']) > 0;
+		(flagEditMenu.FindChildTraverse('FlagPlasma') as Panel).checked =
+			((this.selectedZone.track.defragFlags as number) & DefragFlags['PLASMA']) > 0;
+		(flagEditMenu.FindChildTraverse('FlagBFG') as Panel).checked =
+			((this.selectedZone.track.defragFlags as number) & DefragFlags['BFG']) > 0;
 	}
 
 	static updateDefragFlags(flag: string) {
 		$.Msg(this.selectedZone.track);
 		$.Msg('Attempting to toggle ', flag, ' on track', this.selectedZone.track);
-		if (this.selectedZone.track === null) return;
+		if (this.selectedZone.track === null || !('defragFlags' in this.selectedZone.track)) return;
 		(this.selectedZone.track.defragFlags as number) ^= DefragFlags[flag];
-		
-		$.Msg(flag + ((this.selectedZone.track.defragFlags as number) & DefragFlags[flag] ? ' is enabled' : ' is disabled'));
+
+		$.Msg(
+			flag +
+				((this.selectedZone.track.defragFlags as number) & DefragFlags[flag] ? ' is enabled' : ' is disabled')
+		);
 	}
 
 	static saveZones() {
