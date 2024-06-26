@@ -91,39 +91,25 @@ class ZoneMenu {
 			this.mapZoneData = {} as ZoneDef;
 			this.mapZoneData.tracks = tracks;
 		}
-	}
-
-	static initMenu() {
-		//@ts-expect-error API name not recognized
-		this.mapZoneData = MomentumTimerAPI.GetActiveZoneDefs() as ZoneDef;
-
-		if (!this.mapZoneData) {
-			const tracks: MapTracks = {
-				main: {
-					zones: {
-						segments: [this.createSegment()]
-					},
-					stagesEndAtStageStarts: true
-				},
-				bonuses: [this.createBonusTrack(), this.createBonusTrack(), this.createBonusTrack()] /*as BonusTrack[]*/
-			} as MapTracks;
-
-			this.mapZoneData = {} as ZoneDef;
-			this.mapZoneData.tracks = JSON.parse(JSON.stringify(tracks));
-		}
 
 		this.mapZoneData.tracks.bonuses[0].defragFlags = 31;
 		this.mapZoneData.tracks.bonuses[1].defragFlags = 6;
 		this.mapZoneData.tracks.bonuses[2].defragFlags = 11;
+	}
 
-		//this.onLoad();
+	static initMenu() {
+		if (!this.mapZoneData) {
+			this.onLoad();
+		}
+
+		if (!this.mapZoneData) return;
 
 		this.updateSelection(this.mapZoneData.tracks.main, null, null);
 
 		this.createTrackEntry(this.panels.trackList, this.mapZoneData.tracks.main, 'Main');
 
 		for (const [i, bonus] of this.mapZoneData.tracks.bonuses.entries()) {
-			this.createTrackEntry(this.panels.trackList, bonus, `Bonus ${i}`);
+			this.createTrackEntry(this.panels.trackList, bonus, `Bonus ${i + 1}`);
 		}
 
 		$.Msg(this.mapZoneData);
@@ -157,7 +143,7 @@ class ZoneMenu {
 
 	static showZoneMenu() {
 		// show zone menu
-		if (!this.mapZoneData) {
+		if (!this.mapZoneData || this.panels.trackList.Children().length === 0) {
 			this.initMenu();
 		}
 	}
@@ -168,7 +154,7 @@ class ZoneMenu {
 			this.panels.trackList.RemoveAndDeleteChildren();
 		}
 
-		this.mapZoneData = null;
+		//this.mapZoneData = null;
 	}
 
 	static toggleCollapse(container: Panel, expandIcon: Panel, collapseIcon: Panel) {
@@ -192,7 +178,7 @@ class ZoneMenu {
 		if (trackContainer === null) return;
 		if (entry.zones.segments.length === 0) {
 			trackContainer.RemoveAndDeleteChildren();
-			parent.FindChildTraverse('CollapseButton')?.DeleteAsync(0);
+			(parent.FindChildTraverse('CollapseButton') as Panel).style.visibility = 'collapse';
 			return;
 		}
 
@@ -206,12 +192,12 @@ class ZoneMenu {
 			if (majorListContainer === null) continue;
 			if (segment.checkpoints.length === 0) {
 				majorListContainer.RemoveAndDeleteChildren();
-				trackContainer.FindChildTraverse('CollapseButton')?.DeleteAsync(0);
+				(trackContainer.FindChildTraverse('CollapseButton') as Panel).style.visibility = 'collapse';
 				continue;
 			}
 
 			for (const [j, zone] of segment.checkpoints.entries()) {
-				const minorId = `Checkpoint ${j + 1}`;
+				const minorId = j ? `Checkpoint ${j}` : i ? 'Stage Start' : 'Start Zone';
 				this.addTracklistEntry(majorListContainer, minorId, TracklistSnippet.CHECKPOINT, {
 					track: entry,
 					segment: segment,
@@ -427,19 +413,21 @@ class ZoneMenu {
 	}
 
 	static addCheckpoint() {
-		$.Msg('Add checkpoint to selected zone (' + this.selectedZone.segment + ')');
+		$.Msg('Add checkpoint to selected segment (', this.selectedZone.segment, ')');
 		if (!this.mapZoneData || !this.selectedZone || !this.selectedZone.segment) return;
 		this.selectedZone.segment.checkpoints.push(this.createZone());
+
+		//this.addTracklistEntry()
 	}
 
 	static addEndZone() {
-		$.Msg('Add end zone to selected track (' + this.selectedZone.track + ')');
+		$.Msg('Add end zone to selected track (', this.selectedZone.track, ')');
 		if (!this.mapZoneData || !this.selectedZone || !this.selectedZone.track) return;
 		this.selectedZone.track.zones.end = this.createZone();
 	}
 
 	static addCancelZone() {
-		$.Msg('Add cancel zone to selected segment (' + this.selectedZone.segment + ')');
+		$.Msg('Add cancel zone to selected segment (', this.selectedZone.segment, ')');
 		if (!this.mapZoneData || !this.selectedZone || !this.selectedZone.segment) return;
 		this.selectedZone.segment.cancel.push(this.createZone());
 	}
@@ -525,16 +513,16 @@ class ZoneMenu {
 
 	static deleteSelection() {
 		// delete checkpoint from MapZones object
-		const lastSegmentIndex = (this.mapZoneData?.tracks.main.zones.segments.length as number) - 1;
+		/*const lastSegmentIndex = (this.mapZoneData?.tracks.main.zones.segments.length as number) - 1;
 		const lastSegment = this.mapZoneData?.tracks.main.zones.segments[lastSegmentIndex] as Segment;
-		lastSegment.checkpoints.pop();
+		lastSegment.checkpoints.pop();*/
 
 		// delete checkpoint from tracklist tree
-		const mainTrack: Panel = this.panels.trackList.Children()[0];
+		/*const mainTrack: Panel = this.panels.trackList.Children()[0];
 		const segmentList = mainTrack.FindChildTraverse('ListContainer');
 		const segmentPanel: Panel = segmentList?.Children()[lastSegmentIndex] as Panel;
 		const checkpointList: Panel = segmentPanel.FindChildTraverse('ListContainer') as Panel;
-		checkpointList.Children()[lastSegment.checkpoints.length]?.DeleteAsync(0);
+		checkpointList.Children()[lastSegment.checkpoints.length]?.DeleteAsync(0);*/
 
 		if (!this.selectedZone || !this.mapZoneData) return;
 
