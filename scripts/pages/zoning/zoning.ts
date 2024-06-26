@@ -408,8 +408,24 @@ class ZoneMenu {
 
 	static addSegment() {
 		$.Msg('Add new stage!');
-		if (!this.mapZoneData) return;
-		this.mapZoneData.tracks.main.zones.segments.push(this.createSegment());
+		if (!this.mapZoneData || !this.selectedZone.track) return;
+
+		if ('defragFlags' in this.selectedZone.track) {
+			// warn player bonus tracks can't have segments!
+			$.Msg('WARNING: Bonus track selected. Bonus tracks cannot have stages!');
+			return;
+		}
+		const newSegment = this.createSegment();
+		this.mapZoneData.tracks.main.zones.segments.push(newSegment);
+
+		const mainTrack: Panel = this.panels.trackList.Children()[0];
+		const segmentList = mainTrack.FindChildTraverse('ListContainer') as Panel;
+		const id = `Segment ${this.mapZoneData.tracks.main.zones.segments.length}`;
+		this.addTracklistEntry(segmentList, id, TracklistSnippet.SEGMENT, {
+			track: this.mapZoneData.tracks.main,
+			segment: newSegment,
+			zone: null
+		});
 	}
 
 	static addCheckpoint() {
