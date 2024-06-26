@@ -483,8 +483,29 @@ class ZoneMenu {
 		this.addTracklistEntry(checkpointList, id, TracklistSnippet.CHECKPOINT, { regions: [newRegion] } as Zone);*/
 	}
 
-	static showNewPopup() {
-		UiToolkitAPI.ShowCustomLayoutPopup('NewZonePopup', 'file://{resources}/layout/popups/zoning-new.xml');
+	static showAddMenu() {
+		UiToolkitAPI.ShowSimpleContextMenu('NewZoneButton', '', [
+			{
+				label: $.Localize('#Zoning_AddBonus'),
+				jsCallback: () => this.addBonus()
+			},
+			{
+				label: $.Localize('#Zoning_AddSegment'),
+				jsCallback: () => this.addSegment()
+			},
+			{
+				label: $.Localize('#Zoning_AddCheckpoint'),
+				jsCallback: () => this.addCheckpoint()
+			},
+			{
+				label: $.Localize('#Zoning_AddEnd'),
+				jsCallback: () => this.addEndZone()
+			},
+			{
+				label: $.Localize('#Zoning_AddCancel'),
+				jsCallback: () => this.addCancelZone()
+			}
+		]);
 	}
 
 	static showDeletePopup() {
@@ -500,54 +521,6 @@ class ZoneMenu {
 			() => {},
 			'none'
 		);
-	}
-
-	static setNewObjectType(newType: string) {
-		this.newObjectType = newType;
-	}
-
-	static addObjectToMapZones() {
-		if (!this.newObjectType) return;
-
-		const parent: Panel = $.CreatePanel('Panel', $.GetContextPanel(), '');
-
-		switch (this.newObjectType) {
-			case 'Bonus': {
-				this.addBonus();
-				//add to tracklist tree
-				break;
-			}
-			case 'Segment': {
-				this.addSegment();
-				//add to tracklist tree
-				break;
-			}
-			case 'Checkpoint': {
-				this.addCheckpoint();
-				//add to tracklist tree
-				break;
-			}
-			case 'End': {
-				this.addEndZone();
-				//add to tracklist tree
-				break;
-			}
-			case 'Cancel': {
-				this.addCancelZone();
-				//add to tracklist tree
-				break;
-			}
-		}
-
-		//tech debt?
-		const track = this.selectedZone.track;
-		const segment = this.selectedZone.segment;
-		const zone = this.selectedZone.zone;
-
-		//this.initMenu();
-
-		//this.updateSelection(track, segment, zone);
-		$.Msg('MapZones currently looks like this:\n', this.mapZoneData?.tracks);
 	}
 
 	static deleteSelection() {
