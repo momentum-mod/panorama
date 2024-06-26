@@ -527,22 +527,15 @@ class ZoneMenu {
 		if (!this.selectedZone || !this.mapZoneData) return;
 
 		if (this.selectedZone.track && this.selectedZone.segment && this.selectedZone.zone) {
-			$.Msg(
-				`Zone deleted. Regions: ${this.selectedZone.zone.regions as Region[]}, Filter: ${
-					this.selectedZone.zone.filtername
-				}`
-			);
-			const zoneIndex = this.selectedZone.segment.checkpoints.indexOf(this.selectedZone.zone);
-			if ('defragFlags' in this.selectedZone.track) {
-				const trackIndex = this.mapZoneData.tracks.bonuses.indexOf(this.selectedZone.track as BonusTrack);
-				this.mapZoneData.tracks.bonuses[trackIndex].zones.segments[0].checkpoints.splice(
-					zoneIndex as number,
-					1
-				);
+			const checkpointIndex = this.selectedZone.segment.checkpoints.indexOf(this.selectedZone.zone);
+			if (checkpointIndex === -1) {
+				const cancelIndex = this.selectedZone.segment.cancel.indexOf(this.selectedZone.zone);
+				this.selectedZone.segment.cancel.splice(cancelIndex as number, 1);
 			} else {
-				const segmentIndex = this.selectedZone.track.zones.segments.indexOf(this.selectedZone.segment);
-				this.mapZoneData.tracks.main.zones.segments[segmentIndex].checkpoints.splice(zoneIndex as number, 1);
+				this.selectedZone.segment.checkpoints.splice(checkpointIndex as number, 1);
 			}
+
+			// remove deleted zone from tracklist
 		} else if (this.selectedZone.segment) {
 			$.Msg(
 				`Segment deleted. limitStartGroundSpeed: ${this.selectedZone.segment.limitStartGroundSpeed}, checkpointsRequired: ${this.selectedZone.segment.checkpointsRequired}, checkpointsOrdered: ${this.selectedZone.segment.checkpointsOrdered};`
