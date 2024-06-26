@@ -526,14 +526,23 @@ class ZoneMenu {
 
 		if (!this.selectedZone || !this.mapZoneData) return;
 
-		if (this.selectedZone.zone) {
+		if (this.selectedZone.track && this.selectedZone.segment && this.selectedZone.zone) {
 			$.Msg(
 				`Zone deleted. Regions: ${this.selectedZone.zone.regions as Region[]}, Filter: ${
 					this.selectedZone.zone.filtername
 				}`
 			);
-			const index = this.mapZoneData.tracks.main.zones.segments[0].checkpoints.indexOf(this.selectedZone.zone);
-			this.mapZoneData.tracks.bonuses.splice(index as number, 1);
+			const zoneIndex = this.selectedZone.segment.checkpoints.indexOf(this.selectedZone.zone);
+			if ('defragFlags' in this.selectedZone.track) {
+				const trackIndex = this.mapZoneData.tracks.bonuses.indexOf(this.selectedZone.track as BonusTrack);
+				this.mapZoneData.tracks.bonuses[trackIndex].zones.segments[0].checkpoints.splice(
+					zoneIndex as number,
+					1
+				);
+			} else {
+				const segmentIndex = this.selectedZone.track.zones.segments.indexOf(this.selectedZone.segment);
+				this.mapZoneData.tracks.main.zones.segments[segmentIndex].checkpoints.splice(zoneIndex as number, 1);
+			}
 		} else if (this.selectedZone.segment) {
 			$.Msg(
 				`Segment deleted. limitStartGroundSpeed: ${this.selectedZone.segment.limitStartGroundSpeed}, checkpointsRequired: ${this.selectedZone.segment.checkpointsRequired}, checkpointsOrdered: ${this.selectedZone.segment.checkpointsOrdered};`
@@ -545,8 +554,8 @@ class ZoneMenu {
 			if ('stagesEndAtStageStarts' in this.selectedZone.track) {
 				$.Msg("Can't delete Main track!!!");
 			} else {
-				const index = this.mapZoneData.tracks.bonuses.indexOf(this.selectedZone.track);
-				this.mapZoneData.tracks.bonuses.splice(index as number, 1);
+				const trackIndex = this.mapZoneData.tracks.bonuses.indexOf(this.selectedZone.track);
+				this.mapZoneData.tracks.bonuses.splice(trackIndex as number, 1);
 			}
 		}
 	}
