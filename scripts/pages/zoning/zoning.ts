@@ -590,9 +590,7 @@ class ZoneMenu {
 		}
 	}
 
-	static editDefragFlags() {
-		$.Msg(this.selectedZone.track);
-
+	static showDefragFlagMenu() {
 		if (this.selectedZone.track === null || !('defragFlags' in this.selectedZone.track)) return;
 
 		const flagEditMenu = UiToolkitAPI.ShowCustomLayoutContextMenu(
@@ -601,30 +599,34 @@ class ZoneMenu {
 			'file://{resources}/layout/modals/context-menus/zoning-df-flags.xml'
 		) as Panel;
 
-		(flagEditMenu.FindChildTraverse('FlagHaste') as Panel).checked =
-			((this.selectedZone.track.defragFlags as number) & DefragFlags['HASTE']) > 0;
-		(flagEditMenu.FindChildTraverse('FlagSlick') as Panel).checked =
-			((this.selectedZone.track.defragFlags as number) & DefragFlags['SLICK']) > 0;
-		(flagEditMenu.FindChildTraverse('FlagDamageBoost') as Panel).checked =
-			((this.selectedZone.track.defragFlags as number) & DefragFlags['DAMAGEBOOST']) > 0;
-		(flagEditMenu.FindChildTraverse('FlagRockets') as Panel).checked =
-			((this.selectedZone.track.defragFlags as number) & DefragFlags['ROCKETS']) > 0;
-		(flagEditMenu.FindChildTraverse('FlagPlasma') as Panel).checked =
-			((this.selectedZone.track.defragFlags as number) & DefragFlags['PLASMA']) > 0;
-		(flagEditMenu.FindChildTraverse('FlagBFG') as Panel).checked =
-			((this.selectedZone.track.defragFlags as number) & DefragFlags['BFG']) > 0;
+		const hasteFlag = flagEditMenu.FindChildTraverse('FlagHaste') as Panel;
+		hasteFlag.checked = ((this.selectedZone.track.defragFlags as number) & DefragFlags['HASTE']) > 0;
+		hasteFlag.SetPanelEvent('onactivate', () => ZoneMenu.updateDefragFlags('HASTE'));
+
+		const slickFlag = flagEditMenu.FindChildTraverse('FlagSlick') as Panel;
+		slickFlag.checked = ((this.selectedZone.track.defragFlags as number) & DefragFlags['SLICK']) > 0;
+		slickFlag.SetPanelEvent('onactivate', () => ZoneMenu.updateDefragFlags('SLICK'));
+
+		const damageBoostFlag = flagEditMenu.FindChildTraverse('FlagDamageBoost') as Panel;
+		damageBoostFlag.checked = ((this.selectedZone.track.defragFlags as number) & DefragFlags['DAMAGEBOOST']) > 0;
+		damageBoostFlag.SetPanelEvent('onactivate', () => ZoneMenu.updateDefragFlags('DAMAGEBOOST'));
+
+		const rocketsFlag = flagEditMenu.FindChildTraverse('FlagRockets') as Panel;
+		rocketsFlag.checked = ((this.selectedZone.track.defragFlags as number) & DefragFlags['ROCKETS']) > 0;
+		rocketsFlag.SetPanelEvent('onactivate', () => ZoneMenu.updateDefragFlags('ROCKETS'));
+
+		const plasmaFlag = flagEditMenu.FindChildTraverse('FlagPlasma') as Panel;
+		plasmaFlag.checked = ((this.selectedZone.track.defragFlags as number) & DefragFlags['PLASMA']) > 0;
+		plasmaFlag.SetPanelEvent('onactivate', () => ZoneMenu.updateDefragFlags('PLASMA'));
+
+		const bfgFlag = flagEditMenu.FindChildTraverse('FlagBFG') as Panel;
+		bfgFlag.checked = ((this.selectedZone.track.defragFlags as number) & DefragFlags['BFG']) > 0;
+		bfgFlag.SetPanelEvent('onactivate', () => ZoneMenu.updateDefragFlags('BFG'));
 	}
 
 	static updateDefragFlags(flag: string) {
-		$.Msg(this.selectedZone.track);
-		$.Msg('Attempting to toggle ', flag, ' on track', this.selectedZone.track);
 		if (this.selectedZone.track === null || !('defragFlags' in this.selectedZone.track)) return;
 		(this.selectedZone.track.defragFlags as number) ^= DefragFlags[flag];
-
-		$.Msg(
-			flag +
-				((this.selectedZone.track.defragFlags as number) & DefragFlags[flag] ? ' is enabled' : ' is disabled')
-		);
 	}
 
 	static saveZones() {

@@ -3,28 +3,24 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 
-	<scripts>
-		<include src="file://{scripts}/pages/zoning/zoning.js" />
-	</scripts>
-
 	<ContextMenuCustomLayout class="contextmenu" tabindex="auto" selectionpos="auto">
 		<Panel id="ContextMenuBody" class="contextmenu simplecontextmenu" childfocusonhover="true">
-			<ToggleButton id="FlagHaste" class="checkbox checkbox--right zoning__checkbox" onactivate="ZoneMenu.updateDefragFlags('HASTE')">
+			<ToggleButton id="FlagHaste" class="checkbox checkbox--right zoning__checkbox">
                 <Label text="#Zoning_DFFlags_Haste"/>
             </ToggleButton>
-            <ToggleButton id="FlagSlick" class="checkbox checkbox--right zoning__checkbox" onactivate="ZoneMenu.updateDefragFlags('SLICK')">
+            <ToggleButton id="FlagSlick" class="checkbox checkbox--right zoning__checkbox">
                 <Label text="#Zoning_DFFlags_Slick"/>
             </ToggleButton>
-            <ToggleButton id="FlagDamageBoost" class="checkbox checkbox--right zoning__checkbox" onactivate="ZoneMenu.updateDefragFlags('DAMAGEBOOST')">
+            <ToggleButton id="FlagDamageBoost" class="checkbox checkbox--right zoning__checkbox">
                 <Label text="#Zoning_DFFlags_DamageBoost"/>
             </ToggleButton>
-            <ToggleButton id="FlagRockets" class="checkbox checkbox--right zoning__checkbox" onactivate="ZoneMenu.updateDefragFlags('ROCKETS')">
+            <ToggleButton id="FlagRockets" class="checkbox checkbox--right zoning__checkbox">
                 <Label text="#Zoning_DFFlags_Rockets"/>
             </ToggleButton>
-            <ToggleButton id="FlagPlasma" class="checkbox checkbox--right zoning__checkbox" onactivate="ZoneMenu.updateDefragFlags('PLASMA')">
+            <ToggleButton id="FlagPlasma" class="checkbox checkbox--right zoning__checkbox">
                 <Label text="#Zoning_DFFlags_Plasma"/>
             </ToggleButton>
-            <ToggleButton id="FlagBFG" class="checkbox checkbox--right zoning__checkbox" onactivate="ZoneMenu.updateDefragFlags('BFG')">
+            <ToggleButton id="FlagBFG" class="checkbox checkbox--right zoning__checkbox">
                 <Label text="#Zoning_DFFlags_BFG"/>
             </ToggleButton>
 		</Panel>
