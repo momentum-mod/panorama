@@ -112,33 +112,9 @@ class ZoneMenu {
 			this.createTrackEntry(this.panels.trackList, bonus, `Bonus ${i + 1}`);
 		}
 
-		$.Msg(this.mapZoneData);
-
-		const mainTrack = this.mapZoneData.tracks.main;
-		$.Msg(mainTrack.zones?.segments?.length + ' segments');
-		$.Msg(mainTrack.zones?.segments[0]?.checkpoints?.length + ' checkpoints');
-		const region = mainTrack.zones?.segments[0]?.checkpoints[0]?.regions[0];
-		$.Msg(mainTrack.zones?.segments[0]?.checkpoints[0]?.regions?.length + ' regions');
-
-		//this.panels.regionSelect.SetSelectedIndex($.persistentStorage.getItem('zoning.region') ?? 0);
 		this.panels.regionSelect.SetPanelEvent('oninputsubmit', () => {
-			/*$.persistentStorage.setItem(
-				'zoning.region',
-				this.panels.regionSelect.GetSelected()?.GetAttributeInt('value', 0) ?? 0
-			);*/
 			ZoneMenu.updatePropertyFields(this.panels.regionSelect);
 		});
-
-		// Move these to context menu
-		/*for (let point = 0; point < 4; ++point) {
-			for (let axis = 0; axis < 2; ++axis) {
-				this.panels.regionPoints[point][axis].text = region.points[point][axis].toFixed(2);
-				this.panels.regionPoints[point][axis].text = region.points[point][axis].toFixed(2);
-			}
-		}
-		this.panels.regionBottom.text = region.bottom.toFixed(2);
-		this.panels.regionTop.text = (region.bottom + region.height).toFixed(2);
-		this.panels.regionSafeHeight.text = (region.safeHeight || 0).toFixed(2);*/
 	}
 
 	static showZoneMenu() {
@@ -153,8 +129,6 @@ class ZoneMenu {
 		if (this.panels.trackList?.Children().length) {
 			this.panels.trackList.RemoveAndDeleteChildren();
 		}
-
-		//this.mapZoneData = null;
 	}
 
 	static toggleCollapse(container: Panel, expandIcon: Panel, collapseIcon: Panel) {
@@ -204,7 +178,6 @@ class ZoneMenu {
 					zone: zone
 				});
 			}
-			$.Msg(majorId + ' created in ' + name + 'track, ' + segment.checkpoints.length + ' checkpoints.\n');
 		}
 	}
 
@@ -297,11 +270,6 @@ class ZoneMenu {
 		selectedSegment: Segment | null,
 		selectedZone: Zone | null
 	) {
-		//this.selectedZone?.RemoveClass('zoning__tracklist--active');
-		//newSelectedZone.AddClass('zoning__tracklist--active');
-
-		$.Msg(selectedTrack, selectedSegment, selectedZone);
-
 		if (!selectedTrack) {
 			this.panels.propertiesTrack.style.visibility = 'collapse';
 			this.panels.propertiesSegment.style.visibility = 'collapse';
@@ -309,7 +277,6 @@ class ZoneMenu {
 			return;
 		}
 		if (selectedZone !== null) {
-			$.Msg(`Zone selected. Regions: ${selectedZone.regions}, Filter: ${selectedZone.filtername}`);
 			this.panels.propertiesTrack.style.visibility = 'collapse';
 			this.panels.propertiesSegment.style.visibility = 'collapse';
 			this.panels.propertiesZone.style.visibility = 'visible';
@@ -318,15 +285,11 @@ class ZoneMenu {
 			this.panels.regionSelect.SetSelectedIndex(0);
 			this.panels.regionSafeHeight.text = (selectedZone?.regions[0]?.safeHeight ?? 0).toFixed(2) as string;
 		} else if (selectedSegment !== null) {
-			$.Msg(
-				`Segment selected. limitStartGroundSpeed: ${selectedSegment.limitStartGroundSpeed}, checkpointsRequired: ${selectedSegment.checkpointsRequired}, checkpointsOrdered: ${selectedSegment.checkpointsOrdered};`
-			);
 			this.panels.propertiesTrack.style.visibility = 'collapse';
 			this.panels.propertiesSegment.style.visibility = 'visible';
 			this.panels.propertiesZone.style.visibility = 'collapse';
 			//update segment properties
 		} else if (selectedTrack !== null) {
-			$.Msg(`Track selected. Name: ${'stagesEndAtStageStarts' in selectedTrack ? 'Main' : 'Bonus'}`);
 			this.panels.propertiesTrack.style.visibility = 'visible';
 			this.panels.propertiesSegment.style.visibility = 'collapse';
 			this.panels.propertiesZone.style.visibility = 'collapse';
@@ -398,7 +361,6 @@ class ZoneMenu {
 	}
 
 	static addBonus() {
-		$.Msg('Add new Bonus!');
 		if (!this.mapZoneData) return;
 		const bonus = this.createBonusTrack();
 		this.mapZoneData.tracks.bonuses.push(bonus);
@@ -407,7 +369,6 @@ class ZoneMenu {
 	}
 
 	static addSegment() {
-		$.Msg('Add new stage!');
 		if (!this.mapZoneData || !this.selectedZone.track) return;
 
 		if ('defragFlags' in this.selectedZone.track) {
@@ -429,11 +390,16 @@ class ZoneMenu {
 	}
 
 	static addCheckpoint() {
-		$.Msg('Add checkpoint to selected segment (', this.selectedZone.segment, ')');
 		if (!this.mapZoneData || !this.selectedZone || !this.selectedZone.segment) return;
 		this.selectedZone.segment.checkpoints.push(this.createZone());
 
 		//this.addTracklistEntry()
+		/*const mainTrack: Panel = this.panels.trackList.Children()[0];
+		const segmentList = mainTrack.FindChildTraverse('ListContainer');
+		const segmentPanel: Panel = segmentList?.Children()[lastSegmentIndex] as Panel;
+		const checkpointList: Panel = segmentPanel.FindChildTraverse('ListContainer') as Panel;
+		const id = `Checkpoint ${lastSegment.checkpoints.length}`;
+		this.addTracklistEntry(checkpointList, id, TracklistSnippet.CHECKPOINT, { regions: [newRegion] } as Zone);*/
 	}
 
 	static addEndZone() {
@@ -446,45 +412,6 @@ class ZoneMenu {
 		$.Msg('Add cancel zone to selected segment (', this.selectedZone.segment, ')');
 		if (!this.mapZoneData || !this.selectedZone || !this.selectedZone.segment) return;
 		this.selectedZone.segment.cancel.push(this.createZone());
-	}
-
-	static createNewZone() {
-		$.Msg('Add new zone!');
-
-		/*// create new volume and add to MapZones opbjet
-		// Note: this should use point picker (c++)
-		const x1: number = Math.random(); // fix random
-		const x2: number = Math.random(); // fix random
-		const y1: number = Math.random(); // fix random
-		const y2: number = Math.random(); // fix random
-		const b = 0;
-		const h = 960;
-		const newRegion: Region = {
-			points: [
-				{ x: x1, y: y1 },
-				{ x: x1, y: y2 },
-				{ x: x2, y: y2 },
-				{ x: x2, y: y1 }
-			],
-			bottom: b,
-			height: h,
-			teleDestPos: { x: 0.5 * (x1 + x2), y: 0.5 * (y1 + y2), z: b }, // TODO: This below are required if region is part of a volume used by stafe or major checkpoint zone
-			teleDestYaw: 0, // See convo in mom red 25/09/23 02:00 GMT
-			teleDestTargetName: '',
-			safeHeight: 0
-		};
-
-		const lastSegmentIndex = (this.mapZoneData?.tracks.main.zones.segments.length as number) - 1;
-		const lastSegment = this.mapZoneData?.tracks.main.zones.segments[lastSegmentIndex] as Segment;
-		lastSegment.checkpoints.push({ regions: [newRegion] } as Zone);
-
-		// add to tracklist tree
-		const mainTrack: Panel = this.panels.trackList.Children()[0];
-		const segmentList = mainTrack.FindChildTraverse('ListContainer');
-		const segmentPanel: Panel = segmentList?.Children()[lastSegmentIndex] as Panel;
-		const checkpointList: Panel = segmentPanel.FindChildTraverse('ListContainer') as Panel;
-		const id = `Checkpoint ${lastSegment.checkpoints.length}`;
-		this.addTracklistEntry(checkpointList, id, TracklistSnippet.CHECKPOINT, { regions: [newRegion] } as Zone);*/
 	}
 
 	static showAddMenu() {
@@ -528,18 +455,6 @@ class ZoneMenu {
 	}
 
 	static deleteSelection() {
-		// delete checkpoint from MapZones object
-		/*const lastSegmentIndex = (this.mapZoneData?.tracks.main.zones.segments.length as number) - 1;
-		const lastSegment = this.mapZoneData?.tracks.main.zones.segments[lastSegmentIndex] as Segment;
-		lastSegment.checkpoints.pop();*/
-
-		// delete checkpoint from tracklist tree
-		/*const mainTrack: Panel = this.panels.trackList.Children()[0];
-		const segmentList = mainTrack.FindChildTraverse('ListContainer');
-		const segmentPanel: Panel = segmentList?.Children()[lastSegmentIndex] as Panel;
-		const checkpointList: Panel = segmentPanel.FindChildTraverse('ListContainer') as Panel;
-		checkpointList.Children()[lastSegment.checkpoints.length]?.DeleteAsync(0);*/
-
 		if (!this.selectedZone || !this.mapZoneData) return;
 
 		if (this.selectedZone.track && this.selectedZone.segment && this.selectedZone.zone) {
@@ -553,13 +468,9 @@ class ZoneMenu {
 
 			// remove deleted zone from tracklist
 		} else if (this.selectedZone.segment) {
-			$.Msg(
-				`Segment deleted. limitStartGroundSpeed: ${this.selectedZone.segment.limitStartGroundSpeed}, checkpointsRequired: ${this.selectedZone.segment.checkpointsRequired}, checkpointsOrdered: ${this.selectedZone.segment.checkpointsOrdered};`
-			);
 			const index = this.mapZoneData.tracks.main.zones.segments.indexOf(this.selectedZone.segment);
 			this.mapZoneData.tracks.main.zones.segments.splice(index as number, 1);
 		} else if (this.selectedZone.track) {
-			$.Msg(`Track deleted. Zones: ${this.selectedZone.track.zones}`);
 			if ('stagesEndAtStageStarts' in this.selectedZone.track) {
 				$.Msg("Can't delete Main track!!!");
 			} else {
