@@ -165,7 +165,7 @@ class ZoneMenu {
 			});
 			if (majorListContainer === null) continue;
 			if (segment.checkpoints.length === 0) {
-				majorListContainer.RemoveAndDeleteChildren();
+				//majorListContainer.RemoveAndDeleteChildren();
 				(trackContainer.FindChildTraverse('CollapseButton') as Panel).style.visibility = 'collapse';
 				continue;
 			}
@@ -387,7 +387,11 @@ class ZoneMenu {
 			segment: newSegment,
 			zone: null
 		});
-		// add segment start to tracklist
+		this.addTracklistEntry(list as Panel, 'Stage Start', TracklistSnippet.CHECKPOINT, {
+			track: this.selectedZone.track,
+			segment: newSegment,
+			zone: newSegment.checkpoints[0]
+		});
 	}
 
 	static addCheckpoint() {
@@ -408,7 +412,10 @@ class ZoneMenu {
 		const selectedSegment = trackPanel.FindChildTraverse('ListContainer')?.Children()[segmentIndex] as Panel;
 		const checkpointsList = selectedSegment.FindChildTraverse('ListContainer') as Panel;
 		const id = `Checkpoint ${this.selectedZone.segment.checkpoints.length - 1}`;
-		this.addTracklistEntry(checkpointsList, id, TracklistSnippet.CHECKPOINT, newZone);
+		this.addTracklistEntry(checkpointsList, id, TracklistSnippet.CHECKPOINT, {
+			track: this.selectedZone.track,
+			segment: this.selectedZone.segment,
+			zone: newZone});
 	}
 
 	static addEndZone() {
