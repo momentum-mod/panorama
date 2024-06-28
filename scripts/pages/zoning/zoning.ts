@@ -547,6 +547,7 @@ class ZoneMenu {
 			child.RemoveAndDeleteChildren();
 			child.DeleteAsync(0);
 		}
+		this.mapZoneData = null;
 		this.initMenu();
 	}
 }
