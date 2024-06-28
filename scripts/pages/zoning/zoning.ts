@@ -382,24 +382,33 @@ class ZoneMenu {
 		const mainTrack: Panel = this.panels.trackList.Children()[0];
 		const segmentList = mainTrack.FindChildTraverse('ListContainer') as Panel;
 		const id = `Segment ${this.mapZoneData.tracks.main.zones.segments.length}`;
-		this.addTracklistEntry(segmentList, id, TracklistSnippet.SEGMENT, {
+		const list = this.addTracklistEntry(segmentList, id, TracklistSnippet.SEGMENT, {
 			track: this.mapZoneData.tracks.main,
 			segment: newSegment,
 			zone: null
 		});
+		// add segment start to tracklist
 	}
 
 	static addCheckpoint() {
-		if (!this.mapZoneData || !this.selectedZone || !this.selectedZone.segment) return;
-		this.selectedZone.segment.checkpoints.push(this.createZone());
+		if (!this.mapZoneData || !this.selectedZone || !this.selectedZone.segment || !this.selectedZone.track) return;
+		const newZone = this.createZone()
+		this.selectedZone.segment.checkpoints.push(newZone);
 
 		//this.addTracklistEntry()
-		/*const mainTrack: Panel = this.panels.trackList.Children()[0];
-		const segmentList = mainTrack.FindChildTraverse('ListContainer');
-		const segmentPanel: Panel = segmentList?.Children()[lastSegmentIndex] as Panel;
-		const checkpointList: Panel = segmentPanel.FindChildTraverse('ListContainer') as Panel;
-		const id = `Checkpoint ${lastSegment.checkpoints.length}`;
-		this.addTracklistEntry(checkpointList, id, TracklistSnippet.CHECKPOINT, { regions: [newRegion] } as Zone);*/
+		let trackPanel: Panel;
+		if (this.selectedZone.track === this.mapZoneData.tracks.main) {
+			trackPanel = this.panels.trackList.Children()[0];
+		} else {
+			const bonusId = this.mapZoneData.tracks.bonuses.indexOf(this.selectedZone.track as BonusTrack);
+			trackPanel = this.panels.trackList.Children()[1 + bonusId];
+		}
+		
+		const segmentIndex = this.selectedZone.track.zones.segments.indexOf(this.selectedZone.segment);
+		const selectedSegment = trackPanel.FindChildTraverse('ListContainer')?.Children()[segmentIndex] as Panel;
+		const checkpointsList = selectedSegment.FindChildTraverse('ListContainer') as Panel;
+		const id = `Checkpoint ${this.selectedZone.segment.checkpoints.length - 1}`;
+		this.addTracklistEntry(checkpointsList, id, TracklistSnippet.CHECKPOINT, newZone);
 	}
 
 	static addEndZone() {
