@@ -425,9 +425,26 @@ class ZoneMenu {
 	}
 
 	static addCancelZone() {
-		$.Msg('Add cancel zone to selected segment (', this.selectedZone.segment, ')');
-		if (!this.mapZoneData || !this.selectedZone || !this.selectedZone.segment) return;
-		this.selectedZone.segment.cancel.push(this.createZone());
+		if (!this.mapZoneData || !this.selectedZone || !this.selectedZone.segment || !this.selectedZone.track) return;
+		const newZone = this.createZone();
+		this.selectedZone.segment.cancel.push(newZone);
+
+		let trackPanel: Panel;
+		if (this.selectedZone.track === this.mapZoneData.tracks.main) {
+			trackPanel = this.panels.trackList.Children()[0];
+		} else {
+			const bonusId = this.mapZoneData.tracks.bonuses.indexOf(this.selectedZone.track as BonusTrack);
+			trackPanel = this.panels.trackList.Children()[1 + bonusId];
+		}
+		
+		const segmentIndex = this.selectedZone.track.zones.segments.indexOf(this.selectedZone.segment);
+		const selectedSegment = trackPanel.FindChildTraverse('ListContainer')?.Children()[segmentIndex] as Panel;
+		const checkpointsList = selectedSegment.FindChildTraverse('ListContainer') as Panel;
+		const id = `Cancel Zone ${this.selectedZone.segment.cancel.length}`;
+		this.addTracklistEntry(checkpointsList, id, TracklistSnippet.CHECKPOINT, {
+			track: this.selectedZone.track,
+			segment: this.selectedZone.segment,
+			zone: newZone});
 	}
 
 	static showAddMenu() {
