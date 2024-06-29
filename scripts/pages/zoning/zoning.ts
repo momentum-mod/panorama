@@ -419,9 +419,31 @@ class ZoneMenu {
 	}
 
 	static addEndZone() {
-		$.Msg('Add end zone to selected track (', this.selectedZone.track, ')');
 		if (!this.mapZoneData || !this.selectedZone || !this.selectedZone.track) return;
-		this.selectedZone.track.zones.end = this.createZone();
+		const endZone = this.createZone();
+		this.selectedZone.track.zones.end = endZone;
+
+		let trackPanel: Panel;
+		if (this.selectedZone.track === this.mapZoneData.tracks.main) {
+			trackPanel = this.panels.trackList.Children()[0];
+		} else {
+			const bonusId = this.mapZoneData.tracks.bonuses.indexOf(this.selectedZone.track as BonusTrack);
+			trackPanel = this.panels.trackList.Children()[1 + bonusId];
+		}
+		const segmentList = trackPanel.FindChildTraverse('ListContainer') as Panel;
+		const oldEnd = segmentList.FindChildTraverse('End Zone');
+		if (oldEnd) {
+			oldEnd.SetPanelEvent('onactivate', () =>
+				ZoneMenu.updateSelection(this.selectedZone.track, null, endZone)
+			);
+		} else {
+			const id = 'End Zone';
+			this.addTracklistEntry(segmentList, id, TracklistSnippet.CHECKPOINT, {
+				track: this.selectedZone.track,
+				segment: null,
+				zone: endZone
+			});
+		}
 	}
 
 	static addCancelZone() {
