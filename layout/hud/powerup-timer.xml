@@ -1,0 +1,25 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+	<scripts>
+		<include src="file://{scripts}/common/gamemodes.js" />
+		<include src="file://{scripts}/util/register-for-gamemodes.js" />
+		<include src="file://{scripts}/hud/powerup-timer.js" />
+	</scripts>
+
+	<MomHudPowerupTimer class="powerup-timer">
+		<Panel id="HasteTimer" class="powerup-timer__item">
+			<Image id="HasteIcon" class="powerup-timer__icon powerup-timer__icon--haste" src="file://{images}/hud/haste.svg" textureheight="72"/>
+			<Label id="HasteLabel" class="powerup-timer__label" text="" />
+		</Panel>
+		<Panel id="DamageBoostTimer" class="powerup-timer__item">
+			<Image id="DamageBoostIcon" class="powerup-timer__icon powerup-timer__icon--damageboost" src="file://{images}/hud/damageboost.svg" textureheight="72"/>
+			<Label id="DamageBoostLabel" class="powerup-timer__label" text="" />
+		</Panel>
+		<Panel id="SlickTimer" class="powerup-timer__item">
+			<Image id="SlickIcon" class="powerup-timer__icon" src="file://{images}/logo.svg" textureheight="72"/>
+			<Label id="SlickLabel" class="powerup-timer__label" text="" />
+		</Panel>
+	</MomHudPowerupTimer>
+</root>
