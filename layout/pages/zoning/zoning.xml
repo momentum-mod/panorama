@@ -19,7 +19,8 @@
 						<Label  id="Name" class="zoning__tracklist-label" />
 					</RadioButton>
 				</Panel>
-				<Panel id="ListContainer" class="zoning__list-container" />
+				<Panel id="SegmentContainer" class="zoning__list-container" />
+				<Panel id="EndZoneContainer" class="zoning__list-container" />
 			</Panel>
 		</snippet>
 		<snippet name="tracklist-segment">
@@ -33,7 +34,8 @@
 						<Label  id="Name" class="zoning__tracklist-label" />
 					</RadioButton>
 				</Panel>
-				<Panel id="ListContainer" class="zoning__list-container" />
+				<Panel id="CheckpointContainer" class="zoning__list-container" />
+				<Panel id="CancelContainer" class="zoning__list-container" />
 			</Panel>
 		</snippet>
 		<snippet name="tracklist-checkpoint">

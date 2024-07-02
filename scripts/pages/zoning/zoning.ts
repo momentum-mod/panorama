@@ -158,12 +158,12 @@ class ZoneMenu {
 
 		for (const [i, segment] of entry.zones.segments.entries()) {
 			const majorId = segment.name || `Segment ${i + 1}`;
-			const majorListContainer = this.addTracklistEntry(trackContainer, majorId, TracklistSnippet.SEGMENT, {
+			const segmentContainer = this.addTracklistEntry(trackContainer, majorId, TracklistSnippet.SEGMENT, {
 				track: entry,
 				segment: segment,
 				zone: null
 			});
-			if (majorListContainer === null) continue;
+			if (segmentContainer === null) continue;
 			if (segment.checkpoints.length === 0) {
 				//majorListContainer.RemoveAndDeleteChildren();
 				(trackContainer.FindChildTraverse('CollapseButton') as Panel).style.visibility = 'collapse';
@@ -172,7 +172,7 @@ class ZoneMenu {
 
 			for (const [j, zone] of segment.checkpoints.entries()) {
 				const minorId = j ? `Checkpoint ${j}` : i ? 'Stage Start' : 'Start Zone';
-				this.addTracklistEntry(majorListContainer, minorId, TracklistSnippet.CHECKPOINT, {
+				this.addTracklistEntry(segmentContainer, minorId, TracklistSnippet.CHECKPOINT, {
 					track: entry,
 					segment: segment,
 					zone: zone
@@ -191,7 +191,17 @@ class ZoneMenu {
 		label.text = name;
 
 		const collapseButton = newTracklistPanel.FindChildTraverse('CollapseButton');
-		const listContainer = newTracklistPanel.FindChildTraverse('ListContainer');
+		let listContainer;
+		switch (snippet) {
+			case TracklistSnippet.TRACK:
+				listContainer = newTracklistPanel.FindChildTraverse('SegmentContainer');
+				break;
+			case TracklistSnippet.SEGMENT:
+				listContainer = newTracklistPanel.FindChildTraverse('CheckpointContainer');
+				break;
+			case TracklistSnippet.CHECKPOINT:
+				break;
+		}
 		if (collapseButton && listContainer) {
 			const expandIcon = newTracklistPanel.FindChildTraverse('TracklistExpandIcon') as Panel;
 			const collapseIcon = newTracklistPanel.FindChildTraverse('TracklistCollapseIcon') as Panel;
@@ -380,7 +390,7 @@ class ZoneMenu {
 		this.mapZoneData.tracks.main.zones.segments.push(newSegment);
 
 		const mainTrack: Panel = this.panels.trackList.Children()[0];
-		const segmentList = mainTrack.FindChildTraverse('ListContainer') as Panel;
+		const segmentList = mainTrack.FindChildTraverse('SegmentContainer') as Panel;
 		const id = `Segment ${this.mapZoneData.tracks.main.zones.segments.length}`;
 		const list = this.addTracklistEntry(segmentList, id, TracklistSnippet.SEGMENT, {
 			track: this.mapZoneData.tracks.main,
@@ -409,8 +419,8 @@ class ZoneMenu {
 		}
 		
 		const segmentIndex = this.selectedZone.track.zones.segments.indexOf(this.selectedZone.segment);
-		const selectedSegment = trackPanel.FindChildTraverse('ListContainer')?.Children()[segmentIndex] as Panel;
-		const checkpointsList = selectedSegment.FindChildTraverse('ListContainer') as Panel;
+		const selectedSegment = trackPanel.FindChildTraverse('SegmentContainer')?.Children()[segmentIndex] as Panel;
+		const checkpointsList = selectedSegment.FindChildTraverse('CheckpointContainer') as Panel;
 		const id = `Checkpoint ${this.selectedZone.segment.checkpoints.length - 1}`;
 		this.addTracklistEntry(checkpointsList, id, TracklistSnippet.CHECKPOINT, {
 			track: this.selectedZone.track,
@@ -430,15 +440,15 @@ class ZoneMenu {
 			const bonusId = this.mapZoneData.tracks.bonuses.indexOf(this.selectedZone.track as BonusTrack);
 			trackPanel = this.panels.trackList.Children()[1 + bonusId];
 		}
-		const segmentList = trackPanel.FindChildTraverse('ListContainer') as Panel;
-		const oldEnd = segmentList.FindChildTraverse('End Zone');
+		const endZoneContainer = trackPanel.FindChildTraverse('EndZoneContainer') as Panel;
+		const oldEnd = endZoneContainer.FindChildTraverse('End Zone');
 		if (oldEnd) {
 			oldEnd.SetPanelEvent('onactivate', () =>
 				ZoneMenu.updateSelection(this.selectedZone.track, null, endZone)
 			);
 		} else {
 			const id = 'End Zone';
-			this.addTracklistEntry(segmentList, id, TracklistSnippet.CHECKPOINT, {
+			this.addTracklistEntry(endZoneContainer, id, TracklistSnippet.CHECKPOINT, {
 				track: this.selectedZone.track,
 				segment: null,
 				zone: endZone
@@ -460,10 +470,10 @@ class ZoneMenu {
 		}
 		
 		const segmentIndex = this.selectedZone.track.zones.segments.indexOf(this.selectedZone.segment);
-		const selectedSegment = trackPanel.FindChildTraverse('ListContainer')?.Children()[segmentIndex] as Panel;
-		const checkpointsList = selectedSegment.FindChildTraverse('ListContainer') as Panel;
+		const selectedSegment = trackPanel.FindChildTraverse('SegmentContainer')?.Children()[segmentIndex] as Panel;
+		const cancelList = selectedSegment.FindChildTraverse('CancelContainer') as Panel;
 		const id = `Cancel Zone ${this.selectedZone.segment.cancel.length}`;
-		this.addTracklistEntry(checkpointsList, id, TracklistSnippet.CHECKPOINT, {
+		this.addTracklistEntry(cancelList, id, TracklistSnippet.CHECKPOINT, {
 			track: this.selectedZone.track,
 			segment: this.selectedZone.segment,
 			zone: newZone});
