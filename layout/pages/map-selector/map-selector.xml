@@ -69,9 +69,6 @@
 											<RadioButton id="SJFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button">
 												<Label class="button__text mapselector-filters__text" text="#Gamemode_SJ" />
 											</RadioButton>
-											<RadioButton id="TricksurfFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button">
-												<Label class="button__text mapselector-filters__text" text="#Gamemode_Tricksurf" />
-											</RadioButton>
 											<RadioButton id="AhopFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button">
 												<Label class="button__text mapselector-filters__text" text="#Gamemode_Ahop" />
 											</RadioButton>

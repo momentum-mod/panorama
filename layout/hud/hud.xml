@@ -22,7 +22,6 @@
 
 		<!-- HUD anchored to top-left corner of screen, laid out vertically top-to-bottom -->
 		<Panel id="HudTopLeft" hittest="false" hittestchildren="false">
-			<HudTrickTracker />
 			<HudComparisons />
 		</Panel>
 
@@ -64,7 +63,7 @@
 			<MomHudWeaponSelection />
 		</Panel>
 
-		<HudBlurTarget id="HudBlur" blurrects="TabMenu TrickList" class="hud-blur" hittest="false" hittestchildren="false">
+		<HudBlurTarget id="HudBlur" blurrects="TabMenu" class="hud-blur" hittest="false" hittestchildren="false">
 			<BackbufferImagePanel class="full" />
 		</HudBlurTarget>
 
@@ -80,8 +79,6 @@
 			<MomHudSpectate id="Spectator" />
 			<MomHudJumpStats />
 		</Panel>
-
-		<TrickList id="TrickList" />
 
 		<!-- This container is here so we can move the leaderboard in and out of it during the end-of-match sequence -->
 		<Panel id="TabMenuContainer" class="full-width full-height" hittest="false" hittestchildren="true">

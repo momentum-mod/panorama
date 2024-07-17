@@ -223,9 +223,9 @@ class MapSelection {
 	 * @return {Boolean} Whether the data matched the default filter state
 	 */
 	static setFilterData(panel, data) {
-		if (panel.paneltype !== data.paneltype) {
+		if (panel.paneltype !== data?.paneltype) {
 			$.Warning(
-				`MapSelection:setFilterData: paneltype mismatch. ${panel.id} was ${panel.paneltype}, ${data.id} was ${data.paneltype}.`
+				`MapSelection:setFilterData: paneltype mismatch. ${panel.id} was ${panel.paneltype}, ${data?.id} was ${data?.paneltype}.`
 			);
 
 			// If the paneltypes are off we're in a weird state where the panel type got changed in the XML (say ToggleButton to NStateButton), so just clear the data and return
