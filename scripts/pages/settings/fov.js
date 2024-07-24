@@ -46,7 +46,7 @@ class Fov {
 		let fov = GameInterfaceAPI.GetSettingFloat('fov_desired');
 		fov = Math.round(this.fovToHorizontal(fov));
 
-		if (!isNaN(fov)) {
+		if (!Number.isNaN(fov)) {
 			this.panels.horizontalFov.text = fov;
 		}
 	}
@@ -57,7 +57,7 @@ class Fov {
 		let fov = parseFloat(this.panels.horizontalFov.text);
 		fov = Math.round(this.horizontalToFov(fov));
 
-		if (!isNaN(fov)) {
+		if (!Number.isNaN(fov)) {
 			const fovText = this.panels.fov.FindChildTraverse('Value');
 			fovText.text = fov;
 			fovText.Submit();
