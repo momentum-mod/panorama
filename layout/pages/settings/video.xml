@@ -5,6 +5,7 @@
 
 	<scripts>
 		<include src="file://{scripts}/pages/settings/page.js" />
+		<include src="file://{scripts}/pages/settings/fov.js" />
 	</scripts>
 
 	<Panel class="settings-page">
@@ -31,7 +32,14 @@
 					<Label class="settings-group__title" text="#Settings_Video" />
 				</Panel>
 
-				<SettingsSlider text="#Settings_Video_FOV" min="50" max="130" convar="fov_desired" hasdocspage="false" />
+				<Panel class="settings-group__combo" onload="Fov.loadSettings()">
+					<SettingsSlider id="FOV" text="#Settings_Video_FOV" min="50" max="130" convar="fov_desired" hasdocspage="false" onvaluechanged="Fov.updateFOV()" />
+
+					<Panel class="settings-enum__values pr-2 pl-4 mb-1">
+						<Label text="#Settings_Video_Horizontal_FOV" class="settings-enum__title" />
+						<TextEntry id="FOV_Horizontal" class="textentry settings-slider__textentry ml-4" multiline="false" textmode="numeric" oninputsubmit="Fov.updateHorizontalFov()" />
+					</Panel>
+				</Panel>
 
 				<SettingsSlider text="#Settings_Video_MaxFPS" min="0" max="400" convar="fps_max" infomessage="#Settings_Video_MaxFPS_Info" hasdocspage="false" />
 
