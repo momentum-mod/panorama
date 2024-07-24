@@ -37,7 +37,7 @@
 
 					<Panel class="settings-enum__values pr-2 pl-4 mb-1">
 						<Label text="#Settings_Video_Horizontal_FOV" class="settings-enum__title" />
-						<TextEntry id="FOV_Horizontal" class="textentry settings-slider__textentry ml-4" multiline="false" textmode="numeric" oninputsubmit="Fov.updateHorizontalFov()" />
+						<TextEntry id="FOV_Horizontal" class="textentry settings-slider__textentry HasInput ml-4" multiline="false" textmode="numeric" oninputsubmit="Fov.updateHorizontalFov()" />
 					</Panel>
 				</Panel>
 
