@@ -244,9 +244,7 @@ class MainMenuSettings {
 
 	static initPanelsRecursive(panel) {
 		// Initialise info panel event handlers
-		if (this.isSettingsPanel(panel) || this.isSpeedometerPanel(panel)) {
-			this.setPanelInfoEvents(panel);
-		}
+		this.setPanelInfoEvents(panel);
 
 		// Initialise all the settings using persistent storage
 		// Only Enum and EnumDropDown are currently supported, others can be added when/if needed
@@ -312,15 +310,19 @@ class MainMenuSettings {
 
 	static setPanelInfoEvents(panel) {
 		const message = panel.GetAttributeString('infomessage', '');
+		const title = panel.GetAttributeString('infotitle', '');
+
+		// Don't set events if there's no info to show
+		if (!this.isSettingsPanel(panel) && message === '' && title === '' && !panel.convar && !panel.bind) return;
+
 		// Default to true if not set
 		const hasDocs = !(panel.GetAttributeString('hasdocspage', '') === 'false');
+
 		panel.SetPanelEvent('onmouseover', () => {
 			// Set onmouseover events for all settings panels
 			this.showInfo(
 				// If a panel has a specific title use that, if not use the panel's name. Child ID names vary between panel types, blame Valve
-				panel.GetAttributeString('infotitle', '') ||
-					panel.FindChildTraverse('Title')?.text ||
-					panel.FindChildTraverse('title')?.text,
+				title || panel.FindChildTraverse('Title')?.text || panel.FindChildTraverse('title')?.text,
 				message,
 				panel.convar ?? panel.bind,
 				hasDocs,
@@ -433,9 +435,5 @@ class MainMenuSettings {
 			'SettingsToggle',
 			'ConVarColorDisplay'
 		].includes(panel.paneltype);
-	}
-
-	static isSpeedometerPanel(panel) {
-		return ['SpeedometersContainer', 'RangeColorProfilesContainer'].includes(panel.id);
 	}
 }
