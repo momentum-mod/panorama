@@ -54,7 +54,7 @@ class Fov {
 	static updateHorizontalFov() {
 		if (!this.panels.fov || !this.panels.horizontalFov) return;
 
-		let fov = parseFloat(this.panels.horizontalFov.text);
+		let fov = Number.parseFloat(this.panels.horizontalFov.text);
 		fov = Math.round(this.horizontalToFov(fov));
 
 		if (!Number.isNaN(fov)) {
