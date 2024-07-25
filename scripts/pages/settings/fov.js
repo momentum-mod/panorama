@@ -3,23 +3,26 @@ class Fov {
 		/** @type {SettingsSlider} @static */
 		fov: $('#FOV'),
 		/** @type {TextEntry} @static */
-		horizontalFov: $('#FOV_Horizontal')
+		horizontalFov: $('#FOV_Horizontal'),
+		aspectRatio: $('#FOV_Horizontal_AspectRatioEnum')
 	};
 
 	static loadSettings() {
+		this.panels.aspectRatio.SetSelected('aspectratio1');
 		this.updateFOV();
 	}
 
 	static aspectRatio() {
-		// find the display panel
-		// there doesn't seem to be an api for this yet
-		let panel = this.panels.fov;
-		let parent = panel;
-		while ((parent = panel.GetParent())) {
-			panel = parent;
+		const id = this.panels.aspectRatio.GetSelected().id;
+		switch(id) {
+			case 'aspectratio0':
+				return 4/3;
+			case 'aspectratio1':
+				return 16/9;
+			case 'aspectratio2':
+				return 16/10;
 		}
-
-		return panel.actuallayoutwidth / panel.actuallayoutheight;
+		return Number.NaN;
 	}
 
 	static fovToHorizontal(fov) {

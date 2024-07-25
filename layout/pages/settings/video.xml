@@ -33,12 +33,19 @@
 					<Label class="settings-group__title" text="#Settings_Video" />
 				</Panel>
 
-				<Panel class="settings-group__combo" onload="Fov.loadSettings()">
-					<SettingsSlider id="FOV" text="#Settings_Video_FOV" min="50" max="130" convar="fov_desired" hasdocspage="false" onvaluechanged="Fov.updateFOV()" />
+				<SettingsSlider id="FOV" text="#Settings_Video_FOV" min="50" max="130" convar="fov_desired" hasdocspage="false" onvaluechanged="Fov.updateFOV()" />
 
-					<Panel class="settings-enum__values pr-2 pl-4 mb-1">
+				<Panel class="settings-group__combo" onload="Fov.loadSettings()" infotitle="#Settings_Video_Horizontal_FOV" infomessage="#Settings_Video_Horizontal_FOV_Info">
+					<Panel class="settings-enum">
 						<Label text="#Settings_Video_Horizontal_FOV" class="settings-enum__title" />
-						<TextEntry id="FOV_Horizontal" class="textentry settings-slider__textentry HasInput ml-4" multiline="false" textmode="numeric" oninputsubmit="Fov.updateHorizontalFov()" />
+						<Panel class="settings-enum__values">
+							<TextEntry id="FOV_Horizontal" class="textentry settings-slider__textentry HasInput ml-4" multiline="false" textmode="numeric" oninputsubmit="Fov.updateHorizontalFov()" />
+							<DropDown id="FOV_Horizontal_AspectRatioEnum" class="dropdown ml-4" menuclass="dropdown-menu" onuserinputsubmit="Fov.updateFOV()">
+								<Label text="#Settings_Video_AspectRatio_Normal" value="0" id="aspectratio0" />
+								<Label text="#Settings_Video_AspectRatio_16x9" value="1" id="aspectratio1" />
+								<Label text="#Settings_Video_AspectRatio_16x10" value="2" id="aspectratio2" />
+							</DropDown>
+						</Panel>
 					</Panel>
 				</Panel>
 
