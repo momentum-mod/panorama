@@ -14,13 +14,13 @@ class Fov {
 
 	static aspectRatio() {
 		const id = this.panels.aspectRatio.GetSelected().id;
-		switch(id) {
+		switch (id) {
 			case 'aspectratio0':
-				return 4/3;
+				return 4 / 3;
 			case 'aspectratio1':
-				return 16/9;
+				return 16 / 9;
 			case 'aspectratio2':
-				return 16/10;
+				return 16 / 10;
 		}
 		return Number.NaN;
 	}

@@ -313,19 +313,16 @@ class MainMenuSettings {
 		const title = panel.GetAttributeString('infotitle', '');
 
 		// Don't set events if there's no info to show
-		if(!this.isSettingsPanel(panel) && message === '' && title === '' && !panel.convar && !panel.bind) return;
+		if (!this.isSettingsPanel(panel) && message === '' && title === '' && !panel.convar && !panel.bind) return;
 
 		// Default to true if not set
 		const hasDocs = !(panel.GetAttributeString('hasdocspage', '') === 'false');
-
 
 		panel.SetPanelEvent('onmouseover', () => {
 			// Set onmouseover events for all settings panels
 			this.showInfo(
 				// If a panel has a specific title use that, if not use the panel's name. Child ID names vary between panel types, blame Valve
-				title ||
-					panel.FindChildTraverse('Title')?.text ||
-					panel.FindChildTraverse('title')?.text,
+				title || panel.FindChildTraverse('Title')?.text || panel.FindChildTraverse('title')?.text,
 				message,
 				panel.convar ?? panel.bind,
 				hasDocs,
