@@ -1,10 +1,3 @@
-function deg2rad(x) {
-	return (x / 180) * Math.PI;
-}
-function rad2deg(x) {
-	return (x * 180) / Math.PI;
-}
-
 class Fov {
 	static panels = {
 		/** @type {SettingsSlider} @static */
@@ -29,7 +22,6 @@ class Fov {
 		return panel.actuallayoutwidth / panel.actuallayoutheight;
 	}
 
-	// based on https://casualhacks.net/Source-FOV-calculator.html
 	static fovToHorizontal(fov) {
 		const ratioRatio = this.aspectRatio() / (4 / 3);
 		return 2 * rad2deg(Math.atan(Math.tan(deg2rad(fov) / 2) * ratioRatio));
