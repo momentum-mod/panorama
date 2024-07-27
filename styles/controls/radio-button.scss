@@ -179,6 +179,28 @@
 		}
 	}
 
+	&__icon {
+		height: 36px;
+		width: height-percentage(100%);
+		padding: $button-icon-padding;
+		vertical-align: center;
+		horizontal-align: center;
+		img-shadow: $button-icon-shadow;
+		wash-color: $button-text-color;
+		opacity: 0.9;
+
+		transition: opacity 0.1s ease-in-out 0s;
+
+		#{$root}__tab:hover &,
+		#{$root}__tab:selected & {
+			opacity: 1;
+		}
+
+		#{$root}__tab:disabled & {
+			opacity: 0.2;
+		}
+	}
+
 	.RadioBox {
 		visibility: collapse;
 	}
