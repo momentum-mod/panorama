@@ -81,6 +81,22 @@
 		<Label id="PropertiesLabel" class="zoning__header" text="#Zoning_PropertiesLabel" />
 		<Panel id="PropertiesContainer" class="zoning__menu-section">
 			<Panel id="TrackProperties" class="zoning__property-container">
+				<Panel class="zoning__menu-separator">
+					<Panel id="MapMaxVelocity" class="zoning__property">
+						<Label class="zoning__property-label" text="#Zoning_MaxVelocity" />
+						<TextEntry id="MaxVelocity" class="textentry zoning__textentry" textmode="numeric" text="" ontextentrysubmit="ZoneMenu.setMaxVelocity()" />
+					</Panel>
+					<Panel id="StagesEndAtStageStarts" class="zoning__property">
+						<Label class="zoning__property-label" text="#Zoning_StagesEndAtStageStarts" />
+						<ToggleButton id="CheckBox" class="checkbox checkbox--right zoning__checkbox" onactivate="ZoneMenu.setStageEndAtStageStarts()" />
+					</Panel>
+					<Panel id="DefragFlags" class="zoning__property">
+						<Label class="zoning__property-label" text="#Zoning_DefragFlags" />
+						<Button id="DefragFlagsButton" class="button zoning__property-button" onactivate="ZoneMenu.showDefragFlagMenu()">
+							<Label class="button__text" text="#Zoning_DefragFlags_Edit" />
+						</Button>
+					</Panel>
+				</Panel>
 			</Panel>
 			<Panel id="SegmentProperties" class="zoning__property-container">
 			</Panel>
