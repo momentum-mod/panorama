@@ -99,6 +99,24 @@
 				</Panel>
 			</Panel>
 			<Panel id="SegmentProperties" class="zoning__property-container">
+				<Panel class="zoning__menu-separator">
+					<Panel id="LimitGroundSpeed" class="zoning__property">
+						<Label class="zoning__property-label" text="#Zoning_LimitGroundSpeed" />
+						<ToggleButton id="CheckBox" class="checkbox checkbox--right zoning__checkbox" onactivate="ZoneMenu.setLimitGroundSpeed()" />
+					</Panel>
+					<Panel id="CheckpointsRequired" class="zoning__property">
+						<Label class="zoning__property-label" text="#Zoning_CheckpointsRequired" />
+						<ToggleButton id="CheckBox" class="checkbox checkbox--right zoning__checkbox" onactivate="ZoneMenu.setCheckpointsRequired()" />
+					</Panel>
+					<Panel id="CheckpointsOrdered" class="zoning__property">
+						<Label class="zoning__property-label" text="#Zoning_CheckpointsOrdered" />
+						<ToggleButton id="CheckBox" class="checkbox checkbox--right zoning__checkbox" onactivate="ZoneMenu.setCheckpointsOrdered()" />
+					</Panel>
+					<Panel id="Name" class="zoning__property">
+						<Label class="zoning__property-label" text="#Zoning_Name" />
+						<TextEntry id="SegmentName" class="textentry zoning__textentry" maxchars="255" text="" ontextentrysubmit="ZoneMenu.setSegmentName()" />
+					</Panel>
+				</Panel>
 			</Panel>
 			<Panel id="ZoneProperties" class="zoning__property-container">
 			</Panel>

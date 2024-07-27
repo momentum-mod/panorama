@@ -29,6 +29,10 @@ class ZoneMenu {
 		defragFlags: $<Panel>('#DefragFlags')!,
 		stagesEndAtStageStarts: $('#StagesEndAtStageStarts')!.FindChild('CheckBox') as ToggleButton,
 		propertiesSegment: $<Panel>('#SegmentProperties')!,
+		limitGroundSpeed: $('#LimitGroundSpeed')!.FindChild('CheckBox') as ToggleButton,
+		checkpointsRequired: $('#CheckpointsRequired')!.FindChild('CheckBox') as ToggleButton,
+		checkpointsOrdered: $('#CheckpointsOrdered')!.FindChild('CheckBox') as ToggleButton,
+		segmentName: $<TextEntry>('#SegmentName')!,
 		propertiesZone: $<Panel>('#ZoneProperties')!
 	};
 
@@ -281,9 +285,18 @@ class ZoneMenu {
 		this.panels.propertiesSegment.visible = !validity.zone && validity.segment;
 		this.panels.propertiesZone.visible = validity.zone;
 
+		this.populateSegmentProperties();
 		this.populateTrackProperties();
 	}
 
+	static populateSegmentProperties() {
+		if (!this.mapZoneData || !this.isSelectionValid().segment) return;
+		const segment = this.selectedZone.segment!;
+		this.panels.limitGroundSpeed.SetSelected(segment.limitStartGroundSpeed);
+		this.panels.checkpointsRequired.SetSelected(segment.checkpointsRequired);
+		this.panels.checkpointsOrdered.SetSelected(segment.checkpointsOrdered);
+		this.panels.segmentName.text = segment.name === undefined ? '' : segment.name;
+	}
 	static populateTrackProperties() {
 		if (!this.mapZoneData || !this.isSelectionValid().track) return;
 		const track = this.selectedZone.track!;
@@ -352,6 +365,27 @@ class ZoneMenu {
 		(this.selectedZone.track.defragFlags as number) ^= DefragFlags[flag];
 	}
 
+	static setLimitGroundSpeed() {
+		if (!this.isSelectionValid().segment) return;
+		this.selectedZone.segment!.limitStartGroundSpeed = this.panels.limitGroundSpeed.checked;
+	}
+
+	static setCheckpointsOrdered() {
+		if (!this.isSelectionValid().segment) return;
+		this.selectedZone.segment!.checkpointsOrdered = this.panels.checkpointsOrdered.checked;
+	}
+
+	static setCheckpointsRequired() {
+		if (!this.isSelectionValid().segment) return;
+		this.selectedZone.segment!.checkpointsRequired = this.panels.checkpointsRequired.checked;
+	}
+
+	static setSegmentName() {
+		if (!this.isSelectionValid().segment) return;
+		this.selectedZone.segment!.name = this.panels.segmentName.text;
+		// feat: later
+		// update segment name in trasklist tree
+	}
 	static saveZones() {
 		if (!this.mapZoneData) return;
 		this.mapZoneData.dataTimestamp = Date.now();
