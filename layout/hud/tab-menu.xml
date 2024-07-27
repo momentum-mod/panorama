@@ -52,13 +52,19 @@
 			</Panel>
 
 			<Panel id="ZoningContainer" class="hud-tab-menu__zoning" hittestchildren="true">
-				<ZoneMenu id="ZoneMenu" />
+				<ZoneMenu id="ZoneMenu" hittest="true" hittestchildren="true" />
 			</Panel>
 
 			<Panel class="hud-tab-menu__stats">
 			</Panel>
 			
 			<Panel class="hud-tab-menu__enable-cursor">
+				<Button id="ZoningOpen" class="button horizontal-align-left" onactivate="GameInterfaceAPI.ConsoleCommand('mom_zone_edit 1');$.DispatchEvent('ZoneMenu_Show');" onmouseover="UiToolkitAPI.ShowTextTooltip('ZoningOpen', '#Zoning_ShowMenu_Tooltip');" onmouseout="UiToolkitAPI.HideTextTooltip();">
+					<Image class="button__icon" src="file://{images}/pencil-outline.svg" textureheight="24" />
+				</Button>
+				<Button id="ZoningClose" class="button horizontal-align-left" onactivate="GameInterfaceAPI.ConsoleCommand('mom_zone_edit 0');$.DispatchEvent('ZoneMenu_Hide');" onmouseover="UiToolkitAPI.ShowTextTooltip('ZoningClose', '#Zoning_HideMenu_Tooltip');" onmouseout="UiToolkitAPI.HideTextTooltip();">
+					<Image class="button__icon" src="file://{images}/pencil-off-outline.svg" textureheight="24" />
+				</Button>
 				<Label class="hud-tab-menu__enable-cursor-tip" text="#HudTabMenu_EnableCursorTip"/> 
 			</Panel>
 		</Panel>
