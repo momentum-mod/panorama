@@ -29,6 +29,10 @@ class ZoneMenu {
 		defragFlags: $<Panel>('#DefragFlags') as Panel,
 		segmentsEndAtStageStarts: $<ToggleButton>('#SegmentsEndAtStageStarts')?.FindChild('CheckBox') as ToggleButton,
 		propertiesSegment: $<Panel>('#SegmentProperties') as Panel,
+		limitGroundSpeed: $('#LimitGroundSpeed')?.FindChild('CheckBox') as ToggleButton,
+		checkpointsRequired: $('#CheckpointsRequired')?.FindChild('CheckBox') as ToggleButton,
+		checkpointsOrdered: $('#CheckpointsOrdered')?.FindChild('CheckBox') as ToggleButton,
+		segmentName: $<TextEntry>('#SegmentName') as TextEntry,
 		propertiesZone: $<Panel>('#ZoneProperties') as Panel
 	};
 
@@ -278,6 +282,7 @@ class ZoneMenu {
 			this.panels.propertiesTrack.style.visibility = 'collapse';
 			this.panels.propertiesSegment.style.visibility = 'visible';
 			this.panels.propertiesZone.style.visibility = 'collapse';
+			this.populateSegmentProperties();
 		} else if (selectedTrack !== null) {
 			this.panels.propertiesTrack.style.visibility = 'visible';
 			this.panels.propertiesSegment.style.visibility = 'collapse';
@@ -286,6 +291,14 @@ class ZoneMenu {
 		}
 	}
 
+	static populateSegmentProperties() {
+		if (!this.mapZoneData || !this.selectedZone || !this.selectedZone.segment) return;
+		const segment = this.selectedZone.segment as Segment;
+		this.panels.limitGroundSpeed.SetSelected(segment.limitStartGroundSpeed);
+		this.panels.checkpointsRequired.SetSelected(segment.checkpointsRequired);
+		this.panels.checkpointsOrdered.SetSelected(segment.checkpointsOrdered);
+		this.panels.segmentName.text = segment.name === undefined ? '' : segment.name;
+	}
 	static populateTrackProperties() {
 		if (!this.mapZoneData || !this.selectedZone || !this.selectedZone.track) return;
 		const track = this.selectedZone.track as MainTrack | BonusTrack;
@@ -360,6 +373,27 @@ class ZoneMenu {
 		(this.selectedZone.track.defragFlags as number) ^= DefragFlags[flag];
 	}
 
+	static setLimitGroundSpeed() {
+		if (!this.selectedZone || !this.selectedZone.track || !this.selectedZone.segment) return;
+		this.selectedZone.segment.limitStartGroundSpeed = this.panels.limitGroundSpeed.checked;
+	}
+
+	static setCheckpointsOrdered() {
+		if (!this.selectedZone || !this.selectedZone.track || !this.selectedZone.segment) return;
+		this.selectedZone.segment.checkpointsOrdered = this.panels.checkpointsOrdered.checked;
+	}
+
+	static setCheckpointsRequired() {
+		if (!this.selectedZone || !this.selectedZone.track || !this.selectedZone.segment) return;
+		this.selectedZone.segment.checkpointsRequired = this.panels.checkpointsRequired.checked;
+	}
+
+	static setSegmentName() {
+		if (!this.selectedZone || !this.selectedZone.track || !this.selectedZone.segment) return;
+		this.selectedZone.segment.name = this.panels.segmentName.text;
+		// feat: later
+		// update segment name in trasklist tree
+	}
 	static saveZones() {
 		if (!this.mapZoneData) return;
 		this.mapZoneData.dataTimestamp = Date.now();
