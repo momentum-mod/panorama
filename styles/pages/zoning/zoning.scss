@@ -183,6 +183,100 @@ $medium: 28px;
 		horizontal-align: right;
 	}
 
+	&__region-property-container {
+		horizontal-align: right;
+		flow-children: right;
+	}
+
+	&__slider {
+		margin: 0;
+		padding: 0;
+
+		.settings-slider__title {
+			font-size: $small;
+		}
+	}
+
+	&__region-details {
+		background-color: $dark-100;
+		width: 100%;
+		height: 240px;
+		padding: 4px;
+		border-radius: 3px;
+		flow-children: down;
+	}
+
+	&__region-points-list {
+		background-color: $light-100;
+		width: 100%;
+		height: 100%;
+		padding: 8px;
+		padding-right: 12px;
+		border-radius: 3px;
+		border-color: $white;
+		flow-children: down;
+		overflow: squish scroll;
+	}
+
+	&__region-point-delete {
+		vertical-align: center;
+		height: $button-height;
+		color: $button-text-color;
+		flow-children: right;
+		tooltip-position: bottom;
+		transition: background-color 0.1s ease-in 0s;
+
+		&__icon {
+			height: 100%;
+
+			width: height-percentage(100%);
+			padding: $button-icon-padding;
+			vertical-align: center;
+			horizontal-align: center;
+			img-shadow: $button-icon-shadow;
+			wash-color: $red;
+
+			&:hover {
+				wash-color: $white;
+			}
+		}
+	}
+
+	&__region-point-pick {
+		vertical-align: center;
+		height: $button-height;
+		color: $button-text-color;
+		flow-children: right;
+		tooltip-position: bottom;
+		transition: background-color 0.1s ease-in 0s;
+
+		&:disabled,
+		&:disabled:hover {
+			& > Image {
+				wash-color: $gray-800;
+			}
+		}
+
+		&__icon {
+			height: 100%;
+
+			width: height-percentage(100%);
+			padding: $button-icon-padding;
+			vertical-align: center;
+			horizontal-align: center;
+			img-shadow: $button-icon-shadow;
+			wash-color: $blue;
+
+			&:hover {
+				wash-color: $white;
+			}
+		}
+	}
+
+	&__dropdown {
+		width: 180px;
+	}
+
 	&__textentry {
 		horizontal-align: right;
 		margin-left: 16px;
