@@ -296,7 +296,7 @@ class ZoneMenu {
 
 	static createRegion() {
 		return {
-			points: [] as Vec2D[],
+			points: [] as number[][],
 			bottom: 0,
 			height: 0,
 			teleDestTargetname: ''
@@ -413,7 +413,7 @@ class ZoneMenu {
 	}
 
 	static deleteRegion() {
-		if (this.panels.regionSelect.Children().length === 1) {
+		if (this.panels.regionSelect.GetChildCount() === 1) {
 			$.Msg("Can't delete last Region!!!");
 			return;
 		}
@@ -646,7 +646,11 @@ class ZoneMenu {
 	static addBonus() {
 		if (!this.mapZoneData) return;
 		const bonus = this.createBonusTrack();
-		this.mapZoneData.tracks.bonuses.push(bonus);
+		if (!this.mapZoneData.tracks.bonuses) {
+			this.mapZoneData.tracks.bonuses = [bonus];
+		} else {
+			this.mapZoneData.tracks.bonuses.push(bonus);
+		}
 
 		this.createTrackEntry(
 			this.panels.trackList,
@@ -655,12 +659,182 @@ class ZoneMenu {
 		);
 	}
 
+	static addSegment() {
+		if (!this.mapZoneData || !this.isSelectionValid().track) return;
+
+		if ('defragFlags' in this.selectedZone.track!) {
+			// warn player bonus tracks can't have segments!
+			$.Msg('WARNING: Bonus track selected. Bonus tracks cannot have stages!');
+			return;
+		}
+		const newSegment = this.createSegment();
+		this.mapZoneData.tracks.main.zones.segments.push(newSegment);
+
+		const mainTrack: Panel = this.panels.trackList.GetChild(0)!;
+		const segmentList: Panel = mainTrack.FindChildTraverse('SegmentContainer')!;
+		const id = `${$.Localize('#Zoning_Segment')!} ${this.mapZoneData.tracks.main.zones.segments.length}`;
+		const list = this.addTracklistEntry(segmentList, id, TracklistSnippet.SEGMENT, {
+			track: this.mapZoneData.tracks.main,
+			segment: newSegment,
+			zone: null
+		});
+		this.addTracklistEntry(list as Panel, $.Localize('#Zoning_Start_Stage')!, TracklistSnippet.CHECKPOINT, {
+			track: this.selectedZone.track!,
+			segment: newSegment,
+			zone: newSegment.checkpoints[0]
+		});
+	}
+
+	static addCheckpoint() {
+		if (!this.mapZoneData || !this.isSelectionValid().segment) return;
+		const newZone = this.createZone();
+		this.selectedZone.segment!.checkpoints.push(newZone);
+
+		let trackPanel: Panel;
+		if (this.selectedZone.track === this.mapZoneData.tracks.main) {
+			trackPanel = this.panels.trackList.GetChild(0)!;
+		} else {
+			const bonusId = this.mapZoneData.tracks.bonuses.indexOf(this.selectedZone.track as BonusTrack);
+			trackPanel = this.panels.trackList.GetChild(1 + bonusId)!;
+		}
+
+		const segmentIndex = this.selectedZone.track!.zones.segments.indexOf(this.selectedZone.segment!);
+		const selectedSegment: Panel = trackPanel.FindChildTraverse('SegmentContainer')!.GetChild(segmentIndex)!;
+		const checkpointsList: Panel = selectedSegment.FindChildTraverse('CheckpointContainer')!;
+		const id = `${$.Localize('#Zoning_Checkpoint')!} ${this.selectedZone.segment!.checkpoints.length - 1}`;
+		this.addTracklistEntry(checkpointsList, id, TracklistSnippet.CHECKPOINT, {
+			track: this.selectedZone.track!,
+			segment: this.selectedZone.segment,
+			zone: newZone
+		});
+	}
+
+	static addEndZone() {
+		if (!this.mapZoneData || !this.isSelectionValid().track) return;
+		const endZone = this.createZone();
+		this.selectedZone.track!.zones.end = endZone;
+
+		let trackPanel: Panel;
+		if (this.selectedZone.track === this.mapZoneData.tracks.main) {
+			trackPanel = this.panels.trackList.GetChild(0)!;
+		} else {
+			const bonusId = this.mapZoneData.tracks.bonuses.indexOf(this.selectedZone.track as BonusTrack);
+			trackPanel = this.panels.trackList.GetChild(1 + bonusId)!;
+		}
+		const endZoneContainer: Panel = trackPanel.FindChildTraverse('EndZoneContainer')!;
+		const oldEnd: Panel | null = endZoneContainer.GetChild(0);
+		if (oldEnd) {
+			const selectButton = oldEnd.FindChildTraverse('SelectButton')!;
+			selectButton.SetPanelEvent('onactivate', () =>
+				this.updateSelection(this.selectedZone.track, null, endZone)
+			);
+		} else {
+			this.addTracklistEntry(endZoneContainer, $.Localize('#Zoning_EndZone')!, TracklistSnippet.CHECKPOINT, {
+				track: this.selectedZone.track!,
+				segment: null,
+				zone: endZone
+			});
+		}
+	}
+
+	static addCancelZone() {
+		if (!this.mapZoneData || !this.isSelectionValid().segment) return;
+		const newZone = this.createZone();
+		if (!this.selectedZone.segment!.cancel) {
+			this.selectedZone.segment!.cancel = [newZone];
+		} else {
+			this.selectedZone.segment!.cancel.push(newZone);
+		}
+
+		let trackPanel: Panel;
+		if (this.selectedZone.track === this.mapZoneData.tracks.main) {
+			trackPanel = this.panels.trackList.GetChild(0)!;
+		} else {
+			const bonusId = this.mapZoneData.tracks.bonuses.indexOf(this.selectedZone.track as BonusTrack);
+			trackPanel = this.panels.trackList.GetChild(1 + bonusId)!;
+		}
+
+		const segmentIndex = this.selectedZone.track!.zones.segments.indexOf(this.selectedZone.segment!);
+		const selectedSegment: Panel = trackPanel.FindChildTraverse('SegmentContainer')!.GetChild(segmentIndex)!;
+		const cancelList: Panel = selectedSegment.FindChildTraverse('CancelContainer')!;
+		const id = `${$.Localize('#Zoning_CancelZone')!} ${this.selectedZone.segment!.cancel.length}`;
+		this.addTracklistEntry(cancelList, id, TracklistSnippet.CHECKPOINT, {
+			track: this.selectedZone.track!,
+			segment: this.selectedZone.segment,
+			zone: newZone
+		});
+	}
+
 	static showAddMenu() {
-		//show context menu
+		UiToolkitAPI.ShowSimpleContextMenu('NewZoneButton', '', [
+			{
+				label: $.Localize('#Zoning_Bonus')!,
+				jsCallback: () => this.addBonus()
+			},
+			{
+				label: $.Localize('#Zoning_Segment')!,
+				jsCallback: () => this.addSegment()
+			},
+			{
+				label: $.Localize('#Zoning_Checkpoint')!,
+				jsCallback: () => this.addCheckpoint()
+			},
+			{
+				label: $.Localize('#Zoning_EndZone')!,
+				jsCallback: () => this.addEndZone()
+			},
+			{
+				label: $.Localize('#Zoning_CancelZone')!,
+				jsCallback: () => this.addCancelZone()
+			}
+		]);
 	}
 
 	static showDeletePopup() {
-		//show context menu
+		UiToolkitAPI.ShowGenericPopupTwoOptionsBgStyle(
+			$.Localize('#Zoning_Delete')!,
+			$.Localize('#Zoning_Delete_Message')!,
+			'warning-popup',
+			$.Localize('#Zoning_Delete')!,
+			() => {
+				this.deleteSelection();
+			},
+			$.Localize('#Zoning_Cancel')!,
+			() => {},
+			'none'
+		);
+	}
+
+	static deleteSelection() {
+		if (!this.selectedZone || !this.mapZoneData) return;
+
+		if (this.selectedZone.track && this.selectedZone.segment && this.selectedZone.zone) {
+			const checkpointIndex = this.selectedZone.segment.checkpoints.indexOf(this.selectedZone.zone);
+			if (checkpointIndex === -1) {
+				const cancelIndex = this.selectedZone.segment.cancel.indexOf(this.selectedZone.zone);
+				this.selectedZone.segment.cancel.splice(cancelIndex, 1);
+			} else {
+				this.selectedZone.segment.checkpoints.splice(checkpointIndex, 1);
+			}
+		} else if (this.selectedZone.track && this.selectedZone.segment) {
+			if (this.selectedZone.track.zones.segments.length === 1) {
+				$.Msg('Track must have at least one segment!');
+			} else {
+				const index = this.mapZoneData.tracks.main.zones.segments.indexOf(this.selectedZone.segment);
+				this.mapZoneData.tracks.main.zones.segments.splice(index, 1);
+			}
+		} else if (this.selectedZone.track) {
+			if ('stagesEndAtStageStarts' in this.selectedZone.track) {
+				$.Msg("Can't delete Main track!!!");
+			} else {
+				const trackIndex = this.mapZoneData.tracks.bonuses.indexOf(this.selectedZone.track);
+				this.mapZoneData.tracks.bonuses.splice(trackIndex, 1);
+			}
+		}
+
+		//hack: this can be a little more surgical
+		this.panels.trackList.RemoveAndDeleteChildren();
+		this.initMenu();
 	}
 
 	static setMaxVelocity() {
