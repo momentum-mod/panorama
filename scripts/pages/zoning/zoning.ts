@@ -1,3 +1,62 @@
+/***************************************************************************************** */
+
+interface Region extends JsonObject {
+	points: number[][];
+	bottom: number;
+	height: number;
+	teleDestTargetname: string; // mutually exclusive to other two teleport fields
+	teleDestPos: number[]; // TODO: This below are required if region is part of a volume used by stafe or major checkpoint zone
+	teleDestYaw: number; // See convo in mom red 25/09/23 02:00 GMT
+	safeHeight: number;
+}
+
+interface Zone extends JsonObject {
+	regions: Region[];
+	filtername: string;
+}
+
+interface Segment extends JsonObject {
+	limitStartGroundSpeed: boolean;
+	checkpointsRequired: boolean;
+	checkpointsOrdered: boolean;
+	checkpoints: Zone[];
+	cancel: Zone[];
+	name: string;
+}
+
+interface TrackZones extends JsonObject {
+	segments: Segment[];
+	end: Zone;
+}
+
+interface MainTrack extends JsonObject {
+	zones: TrackZones;
+	stagesEndAtStageStarts: boolean;
+}
+
+interface BonusTrack extends JsonObject {
+	zones: TrackZones;
+	defragFlags: number;
+}
+
+interface MapTracks extends JsonObject {
+	main: MainTrack;
+	bonuses: BonusTrack[];
+}
+
+interface ZoneDef extends JsonObject {
+	formatVersion: number;
+	dataTimestamp: number;
+	maxVelocity: number;
+	tracks: MapTracks;
+}
+
+interface EntityList {
+	filter: string[];
+	teleport: string[];
+}
+/**************************************************************************************************************/
+
 /**
  * Zoning UI logic
  */
