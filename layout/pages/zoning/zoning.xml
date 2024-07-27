@@ -1,3 +1,99 @@
 <root>
-	<Panel class="zoning" acceptsinput="true" acceptsfocus="true" />
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+
+	<scripts>
+		<include src="file://{scripts}/pages/zoning/zoning.js" />
+	</scripts>
+
+	<snippets>
+		<snippet name="tracklist-track">
+			<Panel class="zoning__tracklist-track">
+				<Panel id="Entry" class="zoning__tracklist-course-entry">
+					<Button id="CollapseButton" class="zoning__collapse-button">
+						<Image id="TracklistCollapseIcon" class="button__icon zoning__collapse-icon zoning__icon-green" src="file://{images}/add.svg" />
+						<Image id="TracklistExpandIcon" class="button__icon zoning__collapse-icon zoning__icon-red hide" src="file://{images}/subtract.svg" />
+					</Button>
+					<RadioButton id="SelectButton" class="zoning__tracklist-button" group="tracklist">
+						<Label id="Name" class="zoning__tracklist-label" />
+					</RadioButton>
+				</Panel>
+				<Panel id="ChildContainer" class="full-width flow-down">
+					<Panel id="SegmentContainer" class="zoning__list-container" />
+					<Panel id="EndZoneContainer" class="zoning__list-container" />
+				</Panel>
+			</Panel>
+		</snippet>
+		<snippet name="tracklist-segment">
+			<Panel class="zoning__tracklist-segment">
+				<Panel id="Entry" class="zoning__tracklist-course-entry">
+					<Button id="CollapseButton" class="zoning__collapse-button">
+						<Image id="TracklistCollapseIcon" class="button__icon zoning__collapse-icon zoning__icon-green" src="file://{images}/add.svg" />
+						<Image id="TracklistExpandIcon" class="button__icon zoning__collapse-icon zoning__icon-red hide" src="file://{images}/subtract.svg" />
+					</Button>
+					<RadioButton id="SelectButton" class="zoning__tracklist-button" group="tracklist">
+						<Label id="Name" class="zoning__tracklist-label" />
+					</RadioButton>
+				</Panel>
+				<Panel id="ChildContainer" class="full-width flow-down">
+					<Panel id="CheckpointContainer" class="zoning__list-container" />
+					<Panel id="CancelContainer" class="zoning__list-container" />
+				</Panel>
+			</Panel>
+		</snippet>
+		<snippet name="tracklist-checkpoint">
+			<Panel class="zoning__tracklist-checkpoint">
+				<Panel id="Entry" class="zoning__tracklist-course-entry">
+					<RadioButton id="SelectButton" class="zoning__tracklist-button" group="tracklist">
+						<Label id="Name" class="zoning__tracklist-label" />
+					</RadioButton>
+				</Panel>
+			</Panel>
+		</snippet>
+		<snippet name="region-point">
+			<Panel class="zoning__region-corner">
+				<!--label-->
+				<TextEntry id="PointX" class="textentry zoning__textentry" maxchars="6" textmode="numeric" />
+				<TextEntry id="PointY" class="textentry zoning__textentry" maxchars="6" textmode="numeric" />
+				<Button id="DeleteButton" class="zoning__region-point-delete">
+					<Image class="zoning__region-point-delete__icon" src="file://{images}/close-box-outline.svg" textureheight="24" />
+				</Button>
+			</Panel>
+		</snippet>
+	</snippets>
+
+	<Panel class="zoning" acceptsinput="true" acceptsfocus="true">
+		<Label id="TrackListLabel" class="zoning__header" text="#Zoning_TrackListLabel" />
+		<Panel id="TrackListContainer" class="zoning__menu-section">
+        	<Panel id="TrackList" class="zoning__track-list">
+            	<!-- Populated in js -->
+        	</Panel>
+		</Panel>
+		<Panel class="zoning__button-box">
+			<Button id="NewZoneButton" class="button button--blue ml-2 horizontal-align-right" onactivate="ZoneMenu.showAddMenu()">
+				<Label class="button__text" text="#Zoning_New" />
+			</Button>
+			<Button class="button button--red ml-2 horizontal-align-right" onactivate="ZoneMenu.showDeletePopup()">
+				<Label class="button__text" text="#Zoning_Delete" />
+			</Button>
+		</Panel>
+		<Label id="PropertiesLabel" class="zoning__header" text="#Zoning_PropertiesLabel" />
+		<Panel id="PropertiesContainer" class="zoning__menu-section">
+			<Panel id="TrackProperties" class="zoning__property-container">
+			</Panel>
+			<Panel id="SegmentProperties" class="zoning__property-container">
+			</Panel>
+			<Panel id="ZoneProperties" class="zoning__property-container">
+			</Panel>
+		</Panel>
+		<Panel class="zoning__button-box">
+			<Button class="button button--blue ml-2 horizontal-align-right" onactivate="ZoneMenu.saveZones()">
+				<Label class="button__text" text="#Zoning_Save" />
+			</Button>
+			<Button class="button ml-2 horizontal-align-right" onactivate="ZoneMenu.cancelEdit()">
+				<Label class="button__text" text="#Zoning_CancelEdit" />
+			</Button>
+		</Panel>
+	</Panel>
 </root>
