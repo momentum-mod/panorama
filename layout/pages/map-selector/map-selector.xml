@@ -4,6 +4,7 @@
 	</styles>
 	<scripts>
 		<include src="file://{scripts}/common/gamemodes.js" />
+		<include src="file://{scripts}/util/functions.js" />
 		<include src="file://{scripts}/common/map-cache.js" />
 		<include src="file://{scripts}/pages/map-selector/map-selector.js" />
 	</scripts>
@@ -42,10 +43,6 @@
 										<Button class="button button--green ml-2" onactivate="MapSelection.requestMapUpdate()">
 											<Label class="button__text" text="#Common_Update" />
 										</Button>
-										<ToggleButton id="FilterToggle" class="ml-2 button togglebutton togglebutton--blue" selected="false" onactivate="MapSelection.toggleFilterCollapse()">
-											<Label class="button__text button__text--left" text="#MapSelector_Filters" />
-											<Image class="button__icon button__icon--right" src="file://{images}/filter-menu.svg" textureheight="32" />
-										</ToggleButton>
 										<Button id="FilterErase" class="ml-2 button button--red" onactivate="MapSelection.clearFilters()">
 											<Image class="button__icon" src="file://{images}/filter-remove.svg" textureheight="32" />
 										</Button>
@@ -60,7 +57,16 @@
 											<RadioButton id="BhopFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button">
 												<Label class="button__text mapselector-filters__text" text="#Gamemode_Bhop" />
 											</RadioButton>
-											<RadioButton id="ClimbFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button">
+											<RadioButton id="BhopHLFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button">
+												<Label class="button__text mapselector-filters__text" text="#Gamemode_BhopHL" />
+											</RadioButton>
+											<RadioButton id="KzMomFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button">
+												<Label class="button__text mapselector-filters__text" text="#Gamemode_Climb" />
+											</RadioButton>
+											<RadioButton id="KzKztFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button">
+												<Label class="button__text mapselector-filters__text" text="#Gamemode_Climb" />
+											</RadioButton>
+											<RadioButton id="Kz16FilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button">
 												<Label class="button__text mapselector-filters__text" text="#Gamemode_Climb" />
 											</RadioButton>
 											<RadioButton id="RJFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button">
@@ -72,15 +78,18 @@
 											<RadioButton id="AhopFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button">
 												<Label class="button__text mapselector-filters__text" text="#Gamemode_Ahop" />
 											</RadioButton>
-											<RadioButton id="ParkourFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button">
-												<Label class="button__text mapselector-filters__text" text="#Gamemode_Parkour" />
-											</RadioButton>
 											<RadioButton id="ConcFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button">
 												<Label class="button__text mapselector-filters__text" text="#Gamemode_Conc" />
 											</RadioButton>
-											<RadioButton id="DefragFilterButton" class="button togglebutton togglebutton--blue mapselector-filters__button">
+											<RadioButton id="DefragCPMFilterButton" class="button togglebutton togglebutton--blue mapselector-filters__button">
 												<Label class="button__text mapselector-filters__text" text="#Gamemode_Defrag" />
 											</RadioButton>
+											<RadioButton id="DefragVQ3FilterButton" class="button togglebutton togglebutton--blue mapselector-filters__button">
+												<Label class="button__text mapselector-filters__text" text="#Gamemode_Defrag" />
+											</RadioButton>
+											<RadioButton id="DefragVTGFilterButton" class="button togglebutton togglebutton--blue mapselector-filters__button">
+											<Label class="button__text mapselector-filters__text" text="#Gamemode_Defrag" />
+										</RadioButton>
 										</Panel>
 									</Panel>
 

@@ -23,7 +23,7 @@ class PowerupTimer {
 		this.updatePanel(this.panels.slick, slickTime);
 	}
 
-	static updatePanel({ panel, label }: { panel: Panel; label: Label }, time: number) {
+	static updatePanel({ panel, label }: { panel: GenericPanel; label: Label }, time: number) {
 		if (!time) {
 			panel.visible = false;
 		} else {

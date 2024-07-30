@@ -3,7 +3,7 @@ module.exports = {
 	extends: ['eslint:recommended', 'plugin:unicorn/recommended', 'plugin:@typescript-eslint/recommended', 'prettier'],
 	root: true,
 	parserOptions: { project: 'tsconfig.json' },
-	ignorePatterns: ['.eslintrc.js', 'node_modules', '__types_momentum.js', 'tools', 'script_dist'],
+	ignorePatterns: ['.eslintrc.js', 'node_modules', '__types_momentum.js', 'tools', 'script_dist', 'scripts/types'],
 	rules: {
 		// We don't use modules or really any kind of import system.
 		'@typescript-eslint/explicit-module-boundary-types': 'off',

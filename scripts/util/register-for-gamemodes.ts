@@ -123,7 +123,7 @@ function RegisterHUDPanelForGamemode({
 		throw new Error('RegisterHUDPanelForGamemode: no gamemode provided');
 	}
 
-	let handles: Array<{ event: string; handle: number; contextPanel?: Panel }>;
+	let handles: Array<{ event: string; handle: number; contextPanel?: GenericPanel }>;
 
 	const unregister = () =>
 		(handles ?? []).forEach(({ event, handle, contextPanel }) =>
