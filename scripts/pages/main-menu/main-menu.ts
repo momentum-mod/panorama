@@ -1,29 +1,17 @@
 class MainMenu {
 	static panels = {
-		/** @type {Panel} @static */
-		cp: $.GetContextPanel(),
-		/** @type {Panel} @static */
-		pageContent: $('#PageContent'),
-		/** @type {Panel} @static */
-		homeContent: $('#HomeContent'),
-		/** @type {Panel} @static */
-		contentBlur: $('#MainMenuContentBlur'),
-		/** @type {Panel} @static */
-		backgroundBlur: $('#MainMenuBackgroundBlur'),
-		/** @type {Movie} @static */
-		movie: null,
-		/** @type {Image} @static */
-		image: $('#MainMenuBackground'),
-		/** @type {ModelPanel} @static */
-		model: $('#MainMenuModel'),
-		/** @type {Image} @static */
-		mapSelectorBackground: $('#MainMenuBackgroundMapSelectorImage'),
-		/** @type {Panel} @static */
-		topButtons: $('#MainMenuTopButtons'),
-		/** @type {RadioButton} @static */
-		homeButton: $('#HomeButton'),
-		/** @type {Image} @static */
-		quitButtonIcon: $('#QuitButtonImage')
+		cp: $.GetContextPanel<Panel>(),
+		pageContent: $<Panel>('#PageContent'),
+		homeContent: $<Panel>('#HomeContent'),
+		contentBlur: $<BaseBlurTarget>('#MainMenuContentBlur'),
+		backgroundBlur: $<BaseBlurTarget>('#MainMenuBackgroundBlur'),
+		movie: null as Movie,
+		image: $<Image>('#MainMenuBackground'),
+		model: $<ModelPanel>('#MainMenuModel'),
+		mapSelectorBackground: $<Image>('#MainMenuBackgroundMapSelectorImage'),
+		topButtons: $<Panel>('#MainMenuTopButtons'),
+		homeButton: $<RadioButton>('#HomeButton'),
+		quitButtonIcon: $<Image>('#QuitButtonImage')
 	};
 
 	static activeTab = '';
@@ -37,7 +25,7 @@ class MainMenu {
 		$.RegisterForUnhandledEvent('Safeguard_Disconnect', this.onSafeguardDisconnect.bind(this));
 		$.RegisterForUnhandledEvent('Safeguard_Quit', this.onSafeguardQuit.bind(this));
 		$.RegisterForUnhandledEvent('Safeguard_ChangeMap', this.onSafeguardMapChange.bind(this));
-		$.RegisterForUnhandledEvent('ReloadBackground', this.setMainMenuBackground.bind(this));
+		$.RegisterForUnhandledEvent('ReloadMainMenuBackground', this.setMainMenuBackground.bind(this));
 		$.RegisterForUnhandledEvent('OnMomentumQuitPrompt', this.onQuitPrompt.bind(this));
 		$.RegisterEventHandler('Cancelled', $.GetContextPanel(), this.onEscapeKeyPressed.bind(this));
 
@@ -193,7 +181,7 @@ class MainMenu {
 		this.panels.pageContent.RemoveClass('mainmenu__page-container--hidden');
 
 		$.DispatchEvent('RetractDrawer');
-		$.DispatchEvent('ShowContentPanel');
+		$.DispatchEvent('ShowMainMenuContentPanel');
 
 		this.panels.homeContent.AddClass('home--hidden');
 	}
@@ -227,7 +215,7 @@ class MainMenu {
 	 * Temporary method to show the playtest welcome thingy
 	 */
 	static showPlaytestWelcomePopup() {
-		if (!DosaHandler.checkDosa('playtestWelcome'))
+		if (!Globals.DontShowAgain.checkDosa('playtestWelcome'))
 			UiToolkitAPI.ShowCustomLayoutPopupParameters(
 				'',
 				'file://{resources}/layout/modals/popups/playtest-welcome.xml',
@@ -241,7 +229,7 @@ class MainMenu {
 	static setMainMenuBackground() {
 		if (!this.panels.movie?.IsValid() || !this.panels.image?.IsValid()) return;
 
-		let useVideo = $.persistentStorage.getItem('settings.mainMenuMovie');
+		let useVideo = $.persistentStorage.getItem<boolean>('settings.mainMenuMovie');
 
 		if (useVideo === null) {
 			// Enable video by default
@@ -263,7 +251,7 @@ class MainMenu {
 			$.persistentStorage.setItem('settings.mainMenuBackground', backgroundVar);
 		}
 
-		let name = '';
+		let name: string ;
 
 		// If it's xmas and you're using one of the default backgrounds, replace it with the xmas version
 		const date = new Date();
@@ -330,7 +318,7 @@ class MainMenu {
 	 * based on if we're ingame or not.
 	 */
 	static onQuitButtonPressed() {
-		if (GameInterfaceAPI.GetGameUIState() === GameUIState.PAUSEMENU) {
+		if (GameInterfaceAPI.GetGameUIState() === Globals.State.GameUIState.PAUSEMENU) {
 			GameInterfaceAPI.ConsoleCommand('disconnect');
 			this.onHomeButtonPressed();
 			return;
@@ -338,10 +326,7 @@ class MainMenu {
 		this.onQuitPrompt();
 	}
 
-	/**
-	 * Handles when the quit button is shown, either from button getting pressed or event fired from C++.
-	 * @param {boolean} toDesktop
-	 */
+	/** Handles when the quit button is shown, either from button getting pressed or event fired from C++. */
 	static onQuitPrompt(toDesktop = true) {
 		if (!toDesktop) return; // currently don't handle disconnect prompts
 
@@ -359,35 +344,29 @@ class MainMenu {
 		);
 	}
 
-	/**
-	 * Shows a safeguard popup when disconnect is pressed during a run and safeguard is on
-	 */
+	/** Shows a safeguard popup when disconnect is pressed during a run and safeguard is on */
 	static onSafeguardDisconnect() {
 		UiToolkitAPI.ShowGenericPopupOkCancel(
 			$.Localize('#Safeguard_MapQuitToMenu'),
 			$.Localize('#Safeguard_MapQuitToMenu_Message'),
 			'warning-popup',
-			() => $.DispatchEvent('Safeguard_Response', RunSafeguardType.QUIT_TO_MENU),
+			() => $.DispatchEvent('Safeguard_Response', Globals.Safeguards.RunSafeguardType.QUIT_TO_MENU),
 			() => {}
 		);
 	}
 
-	/**
-	 * Shows a safeguard popup when quit is pressed during a run and safeguard is on
-	 */
+	/** Shows a safeguard popup when quit is pressed during a run and safeguard is on */
 	static onSafeguardQuit() {
 		UiToolkitAPI.ShowGenericPopupOkCancel(
 			$.Localize('#Safeguard_MapQuitGame'),
 			$.Localize('#Safeguard_MapQuitGame_Message'),
 			'warning-popup',
-			() => $.DispatchEvent('Safeguard_Response', RunSafeguardType.QUIT_GAME),
+			() => $.DispatchEvent('Safeguard_Response', Globals.Safeguards.RunSafeguardType.QUIT_GAME),
 			() => {}
 		);
 	}
 
-	/**
-	 * Shows a safeguard popup when map change is triggered during a run and safeguard is on
-	 */
+	/** Shows a safeguard popup when map change is triggered during a run and safeguard is on */
 	static onSafeguardMapChange(mapName) {
 		UiToolkitAPI.ShowGenericPopupOkCancel(
 			$.Localize('#Safeguard_MapChange'),
@@ -409,9 +388,9 @@ class MainMenu {
 	 * @param {unknown} _nRepeats - Pressing in main menu returns "keyboard"
 	 * @param {unknown} _focusPanel - Pressing in main menu returns undefined
 	 */
-	static onEscapeKeyPressed(_eSource, _nRepeats, _focusPanel) {
+	static onEscapeKeyPressed(_eSource: unknown, _nRepeats: unknown, _focusPanel: unknown) {
 		// Resume game in pause menu mode, OTHERWISE close the active menu menu page
-		if (GameInterfaceAPI.GetGameUIState() === GameUIState.PAUSEMENU) {
+		if (GameInterfaceAPI.GetGameUIState() === Globals.State.GameUIState.PAUSEMENU) {
 			$.DispatchEvent('MainMenuResumeGame');
 		} else {
 			this.onHomeButtonPressed();

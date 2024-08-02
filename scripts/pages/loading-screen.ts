@@ -1,19 +1,12 @@
 class LoadingScreen {
 	static panels = {
-		/** @type {Panel} @static */
 		cp: $.GetContextPanel(),
-		/** @type {Image} @static */
-		backgroundImage: $('#BackgroundImage'),
-		/** @type {ProgressBar} @static */
-		progressBar: $('#ProgressBar'),
-		/** @type {Label} @static */
-		mapName: $('#MapName'),
-		/** @type {Label} @static */
-		author: $('#Author'),
-		/** @type {Label} @static */
-		tierAndType: $('#TierAndType'),
-		/** @type {Label} @static */
-		numZones: $('#NumZones')
+		backgroundImage: $<Image>('#BackgroundImage'),
+		progressBar: $<ProgressBar>('#ProgressBar'),
+		mapName: $<Label>('#MapName'),
+		author: $<Label>('#Author'),
+		tierAndType: $<Label>('#TierAndType'),
+		numZones: $<Label>('#NumZones')
 	};
 
 	static {
@@ -47,7 +40,7 @@ class LoadingScreen {
 		this.panels.backgroundImage.visible = false;
 	}
 
-	static updateLoadingScreenInfo(mapName) {
+	static updateLoadingScreenInfo(mapName: string) {
 		if (!mapName) return;
 
 		const mapData = MapCacheAPI.GetCurrentMapData();
@@ -65,16 +58,16 @@ class LoadingScreen {
 			return;
 		}
 
-		const mainTrack = getMainTrack(mapData, GameModeAPI.GetCurrentGameMode());
-		const numZones = getNumZones(mapData);
+		const mainTrack = Globals.Util.getMainTrack(mapData, GameModeAPI.GetCurrentGameMode());
+		const numZones = Globals.Util.getNumZones(mapData);
 
 		this.panels.cp.SetDialogVariable('mapname', mapData.name);
 		this.panels.cp.SetDialogVariableInt('tier', mainTrack?.tier ?? 0);
 		this.panels.cp.SetDialogVariableInt('numzones', numZones);
-		this.panels.cp.SetDialogVariable('tracktype', mainTrack?.isLinear ? 'Linear' : 'Staged');
+		this.panels.cp.SetDialogVariable('tracktype', mainTrack?.linear ? 'Linear' : 'Staged');
 
 		let authorString = '';
-		for (const [i, item] of mapData.credits.filter((x) => x.type === MapCreditType.AUTHOR).entries())
+		for (const [i, item] of mapData.credits.filter((x) => x.type === Globals.Web.MapCreditType.AUTHOR).entries())
 			authorString += (i > 0 ? ', ' : '') + item.user.alias;
 		this.panels.cp.SetDialogVariable('author', authorString);
 

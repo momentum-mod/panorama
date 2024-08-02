@@ -1,6 +1,5 @@
 class Console {
-	/** @type {StaticConsoleMessageTarget} @static */
-	static messageTarget = $('#ConsoleMessageTarget');
+	static messageTarget = $<StaticConsoleMessageTarget>('#ConsoleMessageTarget');
 
 	static onMoveDragStart(_source, callback) {
 		callback.displayPanel = $.GetContextPanel();

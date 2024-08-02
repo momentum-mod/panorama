@@ -1,10 +1,8 @@
 class ControlsLibrary {
-	static progressBar1 = $('#ProgressBar1');
-	static updatingProgressBars;
+	static progressBar1 = $<ProgressBar>('#ProgressBar1');
+	static updatingProgressBars = true;
 
 	static {
-		this.updatingProgressBars = true;
-
 		this.updateProgressBars();
 	}
 
@@ -18,7 +16,7 @@ class ControlsLibrary {
 	}
 
 	static onSimpleContextMenu() {
-		const items = [
+		UiToolkitAPI.ShowSimpleContextMenu('', '', [
 			{
 				label: 'Item 1',
 				jsCallback: () => $.Msg('Item 1 pressed')
@@ -32,7 +30,6 @@ class ControlsLibrary {
 				style: 'TopSeparator',
 				jsCallback: () => $.Msg('Item 3 pressed')
 			}
-		];
-		UiToolkitAPI.ShowSimpleContextMenu('', '', items);
+		]);
 	}
 }

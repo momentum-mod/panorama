@@ -1,6 +1,6 @@
 class SettingsShared {
-	static paintContainer;
-	static videoSettingsPanel;
+	static paintContainer: Panel;
+	static videoSettingsPanel: Panel;
 
 	static onChangedTab(newTab) {
 		switch (newTab) {
@@ -164,7 +164,7 @@ class SettingsShared {
 		const color = GameInterfaceAPI.GetSettingColor('mom_paint_color');
 		const scale = GameInterfaceAPI.GetSettingFloat('mom_paint_scale');
 
-		const paintPanel = this.paintContainer.FindChild('PaintBlob');
+		const paintPanel = this.paintContainer.FindChild<Panel>('PaintBlob');
 
 		paintPanel.style.backgroundColor = color;
 		paintPanel.style.width = scale * width + 'px';
@@ -175,7 +175,7 @@ class SettingsShared {
 		const bodygroup = GameInterfaceAPI.GetSettingInt('mom_ghost_bodygroup');
 
 		const onlineSettingsPanel = $('#OnlineSettings');
-		const ghostPreview = onlineSettingsPanel.FindChildInLayoutFile('GhostModelPreview');
+		const ghostPreview = onlineSettingsPanel.FindChildInLayoutFile<ModelPanel>('GhostModelPreview');
 
 		ghostPreview.SetCameraFOV(60);
 		ghostPreview.SetModelRotationBoundsEnabled(true, false, false);
@@ -194,19 +194,17 @@ class SettingsShared {
 			'#Settings_TextureReplace_Texture_GridWithNoise': 'error_replacement/grid-noise_basecolor'
 		};
 
-		/** @type {Image} @static */
-		const imagePanel = this.videoSettingsPanel.FindChildTraverse('TextureReplacePreview');
+		const imagePanel = this.videoSettingsPanel.FindChildTraverse<Image>('TextureReplacePreview');
 
-		/** @type {DropDown} @static */
 		const dropdown = this.videoSettingsPanel
 			.FindChildTraverse('MatErrorReplaceTexture')
-			.FindChildTraverse('DropDown');
+			.FindChildTraverse<DropDown>('DropDown');
 
 		// Clear the dropdown
 		dropdown.RemoveAllOptions();
 
-		const updatePanel = (override) => {
-			const selected = dropdown.GetSelected();
+		const updatePanel = (override: string) => {
+			const selected = dropdown.GetSelected<Label>();
 
 			let path = '';
 			if (override) {
