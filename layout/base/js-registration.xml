@@ -1,0 +1,36 @@
+<root>
+	<scripts>
+		<!--
+		Include all scripts to be included in Globals.
+		
+		This allows expensive scripts to allow be executed once, exposing themselves to the context of just *this* panel,
+		with globals.ts attaching them to the Globals object, which is then stored onto a global object returned by
+		UiToolkitAPI.GetGlobalObject() (which is persisted in C++).
+		
+		To add further scripts to the Globals object, include them here (above globals.js!) and then add them to the
+		Globals object in globals.ts.
+		-->
+		<include src="file://{scripts}/globals/buttons.js" />
+		<include src="file://{scripts}/globals/dont-show-again.js" />
+		<include src="file://{scripts}/globals/enum.js" />
+		<include src="file://{scripts}/globals/run.js" />
+		<include src="file://{scripts}/globals/safeguards.js" />
+		<include src="file://{scripts}/globals/speedometer.js" />
+		<include src="file://{scripts}/globals/settings.js" />
+		<include src="file://{scripts}/globals/state.js" />
+		<include src="file://{scripts}/globals/timer.js" />
+		<include src="file://{scripts}/globals/util.js" />
+		<include src="file://{scripts}/globals/web.js" />
+		<include src="file://{scripts}/globals/weapon.js" />
+		<include src="file://{scripts}/globals/globals.js" />	
+
+		<include src="file://{scripts}/util/panel-registration.js" />
+		<include src="file://{scripts}/util/event-definition.js" />
+	</scripts>
+
+	<!--
+	This is a dummy top level window. Its only purpose is to make sure to register new panel types and register new
+	panorama events before the other top level windows are loaded
+	-->
+	<Panel hittest="false"/>
+</root>
