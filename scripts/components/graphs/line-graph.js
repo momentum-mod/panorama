@@ -35,7 +35,7 @@
  * @property {Line[]} lines - Array of lines to draw
  * @property {Axis[]} axis - Array of the axis, X then Y
  */
-class LineGraph {
+class LineGraphClass {
 	static panels = {
 		grid: $('#Grid'),
 		graphContainer: $('#GraphContainer')

@@ -15,7 +15,6 @@ class PowerupTimer {
 	};
 
 	static onUpdate() {
-		// @ts-expect-error - TODO: Types for this API!
 		const { damageBoostTime, hasteTime, slickTime } = MomentumMovementAPI.GetLastMoveData();
 
 		this.updatePanel(this.panels.damageBoost, damageBoostTime);
@@ -23,7 +22,7 @@ class PowerupTimer {
 		this.updatePanel(this.panels.slick, slickTime);
 	}
 
-	static updatePanel({ panel, label }: { panel: Panel; label: Label }, time: number) {
+	static updatePanel({ panel, label }: { panel: GenericPanel; label: Label }, time: number) {
 		if (!time) {
 			panel.visible = false;
 		} else {
@@ -33,8 +32,8 @@ class PowerupTimer {
 	}
 
 	static {
-		RegisterHUDPanelForGamemode({
-			gamemodes: [GameMode.DEFRAG],
+		Globals.Util.RegisterHUDPanelForGamemode({
+			gamemodes: Globals.Web.GamemodeCategories.get(Globals.Web.GamemodeCategory.DEFRAG),
 			context: this,
 			contextPanel: $.GetContextPanel(),
 			handledEvents: [{ event: 'HudProcessInput', contextPanel: $.GetContextPanel(), callback: this.onUpdate }]

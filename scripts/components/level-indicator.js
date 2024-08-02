@@ -1,4 +1,4 @@
-class LevelIndicator {
+class LevelIndicatorClass {
 	static totalLevel;
 	static panels = {
 		icon: $('#PrestigeIcon'),

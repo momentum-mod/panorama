@@ -1,3 +1,4 @@
+
 const MAX_ACTIVE_SPLITS = 12;
 const NEW_SPLIT_TRANSITION_DURATION = 2;
 
@@ -25,7 +26,7 @@ class HudComparisons {
 	}
 
 	static onTimerEvent(_ent, eventType) {
-		if (eventType === TimerEvent.STARTED) {
+		if (eventType === Globals.Const.Buttons.STARTED) {
 			this.clearComparisons();
 		}
 	}
@@ -42,7 +43,7 @@ class HudComparisons {
 			!currentData.isInZone ||
 			!currentStats ||
 			currentData.currentZone === 1 ||
-			currentData.timerState === TimerState.PRACTICE
+			currentData.timerState === Globals.Timer.TimerState.PRACTICE
 		) {
 			return;
 		}
@@ -51,7 +52,7 @@ class HudComparisons {
 		// so we don't fire on stage we've already hit.
 		// this.runStatsZoneIndex tracks the correct index into the runStats array
 
-		if (currentData.timerState === TimerState.NOTRUNNING) {
+		if (currentData.timerState === Globals.Timer.TimerState.NOTRUNNING) {
 			// The only time we care about comparisons when timer is not running is if you just
 			// hit the end zone *for the first time*
 			if (!this.runFinished && currentData.currentZone === 0) {

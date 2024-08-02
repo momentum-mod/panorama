@@ -6,7 +6,7 @@ class HudStatus {
 	static curTrack = -1;
 	static linear = true;
 	static enter = false;
-	static timerState = TimerState.NOTRUNNING;
+	static timerState = Globals.Timer.TimerState.NOTRUNNING;
 
 	static inPracticeMode = false;
 
@@ -44,7 +44,7 @@ class HudStatus {
 
 		let text = $.Localize('#HudStatus_Spawn');
 
-		if (this.saveStateUsing && this.timerState !== TimerState.RUNNING) {
+		if (this.saveStateUsing && this.timerState !== Globals.Timer.TimerState.RUNNING) {
 			text = `${$.Localize('#HudStatus_SaveState')} ${this.saveStateCurrent}/${this.saveStateCount}`;
 		} else {
 			if (enteredStartZone) {

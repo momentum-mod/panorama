@@ -193,7 +193,7 @@ class ZoneMenu {
 		}
 	}
 
-	static toggleCollapse(container: Panel, expandIcon: Panel, collapseIcon: Panel) {
+	static toggleCollapse(container: GenericPanel, expandIcon: Image, collapseIcon: Image) {
 		const shouldExpand = container.HasClass('hide');
 		container.SetHasClass('hide', !shouldExpand);
 		expandIcon.SetHasClass('hide', !shouldExpand);
@@ -272,7 +272,7 @@ class ZoneMenu {
 		snippet: string,
 		object,
 		setActive: boolean = false
-	): Panel | null {
+	): GenericPanel | null {
 		const newTracklistPanel = $.CreatePanel('Panel', parent, name);
 		newTracklistPanel.LoadLayoutSnippet(snippet);
 
@@ -282,8 +282,8 @@ class ZoneMenu {
 		const collapseButton = newTracklistPanel.FindChildTraverse('CollapseButton');
 		const childContainer = newTracklistPanel.FindChildTraverse('ChildContainer');
 		if (collapseButton && childContainer) {
-			const expandIcon = newTracklistPanel.FindChildTraverse('TracklistExpandIcon') as Panel;
-			const collapseIcon = newTracklistPanel.FindChildTraverse('TracklistCollapseIcon') as Panel;
+			const expandIcon = newTracklistPanel.FindChildTraverse('TracklistExpandIcon') as Image;
+			const collapseIcon = newTracklistPanel.FindChildTraverse('TracklistCollapseIcon') as Image;
 			collapseButton.SetPanelEvent('onactivate', () =>
 				ZoneMenu.toggleCollapse(childContainer as Panel, expandIcon, collapseIcon)
 			);
@@ -291,7 +291,7 @@ class ZoneMenu {
 			this.toggleCollapse(childContainer, expandIcon, collapseIcon);
 		}
 
-		const selectButton = newTracklistPanel.FindChildTraverse('SelectButton') as Panel;
+		const selectButton = newTracklistPanel.FindChildTraverse<RadioButton>('SelectButton');
 		if (selectButton && object) {
 			selectButton.SetPanelEvent('onactivate', () =>
 				ZoneMenu.updateSelection(object.track, object.segment, object.zone)
@@ -299,7 +299,7 @@ class ZoneMenu {
 		}
 
 		if (setActive) {
-			(selectButton as RadioButton).SetSelected(true);
+			selectButton.SetSelected(true);
 		}
 
 		return childContainer;
@@ -541,9 +541,7 @@ class ZoneMenu {
 		if (teleDestIndex === 0) {
 			// no teleport destination for this region
 			region.teleDestTargetname = '';
-			//@ts-expect-error property must be optional
 			delete region.teleDestPos;
-			//@ts-expect-error property must be optional
 			delete region.teleDestYaw;
 
 			this.panels.regionTPPos.x.text = '';
@@ -572,9 +570,7 @@ class ZoneMenu {
 		} else {
 			region.teleDestTargetname = this.teleDestList[teleDestIndex];
 
-			//@ts-expect-error property must be optional
 			delete region.teleDestPos;
-			//@ts-expect-error property must be optional
 			delete region.teleDestYaw;
 
 			this.panels.regionTPPos.x.text = '';
@@ -635,7 +631,7 @@ class ZoneMenu {
 		const newSegment = this.createSegment();
 		this.mapZoneData.tracks.main.zones.segments.push(newSegment);
 
-		const mainTrack: Panel = this.panels.trackList.Children()[0];
+		const mainTrack = this.panels.trackList.Children()[0];
 		const segmentList = mainTrack.FindChildTraverse('SegmentContainer') as Panel;
 		const id = `Segment ${this.mapZoneData.tracks.main.zones.segments.length}`;
 		const list = this.addTracklistEntry(segmentList, id, TracklistSnippet.SEGMENT, {
@@ -655,7 +651,7 @@ class ZoneMenu {
 		const newZone = this.createZone();
 		this.selectedZone.segment.checkpoints.push(newZone);
 
-		let trackPanel: Panel;
+		let trackPanel: GenericPanel;
 		if (this.selectedZone.track === this.mapZoneData.tracks.main) {
 			trackPanel = this.panels.trackList.Children()[0];
 		} else {
@@ -679,7 +675,7 @@ class ZoneMenu {
 		const endZone = this.createZone();
 		this.selectedZone.track.zones.end = endZone;
 
-		let trackPanel: Panel;
+		let trackPanel: GenericPanel;
 		if (this.selectedZone.track === this.mapZoneData.tracks.main) {
 			trackPanel = this.panels.trackList.Children()[0];
 		} else {
@@ -707,7 +703,7 @@ class ZoneMenu {
 		const newZone = this.createZone();
 		this.selectedZone.segment.cancel.push(newZone);
 
-		let trackPanel: Panel;
+		let trackPanel: GenericPanel;
 		if (this.selectedZone.track === this.mapZoneData.tracks.main) {
 			trackPanel = this.panels.trackList.Children()[0];
 		} else {

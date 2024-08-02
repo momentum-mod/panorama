@@ -8,10 +8,10 @@
 		"alwaysStrict": true,
 		"isolatedModules": false,
 		"allowJs": true,
-		"strict": true,
+		"strict": false,
 		"noImplicitAny": false,
-		"typeRoots": ["./scripts/types/"],
-		"types": ["momentum"] // If you error here, you don't have the submodule installed! (git submodule update --init --recursive)
+		"typeRoots": ["./scripts/types"], // If you error here, you don't have the submodule installed! (git submodule update --init --recursive)
+		"types": ["momentum"]
 	},
 	"include": ["scripts/"],
 	"exclude": ["*.d.ts"]

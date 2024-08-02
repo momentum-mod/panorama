@@ -1,3 +1,4 @@
+
 class SpeedometerSelectPopup {
 	/** @static @type {Panel} */
 	static container = $('#SpeedometerSelectContainer');
@@ -43,10 +44,12 @@ class SpeedometerSelectPopup {
 		SpeedometerSelectPopup.speedometerNames = $.GetContextPanel()
 			.GetAttributeString('speedometerNames', '')
 			.split(',');
-		for (const typeNum of Object.values(SpeedometerTypes)) {
+		for (const typeNum of Globals.Functions.Enum.values(Globals.PanoConst.SpeedometerTypes)) {
 			const speedometer = $.CreatePanel('Panel', SpeedometerSelectPopup.container, '');
 			speedometer.LoadLayoutSnippet('speedometer-radiobutton');
-			speedometer.FindChildInLayoutFile('SpeedometerBtnLabel').text = $.Localize(SpeedometerDispNames[typeNum]);
+			speedometer.FindChildInLayoutFile('SpeedometerBtnLabel').text = $.Localize(
+				Globals.PanoConst.SpeedometerDispNames.get(typeNum)
+			);
 
 			const radioBtn = speedometer.FindChildInLayoutFile('SpeedometerRadioBtn');
 			radioBtn.SetPanelEvent('onactivate', () => {

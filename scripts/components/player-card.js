@@ -1,4 +1,4 @@
-class PlayerCard {
+class PlayerCardClass {
 	static panels = {
 		progressBar: $('#XpProgressBar'),
 		levelIndicator: $('#LevelIndicator')

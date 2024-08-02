@@ -1,4 +1,4 @@
-class Split {
+class SplitClass {
 	static onLoad() {
 		this.update();
 	}
