@@ -1,14 +1,13 @@
-
-const MAX_ACTIVE_SPLITS = 12;
-const NEW_SPLIT_TRANSITION_DURATION = 2;
-
 class HudComparisons {
 	static runFinished = false;
 	static currentZone = 0;
 	static runStatsZoneIndex = 0;
 
+	static readonly maxActiveSplits = 12;
+	static readonly newSplitTransitionDuration = 2;
+
 	static panels = {
-		splits: $('#Splits')
+		splits: $<Panel>('#Splits')
 		// compare: $('#Compare')
 	};
 
@@ -26,14 +25,14 @@ class HudComparisons {
 	}
 
 	static onTimerEvent(_ent, eventType) {
-		if (eventType === _.Const.Buttons.STARTED) {
+		if (eventType === _.Timer.TimerEvent.STARTED) {
 			this.clearComparisons();
 		}
 	}
 
 	static updateComparisons() {
-		const currentData = $.GetContextPanel().currentRunData;
-		const currentStats = $.GetContextPanel().currentRunStats;
+		const currentData = $.GetContextPanel<HudComparisons>().currentRunData;
+		const currentStats = $.GetContextPanel<HudComparisons>().currentRunStats;
 		const comparisonRun = RunComparisonsAPI.GetLoadedComparison();
 
 		const hasCompare = !!comparisonRun.compareRun;
@@ -77,20 +76,20 @@ class HudComparisons {
 		}
 
 		const splitPanels = this.panels.splits.Children().reverse();
-		if (splitPanels.length > MAX_ACTIVE_SPLITS) {
-			for (const panel of splitPanels.filter((_, i) => splitPanels.length - i > MAX_ACTIVE_SPLITS))
+		if (splitPanels.length > this.maxActiveSplits) {
+			for (const panel of splitPanels.filter((_, i) => splitPanels.length - i > this.maxActiveSplits))
 				panel.RemoveAndDeleteChildren();
 		}
 
 		const data = hasCompare
-			? Comparison.generateSplits(
-					new RunStats(currentStats, currentData.tickRate),
-					new RunStats(comparisonRun.compareRun.stats, currentData.tickRate),
-					this.runStatsZoneIndex + 1
-			  )[this.runStatsZoneIndex]
-			: new RunStats(currentStats, currentData.tickRate, this.runStatsZoneIndex + 1).zones[
+			? _.Run.Comparison.generateSplits(
+					new _.Run.RunStats(currentStats, currentData.tickRate),
+					new _.Run.RunStats(comparisonRun.compareRun.stats, currentData.tickRate)
+					// this.runStatsZoneIndex + 1 TODO: this was being passed to generateSplits, but that only takes two args. What was this for?
+				)[this.runStatsZoneIndex]
+			: new _.Run.RunStats(currentStats, currentData.tickRate, this.runStatsZoneIndex + 1).zones[
 					this.runStatsZoneIndex
-			  ];
+				];
 
 		const wrapper = $.CreatePanel('Panel', this.panels.splits, `Split${data.name}`, {
 			class: 'hud-comparisons__split'
@@ -126,14 +125,14 @@ class HudComparisons {
 						name: data.name,
 						time: data.accumulateTime,
 						isFirst: false,
-						diff: data.diff,
-						delta: data.delta
-				  }
+						diff: (data as Run.Split).diff,
+						delta: (data as Run.Split).delta
+					}
 				: {
 						name: data.name,
 						time: data.accumulateTime,
 						isFirst: true
-				  }
+					}
 		);
 	}
 }

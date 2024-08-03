@@ -12,10 +12,11 @@ class GhostEntities {
 			const nameLabel = namePanel.FindChildTraverse('GhostName');
 			entPanel.style.transform = `translatex(${nameLabel.actuallayoutwidth / nameLabel.actualuiscale_x / 2}px)`;
 			entPanel.style.zIndex = 0;
+			
 		}
 	}
 
 	static {
-		$.RegisterForUnhandledEvent('OnAimOverGhostChange', this.onAimOverGhostChange);
+		$.RegisterForUnhandledEvent('OnAimOverGhostChange', (panel: MomHudGhostEntityPanel, aimOver: boolean) => )
 	}
 }

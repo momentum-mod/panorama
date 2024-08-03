@@ -1,19 +1,20 @@
 class ConsoleNotify {
+	static cp = $.GetContextPanel();
 	static scheduleOpacity = -1;
 
 	static onNewMessages() {
 		if (this.scheduleOpacity !== -1) {
-			$.CancelScheduled(ConsoleNotify.scheduleOpacity);
+			$.CancelScheduled(this.scheduleOpacity);
 			this.scheduleOpacity = -1;
 		} else {
-			$.GetContextPanel().style.opacity = '1.0';
+			this.cp.style.opacity = '1.0';
 		}
-		this.scheduleOpacity = $.Schedule(5, ConsoleNotify.scheduledHide);
+		this.scheduleOpacity = $.Schedule(5, () => this.scheduledHide());
 	}
 
 	static scheduledHide() {
-		ConsoleNotify.scheduleOpacity = -1;
-		$.GetContextPanel().style.opacity = '0.0';
+		this.scheduleOpacity = -1;
+		this.cp.style.opacity = '0.0';
 	}
 
 	static {

@@ -9,6 +9,7 @@ namespace Run {
 
 	export interface RunEntityData {
 		isInZone: boolean;
+		timerState: Timer.TimerState;
 		timerString: Timer.TimerState;
 		strafeSync: float;
 		strafeSync2: float;
@@ -191,7 +192,7 @@ namespace Run {
 					(stat, j) => new RunStatsComparison(stat, comparisonRun.stats.overallZone.stats[j])
 				)
 			};
-		}
+	}
 
 		static generateSplits(baseRunStats: RunStats, comparisonRunStats: RunStats): Split[] {
 			return baseRunStats.zones.map((baseZone, i) => {
