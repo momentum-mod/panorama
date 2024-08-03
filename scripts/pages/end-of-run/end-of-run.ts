@@ -28,8 +28,8 @@ class EndOfRun {
 
 	/** Set the current base run and comparison run */
 	static setComparison(runObj: Run.CPPRun, comparisonRunObj: Run.CPPRun) {
-		this.baseRun = runObj ? new Globals.Run.Run(runObj) : null;
-		this.comparisonRun = comparisonRunObj ? new Globals.Run.Run(comparisonRunObj) : null;
+		this.baseRun = runObj ? new _.Run.Run(runObj) : null;
+		this.comparisonRun = comparisonRunObj ? new _.Run.Run(comparisonRunObj) : null;
 	}
 
 	/** Hides the end of run panel, when a new map is loaded. */
@@ -41,43 +41,43 @@ class EndOfRun {
 
 	static updateRunStatusIndicator(status: Run.RunStatusStates, type: Run.RunStatusTypes) {
 		const statusPanel =
-			type === Globals.Run.RunStatusTypes.UPLOAD ? this.panels.uploadStatus : this.panels.saveStatus;
+			type === _.Run.RunStatusTypes.UPLOAD ? this.panels.uploadStatus : this.panels.saveStatus;
 
-		statusPanel.SetHasClass('spin-clockwise', status === Globals.Run.RunStatusStates.PROGRESS);
+		statusPanel.SetHasClass('spin-clockwise', status === _.Run.RunStatusStates.PROGRESS);
 		statusPanel.SetHasClass(
 			'endofrun__run-status-indicator--progress',
-			status === Globals.Run.RunStatusStates.PROGRESS
+			status === _.Run.RunStatusStates.PROGRESS
 		);
 		statusPanel.SetHasClass(
 			'endofrun__run-status-indicator--success',
-			status === Globals.Run.RunStatusStates.SUCCESS
+			status === _.Run.RunStatusStates.SUCCESS
 		);
-		statusPanel.SetHasClass('endofrun__run-status-indicator--error', status === Globals.Run.RunStatusStates.ERROR);
+		statusPanel.SetHasClass('endofrun__run-status-indicator--error', status === _.Run.RunStatusStates.ERROR);
 
 		let icon: string, text: string, style: string;
 
 		switch (status) {
-			case Globals.Run.RunStatusStates.PROGRESS:
-				icon = `file://{images}/${Globals.Run.RunStatusIcons.PROGRESS}.svg`;
+			case _.Run.RunStatusStates.PROGRESS:
+				icon = `file://{images}/${_.Run.RunStatusIcons.PROGRESS}.svg`;
 				break;
-			case Globals.Run.RunStatusStates.SUCCESS:
+			case _.Run.RunStatusStates.SUCCESS:
 				icon = `file://{images}/${
-					type === Globals.Run.RunStatusTypes.UPLOAD
-						? Globals.Run.RunStatusIcons.UPLOAD
-						: Globals.Run.RunStatusIcons.SAVE
+					type === _.Run.RunStatusTypes.UPLOAD
+						? _.Run.RunStatusIcons.UPLOAD
+						: _.Run.RunStatusIcons.SAVE
 				}.svg`;
 				text = $.Localize(
-					type === Globals.Run.RunStatusTypes.UPLOAD
+					type === _.Run.RunStatusTypes.UPLOAD
 						? 'EndOfRun_Status_UploadSuccess'
 						: 'EndOfRun_Status_SaveSuccess'
 				);
 				style = 'positive';
 				break;
-			case Globals.Run.RunStatusStates.ERROR:
+			case _.Run.RunStatusStates.ERROR:
 			default:
-				icon = `file://{images}/${Globals.Run.RunStatusIcons.ERROR}.svg`;
+				icon = `file://{images}/${_.Run.RunStatusIcons.ERROR}.svg`;
 				text = $.Localize(
-					type === Globals.Run.RunStatusTypes.UPLOAD
+					type === _.Run.RunStatusTypes.UPLOAD
 						? 'EndOfRun_Status_UploadFail'
 						: 'EndOfRun_Status_SaveFail'
 				);
@@ -103,15 +103,15 @@ class EndOfRun {
 
 	static updateRunSavedStatus(saved: boolean) {
 		this.updateRunStatusIndicator(
-			saved ? Globals.Run.RunStatusStates.SUCCESS : Globals.Run.RunStatusStates.ERROR,
-			Globals.Run.RunStatusTypes.SAVE
+			saved ? _.Run.RunStatusStates.SUCCESS : _.Run.RunStatusStates.ERROR,
+			_.Run.RunStatusTypes.SAVE
 		);
 	}
 
 	static updateRunUploadStatus(uploaded, _cosXp, _rankXp, _lvlGain) {
 		this.updateRunStatusIndicator(
-			uploaded ? Globals.Run.RunStatusStates.SUCCESS : Globals.Run.RunStatusStates.ERROR,
-			Globals.Run.RunStatusTypes.UPLOAD
+			uploaded ? _.Run.RunStatusStates.SUCCESS : _.Run.RunStatusStates.ERROR,
+			_.Run.RunStatusTypes.UPLOAD
 		);
 	}
 
@@ -145,16 +145,16 @@ class EndOfRun {
 	static showNewEndOfRun(showReason: Run.EorShowReason) {
 		if (!this.baseRun) return;
 
-		if (showReason === Globals.Run.EorShowReason.PLAYER_FINISHED_RUN) {
+		if (showReason === _.Run.EorShowReason.PLAYER_FINISHED_RUN) {
 			this.panels.runStatusIndicators.visible = true;
 			this.panels.actionButtons.visible = true;
-			this.updateRunStatusIndicator(Globals.Run.RunStatusStates.PROGRESS, Globals.Run.RunStatusTypes.SAVE);
-			this.updateRunStatusIndicator(Globals.Run.RunStatusStates.PROGRESS, Globals.Run.RunStatusTypes.UPLOAD);
+			this.updateRunStatusIndicator(_.Run.RunStatusStates.PROGRESS, _.Run.RunStatusTypes.SAVE);
+			this.updateRunStatusIndicator(_.Run.RunStatusStates.PROGRESS, _.Run.RunStatusTypes.UPLOAD);
 		} else {
 			this.panels.runStatusIndicators.visible = false;
 			this.panels.actionButtons.visible = false;
 
-			if (showReason === Globals.Run.EorShowReason.MANUALLY_SHOWN) {
+			if (showReason === _.Run.EorShowReason.MANUALLY_SHOWN) {
 				// If it's a manual show we don't need to redo anything, just return out
 				return;
 			}
@@ -217,7 +217,7 @@ class EndOfRun {
 	static setComparisionStats() {
 		if (!this.baseRun || !this.comparisonRun) return;
 
-		const comparison = new Globals.Run.Comparison(this.baseRun, this.comparisonRun);
+		const comparison = new _.Run.Comparison(this.baseRun, this.comparisonRun);
 
 		// Are we ahead? Probably don't need a class for if you're exactly identical
 		const isAhead = comparison.diff < 0;

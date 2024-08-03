@@ -32,8 +32,8 @@ class PowerupTimer {
 	}
 
 	static {
-		Globals.Util.RegisterHUDPanelForGamemode({
-			gamemodes: Globals.Web.GamemodeCategories.get(Globals.Web.GamemodeCategory.DEFRAG),
+		_.Util.RegisterHUDPanelForGamemode({
+			gamemodes: _.Web.GamemodeCategories.get(_.Web.GamemodeCategory.DEFRAG),
 			context: this,
 			contextPanel: $.GetContextPanel(),
 			handledEvents: [{ event: 'HudProcessInput', contextPanel: $.GetContextPanel(), callback: this.onUpdate }]

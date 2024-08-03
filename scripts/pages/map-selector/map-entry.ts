@@ -9,7 +9,7 @@ class MapEntryClass {
 			return;
 		}
 
-		const items = Globals.Util.Enum.values(Globals.Web.Gamemode).map((gamemode) => ({
+		const items = _.Util.Enum.values(_.Web.Gamemode).map((gamemode) => ({
 			label: $.Localize(GameModeAPI.GetGetModeName(gamemode)),
 			jsCallback: () => $.DispatchEvent('MapSelector_TryPlayMap_GameModeOverride', mapData.id, gamemode)
 		}));

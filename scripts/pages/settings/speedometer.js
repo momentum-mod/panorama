@@ -77,7 +77,7 @@ class SpeedometerDetailObject {
 		this.moveupButton = this.containingPanel.FindChildInLayoutFile('SpeedometerMoveUpBtn');
 		this.movedownButton = this.containingPanel.FindChildInLayoutFile('SpeedometerMoveDownBtn');
 		this.nameLabel = this.toggleButton.FindChildInLayoutFile('SpeedometerName');
-		this.nameLabel.text = `${$.Localize(this.name)} (${$.Localize(Globals.PanoConst.SpeedometerDispNames.get(this.type))})`;
+		this.nameLabel.text = `${$.Localize(this.name)} (${$.Localize(_.PanoConst.SpeedometerDispNames.get(this.type))})`;
 
 		const enabledAxes = speedometerKV[SpeedometerDataKeys.ENABLED_AXES];
 		this.xaxisToggleButton.SetSelected(enabledAxes[0]);

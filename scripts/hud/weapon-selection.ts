@@ -4,21 +4,21 @@ class WeaponSelection {
 
 	static container = $('#WeaponSelection');
 	static weaponPanels: Map<Weapon.WeaponID, Panel> = new Map();
-	static lastDeployed = Globals.Weapon.WeaponID.NONE;
+	static lastDeployed = _.Weapon.WeaponID.NONE;
 
 	static onWeaponStateChange(mode: Weapon.WeaponStateChangeMode, id: Weapon.WeaponID) {
 		switch (mode) {
-			case Globals.Weapon.WeaponStateChangeMode.SWITCH:
-				if (this.lastDeployed !== Globals.Weapon.WeaponID.NONE)
+			case _.Weapon.WeaponStateChangeMode.SWITCH:
+				if (this.lastDeployed !== _.Weapon.WeaponID.NONE)
 					this.weaponPanels.get(this.lastDeployed)?.RemoveClass(this.DeployedClass);
 				this.lastDeployed = id;
 				this.weaponPanels.get(id)?.AddClass(this.DeployedClass);
 				break;
-			case Globals.Weapon.WeaponStateChangeMode.PICKUP:
+			case _.Weapon.WeaponStateChangeMode.PICKUP:
 				this.createWeaponPanel(id);
 				this.container.SortChildrenOnAttribute('slot_index', false);
 				break;
-			case Globals.Weapon.WeaponStateChangeMode.DROP:
+			case _.Weapon.WeaponStateChangeMode.DROP:
 				this.destroyWeaponPanel(id);
 				break;
 			default:
@@ -30,7 +30,7 @@ class WeaponSelection {
 	}
 
 	static onAllWeaponsDropped() {
-		Globals.Util.Enum.values(Globals.Weapon.WeaponID).forEach((id) => this.destroyWeaponPanel(id));
+		_.Util.Enum.values(_.Weapon.WeaponID).forEach((id) => this.destroyWeaponPanel(id));
 	}
 
 	static createWeaponPanel(id: Weapon.WeaponID) {

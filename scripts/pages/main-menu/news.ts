@@ -18,7 +18,7 @@ class MainMenuNews {
 	 * If not called, means that there was an error
 	 * @param {Object} feed - JSON data from RSS
 	 */
-	static onRSSFeedReceived(feed: { items: RSSFeedItem[] }) {
+	static onRSSFeedReceived(feed: { items: News.RSSFeedItem[] }) {
 		if (feed.items.length === 0) {
 			return;
 		}

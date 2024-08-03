@@ -29,4 +29,4 @@ __globalObject.Globals ??= Object.freeze({
 	SteamLobby
 });
 
-const Globals: Globals = __globalObject.Globals;
+const _: Globals = __globalObject.Globals;

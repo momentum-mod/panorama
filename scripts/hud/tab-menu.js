@@ -117,8 +117,8 @@ class HudTabMenu {
 	static setMapStats(data) {
 		const cp = $.GetContextPanel();
 
-		const mainTrack = Globals.Util.getMainTrack(data, GameModeAPI.GetCurrentGameMode());
-		const numZones = Globals.Util.getNumZones(data);
+		const mainTrack = _.Util.getMainTrack(data, GameModeAPI.GetCurrentGameMode());
+		const numZones = _.Util.getNumZones(data);
 
 		cp.SetDialogVariableInt('tier', mainTrack?.tier ?? 0);
 		cp.SetDialogVariable('type', $.Localize(mainTrack?.linear ? '#MapInfo_Type_Linear' : '#MapInfo_Type_Staged'));

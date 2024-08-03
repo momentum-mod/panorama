@@ -20,7 +20,7 @@ class MainMenuSettings {
 
 	static {
 		// Load every tab immediately, otherwise search won't be guaranteed to find everything.
-		Object.keys(Globals.Settings.Tabs).forEach((tab) => this.loadTab(tab));
+		Object.keys(_.Settings.Tabs).forEach((tab) => this.loadTab(tab));
 
 		// Default to input settings page
 		this.navigateToTab('InputSettings');
@@ -78,7 +78,7 @@ class MainMenuSettings {
 				this.setNavItemCollapsed(tab, false);
 
 				// Check the radiobutton for cases where this is called from JS. CSGO Panorama fires an Activated event to the radiobutton instead but I hate that.
-				$.GetContextPanel().FindChildTraverse(Globals.Settings.Tabs[tab].radioid).checked = true;
+				$.GetContextPanel().FindChildTraverse(_.Settings.Tabs[tab].radioid).checked = true;
 			}
 
 			SettingsShared.onChangedTab(this.activeTab);
@@ -90,7 +90,7 @@ class MainMenuSettings {
 
 		// Load XML file for the page
 		newPanel.LoadLayout(
-			'file://{resources}/layout/pages/settings/' + Globals.Settings.Tabs[tab].xml + '.xml',
+			'file://{resources}/layout/pages/settings/' + _.Settings.Tabs[tab].xml + '.xml',
 			false,
 			false
 		);
@@ -196,7 +196,7 @@ class MainMenuSettings {
 						(child.actualyoffset + child.actuallayoutheight + this.spacerHeight) / containerHeight) ||
 				scrollOffset === 0
 			) {
-				this.panels.nav.FindChildTraverse(Globals.Settings.Tabs[tab].children[child.id]).checked = true;
+				this.panels.nav.FindChildTraverse(_.Settings.Tabs[tab].children[child.id]).checked = true;
 				break;
 			}
 		}
@@ -225,7 +225,7 @@ class MainMenuSettings {
 		this.panels.navCollapse.SetHasClass('hide', shouldCollapse);
 
 		// Update all the items
-		Object.keys(Globals.Settings.Tabs)
+		Object.keys(_.Settings.Tabs)
 			.filter((tab) => tab !== 'SearchSettings' && tab !== this.activeTab)
 			.forEach((tab) => this.setNavItemCollapsed(tab, shouldCollapse));
 	}
@@ -233,13 +233,13 @@ class MainMenuSettings {
 	// Set the collapsed state of a nav item
 	static setNavItemCollapsed(tab: string, shouldCollapse: boolean) {
 		this.panels.nav
-			.FindChild(Globals.Settings.Tabs[tab].radioid)
+			.FindChild(_.Settings.Tabs[tab].radioid)
 			.FindChildrenWithClassTraverse('settings-nav__subsection')[0]
 			.SetHasClass('settings-nav__subsection--hidden', shouldCollapse);
 	}
 
 	static initPanelsRecursive(panel: GenericPanel) {
-		for (const child of Globals.Util.traverseChildren(panel)) {
+		for (const child of _.Util.traverseChildren(panel)) {
 			// Initialise info panel event handlers
 			if (this.isSettingsPanel(child) || this.isSpeedometerPanel(child)) {
 				this.setPanelInfoEvents(child);

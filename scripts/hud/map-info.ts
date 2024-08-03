@@ -15,13 +15,13 @@ class HudMapInfo {
 			cp.SetDialogVariable(
 				'author',
 				mapData.credits
-					.filter((x) => x.type === Globals.Web.MapCreditType.AUTHOR)
+					.filter((x) => x.type === _.Web.MapCreditType.AUTHOR)
 					.map(({ user: { alias } }) => alias)
 					.join(', ')
 			);
 
-			const mainTrack = Globals.Util.getMainTrack(mapData, GameModeAPI.GetCurrentGameMode());
-			const numZones = Globals.Util.getNumZones(mapData);
+			const mainTrack = _.Util.getMainTrack(mapData, GameModeAPI.GetCurrentGameMode());
+			const numZones = _.Util.getNumZones(mapData);
 
 			cp.SetDialogVariableInt('tier', mainTrack?.tier ?? 0);
 			cp.SetDialogVariable(

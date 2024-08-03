@@ -61,13 +61,13 @@ namespace Util {
 		return mapData.leaderboards.find(
 			(leaderboard) =>
 				leaderboard.gamemode === gamemode &&
-				leaderboard.trackType === Globals.Web.TrackType.MAIN &&
+				leaderboard.trackType === _.Web.TrackType.MAIN &&
 				leaderboard.style === 0
 		);
 	}
 
 	export function getNumZones(mapData: Web.MMap): number {
-		return mapData.leaderboards.filter((leaderboard) => leaderboard.trackType === Globals.Web.TrackType.STAGE)
+		return mapData.leaderboards.filter((leaderboard) => leaderboard.trackType === _.Web.TrackType.STAGE)
 			.length;
 	}
 

@@ -10,8 +10,8 @@ class HudSpectate {
 	};
 
 	static onSpectatorChanged(type: Run.RunEntityType) {
-		if (type !== Globals.Run.RunEntityType.PLAYER) {
-			const isReplay = type === Globals.Run.RunEntityType.REPLAY;
+		if (type !== _.Run.RunEntityType.PLAYER) {
+			const isReplay = type === _.Run.RunEntityType.REPLAY;
 
 			// TODO: this needs to be done more dynamically, you can switch off replay to real players and back
 			//this.panels.prevPlayer.visible = !isReplay;

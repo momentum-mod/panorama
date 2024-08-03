@@ -9,7 +9,7 @@ class ColorDisplay {
 		$.RegisterEventHandler('ColorPickerSave', popup, (color) => this.saveColor(color));
 	}
 
-	static saveColor(color: Color) {
+	static saveColor(color: color) {
 		$.GetContextPanel<ColorDisplay>().color = color;
 		this.updateDisplayOpacity();
 	}

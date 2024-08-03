@@ -74,7 +74,7 @@ class SettingsSearch {
 		this.matchedSettings = [];
 
 		// Search through each page
-		for (const tabID of Object.keys(Globals.Settings.Tabs)) {
+		for (const tabID of Object.keys(_.Settings.Tabs)) {
 			const tabPanel = this.panels.content.FindChildTraverse(tabID);
 			const tabName = $.Localize(tabPanel.GetFirstChild().GetFirstChild<Label>().text);
 			this.traverseChildren(tabID, this.panels.content.FindChildTraverse(tabID), tabName, null, null);
@@ -102,7 +102,7 @@ class SettingsSearch {
 		groupName: string,
 		groupTags: string[]
 	) {
-		for (const child of Globals.Util.traverseChildren(panel)) {
+		for (const child of _.Util.traverseChildren(panel)) {
 			// At some point in traversal we should hit the settings-group panels. Once we do, do a class traverse to
 			// dig out the title panel. Class traverse is probably quite slow but this doesn't get run as often as
 			// everything else.

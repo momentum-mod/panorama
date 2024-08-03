@@ -58,8 +58,8 @@ class LoadingScreen {
 			return;
 		}
 
-		const mainTrack = Globals.Util.getMainTrack(mapData, GameModeAPI.GetCurrentGameMode());
-		const numZones = Globals.Util.getNumZones(mapData);
+		const mainTrack = _.Util.getMainTrack(mapData, GameModeAPI.GetCurrentGameMode());
+		const numZones = _.Util.getNumZones(mapData);
 
 		this.panels.cp.SetDialogVariable('mapname', mapData.name);
 		this.panels.cp.SetDialogVariableInt('tier', mainTrack?.tier ?? 0);
@@ -67,7 +67,7 @@ class LoadingScreen {
 		this.panels.cp.SetDialogVariable('tracktype', mainTrack?.linear ? 'Linear' : 'Staged');
 
 		let authorString = '';
-		for (const [i, item] of mapData.credits.filter((x) => x.type === Globals.Web.MapCreditType.AUTHOR).entries())
+		for (const [i, item] of mapData.credits.filter((x) => x.type === _.Web.MapCreditType.AUTHOR).entries())
 			authorString += (i > 0 ? ', ' : '') + item.user.alias;
 		this.panels.cp.SetDialogVariable('author', authorString);
 

@@ -215,7 +215,7 @@ class MainMenu {
 	 * Temporary method to show the playtest welcome thingy
 	 */
 	static showPlaytestWelcomePopup() {
-		if (!Globals.DontShowAgain.checkDosa('playtestWelcome'))
+		if (!_.DontShowAgain.checkDosa('playtestWelcome'))
 			UiToolkitAPI.ShowCustomLayoutPopupParameters(
 				'',
 				'file://{resources}/layout/modals/popups/playtest-welcome.xml',
@@ -318,7 +318,7 @@ class MainMenu {
 	 * based on if we're ingame or not.
 	 */
 	static onQuitButtonPressed() {
-		if (GameInterfaceAPI.GetGameUIState() === Globals.State.GameUIState.PAUSEMENU) {
+		if (GameInterfaceAPI.GetGameUIState() === _.State.GameUIState.PAUSEMENU) {
 			GameInterfaceAPI.ConsoleCommand('disconnect');
 			this.onHomeButtonPressed();
 			return;
@@ -350,7 +350,7 @@ class MainMenu {
 			$.Localize('#Safeguard_MapQuitToMenu'),
 			$.Localize('#Safeguard_MapQuitToMenu_Message'),
 			'warning-popup',
-			() => $.DispatchEvent('Safeguard_Response', Globals.Safeguards.RunSafeguardType.QUIT_TO_MENU),
+			() => $.DispatchEvent('Safeguard_Response', _.Safeguards.RunSafeguardType.QUIT_TO_MENU),
 			() => {}
 		);
 	}
@@ -361,7 +361,7 @@ class MainMenu {
 			$.Localize('#Safeguard_MapQuitGame'),
 			$.Localize('#Safeguard_MapQuitGame_Message'),
 			'warning-popup',
-			() => $.DispatchEvent('Safeguard_Response', Globals.Safeguards.RunSafeguardType.QUIT_GAME),
+			() => $.DispatchEvent('Safeguard_Response', _.Safeguards.RunSafeguardType.QUIT_GAME),
 			() => {}
 		);
 	}
@@ -390,7 +390,7 @@ class MainMenu {
 	 */
 	static onEscapeKeyPressed(_eSource: unknown, _nRepeats: unknown, _focusPanel: unknown) {
 		// Resume game in pause menu mode, OTHERWISE close the active menu menu page
-		if (GameInterfaceAPI.GetGameUIState() === Globals.State.GameUIState.PAUSEMENU) {
+		if (GameInterfaceAPI.GetGameUIState() === _.State.GameUIState.PAUSEMENU) {
 			$.DispatchEvent('MainMenuResumeGame');
 		} else {
 			this.onHomeButtonPressed();

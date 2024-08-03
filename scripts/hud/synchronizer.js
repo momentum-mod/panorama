@@ -45,14 +45,14 @@ class Synchronizer {
 		this.addToBuffer(this.gainRatioHistory, 0);
 		this.addToBuffer(this.yawRatioHistory, 0);
 
-		const bValidWishMove = Globals.Util.Maths.getSize2D(lastMoveData.wishdir) > 0.1;
+		const bValidWishMove = _.Util.Maths.getSize2D(lastMoveData.wishdir) > 0.1;
 		const strafeRight = (bValidWishMove ? 1 : 0) * lastTickStats.strafeRight;
 		const direction = this.dynamicEnable === 1 ? strafeRight : 1;
 		const flip = this.flipEnable === 1 ? -1 : 1;
 
 		if (
 			bValidWishMove &&
-			Globals.Util.Maths.getSizeSquared2D(MomentumPlayerAPI.GetVelocity()) > Math.pow(this.minSpeed, 2)
+			_.Util.Maths.getSizeSquared2D(MomentumPlayerAPI.GetVelocity()) > Math.pow(this.minSpeed, 2)
 		) {
 			this.gainRatioHistory[this.interpFrames - 1] =
 				this.sampleWeight * this.NaNCheck(lastTickStats.speedGain / lastTickStats.idealGain, 0);
