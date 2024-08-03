@@ -62,11 +62,13 @@ class MapSelection {
 			for (const mode of Object.keys(this.gameModeData))
 				this.gameModeData[mode].filterButton = $(`#${this.gameModeData[mode].idName}FilterButton`);
 
+			// Filters disabled until 0.10 which rewrites system - fixes JS errors on steam branch
+			// When rebasing 0.10 onto this branch, ignore these changes, pick incoming.
 			// Load the saved filters state
-			const filtersChanged = this.loadFilters();
+			// const filtersChanged = this.loadFilters();
 
 			// Initialise all the filters events
-			this.initFilterSaveEventsRecursive(this.panels.filtersPanel);
+			// this.initFilterSaveEventsRecursive(this.panels.filtersPanel);
 
 			this.timesModeButtonsUnchecked = 0;
 
@@ -105,7 +107,7 @@ class MapSelection {
 			filterButton.SetPanelEvent('oncontextmenu', () => this.clearOtherModes(mode));
 			filterButton.SetPanelEvent('onactivate', () => {
 				this.onModeButtonPressed(mode);
-				this.filterSaveEvent(filterButton);
+				// this.filterSaveEvent(filterButton);
 			});
 		}
 	}
