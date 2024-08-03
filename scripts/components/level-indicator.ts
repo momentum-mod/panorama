@@ -1,32 +1,34 @@
-class LevelIndicatorClass {
-	static totalLevel;
+class LevelIndicator {
+	static totalLevel: number;
+
 	static panels = {
-		icon: $('#PrestigeIcon'),
-		iconIncrement: $('#PrestigeIconIncrement')
+		cp: $.GetContextPanel<LevelIndicator>(),
+		icon: $<Image>('#PrestigeIcon'),
+		iconIncrement: $<Image>('#PrestigeIconIncrement')
 	};
 
 	static {
-		$.GetContextPanel().jsClass = this;
+		this.panels.cp.jsClass = this;
 	}
 
-	static onLoad() {
+	static onLoad(): void {
 		// Load the level from the context panel
-		const level = $.GetContextPanel().GetAttributeInt('level', 0);
+		const level = $.GetContextPanel<LevelIndicator>().level;
 
-		if (level > 0) this.setLevel(level);
+		if (level > 0) {
+			this.setLevel(level);
+		}
 	}
 
-	static setLevel(level) {
-		const cp = $.GetContextPanel();
-
+	static setLevel(level: number): void {
 		const innerLevel = this.getInnerLevel(level);
 		const prestige = this.getPrestige(level);
 
 		for (let i = 1; i <= 11; i++) {
-			cp.SetHasClass('levelindicator--' + i, i === this.getLevelColor(level));
+			this.panels.cp.SetHasClass('levelindicator--' + i, i === this.getLevelColor(level));
 		}
 
-		cp.SetDialogVariableInt('level', innerLevel);
+		this.panels.cp.SetDialogVariableInt('level', innerLevel);
 
 		this.panels.icon.SetImage(this.getImageForPrestige(prestige));
 
@@ -35,18 +37,18 @@ class LevelIndicatorClass {
 		this.panels.iconIncrement.SetHasClass('levelindicator__icon--hidden', prestige === 0);
 
 		// Max level gets special styling
-		cp.SetHasClass('levelindicator--max', level > 3000);
+		this.panels.cp.SetHasClass('levelindicator--max', level > 3000);
 
 		this.totalLevel = level;
 	}
 
-	static incrementLevel(animDuration) {
+	static incrementLevel(animDuration: number): void {
 		// TODO: anims still fucky ESPECIALLY icons
 		if (!this.totalLevel) return;
 
 		const newLevel = this.totalLevel + 1;
 
-		const cp = $.GetContextPanel();
+		const cp = this.panels.cp;
 		for (const panel of [cp, cp.FindChild('Container'), cp.FindChild('IncrementContainer')])
 			panel.style.animationDuration = `${animDuration}s`;
 
@@ -67,21 +69,21 @@ class LevelIndicatorClass {
 		});
 	}
 
-	static getLevelColor(level) {
+	static getLevelColor(level: number): number {
 		if (level > 500) level = this.getInnerLevel(level); // Bound to 500
 		if (level % 500 === 0) return 11; // The special 500th level class
 		return Math.min(Math.max(Math.ceil((level + 1) / 50), 1), 10);
 	}
 
-	static getPrestige(totalLevel) {
+	static getPrestige(totalLevel: number): number {
 		return Math.floor(Math.max(totalLevel - 1, 0) / 500);
 	}
 
-	static getInnerLevel(totalLevel) {
+	static getInnerLevel(totalLevel: number): number {
 		return ((totalLevel - 1) % 500) + 1;
 	}
 
-	static getImageForPrestige(prestige) {
+	static getImageForPrestige(prestige: number): string {
 		if (prestige <= 0) return '';
 
 		const imageName = prestige <= 5 ? 'prestige' + prestige + '.svg' : 'max_level.svg';

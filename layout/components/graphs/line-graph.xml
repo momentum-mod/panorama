@@ -4,6 +4,7 @@
 	</styles>
 
 	<scripts>
+		<include src="file://{scripts}/globals/globals.js" />
 		<include src="file://{scripts}/components/graphs/line-graph.js" />
 	</scripts>
 

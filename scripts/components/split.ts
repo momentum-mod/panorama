@@ -1,10 +1,10 @@
-class SplitClass {
+class Split {
 	static onLoad() {
 		this.update();
 	}
 
 	static update() {
-		const cp = $.GetContextPanel();
+		const cp = $.GetContextPanel<Split>();
 
 		const name = cp.name;
 		const time = cp.time;

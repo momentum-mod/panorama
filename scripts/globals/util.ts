@@ -71,6 +71,10 @@ namespace Util {
 			.length;
 	}
 
+	export function uniqueID(): string {
+		return `${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
+	}
+
 	/**
 	 * Pass an event that should be only registered when playing certain gamemodes.
 	 *
@@ -98,9 +102,9 @@ namespace Util {
 	 * @param callbackFn - Event callback
 	 * @returns Cleanup function that unregisters both event handlers
 	 */
-	function RegisterEventForGamemodes(
+	export function RegisterEventForGamemodes(
 		gamemodes: number[],
-		event: string,
+		event: keyof GlobalEventNameMap,
 		context: string | Panel,
 		callbackFn: (...args: unknown[]) => void
 	): () => void {
@@ -123,7 +127,7 @@ namespace Util {
 		};
 	}
 
-	interface RegisterHUDPanelForGamemodeOptions {
+	export interface RegisterHUDPanelForGamemodeOptions {
 		context: object;
 		contextPanel: Panel;
 		gamemodes: number[];
@@ -305,7 +309,7 @@ namespace Util {
 		}
 
 		/** Float equals check with threshold. */
-		export function floatEquals(A: number, B: number, threshold: number): boolean {
+		export function approxEquals(A: number, B: number, threshold: number): boolean {
 			return Math.abs(A - B) < threshold;
 		}
 
@@ -347,7 +351,7 @@ namespace Util {
 		}
 	}
 
-	namespace Color {
+	export namespace Color {
 		/**
 		 * Functions for manipulating RGB/RGBA strings and tuples.
 		 */

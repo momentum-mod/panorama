@@ -1,100 +1,85 @@
 class EndOfRun {
-	/**
-	 * @property {object} panels - Collection of cached panels.
-	 */
 	static panels = {
-		/** @type {Panel} @static */
-		cp: $.GetContextPanel(),
-		/** @type {Label} @static */
-		time: $('#RunTime'),
-		/** @type {Label} @static */
-		diff: $('#RunDiff'),
-		/** @type {Panel} @static */
-		splits: $('#Splits'),
-		/** @type {Panel} @static */
-		detailedStats: $('#DetailedStats'),
-		/** @type {LineGraph} @static */
-		graph: $('#SplitsGraph'),
-		/** @type {Panel} @static */
-		zoneStats: $('#ZoneStats'),
-		/** @type {Panel} @static */
-		runStatusIndicators: $('#RunStatusIndicators'),
-		/** @type {Image} @static */
-		saveStatus: $('#SaveStatus'),
-		/** @type {Image} @static */
-		uploadStatus: $('#UploadStatus'),
-		/** @type {Panel} @static */
-		actionButtons: $('#EndOfRunActionButtons'),
-		/** @type {Panel} @static */
-		selectedGraphPoint: null
+		cp: $.GetContextPanel<Panel>(),
+		time: $<Label>('#RunTime'),
+		diff: $<Label>('#RunDiff'),
+		splits: $<Panel>('#Splits'),
+		detailedStats: $<Panel>('#DetailedStats'),
+		graph: $<LineGraph>('#SplitsGraph'),
+		zoneStats: $<Panel>('#ZoneStats'),
+		runStatusIndicators: $<Panel>('#RunStatusIndicators'),
+		saveStatus: $<Image>('#SaveStatus'),
+		uploadStatus: $<Image>('#UploadStatus'),
+		actionButtons: $<Panel>('#EndOfRunActionButtons'),
+		selectedGraphPoint: null as Button | null
 	};
 
-	/**
-	 * @property {Split} The currently selected split
-	 */
-	static selectedSplit;
+	static baseRun: Run.Run;
+	static comparisonRun: Run.Run;
+	static selectedSplit: Run.Split;
 
 	static {
 		$.RegisterForUnhandledEvent('EndOfRun_CompareRuns', this.setComparison.bind(this));
-		$.RegisterForUnhandledEvent('Leaderboards_MapDataSet', this.initOnMapLoad.bind(this));
 		$.RegisterForUnhandledEvent('EndOfRun_Show', this.showNewEndOfRun.bind(this));
 		$.RegisterForUnhandledEvent('EndOfRun_Result_RunUpload', this.updateRunUploadStatus.bind(this));
 		$.RegisterForUnhandledEvent('EndOfRun_Result_RunSave', this.updateRunSavedStatus.bind(this));
+		$.RegisterForUnhandledEvent('Leaderboards_MapDataSet', this.initOnMapLoad.bind(this));
 	}
 
-	/**
-	 * Set the current base run and comparison run
-	 * @param {Object} runObj 				- The base run
-	 * @param {Object} comparisonRunObj		- The comparison run
-	 */
-	static setComparison(runObj, comparisonRunObj) {
-		this.baseRun = runObj ? new Run(runObj) : null;
-		this.comparisonRun = comparisonRunObj ? new Run(comparisonRunObj) : null;
+	/** Set the current base run and comparison run */
+	static setComparison(runObj: Run.CPPRun, comparisonRunObj: Run.CPPRun) {
+		this.baseRun = runObj ? new Globals.Run.Run(runObj) : null;
+		this.comparisonRun = comparisonRunObj ? new Globals.Run.Run(comparisonRunObj) : null;
 	}
 
-	/**
-	 * Hides the end of run panel, when a new map is loaded.
-	 * @param {boolean} isOfficial
-	 */
-	static initOnMapLoad(isOfficial) {
+	/** Hides the end of run panel, when a new map is loaded. */
+	static initOnMapLoad(isOfficial: boolean) {
 		this.panels.uploadStatus.SetHasClass('hide', !isOfficial);
 
 		this.hideEndOfRun(true, false);
 	}
 
-	/**
-	 * Update a status indicator
-	 * @param {RunStatusStates} status
-	 * @param {RunStatusTypes} type
-	 */
-	static updateRunStatusIndicator(status, type) {
-		const statusPanel = type === RunStatusTypes.UPLOAD ? this.panels.uploadStatus : this.panels.saveStatus;
+	static updateRunStatusIndicator(status: Run.RunStatusStates, type: Run.RunStatusTypes) {
+		const statusPanel =
+			type === Globals.Run.RunStatusTypes.UPLOAD ? this.panels.uploadStatus : this.panels.saveStatus;
 
-		statusPanel.SetHasClass('spin-clockwise', status === RunStatusStates.PROGRESS);
-		statusPanel.SetHasClass('endofrun__run-status-indicator--progress', status === RunStatusStates.PROGRESS);
-		statusPanel.SetHasClass('endofrun__run-status-indicator--success', status === RunStatusStates.SUCCESS);
-		statusPanel.SetHasClass('endofrun__run-status-indicator--error', status === RunStatusStates.ERROR);
+		statusPanel.SetHasClass('spin-clockwise', status === Globals.Run.RunStatusStates.PROGRESS);
+		statusPanel.SetHasClass(
+			'endofrun__run-status-indicator--progress',
+			status === Globals.Run.RunStatusStates.PROGRESS
+		);
+		statusPanel.SetHasClass(
+			'endofrun__run-status-indicator--success',
+			status === Globals.Run.RunStatusStates.SUCCESS
+		);
+		statusPanel.SetHasClass('endofrun__run-status-indicator--error', status === Globals.Run.RunStatusStates.ERROR);
 
-		let icon, text, style;
+		let icon: string, text: string, style: string;
 
 		switch (status) {
-			case RunStatusStates.PROGRESS:
-				icon = `file://{images}/${RunStatusIcons.PROGRESS}.svg`;
+			case Globals.Run.RunStatusStates.PROGRESS:
+				icon = `file://{images}/${Globals.Run.RunStatusIcons.PROGRESS}.svg`;
 				break;
-			case RunStatusStates.SUCCESS:
+			case Globals.Run.RunStatusStates.SUCCESS:
 				icon = `file://{images}/${
-					type === RunStatusTypes.UPLOAD ? RunStatusIcons.UPLOAD : RunStatusIcons.SAVE
+					type === Globals.Run.RunStatusTypes.UPLOAD
+						? Globals.Run.RunStatusIcons.UPLOAD
+						: Globals.Run.RunStatusIcons.SAVE
 				}.svg`;
 				text = $.Localize(
-					type === RunStatusTypes.UPLOAD ? 'EndOfRun_Status_UploadSuccess' : 'EndOfRun_Status_SaveSuccess'
+					type === Globals.Run.RunStatusTypes.UPLOAD
+						? 'EndOfRun_Status_UploadSuccess'
+						: 'EndOfRun_Status_SaveSuccess'
 				);
 				style = 'positive';
 				break;
-			case RunStatusStates.ERROR:
+			case Globals.Run.RunStatusStates.ERROR:
 			default:
-				icon = `file://{images}/${RunStatusIcons.ERROR}.svg`;
+				icon = `file://{images}/${Globals.Run.RunStatusIcons.ERROR}.svg`;
 				text = $.Localize(
-					type === RunStatusTypes.UPLOAD ? 'EndOfRun_Status_UploadFail' : 'EndOfRun_Status_SaveFail'
+					type === Globals.Run.RunStatusTypes.UPLOAD
+						? 'EndOfRun_Status_UploadFail'
+						: 'EndOfRun_Status_SaveFail'
 				);
 				style = 'error';
 		}
@@ -116,14 +101,17 @@ class EndOfRun {
 		}
 	}
 
-	static updateRunSavedStatus(saved) {
-		this.updateRunStatusIndicator(saved ? RunStatusStates.SUCCESS : RunStatusStates.ERROR, RunStatusTypes.SAVE);
+	static updateRunSavedStatus(saved: boolean) {
+		this.updateRunStatusIndicator(
+			saved ? Globals.Run.RunStatusStates.SUCCESS : Globals.Run.RunStatusStates.ERROR,
+			Globals.Run.RunStatusTypes.SAVE
+		);
 	}
 
 	static updateRunUploadStatus(uploaded, _cosXp, _rankXp, _lvlGain) {
 		this.updateRunStatusIndicator(
-			uploaded ? RunStatusStates.SUCCESS : RunStatusStates.ERROR,
-			RunStatusTypes.UPLOAD
+			uploaded ? Globals.Run.RunStatusStates.SUCCESS : Globals.Run.RunStatusStates.ERROR,
+			Globals.Run.RunStatusTypes.UPLOAD
 		);
 	}
 
@@ -154,19 +142,19 @@ class EndOfRun {
 	 * you go back to a last EoR from leaderboards, or in the future when the player compares two runs.
 	 * @param {EorShowReason} showReason - Why the end of run panel is being shown. See EorShowReason for reasons.
 	 */
-	static showNewEndOfRun(showReason) {
+	static showNewEndOfRun(showReason: Run.EorShowReason) {
 		if (!this.baseRun) return;
 
-		if (showReason === EorShowReason.PLAYER_FINISHED_RUN) {
+		if (showReason === Globals.Run.EorShowReason.PLAYER_FINISHED_RUN) {
 			this.panels.runStatusIndicators.visible = true;
 			this.panels.actionButtons.visible = true;
-			this.updateRunStatusIndicator(RunStatusStates.PROGRESS, RunStatusTypes.SAVE);
-			this.updateRunStatusIndicator(RunStatusStates.PROGRESS, RunStatusTypes.UPLOAD);
+			this.updateRunStatusIndicator(Globals.Run.RunStatusStates.PROGRESS, Globals.Run.RunStatusTypes.SAVE);
+			this.updateRunStatusIndicator(Globals.Run.RunStatusStates.PROGRESS, Globals.Run.RunStatusTypes.UPLOAD);
 		} else {
 			this.panels.runStatusIndicators.visible = false;
 			this.panels.actionButtons.visible = false;
 
-			if (showReason === EorShowReason.MANUALLY_SHOWN) {
+			if (showReason === Globals.Run.EorShowReason.MANUALLY_SHOWN) {
 				// If it's a manual show we don't need to redo anything, just return out
 				return;
 			}
@@ -229,7 +217,7 @@ class EndOfRun {
 	static setComparisionStats() {
 		if (!this.baseRun || !this.comparisonRun) return;
 
-		const comparison = new Comparison(this.baseRun, this.comparisonRun);
+		const comparison = new Globals.Run.Comparison(this.baseRun, this.comparisonRun);
 
 		// Are we ahead? Probably don't need a class for if you're exactly identical
 		const isAhead = comparison.diff < 0;
@@ -287,12 +275,8 @@ class EndOfRun {
 		this.panels.detailedStats.RemoveClass('endofrun__stats--hidden');
 	}
 
-	/**
-	 * Generate a graph for the given comparison
-	 * @param {Comparison} comparison
-	 * @param {number?} statIndex
-	 */
-	static updateGraph(comparison, statIndex = null) {
+	/** Generate a graph for the given comparison */
+	static updateGraph(comparison: Run.Comparison, statIndex = null) {
 		// Grab the actual LineGraph class attached to the panel
 		const lineGraph = this.panels.graph.jsClass;
 
@@ -315,7 +299,7 @@ class EndOfRun {
 		}
 
 		// Start the comparison line
-		const line = {
+		const line: LineGraph.Line = {
 			// First point is just 0 on the "0" stage
 			points: [
 				{
@@ -372,7 +356,7 @@ class EndOfRun {
 		}
 
 		// Now decide whether to increase the number of intervals. This is just based on what looks good to me.
-		let yInterval;
+		let yInterval: number;
 		if (range / scaleFactor >= 2) yInterval = scaleFactor;
 		else if (range / scaleFactor >= 1) yInterval = scaleFactor / 2;
 		else yInterval = scaleFactor / 4;
@@ -403,7 +387,7 @@ class EndOfRun {
 		for (const [i, split] of comparisonSplits.entries()) {
 			const splitName = split.name;
 			const data = useStat ? { ...split.statsComparisons[statIndex], time: 0, delta: 0 } : split;
-			const isTimeComparison = !useStat || data.unit === $.Localize('#Run_Stat_Unit_Second');
+			const isTimeComparison = !useStat || ('unit' in data && data.unit === $.Localize('#Run_Stat_Unit_Second'));
 
 			let tooltipString;
 			const compareVal = isPositiveGood(data) ? -data.diff : data.diff;
@@ -440,15 +424,24 @@ class EndOfRun {
 					onactivate: (_) => $.DispatchEvent('Activated', $(`#Split${splitName}`), 'mouse'),
 					onmouseover: (id) => {
 						if (isTimeComparison) {
-							this.panels.cp.SetDialogVariableFloat('total_time', data.accumulateTime);
+							this.panels.cp.SetDialogVariableFloat('total_time', (data as Run.Split).accumulateTime);
 							this.panels.cp.SetDialogVariableFloat('zone_time', data.time);
 							this.panels.cp.SetDialogVariableFloat('time_diff', data.diff);
 							this.panels.cp.SetDialogVariableFloat('time_delta', data.delta);
 						} else {
 							this.panels.cp.SetDialogVariable('name', $.Localize(data.name));
-							this.panels.cp.SetDialogVariable('base_value', this.roundFloat(data.baseValue, 2));
-							this.panels.cp.SetDialogVariable('compare_value', this.roundFloat(data.comparisonValue, 2));
-							this.panels.cp.SetDialogVariable('diff', this.roundFloat(data.diff, 2));
+							this.panels.cp.SetDialogVariableInt(
+								'base_value',
+								this.roundFloat((data as Run.RunStatsComparison).baseValue, 2)
+							);
+							this.panels.cp.SetDialogVariableInt(
+								'compare_value',
+								this.roundFloat((data as Run.RunStatsComparison).comparisonValue, 2)
+							);
+							this.panels.cp.SetDialogVariableInt(
+								'diff',
+								this.roundFloat((data as Run.RunStatsComparison).diff, 2)
+							);
 						}
 						UiToolkitAPI.ShowTextTooltip(id, tooltipString);
 					},
@@ -500,12 +493,8 @@ class EndOfRun {
 		this.panels.selectedGraphPoint = null;
 	}
 
-	/**
-	 * Set the selected graph point and stats for a given split
-	 * @param {Split} split
-	 * @param {Comparison} comparison
-	 */
-	static setSelectedSplit(split, comparison) {
+	/** Set the selected graph point and stats for a given split */
+	static setSelectedSplit(split: Run.Split, comparison: Run.Comparison) {
 		this.selectedSplit = split;
 
 		this.panels.cp.SetDialogVariable('selected_zone', $.Localize(split.name));
@@ -581,7 +570,7 @@ class EndOfRun {
 		// Don't scroll for the overall split
 		if (split.name !== 'Run_Comparison_Split_Overall') {
 			// Style graph node
-			const selectedGraphPoint = this.panels.graph.FindChildTraverse(`Point${split.name}`);
+			const selectedGraphPoint = this.panels.graph.FindChildTraverse<Button>(`Point${split.name}`);
 			if (selectedGraphPoint) {
 				selectedGraphPoint.AddClass('endofrun-graph__point--selected');
 				this.panels.selectedGraphPoint?.RemoveClass('endofrun-graph__point--selected');
@@ -593,11 +582,11 @@ class EndOfRun {
 		}
 	}
 
-	static roundFloat(n, precision) {
-		return Number.parseFloat(n.toFixed(precision));
+	static roundFloat(n: number, precision: number) {
+		return +n.toFixed(precision);
 	}
 
-	static getDiffSign(diff) {
+	static getDiffSign(diff: number) {
 		return diff > 0 ? '+' : '';
 	}
 }

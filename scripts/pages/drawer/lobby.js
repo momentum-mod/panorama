@@ -171,7 +171,7 @@ class Lobby {
 	 * Request a lobby refresh, then put the button on cooldown
 	 */
 	static refreshLobbyList() {
-		if (SteamLobbyAPI.RefreshList({ this_is_where_filters_will_go_in_the_future: 'true' })) {
+		if (SteamLobbyAPI.RefreshList({})) {
 			this.panels.refreshIcon.AddClass('spin-clockwise'); // Removed when onSteamLobbyListUpdated is called
 
 			this.panels.refreshButton.enabled = false;

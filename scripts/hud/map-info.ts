@@ -1,7 +1,7 @@
 class HudMapInfo {
-	static cachedInfoContainer = $('#CachedInfoContainer');
+	static cachedInfoContainer = $<Panel>('#CachedInfoContainer');
 
-	static onMapLoad(mapName) {
+	static onMapLoad(mapName: string) {
 		if (!mapName) return;
 
 		$.GetContextPanel().SetDialogVariable('mapname', mapName);
@@ -10,19 +10,23 @@ class HudMapInfo {
 		if (mapData) {
 			this.cachedInfoContainer.visible = true;
 
-			let authorString = '';
-			for (const [i, item] of mapData['credits'].filter((x) => x.type === MapCreditType.AUTHOR).entries())
-				authorString += (i > 0 ? ', ' : '') + item.user.alias;
 			const cp = $.GetContextPanel();
-			cp.SetDialogVariable('author', authorString);
+			
+			cp.SetDialogVariable(
+				'author',
+				mapData.credits
+					.filter((x) => x.type === Globals.Web.MapCreditType.AUTHOR)
+					.map(({ user: { alias } }) => alias)
+					.join(', ')
+			);
 
-			const mainTrack = getMainTrack(mapData, GameModeAPI.GetCurrentGameMode());
-			const numZones = getNumZones(mapData);
+			const mainTrack = Globals.Util.getMainTrack(mapData, GameModeAPI.GetCurrentGameMode());
+			const numZones = Globals.Util.getNumZones(mapData);
 
 			cp.SetDialogVariableInt('tier', mainTrack?.tier ?? 0);
 			cp.SetDialogVariable(
 				'zonetype',
-				$.Localize(mainTrack?.isLinear ? '#MapInfo_Type_Linear' : '#MapInfo_Type_Staged')
+				$.Localize(mainTrack?.linear ? '#MapInfo_Type_Linear' : '#MapInfo_Type_Staged')
 			);
 			cp.SetDialogVariableInt('numzones', numZones);
 		} else {

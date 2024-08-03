@@ -1,11 +1,11 @@
-class PlayerCardClass {
+class PlayerCard {
 	static panels = {
-		progressBar: $('#XpProgressBar'),
-		levelIndicator: $('#LevelIndicator')
+		progressBar: $<ProgressBar>('#XpProgressBar'),
+		levelIndicator: $<LevelIndicator>('#LevelIndicator')
 	};
 
 	static {
-		$.GetContextPanel().jsClass = this;
+		$.GetContextPanel<PlayerCard>().jsClass = this;
 	}
 
 	static onLoad() {
@@ -13,7 +13,7 @@ class PlayerCardClass {
 	}
 
 	static update() {
-		const cp = $.GetContextPanel();
+		const cp = $.GetContextPanel<PlayerCard>();
 
 		const level = MomentumAPI.GetPlayerLevel();
 		const xp = MomentumAPI.GetPlayerXp();
@@ -33,6 +33,6 @@ class PlayerCardClass {
 		this.panels.progressBar.min = currLevelXp;
 		this.panels.progressBar.max = nextLevelXp;
 
-		this.panels.levelIndicator.jsClass.setLevel(level);
+		this.panels.levelIndicator.jsClass.setLevel(level); // TODO: Hack, find better approach.
 	}
 }

@@ -2,9 +2,10 @@
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
+	
 	<scripts>
+		<include src="file://{scripts}/globals/global.ts" />
 		<include src="file://{scripts}/hud/map-info.js" />
-		<include src="file://{scripts}/common/map-cache.js" />
 	</scripts>
 
 	<MomHudMapInfo class="hudmapinfo">

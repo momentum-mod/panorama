@@ -25,16 +25,29 @@ interface PanelTagNameMap {
 	ToastGeneric: ToastGeneric;
 }
 
-declare interface PlayerCard extends AbstractPanel<'PlayerCard'> { jsClass: PlayerCardClass; }
+declare interface PlayerCard extends AbstractPanel<'PlayerCard'> {
+	jsClass: typeof PlayerCard;
+}
 UiToolkitAPI.RegisterPanel2d('PlayerCard', 'file://{resources}/layout/components/player-card.xml');
 
-declare interface LevelIndicator extends AbstractPanel<'LevelIndicator'> { jsClass: LevelIndicatorClass; }
+declare interface LevelIndicator extends AbstractPanel<'LevelIndicator'> {
+	jsClass: typeof LevelIndicator;
+	level: number;
+}
 UiToolkitAPI.RegisterPanel2d('LevelIndicator', 'file://{resources}/layout/components/level-indicator.xml');
 
-declare interface LineGraph extends AbstractPanel<'LineGraph'> { jsClass: LineGraphClass; }
+declare interface LineGraph extends AbstractPanel<'LineGraph'> {
+	jsClass: typeof LineGraph.Component;
+}
 UiToolkitAPI.RegisterPanel2d('LineGraph', 'file://{resources}/layout/components/graphs/line-graph.xml');
 
-declare interface Split extends AbstractPanel<'Split'> {}
+declare interface Split extends AbstractPanel<'Split'> {
+	name: string;
+	time: number;
+	isFirst: boolean;
+	diff: number;
+	delta: number;
+}
 UiToolkitAPI.RegisterPanel2d('Split', 'file://{resources}/layout/components/split.xml');
 
 declare interface ToastContainer extends AbstractPanel<'ToastContainer'> {}

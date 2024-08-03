@@ -6,7 +6,23 @@ namespace Run {
 		REPLAY = 2,
 		ONLINE = 3
 	}
-	
+
+	export interface RunEntityData {
+		isInZone: boolean;
+		timerString: Timer.TimerState;
+		strafeSync: float;
+		strafeSync2: float;
+		runFlags: uint32; // These are styles, not done yet.
+		currentTrack: uint32;
+		currentZone: uint32;
+		startTick: uint32;
+		tickRate: float;
+		lastRunTime: uint32;
+	}
+
+	// Can't see where this is getting converted in C++, also this class this ridiculous and probably getting reworked,
+	export type RunStatsData = any;
+
 	/** Enum for why end of run is being shown */
 	export enum EorShowReason {
 		PLAYER_FINISHED_RUN = 0,
@@ -37,6 +53,24 @@ namespace Run {
 		ERROR = 'alert-octagon'
 	}
 
+	/** Data structure passed from C++, would be nice to clean up in future */
+	export interface CPPRun {
+		mapName: string;
+		mapHash: string;
+		playerName: string;
+		steamID: string;
+		date: string;
+		tickInterval: number;
+		runTime: number;
+		startTick: number;
+		endTime: number;
+		runFlags: number;
+		trackNum: number;
+		zoneNum: number;
+		stats: Run.RunStatsData;
+	}
+	
+	
 	/** Friendly JavaScript representation of a C++ Run object. */
 	export class Run {
 		mapName: string;
@@ -54,7 +88,7 @@ namespace Run {
 		numZones: number;
 		stats: RunStats;
 
-		constructor(runObject: any) {
+		constructor(runObject: CPPRun) {
 			this.mapName = runObject.mapName;
 			this.mapHash = runObject.mapHash;
 			this.playerName = runObject.playerName;
@@ -192,7 +226,7 @@ namespace Run {
 		unit: string;
 	}
 
-	class RunStatsComparison {
+	export class RunStatsComparison {
 		name: string;
 		unit: string;
 		baseValue: number;

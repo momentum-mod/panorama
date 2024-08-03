@@ -46,6 +46,7 @@ class Groundboost {
 	}
 
 	static onUpdate() {
+		$.Msg('Groundboost onUpdate: PEEN YOU DONE FUCKED IT')
 		const lastMoveData = MomentumMovementAPI.GetLastMoveData();
 		let timer = lastMoveData.defragTimer;
 		const timerFlags = lastMoveData.defragTimerFlags;

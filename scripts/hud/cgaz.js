@@ -124,7 +124,11 @@ class Cgaz {
 	static updateHandle = null;
 
 	static onLoad() {
-		if (GameModeAPI.GetCurrentGameMode() === GameMode.DEFRAG) {
+		if (
+			Globals.Web.GamemodeCategories.get(Globals.Web.GamemodeCategory.DEFRAG).includes(
+				GameModeAPI.GetCurrentGameMode()
+			)
+		) {
 			this.updateHandle = $.RegisterEventHandler(
 				'HudProcessInput',
 				$.GetContextPanel(),
@@ -420,31 +424,33 @@ class Cgaz {
 		}
 
 		const velocity = MomentumPlayerAPI.GetVelocity();
-		const speed = getSize2D(velocity);
+		const speed = Globals.Util.Maths.getSize2D(velocity);
 		const stopSpeed = Math.max(speed, MomentumMovementAPI.GetStopspeed());
 		const dropSpeed = Math.max(speed - stopSpeed * lastMoveData.friction * tickInterval, 0);
 		const speedSquared = speed * speed;
 		const dropSpeedSquared = dropSpeed * dropSpeed;
 
-		const velDir = getNormal2D(velocity, 0.001);
+		const velDir = Globals.Util.Maths.getNormal2D(velocity, 0.001);
 		const velAngle = Math.atan2(velocity.y, velocity.x);
 		const wishDir = lastMoveData.wishdir;
-		const wishAngle = getSizeSquared2D(wishDir) > 0.001 ? Math.atan2(wishDir.y, wishDir.x) : 0;
+		const wishAngle = Globals.Util.Maths.getSizeSquared2D(wishDir) > 0.001 ? Math.atan2(wishDir.y, wishDir.x) : 0;
 		const viewAngle = (MomentumPlayerAPI.GetAngles().y * Math.PI) / 180;
 		const viewDir = {
 			x: Math.cos(viewAngle),
 			y: Math.sin(viewAngle)
 		};
 
-		const forwardMove = Math.round(getDot2D(viewDir, wishDir));
-		const rightMove = Math.round(getCross2D(viewDir, wishDir));
+		const forwardMove = Math.round(Globals.Util.Maths.getDot2D(viewDir, wishDir));
+		const rightMove = Math.round(Globals.Util.Maths.getCross2D(viewDir, wishDir));
 
 		const bIsFalling = lastMoveData.moveStatus === 0;
-		const bHasAirControl = phyMode && floatEquals(wishAngle, viewAngle, 0.01) && bIsFalling;
-		const bSnapShift = !floatEquals(Math.abs(forwardMove), Math.abs(rightMove), 0.01) && !(phyMode && bIsFalling);
+		const bHasAirControl = phyMode && Globals.Util.Maths.approxEquals(wishAngle, viewAngle, 0.01) && bIsFalling;
+		const bSnapShift =
+			!Globals.Util.Maths.approxEquals(Math.abs(forwardMove), Math.abs(rightMove), 0.01) &&
+			!(phyMode && bIsFalling);
 
 		// find cgaz angles
-		const angleOffset = remapAngle(velAngle - wishAngle);
+		const angleOffset = Globals.Util.Maths.remapAngle(velAngle - wishAngle);
 		const slowCgazAngle = this.findSlowAngle(dropSpeed, dropSpeedSquared, speedSquared, maxSpeed);
 		const fastCgazAngle = this.findFastAngle(dropSpeed, maxSpeed, maxAccel);
 		const turnCgazAngle = this.findTurnAngle(speed, dropSpeed, maxAccel, fastCgazAngle);
@@ -527,8 +533,8 @@ class Cgaz {
 					turnMirrorAngle
 				);
 
-				let mirrorOffset = remapAngle(velAngle - viewAngle);
-				const inputAngle = remapAngle(viewAngle - wishAngle);
+				let mirrorOffset = Globals.Util.Maths.remapAngle(velAngle - viewAngle);
+				const inputAngle = Globals.Util.Maths.remapAngle(viewAngle - wishAngle);
 
 				if (floatEquals(Math.abs(inputAngle), 0.25 * Math.PI, 0.01)) {
 					mirrorOffset += (inputAngle > 0 ? -1 : 1) * Math.PI * 0.25;
@@ -572,11 +578,13 @@ class Cgaz {
 		}
 
 		if (this.snapEnable && this.snapAccel) {
-			const snapOffset = remapAngle((bSnapShift ? 0 : Math.PI * 0.25 * (rightMove > 0 ? -1 : 1)) - viewAngle);
+			const snapOffset = Globals.Util.Maths.remapAngle(
+				(bSnapShift ? 0 : Math.PI * 0.25 * (rightMove > 0 ? -1 : 1)) - viewAngle
+			);
 
 			// draw snap zones
 			if (speed >= this.snapMinSpeed) {
-				const targetOffset = remapAngle(velAngle - viewAngle);
+				const targetOffset = Globals.Util.Maths.remapAngle(velAngle - viewAngle);
 				const targetAngle = this.findFastAngle(dropSpeed, MAX_GROUND_SPEED, MAX_GROUND_SPEED * tickInterval);
 				const leftTarget = -targetAngle - targetOffset + Math.PI * 0.25;
 				const rightTarget = targetAngle - targetOffset - Math.PI * 0.25;
@@ -591,7 +599,9 @@ class Cgaz {
 		this.clearZones(this.primeZones);
 
 		if (this.primeEnable) {
-			const snapOffset = remapAngle((bSnapShift ? 0 : Math.PI * 0.25 * (rightMove > 0 ? -1 : 1)) - viewAngle);
+			const snapOffset = Globals.Util.Maths.remapAngle(
+				(bSnapShift ? 0 : Math.PI * 0.25 * (rightMove > 0 ? -1 : 1)) - viewAngle
+			);
 
 			if (speed > this.primeMinSpeed) {
 				const primeMaxSpeed =
@@ -638,7 +648,7 @@ class Cgaz {
 
 				// arrow
 				if (this.primeArrowEnable) {
-					if (getSizeSquared2D(wishDir) > 0) {
+					if (Globals.Util.Maths.getSizeSquared2D(wishDir) > 0) {
 						let arrowAngle =
 							wishAngle -
 							Math.atan2(
@@ -651,11 +661,16 @@ class Cgaz {
 						} else {
 							this.compassArrowIcon.RemoveClass('arrow__up');
 							this.compassArrowIcon.AddClass('arrow__down');
-							arrowAngle = remapAngle(arrowAngle + Math.PI);
+							arrowAngle = Globals.Util.Maths.remapAngle(arrowAngle + Math.PI);
 						}
 						const leftEdge =
-							mapAngleToScreenDist(arrowAngle, this.hFov, this.screenX, this.scale, this.projection) -
-							this.primeArrowSize;
+							Globals.Util.Maths.mapAngleToScreenDist(
+								arrowAngle,
+								this.hFov,
+								this.screenX,
+								this.scale,
+								this.projection
+							) - this.primeArrowSize;
 						this.primeArrow.style.position = `${this.NaNCheck(leftEdge, 0)}px 0px 0px`;
 						this.primeArrow.visible = true;
 					} else {
@@ -665,19 +680,26 @@ class Cgaz {
 			}
 		}
 
-		let velocityAngle = remapAngle(viewAngle - velAngle);
+		let velocityAngle = Globals.Util.Maths.remapAngle(viewAngle - velAngle);
 		// compass
 		if (this.compassMode) {
 			const ticks = this.tickContainer.Children();
 
-			const bShouldHighlight = Math.abs(remapAngle(8 * velAngle) * 0.125) < 0.01 && speed >= this.accelMinSpeed;
+			const bShouldHighlight =
+				Math.abs(Globals.Util.Maths.remapAngle(8 * velAngle) * 0.125) < 0.01 && speed >= this.accelMinSpeed;
 			const color = bShouldHighlight ? this.compassHlColor : this.compassColor;
 
 			// ticks
 			for (const [i, tick] of ticks.entries()) {
-				const tickAngle = this.NaNCheck(wrapToHalfPi(viewAngle + i * 0.25 * Math.PI), 0);
+				const tickAngle = this.NaNCheck(Globals.Util.Maths.wrapToHalfPi(viewAngle + i * 0.25 * Math.PI), 0);
 				const tickPx = this.NaNCheck(
-					mapAngleToScreenDist(tickAngle, this.hFov, this.screenX, this.scale, this.projection),
+					Globals.Util.Maths.mapAngleToScreenDist(
+						tickAngle,
+						this.hFov,
+						this.screenX,
+						this.scale,
+						this.projection
+					),
 					0
 				);
 				tick.style.position = `${tickPx}px 0px 0px`;
@@ -691,13 +713,18 @@ class Cgaz {
 			} else {
 				this.compassArrowIcon.RemoveClass('arrow__up');
 				this.compassArrowIcon.AddClass('arrow__down');
-				velocityAngle = remapAngle(velocityAngle - Math.PI);
+				velocityAngle = Globals.Util.Maths.remapAngle(velocityAngle - Math.PI);
 			}
 			const leftEdge =
-				mapAngleToScreenDist(velocityAngle, this.hFov, this.screenX, this.scale, this.projection) -
-				this.compassArrowSize;
+				Globals.Util.Maths.mapAngleToScreenDist(
+					velocityAngle,
+					this.hFov,
+					this.screenX,
+					this.scale,
+					this.projection
+				) - this.compassArrowSize;
 			this.compassArrow.style.position = `${this.NaNCheck(leftEdge, 0)}px 0px 0px`;
-			this.compassArrowIcon.style.washColor = rgbaStringToRgb(color);
+			this.compassArrowIcon.style.washColor = Globals.Util.Color.rgbaStringToRgb(color);
 		}
 		this.compassArrow.visible = this.compassMode % 2 && speed >= this.accelMinSpeed;
 		this.tickContainer.visible = this.compassMode > 1;
@@ -708,7 +735,7 @@ class Cgaz {
 			for (let i = 0; i < pitchLines?.length; ++i) {
 				const viewPitch = MomentumPlayerAPI.GetAngles().x;
 				const pitchDelta = this.compassPitchTarget[i] - viewPitch;
-				const pitchDeltaPx = mapAngleToScreenDist(
+				const pitchDeltaPx = Globals.Util.Maths.mapAngleToScreenDist(
 					(pitchDelta * Math.PI) / 180,
 					this.vFov,
 					this.screenY,
@@ -725,7 +752,7 @@ class Cgaz {
 		if (this.compassStatMode) {
 			this.yawStat.text = MomentumPlayerAPI.GetAngles().y.toFixed(0);
 			this.yawStat.style.color =
-				Math.abs(remapAngle(8 * velAngle) * 0.125) < 0.01 && speed >= this.accelMinSpeed
+				Math.abs(Globals.Util.Maths.remapAngle(8 * velAngle) * 0.125) < 0.01 && speed >= this.accelMinSpeed
 					? this.compassHlColor
 					: this.compassColor;
 
@@ -745,8 +772,13 @@ class Cgaz {
 		if (this.windicatorEnable && Math.abs(wTurnAngle) < this.hFov && speed >= this.accelMinSpeed) {
 			this.windicatorArrow.visible = true;
 			const leftEdge =
-				mapAngleToScreenDist(wTurnAngle, this.hFov, this.screenX, this.scale, this.projection) -
-				this.windicatorSize;
+				Globals.Util.Maths.mapAngleToScreenDist(
+					wTurnAngle,
+					this.hFov,
+					this.screenX,
+					this.scale,
+					this.projection
+				) - this.windicatorSize;
 			this.windicatorArrow.style.position = `${this.NaNCheck(leftEdge, 0)}px 0px 0px`;
 
 			const minAngle = Math.min(wTurnAngle, 0);
@@ -804,8 +836,8 @@ class Cgaz {
 		for (let i = 0; i < points; ++i)
 			angles.push(
 				-breakPoints[i],
-				remapAngle(Math.PI * 0.5 - breakPoints[i]),
-				remapAngle(breakPoints[i] - Math.PI * 0.5)
+				Globals.Util.Maths.remapAngle(Math.PI * 0.5 - breakPoints[i]),
+				Globals.Util.Maths.remapAngle(breakPoints[i] - Math.PI * 0.5)
 			);
 
 		return angles.sort((a, b) => a - b);
@@ -843,28 +875,40 @@ class Cgaz {
 	static updateZone(zone, left, right, offset, zoneClass, splitZone) {
 		let wrap = right > left;
 
-		zone.leftAngle = remapAngle(left - offset);
-		zone.rightAngle = remapAngle(right - offset);
+		zone.leftAngle = Globals.Util.Maths.remapAngle(left - offset);
+		zone.rightAngle = Globals.Util.Maths.remapAngle(right - offset);
 
 		wrap = zone.rightAngle > zone.leftAngle ? !wrap : wrap;
 
 		// map angles to screen
-		zone.leftPx = mapAngleToScreenDist(zone.leftAngle, this.hFov, this.screenX, this.scale, this.projection);
-		zone.rightPx = mapAngleToScreenDist(zone.rightAngle, this.hFov, this.screenX, this.scale, this.projection);
+		zone.leftPx = Globals.Util.Maths.mapAngleToScreenDist(
+			zone.leftAngle,
+			this.hFov,
+			this.screenX,
+			this.scale,
+			this.projection
+		);
+		zone.rightPx = Globals.Util.Maths.mapAngleToScreenDist(
+			zone.rightAngle,
+			this.hFov,
+			this.screenX,
+			this.scale,
+			this.projection
+		);
 
 		if (wrap) {
 			// draw second part of split zone
 			this.applyClass(splitZone, zoneClass);
 			splitZone.leftAngle = -this.hFov;
 			splitZone.rightAngle = zone.rightAngle;
-			splitZone.leftPx = mapAngleToScreenDist(
+			splitZone.leftPx = Globals.Util.Maths.mapAngleToScreenDist(
 				this.accelSplitZone.leftAngle,
 				this.hFov,
 				this.screenX,
 				this.scale,
 				this.projection
 			);
-			splitZone.rightPx = mapAngleToScreenDist(
+			splitZone.rightPx = Globals.Util.Maths.mapAngleToScreenDist(
 				this.accelSplitZone.rightAngle,
 				this.hFov,
 				this.screenX,
@@ -874,7 +918,13 @@ class Cgaz {
 			this.drawZone(splitZone);
 
 			zone.rightAngle = this.hFov;
-			zone.rightPx = mapAngleToScreenDist(zone.rightAngle, this.hFov, this.screenX, this.scale, this.projection);
+			zone.rightPx = Globals.Util.Maths.mapAngleToScreenDist(
+				zone.rightAngle,
+				this.hFov,
+				this.screenX,
+				this.scale,
+				this.projection
+			);
 		}
 		this.drawZone(zone);
 	}
@@ -885,8 +935,8 @@ class Cgaz {
 
 		for (const [i, zone] of zones.entries()) {
 			// wrap the angles to only [-pi/2, pi/2]
-			const left = wrapToHalfPi(this.snapAngles[i] - snapOffset);
-			const right = wrapToHalfPi(this.snapAngles[(i + 1) % zones.length] - snapOffset);
+			const left = Globals.Util.Maths.wrapToHalfPi(this.snapAngles[i] - snapOffset);
+			const right = Globals.Util.Maths.wrapToHalfPi(this.snapAngles[(i + 1) % zones.length] - snapOffset);
 			const bUseUncolored = !this.snapHeightgainEnable && !this.snapColorMode && i % 2;
 			let snapColor = bUseUncolored ? this.snapAltColor : this.snapColor;
 			let hlSnapColor = bUseUncolored ? this.snapHlAltColor : this.snapHlColor;
@@ -911,7 +961,7 @@ class Cgaz {
 			this.updateZone(zone, left, right, 0, snapClass, this.snapSplitZone);
 
 			if (this.snapColorMode) {
-				snapColor = rgbaStringLerp(this.snapSlowColor, this.snapFastColor, alpha);
+				snapColor = Globals.Util.Color.rgbaStringLerp(this.snapSlowColor, this.snapFastColor, alpha);
 			}
 
 			let bHighlight = false;
@@ -924,14 +974,14 @@ class Cgaz {
 					break;
 				case 2:
 					// "target" zones only highlight when moving
-					if (getSize2D(MomentumPlayerAPI.GetVelocity()) > this.accelMinSpeed) {
+					if (Globals.Util.Maths.getSize2D(MomentumPlayerAPI.GetVelocity()) > this.accelMinSpeed) {
 						let stopPoint, direction;
 						if (left - leftTarget <= 0 && right - leftTarget >= 0) {
 							stopPoint = floatEquals(zone.rightPx, zone.leftPx, 1)
 								? 0
 								: this.NaNCheck(
 										(
-											(mapAngleToScreenDist(
+											(Globals.Util.Maths.mapAngleToScreenDist(
 												leftTarget,
 												this.hFov,
 												this.screenX,
@@ -942,7 +992,7 @@ class Cgaz {
 											(zone.rightPx - zone.leftPx)
 										).toFixed(3),
 										0
-								  );
+									);
 							direction = '0% 0%, 100% 0%';
 							bHighlight = true;
 						} else if (left - rightTarget <= 0 && right - rightTarget >= 0) {
@@ -951,7 +1001,7 @@ class Cgaz {
 								: this.NaNCheck(
 										(
 											(zone.rightPx -
-												mapAngleToScreenDist(
+												Globals.Util.Maths.mapAngleToScreenDist(
 													rightTarget,
 													this.hFov,
 													this.screenX,
@@ -961,7 +1011,7 @@ class Cgaz {
 											(zone.rightPx - zone.leftPx)
 										).toFixed(3),
 										0
-								  );
+									);
 							direction = '100% 0%, 0% 0%';
 							bHighlight = true;
 						}
@@ -979,12 +1029,13 @@ class Cgaz {
 	static updatePrimeSight(viewDir, viewAngle, targetAngle, boundaryAngle, velAngle, wishDir, wishAngle) {
 		const cross = getCross2D(wishDir, viewDir);
 		const inputMode =
-			Math.round(getSize2D(wishDir)) * (1 << Math.round(2 * Math.pow(cross, 2))) +
+			Math.round(Globals.Util.Maths.getSize2D(wishDir)) * (1 << Math.round(2 * Math.pow(cross, 2))) +
 			(Math.round(cross) > 0 ? 1 : 0);
 
-		const angleOffset = remapAngle(velAngle - wishAngle);
-		const targetOffset = remapAngle(velAngle - viewAngle);
-		const inputAngle = remapAngle(viewAngle - wishAngle) * getSizeSquared2D(wishDir);
+		const angleOffset = Globals.Util.Maths.remapAngle(velAngle - wishAngle);
+		const targetOffset = Globals.Util.Maths.remapAngle(velAngle - viewAngle);
+		const inputAngle =
+			Globals.Util.Maths.remapAngle(viewAngle - wishAngle) * Globals.Util.Maths.getSizeSquared2D(wishDir);
 		const velocity = MomentumPlayerAPI.GetVelocity();
 		const gainZonesMap = new Map();
 
@@ -1015,18 +1066,18 @@ class Cgaz {
 		}
 
 		const leftOffset = -Math.PI * 0.25 - viewAngle;
-		const leftTarget = wrapToHalfPi(-targetAngle - velAngle);
+		const leftTarget = Globals.Util.Maths.wrapToHalfPi(-targetAngle - velAngle);
 		const leftAngles = fillLeftZones ? this.primeAngles : this.snapAngles;
 		const rightOffset = Math.PI * 0.25 - viewAngle;
-		const rightTarget = wrapToHalfPi(targetAngle - velAngle);
+		const rightTarget = Globals.Util.Maths.wrapToHalfPi(targetAngle - velAngle);
 		const rightAngles = fillRightZones ? this.primeAngles : this.snapAngles;
 
 		const iLeft = this.updateFirstPrimeZone(leftTarget, leftOffset, this.primeFirstZoneLeft, leftAngles);
 		const iRight = this.updateFirstPrimeZone(rightTarget, rightOffset, this.primeFirstZoneRight, rightAngles);
 
 		if (fillLeftZones || this.primeShowInactive) {
-			this.primeFirstZoneLeft.rightPx = mapAngleToScreenDist(
-				wrapToHalfPi(leftTarget - leftOffset),
+			this.primeFirstZoneLeft.rightPx = Globals.Util.Maths.mapAngleToScreenDist(
+				Globals.Util.Maths.wrapToHalfPi(leftTarget - leftOffset),
 				this.hFov,
 				this.screenX,
 				this.scale,
@@ -1039,13 +1090,13 @@ class Cgaz {
 			this.clearZones([this.primeFirstZoneLeft]);
 		}
 
-		speedGain = this.findPrimeGain(this.primeFirstZoneLeft, velocity, rotateVector2D(viewDir, 0.25 * Math.PI));
+		speedGain = this.findPrimeGain(this.primeFirstZoneLeft, velocity, Globals.Util.Maths.rotateVector2D(viewDir, 0.25 * Math.PI));
 		gainZonesMap.set(this.primeFirstZoneLeft, speedGain);
 		if (speedGain > gainMax) gainMax = speedGain;
 
 		if (fillRightZones || this.primeShowInactive) {
-			this.primeFirstZoneRight.leftPx = mapAngleToScreenDist(
-				wrapToHalfPi(rightTarget - rightOffset),
+			this.primeFirstZoneRight.leftPx = Globals.Util.Maths.mapAngleToScreenDist(
+				Globals.Util.Maths.wrapToHalfPi(rightTarget - rightOffset),
 				this.hFov,
 				this.screenX,
 				this.scale,
@@ -1058,12 +1109,12 @@ class Cgaz {
 			this.clearZones([this.primeFirstZoneRight]);
 		}
 
-		speedGain = this.findPrimeGain(this.primeFirstZoneRight, velocity, rotateVector2D(viewDir, -0.25 * Math.PI));
+		speedGain = this.findPrimeGain(this.primeFirstZoneRight, velocity, Globals.Util.Maths.rotateVector2D(viewDir, -0.25 * Math.PI));
 		gainZonesMap.set(this.primeFirstZoneRight, speedGain);
 		if (speedGain > gainMax) gainMax = speedGain;
 
 		if (fillLeftZones) {
-			const leftBoundary = wrapToHalfPi(-boundaryAngle - velAngle);
+			const leftBoundary = Globals.Util.Maths.wrapToHalfPi(-boundaryAngle - velAngle);
 			const jLeft = this.findArrayInfimum(this.primeAngles, leftBoundary);
 			const zoneRange = {
 				start: iLeft,
@@ -1074,7 +1125,7 @@ class Cgaz {
 		}
 
 		if (fillRightZones) {
-			const rightBoundary = wrapToHalfPi(boundaryAngle - velAngle);
+			const rightBoundary = Globals.Util.Maths.wrapToHalfPi(boundaryAngle - velAngle);
 			const jRight = this.findArrayInfimum(this.primeAngles, rightBoundary);
 			const zoneRange = {
 				start: iRight,
@@ -1100,7 +1151,7 @@ class Cgaz {
 			if (gain < 0) {
 				zone.color = this.primeLossColor;
 			} else if (this.primeColorgainEnable) {
-				zone.color = rgbaStringLerp(this.primeAltColor, this.primeGainColor, gainFactor);
+				zone.color = Globals.Util.Color.rgbaStringLerp(this.primeAltColor, this.primeGainColor, gainFactor);
 			} else {
 				zone.color = this.primeGainColor;
 			}
@@ -1109,7 +1160,7 @@ class Cgaz {
 				this.zoneCopy(this.primeHighlightZone, zone);
 				this.drawZone(this.primeHighlightZone);
 				this.primeHighlightZone.style.marginTop = (gain < 0 ? this.primeHeight : 0) + 'px';
-				zone.color = enhanceAlpha(zone.color);
+				zone.color = Globals.Util.Color.enhanceAlpha(zone.color);
 			}
 
 			zone.style.backgroundColor = zone.color;
@@ -1136,8 +1187,8 @@ class Cgaz {
 			index = (index + zoneRange.direction + angleCount) % angleCount;
 			zone = this.primeZones[index];
 
-			const left = wrapToHalfPi(this.primeAngles[index] - offset);
-			const right = wrapToHalfPi(this.primeAngles[(index + 1) % angleCount] - offset);
+			const left = Globals.Util.Maths.wrapToHalfPi(this.primeAngles[index] - offset);
+			const right = Globals.Util.Maths.wrapToHalfPi(this.primeAngles[(index + 1) % angleCount] - offset);
 			this.updateZone(zone, left, right, 0, PRIME_SIGHT_CLASS, this.primeSplitZone);
 			const speedGain = this.findPrimeGain(zone, velocity, wishDir);
 			gainZonesMap.set(zone, speedGain);
@@ -1181,24 +1232,24 @@ class Cgaz {
 
 	static findPrimeGain(zone, velocity, wishDir) {
 		const avgAngle = 0.5 * (zone.leftAngle + zone.rightAngle);
-		const zoneVector = rotateVector2D(wishDir, -avgAngle);
+		const zoneVector = Globals.Util.Maths.rotateVector2D(wishDir, -avgAngle);
 		const snapProject = {
 			x: Math.round(zoneVector.x * this.primeAccel),
 			y: Math.round(zoneVector.y * this.primeAccel)
 		};
 
-		const newSpeed = getSize2D({
+		const newSpeed = Globals.Util.Maths.getSize2D({
 			x: Number(velocity.x) + Number(snapProject.x),
 			y: Number(velocity.y) + Number(snapProject.y)
 		});
 
-		return newSpeed - getSize2D(velocity);
+		return newSpeed - Globals.Util.Maths.getSize2D(velocity);
 	}
 
 	static updateFirstPrimeZone(target, offset, zone, angles) {
 		const i = this.findArrayInfimum(angles, target);
-		const left = wrapToHalfPi(angles[i] - offset);
-		const right = wrapToHalfPi(angles[(i + 1) % angles.length] - offset);
+		const left = Globals.Util.Maths.wrapToHalfPi(angles[i] - offset);
+		const right = Globals.Util.Maths.wrapToHalfPi(angles[(i + 1) % angles.length] - offset);
 		this.updateZone(zone, left, right, 0, PRIME_SIGHT_CLASS, this.primeSplitZone);
 		return i;
 	}
@@ -1249,7 +1300,7 @@ class Cgaz {
 
 		arrowIcon.style.height = this.NaNCheck(width, 0) + 'px';
 		arrowIcon.style.width = this.NaNCheck(width, 0) + 'px';
-		arrowIcon.style.washColor = rgbaStringToRgb(color);
+		arrowIcon.style.washColor = Globals.Util.Color.rgbaStringToRgb(color);
 		arrowIcon.style.overflow = 'noclip noclip';
 		arrowIcon.style.verticalAlign = align;
 	}

@@ -70,7 +70,7 @@ interface GlobalEventNameMap {
 	/** Force close the tab menu */
 	HudTabMenu_ForceClose: () => void;
 
-	ColorPickerSave: (currColor: unknown) => void;
+	ColorPickerSave: (currColor: Color) => void;
 
 	ColorPickerCancel: () => void;
 }

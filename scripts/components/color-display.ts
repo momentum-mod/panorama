@@ -1,23 +1,21 @@
 class ColorDisplay {
-	static display = $('#Display');
-
 	static showPopup() {
-		const color = $.GetContextPanel().color;
+		const color = $.GetContextPanel<ColorDisplay>().color;
 		const popup = UiToolkitAPI.ShowCustomLayoutPopupParameters(
 			'',
 			'file://{resources}/layout/modals/popups/color-picker.xml',
-			'color=' + color
+			`color=${color}`
 		);
-		$.RegisterEventHandler('ColorPickerSave', popup, this.saveColor.bind(this));
+		$.RegisterEventHandler('ColorPickerSave', popup, (color) => this.saveColor(color));
 	}
 
-	static saveColor(color) {
-		$.GetContextPanel().color = color;
+	static saveColor(color: Color) {
+		$.GetContextPanel<ColorDisplay>().color = color;
 		this.updateDisplayOpacity();
 	}
 
 	static updateDisplayOpacity() {
 		// set background-img-opacity to inverse of color alpha to have transparency checkerboard blend
-		this.display.style.backgroundImgOpacity = 1 - $.GetContextPanel().alpha;
+		$('#Display').style.backgroundImgOpacity = 1 - $.GetContextPanel<ColorDisplay>().alpha;
 	}
 }

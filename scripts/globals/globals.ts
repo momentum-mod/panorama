@@ -10,23 +10,23 @@ interface Globals {
 	Buttons: typeof Buttons;
 	Safeguards: typeof Safeguards;
 	DontShowAgain: typeof DontShowAgain;
+	SteamLobby: typeof SteamLobby;
 }
 
-namespace __private {
-	export const __globalObject = UiToolkitAPI.GetGlobalObject() as any;
-	__globalObject.Globals ??= Object.freeze({
-		Web,
-		Util,
-		State,
-		Settings,
-		Run,
-		Timer,
-		Weapon,
-		Speedo,
-		Buttons,
-		Safeguards,
-		DontShowAgain
-	});
-}
+const __globalObject = UiToolkitAPI.GetGlobalObject() as any;
+__globalObject.Globals ??= Object.freeze({
+	Web,
+	Util,
+	State,
+	Settings,
+	Run,
+	Timer,
+	Weapon,
+	Speedo,
+	Buttons,
+	Safeguards,
+	DontShowAgain,
+	SteamLobby
+});
 
-const Globals: Globals = __private.__globalObject.Globals;
+const Globals: Globals = __globalObject.Globals;

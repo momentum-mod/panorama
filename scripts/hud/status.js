@@ -70,7 +70,7 @@ class HudStatus {
 	}
 
 	static onLoad() {
-		$.GetContextPanel().hiddenHUDBits = HideHud.TABMENU;
+		$.GetContextPanel().hiddenHUDBits = Globals.State.HideHud.TABMENU;
 	}
 
 	static {

@@ -22,6 +22,7 @@ class RangeObject {
 		this.color = color;
 	}
 }
+
 class SpeedometerObject {
 	constructor(type, speedometerPanel, settings) {
 		/** @type {number} */
@@ -37,15 +38,18 @@ class SpeedometerObject {
 		this.prevVal = 0;
 
 		this.speedometerLabel.AddClass(
-			this.type === SpeedometerTypes.OVERALL_VELOCITY ? AXIS_LABEL_CLASS : EVENT_LABEL_CLASS
+			this.type === Globals.Speedo.SpeedometerTypes.OVERALL_VELOCITY ? AXIS_LABEL_CLASS : EVENT_LABEL_CLASS
 		);
 		this.comparisonLabel.AddClass(
-			this.type === SpeedometerTypes.OVERALL_VELOCITY ? AXIS_COMPLABEL_CLASS : EVENT_COMPLABEL_CLASS
+			this.type === Globals.Speedo.SpeedometerTypes.OVERALL_VELOCITY
+				? AXIS_COMPLABEL_CLASS
+				: EVENT_COMPLABEL_CLASS
 		);
 
 		this.comparisonLabel.SetHasClass(
 			HIDDEN_CLASS,
-			this.settings[SpeedometerDataKeys.COLOR_TYPE] !== SpeedometerColorTypes.COMPARISON_SEP
+			this.settings[Globals.Speedo.SpeedometerDataKeys.COLOR_TYPE] !==
+				Globals.Speedo.SpeedometerColorTypes.COMPARISON_SEP
 		);
 
 		// remove status classes
@@ -105,19 +109,19 @@ class Speedometer {
 		const velocity = MomentumPlayerAPI.GetVelocity();
 
 		this.correctedColorizeDeadzone = deltaTime * COLORIZE_DEADZONE;
-		this.updateSpeedometersOfType(SpeedometerTypes.OVERALL_VELOCITY, velocity);
+		this.updateSpeedometersOfType(Globals.Speedo.SpeedometerTypes.OVERALL_VELOCITY, velocity);
 	}
 	static onExplosiveHitSpeedUpdate(hitVelocity) {
-		this.updateSpeedometersOfType(SpeedometerTypes.EXPLOSION_VELOCITY, hitVelocity);
+		this.updateSpeedometersOfType(Globals.Speedo.SpeedometerTypes.EXPLOSION_VELOCITY, hitVelocity);
 	}
 	static onJumpSpeedUpdate(jumpVelocity) {
-		this.updateSpeedometersOfType(SpeedometerTypes.JUMP_VELOCITY, jumpVelocity);
+		this.updateSpeedometersOfType(Globals.Speedo.SpeedometerTypes.JUMP_VELOCITY, jumpVelocity);
 	}
 	static onRampBoardSpeedUpdate(rampBoardVelocity) {
-		this.updateSpeedometersOfType(SpeedometerTypes.RAMP_VELOCITY, rampBoardVelocity);
+		this.updateSpeedometersOfType(Globals.Speedo.SpeedometerTypes.RAMP_VELOCITY, rampBoardVelocity);
 	}
 	static onRampLeaveSpeedUpdate(rampLeaveVelocity) {
-		this.updateSpeedometersOfType(SpeedometerTypes.RAMP_VELOCITY, rampLeaveVelocity);
+		this.updateSpeedometersOfType(Globals.Speedo.SpeedometerTypes.RAMP_VELOCITY, rampLeaveVelocity);
 	}
 
 	static onZoneChange(enter, linear, curZone, _curTrack, timerState) {
@@ -171,7 +175,7 @@ class Speedometer {
 
 	static getSpeedFromVelocity(velocity, settings) {
 		let numAxes = 0;
-		const enabledAxes = settings[SpeedometerDataKeys.ENABLED_AXES];
+		const enabledAxes = settings[Globals.Speedo.SpeedometerDataKeys.ENABLED_AXES];
 		for (const enabledAxis of enabledAxes) {
 			if (enabledAxis) numAxes++;
 		}
@@ -194,12 +198,12 @@ class Speedometer {
 
 	static updateZoneSpeedometers(absSpeed, horizSpeed, hasComparison = true, absCustomdiff, horizCustomdiff) {
 		/** @type {Array<SpeedometerObject>} */
-		const speedometers = SpeedometerMap.get(SpeedometerTypes.ZONE_VELOCITY);
+		const speedometers = SpeedometerMap.get(Globals.Speedo.SpeedometerTypes.ZONE_VELOCITY);
 		if (!speedometers) return;
 
 		for (const speedometer of speedometers) {
 			// HACK: current runstats system only has abs and horiz speed, not the velocity vector
-			const enabledAxes = speedometer.settings[SpeedometerDataKeys.ENABLED_AXES];
+			const enabledAxes = speedometer.settings[Globals.Speedo.SpeedometerDataKeys.ENABLED_AXES];
 			const isHoriz = enabledAxes[0] && enabledAxes[1] && !enabledAxes[2];
 
 			this.updateSpeedometer(
@@ -221,7 +225,7 @@ class Speedometer {
 			// HACK: last jump speedometer type don't have full velocity vector, and so the velocity they pass in is actually speed
 			// Refactor runstats to fix
 			const speed =
-				type === SpeedometerTypes.JUMP_VELOCITY
+				type === Globals.Speedo.SpeedometerTypes.JUMP_VELOCITY
 					? velocity
 					: this.getSpeedFromVelocity(velocity, speedometer.settings);
 
@@ -230,10 +234,10 @@ class Speedometer {
 	}
 
 	static updateSpeedometer(type, speedometer, speed, hasComparison = true, customdiff) {
-		const colorType = speedometer.settings[SpeedometerDataKeys.COLOR_TYPE];
+		const colorType = speedometer.settings[Globals.Speedo.SpeedometerDataKeys.COLOR_TYPE];
 
-		const separateComparison = colorType === SpeedometerColorTypes.COMPARISON_SEP;
-		const speedometerHasComparison = colorType === SpeedometerColorTypes.COMPARISON || separateComparison;
+		const separateComparison = colorType === Globals.Speedo.SpeedometerColorTypes.COMPARISON_SEP;
+		const speedometerHasComparison = colorType === Globals.Speedo.SpeedometerColorTypes.COMPARISON || separateComparison;
 
 		if (hasComparison && speedometerHasComparison) {
 			const diff = customdiff ?? speed - speedometer.prevVal;
@@ -267,7 +271,7 @@ class Speedometer {
 
 			/** @type {Array<RangeObject>} */
 			const rangeList = speedometer.settings[RANGE_LIST_KEY];
-			if (colorType === SpeedometerColorTypes.RANGE && rangeList) {
+			if (colorType === Globals.Speedo.SpeedometerColorTypes.RANGE && rangeList) {
 				let found = false;
 				for (const range of rangeList) {
 					if (speed >= range.min && speed <= range.max) {
@@ -295,15 +299,15 @@ class Speedometer {
 	}
 
 	static appendRangeColorProfileInfo(speedoData, colorProfData) {
-		if (speedoData[SpeedometerDataKeys.COLOR_TYPE] !== SpeedometerColorTypes.RANGE) return;
+		if (speedoData[Globals.Speedo.SpeedometerDataKeys.COLOR_TYPE] !== Globals.Speedo.SpeedometerColorTypes.RANGE) return;
 
-		const colorProf = speedoData[SpeedometerDataKeys.RANGE_COL_PROF];
+		const colorProf = speedoData[Globals.Speedo.SpeedometerDataKeys.RANGE_COL_PROF];
 		if (!colorProf) return;
 
-		const foundProfile = colorProfData.find((profile) => colorProf === profile[RangeColorProfileKeys.PROFILE_NAME]);
+		const foundProfile = colorProfData.find((profile) => colorProf === profile[Globals.Speedo.RangeColorProfileKeys.PROFILE_NAME]);
 		if (!foundProfile) return;
 
-		const rangesKV = foundProfile[RangeColorProfileKeys.PROFILE_RANGE_DATA];
+		const rangesKV = foundProfile[Globals.Speedo.RangeColorProfileKeys.PROFILE_RANGE_DATA];
 		if (!rangesKV) return;
 
 		speedoData[RANGE_LIST_KEY] = rangesKV.filter(Boolean).map((rangeKV) => {
@@ -329,7 +333,7 @@ class Speedometer {
 
 		SpeedometerMap = new Map();
 		for (const speedoData of data) {
-			const speedoType = speedoData[SpeedometerDataKeys.TYPE];
+			const speedoType = speedoData[Globals.Speedo.SpeedometerDataKeys.TYPE];
 			if (speedoType === undefined || speedoType === null) continue;
 
 			this.appendRangeColorProfileInfo(speedoData, colorProfData);

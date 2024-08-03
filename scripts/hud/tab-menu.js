@@ -117,11 +117,11 @@ class HudTabMenu {
 	static setMapStats(data) {
 		const cp = $.GetContextPanel();
 
-		const mainTrack = getMainTrack(data, GameModeAPI.GetCurrentGameMode());
-		const numZones = getNumZones(data);
+		const mainTrack = Globals.Util.getMainTrack(data, GameModeAPI.GetCurrentGameMode());
+		const numZones = Globals.Util.getNumZones(data);
 
 		cp.SetDialogVariableInt('tier', mainTrack?.tier ?? 0);
-		cp.SetDialogVariable('type', $.Localize(mainTrack?.isLinear ? '#MapInfo_Type_Linear' : '#MapInfo_Type_Staged'));
+		cp.SetDialogVariable('type', $.Localize(mainTrack?.linear ? '#MapInfo_Type_Linear' : '#MapInfo_Type_Staged'));
 		cp.SetDialogVariableInt('numzones', numZones);
 		cp.SetDialogVariableInt('runs', data.stats?.completions);
 	}

@@ -1,6 +1,6 @@
 class Chat {
-	static arrMembersTyping = [];
-	static typingLabel = $('#ChatMemberTypingLabel');
+	static membersTyping: string[] = [];
+	static typingLabel = $<Label>('#ChatMemberTypingLabel');
 
 	static {
 		$.RegisterEventHandler('OnNewChatEntry', $.GetContextPanel(), this.onNewChatEntry.bind(this));
@@ -11,23 +11,23 @@ class Chat {
 	}
 
 	static submitText() {
-		$.GetContextPanel().SubmitText();
+		$.GetContextPanel<MomentumChat>().SubmitText();
 	}
 
-	static createUsersTypingString(users) {
+	static createUsersTypingString() {
 		let strTyping = '';
-		const typingLen = users.length;
+		const typingLen = this.membersTyping.length;
 
 		// TODO: We may run into issues with this in localisation, this seems like it may be specific to English
 		if (typingLen > 0) {
 			if (typingLen < 3) {
-				for (const [i, memberSteamID] of this.arrMembersTyping.entries()) {
+				for (const [i, memberSteamID] of this.membersTyping.entries()) {
 					if (i !== 0 && i !== typingLen - 1) {
 						strTyping += ', ';
 					} else if (i !== 0 && i === typingLen - 1) {
 						strTyping += ` ${$.Localize('#Chat_Typing_Conjugate')} `;
 					}
-					strTyping += FriendsAPI.GetNameForXUID(memberSteamID);
+					strTyping += FriendsAPI.GetNameForXUID(+memberSteamID); // TODO: Why is this a string? Check at runtime
 				}
 				strTyping +=
 					typingLen === 1
@@ -43,7 +43,7 @@ class Chat {
 		return strTyping;
 	}
 
-	static onNewChatEntry(panel) {
+	static onNewChatEntry(panel: GenericPanel) {
 		$.Schedule(0, () => panel.ScrollParentToMakePanelFit(0, false)); // IDK, ScrollToBottom always just scrolled to the second last msg
 		// Emote test for BLT to look into
 		// let messageLabel = panel.GetChild(0);
@@ -55,33 +55,36 @@ class Chat {
 		// TODO: Would be good to let you mute players from the specific chat message esp in large lobbies
 		// where it's hard to find them in the lobby list, but we need the steam id passed in somewhere
 
-		// panel.SetPanelEvent('oncontextmenu', () => {
-		// 	UiToolkitAPI.ShowSimpleContextMenu(panel, '', [
-		// 		{
-		// 			label: 'Mute Player',
-		// 			icon: 'file://{images}/volume-mute.svg',
-		// 			style: 'icon-color-red',
-		// 			jsCallback: () => ChatAPI.ChangeMuteState(needs steam id!!!, true)
-		// 		}
-		// 	]);
-		// });
+		const steamID = panel.GetAttributeString('xuid', '');
+		if (!steamID) return;
+		
+		panel.SetPanelEvent('oncontextmenu', () => {
+			UiToolkitAPI.ShowSimpleContextMenu('', '', [
+				{
+					label: 'Mute Player',
+					icon: 'file://{images}/volume-mute.svg',
+					style: 'icon-color-red',
+					jsCallback: () => ChatAPI.ChangeMuteState(+steamID, true)
+				}
+			]);
+		});
 	}
 
-	static onSteamLobbyMemberDataUpdated(data) {
+	static onSteamLobbyMemberDataUpdated(data: SteamLobby.MemberList) {
 		if (!this.typingLabel || !this.typingLabel.visible) return;
 
 		for (const memberSteamID of Object.keys(data)) {
-			if (memberSteamID === UserAPI.GetXUID()) return;
+			if (+memberSteamID === UserAPI.GetXUID()) return; //  TODO: why stirng?
 
-			const index = this.arrMembersTyping.indexOf(memberSteamID);
+			const index = this.membersTyping.indexOf(memberSteamID);
 
-			if (index === -1 && data[memberSteamID]['isTyping'] === 'y') {
-				this.arrMembersTyping.push(memberSteamID);
+			if (index === -1 && data[memberSteamID].isTyping === 'y') {
+				this.membersTyping.push(memberSteamID);
 			} else if (index !== -1) {
-				this.arrMembersTyping.splice(index, 1);
+				this.membersTyping.splice(index, 1);
 			}
 		}
 
-		this.typingLabel.text = this.createUsersTypingString(this.arrMembersTyping);
+		this.typingLabel.text = this.createUsersTypingString();
 	}
 }
