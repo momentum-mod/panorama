@@ -4,7 +4,7 @@
 	</styles>
 
 	<scripts>
-		<include src="file://{scripts}/common/settings.js" />
+		<include src="file://{scripts}/globals/globals.js" />
 		<include src="file://{scripts}/pages/settings/page.js" />
 		<include src="file://{scripts}/pages/settings/settings.js" />
 		<include src="file://{scripts}/pages/settings/search.js" />

@@ -1,6 +1,6 @@
 class GhostEntities {
-	static onAimOverGhostChange(entPanel, aimOver) {
-		const nameEnabled = $.GetContextPanel().ghostNamesEnabled && aimOver;
+	static onAimOverGhostChange(entPanel: MomHudGhostEntityPanel, aimOver: boolean) {
+		const nameEnabled = $.GetContextPanel<MomHudGhostEntities>().ghostNamesEnabled && aimOver;
 		const namePanel = entPanel.FindChildTraverse('NamePanel');
 		namePanel.SetHasClass('ghost-ent-namepanel--hidden', !nameEnabled);
 
@@ -12,11 +12,10 @@ class GhostEntities {
 			const nameLabel = namePanel.FindChildTraverse('GhostName');
 			entPanel.style.transform = `translatex(${nameLabel.actuallayoutwidth / nameLabel.actualuiscale_x / 2}px)`;
 			entPanel.style.zIndex = 0;
-			
 		}
 	}
 
 	static {
-		$.RegisterForUnhandledEvent('OnAimOverGhostChange', (panel: MomHudGhostEntityPanel, aimOver: boolean) => )
+		$.RegisterForUnhandledEvent('OnAimOverGhostChange', this.onAimOverGhostChange.bind(this));
 	}
 }

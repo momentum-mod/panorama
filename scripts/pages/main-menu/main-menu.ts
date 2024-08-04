@@ -17,8 +17,8 @@ class MainMenu {
 	static activeTab = '';
 
 	static {
-		$.RegisterForUnhandledEvent('ShowMainMenu', this.onShowMainMenu.bind(this));
-		$.RegisterForUnhandledEvent('HideMainMenu', this.onHideMainMenu.bind(this));
+		$.RegisterForUnhandledEvent('ShowMainMenuContentPanel', this.onShowMainMenu.bind(this));
+		$.RegisterForUnhandledEvent('HideMainMenuContentPanel', this.onHideMainMenu.bind(this));
 		$.RegisterForUnhandledEvent('ShowPauseMenu', this.onShowPauseMenu.bind(this));
 		$.RegisterForUnhandledEvent('HidePauseMenu', this.onHidePauseMenu.bind(this));
 		$.RegisterForUnhandledEvent('MapSelector_OnLoaded', this.onMapSelectorLoaded.bind(this));

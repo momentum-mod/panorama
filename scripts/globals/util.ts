@@ -105,10 +105,10 @@ namespace Util {
 	export function RegisterEventForGamemodes(
 		gamemodes: number[],
 		event: keyof GlobalEventNameMap,
-		context: string | Panel,
+		context: GenericPanel,
 		callbackFn: (...args: unknown[]) => void
 	): () => void {
-		let innerHandle: number | undefined;
+		let innerHandle: uuid | undefined;
 		const outerHandle = $.RegisterForUnhandledEvent('LevelInitPostEntity', () => {
 			if (!innerHandle && gamemodes.includes(GameModeAPI.GetCurrentGameMode())) {
 				innerHandle = $.RegisterEventHandler(event, context, callbackFn);

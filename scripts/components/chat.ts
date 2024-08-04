@@ -3,10 +3,11 @@ class Chat {
 	static typingLabel = $<Label>('#ChatMemberTypingLabel');
 
 	static {
-		$.RegisterEventHandler('OnNewChatEntry', $.GetContextPanel(), this.onNewChatEntry.bind(this));
+		$.RegisterEventHandler('OnNewChatEntry', $.GetContextPanel(), (panel) => this.onNewChatEntry(panel));
+
 		$.RegisterForUnhandledEvent(
 			'PanoramaComponent_SteamLobby_OnMemberDataUpdated',
-			this.onSteamLobbyMemberDataUpdated.bind(this)
+			(memberData: SteamLobby.MemberData) => this.onSteamLobbyMemberDataUpdated(memberData)
 		);
 	}
 
@@ -27,7 +28,7 @@ class Chat {
 					} else if (i !== 0 && i === typingLen - 1) {
 						strTyping += ` ${$.Localize('#Chat_Typing_Conjugate')} `;
 					}
-					strTyping += FriendsAPI.GetNameForXUID(+memberSteamID); // TODO: Why is this a string? Check at runtime
+					strTyping += FriendsAPI.GetNameForXUID(+memberSteamID);
 				}
 				strTyping +=
 					typingLen === 1
@@ -43,7 +44,7 @@ class Chat {
 		return strTyping;
 	}
 
-	static onNewChatEntry(panel: GenericPanel) {
+	static onNewChatEntry(panel: GenericPanel & { message: string; author_name: string; author_xuid: string }) {
 		$.Schedule(0, () => panel.ScrollParentToMakePanelFit(0, false)); // IDK, ScrollToBottom always just scrolled to the second last msg
 		// Emote test for BLT to look into
 		// let messageLabel = panel.GetChild(0);
@@ -57,7 +58,7 @@ class Chat {
 
 		const steamID = panel.GetAttributeString('xuid', '');
 		if (!steamID) return;
-		
+
 		panel.SetPanelEvent('oncontextmenu', () => {
 			UiToolkitAPI.ShowSimpleContextMenu('', '', [
 				{
@@ -70,7 +71,7 @@ class Chat {
 		});
 	}
 
-	static onSteamLobbyMemberDataUpdated(data: SteamLobby.MemberList) {
+	static onSteamLobbyMemberDataUpdated(data: SteamLobby.MemberData) {
 		if (!this.typingLabel || !this.typingLabel.visible) return;
 
 		for (const memberSteamID of Object.keys(data)) {

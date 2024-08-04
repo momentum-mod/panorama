@@ -14,6 +14,8 @@ class ConcCook {
 	}
 
 	static {
-		$.RegisterEventHandler('OnCookUpdate', $('#ConcCooktimeContainer'), this.onCookUpdate.bind(this));
+		$.RegisterEventHandler('OnCookUpdate', $('#ConcCooktimeContainer'), (time: float, percentage: float) =>
+			this.onCookUpdate(time, percentage)
+		);
 	}
 }

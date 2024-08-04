@@ -4,7 +4,6 @@
 	</styles>
 	<scripts>
 		<include src="file://{scripts}/globals/globals.js" />
-		<include src="file://{scripts}/util/dont-show-again.js" />
 		<include src="file://{scripts}/pages/drawer/drawer.js" />
 		<include src="file://{scripts}/pages/main-menu/main-menu.js" />
 	</scripts>

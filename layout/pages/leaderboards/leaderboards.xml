@@ -5,7 +5,7 @@
 	</styles>
 
 	<scripts>
-		<include src="file://{scripts}/common/run.js" />
+		<include src="file://{scripts}/globals/globals.js" />
 		<include src="file://{scripts}/pages/leaderboards/leaderboards.js" />
 	</scripts>
 

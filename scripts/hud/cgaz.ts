@@ -40,10 +40,10 @@ namespace Cgaz {
 	class StyleObject {
 		height: number;
 		offset: number;
-		color: RgbaColor;
+		color: rgbaColor;
 		align: Style['verticalAlign'];
 
-		constructor(height: number, offset: number, color: RgbaColor) {
+		constructor(height: number, offset: number, color: rgbaColor) {
 			this.height = height;
 			this.offset = offset;
 			this.align = 'center';
@@ -133,10 +133,10 @@ namespace Cgaz {
 		static accelMinSpeed: float;
 		static accelHeight: float;
 		static accelOffset: float;
-		static accelSlowColor: RgbaColor;
-		static accelFastColor: RgbaColor;
-		static accelTurnColor: RgbaColor;
-		static accelDzColor: RgbaColor;
+		static accelSlowColor: rgbaColor;
+		static accelFastColor: rgbaColor;
+		static accelTurnColor: rgbaColor;
+		static accelDzColor: rgbaColor;
 		static accelScaleEnable: boolean;
 		static accelMirrorEnable: boolean;
 		static accelMirrorBorder: int32;
@@ -145,12 +145,12 @@ namespace Cgaz {
 		static snapMinSpeed: float;
 		static snapHeight: float;
 		static snapOffset: float;
-		static snapColor: RgbaColor;
-		static snapAltColor: RgbaColor;
-		static snapFastColor: RgbaColor;
-		static snapSlowColor: RgbaColor;
-		static snapHlColor: RgbaColor;
-		static snapHlAltColor: RgbaColor;
+		static snapColor: rgbaColor;
+		static snapAltColor: rgbaColor;
+		static snapFastColor: rgbaColor;
+		static snapSlowColor: rgbaColor;
+		static snapHlColor: rgbaColor;
+		static snapHlAltColor: rgbaColor;
 		static snapHlMode: int32;
 		static snapColorMode: int32;
 		static snapHeightgainEnable: boolean;
@@ -162,23 +162,23 @@ namespace Cgaz {
 		static primeMinSpeed: float;
 		static primeHeight: float;
 		static primeOffset: float;
-		static primeGainColor: RgbaColor;
-		static primeLossColor: RgbaColor;
-		static primeAltColor: RgbaColor;
+		static primeGainColor: rgbaColor;
+		static primeLossColor: rgbaColor;
+		static primeAltColor: rgbaColor;
 		static primeHlEnable: boolean;
 		static primeHlBorder: int32;
-		static primeHlColor: RgbaColor;
+		static primeHlColor: rgbaColor;
 		static primeHeightgainEnable: boolean;
 		static primeColorgainEnable: boolean;
 		static primeArrowEnable: boolean;
 		static primeArrowSize: float;
-		static primeArrowColor: RgbaColor;
+		static primeArrowColor: rgbaColor;
 
 		static windicatorEnable: boolean;
 		static windicatorHeight: float;
 		static windicatorOffset: float;
 		static windicatorSize: float;
-		static windicatorColor: RgbaColor;
+		static windicatorColor: rgbaColor;
 		static windicatorBorder: int32;
 
 		static compassMode: int32;
@@ -190,8 +190,8 @@ namespace Cgaz {
 		static compassPitchWidth: float;
 		static compassPitchOffset: float;
 		static compassStatMode: int32;
-		static compassColor: RgbaColor;
-		static compassHlColor: RgbaColor;
+		static compassColor: rgbaColor;
+		static compassHlColor: rgbaColor;
 
 		static updateHandle: uuid = null;
 

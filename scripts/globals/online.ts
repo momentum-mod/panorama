@@ -5,7 +5,8 @@ namespace SteamLobby {
 		PUBLIC = 2
 	}
 
-	export enum LobbyStateChange {
+	// TODO: All of left/disconnected/kicked/banned are lumped into LEAVE here in C++, could distinguish.
+	export enum MemberStateChange {
 		JOIN = 'join',
 		LEAVE = 'leave'
 	}

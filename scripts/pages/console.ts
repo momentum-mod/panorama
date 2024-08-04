@@ -1,7 +1,7 @@
 class Console {
 	static messageTarget = $<StaticConsoleMessageTarget>('#ConsoleMessageTarget');
 
-	static onMoveDragStart(_source, callback) {
+	static onMoveDragStart(_source: unknown, callback: DragEventInfo) {
 		callback.displayPanel = $.GetContextPanel();
 		callback.removePositionBeforeDrop = false;
 	}
@@ -15,7 +15,7 @@ class Console {
 	}
 
 	static {
-		$.RegisterEventHandler('DragStart', $('#MoveDragArea'), Console.onMoveDragStart);
+		$.RegisterEventHandler('DragStart', $('#MoveDragArea'), this.onMoveDragStart.bind(this));
 		$.RegisterEventHandler('NewConsoleMessages', 'ConsoleMessageTarget', Console.onNewMessages.bind(this));
 	}
 }
