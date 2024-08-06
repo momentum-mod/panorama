@@ -37,6 +37,29 @@ enum ResizeDirection {
 	TOP_LEFT = 8
 }
 
+enum DragMode {
+	MOVE = 0,
+	RESIZE_TOP = 1,
+	RESIZE_TOP_RIGHT = 2,
+	RESIZE_RIGHT = 3,
+	RESIZE_BOTTOM_RIGHT = 4,
+	RESIZE_BOTTOM = 5,
+	RESIZE_BOTTOM_LEFT = 6,
+	RESIZE_LEFT = 7,
+	RESIZE_TOP_LEFT = 8
+}
+
+const resizeVector: ReadonlyMap<Exclude<DragMode, DragMode.MOVE>, [number, number]> = new Map([
+	[DragMode.RESIZE_TOP, [0, -1]],
+	[DragMode.RESIZE_TOP_RIGHT, [1, -1]],
+	[DragMode.RESIZE_RIGHT, [1, 0]],
+	[DragMode.RESIZE_BOTTOM_RIGHT, [1, 1]],
+	[DragMode.RESIZE_BOTTOM, [0, 1]],
+	[DragMode.RESIZE_BOTTOM_LEFT, [-1, 1]],
+	[DragMode.RESIZE_LEFT, [-1, 0]],
+	[DragMode.RESIZE_TOP_LEFT, [-1, -1]]
+]);
+
 const MAX_X_POS = 1920;
 const MAX_Y_POS = 1080;
 const MAX_OOB = 16;
@@ -45,6 +68,7 @@ interface HudConfig {
 	components: {
 		[id: string]: {
 			position: LayoutUtil.Position;
+			size: LayoutUtil.Size;
 			snaps: [number, number];
 		};
 	};
@@ -59,6 +83,7 @@ interface Component {
 	panel: GenericPanel;
 	snaps: Snaps;
 	position: LayoutUtil.Position;
+	size: LayoutUtil.Size;
 	properties?: Record<string, unknown>;
 }
 
@@ -132,10 +157,10 @@ class HudCustomizer implements OnPanelLoad {
 		customizer: $('#HudCustomizer')!,
 		virtual: $<Panel>('#HudCustomizerVirtual')!,
 		virtualName: $<Label>('#HudCustomizerVirtualName')!,
+		virtualKnob: $<Panel>('#HudCustomizerVirtualKnob')!,
 		snaps: $('#HudCustomizerSnaps')!,
 		grid: $('#HudCustomizerGrid')!,
-		gridSize: $<NumberEntry>('#HudCustomizerGridSize')!,
-		knobContainer: $('#HudCustomizerKnobContainer')!
+		gridSize: $<NumberEntry>('#HudCustomizerGridSize')!
 	};
 
 	private components: Record<string, Component> = {};
@@ -143,10 +168,15 @@ class HudCustomizer implements OnPanelLoad {
 	private activeComponent: Component | undefined;
 	private activeGridlines: [Gridline | undefined, Gridline | undefined] = [undefined, undefined];
 	private resizeKnobs: Record<ResizeDirection, Button>;
+
 	private dragStartHandle: number | undefined;
 	private dragEndHandle: number | undefined;
 	private onThinkHandle: number | undefined;
+
+	private dragMode: DragMode | undefined;
+
 	private gridSize = DEFAULT_GRID_SIZE;
+
 	private scaleX: number;
 	private scaleY: number;
 
@@ -195,8 +225,10 @@ class HudCustomizer implements OnPanelLoad {
 				LayoutUtil.getY(component.panel) +
 					LayoutUtil.getHeight(component.panel) * snaps[Axis.Y][component.snaps[Axis.Y]].sizeFactor
 			);
+			const size = LayoutUtil.getSize(component.panel);
 			saveData.components[id] = {
 				position: [posX, posY],
+				size,
 				snaps: component.snaps
 			};
 		}
@@ -224,16 +256,16 @@ class HudCustomizer implements OnPanelLoad {
 
 		this.resizeKnobs = {} as any;
 		for (const dir of values(ResizeDirection).filter((x) => !Number.isNaN(+x))) {
-			this.resizeKnobs[dir] = $.CreatePanel(
-				'Button',
-				this.panels.knobContainer,
-				`Resize_${ResizeDirection[dir]}`,
-				{
-					class: 'hud-customizer__resize-knob',
-					draggable: true,
-					hittest: true
-				}
+			this.resizeKnobs[dir] = $.CreatePanel('Button', this.panels.customizer, `Resize_${ResizeDirection[dir]}`, {
+				class: 'hud-customizer__resize-knob',
+				draggable: true,
+				hittest: true
+			});
+			$.RegisterEventHandler('DragStart', this.resizeKnobs[dir], (...args) =>
+				// TODO: technically those two enums do share values, but we should rewrite to not _interpret_ ResizeDirection as DragMode
+				this.onStartDrag(dir as unknown as DragMode, this.panels.virtualKnob, ...args)
 			);
+			$.RegisterEventHandler('DragEnd', this.resizeKnobs[dir], () => this.onEndDrag());
 		}
 
 		this.components = {};
@@ -242,7 +274,7 @@ class HudCustomizer implements OnPanelLoad {
 		}
 	}
 
-	private loadComponentPanel(panel: GenericPanel, component: Pick<Component, 'position' | 'snaps'>): void {
+	private loadComponentPanel(panel: GenericPanel, component: Pick<Component, 'position' | 'size' | 'snaps'>): void {
 		for (const [i, snap] of component.snaps.entries()) {
 			if (!values(SnapMode).includes(snap)) {
 				$.Warning(`HudCustomizer: Invalid snap values ${snap}, setting to default.`);
@@ -259,7 +291,7 @@ class HudCustomizer implements OnPanelLoad {
 			const isX = axis === 0;
 			const max = isX ? MAX_X_POS : MAX_Y_POS;
 			const sf = snaps[axis][component.snaps[axis]].sizeFactor;
-			const panelLen = isX ? LayoutUtil.getWidth(panel) : LayoutUtil.getHeight(panel);
+			const panelLen = component.size[axis];
 			let layoutLen = len - panelLen * sf;
 
 			if (layoutLen < 0 && layoutLen + panelLen < MAX_OOB) {
@@ -277,7 +309,7 @@ class HudCustomizer implements OnPanelLoad {
 			return layoutLen;
 		}) as LayoutUtil.Position;
 
-		LayoutUtil.setPosition(panel, layoutPos);
+		LayoutUtil.setPositionAndSize(panel, layoutPos, component.size);
 
 		this.components[panel.id] = {
 			panel,
@@ -293,15 +325,16 @@ class HudCustomizer implements OnPanelLoad {
 
 	private getDefaultComponent(panel: GenericPanel): Component {
 		const size = LayoutUtil.getSize(panel);
+		const [width, height] = size;
 		if (
-			size[0] > MAX_X_POS ||
-			size[1] > MAX_Y_POS ||
-			(size[0] === MAX_X_POS && size[1] > MAX_Y_POS / 2) ||
-			(size[1] === MAX_X_POS && size[0] > MAX_X_POS / 2)
+			width > MAX_X_POS ||
+			height > MAX_Y_POS ||
+			(width === MAX_X_POS && height > MAX_Y_POS / 2) ||
+			(height === MAX_X_POS && width > MAX_X_POS / 2)
 		) {
 			$.Warning(
 				`HudCustomizer: Found an unrecognised HUD panel ${panel.paneltype} with stupid big dimensions, ignoring.\n` +
-					`\tWidth: ${size[0]}\tHeight: ${size[1]}` +
+					`\tWidth: ${width}\tHeight: ${height}` +
 					`\tPosition: [${LayoutUtil.getPosition(panel).join(', ')}]).`
 			);
 			return;
@@ -316,6 +349,7 @@ class HudCustomizer implements OnPanelLoad {
 		return {
 			panel,
 			position: LayoutUtil.getPosition(panel),
+			size,
 			snaps: DEFAULT_SNAP_MODES
 		};
 	}
@@ -329,69 +363,20 @@ class HudCustomizer implements OnPanelLoad {
 
 		this.activeComponent.panel.AddClass('hud-customizable--active');
 
-		const [[x, y], [width, height]] = LayoutUtil.getPositionAndSize(component.panel);
+		const [position, size] = LayoutUtil.getPositionAndSize(component.panel);
 
 		// Set the virtual panel's position and size to the component we just hovered over
-		LayoutUtil.setPositionAndSize(this.panels.virtual, [x, y], [width, height]);
-		LayoutUtil.setPositionAndSize(this.panels.knobContainer, [x, y], [width, height]);
+		LayoutUtil.setPositionAndSize(this.panels.virtual, position, size);
 
-		const halfWidth = width / 2;
-		const halfHeight = height / 2;
-		let plusX: number, plusY: number;
-		for (const [dir, knob] of Object.entries(
-			this.resizeKnobs satisfies Record<ResizeDirection, Button>
-		) as unknown as [ResizeDirection, Button][]) {
-			switch (+dir) {
-				case ResizeDirection.TOP:
-					plusX = halfWidth;
-					plusY = 0;
-					break;
-				case ResizeDirection.TOP_RIGHT:
-					plusX = width;
-					plusY = 0;
-					break;
-				case ResizeDirection.RIGHT:
-					plusX = width;
-					plusY = halfHeight;
-					break;
-				case ResizeDirection.BOTTOM_RIGHT:
-					plusX = width;
-					plusY = height;
-					break;
-				case ResizeDirection.BOTTOM:
-					plusX = halfWidth;
-					plusY = height;
-					break;
-				case ResizeDirection.BOTTOM_LEFT:
-					plusX = 0;
-					plusY = height;
-					break;
-				case ResizeDirection.LEFT:
-					plusX = 0;
-					plusY = halfHeight;
-					break;
-				case ResizeDirection.TOP_LEFT:
-					plusX = 0;
-					plusY = 0;
-					break;
-			}
-
-			$.Msg('HudCustomizer: setting resize knob', { x, y, width, height, dir, plusX, plusY });
-
-			LayoutUtil.setPosition(knob, [plusX, plusY]);
-		}
+		this.updateResizeKnobs(position, size);
 
 		// This is going to be weird to localise, but I guess we could do it, probably in V2 when we can
 		// define the locale string in the `customisable` XML property.
 		this.panels.virtualName.text = this.activeComponent.panel.id;
 		// TODO: This text looks TERRIBLE. Better to just have a constant size text for every component
 		// place text above component (left-aligned)
-		const stupidFontSizeThing = Math.min(
-			LayoutUtil.getHeight(this.activeComponent.panel) / 2,
-			LayoutUtil.getWidth(this.activeComponent.panel) / 2
-		);
 
-		this.panels.virtualName.style.fontSize = stupidFontSizeThing;
+		this.updateVirtualPanelFontSize();
 
 		snaps[Axis.X][this.activeComponent.snaps[Axis.X]].button.SetSelected(true);
 		snaps[Axis.Y][this.activeComponent.snaps[Axis.Y]].button.SetSelected(true);
@@ -399,94 +384,171 @@ class HudCustomizer implements OnPanelLoad {
 		if (this.dragStartHandle) {
 			$.UnregisterEventHandler('DragStart', this.panels.virtual, this.dragStartHandle);
 		}
+		if (this.dragEndHandle) {
+			$.UnregisterEventHandler('DragEnd', this.panels.virtual, this.dragEndHandle);
+		}
 
 		this.dragStartHandle = $.RegisterEventHandler('DragStart', this.panels.virtual, (...args) =>
-			this.onStartDrag(...args)
+			this.onStartDrag(DragMode.MOVE, this.panels.virtual, ...args)
 		);
-	}
-
-	private onStartDrag(_panelID: string, callback: DragEventInfo): void {
-		if (!this.activeComponent) return;
-
-		callback.displayPanel = this.panels.virtual;
-		callback.removePositionBeforeDrop = false;
-
-		// These aren't actually related to one-another in XML hierarchy so need to handle two classes
-		this.activeComponent.panel.AddClass('hud-customizable--dragging');
-		this.panels.virtual.AddClass('hud-customizer-virtual--dragging');
-
-		$.UnregisterEventHandler('DragStart', this.panels.virtual, this.dragStartHandle);
-
-		this.onThinkHandle = $.RegisterEventHandler('HudThink', $.GetContextPanel(), () => this.onDragThink());
-
 		this.dragEndHandle = $.RegisterEventHandler('DragEnd', this.panels.virtual, () => this.onEndDrag());
 	}
 
-	private onDragThink(): void {
+	private onStartDrag(mode: DragMode, displayPanel: Panel, _panelID: string, callback: DragEventInfo) {
 		if (!this.activeComponent) return;
 
-		const oldPosition = [0, 0];
-		const newPosition: LayoutUtil.Position = [0, 0];
+		this.dragMode = mode; // TODO: technically those two enums do share values, but we should rewrite to not _interpret_ ResizeDirection as DragMode
 
-		for (const axis of Axes) {
-			const isX = axis === 0;
+		this.onThinkHandle = $.RegisterEventHandler('HudThink', $.GetContextPanel(), () => this.onDragThink());
 
-			if (this.activeComponent.snaps[axis] === SnapMode.OFF) {
-				newPosition[axis] = isX ? LayoutUtil.getX(this.panels.virtual) : LayoutUtil.getY(this.panels.virtual);
-			} else {
-				const sizeFactor = snaps[axis][this.activeComponent.snaps[axis]].sizeFactor;
+		if (this.dragMode !== DragMode.MOVE) {
+			callback.offsetX = 0;
+			callback.offsetY = 0;
+		}
 
-				const offset = isX
-					? (this.activeComponent.panel.actuallayoutwidth * sizeFactor) / this.scaleX
-					: (this.activeComponent.panel.actuallayoutheight * sizeFactor) / this.scaleY;
+		callback.displayPanel = displayPanel;
+		callback.removePositionBeforeDrop = false;
+	}
 
-				const gridline = this.getNearestGridLine(axis, sizeFactor);
-				const activeGridline = this.activeGridlines[axis];
+	private onDragThink(): void {
+		if (!this.activeComponent || this.dragMode === undefined) return;
 
-				if (activeGridline) oldPosition[axis] = activeGridline.offset - offset;
-				if (gridline) newPosition[axis] = gridline.offset - offset;
+		let panelPos = this.activeComponent.position;
+		const panelSize = this.activeComponent.size;
 
-				if (gridline !== activeGridline) {
-					if (activeGridline) activeGridline.panel.RemoveClass('hud-customizer__gridline--highlight');
-					if (gridline) {
-						gridline.panel.AddClass('hud-customizer__gridline--highlight');
-						this.activeGridlines[axis] = gridline;
+		const minSize = getMinSize(this.activeComponent.panel);
 
-						newPosition[axis] = gridline.offset - offset;
+		if (this.dragMode === DragMode.MOVE) {
+			panelPos = LayoutUtil.getPosition(this.panels.virtual);
+		} else {
+			const resizeDir = resizeVector.get(this.dragMode) ?? [0, 0];
+			const knobPos = LayoutUtil.getPosition(this.panels.virtualKnob);
+			for (const i of Axes) {
+				if (resizeDir[i] === 1) {
+					panelSize[i] = Math.max(knobPos[i] - panelPos[i], minSize[i]);
+				} else if (resizeDir[i] === -1) {
+					panelSize[i] += panelPos[i] - knobPos[i];
+					const offset = Math.max(panelSize[i], minSize[i]) - panelSize[i];
+					panelSize[i] += offset;
+					panelPos[i] = knobPos[i] - offset;
+				}
+			}
+		}
+
+		this.updateVirtualPanelFontSize();
+
+		LayoutUtil.setPositionAndSize(this.panels.virtual, panelPos, panelSize);
+
+		// snapping
+		if (this.dragMode === DragMode.MOVE) {
+			for (const axis of Axes) {
+				const isX = axis === 0;
+
+				if (this.activeComponent.snaps[axis] !== SnapMode.OFF) {
+					const sizeFactor = snaps[axis][this.activeComponent.snaps[axis]].sizeFactor;
+
+					const offset = panelSize[axis] * sizeFactor;
+
+					const gridline = this.getNearestGridLine(axis, sizeFactor);
+					const activeGridline = this.activeGridlines[axis];
+
+					if (gridline) panelPos[axis] = gridline.offset - offset;
+					if (gridline !== activeGridline) {
+						if (activeGridline) activeGridline.panel.RemoveClass('hud-customizer__gridline--highlight');
+						if (gridline) {
+							gridline.panel.AddClass('hud-customizer__gridline--highlight');
+							this.activeGridlines[axis] = gridline;
+						}
 					}
 				}
 			}
 		}
 
-		if (newPosition[0] !== oldPosition[1] || newPosition[1] !== oldPosition[1]) {
-			LayoutUtil.setPosition(this.activeComponent.panel, newPosition);
-			LayoutUtil.setPosition(this.panels.knobContainer, newPosition);
-		}
+		this.activeComponent.position = panelPos;
+		this.activeComponent.size = panelSize;
+		LayoutUtil.setPositionAndSize(
+			this.activeComponent.panel,
+			this.activeComponent.position,
+			this.activeComponent.size
+		);
+		this.updateResizeKnobs(panelPos, panelSize);
 	}
 
-	private onEndDrag(): void {
+	private onEndDrag() {
 		if (!this.activeComponent) return;
 
-		$.UnregisterEventHandler('DragEnd', this.panels.virtual, this.dragEndHandle);
+		this.onDragThink(); // call the last think to ensure the final position is set
+
 		$.UnregisterEventHandler('HudThink', $.GetContextPanel(), this.onThinkHandle);
 
-		this.dragStartHandle = $.RegisterEventHandler('DragStart', this.panels.virtual, (...args) =>
-			this.onStartDrag(...args)
-		);
-		this.dragEndHandle = undefined;
-		this.onThinkHandle = undefined;
+		LayoutUtil.setPositionAndSize(this.panels.virtual, this.activeComponent.position, this.activeComponent.size);
 
 		this.activeComponent.panel.RemoveClass('hud-customizable--dragging');
 		this.panels.virtual.RemoveClass('hud-customizer-virtual--dragging');
 
-		LayoutUtil.copyPositionAndSize(this.activeComponent.panel, this.panels.virtual);
-
-		this.activeGridlines?.forEach((line) => line.panel.RemoveClass('hud-customizer__gridline--highlight'));
-
+		this.activeGridlines?.forEach((line) => line?.panel.RemoveClass('hud-customizer__gridline--highlight'));
 		this.activeGridlines = [undefined, undefined];
 
 		// TODO: this is just for testing
 		this.save();
+
+		this.dragMode = undefined;
+	}
+
+	private updateResizeKnobs(position: LayoutUtil.Position, size: LayoutUtil.Size): void {
+		const [width, height] = size;
+		const halfWidth = width / 2;
+		const halfHeight = height / 2;
+		let deltaX: number, deltaY: number;
+		for (const [dir, knob] of Object.entries(
+			this.resizeKnobs satisfies Record<ResizeDirection, Button>
+		) as unknown as [ResizeDirection, Button][]) {
+			switch (+dir) {
+				case ResizeDirection.TOP:
+					deltaX = halfWidth;
+					deltaY = 0;
+					break;
+				case ResizeDirection.TOP_RIGHT:
+					deltaX = width;
+					deltaY = 0;
+					break;
+				case ResizeDirection.RIGHT:
+					deltaX = width;
+					deltaY = halfHeight;
+					break;
+				case ResizeDirection.BOTTOM_RIGHT:
+					deltaX = width;
+					deltaY = height;
+					break;
+				case ResizeDirection.BOTTOM:
+					deltaX = halfWidth;
+					deltaY = height;
+					break;
+				case ResizeDirection.BOTTOM_LEFT:
+					deltaX = 0;
+					deltaY = height;
+					break;
+				case ResizeDirection.LEFT:
+					deltaX = 0;
+					deltaY = halfHeight;
+					break;
+				case ResizeDirection.TOP_LEFT:
+					deltaX = 0;
+					deltaY = 0;
+					break;
+			}
+
+			const [x, y] = position;
+			LayoutUtil.setPosition(knob, [x + deltaX, y + deltaY]);
+		}
+	}
+
+	private updateVirtualPanelFontSize() {
+		if (!this.activeComponent) return;
+		const [width, height] = this.activeComponent.size;
+		const stupidFontSizeThing = Math.min(width / 2, height / 2);
+
+		this.panels.virtualName.style.fontSize = stupidFontSizeThing;
 	}
 
 	private getNearestGridLine(axis: Axis, sizeFactor: number): Gridline {
@@ -525,6 +587,7 @@ class HudCustomizer implements OnPanelLoad {
 			const isX = axis === 0;
 			const numLines = isX ? numXLines : numYLines;
 			const totalLength = isX ? MAX_X_POS : MAX_Y_POS;
+
 			this.gridlines[axis] = Array.from({ length: numLines }, (_, i) => {
 				const offset = totalLength * (i / numLines);
 
@@ -577,4 +640,15 @@ class HudCustomizer implements OnPanelLoad {
 
 function fixFloatingImprecision(n: number) {
 	return +n.toPrecision(3);
+}
+
+function parsePx(str: string): number | undefined {
+	if (str?.slice(-2) === 'px') {
+		return Number.parseFloat(str.slice(0, -2));
+	}
+	return undefined;
+}
+
+function getMinSize(panel: GenericPanel): [number, number] {
+	return [parsePx(panel.style.minWidth) ?? 0, parsePx(panel.style.minHeight) ?? 0];
 }
