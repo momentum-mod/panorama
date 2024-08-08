@@ -4,6 +4,8 @@
 	</styles>
 	<scripts>
 		<include src="file://{scripts}/globals/globals.js" />
+		<!-- TODO: MOdule (hnnnng i hope this works in 12 hrs) -->
+		<include src="file://{scripts}/util/toast-manager.js" />
 		<include src="file://{scripts}/pages/drawer/drawer.js" />
 		<include src="file://{scripts}/pages/main-menu/main-menu.js" />
 	</scripts>

@@ -1,6 +1,5 @@
 class HudStatus {
-	/** @type {Label} @static */
-	static label = $('#HudStatusLabel');
+	static label = $<Label>('#HudStatusLabel');
 
 	static curZone = -1;
 	static curTrack = -1;
@@ -70,7 +69,7 @@ class HudStatus {
 	}
 
 	static onLoad() {
-		$.GetContextPanel().hiddenHUDBits = _.State.HideHud.TABMENU;
+		$.GetContextPanel<MomHudStatus>().hiddenHUDBits = _.State.HideHud.TABMENU;
 	}
 
 	static {

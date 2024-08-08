@@ -3,19 +3,19 @@ namespace DontShowAgain {
 
 	/** Store a DOSA */
 	export function addDosa(key: string, nameToken: string): void {
-		const dosas = this.getPSObject();
+		const dosas = getPSObject();
 		dosas[key] = nameToken;
-		this.setPSObject(dosas);
+		setPSObject(dosas);
 	}
 
 	/** Remove a stored DOSA */
 	export function removeDosa(key: string): boolean {
-		const dosas = this.getPSObject();
+		const dosas = getPSObject();
 		if (!dosas) return false;
 
 		if (dosas[key]) {
 			delete dosas[key];
-			this.setPSObject(dosas);
+			setPSObject(dosas);
 			return true;
 		}
 
@@ -24,7 +24,7 @@ namespace DontShowAgain {
 
 	/** Check whether a DOSA is stored. * */
 	export function checkDosa(key: string): boolean {
-		const dosas = this.getPSObject();
+		const dosas = getPSObject();
 
 		return !!dosas?.[key];
 	}
@@ -36,7 +36,7 @@ namespace DontShowAgain {
 
 	/** Get the corresponding name token for a DoSA, if exists */
 	export function getNameToken(key: string): string | undefined {
-		return this.getPSObject()?.[key];
+		return getPSObject()?.[key];
 	}
 
 	/**
@@ -56,7 +56,7 @@ namespace DontShowAgain {
 			throw new Error(`Missing key or nameToken values for DosaHandler: ${{ key, nameToken }}`);
 
 		if (panel.FindChildTraverse('DontShowAgainCheckbox')?.checked && key) {
-			this.addDosa(key, nameToken);
+			addDosa(key, nameToken);
 			return true;
 		}
 

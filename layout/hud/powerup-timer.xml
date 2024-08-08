@@ -3,8 +3,7 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 	<scripts>
-		<include src="file://{scripts}/common/gamemodes.js" />
-		<include src="file://{scripts}/util/register-for-gamemodes.js" />
+		<include src="file://{scripts}/globals/globals.js" />
 		<include src="file://{scripts}/hud/powerup-timer.js" />
 	</scripts>
 

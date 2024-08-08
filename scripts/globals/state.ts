@@ -28,6 +28,6 @@ namespace State {
 		BONUS_PROGRESS = 1 << 11,
 		RADAR = 1 << 12,
 		MINISCOREBOARD = 1 << 13,
-		LEADERBOARDS = 1 << 14
+		TABMENU = 1 << 14 // "Leaderboards" in some places, renaming for momenutm
 	}
 }

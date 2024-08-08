@@ -1,15 +1,7 @@
 <root>
 	<scripts>
-		<!--
-		Include all scripts to be included in Globals.
-		
-		This allows expensive scripts to allow be executed once, exposing themselves to the context of just *this* panel,
-		with globals.ts attaching them to the Globals object, which is then stored onto a global object returned by
-		UiToolkitAPI.GetGlobalObject() (which is persisted in C++).
-		
-		To add further scripts to the Globals object, include them here (above globals.js!) and then add them to the
-		Globals object in globals.ts.
-		-->
+		<include src="file://{scripts}/bar/test.mjs" />
+
 		<include src="file://{scripts}/globals/buttons.js" />
 		<include src="file://{scripts}/globals/dont-show-again.js" />
 		<include src="file://{scripts}/globals/enum.js" />
@@ -22,6 +14,7 @@
 		<include src="file://{scripts}/globals/util.js" />
 		<include src="file://{scripts}/globals/web.js" />
 		<include src="file://{scripts}/globals/weapon.js" />
+		<include src="file://{scripts}/globals/steam-lobby.js" />
 		<include src="file://{scripts}/globals/globals.js" />	
 
 		<include src="file://{scripts}/util/panel-registration.js" />

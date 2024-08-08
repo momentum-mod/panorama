@@ -1,0 +1,2 @@
+export {};
+$.Msg("goodness!");

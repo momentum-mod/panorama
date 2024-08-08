@@ -159,6 +159,15 @@ declare namespace GameModeAPI {
 	/** Gets whether the current gamemode has the specified HUD capability. */
 	function CurrentGameModeHasHUDCapability(capability: GameModeHUDCapability);
 }
+
+declare namespace MomentumTimerAPI {
+	function GetTimerState(): any; // TODO: Old API
+}
+
+declare namespace ZonesAPI {
+	function GetZoneCount(...args: any[]): any; // TODO: Old API (I think)
+}
+
 declare namespace MapCacheAPI {
 	/** Get the current map's name */
 	function GetMapName(): string;

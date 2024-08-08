@@ -51,7 +51,7 @@ declare interface Split extends AbstractPanel<'Split'> {
 UiToolkitAPI.RegisterPanel2d('Split', 'file://{resources}/layout/components/split.xml');
 
 declare interface ToastContainer extends AbstractPanel<'ToastContainer'> {}
-UiToolkitAPI.RegisterPanel2d('ToastContainer', 'file://{resources}/layout/util/toast-manager.xml');
+UiToolkitAPI.RegisterPanel2d('ToastManager', 'file://{resources}/layout/util/toast-manager.xml');
 
 declare interface ToastGeneric extends AbstractPanel<'ToastGeneric'> {}
 UiToolkitAPI.RegisterPanel2d('ToastGeneric', 'file://{resources}/layout/modals/toasts/generic.xml');

@@ -2,7 +2,8 @@
 	"compilerOptions": {
 		"target": "ESNext",
 		"lib": ["ESNext"],
-		"module": "None",
+		// Dynamic imports, import.meta, top-level await and import attributes are all unsupported. 
+		"module": "ES2015",
 		"rootDir": "scripts/",
 		"outDir": "script_dist/",
 		"alwaysStrict": true,
