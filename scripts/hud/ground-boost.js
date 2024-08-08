@@ -31,18 +31,25 @@ class Groundboost {
 	static container = $('#GroundboostContainer');
 
 	static onLoad() {
-		this.onConfigChange();
-
-		this.colorClass = ColorClass.SLICK;
-		this.groundboostMeter.AddClass(this.colorClass);
-
-		this.labelClass = LabelClass.FLAT;
-
-		this.container.AddClass('groundboost__container--hide');
-		this.visible = false;
-		this.missedJumpTimer = 0;
-		this.peakSpeed = 0;
-		this.startSpeed = 0;
+		if (currentMode === GameMode.DEFRAG) {
+			this.updateHandle = $.RegisterEventHandler(
+				'HudProcessInput',
+				$.GetContextPanel(),
+				this.onUpdate.bind(this)
+			);
+			this.onConfigChange();
+			this.colorClass = ColorClass.SLICK;
+			this.groundboostMeter.AddClass(this.colorClass);
+			this.labelClass = LabelClass.FLAT;
+			this.container.AddClass('groundboost__container--hide');
+			this.visible = false;
+			this.missedJumpTimer = 0;
+			this.peakSpeed = 0;
+			this.startSpeed = 0;
+		} else if (this.updateHandle) {
+			$.UnregisterEventHandler('HudProcessInput', $.GetContextPanel(), this.updateHandle);
+			this.updateHandle = null;
+		}
 	}
 
 	static onUpdate() {
@@ -172,7 +179,6 @@ class Groundboost {
 	}
 
 	static {
-		$.RegisterEventHandler('HudProcessInput', $.GetContextPanel(), this.onUpdate.bind(this));
 		$.RegisterForUnhandledEvent('LevelInitPostEntity', this.onLoad.bind(this));
 		$.RegisterForUnhandledEvent('OnDefragHUDGroundboostChange', this.onConfigChange.bind(this));
 	}
