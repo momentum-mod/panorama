@@ -49,9 +49,20 @@ class DFJump {
 	}
 
 	static {
-		$.RegisterEventHandler('DFJumpDataUpdate', this.container, this.onDFJumpUpdate.bind(this));
+		RegisterHUDPanelForGamemode({
+			gamemodes: [GameMode.DEFRAG],
+			context: this,
+			contextPanel: this.container,
+			onLoad: this.onLoad,
+			handledEvents: [
+				{
+					event: 'DFJumpDataUpdate',
+					contextPanel: this.container,
+					callback: this.onDFJumpUpdate
+				}
+			]
+		});
 
-		$.RegisterForUnhandledEvent('LevelInitPostEntity', this.onLoad.bind(this));
 		$.RegisterForUnhandledEvent('DFJumpMaxDelayChanged', this.setMaxDelay.bind(this));
 	}
 }
