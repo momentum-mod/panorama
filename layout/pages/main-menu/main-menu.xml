@@ -4,10 +4,9 @@
 	</styles>
 	<scripts>
 		<include src="file://{scripts}/globals/globals.js" />
-		<!-- TODO: MOdule (hnnnng i hope this works in 12 hrs) -->
 		<include src="file://{scripts}/util/toast-manager.js" />
 		<include src="file://{scripts}/pages/drawer/drawer.js" />
-		<include src="file://{scripts}/pages/main-menu/main-menu.js" />
+		<include src="file://{scripts}/pages/main-menu/main-menu.mjs" />
 	</scripts>
 
 	<snippets>
@@ -20,7 +19,7 @@
 		</snippet>
 	</snippets>
 
-	<MainMenu class="InitialDisplay MainMenuRootPanel" hittest="false" onload="MainMenu.onMainMenuLoaded()">
+	<MainMenu class="InitialDisplay MainMenuRootPanel" hittest="false">
 
 		<Panel id="MainMenuInput" class="mainmenu">
 			<!-- Topnav -->

@@ -1,0 +1,764 @@
+"use strict";
+/***************************************************************************************** */
+/**************************************************************************************************************/
+/**
+ * Zoning UI logic
+ */
+const TracklistSnippet = {
+    TRACK: 'tracklist-track',
+    SEGMENT: 'tracklist-segment',
+    CHECKPOINT: 'tracklist-checkpoint'
+};
+const DefragFlags = {
+    HASTE: 1 << 0,
+    SLICK: 1 << 1,
+    DAMAGEBOOST: 1 << 2,
+    ROCKETS: 1 << 3,
+    PLASMA: 1 << 4,
+    BFG: 1 << 5
+};
+// future: get this from c++
+const FORMAT_VERSION = 1;
+class ZoneMenu {
+    static panels = {
+        zoningMenu: $.GetContextPanel(),
+        trackList: $('#TrackList'),
+        propertiesTrack: $('#TrackProperties'),
+        maxVelocity: $('#MaxVelocity'),
+        defragFlags: $('#DefragFlags'),
+        segmentsEndAtStageStarts: $('#SegmentsEndAtStageStarts')?.FindChild('CheckBox'),
+        propertiesSegment: $('#SegmentProperties'),
+        limitGroundSpeed: $('#LimitGroundSpeed')?.FindChild('CheckBox'),
+        checkpointsRequired: $('#CheckpointsRequired')?.FindChild('CheckBox'),
+        checkpointsOrdered: $('#CheckpointsOrdered')?.FindChild('CheckBox'),
+        segmentName: $('#SegmentName'),
+        propertiesZone: $('#ZoneProperties'),
+        filterSelect: $('#FilterSelect'),
+        volumeSelect: $('#VolumeSelect'),
+        regionSelect: $('#RegionSelect'),
+        pointsSection: $('#PointsSection'),
+        pointsList: $('#PointsList'),
+        propertiesSection: $('#PropertiesSection'),
+        teleportSection: $('#TeleportSection'),
+        regionBottom: $('#RegionBottom'),
+        regionHeight: $('#RegionHeight'),
+        regionSafeHeight: $('#RegionSafeHeight'),
+        regionTPDest: $('#RegionTPDest'),
+        regionTPPos: {
+            x: $('#TeleX'),
+            y: $('#TeleY'),
+            z: $('#TeleZ')
+        },
+        regionTPYaw: $('#TeleYaw')
+    };
+    static selectedZone = {
+        track: null,
+        segment: null,
+        zone: null
+    };
+    static mapZoneData;
+    static backupZoneData;
+    static filternameList;
+    static teleDestList;
+    static newObjectType;
+    static {
+        $.RegisterForUnhandledEvent('ZoneMenu_Show', this.showZoneMenu.bind(this));
+        $.RegisterForUnhandledEvent('ZoneMenu_Hide', this.hideZoneMenu.bind(this));
+        $.RegisterForUnhandledEvent('OnRegionPointAdded', this.addRegionPoint.bind(this));
+        $.RegisterForUnhandledEvent('OnRegionSave', this.onRegionSave.bind(this));
+        $.RegisterForUnhandledEvent('LevelInitPostEntity', this.initMenu.bind(this));
+    }
+    static onLoad() {
+        //@ts-expect-error API name not recognized
+        this.mapZoneData = MomentumTimerAPI.GetActiveZoneDefs();
+        if (!this.mapZoneData) {
+            const tracks = {
+                main: {
+                    zones: {
+                        segments: [this.createSegment()]
+                    },
+                    stagesEndAtStageStarts: true
+                },
+                bonuses: []
+            };
+            this.mapZoneData = {};
+            this.mapZoneData.formatVersion = FORMAT_VERSION;
+            this.mapZoneData.tracks = tracks;
+        }
+    }
+    static initMenu() {
+        if (!this.mapZoneData) {
+            this.onLoad();
+        }
+        if (!this.mapZoneData)
+            return;
+        this.updateSelection(this.mapZoneData.tracks.main, null, null);
+        //@ts-expect-error function name not recognized
+        const entList = $.GetContextPanel().getEntityList();
+        this.filternameList = entList.filter ?? [];
+        this.teleDestList = entList.teleport ?? [];
+        if (this.filternameList !== null) {
+            this.filternameList.unshift($.Localize('#Zoning_Filter_None'));
+            this.populateDropdown(this.filternameList, this.panels.filterSelect, '', true);
+        }
+        if (this.teleDestList !== null) {
+            this.teleDestList.unshift($.Localize('#Zoning_TPDest_MakeNew'));
+            this.teleDestList.unshift($.Localize('#Zoning_TPDest_None'));
+            this.populateDropdown(this.teleDestList, this.panels.regionTPDest, '', true);
+        }
+        this.showRegionMenu('Points');
+        this.createTrackEntry(this.panels.trackList, this.mapZoneData.tracks.main, 'Main');
+        if (!this.mapZoneData.tracks.bonuses || this.mapZoneData.tracks.bonuses.length === 0)
+            return;
+        for (const [i, bonus] of this.mapZoneData.tracks.bonuses.entries()) {
+            this.createTrackEntry(this.panels.trackList, bonus, `Bonus ${i + 1}`);
+        }
+    }
+    static showZoneMenu() {
+        if (!this.mapZoneData || this.panels.trackList.Children().length === 0) {
+            this.initMenu();
+        }
+    }
+    static hideZoneMenu() {
+        if (this.panels.trackList?.Children().length) {
+            this.panels.trackList.RemoveAndDeleteChildren();
+        }
+    }
+    static toggleCollapse(container, expandIcon, collapseIcon) {
+        const shouldExpand = container.HasClass('hide');
+        container.SetHasClass('hide', !shouldExpand);
+        expandIcon.SetHasClass('hide', !shouldExpand);
+        collapseIcon.SetHasClass('hide', shouldExpand);
+        const parent = container.GetParent();
+        if (parent && parent.HasClass('zoning__tracklist-segment')) {
+            parent.SetHasClass('zoning__tracklist-segment--dark', shouldExpand);
+        }
+    }
+    static createTrackEntry(parent, entry, name) {
+        const trackChildContainer = this.addTracklistEntry(parent, name, TracklistSnippet.TRACK, {
+            track: entry,
+            segment: null,
+            zone: null
+        });
+        if (trackChildContainer === null)
+            return;
+        if (entry.zones.segments.length === 0) {
+            trackChildContainer.RemoveAndDeleteChildren();
+            parent.FindChildTraverse('CollapseButton').style.visibility = 'collapse';
+            return;
+        }
+        const trackSegmentContainer = trackChildContainer.FindChildTraverse('SegmentContainer');
+        for (const [i, segment] of entry.zones.segments.entries()) {
+            const majorId = segment.name || `Segment ${i + 1}`;
+            const segmentChildContainer = this.addTracklistEntry(trackSegmentContainer, majorId, TracklistSnippet.SEGMENT, {
+                track: entry,
+                segment: segment,
+                zone: null
+            });
+            if (segmentChildContainer === null)
+                continue;
+            if (segment.checkpoints.length === 0) {
+                trackChildContainer.FindChildTraverse('CollapseButton').style.visibility = 'collapse';
+                continue;
+            }
+            const segmentCheckpointContainer = segmentChildContainer.FindChildTraverse('CheckpointContainer');
+            for (const [j, zone] of segment.checkpoints.entries()) {
+                const minorId = j ? `Checkpoint ${j}` : i ? 'Stage Start' : 'Start Zone';
+                this.addTracklistEntry(segmentCheckpointContainer, minorId, TracklistSnippet.CHECKPOINT, {
+                    track: entry,
+                    segment: segment,
+                    zone: zone
+                });
+            }
+            if (!segment.cancel || segment.cancel.length === 0)
+                continue;
+            for (const [j, zone] of segment.cancel.entries()) {
+                const cancelId = `Cancel ${j + 1}`;
+                this.addTracklistEntry(segmentCheckpointContainer, cancelId, TracklistSnippet.CHECKPOINT, {
+                    track: entry,
+                    segment: segment,
+                    zone: zone
+                });
+            }
+        }
+        if (entry.zones.end) {
+            const trackEndZoneContainer = trackChildContainer.FindChildTraverse('EndZoneContainer');
+            this.addTracklistEntry(trackEndZoneContainer, 'End Zone', TracklistSnippet.CHECKPOINT, {
+                track: entry,
+                segment: null,
+                zone: entry.zones.end
+            });
+        }
+    }
+    static addTracklistEntry(parent, name, snippet, object, setActive = false) {
+        const newTracklistPanel = $.CreatePanel('Panel', parent, name);
+        newTracklistPanel.LoadLayoutSnippet(snippet);
+        const label = newTracklistPanel.FindChildTraverse('Name');
+        label.text = name;
+        const collapseButton = newTracklistPanel.FindChildTraverse('CollapseButton');
+        const childContainer = newTracklistPanel.FindChildTraverse('ChildContainer');
+        if (collapseButton && childContainer) {
+            const expandIcon = newTracklistPanel.FindChildTraverse('TracklistExpandIcon');
+            const collapseIcon = newTracklistPanel.FindChildTraverse('TracklistCollapseIcon');
+            collapseButton.SetPanelEvent('onactivate', () => ZoneMenu.toggleCollapse(childContainer, expandIcon, collapseIcon));
+            this.toggleCollapse(childContainer, expandIcon, collapseIcon);
+        }
+        const selectButton = newTracklistPanel.FindChildTraverse('SelectButton');
+        if (selectButton && object) {
+            selectButton.SetPanelEvent('onactivate', () => ZoneMenu.updateSelection(object.track, object.segment, object.zone));
+        }
+        if (setActive) {
+            selectButton.SetSelected(true);
+        }
+        return childContainer;
+    }
+    static createBonusTrack() {
+        return {
+            zones: {
+                segments: [this.createSegment()],
+                end: {}
+            },
+            defragFlags: 0
+        };
+    }
+    static createSegment() {
+        return {
+            limitStartGroundSpeed: false,
+            checkpointsRequired: true,
+            checkpointsOrdered: true,
+            checkpoints: [this.createZone()],
+            cancel: [],
+            name: ''
+        };
+    }
+    static createZone(withRegion = true) {
+        return {
+            regions: withRegion ? [this.createRegion()] : [],
+            filtername: ''
+        };
+    }
+    static createRegion() {
+        return {
+            points: [],
+            bottom: 0,
+            height: 0,
+            teleDestTargetname: ''
+        };
+    }
+    static addOptionToDropdown(optionType, parent, index, useIndex = true) {
+        const labelString = optionType + (useIndex ? ` ${index}` : '');
+        const optionPanel = $.CreatePanel('Label', parent.AccessDropDownMenu(), labelString);
+        optionPanel.SetAttributeInt('value', index);
+        optionPanel.text = labelString;
+        parent.AddOption(optionPanel);
+    }
+    static populateDropdown(array, dropdown, optionType, clearDropdown = false) {
+        if (clearDropdown)
+            dropdown.RemoveAllOptions();
+        for (const [i, item] of array.entries()) {
+            this.addOptionToDropdown(optionType || item, dropdown, i, optionType !== '');
+        }
+    }
+    static updateSelection(selectedTrack, selectedSegment, selectedZone) {
+        if (!selectedTrack) {
+            this.panels.propertiesTrack.style.visibility = 'collapse';
+            this.panels.propertiesSegment.style.visibility = 'collapse';
+            this.panels.propertiesZone.style.visibility = 'collapse';
+            return;
+        }
+        this.selectedZone.track = selectedTrack;
+        this.selectedZone.segment = selectedSegment;
+        this.selectedZone.zone = selectedZone;
+        if (selectedZone !== null) {
+            this.panels.propertiesTrack.style.visibility = 'collapse';
+            this.panels.propertiesSegment.style.visibility = 'collapse';
+            this.panels.propertiesZone.style.visibility = 'visible';
+            this.populateZoneProperties();
+        }
+        else if (selectedSegment !== null) {
+            this.panels.propertiesTrack.style.visibility = 'collapse';
+            this.panels.propertiesSegment.style.visibility = 'visible';
+            this.panels.propertiesZone.style.visibility = 'collapse';
+            this.populateSegmentProperties();
+        }
+        else if (selectedTrack !== null) {
+            this.panels.propertiesTrack.style.visibility = 'visible';
+            this.panels.propertiesSegment.style.visibility = 'collapse';
+            this.panels.propertiesZone.style.visibility = 'collapse';
+            this.populateTrackProperties();
+        }
+    }
+    static populateZoneProperties() {
+        if (!this.mapZoneData || !this.selectedZone || !this.selectedZone.zone)
+            return;
+        const zone = this.selectedZone.zone;
+        const filterIndex = zone.filtername ? this.filternameList?.indexOf(zone.filtername) ?? 0 : 0;
+        this.panels.filterSelect.SetSelectedIndex(filterIndex);
+        this.populateDropdown(zone.regions, this.panels.regionSelect, 'Region', true);
+        this.panels.regionSelect.SetSelectedIndex(0);
+        this.populateRegionProperties();
+    }
+    static populateSegmentProperties() {
+        if (!this.mapZoneData || !this.selectedZone || !this.selectedZone.segment)
+            return;
+        const segment = this.selectedZone.segment;
+        this.panels.limitGroundSpeed.SetSelected(segment.limitStartGroundSpeed);
+        this.panels.checkpointsRequired.SetSelected(segment.checkpointsRequired);
+        this.panels.checkpointsOrdered.SetSelected(segment.checkpointsOrdered);
+        this.panels.segmentName.text = segment.name === undefined ? '' : segment.name;
+    }
+    static populateTrackProperties() {
+        if (!this.mapZoneData || !this.selectedZone || !this.selectedZone.track)
+            return;
+        const track = this.selectedZone.track;
+        const parentPanel = this.panels.segmentsEndAtStageStarts.GetParent();
+        if ('stagesEndAtStageStarts' in track) {
+            parentPanel.style.visibility = 'visible';
+            this.panels.segmentsEndAtStageStarts.SetSelected(track.stagesEndAtStageStarts);
+        }
+        else {
+            parentPanel.style.visibility = 'collapse';
+        }
+        this.panels.defragFlags.style.visibility = 'defragFlags' in track ? 'visible' : 'collapse';
+        this.panels.maxVelocity.text =
+            this.mapZoneData.maxVelocity === undefined ? '' : this.mapZoneData.maxVelocity.toFixed(0);
+    }
+    static updateZoneFilter() {
+        if (!this.selectedZone || !this.selectedZone.zone || !this.filternameList)
+            return;
+        const filterIndex = this.panels.filterSelect.GetSelected()?.GetAttributeInt('value', 0);
+        this.selectedZone.zone.filtername = filterIndex ? this.filternameList[filterIndex] : '';
+    }
+    static populateRegionProperties() {
+        if (!this.selectedZone || !this.selectedZone.zone)
+            return;
+        const index = this.panels.regionSelect.GetSelected()?.GetAttributeInt('value', -1);
+        const region = this.selectedZone.zone.regions[index];
+        this.panels.pointsList.RemoveAndDeleteChildren();
+        if (region && region.points && region.points.length > 0) {
+            for (const [i, point] of region.points.entries()) {
+                this.addPointToList(i, point);
+            }
+        }
+        this.panels.regionBottom.text = (region?.bottom ?? 0).toFixed(2);
+        this.panels.regionHeight.text = (region?.height ?? 0).toFixed(2);
+        this.panels.regionSafeHeight.text = (region?.safeHeight ?? 0).toFixed(2);
+        const tpIndex = region.teleDestTargetname === '' ? 0 : this.teleDestList?.indexOf(region.teleDestTargetname);
+        this.panels.regionTPDest.SetSelectedIndex(tpIndex);
+    }
+    static addRegion() {
+        if (!this.selectedZone || !this.selectedZone.zone)
+            return;
+        this.selectedZone.zone.regions.push(this.createRegion());
+        this.populateDropdown(this.selectedZone.zone.regions, this.panels.regionSelect, 'Region', true);
+        this.panels.regionSelect.SetSelectedIndex(this.selectedZone.zone.regions.length - 1);
+        this.populateRegionProperties();
+    }
+    static deleteRegion() {
+        if (this.panels.regionSelect.Children().length === 1) {
+            $.Msg("Can't delete last Region!!!");
+            return;
+        }
+        const index = this.panels.regionSelect.GetSelected()?.GetAttributeInt('value', -1);
+        this.selectedZone.zone?.regions.splice(index, 1);
+        this.panels.regionSelect.SetSelectedIndex(0);
+        this.populateRegionProperties();
+    }
+    static addPointToList(i, point) {
+        const newRegionPoint = $.CreatePanel('Panel', this.panels.pointsList, `Point ${i}`);
+        newRegionPoint.LoadLayoutSnippet('region-point');
+        newRegionPoint.FindChildTraverse('PointX').text = point[0].toFixed(2);
+        newRegionPoint.FindChildTraverse('PointY').text = point[1].toFixed(2);
+        const deleteButton = newRegionPoint.FindChildTraverse('DeleteButton');
+        deleteButton.SetPanelEvent('onactivate', () => {
+            ZoneMenu.deleteRegionPoint(newRegionPoint);
+        });
+    }
+    static deleteRegionPoint(point) {
+        if (!this.selectedZone || !this.selectedZone.zone)
+            return;
+        const n = this.panels.pointsList.Children().indexOf(point);
+        const index = this.panels.regionSelect.GetSelected().GetAttributeInt('value', -1);
+        this.selectedZone.zone?.regions[index].points.splice(n, 1);
+        point.DeleteAsync(0);
+    }
+    static addRegionPoint(point) {
+        if (!this.selectedZone || !this.selectedZone.zone)
+            return;
+        const index = this.panels.regionSelect.GetSelected().GetAttributeInt('value', -1);
+        if (index > -1) {
+            const i = this.selectedZone.zone.regions[index].points.length;
+            this.selectedZone.zone.regions[index].points.push([point.x, point.y]);
+            this.addPointToList(i, [point.x, point.y]);
+        }
+    }
+    static setRegionBottom() {
+        if (!this.selectedZone || !this.selectedZone.zone)
+            return;
+        const regionIndex = this.panels.regionSelect.GetSelected().GetAttributeInt('value', -1);
+        const region = this.selectedZone.zone.regions[regionIndex];
+        const bottom = Number.parseFloat(this.panels.regionBottom.text);
+        region.bottom = Number.isNaN(bottom) ? 0 : bottom;
+    }
+    static setRegionHeight() {
+        if (!this.selectedZone || !this.selectedZone.zone)
+            return;
+        const regionIndex = this.panels.regionSelect.GetSelected().GetAttributeInt('value', -1);
+        const region = this.selectedZone.zone.regions[regionIndex];
+        const height = Number.parseFloat(this.panels.regionHeight.text);
+        region.height = Number.isNaN(height) ? 0 : height;
+    }
+    static setRegionSafeHeight() {
+        if (!this.selectedZone || !this.selectedZone.zone)
+            return;
+        const regionIndex = this.panels.regionSelect.GetSelected().GetAttributeInt('value', -1);
+        const region = this.selectedZone.zone.regions[regionIndex];
+        const height = Number.parseFloat(this.panels.regionSafeHeight.text);
+        region.regionSafeHeight = Number.isNaN(height) ? 0 : height;
+    }
+    static updateRegionTPDest() {
+        if (!this.selectedZone || !this.selectedZone.zone || !this.teleDestList)
+            return;
+        const regionIndex = this.panels.regionSelect.GetSelected().GetAttributeInt('value', -1);
+        const teleDestIndex = this.panels.regionTPDest.GetSelected()?.GetAttributeInt('value', 0);
+        const region = this.selectedZone.zone.regions[regionIndex];
+        if (teleDestIndex === 0) {
+            // no teleport destination for this region
+            region.teleDestTargetname = '';
+            delete region.teleDestPos;
+            delete region.teleDestYaw;
+            this.panels.regionTPPos.x.text = '';
+            this.panels.regionTPPos.y.text = '';
+            this.panels.regionTPPos.z.text = '';
+            this.panels.regionTPYaw.text = '';
+            this.setRegionTPDestTextEntriesActive(false);
+        }
+        else if (teleDestIndex === 1 && region.points.length > 0) {
+            if (!region.teleDestPos || !region.teleDestYaw) {
+                region.teleDestPos = [];
+                region.teleDestPos = [0, 0, region.bottom];
+                for (const [_, point] of region.points.entries()) {
+                    region.teleDestPos[0] += point[0];
+                    region.teleDestPos[1] += point[1];
+                }
+                region.teleDestPos[0] /= region.points.length;
+                region.teleDestPos[1] /= region.points.length;
+                region.teleDestYaw = 0;
+            }
+            this.panels.regionTPPos.x.text = region.teleDestPos[0].toFixed(2);
+            this.panels.regionTPPos.y.text = region.teleDestPos[1].toFixed(2);
+            this.panels.regionTPPos.z.text = region.teleDestPos[2].toFixed(2);
+            this.panels.regionTPYaw.text = region.teleDestYaw.toFixed(2);
+            this.setRegionTPDestTextEntriesActive(true);
+        }
+        else {
+            region.teleDestTargetname = this.teleDestList[teleDestIndex];
+            delete region.teleDestPos;
+            delete region.teleDestYaw;
+            this.panels.regionTPPos.x.text = '';
+            this.panels.regionTPPos.y.text = '';
+            this.panels.regionTPPos.z.text = '';
+            this.panels.regionTPYaw.text = '';
+            this.setRegionTPDestTextEntriesActive(false);
+        }
+    }
+    static setRegionTeleDestOrientation() {
+        if (!this.selectedZone || !this.selectedZone.zone)
+            return;
+        const regionIndex = this.panels.regionSelect.GetSelected().GetAttributeInt('value', -1);
+        const region = this.selectedZone.zone.regions[regionIndex];
+        const x = Number.parseFloat(this.panels.regionTPPos.x.text);
+        const y = Number.parseFloat(this.panels.regionTPPos.y.text);
+        const z = Number.parseFloat(this.panels.regionTPPos.z.text);
+        const yaw = Number.parseFloat(this.panels.regionTPYaw.text);
+        region.teleDestPos = [Number.isNaN(x) ? 0 : x, Number.isNaN(y) ? 0 : y, Number.isNaN(z) ? 0 : z];
+        region.teleDestYaw = Number.isNaN(yaw) ? 0 : yaw;
+    }
+    static setRegionTPDestTextEntriesActive(enable) {
+        this.panels.regionTPPos.x.enabled = enable;
+        this.panels.regionTPPos.y.enabled = enable;
+        this.panels.regionTPPos.z.enabled = enable;
+        this.panels.regionTPYaw.enabled = enable;
+    }
+    static onRegionSave() {
+        const index = this.panels.regionSelect.GetSelected()?.GetAttributeInt('value', -1);
+        if (index > -1) {
+            const corners = this.selectedZone.zone?.regions[index].points.length ?? 0;
+            if (corners < 3) {
+                $.Msg('Region needs more points!');
+            }
+        }
+    }
+    static addBonus() {
+        if (!this.mapZoneData)
+            return;
+        const bonus = this.createBonusTrack();
+        this.mapZoneData.tracks.bonuses.push(bonus);
+        this.createTrackEntry(this.panels.trackList, bonus, `Bonus ${this.mapZoneData.tracks.bonuses.length}`);
+    }
+    static addSegment() {
+        if (!this.mapZoneData || !this.selectedZone.track)
+            return;
+        if ('defragFlags' in this.selectedZone.track) {
+            // warn player bonus tracks can't have segments!
+            $.Msg('WARNING: Bonus track selected. Bonus tracks cannot have stages!');
+            return;
+        }
+        const newSegment = this.createSegment();
+        this.mapZoneData.tracks.main.zones.segments.push(newSegment);
+        const mainTrack = this.panels.trackList.Children()[0];
+        const segmentList = mainTrack.FindChildTraverse('SegmentContainer');
+        const id = `Segment ${this.mapZoneData.tracks.main.zones.segments.length}`;
+        const list = this.addTracklistEntry(segmentList, id, TracklistSnippet.SEGMENT, {
+            track: this.mapZoneData.tracks.main,
+            segment: newSegment,
+            zone: null
+        });
+        this.addTracklistEntry(list, 'Stage Start', TracklistSnippet.CHECKPOINT, {
+            track: this.selectedZone.track,
+            segment: newSegment,
+            zone: newSegment.checkpoints[0]
+        });
+    }
+    static addCheckpoint() {
+        if (!this.mapZoneData || !this.selectedZone || !this.selectedZone.segment || !this.selectedZone.track)
+            return;
+        const newZone = this.createZone();
+        this.selectedZone.segment.checkpoints.push(newZone);
+        let trackPanel;
+        if (this.selectedZone.track === this.mapZoneData.tracks.main) {
+            trackPanel = this.panels.trackList.Children()[0];
+        }
+        else {
+            const bonusId = this.mapZoneData.tracks.bonuses.indexOf(this.selectedZone.track);
+            trackPanel = this.panels.trackList.Children()[1 + bonusId];
+        }
+        const segmentIndex = this.selectedZone.track.zones.segments.indexOf(this.selectedZone.segment);
+        const selectedSegment = trackPanel.FindChildTraverse('SegmentContainer')?.Children()[segmentIndex];
+        const checkpointsList = selectedSegment.FindChildTraverse('CheckpointContainer');
+        const id = `Checkpoint ${this.selectedZone.segment.checkpoints.length - 1}`;
+        this.addTracklistEntry(checkpointsList, id, TracklistSnippet.CHECKPOINT, {
+            track: this.selectedZone.track,
+            segment: this.selectedZone.segment,
+            zone: newZone
+        });
+    }
+    static addEndZone() {
+        if (!this.mapZoneData || !this.selectedZone || !this.selectedZone.track)
+            return;
+        const endZone = this.createZone();
+        this.selectedZone.track.zones.end = endZone;
+        let trackPanel;
+        if (this.selectedZone.track === this.mapZoneData.tracks.main) {
+            trackPanel = this.panels.trackList.Children()[0];
+        }
+        else {
+            const bonusId = this.mapZoneData.tracks.bonuses.indexOf(this.selectedZone.track);
+            trackPanel = this.panels.trackList.Children()[1 + bonusId];
+        }
+        const endZoneContainer = trackPanel.FindChildTraverse('EndZoneContainer');
+        const oldEnd = endZoneContainer.FindChildTraverse('End Zone');
+        if (oldEnd) {
+            const selectButton = oldEnd.FindChildTraverse('SelectButton');
+            selectButton.SetPanelEvent('onactivate', () => ZoneMenu.updateSelection(this.selectedZone.track, null, endZone));
+        }
+        else {
+            this.addTracklistEntry(endZoneContainer, 'End Zone', TracklistSnippet.CHECKPOINT, {
+                track: this.selectedZone.track,
+                segment: null,
+                zone: endZone
+            });
+        }
+    }
+    static addCancelZone() {
+        if (!this.mapZoneData || !this.selectedZone || !this.selectedZone.segment || !this.selectedZone.track)
+            return;
+        const newZone = this.createZone();
+        this.selectedZone.segment.cancel.push(newZone);
+        let trackPanel;
+        if (this.selectedZone.track === this.mapZoneData.tracks.main) {
+            trackPanel = this.panels.trackList.Children()[0];
+        }
+        else {
+            const bonusId = this.mapZoneData.tracks.bonuses.indexOf(this.selectedZone.track);
+            trackPanel = this.panels.trackList.Children()[1 + bonusId];
+        }
+        const segmentIndex = this.selectedZone.track.zones.segments.indexOf(this.selectedZone.segment);
+        const selectedSegment = trackPanel.FindChildTraverse('SegmentContainer')?.Children()[segmentIndex];
+        const cancelList = selectedSegment.FindChildTraverse('CancelContainer');
+        const id = `Cancel Zone ${this.selectedZone.segment.cancel.length}`;
+        this.addTracklistEntry(cancelList, id, TracklistSnippet.CHECKPOINT, {
+            track: this.selectedZone.track,
+            segment: this.selectedZone.segment,
+            zone: newZone
+        });
+    }
+    static showAddMenu() {
+        UiToolkitAPI.ShowSimpleContextMenu('NewZoneButton', '', [
+            {
+                label: $.Localize('#Zoning_Bonus'),
+                jsCallback: () => this.addBonus()
+            },
+            {
+                label: $.Localize('#Zoning_Segment'),
+                jsCallback: () => this.addSegment()
+            },
+            {
+                label: $.Localize('#Zoning_Checkpoint'),
+                jsCallback: () => this.addCheckpoint()
+            },
+            {
+                label: $.Localize('#Zoning_EndZone'),
+                jsCallback: () => this.addEndZone()
+            },
+            {
+                label: $.Localize('#Zoning_CancelZone'),
+                jsCallback: () => this.addCancelZone()
+            }
+        ]);
+    }
+    static showDeletePopup() {
+        UiToolkitAPI.ShowGenericPopupTwoOptionsBgStyle($.Localize('#Zoning_Delete'), $.Localize('#Zoning_Delete_Message'), 'warning-popup', $.Localize('#Zoning_Delete'), () => {
+            this.deleteSelection();
+        }, $.Localize('#Zoning_Cancel'), () => { }, 'none');
+    }
+    static deleteSelection() {
+        if (!this.selectedZone || !this.mapZoneData)
+            return;
+        if (this.selectedZone.track && this.selectedZone.segment && this.selectedZone.zone) {
+            const checkpointIndex = this.selectedZone.segment.checkpoints.indexOf(this.selectedZone.zone);
+            if (checkpointIndex === -1) {
+                const cancelIndex = this.selectedZone.segment.cancel.indexOf(this.selectedZone.zone);
+                this.selectedZone.segment.cancel.splice(cancelIndex, 1);
+            }
+            else {
+                this.selectedZone.segment.checkpoints.splice(checkpointIndex, 1);
+            }
+        }
+        else if (this.selectedZone.track && this.selectedZone.segment) {
+            if (this.selectedZone.track.zones.segments.length === 1) {
+                $.Msg('Track must have at least one segment!');
+            }
+            else {
+                const index = this.mapZoneData.tracks.main.zones.segments.indexOf(this.selectedZone.segment);
+                this.mapZoneData.tracks.main.zones.segments.splice(index, 1);
+            }
+        }
+        else if (this.selectedZone.track) {
+            if ('stagesEndAtStageStarts' in this.selectedZone.track) {
+                $.Msg("Can't delete Main track!!!");
+            }
+            else {
+                const trackIndex = this.mapZoneData.tracks.bonuses.indexOf(this.selectedZone.track);
+                this.mapZoneData.tracks.bonuses.splice(trackIndex, 1);
+            }
+        }
+        //hack: this can be a little more surgical
+        this.panels.trackList.RemoveAndDeleteChildren();
+        this.initMenu();
+    }
+    static setMaxVelocity() {
+        if (!this.mapZoneData)
+            return;
+        const velocity = Number.parseFloat(this.panels.maxVelocity.text);
+        this.mapZoneData.maxVelocity = !Number.isNaN(velocity) && velocity > 0 ? velocity : 0;
+    }
+    static setStageEndAtStageStarts() {
+        $.Msg('Setting');
+        if (!this.selectedZone || !this.selectedZone.track || !('stagesEndAtStageStarts' in this.selectedZone.track))
+            return;
+        this.selectedZone.track.stagesEndAtStageStarts = this.panels.segmentsEndAtStageStarts.checked;
+    }
+    static showDefragFlagMenu() {
+        if (this.selectedZone.track === null || !('defragFlags' in this.selectedZone.track))
+            return;
+        const flagEditMenu = UiToolkitAPI.ShowCustomLayoutContextMenu(this.panels.defragFlags.id, '', 'file://{resources}/layout/modals/context-menus/zoning-df-flags.xml');
+        const hasteFlag = flagEditMenu.FindChildTraverse('FlagHaste');
+        hasteFlag.checked = (this.selectedZone.track.defragFlags & DefragFlags['HASTE']) > 0;
+        hasteFlag.SetPanelEvent('onactivate', () => ZoneMenu.setDefragFlags('HASTE'));
+        const slickFlag = flagEditMenu.FindChildTraverse('FlagSlick');
+        slickFlag.checked = (this.selectedZone.track.defragFlags & DefragFlags['SLICK']) > 0;
+        slickFlag.SetPanelEvent('onactivate', () => ZoneMenu.setDefragFlags('SLICK'));
+        const damageBoostFlag = flagEditMenu.FindChildTraverse('FlagDamageBoost');
+        damageBoostFlag.checked = (this.selectedZone.track.defragFlags & DefragFlags['DAMAGEBOOST']) > 0;
+        damageBoostFlag.SetPanelEvent('onactivate', () => ZoneMenu.setDefragFlags('DAMAGEBOOST'));
+        const rocketsFlag = flagEditMenu.FindChildTraverse('FlagRockets');
+        rocketsFlag.checked = (this.selectedZone.track.defragFlags & DefragFlags['ROCKETS']) > 0;
+        rocketsFlag.SetPanelEvent('onactivate', () => ZoneMenu.setDefragFlags('ROCKETS'));
+        const plasmaFlag = flagEditMenu.FindChildTraverse('FlagPlasma');
+        plasmaFlag.checked = (this.selectedZone.track.defragFlags & DefragFlags['PLASMA']) > 0;
+        plasmaFlag.SetPanelEvent('onactivate', () => ZoneMenu.setDefragFlags('PLASMA'));
+        const bfgFlag = flagEditMenu.FindChildTraverse('FlagBFG');
+        bfgFlag.checked = (this.selectedZone.track.defragFlags & DefragFlags['BFG']) > 0;
+        bfgFlag.SetPanelEvent('onactivate', () => ZoneMenu.setDefragFlags('BFG'));
+    }
+    static setDefragFlags(flag) {
+        if (this.selectedZone.track === null || !('defragFlags' in this.selectedZone.track))
+            return;
+        this.selectedZone.track.defragFlags ^= DefragFlags[flag];
+    }
+    static setLimitGroundSpeed() {
+        if (!this.selectedZone || !this.selectedZone.track || !this.selectedZone.segment)
+            return;
+        this.selectedZone.segment.limitStartGroundSpeed = this.panels.limitGroundSpeed.checked;
+    }
+    static setCheckpointsOrdered() {
+        if (!this.selectedZone || !this.selectedZone.track || !this.selectedZone.segment)
+            return;
+        this.selectedZone.segment.checkpointsOrdered = this.panels.checkpointsOrdered.checked;
+    }
+    static setCheckpointsRequired() {
+        if (!this.selectedZone || !this.selectedZone.track || !this.selectedZone.segment)
+            return;
+        this.selectedZone.segment.checkpointsRequired = this.panels.checkpointsRequired.checked;
+    }
+    static setSegmentName() {
+        if (!this.selectedZone || !this.selectedZone.track || !this.selectedZone.segment)
+            return;
+        this.selectedZone.segment.name = this.panels.segmentName.text;
+        // feat: later
+        // update segment name in trasklist tree
+    }
+    static showRegionMenu(menu) {
+        switch (menu) {
+            case 'Points':
+                this.panels.pointsSection.style.visibility = 'visible';
+                this.panels.propertiesSection.style.visibility = 'collapse';
+                this.panels.teleportSection.style.visibility = 'collapse';
+                break;
+            case 'Properties':
+                this.panels.pointsSection.style.visibility = 'collapse';
+                this.panels.propertiesSection.style.visibility = 'visible';
+                this.panels.teleportSection.style.visibility = 'collapse';
+                break;
+            case 'Teleport':
+                this.panels.pointsSection.style.visibility = 'collapse';
+                this.panels.propertiesSection.style.visibility = 'collapse';
+                this.panels.teleportSection.style.visibility = 'visible';
+                break;
+        }
+    }
+    static saveZones() {
+        if (!this.mapZoneData)
+            return;
+        this.mapZoneData.dataTimestamp = Date.now();
+        //@ts-expect-error API name not recognized
+        MomentumTimerAPI.SaveZoneDefs(this.mapZoneData);
+        // reload zones
+    }
+    static cancelEdit() {
+        this.panels.trackList.RemoveAndDeleteChildren();
+        this.mapZoneData = null;
+        this.initMenu();
+    }
+    static isSelectionValid() {
+        return {
+            track: !!this.selectedZone && !!this.selectedZone.track,
+            segment: !!this.selectedZone && !!this.selectedZone.track && !!this.selectedZone.segment,
+            zone: !!this.selectedZone &&
+                !!this.selectedZone.track &&
+                !!this.selectedZone.segment &&
+                !!this.selectedZone.zone
+        };
+    }
+}

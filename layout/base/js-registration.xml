@@ -1,9 +1,8 @@
 <root>
 	<scripts>
-		<include src="file://{scripts}/bar/test.mjs" />
-
+		<include src="file://{scripts}/test.mjs" />
 		<include src="file://{scripts}/globals/buttons.js" />
-		<include src="file://{scripts}/globals/dont-show-again.js" />
+<!--		<include src="file://{scripts}/globals/dont-show-again.js" />-->
 		<include src="file://{scripts}/globals/enum.js" />
 		<include src="file://{scripts}/globals/run.js" />
 		<include src="file://{scripts}/globals/safeguards.js" />
