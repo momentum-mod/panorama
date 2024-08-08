@@ -130,9 +130,20 @@ class JumpStats {
 	}
 
 	static {
-		$.RegisterEventHandler('OnJumpStarted', this.container, this.onJump.bind(this));
+		RegisterHUDPanelForGamemode({
+			gamemodes: [GameMode.BHOP],
+			context: this,
+			contextPanel: this.container,
+			onLoad: this.onLoad,
+			handledEvents: [
+				{
+					event: 'OnJumpStarted',
+					contextPanel: this.container,
+					callback: this.onJump
+				}
+			]
+		});
 
-		$.RegisterForUnhandledEvent('LevelInitPostEntity', this.onLoad.bind(this));
 		$.RegisterForUnhandledEvent('OnJumpStatsCFGChange', this.onConfigChange.bind(this));
 	}
 }
