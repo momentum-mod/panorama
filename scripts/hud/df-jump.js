@@ -20,8 +20,18 @@ class DFJump {
 	static totalLabel = $('#JumpTotalLabel');
 
 	static onLoad() {
-		this.initializeSettings();
-		this.colorClass = COLOR_CLASS.GROUND;
+		if (GameModeAPI.GetCurrentGameMode() === GameMode.DEFRAG) {
+			this.updateHandle = $.RegisterEventHandler(
+				'DFJumpDataUpdate',
+				this.container,
+				this.onDFJumpUpdate.bind(this)
+			);
+			this.initializeSettings();
+			this.colorClass = COLOR_CLASS.GROUND;
+		} else if (this.updateHandle) {
+			$.UnregisterEventHandler('DFJumpDataUpdate', this.container, this.updateHandle);
+			this.updateHandle = null;
+		}
 	}
 
 	static onDFJumpUpdate(releaseDelay, pressDelay, totalDelay) {
@@ -49,8 +59,6 @@ class DFJump {
 	}
 
 	static {
-		$.RegisterEventHandler('DFJumpDataUpdate', this.container, this.onDFJumpUpdate.bind(this));
-
 		$.RegisterForUnhandledEvent('LevelInitPostEntity', this.onLoad.bind(this));
 		$.RegisterForUnhandledEvent('DFJumpMaxDelayChanged', this.setMaxDelay.bind(this));
 	}

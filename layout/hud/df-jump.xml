@@ -3,6 +3,7 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 	<scripts>
+		<include src="file://{scripts}/common/gamemodes.js" />
 		<include src="file://{scripts}/common/buttons.js" />
 		<include src="file://{scripts}/hud/df-jump.js" />
 	</scripts>
