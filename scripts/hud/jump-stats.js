@@ -83,9 +83,15 @@ class JumpStats {
 	}
 
 	static onLoad() {
-		this.onConfigChange();
-		this.initializeStats();
-		this.setText();
+		if (currentMode === GameMode.BHOP) {
+			this.updateHandle = $.RegisterEventHandler('OnJumpStarted', this.container, this.onJump.bind(this));
+			this.onConfigChange();
+			this.initializeStats();
+			this.setText();
+		} else if (this.updateHandle) {
+			$.UnregisterEventHandler('OnJumpStarted', this.container, this.updateHandle);
+			this.updateHandle = null;
+		}
 	}
 
 	static initializeStats() {
@@ -130,8 +136,6 @@ class JumpStats {
 	}
 
 	static {
-		$.RegisterEventHandler('OnJumpStarted', this.container, this.onJump.bind(this));
-
 		$.RegisterForUnhandledEvent('LevelInitPostEntity', this.onLoad.bind(this));
 		$.RegisterForUnhandledEvent('OnJumpStatsCFGChange', this.onConfigChange.bind(this));
 	}
