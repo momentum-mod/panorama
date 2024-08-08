@@ -33,7 +33,6 @@ class Synchronizer {
 
 	static onLoad() {
 		this.initializeSettings();
-
 		if (this.statMode) this.onJump(); // show stats if enabled
 	}
 
@@ -256,7 +255,25 @@ class Synchronizer {
 	}
 
 	static {
-		$.RegisterEventHandler('HudProcessInput', $.GetContextPanel(), this.onUpdate.bind(this));
+		RegisterHUDPanelForGamemode({
+			gamemodes: [GameMode.BHOP, GameMode.SURF],
+			context: this,
+			contextPanel: $.GetContextPanel(),
+			onLoad: this.onLoad,
+			handledEvents: [
+				{
+					event: 'HudProcessInput',
+					contextPanel: $.GetContextPanel(),
+					callback: this.onUpdate
+				}
+			],
+			unhandledEvents: [
+				{
+					event: 'OnJumpStarted',
+					callback: this.onJump
+				}
+			]
+		});
 
 		$.RegisterForUnhandledEvent('OnSynchroModeChanged', this.setDisplayMode.bind(this));
 		$.RegisterForUnhandledEvent('OnSynchroColorModeChanged', this.setColorMode.bind(this));
@@ -266,7 +283,5 @@ class Synchronizer {
 		$.RegisterForUnhandledEvent('OnSynchroMinSpeedChanged', this.setMinSpeed.bind(this));
 		$.RegisterForUnhandledEvent('OnSynchroStatModeChanged', this.setStatMode.bind(this));
 		$.RegisterForUnhandledEvent('OnSynchroStatColorModeChanged', this.setStatColorMode.bind(this));
-		$.RegisterForUnhandledEvent('OnJumpStarted', this.onJump.bind(this));
-		$.RegisterForUnhandledEvent('LevelInitPostEntity', this.onLoad.bind(this));
 	}
 }
