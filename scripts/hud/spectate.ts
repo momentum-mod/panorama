@@ -1,5 +1,5 @@
 class HudSpectate {
-	static panels = {
+panels = {
 		indicatorSpectating: $('#IndicatorSpectating'),
 		indicatorWatchingReplay: $('#IndicatorWatchingReplay'),
 		//targetName: $('#TargetName'),
@@ -9,7 +9,7 @@ class HudSpectate {
 		toggleReplayControls: $('#ToggleReplayControls')
 	};
 
-	static onSpectatorChanged(type: Run.RunEntityType) {
+onSpectatorChanged(type: Run.RunEntityType) {
 		if (type !== _.Run.RunEntityType.PLAYER) {
 			const isReplay = type === _.Run.RunEntityType.REPLAY;
 
@@ -23,7 +23,7 @@ class HudSpectate {
 		}
 	}
 
-	static {
+constructor() {
 		$.RegisterForUnhandledEvent('MomentumSpectatorTargetChanged', (type: Run.RunEntityType) =>
 			this.onSpectatorChanged(type)
 		);

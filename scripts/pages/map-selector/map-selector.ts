@@ -18,7 +18,7 @@ type StoredFilters = {
 };
 
 class MapSelector {
-	static panels = {
+panels = {
 		cp: $.GetContextPanel<MomentumMapSelector>(),
 		searchText: $<TextEntry>('#MapSearchTextEntry'),
 		searchClear: $<Button>('#MapSearchClear'),
@@ -37,16 +37,16 @@ class MapSelector {
 	};
 
 	// Describing which data on which type of panel we want to store out to PS.
-	static readonly filterablePanels = {
+readonly filterablePanels = {
 		ToggleButton: { event: 'onactivate', properties: ['checked'] },
 		NStateButton: { event: 'onactivate', properties: ['currentstate'] },
 		DualSlider: { event: 'onvaluechanged', properties: ['lowerValue', 'upperValue'] }
 	};
 
-	static readonly tierMin = 1;
-	static readonly tierMax = 1;
+readonly tierMin = 1;
+readonly tierMax = 1;
 
-	static {
+constructor() {
 		$.RegisterForUnhandledEvent('MapSelector_ShowConfirmCancelDownload', this.showConfirmCancelDownload.bind(this));
 		$.RegisterForUnhandledEvent('MapSelector_ShowConfirmOverwrite', this.showConfirmOverwrite.bind(this));
 		$.RegisterForUnhandledEvent('MapSelector_MapsFiltered', this.onMapsFiltered.bind(this));
@@ -76,7 +76,7 @@ class MapSelector {
 	/**
 	 * Temporary way of requesting a map list update
 	 */
-	static requestMapUpdate() {
+requestMapUpdate() {
 		this.panels.searchText.Submit();
 		UiToolkitAPI.ShowCustomLayoutTooltip('MapFilters', '', 'file://{resources}/layout/modals/tooltips/test.xml');
 	}
@@ -84,14 +84,14 @@ class MapSelector {
 	/**
 	 * Clear the search bar.
 	 */
-	static clearSearch() {
+clearSearch() {
 		this.panels.searchText.text = '';
 	}
 
 	/**
 	 * Clear all the filters, resetting to the default state
 	 */
-	static clearFilters() {
+clearFilters() {
 		// Reset every NState button
 		for (const button of [
 			this.panels.completedFilterButton,
@@ -113,7 +113,7 @@ class MapSelector {
 	}
 
 	/** Set up panel events to update filter panel properties in persistent storage whenever they change. */
-	static setupFilterSaveEvents(panel: GenericPanel) {
+setupFilterSaveEvents(panel: GenericPanel) {
 		// Find every panel of paneltype that we want to store
 		// TODO: spread not needed when we have iterator methods when on latest v8/TS
 		[...Globals.Util.traverseChildren(panel)]
@@ -144,7 +144,7 @@ class MapSelector {
 	}
 
 	/** Load the saved state of all filter components from persistent storage, and apply them to the UI */
-	static loadFilters() {
+loadFilters() {
 		// If the filter selection yielded empty results on last exit, clear them
 		if ($.persistentStorage.getItem('mapSelector.mapsFiltersYieldEmptyResults')) {
 			return;
@@ -177,11 +177,11 @@ class MapSelector {
 		}
 	}
 
-	static getFiltersFromPS(): StoredFilters {
+getFiltersFromPS(): StoredFilters {
 		return $.persistentStorage.getItem('mapSelector.filtersState') ?? {};
 	}
 
-	static saveFiltersToPS(filters: StoredFilters) {
+saveFiltersToPS(filters: StoredFilters) {
 		$.persistentStorage.setItem('mapSelector.filtersState', filters);
 	}
 
@@ -189,7 +189,7 @@ class MapSelector {
 	 *  Show a popup asking the user if they want to overwrite the map,
 	 * only if mom_map_download_cancel_confirm is true
 	 */
-	static showConfirmOverwrite(mapID: number) {
+showConfirmOverwrite(mapID: number) {
 		UiToolkitAPI.ShowGenericPopupOkCancel(
 			$.Localize('#Action_ConfirmOverwrite'),
 			$.Localize('#Action_ConfirmOverwrite_Message'),
@@ -203,7 +203,7 @@ class MapSelector {
 	 * Show a popup asking the user if they want to cancel an ongoing map download
 	 * @param mapID The map ID to overwrite
 	 */
-	static showConfirmCancelDownload(mapID: number) {
+showConfirmCancelDownload(mapID: number) {
 		const cancel = () => $.DispatchEvent('MapSelector_ConfirmCancelDownload', mapID);
 
 		if (GameInterfaceAPI.GetSettingBool('mom_map_download_cancel_confirm')) {
@@ -223,7 +223,7 @@ class MapSelector {
 	 * Listens to filter changes, if no maps are returned shows the empty warning and tracks in persistent storage
 	 * @param count The number of maps returned by the filter
 	 */
-	static onMapsFiltered(count: number) {
+onMapsFiltered(count: number) {
 		const isZero = count === 0;
 
 		this.panels.emptyContainer.SetHasClass('mapselector__emptywarning--hidden', !isZero);
@@ -234,7 +234,7 @@ class MapSelector {
 	/*
 	 *	Set all the map data for the map just selected
 	 */
-	static onSelectedDataUpdated() {
+onSelectedDataUpdated() {
 		const mapData = $.GetContextPanel<MomentumMapSelector>().selectedMapData;
 
 		if (!mapData) return;
@@ -297,7 +297,7 @@ class MapSelector {
 	/**
 	 * When a NState button is pressed, update its styling classes
 	 */
-	static onNStateBtnChanged(panelID: string, state: 0 | 1 | 2) {
+onNStateBtnChanged(panelID: string, state: 0 | 1 | 2) {
 		const panel = $.GetContextPanel().FindChildTraverse(panelID);
 
 		// TODO: Iterator method when on latest v8/TS
@@ -313,7 +313,7 @@ class MapSelector {
 	/**
 	 * Toggles the visibility of the leaderboards panel
 	 */
-	static toggleLeaderboards() {
+toggleLeaderboards() {
 		$.GetContextPanel().FindChildTraverse('Leaderboards')?.ToggleClass('mapselector-map-times__list--hidden');
 	}
 }

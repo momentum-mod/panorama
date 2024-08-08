@@ -6,7 +6,7 @@ const DATA_URL =
 	'https://docs.google.com/spreadsheets/d/e/2PACX-1vTlH08v-dqtGl49T0Eslb56o-Y-xp6kOwhEo4Bwx387AxbpGHFw7AUBeBQMQdwEBI9g4gBBnGmUZ5EW/pub?output=csv';
 
 class Learn {
-	static panels = {
+panels = {
 		/** @type {Panel} @static */
 		listContainer: $('#LearnListContainer'),
 		/** @type {Button} @static */
@@ -19,12 +19,12 @@ class Learn {
 		guide: $('#Guide')
 	};
 
-	static activeMode;
-	static currentLessonData;
+activeMode;
+currentLessonData;
 
-	static lessonData = {};
-	static modes = {};
-	static {
+lessonData = {};
+modes = {};
+constructor() {
 		// Create modes obj in form { [GameMode.SURF]: { button: ..., list: ... } }
 		for (const modeData of Object.values(GameModeInfo)) {
 			this.modes[modeData.idName] = {
@@ -38,7 +38,7 @@ class Learn {
 		}
 	}
 
-	static async onLoad() {
+async onLoad() {
 		UiToolkitAPI.ShowGenericPopup(
 			'Learn Section - Very early alpha!',
 			'Welcome to the beginnings of the Learn section!\n\n' +
@@ -65,7 +65,7 @@ class Learn {
 		this.setSelectedMode(savedMode ?? 'Surf');
 	}
 
-	static initLearnPanels() {
+initLearnPanels() {
 		for (const [modeName, modeData] of Object.entries(this.modes)) {
 			modeData.list.RemoveAndDeleteChildren(); // This can be removed after the live refresh functionality is removed
 
@@ -110,7 +110,7 @@ class Learn {
 		}
 	}
 
-	static setSelectedLesson(mode, lessonID) {
+setSelectedLesson(mode, lessonID) {
 		const lessonData = this.lessonData[mode][lessonID];
 
 		if (!lessonData) this.clearSelectedLesson();
@@ -128,7 +128,7 @@ class Learn {
 		this.currentLessonData = lessonData;
 	}
 
-	static startCurrentLesson() {
+startCurrentLesson() {
 		if (!this.currentLessonData) return;
 
 		if (!this.currentLessonData['Map']) {
@@ -143,7 +143,7 @@ class Learn {
 		}
 	}
 
-	static launchMapThenTeleport() {
+launchMapThenTeleport() {
 		const onMapLoad = () => {
 			$.UnregisterForUnhandledEvent('LevelInitPostEntity', onLoadHandle);
 
@@ -165,7 +165,7 @@ class Learn {
 		GameInterfaceAPI.ConsoleCommand(`map ${map}`);
 	}
 
-	static teleportToLessonStart() {
+teleportToLessonStart() {
 		if (!GameInterfaceAPI.GetSettingBool('sv_cheats')) {
 			// For some reason SetSettingBool errors here
 			GameInterfaceAPI.ConsoleCommand('sv_cheats 1');
@@ -190,15 +190,15 @@ class Learn {
 		}
 	}
 
-	static clearSelectedLesson() {
+clearSelectedLesson() {
 		this.panels.rightPanel.AddClass('learn__right--hidden');
 	}
 
-	static setSelectedMode(mode) {
+setSelectedMode(mode) {
 		$.DispatchEvent('Activated', this.modes[mode].button, 'mouse');
 	}
 
-	static onModeButtonPressed(mode) {
+onModeButtonPressed(mode) {
 		if (!mode || !this.modes[mode] || mode === this.activeMode) return;
 
 		this.modes[this.activeMode]?.list.RemoveClass('learn-list--active');
@@ -210,13 +210,13 @@ class Learn {
 		this.clearSelectedLesson();
 	}
 
-	static loadFromKVFile() {
+loadFromKVFile() {
 		this.lessonData = $.LoadKeyValuesFile(LEARN_FILE_PATH);
 	}
 
 	// Everything below here can be removed after we're done with loading from sheet
 
-	static async loadFromGoogleSheet() {
+async loadFromGoogleSheet() {
 		this.panels.refreshButton.Children()[0].AddClass('spin-clockwise');
 		UiToolkitAPI.ShowTextTooltip(this.panels.refreshButton.id, 'Quering the Google Sheet...');
 
@@ -239,13 +239,13 @@ class Learn {
 		this.initLearnPanels();
 	}
 
-	static updateSpinnerStatus(tooltipString) {
+updateSpinnerStatus(tooltipString) {
 		this.panels.refreshButton.Children()[0].RemoveClass('spin-clockwise');
 		UiToolkitAPI.ShowTextTooltip(this.panels.refreshButton.id, tooltipString);
 		$.Schedule(1, () => UiToolkitAPI.HideTextTooltip());
 	}
 
-	static getSheetData() {
+getSheetData() {
 		return new Promise((resolve, reject) => {
 			$.AsyncWebRequest(DATA_URL, {
 				type: 'GET',

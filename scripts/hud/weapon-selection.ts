@@ -1,12 +1,12 @@
 class WeaponSelection {
-	static readonly DeployedClass = 'weaponselection__wrapper--deployed';
-	static readonly FadeoutClass = 'weaponselection--fadeout';
+readonly DeployedClass = 'weaponselection__wrapper--deployed';
+readonly FadeoutClass = 'weaponselection--fadeout';
 
-	static container = $('#WeaponSelection');
-	static weaponPanels: Map<Weapon.WeaponID, Panel> = new Map();
-	static lastDeployed = _.Weapon.WeaponID.NONE;
+container = $('#WeaponSelection');
+weaponPanels: Map<Weapon.WeaponID, Panel> = new Map();
+lastDeployed = _.Weapon.WeaponID.NONE;
 
-	static onWeaponStateChange(mode: Weapon.WeaponStateChangeMode, id: Weapon.WeaponID) {
+onWeaponStateChange(mode: Weapon.WeaponStateChangeMode, id: Weapon.WeaponID) {
 		switch (mode) {
 			case _.Weapon.WeaponStateChangeMode.SWITCH:
 				if (this.lastDeployed !== _.Weapon.WeaponID.NONE)
@@ -29,11 +29,11 @@ class WeaponSelection {
 		this.container.TriggerClass(FADEOUT_CLASS);
 	}
 
-	static onAllWeaponsDropped() {
+onAllWeaponsDropped() {
 		_.Util.Enum.values(_.Weapon.WeaponID).forEach((id) => this.destroyWeaponPanel(id));
 	}
 
-	static createWeaponPanel(id: Weapon.WeaponID) {
+createWeaponPanel(id: Weapon.WeaponID) {
 		if (this.weaponPanels.has(id)) return;
 
 		const weaponPanel = $.CreatePanel('Panel', this.container, ''); // Create the new panel
@@ -53,12 +53,12 @@ class WeaponSelection {
 		this.weaponPanels.set(id, weaponPanel);
 	}
 
-	static destroyWeaponPanel(id: Weapon.WeaponID) {
+destroyWeaponPanel(id: Weapon.WeaponID) {
 		this.weaponPanels.get(id)?.DeleteAsync(0);
 		this.weaponPanels.delete(id);
 	}
 
-	static {
+constructor() {
 		$.RegisterForUnhandledEvent('OnMomentumWeaponStateChange', this.onWeaponStateChange.bind(this));
 		$.RegisterForUnhandledEvent('OnAllMomentumWeaponsDropped', this.onAllWeaponsDropped.bind(this));
 	}

@@ -1,5 +1,5 @@
 class PowerupTimer {
-	static panels = {
+panels = {
 		damageBoost: {
 			panel: $('#DamageBoostTimer')!,
 			label: $<Label>('#DamageBoostLabel')!
@@ -14,7 +14,7 @@ class PowerupTimer {
 		}
 	};
 
-	static onUpdate() {
+onUpdate() {
 		const { damageBoostTime, hasteTime, slickTime } = MomentumMovementAPI.GetLastMoveData();
 
 		this.updatePanel(this.panels.damageBoost, damageBoostTime);
@@ -22,7 +22,7 @@ class PowerupTimer {
 		this.updatePanel(this.panels.slick, slickTime);
 	}
 
-	static updatePanel({ panel, label }: { panel: GenericPanel; label: Label }, time: number) {
+updatePanel({ panel, label }: { panel: GenericPanel; label: Label }, time: number) {
 		if (!time) {
 			panel.visible = false;
 		} else {
@@ -31,7 +31,7 @@ class PowerupTimer {
 		}
 	}
 
-	static {
+constructor() {
 		_.Util.RegisterHUDPanelForGamemode({
 			gamemodes: _.Web.GamemodeCategories.get(_.Web.GamemodeCategory.DEFRAG),
 			context: this,

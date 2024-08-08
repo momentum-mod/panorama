@@ -1,11 +1,11 @@
-//--------------------------------------------------------------------------------------------------
-// Common place to register new panel type with Panorama
-//
-// When registering, add an entry to PanelTagNameMap and define the interface for the panel.
-// If the panel attaches its JS class to its context panel, be sure to add a jsClass property to the interface.
-//--------------------------------------------------------------------------------------------------
+/**
+ * Common place to register new panel type with Panorama
+ *
+ * When registering, add an entry to PanelTagNameMap and define the interface for the panel.
+ * If the panel attaches its JS class to its context panel, be sure to add a jsClass property to the interface.
+ */
 
-interface PanelTagNameMap {
+declare interface PanelTagNameMap {
 	Split: Split;
 	LineGraph: LineGraph;
 	LevelIndicator: LevelIndicator;
@@ -26,18 +26,18 @@ interface PanelTagNameMap {
 }
 
 declare interface PlayerCard extends AbstractPanel<'PlayerCard'> {
-	jsClass: typeof PlayerCard;
+	jsClass: import('components/player-card').PlayerCardComponent;
 }
 UiToolkitAPI.RegisterPanel2d('PlayerCard', 'file://{resources}/layout/components/player-card.xml');
 
 declare interface LevelIndicator extends AbstractPanel<'LevelIndicator'> {
-	jsClass: typeof LevelIndicator;
+	jsClass: import('components/level-indicator').LevelIndicatorComponent;
 	level: number;
 }
 UiToolkitAPI.RegisterPanel2d('LevelIndicator', 'file://{resources}/layout/components/level-indicator.xml');
 
 declare interface LineGraph extends AbstractPanel<'LineGraph'> {
-	jsClass: typeof LineGraph.Component;
+	jsClass: import('components/graphs/line-graph').LineGraphComponent;
 }
 UiToolkitAPI.RegisterPanel2d('LineGraph', 'file://{resources}/layout/components/graphs/line-graph.xml');
 
@@ -76,9 +76,6 @@ UiToolkitAPI.RegisterHUDPanel2d('MomHudGroundboost', 'file://{resources}/layout/
 
 declare interface MomHudDFJump extends AbstractHudPanel<'MomHudDFJump'> {}
 UiToolkitAPI.RegisterHUDPanel2d('MomHudDFJump', 'file://{resources}/layout/hud/df-jump.xml');
-
-declare interface MomHudJumpStats extends AbstractHudPanel<'MomHudJumpStats'> {}
-UiToolkitAPI.RegisterHUDPanel2d('MomHudJumpStats', 'file://{resources}/layout/hud/jump-stats.xml');
 
 declare interface MomHudSpecInfo extends AbstractHudPanel<'MomHudSpecInfo'> {}
 UiToolkitAPI.RegisterHUDPanel2d('MomHudSpecInfo', 'file://{resources}/layout/hud/spec-info.xml');

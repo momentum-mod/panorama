@@ -1,5 +1,5 @@
 class DosaSettings {
-	static onLoad() {
+onLoad() {
 		const container = $('#Dosas');
 		for (const [id, nameToken] of DosaHandler.getAll()) {
 			const panel = $.CreatePanel('Panel', container, '');

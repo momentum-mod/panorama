@@ -1,13 +1,13 @@
 class About {
-	static credits = $('#Credits');
+credits = $('#Credits');
 
-	static onLoad() {
+onLoad() {
 		this.initCreditEvents();
 
 		$.GetContextPanel().SetDialogVariable('version', MomentumAPI.GetVersionInfo().version);
 	}
 
-	static initCreditEvents() {
+initCreditEvents() {
 		for (const panel of this.credits.FindChildrenWithClassTraverse('about-credits__name')) {
 			const name = panel.GetAttributeString('name', '');
 			const roles = panel.GetAttributeString('roles', '');

@@ -1,8 +1,15 @@
-class ConcEntities {
-	static cp = $.GetContextPanel<MomHudConcEntities>();
-	static container = $('#ConcEntPanelsContainer');
+import { Component } from 'util/component';
 
-	static onEntPanelThink() {
+@Component
+class ConcEntitiesComponent {
+	cp = $.GetContextPanel<MomHudConcEntities>();
+	container = $('#ConcEntPanelsContainer');
+
+	constructor() {
+		$.RegisterEventHandler('OnConcEntityPanelThink', this.container, this.onEntPanelThink.bind(this));
+	}
+
+	onEntPanelThink() {
 		this.container
 			.Children()
 			.filter((entpanel) => entpanel.HasClass('conc-ent'))
@@ -21,9 +28,5 @@ class ConcEntities {
 
 				entpanel.style.opacity = entpanel.concDistanceFadeAlpha;
 			});
-	}
-
-	static {
-		$.RegisterEventHandler('OnConcEntityPanelThink', this.container, this.onEntPanelThink.bind(this));
 	}
 }

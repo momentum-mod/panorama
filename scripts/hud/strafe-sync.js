@@ -11,11 +11,11 @@ const COLOR_CLASS_BG = {
 };
 
 class StrafeSync {
-	static lastValue = 0;
-	static label = null;
-	static bar = null;
+lastValue = 0;
+label = null;
+bar = null;
 
-	static onUpdate() {
+onUpdate() {
 		const type = $.GetContextPanel().strafesyncType;
 		const value = MomentumPlayerAPI.GetStrafeSync(type);
 		$.GetContextPanel().SetDialogVariable('sync_value', value.toFixed(2));
@@ -59,7 +59,7 @@ class StrafeSync {
 		return true;
 	}
 
-	static {
+constructor() {
 		$.RegisterEventHandler('HudProcessInput', $.GetContextPanel(), this.onUpdate.bind(this));
 
 		/** @type {ProgressBar} @static */

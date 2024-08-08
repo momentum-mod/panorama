@@ -2,7 +2,7 @@
  * Class for the HUD tab menu panel, which contains the leaderboards, end of run, and zoning.
  */
 class HudTabMenu {
-	static panels = {
+panels = {
 		/** @type {Panel} @static */
 		tabMenu: $.GetContextPanel(),
 		/** @type {Panel} @static */
@@ -21,7 +21,7 @@ class HudTabMenu {
 		credits: $('#HudTabMenuMapCredits')
 	};
 
-	static {
+constructor() {
 		$.RegisterForUnhandledEvent('Leaderboards_MapDataSet', this.setMapData.bind(this));
 		$.RegisterForUnhandledEvent('HudTabMenu_ForceClose', this.close.bind(this));
 		$.RegisterForUnhandledEvent('EndOfRun_Show', this.showEndOfRun.bind(this));
@@ -30,19 +30,19 @@ class HudTabMenu {
 		$.RegisterForUnhandledEvent('ZoneMenu_Hide', this.hideZoneMenu.bind(this));
 	}
 
-	static showEndOfRun(_showReason) {
+showEndOfRun(_showReason) {
 		this.panels.leaderboardsContainer.AddClass('hud-tab-menu__leaderboards--hidden');
 		this.panels.endOfRunContainer.RemoveClass('hud-tab-menu__endofrun--hidden');
 		this.panels.zoningContainer.AddClass('hud-tab-menu__zoning--hidden');
 	}
 
-	static hideEndOfRun() {
+hideEndOfRun() {
 		this.panels.leaderboardsContainer.RemoveClass('hud-tab-menu__leaderboards--hidden');
 		this.panels.endOfRunContainer.AddClass('hud-tab-menu__endofrun--hidden');
 		this.panels.zoningContainer.AddClass('hud-tab-menu__zoning--hidden');
 	}
 
-	static showZoneMenu() {
+showZoneMenu() {
 		this.panels.tabMenu.AddClass('hud-tab-menu--offset');
 		this.panels.leaderboardsContainer.AddClass('hud-tab-menu__leaderboards--hidden');
 		this.panels.endOfRunContainer.AddClass('hud-tab-menu__endofrun--hidden');
@@ -52,7 +52,7 @@ class HudTabMenu {
 		this.panels.zoningCloseButton.RemoveClass('hud-tab-menu__zoning--hidden');
 	}
 
-	static hideZoneMenu() {
+hideZoneMenu() {
 		this.panels.tabMenu.RemoveClass('hud-tab-menu--offset');
 		this.panels.leaderboardsContainer.RemoveClass('hud-tab-menu__leaderboards--hidden');
 		this.panels.endOfRunContainer.AddClass('hud-tab-menu__endofrun--hidden');
@@ -62,7 +62,7 @@ class HudTabMenu {
 		this.panels.zoningCloseButton.AddClass('hud-tab-menu__zoning--hidden');
 	}
 
-	static setMapData(isOfficial) {
+setMapData(isOfficial) {
 		$.GetContextPanel().SetHasClass('hud-tab-menu--unofficial', !isOfficial);
 
 		const img = GameModeInfoWithNull[GameModeAPI.GetCurrentGameMode()].idName.toLowerCase();
@@ -77,7 +77,7 @@ class HudTabMenu {
 		}
 	}
 
-	static setMapAuthorCredits(credits) {
+setMapAuthorCredits(credits) {
 		// Delete existing name labels
 		for (const label of this.panels.credits.Children().slice(1) || []) label.DeleteAsync(0);
 
@@ -114,7 +114,7 @@ class HudTabMenu {
 		}
 	}
 
-	static setMapStats(data) {
+setMapStats(data) {
 		const cp = $.GetContextPanel();
 
 		const mainTrack = _.Util.getMainTrack(data, GameModeAPI.GetCurrentGameMode());
@@ -126,7 +126,7 @@ class HudTabMenu {
 		cp.SetDialogVariableInt('runs', data.stats?.completions);
 	}
 
-	static close() {
+close() {
 		$.GetContextPanel().forceCloseTabMenu();
 		return true;
 	}

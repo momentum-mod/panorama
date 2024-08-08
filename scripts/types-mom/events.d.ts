@@ -5,10 +5,15 @@ interface GlobalEventNameMap {
 
 	PanoramaComponent_SteamLobby_OnMemberDataUpdated: (memberData: SteamLobby.MemberData) => void;
 
-	PanoramaComponent_SteamLobby_OnMemberStateChanged: (steamID: string, change: SteamLobby.MemberStateChange) => void;
+	PanoramaComponent_SteamLobby_OnMemberStateChanged: (
+		steamID: string,
+		change: import('common/steam-lobby').LobbyMemberStateChange
+	) => void;
 
 	/** Fired when client state changes */
-	PanoramaComponent_SteamLobby_OnLobbyStateChanged: (change: SteamLobby.MemberStateChange) => void;
+	PanoramaComponent_SteamLobby_OnLobbyStateChanged: (
+		change: import('common/steam-lobby').LobbyMemberStateChange
+	) => void;
 
 	PanoramaComponent_Chat_OnPlayerMuted: (steamID: string) => void;
 
@@ -47,9 +52,32 @@ interface GlobalEventNameMap {
 
 	MapDownload_End: (mapID: uint32, error: boolean) => void;
 
-	Game_MetaModeChanged: (gamemode: Web.Gamemode) => void;
+	Game_MetaModeChanged: (gamemode: import('common/web').Gamemode) => void;
 
-	OnMomentumWeaponStateChange(state: Weapon.WeaponStateChangeMode, weaponID: Weapon.WeaponID): void;
+	OnMomentumWeaponStateChange: (
+		state: import('common/weapon').WeaponStateChangeMode,
+		weaponID: import('common/weapon').WeaponID
+	) => void;
 
 	OnAllMomentumWeaponsDropped: () => void;
+
+	OnDefragHUDProjectionChange: () => void;
+
+	OnDefragHUDFOVChange: () => void;
+
+	OnDefragHUDAccelChange: () => void;
+
+	OnDefragHUDSnapChange: () => void;
+
+	OnDefragHUDPrimeChange: () => void;
+
+	OnDefragHUDWIndicatorChange: () => void;
+
+	OnDefragHUDCompassChange: () => void;
+	
+	OnDefragHUDGroundboostChange: () => void;
+
+	DFJumpDataUpdate: (releaseDelay: float, pressDelay: float, totalDelay: float) => void;
+	
+	DFJumpMaxDelayChanged: (newDelay: float) => void;
 }

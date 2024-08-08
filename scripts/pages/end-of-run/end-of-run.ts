@@ -1,5 +1,5 @@
 class EndOfRun {
-	static panels = {
+panels = {
 		cp: $.GetContextPanel<Panel>(),
 		time: $<Label>('#RunTime'),
 		diff: $<Label>('#RunDiff'),
@@ -14,11 +14,11 @@ class EndOfRun {
 		selectedGraphPoint: null as Button | null
 	};
 
-	static baseRun: Run.Run;
-	static comparisonRun: Run.Run;
-	static selectedSplit: Run.Split;
+baseRun: Run.Run;
+comparisonRun: Run.Run;
+selectedSplit: Run.Split;
 
-	static {
+constructor() {
 		$.RegisterForUnhandledEvent('EndOfRun_CompareRuns', this.setComparison.bind(this));
 		$.RegisterForUnhandledEvent('EndOfRun_Show', this.showNewEndOfRun.bind(this));
 		$.RegisterForUnhandledEvent('EndOfRun_Result_RunUpload', this.updateRunUploadStatus.bind(this));
@@ -27,19 +27,19 @@ class EndOfRun {
 	}
 
 	/** Set the current base run and comparison run */
-	static setComparison(runObj: Run.CPPRun, comparisonRunObj: Run.CPPRun) {
+setComparison(runObj: Run.CPPRun, comparisonRunObj: Run.CPPRun) {
 		this.baseRun = runObj ? new _.Run.Run(runObj) : null;
 		this.comparisonRun = comparisonRunObj ? new _.Run.Run(comparisonRunObj) : null;
 	}
 
 	/** Hides the end of run panel, when a new map is loaded. */
-	static initOnMapLoad(isOfficial: boolean) {
+initOnMapLoad(isOfficial: boolean) {
 		this.panels.uploadStatus.SetHasClass('hide', !isOfficial);
 
 		this.hideEndOfRun(true, false);
 	}
 
-	static updateRunStatusIndicator(status: Run.RunStatusStates, type: Run.RunStatusTypes) {
+updateRunStatusIndicator(status: Run.RunStatusStates, type: Run.RunStatusTypes) {
 		const statusPanel =
 			type === _.Run.RunStatusTypes.UPLOAD ? this.panels.uploadStatus : this.panels.saveStatus;
 
@@ -101,26 +101,26 @@ class EndOfRun {
 		}
 	}
 
-	static updateRunSavedStatus(saved: boolean) {
+updateRunSavedStatus(saved: boolean) {
 		this.updateRunStatusIndicator(
 			saved ? _.Run.RunStatusStates.SUCCESS : _.Run.RunStatusStates.ERROR,
 			_.Run.RunStatusTypes.SAVE
 		);
 	}
 
-	static updateRunUploadStatus(uploaded, _cosXp, _rankXp, _lvlGain) {
+updateRunUploadStatus(uploaded, _cosXp, _rankXp, _lvlGain) {
 		this.updateRunStatusIndicator(
 			uploaded ? _.Run.RunStatusStates.SUCCESS : _.Run.RunStatusStates.ERROR,
 			_.Run.RunStatusTypes.UPLOAD
 		);
 	}
 
-	static watchReplay() {
+watchReplay() {
 		GameInterfaceAPI.ConsoleCommand('mom_replay_play_loaded');
 		this.hideEndOfRun(false, true);
 	}
 
-	static restartMap() {
+restartMap() {
 		GameInterfaceAPI.ConsoleCommand('mom_restart');
 		this.hideEndOfRun(true, true);
 	}
@@ -130,7 +130,7 @@ class EndOfRun {
 	 * @param {boolean} hideEndOfRun
 	 * @param {boolean} hideTabMenu
 	 */
-	static hideEndOfRun(hideEndOfRun = true, hideTabMenu = false) {
+hideEndOfRun(hideEndOfRun = true, hideTabMenu = false) {
 		if (hideEndOfRun) $.DispatchEvent('EndOfRun_Hide');
 
 		if (hideTabMenu) $.DispatchEvent('HudTabMenu_ForceClose');
@@ -142,7 +142,7 @@ class EndOfRun {
 	 * you go back to a last EoR from leaderboards, or in the future when the player compares two runs.
 	 * @param {EorShowReason} showReason - Why the end of run panel is being shown. See EorShowReason for reasons.
 	 */
-	static showNewEndOfRun(showReason: Run.EorShowReason) {
+showNewEndOfRun(showReason: Run.EorShowReason) {
 		if (!this.baseRun) return;
 
 		if (showReason === _.Run.EorShowReason.PLAYER_FINISHED_RUN) {
@@ -181,7 +181,7 @@ class EndOfRun {
 	/**
 	 * Generate the end of run panel for the current base run, with no comparison.
 	 */
-	static setSingleRunStats() {
+setSingleRunStats() {
 		const run = this.baseRun;
 
 		// Clear the diff string, we don't have one
@@ -214,7 +214,7 @@ class EndOfRun {
 	/**
 	 * Generate the end of run panel comparisons from the two active runs.
 	 */
-	static setComparisionStats() {
+setComparisionStats() {
 		if (!this.baseRun || !this.comparisonRun) return;
 
 		const comparison = new _.Run.Comparison(this.baseRun, this.comparisonRun);
@@ -276,7 +276,7 @@ class EndOfRun {
 	}
 
 	/** Generate a graph for the given comparison */
-	static updateGraph(comparison: Run.Comparison, statIndex = null) {
+updateGraph(comparison: Run.Comparison, statIndex = null) {
 		// Grab the actual LineGraph class attached to the panel
 		const lineGraph = this.panels.graph.jsClass;
 
@@ -494,7 +494,7 @@ class EndOfRun {
 	}
 
 	/** Set the selected graph point and stats for a given split */
-	static setSelectedSplit(split: Run.Split, comparison: Run.Comparison) {
+setSelectedSplit(split: Run.Split, comparison: Run.Comparison) {
 		this.selectedSplit = split;
 
 		this.panels.cp.SetDialogVariable('selected_zone', $.Localize(split.name));
@@ -562,7 +562,7 @@ class EndOfRun {
 	/**
 	 * Set the selected point of the graph to whatever split is currently selected.
 	 */
-	static setSelectedGraphPoint() {
+setSelectedGraphPoint() {
 		const split = this.selectedSplit;
 
 		if (!split) return;
@@ -582,11 +582,11 @@ class EndOfRun {
 		}
 	}
 
-	static roundFloat(n: number, precision: number) {
+roundFloat(n: number, precision: number) {
 		return +n.toFixed(precision);
 	}
 
-	static getDiffSign(diff: number) {
+getDiffSign(diff: number) {
 		return diff > 0 ? '+' : '';
 	}
 }

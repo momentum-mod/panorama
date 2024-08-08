@@ -1,19 +1,19 @@
 class HudStatus {
-	static label = $<Label>('#HudStatusLabel');
+label = $<Label>('#HudStatusLabel');
 
-	static curZone = -1;
-	static curTrack = -1;
-	static linear = true;
-	static enter = false;
-	static timerState = _.Timer.TimerState.NOTRUNNING;
+curZone = -1;
+curTrack = -1;
+linear = true;
+enter = false;
+timerState = _.Timer.TimerState.NOTRUNNING;
 
-	static inPracticeMode = false;
+inPracticeMode = false;
 
-	static saveStateCount = 0;
-	static saveStateCurrent = 0;
-	static saveStateUsing = false;
+saveStateCount = 0;
+saveStateCurrent = 0;
+saveStateUsing = false;
 
-	static onZoneChange(enter, linear, curZone, curTrack, timerState) {
+onZoneChange(enter, linear, curZone, curTrack, timerState) {
 		this.enter = enter;
 		this.curZone = curZone;
 		this.curTrack = curTrack;
@@ -23,12 +23,12 @@ class HudStatus {
 		this.updateLabel();
 	}
 
-	static onPracticeModeChange(enabled) {
+onPracticeModeChange(enabled) {
 		this.inPracticeMode = enabled;
 		this.updateLabel();
 	}
 
-	static onSaveStateChange(count, current, usingmenu) {
+onSaveStateChange(count, current, usingmenu) {
 		this.saveStateCount = count;
 		this.saveStateCurrent = current + 1; // need 1-indexing for display
 		this.saveStateUsing = usingmenu;
@@ -37,7 +37,7 @@ class HudStatus {
 		this.updateLabel();
 	}
 
-	static updateLabel() {
+updateLabel() {
 		const enteredStartZone = this.enter && this.curZone === 1;
 		const enteredEndZone = this.enter && this.curZone === 0;
 
@@ -68,11 +68,11 @@ class HudStatus {
 		this.label.text = text;
 	}
 
-	static onLoad() {
+onLoad() {
 		$.GetContextPanel<MomHudStatus>().hiddenHUDBits = _.State.HideHud.TABMENU;
 	}
 
-	static {
+constructor() {
 		$.RegisterForUnhandledEvent('OnMomentumZoneChange', this.onZoneChange.bind(this));
 		$.RegisterForUnhandledEvent('OnMomentumPlayerPracticeModeStateChange', this.onPracticeModeChange.bind(this));
 		$.RegisterForUnhandledEvent('OnSaveStateUpdate', this.onSaveStateChange.bind(this));

@@ -6,13 +6,13 @@ const STICKY_CHARGE_UNITS_TYPE = {
 
 class StickyCharge {
 	/** @type {ProgressBar} @static */
-	static chargeMeter = $('#StickyChargeMeter');
+chargeMeter = $('#StickyChargeMeter');
 	/** @type {Label} @static */
-	static chargeSpeed = $('#StickyChargeSpeed');
+chargeSpeed = $('#StickyChargeSpeed');
 	/** @type {Panel} @static */
-	static container = $('#StickyChargeContainer');
+container = $('#StickyChargeContainer');
 
-	static OnChargeUpdate(speed, percentage) {
+OnChargeUpdate(speed, percentage) {
 		const chargeUnitType = $.GetContextPanel().stickyChargeUnitType;
 
 		let speedText;
@@ -30,11 +30,11 @@ class StickyCharge {
 		this.chargeMeter.value = percentage;
 	}
 
-	static OnChargeToggled(enabled) {
+OnChargeToggled(enabled) {
 		if (this.chargeMeter.enabled !== enabled) this.chargeMeter.enabled = enabled;
 	}
 
-	static {
+constructor() {
 		$.RegisterEventHandler('OnChargeUpdate', this.container, this.OnChargeUpdate.bind(this));
 		$.RegisterEventHandler('OnChargeToggled', this.container, this.OnChargeToggled.bind(this));
 	}

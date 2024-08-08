@@ -1,15 +1,15 @@
 
 class SpeedometerSelectPopup {
 	/** @static @type {Panel} */
-	static container = $('#SpeedometerSelectContainer');
+container = $('#SpeedometerSelectContainer');
 	/** @static @type {TextEntry} */
-	static textEntry = $('#SpeedometerName');
+textEntry = $('#SpeedometerName');
 	/** @type {Label} @static */
-	static invalidNameLabel = $('#InvalidNameLabel');
-	static selected = 0;
-	static speedometerNames = [];
+invalidNameLabel = $('#InvalidNameLabel');
+selected = 0;
+speedometerNames = [];
 
-	static onTextSubmitted() {
+onTextSubmitted() {
 		if (!this.validateSpeedometerNames()) {
 			this.invalidNameLabel.visible = true;
 			return;
@@ -22,7 +22,7 @@ class SpeedometerSelectPopup {
 		UiToolkitAPI.CloseAllVisiblePopups();
 	}
 
-	static validateSpeedometerNames() {
+validateSpeedometerNames() {
 		const text = this.textEntry.text;
 		if (text === '' || text.includes(',')) return false;
 
@@ -31,15 +31,15 @@ class SpeedometerSelectPopup {
 		return true;
 	}
 
-	static invalidNameSubmitted() {
+invalidNameSubmitted() {
 		SpeedometerSelectPopup.invalidNameLabel.visible = true;
 	}
 
-	static onAddButtonPressed() {
+onAddButtonPressed() {
 		this.textEntry.Submit();
 	}
 
-	static init() {
+init() {
 		SpeedometerSelectPopup.invalidNameLabel.visible = false;
 		SpeedometerSelectPopup.speedometerNames = $.GetContextPanel()
 			.GetAttributeString('speedometerNames', '')

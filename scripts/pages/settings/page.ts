@@ -1,8 +1,8 @@
 class SettingsShared {
-	static paintContainer: Panel;
-	static videoSettingsPanel: Panel;
+paintContainer: Panel;
+videoSettingsPanel: Panel;
 
-	static onChangedTab(newTab) {
+onChangedTab(newTab) {
 		switch (newTab) {
 			case 'VideoSettings': {
 				this.videoSettingsPanel ??= $('#VideoSettings');
@@ -41,7 +41,7 @@ class SettingsShared {
 		this.refreshControlsRecursive(newTabPanel);
 	}
 
-	static refreshControlsRecursive(panel) {
+refreshControlsRecursive(panel) {
 		if (panel === null) return;
 
 		panel.OnShow?.();
@@ -49,7 +49,7 @@ class SettingsShared {
 		for (const child of panel.Children() || []) this.refreshControlsRecursive(child);
 	}
 
-	static resetSettingsRecursive(panel) {
+resetSettingsRecursive(panel) {
 		// TODO: Add support for Enums and Colours here, then include
 		if (panel.paneltype === 'SettingsSlider' || panel.paneltype === 'SettingsEnumDropDown') {
 			panel.RestoreCVarDefault();
@@ -61,7 +61,7 @@ class SettingsShared {
 		}
 	}
 
-	static resetControls(panelID) {
+resetControls(panelID) {
 		this.showConfirmResetSettings($.Localize('#Settings_General_ResetControls'), () => {
 			// TODO: remove this out once api is ported
 			typeof OptionsMenuAPI !== typeof undefined
@@ -71,13 +71,13 @@ class SettingsShared {
 		});
 	}
 
-	static resetSettings(panelID) {
+resetSettings(panelID) {
 		this.showConfirmResetSettings($.Localize('#Settings_General_ResetSomething'), () => {
 			this.resetSettingsRecursive($.GetContextPanel().FindChildTraverse(panelID));
 		});
 	}
 
-	static resetVideoSettings() {
+resetVideoSettings() {
 		// For future: use same localisation string as above
 		this.showConfirmResetSettings($.Localize('#Settings_General_ResetSomething'), () => {
 			$.DispatchEvent('VideoSettingsResetDefault');
@@ -86,7 +86,7 @@ class SettingsShared {
 		});
 	}
 
-	static showConfirmResetSettings(message, resetFn) {
+showConfirmResetSettings(message, resetFn) {
 		UiToolkitAPI.ShowGenericPopupTwoOptionsBgStyle(
 			$.Localize('#Settings_General_Apply'),
 			message,
@@ -105,17 +105,17 @@ class SettingsShared {
 	// Apply button pressed -> disable both
 	// Discard button pressed -> disable both
 
-	static videoSettingsOnUserInputSubmit() {
+videoSettingsOnUserInputSubmit() {
 		$('#ApplyVideoSettingsButton').enabled = true;
 		$('#DiscardVideoSettingsButton').enabled = true;
 	}
 
-	static videoSettingsResetUserInput() {
+videoSettingsResetUserInput() {
 		$('#ApplyVideoSettingsButton').enabled = false;
 		$('#DiscardVideoSettingsButton').enabled = false;
 	}
 
-	static videoSettingsDiscardChanges() {
+videoSettingsDiscardChanges() {
 		// Discard dialogue seems unnecessary here
 		// this.showConfirmResetSettings('Are you sure you want to discard your changes to video settings?', () => {
 		$.DispatchEvent('VideoSettingsInit');
@@ -123,12 +123,12 @@ class SettingsShared {
 		// });
 	}
 
-	static videoSettingsApplyChanges() {
+videoSettingsApplyChanges() {
 		$.DispatchEvent('ApplyVideoSettings');
 		this.videoSettingsResetUserInput();
 	}
 
-	static showImportExportDialogue(localeString, panelID) {
+showImportExportDialogue(localeString, panelID) {
 		const section = $.GetContextPanel().FindChildTraverse(panelID);
 
 		const cvars = [];
@@ -150,7 +150,7 @@ class SettingsShared {
 		);
 	}
 
-	static updatePaintPreview() {
+updatePaintPreview() {
 		this.paintContainer ??= $('#GameplaySettings').FindChildInLayoutFile('PaintContainer');
 
 		if (this.paintContainer.actuallayoutwidth === 0) {
@@ -170,7 +170,7 @@ class SettingsShared {
 		paintPanel.style.width = scale * width + 'px';
 	}
 
-	static onlineSettingsUpdateModel() {
+onlineSettingsUpdateModel() {
 		const color = GameInterfaceAPI.GetSettingColor('mom_ghost_color');
 		const bodygroup = GameInterfaceAPI.GetSettingInt('mom_ghost_bodygroup');
 
@@ -186,7 +186,7 @@ class SettingsShared {
 		ghostPreview.SetModelBodygroup(1, bodygroup);
 	}
 
-	static initTextureReplacementDropdown() {
+initTextureReplacementDropdown() {
 		const textures = {
 			'#Settings_TextureReplace_Texture_None': '',
 			'#Settings_TextureReplace_Texture_Noise': 'error_replacement/noise_basecolor',
@@ -258,7 +258,7 @@ class SettingsShared {
 		}
 	}
 
-	static isSettingsPanel(panel) {
+isSettingsPanel(panel) {
 		return [
 			'SettingsEnum',
 			'SettingsSlider',

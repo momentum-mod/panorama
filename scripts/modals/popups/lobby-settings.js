@@ -1,5 +1,5 @@
 class LobbySettings {
-	static panels = {
+panels = {
 		/** @type {Panel} @static */
 		cp: $.GetContextPanel(),
 		/** @type {Panel} @static */
@@ -12,9 +12,9 @@ class LobbySettings {
 		maxPlayers: $('#MaxPlayers')
 	};
 
-	static lobbyMaxPlayers = 250;
+lobbyMaxPlayers = 250;
 
-	static onLoad() {
+onLoad() {
 		let button;
 		switch (this.panels.cp.GetAttributeInt('type', 0)) {
 			case 0:
@@ -34,7 +34,7 @@ class LobbySettings {
 		this.panels.updateButton.enabled = false;
 	}
 
-	static onChanged() {
+onChanged() {
 		UiToolkitAPI.HideTextTooltip();
 
 		if (this.getMaxPlayersEntered() > this.lobbyMaxPlayers) {
@@ -48,7 +48,7 @@ class LobbySettings {
 		}
 	}
 
-	static submit() {
+submit() {
 		let type;
 		if ($.GetContextPanel().FindChildTraverse('LobbySettingsPrivateButton').checked) {
 			type = 0;
@@ -65,11 +65,11 @@ class LobbySettings {
 		UiToolkitAPI.CloseAllVisiblePopups();
 	}
 
-	static cancel() {
+cancel() {
 		UiToolkitAPI.CloseAllVisiblePopups();
 	}
 
-	static getMaxPlayersEntered() {
+getMaxPlayersEntered() {
 		return Number.parseInt(this.panels.maxPlayers.text);
 	}
 }

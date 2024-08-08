@@ -1,5 +1,5 @@
 class MapDownloadStatus {
-	static cancelDownload() {
+cancelDownload() {
 		$.DispatchEvent('MapSelector_ConfirmCancelDownload', $.GetContextPanel().GetAttributeInt('mapID', 0));
 	}
 }

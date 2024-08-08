@@ -15,7 +15,7 @@ namespace StickyCount {
 	]);
 
 	class Component {
-		static onStickyPanelStateChanged(stickyPanel: Panel, state: StickyState, prevstate: StickyState) {
+onStickyPanelStateChanged(stickyPanel: Panel, state: StickyState, prevstate: StickyState) {
 			stickyPanel.AddClass(StickyPanelClasses[state]);
 			switch (state) {
 				case StickyState.ARMED:
@@ -36,7 +36,7 @@ namespace StickyCount {
 			}
 		}
 
-		static {
+constructor() {
 			$.RegisterEventHandler('OnStickyPanelStateChanged', $.GetContextPanel(), this.onStickyPanelStateChanged);
 		}
 	}

@@ -1,19 +1,19 @@
 class ColorPickerPopup {
-	static init() {
+init() {
 		const color = $.GetContextPanel().GetAttributeString('color', 'rgba(0,0,0,1)');
 		$('#ColorPicker').prevColor = color;
 		$('#ColorPicker').currColor = color;
 	}
 
-	static onSaveColor(color) {
+onSaveColor(color) {
 		UiToolkitAPI.CloseAllVisiblePopups();
 	}
 
-	static onDiscardColor() {
+onDiscardColor() {
 		UiToolkitAPI.CloseAllVisiblePopups();
 	}
 
-	static {
+constructor() {
 		$.RegisterEventHandler('ColorPickerSave', $.GetContextPanel(), ColorPickerPopup.onSaveColor);
 		$.RegisterEventHandler('ColorPickerCancel', $.GetContextPanel(), ColorPickerPopup.onDiscardColor);
 	}

@@ -6,9 +6,9 @@ const LEADERBOARD_ENTRY_TYPE = {
 };
 
 class LeaderboardEntry {
-	static avatarPanel = $('#LeaderboardEntryAvatarPanel');
+avatarPanel = $('#LeaderboardEntryAvatarPanel');
 
-	static {
+constructor() {
 		$.RegisterEventHandler(
 			'LeaderboardEntry_TimeDataUpdated',
 			$.GetContextPanel(),
@@ -16,7 +16,7 @@ class LeaderboardEntry {
 		);
 	}
 
-	static timeDataUpdate() {
+timeDataUpdate() {
 		const timeData = $.GetContextPanel().timeData;
 
 		if (!timeData) return;
@@ -34,7 +34,7 @@ class LeaderboardEntry {
 		);
 	}
 
-	static tryDeleteReplay(index) {
+tryDeleteReplay(index) {
 		UiToolkitAPI.ShowGenericPopupOkCancel(
 			$.Localize('#Action_DeleteReplay'),
 			$.Localize('#Action_DeleteReplay_Confirm'),
@@ -44,7 +44,7 @@ class LeaderboardEntry {
 		);
 	}
 
-	static showContextMenu() {
+showContextMenu() {
 		const timeData = $.GetContextPanel().timeData;
 		if (!timeData) return;
 

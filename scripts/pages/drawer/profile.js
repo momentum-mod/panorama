@@ -1,16 +1,16 @@
 class Profile {
-	static panels = {
+panels = {
 		levelIndicatorsContainer: $('#ProfileLevelIndicators'),
 		prestigeIndicator: $('#ProfileLevelIndicatorPrestige'),
 		levelIndicator: $('#ProfileLevelIndicatorLevel'),
 		levelInfo: $('#LevelInfoButton')
 	};
 
-	static onLoad() {
+onLoad() {
 		this.update();
 	}
 
-	static update() {
+update() {
 		const cp = $.GetContextPanel();
 
 		const level = MomentumAPI.GetPlayerLevel();
@@ -33,7 +33,7 @@ class Profile {
 	 * Set a new level in the two levels indicator components
 	 * @param {number} level - the new level
 	 */
-	static updateLevelIndicators(level) {
+updateLevelIndicators(level) {
 		const indicatorClass = this.panels.prestigeIndicator.jsClass;
 		for (let i = 1; i <= 10; i++) {
 			this.panels.levelIndicatorsContainer.SetHasClass(
@@ -51,7 +51,7 @@ class Profile {
 	/**
 	 * Show the levels explainer contextmenu
 	 */
-	static showLevelExplainers() {
+showLevelExplainers() {
 		UiToolkitAPI.ShowCustomLayoutContextMenu(
 			this.panels.levelInfo.id,
 			'',
@@ -59,7 +59,7 @@ class Profile {
 		);
 	}
 
-	static openWebsiteProfile() {
+openWebsiteProfile() {
 		SteamOverlayAPI.OpenURLModal('https://momentum-mod.org/dashboard/profile');
 	}
 }

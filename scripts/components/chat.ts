@@ -1,8 +1,11 @@
-class Chat {
-	static membersTyping: string[] = [];
-	static typingLabel = $<Label>('#ChatMemberTypingLabel');
+import { Component } from 'util/component';
 
-	static {
+@Component
+class ChatComponent {
+	membersTyping: string[] = [];
+	typingLabel = $<Label>('#ChatMemberTypingLabel');
+
+	constructor() {
 		$.RegisterEventHandler('OnNewChatEntry', $.GetContextPanel(), (panel) => this.onNewChatEntry(panel));
 
 		$.RegisterForUnhandledEvent(
@@ -11,11 +14,11 @@ class Chat {
 		);
 	}
 
-	static submitText() {
+	submitText() {
 		$.GetContextPanel<MomentumChat>().SubmitText();
 	}
 
-	static createUsersTypingString() {
+	createUsersTypingString() {
 		let strTyping = '';
 		const typingLen = this.membersTyping.length;
 
@@ -44,7 +47,7 @@ class Chat {
 		return strTyping;
 	}
 
-	static onNewChatEntry(panel: GenericPanel & { message: string; author_name: string; author_xuid: string }) {
+	onNewChatEntry(panel: GenericPanel & { message: string; author_name: string; author_xuid: string }) {
 		$.Schedule(0, () => panel.ScrollParentToMakePanelFit(0, false)); // IDK, ScrollToBottom always just scrolled to the second last msg
 		// Emote test for BLT to look into
 		// let messageLabel = panel.GetChild(0);
@@ -71,7 +74,7 @@ class Chat {
 		});
 	}
 
-	static onSteamLobbyMemberDataUpdated(data: SteamLobby.MemberData) {
+	onSteamLobbyMemberDataUpdated(data: SteamLobby.MemberData) {
 		if (!this.typingLabel || !this.typingLabel.visible) return;
 
 		for (const memberSteamID of Object.keys(data)) {

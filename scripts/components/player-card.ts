@@ -1,18 +1,17 @@
-class PlayerCard {
-	static panels = {
+import { ExposedComponent, OnPanelLoad } from 'util/component';
+
+@ExposedComponent
+export class PlayerCardComponent implements OnPanelLoad {
+	panels = {
 		progressBar: $<ProgressBar>('#XpProgressBar'),
 		levelIndicator: $<LevelIndicator>('#LevelIndicator')
 	};
 
-	static {
-		$.GetContextPanel<PlayerCard>().jsClass = this;
-	}
-
-	static onLoad() {
+	onPanelLoad() {
 		this.update();
 	}
 
-	static update() {
+	update() {
 		const cp = $.GetContextPanel<PlayerCard>();
 
 		const level = MomentumAPI.GetPlayerLevel();
@@ -33,6 +32,6 @@ class PlayerCard {
 		this.panels.progressBar.min = currLevelXp;
 		this.panels.progressBar.max = nextLevelXp;
 
-		this.panels.levelIndicator.jsClass.setLevel(level); // TODO: Hack, find better approach.
+		this.panels.levelIndicator.jsClass.setLevel(level);
 	}
 }

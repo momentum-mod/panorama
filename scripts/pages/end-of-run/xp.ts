@@ -1,12 +1,12 @@
 class EndOfRunXP {
-	static xpData: ReturnType<typeof this.getXPData>;
-	static primaryWidth: number;
+xpData: ReturnType<typeof this.getXPData>;
+primaryWidth: number;
 
-	static readonly baseLevelUpTime = 3;
-	static readonly levelIndicatorMaxTransitionTime = 0.7;
-	static readonly xpCounterTicks = 100;
+readonly baseLevelUpTime = 3;
+readonly levelIndicatorMaxTransitionTime = 0.7;
+readonly xpCounterTicks = 100;
 
-	static panels = {
+panels = {
 		cp: $.GetContextPanel(),
 		levelIndicator: $<LevelIndicator>('#LevelIndicator'),
 		levelBar: $<Panel>('#LevelBar'),
@@ -17,12 +17,12 @@ class EndOfRunXP {
 		newStats: { newXP: $<Panel>('#NewXP') }
 	};
 
-	static {
+constructor() {
 		$.RegisterForUnhandledEvent('EndOfRun_Show', this.initialize.bind(this));
 		$.RegisterForUnhandledEvent('EndOfRun_Result_RunUpload', this.onRunDataReceived.bind(this));
 	}
 
-	static initialize() {
+initialize() {
 		Object.values(this.panels.newStats).forEach((panel) => panel.AddClass('endofrun-xp__new-stat--hidden'));
 
 		this.xpData = this.getXPData();
@@ -37,7 +37,7 @@ class EndOfRunXP {
 		this.panels.cp.AddClass('endofrun-xp--hidden');
 	}
 
-	static onRunDataReceived(uploaded: boolean, cosXp: number, _rankXp: number, lvlGain: number) {
+onRunDataReceived(uploaded: boolean, cosXp: number, _rankXp: number, lvlGain: number) {
 		const setTimingFunction = (str: string) => (this.panels.secondaryBar.style.transitionTimingFunction = str);
 
 		const widthAnimation = (width: number, duration: number): Promise<void> =>
@@ -151,7 +151,7 @@ class EndOfRunXP {
 		}
 	}
 
-	static getXPData() {
+getXPData() {
 		const level = MomentumAPI.GetPlayerLevel();
 		return {
 			level: level,

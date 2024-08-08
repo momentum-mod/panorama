@@ -9,26 +9,26 @@ const FADEOUT_START_CLASS = 'hudtimer__comparison--fade-start';
 
 class HudTimer {
 	/** @type {Label} @static */
-	static timeLabel = $('#HudTimerTime');
+	timeLabel = $('#HudTimerTime');
 	/** @type {Label} @static */
-	static compLabel = $('#HudTimerComparison');
+	compLabel = $('#HudTimerComparison');
 
-	static prevZone = 0;
+	prevZone = 0;
 
-	static onTimerStarted() {
+	onTimerStarted() {
 		this.timeLabel.RemoveClass(FAILED_CLASS); // fail animation could be happening, so force stop
 		this.timeLabel.RemoveClass(INACTIVE_CLASS);
 
 		if (MomentumTimerAPI.IsStartSoundEnabled()) $.PlaySoundEvent('Momentum.StartTimer');
 	}
-	static onTimerFinished() {
+	onTimerFinished() {
 		this.timeLabel.AddClass(FINISHED_CLASS);
 
 		$.GetContextPanel().SetDialogVariableFloat('runtime', MomentumTimerAPI.GetCurrentRunTime());
 
 		if (MomentumTimerAPI.IsFinishSoundEnabled()) $.PlaySoundEvent('Momentum.FinishTimer');
 	}
-	static onTimerStopped() {
+	onTimerStopped() {
 		this.resetTimer();
 
 		// if we want special styling for timer artificially running (via savestate), do it here like so
@@ -36,7 +36,7 @@ class HudTimer {
 
 		if (MomentumTimerAPI.IsStopSoundEnabled()) $.PlaySoundEvent('Momentum.StopTimer');
 	}
-	static onTimerFailed() {
+	onTimerFailed() {
 		// failed to start timer, so resetting is not needed
 
 		this.timeLabel.TriggerClass(FAILED_CLASS);
@@ -44,14 +44,14 @@ class HudTimer {
 		if (MomentumTimerAPI.IsFailSoundEnabled()) $.PlaySoundEvent('Momentum.FailedStartTimer');
 	}
 
-	static onUpdate() {
+	onUpdate() {
 		const timerState = MomentumTimerAPI.GetTimerState();
 		if (timerState === _.Timer.TimerState.NOTRUNNING) return;
 
 		$.GetContextPanel().SetDialogVariableFloat('runtime', MomentumTimerAPI.GetCurrentRunTime());
 	}
 
-	static onZoneChange(enter, linear, curZone, _curTrack, timerState) {
+	onZoneChange(enter, linear, curZone, _curTrack, timerState) {
 		if (timerState === _.Timer.TimerState.NOTRUNNING && enter && curZone === 1) {
 			// timer state is not reset on map finished until entering the start zone again (on reset)
 			this.resetTimer();
@@ -59,7 +59,12 @@ class HudTimer {
 			return;
 		}
 
-		if (timerState === _.Timer.TimerState.RUNNING && curZone > 1 && enter === linear && HudTimer.prevZone !== curZone) {
+		if (
+			timerState === _.Timer.TimerState.RUNNING &&
+			curZone > 1 &&
+			enter === linear &&
+			HudTimer.prevZone !== curZone
+		) {
 			const diff = RunComparisonsAPI.GetLoadedComparisonOverallDiff(curZone);
 
 			let diffSymbol;
@@ -87,19 +92,19 @@ class HudTimer {
 		this.prevZone = curZone;
 	}
 
-	static forceHideComparison() {
+	forceHideComparison() {
 		this.compLabel.RemoveClass(FADEOUT_START_CLASS);
 		this.compLabel.TriggerClass(FADEOUT_CLASS);
 	}
 
-	static resetTimer() {
+	resetTimer() {
 		$.GetContextPanel().SetDialogVariableFloat('runtime', 0);
 		this.timeLabel.AddClass(INACTIVE_CLASS);
 		this.forceHideComparison();
 		this.prevZone = 0;
 	}
 
-	static onTimerEvent(_ent, type) {
+	onTimerEvent(_ent, type) {
 		switch (type) {
 			case _.Timer.TimerEvent.STARTED:
 				this.onTimerStarted();
@@ -119,7 +124,7 @@ class HudTimer {
 		}
 	}
 
-	static onSaveStateChange(_count, _current, _usingmenu) {
+	onSaveStateChange(_count, _current, _usingmenu) {
 		const timerState = MomentumTimerAPI.GetTimerState();
 		if (timerState !== _.Timer.TimerState.RUNNING) {
 			this.resetTimer();
@@ -127,7 +132,7 @@ class HudTimer {
 		}
 	}
 
-	static onReplayStopped() {
+	onReplayStopped() {
 		this.timeLabel.RemoveClass(FINISHED_CLASS);
 
 		const timerState = MomentumTimerAPI.GetTimerState();
@@ -141,11 +146,11 @@ class HudTimer {
 		this.prevZone = ZonesAPI.GetCurrentZone(); // if curZone === 0 and the timer is running we have big problems
 	}
 
-	static onLoad() {
+	onLoad() {
 		$.GetContextPanel().hiddenHUDBits = _.State.HideHud.TABMENU;
 	}
 
-	static {
+	constructor() {
 		$.RegisterEventHandler('HudProcessInput', $.GetContextPanel(), this.onUpdate.bind(this));
 		$.RegisterForUnhandledEvent('OnMomentumTimerStateChange', this.onTimerEvent.bind(this));
 		$.RegisterForUnhandledEvent('OnMomentumZoneChange', this.onZoneChange.bind(this));

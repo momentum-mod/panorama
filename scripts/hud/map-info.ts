@@ -1,7 +1,7 @@
 class HudMapInfo {
-	static cachedInfoContainer = $<Panel>('#CachedInfoContainer');
+cachedInfoContainer = $<Panel>('#CachedInfoContainer');
 
-	static onMapLoad(mapName: string) {
+onMapLoad(mapName: string) {
 		if (!mapName) return;
 
 		$.GetContextPanel().SetDialogVariable('mapname', mapName);
@@ -34,7 +34,8 @@ class HudMapInfo {
 		}
 	}
 
-	static {
+constructor() {
 		$.RegisterForUnhandledEvent('MapCache_MapLoad', HudMapInfo.onMapLoad.bind(this));
 	}
 }
+

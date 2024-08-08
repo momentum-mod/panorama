@@ -1,5 +1,5 @@
 class ImportExportSettings {
-	static panels = {
+panels = {
 		/** @type {TextEntry} @static */
 		import: $('#ImportCode'),
 		/** @type {TextEntry} @static */
@@ -14,9 +14,9 @@ class ImportExportSettings {
 		blockInputWarning: $('#BlockInputWarning')
 	};
 
-	static base64Mode = $.persistentStorage.getItem('settings.base64ExportMode');
+base64Mode = $.persistentStorage.getItem('settings.base64ExportMode');
 
-	static onLoad() {
+onLoad() {
 		const cp = $.GetContextPanel();
 
 		const sectionName = cp.GetAttributeString('name', '');
@@ -39,7 +39,7 @@ class ImportExportSettings {
 		else this.exportSettings();
 	}
 
-	static exportSettings() {
+exportSettings() {
 		this.exportString = Object.values(this.cvars)
 			.map((cvar) =>
 				this.base64Mode
@@ -53,7 +53,7 @@ class ImportExportSettings {
 		this.panels.export.text = this.exportString;
 	}
 
-	static importSettings() {
+importSettings() {
 		const inputText = this.panels.import.text;
 
 		try {
@@ -111,14 +111,14 @@ class ImportExportSettings {
 		this.exportSettings();
 	}
 
-	static toggleBase64Mode() {
+toggleBase64Mode() {
 		this.base64Mode = this.panels.modeButton.IsSelected();
 		$.persistentStorage.setItem('settings.base64ExportMode', this.base64Mode);
 		this.panels.modeWarning.SetHasClass('hide', !this.base64Mode);
 		this.exportSettings();
 	}
 
-	static blockExportEntryInput() {
+blockExportEntryInput() {
 		if (this.panels.export.text !== this.exportString) {
 			// Hacky way of keeping the TextEntry enabled (so you can highlight stuff) without actually letting you change text
 			const offset = this.panels.export.GetCursorOffset();
@@ -127,7 +127,7 @@ class ImportExportSettings {
 		}
 	}
 
-	static exportSelectAll() {
+exportSelectAll() {
 		this.panels.export.SetFocus(true);
 		this.panels.export.SelectAll();
 	}

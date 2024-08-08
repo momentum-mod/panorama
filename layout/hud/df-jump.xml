@@ -3,7 +3,6 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 	<scripts>
-		<include src="file://{scripts}/globals/globals.js" />
 		<include src="file://{scripts}/hud/df-jump.js" />
 	</scripts>
 	<MomHudDFJump>
@@ -12,7 +11,7 @@
 				<ProgressBar id="JumpPressBar" class="dfjump__press dfjump__press--ground" min="0" max="1" />
 				<ProgressBar id="JumpReleaseBar" class="dfjump__release" min="0" max="1" />
 			</Panel>
-			<ConVarEnabler convar="mom_df_hud_jump_text_enable" class="dfjump__text-wrapper" onactivate="hello()" togglevisibility="true">
+			<ConVarEnabler convar="mom_df_hud_jump_text_enable" class="dfjump__text-wrapper" togglevisibility="true">
 				<Label id="JumpReleaseLabel" class="dfjump__text-wrapper--release" />
 				<Label id="JumpTotalLabel" class="dfjump__text-wrapper--total" />
 				<Label id="JumpPressLabel" class="dfjump__text-wrapper--press" />

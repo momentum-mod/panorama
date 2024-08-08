@@ -1,18 +1,18 @@
 class HudSpecInfo {
 	/** @type {Panel} @static */
-	static container = $('#SpecInfoContainer');
+container = $('#SpecInfoContainer');
 	/** @type {Panel} @static */
-	static namesContainer = $('#NamesContainer');
+namesContainer = $('#NamesContainer');
 	/** @type {Label} @static */
-	static numSpecLabel = $('#NumSpecLabel');
+numSpecLabel = $('#NumSpecLabel');
 
-	static maxNames = 0;
+maxNames = 0;
 
-	static onSpectatorTargetChanged(_type) {
+onSpectatorTargetChanged(_type) {
 		this.onSpectatorChanged();
 	}
 
-	static onSpectatorChanged() {
+onSpectatorChanged() {
 		const specList = SpectatorAPI.GetSpecList();
 
 		const specCount = specList.length;
@@ -39,7 +39,7 @@ class HudSpecInfo {
 		}
 	}
 
-	static createSpecNameLabel(text) {
+createSpecNameLabel(text) {
 		const snippetCont = $.CreatePanel('Panel', this.namesContainer, '');
 		snippetCont.LoadLayoutSnippet('specinfo-list-entry');
 
@@ -49,16 +49,16 @@ class HudSpecInfo {
 		nameLabel.text = text;
 	}
 
-	static onMaxNamesChanged(maxNames) {
+onMaxNamesChanged(maxNames) {
 		this.maxNames = maxNames;
 		this.onSpectatorChanged();
 	}
 
-	static onLoad() {
+onLoad() {
 		this.maxNames = GameInterfaceAPI.GetSettingInt('mom_hud_specinfo_names_count');
 	}
 
-	static {
+constructor() {
 		$.RegisterForUnhandledEvent('MomentumSpectatorTargetChanged', this.onSpectatorTargetChanged.bind(this));
 		$.RegisterForUnhandledEvent('MomentumSpectatorUpdate', this.onSpectatorChanged.bind(this));
 		$.RegisterForUnhandledEvent('MomentumSpecListMaxNamesUpdate', this.onMaxNamesChanged.bind(this));

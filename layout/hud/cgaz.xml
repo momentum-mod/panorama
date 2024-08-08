@@ -2,8 +2,8 @@
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
+	
 	<scripts>
-		<include src="file://{scripts}/globals/globals.js" />
 		<include src="file://{scripts}/hud/cgaz.js" />
 	</scripts>
 

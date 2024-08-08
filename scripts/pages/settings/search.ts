@@ -1,3 +1,6 @@
+import { SettingsTabs } from "common/settings";
+import { traverseChildren } from "util/functions";
+
 namespace SettingsSearchNS {
 	export enum MatchType {
 		SETTING_TEXT = 0,
@@ -25,7 +28,7 @@ namespace SettingsSearchNS {
 }
 
 class SettingsSearch {
-	static panels = {
+panels = {
 		content: $<Panel>('#SettingsContent'),
 		searchTextEntry: $<TextEntry>('#SettingsSearchTextEntry'),
 		clearButton: $<Button>('#SettingsSearchClear'),
@@ -33,16 +36,16 @@ class SettingsSearch {
 		emptyContainer: null as Panel
 	};
 
-	static strings: string[] = [];
-	static matchedSettings: SettingsSearchNS.MatchedSetting[] = [];
+strings: string[] = [];
+matchedSettings: SettingsSearchNS.MatchedSetting[] = [];
 
-	static readonly maxMatches = 16;
+readonly maxMatches = 16;
 
-	static {
+constructor() {
 		this.panels.searchTextEntry.SetPanelEvent('ontextentrychange', this.onTextEntryChanged.bind(this));
 	}
 
-	static onTextEntryChanged() {
+onTextEntryChanged() {
 		// Check textentry is not empty
 		if (!/.*\S.*/.test(this.panels.searchTextEntry.text)) {
 			MainMenuSettings.navigateToTab(MainMenuSettings.prevTab);
@@ -74,7 +77,7 @@ class SettingsSearch {
 		this.matchedSettings = [];
 
 		// Search through each page
-		for (const tabID of Object.keys(_.Settings.Tabs)) {
+		for (const tabID of Object.keys(SettingsTabs)) {
 			const tabPanel = this.panels.content.FindChildTraverse(tabID);
 			const tabName = $.Localize(tabPanel.GetFirstChild().GetFirstChild<Label>().text);
 			this.traverseChildren(tabID, this.panels.content.FindChildTraverse(tabID), tabName, null, null);
@@ -95,14 +98,14 @@ class SettingsSearch {
 		}
 	}
 
-	static traverseChildren(
+traverseChildren(
 		tabID: string,
 		panel: GenericPanel,
 		tabName: string,
 		groupName: string,
 		groupTags: string[]
 	) {
-		for (const child of _.Util.traverseChildren(panel)) {
+		for (const child of traverseChildren(panel)) {
 			// At some point in traversal we should hit the settings-group panels. Once we do, do a class traverse to
 			// dig out the title panel. Class traverse is probably quite slow but this doesn't get run as often as
 			// everything else.
@@ -121,7 +124,7 @@ class SettingsSearch {
 		}
 	}
 
-	static searchSettingText(
+searchSettingText(
 		tabID: string,
 		textPanel: GenericPanel & { text: string },
 		tabName: string,
@@ -201,7 +204,7 @@ class SettingsSearch {
 		this.matchedSettings.push({ panel, text, tags, tabName, groupName, tabID, groupTags, matches });
 	}
 
-	static findMatch(
+findMatch(
 		inputStringMatches: Array<{ type: SettingsSearchNS.MatchType; testString: string; tagIndex: number }>,
 		inputString: string,
 		testString: string,
@@ -224,7 +227,7 @@ class SettingsSearch {
 	}
 
 	// Only check text on panels that have a text property, ignore dropdowns, headers, keybinder keys, radiobutton text
-	static shouldSearchPanelText(panel: GenericPanel): panel is GenericPanel & { text: string } {
+shouldSearchPanelText(panel: GenericPanel): panel is GenericPanel & { text: string } {
 		return (
 			Object.hasOwn(panel, 'text') &&
 			panel.paneltype !== 'TextEntry' &&
@@ -238,7 +241,7 @@ class SettingsSearch {
 		);
 	}
 
-	static createSearchResultPanel(matches: SettingsSearchNS.MatchedSetting) {
+createSearchResultPanel(matches: SettingsSearchNS.MatchedSetting) {
 		if (this.panels.results.Children().length >= this.maxMatches) {
 			if (this.panels.results.Children().length === this.maxMatches)
 				$.CreatePanel('Label', this.panels.results, '', {
@@ -311,7 +314,7 @@ class SettingsSearch {
 		});
 	}
 
-	static clearSearch() {
+clearSearch() {
 		this.panels.searchTextEntry.text = '';
 	}
 }

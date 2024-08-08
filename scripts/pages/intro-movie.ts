@@ -1,9 +1,9 @@
 class IntroMovie {
-	static {
+constructor() {
 		$.RegisterForUnhandledEvent('ShowIntroMovie', this.showIntroMovie.bind(this));
 	}
 
-	static showIntroMovie() {
+showIntroMovie() {
 		$.DispatchEvent('HideIntroMovie'); // Disable intro movie for Momentum
 	}
 }

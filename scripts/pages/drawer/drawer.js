@@ -18,10 +18,10 @@ const TABS = {
 };
 
 class Drawer {
-	static activeTab;
-	static isExtended = false;
+activeTab;
+isExtended = false;
 
-	static panels = {
+panels = {
 		/** @type {Panel} @static */
 		drawer: $('#MainMenuDrawerPanel'),
 		/** @type {Panel} @static */
@@ -34,7 +34,7 @@ class Drawer {
 		lobbyPlayerCountLabel: $('#LobbyPlayerCountLabel')
 	};
 
-	static {
+constructor() {
 		for (const tab of Object.keys(TABS)) this.loadTab(tab);
 
 		$.RegisterForUnhandledEvent('Drawer_UpdateLobbyButton', this.updateLobbyButton.bind(this));
@@ -49,7 +49,7 @@ class Drawer {
 	 * Load a drawer tab
 	 * @param {Object} tab The tab to load
 	 */
-	static loadTab(tab) {
+loadTab(tab) {
 		const newPanel = $.CreatePanel('Panel', this.panels.content, tab);
 
 		newPanel.LoadLayout('file://{resources}/layout/pages/drawer/' + TABS[tab].layout + '.xml', false, false);
@@ -73,7 +73,7 @@ class Drawer {
 	 * Switch to a drawer tab
 	 * @param {Object} tab The TABS object to switch to
 	 */
-	static navigateToTab(tab) {
+navigateToTab(tab) {
 		if (this.activeTab === tab) return;
 
 		if (this.activeTab) {
@@ -93,7 +93,7 @@ class Drawer {
 	 * Switch to drawer tab and open it
 	 * @param {Object} tab The Tabs object to switch to
 	 */
-	static extendAndNavigateToTab(tab) {
+extendAndNavigateToTab(tab) {
 		this.navigateToTab(tab);
 
 		if (!this.isExtended) this.extend();
@@ -102,7 +102,7 @@ class Drawer {
 	/**
 	 * Extend the drawer
 	 */
-	static extend() {
+extend() {
 		if (this.isExtended) return;
 
 		this.panels.drawer.AddClass('drawer--expanded');
@@ -122,7 +122,7 @@ class Drawer {
 	/**
 	 * Retract the drawer
 	 */
-	static retract() {
+retract() {
 		if (!this.isExtended) return;
 
 		this.panels.drawer.RemoveClass('drawer--expanded');
@@ -134,7 +134,7 @@ class Drawer {
 	/**
 	 * Toggle the drawer
 	 */
-	static toggle() {
+toggle() {
 		return this.isExtended ? this.retract() : this.extend();
 	}
 
@@ -143,7 +143,7 @@ class Drawer {
 	 * @param {string} imgPath
 	 * @param {number} playerCount
 	 */
-	static updateLobbyButton(imgPath, playerCount) {
+updateLobbyButton(imgPath, playerCount) {
 		this.panels.lobbyTypeImage.SetImage(imgPath);
 		this.panels.lobbyPlayerCountLabel.text = playerCount;
 		this.panels.lobbyPlayerCountLabel.SetHasClass('rightnav__button-subtitle--hidden', playerCount <= 1);
@@ -152,7 +152,7 @@ class Drawer {
 	/**
 	 * Open the profile tab when the main menu player card is pressed
 	 */
-	static onPlayerCardPressed() {
+onPlayerCardPressed() {
 		this.extend();
 
 		if (this.activeTab !== 'ProfileDrawer') {

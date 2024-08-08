@@ -17,8 +17,8 @@ declare namespace MomentumAPI {
 
 declare namespace MomentumMovementAPI {
 	interface LastMove {
-		wishdir: Util.Maths.Vector;
-		moveStatus: Movement.PlayerMoveStatus;
+		wishdir: import('util/math').Vector;
+		moveStatus: import('common/movement').PlayerMoveStatus;
 		wishspeed: float;
 		acceleration: float;
 		maxspeed: float;
@@ -63,7 +63,7 @@ declare namespace MomentumMovementAPI {
 	function GetCurrentTime(): float;
 
 	/** Gets the player's movetype (eg. normal, on a ladder, noclip, etc) */
-	function GetMoveType(): Movement.MoveType;
+	function GetMoveType(): import('common/movement').MoveType;
 
 	/** Gets an object containing the last move data */
 	function GetLastMoveData(): LastMove;
@@ -77,10 +77,10 @@ declare namespace MomentumMovementAPI {
 
 declare namespace MomentumPlayerAPI {
 	/** Gets the player or spec target's current velocity */
-	function GetVelocity(): Util.Maths.Vector;
+	function GetVelocity(): import('util/math').Vector;
 
 	/** Gets the player or spec target's current view angles */
-	function GetAngles(): Util.Maths.Vector;
+	function GetAngles(): import('util/math').Vector;
 
 	/** Gets the player or spec target's percentage of sync'd strafe ticks according to calculation type */
 	function GetStrafeSync(type: 0 | 1): float;
@@ -100,7 +100,7 @@ declare namespace MomentumWeaponAPI {
 	 * Gets the weapon slot for a specific weapon ID.
 	 * @returns -1 if not found.
 	 */
-	function GetWeaponSlot(weaponID: Weapon.WeaponID): int32;
+	function GetWeaponSlot(weaponID: import('common/weapon').WeaponID): int32;
 }
 
 declare namespace ChatAPI {
@@ -117,7 +117,7 @@ declare namespace SteamLobbyAPI {
 	function RefreshList(filters: Record<string, never>): boolean;
 
 	/** Create a new lobby with the given visibility */
-	function Create(type: SteamLobby.LobbyType): void;
+	function Create(type: import('common/steam-lobby').LobbyType): void;
 
 	/** Joins a lobby of the given SteamID */
 	function Join(steamID: string): void;
@@ -126,7 +126,7 @@ declare namespace SteamLobbyAPI {
 	function Leave(): void;
 
 	/** Change the lobby visibility */
-	function ChangeVisibility(type: SteamLobby.LobbyType): void;
+	function ChangeVisibility(type: import('common/steam-lobby').LobbyType): void;
 
 	/** Set the max players (up to 255) */
 	function SetMaxPlayers(maxPlayers: number): void;
@@ -136,14 +136,16 @@ declare namespace SteamLobbyAPI {
 }
 
 declare namespace GameModeAPI {
+	type Gamemode = import('common/web').Gamemode;
+	
 	/** Gets a random tip for the given gamemode. On first call, will load tips from file. */
-	function GetRandomTipForGameMode(gamemode: Web.Gamemode): string;
+	function GetRandomTipForGameMode(gamemode: Gamemode): string;
 
 	/* Gets the current game mode type. */
-	function GetCurrentGameMode(): Web.Gamemode;
+	function GetCurrentGameMode(): Gamemode;
 
 	/** Gets the name of a given gamemode type. */
-	function GetGameModeName(gamemode: Web.Gamemode): string;
+	function GetGameModeName(gamemode: Gamemode): string;
 
 	type GameModeHUDCapability = ValueOf<GameModeHUDCapabilityEnum>;
 	interface GameModeHUDCapabilityEnum {
@@ -169,17 +171,18 @@ declare namespace ZonesAPI {
 }
 
 declare namespace MapCacheAPI {
+	type Map = import('common/web').MMap;
 	/** Get the current map's name */
 	function GetMapName(): string;
 
 	/** Get the metadata for the current map */
-	function GetCurrentMapData(): Web.MMap;
+	function GetCurrentMapData(): Map;
 
 	/** Gets all the maps from the map cache */
-	function GetMaps(): Web.MMap[];
+	function GetMaps(): Map[];
 
 	/** Gets the map data for the given mapID */
-	function GetMapDataByID(mapID: int32): Web.MMap;
+	function GetMapDataByID(mapID: int32): Map;
 
 	/** Returns true if the given mapID is queued from download */
 	function MapQueuedForDownload(mapID: int32): boolean;
@@ -277,7 +280,7 @@ declare namespace DefragAPI {
 		crashHlEnable: boolean;
 	}
 
-	function GetDFPhysicsMode(): Movement.DefragPhysics;
+	function GetDFPhysicsMode(): import('common/movement').DefragPhysics;
 
 	function GetHUDProjection(): 0 | 1 | 2;
 

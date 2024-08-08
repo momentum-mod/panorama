@@ -3,7 +3,7 @@
  * We'll probably rewrite in the future, for now, sorry about the bizarre types!
  */
 declare namespace SteamLobby {
-	export interface Lobby {
+	interface Lobby {
 		/** String of uint64 SteamID */
 		owner: string;
 		/** String of LobbyType value, LobbyType value */
@@ -15,18 +15,18 @@ declare namespace SteamLobby {
 	/*
 	 * List of all lobbies
 	 */
-	export type LobbyList = {
+	type LobbyList = {
 		[Type in 'friends' | 'global' | 'current']?: LobbyData;
 	};
 
 	/**
 	 * A lobby list for a specific type of global/friends/current
 	 */
-	export type LobbyData = {
+	type LobbyData = {
 		[steamID: string]: Lobby;
 	};
 
-	export type MemberData = {
+	type MemberData = {
 		[steamID: string]: Member;
 	};
 
@@ -45,7 +45,7 @@ declare namespace SteamLobby {
 		specTargetID: string; // Might be a string??? idk
 	}
 
-	export interface Appearance {
+	interface Appearance {
 		bodygroup: int32;
 		/** RGBA Hex */
 		model_color: string;
@@ -65,5 +65,25 @@ declare namespace News {
 		date: string;
 		author: string;
 		image: string;
+	}
+}
+
+declare namespace JumpStats {
+	interface Config {
+		statsEnable: boolean;
+		statsFirstPrint: int32;
+		statsInterval: int32;
+		statsLog: int32;
+		takeoffSpeedEnable: boolean;
+		speedDeltaEnable: boolean;
+		enviroAccelEnable: boolean;
+		takeoffTimeEnable: boolean;
+		timeDeltaEnable: boolean;
+		strafeSyncEnable: boolean;
+		strafeCountEnable: boolean;
+		yawRatioEnable: boolean;
+		heightDeltaEnable: boolean;
+		distanceEnable: boolean;
+		efficiencyEnable: boolean;
 	}
 }

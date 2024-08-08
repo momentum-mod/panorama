@@ -1,5 +1,7 @@
+import { getMainTrack, getNumZones } from 'common/timer';
+
 class LoadingScreen {
-	static panels = {
+panels = {
 		cp: $.GetContextPanel(),
 		backgroundImage: $<Image>('#BackgroundImage'),
 		progressBar: $<ProgressBar>('#ProgressBar'),
@@ -9,7 +11,7 @@ class LoadingScreen {
 		numZones: $<Label>('#NumZones')
 	};
 
-	static {
+constructor() {
 		$.RegisterForUnhandledEvent('MapCache_MapLoad', this.updateLoadingScreenInfo.bind(this));
 		$.RegisterForUnhandledEvent('UnloadLoadingScreenAndReinit', this.init.bind(this));
 
@@ -25,7 +27,7 @@ class LoadingScreen {
 		);
 	}
 
-	static init() {
+init() {
 		this.panels.progressBar.value = 0;
 
 		const gamemode = GameModeAPI.GetCurrentGameMode();
@@ -40,7 +42,7 @@ class LoadingScreen {
 		this.panels.backgroundImage.visible = false;
 	}
 
-	static updateLoadingScreenInfo(mapName: string) {
+updateLoadingScreenInfo(mapName: string) {
 		if (!mapName) return;
 
 		const mapData = MapCacheAPI.GetCurrentMapData();
@@ -58,8 +60,8 @@ class LoadingScreen {
 			return;
 		}
 
-		const mainTrack = _.Util.getMainTrack(mapData, GameModeAPI.GetCurrentGameMode());
-		const numZones = _.Util.getNumZones(mapData);
+		const mainTrack = getMainTrack(mapData, GameModeAPI.GetCurrentGameMode());
+		const numZones = getNumZones(mapData);
 
 		this.panels.cp.SetDialogVariable('mapname', mapData.name);
 		this.panels.cp.SetDialogVariableInt('tier', mainTrack?.tier ?? 0);

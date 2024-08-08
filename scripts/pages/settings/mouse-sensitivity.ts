@@ -1,13 +1,13 @@
 class MouseSensitivitySettings {
-	static panels = {
+panels = {
 		dpi: $<TextEntry>('#DPI'),
 		unitSelection: $<DropDown>('#UnitSelection'),
 		unitsPer360: $<TextEntry>('#UnitsPer360')
 	};
 
-	static readonly cmConversionFactor = 2.54;
+readonly cmConversionFactor = 2.54;
 
-	static calculateSensitivity() {
+calculateSensitivity() {
 		if (!this.panels.dpi.text) return;
 
 		const yaw = GameInterfaceAPI.GetSettingFloat('m_yaw');
@@ -21,7 +21,7 @@ class MouseSensitivitySettings {
 		this.panels.unitsPer360.text = per360.toFixed(2);
 	}
 
-	static setSensitivity() {
+setSensitivity() {
 		if (!this.panels.dpi.text) return;
 
 		const yaw = GameInterfaceAPI.GetSettingFloat('m_yaw');
@@ -35,23 +35,23 @@ class MouseSensitivitySettings {
 		GameInterfaceAPI.SetSettingFloat('sensitivity', sensitivity);
 	}
 
-	static saveDPI() {
+saveDPI() {
 		$.persistentStorage.setItem('settings.mouseDPI', this.panels.dpi.text);
 		this.calculateSensitivity();
 	}
 
-	static saveUnitSelection() {
+saveUnitSelection() {
 		$.persistentStorage.setItem('settings.mouseUnitSelector', this.panels.unitSelection.GetSelected().id);
 		this.calculateSensitivity();
 	}
 
-	static loadSettings() {
+loadSettings() {
 		this.panels.dpi.text = $.persistentStorage.getItem('settings.mouseDPI') ?? '';
 		this.panels.unitSelection.SetSelected($.persistentStorage.getItem('settings.mouseUnitSelector'));
 		this.calculateSensitivity();
 	}
 
-	static {
+constructor() {
 		$.RegisterConVarChangeListener('sensitivity', this.calculateSensitivity.bind(this));
 	}
 }

@@ -1,9 +1,12 @@
-class ConcCook {
-	static cp = $.GetContextPanel<MomHudConcCookTime>();
-	static cookMeter = $<ProgressBar>('#ConcCookMeter');
-	static cookLabel = $<Label>('#ConcCookTime');
+import { Component } from 'util/component';
 
-	static onCookUpdate(time: float, percentage: float) {
+@Component
+class ConcCookComponent {
+	cp = $.GetContextPanel<MomHudConcCookTime>();
+	cookMeter = $<ProgressBar>('#ConcCookMeter');
+	cookLabel = $<Label>('#ConcCookTime');
+
+	onCookUpdate(time: float, percentage: float) {
 		this.cookMeter.value = percentage;
 
 		const labelEnabled = this.cp.concTimerLabelEnabled;
@@ -13,7 +16,7 @@ class ConcCook {
 		}
 	}
 
-	static {
+	constructor() {
 		$.RegisterEventHandler('OnCookUpdate', $('#ConcCooktimeContainer'), (time: float, percentage: float) =>
 			this.onCookUpdate(time, percentage)
 		);

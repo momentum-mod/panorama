@@ -1,12 +1,16 @@
-class JumpStats {
-	/** @type {Label} @static */
-	static label = $('#JumpStatsLabel');
-	/** @type {Panel} @static */
-	static container = $('#JumpStatsContainer');
-	/** @type {Panel} @static */
-	static panel = $.GetContextPanel();
+import { Component, OnMapLoad } from 'util/component';
 
-	static onJump() {
+@Component
+class JumpStatsComponent implements OnMapLoad {
+	panel = {
+		cp: $.GetContextPanel(),
+		label: $<Label>('#JumpStatsLabel'),
+		container: $<MomHudJumpStats>('#JumpStatsContainer')
+	};
+
+	jumpStatsConfig: JumpStats.Config;
+
+	onJump() {
 		const lastJumpStats = MomentumMovementAPI.GetLastJumpStats();
 		if (lastJumpStats.jumpCount < this.jumpStatsConfig.statsFirstPrint) {
 			return;
@@ -57,24 +61,24 @@ class JumpStats {
 		this.setText();
 	}
 
-	static initializeBuffer(size) {
+	initializeBuffer(size) {
 		const buffer = Array.from({ length: size }).fill('\n');
 		buffer[buffer.length - 1] = '';
 		return buffer;
 	}
 
-	static addToBuffer(buffer, value) {
+	addToBuffer(buffer, value) {
 		buffer[buffer.length - 1] += '\n';
 		buffer.push(value);
 
 		if (buffer.length > this.bufferLength) buffer.shift();
 	}
 
-	static getBufferedSum(history) {
+	getBufferedSum(history) {
 		return history.reduce((sum, element) => sum + element);
 	}
 
-	static onConfigChange() {
+	onConfigChange() {
 		this.jumpStatsConfig = this.panel.jumpStatsCFG;
 		if (this.jumpStatsConfig.statsLog !== this.bufferLength) {
 			this.bufferLength = this.jumpStatsConfig.statsLog;
@@ -82,13 +86,13 @@ class JumpStats {
 		}
 	}
 
-	static onLoad() {
+	onMapLoad() {
 		this.onConfigChange();
 		this.initializeStats();
 		this.setText();
 	}
 
-	static initializeStats() {
+	initializeStats() {
 		this.countBuffer = this.initializeBuffer(this.bufferLength);
 		this.takeoffSpeedBuffer = this.initializeBuffer(this.bufferLength);
 		this.speedDeltaBuffer = this.initializeBuffer(this.bufferLength);
@@ -103,7 +107,7 @@ class JumpStats {
 		this.efficiencyBuffer = this.initializeBuffer(this.bufferLength);
 	}
 
-	static setText() {
+	setText() {
 		this.panel.SetDialogVariable('jump_count', this.getBufferedSum(this.countBuffer));
 		this.panel.SetDialogVariable('speed', this.getBufferedSum(this.takeoffSpeedBuffer));
 		this.panel.SetDialogVariable('speed_delta', this.getBufferedSum(this.speedDeltaBuffer));
@@ -118,18 +122,18 @@ class JumpStats {
 		this.panel.SetDialogVariable('efficiency', this.getBufferedSum(this.efficiencyBuffer));
 	}
 
-	static makeTime(value) {
+	makeTime(value) {
 		const hours = (value / 3600).toFixed(0).padStart(2, '0');
 		const minutes = (Math.floor(value / 60) % 60).toFixed(0).padStart(2, '0');
 		const seconds = (value % 60).toFixed(3).padStart(6, '0');
 		return `${hours}:${minutes}:${seconds}`;
 	}
 
-	static makePercentage(ratio) {
+	makePercentage(ratio) {
 		return (ratio * 100).toFixed(1) + '%';
 	}
 
-	static {
+	constructor() {
 		$.RegisterEventHandler('OnJumpStarted', this.container, this.onJump.bind(this));
 
 		$.RegisterForUnhandledEvent('LevelInitPostEntity', this.onLoad.bind(this));

@@ -24,11 +24,11 @@ const LEADERBOARD_STATUS_TYPE = {
 };
 
 class Leaderboards {
-	static selectedTimesList;
-	static selectedGlobalListType;
-	static selectedLocalListType;
+selectedTimesList;
+selectedGlobalListType;
+selectedLocalListType;
 
-	static panels = {
+panels = {
 		/** @type {Panel} @static */
 		subtypeButtons: $('#FilterButtonsSubtype'),
 		/** @type {Button} @static */
@@ -43,7 +43,7 @@ class Leaderboards {
 		tracksDropdown: $('#TracksDropdown')
 	};
 
-	static {
+constructor() {
 		$.RegisterEventHandler('Leaderboards_TimesFiltered', $.GetContextPanel(), this.onTimesUpdated.bind(this));
 		$.RegisterForUnhandledEvent('EndOfRun_Show', this.onShowEndOfRun.bind(this));
 		$.RegisterForUnhandledEvent('Leaderboards_MapDataSet', this.onMapLoad.bind(this));
@@ -55,7 +55,7 @@ class Leaderboards {
 		this.setSelectedListType(TIME_LIST_TYPE.LIST_LOCAL, LEADERBOARD_TYPE.TIMES_LOCAL);
 	}
 
-	static onTimesUpdated(count) {
+onTimesUpdated(count) {
 		const currentListType = this.getSelectedListType();
 
 		let statusType = null;
@@ -118,7 +118,7 @@ class Leaderboards {
 		}
 	}
 
-	static setSelectedTimesList(timesList) {
+setSelectedTimesList(timesList) {
 		this.panels.subtypeButtons.SetHasClass(
 			'leaderboard-filter-buttons__subtypes--online',
 			timesList === TIME_LIST_TYPE.LIST_GLOBAL
@@ -131,7 +131,7 @@ class Leaderboards {
 		this.selectedTimesList = timesList;
 	}
 
-	static setSelectedListType(timesList, listType) {
+setSelectedListType(timesList, listType) {
 		if (timesList === TIME_LIST_TYPE.LIST_LOCAL) {
 			this.selectedLocalListType = listType;
 		} else if (timesList === TIME_LIST_TYPE.LIST_GLOBAL) {
@@ -139,7 +139,7 @@ class Leaderboards {
 		}
 	}
 
-	static getSelectedListType() {
+getSelectedListType() {
 		if (this.selectedTimesList === TIME_LIST_TYPE.LIST_LOCAL) {
 			return this.selectedLocalListType;
 		} else if (this.selectedTimesList === TIME_LIST_TYPE.LIST_GLOBAL) {
@@ -149,13 +149,13 @@ class Leaderboards {
 		}
 	}
 
-	static showLobbyTooltip() {
+showLobbyTooltip() {
 		if (!this.panels.lobbyButton.enabled) {
 			UiToolkitAPI.ShowTextTooltip(this.panels.lobbyButton.id, $.Localize('#Leaderboards_JoinLobbyTooltip'));
 		}
 	}
 
-	static showEndOfRun() {
+showEndOfRun() {
 		$.DispatchEvent('EndOfRun_Show', EorShowReason.MANUALLY_SHOWN);
 	}
 
@@ -164,7 +164,7 @@ class Leaderboards {
 	 * Should only be shown if you're completing a run in the current session on the current map.
 	 * @param {EorShowReason} showReason - Why the end of run panel is being shown. See EorShowReason for reasons.
 	 */
-	static onShowEndOfRun(showReason) {
+onShowEndOfRun(showReason) {
 		if (showReason === EorShowReason.PLAYER_FINISHED_RUN) {
 			this.panels.endOfRunButton.visible = true;
 		}
@@ -173,11 +173,11 @@ class Leaderboards {
 	/**
 	 * Hide the button to go to the end of run page.
 	 */
-	static onMapLoad(_isOfficial) {
+onMapLoad(_isOfficial) {
 		this.panels.endOfRunButton.visible = false;
 	}
 
-	static onMapLeaderboardsLoad(map) {
+onMapLeaderboardsLoad(map) {
 		this.panels.tracksDropdown.RemoveAllOptions();
 
 		const currentMode = GameModeAPI.GetCurrentGameMode();

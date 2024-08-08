@@ -1,5 +1,5 @@
 class LobbyCreate {
-	static panels = {
+panels = {
 		/** @type {Panel} @static */
 		cp: $.GetContextPanel(),
 		/** @type {Panel} @static */
@@ -12,9 +12,9 @@ class LobbyCreate {
 		maxPlayers: $('#MaxPlayers')
 	};
 
-	static lobbyMaxPlayers = 250;
+lobbyMaxPlayers = 250;
 
-	static onLoad() {
+onLoad() {
 		if (this.panels.cp.GetAttributeInt('islobbyowner', 0)) {
 			this.panels.warningRow.visible = true;
 			this.panels.cp.SetDialogVariable('warning', '#Lobby_Create_TransferWarning');
@@ -28,7 +28,7 @@ class LobbyCreate {
 		this.onChanged();
 	}
 
-	static onChanged() {
+onChanged() {
 		UiToolkitAPI.HideTextTooltip();
 
 		if (this.getMaxPlayersEntered() > this.lobbyMaxPlayers) {
@@ -45,7 +45,7 @@ class LobbyCreate {
 		}
 	}
 
-	static create() {
+create() {
 		let type;
 		if (this.isChecked('LobbyCreatePrivateButton')) {
 			type = 0;
@@ -72,15 +72,15 @@ class LobbyCreate {
 		});
 	}
 
-	static cancel() {
+cancel() {
 		UiToolkitAPI.CloseAllVisiblePopups();
 	}
 
-	static getMaxPlayersEntered() {
+getMaxPlayersEntered() {
 		return Number.parseInt(this.panels.maxPlayers.text);
 	}
 
-	static isChecked(button) {
+isChecked(button) {
 		return this.panels.cp.FindChildTraverse(button).checked;
 	}
 }

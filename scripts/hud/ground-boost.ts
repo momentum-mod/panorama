@@ -1,52 +1,69 @@
-const TimerFlags = {
-	NONE: 0,
-	LANDING: 1 << 0,
-	KNOCKBACK: 1 << 1,
-	WATERJUMP: 1 << 2
-};
+import { Component, OnHudUpdate, OnMapLoad } from 'util/component';
 
-const ColorClass = {
-	FRICTION: 'groundboost__meter--friction',
-	SLICK: 'groundboost__meter--slick',
-	CRASH: 'groundboost__meter--crash'
-};
+enum TimerFlags {
+	NONE = 0,
+	LANDING = 1 << 0,
+	KNOCKBACK = 1 << 1,
+	WATERJUMP = 1 << 2
+}
 
-const LabelClass = {
-	GAIN: 'groundboost__label--gain',
-	FLAT: 'groundboost__label--flat',
-	LOSS: 'groundboost__label--loss',
-	HIDE: 'groundboost__label--hide'
-};
+enum ColorClass {
+	FRICTION = 'groundboost__meter--friction',
+	SLICK = 'groundboost__meter--slick',
+	CRASH = 'groundboost__meter--crash'
+}
+
+enum LabelClass {
+	GAIN = 'groundboost__label--gain',
+	FLAT = 'groundboost__label--flat',
+	LOSS = 'groundboost__label--loss',
+	HIDE = 'groundboost__label--hide'
+}
 
 const MAX_TIMER_MS = 250;
 const MS_2_DEG = 360 / MAX_TIMER_MS;
 const IDEAL_END_MS = 40; // 5 ticks
 
-class Groundboost {
-	/** @type {Panel} @static */
-	static groundboostMeter = $('#GroundboostMeter');
-	/** @type {Label} @static */
-	static groundboostLabel = $('#GroundboostLabel');
-	/** @type {Panel} @static */
-	static container = $('#GroundboostContainer');
+@Component
+class Groundboost implements OnMapLoad, OnHudUpdate {
+	panels = {
+		container: $<Panel>('#GroundboostContainer'),
+		groundboostMeter: $<Panel>('#GroundboostMeter'),
+		groundboostLabel: $<Label>('#GroundboostLabel')
+	};
 
-	static onLoad() {
+	visible: boolean;
+	overshootEnable: boolean;
+	crashHlEnable: boolean;
+	colorClass: ColorClass;
+	labelClass: LabelClass;
+	missedJumpTimer = 0;
+	peakSpeed = 0;
+	startSpeed = 0;
+	textMode: number;
+	textColorMode: number;
+
+	constructor() {
+		$.RegisterForUnhandledEvent('OnDefragHUDGroundboostChange', this.onConfigChange.bind(this));
+	}
+
+	onMapLoad() {
 		this.onConfigChange();
 
 		this.colorClass = ColorClass.SLICK;
-		this.groundboostMeter.AddClass(this.colorClass);
+		this.panels.groundboostMeter.AddClass(this.colorClass);
 
 		this.labelClass = LabelClass.FLAT;
 
-		this.container.AddClass('groundboost__container--hide');
+		this.panels.container.AddClass('groundboost__container--hide');
 		this.visible = false;
 		this.missedJumpTimer = 0;
 		this.peakSpeed = 0;
 		this.startSpeed = 0;
 	}
 
-	static onUpdate() {
-		$.Msg('Groundboost onUpdate: PEEN YOU DONE FUCKED IT')
+	onHudUpdate() {
+		$.Msg('Groundboost onUpdate: IF THIS HAPPENS IN OTHER MODES PEEN YOU DONE FUCKED IT');
 		const lastMoveData = MomentumMovementAPI.GetLastMoveData();
 		let timer = lastMoveData.defragTimer;
 		const timerFlags = lastMoveData.defragTimerFlags;
@@ -79,13 +96,13 @@ class Groundboost {
 				}
 			}
 			if (bUpdateMeter) {
-				const fill = Math.min(timer * MS_2_DEG, 360).toFixed(2) - 360;
+				const fill = +Math.min(timer * MS_2_DEG, 360).toFixed(2) - 360;
 				const start = this.missedJumpTimer ? -fill : 0;
-				this.groundboostMeter.style.clip = `radial(50% 50%, ${start}deg, ${fill}deg)`;
+				this.panels.groundboostMeter.style.clip = `radial(50% 50%, ${start}deg, ${fill}deg)`;
 
 				this.peakSpeed = Math.max(speed, this.peakSpeed);
 				this.updateTextColor(speed, timer);
-				this.groundboostLabel.text =
+				this.panels.groundboostLabel.text =
 					this.textMode === 2 ? Number(deltaSpeed).toFixed(0) : this.missedJumpTimer ? -timer : timer;
 			}
 		} else if (this.visible && !(timerFlags & TimerFlags.KNOCKBACK)) {
@@ -94,25 +111,25 @@ class Groundboost {
 		}
 	}
 
-	static startGB(bCrashLand) {
+	startGB(bCrashLand) {
 		this.visible = true;
 		this.startSpeed = this.getSize(MomentumPlayerAPI.GetVelocity());
 		this.peakSpeed = this.startSpeed;
 		this.missedJumpTimer = 0;
-		this.container.RemoveClass('groundboost__container--hide');
+		this.panels.container.RemoveClass('groundboost__container--hide');
 		this.setMeterColor(this.crashHlEnable && !bCrashLand ? ColorClass.SLICK : ColorClass.CRASH);
 		this.setTextColor(this.textColorMode === 2 ? LabelClass.GAIN : LabelClass.FLAT);
 	}
 
-	static setMeterColor(color) {
+	setMeterColor(color) {
 		if (this.colorClass === color) return;
 
-		this.groundboostMeter.RemoveClass(this.colorClass);
+		this.panels.groundboostMeter.RemoveClass(this.colorClass);
 		this.colorClass = color;
-		this.groundboostMeter.AddClass(this.colorClass);
+		this.panels.groundboostMeter.AddClass(this.colorClass);
 	}
 
-	static updateTextColor(speed, timer) {
+	updateTextColor(speed, timer) {
 		if (!this.textMode || !this.textColorMode) return;
 
 		switch (this.textColorMode) {
@@ -137,28 +154,28 @@ class Groundboost {
 		}
 	}
 
-	static setTextColor(color) {
+	setTextColor(color) {
 		if (!this.textMode || !this.textColorMode || this.labelClass === color) return;
 
-		this.groundboostLabel.RemoveClass(this.labelClass);
+		this.panels.groundboostLabel.RemoveClass(this.labelClass);
 		this.labelClass = color;
-		this.groundboostLabel.AddClass(this.labelClass);
+		this.panels.groundboostLabel.AddClass(this.labelClass);
 	}
 
-	static fadeOut() {
-		this.container.AddClass('groundboost__container--hide');
+	fadeOut() {
+		this.panels.container.AddClass('groundboost__container--hide');
 		this.visible = false;
 	}
 
-	static getSize(vec) {
+	getSize(vec) {
 		return Math.sqrt(this.getSizeSquared(vec));
 	}
 
-	static getSizeSquared(vec) {
+	getSizeSquared(vec) {
 		return vec.x * vec.x + vec.y * vec.y;
 	}
 
-	static onConfigChange() {
+	onConfigChange() {
 		const groundboostConfig = DefragAPI.GetHUDGroundboostCFG();
 		this.overshootEnable = groundboostConfig.overshootEnable;
 		this.textMode = groundboostConfig.textMode;
@@ -166,15 +183,9 @@ class Groundboost {
 		this.crashHlEnable = groundboostConfig.crashHlEnable;
 
 		if (!this.textMode) {
-			this.groundboostLabel.AddClass(LabelClass.HIDE);
+			this.panels.groundboostLabel.AddClass(LabelClass.HIDE);
 		} else {
-			this.groundboostLabel.RemoveClass(LabelClass.HIDE);
+			this.panels.groundboostLabel.RemoveClass(LabelClass.HIDE);
 		}
-	}
-
-	static {
-		$.RegisterEventHandler('HudProcessInput', $.GetContextPanel(), this.onUpdate.bind(this));
-		$.RegisterForUnhandledEvent('LevelInitPostEntity', this.onLoad.bind(this));
-		$.RegisterForUnhandledEvent('OnDefragHUDGroundboostChange', this.onConfigChange.bind(this));
 	}
 }

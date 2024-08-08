@@ -8,6 +8,7 @@ interface PanelTagNameMap {
 	MomHudConcEntities: MomHudConcEntities;
 	MomHudGhostEntities: MomHudGhostEntities;
 	MomHudGhostEntityPanel: MomHudGhostEntityPanel;
+	MomHudJumpStats: MomHudJumpStats;
 }
 
 interface MomentumChat extends AbstractPanel<'MomentumChat'> {
@@ -15,13 +16,13 @@ interface MomentumChat extends AbstractPanel<'MomentumChat'> {
 }
 
 interface MomentumMapSelector extends AbstractPanel<'MomentumMapSelector'> {
-	readonly selectedMapData: Web.MMap;
+	readonly selectedMapData: import('common/web').MMap;
 
 	ApplyFilters(): void;
 }
 
 interface MapEntry extends AbstractPanel<'MapEntry'> {
-	readonly mapData: Web.MMap;
+	readonly mapData: import('common/web').MMap;
 }
 
 /** Only doing loose type since liable to change in near future. */
@@ -50,3 +51,7 @@ interface MomHudGhostEntities extends AbstractHudPanel<'MomHudGhostEntities'> {
 }
 
 interface MomHudGhostEntityPanel extends AbstractHudPanel<'MomHudGhostEntityPanel'> {}
+
+interface MomHudJumpStats extends AbstractHudPanel<'MomHudJumpStats'> {
+	readonly jumpStatsCFG: JumpStats.Config;
+}

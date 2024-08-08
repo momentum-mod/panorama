@@ -1,13 +1,13 @@
 class MainMenuNews {
-	static panels = {
+panels = {
 		latestUpdateImage: $<Image>('#LatestUpdateImage'),
 		learnMore: $<Button>('#LearnMore'),
 		otherUpdates: $<Panel>('#OtherUpdates')
 	};
 
-	static readonly postMaxChars = 1024;
+readonly postMaxChars = 1024;
 
-	static {
+constructor() {
 		$.RegisterForUnhandledEvent('PanoramaComponent_News_OnRSSFeedReceived', this.onRSSFeedReceived.bind(this));
 
 		NewsAPI.GetRSSFeed();
@@ -18,7 +18,7 @@ class MainMenuNews {
 	 * If not called, means that there was an error
 	 * @param {Object} feed - JSON data from RSS
 	 */
-	static onRSSFeedReceived(feed: { items: News.RSSFeedItem[] }) {
+onRSSFeedReceived(feed: { items: News.RSSFeedItem[] }) {
 		if (feed.items.length === 0) {
 			return;
 		}
@@ -65,7 +65,7 @@ class MainMenuNews {
 		}
 	}
 
-	static minimize() {
+minimize() {
 		$.GetContextPanel().ToggleClass('news--minimized');
 	}
 }

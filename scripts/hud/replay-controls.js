@@ -1,15 +1,15 @@
 class ReplayControls {
-	static panels = {
+panels = {
 		timeSlider: $('#ReplayControlsTimeSlider'),
 		pausePlayButton: $('#ReplayControlsPausePlay'),
 		gotoTick: $('#ReplayControlsGotoTick')
 	};
 
-	static toggleHiddenState() {
+toggleHiddenState() {
 		$.GetContextPanel().ToggleHiddenState();
 	}
 
-	static onProcessInput() {
+onProcessInput() {
 		// Deal with the slider
 		const currentTick = MomentumReplayAPI.GetCurrentTick();
 		const totalTicks = MomentumReplayAPI.GetTotalTicks();
@@ -28,15 +28,15 @@ class ReplayControls {
 		$.GetContextPanel().SetDialogVariableFloat('total_time', MomentumReplayAPI.GetTotalTime());
 	}
 
-	static gotoTick() {
+gotoTick() {
 		GameInterfaceAPI.ConsoleCommand('mom_replay_goto ${this.panels.gotoTick.text}');
 	}
 
-	static onSliderValueChanged(_panel, flProgress) {
+onSliderValueChanged(_panel, flProgress) {
 		MomentumReplayAPI.SetProgress(flProgress);
 	}
 
-	static {
+constructor() {
 		$.RegisterEventHandler('HudProcessInput', $.GetContextPanel(), this.onProcessInput.bind(this));
 		$.RegisterEventHandler('SliderValueChanged', $.GetContextPanel(), this.onSliderValueChanged.bind(this));
 	}

@@ -1,22 +1,27 @@
-class HudComparisons {
-	static runFinished = false;
-	static currentZone = 0;
-	static runStatsZoneIndex = 0;
+import { Component } from 'util/component';
+import { TimerEvent, TimerState } from 'common/timer';
+import { Comparison, RunStats, Split } from 'common/run';
 
-	static readonly maxActiveSplits = 12;
-	static readonly newSplitTransitionDuration = 2;
+@Component
+class HudComparisonsComponent {
+	runFinished = false;
+	currentZone = 0;
+	runStatsZoneIndex = 0;
 
-	static panels = {
+	readonly maxActiveSplits = 12;
+	readonly newSplitTransitionDuration = 2;
+
+	panels = {
 		splits: $<Panel>('#Splits')
 		// compare: $('#Compare')
 	};
 
-	static {
+	constructor() {
 		$.RegisterEventHandler('HudCompare_Update', $.GetContextPanel(), this.updateComparisons.bind(this));
 		$.RegisterForUnhandledEvent('OnMomentumTimerStateChange', this.onTimerEvent.bind(this));
 	}
 
-	static clearComparisons() {
+	clearComparisons() {
 		// this.panels.compare.RemoveAndDeleteChildren();
 		this.panels.splits.RemoveAndDeleteChildren();
 		this.runFinished = false;
@@ -24,13 +29,13 @@ class HudComparisons {
 		this.runStatsZoneIndex = 0;
 	}
 
-	static onTimerEvent(_ent, eventType) {
-		if (eventType === _.Timer.TimerEvent.STARTED) {
+	onTimerEvent(_ent, eventType) {
+		if (eventType === TimerEvent.STARTED) {
 			this.clearComparisons();
 		}
 	}
 
-	static updateComparisons() {
+	updateComparisons() {
 		const currentData = $.GetContextPanel<HudComparisons>().currentRunData;
 		const currentStats = $.GetContextPanel<HudComparisons>().currentRunStats;
 		const comparisonRun = RunComparisonsAPI.GetLoadedComparison();
@@ -42,7 +47,7 @@ class HudComparisons {
 			!currentData.isInZone ||
 			!currentStats ||
 			currentData.currentZone === 1 ||
-			currentData.timerState === _.Timer.TimerState.PRACTICE
+			currentData.timerState === TimerState.PRACTICE
 		) {
 			return;
 		}
@@ -51,7 +56,7 @@ class HudComparisons {
 		// so we don't fire on stage we've already hit.
 		// this.runStatsZoneIndex tracks the correct index into the runStats array
 
-		if (currentData.timerState === _.Timer.TimerState.NOTRUNNING) {
+		if (currentData.timerState === TimerState.NOTRUNNING) {
 			// The only time we care about comparisons when timer is not running is if you just
 			// hit the end zone *for the first time*
 			if (!this.runFinished && currentData.currentZone === 0) {
@@ -82,12 +87,12 @@ class HudComparisons {
 		}
 
 		const data = hasCompare
-			? _.Run.Comparison.generateSplits(
-					new _.Run.RunStats(currentStats, currentData.tickRate),
-					new _.Run.RunStats(comparisonRun.compareRun.stats, currentData.tickRate)
+			? Comparison.generateSplits(
+					new RunStats(currentStats, currentData.tickRate),
+					new RunStats(comparisonRun.compareRun.stats, currentData.tickRate)
 					// this.runStatsZoneIndex + 1 TODO: this was being passed to generateSplits, but that only takes two args. What was this for?
 				)[this.runStatsZoneIndex]
-			: new _.Run.RunStats(currentStats, currentData.tickRate, this.runStatsZoneIndex + 1).zones[
+			: new RunStats(currentStats, currentData.tickRate, this.runStatsZoneIndex + 1).zones[
 					this.runStatsZoneIndex
 				];
 
@@ -125,8 +130,8 @@ class HudComparisons {
 						name: data.name,
 						time: data.accumulateTime,
 						isFirst: false,
-						diff: (data as Run.Split).diff,
-						delta: (data as Run.Split).delta
+						diff: (data as Split).diff,
+						delta: (data as Split).delta
 					}
 				: {
 						name: data.name,

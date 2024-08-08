@@ -18,6 +18,7 @@
 		"get-credits": "node tools/get-credits.js",
 		"fetch-web": "./tools/fetch-web.sh"
 	},
+	"type": "module",
 	"author": "Momentum Team",
 	"license": "MIT",
 	"devDependencies": {

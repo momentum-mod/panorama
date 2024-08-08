@@ -67,11 +67,11 @@ let SpeedometerMap = new Map();
 
 class Speedometer {
 	/** @static @type {Panel} */
-	static container = $('#SpeedometersContainer');
-	static lastZone = 0;
-	static correctedColorizeDeadzone = 0;
+container = $('#SpeedometersContainer');
+lastZone = 0;
+correctedColorizeDeadzone = 0;
 
-	static registerFadeoutEventHandlers() {
+registerFadeoutEventHandlers() {
 		for (const [type, speedometers] of SpeedometerMap) {
 			if (!this.canSpeedometerTypeFadeOut(type)) continue;
 
@@ -89,7 +89,7 @@ class Speedometer {
 			}
 		}
 	}
-	static unregisterFadeoutEventHandlers() {
+unregisterFadeoutEventHandlers() {
 		for (const [type, speedometers] of SpeedometerMap) {
 			if (!this.canSpeedometerTypeFadeOut(type)) continue;
 
@@ -105,26 +105,26 @@ class Speedometer {
 		}
 	}
 
-	static onSpeedometerUpdate(deltaTime) {
+onSpeedometerUpdate(deltaTime) {
 		const velocity = MomentumPlayerAPI.GetVelocity();
 
 		this.correctedColorizeDeadzone = deltaTime * COLORIZE_DEADZONE;
 		this.updateSpeedometersOfType(_.Speedo.SpeedometerTypes.OVERALL_VELOCITY, velocity);
 	}
-	static onExplosiveHitSpeedUpdate(hitVelocity) {
+onExplosiveHitSpeedUpdate(hitVelocity) {
 		this.updateSpeedometersOfType(_.Speedo.SpeedometerTypes.EXPLOSION_VELOCITY, hitVelocity);
 	}
-	static onJumpSpeedUpdate(jumpVelocity) {
+onJumpSpeedUpdate(jumpVelocity) {
 		this.updateSpeedometersOfType(_.Speedo.SpeedometerTypes.JUMP_VELOCITY, jumpVelocity);
 	}
-	static onRampBoardSpeedUpdate(rampBoardVelocity) {
+onRampBoardSpeedUpdate(rampBoardVelocity) {
 		this.updateSpeedometersOfType(_.Speedo.SpeedometerTypes.RAMP_VELOCITY, rampBoardVelocity);
 	}
-	static onRampLeaveSpeedUpdate(rampLeaveVelocity) {
+onRampLeaveSpeedUpdate(rampLeaveVelocity) {
 		this.updateSpeedometersOfType(_.Speedo.SpeedometerTypes.RAMP_VELOCITY, rampLeaveVelocity);
 	}
 
-	static onZoneChange(enter, linear, curZone, _curTrack, timerState) {
+onZoneChange(enter, linear, curZone, _curTrack, timerState) {
 		const startZone = curZone === 1;
 		if (enter && startZone) {
 			this.lastZone = 0;
@@ -159,21 +159,21 @@ class Speedometer {
 		}
 	}
 
-	static resetSpeedometerFadeouts() {
+resetSpeedometerFadeouts() {
 		for (const [type, speedometers] of SpeedometerMap) {
 			if (!this.canSpeedometerTypeFadeOut(type)) continue;
 
 			for (const speedometer of speedometers) this.resetSpeedometerFadeout(speedometer);
 		}
 	}
-	static resetSpeedometerFadeout(speedometer) {
+resetSpeedometerFadeout(speedometer) {
 		// forcibly fade out immediately
 		speedometer.speedometerPanel.RemoveClass(FADEOUT_START_CLASS);
 		speedometer.speedometerPanel.TriggerClass(FADEOUT_CLASS);
 		speedometer.prevVal = 0;
 	}
 
-	static getSpeedFromVelocity(velocity, settings) {
+getSpeedFromVelocity(velocity, settings) {
 		let numAxes = 0;
 		const enabledAxes = settings[_.Speedo.SpeedometerDataKeys.ENABLED_AXES];
 		for (const enabledAxis of enabledAxes) {
@@ -196,7 +196,7 @@ class Speedometer {
 		}
 	}
 
-	static updateZoneSpeedometers(absSpeed, horizSpeed, hasComparison = true, absCustomdiff, horizCustomdiff) {
+updateZoneSpeedometers(absSpeed, horizSpeed, hasComparison = true, absCustomdiff, horizCustomdiff) {
 		/** @type {Array<SpeedometerObject>} */
 		const speedometers = SpeedometerMap.get(_.Speedo.SpeedometerTypes.ZONE_VELOCITY);
 		if (!speedometers) return;
@@ -216,7 +216,7 @@ class Speedometer {
 		}
 	}
 
-	static updateSpeedometersOfType(type, velocity) {
+updateSpeedometersOfType(type, velocity) {
 		/** @type {Array<SpeedometerObject>} */
 		const speedometers = SpeedometerMap.get(type);
 		if (!speedometers) return;
@@ -233,7 +233,7 @@ class Speedometer {
 		}
 	}
 
-	static updateSpeedometer(type, speedometer, speed, hasComparison = true, customdiff) {
+updateSpeedometer(type, speedometer, speed, hasComparison = true, customdiff) {
 		const colorType = speedometer.settings[_.Speedo.SpeedometerDataKeys.COLOR_TYPE];
 
 		const separateComparison = colorType === _.Speedo.SpeedometerColorTypes.COMPARISON_SEP;
@@ -294,11 +294,11 @@ class Speedometer {
 	}
 
 	// Overall velocity speedometers shouldn't fade out as they constantly update
-	static canSpeedometerTypeFadeOut(type) {
+canSpeedometerTypeFadeOut(type) {
 		return type !== SpeedometerTypes.OVERALL_VELOCITY;
 	}
 
-	static appendRangeColorProfileInfo(speedoData, colorProfData) {
+appendRangeColorProfileInfo(speedoData, colorProfData) {
 		if (speedoData[_.Speedo.SpeedometerDataKeys.COLOR_TYPE] !== _.Speedo.SpeedometerColorTypes.RANGE) return;
 
 		const colorProf = speedoData[_.Speedo.SpeedometerDataKeys.RANGE_COL_PROF];
@@ -316,7 +316,7 @@ class Speedometer {
 		});
 	}
 
-	static onSettingsUpdate(success) {
+onSettingsUpdate(success) {
 		if (!success) {
 			$.Warning('Failed to load speedometer settings from speedometer!');
 			return;
@@ -354,7 +354,7 @@ class Speedometer {
 		this.registerFadeoutEventHandlers();
 	}
 
-	static {
+constructor() {
 		$.RegisterEventHandler('OnExplosiveHitSpeedUpdate', this.container, this.onExplosiveHitSpeedUpdate.bind(this));
 		$.RegisterEventHandler('OnJumpSpeedUpdate', this.container, this.onJumpSpeedUpdate.bind(this));
 		$.RegisterEventHandler('OnRampBoardSpeedUpdate', this.container, this.onRampBoardSpeedUpdate.bind(this));

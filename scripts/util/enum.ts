@@ -47,13 +47,6 @@
  * TS => JS enum implementation (this has actually changed in the past). This is copied from the website repo where
  * these functions are unit-tested so should be okay, but TS versions could go out of sync or something.
  */
-export type StringKeyOf<T> = Extract<keyof T, string>;
-export type HeteroEnum<T> = Record<StringKeyOf<T>, string | number>;
-export type NumericEnum<T> = Record<StringKeyOf<T>, number>;
-export type StringEnum<T> = Record<StringKeyOf<T>, string>;
-export type Keys<T> = Array<StringKeyOf<T>>;
-export type Values<T> = Array<T[StringKeyOf<T>]>;
-export type Entries<T> = Array<[StringKeyOf<T>, T[StringKeyOf<T>]]>;
 
 /**
  * Get the number of entries in an enum.
@@ -196,3 +189,12 @@ function getOwnEnumerableNonNumericKeys<T extends Record<string, any>>(obj: T): 
 		(key) => Object.prototype.propertyIsEnumerable.call(obj, key) && isNonNumericKey(key)
 	) as StringKeyOf<T>[];
 }
+
+export type StringKeyOf<T> = Extract<keyof T, string>;
+export type HeteroEnum<T> = Record<StringKeyOf<T>, string | number>;
+export type NumericEnum<T> = Record<StringKeyOf<T>, number>;
+export type StringEnum<T> = Record<StringKeyOf<T>, string>;
+export type Keys<T> = Array<StringKeyOf<T>>;
+export type Values<T> = Array<T[StringKeyOf<T>]>;
+export type Entries<T> = Array<[StringKeyOf<T>, T[StringKeyOf<T>]]>;
+

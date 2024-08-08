@@ -1,13 +1,13 @@
 class Lobby {
-	static lobbyCurrentData: SteamLobby.LobbyData = {};
-	static lobbyListData: SteamLobby.LobbyList = {};
-	static lobbyMemberData: SteamLobby.MemberData = {};
+lobbyCurrentData: SteamLobby.LobbyData = {};
+lobbyListData: SteamLobby.LobbyList = {};
+lobbyMemberData: SteamLobby.MemberData = {};
 
-	static isRefreshHovered: boolean;
+isRefreshHovered: boolean;
 
-	static readonly refreshCooldown = 10;
+readonly refreshCooldown = 10;
 
-	static panels = {
+panels = {
 		search: $<TextEntry>('#LobbySearch'),
 		searchClearButton: $<Button>('#LobbySearchClearButton'),
 		refreshButton: $<Button>('#LobbyRefreshButton'),
@@ -22,7 +22,7 @@ class Lobby {
 		detailsMemberList: $<Panel>('#LobbyDetailsMemberList')
 	};
 
-	static {
+constructor() {
 		// Watch out: these callbacks work a bit different to Steamworks: We will only receive data for our own lobby automatically
 		// And only the list update will give us anything else via OnListUpdated
 		$.RegisterForUnhandledEvent('PanoramaComponent_SteamLobby_OnListUpdated', (lobbyList) =>
@@ -50,7 +50,7 @@ class Lobby {
 	 * Join the lobby with the given id, warning the user if they're currently in a lobby
 	 * @param {number} steamID
 	 */
-	static join(steamID: string) {
+join(steamID: string) {
 		const leaveAndJoinCheck = (message: string) => {
 			UiToolkitAPI.ShowGenericPopupOkCancel(
 				$.Localize('#Lobby_Leave'),
@@ -78,7 +78,7 @@ class Lobby {
 	/**
 	 * Leave the current lobby, warning the user if they're the owner
 	 */
-	static leave() {
+leave() {
 		if (this.isLobbyOwner() && this.getLobbyMemberCount() > 1) {
 			UiToolkitAPI.ShowGenericPopupOkCancel(
 				$.Localize('#Lobby_Leave'),
@@ -95,7 +95,7 @@ class Lobby {
 	/**
 	 * Show the lobby creation popup
 	 */
-	static create() {
+create() {
 		UiToolkitAPI.ShowCustomLayoutPopupParameters(
 			'',
 			'file://{resources}/layout/modals/popups/lobby-create.xml',
@@ -106,7 +106,7 @@ class Lobby {
 	/**
 	 * Show the lobby settings popup
 	 */
-	static showLobbySettings() {
+showLobbySettings() {
 		const lobbyData = Object.values(this.lobbyCurrentData)[0];
 
 		UiToolkitAPI.ShowCustomLayoutPopupParameters(
@@ -119,7 +119,7 @@ class Lobby {
 	/**
 	 * Switch to the lobby details panel
 	 */
-	static showLobbyDetails() {
+showLobbyDetails() {
 		this.panels.details.RemoveClass('lobby__lobby-details--hidden');
 		this.panels.listContainer.AddClass('lobby__lobby-list--hidden');
 	}
@@ -127,7 +127,7 @@ class Lobby {
 	/**
 	 * Switch to the lobby list panel
 	 */
-	static showLobbyList() {
+showLobbyList() {
 		this.panels.listContainer.RemoveClass('lobby__lobby-list--hidden');
 		this.panels.details.AddClass('lobby__lobby-details--hidden');
 
@@ -137,7 +137,7 @@ class Lobby {
 	/**
 	 * Request a lobby refresh, then put the button on cooldown
 	 */
-	static refreshLobbyList() {
+refreshLobbyList() {
 		if (SteamLobbyAPI.RefreshList({})) {
 			this.panels.refreshIcon.AddClass('spin-clockwise'); // Removed when onSteamLobbyListUpdated is called
 
@@ -185,7 +185,7 @@ class Lobby {
 	 * Nuke the lobby list and recreate it
 	 * This should probably be a DelayLoadList??
 	 */
-	static recreateLobbyListChildren() {
+recreateLobbyListChildren() {
 		this.panels.searchClearButton.SetHasClass('search__clearicon--hidden', this.panels.search.text === '');
 
 		// Clear the current list
@@ -270,7 +270,7 @@ class Lobby {
 	/**
 	 * Update the lobbies details view based on current lobby state
 	 */
-	static updateCurrentLobbyDetails() {
+updateCurrentLobbyDetails() {
 		const lobbyData = Object.values(this.lobbyCurrentData)[0];
 		const owner = +lobbyData['owner'];
 		const type = +lobbyData['type'];
@@ -291,7 +291,7 @@ class Lobby {
 	}
 
 	/** Update the panel for a specific lobby member */
-	static updateMemberListItem(memberSteamID: string) {
+updateMemberListItem(memberSteamID: string) {
 		const memberData = this.lobbyMemberData[memberSteamID];
 		let panel = memberData['panel'];
 
@@ -395,7 +395,7 @@ class Lobby {
 		}
 	}
 
-	static onSteamLobbyStateChanged(newState: SteamLobby.MemberStateChange) {
+onSteamLobbyStateChanged(newState: SteamLobby.MemberStateChange) {
 		if (newState === _.SteamLobby.MemberStateChange.LEAVE) {
 			this.lobbyMemberData = {};
 			this.lobbyCurrentData = {};
@@ -414,7 +414,7 @@ class Lobby {
 		}
 	}
 
-	static onSteamLobbyListUpdated(data: SteamLobby.LobbyList) {
+onSteamLobbyListUpdated(data: SteamLobby.LobbyList) {
 		if (!data) return;
 
 		// This is either friends or global
@@ -425,7 +425,7 @@ class Lobby {
 		this.panels.refreshIcon.RemoveClass('spin-clockwise');
 	}
 
-	static onSteamLobbyDataUpdated(data: SteamLobby.LobbyData) {
+onSteamLobbyDataUpdated(data: SteamLobby.LobbyData) {
 		if (data === this.lobbyCurrentData) return;
 
 		const oldType = +Object.values(this.lobbyCurrentData)[0]?.type;
@@ -445,7 +445,7 @@ class Lobby {
 		this.updateCurrentLobbyDetails();
 	}
 
-	static onSteamLobbyMemberDataUpdated(data: SteamLobby.MemberData) {
+onSteamLobbyMemberDataUpdated(data: SteamLobby.MemberData) {
 		for (const memberSteamID of Object.keys(data)) {
 			const localID = UserAPI.GetXUID();
 
@@ -468,29 +468,29 @@ class Lobby {
 		}
 	}
 
-	static onSteamLobbyMemberStateChanged(memberSteamID: string, changeType: SteamLobby.MemberStateChange) {
+onSteamLobbyMemberStateChanged(memberSteamID: string, changeType: SteamLobby.MemberStateChange) {
 		if (changeType === 'leave') {
 			this.lobbyMemberData[memberSteamID]['panel'].DeleteAsync(0);
 			delete this.lobbyMemberData[memberSteamID];
 		}
 	}
 
-	static onPlayerMuted(steamID: string) {
+onPlayerMuted(steamID: string) {
 		if (steamID in this.lobbyMemberData) {
 			this.lobbyMemberData[steamID].isMuted = true;
 			this.updateMemberListItem(steamID);
 		}
 	}
 
-	static isInLobby() {
+isInLobby() {
 		return 'current' in this.lobbyListData;
 	}
 
-	static isLobbyOwner() {
+isLobbyOwner() {
 		return this.isInLobby() && +Object.values(this.lobbyListData.current)[0].owner === UserAPI.GetXUID();
 	}
 
-	static getLobbyMemberCount() {
+getLobbyMemberCount() {
 		return Object.values(this.lobbyCurrentData)[0]?.['members'];
 	}
 }

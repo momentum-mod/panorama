@@ -1,9 +1,8 @@
-class Split {
-	static onLoad() {
-		this.update();
-	}
+import { Component, OnPanelLoad } from 'util/component';
 
-	static update() {
+@Component
+class SplitComponent implements OnPanelLoad {
+	onPanelLoad() {
 		const cp = $.GetContextPanel<Split>();
 
 		const name = cp.name;

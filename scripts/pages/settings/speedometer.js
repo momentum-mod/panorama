@@ -168,24 +168,24 @@ class SpeedometerDetailObject {
 
 class Speedometers {
 	/** @type {Panel} @static */
-	static mainPanel = $('#Speedometers');
-	static gamemode = DEFAULT_GAMEMODE;
-	static keyvalues = null;
+mainPanel = $('#Speedometers');
+gamemode = DEFAULT_GAMEMODE;
+keyvalues = null;
 	/** @type {Array<SpeedometerDetailObject>} */
-	static detailObjectList = [];
+detailObjectList = [];
 
 	/** @type {Button} @static */
-	static addButton = $('#AddSpeedometerBtn');
+addButton = $('#AddSpeedometerBtn');
 	/** @type {Button} @static */
-	static resetButton = $('#ResetSpeedometersBtn');
+resetButton = $('#ResetSpeedometersBtn');
 	/** @type {Button} @static */
-	static discardButton = $('#DiscardSpeedometersBtn');
+discardButton = $('#DiscardSpeedometersBtn');
 
-	static {
+constructor() {
 		$.RegisterForUnhandledEvent('OnSpeedometerSettingsLoaded', Speedometers.settingsLoaded.bind(this));
 	}
 
-	static settingsLoaded(success) {
+settingsLoaded(success) {
 		if (!success) {
 			$.Warning('Failed to load speedometer settings from settings!');
 			return;
@@ -193,17 +193,17 @@ class Speedometers {
 		this.create();
 	}
 
-	static updateGamemode(gamemode) {
+updateGamemode(gamemode) {
 		this.gamemode = gamemode;
 		this.create();
 	}
 
-	static clearSpeedometers() {
+clearSpeedometers() {
 		this.mainPanel.RemoveAndDeleteChildren();
 		this.detailObjectList = [];
 	}
 
-	static deleteSpeedometer(detailObject) {
+deleteSpeedometer(detailObject) {
 		detailObject?.destroy();
 		const idx = this.detailObjectList.findIndex(
 			(detailObjectInList) => detailObjectInList.name === detailObject.name
@@ -214,7 +214,7 @@ class Speedometers {
 		}
 	}
 
-	static addSpeedometer() {
+addSpeedometer() {
 		UiToolkitAPI.ShowCustomLayoutPopupParameters(
 			'',
 			'file://{resources}/layout/modals/popups/speedometer-select.xml',
@@ -226,7 +226,7 @@ class Speedometers {
 		);
 	}
 
-	static addSpeedometerByType(type, name) {
+addSpeedometerByType(type, name) {
 		// fill in some default data
 		const speedoKV = {};
 		speedoKV[SpeedometerDataKeys.CUSTOM_LABEL] = name;
@@ -238,12 +238,12 @@ class Speedometers {
 		this.markAsModified();
 	}
 
-	static markSpeedometerAsModified(detailObject) {
+markSpeedometerAsModified(detailObject) {
 		detailObject?.markAsModified();
 		this.markAsModified();
 	}
 
-	static reorderSpeedometer(detailObject, moveup) {
+reorderSpeedometer(detailObject, moveup) {
 		const idx = this.detailObjectList.findIndex(
 			(detailObjectInList) => detailObjectInList.name === detailObject.name
 		);
@@ -271,7 +271,7 @@ class Speedometers {
 		this.markAsModified();
 	}
 
-	static create() {
+create() {
 		this.clearSpeedometers();
 		this.keyvalues = SpeedometerSettingsAPI.GetSettings(this.gamemode);
 
@@ -282,7 +282,7 @@ class Speedometers {
 		this.markAsUnmodified();
 	}
 
-	static saveAllSpeedometers() {
+saveAllSpeedometers() {
 		const keyvalues = this.detailObjectList.map((detailObject) => detailObject.saveToKV({}));
 
 		if (!SpeedometerSettingsAPI.SaveSpeedometersFromJS(this.gamemode, keyvalues))
@@ -290,7 +290,7 @@ class Speedometers {
 		else this.markAsUnmodified();
 	}
 
-	static resetToDefault() {
+resetToDefault() {
 		UiToolkitAPI.ShowGenericPopupOkCancel(
 			'Reset Speedometers',
 			'Reset all speedometers to default? Your current speedometer config will be unrecoverable.',
@@ -303,15 +303,15 @@ class Speedometers {
 		);
 	}
 
-	static markAsModified() {
+markAsModified() {
 		this.discardButton.enabled = true;
 	}
 
-	static markAsUnmodified() {
+markAsUnmodified() {
 		this.discardButton.enabled = false;
 	}
 
-	static updateProfileDropdowns() {
+updateProfileDropdowns() {
 		for (const detailObject of this.detailObjectList) detailObject?.updateProfileDropdown();
 	}
 }
@@ -330,7 +330,7 @@ class RangeColorObject {
 		rangeKV['color'] = this.kvcolor;
 	}
 
-	static convertCSSToKV(color) {
+convertCSSToKV(color) {
 		const kvColor = color
 			.replaceAll(/[^\d,|]/g, '')
 			.split(',')
@@ -339,7 +339,7 @@ class RangeColorObject {
 		return kvColor;
 	}
 
-	static convertKVToCSS([r, g, b, a]) {
+convertKVToCSS([r, g, b, a]) {
 		return `rgba(${r}, ${g}, ${b}, ${a / 255})`;
 	}
 }
@@ -570,23 +570,23 @@ class RangeColorProfileObject {
 
 class RangeColorProfiles {
 	/** @type {Panel} @static */
-	static mainPanel = $('#SpeedometerColorProfiles');
-	static keyvalues = null;
+mainPanel = $('#SpeedometerColorProfiles');
+keyvalues = null;
 	/** @type {Map<string,RangeColorProfileObject>} */
-	static profileObjectMap = new Map();
+profileObjectMap = new Map();
 
 	/** @type {Button} @static */
-	static addButton = $('#AddColorProfileBtn');
+addButton = $('#AddColorProfileBtn');
 	/** @type {Button} @static */
-	static resetButton = $('#ResetColorProfilesBtn');
+resetButton = $('#ResetColorProfilesBtn');
 	/** @type {Button} @static */
-	static discardButton = $('#DiscardColorProfilesBtn');
+discardButton = $('#DiscardColorProfilesBtn');
 
-	static {
+constructor() {
 		$.RegisterForUnhandledEvent('OnRangeColorProfilesLoaded', RangeColorProfiles.profilesLoaded.bind(this));
 	}
 
-	static profilesLoaded(success) {
+profilesLoaded(success) {
 		if (!success) {
 			$.Warning('Failed to load range color profiles from settings!');
 			return;
@@ -594,18 +594,18 @@ class RangeColorProfiles {
 		this.recreate();
 	}
 
-	static clearProfiles() {
+clearProfiles() {
 		this.mainPanel.RemoveAndDeleteChildren();
 		this.profileObjectMap = new Map();
 	}
 
-	static addProfile() {
+addProfile() {
 		this.makeColorProfileNamePopup('', $.Localize('#Common_Create'), (profileName) =>
 			this.addEmptyProfile(profileName)
 		);
 	}
 
-	static addEmptyProfile(profileName) {
+addEmptyProfile(profileName) {
 		if (this.profileObjectMap.get(profileName)) {
 			$.Warning(`Adding profile ${profileName} that already exists!`);
 			return;
@@ -615,13 +615,13 @@ class RangeColorProfiles {
 		this.markAsModified();
 	}
 
-	static deleteProfile(profileName) {
+deleteProfile(profileName) {
 		this.profileObjectMap.get(profileName)?.destroy();
 		this.profileObjectMap.delete(profileName);
 		this.markAsModified();
 	}
 
-	static updateProfileName(oldProfileName, profileName) {
+updateProfileName(oldProfileName, profileName) {
 		const profileObject = this.profileObjectMap.get(oldProfileName);
 		if (!profileObject) {
 			$.Warning(`Updating old profile name ${oldProfileName} which doesnt exist!`);
@@ -638,7 +638,7 @@ class RangeColorProfiles {
 		this.markAsModified();
 	}
 
-	static addRangeDisplayToProfile(profileName, rangeObject) {
+addRangeDisplayToProfile(profileName, rangeObject) {
 		const profileObject = this.profileObjectMap.get(profileName);
 		if (!profileObject) {
 			$.Warning(`Adding range to profile ${profileName} which doesnt exist!`);
@@ -649,7 +649,7 @@ class RangeColorProfiles {
 		this.markAsModified();
 	}
 
-	static deleteRangeFromProfile(profileName, displayObject) {
+deleteRangeFromProfile(profileName, displayObject) {
 		const profileObject = this.profileObjectMap.get(profileName);
 		if (!profileObject) {
 			$.Warning(`Deleting range from profile ${profileName} which doesnt exist!`);
@@ -659,7 +659,7 @@ class RangeColorProfiles {
 		this.markAsModified();
 	}
 
-	static updateRangeInProfile(profileName, rangeObject, displayObject) {
+updateRangeInProfile(profileName, rangeObject, displayObject) {
 		const profileObject = this.profileObjectMap.get(profileName);
 		if (!profileObject) {
 			$.Warning(`Changing range in profile ${profileName} which doesnt exist!`);
@@ -669,7 +669,7 @@ class RangeColorProfiles {
 		this.markAsModified();
 	}
 
-	static discardChangesForProfile(originalName, profileName, profileKV) {
+discardChangesForProfile(originalName, profileName, profileKV) {
 		const profileObject = this.profileObjectMap.get(profileName);
 		if (!profileKV || !profileObject) {
 			$.Warning(`Discarding profile ${profileName} which doesnt exist!`);
@@ -680,12 +680,12 @@ class RangeColorProfiles {
 		this.markAsUnmodified();
 	}
 
-	static recreate() {
+recreate() {
 		this.create();
 		Speedometers.updateProfileDropdowns();
 	}
 
-	static create() {
+create() {
 		this.clearProfiles();
 		this.markAsUnmodified();
 		this.keyvalues = SpeedometerSettingsAPI.GetColorProfiles();
@@ -700,7 +700,7 @@ class RangeColorProfiles {
 		}
 	}
 
-	static saveAllProfiles() {
+saveAllProfiles() {
 		const keyvalues = [...this.profileObjectMap].map(([profileName, profileObject]) => {
 			profileObject.markAsUnmodified();
 
@@ -716,7 +716,7 @@ class RangeColorProfiles {
 		} else $.Warning('Failed to write color profiles to disk');
 	}
 
-	static resetToDefault() {
+resetToDefault() {
 		UiToolkitAPI.ShowGenericPopupOkCancel(
 			'Reset Range Color Profiles',
 			'Reset all range color profiles to default? Your current range color profiles config will be unrecoverable.',
@@ -729,15 +729,15 @@ class RangeColorProfiles {
 		);
 	}
 
-	static markAsModified() {
+markAsModified() {
 		this.discardButton.enabled = true;
 	}
 
-	static markAsUnmodified() {
+markAsUnmodified() {
 		this.discardButton.enabled = false;
 	}
 
-	static makeColorProfileNamePopup(prefilledText, OKBtnText, callback) {
+makeColorProfileNamePopup(prefilledText, OKBtnText, callback) {
 		UiToolkitAPI.ShowCustomLayoutPopupParameters(
 			'',
 			'file://{resources}/layout/modals/popups/range-color-profile-name.xml',
@@ -752,27 +752,27 @@ class RangeColorProfiles {
 
 class SpeedometerSettings {
 	/** @static @type {DropDown} */
-	static gamemodeDropDown = $('#GamemodeDropDown');
+gamemodeDropDown = $('#GamemodeDropDown');
 
-	static loadSettings() {
+loadSettings() {
 		// order matches events fired from C++ when speedometer settings are loaded
 		// will not initialize correctly if color profiles are loaded after speedometers
 		RangeColorProfiles.create();
 		Speedometers.create();
 	}
 
-	static updateGamemode() {
+updateGamemode() {
 		const gamemodePanel = this.gamemodeDropDown.GetSelected();
 		const gamemode = gamemodePanel ? gamemodePanel.GetAttributeInt('value', DEFAULT_GAMEMODE) : DEFAULT_GAMEMODE;
 		Speedometers.updateGamemode(gamemode);
 	}
 
-	static saveSettings() {
+saveSettings() {
 		RangeColorProfiles.saveAllProfiles();
 		Speedometers.saveAllSpeedometers();
 	}
 
-	static {
+constructor() {
 		$.RegisterForUnhandledEvent('SettingsSave', this.saveSettings.bind(this));
 
 		// Save to file whenever the settings page gets closed as well

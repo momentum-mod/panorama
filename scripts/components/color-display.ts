@@ -1,5 +1,8 @@
-class ColorDisplay {
-	static showPopup() {
+import { Component } from 'util/component';
+
+@Component
+class ColorDisplayComponent {
+	showPopup() {
 		const color = $.GetContextPanel<ColorDisplay>().color;
 		const popup = UiToolkitAPI.ShowCustomLayoutPopupParameters(
 			'',
@@ -9,12 +12,12 @@ class ColorDisplay {
 		$.RegisterEventHandler('ColorPickerSave', popup, (color) => this.saveColor(color));
 	}
 
-	static saveColor(color: rgbaColor) {
+	saveColor(color: rgbaColor) {
 		$.GetContextPanel<ColorDisplay>().color = color;
 		this.updateDisplayOpacity();
 	}
 
-	static updateDisplayOpacity() {
+	updateDisplayOpacity() {
 		// set background-img-opacity to inverse of color alpha to have transparency checkerboard blend
 		$('#Display').style.backgroundImgOpacity = 1 - $.GetContextPanel<ColorDisplay>().alpha;
 	}

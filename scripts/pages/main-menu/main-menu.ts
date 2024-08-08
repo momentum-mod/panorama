@@ -1,7 +1,9 @@
-import { Component, OnLoad, checkDosa } from '@util';
+import { Component, OnPanelLoad } from 'util/component';
+import { checkDosa } from 'util/dont-show-again';
+import { RunSafeguardType } from 'common/safeguards';
 
 @Component
-class MainMenu implements OnLoad {
+class MainMenu implements OnPanelLoad {
 	panels = {
 		cp: $.GetContextPanel<Panel>(),
 		pageContent: $<Panel>('#PageContent'),
@@ -41,7 +43,7 @@ class MainMenu implements OnLoad {
 		$.DispatchEvent('HideIntroMovie');
 	}
 
-	onLoad() {
+	onPanelLoad() {
 		// These aren't accessible until the page has loaded fully, find them now
 		this.panels.movie = $('#MainMenuMovie');
 		this.panels.model = $('#MainMenuModel');
@@ -250,7 +252,7 @@ class MainMenu implements OnLoad {
 			$.persistentStorage.setItem('settings.mainMenuBackground', backgroundVar);
 		}
 
-		let name: string ;
+		let name: string;
 
 		// If it's xmas and you're using one of the default backgrounds, replace it with the xmas version
 		const date = new Date();
@@ -349,7 +351,7 @@ class MainMenu implements OnLoad {
 			$.Localize('#Safeguard_MapQuitToMenu'),
 			$.Localize('#Safeguard_MapQuitToMenu_Message'),
 			'warning-popup',
-			() => $.DispatchEvent('Safeguard_Response', _.Safeguards.RunSafeguardType.QUIT_TO_MENU),
+			() => $.DispatchEvent('Safeguard_Response', RunSafeguardType.QUIT_TO_MENU),
 			() => {}
 		);
 	}
@@ -360,7 +362,7 @@ class MainMenu implements OnLoad {
 			$.Localize('#Safeguard_MapQuitGame'),
 			$.Localize('#Safeguard_MapQuitGame_Message'),
 			'warning-popup',
-			() => $.DispatchEvent('Safeguard_Response', _.Safeguards.RunSafeguardType.QUIT_GAME),
+			() => $.DispatchEvent('Safeguard_Response', RunSafeguardType.QUIT_GAME),
 			() => {}
 		);
 	}

@@ -1,8 +1,11 @@
-class ConsoleNotify {
-	static cp = $.GetContextPanel();
-	static scheduleOpacity = -1;
+import { Component } from 'util/component';
 
-	static onNewMessages() {
+@Component
+class ConsoleNotifyComponent {
+	cp = $.GetContextPanel();
+	scheduleOpacity = -1;
+
+	onNewMessages() {
 		if (this.scheduleOpacity !== -1) {
 			$.CancelScheduled(this.scheduleOpacity);
 			this.scheduleOpacity = -1;
@@ -12,12 +15,12 @@ class ConsoleNotify {
 		this.scheduleOpacity = $.Schedule(5, () => this.scheduledHide());
 	}
 
-	static scheduledHide() {
+	scheduledHide() {
 		this.scheduleOpacity = -1;
 		this.cp.style.opacity = '0.0';
 	}
 
-	static {
+	constructor() {
 		$.RegisterEventHandler('NewConsoleMessages', 'NotifyMessageTarget', this.onNewMessages.bind(this));
 	}
 }

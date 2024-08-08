@@ -1,9 +1,9 @@
 class MapEntryClass {
-	static {
+constructor() {
 		$.RegisterEventHandler('MapEntry_MapDataUpdate', $.GetContextPanel(), this.onMapDataUpdate.bind(this));
 	}
 
-	static showGameModeOverrideMenu() {
+showGameModeOverrideMenu() {
 		const mapData = $.GetContextPanel<MapEntry>().mapData;
 		if (!mapData) {
 			return;
@@ -17,7 +17,7 @@ class MapEntryClass {
 		UiToolkitAPI.ShowSimpleContextMenu('', 'ControlsLibSimpleContextMenu', items);
 	}
 
-	static showContextMenu() {
+showContextMenu() {
 		// const { mapData, userMapData, isDownloading } = $.GetContextPanel<MapEntry>();
 		// if (!mapData || !userMapData) {
 		// 	return;
@@ -93,11 +93,11 @@ class MapEntryClass {
 		// UiToolkitAPI.ShowSimpleContextMenu('', 'ControlsLibSimpleContextMenu', items);
 	}
 
-	static tryPlayMap() {
+tryPlayMap() {
 		$.DispatchEvent('MapSelector_TryPlayMap', $.GetContextPanel<MapEntry>().mapData.id);
 	}
 
-	static onMapDataUpdate() {
+onMapDataUpdate() {
 		const cp = $.GetContextPanel<MapEntry>();
 		const mapData = cp.mapData;
 		const pbPanel = cp.FindChildTraverse('MapPB');

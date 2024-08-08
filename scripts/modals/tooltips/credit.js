@@ -1,7 +1,7 @@
 const SECTIONS = ['lead', 'dept-head', 'team', 'contributor'];
 
 class Credit {
-	static panels = {
+panels = {
 		pronouns: $('#Pronouns'),
 		roles: $('#Roles'),
 		bio: $('#Bio'),
@@ -10,7 +10,7 @@ class Credit {
 		github: $('#Github')
 	};
 
-	static onShow() {
+onShow() {
 		const cp = $.GetContextPanel();
 		const username = cp.GetAttributeString('username', '');
 		const name = cp.GetAttributeString('name', '');

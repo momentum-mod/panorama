@@ -76,8 +76,6 @@ for file in **/*.ts **/*/*.ts; do
   printf "\n" >> ../web.ts
 done
 
-echo "}" >> ../web.ts
-
 cd ../
 
 echo "Generating enum.ts"
@@ -135,8 +133,6 @@ printf "
  
 cat ./enum-tmp.ts >> ./enum.ts
 
-echo "}}" >> ./enum.ts
-
 echo "Running prettier"
 npx prettier --write {web,enum}.ts
 
@@ -150,6 +146,7 @@ rm ./enum-tmp.ts
 
 #echo "Creating Git commit"
 #git reset
+#todo wrongo
 #git add ./scripts/web.ts ./scripts/enum.ts
 #git commit -m 'chore: update website dependencies' --no-verify
 

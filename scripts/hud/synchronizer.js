@@ -14,7 +14,7 @@ const DEFAULT_SETTING_ON = 1;
 const DEFAULT_SETTING_OFF = 0;
 
 class Synchronizer {
-	static panels = {
+panels = {
 		wrapper: $('#BarWrapper'),
 		segments: [$('#Segment0'), $('#Segment1'), $('#Segment2'), $('#Segment3'), $('#Segment4')],
 		container: $('#Container'),
@@ -22,22 +22,22 @@ class Synchronizer {
 		stats: [$('#StatsUpper'), $('#StatsLower')]
 	};
 
-	static rad2deg = 180 / Math.PI;
-	static deg2rad = 1 / this.rad2deg;
-	static indicatorPercentage = 90; // this value shows ~90% gain or better when strafe indicator touches needle
-	static bIsFirstPanelColored = true; // gets toggled in wrapValueToRange()
-	static maxSegmentWidth = 25; // percentage of total element width
-	static firstPanelWidth = this.maxSegmentWidth;
-	static syncGain = 10; // scale how fast the bars move
-	static altColor = 'rgba(0, 0, 0, 0.0)';
+rad2deg = 180 / Math.PI;
+deg2rad = 1 / this.rad2deg;
+indicatorPercentage = 90; // this value shows ~90% gain or better when strafe indicator touches needle
+bIsFirstPanelColored = true; // gets toggled in wrapValueToRange()
+maxSegmentWidth = 25; // percentage of total element width
+firstPanelWidth = this.maxSegmentWidth;
+syncGain = 10; // scale how fast the bars move
+altColor = 'rgba(0, 0, 0, 0.0)';
 
-	static onLoad() {
+onLoad() {
 		this.initializeSettings();
 
 		if (this.statMode) this.onJump(); // show stats if enabled
 	}
 
-	static onUpdate() {
+onUpdate() {
 		const lastMoveData = MomentumMovementAPI.GetLastMoveData();
 		const lastTickStats = MomentumMovementAPI.GetLastTickStats();
 
@@ -109,7 +109,7 @@ class Synchronizer {
 		}
 	}
 
-	static onJump() {
+onJump() {
 		const lastJumpStats = MomentumMovementAPI.GetLastJumpStats();
 		this.panels.stats[0].text =
 			`${lastJumpStats.jumpCount}: `.padStart(6, ' ') +
@@ -123,7 +123,7 @@ class Synchronizer {
 		for (const stat of this.panels.stats) stat.style.color = colorPair[1];
 	}
 
-	static getColorPair(ratio, bOverStrafing) {
+getColorPair(ratio, bOverStrafing) {
 		// cases where gain effectiveness is >90%
 		if (ratio > 1.02) return COLORS.EXTRA;
 		else if (ratio > 0.99) return COLORS.PERFECT;
@@ -148,7 +148,7 @@ class Synchronizer {
 		}
 	}
 
-	static wrapValueToRange(value, min, max, bShouldTrackWrap) {
+wrapValueToRange(value, min, max, bShouldTrackWrap) {
 		const range = max - min;
 		while (value > max) {
 			value -= range;
@@ -165,25 +165,25 @@ class Synchronizer {
 		return value;
 	}
 
-	static findFastAngle(speed, maxSpeed, maxAccel) {
+findFastAngle(speed, maxSpeed, maxAccel) {
 		const threshold = maxSpeed - maxAccel;
 		return Math.acos(speed < threshold ? 1 : threshold / speed);
 	}
 
-	static initializeBuffer(size) {
+initializeBuffer(size) {
 		return Array.from({ length: size }).fill(0);
 	}
 
-	static addToBuffer(buffer, value) {
+addToBuffer(buffer, value) {
 		buffer.push(value);
 		buffer.shift();
 	}
 
-	static getBufferedSum(history) {
+getBufferedSum(history) {
 		return history.reduce((sum, element) => sum + element, 0);
 	}
 
-	static setDisplayMode(newMode) {
+setDisplayMode(newMode) {
 		this.displayMode = newMode ?? 0;
 		switch (this.displayMode) {
 			case 1: // "Half-width throttle"
@@ -210,19 +210,19 @@ class Synchronizer {
 		}
 	}
 
-	static setColorMode(newColorMode) {
+setColorMode(newColorMode) {
 		this.colorEnable = newColorMode ?? DEFAULT_SETTING_OFF;
 	}
 
-	static setDynamicMode(newDynamicMode) {
+setDynamicMode(newDynamicMode) {
 		this.dynamicEnable = newDynamicMode ?? DEFAULT_SETTING_ON;
 	}
 
-	static setDirection(newDirection) {
+setDirection(newDirection) {
 		this.flipEnable = newDirection ?? DEFAULT_SETTING_OFF;
 	}
 
-	static setBufferLength(newBufferLength) {
+setBufferLength(newBufferLength) {
 		this.interpFrames = newBufferLength ?? DEFAULT_BUFFER_LENGTH;
 		this.sampleWeight = 1 / this.interpFrames;
 
@@ -230,24 +230,24 @@ class Synchronizer {
 		this.yawRatioHistory = this.initializeBuffer(this.interpFrames);
 	}
 
-	static setMinSpeed(newMinSpeed) {
+setMinSpeed(newMinSpeed) {
 		this.minSpeed = newMinSpeed ?? DEFAULT_MIN_SPEED;
 	}
 
-	static setStatMode(newStatMode) {
+setStatMode(newStatMode) {
 		this.statMode = newStatMode ?? 0;
 		this.panels.wrapper.style.visibility = newStatMode === 2 ? 'collapse' : 'visible';
 	}
 
-	static setStatColorMode(newColorMode) {
+setStatColorMode(newColorMode) {
 		this.StatColorEnable = newColorMode ?? DEFAULT_SETTING_OFF;
 	}
 
-	static NaNCheck(val, def) {
+NaNCheck(val, def) {
 		return Number.isNaN(Number(val)) ? def : val;
 	}
 
-	static initializeSettings() {
+initializeSettings() {
 		this.setDisplayMode(GameInterfaceAPI.GetSettingFloat('mom_hud_synchro_mode'));
 		this.setColorMode(GameInterfaceAPI.GetSettingFloat('mom_hud_synchro_color_enable'));
 		this.setDynamicMode(GameInterfaceAPI.GetSettingFloat('mom_hud_synchro_dynamic_enable'));
@@ -258,7 +258,7 @@ class Synchronizer {
 		this.setStatColorMode(GameInterfaceAPI.GetSettingFloat('mom_hud_synchro_stat_color_enable'));
 	}
 
-	static {
+constructor() {
 		$.RegisterEventHandler('HudProcessInput', $.GetContextPanel(), this.onUpdate.bind(this));
 
 		$.RegisterForUnhandledEvent('OnSynchroModeChanged', this.setDisplayMode.bind(this));

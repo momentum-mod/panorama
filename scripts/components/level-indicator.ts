@@ -1,17 +1,16 @@
-class LevelIndicator {
-	static totalLevel: number;
+import { ExposedComponent, OnPanelLoad } from 'util/component';
 
-	static panels = {
+@ExposedComponent
+export class LevelIndicatorComponent implements OnPanelLoad {
+	totalLevel: number;
+
+	panels = {
 		cp: $.GetContextPanel<LevelIndicator>(),
 		icon: $<Image>('#PrestigeIcon'),
 		iconIncrement: $<Image>('#PrestigeIconIncrement')
 	};
 
-	static {
-		this.panels.cp.jsClass = this;
-	}
-
-	static onLoad(): void {
+	onPanelLoad(): void {
 		// Load the level from the context panel
 		const level = $.GetContextPanel<LevelIndicator>().level;
 
@@ -20,7 +19,7 @@ class LevelIndicator {
 		}
 	}
 
-	static setLevel(level: number): void {
+	setLevel(level: number): void {
 		const innerLevel = this.getInnerLevel(level);
 		const prestige = this.getPrestige(level);
 
@@ -42,7 +41,7 @@ class LevelIndicator {
 		this.totalLevel = level;
 	}
 
-	static incrementLevel(animDuration: number): void {
+	incrementLevel(animDuration: number): void {
 		// TODO: anims still fucky ESPECIALLY icons
 		if (!this.totalLevel) return;
 
@@ -69,21 +68,21 @@ class LevelIndicator {
 		});
 	}
 
-	static getLevelColor(level: number): number {
+	getLevelColor(level: number): number {
 		if (level > 500) level = this.getInnerLevel(level); // Bound to 500
 		if (level % 500 === 0) return 11; // The special 500th level class
 		return Math.min(Math.max(Math.ceil((level + 1) / 50), 1), 10);
 	}
 
-	static getPrestige(totalLevel: number): number {
+	getPrestige(totalLevel: number): number {
 		return Math.floor(Math.max(totalLevel - 1, 0) / 500);
 	}
 
-	static getInnerLevel(totalLevel: number): number {
+	getInnerLevel(totalLevel: number): number {
 		return ((totalLevel - 1) % 500) + 1;
 	}
 
-	static getImageForPrestige(prestige: number): string {
+	getImageForPrestige(prestige: number): string {
 		if (prestige <= 0) return '';
 
 		const imageName = prestige <= 5 ? 'prestige' + prestige + '.svg' : 'max_level.svg';

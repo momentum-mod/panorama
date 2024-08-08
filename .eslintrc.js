@@ -13,7 +13,6 @@ module.exports = {
 		quotes: ['error', 'single', { avoidEscape: true }],
 		'prefer-const': ['error'],
 		'no-empty': ['error', { allowEmptyCatch: true }],
-		'class-methods-use-this': ['error'],
 		camelcase: ['warn'],
 		eqeqeq: ['error', 'smart'],
 		'no-var': ['error'],
@@ -105,6 +104,8 @@ module.exports = {
 		'@typescript-eslint/no-namespace': 'off',
 		// Applies when directly inside a namespace.
 		// Also we use strict mode so fucky scoping behaviour doesn't apply.
-		'no-inner-declarations': 'off'
+		'no-inner-declarations': 'off',
+		// False positives (we don't use node!)
+		'unicorn/prefer-node-protocol': 'off',
 	}
 };

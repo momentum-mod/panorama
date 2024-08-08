@@ -1,8 +1,13 @@
-class MainMenuSettings {
-	static activeTab = null;
-	static prevTab = null;
+import { Component } from 'util/component';
+import { traverseChildren } from 'util/functions';
+import { SettingsTabs } from 'common/settings';
 
-	static panels = {
+@Component
+class MainMenuSettings {
+activeTab = null;
+prevTab = null;
+
+panels = {
 		content: $<Panel>('#SettingsContent'),
 		nav: $<Panel>('#SettingsNav'),
 		navExpand: $<Image>('#SettingsNavCollapseIcon'),
@@ -14,13 +19,13 @@ class MainMenuSettings {
 		infoDocsButton: $<Button>('#SettingsInfoDocsButton')
 	};
 
-	static currentInfo = null;
-	static spacerHeight = 0;
-	static shouldLimitScroll = false;
+currentInfo = null;
+spacerHeight = 0;
+shouldLimitScroll = false;
 
-	static {
+constructor() {
 		// Load every tab immediately, otherwise search won't be guaranteed to find everything.
-		Object.keys(_.Settings.Tabs).forEach((tab) => this.loadTab(tab));
+		Object.keys(SettingsTabs).forEach((tab) => this.loadTab(tab));
 
 		// Default to input settings page
 		this.navigateToTab('InputSettings');
@@ -39,7 +44,7 @@ class MainMenuSettings {
 		$.RegisterForUnhandledEvent('SettingsSave', this.saveSettings.bind(this));
 	}
 
-	static navigateToTab(tab: string) {
+navigateToTab(tab: string) {
 		// If a we have a active tab and it is different from the selected tab hide it, then show the selected tab
 		if (this.activeTab !== tab) {
 			// If the tab exists then hide it
@@ -78,22 +83,18 @@ class MainMenuSettings {
 				this.setNavItemCollapsed(tab, false);
 
 				// Check the radiobutton for cases where this is called from JS. CSGO Panorama fires an Activated event to the radiobutton instead but I hate that.
-				$.GetContextPanel().FindChildTraverse(_.Settings.Tabs[tab].radioid).checked = true;
+				$.GetContextPanel().FindChildTraverse(SettingsTabs[tab].radioid).checked = true;
 			}
 
 			SettingsShared.onChangedTab(this.activeTab);
 		}
 	}
 
-	static loadTab(tab: string) {
+loadTab(tab: string) {
 		const newPanel = $.CreatePanel('Panel', this.panels.content, tab);
 
 		// Load XML file for the page
-		newPanel.LoadLayout(
-			'file://{resources}/layout/pages/settings/' + _.Settings.Tabs[tab].xml + '.xml',
-			false,
-			false
-		);
+		newPanel.LoadLayout('file://{resources}/layout/pages/settings/' + SettingsTabs[tab].xml + '.xml', false, false);
 
 		// Set the --odd/--even classes all the children
 		this.styleAlternatingItems(newPanel);
@@ -135,12 +136,12 @@ class MainMenuSettings {
 		newPanel.visible = false;
 	}
 
-	static navigateToSubsection(tab: string, section: string) {
+navigateToSubsection(tab: string, section: string) {
 		// Just find the section panel,then use navigateToSettingPanel
 		this.navigateToSettingPanel(tab, $.GetContextPanel().FindChildTraverse(section));
 	}
 
-	static navigateToSettingPanel(tab: string, panel: Panel) {
+navigateToSettingPanel(tab: string, panel: Panel) {
 		// Switch to the page containing the setting
 		if (tab !== this.activeTab) {
 			this.navigateToTab(tab);
@@ -161,12 +162,12 @@ class MainMenuSettings {
 	}
 
 	// Set the shouldLimitScroll bool for a specific amount of time
-	static limitScrollCheck(duration: number) {
+limitScrollCheck(duration: number) {
 		this.shouldLimitScroll = true;
 		$.Schedule(duration, () => (this.shouldLimitScroll = false));
 	}
 
-	static onPageScrolled(tab: string, panel: GenericPanel) {
+onPageScrolled(tab: string, panel: GenericPanel) {
 		// Panorama can fire this event A LOT, so we throttle it
 		if (this.shouldLimitScroll) {
 			return;
@@ -196,13 +197,13 @@ class MainMenuSettings {
 						(child.actualyoffset + child.actuallayoutheight + this.spacerHeight) / containerHeight) ||
 				scrollOffset === 0
 			) {
-				this.panels.nav.FindChildTraverse(_.Settings.Tabs[tab].children[child.id]).checked = true;
+				this.panels.nav.FindChildTraverse(SettingsTabs[tab].children[child.id]).checked = true;
 				break;
 			}
 		}
 	}
 
-	static invertNavCollapse() {
+invertNavCollapse() {
 		// Invert state
 		$.persistentStorage.setItem('settings.collapseNav', !$.persistentStorage.getItem('settings.collapseNav'));
 
@@ -210,7 +211,7 @@ class MainMenuSettings {
 		this.updateNavCollapse();
 	}
 
-	static updateNavCollapse() {
+updateNavCollapse() {
 		// Get state from PS
 		let shouldCollapse = $.persistentStorage.getItem<boolean>('settings.collapseNav');
 
@@ -225,21 +226,21 @@ class MainMenuSettings {
 		this.panels.navCollapse.SetHasClass('hide', shouldCollapse);
 
 		// Update all the items
-		Object.keys(_.Settings.Tabs)
+		Object.keys(SettingsTabs)
 			.filter((tab) => tab !== 'SearchSettings' && tab !== this.activeTab)
 			.forEach((tab) => this.setNavItemCollapsed(tab, shouldCollapse));
 	}
 
 	// Set the collapsed state of a nav item
-	static setNavItemCollapsed(tab: string, shouldCollapse: boolean) {
+setNavItemCollapsed(tab: string, shouldCollapse: boolean) {
 		this.panels.nav
-			.FindChild(_.Settings.Tabs[tab].radioid)
+			.FindChild(SettingsTabs[tab].radioid)
 			.FindChildrenWithClassTraverse('settings-nav__subsection')[0]
 			.SetHasClass('settings-nav__subsection--hidden', shouldCollapse);
 	}
 
-	static initPanelsRecursive(panel: GenericPanel) {
-		for (const child of _.Util.traverseChildren(panel)) {
+initPanelsRecursive(panel: GenericPanel) {
+		for (const child of traverseChildren(panel)) {
 			// Initialise info panel event handlers
 			if (this.isSettingsPanel(child) || this.isSpeedometerPanel(child)) {
 				this.setPanelInfoEvents(child);
@@ -258,7 +259,7 @@ class MainMenuSettings {
 		}
 	}
 
-	static initPersistentStorageEnum(panel: SettingsEnum, storageKey: string) {
+initPersistentStorageEnum(panel: SettingsEnum, storageKey: string) {
 		for (const child of panel.FindChildTraverse('values').Children()) {
 			// Get the value of enum (usually 0: off, 1: on but they can have more values)
 			const value = child.GetAttributeInt('value', -1);
@@ -286,7 +287,7 @@ class MainMenuSettings {
 		}
 	}
 
-	static initPersistentStorageEnumDropdown(panel: SettingsEnumDropDown, storageKey: string) {
+initPersistentStorageEnumDropdown(panel: SettingsEnumDropDown, storageKey: string) {
 		const dropdown = panel.FindChildTraverse<DropDown>('DropDown');
 
 		// Set the selected dropdown to the one stored in PS. Same as above, default to 0
@@ -303,7 +304,7 @@ class MainMenuSettings {
 		});
 	}
 
-	static setPanelInfoEvents(panel: SettingsPanel | GenericPanel) {
+setPanelInfoEvents(panel: SettingsPanel | GenericPanel) {
 		const message = panel.GetAttributeString('infomessage', '');
 		// Default to true if not set
 		const hasDocs = !(panel.GetAttributeString('hasdocspage', '') === 'false');
@@ -323,7 +324,7 @@ class MainMenuSettings {
 		});
 	}
 
-	static showInfo(
+showInfo(
 		title: string,
 		message: string,
 		hasDocs: boolean,
@@ -389,16 +390,16 @@ class MainMenuSettings {
 		}
 	}
 
-	static hideInfo() {
+hideInfo() {
 		// Hide the info panel
 		this.panels.info.AddClass('settings-info--hidden');
 	}
 
-	static styleItem(item: GenericPanel, n: number) {
+styleItem(item: GenericPanel, n: number) {
 		item.AddClass(n % 2 === 0 ? '--odd' : '--even');
 	}
 
-	static styleAlternatingItems(page: Panel) {
+styleAlternatingItems(page: Panel) {
 		// Search all groups on the page
 		for (const group of page.FindChildrenWithClassTraverse('settings-group')) {
 			let n = 1; // Start odd
@@ -423,12 +424,12 @@ class MainMenuSettings {
 		}
 	}
 
-	static saveSettings() {
+saveSettings() {
 		$.Msg('Writing settings to file...');
 		GameInterfaceAPI.ConsoleCommand('host_writeconfig');
 	}
 
-	static isSettingsPanel(panel: GenericPanel): panel is SettingsPanel {
+isSettingsPanel(panel: GenericPanel): panel is SettingsPanel {
 		return [
 			'SettingsEnum',
 			'SettingsSlider',
@@ -439,7 +440,7 @@ class MainMenuSettings {
 		].includes(panel.paneltype);
 	}
 
-	static isSpeedometerPanel(panel: GenericPanel) {
+isSpeedometerPanel(panel: GenericPanel) {
 		return ['SpeedometersContainer', 'RangeColorProfilesContainer'].includes(panel.id);
 	}
 }

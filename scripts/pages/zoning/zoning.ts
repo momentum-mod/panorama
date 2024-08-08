@@ -75,7 +75,7 @@ const DefragFlags = {
 const FORMAT_VERSION = 1;
 
 class ZoneMenu {
-	static panels = {
+panels = {
 		zoningMenu: $.GetContextPanel() as Panel,
 		trackList: $<Panel>('#TrackList') as Panel,
 		propertiesTrack: $<Panel>('#TrackProperties') as Panel,
@@ -107,18 +107,18 @@ class ZoneMenu {
 		regionTPYaw: $<TextEntry>('#TeleYaw') as TextEntry
 	};
 
-	static selectedZone = {
+selectedZone = {
 		track: null as MainTrack | BonusTrack | null,
 		segment: null as Segment | null,
 		zone: null as Zone | null
 	};
-	static mapZoneData: ZoneDef | null;
-	static backupZoneData: ZoneDef | null;
-	static filternameList: string[] | null;
-	static teleDestList: string[] | null;
-	static newObjectType: string | null;
+mapZoneData: ZoneDef | null;
+backupZoneData: ZoneDef | null;
+filternameList: string[] | null;
+teleDestList: string[] | null;
+newObjectType: string | null;
 
-	static {
+constructor() {
 		$.RegisterForUnhandledEvent('ZoneMenu_Show', this.showZoneMenu.bind(this));
 		$.RegisterForUnhandledEvent('ZoneMenu_Hide', this.hideZoneMenu.bind(this));
 		$.RegisterForUnhandledEvent('OnRegionPointAdded', this.addRegionPoint.bind(this));
@@ -127,7 +127,7 @@ class ZoneMenu {
 		$.RegisterForUnhandledEvent('LevelInitPostEntity', this.initMenu.bind(this));
 	}
 
-	static onLoad() {
+onLoad() {
 		//@ts-expect-error API name not recognized
 		this.mapZoneData = MomentumTimerAPI.GetActiveZoneDefs() as ZoneDef;
 
@@ -148,7 +148,7 @@ class ZoneMenu {
 		}
 	}
 
-	static initMenu() {
+initMenu() {
 		if (!this.mapZoneData) {
 			this.onLoad();
 		}
@@ -181,19 +181,19 @@ class ZoneMenu {
 		}
 	}
 
-	static showZoneMenu() {
+showZoneMenu() {
 		if (!this.mapZoneData || this.panels.trackList.Children().length === 0) {
 			this.initMenu();
 		}
 	}
 
-	static hideZoneMenu() {
+hideZoneMenu() {
 		if (this.panels.trackList?.Children().length) {
 			this.panels.trackList.RemoveAndDeleteChildren();
 		}
 	}
 
-	static toggleCollapse(container: GenericPanel, expandIcon: Image, collapseIcon: Image) {
+toggleCollapse(container: GenericPanel, expandIcon: Image, collapseIcon: Image) {
 		const shouldExpand = container.HasClass('hide');
 		container.SetHasClass('hide', !shouldExpand);
 		expandIcon.SetHasClass('hide', !shouldExpand);
@@ -204,7 +204,7 @@ class ZoneMenu {
 		}
 	}
 
-	static createTrackEntry(parent: Panel, entry: MainTrack | BonusTrack, name: string) {
+createTrackEntry(parent: Panel, entry: MainTrack | BonusTrack, name: string) {
 		const trackChildContainer = this.addTracklistEntry(parent, name, TracklistSnippet.TRACK, {
 			track: entry,
 			segment: null,
@@ -266,7 +266,7 @@ class ZoneMenu {
 		}
 	}
 
-	static addTracklistEntry(
+addTracklistEntry(
 		parent: Panel,
 		name: string,
 		snippet: string,
@@ -305,7 +305,7 @@ class ZoneMenu {
 		return childContainer;
 	}
 
-	static createBonusTrack() {
+createBonusTrack() {
 		return {
 			zones: {
 				segments: [this.createSegment()],
@@ -315,7 +315,7 @@ class ZoneMenu {
 		} as BonusTrack;
 	}
 
-	static createSegment() {
+createSegment() {
 		return {
 			limitStartGroundSpeed: false,
 			checkpointsRequired: true,
@@ -326,14 +326,14 @@ class ZoneMenu {
 		} as Segment;
 	}
 
-	static createZone(withRegion: boolean = true) {
+createZone(withRegion: boolean = true) {
 		return {
 			regions: withRegion ? [this.createRegion()] : ([] as Region[]),
 			filtername: ''
 		} as Zone;
 	}
 
-	static createRegion() {
+createRegion() {
 		return {
 			points: [] as number[][],
 			bottom: 0,
@@ -342,7 +342,7 @@ class ZoneMenu {
 		} as Region;
 	}
 
-	static addOptionToDropdown(optionType: string, parent: DropDown, index: number, useIndex: boolean = true) {
+addOptionToDropdown(optionType: string, parent: DropDown, index: number, useIndex: boolean = true) {
 		const labelString = optionType + (useIndex ? ` ${index}` : '');
 		const optionPanel = $.CreatePanel('Label', parent.AccessDropDownMenu(), labelString);
 		optionPanel.SetAttributeInt('value', index);
@@ -350,7 +350,7 @@ class ZoneMenu {
 		parent.AddOption(optionPanel);
 	}
 
-	static populateDropdown(array: any[], dropdown: DropDown, optionType: string, clearDropdown: boolean = false) {
+populateDropdown(array: any[], dropdown: DropDown, optionType: string, clearDropdown: boolean = false) {
 		if (clearDropdown) dropdown.RemoveAllOptions();
 
 		for (const [i, item] of array.entries()) {
@@ -358,7 +358,7 @@ class ZoneMenu {
 		}
 	}
 
-	static updateSelection(
+updateSelection(
 		selectedTrack: MainTrack | BonusTrack | null,
 		selectedSegment: Segment | null,
 		selectedZone: Zone | null
@@ -392,7 +392,7 @@ class ZoneMenu {
 		}
 	}
 
-	static populateZoneProperties() {
+populateZoneProperties() {
 		if (!this.mapZoneData || !this.selectedZone || !this.selectedZone.zone) return;
 		const zone = this.selectedZone.zone as Zone;
 		const filterIndex = zone.filtername ? this.filternameList?.indexOf(zone.filtername) ?? 0 : 0;
@@ -402,7 +402,7 @@ class ZoneMenu {
 		this.populateRegionProperties();
 	}
 
-	static populateSegmentProperties() {
+populateSegmentProperties() {
 		if (!this.mapZoneData || !this.selectedZone || !this.selectedZone.segment) return;
 		const segment = this.selectedZone.segment as Segment;
 		this.panels.limitGroundSpeed.SetSelected(segment.limitStartGroundSpeed);
@@ -411,7 +411,7 @@ class ZoneMenu {
 		this.panels.segmentName.text = segment.name === undefined ? '' : segment.name;
 	}
 
-	static populateTrackProperties() {
+populateTrackProperties() {
 		if (!this.mapZoneData || !this.selectedZone || !this.selectedZone.track) return;
 		const track = this.selectedZone.track as MainTrack | BonusTrack;
 		const parentPanel = this.panels.segmentsEndAtStageStarts.GetParent() as Panel;
@@ -426,14 +426,14 @@ class ZoneMenu {
 			this.mapZoneData.maxVelocity === undefined ? '' : (this.mapZoneData.maxVelocity.toFixed(0) as string);
 	}
 
-	static updateZoneFilter() {
+updateZoneFilter() {
 		if (!this.selectedZone || !this.selectedZone.zone || !this.filternameList) return;
 
 		const filterIndex = this.panels.filterSelect.GetSelected()?.GetAttributeInt('value', 0);
 		this.selectedZone.zone.filtername = filterIndex ? this.filternameList[filterIndex] : '';
 	}
 
-	static populateRegionProperties() {
+populateRegionProperties() {
 		if (!this.selectedZone || !this.selectedZone.zone) return;
 
 		const index = this.panels.regionSelect.GetSelected()?.GetAttributeInt('value', -1);
@@ -454,7 +454,7 @@ class ZoneMenu {
 		this.panels.regionTPDest.SetSelectedIndex(tpIndex);
 	}
 
-	static addRegion() {
+addRegion() {
 		if (!this.selectedZone || !this.selectedZone.zone) return;
 
 		this.selectedZone.zone.regions.push(this.createRegion());
@@ -463,7 +463,7 @@ class ZoneMenu {
 		this.populateRegionProperties();
 	}
 
-	static deleteRegion() {
+deleteRegion() {
 		if (this.panels.regionSelect.Children().length === 1) {
 			$.Msg("Can't delete last Region!!!");
 			return;
@@ -474,7 +474,7 @@ class ZoneMenu {
 		this.populateRegionProperties();
 	}
 
-	static addPointToList(i: number, point: number[]) {
+addPointToList(i: number, point: number[]) {
 		const newRegionPoint = $.CreatePanel('Panel', this.panels.pointsList, `Point ${i}`);
 		newRegionPoint.LoadLayoutSnippet('region-point');
 		(newRegionPoint.FindChildTraverse('PointX') as TextEntry).text = point[0].toFixed(2);
@@ -485,7 +485,7 @@ class ZoneMenu {
 		});
 	}
 
-	static deleteRegionPoint(point: Panel) {
+deleteRegionPoint(point: Panel) {
 		if (!this.selectedZone || !this.selectedZone.zone) return;
 
 		const n = this.panels.pointsList.Children().indexOf(point);
@@ -494,7 +494,7 @@ class ZoneMenu {
 		point.DeleteAsync(0);
 	}
 
-	static addRegionPoint(point) {
+addRegionPoint(point) {
 		if (!this.selectedZone || !this.selectedZone.zone) return;
 
 		const index = this.panels.regionSelect.GetSelected().GetAttributeInt('value', -1);
@@ -505,7 +505,7 @@ class ZoneMenu {
 		}
 	}
 
-	static setRegionBottom() {
+setRegionBottom() {
 		if (!this.selectedZone || !this.selectedZone.zone) return;
 
 		const regionIndex = this.panels.regionSelect.GetSelected().GetAttributeInt('value', -1);
@@ -514,7 +514,7 @@ class ZoneMenu {
 		region.bottom = Number.isNaN(bottom) ? 0 : bottom;
 	}
 
-	static setRegionHeight() {
+setRegionHeight() {
 		if (!this.selectedZone || !this.selectedZone.zone) return;
 
 		const regionIndex = this.panels.regionSelect.GetSelected().GetAttributeInt('value', -1);
@@ -523,7 +523,7 @@ class ZoneMenu {
 		region.height = Number.isNaN(height) ? 0 : height;
 	}
 
-	static setRegionSafeHeight() {
+setRegionSafeHeight() {
 		if (!this.selectedZone || !this.selectedZone.zone) return;
 
 		const regionIndex = this.panels.regionSelect.GetSelected().GetAttributeInt('value', -1);
@@ -532,7 +532,7 @@ class ZoneMenu {
 		region.regionSafeHeight = Number.isNaN(height) ? 0 : height;
 	}
 
-	static updateRegionTPDest() {
+updateRegionTPDest() {
 		if (!this.selectedZone || !this.selectedZone.zone || !this.teleDestList) return;
 
 		const regionIndex = this.panels.regionSelect.GetSelected().GetAttributeInt('value', -1);
@@ -581,7 +581,7 @@ class ZoneMenu {
 		}
 	}
 
-	static setRegionTeleDestOrientation() {
+setRegionTeleDestOrientation() {
 		if (!this.selectedZone || !this.selectedZone.zone) return;
 
 		const regionIndex = this.panels.regionSelect.GetSelected().GetAttributeInt('value', -1);
@@ -595,14 +595,14 @@ class ZoneMenu {
 		region.teleDestYaw = Number.isNaN(yaw) ? 0 : yaw;
 	}
 
-	static setRegionTPDestTextEntriesActive(enable: boolean) {
+setRegionTPDestTextEntriesActive(enable: boolean) {
 		this.panels.regionTPPos.x.enabled = enable;
 		this.panels.regionTPPos.y.enabled = enable;
 		this.panels.regionTPPos.z.enabled = enable;
 		this.panels.regionTPYaw.enabled = enable;
 	}
 
-	static onRegionSave() {
+onRegionSave() {
 		const index = this.panels.regionSelect.GetSelected()?.GetAttributeInt('value', -1);
 		if (index > -1) {
 			const corners = this.selectedZone.zone?.regions[index].points.length ?? 0;
@@ -612,7 +612,7 @@ class ZoneMenu {
 		}
 	}
 
-	static addBonus() {
+addBonus() {
 		if (!this.mapZoneData) return;
 		const bonus = this.createBonusTrack();
 		this.mapZoneData.tracks.bonuses.push(bonus);
@@ -620,7 +620,7 @@ class ZoneMenu {
 		this.createTrackEntry(this.panels.trackList, bonus, `Bonus ${this.mapZoneData.tracks.bonuses.length}`);
 	}
 
-	static addSegment() {
+addSegment() {
 		if (!this.mapZoneData || !this.selectedZone.track) return;
 
 		if ('defragFlags' in this.selectedZone.track) {
@@ -646,7 +646,7 @@ class ZoneMenu {
 		});
 	}
 
-	static addCheckpoint() {
+addCheckpoint() {
 		if (!this.mapZoneData || !this.selectedZone || !this.selectedZone.segment || !this.selectedZone.track) return;
 		const newZone = this.createZone();
 		this.selectedZone.segment.checkpoints.push(newZone);
@@ -670,7 +670,7 @@ class ZoneMenu {
 		});
 	}
 
-	static addEndZone() {
+addEndZone() {
 		if (!this.mapZoneData || !this.selectedZone || !this.selectedZone.track) return;
 		const endZone = this.createZone();
 		this.selectedZone.track.zones.end = endZone;
@@ -698,7 +698,7 @@ class ZoneMenu {
 		}
 	}
 
-	static addCancelZone() {
+addCancelZone() {
 		if (!this.mapZoneData || !this.selectedZone || !this.selectedZone.segment || !this.selectedZone.track) return;
 		const newZone = this.createZone();
 		this.selectedZone.segment.cancel.push(newZone);
@@ -722,7 +722,7 @@ class ZoneMenu {
 		});
 	}
 
-	static showAddMenu() {
+showAddMenu() {
 		UiToolkitAPI.ShowSimpleContextMenu('NewZoneButton', '', [
 			{
 				label: $.Localize('#Zoning_Bonus'),
@@ -747,7 +747,7 @@ class ZoneMenu {
 		]);
 	}
 
-	static showDeletePopup() {
+showDeletePopup() {
 		UiToolkitAPI.ShowGenericPopupTwoOptionsBgStyle(
 			$.Localize('#Zoning_Delete') as string,
 			$.Localize('#Zoning_Delete_Message') as string,
@@ -762,7 +762,7 @@ class ZoneMenu {
 		);
 	}
 
-	static deleteSelection() {
+deleteSelection() {
 		if (!this.selectedZone || !this.mapZoneData) return;
 
 		if (this.selectedZone.track && this.selectedZone.segment && this.selectedZone.zone) {
@@ -794,20 +794,20 @@ class ZoneMenu {
 		this.initMenu();
 	}
 
-	static setMaxVelocity() {
+setMaxVelocity() {
 		if (!this.mapZoneData) return;
 		const velocity = Number.parseFloat(this.panels.maxVelocity.text);
 		this.mapZoneData.maxVelocity = !Number.isNaN(velocity) && velocity > 0 ? velocity : 0;
 	}
 
-	static setStageEndAtStageStarts() {
+setStageEndAtStageStarts() {
 		$.Msg('Setting');
 		if (!this.selectedZone || !this.selectedZone.track || !('stagesEndAtStageStarts' in this.selectedZone.track))
 			return;
 		this.selectedZone.track.stagesEndAtStageStarts = this.panels.segmentsEndAtStageStarts.checked;
 	}
 
-	static showDefragFlagMenu() {
+showDefragFlagMenu() {
 		if (this.selectedZone.track === null || !('defragFlags' in this.selectedZone.track)) return;
 
 		const flagEditMenu = UiToolkitAPI.ShowCustomLayoutContextMenu(
@@ -841,34 +841,34 @@ class ZoneMenu {
 		bfgFlag.SetPanelEvent('onactivate', () => ZoneMenu.setDefragFlags('BFG'));
 	}
 
-	static setDefragFlags(flag: string) {
+setDefragFlags(flag: string) {
 		if (this.selectedZone.track === null || !('defragFlags' in this.selectedZone.track)) return;
 		(this.selectedZone.track.defragFlags as number) ^= DefragFlags[flag];
 	}
 
-	static setLimitGroundSpeed() {
+setLimitGroundSpeed() {
 		if (!this.selectedZone || !this.selectedZone.track || !this.selectedZone.segment) return;
 		this.selectedZone.segment.limitStartGroundSpeed = this.panels.limitGroundSpeed.checked;
 	}
 
-	static setCheckpointsOrdered() {
+setCheckpointsOrdered() {
 		if (!this.selectedZone || !this.selectedZone.track || !this.selectedZone.segment) return;
 		this.selectedZone.segment.checkpointsOrdered = this.panels.checkpointsOrdered.checked;
 	}
 
-	static setCheckpointsRequired() {
+setCheckpointsRequired() {
 		if (!this.selectedZone || !this.selectedZone.track || !this.selectedZone.segment) return;
 		this.selectedZone.segment.checkpointsRequired = this.panels.checkpointsRequired.checked;
 	}
 
-	static setSegmentName() {
+setSegmentName() {
 		if (!this.selectedZone || !this.selectedZone.track || !this.selectedZone.segment) return;
 		this.selectedZone.segment.name = this.panels.segmentName.text;
 		// feat: later
 		// update segment name in trasklist tree
 	}
 
-	static showRegionMenu(menu: string) {
+showRegionMenu(menu: string) {
 		switch (menu) {
 			case 'Points':
 				this.panels.pointsSection.style.visibility = 'visible';
@@ -890,7 +890,7 @@ class ZoneMenu {
 		}
 	}
 
-	static saveZones() {
+saveZones() {
 		if (!this.mapZoneData) return;
 		this.mapZoneData.dataTimestamp = Date.now();
 		//@ts-expect-error API name not recognized
@@ -898,13 +898,13 @@ class ZoneMenu {
 		// reload zones
 	}
 
-	static cancelEdit() {
+cancelEdit() {
 		this.panels.trackList.RemoveAndDeleteChildren();
 		this.mapZoneData = null;
 		this.initMenu();
 	}
 
-	static isSelectionValid() {
+isSelectionValid() {
 		return {
 			track: !!this.selectedZone && !!this.selectedZone.track,
 			segment: !!this.selectedZone && !!this.selectedZone.track && !!this.selectedZone.segment,
