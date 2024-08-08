@@ -1,3 +1,9 @@
+const ReplayState = {
+	NONE: 0,
+	PLAYING: 1,
+	PAUSED: 2
+};
+
 class ReplayControls {
 	static panels = {
 		timeSlider: $('#ReplayControlsTimeSlider'),
@@ -10,30 +16,33 @@ class ReplayControls {
 	}
 
 	static onProcessInput() {
-		// Deal with the slider
-		const currentTick = MomentumReplayAPI.GetCurrentTick();
-		const totalTicks = MomentumReplayAPI.GetTotalTicks();
-		const flProgress = currentTick / totalTicks;
+		const state = MomentumReplayAPI.GetReplayState();
+
+		if (state === ReplayState.NONE) return;
+
+		const progress = MomentumReplayAPI.GetReplayProgress();
+
+		const progressPercent = progress.curtick / progress.totalticks;
 		// Don't interfere with the slider while the user is dragging it
-		if (!this.panels.timeSlider.dragging) this.panels.timeSlider.SetValueNoEvents(flProgress);
+		if (!this.panels.timeSlider.dragging) this.panels.timeSlider.SetValueNoEvents(progressPercent);
 
 		// Deal with pause/play -- play == selected
-		const bPlaying = !MomentumReplayAPI.IsPaused();
+		const bPlaying = state === ReplayState.PLAYING;
 		if (this.panels.pausePlayButton.checked !== bPlaying) this.panels.pausePlayButton.checked = bPlaying;
 
-		$.GetContextPanel().SetDialogVariableInt('curr_tick', currentTick);
-		$.GetContextPanel().SetDialogVariableInt('total_ticks', totalTicks);
+		$.GetContextPanel().SetDialogVariableInt('curr_tick', progress.curtick);
+		$.GetContextPanel().SetDialogVariableInt('total_ticks', progress.totalticks);
 
-		$.GetContextPanel().SetDialogVariableFloat('curr_time', MomentumReplayAPI.GetCurrentTime());
-		$.GetContextPanel().SetDialogVariableFloat('total_time', MomentumReplayAPI.GetTotalTime());
+		$.GetContextPanel().SetDialogVariableFloat('curr_time', progress.curtime);
+		$.GetContextPanel().SetDialogVariableFloat('end_time', progress.endtime);
 	}
 
 	static gotoTick() {
-		GameInterfaceAPI.ConsoleCommand('mom_replay_goto ${this.panels.gotoTick.text}');
+		GameInterfaceAPI.ConsoleCommand(`mom_tv_replay_goto ${this.panels.gotoTick.text}`);
 	}
 
 	static onSliderValueChanged(_panel, flProgress) {
-		MomentumReplayAPI.SetProgress(flProgress);
+		GameInterfaceAPI.ConsoleCommand(`mom_tv_replay_goto ${flProgress * 100}%`);
 	}
 
 	static {

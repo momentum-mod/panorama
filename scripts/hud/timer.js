@@ -193,13 +193,13 @@ class HudTimer {
 
 		switch (timerStatus.state) {
 			case TimerStateNEW.DISABLED:
-				if (MomentumTimerAPI.IsStartSoundEnabled()) $.PlaySoundEvent('Momentum.StopTimer');
+				if (MomentumTimerAPI.IsStopSoundEnabled()) $.PlaySoundEvent('Momentum.StopTimer');
 				break;
 			case TimerStateNEW.RUNNING:
 				if (MomentumTimerAPI.IsStartSoundEnabled()) $.PlaySoundEvent('Momentum.StartTimer');
 				break;
 			case TimerStateNEW.FINISHED:
-				if (MomentumTimerAPI.IsStartSoundEnabled()) $.PlaySoundEvent('Momentum.FinishTimer');
+				if (MomentumTimerAPI.IsFinishSoundEnabled()) $.PlaySoundEvent('Momentum.FinishTimer');
 				break;
 			case TimerStateNEW.PRIMED:
 				// no sound
