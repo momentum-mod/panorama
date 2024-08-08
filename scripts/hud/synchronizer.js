@@ -32,9 +32,19 @@ class Synchronizer {
 	static altColor = 'rgba(0, 0, 0, 0.0)';
 
 	static onLoad() {
-		this.initializeSettings();
-
-		if (this.statMode) this.onJump(); // show stats if enabled
+		const currentMode = GameModeAPI.GetCurrentGameMode();
+		if (currentMode === GameMode.BHOP || currentMode === GameMode.SURF) {
+			this.updateHandle = $.RegisterEventHandler(
+				'HudProcessInput',
+				$.GetContextPanel(),
+				this.onUpdate.bind(this)
+			);
+			this.initializeSettings();
+			if (this.statMode) this.onJump(); // show stats if enabled
+		} else if (this.updateHandle) {
+			$.UnregisterEventHandler('HudProcessInput', $.GetContextPanel(), this.updateHandle);
+			this.updateHandle = null;
+		}
 	}
 
 	static onUpdate() {
@@ -256,8 +266,6 @@ class Synchronizer {
 	}
 
 	static {
-		$.RegisterEventHandler('HudProcessInput', $.GetContextPanel(), this.onUpdate.bind(this));
-
 		$.RegisterForUnhandledEvent('OnSynchroModeChanged', this.setDisplayMode.bind(this));
 		$.RegisterForUnhandledEvent('OnSynchroColorModeChanged', this.setColorMode.bind(this));
 		$.RegisterForUnhandledEvent('OnSynchroDynamicModeChanged', this.setDynamicMode.bind(this));
