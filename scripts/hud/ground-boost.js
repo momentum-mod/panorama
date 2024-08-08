@@ -32,12 +32,9 @@ class Groundboost {
 
 	static onLoad() {
 		this.onConfigChange();
-
 		this.colorClass = ColorClass.SLICK;
 		this.groundboostMeter.AddClass(this.colorClass);
-
 		this.labelClass = LabelClass.FLAT;
-
 		this.container.AddClass('groundboost__container--hide');
 		this.visible = false;
 		this.missedJumpTimer = 0;
@@ -172,8 +169,20 @@ class Groundboost {
 	}
 
 	static {
-		$.RegisterEventHandler('HudProcessInput', $.GetContextPanel(), this.onUpdate.bind(this));
-		$.RegisterForUnhandledEvent('LevelInitPostEntity', this.onLoad.bind(this));
+		RegisterHUDPanelForGamemode({
+			gamemodes: [GameMode.DEFRAG],
+			context: this,
+			contextPanel: $.GetContextPanel(),
+			onLoad: this.onLoad,
+			handledEvents: [
+				{
+					event: 'HudProcessInput',
+					contextPanel: $.GetContextPanel(),
+					callback: this.onUpdate
+				}
+			]
+		});
+
 		$.RegisterForUnhandledEvent('OnDefragHUDGroundboostChange', this.onConfigChange.bind(this));
 	}
 }
