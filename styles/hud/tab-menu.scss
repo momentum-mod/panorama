@@ -89,7 +89,7 @@
 	&__enable-cursor {
 		border-top: 1px solid rgba(0, 0, 0, 0.4);
 		width: 100%;
-		padding: 12px 24px 12px 0;
+		padding-right: 24px;
 		vertical-align: bottom;
 		background-color: rgba(0, 0, 0, 0.6);
 	}
@@ -97,6 +97,7 @@
 	&__enable-cursor-tip {
 		font-size: 11px;
 		color: rgba(255, 255, 255, 0.6);
+		padding: 12px 0;
 		horizontal-align: right;
 	}
 }
