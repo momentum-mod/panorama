@@ -63,6 +63,7 @@
 	height: 100%;
 
 	visibility: collapse;
+	z-index: 1000;
 
 	&--enabled {
 		visibility: visible;
@@ -120,20 +121,14 @@
 		}
 	}
 
-	&__knob-container {
-		overflow: noclip;
-		border: 2px solid orange;
-	}
-
 	&__resize-knob {
-		width: 8px;
-		height: 8px;
-		transform: translateX(-4px) translateY(-4px);
+		width: 16px;
+		height: 16px;
+		transform: translateX(-8px) translateY(-8px);
 		border-radius: 50%;
 		background-color: rgba(255, 255, 255, 0.8);
 		border: 1px solid rgba(0, 0, 0, 0.2);
 		box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.4);
-		z-index: 1000;
 
 		transition-property: border, box-shadow, background-color;
 		transition-timing-function: ease-in-out;

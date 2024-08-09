@@ -28,7 +28,7 @@
 				</Button>
 				<NumberEntry id="HudCustomizerGridSize" class="hud-customizer-settings__gridsize" min="4" max="12" onvaluechanged="HudCustomizer.updateGridSize()" />
 			</Panel>
-			<Panel id="HudCustomizerKnobContainer" class="hud-customizer__knob-container" hittest="false" />
+
 			<Panel id="HudCustomizerGrid" class="hud-customizer__grid" hittest="false" hittestchildren="false" />
 		</Panel>
 		
