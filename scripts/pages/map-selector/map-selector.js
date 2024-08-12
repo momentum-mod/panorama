@@ -80,7 +80,7 @@ class MapSelection {
 
 			$.GetContextPanel().ApplyFilters();
 
-			if (($.persistentStorage.getItem('mapSelector.filtersToggled') ?? false) || filtersChanged) {
+			if ($.persistentStorage.getItem('mapSelector.filtersToggled') ?? false) {
 				$.DispatchEvent('Activated', this.panels.filtersToggle, 'mouse');
 			}
 
