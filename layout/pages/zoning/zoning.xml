@@ -161,9 +161,12 @@
 					</Panel>
 					<Panel id="PointsSection" class="zoning__region-details">
 						<Panel id="RegionPoints" class="zoning__property">
-							<Button class="button zoning__property-button" onactivate="ZoneMenu.pickCorners();">
-								<Label class="button__text" text="#Zoning_EditPoints" />
-							</Button>
+							<Panel class="zoning__region-property-container">
+								<ToggleButton id="TwoClickMode" class="zoning__two-click-button" convar="mom_zone_two_click" onmouseover="UiToolkitAPI.ShowTextTooltip('TwoClickMode', '#Zoning_TwoClickTogle_Tooltip');" onmouseout="UiToolkitAPI.HideTextTooltip();" />
+								<Button class="button zoning__property-button" onactivate="ZoneMenu.pickCorners();">
+									<Label class="button__text" text="#Zoning_EditPoints" />
+								</Button>
+							</Panel>
 						</Panel>
 						<Panel id="PointsList" class="zoning__region-points-list">
 						<!-- Populated in JS -->
