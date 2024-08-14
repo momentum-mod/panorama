@@ -273,6 +273,25 @@ $medium: 28px;
 		}
 	}
 
+	&__two-click-button {
+		height: $button-height;
+		width: height-percentage(100%);
+		background-position: center;
+		background-repeat: no-repeat;
+		background-image: url('file://{images}/vector-polyline.svg');
+		wash-color: $red;
+		tooltip-position: top;
+
+		&:selected {
+			background-image: url('file://{images}/vector-two-click.svg');
+			wash-color: $blue;
+		}
+
+		&:hover {
+			wash-color: $white;
+		}
+	}
+
 	&__dropdown {
 		width: 180px;
 	}
