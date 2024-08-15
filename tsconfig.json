@@ -2,17 +2,20 @@
 	"compilerOptions": {
 		"target": "ES2022",
 		"lib": ["ESNext"],
-		"module": "None",
+		// Dynamic imports, import.meta, top-level await and import attributes are all unsupported.
+		"module": "ES2015",
+		"baseUrl": "scripts/",
 		"rootDir": "scripts/",
 		"outDir": "script_dist/",
 		"alwaysStrict": true,
-		"isolatedModules": true,
+		"isolatedModules": false,
 		"allowJs": true,
 		// Enable every strict mode option *besides* strictNullChecks, they're just too annoying!
 		"strict": true,
 		"strictNullChecks": false,
 		"typeRoots": ["./scripts/types/"],
 		"types": ["momentum"] // If you error here, you don't have the submodule installed! (git submodule update --init --recursive)
+		"experimentalDecorators": true,
 	},
 	"include": ["scripts/"],
 	"exclude": ["*.d.ts"]
