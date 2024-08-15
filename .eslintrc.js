@@ -13,7 +13,6 @@ module.exports = {
 		quotes: ['error', 'single', { avoidEscape: true }],
 		'prefer-const': ['error'],
 		'no-empty': ['error', { allowEmptyCatch: true }],
-		'class-methods-use-this': ['error'],
 		camelcase: ['warn'],
 		eqeqeq: ['error', 'smart'],
 		'no-var': ['error'],
@@ -100,6 +99,11 @@ module.exports = {
 		// We don't need to be that petty about using types well in a repo like this.
 		'@typescript-eslint/explicit-function-return-type': 'off',
 		'@typescript-eslint/no-explicit-any': 'off',
-		'@typescript-eslint/no-inferrable-types': ['warn', { ignoreParameters: true }]
+		'@typescript-eslint/no-inferrable-types': ['warn', { ignoreParameters: true }],
+		// False positives (we don't use node!)
+		'unicorn/prefer-node-protocol': 'off',
+		// Math.hypot is slower than Math.sqrt in V8
+		// https://stackoverflow.com/questions/71898044/why-is-math-hypot-so-slow
+		'unicorn/prefer-modern-math-apis': 'off'
 	}
 };
