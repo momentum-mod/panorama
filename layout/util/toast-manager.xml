@@ -4,7 +4,6 @@
 	</styles>
 
 	<scripts>
-		<include src="file://{scripts}/util/functions.js" />
 		<include type="module" src="file://{scripts}/util/toast-manager.js" />
 	</scripts>
 
