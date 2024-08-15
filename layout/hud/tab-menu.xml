@@ -2,12 +2,10 @@
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
+	
 	<scripts>
 		<include type="module" src="file://{scripts}/hud/tab-menu.js" />
 	</scripts>
-
-	<snippets>
-	</snippets>
 
 	<HudTabMenu class="hud-tab-menu" oncancel="HudTabMenuHandler.close();">
 		<Panel class="hud-tab-menu__wrapper">

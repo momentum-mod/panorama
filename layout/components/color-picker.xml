@@ -2,9 +2,11 @@
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
+	
 	<scripts>
 		<include type="module" src="file://{scripts}/components/color-picker.js" />
 	</scripts>
+	
 	<snippets>
 		<snippet name="color-plane-indicator">
 			<Panel class="color-plane-indicator" />
@@ -13,11 +15,10 @@
 			<Panel class="color-axis-indicator" />
 		</snippet>
 	</snippets>
+	
 	<Panel class="colorpicker">
 		<ColorPickerPlane id="ColorPlane" class="colorpicker__plane" />
-
 		<ColorPickerAxis id="ColorAxis" class="colorpicker__axis" />
-
 		<ColorPickerAlphaAxis id="AlphaAxis" class="colorpicker__axis" />
 
 		<Panel class="colorpicker__right">

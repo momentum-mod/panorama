@@ -2,6 +2,7 @@
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
+	
 	<scripts>
 		<include type="module" src="file://{scripts}/pages/leaderboards/entry.js" />
 	</scripts>
@@ -20,5 +21,4 @@
 		<!-- TODO: Tags -->
 
 	</LeaderboardEntry>
-
 </root>

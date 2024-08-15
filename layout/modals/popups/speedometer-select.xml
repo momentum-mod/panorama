@@ -2,9 +2,11 @@
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
+	
 	<scripts>
 		<include type="module" src="file://{scripts}/modals/popups/speedometer-select.js" />
 	</scripts>
+	
 	<snippets>
 		<snippet name="speedometer-radiobutton">
 			<Panel class="row my-3 horizontal-align-center">
@@ -14,6 +16,7 @@
 			</Panel>
 		</snippet>
 	</snippets>
+	
 	<PopupCustomLayout class="PopupPanel Hidden" popupbackground="dim">
 		<Panel class="row horizontal-align-center mt-0">
 			<Label id="TitleLabel" class="generic-popup__title" text="#Settings_Speedometer_Pick" />
