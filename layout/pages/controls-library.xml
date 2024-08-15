@@ -534,7 +534,7 @@
 
 			<Label class="text-h3 mt-3" text="Context Menus" />
 			<Panel class="row my-3">
-				<Button class="button" onactivate="ControlsLibrary.OnSimpleContextMenu();">
+				<Button class="button" onactivate="ControlsLibraryHandler.onSimpleContextMenu();">
 					<Label class="button__text" text="Simple Context Menu" />
 				</Button>
 			</Panel>

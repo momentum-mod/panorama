@@ -6,7 +6,7 @@
 		<include type="module" src="file://{scripts}/components/player-card.js" />
 	</scripts>
 
-	<Panel class="playercard" onload="PlayerCard.onLoad()">
+	<Panel class="playercard">
 		<Image class="playercard__background-image" src="file://{images}/playercards/card_bg.png" scaling="stretch-to-cover-preserve-aspect" />
 		<!-- <Panel class="playercard__black-overlay" /> 50% opacity black overlay to make the white text readable -->
 		<Panel class="playercard__main">

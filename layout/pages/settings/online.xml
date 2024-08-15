@@ -19,11 +19,11 @@
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_OnlineGhost_Title" tags="online,ghost,multiplayer" />
 					<Panel class="flow-right horizontal-align-right">
-						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Settings_OnlineGhost_Title', 'OnlineGhostSubSection')">
+						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_OnlineGhost_Title', 'OnlineGhostSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
 						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-							<Button class="button" onactivate="SettingsShared.resetSettings('OnlineGhostSubSection');">
+							<Button class="button" onactivate="SettingsPage.resetSettings('OnlineGhostSubSection');">
 								<Image class="button__icon" src="file://{images}/reset.svg" />
 							</Button>
 						</TooltipPanel>
@@ -79,11 +79,11 @@
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_OnlinePlayer_Title" />
 					<Panel class="flow-right horizontal-align-right">
-						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Settings_OnlinePlayer_Title', 'GhostSubSection')">
+						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_OnlinePlayer_Title', 'GhostSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
 						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-							<Button class="button" onactivate="SettingsShared.resetSettings('GhostSubSection');">
+							<Button class="button" onactivate="SettingsPage.resetSettings('GhostSubSection');">
 								<Image class="button__icon" src="file://{images}/reset.svg" />
 							</Button>
 						</TooltipPanel>
@@ -95,7 +95,7 @@
 					<ModelPanel id="GhostModelPreview" class="settings__ghost" src="models/player/player_shape_base.mdl" mouse_rotate="true" antialias="true" />
 
 					<Panel class="fill-width flow-down">
-						<SettingsEnumDropDown text="#Settings_OnlinePlayer_Body" convar="mom_ghost_bodygroup" oninputsubmit="SettingsShared.onlineSettingsUpdateModel()" infomessage="#Settings_OnlinePlayer_Body_Info" tags="shape,model">
+						<SettingsEnumDropDown text="#Settings_OnlinePlayer_Body" convar="mom_ghost_bodygroup" oninputsubmit="SettingsPage.onlineSettingsUpdateModel()" infomessage="#Settings_OnlinePlayer_Body_Info" tags="shape,model">
 							<Label text="#Settings_OnlinePlayer_Bodygroup_0" value="0" id="bodygroup0" />
 							<Label text="#Settings_OnlinePlayer_Bodygroup_1" value="1" id="bodygroup1" />
 							<Label text="#Settings_OnlinePlayer_Bodygroup_2" value="2" id="bodygroup2" />
@@ -113,7 +113,7 @@
 							<Label text="#Settings_OnlinePlayer_Bodygroup_14" value="14" id="bodygroup14" />
 						</SettingsEnumDropDown>
 
-						<ConVarColorDisplay text="#Settings_OnlinePlayer_Color" convar="mom_ghost_color" oncolorchange="SettingsShared.onlineSettingsUpdateModel()" infomessage="#Settings_OnlinePlayer_Color_Info" tags="model,color" />
+						<ConVarColorDisplay text="#Settings_OnlinePlayer_Color" convar="mom_ghost_color" oncolorchange="SettingsPage.onlineSettingsUpdateModel()" infomessage="#Settings_OnlinePlayer_Color_Info" tags="model,color" />
 
 						<SettingsEnum text="#Settings_OnlinePlayer_Trail" convar="mom_trail_enable" infomessage="#Settings_OnlinePlayer_Trail_Info" tags="trail">
 							<RadioButton group="playertrail" text="#Common_Off" value="0" />
@@ -135,7 +135,7 @@
 					<Label class="settings-group__title" text="#Settings_RichPresence_Title" />
 
 					<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-						<Button class="button" onactivate="SettingsShared.resetSettings('RichPresenceSubSection');">
+						<Button class="button" onactivate="SettingsPage.resetSettings('RichPresenceSubSection');">
 							<Image class="button__icon" src="file://{images}/reset.svg" />
 						</Button>
 					</TooltipPanel>

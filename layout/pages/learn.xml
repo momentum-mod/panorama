@@ -57,17 +57,11 @@
 					<Label class="tabs__text" text="#Gamemode_SJ" />
 				</RadioButton>
 				<Panel class="tabs__gap" />
-				<RadioButton id="TricksurfRadio" class="tabs__tab learn-header__modes-tab" group="LearningNavBar" onactivate='Learn.onModeButtonPressed("Tricksurf")'>
-					<Label class="tabs__text" text="#Gamemode_Tricksurf" />
-				</RadioButton>
 				<Panel class="tabs__gap" />
 				<RadioButton id="AhopRadio" class="tabs__tab learn-header__modes-tab" group="LearningNavBar" onactivate='Learn.onModeButtonPressed("Ahop")'>
 					<Label class="tabs__text" text="#Gamemode_Ahop" />
 				</RadioButton>
 				<Panel class="tabs__gap" />
-				<RadioButton id="ParkourRadio" class="tabs__tab learn-header__modes-tab" group="LearningNavBar" onactivate='Learn.onModeButtonPressed("Parkour")'>
-					<Label class="tabs__text" text="#Gamemode_Parkour" />
-				</RadioButton>
 				<Panel class="tabs__gap" />
 				<RadioButton id="ConcRadio" class="tabs__tab learn-header__modes-tab" group="LearningNavBar" onactivate='Learn.onModeButtonPressed("Conc")'>
 					<Label class="tabs__text" text="#Gamemode_Conc" />

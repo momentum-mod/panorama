@@ -19,11 +19,11 @@
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_Gameplay_General_Title" tags="gameplay" />
 					<Panel class="flow-right horizontal-align-right">
-						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Settings_Gameplay', 'GameplayGeneralSubSection')">
+						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_Gameplay', 'GameplayGeneralSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
 						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-							<Button class="button" onactivate="SettingsShared.resetSettings('GameplayGeneralSubSection');">
+							<Button class="button" onactivate="SettingsPage.resetSettings('GameplayGeneralSubSection');">
 								<Image class="button__icon" src="file://{images}/reset.svg" />
 							</Button>
 						</TooltipPanel>
@@ -65,11 +65,11 @@
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_Paint_Title" tags="paint,spray" />
 					<Panel class="flow-right horizontal-align-right">
-						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Settings_Paint_Title', 'PaintSubSection')">
+						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_Paint_Title', 'PaintSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
 						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-							<Button class="button" onactivate="SettingsShared.resetSettings('PaintSubSection');">
+							<Button class="button" onactivate="SettingsPage.resetSettings('PaintSubSection');">
 								<Image class="button__icon" src="file://{images}/reset.svg" />
 							</Button>
 						</TooltipPanel>
@@ -81,9 +81,9 @@
 						<Panel id="PaintBlob" class="settings__paint-blob" />
 					</Panel>
 					<Panel class="fill-width flow-down">
-						<ConVarColorDisplay convar="mom_paint_color" text="#Settings_Paint_Color" oncolorchange="SettingsShared.updatePaintPreview();" tags="color" />
+						<ConVarColorDisplay convar="mom_paint_color" text="#Settings_Paint_Color" oncolorchange="SettingsPage.updatePaintPreview();" tags="color" />
 
-						<SettingsSlider text="#Settings_Paint_Scale" min="0.001" max="1" percentage="true" convar="mom_paint_scale" tags="color,size,scale" onvaluechanged="SettingsShared.updatePaintPreview();" />
+						<SettingsSlider text="#Settings_Paint_Scale" min="0.001" max="1" percentage="true" convar="mom_paint_scale" tags="color,size,scale" onvaluechanged="SettingsPage.updatePaintPreview();" />
 
 						<SettingsEnum text="#Settings_Paint_ApplySound" convar="mom_paint_apply_sound" tags="paint,sound,noise">
 							<RadioButton group="paintsound" text="#Common_Off" value="0" />
@@ -109,11 +109,11 @@
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_Safeguards_Title" tags="safeguards" />
 					<Panel class="flow-right horizontal-align-right">
-						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Settings_Safeguards_Title', 'SafeguardsSubSection')">
+						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_Safeguards_Title', 'SafeguardsSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
 						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-							<Button class="button" onactivate="SettingsShared.resetSettings('SafeguardsSubSection');">
+							<Button class="button" onactivate="SettingsPage.resetSettings('SafeguardsSubSection');">
 								<Image class="button__icon" src="file://{images}/reset.svg" />
 							</Button>
 						</TooltipPanel>
@@ -174,11 +174,11 @@
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_Zones_Title" tags="zones" />
 					<Panel class="flow-right horizontal-align-right">
-						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Settings_Zones_Title', 'ZonesSubSection')">
+						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_Zones_Title', 'ZonesSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
 						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-							<Button class="button" onactivate="SettingsShared.resetSettings('ZonesSubSection');">
+							<Button class="button" onactivate="SettingsPage.resetSettings('ZonesSubSection');">
 								<Image class="button__icon" src="file://{images}/reset.svg" />
 							</Button>
 						</TooltipPanel>
@@ -234,11 +234,11 @@
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_RJ_Title" tags="rj,rocketjump,soldier" />
 					<Panel class="flow-right horizontal-align-right">
-						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Settings_RJ_Title', 'RocketJumpSubSection')">
+						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_RJ_Title', 'RocketJumpSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
 						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-							<Button class="button" onactivate="SettingsShared.resetSettings('RocketJumpSubSection');">
+							<Button class="button" onactivate="SettingsPage.resetSettings('RocketJumpSubSection');">
 								<Image class="button__icon" src="file://{images}/reset.svg" />
 							</Button>
 						</TooltipPanel>
@@ -290,11 +290,11 @@
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_SJ_Title" tags="sj,stickyjump,demoman" />
 					<Panel class="flow-right horizontal-align-right">
-						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Settings_SJ_Title', 'StickyJumpSubSection')">
+						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_SJ_Title', 'StickyJumpSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
 						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-							<Button class="button" onactivate="SettingsShared.resetSettings('StickyJumpSubSection');">
+							<Button class="button" onactivate="SettingsPage.resetSettings('StickyJumpSubSection');">
 								<Image class="button__icon" src="file://{images}/reset.svg" />
 							</Button>
 						</TooltipPanel>
@@ -368,11 +368,11 @@
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_Conc_Title" tags="conc,concussion,grenade" />
 					<Panel class="flow-right horizontal-align-right">
-						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Conc', 'ConcSubSection')">
+						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Conc', 'ConcSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
 						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-							<Button class="button" onactivate="SettingsShared.resetSettings('ConcSubSection');">
+							<Button class="button" onactivate="SettingsPage.resetSettings('ConcSubSection');">
 								<Image class="button__icon" src="file://{images}/reset.svg" />
 							</Button>
 						</TooltipPanel>
@@ -432,11 +432,11 @@
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_Defrag_Title" tags="defrag,quake" />
 					<Panel class="flow-right horizontal-align-right">
-						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Settings_Defrag_Title', 'DefragSubSection')">
+						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_Defrag_Title', 'DefragSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
 						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-							<Button class="button" onactivate="SettingsShared.resetSettings('DefragSubSection');">
+							<Button class="button" onactivate="SettingsPage.resetSettings('DefragSubSection');">
 								<Image class="button__icon" src="file://{images}/reset.svg" />
 							</Button>
 						</TooltipPanel>

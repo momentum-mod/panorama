@@ -17,26 +17,26 @@
 		</snippet>
 	</snippets>
 
-	<MainMenu class="InitialDisplay MainMenuRootPanel" hittest="false" onload="MainMenu.onMainMenuLoaded()">
+	<MainMenu class="InitialDisplay MainMenuRootPanel" hittest="false">
 
 		<Panel id="MainMenuInput" class="mainmenu">
 			<!-- Topnav -->
 			<Panel id="MainMenuNavBar" class="topnav" style="z-index: 10;">
-				<RadioButton id="HomeButton" group="TopNavRadio" class="topnav__home" onactivate="MainMenu.onHomeButtonPressed()">
+				<RadioButton id="HomeButton" group="TopNavRadio" class="topnav__home" onactivate="MainMenuHandler.onHomeButtonPressed()">
 					<Image class="topnav__logo" src="file://{images}/momentumLogo.svg" textureheight="64" scaling="stretch-to-fit-preserve-aspect" />
 				</RadioButton>
 
 				<Panel id="MainMenuTopButtons" class="full-height flow-right">
-					<RadioButton id="PlayButton" group="TopNavRadio" class="topnav__button" onactivate="MainMenu.navigateToPage('MapSelection', 'map-selector/wrapper', false)">
+					<RadioButton id="PlayButton" group="TopNavRadio" class="topnav__button" onactivate="MainMenuHandler.navigateToPage('MapSelection', 'map-selector/wrapper', false)">
 						<Image class="topnav__icon" src="file://{images}/play-circle.svg" textureheight="64" />
 					</RadioButton>
 					<RadioButton id="InventoryButton" group="TopNavRadio" class="topnav__button" disabled="true" onmouseover="UiToolkitAPI.ShowTextTooltip('InventoryButton', $.Localize('#Common_ComingSoon'))" onmouseout="UiToolkitAPI.HideTextTooltip()" style="tooltip-position: bottom;">
 						<Image class="topnav__icon" src="file://{images}/inventory.svg" textureheight="64" />
 					</RadioButton>
-					<RadioButton id="LearnButton" group="TopNavRadio" class="topnav__button" onactivate="MainMenu.navigateToPage('Learn', 'learn')">
+					<RadioButton id="LearnButton" group="TopNavRadio" class="topnav__button" onactivate="MainMenuHandler.navigateToPage('Learn', 'learn')">
 						<Image class="topnav__icon" src="file://{images}/learn.svg" textureheight="64" />
 					</RadioButton>
-					<RadioButton id="SettingsButton" group="TopNavRadio" class="topnav__button" onactivate="MainMenu.navigateToPage('Settings', 'settings/settings')">
+					<RadioButton id="SettingsButton" group="TopNavRadio" class="topnav__button" onactivate="MainMenuHandler.navigateToPage('Settings', 'settings/settings')">
 						<Image class="topnav__icon" src="file://{images}/settings.svg" textureheight="64" />
 					</RadioButton>
 				</Panel>
@@ -45,8 +45,8 @@
 					<RadioButton id="NotificationsButton" class="topnav__button">
 						<Image class="topnav__icon" src="file://{images}/notification.svg" textureheight="64" />
 					</RadioButton>
-					<PlayerCard class="full-height" onactivate="Drawer.onPlayerCardPressed();" />
-					<RadioButton id="QuitButton" class="topnav__button" onactivate="MainMenu.onQuitButtonPressed()">
+					<PlayerCard class="full-height" onactivate="DrawerHandler.onPlayerCardPressed();" />
+					<RadioButton id="QuitButton" class="topnav__button" onactivate="MainMenuHandler.onQuitButtonPressed()">
 						<Image id="QuitButtonImage" class="topnav__icon" src="file://{images}/quit.svg" textureheight="64" />
 					</RadioButton>
 				</Panel>
@@ -68,20 +68,20 @@
 				<!-- Rightnav -->
 				<Panel id="MainMenuOptionListRight" class="rightnav">
 					<Panel class="rightnav__wrapper">
-						<RadioButton id="LobbyButton" group="RightNavRadio" class="rightnav__button" onactivate="Drawer.extendAndNavigateToTab('LobbyDrawer')">
+						<RadioButton id="LobbyButton" group="RightNavRadio" class="rightnav__button" onactivate="DrawerHandler.extendAndNavigateToTab('LobbyDrawer')">
 							<Image id="LobbyButtonImage" class="rightnav__icon" src="file://{images}/lobby.svg" textureheight="32" />
 							<Label id="LobbyPlayerCountLabel" class="rightnav__button-subtitle rightnav__button-subtitle--hidden" />
 						</RadioButton>
-						<RadioButton id="ProfileButton" group="RightNavRadio" class="rightnav__button" onactivate="Drawer.extendAndNavigateToTab('ProfileDrawer')">
+						<RadioButton id="ProfileButton" group="RightNavRadio" class="rightnav__button" onactivate="DrawerHandler.extendAndNavigateToTab('ProfileDrawer')">
 							<Image class="rightnav__icon" src="file://{images}/profile.svg" textureheight="32" />
 						</RadioButton>
-						<RadioButton id="ChallengesButton" group="RightNavRadio" class="rightnav__button" onactivate="Drawer.extendAndNavigateToTab('ChallengesDrawer')">
+						<RadioButton id="ChallengesButton" group="RightNavRadio" class="rightnav__button" onactivate="DrawerHandler.extendAndNavigateToTab('ChallengesDrawer')">
 							<Image class="rightnav__icon" src="file://{images}/crown.svg" textureheight="32" />
 						</RadioButton>
-						<RadioButton id="ChangelogButton" group="RightNavRadio" class="rightnav__button" onactivate="Drawer.extendAndNavigateToTab('AboutDrawer')">
+						<RadioButton id="ChangelogButton" group="RightNavRadio" class="rightnav__button" onactivate="DrawerHandler.extendAndNavigateToTab('AboutDrawer')">
 							<Image class="rightnav__icon" src="file://{images}/news.svg" textureheight="32" />
 						</RadioButton>
-						<Button id="SliderButton" group="RightNavRadio" class="rightnav__button rightnav__drawerbutton" onactivate="Drawer.toggle()">
+						<Button id="SliderButton" group="RightNavRadio" class="rightnav__button rightnav__drawerbutton" onactivate="DrawerHandler.toggle()">
 							<Image class="rightnav__icon" src="file://{images}/right-arrow.svg" textureheight="32" orientation="180" />
 						</Button>
 					</Panel>
@@ -149,11 +149,11 @@
 										<Image class="bottombar__icon" src="file://{images}/social/twitter.svg" textureheight="64" />
 									</Button>
 								</TooltipPanel>
-								<RadioButton id="ControlsLibraryButton" class="bottombar__button hide" group="TopNavRadio" onactivate="MainMenu.navigateToPage('ControlsLibrary', 'controls-library')">
+								<RadioButton id="ControlsLibraryButton" class="bottombar__button hide" group="TopNavRadio" onactivate="MainMenuHandler.navigateToPage('ControlsLibrary', 'controls-library')">
 									<Label class="bottombar__text" text="Controls Library" />
 								</RadioButton>
 								<TooltipPanel class="bottombar__tooltip horizontal-align-right" tooltip="#MainMenu_Button_SwitchBackground">
-									<Button class="bottombar__button" onactivate="MainMenu.toggleBackgroundLightDark()">
+									<Button class="bottombar__button" onactivate="MainMenuHandler.toggleBackgroundLightDark()">
 										<Image class="bottombar__icon" src="file://{images}/theme-light-dark.svg" textureheight="64" />
 									</Button>
 								</TooltipPanel>

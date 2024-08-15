@@ -50,7 +50,7 @@
 					<Label class="text-h lobby-list__title" text="#Lobby_List_Title" />
 				</Panel>
 				<Panel class="lobby-list__config-bar">
-					<Button class="button lobby-list__config-item" onactivate="Lobby.create()">
+					<Button class="button lobby-list__config-item" onactivate="LobbyHandler.create()">
 						<Image class="button__icon button__icon--left" src="file://{images}/add.svg" textureheight="32" />
 						<Label class="button__text button__text--right" text="#Common_Create" />
 					</Button>
@@ -75,12 +75,12 @@
 		<Panel id="LobbyDetailsContainer" class="lobby__lobby-details lobby__lobby-details--hidden lobby-details ">
 			<Panel id="LobbyDetailsHeaderBar" class="lobby-details__header">
 				<TooltipPanel tooltip="#Lobby_Tooltip_ReturnToList">
-					<Button id="LobbyDetailsBackButton" class="button lobby-details__header-item" onactivate="Lobby.showLobbyList()">
+					<Button id="LobbyDetailsBackButton" class="button lobby-details__header-item" onactivate="LobbyHandler.showLobbyList()">
 						<Image class="button__icon" src="file://{images}/arrow-thick-right.svg" textureheight="32" orientation="180" />
 					</Button>
 				</TooltipPanel>
 				<TooltipPanel tooltip="#Lobby_Settings">
-					<Button id="LobbyDetailsSettingsButton" class="button lobby-details__header-item" onactivate="Lobby.showLobbySettings()">
+					<Button id="LobbyDetailsSettingsButton" class="button lobby-details__header-item" onactivate="LobbyHandler.showLobbySettings()">
 						<Image class="button__icon" src="file://{images}/settings.svg" textureheight="32" />
 					</Button>
 				</TooltipPanel>
@@ -90,7 +90,7 @@
 					</Button>
 				</TooltipPanel>
 				<TooltipPanel tooltip="#Lobby_Tooltip_Leave">
-					<Button id="LobbyDetailsLeaveButton" class="button lobby-details__header-item" onactivate="Lobby.leave()">
+					<Button id="LobbyDetailsLeaveButton" class="button lobby-details__header-item" onactivate="LobbyHandler.leave()">
 						<Image class="button__icon" src="file://{images}/online/exitlobby.svg" textureheight="32" />
 					</Button>
 				</TooltipPanel>

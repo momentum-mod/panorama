@@ -18,7 +18,7 @@
 		</snippet>
 	</snippets>
 
-	<PopupCustomLayout class="PopupPanel Hidden" popupbackground="dim" onload="DosaSettings.onLoad()">
+	<PopupCustomLayout class="PopupPanel Hidden" popupbackground="dim">
 		<Panel class="flow-down horizontal-align-center">
 			<Label class="text-h3 mb-3 text-align-center" text="#Settings_Dosa_Title" />
 			<Label class="text-xs text-italic" text="#Settings_Dosa_Info" />

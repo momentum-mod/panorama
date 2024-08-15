@@ -5,7 +5,7 @@
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
-	<Panel class="PopupPanel Hidden" popupbackground="dim" onload="ColorPickerPopup.init()">
+	<Panel class="PopupPanel Hidden" popupbackground="dim">
 		<ColorPicker id="ColorPicker" />
 	</Panel>
 </root>
