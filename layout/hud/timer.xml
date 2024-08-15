@@ -6,7 +6,7 @@
 		<include type="module" src="file://{scripts}/hud/timer.js" />
 	</scripts>
 
-	<MomHudTimer class="full-width" onload="HudTimer.onLoad()">
+	<MomHudTimer class="full-width">
 		<ConVarEnabler class="hudtimer" convar="mom_hud_timer_enable" togglevisibility="true">
 			<Label id="HudTimerTime" class="hudtimer__time hudtimer__time--inactive" text="{g:time:runtime}" />
 			<Label id="HudTimerComparison" class="hudtimer__comparison hudtimer__comparison--fadeout" text="{s:diffSymbol}{g:time:runtimediff}" visible="false" />

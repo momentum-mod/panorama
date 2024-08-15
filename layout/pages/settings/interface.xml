@@ -193,12 +193,12 @@
 							<Label class="settings-group__subtitle" text="#Settings_Speedometer_ColorRange_Title" />
 							<Panel class="settings-speedometer-buttons">
 								<TooltipPanel class="settings-speedometer-buttons__discard ml-3" tooltip="#Action_Discard">
-									<Button id="DiscardColorProfilesBtn" class="button" onactivate="RangeColorProfiles.create();">
+									<Button id="DiscardColorProfilesBtn" class="button" onactivate="RangeColorProfileHandler.create();">
 										<Image class="button__icon" src="file://{images}/reset.svg" />
 									</Button>
 								</TooltipPanel>
 								<TooltipPanel class="settings-speedometer-buttons__reset ml-3" tooltip="Settings_General_Reset">
-									<Button id="ResetColorProfilesBtn" class="button button--red" onactivate="RangeColorProfiles.resetToDefault();">
+									<Button id="ResetColorProfilesBtn" class="button button--red" onactivate="RangeColorProfileHandler.resetToDefault();">
 										<Image class="button__icon" src="file://{images}/reset.svg" />
 									</Button>
 								</TooltipPanel>
@@ -208,7 +208,7 @@
 						<Panel id="SpeedometerColorProfiles" class="settings-speedometer-rangecolorprofs">
 							<!--Filled with snippets in JS-->
 						</Panel>
-						<Button id="AddColorProfileBtn" class="button horizontal-align-center half-width mt-4 mb-4" onactivate="RangeColorProfiles.addProfile();">
+						<Button id="AddColorProfileBtn" class="button horizontal-align-center half-width mt-4 mb-4" onactivate="RangeColorProfileHandler.addProfile();">
 							<Label class="button__text" text="#Settings_Speedometer_ColorProfile_Add" />
 						</Button>
 					</Panel>

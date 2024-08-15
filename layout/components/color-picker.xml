@@ -50,7 +50,7 @@
 				<NumberEntry id="AlphaChannel" class="colorpicker__numberentry" max="255" />
 			</Panel>
 			<Panel class="colorpicker__entry colorpicker__right-item">
-				<Label id="ColorPickerLabel" class="colorpicker__label" onload="$('#ColorPickerLabel').SetProceduralTextThatIPromiseIsLocalizedAndEscaped('#', false)" />
+				<Label id="ColorPickerLabel" class="colorpicker__label" />
 				<TextEntry id="HexColor" textmode="hex" maxchars="8" class="textentry colorpicker__textentry" />
 			</Panel>
 			<Panel class="colorpicker__entry colorpicker__right-item">
@@ -58,10 +58,10 @@
 				<Panel id="LastColorTarget" class="colorpicker__color-target ml-1" acceptsinput="true" acceptsfocus="true" />
 			</Panel>
 			<Panel class="flow-right colorpicker__right-item">
-				<Button class="button button--green colorpicker__action-button mr-1" onactivate="ColorPicker.onSave()">
+				<Button class="button button--green colorpicker__action-button mr-1" onactivate="ColorPickerHandler.onSave()">
 					<Label class="button__text" text="#Common_Save" />
 				</Button>
-				<Button class="button button--red colorpicker__action-button ml-1" onactivate="ColorPicker.onCancel()">
+				<Button class="button button--red colorpicker__action-button ml-1" onactivate="ColorPickerHandler.onCancel()">
 					<Label class="button__text" text="#Common_Cancel" />
 				</Button>
 			</Panel>

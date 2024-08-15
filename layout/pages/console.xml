@@ -15,7 +15,7 @@
 	<Panel class="console__outer" hittest="true" defaultfocus="ConsoleInput">
 		<Panel id="MoveDragArea" class="console__move-drag-area vertical-align-center" draggable="true">
 			<Label text="#Console_Title" class="text-h3 console__header" />
-			<Button class="button button--red horizontal-align-right" onactivate="Console.toggle()">
+			<Button class="button button--red horizontal-align-right" onactivate="ConsoleHandler.toggle()">
 				<Image class="button__icon" src="file://{images}/close.svg" />
 			</Button>
 		</Panel>
