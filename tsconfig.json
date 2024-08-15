@@ -8,8 +8,9 @@
 		"alwaysStrict": true,
 		"isolatedModules": true,
 		"allowJs": true,
+		// Enable every strict mode option *besides* strictNullChecks, they're just too annoying!
 		"strict": true,
-		"noImplicitAny": false,
+		"strictNullChecks": false,
 		"typeRoots": ["./scripts/types/"],
 		"types": ["momentum"] // If you error here, you don't have the submodule installed! (git submodule update --init --recursive)
 	},
