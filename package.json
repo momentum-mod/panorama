@@ -15,7 +15,8 @@
 		"prepare": "husky",
 		"pre-commit": "lint-staged",
 		"get-learn": "node tools/get-learn.js",
-		"get-credits": "node tools/get-credits.js"
+		"get-credits": "node tools/get-credits.js",
+		"fetch-web": "./tools/fetch-web.sh"
 	},
 	"type": "module",
 	"author": "Momentum Team",
