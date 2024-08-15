@@ -1,10 +1,12 @@
 <root>
-	<scripts>
-		<include type="module" src="file://{scripts}/modals/popups/color-picker.js" />
-	</scripts>
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
+
+	<scripts>
+		<include type="module" src="file://{scripts}/modals/popups/color-picker.js" />
+	</scripts>
+
 	<Panel class="PopupPanel Hidden" popupbackground="dim">
 		<ColorPicker id="ColorPicker" />
 	</Panel>

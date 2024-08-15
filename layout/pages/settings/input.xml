@@ -2,6 +2,7 @@
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
+	
 	<scripts>
 		<include type="module" src="file://{scripts}/pages/settings/page.js" />
 		<include type="module" src="file://{scripts}/pages/settings/mouse-sensitivity.js" />
@@ -36,7 +37,6 @@
 				
 					<Panel class="settings-enum__values pr-2 pl-4 mb-1">
 						<Label text="#Settings_DPI_Input" class="settings-enum__title" />
-							
 						<TextEntry id="DPI" class="textentry settings-slider__textentry ml-4" maxchars="5" multiline="false" textmode="numeric" ontextentrychange="MouseSensitivitySettingsHandler.saveDPI()" />
 						<DropDown id="UnitSelection" class="dropdown ml-4" menuclass="dropdown-menu" oninputsubmit="MouseSensitivitySettingsHandler.saveUnitSelection()">
 							<Label text="#Settings_Centimeters_Per_360" value="0" id="m_sens_cm" />

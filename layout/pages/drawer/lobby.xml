@@ -2,9 +2,11 @@
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
+	
 	<scripts>
 		<include type="module" src="file://{scripts}/pages/drawer/lobby.js" />
 	</scripts>
+	
 	<snippets>
 		<snippet name="lobby-list-entry">
 			<Panel class="lobby-lobbies__wrapper" acceptsinput="true">
@@ -22,6 +24,7 @@
 				</Panel>
 			</Panel>
 		</snippet>
+		
 		<snippet name="lobby-member-entry">
 			<Panel class="lobby-members__entry" acceptsinput="true">
 				<AvatarImage id="MemberAvatar" class="lobby-members__avatar" />

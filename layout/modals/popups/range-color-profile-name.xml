@@ -2,9 +2,11 @@
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
+	
 	<scripts>
 		<include type="module" src="file://{scripts}/modals/popups/range-color-profile-name.js" />
 	</scripts>
+	
 	<PopupCustomLayout class="PopupPanel Hidden" popupbackground="dim">
 		<Panel class="row horizontal-align-center mt-0">
 			<Label id="TitleLabel" class="generic-popup__title" text="#Settings_RangeColorProfile_Prompt" />

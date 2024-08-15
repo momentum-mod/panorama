@@ -2,9 +2,11 @@
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
+	
 	<scripts>
 		<include type="module" src="file://{scripts}/components/color-display.js" />
 	</scripts>
+
 	<Panel class="colordisplay" onload="ColorDisplayHandler.onLoad()">
 		<Label id="Title" class="colordisplay__title" />
 		<Panel id="Display" class="colordisplay__display" onactivate="ColorDisplayHandler.showPopup()" acceptsinput="true" />
