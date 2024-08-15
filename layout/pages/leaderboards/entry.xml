@@ -6,7 +6,7 @@
 		<include type="module" src="file://{scripts}/pages/leaderboards/entry.js" />
 	</scripts>
 
-	<LeaderboardEntry class="leaderboard-entry" oncontextmenu="LeaderboardEntry.showContextMenu()">
+	<LeaderboardEntry class="leaderboard-entry" oncontextmenu="LeaderboardEntryHandler.showContextMenu()">
 		<Label class="leaderboard-entry__item leaderboard-entry__rank" text="{d:rank}" />
 
 		<Panel class="leaderboard-entry__item leaderboard-entry__item leaderboard-entry__player">

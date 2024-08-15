@@ -9,7 +9,7 @@
 	<snippets>
 	</snippets>
 
-	<HudTabMenu class="hud-tab-menu" oncancel="HudTabMenu.close();">
+	<HudTabMenu class="hud-tab-menu" oncancel="HudTabMenuHandler.close();">
 		<Panel class="hud-tab-menu__wrapper">
 			<Panel id="TabMenuHeader" class="hud-tab-menu__header">
 				<Image id="HudTabMenuGamemodeImage" class="hud-tab-menu__header-image" textureheight="128" />

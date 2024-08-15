@@ -10,7 +10,7 @@
 	<Panel class="endofrun" acceptsinput="true" acceptsfocus="true">
 		<Panel class="endofrun__header">
 			<Panel class="endofrun__header-left">
-				<Button class="endofrun__header-button endofrun__header-button--back-button" onactivate="EndOfRun.hideEndOfRun();">
+				<Button class="endofrun__header-button endofrun__header-button--back-button" onactivate="EndOfRunHandler.hideEndOfRun();">
 					<Image class="button__icon button__icon--left" src="file://{images}/arrow-thick-right.svg" orientation="180" textureheight="64" />
 				</Button>
 			</Panel>
@@ -24,13 +24,13 @@
 					<Image id="UploadStatus" class="endofrun__run-status-indicator" textureheight="64" onmouseout="UiToolkitAPI.HideTitleImageTextTooltip();" />
 				</Panel>
 				<Panel id="EndOfRunActionButtons" class="endofrun__header-buttons">
-					<Button class="endofrun__header-button" onactivate="EndOfRun.watchReplay();">
+					<Button class="endofrun__header-button" onactivate="EndOfRunHandler.watchReplay();">
 						<Panel class="flow-right horizontal-align-center vertical-align-center">
 							<Image class="button__icon button__icon--left" src="file://{images}/movie-open-play-outline.svg" textureheight="64" />
 							<Label class="button__text button__text--right" text="#Action_WatchReplay" />
 						</Panel>
 					</Button>
-					<Button class="endofrun__header-button endofrun__header-button--last" onactivate="EndOfRun.restartMap();">
+					<Button class="endofrun__header-button endofrun__header-button--last" onactivate="EndOfRunHandler.restartMap();">
 						<Panel class="flow-right horizontal-align-center  vertical-align-center">
 							<Image class="button__icon button__icon--left" src="file://{images}/reset.svg" textureheight="64" />
 							<Label class="button__text button__text--right" text="#Action_RestartMap" />

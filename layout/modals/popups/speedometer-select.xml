@@ -14,21 +14,21 @@
 			</Panel>
 		</snippet>
 	</snippets>
-	<PopupCustomLayout class="PopupPanel Hidden" popupbackground="dim" onload="SpeedometerSelectPopup.init();">
+	<PopupCustomLayout class="PopupPanel Hidden" popupbackground="dim">
 		<Panel class="row horizontal-align-center mt-0">
 			<Label id="TitleLabel" class="generic-popup__title" text="#Settings_Speedometer_Pick" />
 		</Panel>
 		<Panel id="SpeedometerSelectContainer" class="flow-down horizontal-align-center">
 		</Panel>
 		<Panel class="row horizontal-align-center mt-4">
-			<TextEntry id="SpeedometerName" class="textentry" maxchars="255" placeholder="#Settings_Speedometer_Customname_Placeholder" text="" ontextentrysubmit="SpeedometerSelectPopup.onTextSubmitted()"/>
+			<TextEntry id="SpeedometerName" class="textentry" maxchars="255" placeholder="#Settings_Speedometer_Customname_Placeholder" text="" ontextentrysubmit="SpeedometerSelectPopupHandler.onTextSubmitted()"/>
 		</Panel>
 		<Label id="InvalidNameLabel" class="text-m horizontal-align-center" text="#Settings_Speedometer_InvalidName" />
 		<Panel class="row horizontal-align-center mt-4 generic-popup__button-row">
 			<Button id="CancelButton" class="button mr-4" onactivate="UiToolkitAPI.CloseAllVisiblePopups();">
 				<Label class="button__text" text="#Common_Cancel" />
 			</Button>
-			<Button class="button button--green" onactivate="SpeedometerSelectPopup.onAddButtonPressed();">
+			<Button class="button button--green" onactivate="SpeedometerSelectPopupHandler.onAddButtonPressed();">
 				<Label class="button__text" text="#Common_Add" />
 			</Button>
 		</Panel>

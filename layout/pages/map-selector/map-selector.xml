@@ -32,12 +32,12 @@
 									<Panel class="search mapselector-header__search">
 										<Image class="search__icon" src="file://{images}/search.svg" textureheight="32" />
 										<TextEntry id="MapSearchTextEntry" class="search__textentry" maxchars="30" placeholder="#MapSelector_SearchMaps" />
-										<Button id="MapSearchClear" class="search__clearbutton search__clearbutton--hidden" onactivate="MapSelection.clearSearch()">
+										<Button id="MapSearchClear" class="search__clearbutton search__clearbutton--hidden" onactivate="MapSelectorHandler.clearSearch()">
 											<Image class="search__clearicon" src="file://{images}/close.svg" textureheight="32" />
 										</Button>
 									</Panel>
 									<Panel class="mapselector-header__filters">
-										<Button class="button button--green ml-2" onactivate="MapSelection.requestMapUpdate()">
+										<Button class="button button--green ml-2" onactivate="MapSelectorHandler.requestMapUpdate()">
 											<Label class="button__text" text="#Common_Update" />
 										</Button>
 										<ToggleButton id="FilterToggle" class="ml-2 button togglebutton togglebutton--blue" selected="false" onactivate="MapSelection.toggleFilterCollapse()">
@@ -253,7 +253,7 @@
 
 						<Panel class="flow-down mapselector-map-info__block-right">
 							<Panel class="flow-right full-width pb-3">
-								<ToggleButton id="LeaderboardsBtn" class="button togglebutton togglebutton--blue mapselector-map-info__leaderboard-button" onactivate="MapSelection.toggleLeaderboards()">
+								<ToggleButton id="LeaderboardsBtn" class="button togglebutton togglebutton--blue mapselector-map-info__leaderboard-button" onactivate="MapSelectorHandler.toggleLeaderboards()">
 									<Panel class="flow-right  full-height horizontal-align-center">
 										<Image class="button__icon button__icon--left" src="file://{images}/chart-timeline.svg" textureheight="40" />
 										<Label class="button__text button__icon--right mr-3" text="#MapSelector_Button_Leaderboards" />

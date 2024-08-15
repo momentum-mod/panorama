@@ -20,11 +20,11 @@
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_Mouse_Title" tags="mouse,cursor,aim,look,input" />
 					<Panel class="flow-right horizontal-align-right">
-						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Settings_Mouse_Title', 'MouseSubSection')">
+						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_Mouse_Title', 'MouseSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
 						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-							<Button class="button" onactivate="SettingsShared.resetSettings('MouseSubSection');">
+							<Button class="button" onactivate="SettingsPage.resetSettings('MouseSubSection');">
 								<Image class="button__icon" src="file://{images}/reset.svg" />
 							</Button>
 						</TooltipPanel>
@@ -34,15 +34,15 @@
 				<Panel class="settings-group__combo">
 					<SettingsSlider text="#Settings_Mouse_Sens" min="0.1" max="10" displayprecision="2" convar="sensitivity" tags="sensitivity" hasdocspage="false" />
 				
-					<Panel class="settings-enum__values pr-2 pl-4 mb-1" onload="MouseSensitivity.loadSettings()">
+					<Panel class="settings-enum__values pr-2 pl-4 mb-1">
 						<Label text="#Settings_DPI_Input" class="settings-enum__title" />
-						<TextEntry id="DPI" class="textentry settings-slider__textentry ml-4" maxchars="5" multiline="false" textmode="numeric" ontextentrychange="MouseSensitivity.saveDPI()" />
 							
-						<DropDown id="UnitSelection" class="dropdown ml-4" menuclass="dropdown-menu" oninputsubmit="MouseSensitivity.saveUnitSelection()">
+						<TextEntry id="DPI" class="textentry settings-slider__textentry ml-4" maxchars="5" multiline="false" textmode="numeric" ontextentrychange="MouseSensitivitySettingsHandler.saveDPI()" />
+						<DropDown id="UnitSelection" class="dropdown ml-4" menuclass="dropdown-menu" oninputsubmit="MouseSensitivitySettingsHandler.saveUnitSelection()">
 							<Label text="#Settings_Centimeters_Per_360" value="0" id="m_sens_cm" />
 							<Label text="#Settings_Inches_Per_360" value="1" id="m_sens_in" />
 						</DropDown>
-						<TextEntry id="UnitsPer360" class="textentry settings-slider__textentry ml-4" multiline="false" textmode="numeric" oninputsubmit="MouseSensitivity.setSensitivity()"/>
+						<TextEntry id="UnitsPer360" class="textentry settings-slider__textentry ml-4" multiline="false" textmode="numeric" oninputsubmit="MouseSensitivitySettingsHandler.setSensitivity()"/>
 					</Panel>
 				</Panel>
 
@@ -81,7 +81,7 @@
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_Keybinds_Title" tags="keyboard,keybind,controls,input" />
 					<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-						<Button class="button" onactivate="SettingsShared.resetControls('KeybindSubSection');">
+						<Button class="button" onactivate="SettingsPage.resetControls('KeybindSubSection');">
 							<Image class="button__icon" src="file://{images}/reset.svg" />
 						</Button>
 					</TooltipPanel>

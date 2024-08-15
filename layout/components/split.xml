@@ -7,7 +7,7 @@
 		<include type="module" src="file://{scripts}/components/split.js" />
 	</scripts>
 
-	<Panel class="split" onload="Split.onLoad()">
+	<Panel class="split">
 		<Panel class="split__left">
 			<Label id="Name" class="split__name" text="{s:name}" />
 			<Panel class="split__diff-container">

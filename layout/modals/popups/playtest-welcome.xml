@@ -27,8 +27,7 @@
 			<ToggleButton id="DontShowAgainCheckbox" class="checkbox vertical-align-center mr-4">
 				<Label text="#Common_DontShowAgain" />
 			</ToggleButton>
-
-			<Button class="button button--blue horizontal-align-right" onactivate="DosaPopup.onSubmit()">
+			<Button class="button button--blue horizontal-align-right" onactivate="DosaPopupHandler.onSubmit()">
 				<Label class="button__text" text="#Common_IUnderstand" />
 			</Button>
 

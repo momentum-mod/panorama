@@ -7,7 +7,7 @@
 		<include type="module" src="file://{scripts}/pages/drawer/about.js" />
 	</scripts>
 
-	<Panel class="drawer__tab about" acceptsfocus="true" onload="About.onLoad()">
+	<Panel class="drawer__tab about" acceptsfocus="true">
 		<Panel class="about__header">
 			<Panel class="about__logo-container">
 				<Image class="about__logo" src="file://{images}/momentumLogo.svg" textureheight="64" />

@@ -6,9 +6,9 @@
 		<include type="module" src="file://{scripts}/hud/status.js" />
 	</scripts>
 
-	<MomHudStatus class="full-width" onload="HudStatus.onLoad();">
+	<MomHudStatus class="full-width">
 		<ConVarEnabler class="hudstatus" convar="mom_hud_status_enable" togglevisibility="true">
-			<Label id="HudStatusLabel" class="hudstatus__label" text="" />
+			<Label id="HudStatusLabel" class="hudstatus__label" text="#HudStatus_Spawn" />
 		</ConVarEnabler>
 	</MomHudStatus>
 </root>

@@ -8,7 +8,7 @@
 	</scripts>
 
 	<!-- IL End of Run page is gonna use this as well so splitting it up -->
-	<Panel class="endofrun-xp" onload="EndOfRunXP.initialize();">
+	<Panel class="endofrun-xp">
 		<Panel class="flow-right">
 			<LevelIndicator id="LevelIndicator" class="endofrun-xp__levelindicator" />
 			<Panel class="endofrun-xp__wide-container">

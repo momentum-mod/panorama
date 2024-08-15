@@ -11,14 +11,14 @@
 	<MomHudReplayControls class="replaycontrols">
 		<Panel class="flow-right full-width pb-4">
 			<Label class="text-h4" text="#Replay_Controls" />
-			<Button class="button button--blue horizontal-align-right ml-3" onactivate="ReplayControls.toggleHiddenState();">
+			<Button class="button button--blue horizontal-align-right ml-3" onactivate="ReplayControlsHandler.toggleHiddenState();">
 				<Image class="button__icon" src="file://{images}/mom-arrow-down.svg" />
 			</Button>
 		</Panel>
 		<Panel class="flow-down full-width ">
 			<Panel class="flow-right full-width">
 				<Label class="vertical-align-bottom" text="Tick: {i:curr_tick}/{i:total_ticks}" />
-				<TextEntry class="textentry replaycontrols__gototick" id="ReplayControlsGotoTick" placeholder="Goto tick" oninputsubmit="ReplayControls.gotoTick()" clearaftersubmit="true" />
+				<TextEntry class="textentry replaycontrols__gototick" id="ReplayControlsGotoTick" placeholder="Goto tick" oninputsubmit="ReplayControlsHandler.gotoTick()" clearaftersubmit="true" />
 			</Panel>
 			<Label text="Time: {g:time:curr_time}/{g:time:total_time}" />
 			<SettingsSlider text="#Replay_Timescale" min="0" max="10" percentage="true" value100percent="1" convar="mom_replay_timescale" />
