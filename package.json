@@ -21,7 +21,8 @@
 	"author": "Momentum Team",
 	"license": "MIT",
 	"devDependencies": {
-		"@typescript-eslint/eslint-plugin": "^8.1.0",
+		"@eslint/js": "^9.9.0",
+		"@types/eslint__js": "^8.42.3",
 		"axios": "^1.7.4",
 		"eslint": "^9.9.0",
 		"eslint-config-prettier": "^9.1.0",
@@ -32,7 +33,8 @@
 		"papaparse": "^5.4.1",
 		"prettier": "^3.3.3",
 		"prettier-eslint": "^16.3.0",
-		"typescript": "^5.5.4"
+		"typescript": "^5.5.4",
+		"typescript-eslint": "^8.1.0"
 	},
 	"lint-staged": {
 		"**/*.{js,ts,scss,css,md}": [
