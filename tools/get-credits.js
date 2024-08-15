@@ -132,6 +132,7 @@ try {
 
 	let outString = await prettier.format(xmlFrameTop + '\n' + xmlString.output + '\n' + xmlFrameBottom, {
 		parser: 'html',
+		printWidth: 10000,
 		useTabs: true
 	});
 
