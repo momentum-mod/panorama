@@ -1,5 +1,4 @@
 <root>
-
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>

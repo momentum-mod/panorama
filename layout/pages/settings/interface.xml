@@ -2,6 +2,7 @@
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
+	
 	<scripts>
 		<include type="module" src="file://{scripts}/pages/settings/page.js" />
 		<include type="module" src="file://{scripts}/pages/settings/speedometer.js" />
@@ -62,6 +63,7 @@
 				</Panel>
 			</Panel>
 		</snippet>
+		
 		<snippet name="range-color-display">
 			<Panel class="settings-speedometer-rangecolordisp">
 				<Button id="RangeColorDisplayDeleteBtn" class="ml-2 button button--red settings-speedometer-rangecolordisp__deletebutton">
@@ -70,6 +72,7 @@
 				<RangeColorDisplay id="RangeColorDisplay" class="settings-speedometer-rangecolordisp__display" />
 			</Panel>
 		</snippet>
+		
 		<snippet name="range-color-profile">
 			<Panel class="settings-speedometer-rangecolor">
 				<Panel class="settings-speedometer-rangecolor__header">

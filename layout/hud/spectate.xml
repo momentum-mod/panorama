@@ -2,9 +2,11 @@
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
+	
 	<scripts>
 		<include type="module" src="file://{scripts}/hud/spectate.js" />
 	</scripts>
+	
 	<MomHudSpectate class="full-width flow-down">
 		<Panel class="spectate">
 			<Panel class="spectate__status">
