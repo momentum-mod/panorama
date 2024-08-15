@@ -3,7 +3,6 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 	<scripts>
-		<include src="file://{scripts}/common/speedometer.js" />
 		<include type="module" src="file://{scripts}/modals/popups/speedometer-select.js" />
 	</scripts>
 	<snippets>
