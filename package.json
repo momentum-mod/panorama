@@ -12,7 +12,7 @@
 		"format:check": "prettier --check **/*.{js,ts,scss,css,md}",
 		"lint:fix": "eslint \"**/*.{js,ts}\" --fix",
 		"lint:check": "eslint \"**/*.{js,ts}\"",
-		"prepare": "husky install",
+		"prepare": "husky",
 		"pre-commit": "lint-staged",
 		"get-learn": "node tools/get-learn.js",
 		"get-credits": "node tools/get-credits.js"
