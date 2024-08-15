@@ -4,7 +4,6 @@
 	</styles>
 
 	<scripts>
-		<include src="file://{scripts}/common/map-cache.js" />
 		<include type="module" src="file://{scripts}/pages/loading-screen.js" />
 	</scripts>
 
