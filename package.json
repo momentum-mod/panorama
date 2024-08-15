@@ -17,6 +17,7 @@
 		"get-learn": "node tools/get-learn.js",
 		"get-credits": "node tools/get-credits.js"
 	},
+	"type": "module",
 	"author": "Momentum Team",
 	"license": "MIT",
 	"devDependencies": {
