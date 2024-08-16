@@ -36,7 +36,7 @@ interface MainTrack extends JsonObject {
 
 interface BonusTrack extends JsonObject {
 	zones: TrackZones;
-	defragFlags: number;
+	defragModifiers: number;
 }
 
 interface MapTracks extends JsonObject {
@@ -95,7 +95,7 @@ class ZoneMenu {
 		trackList: $<Panel>('#TrackList')!,
 		propertiesTrack: $<Panel>('#TrackProperties')!,
 		maxVelocity: $<TextEntry>('#MaxVelocity')!,
-		defragFlags: $<Panel>('#DefragFlags')!,
+		defragModifiers: $<Panel>('#DefragFlags')!,
 		stagesEndAtStageStarts: $('#StagesEndAtStageStarts')!.FindChild('CheckBox') as ToggleButton,
 		propertiesSegment: $<Panel>('#SegmentProperties')!,
 		limitGroundSpeed: $('#LimitGroundSpeed')!.FindChild('CheckBox') as ToggleButton,
@@ -225,9 +225,9 @@ class ZoneMenu {
 			zone: null
 		});
 		if (trackChildContainer === null) return;
-		if (entry.zones.segments.length === 0) {
+		if (entry.zones === undefined && Boolean(entry.defragModifiers)) {
 			trackChildContainer.RemoveAndDeleteChildren();
-			(parent.FindChildTraverse('CollapseButton') as Panel).visible = false;
+			trackChildContainer.GetParent()!.FindChildTraverse('CollapseButton')!.visible = false;
 			return;
 		}
 
@@ -331,7 +331,7 @@ class ZoneMenu {
 				segments: [this.createSegment()],
 				end: this.createZone()
 			},
-			defragFlags: 0
+			defragModifiers: 0
 		} as BonusTrack;
 	}
 
@@ -429,7 +429,7 @@ class ZoneMenu {
 		const parentPanel = this.panels.stagesEndAtStageStarts.GetParent() as Panel;
 		parentPanel.visible = 'stagesEndAtStageStarts' in track;
 		this.panels.stagesEndAtStageStarts.SetSelected(Boolean(track.stagesEndAtStageStarts ?? false));
-		this.panels.defragFlags.visible = 'defragFlags' in track;
+		this.panels.defragModifiers.visible = this.selectedZone.track !== this.mapZoneData.tracks.main;
 		this.panels.maxVelocity.text =
 			this.mapZoneData.maxVelocity === undefined ? '' : this.mapZoneData.maxVelocity.toFixed(0)!;
 	}
@@ -721,7 +721,7 @@ class ZoneMenu {
 	static addSegment() {
 		if (!this.mapZoneData || !this.isSelectionValid().track) return;
 
-		if ('defragFlags' in this.selectedZone.track!) {
+		if (this.selectedZone.track !== this.mapZoneData.tracks.main) {
 			// warn player bonus tracks can't have segments!
 			$.Msg('WARNING: Bonus track selected. Bonus tracks cannot have stages!');
 			return;
@@ -908,42 +908,44 @@ class ZoneMenu {
 	}
 
 	static showDefragFlagMenu() {
-		if (!this.isSelectionValid().track || !('defragFlags' in this.selectedZone.track!)) return;
+		if (!this.isSelectionValid().track || !('defragModifiers' in this.selectedZone.track!)) return;
 
 		const flagEditMenu = UiToolkitAPI.ShowCustomLayoutContextMenu(
-			this.panels.defragFlags.id,
+			this.panels.defragModifiers.id,
 			'',
 			'file://{resources}/layout/modals/context-menus/zoning-df-flags.xml'
 		) as Panel;
 
 		const hasteFlag = flagEditMenu.FindChildTraverse('FlagHaste') as Panel;
-		hasteFlag.checked = ((this.selectedZone.track.defragFlags as number) & DefragFlags['HASTE']) > 0;
+		hasteFlag.checked = ((this.selectedZone.track.defragModifiers as number) & DefragFlags['HASTE']) > 0;
 		hasteFlag.SetPanelEvent('onactivate', () => this.setDefragFlags('HASTE'));
 
 		const slickFlag = flagEditMenu.FindChildTraverse('FlagSlick') as Panel;
-		slickFlag.checked = ((this.selectedZone.track.defragFlags as number) & DefragFlags['SLICK']) > 0;
+		slickFlag.checked = ((this.selectedZone.track.defragModifiers as number) & DefragFlags['SLICK']) > 0;
 		slickFlag.SetPanelEvent('onactivate', () => this.setDefragFlags('SLICK'));
 
 		const damageBoostFlag = flagEditMenu.FindChildTraverse('FlagDamageBoost') as Panel;
-		damageBoostFlag.checked = ((this.selectedZone.track.defragFlags as number) & DefragFlags['DAMAGEBOOST']) > 0;
+		damageBoostFlag.checked =
+			((this.selectedZone.track.defragModifiers as number) & DefragFlags['DAMAGEBOOST']) > 0;
 		damageBoostFlag.SetPanelEvent('onactivate', () => this.setDefragFlags('DAMAGEBOOST'));
 
 		const rocketsFlag = flagEditMenu.FindChildTraverse('FlagRockets') as Panel;
-		rocketsFlag.checked = ((this.selectedZone.track.defragFlags as number) & DefragFlags['ROCKETS']) > 0;
+		rocketsFlag.checked = ((this.selectedZone.track.defragModifiers as number) & DefragFlags['ROCKETS']) > 0;
 		rocketsFlag.SetPanelEvent('onactivate', () => this.setDefragFlags('ROCKETS'));
 
 		const plasmaFlag = flagEditMenu.FindChildTraverse('FlagPlasma') as Panel;
-		plasmaFlag.checked = ((this.selectedZone.track.defragFlags as number) & DefragFlags['PLASMA']) > 0;
+		plasmaFlag.checked = ((this.selectedZone.track.defragModifiers as number) & DefragFlags['PLASMA']) > 0;
 		plasmaFlag.SetPanelEvent('onactivate', () => this.setDefragFlags('PLASMA'));
 
 		const bfgFlag = flagEditMenu.FindChildTraverse('FlagBFG') as Panel;
-		bfgFlag.checked = ((this.selectedZone.track.defragFlags as number) & DefragFlags['BFG']) > 0;
+		bfgFlag.checked = ((this.selectedZone.track.defragModifiers as number) & DefragFlags['BFG']) > 0;
 		bfgFlag.SetPanelEvent('onactivate', () => this.setDefragFlags('BFG'));
 	}
 
 	static setDefragFlags(flag: string) {
-		if (this.selectedZone.track === null || !('defragFlags' in this.selectedZone.track)) return;
-		(this.selectedZone.track.defragFlags as number) ^= DefragFlags[flag];
+		// don't use defragBonus validity check because we could be setting the flags for the first time
+		if (!this.isSelectionValid().track || !('defragModifiers' in this.selectedZone.track!)) return;
+		(this.selectedZone.track.defragModifiers as number) ^= DefragFlags[flag];
 	}
 
 	static setLimitGroundSpeed() {
@@ -992,6 +994,11 @@ class ZoneMenu {
 		const trackValidity = Boolean(this.selectedZone) && Boolean(this.selectedZone.track);
 		return {
 			track: trackValidity,
+			defragBonus:
+				trackValidity &&
+				(this.selectedZone.track!.zones === undefined ||
+					('defragModifiers' in this.selectedZone.track! &&
+						Boolean(this.selectedZone.track.defragModifiers))),
 			segment: trackValidity && Boolean(this.selectedZone.segment),
 			zone: trackValidity && Boolean(this.selectedZone.zone)
 		};
