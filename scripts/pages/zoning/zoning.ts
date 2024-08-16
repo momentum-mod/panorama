@@ -225,7 +225,7 @@ class ZoneMenu {
 			zone: null
 		});
 		if (trackChildContainer === null) return;
-		if (entry.zones === undefined && Boolean(entry.defragModifiers)) {
+		if (entry.zones === undefined) {
 			trackChildContainer.RemoveAndDeleteChildren();
 			trackChildContainer.GetParent()!.FindChildTraverse('CollapseButton')!.visible = false;
 			return;
@@ -720,7 +720,10 @@ class ZoneMenu {
 
 	static addSegment() {
 		if (!this.mapZoneData || !this.isSelectionValid().track) return;
-
+		if (this.isSelectionValid().defragBonus) {
+			$.Msg('Defrag Bonus must share zones with Main track!');
+			return;
+		}
 		if (this.selectedZone.track !== this.mapZoneData.tracks.main) {
 			// warn player bonus tracks can't have segments!
 			$.Msg('WARNING: Bonus track selected. Bonus tracks cannot have stages!');
@@ -746,6 +749,10 @@ class ZoneMenu {
 
 	static addCheckpoint() {
 		if (!this.mapZoneData || !this.isSelectionValid().segment) return;
+		if (this.isSelectionValid().defragBonus) {
+			$.Msg('Defrag Bonus must share zones with Main track!');
+			return;
+		}
 		const newZone = this.createZone();
 		this.selectedZone.segment!.checkpoints.push(newZone);
 
@@ -770,6 +777,10 @@ class ZoneMenu {
 
 	static addEndZone() {
 		if (!this.mapZoneData || !this.isSelectionValid().track) return;
+		if (this.isSelectionValid().defragBonus) {
+			$.Msg('Defrag Bonus must share zones with Main track!');
+			return;
+		}
 		const endZone = this.createZone();
 		this.selectedZone.track!.zones.end = endZone;
 
@@ -798,6 +809,10 @@ class ZoneMenu {
 
 	static addCancelZone() {
 		if (!this.mapZoneData || !this.isSelectionValid().segment) return;
+		if (this.isSelectionValid().defragBonus) {
+			$.Msg('Defrag Bonus must share zones with Main track!');
+			return;
+		}
 		const newZone = this.createZone();
 		if (!this.selectedZone.segment!.cancel) {
 			this.selectedZone.segment!.cancel = [newZone];
@@ -910,10 +925,14 @@ class ZoneMenu {
 	static showDefragFlagMenu() {
 		if (!this.isSelectionValid().track || !('defragModifiers' in this.selectedZone.track!)) return;
 
-		const flagEditMenu = UiToolkitAPI.ShowCustomLayoutContextMenu(
+		const flagEditMenu = UiToolkitAPI.ShowCustomLayoutContextMenuParametersDismissEvent(
 			this.panels.defragModifiers.id,
 			'',
-			'file://{resources}/layout/modals/context-menus/zoning-df-flags.xml'
+			'file://{resources}/layout/modals/context-menus/zoning-df-flags.xml',
+			'',
+			() => {
+				this.onDefragFlagMenuClosed();
+			}
 		) as Panel;
 
 		const hasteFlag = flagEditMenu.FindChildTraverse('FlagHaste') as Panel;
@@ -946,6 +965,16 @@ class ZoneMenu {
 		// don't use defragBonus validity check because we could be setting the flags for the first time
 		if (!this.isSelectionValid().track || !('defragModifiers' in this.selectedZone.track!)) return;
 		(this.selectedZone.track.defragModifiers as number) ^= DefragFlags[flag];
+	}
+
+	static onDefragFlagMenuClosed() {
+		if (!this.isSelectionValid().defragBonus) return;
+		//@ts-expect-error property must be optional
+		delete this.selectedZone.track.zones;
+		const bonusIndex = this.mapZoneData!.tracks.bonuses.indexOf(this.selectedZone.track as BonusTrack);
+		const trackPanel = this.panels.trackList.GetChild(1 + bonusIndex)!;
+		trackPanel.FindChildTraverse('CollapseButton')!.visible = false;
+		trackPanel.FindChildTraverse('ChildContainer')!.RemoveAndDeleteChildren();
 	}
 
 	static setLimitGroundSpeed() {
