@@ -6,7 +6,7 @@
 		<include src="file://{scripts}/common/gamemodes.js" />
 		<include src="file://{scripts}/common/run.js" />
 		<include src="file://{scripts}/common/map-cache.js" />
-		<include src="file://{scripts}/hud/tab-menu.js" />
+		<include type="module" src="file://{scripts}/hud/tab-menu.js" />
 	</scripts>
 
 	<snippets>

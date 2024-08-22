@@ -6,7 +6,7 @@
 		<include src="file://{scripts}/common/gamemodes.js" />
 		<include src="file://{scripts}/util/math.js" />
 		<include src="file://{scripts}/util/colors.js" />
-		<include src="file://{scripts}/hud/synchronizer.js" />
+		<include type="module" src="file://{scripts}/hud/synchronizer.js" />
 	</scripts>
 	<MomHudSynchronizer class="synchronizer" alternateTicks="false">
 		<Panel id="BarWrapper" class="synchronizer__bar-wrapper">

@@ -3,9 +3,8 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 	<scripts>
-		<include src="file://{scripts}/common/speedometer.js" />
-		<include src="file://{scripts}/pages/settings/page.js" />
-		<include src="file://{scripts}/pages/settings/speedometer.js" />
+		<include type="module" src="file://{scripts}/pages/settings/page.js" />
+		<include type="module" src="file://{scripts}/pages/settings/speedometer.js" />
 	</scripts>
 
 	<snippets>
@@ -110,7 +109,7 @@
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_Menu_Title" tags="menu,ui" />
 					<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-						<Button class="button settings-group__reset" onactivate="SettingsShared.resetSettings('UISubSection');">
+						<Button class="button settings-group__reset" onactivate="SettingsPage.resetSettings('UISubSection');">
 							<Image class="button__icon" src="file://{images}/reset.svg" />
 						</Button>
 					</TooltipPanel>
@@ -140,7 +139,7 @@
 
 			<Panel class="settings-page__spacer" />
 
-			<Panel id="SpeedometerSubSection" class="settings-group" onload="SpeedometerSettings.loadSettings()">
+			<Panel id="SpeedometerSubSection" class="settings-group">
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_Speedometer_Title" tags="speedometer" />
 				</Panel>
@@ -222,11 +221,11 @@
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_Crosshair_Title" tags="crosshair" />
 					<Panel class="flow-right horizontal-align-right">
-						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Settings_Crosshair_Title', 'CrosshairSubSection')">
+						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_Crosshair_Title', 'CrosshairSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
 						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-							<Button class="button" onactivate="SettingsShared.resetSettings('CrosshairSubSection');">
+							<Button class="button" onactivate="SettingsPage.resetSettings('CrosshairSubSection');">
 								<Image class="button__icon" src="file://{images}/reset.svg" />
 							</Button>
 						</TooltipPanel>
@@ -278,11 +277,11 @@
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_Timer_Title" tags="timer" />
 					<Panel class="flow-right horizontal-align-right">
-						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Settings_Timer_Title', 'TimerSubSection')">
+						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_Timer_Title', 'TimerSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
 						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-							<Button class="button" onactivate="SettingsShared.resetSettings('TimerSubSection');">
+							<Button class="button" onactivate="SettingsPage.resetSettings('TimerSubSection');">
 								<Image class="button__icon" src="file://{images}/reset.svg" />
 							</Button>
 						</TooltipPanel>
@@ -321,7 +320,7 @@
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_HUDStatus_Title" tags="hud,info,status" />
 					<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-						<Button class="button" onactivate="SettingsShared.resetSettings('PlayerStatusSubSection');">
+						<Button class="button" onactivate="SettingsPage.resetSettings('PlayerStatusSubSection');">
 							<Image class="button__icon" src="file://{images}/reset.svg" />
 						</Button>
 					</TooltipPanel>
@@ -338,7 +337,7 @@
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_KeypressHUD_Title" tags="keypress,showkeys,hud" />
 					<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-						<Button class="button" onactivate="SettingsShared.resetSettings('KeypressSubSection');">
+						<Button class="button" onactivate="SettingsPage.resetSettings('KeypressSubSection');">
 							<Image class="button__icon" src="file://{images}/reset.svg" />
 						</Button>
 					</TooltipPanel>
@@ -356,7 +355,7 @@
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_ComparisonsHUD_Title" tags="comparisons,stages,checkpoints,time,hud" />
 					<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-						<Button class="button" onactivate="SettingsShared.resetSettings('ComparisonsSubSection');">
+						<Button class="button" onactivate="SettingsPage.resetSettings('ComparisonsSubSection');">
 							<Image class="button__icon" src="file://{images}/reset.svg" />
 						</Button>
 					</TooltipPanel>
@@ -374,12 +373,12 @@
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_WeaponSelection_Title" tags="weapon,hud" />
 					<Panel class="flow-right horizontal-align-right">
-						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Settings_WeaponSelection_Title', 'WeaponSelSubSection')">
+						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_WeaponSelection_Title', 'WeaponSelSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
 
 						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-							<Button class="button" onactivate="SettingsShared.resetSettings('WeaponSelSubSection');">
+							<Button class="button" onactivate="SettingsPage.resetSettings('WeaponSelSubSection');">
 								<Image class="button__icon" src="file://{images}/reset.svg" />
 							</Button>
 						</TooltipPanel>
@@ -410,11 +409,11 @@
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_JumpStats_Title" />
 					<Panel class="flow-right horizontal-align-right">
-						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Jump Stats', 'JumpStatsSubSection')">
+						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Jump Stats', 'JumpStatsSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
 						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-							<Button class="button" onactivate="SettingsShared.resetSettings('JumpStatsSubSection');">
+							<Button class="button" onactivate="SettingsPage.resetSettings('JumpStatsSubSection');">
 								<Image class="button__icon" src="file://{images}/reset.svg" />
 							</Button>
 						</TooltipPanel>
@@ -496,11 +495,11 @@
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_TotalSync_Title" tags="sync,strafe" />
 					<Panel class="flow-right horizontal-align-right">
-						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Settings_TotalSync_Title', 'StrafeSyncSubSection')">
+						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_TotalSync_Title', 'StrafeSyncSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
 						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-							<Button class="button" onactivate="SettingsShared.resetSettings('StrafeSyncSubSection');">
+							<Button class="button" onactivate="SettingsPage.resetSettings('StrafeSyncSubSection');">
 								<Image class="button__icon" src="file://{images}/reset.svg" />
 							</Button>
 						</TooltipPanel>
@@ -538,12 +537,12 @@
 
 					<Panel class="flow-right horizontal-align-right">
 
-						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Damage Indicator', 'DamageIndicatorSubSection')">
+						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Damage Indicator', 'DamageIndicatorSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
 
 						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-							<Button class="button" onactivate="SettingsShared.resetSettings('DamageIndicatorSubSection');">
+							<Button class="button" onactivate="SettingsPage.resetSettings('DamageIndicatorSubSection');">
 								<Image class="button__icon" src="file://{images}/reset.svg" />
 							</Button>
 						</TooltipPanel>
@@ -584,11 +583,11 @@
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_Synchronizer_Title" tags="sync,strafe,trainer" />
 					<Panel class="flow-right horizontal-align-right">
-						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Settings_Synchronizer_Title', 'SynchronizerSubSection')">
+						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_Synchronizer_Title', 'SynchronizerSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
 						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-							<Button class="button" onactivate="SettingsShared.resetSettings('SynchronizerSubSection');">
+							<Button class="button" onactivate="SettingsPage.resetSettings('SynchronizerSubSection');">
 								<Image class="button__icon" src="file://{images}/reset.svg" />
 							</Button>
 						</TooltipPanel>
@@ -648,11 +647,11 @@
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_MapInfo_Title" tags="info,hud" />
 					<Panel class="flow-right horizontal-align-right">
-						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Settings_MapInfo_Title', 'MapInfoSubSection')">
+						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_MapInfo_Title', 'MapInfoSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
 						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-							<Button class="button" onactivate="SettingsShared.resetSettings('MapInfoSubSection');">
+							<Button class="button" onactivate="SettingsPage.resetSettings('MapInfoSubSection');">
 								<Image class="button__icon" src="file://{images}/reset.svg" />
 							</Button>
 						</TooltipPanel>

@@ -4,7 +4,7 @@
 	</styles>
 
 	<scripts>
-		<include src="file://{scripts}/pages/zoning/zoning.js" />
+		<include type="module" src="file://{scripts}/pages/zoning/zoning.js" />
 	</scripts>
 
 	<snippets>

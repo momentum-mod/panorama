@@ -5,7 +5,7 @@
 
 	<scripts>
 		<include src="file://{scripts}/common/gamemodes.js" />
-		<include src="file://{scripts}/pages/learn.js" />
+		<include type="module" src="file://{scripts}/pages/learn.js" />
 	</scripts>
 
 	<snippets>
