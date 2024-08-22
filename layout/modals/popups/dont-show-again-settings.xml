@@ -5,7 +5,7 @@
 
 	<scripts>
 		<include src="file://{scripts}/util/dont-show-again.js" />
-		<include src="file://{scripts}/modals/popups/dont-show-again-settings.js" />
+		<include type="module" src="file://{scripts}/modals/popups/dont-show-again-settings.js" />
 	</scripts>
 
 	<snippets>

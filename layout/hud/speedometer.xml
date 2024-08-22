@@ -4,7 +4,7 @@
 	</styles>
 	<scripts>
 		<include src="file://{scripts}/common/speedometer.js" />
-		<include src="file://{scripts}/hud/speedometer.js" />
+		<include type="module" src="file://{scripts}/hud/speedometer.js" />
 	</scripts>
 
 	<snippets>

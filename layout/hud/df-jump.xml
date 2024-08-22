@@ -4,7 +4,7 @@
 	</styles>
 	<scripts>
 		<include src="file://{scripts}/common/buttons.js" />
-		<include src="file://{scripts}/hud/df-jump.js" />
+		<include type="module" src="file://{scripts}/hud/df-jump.js" />
 	</scripts>
 	<MomHudDFJump>
 		<ConVarEnabler id="DFJumpContainer" class="dfjump__container" convar="mom_df_hud_jump_enable" togglevisibility="true">

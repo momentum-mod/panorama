@@ -5,7 +5,7 @@
 	<scripts>
 		<include src="file://{scripts}/common/gamemodes.js" />
 		<include src="file://{scripts}/util/register-for-gamemodes.js" />
-		<include src="file://{scripts}/hud/powerup-timer.js" />
+		<include type="module" src="file://{scripts}/hud/powerup-timer.js" />
 	</scripts>
 
 	<MomHudPowerupTimer class="powerup-timer">
