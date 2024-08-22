@@ -5,7 +5,7 @@
 
 	<scripts>
 		<include src="file://{scripts}/common/run.js" />
-		<include src="file://{scripts}/pages/end-of-run/end-of-run.js" />
+		<include type="module" src="file://{scripts}/pages/end-of-run/end-of-run.js" />
 	</scripts>
 
 	<Panel class="endofrun" acceptsinput="true" acceptsfocus="true">

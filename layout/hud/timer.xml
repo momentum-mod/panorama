@@ -5,7 +5,7 @@
 	<scripts>
 		<include src="file://{scripts}/common/hud-misc.js" />
 		<include src="file://{scripts}/common/timer.js" />
-		<include src="file://{scripts}/hud/timer.js" />
+		<include type="module" src="file://{scripts}/hud/timer.js" />
 	</scripts>
 
 	<MomHudTimer class="full-width" onload="HudTimer.onLoad()">

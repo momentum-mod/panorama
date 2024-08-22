@@ -4,7 +4,7 @@
 	</styles>
 	<scripts>
 		<include src="file://{scripts}/common/run-entity.js" />
-		<include src="file://{scripts}/hud/spectate.js" />
+		<include type="module" src="file://{scripts}/hud/spectate.js" />
 	</scripts>
 	<MomHudSpectate class="full-width flow-down">
 		<Panel class="spectate">
