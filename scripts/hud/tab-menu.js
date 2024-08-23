@@ -11,10 +11,6 @@ class HudTabMenu {
 		endOfRunContainer: $('#EndOfRunContainer'),
 		/** @type {Panel} @static */
 		zoningContainer: $('#ZoningContainer'),
-		/** @type {Panel} @static */
-		zoningOpenButton: $('#ZoningOpen'),
-		/** @type {Panel} @static */
-		zoningCloseButton: $('#ZoningClose'),
 		/** @type {Image} @static */
 		gamemodeImage: $('#HudTabMenuGamemodeImage'),
 		/** @type {Panel} @static */
@@ -46,20 +42,14 @@ class HudTabMenu {
 		this.panels.tabMenu.AddClass('hud-tab-menu--offset');
 		this.panels.leaderboardsContainer.AddClass('hud-tab-menu__leaderboards--hidden');
 		this.panels.endOfRunContainer.AddClass('hud-tab-menu__endofrun--hidden');
-
 		this.panels.zoningContainer.RemoveClass('hud-tab-menu__zoning--hidden');
-		this.panels.zoningOpenButton.AddClass('hud-tab-menu__zoning--hidden');
-		this.panels.zoningCloseButton.RemoveClass('hud-tab-menu__zoning--hidden');
 	}
 
 	static hideZoneMenu() {
 		this.panels.tabMenu.RemoveClass('hud-tab-menu--offset');
 		this.panels.leaderboardsContainer.RemoveClass('hud-tab-menu__leaderboards--hidden');
 		this.panels.endOfRunContainer.AddClass('hud-tab-menu__endofrun--hidden');
-
 		this.panels.zoningContainer.AddClass('hud-tab-menu__zoning--hidden');
-		this.panels.zoningOpenButton.RemoveClass('hud-tab-menu__zoning--hidden');
-		this.panels.zoningCloseButton.AddClass('hud-tab-menu__zoning--hidden');
 	}
 
 	static setMapData(isOfficial) {
