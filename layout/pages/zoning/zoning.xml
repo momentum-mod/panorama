@@ -147,15 +147,15 @@
 						<SettingsSlider text="#Zoning_GridSnapSize" class="zoning__slider" min="1" max="64" percentage="false" convar="mom_zone_grid" />
 					</Panel>
 					<Panel id="PropertyTabs" class="tabs">
-						<RadioButton group="ZoningRegion" class="tabs__tab" selected="true" onactivate="ZoneMenu.showRegionMenu('Points')" onmouseover="UiToolkitAPI.ShowTextTooltip('PropertyTabs', '#Zoning_RegionPoints_Tooltip');" onmouseout="UiToolkitAPI.HideTextTooltip();">
+						<RadioButton group="ZoningRegion" class="tabs__tab" value="Points" selected="true" onactivate="ZoneMenu.showRegionMenu('Points')" onmouseover="UiToolkitAPI.ShowTextTooltip('PropertyTabs', '#Zoning_RegionPoints_Tooltip');" onmouseout="UiToolkitAPI.HideTextTooltip();">
 							<Image src="file://{images}/vector-square-close.svg" class="tabs__icon" textureheight="48" />
 						</RadioButton>
 						<Panel class="tabs__gap" />
-						<RadioButton group="ZoningRegion" class="tabs__tab" onactivate="ZoneMenu.showRegionMenu('Properties')" onmouseover="UiToolkitAPI.ShowTextTooltip('PropertyTabs', '#Zoning_RegionProperties_Tooltip');" onmouseout="UiToolkitAPI.HideTextTooltip();">
+						<RadioButton group="ZoningRegion" class="tabs__tab" value="Properties" onactivate="ZoneMenu.showRegionMenu('Properties')" onmouseover="UiToolkitAPI.ShowTextTooltip('PropertyTabs', '#Zoning_RegionProperties_Tooltip');" onmouseout="UiToolkitAPI.HideTextTooltip();">
 							<Image src="file://{images}/list-box-outline.svg" class="tabs__icon" textureheight="48" />
 						</RadioButton>
 						<Panel class="tabs__gap" />
-						<RadioButton group="ZoningRegion" class="tabs__tab" onactivate="ZoneMenu.showRegionMenu('Teleport')" onmouseover="UiToolkitAPI.ShowTextTooltip('PropertyTabs', '#Zoning_RegionTeleport_Tooltip');" onmouseout="UiToolkitAPI.HideTextTooltip();">
+						<RadioButton group="ZoningRegion" class="tabs__tab" value="Teleport" onactivate="ZoneMenu.showRegionMenu('Teleport')" onmouseover="UiToolkitAPI.ShowTextTooltip('PropertyTabs', '#Zoning_RegionTeleport_Tooltip');" onmouseout="UiToolkitAPI.HideTextTooltip();">
 							<Image src="file://{images}/ray-start-arrow.svg" class="tabs__icon" textureheight="48" />
 						</RadioButton>
 					</Panel>
