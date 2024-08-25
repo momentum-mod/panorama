@@ -103,6 +103,7 @@ class ZoneMenu {
 		checkpointsOrdered: $('#CheckpointsOrdered')!.FindChild('CheckBox') as ToggleButton,
 		segmentName: $<TextEntry>('#SegmentName')!,
 		propertiesZone: $<Panel>('#ZoneProperties')!,
+		propertyTabs: $<Panel>('#PropertyTabs')!,
 		filterSelect: $<DropDown>('#FilterSelect')!,
 		volumeSelect: $<DropDown>('#VolumeSelect')!,
 		regionSelect: $<DropDown>('#RegionSelect')!,
@@ -184,7 +185,7 @@ class ZoneMenu {
 		this.teleDestList.unshift($.Localize('#Zoning_TPDest_None')!);
 		this.populateDropdown(this.teleDestList, this.panels.regionTPDest, '', true);
 
-		this.showRegionMenu('Points');
+		this.showRegionMenu('reset');
 
 		this.createTrackEntry(this.panels.trackList, this.mapZoneData.tracks.main, 'Main');
 
@@ -412,6 +413,7 @@ class ZoneMenu {
 		this.populateDropdown(zone.regions, this.panels.regionSelect, 'Region', true);
 		this.panels.regionSelect.SetSelectedIndex(0);
 		this.populateRegionProperties();
+		this.showRegionMenu('');
 	}
 
 	static populateSegmentProperties() {
@@ -1000,6 +1002,12 @@ class ZoneMenu {
 	}
 
 	static showRegionMenu(menu: string) {
+		const pointsTab = this.panels.propertyTabs.GetChild(0) as RadioButton;
+		if (menu === 'reset') {
+			pointsTab.SetSelected(true);
+		}
+		menu = menu || pointsTab.GetSelectedButton().GetAttributeString('value', 'Points');
+
 		this.panels.pointsSection.visible = menu === 'Points';
 		this.panels.propertiesSection.visible = menu === 'Properties';
 		this.panels.teleportSection.visible = menu === 'Teleport';
