@@ -38,28 +38,76 @@ class HudStatus {
 		this.updateLabel();
 	}
 
+	static onTimerStatusChanged() {
+		this.updateLabel();
+	}
+
 	static updateLabel() {
-		const enteredStartZone = this.enter && this.curZone === 1;
-		const enteredEndZone = this.enter && this.curZone === 0;
+		const timerStatus = MomentumTimerAPI.GetObservedTimerStatus();
 
-		let text = $.Localize('#HudStatus_Spawn');
+		let text = '';
 
-		if (this.saveStateUsing && this.timerState !== TimerState.RUNNING) {
-			text = `${$.Localize('#HudStatus_SaveState')} ${this.saveStateCurrent}/${this.saveStateCount}`;
-		} else {
-			if (enteredStartZone) {
-				text = $.Localize('#HudStatus_StartZone');
-			} else if (enteredEndZone) {
-				text = $.Localize('#HudStatus_EndZone');
-			} else if (this.curZone >= 0) {
-				text = `${$.Localize(this.linear ? '#HudStatus_Checkpoint' : '#HudStatus_Stage')} ${
-					this.curZone
-				}/${ZonesAPI.GetZoneCount(this.curTrack)}`;
-			}
+		switch (timerStatus.state) {
+			case TimerStateNEW.DISABLED:
+				text = $.Localize('#HudStatus_TimerDisabled');
+				break;
+			case TimerStateNEW.PRIMED:
+				text = $.Localize('#HudStatus_TimerPrimed');
+				break;
+			case TimerStateNEW.RUNNING:
+				switch (timerStatus.trackId.type) {
+					case TrackType.MAIN:
+						if (timerStatus.segmentsCount === 1) {
+							if (timerStatus.segmentCheckpointsCount > 1) {
+								text = `${$.Localize('#HudStatus_Checkpoint')} ${timerStatus.minorNum}/${
+									timerStatus.segmentCheckpointsCount
+								}`;
+							} else {
+								// no state text in this case
+							}
+						} else {
+							text =
+								timerStatus.segmentCheckpointsCount > 1
+									? `${$.Localize('#HudStatus_Stage')} ${timerStatus.majorNum}/${
+											timerStatus.segmentsCount
+									  } | ${$.Localize('#HudStatus_Checkpoint')} ${timerStatus.minorNum}/${
+											timerStatus.segmentCheckpointsCount
+									  }`
+									: `${$.Localize('#HudStatus_Stage')} ${timerStatus.majorNum}/${
+											timerStatus.segmentsCount
+									  }`;
+						}
+						break;
+					case TrackType.STAGE:
+						text =
+							timerStatus.segmentCheckpointsCount > 1
+								? `${$.Localize('#HudStatus_Stage')} ${timerStatus.trackId.number} | ${$.Localize(
+										'#HudStatus_Checkpoint'
+								  )} ${timerStatus.minorNum}/${timerStatus.segmentCheckpointsCount}`
+								: `${$.Localize('#HudStatus_Stage')} ${timerStatus.trackId.number}`;
+						break;
+					case TrackType.BONUS:
+						text =
+							timerStatus.segmentCheckpointsCount > 1
+								? `${$.Localize('#HudStatus_Bonus')} ${timerStatus.trackId.number} | ${$.Localize(
+										'#HudStatus_Checkpoint'
+								  )} ${timerStatus.minorNum}/${timerStatus.segmentCheckpointsCount}`
+								: `${$.Localize('#HudStatus_Bonus')} ${timerStatus.trackId.number}`;
+						break;
+				}
+				break;
+			case TimerStateNEW.FINISHED:
+				text = $.Localize('#HudStatus_TimerFinished');
+				break;
+			default:
+				$.Warning('Unknown timer state');
+				text = '???';
+				break;
+		}
 
-			if (this.curTrack > 0) {
-				text = `${$.Localize('#HudStatus_Bonus')} ${this.curTrack} | ${text}`;
-			}
+		// TODO: maybe show these somewhere else instead of prepending tons of stuff
+		if (this.saveStateUsing) {
+			text = `${$.Localize('#HudStatus_SaveState')} ${this.saveStateCurrent}/${this.saveStateCount} | ${text}`;
 		}
 
 		if (this.inPracticeMode) {
@@ -77,6 +125,10 @@ class HudStatus {
 		$.RegisterForUnhandledEvent('OnMomentumZoneChange', this.onZoneChange.bind(this));
 		$.RegisterForUnhandledEvent('OnMomentumPlayerPracticeModeStateChange', this.onPracticeModeChange.bind(this));
 		$.RegisterForUnhandledEvent('OnSaveStateUpdate', this.onSaveStateChange.bind(this));
+
+		$.RegisterForUnhandledEvent('OnObservedTimerStateChange', this.onTimerStatusChanged.bind(this));
+		$.RegisterForUnhandledEvent('OnObservedTimerCheckpointProgressed', this.onTimerStatusChanged.bind(this));
+		$.RegisterForUnhandledEvent('OnObservedTimerReplaced', this.onTimerStatusChanged.bind(this));
 
 		this.label.text = $.Localize('#HudStatus_Spawn');
 	}

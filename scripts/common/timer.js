@@ -10,3 +10,16 @@ const TimerState = {
 	RUNNING: 1,
 	PRACTICE: 2
 };
+
+const TimerStateNEW = {
+	DISABLED: 0,
+	PRIMED: 1,
+	RUNNING: 2,
+	FINISHED: 3
+};
+
+const TrackType = {
+	MAIN: 0,
+	STAGE: 1,
+	BONUS: 2
+};
