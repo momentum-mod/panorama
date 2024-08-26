@@ -12,6 +12,8 @@ class HudTimer {
 	static timeLabel = $('#HudTimerTime');
 	/** @type {Label} @static */
 	static compLabel = $('#HudTimerComparison');
+	/** @type {Panel} @static */
+	static panel = $.GetContextPanel();
 
 	static prevZone = 0;
 
@@ -24,7 +26,7 @@ class HudTimer {
 	static onTimerFinished() {
 		this.timeLabel.AddClass(FINISHED_CLASS);
 
-		$.GetContextPanel().SetDialogVariableFloat('runtime', MomentumTimerAPI.GetCurrentRunTime());
+		this.panel.SetDialogVariableFloat('runtime', MomentumTimerAPI.GetCurrentRunTime());
 
 		if (MomentumTimerAPI.IsFinishSoundEnabled()) $.PlaySoundEvent('Momentum.FinishTimer');
 	}
@@ -45,10 +47,7 @@ class HudTimer {
 	}
 
 	static onUpdate() {
-		const timerState = MomentumTimerAPI.GetTimerState();
-		if (timerState === TimerState.NOTRUNNING) return;
-
-		$.GetContextPanel().SetDialogVariableFloat('runtime', MomentumTimerAPI.GetCurrentRunTime());
+		this.panel.SetDialogVariableFloat('runtime', MomentumTimerAPI.GetObservedTimerStatus().runTime);
 	}
 
 	static onZoneChange(enter, linear, curZone, _curTrack, timerState) {
@@ -77,8 +76,8 @@ class HudTimer {
 				diffSymbol = '';
 			}
 
-			$.GetContextPanel().SetDialogVariableFloat('runtimediff', Math.abs(diff));
-			$.GetContextPanel().SetDialogVariable('diffSymbol', diffSymbol);
+			this.panel.SetDialogVariableFloat('runtimediff', Math.abs(diff));
+			this.panel.SetDialogVariable('diffSymbol', diffSymbol);
 
 			this.compLabel.AddClass(FADEOUT_START_CLASS);
 			this.compLabel.TriggerClass(FADEOUT_CLASS);
@@ -93,7 +92,7 @@ class HudTimer {
 	}
 
 	static resetTimer() {
-		$.GetContextPanel().SetDialogVariableFloat('runtime', 0);
+		this.panel.SetDialogVariableFloat('runtime', 0);
 		this.timeLabel.AddClass(INACTIVE_CLASS);
 		this.forceHideComparison();
 		this.prevZone = 0;
@@ -141,17 +140,80 @@ class HudTimer {
 		this.prevZone = ZonesAPI.GetCurrentZone(); // if curZone === 0 and the timer is running we have big problems
 	}
 
+	static onTimerStateChange() {
+		this.updateFullState();
+		this.playStateSound();
+	}
+
+	static onTimerReplaced() {
+		this.updateFullState();
+	}
+
+	static updateFullState() {
+		const timerStatus = MomentumTimerAPI.GetObservedTimerStatus();
+
+		switch (timerStatus.state) {
+			case TimerStateNEW.DISABLED:
+				this.timeLabel.AddClass(INACTIVE_CLASS);
+				this.timeLabel.RemoveClass(FINISHED_CLASS);
+				break;
+			case TimerStateNEW.RUNNING:
+				this.timeLabel.RemoveClass(INACTIVE_CLASS);
+				this.timeLabel.RemoveClass(FINISHED_CLASS);
+				break;
+			case TimerStateNEW.FINISHED:
+				this.timeLabel.AddClass(FINISHED_CLASS);
+				this.timeLabel.RemoveClass(INACTIVE_CLASS);
+				break;
+			case TimerStateNEW.PRIMED:
+				this.timeLabel.AddClass(INACTIVE_CLASS);
+				this.timeLabel.RemoveClass(FINISHED_CLASS);
+				break;
+			default:
+				$.Warning('Unknown timer state');
+				break;
+		}
+
+		this.panel.SetDialogVariableFloat('runtime', MomentumTimerAPI.GetObservedTimerStatus().runTime);
+	}
+
+	static playStateSound() {
+		const timerStatus = MomentumTimerAPI.GetObservedTimerStatus();
+
+		switch (timerStatus.state) {
+			case TimerStateNEW.DISABLED:
+				if (MomentumTimerAPI.IsStopSoundEnabled()) $.PlaySoundEvent('Momentum.StopTimer');
+				break;
+			case TimerStateNEW.RUNNING:
+				if (MomentumTimerAPI.IsStartSoundEnabled()) $.PlaySoundEvent('Momentum.StartTimer');
+				break;
+			case TimerStateNEW.FINISHED:
+				if (MomentumTimerAPI.IsFinishSoundEnabled()) $.PlaySoundEvent('Momentum.FinishTimer');
+				break;
+			case TimerStateNEW.PRIMED:
+				// no sound
+				break;
+			default:
+				$.Warning('Unknown timer state');
+				break;
+		}
+	}
+
 	static onLoad() {
-		$.GetContextPanel().hiddenHUDBits = HideHud.TABMENU;
+		this.panel.hiddenHUDBits = HideHud.TABMENU;
 	}
 
 	static {
-		$.RegisterEventHandler('HudProcessInput', $.GetContextPanel(), this.onUpdate.bind(this));
+		$.RegisterEventHandler('HudProcessInput', this.panel, this.onUpdate.bind(this));
 		$.RegisterForUnhandledEvent('OnMomentumTimerStateChange', this.onTimerEvent.bind(this));
 		$.RegisterForUnhandledEvent('OnMomentumZoneChange', this.onZoneChange.bind(this));
 		$.RegisterForUnhandledEvent('OnSaveStateUpdate', this.onSaveStateChange.bind(this));
 		$.RegisterForUnhandledEvent('OnMomentumReplayStopped', this.onReplayStopped.bind(this));
 
-		$.GetContextPanel().SetDialogVariableFloat('runtime', 0);
+		this.panel.SetDialogVariableFloat('runtime', 0);
+
+		// NEW
+		$.RegisterForUnhandledEvent('OnObservedTimerStateChange', this.onTimerStateChange.bind(this));
+		$.RegisterForUnhandledEvent('OnObservedTimerReplaced', this.onTimerReplaced.bind(this));
 	}
 }
