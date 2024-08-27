@@ -26,7 +26,7 @@
 			</RadioButton>
 		</Panel>
 		<Panel class="row mt-1">
-			<Label class="mr-3 vertical-align-center" text="#Lobby_MaxPlayers#" disabled="true" />
+			<Label class="mr-3 vertical-align-center" text="#Lobby_MaxPlayers" disabled="true" />
 			<TextEntry id="MaxPlayers" class="textentry text-align-center horizontal-align-center px-3" maxchars="3" textmode="numeric" style="width: 52px;" ontextentrychange="LobbySettingsHandler.onChanged()" />
 		</Panel>
 		<Panel class="row horizontal-align-right">
