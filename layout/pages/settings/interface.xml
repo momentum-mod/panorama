@@ -124,11 +124,11 @@
 				</SettingsEnum>
 
 				<SettingsEnum text="#Settings_Menu_Movie" psvar="settings.mainMenuMovie" infomessage="#Settings_Menu_Movie_Info" tags="background,video,movie">
-					<RadioButton group="mainmenuvideo" text="#Common_Off" value="0" activateoverride="$.DispatchEvent('ReloadBackground');" />
-					<RadioButton group="mainmenuvideo" text="#Common_On" value="1" activateoverride="$.DispatchEvent('ReloadBackground');" />
+					<RadioButton group="mainmenuvideo" text="#Common_Off" value="0" activateoverride="$.DispatchEvent('ReloadMainMenuBackground');" />
+					<RadioButton group="mainmenuvideo" text="#Common_On" value="1" activateoverride="$.DispatchEvent('ReloadMainMenuBackground');" />
 				</SettingsEnum>
 
-				<SettingsEnumDropDown text="#Settings_Menu_Type" psvar="settings.mainMenuBackground" submitoverride="$.DispatchEvent('ReloadBackground');" infomessage="#Settings_Menu_Type_Info" tags="background,video,movie">
+				<SettingsEnumDropDown text="#Settings_Menu_Type" psvar="settings.mainMenuBackground" submitoverride="$.DispatchEvent('ReloadMainMenuBackground');" infomessage="#Settings_Menu_Type_Info" tags="background,video,movie">
 					<Label text="#Settings_Menu_Type0" value="0" id="bgtype0" />
 					<Label text="#Settings_Menu_Type1" value="1" id="bgtype1" />
 				</SettingsEnumDropDown>
