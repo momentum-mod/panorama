@@ -7,9 +7,9 @@
 		"baseUrl": "scripts/",
 		"rootDir": "scripts/",
 		"outDir": "script_dist/",
+		"allowJs": true,
 		"alwaysStrict": true,
 		"isolatedModules": false,
-		"allowJs": true,
 		// Enable every strict mode option *besides* strictNullChecks, they're just too annoying!
 		"strict": true,
 		"strictNullChecks": false,

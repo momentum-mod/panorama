@@ -1,22 +1,26 @@
-class Console {
-	/** @type {StaticConsoleMessageTarget} @static */
-	static messageTarget = $('#ConsoleMessageTarget');
+import { PanelHandler } from 'util/module-helpers';
 
-	static onMoveDragStart(_source, callback) {
+@PanelHandler()
+class ConsoleHandler {
+	messageTarget = $<StaticConsoleMessageTarget>('#ConsoleMessageTarget');
+
+	constructor() {
+		$.RegisterEventHandler('DragStart', $('#MoveDragArea'), (panelID, source) =>
+			this.onMoveDragStart(panelID, source)
+		);
+		$.RegisterEventHandler('NewConsoleMessages', 'ConsoleMessageTarget', () => this.onNewMessages());
+	}
+
+	onMoveDragStart(_panelID: string, callback: DragEventInfo) {
 		callback.displayPanel = $.GetContextPanel();
 		callback.removePositionBeforeDrop = false;
 	}
 
-	static toggle() {
+	toggle() {
 		$.DispatchEvent('ToggleConsole');
 	}
 
-	static onNewMessages() {
+	onNewMessages() {
 		this.messageTarget.ScrollToBottom();
-	}
-
-	static {
-		$.RegisterEventHandler('DragStart', $('#MoveDragArea'), Console.onMoveDragStart);
-		$.RegisterEventHandler('NewConsoleMessages', 'ConsoleMessageTarget', Console.onNewMessages.bind(this));
 	}
 }

@@ -1,41 +1,49 @@
-const STICKY_CHARGE_UNITS_TYPE = {
-	NONE: 0,
-	UPS: 1,
-	PERCENT: 2
-};
+import { PanelHandler } from 'util/module-helpers';
 
-class StickyCharge {
-	/** @type {ProgressBar} @static */
-	static chargeMeter = $('#StickyChargeMeter');
-	/** @type {Label} @static */
-	static chargeSpeed = $('#StickyChargeSpeed');
-	/** @type {Panel} @static */
-	static container = $('#StickyChargeContainer');
+export enum StickyChargeUnit {
+	NONE = 0,
+	UPS = 1,
+	PERCENT = 2
+}
 
-	static OnChargeUpdate(speed, percentage) {
-		const chargeUnitType = $.GetContextPanel().stickyChargeUnitType;
+@PanelHandler()
+class StickyChargeHandler {
+	readonly panels = {
+		cp: $.GetContextPanel<MomHudStickyCharge>(),
+		container: $<Panel>('#StickyChargeContainer'),
+		chargeMeter: $<ProgressBar>('#StickyChargeMeter'),
+		chargeSpeed: $<Label>('#StickyChargeSpeed')
+	};
+
+	constructor() {
+		$.RegisterEventHandler('OnChargeUpdate', this.panels.container, (speed, percentage) =>
+			this.onChargeUpdate(speed, percentage)
+		);
+		$.RegisterEventHandler('OnChargeToggled', this.panels.container, (enabled) => this.onChargeToggled(enabled));
+	}
+
+	onChargeUpdate(speed: float, percentage: float) {
+		const chargeUnit = this.panels.cp.stickyChargeUnitType;
 
 		let speedText;
-		switch (chargeUnitType) {
-			case STICKY_CHARGE_UNITS_TYPE.UPS:
+		switch (chargeUnit) {
+			case StickyChargeUnit.UPS:
 				speedText = `${Math.floor(speed)}u/s`;
 				break;
-			case STICKY_CHARGE_UNITS_TYPE.PERCENT:
+			case StickyChargeUnit.PERCENT:
 				speedText = `${Math.floor(percentage * 100)}%`;
 				break;
 			default:
 				speedText = '';
 		}
-		this.chargeSpeed.text = speedText;
-		this.chargeMeter.value = percentage;
+
+		this.panels.chargeSpeed.text = speedText;
+		this.panels.chargeMeter.value = percentage;
 	}
 
-	static OnChargeToggled(enabled) {
-		if (this.chargeMeter.enabled !== enabled) this.chargeMeter.enabled = enabled;
-	}
-
-	static {
-		$.RegisterEventHandler('OnChargeUpdate', this.container, this.OnChargeUpdate.bind(this));
-		$.RegisterEventHandler('OnChargeToggled', this.container, this.OnChargeToggled.bind(this));
+	onChargeToggled(enabled: boolean) {
+		if (this.panels.chargeMeter.enabled !== enabled) {
+			this.panels.chargeMeter.enabled = enabled;
+		}
 	}
 }

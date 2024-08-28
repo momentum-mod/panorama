@@ -1,10 +1,9 @@
-class Split {
-	static onLoad() {
-		this.update();
-	}
+import { PanelHandler, OnPanelLoad } from 'util/module-helpers';
 
-	static update() {
-		const cp = $.GetContextPanel();
+@PanelHandler()
+class SplitHandler implements OnPanelLoad {
+	onPanelLoad() {
+		const cp = $.GetContextPanel<Split>();
 
 		const name = cp.name;
 		const time = cp.time;

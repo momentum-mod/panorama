@@ -1,63 +1,65 @@
+import { PanelHandler } from 'util/module-helpers';
+import { EndOfRunShowReason } from 'common/timer';
+import { GamemodeInfo, MapCredit, MapCreditType, MMap } from 'common/web';
+import { getMainTrack, getNumZones } from 'common/leaderboard';
+
 /**
  * Class for the HUD tab menu panel, which contains the leaderboards, end of run, and zoning.
  */
-class HudTabMenu {
-	static panels = {
-		/** @type {Panel} @static */
-		tabMenu: $.GetContextPanel(),
-		/** @type {Panel} @static */
-		leaderboardsContainer: $('#LeaderboardsContainer'),
-		/** @type {Panel} @static */
-		endOfRunContainer: $('#EndOfRunContainer'),
-		/** @type {Panel} @static */
-		zoningContainer: $('#ZoningContainer'),
-		/** @type {Image} @static */
-		gamemodeImage: $('#HudTabMenuGamemodeImage'),
-		/** @type {Panel} @static */
-		credits: $('#HudTabMenuMapCredits')
+@PanelHandler()
+class HudTabMenuHandler {
+	readonly panels = {
+		cp: $.GetContextPanel<MomHudTabMenu>(),
+		leaderboardsContainer: $<Panel>('#LeaderboardsContainer'),
+		endOfRunContainer: $<Panel>('#EndOfRunContainer'),
+		zoningContainer: $<Panel>('#ZoningContainer'),
+		zoningOpen: $<Button>('#ZoningOpen'),
+		zoningClose: $<Button>('#ZoningClose'),
+		gamemodeIcon: $<Image>('#HudTabMenuGamemodeImage'),
+		credits: $<Panel>('#HudTabMenuMapCredits')
 	};
 
-	static {
-		$.RegisterForUnhandledEvent('Leaderboards_MapDataSet', this.setMapData.bind(this));
-		$.RegisterForUnhandledEvent('HudTabMenu_ForceClose', this.close.bind(this));
-		$.RegisterForUnhandledEvent('EndOfRun_Show', this.showEndOfRun.bind(this));
-		$.RegisterForUnhandledEvent('EndOfRun_Hide', this.hideEndOfRun.bind(this));
-		$.RegisterForUnhandledEvent('ZoneMenu_Show', this.showZoneMenu.bind(this));
-		$.RegisterForUnhandledEvent('ZoneMenu_Hide', this.hideZoneMenu.bind(this));
+	constructor() {
+		$.RegisterForUnhandledEvent('Leaderboards_MapDataSet', (isOfficial) => this.setMapData(isOfficial));
+		$.RegisterForUnhandledEvent('HudTabMenu_ForceClose', () => this.close());
+		$.RegisterForUnhandledEvent('EndOfRun_Show', (reason) => this.showEndOfRun(reason));
+		$.RegisterForUnhandledEvent('EndOfRun_Hide', () => this.hideEndOfRun());
+		$.RegisterForUnhandledEvent('ZoneMenu_Show', () => this.showZoneMenu());
+		$.RegisterForUnhandledEvent('ZoneMenu_Hide', () => this.hideZoneMenu());
 	}
 
-	static showEndOfRun(_showReason) {
+	showEndOfRun(reason: EndOfRunShowReason) {
 		this.panels.leaderboardsContainer.AddClass('hud-tab-menu__leaderboards--hidden');
 		this.panels.endOfRunContainer.RemoveClass('hud-tab-menu__endofrun--hidden');
 		this.panels.zoningContainer.AddClass('hud-tab-menu__zoning--hidden');
 	}
 
-	static hideEndOfRun() {
+	hideEndOfRun() {
 		this.panels.leaderboardsContainer.RemoveClass('hud-tab-menu__leaderboards--hidden');
 		this.panels.endOfRunContainer.AddClass('hud-tab-menu__endofrun--hidden');
 		this.panels.zoningContainer.AddClass('hud-tab-menu__zoning--hidden');
 	}
 
-	static showZoneMenu() {
-		this.panels.tabMenu.AddClass('hud-tab-menu--offset');
+	showZoneMenu() {
+		this.panels.cp.AddClass('hud-tab-menu--offset');
 		this.panels.leaderboardsContainer.AddClass('hud-tab-menu__leaderboards--hidden');
 		this.panels.endOfRunContainer.AddClass('hud-tab-menu__endofrun--hidden');
 		this.panels.zoningContainer.RemoveClass('hud-tab-menu__zoning--hidden');
 	}
 
-	static hideZoneMenu() {
-		this.panels.tabMenu.RemoveClass('hud-tab-menu--offset');
+	hideZoneMenu() {
+		this.panels.cp.RemoveClass('hud-tab-menu--offset');
 		this.panels.leaderboardsContainer.RemoveClass('hud-tab-menu__leaderboards--hidden');
 		this.panels.endOfRunContainer.AddClass('hud-tab-menu__endofrun--hidden');
 		this.panels.zoningContainer.AddClass('hud-tab-menu__zoning--hidden');
 	}
 
-	static setMapData(isOfficial) {
+	setMapData(isOfficial: boolean) {
 		$.GetContextPanel().SetHasClass('hud-tab-menu--unofficial', !isOfficial);
 
-		const img = GameModeInfoWithNull[GameModeAPI.GetCurrentGameMode()].idName.toLowerCase();
+		const img = GamemodeInfo.get(GameModeAPI.GetCurrentGameMode()).icon;
 
-		this.panels.gamemodeImage.SetImage(`file://{images}/gamemodes/${img}.svg`);
+		this.panels.gamemodeIcon.SetImage(`file://{images}/gamemodes/${img}.svg`);
 
 		const mapData = MapCacheAPI.GetCurrentMapData();
 
@@ -67,11 +69,13 @@ class HudTabMenu {
 		}
 	}
 
-	static setMapAuthorCredits(credits) {
+	setMapAuthorCredits(credits: MapCredit[]) {
 		// Delete existing name labels
-		for (const label of this.panels.credits.Children().slice(1) || []) label.DeleteAsync(0);
+		for (const label of this.panels.credits.Children().slice(1) || []) {
+			label.DeleteAsync(0);
+		}
 
-		const authorCredits = credits.filter((x) => x.type === MapCreditType.AUTHOR);
+		const authorCredits = credits.filter(({ type }) => type === MapCreditType.AUTHOR);
 
 		for (const credit of authorCredits) {
 			const namePanel = $.CreatePanel('Label', this.panels.credits, '', {
@@ -80,13 +84,15 @@ class HudTabMenu {
 
 			namePanel.AddClass('hud-tab-menu-map-info__credits-name');
 
-			if (credit.user.xuid !== '0') {
+			if (credit.user.steamID) {
+				// TODO: Perhaps better if left-click just loads momentum profile? Can access steam through that,
+				// and profile pages no longer require a login to view.
 				namePanel.SetPanelEvent('oncontextmenu', () => {
 					UiToolkitAPI.ShowSimpleContextMenu('', '', [
 						{
 							label: $.Localize('#Action_ShowSteamProfile'),
 							jsCallback: () => {
-								SteamOverlayAPI.OpenToProfileID(credit.user.xuid);
+								SteamOverlayAPI.OpenToProfileID(credit.user.steamID);
 							}
 						}
 					]);
@@ -104,20 +110,20 @@ class HudTabMenu {
 		}
 	}
 
-	static setMapStats(data) {
-		const cp = $.GetContextPanel();
+	setMapStats(mapData: MMap) {
+		this.panels.cp.forceCloseTabMenu();
 
-		const mainTrack = getMainTrack(data, GameModeAPI.GetCurrentGameMode());
-		const numZones = getNumZones(data);
+		const mainTrack = getMainTrack(mapData, GameModeAPI.GetCurrentGameMode());
+		const numZones = getNumZones(mapData);
 
-		cp.SetDialogVariableInt('tier', mainTrack?.tier ?? 0);
-		cp.SetDialogVariable('type', $.Localize(mainTrack?.isLinear ? '#MapInfo_Type_Linear' : '#MapInfo_Type_Staged'));
-		cp.SetDialogVariableInt('numzones', numZones);
-		cp.SetDialogVariableInt('runs', data.stats?.completions);
+		this.panels.cp.SetDialogVariableInt('tier', mainTrack?.tier ?? 0);
+		this.panels.cp.SetDialogVariable('type', mainTrack?.linear ? '#MapInfo_Type_Linear' : '#MapInfo_Type_Staged');
+		this.panels.cp.SetDialogVariableInt('numzones', numZones);
+		this.panels.cp.SetDialogVariableInt('runs', mapData.stats?.completions);
 	}
 
-	static close() {
-		$.GetContextPanel().forceCloseTabMenu();
+	close() {
+		this.panels.cp.forceCloseTabMenu();
 		return true;
 	}
 }

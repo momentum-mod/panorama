@@ -1,4 +1,4 @@
-const SettingsTabs = {
+export const SettingsTabs = {
 	InputSettings: {
 		xml: 'input',
 		radioid: 'InputRadio',
@@ -70,3 +70,17 @@ const SettingsTabs = {
 		xml: 'search'
 	}
 };
+
+export type SettingsTab = keyof typeof SettingsTabs;
+export type SettingsTabWithoutSearch = Exclude<SettingsTab, 'SearchSettings'>;
+
+export function isSettingsPanel(panel: GenericPanel): panel is SettingsPanel {
+	return [
+		'SettingsEnum',
+		'SettingsSlider',
+		'SettingsEnumDropDown',
+		'SettingsKeyBinder',
+		'SettingsToggle',
+		'ConVarColorDisplay'
+	].includes(panel.paneltype);
+}

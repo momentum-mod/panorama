@@ -1,20 +1,19 @@
-class LobbyCreate {
-	static panels = {
-		/** @type {Panel} @static */
-		cp: $.GetContextPanel(),
-		/** @type {Panel} @static */
-		warningRow: $('#WarningRow'),
-		/** @type {Label} @static */
-		warningLabel: $('#WarningLabel'),
-		/** @type {Button} @static */
-		updateButton: $('#UpdateButton'),
-		/** @type {TextEntry} @static */
-		maxPlayers: $('#MaxPlayers')
+import { OnPanelLoad, PanelHandler } from 'util/module-helpers';
+import { LobbyType } from 'common/online';
+
+@PanelHandler()
+class LobbyCreateHandler implements OnPanelLoad {
+	readonly panels = {
+		cp: $.GetContextPanel<Panel>(),
+		warningRow: $<Panel>('#WarningRow'),
+		warningLabel: $<Label>('#WarningLabel'),
+		updateButton: $<Button>('#UpdateButton'),
+		maxPlayers: $<TextEntry>('#MaxPlayers')
 	};
 
-	static lobbyMaxPlayers = 250;
+	lobbyMaxPlayers = 250;
 
-	static onLoad() {
+	onPanelLoad() {
 		if (this.panels.cp.GetAttributeInt('islobbyowner', 0)) {
 			this.panels.warningRow.visible = true;
 			this.panels.cp.SetDialogVariable('warning', '#Lobby_Create_TransferWarning');
@@ -28,13 +27,13 @@ class LobbyCreate {
 		this.onChanged();
 	}
 
-	static onChanged() {
+	onChanged() {
 		UiToolkitAPI.HideTextTooltip();
 
 		if (this.getMaxPlayersEntered() > this.lobbyMaxPlayers) {
 			UiToolkitAPI.ShowTextTooltip(
 				'MaxPlayers',
-				$.Localize('Lobby_MaxPlayers_Warning').replace('%max%', this.lobbyMaxPlayers)
+				$.Localize('Lobby_MaxPlayers_Warning').replace('%max%', this.lobbyMaxPlayers.toString())
 			);
 			this.panels.updateButton.enabled = false;
 		} else {
@@ -45,21 +44,21 @@ class LobbyCreate {
 		}
 	}
 
-	static create() {
-		let type;
+	create() {
+		let type: LobbyType;
 		if (this.isChecked('LobbyCreatePrivateButton')) {
-			type = 0;
+			type = LobbyType.PRIVATE;
 		} else if (this.isChecked('LobbyCreateFriendsOnlyButton')) {
-			type = 1;
+			type = LobbyType.FRIENDS;
 		} else if (this.isChecked('LobbyCreatePublicButton')) {
-			type = 2;
+			type = LobbyType.PUBLIC;
 		}
 
 		if (this.panels.cp.GetAttributeInt('isinlobby', -1)) {
 			SteamLobbyAPI.Leave();
 		}
 
-		SteamLobbyAPI.Create(type);
+		SteamLobbyAPI.Create(+type as 0 | 1 | 2);
 
 		// The order of this is currently wrong, it should go leave -> set max players -> create. but for some reason
 		// the new lobby data then has the wrong max players (from the previous lobby).
@@ -72,15 +71,15 @@ class LobbyCreate {
 		});
 	}
 
-	static cancel() {
+	cancel() {
 		UiToolkitAPI.CloseAllVisiblePopups();
 	}
 
-	static getMaxPlayersEntered() {
-		return Number.parseInt(this.panels.maxPlayers.text);
+	getMaxPlayersEntered() {
+		return +this.panels.maxPlayers.text;
 	}
 
-	static isChecked(button) {
-		return this.panels.cp.FindChildTraverse(button).checked;
+	isChecked(buttonID: string) {
+		return this.panels.cp.FindChildTraverse<Button>(buttonID).checked;
 	}
 }

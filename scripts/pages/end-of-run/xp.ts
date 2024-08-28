@@ -1,32 +1,42 @@
-const BASE_LEVELUP_TIME = 3;
-const LEVEL_INDICATOR_MAX_TRANSITION_TIME = 0.7;
-const XP_COUNTER_TICKS = 100;
+import { PanelHandler, OnPanelLoad } from 'util/module-helpers';
 
-class EndOfRunXP {
-	static xpData;
-	static primaryWidth;
-	static panels = {
+@PanelHandler()
+class EndOfRunXPHandler implements OnPanelLoad {
+	xpData: ReturnType<typeof this.getXPData>;
+	primaryWidth: number;
+
+	readonly baseLevelUpTime = 3;
+	readonly levelIndicatorMaxTransitionTime = 0.7;
+	readonly xpCounterTicks = 100;
+
+	readonly panels = {
 		cp: $.GetContextPanel(),
-		levelIndicator: $('#LevelIndicator'),
-		levelBar: $('#LevelBar'),
-		primaryBar: $('#PrimaryBar'),
-		secondaryBar: $('#SecondaryBar'),
+		levelIndicator: $<LevelIndicator>('#LevelIndicator'),
+		levelBar: $<Panel>('#LevelBar'),
+		primaryBar: $<Panel>('#PrimaryBar'),
+		secondaryBar: $<Panel>('#SecondaryBar'),
 		xpInfoBar: $('#XPInfoBar'),
-		xpCounter: $('#XPCounter'),
-		newStats: { newXP: $('#NewXP') }
+		xpCounter: $<Panel>('#XPCounter'),
+		newStats: { newXP: $<Panel>('#NewXP') }
 	};
 
-	static {
-		$.RegisterForUnhandledEvent('EndOfRun_Show', this.initialize.bind(this));
-		$.RegisterForUnhandledEvent('EndOfRun_Result_RunUpload', this.onRunDataReceived.bind(this));
+	constructor() {
+		$.RegisterForUnhandledEvent('EndOfRun_Show', () => this.initialize());
+		$.RegisterForUnhandledEvent('EndOfRun_Result_RunUpload', (uploaded, cosXP, rankXP, lvlGain) =>
+			this.onRunDataReceived(uploaded, cosXP, rankXP, lvlGain)
+		);
 	}
 
-	static initialize() {
-		for (const panel of Object.values(this.panels.newStats)) panel.AddClass('endofrun-xp__new-stat--hidden');
+	onPanelLoad() {
+		this.initialize();
+	}
+
+	initialize() {
+		Object.values(this.panels.newStats).forEach((panel) => panel.AddClass('endofrun-xp__new-stat--hidden'));
 
 		this.xpData = this.getXPData();
 
-		this.panels.levelIndicator.jsClass.setLevel(this.xpData.level);
+		this.panels.levelIndicator.handler.setLevel(this.xpData.level);
 
 		this.primaryWidth =
 			((this.xpData.xp - this.xpData.currLevelXP) / (this.xpData.nextLevelXP - this.xpData.currLevelXP)) * 100;
@@ -36,10 +46,10 @@ class EndOfRunXP {
 		this.panels.cp.AddClass('endofrun-xp--hidden');
 	}
 
-	static onRunDataReceived(uploaded, cosXp, _rankXp, lvlGain) {
-		const setTimingFunction = (str) => (this.panels.secondaryBar.style.transitionTimingFunction = str);
+	onRunDataReceived(uploaded: boolean, cosXp: number, _rankXp: number, lvlGain: number) {
+		const setTimingFunction = (str: string) => (this.panels.secondaryBar.style.transitionTimingFunction = str);
 
-		const widthAnimation = (width, duration) =>
+		const widthAnimation = (width: number, duration: number): Promise<void> =>
 			new Promise((resolve) => {
 				this.panels.secondaryBar.style.transitionDuration = `${duration}s`;
 				this.panels.secondaryBar.style.width = `${width}%`;
@@ -50,29 +60,29 @@ class EndOfRunXP {
 				});
 			});
 
-		const levelUp = (duration) => {
+		const levelUp = (duration: number) => {
 			this.panels.primaryBar.style.width = '0%';
 			this.panels.secondaryBar.style.width = '0%';
-			this.panels.levelIndicator.jsClass.incrementLevel(duration);
+			this.panels.levelIndicator.handler.incrementLevel(duration);
 		};
 
-		const endLevelUpAnimation = (isLevelUp) => {
+		const endLevelUpAnimation = (isLevelUp: boolean): Promise<void> => {
 			const lerp =
 				(newXP.xp - (isLevelUp ? newXP.currLevelXP : oldXP.xp)) / (newXP.nextLevelXP - newXP.currLevelXP);
-			const duration = BASE_LEVELUP_TIME;
+			const duration = this.baseLevelUpTime;
 
 			setTimingFunction('ease-out');
 			return widthAnimation(lerp * 100, duration);
 		};
 
-		const runXPCounter = (startXP, endXP, totalLevelXP, duration) => {
-			const iterations = duration * XP_COUNTER_TICKS;
+		const runXPCounter = (startXP: number, endXP: number, totalLevelXP: number, duration: number) => {
+			const iterations = duration * this.xpCounterTicks;
 			const range = endXP - startXP;
 			this.panels.xpCounter.SetDialogVariableInt('total_xp', totalLevelXP);
 
 			for (let i = 0; i <= iterations; i++) {
 				// Could use a dialog variable here, but I'm guessing setting the text directly is faster?
-				$.Schedule(i / XP_COUNTER_TICKS, () =>
+				$.Schedule(i / this.xpCounterTicks, () =>
 					this.panels.xpCounter.SetDialogVariableInt(
 						'xp_counter',
 						Math.round((i / iterations) * range + startXP)
@@ -102,38 +112,38 @@ class EndOfRunXP {
 		this.panels.cp.SetDialogVariableInt('new_xp', newXP.xp - oldXP.xp);
 
 		if (levelDiff === 0) {
-			runXPCounter(oldXP.xp, newXP.xp, newXP.nextLevelXP, BASE_LEVELUP_TIME);
-			endLevelUpAnimation(false);
+			runXPCounter(oldXP.xp, newXP.xp, newXP.nextLevelXP, this.baseLevelUpTime);
+			void endLevelUpAnimation(false);
 		} else {
 			setTimingFunction('ease-in');
 
 			const lerp = (oldXP.xp - oldXP.currLevelXP) / (oldXP.nextLevelXP - oldXP.currLevelXP);
-			const initialDuration = (1 - lerp) * BASE_LEVELUP_TIME;
+			const initialDuration = (1 - lerp) * this.baseLevelUpTime;
 
 			runXPCounter(oldXP.xp, oldXP.nextLevelXP, oldXP.nextLevelXP, initialDuration);
 
 			if (levelDiff === 1) {
 				widthAnimation(100 - this.primaryWidth, lerp * initialDuration).then(() => {
-					levelUp(LEVEL_INDICATOR_MAX_TRANSITION_TIME);
-					runXPCounter(newXP.currLevelXP, newXP.xp, newXP.nextLevelXP, BASE_LEVELUP_TIME);
-					endLevelUpAnimation(true);
+					levelUp(this.levelIndicatorMaxTransitionTime);
+					runXPCounter(newXP.currLevelXP, newXP.xp, newXP.nextLevelXP, this.baseLevelUpTime);
+					return endLevelUpAnimation(true);
 				});
 			} else {
-				let chain = widthAnimation(100 - this.primaryWidth, initialDuration).then(() =>
+				let chain: Promise<any> = widthAnimation(100 - this.primaryWidth, initialDuration).then(() =>
 					setTimingFunction('ease-in-out')
 				);
 				for (let i = 1; i < levelDiff; i++)
 					chain = chain.then(() => {
-						// Smallest fraction of BASE_LEVELUP_TIME a level up duration can be
+						// Smallest fraction of this.baseLevelUpTime a level up duration can be
 						const phi = 5;
-						// Quadratic passing 0 and leveldiff at BASE_LEVELUP_TIME, phi adjusts curviness
+						// Quadratic passing 0 and leveldiff at this.baseLevelUpTime, phi adjusts curviness
 						// Doesn't work great but hard to get right without a bunch more maths or being able to time all the levels in one
 						// animation, maybe that's possible with some very creative CSS?
 						const duration =
-							((4 * BASE_LEVELUP_TIME) / levelDiff ** 2) * (1 - 1 / phi) * (i ** 2 - levelDiff * i) +
-							BASE_LEVELUP_TIME;
+							((4 * this.baseLevelUpTime) / levelDiff ** 2) * (1 - 1 / phi) * (i ** 2 - levelDiff * i) +
+							this.baseLevelUpTime;
 
-						levelUp(Math.min(duration / 2, LEVEL_INDICATOR_MAX_TRANSITION_TIME));
+						levelUp(Math.min(duration / 2, this.levelIndicatorMaxTransitionTime));
 
 						const endXP = MomentumAPI.GetCosmeticXpForLevel(oldXP.level + i + 1);
 
@@ -141,16 +151,16 @@ class EndOfRunXP {
 
 						return widthAnimation(100, duration);
 					});
-				chain.then(() => {
-					levelUp(LEVEL_INDICATOR_MAX_TRANSITION_TIME);
-					runXPCounter(newXP.currLevelXP, newXP.xp, newXP.nextLevelXP, BASE_LEVELUP_TIME);
-					endLevelUpAnimation(true);
+				void chain.then(() => {
+					levelUp(this.levelIndicatorMaxTransitionTime);
+					runXPCounter(newXP.currLevelXP, newXP.xp, newXP.nextLevelXP, this.baseLevelUpTime);
+					return endLevelUpAnimation(true);
 				});
 			}
 		}
 	}
 
-	static getXPData() {
+	getXPData() {
 		const level = MomentumAPI.GetPlayerLevel();
 		return {
 			level: level,

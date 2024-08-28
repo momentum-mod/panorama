@@ -1,5 +1,9 @@
-class HudSpectate {
-	static panels = {
+import { PanelHandler } from 'util/module-helpers';
+import { RunEntityType } from 'common/timer';
+
+@PanelHandler()
+class HudSpectateHandler {
+	readonly panels = {
 		indicatorSpectating: $('#IndicatorSpectating'),
 		indicatorWatchingReplay: $('#IndicatorWatchingReplay'),
 		//targetName: $('#TargetName'),
@@ -9,21 +13,23 @@ class HudSpectate {
 		toggleReplayControls: $('#ToggleReplayControls')
 	};
 
-	static onSpectatorChanged(type) {
-		if (type >= RunEntType.GHOST) {
-			const bReplay = type === RunEntType.REPLAY;
-
-			// TODO: this needs to be done more dynamically, you can switch off replay to real players and back
-			//this.panels.prevPlayer.visible = !bReplay;
-			//this.panels.nextPlayer.visible = !bReplay;
-			this.panels.indicatorSpectating.visible = !bReplay;
-
-			this.panels.toggleReplayControls.visible = bReplay;
-			this.panels.indicatorWatchingReplay.visible = bReplay;
-		}
+	constructor() {
+		$.RegisterForUnhandledEvent('MomentumSpectatorTargetChanged', (type: RunEntityType) =>
+			this.onSpectatorChanged(type)
+		);
 	}
 
-	static {
-		$.RegisterForUnhandledEvent('MomentumSpectatorTargetChanged', this.onSpectatorChanged.bind(this));
+	onSpectatorChanged(type: RunEntityType) {
+		if (type !== RunEntityType.PLAYER) {
+			const isReplay = type === RunEntityType.REPLAY;
+
+			// TODO: this needs to be done more dynamically, you can switch off replay to real players and back
+			//this.panels.prevPlayer.visible = !isReplay;
+			//this.panels.nextPlayer.visible = !isReplay;
+			this.panels.indicatorSpectating.visible = !isReplay;
+
+			this.panels.toggleReplayControls.visible = isReplay;
+			this.panels.indicatorWatchingReplay.visible = isReplay;
+		}
 	}
 }

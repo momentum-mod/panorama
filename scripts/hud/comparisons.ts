@@ -1,22 +1,27 @@
-const MAX_ACTIVE_SPLITS = 12;
-const NEW_SPLIT_TRANSITION_DURATION = 2;
+import { PanelHandler } from 'util/module-helpers';
+import { TimerEvent_OLD, TimerState_OLD } from 'common/timer';
+import { Comparison_OLD, RunStats_OLD, Split_OLD } from 'common/timer';
 
-class HudComparisons {
-	static runFinished = false;
-	static currentZone = 0;
-	static runStatsZoneIndex = 0;
+@PanelHandler()
+class HudComparisonsHandler {
+	runFinished = false;
+	currentZone = 0;
+	runStatsZoneIndex = 0;
 
-	static panels = {
-		splits: $('#Splits')
+	readonly maxActiveSplits = 12;
+	readonly newSplitTransitionDuration = 2;
+
+	readonly panels = {
+		splits: $<Panel>('#Splits')
 		// compare: $('#Compare')
 	};
 
-	static {
-		$.RegisterEventHandler('HudCompare_Update', $.GetContextPanel(), this.updateComparisons.bind(this));
-		$.RegisterForUnhandledEvent('OnMomentumTimerStateChange', this.onTimerEvent.bind(this));
+	constructor() {
+		$.RegisterEventHandler('HudCompare_Update', $.GetContextPanel(), () => this.updateComparisons());
+		$.RegisterForUnhandledEvent('OnMomentumTimerStateChange', (arg, arg2) => this.onTimerEvent(arg, arg2));
 	}
 
-	static clearComparisons() {
+	clearComparisons() {
 		// this.panels.compare.RemoveAndDeleteChildren();
 		this.panels.splits.RemoveAndDeleteChildren();
 		this.runFinished = false;
@@ -24,15 +29,15 @@ class HudComparisons {
 		this.runStatsZoneIndex = 0;
 	}
 
-	static onTimerEvent(_ent, eventType) {
-		if (eventType === TimerEvent.STARTED) {
+	onTimerEvent(_ent: any, eventType: any) {
+		if (eventType === TimerEvent_OLD.STARTED) {
 			this.clearComparisons();
 		}
 	}
 
-	static updateComparisons() {
-		const currentData = $.GetContextPanel().currentRunData;
-		const currentStats = $.GetContextPanel().currentRunStats;
+	updateComparisons() {
+		const currentData = $.GetContextPanel<HudComparisons>().currentRunData;
+		const currentStats = $.GetContextPanel<HudComparisons>().currentRunStats;
 		const comparisonRun = RunComparisonsAPI.GetLoadedComparison();
 
 		const hasCompare = !!comparisonRun.compareRun;
@@ -42,7 +47,7 @@ class HudComparisons {
 			!currentData.isInZone ||
 			!currentStats ||
 			currentData.currentZone === 1 ||
-			currentData.timerState === TimerState.PRACTICE
+			currentData.timerState === TimerState_OLD.PRACTICE
 		) {
 			return;
 		}
@@ -51,7 +56,7 @@ class HudComparisons {
 		// so we don't fire on stage we've already hit.
 		// this.runStatsZoneIndex tracks the correct index into the runStats array
 
-		if (currentData.timerState === TimerState.NOTRUNNING) {
+		if (currentData.timerState === TimerState_OLD.NOT_RUNNING) {
 			// The only time we care about comparisons when timer is not running is if you just
 			// hit the end zone *for the first time*
 			if (!this.runFinished && currentData.currentZone === 0) {
@@ -76,20 +81,20 @@ class HudComparisons {
 		}
 
 		const splitPanels = this.panels.splits.Children().reverse();
-		if (splitPanels.length > MAX_ACTIVE_SPLITS) {
-			for (const panel of splitPanels.filter((_, i) => splitPanels.length - i > MAX_ACTIVE_SPLITS))
+		if (splitPanels.length > this.maxActiveSplits) {
+			for (const panel of splitPanels.filter((_, i) => splitPanels.length - i > this.maxActiveSplits))
 				panel.RemoveAndDeleteChildren();
 		}
 
 		const data = hasCompare
-			? Comparison.generateSplits(
-					new RunStats(currentStats, currentData.tickRate),
-					new RunStats(comparisonRun.compareRun.stats, currentData.tickRate),
-					this.runStatsZoneIndex + 1
-			  )[this.runStatsZoneIndex]
-			: new RunStats(currentStats, currentData.tickRate, this.runStatsZoneIndex + 1).zones[
+			? Comparison_OLD.generateSplits(
+					new RunStats_OLD(currentStats, currentData.tickRate),
+					new RunStats_OLD(comparisonRun.compareRun.stats, currentData.tickRate)
+					// this.runStatsZoneIndex + 1 TODO: this was being passed to generateSplits, but that only takes two args. What was this for?
+				)[this.runStatsZoneIndex]
+			: new RunStats_OLD(currentStats, currentData.tickRate, this.runStatsZoneIndex + 1).zones[
 					this.runStatsZoneIndex
-			  ];
+				];
 
 		const wrapper = $.CreatePanel('Panel', this.panels.splits, `Split${data.name}`, {
 			class: 'hud-comparisons__split'
@@ -125,14 +130,14 @@ class HudComparisons {
 						name: data.name,
 						time: data.accumulateTime,
 						isFirst: false,
-						diff: data.diff,
-						delta: data.delta
-				  }
+						diff: (data as Split_OLD).diff,
+						delta: (data as Split_OLD).delta
+					}
 				: {
 						name: data.name,
 						time: data.accumulateTime,
 						isFirst: true
-				  }
+					}
 		);
 	}
 }
