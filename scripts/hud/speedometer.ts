@@ -1,8 +1,11 @@
+import { PanelHandler } from 'util/module-helpers';
+import { tupleToRgbaString } from 'util/colors';
+import { SpeedometerColorType, SpeedometerType } from 'common/speedometer';
+import { TimerState_OLD } from 'common/timer';
+
 // arbitrary value to determine how much speed needs to change to be considered an increase/decrease
 // adjusted by speedometer update delta time
 const COLORIZE_DEADZONE = 2;
-
-const RANGE_LIST_KEY = 'range_colors';
 
 const HIDDEN_CLASS = 'speedometer--hidden';
 const INCREASE_CLASS = 'speedometer--increase';
@@ -15,37 +18,41 @@ const AXIS_COMPLABEL_CLASS = 'speedometer__axis__comparison';
 const EVENT_LABEL_CLASS = 'speedometer__event';
 const EVENT_COMPLABEL_CLASS = 'speedometer__event__comparison';
 
-class RangeObject {
-	constructor(min, max, color) {
-		this.min = min;
-		this.max = max;
-		this.color = color;
-	}
+interface Range {
+	min: number;
+	max: number;
+	color: rgbaColor;
 }
-class SpeedometerObject {
-	constructor(type, speedometerPanel, settings) {
-		/** @type {number} */
+
+type RuntimeSettings = SpeedometerSettingsAPI.Settings & { range_colors?: Range[] };
+
+class Speedometer {
+	type: SpeedometerType;
+	speedometerPanel: Panel;
+	speedometerLabel: Label;
+	comparisonLabel: Label;
+	settings: RuntimeSettings;
+	prevVal: number;
+	fadeoutEventHandle: number;
+
+	constructor(type: SpeedometerType, speedometerPanel: Panel, settings: SpeedometerSettingsAPI.Settings) {
 		this.type = type;
-		/** @type {Panel} */
 		this.speedometerPanel = speedometerPanel;
-		/** @type {Label} */
 		this.speedometerLabel = speedometerPanel.FindChildInLayoutFile('SpeedometerLabel');
-		/** @type {Label} */
 		this.comparisonLabel = speedometerPanel.FindChildInLayoutFile('SpeedometerComparisonLabel');
 		this.settings = settings;
-		/** @type {number} */
 		this.prevVal = 0;
 
 		this.speedometerLabel.AddClass(
-			this.type === SpeedometerTypes.OVERALL_VELOCITY ? AXIS_LABEL_CLASS : EVENT_LABEL_CLASS
+			this.type === SpeedometerType.OVERALL_VELOCITY ? AXIS_LABEL_CLASS : EVENT_LABEL_CLASS
 		);
 		this.comparisonLabel.AddClass(
-			this.type === SpeedometerTypes.OVERALL_VELOCITY ? AXIS_COMPLABEL_CLASS : EVENT_COMPLABEL_CLASS
+			this.type === SpeedometerType.OVERALL_VELOCITY ? AXIS_COMPLABEL_CLASS : EVENT_COMPLABEL_CLASS
 		);
 
 		this.comparisonLabel.SetHasClass(
 			HIDDEN_CLASS,
-			this.settings[SpeedometerDataKeys.COLOR_TYPE] !== SpeedometerColorTypes.COMPARISON_SEP
+			this.settings.color_type !== SpeedometerColorType.COMPARISON_SEP
 		);
 
 		// remove status classes
@@ -58,17 +65,43 @@ class SpeedometerObject {
 	}
 }
 
-/** @type {Map<number,Array<SpeedometerObject>>} */
-let SpeedometerMap = new Map();
+@PanelHandler()
+class SpeedometerHandler {
+	container = $<Panel>('#SpeedometersContainer');
+	lastZone = 0;
+	correctedColorizeDeadzone = 0;
 
-class Speedometer {
-	/** @static @type {Panel} */
-	static container = $('#SpeedometersContainer');
-	static lastZone = 0;
-	static correctedColorizeDeadzone = 0;
+	speedometers: Map<SpeedometerType, Array<Speedometer>> = new Map();
 
-	static registerFadeoutEventHandlers() {
-		for (const [type, speedometers] of SpeedometerMap) {
+	constructor() {
+		$.RegisterEventHandler('OnExplosiveHitSpeedUpdate', this.container, (velocity: vec3) =>
+			this.updateSpeedometersOfType(SpeedometerType.EXPLOSION_VELOCITY, velocity)
+		);
+		$.RegisterEventHandler('OnJumpSpeedUpdate', this.container, (speed: float) =>
+			this.updateSpeedometersOfType(SpeedometerType.JUMP_VELOCITY, speed)
+		);
+		$.RegisterEventHandler('OnRampBoardSpeedUpdate', this.container, (velocity: vec3) =>
+			this.updateSpeedometersOfType(SpeedometerType.RAMP_VELOCITY, velocity)
+		);
+		$.RegisterEventHandler('OnRampLeaveSpeedUpdate', this.container, (velocity: vec3) =>
+			this.updateSpeedometersOfType(SpeedometerType.RAMP_VELOCITY, velocity)
+		);
+		$.RegisterEventHandler('OnSpeedometerUpdate', this.container, (deltaTime: float) =>
+			this.onSpeedometerUpdate(deltaTime)
+		);
+		$.RegisterForUnhandledEvent('OnMomentumZoneChange', (enter, linear, curZone, curTrack, timerState) =>
+			this.onZoneChange(enter, linear, curZone, curTrack, timerState)
+		);
+
+		// color profiles load before speedo settings, so listening to just the speedo settings load event should be enough
+		$.RegisterForUnhandledEvent('OnSpeedometerSettingsLoaded', (succ: boolean) => this.onSettingsUpdate(succ));
+		// do want to register when color profiles are saved though as that can happen independently
+		$.RegisterForUnhandledEvent('OnSpeedometerSettingsSaved', (succ: boolean) => this.onSettingsUpdate(succ));
+		$.RegisterForUnhandledEvent('OnRangeColorProfilesSaved', (succ: boolean) => this.onSettingsUpdate(succ));
+	}
+
+	registerFadeoutEventHandlers() {
+		for (const [type, speedometers] of this.speedometers) {
 			if (!this.canSpeedometerTypeFadeOut(type)) continue;
 
 			for (const speedometer of speedometers) {
@@ -85,8 +118,9 @@ class Speedometer {
 			}
 		}
 	}
-	static unregisterFadeoutEventHandlers() {
-		for (const [type, speedometers] of SpeedometerMap) {
+
+	unregisterFadeoutEventHandlers() {
+		for (const [type, speedometers] of this.speedometers) {
 			if (!this.canSpeedometerTypeFadeOut(type)) continue;
 
 			for (const speedometer of speedometers) {
@@ -101,26 +135,14 @@ class Speedometer {
 		}
 	}
 
-	static onSpeedometerUpdate(deltaTime) {
+	onSpeedometerUpdate(deltaTime: float) {
 		const velocity = MomentumPlayerAPI.GetVelocity();
 
 		this.correctedColorizeDeadzone = deltaTime * COLORIZE_DEADZONE;
-		this.updateSpeedometersOfType(SpeedometerTypes.OVERALL_VELOCITY, velocity);
-	}
-	static onExplosiveHitSpeedUpdate(hitVelocity) {
-		this.updateSpeedometersOfType(SpeedometerTypes.EXPLOSION_VELOCITY, hitVelocity);
-	}
-	static onJumpSpeedUpdate(jumpVelocity) {
-		this.updateSpeedometersOfType(SpeedometerTypes.JUMP_VELOCITY, jumpVelocity);
-	}
-	static onRampBoardSpeedUpdate(rampBoardVelocity) {
-		this.updateSpeedometersOfType(SpeedometerTypes.RAMP_VELOCITY, rampBoardVelocity);
-	}
-	static onRampLeaveSpeedUpdate(rampLeaveVelocity) {
-		this.updateSpeedometersOfType(SpeedometerTypes.RAMP_VELOCITY, rampLeaveVelocity);
+		this.updateSpeedometersOfType(SpeedometerType.OVERALL_VELOCITY, velocity);
 	}
 
-	static onZoneChange(enter, linear, curZone, _curTrack, timerState) {
+	onZoneChange(enter: boolean, linear: boolean, curZone: int32, _curTrack: int32, timerState: TimerState_OLD) {
 		const startZone = curZone === 1;
 		if (enter && startZone) {
 			this.lastZone = 0;
@@ -155,55 +177,59 @@ class Speedometer {
 		}
 	}
 
-	static resetSpeedometerFadeouts() {
-		for (const [type, speedometers] of SpeedometerMap) {
+	resetSpeedometerFadeouts() {
+		for (const [type, speedometers] of this.speedometers) {
 			if (!this.canSpeedometerTypeFadeOut(type)) continue;
 
 			for (const speedometer of speedometers) this.resetSpeedometerFadeout(speedometer);
 		}
 	}
-	static resetSpeedometerFadeout(speedometer) {
+
+	resetSpeedometerFadeout(speedometer: Speedometer) {
 		// forcibly fade out immediately
 		speedometer.speedometerPanel.RemoveClass(FADEOUT_START_CLASS);
 		speedometer.speedometerPanel.TriggerClass(FADEOUT_CLASS);
 		speedometer.prevVal = 0;
 	}
 
-	static getSpeedFromVelocity(velocity, settings) {
-		let numAxes = 0;
-		const enabledAxes = settings[SpeedometerDataKeys.ENABLED_AXES];
-		for (const enabledAxis of enabledAxes) {
-			if (enabledAxis) numAxes++;
-		}
+	getSpeedFromVelocity({ x, y, z }: vec3, settings: SpeedometerSettingsAPI.Settings): float {
+		const [xEnabled, yEnabled, zEnabled] = settings.enabled_axes;
+		// @ts-expect-error - fastest way to do this, using type coercion (false = 0, true = 1)
+		const numAxes = xEnabled + yEnabled + zEnabled;
 
 		if (numAxes > 1) {
 			let squaredParts = 0;
-			if (enabledAxes[0]) squaredParts += Math.pow(velocity.x, 2);
-			if (enabledAxes[1]) squaredParts += Math.pow(velocity.y, 2);
-			if (enabledAxes[2]) squaredParts += Math.pow(velocity.z, 2);
+			if (xEnabled) squaredParts += x ** 2;
+			if (yEnabled) squaredParts += y ** 2;
+			if (zEnabled) squaredParts += z ** 2;
 			return Math.sqrt(squaredParts);
 		} else if (numAxes === 1) {
-			if (enabledAxes[0]) return Math.abs(velocity.x);
-			else if (enabledAxes[1]) return Math.abs(velocity.y);
-			else if (enabledAxes[2]) return Math.abs(velocity.z);
+			if (xEnabled) return Math.abs(x);
+			if (yEnabled) return Math.abs(y);
+			if (zEnabled) return Math.abs(z);
 		} else {
 			$.Warning('Speedometer with no enabled axes found');
 			return 0;
 		}
 	}
 
-	static updateZoneSpeedometers(absSpeed, horizSpeed, hasComparison = true, absCustomdiff, horizCustomdiff) {
-		/** @type {Array<SpeedometerObject>} */
-		const speedometers = SpeedometerMap.get(SpeedometerTypes.ZONE_VELOCITY);
+	updateZoneSpeedometers(
+		absSpeed: float,
+		horizSpeed: float,
+		hasComparison = true,
+		absCustomdiff?: number,
+		horizCustomdiff?: number
+	) {
+		const speedometers = this.speedometers.get(SpeedometerType.ZONE_VELOCITY);
 		if (!speedometers) return;
 
 		for (const speedometer of speedometers) {
 			// HACK: current runstats system only has abs and horiz speed, not the velocity vector
-			const enabledAxes = speedometer.settings[SpeedometerDataKeys.ENABLED_AXES];
+			const enabledAxes = speedometer.settings.enabled_axes;
 			const isHoriz = enabledAxes[0] && enabledAxes[1] && !enabledAxes[2];
 
 			this.updateSpeedometer(
-				SpeedometerTypes.ZONE_VELOCITY,
+				SpeedometerType.ZONE_VELOCITY,
 				speedometer,
 				isHoriz ? horizSpeed : absSpeed,
 				hasComparison,
@@ -212,34 +238,39 @@ class Speedometer {
 		}
 	}
 
-	static updateSpeedometersOfType(type, velocity) {
-		/** @type {Array<SpeedometerObject>} */
-		const speedometers = SpeedometerMap.get(type);
+	updateSpeedometersOfType(type: SpeedometerType, velocity: vec3 | number) {
+		const speedometers = this.speedometers.get(type);
 		if (!speedometers) return;
 
 		for (const speedometer of speedometers) {
 			// HACK: last jump speedometer type don't have full velocity vector, and so the velocity they pass in is actually speed
 			// Refactor runstats to fix
 			const speed =
-				type === SpeedometerTypes.JUMP_VELOCITY
-					? velocity
-					: this.getSpeedFromVelocity(velocity, speedometer.settings);
+				type === SpeedometerType.JUMP_VELOCITY
+					? (velocity as number)
+					: this.getSpeedFromVelocity(velocity as vec3, speedometer.settings);
 
 			this.updateSpeedometer(type, speedometer, speed);
 		}
 	}
 
-	static updateSpeedometer(type, speedometer, speed, hasComparison = true, customdiff) {
-		const colorType = speedometer.settings[SpeedometerDataKeys.COLOR_TYPE];
+	updateSpeedometer(
+		type: SpeedometerType,
+		speedometer: Speedometer,
+		speed: float,
+		hasComparison = true,
+		customdiff?: number
+	) {
+		const colorType = speedometer.settings.color_type;
 
-		const separateComparison = colorType === SpeedometerColorTypes.COMPARISON_SEP;
-		const speedometerHasComparison = colorType === SpeedometerColorTypes.COMPARISON || separateComparison;
+		const separateComparison = colorType === SpeedometerColorType.COMPARISON_SEP;
+		const speedometerHasComparison = colorType === SpeedometerColorType.COMPARISON || separateComparison;
 
 		if (hasComparison && speedometerHasComparison) {
 			const diff = customdiff ?? speed - speedometer.prevVal;
 
 			const labelToColor = separateComparison ? speedometer.comparisonLabel : speedometer.speedometerLabel;
-			let diffSymbol;
+			let diffSymbol: string;
 			if (diff - this.correctedColorizeDeadzone > 0) {
 				labelToColor.AddClass(INCREASE_CLASS);
 				labelToColor.RemoveClass(DECREASE_CLASS);
@@ -265,15 +296,13 @@ class Speedometer {
 			speedometer.speedometerLabel.RemoveClass(INCREASE_CLASS);
 			speedometer.speedometerLabel.RemoveClass(DECREASE_CLASS);
 
-			/** @type {Array<RangeObject>} */
-			const rangeList = speedometer.settings[RANGE_LIST_KEY];
-			if (colorType === SpeedometerColorTypes.RANGE && rangeList) {
+			const rangeList = speedometer.settings.range_colors;
+			if (colorType === SpeedometerColorType.RANGE && rangeList) {
 				let found = false;
 				for (const range of rangeList) {
 					if (speed >= range.min && speed <= range.max) {
 						speedometer.speedometerLabel.style.color = range.color;
 						found = true;
-						continue;
 					}
 				}
 				// backup to white
@@ -290,78 +319,66 @@ class Speedometer {
 	}
 
 	// Overall velocity speedometers shouldn't fade out as they constantly update
-	static canSpeedometerTypeFadeOut(type) {
-		return type !== SpeedometerTypes.OVERALL_VELOCITY;
+	canSpeedometerTypeFadeOut(type: SpeedometerType): boolean {
+		return type !== SpeedometerType.OVERALL_VELOCITY;
 	}
 
-	static appendRangeColorProfileInfo(speedoData, colorProfData) {
-		if (speedoData[SpeedometerDataKeys.COLOR_TYPE] !== SpeedometerColorTypes.RANGE) return;
+	appendRangeColorProfileInfo(
+		speedoData: RuntimeSettings,
+		colorProfData: SpeedometerSettingsAPI.ColorProfile[]
+	): Range {
+		if (speedoData.color_type !== SpeedometerColorType.RANGE) return;
 
-		const colorProf = speedoData[SpeedometerDataKeys.RANGE_COL_PROF];
+		const colorProf = speedoData.range_color_profile;
 		if (!colorProf) return;
 
-		const foundProfile = colorProfData.find((profile) => colorProf === profile[RangeColorProfileKeys.PROFILE_NAME]);
+		const foundProfile = colorProfData.find((profile) => colorProf === profile.profile_name);
 		if (!foundProfile) return;
 
-		const rangesKV = foundProfile[RangeColorProfileKeys.PROFILE_RANGE_DATA];
-		if (!rangesKV) return;
+		const ranges = foundProfile.profile_ranges;
+		if (!ranges) return;
 
-		speedoData[RANGE_LIST_KEY] = rangesKV.filter(Boolean).map((rangeKV) => {
-			const [r, g, b, a] = rangeKV['color'];
-			return new RangeObject(rangeKV['min'], rangeKV['max'], `rgba(${r}, ${g}, ${b}, ${a / 255})`);
-		});
+		speedoData.range_colors = ranges.map((range) => ({
+			min: range.min,
+			max: range.max,
+			color: tupleToRgbaString(range.color)
+		}));
 	}
 
-	static onSettingsUpdate(success) {
+	onSettingsUpdate(success: boolean) {
 		if (!success) {
 			$.Warning('Failed to load speedometer settings from speedometer!');
 			return;
 		}
 
-		const data = SpeedometerSettingsAPI.GetCurrentGamemodeSettings();
-		if (!data) return;
+		const settings = SpeedometerSettingsAPI.GetCurrentGamemodeSettings();
+		if (!settings) return;
 
-		const colorProfData = SpeedometerSettingsAPI.GetColorProfiles();
-		if (!colorProfData) return;
+		const colorProfiles = SpeedometerSettingsAPI.GetColorProfiles();
+		if (!colorProfiles) return;
 
 		this.unregisterFadeoutEventHandlers();
 		this.container.RemoveAndDeleteChildren();
 
-		SpeedometerMap = new Map();
-		for (const speedoData of data) {
-			const speedoType = speedoData[SpeedometerDataKeys.TYPE];
-			if (speedoType === undefined || speedoType === null) continue;
+		this.speedometers = new Map();
+		for (const speedo of settings) {
+			const speedoType = speedo.type;
+			if (speedoType == null) continue;
 
-			this.appendRangeColorProfileInfo(speedoData, colorProfData);
+			this.appendRangeColorProfileInfo(speedo, colorProfiles);
 
-			/** @type {Label} */
-			const newSpeedometerPanel = $.CreatePanel('Panel', this.container, '');
-			newSpeedometerPanel.LoadLayoutSnippet('speedometer-entry');
+			const newPanel = $.CreatePanel('Panel', this.container, '');
+			newPanel.LoadLayoutSnippet('speedometer-entry');
 
-			const speedometerContainer = newSpeedometerPanel.FindChildInLayoutFile('SpeedometerContainer');
+			const speedometerContainer = newPanel.FindChildInLayoutFile<Panel>('SpeedometerContainer');
 
-			const speedoObject = new SpeedometerObject(speedoType, speedometerContainer, speedoData);
+			const speedoObject = new Speedometer(speedoType, speedometerContainer, speedo);
 
-			const speedometersArray = SpeedometerMap.get(speedoType) ?? [];
+			const speedometersArray = this.speedometers.get(speedoType) ?? [];
 			speedometersArray.push(speedoObject);
-			SpeedometerMap.set(speedoType, speedometersArray);
+			this.speedometers.set(speedoType, speedometersArray);
 		}
 
 		this.registerFadeoutEventHandlers();
-	}
-
-	static {
-		$.RegisterEventHandler('OnExplosiveHitSpeedUpdate', this.container, this.onExplosiveHitSpeedUpdate.bind(this));
-		$.RegisterEventHandler('OnJumpSpeedUpdate', this.container, this.onJumpSpeedUpdate.bind(this));
-		$.RegisterEventHandler('OnRampBoardSpeedUpdate', this.container, this.onRampBoardSpeedUpdate.bind(this));
-		$.RegisterEventHandler('OnRampLeaveSpeedUpdate', this.container, this.onRampLeaveSpeedUpdate.bind(this));
-		$.RegisterEventHandler('OnSpeedometerUpdate', this.container, this.onSpeedometerUpdate.bind(this));
-		$.RegisterForUnhandledEvent('OnMomentumZoneChange', this.onZoneChange.bind(this));
-
-		// color profiles load before speedo settings, so listening to just the speedo settings load event should be enough
-		$.RegisterForUnhandledEvent('OnSpeedometerSettingsLoaded', this.onSettingsUpdate.bind(this));
-		// do want to register when color profiles are saved though as that can happen independently
-		$.RegisterForUnhandledEvent('OnSpeedometerSettingsSaved', this.onSettingsUpdate.bind(this));
-		$.RegisterForUnhandledEvent('OnRangeColorProfilesSaved', this.onSettingsUpdate.bind(this));
 	}
 }
