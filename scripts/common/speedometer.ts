@@ -1,36 +1,23 @@
-const SpeedometerTypes = {
-	OVERALL_VELOCITY: 0,
-	EXPLOSION_VELOCITY: 1,
-	JUMP_VELOCITY: 2,
-	RAMP_VELOCITY: 3,
-	ZONE_VELOCITY: 4
-};
+// We need to iterate over this prick so not using const enum.
+export enum SpeedometerType {
+	OVERALL_VELOCITY = 0,
+	EXPLOSION_VELOCITY = 1,
+	JUMP_VELOCITY = 2,
+	RAMP_VELOCITY = 3,
+	ZONE_VELOCITY = 4
+}
 
-const SpeedometerDataKeys = {
-	CUSTOM_LABEL: 'custom_label',
-	TYPE: 'type',
-	ENABLED_AXES: 'enabled_axes',
-	COLOR_TYPE: 'color_type',
-	RANGE_COL_PROF: 'range_color_profile'
-};
+export enum SpeedometerColorType {
+	NONE = 0,
+	RANGE = 1,
+	COMPARISON = 2,
+	COMPARISON_SEP = 3
+}
 
-const RangeColorProfileKeys = {
-	PROFILE_NAME: 'profile_name',
-	PROFILE_RANGE_DATA: 'profile_ranges'
-};
-
-const SpeedometerColorTypes = {
-	NONE: 0,
-	RANGE: 1,
-	COMPARISON: 2,
-	COMPARISON_SEP: 3
-};
-
-// To be index via SpeedometerTypes
-const SpeedometerDispNames = [
-	'#Speedometer_Type_OverallVelocity',
-	'#Speedometer_Type_ExplosiveJump',
-	'#Speedometer_Type_Jump',
-	'#Speedometer_Type_Ramp',
-	'#Speedometer_Type_Zone'
-];
+export const SpeedometerDispNames: ReadonlyMap<SpeedometerType, string> = new Map([
+	[SpeedometerType.OVERALL_VELOCITY, '#Speedometer_Type_OverallVelocity'],
+	[SpeedometerType.EXPLOSION_VELOCITY, '#Speedometer_Type_ExplosiveJump'],
+	[SpeedometerType.JUMP_VELOCITY, '#Speedometer_Type_Jump'],
+	[SpeedometerType.RAMP_VELOCITY, '#Speedometer_Type_Ramp'],
+	[SpeedometerType.ZONE_VELOCITY, '#Speedometer_Type_Zone']
+]);

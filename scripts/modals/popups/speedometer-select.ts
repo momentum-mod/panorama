@@ -1,60 +1,67 @@
-class SpeedometerSelectPopup {
-	/** @static @type {Panel} */
-	static container = $('#SpeedometerSelectContainer');
-	/** @static @type {TextEntry} */
-	static textEntry = $('#SpeedometerName');
-	/** @type {Label} @static */
-	static invalidNameLabel = $('#InvalidNameLabel');
-	static selected = 0;
-	static speedometerNames = [];
+import { OnPanelLoad, PanelHandler } from 'util/module-helpers';
+import { SpeedometerDispNames, SpeedometerType } from 'common/speedometer';
+import * as Enum from 'util/enum';
 
-	static onTextSubmitted() {
+@PanelHandler()
+class SpeedometerSelectPopupHandler implements OnPanelLoad {
+	readonly panels = {
+		container: $<Panel>('#SpeedometerSelectContainer'),
+		textEntry: $<TextEntry>('#SpeedometerName'),
+		invalidName: $<Label>('#InvalidNameLabel')
+	};
+
+	selected = 0;
+	speedometerNames: string[] = [];
+
+	onPanelLoad() {
+		this.panels.invalidName.visible = false;
+		this.speedometerNames = $.GetContextPanel().GetAttributeString('speedometerNames', '').split(',');
+
+		for (const typeNum of Enum.fastValuesNumeric(SpeedometerType)) {
+			const speedometer = $.CreatePanel('Panel', this.panels.container, '');
+			speedometer.LoadLayoutSnippet('speedometer-radiobutton');
+			speedometer.FindChildInLayoutFile<Label>('SpeedometerBtnLabel').text = $.Localize(
+				SpeedometerDispNames.get(typeNum)
+			);
+
+			const radioBtn = speedometer.FindChildInLayoutFile<RadioButton>('SpeedometerRadioBtn');
+			radioBtn.SetPanelEvent('onactivate', () => (this.selected = typeNum));
+
+			// select overall velocity by default
+			if (typeNum === SpeedometerType.OVERALL_VELOCITY) {
+				radioBtn.SetSelected(true);
+			}
+		}
+	}
+
+	onTextSubmitted() {
 		if (!this.validateSpeedometerNames()) {
-			this.invalidNameLabel.visible = true;
+			this.panels.invalidName.visible = true;
 			return;
 		}
 
 		const callbackHandle = $.GetContextPanel().GetAttributeInt('callback', -1);
 
 		if (callbackHandle !== -1)
-			UiToolkitAPI.InvokeJSCallback(callbackHandle, SpeedometerSelectPopup.selected, this.textEntry.text);
+			UiToolkitAPI.InvokeJSCallback(callbackHandle, this.selected, this.panels.textEntry.text);
 		UiToolkitAPI.CloseAllVisiblePopups();
 	}
 
-	static validateSpeedometerNames() {
-		const text = this.textEntry.text;
-		if (text === '' || text.includes(',')) return false;
+	validateSpeedometerNames() {
+		const text = this.panels.textEntry.text;
 
-		if (this.speedometerNames.some((name) => text.toUpperCase() === name.toUpperCase())) return false;
-
-		return true;
+		return !(
+			text === '' ||
+			text.includes(',') ||
+			this.speedometerNames.some((name) => text.toUpperCase() === name.toUpperCase())
+		);
 	}
 
-	static invalidNameSubmitted() {
-		SpeedometerSelectPopup.invalidNameLabel.visible = true;
+	invalidNameSubmitted() {
+		this.panels.invalidName.visible = true;
 	}
 
-	static onAddButtonPressed() {
-		this.textEntry.Submit();
-	}
-
-	static init() {
-		SpeedometerSelectPopup.invalidNameLabel.visible = false;
-		SpeedometerSelectPopup.speedometerNames = $.GetContextPanel()
-			.GetAttributeString('speedometerNames', '')
-			.split(',');
-		for (const typeNum of Object.values(SpeedometerTypes)) {
-			const speedometer = $.CreatePanel('Panel', SpeedometerSelectPopup.container, '');
-			speedometer.LoadLayoutSnippet('speedometer-radiobutton');
-			speedometer.FindChildInLayoutFile('SpeedometerBtnLabel').text = $.Localize(SpeedometerDispNames[typeNum]);
-
-			const radioBtn = speedometer.FindChildInLayoutFile('SpeedometerRadioBtn');
-			radioBtn.SetPanelEvent('onactivate', () => {
-				SpeedometerSelectPopup.selected = typeNum;
-			});
-
-			// select overall velocity by default
-			if (typeNum === SpeedometerTypes.OVERALL_VELOCITY) radioBtn.selected = true;
-		}
+	onAddButtonPressed() {
+		this.panels.textEntry.Submit();
 	}
 }

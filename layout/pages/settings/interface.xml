@@ -158,17 +158,8 @@
 						<Panel class="settings-group__header">
 							<Label class="settings-group__subtitle" text="#Settings_Speedometer_Gamemode_Long" />
 							<!-- TODO: hook this up to some events so it can change when a map is loaded -->
-							<DropDown id="GamemodeDropDown" class="dropdown settings-group__dropdown" menuclass="dropdown-menu" oninputsubmit="SpeedometerSettings.updateGamemode();">
-								<Label id="surf" text="#Gamemode_Surf" value="1" />
-								<Label id="bhop" text="#Gamemode_Bhop" value="2" />
-								<Label id="kz" text="#Gamemode_KZ" value="3" />
-								<Label id="rj" text="#Gamemode_RJ" value="4" />
-								<Label id="sj" text="#Gamemode_SJ" value="5" />
-								<Label id="tsurf" text="#Gamemode_Tricksurf" value="6" />
-								<Label id="ahop" text="#Gamemode_Ahop" value="7" />
-								<Label id="pk" text="#Gamemode_Parkour" value="8" />
-								<Label id="conc" text="#Gamemode_Conc" value="9" />
-								<Label id="df" text="#Gamemode_Defrag" value="10" />
+							<DropDown id="GamemodeDropDown" class="dropdown settings-group__dropdown" menuclass="dropdown-menu" oninputsubmit="SpeedometerSettingsHandler.updateGamemode();">
+								<!-- Populated via JS -->
 							</DropDown>
 							<Panel class="settings-speedometer-buttons">
 								<TooltipPanel class="settings-speedometer-buttons__discard ml-3" tooltip="#Action_Discard">
