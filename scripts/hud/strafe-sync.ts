@@ -1,70 +1,71 @@
-const COLOR_CLASS_FG = {
-	DEFAULT_COLOR: 'strafesync__default-color--fg',
-	INCREASE_COLOR: 'strafesync__increase-color--fg',
-	DECREASE_COLOR: 'strafesync__decrease-color--fg'
-};
+import { PanelHandler } from 'util/module-helpers';
+import * as Enum from 'util/enum';
 
-const COLOR_CLASS_BG = {
-	DEFAULT_COLOR: 'strafesync__default-color--bg',
-	INCREASE_COLOR: 'strafesync__increase-color--bg',
-	DECREASE_COLOR: 'strafesync__decrease-color--bg'
-};
+enum ColorClassFG {
+	DEFAULT_COLOR = 'strafesync__default-color--fg',
+	INCREASE_COLOR = 'strafesync__increase-color--fg',
+	DECREASE_COLOR = 'strafesync__decrease-color--fg'
+}
 
+enum ColorClassBG {
+	DEFAULT_COLOR = 'strafesync__default-color--bg',
+	INCREASE_COLOR = 'strafesync__increase-color--bg',
+	DECREASE_COLOR = 'strafesync__decrease-color--bg'
+}
+
+@PanelHandler()
 class StrafeSync {
-	static lastValue = 0;
-	static label = null;
-	static bar = null;
+	readonly panels = {
+		cp: $.GetContextPanel<MomHudStrafeSync>(),
+		bar: $<ProgressBar>('#SyncProgressBar'),
+		label: $<Label>('#SyncLabel')
+	};
 
-	static onUpdate() {
-		const type = $.GetContextPanel().strafesyncType;
+	lastValue = 0;
+
+	constructor() {
+		$.RegisterEventHandler('HudProcessInput', $.GetContextPanel(), () => this.onUpdate());
+	}
+
+	onUpdate() {
+		const type = this.panels.cp.strafesyncType;
 		const value = MomentumPlayerAPI.GetStrafeSync(type);
 		$.GetContextPanel().SetDialogVariable('sync_value', value.toFixed(2));
-		this.bar.value = value;
+		this.panels.bar.value = value;
 
-		let colorIndex;
-		switch ($.GetContextPanel().strafesyncColorize) {
+		let colorIndex: ColorClassFG | ColorClassBG;
+		switch (this.panels.cp.strafesyncColorize) {
 			case 1:
-				if (this.lastValue === 0) colorIndex = 'DEFAULT_COLOR';
+				if (this.lastValue === 0) colorIndex = ColorClassFG.DEFAULT_COLOR;
 				else {
 					const diff = value - this.lastValue;
-					if (diff > 0) colorIndex = 'INCREASE_COLOR';
-					else if (diff < 0) colorIndex = 'DECREASE_COLOR';
-					else colorIndex = 'DEFAULT_COLOR';
+					if (diff > 0) colorIndex = ColorClassFG.INCREASE_COLOR;
+					else if (diff < 0) colorIndex = ColorClassFG.DECREASE_COLOR;
+					else colorIndex = ColorClassFG.DEFAULT_COLOR;
 				}
 				break;
 			case 2:
-				if (value === 0) colorIndex = 'DEFAULT_COLOR';
-				else if (value > 90) colorIndex = 'INCREASE_COLOR';
-				else if (value < 75) colorIndex = 'DECREASE_COLOR';
-				else colorIndex = 'DEFAULT_COLOR';
+				if (value === 0) colorIndex = ColorClassFG.DEFAULT_COLOR;
+				else if (value > 90) colorIndex = ColorClassFG.INCREASE_COLOR;
+				else if (value < 75) colorIndex = ColorClassFG.DECREASE_COLOR;
+				else colorIndex = ColorClassFG.DEFAULT_COLOR;
 				break;
 			case 0:
 			default:
-				colorIndex = 'DEFAULT_COLOR';
+				colorIndex = ColorClassFG.DEFAULT_COLOR;
 				break;
 		}
 
 		this.lastValue = value;
 
-		for (const colorclassfgKey in COLOR_CLASS_FG) {
-			this.label.RemoveClass(COLOR_CLASS_FG[colorclassfgKey]);
+		for (const colorClassFG in Enum.fastKeysString(ColorClassFG)) {
+			this.panels.label.RemoveClass(colorClassFG);
 		}
-		this.label.AddClass(COLOR_CLASS_FG[colorIndex]);
+		this.panels.label.AddClass(colorIndex);
 
-		for (const colorclassbgKey in COLOR_CLASS_BG) {
-			this.bar.RemoveClass(COLOR_CLASS_BG[colorclassbgKey]);
+		for (const colorClassBG in Enum.fastKeysString(ColorClassBG)) {
+			this.panels.bar.RemoveClass(colorClassBG);
 		}
-		this.bar.AddClass(COLOR_CLASS_BG[colorIndex]);
-
-		return true;
-	}
-
-	static {
-		$.RegisterEventHandler('HudProcessInput', $.GetContextPanel(), this.onUpdate.bind(this));
-
-		/** @type {ProgressBar} @static */
-		this.bar = $('#SyncProgressBar');
-		/** @type {Label} @static */
-		this.label = $('#SyncLabel');
+		this.panels.bar.AddClass(colorIndex);
 	}
 }

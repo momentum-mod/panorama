@@ -1,55 +1,55 @@
-/**
- * @typedef {Object} Point - A point on a line on the LineGraph
- * @property {number} x - X Coordinate
- * @property {number} y - Y Coordinate
- * @property {string} [id] - A ID for the point panel. Needed if the point has any events.
- * @property {Object} [events] - Object of kv pairs, event names and functions.
- * @property {string} [class] - Styling class
- * @property {number} [selectionSize] - Size of the bounding box around the point for hover and selection
- */
+import { PanelHandler } from 'util/module-helpers';
 
-/**
- * @typedef {Object} Line - A line on the LineGraph component
- * @property {Point[]} points - Array of points
- * @property {string} color	- Hex color of the line
- * @property {number} thickness - Thickness of the line
- * @property {string} [shadeAboveToOriginColor]	- Hex color to shade between above the line and origin
- * @property {string} [shadeBelowToOriginColor]	- Hex color to shade between below the line and origin
- */
+export interface Point {
+	x: number;
+	y: number;
+	id?: string;
+	events?: Record<string, (id: string) => void>;
+	class?: string;
+	selectionSize?: number;
+}
 
-/**
- * @typedef {Object} Axis - An axis on the graph
- * @property {number} max - The maximum value on the axis
- * @property {number} min - The minimum value on the axis
- * @property {number} interval - The intervals upon which to draw gridlines
- * @property {string} name - The name to draw on the side of the axis
- * @property {boolean} timeBased - Whether or not the axis represents a length of time
- */
+export interface Line {
+	points: Point[];
+	color: string;
+	thickness: number;
+	shadeAboveToOriginColor?: string;
+	shadeBelowToOriginColor?: string;
+}
+
+export interface Axis {
+	max: number;
+	min: number;
+	interval: number;
+	name: string;
+	timeBased: boolean;
+}
 
 /**
  * Class for the basic line graph component.
+ *
  * This could be improved in the future to allow dynamically adding/modifying/removing points,
  * for now we just set the class properties then redraw it.
- * @property {number} height - The height of the graph
- * @property {number} width - The width of the graph
- * @property {Line[]} lines - Array of lines to draw
- * @property {Axis[]} axis - Array of the axis, X then Y
  */
-class LineGraph {
-	static panels = {
+@PanelHandler({ exposeToPanel: true })
+export class LineGraphHandler {
+	width = 0;
+	height = 0;
+
+	lines: Line[] = [];
+	axis: Axis[] = [];
+
+	readonly panels = {
 		grid: $('#Grid'),
 		graphContainer: $('#GraphContainer')
 	};
 
-	static {
-		// Attach the JS class
-		$.GetContextPanel().jsClass = this;
-
+	constructor() {
 		this.width = 0;
 		this.height = 0;
 	}
 
-	static draw() {
+	draw() {
 		// Calculate the dimensions of the graph, needed to take UI scaling into account
 		this.calculateDimensions();
 
@@ -59,9 +59,7 @@ class LineGraph {
 
 		// If either axis is undefined or 0 range we're gonna get Infinity/NaNs flying around everywhere
 		if (
-			!this.axis.every(
-				(axis) => !Number.isNaN(Number.parseInt(axis.min)) && !Number.isNaN(Number.parseInt(axis.max))
-			) ||
+			!this.axis.every((axis) => !Number.isNaN(axis.min) && !Number.isNaN(axis.max)) ||
 			this.axis[0].min === this.axis[0].max ||
 			this.axis[1].min === this.axis[1].max
 		) {
@@ -104,7 +102,8 @@ class LineGraph {
 				const offset = 'position: ' + (isX ? `${dist}px 0px 0px;` : `0px ${dist}px 0px;`);
 
 				// Linear interpolate to determine marker text, backwards for Y. Then round to precision and cast back to Number.
-				let markerValue = +(isX ? lineMin + j : lineMax + lineMin - j).toFixed(precision);
+				const markerValue = isX ? lineMin + j : lineMax + lineMin - j;
+				let markerValueStr = markerValue.toFixed(precision);
 				if (axis.timeBased) {
 					const extreme = Math.max(Math.abs(axis.min), Math.abs(axis.max));
 					const time = Math.abs(markerValue);
@@ -112,16 +111,18 @@ class LineGraph {
 					const sign = markerValue > 0 ? '+' : markerValue < 0 ? '-' : '';
 
 					const hours = Math.floor(time / 3600);
-					let minutes = Math.floor((time % 3600) / 60);
-					let seconds = (time % 3600) % 60;
+					const minutes = Math.floor((time % 3600) / 60);
+					const seconds = (time % 3600) % 60;
 
-					if (time < 10 && extreme < 10) seconds = seconds.toFixed(precision);
+					let secondsStr = time < 10 && extreme < 10 ? seconds.toFixed(precision) : seconds.toString();
+					let minuteStr = minutes.toString();
 
-					markerValue = `${sign}${seconds}`;
+					markerValueStr = `${sign}${seconds}`;
 					if (extreme >= 60) {
-						if (extreme >= 3600 && minutes < 10) minutes = '0' + minutes;
-						if (seconds < 10) seconds = '0' + seconds;
-						markerValue = extreme >= 3600 ? `${sign}${hours}:${minutes}` : `${sign}${minutes}:${seconds}`;
+						if (extreme >= 3600 && minutes < 10) minuteStr = '0' + minuteStr;
+						if (seconds < 10) secondsStr = '0' + secondsStr;
+						markerValueStr =
+							extreme >= 3600 ? `${sign}${hours}:${minutes}` : `${sign}${minutes}:${seconds}`;
 					}
 				}
 
@@ -129,7 +130,7 @@ class LineGraph {
 				$.CreatePanel('Label', markers, axisName + j, {
 					class: 'linegraph__marker linegraph__marker--' + axisName,
 					style: offset,
-					text: markerValue
+					text: markerValueStr
 				});
 
 				// Create the gridline, ignoring any that would sit on edge
@@ -152,7 +153,7 @@ class LineGraph {
 			// Make a graph container, a canvas panel for the lines and a panel for the points.
 			panel.LoadLayoutSnippet('graph-instance');
 
-			const graph = panel.FindChild('Graph');
+			const graph = panel.FindChild<UICanvas>('Graph');
 			const pointsContainer = panel.FindChild('Points');
 
 			if (!line.points) continue;
@@ -165,7 +166,7 @@ class LineGraph {
 			for (const point of line.points) {
 				const id = point.id;
 				// Get their relative positions on the graph panel
-				const position = this.#getRelativisedPosition(point);
+				const position = this.getRelativisedPosition(point);
 
 				const size = point.selectionSize;
 				const offset = size / 2;
@@ -182,7 +183,7 @@ class LineGraph {
 
 				// Inner panel, that actually displays the point.
 				$.CreatePanel('Panel', panel, '', {
-					class: 'linegraph__point ' + point?.style
+					class: 'linegraph__point ' + point?.class
 				});
 
 				// Register any events the point, binding the ID of the point panel in the first argument place.
@@ -199,13 +200,13 @@ class LineGraph {
 			// finding trapezoids and triangles between points and the axis. This was really fun!
 			if (line.shadeAboveToOriginColor || line.shadeBelowToOriginColor) {
 				// Array of points to fill up, then draw, then empty
-				let polyPoints = [];
+				let polyPoints: Point[] = [];
 
 				// Draw a polygon in the polyPoints array, then clear it
-				const drawPoly = (isAbove) => {
+				const drawPoly = (isAbove: boolean) => {
 					const formattedArray = [];
 					for (const [i, _] of polyPoints.entries()) {
-						const relativedPoints = this.#getRelativisedPosition(
+						const relativedPoints = this.getRelativisedPosition(
 							polyPoints[isAbove ? i : polyPoints.length - i - 1]
 						);
 						formattedArray.push(relativedPoints.x, relativedPoints.y);
@@ -219,7 +220,7 @@ class LineGraph {
 				};
 
 				// Search through all the space below or above the axis (comments are written for the "below" case)
-				const findPoly = (isAbove, trackingBool) => {
+				const findPoly = (isAbove: boolean, trackingBool: boolean) => {
 					for (const [i, point] of line.points.entries()) {
 						if (isAbove ? point.y > 0 : point.y < 0) {
 							// If this point is below, the next iteration is going to be finishing a poly
@@ -271,20 +272,14 @@ class LineGraph {
 		}
 	}
 
-	/**
-	 * Update the dimensions of the panel, accounting for uiscale fuckery
-	 */
-	static calculateDimensions() {
+	/** Update the dimensions of the panel, accounting for uiscale fuckery */
+	calculateDimensions() {
 		this.height = this.panels.graphContainer.actuallayoutheight / this.panels.graphContainer.actualuiscale_y;
 		this.width = this.panels.graphContainer.actuallayoutwidth / this.panels.graphContainer.actualuiscale_x;
 	}
 
-	/**
-	 * Find the location of point relative to the graph panel.
-	 * @param {Point} point
-	 * @returns {Point}
-	 */
-	static #getRelativisedPosition(point) {
+	/** Find the location of point relative to the graph panel. */
+	private getRelativisedPosition(point: Point): Point {
 		// Linearly interpolate both components by the axis max and min
 		const xLerp = (point.x - this.axis[0].min) / (this.axis[0].max - this.axis[0].min);
 		const yLerp = (point.y - this.axis[1].min) / (this.axis[1].max - this.axis[1].min);

@@ -1,27 +1,31 @@
-class Chat {
-	static arrMembersTyping = [];
-	static typingLabel = $('#ChatMemberTypingLabel');
+import { PanelHandler } from 'util/module-helpers';
+import { MemberData } from 'common/online';
 
-	static {
-		$.RegisterEventHandler('OnNewChatEntry', $.GetContextPanel(), this.onNewChatEntry.bind(this));
-		$.RegisterForUnhandledEvent(
-			'PanoramaComponent_SteamLobby_OnMemberDataUpdated',
-			this.onSteamLobbyMemberDataUpdated.bind(this)
+@PanelHandler()
+class ChatHandler {
+	membersTyping: string[] = [];
+	typingLabel = $<Label>('#ChatMemberTypingLabel');
+
+	constructor() {
+		$.RegisterEventHandler('OnNewChatEntry', $.GetContextPanel(), (panel) => this.onNewChatEntry(panel));
+
+		$.RegisterForUnhandledEvent('PanoramaComponent_SteamLobby_OnMemberDataUpdated', (memberData: MemberData) =>
+			this.onSteamLobbyMemberDataUpdated(memberData)
 		);
 	}
 
-	static submitText() {
-		$.GetContextPanel().SubmitText();
+	submitText() {
+		$.GetContextPanel<MomentumChat>().SubmitText();
 	}
 
-	static createUsersTypingString(users) {
+	createUsersTypingString() {
 		let strTyping = '';
-		const typingLen = users.length;
+		const typingLen = this.membersTyping.length;
 
 		// TODO: We may run into issues with this in localisation, this seems like it may be specific to English
 		if (typingLen > 0) {
 			if (typingLen < 3) {
-				for (const [i, memberSteamID] of this.arrMembersTyping.entries()) {
+				for (const [i, memberSteamID] of this.membersTyping.entries()) {
 					if (i !== 0 && i !== typingLen - 1) {
 						strTyping += ', ';
 					} else if (i !== 0 && i === typingLen - 1) {
@@ -43,7 +47,7 @@ class Chat {
 		return strTyping;
 	}
 
-	static onNewChatEntry(panel) {
+	onNewChatEntry(panel: GenericPanel) {
 		$.Schedule(0, () => panel.ScrollParentToMakePanelFit(0, false)); // IDK, ScrollToBottom always just scrolled to the second last msg
 		// Emote test for BLT to look into
 		// let messageLabel = panel.GetChild(0);
@@ -67,21 +71,21 @@ class Chat {
 		// });
 	}
 
-	static onSteamLobbyMemberDataUpdated(data) {
+	onSteamLobbyMemberDataUpdated(memberData: MemberData) {
 		if (!this.typingLabel || !this.typingLabel.visible) return;
 
-		for (const memberSteamID of Object.keys(data)) {
+		for (const memberSteamID of Object.keys(memberData)) {
 			if (memberSteamID === UserAPI.GetXUID()) return;
 
-			const index = this.arrMembersTyping.indexOf(memberSteamID);
+			const index = this.membersTyping.indexOf(memberSteamID);
 
-			if (index === -1 && data[memberSteamID]['isTyping'] === 'y') {
-				this.arrMembersTyping.push(memberSteamID);
+			if (index === -1 && memberData[memberSteamID].isTyping === 'y') {
+				this.membersTyping.push(memberSteamID);
 			} else if (index !== -1) {
-				this.arrMembersTyping.splice(index, 1);
+				this.membersTyping.splice(index, 1);
 			}
 		}
 
-		this.typingLabel.text = this.createUsersTypingString(this.arrMembersTyping);
+		this.typingLabel.text = this.createUsersTypingString();
 	}
 }

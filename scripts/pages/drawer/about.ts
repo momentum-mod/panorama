@@ -1,13 +1,16 @@
-class About {
-	static credits = $('#Credits');
+import { OnPanelLoad, PanelHandler } from 'util/module-helpers';
 
-	static onLoad() {
+@PanelHandler()
+class AboutHandler implements OnPanelLoad {
+	credits = $('#Credits');
+
+	onPanelLoad() {
 		this.initCreditEvents();
 
 		$.GetContextPanel().SetDialogVariable('version', MomentumAPI.GetVersionInfo().version);
 	}
 
-	static initCreditEvents() {
+	initCreditEvents() {
 		for (const panel of this.credits.FindChildrenWithClassTraverse('about-credits__name')) {
 			const name = panel.GetAttributeString('name', '');
 			const roles = panel.GetAttributeString('roles', '');

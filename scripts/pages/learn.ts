@@ -1,29 +1,96 @@
-// File to use if loading normally
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck - Disables TS for entire file; moved some of this to TS then gave up,
+// really don't care until we work on learn more.
+
 const LEARN_FILE_PATH = 'panorama/data/learn.vdf';
 
 // Spreadsheet URL to use if loading in -dev
 const DATA_URL =
 	'https://docs.google.com/spreadsheets/d/e/2PACX-1vTlH08v-dqtGl49T0Eslb56o-Y-xp6kOwhEo4Bwx387AxbpGHFw7AUBeBQMQdwEBI9g4gBBnGmUZ5EW/pub?output=csv';
 
+// Old stuff from gamemodes.js before integrating website repo-based data.
+// Don't want to think about learn UI til post 0.10.0!
+const GameMode = {
+	SURF: 1,
+	BHOP: 2,
+	CLIMB: 3,
+	RJ: 4,
+	SJ: 5,
+	AHOP: 7,
+	CONC: 9,
+	DEFRAG: 10
+};
+
+const GameModeWithNull = {
+	UNKNOWN: 0,
+	...GameMode
+};
+
+const GameModeInfo = {
+	[GameMode.SURF]: {
+		idName: 'Surf',
+		name: '#Gamemode_Surf',
+		shortName: '#Gamemode_Surf_Short',
+		prefix: 'surf_'
+	},
+	[GameMode.BHOP]: {
+		idName: 'Bhop',
+		name: '#Gamemode_Bhop',
+		shortName: '#Gamemode_Bhop_Short',
+		prefix: 'bhop_'
+	},
+	[GameMode.CLIMB]: {
+		idName: 'Climb',
+		name: '#Gamemode_Climb',
+		shortName: '#Gamemode_Climb_Short',
+		prefix: 'climb_'
+	},
+	[GameMode.RJ]: {
+		idName: 'RJ',
+		name: '#Gamemode_RJ',
+		shortName: '#Gamemode_RJ_Short',
+		prefix: 'rj_'
+	},
+	[GameMode.SJ]: {
+		idName: 'SJ',
+		name: '#Gamemode_SJ',
+		shortName: '#Gamemode_SJ_Short',
+		prefix: 'sj_'
+	},
+	[GameMode.AHOP]: {
+		idName: 'Ahop',
+		name: '#Gamemode_Ahop',
+		shortName: '#Gamemode_Ahop_Short',
+		prefix: 'ahop_'
+	},
+	[GameMode.CONC]: {
+		idName: 'Conc',
+		name: '#Gamemode_Conc',
+		shortName: '#Gamemode_Conc_Short',
+		prefix: 'conc_'
+	},
+	[GameMode.DEFRAG]: {
+		idName: 'Defrag',
+		name: '#Gamemode_Defrag',
+		shortName: '#Gamemode_Defrag_Short',
+		prefix: 'df_'
+	}
+};
+
 class Learn {
-	static panels = {
-		/** @type {Panel} @static */
-		listContainer: $('#LearnListContainer'),
-		/** @type {Button} @static */
-		refreshButton: $('#RefreshButton'),
-		/** @type {Panel} @static */
-		rightPanel: $('#RightPanel'),
-		/** @type {Label} @static */
-		completionStatus: $('#LessonCompletionStatus'),
-		/** @type {Panel} @static */
-		guide: $('#Guide')
+	static readonly panels = {
+		listContainer: $<Panel>('#LearnListContainer'),
+		refreshButton: $<Button>('#RefreshButton'),
+		rightPanel: $<Panel>('#RightPanel'),
+		completionStatus: $<Label>('#LessonCompletionStatus'),
+		guide: $<Panel>('#Guide')
 	};
 
-	static activeMode;
-	static currentLessonData;
+	static activeMode: any;
+	static currentLessonData: any;
 
-	static lessonData = {};
-	static modes = {};
+	static lessonData: any = {};
+	static modes: any = {};
 	static {
 		// Create modes obj in form { [GameMode.SURF]: { button: ..., list: ... } }
 		for (const modeData of Object.values(GameModeInfo)) {
@@ -103,7 +170,7 @@ class Learn {
 				panel.FindChild('CompletionIcon').AddClass('learn-list__completion-icon--hidden'); // We can do these in the future
 			}
 
-			for (const section of Object.values(sections))
+			for (const section of Object.values(sections) as any[])
 				for (const [i, child] of section.Children().entries())
 					if (child.paneltype === 'RadioButton')
 						child.AddClass(`learn-list__lesson--${i % 2 === 0 ? 'even' : 'odd'}`);
@@ -137,9 +204,9 @@ class Learn {
 		}
 
 		if (MapCacheAPI.GetMapName() !== this.currentLessonData['Map']) {
-			this.launchMapThenTeleport(this.currentLessonData);
+			this.launchMapThenTeleport();
 		} else {
-			this.teleportToLessonStart(this.currentLessonData);
+			this.teleportToLessonStart();
 		}
 	}
 

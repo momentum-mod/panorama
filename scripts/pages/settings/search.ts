@@ -1,32 +1,55 @@
+import { isSettingsPanel, SettingsTabs, SettingsTabWithoutSearch } from 'common/settings';
+import { getHandlerInstance, OnPanelLoad, PanelHandler } from 'util/module-helpers';
+import { SettingsHandler } from './settings';
+
+enum MatchType {
+	SETTING_TEXT = 0,
+	SETTING_TAG = 1,
+	GROUP_TEXT = 2,
+	GROUP_TAG = 3
+}
+
+interface MatchedSetting {
+	panel: GenericPanel;
+	text: string;
+	tags: string[];
+	tabName: string;
+	groupName: string;
+	tabID: SettingsTabWithoutSearch;
+	groupTags: string[];
+	matches: Record<string, Match[]>;
+}
+
+interface Match {
+	type: MatchType;
+	testString: string;
+	tagIndex: number;
+}
+
 const MAX_MATCHES = 16;
 
-class SettingsSearch {
-	static panels = {
-		/** @type {Panel} @static */
-		content: $('#SettingsContent'),
-		/** @type {TextEntry} @static */
-		searchTextEntry: $('#SettingsSearchTextEntry'),
-		/** @type {Button} @static */
-		clearButton: $('#SettingsSearchClear'),
-		/** @type {Panel} @static */
-		results: null,
-		/** @type {Panel} @static */
-		emptyContainer: null
+@PanelHandler()
+class SettingsSearchHandler implements OnPanelLoad {
+	readonly panels = {
+		content: $<Panel>('#SettingsContent'),
+		searchTextEntry: $<TextEntry>('#SettingsSearchTextEntry'),
+		clearButton: $<Button>('#SettingsSearchClear'),
+		results: null as Panel,
+		emptyContainer: null as Panel
 	};
 
-	/** @type {string[]} @static */
-	static strings = [];
+	strings: string[] = [];
+	matchedSettings: MatchedSetting[] = [];
 
-	static matches = [];
-
-	static {
-		this.panels.searchTextEntry.SetPanelEvent('ontextentrychange', this.onTextEntryChanged.bind(this));
+	onPanelLoad() {
+		this.panels.searchTextEntry.SetPanelEvent('ontextentrychange', () => this.onTextEntryChanged());
 	}
 
-	static onTextEntryChanged() {
+	onTextEntryChanged() {
 		// Check textentry is not empty
 		if (!/.*\S.*/.test(this.panels.searchTextEntry.text)) {
-			MainMenuSettings.navigateToTab(MainMenuSettings.prevTab);
+			const handler = getHandlerInstance(SettingsHandler);
+			handler.navigateToTab(handler.prevTab);
 
 			this.panels.clearButton.AddClass('search__clearbutton--hidden');
 
@@ -37,7 +60,7 @@ class SettingsSearch {
 		this.panels.clearButton.RemoveClass('search__clearbutton--hidden');
 
 		// Switch to search tab
-		MainMenuSettings.navigateToTab('SearchSettings');
+		getHandlerInstance(SettingsHandler).navigateToTab('SearchSettings');
 
 		this.panels.results ??= this.panels.content.FindChildTraverse('SearchResultsContainer');
 		this.panels.emptyContainer ??= this.panels.content.FindChildTraverse('SettingsEmptyContainer');
@@ -52,18 +75,24 @@ class SettingsSearch {
 		if (!this.strings.some((str) => str.length > 1)) return;
 
 		// Initialise matches array
-		this.matches = [];
+		this.matchedSettings = [];
 
 		// Search through each page
 		for (const tabID of Object.keys(SettingsTabs)) {
 			const tabPanel = this.panels.content.FindChildTraverse(tabID);
-			const tabName = $.Localize(tabPanel.GetFirstChild().GetFirstChild().text);
-			this.traverseChildren(tabID, this.panels.content.FindChildTraverse(tabID), tabName, null, null);
+			const tabName = $.Localize(tabPanel.GetFirstChild().GetFirstChild<Label>().text);
+			this.traverseChildren(
+				tabID as SettingsTabWithoutSearch,
+				this.panels.content.FindChildTraverse(tabID),
+				tabName,
+				null,
+				null
+			);
 		}
 
 		// Populate results panel with matches
-		if (this.matches.length > 0)
-			for (const matchingPanel of this.matches) this.createSearchResultPanel(matchingPanel);
+		if (this.matchedSettings.length > 0)
+			for (const matchingPanel of this.matchedSettings) this.createSearchResultPanel(matchingPanel);
 		else {
 			$.CreatePanel('Label', this.panels.results, '', {
 				class: 'settings-search__empty-header',
@@ -76,12 +105,18 @@ class SettingsSearch {
 		}
 	}
 
-	static traverseChildren(tabID, panel, tabName, groupName, groupTags) {
+	traverseChildren(
+		tabID: SettingsTabWithoutSearch,
+		panel: GenericPanel,
+		tabName: string,
+		groupName: string,
+		groupTags: string[]
+	) {
 		// At some point in traversal we should hit the settings-group panels. Once we do, for a class traverse to
 		// dig out the title panel. Class traverse is probably quite slow but this doesn't get run as often as
 		// everything else.
 		if (panel.HasClass('settings-group')) {
-			const titlePanel = panel.FindChildrenWithClassTraverse('settings-group__title')[0];
+			const titlePanel = panel.FindChildrenWithClassTraverse<Label>('settings-group__title')[0];
 
 			if (titlePanel) {
 				groupName = $.Localize(titlePanel.text);
@@ -90,25 +125,31 @@ class SettingsSearch {
 		}
 
 		for (const child of panel?.Children() ?? []) {
-			if (this.shouldSearchPanelText(child)) this.searchSettingText(tabID, child, tabName, groupName, groupTags);
+			if (this.shouldSearchPanelText(child)) {
+				this.searchSettingText(tabID, child, tabName, groupName, groupTags);
+			}
+
 			this.traverseChildren(tabID, child, tabName, groupName, groupTags);
 		}
 	}
 
-	static searchSettingText(tabID, textPanel, tabName, groupName, groupTags) {
-		// ChaosSettings* panels have embed structure that the traversal searches inside of to dig out a
+	searchSettingText(
+		tabID: SettingsTabWithoutSearch,
+		textPanel: GenericPanel & { text: string },
+		tabName: string,
+		groupName: string,
+		groupTags: string[]
+	) {
+		// Settings* panels have embed structure that the traversal searches inside of to dig out a
 		// .text property match. So, navigate back up to find the actual setting panel.
 		const parent = textPanel.GetParent();
-		const panel =
-			MainMenuSettings.isSettingsPanel(parent) || parent.paneltype === 'ConVarEnabler'
-				? parent
-				: parent.GetParent();
+		const panel = isSettingsPanel(parent) || parent.paneltype === 'ConVarEnabler' ? parent : parent.GetParent();
 
 		const tags = panel.GetAttributeString('tags', '')?.split(',');
 
 		let allMatched = true;
 
-		const matches = {};
+		const matches: Record<string, Match[]> = {};
 
 		for (const inputString of this.strings) {
 			if (!inputString) {
@@ -117,11 +158,14 @@ class SettingsSearch {
 			}
 
 			let matched = false;
-			const inputStringMatches = [];
+			const inputStringMatches: Match[] = [];
 
-			if (this.findMatch(inputStringMatches, inputString, $.Localize(textPanel.text), MatchType.SETTING_TEXT))
+			if (this.findMatch(inputStringMatches, inputString, $.Localize(textPanel.text), MatchType.SETTING_TEXT)) {
 				matched = true;
-			if (this.findMatch(inputStringMatches, inputString, groupName, MatchType.GROUP_TEXT)) matched = true;
+			}
+			if (this.findMatch(inputStringMatches, inputString, groupName, MatchType.GROUP_TEXT)) {
+				matched = true;
+			}
 			if (tags)
 				for (let i = 0; i < tags.length; i++)
 					if (this.findMatch(inputStringMatches, inputString, tags[i], MatchType.SETTING_TAG, i))
@@ -140,37 +184,33 @@ class SettingsSearch {
 
 		const text = textPanel.HasClass('settings-group__title') ? '' : $.Localize(textPanel.text);
 
-		this.matches.push({
-			panel: panel,
-			text: text,
-			tags: tags,
-			tabName: tabName,
-			groupName: groupName,
-			tabID: tabID,
-			groupTags: groupTags,
-			matches: matches
-		});
+		this.matchedSettings.push({ panel, text, tags, tabName, groupName, tabID, groupTags, matches });
 	}
 
-	static findMatch(inputStringMatches, inputString, testString, type, tagIndex) {
-		if (!testString) return false;
+	findMatch(
+		inputStringMatches: Array<{ type: MatchType; testString: string; tagIndex: number }>,
+		inputString: string,
+		testString: string,
+		type: MatchType,
+		tagIndex: number = 0
+	) {
+		if (!testString) {
+			return false;
+		}
 
 		const testLowerCase = testString.toLowerCase();
 		const index = testLowerCase.indexOf(inputString.toLowerCase());
 
-		if (index === -1 || (index > 0 && testLowerCase[index - 1] !== ' ')) return false;
+		if (index === -1 || (index > 0 && testLowerCase[index - 1] !== ' ')) {
+			return false;
+		}
 
-		inputStringMatches.push({
-			type: type,
-			testString: testString,
-			tagIndex: tagIndex
-		});
-
+		inputStringMatches.push({ type, testString, tagIndex });
 		return true;
 	}
 
 	// Only check text on panels that have a text property, ignore dropdowns, headers, keybinder keys, radiobutton text
-	static shouldSearchPanelText(panel) {
+	shouldSearchPanelText(panel: GenericPanel): panel is GenericPanel & { text: string } {
 		return (
 			Object.hasOwn(panel, 'text') &&
 			panel.paneltype !== 'TextEntry' &&
@@ -184,13 +224,10 @@ class SettingsSearch {
 		);
 	}
 
-	/**
-	 * Create a panel for a search result
-	 * @param {MatchingPanel} matches
-	 */
-	static createSearchResultPanel(matches) {
-		if (this.panels.results.Children().length >= MAX_MATCHES) {
-			if (this.panels.results.Children().length === MAX_MATCHES)
+	createSearchResultPanel(matches: MatchedSetting) {
+		const childCount = this.panels.results.GetChildCount();
+		if (childCount >= MAX_MATCHES) {
+			if (childCount === MAX_MATCHES)
 				$.CreatePanel('Label', this.panels.results, '', {
 					class: 'settings-search__empty-para',
 					text: $.Localize('#Settings_General_Search_VeryFull')
@@ -244,10 +281,10 @@ class SettingsSearch {
 			}
 
 		searchResult.SetDialogVariable('tab_name', matches.tabName);
-		searchResult.FindChild('Group').text = groupName;
-		if (!isGroupPanel) searchResult.FindChild('Text').text = name;
+		searchResult.FindChild<Label>('Group').text = groupName;
+		if (!isGroupPanel) searchResult.FindChild<Label>('Text').text = name;
 
-		const tagList = searchResult.FindChild('Tags');
+		const tagList = searchResult.FindChild<Label>('Tags');
 
 		if (tags.length > 0 || groupTags.length > 0)
 			tagList.text =
@@ -261,14 +298,7 @@ class SettingsSearch {
 		});
 	}
 
-	static clearSearch() {
+	clearSearch() {
 		this.panels.searchTextEntry.text = '';
 	}
 }
-
-const MatchType = {
-	SETTING_TEXT: 0,
-	SETTING_TAG: 1,
-	GROUP_TEXT: 2,
-	GROUP_TAG: 3
-};

@@ -1,14 +1,19 @@
-class ControlsLibrary {
-	static progressBar1 = $('#ProgressBar1');
-	static updatingProgressBars;
+import { exposeToPanelContext, OnPanelLoad, PanelHandler } from 'util/module-helpers';
+import { ToastLocation, ToastManager } from 'util/toast-manager';
 
-	static {
-		this.updatingProgressBars = true;
+// Expose toast stuff to XML
+exposeToPanelContext({ ToastManager, ToastLocation });
 
+@PanelHandler()
+class ControlsLibraryHandler implements OnPanelLoad {
+	progressBar1 = $<ProgressBar>('#ProgressBar1');
+	updatingProgressBars = true;
+
+	onPanelLoad() {
 		this.updateProgressBars();
 	}
 
-	static updateProgressBars() {
+	updateProgressBars() {
 		if (this.progressBar1.value <= this.progressBar1.max) this.progressBar1.value += 0.01;
 		else this.progressBar1.value = this.progressBar1.min;
 
@@ -17,8 +22,8 @@ class ControlsLibrary {
 		}
 	}
 
-	static onSimpleContextMenu() {
-		const items = [
+	onSimpleContextMenu() {
+		UiToolkitAPI.ShowSimpleContextMenu('', '', [
 			{
 				label: 'Item 1',
 				jsCallback: () => $.Msg('Item 1 pressed')
@@ -32,7 +37,6 @@ class ControlsLibrary {
 				style: 'TopSeparator',
 				jsCallback: () => $.Msg('Item 3 pressed')
 			}
-		];
-		UiToolkitAPI.ShowSimpleContextMenu('', '', items);
+		]);
 	}
 }

@@ -1,3 +1,7 @@
+import { PanelHandler } from 'util/module-helpers';
+import { HideHud } from 'common/state';
+import { TimerEvent_OLD, TimerState_OLD } from 'common/timer';
+
 const INACTIVE_CLASS = 'hudtimer__time--inactive';
 const FINISHED_CLASS = 'hudtimer__time--finished';
 const FAILED_CLASS = 'hudtimer__time--failed';
@@ -7,109 +11,139 @@ const DECREASE_CLASS = 'hudtimer__comparison--decrease';
 const FADEOUT_CLASS = 'hudtimer__comparison--fadeout';
 const FADEOUT_START_CLASS = 'hudtimer__comparison--fade-start';
 
-class HudTimer {
-	/** @type {Label} @static */
-	static timeLabel = $('#HudTimerTime');
-	/** @type {Label} @static */
-	static compLabel = $('#HudTimerComparison');
-	/** @type {Panel} @static */
-	static panel = $.GetContextPanel();
+@PanelHandler()
+class HudTimerHandler {
+	readonly panels = {
+		cp: $.GetContextPanel<MomHudTimer>(),
+		time: $('#HudTimerTime'),
+		comparison: $('#HudTimerComparison')
+	};
 
-	static prevZone = 0;
+	prevZone = 0;
 
-	static onTimerStarted() {
-		this.timeLabel.RemoveClass(FAILED_CLASS); // fail animation could be happening, so force stop
-		this.timeLabel.RemoveClass(INACTIVE_CLASS);
+	constructor() {
+		$.RegisterEventHandler('HudProcessInput', $.GetContextPanel(), () => this.onUpdate());
+		$.RegisterForUnhandledEvent('OnMomentumTimerStateChange', (arg1, arg2) => this.onTimerEvent(arg1, arg2));
+		$.RegisterForUnhandledEvent(
+			'OnMomentumZoneChange',
+			(entering, isLinear, currentZone, currentTrack, timerState) =>
+				this.onZoneChange(entering, isLinear, currentZone, currentTrack, timerState)
+		);
+		$.RegisterForUnhandledEvent('OnSaveStateUpdate', (count, current, usingMenu) =>
+			this.onSaveStateChange(count, current, usingMenu)
+		);
+		$.RegisterForUnhandledEvent('OnMomentumReplayStopped', () => this.onReplayStopped());
 
-		if (MomentumTimerAPI.IsStartSoundEnabled()) $.PlaySoundEvent('Momentum.StartTimer');
+		$.GetContextPanel().SetDialogVariableFloat('runtime', 0);
+		this.panels.cp.hiddenHUDBits = HideHud.TABMENU;
 	}
-	static onTimerFinished() {
-		this.timeLabel.AddClass(FINISHED_CLASS);
 
-		this.panel.SetDialogVariableFloat('runtime', MomentumTimerAPI.GetCurrentRunTime());
+	onTimerStarted() {
+		this.panels.time.RemoveClass(FAILED_CLASS); // fail animation could be happening, so force stop
+		this.panels.time.RemoveClass(INACTIVE_CLASS);
 
-		if (MomentumTimerAPI.IsFinishSoundEnabled()) $.PlaySoundEvent('Momentum.FinishTimer');
+		if (this.isStartSoundEnabled()) {
+			$.PlaySoundEvent('Momentum.StartTimer');
+		}
 	}
-	static onTimerStopped() {
+
+	onTimerFinished() {
+		this.panels.time.AddClass(FINISHED_CLASS);
+
+		$.GetContextPanel().SetDialogVariableFloat('runtime', MomentumTimerAPI.GetCurrentRunTime());
+
+		if (this.isFinishSoundEnabled()) {
+			$.PlaySoundEvent('Momentum.FinishTimer');
+		}
+	}
+
+	onTimerStopped() {
 		this.resetTimer();
 
 		// if we want special styling for timer artificially running (via savestate), do it here like so
-		// if (MomentumTimerAPI.GetTimerState() === TimerState.PRACTICE) HudTimer.timeLabel.AddClass(PRACTICE_CLASS);
+		// if (MomentumTimerAPI.GetTimerState() === Globals.Timer.State.PRACTICE) HudTimerthis.panels.time.AddClass(PRACTICE_CLASS);
 
-		if (MomentumTimerAPI.IsStopSoundEnabled()) $.PlaySoundEvent('Momentum.StopTimer');
+		if (this.isStopSoundEnabled()) {
+			$.PlaySoundEvent('Momentum.StopTimer');
+		}
 	}
-	static onTimerFailed() {
+	onTimerFailed() {
 		// failed to start timer, so resetting is not needed
 
-		this.timeLabel.TriggerClass(FAILED_CLASS);
+		this.panels.time.TriggerClass(FAILED_CLASS);
 
-		if (MomentumTimerAPI.IsFailSoundEnabled()) $.PlaySoundEvent('Momentum.FailedStartTimer');
+		if (this.isFailSoundEnabled()) {
+			$.PlaySoundEvent('Momentum.FailedStartTimer');
+		}
 	}
 
-	static onUpdate() {
-		this.panel.SetDialogVariableFloat('runtime', MomentumTimerAPI.GetObservedTimerStatus().runTime);
+	onUpdate() {
+		const timerState = MomentumTimerAPI.GetObservedTimerStatus().runTime;
+		if (timerState === TimerState_OLD.NOT_RUNNING) return;
+
+		$.GetContextPanel().SetDialogVariableFloat('runtime', MomentumTimerAPI.GetCurrentRunTime());
 	}
 
-	static onZoneChange(enter, linear, curZone, _curTrack, timerState) {
-		if (timerState === TimerState.NOTRUNNING && enter && curZone === 1) {
+	onZoneChange(enter: any, linear: any, curZone: any, _curTrack: any, timerState: any) {
+		if (timerState === TimerState_OLD.NOT_RUNNING && enter && curZone === 1) {
 			// timer state is not reset on map finished until entering the start zone again (on reset)
 			this.resetTimer();
-			this.timeLabel.RemoveClass(FINISHED_CLASS);
+			this.panels.time.RemoveClass(FINISHED_CLASS);
 			return;
 		}
 
-		if (timerState === TimerState.RUNNING && curZone > 1 && enter === linear && HudTimer.prevZone !== curZone) {
+		if (timerState === TimerState_OLD.RUNNING && curZone > 1 && enter === linear && this.prevZone !== curZone) {
 			const diff = RunComparisonsAPI.GetLoadedComparisonOverallDiff(curZone);
 
 			let diffSymbol;
 			if (diff > 0) {
-				this.compLabel.AddClass(DECREASE_CLASS);
-				this.compLabel.RemoveClass(INCREASE_CLASS);
+				this.panels.comparison.AddClass(DECREASE_CLASS);
+				this.panels.comparison.RemoveClass(INCREASE_CLASS);
 				diffSymbol = '+';
 			} else if (diff < 0) {
-				this.compLabel.AddClass(INCREASE_CLASS);
-				this.compLabel.RemoveClass(DECREASE_CLASS);
+				this.panels.comparison.AddClass(INCREASE_CLASS);
+				this.panels.comparison.RemoveClass(DECREASE_CLASS);
 				diffSymbol = '-';
 			} else {
-				this.compLabel.RemoveClass(INCREASE_CLASS);
-				this.compLabel.RemoveClass(DECREASE_CLASS);
+				this.panels.comparison.RemoveClass(INCREASE_CLASS);
+				this.panels.comparison.RemoveClass(DECREASE_CLASS);
 				diffSymbol = '';
 			}
 
-			this.panel.SetDialogVariableFloat('runtimediff', Math.abs(diff));
-			this.panel.SetDialogVariable('diffSymbol', diffSymbol);
+			$.GetContextPanel().SetDialogVariableFloat('runtimediff', Math.abs(diff));
+			$.GetContextPanel().SetDialogVariable('diffSymbol', diffSymbol);
 
-			this.compLabel.AddClass(FADEOUT_START_CLASS);
-			this.compLabel.TriggerClass(FADEOUT_CLASS);
+			this.panels.comparison.AddClass(FADEOUT_START_CLASS);
+			this.panels.comparison.TriggerClass(FADEOUT_CLASS);
 		}
 
 		this.prevZone = curZone;
 	}
 
-	static forceHideComparison() {
-		this.compLabel.RemoveClass(FADEOUT_START_CLASS);
-		this.compLabel.TriggerClass(FADEOUT_CLASS);
+	forceHideComparison() {
+		this.panels.comparison.RemoveClass(FADEOUT_START_CLASS);
+		this.panels.comparison.TriggerClass(FADEOUT_CLASS);
 	}
 
-	static resetTimer() {
-		this.panel.SetDialogVariableFloat('runtime', 0);
-		this.timeLabel.AddClass(INACTIVE_CLASS);
+	resetTimer() {
+		$.GetContextPanel().SetDialogVariableFloat('runtime', 0);
+		this.panels.time.AddClass(INACTIVE_CLASS);
 		this.forceHideComparison();
 		this.prevZone = 0;
 	}
 
-	static onTimerEvent(_ent, type) {
+	onTimerEvent(_ent: any, type: any) {
 		switch (type) {
-			case TimerEvent.STARTED:
+			case TimerEvent_OLD.STARTED:
 				this.onTimerStarted();
 				break;
-			case TimerEvent.FINISHED:
+			case TimerEvent_OLD.FINISHED:
 				this.onTimerFinished();
 				break;
-			case TimerEvent.STOPPED:
+			case TimerEvent_OLD.STOPPED:
 				this.onTimerStopped();
 				break;
-			case TimerEvent.FAILED:
+			case TimerEvent_OLD.FAILED:
 				this.onTimerFailed();
 				break;
 			default:
@@ -118,102 +152,41 @@ class HudTimer {
 		}
 	}
 
-	static onSaveStateChange(_count, _current, _usingmenu) {
+	onSaveStateChange(_count: any, _current: any, _usingmenu: any) {
 		const timerState = MomentumTimerAPI.GetTimerState();
-		if (timerState !== TimerState.RUNNING) {
+		if (timerState !== TimerState_OLD.RUNNING) {
 			this.resetTimer();
-			this.timeLabel.RemoveClass(FINISHED_CLASS);
+			this.panels.time.RemoveClass(FINISHED_CLASS);
 		}
 	}
 
-	static onReplayStopped() {
-		this.timeLabel.RemoveClass(FINISHED_CLASS);
+	onReplayStopped() {
+		this.panels.time.RemoveClass(FINISHED_CLASS);
 
 		const timerState = MomentumTimerAPI.GetTimerState();
-		if (timerState !== TimerState.RUNNING) {
+		if (timerState !== TimerState_OLD.RUNNING) {
 			this.resetTimer();
 			return;
 		}
 
 		this.forceHideComparison();
-		this.timeLabel.RemoveClass(INACTIVE_CLASS);
+		this.panels.time.RemoveClass(INACTIVE_CLASS);
 		this.prevZone = ZonesAPI.GetCurrentZone(); // if curZone === 0 and the timer is running we have big problems
 	}
 
-	static onTimerStateChange() {
-		this.updateFullState();
-		this.playStateSound();
+	isStartSoundEnabled(): boolean {
+		return GameInterfaceAPI.GetSettingBool('mom_hud_timer_sound_start_enable');
 	}
 
-	static onTimerReplaced() {
-		this.updateFullState();
+	isFinishSoundEnabled(): boolean {
+		return GameInterfaceAPI.GetSettingBool('mom_hud_timer_sound_finish_enable');
 	}
 
-	static updateFullState() {
-		const timerStatus = MomentumTimerAPI.GetObservedTimerStatus();
-
-		switch (timerStatus.state) {
-			case TimerStateNEW.DISABLED:
-				this.timeLabel.AddClass(INACTIVE_CLASS);
-				this.timeLabel.RemoveClass(FINISHED_CLASS);
-				break;
-			case TimerStateNEW.RUNNING:
-				this.timeLabel.RemoveClass(INACTIVE_CLASS);
-				this.timeLabel.RemoveClass(FINISHED_CLASS);
-				break;
-			case TimerStateNEW.FINISHED:
-				this.timeLabel.AddClass(FINISHED_CLASS);
-				this.timeLabel.RemoveClass(INACTIVE_CLASS);
-				break;
-			case TimerStateNEW.PRIMED:
-				this.timeLabel.AddClass(INACTIVE_CLASS);
-				this.timeLabel.RemoveClass(FINISHED_CLASS);
-				break;
-			default:
-				$.Warning('Unknown timer state');
-				break;
-		}
-
-		this.panel.SetDialogVariableFloat('runtime', MomentumTimerAPI.GetObservedTimerStatus().runTime);
+	isStopSoundEnabled(): boolean {
+		return GameInterfaceAPI.GetSettingBool('mom_hud_timer_sound_stop_enable');
 	}
 
-	static playStateSound() {
-		const timerStatus = MomentumTimerAPI.GetObservedTimerStatus();
-
-		switch (timerStatus.state) {
-			case TimerStateNEW.DISABLED:
-				if (MomentumTimerAPI.IsStopSoundEnabled()) $.PlaySoundEvent('Momentum.StopTimer');
-				break;
-			case TimerStateNEW.RUNNING:
-				if (MomentumTimerAPI.IsStartSoundEnabled()) $.PlaySoundEvent('Momentum.StartTimer');
-				break;
-			case TimerStateNEW.FINISHED:
-				if (MomentumTimerAPI.IsFinishSoundEnabled()) $.PlaySoundEvent('Momentum.FinishTimer');
-				break;
-			case TimerStateNEW.PRIMED:
-				// no sound
-				break;
-			default:
-				$.Warning('Unknown timer state');
-				break;
-		}
-	}
-
-	static onLoad() {
-		this.panel.hiddenHUDBits = HideHud.TABMENU;
-	}
-
-	static {
-		$.RegisterEventHandler('HudProcessInput', this.panel, this.onUpdate.bind(this));
-		$.RegisterForUnhandledEvent('OnMomentumTimerStateChange', this.onTimerEvent.bind(this));
-		$.RegisterForUnhandledEvent('OnMomentumZoneChange', this.onZoneChange.bind(this));
-		$.RegisterForUnhandledEvent('OnSaveStateUpdate', this.onSaveStateChange.bind(this));
-		$.RegisterForUnhandledEvent('OnMomentumReplayStopped', this.onReplayStopped.bind(this));
-
-		this.panel.SetDialogVariableFloat('runtime', 0);
-
-		// NEW
-		$.RegisterForUnhandledEvent('OnObservedTimerStateChange', this.onTimerStateChange.bind(this));
-		$.RegisterForUnhandledEvent('OnObservedTimerReplaced', this.onTimerReplaced.bind(this));
+	isFailSoundEnabled(): boolean {
+		return GameInterfaceAPI.GetSettingBool('mom_hud_timer_sound_fail_enable');
 	}
 }

@@ -1,47 +1,47 @@
-class RangeColorProfileNamePopup {
-	/** @type {TextEntry} @static */
-	static textEntry = $('#RangeColorProfileName');
-	/** @type {Label} @static */
-	static invalidNameLabel = $('#InvalidNameLabel');
-	static profileNames = [];
+import { OnPanelLoad, PanelHandler } from 'util/module-helpers';
 
-	static onTextSubmitted() {
-		const text = this.textEntry.text;
+@PanelHandler()
+class RangeColorProfileNamePopupHandler implements OnPanelLoad {
+	readonly panels = {
+		cp: $.GetContextPanel<Panel>(),
+		textEntry: $<TextEntry>('#RangeColorProfileName'),
+		invalidName: $<Label>('#InvalidNameLabel')
+	};
+
+	profileNames: string[] = [];
+
+	onPanelLoad() {
+		$.GetContextPanel().SetDialogVariable('OKBtnText', $.GetContextPanel().GetAttributeString('OKBtnText', ''));
+
+		this.panels.invalidName.visible = false;
+		this.profileNames = $.GetContextPanel().GetAttributeString('profileNames', '').split(',');
+		this.panels.textEntry.text = $.GetContextPanel().GetAttributeString('prefilledText', '');
+	}
+
+	onTextSubmitted() {
+		const text = this.panels.textEntry.text;
 		if (text === '' || text === $.Localize('Settings_Speedometer_ColorProfile_Type0') || text.includes(',')) {
-			RangeColorProfileNamePopup.invalidNameSubmitted();
+			this.invalidNameSubmitted();
 			return;
 		}
 
-		let passed = true;
-		RangeColorProfileNamePopup.profileNames.every((profileName) => {
-			if (text.toUpperCase() === profileName.toUpperCase()) {
-				passed = false;
-				return false;
-			}
-			return true;
-		});
-		if (!passed) {
-			RangeColorProfileNamePopup.invalidNameSubmitted();
+		if (this.profileNames.some((profileName) => text.toUpperCase() === profileName.toUpperCase())) {
+			this.invalidNameSubmitted();
 			return;
 		}
 
 		const callbackHandle = $.GetContextPanel().GetAttributeInt('callback', -1);
-		if (callbackHandle !== -1) UiToolkitAPI.InvokeJSCallback(callbackHandle, text);
+		if (callbackHandle !== -1) {
+			UiToolkitAPI.InvokeJSCallback(callbackHandle, text);
+		}
 		UiToolkitAPI.CloseAllVisiblePopups();
 	}
 
-	static invalidNameSubmitted() {
-		RangeColorProfileNamePopup.invalidNameLabel.visible = true;
+	invalidNameSubmitted() {
+		this.panels.invalidName.visible = true;
 	}
 
-	static onOKPressed() {
-		this.textEntry.Submit();
-	}
-
-	static init() {
-		RangeColorProfileNamePopup.invalidNameLabel.visible = false;
-		$.GetContextPanel().SetDialogVariable('OKBtnText', $.GetContextPanel().GetAttributeString('OKBtnText', ''));
-		RangeColorProfileNamePopup.profileNames = $.GetContextPanel().GetAttributeString('profileNames', '').split(',');
-		this.textEntry.text = $.GetContextPanel().GetAttributeString('prefilledText', '');
+	onOkPressed() {
+		this.onTextSubmitted();
 	}
 }
