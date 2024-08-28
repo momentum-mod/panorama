@@ -18,33 +18,35 @@ class ChatHandler {
 		$.GetContextPanel<MomentumChat>().SubmitText();
 	}
 
-	createUsersTypingString() {
-		let strTyping = '';
-		const typingLen = this.membersTyping.length;
+	readonly strs = {
+		oneUser: $.Localize('#Chat_Typing_1User'),
+		twoUsers: $.Localize('#Chat_Typing_2Users'),
+		many: $.Localize('#Chat_Typing_Many')
+	};
 
-		// TODO: We may run into issues with this in localisation, this seems like it may be specific to English
-		if (typingLen > 0) {
-			if (typingLen < 3) {
-				for (const [i, memberSteamID] of this.membersTyping.entries()) {
-					if (i !== 0 && i !== typingLen - 1) {
-						strTyping += ', ';
-					} else if (i !== 0 && i === typingLen - 1) {
-						strTyping += ` ${$.Localize('#Chat_Typing_Conjugate')} `;
-					}
-					strTyping += FriendsAPI.GetNameForXUID(memberSteamID);
-				}
-				strTyping +=
-					typingLen === 1
-						? ' ' + $.Localize('#Chat_Typing_Specific')
-						: ' ' + $.Localize('#Chat_Typing_Multiple');
-			} else {
-				strTyping += typingLen + ' ' + $.Localize('#Chat_Typing_Many');
+	createUsersTypingString(): string {
+		const numTyping = this.membersTyping.length;
+
+		// 0  => ''
+		// 1  => %user% is typing...
+		// 2  => %user1% and %user2% are typing...
+		// 3+ => %amount% users are typing...
+
+		switch (numTyping) {
+			case 0:
+				return '';
+			case 1: {
+				const user1 = FriendsAPI.GetNameForXUID(this.membersTyping[0]);
+				return this.strs.oneUser.replace('%user1%', user1);
 			}
-		} else {
-			strTyping += ' ';
+			case 2: {
+				const user1 = FriendsAPI.GetNameForXUID(this.membersTyping[0]);
+				const user2 = FriendsAPI.GetNameForXUID(this.membersTyping[1]);
+				return this.strs.twoUsers.replace('%user1%', user1).replace('%user2%', user2);
+			}
+			default:
+				return this.strs.many.replace('%amount%', numTyping.toString());
 		}
-
-		return strTyping;
 	}
 
 	onNewChatEntry(panel: GenericPanel) {
