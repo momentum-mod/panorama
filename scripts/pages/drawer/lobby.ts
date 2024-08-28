@@ -355,7 +355,7 @@ class LobbyHandler {
 					memberStatePanel.id,
 					'',
 					'file://{images}/spectatingIcon.svg',
-					`Specating <b>${specTargetName}</b>`,
+					$.Localize('#Spectate_Status_Spectating_Player').replace('%user%', `<b>${specTargetName}</b>`),
 					'tooltip--notitle'
 				)
 			);
