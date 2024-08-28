@@ -145,21 +145,10 @@
 
 	flow-children: down;
 	width: 100%;
-	height: 0px;
 	padding-right: 8px;
 
 	transition: height 0.2s ease-in-out 0s;
-	overflow: clip;
-
-	&--filters-extended {
-		height: 88px; // Hardcoded value so height can transition
-
-		#{$this}__text {
-			vertical-align: middle;
-			overflow: squish;
-			text-overflow: shrink;
-		}
-	}
+	//overflow: squish;
 
 	&__button {
 		width: fit-children;
@@ -177,8 +166,9 @@
 	}
 
 	&__gamemodes {
-		width: fit-children;
-		overflow: scroll noclip;
+		flow-children: right;
+		width: 100%;
+		overflow: squish;
 
 		& > #HorizontalScrollBar {
 			height: 2px;
