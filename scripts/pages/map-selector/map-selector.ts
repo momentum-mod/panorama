@@ -1,89 +1,104 @@
-const TIER_MIN = 1;
-const TIER_MAX = 10;
+import { OnPanelLoad, PanelHandler } from 'util/module-helpers';
+import { traverseChildren } from 'util/functions';
+import { MapCreditType } from 'common/web';
 
-const MapSelNStateClasses = [
-	'mapselector-filters__nstatebutton--off',
-	'mapselector-filters__nstatebutton--include',
-	'mapselector-filters__nstatebutton--exclude'
-];
+enum NStateButtonState {
+	OFF = 0,
+	INCLUDE = 1,
+	EXCLUDE = 2
+}
 
-class MapSelection {
-	static gameModeData = {};
-	static filtersState = {};
+const NStateButtonClasses: ReadonlyMap<NStateButtonState, string> = new Map([
+	[NStateButtonState.OFF, 'mapselector-filters__nstatebutton--off'],
+	[NStateButtonState.INCLUDE, 'mapselector-filters__nstatebutton--include'],
+	[NStateButtonState.EXCLUDE, 'mapselector-filters__nstatebutton--exclude']
+]);
 
-	static panels = {
-		/** @type {TextEntry} @static */
-		searchText: $('#MapSearchTextEntry'),
-		/** @type {Button} @static */
-		searchClear: $('#MapSearchClear'),
-		/** @type {Panel} @static */
-		filtersPanel: $('#MapFilters'),
-		/** @type {Button} @static */
-		filtersToggle: $('#FilterToggle'),
-		/** @type {Button} @static */
-		completedFilterButton: $('#MapCompletedFilterButton'),
-		/** @type {Button} @static */
-		favoritesFilterButton: $('#MapFavoritedFilterButton'),
-		/** @type {Button} @static */
-		downloadedFilterButton: $('#MapDownloadedFilterButton'),
-		/** @type {Panel} @static */
-		emptyContainer: $('#MapListEmptyContainer'),
-		/** @type {DualSlider} @static */
-		tierSlider: $('#TierSlider'),
-		/** @type {Panel} @static */
-		descriptionContainer: $('#MapDescriptionContainer'),
-		/** @type {Panel} @static */
-		creditsContainer: $('#MapCreditsContainer'),
-		/** @type {Panel} @static */
-		datesContainer: $('#MapDatesContainer'),
-		/** @type {Panel} @static */
-		credits: $('#MapCredits'),
-		/** @type {Button} @static */
-		websiteButton: $('#MapInfoWebsiteButton'),
-		/** @type {Label} @static */
-		tags: $('#MapTags')
+/**
+ *  Structure of the data from filter panels we store to persistent storage, e.g.
+ * {
+ * 		TierSlider: {
+ * 			paneltype: "DualSlider",
+ * 			properties: {
+ * 				checked: true
+ * 			}
+ * 		}
+ * }
+ */
+type StoredFilters = {
+	[panelID: string]:
+		| { paneltype: 'ToggleButton'; properties: { checked: boolean } }
+		| { paneltype: 'NStateButton'; properties: { currentstate: int32 } }
+		| { paneltype: 'DualSlider'; properties: { lowerValue: float; upperValue: float } };
+};
+
+@PanelHandler()
+class MapSelectorHandler implements OnPanelLoad {
+	readonly panels = {
+		cp: $.GetContextPanel<MomentumMapSelector>(),
+		searchText: $<TextEntry>('#MapSearchTextEntry'),
+		searchClear: $<Button>('#MapSearchClear'),
+		filtersPanel: $<Panel>('#MapFilters'),
+		nStateButtons: [
+			$<NStateButton>('#MapCompletedFilterButton'),
+			$<NStateButton>('#MapFavoritedFilterButton'),
+			$<NStateButton>('#MapDownloadedFilterButton')
+		],
+		emptyContainer: $<Panel>('#MapListEmptyContainer'),
+		tierSlider: $<DualSlider>('#TierSlider'),
+		descriptionContainer: $<Panel>('#MapDescriptionContainer'),
+		creditsContainer: $<Panel>('#MapCreditsContainer'),
+		datesContainer: $<Panel>('#MapDatesContainer'),
+		credits: $<Panel>('#MapCredits'),
+		websiteButton: $<Button>('#MapInfoWebsiteButton'),
+		tags: $<Label>('#MapTags')
 	};
 
-	static {
-		$.RegisterForUnhandledEvent('MapSelector_ShowConfirmCancelDownload', this.showConfirmCancelDownload.bind(this));
-		$.RegisterForUnhandledEvent('MapSelector_ShowConfirmOverwrite', this.showConfirmOverwrite.bind(this));
-		$.RegisterForUnhandledEvent('MapSelector_MapsFiltered', this.onMapsFiltered.bind(this));
-		$.RegisterForUnhandledEvent('MapSelector_SelectedDataUpdate', this.onSelectedDataUpdated.bind(this));
+	// Describing which data on which type of panel we want to store out to PS.
+	readonly filterablePanels = {
+		ToggleButton: { event: 'onactivate', properties: ['checked'] },
+		NStateButton: { event: 'onactivate', properties: ['currentstate'] },
+		DualSlider: { event: 'onvaluechanged', properties: ['lowerValue', 'upperValue'] }
+	};
 
-		$.RegisterEventHandler('NStateButtonStateChanged', this.panels.completedFilterButton, this.onNStateBtnChanged);
-		$.RegisterEventHandler('NStateButtonStateChanged', this.panels.favoritesFilterButton, this.onNStateBtnChanged);
-		$.RegisterEventHandler('NStateButtonStateChanged', this.panels.downloadedFilterButton, this.onNStateBtnChanged);
+	readonly tierMin = 1;
+	readonly tierMax = 1;
 
-		$.RegisterEventHandler('PanelLoaded', $.GetContextPanel(), () => {
-			// Populate the gameModeData object, finding all the filter buttons
-			this.gameModeData = { ...GameModeInfoWithNull };
+	constructor() {
+		$.RegisterForUnhandledEvent('MapSelector_ShowConfirmCancelDownload', (mapID) =>
+			this.showConfirmCancelDownload(mapID)
+		);
+		$.RegisterForUnhandledEvent('MapSelector_ShowConfirmOverwrite', (mapID) => this.showConfirmOverwrite(mapID));
+		$.RegisterForUnhandledEvent('MapSelector_MapsFiltered', (count) => this.onMapsFiltered(count));
+		$.RegisterForUnhandledEvent('MapSelector_SelectedDataUpdate', () => this.onSelectedDataUpdated());
 
-			for (const mode of Object.keys(this.gameModeData))
-				this.gameModeData[mode].filterButton = $(`#${this.gameModeData[mode].idName}FilterButton`);
+		this.panels.nStateButtons.forEach((panel) =>
+			$.RegisterEventHandler('NStateButtonStateChanged', panel, (panelID, state) =>
+				this.onNStateBtnChanged(panelID, state as NStateButtonState)
+			)
+		);
+	}
 
-			// Load the saved filters state
-			const filtersChanged = this.loadFilters();
+	onPanelLoad() {
+		// Load any saved filter state from persistent storage
+		this.loadFilters();
 
-			// Initialise all the filters events
-			this.initFilterSaveEventsRecursive(this.panels.filtersPanel);
+		// Initialise all the filters events
+		this.setupFilterSaveEvents(this.panels.filtersPanel);
 
-			// Set this event here rather than XML to avoid error on reload (???)
-			this.panels.searchText.SetPanelEvent('ontextentrychange', this.onSearchChanged.bind(this));
+		this.panels.searchText.SetPanelEvent('ontextentrychange', () =>
+			this.panels.searchClear.SetHasClass('search__clearbutton--hidden', this.panels.searchText.text === '')
+		);
 
-			$.GetContextPanel().ApplyFilters();
+		this.panels.cp.ApplyFilters();
 
-			if (($.persistentStorage.getItem('mapSelector.filtersToggled') ?? false) || filtersChanged) {
-				$.DispatchEvent('Activated', this.panels.filtersToggle, 'mouse');
-			}
-
-			$.DispatchEvent('MapSelector_OnLoaded');
-		});
+		$.DispatchEvent('MapSelector_OnLoaded');
 	}
 
 	/**
 	 * Temporary way of requesting a map list update
 	 */
-	static requestMapUpdate() {
+	requestMapUpdate() {
 		this.panels.searchText.Submit();
 		UiToolkitAPI.ShowCustomLayoutTooltip('MapFilters', '', 'file://{resources}/layout/modals/tooltips/test.xml');
 	}
@@ -91,198 +106,112 @@ class MapSelection {
 	/**
 	 * Clear the search bar.
 	 */
-	static clearSearch() {
+	clearSearch() {
 		this.panels.searchText.text = '';
-	}
-
-	/**
-	 * Toggles the filters panel. Tracks state in persistent storage.
-	 */
-	static toggleFilterCollapse() {
-		this.filtersToggled = !this.filtersToggled;
-
-		$.persistentStorage.setItem('mapSelector.filtersToggled', this.filtersToggled);
-
-		this.panels.filtersPanel.SetHasClass('mapselector-filters--filters-extended', this.filtersToggled);
 	}
 
 	/**
 	 * Clear all the filters, resetting to the default state
 	 */
-	static clearFilters() {
+	clearFilters() {
 		// Reset every NState button
-		for (const button of [
-			this.panels.completedFilterButton,
-			this.panels.favoritesFilterButton,
-			this.panels.downloadedFilterButton
-		])
+		for (const button of this.panels.nStateButtons) {
 			button.currentstate = 0;
+		}
 
 		// Reset tier slider
-		this.panels.tierSlider.SetValues(TIER_MIN, TIER_MAX);
+		this.panels.tierSlider.SetValues(this.tierMin, this.tierMax);
 
 		// Apply the changes
-		$.GetContextPanel().ApplyFilters();
+		this.panels.cp.ApplyFilters();
 
-		// Save persistent storage state
-		this.saveAllFilters();
+		// Clear persistent storage state. Nothing wrong with just resetting to a blank object. This will mean that in
+		// some cases a panel's state is saved to PS but with default state (e.g. when user changes from default and
+		// back), whilst in this case it's not stored in PS at all - either is fine.
+		this.saveFiltersToPS({});
 	}
 
-	/**
-	 * Set panel events for all filter elements.
-	 * Note, we only start tracking the state once it's been changed once (i.e., it's been added to the filtersState object).
-	 * If it doesn't have a storage key then it's not being tracked, just load it in its default state.
-	 * @param {Panel} panel The top-level panel to search
-	 */
-	static initFilterSaveEventsRecursive(panel) {
-		// Ignore game mode buttons for now. They will be removed in the future.
-		if (panel.id === 'GamemodeFilters') return;
+	/** Set up panel events to update filter panel properties in persistent storage whenever they change. */
+	setupFilterSaveEvents(panel: GenericPanel) {
+		// Find every panel of paneltype that we want to store
+		// TODO: spread not needed when we have iterator methods when on latest v8/TS
+		[...traverseChildren(panel)]
+			.filter(({ paneltype }) => Object.keys(this.filterablePanels).includes(paneltype))
+			.forEach((panel) => {
+				const paneltype = panel.paneltype as keyof typeof this.filterablePanels;
+				panel.SetPanelEvent(this.filterablePanels[paneltype].event, () => {
+					// When the change event is fired on this panel, get all the data for this panel that we want to
+					// store, and update the stored filters in PS.
+					const propertiesToStore = this.filterablePanels[paneltype]?.properties;
+					if (!propertiesToStore) {
+						return;
+					}
 
-		if (['ToggleButton', 'RadioButton', 'NStateButton', 'DualSlider'].includes(panel.paneltype)) {
-			let eventType;
-			switch (panel.paneltype) {
-				case 'ToggleButton':
-				case 'RadioButton':
-				case 'NStateButton':
-					eventType = 'onactivate';
-					break;
-				case 'DualSlider':
-					eventType = 'onvaluechanged';
-					break;
-			}
+					const storedFilters = this.getFiltersFromPS();
+					if (!storedFilters) {
+						return;
+					}
 
-			panel.SetPanelEvent(eventType, () => this.filterSaveEvent(panel));
-		} else {
-			for (const child of panel?.Children() || []) this.initFilterSaveEventsRecursive(child);
-		}
+					storedFilters[panel.id] = {
+						paneltype,
+						// Pick properties we defined in filterablePanels. Not bothering with complicated types for this.
+						properties: Object.fromEntries(
+							propertiesToStore.map((prop) => [prop, panel[prop as keyof typeof panel]])
+						) as any
+					};
+
+					this.saveFiltersToPS(storedFilters);
+				});
+			});
 	}
 
-	/**
-	 * An event for filters to register to save properly
-	 * @param {Panel} panel The panel that triggered the event
-	 */
-	static filterSaveEvent(panel) {
-		this.filtersState[panel.id] = this.getFilterData(panel);
-
-		// Just saving this every time as ps only writes on quit so setItem should be cheap
-		this.saveFilters();
-	}
-
-	/**
-	 * Search all the filters we're storing and get their current state, then save them to PS
-	 */
-	static saveAllFilters() {
-		if (!this.filtersState) return;
-
-		for (const panelID of Object.keys(this.filtersState)) {
-			const panel = $.GetContextPanel().FindChildTraverse(panelID);
-
-			if (panel) this.filtersState[panelID] = this.getFilterData(panel);
-		}
-
-		this.saveFilters();
-	}
-
-	/*
-	 * Save the filter state object to persistent storage
-	 */
-	static saveFilters() {
-		$.persistentStorage.setItem('mapSelector.filtersState', this.filtersState);
-	}
-
-	/**
-	 * Load the saved state of all filter components from persistent storage, and apply them to the UI
-	 * @returns {Boolean} If any of the filter's states were changed
-	 */
-	static loadFilters() {
+	/** Load the saved state of all filter components from persistent storage, and apply them to the UI */
+	loadFilters() {
 		// If the filter selection yielded empty results on last exit, clear them
 		if ($.persistentStorage.getItem('mapSelector.mapsFiltersYieldEmptyResults')) {
-			this.filtersState = {};
 			return;
 		}
 
-		this.filtersState = $.persistentStorage.getItem('mapSelector.filtersState') ?? {};
+		const filters = $.persistentStorage.getItem('mapSelector.filtersState') as StoredFilters | null;
+		if (!filters) {
+			return;
+		}
 
-		let filtersChanged = false;
-		for (const panelID of Object.keys(this.filtersState)) {
+		for (const [panelID, panelData] of Object.entries(filters)) {
 			const panel = $.GetContextPanel().FindChildTraverse(panelID);
 
-			// Set the filter's state, and if it returns that it the state changed set the value to true
-			if (panel && !this.setFilterData(panel, this.filtersState[panelID])) {
-				filtersChanged = true;
+			try {
+				if (!panel || panel.paneltype !== panelData.paneltype) {
+					throw undefined;
+				} else {
+					for (const [key, value] of Object.entries(panelData.properties)) {
+						if (panel[key as keyof typeof panel] !== value) {
+							(panel[key as keyof typeof panel] as any) = value; // Cba to prove this only non-readonly properties
+						}
+					}
+				}
+			} catch {
+				// If anything goes wrong here, just reset filters to their default state - they're not precious.
+				$.Warning(`MapSelection:loadFilters: panel ${panelID} not found in filters object, resetting`);
+				$.persistentStorage.setItem('mapSelector.filtersState', {});
+				return;
 			}
 		}
+	}
 
-		return filtersChanged;
+	getFiltersFromPS(): StoredFilters {
+		return $.persistentStorage.getItem('mapSelector.filtersState') ?? {};
+	}
+
+	saveFiltersToPS(filters: StoredFilters) {
+		$.persistentStorage.setItem('mapSelector.filtersState', filters);
 	}
 
 	/**
-	 * Set the state of a filter component from a filter data object
-	 * @param {Panel} panel The filter component
-	 * @param {Object} filterData The filter data object to set the state from
-	 * @return {Boolean} Whether the data matched the default filter state
+	 *  Show a popup asking the user if they want to overwrite the map,
+	 * only if mom_map_download_cancel_confirm is true
 	 */
-	static setFilterData(panel, data) {
-		if (panel.paneltype !== data.paneltype) {
-			$.Warning(
-				`MapSelection:setFilterData: paneltype mismatch. ${panel.id} was ${panel.paneltype}, ${data.id} was ${data.paneltype}.`
-			);
-
-			// If the paneltypes are off we're in a weird state where the panel type got changed in the XML (say ToggleButton to NStateButton), so just clear the data and return
-			this.filtersState[Object.keys(this.filtersState).find((key) => this.filtersState[key] === data)] = null;
-			this.saveFilters();
-
-			// Just return true out of this, UX shouldn't be affected if this happens
-			return true;
-		}
-
-		let wasEqual;
-		switch (panel.paneltype) {
-			case 'ToggleButton':
-			case 'RadioButton':
-				wasEqual = panel.checked === data.checked;
-				panel.checked = data.checked;
-				break;
-			case 'NStateButton':
-				wasEqual = panel.currentstate === data.currentstate;
-				panel.currentstate = data.currentstate;
-				break;
-			case 'DualSlider':
-				wasEqual = panel.lowerValue === data.lowerValue && panel.upperValue === data.upperValue;
-				panel.SetValues(data.lowerValue, data.upperValue);
-				break;
-			default:
-				$.Warning('MapSelection:setFilterData: unknown paneltype ' + panel.paneltype);
-				return true;
-		}
-		return wasEqual;
-	}
-
-	/**
-	 *	Get the state of a filter component as a filter data object
-	 *	@param {Panel} panel The filter component
-	 *	@return {Object} The filter data object
-	 */
-	static getFilterData(panel) {
-		switch (panel.paneltype) {
-			case 'ToggleButton':
-			case 'RadioButton':
-				return { paneltype: panel.paneltype, checked: panel.checked };
-			case 'NStateButton':
-				return { paneltype: panel.paneltype, currentstate: panel.currentstate };
-			case 'DualSlider':
-				return { paneltype: panel.paneltype, lowerValue: panel.lowerValue, upperValue: panel.upperValue };
-			default:
-				$.Warning('MapSelection:getFilterData: unknown paneltype');
-				return null;
-		}
-	}
-
-	/**
-	 * Show a popup asking the user if they want to overwrite the map, only if mom_map_download_cancel_confirm is true
-	 * @param {String} mapID The map ID to overwrite
-	 */
-	static showConfirmOverwrite(mapID) {
+	showConfirmOverwrite(mapID: number) {
 		UiToolkitAPI.ShowGenericPopupOkCancel(
 			$.Localize('#Action_ConfirmOverwrite'),
 			$.Localize('#Action_ConfirmOverwrite_Message'),
@@ -294,9 +223,9 @@ class MapSelection {
 
 	/**
 	 * Show a popup asking the user if they want to cancel an ongoing map download
-	 * @param {String} mapID The map ID to overwrite
+	 * @param mapID The map ID to overwrite
 	 */
-	static showConfirmCancelDownload(mapID) {
+	showConfirmCancelDownload(mapID: number) {
 		const cancel = () => $.DispatchEvent('MapSelector_ConfirmCancelDownload', mapID);
 
 		if (GameInterfaceAPI.GetSettingBool('mom_map_download_cancel_confirm')) {
@@ -314,9 +243,9 @@ class MapSelection {
 
 	/**
 	 * Listens to filter changes, if no maps are returned shows the empty warning and tracks in persistent storage
-	 * @param {number} count The number of maps returned by the filter
+	 * @param count The number of maps returned by the filter
 	 */
-	static onMapsFiltered(count) {
+	onMapsFiltered(count: number) {
 		const isZero = count === 0;
 
 		this.panels.emptyContainer.SetHasClass('mapselector__emptywarning--hidden', !isZero);
@@ -327,8 +256,8 @@ class MapSelection {
 	/*
 	 *	Set all the map data for the map just selected
 	 */
-	static onSelectedDataUpdated() {
-		const mapData = $.GetContextPanel().selectedMapData;
+	onSelectedDataUpdated() {
+		const mapData = $.GetContextPanel<MomentumMapSelector>().selectedMapData;
 
 		if (!mapData) return;
 
@@ -359,7 +288,7 @@ class MapSelection {
 					class: 'mapselector-credits__text mapselector-credits__name'
 				});
 
-				if (credit.user.xuid !== '0') {
+				if (credit.user.steamID !== '0') {
 					namePanel.AddClass('mapselector-credits__name--steam');
 
 					// This will become a player profile panel in the future
@@ -367,7 +296,7 @@ class MapSelection {
 						UiToolkitAPI.ShowSimpleContextMenu(namePanel.id, '', [
 							{
 								label: $.Localize('#Action_ShowSteamProfile'),
-								jsCallback: () => SteamOverlayAPI.OpenToProfileID(credit.user.xuid)
+								jsCallback: () => SteamOverlayAPI.OpenToProfileID(credit.user.steamID)
 							}
 						]);
 					});
@@ -387,29 +316,20 @@ class MapSelection {
 		);
 	}
 
-	/**
-	 * When a NState button is pressed, update its styling classes
-	 * @param {string} panelID The NState button ID
-	 * @param {number} state The state of the button (0 = off, 1 = include, 2 = exclude)
-	 */
-	static onNStateBtnChanged(panelID, state) {
-		const panel = $.GetContextPanel().FindChildTraverse(panelID);
+	/** When a NState button is pressed, update its styling classes */
+	onNStateBtnChanged(panelID: string, state: NStateButtonState) {
+		const panel = this.panels.cp.FindChildTraverse(panelID);
 
-		for (const type of Array.from({ length: 3 }).keys())
-			panel.SetHasClass(MapSelNStateClasses[type], state === type);
-	}
-
-	/**
-	 * Only show the clear button if the search is not empty
-	 */
-	static onSearchChanged() {
-		this.panels.searchClear.SetHasClass('search__clearbutton--hidden', this.panels.searchText.text === '');
+		// TODO: Iterator method when on latest v8/TS
+		[...NStateButtonClasses.entries()].forEach(([i, className]) =>
+			$(`#${panelID}`).SetHasClass(className, state === i)
+		);
 	}
 
 	/**
 	 * Toggles the visibility of the leaderboards panel
 	 */
-	static toggleLeaderboards() {
-		$.GetContextPanel().FindChildTraverse('Leaderboards')?.ToggleClass('mapselector-map-times__list--hidden');
+	toggleLeaderboards() {
+		this.panels.cp.FindChildTraverse('Leaderboards')?.ToggleClass('mapselector-map-times__list--hidden');
 	}
 }
