@@ -496,13 +496,17 @@ class ZoneMenu {
 		if (!this.selectedZone || !this.selectedZone.zone) return;
 
 		this.pointPick = PickType.corner;
+		const index = this.panels.regionSelect.GetSelected().GetAttributeInt('value', -1);
+		const region = this.selectedZone.zone.regions[index];
 		if (GameInterfaceAPI.GetSettingBool('mom_zone_two_click')) {
-			const index = this.panels.regionSelect.GetSelected().GetAttributeInt('value', -1);
-			this.selectedZone.zone.regions[index].points.length = 0;
+			region.points.length = 0;
 			this.panels.pointsList.RemoveAndDeleteChildren();
 		}
 		//@ts-expect-error function name
 		this.panels.zoningMenu.startPointPick(true);
+
+		//@ts-expect-error function name
+		this.panels.zoningMenu.setCornersFromRegion(region);
 	}
 
 	static addPointToList(i: number, point: number[]) {
