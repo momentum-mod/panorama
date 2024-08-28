@@ -131,7 +131,6 @@ class ZoneMenu {
 		zone: null as Zone | null
 	};
 	static mapZoneData: ZoneDef | null;
-	static backupZoneData: ZoneDef | null;
 	static filternameList: string[] | null;
 	static teleDestList: string[] | null;
 	static pointPick: string;
@@ -441,6 +440,8 @@ class ZoneMenu {
 
 		const filterIndex = this.panels.filterSelect.GetSelected()?.GetAttributeInt('value', 0);
 		this.selectedZone.zone.filtername = filterIndex ? this.filternameList[filterIndex] : '';
+
+		this.updateZones();
 	}
 
 	static populateRegionProperties() {
@@ -471,6 +472,8 @@ class ZoneMenu {
 		this.populateDropdown(this.selectedZone.zone.regions, this.panels.regionSelect, 'Region', true);
 		this.panels.regionSelect.SetSelectedIndex(this.selectedZone.zone.regions.length - 1);
 		this.populateRegionProperties();
+
+		this.updateZones();
 	}
 
 	static deleteRegion() {
@@ -482,6 +485,8 @@ class ZoneMenu {
 		this.selectedZone.zone?.regions.splice(index, 1);
 		this.panels.regionSelect.SetSelectedIndex(0);
 		this.populateRegionProperties();
+
+		this.updateZones();
 	}
 
 	static pickCorners() {
@@ -515,6 +520,8 @@ class ZoneMenu {
 		const index = this.panels.regionSelect.GetSelected().GetAttributeInt('value', -1);
 		this.selectedZone.zone?.regions[index].points.splice(n, 1);
 		point.DeleteAsync(0);
+
+		this.updateZones();
 	}
 
 	static pickBottom() {
@@ -530,6 +537,8 @@ class ZoneMenu {
 		const region = this.selectedZone.zone.regions[regionIndex];
 		const bottom = Number.parseFloat(this.panels.regionBottom.text);
 		region.bottom = Number.isNaN(bottom) ? 0 : bottom;
+
+		this.updateZones();
 	}
 
 	static pickHeight() {
@@ -545,6 +554,8 @@ class ZoneMenu {
 		const region = this.selectedZone.zone.regions[regionIndex];
 		const height = Number.parseFloat(this.panels.regionHeight.text);
 		region.height = Number.isNaN(height) ? 0 : height;
+
+		this.updateZones();
 	}
 
 	static pickSafeHeight() {
@@ -560,6 +571,8 @@ class ZoneMenu {
 		const region = this.selectedZone.zone.regions[regionIndex];
 		const height = Number.parseFloat(this.panels.regionSafeHeight.text);
 		region.safeHeight = Number.isNaN(height) ? 0 : height;
+
+		this.updateZones();
 	}
 
 	static pickTeleDestPos() {
@@ -623,6 +636,8 @@ class ZoneMenu {
 			this.panels.regionTPYaw.text = '';
 			this.setRegionTPDestTextEntriesActive(false);
 		}
+
+		this.updateZones();
 	}
 
 	static setRegionTeleDestOrientation() {
@@ -637,6 +652,8 @@ class ZoneMenu {
 
 		region.teleDestPos = [Number.isNaN(x) ? 0 : x, Number.isNaN(y) ? 0 : y, Number.isNaN(z) ? 0 : z];
 		region.teleDestYaw = Number.isNaN(yaw) ? 0 : yaw;
+
+		this.updateZones();
 	}
 
 	static setRegionTPDestTextEntriesActive(enable: boolean) {
@@ -698,10 +715,14 @@ class ZoneMenu {
 				this.panels.regionTPYaw.text = region.teleDestYaw.toFixed(2);
 				break;
 		}
+
+		this.updateZones();
 	}
 
 	static onPickCanceled() {
 		this.pointPick = PickType.none;
+
+		this.updateZones();
 	}
 
 	static addBonus() {
@@ -718,6 +739,8 @@ class ZoneMenu {
 			bonus,
 			`${$.Localize('#Zoning_Bonus')!} ${this.mapZoneData.tracks.bonuses.length}`
 		);
+
+		this.updateZones();
 	}
 
 	static addSegment() {
@@ -747,6 +770,8 @@ class ZoneMenu {
 			segment: newSegment,
 			zone: newSegment.checkpoints[0]
 		});
+
+		this.updateZones();
 	}
 
 	static addCheckpoint() {
@@ -775,6 +800,8 @@ class ZoneMenu {
 			segment: this.selectedZone.segment,
 			zone: newZone
 		});
+
+		this.updateZones();
 	}
 
 	static addEndZone() {
@@ -807,6 +834,8 @@ class ZoneMenu {
 				zone: endZone
 			});
 		}
+
+		this.updateZones();
 	}
 
 	static addCancelZone() {
@@ -839,6 +868,8 @@ class ZoneMenu {
 			segment: this.selectedZone.segment,
 			zone: newZone
 		});
+
+		this.updateZones();
 	}
 
 	static showAddMenu() {
@@ -911,17 +942,23 @@ class ZoneMenu {
 		//hack: this can be a little more surgical
 		this.panels.trackList.RemoveAndDeleteChildren();
 		this.initMenu();
+
+		this.updateZones();
 	}
 
 	static setMaxVelocity() {
 		if (!this.mapZoneData) return;
 		const velocity = Number.parseFloat(this.panels.maxVelocity.text);
 		this.mapZoneData.maxVelocity = !Number.isNaN(velocity) && velocity > 0 ? velocity : 0;
+
+		this.updateZones();
 	}
 
 	static setStageEndAtStageStarts() {
 		if (!this.isSelectionValid().track || !('stagesEndAtStageStarts' in this.selectedZone.track!)) return;
 		this.selectedZone.track.stagesEndAtStageStarts = this.panels.stagesEndAtStageStarts.checked;
+
+		this.updateZones();
 	}
 
 	static showDefragFlagMenu() {
@@ -977,21 +1014,29 @@ class ZoneMenu {
 		const trackPanel = this.panels.trackList.GetChild(1 + bonusIndex)!;
 		trackPanel.FindChildTraverse('CollapseButton')!.visible = false;
 		trackPanel.FindChildTraverse('ChildContainer')!.RemoveAndDeleteChildren();
+
+		this.updateZones();
 	}
 
 	static setLimitGroundSpeed() {
 		if (!this.isSelectionValid().segment) return;
 		this.selectedZone.segment!.limitStartGroundSpeed = this.panels.limitGroundSpeed.checked;
+
+		this.updateZones();
 	}
 
 	static setCheckpointsOrdered() {
 		if (!this.isSelectionValid().segment) return;
 		this.selectedZone.segment!.checkpointsOrdered = this.panels.checkpointsOrdered.checked;
+
+		this.updateZones();
 	}
 
 	static setCheckpointsRequired() {
 		if (!this.isSelectionValid().segment) return;
 		this.selectedZone.segment!.checkpointsRequired = this.panels.checkpointsRequired.checked;
+
+		this.updateZones();
 	}
 
 	static setSegmentName() {
@@ -999,6 +1044,8 @@ class ZoneMenu {
 		this.selectedZone.segment!.name = this.panels.segmentName.text;
 		// feat: later
 		// update segment name in trasklist tree
+
+		this.updateZones();
 	}
 
 	static showRegionMenu(menu: string) {
@@ -1013,17 +1060,30 @@ class ZoneMenu {
 		this.panels.teleportSection.visible = menu === 'Teleport';
 	}
 
+	static updateZones() {
+		if (!this.mapZoneData) return;
+
+		//future: validation here
+
+		this.mapZoneData.dataTimestamp = Date.now();
+		//@ts-expect-error API name not recognized
+		MomentumTimerAPI.SetActiveZoneDefs(this.mapZoneData);
+	}
+
 	static saveZones() {
 		if (!this.mapZoneData) return;
 		this.mapZoneData.dataTimestamp = Date.now();
 		//@ts-expect-error API name not recognized
 		MomentumTimerAPI.SaveZoneDefs(this.mapZoneData);
-		// reload zones
 	}
 
 	static cancelEdit() {
 		this.panels.trackList.RemoveAndDeleteChildren();
 		this.mapZoneData = null;
+
+		//@ts-expect-error API name not recognized
+		MomentumTimerAPI.LoadZoneDefs();
+
 		this.initMenu();
 	}
 
