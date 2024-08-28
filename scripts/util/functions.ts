@@ -52,3 +52,17 @@ function compareDeep(object1, object2) {
 
 	return true;
 }
+
+/**
+ * Traverse all descendents of a Panel (depth-first). Use this to avoid ugly recursive search functions.
+ * This is a generator iterator function, meaning it returns an iterable you can iterate over it directly with a
+ * for...of loop.
+ */
+export function* traverseChildren(panel: GenericPanel): Generator<GenericPanel> {
+	const stack = panel.Children();
+	while (stack.length > 0) {
+		const child = stack.pop();
+		yield child;
+		stack.push(...child.Children());
+	}
+}
