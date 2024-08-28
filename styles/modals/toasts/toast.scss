@@ -15,7 +15,7 @@
 		vertical-align: top;
 		overflow: noclip;
 
-		width: 30%;
+		width: 33.33%;
 		height: 100%;
 	}
 
@@ -136,6 +136,8 @@
 	border-radius: 2px;
 	border: 1px solid rgba(0, 0, 0, 0.25);
 
+	max-width: 100%;
+
 	@each $name, $color in $toast-colors {
 		&--#{$name} {
 			background-color: $color;
@@ -161,14 +163,14 @@
 	&__title {
 		@include mixin.font-styles($use-header: true);
 		vertical-align: center;
-		font-size: 26px;
+		font-size: 20px;
 		margin-right: 8px;
 	}
 
 	&__message {
 		@include mixin.font-styles($use-header: false);
 		vertical-align: center;
-		font-size: 22px;
+		font-size: 16px;
 	}
 
 	&__icon {
