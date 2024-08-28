@@ -1,20 +1,24 @@
-class ColorPickerPopup {
-	static init() {
-		const color = $.GetContextPanel().GetAttributeString('color', 'rgba(0,0,0,1)');
-		$('#ColorPicker').prevColor = color;
-		$('#ColorPicker').currColor = color;
+import { OnPanelLoad, PanelHandler } from 'util/module-helpers';
+
+@PanelHandler()
+class ColorPickerPopup implements OnPanelLoad {
+	constructor() {
+		$.RegisterEventHandler('ColorPickerSave', $.GetContextPanel(), () => this.onSaveColor());
+		$.RegisterEventHandler('ColorPickerCancel', $.GetContextPanel(), () => this.onDiscardColor());
 	}
 
-	static onSaveColor(color) {
+	onPanelLoad() {
+		const color = $.GetContextPanel().GetAttributeString('color', 'rgba(0, 0, 0, 1)');
+		const colorPicker = $<ColorPicker>('#ColorPicker');
+		colorPicker.prevColor = color;
+		colorPicker.currColor = color;
+	}
+
+	onSaveColor() {
 		UiToolkitAPI.CloseAllVisiblePopups();
 	}
 
-	static onDiscardColor() {
+	onDiscardColor() {
 		UiToolkitAPI.CloseAllVisiblePopups();
-	}
-
-	static {
-		$.RegisterEventHandler('ColorPickerSave', $.GetContextPanel(), ColorPickerPopup.onSaveColor);
-		$.RegisterEventHandler('ColorPickerCancel', $.GetContextPanel(), ColorPickerPopup.onDiscardColor);
 	}
 }

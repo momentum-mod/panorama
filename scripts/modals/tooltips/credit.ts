@@ -1,7 +1,10 @@
+import { PanelHandler } from 'util/module-helpers';
+
 const SECTIONS = ['lead', 'dept-head', 'team', 'contributor'];
 
-class Credit {
-	static panels = {
+@PanelHandler()
+class CreditHandler {
+	readonly panels = {
 		pronouns: $('#Pronouns'),
 		roles: $('#Roles'),
 		bio: $('#Bio'),
@@ -10,7 +13,11 @@ class Credit {
 		github: $('#Github')
 	};
 
-	static onShow() {
+	constructor() {
+		$.RegisterEventHandler('TooltipVisible', $.GetContextPanel(), () => this.onShow());
+	}
+
+	onShow() {
 		const cp = $.GetContextPanel();
 		const username = cp.GetAttributeString('username', '');
 		const name = cp.GetAttributeString('name', '');
@@ -32,12 +39,15 @@ class Credit {
 			i++;
 		} while (curBioSection.length >= 255);
 
-		// If the name contains a comma, split around it, for names like "Blah von Blah"
+		// If the name contains a comma, split around it, so "Blah,von Blah" becomes firstname "Blah",  lastname "von Blah"
 		cp.SetDialogVariable(
 			'first_names',
 			name.includes(',') ? name.split(',')[0] : name.split(' ').slice(0, -1).join(' ')
 		);
-		cp.SetDialogVariable('last_name', name.includes(',') ? name.split(',')[1] : name.split(' ').slice(-1));
+		cp.SetDialogVariable(
+			'last_name',
+			name.includes(',') ? name.split(',').slice(1).join(' ') : name.split(' ').at(-1)
+		);
 		cp.SetDialogVariable('username', username);
 		cp.SetDialogVariable('roles', roles);
 		cp.SetDialogVariable('pronouns', pronouns);

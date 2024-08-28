@@ -1,16 +1,19 @@
-class Profile {
-	static panels = {
+import { OnPanelLoad, PanelHandler } from 'util/module-helpers';
+
+@PanelHandler()
+class ProfileHandler implements OnPanelLoad {
+	readonly panels = {
 		levelIndicatorsContainer: $('#ProfileLevelIndicators'),
-		prestigeIndicator: $('#ProfileLevelIndicatorPrestige'),
-		levelIndicator: $('#ProfileLevelIndicatorLevel'),
+		prestigeIndicator: $<LevelIndicator>('#ProfileLevelIndicatorPrestige'),
+		levelIndicator: $<LevelIndicator>('#ProfileLevelIndicatorLevel'),
 		levelInfo: $('#LevelInfoButton')
 	};
 
-	static onLoad() {
+	onPanelLoad() {
 		this.update();
 	}
 
-	static update() {
+	update() {
 		const cp = $.GetContextPanel();
 
 		const level = MomentumAPI.GetPlayerLevel();
@@ -29,12 +32,9 @@ class Profile {
 		this.updateLevelIndicators(level);
 	}
 
-	/**
-	 * Set a new level in the two levels indicator components
-	 * @param {number} level - the new level
-	 */
-	static updateLevelIndicators(level) {
-		const indicatorClass = this.panels.prestigeIndicator.jsClass;
+	/** Set a new level in the two levels indicator components */
+	updateLevelIndicators(level: number) {
+		const indicatorClass = this.panels.prestigeIndicator.handler;
 		for (let i = 1; i <= 10; i++) {
 			this.panels.levelIndicatorsContainer.SetHasClass(
 				'profile-level-indicators--' + i,
@@ -44,14 +44,14 @@ class Profile {
 
 		this.panels.levelIndicatorsContainer.SetHasClass('profile-level-indicators--no-prestige', level < 500);
 
-		this.panels.prestigeIndicator.jsClass.setLevel(level);
-		this.panels.levelIndicator.jsClass.setLevel(level);
+		this.panels.prestigeIndicator.handler.setLevel(level);
+		this.panels.levelIndicator.handler.setLevel(level);
 	}
 
 	/**
 	 * Show the levels explainer contextmenu
 	 */
-	static showLevelExplainers() {
+	showLevelExplainers() {
 		UiToolkitAPI.ShowCustomLayoutContextMenu(
 			this.panels.levelInfo.id,
 			'',
@@ -59,7 +59,7 @@ class Profile {
 		);
 	}
 
-	static openWebsiteProfile() {
+	openWebsiteProfile() {
 		SteamOverlayAPI.OpenURLModal('https://momentum-mod.org/dashboard/profile');
 	}
 }

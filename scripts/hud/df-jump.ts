@@ -1,57 +1,60 @@
-const COLOR_CLASS = {
-	AIR: 'dfjump__press--air',
-	GROUND: 'dfjump__press--ground'
-};
+import { PanelHandler } from 'util/module-helpers';
+
+enum ColorClass {
+	AIR = 'dfjump__press--air',
+	GROUND = 'dfjump__press--ground'
+}
 
 const DEFAULT_DELAY = 360;
 
-class DFJump {
-	/** @type {Panel} @static */
-	static container = $('#DFJumpContainer');
-	/** @type {ProgressBar} @static */
-	static releaseBar = $('#JumpReleaseBar');
-	/** @type {ProgressBar} @static */
-	static pressBar = $('#JumpPressBar');
-	/** @type {Label} @static */
-	static releaseLabel = $('#JumpReleaseLabel');
-	/** @type {Label} @static */
-	static pressLabel = $('#JumpPressLabel');
-	/** @type {Label} @static */
-	static totalLabel = $('#JumpTotalLabel');
+@PanelHandler()
+class DFJumpHandler {
+	readonly panels = {
+		container: $<Panel>('#DFJumpContainer'),
+		releaseBar: $<ProgressBar>('#JumpReleaseBar'),
+		pressBar: $<ProgressBar>('#JumpPressBar'),
+		releaseLabel: $<Label>('#JumpReleaseLabel'),
+		pressLabel: $<Label>('#JumpPressLabel'),
+		totalLabel: $<Label>('#JumpTotalLabel')
+	};
 
-	static onLoad() {
-		this.initializeSettings();
-		this.colorClass = COLOR_CLASS.GROUND;
+	colorClass: ColorClass;
+	inverseMaxDelay: float;
+
+	constructor() {
+		$.RegisterForUnhandledEvent('LevelInitPostEntity', () => this.onMapInit());
+		$.RegisterEventHandler('DFJumpDataUpdate', this.panels.container, (releaseDelay, pressDelay, totalDelay) =>
+			this.onDFJumpUpdate(releaseDelay, pressDelay, totalDelay)
+		);
+		$.RegisterForUnhandledEvent('DFJumpMaxDelayChanged', (newDelay: float) => this.setMaxDelay(newDelay));
 	}
 
-	static onDFJumpUpdate(releaseDelay, pressDelay, totalDelay) {
+	onMapInit() {
+		this.initializeSettings();
+		this.colorClass = ColorClass.GROUND;
+	}
+
+	onDFJumpUpdate(releaseDelay: float, pressDelay: float, totalDelay: float) {
 		const releaseRatio = releaseDelay * this.inverseMaxDelay;
 		const pressRatio = Math.abs(pressDelay) * this.inverseMaxDelay;
-		const newPressColorClass = pressDelay < 0 ? COLOR_CLASS.GROUND : COLOR_CLASS.AIR;
+		const newPressColorClass = pressDelay < 0 ? ColorClass.GROUND : ColorClass.AIR;
 
-		this.releaseBar.value = releaseRatio;
-		this.pressBar.value = pressRatio;
-		this.pressBar.RemoveClass(this.colorClass);
-		this.pressBar.AddClass(newPressColorClass);
+		this.panels.releaseBar.value = releaseRatio;
+		this.panels.pressBar.value = pressRatio;
+		this.panels.pressBar.RemoveClass(this.colorClass);
+		this.panels.pressBar.AddClass(newPressColorClass);
 		this.colorClass = newPressColorClass;
 
-		this.releaseLabel.text = releaseDelay.toFixed(0);
-		this.pressLabel.text = pressDelay.toFixed(0);
-		this.totalLabel.text = totalDelay.toFixed(0);
+		this.panels.releaseLabel.text = releaseDelay.toFixed(0);
+		this.panels.pressLabel.text = pressDelay.toFixed(0);
+		this.panels.totalLabel.text = totalDelay.toFixed(0);
 	}
 
-	static setMaxDelay(newDelay) {
+	setMaxDelay(newDelay: float) {
 		this.inverseMaxDelay = 1 / (newDelay ?? DEFAULT_DELAY);
 	}
 
-	static initializeSettings() {
+	initializeSettings() {
 		this.setMaxDelay(GameInterfaceAPI.GetSettingInt('mom_df_hud_jump_max_delay'));
-	}
-
-	static {
-		$.RegisterEventHandler('DFJumpDataUpdate', this.container, this.onDFJumpUpdate.bind(this));
-
-		$.RegisterForUnhandledEvent('LevelInitPostEntity', this.onLoad.bind(this));
-		$.RegisterForUnhandledEvent('DFJumpMaxDelayChanged', this.setMaxDelay.bind(this));
 	}
 }

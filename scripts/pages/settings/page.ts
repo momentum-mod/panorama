@@ -1,8 +1,13 @@
-class SettingsShared {
-	static paintContainer;
-	static videoSettingsPanel;
+import { PanelHandler } from 'util/module-helpers';
+import { isSettingsPanel } from 'common/settings';
+import { traverseChildren } from 'util/functions';
 
-	static onChangedTab(newTab) {
+@PanelHandler()
+export class SettingsPage {
+	paintContainer: Panel;
+	videoSettingsPanel: Panel;
+
+	onChangedTab(newTab: string) {
 		switch (newTab) {
 			case 'VideoSettings': {
 				this.videoSettingsPanel ??= $('#VideoSettings');
@@ -38,18 +43,19 @@ class SettingsShared {
 		}
 
 		const newTabPanel = $.GetContextPanel().FindChildInLayoutFile(newTab);
+
 		this.refreshControlsRecursive(newTabPanel);
 	}
 
-	static refreshControlsRecursive(panel) {
+	refreshControlsRecursive(panel: GenericPanel) {
 		if (panel === null) return;
 
-		panel.OnShow?.();
+		(panel as any).OnShow?.();
 
 		for (const child of panel.Children() || []) this.refreshControlsRecursive(child);
 	}
 
-	static resetSettingsRecursive(panel) {
+	resetSettingsRecursive(panel: GenericPanel) {
 		// TODO: Add support for Enums and Colours here, then include
 		if (panel.paneltype === 'SettingsSlider' || panel.paneltype === 'SettingsEnumDropDown') {
 			panel.RestoreCVarDefault();
@@ -61,23 +67,20 @@ class SettingsShared {
 		}
 	}
 
-	static resetControls(panelID) {
+	resetControls(panelID: string) {
 		this.showConfirmResetSettings($.Localize('#Settings_General_ResetControls'), () => {
-			// TODO: remove this out once api is ported
-			typeof OptionsMenuAPI !== typeof undefined
-				? OptionsMenuAPI.RestoreKeybdMouseBindingDefaults()
-				: $.Msg('Keybinds resetting not yet implemented! Gimme the API!! Grr!!!!');
+			OptionsMenuAPI?.RestoreKeybdMouseBindingDefaults?.();
 			this.resetSettingsRecursive($.GetContextPanel().FindChildTraverse(panelID));
 		});
 	}
 
-	static resetSettings(panelID) {
+	resetSettings(panelID: string) {
 		this.showConfirmResetSettings($.Localize('#Settings_General_ResetSomething'), () => {
 			this.resetSettingsRecursive($.GetContextPanel().FindChildTraverse(panelID));
 		});
 	}
 
-	static resetVideoSettings() {
+	resetVideoSettings() {
 		// For future: use same localisation string as above
 		this.showConfirmResetSettings($.Localize('#Settings_General_ResetSomething'), () => {
 			$.DispatchEvent('VideoSettingsResetDefault');
@@ -86,7 +89,7 @@ class SettingsShared {
 		});
 	}
 
-	static showConfirmResetSettings(message, resetFn) {
+	showConfirmResetSettings(message: string, resetFn: () => void) {
 		UiToolkitAPI.ShowGenericPopupTwoOptionsBgStyle(
 			$.Localize('#Settings_General_Apply'),
 			message,
@@ -105,17 +108,17 @@ class SettingsShared {
 	// Apply button pressed -> disable both
 	// Discard button pressed -> disable both
 
-	static videoSettingsOnUserInputSubmit() {
+	videoSettingsOnUserInputSubmit() {
 		$('#ApplyVideoSettingsButton').enabled = true;
 		$('#DiscardVideoSettingsButton').enabled = true;
 	}
 
-	static videoSettingsResetUserInput() {
+	videoSettingsResetUserInput() {
 		$('#ApplyVideoSettingsButton').enabled = false;
 		$('#DiscardVideoSettingsButton').enabled = false;
 	}
 
-	static videoSettingsDiscardChanges() {
+	videoSettingsDiscardChanges() {
 		// Discard dialogue seems unnecessary here
 		// this.showConfirmResetSettings('Are you sure you want to discard your changes to video settings?', () => {
 		$.DispatchEvent('VideoSettingsInit');
@@ -123,22 +126,18 @@ class SettingsShared {
 		// });
 	}
 
-	static videoSettingsApplyChanges() {
+	videoSettingsApplyChanges() {
 		$.DispatchEvent('ApplyVideoSettings');
 		this.videoSettingsResetUserInput();
 	}
 
-	static showImportExportDialogue(localeString, panelID) {
+	showImportExportDialogue(localeString: string, panelID: string) {
 		const section = $.GetContextPanel().FindChildTraverse(panelID);
 
-		const cvars = [];
-
-		const findCvarsRecursive = (panel) => {
-			if (panel.paneltype && this.isSettingsPanel(panel) && panel.convar) cvars.push(panel.convar);
-			for (const child of panel?.Children() || []) findCvarsRecursive(child);
-		};
-
-		findCvarsRecursive(section);
+		// // TODO: iterator methods
+		const cvars = [...traverseChildren(section)]
+			.filter((panel) => isSettingsPanel(panel) && panel.paneltype !== 'SettingsKeyBinder')
+			.map((panel) => panel.convar);
 
 		let cvarParams = '';
 		for (const [i, cvar] of cvars.entries()) cvarParams += (i !== 0 ? '&' : '') + 'cvar' + (i + 1) + '=' + cvar;
@@ -150,7 +149,7 @@ class SettingsShared {
 		);
 	}
 
-	static updatePaintPreview() {
+	updatePaintPreview() {
 		this.paintContainer ??= $('#GameplaySettings').FindChildInLayoutFile('PaintContainer');
 
 		if (this.paintContainer.actuallayoutwidth === 0) {
@@ -164,18 +163,18 @@ class SettingsShared {
 		const color = GameInterfaceAPI.GetSettingColor('mom_paint_color');
 		const scale = GameInterfaceAPI.GetSettingFloat('mom_paint_scale');
 
-		const paintPanel = this.paintContainer.FindChild('PaintBlob');
+		const paintPanel = this.paintContainer.FindChild<Panel>('PaintBlob');
 
 		paintPanel.style.backgroundColor = color;
 		paintPanel.style.width = scale * width + 'px';
 	}
 
-	static onlineSettingsUpdateModel() {
+	onlineSettingsUpdateModel() {
 		const color = GameInterfaceAPI.GetSettingColor('mom_ghost_color');
 		const bodygroup = GameInterfaceAPI.GetSettingInt('mom_ghost_bodygroup');
 
 		const onlineSettingsPanel = $('#OnlineSettings');
-		const ghostPreview = onlineSettingsPanel.FindChildInLayoutFile('GhostModelPreview');
+		const ghostPreview = onlineSettingsPanel.FindChildInLayoutFile<ModelPanel>('GhostModelPreview');
 
 		ghostPreview.SetCameraFOV(60);
 		ghostPreview.SetModelRotationBoundsEnabled(true, false, false);
@@ -186,7 +185,7 @@ class SettingsShared {
 		ghostPreview.SetModelBodygroup(1, bodygroup);
 	}
 
-	static initTextureReplacementDropdown() {
+	initTextureReplacementDropdown() {
 		const textures = {
 			'#Settings_TextureReplace_Texture_None': '',
 			'#Settings_TextureReplace_Texture_Noise': 'error_replacement/noise_basecolor',
@@ -194,19 +193,17 @@ class SettingsShared {
 			'#Settings_TextureReplace_Texture_GridWithNoise': 'error_replacement/grid-noise_basecolor'
 		};
 
-		/** @type {Image} @static */
-		const imagePanel = this.videoSettingsPanel.FindChildTraverse('TextureReplacePreview');
+		const imagePanel = this.videoSettingsPanel.FindChildTraverse<Image>('TextureReplacePreview');
 
-		/** @type {DropDown} @static */
 		const dropdown = this.videoSettingsPanel
 			.FindChildTraverse('MatErrorReplaceTexture')
-			.FindChildTraverse('DropDown');
+			.FindChildTraverse<DropDown>('DropDown');
 
 		// Clear the dropdown
 		dropdown.RemoveAllOptions();
 
-		const updatePanel = (override) => {
-			const selected = dropdown.GetSelected();
+		const updatePanel = (override: string) => {
+			const selected = dropdown.GetSelected<Label>();
 
 			let path = '';
 			if (override) {
@@ -258,16 +255,5 @@ class SettingsShared {
 			});
 			dropdown.AddOption(item);
 		}
-	}
-
-	static isSettingsPanel(panel) {
-		return [
-			'SettingsEnum',
-			'SettingsSlider',
-			'SettingsEnumDropDown',
-			'SettingsKeyBinder',
-			'SettingsToggle',
-			'ConVarColorDisplay'
-		].includes(panel.paneltype);
 	}
 }

@@ -1,135 +1,105 @@
-class HudStatus {
-	/** @type {Label} @static */
-	static label = $('#HudStatusLabel');
+import { PanelHandler } from 'util/module-helpers';
+import { HideHud } from 'common/state';
+import { TimerState } from 'common/timer';
+import { TrackType } from 'common/web';
 
-	static curZone = -1;
-	static curTrack = -1;
-	static linear = true;
-	static enter = false;
-	static timerState = TimerState.NOTRUNNING;
+@PanelHandler()
+class HudStatusHandler {
+	label = $<Label>('#HudStatusLabel');
 
-	static inPracticeMode = false;
+	constructor() {
+		$.RegisterForUnhandledEvent('OnMomentumPlayerPracticeModeStateChange', (enabled) =>
+			this.onPracticeModeChange(enabled)
+		);
+		$.RegisterForUnhandledEvent('OnSaveStateUpdate', (count, current, usingMenu) =>
+			this.onSaveStateChange(count, current, usingMenu)
+		);
+		$.RegisterForUnhandledEvent('OnObservedTimerStateChange', (_trackID) => this.update());
+		$.RegisterForUnhandledEvent('OnObservedTimerCheckpointProgressed', (_trackID) => this.update());
+		$.RegisterForUnhandledEvent('OnObservedTimerReplaced', () => this.update());
 
-	static saveStateCount = 0;
-	static saveStateCurrent = 0;
-	static saveStateUsing = false;
+		$.GetContextPanel<MomHudStatus>().hiddenHUDBits = HideHud.TABMENU;
 
-	static onZoneChange(enter, linear, curZone, curTrack, timerState) {
-		this.enter = enter;
-		this.curZone = curZone;
-		this.curTrack = curTrack;
-		this.linear = linear;
-		this.timerState = timerState;
-
-		this.updateLabel();
+		this.label.text = $.Localize('#HudStatus_Spawn');
 	}
 
-	static onPracticeModeChange(enabled) {
+	inPracticeMode = false;
+
+	saveStateCount = 0;
+	saveStateCurrent = 0;
+	saveStateUsing = false;
+
+	onPracticeModeChange(enabled: boolean) {
 		this.inPracticeMode = enabled;
-		this.updateLabel();
+		this.update();
 	}
 
-	static onSaveStateChange(count, current, usingmenu) {
+	onSaveStateChange(count: number, current: number, usingMenu: boolean) {
 		this.saveStateCount = count;
 		this.saveStateCurrent = current + 1; // need 1-indexing for display
-		this.saveStateUsing = usingmenu;
-		this.timerState = MomentumTimerAPI.GetTimerState();
+		this.saveStateUsing = usingMenu;
 
-		this.updateLabel();
+		this.update();
 	}
 
-	static onTimerStatusChanged() {
-		this.updateLabel();
-	}
-
-	static updateLabel() {
-		const timerStatus = MomentumTimerAPI.GetObservedTimerStatus();
-
-		let text = '';
-
-		switch (timerStatus.state) {
-			case TimerStateNEW.DISABLED:
-				text = $.Localize('#HudStatus_TimerDisabled');
-				break;
-			case TimerStateNEW.PRIMED:
-				text = $.Localize('#HudStatus_TimerPrimed');
-				break;
-			case TimerStateNEW.RUNNING:
-				switch (timerStatus.trackId.type) {
-					case TrackType.MAIN:
-						if (timerStatus.segmentsCount === 1) {
-							if (timerStatus.segmentCheckpointsCount > 1) {
-								text = `${$.Localize('#HudStatus_Checkpoint')} ${timerStatus.minorNum}/${
-									timerStatus.segmentCheckpointsCount
-								}`;
-							} else {
-								// no state text in this case
-							}
-						} else {
-							text =
-								timerStatus.segmentCheckpointsCount > 1
-									? `${$.Localize('#HudStatus_Stage')} ${timerStatus.majorNum}/${
-											timerStatus.segmentsCount
-									  } | ${$.Localize('#HudStatus_Checkpoint')} ${timerStatus.minorNum}/${
-											timerStatus.segmentCheckpointsCount
-									  }`
-									: `${$.Localize('#HudStatus_Stage')} ${timerStatus.majorNum}/${
-											timerStatus.segmentsCount
-									  }`;
-						}
-						break;
-					case TrackType.STAGE:
-						text =
-							timerStatus.segmentCheckpointsCount > 1
-								? `${$.Localize('#HudStatus_Stage')} ${timerStatus.trackId.number} | ${$.Localize(
-										'#HudStatus_Checkpoint'
-								  )} ${timerStatus.minorNum}/${timerStatus.segmentCheckpointsCount}`
-								: `${$.Localize('#HudStatus_Stage')} ${timerStatus.trackId.number}`;
-						break;
-					case TrackType.BONUS:
-						text =
-							timerStatus.segmentCheckpointsCount > 1
-								? `${$.Localize('#HudStatus_Bonus')} ${timerStatus.trackId.number} | ${$.Localize(
-										'#HudStatus_Checkpoint'
-								  )} ${timerStatus.minorNum}/${timerStatus.segmentCheckpointsCount}`
-								: `${$.Localize('#HudStatus_Bonus')} ${timerStatus.trackId.number}`;
-						break;
-				}
-				break;
-			case TimerStateNEW.FINISHED:
-				text = $.Localize('#HudStatus_TimerFinished');
-				break;
-			default:
-				$.Warning('Unknown timer state');
-				text = '???';
-				break;
-		}
+	update() {
+		let text = this.getTimerText();
 
 		// TODO: maybe show these somewhere else instead of prepending tons of stuff
 		if (this.saveStateUsing) {
-			text = `${$.Localize('#HudStatus_SaveState')} ${this.saveStateCurrent}/${this.saveStateCount} | ${text}`;
+			text = `${this.strs.saveState} ${this.saveStateCurrent}/${this.saveStateCount} | ${text}`;
 		}
 
 		if (this.inPracticeMode) {
-			text = `${$.Localize('#HudStatus_PracticeMode')} | ${text}`;
+			text = `${this.strs.practiceMode} | ${text}`;
 		}
 
 		this.label.text = text;
 	}
 
-	static onLoad() {
-		$.GetContextPanel().hiddenHUDBits = HideHud.TABMENU;
+	private getTimerText(): string {
+		const { state, trackId, segmentsCount, segmentCheckpointsCount, majorNum, minorNum } =
+			MomentumTimerAPI.GetObservedTimerStatus();
+
+		if (state === TimerState.DISABLED) {
+			return $.Localize('#HudStatus_TimerDisabled');
+		}
+
+		if (state === TimerState.PRIMED) {
+			return $.Localize('#HudStatus_TimerPrimed');
+		}
+
+		if (state === TimerState.FINISHED) {
+			return $.Localize('#HudStatus_TimerFinished');
+		}
+
+		// state is TimerState.RUNNING
+		if (trackId.type === TrackType.MAIN) {
+			if (segmentsCount === 1) {
+				return segmentCheckpointsCount > 1 ? `${this.strs.cp} ${minorNum}/${segmentCheckpointsCount}` : '';
+			} else {
+				return segmentCheckpointsCount > 1
+					? `${this.strs.stage} ${majorNum}/${segmentsCount} | ${this.strs.cp} ${minorNum}/${segmentCheckpointsCount}`
+					: `${this.strs.stage} ${majorNum}/${segmentsCount}`;
+			}
+		} else if (trackId.type === TrackType.STAGE) {
+			return segmentCheckpointsCount > 1
+				? `${this.strs.stage} ${trackId.number} | ${this.strs.cp} ${minorNum}/${segmentCheckpointsCount}`
+				: `${this.strs.stage} ${trackId.number}`;
+		} else {
+			// Bonus
+			return segmentCheckpointsCount > 1
+				? `${this.strs.bonus} ${trackId.number} | ${this.strs.cp} ${minorNum}/${segmentCheckpointsCount}`
+				: `${this.strs.bonus} ${trackId.number}`;
+		}
 	}
 
-	static {
-		$.RegisterForUnhandledEvent('OnMomentumZoneChange', this.onZoneChange.bind(this));
-		$.RegisterForUnhandledEvent('OnMomentumPlayerPracticeModeStateChange', this.onPracticeModeChange.bind(this));
-		$.RegisterForUnhandledEvent('OnSaveStateUpdate', this.onSaveStateChange.bind(this));
-
-		$.RegisterForUnhandledEvent('OnObservedTimerStateChange', this.onTimerStatusChanged.bind(this));
-		$.RegisterForUnhandledEvent('OnObservedTimerCheckpointProgressed', this.onTimerStatusChanged.bind(this));
-		$.RegisterForUnhandledEvent('OnObservedTimerReplaced', this.onTimerStatusChanged.bind(this));
-
-		this.label.text = $.Localize('#HudStatus_Spawn');
-	}
+	// Cache strings to save endless $.Localize calls
+	readonly strs = {
+		cp: $.Localize('#HudStatus_Checkpoint'),
+		stage: $.Localize('#HudStatus_Stage'),
+		bonus: $.Localize('#HudStatus_Bonus'),
+		saveState: $.Localize('#HudStatus_SaveState'),
+		practiceMode: $.Localize('#HudStatus_PracticeMode')
+	};
 }

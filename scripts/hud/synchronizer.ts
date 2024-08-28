@@ -1,4 +1,8 @@
-const COLORS = {
+import { PanelHandler } from 'util/module-helpers';
+import * as MomMath from 'util/math';
+import { rgbaStringLerp } from 'util/colors';
+
+const Colors = {
 	EXTRA: ['rgba(24, 150, 211, 1)', 'rgba(87, 200, 255, 1)'],
 	PERFECT: ['rgba(87, 200, 255, 1)', 'rgba(113, 240, 255, 1)'],
 	GOOD: ['rgba(21, 152, 86, 1)', 'rgba(122, 238, 122, 1)'],
@@ -6,38 +10,93 @@ const COLORS = {
 	NEUTRAL: ['rgba(178, 178, 178, 1)', 'rgba(255, 255, 255, 1)'],
 	LOSS: ['rgba(220, 116, 13, 1)', 'rgba(255, 188, 0, 1)'],
 	STOP: ['rgba(211, 24, 24, 1)', 'rgba(255, 87, 87, 1)']
-};
+} satisfies Record<string, [color, color]>;
 
 const DEFAULT_BUFFER_LENGTH = 10;
 const DEFAULT_MIN_SPEED = 200;
 const DEFAULT_SETTING_ON = 1;
 const DEFAULT_SETTING_OFF = 0;
 
+const RAD2DEG = 180 / Math.PI;
+const DEG2RAD = 1 / RAD2DEG;
+
+enum DisplayMode {
+	DISABLED,
+	HALF_WIDTH_THROTTLE,
+	FULL_WIDTH_THROTTLE,
+	STRAFE_INDICATOR,
+	SYNCHRONIZER
+}
+
+enum StatMode {
+	OFF,
+	ON,
+	HIDE_BAR
+}
+
+@PanelHandler()
 class Synchronizer {
-	static panels = {
+	readonly panels = {
 		wrapper: $('#BarWrapper'),
 		segments: [$('#Segment0'), $('#Segment1'), $('#Segment2'), $('#Segment3'), $('#Segment4')],
 		container: $('#Container'),
 		needle: $('#Needle'),
-		stats: [$('#StatsUpper'), $('#StatsLower')]
+		stats: [$<Label>('#StatsUpper'), $<Label>('#StatsLower')]
 	};
 
-	static rad2deg = 180 / Math.PI;
-	static deg2rad = 1 / this.rad2deg;
-	static indicatorPercentage = 90; // this value shows ~90% gain or better when strafe indicator touches needle
-	static bIsFirstPanelColored = true; // gets toggled in wrapValueToRange()
-	static maxSegmentWidth = 25; // percentage of total element width
-	static firstPanelWidth = this.maxSegmentWidth;
-	static syncGain = 10; // scale how fast the bars move
-	static altColor = 'rgba(0, 0, 0, 0.0)';
+	indicatorPercentage = 90; // this value shows ~90% gain or better when strafe indicator touches needle
+	isFirstPanelColored = true; // gets toggled in wrapValueToRange()
+	maxSegmentWidth = 25; // percentage of total element width
+	firstPanelWidth = this.maxSegmentWidth;
+	syncGain = 10; // scale how fast the bars move
+	altColor = 'rgba(0, 0, 0, 0.0)';
+	statMode: StatMode;
+	displayMode: DisplayMode;
+	colorEnable: boolean;
+	dynamicEnable: boolean;
+	statColorEnable: boolean;
+	flipEnable: boolean;
+	interpFrames: number;
+	minSpeed: number;
+	sampleWeight: number;
+	gainRatioHistory: number[];
+	yawRatioHistory: number[];
 
-	static onLoad() {
+	initializeSettings() {
+		this.setDisplayMode(GameInterfaceAPI.GetSettingInt('mom_hud_synchro_mode') as DisplayMode);
+		this.setColorMode(GameInterfaceAPI.GetSettingBool('mom_hud_synchro_color_enable'));
+		this.setDynamicMode(GameInterfaceAPI.GetSettingBool('mom_hud_synchro_dynamic_enable'));
+		this.setDirection(GameInterfaceAPI.GetSettingBool('mom_hud_synchro_flip_enable'));
+		this.setBufferLength(GameInterfaceAPI.GetSettingFloat('mom_hud_synchro_buffer_size'));
+		this.setMinSpeed(GameInterfaceAPI.GetSettingFloat('mom_hud_synchro_min_speed'));
+		this.setStatMode(GameInterfaceAPI.GetSettingInt('mom_hud_synchro_stat_mode'));
+		this.setStatColorMode(GameInterfaceAPI.GetSettingBool('mom_hud_synchro_stat_color_enable'));
+	}
+
+	constructor() {
+		$.RegisterEventHandler('HudProcessInput', $.GetContextPanel(), () => this.onUpdate());
+
+		$.RegisterForUnhandledEvent('OnSynchroModeChanged', (cvarValue) => this.setDisplayMode(cvarValue));
+		$.RegisterForUnhandledEvent('OnSynchroColorModeChanged', (cvarValue) => this.setColorMode(cvarValue === 1));
+		$.RegisterForUnhandledEvent('OnSynchroDynamicModeChanged', (cvarValue) => this.setDynamicMode(cvarValue === 1));
+		$.RegisterForUnhandledEvent('OnSynchroDirectionChanged', (cvarValue) => this.setDirection(cvarValue === 1));
+		$.RegisterForUnhandledEvent('OnSynchroBufferChanged', (cvarValue) => this.setBufferLength(cvarValue));
+		$.RegisterForUnhandledEvent('OnSynchroMinSpeedChanged', (cvarValue) => this.setMinSpeed(cvarValue));
+		$.RegisterForUnhandledEvent('OnSynchroStatModeChanged', (cvarValue) => this.setStatMode(cvarValue));
+		$.RegisterForUnhandledEvent('OnSynchroStatColorModeChanged', (cvarValue) =>
+			this.setStatColorMode(cvarValue === 1)
+		);
+		$.RegisterForUnhandledEvent('OnJumpStarted', () => this.onJump());
+		$.RegisterForUnhandledEvent('LevelInitPostEntity', () => this.onLoad());
+	}
+
+	onLoad() {
 		this.initializeSettings();
 
 		if (this.statMode) this.onJump(); // show stats if enabled
 	}
 
-	static onUpdate() {
+	onUpdate() {
 		const lastMoveData = MomentumMovementAPI.GetLastMoveData();
 		const lastTickStats = MomentumMovementAPI.GetLastTickStats();
 
@@ -45,12 +104,12 @@ class Synchronizer {
 		this.addToBuffer(this.gainRatioHistory, 0);
 		this.addToBuffer(this.yawRatioHistory, 0);
 
-		const bValidWishMove = getSize2D(lastMoveData.wishdir) > 0.1;
+		const bValidWishMove = MomMath.magnitude2D(lastMoveData.wishdir) > 0.1;
 		const strafeRight = (bValidWishMove ? 1 : 0) * lastTickStats.strafeRight;
-		const direction = this.dynamicEnable === 1 ? strafeRight : 1;
-		const flip = this.flipEnable === 1 ? -1 : 1;
+		const direction = this.dynamicEnable ? strafeRight : 1;
+		const flip = this.flipEnable ? -1 : 1;
 
-		if (bValidWishMove && getSizeSquared2D(MomentumPlayerAPI.GetVelocity()) > Math.pow(this.minSpeed, 2)) {
+		if (bValidWishMove && MomMath.sumOfSquares2D(MomentumPlayerAPI.GetVelocity()) > Math.pow(this.minSpeed, 2)) {
 			this.gainRatioHistory[this.interpFrames - 1] =
 				this.sampleWeight * this.NaNCheck(lastTickStats.speedGain / lastTickStats.idealGain, 0);
 
@@ -63,7 +122,7 @@ class Synchronizer {
 
 		const colorTuple = this.colorEnable
 			? this.getColorPair(gainRatio, false) //strafeRight * yawRatio > 1)
-			: COLORS.NEUTRAL;
+			: Colors.NEUTRAL;
 		const color = `gradient(linear, 0% 0%, 0% 100%, from(${colorTuple[0]}), to(${colorTuple[1]}))`;
 		let flow;
 
@@ -99,14 +158,14 @@ class Synchronizer {
 				this.panels.segments[0].style.width =
 					this.NaNCheck(this.firstPanelWidth.toFixed(3), this.maxSegmentWidth) + '%';
 				for (const [i, segment] of this.panels.segments.entries()) {
-					const index = i + (this.bIsFirstPanelColored ? 1 : 0);
+					const index = i + (this.isFirstPanelColored ? 1 : 0);
 					segment.style.backgroundColor = index % 2 ? color : this.altColor;
 				}
 				break;
 		}
 	}
 
-	static onJump() {
+	onJump() {
 		const lastJumpStats = MomentumMovementAPI.GetLastJumpStats();
 		this.panels.stats[0].text =
 			`${lastJumpStats.jumpCount}: `.padStart(6, ' ') +
@@ -114,91 +173,99 @@ class Synchronizer {
 			`(${(lastJumpStats.yawRatio * 100).toFixed(2)}%)`.padStart(10, ' ');
 		this.panels.stats[1].text = (lastJumpStats.speedGain * 100).toFixed(2);
 
-		const colorPair = this.StatColorEnable
+		const colorPair = this.statColorEnable
 			? this.getColorPair(lastJumpStats.speedGain, lastJumpStats.yawRatio > 0)
-			: COLORS.NEUTRAL;
-		for (const stat of this.panels.stats) stat.style.color = colorPair[1];
-	}
-
-	static getColorPair(ratio, bOverStrafing) {
-		// cases where gain effectiveness is >90%
-		if (ratio > 1.02) return COLORS.EXTRA;
-		else if (ratio > 0.99) return COLORS.PERFECT;
-		else if (ratio > 0.95) return COLORS.GOOD;
-		else if (ratio <= -5) return COLORS.STOP;
-
-		const lerpColorPairs = (c1, c2, alpha) => {
-			return [rgbaStringLerp(c1[0], c2[0], alpha.toFixed(3)), rgbaStringLerp(c1[1], c2[1], alpha.toFixed(3))];
-		};
-
-		// cases where gain effectiveness is <90%
-		if (!bOverStrafing) {
-			if (ratio > 0.85) return lerpColorPairs(COLORS.SLOW, COLORS.GOOD, (ratio - 0.85) / 0.1);
-			else if (ratio > 0.75) return COLORS.SLOW;
-			else if (ratio > 0.5) return lerpColorPairs(COLORS.NEUTRAL, COLORS.SLOW, (ratio - 0.5) / 0.25);
-			else if (ratio > 0) return COLORS.NEUTRAL;
-			else if (ratio > -5) return lerpColorPairs(COLORS.NEUTRAL, COLORS.STOP, Math.abs(ratio) / 5);
-		} else {
-			if (ratio > 0.8) return lerpColorPairs(COLORS.SLOW, COLORS.GOOD, (ratio - 0.8) / 0.15);
-			else if (ratio > 0) return lerpColorPairs(COLORS.LOSS, COLORS.SLOW, (ratio - 0.25) / 0.55);
-			else if (ratio > -5) return lerpColorPairs(COLORS.LOSS, COLORS.STOP, Math.abs(ratio) / 5);
+			: Colors.NEUTRAL;
+		for (const stat of this.panels.stats) {
+			stat.style.color = colorPair[1];
 		}
 	}
 
-	static wrapValueToRange(value, min, max, bShouldTrackWrap) {
+	getColorPair(ratio: number, overStrafing: boolean) {
+		// cases where gain effectiveness is >90%
+		if (ratio > 1.02) return Colors.EXTRA;
+		else if (ratio > 0.99) return Colors.PERFECT;
+		else if (ratio > 0.95) return Colors.GOOD;
+		else if (ratio <= -5) return Colors.STOP;
+
+		const lerpColorPairs = (c1: [color, color], c2: [color, color], alpha: number) => {
+			return [rgbaStringLerp(c1[0], c2[0], +alpha.toFixed(3)), rgbaStringLerp(c1[1], c2[1], +alpha.toFixed(3))];
+		};
+
+		// cases where gain effectiveness is <90%
+		if (!overStrafing) {
+			if (ratio > 0.85) return lerpColorPairs(Colors.SLOW, Colors.GOOD, (ratio - 0.85) / 0.1);
+			else if (ratio > 0.75) return Colors.SLOW;
+			else if (ratio > 0.5) return lerpColorPairs(Colors.NEUTRAL, Colors.SLOW, (ratio - 0.5) / 0.25);
+			else if (ratio > 0) return Colors.NEUTRAL;
+			else if (ratio > -5) return lerpColorPairs(Colors.NEUTRAL, Colors.STOP, Math.abs(ratio) / 5);
+		} else {
+			if (ratio > 0.8) return lerpColorPairs(Colors.SLOW, Colors.GOOD, (ratio - 0.8) / 0.15);
+			else if (ratio > 0) return lerpColorPairs(Colors.LOSS, Colors.SLOW, (ratio - 0.25) / 0.55);
+			else if (ratio > -5) return lerpColorPairs(Colors.LOSS, Colors.STOP, Math.abs(ratio) / 5);
+		}
+	}
+
+	wrapValueToRange(value: number, min: number, max: number, bShouldTrackWrap: boolean) {
 		const range = max - min;
 		while (value > max) {
 			value -= range;
 			if (bShouldTrackWrap) {
-				this.bIsFirstPanelColored = !this.bIsFirstPanelColored; // less than clean way to track color flips
+				this.isFirstPanelColored = !this.isFirstPanelColored; // less than clean way to track color flips
 			}
 		}
 		while (value < min) {
 			value += range;
 			if (bShouldTrackWrap) {
-				this.bIsFirstPanelColored = !this.bIsFirstPanelColored;
+				this.isFirstPanelColored = !this.isFirstPanelColored;
 			}
 		}
 		return value;
 	}
 
-	static findFastAngle(speed, maxSpeed, maxAccel) {
+	findFastAngle(speed: number, maxSpeed: number, maxAccel: number) {
 		const threshold = maxSpeed - maxAccel;
 		return Math.acos(speed < threshold ? 1 : threshold / speed);
 	}
 
-	static initializeBuffer(size) {
-		return Array.from({ length: size }).fill(0);
+	initializeBuffer(size: number): number[] {
+		return Array.from({ length: size }).fill(0) as number[];
 	}
 
-	static addToBuffer(buffer, value) {
+	addToBuffer(buffer: number[], value: number) {
 		buffer.push(value);
 		buffer.shift();
 	}
 
-	static getBufferedSum(history) {
+	getBufferedSum(history: number[]) {
 		return history.reduce((sum, element) => sum + element, 0);
 	}
 
-	static setDisplayMode(newMode) {
-		this.displayMode = newMode ?? 0;
+	setDisplayMode(newMode: DisplayMode) {
+		this.displayMode = newMode ?? DisplayMode.DISABLED;
 		switch (this.displayMode) {
-			case 1: // "Half-width throttle"
-				for (const segment of this.panels.segments) segment.style.backgroundColor = this.altColor;
+			case DisplayMode.HALF_WIDTH_THROTTLE:
+				for (const segment of this.panels.segments) {
+					segment.style.backgroundColor = this.altColor;
+				}
 				this.panels.needle.style.visibility = 'visible';
 				break;
-			case 2: // "Full-width throttle"
-				for (const segment of this.panels.segments) segment.style.backgroundColor = this.altColor;
+			case DisplayMode.FULL_WIDTH_THROTTLE:
+				for (const segment of this.panels.segments) {
+					segment.style.backgroundColor = this.altColor;
+				}
 				this.panels.needle.style.visibility = 'collapse';
 				break;
-			case 3: // "Strafe indicator"
+			case DisplayMode.STRAFE_INDICATOR:
 				this.panels.segments[1].style.width = 100 - this.indicatorPercentage + '%';
 				this.panels.segments[2].style.width = 50 + '%';
 				this.panels.segments[3].style.width = 50 + '%';
-				for (const segment of this.panels.segments) segment.style.backgroundColor = this.altColor;
+				for (const segment of this.panels.segments) {
+					segment.style.backgroundColor = this.altColor;
+				}
 				this.panels.needle.style.visibility = 'visible';
 				break;
-			case 4: // "Synchronizer"
+			case DisplayMode.SYNCHRONIZER:
 				for (const segment of this.panels.segments) {
 					segment.style.width = this.maxSegmentWidth + '%';
 				}
@@ -207,19 +274,19 @@ class Synchronizer {
 		}
 	}
 
-	static setColorMode(newColorMode) {
-		this.colorEnable = newColorMode ?? DEFAULT_SETTING_OFF;
+	setColorMode(newColorMode: boolean) {
+		this.colorEnable = newColorMode ?? false;
 	}
 
-	static setDynamicMode(newDynamicMode) {
-		this.dynamicEnable = newDynamicMode ?? DEFAULT_SETTING_ON;
+	setDynamicMode(newDynamicMode: boolean) {
+		this.dynamicEnable = newDynamicMode ?? false;
 	}
 
-	static setDirection(newDirection) {
-		this.flipEnable = newDirection ?? DEFAULT_SETTING_OFF;
+	setDirection(newDirection: boolean) {
+		this.flipEnable = newDirection ?? false;
 	}
 
-	static setBufferLength(newBufferLength) {
+	setBufferLength(newBufferLength: float) {
 		this.interpFrames = newBufferLength ?? DEFAULT_BUFFER_LENGTH;
 		this.sampleWeight = 1 / this.interpFrames;
 
@@ -227,46 +294,20 @@ class Synchronizer {
 		this.yawRatioHistory = this.initializeBuffer(this.interpFrames);
 	}
 
-	static setMinSpeed(newMinSpeed) {
+	setMinSpeed(newMinSpeed: number) {
 		this.minSpeed = newMinSpeed ?? DEFAULT_MIN_SPEED;
 	}
 
-	static setStatMode(newStatMode) {
-		this.statMode = newStatMode ?? 0;
-		this.panels.wrapper.style.visibility = newStatMode === 2 ? 'collapse' : 'visible';
+	setStatMode(newStatMode: StatMode) {
+		this.statMode = newStatMode ?? StatMode.OFF;
+		this.panels.wrapper.style.visibility = newStatMode === StatMode.HIDE_BAR ? 'collapse' : 'visible';
 	}
 
-	static setStatColorMode(newColorMode) {
-		this.StatColorEnable = newColorMode ?? DEFAULT_SETTING_OFF;
+	setStatColorMode(newColorMode: boolean) {
+		this.statColorEnable = newColorMode ?? false;
 	}
 
-	static NaNCheck(val, def) {
+	NaNCheck(val: any, def: any) {
 		return Number.isNaN(Number(val)) ? def : val;
-	}
-
-	static initializeSettings() {
-		this.setDisplayMode(GameInterfaceAPI.GetSettingFloat('mom_hud_synchro_mode'));
-		this.setColorMode(GameInterfaceAPI.GetSettingFloat('mom_hud_synchro_color_enable'));
-		this.setDynamicMode(GameInterfaceAPI.GetSettingFloat('mom_hud_synchro_dynamic_enable'));
-		this.setDirection(GameInterfaceAPI.GetSettingFloat('mom_hud_synchro_flip_enable'));
-		this.setBufferLength(GameInterfaceAPI.GetSettingFloat('mom_hud_synchro_buffer_size'));
-		this.setMinSpeed(GameInterfaceAPI.GetSettingFloat('mom_hud_synchro_min_speed'));
-		this.setStatMode(GameInterfaceAPI.GetSettingFloat('mom_hud_synchro_stat_mode'));
-		this.setStatColorMode(GameInterfaceAPI.GetSettingFloat('mom_hud_synchro_stat_color_enable'));
-	}
-
-	static {
-		$.RegisterEventHandler('HudProcessInput', $.GetContextPanel(), this.onUpdate.bind(this));
-
-		$.RegisterForUnhandledEvent('OnSynchroModeChanged', this.setDisplayMode.bind(this));
-		$.RegisterForUnhandledEvent('OnSynchroColorModeChanged', this.setColorMode.bind(this));
-		$.RegisterForUnhandledEvent('OnSynchroDynamicModeChanged', this.setDynamicMode.bind(this));
-		$.RegisterForUnhandledEvent('OnSynchroDirectionChanged', this.setDirection.bind(this));
-		$.RegisterForUnhandledEvent('OnSynchroBufferChanged', this.setBufferLength.bind(this));
-		$.RegisterForUnhandledEvent('OnSynchroMinSpeedChanged', this.setMinSpeed.bind(this));
-		$.RegisterForUnhandledEvent('OnSynchroStatModeChanged', this.setStatMode.bind(this));
-		$.RegisterForUnhandledEvent('OnSynchroStatColorModeChanged', this.setStatColorMode.bind(this));
-		$.RegisterForUnhandledEvent('OnJumpStarted', this.onJump.bind(this));
-		$.RegisterForUnhandledEvent('LevelInitPostEntity', this.onLoad.bind(this));
 	}
 }

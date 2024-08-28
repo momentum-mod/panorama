@@ -1,30 +1,45 @@
-class HudSpecInfo {
-	/** @type {Panel} @static */
-	static container = $('#SpecInfoContainer');
-	/** @type {Panel} @static */
-	static namesContainer = $('#NamesContainer');
-	/** @type {Label} @static */
-	static numSpecLabel = $('#NumSpecLabel');
+import { OnPanelLoad, PanelHandler } from 'util/module-helpers';
 
-	static maxNames = 0;
+@PanelHandler()
+class HudSpecInfoHandler implements OnPanelLoad {
+	readonly panels = {
+		cp: $.GetContextPanel<MomHudSpecInfo>(),
+		container: $<Panel>('#SpecInfoContainer'),
+		namesContainer: $<Panel>('#NamesContainer'),
+		numSpecLabel: $<Label>('#NumSpecLabel')
+	};
 
-	static onSpectatorTargetChanged(_type) {
-		this.onSpectatorChanged();
+	maxNames = GameInterfaceAPI.GetSettingInt('mom_hud_specinfo_names_count');
+
+	constructor() {
+		$.RegisterForUnhandledEvent('MomentumSpectatorTargetChanged', () => this.onSpectatorChanged());
+		$.RegisterForUnhandledEvent('MomentumSpectatorUpdate', () => this.onSpectatorChanged());
+		$.RegisterForUnhandledEvent('MomentumSpecListMaxNamesUpdate', (val) => {
+			this.maxNames = val;
+			this.onSpectatorChanged();
+		});
 	}
 
-	static onSpectatorChanged() {
+	onPanelLoad() {
+		this.panels.cp.SetDialogVariableInt('numspec', 0);
+		this.panels.container.visible = false;
+	}
+
+	onSpectatorChanged() {
 		const specList = SpectatorAPI.GetSpecList();
 
 		const specCount = specList.length;
 		if (specCount > 0) {
-			this.container.visible = true;
+			this.panels.container.visible = true;
 			$.GetContextPanel().SetDialogVariableInt('numspec', specCount);
-		} else this.container.visible = false;
+		} else {
+			this.panels.container.visible = false;
+		}
 
 		// 0 max names means there is no max
 		const maxDisplayNames = this.maxNames > specCount || this.maxNames === 0 ? specCount : this.maxNames;
 
-		this.namesContainer.RemoveAndDeleteChildren();
+		this.panels.namesContainer.RemoveAndDeleteChildren();
 		for (let i = 0; i < maxDisplayNames; i++) {
 			const steamID = specList[i];
 			const friendlyName = FriendsAPI.GetNameForXUID(steamID);
@@ -39,31 +54,11 @@ class HudSpecInfo {
 		}
 	}
 
-	static createSpecNameLabel(text) {
-		const snippetCont = $.CreatePanel('Panel', this.namesContainer, '');
+	createSpecNameLabel(text: string) {
+		const snippetCont = $.CreatePanel('Panel', this.panels.namesContainer, '');
 		snippetCont.LoadLayoutSnippet('specinfo-list-entry');
 
-		/** @type {Label} */
-		const nameLabel = snippetCont.FindChildInLayoutFile('FriendlySpecName');
-
+		const nameLabel = snippetCont.FindChildInLayoutFile<Label>('FriendlySpecName');
 		nameLabel.text = text;
-	}
-
-	static onMaxNamesChanged(maxNames) {
-		this.maxNames = maxNames;
-		this.onSpectatorChanged();
-	}
-
-	static onLoad() {
-		this.maxNames = GameInterfaceAPI.GetSettingInt('mom_hud_specinfo_names_count');
-	}
-
-	static {
-		$.RegisterForUnhandledEvent('MomentumSpectatorTargetChanged', this.onSpectatorTargetChanged.bind(this));
-		$.RegisterForUnhandledEvent('MomentumSpectatorUpdate', this.onSpectatorChanged.bind(this));
-		$.RegisterForUnhandledEvent('MomentumSpecListMaxNamesUpdate', this.onMaxNamesChanged.bind(this));
-
-		$.GetContextPanel().SetDialogVariableInt('numspec', 0);
-		this.container.visible = false;
 	}
 }

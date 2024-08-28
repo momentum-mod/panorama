@@ -1,45 +1,38 @@
-class MainMenu {
-	static panels = {
-		/** @type {Panel} @static */
-		cp: $.GetContextPanel(),
-		/** @type {Panel} @static */
-		pageContent: $('#PageContent'),
-		/** @type {Panel} @static */
-		homeContent: $('#HomeContent'),
-		/** @type {Panel} @static */
-		contentBlur: $('#MainMenuContentBlur'),
-		/** @type {Panel} @static */
-		backgroundBlur: $('#MainMenuBackgroundBlur'),
-		/** @type {Movie} @static */
-		movie: null,
-		/** @type {Image} @static */
-		image: $('#MainMenuBackground'),
-		/** @type {ModelPanel} @static */
-		model: $('#MainMenuModel'),
-		/** @type {Image} @static */
-		mapSelectorBackground: $('#MainMenuBackgroundMapSelectorImage'),
-		/** @type {Panel} @static */
-		topButtons: $('#MainMenuTopButtons'),
-		/** @type {RadioButton} @static */
-		homeButton: $('#HomeButton'),
-		/** @type {Image} @static */
-		quitButtonIcon: $('#QuitButtonImage')
+import { PanelHandler, OnPanelLoad } from 'util/module-helpers';
+import { checkDosa } from 'util/dont-show-again';
+import { RunSafeguardType } from 'common/safeguards';
+
+@PanelHandler()
+class MainMenuHandler implements OnPanelLoad {
+	readonly panels = {
+		cp: $.GetContextPanel<Panel>(),
+		pageContent: $<Panel>('#PageContent'),
+		homeContent: $<Panel>('#HomeContent'),
+		contentBlur: $<BaseBlurTarget>('#MainMenuContentBlur'),
+		backgroundBlur: $<BaseBlurTarget>('#MainMenuBackgroundBlur'),
+		movie: null as Movie,
+		image: $<Image>('#MainMenuBackground'),
+		model: $<ModelPanel>('#MainMenuModel'),
+		mapSelectorBackground: $<Image>('#MainMenuBackgroundMapSelectorImage'),
+		topButtons: $<Panel>('#MainMenuTopButtons'),
+		homeButton: $<RadioButton>('#HomeButton'),
+		quitButtonIcon: $<Image>('#QuitButtonImage')
 	};
 
-	static activeTab = '';
+	activeTab = '';
 
-	static {
-		$.RegisterForUnhandledEvent('ShowMainMenu', this.onShowMainMenu.bind(this));
-		$.RegisterForUnhandledEvent('HideMainMenu', this.onHideMainMenu.bind(this));
-		$.RegisterForUnhandledEvent('ShowPauseMenu', this.onShowPauseMenu.bind(this));
-		$.RegisterForUnhandledEvent('HidePauseMenu', this.onHidePauseMenu.bind(this));
-		$.RegisterForUnhandledEvent('MapSelector_OnLoaded', this.onMapSelectorLoaded.bind(this));
-		$.RegisterForUnhandledEvent('Safeguard_Disconnect', this.onSafeguardDisconnect.bind(this));
-		$.RegisterForUnhandledEvent('Safeguard_Quit', this.onSafeguardQuit.bind(this));
-		$.RegisterForUnhandledEvent('Safeguard_ChangeMap', this.onSafeguardMapChange.bind(this));
-		$.RegisterForUnhandledEvent('ReloadBackground', this.setMainMenuBackground.bind(this));
-		$.RegisterForUnhandledEvent('OnMomentumQuitPrompt', this.onQuitPrompt.bind(this));
-		$.RegisterEventHandler('Cancelled', $.GetContextPanel(), this.onEscapeKeyPressed.bind(this));
+	constructor() {
+		$.RegisterForUnhandledEvent('ShowMainMenu', () => this.onShowMainMenu());
+		$.RegisterForUnhandledEvent('HideMainMenu', () => this.onHideMainMenu());
+		$.RegisterForUnhandledEvent('ShowPauseMenu', () => this.onShowPauseMenu());
+		$.RegisterForUnhandledEvent('HidePauseMenu', () => this.onHidePauseMenu());
+		$.RegisterForUnhandledEvent('MapSelector_OnLoaded', () => this.onMapSelectorLoaded());
+		$.RegisterForUnhandledEvent('Safeguard_Disconnect', () => this.onSafeguardDisconnect());
+		$.RegisterForUnhandledEvent('Safeguard_Quit', () => this.onSafeguardQuit());
+		$.RegisterForUnhandledEvent('Safeguard_ChangeMap', (mapName) => this.onSafeguardMapChange(mapName));
+		$.RegisterForUnhandledEvent('ReloadBackground', () => this.setMainMenuBackground());
+		$.RegisterForUnhandledEvent('OnMomentumQuitPrompt', () => this.onQuitPrompt());
+		$.RegisterEventHandler('Cancelled', $.GetContextPanel(), () => this.onEscapeKeyPressed());
 
 		// Close the map selector when a map is successfully loaded
 		$.RegisterForUnhandledEvent(
@@ -50,11 +43,7 @@ class MainMenu {
 		$.DispatchEvent('HideIntroMovie');
 	}
 
-	/**
-	 * General onLoad initialisations.
-	 * Fired when MainMenu fires its onload event.
-	 */
-	static onMainMenuLoaded() {
+	onPanelLoad() {
 		// These aren't accessible until the page has loaded fully, find them now
 		this.panels.movie = $('#MainMenuMovie');
 		this.panels.model = $('#MainMenuModel');
@@ -81,7 +70,7 @@ class MainMenu {
 	/**
 	 * Fired by C++ whenever main menu is switched to.
 	 */
-	static onShowMainMenu() {
+	onShowMainMenu() {
 		this.panels.movie = $('#MainMenuMovie');
 		this.panels.image = $('#MainMenuBackground');
 
@@ -93,14 +82,14 @@ class MainMenu {
 	/**
 	 * Fired by C++ whenever main menu is switched from.
 	 */
-	static onHideMainMenu() {
+	onHideMainMenu() {
 		UiToolkitAPI.CloseAllVisiblePopups();
 	}
 
 	/**
 	 * Fired by C++ whenever pause menu (i.e. main menu when in a map) is switched to.
 	 */
-	static onShowPauseMenu() {
+	onShowPauseMenu() {
 		this.panels.cp.AddClass('MainMenuRootPanel--PauseMenuMode');
 
 		this.panels.quitButtonIcon.SetImage('file://{images}/exit-door.svg');
@@ -109,7 +98,7 @@ class MainMenu {
 	/**
 	 * Fired by C++ whenever pause menu is switched from.
 	 */
-	static onHidePauseMenu() {
+	onHidePauseMenu() {
 		this.panels.cp.RemoveClass('MainMenuRootPanel--PauseMenuMode');
 
 		// Save to file whenever the settings page gets closed
@@ -121,7 +110,7 @@ class MainMenu {
 	/**
 	 * Switch main menu page
 	 */
-	static navigateToPage(tab, xmlName, hasBlur = true) {
+	navigateToPage(tab: string, xmlName: string, hasBlur = true) {
 		this.panels.mapSelectorBackground.SetHasClass('mapselector__background--hidden', tab !== 'MapSelection');
 
 		this.panels.contentBlur.visible = hasBlur;
@@ -189,7 +178,7 @@ class MainMenu {
 	/**
 	 * Show the main menu page container and retract the drawer.
 	 */
-	static showContentPanel() {
+	showContentPanel() {
 		this.panels.pageContent.RemoveClass('mainmenu__page-container--hidden');
 
 		$.DispatchEvent('RetractDrawer');
@@ -201,7 +190,7 @@ class MainMenu {
 	/**
 	 * Hide the main menu page container and active page, and display the home page content.
 	 */
-	static onHideContentPanel() {
+	onHideContentPanel() {
 		this.panels.pageContent.AddClass('mainmenu__page-container--hidden');
 
 		// Uncheck the active button in the main menu navbar.
@@ -226,8 +215,8 @@ class MainMenu {
 	/**
 	 * Temporary method to show the playtest welcome thingy
 	 */
-	static showPlaytestWelcomePopup() {
-		if (!DosaHandler.checkDosa('playtestWelcome'))
+	showPlaytestWelcomePopup() {
+		if (!checkDosa('playtestWelcome'))
 			UiToolkitAPI.ShowCustomLayoutPopupParameters(
 				'',
 				'file://{resources}/layout/modals/popups/playtest-welcome.xml',
@@ -238,10 +227,10 @@ class MainMenu {
 	/**
 	 * Set the video background based on persistent storage settings
 	 */
-	static setMainMenuBackground() {
+	setMainMenuBackground() {
 		if (!this.panels.movie?.IsValid() || !this.panels.image?.IsValid()) return;
 
-		let useVideo = $.persistentStorage.getItem('settings.mainMenuMovie');
+		let useVideo = $.persistentStorage.getItem<boolean>('settings.mainMenuMovie');
 
 		if (useVideo === null) {
 			// Enable video by default
@@ -263,7 +252,7 @@ class MainMenu {
 			$.persistentStorage.setItem('settings.mainMenuBackground', backgroundVar);
 		}
 
-		let name = '';
+		let name: string;
 
 		// If it's xmas and you're using one of the default backgrounds, replace it with the xmas version
 		const date = new Date();
@@ -292,7 +281,7 @@ class MainMenu {
 	/*
 	 *	Toggles between dark and light mode in the main menu
 	 */
-	static toggleBackgroundLightDark() {
+	toggleBackgroundLightDark() {
 		$.persistentStorage.setItem(
 			'settings.mainMenuBackground',
 			$.persistentStorage.getItem('settings.mainMenuBackground') === 0 ? 1 : 0
@@ -304,7 +293,7 @@ class MainMenu {
 	/**
 	 * Hide the map selector background
 	 */
-	static hideMapSelectorBackground() {
+	hideMapSelectorBackground() {
 		this.panels.mapSelectorBackground.AddClass('mapselector__background--hidden');
 	}
 
@@ -312,7 +301,7 @@ class MainMenu {
 	 * Handles the map selector load event to add blurs to some of the map selector panels.
 	 * Necessary to handle in here because map selector background is a part of the main menu background section.
 	 */
-	static onMapSelectorLoaded() {
+	onMapSelectorLoaded() {
 		for (const panel of ['MapSelectorLeft', 'MapDescription', 'MapInfoStats', 'Leaderboards'])
 			this.panels.backgroundBlur?.AddBlurPanel($.GetContextPanel().FindChildTraverse(panel));
 	}
@@ -320,7 +309,7 @@ class MainMenu {
 	/**
 	 * Handles home button getting pressed.
 	 */
-	static onHomeButtonPressed() {
+	onHomeButtonPressed() {
 		this.onHideContentPanel();
 		this.hideMapSelectorBackground();
 	}
@@ -329,7 +318,7 @@ class MainMenu {
 	 * Handles quit button getting pressed, deciding whether to `disconnect` or `quit`
 	 * based on if we're ingame or not.
 	 */
-	static onQuitButtonPressed() {
+	onQuitButtonPressed() {
 		if (GameInterfaceAPI.GetGameUIState() === GameUIState.PAUSEMENU) {
 			GameInterfaceAPI.ConsoleCommand('disconnect');
 			this.onHomeButtonPressed();
@@ -338,11 +327,8 @@ class MainMenu {
 		this.onQuitPrompt();
 	}
 
-	/**
-	 * Handles when the quit button is shown, either from button getting pressed or event fired from C++.
-	 * @param {boolean} toDesktop
-	 */
-	static onQuitPrompt(toDesktop = true) {
+	/** Handles when the quit button is shown, either from button getting pressed or event fired from C++. */
+	onQuitPrompt(toDesktop = true) {
 		if (!toDesktop) return; // currently don't handle disconnect prompts
 
 		$.DispatchEvent('MainMenuPauseGame'); // make sure game is paused so we can see the popup if hit from a keybind in-game
@@ -359,10 +345,8 @@ class MainMenu {
 		);
 	}
 
-	/**
-	 * Shows a safeguard popup when disconnect is pressed during a run and safeguard is on
-	 */
-	static onSafeguardDisconnect() {
+	/** Shows a safeguard popup when disconnect is pressed during a run and safeguard is on */
+	onSafeguardDisconnect() {
 		UiToolkitAPI.ShowGenericPopupOkCancel(
 			$.Localize('#Safeguard_MapQuitToMenu'),
 			$.Localize('#Safeguard_MapQuitToMenu_Message'),
@@ -372,10 +356,8 @@ class MainMenu {
 		);
 	}
 
-	/**
-	 * Shows a safeguard popup when quit is pressed during a run and safeguard is on
-	 */
-	static onSafeguardQuit() {
+	/** Shows a safeguard popup when quit is pressed during a run and safeguard is on */
+	onSafeguardQuit() {
 		UiToolkitAPI.ShowGenericPopupOkCancel(
 			$.Localize('#Safeguard_MapQuitGame'),
 			$.Localize('#Safeguard_MapQuitGame_Message'),
@@ -385,10 +367,8 @@ class MainMenu {
 		);
 	}
 
-	/**
-	 * Shows a safeguard popup when map change is triggered during a run and safeguard is on
-	 */
-	static onSafeguardMapChange(mapName) {
+	/** Shows a safeguard popup when map change is triggered during a run and safeguard is on */
+	onSafeguardMapChange(mapName: string) {
 		UiToolkitAPI.ShowGenericPopupOkCancel(
 			$.Localize('#Safeguard_MapChange'),
 			$.Localize('#Safeguard_MapChange_Message').replace('%map%', mapName),
@@ -399,17 +379,11 @@ class MainMenu {
 	}
 
 	/** Quits the game. Bye! */
-	static quitGame() {
+	quitGame() {
 		GameInterfaceAPI.ConsoleCommand('quit');
 	}
 
-	/**
-	 * Handles the escape key getting pressed
-	 * @param {unknown} _eSource - C++ dev needs to explain what these params do. Pressing in main menu returns "MainMenuInput"
-	 * @param {unknown} _nRepeats - Pressing in main menu returns "keyboard"
-	 * @param {unknown} _focusPanel - Pressing in main menu returns undefined
-	 */
-	static onEscapeKeyPressed(_eSource, _nRepeats, _focusPanel) {
+	onEscapeKeyPressed() {
 		// Resume game in pause menu mode, OTHERWISE close the active menu menu page
 		if (GameInterfaceAPI.GetGameUIState() === GameUIState.PAUSEMENU) {
 			$.DispatchEvent('MainMenuResumeGame');

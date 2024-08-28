@@ -1,18 +1,30 @@
-const DEPLOYED_CLASS = 'weaponselection__wrapper--deployed';
+import { PanelHandler } from 'util/module-helpers';
+import { WeaponID, WeaponNames, WeaponStateChangeMode } from 'common/weapon';
+import * as Enum from 'util/enum';
+
 const FADEOUT_CLASS = 'weaponselection--fadeout';
+const DEPLOYED_CLASS = 'weaponselection__wrapper--deployed';
 
-class WeaponSelection {
-	static container = $('#WeaponSelection');
-	static wepSnippets = [];
-	static lastDeployed = WeaponID.NONE;
+@PanelHandler()
+class WeaponSelectionHandler {
+	container = $('#WeaponSelection');
+	weaponPanels: Map<WeaponID, Panel> = new Map();
+	lastDeployed = WeaponID.NONE;
 
-	static onWeaponStateChange(mode, id) {
+	constructor() {
+		$.RegisterForUnhandledEvent('OnMomentumWeaponStateChange', (state, weaponID) =>
+			this.onWeaponStateChange(state, weaponID)
+		);
+		$.RegisterForUnhandledEvent('OnAllMomentumWeaponsDropped', () => this.onAllWeaponsDropped());
+	}
+
+	onWeaponStateChange(mode: WeaponStateChangeMode, id: WeaponID) {
 		switch (mode) {
 			case WeaponStateChangeMode.SWITCH:
 				if (this.lastDeployed !== WeaponID.NONE)
-					this.wepSnippets[this.lastDeployed - 1]?.RemoveClass(DEPLOYED_CLASS);
+					this.weaponPanels.get(this.lastDeployed)?.RemoveClass(DEPLOYED_CLASS);
 				this.lastDeployed = id;
-				this.wepSnippets[id - 1]?.AddClass(DEPLOYED_CLASS);
+				this.weaponPanels.get(id)?.AddClass(DEPLOYED_CLASS);
 				break;
 			case WeaponStateChangeMode.PICKUP:
 				this.createWeaponPanel(id);
@@ -29,36 +41,32 @@ class WeaponSelection {
 		this.container.TriggerClass(FADEOUT_CLASS);
 	}
 
-	static onAllWeaponsDropped() {
-		for (let id = WeaponID.FIRST; id < WeaponID.MAX; id++) {
-			this.destroyWeaponPanel(id);
-		}
+	onAllWeaponsDropped() {
+		Enum.fastValuesNumeric(WeaponID).forEach((id) => this.destroyWeaponPanel(id));
 	}
 
-	static createWeaponPanel(id) {
-		if (this.wepSnippets[id - 1]) return;
+	createWeaponPanel(id: WeaponID) {
+		if (this.weaponPanels.has(id)) return;
 
 		const weaponPanel = $.CreatePanel('Panel', this.container, ''); // Create the new panel
-		weaponPanel.SetDialogVariable('weapon', $.Localize(WeaponNames[id - 1]));
+		weaponPanel.SetDialogVariable('weapon', $.Localize(WeaponNames.get(id)));
 		weaponPanel.LoadLayoutSnippet('Weapon');
 
 		const weaponSlot = MomentumWeaponAPI.GetWeaponSlot(id) + 1;
-		const keybindPanel = weaponPanel.FindChildTraverse('WeaponKeyBind');
-		if (weaponSlot >= 0) keybindPanel.SetTextWithDialogVariables(`{v:csgo_bind:e:bind_slot${weaponSlot}}`);
-		else keybindPanel.visible = false;
+		const keybindPanel = weaponPanel.FindChildTraverse<Label>('WeaponKeyBind');
+		if (weaponSlot >= 0) {
+			keybindPanel.SetTextWithDialogVariables(`{v:csgo_bind:e:bind_slot${weaponSlot}}`);
+		} else {
+			keybindPanel.visible = false;
+		}
 
 		weaponPanel.SetAttributeInt('slot_index', weaponSlot);
 
-		this.wepSnippets[id - 1] = weaponPanel;
+		this.weaponPanels.set(id, weaponPanel);
 	}
 
-	static destroyWeaponPanel(id) {
-		this.wepSnippets[id - 1]?.DeleteAsync(0);
-		delete this.wepSnippets[id - 1];
-	}
-
-	static {
-		$.RegisterForUnhandledEvent('OnMomentumWeaponStateChange', this.onWeaponStateChange.bind(this));
-		$.RegisterForUnhandledEvent('OnAllMomentumWeaponsDropped', this.onAllWeaponsDropped.bind(this));
+	destroyWeaponPanel(id: WeaponID) {
+		this.weaponPanels.get(id)?.DeleteAsync(0);
+		this.weaponPanels.delete(id);
 	}
 }

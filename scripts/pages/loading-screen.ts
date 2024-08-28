@@ -1,24 +1,22 @@
-class LoadingScreen {
-	static panels = {
-		/** @type {Panel} @static */
+import { PanelHandler } from 'util/module-helpers';
+import { getMainTrack, getNumZones } from 'common/leaderboard';
+import { MapCreditType } from 'common/web';
+
+@PanelHandler()
+class LoadingScreenHandler {
+	readonly panels = {
 		cp: $.GetContextPanel(),
-		/** @type {Image} @static */
-		backgroundImage: $('#BackgroundImage'),
-		/** @type {ProgressBar} @static */
-		progressBar: $('#ProgressBar'),
-		/** @type {Label} @static */
-		mapName: $('#MapName'),
-		/** @type {Label} @static */
-		author: $('#Author'),
-		/** @type {Label} @static */
-		tierAndType: $('#TierAndType'),
-		/** @type {Label} @static */
-		numZones: $('#NumZones')
+		backgroundImage: $<Image>('#BackgroundImage'),
+		progressBar: $<ProgressBar>('#ProgressBar'),
+		mapName: $<Label>('#MapName'),
+		author: $<Label>('#Author'),
+		tierAndType: $<Label>('#TierAndType'),
+		numZones: $<Label>('#NumZones')
 	};
 
-	static {
-		$.RegisterForUnhandledEvent('MapCache_MapLoad', this.updateLoadingScreenInfo.bind(this));
-		$.RegisterForUnhandledEvent('UnloadLoadingScreenAndReinit', this.init.bind(this));
+	constructor() {
+		$.RegisterForUnhandledEvent('MapCache_MapLoad', (mapName) => this.updateLoadingScreenInfo(mapName));
+		$.RegisterForUnhandledEvent('UnloadLoadingScreenAndReinit', () => this.init());
 
 		$.RegisterEventHandler(
 			'PanelLoaded',
@@ -32,7 +30,7 @@ class LoadingScreen {
 		);
 	}
 
-	static init() {
+	init() {
 		this.panels.progressBar.value = 0;
 
 		const gamemode = GameModeAPI.GetCurrentGameMode();
@@ -47,7 +45,7 @@ class LoadingScreen {
 		this.panels.backgroundImage.visible = false;
 	}
 
-	static updateLoadingScreenInfo(mapName) {
+	updateLoadingScreenInfo(mapName: string) {
 		if (!mapName) return;
 
 		const mapData = MapCacheAPI.GetCurrentMapData();
@@ -71,7 +69,7 @@ class LoadingScreen {
 		this.panels.cp.SetDialogVariable('mapname', mapData.name);
 		this.panels.cp.SetDialogVariableInt('tier', mainTrack?.tier ?? 0);
 		this.panels.cp.SetDialogVariableInt('numzones', numZones);
-		this.panels.cp.SetDialogVariable('tracktype', mainTrack?.isLinear ? 'Linear' : 'Staged');
+		this.panels.cp.SetDialogVariable('tracktype', mainTrack?.linear ? 'Linear' : 'Staged');
 
 		let authorString = '';
 		for (const [i, item] of mapData.credits.filter((x) => x.type === MapCreditType.AUTHOR).entries())

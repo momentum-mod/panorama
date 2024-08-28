@@ -1,42 +1,31 @@
-/**
- * Utility functions for Javascript.
- * Could be ported to C++ and exposed globally in the future.
- */
-
-/**
- * Check whether a give argument is an Object.
- * @param {any} item
- * @returns {boolean}
- */
-function isObject(item) {
+/** Check whether a given argument is an Object. */
+export function isObject(item: any): item is Record<string, unknown> {
 	return item && typeof item === 'object' && !Array.isArray(item);
 }
 
-/**
- * Deep merge two Objects.
- * @param {object} target
- * @param {object} source
- * @returns {object}
- */
-function mergeDeep(target, source) {
-	if (!(isObject(target) && isObject(source))) return;
+/** Deep merge two Objects. */
+export function mergeDeep(target: Record<string, unknown>, source: Record<string, unknown>): object {
+	if (!(isObject(target) && isObject(source))) {
+		throw new Error('Both arguments must be objects.');
+	}
 
 	const output = Object.assign({}, target);
-	for (const key of Object.keys(source))
-		if (isObject(source[key]))
-			if (!(key in target)) Object.assign(output, { [key]: source[key] });
-			else output[key] = mergeDeep(target[key], source[key]);
-		else Object.assign(output, { [key]: source[key] });
+	for (const key of Object.keys(source)) {
+		if (isObject(source[key])) {
+			if (!(key in target)) {
+				Object.assign(output, { [key]: source[key] });
+			} else if (isObject(target[key])) {
+				output[key] = mergeDeep(target[key], source[key]);
+			}
+		} else {
+			Object.assign(output, { [key]: source[key] });
+		}
+	}
 	return output;
 }
 
-/**
- * Deep compare two Objects.
- * @param {object} object1
- * @param {object} object2
- * @returns {boolean}
- */
-function compareDeep(object1, object2) {
+/** Deep compare two Objects. */
+export function compareDeep(object1: Record<string, unknown>, object2: Record<string, unknown>): boolean {
 	const objKeys1 = Object.keys(object1);
 	const objKeys2 = Object.keys(object2);
 

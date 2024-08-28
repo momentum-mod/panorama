@@ -15,7 +15,7 @@
  * 			[GameMode.DEFRAG],
  * 			'HudProcessInput',
  * 			$.GetContextPanel(),
- * 			this.onUpdate.bind(this)
+ * 			() => this.onUpdate()
  * 		);
  * 	}
  * ```
@@ -25,15 +25,14 @@
  * @param callbackFn - Event callback
  * @returns Cleanup function that unregisters both event handlers
  */
-function RegisterEventForGamemodes(
+export function RegisterEventForGamemodes(
 	gamemodes: number[],
-	event: string,
-	context: string | Panel,
+	event: keyof GlobalEventNameMap,
+	context: GenericPanel,
 	callbackFn: (...args: unknown[]) => void
 ): () => void {
-	let innerHandle: number | undefined;
+	let innerHandle: uuid | undefined;
 	const outerHandle = $.RegisterForUnhandledEvent('LevelInitPostEntity', () => {
-		// @ts-expect-error - TODO: Typings for this API
 		if (!innerHandle && gamemodes.includes(GameModeAPI.GetCurrentGameMode())) {
 			innerHandle = $.RegisterEventHandler(event, context, callbackFn);
 		} else if (innerHandle) {
@@ -51,13 +50,13 @@ function RegisterEventForGamemodes(
 	};
 }
 
-interface RegisterHUDPanelForGamemodeOptions {
+export interface RegisterHUDPanelForGamemodeOptions {
 	context: object;
 	contextPanel: Panel;
 	gamemodes: number[];
 	onLoad?: Func;
-	handledEvents?: Array<{ event: string; callback: Func; contextPanel: Panel }>;
-	unhandledEvents?: Array<{ event: string; callback: Func }>;
+	handledEvents?: Array<{ event: keyof GlobalEventNameMap; callback: Func; contextPanel: Panel }>;
+	unhandledEvents?: Array<{ event: keyof GlobalEventNameMap; callback: Func }>;
 }
 
 /**
@@ -111,7 +110,7 @@ interface RegisterHUDPanelForGamemodeOptions {
  *
  * @returns Cleanup function that unregisters all event handlers
  */
-function RegisterHUDPanelForGamemode({
+export function RegisterHUDPanelForGamemode({
 	context,
 	contextPanel,
 	onLoad,
@@ -123,10 +122,10 @@ function RegisterHUDPanelForGamemode({
 		throw new Error('RegisterHUDPanelForGamemode: no gamemode provided');
 	}
 
-	let handles: Array<{ event: string; handle: number; contextPanel?: Panel }>;
+	let handles: Array<{ event: keyof GlobalEventNameMap; handle: number; contextPanel?: GenericPanel }> = [];
 
 	const unregister = () =>
-		(handles ?? []).forEach(({ event, handle, contextPanel }) =>
+		handles.forEach(({ event, handle, contextPanel }) =>
 			contextPanel === undefined
 				? $.UnregisterForUnhandledEvent(event, handle)
 				: $.UnregisterEventHandler(event, contextPanel, handle)
@@ -136,7 +135,6 @@ function RegisterHUDPanelForGamemode({
 		unregister();
 		handles = [];
 
-		// @ts-expect-error - TODO: Typings for this API
 		if (gamemodes.includes(GameModeAPI.GetCurrentGameMode())) {
 			contextPanel.enabled = true;
 			onLoad?.call(context);

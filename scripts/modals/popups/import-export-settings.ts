@@ -1,22 +1,21 @@
-class ImportExportSettings {
-	static panels = {
-		/** @type {TextEntry} @static */
-		import: $('#ImportCode'),
-		/** @type {TextEntry} @static */
-		export: $('#ExportCode'),
-		/** @type {ToggleButton} @static */
-		modeButton: $('#Base64ModeButton'),
-		/** @type {Label} @static */
-		modeWarning: $('#Base64ModeWarning'),
-		/** @type {Label} @static */
-		importStatus: $('#ImportStatus'),
-		/** @type {Label} @static */
-		blockInputWarning: $('#BlockInputWarning')
+import { OnPanelLoad, PanelHandler } from 'util/module-helpers';
+
+@PanelHandler()
+class ImportExportSettingsHandler implements OnPanelLoad {
+	readonly panels = {
+		import: $<TextEntry>('#ImportCode'),
+		export: $<TextEntry>('#ExportCode'),
+		modeButton: $<ToggleButton>('#Base64ModeButton'),
+		modeWarning: $<Label>('#Base64ModeWarning'),
+		importStatus: $<Label>('#ImportStatus'),
+		blockInputWarning: $<Label>('#BlockInputWarning')
 	};
 
-	static base64Mode = $.persistentStorage.getItem('settings.base64ExportMode');
+	base64Mode: boolean = $.persistentStorage.getItem('settings.base64ExportMode');
+	cvars: Record<string, string> = {};
+	exportString: string;
 
-	static onLoad() {
+	onPanelLoad() {
 		const cp = $.GetContextPanel();
 
 		const sectionName = cp.GetAttributeString('name', '');
@@ -28,18 +27,21 @@ class ImportExportSettings {
 		cp.SetDialogVariable('import_warning', '');
 
 		this.cvars = {};
-		let cvar;
+		let cvar: string;
 		let i = 0;
 		while ((cvar = cp.GetAttributeString(`cvar${i + 1}`, '')) !== '') {
 			this.cvars[i] = cvar;
 			i++;
 		}
 
-		if (this.base64Mode) $.DispatchEvent('Activated', this.panels.modeButton, 'mouse');
-		else this.exportSettings();
+		if (this.base64Mode) {
+			$.DispatchEvent('Activated', this.panels.modeButton, 'mouse');
+		} else {
+			this.exportSettings();
+		}
 	}
 
-	static exportSettings() {
+	exportSettings() {
 		this.exportString = Object.values(this.cvars)
 			.map((cvar) =>
 				this.base64Mode
@@ -48,12 +50,14 @@ class ImportExportSettings {
 			)
 			.join('\n');
 
-		if (this.base64Mode) this.exportString = $.CompressString(this.exportString);
+		if (this.base64Mode) {
+			this.exportString = $.CompressString(this.exportString);
+		}
 
 		this.panels.export.text = this.exportString;
 	}
 
-	static importSettings() {
+	importSettings() {
 		const inputText = this.panels.import.text;
 
 		try {
@@ -103,7 +107,7 @@ class ImportExportSettings {
 			this.panels.importStatus.AddClass('color-error');
 			$.GetContextPanel().SetDialogVariable(
 				'import_warning',
-				$.Localize('#Settings_ImportExport_Failure') + ' ' + $.Localize(error)
+				$.Localize('#Settings_ImportExport_Failure') + ' ' + $.Localize(error.toString())
 			);
 			$.Warning($.Localize('#Settings import parser failed!') + ' ' + error);
 		}
@@ -111,14 +115,14 @@ class ImportExportSettings {
 		this.exportSettings();
 	}
 
-	static toggleBase64Mode() {
+	toggleBase64Mode() {
 		this.base64Mode = this.panels.modeButton.IsSelected();
 		$.persistentStorage.setItem('settings.base64ExportMode', this.base64Mode);
 		this.panels.modeWarning.SetHasClass('hide', !this.base64Mode);
 		this.exportSettings();
 	}
 
-	static blockExportEntryInput() {
+	blockExportEntryInput() {
 		if (this.panels.export.text !== this.exportString) {
 			// Hacky way of keeping the TextEntry enabled (so you can highlight stuff) without actually letting you change text
 			const offset = this.panels.export.GetCursorOffset();
@@ -127,7 +131,7 @@ class ImportExportSettings {
 		}
 	}
 
-	static exportSelectAll() {
+	exportSelectAll() {
 		this.panels.export.SetFocus(true);
 		this.panels.export.SelectAll();
 	}

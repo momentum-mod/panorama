@@ -1,4 +1,6 @@
-const TABS = {
+import { PanelHandler } from 'util/module-helpers';
+
+export const Tabs = {
 	LobbyDrawer: {
 		layout: 'lobby',
 		button: $('#LobbyButton')
@@ -17,42 +19,44 @@ const TABS = {
 	}
 };
 
-class Drawer {
-	static activeTab;
-	static isExtended = false;
+export type Tab = keyof typeof Tabs;
 
-	static panels = {
-		/** @type {Panel} @static */
-		drawer: $('#MainMenuDrawerPanel'),
-		/** @type {Panel} @static */
-		content: $('#MainMenuDrawerContent'),
-		/** @type {ModelPanel} @static */
-		mainMenuModel: $('#MainMenuModel'),
-		/** @type {Image} @static */
-		lobbyTypeImage: $('#LobbyButtonImage'),
-		/** @type {Label} @static */
-		lobbyPlayerCountLabel: $('#LobbyPlayerCountLabel')
+@PanelHandler()
+class DrawerHandler {
+	activeTab: string;
+	isExtended = false;
+
+	readonly panels = {
+		drawer: $<Panel>('#MainMenuDrawerPanel'),
+		content: $<Panel>('#MainMenuDrawerContent'),
+		mainMenuModel: $<Panel>('#MainMenuModel'),
+		lobbyTypeImage: $<Image>('#LobbyButtonImage'),
+		lobbyPlayerCountLabel: $<Label>('#LobbyPlayerCountLabel')
 	};
 
-	static {
-		for (const tab of Object.keys(TABS)) this.loadTab(tab);
+	constructor() {
+		for (const tab of Object.keys(Tabs)) {
+			this.loadTab(tab as Tab);
+		}
 
-		$.RegisterForUnhandledEvent('Drawer_UpdateLobbyButton', this.updateLobbyButton.bind(this));
-		$.RegisterForUnhandledEvent('Drawer_NavigateToTab', this.navigateToTab.bind(this));
-		$.RegisterForUnhandledEvent('Drawer_ExtendAndNavigateToTab', this.extendAndNavigateToTab.bind(this));
-		$.RegisterForUnhandledEvent('ExtendDrawer', this.extend.bind(this));
-		$.RegisterForUnhandledEvent('RetractDrawer', this.retract.bind(this));
-		$.RegisterForUnhandledEvent('ToggleDrawer', this.toggle.bind(this));
+		$.RegisterForUnhandledEvent('Drawer_UpdateLobbyButton', (imgSrc, playerCount) =>
+			this.updateLobbyButton(imgSrc, playerCount)
+		);
+		$.RegisterForUnhandledEvent('Drawer_NavigateToTab', (tabID) => this.navigateToTab(tabID));
+		$.RegisterForUnhandledEvent('Drawer_ExtendAndNavigateToTab', (tabID) => this.extendAndNavigateToTab(tabID));
+		$.RegisterForUnhandledEvent('ExtendDrawer', () => this.extend());
+		$.RegisterForUnhandledEvent('RetractDrawer', () => this.retract());
+		$.RegisterForUnhandledEvent('ToggleDrawer', () => this.toggle());
 	}
 
 	/**
 	 * Load a drawer tab
 	 * @param {Object} tab The tab to load
 	 */
-	static loadTab(tab) {
+	loadTab(tab: Tab) {
 		const newPanel = $.CreatePanel('Panel', this.panels.content, tab);
 
-		newPanel.LoadLayout('file://{resources}/layout/pages/drawer/' + TABS[tab].layout + '.xml', false, false);
+		newPanel.LoadLayout('file://{resources}/layout/pages/drawer/' + Tabs[tab].layout + '.xml', false, false);
 
 		$.RegisterEventHandler('PropertyTransitionEnd', this.panels.content, (panelName, propertyName) => {
 			if (
@@ -73,7 +77,7 @@ class Drawer {
 	 * Switch to a drawer tab
 	 * @param {Object} tab The TABS object to switch to
 	 */
-	static navigateToTab(tab) {
+	navigateToTab(tab: Tab) {
 		if (this.activeTab === tab) return;
 
 		if (this.activeTab) {
@@ -89,20 +93,15 @@ class Drawer {
 		activePanel.SetReadyForDisplay(true);
 	}
 
-	/**
-	 * Switch to drawer tab and open it
-	 * @param {Object} tab The Tabs object to switch to
-	 */
-	static extendAndNavigateToTab(tab) {
+	/** Switch to drawer tab and open it */
+	extendAndNavigateToTab(tab: Tab) {
 		this.navigateToTab(tab);
 
 		if (!this.isExtended) this.extend();
 	}
 
-	/**
-	 * Extend the drawer
-	 */
-	static extend() {
+	/** Extend the drawer */
+	extend() {
 		if (this.isExtended) return;
 
 		this.panels.drawer.AddClass('drawer--expanded');
@@ -111,7 +110,7 @@ class Drawer {
 		this.isExtended = true;
 
 		if (!this.activeTab) {
-			$.DispatchEvent('Activated', TABS.LobbyDrawer.button, 'mouse');
+			$.DispatchEvent('Activated', Tabs.LobbyDrawer.button, 'mouse');
 		}
 
 		if (this.activeTab === 'LobbyDrawer') {
@@ -119,10 +118,8 @@ class Drawer {
 		}
 	}
 
-	/**
-	 * Retract the drawer
-	 */
-	static retract() {
+	/** Retract the drawer */
+	retract() {
 		if (!this.isExtended) return;
 
 		this.panels.drawer.RemoveClass('drawer--expanded');
@@ -131,32 +128,24 @@ class Drawer {
 		this.isExtended = false;
 	}
 
-	/**
-	 * Toggle the drawer
-	 */
-	static toggle() {
+	/** Toggle the drawer */
+	toggle() {
 		return this.isExtended ? this.retract() : this.extend();
 	}
 
-	/**
-	 * Sets the rightnav lobby icon to the path and playercount of the current lobby
-	 * @param {string} imgPath
-	 * @param {number} playerCount
-	 */
-	static updateLobbyButton(imgPath, playerCount) {
+	/** Sets the rightnav lobby icon to the path and playercount of the current lobby */
+	updateLobbyButton(imgPath: string, playerCount: number) {
 		this.panels.lobbyTypeImage.SetImage(imgPath);
 		this.panels.lobbyPlayerCountLabel.text = playerCount;
 		this.panels.lobbyPlayerCountLabel.SetHasClass('rightnav__button-subtitle--hidden', playerCount <= 1);
 	}
 
-	/**
-	 * Open the profile tab when the main menu player card is pressed
-	 */
-	static onPlayerCardPressed() {
+	/** Open the profile tab when the main menu player card is pressed */
+	onPlayerCardPressed() {
 		this.extend();
 
 		if (this.activeTab !== 'ProfileDrawer') {
-			$.DispatchEvent('Activated', TABS.ProfileDrawer.button, 'mouse');
+			$.DispatchEvent('Activated', Tabs.ProfileDrawer.button, 'mouse');
 		}
 	}
 }
