@@ -30,7 +30,7 @@ class MainMenuHandler implements OnPanelLoad {
 		$.RegisterForUnhandledEvent('Safeguard_Disconnect', () => this.onSafeguardDisconnect());
 		$.RegisterForUnhandledEvent('Safeguard_Quit', () => this.onSafeguardQuit());
 		$.RegisterForUnhandledEvent('Safeguard_ChangeMap', (mapName) => this.onSafeguardMapChange(mapName));
-		$.RegisterForUnhandledEvent('ReloadBackground', () => this.setMainMenuBackground());
+		$.RegisterForUnhandledEvent('ReloadMainMenuBackground', () => this.setMainMenuBackground());
 		$.RegisterForUnhandledEvent('OnMomentumQuitPrompt', () => this.onQuitPrompt());
 		$.RegisterEventHandler('Cancelled', $.GetContextPanel(), () => this.onEscapeKeyPressed());
 
@@ -182,7 +182,6 @@ class MainMenuHandler implements OnPanelLoad {
 		this.panels.pageContent.RemoveClass('mainmenu__page-container--hidden');
 
 		$.DispatchEvent('RetractDrawer');
-		$.DispatchEvent('ShowContentPanel');
 
 		this.panels.homeContent.AddClass('home--hidden');
 	}
