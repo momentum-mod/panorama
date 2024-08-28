@@ -587,63 +587,63 @@
 
 			<Label class="text-h3 mt-3" text="Toasts" />
 			<Panel class="row my-3">
-				<Button class="button" onactivate="ToastAPI.CreateToast('', 'Toast', 'Test Toast!', 0, 10, '', '')">
+				<Button class="button" onactivate="ToastManager.queueToast(({ title: 'Toast', message: 'Test Toast!', location: ToastLocation.LEFT }))">
 					<Label class="button__text" text="Left" />
 				</Button>
-				<Button class="button ml-3" onactivate="ToastAPI.CreateToast('', 'Toast', 'Test Toast!', 1, 10, '', '')">
+				<Button class="button ml-3" onactivate="ToastManager.queueToast({ title: 'Toast', message: 'Test Toast!', location: ToastLocation.CENTER })">
 					<Label class="button__text" text="Center" />
 				</Button>
-				<Button class="button ml-3" onactivate="ToastAPI.CreateToast('', 'Toast', 'Test Toast! Test Toast! Test Toast! Test Toast!', 2, 10, '', '')">
+				<Button class="button ml-3" onactivate="ToastManager.queueToast({ title: 'Toast', message: 'Test Toast!', location: ToastLocation.RIGHT })">
 					<Label class="button__text" text="Right" />
 				</Button>
-				<Button class="button ml-3" onactivate="ToastAPI.CreateToast('', 'Toast', 'Toast!!', 2, 10, '', 'white')">
+				<Button class="button ml-3" onactivate="ToastManager.queueToast({ title: 'Toast', message: 'Test Toast!', location: ToastLocation.RIGHT, style: 'white' })">
 					<Label class="button__text" text="White" />
 				</Button>
-				<Button class="button ml-3" onactivate="ToastAPI.CreateToast('', 'Toast', 'Toast!!', 2, 10, '', 'blue')">
+				<Button class="button ml-3" onactivate="ToastManager.queueToast({ title: 'Toast', message: 'Test Toast!', location: ToastLocation.RIGHT, style: 'blue' })">
 					<Label class="button__text" text="Blue" />
 				</Button>
-				<Button class="button ml-3" onactivate="ToastAPI.CreateToast('', 'Toast', 'Toast!!', 2, 10, '', 'red')">
+				<Button class="button ml-3" onactivate="ToastManager.queueToast({ title: 'Toast', message: 'Test Toast!', location: ToastLocation.RIGHT, style: 'red' })">
 					<Label class="button__text" text="Red" />
 				</Button>
-				<Button class="button ml-3" onactivate="ToastAPI.CreateToast('', 'Toast', 'Toast!!', 2, 10, '', 'green')">
+				<Button class="button ml-3" onactivate="ToastManager.queueToast({ title: 'Toast', message: 'Test Toast!', location: ToastLocation.RIGHT, style: 'green' })">
 					<Label class="button__text" text="Green" />
 				</Button>
-				<Button class="button ml-3" onactivate="ToastAPI.CreateToast('', 'Toast', 'Toast!!', 2, 10, 'play', '')">
+				<Button class="button ml-3" onactivate="ToastManager.queueToast({ title: 'Toast', message: 'Test Toast!', location: ToastLocation.RIGHT, icon: 'play' })">
 					<Label class="button__text" text="Icon" />
 				</Button>
-				<Button class="button ml-3" onactivate="ToastAPI.CreateToast_Custom( '', 'file://{resources}/layout/modals/toasts/custom-layout-example.xml', 1, 10, {testParam: 'horse'})">
+				<Button class="button ml-3" onactivate="ToastManager.queueToast({ layoutFile: 'file://{resources}/layout/modals/toasts/custom-layout-example.xml', location: ToastLocation.CENTER, parameters: { testParam: 'horse' } })">
 					<Label class="button__text" text="Custom Layout" />
 				</Button>
-				<Button class="button ml-3" onactivate="ToastAPI.CreateToast('', 'Toast', Math.random().toString(36), 1, 10, '', '')">
+				<Button class="button ml-3" onactivate="ToastManager.queueToast({ title: 'Toast', message: Math.random().toString(36), location: ToastLocation.CENTER })">
 					<Label class="button__text" text="Random Text" />
 				</Button>
-				<Button class="button ml-3" onactivate="ToastAPI.CreateToast('', 'Toast', 'A toast with a very long message that should hopefully wrap properly, and then the JS will handle the heights so it still animates well! Wow! It still suffers from that fucking text wrapping issue though!', 1, '', '', '')">
+				<Button class="button ml-3" onactivate="ToastManager.queueToast({ title: 'Toast', message: 'A toast with a very long message that should hopefully wrap properly, and then the JS will handle the heights so it still animates well! Wow! It still suffers from that fucking text wrapping issue though!', location: ToastLocation.CENTER })">
 					<Label class="button__text" text="Long Guy" />
 				</Button>
-				<Button class="button ml-3" onactivate="ToastAPI.CreateToast('', 'Toast', 'im gonna expire very fast!!', 1, 1, '', '')">
+				<Button class="button ml-3" onactivate="ToastManager.queueToast({ title: 'Toast', message: 'im gonna expire very fast!!', location: ToastLocation.CENTER, duration: 1 })">
 					<Label class="button__text" text="1 second duration" />
 				</Button>
-				<Button class="button ml-3" onactivate="ToastAPI.CreateToast('', 'Toast', 'I should never expire!', 1, -1, '', '')">
+				<Button class="button ml-3" onactivate="ToastManager.queueToast({ title: 'Toast', message: 'I should never expire!', location: ToastLocation.CENTER, duration: -1 })">
 					<Label class="button__text" text="No Expire" />
 				</Button>
 			</Panel>
 			<Panel class="row my-3">
-				<Button class="button ml-3" onactivate="ToastAPI.ClearToasts(0)">
+				<Button class="button ml-3" onactivate="ToastManager.clearToasts(ToastLocation.LEFT)">
 					<Label class="button__text" text="Clear Toasts Left" />
 				</Button>
-				<Button class="button ml-3" onactivate="ToastAPI.ClearToasts(1)">
+				<Button class="button ml-3" onactivate="ToastManager.clearToasts(ToastLocation.CENTER)">
 					<Label class="button__text" text="Clear Toasts Center" />
 				</Button>
-				<Button class="button ml-3" onactivate="ToastAPI.ClearToasts(2)">
+				<Button class="button ml-3" onactivate="ToastManager.clearToasts(ToastLocation.RIGHT)">
 					<Label class="button__text" text="Clear Toasts Right" />
 				</Button>
-				<Button class="button ml-3" onactivate="ToastAPI.ClearToasts(-1)">
+				<Button class="button ml-3" onactivate="ToastManager.clearToasts(-1)">
 					<Label class="button__text" text="Clear Toasts All" />
 				</Button>
-				<Button class="button ml-3" onactivate="ToastAPI.CreateToast('TestToast', 'Toast', 'i should be deleteable!', 1, 10, '', '')">
+				<Button class="button ml-3" onactivate="ToastManager.queueToast({ id: 'TestToast', title: 'Toast', message: 'i should be deleteable!' })">
 					<Label class="button__text" text="Create Toast with ID" />
 				</Button>
-				<Button class="button ml-3" onactivate="ToastAPI.DeleteToast('TestToast');">
+				<Button class="button ml-3" onactivate="ToastManager.deleteToastByID('TestToast');">
 					<Label class="button__text" text="Clear Toast with ID" />
 				</Button>
 			</Panel>
