@@ -64,9 +64,6 @@ interface GlobalEventNameMap {
 	/** Fired when the JS panel should update what it's showing */
 	HudCompare_Update: () => void;
 
-	// TODO: Old, remove after rio stuff is in
-	OnMomentumTimerStateChange: (arg1: any, arg2: any) => any;
-
 	OnCookUpdate: (time: float, percentage: float) => void; // Conc thing!
 
 	OnConcEntityPanelThink: () => void;
