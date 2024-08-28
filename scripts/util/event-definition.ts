@@ -20,12 +20,7 @@
  */
 
 declare interface GlobalEventNameMap {
-	/** Hide all the main menu content panels and show the default home dashboard */
-	HideContentPanel: () => void;
-
-	ShowContentPanel: () => void;
-
-	ReloadBackground: () => void;
+	ReloadMainMenuBackground: () => void;
 
 	/**	Alert main menu tabs when they are shown, in case there is a data update needed */
 	MainMenuTabShown: (tabID: string) => void;
@@ -75,9 +70,9 @@ declare interface GlobalEventNameMap {
 	ColorPickerCancel: () => void;
 }
 
-$.DefineEvent('HideContentPanel', 0);
-$.DefineEvent('ShowContentPanel', 0);
-$.DefineEvent('ReloadBackground', 0);
+$.DefineEvent('HideMainMenuContentPanel', 0);
+$.DefineEvent('ShowMainMenuContentPanel', 0);
+$.DefineEvent('ReloadMainMenuBackground', 0);
 $.DefineEvent('MainMenuTabShown', 1);
 $.DefineEvent('MainMenuTabHidden', 1);
 $.DefineEvent('SettingsNavigateToPanel', 2);
