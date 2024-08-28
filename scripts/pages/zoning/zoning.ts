@@ -89,6 +89,9 @@ const PickType = {
 	teleDestYaw: 'teleDestYaw'
 };
 
+const FLT_MAX = 3.402823466e38;
+const DEFAULT_HEIGHT = 160;
+
 class ZoneMenu {
 	static panels = {
 		zoningMenu: $.GetContextPanel(),
@@ -356,8 +359,8 @@ class ZoneMenu {
 	static createRegion() {
 		return {
 			points: [] as number[][],
-			bottom: 0,
-			height: 0,
+			bottom: FLT_MAX,
+			height: DEFAULT_HEIGHT,
 			teleDestTargetname: ''
 		} as Region;
 	}
@@ -676,6 +679,10 @@ class ZoneMenu {
 				return;
 
 			case PickType.corner:
+				if (point.z < region.bottom) {
+					region.bottom = point.z;
+					this.panels.regionBottom.text = point.z.toFixed(2);
+				}
 				if (GameInterfaceAPI.GetSettingBool('mom_zone_two_click') && region.points.length === 1) {
 					region.points.push([region.points[0][0], point.y]);
 					this.addPointToList(region.points.length - 1, [region.points[0][0], point.y]);
