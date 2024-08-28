@@ -14,7 +14,8 @@
 		"strict": true,
 		"strictNullChecks": false,
 		"experimentalDecorators": true,
-		"typeRoots": ["./scripts/types-mom"] // If you error here, you don't have the submodule installed! (git submodule update --init --recursive)
+		"typeRoots": ["./scripts/types-mom"], // If you error here, you don't have the submodule installed! (git submodule update --init --recursive)
+		"sourceMap": true
 	},
 	"include": ["scripts/"],
 	"exclude": ["scripts/types/p2ce/**/*"]
