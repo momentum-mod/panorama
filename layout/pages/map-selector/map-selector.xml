@@ -41,51 +41,55 @@
 										<Button class="button button--green ml-2" onactivate="MapSelectorHandler.requestMapUpdate()">
 											<Label class="button__text" text="#Common_Update" />
 										</Button>
-										<ToggleButton id="FilterToggle" class="ml-2 button togglebutton togglebutton--blue" selected="false" onactivate="MapSelection.toggleFilterCollapse()">
-											<Label class="button__text button__text--left" text="#MapSelector_Filters" />
-											<Image class="button__icon button__icon--right" src="file://{images}/filter-menu.svg" textureheight="32" />
-										</ToggleButton>
-										<Button id="FilterErase" class="ml-2 button button--red" onactivate="MapSelection.clearFilters()">
+										<Button id="FilterErase" class="ml-2 button button--red" onactivate="MapSelectorHandler.clearFilters()">
 											<Image class="button__icon" src="file://{images}/filter-remove.svg" textureheight="32" />
 										</Button>
 									</Panel>
 								</Panel>
-								<Panel id="MapFilters" class="mapselector-filters mapselector-filters--filters-retracted">
-									<Panel class="full-width">
-										<Panel id="GamemodeFilters" class="mapselector-filters__row mapselector-filters__gamemodes">
-											<RadioButton id="SurfFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button" selected="true">
-												<Label class="button__text mapselector-filters__text" text="#Gamemode_Surf" />
-											</RadioButton>
-											<RadioButton id="BhopFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button">
-												<Label class="button__text mapselector-filters__text" text="#Gamemode_Bhop" />
-											</RadioButton>
-											<RadioButton id="ClimbFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button">
-												<Label class="button__text mapselector-filters__text" text="#Gamemode_Climb" />
-											</RadioButton>
-											<RadioButton id="RJFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button">
-												<Label class="button__text mapselector-filters__text" text="#Gamemode_RJ" />
-											</RadioButton>
-											<RadioButton id="SJFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button">
-												<Label class="button__text mapselector-filters__text" text="#Gamemode_SJ" />
-											</RadioButton>
-											<RadioButton id="TricksurfFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button">
-												<Label class="button__text mapselector-filters__text" text="#Gamemode_Tricksurf" />
-											</RadioButton>
-											<RadioButton id="AhopFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button">
-												<Label class="button__text mapselector-filters__text" text="#Gamemode_Ahop" />
-											</RadioButton>
-											<RadioButton id="ParkourFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button">
-												<Label class="button__text mapselector-filters__text" text="#Gamemode_Parkour" />
-											</RadioButton>
-											<RadioButton id="ConcFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button">
-												<Label class="button__text mapselector-filters__text" text="#Gamemode_Conc" />
-											</RadioButton>
-											<RadioButton id="DefragFilterButton" class="button togglebutton togglebutton--blue mapselector-filters__button">
-												<Label class="button__text mapselector-filters__text" text="#Gamemode_Defrag" />
-											</RadioButton>
-										</Panel>
+								<Panel id="MapFilters" class="mapselector-filters">
+									<Panel class="mapselector-filters__row mapselector-filters__gamemodes">
+										<RadioButton id="SurfFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button" selected="true">
+											<Label class="button__text mapselector-filters__text" text="#Gamemode_Surf" />
+										</RadioButton>
+										<RadioButton id="BhopFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button">
+											<Label class="button__text mapselector-filters__text" text="#Gamemode_Bhop" />
+										</RadioButton>
+										<RadioButton id="BhopHL1FilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button">
+											<Label class="button__text mapselector-filters__text" text="#Gamemode_BhopHL1" />
+										</RadioButton>
+										<RadioButton id="KzMomFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button">
+											<Label class="button__text mapselector-filters__text" text="#Gamemode_KzMom" />
+										</RadioButton>
+										<RadioButton id="KzKztFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button hidden">
+											<Label class="button__text mapselector-filters__text" text="#Gamemode_KzKzt" />
+										</RadioButton>
+										<RadioButton id="Kz16FilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button">
+											<Label class="button__text mapselector-filters__text" text="#Gamemode_Kz16" />
+										</RadioButton>
+										<RadioButton id="RJFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button">
+											<Label class="button__text mapselector-filters__text" text="#Gamemode_RJ" />
+										</RadioButton>
+										<RadioButton id="SJFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button">
+											<Label class="button__text mapselector-filters__text" text="#Gamemode_SJ" />
+										</RadioButton>
+										<RadioButton id="AhopFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button">
+											<Label class="button__text mapselector-filters__text" text="#Gamemode_Ahop" />
+										</RadioButton>
+										<RadioButton id="ConcFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button">
+											<Label class="button__text mapselector-filters__text" text="#Gamemode_Conc" />
+										</RadioButton>
 									</Panel>
-
+									<Panel class="mapselector-filters__row mapselector-filters__gamemodes">
+										<RadioButton id="DefragCPMFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button">
+											<Label class="button__text mapselector-filters__text" text="#Gamemode_DefragCPM" />
+										</RadioButton>
+										<RadioButton id="DefragVQ3FilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button">
+											<Label class="button__text mapselector-filters__text" text="#Gamemode_DefragVQ3" />
+										</RadioButton>
+										<RadioButton id="DefragVTGFilterButton" class="button togglebutton togglebutton--blue mapselector-filters__button">
+											<Label class="button__text mapselector-filters__text" text="#Gamemode_DefragVTG" />
+										</RadioButton>
+									</Panel>
 									<Panel class="mapselector-filters__row">
 										<Panel class="mapselector-filters__tiers">
 											<Label class="text-h5 mr-2 vertical-align-center" text="Tiers" />

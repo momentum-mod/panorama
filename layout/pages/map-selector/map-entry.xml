@@ -44,7 +44,7 @@
 						<Image class="button__icon" src="file://{images}/star.svg" textureheight="40" />
 					</ToggleButton>
 				</Panel>
-				<Label id="MapEntryTier" class="map-entry__text map-entry__tier" text="T{d:tier}" />
+				<Label id="MapEntryTier" class="map-entry__text map-entry__tier" text="T{s:tier}" />
 				<Panel id="MapPB" class="map-entry__pb" onmouseout="UiToolkitAPI.HideTextTooltip()">
 					<Label id="PBLabel" class="map-entry__text map-entry__pb-text" />
 					<Image id="PBIcon" class="map-entry__pb-icon" textureheight="32" />
