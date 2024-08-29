@@ -41,16 +41,12 @@
 										<Button class="button button--green ml-2" onactivate="MapSelection.requestMapUpdate()">
 											<Label class="button__text" text="#Common_Update" />
 										</Button>
-										<ToggleButton id="FilterToggle" class="ml-2 button togglebutton togglebutton--blue" selected="false" onactivate="MapSelection.toggleFilterCollapse()">
-											<Label class="button__text button__text--left" text="#MapSelector_Filters" />
-											<Image class="button__icon button__icon--right" src="file://{images}/filter-menu.svg" textureheight="32" />
-										</ToggleButton>
 										<Button id="FilterErase" class="ml-2 button button--red" onactivate="MapSelection.clearFilters()">
 											<Image class="button__icon" src="file://{images}/filter-remove.svg" textureheight="32" />
 										</Button>
 									</Panel>
 								</Panel>
-								<Panel id="MapFilters" class="mapselector-filters mapselector-filters--filters-retracted">
+								<Panel id="MapFilters" class="mapselector-filters mapselector-filters--filters-extended">
 									<Panel class="full-width">
 										<Panel id="GamemodeFilters" class="mapselector-filters__row mapselector-filters__gamemodes">
 											<ToggleButton id="SurfFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button" selected="true">
