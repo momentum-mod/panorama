@@ -1,7 +1,7 @@
 import { exposeToPanelContext, PanelHandler } from 'util/module-helpers';
 import { LeaderboardListType, LeaderboardStatusType, LeaderboardType } from 'common/leaderboard';
 import { EndOfRunShowReason } from 'common/timer';
-import { MMap } from 'common/web';
+import { MMap, TrackType } from 'common/web';
 
 exposeToPanelContext({ LeaderboardListType, LeaderboardType });
 
@@ -167,9 +167,9 @@ class LeaderboardsHandler {
 				if (leaderboard.trackType === 0) {
 					trackStr = $.Localize('#Leaderboards_Tracks_Main');
 				} else if (leaderboard.trackType === 1) {
-					trackStr = `${$.Localize('#Leaderboards_Tracks_Stage')} ${leaderboard.trackNum + 1}`;
+					trackStr = `${$.Localize('#Leaderboards_Tracks_Stage')} ${leaderboard.trackNum}`;
 				} else {
-					trackStr = `${$.Localize('#Leaderboards_Tracks_Bonus')} ${leaderboard.trackNum + 1}`;
+					trackStr = `${$.Localize('#Leaderboards_Tracks_Bonus')} ${leaderboard.trackNum}`;
 				}
 
 				const item = $.CreatePanel('Label', this.panels.tracksDropdown, trackStr, {
@@ -186,8 +186,8 @@ class LeaderboardsHandler {
 		this.panels.tracksDropdown.SetPanelEvent('onuserinputsubmit', () => {
 			const selected = this.panels.tracksDropdown.GetSelected();
 			this.panels.cp.selectTrack(
-				selected.GetAttributeInt('trackType', 0),
-				selected.GetAttributeInt('trackNum', 0)
+				selected.GetAttributeInt('trackType', TrackType.MAIN as number),
+				selected.GetAttributeInt('trackNum', 1)
 			);
 		});
 	}
