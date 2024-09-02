@@ -734,6 +734,8 @@ class SpeedometerSettingsHandler {
 			option.SetAttributeInt('value', gamemode);
 			this.panels.gamemode.AddOption(option);
 		}
+
+		this.panels.gamemode.SetSelectedIndex(GameModeAPI.GetMetaGameMode() - 1);
 	}
 
 	static loadSettings() {
