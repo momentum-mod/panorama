@@ -20,7 +20,7 @@ class MapSelection {
 		/** @type {Panel} @static */
 		filtersPanel: $('#MapFilters'),
 		/** @type {Button} @static */
-		filtersToggle: $('#FilterToggle'),
+		// filtersToggle: $('#FilterToggle'),
 		/** @type {Button} @static */
 		completedFilterButton: $('#MapCompletedFilterButton'),
 		/** @type {Button} @static */
@@ -80,9 +80,9 @@ class MapSelection {
 
 			$.GetContextPanel().ApplyFilters();
 
-			if ($.persistentStorage.getItem('mapSelector.filtersToggled') ?? false) {
-				$.DispatchEvent('Activated', this.panels.filtersToggle, 'mouse');
-			}
+			// if ($.persistentStorage.getItem('mapSelector.filtersToggled') ?? false) {
+			// $.DispatchEvent('Activated', this.panels.filtersToggle, 'mouse');
+			// }
 
 			$.DispatchEvent('MapSelector_OnLoaded');
 		});
