@@ -1,5 +1,7 @@
 import { PanelHandler } from 'util/module-helpers';
 import { magnitude2D } from 'util/math';
+import { RegisterHUDPanelForGamemode } from 'util/register-for-gamemodes';
+import { GamemodeCategories, GamemodeCategory } from 'common/web';
 
 enum TimerFlags {
 	NONE = 0,
@@ -45,9 +47,14 @@ class GroundboostHandler {
 	textColorMode: number;
 
 	constructor() {
-		$.RegisterForUnhandledEvent('HudProcessInput', () => this.onHudUpdate());
-		$.RegisterForUnhandledEvent('LevelInitPostEntity', () => this.onMapInit());
-		$.RegisterForUnhandledEvent('OnDefragHUDGroundboostChange', () => this.onConfigChange());
+		RegisterHUDPanelForGamemode({
+			gamemodes: GamemodeCategories.get(GamemodeCategory.DEFRAG),
+			onLoad: () => this.onMapInit(),
+			events: [
+				{ event: 'HudProcessInput', callback: () => this.onHudUpdate() },
+				{ event: 'OnDefragHUDGroundboostChange', callback: () => this.onConfigChange() }
+			]
+		});
 	}
 
 	onMapInit() {

@@ -1,4 +1,6 @@
 import { PanelHandler } from 'util/module-helpers';
+import { RegisterHUDPanelForGamemode } from 'util/register-for-gamemodes';
+import { GamemodeCategories, GamemodeCategory } from 'common/web';
 
 enum ColorClass {
 	AIR = 'dfjump__press--air',
@@ -22,11 +24,21 @@ class DFJumpHandler {
 	inverseMaxDelay: float;
 
 	constructor() {
-		$.RegisterForUnhandledEvent('LevelInitPostEntity', () => this.onMapInit());
-		$.RegisterEventHandler('DFJumpDataUpdate', this.panels.container, (releaseDelay, pressDelay, totalDelay) =>
-			this.onDFJumpUpdate(releaseDelay, pressDelay, totalDelay)
-		);
-		$.RegisterForUnhandledEvent('DFJumpMaxDelayChanged', (newDelay: float) => this.setMaxDelay(newDelay));
+		RegisterHUDPanelForGamemode({
+			gamemodes: GamemodeCategories.get(GamemodeCategory.DEFRAG),
+			onLoad: () => this.onMapInit(),
+			events: [
+				{
+					event: 'DFJumpDataUpdate',
+					callback: (releaseDelay, pressDelay, totalDelay) =>
+						this.onDFJumpUpdate(releaseDelay, pressDelay, totalDelay)
+				},
+				{
+					event: 'DFJumpMaxDelayChanged',
+					callback: (newDelay) => this.setMaxDelay(newDelay)
+				}
+			]
+		});
 	}
 
 	onMapInit() {

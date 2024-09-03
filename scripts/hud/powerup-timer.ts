@@ -22,9 +22,7 @@ class PowerupTimerHandler {
 	constructor() {
 		RegisterHUDPanelForGamemode({
 			gamemodes: GamemodeCategories.get(GamemodeCategory.DEFRAG),
-			context: this,
-			contextPanel: $.GetContextPanel(),
-			handledEvents: [{ event: 'HudProcessInput', contextPanel: $.GetContextPanel(), callback: this.onUpdate }]
+			events: [{ event: 'HudProcessInput', callback: () => this.onUpdate() }]
 		});
 	}
 
