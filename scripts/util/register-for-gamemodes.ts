@@ -21,42 +21,42 @@
  * ```
  * @param gamemodes - Gamemodes to register the callback for. Handler is unregistered for any other modes.
  * @param event - Event name
- * @param context - Panel context
+ * @param panel - Panel context
  * @param callbackFn - Event callback
  * @returns Cleanup function that unregisters both event handlers
  */
 export function RegisterEventForGamemodes(
 	gamemodes: number[],
 	event: keyof GlobalEventNameMap,
-	context: GenericPanel,
+	panel: GenericPanel,
 	callbackFn: (...args: unknown[]) => void
 ): () => void {
 	let innerHandle: uuid | undefined;
 	const outerHandle = $.RegisterForUnhandledEvent('LevelInitPostEntity', () => {
 		if (!innerHandle && gamemodes.includes(GameModeAPI.GetCurrentGameMode())) {
-			innerHandle = $.RegisterEventHandler(event, context, callbackFn);
+			innerHandle = $.RegisterEventHandler(event, panel, callbackFn);
 		} else if (innerHandle) {
-			$.UnregisterEventHandler(event, context, innerHandle);
+			$.UnregisterEventHandler(event, panel, innerHandle);
 			innerHandle = undefined;
 		}
 	});
 
 	return () => {
 		if (innerHandle) {
-			$.UnregisterEventHandler(event, context, innerHandle);
+			$.UnregisterEventHandler(event, panel, innerHandle);
 		}
 
 		$.UnregisterForUnhandledEvent('LevelInitPostEntity', outerHandle);
 	};
 }
 
+// Could do RegisterUnhandledEventForGamemodes, just don't have a use for it.
+
 export interface RegisterHUDPanelForGamemodeOptions {
-	context: object;
-	contextPanel: Panel;
 	gamemodes: number[];
 	onLoad?: Func;
-	handledEvents?: Array<{ event: keyof GlobalEventNameMap; callback: Func; contextPanel: Panel }>;
-	unhandledEvents?: Array<{ event: keyof GlobalEventNameMap; callback: Func }>;
+	handledEvents?: Array<{ event: keyof GlobalEventNameMap; panel: GenericPanel; callback: Func }>;
+	events?: Array<{ event: keyof GlobalEventNameMap; callback: Func }>;
 }
 
 /**
@@ -67,7 +67,7 @@ export interface RegisterHUDPanelForGamemodeOptions {
  * Any events provided will be registered at `LevelInitPostEntity` when the given a map is launched in the provided
  * modes, and unregistered in any other modes.
  *
- * An optional `onLoad` function will be called whenever a launched in the provided modes.
+ * An optional `onLoad` function will be called whenever a map is loaded in the provided modes.
  *
  * You must provide the current JS context with `context`, and don't need to use `.bind(this)` on any functions you pass.
  *
@@ -77,7 +77,6 @@ export interface RegisterHUDPanelForGamemodeOptions {
  *   static {
  *     RegisterHUDPanelForGamemode({
  *       gamemodes: [Gamemode.SURF],
- *       context: this,
  *       contextPanel: $.GetContextPanel()
  *     })
  *   }
@@ -88,12 +87,10 @@ export interface RegisterHUDPanelForGamemodeOptions {
  *   static {
  *     RegisterHUDPanelForGamemode({
  *        gamemodes: [Gamemode.BHOP],
- *        context: this,
  *        contextPanel: $.GetContextPanel(),
  *        onLoad: this.setup,
- *        handledEvents: [{
+ *        events: [{
  *          event: 'HudProcessInput',
- *          callback: this.onUpdate,
  *          contextPanel: $.GetContextPanel()
  *        }]
  *     })
@@ -111,24 +108,22 @@ export interface RegisterHUDPanelForGamemodeOptions {
  * @returns Cleanup function that unregisters all event handlers
  */
 export function RegisterHUDPanelForGamemode({
-	context,
-	contextPanel,
 	onLoad,
 	gamemodes,
 	handledEvents,
-	unhandledEvents
+	events
 }: RegisterHUDPanelForGamemodeOptions): () => void {
+	const contextPanel = $.GetContextPanel();
+
 	if (!(gamemodes?.length > 0)) {
 		throw new Error('RegisterHUDPanelForGamemode: no gamemode provided');
 	}
 
-	let handles: Array<{ event: keyof GlobalEventNameMap; handle: number; contextPanel?: GenericPanel }> = [];
+	let handles: Array<{ event: keyof GlobalEventNameMap; handle: number; panel?: GenericPanel }> = [];
 
 	const unregister = () =>
-		handles.forEach(({ event, handle, contextPanel }) =>
-			contextPanel === undefined
-				? $.UnregisterForUnhandledEvent(event, handle)
-				: $.UnregisterEventHandler(event, contextPanel, handle)
+		handles.forEach(({ event, handle, panel }) =>
+			panel ? $.UnregisterForUnhandledEvent(event, handle) : $.UnregisterEventHandler(event, panel, handle)
 		);
 
 	const handle = $.RegisterForUnhandledEvent('LevelInitPostEntity', () => {
@@ -137,22 +132,22 @@ export function RegisterHUDPanelForGamemode({
 
 		if (gamemodes.includes(GameModeAPI.GetCurrentGameMode())) {
 			contextPanel.enabled = true;
-			onLoad?.call(context);
+			onLoad?.();
 
-			for (const { event, callback } of unhandledEvents ?? []) {
+			events?.forEach(({ event, callback }) => {
 				handles.push({
 					event,
-					handle: $.RegisterForUnhandledEvent(event, callback.bind(context))
+					handle: $.RegisterForUnhandledEvent(event, callback)
 				});
-			}
+			});
 
-			for (const { event, contextPanel, callback } of handledEvents ?? []) {
+			handledEvents?.forEach(({ event, panel, callback }) => {
 				handles.push({
 					event,
-					contextPanel,
-					handle: $.RegisterEventHandler(event, contextPanel, callback.bind(context))
+					panel,
+					handle: $.RegisterEventHandler(event, panel, callback)
 				});
-			}
+			});
 		} else {
 			contextPanel.enabled = false;
 		}

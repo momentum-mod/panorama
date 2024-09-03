@@ -1,4 +1,6 @@
 import { PanelHandler } from 'util/module-helpers';
+import { RegisterHUDPanelForGamemode } from '../util/register-for-gamemodes';
+import { GamemodeCategories, GamemodeCategory } from '../common/web';
 
 @PanelHandler()
 class JumpStatsHandler {
@@ -25,9 +27,12 @@ class JumpStatsHandler {
 	efficiencyBuffer: string[];
 
 	constructor() {
-		$.RegisterForUnhandledEvent('LevelInitPostEntity', () => this.onMapInit());
-		$.RegisterEventHandler('OnJumpStarted', this.panels.container, () => this.onJump());
-		$.RegisterForUnhandledEvent('OnJumpStatsCFGChange', () => this.onConfigChange());
+		RegisterHUDPanelForGamemode({
+			gamemodes: GamemodeCategories.get(GamemodeCategory.BHOP),
+			onLoad: () => this.onMapInit(),
+			handledEvents: [{ event: 'OnJumpStarted', panel: this.panels.container, callback: () => this.onJump() }],
+			events: [{ event: 'OnJumpStatsCFGChange', callback: () => this.onConfigChange() }]
+		});
 	}
 
 	onJump() {
@@ -66,7 +71,7 @@ class JumpStatsHandler {
 			this.addToBuffer(this.speedDeltaBuffer, lastJumpStats.jumpSpeedDelta.toFixed(0));
 			this.addToBuffer(this.takeoffTimeBuffer, this.makeTime(lastJumpStats.takeoffTime));
 			this.addToBuffer(this.timeDeltaBuffer, lastJumpStats.timeDelta.toFixed(3));
-			this.addToBuffer(this.strafesBuffer, lastJumpStats.strafeCount);
+			this.addToBuffer(this.strafesBuffer, lastJumpStats.strafeCount.toFixed(0));
 			this.addToBuffer(this.syncBuffer, this.makePercentage(lastJumpStats.strafeSync));
 			this.addToBuffer(this.gainBuffer, this.makePercentage(lastJumpStats.speedGain));
 			this.addToBuffer(this.yawRatioBuffer, this.makePercentage(lastJumpStats.yawRatio));
@@ -87,9 +92,9 @@ class JumpStatsHandler {
 		return buffer;
 	}
 
-	addToBuffer(buffer: string[], value: string | number) {
+	addToBuffer(buffer: string[], value: string) {
 		buffer[buffer.length - 1] += '\n';
-		buffer.push(value.toString());
+		buffer.push(value);
 
 		if (buffer.length > this.bufferLength) buffer.shift();
 	}

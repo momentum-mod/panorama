@@ -1,6 +1,8 @@
 import { PanelHandler } from 'util/module-helpers';
 import * as MomMath from 'util/math';
 import { rgbaStringLerp } from 'util/colors';
+import { RegisterHUDPanelForGamemode } from '../util/register-for-gamemodes';
+import { Gamemode } from '../common/web';
 
 const Colors = {
 	EXTRA: ['rgba(24, 150, 211, 1)', 'rgba(87, 200, 255, 1)'],
@@ -74,20 +76,25 @@ class Synchronizer {
 	}
 
 	constructor() {
-		$.RegisterEventHandler('HudProcessInput', $.GetContextPanel(), () => this.onUpdate());
-
-		$.RegisterForUnhandledEvent('OnSynchroModeChanged', (cvarValue) => this.setDisplayMode(cvarValue));
-		$.RegisterForUnhandledEvent('OnSynchroColorModeChanged', (cvarValue) => this.setColorMode(cvarValue === 1));
-		$.RegisterForUnhandledEvent('OnSynchroDynamicModeChanged', (cvarValue) => this.setDynamicMode(cvarValue === 1));
-		$.RegisterForUnhandledEvent('OnSynchroDirectionChanged', (cvarValue) => this.setDirection(cvarValue === 1));
-		$.RegisterForUnhandledEvent('OnSynchroBufferChanged', (cvarValue) => this.setBufferLength(cvarValue));
-		$.RegisterForUnhandledEvent('OnSynchroMinSpeedChanged', (cvarValue) => this.setMinSpeed(cvarValue));
-		$.RegisterForUnhandledEvent('OnSynchroStatModeChanged', (cvarValue) => this.setStatMode(cvarValue));
-		$.RegisterForUnhandledEvent('OnSynchroStatColorModeChanged', (cvarValue) =>
-			this.setStatColorMode(cvarValue === 1)
-		);
-		$.RegisterForUnhandledEvent('OnJumpStarted', () => this.onJump());
-		$.RegisterForUnhandledEvent('LevelInitPostEntity', () => this.onLoad());
+		RegisterHUDPanelForGamemode({
+			gamemodes: [Gamemode.BHOP, Gamemode.SURF, Gamemode.CLIMB_KZT, Gamemode.CLIMB_MOM],
+			onLoad: () => this.onLoad(),
+			events: [
+				{ event: 'HudProcessInput', callback: () => this.onUpdate() },
+				{ event: 'OnJumpStarted', callback: () => this.onJump() },
+				{ event: 'OnSynchroModeChanged', callback: (cvarValue) => this.setDisplayMode(cvarValue) },
+				{ event: 'OnSynchroColorModeChanged', callback: (cvarValue) => this.setColorMode(cvarValue === 1) },
+				{ event: 'OnSynchroDynamicModeChanged', callback: (cvarValue) => this.setDynamicMode(cvarValue === 1) },
+				{ event: 'OnSynchroDirectionChanged', callback: (cvarValue) => this.setDirection(cvarValue === 1) },
+				{ event: 'OnSynchroBufferChanged', callback: (cvarValue) => this.setBufferLength(cvarValue) },
+				{ event: 'OnSynchroMinSpeedChanged', callback: (cvarValue) => this.setMinSpeed(cvarValue) },
+				{ event: 'OnSynchroStatModeChanged', callback: (cvarValue) => this.setStatMode(cvarValue) },
+				{
+					event: 'OnSynchroStatColorModeChanged',
+					callback: (cvarValue) => this.setStatColorMode(cvarValue === 1)
+				}
+			]
+		});
 	}
 
 	onLoad() {
