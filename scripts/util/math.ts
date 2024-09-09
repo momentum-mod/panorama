@@ -1,3 +1,5 @@
+import { Vector, Vector2D } from 'common/web';
+
 export function magnitude(vec: vec2 | vec3): number {
 	return Math.sqrt(sumOfSquares(vec));
 }
@@ -62,6 +64,22 @@ export function rotateVector2D(vec: vec2, angle: number): vec2 {
 		x: vec.x * cos - vec.y * sin,
 		y: vec.y * cos + vec.x * sin
 	};
+}
+
+export function vectorLength(vec: Vector | Vector2D): number {
+	return vec.reduce((acc, val) => acc + val * val);
+}
+
+export function addVector2D(v1: Vector2D, v2: Vector2D): Vector2D {
+	return [v1[0] + v2[0], v1[1] + v2[1]];
+}
+
+export function subtractVector2D(v1: Vector2D, v2: Vector2D): Vector2D {
+	return [v1[0] - v2[0], v1[1] - v2[1]];
+}
+
+export function isCCW(A: Vector2D, B: Vector2D, C: Vector2D): boolean {
+	return (C[1] - A[1]) * (B[0] - A[0]) > (B[1] - A[1]) * (C[0] - A[0]);
 }
 
 /** Float equals check with threshold. */
