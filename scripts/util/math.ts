@@ -2,26 +2,18 @@ export function magnitude(vec: vec2 | vec3): number {
 	return Math.sqrt(sumOfSquares(vec));
 }
 
-export function magnitude2D(vec: vec2): number {
+export function magnitude2D(vec: vec2 | vec3): number {
 	return Math.sqrt(sumOfSquares2D(vec));
-}
-
-export function magnitude3D(vec: vec3): number {
-	return Math.sqrt(sumOfSquares3D(vec));
 }
 
 // Note: Math.hypot performs additional bounds checking on V8 which which makes it considerably
 // slower than below implementations.
-export function sumOfSquares2D(vec: vec2): number {
+export function sumOfSquares2D(vec: vec2 | vec3): number {
 	return vec.x ** 2 + vec.y ** 2;
 }
 
-export function sumOfSquares3D(vec: vec3): number {
-	return vec.x ** 2 + vec.y ** 2 + vec.z ** 2;
-}
-
 export function sumOfSquares(vec: vec2 | vec3): number {
-	return 'z' in vec ? vec.x ** 2 + vec.y ** 2 + vec.z ** 2 : vec.x ** 2 + vec.y ** 2;
+	return 'z' in vec ? vec.x ** 2 + vec.y ** 2 + vec.z ** 2 : sumOfSquares2D(vec);
 }
 
 /**
