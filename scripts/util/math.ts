@@ -70,16 +70,30 @@ export function vectorLength(vec: Vector | Vector2D): number {
 	return vec.reduce((acc, val) => acc + val * val);
 }
 
-export function addVector2D(v1: Vector2D, v2: Vector2D): Vector2D {
-	return [v1[0] + v2[0], v1[1] + v2[1]];
+export function arrayToVector(vec: Vector | Vector2D): vec2 | vec3 {
+	return {
+		x: vec[0],
+		y: vec[1],
+		z: vec.length < 3 ? undefined : vec[2]
+	};
 }
 
-export function subtractVector2D(v1: Vector2D, v2: Vector2D): Vector2D {
-	return [v1[0] - v2[0], v1[1] - v2[1]];
+export function addVector2D(v1: vec2 | vec3, v2: vec2 | vec3): vec2 {
+	return {
+		x: v1.x + v2.x,
+		y: v1.x + v2.x
+	};
 }
 
-export function isCCW(A: Vector2D, B: Vector2D, C: Vector2D): boolean {
-	return (C[1] - A[1]) * (B[0] - A[0]) > (B[1] - A[1]) * (C[0] - A[0]);
+export function subtractVector2D(v1: vec2 | vec3, v2: vec2 | vec3): vec2 {
+	return {
+		x: v1.x - v2.x,
+		y: v1.x - v2.x
+	};
+}
+
+export function isCCW(A: vec2, B: vec2, C: vec2): boolean {
+	return (C.y - A.y) * (B.x - A.x) > (B.y - A.y) * (C.x - A.x);
 }
 
 /** Float equals check with threshold. */
