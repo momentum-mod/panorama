@@ -135,4 +135,6 @@ interface ZoneMenu extends AbstractPanel<'ZoneMenu'> {
 	getEntityList(): import('pages/zoning/zoning').EntityList;
 
 	setCornersFromRegion(region: import('common/web').Region): void;
+
+	moveToRegion(region: import('common/web').Region): void;
 }

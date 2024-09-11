@@ -132,6 +132,9 @@
 					<Panel id="Region" class="zoning__property">
 							<Label class="zoning__property-label" text="#Zoning_Region" />
 							<Panel class="zoning__region-property-container">
+								<Button id="MoveToRegionButton" class="button button--green zoning__property-button mr-2" onactivate="ZoneMenuHandler.teleportToRegion()" onmouseover="UiToolkitAPI.ShowTextTooltip('MoveToRegionButton', '#Zoning_MoveToRegion_Tooltip');" onmouseout="UiToolkitAPI.HideTextTooltip();">
+									<Image class="button__icon" src="file://{images}/eye-arrow-right.svg" />
+								</Button>
 								<Button id="AddRegionButton" class="button button--blue zoning__property-button mr-2" onactivate="ZoneMenuHandler.addRegion()" onmouseover="UiToolkitAPI.ShowTextTooltip('AddRegionButton', '#Zoning_CreateRegion_Tooltip');" onmouseout="UiToolkitAPI.HideTextTooltip();">
 									<Image class="button__icon" src="file://{images}/add.svg" />
 								</Button>

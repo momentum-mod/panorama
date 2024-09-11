@@ -255,9 +255,9 @@ class ZoneMenuHandler {
 
 		const collapseButton = newTracklistPanel.FindChildTraverse('CollapseButton');
 		const childContainer = newTracklistPanel.FindChildTraverse('ChildContainer');
+		const expandIcon = newTracklistPanel.FindChildTraverse<Image>('TracklistExpandIcon');
+		const collapseIcon = newTracklistPanel.FindChildTraverse<Image>('TracklistCollapseIcon');
 		if (collapseButton && childContainer) {
-			const expandIcon = newTracklistPanel.FindChildTraverse<Image>('TracklistExpandIcon');
-			const collapseIcon = newTracklistPanel.FindChildTraverse<Image>('TracklistCollapseIcon');
 			collapseButton.SetPanelEvent('onactivate', () =>
 				this.toggleCollapse(childContainer, expandIcon, collapseIcon)
 			);
@@ -269,6 +269,15 @@ class ZoneMenuHandler {
 		selectButton.SetPanelEvent('onactivate', () =>
 			this.updateSelection(selectionObj.track, selectionObj.segment, selectionObj.zone)
 		);
+		if (selectionObj.zone) {
+			selectButton.SetPanelEvent('ondblclick', () =>
+				this.panels.zoningMenu.moveToRegion(selectionObj.zone.regions[0])
+			);
+		} else {
+			selectButton.SetPanelEvent('ondblclick', () =>
+				this.toggleCollapse(childContainer, expandIcon, collapseIcon)
+			);
+		}
 
 		if (setActive) {
 			selectButton.SetSelected(true);
@@ -443,6 +452,14 @@ class ZoneMenuHandler {
 		this.populateRegionProperties();
 
 		this.updateZones();
+	}
+
+	teleportToRegion() {
+		if (!this.selectedZone || !this.selectedZone.zone) return;
+
+		const index = this.panels.regionSelect.GetSelected().GetAttributeInt('value', -1);
+		const region = this.selectedZone.zone.regions[index];
+		this.panels.zoningMenu.moveToRegion(region);
 	}
 
 	pickCorners() {
