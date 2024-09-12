@@ -145,6 +145,23 @@ declare namespace MomentumReplayAPI {
 
 	/** Sets the progress of the replay */
 	function SetProgress(progress: float): void;
+
+	const enum ReplayState {
+		NONE = 0,
+		PLAYING = 1,
+		PAUSED = 2
+	}
+
+	interface ReplayProgress {
+		curtick: int32;
+		totalticks: int32;
+		curtime: float;
+		endtime: float;
+	}
+
+	function GetReplayState(): ReplayState;
+
+	function GetReplayProgress(): ReplayProgress;
 }
 
 declare namespace ChatAPI {
