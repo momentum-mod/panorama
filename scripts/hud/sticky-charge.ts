@@ -16,13 +16,14 @@ class StickyChargeHandler {
 	};
 
 	constructor() {
-		$.RegisterEventHandler('OnChargeUpdate', this.panels.container, (speed, percentage) =>
-			this.onChargeUpdate(speed, percentage)
+		$.RegisterEventHandler('OnChargeUpdate', this.panels.container, (enabled, speed, percentage) =>
+			this.onChargeUpdate(enabled, speed, percentage)
 		);
-		$.RegisterEventHandler('OnChargeToggled', this.panels.container, (enabled) => this.onChargeToggled(enabled));
 	}
 
-	onChargeUpdate(speed: float, percentage: float) {
+	onChargeUpdate(enabled: boolean, speed: float, percentage: float) {
+		this.panels.chargeMeter.enabled = enabled;
+
 		const chargeUnit = this.panels.cp.stickyChargeUnitType;
 
 		let speedText;
@@ -39,11 +40,5 @@ class StickyChargeHandler {
 
 		this.panels.chargeSpeed.text = speedText;
 		this.panels.chargeMeter.value = percentage;
-	}
-
-	onChargeToggled(enabled: boolean) {
-		if (this.panels.chargeMeter.enabled !== enabled) {
-			this.panels.chargeMeter.enabled = enabled;
-		}
 	}
 }

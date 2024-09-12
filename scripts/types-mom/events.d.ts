@@ -223,8 +223,6 @@ interface GlobalEventNameMap {
 	 */
 	Toast_Clear: (location?: import('util/toast-manager').ToastLocation) => void;
 
-	MomentumSpectatorTargetChanged: (type: import('common/timer').RunEntityType) => void;
-
 	MomentumSpectatorModeChanged: (mode: SpectateMode) => void;
 
 	MomentumSpecListMaxNamesUpdate: (maxNames: uint32) => void;
@@ -236,25 +234,11 @@ interface GlobalEventNameMap {
 	/** Called whgen lobby-wide spectator state changes */
 	MomentumSpectatorUpdate: () => void;
 
-	/**
-	 * TODO: changing with new zones/timer
-	 * @deprecated
-	 */
-	OnMomentumZoneChange: (
-		entering: boolean,
-		isLinear: boolean,
-		currentZone: int32,
-		currentTrack: int32,
-		timerState: import('common/timer').TimerState_OLD
-	) => void;
-
 	OnMomentumReplayStarted: () => void;
 
 	OnMomentumReplayStopped: () => void;
 
-	OnChargeUpdate: (speedInUps: float, percentageCharge: float) => void;
-
-	OnChargeToggled: (enabled: boolean) => void;
+	OnChargeUpdate: (chargeEnabled: boolean, speedInUps: float, percentageCharge: float) => void;
 
 	OnStickyPanelStateChanged: (
 		panel: Panel,

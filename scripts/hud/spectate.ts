@@ -13,11 +13,11 @@ class HudSpectateHandler {
 		toggleReplayControls: $('#ToggleReplayControls')
 	};
 
-	constructor() {
-		$.RegisterForUnhandledEvent('MomentumSpectatorTargetChanged', (type: RunEntityType) =>
-			this.onSpectatorChanged(type)
-		);
-	}
+	//constructor() {
+	// $.RegisterForUnhandledEvent('MomentumSpectatorTargetChanged', (type: RunEntityType) =>
+	// 	this.onSpectatorChanged(type)
+	// );
+	//}
 
 	onSpectatorChanged(type: RunEntityType) {
 		if (type !== RunEntityType.PLAYER) {

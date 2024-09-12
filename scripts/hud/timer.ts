@@ -24,11 +24,11 @@ class HudTimerHandler {
 	constructor() {
 		$.RegisterEventHandler('HudProcessInput', this.panels.cp, () => this.onUpdate());
 		$.RegisterForUnhandledEvent('OnMomentumTimerStateChange', (arg1, arg2) => this.onTimerEvent(arg1, arg2));
-		$.RegisterForUnhandledEvent(
-			'OnMomentumZoneChange',
-			(entering, isLinear, currentZone, currentTrack, timerState) =>
-				this.onZoneChange(entering, isLinear, currentZone, currentTrack, timerState)
-		);
+		// $.RegisterForUnhandledEvent(
+		// 	'OnMomentumZoneChange',
+		// 	(entering, isLinear, currentZone, currentTrack, timerState) =>
+		// 		this.onZoneChange(entering, isLinear, currentZone, currentTrack, timerState)
+		// );
 		$.RegisterForUnhandledEvent('OnSaveStateUpdate', (count, current, usingMenu) =>
 			this.onSaveStateChange(count, current, usingMenu)
 		);

@@ -89,9 +89,9 @@ class SpeedometerHandler {
 		$.RegisterEventHandler('OnSpeedometerUpdate', this.container, (deltaTime: float) =>
 			this.onSpeedometerUpdate(deltaTime)
 		);
-		$.RegisterForUnhandledEvent('OnMomentumZoneChange', (enter, linear, curZone, curTrack, timerState) =>
-			this.onZoneChange(enter, linear, curZone, curTrack, timerState)
-		);
+		// $.RegisterForUnhandledEvent('OnMomentumZoneChange', (enter, linear, curZone, curTrack, timerState) =>
+		// 	this.onZoneChange(enter, linear, curZone, curTrack, timerState)
+		// );
 
 		// color profiles load before speedo settings, so listening to just the speedo settings load event should be enough
 		$.RegisterForUnhandledEvent('OnSpeedometerSettingsLoaded', (succ: boolean) => this.onSettingsUpdate(succ));
