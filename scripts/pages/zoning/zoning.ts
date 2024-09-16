@@ -412,8 +412,13 @@ class ZoneMenuHandler {
 		this.panels.regionHeight.text = (region?.height ?? 0).toFixed(2);
 		this.panels.regionSafeHeight.text = (region?.safeHeight ?? 0).toFixed(2);
 
-		const tpIndex = region.teleDestTargetname === '' ? 0 : this.teleDestList?.indexOf(region.teleDestTargetname);
+		const tpIndex = !region.teleDestTargetname
+			? region.teleDestPos !== undefined && region.teleDestYaw !== undefined
+				? 1
+				: 0
+			: this.teleDestList?.indexOf(region.teleDestTargetname);
 		this.panels.regionTPDest.SetSelectedIndex(tpIndex);
+		this.updateRegionTPDest();
 	}
 
 	addRegion() {
@@ -558,13 +563,9 @@ class ZoneMenuHandler {
 			delete region.teleDestPos;
 			delete region.teleDestYaw;
 
-			this.panels.regionTPPos.x.text = '';
-			this.panels.regionTPPos.y.text = '';
-			this.panels.regionTPPos.z.text = '';
-			this.panels.regionTPYaw.text = '';
 			this.setRegionTPDestTextEntriesActive(false);
 		} else if (teleDestIndex === 1 && region.points.length > 0) {
-			if (!region.teleDestPos || !region.teleDestYaw) {
+			if (region.teleDestPos === undefined || region.teleDestYaw === undefined) {
 				region.teleDestPos = [0, 0, region.bottom];
 				const den = 1 / region.points.length;
 				region.points.forEach((val) => {
@@ -572,23 +573,20 @@ class ZoneMenuHandler {
 					region.teleDestPos[1] += val[1] * den;
 				});
 				region.teleDestYaw = 0;
+				region.teleDestTargetname = '';
 			}
 
 			this.panels.regionTPPos.x.text = region.teleDestPos[0].toFixed(2);
 			this.panels.regionTPPos.y.text = region.teleDestPos[1].toFixed(2);
 			this.panels.regionTPPos.z.text = region.teleDestPos[2].toFixed(2);
 			this.panels.regionTPYaw.text = region.teleDestYaw.toFixed(2);
+
 			this.setRegionTPDestTextEntriesActive(true);
 		} else {
 			region.teleDestTargetname = this.teleDestList[teleDestIndex];
-
 			delete region.teleDestPos;
 			delete region.teleDestYaw;
 
-			this.panels.regionTPPos.x.text = '';
-			this.panels.regionTPPos.y.text = '';
-			this.panels.regionTPPos.z.text = '';
-			this.panels.regionTPYaw.text = '';
 			this.setRegionTPDestTextEntriesActive(false);
 		}
 
@@ -618,6 +616,13 @@ class ZoneMenuHandler {
 		this.panels.regionTPPosPick.enabled = enable;
 		this.panels.regionTPYaw.enabled = enable;
 		this.panels.regionTPYawPick.enabled = enable;
+
+		if (!enable) {
+			this.panels.regionTPPos.x.text = '';
+			this.panels.regionTPPos.y.text = '';
+			this.panels.regionTPPos.z.text = '';
+			this.panels.regionTPYaw.text = '';
+		}
 	}
 
 	onPointPicked(point: { x: number; y: number; z: number }) {
