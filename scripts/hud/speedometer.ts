@@ -89,9 +89,6 @@ class SpeedometerHandler {
 		$.RegisterEventHandler('OnSpeedometerUpdate', this.container, (deltaTime: float) =>
 			this.onSpeedometerUpdate(deltaTime)
 		);
-		$.RegisterForUnhandledEvent('OnMomentumZoneChange', (enter, linear, curZone, curTrack, timerState) =>
-			this.onZoneChange(enter, linear, curZone, curTrack, timerState)
-		);
 
 		// color profiles load before speedo settings, so listening to just the speedo settings load event should be enough
 		$.RegisterForUnhandledEvent('OnSpeedometerSettingsLoaded', (succ: boolean) => this.onSettingsUpdate(succ));
@@ -142,6 +139,7 @@ class SpeedometerHandler {
 		this.updateSpeedometersOfType(SpeedometerType.OVERALL_VELOCITY, velocity);
 	}
 
+	/* TODO: replace with updates based on new timer events
 	onZoneChange(enter: boolean, linear: boolean, curZone: int32, _curTrack: int32, timerState: TimerState_OLD) {
 		const startZone = curZone === 1;
 		if (enter && startZone) {
@@ -176,6 +174,7 @@ class SpeedometerHandler {
 			this.updateZoneSpeedometers(actualSpeedAbs, actualSpeedHoriz, false);
 		}
 	}
+	*/
 
 	resetSpeedometerFadeouts() {
 		for (const [type, speedometers] of this.speedometers) {

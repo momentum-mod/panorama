@@ -63,11 +63,7 @@ interface RangeColorDisplay extends AbstractPanel<'RangeColorDisplay'> {
 	SetColorNoEvent(color: color): void;
 }
 
-/** Only doing loose type since liable to change in near future. */
-interface HudComparisons extends AbstractHudPanel<'HudComparisons'> {
-	readonly currentRunData: any;
-	readonly currentRunStats: any;
-}
+interface HudComparisons extends AbstractHudPanel<'HudComparisons'> {}
 
 interface MomHudTabMenu extends AbstractHudPanel<'MomHudTabMenu'> {
 	forceCloseTabMenu(): void;

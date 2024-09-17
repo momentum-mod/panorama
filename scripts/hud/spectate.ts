@@ -13,10 +13,11 @@ class HudSpectateHandler {
 		toggleReplayControls: $('#ToggleReplayControls')
 	};
 
+	/* TODO
 	constructor() {
-		$.RegisterForUnhandledEvent('MomentumSpectatorTargetChanged', (type: RunEntityType) =>
-			this.onSpectatorChanged(type)
-		);
+	$.RegisterForUnhandledEvent('MomentumSpectatorTargetChanged', (type: RunEntityType) =>
+		this.onSpectatorChanged(type)
+	);
 	}
 
 	onSpectatorChanged(type: RunEntityType) {
@@ -32,4 +33,5 @@ class HudSpectateHandler {
 			this.panels.indicatorWatchingReplay.visible = isReplay;
 		}
 	}
+	*/
 }

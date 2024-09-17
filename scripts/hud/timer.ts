@@ -24,11 +24,6 @@ class HudTimerHandler {
 	constructor() {
 		$.RegisterEventHandler('HudProcessInput', this.panels.cp, () => this.onUpdate());
 		$.RegisterForUnhandledEvent('OnMomentumTimerStateChange', (arg1, arg2) => this.onTimerEvent(arg1, arg2));
-		$.RegisterForUnhandledEvent(
-			'OnMomentumZoneChange',
-			(entering, isLinear, currentZone, currentTrack, timerState) =>
-				this.onZoneChange(entering, isLinear, currentZone, currentTrack, timerState)
-		);
 		$.RegisterForUnhandledEvent('OnSaveStateUpdate', (count, current, usingMenu) =>
 			this.onSaveStateChange(count, current, usingMenu)
 		);
@@ -86,6 +81,7 @@ class HudTimerHandler {
 		this.panels.cp.SetDialogVariableFloat('runtime', MomentumTimerAPI.GetObservedTimerStatus().runTime);
 	}
 
+	/* TODO: replace with updates based on new timer events
 	onZoneChange(enter: any, linear: any, curZone: any, _curTrack: any, timerState: any) {
 		if (timerState === TimerState_OLD.NOT_RUNNING && enter && curZone === 1) {
 			// timer state is not reset on map finished until entering the start zone again (on reset)
@@ -121,6 +117,7 @@ class HudTimerHandler {
 
 		this.prevZone = curZone;
 	}
+	*/
 
 	forceHideComparison() {
 		this.panels.comparison.RemoveClass(FADEOUT_START_CLASS);
