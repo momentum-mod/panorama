@@ -12,7 +12,7 @@ class HudSpecInfoHandler implements OnPanelLoad {
 	maxNames = GameInterfaceAPI.GetSettingInt('mom_hud_specinfo_names_count');
 
 	constructor() {
-		$.RegisterForUnhandledEvent('MomentumSpectatorTargetChanged', () => this.onSpectatorChanged());
+		$.RegisterForUnhandledEvent('ObserverTargetChanged', () => this.onSpectatorChanged());
 		$.RegisterForUnhandledEvent('MomentumSpectatorUpdate', () => this.onSpectatorChanged());
 		$.RegisterForUnhandledEvent('MomentumSpecListMaxNamesUpdate', (val) => {
 			this.maxNames = val;

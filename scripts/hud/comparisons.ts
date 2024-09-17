@@ -36,6 +36,7 @@ class HudComparisonsHandler {
 	}
 
 	updateComparisons() {
+		/* TODO
 		const currentData = $.GetContextPanel<HudComparisons>().currentRunData;
 		const currentStats = $.GetContextPanel<HudComparisons>().currentRunStats;
 		const comparisonRun = RunComparisonsAPI.GetLoadedComparison();
@@ -139,5 +140,6 @@ class HudComparisonsHandler {
 						isFirst: true
 					}
 		);
+		*/
 	}
 }
