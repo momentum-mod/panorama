@@ -458,10 +458,23 @@ class ZoneMenuHandler {
 	addPointToList(i: number, point: number[]) {
 		const newRegionPoint = $.CreatePanel('Panel', this.panels.pointsList, `Point ${i}`);
 		newRegionPoint.LoadLayoutSnippet('region-point');
-		newRegionPoint.FindChildTraverse<TextEntry>('PointX').text = point[0].toFixed(2);
-		newRegionPoint.FindChildTraverse<TextEntry>('PointY').text = point[1].toFixed(2);
+
 		const deleteButton = newRegionPoint.FindChildTraverse('DeleteButton');
 		deleteButton.SetPanelEvent('onactivate', () => this.deleteRegionPoint(newRegionPoint));
+
+		const xText = newRegionPoint.FindChildTraverse<TextEntry>('PointX');
+		xText.text = point[0].toFixed(2);
+		xText.SetPanelEvent('ontextentrysubmit', () => {
+			point[0] = Number.parseFloat(xText.text);
+			this.updateZones();
+		});
+
+		const yText = newRegionPoint.FindChildTraverse<TextEntry>('PointY');
+		yText.text = point[1].toFixed(2);
+		yText.SetPanelEvent('ontextentrysubmit', () => {
+			point[1] = Number.parseFloat(yText.text);
+			this.updateZones();
+		});
 	}
 
 	deleteRegionPoint(point: Panel) {
