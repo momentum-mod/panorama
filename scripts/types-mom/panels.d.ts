@@ -129,10 +129,29 @@ interface MomHudDFJump extends AbstractHudPanel<'MomHudDFJump'> {}
 
 interface MomHudSynchronizer extends AbstractHudPanel<'MomHudSynchronizer'> {}
 
+declare const enum RegionRenderMode {
+	NONE = 0,
+	START = 1,
+	START_WITH_SAFE_HEIGHT = 2,
+	TRACK_SWITCH = 3,
+	END = 4,
+	MAJOR_CHECKPOINT = 5,
+	MINOR_CHECKPOINT = 6,
+	CANCEL = 7
+}
+
+interface ZoneEditorRegion {
+	region: import('common/web').Region;
+	renderMode: RegionRenderMode;
+	editing: boolean;
+}
+
 interface ZoneMenu extends AbstractPanel<'ZoneMenu'> {
 	startPointPick(multiPick: boolean): void;
 
 	getEntityList(): import('pages/zoning/zoning').EntityList;
 
 	setCornersFromRegion(region: import('common/web').Region): void;
+
+	drawRegions(editorRegions: ZoneEditorRegion[]): void;
 }

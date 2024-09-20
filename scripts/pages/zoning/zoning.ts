@@ -151,12 +151,49 @@ class ZoneMenuHandler {
 		if (!this.mapZoneData || this.panels.trackList.GetChildCount() === 0) {
 			this.initMenu();
 		}
+
+		const editorRegions = [] as ZoneEditorRegion[];
+
+		editorRegions.push(
+			{
+				region: {
+					points: [
+						[500, 0],
+						[700, 0],
+						[700, -100],
+						[500, -100]
+					],
+					bottom: 0,
+					height: 256
+				},
+				editing: true,
+				renderMode: RegionRenderMode.START
+			},
+			{
+				region: {
+					points: [
+						[500, 200],
+						[700, 200],
+						[700, 100],
+						[500, 100]
+					],
+					bottom: 0,
+					height: 256
+				},
+				editing: false,
+				renderMode: RegionRenderMode.END
+			}
+		);
+
+		this.panels.zoningMenu.drawRegions(editorRegions);
 	}
 
 	hideZoneMenu() {
 		if (this.panels.trackList?.GetChildCount()) {
 			this.panels.trackList.RemoveAndDeleteChildren();
 		}
+
+		this.panels.zoningMenu.drawRegions([]);
 	}
 
 	toggleCollapse(container: GenericPanel, expandIcon: Image, collapseIcon: Image) {
@@ -1006,15 +1043,13 @@ class ZoneMenuHandler {
 		if (!this.mapZoneData) return;
 
 		// future: validation here
-
-		this.mapZoneData.dataTimestamp = Date.now();
-		MomentumTimerAPI.SetActiveZoneDefs(this.mapZoneData);
 	}
 
 	saveZones() {
 		if (!this.mapZoneData) return;
 		this.mapZoneData.dataTimestamp = Date.now();
 		MomentumTimerAPI.SaveZoneDefs(this.mapZoneData);
+		MomentumTimerAPI.LoadZoneDefs();
 	}
 
 	cancelEdit() {
