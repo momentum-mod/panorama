@@ -430,7 +430,7 @@ class ZoneMenuHandler {
 		const filterIndex = this.panels.filterSelect.GetSelected()?.GetAttributeInt('value', 0);
 		this.selectedZone.zone.filtername = filterIndex ? this.filternameList[filterIndex] : '';
 
-		this.updateZones();
+		this.drawRegions();
 	}
 
 	populateRegionProperties() {
@@ -461,7 +461,7 @@ class ZoneMenuHandler {
 		this.panels.regionSelect.SetSelectedIndex(this.selectedZone.zone.regions.length - 1);
 		this.populateRegionProperties();
 
-		this.updateZones();
+		this.drawRegions();
 	}
 
 	deleteRegion() {
@@ -474,7 +474,7 @@ class ZoneMenuHandler {
 		this.panels.regionSelect.SetSelectedIndex(0);
 		this.populateRegionProperties();
 
-		this.updateZones();
+		this.drawRegions();
 	}
 
 	pickCorners() {
@@ -509,7 +509,7 @@ class ZoneMenuHandler {
 		this.selectedZone.zone?.regions[index].points.splice(n, 1);
 		point.DeleteAsync(0);
 
-		this.updateZones();
+		this.drawRegions();
 	}
 
 	pickBottom() {
@@ -525,7 +525,7 @@ class ZoneMenuHandler {
 		const bottom = Number.parseFloat(this.panels.regionBottom.text);
 		region.bottom = Number.isNaN(bottom) ? 0 : bottom;
 
-		this.updateZones();
+		this.drawRegions();
 	}
 
 	pickHeight() {
@@ -541,7 +541,7 @@ class ZoneMenuHandler {
 		const height = Number.parseFloat(this.panels.regionHeight.text);
 		region.height = Number.isNaN(height) ? 0 : height;
 
-		this.updateZones();
+		this.drawRegions();
 	}
 
 	pickSafeHeight() {
@@ -557,7 +557,7 @@ class ZoneMenuHandler {
 		const height = Number.parseFloat(this.panels.regionSafeHeight.text);
 		region.safeHeight = Number.isNaN(height) ? 0 : height;
 
-		this.updateZones();
+		this.drawRegions();
 	}
 
 	pickTeleDestPos() {
@@ -616,7 +616,7 @@ class ZoneMenuHandler {
 			this.setRegionTPDestTextEntriesActive(false);
 		}
 
-		this.updateZones();
+		this.drawRegions();
 	}
 
 	setRegionTeleDestOrientation() {
@@ -632,7 +632,7 @@ class ZoneMenuHandler {
 		region.teleDestPos = [Number.isNaN(x) ? 0 : x, Number.isNaN(y) ? 0 : y, Number.isNaN(z) ? 0 : z];
 		region.teleDestYaw = Number.isNaN(yaw) ? 0 : yaw;
 
-		this.updateZones();
+		this.drawRegions();
 	}
 
 	setRegionTPDestTextEntriesActive(enable: boolean) {
@@ -698,13 +698,13 @@ class ZoneMenuHandler {
 				break;
 		}
 
-		this.updateZones();
+		this.drawRegions();
 	}
 
 	onPickCanceled() {
 		this.pointPick = PickType.NONE;
 
-		this.updateZones();
+		this.drawRegions();
 	}
 
 	addBonus() {
@@ -722,7 +722,7 @@ class ZoneMenuHandler {
 			`${$.Localize('#Zoning_Bonus')} ${this.mapZoneData.tracks.bonuses.length}`
 		);
 
-		this.updateZones();
+		this.drawRegions();
 	}
 
 	addSegment() {
@@ -753,7 +753,7 @@ class ZoneMenuHandler {
 			zone: newSegment.checkpoints[0]
 		});
 
-		this.updateZones();
+		this.drawRegions();
 	}
 
 	addCheckpoint() {
@@ -783,7 +783,7 @@ class ZoneMenuHandler {
 			zone: newZone
 		});
 
-		this.updateZones();
+		this.drawRegions();
 	}
 
 	addEndZone() {
@@ -817,7 +817,7 @@ class ZoneMenuHandler {
 			});
 		}
 
-		this.updateZones();
+		this.drawRegions();
 	}
 
 	addCancelZone() {
@@ -851,7 +851,7 @@ class ZoneMenuHandler {
 			zone: newZone
 		});
 
-		this.updateZones();
+		this.drawRegions();
 	}
 
 	showAddMenu() {
@@ -925,7 +925,7 @@ class ZoneMenuHandler {
 		this.panels.trackList.RemoveAndDeleteChildren();
 		this.initMenu();
 
-		this.updateZones();
+		this.drawRegions();
 	}
 
 	setMaxVelocity() {
@@ -933,14 +933,14 @@ class ZoneMenuHandler {
 		const velocity = Number.parseFloat(this.panels.maxVelocity.text);
 		this.mapZoneData.maxVelocity = !Number.isNaN(velocity) && velocity > 0 ? velocity : 0;
 
-		this.updateZones();
+		this.drawRegions();
 	}
 
 	setStageEndAtStageStarts() {
 		if (!this.isSelectionValid().track || !('stagesEndAtStageStarts' in this.selectedZone.track)) return;
 		this.selectedZone.track.stagesEndAtStageStarts = this.panels.stagesEndAtStageStarts.checked;
 
-		this.updateZones();
+		this.drawRegions();
 	}
 
 	showDefragFlagMenu() {
@@ -995,28 +995,28 @@ class ZoneMenuHandler {
 		trackPanel.FindChildTraverse('CollapseButton').visible = false;
 		trackPanel.FindChildTraverse('ChildContainer').RemoveAndDeleteChildren();
 
-		this.updateZones();
+		this.drawRegions();
 	}
 
 	setLimitGroundSpeed() {
 		if (!this.isSelectionValid().segment) return;
 		this.selectedZone.segment!.limitStartGroundSpeed = this.panels.limitGroundSpeed.checked;
 
-		this.updateZones();
+		this.drawRegions();
 	}
 
 	setCheckpointsOrdered() {
 		if (!this.isSelectionValid().segment) return;
 		this.selectedZone.segment!.checkpointsOrdered = this.panels.checkpointsOrdered.checked;
 
-		this.updateZones();
+		this.drawRegions();
 	}
 
 	setCheckpointsRequired() {
 		if (!this.isSelectionValid().segment) return;
 		this.selectedZone.segment!.checkpointsRequired = this.panels.checkpointsRequired.checked;
 
-		this.updateZones();
+		this.drawRegions();
 	}
 
 	setSegmentName() {
@@ -1025,7 +1025,7 @@ class ZoneMenuHandler {
 		// feat: later
 		// update segment name in trasklist tree
 
-		this.updateZones();
+		this.drawRegions();
 	}
 
 	showRegionMenu(menu?: RegionMenu) {
@@ -1039,10 +1039,49 @@ class ZoneMenuHandler {
 		this.panels.teleportSection.visible = menu === RegionMenu.TELEPORT;
 	}
 
-	updateZones() {
+	drawRegions() {
 		if (!this.mapZoneData) return;
+		if (!this.selectedZone) return;
 
-		// future: validation here
+		const renderRegions: ZoneEditorRegion[] = [];
+
+		const validity = this.isSelectionValid();
+		const regionIndex = this.panels.regionSelect.GetSelected().GetAttributeInt('value', -1);
+
+		for (const [segmentNumber, segment] of this.selectedZone.track.zones.segments.entries()) {
+			for (const [checkpointNumber, checkpoint] of segment.checkpoints.entries()) {
+				for (const region of checkpoint.regions) {
+					renderRegions.push({
+						region: region,
+						renderMode:
+							checkpointNumber === 0
+								? segmentNumber === 0
+									? RegionRenderMode.START
+									: RegionRenderMode.MAJOR_CHECKPOINT
+								: RegionRenderMode.MINOR_CHECKPOINT,
+						editing: validity.zone && region === this.selectedZone.zone.regions[regionIndex]
+					});
+				}
+			}
+			for (const cancel of segment.cancel) {
+				for (const region of cancel.regions) {
+					renderRegions.push({
+						region: region,
+						renderMode: RegionRenderMode.CANCEL,
+						editing: validity.zone && region === this.selectedZone.zone.regions[regionIndex]
+					});
+				}
+			}
+		}
+		for (const region of this.selectedZone.track.zones.end.regions) {
+			renderRegions.push({
+				region: region,
+				renderMode: RegionRenderMode.END,
+				editing: validity.zone && region === this.selectedZone.zone.regions[regionIndex]
+			});
+		}
+
+		this.panels.zoningMenu.drawRegions(renderRegions);
 	}
 
 	saveZones() {
