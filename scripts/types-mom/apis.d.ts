@@ -256,7 +256,7 @@ declare namespace MomentumTimerAPI {
 	function SaveZoneDefs(zoneDefs: Zones): void;
 
 	/** Load ZoneDefs from newzones file */
-	function LoadZoneDefs(): void;
+	function LoadZoneDefs(useLocal: boolean): boolean;
 }
 
 declare namespace MapCacheAPI {

@@ -195,6 +195,8 @@ class ZoneMenuHandler {
 		if (!this.mapZoneData || this.panels.trackList.GetChildCount() === 0) {
 			this.initMenu();
 		}
+
+		this.drawZones();
 	}
 
 	hideZoneMenu() {
@@ -458,6 +460,8 @@ class ZoneMenuHandler {
 		this.populateZoneProperties();
 		this.populateSegmentProperties();
 		this.populateTrackProperties();
+
+		this.drawZones();
 	}
 
 	populateZoneProperties() {
@@ -497,7 +501,7 @@ class ZoneMenuHandler {
 		const filterIndex = this.panels.filterSelect.GetSelected()?.GetAttributeInt('value', 0);
 		this.selectedZone.zone.filtername = filterIndex ? this.filternameList[filterIndex] : '';
 
-		this.updateZones();
+		this.drawZones();
 	}
 
 	populateRegionProperties() {
@@ -533,7 +537,7 @@ class ZoneMenuHandler {
 		this.panels.regionSelect.SetSelectedIndex(this.selectedZone.zone.regions.length - 1);
 		this.populateRegionProperties();
 
-		this.updateZones();
+		this.drawZones();
 	}
 
 	deleteRegion() {
@@ -546,7 +550,7 @@ class ZoneMenuHandler {
 		this.panels.regionSelect.SetSelectedIndex(0);
 		this.populateRegionProperties();
 
-		this.updateZones();
+		this.drawZones();
 	}
 
 	teleportToRegion() {
@@ -583,14 +587,14 @@ class ZoneMenuHandler {
 		xText.text = point[0].toFixed(2);
 		xText.SetPanelEvent('ontextentrysubmit', () => {
 			point[0] = Number.parseFloat(xText.text);
-			this.updateZones();
+			this.drawZones();
 		});
 
 		const yText = newRegionPoint.FindChildTraverse<TextEntry>('PointY');
 		yText.text = point[1].toFixed(2);
 		yText.SetPanelEvent('ontextentrysubmit', () => {
 			point[1] = Number.parseFloat(yText.text);
-			this.updateZones();
+			this.drawZones();
 		});
 	}
 
@@ -602,7 +606,7 @@ class ZoneMenuHandler {
 		this.selectedZone.zone?.regions[index].points.splice(n, 1);
 		point.DeleteAsync(0);
 
-		this.updateZones();
+		this.drawZones();
 	}
 
 	pickBottom() {
@@ -618,7 +622,7 @@ class ZoneMenuHandler {
 		const bottom = Number.parseFloat(this.panels.regionBottom.text);
 		region.bottom = Number.isNaN(bottom) ? 0 : bottom;
 
-		this.updateZones();
+		this.drawZones();
 	}
 
 	pickHeight() {
@@ -634,7 +638,7 @@ class ZoneMenuHandler {
 		const height = Number.parseFloat(this.panels.regionHeight.text);
 		region.height = Number.isNaN(height) ? 0 : height;
 
-		this.updateZones();
+		this.drawZones();
 	}
 
 	pickSafeHeight() {
@@ -650,7 +654,7 @@ class ZoneMenuHandler {
 		const height = Number.parseFloat(this.panels.regionSafeHeight.text);
 		region.safeHeight = Number.isNaN(height) ? 0 : height;
 
-		this.updateZones();
+		this.drawZones();
 	}
 
 	pickTeleDestPos() {
@@ -702,7 +706,7 @@ class ZoneMenuHandler {
 			this.setRegionTPDestTextEntriesActive(false);
 		}
 
-		this.updateZones();
+		this.drawZones();
 	}
 
 	setRegionTeleDestOrientation() {
@@ -718,7 +722,7 @@ class ZoneMenuHandler {
 		region.teleDestPos = [Number.isNaN(x) ? 0 : x, Number.isNaN(y) ? 0 : y, Number.isNaN(z) ? 0 : z];
 		region.teleDestYaw = Number.isNaN(yaw) ? 0 : yaw;
 
-		this.updateZones();
+		this.drawZones();
 	}
 
 	setRegionTPDestTextEntriesActive(enable: boolean) {
@@ -791,7 +795,7 @@ class ZoneMenuHandler {
 				break;
 		}
 
-		this.updateZones();
+		this.drawZones();
 	}
 
 	onPickCanceled() {
@@ -804,7 +808,7 @@ class ZoneMenuHandler {
 			if (region.points.length > 2 && region.height === 0) this.pickHeight();
 		}
 
-		this.updateZones();
+		this.drawZones();
 	}
 
 	addBonus() {
@@ -1000,7 +1004,7 @@ class ZoneMenuHandler {
 		this.panels.trackList.RemoveAndDeleteChildren();
 		this.initMenu();
 
-		this.updateZones();
+		this.drawZones();
 	}
 
 	setMaxVelocity() {
@@ -1008,14 +1012,14 @@ class ZoneMenuHandler {
 		const velocity = Number.parseFloat(this.panels.maxVelocity.text);
 		this.mapZoneData.maxVelocity = !Number.isNaN(velocity) && velocity > 0 ? velocity : 0;
 
-		this.updateZones();
+		this.drawZones();
 	}
 
 	setStageEndAtStageStarts() {
 		if (!this.isSelectionValid().track || !('stagesEndAtStageStarts' in this.selectedZone.track)) return;
 		this.selectedZone.track.stagesEndAtStageStarts = this.panels.stagesEndAtStageStarts.checked;
 
-		this.updateZones();
+		this.drawZones();
 	}
 
 	showDefragFlagMenu() {
@@ -1072,28 +1076,28 @@ class ZoneMenuHandler {
 		// keep select button aligned with other tracks
 		trackPanel.FindChildTraverse('Entry').SetHasClass('zoning__tracklist-checkpoint', true);
 
-		this.updateZones();
+		this.drawZones();
 	}
 
 	setLimitGroundSpeed() {
 		if (!this.isSelectionValid().segment) return;
 		this.selectedZone.segment!.limitStartGroundSpeed = this.panels.limitGroundSpeed.checked;
 
-		this.updateZones();
+		this.drawZones();
 	}
 
 	setCheckpointsOrdered() {
 		if (!this.isSelectionValid().segment) return;
 		this.selectedZone.segment!.checkpointsOrdered = this.panels.checkpointsOrdered.checked;
 
-		this.updateZones();
+		this.drawZones();
 	}
 
 	setCheckpointsRequired() {
 		if (!this.isSelectionValid().segment) return;
 		this.selectedZone.segment!.checkpointsRequired = this.panels.checkpointsRequired.checked;
 
-		this.updateZones();
+		this.drawZones();
 	}
 
 	setSegmentName() {
@@ -1102,7 +1106,7 @@ class ZoneMenuHandler {
 		// feat: later
 		// update segment name in trasklist tree
 
-		this.updateZones();
+		this.drawZones();
 	}
 
 	showRegionMenu(menu?: RegionMenu) {
@@ -1117,13 +1121,55 @@ class ZoneMenuHandler {
 		this.panels.teleportSection.visible = menu === RegionMenu.TELEPORT;
 	}
 
-	updateZones() {
+	drawZones() {
 		if (!this.mapZoneData) return;
+		if (!this.selectedZone) return;
 
-		// future: validation here
+		const renderRegions: ZoneEditorRegion[] = [];
 
-		this.mapZoneData.dataTimestamp = Date.now();
-		MomentumTimerAPI.SetActiveZoneDefs(this.mapZoneData);
+		const validity = this.isSelectionValid();
+		const regionIndex = validity.zone ? this.panels.regionSelect.GetSelected().GetAttributeInt('value', -1) : -1;
+
+		for (const [segmentNumber, segment] of this.selectedZone.track.zones.segments.entries()) {
+			if (segment.checkpoints.length > 0) {
+				for (const [checkpointNumber, checkpoint] of segment.checkpoints.entries()) {
+					for (const region of checkpoint.regions) {
+						renderRegions.push({
+							region: region,
+							renderMode:
+								checkpointNumber === 0
+									? segmentNumber === 0
+										? RegionRenderMode.START
+										: RegionRenderMode.MAJOR_CHECKPOINT
+									: RegionRenderMode.MINOR_CHECKPOINT,
+							editing: validity.zone && region === this.selectedZone.zone.regions[regionIndex]
+						});
+					}
+				}
+			}
+			if (segment.cancel && segment.cancel.length > 0) {
+				for (const cancel of segment.cancel) {
+					for (const region of cancel.regions) {
+						renderRegions.push({
+							region: region,
+							renderMode: RegionRenderMode.CANCEL,
+							editing: validity.zone && region === this.selectedZone.zone.regions[regionIndex]
+						});
+					}
+				}
+			}
+		}
+		if (this.selectedZone.track.zones.end && this.selectedZone.track.zones.end.regions.length > 0) {
+			for (const region of this.selectedZone.track.zones.end.regions) {
+				renderRegions.push({
+					region: region,
+					renderMode: RegionRenderMode.END,
+					editing: validity.zone && region === this.selectedZone.zone.regions[regionIndex]
+				});
+			}
+		}
+
+		this.panels.zoningMenu.drawRegions(renderRegions);
 	}
 
 	saveZones() {
@@ -1133,12 +1179,13 @@ class ZoneMenuHandler {
 	}
 
 	cancelEdit() {
+		this.activeDeleteButton = null;
 		this.panels.trackList.RemoveAndDeleteChildren();
 		this.mapZoneData = null;
 
-		MomentumTimerAPI.LoadZoneDefs();
-
+		MomentumTimerAPI.LoadZoneDefs(false);
 		this.initMenu();
+		this.drawZones();
 	}
 
 	isSelectionValid() {
