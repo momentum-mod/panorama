@@ -24,6 +24,12 @@
 		margin: 32px;
 		horizontal-align: left;
 		vertical-align: top;
+
+		& > .hud-tab-menu__wrapper {
+			> .hud-tab-menu__footer {
+				padding-left: 2px;
+			}
+		}
 	}
 
 	&__wrapper {
@@ -91,6 +97,8 @@
 	&__zoning-button {
 		height: $button-height;
 		width: height-percentage(100%);
+		horizontal-align: left;
+		vertical-align: center;
 		background-position: center;
 		background-repeat: no-repeat;
 		background-image: url('file://{images}/pencil-outline.svg');
@@ -102,10 +110,10 @@
 		}
 	}
 
-	&__enable-cursor {
+	&__footer {
 		border-top: 1px solid rgba(0, 0, 0, 0.4);
 		width: 100%;
-		padding-right: 24px;
+		padding: 0px 24px;
 		vertical-align: bottom;
 		background-color: rgba(0, 0, 0, 0.6);
 	}
