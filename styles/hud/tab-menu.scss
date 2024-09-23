@@ -91,6 +91,9 @@
 	&__zoning-button {
 		height: $button-height;
 		width: height-percentage(100%);
+		margin: 2px;
+		horizontal-align: left;
+		vertical-align: center;
 		background-position: center;
 		background-repeat: no-repeat;
 		background-image: url('file://{images}/pencil-outline.svg');
@@ -102,7 +105,7 @@
 		}
 	}
 
-	&__enable-cursor {
+	&__footer {
 		border-top: 1px solid rgba(0, 0, 0, 0.4);
 		width: 100%;
 		padding-right: 24px;
