@@ -191,6 +191,7 @@ $medium: 28px;
 	&__slider {
 		margin: 0;
 		padding: 0;
+		border: 0px; //remove border from settings-slider
 
 		.settings-slider__title {
 			font-size: $small;
