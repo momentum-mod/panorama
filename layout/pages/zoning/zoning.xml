@@ -18,6 +18,9 @@
 					<RadioButton id="SelectButton" class="zoning__tracklist-button" group="tracklist">
 						<Label id="Name" class="zoning__tracklist-label" />
 					</RadioButton>
+					<Button id="DeleteButton" class="zoning__tracklist-delete hide">
+						<Image class="zoning__tracklist-delete__icon" src="file://{images}/close-box-outline.svg" textureheight="24" />
+					</Button>
 				</Panel>
 				<Panel id="ChildContainer" class="w-full flow-down">
 					<Panel id="SegmentContainer" class="zoning__list-container" />
@@ -35,6 +38,9 @@
 					<RadioButton id="SelectButton" class="zoning__tracklist-button" group="tracklist">
 						<Label id="Name" class="zoning__tracklist-label" />
 					</RadioButton>
+					<Button id="DeleteButton" class="zoning__tracklist-delete hide">
+						<Image class="zoning__tracklist-delete__icon" src="file://{images}/close-box-outline.svg" textureheight="24" />
+					</Button>
 				</Panel>
 				<Panel id="ChildContainer" class="w-full flow-down">
 					<Panel id="CheckpointContainer" class="zoning__list-container" />
@@ -48,6 +54,9 @@
 					<RadioButton id="SelectButton" class="zoning__tracklist-button" group="tracklist">
 						<Label id="Name" class="zoning__tracklist-label" />
 					</RadioButton>
+					<Button id="DeleteButton" class="zoning__tracklist-delete hide">
+						<Image class="zoning__tracklist-delete__icon" src="file://{images}/close-box-outline.svg" textureheight="24" />
+					</Button>
 				</Panel>
 			</Panel>
 		</snippet>
