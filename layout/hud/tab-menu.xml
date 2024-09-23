@@ -52,7 +52,7 @@
 			<Panel class="hud-tab-menu__stats">
 			</Panel>
 			
-			<Panel id="TabMenuFooter" class="hud-tab-menu__enable-cursor">
+			<Panel id="TabMenuFooter" class="hud-tab-menu__footer">
 				<ConVarEnabler convar="sv_cheats" class="v-align-center" togglevisibility="true">
 					<ToggleButton id="ZoningToggle" class="button hud-tab-menu__zoning-button" convar="mom_zone_edit" />
 				</ConVarEnabler>
