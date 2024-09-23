@@ -164,10 +164,10 @@ class ZoneMenuHandler {
 		container.SetHasClass('hide', !shouldExpand);
 		expandIcon.SetHasClass('hide', !shouldExpand);
 		collapseIcon.SetHasClass('hide', shouldExpand);
-		const parent = container.GetParent();
+		/*const parent = container.GetParent();
 		if (parent && parent.HasClass('zoning__tracklist-segment')) {
 			parent.SetHasClass('zoning__tracklist-segment--dark', shouldExpand);
-		}
+		}*/
 	}
 
 	createTrackEntry(parent: GenericPanel, entry: MainTrack | BonusTrack, name: string) {
