@@ -146,9 +146,6 @@
 								</DropDown>
 							</Panel>
 					</Panel>
-					<Panel id="GridSlider" class="zoning__property">
-						<SettingsSlider text="#Zoning_GridSnapSize" class="zoning__slider" min="1" max="64" percentage="false" convar="mom_zone_grid" />
-					</Panel>
 					<Panel id="PropertyTabs" class="tabs">
 						<RadioButton group="ZoningRegion" class="tabs__tab" value="Points" selected="true" onactivate="ZoneMenuHandler.showRegionMenu('Points')" onmouseover="UiToolkitAPI.ShowTextTooltip('PropertyTabs', '#Zoning_RegionPoints_Tooltip');" onmouseout="UiToolkitAPI.HideTextTooltip();">
 							<Image src="file://{images}/vector-square-close.svg" class="tabs__icon" textureheight="48" />
@@ -234,6 +231,9 @@
 							</Panel>
 						</Panel>
 					</Panel>
+				</Panel>
+				<Panel id="GridSlider" class="zoning__property">
+					<SettingsSlider text="#Zoning_GridSnapSize" class="zoning__slider" min="1" max="64" percentage="false" convar="mom_zone_grid" />
 				</Panel>
 			</Panel>
 		</Panel>
