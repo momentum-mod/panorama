@@ -75,6 +75,26 @@ $medium: 28px;
 		}
 	}
 
+	&__tracklist-delete {
+		vertical-align: center;
+		height: 16px;
+		tooltip-position: bottom;
+		transition: background-color 0.1s ease-in 0s;
+
+		&__icon {
+			height: 100%;
+			width: height-percentage(100%);
+			vertical-align: center;
+			horizontal-align: center;
+			img-shadow: $button-icon-shadow;
+			wash-color: $red;
+
+			&:hover {
+				wash-color: $white;
+			}
+		}
+	}
+
 	&__tracklist-track {
 		width: 100%;
 		margin-bottom: 1px;
