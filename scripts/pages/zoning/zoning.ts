@@ -86,6 +86,7 @@ class ZoneMenuHandler {
 		segment: null as Segment | null,
 		zone: null as Zone | null
 	};
+	deleteButton: Button | null;
 	mapZoneData: MapZones | null;
 	filternameList: string[] | null;
 	teleDestList: string[] | null;
@@ -124,8 +125,6 @@ class ZoneMenuHandler {
 
 		if (!this.mapZoneData) return;
 
-		this.updateSelection(this.mapZoneData.tracks.main, null, null);
-
 		const entList: EntityList = this.panels.zoningMenu.getEntityList();
 		this.filternameList = entList.filter ?? [];
 		this.filternameList.unshift($.Localize('#Zoning_Filter_None'));
@@ -136,15 +135,21 @@ class ZoneMenuHandler {
 		this.teleDestList.unshift($.Localize('#Zoning_TPDest_None'));
 		this.populateDropdown(this.teleDestList, this.panels.regionTPDest, '', true);
 
-		this.showRegionMenu(RegionMenu.RESET);
-
 		this.createTrackEntry(this.panels.trackList, this.mapZoneData.tracks.main, 'Main');
 
-		if (!this.mapZoneData.tracks.bonuses || this.mapZoneData.tracks.bonuses.length === 0) return;
-		const tag = $.Localize('#Zoning_Bonus');
-		for (const [i, bonus] of this.mapZoneData.tracks.bonuses.entries()) {
-			this.createTrackEntry(this.panels.trackList, bonus, `${tag} ${i + 1}`);
+		if (this.mapZoneData.tracks.bonuses) {
+			const tag = $.Localize('#Zoning_Bonus');
+			for (const [i, bonus] of this.mapZoneData.tracks.bonuses.entries()) {
+				this.createTrackEntry(this.panels.trackList, bonus, `${tag} ${i + 1}`);
+			}
 		}
+
+		const mainTrackButton = this.panels.trackList.GetChild(0).FindChildTraverse<ToggleButton>('SelectButton');
+		mainTrackButton.SetSelected(true);
+
+		this.showRegionMenu(RegionMenu.RESET);
+
+		this.updateSelection(this.mapZoneData.tracks.main, null, null);
 	}
 
 	showZoneMenu() {
@@ -266,9 +271,24 @@ class ZoneMenuHandler {
 		}
 
 		const selectButton = newTracklistPanel.FindChildTraverse<ToggleButton>('SelectButton');
-		selectButton.SetPanelEvent('onactivate', () =>
-			this.updateSelection(selectionObj.track, selectionObj.segment, selectionObj.zone)
-		);
+		const deleteButton = newTracklistPanel.FindChildTraverse<Button>('DeleteButton');
+		if ('stagesEndAtStageStarts' in selectionObj.track && !selectionObj.segment && !selectionObj.zone) {
+			selectButton.SetPanelEvent('onactivate', () => {
+				this.deleteButton?.SetHasClass('hide', true);
+				this.updateSelection(selectionObj.track, selectionObj.segment, selectionObj.zone);
+				this.deleteButton = null;
+			});
+			deleteButton.DeleteAsync(0);
+		} else {
+			selectButton.SetPanelEvent('onactivate', () => {
+				this.deleteButton?.SetHasClass('hide', true);
+				this.updateSelection(selectionObj.track, selectionObj.segment, selectionObj.zone);
+				deleteButton?.SetHasClass('hide', false);
+				this.deleteButton = deleteButton;
+			});
+			deleteButton.SetPanelEvent('onactivate', () => this.showDeletePopup());
+		}
+
 		if (selectionObj.zone) {
 			selectButton.SetPanelEvent('ondblclick', () =>
 				this.panels.zoningMenu.moveToRegion(selectionObj.zone.regions[0])
@@ -910,6 +930,8 @@ class ZoneMenuHandler {
 				const index = this.mapZoneData.tracks.main.zones.segments.indexOf(this.selectedZone.segment);
 				this.mapZoneData.tracks.main.zones.segments.splice(index, 1);
 			}
+		} else if (this.selectedZone.track && this.selectedZone.zone) {
+			delete this.selectedZone.track.zones.end;
 		} else if (this.selectedZone.track) {
 			if ('stagesEndAtStageStarts' in this.selectedZone.track) {
 				$.Msg("Can't delete Main track!!!");
@@ -919,6 +941,7 @@ class ZoneMenuHandler {
 			}
 		}
 
+		this.deleteButton = null;
 		//hack: this can be a little more surgical
 		this.panels.trackList.RemoveAndDeleteChildren();
 		this.initMenu();
@@ -1030,6 +1053,7 @@ class ZoneMenuHandler {
 		const pointsTab = this.panels.propertyTabs.GetChild<RadioButton>(0);
 		if (menu === RegionMenu.RESET) {
 			pointsTab.SetSelected(true);
+			menu = RegionMenu.POINTS;
 		}
 		menu = menu ?? (pointsTab.GetSelectedButton().GetAttributeString('value', 'Points') as RegionMenu);
 		this.panels.pointsSection.visible = menu === RegionMenu.POINTS;
