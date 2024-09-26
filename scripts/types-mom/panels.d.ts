@@ -129,6 +129,41 @@ interface MomHudDFJump extends AbstractHudPanel<'MomHudDFJump'> {}
 
 interface MomHudSynchronizer extends AbstractHudPanel<'MomHudSynchronizer'> {}
 
+declare const enum RegionRenderMode {
+	NONE = 0,
+	START = 1,
+	START_WITH_SAFE_HEIGHT = 2,
+	TRACK_SWITCH = 3,
+	END = 4,
+	MAJOR_CHECKPOINT = 5,
+	MINOR_CHECKPOINT = 6,
+	CANCEL = 7
+}
+
+declare const enum RegionPolygonProblem {
+	INVALID_INPUT = -1,
+	NONE = 0,
+	POINTS_TOO_CLOSE = 1,
+	ANGLE_TOO_SMALL = 2,
+	COLINEAR_POINTS = 3,
+	SELF_INTERSECTING = 4
+}
+
+interface ZoneEditorRegion {
+	region: import('common/web').Region;
+	renderMode: RegionRenderMode;
+	editing: boolean;
+}
+
+interface ZoneEditorLimits {
+	MAX_REGION_POINTS: number;
+	MAX_TRACK_SEGMENTS: number;
+	MAX_SEGMENT_CHECKPOINTS: number;
+	MAX_STAGE_TRACKS: number;
+	MAX_BONUS_TRACKS: number;
+	MAX_ZONES_ALL_TRACKS: number;
+}
+
 interface ZoneMenu extends AbstractPanel<'ZoneMenu'> {
 	startPointPick(multiPick: boolean): void;
 
@@ -137,4 +172,10 @@ interface ZoneMenu extends AbstractPanel<'ZoneMenu'> {
 	setCornersFromRegion(region: import('common/web').Region): void;
 
 	moveToRegion(region: import('common/web').Region): void;
+
+	drawRegions(editorRegions: ZoneEditorRegion[]): void;
+
+	validateRegionPolygon(points: import('common/web').Vector2D[], closed: boolean): RegionPolygonProblem;
+
+	getZoningLimits(): ZoneEditorLimits;
 }
