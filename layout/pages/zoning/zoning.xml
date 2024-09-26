@@ -12,8 +12,8 @@
 			<Panel class="zoning__tracklist-track">
 				<Panel id="Entry" class="zoning__tracklist-course-entry">
 					<Button id="CollapseButton" class="zoning__collapse-button">
-						<Image id="TracklistCollapseIcon" class="button__icon zoning__collapse-icon zoning__icon-green" src="file://{images}/add.svg" />
-						<Image id="TracklistExpandIcon" class="button__icon zoning__collapse-icon zoning__icon-red hide" src="file://{images}/subtract.svg" />
+						<Image id="TracklistCollapseIcon" class="button__icon zoning__collapse-icon zoning__icon-green hide" src="file://{images}/add.svg" />
+						<Image id="TracklistExpandIcon" class="button__icon zoning__collapse-icon zoning__icon-red" src="file://{images}/subtract.svg" />
 					</Button>
 					<RadioButton id="SelectButton" class="zoning__tracklist-button" group="tracklist">
 						<Label id="Name" class="zoning__tracklist-label" />
@@ -32,8 +32,8 @@
 			<Panel class="zoning__tracklist-segment">
 				<Panel id="Entry" class="zoning__tracklist-course-entry">
 					<Button id="CollapseButton" class="zoning__collapse-button">
-						<Image id="TracklistCollapseIcon" class="button__icon zoning__collapse-icon zoning__icon-green" src="file://{images}/add.svg" />
-						<Image id="TracklistExpandIcon" class="button__icon zoning__collapse-icon zoning__icon-red hide" src="file://{images}/subtract.svg" />
+						<Image id="TracklistCollapseIcon" class="button__icon zoning__collapse-icon zoning__icon-green hide" src="file://{images}/add.svg" />
+						<Image id="TracklistExpandIcon" class="button__icon zoning__collapse-icon zoning__icon-red" src="file://{images}/subtract.svg" />
 					</Button>
 					<RadioButton id="SelectButton" class="zoning__tracklist-button" group="tracklist">
 						<Label id="Name" class="zoning__tracklist-label" />

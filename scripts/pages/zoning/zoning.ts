@@ -266,8 +266,6 @@ class ZoneMenuHandler {
 			collapseButton.SetPanelEvent('onactivate', () =>
 				this.toggleCollapse(childContainer, expandIcon, collapseIcon)
 			);
-
-			this.toggleCollapse(childContainer, expandIcon, collapseIcon);
 		}
 
 		const selectButton = newTracklistPanel.FindChildTraverse<ToggleButton>('SelectButton');
