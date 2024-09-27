@@ -1,6 +1,7 @@
 @use '../../config' as *;
 @use 'sass:color';
 
+$smaller: 12px;
 $small: 16px;
 $medium: 28px;
 
@@ -59,17 +60,18 @@ $medium: 28px;
 	}
 
 	&__tracklist-button {
-		padding: 3px 5px;
+		margin: 2px 2px;
+		padding: 2px 4px;
 
 		&:selected {
-			padding: 2px 4px;
+			margin: 1px 1px;
 			background-color: $light-200;
 			border: 1px solid $gray-800;
 			border-radius: 6px;
 		}
 
 		&:hover {
-			padding: 2px 4px;
+			margin: 1px 1px;
 			border: 1px solid $gray-800;
 			border-radius: 6px;
 		}
@@ -95,32 +97,40 @@ $medium: 28px;
 		}
 	}
 
+	&__add-button {
+		width: fit-children;
+		horizontal-align: left;
+		flow-children: right;
+		margin: 2px 20px;
+		padding: 2px 4px;
+
+		> Image {
+		}
+	}
+
 	&__tracklist-track {
 		width: 100%;
-		margin-bottom: 1px;
-		padding: 2px 6px;
 		flow-children: down;
 	}
 
 	&__tracklist-label {
 		font-size: $small;
+
+		&--add {
+			font-size: $smaller;
+			font-style: italic;
+			color: $gray-800;
+		}
 	}
 
 	&__tracklist-segment {
 		width: 100%;
-		margin-bottom: 1px;
-		padding: 2px 4px;
-		border-radius: 6px;
 		flow-children: down;
-
-		&--dark {
-			//background-color: $dark-100;
-		}
 	}
 
 	&__tracklist-checkpoint {
 		width: 100%;
-		margin: 2px 0px;
+		margin: 0px 18px;
 		flow-children: down;
 	}
 
@@ -131,8 +141,7 @@ $medium: 28px;
 
 	&__list-container {
 		width: 100%;
-		margin-left: 12px;
-		padding-left: 8px;
+		margin-left: 18px;
 		flow-children: down;
 	}
 
