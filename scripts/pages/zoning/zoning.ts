@@ -135,7 +135,7 @@ class ZoneMenuHandler {
 		this.teleDestList.unshift($.Localize('#Zoning_TPDest_None'));
 		this.populateDropdown(this.teleDestList, this.panels.regionTPDest, '', true);
 
-		this.createTrackEntry(this.panels.trackList, this.mapZoneData.tracks.main, 'Main');
+		this.createTrackEntry(this.panels.trackList, this.mapZoneData.tracks.main, $.Localize('#Zoning_Main'));
 
 		if (this.mapZoneData.tracks.bonuses) {
 			const tag = $.Localize('#Zoning_Bonus');
@@ -143,6 +143,10 @@ class ZoneMenuHandler {
 				this.createTrackEntry(this.panels.trackList, bonus, `${tag} ${i + 1}`);
 			}
 		}
+
+		const lastTrack = this.panels.trackList.GetChild(this.mapZoneData.tracks.bonuses?.length ?? 0);
+		const addBonusButton = lastTrack.FindChildTraverse<Panel>('AddBonusButton');
+		addBonusButton.SetHasClass('hide', false);
 
 		const mainTrackButton = this.panels.trackList.GetChild(0).FindChildTraverse<ToggleButton>('SelectButton');
 		mainTrackButton.SetSelected(true);
@@ -224,15 +228,22 @@ class ZoneMenuHandler {
 					zone: zone
 				});
 			}
-			if (!segment.cancel || segment.cancel.length === 0) continue;
-			for (const [j, zone] of segment.cancel.entries()) {
-				const cancelId = `${cancelTag} ${j + 1}`;
-				this.addTracklistEntry(segmentCheckpointContainer, cancelId, TracklistSnippet.CHECKPOINT, {
-					track: entry,
-					segment: segment,
-					zone: zone
-				});
+			if (segment.cancel && segment.cancel.length > 0) {
+				const segmentCancelContainer = segmentChildContainer.FindChildTraverse<Panel>('CancelContainer');
+				for (const [j, zone] of segment.cancel.entries()) {
+					const cancelId = `${cancelTag} ${j + 1}`;
+					this.addTracklistEntry(segmentCancelContainer, cancelId, TracklistSnippet.CHECKPOINT, {
+						track: entry,
+						segment: segment,
+						zone: zone
+					});
+				}
 			}
+
+			const addCheckpointButton = segmentChildContainer.FindChildTraverse<Panel>('AddCheckpointButton');
+			const addCancelZoneButton = segmentChildContainer.FindChildTraverse<Panel>('AddCancelZoneButton');
+			addCheckpointButton.SetPanelEvent('onactivate', () => this.addCheckpoint());
+			addCancelZoneButton.SetPanelEvent('onactivate', () => this.addCancelZone());
 		}
 
 		if (entry.zones.end) {
@@ -242,6 +253,18 @@ class ZoneMenuHandler {
 				segment: null,
 				zone: entry.zones.end
 			});
+		}
+
+		const addSegmentButton = trackChildContainer.GetParent().FindChildTraverse<Panel>('AddSegmentButton');
+		const addEndZoneButton = trackChildContainer.GetParent().FindChildTraverse<Panel>('AddEndZoneButton');
+		if (!('stagesEndAtStageStarts' in entry)) {
+			addSegmentButton.DeleteAsync(0);
+		} else {
+			addSegmentButton.SetPanelEvent('onactivate', () => this.addSegment());
+		}
+		addEndZoneButton.SetPanelEvent('onactivate', () => this.addEndZone());
+		if (entry.zones.end) {
+			addEndZoneButton.SetHasClass('hide', true);
 		}
 	}
 
@@ -725,6 +748,11 @@ class ZoneMenuHandler {
 
 	addBonus() {
 		if (!this.mapZoneData) return;
+
+		const lastTrack = this.panels.trackList.GetChild(this.mapZoneData.tracks.bonuses?.length ?? 0);
+		const addBonusButton = lastTrack.FindChildTraverse<Panel>('AddBonusButton');
+		addBonusButton.SetHasClass('hide', true);
+
 		const bonus = this.createBonusTrack();
 		if (!this.mapZoneData.tracks.bonuses) {
 			this.mapZoneData.tracks.bonuses = [bonus];
@@ -744,6 +772,9 @@ class ZoneMenuHandler {
 		const selectButton = checkpointContainer.FindChildTraverse<ToggleButton>('SelectButton');
 
 		selectButton.SetSelected(true);
+
+		const newBonusButton = newBonusPanel.FindChildTraverse<Panel>('AddBonusButton');
+		newBonusButton.SetHasClass('hide', false);
 
 		this.updateSelection(bonus, bonus.zones.segments[0], bonus.zones.segments[0].checkpoints[0]);
 
@@ -767,7 +798,7 @@ class ZoneMenuHandler {
 		const mainTrack = this.panels.trackList.GetChild(0);
 		const segmentList = mainTrack.FindChildTraverse('SegmentContainer');
 		const id = `${$.Localize('#Zoning_Segment')} ${this.mapZoneData.tracks.main.zones.segments.length}`;
-		const list = this.addTracklistEntry(segmentList, id, TracklistSnippet.SEGMENT, {
+		const childContainer = this.addTracklistEntry(segmentList, id, TracklistSnippet.SEGMENT, {
 			track: this.mapZoneData.tracks.main,
 			segment: newSegment,
 			zone: null
@@ -864,6 +895,8 @@ class ZoneMenuHandler {
 				true
 			);
 		}
+
+		trackPanel.FindChildTraverse('AddEndZoneButton').SetHasClass('hide', true);
 
 		this.updateSelection(this.selectedZone.track, null, endZone);
 
@@ -978,6 +1011,10 @@ class ZoneMenuHandler {
 			} else {
 				const trackIndex = this.mapZoneData.tracks.bonuses.indexOf(this.selectedZone.track);
 				this.mapZoneData.tracks.bonuses.splice(trackIndex, 1);
+
+				const lastTrack = this.panels.trackList.GetChild(this.mapZoneData.tracks.bonuses?.length ?? 0);
+				const addBonusButton = lastTrack.FindChildTraverse<Panel>('AddBonusButton');
+				addBonusButton.SetHasClass('hide', true);
 			}
 		}
 
