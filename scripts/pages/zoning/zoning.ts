@@ -262,7 +262,7 @@ class ZoneMenuHandler {
 		} else {
 			addSegmentButton.SetPanelEvent('onactivate', () => this.addSegment());
 		}
-		addEndZoneButton.SetPanelEvent('onactivate', () => this.addEndZone());
+		addEndZoneButton.SetPanelEvent('onactivate', () => this.addEndZone(entry));
 		if (entry.zones.end) {
 			addEndZoneButton.SetHasClass('hide', true);
 		}
@@ -859,36 +859,35 @@ class ZoneMenuHandler {
 		this.updateZones();
 	}
 
-	addEndZone() {
+	addEndZone(track: MainTrack | BonusTrack) {
+		// TODO: fix this seleciton logic
 		if (!this.mapZoneData || !this.isSelectionValid().track) return;
 		if (this.isSelectionValid().defragBonus) {
 			$.Warning('Defrag Bonus must share zones with Main track!');
 			return;
 		}
 		const endZone = this.createZone();
-		this.selectedZone.track.zones.end = endZone;
+		track.zones.end = endZone;
 
 		let trackPanel: Panel;
-		if (this.selectedZone.track === this.mapZoneData.tracks.main) {
+		if (track === this.mapZoneData.tracks.main) {
 			trackPanel = this.panels.trackList.GetChild(0);
 		} else {
-			const bonusId = this.mapZoneData.tracks.bonuses.indexOf(this.selectedZone.track);
+			const bonusId = this.mapZoneData.tracks.bonuses.indexOf(track);
 			trackPanel = this.panels.trackList.GetChild(1 + bonusId);
 		}
 		const endZoneContainer = trackPanel.FindChildTraverse('EndZoneContainer');
 		const oldEnd = endZoneContainer.GetChild(0);
 		if (oldEnd) {
 			const selectButton = oldEnd.FindChildTraverse('SelectButton');
-			selectButton.SetPanelEvent('onactivate', () =>
-				this.updateSelection(this.selectedZone.track, null, endZone)
-			);
+			selectButton.SetPanelEvent('onactivate', () => this.updateSelection(track, null, endZone));
 		} else {
 			this.addTracklistEntry(
 				endZoneContainer,
 				$.Localize('#Zoning_EndZone'),
 				TracklistSnippet.CHECKPOINT,
 				{
-					track: this.selectedZone.track,
+					track: track,
 					segment: null,
 					zone: endZone
 				},
@@ -898,7 +897,7 @@ class ZoneMenuHandler {
 
 		trackPanel.FindChildTraverse('AddEndZoneButton').SetHasClass('hide', true);
 
-		this.updateSelection(this.selectedZone.track, null, endZone);
+		this.updateSelection(track, null, endZone);
 
 		this.updateZones();
 	}
@@ -961,7 +960,7 @@ class ZoneMenuHandler {
 			},
 			{
 				label: $.Localize('#Zoning_EndZone'),
-				jsCallback: () => this.addEndZone()
+				jsCallback: () => this.addEndZone(this.selectedZone.track)
 			},
 			{
 				label: $.Localize('#Zoning_CancelZone'),
