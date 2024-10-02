@@ -1091,6 +1091,8 @@ class ZoneMenuHandler {
 		const trackPanel = this.panels.trackList.GetChild(1 + bonusIndex);
 		trackPanel.FindChildTraverse('CollapseButton').visible = false;
 		trackPanel.FindChildTraverse('ChildContainer').RemoveAndDeleteChildren();
+		// keep select button aligned with other tracks
+		trackPanel.FindChildTraverse('Entry').SetHasClass('zoning__tracklist-checkpoint', true);
 
 		this.updateZones();
 	}
