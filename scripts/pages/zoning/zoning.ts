@@ -107,7 +107,7 @@ class ZoneMenuHandler {
 				main: {
 					zones: {
 						segments: [this.createSegment()],
-						end: this.createZone()
+						end: null
 					},
 					stagesEndAtStageStarts: true
 				},
@@ -153,7 +153,7 @@ class ZoneMenuHandler {
 
 		this.showRegionMenu(RegionMenu.RESET);
 
-		this.updateSelection(this.mapZoneData.tracks.main, null, null);
+		this.updateSelection(this.mapZoneData.tracks.main, null, null, null);
 	}
 
 	showZoneMenu() {
@@ -173,10 +173,6 @@ class ZoneMenuHandler {
 		container.SetHasClass('hide', !shouldExpand);
 		expandIcon.SetHasClass('hide', !shouldExpand);
 		collapseIcon.SetHasClass('hide', shouldExpand);
-		/*const parent = container.GetParent();
-		if (parent && parent.HasClass('zoning__tracklist-segment')) {
-			parent.SetHasClass('zoning__tracklist-segment--dark', shouldExpand);
-		}*/
 	}
 
 	createTrackEntry(parent: GenericPanel, track: MainTrack | BonusTrack, name: string) {
@@ -280,17 +276,12 @@ class ZoneMenuHandler {
 		const deleteButton = newTracklistPanel.FindChildTraverse<Button>('DeleteButton');
 		if ('stagesEndAtStageStarts' in selectionObj.track && !selectionObj.segment && !selectionObj.zone) {
 			selectButton.SetPanelEvent('onactivate', () => {
-				this.deleteButton?.SetHasClass('hide', true);
-				this.updateSelection(selectionObj.track, selectionObj.segment, selectionObj.zone);
-				this.deleteButton = null;
+				this.updateSelection(selectionObj.track, selectionObj.segment, selectionObj.zone, null);
 			});
 			deleteButton.DeleteAsync(0);
 		} else {
 			selectButton.SetPanelEvent('onactivate', () => {
-				this.deleteButton?.SetHasClass('hide', true);
-				this.updateSelection(selectionObj.track, selectionObj.segment, selectionObj.zone);
-				deleteButton?.SetHasClass('hide', false);
-				this.deleteButton = deleteButton;
+				this.updateSelection(selectionObj.track, selectionObj.segment, selectionObj.zone, deleteButton);
 			});
 			deleteButton.SetPanelEvent('onactivate', () => this.showDeletePopup());
 		}
@@ -339,9 +330,11 @@ class ZoneMenuHandler {
 		}
 
 		if (setActive) {
-			this.selectedZone = selectionObj;
 			selectButton.SetSelected(true);
-			this.updateSelection(selectionObj.track, selectionObj.segment, selectionObj.zone);
+			this.updateSelection(selectionObj.track, selectionObj.segment, selectionObj.zone, deleteButton);
+			if (selectionObj.zone) {
+				this.pickCorners();
+			}
 		}
 
 		return childContainer;
@@ -379,7 +372,7 @@ class ZoneMenuHandler {
 		return {
 			points: [],
 			bottom: FLT_MAX,
-			height: DEFAULT_HEIGHT,
+			height: 0,
 			teleDestTargetname: ''
 		};
 	}
@@ -403,7 +396,8 @@ class ZoneMenuHandler {
 	updateSelection(
 		selectedTrack: MainTrack | BonusTrack | null,
 		selectedSegment: Segment | null,
-		selectedZone: Zone | null
+		selectedZone: Zone | null,
+		deleteButton: Button | null
 	) {
 		if (!selectedTrack) {
 			this.panels.propertiesTrack.visible = false;
@@ -420,6 +414,10 @@ class ZoneMenuHandler {
 		this.panels.propertiesTrack.visible = !validity.zone && !validity.segment && validity.track;
 		this.panels.propertiesSegment.visible = !validity.zone && validity.segment;
 		this.panels.propertiesZone.visible = validity.zone;
+
+		this.deleteButton?.SetHasClass('hide', true);
+		deleteButton?.SetHasClass('hide', false);
+		this.deleteButton = deleteButton;
 
 		this.populateZoneProperties();
 		this.populateSegmentProperties();
@@ -763,6 +761,13 @@ class ZoneMenuHandler {
 	onPickCanceled() {
 		this.pointPick = PickType.NONE;
 
+		if (this.isSelectionValid().zone) {
+			const regionIndex = this.panels.regionSelect.GetSelected().GetAttributeInt('value', -1);
+			const region = this.selectedZone.zone.regions[regionIndex];
+
+			if (region.points.length > 2 && region.height === 0) this.pickHeight();
+		}
+
 		this.updateZones();
 	}
 
@@ -790,15 +795,14 @@ class ZoneMenuHandler {
 		const segmentContainer = newBonusPanel.FindChildTraverse('SegmentContainer');
 		const checkpointContainer = segmentContainer.FindChildTraverse('CheckpointContainer');
 		const selectButton = checkpointContainer.FindChildTraverse<ToggleButton>('SelectButton');
-
-		selectButton.SetSelected(true);
+		const deleteButton = checkpointContainer.FindChildTraverse<Button>('DeleteButton');
 
 		const newBonusButton = newBonusPanel.FindChildTraverse<Panel>('AddBonusButton');
 		newBonusButton.SetHasClass('hide', false);
 
-		//this.updateSelection(bonus, bonus.zones.segments[0], bonus.zones.segments[0].checkpoints[0]);
-
-		this.updateZones();
+		selectButton.SetSelected(true);
+		this.updateSelection(bonus, bonus.zones.segments[0], bonus.zones.segments[0].checkpoints[0], deleteButton);
+		this.pickCorners();
 	}
 
 	addSegment() {
@@ -827,10 +831,6 @@ class ZoneMenuHandler {
 			},
 			true
 		);
-
-		//this.updateSelection(this.selectedZone.track, newSegment, newSegment.checkpoints[0]);
-
-		this.updateZones();
 	}
 
 	addCheckpoint(track: MainTrack | BonusTrack, segment: Segment, checkpointsList: Panel) {
@@ -851,10 +851,6 @@ class ZoneMenuHandler {
 			},
 			true
 		);
-
-		//this.updateSelection(this.selectedZone.track, this.selectedZone.segment, newZone);
-
-		this.updateZones();
 	}
 
 	addEndZone(track: MainTrack | BonusTrack) {
@@ -875,29 +871,20 @@ class ZoneMenuHandler {
 			trackPanel = this.panels.trackList.GetChild(1 + bonusId);
 		}
 		const endZoneContainer = trackPanel.FindChildTraverse('EndZoneContainer');
-		const oldEnd = endZoneContainer.GetChild(0);
-		if (oldEnd) {
-			const selectButton = oldEnd.FindChildTraverse('SelectButton');
-			selectButton.SetPanelEvent('onactivate', () => this.updateSelection(track, null, endZone));
-		} else {
-			this.addTracklistEntry(
-				endZoneContainer,
-				$.Localize('#Zoning_EndZone'),
-				TracklistSnippet.CHECKPOINT,
-				{
-					track: track,
-					segment: null,
-					zone: endZone
-				},
-				true
-			);
-		}
+
+		this.addTracklistEntry(
+			endZoneContainer,
+			$.Localize('#Zoning_EndZone'),
+			TracklistSnippet.CHECKPOINT,
+			{
+				track: track,
+				segment: null,
+				zone: endZone
+			},
+			true
+		);
 
 		trackPanel.FindChildTraverse('AddEndZoneButton').SetHasClass('hide', true);
-
-		//this.updateSelection(track, null, endZone);
-
-		this.updateZones();
 	}
 
 	addCancelZone(track: MainTrack | BonusTrack, segment: Segment, cancelList: Panel) {
@@ -922,10 +909,6 @@ class ZoneMenuHandler {
 			},
 			true
 		);
-
-		//this.updateSelection(this.selectedZone.track, this.selectedZone.segment, newZone);
-
-		this.updateZones();
 	}
 
 	/*showAddMenu() {
