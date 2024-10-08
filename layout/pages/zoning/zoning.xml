@@ -94,14 +94,6 @@
             	<!-- Populated in js -->
         	</Panel>
 		</Panel>
-		<Panel class="zoning__button-box">
-			<Button id="NewZoneButton" class="button button--blue ml-2 h-align-right" onactivate="ZoneMenuHandler.showAddMenu()">
-				<Label class="button__text" text="#Zoning_New" />
-			</Button>
-			<Button class="button button--red ml-2 h-align-right" onactivate="ZoneMenuHandler.showDeletePopup()">
-				<Label class="button__text" text="#Zoning_Delete" />
-			</Button>
-		</Panel>
 		<Label id="PropertiesLabel" class="zoning__header" text="#Zoning_PropertiesLabel" />
 		<Panel id="PropertiesContainer" class="zoning__menu-section">
 			<Panel id="TrackProperties" class="zoning__property-container">
