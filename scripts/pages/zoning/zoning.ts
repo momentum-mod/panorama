@@ -911,31 +911,6 @@ class ZoneMenuHandler {
 		);
 	}
 
-	/*showAddMenu() {
-		UiToolkitAPI.ShowSimpleContextMenu('NewZoneButton', '', [
-			{
-				label: $.Localize('#Zoning_Bonus'),
-				jsCallback: () => this.addBonus()
-			},
-			{
-				label: $.Localize('#Zoning_Segment'),
-				jsCallback: () => this.addSegment()
-			},
-			{
-				label: $.Localize('#Zoning_Checkpoint'),
-				jsCallback: () => this.addCheckpoint()
-			},
-			{
-				label: $.Localize('#Zoning_EndZone'),
-				jsCallback: () => this.addEndZone(this.selectedZone.track)
-			},
-			{
-				label: $.Localize('#Zoning_CancelZone'),
-				jsCallback: () => this.addCancelZone()
-			}
-		]);
-	}*/
-
 	showDeletePopup() {
 		UiToolkitAPI.ShowGenericPopupTwoOptionsBgStyle(
 			$.Localize('#Zoning_Delete'),
