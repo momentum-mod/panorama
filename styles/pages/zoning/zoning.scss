@@ -60,20 +60,18 @@ $medium: 28px;
 	}
 
 	&__tracklist-button {
-		margin: 2px 2px;
+		margin: 1px 1px;
 		padding: 2px 4px;
+		border: 1px none;
+		border-radius: 6px;
 
 		&:selected {
-			margin: 1px 1px;
 			background-color: $light-200;
 			border: 1px solid $gray-800;
-			border-radius: 6px;
 		}
 
 		&:hover {
-			margin: 1px 1px;
 			border: 1px solid $gray-800;
-			border-radius: 6px;
 		}
 	}
 
