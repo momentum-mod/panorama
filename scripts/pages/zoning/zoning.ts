@@ -106,7 +106,7 @@ class ZoneMenuHandler {
 			tracks: {
 				main: {
 					zones: {
-						segments: [this.createSegment()],
+						segments: [this.createSegment(false)],
 						end: null
 					},
 					stagesEndAtStageStarts: true
@@ -136,6 +136,41 @@ class ZoneMenuHandler {
 		this.populateDropdown(this.teleDestList, this.panels.regionTPDest, '', true);
 
 		this.createTrackEntry(this.panels.trackList, this.mapZoneData.tracks.main, $.Localize('#Zoning_Main'));
+
+		// if the first segment has no start zone, show text to create start zone until a start zone has been made
+		if (this.mapZoneData.tracks.main.zones.segments[0]?.checkpoints.length === 0) {
+			const checkpointButton = this.panels.trackList
+				.GetChild(0)
+				?.FindChildTraverse<Button>('AddCheckpointButton');
+			const checkpointLabel = checkpointButton?.GetChild<Label>(0);
+			const startLabel = $.CreatePanel('Label', checkpointButton, '', {
+				class: 'zoning__tracklist-label zoning__tracklist-label--add'
+			});
+
+			checkpointLabel.SetHasClass('hide', true);
+			startLabel.text = $.Localize('#Zoning_CreateStart');
+
+			const checkpointList = this.panels.trackList.GetChild(0).FindChildTraverse<Panel>('CheckpointContainer');
+			checkpointButton.SetPanelEvent('onactivate', () => {
+				checkpointLabel.SetHasClass('hide', false);
+				startLabel.SetHasClass('hide', true);
+				this.addCheckpoint(
+					this.mapZoneData.tracks.main,
+					this.mapZoneData.tracks.main.zones.segments[0],
+					checkpointList
+				);
+
+				checkpointList.GetChild(0).FindChildTraverse<Label>('Name').text = $.Localize('#Zoning_Start_Track');
+
+				checkpointButton.SetPanelEvent('onactivate', () =>
+					this.addCheckpoint(
+						this.mapZoneData.tracks.main,
+						this.mapZoneData.tracks.main.zones.segments[0],
+						checkpointList
+					)
+				);
+			});
+		}
 
 		if (this.mapZoneData.tracks.bonuses) {
 			const tag = $.Localize('#Zoning_Bonus');
@@ -351,12 +386,12 @@ class ZoneMenuHandler {
 		};
 	}
 
-	createSegment(): Segment {
+	createSegment(withStartZone: boolean = true): Segment {
 		return {
 			limitStartGroundSpeed: false,
 			checkpointsRequired: true,
 			checkpointsOrdered: true,
-			checkpoints: [this.createZone()],
+			checkpoints: withStartZone ? [this.createZone()] : [],
 			cancel: [],
 			name: ''
 		};
