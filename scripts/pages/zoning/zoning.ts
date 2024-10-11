@@ -86,7 +86,7 @@ class ZoneMenuHandler {
 		segment: null as Segment | null,
 		zone: null as Zone | null
 	};
-	deleteButton: Button | null;
+	activeDeleteButton: Button | null;
 	mapZoneData: MapZones | null;
 	filternameList: string[] | null;
 	teleDestList: string[] | null;
@@ -166,6 +166,7 @@ class ZoneMenuHandler {
 		if (this.panels.trackList?.GetChildCount()) {
 			this.panels.trackList.RemoveAndDeleteChildren();
 		}
+		this.activeDeleteButton = null;
 	}
 
 	toggleCollapse(container: GenericPanel, expandIcon: Image, collapseIcon: Image) {
@@ -415,9 +416,9 @@ class ZoneMenuHandler {
 		this.panels.propertiesSegment.visible = !validity.zone && validity.segment;
 		this.panels.propertiesZone.visible = validity.zone;
 
-		this.deleteButton?.SetHasClass('hide', true);
+		this.activeDeleteButton?.SetHasClass('hide', true);
 		deleteButton?.SetHasClass('hide', false);
-		this.deleteButton = deleteButton;
+		this.activeDeleteButton = deleteButton;
 
 		this.populateZoneProperties();
 		this.populateSegmentProperties();
@@ -959,7 +960,7 @@ class ZoneMenuHandler {
 			}
 		}
 
-		this.deleteButton = null;
+		this.activeDeleteButton = null;
 		//hack: this can be a little more surgical
 		this.panels.trackList.RemoveAndDeleteChildren();
 		this.initMenu();
