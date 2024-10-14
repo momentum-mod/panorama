@@ -26,7 +26,7 @@
 					</Button>
 					<ToggleButton id="SpeedometerToggleBtn" class="button togglebutton togglebutton--blue settings-speedometer__togglebutton" selected="false">
 						<Label id="SpeedometerName" class="button__text button__text--left settings-speedometer__name" />
-						<Image class="button__icon button__icon--right horizontal-align-right rot-90" src="file://{images}/mom-arrow-right.svg" textureheight="32" />
+						<Image class="button__icon button__icon--right h-align-right rot-90" src="file://{images}/mom-arrow-right.svg" textureheight="32" />
 					</ToggleButton>
 				</Panel>
 				<Panel id="SpeedometerDetailContainer" class="settings-speedometer__detail settings-speedometer__detail--hidden">
@@ -87,7 +87,7 @@
 					</Button>
 					<ToggleButton id="RangeColorToggleBtn" class="button togglebutton togglebutton--blue settings-speedometer-rangecolor__togglebutton" selected="false">
 						<Label id="RangeColorName" class="button__text button__text--left settings-speedometer-rangecolor__name" />
-						<Image class="button__icon button__icon--right horizontal-align-right rot-90" src="file://{images}/mom-arrow-right.svg" textureheight="32" />
+						<Image class="button__icon button__icon--right h-align-right rot-90" src="file://{images}/mom-arrow-right.svg" textureheight="32" />
 					</ToggleButton>
 				</Panel>
 				<Panel id="RangeColorDisplaysContainer" class="settings-speedometer-rangecolor__displayscont settings-speedometer-rangecolor__displayscont--hidden">
@@ -134,7 +134,7 @@
 				</SettingsEnumDropDown>
 
 				<Panel class="settings-group__combo">
-					<Button class="horizontal-align-center button my-2" onactivate="UiToolkitAPI.ShowCustomLayoutPopup('', 'file://{resources}/layout/modals/popups/dont-show-again-settings.xml')">
+					<Button class="h-align-center button my-2" onactivate="UiToolkitAPI.ShowCustomLayoutPopup('', 'file://{resources}/layout/modals/popups/dont-show-again-settings.xml')">
 						<Label class="button__text" text="#Settings_Dosa_Title" />
 					</Button>
 				</Panel>
@@ -154,7 +154,7 @@
 				<ConVarEnabler convar="mom_hud_speedometer_enable" togglevisibility="true" class="flow-down">
 					<SettingsSlider text="#Settings_Speedometer_FPS" min="0" max="400" convar="mom_hud_speedometer_fps" infomessage="#Settings_Speedometer_FPS_Info" hasdocspage="true" tags="speedometer" />
 
-					<Panel id="SpeedometersContainer" class="flow-down full-width" infotitle="#Settings_Speedometer_Gamemode_Long" infomessage="#Settings_Speedometer_Container_Info" tags="speedometer">
+					<Panel id="SpeedometersContainer" class="flow-down w-full" infotitle="#Settings_Speedometer_Gamemode_Long" infomessage="#Settings_Speedometer_Container_Info" tags="speedometer">
 						<Panel class="settings-group__header">
 							<Label class="settings-group__subtitle" text="#Settings_Speedometer_Gamemode_Long" />
 							<!-- TODO: hook this up to some events so it can change when a map is loaded -->
@@ -177,12 +177,12 @@
 						<Panel id="Speedometers" class="settings-speedometers">
 							<!--Filled with snippets in JS-->
 						</Panel>
-						<Button id="AddSpeedometerBtn" class="button horizontal-align-center half-width mt-4 mb-4" onactivate="Speedometers.addSpeedometer();">
+						<Button id="AddSpeedometerBtn" class="button h-align-center w-half mt-4 mb-4" onactivate="Speedometers.addSpeedometer();">
 							<Label class="button__text" text="#Settings_Speedometer_Add" />
 						</Button>
 					</Panel>
 
-					<Panel id="RangeColorProfilesContainer" class="flow-down full-width" infotitle="Settings_Speedometer_ColorRange_Title" infomessage="#Settings_Speedometer_ColorRange_Info">
+					<Panel id="RangeColorProfilesContainer" class="flow-down w-full" infotitle="Settings_Speedometer_ColorRange_Title" infomessage="#Settings_Speedometer_ColorRange_Info">
 						<Panel class="settings-group__header">
 							<Label class="settings-group__subtitle" text="#Settings_Speedometer_ColorRange_Title" />
 							<Panel class="settings-speedometer-buttons">
@@ -202,7 +202,7 @@
 						<Panel id="SpeedometerColorProfiles" class="settings-speedometer-rangecolorprofs">
 							<!--Filled with snippets in JS-->
 						</Panel>
-						<Button id="AddColorProfileBtn" class="button horizontal-align-center half-width mt-4 mb-4" onactivate="RangeColorProfileHandler.addProfile();">
+						<Button id="AddColorProfileBtn" class="button h-align-center w-half mt-4 mb-4" onactivate="RangeColorProfileHandler.addProfile();">
 							<Label class="button__text" text="#Settings_Speedometer_ColorProfile_Add" />
 						</Button>
 					</Panel>
@@ -214,7 +214,7 @@
 			<Panel id="CrosshairSubSection" class="settings-group">
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_Crosshair_Title" tags="crosshair" />
-					<Panel class="flow-right horizontal-align-right">
+					<Panel class="flow-right h-align-right">
 						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_Crosshair_Title', 'CrosshairSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
@@ -226,11 +226,11 @@
 					</Panel>
 				</Panel>
 
-				<Panel class="full-width flow-right mb-2">
+				<Panel class="w-full flow-right mb-2">
 					<ConVarEnabler class="settings__crosshair-wrapper" convar="crosshair">
 						<MomCrosshair id="SettingsCrosshair" class="settings__crosshair" preview="true" />
 					</ConVarEnabler>
-					<Panel class="fill-width flow-down">
+					<Panel class="w-fill flow-down">
 						<Panel class="settings-group__combo" style="margin-bottom: 0px;">							<!-- TODO: fix when sass specificity is fixed -->
 							<SettingsEnum text="#Settings_Crosshair_Enable" convar="crosshair" hasdocspage="false">
 								<RadioButton group="xhairenable" text="#Common_Off" value="0" />
@@ -270,7 +270,7 @@
 			<Panel id="TimerSubSection" class="settings-group">
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_Timer_Title" tags="timer" />
-					<Panel class="flow-right horizontal-align-right">
+					<Panel class="flow-right h-align-right">
 						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_Timer_Title', 'TimerSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
@@ -366,7 +366,7 @@
 			<Panel id="WeaponSelSubSection" class="settings-group">
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_WeaponSelection_Title" tags="weapon,hud" />
-					<Panel class="flow-right horizontal-align-right">
+					<Panel class="flow-right h-align-right">
 						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_WeaponSelection_Title', 'WeaponSelSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
@@ -402,7 +402,7 @@
 			<Panel id="JumpStatsSubSection" class="settings-group">
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_JumpStats_Title" />
-					<Panel class="flow-right horizontal-align-right">
+					<Panel class="flow-right h-align-right">
 						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Jump Stats', 'JumpStatsSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
@@ -488,7 +488,7 @@
 			<Panel id="StrafeSyncSubSection" class="settings-group">
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_TotalSync_Title" tags="sync,strafe" />
-					<Panel class="flow-right horizontal-align-right">
+					<Panel class="flow-right h-align-right">
 						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_TotalSync_Title', 'StrafeSyncSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
@@ -529,7 +529,7 @@
 
 					<Label class="settings-group__title" text="#Settings_DamageIndicator_Title" />
 
-					<Panel class="flow-right horizontal-align-right">
+					<Panel class="flow-right h-align-right">
 
 						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Damage Indicator', 'DamageIndicatorSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
@@ -576,7 +576,7 @@
 			<Panel id="SynchronizerSubSection" class="settings-group">
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_Synchronizer_Title" tags="sync,strafe,trainer" />
-					<Panel class="flow-right horizontal-align-right">
+					<Panel class="flow-right h-align-right">
 						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_Synchronizer_Title', 'SynchronizerSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
@@ -640,7 +640,7 @@
 			<Panel id="MapInfoSubSection" class="settings-group">
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_MapInfo_Title" tags="info,hud" />
-					<Panel class="flow-right horizontal-align-right">
+					<Panel class="flow-right h-align-right">
 						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_MapInfo_Title', 'MapInfoSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>

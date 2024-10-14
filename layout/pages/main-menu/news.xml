@@ -12,7 +12,7 @@
 			<Panel class="news__header">
 				<Label class="news__title" text="#MainMenu_News_Title" />
 				<Button class="news__minimize" onactivate="NewsHandler.minimize();">
-					<Image class="button__icon horizontal-align-right rot-90" src="file://{images}/mom-arrow-right.svg" textureheight="32" />
+					<Image class="button__icon h-align-right rot-90" src="file://{images}/mom-arrow-right.svg" textureheight="32" />
 				</Button>
 			</Panel>
 			<Panel class="news__main">

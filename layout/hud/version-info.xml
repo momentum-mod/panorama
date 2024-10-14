@@ -5,6 +5,6 @@
 
 	<MomHudVersionInfo class="hud-version-info">
 		<!-- This label's text is set in C++ code -->
-		<Label id="VersionLabel" class="text-h6 horizontal-align-right text-align-right" />
+		<Label id="VersionLabel" class="text-h6 h-align-right text-align-right" />
 	</MomHudVersionInfo>
 </root>

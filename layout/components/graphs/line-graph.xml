@@ -17,7 +17,7 @@
 	</snippets>
 
 	<Panel class="linegraph">
-		<Panel class="flow-right full-width fill-height">
+		<Panel class="flow-right w-full h-fill">
 			<Panel id="YMarkers" class="linegraph__y-markers" />
 			<Panel class="linegraph__main">
 				<Panel class="linegraph__axis-y-container">

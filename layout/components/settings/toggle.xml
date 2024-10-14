@@ -6,7 +6,7 @@
 	<!-- Unused, doesn't have styling -->
 
 	<SettingsToggle>
-		<Panel class="flow-right vertical-align-center full-width">
+		<Panel class="flow-right v-align-center w-full">
 			<Panel id="TitleContainer">
 				<Label id="Title" />
 			</Panel>

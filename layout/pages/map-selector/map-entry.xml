@@ -20,7 +20,7 @@
 		</snippet>
 	</snippets>
 
-	<MapEntry class="full-width map-entry" oncontextmenu="MapEntryHandler.showContextMenu()" ondblclick="MapEntryHandler.tryPlayMap()">
+	<MapEntry class="w-full map-entry" oncontextmenu="MapEntryHandler.showContextMenu()" ondblclick="MapEntryHandler.tryPlayMap()">
 		<Panel class="map-entry__left">
 			<Panel class="map-entry__state" />
 			<Panel id="MapEntryImageContainer" class=" map-entry__image">

@@ -19,7 +19,7 @@
 			<Panel id="OnlineGhostSubSection" class="settings-group">
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_OnlineGhost_Title" tags="online,ghost,multiplayer" />
-					<Panel class="flow-right horizontal-align-right">
+					<Panel class="flow-right h-align-right">
 						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_OnlineGhost_Title', 'OnlineGhostSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
@@ -79,7 +79,7 @@
 			<Panel id="GhostSubSection" class="settings-group">
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_OnlinePlayer_Title" />
-					<Panel class="flow-right horizontal-align-right">
+					<Panel class="flow-right h-align-right">
 						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_OnlinePlayer_Title', 'GhostSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
@@ -91,11 +91,11 @@
 					</Panel>
 				</Panel>
 
-				<Panel class="full-width flow-right">
+				<Panel class="w-full flow-right">
 
 					<ModelPanel id="GhostModelPreview" class="settings__ghost" src="models/player/player_shape_base.mdl" mouse_rotate="true" antialias="true" />
 
-					<Panel class="fill-width flow-down">
+					<Panel class="w-fill flow-down">
 						<SettingsEnumDropDown text="#Settings_OnlinePlayer_Body" convar="mom_ghost_bodygroup" oninputsubmit="SettingsPage.onlineSettingsUpdateModel()" infomessage="#Settings_OnlinePlayer_Body_Info" tags="shape,model">
 							<Label text="#Settings_OnlinePlayer_Bodygroup_0" value="0" id="bodygroup0" />
 							<Label text="#Settings_OnlinePlayer_Bodygroup_1" value="1" id="bodygroup1" />

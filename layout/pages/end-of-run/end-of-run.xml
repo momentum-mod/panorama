@@ -25,13 +25,13 @@
 				</Panel>
 				<Panel id="EndOfRunActionButtons" class="endofrun__header-buttons">
 					<Button class="endofrun__header-button" onactivate="EndOfRunHandler.watchReplay();">
-						<Panel class="flow-right horizontal-align-center vertical-align-center">
+						<Panel class="flow-right h-align-center v-align-center">
 							<Image class="button__icon button__icon--left" src="file://{images}/movie-open-play-outline.svg" textureheight="64" />
 							<Label class="button__text button__text--right" text="#Action_WatchReplay" />
 						</Panel>
 					</Button>
 					<Button class="endofrun__header-button endofrun__header-button--last" onactivate="EndOfRunHandler.restartMap();">
-						<Panel class="flow-right horizontal-align-center  vertical-align-center">
+						<Panel class="flow-right h-align-center  v-align-center">
 							<Image class="button__icon button__icon--left" src="file://{images}/reset.svg" textureheight="64" />
 							<Label class="button__text button__text--right" text="#Action_RestartMap" />
 						</Panel>
@@ -48,7 +48,7 @@
 				<Panel class="endofrun-stats">
 					<Panel class="endofrun-stats__header">
 						<Label class="endofrun-stats__title" text="#EndOfRun_Comparison_ZoneTitle" />
-						<Panel class="flow-right horizontal-align-right">
+						<Panel class="flow-right h-align-right">
 							<Label class="endofrun-stats__comparison-pre" text="#EndOfRun_Comparison" />
 							<Label class="endofrun-stats__comparison" text="{s:comparison_name}" />
 						</Panel>

@@ -15,17 +15,17 @@
 	</scripts>
 	
 	<Panel class="console__outer" hittest="true" defaultfocus="ConsoleInput">
-		<Panel id="MoveDragArea" class="console__move-drag-area vertical-align-center" draggable="true">
+		<Panel id="MoveDragArea" class="console__move-drag-area v-align-center" draggable="true">
 			<Label text="#Console_Title" class="text-h3 console__header" />
-			<Button class="button button--red horizontal-align-right" onactivate="ConsoleHandler.toggle()">
+			<Button class="button button--red h-align-right" onactivate="ConsoleHandler.toggle()">
 				<Image class="button__icon" src="file://{images}/close.svg" />
 			</Button>
 		</Panel>
 
 		<Panel class="console__top-splitter" />
 		<Panel class="console__inner" acceptsfocus="true" acceptsinput="true">
-			<StaticConsoleMessageTarget id="ConsoleMessageTarget" class="console__message-target full-width" />
-			<ConsoleInput id="ConsoleInput" class="textentry console__input full-width" clearaftersubmit="true" />
+			<StaticConsoleMessageTarget id="ConsoleMessageTarget" class="console__message-target w-full" />
+			<ConsoleInput id="ConsoleInput" class="textentry console__input w-full" clearaftersubmit="true" />
 		</Panel>
 		<ResizeDragKnob target="Console" class="console__resize-drag-knob">
 			<Image src="file://{images}/resize.svg" textureheight="32" />

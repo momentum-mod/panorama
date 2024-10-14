@@ -14,7 +14,7 @@
 		<Panel id="WarningRow" class="row my-2">
 			<Label id="WarningLabel" class="generic-popup__text text-sm text-italic color-gray-800" text="{s:warning}" />
 		</Panel>
-		<Panel class="row horizontal-align-center mt-3">
+		<Panel class="row h-align-center mt-3">
 			<RadioButton id="LobbyCreatePublicButton" class="button radiobutton radiobutton--blue mr-2" selected="true" onactivate="LobbyCreateHandler.onChanged()">
 				<Image class="button__icon button__icon--left" src="file://{images}/online/publiclobby.svg" textureheight="32" />
 				<Label class="button__text button__text--right" text="#Lobby_Type_Public" />
@@ -29,10 +29,10 @@
 			</RadioButton>
 		</Panel>
 		<Panel class="row mt-4">
-			<Label class="mr-3 vertical-align-center" text="#Lobby_MaxPlayers" />
+			<Label class="mr-3 v-align-center" text="#Lobby_MaxPlayers" />
 			<TextEntry id="MaxPlayers" class="textentry pl-3 pr-0" maxchars="3" textmode="numeric" style="width: 48px; tooltip-position: bottom;" ontextentrychange="LobbyCreateHandler.onChanged()" text="16" />
 		</Panel>
-		<Panel class="row horizontal-align-right">
+		<Panel class="row h-align-right">
 			<Button id="UpdateButton" class="button button--green mr-3" disabled="true" onactivate="LobbyCreateHandler.create()">
 				<Label class="button__text" text="#Common_Create" />
 			</Button>

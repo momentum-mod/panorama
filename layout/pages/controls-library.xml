@@ -211,14 +211,14 @@
 					</Panel>
 				</Panel>
 				<Panel class="col">
-					<Panel class="col full-width">
-						<Label class="text-xs max-width-200 ml-4" text="horizontal-separator" />
+					<Panel class="col w-full">
+						<Label class="text-xs max-w-200 ml-4" text="horizontal-separator" />
 						<Panel class="horizontal-separator" />
 					</Panel>
 				</Panel>
-				<Panel class="col full-height">
-					<Panel class="row full-height">
-						<Label class="text-xs max-width-200" text="vertical-separator" />
+				<Panel class="col h-full">
+					<Panel class="row h-full">
+						<Label class="text-xs max-w-200" text="vertical-separator" />
 						<Panel class="vertical-separator" />
 					</Panel>
 				</Panel>
@@ -746,7 +746,7 @@
 			</Panel>
 
 			<Label class="text-h3 mt-3" text="Settings" />
-			<Panel class="flow-down half-width">
+			<Panel class="flow-down w-half">
 				<SettingsEnum text="SettingsEnum">
 					<RadioButton group="settingsenum" text="1" value="0" />
 					<RadioButton group="settingsenum" text="2" value="1" />

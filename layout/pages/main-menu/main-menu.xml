@@ -27,7 +27,7 @@
 					<Image class="topnav__logo" src="file://{images}/momentumLogo.svg" textureheight="64" scaling="stretch-to-fit-preserve-aspect" />
 				</RadioButton>
 
-				<Panel id="MainMenuTopButtons" class="full-height flow-right">
+				<Panel id="MainMenuTopButtons" class="h-full flow-right">
 					<RadioButton id="PlayButton" group="TopNavRadio" class="topnav__button" onactivate="MainMenuHandler.navigateToPage('MapSelection', 'map-selector/wrapper', false)">
 						<Image class="topnav__icon" src="file://{images}/play-circle.svg" textureheight="64" />
 					</RadioButton>
@@ -42,11 +42,11 @@
 					</RadioButton>
 				</Panel>
 
-				<Panel class="full-height flow-right horizontal-align-right">
+				<Panel class="h-full flow-right h-align-right">
 					<RadioButton id="NotificationsButton" class="topnav__button">
 						<Image class="topnav__icon" src="file://{images}/notification.svg" textureheight="64" />
 					</RadioButton>
-					<PlayerCard class="full-height" onactivate="DrawerHandler.onPlayerCardPressed();" />
+					<PlayerCard class="h-full" onactivate="DrawerHandler.onPlayerCardPressed();" />
 					<RadioButton id="QuitButton" class="topnav__button" onactivate="MainMenuHandler.onQuitButtonPressed()">
 						<Image id="QuitButtonImage" class="topnav__icon" src="file://{images}/quit.svg" textureheight="64" />
 					</RadioButton>
@@ -153,7 +153,7 @@
 								<RadioButton id="ControlsLibraryButton" class="bottombar__button hide" group="TopNavRadio" onactivate="MainMenuHandler.navigateToPage('ControlsLibrary', 'controls-library')">
 									<Label class="bottombar__text" text="Controls Library" />
 								</RadioButton>
-								<TooltipPanel class="bottombar__tooltip horizontal-align-right" tooltip="#MainMenu_Button_SwitchBackground">
+								<TooltipPanel class="bottombar__tooltip h-align-right" tooltip="#MainMenu_Button_SwitchBackground">
 									<Button class="bottombar__button" onactivate="MainMenuHandler.toggleBackgroundLightDark()">
 										<Image class="bottombar__icon" src="file://{images}/theme-light-dark.svg" textureheight="64" />
 									</Button>

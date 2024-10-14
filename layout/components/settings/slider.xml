@@ -10,7 +10,7 @@
 		</Panel>
 		<Panel class="settings-slider__input-container">
 			<Slider class="slider slider--horizontal settings-slider__slider" showdefault="true" direction="horizontal" id="Slider" />
-			<TooltipPanel tooltip="#Settings_General_OutOfBounds" class="full-height">
+			<TooltipPanel tooltip="#Settings_General_OutOfBounds" class="h-full">
 				<Image class="settings-slider__outofbounds" src="file://{images}/alert-octagon.svg" texturewidth="32" />
 			</TooltipPanel>
 			<TextEntry class="textentry settings-slider__textentry" maxchars="6" textmode="numeric" id="Value" />
