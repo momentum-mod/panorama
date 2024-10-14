@@ -661,15 +661,17 @@ class RangeColorProfileHandler {
 	}
 
 	static saveAllProfiles(): void {
-		// TODO: iterator methods
-		const saveData = [...this.profiles.entries()].map(([name, range]) => {
-			range.markAsUnmodified();
+		const saveData = this.profiles
+			.entries()
+			.map(([name, range]) => {
+				range.markAsUnmodified();
 
-			return {
-				profile_name: name,
-				profile_ranges: range.save()
-			};
-		});
+				return {
+					profile_name: name,
+					profile_ranges: range.save()
+				};
+			})
+			.toArray();
 
 		if (SpeedometerSettingsAPI.SaveColorProfilesFromJS(saveData)) {
 			this.markAsUnmodified();
@@ -705,7 +707,7 @@ class RangeColorProfileHandler {
 			'',
 			'file://{resources}/layout/modals/popups/range-color-profile-name.xml',
 			`profileNames=${[
-				[...this.profiles.keys()].join(',')
+				this.profiles.keys().toArray().join(',')
 			]}&prefilledText=${prefilledText}&OKBtnText=${OKBtnText}&callback=${UiToolkitAPI.RegisterJSCallback(
 				callback
 			)}`

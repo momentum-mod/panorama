@@ -35,8 +35,7 @@ class StickyCountHandler {
 			case StickyState.NOSTICKY:
 			default:
 				// remove all classes except the no sticky one
-				// TODO: iterator methods
-				[...StickyPanelClasses.values()]
+				StickyPanelClasses.values()
 					.filter((spClass) => spClass !== StickyPanelClasses.get(StickyState.NOSTICKY))
 					.forEach((spClass) => stickyPanel.RemoveClass(spClass));
 				break;

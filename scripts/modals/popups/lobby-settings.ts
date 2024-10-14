@@ -39,8 +39,7 @@ class LobbySettingsHandler implements OnPanelLoad {
 	}
 
 	submit() {
-		//  TODO: iterator methods
-		const type = [...this.lobbyButtons.entries()].find(([, button]) => button.checked)[0];
+		const type = this.lobbyButtons.entries().find(([, button]) => button.checked)[0];
 		SteamLobbyAPI.ChangeVisibility(+type as 0 | 1 | 2);
 
 		SteamLobbyAPI.SetMaxPlayers(this.getMaxPlayersEntered());
