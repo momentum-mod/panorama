@@ -180,8 +180,9 @@ class ToastManagerInternal {
 	deleteToastByID(toastID: string) {
 		if (!toastID) return;
 
-		// TODO: spread unneeded w iterator methods on latest v8
-		[...this.activeToasts.values()]
+		this.activeToasts
+			.values()
+			.toArray()
 			.flat()
 			.filter(({ id }) => id === toastID)
 			.forEach((toast) => this.deleteToast(toast));

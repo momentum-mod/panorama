@@ -134,10 +134,10 @@ export class SettingsPage {
 	showImportExportDialogue(localeString: string, panelID: string) {
 		const section = $.GetContextPanel().FindChildTraverse(panelID);
 
-		// // TODO: iterator methods
-		const cvars = [...traverseChildren(section)]
+		const cvars = traverseChildren(section)
 			.filter((panel) => isSettingsPanel(panel) && panel.paneltype !== 'SettingsKeyBinder')
-			.map((panel) => panel.convar);
+			.map((panel) => panel.convar)
+			.toArray();
 
 		let cvarParams = '';
 		for (const [i, cvar] of cvars.entries()) cvarParams += (i !== 0 ? '&' : '') + 'cvar' + (i + 1) + '=' + cvar;
