@@ -1,5 +1,5 @@
 import { PanelHandler } from 'util/module-helpers';
-import { getMainTrack, getNumZones } from 'common/leaderboard';
+import { getMainTrack } from 'common/leaderboard';
 import { MapCreditType } from 'common/web';
 
 @PanelHandler()
@@ -63,24 +63,27 @@ class LoadingScreenHandler {
 			return;
 		}
 
-		const mainTrack = getMainTrack(mapData, GameModeAPI.GetCurrentGameMode());
-		const numZones = getNumZones(mapData);
+		const gamemode = GameModeAPI.GetCurrentGameMode();
+		const mainTrack = getMainTrack(mapData.static, gamemode);
 
-		this.panels.cp.SetDialogVariable('mapname', mapData.name);
+		this.panels.cp.SetDialogVariable('mapname', mapData.static.name);
 		this.panels.cp.SetDialogVariableInt('tier', mainTrack?.tier ?? 0);
-		this.panels.cp.SetDialogVariableInt('numzones', numZones);
+		// this.panels.cp.SetDialogVariableInt('numzones', getNumZones(mapData.static));
 		this.panels.cp.SetDialogVariable('tracktype', mainTrack?.linear ? 'Linear' : 'Staged');
-
-		let authorString = '';
-		for (const [i, item] of mapData.credits.filter((x) => x.type === MapCreditType.AUTHOR).entries())
-			authorString += (i > 0 ? ', ' : '') + item.user.alias;
-		this.panels.cp.SetDialogVariable('author', authorString);
+		// this.panels.cp.SetDialogVariableInt('bonuses', getNumBonuses(mapData.static));
+		this.panels.cp.SetDialogVariable(
+			'author',
+			mapData.static.credits
+				.filter(({ type }) => type === MapCreditType.AUTHOR)
+				.map(({ user: { alias } }) => alias)
+				.join(', ')
+		);
 
 		this.panels.mapName.visible = true;
 		this.panels.author.visible = true;
 		this.panels.tierAndType.visible = true;
 		this.panels.numZones.visible = true;
 
-		this.panels.backgroundImage.SetImage(mapData.thumbnail.large);
+		this.panels.backgroundImage.SetImage(mapData.static.thumbnail.large);
 	}
 }

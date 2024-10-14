@@ -18,8 +18,10 @@
 					<Label id="Author" class="text-h2" text="#LoadingScreen_Author" />
 				</Panel>
 				<Panel class="loadingscreen__right-details">
-					<Label id="TierAndType" class="text-h1 loadingscreen__right-label" text="#LoadingScreen_TierAndType" />
-					<Label id="NumZones" class="text-h2 loadingscreen__right-label" text="#LoadingScreen_NumZones" />
+					<Label class="lb-summary__tier" text="#MapInfo_Tier" />
+					<Label class="lb-summary__linearity" text="{s:linearity}" />
+					<!-- TODO: THIS SYSTEM IS A GOOD PLACE TO DO RJ/SJ COURSE TERMINOLOGY BULLSHIT -->
+					<Label class="lb-summary__" text="{s:linearity}" />
 				</Panel>
 				<Label id="GameModeTip" class="text-l loadingscreen__tip" text="{s:tip}" />
 				<Label id="ProgressStatusText" class="text-h1 loadingscreen__status-label" text="#LoadingScreen_Loading" />

@@ -1,7 +1,7 @@
 import { PanelHandler } from 'util/module-helpers';
 import { EndOfRunShowReason } from 'common/timer';
 import { GamemodeInfo, MapCredit, MapCreditType, MMap } from 'common/web';
-import { getMainTrack, getNumZones } from 'common/leaderboard';
+import { getMainTrack } from 'common/leaderboard';
 
 /**
  * Class for the HUD tab menu panel, which contains the leaderboards, end of run, and zoning.
@@ -64,8 +64,8 @@ class HudTabMenuHandler {
 		const mapData = MapCacheAPI.GetCurrentMapData();
 
 		if (mapData && isOfficial) {
-			this.setMapStats(mapData);
-			this.setMapAuthorCredits(mapData.credits);
+			this.setMapStats(mapData.static);
+			this.setMapAuthorCredits(mapData.static.credits);
 		}
 	}
 
@@ -114,11 +114,11 @@ class HudTabMenuHandler {
 		this.panels.cp.forceCloseTabMenu();
 
 		const mainTrack = getMainTrack(mapData, GameModeAPI.GetCurrentGameMode());
-		const numZones = getNumZones(mapData);
+		// const numZones = getNumZones(mapData);
 
 		this.panels.cp.SetDialogVariableInt('tier', mainTrack?.tier ?? 0);
 		this.panels.cp.SetDialogVariable('type', mainTrack?.linear ? '#MapInfo_Type_Linear' : '#MapInfo_Type_Staged');
-		this.panels.cp.SetDialogVariableInt('numzones', numZones);
+		// this.panels.cp.SetDialogVariableInt('numzones', numZones);
 		this.panels.cp.SetDialogVariableInt('runs', mapData.stats?.completions);
 	}
 

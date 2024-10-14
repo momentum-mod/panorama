@@ -39,12 +39,12 @@
 }
 
 @each $name, $width in ('200': 200px, '250': 250px, '300': 300px, '350': 350px, '400': 400px) {
-	.max-width-#{$width} {
-		max-w: $width;
+	.max-w-#{$width} {
+		max-width: $width;
 	}
 
-	.min-width-#{$width} {
-		min-w: $width;
+	.min-w-#{$width} {
+		min-width: $width;
 	}
 }
 

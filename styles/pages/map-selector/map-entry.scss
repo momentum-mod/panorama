@@ -133,10 +133,11 @@ $transition: 0.125s ease-out 0s;
 	}
 
 	&__tier {
+		width: 40px;
 		text-align: center;
 		@include mixin.font-styles($use-header: true);
 		font-size: 26px;
-		margin-left: 60px;
+		margin-left: 32px;
 	}
 
 	&__favorite {
@@ -144,7 +145,7 @@ $transition: 0.125s ease-out 0s;
 		height: 100%;
 		vertical-align: middle;
 		padding: 6px 4px 6px 10px;
-		margin-left: 36px;
+		margin-left: 24px;
 
 		&-button {
 			height: 100%;

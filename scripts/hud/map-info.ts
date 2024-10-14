@@ -1,5 +1,5 @@
 import { PanelHandler } from 'util/module-helpers';
-import { getMainTrack, getNumZones } from 'common/leaderboard';
+import { getMainTrack } from 'common/leaderboard';
 import { MapCreditType } from 'common/web';
 
 @PanelHandler()
@@ -23,18 +23,18 @@ class HudMapInfoHandler {
 
 			cp.SetDialogVariable(
 				'author',
-				mapData.credits
+				mapData.static.credits
 					.filter((x) => x.type === MapCreditType.AUTHOR)
 					.map(({ user: { alias } }) => alias)
 					.join(', ')
 			);
 
-			const mainTrack = getMainTrack(mapData, GameModeAPI.GetCurrentGameMode());
-			const numZones = getNumZones(mapData);
+			const mainTrack = getMainTrack(mapData.static, GameModeAPI.GetCurrentGameMode());
+			// const numZones = getNumZones(mapData.static);
 
 			cp.SetDialogVariableInt('tier', mainTrack?.tier ?? 0);
 			cp.SetDialogVariable('zonetype', mainTrack?.linear ? '#MapInfo_Type_Linear' : '#MapInfo_Type_Staged');
-			cp.SetDialogVariableInt('numzones', numZones);
+			// cp.SetDialogVariableInt('numzones', numZones);
 		} else {
 			this.cachedInfoContainer.visible = false;
 		}

@@ -4,39 +4,40 @@
 @use 'sass:color';
 
 .mapselector {
+	$root: &;
+
+	flow-children: none;
 	width: 100%;
 	height: 100%;
-	flow-children: right;
 
-	$root: &;
+	&__left-container {
+		horizontal-align: left;
+		// Warning: using percentage widths here cause ugly raster scaling
+		width: 820px;
+		height: 100%;
+		margin-right: 8px;
+	}
 
 	&__left {
 		horizontal-align: middle;
 		width: 100%;
 		height: 100%;
 		background-color: rgba(0, 0, 0, 0.3);
+	}
 
-		&-wrapper {
-			flow-children: down;
-			height: 100%;
-			width: 100%;
-			box-shadow: 0 0 16px 0 rgba(0, 0, 0, 0.5);
-		}
-
-		&-container {
-			horizontal-align: left;
-			width: 50%;
-			height: 100%;
-			margin-right: 8px;
-		}
+	&__left-wrapper {
+		flow-children: down;
+		height: 100%;
+		width: 100%;
+		border: 1px solid rgba(255, 255, 255, 0.01);
+		box-shadow: 0 0 16px 0 rgba(0, 0, 0, 0.5);
 	}
 
 	&__right {
 		flow-children: down;
 		horizontal-align: right;
-		width: 50%;
+		width: 960px;
 		height: 100%;
-		margin-left: 8px;
 	}
 
 	&__maps,
@@ -52,7 +53,6 @@
 	}
 
 	&__playlists {
-		height: fill-parent-flow(1);
 		visibility: collapse;
 	}
 
@@ -86,7 +86,6 @@
 	// Elements are MapEntrys, in mapentry.scss
 	&__list {
 		flow-children: down;
-		height: fill-parent-flow(1);
 		padding-right: 16px;
 		width: 100%;
 		overflow: squish scroll;
@@ -146,29 +145,27 @@
 	flow-children: down;
 	width: 100%;
 	padding-right: 8px;
+	margin-top: 2px;
 
-	transition: height 0.2s ease-in-out 0s;
-	//overflow: squish;
-
-	&__button {
-		width: fit-children;
+	&__gamemode-button {
+		// IMPORTANT: `button` class gives vertical-align: center which is buggy with flow wrapping!!
+		vertical-align: top;
+		margin-bottom: 4px;
+		margin-right: 4px;
 	}
 
 	&__text {
-		vertical-align: center;
 		font-size: 20px;
 	}
 
 	&__row {
 		flow-children: right;
-		margin-top: 8px;
-		width: 100%;
 	}
 
 	&__gamemodes {
-		flow-children: right;
-		width: 100%;
-		overflow: squish;
+		margin-top: 4px;
+		margin-bottom: 4px;
+		flow-children: right-wrap;
 
 		& > #HorizontalScrollBar {
 			height: 2px;
@@ -274,26 +271,39 @@ $notch-width: 16px;
 	}
 }
 
-.mapselector-map-times {
+.mapselector-leaderboards {
+	$root: &;
+
 	width: 100%;
+	flow-children: none;
+	vertical-align: top;
 
 	&__list {
 		width: 100%;
 		height: fit-children;
 		background-color: rgba(0, 0, 0, 0.6);
 		padding: 16px;
-
-		visibility: visible;
-
-		&--hidden {
-			visibility: collapse;
-		}
 	}
 
 	&__list-wrapper {
 		width: 100%;
 		height: fit-children;
 		box-shadow: 0 0 16px 0 rgba(0, 0, 0, 0.5);
+
+		visibility: collapse;
+
+		#{$root}--open & {
+			visibility: visible;
+		}
+	}
+
+	&__open-button {
+		horizontal-align: right;
+		height: 36px;
+
+		#{$root}--open & {
+			visibility: collapse;
+		}
 	}
 }
 
@@ -321,7 +331,7 @@ $notch-width: 16px;
 
 	&__content {
 		flow-children: right;
-		height: 270px;
+		height: 280px;
 		width: 100%;
 		margin-top: 8px;
 	}
@@ -351,15 +361,15 @@ $notch-width: 16px;
 		margin-left: 6px;
 	}
 
-	&__leaderboard-button {
+	&__big-button {
 		width: fill-parent-flow(1);
 		height: 40px;
 	}
 
 	&__description {
 		height: 100%;
-
-		background-color: rgba(0, 0, 0, 0.6);
+		@include mixin.font-styles($use-header: false);
+		background-color: rgba(0, 0, 0, 0.5);
 	}
 
 	&__description-scroll {
@@ -383,27 +393,6 @@ $notch-width: 16px;
 		min-height: 210px;
 	}
 
-	&__webbutton {
-		width: 100%;
-		background-color: rgba(0, 0, 0, 0.4);
-		border-top: 1px solid rgba(0, 0, 0, 0.2);
-		padding: 6px;
-		margin: -12px;
-		margin-top: 12px;
-
-		transition: background-color 0.1s ease-in-out 0s;
-
-		&:hover {
-			background-color: rgba(0, 0, 0, 0.3);
-		}
-	}
-
-	&__webbutton-text {
-		align: center center;
-		@include mixin.font-styles($use-header: true);
-		font-size: 20px;
-	}
-
 	&__wrapper {
 		flow-children: down;
 		width: 100%;
@@ -417,27 +406,46 @@ $notch-width: 16px;
 		box-shadow: 0 0 16px 0 rgba(0, 0, 0, 0.5);
 	}
 
+	&__heading {
+		@include mixin.font-styles($use-header: true);
+		font-size: 18px;
+		margin-bottom: 4px;
+		color: #e8e8e8;
+	}
+
 	&__paragraph {
 		width: 100%;
-		font-size: 17px;
+		font-size: 16px;
 		text-shadow: 1px 1px 2px 1 rgba(0, 0, 0, 0.8);
 	}
 }
 
 .mapselector-credits {
-	flow-children: right-wrap;
-	margin-right: 8px;
+	flow-children: down;
+	width: 100%;
+	margin-top: 12px;
 
-	& > HorizontalScrollBar {
-		.ScrollThumb {
-			transform: translateY(6px);
-			max-height: 2px;
-		}
+	&__row {
+		flow-children: right; // right-wrap SUCKS
+	}
+
+	&__col {
+		flow-children: down;
+		min-width: 240px;
+		margin-bottom: 8px;
+	}
+
+	&__credit {
+		flow-children: right;
+		margin-bottom: 4px;
 	}
 
 	&__text {
 		@include mixin.font-styles($use-header: false);
-		font-size: 18px;
+		font-size: 16px;
+		font-weight: medium;
+		text-overflow: clip;
+		vertical-align: top;
 	}
 
 	&__name {
@@ -450,6 +458,22 @@ $notch-width: 16px;
 			&:hover {
 				color: color.scale($light-blue, $lightness: 50%);
 			}
+		}
+	}
+
+	&__avatar {
+		width: 18px;
+		height: 18px;
+		margin-right: 6px;
+		border-radius: 1px;
+		box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.8);
+		vertical-align: center;
+	}
+
+	& > HorizontalScrollBar {
+		.ScrollThumb {
+			transform: translateY(6px);
+			max-height: 2px;
 		}
 	}
 }

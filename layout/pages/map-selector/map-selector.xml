@@ -48,45 +48,43 @@
 								</Panel>
 								<Panel id="MapFilters" class="mapselector-filters">
 									<Panel class="mapselector-filters__row mapselector-filters__gamemodes">
-										<RadioButton id="SurfFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button" selected="true">
+										<RadioButton id="SurfFilterButton" class="button radiobutton radiobutton--blue mapselector-filters__gamemode-button" selected="true">
 											<Label class="button__text mapselector-filters__text" text="#Gamemode_Surf" />
 										</RadioButton>
-										<RadioButton id="BhopFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button">
+										<RadioButton id="BhopFilterButton" class="button radiobutton radiobutton--blue mapselector-filters__gamemode-button">
 											<Label class="button__text mapselector-filters__text" text="#Gamemode_Bhop" />
 										</RadioButton>
-										<RadioButton id="BhopHL1FilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button">
+										<RadioButton id="BhopHL1FilterButton" class="button radiobutton radiobutton--blue mapselector-filters__gamemode-button">
 											<Label class="button__text mapselector-filters__text" text="#Gamemode_BhopHL1" />
 										</RadioButton>
-										<RadioButton id="KzMomFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button">
+										<RadioButton id="KzMomFilterButton" class="button radiobutton radiobutton--blue mapselector-filters__gamemode-button">
 											<Label class="button__text mapselector-filters__text" text="#Gamemode_KzMom" />
 										</RadioButton>
-										<RadioButton id="KzKztFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button hidden">
+										<RadioButton id="KzKztFilterButton" class="button radiobutton radiobutton--blue mapselector-filters__gamemode-button hidden">
 											<Label class="button__text mapselector-filters__text" text="#Gamemode_KzKzt" />
 										</RadioButton>
-										<RadioButton id="Kz16FilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button">
+										<RadioButton id="Kz16FilterButton" class="button radiobutton radiobutton--blue mapselector-filters__gamemode-button">
 											<Label class="button__text mapselector-filters__text" text="#Gamemode_Kz16" />
 										</RadioButton>
-										<RadioButton id="RJFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button">
+										<RadioButton id="RJFilterButton" class="button radiobutton radiobutton--blue mapselector-filters__gamemode-button">
 											<Label class="button__text mapselector-filters__text" text="#Gamemode_RJ" />
 										</RadioButton>
-										<RadioButton id="SJFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button">
+										<RadioButton id="SJFilterButton" class="button radiobutton radiobutton--blue mapselector-filters__gamemode-button">
 											<Label class="button__text mapselector-filters__text" text="#Gamemode_SJ" />
 										</RadioButton>
-										<RadioButton id="AhopFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button">
+										<RadioButton id="AhopFilterButton" class="button radiobutton radiobutton--blue mapselector-filters__gamemode-button">
 											<Label class="button__text mapselector-filters__text" text="#Gamemode_Ahop" />
 										</RadioButton>
-										<RadioButton id="ConcFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button">
+										<RadioButton id="ConcFilterButton" class="button radiobutton radiobutton--blue mapselector-filters__gamemode-button">
 											<Label class="button__text mapselector-filters__text" text="#Gamemode_Conc" />
 										</RadioButton>
-									</Panel>
-									<Panel class="mapselector-filters__row mapselector-filters__gamemodes">
-										<RadioButton id="DefragCPMFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button">
+										<RadioButton id="DefragCPMFilterButton" class="button radiobutton radiobutton--blue mapselector-filters__gamemode-button">
 											<Label class="button__text mapselector-filters__text" text="#Gamemode_DefragCPM" />
 										</RadioButton>
-										<RadioButton id="DefragVQ3FilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button">
+										<RadioButton id="DefragVQ3FilterButton" class="button radiobutton radiobutton--blue mapselector-filters__gamemode-button">
 											<Label class="button__text mapselector-filters__text" text="#Gamemode_DefragVQ3" />
 										</RadioButton>
-										<RadioButton id="DefragVTGFilterButton" class="button togglebutton togglebutton--blue mapselector-filters__button">
+										<RadioButton id="DefragVTGFilterButton" class="button radiobutton radiobutton--blue mapselector-filters__gamemode-button">
 											<Label class="button__text mapselector-filters__text" text="#Gamemode_DefragVTG" />
 										</RadioButton>
 									</Panel>
@@ -118,7 +116,7 @@
 												<DualSlider id="TierSlider" class="slider slider--horizontal mapselector-tier-slider__slider" snaptoincrement="true" direction="horizontal" min="1" max="10" increment="1" default="1" default2="10" value="1" value2="10" />
 											</Panel>
 										</Panel>
-										<Panel class="h-align-right flow-right">
+										<Panel class="flow-right h-align-right v-align-bottom">
 											<TooltipPanel tooltip="&lt;b&gt;Filter by&lt;/b&gt;: Completed">
 												<NStateButton id="MapCompletedFilterButton" class="button nstatebutton mapselector-filters__nstatebutton mr-2">
 													<Image class="button__icon" src="file://{images}/flag.svg" textureheight="32" />
@@ -191,10 +189,14 @@
 			</Panel>
 
 			<Panel class="mapselector__right">
-				<Panel id="MapTimes" class="mapselector-map-times">
-					<Panel class="mapselector-map-times__list-wrapper">
-						<Leaderboards id="Leaderboards" class="mapselector-map-times__list mapselector-map-times__list--hidden" />
+				<Panel id="MapTimes" class="mapselector-leaderboards">
+					<Panel class="mapselector-leaderboards__list-wrapper">
+						<Leaderboards id="Leaderboards" class="mapselector-leaderboards__list mapselector-leaderboards__list--hidden leaderboards--in-map-selector" />
 					</Panel>
+					<Button class="button mapselector-leaderboards__open-button" onactivate="MapSelectorHandler.toggleLeaderboards(true);">
+						<Image class="button__icon button__icon--left" src="file://{images}/chart-timeline.svg" textureheight="40" />
+						<Label class="button__text button__icon--right mr-3" text="#MapSelector_Button_Leaderboards" />
+					</Button>
 				</Panel>
 				<Panel id="MapInfo" class="mapselector-map-info">
 					<!-- Stacked labels to give double layers of shadow. I don't like it, but I'll have to go along with it. -->
@@ -224,46 +226,37 @@
 							</Panel>
 						</Panel>
 					</Panel>
-					<!-- <Panel class="map-info-gallery_container">
-						<Panel class="map-info-gallery" />
-					</Panel> -->
 					<Panel class="mapselector-map-info__content">
 						<Panel id="MapDescription" class="mapselector-map-info__block-left mapselector-map-info__description">
 							<Panel class="mapselector-map-info__wrapper mapselector-map-info__wrapper--unpadded">
 								<Panel class="mapselector-map-info__description-scroll">
 									<Panel class="mapselector-map-info__description-main-elements">
 										<Panel id="MapDescriptionContainer" class="flow-down w-full">
-											<Label class="text-h5 mb-1" text="#MapSelector_Info_Description" />
+											<Label class="mapselector-map-info__heading" text="#MapSelector_Info_Description" />
 											<Label class="mapselector-map-info__paragraph" text="{s:description}" />
 										</Panel>
-										<Panel id="MapCreditsContainer" class="flow-down mt-4">
-											<Label class="text-h5 mb-1" text="#MapSelector_Info_Authors" />
-											<Panel id="MapCredits" class="mapselector-credits">
-												<!-- Populated by JS -->
-											</Panel>
+										<Panel id="MapCredits" class="mapselector-credits">
+											<!-- Populated by JS -->
 										</Panel>
 										<Panel id="MapDatesContainer" class="flow-down mt-4">
-											<Label class="text-h5 mb-1" text="#MapSelector_Info_DateCreated" />
+											<Label class="mapselector-map-info__heading" text="#MapSelector_Info_DateCreated" />
 											<Label class="mapselector-map-info__paragraph" text="{s:date}" />
 										</Panel>
 										<!-- <Label class="text-h5 mt-4 mb-1" text="#MapSelector_Info_Tags" />
 										<Label id="MapTags" class="mapselector-map-info__paragraph" />-->
 									</Panel>
-									<Button id="MapInfoWebsiteButton" class="mapselector-map-info__webbutton">
-										<Label class="mapselector-map-info__webbutton-text" text="#Action_ViewOnWebsite" />
-									</Button>
 								</Panel>
 							</Panel>
 						</Panel>
 
 						<Panel class="flow-down mapselector-map-info__block-right">
 							<Panel class="flow-right w-full pb-3">
-								<ToggleButton id="LeaderboardsBtn" class="button togglebutton togglebutton--blue mapselector-map-info__leaderboard-button" onactivate="MapSelectorHandler.toggleLeaderboards()">
-									<Panel class="flow-right  h-full h-align-center">
-										<Image class="button__icon button__icon--left" src="file://{images}/chart-timeline.svg" textureheight="40" />
-										<Label class="button__text button__icon--right mr-3" text="#MapSelector_Button_Leaderboards" />
+								<Button id="MapInfoWebsiteButton" class="button mapselector-map-info__big-button" onactivate="MapSelectorHandler.openInSteamOverlay();">
+									<Panel class="flow-right h-full h-align-center">
+										<Image class="button__icon button__icon--left" src="file://{images}/globe.svg" textureheight="40" />
+										<Label class="button__text button__icon--right mr-3" text="#Action_ViewOnWebsite" />
 									</Panel>
-								</ToggleButton>
+								</Button>
 								<TooltipPanel tooltip="#MapSelector_Button_Favorite">
 									<ToggleButton id="MapInfoFavorite" class="button togglebutton togglebutton--yellow mapselector-map-info__square-button">
 										<Image class="button__icon" src="file://{images}/star.svg" textureheight="40" />

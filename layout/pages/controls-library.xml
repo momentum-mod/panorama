@@ -10,6 +10,14 @@
 	<Panel class="mainmenu__page">
 		<Panel id="ControlsLibraryPanel" class="flow-down full overflow-vscroll">
 
+			<Panel style="border: 10px solid green;flow-children: right-wrap; width: 500px;">
+				<Panel style="width: 200px; background-color: red; height: 100px;" />
+				<Panel style="width: 200px; background-color: yellow; height: 100px;" />
+				<Panel style="width: 200px; background-color: red; height: 100px;" />
+				<Panel style="width: 200px; background-color: yellow; height: 100px;" />
+				<Panel style="width: 200px; background-color: red; height: 100px;" />
+			</Panel>
+
 			<Label class="text-h1 mt-3" text="Core" />
 
 			<Label class="text-h3 mt-3" text="Text" />

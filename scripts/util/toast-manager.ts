@@ -238,7 +238,7 @@ class ToastManagerInternal {
 				toast.panel.AddClass(`toast-generic--${toast.style}`);
 			}
 
-			toast.panel.SetDialogVariable('toast_title', toast.title.toUpperCase());
+			toast.panel.SetDialogVariable('toast_title', toast.title);
 			toast.panel.SetDialogVariable('toast_message', toast.message);
 
 			toast.panel.FindChildInLayoutFile('Title').SetHasClass('hide', !toast.title);

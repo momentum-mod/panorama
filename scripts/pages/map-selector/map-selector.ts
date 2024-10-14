@@ -2,6 +2,8 @@ import { OnPanelLoad, PanelHandler } from 'util/module-helpers';
 import { traverseChildren } from 'util/functions';
 import { MapCreditType } from 'common/web';
 
+const DASHBOARD_URL = 'https://dashboard.momentum-mod.org';
+
 enum NStateButtonState {
 	OFF = 0,
 	INCLUDE = 1,
@@ -51,6 +53,7 @@ class MapSelectorHandler implements OnPanelLoad {
 		datesContainer: $<Panel>('#MapDatesContainer'),
 		credits: $<Panel>('#MapCredits'),
 		websiteButton: $<Button>('#MapInfoWebsiteButton'),
+		leaderboardContainer: $<Panel>('#MapTimes'),
 		tags: $<Label>('#MapTags')
 	};
 
@@ -71,6 +74,7 @@ class MapSelectorHandler implements OnPanelLoad {
 		$.RegisterForUnhandledEvent('MapSelector_ShowConfirmOverwrite', (mapID) => this.showConfirmOverwrite(mapID));
 		$.RegisterForUnhandledEvent('MapSelector_MapsFiltered', (count) => this.onMapsFiltered(count));
 		$.RegisterForUnhandledEvent('MapSelector_SelectedDataUpdate', () => this.onSelectedDataUpdated());
+		$.RegisterForUnhandledEvent('MapSelector_HideLeaderboards', () => this.toggleLeaderboards(false));
 
 		this.panels.nStateButtons.forEach((panel) =>
 			$.RegisterEventHandler('NStateButtonStateChanged', panel, (panelID, state) =>
@@ -261,33 +265,57 @@ class MapSelectorHandler implements OnPanelLoad {
 		if (!mapData) return;
 
 		// Set the description and creation date text
-		$.GetContextPanel().SetDialogVariable('description', mapData.info?.description);
-		this.panels.descriptionContainer.SetHasClass('hide', !mapData.info?.description);
+		$.GetContextPanel().SetDialogVariable('description', mapData.static.info?.description);
+		this.panels.descriptionContainer.SetHasClass('hide', !mapData.static.info?.description);
 
-		const date = new Date(mapData.info?.creationDate);
+		const date = new Date(mapData.static.info?.creationDate);
 
 		$.GetContextPanel().SetDialogVariable('date', date.toLocaleDateString());
-		this.panels.datesContainer.SetHasClass('hide', !mapData.info?.creationDate);
+		this.panels.datesContainer.SetHasClass('hide', !mapData.static.info?.creationDate);
 
-		// Clear the credits from the last map
+		// Credits
 		this.panels.credits.RemoveAndDeleteChildren();
 
-		// Find all authors
-		const authorCredits = mapData.credits.filter((x) => x.type === MapCreditType.AUTHOR);
+		const categories = [
+			[MapCreditType.AUTHOR, '#MapSelector_Info_Authors'],
+			[MapCreditType.CONTRIBUTOR, '#MapSelector_Info_Contributors'],
+			[MapCreditType.SPECIAL_THANKS, '#MapSelector_Info_SpecialThanks'],
+			[MapCreditType.TESTER, '#MapSelector_Info_Testers']
+		] as const;
 
-		const hasCredits = authorCredits.length > 0;
+		let i = 0;
+		// Panorama's useless right-wrap behaviour makes doing layout for this with CSS very hard - just built out
+		// in JS.
+		categories.forEach(([type, heading]) => {
+			const credits = mapData.static.credits.filter(({ type: t }) => t === type);
 
-		this.panels.creditsContainer.SetHasClass('hide', !hasCredits);
+			if (credits.length === 0) return;
 
-		if (hasCredits) {
-			// Add them to the panel
-			for (const [i, credit] of authorCredits.entries()) {
-				const namePanel = $.CreatePanel('Label', this.panels.credits, '', {
-					text: credit.user.alias,
+			const row =
+				i % 2 === 0
+					? $.CreatePanel('Panel', this.panels.credits, '', { class: 'mapselector-credits__row' })
+					: this.panels.credits.Children().at(-1);
+			i++;
+
+			const col = $.CreatePanel('Panel', row, '', { class: 'mapselector-credits__col' });
+			$.CreatePanel('Label', col, '', { text: $.Localize(heading), class: 'mapselector-map-info__heading' });
+
+			credits.forEach(({ user: { steamID, alias } }) => {
+				const panel = $.CreatePanel('Panel', col, '', { class: 'mapselector-credits__credit' });
+
+				if (steamID) {
+					$.CreatePanel('AvatarImage', panel, '', {
+						class: 'mapselector-credits__avatar',
+						steamid: steamID
+					});
+				}
+
+				const namePanel = $.CreatePanel('Label', panel, '', {
+					text: alias,
 					class: 'mapselector-credits__text mapselector-credits__name'
 				});
 
-				if (credit.user.steamID !== '0') {
+				if (steamID) {
 					namePanel.AddClass('mapselector-credits__name--steam');
 
 					// This will become a player profile panel in the future
@@ -295,24 +323,19 @@ class MapSelectorHandler implements OnPanelLoad {
 						UiToolkitAPI.ShowSimpleContextMenu(namePanel.id, '', [
 							{
 								label: $.Localize('#Action_ShowSteamProfile'),
-								jsCallback: () => SteamOverlayAPI.OpenToProfileID(credit.user.steamID)
+								jsCallback: () => SteamOverlayAPI.OpenToProfileID(steamID)
 							}
 						]);
 					});
 				}
+			});
+		});
+	}
 
-				if (i < authorCredits.length - 1) {
-					const commaPanel = $.CreatePanel('Label', this.panels.credits, '');
-					commaPanel.AddClass('mapselector-credits__text');
-					commaPanel.text = ',  ';
-				}
-			}
-		}
-
-		// Set the website button link
-		this.panels.websiteButton.SetPanelEvent('onactivate', () =>
-			SteamOverlayAPI.OpenURL(`https://momentum-mod.org/dashboard/maps/${mapData.id}`)
-		);
+	openInSteamOverlay() {
+		const mapData = $.GetContextPanel<MomentumMapSelector>().selectedMapData;
+		SteamOverlayAPI.OpenURL(`${DASHBOARD_URL}/maps/${mapData.static.name}`);
+		$.Msg(`${DASHBOARD_URL}/maps/${mapData.static.name}`);
 	}
 
 	/** When a NState button is pressed, update its styling classes */
@@ -321,10 +344,11 @@ class MapSelectorHandler implements OnPanelLoad {
 		NStateButtonClasses.entries().forEach(([i, className]) => panel.SetHasClass(className, state === i));
 	}
 
-	/**
-	 * Toggles the visibility of the leaderboards panel
-	 */
-	toggleLeaderboards() {
-		this.panels.cp.FindChildTraverse('Leaderboards')?.ToggleClass('mapselector-map-times__list--hidden');
+	toggleLeaderboards(open: boolean) {
+		this.panels.leaderboardContainer.SetHasClass('mapselector-leaderboards--open', open);
+	}
+
+	toggleGallery() {
+		UiToolkitAPI.ShowGenericPopupBgStyle('title', 'fuck', '', 'blur');
 	}
 }

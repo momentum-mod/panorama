@@ -81,8 +81,8 @@ $drawer-width: 768px;
 	}
 
 	&__content {
-		width: fill-parent-flow(1);
-		height: fill-parent-flow(1);
+		width: 100%;
+		height: 100%;
 		margin-top: $topnav-height;
 		margin-right: $rightnav-width;
 	}

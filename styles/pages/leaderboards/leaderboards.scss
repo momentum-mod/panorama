@@ -11,6 +11,15 @@
 		horizontal-align: center;
 		width: 100%;
 	}
+
+	&__hide-button {
+		margin-left: 8px;
+		visibility: collapse;
+
+		.leaderboards--in-map-selector & {
+			visibility: visible;
+		}
+	}
 }
 
 .leaderboard-times {
@@ -85,7 +94,7 @@
 
 	&__empty {
 		width: 100%;
-		height: fill-parent-flow(1);
+		height: 100%;
 		background-color: rgba(0, 0, 0, 0.4);
 		padding-bottom: 36px;
 
@@ -95,7 +104,7 @@
 
 	&__loading {
 		width: 100%;
-		height: fill-parent-flow(1);
+		height: 100%;
 		background-color: rgba(0, 0, 0, 0.4);
 		padding-bottom: 36px;
 
@@ -146,22 +155,5 @@
 }
 
 .leaderboard-dropdown {
-	flow-children: right;
-	align: center center;
-
-	width: 100%;
-	height: 48px;
-
-	padding: 0 6px 0 12px;
-
-	border-radius: 2px;
-	border: 1px solid rgba(0, 0, 0, 0.5);
-
-	margin-bottom: 4px;
-
-	&__input-container {
-		flow-children: right;
-		width: 65%;
-		vertical-align: center;
-	}
+	vertical-align: center;
 }

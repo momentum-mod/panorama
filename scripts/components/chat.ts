@@ -26,12 +26,6 @@ class ChatHandler {
 
 	createUsersTypingString(): string {
 		const numTyping = this.membersTyping.length;
-
-		// 0  => ''
-		// 1  => %user% is typing...
-		// 2  => %user1% and %user2% are typing...
-		// 3+ => %amount% users are typing...
-
 		switch (numTyping) {
 			case 0:
 				return '';
