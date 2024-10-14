@@ -7,7 +7,7 @@
 		<include type="module" src="file://{scripts}/hud/status.ts" />
 	</scripts>
 
-	<MomHudStatus class="full-width">
+	<MomHudStatus class="w-full">
 		<ConVarEnabler class="hudstatus" convar="mom_hud_status_enable" togglevisibility="true">
 			<Label id="HudStatusLabel" class="hudstatus__label" text="#HudStatus_Spawn" />
 		</ConVarEnabler>

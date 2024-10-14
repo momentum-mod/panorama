@@ -19,7 +19,7 @@
 			<Panel id="VolumeSubSection" class="settings-group">
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_Volume_Title" tags="volume,sound" />
-					<Panel class="flow-right horizontal-align-right">
+					<Panel class="flow-right h-align-right">
 						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_Volume_Title', 'VolumeSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>

@@ -27,7 +27,7 @@
 					<Panel id="SettingsNav" class="settings-nav__main">
 						<!-- INPUT -->
 						<RadioButton id="InputRadio" class="settings-nav__item" group="SettingsNav" onactivate="SettingsHandler.navigateToTab('InputSettings')" selected="true">
-							<Panel class="full-width">
+							<Panel class="w-full">
 								<Label class="settings-nav__item-label" text="#Settings_Input_Title" />
 							</Panel>
 							<Panel class="settings-nav__subsection settings-nav__subsection--2 settings-nav__subsection--hidden">

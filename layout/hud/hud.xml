@@ -81,7 +81,7 @@
 		</Panel>
 
 		<!-- This container is here so we can move the leaderboard in and out of it during the end-of-match sequence -->
-		<Panel id="TabMenuContainer" class="full-width full-height" hittest="false" hittestchildren="true">
+		<Panel id="TabMenuContainer" class="w-full h-full" hittest="false" hittestchildren="true">
 			<HudTabMenu id="TabMenu" hittest="true" />
 		</Panel>
 

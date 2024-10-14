@@ -7,7 +7,7 @@
 		<include type="module" src="file://{scripts}/hud/cgaz.ts" />
 	</scripts>
 
-	<MomHudCgaz class="full-width full-height" alternateTicks="false">
+	<MomHudCgaz class="w-full h-full" alternateTicks="false">
 		<ConVarEnabler id="AccelContainer" class="cgaz__container" convar="mom_df_hud_accel_enable" togglevisibility="true">
 			<Panel id="LeftTurnZone" />
 			<Panel id="LeftFastZone" />
@@ -25,19 +25,19 @@
 		<ConVarEnabler id="SnapContainer" class="cgaz__container" convar="mom_df_hud_snap_enable" togglevisibility="true" />
 		<ConVarEnabler id="PrimeContainer" class="cgaz__container" convar="mom_df_hud_prime_enable" togglevisibility="true" />
 		<Panel id="PrimeArrow">
-			<ConVarEnabler class="full-height" convar="mom_df_hud_prime_arrow_enable" togglevisibility="true">
+			<ConVarEnabler class="h-full" convar="mom_df_hud_prime_arrow_enable" togglevisibility="true">
 				<Image id="PrimeArrowIcon" class="arrow__down" src="file://{images}/hud/cgaz-arrow.svg" textureheight="48" />
 			</ConVarEnabler>
 		</Panel>
 		<Panel id="CompassArrow">
-			<ConVarEnabler class="full-height" convar="mom_df_hud_compass_mode" togglevisibility="true">
+			<ConVarEnabler class="h-full" convar="mom_df_hud_compass_mode" togglevisibility="true">
 				<Image id="CompassArrowIcon" class="arrow__up" src="file://{images}/hud/cgaz-arrow.svg" textureheight="48" />
 			</ConVarEnabler>
 		</Panel>
-		<ConVarEnabler class="full-height" convar="mom_df_hud_pitch_enable" togglevisibility="true">
+		<ConVarEnabler class="h-full" convar="mom_df_hud_pitch_enable" togglevisibility="true">
 			<Panel id="PitchLines" class="cgaz-line__container" />
 		</ConVarEnabler>
-		<ConVarEnabler class="full-height" convar="mom_df_hud_compass_stat_mode" togglevisibility="true">
+		<ConVarEnabler class="h-full" convar="mom_df_hud_compass_stat_mode" togglevisibility="true">
 			<Panel id="StatsBox" class="cgaz-stats__container">
 				<Label id="PitchStat" class="cgaz-stats cgaz-stats__pitch" />
 				<Label id="YawStat" class="cgaz-stats cgaz-stats__yaw" />
@@ -45,7 +45,7 @@
 		</ConVarEnabler>
 		<Panel id="CompassTicks" class="cgaz-tick__container" />
 		<Panel id="WindicatorArrow">
-			<ConVarEnabler class="full-height" convar="mom_df_hud_windicator_enable" togglevisibility="true">
+			<ConVarEnabler class="h-full" convar="mom_df_hud_windicator_enable" togglevisibility="true">
 				<Image id="WindicatorArrowIcon" class="arrow__down" src="file://{images}/hud/cgaz-arrow.svg" textureheight="48" />
 			</ConVarEnabler>
 		</Panel>

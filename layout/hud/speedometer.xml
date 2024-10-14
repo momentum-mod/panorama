@@ -9,7 +9,7 @@
 
 	<snippets>
 		<snippet name="speedometer-entry">
-			<Panel class="vertical-align-center horizontal-align-center">
+			<Panel class="v-align-center h-align-center">
 				<Panel id="SpeedometerContainer" class="speedometer">
 					<Label id="SpeedometerLabel" text="" class="text-align-center" />
 					<Label id="SpeedometerComparisonLabel" text="" />
@@ -18,7 +18,7 @@
 		</snippet>
 	</snippets>
 
-	<MomHudSpeedometer class="horizontal-align-center">
+	<MomHudSpeedometer class="h-align-center">
 		<Panel id="SpeedometersContainer" class="speedometers">
 		</Panel>
 	</MomHudSpeedometer>

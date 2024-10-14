@@ -11,12 +11,12 @@
 		<snippet name="conc-ent-panel">
 			<Panel class="conc-ent">
 				<ProgressBar id="ConcTimeMeter" class="conc-ent__progressbar progressbar-hudmeter" />
-				<Label id="ConcTimeLabel" text="" class="horizontal-align-center vertical-align-center text-align-center conc-ent__label progressbar-hudmeter__label" />
+				<Label id="ConcTimeLabel" text="" class="h-align-center v-align-center text-align-center conc-ent__label progressbar-hudmeter__label" />
 			</Panel>
 		</snippet>
 	</snippets>
 
-	<MomHudConcEntities class="full-width full-height">
-		<Panel id="ConcEntPanelsContainer" class="full-width full-height" />
+	<MomHudConcEntities class="w-full h-full">
+		<Panel id="ConcEntPanelsContainer" class="w-full h-full" />
 	</MomHudConcEntities>
 </root>

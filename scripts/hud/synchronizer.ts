@@ -134,14 +134,14 @@ class Synchronizer {
 		let flow;
 
 		switch (this.displayMode) {
-			case 1: // "Half-width throttle"
+			case 1: // "w-half throttle"
 				flow = direction * flip;
 				this.panels.container.style.flowChildren = flow < 0 ? 'left' : 'right';
 				this.panels.segments[0].style.backgroundColor = color;
 				this.panels.segments[0].style.width = (yawRatio * 50).toFixed(3) + '%';
 				break;
 			case 2: {
-				// "Full-width throttle"
+				// "w-full throttle"
 				const absRatio = Math.abs(gainRatio);
 				flow = direction * (yawRatio > 1 ? -1 : 1) * flip;
 				this.panels.container.style.flowChildren = flow < 0 ? 'left' : 'right';

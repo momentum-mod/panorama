@@ -20,7 +20,7 @@
 			<Panel id="MouseSubSection" class="settings-group">
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_Mouse_Title" tags="mouse,cursor,aim,look,input" />
-					<Panel class="flow-right horizontal-align-right">
+					<Panel class="flow-right h-align-right">
 						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_Mouse_Title', 'MouseSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>

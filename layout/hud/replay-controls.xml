@@ -8,15 +8,15 @@
 	</scripts>
 
 	<MomHudReplayControls class="replaycontrols">
-		<Panel class="flow-right full-width pb-4">
+		<Panel class="flow-right w-full pb-4">
 			<Label class="text-h4" text="#Replay_Controls" />
-			<Button class="button button--blue horizontal-align-right ml-3" onactivate="ReplayControlsHandler.toggleHiddenState();">
+			<Button class="button button--blue h-align-right ml-3" onactivate="ReplayControlsHandler.toggleHiddenState();">
 				<Image class="button__icon" src="file://{images}/mom-arrow-down.svg" />
 			</Button>
 		</Panel>
-		<Panel class="flow-down full-width ">
-			<Panel class="flow-right full-width">
-				<Label class="vertical-align-bottom" text="Tick: {i:curr_tick}/{i:total_ticks}" />
+		<Panel class="flow-down w-full ">
+			<Panel class="flow-right w-full">
+				<Label class="v-align-bottom" text="Tick: {i:curr_tick}/{i:total_ticks}" />
 				<TextEntry class="textentry replaycontrols__gototick" id="ReplayControlsGotoTick" placeholder="Goto tick" oninputsubmit="ReplayControlsHandler.gotoTick()" clearaftersubmit="true" />
 			</Panel>
 			<Label text="Time: {g:time:curr_time}/{g:time:end_time}" />
@@ -52,8 +52,8 @@
 				<Image class="button__icon" src="file://{images}/skip-next.svg" textureheight="32" />
 			</Button>
 		</Panel>
-		<Panel class="full-width">
-			<Slider id="ReplayControlsTimeSlider" class="slider slider--horizontal full-width" direction="horizontal" />
+		<Panel class="w-full">
+			<Slider id="ReplayControlsTimeSlider" class="slider slider--horizontal w-full" direction="horizontal" />
 		</Panel>
 	</MomHudReplayControls>
 </root>

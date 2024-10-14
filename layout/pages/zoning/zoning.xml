@@ -19,7 +19,7 @@
 						<Label id="Name" class="zoning__tracklist-label" />
 					</RadioButton>
 				</Panel>
-				<Panel id="ChildContainer" class="full-width flow-down">
+				<Panel id="ChildContainer" class="w-full flow-down">
 					<Panel id="SegmentContainer" class="zoning__list-container" />
 					<Panel id="EndZoneContainer" class="zoning__list-container" />
 				</Panel>
@@ -36,7 +36,7 @@
 						<Label id="Name" class="zoning__tracklist-label" />
 					</RadioButton>
 				</Panel>
-				<Panel id="ChildContainer" class="full-width flow-down">
+				<Panel id="ChildContainer" class="w-full flow-down">
 					<Panel id="CheckpointContainer" class="zoning__list-container" />
 					<Panel id="CancelContainer" class="zoning__list-container" />
 				</Panel>
@@ -71,10 +71,10 @@
         	</Panel>
 		</Panel>
 		<Panel class="zoning__button-box">
-			<Button id="NewZoneButton" class="button button--blue ml-2 horizontal-align-right" onactivate="ZoneMenuHandler.showAddMenu()">
+			<Button id="NewZoneButton" class="button button--blue ml-2 h-align-right" onactivate="ZoneMenuHandler.showAddMenu()">
 				<Label class="button__text" text="#Zoning_New" />
 			</Button>
-			<Button class="button button--red ml-2 horizontal-align-right" onactivate="ZoneMenuHandler.showDeletePopup()">
+			<Button class="button button--red ml-2 h-align-right" onactivate="ZoneMenuHandler.showDeletePopup()">
 				<Label class="button__text" text="#Zoning_Delete" />
 			</Button>
 		</Panel>
@@ -238,10 +238,10 @@
 			</Panel>
 		</Panel>
 		<Panel class="zoning__button-box">
-			<Button class="button button--blue ml-2 horizontal-align-right" onactivate="ZoneMenuHandler.saveZones()">
+			<Button class="button button--blue ml-2 h-align-right" onactivate="ZoneMenuHandler.saveZones()">
 				<Label class="button__text" text="#Zoning_Save" />
 			</Button>
-			<Button class="button ml-2 horizontal-align-right" onactivate="ZoneMenuHandler.cancelEdit()">
+			<Button class="button ml-2 h-align-right" onactivate="ZoneMenuHandler.cancelEdit()">
 				<Label class="button__text" text="#Zoning_CancelEdit" />
 			</Button>
 		</Panel>

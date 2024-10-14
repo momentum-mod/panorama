@@ -31,7 +31,7 @@
 				<Label id="MemberName" class="lobby-members__text lobby-members__name" text="{s:memberName}" />
 				<!--<Label id="MemberPrestige" /> -->
 				<Panel class="lobby-members__map-container">
-					<Panel class="flow-right horizontal-align-center">
+					<Panel class="flow-right h-align-center">
 						<Label id="MemberMap" class="lobby-members__text lobby-members__map" text="{s:memberMap}" />
 						<Image id="MemberState" class="lobby-members__state" textureheight="32" onmouseout="UiToolkitAPI.HideTitleImageTextTooltip();" />
 					</Panel>
