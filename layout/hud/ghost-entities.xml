@@ -12,14 +12,14 @@
 			<Panel class="ghost-ent">
 				<AvatarImage id="GhostAvatar" class="ghost-ent__avatar" />
 				<Panel id="NamePanel" class="ghost-ent__namepanel ghost-ent-namepanel">
-					<Image class="full-width full-height" src="file://{images}/playercards/card_bg.png" scaling="stretch-to-cover-preserve-aspect" />
+					<Image class="w-full h-full" src="file://{images}/playercards/card_bg.png" scaling="stretch-to-cover-preserve-aspect" />
 					<Label id="GhostName" class="ghost-ent-namepanel__label text-l" text="" />
 				</Panel>
 			</Panel>
 		</snippet>
 	</snippets>
 
-	<MomHudGhostEntities class="full-width full-height">
-		<Panel id="GhostEntPanelsContainer" class="full-width full-height" />
+	<MomHudGhostEntities class="w-full h-full">
+		<Panel id="GhostEntPanelsContainer" class="w-full h-full" />
 	</MomHudGhostEntities>
 </root>

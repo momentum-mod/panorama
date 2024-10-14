@@ -54,7 +54,7 @@
 			</Panel>
 			
 			<Panel class="hud-tab-menu__enable-cursor">
-				<ToggleButton id="ZoningToggle" class="button horizontal-align-left hud-tab-menu__zoning-button" convar="mom_zone_edit" />
+				<ToggleButton id="ZoningToggle" class="button h-align-left hud-tab-menu__zoning-button" convar="mom_zone_edit" />
 				<Label class="hud-tab-menu__enable-cursor-tip" text="#HudTabMenu_EnableCursorTip"/> 
 			</Panel>
 		</Panel>

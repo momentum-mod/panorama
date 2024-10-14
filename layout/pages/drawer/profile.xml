@@ -12,7 +12,7 @@
 			<Panel class="profile-global__left">
 				<Panel class="profile__row">
 					<Label class="profile-global__name" text="{s:name}" />
-					<TooltipPanel tooltip="View on website" class="ml-3 full-height">
+					<TooltipPanel tooltip="View on website" class="ml-3 h-full">
 						<Button id="ProfileSiteButton" class="button" onactivate="ProfileHandler.openWebsiteProfile()">
 							<Image class="button__icon" src="file://{images}/online/publiclobby.svg" textureheight="32" />
 						</Button>

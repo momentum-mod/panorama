@@ -7,7 +7,7 @@
 		<include type="module" src="file://{scripts}/hud/ground-boost.ts" />
 	</scripts>
 
-	<MomHudGroundboost class="horizontal-align-center" alternateTicks="false">
+	<MomHudGroundboost class="h-align-center" alternateTicks="false">
 		<ConVarEnabler id="GroundboostContainer" class="groundboost__container groundboost__container--hide" convar="mom_df_hud_gb_enable" togglevisibility="true">
 			<Image id="GroundboostBackground" class="groundboost__background-meter" src="file://{images}/hud/meter-ring.svg" textureheight="100" />
 			<Image id="GroundboostMeter" class="groundboost__meter" src="file://{images}/hud/meter-ring.svg" textureheight="100" />

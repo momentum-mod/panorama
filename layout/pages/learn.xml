@@ -79,7 +79,7 @@
 			<Panel id="RightPanel" class="learn__right">
 				<Panel class="learn__info learn-info">
 					<Panel class="learn-info__left">
-						<Panel class="flow-right full-width">
+						<Panel class="flow-right w-full">
 							<Label class="learn-info__title" text="{s:selected_lesson_title}" />
 							<Label id="LessonCompletionStatus" class="learn-info__completion-status" text="#Learn_Completed" />
 						</Panel>
@@ -90,7 +90,7 @@
 							<Label text="Image Goes Here" style="align: center center; opacity: 0.1" />
 						</Image>
 						<Button class="button button--blue learn-info__play-button" onactivate="Learn.startCurrentLesson();">
-							<Panel class="flow-right full-height horizontal-align-center">
+							<Panel class="flow-right h-full h-align-center">
 								<Image class="button__icon button__icon--left" src="file://{images}/play-circle.svg" textureheight="64" />
 								<Label class="button__text button__text--right learn-info__playbutton-text" text="#Learn_Practice" />
 							</Panel>

@@ -19,7 +19,7 @@
 			<Panel id="GameplayGeneralSubSection" class="settings-group">
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_Gameplay_General_Title" tags="gameplay" />
-					<Panel class="flow-right horizontal-align-right">
+					<Panel class="flow-right h-align-right">
 						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_Gameplay', 'GameplayGeneralSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
@@ -65,7 +65,7 @@
 			<Panel id="PaintSubSection" class="settings-group">
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_Paint_Title" tags="paint,spray" />
-					<Panel class="flow-right horizontal-align-right">
+					<Panel class="flow-right h-align-right">
 						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_Paint_Title', 'PaintSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
@@ -81,7 +81,7 @@
 					<Panel id="PaintContainer" class="settings__paint">
 						<Panel id="PaintBlob" class="settings__paint-blob" />
 					</Panel>
-					<Panel class="fill-width flow-down">
+					<Panel class="w-fill flow-down">
 						<ConVarColorDisplay convar="mom_paint_color" text="#Settings_Paint_Color" oncolorchange="SettingsPage.updatePaintPreview();" tags="color" />
 
 						<SettingsSlider text="#Settings_Paint_Scale" min="0.001" max="1" percentage="true" convar="mom_paint_scale" tags="color,size,scale" onvaluechanged="SettingsPage.updatePaintPreview();" />
@@ -109,7 +109,7 @@
 			<Panel id="SafeguardsSubSection" class="settings-group">
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_Safeguards_Title" tags="safeguards" />
-					<Panel class="flow-right horizontal-align-right">
+					<Panel class="flow-right h-align-right">
 						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_Safeguards_Title', 'SafeguardsSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
@@ -174,7 +174,7 @@
 			<Panel id="ZonesSubSection" class="settings-group">
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_Zones_Title" tags="zones" />
-					<Panel class="flow-right horizontal-align-right">
+					<Panel class="flow-right h-align-right">
 						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_Zones_Title', 'ZonesSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
@@ -234,7 +234,7 @@
 			<Panel id="RocketJumpSubSection" class="settings-group">
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_RJ_Title" tags="rj,rocketjump,soldier" />
-					<Panel class="flow-right horizontal-align-right">
+					<Panel class="flow-right h-align-right">
 						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_RJ_Title', 'RocketJumpSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
@@ -290,7 +290,7 @@
 			<Panel id="StickyJumpSubSection" class="settings-group">
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_SJ_Title" tags="sj,stickyjump,demoman" />
-					<Panel class="flow-right horizontal-align-right">
+					<Panel class="flow-right h-align-right">
 						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_SJ_Title', 'StickyJumpSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
@@ -368,7 +368,7 @@
 			<Panel id="ConcSubSection" class="settings-group">
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_Conc_Title" tags="conc,concussion,grenade" />
-					<Panel class="flow-right horizontal-align-right">
+					<Panel class="flow-right h-align-right">
 						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Conc', 'ConcSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
@@ -432,7 +432,7 @@
 			<Panel id="DefragSubSection" class="settings-group">
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_Defrag_Title" tags="defrag,quake" />
-					<Panel class="flow-right horizontal-align-right">
+					<Panel class="flow-right h-align-right">
 						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_Defrag_Title', 'DefragSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
