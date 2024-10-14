@@ -134,8 +134,7 @@ class MapSelectorHandler implements OnPanelLoad {
 	/** Set up panel events to update filter panel properties in persistent storage whenever they change. */
 	setupFilterSaveEvents(panel: GenericPanel) {
 		// Find every panel of paneltype that we want to store
-		// TODO: spread not needed when we have iterator methods when on latest v8/TS
-		[...traverseChildren(panel)]
+		traverseChildren(panel)
 			.filter(({ paneltype }) => Object.keys(this.filterablePanels).includes(paneltype))
 			.forEach((panel) => {
 				const paneltype = panel.paneltype as keyof typeof this.filterablePanels;
@@ -319,11 +318,7 @@ class MapSelectorHandler implements OnPanelLoad {
 	/** When a NState button is pressed, update its styling classes */
 	onNStateBtnChanged(panelID: string, state: NStateButtonState) {
 		const panel = this.panels.cp.FindChildTraverse(panelID);
-
-		// TODO: Iterator method when on latest v8/TS
-		[...NStateButtonClasses.entries()].forEach(([i, className]) =>
-			$(`#${panelID}`).SetHasClass(className, state === i)
-		);
+		NStateButtonClasses.entries().forEach(([i, className]) => panel.SetHasClass(className, state === i));
 	}
 
 	/**
