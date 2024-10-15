@@ -42,5 +42,9 @@
 			"prettier --write"
 		],
 		"**/*.{js,ts}": "eslint --fix"
+	},
+	"dependencies": {
+		"-": "^0.0.1",
+		"npm": "^10.9.0"
 	}
 }
