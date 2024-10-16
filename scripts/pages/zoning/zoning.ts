@@ -6,6 +6,7 @@ const FORMAT_VERSION = 1;
 
 const FLT_MAX = 3.402823466e38;
 const DEFAULT_HEIGHT = 160;
+const ANGLE_SNAP = 15;
 
 export interface EntityList {
 	filter: string[];
@@ -792,8 +793,8 @@ class ZoneMenuHandler {
 				break;
 
 			case PickType.TELE_DEST_YAW:
-				region.teleDestYaw = MomentumPlayerAPI.GetAngles().y;
-				this.panels.regionTPYaw.text = region.teleDestYaw.toFixed(2);
+				region.teleDestYaw = Math.floor(MomentumPlayerAPI.GetAngles().y / ANGLE_SNAP + 0.5) * ANGLE_SNAP;
+				this.panels.regionTPYaw.text = region.teleDestYaw.toFixed(0);
 				break;
 		}
 
