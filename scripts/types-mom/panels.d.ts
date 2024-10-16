@@ -167,8 +167,18 @@ interface ZoneEditorLimits {
 	MAX_ZONES_ALL_TRACKS: number;
 }
 
+declare const enum PickType {
+	NONE = 0,
+	CORNER = 1,
+	BOTTOM = 2,
+	HEIGHT = 3,
+	SAFE_HEIGHT = 4,
+	TELE_DEST_POS = 5,
+	TELE_DEST_YAW = 6
+}
+
 interface ZoneMenu extends AbstractPanel<'ZoneMenu'> {
-	startPointPick(multiPick: boolean): void;
+	startPointPick(mode: PickType): void;
 
 	getEntityList(): import('pages/zoning/zoning').EntityList;
 

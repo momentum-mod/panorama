@@ -28,16 +28,6 @@ enum DefragFlags {
 	BFG = 1 << 5
 }
 
-enum PickType {
-	NONE,
-	CORNER,
-	BOTTOM,
-	HEIGHT,
-	SAFE_HEIGHT,
-	TELE_DEST_POS,
-	TELE_DEST_YAW
-}
-
 enum RegionMenu {
 	POINTS = 'Points',
 	PROPERTIES = 'Properties',
@@ -574,7 +564,7 @@ class ZoneMenuHandler {
 			region.points.length = 0;
 			this.panels.pointsList.RemoveAndDeleteChildren();
 		}
-		this.panels.zoningMenu.startPointPick(true);
+		this.panels.zoningMenu.startPointPick(this.pointPick);
 
 		this.panels.zoningMenu.setCornersFromRegion(region);
 	}
@@ -614,7 +604,7 @@ class ZoneMenuHandler {
 
 	pickBottom() {
 		this.pointPick = PickType.BOTTOM;
-		this.panels.zoningMenu.startPointPick(false);
+		this.panels.zoningMenu.startPointPick(this.pointPick);
 	}
 
 	setRegionBottom() {
@@ -630,7 +620,7 @@ class ZoneMenuHandler {
 
 	pickHeight() {
 		this.pointPick = PickType.HEIGHT;
-		this.panels.zoningMenu.startPointPick(false);
+		this.panels.zoningMenu.startPointPick(this.pointPick);
 	}
 
 	setRegionHeight() {
@@ -646,7 +636,7 @@ class ZoneMenuHandler {
 
 	pickSafeHeight() {
 		this.pointPick = PickType.SAFE_HEIGHT;
-		this.panels.zoningMenu.startPointPick(false);
+		this.panels.zoningMenu.startPointPick(this.pointPick);
 	}
 
 	setRegionSafeHeight() {
@@ -662,12 +652,12 @@ class ZoneMenuHandler {
 
 	pickTeleDestPos() {
 		this.pointPick = PickType.TELE_DEST_POS;
-		this.panels.zoningMenu.startPointPick(false);
+		this.panels.zoningMenu.startPointPick(this.pointPick);
 	}
 
 	pickTeleDestYaw() {
 		this.pointPick = PickType.TELE_DEST_YAW;
-		this.panels.zoningMenu.startPointPick(false);
+		this.panels.zoningMenu.startPointPick(this.pointPick);
 	}
 
 	updateRegionTPDest() {
