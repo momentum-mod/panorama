@@ -204,6 +204,8 @@ class ZoneMenuHandler {
 			this.panels.trackList.RemoveAndDeleteChildren();
 		}
 		this.activeDeleteButton = null;
+
+		MomentumTimerAPI.SetActiveZoneDefs(this.mapZoneData);
 	}
 
 	toggleCollapse(container: GenericPanel, expandIcon: Image, collapseIcon: Image) {
