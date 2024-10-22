@@ -1,0 +1,25 @@
+@use '../../abstract/mixin';
+@use '../../abstract/function';
+
+.myruns {
+	flow-children: down;
+	width: 500px;
+
+	&__filters {
+		flow-children: right;
+		horizontal-align: center;
+		margin-bottom: 12px;
+
+		ToggleButton {
+			margin-left: 24px;
+
+			&.first {
+				margin-left: 0;
+			}
+		}
+
+		Label {
+			font-size: 16px;
+		}
+	}
+}

@@ -3,7 +3,7 @@ import { LeaderboardEntryType } from 'common/leaderboard';
 
 @PanelHandler()
 class LeaderboardEntryHandler {
-	avatarPanel = $<AvatarImage>('#LeaderboardEntryAvatarPanel');
+	avatarPanel = $<AvatarImage>('#RunListingEntryAvatarPanel');
 
 	constructor() {
 		$.RegisterEventHandler('LeaderboardEntry_TimeDataUpdated', $.GetContextPanel(), () => this.timeDataUpdate());

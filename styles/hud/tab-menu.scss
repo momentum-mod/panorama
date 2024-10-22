@@ -6,7 +6,6 @@
 .hud-tab-menu {
 	$root: &;
 
-	width: 50%;
 	horizontal-align: center;
 	vertical-align: center;
 	visibility: visible;
@@ -20,7 +19,6 @@
 	}
 
 	&--offset {
-		width: 560px;
 		margin: 32px;
 		horizontal-align: left;
 		vertical-align: top;
@@ -28,7 +26,6 @@
 
 	&__wrapper {
 		flow-children: down;
-		width: 100%;
 		box-shadow: 0 0 20px 0 rgba(0, 0, 0, 1);
 		border: 1px solid rgba(0, 0, 0, 0.65);
 	}
@@ -58,8 +55,7 @@
 		margin: 24px 24px 24px 0px;
 	}
 
-	&__leaderboards {
-		width: 100%;
+	&__runlistings {
 		padding: 24px;
 		padding-top: 16px;
 		padding-bottom: 14px;
@@ -79,7 +75,7 @@
 	}
 
 	&__zoning {
-		width: 100%;
+		width: 560px;
 
 		background-color: rgba(0, 0, 0, 0.5);
 
@@ -102,19 +98,12 @@
 		}
 	}
 
-	&__enable-cursor {
+	&__footer {
 		border-top: 1px solid rgba(0, 0, 0, 0.4);
 		width: 100%;
 		padding-right: 24px;
 		vertical-align: bottom;
 		background-color: rgba(0, 0, 0, 0.6);
-	}
-
-	&__enable-cursor-tip {
-		font-size: 11px;
-		color: rgba(255, 255, 255, 0.6);
-		padding: 12px 0;
-		horizontal-align: right;
 	}
 }
 

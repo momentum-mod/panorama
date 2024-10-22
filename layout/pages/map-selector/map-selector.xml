@@ -193,7 +193,7 @@
 			<Panel class="mapselector__right">
 				<Panel id="MapTimes" class="mapselector-map-times">
 					<Panel class="mapselector-map-times__list-wrapper">
-						<Leaderboards id="Leaderboards" class="mapselector-map-times__list mapselector-map-times__list--hidden" />
+						<RunListings id="RunListings" class="mapselector-map-times__list mapselector-map-times__list--hidden" />
 					</Panel>
 				</Panel>
 				<Panel id="MapInfo" class="mapselector-map-info">

@@ -1,0 +1,21 @@
+@use '../../abstract/mixin';
+@use '../../abstract/function';
+
+.run-listings {
+	flow-children: down;
+
+	&__upper {
+		flow-children: down;
+		horizontal-align: center;
+		margin-bottom: 18px;
+	}
+
+	&__lower {
+	}
+
+	&__listing {
+		&--hidden {
+			visibility: collapse;
+		}
+	}
+}

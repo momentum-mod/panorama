@@ -10,7 +10,7 @@ import { getMainTrack, getNumZones } from 'common/leaderboard';
 class HudTabMenuHandler {
 	readonly panels = {
 		cp: $.GetContextPanel<MomHudTabMenu>(),
-		leaderboardsContainer: $<Panel>('#LeaderboardsContainer'),
+		runListingsContainer: $<Panel>('#RunListingsContainer'),
 		endOfRunContainer: $<Panel>('#EndOfRunContainer'),
 		zoningContainer: $<Panel>('#ZoningContainer'),
 		zoningOpen: $<Button>('#ZoningOpen'),
@@ -29,27 +29,27 @@ class HudTabMenuHandler {
 	}
 
 	showEndOfRun(reason: EndOfRunShowReason) {
-		this.panels.leaderboardsContainer.AddClass('hud-tab-menu__leaderboards--hidden');
+		this.panels.runListingsContainer.AddClass('hud-tab-menu__runlistings--hidden');
 		this.panels.endOfRunContainer.RemoveClass('hud-tab-menu__endofrun--hidden');
 		this.panels.zoningContainer.AddClass('hud-tab-menu__zoning--hidden');
 	}
 
 	hideEndOfRun() {
-		this.panels.leaderboardsContainer.RemoveClass('hud-tab-menu__leaderboards--hidden');
+		this.panels.runListingsContainer.RemoveClass('hud-tab-menu__runlistings--hidden');
 		this.panels.endOfRunContainer.AddClass('hud-tab-menu__endofrun--hidden');
 		this.panels.zoningContainer.AddClass('hud-tab-menu__zoning--hidden');
 	}
 
 	showZoneMenu() {
 		this.panels.cp.AddClass('hud-tab-menu--offset');
-		this.panels.leaderboardsContainer.AddClass('hud-tab-menu__leaderboards--hidden');
+		this.panels.runListingsContainer.AddClass('hud-tab-menu__runlistings--hidden');
 		this.panels.endOfRunContainer.AddClass('hud-tab-menu__endofrun--hidden');
 		this.panels.zoningContainer.RemoveClass('hud-tab-menu__zoning--hidden');
 	}
 
 	hideZoneMenu() {
 		this.panels.cp.RemoveClass('hud-tab-menu--offset');
-		this.panels.leaderboardsContainer.RemoveClass('hud-tab-menu__leaderboards--hidden');
+		this.panels.runListingsContainer.RemoveClass('hud-tab-menu__runlistings--hidden');
 		this.panels.endOfRunContainer.AddClass('hud-tab-menu__endofrun--hidden');
 		this.panels.zoningContainer.AddClass('hud-tab-menu__zoning--hidden');
 	}

@@ -7,7 +7,7 @@
 		<include type="module" src="file://{scripts}/pages/leaderboards/leaderboards.js" />
 	</scripts>
 
-	<Leaderboards class="leaderboards" acceptsinput="true" acceptsfocus="true" hittest="true" hittestchildren="true">
+	<Leaderboards class="leaderboards" acceptsinput="true" acceptsfocus="true" hittest="true" hittestchildren="true">		
 		<Panel class="leaderboard-filter-buttons online">
 			<Panel class="tabs">
 				<RadioButton id="TimesListGlobal" class="tabs__tab" group="TimeTypeBar" selected="true" onactivate="LeaderboardsHandler.setSelectedTimesList(LeaderboardListType.GLOBAL);">
@@ -55,15 +55,16 @@
 				</Button>
 			</TooltipPanel>
 		</Panel>
-		<Panel class="leaderboard-times">
-			<Panel class="leaderboard-times__header">
-				<Label class="leaderboard-entry__rank leaderboard-times__header-item" text="#Leaderboards_Column_Rank" />
-				<Label class="leaderboard-entry__player leaderboard-times__header-item" text="#Leaderboards_Column_Player" />
-				<Label class="leaderboard-entry__time leaderboard-times__header-item" text="#Leaderboards_Column_Time" />
-				<Label class="leaderboard-entry__achieved leaderboard-times__header-item" text="#Leaderboards_Column_Date" />
+		<Panel class="runlisting">
+			<Panel class="runlisting__header">
+				<Label class="runlisting-cell runlisting-cell__rank" text="#Leaderboards_Column_Rank" />
+				<Label class="runlisting-cell runlisting-cell__player" text="#Leaderboards_Column_Player" />
+				<Label class="runlisting-cell runlisting-cell__time" text="#Leaderboards_Column_Time" />
+				<Label class="runlisting-cell runlisting-cell__tags" text="Tags" />
+				<Label class="runlisting-cell runlisting-cell__dateachieved text-align-right" text="#Leaderboards_Column_Date" />
 			</Panel>
-			<Panel id="LeaderboardTimesContainer" class="leaderboard-times__main">
-				<DelayLoadList id="TimesList" class="leaderboard-times__list" itemheight="30px" itemwidth="100%" spacersize="0px" spacerperiod="1">
+			<Panel id="LeaderboardTimesContainer" class="runlisting__list-container">
+				<DelayLoadList id="TimesList" class="runlisting__list" itemheight="30px" itemwidth="100%" spacersize="0px" spacerperiod="1">
 					<!-- Populated via code -->
 				</DelayLoadList>
 				<Panel class="leaderboard-times__empty">

@@ -1,0 +1,130 @@
+@use '../../config' as *;
+@use 'sass:color';
+
+.runlisting {
+	width: 100%;
+	flow-children: down;
+
+	&__header {
+		width: 100%;
+		flow-children: right;
+		padding: 4px 8px;
+
+		background-color: rgba(0, 0, 0, 0.4);
+		border: 1px solid rgba(0, 0, 0, 0.4);
+		border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+
+		Label {
+			font-size: 14px;
+		}
+	}
+
+	&__list-container {
+		width: 100%;
+		height: 400px;
+		vertical-align: top;
+	}
+
+	// The DelayLoadList
+	&__list {
+		width: 100%;
+		height: 100%;
+		flow-children: down;
+
+		background-color: rgba(0, 0, 0, 0.4);
+		border: 1px solid rgba(0, 0, 0, 0.4);
+		border-top: 0px none;
+
+		& > VerticalScrollBar .ScrollThumb {
+			opacity: 1;
+		}
+	}
+}
+
+// Handled by C++
+.runlisting-entry {
+	&--even {
+		background-color: rgba(255, 255, 255, 0.03);
+	}
+
+	&--odd {
+		background-color: rgba(255, 255, 255, 0.01);
+	}
+
+	&--even,
+	&--odd {
+		transition: background-color 0.1s linear 0s;
+		&:hover {
+			background-color: rgba(255, 255, 255, 0.1);
+		}
+	}
+}
+
+// A dynamically created row in a DelayedLoadList
+.runlisting-entry {
+	flow-children: right;
+	width: 100%;
+	height: 30px; // Must be same as the DelayLoadList itemheight!
+	padding: 0 8px;
+
+	&--localplayer {
+		background-color: color.scale(rgba($blue, 0.7), $lightness: -20%);
+
+		&:hover {
+			background-color: rgba($blue, 0.7);
+		}
+	}
+
+	Label {
+		font-size: 16px;
+		vertical-align: center;
+	}
+}
+
+// A cell in a listing, either in the header or in an entry
+.runlisting-cell {
+	margin: 0 6px;
+
+	&__rank {
+		text-align: center;
+		width: 80px;
+	}
+
+	&__player {
+		width: fill-parent-flow(4);
+		flow-children: right;
+		height: 100%;
+
+		&avatar {
+			height: 100%;
+			vertical-align: center;
+			width: height-percentage(100%);
+			margin: 4px 0;
+			margin-right: 6px;
+		}
+
+		&name {
+			width: fill-parent-flow(1);
+		}
+	}
+
+	&__time {
+		text-align: right;
+		width: fill-parent-flow(1.5);
+	}
+
+	&__tags {
+		text-align: center;
+		width: fill-parent-flow(3);
+	}
+
+	&__dateachieved {
+		text-align: right;
+		width: 120px;
+	}
+
+	&__track {
+		text-align: center;
+		width: fill-parent-flow(1);
+	}
+}

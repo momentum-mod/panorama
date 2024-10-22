@@ -1,0 +1,25 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+
+	<RunListings class="run-listings" acceptsinput="true" acceptsfocus="true" hittest="true" hittestchildren="true">
+		<Panel class="run-listings__upper">
+			<!-- <Panel class="run-listings_trackselector">
+			</Panel> -->
+			<Panel class="run-listings_listingselector tabs">
+				<RadioButton id="RunListingRadio_MyRuns" class="tabs__tab" group="ListingType" selected="true">
+					<Label class="tabs__text" text="My Runs" />
+				</RadioButton>
+				<RadioButton id="RunListingRadio_Leaderboards" class="tabs__tab" group="ListingType">
+					<Label class="tabs__text" text="Leaderboards" />
+				</RadioButton>
+			</Panel>
+		</Panel>
+
+		<Panel class="run-listings__lower">		
+			<MyRuns id="MyRuns" class="run-listings__listing" hittest="true" hittestchildren="true" />
+			<Leaderboards id="Leaderboards" class="run-listings__listing run-listings__listing--hidden" hittest="true" hittestchildren="true" />
+		</Panel>
+	</RunListings>
+</root>

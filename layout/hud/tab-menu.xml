@@ -38,8 +38,8 @@
 				</Panel>
 			</Panel>
 
-			<Panel id="LeaderboardsContainer" class="hud-tab-menu__leaderboards" hittestchildren="true">
-				<Leaderboards id="Leaderboards" hittest="true" hittestchildren="true" />
+			<Panel id="RunListingsContainer" class="hud-tab-menu__runlistings" hittestchildren="true">
+				<RunListings id="RunListings" hittest="true" hittestchildren="true" />
 			</Panel>
 
 			<Panel id="EndOfRunContainer" class="hud-tab-menu__endofrun" hittestchildren="true">
@@ -53,9 +53,8 @@
 			<Panel class="hud-tab-menu__stats">
 			</Panel>
 			
-			<Panel class="hud-tab-menu__enable-cursor">
+			<Panel class="hud-tab-menu__footer">
 				<ToggleButton id="ZoningToggle" class="button horizontal-align-left hud-tab-menu__zoning-button" convar="mom_zone_edit" />
-				<Label class="hud-tab-menu__enable-cursor-tip" text="#HudTabMenu_EnableCursorTip"/> 
 			</Panel>
 		</Panel>
 	</HudTabMenu>

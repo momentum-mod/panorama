@@ -1,0 +1,20 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+	
+	<scripts>
+		<include type="module" src="file://{scripts}/pages/leaderboards/entry.js" />
+	</scripts>
+
+	<LeaderboardEntry class="runlisting-entry" oncontextmenu="LeaderboardEntryHandler.showContextMenu()">
+		<Label class="runlisting-cell runlisting-cell__rank" text="{d:rank}" />
+		<Panel class="runlisting-cell runlisting-cell__player">
+			<AvatarImage id="RunListingEntryAvatarPanel" class="runlisting-cell__playeravatar"/>
+			<Label class="runlisting-cell__playername" text="{s:player}" />
+		</Panel>
+		<Label class="runlisting-cell runlisting-cell__time" text="{s:time}" />
+		<Label class="runlisting-cell runlisting-cell__tags" text="{s:tags}" />
+		<Label class="runlisting-cell runlisting-cell__dateachieved" text="{s:dateachieved}" />
+	</LeaderboardEntry>
+</root>

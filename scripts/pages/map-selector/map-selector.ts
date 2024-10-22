@@ -330,6 +330,6 @@ class MapSelectorHandler implements OnPanelLoad {
 	 * Toggles the visibility of the leaderboards panel
 	 */
 	toggleLeaderboards() {
-		this.panels.cp.FindChildTraverse('Leaderboards')?.ToggleClass('mapselector-map-times__list--hidden');
+		this.panels.cp.FindChildTraverse('RunListings')?.ToggleClass('mapselector-map-times__list--hidden');
 	}
 }
