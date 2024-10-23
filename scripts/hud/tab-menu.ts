@@ -10,6 +10,7 @@ import { getMainTrack, getNumZones } from 'common/leaderboard';
 class HudTabMenuHandler {
 	readonly panels = {
 		cp: $.GetContextPanel<MomHudTabMenu>(),
+		mapInfo: $<MapInfo>('#HudTabMenuMapInfo'),
 		runListingsContainer: $<Panel>('#RunListingsContainer'),
 		endOfRunContainer: $<Panel>('#EndOfRunContainer'),
 		zoningContainer: $<Panel>('#ZoningContainer'),
@@ -26,6 +27,8 @@ class HudTabMenuHandler {
 		$.RegisterForUnhandledEvent('EndOfRun_Hide', () => this.hideEndOfRun());
 		$.RegisterForUnhandledEvent('ZoneMenu_Show', () => this.showZoneMenu());
 		$.RegisterForUnhandledEvent('ZoneMenu_Hide', () => this.hideZoneMenu());
+
+		this.panels.mapInfo.handler.setFromActiveMap();
 	}
 
 	showEndOfRun(reason: EndOfRunShowReason) {
@@ -64,7 +67,6 @@ class HudTabMenuHandler {
 		const mapData = MapCacheAPI.GetCurrentMapData();
 
 		if (mapData && isOfficial) {
-			this.setMapStats(mapData);
 			this.setMapAuthorCredits(mapData.credits);
 		}
 	}
@@ -108,18 +110,6 @@ class HudTabMenuHandler {
 				commaPanel.text = ',';
 			}
 		}
-	}
-
-	setMapStats(mapData: MMap) {
-		this.panels.cp.forceCloseTabMenu();
-
-		const mainTrack = getMainTrack(mapData, GameModeAPI.GetCurrentGameMode());
-		const numZones = getNumZones(mapData);
-
-		this.panels.cp.SetDialogVariableInt('tier', mainTrack?.tier ?? 0);
-		this.panels.cp.SetDialogVariable('type', mainTrack?.linear ? '#MapInfo_Type_Linear' : '#MapInfo_Type_Staged');
-		this.panels.cp.SetDialogVariableInt('numzones', numZones);
-		this.panels.cp.SetDialogVariableInt('runs', mapData.stats?.completions);
 	}
 
 	close() {

@@ -343,6 +343,8 @@ interface GlobalEventNameMap {
 	 * This event is supposed to be fired back to C++ code to be able to handle the outcome of the Safeguard popup response.
 	 */
 	Safeguard_Response: (type: import('common/safeguards').RunSafeguardType) => void;
+
+	ActiveZoneDefsChanged: () => void;
 }
 
 interface PanelEventNameMap {

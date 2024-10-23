@@ -1,0 +1,11 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+	
+	<scripts>
+		<include type="module" src="file://{scripts}/components/map-info.js" />
+	</scripts>
+
+	<Panel class="map-info"></Panel>
+</root>

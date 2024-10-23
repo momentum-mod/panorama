@@ -12,7 +12,7 @@
 	background-color: rgba(0, 0, 0, 0.01); // Very slight background so the blur works
 
 	&--unofficial {
-		.hud-tab-menu-map-info__bottom,
+		.hud-tab-menu-map-info__credits,
 		.hud-tab-menu-map-info__showcase {
 			visibility: collapse;
 		}
@@ -164,34 +164,11 @@
 		margin: 12px 0px 12px 24px;
 	}
 
-	&__stats {
-		flow-children: right;
+	&__info {
 		horizontal-align: right;
 		vertical-align: center;
 
 		@include mixin.font-styles($use-header: true);
 		font-size: 24px;
-	}
-}
-
-.hud-tab-menu-map-info-stats {
-	&__stat {
-		@include mixin.font-styles($use-header: true);
-		font-size: 24px;
-	}
-
-	&__icon {
-		height: 100%;
-		width: height-percentage(100%);
-		margin-right: 12px;
-		img-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
-	}
-
-	&__separator {
-		margin: 4px 6px;
-		width: 2px;
-		height: 100%;
-		box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.8);
-		background-color: white;
 	}
 }

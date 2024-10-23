@@ -25,15 +25,7 @@
 							<Label class="hud-tab-menu-map-info__credits-other-text" text="#Common_By" />
 							<!-- Author names inserted by JS -->
 						</Panel>
-						<Panel class="hud-tab-menu-map-info__stats">
-							<Label class="hud-tab-menu-map-info-stats__stat" text="#MapInfo_Tier" />
-							<Panel class="hud-tab-menu-map-info-stats__separator" />
-							<Label class="hud-tab-menu-map-info-stats__stat" text="#MapInfo_Type_Linear" />
-							<Panel class="hud-tab-menu-map-info-stats__separator" />
-							<Label class="hud-tab-menu-map-info-stats__stat" text="#MapInfo_Zones" />
-							<Panel class="hud-tab-menu-map-info-stats__separator" />
-							<Label class="hud-tab-menu-map-info-stats__stat" text="#MapInfo_Runs" />
-						</Panel>
+						<MapInfo id="HudTabMenuMapInfo" class="hud-tab-menu-map-info__info" />
 					</Panel>
 				</Panel>
 			</Panel>

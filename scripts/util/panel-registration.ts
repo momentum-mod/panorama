@@ -13,6 +13,7 @@ declare interface PanelTagNameMap {
 	Split: Split;
 	LineGraph: LineGraph;
 	LevelIndicator: LevelIndicator;
+	MapInfo: MapInfo;
 	PlayerCard: PlayerCard;
 	MomHudTimer: MomHudTimer;
 	MomHudStatus: MomHudStatus;
@@ -43,6 +44,11 @@ declare interface LineGraph extends AbstractPanel<'LineGraph'> {
 	handler: import('components/graphs/line-graph').LineGraphHandler;
 }
 UiToolkitAPI.RegisterPanel2d('LineGraph', 'file://{resources}/layout/components/graphs/line-graph.xml');
+
+declare interface MapInfo extends AbstractPanel<'MapInfo'> {
+	handler: import('components/map-info').MapInfoHandler;
+}
+UiToolkitAPI.RegisterPanel2d('MapInfo', 'file://{resources}/layout/components/map-info.xml');
 
 declare interface Split extends AbstractPanel<'Split'> {
 	name: string;
