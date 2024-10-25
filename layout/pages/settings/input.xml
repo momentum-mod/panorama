@@ -133,7 +133,7 @@
 
 				<Label class="settings-group__subtitle" text="#Common_Multiplayer" />
 
-				<SettingsKeyBinder text="#Keybind_ToggleTimes" bind="+showtimes" tags="leaderboard,tab,times" />
+				<SettingsKeyBinder text="#Keybind_ToggleTimes" bind="mom_toggle_game_menu" tags="leaderboard,tab,times" />
 				<SettingsKeyBinder text="#Keybind_Chat_Message" bind="chat_open" tags="chat,talk" />
 
 				<Label class="settings-group__subtitle" text="#Settings_Keybinds_Utility" />

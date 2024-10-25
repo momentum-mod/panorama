@@ -262,9 +262,6 @@ interface GlobalEventNameMap {
 	/** Fired when the HUD Leaderboards panel is closed */
 	HudTabMenu_Closed: () => void;
 
-	/** Fired when the HUD leaderboards panel gains mouse input */
-	HudTabMenu_OnMouseActive: () => void;
-
 	/** Fired when the HUD leaderboards panel should show the end of run panel */
 	EndOfRun_Show: (reason: import('common/timer').EndOfRunShowReason) => void;
 
