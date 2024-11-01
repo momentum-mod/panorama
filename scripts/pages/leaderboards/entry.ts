@@ -53,6 +53,15 @@ class LeaderboardEntryHandler {
 					$.DispatchEvent('LeaderboardEntry_PlayReplay', index);
 				}
 			});
+
+			items.push({
+				label: $.Localize('#Action_SetComparisonRun'),
+				icon: 'file://{images}/chart-timeline.svg',
+				style: 'icon-color-light-blue',
+				jsCallback: () => {
+					$.DispatchEvent('LeaderboardEntry_SetComparisonRun', index);
+				}
+			});
 		}
 
 		if (timeData.type === LeaderboardEntryType.ONLINE || timeData.type === LeaderboardEntryType.ONLINE_CACHED) {

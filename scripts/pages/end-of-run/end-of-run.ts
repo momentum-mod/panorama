@@ -34,9 +34,9 @@ class EndOfRunHandler {
 	selectedSplit: Split_OLD;
 
 	constructor() {
-		$.RegisterForUnhandledEvent('EndOfRun_CompareRuns', (baseRun, compareRun) =>
-			this.setComparison(baseRun, compareRun)
-		);
+		// $.RegisterForUnhandledEvent('EndOfRun_CompareRuns', (baseRun, compareRun) =>
+		// 	this.setComparison(baseRun, compareRun)
+		// );
 		$.RegisterForUnhandledEvent('EndOfRun_Show', (reason) => this.showNewEndOfRun(reason));
 		$.RegisterForUnhandledEvent('EndOfRun_Result_RunUpload', (uploaded, cosXP, rankXP, lvlGain) =>
 			this.updateRunUploadStatus(uploaded, cosXP, rankXP, lvlGain)

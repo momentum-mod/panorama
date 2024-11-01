@@ -61,8 +61,7 @@ interface GlobalEventNameMap {
 
 	OnNewChatEntry: (panel: GenericPanel & { message: string; author_name: string; author_xuid: string }) => void;
 
-	/** Fired when the JS panel should update what it's showing */
-	HudCompare_Update: () => void;
+	ComparisonRunUpdated: () => void;
 
 	// TODO: Old, remove after rio stuff is in
 	OnMomentumTimerStateChange: (arg1: any, arg2: any) => any;
@@ -271,12 +270,6 @@ interface GlobalEventNameMap {
 	/** Fired when the end of run panel should be hidden */
 	EndOfRun_Hide: () => void;
 
-	/** Fired when the end of run panel should set the two runs to compare. baseRun is compared to compareRun */
-	EndOfRun_CompareRuns: (
-		baseRun: import('common/timer').CPPRun_OLD,
-		compareRun: import('common/timer').CPPRun_OLD
-	) => void;
-
 	/** Fired when the replay recording finishes and passes whether writing the file was successful */
 	EndOfRun_Result_RunSave: (saved: boolean) => void;
 
@@ -321,6 +314,8 @@ interface GlobalEventNameMap {
 	LeaderboardEntry_TimeDataUpdated: () => void;
 
 	LeaderboardEntry_PlayReplay: (itemIndex: int32) => void;
+
+	LeaderboardEntry_SetComparisonRun: (itemIndex: int32) => void;
 
 	LeaderboardEntry_DeleteReplay: (itemIndex: int32) => void;
 

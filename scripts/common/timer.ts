@@ -1,3 +1,5 @@
+type Gamemode = import('common/web').Gamemode;
+
 /* eslint-disable @typescript-eslint/naming-convention */
 export enum TimerEvent_OLD {
 	STARTED = 0,
@@ -102,6 +104,18 @@ export interface RunSubsegment {
 export interface RunSplits {
 	trackStats: RunStats;
 	segments: RunSegment[];
+}
+
+export interface RunMetadata {
+	filePath: string;
+	timestamp: number;
+	gameMode: Gamemode;
+	tickInterval: float;
+	playerSteamId: number;
+	playerName: string;
+	trackId: TrackID;
+	runTime: double;
+	runSplits: RunSplits | null;
 }
 
 /** Enum for why end of run is being shown */
