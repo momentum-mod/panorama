@@ -1,3 +1,4 @@
+type RunMetadata = import('common/timer').RunMetadata;
 type Gamemode = import('common/web').Gamemode;
 
 declare namespace MomentumAPI {
@@ -280,12 +281,8 @@ declare namespace SpectatorAPI {
 	function GetSpecList(): steamID[];
 }
 
-/** Probably changing soon, doing weak types. */
 declare namespace RunComparisonsAPI {
-	function GetLoadedComparison(): any;
-	function IsComparisonLoaded(): any;
-	function GetLoadedComparisonSpeed(...args: any[]): any;
-	function GetLoadedComparisonOverallDiff(arg: any): any;
+	function GetComparisonRun(): RunMetadata;
 }
 
 declare namespace ZonesAPI {
