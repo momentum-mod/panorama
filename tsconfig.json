@@ -1,6 +1,6 @@
 {
 	"compilerOptions": {
-		"target": "ES2022",
+		"target": "ESNext",
 		"lib": ["ESNext"],
 		// Dynamic imports, import.meta, top-level await and import attributes are all unsupported.
 		"module": "ES2015",
