@@ -201,7 +201,7 @@ class ZoneMenuHandler {
 				}
 			);
 			if (segmentChildContainer === null) continue;
-			if (segment.checkpoints.length === 0 && segment.cancel.length === 0) {
+			if (segment.checkpoints?.length === 0 && segment.cancel?.length === 0) {
 				trackChildContainer.FindChildTraverse<Panel>('CollapseButton').visible = false;
 				continue;
 			}
