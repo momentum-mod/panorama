@@ -4,7 +4,7 @@
 	</styles>
 	
 	<scripts>
-		<include type="module" src="file://{scripts}/hud/spec-info.js" />
+		<include type="module" src="file://{scripts}/hud/spec-info.ts" />
 	</scripts>
 
 	<snippets>

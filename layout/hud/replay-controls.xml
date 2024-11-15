@@ -4,7 +4,7 @@
 	</styles>
 
 	<scripts>
-		<include type="module" src="file://{scripts}/hud/replay-controls.js" />
+		<include type="module" src="file://{scripts}/hud/replay-controls.ts" />
 	</scripts>
 
 	<MomHudReplayControls class="replaycontrols">

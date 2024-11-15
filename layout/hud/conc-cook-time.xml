@@ -4,7 +4,7 @@
 	</styles>
 	
 	<scripts>
-		<include type="module" src="file://{scripts}/hud/conc-cook-time.js" />
+		<include type="module" src="file://{scripts}/hud/conc-cook-time.ts" />
 	</scripts>
 
 	<MomHudConcCooktime class="horizontal-align-center">

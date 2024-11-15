@@ -4,7 +4,7 @@
 	</styles>
 
 	<scripts>
-		<include type="module" src="file://{scripts}/components/graphs/line-graph.js" />
+		<include type="module" src="file://{scripts}/components/graphs/line-graph.ts" />
 	</scripts>
 
 	<snippets>

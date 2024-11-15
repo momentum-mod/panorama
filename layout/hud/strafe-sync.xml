@@ -4,7 +4,7 @@
 	</styles>
 	
 	<scripts>
-		<include type="module" src="file://{scripts}/hud/strafe-sync.js" />
+		<include type="module" src="file://{scripts}/hud/strafe-sync.ts" />
 	</scripts>
 	
 	<Panel class="strafesync">

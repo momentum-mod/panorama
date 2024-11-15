@@ -4,8 +4,8 @@
 	</styles>
 	
 	<scripts>
-		<include type="module" src="file://{scripts}/pages/settings/page.js" />
-		<include type="module" src="file://{scripts}/pages/settings/speedometer.js" />
+		<include type="module" src="file://{scripts}/pages/settings/page.ts" />
+		<include type="module" src="file://{scripts}/pages/settings/speedometer.ts" />
 	</scripts>
 
 	<snippets>

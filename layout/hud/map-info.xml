@@ -4,7 +4,7 @@
 	</styles>
 	
 	<scripts>
-		<include type="module" src="file://{scripts}/hud/map-info.js" />
+		<include type="module" src="file://{scripts}/hud/map-info.ts" />
 	</scripts>
 
 	<MomHudMapInfo class="hudmapinfo">

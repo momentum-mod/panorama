@@ -4,7 +4,7 @@
 	</styles>
 	
 	<scripts>
-		<include type="module" src="file://{scripts}/hud/cgaz.js" />
+		<include type="module" src="file://{scripts}/hud/cgaz.ts" />
 	</scripts>
 
 	<MomHudCgaz class="full-width full-height" alternateTicks="false">

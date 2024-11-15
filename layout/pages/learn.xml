@@ -4,7 +4,7 @@
 	</styles>
 
 	<scripts>
-		<include src="file://{scripts}/pages/learn.js" />
+		<include src="file://{scripts}/pages/learn.ts" />
 	</scripts>
 
 	<snippets>

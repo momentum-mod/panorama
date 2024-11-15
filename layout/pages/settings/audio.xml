@@ -4,7 +4,7 @@
 	</styles>
 
 	<scripts>
-		<include type="module" src="file://{scripts}/pages/settings/page.js" />
+		<include type="module" src="file://{scripts}/pages/settings/page.ts" />
 	</scripts>
 
 	<Panel class="settings-page">

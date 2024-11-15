@@ -4,7 +4,7 @@
 	</styles>
 	
 	<scripts>
-		<include type="module" src="file://{scripts}/pages/drawer/lobby.js" />
+		<include type="module" src="file://{scripts}/pages/drawer/lobby.ts" />
 	</scripts>
 	
 	<snippets>

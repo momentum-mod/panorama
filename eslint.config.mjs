@@ -11,7 +11,6 @@ export default [
 			'**/node_modules',
 			'**/__types_momentum.js',
 			'**/tools',
-			'**/script_dist',
 			'scripts/types'
 		]
 	},

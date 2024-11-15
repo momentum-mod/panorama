@@ -4,7 +4,7 @@
 	</styles>
 	
 	<scripts>
-		<include type="module" src="file://{scripts}/hud/tab-menu.js" />
+		<include type="module" src="file://{scripts}/hud/tab-menu.ts" />
 	</scripts>
 
 	<HudTabMenu class="hud-tab-menu" oncancel="HudTabMenuHandler.close();">
