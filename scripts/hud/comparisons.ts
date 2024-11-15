@@ -39,6 +39,7 @@ class HudComparisonsHandler {
 		if (
 			timerStatus.trackId.type === this.comparison.trackId.type &&
 			timerStatus.trackId.number === this.comparison.trackId.number
+			// eslint-disable-next-line no-empty
 		) {
 		} else {
 			// Track differs -- could maybe do a best-effort comparison if one is a stage and one is the main track,
