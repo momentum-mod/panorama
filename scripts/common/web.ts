@@ -29,20 +29,12 @@ type File = never;
 
 export const STEAM_APPIDS = [669270, 1802710];
 
-export function approvedBspPath(key: string | number): string {
+export function bspPath(key: string | number): string {
 	return `maps/${key}.bsp`;
 }
 
-export function approvedVmfsPath(key: string | number): string {
+export function vmfsPath(key: string | number): string {
 	return `maps/${key}_VMFs.zip`;
-}
-
-export function submissionBspPath(key: string | number): string {
-	return `submissions/${key}.bsp`;
-}
-
-export function submissionVmfsPath(key: string | number): string {
-	return `submissions/${key}_VMFs.zip`;
 }
 
 export function imgSmallPath(key: string): string {
@@ -97,7 +89,7 @@ export const MAX_TEST_INVITES = 20;
 export const MIN_PUBLIC_TESTING_DURATION = 7 * 24 * 60 * 60 * 1000;
 export const MAX_CREDITS_EXCEPT_TESTERS = 20;
 export const MAX_BIO_LENGTH = 2000;
-export const MIN_MAP_DESCRIPTION_LENGTH = 30; // Fuck you, make an effort
+export const MIN_MAP_DESCRIPTION_LENGTH = 10;
 export const MAX_MAP_DESCRIPTION_LENGTH = 1500;
 export const MIN_MAP_NAME_LENGTH = 3;
 export const MAX_MAP_NAME_LENGTH = 32; // Seems high but this is actually a constant in engine.
@@ -188,10 +180,14 @@ export const SocialsData: Readonly<
 	}
 };
 
+export function steamAvatarUrl(id: string): string {
+	return `https://avatars.cloudflare.steamstatic.com/${id}_full.jpg`;
+}
+
 // This is the specific key Steam uses for all missing avatars.
 // They even kept it when migrating to Cloudflare!
 export const STEAM_MISSING_AVATAR = 'fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb';
-export const STEAM_MISSING_AVATAR_URL = `https://avatars.cloudflare.steamstatic.com/${STEAM_MISSING_AVATAR}_full.jpg`;
+export const STEAM_MISSING_AVATAR_URL = steamAvatarUrl(STEAM_MISSING_AVATAR);
 
 export enum ActivityType {
 	ALL = 0,
@@ -582,13 +578,14 @@ export enum MapStatus {
 	DISABLED = 5
 }
 
-export const CombinedMapStatuses = Object.freeze({
+export const MapStatuses = Object.freeze({
 	IN_SUBMISSION: [
 		MapStatus.PRIVATE_TESTING,
 		MapStatus.PUBLIC_TESTING,
 		MapStatus.CONTENT_APPROVAL,
 		MapStatus.FINAL_APPROVAL
-	]
+	],
+	PRIVATE: [MapStatus.PRIVATE_TESTING, MapStatus.CONTENT_APPROVAL]
 });
 
 export enum MapSubmissionType {
@@ -968,7 +965,11 @@ export const MapStatusChangeRules: ReadonlyArray<{ from: MapStatus; to: MapStatu
 		{ from: MapStatus.PUBLIC_TESTING, to: MapStatus.PRIVATE_TESTING, roles: [] },
 		{ from: MapStatus.PUBLIC_TESTING, to: MapStatus.CONTENT_APPROVAL, roles: [Role.ADMIN, Role.MODERATOR] },
 		{ from: MapStatus.PUBLIC_TESTING, to: MapStatus.PUBLIC_TESTING, roles: [] },
-		{ from: MapStatus.PUBLIC_TESTING, to: MapStatus.FINAL_APPROVAL, roles: ['submitter'] },
+		{
+			from: MapStatus.PUBLIC_TESTING,
+			to: MapStatus.FINAL_APPROVAL,
+			roles: ['submitter', Role.ADMIN, Role.MODERATOR]
+		},
 		{ from: MapStatus.PUBLIC_TESTING, to: MapStatus.DISABLED, roles: [Role.ADMIN, Role.MODERATOR] },
 
 		{ from: MapStatus.FINAL_APPROVAL, to: MapStatus.APPROVED, roles: [Role.ADMIN, Role.MODERATOR] },
@@ -1195,13 +1196,12 @@ export interface MMap {
 	id: number;
 	name: string;
 	status: MapStatus;
-	downloadURL: string;
-	hash: string;
-	vmfDownloadURL: string;
 	submitterID: number;
 	createdAt: DateString;
 	updatedAt: DateString;
-	zones: MapZones;
+	currentVersion: MapVersion;
+	currentVersionID: string;
+	versions: MapVersion[];
 	info: MapInfo;
 	submission: MapSubmission;
 	submitter: User;
@@ -1214,6 +1214,19 @@ export interface MMap {
 	worldRecords: LeaderboardRun[];
 	personalBests: LeaderboardRun[];
 	testInvites?: MapTestInvite[];
+}
+
+export interface MapVersion {
+	id: string;
+	versionNum: number;
+	submitterID: number | null;
+	changelog: string;
+	zones: MapZones;
+	bspHash: string;
+	zoneHash: string;
+	downloadURL: string;
+	vmfDownloadURL?: string;
+	createdAt: DateString;
 }
 
 export interface MapInfo {
@@ -1330,8 +1343,6 @@ export interface MapSubmission {
 	suggestions: MapSubmissionSuggestion[];
 	placeholders: MapSubmissionPlaceholder[];
 	dates: MapSubmissionDate[];
-	currentVersion: MapSubmissionVersion;
-	versions: MapSubmissionVersion[];
 }
 
 export interface MapSubmissionApproval {
@@ -1362,17 +1373,6 @@ export interface MapSubmissionSuggestion {
 	comment?: string;
 }
 
-export interface MapSubmissionVersion {
-	id: string;
-	versionNum: number;
-	changelog: string;
-	zones: MapZones;
-	hash: string;
-	downloadURL: string;
-	vmfDownloadURL?: string;
-	createdAt: DateString;
-}
-
 export type MapTags = string[];
 
 export interface MapTestInvite {
@@ -1392,21 +1392,28 @@ export interface MapZones {
 	dataTimestamp: number;
 	maxVelocity?: number;
 	tracks: MapTracks;
+	globalRegions?: GlobalRegions;
+}
+
+export interface GlobalRegions {
+	allowBhop: Region[];
 }
 
 export interface MapTracks {
 	main: MainTrack;
-	bonuses: BonusTrack[];
+	bonuses?: BonusTrack[];
 }
 
 export interface MainTrack {
 	zones: TrackZones;
 	stagesEndAtStageStarts: boolean;
+	bhopEnabled?: boolean;
 }
 
 export interface BonusTrack {
 	zones?: TrackZones;
 	defragModifiers?: number;
+	bhopEnabled?: boolean;
 }
 
 export interface TrackZones {
@@ -1416,7 +1423,7 @@ export interface TrackZones {
 
 export interface Segment {
 	checkpoints: Zone[];
-	cancel: Zone[];
+	cancel?: Zone[];
 	name?: string;
 	limitStartGroundSpeed: boolean;
 	checkpointsRequired: boolean;
@@ -1593,12 +1600,21 @@ export type AdminActivitiesGetQuery = PagedQuery & {
 
 //#region Map
 
-type BaseMapsGetAllExpand = 'zones' | 'leaderboards' | 'info' | 'stats' | 'submitter' | 'credits';
+type BaseMapsGetAllExpand =
+	| 'leaderboards'
+	| 'info'
+	| 'stats'
+	| 'submitter'
+	| 'currentVersionWithZones'
+	| 'currentVersion'
+	| 'versions'
+	| 'versionsWithZones'
+	| 'credits';
 
 export type MapsGetAllExpand = Array<BaseMapsGetAllExpand | 'inFavorites' | 'personalBest' | 'worldRecord'>;
 
 export type MapsGetAllSubmissionExpand = Array<
-	BaseMapsGetAllExpand | 'inFavorites' | 'personalBest' | 'worldRecord' | 'currentVersion' | 'versions' | 'reviews'
+	BaseMapsGetAllExpand | 'inFavorites' | 'personalBest' | 'worldRecord' | 'reviews'
 >;
 
 type MapsGetAllBaseQuery = {
@@ -1717,7 +1733,8 @@ export type MapLeaderboardGetQuery = PagedQuery & {
 	style?: Style; // Default 0
 	expand?: MapRunsGetExpand;
 	filter?: MapRunsGetFilter;
-	filterUserIDs?: number[];
+	userIDs?: number[];
+	steamIDs?: string[];
 	orderByDate?: boolean;
 };
 
@@ -1734,13 +1751,13 @@ export type MapLeaderboardGetRunQuery = PagedQuery & {
 //#endregion
 //#region Submissions
 
-export interface CreateMapSubmissionVersion extends Pick<MapSubmissionVersion, 'changelog' | 'zones'> {
+export interface CreateMapVersion extends Pick<MapVersion, 'changelog' | 'zones'> {
 	resetLeaderboards?: boolean;
 }
 
-export interface CreateMapSubmissionVersionWithFiles {
+export interface CreateMapVersionWithFiles {
 	vmfs: File[];
-	data: CreateMapSubmissionVersion;
+	data: CreateMapVersion;
 }
 
 //#endregion
