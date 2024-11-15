@@ -22,20 +22,20 @@
 	"author": "Momentum Team",
 	"license": "MIT",
 	"devDependencies": {
-		"@eslint/js": "^9.9.0",
+		"@eslint/js": "^9.14.0",
 		"@types/eslint__js": "^8.42.3",
-		"axios": "^1.7.4",
-		"eslint": "^9.9.0",
+		"axios": "^1.7.7",
+		"eslint": "^9.14.0",
 		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-prettier": "^5.2.1",
 		"eslint-plugin-unicorn": "^55.0.0",
-		"husky": "^9.1.4",
-		"lint-staged": "^15.2.9",
+		"husky": "^9.1.6",
+		"lint-staged": "^15.2.10",
 		"papaparse": "^5.4.1",
 		"prettier": "^3.3.3",
 		"prettier-eslint": "^16.3.0",
 		"typescript": "^5.6.3",
-		"typescript-eslint": "^8.1.0"
+		"typescript-eslint": "^8.14.0"
 	},
 	"lint-staged": {
 		"**/*.{js,ts,scss,css,md}": [
