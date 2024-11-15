@@ -4,7 +4,7 @@
 	</styles>
 	
 	<scripts>
-		<include type="module" src="file://{scripts}/hud/status.js" />
+		<include type="module" src="file://{scripts}/hud/status.ts" />
 	</scripts>
 
 	<MomHudStatus class="full-width">

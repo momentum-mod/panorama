@@ -19,7 +19,7 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 	<scripts>
-		<include type="module" src="file://{scripts}/components/chat.js" />
+		<include type="module" src="file://{scripts}/components/chat.ts" />
 	</scripts>
 
 	<snippets>

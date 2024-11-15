@@ -4,7 +4,7 @@
 	</styles>
 	
 	<scripts>
-		<include type="module" src="file://{scripts}/hud/timer.js" />
+		<include type="module" src="file://{scripts}/hud/timer.ts" />
 	</scripts>
 
 	<MomHudTimer class="full-width">

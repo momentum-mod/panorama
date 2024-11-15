@@ -4,7 +4,7 @@
 	</styles>
 	
 	<scripts>
-		<include type="module" src="file://{scripts}/hud/sticky-charge.js" />
+		<include type="module" src="file://{scripts}/hud/sticky-charge.ts" />
 	</scripts>
 
 	<MomHudStickyCharge class="horizontal-align-center">

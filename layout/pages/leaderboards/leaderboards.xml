@@ -4,7 +4,7 @@
 	</styles>
 
 	<scripts>
-		<include type="module" src="file://{scripts}/pages/leaderboards/leaderboards.js" />
+		<include type="module" src="file://{scripts}/pages/leaderboards/leaderboards.ts" />
 	</scripts>
 
 	<Leaderboards class="leaderboards" acceptsinput="true" acceptsfocus="true" hittest="true" hittestchildren="true">

@@ -4,7 +4,7 @@
 	</styles>
 	
 	<scripts>
-		<include type="module" src="file://{scripts}/components/color-display.js" />
+		<include type="module" src="file://{scripts}/components/color-display.ts" />
 	</scripts>
 
 	<Panel class="colordisplay" onload="ColorDisplayHandler.onLoad()">

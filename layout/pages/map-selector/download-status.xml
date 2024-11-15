@@ -4,7 +4,7 @@
 	</styles>
 
 	<scripts>
-		<include type="module" src="file://{scripts}/pages/map-selector/download-status.js" />
+		<include type="module" src="file://{scripts}/pages/map-selector/download-status.ts" />
 	</scripts>
 
 	<MapDownloadStatus>

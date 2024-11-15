@@ -4,7 +4,7 @@
 	</styles>
 	
 	<scripts>
-		<include type="module" src="file://{scripts}/hud/conc-entities.js" />
+		<include type="module" src="file://{scripts}/hud/conc-entities.ts" />
 	</scripts>
 
 	<snippets>

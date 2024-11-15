@@ -4,7 +4,7 @@
 	</styles>
 	
 	<scripts>
-		<include type="module" src="file://{scripts}/hud/df-jump.js" />
+		<include type="module" src="file://{scripts}/hud/df-jump.ts" />
 	</scripts>
 	
 	<MomHudDFJump>

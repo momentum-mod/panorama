@@ -4,7 +4,7 @@
 	</styles>
 	
 	<scripts>
-		<include type="module" src="file://{scripts}/hud/comparisons.js" />
+		<include type="module" src="file://{scripts}/hud/comparisons.ts" />
 	</scripts>
 
 	<HudComparisons class="hud-comparisons">

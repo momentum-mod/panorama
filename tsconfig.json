@@ -6,7 +6,6 @@
 		"module": "ES2015",
 		"baseUrl": "scripts/",
 		"rootDir": "scripts/",
-		"outDir": "script_dist/",
 		"allowJs": true,
 		"alwaysStrict": true,
 		"isolatedModules": false,

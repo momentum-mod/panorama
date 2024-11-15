@@ -4,7 +4,7 @@
 	</styles>
 	
 	<scripts>
-		<include type="module" src="file://{scripts}/pages/map-selector/map-selector.js" />
+		<include type="module" src="file://{scripts}/pages/map-selector/map-selector.ts" />
 	</scripts>
 
 	<MomentumMapSelect>

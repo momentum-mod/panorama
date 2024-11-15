@@ -4,7 +4,7 @@
 	</styles>
 	
 	<scripts>
-		<include type="module" src="file://{scripts}/hud/synchronizer.js" />
+		<include type="module" src="file://{scripts}/hud/synchronizer.ts" />
 	</scripts>
 	
 	<MomHudSynchronizer class="synchronizer" alternateTicks="false">

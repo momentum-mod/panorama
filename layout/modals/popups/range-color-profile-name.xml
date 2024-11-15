@@ -4,7 +4,7 @@
 	</styles>
 	
 	<scripts>
-		<include type="module" src="file://{scripts}/modals/popups/range-color-profile-name.js" />
+		<include type="module" src="file://{scripts}/modals/popups/range-color-profile-name.ts" />
 	</scripts>
 	
 	<PopupCustomLayout class="PopupPanel Hidden" popupbackground="dim">

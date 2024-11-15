@@ -4,8 +4,8 @@
 	</styles>
 	
 	<scripts>
-		<include type="module" src="file://{scripts}/pages/drawer/drawer.js" />
-		<include type="module" src="file://{scripts}/pages/main-menu/main-menu.js" />
+		<include type="module" src="file://{scripts}/pages/drawer/drawer.ts" />
+		<include type="module" src="file://{scripts}/pages/main-menu/main-menu.ts" />
 	</scripts>
 
 	<snippets>

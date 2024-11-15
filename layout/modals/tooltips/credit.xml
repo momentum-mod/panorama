@@ -4,7 +4,7 @@
 	</styles>
 
 	<scripts>
-		<include type="module" src="file://{scripts}/modals/tooltips/credit.js" />
+		<include type="module" src="file://{scripts}/modals/tooltips/credit.ts" />
 	</scripts>
 
 	<Panel class="credit" ontooltiploaded="CreditHandler.onShow()">

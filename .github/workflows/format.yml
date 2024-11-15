@@ -27,4 +27,4 @@ jobs:
       run: npm run lint:check 
       
     - name: TypeScript Build
-      run: npm run build
+      run: npm run ts:check

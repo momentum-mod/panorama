@@ -4,7 +4,7 @@
 	</styles>
 	
 	<scripts>
-		<include type="module" src="file://{scripts}/pages/intro-movie.js" />
+		<include type="module" src="file://{scripts}/pages/intro-movie.ts" />
 	</scripts>
 
 	<IntroMovie hittest="false">

@@ -4,7 +4,7 @@
 	</styles>
 	
 	<scripts>
-		<include type="module" src="file://{scripts}/hud/weapon-selection.js" />
+		<include type="module" src="file://{scripts}/hud/weapon-selection.ts" />
 	</scripts>
 
 	<snippets>

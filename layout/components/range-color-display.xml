@@ -4,7 +4,7 @@
 	</styles>
 	
 	<scripts>
-		<include type="module" src="file://{scripts}/components/range-color-display.js" />
+		<include type="module" src="file://{scripts}/components/range-color-display.ts" />
 	</scripts>
 	
 	<Panel class="rangecolordisplay">

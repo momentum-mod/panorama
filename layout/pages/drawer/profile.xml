@@ -4,7 +4,7 @@
 	</styles>
 
 	<scripts>
-		<include type="module" src="file://{scripts}/pages/drawer/profile.js" />
+		<include type="module" src="file://{scripts}/pages/drawer/profile.ts" />
 	</scripts>
 
 	<Panel class="drawer__tab profile" acceptsfocus="true">

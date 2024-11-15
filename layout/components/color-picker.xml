@@ -4,7 +4,7 @@
 	</styles>
 	
 	<scripts>
-		<include type="module" src="file://{scripts}/components/color-picker.js" />
+		<include type="module" src="file://{scripts}/components/color-picker.ts" />
 	</scripts>
 	
 	<snippets>
