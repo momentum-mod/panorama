@@ -45,23 +45,24 @@ class LeaderboardEntryHandler {
 		const index = $.GetContextPanel().GetAttributeInt('item_index', 0);
 		const isValid = timeData.type !== LeaderboardEntryType.INVALID;
 		if (isValid) {
-			items.push({
-				label: $.Localize('#Action_WatchReplay'),
-				icon: 'file://{images}/movie-open-outline.svg',
-				style: 'icon-color-mid-blue',
-				jsCallback: () => {
-					$.DispatchEvent('LeaderboardEntry_PlayReplay', index);
+			items.push(
+				{
+					label: $.Localize('#Action_WatchReplay'),
+					icon: 'file://{images}/movie-open-outline.svg',
+					style: 'icon-color-mid-blue',
+					jsCallback: () => {
+						$.DispatchEvent('LeaderboardEntry_PlayReplay', index);
+					}
+				},
+				{
+					label: $.Localize('#Action_SetComparisonRun'),
+					icon: 'file://{images}/chart-timeline.svg',
+					style: 'icon-color-light-blue',
+					jsCallback: () => {
+						$.DispatchEvent('LeaderboardEntry_SetComparisonRun', index);
+					}
 				}
-			});
-
-			items.push({
-				label: $.Localize('#Action_SetComparisonRun'),
-				icon: 'file://{images}/chart-timeline.svg',
-				style: 'icon-color-light-blue',
-				jsCallback: () => {
-					$.DispatchEvent('LeaderboardEntry_SetComparisonRun', index);
-				}
-			});
+			);
 		}
 
 		if (timeData.type === LeaderboardEntryType.ONLINE || timeData.type === LeaderboardEntryType.ONLINE_CACHED) {
