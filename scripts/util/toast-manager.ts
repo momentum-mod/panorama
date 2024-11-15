@@ -11,6 +11,17 @@ const DEFAULT_TOAST_DURATION = 10;
 const MAX_ACTIVE_TOASTS = 10;
 const HIDE_TRANSITION_DURATION = 0.3; // This should match transition-duration properties in toast.scss
 
+export enum ToastStyle {
+	INFO = 'info',
+	SUCCESS = 'success',
+	WARNING = 'warning',
+	ERROR = 'error',
+	BLUE = 'blue',
+	RED = 'red',
+	GREEN = 'green',
+	ORANGE = 'orange'
+}
+
 export class ToastError extends Error {
 	constructor(message: string) {
 		super(`ToastManager: ${message}`);
@@ -22,7 +33,7 @@ export type ToastCreateArgs = ({ title: string; message?: string } | { title?: s
 	icon?: string;
 	duration?: number;
 	location?: ToastLocation;
-	style?: string;
+	style?: ToastStyle | string;
 	id?: string;
 	parameters?: Record<string, any>;
 };
@@ -31,7 +42,7 @@ export interface ToastCreateWithLayoutArgs {
 	layoutFile: string;
 	duration?: number;
 	location?: ToastLocation;
-	style?: string;
+	style?: ToastStyle | string;
 	id?: string;
 	parameters?: Record<string, any>;
 }

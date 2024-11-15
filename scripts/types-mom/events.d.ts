@@ -195,7 +195,7 @@ interface GlobalEventNameMap {
 		location: import('util/toast-manager').ToastLocation,
 		duration: number,
 		icon: string,
-		style: string
+		style: import('util/toast-manager').ToastStyle
 	) => void;
 
 	/**
