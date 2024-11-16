@@ -86,7 +86,9 @@
 	// Elements are MapEntrys, in mapentry.scss
 	&__list {
 		flow-children: down;
-		height: fill-parent-flow(1);
+		// Important note: always ensure a DelayLoadList has a non-zero height, if having 0 items results in 0 height,
+		// it'll never repaint itself when items are added.
+		height: 100%;
 		padding-right: 16px;
 		width: 100%;
 		overflow: squish scroll;
