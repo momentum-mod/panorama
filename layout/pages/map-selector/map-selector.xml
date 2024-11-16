@@ -168,7 +168,7 @@
 									</Panel>
 								</Panel>
 
-								<Panel class="w-full">
+								<Panel class="w-full h-fill">
 									<DelayLoadList id="MapListContainer" class="mapselector__list" itemheight="54px" itemwidth="100%" spacersize="3px" spacerperiod="1">
 										<!-- Populated via MapEntry snippets in code -->
 									</DelayLoadList>
