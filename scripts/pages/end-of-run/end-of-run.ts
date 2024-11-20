@@ -1,14 +1,14 @@
 import { PanelHandler } from 'util/module-helpers';
 import {
-	Comparison_OLD,
+	Comparison,
 	CPPRun_OLD,
 	EndOfRunShowReason,
 	Run_OLD,
-	RunStatsComparison_OLD,
+	RunStatsComparison,
 	RunStatusIcons,
 	RunStatusStates,
 	RunStatusTypes,
-	Split_OLD
+	ComparisonSplit
 } from 'common/timer';
 import * as LineGraph from 'components/graphs/line-graph';
 
@@ -31,7 +31,7 @@ class EndOfRunHandler {
 
 	baseRun: Run_OLD;
 	comparisonRun: Run_OLD;
-	selectedSplit: Split_OLD;
+	selectedSplit: ComparisonSplit;
 
 	constructor() {
 		// $.RegisterForUnhandledEvent('EndOfRun_CompareRuns', (baseRun, compareRun) =>
@@ -220,7 +220,7 @@ class EndOfRunHandler {
 	setComparisionStats() {
 		if (!this.baseRun || !this.comparisonRun) return;
 
-		const comparison = new Comparison_OLD(this.baseRun, this.comparisonRun);
+		const comparison = new Comparison(this.baseRun, this.comparisonRun);
 
 		// Are we ahead? Probably don't need a class for if you're exactly identical
 		const isAhead = comparison.diff < 0;
@@ -279,7 +279,7 @@ class EndOfRunHandler {
 	}
 
 	/** Generate a graph for the given comparison */
-	updateGraph(comparison: Comparison_OLD, statIndex: number = null) {
+	updateGraph(comparison: Comparison, statIndex: number = null) {
 		// Grab the actual LineGraph class attached to the panel
 		const lineGraph = this.panels.graph.handler;
 
@@ -327,8 +327,8 @@ class EndOfRunHandler {
 		const numZones = comparisonSplits.length;
 
 		const useStat = statIndex !== null;
-		const isPositiveGood = (s: Split_OLD | RunStatsComparison_OLD) =>
-			useStat && ((s as RunStatsComparison_OLD).unit.includes('UnitsPerSecond') || s.name.includes('StrafeSync'));
+		const isPositiveGood = (s: ComparisonSplit | RunStatsComparison) =>
+			useStat && ((s as RunStatsComparison).unit.includes('UnitsPerSecond') || s.name.includes('StrafeSync'));
 
 		// Find max and min diff for the run
 		for (const split of comparisonSplits) {
@@ -428,7 +428,10 @@ class EndOfRunHandler {
 					onactivate: (_) => $.DispatchEvent('Activated', $(`#Split${splitName}`), 'mouse'),
 					onmouseover: (id) => {
 						if (isTimeComparison) {
-							this.panels.cp.SetDialogVariableFloat('total_time', (data as Split_OLD).accumulateTime);
+							this.panels.cp.SetDialogVariableFloat(
+								'total_time',
+								(data as ComparisonSplit).accumulateTime
+							);
 							this.panels.cp.SetDialogVariableFloat('zone_time', data.time);
 							this.panels.cp.SetDialogVariableFloat('time_diff', data.diff);
 							this.panels.cp.SetDialogVariableFloat('time_delta', data.delta);
@@ -436,15 +439,15 @@ class EndOfRunHandler {
 							this.panels.cp.SetDialogVariable('name', $.Localize(data.name));
 							this.panels.cp.SetDialogVariableInt(
 								'base_value',
-								this.roundFloat((data as RunStatsComparison_OLD).baseValue, 2)
+								this.roundFloat((data as RunStatsComparison).baseValue, 2)
 							);
 							this.panels.cp.SetDialogVariableInt(
 								'compare_value',
-								this.roundFloat((data as RunStatsComparison_OLD).comparisonValue, 2)
+								this.roundFloat((data as RunStatsComparison).comparisonValue, 2)
 							);
 							this.panels.cp.SetDialogVariableInt(
 								'diff',
-								this.roundFloat((data as RunStatsComparison_OLD).diff, 2)
+								this.roundFloat((data as RunStatsComparison).diff, 2)
 							);
 						}
 						UiToolkitAPI.ShowTextTooltip(id, tooltipString);
@@ -498,7 +501,7 @@ class EndOfRunHandler {
 	}
 
 	/** Set the selected graph point and stats for a given split */
-	setSelectedSplit(split: Split_OLD, comparison: Comparison_OLD) {
+	setSelectedSplit(split: ComparisonSplit, comparison: Comparison) {
 		this.selectedSplit = split;
 
 		this.panels.cp.SetDialogVariable('selected_zone', $.Localize(split.name));
@@ -515,7 +518,7 @@ class EndOfRunHandler {
 		this.panels.zoneStats.RemoveAndDeleteChildren();
 
 		// Function to create row for each stat passed in
-		const createRow = (statComparison: RunStatsComparison_OLD, index: number) => {
+		const createRow = (statComparison: RunStatsComparison, index: number) => {
 			const row = $.CreatePanel('RadioButton', this.panels.zoneStats, '', {
 				class: `endofrun-stats__row ${(index + 1) % 2 === 0 ? ' endofrun-stats__row--odd' : ''}`, // +1 to account for Times row
 				selected: index === null

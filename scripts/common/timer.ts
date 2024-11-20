@@ -281,17 +281,17 @@ export interface Zone_OLD {
 	name: string;
 	accumulateTime: number;
 	time: number;
-	stats: RunStat_OLD[];
+	stats: RunStat[];
 }
 
-export class Comparison_OLD {
+export class Comparison {
 	baseRun: Run_OLD;
 	comparisonRun: Run_OLD;
 	diff: number;
 	basePlayerName: string;
 	comparisonPlayerName: string;
-	splits: Split_OLD[];
-	overallSplit: Split_OLD;
+	splits: ComparisonSplit[];
+	overallSplit: ComparisonSplit;
 
 	constructor(baseRun: Run_OLD, comparisonRun: Run_OLD) {
 		this.baseRun = baseRun;
@@ -300,7 +300,8 @@ export class Comparison_OLD {
 		this.basePlayerName = baseRun.playerName;
 		this.comparisonPlayerName = comparisonRun.playerName;
 
-		this.splits = Comparison_OLD.generateSplits(baseRun.stats, comparisonRun.stats);
+		// TODO: Refactor when updating comparison menu
+		//this.splits = Comparison.generateSplits(baseRun.stats, comparisonRun.stats);
 
 		this.overallSplit = {
 			// This gets used as a panel ID, so don't include the hash. $.Localize call works fine without it.
@@ -308,54 +309,94 @@ export class Comparison_OLD {
 			accumulateTime: baseRun.stats.overallZone.accumulateTime,
 			time: baseRun.stats.overallZone.accumulateTime,
 			diff: baseRun.stats.overallZone.accumulateTime - comparisonRun.stats.overallZone.accumulateTime,
-			delta: baseRun.stats.overallZone.accumulateTime - comparisonRun.stats.overallZone.accumulateTime,
-			statsComparisons: baseRun.stats.overallZone.stats.map(
-				(stat, j) => new RunStatsComparison_OLD(stat, comparisonRun.stats.overallZone.stats[j])
-			)
+			delta: baseRun.stats.overallZone.accumulateTime - comparisonRun.stats.overallZone.accumulateTime
+			// statsComparisons: baseRun.stats.overallZone.stats.map(
+			// 	(stat, j) => new RunStatsComparison(stat, comparisonRun.stats.overallZone.stats[j])
+			// )
 		};
 	}
 
-	static generateSplits(baseRunStats: RunStats_OLD, comparisonRunStats: RunStats_OLD): Split_OLD[] {
-		return baseRunStats.zones.map((baseZone, i) => {
-			const compareZone = comparisonRunStats.zones[i];
+	static generateSplits(baseRunSplits: RunSplits, comparisonRunSplits: RunSplits): ComparisonSplit[] {
+		return baseRunSplits.segments.map((_, i) => {
+			const baseAccumulateTime = baseRunSplits.segments[i].subsegments[0].timeReached;
+			const comparisonAccumulateTime = comparisonRunSplits.segments[i].subsegments[0].timeReached;
+			const baseSplitTime = Comparison.getSegmentTime(baseRunSplits, i);
+			const comparisonSplitTime = Comparison.getSegmentTime(comparisonRunSplits, i);
 
 			return {
-				name: (i + 1).toString(),
-				accumulateTime: baseZone.accumulateTime,
-				time: baseZone.time,
-				diff: baseZone.accumulateTime - compareZone.accumulateTime,
-				delta: baseZone.time - compareZone.time,
-				statsComparisons: baseZone.stats.map(
-					(stat, j) => new RunStatsComparison_OLD(stat, compareZone.stats[j])
-				)
+				name: i.toString(),
+				accumulateTime: baseAccumulateTime,
+				time: baseSplitTime,
+				diff: baseAccumulateTime - comparisonAccumulateTime,
+				delta: baseSplitTime - comparisonSplitTime
+				// statsComparisons: baseRunSplits.trackStats.map(
+				// 	(stat, j) => new RunStatsComparison(stat, compareZone.stats[j])
+				// )
 			};
 		});
 	}
+
+	static generateFinishSplit(
+		baseRunTime: number,
+		baseRunSplits: RunSplits,
+		comparisonRunTime: number,
+		comparisonRunSplits: RunSplits
+	): ComparisonSplit {
+		const baseSplitTime = baseRunTime - baseRunSplits.segments.at(-1).subsegments.at(-1).timeReached;
+		const comparisonSplitTime =
+			comparisonRunTime - comparisonRunSplits.segments.at(-1).subsegments.at(-1).timeReached;
+
+		return {
+			name: baseRunSplits.segments.length.toString(),
+			accumulateTime: baseRunTime,
+			time: baseSplitTime,
+			diff: baseRunTime - comparisonRunTime,
+			delta: baseSplitTime - comparisonSplitTime
+			// statsComparisons: baseRunSplits.trackStats.map(
+			// 	(stat, j) => new RunStatsComparison(stat, compareZone.stats[j])
+			// )
+		};
+	}
+
+	static getSegmentTime(runSplits: RunSplits, segmentIndex: number): number {
+		if (segmentIndex < 0 || segmentIndex >= runSplits.segments.length) {
+			return 0;
+		}
+
+		if (segmentIndex === 0) {
+			return runSplits.segments[0].subsegments[0].timeReached;
+		}
+
+		return (
+			runSplits.segments[segmentIndex].subsegments[0].timeReached -
+			runSplits.segments[segmentIndex - 1].subsegments[0].timeReached
+		);
+	}
 }
 
-export interface Split_OLD {
+export interface ComparisonSplit {
 	name: string;
 	accumulateTime: number;
 	time: number;
 	diff: number;
 	delta: number;
-	statsComparisons: RunStatsComparison_OLD[];
+	statsComparisons?: RunStatsComparison[];
 }
 
-export interface RunStat_OLD {
+export interface RunStat {
 	name: string;
 	value: number;
 	unit: string;
 }
 
-export class RunStatsComparison_OLD {
+export class RunStatsComparison {
 	name: string;
 	unit: string;
 	baseValue: number;
 	comparisonValue: number;
 	diff: number;
 
-	constructor(baseStat: RunStat_OLD, comparisonStat: RunStat_OLD) {
+	constructor(baseStat: RunStat, comparisonStat: RunStat) {
 		this.name = baseStat.name;
 		this.unit = baseStat.unit;
 		this.baseValue = baseStat.value;
