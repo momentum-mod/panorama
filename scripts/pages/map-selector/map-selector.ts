@@ -46,6 +46,7 @@ class MapSelectorHandler implements OnPanelLoad {
 		],
 		emptyContainer: $<Panel>('#MapListEmptyContainer'),
 		tierSlider: $<DualSlider>('#TierSlider'),
+		leaderboardContainer: $<Panel>('#MapTimes'),
 		descriptionContainer: $<Panel>('#MapDescriptionContainer'),
 		creditsContainer: $<Panel>('#MapCreditsContainer'),
 		datesContainer: $<Panel>('#MapDatesContainer'),
@@ -71,6 +72,7 @@ class MapSelectorHandler implements OnPanelLoad {
 		$.RegisterForUnhandledEvent('MapSelector_ShowConfirmOverwrite', (mapID) => this.showConfirmOverwrite(mapID));
 		$.RegisterForUnhandledEvent('MapSelector_MapsFiltered', (count) => this.onMapsFiltered(count));
 		$.RegisterForUnhandledEvent('MapSelector_SelectedDataUpdate', () => this.onSelectedDataUpdated());
+		$.RegisterForUnhandledEvent('MapSelector_HideLeaderboards', () => this.toggleLeaderboards(false));
 
 		this.panels.nStateButtons.forEach((panel) =>
 			$.RegisterEventHandler('NStateButtonStateChanged', panel, (panelID, state) =>
@@ -91,6 +93,10 @@ class MapSelectorHandler implements OnPanelLoad {
 		);
 
 		this.panels.cp.ApplyFilters();
+		this.panels.leaderboardContainer.SetHasClass(
+			'mapselector-leaderboards--open',
+			$.persistentStorage.getItem('mapSelector.leaderboardsOpen')
+		);
 
 		$.DispatchEvent('MapSelector_OnLoaded');
 	}
@@ -321,10 +327,8 @@ class MapSelectorHandler implements OnPanelLoad {
 		NStateButtonClasses.entries().forEach(([i, className]) => panel.SetHasClass(className, state === i));
 	}
 
-	/**
-	 * Toggles the visibility of the leaderboards panel
-	 */
-	toggleLeaderboards() {
-		this.panels.cp.FindChildTraverse('Leaderboards')?.ToggleClass('mapselector-map-times__list--hidden');
+	toggleLeaderboards(open: boolean) {
+		this.panels.leaderboardContainer.SetHasClass('mapselector-leaderboards--open', open);
+		$.persistentStorage.setItem('mapSelector.leaderboardsOpen', open);
 	}
 }

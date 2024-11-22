@@ -43,17 +43,22 @@
 				</Panel>
 			</Panel>
 
-			<Panel class="leaderboard-dropdown__input-container">
-				<DropDown id="TracksDropdown" class="dropdown sorting__dropdown" menuclass="dropdown-menu">
-					<Panel id="placeholder" /> <!-- This is needed to unfuck the dynamic dropdown -->
-				</DropDown>
-			</Panel>
+			<Panel class="w-fill mr-4"/>
 
-			<TooltipPanel class="h-align-right w-fit-children h-fit-children" tooltip="#Leaderboards_EndOfRunButton">
+			<DropDown id="TracksDropdown" class="dropdown" menuclass="dropdown-menu">
+				<Panel id="placeholder" /> <!-- This is needed to unfuck the dynamic dropdown -->
+			</DropDown>
+
+			<TooltipPanel tooltip="#Leaderboards_EndOfRunButton" class="v-align-center">
 				<Button id="EndOfRunButton" class="button" onactivate="LeaderboardsHandler.showEndOfRun();">
 					<Image class="button__icon button__icon--left" src="file://{images}/arrow-thick-right.svg" textureheight="64" />
 				</Button>
 			</TooltipPanel>
+
+			<Button class="button button--blue leaderboards__hide-button" onactivate="$.DispatchEvent('MapSelector_HideLeaderboards');">
+				<Image class="button__icon button__icon--left" src="file://{images}/chart-timeline.svg" textureheight="40" />
+				<Label class="button__text button__icon--right mr-3" text="#MapSelector_Button_Leaderboards" />
+			</Button>
 		</Panel>
 		<Panel class="leaderboard-times">
 			<Panel class="leaderboard-times__header">

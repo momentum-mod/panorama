@@ -62,6 +62,8 @@ declare interface GlobalEventNameMap {
 
 	MapSelector_ShowConfirmCancelDownload: (mapID: number) => void;
 
+	MapSelector_HideLeaderboards: () => void;
+
 	/** Force close the tab menu */
 	HudTabMenu_ForceClose: () => void;
 
@@ -87,6 +89,7 @@ $.DefineEvent('RefreshLobbyList', 0);
 $.DefineEvent('Lobby_SetMaxPlayers', 1);
 $.DefineEvent('MapSelector_OnLoaded', 0);
 $.DefineEvent('MapSelector_ShowConfirmCancelDownload', 1);
+$.DefineEvent('MapSelector_HideLeaderboards', 0);
 $.DefineEvent('HudTabMenu_ForceClose', 0);
 $.DefineEvent('ColorPickerSave', 1, 'color');
 $.DefineEvent('ColorPickerCancel', 0);
