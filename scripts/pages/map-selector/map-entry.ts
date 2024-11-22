@@ -1,141 +1,176 @@
 import { PanelHandler } from 'util/module-helpers';
 import * as Enum from 'util/enum';
-import { Gamemode } from 'common/web';
+import { MapStatuses, Gamemode, MapStatus, TrackType } from 'common/web';
 import { GamemodeInfo } from 'common/gamemode';
+import { getTrack, getUserMapDataTrack } from 'common/leaderboard';
+import { timetoHHMMSS } from 'util/time';
+import { getTier } from 'common/maps';
+
+const NEW_MAP_BANNER_CUTOFF = 1000 * 60 * 60 * 24 * 5; // 5 days
 
 @PanelHandler()
 class MapEntryHandler {
 	constructor() {
-		$.RegisterEventHandler('MapEntry_MapDataUpdate', $.GetContextPanel(), () => this.onMapDataUpdate());
+		$.RegisterEventHandler('MapEntry_MapDataUpdate', $.GetContextPanel(), () => this.update());
 	}
+
+	panels = {
+		cp: $.GetContextPanel<MapEntry>(),
+		pbPanel: $<Panel>('#MapEntryPB'),
+		pbLabel: $<Label>('#MapEntryPBLabel'),
+		pbIcon: $<Image>('#MapEntryPBIcon'),
+		tier: $<Label>('#MapEntryTier')
+	};
+
+	strings = {
+		bannerNew: $.Localize('#MapSelector_Banner_New'),
+		bannerPrivate: $.Localize('#MapSelector_Banner_Private')
+	};
 
 	showGameModeOverrideMenu() {
 		const mapData = $.GetContextPanel<MapEntry>().mapData;
-		if (!mapData) {
-			return;
-		}
 
 		const items = Enum.fastValuesNumeric(Gamemode).map((gamemode) => ({
 			label: $.Localize(GamemodeInfo.get(gamemode)!.i18n),
-			jsCallback: () => $.DispatchEvent('MapSelector_TryPlayMap_GameModeOverride', mapData.id, gamemode)
+			jsCallback: () =>
+				$.DispatchEvent('MapSelector_TryPlayMap_GameModeOverride', mapData.staticData.id, gamemode)
 		}));
 
 		UiToolkitAPI.ShowSimpleContextMenu('', 'ControlsLibSimpleContextMenu', items);
 	}
 
 	showContextMenu() {
-		// const { mapData, userMapData, isDownloading } = $.GetContextPanel<MapEntry>();
-		// if (!mapData || !userMapData) {
-		// 	return;
-		// }
-		//
-		// const items = [];
-		// const mapID = mapData.id;
-		//
-		// if (userMapData.mapFileExists) {
-		// 	items.push(
-		// 		{
-		// 			label: $.Localize('#Action_StartMap'),
-		// 			icon: 'file://{images}/play.svg',
-		// 			style: 'icon-color-green',
-		// 			jsCallback: () => $.DispatchEvent('MapSelector_TryPlayMap', mapID)
-		// 		},
-		// 		// Gamemode override submenu
-		// 		{
-		// 			label: $.Localize('#Action_StartMapOverride'),
-		// 			icon: 'file://{images}/alternative-mode.svg',
-		// 			style: 'icon-color-green',
-		// 			jsCallback: () => this.showGameModeOverrideMenu()
-		// 		},
-		// 		{
-		// 			label: $.Localize('#Action_DeleteMap'),
-		// 			icon: 'file://{images}/delete.svg',
-		// 			style: 'icon-color-red',
-		// 			jsCallback: () => $.DispatchEvent('MapSelector_DeleteMap', mapID)
-		// 		}
-		// 	);
-		// } else {
-		// 	if (isDownloading) {
-		// 		items.push({
-		// 			label: $.Localize('#Action_CancelDownload'),
-		// 			icon: 'file://{images}/cancel.svg',
-		// 			style: 'icon-color-red',
-		// 			jsCallback: () => $.DispatchEvent('MapSelector_ShowConfirmCancelDownload', mapID)
-		// 		});
-		// 	} else if (MapCacheAPI.MapQueuedForDownload(mapID)) {
-		// 		items.push({
-		// 			label: $.Localize('#Action_RemoveFromQueue'),
-		// 			icon: 'file://{images}/playlist-remove.svg',
-		// 			style: 'icon-color-red',
-		// 			jsCallback: () => $.DispatchEvent('MapSelector_RemoveMapFromDownloadQueue', mapID)
-		// 		});
-		// 	} else {
-		// 		items.push({
-		// 			label: $.Localize('#Action_DownloadMap'),
-		// 			icon: 'file://{images}/play.svg',
-		// 			style: 'icon-color-mid-blue',
-		// 			jsCallback: () => $.DispatchEvent('MapSelector_TryPlayMap', mapID)
-		// 		});
-		// 	}
-		// }
-		// TODO: Isn't fetched by C++ yet, complicated to do with new map list system.
-		// if (userMapData.isFavorited) {
-		// 	items.push({
-		// 		label: $.Localize('#Action_RemoveFromFavorites'),
-		// 		icon: 'file://{images}/favorite-remove.svg',
-		// 		style: 'icon-color-yellow',
-		// 		jsCallback: () => $.DispatchEvent('MapSelector_ToggleMapStatus', mapID, false)
-		// 	});
-		// } else {
-		// 	items.push({
-		// 		label: $.Localize('#Action_AddToFavorites'),
-		// 		icon: 'file://{images}/star.svg',
-		// 		style: 'icon-color-yellow',
-		// 		jsCallback: () => $.DispatchEvent('MapSelector_ToggleMapStatus', mapID, true)
-		// 	});
-		// }
-		//
-		// UiToolkitAPI.ShowSimpleContextMenu('', 'ControlsLibSimpleContextMenu', items);
+		const { mapData, isDownloading } = $.GetContextPanel<MapEntry>();
+
+		const items = [];
+		const mapID = mapData.staticData.id;
+
+		if (mapData.mapFileExists) {
+			items.push(
+				{
+					label: $.Localize('#Action_StartMap'),
+					icon: 'file://{images}/play.svg',
+					style: 'icon-color-green',
+					jsCallback: () => $.DispatchEvent('MapSelector_TryPlayMap', mapID)
+				},
+				// Gamemode override submenu
+				{
+					label: $.Localize('#Action_StartMapOverride'),
+					icon: 'file://{images}/alternative-mode.svg',
+					style: 'icon-color-green',
+					jsCallback: () => this.showGameModeOverrideMenu()
+				},
+				{
+					label: $.Localize('#Action_DeleteMap'),
+					icon: 'file://{images}/delete.svg',
+					style: 'icon-color-red',
+					jsCallback: () => $.DispatchEvent('MapSelector_DeleteMap', mapID)
+				}
+			);
+		} else {
+			if (isDownloading) {
+				items.push({
+					label: $.Localize('#Action_CancelDownload'),
+					icon: 'file://{images}/cancel.svg',
+					style: 'icon-color-red',
+					jsCallback: () => $.DispatchEvent('MapSelector_ShowConfirmCancelDownload', mapID)
+				});
+			} else if (MapCacheAPI.MapQueuedForDownload(mapID)) {
+				items.push({
+					label: $.Localize('#Action_RemoveFromQueue'),
+					icon: 'file://{images}/playlist-remove.svg',
+					style: 'icon-color-red',
+					jsCallback: () => $.DispatchEvent('MapSelector_RemoveMapFromDownloadQueue', mapID)
+				});
+			} else {
+				items.push({
+					label: $.Localize('#Action_DownloadMap'),
+					icon: 'file://{images}/play.svg',
+					style: 'icon-color-mid-blue',
+					jsCallback: () => $.DispatchEvent('MapSelector_TryPlayMap', mapID)
+				});
+			}
+		}
+		if (mapData.userData?.inFavorites) {
+			items.push({
+				label: $.Localize('#Action_RemoveFromFavorites'),
+				icon: 'file://{images}/favorite-remove.svg',
+				style: 'icon-color-yellow',
+				jsCallback: () => $.DispatchEvent('MapSelector_ToggleMapStatus', mapID, false)
+			});
+		} else {
+			items.push({
+				label: $.Localize('#Action_AddToFavorites'),
+				icon: 'file://{images}/star.svg',
+				style: 'icon-color-yellow',
+				jsCallback: () => $.DispatchEvent('MapSelector_ToggleMapStatus', mapID, true)
+			});
+		}
+
+		UiToolkitAPI.ShowSimpleContextMenu('', 'ControlsLibSimpleContextMenu', items);
 	}
 
 	tryPlayMap() {
-		$.DispatchEvent('MapSelector_TryPlayMap', $.GetContextPanel<MapEntry>().mapData.id);
+		$.DispatchEvent('MapSelector_TryPlayMap', $.GetContextPanel<MapEntry>().mapData.staticData.id);
 	}
 
-	onMapDataUpdate() {
-		const cp = $.GetContextPanel<MapEntry>();
-		const mapData = cp.mapData;
-		const pbPanel = cp.FindChildTraverse('MapPB');
-		const pbIcon = cp.FindChildTraverse<Image>('PBIcon');
-		const pbLabel = cp.FindChildTraverse<Label>('PBLabel');
+	update() {
+		// Images and favorite and action buttons are handled in C++.
+		const cp = this.panels.cp;
+		const { staticData, userData } = this.panels.cp.mapData;
+		const gamemode = GameModeAPI.GetMetaGameMode();
+		const inSubmission = MapStatuses.IN_SUBMISSION.includes(staticData.status);
 
-		// TODO: Not passing user-specific data in yet. This is hard to do. Fucking hell!
-		// if (mapData.isCompleted) {
-		// 	pbPanel.RemoveClass('hide');
-		//
-		// 	// Do G1-6 here when it's hooked up
-		// 	const icon = mapData.pr.rank <= 10 ? 'file://{images}/ranks/top10.svg' : 'file://{images}/flag.svg';
-		//
-		// 	pbIcon.SetImage(icon);
-		//
-		// 	let time = mapData.pr.run.time;
-		// 	if (!time.includes(':')) time = Number.parseInt(time) >= 10 ? '0:' + time : '0:0' + time;
-		//
-		// 	pbLabel.text = time.split('.')[0];
-		//
-		// 	pbPanel.SetPanelEvent('onmouseover', () => {
-		// 		UiToolkitAPI.ShowTextTooltip(
-		// 			pbPanel.id,
-		// 			`<b>${$.Localize('#Common_PersonalBest')}</b>: ${time}\n<b>${$.Localize('#Common_Rank')}</b>: ${
-		// 				mapData.pr.rank
-		// 			}`
-		// 			// `Last Played: ${new Date(mapData.lastPlayed).toDateString()}` +
-		// 		);
-		// 	});
-		// } else {
-		// 	pbPanel.AddClass('hide');
-		// 	pbPanel.ClearPanelEvent('onmouseover');
-		// 	pbLabel.text = '';
-		// }
+		cp.SetDialogVariable('name', staticData.name);
+		cp.SetHasClass('map-entry--submission', inSubmission);
+
+		// If we're in submission, use the tier of suggested by the submitter, if exists
+		const tier = getTier(staticData, gamemode);
+		cp.SetHasClass('map-entry--has-tier', Boolean(tier));
+		if (tier) {
+			cp.SetDialogVariableInt('tier', tier);
+		}
+
+		const userTrackData = getUserMapDataTrack(userData, gamemode);
+		cp.SetHasClass('map-entry--completed', userTrackData?.completed ?? false);
+
+		if (userTrackData && userTrackData.time > 0) {
+			this.panels.pbPanel.visible = true;
+
+			// Current system doesn't know user ranks
+			const icon = /* track.pr.rank <= 10 ? 'file://{images}/ranks/top10.svg' : */ 'file://{images}/flag.svg';
+			this.panels.pbIcon.SetImage(icon);
+			this.panels.pbLabel.text = timetoHHMMSS(userTrackData.time);
+			this.panels.pbPanel.SetPanelEvent('onmouseover', () => {
+				UiToolkitAPI.ShowTextTooltip(
+					this.panels.pbPanel.id,
+					`<b>${$.Localize('#Common_PersonalBest')}</b>: ${userTrackData.time}\n` +
+						`<b>${$.Localize('#Common_LastPlayed')}</b>: ${new Date(userData.lastPlayed).toDateString()}`
+				);
+			});
+		} else {
+			this.panels.pbPanel.visible = false;
+			this.panels.pbPanel.ClearPanelEvent('onmouseover');
+		}
+
+		const isPrivate = MapStatuses.PRIVATE.includes(staticData.status);
+		// TODO: This is wrong, should use mapData.static.info.approvedData once added to backend
+		// (https://github.com/momentum-mod/website/issues/903)
+		const isNew =
+			staticData.status === MapStatus.APPROVED &&
+			Date.now() - new Date(staticData.createdAt).getTime() < NEW_MAP_BANNER_CUTOFF;
+
+		if (isPrivate) {
+			cp.SetDialogVariable('banner', this.strings.bannerPrivate);
+			cp.SetHasClass('map-entry--private', true);
+			cp.SetHasClass('map-entry--new', false);
+		} else if (isNew) {
+			cp.SetDialogVariable('banner', this.strings.bannerNew);
+			cp.SetHasClass('map-entry--private', false);
+			cp.SetHasClass('map-entry--new', true);
+		} else {
+			cp.SetHasClass('map-entry--private', false);
+			cp.SetHasClass('map-entry--new', false);
+		}
 	}
 }

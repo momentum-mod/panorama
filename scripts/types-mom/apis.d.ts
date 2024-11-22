@@ -260,18 +260,33 @@ declare namespace MomentumTimerAPI {
 }
 
 declare namespace MapCacheAPI {
-	type Map = import('common/web').MMap;
+	interface UserTrackData {
+		completed: boolean;
+		time: number;
+	}
+	interface UserData {
+		inFavorites: boolean;
+		lastPlayed: number;
+		// Keys are bitpacked as `gamemode << 24 | trackType << 16 | trackNum << 8 | style`
+		tracks: Record<number, UserTrackData>;
+	}
+
+	type StaticData = import('common/web').MMap;
+
+	interface MapData {
+		staticData: StaticData;
+		userData?: UserData;
+		mapFileExists: boolean;
+	}
+
 	/** Get the current map's name */
 	function GetMapName(): string;
 
 	/** Get the metadata for the current map */
-	function GetCurrentMapData(): Map;
-
-	/** Gets all the maps from the map cache */
-	function GetMaps(): Map[];
+	function GetCurrentMapData(): MapData;
 
 	/** Gets the map data for the given mapID */
-	function GetMapDataByID(mapID: int32): Map;
+	function GetMapData(mapID: int32): MapData;
 
 	/** Returns true if the given mapID is queued from download */
 	function MapQueuedForDownload(mapID: int32): boolean;

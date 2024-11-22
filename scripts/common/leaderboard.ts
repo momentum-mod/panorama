@@ -32,13 +32,43 @@ export enum LeaderboardStatusType {
 	UNAUTHORIZED_FRIENDS_LIST = 6
 }
 
-export function getMainTrack(mapData: MMap, gamemode: Gamemode): Leaderboard {
+export function getTrack(
+	mapData: MMap,
+	gamemode: Gamemode,
+	trackType: TrackType = TrackType.MAIN,
+	trackNum: number = 1,
+	style: number = 0
+): Leaderboard {
 	return mapData.leaderboards.find(
 		(leaderboard) =>
-			leaderboard.gamemode === gamemode && leaderboard.trackType === TrackType.MAIN && leaderboard.style === 0
+			leaderboard.gamemode === gamemode &&
+			leaderboard.trackType === trackType &&
+			leaderboard.trackNum === trackNum &&
+			leaderboard.style === style
 	);
 }
 
+function highestTrackNum(mapData: MMap, trackType: TrackType): number {
+	return Math.max(
+		...mapData.leaderboards
+			.filter((leaderboard) => leaderboard.trackType === trackType)
+			.map((leaderboard) => leaderboard.trackNum)
+	);
+}
 export function getNumZones(mapData: MMap): number {
-	return mapData.leaderboards.filter((leaderboard) => leaderboard.trackType === TrackType.STAGE).length;
+	return highestTrackNum(mapData, TrackType.STAGE) - 1;
+}
+
+export function getNumBonuses(mapData: MMap): number {
+	return highestTrackNum(mapData, TrackType.BONUS) - 1;
+}
+
+export function getUserMapDataTrack(
+	userMapData: MapCacheAPI.UserData,
+	gamemode: Gamemode,
+	trackType: TrackType = TrackType.MAIN,
+	trackNum: number = 1,
+	style: number = 0
+): MapCacheAPI.UserTrackData | undefined {
+	return userMapData?.tracks?.[(gamemode << 24) | (trackType << 16) | (trackNum << 8) | style];
 }

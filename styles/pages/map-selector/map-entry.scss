@@ -34,6 +34,7 @@ $transition: 0.125s ease-out 0s;
 		horizontal-align: left;
 		vertical-align: middle;
 
+		border-radius: 4px 0 0 4px;
 		height: 100%;
 
 		transform: translateX(0px);
@@ -56,7 +57,7 @@ $transition: 0.125s ease-out 0s;
 
 		margin-left: $image-width;
 
-		border-radius: 4px;
+		border-radius: 0 4px 4px 0;
 
 		box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.3);
 
@@ -91,10 +92,6 @@ $transition: 0.125s ease-out 0s;
 		height: 100%;
 		background-color: function.gradient-vertical(rgba(255, 255, 255, 0.5), rgba(182, 182, 182, 0.5));
 		transition: background-color $transition;
-
-		#{$root}--completed & {
-			@include mixin.gradient-themed($color: 'green', $direction: 'down');
-		}
 	}
 
 	&__image {
@@ -120,10 +117,6 @@ $transition: 0.125s ease-out 0s;
 			height: 20px;
 			margin-right: 6px;
 			img-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.5);
-
-			&--hidden {
-				visibility: collapse;
-			}
 		}
 
 		&-text {
@@ -133,10 +126,30 @@ $transition: 0.125s ease-out 0s;
 	}
 
 	&__tier {
-		text-align: center;
 		@include mixin.font-styles($use-header: true);
+		text-align: center;
 		font-size: 26px;
-		margin-left: 60px;
+
+		&-wrapper {
+			height: 100%;
+			width: 44px;
+			margin-left: 32px;
+			visibility: collapse;
+
+			#{$root}--has-tier & {
+				visibility: visible;
+			}
+		}
+
+		&-notice {
+			align: right top;
+			font-size: 14px;
+			visibility: collapse;
+
+			#{$root}--submission & {
+				visibility: visible;
+			}
+		}
 	}
 
 	&__favorite {
