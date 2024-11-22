@@ -2,7 +2,7 @@
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
-	
+
 	<scripts>
 		<include type="module" src="file://{scripts}/pages/map-selector/map-selector.ts" />
 	</scripts>
@@ -12,24 +12,39 @@
 			<Panel id="MapSelectorLeftContainer" class="mapselector__left-container">
 				<Panel id="MapSelectorLeft" class="mapselector__left">
 					<Panel class="mapselector__left-wrapper">
-						<Panel class="mapselector-category-tabs">
-							<RadioButton id="CategoryListMaps" class="mapselector-category-tabs__tab" group="CategoryListNavBar" selected="true" onactivate='$("#CategoryContents").SetHasClass("mapselector__category-contents--playlists", false)'>
-								<Panel class="flow-right h-align-center">
-									<Image class="mapselector-category-tabs__image" src="file://{images}/panorama-variant.svg" textureheight="32" style="padding: 1px;" />
-									<Label class="text-h mapselector-category-tabs__text" text="#MapSelector_Maps" />
-								</Panel>
-							</RadioButton>
-							<RadioButton id="CategoryListPlaylists" class="mapselector-category-tabs__tab" group="CategoryListNavBar" onactivate='$("#CategoryContents").SetHasClass("mapselector__category-contents--playlists", true)'>
-								<Panel class="flow-right h-align-center">
-									<Image class="mapselector-category-tabs__image" src="file://{images}/playlist-play.svg" textureheight="32" />
-									<Label class="text-h mapselector-category-tabs__text" text="#MapSelector_Playlists" />
-								</Panel>
-							</RadioButton>
-						</Panel>
+
+<!--						 Disabling top tabs until we do leaderboards, may not even keep original styling anyway.-->
+<!--						<Panel class="mapselector-category-tabs">-->
+<!--							<RadioButton id="CategoryListMaps" class="mapselector-category-tabs__tab" group="CategoryListNavBar" selected="true" onactivate='$("#CategoryContents").SetHasClass("mapselector__category-contents&#45;&#45;playlists", false)'>-->
+<!--								<Panel class="flow-right h-align-center">-->
+<!--									<Image class="mapselector-category-tabs__image" src="file://{images}/panorama-variant.svg" textureheight="32" style="padding: 1px;" />-->
+<!--									<Label class="text-h mapselector-category-tabs__text" text="#MapSelector_Maps" />-->
+<!--								</Panel>-->
+<!--							</RadioButton>-->
+<!--							<RadioButton id="CategoryListPlaylists" class="mapselector-category-tabs__tab" group="CategoryListNavBar" onactivate='$("#CategoryContents").SetHasClass("mapselector__category-contents&#45;&#45;playlists", true)'>-->
+<!--								<Panel class="flow-right h-align-center">-->
+<!--									<Image class="mapselector-category-tabs__image" src="file://{images}/playlist-play.svg" textureheight="32" />-->
+<!--									<Label class="text-h mapselector-category-tabs__text" text="#MapSelector_Playlists" />-->
+<!--								</Panel>-->
+<!--							</RadioButton>-->
+<!--						</Panel>-->
 
 						<Panel id="CategoryContents" class="mapselector__category-contents">
 							<Panel id="MapSelector" class="mapselector__maps">
 								<Panel class="mapselector-header">
+									<Panel class="tabs mapselector-header__tabs">
+										<RadioButton id="MapListRanked" class="tabs__tab mapselector-header__tab" group="MapListNavBar" selected="true">
+											<Label class="tabs__text" text="#MapSelector_Tabs_Ranked" />
+										</RadioButton>
+										<Panel class="tabs__gap" />
+										<RadioButton id="MapListUnranked" class="tabs__tab mapselector-header__tab" group="MapListNavBar">
+											<Label class="tabs__text" text="#MapSelector_Tabs_Unranked" />
+										</RadioButton>
+										<Panel class="tabs__gap" />
+										<RadioButton id="MapListBeta" class="tabs__tab mapselector-header__tab" group="MapListNavBar">
+											<Label class="tabs__text" text="#MapSelector_Tabs_Beta" />
+										</RadioButton>
+									</Panel>
 									<Panel class="search mapselector-header__search">
 										<Image class="search__icon" src="file://{images}/search.svg" textureheight="32" />
 										<TextEntry id="MapSearchTextEntry" class="search__textentry" maxchars="30" placeholder="#MapSelector_SearchMaps" />
@@ -48,123 +63,103 @@
 								</Panel>
 								<Panel id="MapFilters" class="mapselector-filters">
 									<Panel class="mapselector-filters__row mapselector-filters__gamemodes">
-										<RadioButton id="SurfFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button" selected="true">
+										<RadioButton id="SurfFilterButton" class="button radiobutton radiobutton--blue mapselector-filters__gamemode-button" selected="true">
 											<Label class="button__text mapselector-filters__text" text="#Gamemode_Surf" />
 										</RadioButton>
-										<RadioButton id="BhopFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button">
+										<RadioButton id="BhopFilterButton" class="button radiobutton radiobutton--blue mapselector-filters__gamemode-button">
 											<Label class="button__text mapselector-filters__text" text="#Gamemode_Bhop" />
 										</RadioButton>
-										<RadioButton id="BhopHL1FilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button">
+										<RadioButton id="BhopHL1FilterButton" class="button radiobutton radiobutton--blue mapselector-filters__gamemode-button">
 											<Label class="button__text mapselector-filters__text" text="#Gamemode_BhopHL1" />
 										</RadioButton>
-										<RadioButton id="KzMomFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button">
+										<RadioButton id="KzMomFilterButton" class="button radiobutton radiobutton--blue mapselector-filters__gamemode-button">
 											<Label class="button__text mapselector-filters__text" text="#Gamemode_KzMom" />
 										</RadioButton>
-										<RadioButton id="KzKztFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button hidden">
+										<RadioButton id="KzKztFilterButton" class="button radiobutton radiobutton--blue mapselector-filters__gamemode-button hidden">
 											<Label class="button__text mapselector-filters__text" text="#Gamemode_KzKzt" />
 										</RadioButton>
-										<RadioButton id="Kz16FilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button">
+										<RadioButton id="Kz16FilterButton" class="button radiobutton radiobutton--blue mapselector-filters__gamemode-button">
 											<Label class="button__text mapselector-filters__text" text="#Gamemode_Kz16" />
 										</RadioButton>
-										<RadioButton id="RJFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button">
+										<RadioButton id="RJFilterButton" class="button radiobutton radiobutton--blue mapselector-filters__gamemode-button">
 											<Label class="button__text mapselector-filters__text" text="#Gamemode_RJ" />
 										</RadioButton>
-										<RadioButton id="SJFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button">
+										<RadioButton id="SJFilterButton" class="button radiobutton radiobutton--blue mapselector-filters__gamemode-button">
 											<Label class="button__text mapselector-filters__text" text="#Gamemode_SJ" />
 										</RadioButton>
-										<RadioButton id="AhopFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button">
+										<RadioButton id="AhopFilterButton" class="button radiobutton radiobutton--blue mapselector-filters__gamemode-button">
 											<Label class="button__text mapselector-filters__text" text="#Gamemode_Ahop" />
 										</RadioButton>
-										<RadioButton id="ConcFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button">
+										<RadioButton id="ConcFilterButton" class="button radiobutton radiobutton--blue mapselector-filters__gamemode-button">
 											<Label class="button__text mapselector-filters__text" text="#Gamemode_Conc" />
 										</RadioButton>
-									</Panel>
-									<Panel class="mapselector-filters__row mapselector-filters__gamemodes">
-										<RadioButton id="DefragCPMFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button">
+										<RadioButton id="DefragCPMFilterButton" class="button radiobutton radiobutton--blue mapselector-filters__gamemode-button">
 											<Label class="button__text mapselector-filters__text" text="#Gamemode_DefragCPM" />
 										</RadioButton>
-										<RadioButton id="DefragVQ3FilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button">
+										<RadioButton id="DefragVQ3FilterButton" class="button radiobutton radiobutton--blue mapselector-filters__gamemode-button">
 											<Label class="button__text mapselector-filters__text" text="#Gamemode_DefragVQ3" />
 										</RadioButton>
-										<RadioButton id="DefragVTGFilterButton" class="button togglebutton togglebutton--blue mapselector-filters__button">
+										<RadioButton id="DefragVTGFilterButton" class="button radiobutton radiobutton--blue mapselector-filters__gamemode-button">
 											<Label class="button__text mapselector-filters__text" text="#Gamemode_DefragVTG" />
 										</RadioButton>
 									</Panel>
 									<Panel class="mapselector-filters__row">
 										<Panel class="mapselector-filters__tiers">
-											<Label class="text-h5 mr-2 v-align-center" text="Tiers" />
+											<Label class="mapselector-filters__tier-label" text="#MapSelector_Filters_Tier" />
 											<Panel class="mapselector-tier-slider">
 												<Panel class="mapselector-tier-slider__numbers">
-													<Label class="mapselector-tier-slider__number" text="1" />
+													<Label class="mapselector-tier-slider__number mapselector-tier-slider__number--1" text="1" />
 													<Panel class="mapselector-tier-slider__gap" />
-													<Label class="mapselector-tier-slider__number" text="2" />
+													<Label class="mapselector-tier-slider__number mapselector-tier-slider__number--2" text="2" />
 													<Panel class="mapselector-tier-slider__gap" />
-													<Label class="mapselector-tier-slider__number" text="3" />
+													<Label class="mapselector-tier-slider__number mapselector-tier-slider__number--3" text="3" />
 													<Panel class="mapselector-tier-slider__gap" />
-													<Label class="mapselector-tier-slider__number" text="4" />
+													<Label class="mapselector-tier-slider__number mapselector-tier-slider__number--4" text="4" />
 													<Panel class="mapselector-tier-slider__gap" />
-													<Label class="mapselector-tier-slider__number" text="5" />
+													<Label class="mapselector-tier-slider__number mapselector-tier-slider__number--5" text="5" />
 													<Panel class="mapselector-tier-slider__gap" />
-													<Label class="mapselector-tier-slider__number" text="6" />
+													<Label class="mapselector-tier-slider__number mapselector-tier-slider__number--6" text="6" />
 													<Panel class="mapselector-tier-slider__gap" />
-													<Label class="mapselector-tier-slider__number" text="7" />
+													<Label class="mapselector-tier-slider__number mapselector-tier-slider__number--7" text="7" />
 													<Panel class="mapselector-tier-slider__gap" />
-													<Label class="mapselector-tier-slider__number" text="8" />
+													<Label class="mapselector-tier-slider__number mapselector-tier-slider__number--8" text="8" />
 													<Panel class="mapselector-tier-slider__gap" />
-													<Label class="mapselector-tier-slider__number" text="9" />
+													<Label class="mapselector-tier-slider__number mapselector-tier-slider__number--9" text="9" />
 													<Panel class="mapselector-tier-slider__gap" />
-													<Label class="mapselector-tier-slider__number mapselector-tier-slider__number--double-digit" text="10" />
+													<Label class="mapselector-tier-slider__number mapselector-tier-slider__number--10" text="10" />
 												</Panel>
 												<DualSlider id="TierSlider" class="slider slider--horizontal mapselector-tier-slider__slider" snaptoincrement="true" direction="horizontal" min="1" max="10" increment="1" default="1" default2="10" value="1" value2="10" />
 											</Panel>
 										</Panel>
-										<Panel class="h-align-right flow-right">
-											<TooltipPanel tooltip="&lt;b&gt;Filter by&lt;/b&gt;: Completed">
+										<Panel class="flow-right h-align-right v-align-bottom">
+											<TooltipPanel tooltip="#MapSelector_Filters_ByCompleted">
 												<NStateButton id="MapCompletedFilterButton" class="button nstatebutton mapselector-filters__nstatebutton mr-2">
 													<Image class="button__icon" src="file://{images}/flag.svg" textureheight="32" />
 												</NStateButton>
 											</TooltipPanel>
-											<TooltipPanel tooltip="&lt;b&gt;Filter by&lt;/b&gt;: Favorited">
+											<TooltipPanel tooltip="#MapSelector_Filters_ByFavorited">
 												<NStateButton id="MapFavoritedFilterButton" class="button nstatebutton mapselector-filters__nstatebutton mr-2">
 													<Image class="button__icon" src="file://{images}/star.svg" textureheight="32" />
 												</NStateButton>
 											</TooltipPanel>
-											<TooltipPanel tooltip="&lt;b&gt;Filter by&lt;/b&gt;: Downloaded">
-												<NStateButton id="MapDownloadedFilterButton" class="button nstatebutton mapselector-filters__nstatebutton">
+											<TooltipPanel tooltip="#MapSelector_Filters_ByDownloaded">
+												<NStateButton id="MapDownloadedFilterButton" class="button nstatebutton mapselector-filters__nstatebutton mr-2">
 													<Image class="button__icon" src="file://{images}/download.svg" textureheight="32" />
 												</NStateButton>
 											</TooltipPanel>
+											<DropDown id="SortByDropdown" class="dropdown sorting__dropdown" menuclass="dropdown-menu">
+												<Label text="#MapSelector_Sorting_DateReleased_Asc" id="dateRelAsc" value="6" />
+												<Label text="#MapSelector_Sorting_DateReleased_Desc" id="dateRelDesc" value="7" />
+												<Label text="#MapSelector_Sorting_Alphabetical_Asc" id="alphaAsc" value="0" />
+												<Label text="#MapSelector_Sorting_Alphabetical_Desc" id="alphaDesc" value="1" />
+												<Label text="#MapSelector_Sorting_Tier_Asc" id="tierAsc" value="2" />
+												<Label text="#MapSelector_Sorting_Tier_Desc" id="tierDesc" value="3" />
+												<Label text="#MapSelector_Sorting_LastPlayed_Asc" id="lastPlayAsc" value="4" />
+												<Label text="#MapSelector_Sorting_LastPlayed_Desc" id="lastPlayDesc" value="5" />
+												<Label text="#MapSelector_Sorting_DateCreated_Asc" id="dateCreatedAsc" value="8" />
+												<Label text="#MapSelector_Sorting_DateCreated_Desc" id="dateCreatedDesc" value="9" />
+											</DropDown>
 										</Panel>
-									</Panel>
-								</Panel>
-
-								<Panel id="TabsAndSortBy" class="mapselector-sorting">
-									<Panel class="tabs mapselector-sorting__tabs">
-										<RadioButton id="MapListRanked" class="tabs__tab mapselector-sorting__tab" group="MapListNavBar" selected="true">
-											<Label class="tabs__text" text="#MapSelector_Tabs_Ranked" />
-										</RadioButton>
-										<Panel class="tabs__gap" />
-										<RadioButton id="MapListUnranked" class="tabs__tab mapselector-sorting__tab" group="MapListNavBar">
-											<Label class="tabs__text" text="#MapSelector_Tabs_Unranked" />
-										</RadioButton>
-										<Panel class="tabs__gap" />
-										<RadioButton id="MapListBeta" class="tabs__tab mapselector-sorting__tab" group="MapListNavBar">
-											<Label class="tabs__text" text="#MapSelector_Tabs_Beta" />
-										</RadioButton>
-									</Panel>
-									<Panel id="SortBy" class="mapselector-sorting__sort">
-										<DropDown id="SortByDropdown" class="dropdown sorting__dropdown" menuclass="dropdown-menu">
-											<Label text="#MapSelector_Sorting_DateReleased_Asc" id="dateRelAsc" value="6" />
-											<Label text="#MapSelector_Sorting_DateReleased_Desc" id="dateRelDesc" value="7" />
-											<Label text="#MapSelector_Sorting_Alphabetical_Asc" id="alphaAsc" value="0" />
-											<Label text="#MapSelector_Sorting_Alphabetical_Desc" id="alphaDesc" value="1" />
-											<Label text="#MapSelector_Sorting_Tier_Asc" id="tierAsc" value="2" />
-											<Label text="#MapSelector_Sorting_Tier_Desc" id="tierDesc" value="3" />
-											<Label text="#MapSelector_Sorting_LastPlayed_Asc" id="lastPlayAsc" value="4" />
-											<Label text="#MapSelector_Sorting_LastPlayed_Desc" id="lastPlayDesc" value="5" />
-											<Label text="#MapSelector_Sorting_DateCreated_Asc" id="dateCreatedAsc" value="8" />
-											<Label text="#MapSelector_Sorting_DateCreated_Desc" id="dateCreatedDesc" value="9" />
-										</DropDown>
 									</Panel>
 								</Panel>
 
@@ -191,9 +186,15 @@
 			</Panel>
 
 			<Panel class="mapselector__right">
-				<Panel id="MapTimes" class="mapselector-map-times">
-					<Panel class="mapselector-map-times__list-wrapper">
-						<Leaderboards id="Leaderboards" class="mapselector-map-times__list mapselector-map-times__list--hidden" />
+				<Panel class="mapselector-leaderboards__clipping-hack">
+					<Panel id="MapTimes" class="mapselector-leaderboards">
+						<Panel class="mapselector-leaderboards__list-wrapper">
+							<Leaderboards id="Leaderboards" class="mapselector-leaderboards__list mapselector-leaderboards__list--hidden leaderboards--in-map-selector" />
+						</Panel>
+						<Button class="button mapselector-leaderboards__open-button" onactivate="MapSelectorHandler.toggleLeaderboards(true);">
+							<Image class="button__icon button__icon--left" src="file://{images}/chart-timeline.svg" textureheight="40" />
+							<Label class="button__text button__icon--right mr-3" text="#MapSelector_Button_Leaderboards" />
+						</Button>
 					</Panel>
 				</Panel>
 				<Panel id="MapInfo" class="mapselector-map-info">

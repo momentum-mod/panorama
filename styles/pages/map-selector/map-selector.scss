@@ -4,39 +4,49 @@
 @use 'sass:color';
 
 .mapselector {
+	$root: &;
+
+	flow-children: none;
 	width: 100%;
 	height: 100%;
-	flow-children: right;
 
-	$root: &;
+	&__left-container {
+		horizontal-align: left;
+		// Warning: using percentage widths here cause ugly raster scaling
+		width: 820px;
+		height: 100%;
+		margin-right: 8px;
+	}
 
 	&__left {
 		horizontal-align: middle;
 		width: 100%;
 		height: 100%;
 		background-color: rgba(0, 0, 0, 0.3);
+		opacity: 1;
 
-		&-wrapper {
-			flow-children: down;
-			height: 100%;
-			width: 100%;
-			box-shadow: 0 0 16px 0 rgba(0, 0, 0, 0.5);
-		}
+		transform: translateX(0);
+		@include gallery-transition;
 
-		&-container {
-			horizontal-align: left;
-			width: 50%;
-			height: 100%;
-			margin-right: 8px;
+		#{$root}--gallery-mode & {
+			transform: translateX(-200px);
+			opacity: 0;
 		}
+	}
+
+	&__left-wrapper {
+		flow-children: down;
+		height: 100%;
+		width: 100%;
+		border: 1px solid rgba(255, 255, 255, 0.01);
+		box-shadow: 0 0 16px 0 rgba(0, 0, 0, 0.5);
 	}
 
 	&__right {
 		flow-children: down;
 		horizontal-align: right;
-		width: 50%;
-		height: 100%;
-		margin-left: 8px;
+		width: 960px;
+		height: fill-parent-flow(1);
 	}
 
 	&__maps,
@@ -52,7 +62,6 @@
 	}
 
 	&__playlists {
-		height: fill-parent-flow(1);
 		visibility: collapse;
 	}
 
@@ -133,132 +142,17 @@
 	width: 100%;
 	padding-right: 8px;
 
-	&__search {
-		width: fill-parent-flow(1);
-	}
-
-	&__filters {
-		flow-children: right;
-	}
-}
-
-.mapselector-filters {
-	$this: &;
-
-	flow-children: down;
-	width: 100%;
-	padding-right: 8px;
-
-	transition: height 0.2s ease-in-out 0s;
-	//overflow: squish;
-
-	&__button {
-		width: fit-children;
-	}
-
-	&__text {
-		vertical-align: center;
-		font-size: 20px;
-	}
-
-	&__row {
-		flow-children: right;
-		margin-top: 8px;
-		width: 100%;
-	}
-
-	&__gamemodes {
-		flow-children: right;
-		width: 100%;
-		overflow: squish;
-
-		& > #HorizontalScrollBar {
-			height: 2px;
-			& > #ScrollThumb {
-				opacity: 1;
-			}
-		}
-	}
-
-	&__tiers {
-		width: fill-parent-flow(1);
-		flow-children: right;
-		margin-right: 24px;
-	}
-
-	&__nstatebutton {
-		@include mixin.nstate-button-state('include', 1);
-		@include mixin.nstate-button-state('exclude', 2);
-	}
-}
-
-// Be careful with widths here to ensure the numbers align exactly. The SliderThumb must be the same width as the numbers, and the
-// whole panel must be allowed to fit all its children, so make sure some space is left on the right side. Always test on multiple resolutions!
-$notch-width: 16px;
-.mapselector-tier-slider {
-	flow-children: none;
-	width: 100%;
-	height: 34px;
-	margin-top: 2px;
-
-	&__numbers {
-		flow-children: right;
-		width: 100%;
-		padding-top: 0px;
-	}
-
-	&__number {
-		font-size: 14px;
-		text-align: center;
-		text-shadow: 0px 1px 2px 2 rgba(0, 0, 0, 0.5);
-		width: $notch-width;
-		height: 16px;
-
-		&--double-digit {
-			width: $notch-width + 4px;
-			horizontal-align: right;
-		}
-	}
-
-	&__gap {
-		width: fill-parent-flow(1);
-		height: 100%;
-	}
-
-	&__slider {
-		width: 100%;
-		margin-top: 18px;
-		padding: 0;
-
-		#SliderTrack,
-		#SliderTrackProgress {
-			height: 6px;
-		}
-
-		#SliderThumb,
-		#SliderThumb2 {
-			border-radius: 2px;
-			width: $notch-width;
-			height: $notch-width;
-		}
-	}
-}
-
-.mapselector-sorting {
-	flow-children: right;
-	width: 100%;
-	margin-top: 10px;
-	padding-right: 8px;
-
 	&__tabs {
 		flow-children: right;
 		horizontal-align: right;
 		vertical-align: bottom;
-		border: 0px none;
+		border: 0 none;
+		border-radius: 4px;
+		margin-right: 8px;
 	}
 
 	&__tab {
-		padding: 2px 14px;
+		padding: 2px 8px;
 		border-bottom: 1px solid $tab-lower-border-color;
 
 		&:hover {
@@ -270,32 +164,176 @@ $notch-width: 16px;
 		}
 	}
 
-	&__sort {
-		horizontal-align: right;
-		margin-bottom: 8px;
+	&__search {
+		width: fill-parent-flow(1);
+		margin-right: 6px;
 	}
 }
 
-.mapselector-map-times {
+.mapselector-filters {
+	$this: &;
+
+	flow-children: down;
 	width: 100%;
+	padding-right: 8px;
+	margin-top: 2px;
+	margin-bottom: 8px;
+
+	&__gamemode-button {
+		// IMPORTANT: `button` class gives vertical-align: center which is buggy with flow wrapping!!
+		vertical-align: top;
+		margin-bottom: 4px;
+		margin-right: 4px;
+	}
+
+	&__text {
+		font-size: 20px;
+	}
+
+	&__row {
+		flow-children: right;
+		margin-top: 8px;
+		width: 100%;
+	}
+
+	&__gamemodes {
+		margin-top: 4px;
+		margin-bottom: 4px;
+		flow-children: right-wrap;
+
+		& > #HorizontalScrollBar {
+			height: 2px;
+			& > #ScrollThumb {
+				opacity: 1;
+			}
+		}
+	}
+
+	&__tiers {
+		width: fill-parent-flow(1);
+		max-width: 360px;
+		flow-children: right;
+		margin-right: 24px;
+		margin-top: 4px;
+	}
+
+	&__tier-label {
+		@include mixin.font-styles($use-header: true);
+		font-size: 22px;
+		margin-right: 8px;
+		vertical-align: center;
+	}
+
+	&__nstatebutton {
+		@include mixin.nstate-button-state('include', 1);
+		@include mixin.nstate-button-state('exclude', 2);
+	}
+}
+
+// TODO: Getting this to align well without magic numbers is extremely difficult, but spacing ends up difference on
+// different resolutions. The fill-parent-flow gaps seem to be causing some kind of rounding which differs per res.
+$notch-width: 10px;
+.mapselector-tier-slider {
+	flow-children: none;
+	width: 100%;
+
+	&__numbers {
+		flow-children: right;
+		width: 100%;
+		padding-top: 0;
+		overflow: noclip;
+	}
+
+	&__number {
+		@include mixin.font-styles($use-header: false);
+		font-weight: bold;
+		font-size: 12px;
+		text-align: center;
+		text-shadow: 0 1px 2px 1 rgba(0, 0, 0, 1);
+		width: $notch-width;
+		height: 16px;
+
+		&--10 {
+			transform: translateX(-4px);
+			width: $notch-width + 4px;
+			margin-right: -4px;
+			text-overflow: noclip;
+			overflow: noclip;
+		}
+	}
+
+	&__gap {
+		width: fill-parent-flow(1);
+		height: 100%;
+	}
+
+	&__slider {
+		width: 100%;
+		margin-top: 16px;
+		padding: 0;
+
+		#SliderTrack,
+		#SliderTrackProgress {
+			height: 4px;
+		}
+
+		#SliderThumb,
+		#SliderThumb2 {
+			border-radius: 2px;
+			width: $notch-width;
+			height: $notch-width;
+		}
+	}
+}
+
+.mapselector-leaderboards {
+	$root: &;
+
+	width: 100%;
+	flow-children: none;
+	overflow: noclip;
+
+	transform: translateY(0);
+	@include gallery-transition;
+
+	// Hack noclip container to much gallery mode anims work. Noclip on parent breaks y layout.
+	&__clipping-hack {
+		width: 100%;
+		vertical-align: top;
+		overflow: noclip;
+	}
+
+	.mapselector--gallery-mode & {
+		transform: translateY(-200px);
+		opacity: 0;
+	}
 
 	&__list {
 		width: 100%;
 		height: fit-children;
 		background-color: rgba(0, 0, 0, 0.6);
 		padding: 16px;
-
-		visibility: visible;
-
-		&--hidden {
-			visibility: collapse;
-		}
 	}
 
 	&__list-wrapper {
 		width: 100%;
 		height: fit-children;
 		box-shadow: 0 0 16px 0 rgba(0, 0, 0, 0.5);
+
+		visibility: collapse;
+
+		#{$root}--open & {
+			visibility: visible;
+		}
+	}
+
+	&__open-button {
+		horizontal-align: right;
+		height: 36px;
+
+		#{$root}--open & {
+			visibility: collapse;
+		}
 	}
 }
 
@@ -342,26 +380,19 @@ $notch-width: 16px;
 		margin: 0 6px;
 	}
 
-	&__square-button,
 	&__leaderboard-button {
 		box-shadow: fill 0 0 1px 0 rgba(0, 0, 0, 0.8);
 	}
 
-	&__square-button {
-		width: 40px;
-		height: 40px;
-		margin-left: 6px;
-	}
-
-	&__leaderboard-button {
+	&__big-button {
 		width: fill-parent-flow(1);
 		height: 40px;
 	}
 
 	&__description {
 		height: 100%;
-
-		background-color: rgba(0, 0, 0, 0.6);
+		@include mixin.font-styles($use-header: false);
+		background-color: rgba(0, 0, 0, 0.5);
 	}
 
 	&__description-scroll {
@@ -385,25 +416,21 @@ $notch-width: 16px;
 		min-height: 210px;
 	}
 
-	&__webbutton {
+	&__status,
+	&__changelog {
 		width: 100%;
-		background-color: rgba(0, 0, 0, 0.4);
-		border-top: 1px solid rgba(0, 0, 0, 0.2);
-		padding: 6px;
-		margin: -12px;
-		margin-top: 12px;
+		flow-children: down;
+		visibility: collapse;
 
-		transition: background-color 0.1s ease-in-out 0s;
-
-		&:hover {
-			background-color: rgba(0, 0, 0, 0.3);
+		#{$root}--submission & {
+			visibility: visible;
 		}
 	}
 
-	&__webbutton-text {
-		align: center center;
-		@include mixin.font-styles($use-header: true);
-		font-size: 20px;
+	&__status-icon {
+		wash-color: #fafafa;
+		width: 16px;
+		height: 16px;
 	}
 
 	&__wrapper {
@@ -413,7 +440,6 @@ $notch-width: 16px;
 		padding: 12px;
 
 		&--unpadded {
-			padding: 0px;
 		}
 
 		box-shadow: 0 0 16px 0 rgba(0, 0, 0, 0.5);
@@ -501,11 +527,31 @@ $notch-width: 16px;
 	}
 
 	&__text {
-		vertical-align: center;
 		@include mixin.font-styles($use-header: true, $light-header: true);
 		font-size: 22px;
 		text-overflow: shrink;
-		text-shadow: 0px 1px 3px 2 rgba(0, 0, 0, 0.8);
+		margin-left: 6px;
+		text-shadow: 0 1px 3px 2 rgba(0, 0, 0, 0.8);
+
+		transition: opacity 0.1s ease-out 0s;
+		opacity: 1;
+		.mapselector-stats--loading & {
+			opacity: 0;
+		}
+	}
+
+	&__spinner {
+		padding: 2px;
+		height: 100%;
+		width: height-percentage(100%);
+		img-shadow: 0 0 3px 1 rgba(0, 0, 0, 1);
+		@include animations.spin-animation;
+
+		transition: opacity 0.1s ease-out 0s;
+		opacity: 0;
+		.mapselector-stats--loading & {
+			opacity: 1;
+		}
 	}
 }
 
