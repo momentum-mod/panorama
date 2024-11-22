@@ -33,11 +33,11 @@ interface GlobalEventNameMap {
 	/** Fired when the maps list has applied filters, with the number of maps that passed the filters passed along. */
 	MapSelector_MapsFiltered: (count: number) => void;
 
-	/** "Fired after TryPlayMap returns, if wasSuccessful the map was started, otherwise the map may be downloading or failed to start. */
+	/** Fired after TryPlayMap returns, if wasSuccessful the map was started, otherwise the map may be downloading or failed to start. */
 	MapSelector_TryPlayMap_Outcome: (wasSuccessful: boolean) => void;
 
 	/** Fired when the selected map has its data update */
-	MapSelector_SelectedDataUpdate: () => void;
+	MapSelector_SelectedDataUpdate: (mapData: MapCacheAPI.MapData) => void;
 
 	PanoramaComponent_SteamLobby_OnListUpdated: (lobbyList: import('common/online').GroupedLobbyLists) => void;
 

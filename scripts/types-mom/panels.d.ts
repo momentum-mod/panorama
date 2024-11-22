@@ -27,13 +27,14 @@ interface MomentumChat extends AbstractPanel<'MomentumChat'> {
 }
 
 interface MomentumMapSelector extends AbstractPanel<'MomentumMapSelector'> {
-	readonly selectedMapData: import('common/web').MMap;
+	readonly selectedMapData: MapCacheAPI.MapData;
 
-	ApplyFilters(): void;
+	applyFilters(totalChange: boolean): void;
 }
 
 interface MapEntry extends AbstractPanel<'MapEntry'> {
-	readonly mapData: import('common/web').MMap;
+	readonly mapData: MapCacheAPI.MapData;
+	readonly isDownloading: boolean;
 }
 
 interface Leaderboards extends AbstractPanel<'Leaderboards'> {
