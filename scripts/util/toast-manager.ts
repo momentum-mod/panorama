@@ -249,8 +249,17 @@ class ToastManagerInternal {
 				toast.panel.AddClass(`toast-generic--${toast.style}`);
 			}
 
-			toast.panel.SetDialogVariable('toast_title', toast.title);
-			toast.panel.SetDialogVariable('toast_message', toast.message);
+			if (toast.title)
+				toast.panel.SetDialogVariable(
+					'toast_title',
+					toast.title.startsWith('#') ? $.Localize(toast.title) : toast.title
+				);
+
+			if (toast.message)
+				toast.panel.SetDialogVariable(
+					'toast_message',
+					toast.message.startsWith('#') ? $.Localize(toast.message) : toast.message
+				);
 
 			toast.panel.FindChildInLayoutFile('Title').SetHasClass('hide', !toast.title);
 
