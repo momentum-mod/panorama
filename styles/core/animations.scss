@@ -1,10 +1,14 @@
 @use '../config' as *;
 
-.spin-clockwise {
+@mixin spin-animation {
 	animation-name: SpinClockwise;
 	animation-duration: 0.8s;
 	animation-timing-function: ease-in-out;
 	animation-iteration-count: infinite;
+}
+
+.spin-clockwise {
+	@include spin-animation;
 }
 
 @keyframes SpinClockwise {
