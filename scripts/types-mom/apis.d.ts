@@ -290,6 +290,12 @@ declare namespace MapCacheAPI {
 
 	/** Returns true if the given mapID is queued from download */
 	function MapQueuedForDownload(mapID: int32): boolean;
+
+	/** Checks backend for latest static cache versions, download if out-of-date */
+	function CheckForUpdates(): void;
+
+	/** Fetches private maps visible to the user */
+	function FetchPrivateMaps(): void;
 }
 
 declare namespace SpectatorAPI {

@@ -61,6 +61,7 @@ class MapSelectorHandler implements OnPanelLoad {
 			unranked: $<Button>('#MapListUnranked'),
 			beta: $<Button>('#MapListBeta')
 		},
+		refreshIcon: $<Image>('#RefreshIcon')
 	};
 
 	// Describing which data on which type of panel we want to store out to PS.
@@ -345,7 +346,7 @@ class MapSelectorHandler implements OnPanelLoad {
 
 		info.SetDialogVariableInt('tier', Maps.getTier(staticData, gamemode) ?? 0);
 		info.SetDialogVariableInt('numZones', Leaderboards.getNumZones(staticData));
-		info.SetDialogVariable('type', mainTrack.linear ? this.strings.staged : this.strings.linear);
+		info.SetDialogVariable('layout', mainTrack.linear ? this.strings.staged : this.strings.linear);
 
 		info.SetDialogVariable('description', staticData.info?.description);
 		this.panels.descriptionContainer.SetHasClass('hide', !staticData.info?.description);
@@ -503,5 +504,101 @@ class MapSelectorHandler implements OnPanelLoad {
 	toggleLeaderboards(open: boolean) {
 		this.panels.leaderboardContainer.SetHasClass('mapselector-leaderboards--open', open);
 		$.persistentStorage.setItem('mapSelector.leaderboardsOpen', open);
+	}
+
+	checkingUpdates = false;
+	lastUpdateCheck = 0;
+
+	checkForUpdates() {
+		if (this.checkingUpdates || this.lastUpdateCheck + REFRESH_COOLDOWN > Date.now()) {
+			return;
+		}
+
+		this.lastUpdateCheck = Date.now();
+
+		this.panels.refreshIcon.AddClass('spin-clockwise');
+
+		// Has to handle both private and static map updates, where we only need private if we're in the beta, and we
+		// could need 0, 1 or 2 static updates, depending on the response from the version check. So logic gets quite
+		// complicated, all for one loading spinner. I want RxJS!
+		let updatesNeeded = 0;
+		let fetchedStaticVersions = false;
+		let errored = false;
+		if (this.panels.listTypes.beta.IsSelected()) {
+			updatesNeeded++;
+
+			const privHandle = $.RegisterForUnhandledEvent('MapCache_PrivateMapsUpdate', (success: boolean) => {
+				$.UnregisterForUnhandledEvent('MapCache_PrivateMapsUpdate', privHandle);
+
+				if (!success) {
+					errored = true;
+				}
+
+				updatesNeeded--;
+
+				if (updatesNeeded === 0 && fetchedStaticVersions) {
+					this.onFinishUpdate(errored, {
+						message: '#MapSelector_Updates_Updated',
+						style: ToastStyle.SUCCESS
+					});
+				}
+			});
+
+			MapCacheAPI.FetchPrivateMaps();
+		}
+
+		const versionsHandle = $.RegisterForUnhandledEvent(
+			'MapCache_StaticCacheVersionChecked',
+			(staticUpdatesNeeded) => {
+				$.UnregisterForUnhandledEvent('MapCache_StaticCacheVersionChecked', versionsHandle);
+
+				fetchedStaticVersions = true;
+
+				if (staticUpdatesNeeded === 0) {
+					if (updatesNeeded === 0) {
+						this.onFinishUpdate(errored, {
+							message: '#MapSelector_Updates_UpToDate',
+							style: ToastStyle.INFO
+						});
+					}
+					return;
+				}
+
+				updatesNeeded += staticUpdatesNeeded;
+				let staticUpdates = 0;
+				const staticHandle = $.RegisterForUnhandledEvent('MapCache_StaticCacheUpdate', (_type, success) => {
+					if (!success) {
+						errored = true;
+					}
+
+					staticUpdates++;
+					if (staticUpdates === staticUpdatesNeeded) {
+						$.UnregisterForUnhandledEvent('MapCache_StaticCacheUpdate', staticHandle);
+					}
+
+					--updatesNeeded;
+					if (updatesNeeded === 0) {
+						this.onFinishUpdate(errored, {
+							message: '#MapSelector_Updates_Updated',
+							style: ToastStyle.SUCCESS
+						});
+					}
+				});
+			}
+		);
+
+		this.checkingUpdates = true;
+		MapCacheAPI.CheckForUpdates();
+	}
+
+	onFinishUpdate(errored: boolean, toast: ToastCreateArgs) {
+		// If we errored at any point, C++ will show a toast. Even if some requests were successful, don't show
+		// both success and error toasts, would be confusing.
+		if (!errored) {
+			ToastManager.createToast(toast);
+		}
+
+		this.panels.refreshIcon.RemoveClass('spin-clockwise');
+		this.checkingUpdates = false;
 	}
 }
