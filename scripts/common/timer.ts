@@ -106,6 +106,28 @@ export interface RunSplits {
 	segments: RunSegment[];
 }
 
+export function getSplitSegmentTime(runSplits: RunSplits, segmentIndex: number, subsegmentIndex: number): number {
+	if (subsegmentIndex > 0) {
+		return (
+			runSplits.segments[segmentIndex].subsegments[subsegmentIndex].timeReached -
+			runSplits.segments[segmentIndex].subsegments[subsegmentIndex - 1].timeReached
+		);
+	}
+
+	if (segmentIndex > 0) {
+		return (
+			runSplits.segments[segmentIndex].subsegments[subsegmentIndex].timeReached -
+			runSplits.segments[segmentIndex - 1].subsegments.at(-1).timeReached
+		);
+	}
+
+	return 0;
+}
+
+export function getSegmentName(segmentIndex: number, subsegmentIndex: number): string {
+	return subsegmentIndex >= 1 ? `${segmentIndex + 1}-${subsegmentIndex}` : segmentIndex.toString();
+}
+
 export interface RunMetadata {
 	filePath: string;
 	timestamp: number;
@@ -318,22 +340,33 @@ export class Comparison {
 
 	static generateSplits(baseRunSplits: RunSplits, comparisonRunSplits: RunSplits): ComparisonSplit[] {
 		return baseRunSplits.segments.map((_, i) => {
-			const baseAccumulateTime = baseRunSplits.segments[i].subsegments[0].timeReached;
-			const comparisonAccumulateTime = comparisonRunSplits.segments[i].subsegments[0].timeReached;
-			const baseSplitTime = Comparison.getSegmentTime(baseRunSplits, i);
-			const comparisonSplitTime = Comparison.getSegmentTime(comparisonRunSplits, i);
-
-			return {
-				name: i.toString(),
-				accumulateTime: baseAccumulateTime,
-				time: baseSplitTime,
-				diff: baseAccumulateTime - comparisonAccumulateTime,
-				delta: baseSplitTime - comparisonSplitTime
-				// statsComparisons: baseRunSplits.trackStats.map(
-				// 	(stat, j) => new RunStatsComparison(stat, compareZone.stats[j])
-				// )
-			};
+			// TODO: Generate subsegment splits
+			return this.generateSegmentSplit(baseRunSplits, comparisonRunSplits, i, 0);
 		});
+	}
+
+	static generateSegmentSplit(
+		baseRunSplits: RunSplits,
+		comparisonRunSplits: RunSplits,
+		segmentIndex: number,
+		subsegmentIndex: number
+	): ComparisonSplit {
+		const baseAccumulateTime = baseRunSplits.segments[segmentIndex].subsegments[subsegmentIndex].timeReached;
+		const comparisonAccumulateTime =
+			comparisonRunSplits.segments[segmentIndex].subsegments[subsegmentIndex].timeReached;
+		const baseSplitTime = getSplitSegmentTime(baseRunSplits, segmentIndex, subsegmentIndex);
+		const comparisonSplitTime = getSplitSegmentTime(comparisonRunSplits, segmentIndex, subsegmentIndex);
+
+		return {
+			name: getSegmentName(segmentIndex, subsegmentIndex),
+			accumulateTime: baseAccumulateTime,
+			time: baseSplitTime,
+			diff: baseAccumulateTime - comparisonAccumulateTime,
+			delta: baseSplitTime - comparisonSplitTime
+			// statsComparisons: baseRunSplits.trackStats.map(
+			// 	(stat, j) => new RunStatsComparison(stat, compareZone.stats[j])
+			// )
+		};
 	}
 
 	static generateFinishSplit(
@@ -356,21 +389,6 @@ export class Comparison {
 			// 	(stat, j) => new RunStatsComparison(stat, compareZone.stats[j])
 			// )
 		};
-	}
-
-	static getSegmentTime(runSplits: RunSplits, segmentIndex: number): number {
-		if (segmentIndex < 0 || segmentIndex >= runSplits.segments.length) {
-			return 0;
-		}
-
-		if (segmentIndex === 0) {
-			return runSplits.segments[0].subsegments[0].timeReached;
-		}
-
-		return (
-			runSplits.segments[segmentIndex].subsegments[0].timeReached -
-			runSplits.segments[segmentIndex - 1].subsegments[0].timeReached
-		);
 	}
 }
 
