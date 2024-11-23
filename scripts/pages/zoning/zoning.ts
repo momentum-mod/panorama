@@ -110,9 +110,7 @@ class ZoneMenuHandler {
 	}
 
 	initMenu() {
-		if (!this.mapZoneData) {
-			this.onLoad();
-		}
+		this.onLoad();
 
 		if (!this.mapZoneData) return;
 
