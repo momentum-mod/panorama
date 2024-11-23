@@ -24,6 +24,10 @@
 		margin: 32px;
 		horizontal-align: left;
 		vertical-align: top;
+
+		& > .hud-tab-menu__wrapper > .hud-tab-menu__header {
+			visibility: collapse;
+		}
 	}
 
 	&__wrapper {
