@@ -144,7 +144,7 @@ $transition: 0.125s ease-out 0s;
 		height: 100%;
 		vertical-align: middle;
 		padding: 6px 4px 6px 10px;
-		margin-left: 36px;
+		margin-left: 24px;
 
 		&-button {
 			height: 100%;
@@ -193,23 +193,24 @@ $transition: 0.125s ease-out 0s;
 		width: 100px;
 		height: 20px;
 		align: center center;
-		transform: translate3d(-14px, -32px, 0) rotateZ(-45deg);
+		transform: translate3d(-16px, -26px, 0) rotateZ(-30deg);
+		visibility: collapse;
 
 		&-text {
 			align: center center;
-
-			@include mixin.font-styles($use-header: true, $light-header: true);
 			font-size: 14px;
 
-			height: 16px;
+			@include mixin.font-styles($use-header: true, $light-header: true);
 		}
 
-		&--beta {
+		#{$root}--new & {
+			visibility: visible;
+			@include mixin.gradient-themed($color: 'blue', $direction: 'down');
+		}
+
+		#{$root}--private & {
+			visibility: visible;
 			@include mixin.gradient-themed($color: 'purple', $direction: 'down');
-		}
-
-		&--new {
-			@include mixin.gradient-themed($color: 'red', $direction: 'down');
 		}
 	}
 }
