@@ -39,6 +39,14 @@ interface GlobalEventNameMap {
 	/** Fired when the selected map has its data update */
 	MapSelector_SelectedDataUpdate: (mapData: MapCacheAPI.MapData) => void;
 
+	/**
+	 * Fired when lives stats for the selected map have been updated.
+	 * These are fetched from the backend when a map is selected, with a 60s cooldown. If we're outside the cooldown,
+	 * the event fires once we get a response from backend, otherwise it fires immediately after
+	 * `MapSelector_SelectedDataUpdate`.
+	 */
+	MapSelector_SelectedOnlineDataUpdate: (stats: import('common/web').MapStats) => void;
+
 	PanoramaComponent_SteamLobby_OnListUpdated: (lobbyList: import('common/online').GroupedLobbyLists) => void;
 
 	PanoramaComponent_SteamLobby_OnDataUpdated: (lobbyData: import('common/online').LobbyList) => void;
@@ -80,6 +88,15 @@ interface GlobalEventNameMap {
 	MapCache_MapUpdate: (...args: unknown[]) => void;
 
 	MapCache_SearchComplete: (success: boolean) => void;
+
+	/** Fired when a static map list is updated from backend */
+	MapCache_StaticCacheUpdate: (type: import('common/maps').MapListType, success: boolean) => void;
+
+	/** Fired when finished checking latest static cache versions */
+	MapCache_StaticCacheVersionChecked: (updatesNeeded: 0 | 1 | 2) => void;
+
+	/** Fired when the private map lists are updated from online */
+	MapCache_PrivateMapsUpdate: (success: boolean) => void;
 
 	MapDownload_Queued: (mapID: uint32, added: boolean) => void;
 
