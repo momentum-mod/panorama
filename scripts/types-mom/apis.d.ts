@@ -147,7 +147,7 @@ declare namespace MomentumReplayAPI {
 	/** Sets the progress of the replay */
 	function SetProgress(progress: float): void;
 
-	const enum ReplayState {
+	enum ReplayState {
 		NONE = 0,
 		PLAYING = 1,
 		PAUSED = 2

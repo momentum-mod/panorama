@@ -2,6 +2,15 @@ import { PanelHandler, OnPanelLoad } from 'util/module-helpers';
 import { checkDosa } from 'util/dont-show-again';
 import { RunSafeguardType } from 'common/safeguards';
 
+enum GameUIState {
+	INVALID = 0,
+	LOADINGSCREEN = 1,
+	INGAME = 2,
+	MAINMENU = 3,
+	PAUSEMENU = 4,
+	INTROMOVIE = 5
+}
+
 @PanelHandler()
 class MainMenuHandler implements OnPanelLoad {
 	readonly panels = {
@@ -318,7 +327,7 @@ class MainMenuHandler implements OnPanelLoad {
 	 * based on if we're ingame or not.
 	 */
 	onQuitButtonPressed() {
-		if (GameInterfaceAPI.GetGameUIState() === GameUIState.PAUSEMENU) {
+		if (GameInterfaceAPI.GetGameUIState() === (GameUIState.PAUSEMENU as any)) {
 			GameInterfaceAPI.ConsoleCommand('disconnect');
 			this.onHomeButtonPressed();
 			return;
@@ -384,7 +393,7 @@ class MainMenuHandler implements OnPanelLoad {
 
 	onEscapeKeyPressed() {
 		// Resume game in pause menu mode, OTHERWISE close the active menu menu page
-		if (GameInterfaceAPI.GetGameUIState() === GameUIState.PAUSEMENU) {
+		if (GameInterfaceAPI.GetGameUIState() === (GameUIState.PAUSEMENU as any)) {
 			$.DispatchEvent('MainMenuResumeGame');
 		} else {
 			this.onHomeButtonPressed();

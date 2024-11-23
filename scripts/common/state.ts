@@ -1,12 +1,3 @@
-export enum GameUIState {
-	INVALID = 0,
-	LOADINGSCREEN = 1,
-	INGAME = 2,
-	MAINMENU = 3,
-	PAUSEMENU = 4,
-	INTROMOVIE = 5
-}
-
 /**
  * Bitflags of different HUD types to associate with hiding this panel.
  * @example
