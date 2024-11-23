@@ -1,5 +1,5 @@
 import { PanelHandler } from 'util/module-helpers';
-import { Comparison, RunMetadata, ComparisonSplit, TimerState, RunSplits } from 'common/timer';
+import { Comparison, RunMetadata, ComparisonSplit, TimerState, RunSplits, getSegmentName } from 'common/timer';
 
 @PanelHandler()
 class HudComparisonsHandler {
@@ -50,20 +50,24 @@ class HudComparisonsHandler {
 			timerStatus.trackId.number === this.comparison.trackId.number;
 
 		// TODO: Unordered/optional splits
-		// TODO: Subsegment splits
 		if (timerStatus.state === TimerState.RUNNING) {
-			if (timerStatus.majorNum <= 1 || timerStatus.minorNum > 1) {
+			if (timerStatus.majorNum <= 1 && timerStatus.minorNum <= 1) {
 				return;
 			}
 
 			const split = hasCompare
-				? Comparison.generateSplits(runSplits, this.comparison.runSplits)[timerStatus.majorNum - 1]
+				? Comparison.generateSegmentSplit(
+						runSplits,
+						this.comparison.runSplits,
+						timerStatus.majorNum - 1,
+						timerStatus.minorNum - 1
+					)
 				: {
-						name: timerStatus.majorNum - 1,
+						name: getSegmentName(timerStatus.majorNum - 1, timerStatus.minorNum - 1),
 						accumulateTime: timerStatus.runTime
 					};
 
-			this.addComparisonSplit(split, timerStatus.majorNum, hasCompare);
+			this.addComparisonSplit(split, timerStatus.minorNum > 1, hasCompare);
 		} else if (timerStatus.state === TimerState.FINISHED) {
 			const split = hasCompare
 				? Comparison.generateFinishSplit(
@@ -77,11 +81,16 @@ class HudComparisonsHandler {
 						accumulateTime: timerStatus.runTime
 					};
 
-			this.addComparisonSplit(split, timerStatus.majorNum, hasCompare);
+			this.addComparisonSplit(split, false, hasCompare);
 		}
 	}
 
-	addComparisonSplit(split: any, majorNum: number, hasCompare: boolean): void {
+	addComparisonSplit(
+		split: ComparisonSplit | { name: string; accumulateTime: number },
+		isSubSplit: boolean,
+		hasCompare: boolean
+	): void {
+		// Remove older splits
 		const splitPanels = this.panels.splits.Children().reverse();
 		if (splitPanels.length > this.maxActiveSplits) {
 			splitPanels
@@ -93,14 +102,16 @@ class HudComparisonsHandler {
 			class: 'hud-comparisons__split'
 		});
 
-		if (majorNum > 1) {
-			const lastSplit = this.panels.splits.GetFirstChild().GetFirstChild();
-			lastSplit?.RemoveClass('split--latest');
-		}
+		const lastSplit = this.panels.splits.GetFirstChild().GetFirstChild();
+		lastSplit?.RemoveClass('split--latest');
 
 		this.panels.splits.MoveChildBefore(wrapper, this.panels.splits.Children()[0]);
 
-		const panel = $.CreatePanel('Split', wrapper, '', { class: 'split--hud split--latest' });
+		let splitClass = 'split--hud split--latest';
+		if (isSubSplit) {
+			splitClass += ' split--subsplit';
+		}
+		const panel = $.CreatePanel('Split', wrapper, '', { class: splitClass });
 
 		Object.assign(
 			panel,
