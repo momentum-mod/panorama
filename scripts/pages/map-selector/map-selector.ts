@@ -1,18 +1,18 @@
 import { OnPanelLoad, PanelHandler } from 'util/module-helpers';
 import { traverseChildren } from 'util/functions';
-import { MapCreditType } from 'common/web';
+import { MapStatuses, MapCreditType, MapStatus, MapImage, MMap, MapStats } from 'common/web';
+import { ToastCreateArgs, ToastManager, ToastStyle } from 'util/toast-manager';
+import * as Maps from 'common/maps';
+import * as Leaderboards from 'common/leaderboard';
+import * as Time from 'util/time';
+
+const REFRESH_COOLDOWN = 1000 * 10; // 10 seconds
 
 enum NStateButtonState {
 	OFF = 0,
 	INCLUDE = 1,
 	EXCLUDE = 2
 }
-
-const NStateButtonClasses: ReadonlyMap<NStateButtonState, string> = new Map([
-	[NStateButtonState.OFF, 'mapselector-filters__nstatebutton--off'],
-	[NStateButtonState.INCLUDE, 'mapselector-filters__nstatebutton--include'],
-	[NStateButtonState.EXCLUDE, 'mapselector-filters__nstatebutton--exclude']
-]);
 
 /**
  *  Structure of the data from filter panels we store to persistent storage, e.g.
@@ -46,13 +46,21 @@ class MapSelectorHandler implements OnPanelLoad {
 		],
 		emptyContainer: $<Panel>('#MapListEmptyContainer'),
 		tierSlider: $<DualSlider>('#TierSlider'),
+		info: $<Panel>('#MapInfo'),
 		leaderboardContainer: $<Panel>('#MapTimes'),
 		descriptionContainer: $<Panel>('#MapDescriptionContainer'),
 		creditsContainer: $<Panel>('#MapCreditsContainer'),
 		datesContainer: $<Panel>('#MapDatesContainer'),
 		credits: $<Panel>('#MapCredits'),
+		changelog: $<Panel>('#MapChangelog'),
+		stats: $<Panel>('#MapInfoStats'),
 		websiteButton: $<Button>('#MapInfoWebsiteButton'),
-		tags: $<Label>('#MapTags')
+		tags: $<Label>('#MapTags'),
+		listTypes: {
+			ranked: $<Button>('#MapListRanked'),
+			unranked: $<Button>('#MapListUnranked'),
+			beta: $<Button>('#MapListBeta')
+		},
 	};
 
 	// Describing which data on which type of panel we want to store out to PS.
@@ -62,8 +70,57 @@ class MapSelectorHandler implements OnPanelLoad {
 		DualSlider: { event: 'onvaluechanged', properties: ['lowerValue', 'upperValue'] }
 	};
 
+	readonly strings = {
+		staged: $.Localize('#MapInfo_Type_Staged'),
+		linear: $.Localize('#MapInfo_Type_Linear'),
+		placeholder: $.Localize('#MapSelector_Info_Placeholder'),
+		changelogVersion: $.Localize('#MapSelector_Info_Changelog_Version'),
+		statuses: new Map([
+			[
+				MapStatus.PRIVATE_TESTING,
+				{
+					status: $.Localize('#MapSelector_Status_PrivateTesting'),
+					tooltip: $.Localize('#MapSelector_Status_PrivateTesting_Tooltip')
+				}
+			],
+			[
+				MapStatus.CONTENT_APPROVAL,
+				{
+					status: $.Localize('#MapSelector_Status_ContentApproval'),
+					tooltip: $.Localize('#MapSelector_Status_ContentApproval_Tooltip')
+				}
+			],
+			[
+				MapStatus.PUBLIC_TESTING,
+				{
+					status: $.Localize('#MapSelector_Status_PublicTesting'),
+					tooltip: $.Localize('#MapSelector_Status_PublicTesting_Tooltip')
+				}
+			],
+			[
+				MapStatus.FINAL_APPROVAL,
+				{
+					status: $.Localize('#MapSelector_Status_FinalApproval'),
+					tooltip: $.Localize('#MapSelector_Status_FinalApproval_Tooltip')
+				}
+			]
+		]),
+		credits: new Map([
+			[MapCreditType.AUTHOR, '#MapSelector_Info_Authors'],
+			[MapCreditType.CONTRIBUTOR, '#MapSelector_Info_Contributors'],
+			[MapCreditType.SPECIAL_THANKS, '#MapSelector_Info_SpecialThanks'],
+			[MapCreditType.TESTER, '#MapSelector_Info_Testers']
+		])
+	};
+
+	readonly nStateButtonClasses: ReadonlyMap<NStateButtonState, string> = new Map([
+		[NStateButtonState.OFF, 'mapselector-filters__nstatebutton--off'],
+		[NStateButtonState.INCLUDE, 'mapselector-filters__nstatebutton--include'],
+		[NStateButtonState.EXCLUDE, 'mapselector-filters__nstatebutton--exclude']
+	]);
+
 	readonly tierMin = 1;
-	readonly tierMax = 1;
+	readonly tierMax = 10;
 
 	constructor() {
 		$.RegisterForUnhandledEvent('MapSelector_ShowConfirmCancelDownload', (mapID) =>
@@ -71,7 +128,10 @@ class MapSelectorHandler implements OnPanelLoad {
 		);
 		$.RegisterForUnhandledEvent('MapSelector_ShowConfirmOverwrite', (mapID) => this.showConfirmOverwrite(mapID));
 		$.RegisterForUnhandledEvent('MapSelector_MapsFiltered', (count) => this.onMapsFiltered(count));
-		$.RegisterForUnhandledEvent('MapSelector_SelectedDataUpdate', () => this.onSelectedDataUpdated());
+		$.RegisterForUnhandledEvent('MapSelector_SelectedDataUpdate', (mapData) => this.onSelectedDataUpdated(mapData));
+		$.RegisterForUnhandledEvent('MapSelector_SelectedOnlineDataUpdate', (stats) =>
+			this.onSelectedOnlineDataUpdated(stats)
+		);
 		$.RegisterForUnhandledEvent('MapSelector_HideLeaderboards', () => this.toggleLeaderboards(false));
 
 		this.panels.nStateButtons.forEach((panel) =>
@@ -92,7 +152,7 @@ class MapSelectorHandler implements OnPanelLoad {
 			this.panels.searchClear.SetHasClass('search__clearbutton--hidden', this.panels.searchText.text === '')
 		);
 
-		this.panels.cp.ApplyFilters();
+		this.panels.cp.applyFilters(false);
 		this.panels.leaderboardContainer.SetHasClass(
 			'mapselector-leaderboards--open',
 			$.persistentStorage.getItem('mapSelector.leaderboardsOpen')
@@ -129,7 +189,7 @@ class MapSelectorHandler implements OnPanelLoad {
 		this.panels.tierSlider.SetValues(this.tierMin, this.tierMax);
 
 		// Apply the changes
-		this.panels.cp.ApplyFilters();
+		this.panels.cp.applyFilters(false);
 
 		// Clear persistent storage state. Nothing wrong with just resetting to a blank object. This will mean that in
 		// some cases a panel's state is saved to PS but with default state (e.g. when user changes from default and
@@ -258,73 +318,186 @@ class MapSelectorHandler implements OnPanelLoad {
 		$.persistentStorage.setItem('mapSelector.mapsFiltersYieldEmptyResults', isZero);
 	}
 
-	/*
-	 *	Set all the map data for the map just selected
-	 */
-	onSelectedDataUpdated() {
-		const mapData = $.GetContextPanel<MomentumMapSelector>().selectedMapData;
-
-		if (!mapData) return;
-
-		// Set the description and creation date text
-		$.GetContextPanel().SetDialogVariable('description', mapData.info?.description);
-		this.panels.descriptionContainer.SetHasClass('hide', !mapData.info?.description);
-
-		const date = new Date(mapData.info?.creationDate);
-
-		$.GetContextPanel().SetDialogVariable('date', date.toLocaleDateString());
-		this.panels.datesContainer.SetHasClass('hide', !mapData.info?.creationDate);
-
-		// Clear the credits from the last map
-		this.panels.credits.RemoveAndDeleteChildren();
-
-		// Find all authors
-		const authorCredits = mapData.credits.filter((x) => x.type === MapCreditType.AUTHOR);
-
-		const hasCredits = authorCredits.length > 0;
-
-		this.panels.creditsContainer.SetHasClass('hide', !hasCredits);
-
-		if (hasCredits) {
-			// Add them to the panel
-			for (const [i, credit] of authorCredits.entries()) {
-				const namePanel = $.CreatePanel('Label', this.panels.credits, '', {
-					text: credit.user.alias,
-					class: 'mapselector-credits__text mapselector-credits__name'
-				});
-
-				if (credit.user.steamID !== '0') {
-					namePanel.AddClass('mapselector-credits__name--steam');
-
-					// This will become a player profile panel in the future
-					namePanel.SetPanelEvent('onactivate', () => {
-						UiToolkitAPI.ShowSimpleContextMenu(namePanel.id, '', [
-							{
-								label: $.Localize('#Action_ShowSteamProfile'),
-								jsCallback: () => SteamOverlayAPI.OpenToProfileID(credit.user.steamID)
-							}
-						]);
-					});
-				}
-
-				if (i < authorCredits.length - 1) {
-					const commaPanel = $.CreatePanel('Label', this.panels.credits, '');
-					commaPanel.AddClass('mapselector-credits__text');
-					commaPanel.text = ',  ';
-				}
-			}
+	/** Set all the map data for the map just selected */
+	onSelectedDataUpdated(mapData: MapCacheAPI.MapData) {
+		if (!mapData) {
+			return;
 		}
 
-		// Set the website button link
-		this.panels.websiteButton.SetPanelEvent('onactivate', () =>
-			SteamOverlayAPI.OpenURL(`https://momentum-mod.org/dashboard/maps/${mapData.id}`)
-		);
+		const baseImageUrl = this.parseMapImageUrl(mapData.staticData);
+		if (baseImageUrl) {
+			this.panels.cp.applyBackgroundMapImage(mapData.staticData.thumbnail.id, baseImageUrl);
+		}
+
+		this.updateSelectedMapInfo(mapData.staticData, mapData.userData);
+		this.updateSelectedMapCredits(mapData.staticData);
+
+		// Start loading spinner on live-updateing stats panels -- MapSelector_OnSelectedOnlineDataUpdate will kill it
+		this.panels.stats.AddClass('mapselector-stats--loading');
+	}
+
+	updateSelectedMapInfo(staticData: MMap, userData?: MapCacheAPI.UserData) {
+		const gamemode = GameModeAPI.GetMetaGameMode();
+		const mainTrack = Leaderboards.getTrack(staticData, gamemode);
+		const info = this.panels.info;
+
+		info.SetDialogVariable('name', staticData.name);
+
+		info.SetDialogVariableInt('tier', Maps.getTier(staticData, gamemode) ?? 0);
+		info.SetDialogVariableInt('numZones', Leaderboards.getNumZones(staticData));
+		info.SetDialogVariable('type', mainTrack.linear ? this.strings.staged : this.strings.linear);
+
+		info.SetDialogVariable('description', staticData.info?.description);
+		this.panels.descriptionContainer.SetHasClass('hide', !staticData.info?.description);
+
+		info.SetDialogVariable('date', new Date(staticData.info?.creationDate)?.toLocaleDateString());
+		this.panels.datesContainer.SetHasClass('hide', !staticData.info?.creationDate);
+
+		const pb = Leaderboards.getUserMapDataTrack(userData, gamemode);
+		if (pb) {
+			info.SetDialogVariable('pb', Time.timetoHHMMSS(pb.time));
+		}
+
+		const inSubmission = MapStatuses.IN_SUBMISSION.includes(staticData.status);
+		info.SetHasClass('mapselector-map-info--submission', inSubmission);
+
+		if (inSubmission) {
+			const { status, tooltip } = this.strings.statuses.get(staticData.status);
+			this.panels.info.SetDialogVariable('status', status);
+			this.panels.info.SetDialogVariable('status_tooltip', tooltip);
+
+			const hasChangelog = staticData.versions.length > 1;
+			this.panels.changelog.visible = hasChangelog;
+			if (hasChangelog) {
+				const container = this.panels.changelog.GetChild(1);
+				container.RemoveAndDeleteChildren();
+
+				staticData.versions
+					.values()
+					// Skip first version entirely, doesn't have a changelog, nothing at all to show.
+					.drop(1)
+					.forEach(({ changelog }, i) => {
+						$.CreatePanel('Label', container, '', {
+							class: 'mapselector-map-info__h3',
+							text: $.Localize('#MapSelector_Info_Changelog_Version').replace(
+								'%version%',
+								(i + 2).toString()
+							)
+						});
+						$.CreatePanel('Label', container, '', {
+							text: changelog,
+							class: 'mapselector-map-info__changelog-text'
+						});
+					});
+			}
+		}
+	}
+
+	updateSelectedMapCredits(staticData: MMap) {
+		this.panels.credits.RemoveAndDeleteChildren();
+
+		// Panorama's buggy right-wrap behaviour makes doing layout for this with CSS very hard - just built out in JS.
+		this.strings.credits
+			.entries()
+			// Map to collections of both regular and placeholder suggestions, filter out empty credit types
+			.map(([type, heading]) => [heading, Maps.getAllCredits(staticData, type)] as const)
+			.filter(([_heading, credits]) => credits.length > 0)
+			.forEach(([heading, credits], i) => {
+				const row =
+					i % 2 === 0
+						? $.CreatePanel('Panel', this.panels.credits, '', { class: 'mapselector-credits__row' })
+						: this.panels.credits.Children().at(-1);
+
+				const col = $.CreatePanel('Panel', row, '', { class: 'mapselector-credits__col' });
+				$.CreatePanel('Label', col, '', { text: $.Localize(heading), class: 'mapselector-map-info__h2' });
+
+				credits.forEach(({ alias, steamID }, i) => {
+					const panel = $.CreatePanel('Panel', col, '', { class: 'mapselector-credits__credit' });
+
+					if (steamID) {
+						$.CreatePanel('AvatarImage', panel, '', {
+							class: 'mapselector-credits__avatar',
+							steamid: steamID
+						});
+					} else {
+						const placeholder = $.CreatePanel('Image', panel, `Placholder${i}`, {
+							class: 'mapselector-credits__placeholder',
+							src: 'file://{images}/help.svg',
+							textureheight: '32px'
+						});
+						placeholder.SetPanelEvent('onmouseover', () =>
+							UiToolkitAPI.ShowTextTooltip(placeholder.id, this.strings.placeholder)
+						);
+						placeholder.SetPanelEvent('onmouseout', () => UiToolkitAPI.HideTextTooltip());
+					}
+
+					const namePanel = $.CreatePanel('Label', panel, '', {
+						text: alias,
+						class: 'mapselector-credits__text mapselector-credits__name'
+					});
+
+					if (steamID) {
+						namePanel.AddClass('mapselector-credits__name--steam');
+
+						// This will become a player profile panel in the future
+						panel.SetPanelEvent('onactivate', () => {
+							UiToolkitAPI.ShowSimpleContextMenu(namePanel.id, '', [
+								{
+									label: $.Localize('#Action_ShowSteamProfile'),
+									jsCallback: () => SteamOverlayAPI.OpenToProfileID(steamID)
+								}
+							]);
+						});
+					}
+				});
+			});
+	}
+
+	onSelectedOnlineDataUpdated(stats: MapStats) {
+		const statsPanel = this.panels.stats;
+
+		statsPanel.RemoveClass('mapselector-stats--loading');
+
+		// Removing / omitting several stats here, so we only include the stats that ACTUALLY WORK
+		// - Subscriptions - No longer exists since removing map library.
+		// - Downloads - No longer tracked by the backend.
+		// - Plays - We *may* track this in the future but don't currently.
+		// - Time Played - We don't track this *yet*.
+		// Map stats is in a very WIP state at the moment and doesn't need to be perfect yet.
+		statsPanel.SetDialogVariableInt('completesUnique', stats.uniqueCompletions);
+		statsPanel.SetDialogVariableInt('completes', stats.completions);
+		statsPanel.SetDialogVariableInt('favorites', stats.favorites);
+	}
+
+	/**
+	 * Figure out the base CDN URL from the map images.
+	 *
+	 * Data returned from the backend is a bit unwieldy (would be better to just return the CDN url and array of the
+	 * image IDs), don't want to spend the time refactoring.
+	 */
+	parseMapImageUrl(staticData: MMap): string | undefined {
+		// Pick any image, check URL makes sense
+		const image = staticData.images[0]?.small;
+		if (!/http.+\/[\da-z-]{36}-small.jpg/.test(image)) {
+			$.Warning(`Map Selector: Invalid image URL "${image}", not opening gallery`);
+			return;
+		}
+
+		return image.split('/').slice(0, -1).join('/');
+	}
+
+	openInSteamOverlay() {
+		const mapData = $.GetContextPanel<MomentumMapSelector>().selectedMapData;
+		const frontendUrl = GameInterfaceAPI.GetSettingString('mom_api_url_frontend');
+		if (mapData && frontendUrl) {
+			SteamOverlayAPI.OpenURL(`${frontendUrl}/maps/${mapData.staticData.name}`);
+		}
 	}
 
 	/** When a NState button is pressed, update its styling classes */
 	onNStateBtnChanged(panelID: string, state: NStateButtonState) {
 		const panel = this.panels.cp.FindChildTraverse(panelID);
-		NStateButtonClasses.entries().forEach(([i, className]) => panel.SetHasClass(className, state === i));
+		this.nStateButtonClasses.entries().forEach(([i, className]) => panel.SetHasClass(className, state === i));
 	}
 
 	toggleLeaderboards(open: boolean) {

@@ -30,6 +30,8 @@ interface MomentumMapSelector extends AbstractPanel<'MomentumMapSelector'> {
 	readonly selectedMapData: MapCacheAPI.MapData;
 
 	applyFilters(totalChange: boolean): void;
+	applyBackgroundMapImage(id: string, baseUrl: string): void;
+	applyMapImageToImagePanel(imagePanel: Image, id: string, small: boolean, baseUrl: string): void;
 }
 
 interface MapEntry extends AbstractPanel<'MapEntry'> {
