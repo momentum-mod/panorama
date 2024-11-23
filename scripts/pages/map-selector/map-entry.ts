@@ -1,8 +1,8 @@
 import { PanelHandler } from 'util/module-helpers';
 import * as Enum from 'util/enum';
-import { MapStatuses, Gamemode, MapStatus, TrackType } from 'common/web';
+import { MapStatuses, Gamemode, MapStatus } from 'common/web';
 import { GamemodeInfo } from 'common/gamemode';
-import { getTrack, getUserMapDataTrack } from 'common/leaderboard';
+import { getUserMapDataTrack } from 'common/leaderboard';
 import { timetoHHMMSS } from 'util/time';
 import { getTier } from 'common/maps';
 

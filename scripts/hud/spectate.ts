@@ -1,5 +1,4 @@
 import { PanelHandler } from 'util/module-helpers';
-import { RunEntityType } from 'common/timer';
 
 @PanelHandler()
 class HudSpectateHandler {
