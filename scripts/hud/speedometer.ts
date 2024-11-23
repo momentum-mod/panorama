@@ -1,7 +1,6 @@
 import { PanelHandler } from 'util/module-helpers';
 import { tupleToRgbaString } from 'util/colors';
 import { SpeedometerColorType, SpeedometerType } from 'common/speedometer';
-import { TimerState_OLD } from 'common/timer';
 
 // arbitrary value to determine how much speed needs to change to be considered an increase/decrease
 // adjusted by speedometer update delta time

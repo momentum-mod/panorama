@@ -1,7 +1,6 @@
 import { PanelHandler } from 'util/module-helpers';
 import { getNumZones, getTrack } from 'common/leaderboard';
-import { MapCreditType } from 'common/web';
-import { getAllCredits, getAuthorNames } from '../common/maps';
+import { getAuthorNames } from '../common/maps';
 
 @PanelHandler()
 class HudMapInfoHandler {

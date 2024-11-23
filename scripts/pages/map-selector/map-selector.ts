@@ -1,6 +1,6 @@
 import { OnPanelLoad, PanelHandler } from 'util/module-helpers';
 import { traverseChildren } from 'util/functions';
-import { MapStatuses, MapCreditType, MapStatus, MapImage, MMap, MapStats } from 'common/web';
+import { MapStatuses, MapCreditType, MapStatus, MMap, MapStats } from 'common/web';
 import { ToastCreateArgs, ToastManager, ToastStyle } from 'util/toast-manager';
 import * as Maps from 'common/maps';
 import * as Leaderboards from 'common/leaderboard';
