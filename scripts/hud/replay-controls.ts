@@ -1,5 +1,11 @@
 import { PanelHandler } from 'util/module-helpers';
 
+enum ReplayState {
+	NONE = 0,
+	PLAYING = 1,
+	PAUSED = 2
+}
+
 @PanelHandler()
 class ReplayControlsHandler {
 	readonly panels = {
@@ -23,7 +29,7 @@ class ReplayControlsHandler {
 	onHudUpdate() {
 		const state = MomentumReplayAPI.GetReplayState();
 
-		if (state === MomentumReplayAPI.ReplayState.NONE) return;
+		if (state === ReplayState.NONE) return;
 
 		const progress = MomentumReplayAPI.GetReplayProgress();
 
@@ -33,7 +39,7 @@ class ReplayControlsHandler {
 		if (!this.panels.timeSlider.dragging) this.panels.timeSlider.SetValueNoEvents(progressPercent);
 
 		// Deal with pause/play -- play == selected
-		const bPlaying = state === MomentumReplayAPI.ReplayState.PLAYING;
+		const bPlaying = state === ReplayState.PLAYING;
 		if (this.panels.pausePlayButton.checked !== bPlaying) this.panels.pausePlayButton.checked = bPlaying;
 
 		this.panels.cp.SetDialogVariableInt('curr_tick', progress.curtick);
