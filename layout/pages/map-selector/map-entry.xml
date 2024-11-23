@@ -2,30 +2,18 @@
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
-	
+
 	<scripts>
 		<include type="module" src="file://{scripts}/pages/map-selector/map-entry.ts" />
 	</scripts>
 
-	<snippets>
-		<snippet name="MapBannerBeta">
-			<Panel class="map-entry__banner map-entry__banner--beta">
-				<Label class="map-entry__banner-text" text="#MapSelector_Banner_Beta" />
-			</Panel>
-		</snippet>
-		<snippet name="MapBannerNew">
-			<Panel class="map-entry__banner map-entry__banner--new">
-				<Label class="map-entry__banner-text" text="#MapSelector_Banner_New" />
-			</Panel>
-		</snippet>
-	</snippets>
-
 	<MapEntry class="w-full map-entry" oncontextmenu="MapEntryHandler.showContextMenu()" ondblclick="MapEntryHandler.tryPlayMap()">
 		<Panel class="map-entry__left">
-			<Panel class="map-entry__state" />
 			<Panel id="MapEntryImageContainer" class=" map-entry__image">
 				<Image id="MapEntryImage" scaling="stretch-to-cover-preserve-aspect" />
-				<!-- MapEntryBanner inserted via code -->
+				<Panel class="map-entry__banner">
+					<Label class="map-entry__banner-text" text="{s:banner}" />
+				</Panel>
 			</Panel>
 			<Label id="MapEntryName" class="map-entry__text map-entry__name" text="{s:name}" />
 		</Panel>
@@ -44,10 +32,17 @@
 						<Image class="button__icon" src="file://{images}/star.svg" textureheight="40" />
 					</ToggleButton>
 				</Panel>
-				<Label id="MapEntryTier" class="map-entry__text map-entry__tier" text="T{s:tier}" />
-				<Panel id="MapPB" class="map-entry__pb" onmouseout="UiToolkitAPI.HideTextTooltip()">
-					<Label id="PBLabel" class="map-entry__text map-entry__pb-text" />
-					<Image id="PBIcon" class="map-entry__pb-icon" textureheight="32" />
+				<Panel class="map-entry__tier-wrapper">
+					<Panel class="flow-right v-align-center h-align-center">
+						<Label id="MapEntryTier" class="map-entry__text map-entry__tier" text="T{d:tier}" />
+						<TooltipPanel class="map-entry__tier-notice" tooltip="#MapSelector_Tooltip_UnofficialTier">
+							<Label text="*" />
+						</TooltipPanel>
+					</Panel>
+				</Panel>
+				<Panel id="MapEntryPB" class="map-entry__pb" onmouseout="UiToolkitAPI.HideTextTooltip()">
+					<Label id="MapEntryPBLabel" class="map-entry__text map-entry__pb-text" />
+					<Image id="MapEntryPBIcon" class="map-entry__pb-icon" textureheight="32" />
 				</Panel>
 			</Panel>
 		</Panel>
