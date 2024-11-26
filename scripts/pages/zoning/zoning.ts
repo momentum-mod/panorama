@@ -35,6 +35,36 @@ enum RegionMenu {
 	RESET = 'Reset'
 }
 
+export enum PickType {
+	NONE = 0,
+	CORNER = 1,
+	BOTTOM = 2,
+	HEIGHT = 3,
+	SAFE_HEIGHT = 4,
+	TELE_DEST_POS = 5,
+	TELE_DEST_YAW = 6
+}
+
+export enum RegionRenderMode {
+	NONE = 0,
+	START = 1,
+	START_WITH_SAFE_HEIGHT = 2,
+	TRACK_SWITCH = 3,
+	END = 4,
+	MAJOR_CHECKPOINT = 5,
+	MINOR_CHECKPOINT = 6,
+	CANCEL = 7
+}
+
+export enum RegionPolygonProblem {
+	INVALID_INPUT = -1,
+	NONE = 0,
+	POINTS_TOO_CLOSE = 1,
+	ANGLE_TOO_SMALL = 2,
+	COLINEAR_POINTS = 3,
+	SELF_INTERSECTING = 4
+}
+
 @PanelHandler()
 class ZoneMenuHandler {
 	readonly panels = {
