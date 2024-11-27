@@ -84,10 +84,6 @@ class ZoneMenuHandler {
 		filterSelect: $<DropDown>('#FilterSelect'),
 		volumeSelect: $<DropDown>('#VolumeSelect'),
 		regionSelect: $<DropDown>('#RegionSelect'),
-		pointsSection: $<Panel>('#PointsSection'),
-		pointsList: $<Panel>('#PointsList'),
-		propertiesSection: $<Panel>('#PropertiesSection'),
-		teleportSection: $<Panel>('#TeleportSection'),
 		regionBottom: $<TextEntry>('#RegionBottom'),
 		regionHeight: $<TextEntry>('#RegionHeight'),
 		regionSafeHeight: $<TextEntry>('#RegionSafeHeight'),
@@ -204,8 +200,6 @@ class ZoneMenuHandler {
 
 		const mainTrackButton = this.panels.trackList.GetChild(0).FindChildTraverse<ToggleButton>('SelectButton');
 		mainTrackButton.SetSelected(true);
-
-		this.showRegionMenu(RegionMenu.RESET);
 
 		this.updateSelection(this.mapZoneData.tracks.main, null, null, null);
 	}
@@ -493,7 +487,6 @@ class ZoneMenuHandler {
 		this.populateDropdown(zone.regions, this.panels.regionSelect, 'Region', true);
 		this.panels.regionSelect.SetSelectedIndex(0);
 		this.populateRegionProperties();
-		this.showRegionMenu();
 	}
 
 	populateSegmentProperties() {
@@ -531,12 +524,6 @@ class ZoneMenuHandler {
 		const index = this.panels.regionSelect.GetSelected()?.GetAttributeInt('value', -1);
 		const region = this.selectedZone.zone.regions[index];
 
-		this.panels.pointsList.RemoveAndDeleteChildren();
-		if (region && region.points && region.points.length > 0) {
-			for (const [i, point] of region.points.entries()) {
-				this.addPointToList(i, point);
-			}
-		}
 		this.panels.regionBottom.text = (region?.bottom ?? 0).toFixed(2);
 		this.panels.regionHeight.text = (region?.height ?? 0).toFixed(2);
 		this.panels.regionSafeHeight.text = (region?.safeHeight ?? 0).toFixed(2);
@@ -588,46 +575,11 @@ class ZoneMenuHandler {
 		this.pointPick = PickType.CORNER;
 		const index = this.panels.regionSelect.GetSelected().GetAttributeInt('value', -1);
 		const region = this.selectedZone.zone.regions[index];
-		if (GameInterfaceAPI.GetSettingBool('mom_zone_two_click')) {
-			region.points.length = 0;
-			this.panels.pointsList.RemoveAndDeleteChildren();
-		}
+
+		if (GameInterfaceAPI.GetSettingBool('mom_zone_two_click')) region.points.length = 0;
+
 		this.panels.zoningMenu.startPointPick(this.pointPick);
-
 		this.panels.zoningMenu.setCornersFromRegion(region);
-	}
-
-	addPointToList(i: number, point: number[]) {
-		const newRegionPoint = $.CreatePanel('Panel', this.panels.pointsList, `Point ${i}`);
-		newRegionPoint.LoadLayoutSnippet('region-point');
-
-		const deleteButton = newRegionPoint.FindChildTraverse('DeleteButton');
-		deleteButton.SetPanelEvent('onactivate', () => this.deleteRegionPoint(newRegionPoint));
-
-		const xText = newRegionPoint.FindChildTraverse<TextEntry>('PointX');
-		xText.text = point[0].toFixed(2);
-		xText.SetPanelEvent('ontextentrysubmit', () => {
-			point[0] = Number.parseFloat(xText.text);
-			this.drawZones();
-		});
-
-		const yText = newRegionPoint.FindChildTraverse<TextEntry>('PointY');
-		yText.text = point[1].toFixed(2);
-		yText.SetPanelEvent('ontextentrysubmit', () => {
-			point[1] = Number.parseFloat(yText.text);
-			this.drawZones();
-		});
-	}
-
-	deleteRegionPoint(point: Panel) {
-		if (!this.selectedZone || !this.selectedZone.zone) return;
-
-		const n = this.panels.pointsList.Children().indexOf(point);
-		const index = this.panels.regionSelect.GetSelected().GetAttributeInt('value', -1);
-		this.selectedZone.zone?.regions[index].points.splice(n, 1);
-		point.DeleteAsync(0);
-
-		this.drawZones();
 	}
 
 	pickBottom() {
@@ -779,12 +731,10 @@ class ZoneMenuHandler {
 				}
 				if (GameInterfaceAPI.GetSettingBool('mom_zone_two_click') && region.points.length === 1) {
 					region.points.push([region.points[0][0], point.y]);
-					this.addPointToList(region.points.length - 1, [region.points[0][0], point.y]);
 					this.onPointPicked(point);
 					this.onPointPicked({ x: point.x, y: region.points[0][1], z: point.z });
 				} else {
 					region.points.push([point.x, point.y]);
-					this.addPointToList(region.points.length - 1, [point.x, point.y]);
 				}
 				break;
 
@@ -1128,18 +1078,6 @@ class ZoneMenuHandler {
 		// update segment name in trasklist tree
 
 		this.drawZones();
-	}
-
-	showRegionMenu(menu?: RegionMenu) {
-		const pointsTab = this.panels.propertyTabs.GetChild<RadioButton>(0);
-		if (menu === RegionMenu.RESET) {
-			pointsTab.SetSelected(true);
-			menu = RegionMenu.POINTS;
-		}
-		menu = menu ?? (pointsTab.GetSelectedButton().GetAttributeString('value', 'Points') as RegionMenu);
-		this.panels.pointsSection.visible = menu === RegionMenu.POINTS;
-		this.panels.propertiesSection.visible = menu === RegionMenu.PROPERTIES;
-		this.panels.teleportSection.visible = menu === RegionMenu.TELEPORT;
 	}
 
 	drawZones() {
