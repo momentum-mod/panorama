@@ -297,7 +297,7 @@ interface GlobalEventNameMap {
 
 	ZoneMenu_Hide: () => void;
 
-	OnPointPicked: (point: vec3) => void;
+	OnPointPicked: (region: import('common/web').Region) => void;
 
 	OnPickCanceled: () => void;
 
