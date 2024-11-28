@@ -299,6 +299,8 @@ interface GlobalEventNameMap {
 
 	OnPointPicked: (point: vec3) => void;
 
+	OnPointDeleted: (point: vec3 | undefined) => void;
+
 	OnPickCanceled: () => void;
 
 	/** Fired when the the primary timer of the UI entity transitions to a different state */

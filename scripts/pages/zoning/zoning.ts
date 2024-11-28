@@ -113,6 +113,7 @@ class ZoneMenuHandler {
 		$.RegisterForUnhandledEvent('ZoneMenu_Show', () => this.showZoneMenu());
 		$.RegisterForUnhandledEvent('ZoneMenu_Hide', () => this.hideZoneMenu());
 		$.RegisterForUnhandledEvent('OnPointPicked', (point) => this.onPointPicked(point));
+		$.RegisterForUnhandledEvent('OnPointDeleted', () => this.onPointDeleted());
 		$.RegisterForUnhandledEvent('OnPickCanceled', () => this.onPickCanceled());
 
 		$.RegisterForUnhandledEvent('LevelInitPostEntity', this.initMenu.bind(this));
@@ -764,6 +765,22 @@ class ZoneMenuHandler {
 				region.teleDestYaw = Math.floor(MomentumPlayerAPI.GetAngles().y / ANGLE_SNAP + 0.5) * ANGLE_SNAP;
 				this.panels.regionTPYaw.text = region.teleDestYaw.toFixed(0);
 				break;
+		}
+
+		this.drawZones();
+	}
+
+	onPointDeleted(index: number | undefined) {
+		if (!this.selectedZone || !this.selectedZone.zone) return;
+		const regionIndex = this.panels.regionSelect.GetSelected().GetAttributeInt('value', -1);
+		const region = this.selectedZone.zone.regions[regionIndex];
+
+		if (region.points.length === 0) return;
+
+		if (index === undefined) {
+			region.points.pop();
+		} else {
+			region.points.splice(index, 1);
 		}
 
 		this.drawZones();
