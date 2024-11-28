@@ -23,11 +23,11 @@
 					</Button>
 				</Panel>
 				<Panel id="ChildContainer" class="zoning__list-container">
-					<Panel id="SegmentContainer" class="full-width flow-down" />
+					<Panel id="SegmentContainer" class="w-full flow-down" />
 					<Button id="AddSegmentButton" class="zoning__add-button">
 						<Label class="zoning__tracklist-label zoning__tracklist-label--add" text="#Zoning_NewSegment" />
 					</Button>
-					<Panel id="EndZoneContainer" class="full-width flow-down" />
+					<Panel id="EndZoneContainer" class="w-full flow-down" />
 					<Button id="AddEndZoneButton" class="zoning__add-button">
 						<Label class="zoning__tracklist-label zoning__tracklist-label--add" text="#Zoning_NewEndZone" />
 					</Button>
@@ -38,7 +38,7 @@
 			</Panel>
 		</snippet>
 		<snippet name="tracklist-segment">
-			<Panel class="full-width flow-down">
+			<Panel class="w-full flow-down">
 				<Panel id="Entry" class="zoning__tracklist-course-entry">
 					<Button id="CollapseButton" class="zoning__collapse-button">
 						<Image id="TracklistCollapseIcon" class="button__icon zoning__collapse-icon zoning__icon-green hide" src="file://{images}/add.svg" />
@@ -64,7 +64,7 @@
 			</Panel>
 		</snippet>
 		<snippet name="tracklist-checkpoint">
-			<Panel class="full-width flow-down">
+			<Panel class="w-full flow-down">
 				<Panel id="Entry" class="zoning__tracklist-course-entry">
 					<RadioButton id="SelectButton" class="zoning__tracklist-button" group="tracklist">
 						<Label id="Name" class="zoning__tracklist-label" />
@@ -226,10 +226,10 @@
 			</Panel>
 		</Panel>
 		<Panel class="zoning__button-box">
-			<Button class="button button--blue ml-2 horizontal-align-right" onactivate="ZoneMenuHandler.saveZones()">
+			<Button class="button button--blue ml-2 h-align-right" onactivate="ZoneMenuHandler.saveZones()">
 				<Label class="button__text" text="#Zoning_Save" />
 			</Button>
-			<Button class="button ml-2 horizontal-align-right" onactivate="ZoneMenuHandler.cancelEdit()">
+			<Button class="button ml-2 h-align-right" onactivate="ZoneMenuHandler.cancelEdit()">
 				<Label class="button__text" text="#Zoning_Discard" />
 			</Button>
 		</Panel>
