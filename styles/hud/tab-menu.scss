@@ -158,12 +158,16 @@
 	}
 
 	&__credits-name {
-		color: $mid-blue;
 		margin-left: 4px;
-		transition: color 0.1s ease-in-out 0s;
+		color: color.scale($mid-blue, $lightness: 75%);
 
-		&:hover:not(&--no-steam) {
-			color: color.scale($mid-blue, $lightness: 50%);
+		&--steam {
+			color: $mid-blue;
+			transition: color 0.1s ease-in-out 0s;
+
+			&:hover {
+				color: color.scale($mid-blue, $lightness: 50%);
+			}
 		}
 	}
 

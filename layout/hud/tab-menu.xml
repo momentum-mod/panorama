@@ -22,7 +22,6 @@
 					</Panel>
 					<Panel class="hud-tab-menu-map-info__bottom">
 						<Panel id="HudTabMenuMapCredits" class="hud-tab-menu-map-info__credits">
-							<Label class="hud-tab-menu-map-info__credits-other-text" text="#Common_By" />
 							<!-- Author names inserted by JS -->
 						</Panel>
 						<Panel class="hud-tab-menu-map-info__stats">

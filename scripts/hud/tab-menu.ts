@@ -72,9 +72,16 @@ class HudTabMenuHandler {
 
 	setMapAuthorCredits(credits: SimpleMapCredit[]) {
 		// Delete existing name labels
-		for (const label of this.panels.credits.Children().slice(1) || []) {
-			label.DeleteAsync(0);
+		this.panels.credits.Children()?.forEach((label) => label.DeleteAsync(0));
+
+		if (credits.length === 0) {
+			return;
 		}
+
+		$.CreatePanel('Label', this.panels.credits, '', {
+			class: 'hud-tab-menu-map-info__credits-other-text',
+			text: $.Localize('#CommonBy')
+		});
 
 		for (const [idx, { alias, steamID }] of credits.entries()) {
 			const namePanel = $.CreatePanel('Label', this.panels.credits, '', {
@@ -83,9 +90,11 @@ class HudTabMenuHandler {
 
 			namePanel.AddClass('hud-tab-menu-map-info__credits-name');
 
-				// TODO: Perhaps better if left-click just loads momentum profile? Can access steam through that,
-				// and profile pages no longer require a login to view.
 			if (steamID) {
+				namePanel.AddClass('hud-tab-menu-map-info__credits-name--steam');
+
+				// TODO: Should be an onactivate (left click, not right), and open player card component,
+				// once that's made.
 				namePanel.SetPanelEvent('oncontextmenu', () => {
 					UiToolkitAPI.ShowSimpleContextMenu('', '', [
 						{
@@ -96,12 +105,10 @@ class HudTabMenuHandler {
 						}
 					]);
 				});
-			} else {
-				namePanel.AddClass('hud-tab-menu-map-info__credits-name--no-steam');
 			}
 
 			// hoped this would make contextmenu work but it doesn't
-			if (authorCredits.indexOf(credit) < authorCredits.length - 1) {
+			if (idx < credits.length - 1) {
 				const commaPanel = $.CreatePanel('Label', this.panels.credits, '');
 				commaPanel.AddClass('hud-tab-menu-map-info__credits-other-text');
 				commaPanel.text = ',';
