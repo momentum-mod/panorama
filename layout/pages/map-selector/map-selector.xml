@@ -188,16 +188,14 @@
 			</Panel>
 
 			<Panel class="mapselector__right">
-				<Panel class="mapselector-leaderboards__clipping-hack">
-					<Panel id="MapTimes" class="mapselector-leaderboards">
-						<Panel class="mapselector-leaderboards__list-wrapper">
-							<Leaderboards id="Leaderboards" class="mapselector-leaderboards__list mapselector-leaderboards__list--hidden leaderboards--in-map-selector" />
-						</Panel>
-						<Button class="button mapselector-leaderboards__open-button" onactivate="MapSelectorHandler.toggleLeaderboards(true);">
-							<Image class="button__icon button__icon--left" src="file://{images}/chart-timeline.svg" textureheight="40" />
-							<Label class="button__text button__icon--right mr-3" text="#MapSelector_Button_Leaderboards" />
-						</Button>
+				<Panel id="MapTimes" class="mapselector-leaderboards">
+					<Panel class="mapselector-leaderboards__list-wrapper">
+						<Leaderboards id="Leaderboards" class="mapselector-leaderboards__list mapselector-leaderboards__list--hidden leaderboards--in-map-selector" />
 					</Panel>
+					<Button class="button mapselector-leaderboards__open-button" onactivate="MapSelectorHandler.toggleLeaderboards(true);">
+						<Image class="button__icon button__icon--left" src="file://{images}/chart-timeline.svg" textureheight="40" />
+						<Label class="button__text button__icon--right mr-3" text="#MapSelector_Button_Leaderboards" />
+					</Button>
 				</Panel>
 				<Panel id="MapInfo" class="mapselector-map-info">
 					<Panel class="mapselector-map-info__top">

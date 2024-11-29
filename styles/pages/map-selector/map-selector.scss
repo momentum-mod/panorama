@@ -305,6 +305,7 @@ $notch-width: 10px;
 	&__open-button {
 		horizontal-align: right;
 		height: 36px;
+		visibility: visible;
 
 		#{$root}--open & {
 			visibility: collapse;
