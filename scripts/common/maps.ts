@@ -20,11 +20,17 @@ export function getTier(
 		: getTrack(staticData, gamemode, trackType, trackNum)?.tier;
 }
 
+/** Simplified credit object, derived from either a regular credit or a placeholder suggestion */
+export interface SimpleMapCredit {
+	alias: string;
+	steamID?: string;
+}
+
 /**
  * Get collection of simplified credits data, optionally filtered by type.
  * If the map is in submission, placeholders suggestions are included, with steamID omitted.
  */
-export function getAllCredits(staticData: MMap, type?: MapCreditType): Array<{ alias: string; steamID?: string }> {
+export function getAllCredits(staticData: MMap, type?: MapCreditType): SimpleMapCredit[] {
 	const credits = [];
 
 	let normal = staticData.credits;

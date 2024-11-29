@@ -1,7 +1,8 @@
 import { PanelHandler } from 'util/module-helpers';
 import { EndOfRunShowReason } from 'common/timer';
-import { GamemodeInfo, MapCredit, MapCreditType, MMap } from 'common/web';
+import { GamemodeInfo, MapCreditType, MMap } from 'common/web';
 import { getNumZones, getTrack } from 'common/leaderboard';
+import { getAllCredits, SimpleMapCredit } from 'common/maps';
 
 /**
  * Class for the HUD tab menu panel, which contains the leaderboards, end of run, and zoning.
@@ -65,34 +66,32 @@ class HudTabMenuHandler {
 
 		if (mapData && isOfficial) {
 			this.setMapStats(mapData.staticData);
-			this.setMapAuthorCredits(mapData.staticData.credits);
+			this.setMapAuthorCredits(getAllCredits(mapData.staticData, MapCreditType.AUTHOR));
 		}
 	}
 
-	setMapAuthorCredits(credits: MapCredit[]) {
+	setMapAuthorCredits(credits: SimpleMapCredit[]) {
 		// Delete existing name labels
 		for (const label of this.panels.credits.Children().slice(1) || []) {
 			label.DeleteAsync(0);
 		}
 
-		const authorCredits = credits.filter(({ type }) => type === MapCreditType.AUTHOR);
-
-		for (const credit of authorCredits) {
+		for (const [idx, { alias, steamID }] of credits.entries()) {
 			const namePanel = $.CreatePanel('Label', this.panels.credits, '', {
-				text: credit.user.alias
+				text: alias
 			});
 
 			namePanel.AddClass('hud-tab-menu-map-info__credits-name');
 
-			if (credit.user.steamID) {
 				// TODO: Perhaps better if left-click just loads momentum profile? Can access steam through that,
 				// and profile pages no longer require a login to view.
+			if (steamID) {
 				namePanel.SetPanelEvent('oncontextmenu', () => {
 					UiToolkitAPI.ShowSimpleContextMenu('', '', [
 						{
 							label: $.Localize('#Action_ShowSteamProfile'),
 							jsCallback: () => {
-								SteamOverlayAPI.OpenToProfileID(credit.user.steamID);
+								SteamOverlayAPI.OpenToProfileID(steamID);
 							}
 						}
 					]);
