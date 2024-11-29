@@ -362,10 +362,11 @@ export class Comparison {
 			accumulateTime: baseAccumulateTime,
 			time: baseSplitTime,
 			diff: baseAccumulateTime - comparisonAccumulateTime,
-			delta: baseSplitTime - comparisonSplitTime
-			// statsComparisons: baseRunSplits.trackStats.map(
-			// 	(stat, j) => new RunStatsComparison(stat, compareZone.stats[j])
-			// )
+			delta: baseSplitTime - comparisonSplitTime,
+			statsComparisons: generateStatsComparison(
+				baseRunSplits.segments[segmentIndex].subsegments[subsegmentIndex].stats,
+				comparisonRunSplits.segments[segmentIndex].subsegments[subsegmentIndex].stats
+			)
 		};
 	}
 
@@ -384,10 +385,11 @@ export class Comparison {
 			accumulateTime: baseRunTime,
 			time: baseSplitTime,
 			diff: baseRunTime - comparisonRunTime,
-			delta: baseSplitTime - comparisonSplitTime
-			// statsComparisons: baseRunSplits.trackStats.map(
-			// 	(stat, j) => new RunStatsComparison(stat, compareZone.stats[j])
-			// )
+			delta: baseSplitTime - comparisonSplitTime,
+			statsComparisons: generateStatsComparison(
+				baseRunSplits.segments.at(-1).subsegments.at(-1).stats,
+				comparisonRunSplits.segments.at(-1).subsegments.at(-1).stats
+			)
 		};
 	}
 }
@@ -407,18 +409,31 @@ export interface RunStat {
 	unit: string;
 }
 
-export class RunStatsComparison {
+const RunStatsUnits: Record<keyof RunStats, string> = {
+	maxOverallSpeed: 'ups',
+	maxHorizontalSpeed: 'ups',
+
+	overallDistanceTravelled: 'units',
+	horizontalDistanceTravelled: 'units',
+
+	jumps: 'jumps',
+	strafes: 'strafes'
+};
+
+export interface RunStatsComparison {
 	name: string;
 	unit: string;
 	baseValue: number;
 	comparisonValue: number;
 	diff: number;
+}
 
-	constructor(baseStat: RunStat, comparisonStat: RunStat) {
-		this.name = baseStat.name;
-		this.unit = baseStat.unit;
-		this.baseValue = baseStat.value;
-		this.comparisonValue = comparisonStat.value;
-		this.diff = baseStat.value - comparisonStat.value;
-	}
+export function generateStatsComparison(baseStats: RunStats, comparisonStat: RunStats): RunStatsComparison[] {
+	return (Object.keys(baseStats) as Array<keyof RunStats>).map((key) => ({
+		name: key,
+		unit: RunStatsUnits[key],
+		baseValue: baseStats[key],
+		comparisonValue: comparisonStat[key],
+		diff: baseStats[key] - comparisonStat[key]
+	}));
 }
