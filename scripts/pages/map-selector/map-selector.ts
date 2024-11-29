@@ -156,7 +156,7 @@ class MapSelectorHandler implements OnPanelLoad {
 		this.panels.cp.applyFilters(false);
 		this.panels.leaderboardContainer.SetHasClass(
 			'mapselector-leaderboards--open',
-			$.persistentStorage.getItem('mapSelector.leaderboardsOpen')
+			$.persistentStorage.getItem('mapSelector.leaderboardsOpen') ?? false
 		);
 
 		$.DispatchEvent('MapSelector_OnLoaded');
