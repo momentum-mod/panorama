@@ -1,16 +1,7 @@
 import { PanelHandler } from 'util/module-helpers';
-import {
-	Comparison,
-	CPPRun_OLD,
-	EndOfRunShowReason,
-	Run_OLD,
-	RunStatsComparison,
-	RunStatusIcons,
-	RunStatusStates,
-	RunStatusTypes,
-	ComparisonSplit
-} from 'common/timer';
+import * as Timer from 'common/timer';
 import * as LineGraph from 'components/graphs/line-graph';
+import { ComparisonSplit } from 'common/timer';
 
 @PanelHandler()
 class EndOfRunHandler {
@@ -29,11 +20,17 @@ class EndOfRunHandler {
 		selectedGraphPoint: null as Button | null
 	};
 
-	baseRun: Run_OLD;
-	comparisonRun: Run_OLD;
-	selectedSplit: ComparisonSplit;
+	baseRun: Timer.RunMetadata;
+	// Possibly undefined, if we're not comparing to a run. Note that the baseRun *can* be undefined, before
+	// EndOfRun_Show is called, but that should never happen be allowed to happen.
+	comparisonRun?: Timer.RunMetadata;
+
+	comparison: Timer.Comparison;
+	selectedSplit: Timer.ComparisonSplit;
 
 	constructor() {
+		// TODO: I'm using undefined rather than null here, which should be right for datamap usage (mixing null and
+		// undefined can be confusing, using `undefined` when unsure)
 		// $.RegisterForUnhandledEvent('EndOfRun_CompareRuns', (baseRun, compareRun) =>
 		// 	this.setComparison(baseRun, compareRun)
 		// );
@@ -46,9 +43,9 @@ class EndOfRunHandler {
 	}
 
 	/** Set the current base run and comparison run */
-	setComparison(runObj: CPPRun_OLD, comparisonRunObj: CPPRun_OLD) {
-		this.baseRun = runObj ? new Run_OLD(runObj) : null;
-		this.comparisonRun = comparisonRunObj ? new Run_OLD(comparisonRunObj) : null;
+	setComparison(base: Timer.RunMetadata, comparison?: Timer.RunMetadata) {
+		this.baseRun = base;
+		this.comparisonRun = comparison;
 	}
 
 	/** Hides the end of run panel, when a new map is loaded. */
@@ -58,34 +55,36 @@ class EndOfRunHandler {
 		this.hideEndOfRun(true, false);
 	}
 
-	updateRunStatusIndicator(status: RunStatusStates, type: RunStatusTypes) {
-		const statusPanel = type === RunStatusTypes.UPLOAD ? this.panels.uploadStatus : this.panels.saveStatus;
+	updateRunStatusIndicator(status: Timer.RunStatusStates, type: Timer.RunStatusTypes) {
+		const statusPanel = type === Timer.RunStatusTypes.UPLOAD ? this.panels.uploadStatus : this.panels.saveStatus;
 
-		statusPanel.SetHasClass('spin-clockwise', status === RunStatusStates.PROGRESS);
-		statusPanel.SetHasClass('endofrun__run-status-indicator--progress', status === RunStatusStates.PROGRESS);
-		statusPanel.SetHasClass('endofrun__run-status-indicator--success', status === RunStatusStates.SUCCESS);
-		statusPanel.SetHasClass('endofrun__run-status-indicator--error', status === RunStatusStates.ERROR);
+		statusPanel.SetHasClass('spin-clockwise', status === Timer.RunStatusStates.PROGRESS);
+		statusPanel.SetHasClass('endofrun__run-status-indicator--progress', status === Timer.RunStatusStates.PROGRESS);
+		statusPanel.SetHasClass('endofrun__run-status-indicator--success', status === Timer.RunStatusStates.SUCCESS);
+		statusPanel.SetHasClass('endofrun__run-status-indicator--error', status === Timer.RunStatusStates.ERROR);
 
 		let icon: string, text: string, style: string;
 
 		switch (status) {
-			case RunStatusStates.PROGRESS:
-				icon = `file://{images}/${RunStatusIcons.PROGRESS}.svg`;
+			case Timer.RunStatusStates.PROGRESS:
+				icon = `file://{images}/${Timer.RunStatusIcons.PROGRESS}.svg`;
 				break;
-			case RunStatusStates.SUCCESS:
+			case Timer.RunStatusStates.SUCCESS:
 				icon = `file://{images}/${
-					type === RunStatusTypes.UPLOAD ? RunStatusIcons.UPLOAD : RunStatusIcons.SAVE
+					type === Timer.RunStatusTypes.UPLOAD ? Timer.RunStatusIcons.UPLOAD : Timer.RunStatusIcons.SAVE
 				}.svg`;
 				text = $.Localize(
-					type === RunStatusTypes.UPLOAD ? 'EndOfRun_Status_UploadSuccess' : 'EndOfRun_Status_SaveSuccess'
+					type === Timer.RunStatusTypes.UPLOAD
+						? 'EndOfRun_Status_UploadSuccess'
+						: 'EndOfRun_Status_SaveSuccess'
 				);
 				style = 'positive';
 				break;
-			case RunStatusStates.ERROR:
+			case Timer.RunStatusStates.ERROR:
 			default:
-				icon = `file://{images}/${RunStatusIcons.ERROR}.svg`;
+				icon = `file://{images}/${Timer.RunStatusIcons.ERROR}.svg`;
 				text = $.Localize(
-					type === RunStatusTypes.UPLOAD ? 'EndOfRun_Status_UploadFail' : 'EndOfRun_Status_SaveFail'
+					type === Timer.RunStatusTypes.UPLOAD ? 'EndOfRun_Status_UploadFail' : 'EndOfRun_Status_SaveFail'
 				);
 				style = 'error';
 		}
@@ -108,13 +107,16 @@ class EndOfRunHandler {
 	}
 
 	updateRunSavedStatus(saved: boolean) {
-		this.updateRunStatusIndicator(saved ? RunStatusStates.SUCCESS : RunStatusStates.ERROR, RunStatusTypes.SAVE);
+		this.updateRunStatusIndicator(
+			saved ? Timer.RunStatusStates.SUCCESS : Timer.RunStatusStates.ERROR,
+			Timer.RunStatusTypes.SAVE
+		);
 	}
 
 	updateRunUploadStatus(uploaded: boolean, _cosXp: number, _rankXp: number, _lvlGain: number) {
 		this.updateRunStatusIndicator(
-			uploaded ? RunStatusStates.SUCCESS : RunStatusStates.ERROR,
-			RunStatusTypes.UPLOAD
+			uploaded ? Timer.RunStatusStates.SUCCESS : Timer.RunStatusStates.ERROR,
+			Timer.RunStatusTypes.UPLOAD
 		);
 	}
 
@@ -138,26 +140,27 @@ class EndOfRunHandler {
 
 		if (hideTabMenu) $.DispatchEvent('HudTabMenu_ForceClose');
 	}
+
 	/**
 	 * Reset and determine how to generate the end of run panel.
 	 * The comparison run can be null, in which case we don't show splits or the graph.
 	 * Fired when either when the local player's run ends, a replay run ends,
 	 * you go back to a last EoR from leaderboards, or in the future when the player compares two runs.
-	 * @param {EndOfRunShowReason} showReason - Why the end of run panel is being shown. See EorShowReason for reasons.
+	 * @param {Timer.EndOfRunShowReason} showReason - Why the end of run panel is being shown. See EorShowReason for reasons.
 	 */
-	showNewEndOfRun(showReason: EndOfRunShowReason) {
+	showNewEndOfRun(showReason: Timer.EndOfRunShowReason) {
 		if (!this.baseRun) return;
 
-		if (showReason === EndOfRunShowReason.PLAYER_FINISHED_RUN) {
+		if (showReason === Timer.EndOfRunShowReason.PLAYER_FINISHED_RUN) {
 			this.panels.runStatusIndicators.visible = true;
 			this.panels.actionButtons.visible = true;
-			this.updateRunStatusIndicator(RunStatusStates.PROGRESS, RunStatusTypes.SAVE);
-			this.updateRunStatusIndicator(RunStatusStates.PROGRESS, RunStatusTypes.UPLOAD);
+			this.updateRunStatusIndicator(Timer.RunStatusStates.PROGRESS, Timer.RunStatusTypes.SAVE);
+			this.updateRunStatusIndicator(Timer.RunStatusStates.PROGRESS, Timer.RunStatusTypes.UPLOAD);
 		} else {
 			this.panels.runStatusIndicators.visible = false;
 			this.panels.actionButtons.visible = false;
 
-			if (showReason === EndOfRunShowReason.MANUALLY_SHOWN) {
+			if (showReason === Timer.EndOfRunShowReason.MANUALLY_SHOWN) {
 				// If it's a manual show we don't need to redo anything, just return out
 				return;
 			}
@@ -171,7 +174,7 @@ class EndOfRunHandler {
 		this.panels.cp.RemoveClass('endofrun--ahead');
 		this.panels.cp.RemoveClass('endofrun--behind');
 
-		this.panels.cp.SetDialogVariableFloat('run_time', this.baseRun.time);
+		this.panels.cp.SetDialogVariableFloat('run_time', this.baseRun.runTime);
 
 		// If we have a comparison, make the full stats, otherwise just simple page without graph
 		if (this.comparisonRun) {
@@ -195,19 +198,25 @@ class EndOfRunHandler {
 		this.panels.cp.AddClass('endofrun--first');
 
 		// Loop through each zone in the run and create a neutral Split panel with no diff/delta
-		for (const [i, zone] of run.stats.zones.entries()) {
-			const splitWrapper = $.CreatePanel('Panel', this.panels.splits, `Split${zone.name}`, {
+		run.runSplits.segments.forEach((segment, i) => {
+			// TODO: Subsegments!
+			const name = Timer.getSegmentName(i, 0);
+
+			const splitWrapper = $.CreatePanel('Panel', this.panels.splits, `Split${name}`, {
 				class: 'endofrun__split'
 			});
 
 			Object.assign($.CreatePanel('Split', splitWrapper, '', { class: 'split--eor' }), {
-				name: zone.name,
-				time: zone.accumulateTime,
+				name: name,
+				time: segment.subsegments[0].timeReached,
 				isFirst: true
 			});
 
-			if (i === run.numZones - 1) splitWrapper.ScrollParentToMakePanelFit(3, false);
-		}
+			// Scroll the rightmost split
+			if (i === run.runSplits.segments.length - 1) {
+				splitWrapper.ScrollParentToMakePanelFit(3, false);
+			}
+		});
 
 		this.panels.cp.SetDialogVariable('comparison_name', '');
 
@@ -220,7 +229,7 @@ class EndOfRunHandler {
 	setComparisionStats() {
 		if (!this.baseRun || !this.comparisonRun) return;
 
-		const comparison = new Comparison(this.baseRun, this.comparisonRun);
+		const comparison = Timer.generateComparison(this.baseRun, this.comparisonRun);
 
 		// Are we ahead? Probably don't need a class for if you're exactly identical
 		const isAhead = comparison.diff < 0;
@@ -239,7 +248,8 @@ class EndOfRunHandler {
 		});
 
 		// Create splits for every comparison
-		for (const [i, split] of comparison.splits.entries()) {
+		// TODO: Subsegments!
+		comparison.segmentSplits.forEach((split, i) => {
 			// Create radiobutton rather than regular panel to wrap the split in
 			const button = $.CreatePanel('RadioButton', this.panels.splits, `Split${split.name}`, {
 				class: 'endofrun__split-button',
@@ -251,7 +261,9 @@ class EndOfRunHandler {
 				if (this.selectedSplit === split) {
 					$.DispatchEvent('Activated', overallSplitPanel, 'mouse');
 					this.setSelectedSplit(comparison.overallSplit, comparison);
-				} else this.setSelectedSplit(split, comparison);
+				} else {
+					this.setSelectedSplit(split, comparison);
+				}
 			});
 
 			Object.assign($.CreatePanel('Split', button, '', { class: 'split--eor' }), {
@@ -263,8 +275,10 @@ class EndOfRunHandler {
 			});
 
 			// Scroll the rightmost split
-			if (i === comparison.splits.length - 1) button.ScrollParentToMakePanelFit(3, false);
-		}
+			if (i === comparison.segmentSplits.length - 1) {
+				button.ScrollParentToMakePanelFit(3, false);
+			}
+		});
 
 		// Make the graph
 		this.updateGraph(comparison, null);
@@ -279,7 +293,7 @@ class EndOfRunHandler {
 	}
 
 	/** Generate a graph for the given comparison */
-	updateGraph(comparison: Comparison, statIndex: number = null) {
+	updateGraph(comparison: Timer.Comparison, statIndex: number = null) {
 		// Grab the actual LineGraph class attached to the panel
 		const lineGraph = this.panels.graph.handler;
 
@@ -322,13 +336,17 @@ class EndOfRunHandler {
 		let min = 0;
 
 		// Point for each zone
-		const comparisonSplits = comparison.splits;
+		const comparisonSplits = comparison.segmentSplits;
 
 		const numZones = comparisonSplits.length;
 
 		const useStat = statIndex !== null;
-		const isPositiveGood = (s: ComparisonSplit | RunStatsComparison) =>
-			useStat && ((s as RunStatsComparison).unit.includes('UnitsPerSecond') || s.name.includes('StrafeSync'));
+		// TODO: Below is so ugly. We can probably turn RunStatsUnits into something like
+		// RunStatsProperties: Record<keyof RunStats, {unit: string, isPositiveGood: boolean}>
+		// const isPositiveGood = (s: ComparisonSplit | RunStatsComparison) =>
+		// 	useStat && ((s as RunStatsComparison).unit.includes('UnitsPerSecond') || s.name.includes('StrafeSync'));
+		// temp hack
+		const isPositiveGood = (s: any) => true;
 
 		// Find max and min diff for the run
 		for (const split of comparisonSplits) {
@@ -396,7 +414,7 @@ class EndOfRunHandler {
 			let tooltipString;
 			const compareVal = isPositiveGood(data) ? -data.diff : data.diff;
 			const diffStyle = compareVal < 0 ? 'split--ahead ' : compareVal > 0 ? 'split--behind ' : '';
-			if (isTimeComparison) {
+			if (!useStat) {
 				const deltaStyle =
 					(data.diff < 0 ? 'split--ahead ' : data.diff > 0 ? 'split--behind ' : '') +
 					(data.delta < 0 ? 'split--gain' : data.delta > 0 ? 'split--loss' : '');
@@ -409,6 +427,7 @@ class EndOfRunHandler {
 					`${$.Localize('#Run_Comparison_Delta')}: <b class='${deltaStyle}'>${this.getDiffSign(data.delta)}{g:time:time_delta}</b>`;
 			} else {
 				// Using string instead of float here, floats add a shit ton of floating point imprecision e.g. 90.00000000128381273
+				// prettier-ignore
 				tooltipString =
 					'{s:name}: <b>{s:base_value}</b>\n' +
 					`${$.Localize('#Run_Comparison')}: <b>{s:compare_value}</b>\n` +
@@ -428,27 +447,23 @@ class EndOfRunHandler {
 					onactivate: (_) => $.DispatchEvent('Activated', $(`#Split${splitName}`), 'mouse'),
 					onmouseover: (id) => {
 						if (isTimeComparison) {
-							this.panels.cp.SetDialogVariableFloat(
-								'total_time',
-								(data as ComparisonSplit).accumulateTime
-							);
+							const splitCompare = data as ComparisonSplit;
+							this.panels.cp.SetDialogVariableFloat('total_time', splitCompare.accumulateTime);
 							this.panels.cp.SetDialogVariableFloat('zone_time', data.time);
 							this.panels.cp.SetDialogVariableFloat('time_diff', data.diff);
 							this.panels.cp.SetDialogVariableFloat('time_delta', data.delta);
 						} else {
+							const statCompare = data as Timer.RunStatsComparison;
 							this.panels.cp.SetDialogVariable('name', $.Localize(data.name));
 							this.panels.cp.SetDialogVariableInt(
 								'base_value',
-								this.roundFloat((data as RunStatsComparison).baseValue, 2)
+								this.roundFloat(statCompare.baseValue, 2)
 							);
 							this.panels.cp.SetDialogVariableInt(
 								'compare_value',
-								this.roundFloat((data as RunStatsComparison).comparisonValue, 2)
+								this.roundFloat(statCompare.comparisonValue, 2)
 							);
-							this.panels.cp.SetDialogVariableInt(
-								'diff',
-								this.roundFloat((data as RunStatsComparison).diff, 2)
-							);
+							this.panels.cp.SetDialogVariableInt('diff', this.roundFloat(statCompare.diff, 2));
 						}
 						UiToolkitAPI.ShowTextTooltip(id, tooltipString);
 					},
@@ -501,7 +516,7 @@ class EndOfRunHandler {
 	}
 
 	/** Set the selected graph point and stats for a given split */
-	setSelectedSplit(split: ComparisonSplit, comparison: Comparison) {
+	setSelectedSplit(split: ComparisonSplit, comparison: Timer.Comparison) {
 		this.selectedSplit = split;
 
 		this.panels.cp.SetDialogVariable('selected_zone', $.Localize(split.name));
@@ -518,7 +533,7 @@ class EndOfRunHandler {
 		this.panels.zoneStats.RemoveAndDeleteChildren();
 
 		// Function to create row for each stat passed in
-		const createRow = (statComparison: RunStatsComparison, index: number) => {
+		const createRow = (statComparison: Timer.RunStatsComparison, index: number) => {
 			const row = $.CreatePanel('RadioButton', this.panels.zoneStats, '', {
 				class: `endofrun-stats__row ${(index + 1) % 2 === 0 ? ' endofrun-stats__row--odd' : ''}`, // +1 to account for Times row
 				selected: index === null
@@ -563,7 +578,7 @@ class EndOfRunHandler {
 			null
 		);
 
-		for (const [i, statComparison] of split.statsComparisons.entries()) createRow(statComparison, i);
+		split.statsComparisons?.forEach((statComparison, i) => createRow(statComparison, i));
 	}
 
 	/**
