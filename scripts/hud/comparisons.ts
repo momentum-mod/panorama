@@ -1,5 +1,5 @@
 import { PanelHandler } from 'util/module-helpers';
-import { Comparison, RunMetadata, ComparisonSplit, TimerState, RunSplits, getSegmentName } from 'common/timer';
+import * as Timer from 'common/timer';
 
 @PanelHandler()
 class HudComparisonsHandler {
@@ -38,7 +38,7 @@ class HudComparisonsHandler {
 		const timerStatus = MomentumTimerAPI.GetObservedTimerStatus();
 		const runSplits = MomentumTimerAPI.GetObservedTimerRunSplits();
 
-		if (timerStatus.state === TimerState.PRIMED) {
+		if (timerStatus.state === Timer.TimerState.PRIMED) {
 			this.panels.splits.RemoveAndDeleteChildren();
 			return;
 		}
@@ -49,27 +49,27 @@ class HudComparisonsHandler {
 			timerStatus.trackId.number === this.comparison.trackId.number;
 
 		// TODO: Unordered/optional splits
-		if (timerStatus.state === TimerState.RUNNING) {
+		if (timerStatus.state === Timer.TimerState.RUNNING) {
 			if (timerStatus.majorNum <= 1 && timerStatus.minorNum <= 1) {
 				return;
 			}
 
 			const split = hasCompare
-				? Comparison.generateSegmentSplit(
+				? Timer.generateSegmentComparisonSplit(
 						runSplits,
 						this.comparison.runSplits,
 						timerStatus.majorNum - 1,
 						timerStatus.minorNum - 1
 					)
 				: {
-						name: getSegmentName(timerStatus.majorNum - 1, timerStatus.minorNum - 1),
+						name: Timer.getSegmentName(timerStatus.majorNum - 1, timerStatus.minorNum - 1),
 						accumulateTime: timerStatus.runTime
 					};
 
 			this.addComparisonSplit(split, timerStatus.minorNum > 1, hasCompare);
-		} else if (timerStatus.state === TimerState.FINISHED) {
+		} else if (timerStatus.state === Timer.TimerState.FINISHED) {
 			const split = hasCompare
-				? Comparison.generateFinishSplit(
+				? Timer.generateFinishSplitComparison(
 						timerStatus.runTime,
 						runSplits,
 						this.comparison.runTime,
@@ -85,7 +85,7 @@ class HudComparisonsHandler {
 	}
 
 	addComparisonSplit(
-		split: ComparisonSplit | { name: string; accumulateTime: number },
+		split: Timer.ComparisonSplit | { name: string; accumulateTime: number },
 		isSubSplit: boolean,
 		hasCompare: boolean
 	): void {
@@ -110,17 +110,18 @@ class HudComparisonsHandler {
 		if (isSubSplit) {
 			splitClass += ' split--subsplit';
 		}
+
 		const panel = $.CreatePanel('Split', wrapper, '', { class: splitClass });
 
 		Object.assign(
 			panel,
-			hasCompare
+			'diff' in split && hasCompare
 				? {
 						name: split.name,
 						time: split.accumulateTime,
 						isFirst: false,
-						diff: (split as ComparisonSplit).diff,
-						delta: (split as ComparisonSplit).delta
+						diff: split.diff,
+						delta: split.delta
 					}
 				: {
 						name: split.name,
