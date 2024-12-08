@@ -219,10 +219,15 @@
 							<TextEntry id="TeleYaw" class="textentry zoning__textentry" maxchars="6" textmode="numeric" ontextentrysubmit="ZoneMenuHandler.setRegionTeleDestOrientation()" />
 						</Panel>
 					</Panel>
-					<Panel id="GridSlider" class="zoning__property">
-						<SettingsSlider text="#Zoning_GridSnapSize" class="zoning__slider" min="1" max="64" percentage="false" convar="mom_zone_grid" />
-					</Panel>
 				</Panel>
+			</Panel>
+		</Panel>
+		<Panel id="InfoPanel" class="zoning__menu-section hide">
+			<Label id="SelectionMode" class="zoning__property-label" />
+			<Panel class="zoning__property-container">
+			</Panel>
+			<Panel id="GridSlider" class="zoning__property">
+				<SettingsSlider text="#Zoning_GridSnapSize" class="zoning__slider" min="1" max="64" percentage="false" convar="mom_zone_grid" />
 			</Panel>
 		</Panel>
 		<Panel class="zoning__button-box">
