@@ -114,6 +114,7 @@ class ZoneMenuHandler {
 		$.RegisterForUnhandledEvent('ZoneMenu_Show', () => this.showZoneMenu());
 		$.RegisterForUnhandledEvent('ZoneMenu_Hide', () => this.hideZoneMenu());
 		$.RegisterForUnhandledEvent('OnPointPicked', (region) => this.onPointPicked(region));
+		$.RegisterForUnhandledEvent('OnPointDeleted', (index) => this.onPointDeleted(index));
 		$.RegisterForUnhandledEvent('OnPickCanceled', () => this.onPickCanceled());
 
 		$.RegisterForUnhandledEvent('LevelInitPostEntity', this.initMenu.bind(this));
@@ -760,8 +761,15 @@ class ZoneMenuHandler {
 		this.drawZones();
 	}
 
+	onPointDeleted(index: number | undefined) {
+		if (!this.selectedZone || !this.selectedZone.region) return;
 
+		if (this.selectedZone.region.points.length === 0) return;
 
+		if (index === undefined) {
+			this.selectedZone.region.points.pop();
+		} else {
+			this.selectedZone.region.points.splice(index, 1);
 		}
 
 		this.drawZones();
