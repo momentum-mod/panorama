@@ -31,6 +31,7 @@ class HudTabMenuHandler {
 		$.RegisterForUnhandledEvent('EndOfRun_Hide', () => this.hideEndOfRun());
 		$.RegisterForUnhandledEvent('ZoneMenu_Show', () => this.showZoneMenu());
 		$.RegisterForUnhandledEvent('ZoneMenu_Hide', () => this.hideZoneMenu());
+		$.RegisterForUnhandledEvent('LevelInitPostEntity', () => this.hideZoneMenu());
 		$.RegisterForUnhandledEvent('ActiveZoneDefsChanged', () => this.updateMapStats());
 	}
 
