@@ -84,10 +84,6 @@ class ZoneMenuHandler {
 		filterSelect: $<DropDown>('#FilterSelect'),
 		volumeSelect: $<DropDown>('#VolumeSelect'),
 		regionSelect: $<DropDown>('#RegionSelect'),
-		pointsSection: $<Panel>('#PointsSection'),
-		pointsList: $<Panel>('#PointsList'),
-		propertiesSection: $<Panel>('#PropertiesSection'),
-		teleportSection: $<Panel>('#TeleportSection'),
 		regionBottom: $<TextEntry>('#RegionBottom'),
 		regionHeight: $<TextEntry>('#RegionHeight'),
 		regionSafeHeight: $<TextEntry>('#RegionSafeHeight'),
@@ -207,8 +203,6 @@ class ZoneMenuHandler {
 
 		const mainTrackButton = this.panels.trackList.GetChild(0).FindChildTraverse<ToggleButton>('SelectButton');
 		mainTrackButton.SetSelected(true);
-
-		this.showRegionMenu(RegionMenu.RESET);
 
 		this.updateSelection(this.mapZoneData.tracks.main, null, null, null);
 	}
@@ -497,7 +491,6 @@ class ZoneMenuHandler {
 		this.populateDropdown(zone.regions, this.panels.regionSelect, 'Region', true);
 		this.panels.regionSelect.SetSelectedIndex(0);
 		this.populateRegionProperties();
-		this.showRegionMenu();
 	}
 
 	populateSegmentProperties() {
@@ -536,12 +529,6 @@ class ZoneMenuHandler {
 		const region = this.selectedZone.zone.regions[index];
 		this.selectedZone.region = region;
 
-		this.panels.pointsList.RemoveAndDeleteChildren();
-		if (region && region.points && region.points.length > 0) {
-			for (const [i, point] of region.points.entries()) {
-				this.addPointToList(i, point);
-			}
-		}
 		this.panels.regionBottom.text = (region?.bottom ?? 0).toFixed(2);
 		this.panels.regionHeight.text = (region?.height ?? 0).toFixed(2);
 		this.panels.regionSafeHeight.text = (region?.safeHeight ?? 0).toFixed(2);
@@ -590,38 +577,8 @@ class ZoneMenuHandler {
 
 		this.pointPick = PickType.CORNER;
 
-	addPointToList(i: number, point: number[]) {
-		const newRegionPoint = $.CreatePanel('Panel', this.panels.pointsList, `Point ${i}`);
-		newRegionPoint.LoadLayoutSnippet('region-point');
-
-		const deleteButton = newRegionPoint.FindChildTraverse('DeleteButton');
-		deleteButton.SetPanelEvent('onactivate', () => this.deleteRegionPoint(newRegionPoint));
 		if (GameInterfaceAPI.GetSettingBool('mom_zone_two_click')) this.selectedZone.region.points.length = 0;
 
-		const xText = newRegionPoint.FindChildTraverse<TextEntry>('PointX');
-		xText.text = point[0].toFixed(2);
-		xText.SetPanelEvent('ontextentrysubmit', () => {
-			point[0] = Number.parseFloat(xText.text);
-			this.drawZones();
-		});
-
-		const yText = newRegionPoint.FindChildTraverse<TextEntry>('PointY');
-		yText.text = point[1].toFixed(2);
-		yText.SetPanelEvent('ontextentrysubmit', () => {
-			point[1] = Number.parseFloat(yText.text);
-			this.drawZones();
-		});
-	}
-
-	deleteRegionPoint(point: Panel) {
-		if (!this.selectedZone || !this.selectedZone.zone) return;
-
-		const n = this.panels.pointsList.Children().indexOf(point);
-		const index = this.panels.regionSelect.GetSelected().GetAttributeInt('value', -1);
-		this.selectedZone.zone?.regions[index].points.splice(n, 1);
-		point.DeleteAsync(0);
-
-		this.drawZones();
 		this.panels.zoningMenu.startPointPick(this.pointPick, this.selectedZone.region);
 	}
 
@@ -767,20 +724,6 @@ class ZoneMenuHandler {
 				return;
 
 			case PickType.CORNER:
-				/*if (point.z < this.selectedZone.region.bottom) {
-					this.selectedZone.region.bottom = point.z;
-					this.panels.regionBottom.text = point.z.toFixed(2);
-				}
-				if (
-					GameInterfaceAPI.GetSettingBool('mom_zone_two_click') &&
-					this.selectedZone.region.points.length === 1
-				) {
-					this.selectedZone.region.points.push([this.selectedZone.region.points[0][0], point.y]);
-					this.onPointPicked(point);
-					this.onPointPicked({ x: point.x, y: this.selectedZone.region.points[0][1], z: point.z });
-				} else {
-					this.selectedZone.region.points.push([point.x, point.y]);
-				}*/
 				this.selectedZone.region.points = region.points;
 				this.selectedZone.region.bottom = region.bottom;
 				this.panels.regionBottom.text = this.selectedZone.region.bottom.toFixed(2);
@@ -1134,18 +1077,6 @@ class ZoneMenuHandler {
 		// update segment name in trasklist tree
 
 		this.drawZones();
-	}
-
-	showRegionMenu(menu?: RegionMenu) {
-		const pointsTab = this.panels.propertyTabs.GetChild<RadioButton>(0);
-		if (menu === RegionMenu.RESET) {
-			pointsTab.SetSelected(true);
-			menu = RegionMenu.POINTS;
-		}
-		menu = menu ?? (pointsTab.GetSelectedButton().GetAttributeString('value', 'Points') as RegionMenu);
-		this.panels.pointsSection.visible = menu === RegionMenu.POINTS;
-		this.panels.propertiesSection.visible = menu === RegionMenu.PROPERTIES;
-		this.panels.teleportSection.visible = menu === RegionMenu.TELEPORT;
 	}
 
 	drawZones() {
