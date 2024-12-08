@@ -119,10 +119,24 @@ class ZoneMenuHandler {
 		$.RegisterForUnhandledEvent('OnPointDeleted', (index) => this.onPointDeleted(index));
 		$.RegisterForUnhandledEvent('OnPickCanceled', () => this.onPickCanceled());
 
-		$.RegisterForUnhandledEvent('LevelInitPostEntity', this.initMenu.bind(this));
+		$.RegisterForUnhandledEvent('LevelInitPostEntity', this.onLoad.bind(this));
 	}
 
 	onLoad() {
+		if (this.panels.trackList?.GetChildCount()) {
+			this.panels.trackList.RemoveAndDeleteChildren();
+		}
+
+		this.getZoneData();
+
+		this.pointPick = PickType.NONE;
+
+		//prompt to copy official zones to local
+
+		this.initMenu();
+	}
+
+	getZoneData() {
 		this.mapZoneData = MomentumTimerAPI.GetActiveZoneDefs() ?? {
 			tracks: {
 				main: {
@@ -141,7 +155,7 @@ class ZoneMenuHandler {
 
 	initMenu() {
 		if (!this.mapZoneData) {
-			this.onLoad();
+			this.getZoneData();
 		}
 
 		if (!this.mapZoneData) return;
