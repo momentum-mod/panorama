@@ -299,6 +299,8 @@ interface GlobalEventNameMap {
 
 	OnPointPicked: (region: import('common/web').Region) => void;
 
+	OnPointDeleted: (point: number | undefined) => void;
+
 	OnPickCanceled: () => void;
 
 	/** Fired when the the primary timer of the UI entity transitions to a different state */
