@@ -70,6 +70,7 @@ class ZoneMenuHandler {
 	readonly panels = {
 		zoningMenu: $.GetContextPanel<ZoneMenu>(),
 		trackList: $<Panel>('#TrackList'),
+		propertiesPanel: $<Panel>('#PropertiesContainer'),
 		propertiesTrack: $<Panel>('#TrackProperties'),
 		maxVelocity: $<TextEntry>('#MaxVelocity'),
 		defragModifiers: $<Panel>('#DefragFlags'),
@@ -80,7 +81,8 @@ class ZoneMenuHandler {
 		checkpointsOrdered: $('#CheckpointsOrdered').FindChild<ToggleButton>('CheckBox'),
 		segmentName: $<TextEntry>('#SegmentName'),
 		propertiesZone: $<Panel>('#ZoneProperties'),
-		propertyTabs: $<Panel>('#PropertyTabs'),
+		infoPanel: $<Panel>('#InfoPanel'),
+		selectionMode: $<Label>('#SelectionMode'),
 		filterSelect: $<DropDown>('#FilterSelect'),
 		volumeSelect: $<DropDown>('#VolumeSelect'),
 		regionSelect: $<DropDown>('#RegionSelect'),
@@ -581,12 +583,14 @@ class ZoneMenuHandler {
 		if (GameInterfaceAPI.GetSettingBool('mom_zone_two_click')) this.selectedZone.region.points.length = 0;
 
 		this.panels.zoningMenu.startPointPick(this.pointPick, this.selectedZone.region);
+		this.showInfoPanel(true);
 	}
 
 	pickBottom() {
 		this.pointPick = PickType.BOTTOM;
 
 		this.panels.zoningMenu.startPointPick(this.pointPick, this.selectedZone.region);
+		this.showInfoPanel(true);
 	}
 
 	setRegionBottom() {
@@ -602,6 +606,7 @@ class ZoneMenuHandler {
 		this.pointPick = PickType.HEIGHT;
 
 		this.panels.zoningMenu.startPointPick(this.pointPick, this.selectedZone.region);
+		this.showInfoPanel(true);
 	}
 
 	setRegionHeight() {
@@ -617,6 +622,7 @@ class ZoneMenuHandler {
 		this.pointPick = PickType.SAFE_HEIGHT;
 
 		this.panels.zoningMenu.startPointPick(this.pointPick, this.selectedZone.region);
+		this.showInfoPanel(true);
 	}
 
 	setRegionSafeHeight() {
@@ -632,12 +638,14 @@ class ZoneMenuHandler {
 		this.pointPick = PickType.TELE_DEST_POS;
 
 		this.panels.zoningMenu.startPointPick(this.pointPick, this.selectedZone.region);
+		this.showInfoPanel(true);
 	}
 
 	pickTeleDestYaw() {
 		this.pointPick = PickType.TELE_DEST_YAW;
 
 		this.panels.zoningMenu.startPointPick(this.pointPick, this.selectedZone.region);
+		this.showInfoPanel(true);
 	}
 
 	updateRegionTPDest() {
@@ -722,6 +730,7 @@ class ZoneMenuHandler {
 
 		switch (this.pointPick) {
 			case PickType.NONE:
+				this.showInfoPanel(false);
 				return;
 
 			case PickType.CORNER:
@@ -776,17 +785,55 @@ class ZoneMenuHandler {
 	}
 
 	onPickCanceled() {
-		this.pointPick = PickType.NONE;
-
 		if (
 			this.isSelectionValid().zone &&
 			this.selectedZone.region &&
 			this.selectedZone.region.points.length > 2 &&
 			this.selectedZone.region.height === 0
-		)
+		) {
 			this.pickHeight();
-
+		} else if (this.pointPick === PickType.TELE_DEST_POS) {
+			this.pickTeleDestYaw();
+		} else {
+			this.pointPick = PickType.NONE;
+			this.showInfoPanel(false);
+		}
 		this.drawZones();
+	}
+
+	showInfoPanel(hideProperties: boolean) {
+		this.panels.propertiesPanel.SetHasClass('hide', hideProperties);
+		this.panels.infoPanel.SetHasClass('hide', !hideProperties);
+
+		switch (this.pointPick) {
+			case PickType.NONE:
+				this.panels.selectionMode.text = '';
+				break;
+
+			case PickType.CORNER:
+				this.panels.selectionMode.text = '#Zoning_SelectionMode_Corner';
+				break;
+
+			case PickType.BOTTOM:
+				this.panels.selectionMode.text = '#Zoning_SelectionMode_Bottom';
+				break;
+
+			case PickType.HEIGHT:
+				this.panels.selectionMode.text = '#Zoning_SelectionMode_Height';
+				break;
+
+			case PickType.SAFE_HEIGHT:
+				this.panels.selectionMode.text = '#Zoning_SelectionMode_SafeHeight';
+				break;
+
+			case PickType.TELE_DEST_POS:
+				this.panels.selectionMode.text = '#Zoning_SelectionMode_TpPos';
+				break;
+
+			case PickType.TELE_DEST_YAW:
+				this.panels.selectionMode.text = '#Zoning_SelectionMode_TpYaw';
+				break;
+		}
 	}
 
 	addBonus() {
