@@ -58,6 +58,14 @@
 					<Label id="wepdes3" text="#Settings_Gameplay_WeaponDesirability_All" value="2" />
 				</SettingsEnumDropDown>
 
+				<Panel class="settings-group__combo">
+					<SettingsSlider text="#Settings_Gameplay_NoclipSpeed" convar="sv_noclipspeed" min="0" max="20" />
+					<Panel class="flow-right w-full">
+						<SettingsSlider class="w-fill mr-2" text="#Settings_Gameplay_NoclipDuckModifier" min="0" max="5" displayprecision="1" convar="sv_noclipspeed_duck_multiplier" />
+						<SettingsSlider class="w-fill ml-2" text="#Settings_Gameplay_NoclipSprintModifier" min="0" max="5" displayprecision="1" convar="sv_noclipspeed_sprint_multiplier" />
+					</Panel>
+				</Panel>
+
 			</Panel>
 
 			<Panel class="settings-page__spacer" />
