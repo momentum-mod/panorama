@@ -135,8 +135,6 @@ class MapEntryHandler {
 		cp.SetHasClass('map-entry--completed', userTrackData?.completed ?? false);
 
 		if (userTrackData && userTrackData.time > 0) {
-			this.panels.pbPanel.visible = true;
-
 			// Current system doesn't know user ranks
 			const icon = /* track.pr.rank <= 10 ? 'file://{images}/ranks/top10.svg' : */ 'file://{images}/flag.svg';
 			this.panels.pbIcon.SetImage(icon);
@@ -149,7 +147,8 @@ class MapEntryHandler {
 				);
 			});
 		} else {
-			this.panels.pbPanel.visible = false;
+			this.panels.pbLabel.text = '';
+			this.panels.pbIcon.SetImage('');
 			this.panels.pbPanel.ClearPanelEvent('onmouseover');
 		}
 
