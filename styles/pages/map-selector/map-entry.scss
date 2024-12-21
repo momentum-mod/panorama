@@ -129,16 +129,16 @@ $transition: 0.125s ease-out 0s;
 		@include mixin.font-styles($use-header: true);
 		text-align: center;
 		font-size: 26px;
+		visibility: collapse;
 
 		&-wrapper {
 			height: 100%;
 			width: 44px;
 			margin-left: 32px;
-			visibility: collapse;
+		}
 
-			#{$root}--has-tier & {
-				visibility: visible;
-			}
+		#{$root}--has-tier & {
+			visibility: visible;
 		}
 
 		&-notice {
@@ -146,7 +146,7 @@ $transition: 0.125s ease-out 0s;
 			font-size: 14px;
 			visibility: collapse;
 
-			#{$root}--submission & {
+			#{$root}--submission#{$root}--has-tier & {
 				visibility: visible;
 			}
 		}
