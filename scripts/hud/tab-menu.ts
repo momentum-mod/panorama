@@ -80,7 +80,7 @@ class HudTabMenuHandler {
 
 		$.CreatePanel('Label', this.panels.credits, '', {
 			class: 'hud-tab-menu-map-info__credits-other-text',
-			text: $.Localize('#CommonBy')
+			text: $.Localize('#Common_By')
 		});
 
 		for (const [idx, { alias, steamID }] of credits.entries()) {
