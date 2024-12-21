@@ -135,15 +135,21 @@ class MapEntryHandler {
 		cp.SetHasClass('map-entry--completed', userTrackData?.completed ?? false);
 
 		if (userTrackData && userTrackData.time > 0) {
+			const time = timetoHHMMSS(userTrackData.time);
 			// Current system doesn't know user ranks
 			const icon = /* track.pr.rank <= 10 ? 'file://{images}/ranks/top10.svg' : */ 'file://{images}/flag.svg';
 			this.panels.pbIcon.SetImage(icon);
-			this.panels.pbLabel.text = timetoHHMMSS(userTrackData.time);
+			this.panels.pbLabel.text = time;
+
+			// Derived from C time() function (unix time in seconds, JS is in milliseconds), so * 1000
+			const lastPlayed = new Date(userData.lastPlayed * 1000).toLocaleDateString();
+
 			this.panels.pbPanel.SetPanelEvent('onmouseover', () => {
 				UiToolkitAPI.ShowTextTooltip(
 					this.panels.pbPanel.id,
-					`<b>${$.Localize('#Common_PersonalBest')}</b>: ${userTrackData.time}\n` +
-						`<b>${$.Localize('#Common_LastPlayed')}</b>: ${new Date(userData.lastPlayed).toDateString()}`
+					// prettier-ignore
+					`<b>${$.Localize('#Common_PersonalBest')}</b>: ${time}\n` +
+					`<b>${$.Localize('#Common_LastPlayed')}</b>: ${lastPlayed}`
 				);
 			});
 		} else {
