@@ -29,9 +29,8 @@ class HudComparisonsHandler {
 			$.Msg(`jumps: ${this.comparison.runSplits.trackStats.jumps}`);
 		}
 
-		this.panels.splits.RemoveAndDeleteChildren();
-
 		// TODO: Regenerate comparisons with new info
+		//this.panels.splits.RemoveAndDeleteChildren();
 		//this.updateComparisons();
 	}
 
