@@ -39,7 +39,7 @@ class LeaderboardsHandler {
 		const currentListType = this.getSelectedListType();
 
 		let statusType = null;
-		if (currentListType) {
+		if (currentListType !== undefined) {
 			statusType = this.panels.cp.getTimesListStatus(currentListType);
 		} else {
 			$.Warning('Warning: Current leaderboard list type is undefined!');
@@ -112,7 +112,7 @@ class LeaderboardsHandler {
 	}
 
 	setSelectedListType(timesList: LeaderboardListType, listType: LeaderboardType) {
-		if (timesList === LeaderboardListType.LOBBY) {
+		if (timesList === LeaderboardListType.LOCAL) {
 			this.selectedLocalListType = listType;
 		} else if (timesList === LeaderboardListType.GLOBAL) {
 			this.selectedGlobalListType = listType;
