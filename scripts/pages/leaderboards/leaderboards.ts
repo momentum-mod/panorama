@@ -1,7 +1,7 @@
 import { exposeToPanelContext, PanelHandler } from 'util/module-helpers';
-import { LeaderboardListType, LeaderboardStatusType, LeaderboardType } from 'common/leaderboard';
+import { LeaderboardListType, LeaderboardStatusType, LeaderboardType, sortLeaderboard } from 'common/leaderboard';
 import { EndOfRunShowReason } from 'common/timer';
-import { MMap, TrackType } from 'common/web';
+import { Leaderboard, MMap, TrackType } from 'common/web';
 
 exposeToPanelContext({ LeaderboardListType, LeaderboardType });
 
@@ -251,6 +251,7 @@ class LeaderboardsHandler {
 		const currentMode = isTabMenu ? GameModeAPI.GetCurrentGameMode() : GameModeAPI.GetMetaGameMode();
 		map.leaderboards
 			.filter((leaderboard) => leaderboard.gamemode === currentMode)
+			.sort(sortLeaderboard)
 			.forEach((leaderboard, index) => {
 				let trackStr;
 				if (leaderboard.trackType === 0) {
