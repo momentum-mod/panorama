@@ -159,7 +159,8 @@ class LeaderboardsHandler {
 	onMapLeaderboardsLoad(map: MMap) {
 		this.panels.tracksDropdown.RemoveAllOptions();
 
-		const currentMode = GameModeAPI.GetCurrentGameMode();
+		const isTabMenu = $.GetContextPanel().id === 'TabMenuLeaderboard';
+		const currentMode = isTabMenu ? GameModeAPI.GetCurrentGameMode() : GameModeAPI.GetMetaGameMode();
 		map.leaderboards
 			.filter((leaderboard) => leaderboard.gamemode === currentMode)
 			.forEach((leaderboard, index) => {

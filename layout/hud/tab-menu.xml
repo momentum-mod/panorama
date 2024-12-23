@@ -38,7 +38,7 @@
 			</Panel>
 
 			<Panel id="LeaderboardsContainer" class="hud-tab-menu__leaderboards" hittestchildren="true">
-				<Leaderboards id="Leaderboards" hittest="true" hittestchildren="true" />
+				<Leaderboards id="TabMenuLeaderboards" hittest="true" hittestchildren="true" />
 			</Panel>
 
 			<Panel id="EndOfRunContainer" class="hud-tab-menu__endofrun" hittestchildren="true">
