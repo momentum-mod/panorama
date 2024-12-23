@@ -41,9 +41,13 @@ class LeaderboardsHandler {
 		$.RegisterEventHandler('Leaderboards_TimesFiltered', $.GetContextPanel(), (count) =>
 			this.onTimesUpdated(count)
 		);
-		$.RegisterForUnhandledEvent('EndOfRun_Show', (reason) => this.onShowEndOfRun(reason));
-		$.RegisterForUnhandledEvent('Leaderboards_MapDataSet', (isOfficial) => this.onMapLoad(isOfficial));
-		$.RegisterForUnhandledEvent('Leaderboards_MapLeaderboardsLoaded', (map) => this.onMapLeaderboardsLoad(map));
+		$.RegisterEventHandler('EndOfRun_Show', $.GetContextPanel(), (reason) => this.onShowEndOfRun(reason));
+		$.RegisterEventHandler('Leaderboards_MapDataSet', $.GetContextPanel(), (isOfficial) =>
+			this.onMapLoad(isOfficial)
+		);
+		$.RegisterEventHandler('Leaderboards_MapLeaderboardsLoaded', $.GetContextPanel(), (map) =>
+			this.onMapLeaderboardsLoad(map)
+		);
 
 		// Note: Can't set radio button groups in the XML because it causes multiple leaderboard instances to interfere with eachother
 		const lbType = this.panels.cp.id === 'TabMenuLeaderboards' ? 'TabMenu' : 'MapSelector';
