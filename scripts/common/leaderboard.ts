@@ -1,3 +1,4 @@
+import { TrackID } from './timer';
 import { Gamemode, Leaderboard, MMap, TrackType } from './web';
 
 export enum LeaderboardListType {
@@ -71,4 +72,11 @@ export function getUserMapDataTrack(
 	style: number = 0
 ): MapCacheAPI.UserTrackData | undefined {
 	return userMapData?.tracks?.[(gamemode << 24) | (trackType << 16) | (trackNum << 8) | style];
+}
+
+export function sortLeaderboard(
+	left: { trackNum: number; trackType: TrackType },
+	right: { trackNum: number; trackType: TrackType }
+): number {
+	return left.trackType === right.trackType ? left.trackNum - right.trackNum : left.trackType - right.trackType;
 }
