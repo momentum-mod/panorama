@@ -10,34 +10,34 @@
 	<Leaderboards class="leaderboards" acceptsinput="true" acceptsfocus="true" hittest="true" hittestchildren="true">
 		<Panel class="leaderboard-filter-buttons online">
 			<Panel class="tabs">
-				<RadioButton id="TimesListGlobal" class="tabs__tab" group="TimeTypeBar" selected="true" onactivate="LeaderboardsHandler.setSelectedTimesList(LeaderboardListType.GLOBAL);">
+				<RadioButton id="TimesListGlobal" class="tabs__tab" onactivate="LeaderboardsHandler.setSelectedTimesList(LeaderboardListType.GLOBAL);">
 					<Label class="tabs__text" text="#Leaderboards_Category_Global" />
 				</RadioButton>
-				<RadioButton id="TimesListLocal" class="tabs__tab" group="TimeTypeBar" onactivate="LeaderboardsHandler.setSelectedTimesList(LeaderboardListType.LOCAL);">
+				<RadioButton id="TimesListLocal" class="tabs__tab" onactivate="LeaderboardsHandler.setSelectedTimesList(LeaderboardListType.LOCAL);">
 					<Label class="tabs__text" text="#Leaderboards_Category_Local" />
 				</RadioButton>
-				<RadioButton id="TimesListLobby" class="tabs__tab" group="TimeTypeBar" onactivate="LeaderboardsHandler.setSelectedTimesList(LeaderboardListType.LOBBY);" onmouseover="LeaderboardsHandler.showLobbyTooltip();" onmouseout="UiToolkitAPI.HideTextTooltip();">
+				<RadioButton id="TimesListLobby" class="tabs__tab" onactivate="LeaderboardsHandler.setSelectedTimesList(LeaderboardListType.LOBBY);" onmouseover="LeaderboardsHandler.showLobbyTooltip();" onmouseout="UiToolkitAPI.HideTextTooltip();">
 					<Label class="tabs__text" text="#Leaderboards_Category_Lobby" />
 				</RadioButton>
 			</Panel>
 
 			<Panel id="FilterButtonsSubtype" class="leaderboard-filter-buttons__subtypes">
 				<Panel class="leaderboard-filter-buttons__local tabs">
-					<RadioButton id="LocalTypeRuns" class="tabs__tab" group="LocalTimeTypeBar" selected="true" onactivate="LeaderboardsHandler.setSelectedListType(LeaderboardListType.LOCAL, LeaderboardType.LOCAL);">
+					<RadioButton id="LocalTypeRuns" class="tabs__tab" onactivate="LeaderboardsHandler.setSelectedListType(LeaderboardListType.LOCAL, LeaderboardType.LOCAL);">
 						<Label class="tabs__text" text="#Leaderboards_Category_YourRuns" />
 					</RadioButton>
-					<RadioButton id="LocalTypeDownloaded" class="tabs__tab" group="LocalTimeTypeBar" onactivate="LeaderboardsHandler.setSelectedListType(LeaderboardListType.LOCAL, LeaderboardType.LOCAL_DOWNLOADED);">
+					<RadioButton id="LocalTypeDownloaded" class="tabs__tab" onactivate="LeaderboardsHandler.setSelectedListType(LeaderboardListType.LOCAL, LeaderboardType.LOCAL_DOWNLOADED);">
 						<Label class="tabs__text" text="#Leaderboards_Category_Downloaded" />
 					</RadioButton>
 				</Panel>
 				<Panel class="leaderboard-filter-buttons__online tabs">
-					<RadioButton id="OnlineTypeTop10" class="tabs__tab" group="OnlineTimeTypeBar" selected="true" onactivate="LeaderboardsHandler.setSelectedListType(LeaderboardListType.GLOBAL, LeaderboardType.TOP10);">
+					<RadioButton id="OnlineTypeTop10" class="tabs__tab" onactivate="LeaderboardsHandler.setSelectedListType(LeaderboardListType.GLOBAL, LeaderboardType.TOP10);">
 						<Label class="tabs__text" text="#Leaderboards_Category_Top10" />
 					</RadioButton>
-					<RadioButton id="OnlineTypeAround" class="tabs__tab" group="OnlineTimeTypeBar" onactivate="LeaderboardsHandler.setSelectedListType(LeaderboardListType.GLOBAL, LeaderboardType.AROUND);">
+					<RadioButton id="OnlineTypeAround" class="tabs__tab" onactivate="LeaderboardsHandler.setSelectedListType(LeaderboardListType.GLOBAL, LeaderboardType.AROUND);">
 						<Label class="tabs__text" text="#Leaderboards_Category_Around" />
 					</RadioButton>
-					<RadioButton id="OnlineTypeFriends" class="tabs__tab" group="OnlineTimeTypeBar" onactivate="LeaderboardsHandler.setSelectedListType(LeaderboardListType.GLOBAL, LeaderboardType.FRIENDS);">
+					<RadioButton id="OnlineTypeFriends" class="tabs__tab" onactivate="LeaderboardsHandler.setSelectedListType(LeaderboardListType.GLOBAL, LeaderboardType.FRIENDS);">
 						<Label class="tabs__text" text="#Leaderboards_Category_Friends" />
 					</RadioButton>
 				</Panel>
