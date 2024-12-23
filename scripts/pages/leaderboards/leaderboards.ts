@@ -18,7 +18,23 @@ class LeaderboardsHandler {
 		timesContainer: $<Panel>('#LeaderboardTimesContainer'),
 		emptyWarningText: $<Label>('#LeaderboardEmptyWarningText'),
 		endOfRunButton: $<Button>('#EndOfRunButton'),
-		tracksDropdown: $<DropDown>('#TracksDropdown')
+		tracksDropdown: $<DropDown>('#TracksDropdown'),
+		radioButtons: {
+			listTypes: {
+				global: $<RadioButton>('#TimesListGlobal'),
+				local: $<RadioButton>('#TimesListLocal'),
+				lobby: $<RadioButton>('#TimesListLobby')
+			},
+			local: {
+				runs: $<RadioButton>('#LocalTypeRuns'),
+				downloaded: $<RadioButton>('#LocalTypeDownloaded')
+			},
+			online: {
+				top10: $<RadioButton>('#OnlineTypeTop10'),
+				around: $<RadioButton>('#OnlineTypeAround'),
+				friends: $<RadioButton>('#OnlineTypeFriends')
+			}
+		}
 	};
 
 	constructor() {
@@ -29,10 +45,23 @@ class LeaderboardsHandler {
 		$.RegisterForUnhandledEvent('Leaderboards_MapDataSet', (isOfficial) => this.onMapLoad(isOfficial));
 		$.RegisterForUnhandledEvent('Leaderboards_MapLeaderboardsLoaded', (map) => this.onMapLeaderboardsLoad(map));
 
+		// Note: Can't set radio button groups in the XML because it causes multiple leaderboard instances to interfere with eachother
+		const lbType = this.panels.cp.id === 'TabMenuLeaderboards' ? 'TabMenu' : 'MapSelector';
+		Object.entries(this.panels.radioButtons).forEach(([group, buttons]) => {
+			Object.values(buttons).forEach((button) => (button.group = lbType + group));
+		});
+
+		this.panels.radioButtons.listTypes.global.SetSelected(true);
+		this.panels.radioButtons.local.runs.SetSelected(true);
+		this.panels.radioButtons.online.top10.SetSelected(true);
+
 		// Default to Top 10
 		this.setSelectedTimesList(LeaderboardListType.GLOBAL);
 		this.setSelectedListType(LeaderboardListType.GLOBAL, LeaderboardType.TOP10);
 		this.setSelectedListType(LeaderboardListType.LOCAL, LeaderboardType.LOCAL);
+
+		this.panels.tracksDropdown.RemoveAllOptions();
+		this.panels.tracksDropdown.visible = false;
 	}
 
 	onTimesUpdated(count: number) {
