@@ -185,8 +185,63 @@ class LeaderboardsHandler {
 	/**
 	 * Hide the button to go to the end of run page.
 	 */
-	onMapLoad(_isOfficial: boolean) {
+	onMapLoad(isOfficial: boolean) {
 		this.panels.endOfRunButton.visible = false;
+
+		if (isOfficial) {
+			return; // Load official leaderboard tracks instead
+		}
+
+		// Try to load tracks from local zones
+		const mapZoneData = MomentumTimerAPI.GetActiveZoneDefs();
+		if (mapZoneData) {
+			// Main track
+			{
+				const trackStr = $.Localize('#Leaderboards_Tracks_Main');
+				const item = $.CreatePanel('Label', this.panels.tracksDropdown, trackStr, {
+					text: trackStr,
+					value: 0
+				});
+				item.SetAttributeInt('trackNum', 1);
+				item.SetAttributeInt('trackType', TrackType.MAIN);
+
+				this.panels.tracksDropdown.AddOption(item);
+			}
+
+			// Stage tracks
+			const segments = mapZoneData.tracks.main.zones.segments;
+			if (segments.length > 1) {
+				segments.forEach((_, index) => {
+					const trackStr = `${$.Localize('#Leaderboards_Tracks_Stage')} ${index + 1}`;
+					const item = $.CreatePanel('Label', this.panels.tracksDropdown, trackStr, {
+						text: trackStr,
+						value: index + 1
+					});
+					item.SetAttributeInt('trackNum', index + 1);
+					item.SetAttributeInt('trackType', TrackType.STAGE);
+
+					this.panels.tracksDropdown.AddOption(item);
+				});
+			}
+
+			// Bonus tracks
+			const bonuses = mapZoneData.tracks.bonuses;
+			if (bonuses) {
+				bonuses.forEach((_, index) => {
+					const trackStr = `${$.Localize('#Leaderboards_Tracks_Bonus')} ${index + 1}`;
+					const item = $.CreatePanel('Label', this.panels.tracksDropdown, trackStr, {
+						text: trackStr,
+						value: index + 1
+					});
+					item.SetAttributeInt('trackNum', index + 1);
+					item.SetAttributeInt('trackType', TrackType.BONUS);
+
+					this.panels.tracksDropdown.AddOption(item);
+				});
+			}
+		}
+
+		this.initTracksDropdown();
 	}
 
 	onMapLeaderboardsLoad(map: MMap) {
@@ -216,6 +271,16 @@ class LeaderboardsHandler {
 				this.panels.tracksDropdown.AddOption(item);
 			});
 
+		this.initTracksDropdown();
+	}
+
+	initTracksDropdown() {
+		if (this.panels.tracksDropdown.AccessDropDownMenu().GetChildCount() === 0) {
+			this.panels.tracksDropdown.visible = false;
+			return;
+		}
+
+		this.panels.tracksDropdown.visible = true;
 		this.panels.tracksDropdown.SetSelectedIndex(0);
 		this.panels.tracksDropdown.SetPanelEvent('onuserinputsubmit', () => {
 			const selected = this.panels.tracksDropdown.GetSelected();
