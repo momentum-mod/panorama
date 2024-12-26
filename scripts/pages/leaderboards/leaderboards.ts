@@ -38,14 +38,10 @@ class LeaderboardsHandler {
 	};
 
 	constructor() {
-		$.RegisterEventHandler('Leaderboards_TimesFiltered', $.GetContextPanel(), (count) =>
-			this.onTimesUpdated(count)
-		);
-		$.RegisterEventHandler('EndOfRun_Show', $.GetContextPanel(), (reason) => this.onShowEndOfRun(reason));
-		$.RegisterEventHandler('Leaderboards_MapDataSet', $.GetContextPanel(), (isOfficial) =>
-			this.onMapLoad(isOfficial)
-		);
-		$.RegisterEventHandler('Leaderboards_MapLeaderboardsLoaded', $.GetContextPanel(), (map) =>
+		$.RegisterEventHandler('Leaderboards_TimesFiltered', this.panels.cp, (count) => this.onTimesUpdated(count));
+		$.RegisterEventHandler('EndOfRun_Show', this.panels.cp, (reason) => this.onShowEndOfRun(reason));
+		$.RegisterEventHandler('Leaderboards_MapDataSet', this.panels.cp, (isOfficial) => this.onMapLoad(isOfficial));
+		$.RegisterEventHandler('Leaderboards_MapLeaderboardsLoaded', this.panels.cp, (map) =>
 			this.onMapLeaderboardsLoad(map)
 		);
 
@@ -125,7 +121,7 @@ class LeaderboardsHandler {
 					break;
 			}
 			if (warningText) {
-				$.GetContextPanel().SetDialogVariable('empty-warning', $.Localize(warningText));
+				this.panels.cp.SetDialogVariable('empty-warning', $.Localize(warningText));
 				this.panels.timesContainer.AddClass('leaderboard-times__main--empty');
 			}
 		}
@@ -247,7 +243,7 @@ class LeaderboardsHandler {
 	onMapLeaderboardsLoad(map: MMap) {
 		this.panels.tracksDropdown.RemoveAllOptions();
 
-		const isTabMenu = $.GetContextPanel().id === 'TabMenuLeaderboard';
+		const isTabMenu = this.panels.cp.id === 'TabMenuLeaderboard';
 		const currentMode = isTabMenu ? GameModeAPI.GetCurrentGameMode() : GameModeAPI.GetMetaGameMode();
 		map.leaderboards
 			.filter((leaderboard) => leaderboard.gamemode === currentMode)
