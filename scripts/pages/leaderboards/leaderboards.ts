@@ -194,7 +194,7 @@ class LeaderboardsHandler {
 			// Main track
 			{
 				const trackStr = $.Localize('#Leaderboards_Tracks_Main');
-				const item = $.CreatePanel('Label', this.panels.tracksDropdown, trackStr, {
+				const item = $.CreatePanel('Label', this.panels.tracksDropdown, '', {
 					text: trackStr,
 					value: 0
 				});
@@ -209,7 +209,7 @@ class LeaderboardsHandler {
 			if (segments.length > 1) {
 				segments.forEach((_, index) => {
 					const trackStr = `${$.Localize('#Leaderboards_Tracks_Stage')} ${index + 1}`;
-					const item = $.CreatePanel('Label', this.panels.tracksDropdown, trackStr, {
+					const item = $.CreatePanel('Label', this.panels.tracksDropdown, '', {
 						text: trackStr,
 						value: index + 1
 					});
@@ -225,7 +225,7 @@ class LeaderboardsHandler {
 			if (bonuses) {
 				bonuses.forEach((_, index) => {
 					const trackStr = `${$.Localize('#Leaderboards_Tracks_Bonus')} ${index + 1}`;
-					const item = $.CreatePanel('Label', this.panels.tracksDropdown, trackStr, {
+					const item = $.CreatePanel('Label', this.panels.tracksDropdown, '', {
 						text: trackStr,
 						value: index + 1
 					});
@@ -258,7 +258,7 @@ class LeaderboardsHandler {
 					trackStr = `${$.Localize('#Leaderboards_Tracks_Bonus')} ${leaderboard.trackNum}`;
 				}
 
-				const item = $.CreatePanel('Label', this.panels.tracksDropdown, trackStr, {
+				const item = $.CreatePanel('Label', this.panels.tracksDropdown, '', {
 					text: trackStr,
 					value: index
 				});
