@@ -1,7 +1,7 @@
 import { exposeToPanelContext, PanelHandler } from 'util/module-helpers';
 import { LeaderboardListType, LeaderboardStatusType, LeaderboardType, sortLeaderboard } from 'common/leaderboard';
 import { EndOfRunShowReason } from 'common/timer';
-import { Leaderboard, MMap, TrackType } from 'common/web';
+import { MMap, TrackType } from 'common/web';
 
 exposeToPanelContext({ LeaderboardListType, LeaderboardType });
 
