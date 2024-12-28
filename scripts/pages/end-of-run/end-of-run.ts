@@ -201,6 +201,10 @@ class EndOfRunHandler {
 
 		// Loop through each zone in the run and create a neutral Split panel with no diff/delta
 		run.runSplits.segments.forEach((segment, i) => {
+			if (i === 0) {
+				return;
+			}
+
 			// TODO: Subsegments!
 			const name = Timer.getSegmentName(i, 0);
 
@@ -213,12 +217,22 @@ class EndOfRunHandler {
 				time: segment.subsegments[0].timeReached,
 				isFirst: true
 			});
-
-			// Scroll the rightmost split
-			if (i === run.runSplits.segments.length - 1) {
-				splitWrapper.ScrollParentToMakePanelFit(3, false);
-			}
 		});
+
+		// Finish split
+		const numSegments = run.runSplits.segments.length;
+		const splitWrapper = $.CreatePanel('Panel', this.panels.splits, `Split${numSegments}`, {
+			class: 'endofrun__split'
+		});
+
+		Object.assign($.CreatePanel('Split', splitWrapper, '', { class: 'split--eor' }), {
+			name: numSegments,
+			time: run.runTime,
+			isFirst: true
+		});
+
+		// Scroll the rightmost split
+		splitWrapper.ScrollParentToMakePanelFit(3, false);
 
 		this.panels.cp.SetDialogVariable('comparison_name', '');
 
