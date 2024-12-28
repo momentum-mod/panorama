@@ -117,12 +117,12 @@ export class LineGraphHandler {
 					let secondsStr = time < 10 && extreme < 10 ? seconds.toFixed(precision) : seconds.toString();
 					let minuteStr = minutes.toString();
 
-					markerValueStr = `${sign}${seconds}`;
+					markerValueStr = `${sign}${secondsStr}`;
 					if (extreme >= 60) {
 						if (extreme >= 3600 && minutes < 10) minuteStr = '0' + minuteStr;
 						if (seconds < 10) secondsStr = '0' + secondsStr;
 						markerValueStr =
-							extreme >= 3600 ? `${sign}${hours}:${minutes}` : `${sign}${minutes}:${seconds}`;
+							extreme >= 3600 ? `${sign}${hours}:${minuteStr}` : `${sign}${minuteStr}:${secondsStr}`;
 					}
 				}
 
