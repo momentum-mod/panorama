@@ -379,9 +379,9 @@ class EndOfRunHandler {
 
 		// Now decide whether to increase the number of intervals. This is just based on what looks good to me.
 		let yInterval: number;
-		if (range / scaleFactor >= 2) yInterval = scaleFactor;
-		else if (range / scaleFactor >= 1) yInterval = scaleFactor / 2;
-		else yInterval = scaleFactor / 4;
+		if (range / scaleFactor >= 2) yInterval = scaleFactor * 2;
+		else if (range / scaleFactor >= 1) yInterval = scaleFactor;
+		else yInterval = scaleFactor / 2;
 
 		// Set the axis
 		lineGraph.axis = [
