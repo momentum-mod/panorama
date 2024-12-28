@@ -29,23 +29,11 @@ class EndOfRunHandler {
 	selectedSplit: Timer.ComparisonSplit;
 
 	constructor() {
-		// TODO: I'm using undefined rather than null here, which should be right for datamap usage (mixing null and
-		// undefined can be confusing, using `undefined` when unsure)
-		// $.RegisterForUnhandledEvent('EndOfRun_CompareRuns', (baseRun, compareRun) =>
-		// 	this.setComparison(baseRun, compareRun)
-		// );
-		$.RegisterForUnhandledEvent('EndOfRun_Show', (reason) => this.showNewEndOfRun(reason));
 		$.RegisterForUnhandledEvent('EndOfRun_Result_RunUpload', (uploaded, cosXP, rankXP, lvlGain) =>
 			this.updateRunUploadStatus(uploaded, cosXP, rankXP, lvlGain)
 		);
-		$.RegisterForUnhandledEvent('EndOfRun_Result_RunSave', (saved) => this.updateRunSavedStatus(saved));
+		$.RegisterForUnhandledEvent('EndOfRun_Result_RunSave', (saved, run) => this.updateRunSavedStatus(saved, run));
 		$.RegisterForUnhandledEvent('Leaderboards_MapDataSet', (isOfficial) => this.initOnMapLoad(isOfficial));
-	}
-
-	/** Set the current base run and comparison run */
-	setComparison(base: Timer.RunMetadata, comparison?: Timer.RunMetadata) {
-		this.baseRun = base;
-		this.comparisonRun = comparison;
 	}
 
 	/** Hides the end of run panel, when a new map is loaded. */
@@ -106,7 +94,17 @@ class EndOfRunHandler {
 		}
 	}
 
-	updateRunSavedStatus(saved: boolean) {
+	updateRunSavedStatus(saved: boolean, run: Timer.RunMetadata) {
+		const observedStatus = MomentumTimerAPI.GetObservedTimerStatus();
+		if (observedStatus.trackId.type !== run.trackId.type || observedStatus.trackId.number !== run.trackId.number) {
+			return;
+		}
+
+		this.baseRun = run;
+		this.comparisonRun = RunComparisonsAPI.GetComparisonRun();
+
+		this.showNewEndOfRun(Timer.EndOfRunShowReason.PLAYER_FINISHED_RUN);
+
 		this.updateRunStatusIndicator(
 			saved ? Timer.RunStatusStates.SUCCESS : Timer.RunStatusStates.ERROR,
 			Timer.RunStatusTypes.SAVE
@@ -177,7 +175,11 @@ class EndOfRunHandler {
 		this.panels.cp.SetDialogVariableFloat('run_time', this.baseRun.runTime);
 
 		// If we have a comparison, make the full stats, otherwise just simple page without graph
-		if (this.comparisonRun) {
+		if (
+			this.comparisonRun &&
+			this.comparisonRun.trackId.type === this.baseRun.trackId.type &&
+			this.comparisonRun.trackId.number === this.baseRun.trackId.number
+		) {
 			this.setComparisionStats();
 		} else {
 			this.setSingleRunStats();
