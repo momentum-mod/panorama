@@ -153,7 +153,7 @@ export function generateComparison(baseRun: RunMetadata, comparisonRun: RunMetad
 // TODO: untested
 export function generateOverallComparisonSplit(baseRun: RunMetadata, comparisonRun: RunMetadata): ComparisonSplit {
 	return {
-		name: 'Overall',
+		name: 'Run_Comparison_Split_Overall',
 		accumulateTime: baseRun.runTime,
 		time: baseRun.runTime,
 		diff: baseRun.runTime - comparisonRun.runTime,
