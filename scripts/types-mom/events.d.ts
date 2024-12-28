@@ -288,7 +288,7 @@ interface GlobalEventNameMap {
 	EndOfRun_Hide: () => void;
 
 	/** Fired when the replay recording finishes and passes whether writing the file was successful */
-	EndOfRun_Result_RunSave: (saved: boolean) => void;
+	EndOfRun_Result_RunSave: (saved: boolean, run: RunMetadata) => void;
 
 	/** Fired when the replay recording finishes and passes whether writing the file was successful */
 	EndOfRun_Result_RunUpload: (uploaded: boolean, cosXP: number, rankXP: number, lvlGain: number) => void;
