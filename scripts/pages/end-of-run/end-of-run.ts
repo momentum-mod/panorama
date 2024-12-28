@@ -250,28 +250,30 @@ class EndOfRunHandler {
 		// Create splits for every comparison
 		// TODO: Subsegments!
 		comparison.segmentSplits.forEach((split, i) => {
+			const subsplit = split[0];
+
 			// Create radiobutton rather than regular panel to wrap the split in
-			const button = $.CreatePanel('RadioButton', this.panels.splits, `Split${split.name}`, {
+			const button = $.CreatePanel('RadioButton', this.panels.splits, `Split${subsplit.name}`, {
 				class: 'endofrun__split-button',
 				group: 'end-of-run-split-buttons'
 			});
 
 			// Wrapper button updates selected stats and graph point
 			button.SetPanelEvent('onactivate', () => {
-				if (this.selectedSplit === split) {
+				if (this.selectedSplit === subsplit) {
 					$.DispatchEvent('Activated', overallSplitPanel, 'mouse');
 					this.setSelectedSplit(comparison.overallSplit, comparison);
 				} else {
-					this.setSelectedSplit(split, comparison);
+					this.setSelectedSplit(subsplit, comparison);
 				}
 			});
 
 			Object.assign($.CreatePanel('Split', button, '', { class: 'split--eor' }), {
-				name: split.name,
-				time: split.accumulateTime,
+				name: subsplit.name,
+				time: subsplit.accumulateTime,
 				isFirst: false,
-				diff: split.diff,
-				delta: split.delta
+				diff: subsplit.diff,
+				delta: subsplit.delta
 			});
 
 			// Scroll the rightmost split
@@ -350,14 +352,16 @@ class EndOfRunHandler {
 
 		// Find max and min diff for the run
 		for (const split of comparisonSplits) {
-			max = Math.max(max, useStat ? split.statsComparisons[statIndex].diff : split.diff);
-			min = Math.min(min, useStat ? split.statsComparisons[statIndex].diff : split.diff);
+			const subsplit = split[0];
+
+			max = Math.max(max, useStat ? subsplit.statsComparisons[statIndex].diff : subsplit.diff);
+			min = Math.min(min, useStat ? subsplit.statsComparisons[statIndex].diff : subsplit.diff);
 		}
 
 		// Add some vertical spacing to the graph
 		const spacing = (max - min) / 10;
-		if (max > 0 && max !== comparisonSplits.at(-1).diff) max += spacing;
-		if (min < 0 && min !== comparisonSplits.at(-1).diff) min -= spacing;
+		if (max > 0 && max !== comparisonSplits.at(-1)[0].diff) max += spacing;
+		if (min < 0 && min !== comparisonSplits.at(-1)[0].diff) min -= spacing;
 
 		const range = max - min;
 
@@ -386,7 +390,7 @@ class EndOfRunHandler {
 		// Set the axis
 		lineGraph.axis = [
 			{
-				min: 0,
+				min: 1,
 				max: numZones,
 				name: $.Localize('#Common_Zone'),
 				// Limit max zones we draw an axis for to 30
@@ -398,7 +402,7 @@ class EndOfRunHandler {
 				min: min,
 				max: max,
 				name: $.Localize(
-					useStat ? comparisonSplits[0].statsComparisons[statIndex].name : '#Run_Stat_Name_Time'
+					useStat ? comparisonSplits[0][0].statsComparisons[statIndex].name : '#Run_Stat_Name_Time'
 				),
 				interval: yInterval,
 				timeBased: !useStat
@@ -406,9 +410,11 @@ class EndOfRunHandler {
 		];
 
 		// Make our points
+		// TODO: Subsegment splits
 		for (const [i, split] of comparisonSplits.entries()) {
-			const splitName = split.name;
-			const data = useStat ? { ...split.statsComparisons[statIndex], time: 0, delta: 0 } : split;
+			const subsplit = split[0];
+			const splitName = subsplit.name;
+			const data = useStat ? { ...subsplit.statsComparisons[statIndex], time: 0, delta: 0 } : subsplit;
 			const isTimeComparison = !useStat || ('unit' in data && data.unit === $.Localize('#Run_Stat_Unit_Second'));
 
 			let tooltipString;
@@ -493,7 +499,7 @@ class EndOfRunHandler {
 		// Whether the invert the positive and negative zones. We don't currently have a great way of determining this,
 		// the best we can do is use the units - lets add this to the stats data in the future.
 		// For now, strafe sync and any speed are usually good, so invert those.
-		const stat = comparisonSplits[0].statsComparisons[statIndex];
+		const stat = comparisonSplits[0][0].statsComparisons[statIndex];
 
 		$.CreatePanel('Panel', grid, '', {
 			class: isPositiveGood(stat) ? 'endofrun-graph__negative' : 'endofrun-graph__positive',

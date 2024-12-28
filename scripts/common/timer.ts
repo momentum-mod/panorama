@@ -1,6 +1,5 @@
 type Gamemode = import('common/web').Gamemode;
 
-/* eslint-disable @typescript-eslint/naming-convention */
 export enum TimerEvent_OLD {
 	STARTED = 0,
 	FINISHED = 1,
@@ -128,7 +127,7 @@ export interface Comparison {
 	comparisonRun: RunMetadata;
 	diff: number;
 	overallSplit: ComparisonSplit;
-	segmentSplits: ComparisonSplit[];
+	segmentSplits: ComparisonSplit[][];
 }
 
 export interface ComparisonSplit {
@@ -146,7 +145,7 @@ export function generateComparison(baseRun: RunMetadata, comparisonRun: RunMetad
 		comparisonRun,
 		diff: baseRun.runTime - comparisonRun.runTime,
 		overallSplit: generateOverallComparisonSplit(baseRun, comparisonRun),
-		segmentSplits: generateComparisonSplits(baseRun.runSplits, comparisonRun.runSplits)
+		segmentSplits: generateComparisonSplits(baseRun, comparisonRun)
 	};
 }
 
@@ -162,11 +161,31 @@ export function generateOverallComparisonSplit(baseRun: RunMetadata, comparisonR
 	};
 }
 
-export function generateComparisonSplits(baseRunSplits: RunSplits, comparisonRunSplits: RunSplits): ComparisonSplit[] {
-	return baseRunSplits.segments.map((_, i) =>
-		// TODO: Generate subsegment splits
-		generateSegmentComparisonSplit(baseRunSplits, comparisonRunSplits, i, 0)
+export function generateComparisonSplits(baseRun: RunMetadata, comparisonRun: RunMetadata): ComparisonSplit[][] {
+	const comparisonSplits = baseRun.runSplits.segments.map((segment, i) =>
+		segment.subsegments.map((_, j) =>
+			generateSegmentComparisonSplit(baseRun.runSplits, comparisonRun.runSplits, i, j)
+		)
 	);
+
+	// Remove first split since both segments will be at timeReached == 0
+	if (comparisonSplits[0].length <= 1) {
+		// First segment only has one split, so remove entire segment
+		comparisonSplits.shift();
+	} else {
+		comparisonSplits[0].shift();
+	}
+
+	comparisonSplits.push([
+		generateFinishSplitComparison(
+			baseRun.runTime,
+			baseRun.runSplits,
+			comparisonRun.runTime,
+			comparisonRun.runSplits
+		)
+	]);
+
+	return comparisonSplits;
 }
 
 export function generateSegmentComparisonSplit(
