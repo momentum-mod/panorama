@@ -102,8 +102,8 @@ export class LineGraphHandler {
 				const offset = 'position: ' + (isX ? `${dist}px 0px 0px;` : `0px ${dist}px 0px;`);
 
 				// Linear interpolate to determine marker text, backwards for Y. Then round to precision and cast back to Number.
-				const markerValue = isX ? lineMin + j : lineMax + lineMin - j;
-				let markerValueStr = markerValue.toFixed(precision);
+				const markerValue = isX ? j : lineMax + lineMin - j;
+				let markerValueStr = markerValue.toFixed(isX ? 0 : precision);
 				if (axis.timeBased) {
 					const extreme = Math.max(Math.abs(axis.min), Math.abs(axis.max));
 					const time = Math.abs(markerValue);
