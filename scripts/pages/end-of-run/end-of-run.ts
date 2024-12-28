@@ -345,10 +345,9 @@ class EndOfRunHandler {
 		const useStat = statIndex !== null;
 		// TODO: Below is so ugly. We can probably turn RunStatsUnits into something like
 		// RunStatsProperties: Record<keyof RunStats, {unit: string, isPositiveGood: boolean}>
-		// const isPositiveGood = (s: ComparisonSplit | RunStatsComparison) =>
-		// 	useStat && ((s as RunStatsComparison).unit.includes('UnitsPerSecond') || s.name.includes('StrafeSync'));
-		// temp hack
-		const isPositiveGood = (s: any) => true;
+		const isPositiveGood = (s: ComparisonSplit | Timer.RunStatsComparison) => {
+			return useStat && ((s as Timer.RunStatsComparison).unit.includes('ups') || s.name.includes('strafes'));
+		};
 
 		// Find max and min diff for the run
 		for (const split of comparisonSplits) {
