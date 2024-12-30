@@ -358,6 +358,9 @@ interface GlobalEventNameMap {
 	 * This event is supposed to be fired back to C++ code to be able to handle the outcome of the Safeguard popup response.
 	 */
 	Safeguard_Response: (type: import('common/safeguards').RunSafeguardType) => void;
+
+	/** Fired when local user data is loaded from disk or fetched from backend. */
+	MomAPI_UserUpdate: (user: import('common/web').User) => void;
 }
 
 interface PanelEventNameMap {

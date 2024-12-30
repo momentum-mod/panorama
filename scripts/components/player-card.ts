@@ -1,4 +1,5 @@
 import { OnPanelLoad, PanelHandler } from 'util/module-helpers';
+import { User } from 'common/web';
 
 @PanelHandler({ exposeToPanel: true })
 export class PlayerCardHandler implements OnPanelLoad {
@@ -10,6 +11,7 @@ export class PlayerCardHandler implements OnPanelLoad {
 
 	onPanelLoad() {
 		this.update();
+		$.RegisterForUnhandledEvent('MomAPI_UserUpdate', (_user: User) => this.update());
 	}
 
 	update() {
