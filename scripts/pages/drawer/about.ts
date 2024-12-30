@@ -7,7 +7,7 @@ class AboutHandler implements OnPanelLoad {
 	onPanelLoad() {
 		this.initCreditEvents();
 
-		$.GetContextPanel().SetDialogVariable('version', MomentumAPI.GetVersionInfo().version);
+		$.GetContextPanel().SetDialogVariable('version', MomentumAPI.GetVersionInfo());
 	}
 
 	initCreditEvents() {
