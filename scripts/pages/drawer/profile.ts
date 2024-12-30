@@ -1,4 +1,5 @@
 import { OnPanelLoad, PanelHandler } from 'util/module-helpers';
+import { User } from 'common/web';
 
 @PanelHandler()
 class ProfileHandler implements OnPanelLoad {
@@ -11,6 +12,7 @@ class ProfileHandler implements OnPanelLoad {
 
 	onPanelLoad() {
 		this.update();
+		$.RegisterForUnhandledEvent('MomAPI_UserUpdate', (_user: User) => this.update());
 	}
 
 	update() {
