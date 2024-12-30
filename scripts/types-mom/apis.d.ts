@@ -21,7 +21,7 @@ declare namespace MomentumAPI {
 	function GetPlayerMoney(): int32;
 	/** Gets Momentum's current version information." */
 
-	function GetVersionInfo(): { version: string };
+	function GetVersionInfo(): string;
 }
 
 declare namespace MomentumMovementAPI {
