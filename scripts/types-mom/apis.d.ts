@@ -2,6 +2,12 @@ type RunMetadata = import('common/timer').RunMetadata;
 type Gamemode = import('common/web').Gamemode;
 
 declare namespace MomentumAPI {
+	/** Gets the entire User object with profile and stats. May be disk-cached data. */
+	function GetPlayerUserData(): import('common/web').User;
+
+	/** Fetch new user data from backend, fires MomAPI_UserUpdate when complete. */
+	function RefreshPlayerUserData(): void;
+
 	/** Gets the local players level */
 	function GetPlayerXp(): int32;
 
