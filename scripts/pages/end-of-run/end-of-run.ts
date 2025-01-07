@@ -119,7 +119,11 @@ class EndOfRunHandler {
 	}
 
 	watchReplay() {
-		GameInterfaceAPI.ConsoleCommand('mom_replay_play_loaded');
+		if (!this.baseRun) {
+			return;
+		}
+
+		GameInterfaceAPI.ConsoleCommand(`mom_tv_replay_watch ${this.baseRun.filePath}`);
 		this.hideEndOfRun(false, true);
 	}
 
