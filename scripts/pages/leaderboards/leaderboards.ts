@@ -17,6 +17,7 @@ class LeaderboardsHandler {
 		lobbyButton: $<Button>('#TimesListLobby'),
 		timesContainer: $<Panel>('#LeaderboardTimesContainer'),
 		emptyWarningText: $<Label>('#LeaderboardEmptyWarningText'),
+		syncTrackButton: $<Button>('#SyncTrackButton'),
 		endOfRunButton: $<Button>('#EndOfRunButton'),
 		tracksDropdown: $<DropDown>('#TracksDropdown'),
 		radioButtons: {
@@ -164,6 +165,24 @@ class LeaderboardsHandler {
 		}
 	}
 
+	syncTrackWithLeaderboard() {
+		const selected = this.panels.tracksDropdown.GetSelected();
+		const trackType = selected.GetAttributeInt('trackType', TrackType.MAIN as number);
+		const trackNum = selected.GetAttributeInt('trackNum', 1);
+
+		switch (trackType) {
+			case TrackType.MAIN:
+				GameInterfaceAPI.ConsoleCommand('mom_main');
+				break;
+			case TrackType.STAGE:
+				GameInterfaceAPI.ConsoleCommand(`mom_stage ${trackNum}`);
+				break;
+			case TrackType.BONUS:
+				GameInterfaceAPI.ConsoleCommand(`mom_bonus ${trackNum}`);
+				break;
+		}
+	}
+
 	showEndOfRun() {
 		$.DispatchEvent('EndOfRun_Show', EndOfRunShowReason.MANUALLY_SHOWN);
 	}
@@ -183,6 +202,7 @@ class LeaderboardsHandler {
 	 */
 	onMapLoad(isOfficial: boolean) {
 		this.panels.endOfRunButton.visible = false;
+		this.panels.syncTrackButton.visible = false;
 
 		if (isOfficial) {
 			return; // Load official leaderboard tracks instead
@@ -191,6 +211,8 @@ class LeaderboardsHandler {
 		// Try to load tracks from local zones
 		const mapZoneData = MomentumTimerAPI.GetActiveZoneDefs();
 		if (mapZoneData) {
+			this.panels.syncTrackButton.visible = true;
+
 			// Main track
 			{
 				const trackStr = $.Localize('#Leaderboards_Tracks_Main');
