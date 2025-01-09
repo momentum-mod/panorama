@@ -199,9 +199,10 @@ export function generateSegmentComparisonSplit(
 		comparisonRunSplits.segments[segmentIndex].subsegments[subsegmentIndex].timeReached;
 	const baseSplitTime = getSplitSegmentTime(baseRunSplits, segmentIndex, subsegmentIndex);
 	const comparisonSplitTime = getSplitSegmentTime(comparisonRunSplits, segmentIndex, subsegmentIndex);
+	const isLinear = baseRunSplits.segments.length === 1;
 
 	return {
-		name: getSegmentName(segmentIndex, subsegmentIndex),
+		name: isLinear ? subsegmentIndex.toString() : getSegmentName(segmentIndex, subsegmentIndex),
 		accumulateTime: baseAccumulateTime,
 		time: baseSplitTime,
 		diff: baseAccumulateTime - comparisonAccumulateTime,
@@ -221,9 +222,12 @@ export function generateFinishSplitComparison(
 ): ComparisonSplit {
 	const baseSplitTime = baseRunTime - baseRunSplits.segments.at(-1).subsegments.at(-1).timeReached;
 	const comparisonSplitTime = comparisonRunTime - comparisonRunSplits.segments.at(-1).subsegments.at(-1).timeReached;
+	const isLinear = baseRunSplits.segments.length === 1;
 
 	return {
-		name: baseRunSplits.segments.length.toString(),
+		name: isLinear
+			? baseRunSplits.segments[0].subsegments.length.toString()
+			: baseRunSplits.segments.length.toString(),
 		accumulateTime: baseRunTime,
 		time: baseSplitTime,
 		diff: baseRunTime - comparisonRunTime,
