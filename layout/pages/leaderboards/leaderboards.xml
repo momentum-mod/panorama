@@ -49,6 +49,12 @@
 				<Panel id="placeholder" /> <!-- This is needed to unfuck the dynamic dropdown -->
 			</DropDown>
 
+			<TooltipPanel tooltip="#Leaderboards_SyncTrackButton" class="v-align-center">
+				<Button id="SyncTrackButton" class="button leaderboards__button" onactivate="LeaderboardsHandler.syncTrackWithLeaderboard();">
+					<Image class="button__icon" src="file://{images}/refresh.svg" textureheight="32" />
+				</Button>
+			</TooltipPanel>
+
 			<TooltipPanel tooltip="#Leaderboards_EndOfRunButton" class="v-align-center">
 				<Button id="EndOfRunButton" class="button leaderboards__button" onactivate="LeaderboardsHandler.showEndOfRun();">
 					<Image class="button__icon button__icon--left" src="file://{images}/arrow-thick-right.svg" textureheight="64" />
