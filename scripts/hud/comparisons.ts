@@ -48,6 +48,8 @@ class HudComparisonsHandler {
 			timerStatus.trackId.type === this.comparison.trackId.type &&
 			timerStatus.trackId.number === this.comparison.trackId.number;
 
+		const isLinear = timerStatus.segmentsCount === 1;
+
 		// TODO: Unordered/optional splits
 		if (timerStatus.state === Timer.TimerState.RUNNING) {
 			if (timerStatus.majorNum <= 1 && timerStatus.minorNum <= 1) {
@@ -62,11 +64,14 @@ class HudComparisonsHandler {
 						timerStatus.minorNum - 1
 					)
 				: {
-						name: Timer.getSegmentName(timerStatus.majorNum - 1, timerStatus.minorNum - 1),
+						name: isLinear
+							? (timerStatus.minorNum - 1).toString()
+							: Timer.getSegmentName(timerStatus.majorNum - 1, timerStatus.minorNum - 1),
 						accumulateTime: timerStatus.runTime
 					};
 
-			this.addComparisonSplit(split, timerStatus.minorNum > 1, hasCompare);
+			const isSubSplit = !isLinear && timerStatus.minorNum > 1;
+			this.addComparisonSplit(split, isSubSplit, hasCompare);
 		} else if (timerStatus.state === Timer.TimerState.FINISHED) {
 			const split = hasCompare
 				? Timer.generateFinishSplitComparison(
@@ -76,7 +81,9 @@ class HudComparisonsHandler {
 						this.comparison.runSplits
 					)
 				: {
-						name: runSplits.segments.length.toString(),
+						name: isLinear
+							? runSplits.segments[0].subsegments.length.toString()
+							: runSplits.segments.length.toString(),
 						accumulateTime: timerStatus.runTime
 					};
 
