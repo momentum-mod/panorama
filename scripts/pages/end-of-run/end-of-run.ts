@@ -199,23 +199,26 @@ class EndOfRunHandler {
 		// Give the styling for a first/no comparison set run
 		this.panels.cp.AddClass('endofrun--first');
 
+		const isLinear = run.runSplits.segments.length === 1;
+
 		// Loop through each zone in the run and create a neutral Split panel with no diff/delta
 		run.runSplits.segments.forEach((segment, i) => {
-			if (i === 0) {
-				return;
-			}
+			segment.subsegments.forEach((subsegment, j) => {
+				if (i === 0 && j === 0) {
+					return;
+				}
 
-			// TODO: Subsegments!
-			const name = Timer.getSegmentName(i, 0);
+				const name = isLinear ? j.toString() : Timer.getSegmentName(i, j);
 
-			const splitWrapper = $.CreatePanel('Panel', this.panels.splits, `Split${name}`, {
-				class: 'endofrun__split'
-			});
+				const splitWrapper = $.CreatePanel('Panel', this.panels.splits, `Split${name}`, {
+					class: 'endofrun__split'
+				});
 
-			Object.assign($.CreatePanel('Split', splitWrapper, '', { class: 'split--eor' }), {
-				name: name,
-				time: segment.subsegments[0].timeReached,
-				isFirst: true
+				Object.assign($.CreatePanel('Split', splitWrapper, '', { class: 'split--eor' }), {
+					name: name,
+					time: subsegment.timeReached,
+					isFirst: true
+				});
 			});
 		});
 
@@ -264,38 +267,37 @@ class EndOfRunHandler {
 		});
 
 		// Create splits for every comparison
-		// TODO: Subsegments!
 		comparison.segmentSplits.forEach((split, i) => {
-			const subsplit = split[0];
+			split.forEach((subsplit, j) => {
+				// Create radiobutton rather than regular panel to wrap the split in
+				const button = $.CreatePanel('RadioButton', this.panels.splits, `Split${subsplit.name}`, {
+					class: 'endofrun__split-button',
+					group: 'end-of-run-split-buttons'
+				});
 
-			// Create radiobutton rather than regular panel to wrap the split in
-			const button = $.CreatePanel('RadioButton', this.panels.splits, `Split${subsplit.name}`, {
-				class: 'endofrun__split-button',
-				group: 'end-of-run-split-buttons'
-			});
+				// Wrapper button updates selected stats and graph point
+				button.SetPanelEvent('onactivate', () => {
+					if (this.selectedSplit === subsplit) {
+						$.DispatchEvent('Activated', overallSplitPanel, 'mouse');
+						this.setSelectedSplit(comparison.overallSplit, comparison);
+					} else {
+						this.setSelectedSplit(subsplit, comparison);
+					}
+				});
 
-			// Wrapper button updates selected stats and graph point
-			button.SetPanelEvent('onactivate', () => {
-				if (this.selectedSplit === subsplit) {
-					$.DispatchEvent('Activated', overallSplitPanel, 'mouse');
-					this.setSelectedSplit(comparison.overallSplit, comparison);
-				} else {
-					this.setSelectedSplit(subsplit, comparison);
+				Object.assign($.CreatePanel('Split', button, '', { class: 'split--eor' }), {
+					name: subsplit.name,
+					time: subsplit.accumulateTime,
+					isFirst: false,
+					diff: subsplit.diff,
+					delta: subsplit.delta
+				});
+
+				// Scroll the rightmost split
+				if (i === comparison.segmentSplits.length - 1 && j === split.length - 1) {
+					button.ScrollParentToMakePanelFit(3, false);
 				}
 			});
-
-			Object.assign($.CreatePanel('Split', button, '', { class: 'split--eor' }), {
-				name: subsplit.name,
-				time: subsplit.accumulateTime,
-				isFirst: false,
-				diff: subsplit.diff,
-				delta: subsplit.delta
-			});
-
-			// Scroll the rightmost split
-			if (i === comparison.segmentSplits.length - 1) {
-				button.ScrollParentToMakePanelFit(3, false);
-			}
 		});
 
 		// Make the graph
@@ -356,7 +358,8 @@ class EndOfRunHandler {
 		// Point for each zone
 		const comparisonSplits = comparison.segmentSplits;
 
-		const numZones = comparisonSplits.length;
+		const isLinear = comparisonSplits.length <= 2; // Linear maps can have comparison splits for both the checkpoints and end zone
+		const numZones = isLinear ? comparisonSplits[0].length + 1 : comparisonSplits.length;
 
 		const useStat = statIndex !== null;
 		// TODO: Below is so ugly. We can probably turn RunStatsUnits into something like
@@ -367,10 +370,10 @@ class EndOfRunHandler {
 
 		// Find max and min diff for the run
 		for (const split of comparisonSplits) {
-			const subsplit = split[0];
-
-			max = Math.max(max, useStat ? subsplit.statsComparisons[statIndex].diff : subsplit.diff);
-			min = Math.min(min, useStat ? subsplit.statsComparisons[statIndex].diff : subsplit.diff);
+			for (const subsplit of split) {
+				max = Math.max(max, useStat ? subsplit.statsComparisons[statIndex].diff : subsplit.diff);
+				min = Math.min(min, useStat ? subsplit.statsComparisons[statIndex].diff : subsplit.diff);
+			}
 		}
 
 		// Add some vertical spacing to the graph
@@ -425,72 +428,79 @@ class EndOfRunHandler {
 		];
 
 		// Make our points
-		// TODO: Subsegment splits
 		for (const [i, split] of comparisonSplits.entries()) {
-			const subsplit = split[0];
-			const splitName = subsplit.name;
-			const data = useStat ? { ...subsplit.statsComparisons[statIndex], time: 0, delta: 0 } : subsplit;
-			const isTimeComparison = !useStat || ('unit' in data && data.unit === $.Localize('#Run_Stat_Unit_Second'));
+			for (const [j, subsplit] of split.entries()) {
+				const splitName = subsplit.name;
+				const data = useStat ? { ...subsplit.statsComparisons[statIndex], time: 0, delta: 0 } : subsplit;
+				const isTimeComparison =
+					!useStat || ('unit' in data && data.unit === $.Localize('#Run_Stat_Unit_Second'));
 
-			let tooltipString;
-			const compareVal = isPositiveGood(data) ? -data.diff : data.diff;
-			const diffStyle = compareVal < 0 ? 'split--ahead ' : compareVal > 0 ? 'split--behind ' : '';
-			if (!useStat) {
-				const deltaStyle =
-					(data.diff < 0 ? 'split--ahead ' : data.diff > 0 ? 'split--behind ' : '') +
-					(data.delta < 0 ? 'split--gain' : data.delta > 0 ? 'split--loss' : '');
+				let tooltipString;
+				const compareVal = isPositiveGood(data) ? -data.diff : data.diff;
+				const diffStyle = compareVal < 0 ? 'split--ahead ' : compareVal > 0 ? 'split--behind ' : '';
+				if (!useStat) {
+					const deltaStyle =
+						(data.diff < 0 ? 'split--ahead ' : data.diff > 0 ? 'split--behind ' : '') +
+						(data.delta < 0 ? 'split--gain' : data.delta > 0 ? 'split--loss' : '');
 
-				//prettier-ignore
-				tooltipString =
-					`${$.Localize('#Run_Comparison_TotalTime')}: <b>{g:time:total_time}</b>\n` +
-					`${$.Localize('#Run_Comparison_ZoneTime')}: <b>{g:time:zone_time}</b>\n` +
-					`${$.Localize('#Run_Comparison_Diff')}: <b class='${diffStyle}'>${this.getDiffSign(data.diff)}{g:time:time_diff}</b>\n` +
-					`${$.Localize('#Run_Comparison_Delta')}: <b class='${deltaStyle}'>${this.getDiffSign(data.delta)}{g:time:time_delta}</b>`;
-			} else {
-				// Using string instead of float here, floats add a shit ton of floating point imprecision e.g. 90.00000000128381273
-				// prettier-ignore
-				tooltipString =
-					'{s:name}: <b>{s:base_value}</b>\n' +
-					`${$.Localize('#Run_Comparison')}: <b>{s:compare_value}</b>\n` +
-					`${$.Localize('#Run_Comparison_Diff')}: <b class='${diffStyle}'>${this.getDiffSign(
-						data.diff
-					)}{s:diff}</b>`;
-			}
-
-			line.points.push({
-				// 0th stage was just the hidden point at [0, 0] added to the array on initialisation above
-				id: `Point${splitName}`,
-				x: i + 1,
-				y: data.diff,
-				selectionSize: 25,
-				events: {
-					// Set the activate event to just press the radiobutton in the splits panel, simplifies the code.
-					onactivate: (_) => $.DispatchEvent('Activated', $(`#Split${splitName}`), 'mouse'),
-					onmouseover: (id) => {
-						if (isTimeComparison) {
-							const splitCompare = data as ComparisonSplit;
-							this.panels.cp.SetDialogVariableFloat('total_time', splitCompare.accumulateTime);
-							this.panels.cp.SetDialogVariableFloat('zone_time', data.time);
-							this.panels.cp.SetDialogVariableFloat('time_diff', data.diff);
-							this.panels.cp.SetDialogVariableFloat('time_delta', data.delta);
-						} else {
-							const statCompare = data as Timer.RunStatsComparison;
-							this.panels.cp.SetDialogVariable('name', $.Localize(data.name));
-							this.panels.cp.SetDialogVariableInt(
-								'base_value',
-								this.roundFloat(statCompare.baseValue, 2)
-							);
-							this.panels.cp.SetDialogVariableInt(
-								'compare_value',
-								this.roundFloat(statCompare.comparisonValue, 2)
-							);
-							this.panels.cp.SetDialogVariableInt('diff', this.roundFloat(statCompare.diff, 2));
-						}
-						UiToolkitAPI.ShowTextTooltip(id, tooltipString);
-					},
-					onmouseout: (_) => UiToolkitAPI.HideTextTooltip()
+					//prettier-ignore
+					tooltipString =
+						`${$.Localize('#Run_Comparison_TotalTime')}: <b>{g:time:total_time}</b>\n` +
+						`${$.Localize('#Run_Comparison_ZoneTime')}: <b>{g:time:zone_time}</b>\n` +
+						`${$.Localize('#Run_Comparison_Diff')}: <b class='${diffStyle}'>${this.getDiffSign(data.diff)}{g:time:time_diff}</b>\n` +
+						`${$.Localize('#Run_Comparison_Delta')}: <b class='${deltaStyle}'>${this.getDiffSign(data.delta)}{g:time:time_delta}</b>`;
+				} else {
+					// Using string instead of float here, floats add a shit ton of floating point imprecision e.g. 90.00000000128381273
+					// prettier-ignore
+					tooltipString =
+						'{s:name}: <b>{s:base_value}</b>\n' +
+						`${$.Localize('#Run_Comparison')}: <b>{s:compare_value}</b>\n` +
+						`${$.Localize('#Run_Comparison_Diff')}: <b class='${diffStyle}'>${this.getDiffSign(
+							data.diff
+						)}{s:diff}</b>`;
 				}
-			});
+
+				const zoneNum = isLinear
+					? i === 1
+						? comparisonSplits[0].length + 1
+						: j + 1
+					: i + 1 + j / split.length;
+
+				line.points.push({
+					// 0th stage was just the hidden point at [0, 0] added to the array on initialisation above
+					id: `Point${splitName}`,
+					x: zoneNum,
+					y: data.diff,
+					selectionSize: 25,
+					events: {
+						// Set the activate event to just press the radiobutton in the splits panel, simplifies the code.
+						onactivate: (_) => $.DispatchEvent('Activated', $(`#Split${splitName}`), 'mouse'),
+						onmouseover: (id) => {
+							if (isTimeComparison) {
+								const splitCompare = data as ComparisonSplit;
+								this.panels.cp.SetDialogVariableFloat('total_time', splitCompare.accumulateTime);
+								this.panels.cp.SetDialogVariableFloat('zone_time', data.time);
+								this.panels.cp.SetDialogVariableFloat('time_diff', data.diff);
+								this.panels.cp.SetDialogVariableFloat('time_delta', data.delta);
+							} else {
+								const statCompare = data as Timer.RunStatsComparison;
+								this.panels.cp.SetDialogVariable('name', $.Localize(data.name));
+								this.panels.cp.SetDialogVariableInt(
+									'base_value',
+									this.roundFloat(statCompare.baseValue, 2)
+								);
+								this.panels.cp.SetDialogVariableInt(
+									'compare_value',
+									this.roundFloat(statCompare.comparisonValue, 2)
+								);
+								this.panels.cp.SetDialogVariableInt('diff', this.roundFloat(statCompare.diff, 2));
+							}
+							UiToolkitAPI.ShowTextTooltip(id, tooltipString);
+						},
+						onmouseout: (_) => UiToolkitAPI.HideTextTooltip()
+					}
+				});
+			}
 		}
 
 		// Add our line to the lines array
