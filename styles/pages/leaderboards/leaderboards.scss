@@ -89,11 +89,13 @@
 		background-color: rgba(0, 0, 0, 0.4);
 		border: 1px solid rgba(0, 0, 0, 0.4);
 		border-top: 0px none;
+		transition: opacity 0.1s ease-in-out 0s;
+		opacity: 1;
+		overflow: squish scroll;
+
 		& > VerticalScrollBar .ScrollThumb {
 			opacity: 1;
 		}
-		transition: opacity 0.1s ease-in-out 0s;
-		opacity: 1;
 	}
 
 	&__empty {
