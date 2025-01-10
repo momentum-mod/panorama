@@ -350,8 +350,8 @@ class EndOfRunHandler {
 			shadeAboveToOriginColor: '#ffffff33'
 		};
 
-		let max = 0;
-		let min = 0;
+		let max = Number.MIN_VALUE;
+		let min = Number.MAX_VALUE;
 
 		// Point for each zone
 		const comparisonSplits = comparison.segmentSplits;
