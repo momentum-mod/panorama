@@ -27,7 +27,7 @@
 			</Panel>
 			<Panel class="spectate__interface">
 				<Panel class="flow-right h-align-right">
-					<Label class="text-h6 v-align-center" text="Press CTRL to toggle mouse input!" />
+					<Label class="text-h6 v-align-center" text="#Spectate_Interface_Cursor_Toggle" />
 					<Button class="button ml-3" onactivate="GameInterfaceAPI.ConsoleCommand('spec_mode');">
 						<Label class="button__text" text="{s:next_spec_mode}" />
 					</Button>
