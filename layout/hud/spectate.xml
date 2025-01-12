@@ -7,7 +7,7 @@
 		<include type="module" src="file://{scripts}/hud/spectate.ts" />
 	</scripts>
 	
-	<MomHudSpectate class="w-full flow-down">
+	<MomHudSpectate class="w-full h-fill flow-down">
 		<Panel class="spectate">
 			<Panel class="spectate__status">
 				<Panel class="h-align-left flow-right" id="IndicatorSpectating">
