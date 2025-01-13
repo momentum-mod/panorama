@@ -12,14 +12,16 @@ class HudSpectateHandler {
 		toggleReplayControls: $('#ToggleReplayControls')
 	};
 
-	/* TODO
 	constructor() {
-	$.RegisterForUnhandledEvent('MomentumSpectatorTargetChanged', (type: RunEntityType) =>
-		this.onSpectatorChanged(type)
-	);
+		// TEMP: Hide spectate panel since we don't distinguish between replays and spectate yet
+		this.panels.indicatorSpectating.visible = false;
+
+		// $.RegisterForUnhandledEvent('MomentumSpectatorTargetChanged', (type: RunEntityType) =>
+		// 	this.onSpectatorChanged(type)
+		// );
 	}
 
-	onSpectatorChanged(type: RunEntityType) {
+	/*onSpectatorChanged(type: RunEntityType) {
 		if (type !== RunEntityType.PLAYER) {
 			const isReplay = type === RunEntityType.REPLAY;
 
@@ -31,6 +33,5 @@ class HudSpectateHandler {
 			this.panels.toggleReplayControls.visible = isReplay;
 			this.panels.indicatorWatchingReplay.visible = isReplay;
 		}
-	}
-	*/
+	}*/
 }
