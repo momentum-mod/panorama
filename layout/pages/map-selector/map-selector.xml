@@ -82,6 +82,9 @@
 										<RadioButton id="BhopFilterButton" class="button radiobutton radiobutton--blue mapselector-filters__gamemode-button">
 											<Label class="button__text mapselector-filters__text" text="#Gamemode_Bhop" />
 										</RadioButton>
+										<RadioButton id="BhopStaminaFilterButton" class="button radiobutton radiobutton--blue mapselector-filters__gamemode-button">
+											<Label class="button__text mapselector-filters__text" text="#Gamemode_BhopStamina" />
+										</RadioButton>
 										<RadioButton id="BhopHL1FilterButton" class="button radiobutton radiobutton--blue mapselector-filters__gamemode-button">
 											<Label class="button__text mapselector-filters__text" text="#Gamemode_BhopHL1" />
 										</RadioButton>
