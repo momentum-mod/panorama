@@ -22,7 +22,8 @@ const extraModeData = [
 	[Gamemode.CONC, { i18n: '#Gamemode_Conc' }],
 	[Gamemode.DEFRAG_CPM, { i18n: '#Gamemode_DefragCPM' }],
 	[Gamemode.DEFRAG_VQ3, { i18n: '#Gamemode_DefragVQ3' }],
-	[Gamemode.DEFRAG_VTG, { i18n: '#Gamemode_DefragVTG' }]
+	[Gamemode.DEFRAG_VTG, { i18n: '#Gamemode_DefragVTG' }],
+	[Gamemode.BHOP_STAMINA, { i18n: '#Gamemode_BhopStamina' }]
 ] as const;
 
 // Just append to the existing data, shouldn't be using original version anywhere anyway.
