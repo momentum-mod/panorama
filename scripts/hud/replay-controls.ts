@@ -16,7 +16,7 @@ class ReplayControlsHandler {
 	};
 
 	constructor() {
-		$.RegisterForUnhandledEvent('HudProcessInput', () => this.onHudUpdate());
+		$.RegisterEventHandler('HudProcessInput', $.GetContextPanel(), () => this.onHudUpdate());
 		$.RegisterEventHandler('SliderValueChanged', $.GetContextPanel(), (_, value) => {
 			GameInterfaceAPI.ConsoleCommand(`mom_tv_replay_goto ${value * 100}%`);
 		});
