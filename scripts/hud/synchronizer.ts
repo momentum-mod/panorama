@@ -80,7 +80,6 @@ class Synchronizer {
 			gamemodes: [Gamemode.BHOP, Gamemode.SURF, Gamemode.CLIMB_KZT, Gamemode.CLIMB_MOM],
 			onLoad: () => this.onLoad(),
 			events: [
-				{ event: 'HudProcessInput', callback: () => this.onUpdate() },
 				{ event: 'OnJumpStarted', callback: () => this.onJump() },
 				{ event: 'OnSynchroModeChanged', callback: (cvarValue) => this.setDisplayMode(cvarValue) },
 				{ event: 'OnSynchroColorModeChanged', callback: (cvarValue) => this.setColorMode(cvarValue === 1) },
@@ -93,7 +92,8 @@ class Synchronizer {
 					event: 'OnSynchroStatColorModeChanged',
 					callback: (cvarValue) => this.setStatColorMode(cvarValue === 1)
 				}
-			]
+			],
+			handledEvents: [{ event: 'HudProcessInput', panel: $.GetContextPanel(), callback: () => this.onUpdate() }]
 		});
 	}
 

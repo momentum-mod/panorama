@@ -29,13 +29,16 @@ class DFJumpHandler {
 			onLoad: () => this.onMapInit(),
 			events: [
 				{
-					event: 'DFJumpDataUpdate',
-					callback: (releaseDelay, pressDelay, totalDelay) =>
-						this.onDFJumpUpdate(releaseDelay, pressDelay, totalDelay)
-				},
-				{
 					event: 'DFJumpMaxDelayChanged',
 					callback: (newDelay) => this.setMaxDelay(newDelay)
+				}
+			],
+			handledEvents: [
+				{
+					event: 'DFJumpDataUpdate',
+					panel: this.panels.container,
+					callback: (releaseDelay, pressDelay, totalDelay) =>
+						this.onDFJumpUpdate(releaseDelay, pressDelay, totalDelay)
 				}
 			]
 		});

@@ -50,9 +50,9 @@ class GroundboostHandler {
 		RegisterHUDPanelForGamemode({
 			gamemodes: GamemodeCategories.get(GamemodeCategory.DEFRAG),
 			onLoad: () => this.onMapInit(),
-			events: [
-				{ event: 'HudProcessInput', callback: () => this.onHudUpdate() },
-				{ event: 'OnDefragHUDGroundboostChange', callback: () => this.onConfigChange() }
+			events: [{ event: 'OnDefragHUDGroundboostChange', callback: () => this.onConfigChange() }],
+			handledEvents: [
+				{ event: 'HudProcessInput', panel: $.GetContextPanel(), callback: () => this.onHudUpdate() }
 			]
 		});
 	}
