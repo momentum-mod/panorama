@@ -162,4 +162,6 @@ interface ZoneMenu extends AbstractPanel<'ZoneMenu'> {
 	): import('pages/zoning/zoning').RegionPolygonProblem;
 
 	getZoningLimits(): ZoneEditorLimits;
+
+	createDefaultTeleDest(region: import('common/web').Region): import('common/web').Region;
 }
