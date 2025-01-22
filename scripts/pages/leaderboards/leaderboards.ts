@@ -63,6 +63,9 @@ class LeaderboardsHandler {
 
 		this.panels.tracksDropdown.RemoveAllOptions();
 		this.panels.tracksDropdown.visible = false;
+
+		this.panels.endOfRunButton.visible = false;
+		this.panels.syncTrackButton.visible = false;
 	}
 
 	onTimesUpdated(count: number) {
@@ -201,9 +204,6 @@ class LeaderboardsHandler {
 	 * Hide the button to go to the end of run page.
 	 */
 	onMapLoad(isOfficial: boolean) {
-		this.panels.endOfRunButton.visible = false;
-		this.panels.syncTrackButton.visible = false;
-
 		if (isOfficial) {
 			return; // Load official leaderboard tracks instead
 		}
@@ -211,8 +211,6 @@ class LeaderboardsHandler {
 		// Try to load tracks from local zones
 		const mapZoneData = MomentumTimerAPI.GetActiveZoneDefs();
 		if (mapZoneData) {
-			this.panels.syncTrackButton.visible = true;
-
 			// Main track
 			{
 				const trackStr = $.Localize('#Leaderboards_Tracks_Main');
@@ -297,6 +295,11 @@ class LeaderboardsHandler {
 		if (this.panels.tracksDropdown.AccessDropDownMenu().GetChildCount() === 0) {
 			this.panels.tracksDropdown.visible = false;
 			return;
+		}
+
+		// Allow player to sync their current track to the value selected in the dropdown
+		if (this.panels.cp.id === 'TabMenuLeaderboards') {
+			this.panels.syncTrackButton.visible = true;
 		}
 
 		this.panels.tracksDropdown.visible = true;
