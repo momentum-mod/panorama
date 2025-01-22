@@ -28,13 +28,6 @@ enum DefragFlags {
 	BFG = 1 << 5
 }
 
-enum RegionMenu {
-	POINTS = 'Points',
-	PROPERTIES = 'Properties',
-	TELEPORT = 'Teleport',
-	RESET = 'Reset'
-}
-
 export enum PickType {
 	NONE = 0,
 	CORNER = 1,
