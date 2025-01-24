@@ -365,4 +365,7 @@ interface GlobalEventNameMap {
 
 interface PanelEventNameMap {
 	MapEntry_MapDataUpdate: () => void;
+
+	/** Fired after updating the map cache with the latest roaming lobby player counts. */
+	MapEntry_RoamingLobbiesUpdated: (playerCount: number) => void;
 }
