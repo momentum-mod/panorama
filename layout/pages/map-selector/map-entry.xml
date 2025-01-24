@@ -14,6 +14,10 @@
 				<Panel class="map-entry__banner">
 					<Label class="map-entry__banner-text" text="{s:banner}" />
 				</Panel>
+				<Panel id="MapEntryLobbyContainer" class="map-entry__lobby">
+					<Image class="map-entry__lobby-icon" src="file://{images}/profile.svg" textureheight="40" />
+					<Label class="map-entry__lobby-playercount" text="{d:playerCount}" />
+				</Panel>
 			</Panel>
 			<Label id="MapEntryName" class="map-entry__text map-entry__name" text="{s:name}" />
 		</Panel>

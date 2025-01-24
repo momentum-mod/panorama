@@ -226,4 +226,25 @@ $transition: 0.125s ease-out 0s;
 			@include mixin.gradient-themed($color: 'purple', $direction: 'down');
 		}
 	}
+
+	&__lobby {
+		width: 100px;
+		height: 20px;
+		flow-children: left;
+		align: right bottom;
+
+		&-icon {
+			height: 100%;
+			width: height-percentage(100%);
+			img-shadow: $button-icon-shadow;
+		}
+
+		&-playercount {
+			font-size: 16px;
+			font-weight: medium;
+			margin-right: 1px;
+			vertical-align: bottom;
+			text-shadow: $button-icon-shadow;
+		}
+	}
 }

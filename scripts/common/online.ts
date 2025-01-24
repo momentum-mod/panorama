@@ -56,12 +56,14 @@ export enum LobbyMemberStateChange {
 export enum LobbyType {
 	PRIVATE = '0',
 	FRIENDS = '1',
-	PUBLIC = '2'
+	PUBLIC = '2',
+	INVISIBLE = '3'
 }
 
 // TODO: Localise `name`!
 export const LobbyProperties: ReadonlyMap<LobbyType, { name: string; icon: string }> = new Map([
-	[LobbyType.PRIVATE, { name: 'Private Lobby', icon: 'privatelobby' }],
-	[LobbyType.FRIENDS, { name: 'Friends Only Lobby', icon: 'friendslobby' }],
-	[LobbyType.PUBLIC, { name: 'Public Lobby', icon: 'publiclobby' }]
+	[LobbyType.PRIVATE, { name: '#Lobby_Type_Private', icon: 'privatelobby' }],
+	[LobbyType.FRIENDS, { name: '#Lobby_Type_FriendsOnly', icon: 'friendsonlylobby' }],
+	[LobbyType.PUBLIC, { name: '#Lobby_Type_Public', icon: 'publiclobby' }],
+	[LobbyType.INVISIBLE, { name: '#Lobby_Type_Roaming', icon: 'roaminglobby' }]
 ]);

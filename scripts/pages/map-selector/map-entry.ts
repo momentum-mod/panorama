@@ -12,6 +12,11 @@ const NEW_MAP_BANNER_CUTOFF = 1000 * 60 * 60 * 24 * 5; // 5 days
 class MapEntryHandler {
 	constructor() {
 		$.RegisterEventHandler('MapEntry_MapDataUpdate', $.GetContextPanel(), () => this.update());
+		$.RegisterEventHandler('MapEntry_RoamingLobbiesUpdated', $.GetContextPanel(), (playerCount: number) =>
+			this.updatePlayerCount(playerCount)
+		);
+
+		this.panels.lobbyContainer.visible = false;
 	}
 
 	panels = {
@@ -19,7 +24,8 @@ class MapEntryHandler {
 		pbPanel: $<Panel>('#MapEntryPB'),
 		pbLabel: $<Label>('#MapEntryPBLabel'),
 		pbIcon: $<Image>('#MapEntryPBIcon'),
-		tier: $<Label>('#MapEntryTier')
+		tier: $<Label>('#MapEntryTier'),
+		lobbyContainer: $<Panel>('#MapEntryLobbyContainer')
 	};
 
 	strings = {
@@ -176,6 +182,16 @@ class MapEntryHandler {
 		} else {
 			cp.SetHasClass('map-entry--private', false);
 			cp.SetHasClass('map-entry--new', false);
+		}
+	}
+
+	updatePlayerCount(playerCount: number) {
+		// Roaming lobby player count
+		if (playerCount > 0) {
+			this.panels.lobbyContainer.visible = true;
+			this.panels.cp.SetDialogVariableInt('playerCount', playerCount);
+		} else {
+			this.panels.lobbyContainer.visible = false;
 		}
 	}
 }
