@@ -546,13 +546,13 @@ class ZoneMenuHandler {
 		this.panels.regionHeight.text = (region?.height ?? 0).toFixed(2);
 		this.panels.regionSafeHeight.text = (region?.safeHeight ?? 0).toFixed(2);
 
-		const tpIndex = !region.teleDestTargetname
+		const tpIndex = (region.teleDestTargetname === undefined || region.teleDestTargetname === '')
 			? region.teleDestPos !== undefined && region.teleDestYaw !== undefined
 				? 1
 				: 0
 			: this.teleDestList?.indexOf(region.teleDestTargetname);
 		this.panels.regionTPDest.SetSelectedIndex(tpIndex);
-		this.updateRegionTPDest();
+		this.onTPDestSelectionChanged();
 	}
 
 	addRegion() {
@@ -658,7 +658,7 @@ class ZoneMenuHandler {
 		this.showInfoPanel(true);
 	}
 
-	updateRegionTPDest() {
+	onTPDestSelectionChanged() {
 		if (!this.selectedZone || !this.selectedZone.region || !this.teleDestList) return;
 
 		const teleDestIndex = this.panels.regionTPDest.GetSelected()?.GetAttributeInt('value', 0);
