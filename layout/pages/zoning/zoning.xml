@@ -193,7 +193,7 @@
 					</Panel>
 					<Panel class="zoning__property">
 						<Label class="zoning__property-label" text="#Zoning_RegionDetails_TPDest" />
-						<DropDown id="RegionTPDest" class="dropdown zoning__dropdown" menuclass="dropdown-menu" onuserinputsubmit="ZoneMenuHandler.updateRegionTPDest()">
+						<DropDown id="RegionTPDest" class="dropdown zoning__dropdown" menuclass="dropdown-menu" onuserinputsubmit="ZoneMenuHandler.onTPDestSelectionChanged()">
 							<!-- Populated in js -->
 							<Label text="#Zoning_TPDest_None" value="0" />
 							<Label text="#Zoning_TPDest_MakeNew" value="1" />
