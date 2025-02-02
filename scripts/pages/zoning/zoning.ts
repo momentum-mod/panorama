@@ -935,7 +935,7 @@ class ZoneMenuHandler {
 		const checkpointContainer = childContainer.FindChildTraverse<Panel>('CheckpointContainer');
 		this.addTracklistEntry(
 			checkpointContainer,
-			$.Localize('#Zoning_Start_Stage'),
+			mainTrack.zones.segments.length > 0 ? $.Localize('#Zoning_Start_Stage') : $.Localize('#Zoning_Start_Track'),
 			TracklistSnippet.CHECKPOINT,
 			{
 				track: mainTrack,
@@ -952,7 +952,12 @@ class ZoneMenuHandler {
 		const newZone = this.createZone();
 		segment.checkpoints.push(newZone);
 
-		const id = `${$.Localize('#Zoning_Checkpoint')} ${segment.checkpoints.length - 1}`;
+		const id =
+			segment.checkpoints.length > 1
+				? `${$.Localize('#Zoning_Checkpoint')} ${segment.checkpoints.length - 1}`
+				: track.zones.segments.indexOf(segment) > 0
+					? $.Localize('#Zoning_Start_Stage')
+					: $.Localize('#Zoning_Start_Track');
 		this.addTracklistEntry(
 			checkpointsList,
 			id,
