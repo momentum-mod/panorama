@@ -6,6 +6,8 @@ export interface Lobby {
 	members: number;
 
 	members_limit: number;
+
+	isRoaming: boolean;
 }
 
 /* List of all lobbies grouped by currrent/friends/global */
