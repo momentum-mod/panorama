@@ -51,7 +51,7 @@
 
 			<TooltipPanel tooltip="#Leaderboards_SyncTrackButton" class="v-align-center">
 				<Button id="SyncTrackButton" class="button leaderboards__button" onactivate="LeaderboardsHandler.syncTrackWithLeaderboard();">
-					<Image class="button__icon" src="file://{images}/refresh.svg" textureheight="32" />
+					<Image class="button__icon" src="file://{images}/sync.svg" textureheight="32" />
 				</Button>
 			</TooltipPanel>
 
