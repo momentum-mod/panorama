@@ -204,10 +204,9 @@ class LobbyHandler {
 
 				const ownerSteamID = lobbyData.owner;
 				const lobbyType = lobbyData.type;
-				const lobbyName = $.Localize('#Lobby_Owner').replace(
-					'%owner%',
-					FriendsAPI.GetNameForXUID(ownerSteamID)
-				);
+				const lobbyName = lobbyData.isRoaming
+					? `${$.Localize('#Lobby_Roaming')} (${MapCacheAPI.GetMapName()})`
+					: $.Localize('#Lobby_Owner').replace('%owner%', FriendsAPI.GetNameForXUID(ownerSteamID));
 
 				// Only show items that match the search. Always true if search is empty
 				if (!lobbyName.includes(this.panels.search.text)) {
@@ -266,7 +265,7 @@ class LobbyHandler {
 
 	/** Update the lobbies details view based on current lobby state */
 	updateCurrentLobbyDetails() {
-		const { owner, type, members, members_limit } = Object.values(this.lobbyCurrentData)[0];
+		const { owner, type, members, members_limit, isRoaming } = Object.values(this.lobbyCurrentData)[0];
 
 		this.panels.detailsType.SetImage(`file://{images}/online/${LobbyProperties.get(type).icon}.svg`);
 
@@ -275,7 +274,9 @@ class LobbyHandler {
 
 		$.GetContextPanel().SetDialogVariable(
 			'lobbyTitle',
-			$.Localize('#Lobby_Owner').replace('%owner%', FriendsAPI.GetNameForXUID(owner))
+			isRoaming
+				? `${$.Localize('#Lobby_Roaming')} (${MapCacheAPI.GetMapName()})`
+				: $.Localize('#Lobby_Owner').replace('%owner%', FriendsAPI.GetNameForXUID(owner))
 		);
 		$.GetContextPanel().SetDialogVariable('lobbyPlayerCount', `${members}/${members_limit}`);
 	}
