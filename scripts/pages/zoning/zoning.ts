@@ -4,9 +4,7 @@ import { PanelHandler } from 'util/module-helpers';
 // future: get this from c++
 const FORMAT_VERSION = 1;
 
-const FLT_MAX = 3.402823466e38;
-const DEFAULT_HEIGHT = 160;
-const ANGLE_SNAP = 15;
+const COORD_MAX = 65536;
 
 export interface EntityList {
 	filter: string[];
@@ -169,7 +167,10 @@ class ZoneMenuHandler {
 		this.createTrackEntry(this.panels.trackList, this.mapZoneData.tracks.main, $.Localize('#Zoning_Main'));
 
 		// if the first segment has no start zone, show text to create start zone until a start zone has been made
-		if (this.mapZoneData.tracks.main.zones.segments[0]?.checkpoints.length === 0) {
+		if (
+			this.mapZoneData.tracks.main.zones?.segments?.length > 0 &&
+			this.mapZoneData.tracks.main.zones.segments[0]?.checkpoints?.length === 0
+		) {
 			const checkpointButton = this.panels.trackList
 				.GetChild(0)
 				?.FindChildTraverse<Button>('AddCheckpointButton');
@@ -203,11 +204,9 @@ class ZoneMenuHandler {
 			});
 		}
 
-		if (this.mapZoneData.tracks.bonuses) {
-			const tag = $.Localize('#Zoning_Bonus');
-			for (const [i, bonus] of this.mapZoneData.tracks.bonuses.entries()) {
-				this.createTrackEntry(this.panels.trackList, bonus, `${tag} ${i + 1}`);
-			}
+		const bonusTag = $.Localize('#Zoning_Bonus');
+		for (const [i, bonus] of this.mapZoneData.tracks.bonuses?.entries() ?? []) {
+			this.createTrackEntry(this.panels.trackList, bonus, `${bonusTag} ${i + 1}`);
 		}
 
 		const lastTrack = this.panels.trackList.GetChild(this.mapZoneData.tracks.bonuses?.length ?? 0);
@@ -262,7 +261,7 @@ class ZoneMenuHandler {
 		const checkpointTag = $.Localize('#Zoning_Checkpoint');
 		const cancelTag = $.Localize('#Zoning_CancelZone');
 		const endTag = $.Localize('#Zoning_EndZone');
-		for (const [i, segment] of track.zones.segments.entries()) {
+		for (const [i, segment] of track.zones.segments?.entries() ?? []) {
 			const majorId = segment.name || `${segmentTag} ${i + 1}`;
 			const segmentChildContainer = this.addTracklistEntry(
 				trackSegmentContainer,
@@ -282,10 +281,10 @@ class ZoneMenuHandler {
 			}
 
 			const segmentCheckpointContainer = segmentChildContainer.FindChildTraverse<Panel>('CheckpointContainer');
-			for (const [j, zone] of segment.checkpoints.entries()) {
+			for (const [j, zone] of segment.checkpoints?.entries() ?? []) {
 				const minorId = j
 					? `${checkpointTag} ${j}`
-					: i
+					: i > 0
 						? $.Localize('#Zoning_Start_Stage')
 						: $.Localize('#Zoning_Start_Track');
 				this.addTracklistEntry(segmentCheckpointContainer, minorId, TracklistSnippet.CHECKPOINT, {
@@ -296,15 +295,13 @@ class ZoneMenuHandler {
 			}
 
 			const segmentCancelContainer = segmentChildContainer.FindChildTraverse<Panel>('CancelContainer');
-			if (segment.cancel && segment.cancel.length > 0) {
-				for (const [j, zone] of segment.cancel.entries()) {
-					const cancelId = `${cancelTag} ${j + 1}`;
-					this.addTracklistEntry(segmentCancelContainer, cancelId, TracklistSnippet.CHECKPOINT, {
-						track: track,
-						segment: segment,
-						zone: zone
-					});
-				}
+			for (const [j, zone] of segment.cancel?.entries() ?? []) {
+				const cancelId = `${cancelTag} ${j + 1}`;
+				this.addTracklistEntry(segmentCancelContainer, cancelId, TracklistSnippet.CHECKPOINT, {
+					track: track,
+					segment: segment,
+					zone: zone
+				});
 			}
 		}
 
@@ -440,7 +437,7 @@ class ZoneMenuHandler {
 	createRegion(): Region {
 		return {
 			points: [],
-			bottom: FLT_MAX,
+			bottom: COORD_MAX,
 			height: 0,
 			teleDestTargetname: ''
 		};
@@ -457,7 +454,7 @@ class ZoneMenuHandler {
 	populateDropdown(array: any[], dropdown: DropDown, optionType: string, clearDropdown: boolean = false) {
 		if (clearDropdown) dropdown.RemoveAllOptions();
 
-		for (const [i, item] of array.entries()) {
+		for (const [i, item] of array?.entries() ?? []) {
 			this.addOptionToDropdown(optionType || item, dropdown, i, optionType !== '');
 		}
 	}
@@ -546,7 +543,7 @@ class ZoneMenuHandler {
 		this.panels.regionHeight.text = (region?.height ?? 0).toFixed(2);
 		this.panels.regionSafeHeight.text = (region?.safeHeight ?? 0).toFixed(2);
 
-		const tpIndex = (region.teleDestTargetname === undefined || region.teleDestTargetname === '')
+		const tpIndex = !region.teleDestTargetname
 			? region.teleDestPos !== undefined && region.teleDestYaw !== undefined
 				? 1
 				: 0
@@ -590,7 +587,7 @@ class ZoneMenuHandler {
 
 		this.pointPick = PickType.CORNER;
 
-		if (GameInterfaceAPI.GetSettingBool('mom_zone_two_click')) this.selectedZone.region.points.length = 0;
+		//if (GameInterfaceAPI.GetSettingBool('mom_zone_two_click')) this.selectedZone.region.points.length = 0;
 
 		this.panels.zoningMenu.startPointPick(this.pointPick, this.selectedZone.region);
 		this.showInfoPanel(true);
@@ -669,7 +666,7 @@ class ZoneMenuHandler {
 			delete this.selectedZone.region.teleDestYaw;
 
 			this.setRegionTPDestTextEntriesActive(false);
-		} else if (teleDestIndex === 1 && this.selectedZone.region.points.length > 0) {
+		} else if (teleDestIndex === 1 && this.selectedZone.region.points?.length > 0) {
 			if (
 				this.selectedZone.region.teleDestPos === undefined ||
 				this.selectedZone.region.teleDestYaw === undefined
@@ -923,7 +920,12 @@ class ZoneMenuHandler {
 
 		const mainTrack = this.mapZoneData.tracks.main;
 		const newSegment = this.createSegment();
-		mainTrack.zones.segments.push(newSegment);
+
+		if (!mainTrack.zones.segments) {
+			mainTrack.zones.segments = [newSegment];
+		} else {
+			mainTrack.zones.segments.push(newSegment);
+		}
 
 		const segmentList = this.panels.trackList.GetChild(0)?.FindChildTraverse('SegmentContainer');
 		const id = `${$.Localize('#Zoning_Segment')} ${mainTrack.zones.segments.length}`;
@@ -1056,7 +1058,7 @@ class ZoneMenuHandler {
 				this.selectedZone.segment.checkpoints.splice(checkpointIndex, 1);
 			}
 		} else if (this.selectedZone.track && this.selectedZone.segment) {
-			if (this.selectedZone.track.zones.segments.length === 1) {
+			if (this.selectedZone.track.zones.segments?.length === 1) {
 				$.Msg('Track must have at least one segment!');
 			} else {
 				const index = this.mapZoneData.tracks.main.zones.segments.indexOf(this.selectedZone.segment);
@@ -1195,43 +1197,37 @@ class ZoneMenuHandler {
 
 		const validity = this.isSelectionValid();
 
-		for (const [segmentNumber, segment] of this.selectedZone.track.zones.segments.entries()) {
-			if (segment.checkpoints.length > 0) {
-				for (const [checkpointNumber, checkpoint] of segment.checkpoints.entries()) {
-					for (const region of checkpoint.regions) {
-						renderRegions.push({
-							region: region,
-							renderMode:
-								checkpointNumber === 0
-									? segmentNumber === 0
-										? RegionRenderMode.START
-										: RegionRenderMode.MAJOR_CHECKPOINT
-									: RegionRenderMode.MINOR_CHECKPOINT,
-							editing: validity.zone && region === this.selectedZone.region
-						});
-					}
+		for (const [segmentNumber, segment] of this.selectedZone.track.zones.segments?.entries() ?? []) {
+			for (const [checkpointNumber, checkpoint] of segment.checkpoints?.entries() ?? []) {
+				for (const region of checkpoint.regions) {
+					renderRegions.push({
+						region: region,
+						renderMode:
+							checkpointNumber === 0
+								? segmentNumber === 0
+									? RegionRenderMode.START
+									: RegionRenderMode.MAJOR_CHECKPOINT
+								: RegionRenderMode.MINOR_CHECKPOINT,
+						editing: validity.zone && region === this.selectedZone.region
+					});
 				}
 			}
-			if (segment.cancel && segment.cancel.length > 0) {
-				for (const cancel of segment.cancel) {
-					for (const region of cancel.regions) {
-						renderRegions.push({
-							region: region,
-							renderMode: RegionRenderMode.CANCEL,
-							editing: validity.zone && region === this.selectedZone.region
-						});
-					}
+			for (const cancel of segment?.cancel ?? []) {
+				for (const region of cancel.regions) {
+					renderRegions.push({
+						region: region,
+						renderMode: RegionRenderMode.CANCEL,
+						editing: validity.zone && region === this.selectedZone.region
+					});
 				}
 			}
 		}
-		if (this.selectedZone.track.zones.end && this.selectedZone.track.zones.end.regions.length > 0) {
-			for (const region of this.selectedZone.track.zones.end.regions) {
-				renderRegions.push({
-					region: region,
-					renderMode: RegionRenderMode.END,
-					editing: validity.zone && region === this.selectedZone.region
-				});
-			}
+		for (const region of this.selectedZone.track.zones.end?.regions ?? []) {
+			renderRegions.push({
+				region: region,
+				renderMode: RegionRenderMode.END,
+				editing: validity.zone && region === this.selectedZone.region
+			});
 		}
 
 		this.panels.zoningMenu.drawRegions(renderRegions);
