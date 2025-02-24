@@ -325,8 +325,11 @@ interface GlobalEventNameMap {
 	/** Fired when the leaderboards has its map data set but before times are loaded */
 	Leaderboards_MapDataSet: (isOfficial: boolean) => void;
 
-	/** Fired when the map leaderboard data has loaded */
-	Leaderboards_MapLeaderboardsLoaded: (map: import('common/web').MMap) => void;
+	/** Fired when the official map leaderboard data has loaded */
+	Leaderboards_OfficialMapLeaderboardsLoaded: (map: import('common/web').MMap) => void;
+
+	/** Fired when the local map leaderboard data has loaded */
+	Leaderboards_LocalMapLeaderboardsLoaded: () => void;
 
 	LeaderboardEntry_TimeDataUpdated: () => void;
 
