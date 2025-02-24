@@ -41,9 +41,11 @@ class LeaderboardsHandler {
 	constructor() {
 		$.RegisterEventHandler('Leaderboards_TimesFiltered', this.panels.cp, (count) => this.onTimesUpdated(count));
 		$.RegisterEventHandler('EndOfRun_Show', this.panels.cp, (reason) => this.onShowEndOfRun(reason));
-		$.RegisterEventHandler('Leaderboards_MapDataSet', this.panels.cp, (isOfficial) => this.onMapLoad(isOfficial));
-		$.RegisterEventHandler('Leaderboards_MapLeaderboardsLoaded', this.panels.cp, (map) =>
-			this.onMapLeaderboardsLoad(map)
+		$.RegisterEventHandler('Leaderboards_OfficialMapLeaderboardsLoaded', this.panels.cp, (map) =>
+			this.onOfficialMapLeaderboardsLoaded(map)
+		);
+		$.RegisterEventHandler('Leaderboards_LocalMapLeaderboardsLoaded', this.panels.cp, () =>
+			this.onLocalMapLeaderboardsLoaded()
 		);
 
 		// Note: Can't set radio button groups in the XML because it causes multiple leaderboard instances to interfere with eachother
@@ -200,13 +202,39 @@ class LeaderboardsHandler {
 		}
 	}
 
-	/**
-	 * Hide the button to go to the end of run page.
-	 */
-	onMapLoad(isOfficial: boolean) {
-		if (isOfficial) {
-			return; // Load official leaderboard tracks instead
-		}
+	onOfficialMapLeaderboardsLoaded(map: MMap) {
+		this.panels.tracksDropdown.RemoveAllOptions();
+
+		const isTabMenu = this.panels.cp.id === 'TabMenuLeaderboard';
+		const currentMode = isTabMenu ? GameModeAPI.GetCurrentGameMode() : GameModeAPI.GetMetaGameMode();
+		map.leaderboards
+			.filter((leaderboard) => leaderboard.gamemode === currentMode)
+			.sort(sortLeaderboard)
+			.forEach((leaderboard, index) => {
+				let trackStr;
+				if (leaderboard.trackType === 0) {
+					trackStr = $.Localize('#Leaderboards_Tracks_Main');
+				} else if (leaderboard.trackType === 1) {
+					trackStr = `${$.Localize('#Leaderboards_Tracks_Stage')} ${leaderboard.trackNum}`;
+				} else {
+					trackStr = `${$.Localize('#Leaderboards_Tracks_Bonus')} ${leaderboard.trackNum}`;
+				}
+
+				const item = $.CreatePanel('Label', this.panels.tracksDropdown, trackStr, {
+					text: trackStr,
+					value: index
+				});
+				item.SetAttributeInt('trackNum', leaderboard.trackNum);
+				item.SetAttributeInt('trackType', leaderboard.trackType);
+
+				this.panels.tracksDropdown.AddOption(item);
+			});
+
+		this.initTracksDropdown();
+	}
+
+	onLocalMapLeaderboardsLoaded() {
+		this.panels.tracksDropdown.RemoveAllOptions();
 
 		// Try to load tracks from local zones
 		const mapZoneData = MomentumTimerAPI.GetActiveZoneDefs();
@@ -256,37 +284,6 @@ class LeaderboardsHandler {
 				});
 			}
 		}
-
-		this.initTracksDropdown();
-	}
-
-	onMapLeaderboardsLoad(map: MMap) {
-		this.panels.tracksDropdown.RemoveAllOptions();
-
-		const isTabMenu = this.panels.cp.id === 'TabMenuLeaderboard';
-		const currentMode = isTabMenu ? GameModeAPI.GetCurrentGameMode() : GameModeAPI.GetMetaGameMode();
-		map.leaderboards
-			.filter((leaderboard) => leaderboard.gamemode === currentMode)
-			.sort(sortLeaderboard)
-			.forEach((leaderboard, index) => {
-				let trackStr;
-				if (leaderboard.trackType === 0) {
-					trackStr = $.Localize('#Leaderboards_Tracks_Main');
-				} else if (leaderboard.trackType === 1) {
-					trackStr = `${$.Localize('#Leaderboards_Tracks_Stage')} ${leaderboard.trackNum}`;
-				} else {
-					trackStr = `${$.Localize('#Leaderboards_Tracks_Bonus')} ${leaderboard.trackNum}`;
-				}
-
-				const item = $.CreatePanel('Label', this.panels.tracksDropdown, trackStr, {
-					text: trackStr,
-					value: index
-				});
-				item.SetAttributeInt('trackNum', leaderboard.trackNum);
-				item.SetAttributeInt('trackType', leaderboard.trackType);
-
-				this.panels.tracksDropdown.AddOption(item);
-			});
 
 		this.initTracksDropdown();
 	}
