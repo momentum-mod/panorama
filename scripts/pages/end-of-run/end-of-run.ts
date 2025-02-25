@@ -607,7 +607,7 @@ class EndOfRunHandler {
 				name: '#Run_Stat_Name_Time',
 				unit: '#Run_Stat_Unit_Second',
 				baseValue: split.time,
-				comparisonValue: split.time + split.diff,
+				comparisonValue: split.time - split.diff,
 				diff: split.diff
 			},
 			null
