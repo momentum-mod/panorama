@@ -528,8 +528,6 @@ class ZoneMenuHandler {
 
 		const filterIndex = this.panels.filterSelect.GetSelected()?.GetAttributeInt('value', 0);
 		this.selectedZone.zone.filtername = filterIndex ? this.filternameList[filterIndex] : '';
-
-		this.drawZones();
 	}
 
 	populateRegionProperties() {
@@ -559,8 +557,6 @@ class ZoneMenuHandler {
 		this.populateDropdown(this.selectedZone.zone.regions, this.panels.regionSelect, 'Region', true);
 		this.panels.regionSelect.SetSelectedIndex(this.selectedZone.zone.regions.length - 1);
 		this.populateRegionProperties();
-
-		this.drawZones();
 	}
 
 	deleteRegion() {
@@ -843,7 +839,7 @@ class ZoneMenuHandler {
 
 		this.pointPick = PickType.NONE;
 		this.showInfoPanel(false);
-		//this.drawZones();
+		this.drawZones();
 	}
 
 	showInfoPanel(hideProperties: boolean) {
@@ -1091,15 +1087,11 @@ class ZoneMenuHandler {
 		if (!this.mapZoneData) return;
 		const velocity = Number.parseFloat(this.panels.maxVelocity.text);
 		this.mapZoneData.maxVelocity = !Number.isNaN(velocity) && velocity > 0 ? velocity : 0;
-
-		this.drawZones();
 	}
 
 	setStageEndAtStageStarts() {
 		if (!this.isSelectionValid().track || !('stagesEndAtStageStarts' in this.selectedZone.track)) return;
 		this.selectedZone.track.stagesEndAtStageStarts = this.panels.stagesEndAtStageStarts.checked;
-
-		this.drawZones();
 	}
 
 	showDefragFlagMenu() {
@@ -1155,29 +1147,21 @@ class ZoneMenuHandler {
 		trackPanel.FindChildTraverse('ChildContainer').RemoveAndDeleteChildren();
 		// keep select button aligned with other tracks
 		trackPanel.FindChildTraverse('Entry').SetHasClass('zoning__tracklist-checkpoint', true);
-
-		this.drawZones();
 	}
 
 	setLimitGroundSpeed() {
 		if (!this.isSelectionValid().segment) return;
 		this.selectedZone.segment!.limitStartGroundSpeed = this.panels.limitGroundSpeed.checked;
-
-		this.drawZones();
 	}
 
 	setCheckpointsOrdered() {
 		if (!this.isSelectionValid().segment) return;
 		this.selectedZone.segment!.checkpointsOrdered = this.panels.checkpointsOrdered.checked;
-
-		this.drawZones();
 	}
 
 	setCheckpointsRequired() {
 		if (!this.isSelectionValid().segment) return;
 		this.selectedZone.segment!.checkpointsRequired = this.panels.checkpointsRequired.checked;
-
-		this.drawZones();
 	}
 
 	setSegmentName() {
@@ -1185,8 +1169,6 @@ class ZoneMenuHandler {
 		this.selectedZone.segment!.name = this.panels.segmentName.text;
 		// feat: later
 		// update segment name in trasklist tree
-
-		this.drawZones();
 	}
 
 	drawZones() {
