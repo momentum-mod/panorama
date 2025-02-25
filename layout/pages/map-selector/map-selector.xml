@@ -205,10 +205,15 @@
 								<Label class="text-h1 text-shadow-outline" text="{s:name}" />
 								<Label class="text-h1 text-shadow-black color-transparent" text="{s:name}" />
 							</Panel>
-							<Panel class="w-full">
-								<!-- TODO: This is a hack to get a stronger font shadow. Remove when doing sRGB styling! -->
-								<Label class="text-h4 text-shadow-outline" text="#MapSelector_Info_Stats" />
-								<Label class="text-h4 text-shadow-bold color-transparent" text="#MapSelector_Info_Stats" />
+							<Panel class="w-full flow-right">
+								<Label class="text-h4 text-shadow-outline" text="#MapInfo_Tier" />
+								<Label id="HudTabMenuLinearSeparator" class="text-h4 text-shadow-outline" text="|" />
+								<Label id="HudTabMenuLinearLabel" class="text-h4 text-shadow-outline" text="#MapInfo_Type_Linear" />
+								<Label id="HudTabMenuStageCountSeparator" class="text-h4 text-shadow-outline" text="|" />
+								<Label id="HudTabMenuStageCountLabel" class="text-h4 text-shadow-outline" text="#MapInfo_StageCount" />
+								<Label id="HudTabMenuBonusCountSeparator" class="text-h4 text-shadow-outline" text="|" />
+								<Label id="HudTabMenuBonusCountLabel" class="text-h4 text-shadow-outline" text="#MapInfo_BonusCount" />
+								<Label id="HudTabMenuBonusesCountLabel" class="text-h4 text-shadow-outline" text="#MapInfo_BonusesCount" />
 							</Panel>
 						</Panel>
 						<Panel class="mapselector-map-info__top-right">

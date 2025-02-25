@@ -1,8 +1,8 @@
 import { PanelHandler } from 'util/module-helpers';
 import { EndOfRunShowReason } from 'common/timer';
 import { GamemodeInfo, MapCreditType, MMap } from 'common/web';
-import { getNumZones, getTrack } from 'common/leaderboard';
-import { getAllCredits, SimpleMapCredit } from 'common/maps';
+import { getNumStages } from 'common/leaderboard';
+import { getAllCredits, getTier, SimpleMapCredit } from 'common/maps';
 
 /**
  * Class for the HUD tab menu panel, which contains the leaderboards, end of run, and zoning.
@@ -17,7 +17,11 @@ class HudTabMenuHandler {
 		zoningOpen: $<Button>('#ZoningOpen'),
 		zoningClose: $<Button>('#ZoningClose'),
 		gamemodeIcon: $<Image>('#HudTabMenuGamemodeImage'),
-		credits: $<Panel>('#HudTabMenuMapCredits')
+		credits: $<Panel>('#HudTabMenuMapCredits'),
+		linearSeparator: $<Label>('#HudTabMenuLinearSeparator'),
+		linearLabel: $<Label>('#HudTabMenuLinearLabel'),
+		stageCountSeparator: $<Panel>('#HudTabMenuStageCountSeparator'),
+		stageCountLabel: $<Label>('#HudTabMenuStageCountLabel')
 	};
 
 	constructor() {
@@ -119,12 +123,18 @@ class HudTabMenuHandler {
 	setMapStats(mapData: MMap) {
 		this.panels.cp.forceCloseTabMenu();
 
-		const mainTrack = getTrack(mapData, GameModeAPI.GetCurrentGameMode());
-		const numZones = getNumZones(mapData);
+		const mainTrackTier = getTier(mapData, GameModeAPI.GetCurrentGameMode());
+		const numStages = getNumStages(mapData);
+		const isLinear = numStages <= 1;
 
-		this.panels.cp.SetDialogVariableInt('tier', mainTrack?.tier ?? 0);
-		this.panels.cp.SetDialogVariable('type', mainTrack?.linear ? '#MapInfo_Type_Linear' : '#MapInfo_Type_Staged');
-		this.panels.cp.SetDialogVariableInt('numzones', numZones);
+		this.panels.cp.SetDialogVariableInt('tier', mainTrackTier ?? 0);
+		this.panels.linearSeparator.visible = isLinear;
+		this.panels.linearLabel.visible = isLinear;
+		this.panels.stageCountSeparator.visible = !isLinear;
+		this.panels.stageCountLabel.visible = !isLinear;
+		if (!isLinear) {
+			this.panels.cp.SetDialogVariableInt('stageCount', numStages);
+		}
 		this.panels.cp.SetDialogVariableInt('runs', mapData.stats?.completions);
 	}
 

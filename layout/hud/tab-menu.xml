@@ -26,10 +26,10 @@
 						</Panel>
 						<Panel class="hud-tab-menu-map-info__stats">
 							<Label class="hud-tab-menu-map-info-stats__stat" text="#MapInfo_Tier" />
-							<Panel class="hud-tab-menu-map-info-stats__separator" />
-							<Label class="hud-tab-menu-map-info-stats__stat" text="#MapInfo_Type_Linear" />
-							<Panel class="hud-tab-menu-map-info-stats__separator" />
-							<Label class="hud-tab-menu-map-info-stats__stat" text="#MapInfo_Zones" />
+							<Panel id="HudTabMenuLinearSeparator" class="hud-tab-menu-map-info-stats__separator" />
+							<Label id="HudTabMenuLinearLabel" class="hud-tab-menu-map-info-stats__stat" text="#MapInfo_Type_Linear" />
+							<Panel id="HudTabMenuStageCountSeparator" class="hud-tab-menu-map-info-stats__separator" />
+							<Label id="HudTabMenuStageCountLabel" class="hud-tab-menu-map-info-stats__stat" text="#MapInfo_StageCount" />
 							<Panel class="hud-tab-menu-map-info-stats__separator" />
 							<Label class="hud-tab-menu-map-info-stats__stat" text="#MapInfo_Runs" />
 						</Panel>

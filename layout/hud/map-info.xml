@@ -22,17 +22,14 @@
 
 				<Panel class="flow-left w-fit-children h-align-right v-align-center">
 					<ConVarEnabler class="flow-right w-fit-children h-align-right" convar="mom_hud_mapinfo_numzones_enable" togglevisibility="true">
-						<ConVarEnabler class="w-fit-children h-align-right" convar="mom_hud_mapinfo_zonetype_enable" togglevisibility="true">
-							<Label class="hudmapinfo__label" text=" " />
-						</ConVarEnabler>
-						<Label id="NumzonesLabel" class="hudmapinfo__label" text="#MapInfo_Zones" />
+						<Label id="StageCountLabel" class="hudmapinfo__label" text="#MapInfo_StageCount" />
 					</ConVarEnabler>
 
 					<ConVarEnabler class="flow-right w-fit-children h-align-right" convar="mom_hud_mapinfo_zonetype_enable" togglevisibility="true">
 						<ConVarEnabler class="w-fit-children h-align-right" convar="mom_hud_mapinfo_tier_enable" togglevisibility="true">
 							<Label class="hudmapinfo__label" text=" - " />
 						</ConVarEnabler>
-						<Label id="ZonetypeLabel" class="hudmapinfo__label" text="{s:zonetype}" />
+						<Label id="LinearLabel" class="hudmapinfo__label" text="#MapInfo_Type_Linear" />
 					</ConVarEnabler>
 
 					<ConVarEnabler class="flow-right w-fit-children h-align-right" convar="mom_hud_mapinfo_tier_enable" togglevisibility="true">
