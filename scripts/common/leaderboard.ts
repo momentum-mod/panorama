@@ -56,12 +56,12 @@ function highestTrackNum(mapData: MMap, trackType: TrackType): number {
 			.map((leaderboard) => leaderboard.trackNum)
 	);
 }
-export function getNumZones(mapData: MMap): number {
-	return highestTrackNum(mapData, TrackType.STAGE) - 1;
+export function getNumStages(mapData: MMap): number {
+	return highestTrackNum(mapData, TrackType.STAGE);
 }
 
 export function getNumBonuses(mapData: MMap): number {
-	return highestTrackNum(mapData, TrackType.BONUS) - 1;
+	return highestTrackNum(mapData, TrackType.BONUS);
 }
 
 export function getUserMapDataTrack(

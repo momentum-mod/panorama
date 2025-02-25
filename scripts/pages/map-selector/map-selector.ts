@@ -47,6 +47,13 @@ class MapSelectorHandler implements OnPanelLoad {
 		emptyContainer: $<Panel>('#MapListEmptyContainer'),
 		tierSlider: $<DualSlider>('#TierSlider'),
 		info: $<Panel>('#MapInfo'),
+		linearSeparator: $<Label>('#HudTabMenuLinearSeparator'),
+		linearLabel: $<Label>('#HudTabMenuLinearLabel'),
+		stageCountSeparator: $<Label>('#HudTabMenuStageCountSeparator'),
+		stageCountLabel: $<Label>('#HudTabMenuStageCountLabel'),
+		bonusCountSeparator: $<Label>('#HudTabMenuBonusCountSeparator'),
+		bonusCountLabel: $<Label>('#HudTabMenuBonusCountLabel'),
+		bonusesCountLabel: $<Label>('#HudTabMenuBonusesCountLabel'),
 		leaderboardContainer: $<Panel>('#MapTimes'),
 		descriptionContainer: $<Panel>('#MapDescriptionContainer'),
 		creditsContainer: $<Panel>('#MapCreditsContainer'),
@@ -339,14 +346,28 @@ class MapSelectorHandler implements OnPanelLoad {
 
 	updateSelectedMapInfo(staticData: MMap, userData?: MapCacheAPI.UserData) {
 		const gamemode = GameModeAPI.GetMetaGameMode();
-		const mainTrack = Leaderboards.getTrack(staticData, gamemode);
+		const mainTrackTier = Maps.getTier(staticData, gamemode);
+		const numStages = Leaderboards.getNumStages(staticData);
+		const numBonuses = Leaderboards.getNumBonuses(staticData);
+		const isLinear = numStages <= 1;
 		const info = this.panels.info;
 
 		info.SetDialogVariable('name', staticData.name);
 
-		info.SetDialogVariableInt('tier', Maps.getTier(staticData, gamemode) ?? 0);
-		info.SetDialogVariableInt('numZones', Leaderboards.getNumZones(staticData));
-		info.SetDialogVariable('layout', mainTrack.linear ? this.strings.staged : this.strings.linear);
+		info.SetDialogVariableInt('tier', mainTrackTier ?? 0);
+		this.panels.linearSeparator.visible = isLinear;
+		this.panels.linearLabel.visible = isLinear;
+		this.panels.stageCountSeparator.visible = !isLinear;
+		this.panels.stageCountLabel.visible = !isLinear;
+		if (!isLinear) {
+			info.SetDialogVariableInt('stageCount', numStages);
+		}
+		this.panels.bonusCountSeparator.visible = numBonuses > 0;
+		this.panels.bonusCountLabel.visible = numBonuses === 1;
+		this.panels.bonusesCountLabel.visible = numBonuses > 1;
+		if (numBonuses > 0) {
+			info.SetDialogVariableInt('bonusCount', numBonuses);
+		}
 
 		info.SetDialogVariable('description', staticData.info?.description);
 		this.panels.descriptionContainer.SetHasClass('hide', !staticData.info?.description);

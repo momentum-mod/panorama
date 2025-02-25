@@ -19,7 +19,9 @@
 				</Panel>
 				<Panel class="loadingscreen__right-details">
 					<Label id="TierAndType" class="text-h1 loadingscreen__right-label" text="#LoadingScreen_TierAndType" />
-					<Label id="NumZones" class="text-h2 loadingscreen__right-label" text="#LoadingScreen_NumZones" />
+					<Label id="StageCount" class="text-h2 loadingscreen__right-label" text="#MapInfo_StageCount" />
+					<Label id="BonusCount" class="text-h2 loadingscreen__right-label" text="#MapInfo_BonusCount" />
+					<Label id="BonusesCount" class="text-h2 loadingscreen__right-label" text="#MapInfo_BonusesCount" />
 				</Panel>
 				<Label id="GameModeTip" class="text-l loadingscreen__tip" text="{s:tip}" />
 				<Label id="ProgressStatusText" class="text-h1 loadingscreen__status-label" text="#LoadingScreen_Loading" />
