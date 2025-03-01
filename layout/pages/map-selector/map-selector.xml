@@ -74,10 +74,10 @@
 										<RadioButton id="BhopHL1FilterButton" class="button radiobutton radiobutton--blue mapselector-filters__gamemode-button">
 											<Label class="button__text mapselector-filters__text" text="#Gamemode_BhopHL1" />
 										</RadioButton>
-										<RadioButton id="KzMomFilterButton" class="button radiobutton radiobutton--blue mapselector-filters__gamemode-button">
+										<RadioButton id="KzMomFilterButton" class="hide button radiobutton radiobutton--blue mapselector-filters__gamemode-button">
 											<Label class="button__text mapselector-filters__text" text="#Gamemode_KzMom" />
 										</RadioButton>
-										<RadioButton id="KzKztFilterButton" class="button radiobutton radiobutton--blue mapselector-filters__gamemode-button hidden">
+										<RadioButton id="KzKztFilterButton" class="hide button radiobutton radiobutton--blue mapselector-filters__gamemode-button">
 											<Label class="button__text mapselector-filters__text" text="#Gamemode_KzKzt" />
 										</RadioButton>
 										<RadioButton id="Kz16FilterButton" class="button radiobutton radiobutton--blue mapselector-filters__gamemode-button">
