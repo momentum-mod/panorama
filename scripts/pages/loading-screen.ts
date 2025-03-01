@@ -50,6 +50,8 @@ class LoadingScreenHandler {
 	}
 
 	updateLoadingScreenInfo(mapName: string) {
+		this.panels.backgroundImage.visible = false;
+
 		if (!mapName) return;
 
 		const mapData = MapCacheAPI.GetCurrentMapData();
