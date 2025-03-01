@@ -31,6 +31,7 @@ class HudTabMenuHandler {
 		$.RegisterForUnhandledEvent('EndOfRun_Hide', () => this.hideEndOfRun());
 		$.RegisterForUnhandledEvent('ZoneMenu_Show', () => this.showZoneMenu());
 		$.RegisterForUnhandledEvent('ZoneMenu_Hide', () => this.hideZoneMenu());
+		$.RegisterForUnhandledEvent('ActiveZoneDefsChanged', () => this.updateMapStats());
 	}
 
 	showEndOfRun(reason: EndOfRunShowReason) {
@@ -117,6 +118,13 @@ class HudTabMenuHandler {
 				commaPanel.AddClass('hud-tab-menu-map-info__credits-other-text');
 				commaPanel.text = ',';
 			}
+		}
+	}
+
+	updateMapStats() {
+		const mapData = MapCacheAPI.GetCurrentMapData();
+		if (mapData) {
+			this.setMapStats(mapData.staticData);
 		}
 	}
 

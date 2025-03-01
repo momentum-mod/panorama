@@ -364,6 +364,8 @@ interface GlobalEventNameMap {
 
 	/** Fired when local user data is loaded from disk or fetched from backend. */
 	MomAPI_UserUpdate: (user: import('common/web').User) => void;
+
+	ActiveZoneDefsChanged: () => void;
 }
 
 interface PanelEventNameMap {
