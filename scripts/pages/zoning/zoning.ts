@@ -773,16 +773,10 @@ class ZoneMenuHandler {
 		this.drawZones();
 	}
 
-	onPointDeleted(index: number | undefined) {
+	onPointDeleted(newPoints: Region) {
 		if (!this.selectedZone || !this.selectedZone.region) return;
 
-		if (this.selectedZone.region.points.length === 0) return;
-
-		if (index === undefined) {
-			this.selectedZone.region.points.pop();
-		} else {
-			this.selectedZone.region.points.splice(index, 1);
-		}
+		this.selectedZone.region = newPoints;
 
 		this.drawZones();
 	}
