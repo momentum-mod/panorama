@@ -299,7 +299,7 @@ interface GlobalEventNameMap {
 
 	OnPointPicked: (region: import('common/web').Region) => void;
 
-	OnPointDeleted: (point: number | undefined) => void;
+	OnPointDeleted: (region: import('common/web').Region) => void;
 
 	OnPickCanceled: () => void;
 
