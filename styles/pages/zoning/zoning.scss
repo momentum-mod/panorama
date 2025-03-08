@@ -326,8 +326,9 @@ $medium: 28px;
 
 	&__textentry {
 		horizontal-align: right;
-		margin-left: 16px;
-		width: 80px;
+		margin-left: 8px;
+		width: 120px;
+		text-align: right;
 
 		&:disabled,
 		&:disabled:hover {
