@@ -78,8 +78,8 @@
 		<snippet name="region-point">
 			<Panel class="zoning__region-property-container">
 				<!--label-->
-				<TextEntry id="PointX" class="textentry zoning__textentry" maxchars="6" textmode="numeric" />
-				<TextEntry id="PointY" class="textentry zoning__textentry" maxchars="6" textmode="numeric" />
+				<TextEntry id="PointX" class="textentry zoning__textentry" maxchars="10" textmode="numeric" />
+				<TextEntry id="PointY" class="textentry zoning__textentry" maxchars="10" textmode="numeric" />
 				<Button id="DeleteButton" class="zoning__region-point-delete">
 					<Image class="zoning__region-point-delete__icon" src="file://{images}/close-box-outline.svg" textureheight="24" />
 				</Button>
@@ -170,7 +170,7 @@
 							<Button class="zoning__region-point-pick" onactivate="ZoneMenuHandler.pickBottom()">
 								<Image class="zoning__region-point-pick__icon" src="file://{images}/adjust.svg" />
 							</Button>
-							<TextEntry id="RegionBottom" class="textentry zoning__textentry" maxchars="8" textmode="numeric" ontextentrysubmit="ZoneMenuHandler.setRegionBottom()" />
+							<TextEntry id="RegionBottom" class="textentry zoning__textentry" maxchars="10" textmode="numeric" ontextentrysubmit="ZoneMenuHandler.setRegionBottom()" />
 						</Panel>
 					</Panel>
 					<Panel class="zoning__property">
@@ -179,7 +179,7 @@
 							<Button class="zoning__region-point-pick" onactivate="ZoneMenuHandler.pickHeight()">
 								<Image class="zoning__region-point-pick__icon" src="file://{images}/adjust.svg" />
 							</Button>
-							<TextEntry id="RegionHeight" class="textentry zoning__textentry" maxchars="8" textmode="numeric" ontextentrysubmit="ZoneMenuHandler.setRegionHeight()" />
+							<TextEntry id="RegionHeight" class="textentry zoning__textentry" maxchars="10" textmode="numeric" ontextentrysubmit="ZoneMenuHandler.setRegionHeight()" />
 						</Panel>
 					</Panel>
 					<Panel class="zoning__property">
@@ -188,7 +188,7 @@
 							<Button class="zoning__region-point-pick" onactivate="ZoneMenuHandler.pickSafeHeight()">
 								<Image class="zoning__region-point-pick__icon" src="file://{images}/adjust.svg" />
 							</Button>
-							<TextEntry id="RegionSafeHeight" class="textentry zoning__textentry" maxchars="8" textmode="numeric" ontextentrysubmit="ZoneMenuHandler.setRegionSafeHeight()" />
+							<TextEntry id="RegionSafeHeight" class="textentry zoning__textentry" maxchars="10" textmode="numeric" ontextentrysubmit="ZoneMenuHandler.setRegionSafeHeight()" />
 						</Panel>
 					</Panel>
 					<Panel class="zoning__property">
@@ -205,9 +205,9 @@
 							<Button id="TelePosPick" class="zoning__region-point-pick" onactivate="ZoneMenuHandler.pickTeleDestPos()">
 								<Image class="zoning__region-point-pick__icon" src="file://{images}/adjust.svg" />
 							</Button>
-							<TextEntry id="TeleX" class="textentry zoning__textentry" maxchars="6" textmode="numeric" ontextentrysubmit="ZoneMenuHandler.setRegionTeleDestOrientation()" />
-							<TextEntry id="TeleY" class="textentry zoning__textentry" maxchars="6" textmode="numeric" ontextentrysubmit="ZoneMenuHandler.setRegionTeleDestOrientation()" />
-							<TextEntry id="TeleZ" class="textentry zoning__textentry" maxchars="6" textmode="numeric" ontextentrysubmit="ZoneMenuHandler.setRegionTeleDestOrientation()" />
+							<TextEntry id="TeleX" class="textentry zoning__textentry" maxchars="10" textmode="numeric" ontextentrysubmit="ZoneMenuHandler.setRegionTeleDestOrientation()" />
+							<TextEntry id="TeleY" class="textentry zoning__textentry" maxchars="10" textmode="numeric" ontextentrysubmit="ZoneMenuHandler.setRegionTeleDestOrientation()" />
+							<TextEntry id="TeleZ" class="textentry zoning__textentry" maxchars="10" textmode="numeric" ontextentrysubmit="ZoneMenuHandler.setRegionTeleDestOrientation()" />
 						</Panel>
 					</Panel>
 					<Panel class="zoning__property">
@@ -216,7 +216,7 @@
 							<Button id="TeleYawPick" class="zoning__region-point-pick" onactivate="ZoneMenuHandler.pickTeleDestYaw()">
 								<Image class="zoning__region-point-pick__icon" src="file://{images}/adjust.svg" />
 							</Button>
-							<TextEntry id="TeleYaw" class="textentry zoning__textentry" maxchars="6" textmode="numeric" ontextentrysubmit="ZoneMenuHandler.setRegionTeleDestOrientation()" />
+							<TextEntry id="TeleYaw" class="textentry zoning__textentry" maxchars="4" textmode="numeric" ontextentrysubmit="ZoneMenuHandler.setRegionTeleDestOrientation()" />
 						</Panel>
 					</Panel>
 				</Panel>
