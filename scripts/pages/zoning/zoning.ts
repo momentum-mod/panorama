@@ -86,9 +86,9 @@ class ZoneMenuHandler {
 			y: $<TextEntry>('#TeleY'),
 			z: $<TextEntry>('#TeleZ')
 		},
-		regionTPPosPick: $<Button>('#TelePosPick'),
+		regionTPPosButton: $<Button>('#SetTeleDestPosButton'),
 		regionTPYaw: $<TextEntry>('#TeleYaw'),
-		regionTPYawPick: $<Button>('#TeleYawPick')
+		regionTPYawButton: $<Button>('#SetTeleDestYawButton')
 	};
 
 	zoningLimits: ZoneEditorLimits;
@@ -716,9 +716,9 @@ class ZoneMenuHandler {
 		this.panels.regionTPPos.x.enabled = enable;
 		this.panels.regionTPPos.y.enabled = enable;
 		this.panels.regionTPPos.z.enabled = enable;
-		this.panels.regionTPPosPick.enabled = enable;
+		this.panels.regionTPPosButton.enabled = enable;
 		this.panels.regionTPYaw.enabled = enable;
-		this.panels.regionTPYawPick.enabled = enable;
+		this.panels.regionTPYawButton.enabled = enable;
 
 		if (!enable) {
 			this.panels.regionTPPos.x.text = '';
