@@ -167,7 +167,7 @@
 					<Panel class="zoning__property">
 						<Label class="zoning__property-label" text="#Zoning_RegionDetails_Bottom" />
 						<Panel class="zoning__region-property-container">
-							<Button class="zoning__region-point-pick" onactivate="ZoneMenuHandler.pickBottom()">
+							<Button id='SetBottomButton' class="zoning__region-point-pick" onactivate="ZoneMenuHandler.pickBottom()" onmouseover="UiToolkitAPI.ShowTextTooltip('SetBottomButton', '#Zoning_SetBottom_Tooltip');" onmouseout="UiToolkitAPI.HideTextTooltip();">
 								<Image class="zoning__region-point-pick__icon" src="file://{images}/adjust.svg" />
 							</Button>
 							<TextEntry id="RegionBottom" class="textentry zoning__textentry" maxchars="10" textmode="numeric" ontextentrysubmit="ZoneMenuHandler.setRegionBottom()" />
@@ -176,7 +176,7 @@
 					<Panel class="zoning__property">
 						<Label class="zoning__property-label" text="#Zoning_RegionDetails_Height" />
 						<Panel class="zoning__region-property-container">
-							<Button class="zoning__region-point-pick" onactivate="ZoneMenuHandler.pickHeight()">
+							<Button id='SetHeightButton' class="zoning__region-point-pick" onactivate="ZoneMenuHandler.pickHeight()" onmouseover="UiToolkitAPI.ShowTextTooltip('SetHeightButton', '#Zoning_SetHeight_Tooltip');" onmouseout="UiToolkitAPI.HideTextTooltip();">
 								<Image class="zoning__region-point-pick__icon" src="file://{images}/adjust.svg" />
 							</Button>
 							<TextEntry id="RegionHeight" class="textentry zoning__textentry" maxchars="10" textmode="numeric" ontextentrysubmit="ZoneMenuHandler.setRegionHeight()" />
@@ -185,7 +185,7 @@
 					<Panel class="zoning__property">
 						<Label class="zoning__property-label" text="#Zoning_RegionDetails_SafeHeight" />
 						<Panel class="zoning__region-property-container">
-							<Button class="zoning__region-point-pick" onactivate="ZoneMenuHandler.pickSafeHeight()">
+							<Button id='SetSafeHeightButton' class="zoning__region-point-pick" onactivate="ZoneMenuHandler.pickSafeHeight()" onmouseover="UiToolkitAPI.ShowTextTooltip('SetSafeHeightButton', '#Zoning_SetSafeHeight_Tooltip');" onmouseout="UiToolkitAPI.HideTextTooltip();">
 								<Image class="zoning__region-point-pick__icon" src="file://{images}/adjust.svg" />
 							</Button>
 							<TextEntry id="RegionSafeHeight" class="textentry zoning__textentry" maxchars="10" textmode="numeric" ontextentrysubmit="ZoneMenuHandler.setRegionSafeHeight()" />
@@ -202,7 +202,7 @@
 					<Panel class="zoning__property">
 						<Label id="Position" class="zoning__property-label" text="#Zoning_TPDest_Position" />
 						<Panel class="zoning__region-property-container">
-							<Button id="TelePosPick" class="zoning__region-point-pick" onactivate="ZoneMenuHandler.pickTeleDestPos()">
+							<Button id="SetTeleDestPosButton" class="zoning__region-point-pick" onactivate="ZoneMenuHandler.pickTeleDestPos()" onmouseover="UiToolkitAPI.ShowTextTooltip('SetTeleDestPosButton', '#Zoning_SetTeleDestPos_Tooltip');" onmouseout="UiToolkitAPI.HideTextTooltip();">
 								<Image class="zoning__region-point-pick__icon" src="file://{images}/adjust.svg" />
 							</Button>
 							<TextEntry id="TeleX" class="textentry zoning__textentry" maxchars="10" textmode="numeric" ontextentrysubmit="ZoneMenuHandler.setRegionTeleDestOrientation()" />
@@ -213,7 +213,7 @@
 					<Panel class="zoning__property">
 						<Label id="Yaw" class="zoning__property-label" text="#Zoning_TPDest_Yaw" />
 						<Panel class="zoning__region-property-container">
-							<Button id="TeleYawPick" class="zoning__region-point-pick" onactivate="ZoneMenuHandler.pickTeleDestYaw()">
+							<Button id="SetTeleDestYawButton" class="zoning__region-point-pick" onactivate="ZoneMenuHandler.pickTeleDestYaw()" onmouseover="UiToolkitAPI.ShowTextTooltip('SetTeleDestYawButton', '#Zoning_SetTeleDestYaw_Tooltip');" onmouseout="UiToolkitAPI.HideTextTooltip();">
 								<Image class="zoning__region-point-pick__icon" src="file://{images}/adjust.svg" />
 							</Button>
 							<TextEntry id="TeleYaw" class="textentry zoning__textentry" maxchars="4" textmode="numeric" ontextentrysubmit="ZoneMenuHandler.setRegionTeleDestOrientation()" />
