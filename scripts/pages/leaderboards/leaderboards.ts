@@ -254,7 +254,7 @@ class LeaderboardsHandler {
 
 			// Stage tracks
 			const segments = mapZoneData.tracks.main.zones.segments;
-			if (segments.length > 1) {
+			if (segments && segments.length > 1) {
 				segments.forEach((_, index) => {
 					const trackStr = `${$.Localize('#Leaderboards_Tracks_Stage')} ${index + 1}`;
 					const item = $.CreatePanel('Label', this.panels.tracksDropdown, trackStr, {
