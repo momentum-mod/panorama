@@ -1,4 +1,3 @@
-import { TrackID } from './timer';
 import { Gamemode, Leaderboard, MMap, TrackType } from './web';
 
 export enum LeaderboardListType {

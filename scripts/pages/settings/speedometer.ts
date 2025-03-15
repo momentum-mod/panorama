@@ -468,7 +468,7 @@ class RangeColorProfile {
 	deleteRange(display?: RangeColorRangeDisplay) {
 		display?.destroy();
 		const idx = this.displays.indexOf(display);
-		if (idx > -1) {
+		if (idx !== -1) {
 			this.displays.splice(idx, 1);
 			this.markAsModified();
 		}
