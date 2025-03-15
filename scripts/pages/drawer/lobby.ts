@@ -2,7 +2,6 @@ import { PanelHandler } from 'util/module-helpers';
 import {
 	LobbyProperties,
 	LobbyMemberStateChange,
-	LobbyType,
 	LobbyMember,
 	LobbyList,
 	GroupedLobbyLists,
