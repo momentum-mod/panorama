@@ -16,6 +16,34 @@
 		</Panel>
 
 		<Panel id="SettingsPageContainer" class="settings-page__container">
+			<Panel id="ReplaySubSection" class="settings-group">
+				<Panel class="settings-group__header">
+					<Label class="settings-group__title" text="#Settings_OnlineReplay_Title" tags="online,replay,multiplayer" />
+					<Panel class="flow-right h-align-right">
+						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_OnlineReplay_Title', 'ReplaySubSection')">
+							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
+						</Button>
+						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
+							<Button class="button" onactivate="SettingsPage.resetSettings('ReplaySubSection');">
+								<Image class="button__icon" src="file://{images}/reset.svg" />
+							</Button>
+						</TooltipPanel>
+					</Panel>
+				</Panel>
+
+				<SettingsEnum text="#Settings_OnlineReplay_Comparison_Show" convar="mom_tv_replay_comparison_show" infomessage="#Settings_OnlineReplay_Comparison_Show_Info">
+					<RadioButton group="replaycomparisonshow" text="#Common_Off" value="0" />
+					<RadioButton group="replaycomparisonshow" text="#Common_On" value="1" />
+				</SettingsEnum>
+
+				<SettingsEnum text="#Settings_OnlineReplay_Comparison_AutoLoad" convar="mom_tv_replay_comparison_autoload" infomessage="#Settings_OnlineReplay_Comparison_AutoLoad_Info">
+					<RadioButton group="replaycomparisonautoload" text="#Common_Off" value="0" />
+					<RadioButton group="replaycomparisonautoload" text="#Common_On" value="1" />
+				</SettingsEnum>
+			</Panel>
+
+			<Panel class="settings-page__spacer" />
+
 			<Panel id="OnlineGhostSubSection" class="settings-group">
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_OnlineGhost_Title" tags="online,ghost,multiplayer" />

@@ -485,7 +485,8 @@
 
 			<Panel class="settings-page__spacer" />
 
-			<Panel id="StrafeSyncSubSection" class="settings-group">
+			<!-- TODO: This is currently broken. Does anyone want this feature? -->
+			<!-- <Panel id="StrafeSyncSubSection" class="settings-group">
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_TotalSync_Title" tags="sync,strafe" />
 					<Panel class="flow-right h-align-right">
@@ -521,7 +522,7 @@
 					<Label id="colorize3" text="#Settings_TotalSync_Color_Type2" value="2" />
 				</SettingsEnumDropDown>
 			</Panel>
-			<Panel class="settings-page__spacer" />
+			<Panel class="settings-page__spacer" /> -->
 
 			<Panel id="DamageIndicatorSubSection" class="settings-group">
 
