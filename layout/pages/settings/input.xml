@@ -116,12 +116,17 @@
 				<SettingsKeyBinder text="#Keybind_Weapon_Category_3" bind="slot3" tags="slot3" />
 				<SettingsKeyBinder text="#Keybind_Weapon_Category_4" bind="slot4" tags="slot4" />
 				<SettingsKeyBinder text="#Keybind_Weapon_Category_5" bind="slot5" tags="slot5" />
+				<SettingsKeyBinder text="#Keybind_Weapon_Category_6" bind="slot6" tags="slot6" />
+				<SettingsKeyBinder text="#Keybind_Weapon_Category_7" bind="slot7" tags="slot7" />
+				<SettingsKeyBinder text="#Keybind_Weapon_Category_8" bind="slot8" tags="slot8" />
+				<SettingsKeyBinder text="#Keybind_Weapon_Category_9" bind="slot9" tags="slot9" />
 
 				<Label class="settings-group__subtitle" text="#Common_Timer" />
 
-				<SettingsKeyBinder text="#Keybind_Restart" bind="mom_restart" tags="restart,reset" />
+				<SettingsKeyBinder text="#Keybind_RestartTrack" bind="mom_restart_track" tags="restart,reset" />
 				<SettingsKeyBinder text="#Keybind_RestartStage" bind="mom_restart_stage" tags="restart,reset,stage" />
-				<SettingsKeyBinder text="#Keybind_StopTimer" bind="mom_timer_stop" tags="stop" />
+				<SettingsKeyBinder text="#Keybind_Respawn" bind="mom_respawn" tags="restart,reset,respawn" />
+				<SettingsKeyBinder text="#Keybind_Main" bind="mom_main" tags="restart,reset,switch,track" />
 
 				<Label class="settings-group__subtitle" text="#Settings_Keybinds_Savestates" />
 
@@ -139,6 +144,7 @@
 				<Label class="settings-group__subtitle" text="#Settings_Keybinds_Utility" />
 
 				<SettingsKeyBinder text="#Keybind_Practice" bind="mom_practice" tags="practice,noclip" />
+				<SettingsKeyBinder text="#Keybind_ClimbMenu" bind="hud_menu_show climbtpmenu" tags="climb,tp" />
 				<SettingsKeyBinder text="#Keybind_MapCommands" bind="hud_menu_show mapcmdsmenu" />
 				<SettingsKeyBinder text="#Keybind_Ruler" bind="hud_menu_show rulermenu" tags="ruler,measure,distance" />
 				<SettingsKeyBinder text="#Keybind_Paint" bind="+paint" tags="paint" />
@@ -148,6 +154,7 @@
 
 				<SettingsKeyBinder text="#Keybind_Console" bind="toggleconsole" tags="console" />
 				<SettingsKeyBinder text="#Keybind_Screenshot" bind="jpeg" tags="screenshot" />
+				<SettingsKeyBinder text="#Keybind_Screenshot_Official" bind="mom_screenshot_official" tags="screenshot,official" />
 				<SettingsKeyBinder text="#Keybind_Quit_Prompt" bind="quit_prompt" tags="quit,close" />
 				<SettingsKeyBinder text="#Keybind_Quit" bind="quit" tags="quit,close" />
 

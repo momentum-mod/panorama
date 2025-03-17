@@ -28,6 +28,7 @@ export const SettingsTabs = {
 		xml: 'online',
 		radioid: 'OnlineRadio',
 		children: {
+			ReplaySubSection: 'ReplayRadio',
 			OnlineGhostSubSection: 'OnlineGhostRadio',
 			GhostSubSection: 'GhostRadio',
 			RichPresenceSubSection: 'RichPresenceRadio'

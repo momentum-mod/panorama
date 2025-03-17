@@ -83,6 +83,9 @@
 						<RadioButton id="OnlineRadio" class="settings-nav__item" group="SettingsNav" onactivate="SettingsHandler.navigateToTab('OnlineSettings')">
 							<Label class="settings-nav__item-label" text="#Settings_Online" />
 							<Panel class="settings-nav__subsection settings-nav__subsection--3 settings-nav__subsection--hidden">
+								<RadioButton id="ReplayRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="SettingsHandler.navigateToSubsection('OnlineSettings', 'ReplaySubSection')">
+									<Label class="settings-nav__subitem-label" text="#Settings_OnlineReplay_Title" />
+								</RadioButton>
 								<RadioButton id="OnlineGhostRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="SettingsHandler.navigateToSubsection('OnlineSettings', 'OnlineGhostSubSection')">
 									<Label class="settings-nav__subitem-label" text="#Settings_OnlineGhost_Title" />
 								</RadioButton>
@@ -167,9 +170,10 @@
 								<RadioButton id="DamageIndicatorRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="SettingsHandler.navigateToSubsection('InterfaceSettings', 'DamageIndicatorSubSection')">
 									<Label class="settings-nav__subitem-label" text="#Settings_DamageIndicator_Title" />
 								</RadioButton>
-								<RadioButton id="StrafeSyncRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="SettingsHandler.navigateToSubsection('InterfaceSettings', 'StrafeSyncSubSection')">
+								<!-- TODO: This is currently broken. Does anyone want this feature? -->
+								<!-- <RadioButton id="StrafeSyncRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="SettingsHandler.navigateToSubsection('InterfaceSettings', 'StrafeSyncSubSection')">
 									<Label class="settings-nav__subitem-label" text="#Settings_TotalSync_Title" />
-								</RadioButton>
+								</RadioButton> -->
 								<RadioButton id="SynchronizerRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="SettingsHandler.navigateToSubsection('InterfaceSettings', 'SynchronizerSubSection')">
 									<Label class="settings-nav__subitem-label" text="#Settings_Synchronizer_Title" />
 								</RadioButton>
