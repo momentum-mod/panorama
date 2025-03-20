@@ -170,19 +170,19 @@ export class SettingsPage {
 	}
 
 	onlineSettingsUpdateModel() {
-		const color = GameInterfaceAPI.GetSettingColor('mom_ghost_color');
-		const bodygroup = GameInterfaceAPI.GetSettingInt('mom_ghost_bodygroup');
-
 		const onlineSettingsPanel = $('#OnlineSettings');
 		const ghostPreview = onlineSettingsPanel.FindChildInLayoutFile<ModelPanel>('GhostModelPreview');
 
 		ghostPreview.SetCameraFOV(60);
-		ghostPreview.SetModelRotationBoundsEnabled(true, false, false);
-		ghostPreview.SetModelRotationBoundsX(-90, 90);
+		ghostPreview.SetModelRotation(0, 180, 0); // Model faces away from us by default, rotate it towards us
+		ghostPreview.SetMouseXRotationScale(0, 1, 0); // By default mouse X will rotate the X axis, but we want it to spin Y axis
+		ghostPreview.SetMouseYRotationScale(0, 0, 0); // Disable mouse Y movement rotations
 		ghostPreview.LookAtModel();
-		ghostPreview.SetCameraOffset(-100, 0, 0);
-		ghostPreview.SetModelColor(color);
-		ghostPreview.SetModelBodygroup(1, bodygroup);
+		ghostPreview.SetCameraOffset(-65, 0, 0);
+
+		ghostPreview.SetLightAmbient(1, 1, 1);
+		ghostPreview.SetDirectionalLightColor(0, 2, 2, 2);
+		ghostPreview.SetDirectionalLightDirection(0, 1, 1, -1);
 	}
 
 	initTextureReplacementDropdown() {
