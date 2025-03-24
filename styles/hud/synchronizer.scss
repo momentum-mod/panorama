@@ -34,10 +34,11 @@ $border-color: rgba(255, 255, 255, 0.3);
 	}
 
 	&__needle {
+		width: 1px;
 		height: 100%;
-		width: 2px;
 		horizontal-align: center;
-		background-color: rgba(0, 0, 0, 1);
+		background-color: rgba(0, 0, 0, 0.75);
+		box-shadow: 0 0 2px rgba(255, 255, 255, 0.05);
 	}
 
 	&__stats {
