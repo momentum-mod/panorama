@@ -302,7 +302,8 @@ declare namespace SpectatorAPI {
 }
 
 declare namespace RunComparisonsAPI {
-	function GetComparisonRun(): RunMetadata;
+	/** Gets the RunMetadata for the comparison run, if any */
+	function GetComparisonRun(): RunMetadata | null;
 }
 
 declare namespace ZonesAPI {
