@@ -1,18 +1,5 @@
 type Gamemode = import('common/web').Gamemode;
 
-export enum TimerEvent_OLD {
-	STARTED = 0,
-	FINISHED = 1,
-	STOPPED = 2,
-	FAILED = 3
-}
-
-export enum TimerState_OLD {
-	NOT_RUNNING = 0,
-	RUNNING = 1,
-	PRACTICE = 2
-}
-
 export enum TimerState {
 	DISABLED,
 	PRIMED,
