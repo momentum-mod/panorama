@@ -11,10 +11,6 @@
 	</styles>
 
 	<HudHintText hittest="false" class="hud-hint">
-		<Panel class="hud-hint__text">
-			<Panel class="vertical-center top-bottom-flow">
-				<Label id="HintLabel" html="true" class="hud-hint__label mono-spaced-font-bold" />
-			</Panel>
-		</Panel>
+		<Label id="HintLabel" html="true" class="hud-hint__label" />
 	</HudHintText>
 </root>
