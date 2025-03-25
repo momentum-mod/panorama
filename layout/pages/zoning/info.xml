@@ -1,9 +1,0 @@
-<root>
-	<styles>
-		<include src="file://{resources}/styles/main.scss" />
-	</styles>
-
-	<scripts>
-		<include type="module" src="file://{scripts}/pages/zoning/zoning.ts" />
-	</scripts>
-</root>

@@ -337,3 +337,26 @@ $medium: 28px;
 		}
 	}
 }
+
+.zoning-info {
+	&__binds-list {
+		width: 100%;
+		padding: 8px;
+		flow-children: down;
+	}
+
+	&__bind {
+		width: 100%;
+		flow-children: right;
+	}
+
+	&__bind-action {
+		horizontal-align: left;
+	}
+
+	&__bind-key {
+		width: 160px;
+		horizontal-align: right;
+		text-align: left;
+	}
+}

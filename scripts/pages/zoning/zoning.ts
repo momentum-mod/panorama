@@ -846,27 +846,27 @@ class ZoneMenuHandler {
 				break;
 
 			case PickType.CORNER:
-				this.panels.selectionMode.text = '#Zoning_SelectionMode_Corner';
+				this.panels.selectionMode.text = $.Localize('#Zoning_SelectionMode_Corner');
 				break;
 
 			case PickType.BOTTOM:
-				this.panels.selectionMode.text = '#Zoning_SelectionMode_Bottom';
+				this.panels.selectionMode.text = $.Localize('#Zoning_SelectionMode_Bottom');
 				break;
 
 			case PickType.HEIGHT:
-				this.panels.selectionMode.text = '#Zoning_SelectionMode_Height';
+				this.panels.selectionMode.text = $.Localize('#Zoning_SelectionMode_Height');
 				break;
 
 			case PickType.SAFE_HEIGHT:
-				this.panels.selectionMode.text = '#Zoning_SelectionMode_SafeHeight';
+				this.panels.selectionMode.text = $.Localize('#Zoning_SelectionMode_SafeHeight');
 				break;
 
 			case PickType.TELE_DEST_POS:
-				this.panels.selectionMode.text = '#Zoning_SelectionMode_TpPos';
+				this.panels.selectionMode.text = $.Localize('#Zoning_SelectionMode_TpPos');
 				break;
 
 			case PickType.TELE_DEST_YAW:
-				this.panels.selectionMode.text = '#Zoning_SelectionMode_TpYaw';
+				this.panels.selectionMode.text = $.Localize('#Zoning_SelectionMode_TpYaw');
 				break;
 		}
 	}
