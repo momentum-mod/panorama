@@ -31,7 +31,7 @@
 					</Panel>
 				</Panel>
 
-				<SettingsEnum text="#Settings_OnlineReplay_Comparison_Show" convar="mom_tv_replay_comparison_show" infomessage="#Settings_OnlineReplay_Comparison_Show_Info">
+				<SettingsEnum text="#Settings_OnlineReplay_Comparison_Show" convar="mom_tv_replay_comparison_ghost_show" infomessage="#Settings_OnlineReplay_Comparison_Show_Info">
 					<RadioButton group="replaycomparisonshow" text="#Common_Off" value="0" />
 					<RadioButton group="replaycomparisonshow" text="#Common_On" value="1" />
 				</SettingsEnum>
