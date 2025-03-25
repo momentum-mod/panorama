@@ -23,11 +23,11 @@ class HudTimerHandler {
 
 	constructor() {
 		$.RegisterEventHandler('HudProcessInput', this.panels.cp, () => this.onUpdate());
-		$.RegisterForUnhandledEvent('OnMomentumTimerStateChange', (arg1, arg2) => this.onTimerEvent(arg1, arg2));
-		$.RegisterForUnhandledEvent('OnSaveStateUpdate', (count, current, usingMenu) =>
-			this.onSaveStateChange(count, current, usingMenu)
-		);
-		$.RegisterForUnhandledEvent('OnMomentumReplayStopped', () => this.onReplayStopped());
+		// $.RegisterForUnhandledEvent('OnMomentumTimerStateChange', (arg1, arg2) => this.onTimerEvent(arg1, arg2));
+		// $.RegisterForUnhandledEvent('OnSaveStateUpdate', (count, current, usingMenu) =>
+		// 	this.onSaveStateChange(count, current, usingMenu)
+		// );
+		// $.RegisterForUnhandledEvent('OnMomentumReplayStopped', () => this.onReplayStopped());
 
 		this.panels.cp.SetDialogVariableFloat('runtime', 0);
 		this.panels.cp.hiddenHUDBits = HideHud.TABMENU;
