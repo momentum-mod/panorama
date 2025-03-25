@@ -233,17 +233,6 @@ declare namespace GameModeAPI {
 }
 
 declare namespace MomentumTimerAPI {
-	/**
-	 * OLD API! Remove me!
-	 * @deprecated
-	 */
-	function GetTimerState(): any;
-	/**
-	 * OLD API! Remove me!
-	 * @deprecated
-	 */
-	function GetCurrentRunTime(): any;
-
 	type Zones = import('common/web').MapZones;
 
 	/** Gets the observed timer status */
