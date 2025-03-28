@@ -143,7 +143,7 @@ class EndOfRunHandler {
 	}
 
 	restartMap() {
-		GameInterfaceAPI.ConsoleCommand('mom_restart');
+		GameInterfaceAPI.ConsoleCommand('mom_restart_track');
 		this.hideEndOfRun(true, true);
 	}
 

@@ -287,6 +287,9 @@ interface GlobalEventNameMap {
 	/** Fired when the end of run panel should be hidden */
 	EndOfRun_Hide: () => void;
 
+	/** Fired when a run is finished and passes the run metadata for the completed run. At this point the replay has not been saved yet. */
+	EndOfRun_Result_RunFinish: (run: RunMetadata) => void;
+
 	/** Fired when the replay recording finishes and passes whether writing the file was successful */
 	EndOfRun_Result_RunSave: (saved: boolean, run: RunMetadata) => void;
 
