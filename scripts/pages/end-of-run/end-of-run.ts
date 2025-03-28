@@ -29,10 +29,15 @@ class EndOfRunHandler {
 	selectedSplit: Timer.ComparisonSplit;
 
 	constructor() {
+		// End of run goes through 3 stages in sequence:
+		// 1) Run is completed after player enters end zone (EndofRun_Result_RunFinish)
+		// 2) Replay for the run has been compressed and saved to disk (EndOfRun_Result_RunSave)
+		// 3) Replay has been uploaded and verified (EndOfRun_Result_RunUpload)
+		$.RegisterForUnhandledEvent('EndOfRun_Result_RunFinish', (run) => this.onRunFinished(run));
+		$.RegisterForUnhandledEvent('EndOfRun_Result_RunSave', (saved, run) => this.updateRunSavedStatus(saved, run));
 		$.RegisterForUnhandledEvent('EndOfRun_Result_RunUpload', (uploaded, cosXP, rankXP, lvlGain) =>
 			this.updateRunUploadStatus(uploaded, cosXP, rankXP, lvlGain)
 		);
-		$.RegisterForUnhandledEvent('EndOfRun_Result_RunSave', (saved, run) => this.updateRunSavedStatus(saved, run));
 		$.RegisterForUnhandledEvent('Leaderboards_MapDataSet', (isOfficial) => this.initOnMapLoad(isOfficial));
 	}
 
@@ -94,7 +99,7 @@ class EndOfRunHandler {
 		}
 	}
 
-	updateRunSavedStatus(saved: boolean, run: Timer.RunMetadata) {
+	onRunFinished(run: Timer.RunMetadata) {
 		const observedStatus = MomentumTimerAPI.GetObservedTimerStatus();
 		if (observedStatus.trackId.type !== run.trackId.type || observedStatus.trackId.number !== run.trackId.number) {
 			return;
@@ -104,6 +109,16 @@ class EndOfRunHandler {
 		this.comparisonRun = RunComparisonsAPI.GetComparisonRun();
 
 		this.showNewEndOfRun(Timer.EndOfRunShowReason.PLAYER_FINISHED_RUN);
+	}
+
+	updateRunSavedStatus(saved: boolean, run: Timer.RunMetadata) {
+		const observedStatus = MomentumTimerAPI.GetObservedTimerStatus();
+		if (observedStatus.trackId.type !== run.trackId.type || observedStatus.trackId.number !== run.trackId.number) {
+			return;
+		}
+
+		this.baseRun = run;
+		this.comparisonRun = RunComparisonsAPI.GetComparisonRun();
 
 		this.updateRunStatusIndicator(
 			saved ? Timer.RunStatusStates.SUCCESS : Timer.RunStatusStates.ERROR,
@@ -119,7 +134,7 @@ class EndOfRunHandler {
 	}
 
 	watchReplay() {
-		if (!this.baseRun) {
+		if (!this.baseRun || !this.baseRun.filePath) {
 			return;
 		}
 
