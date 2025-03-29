@@ -292,12 +292,12 @@
 					<RadioButton group="timerstartsound" text="#Common_On" value="1" />
 				</SettingsEnum>
 
-				<SettingsEnum text="#Settings_Timer_SoundFinish" convar="mom_hud_timer_sound_finish_enable" infomessage="#Settings_Timer_SoundStop_Info" tags="sound">
+				<SettingsEnum text="#Settings_Timer_SoundFinish" convar="mom_hud_timer_sound_finish_enable" infomessage="#Settings_Timer_SoundFinish_Info" tags="sound">
 					<RadioButton group="timerfinishsound" text="#Common_Off" value="0" />
 					<RadioButton group="timerfinishsound" text="#Common_On" value="1" />
 				</SettingsEnum>
 
-				<SettingsEnum text="#Settings_Timer_SoundFinish" convar="mom_hud_timer_sound_stop_enable" infomessage="#Settings_Timer_SoundFinish_Info" tags="sound">
+				<SettingsEnum text="#Settings_Timer_SoundStop" convar="mom_hud_timer_sound_stop_enable" infomessage="#Settings_Timer_SoundStop_Info" tags="sound">
 					<RadioButton group="timerstopsound" text="#Common_Off" value="0" />
 					<RadioButton group="timerstopsound" text="#Common_On" value="1" />
 				</SettingsEnum>
