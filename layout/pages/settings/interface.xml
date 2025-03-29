@@ -301,11 +301,6 @@
 					<RadioButton group="timerstopsound" text="#Common_Off" value="0" />
 					<RadioButton group="timerstopsound" text="#Common_On" value="1" />
 				</SettingsEnum>
-
-				<SettingsEnum text="#Settings_Timer_SoundFail" convar="mom_hud_timer_sound_fail_enable" infomessage="#Settings_Timer_SoundFail_Info" tags="sound">
-					<RadioButton group="timerfailsound" text="#Common_Off" value="0" />
-					<RadioButton group="timerfailsound" text="#Common_On" value="1" />
-				</SettingsEnum>
 			</Panel>
 
 			<Panel class="settings-page__spacer" />
