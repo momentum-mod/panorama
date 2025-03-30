@@ -93,6 +93,7 @@ export const MIN_MAP_DESCRIPTION_LENGTH = 10;
 export const MAX_MAP_DESCRIPTION_LENGTH = 1500;
 export const MIN_MAP_NAME_LENGTH = 3;
 export const MAX_MAP_NAME_LENGTH = 32; // Seems high but this is actually a constant in engine.
+export const MAX_OPEN_MAP_SUBMISSIONS = 20;
 export const MAX_MAP_SUGGESTION_COMMENT_LENGTH = 500;
 export const PRE_SIGNED_URL_EXPIRE_TIME = 5 * 60;
 
@@ -522,6 +523,33 @@ export enum GamemodeCategory {
 	DEFRAG = 8
 }
 
+export const GamemodeCategoryToGamemode = new Map<GamemodeCategory, Gamemode[]>([
+	[GamemodeCategory.SURF, [Gamemode.SURF]],
+	[GamemodeCategory.BHOP, [Gamemode.BHOP, Gamemode.BHOP_HL1]],
+	[GamemodeCategory.CLIMB, [Gamemode.CLIMB_MOM, Gamemode.CLIMB_KZT, Gamemode.CLIMB_16]],
+	[GamemodeCategory.RJ, [Gamemode.RJ]],
+	[GamemodeCategory.SJ, [Gamemode.SJ]],
+	[GamemodeCategory.AHOP, [Gamemode.AHOP]],
+	[GamemodeCategory.CONC, [Gamemode.CONC]],
+	[GamemodeCategory.DEFRAG, [Gamemode.DEFRAG_CPM, Gamemode.DEFRAG_VQ3, Gamemode.DEFRAG_VTG]]
+]);
+
+export const GamemodeToGamemodeCategory = new Map<Gamemode, GamemodeCategory>([
+	[Gamemode.SURF, GamemodeCategory.SURF],
+	[Gamemode.BHOP, GamemodeCategory.BHOP],
+	[Gamemode.BHOP_HL1, GamemodeCategory.BHOP],
+	[Gamemode.CLIMB_MOM, GamemodeCategory.CLIMB],
+	[Gamemode.CLIMB_KZT, GamemodeCategory.CLIMB],
+	[Gamemode.CLIMB_16, GamemodeCategory.CLIMB],
+	[Gamemode.RJ, GamemodeCategory.RJ],
+	[Gamemode.SJ, GamemodeCategory.SJ],
+	[Gamemode.AHOP, GamemodeCategory.AHOP],
+	[Gamemode.CONC, GamemodeCategory.CONC],
+	[Gamemode.DEFRAG_CPM, GamemodeCategory.DEFRAG],
+	[Gamemode.DEFRAG_VQ3, GamemodeCategory.DEFRAG],
+	[Gamemode.DEFRAG_VTG, GamemodeCategory.DEFRAG]
+]);
+
 /**
  * All the image formats we support in different places.
  *
@@ -594,6 +622,118 @@ export enum MapSubmissionType {
 	SPECIAL = 2
 }
 
+/* eslint @typescript-eslint/naming-convention: 0 */
+/**
+ * Enum of all possible tags.
+ *
+ * Tags should *never* be removed - if we need to disable a tag in the
+ * future, just remove it global tags and gamemode tags.
+ *
+ * Breaking naming convention, using casing that lets us translate to English
+ * strings easily.
+ *
+ * - If tag name starts with a number, prefix it with `_Num`.
+ * - If tag name contains a hyphen, use `__`
+ *
+ * For example, `_Num2__Way_Sym` becomes `2-Way Sym`.
+ *
+ * After adding tags, you need to run
+ * ```
+ * nx run scripts:maptags-poeditor
+ * ```
+ * which writes a JSON file to cwd, then import that file into POEditor, with
+ * "Also import translations to a language" set to English. POEditor will not
+ * overwrite existing translations.
+ */
+export enum MapTag {
+	Portals = 1,
+	Multiroute = 2,
+	Low_Grav = 3,
+	Gimmick = 4,
+	Endurance = 5,
+	Collectibles = 6,
+	Anti_Grav = 7,
+	Moving_Surfaces = 8,
+	Unit = 9,
+	Tech = 10,
+	Spins = 11,
+	Booster = 12,
+	Headsurf = 13,
+	Bhop = 14,
+	Increased_Maxvel = 15,
+	Fall = 16,
+	Rampstrafe = 17,
+	Headcheck = 18,
+	Strafe = 19,
+	Fly = 20,
+	Surf = 21,
+	Weapons = 22,
+	Spikes = 23,
+	Slopes = 24,
+	Misaligned_Teleporters = 25,
+	Climb = 26,
+	Ladder = 27,
+	Forced_Bhop = 28,
+	HL2 = 29,
+	Speed_Control = 30,
+	Displacements = 31,
+	Prec = 32,
+	Juggle = 33,
+	Juggleprec = 34,
+	Handheld = 35,
+	Sync = 36,
+	Wallpogo = 37,
+	Speedshot = 38,
+	Bounce = 39,
+	Bouncehop = 40,
+	Jurf = 41,
+	Edgebug = 42,
+	Wallshot = 43,
+	Phase = 44,
+	Prefire = 45,
+	Buttons = 46,
+	Limited_Ammo = 47,
+	Water = 48,
+	Teledoor = 49,
+	Airpogo = 50,
+	Vert = 51,
+	Rollerpogo = 52,
+	Downair = 53,
+	Slanted_Walls = 54,
+	Air_Jump = 55,
+	Rocket_Launcher = 56,
+	Grenade_Launcher = 57,
+	Plasma_Gun = 58,
+	BFG = 59,
+	Combo = 60,
+	Haste = 61,
+	Damageboost = 62,
+	Trick = 63,
+	Slick = 64,
+	Torture = 65,
+	Overbounce = 66,
+	LG_Climb = 67,
+	Rocket_Stack = 68,
+	Telehop = 69,
+	Slide = 70,
+	Longjump = 71,
+	Ceilingsmash = 72,
+	CS_Practice = 73,
+	Single_Hop = 74,
+	Holes = 75,
+	Angle_Snipe = 76,
+	Low_Speed = 77,
+	Fast_Paced = 78,
+	Progressive_Difficulty = 79,
+	Rocket_Spam = 80,
+	Strafe_Pads = 81,
+	Lightning_Gun = 82,
+	_Num2__Way_Sym = 83,
+	_Num4__Way_Sym = 84,
+	Staged__Linear = 85,
+	Funkyboost = 86
+}
+
 export enum MapTestInviteState {
 	UNREAD = 0,
 	ACCEPTED = 1,
@@ -629,59 +769,36 @@ export const CombinedRoles = Object.freeze({
 	REVIEWER_AND_ABOVE: Role.REVIEWER | Role.MODERATOR | Role.ADMIN,
 	MAPPER_OR_PORTER: Role.MAPPER | Role.PORTER,
 	MAPPER_AND_ABOVE: Role.MAPPER | Role.PORTER | Role.REVIEWER | Role.MODERATOR | Role.ADMIN
-}); // These live in here as service logic and E2E need access.
+});
 
 export enum RunValidationErrorType {
-	BAD_TIMESTAMPS,
-	BAD_REPLAY_FILE,
-	BAD_META,
-	INVALID_STATS,
-	OUT_OF_SYNC,
-	UNSUPPORTED_MODE,
-	FUCKY_BEHAVIOUR,
-	INTERNAL_ERROR
+	BAD_TIMESTAMPS = 0,
+	BAD_REPLAY_FILE = 1,
+	BAD_META = 2,
+	INVALID_STATS = 3,
+	OUT_OF_SYNC = 4,
+	UNSUPPORTED_MODE = 5,
+	FUCKY_BEHAVIOUR = 6,
+	INTERNAL_ERROR = 7
 }
 
-interface ErrorData {
-	code: number;
-	message: string;
-}
-
-export const RunValidationErrors: Record<RunValidationErrorType, ErrorData> = {
-	[RunValidationErrorType.BAD_TIMESTAMPS]: {
-		code: 0,
-		message: 'run timestamps were misordered'
-	},
-	[RunValidationErrorType.BAD_REPLAY_FILE]: {
-		code: 1,
-		message: 'invalid replay file'
-	},
-	[RunValidationErrorType.BAD_META]: { code: 2, message: 'invalid metadata' },
-	[RunValidationErrorType.INVALID_STATS]: { code: 3, message: 'invalid stats' },
-	[RunValidationErrorType.OUT_OF_SYNC]: {
-		code: 4,
-		message: 'replay data out of sync with submission times'
-	},
-	[RunValidationErrorType.UNSUPPORTED_MODE]: {
-		code: 5,
-		message: 'this mode is not currently supported'
-	},
-	[RunValidationErrorType.FUCKY_BEHAVIOUR]: {
-		code: 6,
-		message: 'unusual behaviour in replay'
-	},
-	[RunValidationErrorType.INTERNAL_ERROR]: {
-		code: 7,
-		message: 'an internal server error occurred'
-	}
-} as const;
+export const RunValidationErrorMessages: Record<RunValidationErrorType, string> = {
+	[RunValidationErrorType.BAD_TIMESTAMPS]: 'run timestamps were misordered',
+	[RunValidationErrorType.BAD_REPLAY_FILE]: 'invalid replay file',
+	[RunValidationErrorType.BAD_META]: 'invalid metadata',
+	[RunValidationErrorType.INVALID_STATS]: 'invalid stats',
+	[RunValidationErrorType.OUT_OF_SYNC]: 'replay data out of sync with submission times',
+	[RunValidationErrorType.UNSUPPORTED_MODE]: 'this mode is not currently supported',
+	[RunValidationErrorType.FUCKY_BEHAVIOUR]: 'unusual behaviour in replay',
+	[RunValidationErrorType.INTERNAL_ERROR]: 'an internal server error occurred'
+};
 
 export class RunValidationError extends Error {
-	code: number;
+	code: RunValidationErrorType;
 
 	constructor(type: RunValidationErrorType) {
-		super(RunValidationErrors[type].message);
-		this.code = RunValidationErrors[type].code;
+		super(RunValidationErrorMessages[type]);
+		this.code = type;
 	}
 }
 
@@ -996,6 +1113,149 @@ export const MapStatusName: ReadonlyMap<MapStatus, string> = new Map([
 	[MapStatus.DISABLED, 'Disabled']
 ]);
 
+export const GlobalTags = [
+	MapTag.Portals,
+	MapTag.Multiroute,
+	MapTag.Low_Grav,
+	MapTag.Gimmick,
+	MapTag.Endurance,
+	MapTag.Collectibles,
+	MapTag.Anti_Grav,
+	MapTag.Moving_Surfaces,
+	MapTag.Increased_Maxvel,
+	MapTag.Progressive_Difficulty
+];
+
+export const GamemodeTags = {
+	[GamemodeCategory.SURF]: [
+		MapTag.Unit,
+		MapTag.Tech,
+		MapTag.Spins,
+		MapTag.Booster,
+		MapTag.Headsurf,
+		MapTag.Bhop,
+		MapTag.Increased_Maxvel,
+		MapTag.Fall,
+		MapTag.Slide,
+		MapTag.Rampstrafe,
+		MapTag.Headcheck,
+		MapTag.Angle_Snipe,
+		MapTag.Low_Speed,
+		MapTag.Fast_Paced,
+		MapTag._Num2__Way_Sym,
+		MapTag._Num4__Way_Sym,
+		MapTag.Staged__Linear
+	],
+	[GamemodeCategory.BHOP]: [
+		MapTag.Strafe,
+		MapTag.Tech,
+		MapTag.Fly,
+		MapTag.Surf,
+		MapTag.Weapons,
+		MapTag.Spins,
+		MapTag.Spikes,
+		MapTag.Slopes,
+		MapTag.Misaligned_Teleporters,
+		MapTag.Climb,
+		MapTag.Booster,
+		MapTag.Fast_Paced,
+		MapTag.Forced_Bhop
+	],
+	[GamemodeCategory.CLIMB]: [
+		MapTag.Ladder,
+		MapTag.Bhop,
+		MapTag.Slide,
+		MapTag.Longjump,
+		MapTag.Ceilingsmash,
+		MapTag.CS_Practice,
+		MapTag.Single_Hop
+	],
+	[GamemodeCategory.RJ]: [
+		MapTag.Sync,
+		MapTag.Wallpogo,
+		MapTag.Speedshot,
+		MapTag.Bounce,
+		MapTag.Bouncehop,
+		MapTag.Jurf,
+		MapTag.Edgebug,
+		MapTag.Wallshot,
+		MapTag.Phase,
+		MapTag.Prefire,
+		MapTag.Buttons,
+		MapTag.Limited_Ammo,
+		MapTag.Water,
+		MapTag.Teledoor
+	],
+	[GamemodeCategory.SJ]: [
+		MapTag.Airpogo,
+		MapTag.Wallpogo,
+		MapTag.Vert,
+		MapTag.Limited_Ammo,
+		MapTag.Phase,
+		MapTag.Downair,
+		MapTag.Slanted_Walls,
+		MapTag.Teledoor,
+		MapTag.Holes
+	],
+	[GamemodeCategory.AHOP]: [
+		MapTag.HL2,
+		MapTag.Speed_Control,
+		MapTag.Displacements,
+		MapTag.Surf,
+		MapTag.Low_Speed,
+		MapTag.Fast_Paced
+	],
+	[GamemodeCategory.CONC]: [MapTag.Prec, MapTag.Juggle, MapTag.Limited_Ammo, MapTag.Handheld, MapTag.Juggleprec],
+	[GamemodeCategory.DEFRAG]: [
+		MapTag.Strafe,
+		MapTag.Rocket_Launcher,
+		MapTag.Grenade_Launcher,
+		MapTag.Plasma_Gun,
+		MapTag.BFG,
+		MapTag.Combo,
+		MapTag.Haste,
+		MapTag.Damageboost,
+		MapTag.Climb,
+		MapTag.Trick,
+		MapTag.Slick,
+		MapTag.Torture,
+		MapTag.Overbounce,
+		MapTag.LG_Climb,
+		MapTag.Rocket_Stack,
+		MapTag.Buttons,
+		MapTag.Air_Jump,
+		MapTag.Rocket_Spam,
+		MapTag.Strafe_Pads,
+		MapTag.Lightning_Gun,
+		MapTag.Staged__Linear,
+		MapTag.Funkyboost
+	]
+} satisfies Record<GamemodeCategory, number[]>;
+
+// We could add support for individual subcategories (Gamemodes), but don't
+// have a single example of one yet.
+
+/** Get the i18n token for a map tag */
+export function mapTagToken(tag: MapTag): string {
+	return 'MapTag_' + MapTag[tag];
+}
+
+/** Get the English name of a map tag */
+export function mapTagEnglishName(tag: MapTag): string {
+	return MapTag[tag].replace('__', '-').replace('_Num', '').replace('_', ' ');
+}
+
+export const MapTags = new Map(
+	GamemodeToGamemodeCategory.entries().map(([gamemode, category]) => [
+		gamemode,
+		[...GlobalTags, ...GamemodeTags[category]].sort((a, b) =>
+			// Lexicograpic sort by *ENGLISH* name - Panorama will want to sort by
+			// localized names!
+			MapTag[a] > MapTag[b] ? 1 : -1
+		)
+	])
+);
+
 export const RoleNames: ReadonlyMap<Role, string> = new Map([
 	[Role.ADMIN, 'Admin'],
 	[Role.MODERATOR, 'Moderator'],
@@ -1008,26 +1268,32 @@ export const RoleNames: ReadonlyMap<Role, string> = new Map([
 ]);
 
 /**
- * The tickrates each gamemode uses. May change in future when we allow surf
- * 100 tick etc. 0.015 <=> 66
- * 0.01 <=> 100
- * 0.008 <=> 125
- * 0.0078125 <=> 128
+ * The tick intervals (inverse of tickrate) each gamemode uses. In Source
+ * they're floats (32-bit), so take care to use f32 rounded values in JS.
+ *
+ * @see (https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/fround)
+ *
+ * | Tick Rate | Tick Interval |
+ * |-----------|---------------|
+ * | 66        | 0.015         |
+ * | 100       | 0.01          |
+ * | 125       | 0.008         |
+ * | 128       | 0.0078125     |
  */
-export const Tickrates: ReadonlyMap<Gamemode, number> = new Map([
-	[Gamemode.AHOP, 0.015],
-	[Gamemode.BHOP, 0.01],
-	[Gamemode.BHOP_HL1, 0.004],
-	[Gamemode.CLIMB_MOM, 0.01],
-	[Gamemode.CLIMB_KZT, 0.01],
-	[Gamemode.CLIMB_16, 0.01],
-	[Gamemode.CONC, 0.01],
-	[Gamemode.DEFRAG_CPM, 0.008],
-	[Gamemode.DEFRAG_VQ3, 0.008],
-	[Gamemode.DEFRAG_VTG, 0.008],
-	[Gamemode.RJ, 0.015],
-	[Gamemode.SJ, 0.015],
-	[Gamemode.SURF, 0.015]
+export const TickIntervals: ReadonlyMap<Gamemode, float> = new Map([
+	[Gamemode.AHOP, Math.fround(0.015)],
+	[Gamemode.BHOP, Math.fround(0.01)],
+	[Gamemode.BHOP_HL1, Math.fround(0.004)],
+	[Gamemode.CLIMB_MOM, Math.fround(0.01)],
+	[Gamemode.CLIMB_KZT, Math.fround(0.01)],
+	[Gamemode.CLIMB_16, Math.fround(0.01)],
+	[Gamemode.CONC, Math.fround(0.01)],
+	[Gamemode.DEFRAG_CPM, Math.fround(0.008)],
+	[Gamemode.DEFRAG_VQ3, Math.fround(0.008)],
+	[Gamemode.DEFRAG_VTG, Math.fround(0.008)],
+	[Gamemode.RJ, Math.fround(0.015)],
+	[Gamemode.SJ, Math.fround(0.015)],
+	[Gamemode.SURF, Math.fround(0.015)]
 ]);
 
 export const ISO_8601_REGEXP =
@@ -1050,6 +1316,8 @@ export const YOUTUBE_ID_REGEXP = /^[\w-_]{11}$/;
 // - Prisma types are absurdly complicated, and slow down the TypeScript
 //   language server.
 // - Fuck Prisma.
+
+/* eslint @typescript-eslint/no-namespace: 0 */
 
 //#region User
 
@@ -1324,6 +1592,7 @@ export interface MapReviewSuggestion {
 	trackNum: number;
 	tier?: number;
 	gameplayRating?: number;
+	tags?: MapTag[];
 }
 
 export interface MapStats {
@@ -1335,7 +1604,6 @@ export interface MapStats {
 	completions: number;
 	uniqueCompletions: number;
 	timePlayed: number;
-	baseStats: BaseStats;
 }
 
 export interface MapSubmission {
@@ -1351,6 +1619,7 @@ export interface MapSubmissionApproval {
 	gamemode: Gamemode;
 	tier?: number; // Hidden leaderboards don't have tiers
 	type: Exclude<LeaderboardType, LeaderboardType.IN_SUBMISSION>;
+	tags?: MapTag[];
 }
 
 export type MapSubmissionDate = {
@@ -1371,9 +1640,8 @@ export interface MapSubmissionSuggestion {
 	tier: number;
 	type: LeaderboardType.RANKED | LeaderboardType.UNRANKED;
 	comment?: string;
+	tags?: MapTag[];
 }
-
-export type MapTags = string[];
 
 export interface MapTestInvite {
 	mapID: number;
@@ -1447,29 +1715,7 @@ export interface Region {
 }
 
 //#endregion
-//#region Stats
-
-export interface BaseStats {
-	jumps: number;
-	strafes: number;
-	avgStrafeSync: number;
-	avgStrafeSync2: number;
-	enterTime: number;
-	totalTime: number;
-	velAvg3D: number;
-	velAvg2D: number;
-	velMax3D: number;
-	velMax2D: number;
-	velEnter3D: number;
-	velEnter2D: number;
-	velExit3D: number;
-	velExit2D: number;
-}
-
-export interface RunStats {
-	overall: BaseStats;
-	zones?: any;
-}
+//#region Runs
 
 export interface Leaderboard {
 	gamemode: Gamemode;
@@ -1478,7 +1724,7 @@ export interface Leaderboard {
 	tier: number | null;
 	style: Style;
 	type: LeaderboardType;
-	tags: MapTags;
+	tags: MapTag[];
 	linear: boolean;
 }
 
@@ -1496,7 +1742,7 @@ export interface LeaderboardRun {
 	downloadURL: string;
 	replayHash: string;
 	flags: Style[];
-	stats: RunStats;
+	splits?: RunSplits.Splits;
 	rank: number;
 	rankXP: number;
 	userID: number;
@@ -1538,11 +1784,69 @@ export interface RunSession {
 
 export interface RunSessionTimestamp {
 	id: number;
-	segment: number;
-	checkpoint: number;
+	majorNum: number;
+	minorNum: number;
 	time: number;
 	sessionID: number;
 	createdAt: DateString;
+}
+
+export namespace RunSplits {
+	export interface Splits {
+		trackStats: Stats;
+		segments: Segment[];
+	}
+
+	export interface Segment {
+		// Contains an entry for every subsegment the player has reached so far
+		subsegments: Subsegment[];
+
+		segmentStats: Stats;
+
+		// This is velocity when effectively starting this segment (when *leaving* the
+		// first zone)
+		effectiveStartVelocity: vec3;
+
+		// Whether this segment's checkpoints have a logical order. This lets split
+		// comparison logic know if apparent gaps are due to skipped checkpoints
+		// (align subsegments by minorNum) or are just unordered checkpoints (don't
+		// align).
+		checkpointsOrdered: boolean;
+	}
+
+	// A subsegment begins at the checkpoint zone with the specified minorNum (which
+	// may be a Major Checkpoint zone, possibly the overall track start) and ends
+	// when another checkpoint zone is activated (which may not be the next in
+	// logical order if checkpoints can be skipped or done out of order).
+	//
+	// The very first subsegment of a run across all segments actually begins when
+	// the run starts and so will have timeReached == 0.0. For all other
+	// subsegments, timeReached has a meaningful value. Also note that for
+	// subsegments after the first overall, stat tracking includes time spent within
+	// its corresponding checkpoint zone.
+	export interface Subsegment {
+		minorNum: uint8;
+
+		timeReached: float;
+
+		// Velocity when triggering this checkpoint; note the difference between this
+		// and Segment::effectiveStartVelocity
+		velocityWhenReached: vec3;
+
+		stats: Stats;
+	}
+
+	/** Stats for a whole run, or segment */
+	export interface Stats {
+		maxOverallSpeed: float;
+		maxHorizontalSpeed: float;
+
+		overallDistanceTravelled: float;
+		horizontalDistanceTravelled: float;
+
+		jumps: uint16;
+		strafes: uint16;
+	}
 }
 
 export interface XpGain {
@@ -1564,14 +1868,40 @@ export interface CompletedRun {
 //#endregion
 //#region Misc
 
-/* eslint-disable @typescript-eslint/naming-convention */
 export interface TwitchStream {
-	title: string;
+	id: string;
+	user_id: string;
+	user_login: string;
 	user_name: string;
+	game_id: string;
+	game_name: string;
+	type: string;
+	title: string;
+	tags: string[];
 	viewer_count: number;
 	started_at: string;
+	language: string;
 	thumbnail_url: string;
+	/** @deprecated */
+	tag_ids: any[];
+	is_mature: boolean;
 }
+
+export interface TwitchUser {
+	id: string;
+	login: string;
+	display_name: string;
+	type: string;
+	broadcaster_type: string;
+	description: string;
+	profile_image_url: string;
+	offline_image_url: string;
+	/** @deprecated */
+	view_count: number;
+	email: string;
+	created_at: string;
+}
+
 //#endregion
 
 export interface PagedResponse<T> {
@@ -1671,6 +2001,7 @@ export interface CreateMap extends Pick<MMap, 'name'> {
 	info: CreateMapInfo;
 	zones: MapZones;
 	credits: CreateMapCredit[];
+	portingChangelog?: string;
 }
 
 export interface UpdateMap
@@ -1680,6 +2011,7 @@ export interface UpdateMap
 	status?: MapStatus.CONTENT_APPROVAL | MapStatus.FINAL_APPROVAL;
 	info?: UpdateMapInfo;
 	zones?: MapZones;
+	portingChangelog?: string;
 	resetLeaderboards?: boolean;
 }
 
@@ -1724,7 +2056,7 @@ export type UpdateMapNotify = Pick<MapNotify, 'notifyOn'>;
 //#endregion
 //#region Runs
 
-export type MapRunsGetExpand = 'stats';
+export type MapRunsGetExpand = 'splits';
 export type MapRunsGetFilter = 'around' | 'friends';
 
 export type MapLeaderboardGetQuery = PagedQuery & {
@@ -1754,6 +2086,7 @@ export type MapLeaderboardGetRunQuery = PagedQuery & {
 
 export interface CreateMapVersion extends Pick<MapVersion, 'changelog' | 'zones'> {
 	resetLeaderboards?: boolean;
+	hasBSP: boolean;
 }
 
 export interface CreateMapVersionWithFiles {
@@ -1869,12 +2202,11 @@ export type RunsGetQuery = {
 	expand?: RunsGetExpand;
 };
 
-export interface CreateRunSession extends Pick<RunSession, 'mapID' | 'gamemode' | 'trackType' | 'trackNum'> {
-	segment: number;
-}
+export type CreateRunSession = Pick<RunSession, 'mapID' | 'gamemode' | 'trackType' | 'trackNum'>;
 
-export interface UpdateRunSession extends Pick<CreateRunSession, 'segment'> {
-	checkpoint: number;
+export interface UpdateRunSession {
+	majorNum: number;
+	minorNum: number;
 	time: number;
 }
 
@@ -1900,7 +2232,6 @@ export type UsersGetExpand = Array<'profile' | 'userStats'>;
 
 export type UsersGetQuery = {
 	expand?: UsersGetExpand;
-	mapRank?: number;
 };
 
 export type UsersGetAllExpand = UsersGetExpand;
@@ -1911,7 +2242,6 @@ export type UsersGetAllQuery = PagedQuery & {
 	steamID?: string;
 	steamIDs?: string[];
 	userIDs?: number[];
-	mapRank?: number;
 };
 
 export type UsersGetActivitiesQuery = Omit<ActivitiesGetQuery, 'userID'>;
@@ -1955,6 +2285,25 @@ export type NumberifyBigInt<Model extends Record<string, any>, Exclude extends s
 				? number | null // Replace nullable bigint with nullable bigint
 				: Model[K];
 };
+
+export type uint8 = number;
+export type uint16 = number;
+export type uint32 = number;
+export type uint64 = bigint;
+export type int8 = number;
+export type int16 = number;
+export type int32 = number;
+export type int64 = bigint;
+
+/**
+ * Denotes a 32-bit IEEE floating point number, note all JS numbers are still
+ * 64-bit (doubles) at runtime! Take care to use Math.fround when comparing.
+ */
+export type float = number;
+export type double = number;
+
+export type vec2 = { x: number; y: number };
+export type vec3 = { x: number; y: number; z: number };
 
 export type Vector = [number, number, number];
 export type Vector2D = [number, number];
