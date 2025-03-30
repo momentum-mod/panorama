@@ -8,7 +8,7 @@ class NewsHandler {
 		otherUpdates: $<Panel>('#OtherUpdates')
 	};
 
-	readonly postMaxChars = 1024;
+	readonly maxDescriptionLength = 2048;
 
 	constructor() {
 		$.RegisterForUnhandledEvent('PanoramaComponent_News_OnRSSFeedReceived', (items) =>
@@ -31,17 +31,43 @@ class NewsHandler {
 		const cp = $.GetContextPanel();
 		const item = feed.items[0];
 
-		let desc;
-		if (item.description.length > this.postMaxChars) {
-			desc = item.description.slice(0, this.postMaxChars);
+		let desc = item.description;
 
-			// Check we're not inside a tag
-			if ((desc.includes('<') && desc.match(/</g)).length !== desc.match(/>/g).length) {
-				desc = desc.slice(0, desc.lastIndexOf('<'));
+		// Limit description length by at most maxDescriptionLength
+		if (desc.length > this.maxDescriptionLength) {
+			desc = desc.slice(0, this.maxDescriptionLength);
+
+			// Trim description to the last full list item, ensures we're not trimming inside of a tag,
+			// and avoids ever showing an e.g. "Added" heading with no items below it.
+			const lastLi = desc.lastIndexOf('</li>');
+			if (lastLi > 0) {
+				desc = desc.slice(0, lastLi + 5);
+			} else {
+				// Unlikely we ever had something without list items, at worst we could just have slightly buggy
+				// text. Not worth trying to escape other bits of HTML, too complex.
 			}
-		} else {
-			desc = item.description;
+
+			// Not localizing since blog isn't translated either
+			desc +=
+				'<br><font class="news-latest__description__see-more">See the blog post on the right for more!</font>';
 		}
+
+		// Evil hacks to make description look decent -- Panorama's HTML parsing is garbage.
+		desc = desc
+			// <div>s aren't parsed!
+			.replaceAll('<div class="bb_h2">', '<font class="news-latest__description__h2">')
+			.replaceAll('</div>', '</font><br>')
+			// <li>s just appends a unicode bullet point and whitespace, regular hyphen looks better.
+			.replaceAll('<li>', '<font>- ')
+			.replaceAll('</li>', '</font>')
+			// <ul>s aren't parsed at all, better helpful for line breaks. Note that we can't use
+			// margins here, they get ignored.
+			.replaceAll('<ul>', '<br>')
+			.replaceAll('</ul>', '<br><br>')
+			// Replace backticks with <pre> tags
+			.replace(/`([^`]+)`/g, '<pre>$1</pre>')
+			// If a <pre> is followed by a regular whitespace, Panorama ignores it (????)
+			.replaceAll('</pre> ', '</pre>&nbsp;');
 
 		cp.SetDialogVariable('title', item.title);
 		cp.SetDialogVariable('description', desc);
