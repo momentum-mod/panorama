@@ -58,6 +58,13 @@
 					<Label text="#Settings_AudioDevices_Speaker_51" id="speakerconfig4" value="5" />
 				</SettingsEnumDropDown>
 
+				<ConVarEnabler convar="snd_surround_speakers" invert="true" togglevisibility="true">
+					<SettingsEnum text="#Settings_AudioDevices_HWCompat" infomessage="#Settings_HRTF_Info" convar="snd_hrtf_enable" hasdocspage="false">
+						<RadioButton group="hwcompat" text="#Common_Off" value="0" />
+						<RadioButton group="hwcompat" text="#Common_On" value="1" />
+					</SettingsEnum>
+				</ConVarEnabler>
+
 				<SettingsEnumDropDown text="#Settings_AudioDevices_Device" id="DeviceConfigurationEnum" convar="sound_device_override" oninputsubmit="BaseAudioDeviceConfigurationChanged()" hasdocspage="false">
 					<!--placeholder labels that will be modified in cui_audiosettingsscreen-->
 					<Label id="device1" text="XXXXXX 1" />
@@ -69,11 +76,6 @@
 					<Label id="device7" text="XXXXXX 7" />
 					<Label id="device8" text="XXXXXX 8" />
 				</SettingsEnumDropDown>
-
-				<SettingsEnum text="#Settings_AudioDevices_HWCompat" convar="snd_hwcompat" hasdocspage="false">
-					<RadioButton group="hwcompat" text="#Common_Off" value="0" />
-					<RadioButton group="hwcompat" text="#Common_On" value="1" />
-				</SettingsEnum>
 
 				<SettingsEnum text="#Settings_AudioDevices_Background" convar="snd_mute_losefocus" hasdocspage="false">
 					<RadioButton group="losefocus" text="#Common_Off" value="0" />
