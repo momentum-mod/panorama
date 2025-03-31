@@ -77,11 +77,7 @@
 					<Label id="device8" text="XXXXXX 8" />
 				</SettingsEnumDropDown>
 
-				<SettingsEnum text="#Settings_AudioDevices_Background" convar="snd_mute_losefocus" hasdocspage="false">
-					<RadioButton group="losefocus" text="#Common_Off" value="0" />
-					<RadioButton group="losefocus" text="#Common_On" value="1" />
-				</SettingsEnum>
-
+				<SettingsSlider text="#Settings_AudioDevices_Background" infomessage="#Settings_Volume_Background_Info" convar="snd_mute_losefocus" hasdocspage="false" tags="focus,background" min="0" max="1" percentage="true" />
 			</Panel>
 		</BaseAudioSettings>
 	</Panel>
