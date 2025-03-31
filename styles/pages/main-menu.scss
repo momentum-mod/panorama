@@ -569,7 +569,7 @@ $drawer-width: 768px;
 .news-latest {
 	&__left {
 		flow-children: down;
-		width: 400px;
+		width: 450px;
 		height: 100%;
 		margin-right: 8px;
 		padding-left: 4px;
@@ -591,6 +591,25 @@ $drawer-width: 768px;
 		font-size: 14px;
 		text-overflow: ellipsis;
 		overflow: squish scroll;
+
+		&__h2 {
+			font-weight: bold;
+		}
+
+		& pre {
+			// Can't get Roboto Mono to align well with regular Roboto
+			// looks wonky and hard to read.
+			font-family: $font;
+			font-style: italic;
+			color: #cbcbcb;
+			font-weight: medium;
+		}
+
+		&__see-more {
+			font-style: italic;
+			font-weight: medium;
+			color: #eee;
+		}
 	}
 
 	&__image {
