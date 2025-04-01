@@ -1,5 +1,4 @@
 import { PanelHandler, OnPanelLoad } from 'util/module-helpers';
-import { checkDosa } from 'util/dont-show-again';
 import { RunSafeguardType } from 'common/safeguards';
 
 enum GameUIState {
@@ -224,12 +223,12 @@ class MainMenuHandler implements OnPanelLoad {
 	 * Temporary method to show the playtest welcome thingy
 	 */
 	showPlaytestWelcomePopup() {
-		if (!checkDosa('playtestWelcome'))
-			UiToolkitAPI.ShowCustomLayoutPopupParameters(
-				'',
-				'file://{resources}/layout/modals/popups/playtest-welcome.xml',
-				'dosaKey=playtestWelcome&dosaNameToken=Dosa_PlaytestWelcome'
-			);
+		//if (!checkDosa('playtestWelcome'))
+		UiToolkitAPI.ShowCustomLayoutPopupParameters(
+			'',
+			'file://{resources}/layout/modals/popups/playtest-welcome.xml',
+			'dosaKey=playtestWelcome&dosaNameToken=Dosa_PlaytestWelcome'
+		);
 	}
 
 	/**

@@ -9,13 +9,18 @@
 
 	<PopupCustomLayout class="PopupPanel Hidden generic-popup generic-popup--large" popupbackground="blur">
 		<Panel class="flow-down">
-			<Label class="text-h1 mb-4 w-full text-align-center" text="Welcome to the\nMomentum Mod Playtest!" />
-			<Label class="mb-2" text="Congratulations on gaining access to the Momentum Mod playtest!" />
-			<Label class="mb-3" text="Please note this build is a work in progress, not a final copy of the game. You should expect to encounter bugs and unfinished features, and most importantly..." />
-			<Label class="color-error mb-3 w-full text-align-center" text="Times you submit to the leaderboards will be wiped before the 1.0.0 release!!" />
-			<Label class="mb-2" text="Whilst we don't want to discourage people from enjoying the game, no times submitted or XP gained will be permanent. Additionally, the game is only available in English, and anti-cheat hasn't been added yet, meaning you may come across glitched runs. This is to be expected, in fact we encourage you to try to break the game in whatever ways you can find! Just please make sure to let us know how you do in our Discord (links on the bottom left of this page) as well sending us any suggestions you might have." />
-			<Label class="mb-4" text="All that being said, thanks for your interest, and we hope you enjoy the game!" />
-			<Label class="ml-4 mb-4 text-italic" text="   - Momentum Mod Team" />
+			<Label class="text-h1 mb-4 w-full text-align-center" text="#Playtest_Welcome_Title" />
+			<Label class="mb-2" text="#Playtest_Welcome_Acknowledge" />
+			<ToggleButton class="checkbox mb-2">
+				<Label class="mb-2" text="#Playtest_Welcome_Acknowledge_1" />
+			</ToggleButton>
+			<ToggleButton class="checkbox mb-2">
+				<Label class="mb-2" text="#Playtest_Welcome_Acknowledge_2" />
+			</ToggleButton>
+			<ToggleButton class="checkbox mb-2">
+				<Label class="mb-2" text="#Playtest_Welcome_Acknowledge_3" />
+			</ToggleButton>
+			<Label class="mb-4" text="#Playtest_Welcome_Acknowledge_End" />
 		</Panel>
 
 		<Panel class="flow-right w-full">
