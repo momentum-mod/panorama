@@ -14,8 +14,8 @@ class HudStatusHandler {
 		$.RegisterForUnhandledEvent('OnSaveStateUpdate', (count, current, usingMenu) =>
 			this.onSaveStateChange(count, current, usingMenu)
 		);
-		$.RegisterForUnhandledEvent('OnObservedTimerStateChange', (_trackID) => this.update());
-		$.RegisterForUnhandledEvent('OnObservedTimerCheckpointProgressed', (_trackID) => this.update());
+		$.RegisterForUnhandledEvent('OnObservedTimerStateChange', () => this.update());
+		$.RegisterForUnhandledEvent('OnObservedTimerCheckpointProgressed', () => this.update());
 		$.RegisterForUnhandledEvent('OnObservedTimerReplaced', () => this.update());
 
 		$.GetContextPanel<MomHudStatus>().hiddenHUDBits = HideHud.TABMENU;
