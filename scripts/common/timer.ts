@@ -45,6 +45,7 @@ export interface RunMetadata {
 	playerName: string;
 	trackId: TrackID;
 	runTime: double;
+	tempId: number;
 	runSplits: RunSplits | null;
 }
 

@@ -307,16 +307,19 @@ interface GlobalEventNameMap {
 	OnPickCanceled: () => void;
 
 	/** Fired when the the primary timer of the UI entity transitions to a different state */
-	OnObservedTimerStateChange: (trackID: import('common/timer').TrackID) => void;
+	OnObservedTimerStateChange: () => void;
 
 	/** Fired when the the primary timer of the UI entity progresses to a new checkpoint */
-	OnObservedTimerCheckpointProgressed: (trackId: import('common/timer').TrackID) => void;
+	OnObservedTimerCheckpointProgressed: () => void;
 
 	/** Fired when the the primary timer of the UI entity effectively starts a segment. */
-	OnObservedTimerSegmentEffectiveStart: (trackId: import('common/timer').TrackID) => void;
+	OnObservedTimerSegmentEffectiveStart: () => void;
 
 	/** Fired when the UI entity changes or when primary timer of the UI entity changes */
 	OnObservedTimerReplaced: () => void;
+
+	/** Fired when a new controllable replay is set, or the prior one was shut down */
+	OnControlledReplaySet: () => void;
 
 	/** Fired when the selected time list type is changed, passing the old times list type and new type that was selected */
 	Leaderboards_TimeListTypeChange: (

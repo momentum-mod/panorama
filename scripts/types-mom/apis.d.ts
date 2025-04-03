@@ -169,6 +169,8 @@ declare namespace MomentumReplayAPI {
 	function GetReplayState(): ReplayState;
 
 	function GetReplayProgress(): ReplayProgress;
+
+	function GetReplayRunMetadata(): RunMetadata | null;
 }
 
 declare namespace ChatAPI {
