@@ -151,7 +151,9 @@ interface ZoneEditorLimits {
 }
 
 interface ZoneMenu extends AbstractPanel<'ZoneMenu'> {
-	startPointPick(mode: import('pages/zoning/zoning').PickType, region: import('common/web').Region): void;
+	createRegion(startZone: boolean): void;
+
+	editRegion(mode: import('pages/zoning/zoning').PickType, region: import('common/web').Region): void;
 
 	getEntityList(): import('pages/zoning/zoning').EntityList;
 

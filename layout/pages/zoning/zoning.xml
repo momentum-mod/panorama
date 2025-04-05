@@ -224,7 +224,7 @@
 		</Panel>
 		<Panel id="InfoPanel" class="zoning__menu-section hide">
 			<Panel class="w-full flow-down">
-				<Label id="SelectionMode" class="zoning__property-label" />
+				<Label id="SelectionMode" class="zoning__property-label" text="{s:selectionModeHint}" />
 				<Panel class="zoning-info__binds-list">
 					<Panel class="zoning-info__bind">
 						<Label class="zoning-info__bind-action" text="Select" />
