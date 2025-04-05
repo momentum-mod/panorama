@@ -535,9 +535,9 @@ class ZoneMenuHandler {
 		const region = this.selectedZone.zone.regions[index];
 		this.selectedZone.region = region;
 
-		this.panels.regionBottom.text = (region?.bottom ?? 0).toFixed(2);
-		this.panels.regionHeight.text = (region?.height ?? 0).toFixed(2);
-		this.panels.regionSafeHeight.text = (region?.safeHeight ?? 0).toFixed(2);
+		this.panels.regionBottom.text = region?.bottom?.toFixed(2) ?? '';
+		this.panels.regionHeight.text = region?.height?.toFixed(2) ?? '';
+		this.panels.regionSafeHeight.text = region?.safeHeight?.toFixed(2) ?? '';
 
 		const tpIndex = !region.teleDestTargetname
 			? region.teleDestPos !== undefined && region.teleDestYaw !== undefined
