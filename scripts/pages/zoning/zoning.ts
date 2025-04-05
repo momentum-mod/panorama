@@ -559,21 +559,38 @@ class ZoneMenuHandler {
 
 	deleteRegion() {
 		if (this.selectedZone.zone?.regions?.length === 1) {
-			$.Warning("Deleted the last Region in this zone!!!");
-			const trackIndex =
-				this.selectedZone.track === this.mapZoneData.tracks.main
-					? 0
-					: this.mapZoneData.tracks.bonuses.indexOf(this.selectedZone.track) + 1;
-			const segmentIndex = this.selectedZone.track.zones.segments.indexOf(this.selectedZone.segment);
+			UiToolkitAPI.ShowGenericPopupTwoOptionsBgStyle(
+				$.Localize('#Zoning_Delete'),
+				$.Localize('#Zoning_LastRegion_Message'),
+				'warning-popup',
+				$.Localize('#Zoning_Delete'),
+				() => {
+					const trackIndex =
+						this.selectedZone.track === this.mapZoneData.tracks.main
+							? 0
+							: this.mapZoneData.tracks.bonuses.indexOf(this.selectedZone.track) + 1;
+					const segmentIndex = this.selectedZone.track.zones.segments.indexOf(this.selectedZone.segment);
 
-			this.deleteSelection();
-			const childContainer = this.panels.trackList.GetChild(trackIndex)?.FindChildTraverse('ChildContainer');
-			const segmentPanel = childContainer?.FindChildTraverse('SegmentContainer')?.GetChild(segmentIndex);
-			const selectButton = segmentPanel.FindChildTraverse<ToggleButton>('SelectButton');
-			const deleteButton = segmentPanel.FindChildTraverse<Button>('DeleteButton');
+					this.deleteSelection();
+					const childContainer = this.panels.trackList
+						.GetChild(trackIndex)
+						?.FindChildTraverse('ChildContainer');
+					const segmentPanel = childContainer?.FindChildTraverse('SegmentContainer')?.GetChild(segmentIndex);
+					const selectButton = segmentPanel?.FindChildTraverse<ToggleButton>('SelectButton');
+					const deleteButton = segmentPanel?.FindChildTraverse<Button>('DeleteButton');
 
-			selectButton?.SetSelected(true);
-			this.updateSelection(this.selectedZone.track, this.selectedZone.segment, null, deleteButton);
+					selectButton?.SetSelected(true);
+					this.updateSelection(this.selectedZone.track, this.selectedZone.segment, null, deleteButton);
+				},
+				$.Localize('#Zoning_Recreate'),
+				() => {
+					if (!this.selectedZone || !this.selectedZone.zone) throw new Error('Missing selected zone!');
+					this.selectedZone.zone.regions = [];
+					this.drawZones();
+					this.panels.zoningMenu.createRegion(this.isStartZone(this.selectedZone.zone));
+				},
+				'none'
+			);
 			return;
 		}
 		const index = this.panels.regionSelect.GetSelected()?.GetAttributeInt('value', -1);
