@@ -231,6 +231,14 @@
 						<Label class="zoning-info__bind-key" text="MOUSE1" />
 					</Panel>
 					<Panel class="zoning-info__bind">
+						<Label class="zoning-info__bind-action" text="Back" />
+						<Label class="zoning-info__bind-key" text="MOUSE2" />
+					</Panel>
+					<Panel class="zoning-info__bind">
+						<Label class="zoning-info__bind-action" text="Cancel region edit" />
+						<Label class="zoning-info__bind-key" text="ESCAPE" />
+					</Panel>
+					<Panel class="zoning-info__bind">
 						<Label class="zoning-info__bind-action" text="Delete last point" />
 						<Label class="zoning-info__bind-key" text="DELETE, BACKSPACE" />
 					</Panel>
