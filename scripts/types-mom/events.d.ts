@@ -303,11 +303,9 @@ interface GlobalEventNameMap {
 
 	ZoneMenu_Hide: () => void;
 
-	OnPointPicked: (region: import('common/web').Region) => void;
+	OnRegionEditCompleted: (region: import('common/web').Region) => void;
 
-	OnPointDeleted: (region: import('common/web').Region) => void;
-
-	OnPickCanceled: () => void;
+	OnRegionEditCanceled: () => void;
 
 	/** Fired when the the primary timer of the UI entity transitions to a different state */
 	OnObservedTimerStateChange: () => void;

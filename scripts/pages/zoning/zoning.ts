@@ -3,7 +3,7 @@ import { PanelHandler } from 'util/module-helpers';
 
 // future: get this from c++
 const FORMAT_VERSION = 1;
-
+const DEFAULT_HEIGHT = 256;
 const COORD_MAX = 65536;
 
 export interface EntityList {
@@ -102,14 +102,12 @@ class ZoneMenuHandler {
 	mapZoneData: MapZones | null;
 	filternameList: string[] | null;
 	teleDestList: string[] | null;
-	pointPick: PickType;
 
 	constructor() {
 		$.RegisterForUnhandledEvent('ZoneMenu_Show', () => this.showZoneMenu());
 		$.RegisterForUnhandledEvent('ZoneMenu_Hide', () => this.hideZoneMenu());
-		$.RegisterForUnhandledEvent('OnPointPicked', (region) => this.onPointPicked(region));
-		$.RegisterForUnhandledEvent('OnPointDeleted', (index) => this.onPointDeleted(index));
-		$.RegisterForUnhandledEvent('OnPickCanceled', () => this.onPickCanceled());
+		$.RegisterForUnhandledEvent('OnRegionEditCompleted', (region) => this.onRegionEditCompleted(region));
+		$.RegisterForUnhandledEvent('OnRegionEditCanceled', () => this.onRegionEditCanceled());
 
 		$.RegisterForUnhandledEvent('LevelInitPostEntity', this.onLoad.bind(this));
 	}
@@ -120,8 +118,6 @@ class ZoneMenuHandler {
 		}
 
 		this.getZoneData();
-
-		this.pointPick = PickType.NONE;
 
 		//prompt to copy official zones to local
 
@@ -399,7 +395,8 @@ class ZoneMenuHandler {
 			selectButton.SetSelected(true);
 			this.updateSelection(selectionObj.track, selectionObj.segment, selectionObj.zone, deleteButton);
 			if (selectionObj.zone) {
-				this.pickCorners();
+				this.panels.zoningMenu.createRegion(!selectionObj.segment.checkpoints.indexOf(selectionObj.zone));
+				this.showInfoPanel(true);
 			}
 		}
 
@@ -409,7 +406,7 @@ class ZoneMenuHandler {
 	createBonusTrack(): BonusTrack {
 		return {
 			zones: {
-				segments: [this.createSegment()],
+				segments: [this.createSegment(false)],
 				end: null
 			},
 			defragModifiers: 0
@@ -438,7 +435,7 @@ class ZoneMenuHandler {
 		return {
 			points: [],
 			bottom: COORD_MAX,
-			height: 0,
+			height: DEFAULT_HEIGHT,
 			teleDestTargetname: ''
 		};
 	}
@@ -534,6 +531,7 @@ class ZoneMenuHandler {
 		if (!this.selectedZone || !this.selectedZone.zone) return;
 
 		const index = this.panels.regionSelect.GetSelected()?.GetAttributeInt('value', -1);
+		if (index === -1) return;
 		const region = this.selectedZone.zone.regions[index];
 		this.selectedZone.region = region;
 
@@ -545,7 +543,7 @@ class ZoneMenuHandler {
 			? region.teleDestPos !== undefined && region.teleDestYaw !== undefined
 				? 1
 				: 0
-			: this.teleDestList?.indexOf(region.teleDestTargetname);
+			: this.teleDestList?.indexOf(region?.teleDestTargetname);
 		this.panels.regionTPDest.SetSelectedIndex(tpIndex);
 		this.onTPDestSelectionChanged();
 	}
@@ -560,8 +558,22 @@ class ZoneMenuHandler {
 	}
 
 	deleteRegion() {
-		if (this.panels.regionSelect.GetChildCount() === 1) {
-			$.Warning("Can't delete last Region!!!");
+		if (this.selectedZone.zone?.regions?.length === 1) {
+			$.Warning("Deleted the last Region in this zone!!!");
+			const trackIndex =
+				this.selectedZone.track === this.mapZoneData.tracks.main
+					? 0
+					: this.mapZoneData.tracks.bonuses.indexOf(this.selectedZone.track) + 1;
+			const segmentIndex = this.selectedZone.track.zones.segments.indexOf(this.selectedZone.segment);
+
+			this.deleteSelection();
+			const childContainer = this.panels.trackList.GetChild(trackIndex)?.FindChildTraverse('ChildContainer');
+			const segmentPanel = childContainer?.FindChildTraverse('SegmentContainer')?.GetChild(segmentIndex);
+			const selectButton = segmentPanel.FindChildTraverse<ToggleButton>('SelectButton');
+			const deleteButton = segmentPanel.FindChildTraverse<Button>('DeleteButton');
+
+			selectButton?.SetSelected(true);
+			this.updateSelection(this.selectedZone.track, this.selectedZone.segment, null, deleteButton);
 			return;
 		}
 		const index = this.panels.regionSelect.GetSelected()?.GetAttributeInt('value', -1);
@@ -580,19 +592,13 @@ class ZoneMenuHandler {
 
 	pickCorners() {
 		if (!this.selectedZone || !this.selectedZone.region) return;
-
-		this.pointPick = PickType.CORNER;
-
-		//if (GameInterfaceAPI.GetSettingBool('mom_zone_two_click')) this.selectedZone.region.points.length = 0;
-
-		this.panels.zoningMenu.startPointPick(this.pointPick, this.selectedZone.region);
+		this.panels.zoningMenu.editRegion(PickType.CORNER, this.selectedZone.region);
 		this.showInfoPanel(true);
 	}
 
 	pickBottom() {
-		this.pointPick = PickType.BOTTOM;
-
-		this.panels.zoningMenu.startPointPick(this.pointPick, this.selectedZone.region);
+		if (!this.selectedZone || !this.selectedZone.region) return;
+		this.panels.zoningMenu.editRegion(PickType.BOTTOM, this.selectedZone.region);
 		this.showInfoPanel(true);
 	}
 
@@ -606,9 +612,8 @@ class ZoneMenuHandler {
 	}
 
 	pickHeight() {
-		this.pointPick = PickType.HEIGHT;
-
-		this.panels.zoningMenu.startPointPick(this.pointPick, this.selectedZone.region);
+		if (!this.selectedZone || !this.selectedZone.region) return;
+		this.panels.zoningMenu.editRegion(PickType.HEIGHT, this.selectedZone.region);
 		this.showInfoPanel(true);
 	}
 
@@ -622,9 +627,8 @@ class ZoneMenuHandler {
 	}
 
 	pickSafeHeight() {
-		this.pointPick = PickType.SAFE_HEIGHT;
-
-		this.panels.zoningMenu.startPointPick(this.pointPick, this.selectedZone.region);
+		if (!this.selectedZone || !this.selectedZone.region) return;
+		this.panels.zoningMenu.editRegion(PickType.SAFE_HEIGHT, this.selectedZone.region);
 		this.showInfoPanel(true);
 	}
 
@@ -638,16 +642,14 @@ class ZoneMenuHandler {
 	}
 
 	pickTeleDestPos() {
-		this.pointPick = PickType.TELE_DEST_POS;
-
-		this.panels.zoningMenu.startPointPick(this.pointPick, this.selectedZone.region);
+		if (!this.selectedZone || !this.selectedZone.region) return;
+		this.panels.zoningMenu.editRegion(PickType.TELE_DEST_POS, this.selectedZone.region);
 		this.showInfoPanel(true);
 	}
 
 	pickTeleDestYaw() {
-		this.pointPick = PickType.TELE_DEST_YAW;
-
-		this.panels.zoningMenu.startPointPick(this.pointPick, this.selectedZone.region);
+		if (!this.selectedZone || !this.selectedZone.region) return;
+		this.panels.zoningMenu.editRegion(PickType.TELE_DEST_YAW, this.selectedZone.region);
 		this.showInfoPanel(true);
 	}
 
@@ -667,12 +669,7 @@ class ZoneMenuHandler {
 				this.selectedZone.region.teleDestPos === undefined ||
 				this.selectedZone.region.teleDestYaw === undefined
 			) {
-				this.selectedZone.region.teleDestPos = [0, 0, this.selectedZone.region.bottom];
-				const den = 1 / this.selectedZone.region.points.length;
-				this.selectedZone.region.points.forEach((val) => {
-					this.selectedZone.region.teleDestPos[0] += val[0] * den;
-					this.selectedZone.region.teleDestPos[1] += val[1] * den;
-				});
+				this.selectedZone.region = this.panels.zoningMenu.createDefaultTeleDest(this.selectedZone.region);
 				this.selectedZone.region.teleDestYaw = 0;
 				this.selectedZone.region.teleDestTargetname = '';
 			}
@@ -728,110 +725,17 @@ class ZoneMenuHandler {
 		}
 	}
 
-	onPointPicked(region: Region) {
-		if (!this.selectedZone || !this.selectedZone.region) return;
+	onRegionEditCompleted(newRegion: Region) {
+		const index = this.panels.regionSelect.GetSelected()?.GetAttributeInt('value', -1);
+		if (index !== -1) this.selectedZone.zone.regions[index] = newRegion;
 
-		switch (this.pointPick) {
-			case PickType.NONE:
-				this.showInfoPanel(false);
-				return;
-
-			case PickType.CORNER:
-				this.selectedZone.region.points = region.points;
-				this.selectedZone.region.bottom = region.bottom;
-				this.panels.regionBottom.text = this.selectedZone.region.bottom.toFixed(2);
-				break;
-
-			case PickType.BOTTOM:
-				this.selectedZone.region.bottom = region.bottom;
-				this.panels.regionBottom.text = this.selectedZone.region.bottom.toFixed(2);
-				break;
-
-			case PickType.HEIGHT:
-				this.selectedZone.region.height = region.height;
-				this.panels.regionHeight.text = this.selectedZone.region.height.toFixed(2);
-				break;
-
-			case PickType.SAFE_HEIGHT:
-				this.selectedZone.region.safeHeight = region.safeHeight;
-				this.panels.regionSafeHeight.text = this.selectedZone.region.safeHeight.toFixed(2);
-				break;
-
-			case PickType.TELE_DEST_POS:
-				this.selectedZone.region.teleDestPos = region.teleDestPos;
-				this.panels.regionTPPos.x.text = this.selectedZone.region.teleDestPos[0].toFixed(2);
-				this.panels.regionTPPos.y.text = this.selectedZone.region.teleDestPos[1].toFixed(2);
-				this.panels.regionTPPos.z.text = this.selectedZone.region.teleDestPos[2].toFixed(2);
-				break;
-
-			case PickType.TELE_DEST_YAW:
-				this.selectedZone.region.teleDestYaw = region.teleDestYaw;
-				this.panels.regionTPYaw.text = this.selectedZone.region.teleDestYaw.toFixed(0);
-				break;
-		}
-
+		this.showInfoPanel(false);
 		this.drawZones();
 	}
 
-	onPointDeleted(newPoints: Region) {
-		if (!this.selectedZone || !this.selectedZone.region) return;
+	onRegionEditCanceled() {
+		if (!this.selectedZone?.region?.points.length) this.deleteRegion();
 
-		this.selectedZone.region = newPoints;
-
-		this.drawZones();
-	}
-
-	onPickCanceled() {
-		if (!this.isSelectionValid().zone || !this.selectedZone.region) return;
-
-		const bHasEnoughCorners =
-			this.selectedZone.region.points.length > 2 &&
-			this.selectedZone.region.points.length < this.zoningLimits.MAX_REGION_POINTS;
-		if (!bHasEnoughCorners) {
-			const trackIndex =
-				this.selectedZone.track === this.mapZoneData.tracks.main
-					? 0
-					: this.mapZoneData.tracks.bonuses.indexOf(this.selectedZone.track) + 1;
-			const segmentIndex = this.selectedZone.track.zones.segments.indexOf(this.selectedZone.segment);
-
-			this.deleteSelection();
-			const childContainer = this.panels.trackList.GetChild(trackIndex)?.FindChildTraverse('ChildContainer');
-			const segmentPanel = childContainer?.FindChildTraverse('SegmentContainer')?.GetChild(segmentIndex);
-			const selectButton = segmentPanel.FindChildTraverse<ToggleButton>('SelectButton');
-			const deleteButton = segmentPanel.FindChildTraverse<Button>('DeleteButton');
-
-			selectButton?.SetSelected(true);
-			this.updateSelection(this.selectedZone.track, this.selectedZone.segment, null, deleteButton);
-
-			this.pointPick = PickType.NONE;
-			this.showInfoPanel(false);
-			return;
-		}
-
-		if (this.selectedZone.region.height === 0) {
-			this.pickHeight();
-			return;
-		}
-
-		const bStartZone = this.selectedZone?.segment?.checkpoints?.indexOf(this.selectedZone.zone) === 0;
-		if (bStartZone && !this.selectedZone.region.teleDestTargetname && !this.selectedZone.region.teleDestPos) {
-			const region = this.panels.zoningMenu.createDefaultTeleDest(this.selectedZone.region);
-
-			const tpIndex = !region.teleDestTargetname
-				? region.teleDestPos !== undefined
-					? 1
-					: 0
-				: this.teleDestList?.indexOf(region.teleDestTargetname);
-			this.panels.regionTPDest.SetSelectedIndex(tpIndex);
-			this.onTPDestSelectionChanged();
-
-			if (this.selectedZone.region.teleDestPos) {
-				this.pickTeleDestYaw();
-				return;
-			}
-		}
-
-		this.pointPick = PickType.NONE;
 		this.showInfoPanel(false);
 		this.drawZones();
 	}
@@ -840,35 +744,7 @@ class ZoneMenuHandler {
 		this.panels.propertiesPanel.SetHasClass('hide', hideProperties);
 		this.panels.infoPanel.SetHasClass('hide', !hideProperties);
 
-		switch (this.pointPick) {
-			case PickType.NONE:
-				this.panels.selectionMode.text = '';
-				break;
-
-			case PickType.CORNER:
-				this.panels.selectionMode.text = $.Localize('#Zoning_SelectionMode_Corner');
-				break;
-
-			case PickType.BOTTOM:
-				this.panels.selectionMode.text = $.Localize('#Zoning_SelectionMode_Bottom');
-				break;
-
-			case PickType.HEIGHT:
-				this.panels.selectionMode.text = $.Localize('#Zoning_SelectionMode_Height');
-				break;
-
-			case PickType.SAFE_HEIGHT:
-				this.panels.selectionMode.text = $.Localize('#Zoning_SelectionMode_SafeHeight');
-				break;
-
-			case PickType.TELE_DEST_POS:
-				this.panels.selectionMode.text = $.Localize('#Zoning_SelectionMode_TpPos');
-				break;
-
-			case PickType.TELE_DEST_YAW:
-				this.panels.selectionMode.text = $.Localize('#Zoning_SelectionMode_TpYaw');
-				break;
-		}
+		if (!hideProperties) this.populateRegionProperties();
 	}
 
 	addBonus() {
@@ -893,16 +769,16 @@ class ZoneMenuHandler {
 
 		const newBonusPanel = this.panels.trackList.GetChild(this.mapZoneData.tracks.bonuses.length);
 		const segmentContainer = newBonusPanel.FindChildTraverse('SegmentContainer');
-		const checkpointContainer = segmentContainer.FindChildTraverse('CheckpointContainer');
+		const checkpointContainer = segmentContainer.FindChildTraverse<Panel>('CheckpointContainer');
+		this.addCheckpoint(bonus, bonus.zones.segments[0], checkpointContainer);
+
 		const selectButton = checkpointContainer.FindChildTraverse<ToggleButton>('SelectButton');
 		const deleteButton = checkpointContainer.FindChildTraverse<Button>('DeleteButton');
-
 		const newBonusButton = newBonusPanel.FindChildTraverse<Panel>('AddBonusButton');
 		newBonusButton.SetHasClass('hide', false);
-
 		selectButton.SetSelected(true);
+
 		this.updateSelection(bonus, bonus.zones.segments[0], bonus.zones.segments[0].checkpoints[0], deleteButton);
-		this.pickCorners();
 	}
 
 	addSegment() {
@@ -961,6 +837,7 @@ class ZoneMenuHandler {
 			},
 			true
 		);
+		this.panels.regionSelect.SetSelectedIndex(0);
 	}
 
 	addEndZone(track: MainTrack | BonusTrack) {
@@ -1050,15 +927,21 @@ class ZoneMenuHandler {
 		} else if (this.selectedZone.track && this.selectedZone.segment) {
 			if (this.selectedZone.track.zones.segments?.length === 1) {
 				$.Msg('Track must have at least one segment!');
-			} else {
-				const index = this.mapZoneData.tracks.main.zones.segments.indexOf(this.selectedZone.segment);
-				this.mapZoneData.tracks.main.zones.segments.splice(index, 1);
 			}
+			const index = this.mapZoneData.tracks.main.zones.segments.indexOf(this.selectedZone.segment);
+			this.mapZoneData.tracks.main.zones.segments.splice(index, 1);
 		} else if (this.selectedZone.track && this.selectedZone.zone) {
 			delete this.selectedZone.track.zones.end;
 		} else if (this.selectedZone.track) {
 			if ('stagesEndAtStageStarts' in this.selectedZone.track) {
 				$.Msg("Can't delete Main track!!!");
+				this.mapZoneData.tracks.main = {
+					zones: {
+						segments: [this.createSegment(false)],
+						end: null
+					},
+					stagesEndAtStageStarts: true
+				};
 			} else {
 				const trackIndex = this.mapZoneData.tracks.bonuses.indexOf(this.selectedZone.track);
 				this.mapZoneData.tracks.bonuses.splice(trackIndex, 1);
