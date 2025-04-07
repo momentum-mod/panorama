@@ -130,24 +130,24 @@
 										<Image class="bottombar__icon" src="file://{images}/social/home.svg" textureheight="64" />
 									</Button>
 								</TooltipPanel>
-								<TooltipPanel class="bottombar__tooltip" tooltip="#MainMenu_Button_Github">
-									<Button class="bottombar__button" onactivate="SteamOverlayAPI.OpenURLModal('https://github.com/momentum-mod/game')">
-										<Image class="bottombar__icon" src="file://{images}/social/github.svg" textureheight="64" />
-									</Button>
-								</TooltipPanel>
 								<TooltipPanel class="bottombar__tooltip" tooltip="#MainMenu_Button_Discord">
 									<Button class="bottombar__button" onactivate="SteamOverlayAPI.OpenURLModal('https://discord.gg/momentummod')">
 										<Image class="bottombar__icon" src="file://{images}/social/discord.svg" textureheight="64" />
 									</Button>
 								</TooltipPanel>
-								<TooltipPanel class="bottombar__tooltip" tooltip="#MainMenu_Button_Forums">
-									<Button class="bottombar__button" onactivate="SteamOverlayAPI.OpenURLModal('https://forum.momentum-mod.org/')">
-										<Image class="bottombar__icon" src="file://{images}/social/forum.svg" textureheight="64" />
+								<TooltipPanel class="bottombar__tooltip" tooltip="#MainMenu_Button_OpenCollective">
+									<Button class="bottombar__button" onactivate="SteamOverlayAPI.OpenURLModal('https://opencollective.com/momentum-mod')">
+										<Image class="bottombar__icon" style="padding: 12px;" src="file://{images}/social/opencollective.svg" textureheight="64" />
 									</Button>
 								</TooltipPanel>
-								<TooltipPanel class="bottombar__tooltip" tooltip="#MainMenu_Button_Twitter">
-									<Button class="bottombar__button" onactivate="SteamOverlayAPI.OpenURLModal('https://twitter.com/MomentumMod')">
-										<Image class="bottombar__icon" src="file://{images}/social/twitter.svg" textureheight="64" />
+								<TooltipPanel class="bottombar__tooltip" tooltip="#MainMenu_Button_Github">
+									<Button class="bottombar__button" onactivate="SteamOverlayAPI.OpenURLModal('https://github.com/momentum-mod/game')">
+										<Image class="bottombar__icon" src="file://{images}/social/github.svg" textureheight="64" />
+									</Button>
+								</TooltipPanel>
+								<TooltipPanel class="bottombar__tooltip" tooltip="#MainMenu_Button_YouTube">
+									<Button class="bottombar__button" onactivate="SteamOverlayAPI.OpenURLModal('https://www.youtube.com/@MomentumMod')">
+										<Image class="bottombar__icon" src="file://{images}/social/youtube.svg" textureheight="64" />
 									</Button>
 								</TooltipPanel>
 								<RadioButton id="ControlsLibraryButton" class="bottombar__button hide" group="TopNavRadio" onactivate="MainMenuHandler.navigateToPage('ControlsLibrary', 'controls-library')">
