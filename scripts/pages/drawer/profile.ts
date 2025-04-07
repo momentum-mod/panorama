@@ -10,9 +10,15 @@ class ProfileHandler implements OnPanelLoad {
 		levelInfo: $('#LevelInfoButton')
 	};
 
+	user: User | null;
+
 	onPanelLoad() {
 		this.update();
-		$.RegisterForUnhandledEvent('MomAPI_UserUpdate', (_user: User) => this.update());
+
+		$.RegisterForUnhandledEvent('MomAPI_UserUpdate', (user: User) => {
+			this.user = user;
+			this.update();
+		});
 	}
 
 	update() {
@@ -62,6 +68,9 @@ class ProfileHandler implements OnPanelLoad {
 	}
 
 	openWebsiteProfile() {
-		SteamOverlayAPI.OpenURLModal('https://momentum-mod.org/dashboard/profile');
+		const frontendUrl = GameInterfaceAPI.GetSettingString('mom_api_url_frontend');
+		// If user.id isn't set this will redirect to homepage unless Steam browser
+		// has an active login.
+		SteamOverlayAPI.OpenURLModal(`${frontendUrl}/profile/${this.user.id ?? ''}`);
 	}
 }

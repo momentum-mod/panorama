@@ -65,16 +65,19 @@ class LeaderboardEntryHandler {
 			);
 		}
 
-		if (timeData.type === LeaderboardEntryType.ONLINE || timeData.type === LeaderboardEntryType.ONLINE_CACHED) {
-			items.push({
-				label: $.Localize('#Action_ViewOnWebsite'),
-				icon: 'file://{images}/online/publiclobby.svg',
-				style: 'icon-color-blue',
-				jsCallback: () => {
-					SteamOverlayAPI.OpenURLModal(`https://momentum-mod.org/dashboard/runs/${timeData.replayID}`);
-				}
-			});
-		}
+		// TODO: This page doesn't currently exist on frontend, probably getting added back when we have frontend
+		// component for per-run stats.
+		// if (timeData.type === LeaderboardEntryType.ONLINE || timeData.type === LeaderboardEntryType.ONLINE_CACHED) {
+		// 	items.push({
+		// 		label: $.Localize('#Action_ViewOnWebsite'),
+		// 		icon: 'file://{images}/online/publiclobby.svg',
+		// 		style: 'icon-color-blue',
+		// 		jsCallback: () => {
+		// 			const frontendUrl = GameInterfaceAPI.GetSettingString('mom_api_url_frontend');
+		// 			SteamOverlayAPI.OpenURLModal(`${frontendUrl}/runs/${timeData.replayID}`);
+		// 		}
+		// 	});
+		// }
 
 		if (timeData.type === LeaderboardEntryType.LOCAL || timeData.type === LeaderboardEntryType.ONLINE_CACHED) {
 			$.GetContextPanel().SetDialogVariableInt('rank', index + 1);
