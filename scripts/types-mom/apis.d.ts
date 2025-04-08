@@ -169,8 +169,6 @@ declare namespace MomentumReplayAPI {
 	function GetReplayState(): ReplayState;
 
 	function GetReplayProgress(): ReplayProgress;
-
-	function GetReplayRunMetadata(): RunMetadata | null;
 }
 
 declare namespace ChatAPI {
@@ -253,6 +251,9 @@ declare namespace MomentumTimerAPI {
 
 	/** Gets the observed timer run splits */
 	function GetObservedTimerRunSplits(): import('common/timer').RunSplits;
+
+	/** Gets the observed run metadata. Returns null if not observing a run replay. */
+	function GetObservedRunMetadata(): RunMetadata | null;
 
 	/** Gets the ZoneDefs for the active zones, if any */
 	function GetActiveZoneDefs(): Zones;
