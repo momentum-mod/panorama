@@ -75,16 +75,6 @@
 				</Panel>
 			</Panel>
 		</snippet>
-		<snippet name="region-point">
-			<Panel class="zoning__region-property-container">
-				<!--label-->
-				<TextEntry id="PointX" class="textentry zoning__textentry" maxchars="10" textmode="numeric" />
-				<TextEntry id="PointY" class="textentry zoning__textentry" maxchars="10" textmode="numeric" />
-				<Button id="DeleteButton" class="zoning__region-point-delete">
-					<Image class="zoning__region-point-delete__icon" src="file://{images}/close-box-outline.svg" textureheight="24" />
-				</Button>
-			</Panel>
-		</snippet>
 	</snippets>
 
 	<ZoneMenu class="zoning" acceptsinput="true" acceptsfocus="true">
