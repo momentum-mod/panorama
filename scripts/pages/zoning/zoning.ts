@@ -363,6 +363,38 @@ class ZoneMenuHandler {
 
 				this.panels.zoningMenu.moveToRegion(selectionObj.zone.regions[0]);
 			});
+			selectButton.SetPanelEvent('oncontextmenu', () => {
+				const insertZoneContextMenu = UiToolkitAPI.ShowCustomLayoutContextMenuParametersDismissEvent<Panel>(
+					'',
+					'InsertZoneContextMenu',
+					'file://{resources}/layout/modals/context-menus/zoning-insert-zone.xml',
+					'',
+					() => {}
+				);
+				const beforeButton = insertZoneContextMenu.FindChildTraverse<Button>('InsertBefore');
+				beforeButton.SetPanelEvent('onactivate', () => {
+					this.insertCheckpoint(
+						selectionObj.track,
+						selectionObj.segment,
+						<Panel>parent,
+						selectionObj.zone,
+						true
+					);
+					insertZoneContextMenu.DeleteAsync(0);
+				});
+
+				const afterButton = insertZoneContextMenu.FindChildTraverse<Button>('InsertAfter');
+				afterButton.SetPanelEvent('onactivate', () => {
+					this.insertCheckpoint(
+						selectionObj.track,
+						selectionObj.segment,
+						<Panel>parent,
+						selectionObj.zone,
+						false
+					);
+					insertZoneContextMenu.DeleteAsync(0);
+				});
+			});
 		} else {
 			selectButton.SetPanelEvent('ondblclick', () =>
 				this.toggleCollapse(childContainer, expandIcon, collapseIcon)
@@ -895,6 +927,37 @@ class ZoneMenuHandler {
 			true
 		);
 		this.panels.regionSelect.SetSelectedIndex(0);
+	}
+
+	insertCheckpoint(
+		track: MainTrack | BonusTrack,
+		segment: Segment,
+		checkpointsList: Panel,
+		pivotCP: Zone,
+		insertBefore: boolean
+	) {
+		if (!this.mapZoneData || !segment || !checkpointsList) return;
+
+		this.addCheckpoint(track, segment, checkpointsList);
+		const pivot = segment.checkpoints.indexOf(pivotCP) + (insertBefore ? 0 : 1);
+		const last = segment.checkpoints.length - 1;
+		[segment.checkpoints[pivot], segment.checkpoints[last]] = [
+			segment.checkpoints[last],
+			segment.checkpoints[pivot]
+		];
+		const pivotPanel = checkpointsList.GetChild(pivot);
+		const newPanel = checkpointsList.GetChild(last);
+		checkpointsList.MoveChildBefore(newPanel, pivotPanel);
+		for (const [i, panel] of checkpointsList.Children().entries() ?? []) {
+			if (i < pivot) continue;
+			const label = panel.FindChildTraverse<Label>('Name');
+			label.text =
+				i > 0
+					? `${$.Localize('#Zoning_Checkpoint')} ${i}`
+					: track.zones.segments.indexOf(segment) > 0
+						? $.Localize('#Zoning_Start_Stage')
+						: $.Localize('#Zoning_Start_Track');
+		}
 	}
 
 	addEndZone(track: MainTrack | BonusTrack) {
