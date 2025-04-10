@@ -228,23 +228,26 @@ $transition: 0.125s ease-out 0s;
 	}
 
 	&__lobby {
-		width: 100px;
-		height: 20px;
+		width: fit-children;
+		height: 16px;
 		flow-children: left;
 		align: right bottom;
+		margin-bottom: 1px;
+		margin-right: 1px;
 
 		&-icon {
-			height: 100%;
-			width: height-percentage(100%);
-			img-shadow: $button-icon-shadow;
+			height: 16px;
+			width: 16px;
+			vertical-align: center;
+			img-shadow: 0 1px 2px 2 rgba(0, 0, 0, 0.7);
 		}
 
 		&-playercount {
-			font-size: 16px;
+			font-size: 14px;
 			font-weight: medium;
-			margin-right: 1px;
 			vertical-align: bottom;
-			text-shadow: $button-icon-shadow;
+			margin-top: 1px;
+			text-shadow: 0 1px 2px 2 rgba(0, 0, 0, 0.7);
 		}
 	}
 }

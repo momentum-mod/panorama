@@ -185,13 +185,20 @@ class MapEntryHandler {
 		}
 	}
 
+	// Update roaming lobby player count
 	updatePlayerCount(playerCount: number) {
-		// Roaming lobby player count
+		const panel = this.panels.lobbyContainer;
 		if (playerCount > 0) {
-			this.panels.lobbyContainer.visible = true;
-			this.panels.cp.SetDialogVariableInt('playerCount', playerCount);
+			panel.visible = true;
+			panel.SetDialogVariableInt('player_count', playerCount);
+			panel.SetPanelEvent('onmouseover', () =>
+				UiToolkitAPI.ShowTextTooltip(
+					panel.id,
+					playerCount > 1 ? '#Lobby_Roaming_Count_Plural' : '#Lobby_Roaming_Count_Singular'
+				)
+			);
 		} else {
-			this.panels.lobbyContainer.visible = false;
+			panel.visible = false;
 		}
 	}
 }
