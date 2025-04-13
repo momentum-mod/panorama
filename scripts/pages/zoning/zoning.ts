@@ -395,7 +395,7 @@ class ZoneMenuHandler {
 			selectButton.SetSelected(true);
 			this.updateSelection(selectionObj.track, selectionObj.segment, selectionObj.zone, deleteButton);
 			if (selectionObj.zone) {
-				this.panels.zoningMenu.createRegion(!selectionObj.segment.checkpoints.indexOf(selectionObj.zone));
+				this.panels.zoningMenu.createRegion(this.isStartZone(selectionObj.zone));
 				this.showInfoPanel(true);
 			}
 		}
@@ -1106,6 +1106,16 @@ class ZoneMenuHandler {
 		MomentumTimerAPI.LoadZoneDefs(false);
 		this.initMenu();
 		this.drawZones();
+	}
+
+	isStartZone(zone: Zone | null): boolean {
+		if (!zone || !this.mapZoneData) return false;
+        const { main, bonuses } = this.mapZoneData.tracks;
+
+        return (
+            (main.zones.segments.some?.((segment) => segment.checkpoints.at(0) === zone) ?? false) ||
+            (bonuses?.some?.((bonus) => bonus.zones?.segments?.at(0)?.checkpoints?.at(0) === zone) ?? false)
+        );
 	}
 
 	isSelectionValid() {
