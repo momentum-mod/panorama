@@ -1397,6 +1397,7 @@ export interface MapZones {
 
 export interface GlobalRegions {
 	allowBhop: Region[];
+	cancel: Region[];
 }
 
 export interface MapTracks {
