@@ -32,7 +32,7 @@
 
 		<snippet name="lobby-chat-message-spec">
 			<Panel class="flow-right">
-				<Image class="chat-entry__icon" src="file://{images}/spectatingIcon.svg" textureheight="16" />
+				<Image class="chat-entry__icon" src="file://{images}/eye.svg" textureheight="16" />
 				<Label class="chat-entry__message chat-entry__message--with-icon" text="&lt;b&gt;{s:author_name}&lt;/b&gt;: {s:message}" html="true" acceptsinput="true" />
 			</Panel>
 		</snippet>
