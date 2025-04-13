@@ -24,7 +24,7 @@
 }
 
 @each $weight in $font-weights {
-	.text-weight-#{$weight} {
+	.text-#{$weight} {
 		font-weight: $weight;
 	}
 }
