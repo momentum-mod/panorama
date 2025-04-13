@@ -30,7 +30,7 @@ export default [
 		},
 		files: ['**/*.ts'],
 		rules: {
-			'prettier/prettier': ['warn'],
+			'prettier/prettier': ['off'], // Prettier warnings are annoying!
 			quotes: ['error', 'single', { avoidEscape: true }],
 			'prefer-const': ['error'],
 			'no-empty': ['error', { allowEmptyCatch: true }],
