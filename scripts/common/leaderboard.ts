@@ -38,7 +38,7 @@ export function getTrack(
 	trackType: TrackType = TrackType.MAIN,
 	trackNum: number = 1,
 	style: number = 0
-): Leaderboard {
+): Leaderboard | undefined {
 	return mapData.leaderboards.find(
 		(leaderboard) =>
 			leaderboard.gamemode === gamemode &&
@@ -64,7 +64,7 @@ export function getNumBonuses(mapData: MMap): number {
 }
 
 export function getUserMapDataTrack(
-	userMapData: MapCacheAPI.UserData,
+	userMapData: MapCacheAPI.UserData | undefined,
 	gamemode: Gamemode,
 	trackType: TrackType = TrackType.MAIN,
 	trackNum: number = 1,
