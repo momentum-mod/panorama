@@ -151,6 +151,32 @@ export function getHandlerInstance<T extends Constructor>(handler: T): InstanceT
 }
 
 /**
+ * Create a new panel with additional JS properties assign to the created panel's JS object.
+ *
+ * Traditionally in Panorama if you want to assign additional properties to a panel you set
+ * attributes, however these can only be strings or ints, and are more cumbersome to work
+ * with in JS/TS. You can assign these in the third param of $.CreatePanel, but Panorama
+ * will automatically stringify them.
+ *
+ * Instead we just assign JS properties to the panel object directly. Maybe a bit hacky, but
+ * fine so long as the properties are documented in the declaration of the panel's type in
+ * TypeScript.
+ *
+ * Previously we used Object.assign directly but this function provides strong type safety.
+ */
+export function createPanelExtended<T extends keyof PanelTagNameMap>(
+	type: T,
+	parent: GenericPanel,
+	id: string,
+	properties: Record<string, any>,
+	additionalProperties: Partial<Omit<PanelTagNameMap[T], keyof Panel>>
+) {
+	const panel = $.CreatePanel(type, parent, id, properties);
+	Object.assign(panel, additionalProperties);
+	return panel;
+}
+
+/**
  * Register a `Component` method with the `PanelLoaded` panel event.
  *
  * Any work that should done during panel initialization that involves child panels should be placed here, not
