@@ -346,7 +346,7 @@ class LobbyHandler {
 		if (memberData.isSpectating === '1') {
 			const specTargetName = FriendsAPI.GetNameForXUID(memberData.specTargetID);
 
-			memberStatePanel.SetImage('file://{images}/spectatingIcon.svg');
+			memberStatePanel.SetImage('file://{images}/eye.svg');
 
 			memberStatePanel.RemoveClass('hide');
 
@@ -354,7 +354,7 @@ class LobbyHandler {
 				UiToolkitAPI.ShowTitleImageTextTooltipStyled(
 					memberStatePanel.id,
 					'',
-					'file://{images}/spectatingIcon.svg',
+					'file://{images}/eye.svg',
 					$.Localize('#Spectate_Status_Spectating_Player').replace('%user%', `<b>${specTargetName}</b>`),
 					'tooltip--notitle'
 				)
