@@ -21,11 +21,11 @@ class MapEntryHandler {
 
 	panels = {
 		cp: $.GetContextPanel<MapEntry>(),
-		pbPanel: $<Panel>('#MapEntryPB'),
-		pbLabel: $<Label>('#MapEntryPBLabel'),
-		pbIcon: $<Image>('#MapEntryPBIcon'),
-		tier: $<Label>('#MapEntryTier'),
-		lobbyContainer: $<Panel>('#MapEntryLobbyContainer')
+		pbPanel: $<Panel>('#MapEntryPB')!,
+		pbLabel: $<Label>('#MapEntryPBLabel')!,
+		pbIcon: $<Image>('#MapEntryPBIcon')!,
+		tier: $<Label>('#MapEntryTier')!,
+		lobbyContainer: $<Panel>('#MapEntryLobbyContainer')!
 	};
 
 	strings = {
@@ -48,7 +48,7 @@ class MapEntryHandler {
 	showContextMenu() {
 		const { mapData, isDownloading } = $.GetContextPanel<MapEntry>();
 
-		const items = [];
+		const items: UiToolkitAPI.SimpleContextMenuItem[] = [];
 		const mapID = mapData.staticData.id;
 
 		if (mapData.mapFileExists) {
@@ -140,7 +140,7 @@ class MapEntryHandler {
 		const userTrackData = getUserMapDataTrack(userData, gamemode);
 		cp.SetHasClass('map-entry--completed', userTrackData?.completed ?? false);
 
-		if (userTrackData && userTrackData.time > 0) {
+		if (userData && userTrackData && userTrackData.time > 0) {
 			const time = timetoHHMMSS(userTrackData.time);
 			// Current system doesn't know user ranks
 			const icon = /* track.pr.rank <= 10 ? 'file://{images}/ranks/top10.svg' : */ 'file://{images}/flag.svg';
