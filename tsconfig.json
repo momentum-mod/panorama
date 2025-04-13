@@ -9,7 +9,7 @@
 		"allowJs": true,
 		"alwaysStrict": true,
 		"isolatedModules": false,
-		// Enable every strict mode option *besides* strictNullChecks, they're just too annoying!
+		// Enable every strict mode option *besides* strictNullChecks, which we don't support yet
 		"strict": true,
 		"strictNullChecks": false,
 		"experimentalDecorators": true,
