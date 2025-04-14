@@ -1,5 +1,7 @@
 type Gamemode = import('common/web').Gamemode;
 
+//#region Types
+
 export enum TimerState {
 	DISABLED,
 	PRIMED,
@@ -57,6 +59,43 @@ export interface RunSegment {
 	checkpointsOrdered: boolean;
 }
 
+/**
+ * A subsegment begins at the checkpoint zone with the specified minorNum (which may be a Major Checkpoint zone,
+ * possibly the overall track start) and ends when another checkpoint zone is activated (which may not be the next
+ * in logical order if checkpoints can be skipped or done out of order).
+ *
+ * The very first subsegment of a run across all segments actually begins when the run starts and so will have
+ * timeReached == 0.0. For all other subsegments, timeReached has a meaningful value. Also note that for subsegments
+ * after the first overall, stat tracking includes time spent within its corresponding checkpoint zone.
+ */
+export interface RunSubsegment {
+	/**
+	 * Note that minorNum is defined on RunSubsegment, but there's no majorNum on RunSegment.
+	 *
+	 * This is by design and very important to understanding the data structure:
+	 * - Segments are always ordered and required, so majorNum is always equal to segments.indexOf(segment) + 1.
+	 * - Subsegments aren't necessarily either ordered or required, therefore subsegment indices don't reliably map to
+	 *   minorNum.
+	 *
+	 *  So for a given majorNum min and minorNum maj, the correct way to find a subsegment is
+	 *  ```ts
+	 *  segments[maj - 1].subsegments.find(subseg => subseg.minorNum === min)
+	 *  ```
+	 *  whilst you should never use
+	 *  ```ts
+	 *  segments[maj - 1].subsegments[min - 1];
+	 *  ```
+	 */
+	minorNum: uint8;
+
+	timeReached: float;
+
+	/** Velocity when triggering this checkpoint; note the difference between this and Segment.effectiveStartVelocity */
+	velocityWhenReached: vec3;
+
+	stats: RunStats;
+}
+
 export interface RunStats {
 	maxOverallSpeed: float;
 	maxHorizontalSpeed: float;
@@ -68,63 +107,323 @@ export interface RunStats {
 	strafes: uint16;
 }
 
+export type RunStatType = keyof RunStats;
+
+export const RunStatsProperties: Record<RunStatType, { unit: string; isPositiveGood: boolean }> = {
+	maxOverallSpeed: {
+		unit: 'ups',
+		isPositiveGood: true
+	},
+	maxHorizontalSpeed: {
+		unit: 'ups',
+		isPositiveGood: true
+	},
+	overallDistanceTravelled: {
+		unit: 'units',
+		isPositiveGood: false
+	},
+	horizontalDistanceTravelled: {
+		unit: 'units',
+		isPositiveGood: false
+	},
+	jumps: {
+		unit: 'jumps',
+		isPositiveGood: false
+	},
+	strafes: {
+		unit: 'strafes',
+		isPositiveGood: false
+	}
+};
+
+//#endregion
+//#region Utility Functions
+
 /**
- * A subsegment begins at the checkpoint zone with the specified minorNum (which may be a Major Checkpoint zone,
- * possibly the overall track start) and ends when another checkpoint zone is activated (which may not be the next
- * in logical order if checkpoints can be skipped or done out of order).
- *
- * The very first subsegment of a run across all segments actually begins when the run starts and so will have
- * timeReached == 0.0. For all other subsegments, timeReached has a meaningful value. Also note that for subsegments
- * after the first overall, stat tracking includes time spent within its corresponding checkpoint zone.
+ * For a given base and comparison splits, finds the split in base splits for a given majorNum and minorNum, then
+ * picks the appropriate split in the comparison splits, accounting for missing and unordered checkpoints.
  */
-export interface RunSubsegment {
-	minorNum: uint8;
+export function findSubsegmentComparison(
+	baseSplits: RunSplits,
+	compSplits: RunSplits | null,
+	majorNum: number,
+	minorNum: number
+): [RunSubsegment, RunSubsegment | null] {
+	const baseSeg = baseSplits.segments[majorNum - 1];
+	const baseSubsegIdx = baseSeg.subsegments.findIndex((ss) => ss.minorNum === minorNum);
 
-	timeReached: float;
-
-	/** Velocity when triggering this checkpoint; note the difference between this and Segment.effectiveStartVelocity */
-	velocityWhenReached: vec3;
-
-	stats: RunStats;
-}
-
-export function getSplitSegmentTime(runSplits: RunSplits, segmentIndex: number, subsegmentIndex: number): number {
-	if (subsegmentIndex > 0) {
-		return (
-			runSplits.segments[segmentIndex].subsegments[subsegmentIndex].timeReached -
-			runSplits.segments[segmentIndex].subsegments[subsegmentIndex - 1].timeReached
-		);
+	// If this happens, something's gone wrong in the caller logic.
+	if (baseSubsegIdx === -1) {
+		throw new Error(`Missing subsegment for majorNum: ${majorNum}, minorNum: ${minorNum}`);
 	}
 
-	if (segmentIndex > 0) {
-		return (
-			runSplits.segments[segmentIndex].subsegments[subsegmentIndex].timeReached -
-			runSplits.segments[segmentIndex - 1].subsegments.at(-1).timeReached
-		);
+	if (!compSplits) {
+		return [baseSeg.subsegments[baseSubsegIdx], null];
 	}
 
-	return 0;
+	const compSeg = compSplits.segments[majorNum - 1];
+	// Rare case when zones differ, could be undefined.
+	if (!compSeg) {
+		return [baseSeg.subsegments[baseSubsegIdx], null];
+	}
+
+	const compSubsegIdx = compSeg.subsegments.findIndex((ss) => ss.minorNum === minorNum);
+
+	// Easy case, base and comp are at same position in splits: return respective subsegs
+	//   Base ----S1---Cp1-----Cp2----
+	//   Comp ---S1----Cp1----Cp2-----
+	if (baseSubsegIdx === compSubsegIdx) {
+		return [baseSeg.subsegments[baseSubsegIdx], compSeg.subsegments[compSubsegIdx]];
+	}
+
+	// Indices don't match, but checkpoints are ordered, so comp missed this checkpoint: return comp undefined
+	//   Base ----S1---Cp1-----Cp2----
+	//   Comp ---S1-----------Cp2-----
+	if (baseSeg.checkpointsOrdered) {
+		return [baseSeg.subsegments[baseSubsegIdx], null];
+	}
+
+	// Indices don't match, checkpoints *aren't* ordered: return the comp at same index as base, if exists
+	//   Base ----S1---Cp1-----Cp1----
+	//   Comp ---S1-----Cp2----Cp2----
+	// This won't always be useful information, but at best it'll be like comparing "collectible" count,
+	// e.g. how fast did they get their 2nd collectible, 3rd collectible, etc...
+	return [baseSeg.subsegments[baseSubsegIdx], compSeg.subsegments[baseSubsegIdx] ?? null];
 }
 
-export function getSegmentName(segmentIndex: number, subsegmentIndex: number): string {
-	return subsegmentIndex >= 1 ? `${segmentIndex + 1}-${subsegmentIndex}` : segmentIndex.toString();
+/**
+ * Try find the index of a subsegment hit previously in the given splits, taking unordered and missing checkpoints into
+ * account, returning last subsegment index in the previous segment if a starting subsegment is provided.
+ * @returns Tuple of [majorNum, minorNum]
+ */
+export function findPreviousSubsegment(splits: RunSplits, majorNum: number, minorNum: number): [number, number] {
+	if (minorNum === 1) {
+		if (majorNum === 1) {
+			// If we're at the very start of the run, there is no previous subsegment
+			return [0, 0];
+		}
+
+		// If minorNum == 1 we're in a starting segment, so the previous subsegment is always the last subsegment in the
+		// last segment's subsegments. Segments are never optional, and must have had a start segment so both index
+		// accesses must be valid.
+		return [majorNum - 1, splits.segments[majorNum - 2].subsegments.length];
+	}
+
+	const segment = splits.segments[majorNum - 1];
+
+	// Find last subsegment in subsegments, i.e. in chronological order -- for unordered/missing subsegments this
+	// could be < minorNum - 1
+	const subsegment = segment.subsegments[segment.subsegments.findIndex((ss) => ss.minorNum === minorNum) - 1];
+
+	// Weird if this happens, our JS is probably bad!
+	if (!subsegment) {
+		throw new Error(`Missing subsegment for majorNum: ${majorNum}, minorNum: ${minorNum}`);
+	}
+
+	return [majorNum, subsegment.minorNum];
+}
+
+/**
+ * Picks an appropriate name for a split based on the splits data and the current majorNum and minorNum.
+ * For tracks with both multiple segments and subsegments, returns string in "X-Y" form, otherwise just "X".
+ */
+export function getSplitName(
+	splits: RunSplits,
+	majorNum: number,
+	minorNum: number,
+	segmentsCount: number,
+	segmentsCheckpointsCount: number
+): string {
+	if (majorNum === 1 && minorNum === 1) return '';
+
+	// Single segment run (e.g. linear surf map): previous minorNum
+	// Note that splits.segments.length is viable here since only contains splits hit so far.
+	if (segmentsCount === 1) {
+		const [, prevMin] = findPreviousSubsegment(splits, majorNum, minorNum);
+		return prevMin.toString();
+	}
+
+	// Multiple segments, multiple subsegments
+	// (e.g. RJ map with courses): "X-Y" for previous majorNum, previous minorNum
+	if (segmentsCheckpointsCount > 1) {
+		// For these zones, we want:
+		//  S1----CP1----CP2----S2----CP1----CP2----END
+		// (n/a)  1-1    1-2    1-3   2-1    2-2    2-3
+		// So:
+		// Maj 1, Min 1 => N/A      Maj 1, Min 2 => 1-1      Maj 1, Min 3 => 1-2
+		// Maj 2, Min 1 => 1-3      Maj 2, Min 2 => 2-1      Maj 2, Min 3 => 2-2
+		// END => 2-3
+		const [prevMaj, prevMin] = findPreviousSubsegment(splits, majorNum, minorNum);
+		return `${prevMaj}-${prevMin}`;
+	}
+
+	// Multiple segments, all with single subsegments (e.g. staged surf map): previous majorNum
+	return (majorNum - 1).toString();
+}
+
+//#endregion
+//#region Splits Generation
+
+export interface Split {
+	/** Use majorNum = 0 and minorNum = 0 for "Overall" */
+	majorNum: number;
+	minorNum: number;
+
+	/**
+	 * This will be the name of the *previous* subsegment,
+	 * e.g. if you hit S1 CP2 => 1-1, S2 CP1 => 1-2
+	 */
+	name: string;
+
+	/** Total duration until now **/
+	time: number;
+
+	/** Duration of this individual segment */
+	segmentTime: number;
+
+	/** False if comparison run has missing segment for given majorNum and minorNum  */
+	hasComparison: boolean;
+
+	/** Base time - comp time */
+	diff?: number;
+
+	/** Base segment time - comp segment time */
+	delta?: number;
+
+	segmentsCount: number;
+
+	segmentCheckpointsCount: number;
+
+	statsComparisons?: Record<RunStatType, RunStatsComparison>;
+}
+
+export interface RunStatsComparison {
+	name: RunStatType;
+	unit: string;
+	baseValue: number;
+	comparisonValue: number;
+	diff: number;
+	isPositiveGood: boolean;
+}
+
+export function generateSplit(
+	baseSplits: RunSplits,
+	compSplits: RunSplits | null,
+	majorNum: number,
+	minorNum: number,
+	segmentsCount: number,
+	segmentCheckpointsCount: number,
+	generateStats = false
+): Split {
+	const [base, comp] = findSubsegmentComparison(baseSplits, compSplits, majorNum, minorNum) ?? [];
+
+	if (!base) {
+		throw new Error(`Missing base subsegment for majorNum: ${majorNum}, minorNum: ${minorNum}`);
+	}
+
+	const name = getSplitName(baseSplits, majorNum, minorNum, segmentsCount, segmentCheckpointsCount);
+	const [prevMaj, prevMin] = findPreviousSubsegment(baseSplits, majorNum, minorNum);
+
+	const split: Split = {
+		name,
+		majorNum,
+		minorNum,
+		segmentsCount,
+		segmentCheckpointsCount,
+		segmentTime: 0,
+		time: 0,
+		diff: 0,
+		delta: 0,
+		hasComparison: false
+	};
+
+	// If we're at the very start of the run, there is no previous subsegment
+	if (prevMaj === 0 && prevMin === 0) return split;
+
+	const [prevBase, prevComp] = findSubsegmentComparison(baseSplits, compSplits, prevMaj, prevMin) ?? [];
+
+	split.time = base.timeReached;
+	split.segmentTime = base.timeReached - prevBase.timeReached;
+
+	if (!comp) return split;
+
+	split.diff = base.timeReached - comp.timeReached;
+	split.hasComparison = true;
+
+	if (!prevComp) return split;
+
+	split.delta = split.segmentTime - (comp.timeReached - prevComp.timeReached);
+
+	if (!generateStats) return split;
+
+	split.statsComparisons = generateStatsComparison(base.stats, comp.stats);
+	return split;
+}
+
+export function generateFinishSplit(
+	baseSplits: RunSplits,
+	compSplits: RunSplits | null,
+	baseRunTime: number,
+	compRunTime: number,
+	segmentsCount: number,
+	segmentCheckpointsCount: number,
+	generateStats = false
+): Split {
+	const prevBase = baseSplits.segments.at(-1)?.subsegments?.at(-1);
+	if (!prevBase) throw new Error('Base run has no subsegments somehow');
+
+	const split: Split = {
+		name: getSplitName(baseSplits, segmentsCount + 1, 1, segmentsCount, segmentCheckpointsCount),
+		majorNum: segmentsCount + 1,
+		minorNum: 1,
+		segmentsCount,
+		segmentCheckpointsCount,
+		time: baseRunTime,
+		segmentTime: baseRunTime - prevBase.timeReached,
+		hasComparison: false
+	};
+
+	if (!compSplits || compSplits.segments.length === 0) return split;
+
+	const prevComp = compSplits.segments.at(-1)?.subsegments?.at(-1);
+	if (!prevComp) throw new Error('Comparison run has no subsegments somehow');
+
+	split.hasComparison = true;
+	split.diff = baseRunTime - compRunTime;
+	split.delta = split.segmentTime - (compRunTime - prevComp.timeReached);
+
+	if (generateStats) {
+		split.statsComparisons = generateStatsComparison(baseSplits.trackStats, compSplits.trackStats);
+	}
+
+	return split;
+}
+
+export function generateStatsComparison(
+	baseStats: RunStats,
+	comparisonStat: RunStats
+): Record<RunStatType, RunStatsComparison> {
+	return Object.fromEntries(
+		Object.keys(baseStats).map((key) => [
+			key,
+			{
+				name: key,
+				unit: RunStatsProperties[key].unit,
+				isPositiveGood: RunStatsProperties[key].isPositiveGood,
+				baseValue: baseStats[key],
+				comparisonValue: comparisonStat[key],
+				diff: baseStats[key] - comparisonStat[key]
+			}
+		])
+	) as Record<RunStatType, RunStatsComparison>;
 }
 
 export interface Comparison {
 	baseRun: RunMetadata;
 	comparisonRun: RunMetadata;
 	diff: number;
-	overallSplit: ComparisonSplit;
-	segmentSplits: ComparisonSplit[][];
-}
-
-export interface ComparisonSplit {
-	name: string;
-	accumulateTime: number;
-	time: number;
-	diff: number;
-	delta: number;
-	statsComparisons?: RunStatsComparison[];
+	overallSplit: Split;
+	segmentSplits: Split[][];
 }
 
 export function generateComparison(baseRun: RunMetadata, comparisonRun: RunMetadata): Comparison {
@@ -137,124 +436,62 @@ export function generateComparison(baseRun: RunMetadata, comparisonRun: RunMetad
 	};
 }
 
-// TODO: untested
-export function generateOverallComparisonSplit(baseRun: RunMetadata, comparisonRun: RunMetadata): ComparisonSplit {
+const OverallSplitName = $.Localize('#Run_Comparison_Split_Overall');
+
+export function generateOverallComparisonSplit(baseRun: RunMetadata, comparisonRun: RunMetadata): Split {
 	return {
-		name: 'Run_Comparison_Split_Overall',
-		accumulateTime: baseRun.runTime,
+		name: OverallSplitName,
+		majorNum: 0,
+		minorNum: 0,
+		segmentsCount: 0,
+		segmentCheckpointsCount: 0,
 		time: baseRun.runTime,
+		segmentTime: baseRun.runTime,
+		hasComparison: true,
 		diff: baseRun.runTime - comparisonRun.runTime,
 		delta: 0,
-		statsComparisons: generateStatsComparison(baseRun.runSplits.trackStats, comparisonRun.runSplits.trackStats)
+		statsComparisons: generateStatsComparison(baseRun.runSplits!.trackStats, comparisonRun.runSplits!.trackStats)
 	};
 }
 
-export function generateComparisonSplits(baseRun: RunMetadata, comparisonRun: RunMetadata): ComparisonSplit[][] {
-	const comparisonSplits = baseRun.runSplits.segments.map((segment, i) =>
-		segment.subsegments.map((_, j) =>
-			generateSegmentComparisonSplit(baseRun.runSplits, comparisonRun.runSplits, i, j)
+export function generateComparisonSplits(baseRun: RunMetadata, comparisonRun: RunMetadata): Split[][] {
+	if (!baseRun.runSplits || !comparisonRun.runSplits) return [[]];
+	const baseSplits = baseRun.runSplits;
+
+	// Note that we're deliberately leaving in the 1-1 start split here. It should never be shown
+	// in comparison or end-of-run splits, but needed for the line graph to work correctly.
+	const segmentsCount = baseSplits.segments.length;
+	const comparisonSplits = baseSplits.segments.map((segment, i) =>
+		segment.subsegments.map((subsegment) =>
+			generateSplit(
+				baseSplits!,
+				comparisonRun.runSplits,
+				i + 1,
+				subsegment.minorNum,
+				segmentsCount,
+				segment.subsegments.length,
+				true
+			)
 		)
 	);
 
-	// Remove first split since both segments will be at timeReached == 0
-	if (comparisonSplits[0].length <= 1) {
-		// First segment only has one split, so remove entire segment
-		comparisonSplits.shift();
-	} else {
-		comparisonSplits[0].shift();
-	}
-
 	comparisonSplits.push([
-		generateFinishSplitComparison(
+		generateFinishSplit(
+			baseSplits,
+			comparisonRun.runSplits,
 			baseRun.runTime,
-			baseRun.runSplits,
 			comparisonRun.runTime,
-			comparisonRun.runSplits
+			segmentsCount,
+			baseSplits.segments.at(-1)!.subsegments.length,
+			true
 		)
 	]);
 
 	return comparisonSplits;
 }
 
-export function generateSegmentComparisonSplit(
-	baseRunSplits: RunSplits,
-	comparisonRunSplits: RunSplits,
-	segmentIndex: number,
-	subsegmentIndex: number
-): ComparisonSplit {
-	const baseAccumulateTime = baseRunSplits.segments[segmentIndex].subsegments[subsegmentIndex].timeReached;
-	const comparisonAccumulateTime =
-		comparisonRunSplits.segments[segmentIndex].subsegments[subsegmentIndex].timeReached;
-	const baseSplitTime = getSplitSegmentTime(baseRunSplits, segmentIndex, subsegmentIndex);
-	const comparisonSplitTime = getSplitSegmentTime(comparisonRunSplits, segmentIndex, subsegmentIndex);
-	const isLinear = baseRunSplits.segments.length === 1;
-
-	return {
-		name: isLinear ? subsegmentIndex.toString() : getSegmentName(segmentIndex, subsegmentIndex),
-		accumulateTime: baseAccumulateTime,
-		time: baseSplitTime,
-		diff: baseAccumulateTime - comparisonAccumulateTime,
-		delta: baseSplitTime - comparisonSplitTime,
-		statsComparisons: generateStatsComparison(
-			baseRunSplits.segments[segmentIndex].subsegments[subsegmentIndex].stats,
-			comparisonRunSplits.segments[segmentIndex].subsegments[subsegmentIndex].stats
-		)
-	};
-}
-
-export function generateFinishSplitComparison(
-	baseRunTime: number,
-	baseRunSplits: RunSplits,
-	comparisonRunTime: number,
-	comparisonRunSplits: RunSplits
-): ComparisonSplit {
-	const baseSplitTime = baseRunTime - baseRunSplits.segments.at(-1).subsegments.at(-1).timeReached;
-	const comparisonSplitTime = comparisonRunTime - comparisonRunSplits.segments.at(-1).subsegments.at(-1).timeReached;
-	const isLinear = baseRunSplits.segments.length === 1;
-
-	return {
-		name: isLinear
-			? baseRunSplits.segments[0].subsegments.length.toString()
-			: baseRunSplits.segments.length.toString(),
-		accumulateTime: baseRunTime,
-		time: baseSplitTime,
-		diff: baseRunTime - comparisonRunTime,
-		delta: baseSplitTime - comparisonSplitTime,
-		statsComparisons: generateStatsComparison(
-			baseRunSplits.segments.at(-1).subsegments.at(-1).stats,
-			comparisonRunSplits.segments.at(-1).subsegments.at(-1).stats
-		)
-	};
-}
-
-export interface RunStatsComparison {
-	name: string;
-	unit: string;
-	baseValue: number;
-	comparisonValue: number;
-	diff: number;
-}
-
-export function generateStatsComparison(baseStats: RunStats, comparisonStat: RunStats): RunStatsComparison[] {
-	return (Object.keys(baseStats) as Array<keyof RunStats>).map((key) => ({
-		name: key,
-		unit: RunStatsUnits[key],
-		baseValue: baseStats[key],
-		comparisonValue: comparisonStat[key],
-		diff: baseStats[key] - comparisonStat[key]
-	}));
-}
-
-const RunStatsUnits: Record<keyof RunStats, string> = {
-	maxOverallSpeed: 'ups',
-	maxHorizontalSpeed: 'ups',
-
-	overallDistanceTravelled: 'units',
-	horizontalDistanceTravelled: 'units',
-
-	jumps: 'jumps',
-	strafes: 'strafes'
-};
+//#endregion
+//#region End of Run / Run Submission
 
 /** Enum for why end of run is being shown */
 export enum EndOfRunShowReason {
@@ -286,26 +523,4 @@ export enum RunStatusIcons {
 	ERROR = 'alert-octagon'
 }
 
-export enum RunEntityType {
-	PLAYER = 0,
-	GHOST = 1,
-	REPLAY = 2,
-	ONLINE = 3
-}
-
-export enum ZoneType {
-	NONE = 0,
-
-	/** When majorNum = 1, and minorNum = 1 */
-	START = 1,
-
-	END = 2,
-
-	/** When majorNum > 1 and minorNum = 1 */
-	MAJOR_CHECKPOINT = 3,
-
-	/** All other timer segment zones */
-	MINOR_CHECKPOINT = 4,
-
-	CANCEL = 5
-}
+// #endregion
