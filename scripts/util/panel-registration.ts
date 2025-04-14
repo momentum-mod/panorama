@@ -10,7 +10,6 @@
  */
 
 declare interface PanelTagNameMap {
-	Split: Split;
 	LineGraph: LineGraph;
 	LevelIndicator: LevelIndicator;
 	PlayerCard: PlayerCard;
@@ -44,15 +43,6 @@ declare interface LineGraph extends AbstractPanel<'LineGraph'> {
 	handler: import('components/graphs/line-graph').LineGraphHandler;
 }
 UiToolkitAPI.RegisterPanel2d('LineGraph', 'file://{resources}/layout/components/graphs/line-graph.xml');
-
-declare interface Split extends AbstractPanel<'Split'> {
-	name: string;
-	time: number;
-	isFirst: boolean;
-	diff: number;
-	delta: number;
-}
-UiToolkitAPI.RegisterPanel2d('Split', 'file://{resources}/layout/components/split.xml');
 
 declare interface ToastContainer extends AbstractPanel<'ToastContainer'> {}
 UiToolkitAPI.RegisterPanel2d('ToastManager', 'file://{resources}/layout/util/toast-manager.xml');
