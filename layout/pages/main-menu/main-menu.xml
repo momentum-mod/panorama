@@ -73,12 +73,12 @@
 							<Image id="LobbyButtonImage" class="rightnav__icon" src="file://{images}/lobby.svg" textureheight="32" />
 							<Label id="LobbyPlayerCountLabel" class="rightnav__button-subtitle rightnav__button-subtitle--hidden" />
 						</RadioButton>
-						<RadioButton id="ProfileButton" group="RightNavRadio" class="rightnav__button" onactivate="DrawerHandler.extendAndNavigateToTab('ProfileDrawer')">
-							<Image class="rightnav__icon" src="file://{images}/profile.svg" textureheight="32" />
-						</RadioButton>
-						<RadioButton id="ChallengesButton" group="RightNavRadio" class="rightnav__button" onactivate="DrawerHandler.extendAndNavigateToTab('ChallengesDrawer')">
-							<Image class="rightnav__icon" src="file://{images}/crown.svg" textureheight="32" />
-						</RadioButton>
+<!--						<RadioButton id="ProfileButton" group="RightNavRadio" class="rightnav__button" onactivate="DrawerHandler.extendAndNavigateToTab('ProfileDrawer')">-->
+<!--							<Image class="rightnav__icon" src="file://{images}/profile.svg" textureheight="32" />-->
+<!--						</RadioButton>-->
+<!--						<RadioButton id="ChallengesButton" group="RightNavRadio" class="rightnav__button" onactivate="DrawerHandler.extendAndNavigateToTab('ChallengesDrawer')">-->
+<!--							<Image class="rightnav__icon" src="file://{images}/crown.svg" textureheight="32" />-->
+<!--						</RadioButton>-->
 						<RadioButton id="ChangelogButton" group="RightNavRadio" class="rightnav__button" onactivate="DrawerHandler.extendAndNavigateToTab('AboutDrawer')">
 							<Image class="rightnav__icon" src="file://{images}/news.svg" textureheight="32" />
 						</RadioButton>
