@@ -22,7 +22,7 @@
 			background-color: rgba($comparison-behind-loss-background, 0.3);
 		}
 		#{$root}--first & {
-			background-color: rgba($comparison-neutral-background, 0.4);
+			background-color: rgba($comparison-neutral-background, 0.3);
 		}
 	}
 
@@ -146,7 +146,6 @@
 
 	&__splits-container {
 		width: 100%;
-		padding-top: 8px;
 		background-color: rgba(0, 0, 0, 0.5);
 	}
 
@@ -154,20 +153,19 @@
 		flow-children: right;
 		horizontal-align: center;
 		overflow: scroll clip;
+		margin-top: 8px;
 		padding: 0 8px;
 		padding-bottom: 10px;
+
+		.endofrun--no-cps & {
+			visibility: collapse;
+		}
 
 		& > HorizontalScrollBar {
 			height: 2px;
 			border-radius: 0;
 			opacity: 0.2;
 		}
-	}
-
-	&__split {
-		margin: 0 2px;
-		box-shadow: 1px 1px 12px 0 rgba(0, 0, 0, 1);
-		border: 1px solid rgba(0, 0, 0, 0.7);
 	}
 
 	&__split-button {
@@ -181,14 +179,14 @@
 
 		&:selected {
 			border: 1px solid rgba(255, 255, 255, 1);
-			& > .split {
+			& > .endofrun-split {
 				brightness: 1.2;
 			}
 		}
 
 		&:hover {
 			border: 1px solid rgba(255, 255, 255, 0.3);
-			& > .split {
+			& > .endofrun-split {
 				brightness: 1.1;
 			}
 		}
@@ -221,13 +219,100 @@
 	}
 }
 
+.endofrun-split {
+	$root: &;
+
+	flow-children: right;
+
+	height: 44px;
+	overflow: noclip;
+
+	box-shadow: 1px 1px 12px 0 rgba(0, 0, 0, 1);
+	border: 1px solid rgba(0, 0, 0, 0.7);
+
+	&--no-comparison {
+		height: 36px;
+		margin: 0 2px;
+
+		& #{$root}__diff {
+			visibility: collapse;
+		}
+	}
+
+	background-color: $comparison-neutral-background;
+
+	&.--ahead {
+		&.--gain {
+			background-color: $comparison-ahead-gain-background;
+		}
+
+		&.--loss {
+			background-color: $comparison-ahead-loss-background;
+		}
+	}
+
+	&.--behind {
+		&.--gain {
+			background-color: $comparison-behind-gain-background;
+		}
+
+		&.--loss {
+			background-color: $comparison-behind-loss-background;
+		}
+	}
+
+	&__left {
+		width: fit-children;
+		height: 100%;
+		background-color: rgba(0, 0, 0, 0.3);
+		padding-right: 7px;
+		padding-left: 8px;
+		border-right: 1px solid rgba(0, 0, 0, 0.5);
+		margin-right: 0px;
+	}
+
+	&__right {
+		flow-children: down;
+		padding: 0 8px;
+		vertical-align: center;
+	}
+
+	&__name {
+		@include mixin.font-styles($use-header: true);
+		font-size: 20px;
+		text-align: left;
+		margin-bottom: 1px;
+		vertical-align: center;
+	}
+
+	&__time {
+		margin-right: 0px;
+		font-size: 16px;
+		vertical-align: center;
+		font-weight: medium;
+		text-shadow: 0px 1px 2px 1 rgba(0, 0, 0, 1);
+	}
+
+	&__diff {
+		font-weight: normal;
+		text-shadow: 0px 1px 2px 1 rgba(0, 0, 0, 1);
+		margin: 0;
+		font-size: 14px;
+
+		#{$root}--no-comparison & {
+			visibility: collapse;
+		}
+	}
+}
+
+$graph-n-stats-height: 180px + $linegraph-axis-width;
 .endofrun-graph {
-	height: 180px + $linegraph-axis-width;
-	width: 560px + $linegraph-axis-width;
-	padding: 12px 16px 8px 4px;
+	height: $graph-n-stats-height;
+	width: 520px + $linegraph-axis-width;
+	padding: 12px 4px 8px 4px;
 	margin-bottom: 2px;
 
-	&--hidden {
+	.endofrun--no-cps & {
 		visibility: collapse;
 	}
 
@@ -268,12 +353,17 @@
 
 	flow-children: down;
 	width: fill-parent-flow(1);
-	height: 100%;
+	height: fit-children;
+	max-height: $graph-n-stats-height;
 	overflow: squish scroll;
 	padding-right: 12px;
-	padding-left: 0px;
-	// padding-bottom: 12px;
+	padding-left: 12px;
 	margin-bottom: 16px;
+
+	.endofrun--no-cps & {
+		max-width: 480px;
+		horizontal-align: center;
+	}
 
 	& VerticalScrollBar {
 		width: 2px;
@@ -346,7 +436,7 @@
 	}
 
 	&__name {
-		width: fill-parent-flow(1.8);
+		width: fill-parent-flow(2.4);
 		font-size: 12px;
 		text-align: left;
 		text-overflow: shrink;
@@ -363,6 +453,15 @@
 	&__table-header-text {
 		font-weight: bold;
 		font-size: 12px;
+
+		&--base {
+			// Don't have space for padding between this and Comparison
+			text-align: center;
+
+			.endofrun--no-cps & {
+				text-align: right;
+			}
+		}
 	}
 }
 
