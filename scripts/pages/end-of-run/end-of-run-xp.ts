@@ -2,15 +2,15 @@ import { PanelHandler, OnPanelLoad } from 'util/module-helpers';
 
 @PanelHandler()
 class EndOfRunXPHandler implements OnPanelLoad {
-	xpData: ReturnType<typeof this.getXPData>;
-	primaryWidth: number;
+	xpData!: ReturnType<typeof this.getXPData>;
+	primaryWidth!: number;
 
 	readonly baseLevelUpTime = 3;
 	readonly levelIndicatorMaxTransitionTime = 0.7;
 	readonly xpCounterTicks = 100;
 
 	readonly panels = {
-		cp: $.GetContextPanel(),
+		xpContainer: $('#XpContainer'),
 		levelIndicator: $<LevelIndicator>('#LevelIndicator'),
 		levelBar: $<Panel>('#LevelBar'),
 		primaryBar: $<Panel>('#PrimaryBar'),
@@ -43,7 +43,7 @@ class EndOfRunXPHandler implements OnPanelLoad {
 		this.panels.primaryBar.style.width = `${this.primaryWidth}%`;
 		this.panels.secondaryBar.style.width = '0%';
 
-		this.panels.cp.AddClass('endofrun-xp--hidden');
+		this.panels.xpContainer.AddClass('endofrun-xp--hidden');
 	}
 
 	onRunDataReceived(uploaded: boolean, cosXp: number, _rankXp: number, lvlGain: number) {
@@ -107,9 +107,9 @@ class EndOfRunXPHandler implements OnPanelLoad {
 
 		const levelDiff = newXP.level - oldXP.level;
 
-		this.panels.cp.RemoveClass('endofrun-xp--hidden');
+		this.panels.xpContainer.RemoveClass('endofrun-xp--hidden');
 
-		this.panels.cp.SetDialogVariableInt('new_xp', newXP.xp - oldXP.xp);
+		this.panels.xpContainer.SetDialogVariableInt('new_xp', newXP.xp - oldXP.xp);
 
 		if (levelDiff === 0) {
 			runXPCounter(oldXP.xp, newXP.xp, newXP.nextLevelXP, this.baseLevelUpTime);
