@@ -5,6 +5,7 @@
 
 	<scripts>
 		<include type="module" src="file://{scripts}/pages/end-of-run/end-of-run.ts" />
+		<include type="module" src="file://{scripts}/pages/end-of-run/end-of-run-xp.ts" />
 	</scripts>
 
 	<Panel class="endofrun" acceptsinput="true" acceptsfocus="true">
@@ -63,6 +64,26 @@
 				</Panel>
 			</Panel>
 		</Panel>
-		<Frame src="file://{resources}/layout/pages/end-of-run/xp.xml" />
+		<Panel id="XpContainer" class="endofrun-xp">
+			<Panel class="flow-right">
+				<LevelIndicator id="LevelIndicator" class="endofrun-xp__levelindicator" />
+				<Panel class="endofrun-xp__wide-container">
+					<Panel id="LevelBar" class="endofrun-xp-bar">
+						<Panel id="PrimaryBar" class="endofrun-xp-bar__primary" />
+						<Panel id="SecondaryBar" class="endofrun-xp-bar__secondary" />
+					</Panel>
+					<Panel id="XPInfoBar" class="endofrun-xp__xp-info">
+						<Panel class="flow-right">
+							<Label id="XPCounter" class="endofrun-xp__xp-counter " text="{d:xp_counter} / {d:total_xp}" />
+							<Label class="endofrun-xp__xp-counter text-header-light" text=" #Common_XP" />
+						</Panel>
+						<Panel id="NewXP" class="endofrun-xp__new-stat-container">
+							<Label class="endofrun-xp__new-stat" text="+ {d:new_xp}" />
+							<Label class="endofrun-xp__new-stat text-header-light" text=" #Common_XP" />
+						</Panel>
+					</Panel>
+				</Panel>
+			</Panel>
+		</Panel>
 	</Panel>
 </root>
