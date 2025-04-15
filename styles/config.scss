@@ -638,12 +638,13 @@ $rightnav-width: 50px;
 // COMPARISONS (Used by HUD Comparisons and End of Run)
 // ================
 
-$comparison-neutral-background: rgb(93, 122, 155);
+$comparison-neutral-background: rgb(110, 119, 126);
+$comparison-neutral: rgb(210, 210, 210);
 
 $comparison-ahead: $blue;
 $comparison-ahead-gain: color.scale($comparison-ahead, $lightness: 10%, $saturation: 0%);
 $comparison-ahead-gain-background: color.scale(rgba($comparison-ahead, 0.5), $lightness: -15%, $saturation: 50%);
-$comparison-ahead-loss: color.scale($comparison-ahead, $lightness: 50%, $saturation: -50%);
+$comparison-ahead-loss: color.scale($comparison-ahead, $lightness: 50%, $saturation: -40%);
 $comparison-ahead-loss-background: color.scale(rgba($comparison-ahead, 0.5), $lightness: 15%, $saturation: -60%);
 
 $comparison-behind: $red;
