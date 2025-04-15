@@ -7,20 +7,13 @@
 	flow-children: down;
 
 	margin: 20px;
-	margin-top: 28px;
+	margin-top: 120px;
 
 	&__splits {
-		flow-children: up;
-		height: 380px;
-		// padding-bottom: 80px;
-
-		// Panorama won't let the topmost items clip out, letting them squish together kind of works.
-		// Just bump the topmost stuff upwards a bit and clip it.
-		transform: translateY(-36px);
 	}
 
 	&__split {
-		margin-top: 6px;
+		margin-top: 4px;
 
 		overflow: noclip;
 
@@ -31,5 +24,76 @@
 
 	&__compare {
 		flow-children: down;
+	}
+}
+
+.hud-splits {
+	flow-children: right;
+
+	&__column {
+		flow-children: up;
+	}
+
+	// Panorama forcibly sets the `height` property when sizing text so forcing a label
+	// to a certain height is very difficult -- line-height doesn't help.
+	// This is a wrapper container that each label is placed in and vertically centered
+	// to achieve a consistent grid.
+	&__cell {
+		height: 27px;
+		width: fit-children;
+
+		&--name {
+			horizontal-align: right;
+		}
+
+		&--time {
+			horizontal-align: right;
+		}
+
+		&--diff {
+			horizontal-align: right;
+		}
+
+		// &--latest {
+		//	 height: 27px;
+		// }
+	}
+
+	&__name,
+	&__time,
+	&__diff {
+		font-size: 22px;
+		vertical-align: center;
+
+		&--hidden {
+			visibility: collapse;
+		}
+	}
+
+	&__name {
+		font-family: $font-header;
+		margin-right: 16px;
+		color: #e0e0e0;
+		padding-top: 1px;
+
+		// &--subsegment {
+		//	 color: #d3d3d3;
+		// }
+	}
+
+	&__time {
+		font-weight: medium;
+		margin-right: 14px;
+	}
+
+	&__diff {
+		font-weight: bold;
+		horizontal-align: right;
+
+		// Possible styling for bottom-most value (latest split), not happy
+		// with how it looks though.
+		.hud-splits__cell--latest & {
+			// font-size: 26px;
+		}
 	}
 }

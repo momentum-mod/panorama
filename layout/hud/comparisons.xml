@@ -9,12 +9,12 @@
 
 	<HudComparisons class="hud-comparisons">
 		<ConVarEnabler class="w-fit-children" convar="mom_hud_comparisons_enable" togglevisibility="true">
-			<Panel id="Splits" class="hud-comparisons__splits">
-				<!-- Populated in JS -->
+			<Panel class="hud-comparisons__splits hud-splits">
+				<!-- Each column populated in JS -->
+				<Panel id="SplitNames" class="hud-splits__column" />
+				<Panel id="SplitTimes" class="hud-splits__column" />
+				<Panel id="SplitDiffs" class="hud-splits__column" />
 			</Panel>
-			<!-- Stats comparisons will go here in the future -->
-			<!-- <Panel id="Compare" class="hud-comparisons__compare">
-			</Panel> -->
 		</ConVarEnabler>
 	</HudComparisons>
 </root>
