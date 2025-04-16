@@ -63,7 +63,7 @@
 			<MomHudWeaponSelection />
 		</Panel>
 
-		<HudBlurTarget id="HudBlur" blurrects="TabMenu" class="hud-blur" hittest="false" hittestchildren="false">
+		<HudBlurTarget id="HudBlur" blurrects="TabMenu Spectator" class="hud-blur" hittest="false" hittestchildren="false">
 			<BackbufferImagePanel class="full" />
 		</HudBlurTarget>
 
