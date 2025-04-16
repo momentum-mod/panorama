@@ -2,50 +2,45 @@
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
-	
+
 	<scripts>
 		<include type="module" src="file://{scripts}/hud/spectate.ts" />
 	</scripts>
-	
-	<MomHudSpectate class="w-full h-fill flow-down">
-		<Panel class="spectate">
+
+	<MomHudSpectate class="spectate">
+		<Panel class="spectate__top-row">
 			<Panel class="spectate__status">
-				<Panel class="h-align-left flow-right" id="IndicatorSpectating">
-					<Image src="file://{images}/spectatingIcon.svg" textureheight="64" scaling="stretch-to-cover-preserve-aspect" />
-					<Label class="text-h4" text="#Spectate_Status_Spectating" />
-				</Panel>
-				<Panel class="h-align-left flow-right" id="IndicatorWatchingReplay">
-					<Image src="file://{images}/replay-open.svg" textureheight="64" scaling="stretch-to-cover-preserve-aspect" />
-					<Label class="text-h4" text="#Spectate_Status_WatchingReplay" />
-				</Panel>
+				<Image id="StatusIcon" class="spectate__status-icon" textureheight="64" />
+				<Label class="spectate__title" text="{s:status}" />
 			</Panel>
 			<Panel class="spectate__playerinfo">
 				<Panel class="h-align-center">
-					<Label class="text-h4" text="{s:spec_target}" id="TargetName" />
+					<Label class="spectate__title" text="{s:spec_target}" />
 				</Panel>
-				<!-- TODO: Put playercard here somehow -->
+				<!-- TODO: avatar -->
 			</Panel>
 			<Panel class="spectate__interface">
 				<Panel class="flow-right h-align-right">
-					<Label class="text-h6 v-align-center" text="#Spectate_Interface_Cursor_Toggle" />
-					<Button class="button ml-3" onactivate="GameInterfaceAPI.ConsoleCommand('spec_mode');">
-						<Label class="button__text" text="{s:next_spec_mode}" />
+					<Label class="spectate__hint" text="#Spectate_Interface_Cursor_Toggle" />
+					<Button class="button spectate__button ml-4" onactivate="GameInterfaceAPI.ConsoleCommand('spec_mode');">
+						<Label class="button__text" text="{s:curr_spec_mode}" />
 					</Button>
-					<Button class="button ml-3" id="PrevPlayer" onactivate="GameInterfaceAPI.ConsoleCommand('spec_prev');">
+					<Button class="button spectate__button" id="PrevPlayer" onactivate="GameInterfaceAPI.ConsoleCommand('spec_prev');">
 						<Image class="button__icon" src="file://{images}/right-arrow.svg" textureheight="32" orientation="180" />
 					</Button>
-					<Button class="button ml-3" id="NextPlayer" onactivate="GameInterfaceAPI.ConsoleCommand('spec_next');">
+					<Button class="button spectate__button" id="NextPlayer" onactivate="GameInterfaceAPI.ConsoleCommand('spec_next');">
 						<Image class="button__icon" src="file://{images}/right-arrow.svg" textureheight="32" />
 					</Button>
-					<Button class="button ml-3" id="ToggleReplayControls" onactivate="HudSpectateHandler.panels.replayControls.ToggleHiddenState()">
-						<Image class="button__icon" src="file://{images}/settings.svg" textureheight="32" />
+					<Button class="button spectate__button" id="ToggleReplayControls" onactivate="HudSpectateHandler.toggleReplayControls()">
+						<Image class="button__icon" src="file://{images}/video-switch-outline.svg" textureheight="32" />
 					</Button>
-					<Button class="button button--red ml-3" onactivate="GameInterfaceAPI.ConsoleCommand('mom_spectate_stop');">
+					<Button class="button button--red spectate__button" onactivate="GameInterfaceAPI.ConsoleCommand('mom_spectate_stop');">
 						<Image class="button__icon" src="file://{images}/close.svg" />
 					</Button>
 				</Panel>
 			</Panel>
 		</Panel>
+
 		<MomHudReplayControls id="ReplayControls" />
 	</MomHudSpectate>
 
