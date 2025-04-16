@@ -343,6 +343,9 @@ interface GlobalEventNameMap {
 	/** Fired when the local map leaderboard data has loaded */
 	Leaderboards_LocalMapLeaderboardsLoaded: () => void;
 
+	/** Fired when the leaderboards has attempted to play a replay. */
+	Leaderboards_OnPlayReplay: () => void;
+
 	LeaderboardEntry_TimeDataUpdated: () => void;
 
 	LeaderboardEntry_PlayReplay: (itemIndex: int32) => void;
