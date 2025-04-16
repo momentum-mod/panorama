@@ -1,4 +1,5 @@
 type RunMetadata = import('common/timer').RunMetadata;
+type RunSplits = import('common/timer').RunSplits;
 type Gamemode = import('common/web').Gamemode;
 
 declare namespace MomentumAPI {
@@ -135,24 +136,6 @@ declare namespace MomentumWeaponAPI {
 }
 
 declare namespace MomentumReplayAPI {
-	/** Gets the current tick of the replay */
-	function GetCurrentTick(): int32;
-
-	/** Gets the total ticks of the replay */
-	function GetTotalTicks(): int32;
-
-	/** Gets the current time of the replay */
-	function GetCurrentTime(): float;
-
-	/** Gets the total time of the replay */
-	function GetTotalTime(): float;
-
-	/** Gets whether the replay is paused */
-	function IsPaused(): boolean;
-
-	/** Sets the progress of the replay */
-	function SetProgress(progress: float): void;
-
 	enum ReplayState {
 		NONE = 0,
 		PLAYING = 1,
@@ -163,12 +146,32 @@ declare namespace MomentumReplayAPI {
 		curtick: int32;
 		totalticks: int32;
 		curtime: float;
+		starttime: float;
 		endtime: float;
 	}
 
 	function GetReplayState(): ReplayState;
 
 	function GetReplayProgress(): ReplayProgress;
+
+	function GetReplayRunSplits(): RunSplits | null;
+
+	function PlayPause(): void;
+
+	/** Go to some point within the replay, within [0, 1]  */
+	function GoTo(position: float): void;
+
+	function GoToStart(): void;
+
+	function GoToEnd(): void;
+
+	function GoToNextTick(): void;
+
+	function GoToPreviousTick(): void;
+
+	function GoToNextChapter(): void;
+
+	function GoToPreviousChapter(): void;
 }
 
 declare namespace ChatAPI {

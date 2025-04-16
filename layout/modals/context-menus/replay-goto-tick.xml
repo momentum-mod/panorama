@@ -1,0 +1,19 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss"/>
+	</styles>
+	
+	<script>
+		function GoTo() { 
+			const textEntry = $('#TickEntry'); 
+			MomentumReplayAPI.GoToTick(Number(textEntry.text));
+		}
+	</script>
+
+	<ContextMenuCustomLayout class="contextmenu flow-right p-2">
+		<TextEntry id="TickEntry" class="textentry replaycontrols__textentry mr-1" oninputsubmit="GoTo()" clearaftersubmit="true"/>
+		<Button class="button spectate__button" onactivate="GoTo()">
+			<Label class="button__text" text="#ReplayControls_GoToTick"/>
+		</Button>
+	</ContextMenuCustomLayout>
+</root>

@@ -117,7 +117,7 @@ interface MomHudJumpStats extends AbstractHudPanel<'MomHudJumpStats'> {
 }
 
 interface MomHudReplayControls extends AbstractHudPanel<'MomHudReplayControls'> {
-	ToggleHiddenState(): void;
+	hidden: boolean;
 }
 
 interface MomHudStickyCharge extends AbstractHudPanel<'MomHudStickyCharge'> {
