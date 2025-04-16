@@ -9,7 +9,7 @@
 
 	<MomHudStatus class="w-full">
 		<ConVarEnabler class="hudstatus" convar="mom_hud_status_enable" togglevisibility="true">
-			<Label id="HudStatusLabel" class="hudstatus__label" text="#HudStatus_Spawn" />
+			<Label id="HudStatusLabel" class="hudstatus__label" />
 		</ConVarEnabler>
 	</MomHudStatus>
 </root>
