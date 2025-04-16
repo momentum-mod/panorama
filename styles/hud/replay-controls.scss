@@ -1,34 +1,110 @@
 @use '../config' as *;
 @use '../abstract/mixin';
+@use '../abstract/function';
+@use 'sass:color';
+@use 'sass:math';
 
 .replaycontrols {
-	transition: opacity 0.5s ease-in-out 0s;
-	opacity: 0.5;
-	padding: 12px;
-	background-color: rgba(0, 0, 0, 0.6);
-	width: 480px;
-	margin: 40px;
-	flow-children: down;
+	width: 100%;
+	height: fit-children;
+	margin-left: 4px;
+	margin-top: 4px;
 
-	&:hover {
-		opacity: 1;
+	flow-children: right;
+
+	&__left {
+		flow-children: right;
+		vertical-align: center;
+		margin-bottom: 0;
+		margin-left: 4px;
 	}
 
-	&__bigbutton {
-		width: fill-parent-flow(1);
+	&__right {
+		flow-children: right;
+		margin-left: 8px;
+	}
+
+	&__text {
+		@include mixin.font-styles($use-header: false);
+		font-weight: medium;
+		vertical-align: center;
+		font-size: 18px;
+
+		&--typeof {
+			color: #bbb;
+			margin-right: 6px;
+			margin-top: 1px;
+			font-size: 14px;
+			text-transform: uppercase;
+		}
+
+		// Fixed width with shrinking because we absolute do not want high values of
+		// these shifting/resizing RHS stuff
+		&--time,
+		&--ticks {
+			font-weight: medium;
+			max-height: 20px;
+			overflow: squish;
+			text-overflow: shrink;
+		}
+
+		&--time {
+			width: 156px;
+		}
+
+		&--ticks {
+			width: 128px;
+		}
+	}
+
+	// Used by contextmenu
+	&__textentry {
+		height: 28px;
+		background-color: rgba(255, 255, 255, 0.05);
+		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+		vertical-align: center;
+		font-size: 14px;
+
+		& #PlaceholderText {
+			font-size: 14px;
+		}
+
+		&:focus {
+			background-color: rgba(255, 255, 255, 0.065);
+		}
+
+		&:hover {
+			background-color: rgba(255, 255, 255, 0.075);
+		}
+	}
+
+	// Using unconventional button styling here cus I don't like Pano's base styles
+	// but don't wanna change til after 0.10.0
+	& &__playpause {
+		width: 56px;
 		flow-children: none;
+
+		&:selected {
+			background-color: rgba($blue, 0.7);
+		}
+
+		&:selected:hover {
+			background-color: rgba($blue, 0.9);
+		}
 	}
 
 	&__playicon {
 		visibility: visible;
-		ToggleButton:selected > & {
+
+		ToggleButton:selected & {
 			visibility: collapse;
 		}
 	}
 
 	&__pauseicon {
 		visibility: collapse;
-		ToggleButton:selected > & {
+
+		ToggleButton:selected & {
 			visibility: visible;
 		}
 	}
@@ -37,14 +113,171 @@
 		@include mixin.button-gradient($color: 'blue');
 	}
 
-	&__gototick {
-		width: 120px;
-		horizontal-align: right;
+	&__tooltip {
+		vertical-align: center;
 	}
 
-	& #SliderThumb,
-	#SliderThumb2 {
-		width: 0.33 * $slider-thumb-width;
-		border-radius: 0.5 * $slider-thumb-radius;
+	&__tooltip-icon {
+		width: 20px;
+		height: 20px;
+		margin-left: 4px;
+		margin-right: 4px;
+
+		img-shadow: 0 1px 2px black;
+		opacity: 0.6;
+		transition: opacity 0.1s ease-out 0s;
+
+		&:hover {
+			opacity: 1;
+		}
+	}
+}
+
+.replayslider {
+	$container: &;
+
+	width: fill-parent-flow(1);
+	height: 100%;
+	flow-children: none;
+
+	vertical-align: top;
+
+	// Weird fake slider system, real track gets hidden, whilst fake segmented
+	// track behind us is updated in JS.
+	// Note that C++ has very specific code for calculating slider thumb based
+	// track and thumb width, important to make the real and fake slider align,
+	// and avoid JS styling logic as much as possible.
+	&__slider {
+		width: 100%;
+		z-index: 100;
+		vertical-align: bottom;
+		margin-bottom: 2px;
+
+		#{$container}--no-labels & {
+			vertical-align: center;
+			margin-bottom: 0;
+		}
+
+		// Completely invisible but width needed for C++ slider calcs to work
+		& #SliderTrack {
+			width: 100%;
+		}
+
+		& #SliderThumb {
+			height: 10px;
+			width: 14px;
+			z-index: 100;
+			background-color: #cecece;
+			border-radius: 2px;
+			box-shadow: 0 0.5px 4px rgba(0, 0, 0, 1);
+		}
+	}
+
+	&__segment-container {
+		margin: 0 7px;
+		flow-children: right;
+		width: 100%;
+		height: 100%;
+		vertical-align: bottom;
+	}
+}
+
+.replaysegment {
+	$segment: &;
+	height: 100%;
+
+	&__inner {
+		// Panorama layouting of segments is a pain to get right and can't figure out
+		// a way to do it without this extra div
+		flow-children: none;
+		width: 100%;
+		height: 5px;
+		vertical-align: bottom;
+
+		margin-left: 1.5px;
+		margin-right: 1.5px;
+		margin-bottom: 4px;
+
+		border-radius: 1px;
+		box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.7);
+		background-color: color.scale($blue, $lightness: -60%, $saturation: -60%);
+
+		transition: height 0.1s ease-out 0s;
+
+		#{$segment}--active & {
+			height: 7px;
+		}
+
+		.replayslider--no-labels & {
+			vertical-align: center;
+			margin-bottom: 0;
+		}
+
+		&--left {
+			margin-left: 0;
+		}
+
+		&--right {
+			margin-right: 0;
+		}
+
+		&--prerun {
+			margin-left: 0;
+		}
+
+		&--tiny-prerun {
+			opacity: 0.00001; // Make invisible but still used in layout so fill-parent-flow in JS aligns right
+		}
+	}
+
+	&__progress {
+		height: 100%;
+		background-color: $blue;
+
+		#{$segment}--active & {
+			background-color: function.gradient-horizontal($blue, $mid-blue);
+		}
+	}
+
+	&__label {
+		width: 100%;
+
+		@include mixin.font-styles($use-header: false);
+		font-size: 12px;
+		text-align: center;
+		color: rgba(211, 211, 211, 0.9);
+		text-shadow: 0 1px 2px rgba(0, 0, 0, 1);
+		font-weight: regular;
+
+		transition-property: color, text-shadow;
+		transition-timing-function: ease-out;
+		transition-duration: 0.1s;
+
+		#{$segment}--active & {
+			color: rgba(240, 240, 240, 0.9);
+			font-weight: medium;
+			text-shadow: 0 1px 1px rgba(0, 0, 0, 0.9);
+		}
+
+		.replayslider--no-labels & {
+			visibility: collapse;
+		}
+	}
+
+	&__subsegments {
+		flow-children: right;
+		height: 100px;
+		width: 100%;
+	}
+}
+
+// TODO: Leaving subsegments invisible for now, I just can't figure out a way to style them. Frustrating!!
+// Though note this only affects maps with both major and minor CPs, so fairly rare.
+.replaysubsegment {
+	height: 100%;
+	//border-left: 1px solid rgba(0, 0, 0, 0.4);
+
+	&--first {
+		opacity: 0.001;
 	}
 }

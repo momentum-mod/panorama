@@ -7,53 +7,75 @@
 		<include type="module" src="file://{scripts}/hud/replay-controls.ts" />
 	</scripts>
 
-	<MomHudReplayControls class="replaycontrols">
-		<Panel class="flow-right w-full pb-4">
-			<Label class="text-h4" text="#Replay_Controls" />
-			<Button class="button button--blue h-align-right ml-3" onactivate="ReplayControlsHandler.toggleHiddenState();">
-				<Image class="button__icon" src="file://{images}/mom-arrow-down.svg" />
-			</Button>
-		</Panel>
-		<Panel class="flow-down w-full ">
-			<Panel class="flow-right w-full">
-				<Label class="v-align-bottom" text="Tick: {i:curr_tick}/{i:total_ticks}" />
-				<TextEntry class="textentry replaycontrols__gototick" id="ReplayControlsGotoTick" placeholder="Goto tick" oninputsubmit="ReplayControlsHandler.gotoTick()" clearaftersubmit="true" />
+	<snippets>
+		<snippet name="replay-segment">
+			<Panel class="replaysegment">
+				<Panel class="replaysegment__inner">
+					<Panel id="Progress" class="replaysegment__progress" />
+					<Panel id="Subsegments" class="replaysegment__subsegments" />
+				</Panel>
+				<Label class="replaysegment__label" text="{s:num}" />
 			</Panel>
-			<Label text="Time: {g:time:curr_time}/{g:time:end_time}" />
-			<!-- <SettingsSlider text="#Replay_Timescale" min="0" max="10" percentage="true" value100percent="1" convar="mom_replay_timescale" /> -->
+		</snippet>
+
+		<snippet name="replay-segment-prerun">
+			<Panel class="replaysegment">
+				<Panel class="replaysegment__inner">
+					<Panel id="Progress" class="replaysegment__progress" />
+				</Panel>
+			</Panel>
+		</snippet>
+	</snippets>
+
+	<MomHudReplayControls class="replaycontrols">
+		<Panel class="replaycontrols__left">
+			<Label class="replaycontrols__text replaycontrols__text--typeof" text="#Common_Time" />
+			<Label class="replaycontrols__text replaycontrols__text--time" text="{g:time:curr_time} / {g:time:end_time}" />
+
+			<Label class="replaycontrols__text replaycontrols__text--typeof" text="#Common_Tick" />
+			<Label class="replaycontrols__text replaycontrols__text--ticks" text="{i:curr_tick} / {i:total_ticks}" />
 		</Panel>
-		<Panel class="flow-right">
-			<Button class="button" onactivate="GameInterfaceAPI.ConsoleCommand('mom_tv_replay_goto 0%');">
+
+		<Panel id="TimeSliderContainer" class="replayslider">
+			<Slider id="TimeSliderReal" class="replayslider__slider" direction="horizontal" />
+			<Panel id="TimeSliderFakeContainer" class="replayslider__segment-container" />
+		</Panel>
+
+		<Panel class="replaycontrols__right">
+			<!-- <SettingsSlider text="#Replay_Timescale" min="0" max="10" percentage="true" value100percent="1" convar="mom_replay_timescale" /> -->
+			<TooltipPanel src-id="ReplayControlsTooltip" src="file://{resources}/layout/modals/tooltips/replay-controls.xml" class="replaycontrols__tooltip">
+				<Image class="replaycontrols__tooltip-icon" src="file://{images}/info.svg" textureheight="32" />
+			</TooltipPanel>
+			<Button class="button spectate__button" id="GoToStart" onactivate="MomentumReplayAPI.GoToStart()">
+				<Image class="button__icon" src="file://{images}/skip-forward.svg" textureheight="32" orientation="180" />
+			</Button>
+			<Button class="button spectate__button" id="GoToPrevSeg" onactivate="MomentumReplayAPI.GoToPreviousChapter()">
 				<Image class="button__icon" src="file://{images}/skip-next.svg" textureheight="32" orientation="180" />
 			</Button>
-			<!-- <HoldButton class="replaycontrols__holdbutton button ml-3" onmousedown="GameInterfaceAPI.ConsoleCommand('+mom_replay_backward');" onmouseup="GameInterfaceAPI.ConsoleCommand('-mom_replay_backward');">
-				<Image class="button__icon" src="file://{images}/fast-forward.svg" textureheight="32" orientation="180" />
-			</HoldButton> -->
-			<Button class="button ml-3" onactivate="GameInterfaceAPI.ConsoleCommand('mom_tv_replay_goto -#1');">
-				<Image class="button__icon" src="file://{images}/fast-forward.svg" textureheight="32" orientation="180" />
+			<Button class="button spectate__button" id="GoToPrevTick" onactivate="MomentumReplayAPI.GoToPreviousTick()">
+				<Image class="button__icon" src="file://{images}/chevron-right.svg" textureheight="32" orientation="180" />
 			</Button>
-			<Button class="button ml-3" onactivate="GameInterfaceAPI.ConsoleCommand('mom_tv_replay_goto -1 pause');">
-				<Image class="button__icon" src="file://{images}/subtract.svg" textureheight="32" />
-			</Button>
-			<ToggleButton id="ReplayControlsPausePlay" class="replaycontrols__bigbutton button togglebutton togglebutton--blue ml-3" onactivate="GameInterfaceAPI.ConsoleCommand('mom_tv_replay_playpause');">
-				<Image class="button__icon replaycontrols__playicon" src="file://{images}/play.svg" textureheight="32" />
-				<Image class="button__icon replaycontrols__pauseicon" src="file://{images}/pause.svg" textureheight="32" />
+			<ToggleButton id="PausePlay" class="button togglebutton togglebutton--blue spectate__button replaycontrols__playpause" onactivate="MomentumReplayAPI.PlayPause()">
+				<!-- can't get horiz centering to work without this -->
+				<Panel class="w-full h-full">
+					<Image class="button__icon replaycontrols__playicon" src="file://{images}/play.svg" textureheight="32" />
+				</Panel>
+				<Panel class="w-full h-full">
+					<Image class="button__icon replaycontrols__pauseicon" src="file://{images}/pause.svg" textureheight="32" />
+				</Panel>
 			</ToggleButton>
-			<Button class="button ml-3" onactivate="GameInterfaceAPI.ConsoleCommand('mom_tv_replay_goto +1 pause');">
-				<Image class="button__icon" src="file://{images}/add.svg" textureheight="32" />
+			<Button class="button spectate__button" id="GoToNextTick" onactivate="MomentumReplayAPI.GoToNextTick()">
+				<Image class="button__icon" src="file://{images}/chevron-right.svg" textureheight="32" />
 			</Button>
-			<Button class="button ml-3" onactivate="GameInterfaceAPI.ConsoleCommand('mom_tv_replay_goto +#1');">
-				<Image class="button__icon" src="file://{images}/fast-forward.svg" textureheight="32"/>
-			</Button>
-			<!-- <HoldButton class="replaycontrols__holdbutton button ml-3" onmousedown="GameInterfaceAPI.ConsoleCommand('+mom_replay_forward');" onmouseup="GameInterfaceAPI.ConsoleCommand('-mom_replay_forward');">
-				<Image class="button__icon" src="file://{images}/fast-forward.svg" textureheight="32" />
-			</HoldButton> -->
-			<Button class="button ml-3" onactivate="GameInterfaceAPI.ConsoleCommand('mom_tv_replay_goto 100%');">
+			<Button class="button spectate__button" id="GoToNextSeg" onactivate="MomentumReplayAPI.GoToNextChapter()">
 				<Image class="button__icon" src="file://{images}/skip-next.svg" textureheight="32" />
 			</Button>
-		</Panel>
-		<Panel class="w-full">
-			<Slider id="ReplayControlsTimeSlider" class="slider slider--horizontal w-full" direction="horizontal" />
+			<!--			<Button class="button spectate__button" onactivate="MomentumReplayAPI.GoToEnd()">-->
+			<!--				<Image class="button__icon" src="file://{images}/skip-forward.svg" textureheight="32"/>-->
+			<!--			</Button>-->
+			<Button class="button spectate__button" id="GoToTickButton" onactivate="ReplayControlsHandler.showGoToTickDialog()">
+				<Image class="button__icon" src="file://{images}/debug-step-over.svg" textureheight="32" />
+			</Button>
 		</Panel>
 	</MomHudReplayControls>
 </root>
