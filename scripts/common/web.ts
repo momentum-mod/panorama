@@ -731,7 +731,8 @@ export enum MapTag {
 	_Num2__Way_Sym = 83,
 	_Num4__Way_Sym = 84,
 	Staged__Linear = 85,
-	Funkyboost = 86
+	Funkyboost = 86,
+	Mixed = 87
 }
 
 export enum MapTestInviteState {
@@ -800,6 +801,13 @@ export class RunValidationError extends Error {
 		super(RunValidationErrorMessages[type]);
 		this.code = type;
 	}
+}
+
+export enum SteamGame {
+	CSS = 240,
+	TF2 = 440,
+	PORTAL2 = 620,
+	CSGO = 730
 }
 
 export enum Style {
@@ -1123,7 +1131,8 @@ export const GlobalTags = [
 	MapTag.Anti_Grav,
 	MapTag.Moving_Surfaces,
 	MapTag.Increased_Maxvel,
-	MapTag.Progressive_Difficulty
+	MapTag.Progressive_Difficulty,
+	MapTag.Mixed
 ];
 
 export const GamemodeTags = {
@@ -1134,7 +1143,6 @@ export const GamemodeTags = {
 		MapTag.Booster,
 		MapTag.Headsurf,
 		MapTag.Bhop,
-		MapTag.Increased_Maxvel,
 		MapTag.Fall,
 		MapTag.Slide,
 		MapTag.Rampstrafe,
@@ -1265,6 +1273,20 @@ export const RoleNames: ReadonlyMap<Role, string> = new Map([
 	[Role.PLACEHOLDER, 'Placeholder'],
 	[Role.REVIEWER, 'Reviewer'],
 	[Role.VERIFIED, 'Verified']
+]);
+
+export const SteamGamesNames: ReadonlyMap<SteamGame, string> = new Map([
+	[SteamGame.CSS, 'Counter-Strike: Source'],
+	[SteamGame.TF2, 'Team Fortress 2'],
+	[SteamGame.PORTAL2, 'Portal 2'],
+	[SteamGame.CSGO, 'Counter-Strike: Global Offensive']
+]);
+
+export const SteamGamesImages: ReadonlyMap<SteamGame, string> = new Map([
+	[SteamGame.CSS, '/assets/images/games-logos/css.png'],
+	[SteamGame.TF2, '/assets/images/games-logos/tf2.png'],
+	[SteamGame.PORTAL2, '/assets/images/games-logos/portal2.png'],
+	[SteamGame.CSGO, '/assets/images/games-logos/csgo.png']
 ]);
 
 /**
@@ -1501,6 +1523,7 @@ export interface MapInfo {
 	description: string;
 	youtubeID: string;
 	creationDate: DateString;
+	requiredGames: SteamGame[];
 }
 
 export interface MapCredit {
@@ -2023,9 +2046,11 @@ export interface UpdateMapAdmin extends Omit<UpdateMap, 'status'> {
 //#endregion
 //#region Map Info
 
-export type CreateMapInfo = Pick<MapInfo, 'description' | 'youtubeID' | 'creationDate'>;
+export type CreateMapInfo = Pick<MapInfo, 'description' | 'youtubeID' | 'creationDate' | 'requiredGames'>;
 
-export type UpdateMapInfo = Partial<Pick<CreateMapInfo, 'description' | 'youtubeID' | 'creationDate'>>;
+export type UpdateMapInfo = Partial<
+	Pick<CreateMapInfo, 'description' | 'youtubeID' | 'creationDate' | 'requiredGames'>
+>;
 
 //#endregion
 //#region Credits
