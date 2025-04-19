@@ -232,7 +232,7 @@ class HudComparisonsHandler {
 		this.splitRows.forEach((row) => {
 			if (!row.split) return;
 
-			if (this.hasUniqueComparison) {
+			if (this.hasUniqueComparison()) {
 				row.split = Timer.generateSplit(
 					splits,
 					this.comparison?.runSplits ?? null,
@@ -289,9 +289,17 @@ class HudComparisonsHandler {
 		name.RemoveClass('hud-splits__name--hidden');
 		time.RemoveClass('hud-splits__time--hidden');
 
-		// hasUniqueComparison is based on controlledReplayID which is updated whenever observed timer
-		// changes, so `split` will be derived from current timer
-		const hasComparison = split.hasComparison && this.hasUniqueComparison;
+		const { trackId } = MomentumTimerAPI.GetObservedTimerStatus();
+		const hasComparison =
+			split.hasComparison &&
+			// hasUniqueComparison is based on controlledReplayID which is updated whenever observed timer
+			// changes, so `split` will be derived from current timer
+			this.hasUniqueComparison() &&
+			// Ensure we're definitely on the same track, currently possible that the comparison could be
+			// on a different one
+			trackId.type === this.comparison.trackId.type &&
+			trackId.number === this.comparison.trackId.number;
+
 		diff.SetHasClass('hud-splits__diff--hidden', !hasComparison);
 
 		if (!hasComparison) return;
@@ -319,7 +327,7 @@ class HudComparisonsHandler {
 
 	// Check whether comparison run is identical to the observed replay (if exists) so we never
 	// show pointless +0:00 comparisons by comparing a run to itself.
-	get hasUniqueComparison() {
+	hasUniqueComparison(): this is { comparison: Timer.RunMetadata } {
 		return this.comparison !== null && this.comparison.tempId !== this.controlledReplayID;
 	}
 }
