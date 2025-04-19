@@ -102,14 +102,14 @@ class MapEntryHandler {
 				label: $.Localize('#Action_RemoveFromFavorites'),
 				icon: 'file://{images}/favorite-remove.svg',
 				style: 'icon-color-yellow',
-				jsCallback: () => $.DispatchEvent('MapSelector_ToggleMapStatus', mapID, false)
+				jsCallback: () => $.DispatchEvent('MapSelector_ToggleMapFavorite', mapID, false)
 			});
 		} else {
 			items.push({
 				label: $.Localize('#Action_AddToFavorites'),
 				icon: 'file://{images}/star.svg',
 				style: 'icon-color-yellow',
-				jsCallback: () => $.DispatchEvent('MapSelector_ToggleMapStatus', mapID, true)
+				jsCallback: () => $.DispatchEvent('MapSelector_ToggleMapFavorite', mapID, true)
 			});
 		}
 
