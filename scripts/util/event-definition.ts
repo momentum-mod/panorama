@@ -72,8 +72,6 @@ declare interface GlobalEventNameMap {
 	ColorPickerCancel: () => void;
 }
 
-$.DefineEvent('HideMainMenuContentPanel', 0);
-$.DefineEvent('ShowMainMenuContentPanel', 0);
 $.DefineEvent('ReloadMainMenuBackground', 0);
 $.DefineEvent('MainMenuTabShown', 1);
 $.DefineEvent('MainMenuTabHidden', 1);
