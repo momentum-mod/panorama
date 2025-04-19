@@ -9,11 +9,11 @@ class RangeColorDisplayHandler {
 	// need to forward the colordisplay panelevent to parent
 	onColorChange() {
 		$.GetContextPanel<RangeColorDisplay>().color = this.colorDisplay.color;
-		$.RegisterEventHandler('InputFocusLost', $.GetContextPanel(), (panel) => this.onFocusLost(panel));
+		$.RegisterEventHandler('InputFocusLost', $.GetContextPanel(), () => this.onFocusLost());
 	}
 
 	// set bounds when focus is changed to be outside of the panel
-	onFocusLost(_panel: GenericPanel) {
+	onFocusLost() {
 		if (this.minEntry.HasKeyFocus() || this.maxEntry.HasKeyFocus() || this.colorDisplay.HasKeyFocus()) {
 			return;
 		}
