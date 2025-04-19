@@ -297,7 +297,7 @@ class EndOfRunHandler {
 				// Wrapper button updates selected stats and graph point
 				button.SetPanelEvent('onactivate', () => {
 					if (this.selectedSplit === subsplit) {
-						$.DispatchEvent('Activated', overallSplitPanel, 'mouse');
+						$.DispatchEvent('Activated', overallSplitPanel, PanelEventSource.MOUSE);
 						this.setSelectedSplit(comparison.overallSplit, comparison);
 					} else {
 						this.setSelectedSplit(subsplit, comparison);
@@ -493,7 +493,8 @@ class EndOfRunHandler {
 					selectionSize: 25,
 					events: {
 						// Set the activate event to just press the radiobutton in the splits panel, simplifies the code.
-						onactivate: (_) => $.DispatchEvent('Activated', $(`#Split${splitName}`), 'mouse'),
+						onactivate: (_) =>
+							$.DispatchEvent('Activated', $(`#Split${splitName}`), PanelEventSource.MOUSE),
 						onmouseover: (id) => {
 							if (isTimeComparison) {
 								const splitCompare = data as ComparisonSplit;

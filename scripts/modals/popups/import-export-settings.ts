@@ -35,7 +35,7 @@ class ImportExportSettingsHandler implements OnPanelLoad {
 		}
 
 		if (this.base64Mode) {
-			$.DispatchEvent('Activated', this.panels.modeButton, 'mouse');
+			$.DispatchEvent('Activated', this.panels.modeButton, PanelEventSource.MOUSE);
 		} else {
 			this.exportSettings();
 		}
