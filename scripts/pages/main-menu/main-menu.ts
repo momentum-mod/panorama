@@ -125,7 +125,7 @@ class MainMenuHandler implements OnPanelLoad {
 		this.panels.contentBlur.visible = hasBlur;
 
 		if (this.activeTab === tab) {
-			$.DispatchEvent('Activated', this.panels.homeButton, 'mouse');
+			$.DispatchEvent('Activated', this.panels.homeButton, PanelEventSource.MOUSE);
 			return;
 		}
 

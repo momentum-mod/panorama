@@ -110,7 +110,7 @@ class DrawerHandler {
 		this.isExtended = true;
 
 		if (!this.activeTab) {
-			$.DispatchEvent('Activated', Tabs.LobbyDrawer.button, 'mouse');
+			$.DispatchEvent('Activated', Tabs.LobbyDrawer.button, PanelEventSource.MOUSE);
 		}
 
 		if (this.activeTab === 'LobbyDrawer') {
@@ -145,7 +145,7 @@ class DrawerHandler {
 		this.extend();
 
 		if (this.activeTab !== 'ProfileDrawer') {
-			$.DispatchEvent('Activated', Tabs.ProfileDrawer.button, 'mouse');
+			$.DispatchEvent('Activated', Tabs.ProfileDrawer.button, PanelEventSource.MOUSE);
 		}
 	}
 }
