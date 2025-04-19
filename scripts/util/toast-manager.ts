@@ -312,7 +312,7 @@ class ToastManagerInternal {
 
 		this.onToastExpired(toast.location);
 
-		$.RegisterEventHandler('PropertyTransitionEnd', toast.panel, (_, propertyName) => {
+		$.RegisterEventHandler('PropertyTransitionEnd', toast.panel, (_, propertyName: string) => {
 			if (propertyName === 'opacity') {
 				toast.panel.DeleteAsync(0);
 			}
