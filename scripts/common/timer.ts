@@ -306,6 +306,22 @@ export interface RunStatsComparison {
 	isPositiveGood: boolean;
 }
 
+/**
+ * Generate a "Split" object for a given majorNum and minorNum. If non-null comparison is given, generates diff, delta,
+ * optionally stats.
+ * @param baseSplits - The splits to use as the base for the comparison
+ * @param compSplits - The splits to use as the comparison. If not given, no comparison will be made
+ * @param majorNum - majorNum of the base split.
+ * @param minorNum - minorNum of the base split. Don't use a subsegment index here! (See RunSegment.minorNum docs)
+ * @param segmentsCount - The number of segments in the entire run (not just the splits so far).
+ * 						  Needed to determine split name.
+ * @param segmentCheckpointsCount - The number of checkpoints in the current segment (not just the splits so far).
+ * 						 			Needed to determine split name.
+ * @param fround - Whether to use Math.fround before calculating delta/delta. If either baseSplits or compSplits could
+ * 				   be from a networked timer, this should be true.
+ * @param generateStats - Whether to generate stats for the split. If true, statsComparisons will be populated.
+ *                        Networked data does not contain these stats!
+ */
 export function generateSplit(
 	baseSplits: RunSplits,
 	compSplits: RunSplits | null,
@@ -313,6 +329,7 @@ export function generateSplit(
 	minorNum: number,
 	segmentsCount: number,
 	segmentCheckpointsCount: number,
+	fround: boolean,
 	generateStats = false
 ): Split {
 	const [base, comp] = findSubsegmentComparison(baseSplits, compSplits, majorNum, minorNum) ?? [];
@@ -343,16 +360,16 @@ export function generateSplit(
 	const [prevBase, prevComp] = findSubsegmentComparison(baseSplits, compSplits, prevMaj, prevMin) ?? [];
 
 	split.time = base.timeReached;
-	split.segmentTime = base.timeReached - prevBase.timeReached;
+	split.segmentTime = computeDiff(base.timeReached, prevBase.timeReached, fround);
 
 	if (!comp) return split;
 
-	split.diff = base.timeReached - comp.timeReached;
+	split.diff = computeDiff(base.timeReached, comp.timeReached, fround);
 	split.hasComparison = true;
 
 	if (!prevComp) return split;
 
-	split.delta = split.segmentTime - (comp.timeReached - prevComp.timeReached);
+	split.delta = computeDiff(split.segmentTime, computeDiff(comp.timeReached, prevComp.timeReached, fround), fround);
 
 	if (!generateStats) return split;
 
@@ -367,7 +384,8 @@ export function generateFinishSplit(
 	compRunTime: number,
 	segmentsCount: number,
 	segmentCheckpointsCount: number,
-	generateStats = false
+	generateStats = false,
+	fround = false
 ): Split {
 	const prevBase = baseSplits.segments.at(-1)?.subsegments?.at(-1);
 	if (!prevBase) throw new Error('Base run has no subsegments somehow');
@@ -379,7 +397,7 @@ export function generateFinishSplit(
 		segmentsCount,
 		segmentCheckpointsCount,
 		time: baseRunTime,
-		segmentTime: baseRunTime - prevBase.timeReached,
+		segmentTime: computeDiff(baseRunTime, prevBase.timeReached, fround),
 		hasComparison: false
 	};
 
@@ -389,8 +407,8 @@ export function generateFinishSplit(
 	if (!prevComp) throw new Error('Comparison run has no subsegments somehow');
 
 	split.hasComparison = true;
-	split.diff = baseRunTime - compRunTime;
-	split.delta = split.segmentTime - (compRunTime - prevComp.timeReached);
+	split.diff = computeDiff(baseRunTime, compRunTime, fround);
+	split.delta = computeDiff(split.segmentTime, computeDiff(compRunTime, prevComp.timeReached, fround), fround);
 
 	if (generateStats) {
 		split.statsComparisons = generateStatsComparison(baseSplits.trackStats, compSplits.trackStats);
@@ -399,9 +417,20 @@ export function generateFinishSplit(
 	return split;
 }
 
+/**
+ * Take the difference of two doubles, optionally using Math.fround to ensure the result is a float.
+ *
+ * Timer networking uses 32-bit floats, replays use 64-bit, so use rounding for values that might
+ * come from networked timer, e.g. HUD comparisons.
+ */
+export function computeDiff(base: double, comp: double, fround: boolean): double | float {
+	return fround ? Math.fround(base) - Math.fround(comp) : base - comp;
+}
+
 export function generateStatsComparison(
 	baseStats: RunStats,
-	comparisonStat: RunStats
+	comparisonStat: RunStats,
+	fround = false
 ): Record<RunStatType, RunStatsComparison> {
 	return Object.fromEntries(
 		Object.keys(baseStats).map((key) => [
@@ -412,7 +441,7 @@ export function generateStatsComparison(
 				isPositiveGood: RunStatsProperties[key].isPositiveGood,
 				baseValue: baseStats[key],
 				comparisonValue: comparisonStat[key],
-				diff: baseStats[key] - comparisonStat[key]
+				diff: computeDiff(baseStats[key], comparisonStat[key], fround)
 			}
 		])
 	) as Record<RunStatType, RunStatsComparison>;
@@ -430,7 +459,7 @@ export function generateComparison(baseRun: RunMetadata, comparisonRun: RunMetad
 	return {
 		baseRun,
 		comparisonRun,
-		diff: baseRun.runTime - comparisonRun.runTime,
+		diff: computeDiff(baseRun.runTime, comparisonRun.runTime, false),
 		overallSplit: generateOverallComparisonSplit(baseRun, comparisonRun),
 		segmentSplits: generateComparisonSplits(baseRun, comparisonRun)
 	};
@@ -448,7 +477,7 @@ export function generateOverallComparisonSplit(baseRun: RunMetadata, comparisonR
 		time: baseRun.runTime,
 		segmentTime: baseRun.runTime,
 		hasComparison: true,
-		diff: baseRun.runTime - comparisonRun.runTime,
+		diff: computeDiff(baseRun.runTime, comparisonRun.runTime, false),
 		delta: 0,
 		statsComparisons: generateStatsComparison(baseRun.runSplits!.trackStats, comparisonRun.runSplits!.trackStats)
 	};
@@ -470,6 +499,7 @@ export function generateComparisonSplits(baseRun: RunMetadata, comparisonRun: Ru
 				subsegment.minorNum,
 				segmentsCount,
 				segment.subsegments.length,
+				false, // Function takes a RunMetadata which is only available for a completed run, not need to fround
 				true
 			)
 		)

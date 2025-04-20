@@ -227,7 +227,15 @@ class EndOfRunHandler {
 				panel.LoadLayoutSnippet('split');
 				this.updateSplitPanel(
 					panel,
-					Timer.generateSplit(runSplits, null, majorNum, minorNum, segmentsCount, segmentsCheckpointCount)
+					Timer.generateSplit(
+						runSplits,
+						null,
+						majorNum,
+						minorNum,
+						segmentsCount,
+						segmentsCheckpointCount,
+						false
+					)
 				);
 			});
 		});

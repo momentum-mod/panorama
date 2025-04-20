@@ -132,12 +132,14 @@ class HudComparisonsHandler {
 					majorNum,
 					minorNum,
 					segmentsCount,
-					segmentCheckpointsCount
+					segmentCheckpointsCount,
+					true
 				)
 			);
 		});
 
 		$.RegisterForUnhandledEvent('OnObservedTimerReplaced', () => {
+			$.Msg('OnObservedTimerReplaced');
 			this.controlledReplayID = MomentumTimerAPI.GetObservedRunMetadata()?.tempId ?? null;
 			this.regenerateSplits();
 		});
@@ -212,7 +214,8 @@ class HudComparisonsHandler {
 						majorNum,
 						subseg.minorNum,
 						splits.segments.length,
-						currMaj === majorNum ? segmentCheckpointsCount : segment.subsegments.length
+						currMaj === majorNum ? segmentCheckpointsCount : segment.subsegments.length,
+						true
 					)
 				);
 
@@ -239,7 +242,8 @@ class HudComparisonsHandler {
 					row.split.majorNum,
 					row.split.minorNum,
 					row.split.segmentsCount,
-					row.split.segmentCheckpointsCount
+					row.split.segmentCheckpointsCount,
+					true // round to float, could be networked data
 				);
 			} else {
 				// Split obj might have some irrelevant properties, but they won't be used
