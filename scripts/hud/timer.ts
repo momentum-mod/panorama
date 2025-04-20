@@ -128,7 +128,8 @@ class HudTimerHandler {
 					majorNum,
 					minorNum,
 					segmentsCount,
-					segmentCheckpointsCount
+					segmentCheckpointsCount,
+					true
 				).diff ?? 0;
 		} else if (state === Timer.TimerState.FINISHED) {
 			diff = runTime - this.comparison.runTime;

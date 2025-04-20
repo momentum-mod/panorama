@@ -1,5 +1,5 @@
 import { PanelHandler } from 'util/module-helpers';
-import { RunSubsegment } from '../common/timer';
+import { computeDiff, RunSubsegment } from 'common/timer';
 
 enum ReplayState {
 	NONE = 0,
@@ -57,7 +57,7 @@ class ReplayControlsHandler {
 
 		const segments = splits.segments;
 		const { starttime, endtime } = MomentumReplayAPI.GetReplayProgress();
-		const runTime = endtime - starttime;
+		const runTime = computeDiff(endtime, starttime, false); // no frounding, completed run is always doubles
 
 		const isSingleSegment = segments.length === 1;
 		const numSegments = isSingleSegment ? segments[0].subsegments.length + 1 : segments.length;
@@ -105,7 +105,7 @@ class ReplayControlsHandler {
 						index: i,
 						segmentStartTime: startTime,
 						segmentEndTime: endTime,
-						segmentTotalTime: endTime - startTime
+						segmentTotalTime: computeDiff(endTime, startTime, false)
 					});
 				})
 			: segments.map((segment, i) => {
@@ -117,7 +117,7 @@ class ReplayControlsHandler {
 						index: i,
 						segmentStartTime: startTime,
 						segmentEndTime: endTime,
-						segmentTotalTime: endTime - startTime,
+						segmentTotalTime: computeDiff(endTime, startTime, false),
 						subsegments: segment.subsegments
 					});
 				});
@@ -160,7 +160,7 @@ class ReplayControlsHandler {
 		for (let i = 0; i < ssLen; i++) {
 			const a = i === 0 ? segmentStartTime : (subsegments?.[i - 1]?.timeReached ?? 0);
 			const b = i === ssLen - 1 ? segmentEndTime : (subsegments?.[i]?.timeReached ?? 0);
-			const w = b - a;
+			const w = computeDiff(b, a, false);
 			if (w <= 0) continue;
 			$.CreatePanel('Panel', subsegmentContainer, '', {
 				class: 'replaysubsegment ' + (first ? 'replaysubsegment--first' : ''),
