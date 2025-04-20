@@ -108,15 +108,15 @@ class HudComparisonsHandler {
 
 		$.RegisterForUnhandledEvent('ComparisonRunUpdated', () => {
 			const { state } = MomentumTimerAPI.GetObservedTimerStatus();
+
+			this.comparison = RunComparisonsAPI.GetComparisonRun();
+
 			// If timer just finished and we're not watching a replay, don't update - otherwise
 			// comparison will get set to the run you just finished when you PB which we
 			// obviously don't want to happen.
-			if (state === Timer.TimerState.FINISHED && this.controlledReplayID === null) {
-				return;
+			if (!(state === Timer.TimerState.FINISHED && this.controlledReplayID === null)) {
+				this.recomputeComparisons();
 			}
-
-			this.comparison = RunComparisonsAPI.GetComparisonRun();
-			this.recomputeComparisons();
 		});
 
 		$.RegisterForUnhandledEvent('OnObservedTimerCheckpointProgressed', () => {
