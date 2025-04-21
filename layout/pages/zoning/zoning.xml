@@ -227,24 +227,26 @@
 				<Label id="SelectionMode" class="zoning__property-label" text="{s:selectionModeHint}" />
 				<Panel class="zoning-info__binds-list">
 					<Panel class="zoning-info__bind">
-						<Label class="zoning-info__bind-action" text="Select" />
+						<Label class="zoning-info__bind-action" text="{s:mouse1Hint}" />
 						<Label class="zoning-info__bind-key" text="MOUSE1" />
 					</Panel>
 					<Panel class="zoning-info__bind">
-						<Label class="zoning-info__bind-action" text="Back" />
+						<Label class="zoning-info__bind-action" text="{s:mouse2Hint}" />
 						<Label class="zoning-info__bind-key" text="MOUSE2" />
 					</Panel>
 					<Panel class="zoning-info__bind">
 						<Label class="zoning-info__bind-action" text="Cancel region edit" />
 						<Label class="zoning-info__bind-key" text="ESCAPE" />
 					</Panel>
-					<Panel class="zoning-info__bind">
-						<Label class="zoning-info__bind-action" text="Delete last point" />
-						<Label class="zoning-info__bind-key" text="DELETE, BACKSPACE" />
-					</Panel>
-					<Panel class="zoning-info__bind">
-						<Label class="zoning-info__bind-action" text="Toggle two-click mode" />
-						<Label class="zoning-info__bind-key" text="MOUSE3" />
+					<Panel id="ZoningBindsCorner" class="zoning-info__category">
+						<Panel class="zoning-info__bind">
+							<Label class="zoning-info__bind-action" text="Delete last point" />
+							<Label class="zoning-info__bind-key" text="DELETE, BACKSPACE" />
+						</Panel>
+						<Panel class="zoning-info__bind">
+							<Label class="zoning-info__bind-action" text="Toggle two-click mode" />
+							<Label class="zoning-info__bind-key" text="MOUSE3" />
+						</Panel>
 					</Panel>
 					<Panel class="zoning-info__bind">
 						<Label class="zoning-info__bind-action" text="Increase reticle distance" />
@@ -264,7 +266,11 @@
 					</Panel>
 					<Panel class="zoning-info__bind">
 						<Label class="zoning-info__bind-action" text="Force grid snap (override geometry snap)" />
-						<Label class="zoning-info__bind-key" text="LCTRL" />
+						<Label class="zoning-info__bind-key" text="SHIFT" />
+					</Panel>
+					<Panel class="zoning-info__bind">
+						<Label class="zoning-info__bind-action" text="Ignore trace (snap to free space)" />
+						<Label class="zoning-info__bind-key" text="LALT" />
 					</Panel>
 				</Panel>
 				<Panel id="GridSlider" class="zoning__property">

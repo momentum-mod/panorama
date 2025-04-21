@@ -345,6 +345,11 @@ $medium: 28px;
 		flow-children: down;
 	}
 
+	&__category {
+		width: 100%;
+		flow-children: down;
+	}
+
 	&__bind {
 		width: 100%;
 		flow-children: right;
