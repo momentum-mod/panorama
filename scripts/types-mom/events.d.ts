@@ -137,6 +137,9 @@ interface GlobalEventNameMap {
 
 	DFJumpMaxDelayChanged: (newDelay: float) => void;
 
+	/** Jump timing has been updated */
+	JumpTimingDataUpdate: (jumpTiming: number, maxTimingPenalty: number) => void;
+
 	OnJumpStatsCFGChange: () => void;
 
 	OnJumpStarted: () => void;
