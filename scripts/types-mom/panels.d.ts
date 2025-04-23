@@ -18,6 +18,7 @@ interface PanelTagNameMap {
 	MomHudStickyCharge: MomHudStickyCharge;
 	MomHudStrafeSync: MomHudStrafeSync;
 	MomHudDFJump: MomHudDFJump;
+	MomHudJumpTiming: MomHudJumpTiming;
 	MomHudSyncronizer: MomHudSynchronizer;
 	ZoneMenu: ZoneMenu;
 }
@@ -129,6 +130,8 @@ interface MomHudStrafeSync extends AbstractHudPanel<'MomHudStrafeSync'> {
 }
 
 interface MomHudDFJump extends AbstractHudPanel<'MomHudDFJump'> {}
+
+interface MomHudJumpTiming extends AbstractHudPanel<'MomHudJumpTiming'> {}
 
 interface MomHudSynchronizer extends AbstractHudPanel<'MomHudSynchronizer'> {}
 

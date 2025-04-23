@@ -17,7 +17,7 @@
 
 		<!-- Center of screen HUD laid out vertically top-to-bottom -->
 		<Panel id="HudCenter" hittest="false" hittestchildren="false">
-
+			<MomHudJumpTiming />
 		</Panel>
 
 		<!-- HUD anchored to top-left corner of screen, laid out vertically top-to-bottom -->

@@ -693,6 +693,18 @@ $dfjump-font-size: 22px !default;
 $dfjump-padding: 6px !default;
 
 // ================
+// BHOP JUMP TIMING
+// ================
+$bhopjump-width: 300px !default;
+$bhopjump-height: 20px !default;
+$bhopjump-bar-height: 16px !default;
+$bhopjump-opacity: 0.7 !default;
+$bhopjump-color-background: #5f5f5f80 !default;
+$bhopjump-font-size: 22px !default;
+$bhopjump-font-weight: medium !default;
+$bhopjump-padding: 8px !default;
+
+// ================
 // STRAFESYNC
 // ================
 $strafesync-color-default: $white !default;
