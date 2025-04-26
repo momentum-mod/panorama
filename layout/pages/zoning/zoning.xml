@@ -235,41 +235,41 @@
 						<Label class="zoning-info__bind-key" text="MOUSE2" />
 					</Panel>
 					<Panel class="zoning-info__bind">
-						<Label class="zoning-info__bind-action" text="Cancel region edit" />
+						<Label class="zoning-info__bind-action" text="#Zoning_Keybind_CancelEdit" />
 						<Label class="zoning-info__bind-key" text="ESCAPE" />
 					</Panel>
 					<Panel id="ZoningBindsCorner" class="zoning-info__category">
 						<Panel class="zoning-info__bind">
-							<Label class="zoning-info__bind-action" text="Delete last point" />
+							<Label class="zoning-info__bind-action" text="#Zoning_Keybind_DeletePoint" />
 							<Label class="zoning-info__bind-key" text="DELETE, BACKSPACE" />
 						</Panel>
 						<Panel class="zoning-info__bind">
-							<Label class="zoning-info__bind-action" text="Toggle two-click mode" />
+							<Label class="zoning-info__bind-action" text="#Zoning_Keybind_TwoclickToggle" />
 							<Label class="zoning-info__bind-key" text="MOUSE3" />
 						</Panel>
 					</Panel>
 					<Panel class="zoning-info__bind">
-						<Label class="zoning-info__bind-action" text="Increase reticle distance" />
+						<Label class="zoning-info__bind-action" text="#Zoning_Keybind_ReticleDistIncrease" />
 						<Label class="zoning-info__bind-key" text="MWHEELUP" />
 					</Panel>
 					<Panel class="zoning-info__bind">
-						<Label class="zoning-info__bind-action" text="Decrease reticle distance" />
+						<Label class="zoning-info__bind-action" text="#Zoning_Keybind_ReticleDistDecrease" />
 						<Label class="zoning-info__bind-key" text="MWHEELDOWN" />
 					</Panel>
 					<Panel class="zoning-info__bind">
-						<Label class="zoning-info__bind-action" text="Increase grid size" />
+						<Label class="zoning-info__bind-action" text="#Zoning_Keybind_GridSizeIncrease" />
 						<Label class="zoning-info__bind-key" text="]" />
 					</Panel>
 					<Panel class="zoning-info__bind">
-						<Label class="zoning-info__bind-action" text="Decrease grid size" />
+						<Label class="zoning-info__bind-action" text="#Zoning_Keybind_GridSizeDecrease" />
 						<Label class="zoning-info__bind-key" text="[" />
 					</Panel>
 					<Panel class="zoning-info__bind">
-						<Label class="zoning-info__bind-action" text="Force grid snap (override geometry snap)" />
+						<Label class="zoning-info__bind-action" text="#Zoning_Keybind_ForceGridSnap" />
 						<Label class="zoning-info__bind-key" text="SHIFT" />
 					</Panel>
 					<Panel class="zoning-info__bind">
-						<Label class="zoning-info__bind-action" text="Ignore trace (snap to free space)" />
+						<Label class="zoning-info__bind-action" text="#Zoning_Keybind_ForceReticleDist" />
 						<Label class="zoning-info__bind-key" text="LALT" />
 					</Panel>
 				</Panel>
