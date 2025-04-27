@@ -112,6 +112,10 @@
 							<Label class="button__text" text="#Zoning_DefragFlags_Edit" />
 						</Button>
 					</Panel>
+					<Panel id="BhopEnabled" class="zoning__property">
+						<Label class="zoning__property-label" text="#Zoning_BhopEnabled" />
+						<ToggleButton id="CheckBox" class="checkbox checkbox--right zoning__checkbox" onactivate="ZoneMenuHandler.setBhopEnabled()" />
+					</Panel>
 				</Panel>
 			</Panel>
 			<Panel id="SegmentProperties" class="zoning__property-container">

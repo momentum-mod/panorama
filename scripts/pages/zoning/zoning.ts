@@ -66,6 +66,7 @@ class ZoneMenuHandler {
 		maxVelocity: $<TextEntry>('#MaxVelocity')!,
 		defragModifiers: $<Panel>('#DefragFlags')!,
 		stagesEndAtStageStarts: $('#StagesEndAtStageStarts')!.FindChild<ToggleButton>('CheckBox')!,
+		bhopEnabled: $('#BhopEnabled')!.FindChild<ToggleButton>('CheckBox')!,
 		propertiesSegment: $<Panel>('#SegmentProperties')!,
 		limitGroundSpeed: $('#LimitGroundSpeed')!.FindChild<ToggleButton>('CheckBox')!,
 		checkpointsRequired: $('#CheckpointsRequired')!.FindChild<ToggleButton>('CheckBox')!,
@@ -1090,6 +1091,11 @@ class ZoneMenuHandler {
 		trackPanel.FindChildTraverse('ChildContainer')!.RemoveAndDeleteChildren();
 		// keep select button aligned with other tracks
 		trackPanel.FindChildTraverse('Entry')!.SetHasClass('zoning__tracklist-checkpoint', true);
+	}
+
+	setBhopEnabled() {
+		if (!this.hasSelectedMainTrack() || !this.hasSelectedBonusTrack()) return;
+		this.selectedZone.track.bhopEnabled = this.panels.bhopEnabled.checked;
 	}
 
 	setLimitGroundSpeed() {
