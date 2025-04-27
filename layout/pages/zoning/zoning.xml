@@ -176,6 +176,9 @@
 					<Panel class="zoning__property">
 						<Label class="zoning__property-label" text="#Zoning_RegionDetails_Height" />
 						<Panel class="zoning__region-property-container">
+							<Button id="ExtendToCeilingButton" class="zoning__region-point-pick" onactivate="ZoneMenuHandler.extendToCeiling()"  onmouseover="UiToolkitAPI.ShowTextTooltip('ExtendToCeilingButton', '#Zoning_ExtendToCeiling_Tooltip');" onmouseout="UiToolkitAPI.HideTextTooltip();">
+								<Image class="zoning__region-point-pick__icon" src="file://{images}/arrow-collapse-up.svg" />
+							</Button>
 							<Button id='SetHeightButton' class="zoning__region-point-pick" onactivate="ZoneMenuHandler.pickHeight()" onmouseover="UiToolkitAPI.ShowTextTooltip('SetHeightButton', '#Zoning_SetHeight_Tooltip');" onmouseout="UiToolkitAPI.HideTextTooltip();">
 								<Image class="zoning__region-point-pick__icon" src="file://{images}/adjust.svg" />
 							</Button>

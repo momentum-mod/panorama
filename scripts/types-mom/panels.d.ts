@@ -169,4 +169,6 @@ interface ZoneMenu extends AbstractPanel<'ZoneMenu'> {
 	getZoningLimits(): ZoneEditorLimits;
 
 	createDefaultTeleDest(region: import('common/web').Region): import('common/web').Region;
+
+	extendRegionToCeiling(region: import('common/web').Region): void;
 }

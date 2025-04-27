@@ -654,6 +654,11 @@ class ZoneMenuHandler {
 		this.drawZones();
 	}
 
+	extendToCeiling() {
+		if (!this.selectedZone || !this.selectedZone.region) return;
+		this.panels.zoningMenu.extendRegionToCeiling(this.selectedZone.region);
+	}
+
 	pickHeight() {
 		if (!this.selectedZone || !this.selectedZone.region) return;
 		this.panels.zoningMenu.editRegion(PickType.HEIGHT, this.selectedZone.region);
