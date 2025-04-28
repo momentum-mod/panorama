@@ -516,7 +516,7 @@ class EndOfRunHandler {
 				selectionSize: 25,
 				events: {
 					// Set the activate event to just press the radiobutton in the splits panel, simplifies the code.
-					onactivate: () => $.DispatchEvent('Activated', $(`#Split${id}`), PanelEventSource.MOUSE),
+					onactivate: () => $.DispatchEvent('Activated', $(`#Split${id}`)!, PanelEventSource.MOUSE),
 					onmouseover: () => {
 						if (!stat) {
 							this.panels.cp.SetDialogVariableFloat('total_time', split.time);
