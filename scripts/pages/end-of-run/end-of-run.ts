@@ -19,11 +19,8 @@ class EndOfRunHandler {
 		selectedGraphPoint: null as Button | null
 	};
 
-	baseRun!: Timer.RunMetadata;
-	// Possibly undefined, if we're not comparing to a run. Note that the baseRun *can* be undefined, before
-	// EndOfRun_Show is called, but that should never happen be allowed to happen.
+	baseRun?: Timer.RunMetadata | null;
 	comparisonRun?: Timer.RunMetadata | null;
-
 	comparison?: Timer.Comparison | null;
 	selectedSplit?: Timer.Split | null;
 
@@ -38,6 +35,7 @@ class EndOfRunHandler {
 			this.updateRunUploadStatus(uploaded, cosXP, rankXP, lvlGain)
 		);
 		$.RegisterForUnhandledEvent('Leaderboards_MapDataSet', (isOfficial) => this.initOnMapLoad(isOfficial));
+		$.RegisterForUnhandledEvent('ComparisonRunUpdated', () => this.onComparisonUpdated());
 	}
 
 	/** Hides the end of run panel, when a new map is loaded. */
@@ -110,6 +108,27 @@ class EndOfRunHandler {
 		this.showNewEndOfRun(Timer.EndOfRunShowReason.PLAYER_FINISHED_RUN);
 	}
 
+	onComparisonUpdated() {
+		// When a local PB is set, it's automatically made comparison. If it was the run we just did,
+		// obviously we don't want to compare against ourselves, but we *do* want the new run to be
+		// the comparison run if another run is completed in the future.
+		//
+		// According to C++ comments, EndOfRun_Result_RunFinish is always called before ComparisonRunUpdated,
+		// so we're safe to unconditional set the new comparison run here, but only regenerate the page if
+		// it's a different run from the baseRun, in cases like user changing their active comparison via
+		// leaderboards.
+		//
+		// If the user selects a different track and tries to compare against that (do we even allow this?),
+		// we'll let the comparison be set, but generateEndOfRunPage won't create a comparison since the
+		// trackIds won't match. Seems easier to leave the C++ logic in charge of picking the right comparison
+		// for the track you're on.
+		this.comparisonRun = RunComparisonsAPI.GetComparisonRun();
+
+		if (this.baseRun && this.comparisonRun?.tempId !== this.baseRun.tempId) {
+			this.generateEndOfRunPage();
+		}
+	}
+
 	updateRunSavedStatus(saved: boolean, run: Timer.RunMetadata) {
 		const observedStatus = MomentumTimerAPI.GetObservedTimerStatus();
 		if (observedStatus.trackId.type !== run.trackId.type || observedStatus.trackId.number !== run.trackId.number) {
@@ -176,6 +195,12 @@ class EndOfRunHandler {
 			}
 		}
 
+		this.generateEndOfRunPage();
+	}
+
+	generateEndOfRunPage() {
+		if (!this.baseRun) return;
+
 		// Remove the previous splits, if any
 		this.panels.splits.RemoveAndDeleteChildren();
 
@@ -190,7 +215,8 @@ class EndOfRunHandler {
 		if (
 			this.comparisonRun &&
 			this.comparisonRun.trackId.type === this.baseRun.trackId.type &&
-			this.comparisonRun.trackId.number === this.baseRun.trackId.number
+			this.comparisonRun.trackId.number === this.baseRun.trackId.number &&
+			this.comparisonRun.tempId !== this.baseRun.tempId
 		) {
 			this.setComparisionStats();
 		} else {
@@ -202,6 +228,8 @@ class EndOfRunHandler {
 	 * Generate the end of run panel for the current base run, with no comparison.
 	 */
 	setSingleRunStats() {
+		if (!this.baseRun) return;
+
 		const { runSplits, runTime } = this.baseRun;
 		if (!runSplits) return;
 
