@@ -105,11 +105,14 @@ class HudTimerHandler {
 		const { state, trackId, majorNum, minorNum, runTime, segmentsCount, segmentCheckpointsCount } =
 			MomentumTimerAPI.GetObservedTimerStatus();
 
+		const metadata = MomentumTimerAPI.GetObservedRunMetadata();
+
 		if (
 			trackId.type !== this.comparison.trackId.type ||
 			trackId.number !== this.comparison.trackId.number ||
 			state === Timer.TimerState.PRIMED ||
-			state === Timer.TimerState.DISABLED
+			state === Timer.TimerState.DISABLED ||
+			metadata?.tempId === this.comparison.tempId
 		) {
 			this.forceHideComparison();
 			return;
