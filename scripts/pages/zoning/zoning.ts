@@ -872,7 +872,7 @@ class ZoneMenuHandler {
 		if (!this.mapZoneData || !checkpointsList) return;
 		if (!track) throw new Error('Attempted to add checkpoint zone to missing track!');
 		if (!segment) throw new Error('Attempted to add checkpoint zone to missing segment!');
-		if (this.hasSelectedDefragBonus()) throw new Error('Defrag Bonus must share zones with Main track!');
+		if (this.isDefragBonus(track)) throw new Error('Defrag Bonus must share zones with Main track!');
 
 		const newZone = this.createZone();
 		segment.checkpoints.push(newZone);
@@ -900,7 +900,7 @@ class ZoneMenuHandler {
 	addEndZone(track: MainTrack | BonusTrack) {
 		// TODO: fix this seleciton logic
 		if (!this.mapZoneData || !this.hasSelectedTrack()) return;
-		if (this.hasSelectedDefragBonus()) {
+		if (this.isDefragBonus(track)) {
 			throw new Error('Defrag Bonus must share zones with Main track!');
 		}
 
@@ -908,9 +908,9 @@ class ZoneMenuHandler {
 		track.zones!.end = endZone;
 
 		let trackPanel: Panel | null = null;
-		if (this.hasSelectedMainTrack()) {
+		if (this.isMainTrack(track)) {
 			trackPanel = this.panels.trackList.GetChild(0)!;
-		} else if (this.hasSelectedBonusTrack()) {
+		} else if (this.isBonusTrack(track)) {
 			const bonusId = this.mapZoneData.tracks.bonuses!.indexOf(track);
 			if (bonusId === undefined || bonusId === -1) throw new Error('Selected track missing trasklist entry!');
 
@@ -1206,11 +1206,23 @@ class ZoneMenuHandler {
 		return this.selectedZone.track !== null && 'stagesEndAtStageStarts' in this.selectedZone.track;
 	}
 
+	isMainTrack(track: MainTrack | BonusTrack): track is MainTrack {
+		return track !== null && 'stagesEndAtStageStarts' in track;
+	}
+
 	hasSelectedBonusTrack(): this is { selectedZone: { track: BonusTrack } } {
 		return (
 			this.selectedZone.track !== null &&
 			this.selectedZone.track !== this.mapZoneData?.tracks.main &&
 			(this.mapZoneData?.tracks.bonuses?.includes(this.selectedZone.track) ?? false)
+		);
+	}
+
+	isBonusTrack(track: MainTrack | BonusTrack): track is BonusTrack {
+		return (
+			track !== null &&
+			track !== this.mapZoneData?.tracks.main &&
+			(this.mapZoneData?.tracks.bonuses?.includes(track) ?? false)
 		);
 	}
 
@@ -1226,7 +1238,14 @@ class ZoneMenuHandler {
 		return (
 			this.hasSelectedBonusTrack() &&
 			(this.selectedZone.track.zones == null ||
-				('defragModifiers' in this.selectedZone.track && this.selectedZone.track.defragModifiers != null))
+				('defragModifiers' in this.selectedZone.track && this.selectedZone.track.defragModifiers !== 0))
+		);
+	}
+
+	isDefragBonus(track: MainTrack | BonusTrack): track is { zones: undefined; defragModifiers: number } {
+		return (
+			this.isBonusTrack(track) &&
+			(track.zones == null || ('defragModifiers' in track && track.defragModifiers !== 0))
 		);
 	}
 }
