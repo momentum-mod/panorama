@@ -568,6 +568,7 @@ class ZoneMenuHandler {
 		if (!this.selectedZone || !this.selectedZone.zone) return;
 
 		this.selectedZone.zone.regions.push(this.createRegion());
+		this.panels.zoningMenu.createRegion(this.isStartZone(this.selectedZone.zone));
 		this.populateDropdown(this.selectedZone.zone.regions, this.panels.regionSelect, 'Region', true);
 		this.panels.regionSelect.SetSelectedIndex(this.selectedZone.zone.regions.length - 1);
 		this.populateRegionProperties();
