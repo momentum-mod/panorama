@@ -11,8 +11,6 @@ class LobbyCreateHandler implements OnPanelLoad {
 		maxPlayers: $<TextEntry>('#MaxPlayers')
 	};
 
-	lobbyMaxPlayers = 250;
-
 	onPanelLoad() {
 		if (this.panels.cp.GetAttributeInt('islobbyowner', 0)) {
 			this.panels.warningRow.visible = true;
@@ -30,10 +28,13 @@ class LobbyCreateHandler implements OnPanelLoad {
 	onChanged() {
 		UiToolkitAPI.HideTextTooltip();
 
-		if (this.getMaxPlayersEntered() > this.lobbyMaxPlayers) {
+		if (this.getMaxPlayersEntered() > SteamLobbyAPI.GetMaxAllowedMemberLimit()) {
 			UiToolkitAPI.ShowTextTooltip(
 				'MaxPlayers',
-				$.Localize('Lobby_MaxPlayers_Warning').replace('%max%', this.lobbyMaxPlayers.toString())
+				$.Localize('Lobby_MaxPlayers_Warning').replace(
+					'%max%',
+					SteamLobbyAPI.GetMaxAllowedMemberLimit().toString()
+				)
 			);
 			this.panels.updateButton.enabled = false;
 		} else {
@@ -54,19 +55,9 @@ class LobbyCreateHandler implements OnPanelLoad {
 			type = LobbyType.PUBLIC;
 		}
 
-		if (this.panels.cp.GetAttributeInt('isinlobby', -1)) {
-			SteamLobbyAPI.Leave();
-		}
+		SteamLobbyAPI.Create(+type as 0 | 1 | 2, this.getMaxPlayersEntered());
 
-		SteamLobbyAPI.Create(+type as 0 | 1 | 2);
-
-		// The order of this is currently wrong, it should go leave -> set max players -> create. but for some reason
-		// the new lobby data then has the wrong max players (from the previous lobby).
-		// so for now, create the new lobby first, then set the max players. if you fail to create a lobby this popup is gonna just sit around
-		// until you press cancel though.
 		$.RegisterForUnhandledEvent('SteamLobby_Enter', () => {
-			SteamLobbyAPI.SetMaxPlayers(this.getMaxPlayersEntered());
-
 			UiToolkitAPI.CloseAllVisiblePopups();
 		});
 	}

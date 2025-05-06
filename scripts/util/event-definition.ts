@@ -55,9 +55,6 @@ declare interface GlobalEventNameMap {
 	/** Send a refresh request for the lobby list */
 	RefreshLobbyList: () => void;
 
-	/** Sets the max players of your lobby */
-	Lobby_SetMaxPlayers: (maxPlayers: number) => void;
-
 	MapSelector_OnLoaded: () => void;
 
 	MapSelector_ShowConfirmCancelDownload: (mapID: number) => void;
@@ -84,7 +81,6 @@ $.DefineEvent('Drawer_UpdateLobbyButton', 2);
 $.DefineEvent('Drawer_NavigateToTab', 1);
 $.DefineEvent('Drawer_ExtendAndNavigateToTab', 1);
 $.DefineEvent('RefreshLobbyList', 0);
-$.DefineEvent('Lobby_SetMaxPlayers', 1);
 $.DefineEvent('MapSelector_OnLoaded', 0);
 $.DefineEvent('MapSelector_ShowConfirmCancelDownload', 1);
 $.DefineEvent('MapSelector_HideLeaderboards', 0);

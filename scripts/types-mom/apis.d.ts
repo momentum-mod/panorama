@@ -188,7 +188,7 @@ declare namespace SteamLobbyAPI {
 	function RefreshList(filters: Record<string, never>): boolean;
 
 	/** Create a new lobby with the given visibility */
-	function Create(type: 0 | 1 | 2): void;
+	function Create(type: 0 | 1 | 2, memberLimit: number): void;
 
 	/** Joins a lobby of the given SteamID */
 	function Join(steamID: steamID): void;
@@ -196,14 +196,17 @@ declare namespace SteamLobbyAPI {
 	/** Leaves the current lobby */
 	function Leave(): void;
 
-	/** Change the lobby visibility */
-	function ChangeVisibility(type: 0 | 1 | 2): void;
+	/** Set the lobby type */
+	function SetType(type: 0 | 1 | 2): void;
 
-	/** Set the max players (up to 255) */
-	function SetMaxPlayers(maxPlayers: number): void;
+	/** Set the member limit */
+	function SetMemberLimit(memberLimit: number): void;
 
 	/** Show the Steam Overlay invite dialog if we're in a lobby */
 	function ShowInviteDialog(): void;
+
+	/** Get the maximum member limit a lobby may have */
+	function GetMaxAllowedMemberLimit(): number;
 }
 
 declare namespace GameModeAPI {

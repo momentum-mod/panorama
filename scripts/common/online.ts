@@ -7,7 +7,7 @@ export interface Lobby {
 
 	members_limit: number;
 
-	isRoaming: boolean;
+	is_map_lobby: boolean;
 }
 
 /* List of all lobbies grouped by currrent/friends/global */
@@ -21,12 +21,6 @@ export type MemberData = Record<steamID, LobbyMember>;
 export interface LobbyMember {
 	map: string;
 
-	/**
-	 * Currently a KV1 string with structure of Appearance.
-	 * If/when needed, tell a C++ programmer - we need to unfuck this code first.
-	 */
-	appearance: string;
-
 	isTyping: 'y' | undefined;
 
 	isSpectating: '1' | undefined;
@@ -35,17 +29,6 @@ export interface LobbyMember {
 	isMuted: boolean | undefined;
 
 	specTargetID: steamID;
-}
-
-interface Appearance {
-	bodygroup: int32;
-	/** RGBA Hex */
-	model_color: string;
-	/** RGBA Hex */
-	trail_color: string;
-	trail_length: int32;
-	trail_enabled: boolean;
-	flashlight_enabled: boolean;
 }
 
 // TODO: All of left/disconnected/kicked/banned are lumped into LEAVE here in C++, could distinguish if needed.

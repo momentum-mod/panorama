@@ -203,7 +203,7 @@ class LobbyHandler {
 
 				const ownerSteamID = lobbyData.owner;
 				const lobbyType = lobbyData.type;
-				const lobbyName = lobbyData.isRoaming
+				const lobbyName = lobbyData.is_map_lobby
 					? `${$.Localize('#Lobby_Roaming')} (${MapCacheAPI.GetMapName()})`
 					: $.Localize('#Lobby_Owner').replace('%owner%', FriendsAPI.GetNameForXUID(ownerSteamID));
 
@@ -264,7 +264,7 @@ class LobbyHandler {
 
 	/** Update the lobbies details view based on current lobby state */
 	updateCurrentLobbyDetails() {
-		const { owner, type, members, members_limit, isRoaming } = Object.values(this.lobbyCurrentData)[0];
+		const { owner, type, members, members_limit, is_map_lobby } = Object.values(this.lobbyCurrentData)[0];
 
 		this.panels.detailsType.SetImage(`file://{images}/online/${LobbyProperties.get(type).icon}.svg`);
 
@@ -273,7 +273,7 @@ class LobbyHandler {
 
 		$.GetContextPanel().SetDialogVariable(
 			'lobbyTitle',
-			isRoaming
+			is_map_lobby
 				? `${$.Localize('#Lobby_Roaming')} (${MapCacheAPI.GetMapName()})`
 				: $.Localize('#Lobby_Owner').replace('%owner%', FriendsAPI.GetNameForXUID(owner))
 		);
