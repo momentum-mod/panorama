@@ -11,7 +11,6 @@ class LobbySettingsHandler implements OnPanelLoad {
 		maxPlayers: $<TextEntry>('#MaxPlayers')
 	};
 
-	lobbyMaxPlayers = 250;
 	lobbyButtons: ReadonlyMap<LobbyType, Button> = new Map([
 		[LobbyType.PRIVATE, $('#LobbySettingsPrivateButton')],
 		[LobbyType.FRIENDS, $('#LobbySettingsFriendsOnlyButton')],
@@ -20,17 +19,20 @@ class LobbySettingsHandler implements OnPanelLoad {
 
 	onPanelLoad() {
 		this.lobbyButtons.get(this.panels.cp.GetAttributeString('type', LobbyType.PUBLIC) as LobbyType).checked = true;
-		this.panels.maxPlayers.text = $.GetContextPanel().GetAttributeString('maxplayers', '64');
+		this.panels.maxPlayers.text = $.GetContextPanel().GetAttributeString('maxplayers', '2');
 		this.panels.updateButton.enabled = false;
 	}
 
 	onChanged() {
 		UiToolkitAPI.HideTextTooltip();
 
-		if (this.getMaxPlayersEntered() > this.lobbyMaxPlayers) {
+		if (this.getMaxPlayersEntered() > SteamLobbyAPI.GetMaxAllowedMemberLimit()) {
 			UiToolkitAPI.ShowTextTooltip(
 				'MaxPlayers',
-				$.Localize('#Lobby_MaxPlayers_Warning').replace('%max%', this.lobbyMaxPlayers.toString())
+				$.Localize('#Lobby_MaxPlayers_Warning').replace(
+					'%max%',
+					SteamLobbyAPI.GetMaxAllowedMemberLimit().toString()
+				)
 			);
 			this.panels.updateButton.enabled = false;
 		} else {
@@ -40,9 +42,9 @@ class LobbySettingsHandler implements OnPanelLoad {
 
 	submit() {
 		const type = this.lobbyButtons.entries().find(([, button]) => button.checked)[0];
-		SteamLobbyAPI.ChangeVisibility(+type as 0 | 1 | 2);
+		SteamLobbyAPI.SetType(+type as 0 | 1 | 2);
 
-		SteamLobbyAPI.SetMaxPlayers(this.getMaxPlayersEntered());
+		SteamLobbyAPI.SetMemberLimit(this.getMaxPlayersEntered());
 
 		UiToolkitAPI.CloseAllVisiblePopups();
 	}
