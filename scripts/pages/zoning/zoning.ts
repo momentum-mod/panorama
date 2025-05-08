@@ -544,7 +544,7 @@ class ZoneMenuHandler {
 	}
 
 	populateRegionProperties() {
-		if (!this.selectedZone || !this.selectedZone.zone) return;
+		if (!this.selectedZone || !this.selectedZone.zone || !this.teleDestList) return;
 
 		const index = this.panels.regionSelect.GetSelected()?.GetAttributeInt('value', -1);
 		if (index === -1) return;
