@@ -755,7 +755,7 @@ class ZoneMenuHandler {
 					);
 
 				this.selectedZone.region = this.selectedZone.zone.regions[index];
-				this.pickTeleDestYaw();
+				this.pickTeleDestPos();
 			}
 
 			this.panels.regionTPPos.x.text = this.selectedZone.region.teleDestPos?.at(0)?.toFixed(2) ?? '';
