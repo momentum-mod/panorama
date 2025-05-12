@@ -1,6 +1,6 @@
-import { values } from 'util/enum';
-import { PanelHandler, OnPanelLoad } from 'util/module-helpers';
 import * as LayoutUtil from 'common/layout';
+import * as Enum from 'util/enum';
+import { PanelHandler, OnPanelLoad } from 'util/module-helpers';
 
 enum Axis {
 	X = 0,
@@ -26,17 +26,6 @@ enum SnapMode {
 // Tuple of X, Y axis snaps respectively
 const DEFAULT_SNAP_MODES: Snaps = [SnapMode.OFF, SnapMode.OFF];
 
-enum ResizeDirection {
-	TOP = 1,
-	TOP_RIGHT = 2,
-	RIGHT = 3,
-	BOTTOM_RIGHT = 4,
-	BOTTOM = 5,
-	BOTTOM_LEFT = 6,
-	LEFT = 7,
-	TOP_LEFT = 8
-}
-
 enum DragMode {
 	MOVE = 0,
 	RESIZE_TOP = 1,
@@ -49,16 +38,18 @@ enum DragMode {
 	RESIZE_TOP_LEFT = 8
 }
 
-const resizeVector: ReadonlyMap<Exclude<DragMode, DragMode.MOVE>, [number, number]> = new Map([
-	[DragMode.RESIZE_TOP, [0, -1]],
-	[DragMode.RESIZE_TOP_RIGHT, [1, -1]],
-	[DragMode.RESIZE_RIGHT, [1, 0]],
-	[DragMode.RESIZE_BOTTOM_RIGHT, [1, 1]],
-	[DragMode.RESIZE_BOTTOM, [0, 1]],
-	[DragMode.RESIZE_BOTTOM_LEFT, [-1, 1]],
-	[DragMode.RESIZE_LEFT, [-1, 0]],
-	[DragMode.RESIZE_TOP_LEFT, [-1, -1]]
-]);
+type ResizeMode = Exclude<DragMode, DragMode.MOVE>;
+
+const resizeVector: Record<ResizeMode, [number, number]> = {
+	[DragMode.RESIZE_TOP]: [0, -1],
+	[DragMode.RESIZE_TOP_RIGHT]: [1, -1],
+	[DragMode.RESIZE_RIGHT]: [1, 0],
+	[DragMode.RESIZE_BOTTOM_RIGHT]: [1, 1],
+	[DragMode.RESIZE_BOTTOM]: [0, 1],
+	[DragMode.RESIZE_BOTTOM_LEFT]: [-1, 1],
+	[DragMode.RESIZE_LEFT]: [-1, 0],
+	[DragMode.RESIZE_TOP_LEFT]: [1, -1]
+} satisfies Record<ResizeMode, [number, number]> as any;
 
 const MAX_X_POS = 1920;
 const MAX_Y_POS = 1080;
@@ -94,7 +85,7 @@ interface Gridline {
 
 type GridlineForAxis = [Gridline[], Gridline[]];
 
-const snaps: Record<
+const SNAPS: Record<
 	Axis,
 	Record<
 		SnapMode,
@@ -167,7 +158,9 @@ class HudCustomizer implements OnPanelLoad {
 	private gridlines: GridlineForAxis = [[], []];
 	private activeComponent: Component | undefined;
 	private activeGridlines: [Gridline | undefined, Gridline | undefined] = [undefined, undefined];
-	private resizeKnobs: Record<ResizeDirection, Button>;
+
+	// `${ResizeMode}` allows us to return correctly typed values from recordEntries and convert them explicitly back into ResizeMode
+	private resizeKnobs: Record<`${ResizeMode}`, Button>;
 
 	private dragStartHandle: number | undefined;
 	private dragEndHandle: number | undefined;
@@ -219,11 +212,11 @@ class HudCustomizer implements OnPanelLoad {
 		for (const [id, component] of Object.entries(this.components)) {
 			const posX = fixFloatingImprecision(
 				LayoutUtil.getX(component.panel) +
-					LayoutUtil.getWidth(component.panel) * snaps[Axis.X][component.snaps[Axis.X]].sizeFactor
+					LayoutUtil.getWidth(component.panel) * SNAPS[Axis.X][component.snaps[Axis.X]].sizeFactor
 			);
 			const posY = fixFloatingImprecision(
 				LayoutUtil.getY(component.panel) +
-					LayoutUtil.getHeight(component.panel) * snaps[Axis.Y][component.snaps[Axis.Y]].sizeFactor
+					LayoutUtil.getHeight(component.panel) * SNAPS[Axis.Y][component.snaps[Axis.Y]].sizeFactor
 			);
 			const size = LayoutUtil.getSize(component.panel);
 			saveData.components[id] = {
@@ -254,16 +247,16 @@ class HudCustomizer implements OnPanelLoad {
 
 		this.createGridLines();
 
-		this.resizeKnobs = {} as any;
-		for (const dir of values(ResizeDirection).filter((x) => !Number.isNaN(+x))) {
-			this.resizeKnobs[dir] = $.CreatePanel('Button', this.panels.customizer, `Resize_${ResizeDirection[dir]}`, {
+		this.resizeKnobs = {} as Record<any, any>;
+		for (const dir of Enum.fastValuesNumeric(DragMode)) {
+			if (dir === DragMode.MOVE) continue; // handled in onComponentMouseOver
+			this.resizeKnobs[dir] = $.CreatePanel('Button', this.panels.customizer, `Resize_${DragMode[dir]}`, {
 				class: 'hud-customizer__resize-knob',
 				draggable: true,
 				hittest: true
 			});
 			$.RegisterEventHandler('DragStart', this.resizeKnobs[dir], (...args) =>
-				// TODO: technically those two enums do share values, but we should rewrite to not _interpret_ ResizeDirection as DragMode
-				this.onStartDrag(dir as unknown as DragMode, this.panels.virtualKnob, ...args)
+				this.onStartDrag(dir, this.panels.virtualKnob, ...args)
 			);
 			$.RegisterEventHandler('DragEnd', this.resizeKnobs[dir], () => this.onEndDrag());
 		}
@@ -276,7 +269,7 @@ class HudCustomizer implements OnPanelLoad {
 
 	private loadComponentPanel(panel: GenericPanel, component: Pick<Component, 'position' | 'size' | 'snaps'>): void {
 		for (const [i, snap] of component.snaps.entries()) {
-			if (!values(SnapMode).includes(snap)) {
+			if (!Enum.values(SnapMode).includes(snap)) {
 				$.Warning(`HudCustomizer: Invalid snap values ${snap}, setting to default.`);
 				component.snaps[i] = DEFAULT_SNAP_MODES[i];
 			}
@@ -290,7 +283,7 @@ class HudCustomizer implements OnPanelLoad {
 
 			const isX = axis === 0;
 			const max = isX ? MAX_X_POS : MAX_Y_POS;
-			const sf = snaps[axis][component.snaps[axis]].sizeFactor;
+			const sf = SNAPS[axis][component.snaps[axis]].sizeFactor;
 			const panelLen = component.size[axis];
 			let layoutLen = len - panelLen * sf;
 
@@ -378,8 +371,8 @@ class HudCustomizer implements OnPanelLoad {
 
 		this.updateVirtualPanelFontSize();
 
-		snaps[Axis.X][this.activeComponent.snaps[Axis.X]].button.SetSelected(true);
-		snaps[Axis.Y][this.activeComponent.snaps[Axis.Y]].button.SetSelected(true);
+		SNAPS[Axis.X][this.activeComponent.snaps[Axis.X]].button.SetSelected(true);
+		SNAPS[Axis.Y][this.activeComponent.snaps[Axis.Y]].button.SetSelected(true);
 
 		if (this.dragStartHandle) {
 			$.UnregisterEventHandler('DragStart', this.panels.virtual, this.dragStartHandle);
@@ -397,7 +390,7 @@ class HudCustomizer implements OnPanelLoad {
 	private onStartDrag(mode: DragMode, displayPanel: Panel, _panelID: string, callback: DragEventInfo) {
 		if (!this.activeComponent) return;
 
-		this.dragMode = mode; // TODO: technically those two enums do share values, but we should rewrite to not _interpret_ ResizeDirection as DragMode
+		this.dragMode = mode;
 
 		this.onThinkHandle = $.RegisterEventHandler('HudThink', $.GetContextPanel(), () => this.onDragThink());
 
@@ -421,7 +414,7 @@ class HudCustomizer implements OnPanelLoad {
 		if (this.dragMode === DragMode.MOVE) {
 			panelPos = LayoutUtil.getPosition(this.panels.virtual);
 		} else {
-			const resizeDir = resizeVector.get(this.dragMode) ?? [0, 0];
+			const resizeDir = resizeVector[this.dragMode] ?? [0, 0];
 			const knobPos = LayoutUtil.getPosition(this.panels.virtualKnob);
 			for (const i of Axes) {
 				if (resizeDir[i] === 1) {
@@ -445,7 +438,7 @@ class HudCustomizer implements OnPanelLoad {
 				const isX = axis === 0;
 
 				if (this.activeComponent.snaps[axis] !== SnapMode.OFF) {
-					const sizeFactor = snaps[axis][this.activeComponent.snaps[axis]].sizeFactor;
+					const sizeFactor = SNAPS[axis][this.activeComponent.snaps[axis]].sizeFactor;
 
 					const offset = panelSize[axis] * sizeFactor;
 
@@ -500,39 +493,38 @@ class HudCustomizer implements OnPanelLoad {
 		const halfWidth = width / 2;
 		const halfHeight = height / 2;
 		let deltaX: number, deltaY: number;
-		for (const [dir, knob] of Object.entries(
-			this.resizeKnobs satisfies Record<ResizeDirection, Button>
-		) as unknown as [ResizeDirection, Button][]) {
-			switch (+dir) {
-				case ResizeDirection.TOP:
+
+		for (const [dir, knob] of recordEntries(this.resizeKnobs)) {
+			switch (+(dir satisfies `${ResizeMode}`) as ResizeMode) {
+				case DragMode.RESIZE_TOP:
 					deltaX = halfWidth;
 					deltaY = 0;
 					break;
-				case ResizeDirection.TOP_RIGHT:
+				case DragMode.RESIZE_TOP_RIGHT:
 					deltaX = width;
 					deltaY = 0;
 					break;
-				case ResizeDirection.RIGHT:
+				case DragMode.RESIZE_RIGHT:
 					deltaX = width;
 					deltaY = halfHeight;
 					break;
-				case ResizeDirection.BOTTOM_RIGHT:
+				case DragMode.RESIZE_BOTTOM_RIGHT:
 					deltaX = width;
 					deltaY = height;
 					break;
-				case ResizeDirection.BOTTOM:
+				case DragMode.RESIZE_BOTTOM:
 					deltaX = halfWidth;
 					deltaY = height;
 					break;
-				case ResizeDirection.BOTTOM_LEFT:
+				case DragMode.RESIZE_BOTTOM_LEFT:
 					deltaX = 0;
 					deltaY = height;
 					break;
-				case ResizeDirection.LEFT:
+				case DragMode.RESIZE_LEFT:
 					deltaX = 0;
 					deltaY = halfHeight;
 					break;
-				case ResizeDirection.TOP_LEFT:
+				case DragMode.RESIZE_TOP_LEFT:
 					deltaX = 0;
 					deltaY = 0;
 					break;
@@ -628,8 +620,8 @@ class HudCustomizer implements OnPanelLoad {
 		UiToolkitAPI.ShowTextTooltip(
 			this.panels.snaps.id,
 			'<b><i>Snapping Mode</i></b>\n' +
-				`Horizontal: <b>${snaps[Axis.X][this.activeComponent.snaps[Axis.X]].name}</b>\n` +
-				`Vertical: <b>${snaps[Axis.Y][this.activeComponent.snaps[Axis.Y]].name}</b>`
+				`Horizontal: <b>${SNAPS[Axis.X][this.activeComponent.snaps[Axis.X]].name}</b>\n` +
+				`Vertical: <b>${SNAPS[Axis.Y][this.activeComponent.snaps[Axis.Y]].name}</b>`
 		);
 	}
 
@@ -651,4 +643,8 @@ function parsePx(str: string): number | undefined {
 
 function getMinSize(panel: GenericPanel): [number, number] {
 	return [parsePx(panel.style.minWidth) ?? 0, parsePx(panel.style.minHeight) ?? 0];
+}
+
+function recordEntries<K extends keyof any, T>(record: Record<K, T>): [K, T][] {
+	return Object.entries(record) as [K, T][];
 }
