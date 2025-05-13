@@ -40,7 +40,7 @@ enum DragMode {
 
 type ResizeMode = Exclude<DragMode, DragMode.MOVE>;
 
-const resizeVector: Record<ResizeMode, [number, number]> = {
+const RESIZE_VECTOR: Record<ResizeMode, [number, number]> = {
 	[DragMode.RESIZE_TOP]: [0, -1],
 	[DragMode.RESIZE_TOP_RIGHT]: [1, -1],
 	[DragMode.RESIZE_RIGHT]: [1, 0],
@@ -414,7 +414,7 @@ class HudCustomizer implements OnPanelLoad {
 		if (this.dragMode === DragMode.MOVE) {
 			panelPos = LayoutUtil.getPosition(this.panels.virtual);
 		} else {
-			const resizeDir = resizeVector[this.dragMode] ?? [0, 0];
+			const resizeDir = RESIZE_VECTOR[this.dragMode] ?? [0, 0];
 			const knobPos = LayoutUtil.getPosition(this.panels.virtualKnob);
 			for (const i of Axes) {
 				if (resizeDir[i] === 1) {
@@ -494,8 +494,8 @@ class HudCustomizer implements OnPanelLoad {
 		const halfHeight = height / 2;
 		let deltaX: number, deltaY: number;
 
-		for (const [dir, knob] of recordEntries(this.resizeKnobs)) {
-			switch (+(dir satisfies `${ResizeMode}`) as ResizeMode) {
+		for (const [dir, knob] of Object.entries(this.resizeKnobs)) {
+			switch (+dir) {
 				case DragMode.RESIZE_TOP:
 					deltaX = halfWidth;
 					deltaY = 0;
@@ -643,8 +643,4 @@ function parsePx(str: string): number | undefined {
 
 function getMinSize(panel: GenericPanel): [number, number] {
 	return [parsePx(panel.style.minWidth) ?? 0, parsePx(panel.style.minHeight) ?? 0];
-}
-
-function recordEntries<K extends keyof any, T>(record: Record<K, T>): [K, T][] {
-	return Object.entries(record) as [K, T][];
 }
