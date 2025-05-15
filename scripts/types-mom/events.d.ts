@@ -137,8 +137,11 @@ interface GlobalEventNameMap {
 
 	DFJumpMaxDelayChanged: (newDelay: float) => void;
 
+	/** Called when the player changes a jump timing setting (mom_hud_jump_timing_range, mom_mv_perfect_jump_window, or mom_mv_autohop_mode). */
+	JumpTimingSettingChanged: () => void;
+
 	/** Jump timing has been updated */
-	JumpTimingDataUpdate: (jumpTiming: number, maxTimingPenalty: number) => void;
+	JumpTimingDataUpdate: (jumpTiming: number) => void;
 
 	OnJumpStatsCFGChange: () => void;
 
