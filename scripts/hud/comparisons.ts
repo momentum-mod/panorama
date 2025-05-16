@@ -139,7 +139,6 @@ class HudComparisonsHandler {
 		});
 
 		$.RegisterForUnhandledEvent('OnObservedTimerReplaced', () => {
-			$.Msg('OnObservedTimerReplaced');
 			this.controlledReplayID = MomentumTimerAPI.GetObservedRunMetadata()?.tempId ?? null;
 			this.regenerateSplits();
 		});
