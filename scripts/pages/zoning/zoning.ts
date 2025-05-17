@@ -550,6 +550,7 @@ class ZoneMenuHandler {
 		if (index === -1) return;
 		const region = this.selectedZone.zone.regions[index];
 		this.selectedZone.region = region;
+		this.panels.zoningMenu.updateSelectedRegion(this.selectedZone.region);
 
 		this.panels.regionBottom.text = region?.bottom?.toFixed(2) ?? '';
 		this.panels.regionHeight.text = region?.height?.toFixed(2) ?? '';
@@ -637,13 +638,13 @@ class ZoneMenuHandler {
 
 	pickCorners() {
 		if (!this.selectedZone || !this.selectedZone.region) return;
-		this.panels.zoningMenu.editRegion(PickType.CORNER, this.selectedZone.region);
+		this.panels.zoningMenu.editRegion(PickType.CORNER);
 		this.showInfoPanel(true);
 	}
 
 	pickBottom() {
 		if (!this.selectedZone || !this.selectedZone.region) return;
-		this.panels.zoningMenu.editRegion(PickType.BOTTOM, this.selectedZone.region);
+		this.panels.zoningMenu.editRegion(PickType.BOTTOM);
 		this.showInfoPanel(true);
 	}
 
@@ -658,7 +659,7 @@ class ZoneMenuHandler {
 
 	pickHeight() {
 		if (!this.selectedZone || !this.selectedZone.region) return;
-		this.panels.zoningMenu.editRegion(PickType.HEIGHT, this.selectedZone.region);
+		this.panels.zoningMenu.editRegion(PickType.HEIGHT);
 		this.showInfoPanel(true);
 	}
 
@@ -673,7 +674,7 @@ class ZoneMenuHandler {
 
 	pickSafeHeight() {
 		if (!this.selectedZone || !this.selectedZone.region) return;
-		this.panels.zoningMenu.editRegion(PickType.SAFE_HEIGHT, this.selectedZone.region);
+		this.panels.zoningMenu.editRegion(PickType.SAFE_HEIGHT);
 		this.showInfoPanel(true);
 	}
 
@@ -688,13 +689,13 @@ class ZoneMenuHandler {
 
 	pickTeleDestPos() {
 		if (!this.selectedZone || !this.selectedZone.region) return;
-		this.panels.zoningMenu.editRegion(PickType.TELE_DEST_POS, this.selectedZone.region);
+		this.panels.zoningMenu.editRegion(PickType.TELE_DEST_POS);
 		this.showInfoPanel(true);
 	}
 
 	pickTeleDestYaw() {
 		if (!this.selectedZone || !this.selectedZone.region) return;
-		this.panels.zoningMenu.editRegion(PickType.TELE_DEST_YAW, this.selectedZone.region);
+		this.panels.zoningMenu.editRegion(PickType.TELE_DEST_YAW);
 		this.showInfoPanel(true);
 	}
 
