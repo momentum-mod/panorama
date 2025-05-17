@@ -23,7 +23,7 @@ declare interface PanelTagNameMap {
 	MomHudJumpStats: MomHudJumpStats;
 	MomHudJumpTiming: MomHudJumpTiming;
 	MomHudSpecInfo: MomHudSpecInfo;
-	MomHudSynchronizer: MomHudSynchronizer;
+	MomHudStrafeTrainer: MomHudStrafeTrainer;
 	MomHudPowerupTimer: MomHudPowerupTimer;
 	ToastContainer: ToastContainer;
 	ToastGeneric: ToastGeneric;

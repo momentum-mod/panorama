@@ -569,63 +569,63 @@
 
 			<Panel class="settings-page__spacer" />
 
-			<Panel id="SynchronizerSubSection" class="settings-group">
+			<Panel id="StrafeTrainerSubSection" class="settings-group">
 				<Panel class="settings-group__header">
-					<Label class="settings-group__title" text="#Settings_Synchronizer_Title" tags="sync,strafe,trainer" />
+					<Label class="settings-group__title" text="#Settings_StrafeTrainer_Title" tags="sync,strafe,trainer" />
 					<Panel class="flow-right h-align-right">
-						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_Synchronizer_Title', 'SynchronizerSubSection')">
+						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_StrafeTrainer_Title', 'StrafeTrainerSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
 						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-							<Button class="button" onactivate="SettingsPage.resetSettings('SynchronizerSubSection');">
+							<Button class="button" onactivate="SettingsPage.resetSettings('StrafeTrainerSubSection');">
 								<Image class="button__icon" src="file://{images}/reset.svg" />
 							</Button>
 						</TooltipPanel>
 					</Panel>
 				</Panel>
 
-				<SettingsEnumDropDown text="#Settings_Synchronizer_DisplayMode" convar="mom_hud_synchro_mode" infomessage="#Settings_Synchronizer_DisplayMode_Info">
-					<Label id="mode0" text="#Settings_Synchronizer_DisplayMode_Mode0" value="0" />
-					<Label id="mode1" text="#Settings_Synchronizer_DisplayMode_Mode1" value="1" />
-					<Label id="mode2" text="#Settings_Synchronizer_DisplayMode_Mode2" value="2" />
-					<Label id="mode3" text="#Settings_Synchronizer_DisplayMode_Mode3" value="3" />
-					<Label id="mode4" text="#Settings_Synchronizer_DisplayMode_Mode4" value="4" />
+				<SettingsEnumDropDown text="#Settings_StrafeTrainer_DisplayMode" convar="mom_hud_strafetrainer_mode" infomessage="#Settings_StrafeTrainer_DisplayMode_Info">
+					<Label id="mode0" text="#Settings_StrafeTrainer_DisplayMode_Mode0" value="0" />
+					<Label id="mode1" text="#Settings_StrafeTrainer_DisplayMode_Mode1" value="1" />
+					<Label id="mode2" text="#Settings_StrafeTrainer_DisplayMode_Mode2" value="2" />
+					<Label id="mode3" text="#Settings_StrafeTrainer_DisplayMode_Mode3" value="3" />
+					<Label id="mode4" text="#Settings_StrafeTrainer_DisplayMode_Mode4" value="4" />
 				</SettingsEnumDropDown>
 
-				<ConVarEnabler convar="mom_hud_synchro_mode" class="flow-down">
-					<SettingsEnum text="#Settings_Synchronizer_Color" convar="mom_hud_synchro_color_enable" infomessage="#Settings_Synchronizer_Color_Info" tags="color">
-						<RadioButton group="synchrocolor" text="#Common_Off" value="0" />
-						<RadioButton group="synchrocolor" text="#Common_On" value="1" />
+				<ConVarEnabler convar="mom_hud_strafetrainer_mode" class="flow-down">
+					<SettingsEnum text="#Settings_StrafeTrainer_Color" convar="mom_hud_strafetrainer_color_enable" infomessage="#Settings_StrafeTrainer_Color_Info" tags="color">
+						<RadioButton group="strafetrainercolor" text="#Common_Off" value="0" />
+						<RadioButton group="strafetrainercolor" text="#Common_On" value="1" />
 					</SettingsEnum>
 
-					<SettingsEnum text="Settings_Synchronizer_Dynamic_Mode" convar="mom_hud_synchro_dynamic_enable" infomessage="#Settings_Synchronizer_Dynamic_Mode_Info">
-						<RadioButton group="synchrodynamic" text="#Common_Off" value="0" />
-						<RadioButton group="synchrodynamic" text="#Common_On" value="1" />
+					<SettingsEnum text="Settings_StrafeTrainer_Dynamic_Mode" convar="mom_hud_strafetrainer_dynamic_enable" infomessage="#Settings_StrafeTrainer_Dynamic_Mode_Info">
+						<RadioButton group="strafetrainerdynamic" text="#Common_Off" value="0" />
+						<RadioButton group="strafetrainerdynamic" text="#Common_On" value="1" />
 					</SettingsEnum>
 
-					<SettingsEnum text="#Settings_Synchronizer_Direction" convar="mom_hud_synchro_flip_enable" infomessage="#Settings_Synchronizer_Direction_Info">
-						<RadioButton group="synchrodirection" text="#Settings_Synchronizer_Direction_Normal" value="0" />
-						<RadioButton group="synchrodirection" text="#Settings_Synchronizer_Direction_Flipped" value="1" />
+					<SettingsEnum text="#Settings_StrafeTrainer_Direction" convar="mom_hud_strafetrainer_flip_enable" infomessage="#Settings_StrafeTrainer_Direction_Info">
+						<RadioButton group="strafetrainerdirection" text="#Settings_StrafeTrainer_Direction_Normal" value="0" />
+						<RadioButton group="strafetrainerdirection" text="#Settings_StrafeTrainer_Direction_Flipped" value="1" />
 					</SettingsEnum>
 
-					<SettingsEnumDropDown text="#Settings_Synchronizer_AveragingWindow" convar="mom_hud_synchro_buffer_size" infomessage="#Settings_Synchronizer_AveragingWindow_Info">
-						<Label text="#Settings_Synchronizer_AveragingWindow_Mode1" value="1" id="buffer0" />
-						<Label text="#Settings_Synchronizer_AveragingWindow_Mode2" value="5" id="buffer1" />
-						<Label text="#Settings_Synchronizer_AveragingWindow_Mode3" value="10" id="buffer2" />
-						<Label text="#Settings_Synchronizer_AveragingWindow_Mode4" value="20" id="buffer3" />
+					<SettingsEnumDropDown text="#Settings_StrafeTrainer_AveragingWindow" convar="mom_hud_strafetrainer_buffer_size" infomessage="#Settings_StrafeTrainer_AveragingWindow_Info">
+						<Label text="#Settings_StrafeTrainer_AveragingWindow_Mode1" value="1" id="buffer0" />
+						<Label text="#Settings_StrafeTrainer_AveragingWindow_Mode2" value="5" id="buffer1" />
+						<Label text="#Settings_StrafeTrainer_AveragingWindow_Mode3" value="10" id="buffer2" />
+						<Label text="#Settings_StrafeTrainer_AveragingWindow_Mode4" value="20" id="buffer3" />
 					</SettingsEnumDropDown>
 
-					<SettingsSlider text="#Settings_Synchronizer_MinSpeed" min="50" max="250" convar="mom_hud_synchro_min_speed" displayprecision="0" infomessage="#Settings_Synchronizer_MinSpeed_Info" />
+					<SettingsSlider text="#Settings_StrafeTrainer_MinSpeed" min="50" max="250" convar="mom_hud_strafetrainer_min_speed" displayprecision="0" infomessage="#Settings_StrafeTrainer_MinSpeed_Info" />
 
-					<SettingsEnumDropDown text="#Settings_Synchronizer_Stats_Mode" convar="mom_hud_synchro_stat_mode" infomessage="#Settings_Synchronizer_Stats_Mode_Info">
+					<SettingsEnumDropDown text="#Settings_StrafeTrainer_Stats_Mode" convar="mom_hud_strafetrainer_stat_mode" infomessage="#Settings_StrafeTrainer_Stats_Mode_Info">
 						<Label id="mode0" text="#Common_Off" value="0" />
-						<Label id="mode1" text="#Settings_Synchronizer_StatsMode_Mode1" value="1" />
-						<Label id="mode2" text="#Settings_Synchronizer_StatsMode_Mode2" value="2" />
+						<Label id="mode1" text="#Settings_StrafeTrainer_StatsMode_Mode1" value="1" />
+						<Label id="mode2" text="#Settings_StrafeTrainer_StatsMode_Mode2" value="2" />
 					</SettingsEnumDropDown>
 
-					<SettingsEnum text="#Settings_Synchronizer_StatColor" convar="mom_hud_synchro_stat_color_enable" infomessage="#Settings_Synchronizer_StatColor_Info" tags="color">
-						<RadioButton group="synchrostatcolor" text="#Common_Off" value="0" />
-						<RadioButton group="synchrostatcolor" text="#Common_On" value="1" />
+					<SettingsEnum text="#Settings_StrafeTrainer_StatColor" convar="mom_hud_strafetrainer_stat_color_enable" infomessage="#Settings_StrafeTrainer_StatColor_Info" tags="color">
+						<RadioButton group="strafetrainerstatcolor" text="#Common_Off" value="0" />
+						<RadioButton group="strafetrainerstatcolor" text="#Common_On" value="1" />
 					</SettingsEnum>
 				</ConVarEnabler>
 

@@ -144,29 +144,29 @@ interface GlobalEventNameMap {
 
 	OnJumpStarted: () => void;
 
-	/** Called when the player changes synchronizer display mode setting (mom_hud_synchro_mode). */
-	OnSynchroModeChanged: (cvarValue: int32) => void;
+	/** Called when the player changes strafe trainer display mode setting (mom_hud_strafetrainer_mode). */
+	OnStrafeTrainerModeChanged: (cvarValue: int32) => void;
 
-	/** Called when the player changes synchronizer color mode setting (mom_hud_synchro_color_enable). */
-	OnSynchroColorModeChanged: (cvarValue: int32) => void;
+	/** Called when the player changes strafe trainer color mode setting (mom_hud_strafetrainer_color_enable). */
+	OnStrafeTrainerColorModeChanged: (cvarValue: int32) => void;
 
-	/** Called when the player changes synchronizer dynamic direction setting (mom_hud_synchro_dynamic_enable). */
-	OnSynchroDynamicModeChanged: (cvarValue: int32) => void;
+	/** Called when the player changes strafe trainer dynamic direction setting (mom_hud_strafetrainer_dynamic_enable). */
+	OnStrafeTrainerDynamicModeChanged: (cvarValue: int32) => void;
 
-	/** Called when the player changes synchronizer direction setting  (mom_hud_synchro_flip_enable). */
-	OnSynchroDirectionChanged: (cvarValue: int32) => void;
+	/** Called when the player changes strafe trainer direction setting  (mom_hud_strafetrainer_flip_enable). */
+	OnStrafeTrainerDirectionChanged: (cvarValue: int32) => void;
 
-	/** Called when the player changes synchronizer buffer length setting (mom_hud_synchro_buffer_size). */
-	OnSynchroBufferChanged: (cvarValue: int32) => void;
+	/** Called when the player changes strafe trainer buffer length setting (mom_hud_strafetrainer_buffer_size). */
+	OnStrafeTrainerBufferChanged: (cvarValue: int32) => void;
 
-	/** Called when the player changes synchronizer minimum speed setting (mom_hud_synchro_min_speed). */
-	OnSynchroMinSpeedChanged: (cvarValue: int32) => void;
+	/** Called when the player changes strafe trainer minimum speed setting (mom_hud_strafetrainer_min_speed). */
+	OnStrafeTrainerMinSpeedChanged: (cvarValue: int32) => void;
 
-	/** Called when the player changes synchronizer text mode setting (mom_hud_synchro_stat_mode). */
-	OnSynchroStatModeChanged: (cvarValue: int32) => void;
+	/** Called when the player changes strafe trainer text mode setting (mom_hud_strafetrainer_stat_mode). */
+	OnStrafeTrainerStatModeChanged: (cvarValue: int32) => void;
 
-	/** Called when the player changes synchronizer stats color mode setting (mom_hud_synchro_color_enable). */
-	OnSynchroStatColorModeChanged: (cvarValue: int32) => void;
+	/** Called when the player changes strafe trainer stats color mode setting (mom_hud_strafetrainer_color_enable). */
+	OnStrafeTrainerStatColorModeChanged: (cvarValue: int32) => void;
 
 	/** Fires when quit_prompt is called. */
 	OnMomentumQuitPrompt: () => void;

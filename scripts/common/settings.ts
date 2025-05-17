@@ -62,7 +62,7 @@ export const SettingsTabs = {
 			JumpStatsSubSection: 'JumpStatsRadio',
 			WeaponSelSubSection: 'WeaponSelRadio',
 			StrafeSyncSubSection: 'StrafeSyncRadio',
-			SynchronizerSubSection: 'SynchronizerRadio',
+			StrafeTrainerSubSection: 'StrafeTrainerRadio',
 			MapInfoSubSection: 'MapInfoRadio',
 			DamageIndicatorSubSection: 'DamageIndicatorRadio'
 		}
