@@ -37,7 +37,7 @@ enum StatMode {
 }
 
 @PanelHandler()
-class Synchronizer {
+class StrafeTrainer {
 	readonly panels = {
 		wrapper: $('#BarWrapper'),
 		segments: [$('#Segment0'), $('#Segment1'), $('#Segment2'), $('#Segment3'), $('#Segment4')],
@@ -65,14 +65,14 @@ class Synchronizer {
 	yawRatioHistory: number[];
 
 	initializeSettings() {
-		this.setDisplayMode(GameInterfaceAPI.GetSettingInt('mom_hud_synchro_mode') as DisplayMode);
-		this.setColorMode(GameInterfaceAPI.GetSettingBool('mom_hud_synchro_color_enable'));
-		this.setDynamicMode(GameInterfaceAPI.GetSettingBool('mom_hud_synchro_dynamic_enable'));
-		this.setDirection(GameInterfaceAPI.GetSettingBool('mom_hud_synchro_flip_enable'));
-		this.setBufferLength(GameInterfaceAPI.GetSettingFloat('mom_hud_synchro_buffer_size'));
-		this.setMinSpeed(GameInterfaceAPI.GetSettingFloat('mom_hud_synchro_min_speed'));
-		this.setStatMode(GameInterfaceAPI.GetSettingInt('mom_hud_synchro_stat_mode'));
-		this.setStatColorMode(GameInterfaceAPI.GetSettingBool('mom_hud_synchro_stat_color_enable'));
+		this.setDisplayMode(GameInterfaceAPI.GetSettingInt('mom_hud_strafetrainer_mode') as DisplayMode);
+		this.setColorMode(GameInterfaceAPI.GetSettingBool('mom_hud_strafetrainer_color_enable'));
+		this.setDynamicMode(GameInterfaceAPI.GetSettingBool('mom_hud_strafetrainer_dynamic_enable'));
+		this.setDirection(GameInterfaceAPI.GetSettingBool('mom_hud_strafetrainer_flip_enable'));
+		this.setBufferLength(GameInterfaceAPI.GetSettingFloat('mom_hud_strafetrainer_buffer_size'));
+		this.setMinSpeed(GameInterfaceAPI.GetSettingFloat('mom_hud_strafetrainer_min_speed'));
+		this.setStatMode(GameInterfaceAPI.GetSettingInt('mom_hud_strafetrainer_stat_mode'));
+		this.setStatColorMode(GameInterfaceAPI.GetSettingBool('mom_hud_strafetrainer_stat_color_enable'));
 	}
 
 	constructor() {
@@ -81,15 +81,24 @@ class Synchronizer {
 			onLoad: () => this.onLoad(),
 			events: [
 				{ event: 'OnJumpStarted', callback: () => this.onJump() },
-				{ event: 'OnSynchroModeChanged', callback: (cvarValue) => this.setDisplayMode(cvarValue) },
-				{ event: 'OnSynchroColorModeChanged', callback: (cvarValue) => this.setColorMode(cvarValue === 1) },
-				{ event: 'OnSynchroDynamicModeChanged', callback: (cvarValue) => this.setDynamicMode(cvarValue === 1) },
-				{ event: 'OnSynchroDirectionChanged', callback: (cvarValue) => this.setDirection(cvarValue === 1) },
-				{ event: 'OnSynchroBufferChanged', callback: (cvarValue) => this.setBufferLength(cvarValue) },
-				{ event: 'OnSynchroMinSpeedChanged', callback: (cvarValue) => this.setMinSpeed(cvarValue) },
-				{ event: 'OnSynchroStatModeChanged', callback: (cvarValue) => this.setStatMode(cvarValue) },
+				{ event: 'OnStrafeTrainerModeChanged', callback: (cvarValue) => this.setDisplayMode(cvarValue) },
 				{
-					event: 'OnSynchroStatColorModeChanged',
+					event: 'OnStrafeTrainerColorModeChanged',
+					callback: (cvarValue) => this.setColorMode(cvarValue === 1)
+				},
+				{
+					event: 'OnStrafeTrainerDynamicModeChanged',
+					callback: (cvarValue) => this.setDynamicMode(cvarValue === 1)
+				},
+				{
+					event: 'OnStrafeTrainerDirectionChanged',
+					callback: (cvarValue) => this.setDirection(cvarValue === 1)
+				},
+				{ event: 'OnStrafeTrainerBufferChanged', callback: (cvarValue) => this.setBufferLength(cvarValue) },
+				{ event: 'OnStrafeTrainerMinSpeedChanged', callback: (cvarValue) => this.setMinSpeed(cvarValue) },
+				{ event: 'OnStrafeTrainerStatModeChanged', callback: (cvarValue) => this.setStatMode(cvarValue) },
+				{
+					event: 'OnStrafeTrainerStatColorModeChanged',
 					callback: (cvarValue) => this.setStatColorMode(cvarValue === 1)
 				}
 			],

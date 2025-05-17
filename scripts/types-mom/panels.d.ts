@@ -19,7 +19,7 @@ interface PanelTagNameMap {
 	MomHudStrafeSync: MomHudStrafeSync;
 	MomHudDFJump: MomHudDFJump;
 	MomHudJumpTiming: MomHudJumpTiming;
-	MomHudSyncronizer: MomHudSynchronizer;
+	MomHudStrafeTrainer: MomHudStrafeTrainer;
 	ZoneMenu: ZoneMenu;
 }
 
@@ -133,7 +133,7 @@ interface MomHudDFJump extends AbstractHudPanel<'MomHudDFJump'> {}
 
 interface MomHudJumpTiming extends AbstractHudPanel<'MomHudJumpTiming'> {}
 
-interface MomHudSynchronizer extends AbstractHudPanel<'MomHudSynchronizer'> {}
+interface MomHudStrafeTrainer extends AbstractHudPanel<'MomHudStrafeTrainer'> {}
 
 interface ZoneEditorRegion {
 	region: import('common/web').Region;

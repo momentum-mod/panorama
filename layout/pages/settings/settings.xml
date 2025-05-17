@@ -174,8 +174,8 @@
 								<!-- <RadioButton id="StrafeSyncRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="SettingsHandler.navigateToSubsection('InterfaceSettings', 'StrafeSyncSubSection')">
 									<Label class="settings-nav__subitem-label" text="#Settings_TotalSync_Title" />
 								</RadioButton> -->
-								<RadioButton id="SynchronizerRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="SettingsHandler.navigateToSubsection('InterfaceSettings', 'SynchronizerSubSection')">
-									<Label class="settings-nav__subitem-label" text="#Settings_Synchronizer_Title" />
+								<RadioButton id="StrafeTrainerRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="SettingsHandler.navigateToSubsection('InterfaceSettings', 'StrafeTrainerSubSection')">
+									<Label class="settings-nav__subitem-label" text="#Settings_StrafeTrainer_Title" />
 								</RadioButton>
 								<RadioButton id="MapInfoRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="SettingsHandler.navigateToSubsection('InterfaceSettings', 'MapInfoSubSection')">
 									<Label class="settings-nav__subitem-label" text="#Settings_MapInfo_Title" />
