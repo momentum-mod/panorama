@@ -154,7 +154,7 @@ class ZoneMenuHandler {
 		this.populateDropdown(this.filternameList, this.panels.filterSelect, '', true);
 
 		this.teleDestList = entList.teleport ?? [];
-		this.teleDestList.unshift($.Localize('#Zoning_TPDest_MakeNew'));
+		this.teleDestList.unshift($.Localize('#Zoning_TPDest_UserDefined'));
 		this.teleDestList.unshift($.Localize('#Zoning_TPDest_None'));
 		this.populateDropdown(this.teleDestList, this.panels.regionTPDest, '', true);
 
