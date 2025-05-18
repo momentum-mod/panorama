@@ -235,7 +235,7 @@
 						<Label class="zoning-info__bind-key" text="MOUSE1" />
 					</Panel>
 					<Panel class="zoning-info__bind">
-						<Label class="zoning-info__bind-action" text="#Zoning_Keybind_CancelEdit" />
+						<Label class="zoning-info__bind-action" text="{s:mouse2Hint}" />
 						<Label class="zoning-info__bind-key" text="MOUSE2" />
 					</Panel>
 					<Panel id="ZoningBindsOptions" class="zoning-info__category">
@@ -249,13 +249,13 @@
 						</Panel>
 					</Panel>
 					<Panel class="zoning-info__bind">
-						<Label class="zoning-info__bind-action" text="{s:backspaceHint}" />
-						<Label class="zoning-info__bind-key" text="BACKSPACE" />
+						<Label class="zoning-info__bind-action" text="#Zoning_Keybind_CancelEdit" />
+						<Label class="zoning-info__bind-key" text="ESCAPE" />
 					</Panel>
 					<Panel id="ZoningBindsCorner" class="zoning-info__category">
 						<Panel class="zoning-info__bind">
 							<Label class="zoning-info__bind-action" text="#Zoning_Keybind_DeletePoint" />
-							<Label class="zoning-info__bind-key" text="DELETE" />
+							<Label class="zoning-info__bind-key" text="DELETE, BACKSPACE" />
 						</Panel>
 						<Panel class="zoning-info__bind">
 							<Label class="zoning-info__bind-action" text="#Zoning_Keybind_TwoclickToggle" />
