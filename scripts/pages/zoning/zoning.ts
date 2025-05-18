@@ -588,8 +588,8 @@ class ZoneMenuHandler {
 		this.panels.regionHeight.text = region?.height?.toFixed(2) ?? '';
 		this.panels.regionSafeHeight.text = region?.safeHeight?.toFixed(2) ?? '';
 
-		const tpIndex = !region.teleDestTargetname
-			? region.teleDestPos !== undefined && region.teleDestYaw !== undefined
+		const tpIndex = !region?.teleDestTargetname
+			? region?.teleDestPos !== undefined && region?.teleDestYaw !== undefined
 				? 1
 				: 0
 			: (this.teleDestList?.indexOf(region?.teleDestTargetname) ?? 0);
