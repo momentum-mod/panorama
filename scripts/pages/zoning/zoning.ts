@@ -602,9 +602,9 @@ class ZoneMenuHandler {
 
 		this.selectedZone.zone.regions.push(this.createRegion());
 		this.panels.zoningMenu.createRegion(this.isStartZone(this.selectedZone.zone));
+		this.showInfoPanel(true);
 		this.populateDropdown(this.selectedZone.zone.regions, this.panels.regionSelect, 'Region', true);
 		this.panels.regionSelect.SetSelectedIndex(this.selectedZone.zone.regions.length - 1);
-		this.populateRegionProperties();
 	}
 
 	deleteRegion() {
@@ -649,6 +649,7 @@ class ZoneMenuHandler {
 					this.selectedZone.zone.regions = [];
 					this.drawZones();
 					this.panels.zoningMenu.createRegion(this.isStartZone(this.selectedZone.zone));
+					this.showInfoPanel(true);
 				},
 				'none'
 			);
@@ -822,9 +823,9 @@ class ZoneMenuHandler {
 	}
 
 	onRegionEditCanceled() {
+		this.showInfoPanel(false);
 		if (this.selectedZone?.region?.points.length === 0) this.deleteRegion();
 
-		this.showInfoPanel(false);
 		this.drawZones();
 	}
 
