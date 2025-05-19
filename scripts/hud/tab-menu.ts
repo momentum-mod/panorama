@@ -11,6 +11,7 @@ import { getAllCredits, getTier, SimpleMapCredit } from 'common/maps';
 class HudTabMenuHandler {
 	readonly panels = {
 		cp: $.GetContextPanel<MomHudTabMenu>(),
+		scoreboardContainer: $<Panel>('#ScoreboardContainer'),
 		leaderboardsContainer: $<Panel>('#LeaderboardsContainer'),
 		endOfRunContainer: $<Panel>('#EndOfRunContainer'),
 		zoningContainer: $<Panel>('#ZoningContainer'),
@@ -36,12 +37,14 @@ class HudTabMenuHandler {
 	}
 
 	showEndOfRun(reason: EndOfRunShowReason) {
+		this.panels.scoreboardContainer.AddClass('hud-tab-menu__leaderboards--hidden');
 		this.panels.leaderboardsContainer.AddClass('hud-tab-menu__leaderboards--hidden');
 		this.panels.endOfRunContainer.RemoveClass('hud-tab-menu__endofrun--hidden');
 		this.panels.zoningContainer.AddClass('hud-tab-menu__zoning--hidden');
 	}
 
 	hideEndOfRun() {
+		this.panels.scoreboardContainer.RemoveClass('hud-tab-menu__leaderboards--hidden');
 		this.panels.leaderboardsContainer.RemoveClass('hud-tab-menu__leaderboards--hidden');
 		this.panels.endOfRunContainer.AddClass('hud-tab-menu__endofrun--hidden');
 		this.panels.zoningContainer.AddClass('hud-tab-menu__zoning--hidden');
@@ -49,6 +52,7 @@ class HudTabMenuHandler {
 
 	showZoneMenu() {
 		this.panels.cp.AddClass('hud-tab-menu--offset');
+		this.panels.scoreboardContainer.AddClass('hud-tab-menu__leaderboards--hidden');
 		this.panels.leaderboardsContainer.AddClass('hud-tab-menu__leaderboards--hidden');
 		this.panels.endOfRunContainer.AddClass('hud-tab-menu__endofrun--hidden');
 		this.panels.zoningContainer.RemoveClass('hud-tab-menu__zoning--hidden');
@@ -56,6 +60,7 @@ class HudTabMenuHandler {
 
 	hideZoneMenu() {
 		this.panels.cp.RemoveClass('hud-tab-menu--offset');
+		this.panels.scoreboardContainer.RemoveClass('hud-tab-menu__leaderboards--hidden');
 		this.panels.leaderboardsContainer.RemoveClass('hud-tab-menu__leaderboards--hidden');
 		this.panels.endOfRunContainer.AddClass('hud-tab-menu__endofrun--hidden');
 		this.panels.zoningContainer.AddClass('hud-tab-menu__zoning--hidden');
