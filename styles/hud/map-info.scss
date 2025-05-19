@@ -1,12 +1,10 @@
 @use '../config' as *;
 @use '../abstract/mixin';
 
-.hudmapinfo {
-	margin: 0 5px 5px 5px;
+.hud-map-info {
 	flow-children: down;
 	width: 350px;
 	height: fit-children;
-	align: right center;
 
 	&__label {
 		@include mixin.font-styles($use-header: true);

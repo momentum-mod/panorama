@@ -127,9 +127,9 @@ export function values<T extends HeteroEnum<T>>(enumObj: T): Values<T> {
 }
 
 /**
- * Faster version of `Enum.keys` for numeric enums.
+ * Faster version of `Enum.values` for numeric enums.
  * @param enumObj - Enum-like Object
- * @return An array of the enum's keys
+ * @return An array of the enum's values
  */
 export function fastValuesNumeric<T extends NumericEnum<T>>(enumObj: T): Values<T> {
 	const values = Object.values(enumObj);
@@ -137,9 +137,9 @@ export function fastValuesNumeric<T extends NumericEnum<T>>(enumObj: T): Values<
 }
 
 /**
- * Faster version of `Enum.keys` for string enums.
+ * Faster version of `Enum.values` for string enums.
  * @param enumObj - Enum-like Object
- * @return An array of the enum's keys
+ * @return An array of the enum's values
  */
 export function fastValuesString<T extends StringEnum<T>>(enumObj: T): Values<T> {
 	return Object.values(enumObj) as Values<T>;
@@ -148,16 +148,16 @@ export function fastValuesString<T extends StringEnum<T>>(enumObj: T): Values<T>
 /**
  * Get the enum's entries as [key, value] tuples.
  * @param enumObj - Enum-like Object
- * @return An array of the enum's values
+ * @return An array of the enum's entries
  */
 export function entries<T extends HeteroEnum<T>>(enumObj: T): Entries<T> {
 	return keys(enumObj).map((key) => [key, enumObj[key]]);
 }
 
 /**
- * Faster version of `Enum.keys` for numeric enums.
+ * Faster version of `Enum.entries` for numeric enums.
  * @param enumObj - Enum-like Object
- * @return An array of the enum's keys
+ * @return An array of the enum's entries
  */
 export function fastEntriesNumeric<T extends NumericEnum<T>>(enumObj: T): Entries<T> {
 	const entries = Object.entries(enumObj);
@@ -165,9 +165,9 @@ export function fastEntriesNumeric<T extends NumericEnum<T>>(enumObj: T): Entrie
 }
 
 /**
- * Faster version of `Enum.keys` for string enums.
+ * Faster version of `Enum.entries` for string enums.
  * @param enumObj - Enum-like Object
- * @return An array of the enum's keys
+ * @return An array of the enum's entries
  */
 export function fastEntriesString<T extends StringEnum<T>>(enumObj: T): Entries<T> {
 	return Object.entries(enumObj) as Entries<T>;
