@@ -702,7 +702,7 @@ class CgazHandler {
 				if (this.primeAccel !== primeSightAccel) {
 					this.primeAccel = primeSightAccel;
 
-					this.primeAngles = this.findSnapAngles(this.primeAccel);
+					this.primeAngles = this.findSnapAngles(primeSightAccel);
 				}
 
 				if (this.primeAngles.length > this.primeZones?.length) {
@@ -1134,16 +1134,33 @@ class CgazHandler {
 		let gainMax = -this.primeAccel;
 		let fillLeftZones = false;
 		let fillRightZones = false;
+		let leftOffset = -Math.PI * 0.25 - viewAngle;
+		let rightOffset = Math.PI * 0.25 - viewAngle;
+		let leftTarget = MomMath.wrapToHalfPi(-targetAngle - velAngle);
+		let rightTarget = MomMath.wrapToHalfPi(targetAngle - velAngle);
 
 		switch (inputMode) {
 			case InputMode.NONE: // Fall-through
+			case InputMode.AIR_CONTROL: // Fall-through
 			default:
 				break;
 
-			case InputMode.AIR_CONTROL: // Fall-through
-			case InputMode.TURN_LEFT:
+			case InputMode.TURN_LEFT: {
+				fillLeftZones = true;
+				leftOffset = -Math.PI * 0.5 - viewAngle;
+				const velocity = MomentumPlayerAPI.GetVelocity();
+				const speed = MomMath.magnitude2D(velocity);
+				const mirrorTarget = this.findFastAngle(speed, MAX_GROUND_SPEED, AIR_ACCEL);
+				rightTarget = MomMath.wrapToHalfPi(mirrorTarget - velAngle);
+				break;
+			}
 			case InputMode.TURN_RIGHT: {
-				targetAngle = Math.max(Math.abs(targetAngle), Math.PI * 0.25);
+				fillRightZones = true;
+				rightOffset = Math.PI * 0.5 - viewAngle;
+				const velocity = MomentumPlayerAPI.GetVelocity();
+				const speed = MomMath.magnitude2D(velocity);
+				const mirrorTarget = this.findFastAngle(speed, MAX_GROUND_SPEED, AIR_ACCEL);
+				leftTarget = MomMath.wrapToHalfPi(-mirrorTarget - velAngle);
 				break;
 			}
 			case InputMode.STRAFE_LEFT: {
@@ -1156,12 +1173,10 @@ class CgazHandler {
 			}
 		}
 
-		const leftOffset = -Math.PI * 0.25 - viewAngle;
-		const leftTarget = MomMath.wrapToHalfPi(-targetAngle - velAngle);
-		const leftAngles = fillLeftZones ? this.primeAngles : this.snapAngles;
-		const rightOffset = Math.PI * 0.25 - viewAngle;
-		const rightTarget = MomMath.wrapToHalfPi(targetAngle - velAngle);
-		const rightAngles = fillRightZones ? this.primeAngles : this.snapAngles;
+		const leftAngles =
+			fillLeftZones && this.primeTruenessMode === TruenessMode.CPM_TURN ? this.primeAngles : this.snapAngles;
+		const rightAngles =
+			fillRightZones && this.primeTruenessMode === TruenessMode.CPM_TURN ? this.primeAngles : this.snapAngles;
 
 		const iLeft = this.updateFirstPrimeZone(leftTarget, leftOffset, this.primeFirstZoneLeft, leftAngles);
 		const iRight = this.updateFirstPrimeZone(rightTarget, rightOffset, this.primeFirstZoneRight, rightAngles);
@@ -1245,7 +1260,11 @@ class CgazHandler {
 			zone.style.marginBottom =
 				Number(secondLine ? this.primeHeight - height : this.primeHeight).toFixed(0) + 'px';
 
-			if (zone.isInactive) continue;
+			if (zone.isInactive) {
+				if (inputMode === InputMode.TURN_LEFT || inputMode === InputMode.TURN_RIGHT)
+					zone.style.height = this.NaNCheck(this.primeHeight.toFixed(), 0) + 'px';
+				continue;
+			}
 
 			if (gain < 0) {
 				zone.color = this.primeLossColor;
