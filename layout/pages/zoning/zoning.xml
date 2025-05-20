@@ -32,9 +32,6 @@
 						<Label class="zoning__tracklist-label zoning__tracklist-label--add" text="#Zoning_NewEndZone" />
 					</Button>
 				</Panel>
-				<Button id="AddBonusButton" class="zoning__add-button hide" onactivate="ZoneMenuHandler.addBonus()">
-					<Label class="zoning__tracklist-label zoning__tracklist-label--add" text="#Zoning_NewBonus" />
-				</Button>
 			</Panel>
 		</snippet>
 		<snippet name="tracklist-segment">
@@ -75,6 +72,51 @@
 				</Panel>
 			</Panel>
 		</snippet>
+		<snippet name="tracklist-global">
+			<Panel class="w-full flow-down">
+				<Panel id="GlobalRegions" class="zoning__tracklist-course-entry">
+					<Button id="CollapseButton" class="zoning__collapse-button">
+						<Image id="TracklistCollapseIcon" class="button__icon zoning__collapse-icon zoning__icon-green hide" src="file://{images}/add.svg" />
+						<Image id="TracklistExpandIcon" class="button__icon zoning__collapse-icon zoning__icon-red" src="file://{images}/subtract.svg" />
+					</Button>
+					<RadioButton id="SelectButton" class="zoning__tracklist-button" group="tracklist">
+						<Label id="Name" class="zoning__tracklist-label" />
+					</RadioButton>
+					<Button id="DeleteButton" class="zoning__tracklist-delete hide">
+						<Image class="zoning__tracklist-delete__icon" src="file://{images}/close-box-outline.svg" textureheight="24" />
+					</Button>
+				</Panel>
+				<Panel id="ChildContainer" class="zoning__list-container">
+					<Panel id="GlobalBhopContainer" class="w-full flow-down" />
+					<Button id="AddGlobalBhopButton" class="zoning__add-button">
+						<Label class="zoning__tracklist-label zoning__tracklist-label--add" text="#Zoning_NewGlobalBhop" />
+					</Button>
+					<Panel id="GlobalCancelContainer" class="w-full flow-down" />
+					<Button id="AddGlobalCancelButton" class="zoning__add-button">
+						<Label class="zoning__tracklist-label zoning__tracklist-label--add" text="#Zoning_NewGlobalCancel" />
+					</Button>
+				</Panel>
+			</Panel>
+		</snippet>
+		<snippet name="tracklist-group">
+			<Panel class="w-full flow-down">
+				<Panel id="Entry" class="zoning__tracklist-course-entry">
+					<Button id="CollapseButton" class="zoning__collapse-button">
+						<Image id="TracklistCollapseIcon" class="button__icon zoning__collapse-icon zoning__icon-green hide" src="file://{images}/add.svg" />
+						<Image id="TracklistExpandIcon" class="button__icon zoning__collapse-icon zoning__icon-red" src="file://{images}/subtract.svg" />
+					</Button>
+					<RadioButton id="SelectButton" class="zoning__tracklist-button" group="tracklist">
+						<Label id="Name" class="zoning__tracklist-label" />
+					</RadioButton>
+					<Button id="DeleteButton" class="zoning__tracklist-delete hide">
+						<Image class="zoning__tracklist-delete__icon" src="file://{images}/close-box-outline.svg" textureheight="24" />
+					</Button>
+				</Panel>
+				<Panel id="ChildContainer" class="zoning__list-container">
+					<Panel id="RegionContainer" class="zoning__tracklist-checkpoint" />
+				</Panel>
+			</Panel>
+		</snippet>
 	</snippets>
 
 	<ZoneMenu class="zoning" acceptsinput="true" acceptsfocus="true">
@@ -82,6 +124,12 @@
 		<Panel id="TrackListContainer" class="zoning__menu-section">
         	<Panel id="TrackList" class="zoning__track-list">
             	<!-- Populated in js -->
+				<Panel id="MainTrackContainer" class="w-full flow-down" />
+				<Panel id="BonusTrackContainer" class="w-full flow-down" />
+				<Button id="AddBonusButton" class="zoning__add-button" onactivate="ZoneMenuHandler.addBonus()">
+					<Label class="zoning__tracklist-label zoning__tracklist-label--add" text="#Zoning_NewBonus" />
+				</Button>
+				<Panel id="GlobalRegionContainer" class="w-full flow-down" />
         	</Panel>
 		</Panel>
 		<Label id="PropertiesLabel" class="zoning__header" text="#Zoning_PropertiesLabel" />

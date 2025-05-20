@@ -1687,7 +1687,7 @@ export interface MapZones {
 }
 
 export interface GlobalRegions {
-	allowBhop: Region[];
+	bhop: Region[];
 	cancel: Region[];
 }
 
