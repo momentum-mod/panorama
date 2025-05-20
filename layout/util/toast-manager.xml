@@ -7,7 +7,7 @@
 		<include type="module" src="file://{scripts}/util/toast-manager.ts" />
 	</scripts>
 
-	<Panel class="w-full h-full" hittest="false" hittestchildren="false">
+	<Panel class="w-full h-full" hittest="false" hittestchildren="false" onload="registerToastManager()">
 		<ConVarEnabler class="toast-manager" hittest="false" hittestchildren="false" convar="mom_ui_toasts_enable" togglevisibility="true">
 			<Panel id="Center" class="toast-manager__center" />
 			<Panel id="Left" class="toast-manager__left" />

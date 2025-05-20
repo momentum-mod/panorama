@@ -1,4 +1,4 @@
-import { getOrCreateGlobal } from './module-helpers';
+import { exposeToPanelContext, getOrCreateGlobal } from './module-helpers';
 import * as Enum from './enum';
 import { compareDeep } from './functions';
 
@@ -121,7 +121,7 @@ class Toast {
 	}
 }
 
-class ToastManagerInternal {
+class ToastManagerInstance {
 	private readonly activeToasts: Map<ToastLocation, Toast[]> = new Map(
 		Enum.values(ToastLocation).map((loc) => [loc, []])
 	);
@@ -139,24 +139,13 @@ class ToastManagerInternal {
 		[ToastLocation.RIGHT, 'toast--right']
 	]);
 
-	constructor() {
-		$.RegisterForUnhandledEvent('Toast_Show', (id, title, message, location, duration, icon, style) =>
-			this.createToast({ id, title, message, location, duration, style, icon })
-		);
-		$.RegisterForUnhandledEvent('Toast_ShowCustom', (id, layoutFile, location, duration, parameters) =>
-			this.createToastWithLayout({ id, layoutFile, location, duration, parameters })
-		);
-		$.RegisterForUnhandledEvent('Toast_Delete', (id) => this.deleteToastByID(id));
-		$.RegisterForUnhandledEvent('Toast_Clear', (location) => this.clearToasts(location));
-	}
-
 	/** Create a standard text-based toast. Either a title or message is required. */
-	createToast(toastArgs: ToastCreateArgs) {
+	public createToast(toastArgs: ToastCreateArgs) {
 		this.createToastInternal(toastArgs);
 	}
 
 	/** Create a toast with a custom layout file. */
-	createToastWithLayout(toastArgs: ToastCreateWithLayoutArgs) {
+	public createToastWithLayout(toastArgs: ToastCreateWithLayoutArgs) {
 		this.createToastInternal(toastArgs);
 	}
 
@@ -188,7 +177,7 @@ class ToastManagerInternal {
 	}
 
 	/** Delete Toast by its panel ID */
-	deleteToastByID(toastID: string) {
+	public deleteToastByID(toastID: string) {
 		if (!toastID) return;
 
 		this.activeToasts
@@ -200,7 +189,7 @@ class ToastManagerInternal {
 	}
 
 	/** Delete a given Toast instance */
-	deleteToast(toast: Toast) {
+	public deleteToast(toast: Toast) {
 		if (!toast) return;
 
 		if (toast.schedulerHandle) {
@@ -210,7 +199,7 @@ class ToastManagerInternal {
 		this.toastExpire(toast);
 	}
 
-	clearToasts(location?: ToastLocation | -1) {
+	public clearToasts(location?: ToastLocation | -1) {
 		// Panorama/JS doesn't run this synchronously for some reason, so put a slight delay between deletions. Also looks kinda cool!
 		if (location != null && location !== -1) {
 			let delay = 0;
@@ -327,8 +316,54 @@ class ToastManagerInternal {
 	}
 }
 
+class ToastManagerGlobal {
+	constructor() {
+		$.RegisterForUnhandledEvent('Toast_Show', (id, title, message, location, duration, icon, style) =>
+			this.createToast({ id, title, message, location, duration, style, icon })
+		);
+		$.RegisterForUnhandledEvent('Toast_ShowCustom', (id, layoutFile, location, duration, parameters) =>
+			this.createToastWithLayout({ id, layoutFile, location, duration, parameters })
+		);
+		$.RegisterForUnhandledEvent('Toast_Delete', (id) => this.deleteToastByID(id));
+		$.RegisterForUnhandledEvent('Toast_Clear', (location) => this.clearToasts(location));
+	}
+
+	public instances: Map<string, ToastManagerInstance> = new Map();
+
+	public createToast(args: ToastCreateArgs) {
+		this.instances.forEach((instance) => instance.createToast(args));
+	}
+
+	public createToastWithLayout(args: ToastCreateWithLayoutArgs) {
+		this.instances.forEach((instance) => instance.createToastWithLayout(args));
+	}
+
+	public deleteToastByID(id: string) {
+		this.instances.forEach((instance) => instance.deleteToastByID(id));
+	}
+
+	public deleteToast(toast: Toast) {
+		this.instances.forEach((instance) => instance.deleteToast(toast));
+	}
+
+	public clearToasts(location?: ToastLocation | -1) {
+		this.instances.forEach((instance) => instance.clearToasts(location));
+	}
+}
+
 /**
  * Class for creating toasts. Unlike others modals, using UiToolkitAPI, this is all in JS. Just import ToastManager to
  * use it.
  */
-export const ToastManager = getOrCreateGlobal('ToastManager', ToastManagerInternal);
+export const ToastManager = getOrCreateGlobal('ToastManager', ToastManagerGlobal);
+
+// GlobalPopups, MainMenu and Hud each have an instance of ToastManager (grrr) and I like having a ToastManager class
+// like this for TS code to use instead of events, so we wrap every instance in a global that calls the same methods.
+exposeToPanelContext({
+	registerToastManager: () => {
+		// Use parent ID ('GlobalPopups', 'MainMenu', 'Hud') as the key for the instance so we overwrite the HUD
+		// instance every time the map changes and HUD is reloaded.
+		const parentId = $.GetContextPanel().GetParent()!.id;
+		ToastManager.instances.set(parentId, new ToastManagerInstance());
+	}
+});
