@@ -91,7 +91,7 @@
 		border-top: 0px none;
 		transition: opacity 0.1s ease-in-out 0s;
 		opacity: 1;
-		overflow: squish scroll;
+		overflow: squish clip;
 
 		& > VerticalScrollBar .ScrollThumb {
 			opacity: 1;
