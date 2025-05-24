@@ -172,6 +172,9 @@
 	margin-bottom: 8px;
 
 	&__gamemode-button {
+		&:selected {
+			sound: 'UIPanorama.ModeSelect';
+		}
 		// IMPORTANT: `button` class gives vertical-align: center which is buggy with flow wrapping!!
 		vertical-align: top;
 		margin-bottom: 4px;

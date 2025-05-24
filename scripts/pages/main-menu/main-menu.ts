@@ -290,12 +290,10 @@ class MainMenuHandler implements OnPanelLoad {
 	 *	Toggles between dark and light mode in the main menu
 	 */
 	toggleBackgroundLightDark() {
-		$.persistentStorage.setItem(
-			'settings.mainMenuBackground',
-			$.persistentStorage.getItem('settings.mainMenuBackground') === 0 ? 1 : 0
-		);
-
+		const isLightMode = $.persistentStorage.getItem('settings.mainMenuBackground') === 0;
+		$.persistentStorage.setItem('settings.mainMenuBackground', isLightMode ? 1 : 0);
 		this.setMainMenuBackground();
+		$.PlaySoundEvent(isLightMode ? 'UIPanorama.MenuThemeDark' : 'UIPanorama.MenuThemeLight');
 	}
 
 	/**
