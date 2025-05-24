@@ -1174,9 +1174,9 @@ class CgazHandler {
 		}
 
 		const leftAngles =
-			fillLeftZones && this.primeTruenessMode === TruenessMode.CPM_TURN ? this.primeAngles : this.snapAngles;
+			fillLeftZones && this.primeTruenessMode & TruenessMode.CPM_TURN ? this.primeAngles : this.snapAngles;
 		const rightAngles =
-			fillRightZones && this.primeTruenessMode === TruenessMode.CPM_TURN ? this.primeAngles : this.snapAngles;
+			fillRightZones && this.primeTruenessMode & TruenessMode.CPM_TURN ? this.primeAngles : this.snapAngles;
 
 		const iLeft = this.updateFirstPrimeZone(leftTarget, leftOffset, this.primeFirstZoneLeft, leftAngles);
 		const iRight = this.updateFirstPrimeZone(rightTarget, rightOffset, this.primeFirstZoneRight, rightAngles);
@@ -1235,7 +1235,7 @@ class CgazHandler {
 				end: jLeft,
 				direction: -1
 			};
-			this.fillActivePrimeZones(zoneRange, leftOffset, gainZonesMap, gainMax, velocity, wishDir);
+			this.fillActivePrimeZones(zoneRange, leftOffset, leftAngles, gainZonesMap, gainMax, velocity, wishDir);
 		}
 
 		if (fillRightZones) {
@@ -1246,7 +1246,7 @@ class CgazHandler {
 				end: jRight,
 				direction: 1
 			};
-			this.fillActivePrimeZones(zoneRange, rightOffset, gainZonesMap, gainMax, velocity, wishDir);
+			this.fillActivePrimeZones(zoneRange, rightOffset, rightAngles, gainZonesMap, gainMax, velocity, wishDir);
 		}
 
 		const scale = 1 / (gainMax > 0 ? gainMax : this.primeAccel);
@@ -1289,12 +1289,13 @@ class CgazHandler {
 	fillActivePrimeZones(
 		zoneRange: { direction: number; start: number; end: number },
 		offset: number,
+		angles: number[],
 		gainZonesMap: Map<unknown, number>,
 		gainMax: number,
 		velocity: vec3,
 		wishDir: vec2
 	) {
-		const angleCount = this.primeAngles.length;
+		const angleCount = angles.length;
 		let count = (zoneRange.direction * (zoneRange.end - zoneRange.start) + angleCount) % angleCount;
 		let index = zoneRange.start;
 		let zone;
@@ -1302,8 +1303,8 @@ class CgazHandler {
 			index = (index + zoneRange.direction + angleCount) % angleCount;
 			zone = this.primeZones[index];
 
-			const left = MomMath.wrapToHalfPi(this.primeAngles[index] - offset);
-			const right = MomMath.wrapToHalfPi(this.primeAngles[(index + 1) % angleCount] - offset);
+			const left = MomMath.wrapToHalfPi(angles[index] - offset);
+			const right = MomMath.wrapToHalfPi(angles[(index + 1) % angleCount] - offset);
 			this.updateZone(zone, left, right, 0, PRIME_SIGHT_CLASS, this.primeSplitZone);
 			const speedGain = this.findPrimeGain(zone, velocity, wishDir);
 			gainZonesMap.set(zone, speedGain);
