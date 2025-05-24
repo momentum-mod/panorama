@@ -285,6 +285,7 @@ $drawer-width: 768px;
 			background-color: function.gradient-radial-button(rgba(77, 77, 77, 0.4), rgba(0, 0, 0, 0.4));
 			border-top: 1px solid rgba(0, 0, 0, 0.3);
 			border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+			sound: 'UIPanorama.ButtonSecondary';
 
 			#{$root}__icon {
 				opacity: 1;
@@ -375,6 +376,8 @@ $drawer-width: 768px;
 
 	$this: &;
 	&--expanded {
+		sound: 'UIPanorama.DrawerOpen';
+		sound-out: 'UIPanorama.DrawerClose';
 		transform: translateX(0);
 
 		#{$this}__rightnav {
@@ -481,6 +484,8 @@ $drawer-width: 768px;
 .news {
 	$root: &;
 	&--minimized {
+		sound: 'UIPanorama.DrawerClose';
+		sound-out: 'UIPanorama.DrawerOpen';
 		#{$root}__main {
 			height: 0px;
 		}
