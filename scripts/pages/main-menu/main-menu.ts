@@ -1,6 +1,5 @@
 import { PanelHandler, OnPanelLoad } from 'util/module-helpers';
 import { checkDosa } from 'util/dont-show-again';
-import { RunSafeguardType } from 'common/safeguards';
 
 enum GameUIState {
 	INVALID = 0,
@@ -36,9 +35,6 @@ class MainMenuHandler implements OnPanelLoad {
 		$.RegisterForUnhandledEvent('ShowPauseMenu', () => this.onShowPauseMenu());
 		$.RegisterForUnhandledEvent('HidePauseMenu', () => this.onHidePauseMenu());
 		$.RegisterForUnhandledEvent('MapSelector_OnLoaded', () => this.onMapSelectorLoaded());
-		$.RegisterForUnhandledEvent('Safeguard_Disconnect', () => this.onSafeguardDisconnect());
-		$.RegisterForUnhandledEvent('Safeguard_Quit', () => this.onSafeguardQuit());
-		$.RegisterForUnhandledEvent('Safeguard_ChangeMap', (mapName) => this.onSafeguardMapChange(mapName));
 		$.RegisterForUnhandledEvent('ReloadMainMenuBackground', () => this.setMainMenuBackground());
 		$.RegisterForUnhandledEvent('OnMomentumQuitPrompt', () => this.onQuitPrompt());
 		$.RegisterEventHandler('Cancelled', $.GetContextPanel(), () => this.onEscapeKeyPressed());
@@ -348,39 +344,6 @@ class MainMenuHandler implements OnPanelLoad {
 			$.Localize('#Action_Return'),
 			() => {},
 			'blur'
-		);
-	}
-
-	/** Shows a safeguard popup when disconnect is pressed during a run and safeguard is on */
-	onSafeguardDisconnect() {
-		UiToolkitAPI.ShowGenericPopupOkCancel(
-			$.Localize('#Safeguard_MapQuitToMenu'),
-			$.Localize('#Safeguard_MapQuitToMenu_Message'),
-			'warning-popup',
-			() => $.DispatchEvent('Safeguard_Response', RunSafeguardType.QUIT_TO_MENU),
-			() => {}
-		);
-	}
-
-	/** Shows a safeguard popup when quit is pressed during a run and safeguard is on */
-	onSafeguardQuit() {
-		UiToolkitAPI.ShowGenericPopupOkCancel(
-			$.Localize('#Safeguard_MapQuitGame'),
-			$.Localize('#Safeguard_MapQuitGame_Message'),
-			'warning-popup',
-			() => $.DispatchEvent('Safeguard_Response', RunSafeguardType.QUIT_GAME),
-			() => {}
-		);
-	}
-
-	/** Shows a safeguard popup when map change is triggered during a run and safeguard is on */
-	onSafeguardMapChange(mapName: string) {
-		UiToolkitAPI.ShowGenericPopupOkCancel(
-			$.Localize('#Safeguard_MapChange'),
-			$.Localize('#Safeguard_MapChange_Message').replace('%map%', mapName),
-			'warning-popup',
-			() => GameInterfaceAPI.ConsoleCommand('__map_change_ok 1;map ' + mapName),
-			() => {}
 		);
 	}
 

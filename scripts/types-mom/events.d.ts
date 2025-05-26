@@ -357,29 +357,6 @@ interface GlobalEventNameMap {
 
 	LeaderboardEntry_DeleteReplay: (itemIndex: int32) => void;
 
-	/**
-	 * This event is fired when the act of disconnecting from the map is safeguarded.
-	 * Respond to this via dispatching a Safeguard_Response event if the user acccepts.
-	 */
-	Safeguard_Disconnect: () => void;
-
-	/**
-	 * This event is fired when the act of quitting the game is safeguarded.
-	 * Respond to this via dispatching a Safeguard_Response event if the user acccepts.
-	 */
-	Safeguard_Quit: () => void;
-
-	/**
-	 * This event is fired when the act of changing the map is safeguarded.
-	 * Respond to this via dispatching a Safeguard_Response event if the user acccepts.
-	 */
-	Safeguard_ChangeMap: (mapName: string) => void;
-
-	/**
-	 * This event is supposed to be fired back to C++ code to be able to handle the outcome of the Safeguard popup response.
-	 */
-	Safeguard_Response: (type: import('common/safeguards').RunSafeguardType) => void;
-
 	/** Fired when local user data is loaded from disk or fetched from backend. */
 	MomAPI_UserUpdate: (user: import('common/web').User) => void;
 
