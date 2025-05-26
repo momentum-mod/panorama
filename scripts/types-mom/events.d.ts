@@ -387,6 +387,18 @@ interface GlobalEventNameMap {
 
 	/** Fired after updating the map cache with the latest roaming lobby player counts. */
 	MapEntry_RoamingLobbiesUpdated: (playerCount: number) => void;
+
+	/** Called when the player changes safeguard HUD setting (mom_hud_safeguard_indicator, mom_safeguard_holdtime). */
+	OnSafeguardSettingChanged: () => void;
+
+	/** Called when the player starts holding down a safeguarded command. */
+	OnSafeguardCommandHold: () => void;
+
+	/** Called when the player releases a safeguarded command before it completes. */
+	OnSafeguardCommandRelease: () => void;
+
+	/** Called when the player completes a safeguarded command. */
+	OnSafeguardCommandComplete: () => void;
 }
 
 interface PanelEventNameMap {

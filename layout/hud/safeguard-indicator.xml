@@ -1,0 +1,15 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+	
+	<scripts>
+		<include type="module" src="file://{scripts}/hud/safeguard-indicator.ts" />
+	</scripts>
+
+	<MomHudSafeguardIndicator class="h-align-center v-align-center" alternateTicks="false">
+		<ConVarEnabler id="SafeguardContainer" class="safeguard__container" convar="mom_hud_safeguard_indicator" togglevisibility="true">
+			<Image id="SafeguardMeter" class="safeguard__meter" src="file://{images}/hud/safeguard-indicator.svg" textureheight="64" />
+		</ConVarEnabler>
+	</MomHudSafeguardIndicator>
+</root>
