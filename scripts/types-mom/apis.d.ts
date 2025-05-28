@@ -312,13 +312,6 @@ declare namespace RunComparisonsAPI {
 	function GetComparisonRun(): RunMetadata | null;
 }
 
-declare namespace ZonesAPI {
-	function GetZoneCount(...args: any[]): any; // TODO: Old API (I think)
-	function GetZoneSpeed(...args: any[]): any;
-	function GetZoneSpeed(...args: any[]): any;
-	function GetCurrentZone(...args: any[]): any;
-}
-
 declare namespace NewsAPI {
 	interface RSSFeedItem {
 		title: string;
