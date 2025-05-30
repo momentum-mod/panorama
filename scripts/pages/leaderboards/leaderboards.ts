@@ -212,12 +212,16 @@ class LeaderboardsHandler {
 			.sort(sortLeaderboard)
 			.forEach((leaderboard, index) => {
 				let trackStr;
-				if (leaderboard.trackType === 0) {
-					trackStr = $.Localize('#Leaderboards_Tracks_Main');
-				} else if (leaderboard.trackType === 1) {
-					trackStr = `${$.Localize('#Leaderboards_Tracks_Stage')} ${leaderboard.trackNum}`;
-				} else {
-					trackStr = `${$.Localize('#Leaderboards_Tracks_Bonus')} ${leaderboard.trackNum}`;
+				switch (leaderboard.trackType) {
+					case TrackType.MAIN:
+						trackStr = $.Localize('#Leaderboards_Tracks_Main');
+						break;
+					case TrackType.STAGE:
+						trackStr = `${$.Localize('#Leaderboards_Tracks_Stage')} ${leaderboard.trackNum}`;
+						break;
+					case TrackType.BONUS:
+						trackStr = `${$.Localize('#Leaderboards_Tracks_Bonus')} ${leaderboard.trackNum}`;
+						break;
 				}
 
 				const item = $.CreatePanel('Label', this.panels.tracksDropdown, trackStr, {
