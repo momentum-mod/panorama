@@ -5,7 +5,8 @@ import {
 	LobbyMember,
 	LobbyList,
 	GroupedLobbyLists,
-	MemberData
+	MemberData,
+	LobbyType
 } from 'common/online';
 
 type LobbyListItem = LobbyMember & { panel?: Panel };
@@ -221,19 +222,22 @@ class LobbyHandler {
 				newPanel.SetPanelEvent('ondblclick', joinCallback);
 				newPanel.FindChildTraverse('LobbyJoinButton').SetPanelEvent('onactivate', joinCallback);
 
-				const typePanel = newPanel.FindChildTraverse<Image>('LobbyType');
-				const typeProps = LobbyProperties.get(lobbyType);
-				const typeIcon = `file://{images}/online/${typeProps.icon}.svg`;
-				typePanel.SetImage(typeIcon);
-				typePanel.SetPanelEvent('onmouseover', () =>
-					UiToolkitAPI.ShowTitleImageTextTooltipStyled(
-						typePanel.id,
-						'',
-						typeIcon,
-						typeProps.name,
-						'tooltip--notitle'
-					)
-				);
+				if (lobbyType >= LobbyType.PRIVATE && lobbyType <= LobbyType.INVISIBLE) {
+					// Suppress annoying JS error until we refactor lobby system to C++
+					const typePanel = newPanel.FindChildTraverse<Image>('LobbyType');
+					const typeProps = LobbyProperties.get(lobbyType);
+					const typeIcon = `file://{images}/online/${typeProps.icon}.svg`;
+					typePanel.SetImage(typeIcon);
+					typePanel.SetPanelEvent('onmouseover', () =>
+						UiToolkitAPI.ShowTitleImageTextTooltipStyled(
+							typePanel.id,
+							'',
+							typeIcon,
+							typeProps.name,
+							'tooltip--notitle'
+						)
+					);
+				}
 
 				const avatarPanel = newPanel.FindChildTraverse<AvatarImage>('LobbyPlayerAvatar');
 				avatarPanel.steamid = ownerSteamID;
