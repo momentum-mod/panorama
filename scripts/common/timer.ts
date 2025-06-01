@@ -526,8 +526,7 @@ export function generateComparisonSplits(baseRun: RunMetadata, comparisonRun: Ru
 /** Enum for why end of run is being shown */
 export enum EndOfRunShowReason {
 	PLAYER_FINISHED_RUN = 0,
-	REPLAY_FINISHED_RUN = 1,
-	MANUALLY_SHOWN = 2
+	MANUALLY_SHOWN = 1
 }
 
 /** Enum for different run submission states */
