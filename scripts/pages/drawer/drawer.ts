@@ -5,14 +5,14 @@ export const Tabs = {
 		layout: 'lobby',
 		button: $('#LobbyButton')
 	},
-	ProfileDrawer: {
-		layout: 'profile',
-		button: $('#ProfileButton')
-	},
-	ChallengesDrawer: {
-		layout: 'challenges',
-		button: $('#ChallengesButton')
-	},
+	// ProfileDrawer: {
+	// 	layout: 'profile',
+	// 	button: $('#ProfileButton')
+	// },
+	// ChallengesDrawer: {
+	// 	layout: 'challenges',
+	// 	button: $('#ChallengesButton')
+	// },
 	AboutDrawer: {
 		layout: 'about',
 		button: $('#AboutButton')
@@ -140,12 +140,12 @@ class DrawerHandler {
 		this.panels.lobbyPlayerCountLabel.SetHasClass('rightnav__button-subtitle--hidden', playerCount <= 1);
 	}
 
-	/** Open the profile tab when the main menu player card is pressed */
-	onPlayerCardPressed() {
-		this.extend();
-
-		if (this.activeTab !== 'ProfileDrawer') {
-			$.DispatchEvent('Activated', Tabs.ProfileDrawer.button, PanelEventSource.MOUSE);
-		}
-	}
+	// /** Open the profile tab when the main menu player card is pressed */
+	// onPlayerCardPressed() {
+	// 	this.extend();
+	//
+	// 	if (this.activeTab !== 'ProfileDrawer') {
+	// 		$.DispatchEvent('Activated', Tabs.ProfileDrawer.button, PanelEventSource.MOUSE);
+	// 	}
+	// }
 }
