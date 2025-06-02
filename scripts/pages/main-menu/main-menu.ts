@@ -2,15 +2,6 @@ import { OnPanelLoad, PanelHandler } from 'util/module-helpers';
 import { checkDosa } from 'util/dont-show-again';
 import AuthenicationResult = MomentumAPI.AuthenicationResult;
 
-enum GameUIState {
-	INVALID = 0,
-	LOADINGSCREEN = 1,
-	INGAME = 2,
-	MAINMENU = 3,
-	PAUSEMENU = 4,
-	INTROMOVIE = 5
-}
-
 @PanelHandler()
 class MainMenuHandler implements OnPanelLoad {
 	readonly panels = {
