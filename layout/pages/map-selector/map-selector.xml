@@ -216,8 +216,6 @@
 								<Label id="HudTabMenuBonusesCountLabel" class="text-h4 text-shadow-outline" text="#MapInfo_BonusesCount" />
 							</Panel>
 						</Panel>
-						<Panel class="mapselector-map-info__top-right">
-						</Panel>
 					</Panel>
 					<Panel class="mapselector-map-info__content">
 						<Panel id="MapDescription" class="mapselector-map-info__content-left mapselector-map-info__description">
@@ -258,7 +256,7 @@
 						</Panel>
 
 						<Panel class="flow-down mapselector-map-info__content-right">
-							<Panel class="mapselector-map-info__action mb-3">
+							<Panel class="mapselector-map-info__action mb-1">
 								<Button id="MapInfoAction" class="button mapselector-action-button">
 									<Panel class="mapselector-action-button__typecontainer action-play">
 										<Image class="button__icon mapselector-action-button__icon" src="file://{images}/play-circle.svg" textureheight="40" />
@@ -271,17 +269,23 @@
 								</Button>
 								<MapDownloadStatus id="MapInfoDownloadStatus" class="map-download-status" />
 							</Panel>
-							<Panel class="flow-right w-full mb-3">
+							<Panel class="flow-right w-full mb-2">
 								<ToggleButton id="MapInfoFavorite" class="button togglebutton togglebutton--yellow mapselector-map-info__big-button mr-1">
-									<Panel class="flow-right h-full h-align-center">
-										<Image class="button__icon button__icon--left" src="file://{images}/star.svg" textureheight="40" />
-										<Label class="button__text button__text--right" text="#MapSelector_Button_Favorite" />
+									<Panel class="flow-right v-align-center h-align-center">
+										<Image class="button__icon button__icon--left mapselector-map-info__big-button__icon" src="file://{images}/star.svg" textureheight="40" />
+										<Label class="button__text button__text--right mapselector-map-info__big-button__text" text="#MapSelector_Button_Favorite" />
 									</Panel>
 								</ToggleButton>
-								<Button id="MapInfoWebsiteButton" class="button mapselector-map-info__big-button ml-1" onactivate="MapSelectorHandler.openInSteamOverlay();">
-									<Panel class="flow-right h-full h-align-center">
-										<Image class="button__icon button__icon--left ml-0" src="file://{images}/globe.svg" textureheight="40" />
-										<Label class="button__text button__text--right" text="#MapSelector_Button_Webpage" />
+								<Button id="MapInfoWebsiteButton" class="button mapselector-map-info__big-button mr-1" onactivate="MapSelectorHandler.openInSteamOverlay();">
+									<Panel class="flow-right v-align-center h-align-center">
+										<Image class="button__icon mapselector-map-info__big-button__icon" src="file://{images}/globe.svg" textureheight="40" />
+										<Label class="button__text mapselector-map-info__big-button__text" text="#MapSelector_Button_Webpage" />
+									</Panel>
+								</Button>
+								<Button id="MapInfoGallery" class="button mapselector-map-info__big-button" onactivate="MapSelectorHandler.openGallery();">
+									<Panel class="flow-right v-align-center h-align-center">
+										<Image class="button__icon mapselector-map-info__big-button__icon" src="file://{images}/panorama-outline.svg" textureheight="40" />
+										<Label class="button__text mapselector-map-info__big-button__text" text="#MapSelector_Button_Gallery" />
 									</Panel>
 								</Button>
 							</Panel>

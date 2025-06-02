@@ -130,6 +130,8 @@ class MapSelectorHandler implements OnPanelLoad {
 	readonly tierMin = 1;
 	readonly tierMax = 10;
 
+	selectedMapData: MapCacheAPI.MapData | null = null;
+
 	constructor() {
 		$.RegisterForUnhandledEvent('MapSelector_ShowConfirmCancelDownload', (mapID) =>
 			this.showConfirmCancelDownload(mapID)
@@ -329,8 +331,11 @@ class MapSelectorHandler implements OnPanelLoad {
 	/** Set all the map data for the map just selected */
 	onSelectedDataUpdated(mapData: MapCacheAPI.MapData) {
 		if (!mapData) {
+			this.selectedMapData = null;
 			return;
 		}
+
+		this.selectedMapData = mapData;
 
 		const baseImageUrl = this.parseMapImageUrl(mapData.staticData);
 		if (baseImageUrl) {
@@ -525,6 +530,21 @@ class MapSelectorHandler implements OnPanelLoad {
 	toggleLeaderboards(open: boolean) {
 		this.panels.leaderboardContainer.SetHasClass('mapselector-leaderboards--open', open);
 		$.persistentStorage.setItem('mapSelector.leaderboardsOpen', open);
+	}
+
+	openGallery() {
+		if (!this.selectedMapData) return;
+
+		const gallery = UiToolkitAPI.ShowCustomLayoutPopup<Gallery>(
+			'MapSelectorGallery',
+			'file://{resources}/layout/components/gallery.xml'
+		);
+
+		gallery.handler.init(
+			this.panels.cp,
+			this.selectedMapData.staticData.images.map(({ id }) => id),
+			this.parseMapImageUrl(this.selectedMapData.staticData) ?? ''
+		);
 	}
 
 	checkingUpdates = false;

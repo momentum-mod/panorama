@@ -28,6 +28,7 @@ declare interface PanelTagNameMap {
 	MomHudSafeguardIndicator: MomHudSafeguardIndicator;
 	ToastContainer: ToastContainer;
 	ToastGeneric: ToastGeneric;
+	Gallery: Gallery;
 }
 
 declare interface PlayerCard extends AbstractPanel<'PlayerCard'> {
@@ -44,6 +45,11 @@ declare interface LineGraph extends AbstractPanel<'LineGraph'> {
 	handler: import('components/graphs/line-graph').LineGraphHandler;
 }
 UiToolkitAPI.RegisterPanel2d('LineGraph', 'file://{resources}/layout/components/graphs/line-graph.xml');
+
+// Loaded using ShowCustomLayoutPopup
+declare interface Gallery extends AbstractPanel<'Gallery'> {
+	handler: import('components/gallery').GalleryHandler;
+}
 
 declare interface ToastContainer extends AbstractPanel<'ToastContainer'> {}
 UiToolkitAPI.RegisterPanel2d('ToastManager', 'file://{resources}/layout/util/toast-manager.xml');

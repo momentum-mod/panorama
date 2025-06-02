@@ -351,8 +351,6 @@ $notch-width: 10px;
 
 		height: 72px;
 		max-height: 40px;
-
-		margin-bottom: 8px;
 	}
 
 	&__content {
@@ -384,7 +382,26 @@ $notch-width: 10px;
 
 	&__big-button {
 		width: fill-parent-flow(1);
-		height: 40px;
+		height: 36px;
+
+		&__icon {
+			padding: 0;
+			margin: 0;
+			width: 20px;
+			height: 20px;
+		}
+
+		&__text {
+			font-size: 18px;
+			margin: 0;
+			margin-left: 4px;
+			margin-right: 1px;
+			vertical-align: center;
+			max-width: 60px;
+			max-height: 30px;
+			overflow: squish;
+			text-overflow: shrink;
+		}
 	}
 
 	&__description {
@@ -479,6 +496,7 @@ $notch-width: 10px;
 		font-size: 16px;
 	}
 }
+
 
 .mapselector-credits {
 	flow-children: down;
