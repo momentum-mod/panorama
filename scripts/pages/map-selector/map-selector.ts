@@ -400,15 +400,14 @@ class MapSelectorHandler implements OnPanelLoad {
 				container.RemoveAndDeleteChildren();
 
 				staticData.versions
-					.values()
-					// Skip first version entirely, doesn't have a changelog, nothing at all to show.
-					.drop(1)
-					.forEach(({ changelog }, i) => {
+					// Data doesn't seem always ordered by versionNum (?) so doing a sort
+					.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+					.forEach(({ changelog }, i, arr) => {
 						$.CreatePanel('Label', container, '', {
 							class: 'mapselector-map-info__h3',
 							text: $.Localize('#MapSelector_Info_Changelog_Version').replace(
 								'%version%',
-								(i + 2).toString()
+								(arr.length - i).toString()
 							)
 						});
 						$.CreatePanel('Label', container, '', {
