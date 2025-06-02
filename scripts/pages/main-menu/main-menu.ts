@@ -1,5 +1,6 @@
-import { PanelHandler, OnPanelLoad } from 'util/module-helpers';
+import { OnPanelLoad, PanelHandler } from 'util/module-helpers';
 import { checkDosa } from 'util/dont-show-again';
+import AuthenicationResult = MomentumAPI.AuthenicationResult;
 
 enum GameUIState {
 	INVALID = 0,
@@ -37,6 +38,7 @@ class MainMenuHandler implements OnPanelLoad {
 		$.RegisterForUnhandledEvent('MapSelector_OnLoaded', () => this.onMapSelectorLoaded());
 		$.RegisterForUnhandledEvent('ReloadMainMenuBackground', () => this.setMainMenuBackground());
 		$.RegisterForUnhandledEvent('OnMomentumQuitPrompt', () => this.onQuitPrompt());
+		$.RegisterForUnhandledEvent('MomAPI_Authenticated', (result) => this.onAuthenticated(result));
 		$.RegisterEventHandler('Cancelled', $.GetContextPanel(), () => this.onEscapeKeyPressed());
 
 		// Close the map selector when a map is successfully loaded
@@ -321,7 +323,7 @@ class MainMenuHandler implements OnPanelLoad {
 	 * based on if we're ingame or not.
 	 */
 	onQuitButtonPressed() {
-		if (GameInterfaceAPI.GetGameUIState() === (GameUIState.PAUSEMENU as any)) {
+		if (GameInterfaceAPI.GetGameUIState() === GameUIState.PAUSEMENU) {
 			GameInterfaceAPI.ConsoleCommand('disconnect');
 			this.onHomeButtonPressed();
 			return;
@@ -354,10 +356,46 @@ class MainMenuHandler implements OnPanelLoad {
 
 	onEscapeKeyPressed() {
 		// Resume game in pause menu mode, OTHERWISE close the active menu menu page
-		if (GameInterfaceAPI.GetGameUIState() === (GameUIState.PAUSEMENU as any)) {
+		if (GameInterfaceAPI.GetGameUIState() === GameUIState.PAUSEMENU) {
 			$.DispatchEvent('MainMenuResumeGame');
 		} else {
 			this.onHomeButtonPressed();
 		}
+	}
+
+	onAuthenticated(result: MomentumAPI.AuthenicationResult) {
+		if (result === MomentumAPI.AuthenicationResult.SUCCESS) return;
+
+		if (result === AuthenicationResult.FAILURE_ACCOUNT_LIMITED) {
+			UiToolkitAPI.ShowGenericPopupTwoOptions(
+				'#API_Auth_Failure',
+				'#API_Auth_LimitedSteamAccount',
+				'wide-popup',
+				'#API_Auth_SteamLimitedInfo',
+				() => SteamOverlayAPI.OpenURLModal('https://help.steampowered.com/en/faqs/view/71D3-35C2-AD96-AA3A'),
+				'#Common_OK',
+				() => {}
+			);
+
+			return;
+		}
+
+		let token: string;
+		switch (result) {
+			case AuthenicationResult.FAILURE_LOCAL_STEAM_CONNECTION:
+			case AuthenicationResult.FAILURE_BACKEND_STEAM_CONNECTION:
+				token = '#API_Auth_SteamDown';
+				break;
+			case AuthenicationResult.FAILURE_SIGNUPS_DISABLED:
+				token = '#API_Auth_SignupsDisabled';
+				break;
+			case AuthenicationResult.FAILURE_BACKEND_DOWN:
+				token = '#API_Auth_BackendDown';
+				break;
+			default:
+				token = '#API_Auth_Unauthorized';
+		}
+
+		UiToolkitAPI.ShowGenericPopupOk('#API_Auth_Failure', token, 'wide-popup', () => {});
 	}
 }

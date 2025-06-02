@@ -360,6 +360,9 @@ interface GlobalEventNameMap {
 	/** Fired when local user data is loaded from disk or fetched from backend. */
 	MomAPI_UserUpdate: (user: import('common/web').User) => void;
 
+	/** Fired on API authenticate success or failure. */
+	MomAPI_Authenticated: (result: MomentumAPI.AuthenicationResult) => void;
+
 	ActiveZoneDefsChanged: () => void;
 
 	/** Fired after updating the map cache with the latest roaming lobby player counts. */
