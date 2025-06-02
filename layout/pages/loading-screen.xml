@@ -8,7 +8,7 @@
 	</scripts>
 
 	<Panel class="loadingscreen">
-		<Image id="BackgroundImageDefault" class="full" src="file://{materials}/panorama/bg_00.vtf"/>
+		<Image id="BackgroundImageDefault" class="full" src="file://{images}/backgrounds/MomentumNeutral_4K.png" scaling="stretch-to-cover-preserve-aspect"/>
 		<Image id="BackgroundImage" class="full hide" scaling="stretch-to-cover-preserve-aspect"/>
 
 		<Panel class="full flow-down">
