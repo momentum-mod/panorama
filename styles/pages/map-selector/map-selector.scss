@@ -465,20 +465,22 @@ $notch-width: 10px;
 	&__h2,
 	&__h3 {
 		@include mixin.font-styles($use-header: true);
-		margin-bottom: 4px;
 		color: #eee;
 	}
 
 	&__h1 {
 		font-size: 22px;
+		margin-bottom: 4px;
 	}
 
 	&__h2 {
 		font-size: 20px;
+		margin-bottom: 4px;
 	}
 
 	&__h3 {
 		font-size: 18px;
+		margin-bottom: 0px;
 	}
 
 	&__paragraph {
@@ -494,9 +496,9 @@ $notch-width: 10px;
 
 	&__changelog-text {
 		font-size: 16px;
+		margin-bottom: 6px;
 	}
 }
-
 
 .mapselector-credits {
 	flow-children: down;
