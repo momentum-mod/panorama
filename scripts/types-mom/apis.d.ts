@@ -23,6 +23,29 @@ declare namespace MomentumAPI {
 	/** Gets Momentum's current version information." */
 
 	function GetVersionInfo(): string;
+
+	const enum AuthenicationResult {
+		SUCCESS = 0,
+
+		// General failure case, could be invalid ticket, using noencryptedticket for prod etc...
+		// Should be very rare for normal users.
+		FAILURE_UNAUTHORIZED = 1,
+
+		// Whenever Steam won't respond to local user with valid data (Tuesdays!)
+		FAILURE_LOCAL_STEAM_CONNECTION = 2,
+
+		// Backend can't get through to Steam (Tuesdays!)
+		FAILURE_BACKEND_STEAM_CONNECTION = 3,
+
+		// Backend is down for some reason
+		FAILURE_BACKEND_DOWN = 4,
+
+		// Limited (haven't spent £5) Steam account
+		FAILURE_ACCOUNT_LIMITED = 5,
+
+		// Signups killswitch is active (hard to know if we'll ever do this)
+		FAILURE_SIGNUPS_DISABLED = 6
+	}
 }
 
 declare namespace MomentumMovementAPI {
