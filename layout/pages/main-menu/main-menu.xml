@@ -31,9 +31,9 @@
 					<RadioButton id="PlayButton" group="TopNavRadio" class="topnav__button" onactivate="MainMenuHandler.navigateToPage('MapSelection', 'map-selector/wrapper', false)">
 						<Image class="topnav__icon" src="file://{images}/play-circle.svg" textureheight="64" />
 					</RadioButton>
-					<RadioButton id="InventoryButton" group="TopNavRadio" class="topnav__button" disabled="true" onmouseover="UiToolkitAPI.ShowTextTooltip('InventoryButton', $.Localize('#Common_ComingSoon'))" onmouseout="UiToolkitAPI.HideTextTooltip()" style="tooltip-position: bottom;">
-						<Image class="topnav__icon" src="file://{images}/inventory.svg" textureheight="64" />
-					</RadioButton>
+<!--					<RadioButton id="InventoryButton" group="TopNavRadio" class="topnav__button" disabled="true" onmouseover="UiToolkitAPI.ShowTextTooltip('InventoryButton', $.Localize('#Common_ComingSoon'))" onmouseout="UiToolkitAPI.HideTextTooltip()" style="tooltip-position: bottom;">-->
+<!--						<Image class="topnav__icon" src="file://{images}/inventory.svg" textureheight="64" />-->
+<!--					</RadioButton>-->
 					<RadioButton id="LearnButton" group="TopNavRadio" class="topnav__button" onactivate="MainMenuHandler.navigateToPage('Learn', 'learn')">
 						<Image class="topnav__icon" src="file://{images}/learn.svg" textureheight="64" />
 					</RadioButton>
