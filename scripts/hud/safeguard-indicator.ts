@@ -6,7 +6,6 @@ class SafeguardHandler {
 		container: $<Panel>('#SafeguardContainer')
 	};
 
-	enabled: boolean;
 	holdTime: number;
 
 	constructor() {
@@ -32,14 +31,12 @@ class SafeguardHandler {
 	}
 
 	updateSettings() {
-		this.enabled = GameInterfaceAPI.GetSettingInt('mom_hud_safeguard_indicator') === 1;
 		this.holdTime = GameInterfaceAPI.GetSettingFloat('mom_safeguard_holdtime');
-
 		this.panels.container.style.transitionDuration = `${this.holdTime}s`;
 	}
 
 	updateVisibility(visible: boolean) {
-		if (visible && this.enabled) {
+		if (visible) {
 			this.panels.container.RemoveClass('safeguard__container--hide');
 			this.panels.container.style.transitionDuration = '0.0s';
 		} else {
