@@ -129,8 +129,8 @@
 					</Panel>
 				</Panel>
 
-				<SettingsSlider text="#Settings_Safeguards_HoldTime" min="0" max="5" displayprecision="2" convar="mom_safeguard_holdtime" infomessage="#Settings_Safeguards_HoldTime_Info" tags="safeguard" />
-				<SettingsSlider text="#Settings_Safeguards_MinRuntime" min="0" max="600" displayprecision="1" convar="mom_safeguard_minruntime" infomessage="#Settings_Safeguards_MinRuntime_Info" tags="safeguard" />
+				<SettingsSlider text="#Settings_Safeguards_HoldTime" min="0.25" max="1" displayprecision="2" convar="mom_safeguard_holdtime" infomessage="#Settings_Safeguards_HoldTime_Info" tags="safeguard" />
+				<SettingsSlider text="#Settings_Safeguards_MinRuntime" min="0" max="1200" displayprecision="1" convar="mom_safeguard_minruntime" infomessage="#Settings_Safeguards_MinRuntime_Info" tags="safeguard" />
 			</Panel>
 
 			<Panel class="settings-page__spacer" />
