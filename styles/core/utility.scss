@@ -1,5 +1,6 @@
 @use '../config' as *;
 @use 'sass:list';
+@use 'sass:string';
 
 // ================
 // WIDTH / HEIGHT
@@ -223,7 +224,7 @@ $s: list.join((0px), $spacers);
 
 @each $rotation in (45, 90, 135, 180, 225, 270, 315) {
 	.rot-#{$rotation} {
-		transform: rotateZ(unquote($rotation + 'deg'));
+		transform: rotateZ(string.unquote($rotation + 'deg'));
 	}
 }
 
