@@ -259,6 +259,18 @@ declare namespace GameModeAPI {
 
 	/** Gets whether the current gamemode has the specified HUD capability. */
 	function CurrentGameModeHasHUDCapability(capability: GameModeHUDCapability): boolean;
+
+	/**
+	 * Get i18n token for the provided gamemode.
+	 * Returns #Timer_Stage for most modes, #Timer_Course for modes like RJ.
+	 */
+	function GetGameModeSegmentToken(gamemode: Gamemode): string;
+
+	/**
+	 * Get i18n token for the provided gamemode.
+	 * Returns #Timer_Checkpoint for most modes, #Timer_Jump for modes like RJ.
+	 */
+	function GetGameModeCheckpointToken(gamemode: Gamemode): string;
 }
 
 declare namespace MomentumTimerAPI {
