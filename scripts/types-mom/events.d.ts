@@ -71,9 +71,6 @@ interface GlobalEventNameMap {
 
 	ComparisonRunUpdated: () => void;
 
-	// TODO: Old, remove after rio stuff is in
-	OnMomentumTimerStateChange: (arg1: any, arg2: any) => any;
-
 	OnCookUpdate: (time: float, percentage: float) => void; // Conc thing!
 
 	OnConcEntityPanelThink: () => void;
