@@ -43,7 +43,7 @@ class HudStatusHandler {
 			// set false when menu is closed, and on level shutdown
 			//
 			// So toggling whether we show savestate info in status based on this is okay - presumably intended.
-			// It become enabled until you actually teleport to a savestate,
+			// It becomes enabled until you actually teleport to a savestate,
 			// then stays enabled until menu closes or level changes.
 			this.saveStatesActive = usingMenu;
 			this.saveStateCount = count;
@@ -90,6 +90,10 @@ class HudStatusHandler {
 		const { state, trackId, segmentsCount, segmentCheckpointsCount, majorNum, minorNum } =
 			MomentumTimerAPI.GetObservedTimerStatus();
 
+		const gamemode = GameModeAPI.GetCurrentGameMode();
+		const segmentTerm = $.Localize(GameModeAPI.GetGameModeSegmentToken(gamemode));
+		const checkpointTerm = $.Localize(GameModeAPI.GetGameModeCheckpointToken(gamemode));
+
 		if (state === TimerState.DISABLED) {
 			return this.strs.disabled;
 		}
@@ -102,7 +106,7 @@ class HudStatusHandler {
 			if (trackId.type === TrackType.MAIN) {
 				str += this.strs.mainTrack;
 			} else if (trackId.type === TrackType.STAGE) {
-				str += `${this.strs.stage} ${trackId.number}`;
+				str += `${segmentTerm} ${trackId.number}`;
 			} else {
 				str += `${this.strs.bonus} ${trackId.number}`;
 			}
@@ -117,20 +121,20 @@ class HudStatusHandler {
 		// state is TimerState.RUNNING
 		if (trackId.type === TrackType.MAIN) {
 			if (segmentsCount === 1) {
-				return segmentCheckpointsCount > 1 ? `${this.strs.cp} ${minorNum}/${segmentCheckpointsCount}` : '';
+				return segmentCheckpointsCount > 1 ? `${checkpointTerm} ${minorNum}/${segmentCheckpointsCount}` : '';
 			} else {
 				return segmentCheckpointsCount > 1
-					? `${this.strs.stage} ${majorNum}/${segmentsCount} | ${this.strs.cp} ${minorNum}/${segmentCheckpointsCount}`
-					: `${this.strs.stage} ${majorNum}/${segmentsCount}`;
+					? `${segmentTerm} ${majorNum}/${segmentsCount} | ${checkpointTerm} ${minorNum}/${segmentCheckpointsCount}`
+					: `${segmentTerm} ${majorNum}/${segmentsCount}`;
 			}
 		} else if (trackId.type === TrackType.STAGE) {
 			return segmentCheckpointsCount > 1
-				? `${this.strs.stage} ${trackId.number} | ${this.strs.cp} ${minorNum}/${segmentCheckpointsCount}`
-				: `${this.strs.stage} ${trackId.number}`;
+				? `${segmentTerm} ${trackId.number} | ${checkpointTerm} ${minorNum}/${segmentCheckpointsCount}`
+				: `${segmentTerm} ${trackId.number}`;
 		} else {
 			// Bonus
 			return segmentCheckpointsCount > 1
-				? `${this.strs.bonus} ${trackId.number} | ${this.strs.cp} ${minorNum}/${segmentCheckpointsCount}`
+				? `${this.strs.bonus} ${trackId.number} | ${checkpointTerm} ${minorNum}/${segmentCheckpointsCount}`
 				: `${this.strs.bonus} ${trackId.number}`;
 		}
 	}
@@ -140,9 +144,7 @@ class HudStatusHandler {
 		disabled: $.Localize('#Timer_Disabled'),
 		primed: $.Localize('#Timer_Primed'),
 		finished: $.Localize('#Timer_Finished'),
-		mainTrack: $.Localize('#Timer_Main'),
-		cp: $.Localize('#Timer_Checkpoint'),
-		stage: $.Localize('#Timer_Stage'),
+		mainTrack: $.Localize('#Timer_Main_Track'),
 		bonus: $.Localize('#Timer_Bonus'),
 		saveState: $.Localize('#Timer_SaveState'),
 		practiceMode: $.Localize('#Timer_PracticeMode')
