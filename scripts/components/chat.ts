@@ -89,6 +89,8 @@ class ChatHandler {
 			}
 		}
 
+		// TODO:A AAAAAA needs fixed height to avoid shifting by then controlling visibility is annoying probs use a 
+		// class im too tired asdjkhasbkdfasdf
 		if (this.membersTyping.size === 0) {
 			this.isTypingPanel.visible = false;
 		} else {

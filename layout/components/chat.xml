@@ -48,8 +48,8 @@
 	<Panel class="chat" defaultfocus="ChatInput">
 		<!-- CAUTION: inverse flow everywhere!!-->
 		<ConVarEnabler id="IsTypingConvarEnabler" convar="mom_chat_typing_receive" togglevisibility="true">
-			<Panel id="IsTyping" class="chat__typing" visible="false">
-				<Image class="chat__typing__icon" src="file://{images}/chat-processing.svg" textureheight="32" />
+			<Panel class="chat__typing" visible="false">
+				<Image id="IsTypingIcon" class="chat__typing__icon" src="file://{images}/chat-processing.svg" textureheight="32" />
 				<Label class="chat__typing__users" text="{s:users_typing}" />
 			</Panel>
 		</ConVarEnabler>
