@@ -3,7 +3,7 @@ import { MemberData } from 'common/online';
 
 @PanelHandler()
 class ChatHandler {
-	membersTyping: string[] = [];
+	membersTyping = new Set<string>();
 
 	isTypingPanel = $<Panel>('#IsTyping')!;
 	isTypingCvarEnabler = $<Panel>('#IsTypingConvarEnabler')!;
@@ -27,14 +27,12 @@ class ChatHandler {
 	};
 
 	createUsersTypingString(): string {
-		const numTyping = this.membersTyping.length;
-
 		// 0  => ''
 		// 1  => %user% is typing...
 		// 2  => %user1% and %user2% are typing...
 		// 3+ => %amount% users are typing...
 
-		switch (numTyping) {
+		switch (this.membersTyping.size) {
 			case 0:
 				return '';
 			case 1: {
@@ -47,7 +45,7 @@ class ChatHandler {
 				return this.strs.twoUsers.replace('%user1%', user1).replace('%user2%', user2);
 			}
 			default:
-				return this.strs.many.replace('%amount%', numTyping.toString());
+				return this.strs.many.replace('%amount%', this.membersTyping.size.toString());
 		}
 	}
 
@@ -78,15 +76,16 @@ class ChatHandler {
 	onSteamLobbyMemberDataUpdated(memberData: MemberData) {
 		if (!this.isTypingCvarEnabler.visible) return;
 
+		const localPlayerID = UserAPI.GetXUID();
 		for (const memberSteamID of Object.keys(memberData)) {
-			if (memberSteamID === UserAPI.GetXUID()) return;
+			if (memberSteamID === localPlayerID) continue;
 
-			const index = this.membersTyping.indexOf(memberSteamID);
+			const inSet = this.membersTyping.has(memberSteamID);
 
-			if (index === -1 && memberData[memberSteamID].isTyping === 'y') {
-				this.membersTyping.push(memberSteamID);
-			} else if (index !== -1) {
-				this.membersTyping.splice(index, 1);
+			if (!inSet && memberData[memberSteamID].isTyping === 'y') {
+				this.membersTyping.add(memberSteamID);
+			} else if (!inSet) {
+				this.membersTyping.delete(memberSteamID);
 			}
 		}
 
