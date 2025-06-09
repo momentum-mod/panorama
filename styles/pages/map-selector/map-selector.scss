@@ -453,12 +453,11 @@ $notch-width: 10px;
 		width: 100%;
 		height: 100%;
 		padding: 12px;
+		box-shadow: 0 0 16px 0 rgba(0, 0, 0, 0.5);
 
 		&--unpadded {
 			padding: 0;
 		}
-
-		box-shadow: 0 0 16px 0 rgba(0, 0, 0, 0.5);
 	}
 
 	&__h1,

@@ -229,6 +229,7 @@
 
 	box-shadow: 1px 1px 12px 0 rgba(0, 0, 0, 1);
 	border: 1px solid rgba(0, 0, 0, 0.7);
+	background-color: $comparison-neutral-background;
 
 	&--no-comparison {
 		height: 36px;
@@ -238,8 +239,6 @@
 			visibility: collapse;
 		}
 	}
-
-	background-color: $comparison-neutral-background;
 
 	&.--ahead {
 		&.--gain {

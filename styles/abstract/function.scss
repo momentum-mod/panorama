@@ -1,15 +1,16 @@
 @use 'sass:map';
 @use 'sass:string';
+@use 'sass:meta';
 
 @function map-collect($maps...) {
 	$collection: ();
 
 	@each $map in $maps {
-		@if type-of($map) != 'map' {
-			@error 'The argument $map: `#{$map}` is of incorrect type: `#{type-of($map)}`. Type of `Map` is required!';
+		@if meta.type-of($map) != 'map' {
+			@error 'The argument $map: `#{$map}` is of incorrect type: `#{meta.type-of($map)}`. Type of `Map` is required!';
 		}
 
-		$collection: map-merge($collection, $map);
+		$collection: map.merge($collection, $map);
 	}
 
 	@return $collection;
