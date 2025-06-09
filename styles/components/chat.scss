@@ -1,3 +1,6 @@
+@use '../config' as *;
+@use 'sass:color';
+
 .chat {
 	flow-children: up;
 	width: 100%;
@@ -82,19 +85,23 @@
 	transition: background-color 0.1s ease-in 0s;
 
 	&__message {
+		width: fill-parent-flow(1);
 		margin-right: 16px;
-		padding: 2px 12px;
+		padding-top: 2px;
+		padding-bottom: 2px;
 		text-overflow: clip;
+		vertical-align: center;
 		font-size: 18px;
-
-		&--with-icon {
-			padding-left: 6px;
-		}
 	}
 
 	&__icon {
-		padding-left: 12px;
-		vertical-align: center;
+		width: 16px;
+		height: 16px;
+		margin-left: 8px;
+		margin-right: 6px;
+		margin-top: 5px;
+		wash-color: #d3d3d3;
+		img-shadow: 0 1px 2px rgba(0, 0, 0, 1);
 	}
 
 	&:hover {
@@ -113,5 +120,62 @@
 
 	& .chat-entry__message {
 		margin-right: 0px;
+	}
+}
+
+.chatmsg {
+	&__timestamp {
+		color: #ccc;
+		font-weight: medium;
+	}
+
+	&__divider {
+		color: #ccc;
+	}
+}
+
+.chatmsg-timer {
+	&__track {
+		font-weight: bold;
+	}
+
+	&__time {
+		font-weight: medium;
+		color: $green;
+	}
+
+	&__rank-name,
+	&__diff-name {
+		/* unused */
+	}
+
+	&__diff {
+		font-weight: medium;
+		color: $mid-blue;
+	}
+
+	&__rank {
+		font-weight: medium;
+		color: $red;
+	}
+
+	&__total-ranks {
+		font-weight: medium;
+		color: $red;
+	}
+
+	&__rank-divider {
+		color: color.scale($red, $lightness: 80%);
+	}
+}
+
+.chatmsg-chat,
+.chatmsg-lobby,
+.chatmsg-map {
+	&__user {
+		font-weight: bold;
+	}
+
+	&__message {
 	}
 }
