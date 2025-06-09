@@ -18,6 +18,7 @@
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
+	
 	<scripts>
 		<include type="module" src="file://{scripts}/components/chat.ts" />
 	</scripts>
@@ -46,8 +47,11 @@
 
 	<Panel class="chat" defaultfocus="ChatInput">
 		<!-- CAUTION: inverse flow everywhere!!-->
-		<ConVarEnabler convar="mom_chat_typing_receive" togglevisibility="true">
-			<Label id="ChatMemberTypingLabel" class="chat__member-typing" text=" " />
+		<ConVarEnabler id="IsTypingConvarEnabler" convar="mom_chat_typing_receive" togglevisibility="true">
+			<Panel id="IsTyping" class="chat__typing" visible="false">
+				<Image class="chat__typing__icon" src="file://{images}/chat-processing.svg" textureheight="32" />
+				<Label class="chat__typing__users" text="{s:users_typing}" />
+			</Panel>
 		</ConVarEnabler>
 		<Panel class="chat__input-container">
 			<TextEntry id="ChatInput" class="chat__elem chat__input" oninputsubmit="ChatHandler.submitText()" maxchars="127" clearaftersubmit="true" />

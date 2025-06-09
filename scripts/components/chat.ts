@@ -4,7 +4,9 @@ import { MemberData } from 'common/online';
 @PanelHandler()
 class ChatHandler {
 	membersTyping: string[] = [];
-	typingLabel = $<Label>('#ChatMemberTypingLabel');
+
+	isTypingPanel = $<Panel>('#IsTyping')!;
+	isTypingCvarEnabler = $<Panel>('#IsTypingConvarEnabler')!;
 
 	constructor() {
 		$.RegisterEventHandler('OnNewChatEntry', $.GetContextPanel(), (panel) => this.onNewChatEntry(panel));
@@ -74,7 +76,7 @@ class ChatHandler {
 	}
 
 	onSteamLobbyMemberDataUpdated(memberData: MemberData) {
-		if (!this.typingLabel || !this.typingLabel.visible) return;
+		if (!this.isTypingCvarEnabler.visible) return;
 
 		for (const memberSteamID of Object.keys(memberData)) {
 			if (memberSteamID === UserAPI.GetXUID()) return;
@@ -88,6 +90,11 @@ class ChatHandler {
 			}
 		}
 
-		this.typingLabel.text = this.createUsersTypingString();
+		if (this.membersTyping.size === 0) {
+			this.isTypingPanel.visible = false;
+		} else {
+			this.isTypingPanel.visible = true;
+			this.isTypingPanel.SetDialogVariable('users_typing', this.createUsersTypingString());
+		}
 	}
 }
