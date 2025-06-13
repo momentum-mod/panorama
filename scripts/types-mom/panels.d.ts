@@ -5,7 +5,7 @@ interface PanelTagNameMap {
 	Leaderboards: Leaderboards;
 	LeaderboardEntry: LeaderboardEntry;
 	RangeColorDisplay: RangeColorDisplay;
-	ScoreboardPlayer: ScoreboardPlayer;
+	PlayerListPlayer: PlayerListPlayer;
 	HudComparisons: HudComparisons;
 	MomConcEntityPanel: MomConcEntityPanel;
 	MomHudTabMenu: MomHudTabMenu;
@@ -134,7 +134,7 @@ interface MomHudDFJump extends AbstractHudPanel<'MomHudDFJump'> {}
 
 interface MomHudJumpTiming extends AbstractHudPanel<'MomHudJumpTiming'> {}
 
-interface ScoreboardPlayer extends AbstractPanel<'ScoreboardPlayer'> {
+interface PlayerListPlayer extends AbstractPanel<'PlayerListPlayer'> {
 	readonly steamId: number;
 	readonly isSelf: boolean;
 	readonly connected: boolean;

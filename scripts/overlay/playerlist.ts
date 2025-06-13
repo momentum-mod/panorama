@@ -1,9 +1,9 @@
 import { PanelHandler } from 'util/module-helpers';
 
 @PanelHandler()
-class ScoreboardPlayerHandler {
+class PlayerListPlayerHandler {
 	showContextMenu() {
-		const player = $.GetContextPanel<ScoreboardPlayer>();
+		const player = $.GetContextPanel<PlayerListPlayer>();
 
 		const items = [];
 

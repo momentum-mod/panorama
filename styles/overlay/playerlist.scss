@@ -1,21 +1,21 @@
 $player-border: 1px solid rgba(70, 70, 70, 0.5);
 
-.scoreboard {
+.playerlist {
 	flow-children: down;
 	width: 550px;
 
-	&__playerlist {
+	&__section {
 		flow-children: down;
 		width: 100%;
 		border-bottom: $player-border;
 	}
 
-	#ScoreboardNotconnectedPlayersList {
+	#PlayerListNotconnectedSection {
 		margin-top: 20px;
 	}
 }
 
-.scoreboard-player {
+.playerlist-player {
 	flow-children: right;
 	width: 100%;
 
