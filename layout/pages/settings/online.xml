@@ -31,6 +31,13 @@
 					</Panel>
 				</Panel>
 
+				<SettingsEnumDropDown text="#Settings_Replay_Save_Mode" convar="mom_tv_replay_save_mode" infomessage="#Settings_Replay_Save_Mode_Info">
+					<Label id="savemode1" text="#Settings_Replay_Save_Mode_KeepAll" value="0" />
+					<Label id="savemode2" text="#Settings_Replay_Save_Mode_KeepAllPB" value="1" />
+				</SettingsEnumDropDown>
+
+				<SettingsSlider text="#Settings_Replay_Expiration" min="0" max="365" convar="mom_tv_replay_expiration" infomessage="#Settings_Replay_Expiration_Info" tags="expiration" />
+
 				<SettingsEnum text="#Settings_OnlineReplay_Comparison_Show" convar="mom_tv_replay_comparison_ghost_show" infomessage="#Settings_OnlineReplay_Comparison_Show_Info">
 					<RadioButton group="replaycomparisonshow" text="#Common_Off" value="0" />
 					<RadioButton group="replaycomparisonshow" text="#Common_On" value="1" />
