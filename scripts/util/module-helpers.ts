@@ -36,47 +36,6 @@ export function exposeToPanelContext(obj: Record<string, any>): void {
 }
 
 /**
- * Get or create a globally accessible class.
- *
- * Only one instance will be created for the lifetime of Panorama, allowing module scripts/modules
- * to access the same instance, without `useglobalcontext`.
- */
-export function getOrCreateGlobal<T>(name: string, ctor: Constructor<T>, ...args: unknown[]): T;
-
-/**
- * Get or create a globally accessible object.
- *
- * Only one instance will be created for the lifetime of Panorama, allowing module scripts/modules
- * to access the same instance, without `useglobalcontext`.
- *
- * If the object already exists, a reference the existing object is returned, otherwise the passed
- * object reference is set on the global object, and returned.
- */
-export function getOrCreateGlobal<T extends object>(name: string, obj: T): T;
-
-export function getOrCreateGlobal<Class, Obj extends object>(
-	name: string,
-	global: Constructor<Class> | Obj,
-	...args: unknown[]
-): Class | Obj {
-	const globalObject = UiToolkitAPI.GetGlobalObject();
-
-	if (typeof global === 'function') {
-		if (!(name in globalObject)) {
-			globalObject[name] = new global(...args);
-		}
-
-		return globalObject[name] as Class;
-	} else {
-		if (!(name in globalObject)) {
-			globalObject[name] = global;
-		}
-
-		return globalObject[name] as Obj;
-	}
-}
-
-/**
  * Class decorator for exposing a class in a module to the current panel context.
  *
  * This allows modules, which otherwise live in an encapsulated JS context, to expose themselves to XML.
