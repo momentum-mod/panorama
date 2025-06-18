@@ -142,11 +142,11 @@ class DrawerHandler {
 
 	/** Open the profile tab when the main menu player card is pressed */
 	onPlayerCardPressed() {
-	// Leaving this disabled for now until we finish/move profile stuff.
-	// 	this.extend();
-	//
-	// 	if (this.activeTab !== 'ProfileDrawer') {
-	// 		$.DispatchEvent('Activated', Tabs.ProfileDrawer.button, PanelEventSource.MOUSE);
-	// 	}
+		// Leaving this disabled for now until we finish/move profile stuff.
+		// 	this.extend();
+		//
+		// 	if (this.activeTab !== 'ProfileDrawer') {
+		// 		$.DispatchEvent('Activated', Tabs.ProfileDrawer.button, PanelEventSource.MOUSE);
+		// 	}
 	}
 }
