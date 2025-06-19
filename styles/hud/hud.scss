@@ -11,6 +11,10 @@ Hud,
 	height: 100%;
 	-s2-mix-blend-mode: opaque;
 	blur: fastgaussian(4, 4, 5);
+
+	&--weak {
+		blur: fastgaussian(4, 4, 2);
+	}
 }
 
 #HudTopLeft {
