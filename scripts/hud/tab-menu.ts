@@ -13,7 +13,6 @@ class HudTabMenuHandler {
 		cp: $.GetContextPanel<MomHudTabMenu>(),
 		sidebysideContainer: $<Panel>('#SideBySideContainer'),
 		endOfRunContainer: $<Panel>('#EndOfRunContainer'),
-		zoningContainer: $<Panel>('#ZoningContainer'),
 		zoningOpen: $<Button>('#ZoningOpen'),
 		zoningClose: $<Button>('#ZoningClose'),
 		gamemodeIcon: $<Image>('#HudTabMenuGamemodeImage'),
@@ -29,36 +28,17 @@ class HudTabMenuHandler {
 		$.RegisterForUnhandledEvent('HudTabMenu_ForceClose', () => this.close());
 		$.RegisterForUnhandledEvent('EndOfRun_Show', (reason) => this.showEndOfRun(reason));
 		$.RegisterForUnhandledEvent('EndOfRun_Hide', () => this.hideEndOfRun());
-		$.RegisterForUnhandledEvent('ZoneMenu_Show', () => this.showZoneMenu());
-		$.RegisterForUnhandledEvent('ZoneMenu_Hide', () => this.hideZoneMenu());
-		$.RegisterForUnhandledEvent('LevelInitPostEntity', () => this.hideZoneMenu());
 		$.RegisterForUnhandledEvent('ActiveZoneDefsChanged', () => this.updateMapStats());
 	}
 
 	showEndOfRun(reason: EndOfRunShowReason) {
 		this.panels.sidebysideContainer.AddClass('hud-tab-menu__leaderboards--hidden');
 		this.panels.endOfRunContainer.RemoveClass('hud-tab-menu__endofrun--hidden');
-		this.panels.zoningContainer.AddClass('hud-tab-menu__zoning--hidden');
 	}
 
 	hideEndOfRun() {
 		this.panels.sidebysideContainer.RemoveClass('hud-tab-menu__leaderboards--hidden');
 		this.panels.endOfRunContainer.AddClass('hud-tab-menu__endofrun--hidden');
-		this.panels.zoningContainer.AddClass('hud-tab-menu__zoning--hidden');
-	}
-
-	showZoneMenu() {
-		this.panels.cp.AddClass('hud-tab-menu--offset');
-		this.panels.sidebysideContainer.AddClass('hud-tab-menu__leaderboards--hidden');
-		this.panels.endOfRunContainer.AddClass('hud-tab-menu__endofrun--hidden');
-		this.panels.zoningContainer.RemoveClass('hud-tab-menu__zoning--hidden');
-	}
-
-	hideZoneMenu() {
-		this.panels.cp.RemoveClass('hud-tab-menu--offset');
-		this.panels.sidebysideContainer.RemoveClass('hud-tab-menu__leaderboards--hidden');
-		this.panels.endOfRunContainer.AddClass('hud-tab-menu__endofrun--hidden');
-		this.panels.zoningContainer.AddClass('hud-tab-menu__zoning--hidden');
 	}
 
 	setMapData(isOfficial: boolean) {

@@ -6,11 +6,21 @@ $smaller: 12px;
 $small: 16px;
 $medium: 28px;
 
+#ZoningContainer {
+	margin: 24px;
+	width: 560px;
+	background-color: rgba(0, 0, 0, 0.5);
+}
+
 .zoning {
 	width: 100%;
 	padding: 8px;
 	flow-children: down;
 	overflow: squish;
+
+	&.nomousecapture {
+		opacity: 0.5;
+	}
 
 	&__title {
 		@include mixin.font-styles($use-header: true);

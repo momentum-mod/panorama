@@ -68,6 +68,10 @@
 			<BackbufferImagePanel class="full" />
 		</HudBlurTarget>
 
+		<HudBlurTarget id="HudWeakBlur" blurrects="" class="hud-blur hud-blur--weak" hittest="false" hittestchildren="false">
+			<BackbufferImagePanel class="full" />
+		</HudBlurTarget>
+
 		<!-- HUD anchored to top center of screen, laid out vertically top-to-bottom
 		-  NOTE: Not really set up properly - HudTeamCounter should dynamically move
 		-        between HudTopCenter and HudBottomCenter, but instead it just moves
@@ -79,6 +83,10 @@
 			<HudBoneCounts />
 			<MomHudSpectate id="Spectator" />
 			<MomHudJumpStats />
+		</Panel>
+
+		<Panel id="ZoningContainer" hittestchildren="true">
+			<ZoneMenu id="ZoneMenu" hittest="true" hittestchildren="true" />
 		</Panel>
 
 		<!-- This container is here so we can move the leaderboard in and out of it during the end-of-match sequence -->
