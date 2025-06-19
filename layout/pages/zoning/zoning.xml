@@ -88,6 +88,7 @@
 	</snippets>
 
 	<ZoneMenu class="zoning" acceptsinput="true" acceptsfocus="true">
+		<Label class="zoning__title" text="#Zoning_WindowTitle" />
 		<Label id="TrackListLabel" class="zoning__header" text="#Zoning_TrackListLabel" />
 		<Panel id="TrackListContainer" class="zoning__menu-section">
         	<Panel id="TrackList" class="zoning__track-list">
