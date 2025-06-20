@@ -133,7 +133,7 @@
 				<SettingsKeyBinder text="#Keybind_Savestate_Create" bind="mom_saveloc_create" tags="saveloc,savestate" />
 				<SettingsKeyBinder text="#Keybind_Savestate_Goto" bind="+mom_saveloc_current" tags="saveloc,savestate" />
 				<SettingsKeyBinder text="#Keybind_Savestate_Menu" bind="hud_menu_show savelocmenu" tags="saveloc,savestate" />
-				<SettingsKeyBinder text="#Keybind_StartMark_Create" bind="mom_start_mark_create" tags="saveloc,savestate" />
+				<SettingsKeyBinder text="#Keybind_StartMark_Set" bind="mom_start_mark_set" tags="saveloc,savestate" />
 				<SettingsKeyBinder text="#Keybind_StartMark_Clear" bind="mom_start_mark_clear" tags="saveloc,savestate" />
 
 				<Label class="settings-group__subtitle" text="#Common_Multiplayer" />
