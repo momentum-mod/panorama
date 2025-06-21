@@ -1,7 +1,6 @@
 import { OnPanelLoad, PanelHandler } from 'util/module-helpers';
 import { traverseChildren } from 'util/functions';
 import { MapStatuses, MapCreditType, MapStatus, MMap, MapStats } from 'common/web';
-import { ToastCreateArgs, ToastManager, ToastStyle } from 'util/toast-manager';
 import * as Maps from 'common/maps';
 import * as Leaderboards from 'common/leaderboard';
 import * as Time from 'util/time';
@@ -577,10 +576,7 @@ class MapSelectorHandler implements OnPanelLoad {
 				updatesNeeded--;
 
 				if (updatesNeeded === 0 && fetchedStaticVersions) {
-					this.onFinishUpdate(errored, {
-						message: '#MapSelector_Updates_Updated',
-						style: ToastStyle.SUCCESS
-					});
+					this.onFinishUpdate(errored, '#MapSelector_Updates_Updated', ToastAPI.ToastStyle.SUCCESS);
 				}
 			});
 
@@ -596,10 +592,7 @@ class MapSelectorHandler implements OnPanelLoad {
 
 				if (staticUpdatesNeeded === 0) {
 					if (updatesNeeded === 0) {
-						this.onFinishUpdate(errored, {
-							message: '#MapSelector_Updates_UpToDate',
-							style: ToastStyle.INFO
-						});
+						this.onFinishUpdate(errored, '#MapSelector_Updates_UpToDate', ToastAPI.ToastStyle.INFO);
 					}
 					return;
 				}
@@ -618,10 +611,7 @@ class MapSelectorHandler implements OnPanelLoad {
 
 					--updatesNeeded;
 					if (updatesNeeded === 0) {
-						this.onFinishUpdate(errored, {
-							message: '#MapSelector_Updates_Updated',
-							style: ToastStyle.SUCCESS
-						});
+						this.onFinishUpdate(errored, '#MapSelector_Updates_Updated', ToastAPI.ToastStyle.SUCCESS);
 					}
 				});
 			}
@@ -631,11 +621,11 @@ class MapSelectorHandler implements OnPanelLoad {
 		MapCacheAPI.CheckForUpdates();
 	}
 
-	onFinishUpdate(errored: boolean, toast: ToastCreateArgs) {
+	onFinishUpdate(errored: boolean, toastMessage: string, toastStyle: ToastAPI.ToastStyle) {
 		// If we errored at any point, C++ will show a toast. Even if some requests were successful, don't show
 		// both success and error toasts, would be confusing.
 		if (!errored) {
-			ToastManager.createToast(toast);
+			ToastAPI.CreateToast('', '', toastMessage, ToastAPI.ToastLocation.RIGHT, 10, toastStyle);
 		}
 
 		this.panels.refreshIcon.RemoveClass('spin-clockwise');

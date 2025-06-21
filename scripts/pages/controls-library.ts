@@ -1,8 +1,4 @@
-import { exposeToPanelContext, OnPanelLoad, PanelHandler } from 'util/module-helpers';
-import { ToastLocation, ToastManager } from 'util/toast-manager';
-
-// Expose toast stuff to XML
-exposeToPanelContext({ ToastManager, ToastLocation });
+import { OnPanelLoad, PanelHandler } from 'util/module-helpers';
 
 @PanelHandler()
 class ControlsLibraryHandler implements OnPanelLoad {

@@ -1,35 +1,19 @@
-import { getOrCreateGlobal } from './module-helpers';
-import * as Enum from './enum';
 import { compareDeep } from './functions';
+import { PanelHandler } from './module-helpers';
+import ToastStyle = ToastAPI.ToastStyle;
+import ToastLocation = ToastAPI.ToastLocation;
 
-export enum ToastLocation {
-	LEFT = 0,
-	CENTER = 1,
-	RIGHT = 2
-}
 const DEFAULT_TOAST_DURATION = 10;
 const MAX_ACTIVE_TOASTS = 10;
-const HIDE_TRANSITION_DURATION = 0.3; // This should match transition-duration properties in toast.scss
 
-export enum ToastStyle {
-	INFO = 'info',
-	SUCCESS = 'success',
-	WARNING = 'warning',
-	ERROR = 'error',
-	BLUE = 'blue',
-	RED = 'red',
-	GREEN = 'green',
-	ORANGE = 'orange'
-}
-
-export class ToastError extends Error {
+class ToastError extends Error {
 	constructor(message: string) {
 		super(`ToastManager: ${message}`);
 		this.name = 'ToastError';
 	}
 }
 
-export type ToastCreateArgs = ({ title: string; message?: string } | { title?: string; message: string }) & {
+type ToastCreateArgs = ({ title: string; message?: string } | { title?: string; message: string }) & {
 	icon?: string;
 	duration?: number;
 	location?: ToastLocation;
@@ -38,7 +22,7 @@ export type ToastCreateArgs = ({ title: string; message?: string } | { title?: s
 	parameters?: Record<string, any>;
 };
 
-export interface ToastCreateWithLayoutArgs {
+interface ToastCreateWithLayoutArgs {
 	layoutFile: string;
 	duration?: number;
 	location?: ToastLocation;
@@ -83,7 +67,10 @@ class Toast {
 			);
 		}
 
-		if (args.location != null && !Enum.values(ToastLocation).includes(args.location)) {
+		if (
+			args.location != null &&
+			![ToastLocation.LEFT, ToastLocation.CENTER, ToastLocation.RIGHT].includes(args.location)
+		) {
 			throw new ToastError("Toast object created with invalid location. Must be one of 'ToastLocation'.");
 		}
 
@@ -121,18 +108,26 @@ class Toast {
 	}
 }
 
-class ToastManagerInternal {
-	private readonly activeToasts: Map<ToastLocation, Toast[]> = new Map(
-		Enum.values(ToastLocation).map((loc) => [loc, []])
-	);
-	private readonly queuedToasts: Map<ToastLocation, Toast[]> = new Map(
-		Enum.values(ToastLocation).map((loc) => [loc, []])
-	);
+@PanelHandler()
+class ToastHandler {
+	private readonly activeToasts: Map<ToastLocation, Toast[]> = new Map([
+		[ToastLocation.LEFT, []],
+		[ToastLocation.CENTER, []],
+		[ToastLocation.RIGHT, []]
+	]);
+
+	private readonly queuedToasts: Map<ToastLocation, Toast[]> = new Map([
+		[ToastLocation.LEFT, []],
+		[ToastLocation.CENTER, []],
+		[ToastLocation.RIGHT, []]
+	]);
+
 	private readonly containers: ReadonlyMap<ToastLocation, Panel> = new Map([
 		[ToastLocation.LEFT, $('#Left')],
 		[ToastLocation.CENTER, $('#Center')],
 		[ToastLocation.RIGHT, $('#Right')]
 	]);
+
 	private readonly classes: ReadonlyMap<ToastLocation, string> = new Map([
 		[ToastLocation.LEFT, 'toast--left'],
 		[ToastLocation.CENTER, 'toast--center'],
@@ -221,7 +216,7 @@ class ToastManagerInternal {
 
 			this.queuedToasts.set(location, []);
 		} else {
-			for (const location of Enum.values(ToastLocation)) {
+			for (const location of [ToastLocation.LEFT, ToastLocation.CENTER, ToastLocation.RIGHT]) {
 				let delay = 0;
 				for (const toast of this.activeToasts.get(location)) {
 					$.Schedule(delay, () => this.deleteToast(toast));
@@ -326,9 +321,3 @@ class ToastManagerInternal {
 		}
 	}
 }
-
-/**
- * Class for creating toasts. Unlike others modals, using UiToolkitAPI, this is all in JS. Just import ToastManager to
- * use it.
- */
-export const ToastManager = getOrCreateGlobal('ToastManager', ToastManagerInternal);

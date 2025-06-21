@@ -212,10 +212,10 @@ interface GlobalEventNameMap {
 		id: string,
 		title: string,
 		message: string,
-		location: import('util/toast-manager').ToastLocation,
+		location: ToastAPI.ToastLocation,
 		duration: number,
 		icon: string,
-		style: import('util/toast-manager').ToastStyle
+		style: ToastAPI.ToastStyle
 	) => void;
 
 	/**
@@ -225,7 +225,7 @@ interface GlobalEventNameMap {
 	Toast_ShowCustom: (
 		id: string,
 		layoutFile: string,
-		location: import('util/toast-manager').ToastLocation,
+		location: ToastAPI.ToastLocation,
 		duration: number,
 		parameters: Record<string, any>
 	) => void;
@@ -240,7 +240,7 @@ interface GlobalEventNameMap {
 	 * Fired from C++ to clear toastsa
 	 * @internal Don't use these, import ToastManager and use that directly.
 	 */
-	Toast_Clear: (location?: import('util/toast-manager').ToastLocation) => void;
+	Toast_Clear: (location?: ToastAPI.ToastLocation) => void;
 
 	MomentumSpectatorModeChanged: (mode: SpectateMode) => void;
 
