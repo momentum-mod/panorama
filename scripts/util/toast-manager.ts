@@ -266,18 +266,6 @@ class ToastHandler {
 			}
 		}
 
-		const handle = $.RegisterEventHandler('PropertyTransitionEnd', toast.panel, (_, propertyName) => {
-			if (propertyName !== 'opacity') return;
-
-			// This is a hacky way of ensuring height animations work properly. Panorama can't interpolate something with height set to fit-children;
-			// it needs a fixed height. This waits for the loading anim to finish, then explicitly sets the height property to its actual height.
-			// Annoyingly, this causes an anim bug so we have to remove the transition duration temporarily (and Panorama can't get its initial value because Valve are really smart)
-			$.UnregisterEventHandler('PropertyTransitionEnd', toast.panel, handle);
-			toast.panel.style.transitionDuration = '0s';
-			toast.panel.style.height = `${toast.panel.actuallayoutheight / toast.panel.actualuiscale_y}px`;
-			toast.panel.style.transitionDuration = HIDE_TRANSITION_DURATION + 's';
-		});
-
 		toast.panel.AddClass('toast--show');
 
 		this.initToastBehaviour(toast);
