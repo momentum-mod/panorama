@@ -530,7 +530,7 @@ declare namespace DefragAPI {
  * C++ side is agnostic to what you pass it, and we're not decided on the format of HUD layouts,
  * so types here are deliberately very weak; types in the HUD customizer files are much stronger.
  *
- * Note that cfg/hud_default.kv3 is stored in a the licensee-only game repo, just let someone
+ * Note that cfg/hud_default.kv3 is stored in the licensee-only game repo, just let someone
  * (probably Tom) know if you need to update it.
  */
 declare namespace HudCustomizerAPI {
@@ -550,4 +550,47 @@ declare namespace HudCustomizerAPI {
 	 * Gets the contents of cfg/hud_default.kv3 as a JS object.
 	 */
 	function GetDefaultLayout(): Record<string, any>;
+}
+
+declare namespace ToastAPI {
+	const enum ToastLocation {
+		LEFT = 0,
+		CENTER = 1,
+		RIGHT = 2
+	}
+
+	enum ToastStyle {
+		INFO = 'info',
+		SUCCESS = 'success',
+		WARNING = 'warning',
+		ERROR = 'error',
+		BLUE = 'blue',
+		RED = 'red',
+		GREEN = 'green',
+		ORANGE = 'orange'
+	}
+
+	function CreateToast(
+		id: string,
+		title: string,
+		message: string,
+		location: ToastLocation,
+		duration: number,
+		icon?: string,
+		style?: string
+	): void;
+
+	function CreateToast_Simple(title: string, message: string): void;
+
+	function CreateToast_Custom(
+		id: string,
+		layoutFile: string,
+		location: ToastLocation,
+		duration: number,
+		params: Record<string, any>
+	): void;
+
+	function DeleteToast(id: string): void;
+
+	function ClearToasts(): void;
 }
