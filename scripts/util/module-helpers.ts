@@ -1,8 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-function-type */
 
-// Store object reference to avoid calling into C++ if getHandlerInstance is used a lot.
-const contextObject = $.GetContextObject();
-
 /**
  * Expose the given properties to the panel context. This allows XML event handlers to access objects declared in
  * modules as if they were declared in a script (.js rather than  file).
@@ -32,7 +29,7 @@ const contextObject = $.GetContextObject();
  * shorthand, that `{ State }` is shorthand to `{ State: State }`, skipping writing`State`/`setState` twice).
  */
 export function exposeToPanelContext(obj: Record<string, any>): void {
-	Object.assign(contextObject, obj);
+	Object.assign($.GetContextObject(), obj);
 }
 
 /**
@@ -93,6 +90,8 @@ export function PanelHandler(
 		// target is a ctor, so the function name is the class it's a constructor for. Look ma, no reflection!
 		const className = opts.name ?? target.name;
 
+		const contextObject = $.GetContextObject();
+
 		// Only ever construct one instance
 		if (className in contextObject) {
 			return;
@@ -129,6 +128,8 @@ export function PanelHandler(
  * @see PanelHandler
  */
 export function getHandlerInstance<T extends Constructor>(handler: T): InstanceType<T> {
+	const contextObject = $.GetContextObject();
+
 	if (!(handler.name in contextObject)) {
 		throw new Error(`Handler ${handler.name} not found in context object`);
 	}
