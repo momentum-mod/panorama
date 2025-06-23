@@ -1692,7 +1692,7 @@ export interface GlobalRegions {
 }
 
 export interface MapTracks {
-	main: MainTrack;
+	main?: MainTrack;
 	bonuses?: BonusTrack[];
 }
 
@@ -1723,7 +1723,7 @@ export interface Segment {
 }
 
 export interface Zone {
-	regions: Region[];
+	regions?: Region[];
 	filtername?: string;
 }
 
