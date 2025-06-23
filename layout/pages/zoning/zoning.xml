@@ -8,92 +8,56 @@
 	</scripts>
 
 	<snippets>
-		<snippet name="tracklist-track">
-			<Panel class="zoning__tracklist-track">
-				<Panel id="Entry" class="zoning__tracklist-course-entry">
-					<Button id="CollapseButton" class="zoning__collapse-button">
-						<Image id="TracklistCollapseIcon" class="button__icon zoning__collapse-icon zoning__icon-green hide" src="file://{images}/add.svg" />
-						<Image id="TracklistExpandIcon" class="button__icon zoning__collapse-icon zoning__icon-red" src="file://{images}/subtract.svg" />
-					</Button>
-					<RadioButton id="SelectButton" class="zoning__tracklist-button" group="tracklist">
-						<Label id="Name" class="zoning__tracklist-label" />
-					</RadioButton>
-					<Button id="DeleteButton" class="zoning__tracklist-delete hide">
-						<Image class="zoning__tracklist-delete__icon" src="file://{images}/close-box-outline.svg" textureheight="24" />
-					</Button>
-				</Panel>
-				<Panel id="ChildContainer" class="zoning__list-container">
-					<Panel id="SegmentContainer" class="w-full flow-down" />
-					<Button id="AddSegmentButton" class="zoning__add-button">
-						<Label class="zoning__tracklist-label zoning__tracklist-label--add" text="#Zoning_NewSegment" />
-					</Button>
-					<Panel id="EndZoneContainer" class="w-full flow-down" />
-					<Button id="AddEndZoneButton" class="zoning__add-button">
-						<Label class="zoning__tracklist-label zoning__tracklist-label--add" text="#Zoning_NewEndZone" />
-					</Button>
-				</Panel>
-				<Button id="AddBonusButton" class="zoning__add-button hide" onactivate="ZoneMenuHandler.addBonus()">
-					<Label class="zoning__tracklist-label zoning__tracklist-label--add" text="#Zoning_NewBonus" />
+
+		<snippet name="itemlist-item">
+			<Panel class="w-full flow-right">
+				<Button id="SelectButton" class="zoning__item-selectbutton">
+					<Label id="Name" class="zoning__item-label" />
+				</Button>
+				<Button id="DeleteButton" class="zoning__item-deletebutton hide">
+					<Image class="zoning__item-deletebutton__icon" src="file://{images}/close-box-outline.svg" textureheight="24" />
 				</Button>
 			</Panel>
 		</snippet>
-		<snippet name="tracklist-segment">
-			<Panel class="w-full flow-down">
-				<Panel id="Entry" class="zoning__tracklist-course-entry">
-					<Button id="CollapseButton" class="zoning__collapse-button">
-						<Image id="TracklistCollapseIcon" class="button__icon zoning__collapse-icon zoning__icon-green hide" src="file://{images}/add.svg" />
-						<Image id="TracklistExpandIcon" class="button__icon zoning__collapse-icon zoning__icon-red" src="file://{images}/subtract.svg" />
-					</Button>
-					<RadioButton id="SelectButton" class="zoning__tracklist-button" group="tracklist">
-						<Label id="Name" class="zoning__tracklist-label" />
-					</RadioButton>
-					<Button id="DeleteButton" class="zoning__tracklist-delete hide">
-						<Image class="zoning__tracklist-delete__icon" src="file://{images}/close-box-outline.svg" textureheight="24" />
-					</Button>
-				</Panel>
-				<Panel id="ChildContainer" class="zoning__list-container">
-					<Panel id="CheckpointContainer" class="zoning__tracklist-checkpoint" />
-					<Button id="AddCheckpointButton" class="zoning__add-button">
-						<Label class="zoning__tracklist-label zoning__tracklist-label--add" text="#Zoning_NewCheckpoint" />
-					</Button>
-					<Panel id="CancelContainer" class="zoning__tracklist-checkpoint" />
-					<Button id="AddCancelZoneButton" class="zoning__add-button">
-						<Label class="zoning__tracklist-label zoning__tracklist-label--add" text="#Zoning_NewCancelZone" />
-					</Button>
-				</Panel>
-			</Panel>
-		</snippet>
-		<snippet name="tracklist-checkpoint">
-			<Panel class="w-full flow-down">
-				<Panel id="Entry" class="zoning__tracklist-course-entry">
-					<RadioButton id="SelectButton" class="zoning__tracklist-button" group="tracklist">
-						<Label id="Name" class="zoning__tracklist-label" />
-					</RadioButton>
-					<Button id="DeleteButton" class="zoning__tracklist-delete hide">
-						<Image class="zoning__tracklist-delete__icon" src="file://{images}/close-box-outline.svg" textureheight="24" />
-					</Button>
-				</Panel>
-			</Panel>
-		</snippet>
-		<snippet name="region-point">
-			<Panel class="zoning__region-property-container">
-				<!--label-->
-				<TextEntry id="PointX" class="textentry zoning__textentry" maxchars="10" textmode="numeric" />
-				<TextEntry id="PointY" class="textentry zoning__textentry" maxchars="10" textmode="numeric" />
-				<Button id="DeleteButton" class="zoning__region-point-delete">
-					<Image class="zoning__region-point-delete__icon" src="file://{images}/close-box-outline.svg" textureheight="24" />
-				</Button>
-			</Panel>
-		</snippet>
+
 	</snippets>
 
 	<ZoneMenu class="zoning" acceptsinput="true" acceptsfocus="true">
 		<Label class="zoning__title" text="#Zoning_Menu" />
-		<Label id="TrackListLabel" class="zoning__header" text="#Zoning_TrackListLabel" />
-		<Panel id="TrackListContainer" class="zoning__menu-section">
-        	<Panel id="TrackList" class="zoning__track-list">
-            	<!-- Populated in js -->
+		<Panel id="ItemListsContainer" class="zoning__itemlists">
+        	<Panel class="zoning__menu-section zoning__itemlist">
+				<Button id="CreateMainButton" class="zoning__add-button hide" onactivate="ZoneMenuHandler.createMain()">
+					<Label class="zoning__itemlist-label zoning__itemlist-label--add" text="#Zoning_CreateMain" />
+				</Button>
+        		<Panel id="LeftList" class="w-full flow-down">
+            		<!-- Populated in js -->
+				</Panel>
+				<Button id="AddBonusButton" class="zoning__add-button hide" onactivate="ZoneMenuHandler.addBonus()">
+					<Label class="zoning__itemlist-label zoning__itemlist-label--add" text="#Zoning_NewBonus" />
+				</Button>
         	</Panel>
+        	<Panel class="zoning__menu-section zoning__itemlist zoning__itemlist--gap-before">
+				<Panel id="CenterList" class="w-full flow-down">
+					<!-- Populated in js -->
+				</Panel>
+				<Button id="AddSegmentButton" class="zoning__add-button hide" onactivate="ZoneMenuHandler.addSegment()">
+					<Label class="zoning__itemlist-label zoning__itemlist-label--add" text="#Zoning_NewSegment" />
+				</Button>
+				<Button id="AddEndZoneButton" class="zoning__add-button hide" onactivate="ZoneMenuHandler.addEndZone()">
+					<Label class="zoning__itemlist-label zoning__itemlist-label--add" text="#Zoning_NewEndZone" />
+				</Button>
+			</Panel>
+			<Panel class="zoning__menu-section zoning__itemlist zoning__itemlist--gap-before">
+				<Panel id="RightList" class="w-full flow-down">
+					<!-- Populated in js -->
+				</Panel>
+				<Button id="AddCheckpointButton" class="zoning__add-button hide" onactivate="ZoneMenuHandler.addCheckpoint()">
+					<Label id="AddCheckpointButtonLabel" class="zoning__itemlist-label zoning__itemlist-label--add" text="#Zoning_NewCheckpoint" />
+				</Button>
+				<Button id="AddCancelZoneButton" class="zoning__add-button hide" onactivate="ZoneMenuHandler.addCancelZone()">
+					<Label class="zoning__itemlist-label zoning__itemlist-label--add" text="#Zoning_NewCancelZone" />
+				</Button>
+			</Panel>
 		</Panel>
 		<Label id="PropertiesLabel" class="zoning__header" text="#Zoning_PropertiesLabel" />
 		<Panel id="PropertiesContainer" class="zoning__menu-section">

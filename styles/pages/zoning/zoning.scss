@@ -44,7 +44,7 @@ $medium: 28px;
 		width: 100%;
 		background-color: $dark-200;
 		margin: 2px 0px;
-		padding: 6px 0px;
+		padding: 4px;
 		border-radius: 6px;
 		border: 1px solid rgba(50, 50, 50, 0.7);
 		flow-children: down;
@@ -53,7 +53,6 @@ $medium: 28px;
 
 	&__menu-separator {
 		width: 100%;
-		padding: 0px 6px;
 		border-radius: 4px;
 		flow-children: down;
 
@@ -64,36 +63,45 @@ $medium: 28px;
 		}
 	}
 
-	&__track-list {
+	&__itemlists {
 		width: 100%;
-		height: 330px;
-		padding: 0px 6px;
-		margin-right: 6px;
-		flow-children: down;
-		overflow: squish scroll;
+		flow-children: right;
 
-		& > VerticalScrollBar .ScrollThumb {
-			border-radius: 2px;
+		// & > VerticalScrollBar .ScrollThumb {
+		// 	border-radius: 2px;
+		// }
+	}
+
+	&__itemlist {
+		height: 300px;
+		width: 32.666%;
+
+		&--gap-before {
+			margin-left: 1%;
 		}
 	}
 
-	&__tracklist-button {
+	&__item-selectbutton {
 		margin: 1px 1px;
 		padding: 2px 4px;
 		border: 1px none;
 		border-radius: 6px;
 
-		&:selected {
-			background-color: $light-200;
-			border: 1px solid $gray-800;
+		&.in-active-hierarchy {
+			background-color: $gray-500;
+			border: 1px solid $gray-600;
+
+			&.selected {
+				background-color: $gray-800;
+			}
 		}
 
-		&:hover {
-			border: 1px solid $gray-800;
+		&:not(.selected):hover {
+			border: 1px solid $gray-900;
 		}
 	}
 
-	&__tracklist-delete {
+	&__item-deletebutton {
 		vertical-align: center;
 		height: 16px;
 		tooltip-position: bottom;
@@ -117,42 +125,27 @@ $medium: 28px;
 		width: fit-children;
 		horizontal-align: left;
 		flow-children: right;
-		margin: 2px 20px;
+		margin: 2px;
 		padding: 2px 4px;
-
-		> Image {
-		}
 	}
 
-	&__tracklist-track {
+	&__itemlist-item {
 		width: 100%;
 		flow-children: down;
 	}
 
-	&__tracklist-label {
+	&__itemlist-label {
 		font-size: $small;
 
 		&--add {
 			font-size: $smaller;
 			font-style: italic;
 			color: $gray-800;
+
+			&:hover {
+				color: white;
+			}
 		}
-	}
-
-	&__tracklist-segment {
-		width: 100%;
-		flow-children: down;
-	}
-
-	&__tracklist-checkpoint {
-		width: 100%;
-		margin: 0px 18px;
-		flow-children: down;
-	}
-
-	&__tracklist-course-entry {
-		width: 100%;
-		flow-children: right;
 	}
 
 	&__list-container {

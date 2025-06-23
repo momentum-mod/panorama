@@ -156,7 +156,7 @@ interface ZoneEditorLimits {
 	MAX_SEGMENT_CHECKPOINTS: number;
 	MAX_STAGE_TRACKS: number;
 	MAX_BONUS_TRACKS: number;
-	MAX_ZONES_ALL_TRACKS: number;
+	MAX_REGIONS: number;
 }
 
 interface ZoneMenu extends AbstractPanel<'ZoneMenu'> {
