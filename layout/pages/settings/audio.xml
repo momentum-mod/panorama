@@ -35,7 +35,7 @@
 				<SettingsSlider text="#Settings_Volume_Ambient" min="0" max="1" percentage="true" convar="snd_volume_ambient" tags="ambient" hasdocspage="false" />
 				<SettingsSlider text="#Settings_Volume_Weapon" min="0" max="1" percentage="true" convar="snd_volume_weapon" tags="weapon" hasdocspage="false" />
 				<SettingsSlider text="#Settings_Volume_Movement" min="0" max="1" percentage="true" convar="snd_volume_footsteps" tags="movement,footsteps" hasdocspage="false" />
-				<SettingsSlider text="#Settings_Volume_Ghosts" min="0" max="1" percentage="true" convar="mom_snd_volume_ghosts" infomessage="#Settings_Volume_Ghost_Info" tags="ghosts" hasdocspage="false" />
+				<SettingsSlider text="#Settings_Volume_Ghosts" min="0" max="1" percentage="true" convar="mom_ghost_volume" infomessage="#Settings_Volume_Ghost_Info" tags="ghosts" hasdocspage="false" />
 				<SettingsSlider text="#Settings_Volume_UI" min="0" max="1" percentage="true" convar="snd_volume_ui" tags="ui,interface" hasdocspage="false" />
 			</Panel>
 

@@ -8,7 +8,7 @@
 	</scripts>
 
 	<HudComparisons class="hud-comparisons">
-		<ConVarEnabler class="w-fit-children" convar="mom_hud_comparisons_enable" togglevisibility="true">
+		<ConVarEnabler class="w-fit-children" convar="mom_hud_comparisons" togglevisibility="true">
 			<Panel class="hud-comparisons__splits hud-splits">
 				<!-- Each column populated in JS -->
 				<Panel id="SplitNames" class="hud-splits__column" />
