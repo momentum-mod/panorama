@@ -161,7 +161,7 @@ export class SettingsPage {
 		const width = this.paintContainer.actuallayoutwidth / this.paintContainer.actualuiscale_x;
 
 		const color = GameInterfaceAPI.GetSettingColor('mom_paint_color');
-		const scale = GameInterfaceAPI.GetSettingFloat('mom_paint_scale');
+		const scale = GameInterfaceAPI.GetSettingFloat('mom_paint_size');
 
 		const paintPanel = this.paintContainer.FindChild<Panel>('PaintBlob');
 

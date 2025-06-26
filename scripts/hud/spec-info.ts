@@ -9,7 +9,7 @@ class HudSpecInfoHandler implements OnPanelLoad {
 		numSpecLabel: $<Label>('#NumSpecLabel')
 	};
 
-	maxNames = GameInterfaceAPI.GetSettingInt('mom_hud_specinfo_names_count');
+	maxNames = GameInterfaceAPI.GetSettingInt('mom_hud_spectator_list_max_names');
 
 	constructor() {
 		$.RegisterForUnhandledEvent('ObserverTargetChanged', () => this.onSpectatorChanged());

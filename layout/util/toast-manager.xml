@@ -8,7 +8,7 @@
 	</scripts>
 
 	<Panel class="w-full h-full" hittest="false" hittestchildren="false">
-		<ConVarEnabler class="toast-manager" hittest="false" hittestchildren="false" convar="mom_ui_toasts_enable" togglevisibility="true">
+		<ConVarEnabler class="toast-manager" hittest="false" hittestchildren="false" convar="mom_toasts_enable" togglevisibility="true">
 			<Panel id="Center" class="toast-manager__center" />
 			<Panel id="Left" class="toast-manager__left" />
 			<Panel id="Right" class="toast-manager__right" />

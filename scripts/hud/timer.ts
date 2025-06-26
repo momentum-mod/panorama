@@ -213,14 +213,14 @@ class HudTimerHandler {
 	}
 
 	get isStartSoundEnabled(): boolean {
-		return GameInterfaceAPI.GetSettingBool('mom_hud_timer_sound_start_enable');
+		return GameInterfaceAPI.GetSettingBool('mom_timer_start_sound');
 	}
 
 	get isFinishSoundEnabled(): boolean {
-		return GameInterfaceAPI.GetSettingBool('mom_hud_timer_sound_finish_enable');
+		return GameInterfaceAPI.GetSettingBool('mom_timer_finish_sound');
 	}
 
 	get isStopSoundEnabled(): boolean {
-		return GameInterfaceAPI.GetSettingBool('mom_hud_timer_sound_stop_enable');
+		return GameInterfaceAPI.GetSettingBool('mom_timer_disable_sound');
 	}
 }
