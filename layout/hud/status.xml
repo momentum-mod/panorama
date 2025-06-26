@@ -8,7 +8,7 @@
 	</scripts>
 
 	<MomHudStatus class="w-full">
-		<ConVarEnabler class="hudstatus" convar="mom_hud_status_enable" togglevisibility="true">
+		<ConVarEnabler class="hudstatus" convar="mom_hud_status" togglevisibility="true">
 			<Label id="HudStatusLabel" class="hudstatus__label" />
 		</ConVarEnabler>
 	</MomHudStatus>

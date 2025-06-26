@@ -8,31 +8,31 @@
 	</scripts>
 
 	<MomHudMapInfo class="hudmapinfo">
-		<ConVarEnabler class="flow-down w-full" convar="mom_hud_mapinfo_enable" togglevisibility="true">
+		<ConVarEnabler class="flow-down w-full" convar="mom_hud_map_info" togglevisibility="true">
 
-			<ConVarEnabler class="w-full" convar="mom_hud_mapinfo_mapname_enable" togglevisibility="true">
+			<ConVarEnabler class="w-full" convar="mom_hud_map_name" togglevisibility="true">
 				<Label class="hudmapinfo__label h-align-right" text="{s:mapname} ({s:gamemode})" />
 			</ConVarEnabler>
 
 			<Panel id="CachedInfoContainer" class="flow-down w-fit-children h-align-right v-align-center">
 
-				<ConVarEnabler class="flow-right w-fit-children h-align-right" convar="mom_hud_mapinfo_author_enable" togglevisibility="true">
+				<ConVarEnabler class="flow-right w-fit-children h-align-right" convar="mom_hud_map_author" togglevisibility="true">
 					<Label class="hudmapinfo__label" text="#MapInfo_Author" />
 				</ConVarEnabler>
 
 				<Panel class="flow-left w-fit-children h-align-right v-align-center">
-					<ConVarEnabler class="flow-right w-fit-children h-align-right" convar="mom_hud_mapinfo_numzones_enable" togglevisibility="true">
+					<ConVarEnabler class="flow-right w-fit-children h-align-right" convar="mom_hud_map_stages" togglevisibility="true">
 						<Label id="StageCountLabel" class="hudmapinfo__label" text="#MapInfo_StageCount" />
 					</ConVarEnabler>
 
-					<ConVarEnabler class="flow-right w-fit-children h-align-right" convar="mom_hud_mapinfo_zonetype_enable" togglevisibility="true">
-						<ConVarEnabler class="w-fit-children h-align-right" convar="mom_hud_mapinfo_tier_enable" togglevisibility="true">
+					<ConVarEnabler class="flow-right w-fit-children h-align-right" convar="mom_hud_map_type" togglevisibility="true">
+						<ConVarEnabler class="w-fit-children h-align-right" convar="mom_hud_map_tier" togglevisibility="true">
 							<Label class="hudmapinfo__label" text=" - " />
 						</ConVarEnabler>
 						<Label id="LinearLabel" class="hudmapinfo__label" text="#MapInfo_Type_Linear" />
 					</ConVarEnabler>
 
-					<ConVarEnabler class="flow-right w-fit-children h-align-right" convar="mom_hud_mapinfo_tier_enable" togglevisibility="true">
+					<ConVarEnabler class="flow-right w-fit-children h-align-right" convar="mom_hud_map_tier" togglevisibility="true">
 						<Label id="TierLabel" class="hudmapinfo__label" text="#MapInfo_Tier" />
 					</ConVarEnabler>
 				</Panel>

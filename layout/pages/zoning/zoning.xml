@@ -121,7 +121,7 @@
 					<Panel id="Region" class="zoning__property">
 						<Label class="zoning__property-label" text="#Zoning_Region" />
 						<Panel class="zoning__region-property-container">
-							<ToggleButton id="TwoClickMode" class="zoning__two-click-button" convar="mom_zone_two_click" onmouseover="UiToolkitAPI.ShowTextTooltip('TwoClickMode', '#Zoning_TwoClickTogle_Tooltip');" onmouseout="UiToolkitAPI.HideTextTooltip();" />
+							<ToggleButton id="TwoClickMode" class="zoning__two-click-button" convar="mom_zoning_two_click" onmouseover="UiToolkitAPI.ShowTextTooltip('TwoClickMode', '#Zoning_TwoClickTogle_Tooltip');" onmouseout="UiToolkitAPI.HideTextTooltip();" />
 							<Button class="button zoning__property-button mr-2" onactivate="ZoneMenuHandler.pickCorners();">
 								<Label class="button__text" text="#Zoning_EditPoints" />
 							</Button>
@@ -259,7 +259,7 @@
 					</Panel>
 				</Panel>
 				<Panel id="GridSlider" class="zoning__property">
-					<SettingsSlider text="#Zoning_GridSnapSize" class="zoning__slider" min="1" max="64" percentage="false" convar="mom_zone_grid" />
+					<SettingsSlider text="#Zoning_GridSnapSize" class="zoning__slider" min="1" max="64" percentage="false" convar="mom_zoning_grid_size" />
 				</Panel>
 			</Panel>
 		</Panel>
