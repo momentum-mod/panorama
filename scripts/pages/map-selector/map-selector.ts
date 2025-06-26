@@ -283,7 +283,7 @@ class MapSelectorHandler implements OnPanelLoad {
 
 	/**
 	 *  Show a popup asking the user if they want to overwrite the map,
-	 * only if mom_map_download_cancel_confirm is true
+	 * only if mom_map_download_cancel_confirmation is true
 	 */
 	showConfirmOverwrite(mapID: number) {
 		UiToolkitAPI.ShowGenericPopupOkCancel(
@@ -302,7 +302,7 @@ class MapSelectorHandler implements OnPanelLoad {
 	showConfirmCancelDownload(mapID: number) {
 		const cancel = () => $.DispatchEvent('MapSelector_ConfirmCancelDownload', mapID);
 
-		if (GameInterfaceAPI.GetSettingBool('mom_map_download_cancel_confirm')) {
+		if (GameInterfaceAPI.GetSettingBool('mom_map_download_cancel_confirmation')) {
 			UiToolkitAPI.ShowGenericPopupOkCancel(
 				$.Localize('#Action_ConfirmCancel'),
 				$.Localize('#Action_ConfirmCancel_Message'),
@@ -513,7 +513,7 @@ class MapSelectorHandler implements OnPanelLoad {
 
 	openInSteamOverlay() {
 		const mapData = $.GetContextPanel<MomentumMapSelector>().selectedMapData;
-		const frontendUrl = GameInterfaceAPI.GetSettingString('mom_api_url_frontend');
+		const frontendUrl = GameInterfaceAPI.GetSettingString('mom_api_url_backend_frontend');
 		if (mapData && frontendUrl) {
 			SteamOverlayAPI.OpenURL(`${frontendUrl}/maps/${mapData.staticData.name}`);
 		}

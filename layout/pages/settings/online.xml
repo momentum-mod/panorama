@@ -38,12 +38,12 @@
 
 				<SettingsSlider text="#Settings_Replay_Expiration" min="0" max="365" convar="mom_tv_replay_expiration" infomessage="#Settings_Replay_Expiration_Info" tags="expiration" />
 
-				<SettingsEnum text="#Settings_OnlineReplay_Comparison_Show" convar="mom_tv_replay_comparison_ghost_show" infomessage="#Settings_OnlineReplay_Comparison_Show_Info">
+				<SettingsEnum text="#Settings_OnlineReplay_Comparison_Show" convar="mom_comparison_ghost" infomessage="#Settings_OnlineReplay_Comparison_Show_Info">
 					<RadioButton group="replaycomparisonshow" text="#Common_Off" value="0" />
 					<RadioButton group="replaycomparisonshow" text="#Common_On" value="1" />
 				</SettingsEnum>
 
-				<SettingsEnum text="#Settings_OnlineReplay_Comparison_AutoLoad" convar="mom_tv_replay_comparison_autoload" infomessage="#Settings_OnlineReplay_Comparison_AutoLoad_Info">
+				<SettingsEnum text="#Settings_OnlineReplay_Comparison_AutoLoad" convar="mom_comparison_auto_select" infomessage="#Settings_OnlineReplay_Comparison_AutoLoad_Info">
 					<RadioButton group="replaycomparisonautoload" text="#Common_Off" value="0" />
 					<RadioButton group="replaycomparisonautoload" text="#Common_On" value="1" />
 				</SettingsEnum>
@@ -92,7 +92,7 @@
 					<RadioButton group="ghostpanels" text="#Common_On" value="1" />
 				</SettingsEnum>
 
-				<SettingsEnum text="#Settings_OnlineGhost_Trails" convar="mom_ghost_online_trail_enable" infomessage="#Settings_OnlineGhost_Trails_Info" tags="trail">
+				<SettingsEnum text="#Settings_OnlineGhost_Trails" convar="mom_ghost_trails" infomessage="#Settings_OnlineGhost_Trails_Info" tags="trail">
 					<RadioButton group="ghosttrail" text="#Common_Off" value="0" />
 					<RadioButton group="ghosttrail" text="#Common_On" value="1" />
 				</SettingsEnum>
@@ -141,7 +141,7 @@
 
 						<ConVarColorDisplay text="#Settings_OnlinePlayer_TrailColor" convar="mom_trail_color" infomessage="#Settings_OnlinePlayer_TrailColor_Info" tags="trail,color" />
 
-						<SettingsSlider text="#Settings_OnlinePlayer_TrailLength" min="0.1" max="10" displayprecision="1" convar="mom_trail_length" infomessage="#Settings_OnlinePlayer_TrailLength_Info" tags="trail,length" />
+						<SettingsSlider text="#Settings_OnlinePlayer_TrailLength" min="0.1" max="10" displayprecision="1" convar="mom_trail_duration" infomessage="#Settings_OnlinePlayer_TrailLength_Info" tags="trail,length" />
 
 					</Panel>
 				</Panel>
@@ -160,7 +160,7 @@
 					</TooltipPanel>
 				</Panel>
 
-				<SettingsEnum text="#Settings_RichPresence_Discord" convar="mom_discord_enable" infomessage="#Settings_RichPresence_Discord_Info" tags="discord,richard,presence">
+				<SettingsEnum text="#Settings_RichPresence_Discord" convar="mom_discord_integration" infomessage="#Settings_RichPresence_Discord_Info" tags="discord,richard,presence">
 					<RadioButton group="enablediscordrp" text="#Common_Off" value="0" />
 					<RadioButton group="enablediscordrp" text="#Common_On" value="1" />
 				</SettingsEnum>

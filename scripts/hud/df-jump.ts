@@ -70,6 +70,6 @@ class DFJumpHandler {
 	}
 
 	initializeSettings() {
-		this.setMaxDelay(GameInterfaceAPI.GetSettingInt('mom_df_hud_jump_max_delay'));
+		this.setMaxDelay(GameInterfaceAPI.GetSettingInt('mom_hud_df_jump_max_delay'));
 	}
 }
