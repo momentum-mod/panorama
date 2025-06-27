@@ -66,27 +66,6 @@
 					</Panel>
 				</Panel>
 
-				<Panel class="settings-group__combo">
-					<SettingsEnum text="#Settings_OnlineGhost_OverrideAlphaEnable" convar="mom_ghost_online_alpha_override_enable" infomessage="#Settings_OnlineGhost_OverrideAlphaEnable_Info" tags="alpha,transparency">
-						<RadioButton group="ghostalpha" text="#Common_Off" value="0" />
-						<RadioButton group="ghostalpha" text="#Common_On" value="1" />
-					</SettingsEnum>
-
-					<ConVarEnabler convar="mom_ghost_online_alpha_override_enable">
-						<SettingsSlider text="" min="0" max="255" percentage="true" convar="mom_ghost_online_alpha_override" infotitle="#Settings_OnlineGhost_OverrideAlphaEnable" infomessage="#Settings_OnlineGhost_OverrideAlphaAmount_Info" tags="alpha,transparency" />
-					</ConVarEnabler>
-				</Panel>
-
-				<SettingsEnum text="#Settings_OnlineGhost_Rotations" convar="mom_ghost_online_rotations" infomessage="#Settings_OnlineGhost_Rotations_Info">
-					<RadioButton group="ghostrotation" text="#Common_Off" value="0" />
-					<RadioButton group="ghostrotation" text="#Common_On" value="1" />
-				</SettingsEnum>
-
-				<SettingsEnum text="#Settings_OnlineGhost_Sounds" convar="mom_ghost_online_flashlights_enable" infomessage="#Settings_OnlineGhost_Sounds_Info" tags="sound">
-					<RadioButton group="ghostsounds" text="#Common_Off" value="0" />
-					<RadioButton group="ghostsounds" text="#Common_On" value="1" />
-				</SettingsEnum>
-
 				<SettingsEnum text="#Settings_OnlineGhost_Panels" convar="mom_hud_ghost_entpanels_enable" infomessage="#Settings_OnlineGhost_Panels_Info" tags="panel">
 					<RadioButton group="ghostpanels" text="#Common_Off" value="0" />
 					<RadioButton group="ghostpanels" text="#Common_On" value="1" />
@@ -102,10 +81,6 @@
 				I've added Settings_OnlineGhost_ExplosiveAlpha and Settings_OnlineGhost_ExplosiveAlpha_Info
 				to localisation preemptively. - Tom
 				-->
-
-				<SettingsSlider text="#Settings_OnlineGhost_StickyAlpha" min="10" max="255" percentage="false" convar="mom_ghost_online_sticky_alpha" infomessage="#Settings_OnlineGhost_StickyAlpha_Info" tags="alpha,transparency" />
-
-				<SettingsSlider text="#Settings_OnlineGhost_ConcAlpha" min="10" max="255" percentage="false" convar="mom_ghost_online_conc_alpha" infomessage="#Settings_OnlineGhost_ConcAlpha_Info" tags="alpha,transparency" />
 
 			</Panel>
 

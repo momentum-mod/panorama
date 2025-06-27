@@ -257,7 +257,8 @@
 
 				<SettingsEnum text="#Settings_RJ_RocketDecals" convar="mom_tf2_rocket_decals" infomessage="#Settings_RJ_RocketDecals_Info" tags="decals,explosion">
 					<RadioButton group="rjdecals" text="#Common_Off" value="0" />
-					<RadioButton group="rjdecals" text="#Common_On" value="1" />
+					<RadioButton group="rjdecals" text="#Common_Decal_FadeOut" value="1" />
+					<RadioButton group="rjdecals" text="#Common_Decal_Permanent" value="2" />
 				</SettingsEnum>
 
 				<SettingsEnumDropDown text="#Settings_RJ_CenterFire" convar="mom_tf2_rocket_fire_angle" infomessage="#Settings_RJ_CenterFire_Info" tags="center,centre,middle,original">
@@ -298,7 +299,8 @@
 
 				<SettingsEnum text="#Settings_SJ_StickybombDecals" convar="mom_stickybomb_decals" infomessage="#Settings_SJ_StickybombDecals_Info" tags="decal,explosion">
 					<RadioButton group="sjdecals" text="#Common_Off" value="0" />
-					<RadioButton group="sjdecals" text="#Common_On" value="1" />
+					<RadioButton group="sjdecals" text="#Common_Decal_FadeOut" value="1" />
+					<RadioButton group="sjdecals" text="#Common_Decal_Permanent" value="2" />
 				</SettingsEnum>
 
 				<SettingsEnum text="#Settings_SJ_ExplosionSound" convar="mom_stickybomb_sound_explosion" infomessage="#Settings_SJ_ExplosionSound_Info" tags="explosion,sound">
@@ -455,7 +457,8 @@
 
 				<SettingsEnum text="#Settings_DefragWeaponDecals" convar="mom_df_decals" infomessage="#Settings_DefragWeaponDecals_Info" tags="decal">
 					<RadioButton group="defragweapondecals" text="#Common_Off" value="0" />
-					<RadioButton group="defragweapondecals" text="#Common_On" value="1" />
+					<RadioButton group="defragweapondecals" text="#Common_Decal_FadeOut" value="1" />
+					<RadioButton group="defragweapondecals" text="#Common_Decal_Permanent" value="2" />
 				</SettingsEnum>
 
 				<SettingsEnum text="#Settings_DefragProjectileTrail" convar="mom_df_projectile_trails" infomessage="#Settings_DefragProjectileTrail_Info" tags="particle,trail">
@@ -640,14 +643,7 @@
 
 				<Panel class="settings-group__combo">
 
-					<SettingsEnum text="#Settings_Defrag_HUDFOVEnable" convar="mom_hud_df_fov_override_enable" infomessage="#Settings_Defrag_HUDFOV_Info" tags="fov">
-						<RadioButton group="hudfovenable" text="#Common_Off" value="0" />
-						<RadioButton group="hudfovenable" text="#Common_On" value="1" />
-					</SettingsEnum>
-
-					<ConVarEnabler convar="mom_hud_df_fov_override_enable">
-						<SettingsSlider text="#Settings_Defrag_HUDFOV" min="50" max="130" convar="mom_hud_df_fov_override" displayprecision="0" infomessage="#Settings_Defrag_HUDFOV_Info" />
-					</ConVarEnabler>
+					<SettingsSlider text="#Settings_Defrag_HUDFOV" min="0" max="130" convar="mom_hud_df_fov_override" displayprecision="0" infomessage="#Settings_Defrag_HUDFOV_Info" />
 
 				</Panel>
 
