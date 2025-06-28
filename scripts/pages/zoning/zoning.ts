@@ -65,7 +65,7 @@ interface ZoneSelection {
 function countTrackRegions(track: MainTrack | BonusTrack) {
 	let regionCount = 0;
 
-	for (const segment of track.zones.segments ?? []) {
+	for (const segment of track.zones?.segments ?? []) {
 		for (const zone of segment.checkpoints ?? []) {
 			regionCount += zone.regions?.length ?? 0;
 		}
@@ -74,7 +74,7 @@ function countTrackRegions(track: MainTrack | BonusTrack) {
 		}
 	}
 
-	if (track.zones.end.regions) {
+	if (track.zones?.end.regions) {
 		regionCount += track.zones.end.regions.length;
 	}
 
@@ -92,6 +92,7 @@ class ZoneMenuHandler {
 
 		createMainButton: $<Button>('#CreateMainButton')!,
 		addBonusButton: $<Button>('#AddBonusButton')!,
+		addDefragBonusButton: $<Button>('#AddDefragBonusButton')!,
 		addSegmentButton: $<Button>('#AddSegmentButton')!,
 		addEndZoneButton: $<Button>('#AddEndZoneButton')!,
 		addCheckpointButton: $<Button>('#AddCheckpointButton')!,
@@ -139,6 +140,7 @@ class ZoneMenuHandler {
 	mapZoneData: MapZones | null = null;
 	filternameList: string[] | null = null;
 	teleDestList: string[] | null = null;
+	editorDefragModifiers = 0;
 
 	didInit = false;
 
@@ -302,7 +304,7 @@ class ZoneMenuHandler {
 				const insertBonus = (before) => {
 					// Select this one first for the context of where to add the new one
 					this.updateSelection(selectionObj);
-					this.addBonus(before ? i : i + 1);
+					this.addBonus(false, before ? i : i + 1);
 				};
 
 				const contextItems = [
@@ -319,6 +321,7 @@ class ZoneMenuHandler {
 				UiToolkitAPI.ShowSimpleContextMenu('', '', contextItems);
 			});
 		}
+
 		this.rebuildCenterList();
 		this.rebuildRightList();
 
@@ -341,19 +344,28 @@ class ZoneMenuHandler {
 				this.mapZoneData.tracks.bonuses?.length >= this.zoningLimits.MAX_BONUS_TRACKS
 		);
 
+		this.panels.addDefragBonusButton.SetHasClass(
+			'hide',
+			regionCount >= this.zoningLimits.MAX_REGIONS ||
+				this.mapZoneData.tracks.bonuses?.length >= this.zoningLimits.MAX_BONUS_TRACKS ||
+				!this.mapZoneData.tracks.main ||
+				this.mapZoneData.tracks.main.zones.segments.length !== 1
+		);
+
 		this.panels.addSegmentButton.SetHasClass(
 			'hide',
 			regionCount >= this.zoningLimits.MAX_REGIONS ||
 				!this.selectedZone.track ||
 				!this.isMainTrack(this.selectedZone.track) ||
-				this.selectedZone.track.zones.segments.length >= this.zoningLimits.MAX_TRACK_SEGMENTS
+				this.selectedZone.track.zones.segments.length >= this.zoningLimits.MAX_TRACK_SEGMENTS ||
+				this.mapZoneData.tracks.bonuses?.some((bonus) => this.isDefragBonus(bonus))
 		);
 
 		this.panels.addEndZoneButton.SetHasClass(
 			'hide',
 			regionCount >= this.zoningLimits.MAX_REGIONS ||
 				!this.selectedZone.track ||
-				(this.selectedZone.track.zones.segments ?? []).length === 0 ||
+				(this.selectedZone.track.zones?.segments ?? []).length === 0 ||
 				(this.selectedZone.track.zones.segments[0].checkpoints ?? []).length === 0 || // require making a start zone first
 				Boolean(this.selectedZone.track?.zones?.end.regions?.length > 0)
 		);
@@ -378,7 +390,7 @@ class ZoneMenuHandler {
 
 		const segmentTag = $.Localize('#Zoning_Segment');
 
-		for (const [i, segment] of this.selectedZone.track.zones.segments?.entries() ?? []) {
+		for (const [i, segment] of this.selectedZone.track.zones?.segments?.entries() ?? []) {
 			const majorId = segment.name || `${segmentTag} ${i + 1}`;
 
 			this.addItemListItem(this.panels.centerList, majorId, segment, ItemType.SEGMENT, {
@@ -388,7 +400,7 @@ class ZoneMenuHandler {
 			});
 		}
 
-		if (this.selectedZone.track.zones.end.regions?.length > 0) {
+		if (this.selectedZone.track.zones?.end.regions?.length > 0) {
 			this.addItemListItem(
 				this.panels.centerList,
 				$.Localize('#Zoning_EndZone'),
@@ -584,7 +596,7 @@ class ZoneMenuHandler {
 		const parentPanel = this.panels.stagesEndAtStageStarts.GetParent()!;
 		parentPanel.visible = this.hasSelectedMainTrack();
 		this.panels.stagesEndAtStageStarts.SetSelected(Boolean((track as MainTrack).stagesEndAtStageStarts ?? false));
-		this.panels.defragModifiers.visible = this.hasSelectedBonusTrack();
+		this.panels.defragModifiers.visible = this.hasSelectedDefragBonus();
 		this.panels.maxVelocity.text =
 			this.mapZoneData.maxVelocity === undefined ? '' : this.mapZoneData.maxVelocity.toFixed(0);
 	}
@@ -928,10 +940,11 @@ class ZoneMenuHandler {
 		this.setInfoPanelShown(true);
 	}
 
-	addBonus(index = null) {
+	addBonus(defragBonus = false, index = null) {
 		if (!this.mapZoneData) return;
 
-		const bonus = this.createBonusTrack();
+		const bonus = defragBonus ? { defragModifiers: 1 } : this.createBonusTrack();
+
 		if (!this.mapZoneData.tracks.bonuses) {
 			this.mapZoneData.tracks.bonuses = [];
 		}
@@ -942,14 +955,19 @@ class ZoneMenuHandler {
 			this.mapZoneData.tracks.bonuses.push(bonus);
 		}
 
-		this.updateSelection({
-			track: bonus,
-			segment: bonus.zones.segments[0],
-			zone: bonus.zones.segments[0].checkpoints[0]
-		});
+		if (defragBonus) {
+			this.updateSelection({ track: bonus, segment: null, zone: null });
+			this.showDefragFlagMenu();
+		} else {
+			this.updateSelection({
+				track: bonus,
+				segment: bonus.zones.segments[0],
+				zone: bonus.zones.segments[0].checkpoints[0]
+			});
 
-		this.panels.zoningMenu.createRegion(true);
-		this.setInfoPanelShown(true);
+			this.panels.zoningMenu.createRegion(true);
+			this.setInfoPanelShown(true);
+		}
 	}
 
 	addSegment() {
@@ -1121,7 +1139,9 @@ class ZoneMenuHandler {
 	}
 
 	showDefragFlagMenu() {
-		if (!this.hasSelectedBonusTrack() || !('defragModifiers' in this.selectedZone.track)) return;
+		if (!this.hasSelectedDefragBonus()) return;
+
+		this.editorDefragModifiers = this.selectedZone.track.defragModifiers;
 
 		const flagEditMenu = UiToolkitAPI.ShowCustomLayoutContextMenuParametersDismissEvent<Panel>(
 			this.panels.defragModifiers.id,
@@ -1129,52 +1149,41 @@ class ZoneMenuHandler {
 			'file://{resources}/layout/modals/context-menus/zoning-df-flags.xml',
 			'',
 			() => {
-				this.onDefragFlagMenuClosed();
+				if (this.editorDefragModifiers === 0) {
+					UiToolkitAPI.ShowGenericPopupOk(
+						$.Localize('#Zoning_Error'),
+						$.Localize('#Zoning_DefragBonusMustHaveModifiers'),
+						'generic-popup',
+						() => {
+							this.showDefragFlagMenu();
+						}
+					);
+				} else {
+					this.selectedZone.track.defragModifiers = this.editorDefragModifiers;
+				}
 			}
 		);
 
-		const hasteFlag = flagEditMenu.FindChildTraverse<Panel>('FlagHaste')!;
-		hasteFlag.checked = (this.selectedZone.track.defragModifiers! & DefragFlags.HASTE) > 0;
-		hasteFlag.SetPanelEvent('onactivate', () => this.setDefragFlags(DefragFlags.HASTE));
+		const flags = {
+			FlagHaste: DefragFlags.HASTE,
+			FlagSlick: DefragFlags.SLICK,
+			FlagDamageBoost: DefragFlags.DAMAGEBOOST,
+			FlagRockets: DefragFlags.ROCKETS,
+			FlagPlasma: DefragFlags.PLASMA,
+			FlagBFG: DefragFlags.BFG
+		};
 
-		const slickFlag = flagEditMenu.FindChildTraverse<Panel>('FlagSlick')!;
-		slickFlag.checked = (this.selectedZone.track.defragModifiers! & DefragFlags.SLICK) > 0;
-		slickFlag.SetPanelEvent('onactivate', () => this.setDefragFlags(DefragFlags.SLICK));
-
-		const damageBoostFlag = flagEditMenu.FindChildTraverse<Panel>('FlagDamageBoost')!;
-		damageBoostFlag.checked = (this.selectedZone.track.defragModifiers! & DefragFlags.DAMAGEBOOST) > 0;
-		damageBoostFlag.SetPanelEvent('onactivate', () => this.setDefragFlags(DefragFlags.DAMAGEBOOST));
-
-		const rocketsFlag = flagEditMenu.FindChildTraverse<Panel>('FlagRockets')!;
-		rocketsFlag.checked = (this.selectedZone.track.defragModifiers! & DefragFlags.ROCKETS) > 0;
-		rocketsFlag.SetPanelEvent('onactivate', () => this.setDefragFlags(DefragFlags.ROCKETS));
-
-		const plasmaFlag = flagEditMenu.FindChildTraverse<Panel>('FlagPlasma')!;
-		plasmaFlag.checked = (this.selectedZone.track.defragModifiers! & DefragFlags.PLASMA) > 0;
-		plasmaFlag.SetPanelEvent('onactivate', () => this.setDefragFlags(DefragFlags.PLASMA));
-
-		const bfgFlag = flagEditMenu.FindChildTraverse<Panel>('FlagBFG')!;
-		bfgFlag.checked = (this.selectedZone.track.defragModifiers! & DefragFlags.BFG) > 0;
-		bfgFlag.SetPanelEvent('onactivate', () => this.setDefragFlags(DefragFlags.BFG));
-	}
-
-	setDefragFlags(flag: DefragFlags) {
-		// don't use defragBonus validity check because we could be setting the flags for the first time
-		if (!this.hasSelectedBonusTrack() || !('defragModifiers' in this.selectedZone.track)) return;
-		this.selectedZone.track.defragModifiers! ^= flag;
-	}
-
-	onDefragFlagMenuClosed() {
-		if (!this.hasSelectedDefragBonus() || !this.mapZoneData) return;
-		delete this.selectedZone.track.zones;
-		const bonusIndex = this.mapZoneData.tracks.bonuses!.indexOf(this.selectedZone.track);
-		if (bonusIndex === undefined || bonusIndex === -1) throw new Error('Missing bonus track!');
-
-		const trackPanel = this.panels.leftList.GetChild(1 + bonusIndex)!;
-		trackPanel.FindChildTraverse('CollapseButton')!.visible = false;
-		trackPanel.FindChildTraverse('ChildContainer')!.RemoveAndDeleteChildren();
-		// keep select button aligned with other tracks
-		trackPanel.FindChildTraverse('Entry')!.SetHasClass('zoning__tracklist-checkpoint', true);
+		for (const [panelId, flag] of Object.entries(flags)) {
+			const flagPanel = flagEditMenu.FindChildTraverse<Panel>(panelId)!;
+			flagPanel.checked = (this.selectedZone.track.defragModifiers! & flag) !== 0;
+			flagPanel.SetPanelEvent('onactivate', () => {
+				if (flagPanel.checked) {
+					this.editorDefragModifiers |= flag;
+				} else {
+					this.editorDefragModifiers &= ~flag;
+				}
+			});
+		}
 	}
 
 	setBhopEnabled() {
