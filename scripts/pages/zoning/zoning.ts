@@ -275,13 +275,7 @@ class ZoneMenuHandler {
 		const bonusTag = $.Localize('#Zoning_Bonus');
 		for (const [i, bonus] of this.mapZoneData.tracks.bonuses?.entries() ?? []) {
 			const selectionObj: ZoneSelection = { track: bonus, segment: null, zone: null };
-			this.addItemListItem(
-				this.panels.leftList,
-				`${bonusTag} ${i + 1}`,
-				bonus,
-				ItemType.TRACK,
-				selectionObj
-			);
+			this.addItemListItem(this.panels.leftList, `${bonusTag} ${i + 1}`, bonus, ItemType.TRACK, selectionObj);
 		}
 
 		this.rebuildCenterList();
@@ -346,13 +340,11 @@ class ZoneMenuHandler {
 		for (const [i, segment] of this.selectedZone.track.zones.segments?.entries() ?? []) {
 			const majorId = segment.name || `${segmentTag} ${i + 1}`;
 
-			this.addItemListItem(
-				this.panels.centerList,
-				majorId,
-				segment,
-				ItemType.SEGMENT,
-				{ track: this.selectedZone.track, segment: segment, zone: null }
-			);
+			this.addItemListItem(this.panels.centerList, majorId, segment, ItemType.SEGMENT, {
+				track: this.selectedZone.track,
+				segment: segment,
+				zone: null
+			});
 		}
 
 		if (this.selectedZone.track.zones.end.regions?.length > 0) {
@@ -384,25 +376,40 @@ class ZoneMenuHandler {
 				minorId = `${checkpointTag} ${i}`;
 			}
 
-			this.addTrackListItem(
-				this.panels.rightList,
-				minorId,
-				zone,
-				TrackListItemType.ZONE,
-				{ track: this.selectedZone.track, segment: this.selectedZone.segment, zone: zone }
-			);
+			const selectionObj = { track: this.selectedZone.track, segment: this.selectedZone.segment, zone: zone };
+
+			const item = this.addItemListItem(this.panels.rightList, minorId, zone, ItemType.ZONE, selectionObj);
+
+			item.SetPanelEvent('oncontextmenu', () => {
+				const insertCheckpoint = (before) => {
+					// Select this one first for the context of which segment to add the new one to
+					this.updateSelection(selectionObj);
+					this.addCheckpoint(before ? i : i + 1);
+				};
+
+				const contextItems = [
+					{
+						label: '#Zoning_InsertBefore',
+						jsCallback: () => insertCheckpoint(true)
+					},
+					{
+						label: '#Zoning_InsertAfter',
+						jsCallback: () => insertCheckpoint(false)
+					}
+				];
+
+				UiToolkitAPI.ShowSimpleContextMenu('', '', contextItems);
+			});
 		}
 
 		for (const [i, zone] of this.selectedZone.segment.cancel?.entries() ?? []) {
 			const cancelTag = $.Localize('#Zoning_CancelZone');
 
-			this.addItemListItem(
-				this.panels.rightList,
-				`${cancelTag} ${i + 1}`,
-				zone,
-				ItemType.ZONE,
-				{ track: this.selectedZone.track, segment: this.selectedZone.segment, zone: zone }
-			);
+			this.addItemListItem(this.panels.rightList, `${cancelTag} ${i + 1}`, zone, ItemType.ZONE, {
+				track: this.selectedZone.track,
+				segment: this.selectedZone.segment,
+				zone: zone
+			});
 		}
 
 		this.panels.addCheckpointButtonLabel.text = $.Localize(
@@ -918,7 +925,7 @@ class ZoneMenuHandler {
 		this.setInfoPanelShown(true);
 	}
 
-	addCheckpoint() {
+	addCheckpoint(index = null) {
 		if (!this.mapZoneData) return;
 		if (!this.selectedZone.track) throw new Error('Attempted to add checkpoint zone to missing track!');
 		if (!this.selectedZone.segment) throw new Error('Attempted to add checkpoint zone to missing segment!');
@@ -931,7 +938,11 @@ class ZoneMenuHandler {
 			this.selectedZone.segment.checkpoints = [];
 		}
 
-		this.selectedZone.segment.checkpoints.push(newZone);
+		if (index != null && index < this.selectedZone.segment.checkpoints.length) {
+			this.selectedZone.segment.checkpoints.splice(Math.max(index, 0), 0, newZone);
+		} else {
+			this.selectedZone.segment.checkpoints.push(newZone);
+		}
 
 		this.updateSelection({ track: this.selectedZone.track, segment: this.selectedZone.segment, zone: newZone });
 
