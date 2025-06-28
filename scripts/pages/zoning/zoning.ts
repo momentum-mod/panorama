@@ -207,8 +207,24 @@ class ZoneMenuHandler {
 
 		item.FindChildTraverse<Label>('Name')!.text = label;
 
-		item.FindChildTraverse<ToggleButton>('SelectButton')?.SetPanelEvent('onactivate', () => {
+		const selectButton = item.FindChildTraverse<ToggleButton>('SelectButton');
+
+		selectButton.SetPanelEvent('onactivate', () => {
 			this.updateSelection(selectionWhenActivated);
+		});
+
+		selectButton.SetPanelEvent('ondblclick', () => {
+			let zone: Zone = null;
+			if (selectionWhenActivated.zone) {
+				zone = selectionWhenActivated.zone;
+			} else if (selectionWhenActivated.segment) {
+				zone = selectionWhenActivated.segment.checkpoints[0];
+			} else if (selectionWhenActivated.track) {
+				zone = selectionWhenActivated.track.zones.segments[0].checkpoints[0];
+			}
+			if (zone) {
+				this.panels.zoningMenu.moveToRegion(zone.regions[0]);
+			}
 		});
 
 		let isInActiveHierarchy = false;
@@ -225,7 +241,6 @@ class ZoneMenuHandler {
 		}
 
 		if (isInActiveHierarchy) {
-			const selectButton = item.FindChildTraverse<ToggleButton>('SelectButton');
 			selectButton.AddClass('in-active-hierarchy');
 
 			if (zonesObject === this.getActiveSelection()) {
