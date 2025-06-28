@@ -35,6 +35,9 @@
 				<Button id="AddBonusButton" class="zoning__add-button hide" onactivate="ZoneMenuHandler.addBonus()">
 					<Label class="zoning__itemlist-label zoning__itemlist-label--add" text="#Zoning_NewBonus" />
 				</Button>
+				<Button id="AddDefragBonusButton" class="zoning__add-button hide" onactivate="ZoneMenuHandler.addBonus(true)">
+					<Label class="zoning__itemlist-label zoning__itemlist-label--add" text="#Zoning_NewDefragBonus" />
+				</Button>
         	</Panel>
         	<Panel class="zoning__menu-section zoning__itemlist zoning__itemlist--gap-before">
 				<Panel id="CenterList" class="w-full flow-down">
