@@ -747,7 +747,8 @@ class ZoneMenuHandler {
 				$.Localize('#Zoning_Recreate'),
 				() => {
 					if (!this.selectedZone || !this.selectedZone.zone) throw new Error('Missing selected zone!');
-					this.selectedZone.zone.regions = [];
+					this.selectedZone.zone.regions = [this.createRegion()];
+					this.selectedZone.region = this.selectedZone.zone.regions[0];
 					this.drawZones();
 					this.panels.zoningMenu.createRegion(this.isStartZone(this.selectedZone.zone));
 					this.showInfoPanel(true);
