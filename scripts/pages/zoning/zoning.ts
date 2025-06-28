@@ -290,9 +290,35 @@ class ZoneMenuHandler {
 		const bonusTag = $.Localize('#Zoning_Bonus');
 		for (const [i, bonus] of this.mapZoneData.tracks.bonuses?.entries() ?? []) {
 			const selectionObj: ZoneSelection = { track: bonus, segment: null, zone: null };
-			this.addItemListItem(this.panels.leftList, `${bonusTag} ${i + 1}`, bonus, ItemType.TRACK, selectionObj);
-		}
+			const item = this.addItemListItem(
+				this.panels.leftList,
+				`${bonusTag} ${i + 1}`,
+				bonus,
+				ItemType.TRACK,
+				selectionObj
+			);
 
+			item.SetPanelEvent('oncontextmenu', () => {
+				const insertBonus = (before) => {
+					// Select this one first for the context of where to add the new one
+					this.updateSelection(selectionObj);
+					this.addBonus(before ? i : i + 1);
+				};
+
+				const contextItems = [
+					{
+						label: '#Zoning_InsertBonusBefore',
+						jsCallback: () => insertBonus(true)
+					},
+					{
+						label: '#Zoning_InsertBonusAfter',
+						jsCallback: () => insertBonus(false)
+					}
+				];
+
+				UiToolkitAPI.ShowSimpleContextMenu('', '', contextItems);
+			});
+		}
 		this.rebuildCenterList();
 		this.rebuildRightList();
 
@@ -902,12 +928,16 @@ class ZoneMenuHandler {
 		this.setInfoPanelShown(true);
 	}
 
-	addBonus() {
+	addBonus(index = null) {
 		if (!this.mapZoneData) return;
 
 		const bonus = this.createBonusTrack();
 		if (!this.mapZoneData.tracks.bonuses) {
-			this.mapZoneData.tracks.bonuses = [bonus];
+			this.mapZoneData.tracks.bonuses = [];
+		}
+
+		if (index != null && index < this.mapZoneData.tracks.bonuses.length) {
+			this.mapZoneData.tracks.bonuses.splice(Math.max(index, 0), 0, bonus);
 		} else {
 			this.mapZoneData.tracks.bonuses.push(bonus);
 		}
