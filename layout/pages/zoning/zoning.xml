@@ -60,6 +60,9 @@
 				<Button id="AddCancelZoneButton" class="zoning__add-button hide" onactivate="ZoneMenuHandler.addCancelZone()">
 					<Label class="zoning__itemlist-label zoning__itemlist-label--add" text="#Zoning_NewCancelZone" />
 				</Button>
+				<Button id="AddGlobalRegionButton" class="zoning__add-button hide" onactivate="ZoneMenuHandler.addGlobalRegion()">
+					<Label class="zoning__itemlist-label zoning__itemlist-label--add" text="#Zoning_NewGlobalRegion" />
+				</Button>
 			</Panel>
 		</Panel>
 		<Label id="PropertiesLabel" class="zoning__header" text="#Zoning_PropertiesLabel" />
