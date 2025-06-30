@@ -65,7 +65,10 @@
 				</Button>
 			</Panel>
 		</Panel>
-		<Label id="PropertiesLabel" class="zoning__header" text="#Zoning_PropertiesLabel" />
+		<Panel class="zoning__properties-header">
+			<Label text="#Zoning_PropertiesLabel" />
+			<Label id="PropertiesLabel" />
+		</Panel>
 		<Panel id="PropertiesContainer" class="zoning__menu-section">
 			<Panel id="TrackProperties" class="zoning__property-container">
 				<Panel class="zoning__menu-separator">
