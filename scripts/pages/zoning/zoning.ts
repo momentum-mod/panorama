@@ -116,6 +116,7 @@ class ZoneMenuHandler {
 		addCancelZoneButton: $<Button>('#AddCancelZoneButton')!,
 		addGlobalRegionButton: $<Button>('#AddGlobalRegionButton')!,
 
+		propertiesLabel: $<Label>('#PropertiesLabel')!,
 		propertiesPanel: $<Panel>('#PropertiesContainer')!,
 		propertiesTrack: $<Panel>('#TrackProperties')!,
 		maxVelocity: $<TextEntry>('#MaxVelocity')!,
@@ -159,6 +160,7 @@ class ZoneMenuHandler {
 	filternameList: string[] | null = null;
 	teleDestList: string[] | null = null;
 	editorDefragModifiers = 0;
+	selectedHierarchyNames: string[] = [];
 
 	didInit = false;
 
@@ -276,6 +278,8 @@ class ZoneMenuHandler {
 		}
 
 		if (isInActiveHierarchy) {
+			this.selectedHierarchyNames.push(label);
+
 			selectButton.AddClass('in-active-hierarchy');
 
 			if (zonesObject === this.getActiveSelection()) {
@@ -318,6 +322,8 @@ class ZoneMenuHandler {
 		this.panels.leftList.RemoveAndDeleteChildren();
 		this.panels.centerList.RemoveAndDeleteChildren();
 		this.panels.rightList.RemoveAndDeleteChildren();
+
+		this.selectedHierarchyNames = [];
 
 		if (this.mapZoneData.tracks.main) {
 			this.addItemListItem(
@@ -376,6 +382,12 @@ class ZoneMenuHandler {
 
 		this.rebuildCenterList();
 		this.rebuildRightList();
+
+		if (this.selectedHierarchyNames.length > 0) {
+			this.panels.propertiesLabel.text = `(${this.selectedHierarchyNames.join(' > ')})`;
+		} else {
+			this.panels.propertiesLabel.text = '';
+		}
 
 		const regionCount = this.getTotalRegionCount();
 
@@ -645,29 +657,22 @@ class ZoneMenuHandler {
 		this.selectedZone = newSelection;
 		this.selectedRegion = null; // this is set in populateRegionProperties()
 
-		if (newSelection?.track) {
-			const validTrack = this.hasSelectedTrack();
-			const validSegment = this.hasSelectedSegment();
-			const validZone = this.hasSelectedZone();
-			this.panels.propertiesTrack.visible = !validZone && !validSegment && validTrack;
-			this.panels.propertiesSegment.visible = !validZone && validSegment;
-			this.panels.propertiesZone.visible = validZone;
-
-			this.panels.regionSelect.SetSelectedIndex(0);
-
-			this.populateZoneProperties();
-			this.populateSegmentProperties();
-			this.populateTrackProperties();
-		} else if (newSelection.globalRegion?.index >= 0) {
-			this.panels.propertiesTrack.visible = false;
-			this.panels.propertiesSegment.visible = false;
-
+		this.panels.propertiesTrack.visible = false;
+		this.panels.propertiesSegment.visible = false;
+		this.panels.propertiesZone.visible = false;
+		if (newSelection.globalRegion?.index >= 0) {
 			this.panels.propertiesZone.visible = true;
 			this.populateRegionProperties();
-		} else {
-			this.panels.propertiesTrack.visible = false;
-			this.panels.propertiesSegment.visible = false;
-			this.panels.propertiesZone.visible = false;
+		} else if (this.hasSelectedZone()) {
+			this.panels.propertiesZone.visible = true;
+			this.populateZoneProperties();
+			this.panels.regionSelect.SetSelectedIndex(0);
+		} else if (this.hasSelectedSegment()) {
+			this.panels.propertiesSegment.visible = true;
+			this.populateSegmentProperties();
+		} else if (this.hasSelectedTrack()) {
+			this.panels.propertiesTrack.visible = true;
+			this.populateTrackProperties();
 		}
 
 		this.rebuildLists();
