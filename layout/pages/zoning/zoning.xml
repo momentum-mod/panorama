@@ -15,7 +15,7 @@
 					<Label id="Name" class="zoning__item-label" />
 				</Button>
 				<Button id="DeleteButton" class="zoning__item-deletebutton hide">
-					<Image class="zoning__item-deletebutton__icon" src="file://{images}/close-box-outline.svg" textureheight="24" />
+					<Image class="zoning__item-deletebutton__icon" src="file://{images}/delete.svg" textureheight="24" />
 				</Button>
 			</Panel>
 		</snippet>
