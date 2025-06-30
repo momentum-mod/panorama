@@ -650,6 +650,12 @@ class ZoneMenuHandler {
 			this.populateZoneProperties();
 			this.populateSegmentProperties();
 			this.populateTrackProperties();
+		} else if (newSelection.globalRegion?.index >= 0) {
+			this.panels.propertiesTrack.visible = false;
+			this.panels.propertiesSegment.visible = false;
+
+			this.panels.propertiesZone.visible = true;
+			this.populateRegionProperties();
 		} else {
 			this.panels.propertiesTrack.visible = false;
 			this.panels.propertiesSegment.visible = false;
@@ -699,25 +705,43 @@ class ZoneMenuHandler {
 	}
 
 	populateRegionProperties() {
-		if (!this.selectedZone || !this.selectedZone.zone || !this.teleDestList) return;
+		let region = null;
 
-		const index = this.panels.regionSelect.GetSelected()?.GetAttributeInt('value', -1);
-		if (index === -1) return;
-		const region = this.selectedZone.zone.regions[index];
-		this.selectedRegion = region;
-		this.panels.zoningMenu.updateSelectedRegion(this.selectedRegion);
+		if (this.selectedZone.zone) {
+			if (!this.teleDestList) return;
 
+			const index = this.panels.regionSelect.GetSelected()?.GetAttributeInt('value', -1);
+			if (index === -1) return;
+
+			region = this.selectedZone.zone.regions[index];
+
+			this.panels.regionSafeHeight.text = region?.safeHeight?.toFixed(2) ?? '';
+
+			const tpIndex = !region?.teleDestTargetname
+				? region?.teleDestPos !== undefined && region?.teleDestYaw !== undefined
+					? 1
+					: 0
+				: (this.teleDestList?.indexOf(region?.teleDestTargetname) ?? 0);
+			this.panels.regionTPDest.SetSelectedIndex(tpIndex);
+			// TODO: we should not use the same logic for both populating the UI and handling user input which changes values
+			this.onTPDestSelectionChanged();
+		} else if (this.selectedZone.globalRegion?.index >= 0) {
+			region = this.selectedZone.globalRegion.regions[this.selectedZone.globalRegion.index];
+		}
+
+		if (!region) return;
+
+		// These controls should only be shown for zones, not global regions.
+		this.panels.propertiesZone.FindChildrenWithClassTraverse('not-global-region').forEach((panel) => {
+			panel.visible = this.selectedZone.zone != null;
+		});
+
+		// Controls used by zone regions and global regions
 		this.panels.regionBottom.text = region?.bottom?.toFixed(2) ?? '';
 		this.panels.regionHeight.text = region?.height?.toFixed(2) ?? '';
-		this.panels.regionSafeHeight.text = region?.safeHeight?.toFixed(2) ?? '';
 
-		const tpIndex = !region?.teleDestTargetname
-			? region?.teleDestPos !== undefined && region?.teleDestYaw !== undefined
-				? 1
-				: 0
-			: (this.teleDestList?.indexOf(region?.teleDestTargetname) ?? 0);
-		this.panels.regionTPDest.SetSelectedIndex(tpIndex);
-		this.onTPDestSelectionChanged();
+		this.selectedRegion = region;
+		this.panels.zoningMenu.updateSelectedRegion(this.selectedRegion);
 	}
 
 	addRegion() {
