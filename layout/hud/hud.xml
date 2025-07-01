@@ -30,13 +30,20 @@
 		<!-- misleading name, not 'bottom-center' but 'below center' -->
 		<Panel id="HudBottomCenter" hittest="false" hittestchildren="false">
 			<!-- Anchored on Bottom-center, laid out from top to bottom -->
+			<ConVarEnabler convar="mom_zoning_enable" togglevisibility="true">
+				<MomHudZoning />
+			</ConVarEnabler>
 			<MomHudStrafeTrainer />
 			<MomHudSpeedometer />
 			<MomHudConcCooktime />
 			<MomHudStickyCharge />
 			<MomHudStickyCount />
-			<MomHudStatus />
-			<MomHudTimer />
+			<ConVarEnabler convar="mom_zoning_enable" invert="true" togglevisibility="true">
+				<MomHudStatus />
+			</ConVarEnabler>
+			<ConVarEnabler convar="mom_zoning_enable" invert="true" togglevisibility="true">
+				<MomHudTimer />
+			</ConVarEnabler>
 			<MomHudStrafeSync />
 			<MomHudGroundboost />
 			<HudHintText id="HudHintText" />
