@@ -23,11 +23,10 @@ enum DefragFlags {
 export enum PickType {
 	NONE = 0,
 	CORNER = 1,
-	BOTTOM = 2,
-	HEIGHT = 3,
-	SAFE_HEIGHT = 4,
-	TELE_DEST_POS = 5,
-	TELE_DEST_YAW = 6
+	HEIGHT = 2,
+	SAFE_HEIGHT = 3,
+	TELE_DEST_POS = 4,
+	TELE_DEST_YAW = 5
 }
 
 export enum RegionRenderMode {
@@ -134,7 +133,6 @@ class ZoneMenuHandler {
 		filterSelect: $<DropDown>('#FilterSelect')!,
 		volumeSelect: $<DropDown>('#VolumeSelect')!,
 		regionSelect: $<DropDown>('#RegionSelect')!,
-		regionBottom: $<TextEntry>('#RegionBottom')!,
 		regionHeight: $<TextEntry>('#RegionHeight')!,
 		regionSafeHeight: $<TextEntry>('#RegionSafeHeight')!,
 		regionTPDest: $<DropDown>('#RegionTPDest')!,
@@ -748,7 +746,6 @@ class ZoneMenuHandler {
 		});
 
 		// Controls used by zone regions and global regions
-		this.panels.regionBottom.text = region?.bottom?.toFixed(2) ?? '';
 		this.panels.regionHeight.text = region?.height?.toFixed(2) ?? '';
 
 		this.selectedRegion = region;
@@ -880,21 +877,6 @@ class ZoneMenuHandler {
 		if (!this.selectedZone || !this.selectedRegion) return;
 		this.panels.zoningMenu.editRegion(PickType.CORNER);
 		this.setInfoPanelShown(true);
-	}
-
-	pickBottom() {
-		if (!this.selectedZone || !this.selectedRegion) return;
-		this.panels.zoningMenu.editRegion(PickType.BOTTOM);
-		this.setInfoPanelShown(true);
-	}
-
-	setRegionBottom() {
-		if (!this.selectedZone || !this.selectedRegion) return;
-
-		const bottom = Number.parseFloat(this.panels.regionBottom.text);
-		this.selectedRegion.bottom = Number.isNaN(bottom) ? 0 : bottom;
-
-		this.drawZones();
 	}
 
 	pickHeight() {

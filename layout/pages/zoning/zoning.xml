@@ -143,15 +143,6 @@
 						</Panel>
 					</Panel>
 					<Panel class="zoning__property">
-						<Label class="zoning__property-label" text="#Zoning_RegionDetails_Bottom" />
-						<Panel class="zoning__region-property-container">
-							<Button id='SetBottomButton' class="zoning__region-point-pick" onactivate="ZoneMenuHandler.pickBottom()" onmouseover="UiToolkitAPI.ShowTextTooltip('SetBottomButton', '#Zoning_SetBottom_Tooltip');" onmouseout="UiToolkitAPI.HideTextTooltip();">
-								<Image class="zoning__region-point-pick__icon" src="file://{images}/adjust.svg" />
-							</Button>
-							<TextEntry id="RegionBottom" class="textentry zoning__textentry" maxchars="10" textmode="numeric" ontextentrysubmit="ZoneMenuHandler.setRegionBottom()" />
-						</Panel>
-					</Panel>
-					<Panel class="zoning__property">
 						<Label class="zoning__property-label" text="#Zoning_RegionDetails_Height" />
 						<Panel class="zoning__region-property-container">
 							<Button id='SetHeightButton' class="zoning__region-point-pick" onactivate="ZoneMenuHandler.pickHeight()" onmouseover="UiToolkitAPI.ShowTextTooltip('SetHeightButton', '#Zoning_SetHeight_Tooltip');" onmouseout="UiToolkitAPI.HideTextTooltip();">
