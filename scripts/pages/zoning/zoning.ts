@@ -131,8 +131,9 @@ class ZoneMenuHandler {
 		infoPanel: $<Panel>('#InfoPanel')!,
 		selectionMode: $<Label>('#SelectionMode')!,
 		filterSelect: $<DropDown>('#FilterSelect')!,
-		volumeSelect: $<DropDown>('#VolumeSelect')!,
+		regionProperties: $<Panel>('#RegionProperties')!,
 		regionSelect: $<DropDown>('#RegionSelect')!,
+		regionCountLabel: $<Label>('#RegionCountLabel')!,
 		regionHeight: $<TextEntry>('#RegionHeight')!,
 		regionSafeHeight: $<TextEntry>('#RegionSafeHeight')!,
 		regionTPDest: $<DropDown>('#RegionTPDest')!,
@@ -174,12 +175,12 @@ class ZoneMenuHandler {
 		const entList: EntityList = this.panels.zoningMenu.getEntityList();
 		this.filternameList = entList.filter ?? [];
 		this.filternameList.unshift($.Localize('#Zoning_Filter_None'));
-		this.populateDropdown(this.filternameList, this.panels.filterSelect, '', true);
+		this.populateDropdown(this.panels.filterSelect, this.filternameList);
 
 		this.teleDestList = entList.teleport ?? [];
 		this.teleDestList.unshift($.Localize('#Zoning_TPDest_UserDefined'));
 		this.teleDestList.unshift($.Localize('#Zoning_TPDest_None'));
-		this.populateDropdown(this.teleDestList, this.panels.regionTPDest, '', true);
+		this.populateDropdown(this.panels.regionTPDest, this.teleDestList);
 
 		this.zoningLimits = this.panels.zoningMenu.getZoningLimits();
 
@@ -630,19 +631,18 @@ class ZoneMenuHandler {
 		};
 	}
 
-	addOptionToDropdown(optionType: string, parent: DropDown, index: number, useIndex: boolean = true) {
-		const labelString = optionType + (useIndex ? ` ${index}` : '');
-		const optionPanel = $.CreatePanel('Label', parent.AccessDropDownMenu(), labelString);
+	addOptionToDropdown(parent: DropDown, label: string, index: number) {
+		const optionPanel = $.CreatePanel('Label', parent.AccessDropDownMenu(), label);
 		optionPanel.SetAttributeInt('value', index);
-		optionPanel.text = labelString;
+		optionPanel.text = label;
 		parent.AddOption(optionPanel);
 	}
 
-	populateDropdown(array: any[], dropdown: DropDown, optionType: string, clearDropdown: boolean = false) {
-		if (clearDropdown) dropdown.RemoveAllOptions();
+	populateDropdown(dropdown: DropDown, strings: string[]) {
+		dropdown.RemoveAllOptions();
 
-		for (const [i, item] of array?.entries() ?? []) {
-			this.addOptionToDropdown(optionType || item, dropdown, i, optionType !== '');
+		for (const [i, item] of strings.entries()) {
+			this.addOptionToDropdown(dropdown, item, i);
 		}
 	}
 
@@ -663,8 +663,8 @@ class ZoneMenuHandler {
 			this.populateRegionProperties();
 		} else if (this.hasSelectedZone()) {
 			this.panels.propertiesZone.visible = true;
-			this.populateZoneProperties();
 			this.panels.regionSelect.SetSelectedIndex(0);
+			this.populateZoneProperties(true);
 		} else if (this.hasSelectedSegment()) {
 			this.panels.propertiesSegment.visible = true;
 			this.populateSegmentProperties();
@@ -678,13 +678,23 @@ class ZoneMenuHandler {
 		this.drawZones();
 	}
 
-	populateZoneProperties() {
+	populateZoneProperties(newSelection) {
 		if (!this.mapZoneData || !this.hasSelectedZone()) return;
 		const zone = this.selectedZone.zone;
 		const filterIndex = zone.filtername ? (this.filternameList?.indexOf(zone.filtername) ?? 0) : 0;
 		this.panels.filterSelect.SetSelectedIndex(filterIndex);
-		this.populateDropdown(zone.regions, this.panels.regionSelect, 'Region', true);
-		this.panels.regionSelect.SetSelectedIndex(0);
+		const regionNumbers = [];
+		for (let i = 0; i < zone.regions.length; i++) {
+			regionNumbers.push(`${i + 1}`);
+		}
+
+		if (newSelection) {
+			this.populateDropdown(this.panels.regionSelect, regionNumbers);
+			this.panels.regionSelect.SetSelectedIndex(0);
+		}
+
+		this.panels.regionCountLabel.text = `/ ${zone.regions.length}`;
+
 		this.populateRegionProperties();
 	}
 
@@ -745,6 +755,9 @@ class ZoneMenuHandler {
 			panel.visible = this.selectedZone.zone != null;
 		});
 
+		// Indent region properties for zone regions so they appear as subitems of the region selection
+		this.panels.regionProperties.SetHasClass('is-global-region', this.selectedZone.zone == null);
+
 		// Controls used by zone regions and global regions
 		this.panels.regionHeight.text = region?.height?.toFixed(2) ?? '';
 
@@ -759,7 +772,11 @@ class ZoneMenuHandler {
 		this.selectedZone.zone.regions.push(this.createRegion());
 		this.panels.zoningMenu.createRegion(this.isStartZone(this.selectedZone.zone));
 		this.setInfoPanelShown(true);
-		this.populateDropdown(this.selectedZone.zone.regions, this.panels.regionSelect, 'Region', true);
+		const regionNumbers = [];
+		for (let i = 0; i < this.selectedZone.zone.regions.length; i++) {
+			regionNumbers.push(`${i + 1}`);
+		}
+		this.populateDropdown(this.panels.regionSelect, regionNumbers);
 		this.panels.regionSelect.SetSelectedIndex(this.selectedZone.zone.regions.length - 1);
 	}
 
@@ -860,8 +877,8 @@ class ZoneMenuHandler {
 			// It is safe to delete just this region
 			const index = this.panels.regionSelect.GetSelected()?.GetAttributeInt('value', -1);
 			this.selectedZone.zone?.regions.splice(index, 1);
-			this.panels.regionSelect.SetSelectedIndex(0);
-			this.populateRegionProperties();
+			this.panels.regionSelect.SetSelectedIndex(Math.max(index - 1, 0));
+			this.populateZoneProperties(false);
 
 			this.drawZones();
 		}
@@ -1034,7 +1051,7 @@ class ZoneMenuHandler {
 		this.panels.infoPanel.SetHasClass('hide', !show);
 
 		if (!show) {
-			this.populateRegionProperties();
+			this.populateZoneProperties(false);
 		}
 	}
 
