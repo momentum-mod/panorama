@@ -654,6 +654,7 @@ class ZoneMenuHandler {
 
 		this.selectedZone = newSelection;
 		this.selectedRegion = null; // this is set in populateRegionProperties()
+		this.panels.zoningMenu.updateSelectedRegion(this.selectedRegion);
 
 		this.panels.propertiesTrack.visible = false;
 		this.panels.propertiesSegment.visible = false;
