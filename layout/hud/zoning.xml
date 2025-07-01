@@ -1,0 +1,9 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+
+	<MomHudZoning class="h-align-center">
+		<Label id="StatusLabel" />
+	</MomHudZoning>
+</root>
