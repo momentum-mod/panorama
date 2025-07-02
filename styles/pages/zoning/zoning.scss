@@ -6,6 +6,8 @@ $smaller: 12px;
 $small: 16px;
 $medium: 28px;
 
+$properties_inset: 24px;
+
 #ZoningContainer {
 	margin: 24px;
 	width: 560px;
@@ -158,6 +160,10 @@ $medium: 28px;
 		height: 40px;
 	}
 
+	&__property-inset {
+		padding-left: $properties_inset;
+	}
+
 	&__divider {
 		width: 100%;
 		height: 1px;
@@ -217,10 +223,6 @@ $medium: 28px;
 	#RegionProperties {
 		flow-children: down;
 		width: 100%;
-
-		&:not(.is-global-region) {
-			padding-left: 24px;
-		}
 	}
 
 	&__slider {
