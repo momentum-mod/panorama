@@ -22,7 +22,7 @@
 
 	</snippets>
 
-	<ZoneMenu class="zoning" acceptsinput="true" acceptsfocus="true">
+	<ZoneMenu class="zoning" acceptsinput="true" acceptsfocus="true" tabindex="auto">
 		<Label class="zoning__title" text="#Zoning_Menu" />
 		<Panel id="ItemListsContainer" class="zoning__itemlists">
         	<Panel class="zoning__menu-section zoning__itemlist">
