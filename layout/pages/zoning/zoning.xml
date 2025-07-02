@@ -155,7 +155,7 @@
 								<Button id='SetHeightButton' class="zoning__region-point-pick" onactivate="ZoneMenuHandler.pickHeight()" onmouseover="UiToolkitAPI.ShowTextTooltip('SetHeightButton', '#Zoning_SetHeight_Tooltip');" onmouseout="UiToolkitAPI.HideTextTooltip();">
 									<Image class="zoning__region-point-pick__icon" src="file://{images}/adjust.svg" />
 								</Button>
-								<TextEntry id="RegionHeight" class="textentry zoning__textentry" maxchars="10" textmode="numeric" ontextentrysubmit="ZoneMenuHandler.setRegionHeight()" />
+								<TextEntry id="RegionHeight" class="textentry zoning__textentry" maxchars="9" textmode="numeric" ontextentrysubmit="ZoneMenuHandler.setRegionHeight()" />
 							</Panel>
 						</Panel>
 						<Panel class="zoning__property not-global-region">
@@ -164,7 +164,7 @@
 								<Button id='SetSafeHeightButton' class="zoning__region-point-pick" onactivate="ZoneMenuHandler.pickSafeHeight()" onmouseover="UiToolkitAPI.ShowTextTooltip('SetSafeHeightButton', '#Zoning_SetSafeHeight_Tooltip');" onmouseout="UiToolkitAPI.HideTextTooltip();">
 									<Image class="zoning__region-point-pick__icon" src="file://{images}/adjust.svg" />
 								</Button>
-								<TextEntry id="RegionSafeHeight" class="textentry zoning__textentry" maxchars="10" textmode="numeric" ontextentrysubmit="ZoneMenuHandler.setRegionSafeHeight()" />
+								<TextEntry id="RegionSafeHeight" class="textentry zoning__textentry" maxchars="9" textmode="numeric" ontextentrysubmit="ZoneMenuHandler.setRegionSafeHeight()" />
 							</Panel>
 						</Panel>
 						<Panel class="not-global-region w-full col">
@@ -198,9 +198,9 @@
 											<Button id="SetTeleDestPosButton" class="zoning__region-point-pick" onactivate="ZoneMenuHandler.pickTeleDestPos()" onmouseover="UiToolkitAPI.ShowTextTooltip('SetTeleDestPosButton', '#Zoning_SetTeleDestPos_Tooltip');" onmouseout="UiToolkitAPI.HideTextTooltip();">
 												<Image class="zoning__region-point-pick__icon" src="file://{images}/adjust.svg" />
 											</Button>
-											<TextEntry id="TeleX" class="textentry zoning__textentry" maxchars="10" textmode="numeric" ontextentrysubmit="ZoneMenuHandler.setRegionTeleDestOrientation()" />
-											<TextEntry id="TeleY" class="textentry zoning__textentry" maxchars="10" textmode="numeric" ontextentrysubmit="ZoneMenuHandler.setRegionTeleDestOrientation()" />
-											<TextEntry id="TeleZ" class="textentry zoning__textentry" maxchars="10" textmode="numeric" ontextentrysubmit="ZoneMenuHandler.setRegionTeleDestOrientation()" />
+											<TextEntry id="TeleX" class="textentry zoning__textentry" maxchars="9" textmode="numeric" ontextentrysubmit="ZoneMenuHandler.setRegionTeleDestOrientation()" />
+											<TextEntry id="TeleY" class="textentry zoning__textentry" maxchars="9" textmode="numeric" ontextentrysubmit="ZoneMenuHandler.setRegionTeleDestOrientation()" />
+											<TextEntry id="TeleZ" class="textentry zoning__textentry" maxchars="9" textmode="numeric" ontextentrysubmit="ZoneMenuHandler.setRegionTeleDestOrientation()" />
 										</Panel>
 									</Panel>
 									<Panel class="zoning__property">
