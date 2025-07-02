@@ -309,8 +309,8 @@ $button-background-hover: gradient-vertical(
 	color.scale($button-background-base, $lightness: -20%, $alpha: 15%)
 ) !default;
 $button-background-selected: gradient-vertical(
-	color.scale($button-background-base, $lightness: 0%, $alpha: 20%),
-	color.scale($button-background-base, $lightness: -20%, $alpha: 20%)
+	color.scale($button-background-base, $lightness: 0%, $alpha: 40%),
+	color.scale($button-background-base, $lightness: -20%, $alpha: 40%)
 ) !default; // Used by Radiobuttons + Togglebuttons
 $button-background-disabled: gradient-vertical(
 	color.scale($button-background-base, $lightness: -50%, $alpha: 20%),
