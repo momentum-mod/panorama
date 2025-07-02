@@ -27,6 +27,14 @@
 	}
 }
 
+.connected-radiobuttons {
+	border-radius: $button-radius;
+	.radiobutton {
+		border-radius: 0;
+		border-left: 1px solid rgba(0, 0, 0, 0.6);
+	}
+}
+
 .radiobutton-classic {
 	background-color: none;
 	vertical-align: middle;
