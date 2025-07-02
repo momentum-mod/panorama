@@ -26,12 +26,12 @@
 		<Label class="zoning__title" text="#Zoning_Menu" />
 		<Panel id="ItemListsContainer" class="zoning__itemlists">
         	<Panel class="zoning__menu-section zoning__itemlist">
-				<Button id="CreateMainButton" class="zoning__add-button hide" onactivate="ZoneMenuHandler.createMain()">
-					<Label class="zoning__itemlist-label zoning__itemlist-label--add" text="#Zoning_CreateMain" />
-				</Button>
         		<Panel id="LeftList" class="w-full flow-down">
             		<!-- Populated in js -->
 				</Panel>
+				<Button id="CreateMainButton" class="zoning__add-button hide" onactivate="ZoneMenuHandler.createMain()">
+					<Label class="zoning__itemlist-label zoning__itemlist-label--add" text="#Zoning_CreateMain" />
+				</Button>
 				<Button id="AddBonusButton" class="zoning__add-button hide" onactivate="ZoneMenuHandler.addBonus()">
 					<Label class="zoning__itemlist-label zoning__itemlist-label--add" text="#Zoning_NewBonus" />
 				</Button>
@@ -167,32 +167,52 @@
 								<TextEntry id="RegionSafeHeight" class="textentry zoning__textentry" maxchars="10" textmode="numeric" ontextentrysubmit="ZoneMenuHandler.setRegionSafeHeight()" />
 							</Panel>
 						</Panel>
-						<Panel class="zoning__property not-global-region">
-							<Label class="zoning__property-label" text="#Zoning_RegionDetails_TPDest" />
-							<DropDown id="RegionTPDest" class="dropdown zoning__dropdown" menuclass="dropdown-menu" onuserinputsubmit="ZoneMenuHandler.onTPDestSelectionChanged()">
-								<!-- Populated in js -->
-								<Label text="#Zoning_TPDest_None" value="0" />
-								<Label text="#Zoning_TPDest_MakeNew" value="1" />
-							</DropDown>
-						</Panel>
-						<Panel class="zoning__property not-global-region">
-							<Label id="Position" class="zoning__property-label" text="#Zoning_TPDest_Position" />
-							<Panel class="zoning__region-property-container">
-								<Button id="SetTeleDestPosButton" class="zoning__region-point-pick" onactivate="ZoneMenuHandler.pickTeleDestPos()" onmouseover="UiToolkitAPI.ShowTextTooltip('SetTeleDestPosButton', '#Zoning_SetTeleDestPos_Tooltip');" onmouseout="UiToolkitAPI.HideTextTooltip();">
-									<Image class="zoning__region-point-pick__icon" src="file://{images}/adjust.svg" />
-								</Button>
-								<TextEntry id="TeleX" class="textentry zoning__textentry" maxchars="10" textmode="numeric" ontextentrysubmit="ZoneMenuHandler.setRegionTeleDestOrientation()" />
-								<TextEntry id="TeleY" class="textentry zoning__textentry" maxchars="10" textmode="numeric" ontextentrysubmit="ZoneMenuHandler.setRegionTeleDestOrientation()" />
-								<TextEntry id="TeleZ" class="textentry zoning__textentry" maxchars="10" textmode="numeric" ontextentrysubmit="ZoneMenuHandler.setRegionTeleDestOrientation()" />
+						<Panel class="not-global-region w-full col">
+							<Panel class="zoning__property">
+								<Label class="zoning__property-label" text="#Zoning_RegionDetails_TPDest" />
+								<Panel class="zoning__region-property-container connected-radiobuttons">
+									<RadioButton id="RegionTPDest_None" class="button radiobutton radiobutton--blue" group="RegionTPDest" selected="true" onactivate="ZoneMenuHandler.setTPDestType(0)">
+										<Label class="button__text" text="#Zoning_None" />
+									</RadioButton>
+									<RadioButton id="RegionTPDest_Entity" class="button radiobutton radiobutton--blue" group="RegionTPDest" onactivate="ZoneMenuHandler.setTPDestType(1)">
+										<Label class="button__text" text="#Zoning_Entity" />
+									</RadioButton>
+									<RadioButton id="RegionTPDest_Custom" class="button radiobutton radiobutton--blue" group="RegionTPDest" onactivate="ZoneMenuHandler.setTPDestType(2)">
+										<Label class="button__text" text="#Zoning_Custom" />
+									</RadioButton>
+								</Panel>
 							</Panel>
-						</Panel>
-						<Panel class="zoning__property not-global-region">
-							<Label id="Yaw" class="zoning__property-label" text="#Zoning_TPDest_Yaw" />
-							<Panel class="zoning__region-property-container">
-								<Button id="SetTeleDestYawButton" class="zoning__region-point-pick" onactivate="ZoneMenuHandler.pickTeleDestYaw()" onmouseover="UiToolkitAPI.ShowTextTooltip('SetTeleDestYawButton', '#Zoning_SetTeleDestYaw_Tooltip');" onmouseout="UiToolkitAPI.HideTextTooltip();">
-									<Image class="zoning__region-point-pick__icon" src="file://{images}/adjust.svg" />
-								</Button>
-								<TextEntry id="TeleYaw" class="textentry zoning__textentry" maxchars="4" textmode="numeric" ontextentrysubmit="ZoneMenuHandler.setRegionTeleDestOrientation()" />
+							<Panel class="zoning__property-inset w-full">
+								<Panel id="RegionTPDest_Entity_Properties" class="w-full col">
+									<Panel class="zoning__property">
+										<Label class="zoning__property-label" text="#Zoning_EntityName" />
+										<DropDown id="RegionTPDest_EntityList" class="dropdown zoning__dropdown" menuclass="dropdown-menu" onuserinputsubmit="ZoneMenuHandler.onTPDestEntitySelectionChanged()">
+											<!-- Populated in js -->
+										</DropDown>
+									</Panel>
+								</Panel>
+								<Panel id="RegionTPDest_Custom_Properties" class="w-full col">
+									<Panel class="zoning__property">
+										<Label class="zoning__property-label" text="#Zoning_TPDest_Position" />
+										<Panel class="zoning__region-property-container">
+											<Button id="SetTeleDestPosButton" class="zoning__region-point-pick" onactivate="ZoneMenuHandler.pickTeleDestPos()" onmouseover="UiToolkitAPI.ShowTextTooltip('SetTeleDestPosButton', '#Zoning_SetTeleDestPos_Tooltip');" onmouseout="UiToolkitAPI.HideTextTooltip();">
+												<Image class="zoning__region-point-pick__icon" src="file://{images}/adjust.svg" />
+											</Button>
+											<TextEntry id="TeleX" class="textentry zoning__textentry" maxchars="10" textmode="numeric" ontextentrysubmit="ZoneMenuHandler.setRegionTeleDestOrientation()" />
+											<TextEntry id="TeleY" class="textentry zoning__textentry" maxchars="10" textmode="numeric" ontextentrysubmit="ZoneMenuHandler.setRegionTeleDestOrientation()" />
+											<TextEntry id="TeleZ" class="textentry zoning__textentry" maxchars="10" textmode="numeric" ontextentrysubmit="ZoneMenuHandler.setRegionTeleDestOrientation()" />
+										</Panel>
+									</Panel>
+									<Panel class="zoning__property">
+										<Label class="zoning__property-label" text="#Zoning_TPDest_Yaw" />
+										<Panel class="zoning__region-property-container">
+											<Button id="SetTeleDestYawButton" class="zoning__region-point-pick" onactivate="ZoneMenuHandler.pickTeleDestYaw()" onmouseover="UiToolkitAPI.ShowTextTooltip('SetTeleDestYawButton', '#Zoning_SetTeleDestYaw_Tooltip');" onmouseout="UiToolkitAPI.HideTextTooltip();">
+												<Image class="zoning__region-point-pick__icon" src="file://{images}/adjust.svg" />
+											</Button>
+											<TextEntry id="TeleYaw" class="textentry zoning__textentry" maxchars="4" textmode="numeric" ontextentrysubmit="ZoneMenuHandler.setRegionTeleDestOrientation()" />
+										</Panel>
+									</Panel>
+								</Panel>
 							</Panel>
 						</Panel>
 					</Panel>
