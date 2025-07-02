@@ -136,7 +136,15 @@ class ZoneMenuHandler {
 		regionCountLabel: $<Label>('#RegionCountLabel')!,
 		regionHeight: $<TextEntry>('#RegionHeight')!,
 		regionSafeHeight: $<TextEntry>('#RegionSafeHeight')!,
-		regionTPDest: $<DropDown>('#RegionTPDest')!,
+
+		regionTPDestNone: $<RadioButton>('#RegionTPDest_None')!,
+		regionTPDestEntity: $<RadioButton>('#RegionTPDest_Entity')!,
+		regionTPDestCustom: $<RadioButton>('#RegionTPDest_Custom')!,
+
+		regionTPDestEntityProperties: $<Panel>('#RegionTPDest_Entity_Properties')!,
+		regionTPDestEntityList: $<DropDown>('#RegionTPDest_EntityList')!,
+
+		regionTPDestCustomProperties: $<Panel>('#RegionTPDest_Custom_Properties')!,
 		regionTPPos: {
 			x: $<TextEntry>('#TeleX')!,
 			y: $<TextEntry>('#TeleY')!,
@@ -178,9 +186,7 @@ class ZoneMenuHandler {
 		this.populateDropdown(this.panels.filterSelect, this.filternameList);
 
 		this.teleDestList = entList.teleport ?? [];
-		this.teleDestList.unshift($.Localize('#Zoning_TPDest_UserDefined'));
-		this.teleDestList.unshift($.Localize('#Zoning_TPDest_None'));
-		this.populateDropdown(this.panels.regionTPDest, this.teleDestList);
+		this.populateDropdown(this.panels.regionTPDestEntityList, this.teleDestList);
 
 		this.zoningLimits = this.panels.zoningMenu.getZoningLimits();
 
@@ -626,8 +632,7 @@ class ZoneMenuHandler {
 		return {
 			points: [],
 			bottom: COORD_MAX,
-			height: DEFAULT_HEIGHT,
-			teleDestTargetname: ''
+			height: DEFAULT_HEIGHT
 		};
 	}
 
@@ -739,12 +744,30 @@ class ZoneMenuHandler {
 
 			this.panels.regionSafeHeight.text = region?.safeHeight?.toFixed(2) ?? '';
 
-			const tpIndex = !region?.teleDestTargetname
-				? region?.teleDestPos !== undefined && region?.teleDestYaw !== undefined
-					? 1
-					: 0
-				: (this.teleDestList?.indexOf(region?.teleDestTargetname) ?? 0);
-			this.panels.regionTPDest.SetSelectedIndex(tpIndex);
+			this.panels.regionTPDestNone.enabled = !this.isStartZone(this.selectedZone.zone);
+
+			this.panels.regionTPDestEntityProperties.visible = false;
+			this.panels.regionTPDestCustomProperties.visible = false;
+
+			if (region?.teleDestTargetname) {
+				// entity tp dest
+				this.panels.regionTPDestEntity.SetSelected(true);
+				this.panels.regionTPDestEntityProperties.visible = true;
+				this.panels.regionTPDestEntityList.SetSelectedIndex(
+					this.teleDestList?.indexOf(region?.teleDestTargetname)
+				);
+			} else if (region?.teleDestPos) {
+				// custom tp dest
+				this.panels.regionTPDestCustom.SetSelected(true);
+				this.panels.regionTPDestCustomProperties.visible = true;
+				this.panels.regionTPPos.x.text = region.teleDestPos?.at(0)?.toFixed(2) ?? '';
+				this.panels.regionTPPos.y.text = region.teleDestPos?.at(1)?.toFixed(2) ?? '';
+				this.panels.regionTPPos.z.text = region.teleDestPos?.at(2)?.toFixed(2) ?? '';
+				this.panels.regionTPYaw.text = region.teleDestYaw?.toFixed(2) ?? '';
+			} else {
+				// no tp dest
+				this.panels.regionTPDestNone.SetSelected(true);
+			}
 		} else if (this.selectedZone.globalRegion?.index >= 0) {
 			region = this.selectedZone.globalRegion.regions[this.selectedZone.globalRegion.index];
 		}
@@ -757,14 +780,13 @@ class ZoneMenuHandler {
 		});
 
 		// Indent region properties for zone regions so they appear as subitems of the region selection
-		this.panels.regionProperties.SetHasClass('is-global-region', this.selectedZone.zone == null);
+		this.panels.regionProperties.SetHasClass('zoning__property-inset', this.selectedZone.zone != null);
 
 		// Controls used by zone regions and global regions
 		this.panels.regionHeight.text = region?.height?.toFixed(2) ?? '';
 
 		this.selectedRegion = region;
 		this.panels.zoningMenu.updateSelectedRegion(this.selectedRegion);
-		this.updateRegionTeleportTextEntries();
 	}
 
 	addRegion() {
@@ -939,32 +961,46 @@ class ZoneMenuHandler {
 		this.setInfoPanelShown(true);
 	}
 
-	onTPDestSelectionChanged() {
-		if (!this.selectedZone || !this.selectedRegion || !this.teleDestList) return;
+	setTPDestType(type) {
+		const index = this.panels.regionSelect.GetSelected()?.GetAttributeInt('value', -1);
 
-		const teleDestIndex = this.panels.regionTPDest.GetSelected()?.GetAttributeInt('value', 0);
-		if (teleDestIndex === 1 && this.selectedRegion.points?.length > 0) {
-			// user is requesting to place a TP destination at some location (not entity)
-			if (this.selectedRegion.teleDestPos === undefined || this.selectedRegion.teleDestYaw === undefined) {
-				this.selectedRegion.teleDestTargetname = '';
-				const index = this.panels.regionSelect.GetSelected()?.GetAttributeInt('value', -1);
-				if (index !== -1) {
-					const regionWithTPDest = this.panels.zoningMenu.createDefaultTeleDest(this.selectedRegion);
-					this.deepCopyRegion(this.selectedZone.zone.regions[index], regionWithTPDest);
-				}
+		delete this.selectedRegion.teleDestTargetname;
+		delete this.selectedRegion.teleDestPos;
+		delete this.selectedRegion.teleDestYaw;
 
-				this.selectedRegion = this.selectedZone.zone.regions[index];
-				this.pickTeleDestPos();
-			}
-		} else {
-			this.selectedRegion.teleDestTargetname = teleDestIndex ? this.teleDestList[teleDestIndex] : '';
-			delete this.selectedRegion.teleDestPos;
-			delete this.selectedRegion.teleDestYaw;
+		switch (type) {
+			case 0:
+				// none
+				break;
+			case 1:
+				// entity
+				// TODO: pick dest closest to zone center
+				this.selectedRegion.teleDestTargetname = this.teleDestList[0];
+				break;
+			case 2:
+				// custom
+				this.deepCopyRegion(
+					this.selectedZone.zone.regions[index],
+					this.panels.zoningMenu.createDefaultTeleDest(this.selectedRegion)
+				);
+
+				// If they back out of picking the yaw interactively, I don't want to deal with the complication
+				// of trying to revert the dest to whatever it was before, so just set a default here instead.
+				this.selectedZone.zone.regions[index].teleDestYaw = 0;
+
+				this.pickTeleDestYaw();
+				break;
 		}
 
-		this.panels.zoningMenu.updateSelectedRegion(this.selectedRegion);
-		this.updateRegionTeleportTextEntries();
-		this.drawZones();
+		this.populateRegionProperties();
+	}
+
+	onTPDestEntitySelectionChanged() {
+		const teleDestIndex = this.panels.regionTPDestEntityList.GetSelected()?.GetAttributeInt('value', -1);
+		this.selectedRegion.teleDestTargetname = this.teleDestList[teleDestIndex];
+
+		// Mostly just to push the updated region to game code for drawing the new destination
+		this.populateRegionProperties();
 	}
 
 	setRegionTeleDestOrientation() {
@@ -984,29 +1020,6 @@ class ZoneMenuHandler {
 
 		this.drawZones();
 	}
-
-	updateRegionTeleportTextEntries() {
-		const enable = this.panels.regionTPDest.GetSelected()?.GetAttributeInt('value', 0) === 1;
-		this.panels.regionTPPos.x.enabled = enable;
-		this.panels.regionTPPos.y.enabled = enable;
-		this.panels.regionTPPos.z.enabled = enable;
-		this.panels.regionTPPosButton.enabled = enable;
-		this.panels.regionTPYaw.enabled = enable;
-		this.panels.regionTPYawButton.enabled = enable;
-
-		if (enable) {
-			this.panels.regionTPPos.x.text = this.selectedRegion?.teleDestPos?.at(0)?.toFixed(2) ?? '';
-			this.panels.regionTPPos.y.text = this.selectedRegion?.teleDestPos?.at(1)?.toFixed(2) ?? '';
-			this.panels.regionTPPos.z.text = this.selectedRegion?.teleDestPos?.at(2)?.toFixed(2) ?? '';
-			this.panels.regionTPYaw.text = this.selectedRegion?.teleDestYaw?.toFixed(2) ?? '';
-		} else {
-			this.panels.regionTPPos.x.text = '';
-			this.panels.regionTPPos.y.text = '';
-			this.panels.regionTPPos.z.text = '';
-			this.panels.regionTPYaw.text = '';
-		}
-	}
-
 	onRegionEditCompleted(newRegion: Region) {
 		if (this.selectedZone.globalRegion?.index != null) {
 			this.deepCopyRegion(
