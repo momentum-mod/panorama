@@ -763,7 +763,7 @@ class ZoneMenuHandler {
 				this.panels.regionTPPos.x.text = region.teleDestPos?.at(0)?.toFixed(2) ?? '';
 				this.panels.regionTPPos.y.text = region.teleDestPos?.at(1)?.toFixed(2) ?? '';
 				this.panels.regionTPPos.z.text = region.teleDestPos?.at(2)?.toFixed(2) ?? '';
-				this.panels.regionTPYaw.text = region.teleDestYaw?.toFixed(2) ?? '';
+				this.panels.regionTPYaw.text = region.teleDestYaw?.toFixed(0) ?? '';
 			} else {
 				// no tp dest
 				this.panels.regionTPDestNone.SetSelected(true);
@@ -1016,9 +1016,9 @@ class ZoneMenuHandler {
 			Number.isNaN(y) ? undefined : y,
 			Number.isNaN(z) ? undefined : z
 		];
-		this.selectedRegion.teleDestYaw = Number.isNaN(yaw) ? undefined : yaw;
+		this.selectedRegion.teleDestYaw = Number.isNaN(yaw) ? undefined : Math.round(yaw);
 
-		this.drawZones();
+		this.updateSelection(this.selectedZone);
 	}
 	onRegionEditCompleted(newRegion: Region) {
 		if (this.selectedZone.globalRegion?.index != null) {
@@ -1302,7 +1302,7 @@ class ZoneMenuHandler {
 	setMaxVelocity() {
 		if (!this.mapZoneData) return;
 		const velocity = Number.parseFloat(this.panels.maxVelocity.text);
-		this.mapZoneData.maxVelocity = !Number.isNaN(velocity) && velocity > 0 ? velocity : 0;
+		this.mapZoneData.maxVelocity = !Number.isNaN(velocity) && velocity > 0 ? Math.round(velocity) : 0;
 	}
 
 	setStageEndAtStageStarts() {
