@@ -158,13 +158,29 @@
 								<TextEntry id="RegionHeight" class="textentry zoning__textentry" maxchars="9" textmode="numeric" ontextentrysubmit="ZoneMenuHandler.setRegionHeight()" />
 							</Panel>
 						</Panel>
-						<Panel class="zoning__property not-global-region">
-							<Label class="zoning__property-label" text="#Zoning_RegionDetails_SafeHeight" />
-							<Panel class="zoning__region-property-container">
-								<Button id='SetSafeHeightButton' class="zoning__region-point-pick" onactivate="ZoneMenuHandler.pickSafeHeight()" onmouseover="UiToolkitAPI.ShowTextTooltip('SetSafeHeightButton', '#Zoning_SetSafeHeight_Tooltip');" onmouseout="UiToolkitAPI.HideTextTooltip();">
-									<Image class="zoning__region-point-pick__icon" src="file://{images}/adjust.svg" />
-								</Button>
-								<TextEntry id="RegionSafeHeight" class="textentry zoning__textentry" maxchars="9" textmode="numeric" ontextentrysubmit="ZoneMenuHandler.setRegionSafeHeight()" />
+						<Panel id="RegionSafeHeightSection" class="not-global-region w-full col">
+							<Panel class="zoning__property">
+								<Label id="SafeHeightLabel" class="zoning__property-label" text="#Zoning_RegionDetails_SafeHeight" onmouseover="UiToolkitAPI.ShowTextTooltip('SafeHeightLabel', '#Zoning_SafeHeight_Tooltip');" onmouseout="UiToolkitAPI.HideTextTooltip();" />
+								<Panel class="zoning__region-property-container connected-radiobuttons">
+									<RadioButton id="RegionSafeHeight_Base" class="button radiobutton radiobutton--blue" group="RegionSafeHeight" selected="true" onactivate="ZoneMenuHandler.setRegionSafeHeight(0)">
+										<Label class="button__text" text="#Zoning_RegionBase" />
+									</RadioButton>
+									<RadioButton id="RegionSafeHeight_FullHeight" class="button radiobutton radiobutton--blue" group="RegionSafeHeight" onactivate="ZoneMenuHandler.setRegionSafeHeight(-1)">
+										<Label class="button__text" text="#Zoning_FullRegionHeight" />
+									</RadioButton>
+									<RadioButton id="RegionSafeHeight_Custom" class="button radiobutton radiobutton--blue" group="RegionSafeHeight" onactivate="ZoneMenuHandler.pickSafeHeight()">
+										<Label class="button__text" text="#Zoning_Custom" />
+									</RadioButton>
+								</Panel>
+							</Panel>
+							<Panel id="RegionSafeHeight_Custom_Properties" class="zoning__property zoning__property-inset mb-4">
+								<Label class="zoning__property-label" text="#Zoning_CustomHeight" />
+								<Panel class="zoning__region-property-container">
+									<Button id='SetSafeHeightButton' class="zoning__region-point-pick" onactivate="ZoneMenuHandler.pickSafeHeight()" onmouseover="UiToolkitAPI.ShowTextTooltip('SetSafeHeightButton', '#Zoning_SetSafeHeight_Tooltip');" onmouseout="UiToolkitAPI.HideTextTooltip();">
+										<Image class="zoning__region-point-pick__icon" src="file://{images}/adjust.svg" />
+									</Button>
+									<TextEntry id="RegionSafeHeight" class="textentry zoning__textentry" maxchars="9" textmode="numeric" ontextentrysubmit="ZoneMenuHandler.setRegionSafeHeight()" />
+								</Panel>
 							</Panel>
 						</Panel>
 						<Panel class="not-global-region w-full col">
