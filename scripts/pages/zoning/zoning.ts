@@ -135,6 +135,12 @@ class ZoneMenuHandler {
 		regionSelect: $<DropDown>('#RegionSelect')!,
 		regionCountLabel: $<Label>('#RegionCountLabel')!,
 		regionHeight: $<TextEntry>('#RegionHeight')!,
+
+		regionSafeHeightSection: $<Panel>('#RegionSafeHeightSection')!,
+		regionSafeHeightBase: $<RadioButton>('#RegionSafeHeight_Base')!,
+		regionSafeHeightFullHeight: $<RadioButton>('#RegionSafeHeight_FullHeight')!,
+		regionSafeHeightCustom: $<RadioButton>('#RegionSafeHeight_Custom')!,
+		regionSafeHeightCustomProperties: $<TextEntry>('#RegionSafeHeight_Custom_Properties')!,
 		regionSafeHeight: $<TextEntry>('#RegionSafeHeight')!,
 
 		regionTPDestNone: $<RadioButton>('#RegionTPDest_None')!,
@@ -742,7 +748,26 @@ class ZoneMenuHandler {
 
 			region = this.selectedZone.zone.regions[index];
 
-			this.panels.regionSafeHeight.text = region?.safeHeight?.toFixed(2) ?? '';
+			this.panels.regionSafeHeight.text = '';
+
+			// Safe height currently only pertains to priming, so only show it for start zones
+			this.panels.regionSafeHeightSection.visible = this.isStartZone(this.selectedZone.zone);
+
+			this.panels.regionSafeHeightCustomProperties.visible = false;
+
+			switch (region.safeHeight) {
+				case 0:
+					this.panels.regionSafeHeightBase.SetSelected(true);
+					break;
+				case -1:
+					this.panels.regionSafeHeightFullHeight.SetSelected(true);
+					break;
+				default:
+					this.panels.regionSafeHeightCustom.SetSelected(true);
+					this.panels.regionSafeHeight.text = region.safeHeight?.toFixed(2) ?? '';
+					this.panels.regionSafeHeightCustomProperties.visible = true;
+					break;
+			}
 
 			this.panels.regionTPDestNone.enabled = !this.isStartZone(this.selectedZone.zone);
 
@@ -776,7 +801,8 @@ class ZoneMenuHandler {
 
 		// These controls should only be shown for zones, not global regions.
 		this.panels.propertiesZone.FindChildrenWithClassTraverse('not-global-region').forEach((panel) => {
-			panel.visible = this.selectedZone.zone != null;
+			// Respect if something above wanted this to not be visible
+			panel.visible &&= this.selectedZone.zone != null;
 		});
 
 		// Indent region properties for zone regions so they appear as subitems of the region selection
@@ -940,13 +966,13 @@ class ZoneMenuHandler {
 		this.setInfoPanelShown(true);
 	}
 
-	setRegionSafeHeight() {
+	setRegionSafeHeight(value = null) {
 		if (!this.selectedZone || !this.selectedRegion) return;
 
-		const height = Number.parseFloat(this.panels.regionSafeHeight.text);
+		const height = value ?? Number.parseFloat(this.panels.regionSafeHeight.text);
 		this.selectedRegion.safeHeight = Number.isNaN(height) ? 0 : height;
 
-		this.drawZones();
+		this.updateSelection(this.selectedZone);
 	}
 
 	pickTeleDestPos() {
