@@ -253,6 +253,18 @@ class LobbyHandler {
 					])
 				);
 
+				const hackId = $.RegisterEventHandler('PanelLoaded', avatarPanel, () => {
+					$.Schedule(2.5, () => {
+						if (newPanel.IsValid()) {
+							newPanel.SetDialogVariable(
+								'lobbyTitle',
+								$.Localize('#Lobby_Owner').replace('%owner%', FriendsAPI.GetNameForXUID(ownerSteamID))
+							);
+							$.UnregisterEventHandler('PanelLoaded', avatarPanel, hackId);
+						}
+					});
+				});
+
 				newPanel.SetDialogVariable('lobbyTitle', lobbyName);
 				newPanel.SetDialogVariable('lobbyPlayerCount', `${lobbyData['members']}/${lobbyData['members_limit']}`);
 				newPanel.SetDialogVariable(
