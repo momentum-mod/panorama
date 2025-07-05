@@ -19,7 +19,7 @@ export type LobbyList = Record<uint64_str, Lobby>;
 export type MemberData = Record<steamID, LobbyMember>;
 
 export interface LobbyMember {
-	map: string;
+	map_name: string;
 
 	isTyping: 'y' | undefined;
 

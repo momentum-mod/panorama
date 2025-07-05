@@ -307,9 +307,9 @@ class LobbyHandler {
 			isMuted ? $.Localize('#Lobby_MutedPlayer') : FriendsAPI.GetNameForXUID(memberSteamID)
 		);
 
-		const memberMap = memberData.map;
+		const memberMap = memberData.map_name;
 		const localSteamID = UserAPI.GetXUID();
-		const localMap = this.lobbyMemberData[localSteamID]?.map;
+		const localMap = this.lobbyMemberData[localSteamID]?.map_name;
 
 		panel.SetDialogVariable('memberMap', isMuted ? '' : (memberMap ?? $.Localize('#Lobby_InMainMenu')));
 
@@ -441,8 +441,8 @@ class LobbyHandler {
 	onLobbyMemberDataUpdated(memberData: MemberData) {
 		for (const [memberSteamID, member] of Object.entries(memberData)) {
 			const localID = UserAPI.GetXUID();
-			const oldMap = this.lobbyMemberData[localID]?.map;
-			const newMap = member.map;
+			const oldMap = this.lobbyMemberData[localID]?.map_name;
+			const newMap = member.map_name;
 
 			if (memberSteamID in this.lobbyMemberData) {
 				const member = this.lobbyMemberData[memberSteamID] as Record<string, any>;
