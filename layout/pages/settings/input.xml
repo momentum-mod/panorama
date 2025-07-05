@@ -126,7 +126,9 @@
 				<SettingsKeyBinder text="#Keybind_RestartTrack" bind="mom_restart_track" tags="restart,reset" />
 				<SettingsKeyBinder text="#Keybind_RestartStage" bind="mom_restart_stage" tags="restart,reset,stage" />
 				<SettingsKeyBinder text="#Keybind_Respawn" bind="mom_respawn" tags="restart,reset,respawn" />
+				<SettingsKeyBinder text="#Keybind_TeleportToSpawn" bind="mom_teleport_to_spawn" tags="restart,reset,spawn" />
 				<SettingsKeyBinder text="#Keybind_Main" bind="mom_main" tags="restart,reset,switch,track" />
+				<SettingsKeyBinder text="#Keybind_TimerStop" bind="mom_timer_stop" tags="timer,stop" />
 
 				<Label class="settings-group__subtitle" text="#Settings_Keybinds_Savestates" />
 
