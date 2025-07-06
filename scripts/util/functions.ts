@@ -55,3 +55,11 @@ export function* traverseChildren(panel: GenericPanel): Generator<GenericPanel> 
 		stack.push(...child.Children());
 	}
 }
+
+export function randomInt(min: number, max: number): number {
+	if (min > max) {
+		[max, min] = [min, max];
+	}
+
+	return Math.floor(Math.random() * (max - min + 1) + min);
+}
