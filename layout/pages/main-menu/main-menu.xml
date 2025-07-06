@@ -6,6 +6,7 @@
 	<scripts>
 		<include type="module" src="file://{scripts}/pages/drawer/drawer.ts" />
 		<include type="module" src="file://{scripts}/pages/main-menu/main-menu.ts" />
+		<include type="module" src="file://{scripts}/pages/main-menu/main-menu-sounds.ts" />
 	</scripts>
 
 	<snippets>
