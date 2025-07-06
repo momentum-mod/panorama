@@ -72,6 +72,8 @@ class MainMenuHandler implements OnPanelLoad {
 		this.setMainMenuBackground();
 
 		this.showPlaytestWelcomePopup();
+
+		$.DispatchEvent('MainMenuPageShown', null);
 	}
 
 	/**
@@ -137,16 +139,17 @@ class MainMenuHandler implements OnPanelLoad {
 			// Handler that catches PropertyTransitionEndEvent event for this panel.
 			// Check if the panel is transparent then collapse it.
 			$.RegisterEventHandler('PropertyTransitionEnd', newPanel, (panelName, propertyName) => {
-				if (newPanel.id === panelName && propertyName === 'opacity') {
-					// Panel is visible and fully transparent
-					if (newPanel.visible === true && newPanel.IsTransparent()) {
-						// Set visibility to false and unload resources
-						newPanel.visible = false;
-						newPanel.SetReadyForDisplay(false);
-						return true;
-					} else if (newPanel.visible === true) {
-						$.DispatchEvent('MainMenuTabShown', tab);
-					}
+				// Panel is visible and fully transparent
+				if (
+					newPanel.id === panelName &&
+					propertyName === 'opacity' &&
+					newPanel.visible &&
+					newPanel.IsTransparent()
+				) {
+					// Set visibility to false and unload resources
+					newPanel.visible = false;
+					newPanel.SetReadyForDisplay(false);
+					return true;
 				}
 				return false;
 			});
@@ -167,6 +170,7 @@ class MainMenuHandler implements OnPanelLoad {
 			this.activePage = page;
 			const activePanel = this.panels.cp.FindChildInLayoutFile(page);
 			activePanel.RemoveClass('mainmenu__page-container--hidden');
+			$.DispatchEvent('MainMenuPageShown', page);
 
 			// Force a reload of any resources since we're about to display the panel
 			activePanel.visible = true;
@@ -206,7 +210,7 @@ class MainMenuHandler implements OnPanelLoad {
 
 			$.DispatchEvent('MainMenuPageHidden', this.activePage);
 		}
-
+		$.DispatchEvent('MainMenuPageShown', null);
 		this.activePage = null;
 		this.panels.homeContent.RemoveClass('home--hidden');
 	}
