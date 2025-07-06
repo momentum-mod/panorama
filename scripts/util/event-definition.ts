@@ -22,8 +22,12 @@
 declare interface GlobalEventNameMap {
 	ReloadMainMenuBackground: () => void;
 
-	/**	Alert main menu tabs when they are shown, in case there is a data update needed */
-	MainMenuPageShown: (page: import('pages/main-menu/main-menu').Page) => void;
+	/**
+	 * Alert main menu tabs when they are shown, in case there is a data update needed.
+	 * `null` is used to indicate the main menu itself being show (e.g. you click the big Momentum logo), and
+	 * is fired on first launch.
+	 */
+	MainMenuPageShown: (page: import('pages/main-menu/main-menu').Page | null) => void;
 
 	/** Fired when a main menu tab is closed */
 	MainMenuPageHidden: (page: import('pages/main-menu/main-menu').Page) => void;
