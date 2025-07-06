@@ -725,7 +725,7 @@ class SpeedometerSettingsHandler {
 		$.RegisterForUnhandledEvent('SettingsSave', () => this.saveSettings());
 
 		// Save to file whenever the settings page gets closed as well
-		$.RegisterForUnhandledEvent('MainMenuTabHidden', (tab) => tab === 'Settings' && this.saveSettings());
+		$.RegisterForUnhandledEvent('MainMenuPageHidden', (tab) => tab === 'Settings' && this.saveSettings());
 	}
 
 	static onPanelLoad() {

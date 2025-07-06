@@ -23,10 +23,10 @@ declare interface GlobalEventNameMap {
 	ReloadMainMenuBackground: () => void;
 
 	/**	Alert main menu tabs when they are shown, in case there is a data update needed */
-	MainMenuTabShown: (tabID: string) => void;
+	MainMenuPageShown: (page: import('pages/main-menu/main-menu').Page) => void;
 
 	/** Fired when a main menu tab is closed */
-	MainMenuTabHidden: (tabID: string) => void;
+	MainMenuPageHidden: (page: import('pages/main-menu/main-menu').Page) => void;
 
 	/** Navigates to a setting by panel handle */
 	SettingsNavigateToPanel: (tabID: keyof typeof import('common/settings').SettingsTabs, panel: GenericPanel) => void;
@@ -70,8 +70,8 @@ declare interface GlobalEventNameMap {
 }
 
 $.DefineEvent('ReloadMainMenuBackground', 0);
-$.DefineEvent('MainMenuTabShown', 1);
-$.DefineEvent('MainMenuTabHidden', 1);
+$.DefineEvent('MainMenuPageShown', 1);
+$.DefineEvent('MainMenuPageHidden', 1);
 $.DefineEvent('SettingsNavigateToPanel', 2);
 $.DefineEvent('SettingsSave', 0);
 $.DefineEvent('ExtendDrawer', 0);

@@ -2,10 +2,17 @@ import { OnPanelLoad, PanelHandler } from 'util/module-helpers';
 import { checkDosa } from 'util/dont-show-again';
 import AuthenicationResult = MomentumAPI.AuthenicationResult;
 
+export enum Page {
+	MAP_SELECTOR = 'MapSelection',
+	LEARN = 'Learn',
+	SETTINGS = 'Settings',
+	CONTROLS_LIBRARY = 'ControlsLibrary'
+}
+
 @PanelHandler()
 class MainMenuHandler implements OnPanelLoad {
 	readonly panels = {
-		cp: $.GetContextPanel<Panel>(),
+		cp: $.GetContextPanel<MainMenu>(),
 		pageContent: $<Panel>('#PageContent'),
 		homeContent: $<Panel>('#HomeContent'),
 		contentBlur: $<BaseBlurTarget>('#MainMenuContentBlur'),
@@ -19,7 +26,7 @@ class MainMenuHandler implements OnPanelLoad {
 		quitButtonIcon: $<Image>('#QuitButtonImage')
 	};
 
-	activeTab = '';
+	activePage: Page | null = null;
 
 	constructor() {
 		$.RegisterForUnhandledEvent('ShowMainMenu', () => this.onShowMainMenu());
@@ -100,7 +107,7 @@ class MainMenuHandler implements OnPanelLoad {
 		this.panels.cp.RemoveClass('MainMenuRootPanel--PauseMenuMode');
 
 		// Save to file whenever the settings page gets closed
-		if (this.activeTab === 'Settings') {
+		if (this.activePage === Page.SETTINGS) {
 			$.DispatchEvent('SettingsSave');
 		}
 	}
@@ -108,22 +115,21 @@ class MainMenuHandler implements OnPanelLoad {
 	/**
 	 * Switch main menu page
 	 */
-	navigateToPage(tab: string, xmlName: string, hasBlur = true) {
-		this.panels.mapSelectorBackground.SetHasClass('mapselector__background--hidden', tab !== 'MapSelection');
+	navigateToPage(page: Page, layoutFile: string, hasBlur = true) {
+		this.panels.mapSelectorBackground.SetHasClass('mapselector__background--hidden', page !== Page.MAP_SELECTOR);
 
 		this.panels.contentBlur.visible = hasBlur;
 
-		if (this.activeTab === tab) {
+		if (this.activePage === page) {
 			$.DispatchEvent('Activated', this.panels.homeButton, PanelEventSource.MOUSE);
 			return;
 		}
 
-		// Check to see if tab to show exists.
-		// If not load the xml file.
-		if (!this.panels.cp.FindChildInLayoutFile(tab)) {
-			const newPanel = $.CreatePanel('Panel', this.panels.pageContent, tab);
+		// Check to see if page to show exists. If not load the xml file.
+		if (!this.panels.cp.FindChildInLayoutFile(page)) {
+			const newPanel = $.CreatePanel('Panel', this.panels.pageContent, page);
 
-			newPanel.LoadLayout(`file://{resources}/layout/pages/${xmlName}.xml`, false, false);
+			newPanel.LoadLayout(`file://{resources}/layout/pages/${layoutFile}.xml`, false, false);
 			newPanel.RegisterForReadyEvents(true);
 
 			// Handler that catches PropertyTransitionEndEvent event for this panel.
@@ -144,25 +150,20 @@ class MainMenuHandler implements OnPanelLoad {
 			});
 		}
 
-		// If a we have a active tab and it is different from the selected tab hide it.
-		// Then show the selected tab
-		if (this.activeTab !== tab) {
-			// Trigger sound event for the new panel
-			// if (xmlName) {
-			// 	$.DispatchEvent('PlaySoundEffect', 'tab_' + xmlName.replace('/', '_'), 'MOUSE');
-			// }
-
+		// If we have an active tab and it is different from the selected tab, hide it.
+		// Then show the selected tab.
+		if (this.activePage !== page) {
 			// If the tab exists then hide it
-			if (this.activeTab) {
-				const panelToHide = this.panels.cp.FindChildInLayoutFile(this.activeTab);
-				panelToHide.AddClass('mainmenu__page-container--hidden');
-
-				$.DispatchEvent('MainMenuTabHidden', this.activeTab);
+			if (this.activePage) {
+				const pagePanel = this.panels.cp.FindChildInLayoutFile(this.activePage);
+				pagePanel.visible = false;
+				pagePanel.AddClass('mainmenu__page-container--hidden');
+				$.DispatchEvent('MainMenuPageHidden', this.activePage);
 			}
 
-			// Show selected tab
-			this.activeTab = tab;
-			const activePanel = this.panels.cp.FindChildInLayoutFile(tab);
+			// Show selected page
+			this.activePage = page;
+			const activePanel = this.panels.cp.FindChildInLayoutFile(page);
 			activePanel.RemoveClass('mainmenu__page-container--hidden');
 
 			// Force a reload of any resources since we're about to display the panel
@@ -197,15 +198,14 @@ class MainMenuHandler implements OnPanelLoad {
 		}
 
 		// If the tab exists then hide it
-		if (this.activeTab) {
-			const panelToHide = this.panels.cp.FindChildInLayoutFile(this.activeTab);
+		if (this.activePage) {
+			const panelToHide = this.panels.cp.FindChildInLayoutFile(this.activePage);
 			if (panelToHide) panelToHide.AddClass('mainmenu__page-container--hidden');
 
-			$.DispatchEvent('MainMenuTabHidden', this.activeTab);
+			$.DispatchEvent('MainMenuPageHidden', this.activePage);
 		}
 
-		this.activeTab = '';
-
+		this.activePage = null;
 		this.panels.homeContent.RemoveClass('home--hidden');
 	}
 
