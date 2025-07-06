@@ -42,7 +42,7 @@ export class SettingsHandler {
 		);
 
 		// Save to file whenever the settings page gets closed
-		$.RegisterForUnhandledEvent('MainMenuTabHidden', (tab) => tab === 'Settings' && this.saveSettings());
+		$.RegisterForUnhandledEvent('MainMenuPageHidden', (tab) => tab === 'Settings' && this.saveSettings());
 
 		// Handle the settings save event
 		$.RegisterForUnhandledEvent('SettingsSave', () => this.saveSettings());
