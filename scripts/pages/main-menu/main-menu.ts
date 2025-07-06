@@ -65,7 +65,9 @@ class MainMenuHandler implements OnPanelLoad {
 		this.panels.model.SetDirectionalLightColor(0, 0.5, 0.5, 0.5);
 		this.panels.model.SetDirectionalLightDirection(0, 1, 0, 0);
 
-		if (GameInterfaceAPI.GetSettingBool('developer')) $('#ControlsLibraryButton').RemoveClass('hide');
+		if (GameInterfaceAPI.GetSettingBool('developer')) {
+			$('#ControlsLibraryButton').RemoveClass('hide');
+		}
 
 		this.setMainMenuBackground();
 
@@ -282,7 +284,7 @@ class MainMenuHandler implements OnPanelLoad {
 		const isLightMode = $.persistentStorage.getItem('settings.mainMenuBackground') === 0;
 		$.persistentStorage.setItem('settings.mainMenuBackground', isLightMode ? 1 : 0);
 		this.setMainMenuBackground();
-		$.PlaySoundEvent(isLightMode ? 'UIPanorama.MenuThemeDark' : 'UIPanorama.MenuThemeLight');
+		$.PlaySoundEvent(isLightMode ? 'MenuThemeDark' : 'MenuThemeLight');
 	}
 
 	/**
