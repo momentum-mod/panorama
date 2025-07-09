@@ -731,8 +731,6 @@ class ZoneMenuHandler {
 					: 0
 				: (this.teleDestList?.indexOf(region?.teleDestTargetname) ?? 0);
 			this.panels.regionTPDest.SetSelectedIndex(tpIndex);
-			// TODO: we should not use the same logic for both populating the UI and handling user input which changes values
-			this.onTPDestSelectionChanged();
 		} else if (this.selectedZone.globalRegion?.index >= 0) {
 			region = this.selectedZone.globalRegion.regions[this.selectedZone.globalRegion.index];
 		}
@@ -750,6 +748,7 @@ class ZoneMenuHandler {
 
 		this.selectedRegion = region;
 		this.panels.zoningMenu.updateSelectedRegion(this.selectedRegion);
+		this.updateRegionTeleportTextEntries();
 	}
 
 	addRegion() {
@@ -939,14 +938,7 @@ class ZoneMenuHandler {
 		if (!this.selectedZone || !this.selectedRegion || !this.teleDestList) return;
 
 		const teleDestIndex = this.panels.regionTPDest.GetSelected()?.GetAttributeInt('value', 0);
-		if (teleDestIndex === 0) {
-			// user is requesting no teleport destination for this region
-			this.selectedRegion.teleDestTargetname = '';
-			delete this.selectedRegion.teleDestPos;
-			delete this.selectedRegion.teleDestYaw;
-
-			this.setRegionTPDestTextEntriesActive(false);
-		} else if (teleDestIndex === 1 && this.selectedRegion.points?.length > 0) {
+		if (teleDestIndex === 1 && this.selectedRegion.points?.length > 0) {
 			// user is requesting to place a TP destination at some location (not entity)
 			if (this.selectedRegion.teleDestPos === undefined || this.selectedRegion.teleDestYaw === undefined) {
 				this.selectedRegion.teleDestTargetname = '';
@@ -959,22 +951,14 @@ class ZoneMenuHandler {
 				this.selectedRegion = this.selectedZone.zone.regions[index];
 				this.pickTeleDestPos();
 			}
-
-			this.panels.regionTPPos.x.text = this.selectedRegion.teleDestPos?.at(0)?.toFixed(2) ?? '';
-			this.panels.regionTPPos.y.text = this.selectedRegion.teleDestPos?.at(1)?.toFixed(2) ?? '';
-			this.panels.regionTPPos.z.text = this.selectedRegion.teleDestPos?.at(2)?.toFixed(2) ?? '';
-			this.panels.regionTPYaw.text = this.selectedRegion.teleDestYaw?.toFixed(2) ?? '';
-
-			this.setRegionTPDestTextEntriesActive(true);
 		} else {
-			// user is requesting to use an entity as the TP destination
-			this.selectedRegion.teleDestTargetname = this.teleDestList[teleDestIndex];
+			this.selectedRegion.teleDestTargetname = teleDestIndex ? this.teleDestList[teleDestIndex] : '';
 			delete this.selectedRegion.teleDestPos;
 			delete this.selectedRegion.teleDestYaw;
-
-			this.setRegionTPDestTextEntriesActive(false);
 		}
 
+		this.panels.zoningMenu.updateSelectedRegion(this.selectedRegion);
+		this.updateRegionTeleportTextEntries();
 		this.drawZones();
 	}
 
@@ -996,7 +980,8 @@ class ZoneMenuHandler {
 		this.drawZones();
 	}
 
-	setRegionTPDestTextEntriesActive(enable: boolean) {
+	updateRegionTeleportTextEntries() {
+		const enable = this.panels.regionTPDest.GetSelected()?.GetAttributeInt('value', 0) === 1;
 		this.panels.regionTPPos.x.enabled = enable;
 		this.panels.regionTPPos.y.enabled = enable;
 		this.panels.regionTPPos.z.enabled = enable;
@@ -1004,7 +989,12 @@ class ZoneMenuHandler {
 		this.panels.regionTPYaw.enabled = enable;
 		this.panels.regionTPYawButton.enabled = enable;
 
-		if (!enable) {
+		if (enable) {
+			this.panels.regionTPPos.x.text = this.selectedRegion?.teleDestPos?.at(0)?.toFixed(2) ?? '';
+			this.panels.regionTPPos.y.text = this.selectedRegion?.teleDestPos?.at(1)?.toFixed(2) ?? '';
+			this.panels.regionTPPos.z.text = this.selectedRegion?.teleDestPos?.at(2)?.toFixed(2) ?? '';
+			this.panels.regionTPYaw.text = this.selectedRegion?.teleDestYaw?.toFixed(2) ?? '';
+		} else {
 			this.panels.regionTPPos.x.text = '';
 			this.panels.regionTPPos.y.text = '';
 			this.panels.regionTPPos.z.text = '';
