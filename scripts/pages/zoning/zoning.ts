@@ -951,10 +951,10 @@ class ZoneMenuHandler {
 			if (this.selectedRegion.teleDestPos === undefined || this.selectedRegion.teleDestYaw === undefined) {
 				this.selectedRegion.teleDestTargetname = '';
 				const index = this.panels.regionSelect.GetSelected()?.GetAttributeInt('value', -1);
-				if (index !== -1)
-					this.selectedZone.zone.regions[index] = this.panels.zoningMenu.createDefaultTeleDest(
-						this.selectedRegion
-					);
+				if (index !== -1) {
+					const regionWithTPDest = this.panels.zoningMenu.createDefaultTeleDest(this.selectedRegion);
+					this.deepCopyRegion(this.selectedZone.zone.regions[index], regionWithTPDest);
+				}
 
 				this.selectedRegion = this.selectedZone.zone.regions[index];
 				this.pickTeleDestPos();
@@ -1014,16 +1014,30 @@ class ZoneMenuHandler {
 
 	onRegionEditCompleted(newRegion: Region) {
 		if (this.selectedZone.globalRegion?.index != null) {
-			this.selectedZone.globalRegion.regions[this.selectedZone.globalRegion.index] = newRegion;
+			this.deepCopyRegion(
+				this.selectedZone.globalRegion.regions[this.selectedZone.globalRegion.index],
+				newRegion
+			);
 		} else if (this.selectedZone.zone) {
 			const index = this.panels.regionSelect.GetSelected()?.GetAttributeInt('value', -1);
-			if (index !== -1) this.selectedZone.zone.regions[index] = newRegion;
+			if (index !== -1) this.deepCopyRegion(this.selectedZone.zone.regions[index], newRegion);
 		} else {
 			return;
 		}
 
 		this.setInfoPanelShown(false);
 		this.drawZones();
+	}
+
+	deepCopyRegion(to: Region, from: Region) {
+		if (!to || !from) return;
+		to.points = [...from.points];
+		to.bottom = from.bottom;
+		to.height = from.height;
+		if (from.safeHeight !== undefined) to.safeHeight = from.safeHeight;
+		if (from.teleDestTargetname !== undefined) to.teleDestTargetname = from.teleDestTargetname;
+		if (from.teleDestPos !== undefined) to.teleDestPos = [...from.teleDestPos];
+		if (from.teleDestYaw !== undefined) to.teleDestYaw = from.teleDestYaw;
 	}
 
 	onRegionEditCanceled() {
