@@ -341,6 +341,10 @@ class ZoneMenuHandler {
 			);
 
 			item.SetPanelEvent('oncontextmenu', () => {
+				if (!this.mayAddBonus()) {
+					return;
+				}
+
 				const insertBonus = (before) => {
 					// Select this one first for the context of where to add the new one
 					this.updateSelection(selectionObj);
@@ -373,42 +377,23 @@ class ZoneMenuHandler {
 		this.rebuildCenterList();
 		this.rebuildRightList();
 
-		let regionCount = 0;
-		if (this.mapZoneData.tracks.main) {
-			regionCount += countTrackRegions(this.mapZoneData.tracks.main);
-		}
-		for (const bonus of this.mapZoneData.tracks.bonuses ?? []) {
-			regionCount += countTrackRegions(bonus);
-		}
+		const regionCount = this.getTotalRegionCount();
 
 		this.panels.createMainButton.SetHasClass(
 			'hide',
 			regionCount >= this.zoningLimits.MAX_REGIONS || Boolean(this.mapZoneData.tracks.main)
 		);
 
-		this.panels.addBonusButton.SetHasClass(
-			'hide',
-			regionCount >= this.zoningLimits.MAX_REGIONS ||
-				this.mapZoneData.tracks.bonuses?.length >= this.zoningLimits.MAX_BONUS_TRACKS
-		);
+		this.panels.addBonusButton.SetHasClass('hide', !this.mayAddBonus(regionCount));
 
 		this.panels.addDefragBonusButton.SetHasClass(
 			'hide',
-			regionCount >= this.zoningLimits.MAX_REGIONS ||
-				this.mapZoneData.tracks.bonuses?.length >= this.zoningLimits.MAX_BONUS_TRACKS ||
+			!this.mayAddBonus(regionCount) ||
 				!this.mapZoneData.tracks.main ||
 				this.mapZoneData.tracks.main.zones.segments.length !== 1
 		);
 
-		this.panels.addSegmentButton.SetHasClass(
-			'hide',
-			regionCount >= this.zoningLimits.MAX_REGIONS ||
-				!this.selectedZone.track ||
-				!this.isMainTrack(this.selectedZone.track) ||
-				this.selectedZone.track.zones.segments.length >= this.zoningLimits.MAX_TRACK_SEGMENTS ||
-				this.mapZoneData.tracks.bonuses?.some((bonus) => this.isDefragBonus(bonus)) ||
-				false
-		);
+		this.panels.addSegmentButton.SetHasClass('hide', !this.mayAddSegment(regionCount));
 
 		this.panels.addEndZoneButton.SetHasClass(
 			'hide',
@@ -419,12 +404,7 @@ class ZoneMenuHandler {
 				Boolean(this.selectedZone.track?.zones?.end.regions?.length > 0)
 		);
 
-		this.panels.addCheckpointButton.SetHasClass(
-			'hide',
-			regionCount >= this.zoningLimits.MAX_REGIONS ||
-				!this.selectedZone.segment ||
-				this.selectedZone.segment.checkpoints?.length >= this.zoningLimits.MAX_SEGMENT_CHECKPOINTS
-		);
+		this.panels.addCheckpointButton.SetHasClass('hide', !this.mayAddCheckpoint(regionCount));
 
 		this.panels.addCancelZoneButton.SetHasClass(
 			'hide',
@@ -472,6 +452,10 @@ class ZoneMenuHandler {
 			const item = this.addItemListItem(this.panels.centerList, majorId, segment, ItemType.SEGMENT, selectionObj);
 
 			item.SetPanelEvent('oncontextmenu', () => {
+				if (!this.mayAddSegment()) {
+					return;
+				}
+
 				const insertSegment = (before) => {
 					// Select this one first for the context of where to add the new one
 					this.updateSelection(selectionObj);
@@ -544,6 +528,10 @@ class ZoneMenuHandler {
 			const item = this.addItemListItem(this.panels.rightList, minorId, zone, ItemType.ZONE, selectionObj);
 
 			item.SetPanelEvent('oncontextmenu', () => {
+				if (!this.mayAddCheckpoint()) {
+					return;
+				}
+
 				const insertCheckpoint = (before) => {
 					// Select this one first for the context of which segment to add the new one to
 					this.updateSelection(selectionObj);
@@ -1082,6 +1070,7 @@ class ZoneMenuHandler {
 
 	addBonus(defragBonus = false, index = null) {
 		if (!this.mapZoneData) return;
+		if (!this.mayAddBonus()) return;
 
 		const bonus = defragBonus ? { defragModifiers: 1 } : this.createBonusTrack();
 
@@ -1112,7 +1101,7 @@ class ZoneMenuHandler {
 
 	addSegment(index = null) {
 		if (!this.mapZoneData) return;
-		if (!this.selectedZone.track || !this.isMainTrack(this.selectedZone.track)) return;
+		if (!this.mayAddSegment()) return;
 
 		const newSegment = this.createSegment();
 
@@ -1134,10 +1123,7 @@ class ZoneMenuHandler {
 
 	addCheckpoint(index = null) {
 		if (!this.mapZoneData) return;
-		if (!this.selectedZone.track) throw new Error('Attempted to add checkpoint zone to missing track!');
-		if (!this.selectedZone.segment) throw new Error('Attempted to add checkpoint zone to missing segment!');
-		if (this.isDefragBonus(this.selectedZone.track))
-			throw new Error('Defrag Bonus must share zones with Main track!');
+		if (!this.mayAddCheckpoint()) return;
 
 		const newZone = this.createZone();
 
@@ -1507,6 +1493,44 @@ class ZoneMenuHandler {
 		return (
 			this.isBonusTrack(track) &&
 			(track.zones == null || ('defragModifiers' in track && track.defragModifiers !== 0))
+		);
+	}
+
+	getTotalRegionCount() {
+		let regionCount = 0;
+		if (this.mapZoneData.tracks.main) {
+			regionCount += countTrackRegions(this.mapZoneData.tracks.main);
+		}
+		for (const bonus of this.mapZoneData.tracks.bonuses ?? []) {
+			regionCount += countTrackRegions(bonus);
+		}
+
+		return regionCount;
+	}
+
+	mayAddBonus(precomputedRegionCount?) {
+		return (
+			(precomputedRegionCount ?? this.getTotalRegionCount()) < this.zoningLimits.MAX_REGIONS &&
+			(this.mapZoneData.tracks.bonuses?.length ?? 0) < this.zoningLimits.MAX_BONUS_TRACKS
+		);
+	}
+
+	mayAddSegment(precomputedRegionCount?) {
+		return (
+			(precomputedRegionCount ?? this.getTotalRegionCount()) < this.zoningLimits.MAX_REGIONS &&
+			this.selectedZone.track &&
+			this.isMainTrack(this.selectedZone.track) &&
+			this.selectedZone.track.zones.segments.length < this.zoningLimits.MAX_TRACK_SEGMENTS &&
+			!this.mapZoneData.tracks.bonuses?.some((bonus) => this.isDefragBonus(bonus))
+		);
+	}
+
+	mayAddCheckpoint(precomputedRegionCount?) {
+		return (
+			(precomputedRegionCount ?? this.getTotalRegionCount()) < this.zoningLimits.MAX_REGIONS &&
+			!this.isDefragBonus(this.selectedZone.track) &&
+			this.selectedZone.segment &&
+			(this.selectedZone.segment.checkpoints?.length ?? 0) < this.zoningLimits.MAX_SEGMENT_CHECKPOINTS
 		);
 	}
 }
