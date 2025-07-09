@@ -467,9 +467,29 @@ class ZoneMenuHandler {
 		for (const [i, segment] of this.selectedZone.track.zones?.segments?.entries() ?? []) {
 			const majorId = segment.name || `${segmentTag} ${i + 1}`;
 
-			this.addItemListItem(this.panels.centerList, majorId, segment, ItemType.SEGMENT, {
-				track: this.selectedZone.track,
-				segment: segment
+			const selectionObj = { track: this.selectedZone.track, segment: segment };
+
+			const item = this.addItemListItem(this.panels.centerList, majorId, segment, ItemType.SEGMENT, selectionObj);
+
+			item.SetPanelEvent('oncontextmenu', () => {
+				const insertSegment = (before) => {
+					// Select this one first for the context of where to add the new one
+					this.updateSelection(selectionObj);
+					this.addSegment(before ? i : i + 1);
+				};
+
+				const contextItems = [
+					{
+						label: '#Zoning_InsertSegmentBefore',
+						jsCallback: () => insertSegment(true)
+					},
+					{
+						label: '#Zoning_InsertSegmentAfter',
+						jsCallback: () => insertSegment(false)
+					}
+				];
+
+				UiToolkitAPI.ShowSimpleContextMenu('', '', contextItems);
 			});
 		}
 
@@ -1090,14 +1110,18 @@ class ZoneMenuHandler {
 		}
 	}
 
-	addSegment() {
+	addSegment(index = null) {
 		if (!this.mapZoneData) return;
 		if (!this.selectedZone.track || !this.isMainTrack(this.selectedZone.track)) return;
 
 		const newSegment = this.createSegment();
 
 		if (!this.selectedZone.track.zones.segments) {
-			this.selectedZone.track.zones.segments = [newSegment];
+			this.selectedZone.track.zones.segments = [];
+		}
+
+		if (index != null && index < this.selectedZone.track.zones.segments.length) {
+			this.selectedZone.track.zones.segments.splice(Math.max(index, 0), 0, newSegment);
 		} else {
 			this.selectedZone.track.zones.segments.push(newSegment);
 		}
