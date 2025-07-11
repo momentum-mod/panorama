@@ -1,0 +1,16 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+
+	<ContextMenuCustomLayout class="contextmenu" tabindex="auto" selectionpos="auto">
+		<Panel id="ContextMenuBody" class="contextmenu simplecontextmenu zoning-context" childfocusonhover="true">
+			<Button id="InsertBefore">
+                <Label text="#Zoning_InsertBefore" class="zoning__tracklist-label" />
+            </Button>
+            <Button id="InsertAfter">
+                <Label text="#Zoning_InsertAfter" class="zoning__tracklist-label" />
+            </Button>
+		</Panel>
+	</ContextMenuCustomLayout>
+</root>

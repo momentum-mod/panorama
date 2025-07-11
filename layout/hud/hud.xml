@@ -17,12 +17,12 @@
 
 		<!-- Center of screen HUD laid out vertically top-to-bottom -->
 		<Panel id="HudCenter" hittest="false" hittestchildren="false">
-
+			<MomHudSafeguardIndicator />
+			<MomHudJumpTiming />
 		</Panel>
 
 		<!-- HUD anchored to top-left corner of screen, laid out vertically top-to-bottom -->
 		<Panel id="HudTopLeft" hittest="false" hittestchildren="false">
-			<HudTrickTracker />
 			<HudComparisons />
 		</Panel>
 
@@ -30,7 +30,7 @@
 		<!-- misleading name, not 'bottom-center' but 'below center' -->
 		<Panel id="HudBottomCenter" hittest="false" hittestchildren="false">
 			<!-- Anchored on Bottom-center, laid out from top to bottom -->
-			<MomHudSynchronizer />
+			<MomHudStrafeTrainer />
 			<MomHudSpeedometer />
 			<MomHudConcCooktime />
 			<MomHudStickyCharge />
@@ -64,7 +64,11 @@
 			<MomHudWeaponSelection />
 		</Panel>
 
-		<HudBlurTarget id="HudBlur" blurrects="Leaderboards TrickList" class="hud-blur" hittest="false" hittestchildren="false">
+		<HudBlurTarget id="HudBlur" blurrects="TabMenu Spectator" class="hud-blur" hittest="false" hittestchildren="false">
+			<BackbufferImagePanel class="full" />
+		</HudBlurTarget>
+
+		<HudBlurTarget id="HudWeakBlur" blurrects="" class="hud-blur hud-blur--weak" hittest="false" hittestchildren="false">
 			<BackbufferImagePanel class="full" />
 		</HudBlurTarget>
 
@@ -81,11 +85,13 @@
 			<MomHudJumpStats />
 		</Panel>
 
-		<TrickList id="TrickList" />
+		<Panel id="ZoningContainer" hittestchildren="true">
+			<ZoneMenu id="ZoneMenu" hittest="true" hittestchildren="true" />
+		</Panel>
 
 		<!-- This container is here so we can move the leaderboard in and out of it during the end-of-match sequence -->
-		<Panel id="LeaderboardsContainer" class="full-width full-height" hittest="false" hittestchildren="true">
-			<HudLeaderboards id="Leaderboards" hittest="true" />
+		<Panel id="TabMenuContainer" class="w-full h-full" hittest="false" hittestchildren="true">
+			<HudTabMenu id="TabMenu" hittest="true" />
 		</Panel>
 
 		<!-- Make sure these are at the bottom to get the z-order right -->

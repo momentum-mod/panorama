@@ -7,10 +7,15 @@
 	width: 100%;
 	align: center center;
 
+	&--hidden {
+		opacity: 0;
+	}
+
 	&__label {
 		@include mixin.font-styles($use-header: false);
 
 		font-size: $timer-hudstatus-font-size;
+		font-weight: $timer-hudstatus-font-weight;
 		text-align: center;
 		align: center center;
 		color: $timer-hudstatus-color;

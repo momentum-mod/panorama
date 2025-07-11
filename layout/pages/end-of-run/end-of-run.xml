@@ -4,14 +4,28 @@
 	</styles>
 
 	<scripts>
-		<include src="file://{scripts}/common/run.js" />
-		<include src="file://{scripts}/pages/end-of-run/end-of-run.js" />
+		<include type="module" src="file://{scripts}/pages/end-of-run/end-of-run.ts" />
+		<include type="module" src="file://{scripts}/pages/end-of-run/end-of-run-xp.ts" />
 	</scripts>
+
+	<snippets>
+		<snippet name="split">
+			<Panel class="endofrun-split diff">
+				<Panel class="endofrun-split__left">
+					<Label id="Name" class="endofrun-split__name" text="{s:name}" />
+				</Panel>
+				<Panel class="endofrun-split__right">
+					<Label class="endofrun-split__time" text="{g:time:time}" />
+					<Label class="endofrun-split__diff diff" text="{s:diff_sign}{g:time:diff}" />
+				</Panel>
+			</Panel>
+		</snippet>
+	</snippets>
 
 	<Panel class="endofrun" acceptsinput="true" acceptsfocus="true">
 		<Panel class="endofrun__header">
 			<Panel class="endofrun__header-left">
-				<Button class="endofrun__header-button endofrun__header-button--back-button" onactivate="EndOfRun.hideEndOfRun();">
+				<Button class="endofrun__header-button endofrun__header-button--back-button" onactivate="EndOfRunHandler.hideEndOfRun();">
 					<Image class="button__icon button__icon--left" src="file://{images}/arrow-thick-right.svg" orientation="180" textureheight="64" />
 				</Button>
 			</Panel>
@@ -25,14 +39,14 @@
 					<Image id="UploadStatus" class="endofrun__run-status-indicator" textureheight="64" onmouseout="UiToolkitAPI.HideTitleImageTextTooltip();" />
 				</Panel>
 				<Panel id="EndOfRunActionButtons" class="endofrun__header-buttons">
-					<Button class="endofrun__header-button" onactivate="EndOfRun.watchReplay();">
-						<Panel class="flow-right horizontal-align-center vertical-align-center">
+					<Button class="endofrun__header-button" onactivate="EndOfRunHandler.watchReplay();">
+						<Panel class="flow-right h-align-center v-align-center">
 							<Image class="button__icon button__icon--left" src="file://{images}/movie-open-play-outline.svg" textureheight="64" />
 							<Label class="button__text button__text--right" text="#Action_WatchReplay" />
 						</Panel>
 					</Button>
-					<Button class="endofrun__header-button endofrun__header-button--last" onactivate="EndOfRun.restartMap();">
-						<Panel class="flow-right horizontal-align-center  vertical-align-center">
+					<Button class="endofrun__header-button endofrun__header-button--last" onactivate="EndOfRunHandler.restartMap();">
+						<Panel class="flow-right h-align-center  v-align-center">
 							<Image class="button__icon button__icon--left" src="file://{images}/reset.svg" textureheight="64" />
 							<Label class="button__text button__text--right" text="#Action_RestartMap" />
 						</Panel>
@@ -49,14 +63,14 @@
 				<Panel class="endofrun-stats">
 					<Panel class="endofrun-stats__header">
 						<Label class="endofrun-stats__title" text="#EndOfRun_Comparison_ZoneTitle" />
-						<Panel class="flow-right horizontal-align-right">
+						<Panel class="flow-right h-align-right">
 							<Label class="endofrun-stats__comparison-pre" text="#EndOfRun_Comparison" />
 							<Label class="endofrun-stats__comparison" text="{s:comparison_name}" />
 						</Panel>
 					</Panel>
 					<Panel class="endofrun-stats__row endofrun-stats__row--header">
 						<Label class="endofrun-stats__name endofrun-stats__table-header-text" text="#EndOfRun_Stats" />
-						<Label class="endofrun-stats__value endofrun-stats__table-header-text" text="#EndOfRun_Stats_Base" />
+						<Label class="endofrun-stats__value endofrun-stats__table-header-text endofrun-stats__table-header-text--base" text="#EndOfRun_Stats_Base" />
 						<Label class="endofrun-stats__value endofrun-stats__table-header-text" text="#EndOfRun_Stats_Comparison" />
 						<Label class="endofrun-stats__value endofrun-stats__table-header-text" text="#EndOfRun_Stats_Difference" />
 					</Panel>
@@ -64,6 +78,26 @@
 				</Panel>
 			</Panel>
 		</Panel>
-		<Frame src="file://{resources}/layout/pages/end-of-run/xp.xml" />
+		<Panel id="XpContainer" class="endofrun-xp">
+			<Panel class="flow-right">
+				<LevelIndicator id="LevelIndicator" class="endofrun-xp__levelindicator" />
+				<Panel class="endofrun-xp__wide-container">
+					<Panel id="LevelBar" class="endofrun-xp-bar">
+						<Panel id="PrimaryBar" class="endofrun-xp-bar__primary" />
+						<Panel id="SecondaryBar" class="endofrun-xp-bar__secondary" />
+					</Panel>
+					<Panel id="XPInfoBar" class="endofrun-xp__xp-info">
+						<Panel class="flow-right">
+							<Label id="XPCounter" class="endofrun-xp__xp-counter " text="{d:xp_counter} / {d:total_xp}" />
+							<Label class="endofrun-xp__xp-counter text-header-light ml-1" style="transform:translateY(1px)" text="#Common_XP" />
+						</Panel>
+						<Panel id="NewXP" class="endofrun-xp__new-stat-container">
+							<Label class="endofrun-xp__new-stat" text="+ {d:new_xp}" />
+							<Label class="endofrun-xp__new-stat text-header-light ml-1" style="transform:translateY(1px)" text="#Common_XP" />
+						</Panel>
+					</Panel>
+				</Panel>
+			</Panel>
+		</Panel>
 	</Panel>
 </root>

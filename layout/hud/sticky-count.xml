@@ -2,11 +2,12 @@
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
+	
 	<scripts>
-		<include src="file://{scripts}/hud/sticky-count.js" />
+		<include type="module" src="file://{scripts}/hud/sticky-count.ts" />
 	</scripts>
 
-	<MomHudStickyCharge class="horizontal-align-center">
-		<Panel id="StickyCountContainer" class="sticky-count horizontal-align-center flow-right" />
+	<MomHudStickyCharge class="h-align-center">
+		<Panel id="StickyCountContainer" class="sticky-count h-align-center flow-right" />
 	</MomHudStickyCharge>
 </root>

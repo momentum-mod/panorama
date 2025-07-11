@@ -2,9 +2,9 @@
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
+
 	<scripts>
-		<include src="file://{scripts}/common/gamemodes.js" />
-		<include src="file://{scripts}/pages/map-selector/map-selector.js" />
+		<include type="module" src="file://{scripts}/pages/map-selector/map-selector.ts" />
 	</scripts>
 
 	<MomentumMapSelect>
@@ -12,169 +12,174 @@
 			<Panel id="MapSelectorLeftContainer" class="mapselector__left-container">
 				<Panel id="MapSelectorLeft" class="mapselector__left">
 					<Panel class="mapselector__left-wrapper">
-						<Panel class="mapselector-category-tabs">
-							<RadioButton id="CategoryListMaps" class="mapselector-category-tabs__tab" group="CategoryListNavBar" selected="true" onactivate='$("#CategoryContents").SetHasClass("mapselector__category-contents--playlists", false)'>
-								<Panel class="flow-right horizontal-align-center">
-									<Image class="mapselector-category-tabs__image" src="file://{images}/panorama-variant.svg" textureheight="32" style="padding: 1px;" />
-									<Label class="text-h mapselector-category-tabs__text" text="#MapSelector_Maps" />
-								</Panel>
-							</RadioButton>
-							<RadioButton id="CategoryListPlaylists" class="mapselector-category-tabs__tab" group="CategoryListNavBar" onactivate='$("#CategoryContents").SetHasClass("mapselector__category-contents--playlists", true)'>
-								<Panel class="flow-right horizontal-align-center">
-									<Image class="mapselector-category-tabs__image" src="file://{images}/playlist-play.svg" textureheight="32" />
-									<Label class="text-h mapselector-category-tabs__text" text="#MapSelector_Playlists" />
-								</Panel>
-							</RadioButton>
-						</Panel>
+
+<!--						 Disabling top tabs until we do leaderboards, may not even keep original styling anyway.-->
+<!--						<Panel class="mapselector-category-tabs">-->
+<!--							<RadioButton id="CategoryListMaps" class="mapselector-category-tabs__tab" group="CategoryListNavBar" selected="true" onactivate='$("#CategoryContents").SetHasClass("mapselector__category-contents&#45;&#45;playlists", false)'>-->
+<!--								<Panel class="flow-right h-align-center">-->
+<!--									<Image class="mapselector-category-tabs__image" src="file://{images}/panorama-variant.svg" textureheight="32" style="padding: 1px;" />-->
+<!--									<Label class="text-h mapselector-category-tabs__text" text="#MapSelector_Maps" />-->
+<!--								</Panel>-->
+<!--							</RadioButton>-->
+<!--							<RadioButton id="CategoryListPlaylists" class="mapselector-category-tabs__tab" group="CategoryListNavBar" onactivate='$("#CategoryContents").SetHasClass("mapselector__category-contents&#45;&#45;playlists", true)'>-->
+<!--								<Panel class="flow-right h-align-center">-->
+<!--									<Image class="mapselector-category-tabs__image" src="file://{images}/playlist-play.svg" textureheight="32" />-->
+<!--									<Label class="text-h mapselector-category-tabs__text" text="#MapSelector_Playlists" />-->
+<!--								</Panel>-->
+<!--							</RadioButton>-->
+<!--						</Panel>-->
 
 						<Panel id="CategoryContents" class="mapselector__category-contents">
 							<Panel id="MapSelector" class="mapselector__maps">
 								<Panel class="mapselector-header">
+									<Panel class="tabs mapselector-header__tabs">
+										<RadioButton id="MapListRanked" class="tabs__tab mapselector-header__tab" group="MapListNavBar" selected="true">
+											<Label class="tabs__text" text="#MapSelector_Tabs_Ranked" />
+										</RadioButton>
+										<Panel class="tabs__gap" />
+										<RadioButton id="MapListUnranked" class="tabs__tab mapselector-header__tab" group="MapListNavBar">
+											<Label class="tabs__text" text="#MapSelector_Tabs_Unranked" />
+										</RadioButton>
+										<Panel class="tabs__gap" />
+										<RadioButton id="MapListBeta" class="tabs__tab mapselector-header__tab" group="MapListNavBar">
+											<Label class="tabs__text" text="#MapSelector_Tabs_Beta" />
+										</RadioButton>
+									</Panel>
 									<Panel class="search mapselector-header__search">
 										<Image class="search__icon" src="file://{images}/search.svg" textureheight="32" />
 										<TextEntry id="MapSearchTextEntry" class="search__textentry" maxchars="30" placeholder="#MapSelector_SearchMaps" />
-										<Button id="MapSearchClear" class="search__clearbutton search__clearbutton--hidden" onactivate="MapSelection.clearSearch()">
+										<Button id="MapSearchClear" class="search__clearbutton search__clearbutton--hidden" onactivate="MapSelectorHandler.clearSearch()">
 											<Image class="search__clearicon" src="file://{images}/close.svg" textureheight="32" />
 										</Button>
 									</Panel>
-									<Panel class="mapselector-header__filters">
-										<Button class="button button--green ml-2" onactivate="MapSelection.requestMapUpdate()">
-											<Label class="button__text" text="#Common_Update" />
+									<TooltipPanel class="mr-2" tooltip="#MapSelector_Updates_Check">
+										<Button class="button" onactivate="MapSelectorHandler.checkForUpdates()">
+											<Image id="RefreshIcon" class="button__icon" src="file://{images}/refresh.svg" textureheight="32" />
 										</Button>
-										<Button id="FilterErase" class="ml-2 button button--red" onactivate="MapSelection.clearFilters()">
+									</TooltipPanel>
+									<TooltipPanel tooltip="#MapSelector_Filters_Reset">
+										<Button class="button button--red" onactivate="MapSelectorHandler.clearFilters()">
 											<Image class="button__icon" src="file://{images}/filter-remove.svg" textureheight="32" />
 										</Button>
-									</Panel>
+									</TooltipPanel>
 								</Panel>
-								<Panel id="MapFilters" class="mapselector-filters mapselector-filters--filters-extended">
-									<Panel class="full-width">
-										<Panel id="GamemodeFilters" class="mapselector-filters__row mapselector-filters__gamemodes">
-											<ToggleButton id="SurfFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button" selected="true">
-												<Label class="button__text mapselector-filters__text" text="#Gamemode_Surf" />
-											</ToggleButton>
-											<ToggleButton id="BhopFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button" selected="true">
-												<Label class="button__text mapselector-filters__text" text="#Gamemode_Bhop" />
-											</ToggleButton>
-											<ToggleButton id="ClimbFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button" selected="true">
-												<Label class="button__text mapselector-filters__text" text="#Gamemode_Climb" />
-											</ToggleButton>
-											<ToggleButton id="RJFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button" selected="true">
-												<Label class="button__text mapselector-filters__text" text="#Gamemode_RJ" />
-											</ToggleButton>
-											<ToggleButton id="SJFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button" selected="true">
-												<Label class="button__text mapselector-filters__text" text="#Gamemode_SJ" />
-											</ToggleButton>
-											<ToggleButton id="TricksurfFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button" selected="true">
-												<Label class="button__text mapselector-filters__text" text="#Gamemode_Tricksurf" />
-											</ToggleButton>
-											<ToggleButton id="AhopFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button" selected="true">
-												<Label class="button__text mapselector-filters__text" text="#Gamemode_Ahop" />
-											</ToggleButton>
-											<ToggleButton id="ParkourFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button" selected="true">
-												<Label class="button__text mapselector-filters__text" text="#Gamemode_Parkour" />
-											</ToggleButton>
-											<ToggleButton id="ConcFilterButton" class="mr-1 button togglebutton togglebutton--blue mapselector-filters__button" selected="true">
-												<Label class="button__text mapselector-filters__text" text="#Gamemode_Conc" />
-											</ToggleButton>
-											<ToggleButton id="DefragFilterButton" class="button togglebutton togglebutton--blue mapselector-filters__button" selected="true">
-												<Label class="button__text mapselector-filters__text" text="#Gamemode_Defrag" />
-											</ToggleButton>
-										</Panel>
+								<Panel id="MapFilters" class="mapselector-filters">
+									<Panel class="mapselector-filters__row mapselector-filters__gamemodes">
+										<RadioButton id="SurfFilterButton" class="button radiobutton radiobutton--blue mapselector-filters__gamemode-button" selected="true">
+											<Label class="button__text mapselector-filters__text" text="#Gamemode_Surf" />
+										</RadioButton>
+										<RadioButton id="BhopFilterButton" class="button radiobutton radiobutton--blue mapselector-filters__gamemode-button">
+											<Label class="button__text mapselector-filters__text" text="#Gamemode_Bhop" />
+										</RadioButton>
+										<RadioButton id="BhopHL1FilterButton" class="button radiobutton radiobutton--blue mapselector-filters__gamemode-button">
+											<Label class="button__text mapselector-filters__text" text="#Gamemode_BhopHL1" />
+										</RadioButton>
+										<RadioButton id="KzMomFilterButton" class="hide button radiobutton radiobutton--blue mapselector-filters__gamemode-button">
+											<Label class="button__text mapselector-filters__text" text="#Gamemode_KzMom" />
+										</RadioButton>
+										<RadioButton id="KzKztFilterButton" class="hide button radiobutton radiobutton--blue mapselector-filters__gamemode-button">
+											<Label class="button__text mapselector-filters__text" text="#Gamemode_KzKzt" />
+										</RadioButton>
+										<RadioButton id="Kz16FilterButton" class="button radiobutton radiobutton--blue mapselector-filters__gamemode-button">
+											<Label class="button__text mapselector-filters__text" text="#Gamemode_Kz16" />
+										</RadioButton>
+										<RadioButton id="RJFilterButton" class="button radiobutton radiobutton--blue mapselector-filters__gamemode-button">
+											<Label class="button__text mapselector-filters__text" text="#Gamemode_RJ" />
+										</RadioButton>
+										<RadioButton id="SJFilterButton" class="button radiobutton radiobutton--blue mapselector-filters__gamemode-button">
+											<Label class="button__text mapselector-filters__text" text="#Gamemode_SJ" />
+										</RadioButton>
+										<RadioButton id="AhopFilterButton" class="button radiobutton radiobutton--blue mapselector-filters__gamemode-button">
+											<Label class="button__text mapselector-filters__text" text="#Gamemode_Ahop" />
+										</RadioButton>
+										<RadioButton id="ConcFilterButton" class="button radiobutton radiobutton--blue mapselector-filters__gamemode-button">
+											<Label class="button__text mapselector-filters__text" text="#Gamemode_Conc" />
+										</RadioButton>
+										<RadioButton id="DefragCPMFilterButton" class="button radiobutton radiobutton--blue mapselector-filters__gamemode-button">
+											<Label class="button__text mapselector-filters__text" text="#Gamemode_DefragCPM" />
+										</RadioButton>
+										<RadioButton id="DefragVQ3FilterButton" class="button radiobutton radiobutton--blue mapselector-filters__gamemode-button">
+											<Label class="button__text mapselector-filters__text" text="#Gamemode_DefragVQ3" />
+										</RadioButton>
+										<RadioButton id="DefragVTGFilterButton" class="button radiobutton radiobutton--blue mapselector-filters__gamemode-button">
+											<Label class="button__text mapselector-filters__text" text="#Gamemode_DefragVTG" />
+										</RadioButton>
 									</Panel>
-
 									<Panel class="mapselector-filters__row">
 										<Panel class="mapselector-filters__tiers">
-											<Label class="text-h5 mr-2 vertical-align-center" text="Tiers" />
+											<Label class="mapselector-filters__tier-label" text="#MapSelector_Filters_Tier" />
 											<Panel class="mapselector-tier-slider">
 												<Panel class="mapselector-tier-slider__numbers">
-													<Label class="mapselector-tier-slider__number" text="1" />
+													<Label class="mapselector-tier-slider__number mapselector-tier-slider__number--1" text="1" />
 													<Panel class="mapselector-tier-slider__gap" />
-													<Label class="mapselector-tier-slider__number" text="2" />
+													<Label class="mapselector-tier-slider__number mapselector-tier-slider__number--2" text="2" />
 													<Panel class="mapselector-tier-slider__gap" />
-													<Label class="mapselector-tier-slider__number" text="3" />
+													<Label class="mapselector-tier-slider__number mapselector-tier-slider__number--3" text="3" />
 													<Panel class="mapselector-tier-slider__gap" />
-													<Label class="mapselector-tier-slider__number" text="4" />
+													<Label class="mapselector-tier-slider__number mapselector-tier-slider__number--4" text="4" />
 													<Panel class="mapselector-tier-slider__gap" />
-													<Label class="mapselector-tier-slider__number" text="5" />
+													<Label class="mapselector-tier-slider__number mapselector-tier-slider__number--5" text="5" />
 													<Panel class="mapselector-tier-slider__gap" />
-													<Label class="mapselector-tier-slider__number" text="6" />
+													<Label class="mapselector-tier-slider__number mapselector-tier-slider__number--6" text="6" />
 													<Panel class="mapselector-tier-slider__gap" />
-													<Label class="mapselector-tier-slider__number" text="7" />
+													<Label class="mapselector-tier-slider__number mapselector-tier-slider__number--7" text="7" />
 													<Panel class="mapselector-tier-slider__gap" />
-													<Label class="mapselector-tier-slider__number" text="8" />
+													<Label class="mapselector-tier-slider__number mapselector-tier-slider__number--8" text="8" />
 													<Panel class="mapselector-tier-slider__gap" />
-													<Label class="mapselector-tier-slider__number" text="9" />
+													<Label class="mapselector-tier-slider__number mapselector-tier-slider__number--9" text="9" />
 													<Panel class="mapselector-tier-slider__gap" />
-													<Label class="mapselector-tier-slider__number mapselector-tier-slider__number--double-digit" text="10" />
+													<Label class="mapselector-tier-slider__number mapselector-tier-slider__number--10" text="10" />
 												</Panel>
 												<DualSlider id="TierSlider" class="slider slider--horizontal mapselector-tier-slider__slider" snaptoincrement="true" direction="horizontal" min="1" max="10" increment="1" default="1" default2="10" value="1" value2="10" />
 											</Panel>
 										</Panel>
-										<Panel class="horizontal-align-right flow-right">
-											<TooltipPanel tooltip="&lt;b&gt;Filter by&lt;/b&gt;: Completed">
+										<Panel class="flow-right h-align-right v-align-bottom">
+											<TooltipPanel tooltip="#MapSelector_Filters_ByCompleted">
 												<NStateButton id="MapCompletedFilterButton" class="button nstatebutton mapselector-filters__nstatebutton mr-2">
 													<Image class="button__icon" src="file://{images}/flag.svg" textureheight="32" />
 												</NStateButton>
 											</TooltipPanel>
-											<TooltipPanel tooltip="&lt;b&gt;Filter by&lt;/b&gt;: Favorited">
+											<TooltipPanel tooltip="#MapSelector_Filters_ByFavorited">
 												<NStateButton id="MapFavoritedFilterButton" class="button nstatebutton mapselector-filters__nstatebutton mr-2">
 													<Image class="button__icon" src="file://{images}/star.svg" textureheight="32" />
 												</NStateButton>
 											</TooltipPanel>
-											<TooltipPanel tooltip="&lt;b&gt;Filter by&lt;/b&gt;: Downloaded">
-												<NStateButton id="MapDownloadedFilterButton" class="button nstatebutton mapselector-filters__nstatebutton">
+											<TooltipPanel tooltip="#MapSelector_Filters_ByDownloaded">
+												<NStateButton id="MapDownloadedFilterButton" class="button nstatebutton mapselector-filters__nstatebutton mr-2">
 													<Image class="button__icon" src="file://{images}/download.svg" textureheight="32" />
 												</NStateButton>
 											</TooltipPanel>
+											<DropDown id="SortByDropdown" class="dropdown sorting__dropdown" menuclass="dropdown-menu">
+												<Label text="#MapSelector_Sorting_DateReleased_Asc" id="dateRelAsc" value="6" />
+												<Label text="#MapSelector_Sorting_DateReleased_Desc" id="dateRelDesc" value="7" />
+												<Label text="#MapSelector_Sorting_Alphabetical_Asc" id="alphaAsc" value="0" />
+												<Label text="#MapSelector_Sorting_Alphabetical_Desc" id="alphaDesc" value="1" />
+												<Label text="#MapSelector_Sorting_Tier_Asc" id="tierAsc" value="2" />
+												<Label text="#MapSelector_Sorting_Tier_Desc" id="tierDesc" value="3" />
+												<Label text="#MapSelector_Sorting_LastPlayed_Asc" id="lastPlayAsc" value="4" />
+												<Label text="#MapSelector_Sorting_LastPlayed_Desc" id="lastPlayDesc" value="5" />
+												<Label text="#MapSelector_Sorting_DateCreated_Asc" id="dateCreatedAsc" value="8" />
+												<Label text="#MapSelector_Sorting_DateCreated_Desc" id="dateCreatedDesc" value="9" />
+											</DropDown>
 										</Panel>
 									</Panel>
 								</Panel>
 
-								<Panel id="TabsAndSortBy" class="mapselector-sorting">
-									<Panel class="tabs mapselector-sorting__tabs">
-										<RadioButton id="MapListRanked" class="tabs__tab mapselector-sorting__tab" group="MapListNavBar" selected="true">
-											<Label class="tabs__text" text="#MapSelector_Tabs_Ranked" />
-										</RadioButton>
-										<Panel class="tabs__gap" />
-										<RadioButton id="MapListUnranked" class="tabs__tab mapselector-sorting__tab" group="MapListNavBar">
-											<Label class="tabs__text" text="#MapSelector_Tabs_Unranked" />
-										</RadioButton>
-										<Panel class="tabs__gap" />
-										<RadioButton id="MapListBeta" class="tabs__tab mapselector-sorting__tab" group="MapListNavBar">
-											<Label class="tabs__text" text="#MapSelector_Tabs_Beta" />
-										</RadioButton>
-									</Panel>
-									<Panel id="SortBy" class="mapselector-sorting__sort">
-										<DropDown id="SortByDropdown" class="dropdown sorting__dropdown" menuclass="dropdown-menu">
-											<Label text="#MapSelector_Sorting_DateReleased_Asc" id="dateRelAsc" value="6" />
-											<Label text="#MapSelector_Sorting_DateReleased_Desc" id="dateRelDesc" value="7" />
-											<Label text="#MapSelector_Sorting_Alphabetical_Asc" id="alphaAsc" value="0" />
-											<Label text="#MapSelector_Sorting_Alphabetical_Desc" id="alphaDesc" value="1" />
-											<Label text="#MapSelector_Sorting_Tier_Asc" id="tierAsc" value="2" />
-											<Label text="#MapSelector_Sorting_Tier_Desc" id="tierDesc" value="3" />
-											<Label text="#MapSelector_Sorting_LastPlayed_Asc" id="lastPlayAsc" value="4" />
-											<Label text="#MapSelector_Sorting_LastPlayed_Desc" id="lastPlayDesc" value="5" />
-											<Label text="#MapSelector_Sorting_DateCreated_Asc" id="dateCreatedAsc" value="8" />
-											<Label text="#MapSelector_Sorting_DateCreated_Desc" id="dateCreatedDesc" value="9" />
-										</DropDown>
-									</Panel>
-								</Panel>
-
-								<Panel class="full-width">
+								<Panel class="w-full h-fill">
 									<DelayLoadList id="MapListContainer" class="mapselector__list" itemheight="54px" itemwidth="100%" spacersize="3px" spacerperiod="1">
 										<!-- Populated via MapEntry snippets in code -->
 									</DelayLoadList>
 									<Panel id="MapListEmptyContainer" class="mapselector__emptywarning mapselector__emptywarning--hidden">
-										<Label class="text-h2 horizontal-align-center mb-4" text="#MapSelector_Error_NoMapsFound" />
-										<Label class="horizontal-align-center text-align-center full-height" text="#MapSelector_Error_NoMapsFound_Long" />
+										<Label class="text-h2 h-align-center mb-4" text="#MapSelector_Error_NoMapsFound" />
+										<Label class="h-align-center text-align-center h-full" text="#MapSelector_Error_NoMapsFound_Long" />
 									</Panel>
 								</Panel>
 							</Panel>
 
 							<!-- Playlist Selector -->
 							<Panel id="PlaylistSelector" class="mapselector__playlists">
-								<Panel class="full-height full-width">
-									<Label class="text-h1 text-align-center horizontal-align-center mt-5" text="#Common_ComingSoon" />
+								<Panel class="h-full w-full">
+									<Label class="text-h1 text-align-center h-align-center mt-5" text="#Common_ComingSoon" />
 								</Panel>
 							</Panel>
 						</Panel>
@@ -183,25 +188,75 @@
 			</Panel>
 
 			<Panel class="mapselector__right">
-				<Panel id="MapTimes" class="mapselector-map-times">
-					<Panel class="mapselector-map-times__list-wrapper">
-						<Leaderboards id="Leaderboards" class="mapselector-map-times__list mapselector-map-times__list--hidden" />
+				<Panel id="MapTimes" class="mapselector-leaderboards">
+					<Panel class="mapselector-leaderboards__list-wrapper">
+						<Leaderboards id="Leaderboards" class="mapselector-leaderboards__list mapselector-leaderboards__list--hidden leaderboards--in-map-selector" />
 					</Panel>
+					<Button class="button mapselector-leaderboards__open-button" onactivate="MapSelectorHandler.toggleLeaderboards(true);">
+						<Image class="button__icon button__icon--left" src="file://{images}/chart-timeline.svg" textureheight="40" />
+						<Label class="button__text button__icon--right mr-3" text="#MapSelector_Button_Leaderboards" />
+					</Button>
 				</Panel>
 				<Panel id="MapInfo" class="mapselector-map-info">
-					<!-- Stacked labels to give double layers of shadow. I don't like it, but I'll have to go along with it. -->
-					<Panel>
-						<Label class="text-h1 text-shadow-outline" text="{s:name}" />
-						<Label class="text-h1 text-shadow-black color-transparent" text="{s:name}" />
-					</Panel>
-					<Panel class="mapselector-map-info__block">
-						<Panel class="mapselector-map-info__block-left">
-							<!-- TODO: This is a hack to get a stronger font shadow. Remove when doing sRGB styling! -->
-							<Label class="text-h4 text-shadow-outline" text="#MapSelector_Info_Stats" />
-							<Label class="text-h4 text-shadow-bold color-transparent" text="#MapSelector_Info_Stats" />
+					<Panel class="mapselector-map-info__top">
+						<Panel class="mapselector-map-info__top-left">
+							<Panel class="w-full">
+								<!-- Stacked labels to give double layers of shadow. I don't like it, but I'll have to go along with it. -->
+								<Label class="text-h1 text-shadow-outline" text="{s:name}" />
+								<Label class="text-h1 text-shadow-black color-transparent" text="{s:name}" />
+							</Panel>
+							<Panel class="w-full flow-right">
+								<Label class="text-h4 text-shadow-outline" text="#MapInfo_Tier" />
+								<Label id="HudTabMenuLinearSeparator" class="text-h4 text-shadow-outline" text="|" />
+								<Label id="HudTabMenuLinearLabel" class="text-h4 text-shadow-outline" text="#MapInfo_Type_Linear" />
+								<Label id="HudTabMenuStageCountSeparator" class="text-h4 text-shadow-outline" text="|" />
+								<Label id="HudTabMenuStageCountLabel" class="text-h4 text-shadow-outline" text="#MapInfo_StageCount" />
+								<Label id="HudTabMenuBonusCountSeparator" class="text-h4 text-shadow-outline" text="|" />
+								<Label id="HudTabMenuBonusCountLabel" class="text-h4 text-shadow-outline" text="#MapInfo_BonusCount" />
+								<Label id="HudTabMenuBonusesCountLabel" class="text-h4 text-shadow-outline" text="#MapInfo_BonusesCount" />
+							</Panel>
 						</Panel>
-						<Panel class="flow-right mapselector-map-info__block-right">
-							<Panel class="mapselector-map-info__action">
+					</Panel>
+					<Panel class="mapselector-map-info__content">
+						<Panel id="MapDescription" class="mapselector-map-info__content-left mapselector-map-info__description">
+							<Panel class="mapselector-map-info__wrapper mapselector-map-info__wrapper--unpadded">
+								<Panel class="mapselector-map-info__description-scroll">
+									<Panel class="mapselector-map-info__description-main-elements">
+										<Panel id="MapDescriptionContainer" class="flow-down w-full">
+											<Label class="mapselector-map-info__h1" text="#MapSelector_Info_Description" />
+											<Label class="mapselector-map-info__paragraph" text="{s:description}" />
+										</Panel>
+										<Panel id="MapCredits" class="mapselector-credits">
+											<!-- Populated by JS -->
+										</Panel>
+										<Panel class="mapselector-map-info__status">
+											<Label class="mapselector-map-info__h1" text="#MapSelector_Status_Heading" />
+											<Panel class="flow-right w-full">
+												<Label class="mapselector-map-info__text mr-1" text="{s:status}" />
+												<TooltipPanel tooltip="{s:status_tooltip}" class="v-align-center">
+													<Image class="mapselector-map-info__status-icon" src="file://{images}/info.svg" textureheight="32" />
+												</TooltipPanel>
+											</Panel>
+										</Panel>
+										<Panel id="MapChangelog" class="mapselector-map-info__changelog mt-4">
+											<Label class="mapselector-map-info__h1" text="#MapSelector_Info_Changelog_Heading" />
+											<Panel class="flow-down w-full">
+												<!-- Populated by JS -->
+											</Panel>
+										</Panel>
+										<Panel id="MapDatesContainer" class="flow-down mt-4">
+											<Label class="mapselector-map-info__h1" text="#MapSelector_Info_DateCreated" />
+											<Label class="mapselector-map-info__paragraph" text="{s:date}" />
+										</Panel>
+										<!-- <Label class="text-h5 mt-4 mb-1" text="#MapSelector_Info_Tags" />
+										<Label id="MapTags" class="mapselector-map-info__paragraph" />-->
+									</Panel>
+								</Panel>
+							</Panel>
+						</Panel>
+
+						<Panel class="flow-down mapselector-map-info__content-right">
+							<Panel class="mapselector-map-info__action mb-1">
 								<Button id="MapInfoAction" class="button mapselector-action-button">
 									<Panel class="mapselector-action-button__typecontainer action-play">
 										<Image class="button__icon mapselector-action-button__icon" src="file://{images}/play-circle.svg" textureheight="40" />
@@ -214,58 +269,25 @@
 								</Button>
 								<MapDownloadStatus id="MapInfoDownloadStatus" class="map-download-status" />
 							</Panel>
-						</Panel>
-					</Panel>
-					<!-- <Panel class="map-info-gallery_container">
-						<Panel class="map-info-gallery" />
-					</Panel> -->
-					<Panel class="mapselector-map-info__content">
-						<Panel id="MapDescription" class="mapselector-map-info__block-left mapselector-map-info__description">
-							<Panel class="mapselector-map-info__wrapper mapselector-map-info__wrapper--unpadded">
-								<Panel class="mapselector-map-info__description-scroll">
-									<Panel class="mapselector-map-info__description-main-elements">
-										<Panel id="MapDescriptionContainer" class="flow-down full-width">
-											<Label class="text-h5 mb-1" text="#MapSelector_Info_Description" />
-											<Label class="mapselector-map-info__paragraph" text="{s:description}" />
-										</Panel>
-										<Panel id="MapCreditsContainer" class="flow-down mt-4">
-											<Label class="text-h5 mb-1" text="#MapSelector_Info_Authors" />
-											<Panel id="MapCredits" class="mapselector-credits">
-												<!-- Populated by JS -->
-											</Panel>
-										</Panel>
-										<Panel id="MapDatesContainer" class="flow-down mt-4">
-											<Label class="text-h5 mb-1" text="#MapSelector_Info_DateCreated" />
-											<Label class="mapselector-map-info__paragraph" text="{s:date}" />
-										</Panel>
-										<!-- <Label class="text-h5 mt-4 mb-1" text="#MapSelector_Info_Tags" />
-										<Label id="MapTags" class="mapselector-map-info__paragraph" />-->
-									</Panel>
-									<Button id="MapInfoWebsiteButton" class="mapselector-map-info__webbutton">
-										<Label class="mapselector-map-info__webbutton-text" text="#Action_ViewOnWebsite" />
-									</Button>
-								</Panel>
-							</Panel>
-						</Panel>
-
-						<Panel class="flow-down mapselector-map-info__block-right">
-							<Panel class="flow-right full-width pb-3">
-								<ToggleButton id="LeaderboardsBtn" class="button togglebutton togglebutton--blue mapselector-map-info__leaderboard-button" onactivate="MapSelection.toggleLeaderboards()">
-									<Panel class="flow-right  full-height horizontal-align-center">
-										<Image class="button__icon button__icon--left" src="file://{images}/chart-timeline.svg" textureheight="40" />
-										<Label class="button__text button__icon--right mr-3" text="#MapSelector_Button_Leaderboards" />
+							<Panel class="flow-right w-full mb-2">
+								<ToggleButton id="MapInfoFavorite" class="button togglebutton togglebutton--yellow mapselector-map-info__big-button mr-1">
+									<Panel class="flow-right v-align-center h-align-center">
+										<Image class="button__icon button__icon--left mapselector-map-info__big-button__icon" src="file://{images}/star.svg" textureheight="40" />
+										<Label class="button__text button__text--right mapselector-map-info__big-button__text" text="#MapSelector_Button_Favorite" />
 									</Panel>
 								</ToggleButton>
-								<TooltipPanel tooltip="#MapSelector_Button_Favorite">
-									<ToggleButton id="MapInfoFavorite" class="button togglebutton togglebutton--yellow mapselector-map-info__square-button">
-										<Image class="button__icon" src="file://{images}/star.svg" textureheight="40" />
-									</ToggleButton>
-								</TooltipPanel>
-								<TooltipPanel tooltip="#MapSelector_Button_Gallery">
-									<Button id="MapInfoGallery" class="button mapselector-map-info__square-button">
-										<Image class="button__icon" src="file://{images}/fullscreen.svg" textureheight="40" />
-									</Button>
-								</TooltipPanel>
+								<Button id="MapInfoWebsiteButton" class="button mapselector-map-info__big-button mr-1" onactivate="MapSelectorHandler.openInSteamOverlay();">
+									<Panel class="flow-right v-align-center h-align-center">
+										<Image class="button__icon mapselector-map-info__big-button__icon" src="file://{images}/globe.svg" textureheight="40" />
+										<Label class="button__text mapselector-map-info__big-button__text" text="#MapSelector_Button_Webpage" />
+									</Panel>
+								</Button>
+								<Button id="MapInfoGallery" class="button mapselector-map-info__big-button" onactivate="MapSelectorHandler.openGallery();">
+									<Panel class="flow-right v-align-center h-align-center">
+										<Image class="button__icon mapselector-map-info__big-button__icon" src="file://{images}/panorama-outline.svg" textureheight="40" />
+										<Label class="button__text mapselector-map-info__big-button__text" text="#MapSelector_Button_Gallery" />
+									</Panel>
+								</Button>
 							</Panel>
 							<Panel id="MapInfoStats" class="mapselector-stats">
 								<Panel class="mapselector-map-info__wrapper">
@@ -274,38 +296,62 @@
 										<Panel class="mapselector-stats__column">
 											<TooltipPanel class="mapselector-stat" tooltip="#MapSelector_Stats_PlaylistInstances">
 												<Image class="mapselector-stat__icon" src="file://{images}/playlist-plus.svg" textureheight="48" />
-												<Label class="mapselector-stat__text" text="{d:completesUnique}" />
+												<Panel class="h-full v-align-center">
+													<Label class="mapselector-stat__text" text="{d:completesUnique}" />
+													<Image class="mapselector-stat__spinner" src="file://{images}/refresh.svg" textureheight="32" />
+												</Panel>
 											</TooltipPanel>
 											<TooltipPanel class="mapselector-stat" tooltip="#MapSelector_Stats_Favorites">
 												<Image class="mapselector-stat__icon" src="file://{images}/star.svg" textureheight="48" />
-												<Label class="mapselector-stat__text" text="{d:favorites}" />
+												<Panel class="h-full v-align-center">
+													<Label class="mapselector-stat__text" text="{d:favorites}" />
+													<Image class="mapselector-stat__spinner" src="file://{images}/refresh.svg" textureheight="32" />
+												</Panel>
 											</TooltipPanel>
 											<TooltipPanel class="mapselector-stat" tooltip="#MapSelector_Stats_Downloads">
 												<Image class="mapselector-stat__icon" src="file://{images}/download.svg" textureheight="48" />
-												<Label class="mapselector-stat__text" text="{d:downloads}" />
+												<Panel class="h-full v-align-center">
+													<Label class="mapselector-stat__text" text="{d:downloads}" />
+													<Image class="mapselector-stat__spinner" src="file://{images}/refresh.svg" textureheight="32" />
+												</Panel>
 											</TooltipPanel>
 											<TooltipPanel class="mapselector-stat" tooltip="#Common_PersonalBest">
 												<Image class="mapselector-stat__icon" src="file://{images}/ranks/pb.svg" textureheight="48" />
-												<Label class="mapselector-stat__text" text="{s:pb}" />
+												<Panel class="h-full v-align-center">
+													<Label class="mapselector-stat__text" text="{s:pb}" />
+													<Image class="mapselector-stat__spinner" src="file://{images}/refresh.svg" textureheight="32" />
+												</Panel>
 											</TooltipPanel>
 										</Panel>
 										<Panel class="vertical-separator mt-3" />
 										<Panel class="mapselector-stats__column mapselector-stats__column--right">
 											<TooltipPanel class="mapselector-stat" tooltip="#MapSelector_Stats_Downloads">
 												<Image class="mapselector-stat__icon" src="file://{images}/play.svg" textureheight="48" />
-												<Label class="mapselector-stat__text" text="{d:plays}" />
+												<Panel class="h-full v-align-center">
+													<Label class="mapselector-stat__text" text="{d:plays}" />
+													<Image class="mapselector-stat__spinner" src="file://{images}/refresh.svg" textureheight="32" />
+												</Panel>
 											</TooltipPanel>
 											<TooltipPanel class="mapselector-stat" tooltip="#MapSelector_Stats_Completions">
 												<Image class="mapselector-stat__icon" src="file://{images}/flag.svg" textureheight="48" />
-												<Label class="mapselector-stat__text" text="{d:completes}" />
+												<Panel class="h-full v-align-center">
+													<Label class="mapselector-stat__text" text="{d:completes}" />
+													<Image class="mapselector-stat__spinner" src="file://{images}/refresh.svg" textureheight="32" />
+												</Panel>
 											</TooltipPanel>
 											<TooltipPanel class="mapselector-stat" tooltip="#MapSelector_Stats_PercentCompletion">
 												<Image class="mapselector-stat__icon" src="file://{images}/percent.svg" textureheight="48" />
-												<Label class="mapselector-stat__text" text="{s:avgTime}" />
+												<Panel class="h-full v-align-center">
+													<Label class="mapselector-stat__text" text="{s:avgTime}" />
+													<Image class="mapselector-stat__spinner" src="file://{images}/refresh.svg" textureheight="32" />
+												</Panel>
 											</TooltipPanel>
 											<TooltipPanel class="mapselector-stat" tooltip="#Common_WorldRecord">
 												<Image class="mapselector-stat__icon" src="file://{images}/ranks/wr.svg" textureheight="48" />
-												<Label class="mapselector-stat__text" text="{s:wr}" />
+												<Panel class="h-full v-align-center">
+													<Label class="mapselector-stat__text" text="{s:wr}" />
+													<Image class="mapselector-stat__spinner" src="file://{images}/refresh.svg" textureheight="32" />
+												</Panel>
 											</TooltipPanel>
 										</Panel>
 									</Panel>

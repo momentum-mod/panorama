@@ -1,0 +1,28 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+	
+	<scripts>
+		<include type="module" src="file://{scripts}/hud/strafe-trainer.ts" />
+	</scripts>
+	
+	<MomHudStrafeTrainer class="strafetrainer" alternateTicks="false">
+		<Panel id="BarWrapper" class="strafetrainer__bar-wrapper">
+			<ConVarEnabler class="strafetrainer__background" convar="mom_hud_strafetrainer_mode" togglevisibility="true">
+				<Panel id="Container" class="strafetrainer__container">
+					<Panel id="Segment0" class="strafetrainer__segment" />
+					<Panel id="Segment1" class="strafetrainer__segment" />
+					<Panel id="Segment2" class="strafetrainer__segment" />
+					<Panel id="Segment3" class="strafetrainer__segment" />
+					<Panel id="Segment4" class="strafetrainer__segment" />
+				</Panel>
+				<Panel id="Needle" class="strafetrainer__needle" />
+			</ConVarEnabler>
+		</Panel>
+		<ConVarEnabler class="strafetrainer__stats" convar="mom_hud_strafetrainer_stat_mode" togglevisibility="true">
+			<Label id="StatsUpper" class="strafetrainer__stats--upper" />
+			<Label id="StatsLower" class="strafetrainer__stats--lower" />
+		</ConVarEnabler>
+	</MomHudStrafeTrainer>
+</root>

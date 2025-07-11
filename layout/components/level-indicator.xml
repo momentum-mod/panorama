@@ -2,11 +2,12 @@
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
+	
 	<scripts>
-		<include src="file://{scripts}/components/level-indicator.js" />
+		<include type="module" src="file://{scripts}/components/level-indicator.ts" />
 	</scripts>
 
-	<Panel class="levelindicator" onload="LevelIndicator.onLoad()">
+	<Panel class="levelindicator">
 		<Panel id="Container" class="levelindicator__container">
 			<Image id="PrestigeIcon" class="levelindicator__icon" src="" textureheight="32" />
 			<Label class="levelindicator__text" text="{d:level}" />

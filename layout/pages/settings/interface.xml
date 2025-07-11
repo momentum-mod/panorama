@@ -2,10 +2,10 @@
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
+	
 	<scripts>
-		<include src="file://{scripts}/common/speedometer.js" />
-		<include src="file://{scripts}/pages/settings/page.js" />
-		<include src="file://{scripts}/pages/settings/speedometer.js" />
+		<include type="module" src="file://{scripts}/pages/settings/page.ts" />
+		<include type="module" src="file://{scripts}/pages/settings/speedometer.ts" />
 	</scripts>
 
 	<snippets>
@@ -26,7 +26,7 @@
 					</Button>
 					<ToggleButton id="SpeedometerToggleBtn" class="button togglebutton togglebutton--blue settings-speedometer__togglebutton" selected="false">
 						<Label id="SpeedometerName" class="button__text button__text--left settings-speedometer__name" />
-						<Image class="button__icon button__icon--right horizontal-align-right rot-90" src="file://{images}/mom-arrow-right.svg" textureheight="32" />
+						<Image class="button__icon button__icon--right h-align-right rot-90" src="file://{images}/mom-arrow-right.svg" textureheight="32" />
 					</ToggleButton>
 				</Panel>
 				<Panel id="SpeedometerDetailContainer" class="settings-speedometer__detail settings-speedometer__detail--hidden">
@@ -63,6 +63,7 @@
 				</Panel>
 			</Panel>
 		</snippet>
+		
 		<snippet name="range-color-display">
 			<Panel class="settings-speedometer-rangecolordisp">
 				<Button id="RangeColorDisplayDeleteBtn" class="ml-2 button button--red settings-speedometer-rangecolordisp__deletebutton">
@@ -71,6 +72,7 @@
 				<RangeColorDisplay id="RangeColorDisplay" class="settings-speedometer-rangecolordisp__display" />
 			</Panel>
 		</snippet>
+		
 		<snippet name="range-color-profile">
 			<Panel class="settings-speedometer-rangecolor">
 				<Panel class="settings-speedometer-rangecolor__header">
@@ -85,7 +87,7 @@
 					</Button>
 					<ToggleButton id="RangeColorToggleBtn" class="button togglebutton togglebutton--blue settings-speedometer-rangecolor__togglebutton" selected="false">
 						<Label id="RangeColorName" class="button__text button__text--left settings-speedometer-rangecolor__name" />
-						<Image class="button__icon button__icon--right horizontal-align-right rot-90" src="file://{images}/mom-arrow-right.svg" textureheight="32" />
+						<Image class="button__icon button__icon--right h-align-right rot-90" src="file://{images}/mom-arrow-right.svg" textureheight="32" />
 					</ToggleButton>
 				</Panel>
 				<Panel id="RangeColorDisplaysContainer" class="settings-speedometer-rangecolor__displayscont settings-speedometer-rangecolor__displayscont--hidden">
@@ -110,7 +112,7 @@
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_Menu_Title" tags="menu,ui" />
 					<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-						<Button class="button settings-group__reset" onactivate="SettingsShared.resetSettings('UISubSection');">
+						<Button class="button settings-group__reset" onactivate="SettingsPage.resetSettings('UISubSection');">
 							<Image class="button__icon" src="file://{images}/reset.svg" />
 						</Button>
 					</TooltipPanel>
@@ -122,17 +124,17 @@
 				</SettingsEnum>
 
 				<SettingsEnum text="#Settings_Menu_Movie" psvar="settings.mainMenuMovie" infomessage="#Settings_Menu_Movie_Info" tags="background,video,movie">
-					<RadioButton group="mainmenuvideo" text="#Common_Off" value="0" activateoverride="$.DispatchEvent('ReloadBackground');" />
-					<RadioButton group="mainmenuvideo" text="#Common_On" value="1" activateoverride="$.DispatchEvent('ReloadBackground');" />
+					<RadioButton group="mainmenuvideo" text="#Common_Off" value="0" activateoverride="$.DispatchEvent('ReloadMainMenuBackground');" />
+					<RadioButton group="mainmenuvideo" text="#Common_On" value="1" activateoverride="$.DispatchEvent('ReloadMainMenuBackground');" />
 				</SettingsEnum>
 
-				<SettingsEnumDropDown text="#Settings_Menu_Type" psvar="settings.mainMenuBackground" submitoverride="$.DispatchEvent('ReloadBackground');" infomessage="#Settings_Menu_Type_Info" tags="background,video,movie">
+				<SettingsEnumDropDown text="#Settings_Menu_Type" psvar="settings.mainMenuBackground" submitoverride="$.DispatchEvent('ReloadMainMenuBackground');" infomessage="#Settings_Menu_Type_Info" tags="background,video,movie">
 					<Label text="#Settings_Menu_Type0" value="0" id="bgtype0" />
 					<Label text="#Settings_Menu_Type1" value="1" id="bgtype1" />
 				</SettingsEnumDropDown>
 
 				<Panel class="settings-group__combo">
-					<Button class="horizontal-align-center button my-2" onactivate="UiToolkitAPI.ShowCustomLayoutPopup('', 'file://{resources}/layout/modals/popups/dont-show-again-settings.xml')">
+					<Button class="h-align-center button my-2" onactivate="UiToolkitAPI.ShowCustomLayoutPopup('', 'file://{resources}/layout/modals/popups/dont-show-again-settings.xml')">
 						<Label class="button__text" text="#Settings_Dosa_Title" />
 					</Button>
 				</Panel>
@@ -140,7 +142,7 @@
 
 			<Panel class="settings-page__spacer" />
 
-			<Panel id="SpeedometerSubSection" class="settings-group" onload="SpeedometerSettings.loadSettings()">
+			<Panel id="SpeedometerSubSection" class="settings-group">
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_Speedometer_Title" tags="speedometer" />
 				</Panel>
@@ -152,21 +154,12 @@
 				<ConVarEnabler convar="mom_hud_speedometer_enable" togglevisibility="true" class="flow-down">
 					<SettingsSlider text="#Settings_Speedometer_FPS" min="0" max="400" convar="mom_hud_speedometer_fps" infomessage="#Settings_Speedometer_FPS_Info" hasdocspage="true" tags="speedometer" />
 
-					<Panel id="SpeedometersContainer" class="flow-down full-width" infotitle="#Settings_Speedometer_Gamemode_Long" infomessage="#Settings_Speedometer_Container_Info" tags="speedometer">
+					<Panel id="SpeedometersContainer" class="flow-down w-full" infotitle="#Settings_Speedometer_Gamemode_Long" infomessage="#Settings_Speedometer_Container_Info" tags="speedometer">
 						<Panel class="settings-group__header">
 							<Label class="settings-group__subtitle" text="#Settings_Speedometer_Gamemode_Long" />
 							<!-- TODO: hook this up to some events so it can change when a map is loaded -->
-							<DropDown id="GamemodeDropDown" class="dropdown settings-group__dropdown" menuclass="dropdown-menu" oninputsubmit="SpeedometerSettings.updateGamemode();">
-								<Label id="surf" text="#Gamemode_Surf" value="1" />
-								<Label id="bhop" text="#Gamemode_Bhop" value="2" />
-								<Label id="kz" text="#Gamemode_KZ" value="3" />
-								<Label id="rj" text="#Gamemode_RJ" value="4" />
-								<Label id="sj" text="#Gamemode_SJ" value="5" />
-								<Label id="tsurf" text="#Gamemode_Tricksurf" value="6" />
-								<Label id="ahop" text="#Gamemode_Ahop" value="7" />
-								<Label id="pk" text="#Gamemode_Parkour" value="8" />
-								<Label id="conc" text="#Gamemode_Conc" value="9" />
-								<Label id="df" text="#Gamemode_Defrag" value="10" />
+							<DropDown id="GamemodeDropDown" class="dropdown settings-group__dropdown" menuclass="dropdown-menu" oninputsubmit="SpeedometerSettingsHandler.updateGamemode();">
+								<!-- Populated via JS -->
 							</DropDown>
 							<Panel class="settings-speedometer-buttons">
 								<TooltipPanel class="settings-speedometer-buttons__discard ml-3" tooltip="#Action_Discard">
@@ -184,22 +177,22 @@
 						<Panel id="Speedometers" class="settings-speedometers">
 							<!--Filled with snippets in JS-->
 						</Panel>
-						<Button id="AddSpeedometerBtn" class="button horizontal-align-center half-width mt-4 mb-4" onactivate="Speedometers.addSpeedometer();">
+						<Button id="AddSpeedometerBtn" class="button h-align-center w-half mt-4 mb-4" onactivate="Speedometers.addSpeedometer();">
 							<Label class="button__text" text="#Settings_Speedometer_Add" />
 						</Button>
 					</Panel>
 
-					<Panel id="RangeColorProfilesContainer" class="flow-down full-width" infotitle="Settings_Speedometer_ColorRange_Title" infomessage="#Settings_Speedometer_ColorRange_Info">
+					<Panel id="RangeColorProfilesContainer" class="flow-down w-full" infotitle="Settings_Speedometer_ColorRange_Title" infomessage="#Settings_Speedometer_ColorRange_Info">
 						<Panel class="settings-group__header">
 							<Label class="settings-group__subtitle" text="#Settings_Speedometer_ColorRange_Title" />
 							<Panel class="settings-speedometer-buttons">
 								<TooltipPanel class="settings-speedometer-buttons__discard ml-3" tooltip="#Action_Discard">
-									<Button id="DiscardColorProfilesBtn" class="button" onactivate="RangeColorProfiles.create();">
+									<Button id="DiscardColorProfilesBtn" class="button" onactivate="RangeColorProfileHandler.create();">
 										<Image class="button__icon" src="file://{images}/reset.svg" />
 									</Button>
 								</TooltipPanel>
 								<TooltipPanel class="settings-speedometer-buttons__reset ml-3" tooltip="Settings_General_Reset">
-									<Button id="ResetColorProfilesBtn" class="button button--red" onactivate="RangeColorProfiles.resetToDefault();">
+									<Button id="ResetColorProfilesBtn" class="button button--red" onactivate="RangeColorProfileHandler.resetToDefault();">
 										<Image class="button__icon" src="file://{images}/reset.svg" />
 									</Button>
 								</TooltipPanel>
@@ -209,7 +202,7 @@
 						<Panel id="SpeedometerColorProfiles" class="settings-speedometer-rangecolorprofs">
 							<!--Filled with snippets in JS-->
 						</Panel>
-						<Button id="AddColorProfileBtn" class="button horizontal-align-center half-width mt-4 mb-4" onactivate="RangeColorProfiles.addProfile();">
+						<Button id="AddColorProfileBtn" class="button h-align-center w-half mt-4 mb-4" onactivate="RangeColorProfileHandler.addProfile();">
 							<Label class="button__text" text="#Settings_Speedometer_ColorProfile_Add" />
 						</Button>
 					</Panel>
@@ -221,23 +214,23 @@
 			<Panel id="CrosshairSubSection" class="settings-group">
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_Crosshair_Title" tags="crosshair" />
-					<Panel class="flow-right horizontal-align-right">
-						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Settings_Crosshair_Title', 'CrosshairSubSection')">
+					<Panel class="flow-right h-align-right">
+						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_Crosshair_Title', 'CrosshairSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
 						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-							<Button class="button" onactivate="SettingsShared.resetSettings('CrosshairSubSection');">
+							<Button class="button" onactivate="SettingsPage.resetSettings('CrosshairSubSection');">
 								<Image class="button__icon" src="file://{images}/reset.svg" />
 							</Button>
 						</TooltipPanel>
 					</Panel>
 				</Panel>
 
-				<Panel class="full-width flow-right mb-2">
+				<Panel class="w-full flow-right mb-2">
 					<ConVarEnabler class="settings__crosshair-wrapper" convar="crosshair">
 						<MomCrosshair id="SettingsCrosshair" class="settings__crosshair" preview="true" />
 					</ConVarEnabler>
-					<Panel class="fill-width flow-down">
+					<Panel class="w-fill flow-down">
 						<Panel class="settings-group__combo" style="margin-bottom: 0px;">							<!-- TODO: fix when sass specificity is fixed -->
 							<SettingsEnum text="#Settings_Crosshair_Enable" convar="crosshair" hasdocspage="false">
 								<RadioButton group="xhairenable" text="#Common_Off" value="0" />
@@ -277,12 +270,12 @@
 			<Panel id="TimerSubSection" class="settings-group">
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_Timer_Title" tags="timer" />
-					<Panel class="flow-right horizontal-align-right">
-						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Settings_Timer_Title', 'TimerSubSection')">
+					<Panel class="flow-right h-align-right">
+						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_Timer_Title', 'TimerSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
 						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-							<Button class="button" onactivate="SettingsShared.resetSettings('TimerSubSection');">
+							<Button class="button" onactivate="SettingsPage.resetSettings('TimerSubSection');">
 								<Image class="button__icon" src="file://{images}/reset.svg" />
 							</Button>
 						</TooltipPanel>
@@ -299,19 +292,14 @@
 					<RadioButton group="timerstartsound" text="#Common_On" value="1" />
 				</SettingsEnum>
 
-				<SettingsEnum text="#Settings_Timer_SoundFinish" convar="mom_hud_timer_sound_finish_enable" infomessage="#Settings_Timer_SoundStop_Info" tags="sound">
+				<SettingsEnum text="#Settings_Timer_SoundFinish" convar="mom_hud_timer_sound_finish_enable" infomessage="#Settings_Timer_SoundFinish_Info" tags="sound">
 					<RadioButton group="timerfinishsound" text="#Common_Off" value="0" />
 					<RadioButton group="timerfinishsound" text="#Common_On" value="1" />
 				</SettingsEnum>
 
-				<SettingsEnum text="#Settings_Timer_SoundFinish" convar="mom_hud_timer_sound_stop_enable" infomessage="#Settings_Timer_SoundFinish_Info" tags="sound">
+				<SettingsEnum text="#Settings_Timer_SoundStop" convar="mom_hud_timer_sound_stop_enable" infomessage="#Settings_Timer_SoundStop_Info" tags="sound">
 					<RadioButton group="timerstopsound" text="#Common_Off" value="0" />
 					<RadioButton group="timerstopsound" text="#Common_On" value="1" />
-				</SettingsEnum>
-
-				<SettingsEnum text="#Settings_Timer_SoundFail" convar="mom_hud_timer_sound_fail_enable" infomessage="#Settings_Timer_SoundFail_Info" tags="sound">
-					<RadioButton group="timerfailsound" text="#Common_Off" value="0" />
-					<RadioButton group="timerfailsound" text="#Common_On" value="1" />
 				</SettingsEnum>
 			</Panel>
 
@@ -321,7 +309,7 @@
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_HUDStatus_Title" tags="hud,info,status" />
 					<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-						<Button class="button" onactivate="SettingsShared.resetSettings('PlayerStatusSubSection');">
+						<Button class="button" onactivate="SettingsPage.resetSettings('PlayerStatusSubSection');">
 							<Image class="button__icon" src="file://{images}/reset.svg" />
 						</Button>
 					</TooltipPanel>
@@ -338,7 +326,7 @@
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_KeypressHUD_Title" tags="keypress,showkeys,hud" />
 					<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-						<Button class="button" onactivate="SettingsShared.resetSettings('KeypressSubSection');">
+						<Button class="button" onactivate="SettingsPage.resetSettings('KeypressSubSection');">
 							<Image class="button__icon" src="file://{images}/reset.svg" />
 						</Button>
 					</TooltipPanel>
@@ -356,7 +344,7 @@
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_ComparisonsHUD_Title" tags="comparisons,stages,checkpoints,time,hud" />
 					<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-						<Button class="button" onactivate="SettingsShared.resetSettings('ComparisonsSubSection');">
+						<Button class="button" onactivate="SettingsPage.resetSettings('ComparisonsSubSection');">
 							<Image class="button__icon" src="file://{images}/reset.svg" />
 						</Button>
 					</TooltipPanel>
@@ -373,13 +361,13 @@
 			<Panel id="WeaponSelSubSection" class="settings-group">
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_WeaponSelection_Title" tags="weapon,hud" />
-					<Panel class="flow-right horizontal-align-right">
-						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Settings_WeaponSelection_Title', 'WeaponSelSubSection')">
+					<Panel class="flow-right h-align-right">
+						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_WeaponSelection_Title', 'WeaponSelSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
 
 						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-							<Button class="button" onactivate="SettingsShared.resetSettings('WeaponSelSubSection');">
+							<Button class="button" onactivate="SettingsPage.resetSettings('WeaponSelSubSection');">
 								<Image class="button__icon" src="file://{images}/reset.svg" />
 							</Button>
 						</TooltipPanel>
@@ -409,12 +397,12 @@
 			<Panel id="JumpStatsSubSection" class="settings-group">
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_JumpStats_Title" />
-					<Panel class="flow-right horizontal-align-right">
-						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Jump Stats', 'JumpStatsSubSection')">
+					<Panel class="flow-right h-align-right">
+						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Jump Stats', 'JumpStatsSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
 						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-							<Button class="button" onactivate="SettingsShared.resetSettings('JumpStatsSubSection');">
+							<Button class="button" onactivate="SettingsPage.resetSettings('JumpStatsSubSection');">
 								<Image class="button__icon" src="file://{images}/reset.svg" />
 							</Button>
 						</TooltipPanel>
@@ -492,15 +480,16 @@
 
 			<Panel class="settings-page__spacer" />
 
-			<Panel id="StrafeSyncSubSection" class="settings-group">
+			<!-- TODO: This is currently broken. Does anyone want this feature? -->
+			<!-- <Panel id="StrafeSyncSubSection" class="settings-group">
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_TotalSync_Title" tags="sync,strafe" />
-					<Panel class="flow-right horizontal-align-right">
-						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Settings_TotalSync_Title', 'StrafeSyncSubSection')">
+					<Panel class="flow-right h-align-right">
+						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_TotalSync_Title', 'StrafeSyncSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
 						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-							<Button class="button" onactivate="SettingsShared.resetSettings('StrafeSyncSubSection');">
+							<Button class="button" onactivate="SettingsPage.resetSettings('StrafeSyncSubSection');">
 								<Image class="button__icon" src="file://{images}/reset.svg" />
 							</Button>
 						</TooltipPanel>
@@ -528,7 +517,7 @@
 					<Label id="colorize3" text="#Settings_TotalSync_Color_Type2" value="2" />
 				</SettingsEnumDropDown>
 			</Panel>
-			<Panel class="settings-page__spacer" />
+			<Panel class="settings-page__spacer" /> -->
 
 			<Panel id="DamageIndicatorSubSection" class="settings-group">
 
@@ -536,14 +525,14 @@
 
 					<Label class="settings-group__title" text="#Settings_DamageIndicator_Title" />
 
-					<Panel class="flow-right horizontal-align-right">
+					<Panel class="flow-right h-align-right">
 
-						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Damage Indicator', 'DamageIndicatorSubSection')">
+						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Damage Indicator', 'DamageIndicatorSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
 
 						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-							<Button class="button" onactivate="SettingsShared.resetSettings('DamageIndicatorSubSection');">
+							<Button class="button" onactivate="SettingsPage.resetSettings('DamageIndicatorSubSection');">
 								<Image class="button__icon" src="file://{images}/reset.svg" />
 							</Button>
 						</TooltipPanel>
@@ -580,63 +569,63 @@
 
 			<Panel class="settings-page__spacer" />
 
-			<Panel id="SynchronizerSubSection" class="settings-group">
+			<Panel id="StrafeTrainerSubSection" class="settings-group">
 				<Panel class="settings-group__header">
-					<Label class="settings-group__title" text="#Settings_Synchronizer_Title" tags="sync,strafe,trainer" />
-					<Panel class="flow-right horizontal-align-right">
-						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Settings_Synchronizer_Title', 'SynchronizerSubSection')">
+					<Label class="settings-group__title" text="#Settings_StrafeTrainer_Title" tags="sync,strafe,trainer" />
+					<Panel class="flow-right h-align-right">
+						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_StrafeTrainer_Title', 'StrafeTrainerSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
 						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-							<Button class="button" onactivate="SettingsShared.resetSettings('SynchronizerSubSection');">
+							<Button class="button" onactivate="SettingsPage.resetSettings('StrafeTrainerSubSection');">
 								<Image class="button__icon" src="file://{images}/reset.svg" />
 							</Button>
 						</TooltipPanel>
 					</Panel>
 				</Panel>
 
-				<SettingsEnumDropDown text="#Settings_Synchronizer_DisplayMode" convar="mom_hud_synchro_mode" infomessage="#Settings_Synchronizer_DisplayMode_Info">
-					<Label id="mode0" text="#Settings_Synchronizer_DisplayMode_Mode0" value="0" />
-					<Label id="mode1" text="#Settings_Synchronizer_DisplayMode_Mode1" value="1" />
-					<Label id="mode2" text="#Settings_Synchronizer_DisplayMode_Mode2" value="2" />
-					<Label id="mode3" text="#Settings_Synchronizer_DisplayMode_Mode3" value="3" />
-					<Label id="mode4" text="#Settings_Synchronizer_DisplayMode_Mode4" value="4" />
+				<SettingsEnumDropDown text="#Settings_StrafeTrainer_DisplayMode" convar="mom_hud_strafetrainer_mode" infomessage="#Settings_StrafeTrainer_DisplayMode_Info">
+					<Label id="mode0" text="#Settings_StrafeTrainer_DisplayMode_Mode0" value="0" />
+					<Label id="mode1" text="#Settings_StrafeTrainer_DisplayMode_Mode1" value="1" />
+					<Label id="mode2" text="#Settings_StrafeTrainer_DisplayMode_Mode2" value="2" />
+					<Label id="mode3" text="#Settings_StrafeTrainer_DisplayMode_Mode3" value="3" />
+					<Label id="mode4" text="#Settings_StrafeTrainer_DisplayMode_Mode4" value="4" />
 				</SettingsEnumDropDown>
 
-				<ConVarEnabler convar="mom_hud_synchro_mode" class="flow-down">
-					<SettingsEnum text="#Settings_Synchronizer_Color" convar="mom_hud_synchro_color_enable" infomessage="#Settings_Synchronizer_Color_Info" tags="color">
-						<RadioButton group="synchrocolor" text="#Common_Off" value="0" />
-						<RadioButton group="synchrocolor" text="#Common_On" value="1" />
+				<ConVarEnabler convar="mom_hud_strafetrainer_mode" class="flow-down">
+					<SettingsEnum text="#Settings_StrafeTrainer_Color" convar="mom_hud_strafetrainer_color_enable" infomessage="#Settings_StrafeTrainer_Color_Info" tags="color">
+						<RadioButton group="strafetrainercolor" text="#Common_Off" value="0" />
+						<RadioButton group="strafetrainercolor" text="#Common_On" value="1" />
 					</SettingsEnum>
 
-					<SettingsEnum text="Settings_Synchronizer_Dynamic_Mode" convar="mom_hud_synchro_dynamic_enable" infomessage="#Settings_Synchronizer_Dynamic_Mode_Info">
-						<RadioButton group="synchrodynamic" text="#Common_Off" value="0" />
-						<RadioButton group="synchrodynamic" text="#Common_On" value="1" />
+					<SettingsEnum text="Settings_StrafeTrainer_Dynamic_Mode" convar="mom_hud_strafetrainer_dynamic_enable" infomessage="#Settings_StrafeTrainer_Dynamic_Mode_Info">
+						<RadioButton group="strafetrainerdynamic" text="#Common_Off" value="0" />
+						<RadioButton group="strafetrainerdynamic" text="#Common_On" value="1" />
 					</SettingsEnum>
 
-					<SettingsEnum text="#Settings_Synchronizer_Direction" convar="mom_hud_synchro_flip_enable" infomessage="#Settings_Synchronizer_Direction_Info">
-						<RadioButton group="synchrodirection" text="#Settings_Synchronizer_Direction_Normal" value="0" />
-						<RadioButton group="synchrodirection" text="#Settings_Synchronizer_Direction_Flipped" value="1" />
+					<SettingsEnum text="#Settings_StrafeTrainer_Direction" convar="mom_hud_strafetrainer_flip_enable" infomessage="#Settings_StrafeTrainer_Direction_Info">
+						<RadioButton group="strafetrainerdirection" text="#Settings_StrafeTrainer_Direction_Normal" value="0" />
+						<RadioButton group="strafetrainerdirection" text="#Settings_StrafeTrainer_Direction_Flipped" value="1" />
 					</SettingsEnum>
 
-					<SettingsEnumDropDown text="#Settings_Synchronizer_AveragingWindow" convar="mom_hud_synchro_buffer_size" infomessage="#Settings_Synchronizer_AveragingWindow_Info">
-						<Label text="#Settings_Synchronizer_AveragingWindow_Mode1" value="1" id="buffer0" />
-						<Label text="#Settings_Synchronizer_AveragingWindow_Mode2" value="5" id="buffer1" />
-						<Label text="#Settings_Synchronizer_AveragingWindow_Mode3" value="10" id="buffer2" />
-						<Label text="#Settings_Synchronizer_AveragingWindow_Mode4" value="20" id="buffer3" />
+					<SettingsEnumDropDown text="#Settings_StrafeTrainer_AveragingWindow" convar="mom_hud_strafetrainer_buffer_size" infomessage="#Settings_StrafeTrainer_AveragingWindow_Info">
+						<Label text="#Settings_StrafeTrainer_AveragingWindow_Mode1" value="1" id="buffer0" />
+						<Label text="#Settings_StrafeTrainer_AveragingWindow_Mode2" value="5" id="buffer1" />
+						<Label text="#Settings_StrafeTrainer_AveragingWindow_Mode3" value="10" id="buffer2" />
+						<Label text="#Settings_StrafeTrainer_AveragingWindow_Mode4" value="20" id="buffer3" />
 					</SettingsEnumDropDown>
 
-					<SettingsSlider text="#Settings_Synchronizer_MinSpeed" min="50" max="250" convar="mom_hud_synchro_min_speed" displayprecision="0" infomessage="#Settings_Synchronizer_MinSpeed_Info" />
+					<SettingsSlider text="#Settings_StrafeTrainer_MinSpeed" min="50" max="250" convar="mom_hud_strafetrainer_min_speed" displayprecision="0" infomessage="#Settings_StrafeTrainer_MinSpeed_Info" />
 
-					<SettingsEnumDropDown text="#Settings_Synchronizer_Stats_Mode" convar="mom_hud_synchro_stat_mode" infomessage="#Settings_Synchronizer_Stats_Mode_Info">
+					<SettingsEnumDropDown text="#Settings_StrafeTrainer_Stats_Mode" convar="mom_hud_strafetrainer_stat_mode" infomessage="#Settings_StrafeTrainer_Stats_Mode_Info">
 						<Label id="mode0" text="#Common_Off" value="0" />
-						<Label id="mode1" text="#Settings_Synchronizer_StatsMode_Mode1" value="1" />
-						<Label id="mode2" text="#Settings_Synchronizer_StatsMode_Mode2" value="2" />
+						<Label id="mode1" text="#Settings_StrafeTrainer_StatsMode_Mode1" value="1" />
+						<Label id="mode2" text="#Settings_StrafeTrainer_StatsMode_Mode2" value="2" />
 					</SettingsEnumDropDown>
 
-					<SettingsEnum text="#Settings_Synchronizer_StatColor" convar="mom_hud_synchro_stat_color_enable" infomessage="#Settings_Synchronizer_StatColor_Info" tags="color">
-						<RadioButton group="synchrostatcolor" text="#Common_Off" value="0" />
-						<RadioButton group="synchrostatcolor" text="#Common_On" value="1" />
+					<SettingsEnum text="#Settings_StrafeTrainer_StatColor" convar="mom_hud_strafetrainer_stat_color_enable" infomessage="#Settings_StrafeTrainer_StatColor_Info" tags="color">
+						<RadioButton group="strafetrainerstatcolor" text="#Common_Off" value="0" />
+						<RadioButton group="strafetrainerstatcolor" text="#Common_On" value="1" />
 					</SettingsEnum>
 				</ConVarEnabler>
 
@@ -647,12 +636,12 @@
 			<Panel id="MapInfoSubSection" class="settings-group">
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_MapInfo_Title" tags="info,hud" />
-					<Panel class="flow-right horizontal-align-right">
-						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Settings_MapInfo_Title', 'MapInfoSubSection')">
+					<Panel class="flow-right h-align-right">
+						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_MapInfo_Title', 'MapInfoSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
 						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-							<Button class="button" onactivate="SettingsShared.resetSettings('MapInfoSubSection');">
+							<Button class="button" onactivate="SettingsPage.resetSettings('MapInfoSubSection');">
 								<Image class="button__icon" src="file://{images}/reset.svg" />
 							</Button>
 						</TooltipPanel>

@@ -4,11 +4,10 @@
 	</styles>
 
 	<scripts>
-		<include src="file://{scripts}/modals/tooltips/credit.js" />
-
+		<include type="module" src="file://{scripts}/modals/tooltips/credit.ts" />
 	</scripts>
 
-	<Panel class="credit" ontooltiploaded="Credit.onShow()">
+	<Panel class="credit" ontooltiploaded="CreditHandler.onShow()">
 		<Panel class="credit__header">
 			<Panel class="flow-right">
 				<Label class="credit__name" text="{s:first_names}" />

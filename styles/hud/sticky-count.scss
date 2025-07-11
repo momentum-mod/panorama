@@ -1,21 +1,5 @@
 @use '../config' as *;
 
-// keyframe sticky arming over a second to avoid ending the animation before the armed state is set
-// (as that causes color flickering)
-@keyframes stickyArmAnim {
-	from {
-	}
-	70% {
-		background-color: $progressbar-background;
-	}
-	// 0.8 second arm time
-	80% {
-		background-color: $progressbar-background-progress;
-	}
-	to {
-	}
-}
-
 .sticky-count {
 	margin: 6px 0 6px 0;
 
@@ -37,8 +21,6 @@
 		}
 
 		&--sticky-arming {
-			animation-name: stickyArmAnim;
-			animation-duration: 1s;
 		}
 
 		&--sticky-armed {

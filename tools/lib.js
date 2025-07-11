@@ -1,9 +1,7 @@
-'use strict';
-
-exports.xmlFrameTop =
+export const xmlFrameTop =
 	'<root>\n' + '	<styles>\n' + '		<include src="file://{resources}/styles/main.scss" />\n' + '	</styles>\n\n' + '	<Panel>';
 
-exports.xmlFrameBottom = '	</Panel>\n' + '</root>';
+export const xmlFrameBottom = '	</Panel>\n' + '</root>';
 
 /**
  * Very basic KV1 parser. Won't support everything, works for Google sheets!
@@ -11,7 +9,7 @@ exports.xmlFrameBottom = '	</Panel>\n' + '</root>';
  * @param {string} header - String to put at the very top
  * @returns {string} kvString - Formatted KV string
  */
-exports.jsonToKV1 = (jsonData, header) => {
+export const jsonToKV1 = (jsonData, header) => {
 	const out = (str) => (output += '\t'.repeat(tabDepth) + str);
 
 	let tabDepth = 0;

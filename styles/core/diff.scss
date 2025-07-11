@@ -1,0 +1,27 @@
+@use '../config' as *;
+@use '../abstract/mixin';
+@use 'sass:color';
+
+.diff {
+	color: $comparison-neutral;
+}
+
+.--ahead.diff,
+.--ahead .diff {
+	color: $comparison-ahead-gain;
+}
+
+.--loss.--ahead.diff,
+.--loss.--ahead .diff {
+	color: $comparison-ahead-loss;
+}
+
+.--behind.diff,
+.--behind .diff {
+	color: color.scale($comparison-behind-loss, $lightness: -7%);
+}
+
+.--behind.--gain.diff,
+.--behind.--gain .diff {
+	color: $comparison-behind-gain;
+}

@@ -1,31 +1,34 @@
 <root>
 	<styles>
-		<include src="file://{resources}/styles/main.scss" />
+		<include src="file://{resources}/styles/main.scss"/>
 	</styles>
 
 	<scripts>
-		<include src="file://{scripts}/pages/loading-screen.js" />
+		<include type="module" src="file://{scripts}/pages/loading-screen.ts"/>
 	</scripts>
 
 	<Panel class="loadingscreen">
-		<Image id="BackgroundImageDefault" class="full" src="file://{materials}/panorama/bg_00.vtf" />
-		<Image id="BackgroundImage" class="full hide" scaling="stretch-to-cover-preserve-aspect" />
+		<Image id="BackgroundImageDefault" class="full" src="file://{images}/backgrounds/MomentumNeutral_4K.png" scaling="stretch-to-cover-preserve-aspect"/>
+		<Image id="BackgroundImage" class="full hide" scaling="stretch-to-cover-preserve-aspect"/>
 
 		<Panel class="full flow-down">
 			<Panel class="loadingscreen__details">
 				<Panel class="loadingscreen__left-details">
-					<Label id="MapName" class="text-h1" text="{s:mapname}" />
-					<Label id="Author" class="text-h2" text="#LoadingScreen_Author" />
+					<Label id="MapName" class="loadingscreen__map-name" text="{s:mapname}"/>
+					<Label id="Author" class="loadingscreen__author" text="#LoadingScreen_Author"/>
 				</Panel>
 				<Panel class="loadingscreen__right-details">
-					<Label id="TierAndType" class="text-h1 loadingscreen__right-label" text="#LoadingScreen_TierAndType" />
-					<Label id="NumZones" class="text-h2 loadingscreen__right-label" text="#LoadingScreen_NumZones" />
+					<Label id="TierAndType" class="loadingscreen__right-label loadingscreen__right-label--large"
+								 text="#LoadingScreen_TierAndType"/>
+					<Label id="StageCount" class="loadingscreen__right-label" text="#MapInfo_StageCount"/>
+					<Label id="BonusCount" class="loadingscreen__right-label" text="#MapInfo_BonusCount"/>
+					<Label id="BonusesCount" class="loadingscreen__right-label" text="#MapInfo_BonusesCount"/>
 				</Panel>
-				<Label id="GameModeTip" class="text-l loadingscreen__tip" text="{s:tip}" />
-				<Label id="ProgressStatusText" class="text-h1 loadingscreen__status-label" text="#LoadingScreen_Loading" />
-				<Label id="PercentText" class="text-h1 loadingscreen__percentage-label" text="{d:percent}%" />
+				<Label id="GameModeTip" class="loadingscreen__tip" text="{s:tip}"/>
+				<Label id="ProgressStatusText" class="loadingscreen__status-label" text="#LoadingScreen_Loading"/>
+				<Label id="PercentText" class="loadingscreen__percentage-label" text="{d:percent}%"/>
 			</Panel>
-			<ProgressBar id="ProgressBar" class="loadingscreen__progressbar progressbar" />
+			<ProgressBar id="ProgressBar" class="loadingscreen__progressbar progressbar"/>
 		</Panel>
 	</Panel>
 </root>

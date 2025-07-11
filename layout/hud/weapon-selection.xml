@@ -2,16 +2,16 @@
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
+	
 	<scripts>
-		<include src="file://{scripts}/common/weapon.js" />
-		<include src="file://{scripts}/hud/weapon-selection.js" />
+		<include type="module" src="file://{scripts}/hud/weapon-selection.ts" />
 	</scripts>
 
 	<snippets>
 		<snippet name="Weapon">
 			<Panel class="weaponselection__wrapper">
 				<Panel class="weaponselection__notch" />
-				<ConVarEnabler class="width-fit-children height-fit-children vertical-align-center" convar="mom_hud_weaponselection_keybind_enable" togglevisibility="true">
+				<ConVarEnabler class="w-fit-children h-fit-children v-align-center" convar="mom_hud_weaponselection_keybind_enable" togglevisibility="true">
 					<Label id="WeaponKeyBind" class="weaponselection__keybind" text="" />
 				</ConVarEnabler>
 				<Label class="weaponselection__weplabel" text="{s:weapon}" />
@@ -19,7 +19,7 @@
 		</snippet>
 	</snippets>
 
-	<MomHudWeaponSelection class="full-width">
+	<MomHudWeaponSelection class="w-full">
 		<ConVarEnabler id="WeaponSelection" class="weaponselection" convar="mom_hud_weaponselection_enable" togglevisibility="true">
 		</ConVarEnabler>
 	</MomHudWeaponSelection>

@@ -4,12 +4,25 @@
 	$root: &;
 
 	flow-children: down;
-	width: 100%;
+	width: 800px;
 
 	&__filters {
 		flow-children: right;
 		horizontal-align: center;
 		width: 100%;
+	}
+
+	&__hide-button {
+		margin-left: 8px;
+		visibility: collapse;
+
+		.leaderboards--in-map-selector & {
+			visibility: visible;
+		}
+	}
+
+	&__button {
+		margin-left: 8px;
 	}
 }
 
@@ -76,16 +89,18 @@
 		background-color: rgba(0, 0, 0, 0.4);
 		border: 1px solid rgba(0, 0, 0, 0.4);
 		border-top: 0px none;
+		transition: opacity 0.1s ease-in-out 0s;
+		opacity: 1;
+		overflow: squish clip;
+
 		& > VerticalScrollBar .ScrollThumb {
 			opacity: 1;
 		}
-		transition: opacity 0.1s ease-in-out 0s;
-		opacity: 1;
 	}
 
 	&__empty {
 		width: 100%;
-		height: fill-parent-flow(1);
+		height: 100%;
 		background-color: rgba(0, 0, 0, 0.4);
 		padding-bottom: 36px;
 
@@ -95,7 +110,7 @@
 
 	&__loading {
 		width: 100%;
-		height: fill-parent-flow(1);
+		height: 100%;
 		background-color: rgba(0, 0, 0, 0.4);
 		padding-bottom: 36px;
 
@@ -143,4 +158,8 @@
 			visibility: collapse;
 		}
 	}
+}
+
+.leaderboard-dropdown {
+	vertical-align: center;
 }

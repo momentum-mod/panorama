@@ -2,8 +2,6 @@
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
-	<scripts>
-	</scripts>
 
 	<Panel>
 		<Label class="text-h2" text="#Common_ComingSoon" />

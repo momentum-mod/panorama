@@ -1,17 +1,11 @@
-/**
- * Functions for manipulating RGB/RGBA strings and tuples.
- */
-
-/**
- * Tuple of R, G, B, A values ranged [0, 255]
- */
-type RgbaTuple = [number, number, number, number];
+/** Tuple of R, G, B, A values ranged [0, 255] (including A) */
+export type RgbaTuple = [number, number, number, number];
 
 /**
  * Returns a string formatted `rgba(R, G, B, A)` from RGBA number tuple, where
  * `R`, `G`, `B` are values ranged [0, 255], `A` ranged [0, 1].
  */
-function tupleToRgbaString([r, g, b, a = 255]: RgbaTuple): string {
+export function tupleToRgbaString([r, g, b, a = 255]: RgbaTuple): string {
 	return `rgba(${r}, ${g}, ${b}, ${a / 255})`;
 }
 
@@ -22,7 +16,7 @@ function tupleToRgbaString([r, g, b, a = 255]: RgbaTuple): string {
  *
  * For performance, this function does not check the input string.
  */
-function rgbStringToTuple(str: string): RgbaTuple {
+export function rgbStringToTuple(str: string): RgbaTuple {
 	return [
 		...str
 			.slice(4, -1)
@@ -37,7 +31,7 @@ function rgbStringToTuple(str: string): RgbaTuple {
  * Input string must be formatted as `rgb(R, G, B, A)`, where `R`, `G`, `B`
  * are values ranged `[0, 255]`, `A` ranged `[0, 1]`.
  */
-function rgbaStringToTuple(str: string): RgbaTuple {
+export function rgbaStringToTuple(str: string): RgbaTuple {
 	if (str[3] !== 'a') return rgbStringToTuple(str);
 
 	return str
@@ -49,7 +43,7 @@ function rgbaStringToTuple(str: string): RgbaTuple {
 /**
  * Blends two tuples linearly by alpha value.
  */
-function rgbaTupleLerp(colorA: RgbaTuple, colorB: RgbaTuple, alpha: number): RgbaTuple {
+export function rgbaTupleLerp(colorA: RgbaTuple, colorB: RgbaTuple, alpha: number): RgbaTuple {
 	const interp: number = Math.max(Math.min(alpha, 1), 0);
 	return (colorA as number[]).map((Ai, i) => Math.round(Ai + interp * (colorB[i] - Ai))) as RgbaTuple;
 }
@@ -58,10 +52,12 @@ function rgbaTupleLerp(colorA: RgbaTuple, colorB: RgbaTuple, alpha: number): Rgb
  * Blends two strings linearly by alpha.
  * RGB inputs are converted to RGBA with A value of 1.
  */
-function rgbaStringLerp(colorA: string, colorB: string, alpha: number, useHsv: boolean = false): string {
+export function rgbaStringLerp(colorA: string, colorB: string, alpha: number, useHsv: boolean = false): string {
 	const arrayA: RgbaTuple = rgbaStringToTuple(colorA);
 	const arrayB: RgbaTuple = rgbaStringToTuple(colorB);
-	if (!useHsv) return tupleToRgbaString(rgbaTupleLerp(arrayA, arrayB, alpha));
+	if (!useHsv) {
+		return tupleToRgbaString(rgbaTupleLerp(arrayA, arrayB, alpha));
+	}
 
 	const fromHsv: RgbaTuple = rgbaToHsva(arrayA) as RgbaTuple;
 	const toHsv: RgbaTuple = rgbaToHsva(arrayB) as RgbaTuple;
@@ -86,10 +82,8 @@ function rgbaStringLerp(colorA: string, colorB: string, alpha: number, useHsv: b
 	return tupleToRgbaString(newRgb);
 }
 
-/**
- * Converts HSVA tuple to RGBA tuple
- */
-function hsvaToRgba([h, s, v, a]: RgbaTuple): RgbaTuple {
+/** Converts HSVA tuple to RGBA tuple */
+export function hsvaToRgba([h, s, v, a]: RgbaTuple): RgbaTuple {
 	const hueDir: number = h / 60; // divide color wheel into Red, Yellow, Green, Cyan, Blue, Magenta
 	const hueDirFloor: number = Math.floor(hueDir); // see which of the six regions holds the color to be converted
 	const hueDirFraction: number = hueDir - hueDirFloor;
@@ -113,10 +107,8 @@ function hsvaToRgba([h, s, v, a]: RgbaTuple): RgbaTuple {
 	] as RgbaTuple;
 }
 
-/**
- * Converts RGBA tuple to HSVA tuple
- */
-function rgbaToHsva([r, g, b, a]: RgbaTuple): RgbaTuple {
+/** Converts RGBA tuple to HSVA tuple */
+export function rgbaToHsva([r, g, b, a]: RgbaTuple): RgbaTuple {
 	const rgbMin: number = Math.min(r, g, b);
 	const rgbMax: number = Math.max(r, g, b);
 	const rgbRange: number = rgbMax - rgbMin;
@@ -125,12 +117,12 @@ function rgbaToHsva([r, g, b, a]: RgbaTuple): RgbaTuple {
 		rgbMax === rgbMin
 			? 0
 			: rgbMax === r
-			? (((g - b) / rgbRange) * 60 + 360) % 360
-			: rgbMax === g
-			? ((b - r) / rgbRange) * 60 + 120
-			: rgbMax === b
-			? ((r - g) / rgbRange) * 60 + 240
-			: 0;
+				? (((g - b) / rgbRange) * 60 + 360) % 360
+				: rgbMax === g
+					? ((b - r) / rgbRange) * 60 + 120
+					: rgbMax === b
+						? ((r - g) / rgbRange) * 60 + 240
+						: 0;
 
 	const s: number = rgbMax === 0 ? 0 : rgbRange / rgbMax;
 	const v: number = rgbMax / 255;
@@ -138,18 +130,14 @@ function rgbaToHsva([r, g, b, a]: RgbaTuple): RgbaTuple {
 	return [h, s, v, a] as RgbaTuple;
 }
 
-/**
- * Removes A value from string formatted `rgba(R, G, B, A)`.
- */
-function rgbaStringToRgb(str: string): string {
+/** Removes A value from string formatted `rgba(R, G, B, A)`. */
+export function rgbaStringToRgb(str: string): string {
 	const [r, g, b] = rgbaStringToTuple(str);
 	return `rgb(${r}, ${g}, ${b})`;
 }
 
-/**
- * Compresses A value from string formatted `rgba(R, G, B, A)` to the range `[0.75, 1]`
- */
-function enhanceAlpha(str: string): string {
+/** Compresses A value from string formatted `rgba(R, G, B, A)` to the range `[0.75, 1]` */
+export function enhanceAlpha(str: string): string {
 	const [r, g, b, a = 255] = rgbaStringToTuple(str);
 	return tupleToRgbaString([r, g, b, Math.min(0.25 * a + 192, 255)]);
 }

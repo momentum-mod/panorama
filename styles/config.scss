@@ -206,7 +206,7 @@ $font-shadows: (
 
 $font-default-color: $white !default;
 $font-disabled-color: color.scale($font-default-color, $lightness: -20%) !default;
-$font-default-size: 18px !default;
+$font-default-size: 16px !default;
 
 $font-primary: Roboto, sans-serif !default;
 $font-secondary:
@@ -242,16 +242,16 @@ $font: $font-primary !default;
 $font-shadow: 0px 1px rgba(0, 0, 0, 0.9) !default; // This is a text-shadow-fast
 $font-spacing: 0px !default;
 $font-sizes: (
-	'xxxl': 48px,
-	'xxl': 36px,
-	'xl': 28px,
-	'l': 24px,
-	'm': $font-default-size,
+	'xxxl': 42px,
+	'xxl': 32px,
+	'xl': 26px,
+	'lg': 20px,
+	'md': $font-default-size,
 	'sm': 14px,
 	'xs': 12px
 ) !default;
 
-$font-weights: ('thin', 'light', 'normal', 'medium', 'bold', 'black') !default;
+$font-weights: ('thin', 'light', 'normal', 'medium', 'semi-bold', 'bold', 'black') !default;
 
 // ================
 // EASINGS (see https://easings.net/ for previews)
@@ -584,10 +584,10 @@ $tooltip-image-size: 20px !default;
 
 $popup-min-width: 400px !default;
 $popup-max-width: 480px !default;
-$popup-wide: 960px !default;
+$popup-wide: 840px !default;
 $popup-large-max-width: 720px !default;
 $popup-background: $dark-800 !default;
-$popup-shadow: rgba(0, 0, 0, 1) -2.5px -2.5px 10px 5px !default;
+$popup-shadow: rgba(0, 0, 0, 1) 2px 2px 16px 2px !default;
 $popup-padding: 24px 32px !default;
 $popup-radius: 4px !default;
 
@@ -638,12 +638,13 @@ $rightnav-width: 50px;
 // COMPARISONS (Used by HUD Comparisons and End of Run)
 // ================
 
-$comparison-neutral-background: rgb(93, 122, 155);
+$comparison-neutral-background: rgb(110, 119, 126);
+$comparison-neutral: rgb(210, 210, 210);
 
 $comparison-ahead: $blue;
 $comparison-ahead-gain: color.scale($comparison-ahead, $lightness: 10%, $saturation: 0%);
 $comparison-ahead-gain-background: color.scale(rgba($comparison-ahead, 0.5), $lightness: -15%, $saturation: 50%);
-$comparison-ahead-loss: color.scale($comparison-ahead, $lightness: 50%, $saturation: -50%);
+$comparison-ahead-loss: color.scale($comparison-ahead, $lightness: 50%, $saturation: -40%);
 $comparison-ahead-loss-background: color.scale(rgba($comparison-ahead, 0.5), $lightness: 15%, $saturation: -60%);
 
 $comparison-behind: $red;
@@ -693,6 +694,18 @@ $dfjump-font-size: 22px !default;
 $dfjump-padding: 6px !default;
 
 // ================
+// BHOP JUMP TIMING
+// ================
+$bhopjump-width: 300px !default;
+$bhopjump-height: 20px !default;
+$bhopjump-bar-height: 16px !default;
+$bhopjump-opacity: 0.7 !default;
+$bhopjump-color-background: #5f5f5f80 !default;
+$bhopjump-font-size: 22px !default;
+$bhopjump-font-weight: medium !default;
+$bhopjump-padding: 8px !default;
+
+// ================
 // STRAFESYNC
 // ================
 $strafesync-color-default: $white !default;
@@ -724,12 +737,12 @@ $timer-comp-color-increase: $blue !default;
 $timer-comp-color-decrease: $red !default;
 $timer-comp-font-weight: bold !default;
 $timer-comp-font-size: 24px !default;
-$timer-event-fadeout-time: 10s !default;
 
 // ================
 // STATUS
 // ================
-$timer-hudstatus-font-size: 18px !default;
+$timer-hudstatus-font-size: 17px !default;
+$timer-hudstatus-font-weight: regular !default;
 $timer-hudstatus-color: $white !default;
 
 // ================

@@ -1,0 +1,209 @@
+@use '../config' as *;
+@use '../abstract/mixin';
+@use '../abstract/function';
+@use 'sass:color';
+
+.hud-tab-menu {
+	$root: &;
+
+	horizontal-align: center;
+	vertical-align: center;
+	visibility: visible;
+	background-color: rgba(0, 0, 0, 0.01); // Very slight background so the blur works
+
+	&--unofficial {
+		.hud-tab-menu-map-info__bottom,
+		.hud-tab-menu-map-info__showcase {
+			visibility: collapse;
+		}
+	}
+
+	&__wrapper {
+		flow-children: down;
+		box-shadow: 0 0 20px 0 rgba(0, 0, 0, 1);
+		border: 1px solid rgba(0, 0, 0, 0.65);
+	}
+
+	&__header {
+		flow-children: right;
+		width: 100%;
+		background-color: rgba(0, 0, 0, 0.5);
+	}
+
+	&__header-image {
+		height: 100%;
+		width: height-percentage(100%);
+		margin: 24px 16px 24px 24px;
+		padding: -4px; // >:)
+		img-shadow: 0 1px 3px rgba(0, 0, 0, 1);
+	}
+
+	&__stats {
+		width: 100%;
+		height: fit-children; // Don't show the stats panel until we actually make it
+		background-color: rgba(36, 36, 36, 0.9);
+	}
+
+	&__map-info {
+		flow-children: down;
+		margin: 24px 24px 24px 0px;
+	}
+
+	&__sidebysidecontainer {
+		flow-children: right;
+	}
+
+	&__leaderboards {
+		padding: 24px;
+		padding-top: 16px;
+		padding-bottom: 14px;
+		background-color: rgba(0, 0, 0, 0.6);
+
+		&--hidden {
+			visibility: collapse;
+		}
+	}
+
+	&__endofrun {
+		width: 1000px;
+
+		&--hidden {
+			visibility: collapse;
+		}
+	}
+
+	&__zoning {
+		width: 560px;
+
+		background-color: rgba(0, 0, 0, 0.5);
+
+		&--hidden {
+			visibility: collapse;
+		}
+	}
+
+	&__zoning-button {
+		height: $button-height;
+		width: height-percentage(100%);
+		margin: 2px;
+		horizontal-align: left;
+		vertical-align: center;
+		background-position: center;
+		background-repeat: no-repeat;
+		background-image: url('file://{images}/pencil-outline.svg');
+		img-shadow: $button-icon-shadow;
+		wash-color: $button-text-color;
+
+		&:selected {
+			background-image: url('file://{images}/pencil-off-outline.svg');
+		}
+	}
+
+	&__footer {
+		border-top: 1px solid rgba(0, 0, 0, 0.4);
+		width: 100%;
+		padding-right: 24px;
+		vertical-align: bottom;
+		background-color: rgba(0, 0, 0, 0.6);
+	}
+
+	&__enable-cursor-tip {
+		font-size: 11px;
+		color: rgba(255, 255, 255, 0.6);
+		padding: 12px 0;
+		horizontal-align: right;
+	}
+}
+
+.hud-tab-menu-map-info {
+	&__top {
+		flow-children: right;
+		width: fill-parent-flow(1);
+	}
+
+	&__bottom {
+		flow-children: right;
+		width: 100%;
+		margin-bottom: 4px;
+		// height: 28px;
+	}
+
+	&__map-name {
+		@include mixin.font-styles($use-header: true);
+		font-size: 48px;
+	}
+
+	&__credits {
+		flow-children: right;
+		width: fill-parent-flow(1);
+		height: 100%;
+		margin-right: 8px;
+		overflow: scroll squish;
+
+		& > HorizontalScrollBar {
+			.ScrollThumb {
+				transform: translateY(6px);
+				max-height: 2px;
+			}
+		}
+	}
+
+	&__credits-other-text,
+	&__credits-name {
+		@include mixin.font-styles($use-header: true);
+		font-size: 24px;
+	}
+
+	&__credits-name {
+		margin-left: 4px;
+		color: color.scale($mid-blue, $lightness: 75%);
+
+		&--steam {
+			color: $mid-blue;
+			transition: color 0.1s ease-in-out 0s;
+
+			&:hover {
+				color: color.scale($mid-blue, $lightness: 50%);
+			}
+		}
+	}
+
+	&__showcase {
+		height: 100%;
+		width: height-percentage(100%);
+		horizontal-align: right;
+		vertical-align: center;
+		margin: 12px 0px 12px 24px;
+	}
+
+	&__stats {
+		flow-children: right;
+		horizontal-align: right;
+		vertical-align: center;
+
+		@include mixin.font-styles($use-header: true);
+		font-size: 24px;
+	}
+}
+
+.hud-tab-menu-map-info-stats {
+	&__stat {
+		@include mixin.font-styles($use-header: true);
+		font-size: 24px;
+	}
+
+	&__icon {
+		height: 100%;
+		width: height-percentage(100%);
+		margin-right: 12px;
+		img-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+	}
+
+	&__separator {
+		margin: 4px 6px;
+		width: 2px;
+		height: 100%;
+		box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.8);
+		background-color: white;
+	}
+}
