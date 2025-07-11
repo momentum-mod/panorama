@@ -106,10 +106,10 @@ export function mapAngleToScreenDist(
 	}
 }
 
-function deg2rad(x: number): number {
+export function deg2rad(x: number): number {
 	return (x / 180) * Math.PI;
 }
 
-function rad2deg(x: number): number {
+export function rad2deg(x: number): number {
 	return (x * 180) / Math.PI;
 }
