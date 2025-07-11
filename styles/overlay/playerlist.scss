@@ -1,0 +1,63 @@
+$player-border: 1px solid rgba(70, 70, 70, 0.5);
+
+.playerlist {
+	flow-children: down;
+	width: 550px;
+
+	&__section {
+		flow-children: down;
+		width: 100%;
+		border-bottom: $player-border;
+	}
+
+	#PlayerListNotconnectedSection {
+		margin-top: 20px;
+	}
+}
+
+.playerlist-player {
+	flow-children: right;
+	width: 100%;
+
+	$row-height: 34px;
+	$image-size: $row-height - 6px;
+
+	height: $row-height;
+	border-top: $player-border;
+	padding: 0 10px;
+
+	background-color: rgba(0, 0, 0, 0.5);
+	&:hover {
+		background-color: rgba(100, 100, 100, 0.4);
+	}
+
+	Image,
+	AvatarImage,
+	Label {
+		vertical-align: middle;
+	}
+
+	AvatarImage,
+	Label {
+		margin-left: 8px;
+	}
+
+	Image,
+	AvatarImage {
+		width: $image-size;
+		height: $image-size;
+	}
+
+	Label {
+		font-size: 14px;
+		white-space: nowrap;
+	}
+
+	#NameLabel {
+		width: 210px;
+	}
+
+	#StatusLabel {
+		opacity: 0.6;
+	}
+}

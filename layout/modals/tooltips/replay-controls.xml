@@ -1,0 +1,32 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss"/>
+	</styles>
+	
+	<Panel class="flow-down">
+		<!-- TODO: Localize -->
+		<Label class="color-gray-900 text-sm text-italic text-medium mb-1" text="Replay Controls"/>
+		<Panel class="flow-right">
+			<Panel class="flow-down mr-4">
+				<Label class="text-sm" text="#ReplayControls_PlayPause"/>
+				<Label class="text-sm" text="#ReplayControls_GoToStart"/>
+				<Label class="text-sm" text="#ReplayControls_NextSegment"/>
+				<Label class="text-sm" text="#ReplayControls_PreviousSegment"/>
+				<Label class="text-sm" text="#ReplayControls_NextTick"/>
+				<Label class="text-sm" text="#ReplayControls_PreviousTick"/>
+				<Label class="text-sm" text="#ReplayControls_Forward5"/>
+				<Label class="text-sm" text="#ReplayControls_Back5"/>
+			</Panel>
+			<Panel class="flow-down">
+				<Label class="text-sm text-bold" text="#Common_SpaceKey"/>
+				<Label class="text-sm text-bold" text="R"/>
+				<Label class="text-sm text-bold" text="W"/>
+				<Label class="text-sm text-bold" text="S"/>
+				<Label class="text-sm text-bold" text="E"/>
+				<Label class="text-sm text-bold" text="Q"/>
+				<Label class="text-sm text-bold" text="D"/>
+				<Label class="text-sm text-bold" text="A"/>
+			</Panel>
+		</Panel>
+	</Panel>
+</root>

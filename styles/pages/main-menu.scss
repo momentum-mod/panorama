@@ -285,6 +285,7 @@ $drawer-width: 768px;
 			background-color: function.gradient-radial-button(rgba(77, 77, 77, 0.4), rgba(0, 0, 0, 0.4));
 			border-top: 1px solid rgba(0, 0, 0, 0.3);
 			border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+			sound: 'UIPanorama.ButtonSecondary';
 
 			#{$root}__icon {
 				opacity: 1;
@@ -375,6 +376,8 @@ $drawer-width: 768px;
 
 	$this: &;
 	&--expanded {
+		sound: 'UIPanorama.DrawerOpen';
+		sound-out: 'UIPanorama.DrawerClose';
 		transform: translateX(0);
 
 		#{$this}__rightnav {
@@ -481,6 +484,8 @@ $drawer-width: 768px;
 .news {
 	$root: &;
 	&--minimized {
+		sound: 'UIPanorama.DrawerClose';
+		sound-out: 'UIPanorama.DrawerOpen';
 		#{$root}__main {
 			height: 0px;
 		}
@@ -569,7 +574,7 @@ $drawer-width: 768px;
 .news-latest {
 	&__left {
 		flow-children: down;
-		width: 400px;
+		width: 450px;
 		height: 100%;
 		margin-right: 8px;
 		padding-left: 4px;
@@ -591,6 +596,25 @@ $drawer-width: 768px;
 		font-size: 14px;
 		text-overflow: ellipsis;
 		overflow: squish scroll;
+
+		&__h2 {
+			font-weight: bold;
+		}
+
+		& pre {
+			// Can't get Roboto Mono to align well with regular Roboto
+			// looks wonky and hard to read.
+			font-family: $font;
+			font-style: italic;
+			color: #cbcbcb;
+			font-weight: medium;
+		}
+
+		&__see-more {
+			font-style: italic;
+			font-weight: medium;
+			color: #eee;
+		}
 	}
 
 	&__image {

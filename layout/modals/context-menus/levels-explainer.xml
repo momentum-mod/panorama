@@ -3,11 +3,18 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 
-	<scripts>
-		<include src="file://{scripts}/modals/context-menus/levels-explainer.js" />
-	</scripts>
+	<script>
+		// When these panels are first created, for some godforsaken reason they don't have the correct class until you
+		// mouse over them... I have absolutely no idea why, this is a quick fix.
+		const className = 'levels-explainer__level-indicator';
+		$.RegisterEventHandler('PanelLoaded', $.GetContextPanel(), () => {
+			for (const p of $.GetContextPanel().FindChildrenWithClassTraverse(className)) { 
+				p.TriggerClass(className);
+			}
+		});
+	</script>
 
-	<ContextMenuCustomLayout class="contextmenu levels-explainer" onload="LevelsExplainer.fixLevelIndicators()">
+	<ContextMenuCustomLayout class="contextmenu levels-explainer">
 		<Label class="levels-explainer__title" text="#Profile_LevelsExplainer_Title" />
 		<Label class="levels-explainer__paragraph" text="#Profile_LevelsExplainer_Desc1" />
 		<Panel class="levels-explainer__showcase-row my-4">

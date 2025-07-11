@@ -2,15 +2,14 @@
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
+	
 	<scripts>
-		<include src="file://{scripts}/common/hud-misc.js" />
-		<include src="file://{scripts}/common/timer.js" />
-		<include src="file://{scripts}/hud/status.js" />
+		<include type="module" src="file://{scripts}/hud/status.ts" />
 	</scripts>
 
-	<MomHudStatus class="full-width" onload="HudStatus.onLoad();">
+	<MomHudStatus class="w-full">
 		<ConVarEnabler class="hudstatus" convar="mom_hud_status_enable" togglevisibility="true">
-			<Label id="HudStatusLabel" class="hudstatus__label" text="" />
+			<Label id="HudStatusLabel" class="hudstatus__label" />
 		</ConVarEnabler>
 	</MomHudStatus>
 </root>

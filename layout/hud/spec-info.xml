@@ -2,8 +2,9 @@
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
+	
 	<scripts>
-		<include src="file://{scripts}/hud/spec-info.js" />
+		<include type="module" src="file://{scripts}/hud/spec-info.ts" />
 	</scripts>
 
 	<snippets>
@@ -14,21 +15,14 @@
 		</snippet>
 	</snippets>
 
-	<MomHudSpecInfo class="full-width flow-down" onload="HudSpecInfo.onLoad();">
-
+	<MomHudSpecInfo class="w-full flow-down">
 		<!-- So we can toggle visibility for the whole panel -->
 		<Panel id="SpecInfoContainer" class="hudspecinfo">
-
-			<ConVarEnabler class="flow-down width-fit-children horizontal-align-right vertical-align-center" convar="mom_hud_specinfo_enable" togglevisibility="true">
-
-				<Label id="NumSpecLabel" class="hudspecinfo__count horizontal-align-right" text="{d:numspec} Spectator(s)" />
-
+			<ConVarEnabler class="flow-down w-fit-children h-align-right v-align-center" convar="mom_hud_specinfo_enable" togglevisibility="true">
+				<Label id="NumSpecLabel" class="hudspecinfo__count h-align-right" text="{d:numspec} Spectator(s)" />
 				<!-- Filled with specinfo-list-entry snippets -->
-				<ConVarEnabler id="NamesContainer" class="flow-down width-fit-children horizontal-align-right" convar="mom_hud_specinfo_names_enable" togglevisibility="true" />
-
+				<ConVarEnabler id="NamesContainer" class="flow-down w-fit-children h-align-right" convar="mom_hud_specinfo_names_enable" togglevisibility="true" />
 			</ConVarEnabler>
-
 		</Panel>
-
 	</MomHudSpecInfo>
 </root>

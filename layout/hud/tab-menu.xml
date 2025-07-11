@@ -1,0 +1,65 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+	
+	<scripts>
+		<include type="module" src="file://{scripts}/hud/tab-menu.ts" />
+	</scripts>
+
+	<HudTabMenu class="hud-tab-menu" oncancel="HudTabMenuHandler.close();">
+		<Panel class="hud-tab-menu__wrapper">
+			<Panel id="TabMenuHeader" class="hud-tab-menu__header">
+				<Image id="HudTabMenuGamemodeImage" class="hud-tab-menu__header-image" textureheight="128" />
+				<Panel class="hud-tab-menu__map-info">
+					<Panel class="hud-tab-menu-map-info__top">
+						<Label class="hud-tab-menu-map-info__map-name" text="{s:map}" />
+<!--						<TooltipPanel tooltip="View showcase run" class="hud-tab-menu-map-info__showcase">-->
+<!--							<Button class="button full">-->
+<!--								<Image class="button__icon" src="file://{images}/filmstrip.svg" textureheight="64" />-->
+<!--							</Button>-->
+<!--						</TooltipPanel>-->
+					</Panel>
+					<Panel class="hud-tab-menu-map-info__bottom">
+						<Panel id="HudTabMenuMapCredits" class="hud-tab-menu-map-info__credits">
+							<!-- Author names inserted by JS -->
+						</Panel>
+						<Panel class="hud-tab-menu-map-info__stats">
+							<Label class="hud-tab-menu-map-info-stats__stat" text="#MapInfo_Tier" />
+							<Panel id="HudTabMenuLinearSeparator" class="hud-tab-menu-map-info-stats__separator" />
+							<Label id="HudTabMenuLinearLabel" class="hud-tab-menu-map-info-stats__stat" text="#MapInfo_Type_Linear" />
+							<Panel id="HudTabMenuStageCountSeparator" class="hud-tab-menu-map-info-stats__separator" />
+							<Label id="HudTabMenuStageCountLabel" class="hud-tab-menu-map-info-stats__stat" text="#MapInfo_StageCount" />
+							<Panel class="hud-tab-menu-map-info-stats__separator" />
+							<Label class="hud-tab-menu-map-info-stats__stat" text="#MapInfo_Runs" />
+						</Panel>
+					</Panel>
+				</Panel>
+			</Panel>
+
+			<Panel id="SideBySideContainer" class="hud-tab-menu__sidebysidecontainer">
+				<Panel id="PlayerListContainer" class="" hittestchildren="true">
+					<PlayerList id="PlayerList" hittest="true" hittestchildren="true" />
+				</Panel>	
+
+				<Panel id="LeaderboardsContainer" class="hud-tab-menu__leaderboards" hittestchildren="true">
+					<Leaderboards id="TabMenuLeaderboards" hittest="true" hittestchildren="true" />
+				</Panel>
+			</Panel>
+
+			<Panel id="EndOfRunContainer" class="hud-tab-menu__endofrun" hittestchildren="true">
+				<Frame src="file://{resources}/layout/pages/end-of-run/end-of-run.xml" hittest="true" hittestchildren="true" />
+			</Panel>
+
+			<Panel class="hud-tab-menu__stats">
+			</Panel>
+			
+			<Panel id="TabMenuFooter" class="hud-tab-menu__footer">
+				<ConVarEnabler convar="sv_cheats" class="v-align-center" togglevisibility="true">
+					<ToggleButton id="ZoningToggle" class="button hud-tab-menu__zoning-button" convar="mom_zone_edit" />
+				</ConVarEnabler>
+				<Label class="hud-tab-menu__enable-cursor-tip" text="#HudTabMenu_EnableCursorTip"/> 
+			</Panel>
+		</Panel>
+	</HudTabMenu>
+</root>

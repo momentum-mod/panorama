@@ -1,0 +1,275 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+
+	<scripts>
+		<include type="module" src="file://{scripts}/pages/zoning/zoning.ts" />
+	</scripts>
+
+	<snippets>
+
+		<snippet name="itemlist-item">
+			<Panel class="w-full flow-right">
+				<Button id="SelectButton" class="zoning__item-selectbutton">
+					<Label id="Name" class="zoning__item-label" />
+				</Button>
+				<Button id="DeleteButton" class="zoning__item-deletebutton hide">
+					<Image class="zoning__item-deletebutton__icon" src="file://{images}/close-box-outline.svg" textureheight="24" />
+				</Button>
+			</Panel>
+		</snippet>
+
+	</snippets>
+
+	<ZoneMenu class="zoning" acceptsinput="true" acceptsfocus="true">
+		<Label class="zoning__title" text="#Zoning_Menu" />
+		<Panel id="ItemListsContainer" class="zoning__itemlists">
+        	<Panel class="zoning__menu-section zoning__itemlist">
+				<Button id="CreateMainButton" class="zoning__add-button hide" onactivate="ZoneMenuHandler.createMain()">
+					<Label class="zoning__itemlist-label zoning__itemlist-label--add" text="#Zoning_CreateMain" />
+				</Button>
+        		<Panel id="LeftList" class="w-full flow-down">
+            		<!-- Populated in js -->
+				</Panel>
+				<Button id="AddBonusButton" class="zoning__add-button hide" onactivate="ZoneMenuHandler.addBonus()">
+					<Label class="zoning__itemlist-label zoning__itemlist-label--add" text="#Zoning_NewBonus" />
+				</Button>
+				<Button id="AddDefragBonusButton" class="zoning__add-button hide" onactivate="ZoneMenuHandler.addBonus(true)">
+					<Label class="zoning__itemlist-label zoning__itemlist-label--add" text="#Zoning_NewDefragBonus" />
+				</Button>
+        	</Panel>
+        	<Panel class="zoning__menu-section zoning__itemlist zoning__itemlist--gap-before">
+				<Panel id="CenterList" class="w-full flow-down">
+					<!-- Populated in js -->
+				</Panel>
+				<Button id="AddSegmentButton" class="zoning__add-button hide" onactivate="ZoneMenuHandler.addSegment()">
+					<Label class="zoning__itemlist-label zoning__itemlist-label--add" text="#Zoning_NewSegment" />
+				</Button>
+				<Button id="AddEndZoneButton" class="zoning__add-button hide" onactivate="ZoneMenuHandler.addEndZone()">
+					<Label class="zoning__itemlist-label zoning__itemlist-label--add" text="#Zoning_NewEndZone" />
+				</Button>
+			</Panel>
+			<Panel class="zoning__menu-section zoning__itemlist zoning__itemlist--gap-before">
+				<Panel id="RightList" class="w-full flow-down">
+					<!-- Populated in js -->
+				</Panel>
+				<Button id="AddCheckpointButton" class="zoning__add-button hide" onactivate="ZoneMenuHandler.addCheckpoint()">
+					<Label id="AddCheckpointButtonLabel" class="zoning__itemlist-label zoning__itemlist-label--add" text="#Zoning_NewCheckpoint" />
+				</Button>
+				<Button id="AddCancelZoneButton" class="zoning__add-button hide" onactivate="ZoneMenuHandler.addCancelZone()">
+					<Label class="zoning__itemlist-label zoning__itemlist-label--add" text="#Zoning_NewCancelZone" />
+				</Button>
+				<Button id="AddGlobalRegionButton" class="zoning__add-button hide" onactivate="ZoneMenuHandler.addGlobalRegion()">
+					<Label class="zoning__itemlist-label zoning__itemlist-label--add" text="#Zoning_NewGlobalRegion" />
+				</Button>
+			</Panel>
+		</Panel>
+		<Label id="PropertiesLabel" class="zoning__header" text="#Zoning_PropertiesLabel" />
+		<Panel id="PropertiesContainer" class="zoning__menu-section">
+			<Panel id="TrackProperties" class="zoning__property-container">
+				<Panel class="zoning__menu-separator">
+					<Panel id="MapMaxVelocity" class="zoning__property">
+						<Label class="zoning__property-label" text="#Zoning_MaxVelocity" />
+						<TextEntry id="MaxVelocity" class="textentry zoning__textentry" textmode="numeric" text="" ontextentrysubmit="ZoneMenuHandler.setMaxVelocity()" />
+					</Panel>
+					<Panel id="StagesEndAtStageStarts" class="zoning__property">
+						<Label class="zoning__property-label" text="#Zoning_StagesEndAtStageStarts" />
+						<ToggleButton id="CheckBox" class="checkbox checkbox--right zoning__checkbox" onactivate="ZoneMenuHandler.setStageEndAtStageStarts()" />
+					</Panel>
+					<Panel id="DefragFlags" class="zoning__property">
+						<Label class="zoning__property-label" text="#Zoning_DefragFlags" />
+						<Button id="DefragFlagsButton" class="button zoning__property-button" onactivate="ZoneMenuHandler.showDefragFlagMenu()">
+							<Label class="button__text" text="#Zoning_DefragFlags_Edit" />
+						</Button>
+					</Panel>
+					<Panel id="BhopEnabled" class="zoning__property">
+						<Label class="zoning__property-label" text="#Zoning_BhopEnabled" />
+						<ToggleButton id="CheckBox" class="checkbox checkbox--right zoning__checkbox" onactivate="ZoneMenuHandler.setBhopEnabled()" />
+					</Panel>
+				</Panel>
+			</Panel>
+			<Panel id="SegmentProperties" class="zoning__property-container">
+				<Panel class="zoning__menu-separator">
+					<Panel id="LimitGroundSpeed" class="zoning__property">
+						<Label class="zoning__property-label" text="#Zoning_LimitGroundSpeed" />
+						<ToggleButton id="CheckBox" class="checkbox checkbox--right zoning__checkbox" onactivate="ZoneMenuHandler.setLimitGroundSpeed()" />
+					</Panel>
+					<Panel id="CheckpointsRequired" class="zoning__property">
+						<Label class="zoning__property-label" text="#Zoning_CheckpointsRequired" />
+						<ToggleButton id="CheckBox" class="checkbox checkbox--right zoning__checkbox" onactivate="ZoneMenuHandler.setCheckpointsRequired()" />
+					</Panel>
+					<Panel id="CheckpointsOrdered" class="zoning__property">
+						<Label class="zoning__property-label" text="#Zoning_CheckpointsOrdered" />
+						<ToggleButton id="CheckBox" class="checkbox checkbox--right zoning__checkbox" onactivate="ZoneMenuHandler.setCheckpointsOrdered()" />
+					</Panel>
+					<Panel id="Name" class="zoning__property">
+						<Label class="zoning__property-label" text="#Zoning_Name" />
+						<TextEntry id="SegmentName" class="textentry zoning__textentry" maxchars="255" text="" ontextentrysubmit="ZoneMenuHandler.setSegmentName()" />
+					</Panel>
+				</Panel>
+			</Panel>
+			<Panel id="ZoneProperties" class="zoning__property-container">
+				<Panel class="zoning__menu-separator">
+					<Panel id="Filter" class="zoning__property not-global-region">
+						<Label class="zoning__property-label" text="#Zoning_Filter" />
+						<DropDown id="FilterSelect" class="dropdown zoning__dropdown" menuclass="dropdown-menu" onuserinputsubmit="ZoneMenuHandler.updateZoneFilter()">
+							<Label text="#Zoning_Filter_None" value="0" />
+							<!-- Populated in js -->
+						</DropDown>
+					</Panel>
+					<Panel id="Region" class="zoning__property">
+						<Label class="zoning__property-label" text="#Zoning_Region" />
+						<Panel class="zoning__region-property-container">
+							<ToggleButton id="TwoClickMode" class="zoning__two-click-button" convar="mom_zone_two_click" onmouseover="UiToolkitAPI.ShowTextTooltip('TwoClickMode', '#Zoning_TwoClickTogle_Tooltip');" onmouseout="UiToolkitAPI.HideTextTooltip();" />
+							<Button class="button zoning__property-button mr-2" onactivate="ZoneMenuHandler.pickCorners();">
+								<Label class="button__text" text="#Zoning_EditPoints" />
+							</Button>
+							<Button id="MoveToRegionButton" class="button button--green zoning__property-button mr-2" onactivate="ZoneMenuHandler.teleportToRegion()" onmouseover="UiToolkitAPI.ShowTextTooltip('MoveToRegionButton', '#Zoning_MoveToRegion_Tooltip');" onmouseout="UiToolkitAPI.HideTextTooltip();">
+								<Image class="button__icon" src="file://{images}/eye-arrow-right.svg" />
+							</Button>
+							<Button id="AddRegionButton" class="button button--blue zoning__property-button mr-2 not-global-region" onactivate="ZoneMenuHandler.addRegion()" onmouseover="UiToolkitAPI.ShowTextTooltip('AddRegionButton', '#Zoning_CreateRegion_Tooltip');" onmouseout="UiToolkitAPI.HideTextTooltip();">
+								<Image class="button__icon" src="file://{images}/add.svg" />
+							</Button>
+							<Button id="DeleteRegionButton" class="button button--red zoning__property-button mr-2 not-global-region" onactivate="ZoneMenuHandler.deleteRegion()" onmouseover="UiToolkitAPI.ShowTextTooltip('DeleteRegionButton', '#Zoning_DeleteRegion_Tooltip');" onmouseout="UiToolkitAPI.HideTextTooltip();">
+								<Image class="button__icon" src="file://{images}/delete.svg" />
+							</Button>
+							<DropDown id="RegionSelect" class="dropdown zoning__dropdown not-global-region" menuclass="dropdown-menu" onuserinputsubmit="ZoneMenuHandler.populateRegionProperties()">
+								<!-- Populated in js -->
+							</DropDown>
+						</Panel>
+					</Panel>
+					<Panel class="zoning__property">
+						<Label class="zoning__property-label" text="#Zoning_RegionDetails_Bottom" />
+						<Panel class="zoning__region-property-container">
+							<Button id='SetBottomButton' class="zoning__region-point-pick" onactivate="ZoneMenuHandler.pickBottom()" onmouseover="UiToolkitAPI.ShowTextTooltip('SetBottomButton', '#Zoning_SetBottom_Tooltip');" onmouseout="UiToolkitAPI.HideTextTooltip();">
+								<Image class="zoning__region-point-pick__icon" src="file://{images}/adjust.svg" />
+							</Button>
+							<TextEntry id="RegionBottom" class="textentry zoning__textentry" maxchars="10" textmode="numeric" ontextentrysubmit="ZoneMenuHandler.setRegionBottom()" />
+						</Panel>
+					</Panel>
+					<Panel class="zoning__property">
+						<Label class="zoning__property-label" text="#Zoning_RegionDetails_Height" />
+						<Panel class="zoning__region-property-container">
+							<Button id='SetHeightButton' class="zoning__region-point-pick" onactivate="ZoneMenuHandler.pickHeight()" onmouseover="UiToolkitAPI.ShowTextTooltip('SetHeightButton', '#Zoning_SetHeight_Tooltip');" onmouseout="UiToolkitAPI.HideTextTooltip();">
+								<Image class="zoning__region-point-pick__icon" src="file://{images}/adjust.svg" />
+							</Button>
+							<TextEntry id="RegionHeight" class="textentry zoning__textentry" maxchars="10" textmode="numeric" ontextentrysubmit="ZoneMenuHandler.setRegionHeight()" />
+						</Panel>
+					</Panel>
+					<Panel class="zoning__property not-global-region">
+						<Label class="zoning__property-label" text="#Zoning_RegionDetails_SafeHeight" />
+						<Panel class="zoning__region-property-container">
+							<Button id='SetSafeHeightButton' class="zoning__region-point-pick" onactivate="ZoneMenuHandler.pickSafeHeight()" onmouseover="UiToolkitAPI.ShowTextTooltip('SetSafeHeightButton', '#Zoning_SetSafeHeight_Tooltip');" onmouseout="UiToolkitAPI.HideTextTooltip();">
+								<Image class="zoning__region-point-pick__icon" src="file://{images}/adjust.svg" />
+							</Button>
+							<TextEntry id="RegionSafeHeight" class="textentry zoning__textentry" maxchars="10" textmode="numeric" ontextentrysubmit="ZoneMenuHandler.setRegionSafeHeight()" />
+						</Panel>
+					</Panel>
+					<Panel class="zoning__property not-global-region">
+						<Label class="zoning__property-label" text="#Zoning_RegionDetails_TPDest" />
+						<DropDown id="RegionTPDest" class="dropdown zoning__dropdown" menuclass="dropdown-menu" onuserinputsubmit="ZoneMenuHandler.onTPDestSelectionChanged()">
+							<!-- Populated in js -->
+							<Label text="#Zoning_TPDest_None" value="0" />
+							<Label text="#Zoning_TPDest_MakeNew" value="1" />
+						</DropDown>
+					</Panel>
+					<Panel class="zoning__property not-global-region">
+						<Label id="Position" class="zoning__property-label" text="#Zoning_TPDest_Position" />
+						<Panel class="zoning__region-property-container">
+							<Button id="SetTeleDestPosButton" class="zoning__region-point-pick" onactivate="ZoneMenuHandler.pickTeleDestPos()" onmouseover="UiToolkitAPI.ShowTextTooltip('SetTeleDestPosButton', '#Zoning_SetTeleDestPos_Tooltip');" onmouseout="UiToolkitAPI.HideTextTooltip();">
+								<Image class="zoning__region-point-pick__icon" src="file://{images}/adjust.svg" />
+							</Button>
+							<TextEntry id="TeleX" class="textentry zoning__textentry" maxchars="10" textmode="numeric" ontextentrysubmit="ZoneMenuHandler.setRegionTeleDestOrientation()" />
+							<TextEntry id="TeleY" class="textentry zoning__textentry" maxchars="10" textmode="numeric" ontextentrysubmit="ZoneMenuHandler.setRegionTeleDestOrientation()" />
+							<TextEntry id="TeleZ" class="textentry zoning__textentry" maxchars="10" textmode="numeric" ontextentrysubmit="ZoneMenuHandler.setRegionTeleDestOrientation()" />
+						</Panel>
+					</Panel>
+					<Panel class="zoning__property not-global-region">
+						<Label id="Yaw" class="zoning__property-label" text="#Zoning_TPDest_Yaw" />
+						<Panel class="zoning__region-property-container">
+							<Button id="SetTeleDestYawButton" class="zoning__region-point-pick" onactivate="ZoneMenuHandler.pickTeleDestYaw()" onmouseover="UiToolkitAPI.ShowTextTooltip('SetTeleDestYawButton', '#Zoning_SetTeleDestYaw_Tooltip');" onmouseout="UiToolkitAPI.HideTextTooltip();">
+								<Image class="zoning__region-point-pick__icon" src="file://{images}/adjust.svg" />
+							</Button>
+							<TextEntry id="TeleYaw" class="textentry zoning__textentry" maxchars="4" textmode="numeric" ontextentrysubmit="ZoneMenuHandler.setRegionTeleDestOrientation()" />
+						</Panel>
+					</Panel>
+				</Panel>
+			</Panel>
+		</Panel>
+		<Panel id="InfoPanel" class="zoning__menu-section hide">
+			<Panel class="w-full flow-down">
+				<Label id="SelectionMode" class="zoning__property-label" text="{s:selectionModeHint}" />
+				<Panel class="zoning-info__binds-list">
+					<Panel class="zoning-info__bind">
+						<Label class="zoning-info__bind-action" text="{s:mouse1Hint}" />
+						<Label class="zoning-info__bind-key" text="MOUSE1" />
+					</Panel>
+					<Panel class="zoning-info__bind">
+						<Label class="zoning-info__bind-action" text="{s:mouse2Hint}" />
+						<Label class="zoning-info__bind-key" text="MOUSE2" />
+					</Panel>
+					<Panel id="ZoningBindsOptions" class="zoning-info__category">
+						<Panel class="zoning-info__bind">
+							<Label class="zoning-info__bind-action" text="{s:option1Hint}" />
+							<Label class="zoning-info__bind-key" text="1" />
+						</Panel>
+						<Panel class="zoning-info__bind">
+							<Label class="zoning-info__bind-action" text="{s:option2Hint}" />
+							<Label class="zoning-info__bind-key" text="2" />
+						</Panel>
+					</Panel>
+					<Panel class="zoning-info__bind">
+						<Label class="zoning-info__bind-action" text="#Zoning_Keybind_CancelEdit" />
+						<Label class="zoning-info__bind-key" text="ESCAPE" />
+					</Panel>
+					<Panel id="ZoningBindsCorner" class="zoning-info__category">
+						<Panel class="zoning-info__bind">
+							<Label class="zoning-info__bind-action" text="#Zoning_Keybind_DeletePoint" />
+							<Label class="zoning-info__bind-key" text="DELETE, BACKSPACE" />
+						</Panel>
+						<Panel class="zoning-info__bind">
+							<Label class="zoning-info__bind-action" text="#Zoning_Keybind_TwoclickToggle" />
+							<Label class="zoning-info__bind-key" text="MOUSE3" />
+						</Panel>
+					</Panel>
+					<Panel class="zoning-info__bind">
+						<Label class="zoning-info__bind-action" text="#Zoning_Keybind_ReticleDistIncrease" />
+						<Label class="zoning-info__bind-key" text="MWHEELUP" />
+					</Panel>
+					<Panel class="zoning-info__bind">
+						<Label class="zoning-info__bind-action" text="#Zoning_Keybind_ReticleDistDecrease" />
+						<Label class="zoning-info__bind-key" text="MWHEELDOWN" />
+					</Panel>
+					<Panel class="zoning-info__bind">
+						<Label class="zoning-info__bind-action" text="#Zoning_Keybind_GridSizeIncrease" />
+						<Label class="zoning-info__bind-key" text="]" />
+					</Panel>
+					<Panel class="zoning-info__bind">
+						<Label class="zoning-info__bind-action" text="#Zoning_Keybind_GridSizeDecrease" />
+						<Label class="zoning-info__bind-key" text="[" />
+					</Panel>
+					<Panel class="zoning-info__bind">
+						<Label class="zoning-info__bind-action" text="#Zoning_Keybind_ForceGridSnap" />
+						<Label class="zoning-info__bind-key" text="SHIFT" />
+					</Panel>
+					<Panel class="zoning-info__bind">
+						<Label class="zoning-info__bind-action" text="#Zoning_Keybind_ForceReticleDist" />
+						<Label class="zoning-info__bind-key" text="LALT" />
+					</Panel>
+				</Panel>
+				<Panel id="GridSlider" class="zoning__property">
+					<SettingsSlider text="#Zoning_GridSnapSize" class="zoning__slider" min="1" max="64" percentage="false" convar="mom_zone_grid" />
+				</Panel>
+			</Panel>
+		</Panel>
+		<Panel class="zoning__button-box">
+			<Button class="button button--blue ml-2 h-align-right" onactivate="ZoneMenuHandler.saveZones()">
+				<Label class="button__text" text="#Zoning_Save" />
+			</Button>
+			<Button class="button ml-2 h-align-right" onactivate="ZoneMenuHandler.cancelEdit()">
+				<Label class="button__text" text="#Zoning_Discard" />
+			</Button>
+		</Panel>
+	</ZoneMenu>
+</root>

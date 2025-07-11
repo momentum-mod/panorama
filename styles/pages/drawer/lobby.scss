@@ -99,7 +99,7 @@
 	&__title {
 		width: fill-parent-flow(1);
 		margin: 0 16px;
-		font-size: 40px;
+		font-size: 36px;
 		max-height: 48px;
 		overflow: squish clip;
 		text-overflow: shrink;
@@ -218,6 +218,7 @@
 	&__title {
 		width: fill-parent-flow(1);
 		horizontal-align: left;
+		font-size: 16px;
 	}
 
 	&__type {

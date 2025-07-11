@@ -1,0 +1,17 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+		<include src="file://{resources}/styles/overlay/playerlist.scss" />
+	</styles>
+	
+	<scripts>
+		<include type="module" src="file://{scripts}/overlay/playerlist.ts" />
+	</scripts>
+
+	<PlayerListPlayer class="playerlist-player" oncontextmenu="PlayerListPlayerHandler.showContextMenu()">
+		<Image id="GameModeImage" />
+		<AvatarImage id="AvatarImage" />
+		<Label id="NameLabel" />
+		<Label id="StatusLabel" />
+	</PlayerListPlayer>
+</root>

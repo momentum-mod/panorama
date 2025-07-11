@@ -4,28 +4,27 @@
 	</styles>
 
 	<scripts>
-		<include src="file://{scripts}/util/dont-show-again.js" />
-		<include src="file://{scripts}/modals/popups/dont-show-again-settings.js" />
+		<include type="module" src="file://{scripts}/modals/popups/dont-show-again-settings.ts" />
 	</scripts>
 
 	<snippets>
 		<snippet name="dosa-item">
-			<Panel class="flow-right py-2 full-width">
-				<Label class="vertical-align-center" text="{s:name}" />
-				<Button id="ResetButton" class="horizontal-align-right button button--blue">
+			<Panel class="flow-right py-2 w-full">
+				<Label class="v-align-center" text="{s:name}" />
+				<Button id="ResetButton" class="h-align-right button button--blue">
 					<Label class="button__text" text="#Settings_General_Reset" />
 				</Button>
 			</Panel>
 		</snippet>
 	</snippets>
 
-	<PopupCustomLayout class="PopupPanel Hidden" popupbackground="dim" onload="DosaSettings.onLoad()">
-		<Panel class="flow-down horizontal-align-center">
+	<PopupCustomLayout class="PopupPanel Hidden" popupbackground="dim">
+		<Panel class="flow-down h-align-center">
 			<Label class="text-h3 mb-3 text-align-center" text="#Settings_Dosa_Title" />
 			<Label class="text-xs text-italic" text="#Settings_Dosa_Info" />
 			<!-- Inserted by JS -->
-			<Panel id="Dosas" class="flow-down full-width mb-2" />
-			<Button class="button button--red horizontal-align-right" onactivate="UiToolkitAPI.CloseAllVisiblePopups()">
+			<Panel id="Dosas" class="flow-down w-full mb-2" />
+			<Button class="button button--red h-align-right" onactivate="UiToolkitAPI.CloseAllVisiblePopups()">
 				<Label class="button__text" text="#Common_Close" />
 			</Button>
 		</Panel>

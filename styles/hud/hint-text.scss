@@ -1,35 +1,26 @@
+@use '../abstract/mixin';
+
 .hud-hint {
-	width: 750px;
-	flow-children: none;
+	width: fit-children;
+	max-width: 640px;
 	opacity: 0;
+	background-color: rgba(0, 0, 0, 0.7);
+	padding: 6px 24px;
+	border-radius: 4px;
+	border: 1px solid rgba(255, 255, 255, 0.0125);
 	horizontal-align: center;
-	background-color: black;
+	transition-property: opacity;
+	transition-duration: 0.1s;
+	transition-timing-function: ease-out;
 
 	&--visible {
 		opacity: 1;
 	}
 
-	&--priority {
-	}
-
 	&__label {
+		@include mixin.font-styles($use-header: false);
 		horizontal-align: center;
-		height: fit-children;
-		color: #ffffff;
-
-		font-size: 20px;
-		font-weight: bold;
-		text-shadow-fast: 1px 1px #00000088;
-		text-overflow: shrink;
-	}
-
-	&__text {
-		flow-children: down;
-
-		vertical-align: middle;
-		horizontal-align: center;
-		height: fit-children;
-		padding-top: 8px;
-		padding-bottom: 8px;
+		font-size: 18px;
+		font-weight: medium;
 	}
 }

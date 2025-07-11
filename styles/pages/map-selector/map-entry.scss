@@ -34,6 +34,7 @@ $transition: 0.125s ease-out 0s;
 		horizontal-align: left;
 		vertical-align: middle;
 
+		border-radius: 4px 0 0 4px;
 		height: 100%;
 
 		transform: translateX(0px);
@@ -56,7 +57,7 @@ $transition: 0.125s ease-out 0s;
 
 		margin-left: $image-width;
 
-		border-radius: 4px;
+		border-radius: 0 4px 4px 0;
 
 		box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.3);
 
@@ -91,10 +92,6 @@ $transition: 0.125s ease-out 0s;
 		height: 100%;
 		background-color: function.gradient-vertical(rgba(255, 255, 255, 0.5), rgba(182, 182, 182, 0.5));
 		transition: background-color $transition;
-
-		#{$root}--completed & {
-			@include mixin.gradient-themed($color: 'green', $direction: 'down');
-		}
 	}
 
 	&__image {
@@ -120,10 +117,6 @@ $transition: 0.125s ease-out 0s;
 			height: 20px;
 			margin-right: 6px;
 			img-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.5);
-
-			&--hidden {
-				visibility: collapse;
-			}
 		}
 
 		&-text {
@@ -133,10 +126,30 @@ $transition: 0.125s ease-out 0s;
 	}
 
 	&__tier {
-		text-align: center;
 		@include mixin.font-styles($use-header: true);
+		text-align: center;
 		font-size: 26px;
-		margin-left: 60px;
+		visibility: collapse;
+
+		&-wrapper {
+			height: 100%;
+			width: 44px;
+			margin-left: 32px;
+		}
+
+		#{$root}--has-tier & {
+			visibility: visible;
+		}
+
+		&-notice {
+			align: right top;
+			font-size: 14px;
+			visibility: collapse;
+
+			#{$root}--submission#{$root}--has-tier & {
+				visibility: visible;
+			}
+		}
 	}
 
 	&__favorite {
@@ -144,7 +157,7 @@ $transition: 0.125s ease-out 0s;
 		height: 100%;
 		vertical-align: middle;
 		padding: 6px 4px 6px 10px;
-		margin-left: 36px;
+		margin-left: 24px;
 
 		&-button {
 			height: 100%;
@@ -193,23 +206,48 @@ $transition: 0.125s ease-out 0s;
 		width: 100px;
 		height: 20px;
 		align: center center;
-		transform: translate3d(-14px, -32px, 0) rotateZ(-45deg);
+		transform: translate3d(-16px, -26px, 0) rotateZ(-30deg);
+		visibility: collapse;
 
 		&-text {
 			align: center center;
-
-			@include mixin.font-styles($use-header: true, $light-header: true);
 			font-size: 14px;
 
-			height: 16px;
+			@include mixin.font-styles($use-header: true, $light-header: true);
 		}
 
-		&--beta {
+		#{$root}--new & {
+			visibility: visible;
+			@include mixin.gradient-themed($color: 'blue', $direction: 'down');
+		}
+
+		#{$root}--private & {
+			visibility: visible;
 			@include mixin.gradient-themed($color: 'purple', $direction: 'down');
 		}
+	}
 
-		&--new {
-			@include mixin.gradient-themed($color: 'red', $direction: 'down');
+	&__lobby {
+		width: fit-children;
+		height: 16px;
+		flow-children: left;
+		align: right bottom;
+		margin-bottom: 1px;
+		margin-right: 1px;
+
+		&-icon {
+			height: 16px;
+			width: 16px;
+			vertical-align: center;
+			img-shadow: 0 1px 2px 2 rgba(0, 0, 0, 0.7);
+		}
+
+		&-playercount {
+			font-size: 14px;
+			font-weight: medium;
+			vertical-align: bottom;
+			margin-top: 1px;
+			text-shadow: 0 1px 2px 2 rgba(0, 0, 0, 0.7);
 		}
 	}
 }

@@ -1,31 +1,19 @@
-/**
- * Utility functions for Javascript.
- * Could be ported to C++ and exposed globally in the future.
- */
-
-/**
- * 2D vector object with x and y member variables
- */
-type Vec2D = { x: number; y: number };
-
-/**
- * 3D vector object with x, y, and z member variables
- */
-type Vec3D = { x: number; y: number; z: number };
-type Vector = Vec2D | Vec3D;
-
-/**
- * 2D length of input vector
- */
-function getSize2D(vec: Vector): number {
-	return Math.sqrt(getSizeSquared2D(vec));
+export function magnitude(vec: vec2 | vec3): number {
+	return Math.sqrt(sumOfSquares(vec));
 }
 
-/**
- * 2D length squared of input vector
- */
-function getSizeSquared2D(vec: Vector): number {
-	return vec.x * vec.x + vec.y * vec.y;
+export function magnitude2D(vec: vec2 | vec3): number {
+	return Math.sqrt(sumOfSquares2D(vec));
+}
+
+// Note: Math.hypot performs additional bounds checking on V8 which which makes it considerably
+// slower than below implementations.
+export function sumOfSquares2D(vec: vec2 | vec3): number {
+	return vec.x ** 2 + vec.y ** 2;
+}
+
+export function sumOfSquares(vec: vec2 | vec3): number {
+	return 'z' in vec ? vec.x ** 2 + vec.y ** 2 + vec.z ** 2 : sumOfSquares2D(vec);
 }
 
 /**
@@ -33,8 +21,8 @@ function getSizeSquared2D(vec: Vector): number {
  * If input vector length is less than threshold,
  * the zero vector is returned.
  */
-function getNormal2D(vec: Vector, threshold: number): Vec2D {
-	const mag = getSize2D(vec);
+export function normal2D(vec: vec2, threshold: number): vec2 {
+	const mag = magnitude2D(vec);
 	const vecNormal = {
 		x: vec.x,
 		y: vec.y
@@ -50,10 +38,8 @@ function getNormal2D(vec: Vector, threshold: number): Vec2D {
 	return vecNormal;
 }
 
-/**
- * Dot product of two vectors.
- */
-function getDot2D(vec1: Vector, vec2: Vector): number {
+/** Dot product of two vectors. */
+export function dot2D(vec1: vec2, vec2: vec2): number {
 	return vec1.x * vec2.x + vec1.y * vec2.y;
 }
 
@@ -61,14 +47,14 @@ function getDot2D(vec1: Vector, vec2: Vector): number {
  * Cross product of two 2D vectors.
  * Defined as Z-component of resultant vector.
  */
-function getCross2D(vec1: Vector, vec2: Vector): number {
+export function cross2D(vec1: vec2, vec2: vec2): number {
 	return vec1.x * vec2.y - vec1.y * vec2.x;
 }
 
 /**
  * Returns 2D copy of input vector rotated anti-clockwise by specified angle (in radians).
  */
-function rotateVector2D(vec: Vector, angle: number): Vec2D {
+export function rotateVector2D(vec: vec2, angle: number): vec2 {
 	const cos = Math.cos(angle);
 	const sin = Math.sin(angle);
 
@@ -78,34 +64,32 @@ function rotateVector2D(vec: Vector, angle: number): Vec2D {
 	};
 }
 
-/**
- * Float equals check with threshold.
- */
-function floatEquals(A: number, B: number, threshold: number): boolean {
+/** Float equals check with threshold. */
+export function approxEquals(A: number, B: number, threshold: number): boolean {
 	return Math.abs(A - B) < threshold;
 }
 
-/**
- * Clamp angle to range [-Pi/2, Pi/2] by wrapping
- */
-function wrapToHalfPi(angle: number): number {
+/** Clamp angle to range [-Pi/2, Pi/2] by wrapping */
+export function wrapToHalfPi(angle: number): number {
 	return Math.abs(angle) > Math.PI * 0.5 ? wrapToHalfPi(angle - Math.sign(angle) * Math.PI) : angle;
 }
 
-/**
- * Converts [0, 2Pi) to [-Pi, Pi]
- */
-function remapAngle(angle: number): number {
+/** Converts [0, 2Pi) to [-Pi, Pi] */
+export function remapAngle(angle: number): number {
 	angle += Math.PI;
 	const integer = Math.trunc(angle / (2 * Math.PI));
 	angle -= integer * 2 * Math.PI;
 	return angle < 0 ? angle + Math.PI : angle - Math.PI;
 }
 
-/**
- * Convert an angle to a projected screen length in pixels.
- */
-function mapAngleToScreenDist(angle: number, fov: number, length: number, scale: number = 1, projection: number = 0) {
+/** Convert an angle to a projected screen length in pixels. */
+export function mapAngleToScreenDist(
+	angle: number,
+	fov: number,
+	length: number,
+	scale: number = 1,
+	projection: number = 0
+) {
 	const screenDist = length / scale;
 
 	if (Math.abs(angle) >= fov) {
@@ -122,10 +106,10 @@ function mapAngleToScreenDist(angle: number, fov: number, length: number, scale:
 	}
 }
 
-function deg2rad(x: number): number {
+export function deg2rad(x: number): number {
 	return (x / 180) * Math.PI;
 }
 
-function rad2deg(x: number): number {
+export function rad2deg(x: number): number {
 	return (x * 180) / Math.PI;
 }

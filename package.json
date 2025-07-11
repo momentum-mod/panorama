@@ -6,32 +6,37 @@
 		"baseDir": "./"
 	},
 	"scripts": {
-		"build": "tsc",
-		"watch": "tsc --watch",
+		"ts:check": "tsc --noEmit",
+		"ts:watch": "tsc --watch --noEmit",
 		"format:fix": "prettier --write **/*.{js,ts,scss,css,md}",
 		"format:check": "prettier --check **/*.{js,ts,scss,css,md}",
 		"lint:fix": "eslint \"**/*.{js,ts}\" --fix",
 		"lint:check": "eslint \"**/*.{js,ts}\"",
-		"prepare": "husky install",
+		"prepare": "husky",
 		"pre-commit": "lint-staged",
 		"get-learn": "node tools/get-learn.js",
-		"get-credits": "node tools/get-credits.js"
+		"get-credits": "node tools/get-credits.js",
+		"fetch-web": "bash tools/fetch-web.sh"
 	},
+	"type": "module",
 	"author": "Momentum Team",
 	"license": "MIT",
 	"devDependencies": {
-		"@typescript-eslint/eslint-plugin": "6.7.2",
-		"axios": "1.5.0",
-		"eslint": "8.49.0",
-		"eslint-config-prettier": "9.0.0",
-		"eslint-plugin-prettier": "5.0.0",
-		"eslint-plugin-unicorn": "48.0.1",
-		"husky": "8.0.3",
-		"lint-staged": "14.0.1",
-		"papaparse": "5.4.1",
-		"prettier": "3.0.3",
-		"prettier-eslint": "15.0.1",
-		"typescript": "5.2.2"
+		"@eslint/js": "^9.22.0",
+		"@types/eslint__js": "^9.14.0",
+		"axios": "^1.8.3",
+		"eslint": "^9.22.0",
+		"eslint-config-prettier": "^10.1.1",
+		"eslint-plugin-prettier": "^5.2.3",
+		"eslint-plugin-unicorn": "^57.0.0",
+		"eslint-plugin-unused-imports": "^4.1.4",
+		"husky": "^9.1.7",
+		"lint-staged": "^15.5.0",
+		"papaparse": "^5.5.2",
+		"prettier": "^3.5.3",
+		"prettier-eslint": "^16.3.0",
+		"typescript": "^5.8.2",
+		"typescript-eslint": "^8.26.1"
 	},
 	"lint-staged": {
 		"**/*.{js,ts,scss,css,md}": [

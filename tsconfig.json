@@ -2,17 +2,21 @@
 	"compilerOptions": {
 		"target": "ESNext",
 		"lib": ["ESNext"],
-		"module": "None",
+		// Dynamic imports, import.meta, top-level await and import attributes are all unsupported.
+		"module": "ES2015",
+		"baseUrl": "scripts/",
 		"rootDir": "scripts/",
-		"outDir": "script_dist/",
-		"alwaysStrict": true,
-		"isolatedModules": true,
 		"allowJs": true,
+		"alwaysStrict": true,
+		"isolatedModules": false,
+		// Enable every strict mode option *besides* strictNullChecks, which we don't support yet
 		"strict": true,
-		"noImplicitAny": false,
-		"typeRoots": ["./scripts/types/"],
-		"types": ["momentum"] // If you error here, you don't have the submodule installed! (git submodule update --init --recursive)
+		"strictNullChecks": false,
+		"experimentalDecorators": true,
+		"typeRoots": ["./scripts/types-mom"], // If you error here, you don't have the submodule installed! (git submodule update --init --recursive)
+		"sourceMap": true,
+		"noImplicitAny": false
 	},
 	"include": ["scripts/"],
-	"exclude": ["*.d.ts"]
+	"exclude": ["scripts/types/p2ce/**/*"]
 }
