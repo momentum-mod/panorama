@@ -3,18 +3,18 @@
 .console-notify {
 	&__frame {
 		transition-property: opacity;
-		transition-duration: 0.5s;
-		transition-timing-function: linear;
-		width: 480px;
+		transition-duration: 0.2s;
+		transition-timing-function: ease-out;
+		width: 720px;
 	}
 
 	&__message-target {
 		flow-children: up;
 		margin: 4px;
-		width: 480px;
+		width: 720px;
 
 		& > MultiselectLabel {
-			text-shadow: 0 2px 3px rgba(0, 0, 0, 1);
+			text-shadow-fast: 0 1px black;
 			font-family: $font-monospace;
 			font-size: 11px;
 		}

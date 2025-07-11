@@ -2,8 +2,9 @@
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
+	
 	<scripts>
-		<include src="file://{scripts}/pages/settings/page.js" />
+		<include type="module" src="file://{scripts}/pages/settings/page.ts" />
 	</scripts>
 
 	<Panel class="settings-page">
@@ -18,12 +19,12 @@
 			<Panel id="GameplayGeneralSubSection" class="settings-group">
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_Gameplay_General_Title" tags="gameplay" />
-					<Panel class="flow-right horizontal-align-right">
-						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Settings_Gameplay', 'GameplayGeneralSubSection')">
+					<Panel class="flow-right h-align-right">
+						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_Gameplay', 'GameplayGeneralSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
 						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-							<Button class="button" onactivate="SettingsShared.resetSettings('GameplayGeneralSubSection');">
+							<Button class="button" onactivate="SettingsPage.resetSettings('GameplayGeneralSubSection');">
 								<Image class="button__icon" src="file://{images}/reset.svg" />
 							</Button>
 						</TooltipPanel>
@@ -57,6 +58,14 @@
 					<Label id="wepdes3" text="#Settings_Gameplay_WeaponDesirability_All" value="2" />
 				</SettingsEnumDropDown>
 
+				<Panel class="settings-group__combo">
+					<SettingsSlider text="#Settings_Gameplay_NoclipSpeed" convar="sv_noclipspeed" min="0" max="20" />
+					<Panel class="flow-right w-full">
+						<SettingsSlider class="w-fill mr-2" text="#Settings_Gameplay_NoclipDuckModifier" min="0" max="5" displayprecision="1" convar="sv_noclipspeed_duck_multiplier" />
+						<SettingsSlider class="w-fill ml-2" text="#Settings_Gameplay_NoclipSprintModifier" min="0" max="5" displayprecision="1" convar="sv_noclipspeed_sprint_multiplier" />
+					</Panel>
+				</Panel>
+
 			</Panel>
 
 			<Panel class="settings-page__spacer" />
@@ -64,12 +73,12 @@
 			<Panel id="PaintSubSection" class="settings-group">
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_Paint_Title" tags="paint,spray" />
-					<Panel class="flow-right horizontal-align-right">
-						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Settings_Paint_Title', 'PaintSubSection')">
+					<Panel class="flow-right h-align-right">
+						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_Paint_Title', 'PaintSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
 						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-							<Button class="button" onactivate="SettingsShared.resetSettings('PaintSubSection');">
+							<Button class="button" onactivate="SettingsPage.resetSettings('PaintSubSection');">
 								<Image class="button__icon" src="file://{images}/reset.svg" />
 							</Button>
 						</TooltipPanel>
@@ -80,10 +89,10 @@
 					<Panel id="PaintContainer" class="settings__paint">
 						<Panel id="PaintBlob" class="settings__paint-blob" />
 					</Panel>
-					<Panel class="fill-width flow-down">
-						<ConVarColorDisplay convar="mom_paint_color" text="#Settings_Paint_Color" oncolorchange="SettingsShared.updatePaintPreview();" tags="color" />
+					<Panel class="w-fill flow-down">
+						<ConVarColorDisplay convar="mom_paint_color" text="#Settings_Paint_Color" oncolorchange="SettingsPage.updatePaintPreview();" tags="color" />
 
-						<SettingsSlider text="#Settings_Paint_Scale" min="0.001" max="1" percentage="true" convar="mom_paint_scale" tags="color,size,scale" onvaluechanged="SettingsShared.updatePaintPreview();" />
+						<SettingsSlider text="#Settings_Paint_Scale" min="0.001" max="1" percentage="true" convar="mom_paint_scale" tags="color,size,scale" onvaluechanged="SettingsPage.updatePaintPreview();" />
 
 						<SettingsEnum text="#Settings_Paint_ApplySound" convar="mom_paint_apply_sound" tags="paint,sound,noise">
 							<RadioButton group="paintsound" text="#Common_Off" value="0" />
@@ -108,64 +117,20 @@
 			<Panel id="SafeguardsSubSection" class="settings-group">
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_Safeguards_Title" tags="safeguards" />
-					<Panel class="flow-right horizontal-align-right">
-						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Settings_Safeguards_Title', 'SafeguardsSubSection')">
+					<Panel class="flow-right h-align-right">
+						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_Safeguards_Title', 'SafeguardsSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
 						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-							<Button class="button" onactivate="SettingsShared.resetSettings('SafeguardsSubSection');">
+							<Button class="button" onactivate="SettingsPage.resetSettings('SafeguardsSubSection');">
 								<Image class="button__icon" src="file://{images}/reset.svg" />
 							</Button>
 						</TooltipPanel>
 					</Panel>
 				</Panel>
 
-				<!-- TODO: infomessages here in the future. Not doing now because of future safeguard changes -->
-
-				<SettingsEnumDropDown text="#Settings_Safeguards_PracticeMode" convar="mom_run_safeguard_practicemode" tags="practice">
-					<Label id="colorize1" text="#Settings_Safeguards_ModesNone" value="0" />
-					<Label id="colorize2" text="#Settings_Safeguards_Modes1" value="1" />
-					<Label id="colorize3" text="#Settings_Safeguards_Modes2" value="2" />
-				</SettingsEnumDropDown>
-
-				<SettingsEnumDropDown text="#Settings_Safeguards_RestartMap" convar="mom_run_safeguard_restart" tags="restart">
-					<Label id="colorize1" text="#Settings_Safeguards_ModesNone" value="0" />
-					<Label id="colorize2" text="#Settings_Safeguards_Modes1" value="1" />
-					<Label id="colorize3" text="#Settings_Safeguards_Modes2" value="2" />
-				</SettingsEnumDropDown>
-
-				<SettingsEnumDropDown text="#Settings_Safeguards_SavestateTele" convar="mom_run_safeguard_saveloc_tele" tags="teleport">
-					<Label id="colorize1" text="#Settings_Safeguards_ModesNone" value="0" />
-					<Label id="colorize2" text="#Settings_Safeguards_Modes1" value="1" />
-					<Label id="colorize3" text="#Settings_Safeguards_Modes2" value="2" />
-				</SettingsEnumDropDown>
-
-				<SettingsEnumDropDown text="#Settings_Safeguards_OpenChat" convar="mom_run_safeguard_chat_open" tags="chat">
-					<Label id="colorize1" text="#Settings_Safeguards_ModesNone" value="0" />
-					<Label id="colorize2" text="#Settings_Safeguards_Modes1" value="1" />
-					<Label id="colorize3" text="#Settings_Safeguards_Modes2" value="2" />
-				</SettingsEnumDropDown>
-
-				<SettingsEnumDropDown text="#Settings_Safeguards_RestartStage" convar="mom_run_safeguard_restart_stage" tags="stage">
-					<Label id="colorize1" text="#Settings_Safeguards_ModesNone" value="0" />
-					<Label id="colorize2" text="#Settings_Safeguards_Modes1" value="1" />
-					<Label id="colorize3" text="#Settings_Safeguards_Modes2" value="2" />
-				</SettingsEnumDropDown>
-
-				<SettingsEnum text="#Settings_Safeguards_ChangeMap" convar="mom_run_safeguard_change_map" tags="change,level,map">
-					<RadioButton group="safeguardchangemap" text="#Common_Off" value="0" />
-					<RadioButton group="safeguardchangemap" text="#Common_On" value="1" />
-				</SettingsEnum>
-
-				<SettingsEnum text="#Settings_Safeguards_QuitMap" convar="mom_run_safeguard_quit_map" tags="map,level,quit">
-					<RadioButton group="safeguardquitmap" text="#Common_Off" value="0" />
-					<RadioButton group="safeguardquitmap" text="#Common_On" value="1" />
-				</SettingsEnum>
-
-				<SettingsEnum text="#Settings_Safeguards_QuitGame" convar="mom_run_safeguard_quit_game" tags="quit,exit">
-					<RadioButton group="safeguardquitgame" text="#Common_Off" value="0" />
-					<RadioButton group="safeguardquitgame" text="#Common_On" value="1" />
-				</SettingsEnum>
+				<SettingsSlider text="#Settings_Safeguards_HoldTime" min="0.25" max="1" displayprecision="2" convar="mom_safeguard_holdtime" infomessage="#Settings_Safeguards_HoldTime_Info" tags="safeguard" />
+				<SettingsSlider text="#Settings_Safeguards_MinRuntime" min="0" max="1200" displayprecision="1" convar="mom_safeguard_minruntime" infomessage="#Settings_Safeguards_MinRuntime_Info" tags="safeguard" />
 			</Panel>
 
 			<Panel class="settings-page__spacer" />
@@ -173,12 +138,12 @@
 			<Panel id="ZonesSubSection" class="settings-group">
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_Zones_Title" tags="zones" />
-					<Panel class="flow-right horizontal-align-right">
-						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Settings_Zones_Title', 'ZonesSubSection')">
+					<Panel class="flow-right h-align-right">
+						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_Zones_Title', 'ZonesSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
 						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-							<Button class="button" onactivate="SettingsShared.resetSettings('ZonesSubSection');">
+							<Button class="button" onactivate="SettingsPage.resetSettings('ZonesSubSection');">
 								<Image class="button__icon" src="file://{images}/reset.svg" />
 							</Button>
 						</TooltipPanel>
@@ -226,6 +191,26 @@
 					<Label id="colorize5" text="#Settings_Zones_Style_SideOverlays" value="4" />
 				</SettingsEnumDropDown>
 
+				<ConVarColorDisplay text="#Settings_Zones_CancelOutlineColor" convar="mom_zone_cancel_draw_color" tags="color,outline,edge" />
+
+				<SettingsEnumDropDown text="#Settings_Zones_CancelOutlineStyle" convar="mom_zone_cancel_draw_mode" tags="color,outline,edge">
+					<Label id="colorize1" text="#Common_Off" value="0" />
+					<Label id="colorize2" text="#Settings_Zones_Style_Outlines" value="1" />
+					<Label id="colorize3" text="#Settings_Zones_Style_OutlineOverlays" value="2" />
+					<Label id="colorize4" text="#Settings_Zones_Style_Sides" value="3" />
+					<Label id="colorize5" text="#Settings_Zones_Style_SideOverlays" value="4" />
+				</SettingsEnumDropDown>
+
+				<ConVarColorDisplay text="#Settings_Zones_BhopOutlineColor" convar="mom_zone_bhop_draw_color" tags="color,outline,edge" />
+
+				<SettingsEnumDropDown text="#Settings_Zones_BhopOutlineStyle" convar="mom_zone_bhop_draw_mode" tags="color,outline,edge">
+					<Label id="colorize1" text="#Common_Off" value="0" />
+					<Label id="colorize2" text="#Settings_Zones_Style_Outlines" value="1" />
+					<Label id="colorize3" text="#Settings_Zones_Style_OutlineOverlays" value="2" />
+					<Label id="colorize4" text="#Settings_Zones_Style_Sides" value="3" />
+					<Label id="colorize5" text="#Settings_Zones_Style_SideOverlays" value="4" />
+				</SettingsEnumDropDown>
+
 			</Panel>
 
 			<Panel class="settings-page__spacer" />
@@ -233,12 +218,12 @@
 			<Panel id="RocketJumpSubSection" class="settings-group">
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_RJ_Title" tags="rj,rocketjump,soldier" />
-					<Panel class="flow-right horizontal-align-right">
-						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Settings_RJ_Title', 'RocketJumpSubSection')">
+					<Panel class="flow-right h-align-right">
+						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_RJ_Title', 'RocketJumpSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
 						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-							<Button class="button" onactivate="SettingsShared.resetSettings('RocketJumpSubSection');">
+							<Button class="button" onactivate="SettingsPage.resetSettings('RocketJumpSubSection');">
 								<Image class="button__icon" src="file://{images}/reset.svg" />
 							</Button>
 						</TooltipPanel>
@@ -289,12 +274,12 @@
 			<Panel id="StickyJumpSubSection" class="settings-group">
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_SJ_Title" tags="sj,stickyjump,demoman" />
-					<Panel class="flow-right horizontal-align-right">
-						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Settings_SJ_Title', 'StickyJumpSubSection')">
+					<Panel class="flow-right h-align-right">
+						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_SJ_Title', 'StickyJumpSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
 						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-							<Button class="button" onactivate="SettingsShared.resetSettings('StickyJumpSubSection');">
+							<Button class="button" onactivate="SettingsPage.resetSettings('StickyJumpSubSection');">
 								<Image class="button__icon" src="file://{images}/reset.svg" />
 							</Button>
 						</TooltipPanel>
@@ -367,12 +352,12 @@
 			<Panel id="ConcSubSection" class="settings-group">
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_Conc_Title" tags="conc,concussion,grenade" />
-					<Panel class="flow-right horizontal-align-right">
-						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Conc', 'ConcSubSection')">
+					<Panel class="flow-right h-align-right">
+						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Conc', 'ConcSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
 						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-							<Button class="button" onactivate="SettingsShared.resetSettings('ConcSubSection');">
+							<Button class="button" onactivate="SettingsPage.resetSettings('ConcSubSection');">
 								<Image class="button__icon" src="file://{images}/reset.svg" />
 							</Button>
 						</TooltipPanel>
@@ -431,12 +416,12 @@
 			<Panel id="DefragSubSection" class="settings-group">
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_Defrag_Title" tags="defrag,quake" />
-					<Panel class="flow-right horizontal-align-right">
-						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Settings_Defrag_Title', 'DefragSubSection')">
+					<Panel class="flow-right h-align-right">
+						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_Defrag_Title', 'DefragSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
 						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-							<Button class="button" onactivate="SettingsShared.resetSettings('DefragSubSection');">
+							<Button class="button" onactivate="SettingsPage.resetSettings('DefragSubSection');">
 								<Image class="button__icon" src="file://{images}/reset.svg" />
 							</Button>
 						</TooltipPanel>

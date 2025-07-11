@@ -2,12 +2,14 @@
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
+	
 	<scripts>
-		<include src="file://{scripts}/components/color-display.js" />
+		<include type="module" src="file://{scripts}/components/color-display.ts" />
 	</scripts>
-	<Panel class="colordisplay" onload="ColorDisplay.updateDisplayOpacity();">
+
+	<Panel class="colordisplay" onload="ColorDisplayHandler.onLoad()">
 		<Label id="Title" class="colordisplay__title" />
-		<Panel id="Display" class="colordisplay__display" onactivate="ColorDisplay.showPopup()" acceptsinput="true" />
+		<Panel id="Display" class="colordisplay__display" onactivate="ColorDisplayHandler.showPopup()" acceptsinput="true" />
 		<TextEntry id="Hex" class="textentry colordisplay__hexentry" textmode="hex" maxchars="8" />
 	</Panel>
 </root>

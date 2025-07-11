@@ -1,0 +1,11 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+		<include src="file://{resources}/styles/overlay/playerlist.scss" />
+	</styles>
+
+	<PlayerList class="playerlist" acceptsinput="true" acceptsfocus="true" hittest="true" hittestchildren="true">
+		<Panel id="PlayerListConnectedSection" class="playerlist__section" />
+		<Panel id="PlayerListNotconnectedSection" class="playerlist__section" />
+	</PlayerList>
+</root>

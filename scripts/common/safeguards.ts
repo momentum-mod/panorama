@@ -1,0 +1,12 @@
+export enum RunSafeguardType {
+	PRACTICE_MODE = 0,
+	RESPAWN = 1,
+	RESTART_TRACK = 2,
+	RESTART_STAGE = 3,
+	SWITCH_TRACKS = 4,
+	SAVELOC_TELE = 5,
+	CHAT_OPEN = 6,
+	MAP_CHANGE = 7,
+	QUIT_TO_MENU = 8,
+	QUIT_GAME = 9
+}

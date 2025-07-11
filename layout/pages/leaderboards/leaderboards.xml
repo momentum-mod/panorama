@@ -1,55 +1,70 @@
 <root>
-
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 
 	<scripts>
-		<include src="file://{scripts}/common/run.js" />
-		<include src="file://{scripts}/pages/leaderboards/leaderboards.js" />
+		<include type="module" src="file://{scripts}/pages/leaderboards/leaderboards.ts" />
 	</scripts>
 
 	<Leaderboards class="leaderboards" acceptsinput="true" acceptsfocus="true" hittest="true" hittestchildren="true">
 		<Panel class="leaderboard-filter-buttons online">
 			<Panel class="tabs">
-				<RadioButton id="TimesListGlobal" class="tabs__tab" group="TimeTypeBar" selected="true" onactivate="Leaderboards.setSelectedTimesList(TIME_LIST_TYPE.LIST_GLOBAL);">
+				<RadioButton id="TimesListGlobal" class="tabs__tab" onactivate="LeaderboardsHandler.setSelectedTimesList(LeaderboardListType.GLOBAL);">
 					<Label class="tabs__text" text="#Leaderboards_Category_Global" />
 				</RadioButton>
-				<RadioButton id="TimesListLocal" class="tabs__tab" group="TimeTypeBar" onactivate="Leaderboards.setSelectedTimesList(TIME_LIST_TYPE.LIST_LOCAL);">
+				<RadioButton id="TimesListLocal" class="tabs__tab" onactivate="LeaderboardsHandler.setSelectedTimesList(LeaderboardListType.LOCAL);">
 					<Label class="tabs__text" text="#Leaderboards_Category_Local" />
 				</RadioButton>
-				<RadioButton id="TimesListLobby" class="tabs__tab" group="TimeTypeBar" onactivate="Leaderboards.setSelectedTimesList(TIME_LIST_TYPE.LIST_LOBBY);" onmouseover="Leaderboards.showLobbyTooltip();" onmouseout="UiToolkitAPI.HideTextTooltip();">
+				<RadioButton id="TimesListLobby" class="tabs__tab" onactivate="LeaderboardsHandler.setSelectedTimesList(LeaderboardListType.LOBBY);" onmouseover="LeaderboardsHandler.showLobbyTooltip();" onmouseout="UiToolkitAPI.HideTextTooltip();">
 					<Label class="tabs__text" text="#Leaderboards_Category_Lobby" />
 				</RadioButton>
 			</Panel>
 
 			<Panel id="FilterButtonsSubtype" class="leaderboard-filter-buttons__subtypes">
 				<Panel class="leaderboard-filter-buttons__local tabs">
-					<RadioButton id="LocalTypeRuns" class="tabs__tab" group="LocalTimeTypeBar" selected="true" onactivate="Leaderboards.setSelectedListType(TIME_LIST_TYPE.LIST_LOCAL, LEADERBOARD_TYPE.TIMES_LOCAL);">
+					<RadioButton id="LocalTypeRuns" class="tabs__tab" onactivate="LeaderboardsHandler.setSelectedListType(LeaderboardListType.LOCAL, LeaderboardType.LOCAL);">
 						<Label class="tabs__text" text="#Leaderboards_Category_YourRuns" />
 					</RadioButton>
-					<RadioButton id="LocalTypeDownloaded" class="tabs__tab" group="LocalTimeTypeBar" onactivate="Leaderboards.setSelectedListType(TIME_LIST_TYPE.LIST_LOCAL, LEADERBOARD_TYPE.TIMES_LOCAL_DOWNLOADED);">
+					<RadioButton id="LocalTypeDownloaded" class="tabs__tab" onactivate="LeaderboardsHandler.setSelectedListType(LeaderboardListType.LOCAL, LeaderboardType.LOCAL_DOWNLOADED);">
 						<Label class="tabs__text" text="#Leaderboards_Category_Downloaded" />
 					</RadioButton>
 				</Panel>
 				<Panel class="leaderboard-filter-buttons__online tabs">
-					<RadioButton id="OnlineTypeTop10" class="tabs__tab" group="OnlineTimeTypeBar" selected="true" onactivate="Leaderboards.setSelectedListType(TIME_LIST_TYPE.LIST_GLOBAL, LEADERBOARD_TYPE.TIMES_TOP10);">
+					<RadioButton id="OnlineTypeTop10" class="tabs__tab" onactivate="LeaderboardsHandler.setSelectedListType(LeaderboardListType.GLOBAL, LeaderboardType.TOP10);">
 						<Label class="tabs__text" text="#Leaderboards_Category_Top10" />
 					</RadioButton>
-					<RadioButton id="OnlineTypeAround" class="tabs__tab" group="OnlineTimeTypeBar" onactivate="Leaderboards.setSelectedListType(TIME_LIST_TYPE.LIST_GLOBAL, LEADERBOARD_TYPE.TIMES_AROUND);">
+					<RadioButton id="OnlineTypeAround" class="tabs__tab" onactivate="LeaderboardsHandler.setSelectedListType(LeaderboardListType.GLOBAL, LeaderboardType.AROUND);">
 						<Label class="tabs__text" text="#Leaderboards_Category_Around" />
 					</RadioButton>
-					<RadioButton id="OnlineTypeFriends" class="tabs__tab" group="OnlineTimeTypeBar" onactivate="Leaderboards.setSelectedListType(TIME_LIST_TYPE.LIST_GLOBAL, LEADERBOARD_TYPE.TIMES_FRIENDS);">
+					<RadioButton id="OnlineTypeFriends" class="tabs__tab" onactivate="LeaderboardsHandler.setSelectedListType(LeaderboardListType.GLOBAL, LeaderboardType.FRIENDS);">
 						<Label class="tabs__text" text="#Leaderboards_Category_Friends" />
 					</RadioButton>
 				</Panel>
 			</Panel>
 
-			<TooltipPanel class="horizontal-align-right width-fit-children height-fit-children" tooltip="#Leaderboards_EndOfRunButton">
-				<Button id="EndOfRunButton" class="button" onactivate="Leaderboards.showEndOfRun();">
+			<Panel class="w-fill mr-4"/>
+
+			<DropDown id="TracksDropdown" class="dropdown" menuclass="dropdown-menu">
+				<Panel id="placeholder" /> <!-- This is needed to unfuck the dynamic dropdown -->
+			</DropDown>
+
+			<TooltipPanel tooltip="#Leaderboards_SyncTrackButton" class="v-align-center">
+				<Button id="SyncTrackButton" class="button leaderboards__button" onactivate="LeaderboardsHandler.syncTrackWithLeaderboard();">
+					<Image class="button__icon" src="file://{images}/sync.svg" textureheight="32" />
+				</Button>
+			</TooltipPanel>
+
+			<TooltipPanel tooltip="#Leaderboards_EndOfRunButton" class="v-align-center">
+				<Button id="EndOfRunButton" class="button leaderboards__button" onactivate="LeaderboardsHandler.showEndOfRun();">
 					<Image class="button__icon button__icon--left" src="file://{images}/arrow-thick-right.svg" textureheight="64" />
 				</Button>
 			</TooltipPanel>
+
+			<Button class="button button--blue leaderboards__hide-button" onactivate="$.DispatchEvent('MapSelector_HideLeaderboards');">
+				<Image class="button__icon button__icon--left" src="file://{images}/chart-timeline.svg" textureheight="40" />
+				<Label class="button__text button__icon--right mr-3" text="#MapSelector_Button_Leaderboards" />
+			</Button>
 		</Panel>
 		<Panel class="leaderboard-times">
 			<Panel class="leaderboard-times__header">
@@ -63,15 +78,15 @@
 					<!-- Populated via code -->
 				</DelayLoadList>
 				<Panel class="leaderboard-times__empty">
-					<Panel class="vertical-align-center horizontal-align-center flow-down">
-						<Label id="LeaderboardEmptyWarningTitle" class="text-h3 horizontal-align-center mb-3" text="#Leaderboards_NoRunsFound" />
-						<Label id="LeaderboardEmptyWarningText" class="horizontal-align-center" text="{s:empty-warning}" />
+					<Panel class="v-align-center h-align-center flow-down">
+						<Label id="LeaderboardEmptyWarningTitle" class="text-h3 h-align-center mb-3" text="#Leaderboards_NoRunsFound" />
+						<Label id="LeaderboardEmptyWarningText" class="h-align-center" text="{s:empty-warning}" />
 					</Panel>
 				</Panel>
 				<Panel class="leaderboard-times__loading">
-					<Panel class="vertical-align-center horizontal-align-center flow-down">
+					<Panel class="v-align-center h-align-center flow-down">
 						<Image class="button__icon button__icon--left spin-clockwise leaderboard-times__loading-spinner" src="file://{images}/refresh.svg" textureheight="128" />
-						<Label class="text-h5 horizontal-align-center" text="#Leaderboards_RequestingData" />
+						<Label class="text-h5 h-align-center" text="#Leaderboards_RequestingData" />
 					</Panel>
 				</Panel>
 			</Panel>

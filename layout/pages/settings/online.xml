@@ -2,8 +2,9 @@
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
+	
 	<scripts>
-		<include src="file://{scripts}/pages/settings/page.js" />
+		<include type="module" src="file://{scripts}/pages/settings/page.ts" />
 	</scripts>
 
 	<Panel class="settings-page">
@@ -15,15 +16,50 @@
 		</Panel>
 
 		<Panel id="SettingsPageContainer" class="settings-page__container">
-			<Panel id="OnlineGhostSubSection" class="settings-group">
+			<Panel id="ReplaySubSection" class="settings-group">
 				<Panel class="settings-group__header">
-					<Label class="settings-group__title" text="#Settings_OnlineGhost_Title" tags="online,ghost,multiplayer" />
-					<Panel class="flow-right horizontal-align-right">
-						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Settings_OnlineGhost_Title', 'OnlineGhostSubSection')">
+					<Label class="settings-group__title" text="#Settings_OnlineReplay_Title" tags="online,replay,multiplayer" />
+					<Panel class="flow-right h-align-right">
+						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_OnlineReplay_Title', 'ReplaySubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
 						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-							<Button class="button" onactivate="SettingsShared.resetSettings('OnlineGhostSubSection');">
+							<Button class="button" onactivate="SettingsPage.resetSettings('ReplaySubSection');">
+								<Image class="button__icon" src="file://{images}/reset.svg" />
+							</Button>
+						</TooltipPanel>
+					</Panel>
+				</Panel>
+
+				<SettingsEnumDropDown text="#Settings_Replay_Save_Mode" convar="mom_tv_replay_save_mode" infomessage="#Settings_Replay_Save_Mode_Info">
+					<Label id="savemode1" text="#Settings_Replay_Save_Mode_KeepAll" value="0" />
+					<Label id="savemode2" text="#Settings_Replay_Save_Mode_KeepAllPB" value="1" />
+				</SettingsEnumDropDown>
+
+				<SettingsSlider text="#Settings_Replay_Expiration" min="0" max="365" convar="mom_tv_replay_expiration" infomessage="#Settings_Replay_Expiration_Info" tags="expiration" />
+
+				<SettingsEnum text="#Settings_OnlineReplay_Comparison_Show" convar="mom_tv_replay_comparison_ghost_show" infomessage="#Settings_OnlineReplay_Comparison_Show_Info">
+					<RadioButton group="replaycomparisonshow" text="#Common_Off" value="0" />
+					<RadioButton group="replaycomparisonshow" text="#Common_On" value="1" />
+				</SettingsEnum>
+
+				<SettingsEnum text="#Settings_OnlineReplay_Comparison_AutoLoad" convar="mom_tv_replay_comparison_autoload" infomessage="#Settings_OnlineReplay_Comparison_AutoLoad_Info">
+					<RadioButton group="replaycomparisonautoload" text="#Common_Off" value="0" />
+					<RadioButton group="replaycomparisonautoload" text="#Common_On" value="1" />
+				</SettingsEnum>
+			</Panel>
+
+			<Panel class="settings-page__spacer" />
+
+			<Panel id="OnlineGhostSubSection" class="settings-group">
+				<Panel class="settings-group__header">
+					<Label class="settings-group__title" text="#Settings_OnlineGhost_Title" tags="online,ghost,multiplayer" />
+					<Panel class="flow-right h-align-right">
+						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_OnlineGhost_Title', 'OnlineGhostSubSection')">
+							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
+						</Button>
+						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
+							<Button class="button" onactivate="SettingsPage.resetSettings('OnlineGhostSubSection');">
 								<Image class="button__icon" src="file://{images}/reset.svg" />
 							</Button>
 						</TooltipPanel>
@@ -78,42 +114,25 @@
 			<Panel id="GhostSubSection" class="settings-group">
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_OnlinePlayer_Title" />
-					<Panel class="flow-right horizontal-align-right">
-						<Button class="button mr-3" onactivate="SettingsShared.showImportExportDialogue('Settings_OnlinePlayer_Title', 'GhostSubSection')">
+					<Panel class="flow-right h-align-right">
+						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_OnlinePlayer_Title', 'GhostSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
 						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-							<Button class="button" onactivate="SettingsShared.resetSettings('GhostSubSection');">
+							<Button class="button" onactivate="SettingsPage.resetSettings('GhostSubSection');">
 								<Image class="button__icon" src="file://{images}/reset.svg" />
 							</Button>
 						</TooltipPanel>
 					</Panel>
 				</Panel>
 
-				<Panel class="full-width flow-right">
+				<Panel class="w-full flow-right">
 
-					<ModelPanel id="GhostModelPreview" class="settings__ghost" src="models/player/player_shape_base.mdl" mouse_rotate="true" antialias="true" />
+					<ModelPanel id="GhostModelPreview" class="settings__ghost" src="models/player/mom_player.mdl" mouse_rotate="true" antialias="true" />
 
-					<Panel class="fill-width flow-down">
-						<SettingsEnumDropDown text="#Settings_OnlinePlayer_Body" convar="mom_ghost_bodygroup" oninputsubmit="SettingsShared.onlineSettingsUpdateModel()" infomessage="#Settings_OnlinePlayer_Body_Info" tags="shape,model">
-							<Label text="#Settings_OnlinePlayer_Bodygroup_0" value="0" id="bodygroup0" />
-							<Label text="#Settings_OnlinePlayer_Bodygroup_1" value="1" id="bodygroup1" />
-							<Label text="#Settings_OnlinePlayer_Bodygroup_2" value="2" id="bodygroup2" />
-							<Label text="#Settings_OnlinePlayer_Bodygroup_3" value="3" id="bodygroup3" />
-							<Label text="#Settings_OnlinePlayer_Bodygroup_4" value="4" id="bodygroup4" />
-							<Label text="#Settings_OnlinePlayer_Bodygroup_5" value="5" id="bodygroup5" />
-							<Label text="#Settings_OnlinePlayer_Bodygroup_6" value="6" id="bodygroup6" />
-							<Label text="#Settings_OnlinePlayer_Bodygroup_7" value="7" id="bodygroup7" />
-							<Label text="#Settings_OnlinePlayer_Bodygroup_8" value="8" id="bodygroup8" />
-							<Label text="#Settings_OnlinePlayer_Bodygroup_9" value="9" id="bodygroup9" />
-							<Label text="#Settings_OnlinePlayer_Bodygroup_10" value="10" id="bodygroup10" />
-							<Label text="#Settings_OnlinePlayer_Bodygroup_11" value="11" id="bodygroup11" />
-							<Label text="#Settings_OnlinePlayer_Bodygroup_12" value="12" id="bodygroup12" />
-							<Label text="#Settings_OnlinePlayer_Bodygroup_13" value="13" id="bodygroup13" />
-							<Label text="#Settings_OnlinePlayer_Bodygroup_14" value="14" id="bodygroup14" />
-						</SettingsEnumDropDown>
-
-						<ConVarColorDisplay text="#Settings_OnlinePlayer_Color" convar="mom_ghost_color" oncolorchange="SettingsShared.onlineSettingsUpdateModel()" infomessage="#Settings_OnlinePlayer_Color_Info" tags="model,color" />
+					<Panel class="w-fill flow-down">
+						<ConVarColorDisplay text="#Settings_OnlinePlayer_PrimaryColor" convar="mom_player_color_primary" oncolorchange="SettingsPage.onlineSettingsUpdateModel()" infomessage="#Settings_OnlinePlayer_PrimaryColor_Info" tags="model,color" />
+						<ConVarColorDisplay text="#Settings_OnlinePlayer_SecondaryColor" convar="mom_player_color_secondary" oncolorchange="SettingsPage.onlineSettingsUpdateModel()" infomessage="#Settings_OnlinePlayer_SecondaryColor_Info" tags="model,color" />
 
 						<SettingsEnum text="#Settings_OnlinePlayer_Trail" convar="mom_trail_enable" infomessage="#Settings_OnlinePlayer_Trail_Info" tags="trail">
 							<RadioButton group="playertrail" text="#Common_Off" value="0" />
@@ -135,7 +154,7 @@
 					<Label class="settings-group__title" text="#Settings_RichPresence_Title" />
 
 					<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-						<Button class="button" onactivate="SettingsShared.resetSettings('RichPresenceSubSection');">
+						<Button class="button" onactivate="SettingsPage.resetSettings('RichPresenceSubSection');">
 							<Image class="button__icon" src="file://{images}/reset.svg" />
 						</Button>
 					</TooltipPanel>

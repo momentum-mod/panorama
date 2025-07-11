@@ -1,0 +1,73 @@
+@use '../config' as *;
+
+.bhopjump {
+	align: center center;
+
+	&__component {
+		align: center center;
+		transform: translateY(34px);
+	}
+
+	&__container {
+		width: fit-children;
+		height: $bhopjump-height;
+		flow-children: right;
+		horizontal-align: center;
+		vertical-align: center;
+	}
+
+	&__bar-wrapper {
+		width: $bhopjump-width;
+		height: $bhopjump-bar-height;
+		vertical-align: center;
+		border: 1px solid $white;
+		border-radius: 3px;
+		opacity: $bhopjump-opacity;
+	}
+
+	&__early {
+		width: 50%;
+		height: 100%;
+		horizontal-align: left;
+		vertical-align: center;
+		flow-children: left;
+		border-radius: 0px;
+		background-color: rgba(0, 0, 0, 0);
+
+		.ProgressBarRight {
+			background-color: $bhopjump-color-background;
+		}
+	}
+
+	&__late {
+		width: 50%;
+		height: 100%;
+		horizontal-align: right;
+		vertical-align: center;
+		flow-children: right;
+		border-radius: 0px;
+		background-color: rgba(0, 0, 0, 0);
+
+		.ProgressBarRight {
+			background-color: $bhopjump-color-background;
+		}
+	}
+
+	&__text-wrapper {
+		width: fit-children;
+		height: $bhopjump-height;
+		vertical-align: top;
+		font-size: $bhopjump-font-size;
+		font-weight: $bhopjump-font-weight;
+
+		&--early {
+			horizontal-align: left;
+			padding-right: $bhopjump-padding;
+		}
+
+		&--late {
+			horizontal-align: right;
+			padding-left: $bhopjump-padding;
+		}
+	}
+}

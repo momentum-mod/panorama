@@ -1,5 +1,6 @@
 @use '../config' as *;
 @use 'sass:list';
+@use 'sass:string';
 
 // ================
 // WIDTH / HEIGHT
@@ -10,40 +11,40 @@
 	height: 100%;
 }
 
-.full-width {
+.w-full {
 	width: 100%;
 }
 
-.half-width {
+.w-half {
 	width: 50%;
 }
 
-.full-height {
+.h-full {
 	height: 100%;
 }
 
-.fill-width {
+.w-fill {
 	width: fill-parent-flow(1);
 }
 
-.fill-height {
+.h-fill {
 	height: fill-parent-flow(1);
 }
 
-.height-fit-children {
+.h-fit-children {
 	height: fit-children;
 }
 
-.width-fit-children {
+.w-fit-children {
 	width: fit-children;
 }
 
 @each $name, $width in ('200': 200px, '250': 250px, '300': 300px, '350': 350px, '400': 400px) {
-	.max-width-#{$width} {
+	.max-w-#{$width} {
 		max-width: $width;
 	}
 
-	.min-width-#{$width} {
+	.min-w-#{$width} {
 		min-width: $width;
 	}
 }
@@ -121,27 +122,27 @@ $s: list.join((0px), $spacers);
 // ALIGNMENT
 // ================
 
-.horizontal-align-center {
+.h-align-center {
 	horizontal-align: center;
 }
 
-.horizontal-align-right {
+.h-align-right {
 	horizontal-align: right;
 }
 
-.horizontal-align-left {
+.h-align-left {
 	horizontal-align: left;
 }
 
-.vertical-align-center {
+.v-align-center {
 	vertical-align: middle;
 }
 
-.vertical-align-top {
+.v-align-top {
 	vertical-align: top;
 }
 
-.vertical-align-bottom {
+.v-align-bottom {
 	vertical-align: bottom;
 }
 
@@ -223,7 +224,7 @@ $s: list.join((0px), $spacers);
 
 @each $rotation in (45, 90, 135, 180, 225, 270, 315) {
 	.rot-#{$rotation} {
-		transform: rotateZ(unquote($rotation + 'deg'));
+		transform: rotateZ(string.unquote($rotation + 'deg'));
 	}
 }
 

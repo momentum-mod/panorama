@@ -2,11 +2,12 @@
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
+	
 	<scripts>
-		<include src="file://{scripts}/pages/leaderboards/entry.js" />
+		<include type="module" src="file://{scripts}/pages/leaderboards/entry.ts" />
 	</scripts>
 
-	<LeaderboardEntry class="leaderboard-entry" oncontextmenu="LeaderboardEntry.showContextMenu()">
+	<LeaderboardEntry class="leaderboard-entry" oncontextmenu="LeaderboardEntryHandler.showContextMenu()">
 		<Label class="leaderboard-entry__item leaderboard-entry__rank" text="{d:rank}" />
 
 		<Panel class="leaderboard-entry__item leaderboard-entry__item leaderboard-entry__player">
@@ -20,5 +21,4 @@
 		<!-- TODO: Tags -->
 
 	</LeaderboardEntry>
-
 </root>

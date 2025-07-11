@@ -2,9 +2,11 @@
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
+	
 	<scripts>
-		<include src="file://{scripts}/hud/console-notify.js" />
+		<include type="module" src="file://{scripts}/hud/console-notify.ts" />
 	</scripts>
+	
 	<Panel class="console-notify__frame">
 		<ConVarEnabler convar="developer" togglevisibility="true">
 			<ConVarEnabler convar="con_drawnotify" togglevisibility="true">

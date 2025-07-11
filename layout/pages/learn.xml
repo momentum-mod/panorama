@@ -4,8 +4,7 @@
 	</styles>
 
 	<scripts>
-		<include src="file://{scripts}/common/gamemodes.js" />
-		<include src="file://{scripts}/pages/learn.js" />
+		<include src="file://{scripts}/pages/learn.ts" />
 	</scripts>
 
 	<snippets>
@@ -58,17 +57,11 @@
 					<Label class="tabs__text" text="#Gamemode_SJ" />
 				</RadioButton>
 				<Panel class="tabs__gap" />
-				<RadioButton id="TricksurfRadio" class="tabs__tab learn-header__modes-tab" group="LearningNavBar" onactivate='Learn.onModeButtonPressed("Tricksurf")'>
-					<Label class="tabs__text" text="#Gamemode_Tricksurf" />
-				</RadioButton>
 				<Panel class="tabs__gap" />
 				<RadioButton id="AhopRadio" class="tabs__tab learn-header__modes-tab" group="LearningNavBar" onactivate='Learn.onModeButtonPressed("Ahop")'>
 					<Label class="tabs__text" text="#Gamemode_Ahop" />
 				</RadioButton>
 				<Panel class="tabs__gap" />
-				<RadioButton id="ParkourRadio" class="tabs__tab learn-header__modes-tab" group="LearningNavBar" onactivate='Learn.onModeButtonPressed("Parkour")'>
-					<Label class="tabs__text" text="#Gamemode_Parkour" />
-				</RadioButton>
 				<Panel class="tabs__gap" />
 				<RadioButton id="ConcRadio" class="tabs__tab learn-header__modes-tab" group="LearningNavBar" onactivate='Learn.onModeButtonPressed("Conc")'>
 					<Label class="tabs__text" text="#Gamemode_Conc" />
@@ -86,7 +79,7 @@
 			<Panel id="RightPanel" class="learn__right">
 				<Panel class="learn__info learn-info">
 					<Panel class="learn-info__left">
-						<Panel class="flow-right full-width">
+						<Panel class="flow-right w-full">
 							<Label class="learn-info__title" text="{s:selected_lesson_title}" />
 							<Label id="LessonCompletionStatus" class="learn-info__completion-status" text="#Learn_Completed" />
 						</Panel>
@@ -97,7 +90,7 @@
 							<Label text="Image Goes Here" style="align: center center; opacity: 0.1" />
 						</Image>
 						<Button class="button button--blue learn-info__play-button" onactivate="Learn.startCurrentLesson();">
-							<Panel class="flow-right full-height horizontal-align-center">
+							<Panel class="flow-right h-full h-align-center">
 								<Image class="button__icon button__icon--left" src="file://{images}/play-circle.svg" textureheight="64" />
 								<Label class="button__text button__text--right learn-info__playbutton-text" text="#Learn_Practice" />
 							</Panel>

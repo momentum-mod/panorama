@@ -4,7 +4,7 @@
 	</styles>
 
 	<scripts>
-		<include src="file://{scripts}/pages/controls-library.js" />
+		<include type="module" src="file://{scripts}/pages/controls-library.ts" />
 	</scripts>
 
 	<Panel class="mainmenu__page">
@@ -34,20 +34,21 @@
 					<Label class="text-xxxl" text="text-xxxl" />
 					<Label class="text-xxl" text="text-xxl" />
 					<Label class="text-xl" text="text-xl" />
-					<Label class="text-l" text="text-l" />
+					<Label class="text-lg" text="text-l" />
 					<Label class="text-m" text="text-m" />
 					<Label class="text-sm" text="text-sm" />
 					<Label class="text-xs" text="text-xs" />
 				</Panel>
 				<Panel class="col">
-					<Label class="text-weight-black" text="text-weight-black" />
-					<Label class="text-weight-bold" text="text-weight-bold" />
-					<Label class="text-weight-medium" text="text-weight-medium" />
-					<Label class="text-weight-normal" text="text-weight-normal" />
-					<Label class="text-weight-light" text="text-weight-light" />
-					<Label class="text-weight-thin" text="text-weight-thin" />
-					<Label class="text-weight-italic" text="text-weight-italic" />
-					<Label class="text-weight-bold text-italic" text="text-weight-bold text-italic" />
+					<Label class="text-black" text="text-black" />
+					<Label class="text-bold" text="text-bold" />
+					<Label class="text-semi-bold" text="text-semi-bold" />
+					<Label class="text-medium" text="text-medium" />
+					<Label class="text-normal" text="text-normal" />
+					<Label class="text-light" text="text-light" />
+					<Label class="text-thin" text="text-thin" />
+					<Label class="text-italic" text="text-italic" />
+					<Label class="text-bold text-italic" text="text-bold text-italic" />
 				</Panel>
 			</Panel>
 
@@ -211,14 +212,14 @@
 					</Panel>
 				</Panel>
 				<Panel class="col">
-					<Panel class="col full-width">
-						<Label class="text-xs max-width-200 ml-4" text="horizontal-separator" />
+					<Panel class="col w-full">
+						<Label class="text-xs max-w-200 ml-4" text="horizontal-separator" />
 						<Panel class="horizontal-separator" />
 					</Panel>
 				</Panel>
-				<Panel class="col full-height">
-					<Panel class="row full-height">
-						<Label class="text-xs max-width-200" text="vertical-separator" />
+				<Panel class="col h-full">
+					<Panel class="row h-full">
+						<Label class="text-xs max-w-200" text="vertical-separator" />
 						<Panel class="vertical-separator" />
 					</Panel>
 				</Panel>
@@ -534,7 +535,7 @@
 
 			<Label class="text-h3 mt-3" text="Context Menus" />
 			<Panel class="row my-3">
-				<Button class="button" onactivate="ControlsLibrary.OnSimpleContextMenu();">
+				<Button class="button" onactivate="ControlsLibraryHandler.onSimpleContextMenu();">
 					<Label class="button__text" text="Simple Context Menu" />
 				</Button>
 			</Panel>
@@ -746,7 +747,7 @@
 			</Panel>
 
 			<Label class="text-h3 mt-3" text="Settings" />
-			<Panel class="flow-down half-width">
+			<Panel class="flow-down w-half">
 				<SettingsEnum text="SettingsEnum">
 					<RadioButton group="settingsenum" text="1" value="0" />
 					<RadioButton group="settingsenum" text="2" value="1" />

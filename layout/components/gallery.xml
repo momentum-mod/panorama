@@ -1,0 +1,22 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+
+	<scripts>
+		<include type="module" src="file://{scripts}/components/gallery.ts" />
+	</scripts>
+
+	<PopupCustomLayout class="PopupPanel Hidden gallery" popupbackground="blur">
+		<Panel class="gallery__background" onactivate="UiToolkitAPI.CloseAllVisiblePopups();"/>
+		<Panel class="gallery__container">
+			<!-- Empty event to stop left-click hitting background panel and closing the popup -->
+			<Image id="MainImage" class="gallery__main-image" hittest="true" onactivate="" />
+			<Panel id="Thumbnails" class="gallery__thumbnails">
+				<!-- Populated by JS -->
+			</Panel>
+		</Panel>
+		<!-- Using a big clear close button, though clicking anywhere on the background will close -->
+		<Image class="gallery__close-button" src="file://{images}/close.svg" textureheight="64" onactivate="UiToolkitAPI.CloseAllVisiblePopups();"/>
+	</PopupCustomLayout>
+</root>
