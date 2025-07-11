@@ -1146,8 +1146,8 @@ class CgazHandler {
 				break;
 
 			case InputMode.TURN_LEFT: {
-				fillLeftZones = true;
-				leftOffset = -Math.PI * 0.5 - viewAngle;
+				fillLeftZones = Boolean(this.primeTruenessMode & TruenessMode.CPM_TURN);
+				if (fillLeftZones) leftOffset = -Math.PI * 0.5 - viewAngle;
 				const velocity = MomentumPlayerAPI.GetVelocity();
 				const speed = MomMath.magnitude2D(velocity);
 				const mirrorTarget = this.findFastAngle(speed, MAX_GROUND_SPEED, AIR_ACCEL);
@@ -1155,8 +1155,8 @@ class CgazHandler {
 				break;
 			}
 			case InputMode.TURN_RIGHT: {
-				fillRightZones = true;
-				rightOffset = Math.PI * 0.5 - viewAngle;
+				fillRightZones = Boolean(this.primeTruenessMode & TruenessMode.CPM_TURN);
+				if (fillRightZones) rightOffset = Math.PI * 0.5 - viewAngle;
 				const velocity = MomentumPlayerAPI.GetVelocity();
 				const speed = MomMath.magnitude2D(velocity);
 				const mirrorTarget = this.findFastAngle(speed, MAX_GROUND_SPEED, AIR_ACCEL);
@@ -1173,10 +1173,8 @@ class CgazHandler {
 			}
 		}
 
-		const leftAngles =
-			fillLeftZones && this.primeTruenessMode & TruenessMode.CPM_TURN ? this.primeAngles : this.snapAngles;
-		const rightAngles =
-			fillRightZones && this.primeTruenessMode & TruenessMode.CPM_TURN ? this.primeAngles : this.snapAngles;
+		const leftAngles = fillLeftZones ? this.primeAngles : this.snapAngles;
+		const rightAngles = fillRightZones ? this.primeAngles : this.snapAngles;
 
 		const iLeft = this.updateFirstPrimeZone(leftTarget, leftOffset, this.primeFirstZoneLeft, leftAngles);
 		const iRight = this.updateFirstPrimeZone(rightTarget, rightOffset, this.primeFirstZoneRight, rightAngles);
