@@ -173,7 +173,7 @@ class Speedometers {
 
 	static settings: SpeedometerSettingsAPI.Settings[] = [];
 	static gamemode: Gamemode = DEFAULT_GAMEMODE;
-	static details: Speedometer[];
+	static details: Speedometer[] = [];
 
 	static {
 		$.RegisterForUnhandledEvent('OnSpeedometerSettingsLoaded', (succ) => this.settingsLoaded(succ));
