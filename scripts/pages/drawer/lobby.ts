@@ -457,10 +457,7 @@ class LobbyHandler {
 			const newMap = member.map_name;
 
 			if (memberSteamID in this.lobbyMemberData) {
-				const member = this.lobbyMemberData[memberSteamID] as Record<string, any>;
-				for (const [k, v] of Object.entries(member)) {
-					member[k] = v;
-				}
+				Object.assign(this.lobbyMemberData[memberSteamID], member);
 			} else {
 				this.lobbyMemberData[memberSteamID] = member;
 			}
