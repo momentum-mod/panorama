@@ -73,7 +73,7 @@ class LeaderboardEntryHandler {
 		// 		icon: 'file://{images}/online/publiclobby.svg',
 		// 		style: 'icon-color-blue',
 		// 		jsCallback: () => {
-		// 			const frontendUrl = GameInterfaceAPI.GetSettingString('mom_api_url_frontend');
+		// 			const frontendUrl = GameInterfaceAPI.GetSettingString('mom_api_url_backend_frontend');
 		// 			SteamOverlayAPI.OpenURLModal(`${frontendUrl}/runs/${timeData.replayID}`);
 		// 		}
 		// 	});
