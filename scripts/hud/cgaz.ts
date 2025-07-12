@@ -691,18 +691,20 @@ class CgazHandler {
 
 		this.clearZones(this.primeZones);
 
-		if (this.primeEnable) {
+		if (this.primeEnable && phyMode !== DefragAPI.DefragPhysics.VTG) {
 			const snapOffset = MomMath.remapAngle(
 				(bSnapShift ? 0 : Math.PI * 0.25 * (rightMove > 0 ? -1 : 1)) - viewAngle
 			);
 
 			if (speed > this.primeMinSpeed) {
+				const useSnapAccel = !(
+					this.primeTruenessMode & TruenessMode.CPM_TURN || phyMode === DefragAPI.DefragPhysics.VQ3
+				);
 				const primeMaxSpeed =
 					this.primeTruenessMode & TruenessMode.PROJECTED ? lastMoveData.wishspeed : lastMoveData.maxspeed;
 				const primeMaxAccel = lastMoveData.acceleration * maxSpeed * tickInterval;
-				const primeSightSpeed =
-					this.primeTruenessMode & TruenessMode.CPM_TURN ? primeMaxSpeed : MAX_GROUND_SPEED;
-				const primeSightAccel = this.primeTruenessMode & TruenessMode.CPM_TURN ? primeMaxAccel : this.snapAccel;
+				const primeSightSpeed = useSnapAccel ? MAX_GROUND_SPEED : primeMaxSpeed;
+				const primeSightAccel = useSnapAccel ? this.snapAccel : primeMaxAccel;
 
 				if (this.primeAccel !== primeSightAccel) {
 					this.primeAccel = primeSightAccel;
@@ -1134,6 +1136,8 @@ class CgazHandler {
 		const inputAngle = MomMath.remapAngle(viewAngle - wishAngle) * MomMath.sumOfSquares2D(wishDir);
 		const velocity = MomentumPlayerAPI.GetVelocity();
 		const gainZonesMap = new Map();
+		const phyMode = DefragAPI.GetDFPhysicsMode();
+		const lastMoveData = MomentumMovementAPI.GetLastMoveData();
 
 		let speedGain = 0;
 		let gainMax = -this.primeAccel;
@@ -1151,7 +1155,9 @@ class CgazHandler {
 				break;
 
 			case InputMode.TURN_LEFT: {
-				fillLeftZones = Boolean(this.primeTruenessMode & TruenessMode.CPM_TURN);
+				fillLeftZones = Boolean(
+					this.primeTruenessMode & TruenessMode.CPM_TURN || phyMode === DefragAPI.DefragPhysics.VQ3
+				);
 				if (fillLeftZones) leftOffset = -Math.PI * 0.5 - viewAngle;
 				const velocity = MomentumPlayerAPI.GetVelocity();
 				const speed = MomMath.magnitude2D(velocity);
@@ -1160,7 +1166,9 @@ class CgazHandler {
 				break;
 			}
 			case InputMode.TURN_RIGHT: {
-				fillRightZones = Boolean(this.primeTruenessMode & TruenessMode.CPM_TURN);
+				fillRightZones = Boolean(
+					this.primeTruenessMode & TruenessMode.CPM_TURN || phyMode === DefragAPI.DefragPhysics.VQ3
+				);
 				if (fillRightZones) rightOffset = Math.PI * 0.5 - viewAngle;
 				const velocity = MomentumPlayerAPI.GetVelocity();
 				const speed = MomMath.magnitude2D(velocity);
