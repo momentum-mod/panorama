@@ -740,6 +740,12 @@ class ZoneMenuHandler {
 	populateRegionProperties() {
 		let region = null;
 
+		// These controls should only be shown for zones, not global regions.
+		// Some of these may also be selectively hidden below
+		this.panels.propertiesZone.FindChildrenWithClassTraverse('not-global-region').forEach((panel) => {
+			panel.visible = this.selectedZone.zone != null;
+		});
+
 		if (this.selectedZone.zone) {
 			if (!this.teleDestList) return;
 
@@ -798,12 +804,6 @@ class ZoneMenuHandler {
 		}
 
 		if (!region) return;
-
-		// These controls should only be shown for zones, not global regions.
-		this.panels.propertiesZone.FindChildrenWithClassTraverse('not-global-region').forEach((panel) => {
-			// Respect if something above wanted this to not be visible
-			panel.visible &&= this.selectedZone.zone != null;
-		});
 
 		// Indent region properties for zone regions so they appear as subitems of the region selection
 		this.panels.regionProperties.SetHasClass('zoning__property-inset', this.selectedZone.zone != null);
