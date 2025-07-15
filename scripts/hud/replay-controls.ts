@@ -234,16 +234,16 @@ class ReplayControlsHandler {
 		this.sliderSegments.forEach(({ startTime, endTime, panel, progressPanel }) => {
 			// For iters on later segments after current one
 			if (foundActive) {
-				panel.SetHasClass('replayslider__segment--active', false);
+				panel.SetHasClass('replaysegment--active', false);
 				progressPanel.style.width = '0%';
 			} else if (startTime <= curtime && curtime < endTime) {
 				foundActive = true;
-				panel.SetHasClass('replayslider__segment--active', true);
+				panel.SetHasClass('replaysegment--active', true);
 				const progressPercent = (curtime - startTime) / (endTime - startTime);
-				// Without toFixed JS sometimes stringify with exponential notation (js lol)
+				// Without toFixed JS sometimes stringifies with exponential notation (js lol)
 				progressPanel.style.width = `${(progressPercent * 100).toFixed(10)}%`;
 			} else {
-				panel.SetHasClass('replayslider__segment--active', false);
+				panel.SetHasClass('replaysegment--active', false);
 				progressPanel.style.width = '100%';
 			}
 		});
