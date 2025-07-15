@@ -58,6 +58,7 @@ class MapSelectorHandler implements OnPanelLoad {
 		creditsContainer: $<Panel>('#MapCreditsContainer'),
 		datesContainer: $<Panel>('#MapDatesContainer'),
 		credits: $<Panel>('#MapCredits'),
+		submissionStatus: $<Label>('#MapSubmissionStatus'),
 		changelog: $<Panel>('#MapChangelog'),
 		stats: $<Panel>('#MapInfoStats'),
 		websiteButton: $<Button>('#MapInfoWebsiteButton'),
@@ -392,6 +393,8 @@ class MapSelectorHandler implements OnPanelLoad {
 			this.panels.info.SetDialogVariable('status', status);
 			this.panels.info.SetDialogVariable('status_tooltip', tooltip);
 
+			this.panels.submissionStatus.visible = true;
+
 			const hasChangelog = staticData.versions.length > 1;
 			this.panels.changelog.visible = hasChangelog;
 			if (hasChangelog) {
@@ -409,12 +412,20 @@ class MapSelectorHandler implements OnPanelLoad {
 								(arr.length - i).toString()
 							)
 						});
-						$.CreatePanel('Label', container, '', {
-							text: changelog,
-							class: 'mapselector-map-info__changelog-text'
-						});
+						// First version doesn't necessarily have a changelog
+						if (changelog) {
+							$.CreatePanel('Label', container, '', {
+								text: changelog,
+								class: 'mapselector-map-info__changelog-text'
+							});
+						}
 					});
 			}
+		} else {
+			this.panels.submissionStatus.visible = false;
+			this.panels.changelog.visible = false;
+			this.panels.info.SetDialogVariable('status', '');
+			this.panels.info.SetDialogVariable('status_tooltip', '');
 		}
 	}
 

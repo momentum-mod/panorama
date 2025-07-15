@@ -435,11 +435,6 @@ $notch-width: 10px;
 	&__changelog {
 		width: 100%;
 		flow-children: down;
-		visibility: collapse;
-
-		#{$root}--submission & {
-			visibility: visible;
-		}
 	}
 
 	&__status-icon {
