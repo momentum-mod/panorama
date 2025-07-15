@@ -143,13 +143,6 @@ class HudComparisonsHandler {
 			this.regenerateSplits();
 		});
 
-		// TODO: in future OnObservedTimerReplaced should fire when you stop viewing a replay.
-		// Presuming GetObservedRunMetadata returns `null` at that point, we can remove this callback completely.
-		$.RegisterForUnhandledEvent('ObserverTargetChanged', () => {
-			this.controlledReplayID = null;
-			this.regenerateSplits();
-		});
-
 		$.RegisterForUnhandledEvent('LevelInitPostEntity', () => {
 			this.clearSplits();
 		});
