@@ -172,11 +172,11 @@ class ReplayControlsHandler {
 		return { startTime: segmentStartTime, endTime: segmentEndTime, panel: outer, progressPanel };
 	}
 
-	createPrerunSegment(length: number, runtime: number) {
+	createPrerunSegment(prerunLength: number, runtime: number) {
 		if (!this.sliderSegments) return;
 
 		const outer = $.CreatePanel('Panel', this.panels.fakeSliderContainer, '', {
-			style: `width: fill-parent-flow(${length});`
+			style: `width: fill-parent-flow(${prerunLength});`
 		});
 		outer.LoadLayoutSnippet('replay-segment-prerun');
 
@@ -184,14 +184,15 @@ class ReplayControlsHandler {
 
 		const inner = outer.GetFirstChild()!;
 
-		// Conditional give an extra class for very small segments, otherwise looks weird. Essential that this
-		// panel exists though, so the fill-parent-flow aligns right.
-		if (length / runtime < 0.05) {
+		// If the prerun segment would be tiny, hide it (but essential that this panel exists to get the
+		// fill-parent-flow alignment correct). The width of the whole bar is about 1200px on 1920, we don't want to
+		// see a bar smaller than 8px.
+		if (runtime / prerunLength > 1200 / 8) {
 			inner.AddClass('replaysegment__inner--tiny-prerun');
 		}
 
 		this.sliderSegments.unshift({
-			startTime: length * -1,
+			startTime: prerunLength * -1,
 			endTime: 0,
 			panel: outer,
 			progressPanel: inner.GetFirstChild()!
