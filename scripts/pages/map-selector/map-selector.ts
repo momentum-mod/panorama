@@ -625,7 +625,7 @@ class MapSelectorHandler implements OnPanelLoad {
 		// If we errored at any point, C++ will show a toast. Even if some requests were successful, don't show
 		// both success and error toasts, would be confusing.
 		if (!errored) {
-			ToastAPI.CreateToast('', '', toastMessage, ToastAPI.ToastLocation.RIGHT, 10, toastStyle);
+			ToastAPI.CreateToast('', '', toastMessage, ToastAPI.ToastLocation.RIGHT, 10, '', toastStyle);
 		}
 
 		this.panels.refreshIcon.RemoveClass('spin-clockwise');
