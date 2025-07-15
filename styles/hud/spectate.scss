@@ -82,7 +82,7 @@
 
 	&__hint {
 		@include mixin.font-styles($use-header: false);
-		color: #999;
+		color: rgb(255, 255, 255, 0.9);
 		font-size: 12px;
 		font-style: italic;
 		vertical-align: center;
