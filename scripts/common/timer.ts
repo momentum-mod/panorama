@@ -192,7 +192,7 @@ export function findSubsegmentComparison(
 }
 
 /**
- * Try find the index of a subsegment hit previously in the given splits, taking unordered and missing checkpoints into
+ * Try to find the index of a subsegment hit previously in the given splits, taking unordered and missing checkpoints into
  * account, returning last subsegment index in the previous segment if a starting subsegment is provided.
  * @returns Tuple of [majorNum, minorNum]
  */
@@ -206,6 +206,17 @@ export function findPreviousSubsegment(splits: RunSplits, majorNum: number, mino
 		// If minorNum == 1 we're in a starting segment, so the previous subsegment is always the last subsegment in the
 		// last segment's subsegments. Segments are never optional, and must have had a start segment so both index
 		// accesses must be valid.
+
+		if (!splits.segments[majorNum - 2].subsegments) {
+			// Subsegments are omitted for segments before the most recent LIMITED_DATA_MAX_SUBSEGMENTS segments, so
+			// trying to access here would throw. If this happens, return 0, 0 so comparisons can treat as having no
+			// previous subsegment.
+			$.Warning(
+				`Timer.findPreviousSubsegment: Previous segment ${majorNum - 2} has no subsegments, don't try to access past LIMITED_DATA_MAX_SUBSEGMENTS!`
+			);
+			return [0, 0];
+		}
+
 		return [majorNum - 1, splits.segments[majorNum - 2].subsegments.length];
 	}
 
