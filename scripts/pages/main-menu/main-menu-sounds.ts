@@ -21,6 +21,8 @@ const AmbientSounds = {
 	}
 };
 
+const AmbientGameUIStates = new Set([GameUIState.MAINMENU, GameUIState.LOADINGSCREEN]);
+
 let currentPage: Page | 'MainMenu' = 'MainMenu';
 let playedMapSelectorSparkles = false;
 
@@ -41,6 +43,7 @@ $.RegisterForUnhandledEvent('MapCache_MapLoad', () => playMapLoadSound());
 function updateAmbientSounds(newPage: Page | 'MainMenu') {
 	currentPage = newPage;
 
+	if (!AmbientGameUIStates.has(GameInterfaceAPI.GetGameUIState())) return;
 	// Map selector ambience is extra layer on top of main menu ambience, whilst settings ambience is a separate sound.
 	if (newPage === Page.SETTINGS) {
 		startAmbientSound(AmbientSounds.Settings);
