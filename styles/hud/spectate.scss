@@ -36,7 +36,6 @@
 	}
 
 	&__playerinfo {
-		width: 20%;
 		vertical-align: center;
 		horizontal-align: center;
 	}
@@ -50,7 +49,16 @@
 		@include mixin.font-styles($use-header: true);
 		vertical-align: center;
 		text-shadow: 0 1px 3px 2 rgba(0, 0, 0, 0.5);
-		font-size: 26px;
+		font-size: 24px;
+	}
+
+	&__avatar {
+		vertical-align: center;
+		width: 24px;
+		height: 24px;
+		border-radius: 2px;
+		margin-right: 12px;
+		box-shadow: 0 1px 2px rgba(0, 0, 0, 1);
 	}
 
 	&__button {

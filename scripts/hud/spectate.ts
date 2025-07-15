@@ -4,6 +4,7 @@ import { OnPanelLoad, PanelHandler } from 'util/module-helpers';
 class HudSpectateHandler implements OnPanelLoad {
 	readonly panels = {
 		cp: $.GetContextPanel<MomHudSpectate>(),
+		avatar: $<AvatarImage>('#Avatar')!,
 		statusIcon: $<Image>('#StatusIcon')!,
 		prevPlayer: $<Button>('#PrevPlayer')!,
 		nextPlayer: $<Button>('#NextPlayer')!,
@@ -21,9 +22,11 @@ class HudSpectateHandler implements OnPanelLoad {
 	}
 
 	update() {
-		const { name, isReplay } = this.panels.cp;
+		const { steamId, name, isReplay } = this.panels.cp;
 
 		this.panels.cp.SetDialogVariable('spec_target', name);
+
+		this.panels.avatar.steamid = steamId;
 
 		this.panels.cp.SetDialogVariable(
 			'status',
