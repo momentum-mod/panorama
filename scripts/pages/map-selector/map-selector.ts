@@ -1,6 +1,6 @@
 import { OnPanelLoad, PanelHandler } from 'util/module-helpers';
 import { traverseChildren } from 'util/functions';
-import { MapStatuses, MapCreditType, MapStatus, MMap, MapStats } from 'common/web';
+import { MapCreditType, MapStatus, MapStatuses, MMap, TrackType } from 'common/web';
 import * as Maps from 'common/maps';
 import * as Leaderboards from 'common/leaderboard';
 import * as Time from 'util/time';
@@ -139,8 +139,8 @@ class MapSelectorHandler implements OnPanelLoad {
 		$.RegisterForUnhandledEvent('MapSelector_ShowConfirmOverwrite', (mapID) => this.showConfirmOverwrite(mapID));
 		$.RegisterForUnhandledEvent('MapSelector_MapsFiltered', (count) => this.onMapsFiltered(count));
 		$.RegisterForUnhandledEvent('MapSelector_SelectedDataUpdate', (mapData) => this.onSelectedDataUpdated(mapData));
-		$.RegisterForUnhandledEvent('MapSelector_SelectedOnlineDataUpdate', (stats) =>
-			this.onSelectedOnlineDataUpdated(stats)
+		$.RegisterForUnhandledEvent('MapSelector_SelectedOnlineDataUpdate', (mapData) =>
+			this.onSelectedOnlineDataUpdated(mapData)
 		);
 		$.RegisterForUnhandledEvent('MapSelector_HideLeaderboards', () => this.toggleLeaderboards(false));
 
@@ -365,13 +365,13 @@ class MapSelectorHandler implements OnPanelLoad {
 		this.panels.stageCountSeparator.visible = !isLinear;
 		this.panels.stageCountLabel.visible = !isLinear;
 		if (!isLinear) {
-			info.SetDialogVariableInt('stageCount', numStages);
+			info.SetDialogVariableInt('stage_count', numStages);
 		}
 		this.panels.bonusCountSeparator.visible = numBonuses > 0;
 		this.panels.bonusCountLabel.visible = numBonuses === 1;
 		this.panels.bonusesCountLabel.visible = numBonuses > 1;
 		if (numBonuses > 0) {
-			info.SetDialogVariableInt('bonusCount', numBonuses);
+			info.SetDialogVariableInt('bonus_count', numBonuses);
 		}
 
 		info.SetDialogVariable('description', staticData.info?.description);
@@ -381,9 +381,7 @@ class MapSelectorHandler implements OnPanelLoad {
 		this.panels.datesContainer.SetHasClass('hide', !staticData.info?.creationDate);
 
 		const pb = Leaderboards.getUserMapDataTrack(userData, gamemode);
-		if (pb) {
-			info.SetDialogVariable('pb', Time.timetoHHMMSS(pb.time));
-		}
+		info.SetDialogVariable('personal_best', pb ? Time.timetoHHMMSS(pb.time) : $.Localize('#Common_NA'));
 
 		const inSubmission = MapStatuses.IN_SUBMISSION.includes(staticData.status);
 		info.SetHasClass('mapselector-map-info--submission', inSubmission);
@@ -489,7 +487,7 @@ class MapSelectorHandler implements OnPanelLoad {
 			});
 	}
 
-	onSelectedOnlineDataUpdated(stats: MapStats) {
+	onSelectedOnlineDataUpdated(onlineMapData: MMap) {
 		const statsPanel = this.panels.stats;
 
 		statsPanel.RemoveClass('mapselector-stats--loading');
@@ -500,9 +498,15 @@ class MapSelectorHandler implements OnPanelLoad {
 		// - Plays - We *may* track this in the future but don't currently.
 		// - Time Played - We don't track this *yet*.
 		// Map stats is in a very WIP state at the moment and doesn't need to be perfect yet.
-		statsPanel.SetDialogVariableInt('completesUnique', stats.uniqueCompletions);
-		statsPanel.SetDialogVariableInt('completes', stats.completions);
-		statsPanel.SetDialogVariableInt('favorites', stats.favorites);
+		statsPanel.SetDialogVariableInt('unique_completions', onlineMapData.stats.uniqueCompletions);
+		statsPanel.SetDialogVariableInt('total_completions', onlineMapData.stats.completions);
+		statsPanel.SetDialogVariableInt('favorites', onlineMapData.stats.favorites);
+
+		const gamemode = GameModeAPI.GetMetaGameMode();
+		const wr = onlineMapData.worldRecords?.find(
+			(run) => run.gamemode === gamemode && run.trackType === TrackType.MAIN && run.style === 0
+		);
+		statsPanel.SetDialogVariable('world_record', wr ? Time.timetoHHMMSS(wr.time) : $.Localize('#Common_NA'));
 	}
 
 	/**

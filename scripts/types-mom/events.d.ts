@@ -40,12 +40,12 @@ interface GlobalEventNameMap {
 	MapSelector_SelectedDataUpdate: (mapData: MapCacheAPI.MapData) => void;
 
 	/**
-	 * Fired when lives stats for the selected map have been updated.
+	 * Fired when online map data for the selected map have been updated.
 	 * These are fetched from the backend when a map is selected, with a 60s cooldown. If we're outside the cooldown,
 	 * the event fires once we get a response from backend, otherwise it fires immediately after
 	 * `MapSelector_SelectedDataUpdate`.
 	 */
-	MapSelector_SelectedOnlineDataUpdate: (stats: import('common/web').MapStats) => void;
+	MapSelector_SelectedOnlineDataUpdate: (stats: import('common/web').MMap) => void;
 
 	PanoramaComponent_SteamLobby_OnListUpdated: (lobbyList: import('common/online').GroupedLobbyLists) => void;
 
