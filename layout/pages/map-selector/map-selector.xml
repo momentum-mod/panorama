@@ -229,7 +229,7 @@
 										<Panel id="MapCredits" class="mapselector-credits">
 											<!-- Populated by JS -->
 										</Panel>
-										<Panel class="mapselector-map-info__status">
+										<Panel id="MapSubmissionStatus" class="mapselector-map-info__status">
 											<Label class="mapselector-map-info__h1" text="#MapSelector_Status_Heading" />
 											<Panel class="flow-right w-full">
 												<Label class="mapselector-map-info__text mr-1" text="{s:status}" />
