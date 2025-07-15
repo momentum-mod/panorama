@@ -2,6 +2,7 @@ import { PanelHandler } from 'util/module-helpers';
 import { GamemodeCategories, GamemodeCategory } from 'common/web';
 import * as MomMath from 'util/math';
 import { enhanceAlpha, rgbaStringLerp, rgbaStringToRgb } from 'util/colors';
+import { RegisterHUDPanelForGamemode } from '../util/register-for-gamemodes';
 
 let MAX_GROUND_SPEED = 320; // initialized to 320. Changes with haste status.
 const AIR_ACCEL = 1;
@@ -210,7 +211,18 @@ class CgazHandler {
 	updateHandle: uuid = null;
 
 	constructor() {
-		$.RegisterForUnhandledEvent('LevelInitPostEntity', () => this.onMapInit());
+		RegisterHUDPanelForGamemode({
+			gamemodes: GamemodeCategories.get(GamemodeCategory.DEFRAG),
+			onLoad: () => this.onLoad(),
+			handledEvents: [
+				{
+					event: 'HudProcessInput',
+					panel: $.GetContextPanel(),
+					callback: () => this.onUpdate()
+				}
+			]
+		});
+
 		$.RegisterForUnhandledEvent('OnDefragHUDProjectionChange', () => this.onProjectionChange());
 		$.RegisterForUnhandledEvent('OnDefragHUDFOVChange', () => this.onHudFovChange());
 		$.RegisterForUnhandledEvent('OnDefragHUDAccelChange', () => this.onAccelConfigChange());
@@ -220,22 +232,15 @@ class CgazHandler {
 		$.RegisterForUnhandledEvent('OnDefragHUDCompassChange', () => this.onCompassConfigChange());
 	}
 
-	onMapInit() {
-		if (GamemodeCategories.get(GamemodeCategory.DEFRAG).includes(GameModeAPI.GetCurrentGameMode())) {
-			this.updateHandle = $.RegisterEventHandler('HudProcessInput', $.GetContextPanel(), () => this.onUpdate());
-
-			this.onAccelConfigChange();
-			this.onSnapConfigChange();
-			this.onPrimeConfigChange();
-			this.onProjectionChange();
-			this.onHudFovChange();
-			this.onSnapConfigChange();
-			this.onWindicatorConfigChange();
-			this.onCompassConfigChange();
-		} else if (this.updateHandle) {
-			$.UnregisterEventHandler('HudProcessInput', $.GetContextPanel(), this.updateHandle);
-			this.updateHandle = null;
-		}
+	onLoad() {
+		this.onAccelConfigChange();
+		this.onSnapConfigChange();
+		this.onPrimeConfigChange();
+		this.onProjectionChange();
+		this.onHudFovChange();
+		this.onSnapConfigChange();
+		this.onWindicatorConfigChange();
+		this.onCompassConfigChange();
 	}
 
 	onProjectionChange() {

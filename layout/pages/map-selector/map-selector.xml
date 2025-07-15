@@ -104,6 +104,9 @@
 										<RadioButton id="DefragVTGFilterButton" class="button radiobutton radiobutton--blue mapselector-filters__gamemode-button">
 											<Label class="button__text mapselector-filters__text" text="#Gamemode_DefragVTG" />
 										</RadioButton>
+										<RadioButton id="BhopStaminaFilterButton" class="button radiobutton radiobutton--blue mapselector-filters__gamemode-button">
+											<Label class="button__text mapselector-filters__text" text="#Gamemode_BhopStamina" />
+										</RadioButton>
 									</Panel>
 									<Panel class="mapselector-filters__row">
 										<Panel class="mapselector-filters__tiers">

@@ -5,6 +5,7 @@
 
 	<scripts>
 		<include type="module" src="file://{scripts}/pages/settings/page.ts" />
+		<include type="module" src="file://{scripts}/pages/settings/fov.ts" />
 	</scripts>
 
 	<Panel class="settings-page">
@@ -33,6 +34,22 @@
 
 				<SettingsSlider text="#Settings_Video_FOV" min="50" max="130" convar="fov_desired" hasdocspage="false" />
 
+				<SettingsSlider id="FOV" text="#Settings_Video_FOV" min="50" max="130" convar="fov_desired" hasdocspage="false" onvaluechanged="FovHandler.updateFOV()" />
+				
+				<Panel class="settings-group__combo" infotitle="#Settings_Video_Horizontal_FOV" infomessage="#Settings_Video_Horizontal_FOV_Info">
+					<Panel class="settings-enum">
+						<Label text="#Settings_Video_Horizontal_FOV" class="settings-enum__title" />
+						<Panel class="settings-enum__values">
+							<TextEntry id="FOV_Horizontal" class="textentry settings-slider__textentry HasInput ml-4" multiline="false" textmode="numeric" oninputsubmit="FovHandler.updateHorizontalFov()" />
+							<DropDown id="FOV_Horizontal_AspectRatioEnum" class="dropdown ml-4" menuclass="dropdown-menu" onuserinputsubmit="FovHandler.updateFOV()" initialselection="aspectratio0">
+								<Label text="#Settings_Video_AspectRatio_Normal" value="0" id="aspectratio0" />
+								<Label text="#Settings_Video_AspectRatio_16x9" value="1" id="aspectratio1" />
+								<Label text="#Settings_Video_AspectRatio_16x10" value="2" id="aspectratio2" />
+							</DropDown>
+						</Panel>
+					</Panel>
+				</Panel>
+				
 				<SettingsSlider text="#Settings_Video_MaxFPS" min="0" max="400" convar="fps_max" infomessage="#Settings_Video_MaxFPS_Info" hasdocspage="false" />
 
 				<SettingsEnumDropDown text="#Settings_Video_ColorMode" onuserinputsubmit="SettingsPage.videoSettingsOnUserInputSubmit()" id="ColorMode">

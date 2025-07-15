@@ -409,10 +409,6 @@ export class SettingsHandler {
 					if (isSettingsPanel(child) || child.HasClass('settings-group__combo')) {
 						this.styleItem(child, n);
 						n++;
-					}
-					// Otherwise if it's a ConVarEnabler search all its children
-					else if (child.paneltype === 'ConVarEnabler') {
-						for (const grandchild of child.Children()) search(grandchild);
 					} else {
 						search(child);
 					}

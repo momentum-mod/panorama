@@ -105,3 +105,11 @@ export function mapAngleToScreenDist(
 			return Math.round((1 + Math.tan(angle * 0.5) / Math.tan(fov * 0.5)) * screenDist * 0.5);
 	}
 }
+
+export function deg2rad(x: number): number {
+	return (x / 180) * Math.PI;
+}
+
+export function rad2deg(x: number): number {
+	return (x * 180) / Math.PI;
+}
