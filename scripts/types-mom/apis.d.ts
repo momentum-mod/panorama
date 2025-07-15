@@ -576,8 +576,8 @@ declare namespace ToastAPI {
 		message: string,
 		location: ToastLocation,
 		duration: number,
-		icon?: string,
-		style?: string
+		icon: string,
+		style: string
 	): void;
 
 	function CreateToast_Simple(title: string, message: string): void;
