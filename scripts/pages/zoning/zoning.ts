@@ -1440,7 +1440,7 @@ class ZoneMenuHandler {
 						renderMode:
 							checkpointNumber === 0
 								? segmentNumber === 0
-									? RegionRenderMode.START
+									? RegionRenderMode.START_WITH_SAFE_HEIGHT
 									: RegionRenderMode.MAJOR_CHECKPOINT
 								: RegionRenderMode.MINOR_CHECKPOINT,
 						editing: this.hasSelectedZone() && region === this.selectedRegion
