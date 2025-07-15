@@ -14,10 +14,10 @@
 				<Label class="spectate__title" text="{s:status}" />
 			</Panel>
 			<Panel class="spectate__playerinfo">
-				<Panel class="h-align-center">
+				<Panel class="h-align-center flow-right">
+					<AvatarImage id="Avatar" class="spectate__avatar" />
 					<Label class="spectate__title" text="{s:spec_target}" />
 				</Panel>
-				<!-- TODO: avatar -->
 			</Panel>
 			<Panel class="spectate__interface">
 				<Panel class="flow-right h-align-right">
