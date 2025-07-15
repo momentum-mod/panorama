@@ -3,7 +3,7 @@ import { OnPanelLoad, PanelHandler } from 'util/module-helpers';
 @PanelHandler()
 class HudSpectateHandler implements OnPanelLoad {
 	readonly panels = {
-		cp: $.GetContextPanel(),
+		cp: $.GetContextPanel<MomHudSpectate>(),
 		statusIcon: $<Image>('#StatusIcon')!,
 		prevPlayer: $<Button>('#PrevPlayer')!,
 		nextPlayer: $<Button>('#NextPlayer')!,
@@ -11,47 +11,52 @@ class HudSpectateHandler implements OnPanelLoad {
 		toggleReplayControls: $<Button>('#ToggleReplayControls')!
 	};
 
-	onPanelLoad() {
-		// TODO: We don't have a way to distinguish between speccing and watching replay yet,
-		// needs rio code. Replay controls will be permanently visible until this.
-		this.setReplayMode(true);
-
-		// $.RegisterForUnhandledEvent('MomentumSpectatorTargetChanged', (type: RunEntityType) =>
-		// 	this.onSpectatorChanged(type)
-		// );
+	constructor() {
+		$.RegisterForUnhandledEvent('ObserverTargetChanged', () => this.update());
+		$.RegisterForUnhandledEvent('MomentumSpectatorModeChanged', (newMode) => this.onSpectatorModeChange(newMode));
 	}
 
-	setReplayMode(enable: boolean) {
+	onPanelLoad() {
+		this.update();
+	}
+
+	update() {
+		const { name, isReplay } = this.panels.cp;
+
+		this.panels.cp.SetDialogVariable('spec_target', name);
+
 		this.panels.cp.SetDialogVariable(
 			'status',
-			$.Localize(enable ? '#Spectate_Status_WatchingReplay' : '#Spectate_Status_Spectating')
+			$.Localize(isReplay ? '#Spectate_Status_WatchingReplay' : '#Spectate_Status_Spectating')
 		);
 
-		this.panels.statusIcon.SetImage(`file://{images}/${enable ? 'movie-open-outline' : 'eye'}.svg`);
+		this.panels.statusIcon.SetImage(`file://{images}/${isReplay ? 'movie-open-outline' : 'eye'}.svg`);
 
-		this.panels.prevPlayer.visible = !enable;
-		this.panels.nextPlayer.visible = !enable;
-		this.panels.toggleReplayControls.visible = enable;
+		this.panels.prevPlayer.visible = !isReplay;
+		this.panels.nextPlayer.visible = !isReplay;
+		this.panels.toggleReplayControls.visible = isReplay;
 
-		this.panels.replayControls.hidden = !enable;
+		this.panels.replayControls.hidden = !isReplay;
 	}
 
 	toggleReplayControls() {
 		this.panels.replayControls.hidden = !this.panels.replayControls.hidden;
 	}
 
-	// TODO: Old handler for spectator changed event
-	/*onSpectatorChanged(type: RunEntityType) {
-		if (type !== RunEntityType.PLAYER) {
-			const isReplay = type === RunEntityType.REPLAY;
-
-			// TODO: this needs to be done more dynamically, you can switch off replay to real players and back
-			//this.panels.prevPlayer.visible = !isReplay;
-			//this.panels.nextPlayer.visible = !isReplay;
-			this.panels.indicatorSpectating.visible = !isReplay;
-
-			this.panels.toggleReplayControls.visible = isReplay;
-			this.panels.indicatorWatchingReplay.visible = isReplay;
+	onSpectatorModeChange(newMode: SpectateMode) {
+		let modeText = '';
+		switch (newMode) {
+			case SpectateMode.IN_EYE:
+				modeText = $.Localize('#OBS_IN_EYE');
+				break;
+			case SpectateMode.CHASE:
+				modeText = $.Localize('#OBS_CHASE_LOCKED');
+				break;
+			case SpectateMode.ROAMING:
+				modeText = $.Localize('#OBS_ROAMING');
+				break;
 		}
-	}*/
+
+		this.panels.cp.SetDialogVariable('curr_spec_mode', modeText);
+	}
 }
