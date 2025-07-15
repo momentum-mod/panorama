@@ -21,6 +21,7 @@ interface PanelTagNameMap {
 	MomHudDFJump: MomHudDFJump;
 	MomHudJumpTiming: MomHudJumpTiming;
 	MomHudStrafeTrainer: MomHudStrafeTrainer;
+	MomHudSpectate: MomHudSpectate;
 	ZoneMenu: ZoneMenu;
 }
 
@@ -157,6 +158,12 @@ interface ZoneEditorLimits {
 	MAX_STAGE_TRACKS: number;
 	MAX_BONUS_TRACKS: number;
 	MAX_REGIONS: number;
+}
+
+interface MomHudSpectate extends AbstractHudPanel<'MomHudSpectate'> {
+	steamId: steamID;
+	name: string;
+	isReplay: boolean;
 }
 
 interface ZoneMenu extends AbstractPanel<'ZoneMenu'> {
