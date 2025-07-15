@@ -49,7 +49,7 @@ export class SettingsHandler {
 	}
 
 	navigateToTab(tab: SettingsTab) {
-		// If a we have a active tab and it is different from the selected tab hide it, then show the selected tab
+		// If we have an active tab and it is different from the selected tab hide it, then show the selected tab
 		if (this.activeTab !== tab) {
 			// If the tab exists then hide it
 			if (this.activeTab) {
