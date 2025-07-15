@@ -665,11 +665,11 @@ class ZoneMenuHandler {
 
 		this.selectedZone = newSelection;
 		this.selectedRegion = null; // this is set in populateRegionProperties()
-		this.panels.zoningMenu.updateSelectedRegion(this.selectedRegion);
 
 		this.panels.propertiesTrack.visible = false;
 		this.panels.propertiesSegment.visible = false;
 		this.panels.propertiesZone.visible = false;
+
 		if (newSelection.globalRegion?.index >= 0) {
 			this.panels.propertiesZone.visible = true;
 			this.populateRegionProperties();
@@ -687,25 +687,28 @@ class ZoneMenuHandler {
 
 		this.rebuildLists();
 
-		this.drawZones();
+		this.updateEditorRegions();
 	}
 
 	populateZoneProperties(newSelection) {
-		if (!this.mapZoneData || !this.hasSelectedZone()) return;
-		const zone = this.selectedZone.zone;
-		const filterIndex = zone.filtername ? (this.filternameList?.indexOf(zone.filtername) ?? 0) : 0;
-		this.panels.filterSelect.SetSelectedIndex(filterIndex);
-		const regionNumbers = [];
-		for (let i = 0; i < zone.regions.length; i++) {
-			regionNumbers.push(`${i + 1}`);
-		}
+		if (!this.mapZoneData) return;
 
-		if (newSelection) {
-			this.populateDropdown(this.panels.regionSelect, regionNumbers);
-			this.panels.regionSelect.SetSelectedIndex(0);
-		}
+		if (this.hasSelectedZone()) {
+			const zone = this.selectedZone.zone;
+			const filterIndex = zone.filtername ? (this.filternameList?.indexOf(zone.filtername) ?? 0) : 0;
+			this.panels.filterSelect.SetSelectedIndex(filterIndex);
+			const regionNumbers = [];
+			for (let i = 0; i < zone.regions.length; i++) {
+				regionNumbers.push(`${i + 1}`);
+			}
 
-		this.panels.regionCountLabel.text = `/ ${zone.regions.length}`;
+			if (newSelection) {
+				this.populateDropdown(this.panels.regionSelect, regionNumbers);
+				this.panels.regionSelect.SetSelectedIndex(0);
+			}
+
+			this.panels.regionCountLabel.text = `/ ${zone.regions.length}`;
+		}
 
 		this.populateRegionProperties();
 	}
@@ -812,21 +815,33 @@ class ZoneMenuHandler {
 		this.panels.regionHeight.text = region?.height?.toFixed(2) ?? '';
 
 		this.selectedRegion = region;
-		this.panels.zoningMenu.updateSelectedRegion(this.selectedRegion);
+		this.updateEditorRegions();
 	}
 
 	addRegion() {
 		if (!this.selectedZone || !this.selectedZone.zone) return;
 
-		this.selectedZone.zone.regions.push(this.createRegion());
-		this.panels.zoningMenu.createRegion(this.isStartZone(this.selectedZone.zone));
-		this.setInfoPanelShown(true);
+		const newRegion = this.createRegion();
+
+		this.selectedZone.zone.regions.push(newRegion);
+
 		const regionNumbers = [];
 		for (let i = 0; i < this.selectedZone.zone.regions.length; i++) {
 			regionNumbers.push(`${i + 1}`);
 		}
 		this.populateDropdown(this.panels.regionSelect, regionNumbers);
 		this.panels.regionSelect.SetSelectedIndex(this.selectedZone.zone.regions.length - 1);
+
+		// Be careful around this logic, this is really fiddly...
+		// Here we update the value of selectedRegion and then push that
+		this.populateRegionProperties();
+		this.updateEditorRegions();
+
+		if (this.selectedRegion !== newRegion) throw new Error('New region is not selected');
+
+		this.panels.zoningMenu.createRegion(this.isStartZone(this.selectedZone.zone));
+
+		this.setInfoPanelShown(true);
 	}
 
 	deletingSelectedRegionCascadesToZone() {
@@ -929,7 +944,7 @@ class ZoneMenuHandler {
 			this.panels.regionSelect.SetSelectedIndex(Math.max(index - 1, 0));
 			this.populateZoneProperties(false);
 
-			this.drawZones();
+			this.updateEditorRegions();
 		}
 	}
 
@@ -957,7 +972,7 @@ class ZoneMenuHandler {
 		const height = Number.parseFloat(this.panels.regionHeight.text);
 		this.selectedRegion.height = Number.isNaN(height) ? 0 : height;
 
-		this.drawZones();
+		this.updateEditorRegions();
 	}
 
 	pickSafeHeight() {
@@ -1060,7 +1075,7 @@ class ZoneMenuHandler {
 		}
 
 		this.setInfoPanelShown(false);
-		this.drawZones();
+		this.updateEditorRegions();
 	}
 
 	deepCopyRegion(to: Region, from: Region) {
@@ -1083,7 +1098,7 @@ class ZoneMenuHandler {
 			this.deleteRegion();
 		}
 
-		this.drawZones();
+		this.updateEditorRegions();
 	}
 
 	setInfoPanelShown(show: boolean) {
@@ -1411,7 +1426,7 @@ class ZoneMenuHandler {
 		// update segment name in trasklist tree
 	}
 
-	drawZones() {
+	updateEditorRegions() {
 		if (!this.mapZoneData || !this.selectedZone) return;
 
 		const renderRegions: ZoneEditorRegion[] = [];
@@ -1466,7 +1481,9 @@ class ZoneMenuHandler {
 			});
 		}
 
-		this.panels.zoningMenu.drawRegions(renderRegions);
+		// This initializes the regions we want to render, and also initializes
+		// the Region data for the region we have selected for editing.
+		this.panels.zoningMenu.updateEditorRegions(renderRegions);
 	}
 
 	saveZones() {
