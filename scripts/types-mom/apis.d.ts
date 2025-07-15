@@ -559,7 +559,7 @@ declare namespace ToastAPI {
 		RIGHT = 2
 	}
 
-	enum ToastStyle {
+	const enum ToastStyle {
 		INFO = 'info',
 		SUCCESS = 'success',
 		WARNING = 'warning',
