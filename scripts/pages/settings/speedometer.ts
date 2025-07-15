@@ -271,7 +271,9 @@ class Speedometers {
 	}
 
 	static saveAllSpeedometers() {
-		const speedos = this.details.map((detail) => detail.save());
+		const speedos = this.details?.map((detail) => detail.save());
+
+		if (!speedos) return;
 
 		if (
 			!SpeedometerSettingsAPI.SaveSpeedometersFromJS(this.gamemode, speedos as SpeedometerSettingsAPI.Settings[])
