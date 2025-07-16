@@ -145,13 +145,19 @@
 	}
 
 	&__rank-name,
-	&__diff-name {
-		/* unused */
+	&__diff-name,
+	&__diff-name-negative {
+		// unused
 	}
 
 	&__diff {
 		font-weight: medium;
 		color: $mid-blue;
+	}
+
+	&__diff-negative {
+		font-weight: medium;
+		color: $red;
 	}
 
 	&__rank {
@@ -165,7 +171,7 @@
 	}
 
 	&__rank-divider {
-		color: color.scale($red, $lightness: 80%);
+		// unused
 	}
 }
 
