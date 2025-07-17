@@ -3,7 +3,8 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 
-	<MomHudZoning class="h-align-center">
-		<Label id="StatusLabel" />
+	<MomHudZoning class="h-align-center flow-down">
+		<Label class="h-align-center" id="StatusLabel" />
+		<Label class="h-align-center" id="ShapeCreationModeLabel" />
 	</MomHudZoning>
 </root>
