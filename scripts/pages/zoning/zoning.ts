@@ -37,7 +37,9 @@ export enum RegionRenderMode {
 	END = 4,
 	MAJOR_CHECKPOINT = 5,
 	MINOR_CHECKPOINT = 6,
-	CANCEL = 7
+	CANCEL = 7,
+	ALLOW_BHOP = 8,
+	OVERBOUNCE = 9
 }
 
 export enum RegionPolygonProblem {
@@ -1469,7 +1471,7 @@ class ZoneMenuHandler {
 		for (const region of this.mapZoneData.globalRegions?.allowBhop ?? []) {
 			renderRegions.push({
 				region: region,
-				renderMode: RegionRenderMode.NONE,
+				renderMode: RegionRenderMode.ALLOW_BHOP,
 				editing: region === this.selectedRegion
 			});
 		}
