@@ -138,7 +138,6 @@
 								</Button>
 							</Panel>
 							<Panel class="w-fit-children h-align-right flow-right">
-								<ToggleButton id="TwoClickMode" class="zoning__two-click-button" convar="mom_zoning_two_click" onmouseover="UiToolkitAPI.ShowTextTooltip('TwoClickMode', '#Zoning_TwoClickTogle_Tooltip');" onmouseout="UiToolkitAPI.HideTextTooltip();" />
 								<Button class="button zoning__property-button mr-2" onactivate="ZoneMenuHandler.pickCorners();">
 									<Label class="button__text" text="#Zoning_EditPoints" />
 								</Button>
@@ -267,7 +266,7 @@
 							<Label class="zoning-info__bind-key" text="DELETE, BACKSPACE" />
 						</Panel>
 						<Panel class="zoning-info__bind">
-							<Label class="zoning-info__bind-action" text="#Zoning_Keybind_TwoclickToggle" />
+							<Label class="zoning-info__bind-action" text="#Zoning_Keybind_CycleShapeCreationMode" />
 							<Label class="zoning-info__bind-key" text="MOUSE3" />
 						</Panel>
 					</Panel>
@@ -293,7 +292,7 @@
 					</Panel>
 					<Panel class="zoning-info__bind">
 						<Label class="zoning-info__bind-action" text="#Zoning_Keybind_ForceReticleDist" />
-						<Label class="zoning-info__bind-key" text="LALT" />
+						<Label class="zoning-info__bind-key" text="ALT" />
 					</Panel>
 				</Panel>
 				<Panel id="GridSlider" class="zoning__property">
