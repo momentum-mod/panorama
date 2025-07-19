@@ -382,6 +382,17 @@
 					<Label class="button__text" text="Radiobutton" />
 				</RadioButton>
 			</Panel>
+			<Panel class="row connected-radiobuttons my-3">
+				<RadioButton class="button radiobutton">
+					<Label class="button__text" text="Connected Radio" selected="true"/>
+				</RadioButton>
+				<RadioButton class="button radiobutton radiobutton--blue">
+					<Label class="button__text" text="Connected Radio" />
+				</RadioButton>
+				<RadioButton class="button radiobutton radiobutton--green">
+					<Label class="button__text" text="Connected Radio" />
+				</RadioButton>
+			</Panel>
 			<Panel class="row my-3">
 				<RadioButton class="radiobutton-classic">
 					<Label class="radiobutton-classic__text" text="Classic Radiobutton" />
