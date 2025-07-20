@@ -382,7 +382,7 @@ class LobbyHandler {
 			memberStatePanel.RemoveClass('hide');
 
 			if (memberMap === localMap && memberMap) {
-				joinButton.SetDialogVariable('memberJoinLabel', '#Lobby_Spectate');
+				joinButton.SetDialogVariable('memberJoinLabel', $.Localize('#Lobby_Spectate'));
 				joinButton.RemoveClass('hide');
 
 				const joinCallback = () => GameInterfaceAPI.ConsoleCommand('mom_spectate ' + memberSteamID);
