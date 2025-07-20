@@ -147,17 +147,16 @@ class MapEntryHandler {
 			this.panels.pbIcon.SetImage(icon);
 			this.panels.pbLabel.text = time;
 
-			// Derived from C time() function (unix time in seconds, JS is in milliseconds), so * 1000
-			const lastPlayed = new Date(userData.lastPlayed * 1000).toLocaleDateString();
+			let tooltip = `<b>${$.Localize('#Common_PersonalBest')}</b>: ${time}`;
+			if (userData.lastPlayed > 0) {
+				// Derived from C time() function (unix time in seconds, JS is in milliseconds), so * 1000
+				const lastPlayed = new Date(userData.lastPlayed * 1000).toLocaleDateString();
+				tooltip += `<br><b>${$.Localize('#Common_LastPlayed')}</b>: ${lastPlayed}`;
+			}
 
-			this.panels.pbPanel.SetPanelEvent('onmouseover', () => {
-				UiToolkitAPI.ShowTextTooltip(
-					this.panels.pbPanel.id,
-					// prettier-ignore
-					`<b>${$.Localize('#Common_PersonalBest')}</b>: ${time}\n` +
-					`<b>${$.Localize('#Common_LastPlayed')}</b>: ${lastPlayed}`
-				);
-			});
+			this.panels.pbPanel.SetPanelEvent('onmouseover', () =>
+				UiToolkitAPI.ShowTextTooltip(this.panels.pbPanel.id, tooltip)
+			);
 		} else {
 			this.panels.pbLabel.text = '';
 			this.panels.pbIcon.SetImage('');
