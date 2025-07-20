@@ -365,13 +365,13 @@ class MapSelectorHandler implements OnPanelLoad {
 		this.panels.stageCountSeparator.visible = !isLinear;
 		this.panels.stageCountLabel.visible = !isLinear;
 		if (!isLinear) {
-			info.SetDialogVariableInt('stage_count', numStages);
+			info.SetDialogVariableInt('stageCount', numStages);
 		}
 		this.panels.bonusCountSeparator.visible = numBonuses > 0;
 		this.panels.bonusCountLabel.visible = numBonuses === 1;
 		this.panels.bonusesCountLabel.visible = numBonuses > 1;
 		if (numBonuses > 0) {
-			info.SetDialogVariableInt('bonus_count', numBonuses);
+			info.SetDialogVariableInt('bonusCount', numBonuses);
 		}
 
 		info.SetDialogVariable('description', staticData.info?.description);
