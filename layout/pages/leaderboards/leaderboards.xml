@@ -45,8 +45,12 @@
 
 			<Panel class="w-fill mr-4"/>
 
+			<DropDown id="StylesDropdown" class="dropdown leaderboards__style-dropdown" menuclass="dropdown-menu">
+				<Panel id="placeholder" /> <!-- This is needed to dynamically add dropdown items from code -->
+			</DropDown>
+
 			<DropDown id="TracksDropdown" class="dropdown leaderboards__dropdown" menuclass="dropdown-menu">
-				<Panel id="placeholder" /> <!-- This is needed to unfuck the dynamic dropdown -->
+				<Panel id="placeholder" /> <!-- This is needed to dynamically add dropdown items from code -->
 			</DropDown>
 
 			<TooltipPanel tooltip="#Leaderboards_SyncTrackButton" class="v-align-center">
