@@ -20,6 +20,7 @@ class LeaderboardsHandler {
 		syncTrackButton: $<Button>('#SyncTrackButton'),
 		endOfRunButton: $<Button>('#EndOfRunButton'),
 		tracksDropdown: $<DropDown>('#TracksDropdown'),
+		stylesDropdown: $<DropDown>('#StylesDropdown'),
 		radioButtons: {
 			listTypes: {
 				global: $<RadioButton>('#TimesListGlobal'),
@@ -65,6 +66,12 @@ class LeaderboardsHandler {
 
 		this.panels.tracksDropdown.RemoveAllOptions();
 		this.panels.tracksDropdown.visible = false;
+
+		this.panels.stylesDropdown.RemoveAllOptions();
+		this.panels.stylesDropdown.visible = false;
+
+		// Add gamemode styles
+		
 
 		this.panels.endOfRunButton.visible = false;
 		this.panels.syncTrackButton.visible = false;
@@ -171,9 +178,9 @@ class LeaderboardsHandler {
 	}
 
 	syncTrackWithLeaderboard() {
-		const selected = this.panels.tracksDropdown.GetSelected();
-		const trackType = selected.GetAttributeInt('trackType', TrackType.MAIN as number);
-		const trackNum = selected.GetAttributeInt('trackNum', 1);
+		const selectedTrack = this.panels.tracksDropdown.GetSelected();
+		const trackType = selectedTrack.GetAttributeInt('trackType', TrackType.MAIN as number);
+		const trackNum = selectedTrack.GetAttributeInt('trackNum', 1);
 
 		switch (trackType) {
 			case TrackType.MAIN:
@@ -186,6 +193,9 @@ class LeaderboardsHandler {
 				GameInterfaceAPI.ConsoleCommand(`mom_bonus ${trackNum}`);
 				break;
 		}
+
+		const selectedStyle = this.panels.stylesDropdown.GetSelected();
+		GameInterfaceAPI.ConsoleCommand(`mom_style ${selectedStyle.text}`);
 	}
 
 	showEndOfRun() {

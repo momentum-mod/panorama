@@ -49,6 +49,10 @@
 				<Panel id="placeholder" /> <!-- This is needed to unfuck the dynamic dropdown -->
 			</DropDown>
 
+			<DropDown id="StylesDropdown" class="dropdown" menuclass="dropdown-menu">
+				<Panel id="placeholder" /> <!-- This is needed to unfuck the dynamic dropdown -->
+			</DropDown>
+
 			<TooltipPanel tooltip="#Leaderboards_SyncTrackButton" class="v-align-center">
 				<Button id="SyncTrackButton" class="button leaderboards__button" onactivate="LeaderboardsHandler.syncTrackWithLeaderboard();">
 					<Image class="button__icon" src="file://{images}/sync.svg" textureheight="32" />
