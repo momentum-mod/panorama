@@ -1,3 +1,5 @@
+import { RunStyle } from './run-style';
+
 type Gamemode = import('./web/enums/gamemode.enum').Gamemode;
 
 //#region Types
@@ -21,6 +23,7 @@ export interface TimerStatus {
 	runTimeTickstamp: int32;
 	majorNum: uint8;
 	minorNum: uint8;
+	style: RunStyle;
 	segmentsCount: uint8;
 	segmentCheckpointsCount: uint8;
 }
