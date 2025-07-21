@@ -45,6 +45,10 @@
 
 			<Panel class="w-fill mr-4"/>
 
+			<DropDown id="StylesDropdown" class="dropdown leaderboards__style-dropdown" menuclass="dropdown-menu">
+				<Panel id="placeholder" /> <!-- This is needed to unfuck the dynamic dropdown -->
+			</DropDown>
+
 			<DropDown id="TracksDropdown" class="dropdown leaderboards__dropdown" menuclass="dropdown-menu">
 				<Panel id="placeholder" /> <!-- This is needed to unfuck the dynamic dropdown -->
 			</DropDown>

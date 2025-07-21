@@ -4,7 +4,7 @@
 	$root: &;
 
 	flow-children: down;
-	width: 800px;
+	width: 950px;
 
 	&__filters {
 		flow-children: right;
@@ -28,6 +28,10 @@
 
 	&__end-of-run-button {
 		margin-left: 8px;
+	}
+
+	&__style-dropdown {
+		margin-right: 8px;
 	}
 
 	&__dropdown {
