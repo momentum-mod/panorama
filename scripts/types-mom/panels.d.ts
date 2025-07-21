@@ -52,6 +52,7 @@ interface Leaderboards extends AbstractPanel<'Leaderboards'> {
 	applyFilters(): void;
 
 	selectTrack(trackType: import('common/web/enums/track-type.enum').TrackType, trackNum: int32): void;
+	selectStyle(style: int32): void;
 }
 
 interface LeaderboardEntry extends AbstractPanel<'LeaderboardEntry'> {
