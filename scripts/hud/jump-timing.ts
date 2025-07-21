@@ -1,6 +1,6 @@
 import { PanelHandler } from 'util/module-helpers';
 import { RegisterHUDPanelForGamemode } from 'util/register-for-gamemodes';
-import { RgbaTuple, rgbaTupleLerp, tupleToRgbaString } from 'util/colors';
+import { RgbaTuple, tupleToRgbaString } from 'util/colors';
 import { GamemodeCategory } from 'common/web/enums/gamemode.enum';
 import { GamemodeCategories } from 'common/web/maps/gamemodes.map';
 
@@ -22,7 +22,8 @@ class JumpTimingHandler {
 	};
 
 	perfWindow: number;
-	range: number;
+	maxEarlyTiming: number;
+	maxLateTiming: number;
 	bufferedJumpingEnabled: boolean;
 
 	constructor() {
@@ -52,8 +53,9 @@ class JumpTimingHandler {
 	}
 
 	updateSettings() {
-		this.range = GameInterfaceAPI.GetSettingInt('mom_hud_jump_timing_range');
-		this.perfWindow = GameInterfaceAPI.GetSettingInt('mom_mv_perfect_jump_window');
+		this.maxEarlyTiming = GameInterfaceAPI.GetSettingInt('mom_mv_buffered_jump_near_perf_window') + 1;
+		this.maxLateTiming = GameInterfaceAPI.GetSettingInt('mom_hud_late_jump_timing');
+		this.perfWindow = GameInterfaceAPI.GetSettingInt('mom_mv_buffered_jump_perf_window');
 		this.bufferedJumpingEnabled = GameInterfaceAPI.GetSettingInt('mom_mv_autohop_mode') === 2;
 
 		this.panels.earlyLabel.visible = this.bufferedJumpingEnabled;
@@ -62,22 +64,26 @@ class JumpTimingHandler {
 	}
 
 	onJumpTimingUpdate(jumpTiming: number) {
-		jumpTiming = Math.max(Math.min(jumpTiming, this.range), -this.range);
+		const clampedJumpTiming = Math.max(Math.min(jumpTiming, this.maxLateTiming), -this.maxEarlyTiming);
 
 		if (this.bufferedJumpingEnabled) {
 			const earlyTimingRatio =
-				jumpTiming < 0
-					? Math.max(-jumpTiming - this.perfWindow, 0) / Math.max(this.range - this.perfWindow, 1)
+				clampedJumpTiming < 0
+					? Math.max(-clampedJumpTiming - this.perfWindow, 0) /
+						Math.max(this.maxEarlyTiming - this.perfWindow, 1)
 					: 0;
 			this.panels.earlyBar.value = earlyTimingRatio;
 			this.panels.earlyLabel.text = jumpTiming < 0 ? -jumpTiming : 0;
+
+			const earlyTimingColor = jumpTiming <= -this.maxEarlyTiming ? Colors.RED : Colors.ORANGE;
+			this.panels.earlyBarProgress.style.backgroundColor = tupleToRgbaString(earlyTimingColor);
 		}
 
-		const lateTimingRatio = jumpTiming > 0 ? jumpTiming / this.range : 0;
+		const lateTimingRatio = clampedJumpTiming > 0 ? clampedJumpTiming / this.maxLateTiming : 0;
 		this.panels.lateBar.value = lateTimingRatio;
 		this.panels.lateLabel.text = jumpTiming > 0 ? jumpTiming : 0;
-		const colorLerp = (Math.abs(jumpTiming) - 1) / (this.range - 1);
-		const lateTimingColor = rgbaTupleLerp(Colors.ORANGE, Colors.RED, colorLerp);
+
+		const lateTimingColor = Colors.RED;
 		this.panels.lateBarProgress.style.backgroundColor = tupleToRgbaString(lateTimingColor);
 	}
 }
