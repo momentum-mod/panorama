@@ -292,6 +292,9 @@ declare namespace GameModeAPI {
 	 * Returns #Timer_Checkpoint for most modes, #Timer_Jump for modes like RJ.
 	 */
 	function GetGameModeCheckpointToken(gamemode: Gamemode): string;
+
+	/** Gets all valid run styles for the provided gamemode. */
+	function GetValidRunStyles(gamemode: Gamemode): number[];
 }
 
 declare namespace MomentumTimerAPI {
