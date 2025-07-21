@@ -33,7 +33,7 @@
 		<Label id="KeyLeft" class="keypress__key keypress__unimplemented" text="" />
 		<Label id="KeyRight" class="keypress__key keypress__unimplemented" text="" />
 
-		<Label id="CountStrafes" class="keypress__key" text="{i:strafes}" />
-		<Label id="CountJumps" class="keypress__key" text="{i:jumps}" />
+		<Label id="CountStrafes" class="keypress__key keypress__unimplemented" text="{i:strafes}" />
+		<Label id="CountJumps" class="keypress__key keypress__unimplemented" text="{i:jumps}" />
 	</MomHudKeyPress>
 </root>
