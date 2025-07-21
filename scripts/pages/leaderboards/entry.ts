@@ -74,7 +74,7 @@ class LeaderboardEntryHandler {
 		// 		style: 'icon-color-blue',
 		// 		jsCallback: () => {
 		// 			const frontendUrl = GameInterfaceAPI.GetSettingString('mom_api_url_frontend');
-		// 			SteamOverlayAPI.OpenURLModal(`${frontendUrl}/runs/${timeData.replayID}`);
+		// 			SteamOverlayAPI.OpenURL(`${frontendUrl}/runs/${timeData.replayID}`);
 		// 		}
 		// 	});
 		// }

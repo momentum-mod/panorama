@@ -377,7 +377,7 @@ export class SettingsHandler {
 					this.panels.infoDocsButton.SetHasClass('hide', !hasDocs || isKeybinder);
 					// Shouldn't need to clear the panel event here as it's hidden or gets overwritten
 					this.panels.infoDocsButton.SetPanelEvent('onactivate', () =>
-						SteamOverlayAPI.OpenURLModal(`https://docs.momentum-mod.org/var/${convar}`)
+						SteamOverlayAPI.OpenURL(`https://docs.momentum-mod.org/var/${convar}`)
 					);
 				} else {
 					this.panels.infoConvar.AddClass('hide');

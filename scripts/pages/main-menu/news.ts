@@ -75,8 +75,8 @@ class NewsHandler {
 		cp.SetDialogVariable('author', item.author);
 
 		this.panels.latestUpdateImage.SetImage(item.image);
-		this.panels.latestUpdateImage.SetPanelEvent('onactivate', () => SteamOverlayAPI.OpenURLModal(item.link));
-		this.panels.learnMore.SetPanelEvent('onactivate', () => SteamOverlayAPI.OpenURLModal(item.link));
+		this.panels.latestUpdateImage.SetPanelEvent('onactivate', () => SteamOverlayAPI.OpenURL(item.link));
+		this.panels.learnMore.SetPanelEvent('onactivate', () => SteamOverlayAPI.OpenURL(item.link));
 
 		if (feed.items.length === 1) {
 			return;
@@ -90,7 +90,7 @@ class NewsHandler {
 				acceptsinput: true,
 				class: 'news__other-item news__other-image'
 			});
-			entry.SetPanelEvent('onactivate', () => SteamOverlayAPI.OpenURLModal(item.link));
+			entry.SetPanelEvent('onactivate', () => SteamOverlayAPI.OpenURL(item.link));
 			// entry.LoadLayoutSnippet('news-update-preview');
 			entry.SetImage(item.image);
 		}
