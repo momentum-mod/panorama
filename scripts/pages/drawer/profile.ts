@@ -71,6 +71,6 @@ class ProfileHandler implements OnPanelLoad {
 		const frontendUrl = GameInterfaceAPI.GetSettingString('mom_api_url_frontend');
 		// If user.id isn't set this will redirect to homepage unless Steam browser
 		// has an active login.
-		SteamOverlayAPI.OpenURLModal(`${frontendUrl}/profile/${this.user.id ?? ''}`);
+		SteamOverlayAPI.OpenURL(`${frontendUrl}/profile/${this.user.id ?? ''}`);
 	}
 }

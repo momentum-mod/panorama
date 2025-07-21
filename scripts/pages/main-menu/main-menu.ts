@@ -369,7 +369,7 @@ class MainMenuHandler implements OnPanelLoad {
 				'#API_Auth_LimitedSteamAccount',
 				'wide-popup',
 				'#API_Auth_SteamLimitedInfo',
-				() => SteamOverlayAPI.OpenURLModal('https://help.steampowered.com/en/faqs/view/71D3-35C2-AD96-AA3A'),
+				() => SteamOverlayAPI.OpenURL('https://help.steampowered.com/en/faqs/view/71D3-35C2-AD96-AA3A'),
 				'#Common_OK',
 				() => {}
 			);
