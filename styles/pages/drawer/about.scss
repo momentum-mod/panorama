@@ -49,8 +49,9 @@
 
 	&__section {
 		flow-children: down;
+		horizontal-align: center;
 		overflow: squish scroll;
-		padding: 16px 24px;
+		padding: 16px 4px;
 	}
 }
 
@@ -84,16 +85,17 @@
 	&__name {
 		@include mixin.font-styles($use-header: true);
 		font-size: 28px;
-		padding: 0 8px;
+		padding: 0 2px;
 		text-align: center;
 		overflow: squish;
 		text-overflow: shrink;
+		vertical-align: center;
 		text-shadow: 0 1px 3px rgba(0, 0, 0, 1);
 		transition: color 0.1s ease-in-out 0s;
 		tooltip-position: bottom;
 
-		&--lead {
-			font-size: 40px;
+		&--project-lead {
+			font-size: 36px;
 			color: map.get($roles, 'lead');
 
 			&:hover {
@@ -102,7 +104,7 @@
 		}
 
 		&--dept-head {
-			font-size: 36px;
+			font-size: 32px;
 			color: map.get($roles, 'dept-head');
 
 			&:hover {
@@ -111,11 +113,20 @@
 		}
 
 		&--team {
-			font-size: 32px;
+			font-size: 30px;
 			color: map.get($roles, 'team');
 
 			&:hover {
 				color: color.scale(map.get($roles, 'team'), $lightness: 50%);
+			}
+		}
+
+		&--emeritus {
+			font-size: 28px;
+			color: map.get($roles, 'emeritus');
+
+			&:hover {
+				color: color.scale(map.get($roles, 'emeritus'), $lightness: 50%);
 			}
 		}
 	}

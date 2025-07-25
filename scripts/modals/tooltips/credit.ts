@@ -1,6 +1,6 @@
 import { PanelHandler } from 'util/module-helpers';
 
-const SECTIONS = ['lead', 'dept-head', 'team', 'contributor'];
+const SECTIONS = ['project-lead', 'dept-head', 'team', 'emeritus'] as const;
 
 @PanelHandler()
 class CreditHandler {
@@ -38,6 +38,8 @@ class CreditHandler {
 			bio += curBioSection;
 			i++;
 		} while (curBioSection.length >= 255);
+
+		bio = bio.replaceAll('#newline#', '<br><br>');
 
 		// If the name contains a comma, split around it, so "Blah,von Blah" becomes firstname "Blah",  lastname "von Blah"
 		cp.SetDialogVariable(

@@ -37,7 +37,7 @@
 			padding: 0px;
 		}
 
-		#{$root}--lead & {
+		#{$root}--project-lead & {
 			color: map.get($roles, 'lead');
 		}
 
@@ -47,6 +47,10 @@
 
 		#{$root}--team & {
 			color: map.get($roles, 'team');
+		}
+
+		#{$root}--emeritus & {
+			color: map.get($roles, 'emeritus');
 		}
 
 		#{$root}--contributor & {
