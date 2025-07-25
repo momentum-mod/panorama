@@ -15,7 +15,7 @@
 		"prepare": "husky",
 		"pre-commit": "lint-staged",
 		"get-learn": "node tools/get-learn.js",
-		"get-credits": "node tools/get-credits.js",
+		"get-credits": "tsx tools/get-credits.ts",
 		"fetch-web": "bash tools/fetch-web.sh"
 	},
 	"type": "module",
@@ -24,6 +24,7 @@
 	"devDependencies": {
 		"@eslint/js": "^9.22.0",
 		"@types/eslint__js": "^9.14.0",
+		"@types/papaparse": "^5.3.16",
 		"axios": "^1.8.3",
 		"eslint": "^9.22.0",
 		"eslint-config-prettier": "^10.1.1",
@@ -35,6 +36,7 @@
 		"papaparse": "^5.5.2",
 		"prettier": "^3.5.3",
 		"prettier-eslint": "^16.3.0",
+		"tsx": "^4.20.3",
 		"typescript": "^5.8.2",
 		"typescript-eslint": "^8.26.1"
 	},
