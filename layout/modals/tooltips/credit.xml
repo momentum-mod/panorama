@@ -17,7 +17,7 @@
 			<Label id="Pronouns" class="credit__pronouns" text="{s:pronouns}" />
 		</Panel>
 		<Label id="Roles" class="credit__roles" text="{s:roles}" />
-		<Label id="Bio" class="credit__bio" text="{s:bio}" />
+		<Panel id="Bio" class="credit__bio" />
 		<Panel id="Email" class="credit__item">
 			<Image class="credit__icon" src="file://{images}/social/email.svg" />
 			<Label class="credit__text" text="{s:email}" />

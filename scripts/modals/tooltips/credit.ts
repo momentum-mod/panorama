@@ -1,13 +1,13 @@
 import { PanelHandler } from 'util/module-helpers';
 
-const SECTIONS = ['lead', 'dept-head', 'team', 'contributor'];
+const SECTIONS = ['project-lead', 'dept-head', 'team', 'emeritus'] as const;
 
 @PanelHandler()
 class CreditHandler {
 	readonly panels = {
 		pronouns: $('#Pronouns'),
 		roles: $('#Roles'),
-		bio: $('#Bio'),
+		bio: $<Label>('#Bio'),
 		email: $('#Email'),
 		discord: $('#Discord'),
 		github: $('#Github')
@@ -51,12 +51,17 @@ class CreditHandler {
 		cp.SetDialogVariable('username', username);
 		cp.SetDialogVariable('roles', roles);
 		cp.SetDialogVariable('pronouns', pronouns);
-		cp.SetDialogVariable('bio', bio);
+
+		this.panels.bio.RemoveAndDeleteChildren();
+		bio.split('#newline#').forEach((text) =>
+			$.CreatePanel('Label', this.panels.bio, '', { text, class: 'credit__bio__line' })
+		);
+
 		cp.SetDialogVariable('email', email);
 		cp.SetDialogVariable('discord', discord);
 		cp.SetDialogVariable('github', github);
 
-		for (const s of SECTIONS) cp.SetHasClass(`credit--${s.toLowerCase()}`, s === section);
+		SECTIONS.forEach((s) => cp.SetHasClass(`credit--${s.toLowerCase()}`, s === section));
 
 		cp.SetHasClass('credit--no-name', name === '');
 		this.panels.pronouns.SetHasClass('hide', pronouns === '');
