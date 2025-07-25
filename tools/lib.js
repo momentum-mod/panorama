@@ -1,8 +1,3 @@
-export const xmlFrameTop =
-	'<root>\n' + '	<styles>\n' + '		<include src="file://{resources}/styles/main.scss" />\n' + '	</styles>\n\n' + '	<Panel>';
-
-export const xmlFrameBottom = '	</Panel>\n' + '</root>';
-
 /**
  * Very basic KV1 parser. Won't support everything, works for Google sheets!
  * @param {Object} jsonData - JSON data
