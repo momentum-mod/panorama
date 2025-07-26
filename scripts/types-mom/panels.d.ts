@@ -167,8 +167,6 @@ interface MomHudSpectate extends AbstractHudPanel<'MomHudSpectate'> {
 }
 
 interface ZoneMenu extends AbstractPanel<'ZoneMenu'> {
-	updateSelectedRegion(region: import('common/web').Region): void;
-
 	createRegion(startZone: boolean): void;
 
 	editRegion(mode: import('pages/zoning/zoning').PickType): void;
@@ -177,7 +175,7 @@ interface ZoneMenu extends AbstractPanel<'ZoneMenu'> {
 
 	moveToRegion(region: import('common/web').Region): void;
 
-	drawRegions(editorRegions: ZoneEditorRegion[]): void;
+	updateEditorRegions(editorRegions: ZoneEditorRegion[]): void;
 
 	validateRegionPolygon(
 		points: import('common/web').Vector2D[],
