@@ -19,12 +19,20 @@ class PlayerListPlayerHandler {
 					});
 				}
 			} else {
-				items.push({
-					label: $.Localize('#Lobby_Spectate'),
-					icon: 'file://{images}/eye.svg',
-					style: 'icon-color-white',
-					jsCallback: () => GameInterfaceAPI.ConsoleCommand('mom_spectate ' + player.steamId)
-				});
+				items.push(
+					{
+						label: $.Localize('#Lobby_Spectate'),
+						icon: 'file://{images}/eye.svg',
+						style: 'icon-color-white',
+						jsCallback: () => GameInterfaceAPI.ConsoleCommand('mom_spectate ' + player.steamId)
+					},
+					{
+						label: $.Localize('#Lobby_TeleportTo'),
+						icon: 'file://{images}/goto.svg',
+						style: 'icon-color-white',
+						jsCallback: () => GameInterfaceAPI.ConsoleCommand('mom_goto ' + player.steamId)
+					}
+				);
 			}
 		}
 
