@@ -14,15 +14,16 @@ class HudStatusHandler {
 		$.GetContextPanel<MomHudStatus>().hiddenHUDBits = HideHud.TABMENU;
 
 		$.RegisterForUnhandledEvent('OnObservedTimerStateChange', () => {
+			this.hasTimerStateUpdated = true;
 			this.update();
 		});
 
 		$.RegisterForUnhandledEvent('OnObservedTimerCheckpointProgressed', () => {
+			this.hasTimerStateUpdated = true;
 			this.update();
 		});
 
 		$.RegisterForUnhandledEvent('OnObservedTimerReplaced', () => {
-			this.timerInteractedWith = true;
 			// Don't show savestate stuff if we start watching replay/specing
 			// Though note you don't get savestate stuff back on exiting replay/specing
 			// until you do savestate stuff again - don't have a good solution to that.
@@ -32,7 +33,6 @@ class HudStatusHandler {
 
 		$.RegisterForUnhandledEvent('OnMomentumPlayerPracticeModeStateChange', (enabled) => {
 			this.inPracticeMode = enabled;
-			this.timerInteractedWith = true;
 			this.update();
 		});
 
@@ -49,12 +49,10 @@ class HudStatusHandler {
 			this.saveStateCount = count;
 			this.saveStateCurrent = current + 1; // need 1-indexing for display
 
-			this.timerInteractedWith = true;
 			this.update();
 		});
 
 		$.RegisterForUnhandledEvent('LevelInitPostEntity', () => {
-			this.timerInteractedWith = false;
 			this.saveStatesActive = false;
 			this.inPracticeMode = false;
 			this.update();
@@ -67,23 +65,28 @@ class HudStatusHandler {
 
 	inPracticeMode = false;
 
-	// Whether player has doing anything timer related yet, e.g. primed, started, savelocced, used practice mode.
-	timerInteractedWith = false;
+	// Whether timer state has changed at all. Starting false means we won't show timer
+	// status at all until you first enter a start zone. Avoids map with no zones showing
+	// "Timer Disabled" all the time, or when starting in the spawn area of a map.
+	hasTimerStateUpdated = false;
 
 	update() {
-		let text = this.getTimerText();
+		const strings = this.hasTimerStateUpdated ? [this.getTimerText()] : [];
 
 		if (this.saveStatesActive) {
-			text = `${this.strs.saveState} ${this.saveStateCurrent}/${this.saveStateCount} | ${text}`;
+			strings.unshift(`${this.strs.saveState} ${this.saveStateCurrent}/${this.saveStateCount}`);
 		}
 
 		if (this.inPracticeMode) {
-			text = `${this.strs.practiceMode} | ${text}`;
+			strings.unshift(this.strs.practiceMode);
 		}
 
-		this.panels.cp.SetHasClass('hudstatus--hidden', !this.timerInteractedWith);
+		this.panels.cp.SetHasClass(
+			'hudstatus--hidden',
+			!this.saveStatesActive && !this.inPracticeMode && !this.hasTimerStateUpdated
+		);
 
-		this.panels.label.text = text;
+		this.panels.label.text = strings.join(' | ');
 	}
 
 	private getTimerText(): string {
@@ -99,7 +102,7 @@ class HudStatusHandler {
 		}
 
 		// Timer has been interacted with if it's not disabled
-		this.timerInteractedWith = true;
+		this.hasTimerStateUpdated = true;
 
 		if (state === TimerState.PRIMED) {
 			let str = this.strs.primed + ' | ';
