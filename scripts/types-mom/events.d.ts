@@ -307,13 +307,13 @@ interface GlobalEventNameMap {
 
 	OnRegionEditCanceled: () => void;
 
-	/** Fired when the the primary timer of the UI entity transitions to a different state */
+	/** Fired when the primary timer of the UI entity transitions to a different state */
 	OnObservedTimerStateChange: () => void;
 
-	/** Fired when the the primary timer of the UI entity progresses to a new checkpoint */
+	/** Fired when the primary timer of the UI entity progresses to a new checkpoint */
 	OnObservedTimerCheckpointProgressed: () => void;
 
-	/** Fired when the the primary timer of the UI entity effectively starts a segment. */
+	/** Fired when the primary timer of the UI entity effectively starts a segment. */
 	OnObservedTimerSegmentEffectiveStart: () => void;
 
 	/**
