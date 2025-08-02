@@ -123,7 +123,7 @@ export function RegisterHUDPanelForGamemode({
 
 	const unregister = () =>
 		handles.forEach(({ event, handle, panel }) =>
-			panel ? $.UnregisterForUnhandledEvent(event, handle) : $.UnregisterEventHandler(event, panel, handle)
+			panel ? $.UnregisterEventHandler(event, panel, handle) : $.UnregisterForUnhandledEvent(event, handle)
 		);
 
 	const handle = $.RegisterForUnhandledEvent('LevelInitPostEntity', () => {
