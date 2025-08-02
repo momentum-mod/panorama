@@ -6,6 +6,8 @@ $smaller: 12px;
 $small: 16px;
 $medium: 28px;
 
+$properties_inset: 24px;
+
 #ZoningContainer {
 	margin: 24px;
 	width: 560px;
@@ -25,13 +27,6 @@ $medium: 28px;
 	&__title {
 		@include mixin.font-styles($use-header: true);
 		font-size: 40px;
-	}
-
-	&__header {
-		@include mixin.font-styles($use-header: true);
-		font-size: $medium;
-		margin-top: 6px;
-		margin-left: 6px;
 	}
 
 	&__button-box {
@@ -154,40 +149,6 @@ $medium: 28px;
 		flow-children: down;
 	}
 
-	&__collapse-button {
-		z-index: 2;
-		horizontal-align: right;
-		vertical-align: center;
-		height: 14px;
-		width: 14px;
-
-		background-color: $light-400;
-
-		margin-right: 4px;
-
-		border-bottom-left-radius: 1px;
-		border-bottom-right-radius: 1px;
-
-		&:hover {
-			opacity: 1;
-		}
-	}
-
-	&__collapse-icon {
-		align: center center;
-		padding: 2px;
-		opacity: 0.4;
-		transition: opacity 0.1s ease-in-out 0s;
-	}
-
-	&__icon-green {
-		wash-color: $green;
-	}
-
-	&__icon-red {
-		wash-color: $red;
-	}
-
 	&__checkbox {
 		horizontal-align: right;
 	}
@@ -197,6 +158,17 @@ $medium: 28px;
 		padding: 4px;
 		width: 100%;
 		height: 40px;
+	}
+
+	&__property-inset {
+		padding-left: $properties_inset;
+	}
+
+	&__divider {
+		width: 100%;
+		height: 1px;
+		background-color: $light-200;
+		margin: 6px;
 	}
 
 	&__property-container {
@@ -210,6 +182,28 @@ $medium: 28px;
 		color: white;
 		text-align: center;
 		font-size: $small;
+		margin-right: 8px;
+	}
+
+	#RegionCountLabel {
+		margin-left: 8px;
+	}
+
+	&__properties-header {
+		flow-children: right;
+
+		Label {
+			@include mixin.font-styles($use-header: true);
+
+			padding-top: 8px;
+			padding-left: 6px;
+			font-size: $medium;
+		}
+
+		#PropertiesLabel {
+			font-size: 22px;
+			vertical-align: middle;
+		}
 	}
 
 	&__property-entry {
@@ -224,6 +218,11 @@ $medium: 28px;
 	&__region-property-container {
 		horizontal-align: right;
 		flow-children: right;
+	}
+
+	#RegionProperties {
+		flow-children: down;
+		width: 100%;
 	}
 
 	&__slider {
@@ -243,42 +242,6 @@ $medium: 28px;
 		padding: 4px;
 		border-radius: 3px;
 		flow-children: down;
-	}
-
-	&__region-points-list {
-		background-color: $light-100;
-		width: 100%;
-		height: 100%;
-		padding: 8px;
-		padding-right: 12px;
-		border-radius: 3px;
-		border-color: $white;
-		flow-children: down;
-		overflow: squish scroll;
-	}
-
-	&__region-point-delete {
-		vertical-align: center;
-		height: $button-height;
-		color: $button-text-color;
-		flow-children: right;
-		tooltip-position: bottom;
-		transition: background-color 0.1s ease-in 0s;
-
-		&__icon {
-			height: 100%;
-
-			width: height-percentage(100%);
-			padding: $button-icon-padding;
-			vertical-align: center;
-			horizontal-align: center;
-			img-shadow: $button-icon-shadow;
-			wash-color: $red;
-
-			&:hover {
-				wash-color: $white;
-			}
-		}
 	}
 
 	&__region-point-pick {
@@ -312,33 +275,18 @@ $medium: 28px;
 		}
 	}
 
-	&__two-click-button {
-		height: $button-height;
-		width: height-percentage(100%);
-		background-position: center;
-		background-repeat: no-repeat;
-		background-image: url('file://{images}/vector-polyline.svg');
-		wash-color: $red;
-		tooltip-position: top;
-
-		&:selected {
-			background-image: url('file://{images}/vector-two-click.svg');
-			wash-color: $blue;
-		}
-
-		&:hover {
-			wash-color: $white;
-		}
-	}
-
 	&__dropdown {
 		width: 180px;
+	}
+
+	#RegionSelect {
+		width: 75px;
 	}
 
 	&__textentry {
 		horizontal-align: right;
 		margin-left: 8px;
-		width: 120px;
+		width: 112px;
 		text-align: right;
 
 		&:disabled,
