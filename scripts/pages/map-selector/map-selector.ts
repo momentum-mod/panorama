@@ -338,9 +338,7 @@ class MapSelectorHandler implements OnPanelLoad {
 		this.selectedMapData = mapData;
 
 		const baseImageUrl = this.parseMapImageUrl(mapData.staticData);
-		if (baseImageUrl) {
-			this.panels.cp.applyBackgroundMapImage(mapData.staticData.thumbnail.id, baseImageUrl);
-		}
+		this.panels.cp.applyBackgroundMapImage(mapData.staticData.thumbnail.id, baseImageUrl);
 
 		this.updateSelectedMapInfo(mapData.staticData, mapData.userData);
 		this.updateSelectedMapCredits(mapData.staticData);
@@ -515,12 +513,12 @@ class MapSelectorHandler implements OnPanelLoad {
 	 * Data returned from the backend is a bit unwieldy (would be better to just return the CDN url and array of the
 	 * image IDs), don't want to spend the time refactoring.
 	 */
-	parseMapImageUrl(staticData: MMap): string | undefined {
+	parseMapImageUrl(staticData: MMap): string | null {
 		// Pick any image, check URL makes sense
-		const image = staticData.images[0]?.small;
-		if (!/http.+\/[\da-z-]{36}-small.jpg/.test(image)) {
+		const image = staticData.images?.[0]?.small;
+		if (!image || !/http.+\/[\da-z-]{36}-small.jpg/.test(image)) {
 			$.Warning(`Map Selector: Invalid image URL "${image}", not opening gallery`);
-			return;
+			return null;
 		}
 
 		return image.split('/').slice(0, -1).join('/');
@@ -555,7 +553,7 @@ class MapSelectorHandler implements OnPanelLoad {
 
 		gallery.handler.init(
 			this.panels.cp,
-			this.selectedMapData.staticData.images.map(({ id }) => id),
+			this.selectedMapData.staticData.images?.map(({ id }) => id) ?? [],
 			this.parseMapImageUrl(this.selectedMapData.staticData) ?? ''
 		);
 	}
