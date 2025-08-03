@@ -191,7 +191,7 @@
 										<Image class="button__icon" src="file://{images}/reset.svg" />
 									</Button>
 								</TooltipPanel>
-								<TooltipPanel class="settings-speedometer-buttons__reset ml-3" tooltip="Settings_General_Reset">
+								<TooltipPanel class="settings-speedometer-buttons__reset ml-3" tooltip="#Settings_General_Reset">
 									<Button id="ResetColorProfilesBtn" class="button button--red" onactivate="RangeColorProfileHandler.resetToDefault();">
 										<Image class="button__icon" src="file://{images}/reset.svg" />
 									</Button>
