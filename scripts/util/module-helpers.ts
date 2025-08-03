@@ -166,7 +166,7 @@ export function createPanelExtended<T extends keyof PanelTagNameMap>(
 /**
  * Register a `Component` method with the `PanelLoaded` panel event.
  *
- * Any work that should done during panel initialization that involves child panels should be placed here, not
+ * Any work that should be done during panel initialization that involves child panels should be placed here, not
  * in this class's constructor - the constructor is called early in the panel init process, before child panels have
  * been initialized.
  *
