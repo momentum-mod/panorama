@@ -740,6 +740,8 @@ class SpeedometerSettingsHandler {
 		}
 
 		this.panels.gamemode.SetSelectedIndex(GameModeAPI.GetMetaGameMode() - 1);
+
+		this.loadSettings();
 	}
 
 	static loadSettings() {
