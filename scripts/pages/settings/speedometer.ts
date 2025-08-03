@@ -173,7 +173,9 @@ class Speedometers {
 
 	static settings: SpeedometerSettingsAPI.Settings[] = [];
 	static gamemode: Gamemode = DEFAULT_GAMEMODE;
-	static details: Speedometer[];
+
+	// Start as null and check everywhere so if we don't load successfully, we don't then save out an empty config.
+	static details: Speedometer[] | null = null;
 
 	static {
 		$.RegisterForUnhandledEvent('OnSpeedometerSettingsLoaded', (succ) => this.settingsLoaded(succ));
@@ -271,9 +273,9 @@ class Speedometers {
 	}
 
 	static saveAllSpeedometers() {
-		const speedos = this.details?.map((detail) => detail.save());
+		if (!this.details) return;
 
-		if (!speedos) return;
+		const speedos = this.details?.map((detail) => detail.save());
 
 		if (
 			!SpeedometerSettingsAPI.SaveSpeedometersFromJS(this.gamemode, speedos as SpeedometerSettingsAPI.Settings[])
@@ -542,7 +544,7 @@ class RangeColorProfileHandler {
 		discard: $<Button>('#DiscardColorProfilesBtn')
 	};
 
-	static profiles: Map<string, RangeColorProfile> = new Map();
+	static profiles: Map<string, RangeColorProfile> | null = null;
 
 	static {
 		$.RegisterForUnhandledEvent('OnRangeColorProfilesLoaded', (succ) => this.profilesLoaded(succ));
@@ -562,23 +564,23 @@ class RangeColorProfileHandler {
 	}
 
 	static addEmptyProfile(name: string) {
-		if (this.profiles.get(name)) {
+		if (this.profiles?.get(name)) {
 			$.Warning(`Adding profile ${name} that already exists!`);
 			return;
 		}
 
-		this.profiles.set(name, new RangeColorProfile(name, []));
+		this.profiles?.set(name, new RangeColorProfile(name, []));
 		this.markAsModified();
 	}
 
 	static deleteProfile(name: string) {
-		this.profiles.get(name)?.destroy();
-		this.profiles.delete(name);
+		this.profiles?.get(name)?.destroy();
+		this.profiles?.delete(name);
 		this.markAsModified();
 	}
 
 	static updateProfileName(oldName: string, name: string) {
-		const profile = this.profiles.get(oldName);
+		const profile = this.profiles?.get(oldName);
 		if (!profile) {
 			$.Warning(`Updating old profile name ${oldName} which doesnt exist!`);
 			return;
@@ -589,14 +591,14 @@ class RangeColorProfileHandler {
 		profile.updateName(name);
 
 		// rename key
-		this.profiles.set(name, this.profiles.get(oldName));
-		this.profiles.delete(oldName);
+		this.profiles?.set(name, this.profiles?.get(oldName));
+		this.profiles?.delete(oldName);
 
 		this.markAsModified();
 	}
 
 	static addRangeDisplayToProfile(name: string, range: RangeColor) {
-		const profile = this.profiles.get(name);
+		const profile = this.profiles?.get(name);
 		if (!profile) {
 			$.Warning(`Adding range to profile ${name} which doesnt exist!`);
 			return;
@@ -607,7 +609,7 @@ class RangeColorProfileHandler {
 	}
 
 	static deleteRangeFromProfile(name: string, display: RangeColorRangeDisplay) {
-		const profile = this.profiles.get(name);
+		const profile = this.profiles?.get(name);
 		if (!profile) {
 			$.Warning(`Deleting range from profile ${name} which doesnt exist!`);
 			return;
@@ -617,7 +619,7 @@ class RangeColorProfileHandler {
 	}
 
 	static updateRangeInProfile(name: string) {
-		const profile = this.profiles.get(name);
+		const profile = this.profiles?.get(name);
 		if (!profile) {
 			$.Warning(`Changing range in profile ${name} which doesnt exist!`);
 			return;
@@ -631,7 +633,7 @@ class RangeColorProfileHandler {
 		name: string,
 		ogProfiles: SpeedometerSettingsAPI.RangeColorProfile[]
 	) {
-		const profile = this.profiles.get(name);
+		const profile = this.profiles?.get(name);
 
 		if (!ogProfiles || !profile) {
 			$.Warning(`Discarding profile ${name} which doesnt exist!`);
@@ -663,6 +665,8 @@ class RangeColorProfileHandler {
 	}
 
 	static saveAllProfiles(): void {
+		if (!this.profiles) return;
+
 		const saveData = this.profiles
 			.entries()
 			.map(([name, range]) => {
@@ -709,7 +713,7 @@ class RangeColorProfileHandler {
 			'',
 			'file://{resources}/layout/modals/popups/range-color-profile-name.xml',
 			`profileNames=${[
-				this.profiles.keys().toArray().join(',')
+				this.profiles?.keys().toArray().join(',')
 			]}&prefilledText=${prefilledText}&OKBtnText=${OKBtnText}&callback=${UiToolkitAPI.RegisterJSCallback(
 				callback
 			)}`
