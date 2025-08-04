@@ -110,7 +110,6 @@
 				<SettingsKeyBinder text="#Keybind_Attack_Primary" bind="+attack" tags="attack,primary,fire" />
 				<SettingsKeyBinder text="#Keybind_Attack_Secondary" bind="+attack2" tags="secondary,fire" />
 				<SettingsKeyBinder text="#Keybind_Use_Items" bind="+use" tags="use,interact" />
-				<SettingsKeyBinder text="#Keybind_Drop" bind="drop" tags="drop" />
 				<SettingsKeyBinder text="#Keybind_Weapon_Category_1" bind="slot1" tags="slot1" />
 				<SettingsKeyBinder text="#Keybind_Weapon_Category_2" bind="slot2" tags="slot2" />
 				<SettingsKeyBinder text="#Keybind_Weapon_Category_3" bind="slot3" tags="slot3" />
@@ -125,38 +124,42 @@
 
 				<SettingsKeyBinder text="#Keybind_RestartTrack" bind="mom_restart_track" tags="restart,reset" />
 				<SettingsKeyBinder text="#Keybind_RestartStage" bind="mom_restart_stage" tags="restart,reset,stage" />
-				<SettingsKeyBinder text="#Keybind_Respawn" bind="mom_respawn" tags="restart,reset,respawn" />
-				<SettingsKeyBinder text="#Keybind_TeleportToSpawn" bind="mom_teleport_to_spawn" tags="restart,reset,spawn" />
-				<SettingsKeyBinder text="#Keybind_Main" bind="mom_main" tags="restart,reset,switch,track" />
 				<SettingsKeyBinder text="#Keybind_TimerStop" bind="mom_timer_stop" tags="timer,stop" />
+				<SettingsKeyBinder text="#Keybind_TeleportToSpawn" bind="mom_teleport_to_spawn" tags="restart,reset,spawn" />
+				<SettingsKeyBinder text="#Keybind_Respawn" bind="mom_respawn" tags="restart,reset,respawn" info="#Keybind_Respawn_Info" />
+				<SettingsKeyBinder text="#Keybind_Main" bind="mom_main" tags="restart,reset,switch,track" />
 
 				<Label class="settings-group__subtitle" text="#Settings_Keybinds_Savestates" />
 
+				<SettingsKeyBinder text="#Keybind_Savestate_Menu" bind="hud_menu_show savelocmenu" tags="saveloc,savestate" />
 				<SettingsKeyBinder text="#Keybind_Savestate_Create" bind="mom_saveloc_create" tags="saveloc,savestate" />
 				<SettingsKeyBinder text="#Keybind_Savestate_Goto" bind="+mom_saveloc_current" tags="saveloc,savestate" />
-				<SettingsKeyBinder text="#Keybind_Savestate_Menu" bind="hud_menu_show savelocmenu" tags="saveloc,savestate" />
 				<SettingsKeyBinder text="#Keybind_StartMark_Set" bind="mom_start_mark_set" tags="saveloc,savestate" />
 				<SettingsKeyBinder text="#Keybind_StartMark_Clear" bind="mom_start_mark_clear" tags="saveloc,savestate" />
 
 				<Label class="settings-group__subtitle" text="#Common_Multiplayer" />
 
 				<SettingsKeyBinder text="#Keybind_ToggleTimes" bind="+showtimes" tags="leaderboard,tab,times" />
-				<SettingsKeyBinder text="#Keybind_Chat_Message" bind="chat_open" tags="chat,talk" />
+				<SettingsKeyBinder text="#Keybind_Chat" bind="chat_open" tags="chat,talk" />
 
 				<Label class="settings-group__subtitle" text="#Settings_Keybinds_Utility" />
 
-				<SettingsKeyBinder text="#Keybind_Practice" bind="mom_practice" tags="practice,noclip" />
-				<SettingsKeyBinder text="#Keybind_ClimbMenu" bind="hud_menu_show climbtpmenu" tags="climb,tp" />
-				<SettingsKeyBinder text="#Keybind_MapCommands" bind="hud_menu_show mapcmdsmenu" />
-				<SettingsKeyBinder text="#Keybind_Ruler" bind="hud_menu_show rulermenu" tags="ruler,measure,distance" />
+				<SettingsKeyBinder text="#Keybind_Noclip" bind="noclip" tags="noclip,freecam,practice" infomessage="#Keybind_Noclip_Info" />
 				<SettingsKeyBinder text="#Keybind_Paint" bind="+paint" tags="paint" />
+				<SettingsKeyBinder text="#Keybind_Viewmodels" bind="toggle r_drawviewmodel" tags="viewmodel" />
 				<SettingsKeyBinder text="#Keybind_Flashlight" bind="impulse 100" tags="flashlight" />
+				<SettingsKeyBinder text="#Keybind_Fullbright" bind="toggle mat_fullbright" tags="fullbright,light" infomessage="#Keybind_Fullbright_Info" />
+				<!-- Disabled until we work on this more -->
+				<!-- <SettingsKeyBinder text="#Keybind_Practice" bind="mom_practice" tags="practice" /> -->
+				<SettingsKeyBinder text="#Keybind_ClimbMenu" bind="hud_menu_show climbtpmenu" tags="climb,tp,teleport" />
+				<SettingsKeyBinder text="#Keybind_MapCommands" bind="hud_menu_show mapcmdsmenu" tags="mapping" />
+				<SettingsKeyBinder text="#Keybind_Ruler" bind="hud_menu_show rulermenu" tags="ruler,measure,distance" />
 
 				<Label class="settings-group__subtitle" text="#Settings_Input_Keybinds_Misc" />
 
 				<SettingsKeyBinder text="#Keybind_Console" bind="toggleconsole" tags="console" />
 				<SettingsKeyBinder text="#Keybind_Screenshot" bind="jpeg" tags="screenshot" />
-				<SettingsKeyBinder text="#Keybind_Screenshot_Official" bind="mom_screenshot_official" tags="screenshot,official" />
+				<SettingsKeyBinder text="#Keybind_Screenshot_Official" bind="mom_screenshot_official" tags="screenshot,official" infomessage="#Keybind_Screenshot_Official_Info" />
 				<SettingsKeyBinder text="#Keybind_Quit_Prompt" bind="quit_prompt" tags="quit,close" />
 				<SettingsKeyBinder text="#Keybind_Quit" bind="quit" tags="quit,close" />
 
