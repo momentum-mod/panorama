@@ -20,17 +20,18 @@
 		opacity: 0;
 	}
 
+	$trans: 0.15s ease-out 0s;
+
 	&__wrapper {
 		flow-children: left;
-		margin-top: 4px;
-		margin-bottom: 4px;
+		margin-top: 0px;
+		margin-bottom: 0px;
 		width: fit-children;
 		height: fit-children;
 		align: right center;
-		padding-left: 8px; // some extra padding for deployed gradient
 
 		transform: translatex($weapsel-notch-width); // hide notch till deployed
-		transition: transform 0.15s ease-out 0s;
+		transition: transform $trans;
 
 		&--deployed {
 			background-color: $weapsel-deployed-background-color;
@@ -39,8 +40,8 @@
 			& #{$root}__weplabel {
 				color: $weapsel-deployed-name-color;
 			}
-			& #{$root}__notch {
-				background-color: $weapsel-deployed-notch-color;
+			& #{$root}__keybind {
+				color: $weapsel-deployed-keybind-color;
 			}
 		}
 	}
@@ -50,31 +51,27 @@
 		font-size: $weapsel-name-font-size;
 		text-align: right;
 		text-overflow: clip;
+
 		color: $weapsel-name-color;
+		transition: color $trans;
 
 		padding: 6px;
 	}
 
 	&__keybind {
-		@include mixin.font-styles($use-header: $button-use-header-font, $light-header: $button-light-header-font);
-		font-size: $button-font-size;
-		text-align: center;
-		align: center center;
-		text-overflow: ellipsis;
-		width: height-percentage(100%);
+		@include mixin.font-styles($use-header: true);
+		font-size: $weapsel-name-font-size;
 
-		color: $button-text-color;
-		background-color: $button-background;
-		border: $button-border;
-		border-radius: $button-radius;
-		text-shadow: $button-text-shadow;
-		box-shadow: $button-shadow;
+		color: $weapsel-keybind-color;
+		transition: color $trans;
 
-		margin-right: 6px;
+		margin-left: 2px;
+		margin-right: 10px;
 	}
 
 	&__notch {
 		background-color: $weapsel-notch-color;
+		box-shadow: $font-header-shadow;
 		width: $weapsel-notch-width;
 		height: 100%;
 	}

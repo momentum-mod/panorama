@@ -197,8 +197,8 @@ $font-shadows: (
 	'black': 2px 3px 8px 2 rgba(0, 0, 0, 1),
 	'bold': 1px 3px 8px 2 rgba(0, 0, 0, 0.35),
 	'medium': 0px 1px 6px 1 rgba(0, 0, 0, 1),
-	'regular': 0px 1px 3px 1 rgba(0, 0, 0, 1),
-	'light': 0px 1px 3px 1 rgba(0, 0, 0, 0.7),
+	'regular': 0px 1px 1.5px 1 rgba(0, 0, 0, 1),
+	'light': 0px 1px 1.5px 1 rgba(0, 0, 0, 0.7),
 	'thin': 0px 1px 2px rgba(0, 0, 0, 0.5),
 	'outline': 0px 1px 2px 2 rgba(0, 0, 0, 1),
 	'none': 0 0 0 0 rgba(0, 0, 0, 0)
@@ -749,9 +749,10 @@ $timer-hudstatus-color: $white !default;
 // WEAPON SELECTION
 // ================
 $weapsel-name-color: $white !default;
+$weapsel-keybind-color: #d5d5d5 !default;
 $weapsel-name-font-size: 24px !default;
-$weapsel-deployed-background-color: gradient-horizontal(rgba($blue, 0), rgba($blue, 0.5)) !default;
-$weapsel-deployed-name-color: $light-blue !default;
-$weapsel-deployed-notch-color: $light-blue !default;
+$weapsel-deployed-background-color: none !default;
+$weapsel-deployed-name-color: $mid-blue !default;
+$weapsel-deployed-keybind-color: $white !default;
+$weapsel-notch-color: $mid-blue !default;
 $weapsel-notch-width: 4px !default;
-$weapsel-notch-color: $white !default;
