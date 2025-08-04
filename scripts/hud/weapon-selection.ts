@@ -23,6 +23,7 @@ class WeaponSelectionHandler {
 			case WeaponStateChangeMode.SWITCH:
 				if (this.lastDeployed !== WeaponID.NONE)
 					this.weaponPanels.get(this.lastDeployed)?.RemoveClass(DEPLOYED_CLASS);
+
 				this.lastDeployed = id;
 				this.weaponPanels.get(id)?.AddClass(DEPLOYED_CLASS);
 				break;
@@ -48,18 +49,20 @@ class WeaponSelectionHandler {
 	createWeaponPanel(id: WeaponID) {
 		if (this.weaponPanels.has(id)) return;
 
-		const weaponPanel = $.CreatePanel('Panel', this.container, ''); // Create the new panel
+		// If weapon doesn't have a slot we have no way of switching to it so may as well not show
+		const weaponSlot = MomentumWeaponAPI.GetWeaponSlot(id);
+		if (weaponSlot === -1) {
+			$.Warning(`Weapon ${id} does not have a valid slot, not creating panel!`);
+			return;
+		}
+
+		const weaponPanel = $.CreatePanel('Panel', this.container, '');
 		weaponPanel.SetDialogVariable('weapon', $.Localize(WeaponNames.get(id)));
 		weaponPanel.LoadLayoutSnippet('Weapon');
 
-		const weaponSlot = MomentumWeaponAPI.GetWeaponSlot(id) + 1;
 		const keybindPanel = weaponPanel.FindChildTraverse<Label>('WeaponKeyBind');
-		if (weaponSlot >= 0) {
-			keybindPanel.SetTextWithDialogVariables(`{v:csgo_bind:e:bind_slot${weaponSlot}}`);
-		} else {
-			keybindPanel.visible = false;
-		}
 
+		keybindPanel.SetTextWithDialogVariables(`{v:csgo_bind:e:bind_slot${weaponSlot + 1}}`);
 		weaponPanel.SetAttributeInt('slot_index', weaponSlot);
 
 		this.weaponPanels.set(id, weaponPanel);
