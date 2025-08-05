@@ -15,13 +15,13 @@ class HudMapInfoHandler {
 	onOfficialMapLoad(mapName: string) {
 		if (!mapName) return;
 
-		$.GetContextPanel().SetDialogVariable('mapname', mapName);
+		const cp = $.GetContextPanel();
+		cp.SetDialogVariable('mapname', mapName);
+		cp.SetDialogVariable('gamemode', $.Localize(GameModeAPI.GetGameModeName(GameModeAPI.GetCurrentGameMode())));
 
 		const mapData = MapCacheAPI.GetCurrentMapData();
 		if (mapData) {
 			this.cachedInfoContainer.visible = true;
-
-			const cp = $.GetContextPanel();
 
 			cp.SetDialogVariable('author', getAuthorNames(mapData.staticData));
 

@@ -11,7 +11,7 @@
 		<ConVarEnabler class="flow-down w-full" convar="mom_hud_mapinfo_enable" togglevisibility="true">
 
 			<ConVarEnabler class="w-full" convar="mom_hud_mapinfo_mapname_enable" togglevisibility="true">
-				<Label class="hudmapinfo__label h-align-right" text="{s:mapname}" />
+				<Label class="hudmapinfo__label h-align-right" text="{s:mapname} ({s:gamemode})" />
 			</ConVarEnabler>
 
 			<Panel id="CachedInfoContainer" class="flow-down w-fit-children h-align-right v-align-center">
