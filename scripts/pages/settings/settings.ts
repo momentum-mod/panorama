@@ -158,11 +158,7 @@ export class SettingsHandler {
 		this.limitScrollCheck(1);
 
 		// Apply highlight anim
-		panel.AddClass('settings-group--highlight');
-
-		// I really hate this way of animating, but it ensures the --highlight class gets removed
-		const kfs = panel.CreateCopyOfCSSKeyframes('SettingsGroupHighlight');
-		panel.UpdateCurrentAnimationKeyframes(kfs);
+		panel.TriggerClass('settings-group--highlight');
 	}
 
 	// Set the shouldLimitScroll bool for a specific amount of time
@@ -349,9 +345,7 @@ export class SettingsHandler {
 			} else {
 				switchDelay = 0.05; // This should always be half the duration of settings-info--switch
 
-				this.panels.info.AddClass('settings-info--switch');
-				const kfs = this.panels.info.CreateCopyOfCSSKeyframes('BlurFadeInOut');
-				this.panels.info.UpdateCurrentAnimationKeyframes(kfs);
+				this.panels.info.TriggerClass('settings-info--switch');
 			}
 
 			// Delay changing the properties even we've just played the switch animation,
