@@ -146,13 +146,13 @@
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_Speedometer_Title" tags="speedometer" />
 				</Panel>
-				<SettingsEnum text="#Settings_Speedometer_Enable" convar="mom_hud_speedometer_enable" infomessage="#Settings_Speedometer_Enable_Info" tags="speedometer">
+				<SettingsEnum text="#Settings_Speedometer_Enable" convar="mom_hud_speedometer_show" infomessage="#Settings_Speedometer_Enable_Info" tags="speedometer">
 					<RadioButton group="speedometer" text="#Common_Off" value="0" />
 					<RadioButton group="speedometer" text="#Common_On" value="1" />
 				</SettingsEnum>
 
-				<ConVarEnabler convar="mom_hud_speedometer_enable" togglevisibility="true" class="flow-down">
-					<SettingsSlider text="#Settings_Speedometer_FPS" min="0" max="400" convar="mom_hud_speedometer_fps" infomessage="#Settings_Speedometer_FPS_Info" hasdocspage="true" tags="speedometer" />
+				<ConVarEnabler convar="mom_hud_speedometer_show" togglevisibility="true" class="flow-down">
+					<SettingsSlider text="#Settings_Speedometer_FPS" min="0" max="400" convar="mom_hud_speedometer_refresh_rate" infomessage="#Settings_Speedometer_FPS_Info" hasdocspage="true" tags="speedometer" />
 
 					<Panel id="SpeedometersContainer" class="flow-down w-full" infotitle="#Settings_Speedometer_Gamemode_Long" infomessage="#Settings_Speedometer_Container_Info" tags="speedometer">
 						<Panel class="settings-group__header">
@@ -282,22 +282,22 @@
 					</Panel>
 				</Panel>
 
-				<SettingsEnum text="#Settings_Timer_Show" convar="mom_hud_timer_enable" infomessage="#Settings_Timer_Show_Info">
+				<SettingsEnum text="#Settings_Timer_Show" convar="mom_hud_timer" infomessage="#Settings_Timer_Show_Info">
 					<RadioButton group="timerenable" text="#Common_Off" value="0" />
 					<RadioButton group="timerenable" text="#Common_On" value="1" />
 				</SettingsEnum>
 
-				<SettingsEnum text="#Settings_Timer_SoundStart" convar="mom_hud_timer_sound_start_enable" infomessage="#Settings_Timer_SoundStart_Info" tags="sound">
+				<SettingsEnum text="#Settings_Timer_SoundStart" convar="mom_timer_start_sound" infomessage="#Settings_Timer_SoundStart_Info" tags="sound">
 					<RadioButton group="timerstartsound" text="#Common_Off" value="0" />
 					<RadioButton group="timerstartsound" text="#Common_On" value="1" />
 				</SettingsEnum>
 
-				<SettingsEnum text="#Settings_Timer_SoundFinish" convar="mom_hud_timer_sound_finish_enable" infomessage="#Settings_Timer_SoundFinish_Info" tags="sound">
+				<SettingsEnum text="#Settings_Timer_SoundFinish" convar="mom_timer_finish_sound" infomessage="#Settings_Timer_SoundFinish_Info" tags="sound">
 					<RadioButton group="timerfinishsound" text="#Common_Off" value="0" />
 					<RadioButton group="timerfinishsound" text="#Common_On" value="1" />
 				</SettingsEnum>
 
-				<SettingsEnum text="#Settings_Timer_SoundStop" convar="mom_hud_timer_sound_stop_enable" infomessage="#Settings_Timer_SoundStop_Info" tags="sound">
+				<SettingsEnum text="#Settings_Timer_SoundStop" convar="mom_timer_disable_sound" infomessage="#Settings_Timer_SoundStop_Info" tags="sound">
 					<RadioButton group="timerstopsound" text="#Common_Off" value="0" />
 					<RadioButton group="timerstopsound" text="#Common_On" value="1" />
 				</SettingsEnum>
@@ -314,7 +314,7 @@
 						</Button>
 					</TooltipPanel>
 				</Panel>
-				<SettingsEnum text="#Settings_HUDStatus_Enable" convar="mom_hud_status_enable" infomessage="#Settings_HUDStatus_Enable_Info">
+				<SettingsEnum text="#Settings_HUDStatus_Enable" convar="mom_hud_status" infomessage="#Settings_HUDStatus_Enable_Info">
 					<RadioButton group="playerstatusenable" text="#Common_Off" value="0" />
 					<RadioButton group="playerstatusenable" text="#Common_On" value="1" />
 				</SettingsEnum>
@@ -332,7 +332,7 @@
 					</TooltipPanel>
 				</Panel>
 
-				<SettingsEnum text="#Settings_KeypressHUD_Enable" convar="mom_hud_keypress_enable" infomessage="#Settings_KeypressHUD_Enable_Info">
+				<SettingsEnum text="#Settings_KeypressHUD_Enable" convar="mom_hud_keys" infomessage="#Settings_KeypressHUD_Enable_Info">
 					<RadioButton group="showkeys" text="#Common_Off" value="0" />
 					<RadioButton group="showkeys" text="#Common_On" value="1" />
 				</SettingsEnum>
@@ -350,7 +350,7 @@
 					</TooltipPanel>
 				</Panel>
 
-				<SettingsEnum text="#Settings_ComparisonsHUD_Enable" convar="mom_hud_comparisons_enable" infomessage="#Settings_ComparisonsHUD_Enable_Info">
+				<SettingsEnum text="#Settings_ComparisonsHUD_Enable" convar="mom_hud_comparisons" infomessage="#Settings_ComparisonsHUD_Enable_Info">
 					<RadioButton group="showcomparisons" text="#Common_Off" value="0" />
 					<RadioButton group="showcomparisons" text="#Common_On" value="1" />
 				</SettingsEnum>
@@ -374,19 +374,19 @@
 					</Panel>
 				</Panel>
 
-				<SettingsEnum text="#Settings_WeaponSelection_Enable" convar="mom_hud_weaponselection_enable" infomessage="#Settings_WeaponSelection_Enable_Info">
+				<SettingsEnum text="#Settings_WeaponSelection_Enable" convar="mom_hud_weapon_select" infomessage="#Settings_WeaponSelection_Enable_Info">
 					<RadioButton group="showwepsel" text="#Common_Off" value="0" />
 					<RadioButton group="showwepsel" text="#Common_On" value="1" />
 				</SettingsEnum>
 
-				<ConVarEnabler convar="mom_hud_weaponselection_enable" togglevisibility="true" class="flow-down">
-					<SettingsEnum text="#Settings_WeaponSelection_ShowKeybind" convar="mom_hud_weaponselection_keybind_enable" infomessage="#Settings_WeaponSelection_ShowKeybind_Info">
+				<ConVarEnabler convar="mom_hud_weapon_select" togglevisibility="true" class="flow-down">
+					<SettingsEnum text="#Settings_WeaponSelection_ShowKeybind" convar="mom_hud_weapon_select_keys" infomessage="#Settings_WeaponSelection_ShowKeybind_Info">
 						<RadioButton group="showwepselkb" text="#Common_Off" value="0" />
 						<RadioButton group="showwepselkb" text="#Common_On" value="1" />
 					</SettingsEnum>
 				</ConVarEnabler>
 
-				<SettingsEnum text="#Settings_WeaponSelection_Sound" convar="mom_hud_weaponselection_sound_enable" infomessage="#Settings_WeaponSelection_Sound_Info" tags="sound">
+				<SettingsEnum text="#Settings_WeaponSelection_Sound" convar="mom_hud_weapon_select_sounds" infomessage="#Settings_WeaponSelection_Sound_Info" tags="sound">
 					<RadioButton group="showwepselsound" text="#Common_Off" value="0" />
 					<RadioButton group="showwepselsound" text="#Common_On" value="1" />
 				</SettingsEnum>
@@ -415,63 +415,63 @@
 				</SettingsEnum>
 
 				<ConVarEnabler convar="mom_hud_jstats_enable" class="flow-down">
-					<SettingsSlider text="#Settings_JumpStats_First" min="1" max="10" convar="mom_hud_jstats_first" displayprecision="0" infomessage="#Settings_JumpStats_First_Info" hasdocspage="false" />
+					<SettingsSlider text="#Settings_JumpStats_First" min="1" max="10" convar="mom_hud_jstats_first_jump" displayprecision="0" infomessage="#Settings_JumpStats_First_Info" hasdocspage="false" />
 
 					<SettingsSlider text="#Settings_JumpStats_Interval" min="0" max="10" convar="mom_hud_jstats_interval" displayprecision="0" infomessage="#Settings_JumpStats_Interval_Info" hasdocspage="false" />
 
-					<SettingsSlider text="#Settings_JumpStats_Log" min="1" max="10" convar="mom_hud_jstats_log" displayprecision="0" infomessage="#Settings_JumpStats_Log_Info" hasdocspage="false" />
+					<SettingsSlider text="#Settings_JumpStats_Log" min="1" max="10" convar="mom_hud_jstats_log_history" displayprecision="0" infomessage="#Settings_JumpStats_Log_Info" hasdocspage="false" />
 
-					<SettingsEnum text="#Settings_JumpStats_TakeoffSpeed" convar="mom_hud_jstats_takeoff_speed_enable" infomessage="#Settings_JumpStats_TakeoffSpeed_Info">
+					<SettingsEnum text="#Settings_JumpStats_TakeoffSpeed" convar="mom_hud_jstats_takeoff_speed" infomessage="#Settings_JumpStats_TakeoffSpeed_Info">
 						<RadioButton group="takeoffspeed" text="#Common_Off" value="0" />
 						<RadioButton group="takeoffspeed" text="#Common_On" value="1" />
 					</SettingsEnum>
 
-					<SettingsEnum text="#Settings_JumpStats_SpeedDelta" convar="mom_hud_jstats_speed_delta_enable" infomessage="#Settings_JumpStats_SpeedDelta_Info">
+					<SettingsEnum text="#Settings_JumpStats_SpeedDelta" convar="mom_hud_jstats_speed_delta" infomessage="#Settings_JumpStats_SpeedDelta_Info">
 						<RadioButton group="deltaspeed" text="#Common_Off" value="0" />
 						<RadioButton group="deltaspeed" text="#Common_On" value="1" />
 					</SettingsEnum>
 
-					<SettingsEnum text="#Settings_JumpStats_TakeoffTime" convar="mom_hud_jstats_takeoff_time_enable" infomessage="#Settings_JumpStats_TakeoffTime_Info">
+					<SettingsEnum text="#Settings_JumpStats_TakeoffTime" convar="mom_hud_jstats_takeoff_time" infomessage="#Settings_JumpStats_TakeoffTime_Info">
 						<RadioButton group="jumptime" text="#Common_Off" value="0" />
 						<RadioButton group="jumptime" text="#Common_On" value="1" />
 					</SettingsEnum>
 
-					<SettingsEnum text="#Settings_JumpStats_TimeDelta" convar="mom_hud_jstats_time_delta_enable" infomessage="#Settings_JumpStats_TimeDelta_Info">
+					<SettingsEnum text="#Settings_JumpStats_TimeDelta" convar="mom_hud_jstats_time_delta" infomessage="#Settings_JumpStats_TimeDelta_Info">
 						<RadioButton group="jumptimedelta" text="#Common_Off" value="0" />
 						<RadioButton group="jumptimedelta" text="#Common_On" value="1" />
 					</SettingsEnum>
 
-					<SettingsEnum text="#Settings_JumpStats_StrafeSync" convar="mom_hud_jstats_strafe_sync_enable" infomessage="#Settings_JumpStats_StrafeSync_Info">
+					<SettingsEnum text="#Settings_JumpStats_StrafeSync" convar="mom_hud_jstats_strafe_sync" infomessage="#Settings_JumpStats_StrafeSync_Info">
 						<RadioButton group="syncratio" text="#Common_Off" value="0" />
 						<RadioButton group="syncratio" text="#Common_On" value="1" />
 					</SettingsEnum>
 
-					<SettingsEnum text="#Settings_JumpStats_StrafeCount" convar="mom_hud_jstats_strafe_count_enable" infomessage="#Settings_JumpStats_StrafeCount_Info">
+					<SettingsEnum text="#Settings_JumpStats_StrafeCount" convar="mom_hud_jstats_strafe_count" infomessage="#Settings_JumpStats_StrafeCount_Info">
 						<RadioButton group="jumpstrafes" text="#Common_Off" value="0" />
 						<RadioButton group="jumpstrafes" text="#Common_On" value="1" />
 					</SettingsEnum>
 
-					<SettingsEnum text="#Settings_JumpStats_SpeedGain" convar="mom_hud_jstats_speed_gain_enable" infomessage="#Settings_JumpStats_SpeedGain_Info">
+					<SettingsEnum text="#Settings_JumpStats_SpeedGain" convar="mom_hud_jstats_speed_gain" infomessage="#Settings_JumpStats_SpeedGain_Info">
 						<RadioButton group="speedgain" text="#Common_Off" value="0" />
 						<RadioButton group="speedgain" text="#Common_On" value="1" />
 					</SettingsEnum>
 
-					<SettingsEnum text="#Settings_JumpStats_YawRatio" convar="mom_hud_jstats_yaw_ratio_enable" infomessage="#Settings_JumpStats_YawRatio_Info">
+					<SettingsEnum text="#Settings_JumpStats_YawRatio" convar="mom_hud_jstats_yaw_ratio" infomessage="#Settings_JumpStats_YawRatio_Info">
 						<RadioButton group="yawratio" text="#Common_Off" value="0" />
 						<RadioButton group="yawratio" text="#Common_On" value="1" />
 					</SettingsEnum>
 
-					<SettingsEnum text="#Settings_JumpStats_HeightDelta" convar="mom_hud_jstats_height_delta_enable" infomessage="#Settings_JumpStats_HeightDelta_Info">
+					<SettingsEnum text="#Settings_JumpStats_HeightDelta" convar="mom_hud_jstats_height_delta" infomessage="#Settings_JumpStats_HeightDelta_Info">
 						<RadioButton group="heightdelta" text="#Common_Off" value="0" />
 						<RadioButton group="heightdelta" text="#Common_On" value="1" />
 					</SettingsEnum>
 
-					<SettingsEnum text="#Settings_JumpStats_Distance" convar="mom_hud_jstats_distance_enable" infomessage="#Settings_JumpStats_Distance_Info">
+					<SettingsEnum text="#Settings_JumpStats_Distance" convar="mom_hud_jstats_distance" infomessage="#Settings_JumpStats_Distance_Info">
 						<RadioButton group="distance" text="#Common_Off" value="0" />
 						<RadioButton group="distance" text="#Common_On" value="1" />
 					</SettingsEnum>
 
-					<SettingsEnum text="#Settings_JumpStats_Efficiency" convar="mom_hud_jstats_efficiency_enable" infomessage="#Settings_JumpStats_Efficiency_Info">
+					<SettingsEnum text="#Settings_JumpStats_Efficiency" convar="mom_hud_jstats_efficiency" infomessage="#Settings_JumpStats_Efficiency_Info">
 						<RadioButton group="efficiency" text="#Common_Off" value="0" />
 						<RadioButton group="efficiency" text="#Common_On" value="1" />
 					</SettingsEnum>
@@ -541,28 +541,28 @@
 
 				</Panel>
 
-				<SettingsEnum text="#Settings_DamageIndicator_Enable" convar="mom_hud_damageindicator_enable" infomessage="#Settings_DamageIndicator_Enable_Info">
+				<SettingsEnum text="#Settings_DamageIndicator_Enable" convar="mom_hud_damage_indicator_enable" infomessage="#Settings_DamageIndicator_Enable_Info">
 					<RadioButton group="damageindicatorenable" text="#Common_Off" value="0" />
 					<RadioButton group="damageindicatorenable" text="#Common_On" value="1" />
 				</SettingsEnum>
 
-				<ConVarEnabler convar="mom_hud_damageindicator_enable" class="flow-down">
+				<ConVarEnabler convar="mom_hud_damage_indicator_enable" class="flow-down">
 
-					<ConVarColorDisplay convar="mom_hud_damageindicator_color" text="#Settings_DamageIndicator_Color" tags="color" />
+					<ConVarColorDisplay convar="mom_hud_damage_indicator_color" text="#Settings_DamageIndicator_Color" tags="color" />
 
-					<SettingsSlider text="#Settings_DamageIndicator_MinHeight" min="1" max="500" convar="mom_hud_damageindicator_minheight" displayprecision="0" infomessage="#Settings_DamageIndicator_MinHeight_Info" hasdocspage="false" />
+					<SettingsSlider text="#Settings_DamageIndicator_MinHeight" min="1" max="500" convar="mom_hud_damage_indicator_min_height" displayprecision="0" infomessage="#Settings_DamageIndicator_MinHeight_Info" hasdocspage="false" />
 
-					<SettingsSlider text="#Settings_DamageIndicator_MaxHeight" min="1" max="500" convar="mom_hud_damageindicator_maxheight" displayprecision="0" infomessage="#Settings_DamageIndicator_MaxHeight_Info" hasdocspage="false" />
+					<SettingsSlider text="#Settings_DamageIndicator_MaxHeight" min="1" max="500" convar="mom_hud_damage_indicator_max_height" displayprecision="0" infomessage="#Settings_DamageIndicator_MaxHeight_Info" hasdocspage="false" />
 
-					<SettingsSlider text="#Settings_DamageIndicator_MinWidth" min="1" max="500" convar="mom_hud_damageindicator_minwidth" displayprecision="0" infomessage="#Settings_DamageIndicator_MinWidth_Info" hasdocspage="false" />
+					<SettingsSlider text="#Settings_DamageIndicator_MinWidth" min="1" max="500" convar="mom_hud_damage_indicator_min_width" displayprecision="0" infomessage="#Settings_DamageIndicator_MinWidth_Info" hasdocspage="false" />
 
-					<SettingsSlider text="#Settings_DamageIndicator_MaxWidth" min="1" max="500" convar="mom_hud_damageindicator_maxwidth" displayprecision="0" infomessage="#Settings_DamageIndicator_MaxWidth_Info" hasdocspage="false" />
+					<SettingsSlider text="#Settings_DamageIndicator_MaxWidth" min="1" max="500" convar="mom_hud_damage_indicator_max_width" displayprecision="0" infomessage="#Settings_DamageIndicator_MaxWidth_Info" hasdocspage="false" />
 
-					<SettingsSlider text="#Settings_DamageIndicator_MinLifetime" min="1" max="5" convar="mom_hud_damageindicator_minlifetime" displayprecision="1" infomessage="#Settings_DamageIndicator_MinLifetime_Info" hasdocspage="false" />
+					<SettingsSlider text="#Settings_DamageIndicator_MinLifetime" min="1" max="5" convar="mom_hud_damage_indicator_min_lifetime" displayprecision="1" infomessage="#Settings_DamageIndicator_MinLifetime_Info" hasdocspage="false" />
 
-					<SettingsSlider text="#Settings_DamageIndicator_MaxLifetime" min="1" max="5" convar="mom_hud_damageindicator_maxlifetime" displayprecision="1" infomessage="#Settings_DamageIndicator_MaxLifetime_Info" hasdocspage="false" />
+					<SettingsSlider text="#Settings_DamageIndicator_MaxLifetime" min="1" max="5" convar="mom_hud_damage_indicator_max_lifetime" displayprecision="1" infomessage="#Settings_DamageIndicator_MaxLifetime_Info" hasdocspage="false" />
 
-					<SettingsSlider text="#Settings_DamageIndicator_Radius" min="0" max="500" convar="mom_hud_damageindicator_radius" displayprecision="0" infomessage="#Settings_DamageIndicator_Radius_Info" hasdocspage="false" />
+					<SettingsSlider text="#Settings_DamageIndicator_Radius" min="0" max="500" convar="mom_hud_damage_indicator_radius" displayprecision="0" infomessage="#Settings_DamageIndicator_Radius_Info" hasdocspage="false" />
 
 				</ConVarEnabler>
 			</Panel>
@@ -648,34 +648,34 @@
 					</Panel>
 				</Panel>
 
-				<SettingsEnum text="#Settings_MapInfo_Enable" convar="mom_hud_mapinfo_enable" infomessage="#Settings_MapInfo_Enable_Info">
+				<SettingsEnum text="#Settings_MapInfo_Enable" convar="mom_hud_map_info" infomessage="#Settings_MapInfo_Enable_Info">
 					<RadioButton group="mapinfoenable" text="#Common_Off" value="0" />
 					<RadioButton group="mapinfoenable" text="#Common_On" value="1" />
 				</SettingsEnum>
 
-				<ConVarEnabler convar="mom_hud_mapinfo_enable" togglevisibility="true" class="flow-down">
+				<ConVarEnabler convar="mom_hud_map_info" togglevisibility="true" class="flow-down">
 
-					<SettingsEnum text="#Settings_MapInfo_MapName" convar="mom_hud_mapinfo_mapname_enable" infomessage="#Settings_MapInfo_MapName_Info">
+					<SettingsEnum text="#Settings_MapInfo_MapName" convar="mom_hud_map_name" infomessage="#Settings_MapInfo_MapName_Info">
 						<RadioButton group="mapinfonameenable" text="#Common_Off" value="0" />
 						<RadioButton group="mapinfonameenable" text="#Common_On" value="1" />
 					</SettingsEnum>
 
-					<SettingsEnum text="#Settings_MapInfo_MapAuthor" convar="mom_hud_mapinfo_author_enable" infomessage="#Settings_MapInfo_MapAuthor_Info">
+					<SettingsEnum text="#Settings_MapInfo_MapAuthor" convar="mom_hud_map_author" infomessage="#Settings_MapInfo_MapAuthor_Info">
 						<RadioButton group="mapinfoauthorenable" text="#Common_Off" value="0" />
 						<RadioButton group="mapinfoauthorenable" text="#Common_On" value="1" />
 					</SettingsEnum>
 
-					<SettingsEnum text="#Settings_MapInfo_MapDifficulty" convar="mom_hud_mapinfo_tier_enable" infomessage="#Settings_MapInfo_MapDifficulty_Info">
+					<SettingsEnum text="#Settings_MapInfo_MapDifficulty" convar="mom_hud_map_tier" infomessage="#Settings_MapInfo_MapDifficulty_Info">
 						<RadioButton group="mapinfotierenable" text="#Common_Off" value="0" />
 						<RadioButton group="mapinfotierenable" text="#Common_On" value="1" />
 					</SettingsEnum>
 
-					<SettingsEnum text="#Settings_MapInfo_ZoneType" convar="mom_hud_mapinfo_zonetype_enable" infomessage="#Settings_MapInfo_ZoneType_Info">
+					<SettingsEnum text="#Settings_MapInfo_ZoneType" convar="mom_hud_map_type" infomessage="#Settings_MapInfo_ZoneType_Info">
 						<RadioButton group="mapinfozonetypeenable" text="#Common_Off" value="0" />
 						<RadioButton group="mapinfozonetypeenable" text="#Common_On" value="1" />
 					</SettingsEnum>
 
-					<SettingsEnum text="#Settings_MapInfo_ZoneNum" convar="mom_hud_mapinfo_numzones_enable" infomessage="#Settings_MapInfo_ZoneNum_Info">
+					<SettingsEnum text="#Settings_MapInfo_ZoneNum" convar="mom_hud_map_stages" infomessage="#Settings_MapInfo_ZoneNum_Info">
 						<RadioButton group="mapinfonumzonesenable" text="#Common_Off" value="0" />
 						<RadioButton group="mapinfonumzonesenable" text="#Common_On" value="1" />
 					</SettingsEnum>

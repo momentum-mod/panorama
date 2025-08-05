@@ -177,7 +177,7 @@ interface GlobalEventNameMap {
 	/** Fired when HUD chat is closed. */
 	HudChat_Hide: () => void;
 
-	/** Called on speed update, respecting mom_hud_speedometer_fps */
+	/** Called on speed update, respecting mom_hud_speedometer_refresh_rate */
 	OnSpeedometerUpdate: (deltaTime: float) => void;
 
 	/** Called on explosive hit speed update */
