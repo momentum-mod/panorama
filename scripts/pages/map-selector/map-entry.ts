@@ -12,7 +12,7 @@ const NEW_MAP_BANNER_CUTOFF = 1000 * 60 * 60 * 24 * 5; // 5 days
 class MapEntryHandler {
 	constructor() {
 		$.RegisterEventHandler('MapEntry_MapDataUpdate', $.GetContextPanel(), () => this.update());
-		$.RegisterEventHandler('MapEntry_RoamingLobbiesUpdated', $.GetContextPanel(), (playerCount: number) =>
+		$.RegisterEventHandler('MapEntry_MapLobbiesUpdated', $.GetContextPanel(), (playerCount: number) =>
 			this.updatePlayerCount(playerCount)
 		);
 
@@ -184,7 +184,7 @@ class MapEntryHandler {
 		}
 	}
 
-	// Update roaming lobby player count
+	// Update map lobby player count
 	updatePlayerCount(playerCount: number) {
 		const panel = this.panels.lobbyContainer;
 		if (playerCount > 0) {
@@ -193,7 +193,7 @@ class MapEntryHandler {
 			panel.SetPanelEvent('onmouseover', () =>
 				UiToolkitAPI.ShowTextTooltip(
 					panel.id,
-					playerCount > 1 ? '#Lobby_Roaming_Count_Plural' : '#Lobby_Roaming_Count_Singular'
+					playerCount > 1 ? '#Lobby_MapLobby_Count_Plural' : '#Lobby_MapLobby_Count_Singular'
 				)
 			);
 		} else {

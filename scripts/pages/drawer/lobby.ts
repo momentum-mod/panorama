@@ -205,7 +205,7 @@ class LobbyHandler {
 				const ownerSteamID = lobbyData.owner;
 				const lobbyType = lobbyData.type;
 				const lobbyName = lobbyData.is_map_lobby
-					? `${$.Localize('#Lobby_Roaming')} (${MapCacheAPI.GetMapName()})`
+					? `${$.Localize('#Lobby_MapLobby')} (${MapCacheAPI.GetMapName()})`
 					: $.Localize('#Lobby_Owner').replace('%owner%', FriendsAPI.GetNameForXUID(ownerSteamID));
 
 				// Only show items that match the search. Always true if search is empty
@@ -290,7 +290,7 @@ class LobbyHandler {
 		$.GetContextPanel().SetDialogVariable(
 			'lobbyTitle',
 			is_map_lobby
-				? `${$.Localize('#Lobby_Roaming')} (${MapCacheAPI.GetMapName()})`
+				? `${$.Localize('#Lobby_MapLobby')} (${MapCacheAPI.GetMapName()})`
 				: $.Localize('#Lobby_Owner').replace('%owner%', FriendsAPI.GetNameForXUID(owner))
 		);
 		$.GetContextPanel().SetDialogVariable('lobbyPlayerCount', `${members}/${members_limit}`);

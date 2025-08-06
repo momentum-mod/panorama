@@ -50,5 +50,5 @@ export const LobbyProperties: ReadonlyMap<LobbyType, { name: string; icon: strin
 	[LobbyType.PRIVATE, { name: '#Lobby_Type_Private', icon: 'privatelobby' }],
 	[LobbyType.FRIENDS, { name: '#Lobby_Type_FriendsOnly', icon: 'friendsonlylobby' }],
 	[LobbyType.PUBLIC, { name: '#Lobby_Type_Public', icon: 'publiclobby' }],
-	[LobbyType.INVISIBLE, { name: '#Lobby_Type_Roaming', icon: 'roaminglobby' }]
+	[LobbyType.INVISIBLE, { name: '#Lobby_Type_MapLobby', icon: 'maplobby' }]
 ]);
