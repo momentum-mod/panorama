@@ -24,7 +24,7 @@
 		<Panel id="MainMenuInput" class="mainmenu">
 			<!-- Topnav -->
 			<Panel id="MainMenuNavBar" class="topnav" style="z-index: 10;">
-				<RadioButton id="HomeButton" group="TopNavRadio" class="topnav__home" onactivate="MainMenuHandler.onHomeButtonPressed()">
+				<RadioButton id="HomeButton" group="TopNavRadio" class="topnav__home" onactivate="MainMenuHandler.hideMainMenuPageContent()">
 					<Image class="topnav__logo" src="file://{images}/momentumLogo.svg" textureheight="64" scaling="stretch-to-fit-preserve-aspect" />
 				</RadioButton>
 

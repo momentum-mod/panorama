@@ -177,13 +177,13 @@ class MainMenuHandler implements OnPanelLoad {
 			activePanel.SetReadyForDisplay(true);
 		}
 
-		this.showContentPanel();
+		this.showMainMenuPageContent();
 	}
 
 	/**
 	 * Show the main menu page container and retract the drawer.
 	 */
-	showContentPanel() {
+	showMainMenuPageContent() {
 		this.panels.pageContent.RemoveClass('mainmenu__page-container--hidden');
 
 		$.DispatchEvent('RetractDrawer');
@@ -194,8 +194,9 @@ class MainMenuHandler implements OnPanelLoad {
 	/**
 	 * Hide the main menu page container and active page, and display the home page content.
 	 */
-	onHideContentPanel() {
+	hideMainMenuPageContent() {
 		this.panels.pageContent.AddClass('mainmenu__page-container--hidden');
+		this.panels.mapSelectorBackground.AddClass('mapselector__background--hidden');
 
 		// Uncheck the active button in the main menu navbar.
 		const activeButton = this.panels.topButtons.Children().find((panel) => panel.IsSelected());
@@ -210,6 +211,7 @@ class MainMenuHandler implements OnPanelLoad {
 
 			$.DispatchEvent('MainMenuPageHidden', this.activePage);
 		}
+
 		$.DispatchEvent('MainMenuPageShown', null);
 		this.activePage = null;
 		this.panels.homeContent.RemoveClass('home--hidden');
@@ -292,13 +294,6 @@ class MainMenuHandler implements OnPanelLoad {
 	}
 
 	/**
-	 * Hide the map selector background
-	 */
-	hideMapSelectorBackground() {
-		this.panels.mapSelectorBackground.AddClass('mapselector__background--hidden');
-	}
-
-	/**
 	 * Handles the map selector load event to add blurs to some of the map selector panels.
 	 * Necessary to handle in here because map selector background is a part of the main menu background section.
 	 */
@@ -308,21 +303,13 @@ class MainMenuHandler implements OnPanelLoad {
 	}
 
 	/**
-	 * Handles home button getting pressed.
-	 */
-	onHomeButtonPressed() {
-		this.onHideContentPanel();
-		this.hideMapSelectorBackground();
-	}
-
-	/**
 	 * Handles quit button getting pressed, deciding whether to `disconnect` or `quit`
 	 * based on if we're ingame or not.
 	 */
 	onQuitButtonPressed() {
 		if (GameInterfaceAPI.GetGameUIState() === GameUIState.PAUSEMENU) {
 			GameInterfaceAPI.ConsoleCommand('disconnect');
-			this.onHomeButtonPressed();
+			this.hideMainMenuPageContent();
 			return;
 		}
 		this.onQuitPrompt();
@@ -356,7 +343,7 @@ class MainMenuHandler implements OnPanelLoad {
 		if (GameInterfaceAPI.GetGameUIState() === GameUIState.PAUSEMENU) {
 			$.DispatchEvent('MainMenuResumeGame');
 		} else {
-			this.onHomeButtonPressed();
+			this.hideMainMenuPageContent();
 		}
 	}
 
