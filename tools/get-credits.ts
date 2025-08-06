@@ -83,7 +83,7 @@ function label(credit: Credit): string {
 			bio="${credit.bio.replaceAll('\n', '#newline#') || ''}"
 			steamID="${credit.steam || ''}"
 			discord="${credit.discord || ''}"
-			email="${credit.email || ''}"
+			email="${credit.email.replace('@', 'EMMMAAAIIIILLLL') || ''}"
 			github="${credit.github || ''}"
 			html="true"
 		/>`.replace('\n', ' ');
