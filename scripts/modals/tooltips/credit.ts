@@ -57,7 +57,7 @@ class CreditHandler {
 			$.CreatePanel('Label', this.panels.bio, '', { text, class: 'credit__bio__line' })
 		);
 
-		cp.SetDialogVariable('email', email);
+		cp.SetDialogVariable('email', email.replace('EMMMAAAIIIILLLL', '@'));
 		cp.SetDialogVariable('discord', discord);
 		cp.SetDialogVariable('github', github);
 
