@@ -39,11 +39,8 @@ class MainMenuHandler implements OnPanelLoad {
 		$.RegisterForUnhandledEvent('MomAPI_Authenticated', (result) => this.onAuthenticated(result));
 		$.RegisterEventHandler('Cancelled', $.GetContextPanel(), () => this.onEscapeKeyPressed());
 
-		// Close the map selector when a map is successfully loaded
-		$.RegisterForUnhandledEvent(
-			'MapSelector_TryPlayMap_Outcome',
-			(outcome) => outcome && this.onHomeButtonPressed()
-		);
+		// Close the map selector when a map is loaded
+		$.RegisterForUnhandledEvent('LevelInitPostEntity', () => this.hideMainMenuPageContent());
 
 		$.DispatchEvent('HideIntroMovie');
 	}
