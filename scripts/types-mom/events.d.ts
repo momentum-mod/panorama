@@ -362,8 +362,8 @@ interface GlobalEventNameMap {
 
 	ActiveZoneDefsChanged: () => void;
 
-	/** Fired after updating the map cache with the latest roaming lobby player counts. */
-	MapEntry_RoamingLobbiesUpdated: (playerCount: number) => void;
+	/** Fired after updating the map cache with the latest map lobby player counts. */
+	MapEntry_MapLobbiesUpdated: (playerCount: number) => void;
 
 	/** Called when the player changes safeguard HUD settings (mom_safeguard_holdtime). */
 	OnSafeguardSettingChanged: () => void;

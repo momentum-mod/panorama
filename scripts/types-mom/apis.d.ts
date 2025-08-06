@@ -316,7 +316,6 @@ declare namespace MapCacheAPI {
 		staticData: StaticData;
 		userData?: UserData;
 		mapFileExists: boolean;
-		roamingLobbyPlayerCount: number;
 	}
 
 	/** Get the current map's name */
