@@ -23,11 +23,10 @@ enum DefragFlags {
 export enum PickType {
 	NONE = 0,
 	CORNER = 1,
-	BOTTOM = 2,
-	HEIGHT = 3,
-	SAFE_HEIGHT = 4,
-	TELE_DEST_POS = 5,
-	TELE_DEST_YAW = 6
+	HEIGHT = 2,
+	SAFE_HEIGHT = 3,
+	TELE_DEST_POS = 4,
+	TELE_DEST_YAW = 5
 }
 
 export enum RegionRenderMode {
@@ -38,7 +37,9 @@ export enum RegionRenderMode {
 	END = 4,
 	MAJOR_CHECKPOINT = 5,
 	MINOR_CHECKPOINT = 6,
-	CANCEL = 7
+	CANCEL = 7,
+	ALLOW_BHOP = 8,
+	OVERBOUNCE = 9
 }
 
 export enum RegionPolygonProblem {
@@ -116,6 +117,7 @@ class ZoneMenuHandler {
 		addCancelZoneButton: $<Button>('#AddCancelZoneButton')!,
 		addGlobalRegionButton: $<Button>('#AddGlobalRegionButton')!,
 
+		propertiesLabel: $<Label>('#PropertiesLabel')!,
 		propertiesPanel: $<Panel>('#PropertiesContainer')!,
 		propertiesTrack: $<Panel>('#TrackProperties')!,
 		maxVelocity: $<TextEntry>('#MaxVelocity')!,
@@ -131,12 +133,26 @@ class ZoneMenuHandler {
 		infoPanel: $<Panel>('#InfoPanel')!,
 		selectionMode: $<Label>('#SelectionMode')!,
 		filterSelect: $<DropDown>('#FilterSelect')!,
-		volumeSelect: $<DropDown>('#VolumeSelect')!,
+		regionProperties: $<Panel>('#RegionProperties')!,
 		regionSelect: $<DropDown>('#RegionSelect')!,
-		regionBottom: $<TextEntry>('#RegionBottom')!,
+		regionCountLabel: $<Label>('#RegionCountLabel')!,
 		regionHeight: $<TextEntry>('#RegionHeight')!,
+
+		regionSafeHeightSection: $<Panel>('#RegionSafeHeightSection')!,
+		regionSafeHeightBase: $<RadioButton>('#RegionSafeHeight_Base')!,
+		regionSafeHeightFullHeight: $<RadioButton>('#RegionSafeHeight_FullHeight')!,
+		regionSafeHeightCustom: $<RadioButton>('#RegionSafeHeight_Custom')!,
+		regionSafeHeightCustomProperties: $<TextEntry>('#RegionSafeHeight_Custom_Properties')!,
 		regionSafeHeight: $<TextEntry>('#RegionSafeHeight')!,
-		regionTPDest: $<DropDown>('#RegionTPDest')!,
+
+		regionTPDestNone: $<RadioButton>('#RegionTPDest_None')!,
+		regionTPDestEntity: $<RadioButton>('#RegionTPDest_Entity')!,
+		regionTPDestCustom: $<RadioButton>('#RegionTPDest_Custom')!,
+
+		regionTPDestEntityProperties: $<Panel>('#RegionTPDest_Entity_Properties')!,
+		regionTPDestEntityList: $<DropDown>('#RegionTPDest_EntityList')!,
+
+		regionTPDestCustomProperties: $<Panel>('#RegionTPDest_Custom_Properties')!,
 		regionTPPos: {
 			x: $<TextEntry>('#TeleX')!,
 			y: $<TextEntry>('#TeleY')!,
@@ -159,6 +175,7 @@ class ZoneMenuHandler {
 	filternameList: string[] | null = null;
 	teleDestList: string[] | null = null;
 	editorDefragModifiers = 0;
+	selectedHierarchyNames: string[] = [];
 
 	didInit = false;
 
@@ -174,12 +191,10 @@ class ZoneMenuHandler {
 		const entList: EntityList = this.panels.zoningMenu.getEntityList();
 		this.filternameList = entList.filter ?? [];
 		this.filternameList.unshift($.Localize('#Zoning_Filter_None'));
-		this.populateDropdown(this.filternameList, this.panels.filterSelect, '', true);
+		this.populateDropdown(this.panels.filterSelect, this.filternameList);
 
 		this.teleDestList = entList.teleport ?? [];
-		this.teleDestList.unshift($.Localize('#Zoning_TPDest_UserDefined'));
-		this.teleDestList.unshift($.Localize('#Zoning_TPDest_None'));
-		this.populateDropdown(this.teleDestList, this.panels.regionTPDest, '', true);
+		this.populateDropdown(this.panels.regionTPDestEntityList, this.teleDestList);
 
 		this.zoningLimits = this.panels.zoningMenu.getZoningLimits();
 
@@ -276,6 +291,8 @@ class ZoneMenuHandler {
 		}
 
 		if (isInActiveHierarchy) {
+			this.selectedHierarchyNames.push(label);
+
 			selectButton.AddClass('in-active-hierarchy');
 
 			if (zonesObject === this.getActiveSelection()) {
@@ -318,6 +335,8 @@ class ZoneMenuHandler {
 		this.panels.leftList.RemoveAndDeleteChildren();
 		this.panels.centerList.RemoveAndDeleteChildren();
 		this.panels.rightList.RemoveAndDeleteChildren();
+
+		this.selectedHierarchyNames = [];
 
 		if (this.mapZoneData.tracks.main) {
 			this.addItemListItem(
@@ -376,6 +395,12 @@ class ZoneMenuHandler {
 
 		this.rebuildCenterList();
 		this.rebuildRightList();
+
+		if (this.selectedHierarchyNames.length > 0) {
+			this.panels.propertiesLabel.text = `(${this.selectedHierarchyNames.join(' > ')})`;
+		} else {
+			this.panels.propertiesLabel.text = '';
+		}
 
 		const regionCount = this.getTotalRegionCount();
 
@@ -615,24 +640,22 @@ class ZoneMenuHandler {
 		return {
 			points: [],
 			bottom: COORD_MAX,
-			height: DEFAULT_HEIGHT,
-			teleDestTargetname: ''
+			height: DEFAULT_HEIGHT
 		};
 	}
 
-	addOptionToDropdown(optionType: string, parent: DropDown, index: number, useIndex: boolean = true) {
-		const labelString = optionType + (useIndex ? ` ${index}` : '');
-		const optionPanel = $.CreatePanel('Label', parent.AccessDropDownMenu(), labelString);
+	addOptionToDropdown(parent: DropDown, label: string, index: number) {
+		const optionPanel = $.CreatePanel('Label', parent.AccessDropDownMenu(), label);
 		optionPanel.SetAttributeInt('value', index);
-		optionPanel.text = labelString;
+		optionPanel.text = label;
 		parent.AddOption(optionPanel);
 	}
 
-	populateDropdown(array: any[], dropdown: DropDown, optionType: string, clearDropdown: boolean = false) {
-		if (clearDropdown) dropdown.RemoveAllOptions();
+	populateDropdown(dropdown: DropDown, strings: string[]) {
+		dropdown.RemoveAllOptions();
 
-		for (const [i, item] of array?.entries() ?? []) {
-			this.addOptionToDropdown(optionType || item, dropdown, i, optionType !== '');
+		for (const [i, item] of strings.entries()) {
+			this.addOptionToDropdown(dropdown, item, i);
 		}
 	}
 
@@ -645,43 +668,50 @@ class ZoneMenuHandler {
 		this.selectedZone = newSelection;
 		this.selectedRegion = null; // this is set in populateRegionProperties()
 
-		if (newSelection?.track) {
-			const validTrack = this.hasSelectedTrack();
-			const validSegment = this.hasSelectedSegment();
-			const validZone = this.hasSelectedZone();
-			this.panels.propertiesTrack.visible = !validZone && !validSegment && validTrack;
-			this.panels.propertiesSegment.visible = !validZone && validSegment;
-			this.panels.propertiesZone.visible = validZone;
+		this.panels.propertiesTrack.visible = false;
+		this.panels.propertiesSegment.visible = false;
+		this.panels.propertiesZone.visible = false;
 
-			this.panels.regionSelect.SetSelectedIndex(0);
-
-			this.populateZoneProperties();
-			this.populateSegmentProperties();
-			this.populateTrackProperties();
-		} else if (newSelection.globalRegion?.index >= 0) {
-			this.panels.propertiesTrack.visible = false;
-			this.panels.propertiesSegment.visible = false;
-
+		if (newSelection.globalRegion?.index >= 0) {
 			this.panels.propertiesZone.visible = true;
 			this.populateRegionProperties();
-		} else {
-			this.panels.propertiesTrack.visible = false;
-			this.panels.propertiesSegment.visible = false;
-			this.panels.propertiesZone.visible = false;
+		} else if (this.hasSelectedZone()) {
+			this.panels.propertiesZone.visible = true;
+			this.panels.regionSelect.SetSelectedIndex(0);
+			this.populateZoneProperties(true);
+		} else if (this.hasSelectedSegment()) {
+			this.panels.propertiesSegment.visible = true;
+			this.populateSegmentProperties();
+		} else if (this.hasSelectedTrack()) {
+			this.panels.propertiesTrack.visible = true;
+			this.populateTrackProperties();
 		}
 
 		this.rebuildLists();
 
-		this.drawZones();
+		this.updateEditorRegions();
 	}
 
-	populateZoneProperties() {
-		if (!this.mapZoneData || !this.hasSelectedZone()) return;
-		const zone = this.selectedZone.zone;
-		const filterIndex = zone.filtername ? (this.filternameList?.indexOf(zone.filtername) ?? 0) : 0;
-		this.panels.filterSelect.SetSelectedIndex(filterIndex);
-		this.populateDropdown(zone.regions, this.panels.regionSelect, 'Region', true);
-		this.panels.regionSelect.SetSelectedIndex(0);
+	populateZoneProperties(newSelection) {
+		if (!this.mapZoneData) return;
+
+		if (this.hasSelectedZone()) {
+			const zone = this.selectedZone.zone;
+			const filterIndex = zone.filtername ? (this.filternameList?.indexOf(zone.filtername) ?? 0) : 0;
+			this.panels.filterSelect.SetSelectedIndex(filterIndex);
+			const regionNumbers = [];
+			for (let i = 0; i < zone.regions.length; i++) {
+				regionNumbers.push(`${i + 1}`);
+			}
+
+			if (newSelection) {
+				this.populateDropdown(this.panels.regionSelect, regionNumbers);
+				this.panels.regionSelect.SetSelectedIndex(0);
+			}
+
+			this.panels.regionCountLabel.text = `/ ${zone.regions.length}`;
+		}
+
 		this.populateRegionProperties();
 	}
 
@@ -715,6 +745,12 @@ class ZoneMenuHandler {
 	populateRegionProperties() {
 		let region = null;
 
+		// These controls should only be shown for zones, not global regions.
+		// Some of these may also be selectively hidden below
+		this.panels.propertiesZone.FindChildrenWithClassTraverse('not-global-region').forEach((panel) => {
+			panel.visible = this.selectedZone.zone != null;
+		});
+
 		if (this.selectedZone.zone) {
 			if (!this.teleDestList) return;
 
@@ -723,42 +759,91 @@ class ZoneMenuHandler {
 
 			region = this.selectedZone.zone.regions[index];
 
-			this.panels.regionSafeHeight.text = region?.safeHeight?.toFixed(2) ?? '';
+			this.panels.regionSafeHeight.text = '';
 
-			const tpIndex = !region?.teleDestTargetname
-				? region?.teleDestPos !== undefined && region?.teleDestYaw !== undefined
-					? 1
-					: 0
-				: (this.teleDestList?.indexOf(region?.teleDestTargetname) ?? 0);
-			this.panels.regionTPDest.SetSelectedIndex(tpIndex);
+			// Safe height currently only pertains to priming, so only show it for start zones
+			this.panels.regionSafeHeightSection.visible = this.isStartZone(this.selectedZone.zone);
+
+			this.panels.regionSafeHeightCustomProperties.visible = false;
+
+			switch (region.safeHeight) {
+				case 0:
+					this.panels.regionSafeHeightBase.SetSelected(true);
+					break;
+				case -1:
+					this.panels.regionSafeHeightFullHeight.SetSelected(true);
+					break;
+				default:
+					this.panels.regionSafeHeightCustom.SetSelected(true);
+					this.panels.regionSafeHeight.text = region.safeHeight?.toFixed(2) ?? '';
+					this.panels.regionSafeHeightCustomProperties.visible = true;
+					break;
+			}
+
+			this.panels.regionTPDestNone.enabled = !this.isStartZone(this.selectedZone.zone);
+
+			this.panels.regionTPDestEntityProperties.visible = false;
+			this.panels.regionTPDestCustomProperties.visible = false;
+
+			if (region?.teleDestTargetname) {
+				// entity tp dest
+				this.panels.regionTPDestEntity.SetSelected(true);
+				this.panels.regionTPDestEntityProperties.visible = true;
+				this.panels.regionTPDestEntityList.SetSelectedIndex(
+					this.teleDestList?.indexOf(region?.teleDestTargetname)
+				);
+			} else if (region?.teleDestPos) {
+				// custom tp dest
+				this.panels.regionTPDestCustom.SetSelected(true);
+				this.panels.regionTPDestCustomProperties.visible = true;
+				this.panels.regionTPPos.x.text = region.teleDestPos?.at(0)?.toFixed(2) ?? '';
+				this.panels.regionTPPos.y.text = region.teleDestPos?.at(1)?.toFixed(2) ?? '';
+				this.panels.regionTPPos.z.text = region.teleDestPos?.at(2)?.toFixed(2) ?? '';
+				this.panels.regionTPYaw.text = region.teleDestYaw?.toFixed(0) ?? '';
+			} else {
+				// no tp dest
+				this.panels.regionTPDestNone.SetSelected(true);
+			}
 		} else if (this.selectedZone.globalRegion?.index >= 0) {
 			region = this.selectedZone.globalRegion.regions[this.selectedZone.globalRegion.index];
 		}
 
 		if (!region) return;
 
-		// These controls should only be shown for zones, not global regions.
-		this.panels.propertiesZone.FindChildrenWithClassTraverse('not-global-region').forEach((panel) => {
-			panel.visible = this.selectedZone.zone != null;
-		});
+		// Indent region properties for zone regions so they appear as subitems of the region selection
+		this.panels.regionProperties.SetHasClass('zoning__property-inset', this.selectedZone.zone != null);
 
 		// Controls used by zone regions and global regions
-		this.panels.regionBottom.text = region?.bottom?.toFixed(2) ?? '';
 		this.panels.regionHeight.text = region?.height?.toFixed(2) ?? '';
 
 		this.selectedRegion = region;
-		this.panels.zoningMenu.updateSelectedRegion(this.selectedRegion);
-		this.updateRegionTeleportTextEntries();
+		this.updateEditorRegions();
 	}
 
 	addRegion() {
 		if (!this.selectedZone || !this.selectedZone.zone) return;
 
-		this.selectedZone.zone.regions.push(this.createRegion());
-		this.panels.zoningMenu.createRegion(this.isStartZone(this.selectedZone.zone));
-		this.setInfoPanelShown(true);
-		this.populateDropdown(this.selectedZone.zone.regions, this.panels.regionSelect, 'Region', true);
+		const newRegion = this.createRegion();
+
+		this.selectedZone.zone.regions.push(newRegion);
+
+		const regionNumbers = [];
+		for (let i = 0; i < this.selectedZone.zone.regions.length; i++) {
+			regionNumbers.push(`${i + 1}`);
+		}
+		this.populateDropdown(this.panels.regionSelect, regionNumbers);
 		this.panels.regionSelect.SetSelectedIndex(this.selectedZone.zone.regions.length - 1);
+
+		// Be careful around this logic, this is really fiddly...
+		// Here we update the value of selectedRegion and then push that
+		this.populateRegionProperties();
+		this.updateEditorRegions();
+
+		if (this.selectedRegion !== newRegion) throw new Error('New region is not selected');
+
+		this.panels.zoningMenu.createRegion(this.isStartZone(this.selectedZone.zone));
+
+		this.setInfoPanelShown(true);
 	}
 
 	deletingSelectedRegionCascadesToZone() {
@@ -858,10 +943,10 @@ class ZoneMenuHandler {
 			// It is safe to delete just this region
 			const index = this.panels.regionSelect.GetSelected()?.GetAttributeInt('value', -1);
 			this.selectedZone.zone?.regions.splice(index, 1);
-			this.panels.regionSelect.SetSelectedIndex(0);
-			this.populateRegionProperties();
+			this.panels.regionSelect.SetSelectedIndex(Math.max(index - 1, 0));
+			this.populateZoneProperties(false);
 
-			this.drawZones();
+			this.updateEditorRegions();
 		}
 	}
 
@@ -877,21 +962,6 @@ class ZoneMenuHandler {
 		this.setInfoPanelShown(true);
 	}
 
-	pickBottom() {
-		if (!this.selectedZone || !this.selectedRegion) return;
-		this.panels.zoningMenu.editRegion(PickType.BOTTOM);
-		this.setInfoPanelShown(true);
-	}
-
-	setRegionBottom() {
-		if (!this.selectedZone || !this.selectedRegion) return;
-
-		const bottom = Number.parseFloat(this.panels.regionBottom.text);
-		this.selectedRegion.bottom = Number.isNaN(bottom) ? 0 : bottom;
-
-		this.drawZones();
-	}
-
 	pickHeight() {
 		if (!this.selectedZone || !this.selectedRegion) return;
 		this.panels.zoningMenu.editRegion(PickType.HEIGHT);
@@ -904,7 +974,7 @@ class ZoneMenuHandler {
 		const height = Number.parseFloat(this.panels.regionHeight.text);
 		this.selectedRegion.height = Number.isNaN(height) ? 0 : height;
 
-		this.drawZones();
+		this.updateEditorRegions();
 	}
 
 	pickSafeHeight() {
@@ -913,13 +983,13 @@ class ZoneMenuHandler {
 		this.setInfoPanelShown(true);
 	}
 
-	setRegionSafeHeight() {
+	setRegionSafeHeight(value = null) {
 		if (!this.selectedZone || !this.selectedRegion) return;
 
-		const height = Number.parseFloat(this.panels.regionSafeHeight.text);
+		const height = value ?? Number.parseFloat(this.panels.regionSafeHeight.text);
 		this.selectedRegion.safeHeight = Number.isNaN(height) ? 0 : height;
 
-		this.drawZones();
+		this.updateSelection(this.selectedZone);
 	}
 
 	pickTeleDestPos() {
@@ -934,32 +1004,46 @@ class ZoneMenuHandler {
 		this.setInfoPanelShown(true);
 	}
 
-	onTPDestSelectionChanged() {
-		if (!this.selectedZone || !this.selectedRegion || !this.teleDestList) return;
+	setTPDestType(type) {
+		const index = this.panels.regionSelect.GetSelected()?.GetAttributeInt('value', -1);
 
-		const teleDestIndex = this.panels.regionTPDest.GetSelected()?.GetAttributeInt('value', 0);
-		if (teleDestIndex === 1 && this.selectedRegion.points?.length > 0) {
-			// user is requesting to place a TP destination at some location (not entity)
-			if (this.selectedRegion.teleDestPos === undefined || this.selectedRegion.teleDestYaw === undefined) {
-				this.selectedRegion.teleDestTargetname = '';
-				const index = this.panels.regionSelect.GetSelected()?.GetAttributeInt('value', -1);
-				if (index !== -1) {
-					const regionWithTPDest = this.panels.zoningMenu.createDefaultTeleDest(this.selectedRegion);
-					this.deepCopyRegion(this.selectedZone.zone.regions[index], regionWithTPDest);
-				}
+		delete this.selectedRegion.teleDestTargetname;
+		delete this.selectedRegion.teleDestPos;
+		delete this.selectedRegion.teleDestYaw;
 
-				this.selectedRegion = this.selectedZone.zone.regions[index];
-				this.pickTeleDestPos();
-			}
-		} else {
-			this.selectedRegion.teleDestTargetname = teleDestIndex ? this.teleDestList[teleDestIndex] : '';
-			delete this.selectedRegion.teleDestPos;
-			delete this.selectedRegion.teleDestYaw;
+		switch (type) {
+			case 0:
+				// none
+				break;
+			case 1:
+				// entity
+				// TODO: pick dest closest to zone center
+				this.selectedRegion.teleDestTargetname = this.teleDestList[0];
+				break;
+			case 2:
+				// custom
+				this.deepCopyRegion(
+					this.selectedZone.zone.regions[index],
+					this.panels.zoningMenu.createDefaultTeleDest(this.selectedRegion)
+				);
+
+				// If they back out of picking the yaw interactively, I don't want to deal with the complication
+				// of trying to revert the dest to whatever it was before, so just set a default here instead.
+				this.selectedZone.zone.regions[index].teleDestYaw = 0;
+
+				this.pickTeleDestYaw();
+				break;
 		}
 
-		this.panels.zoningMenu.updateSelectedRegion(this.selectedRegion);
-		this.updateRegionTeleportTextEntries();
-		this.drawZones();
+		this.populateRegionProperties();
+	}
+
+	onTPDestEntitySelectionChanged() {
+		const teleDestIndex = this.panels.regionTPDestEntityList.GetSelected()?.GetAttributeInt('value', -1);
+		this.selectedRegion.teleDestTargetname = this.teleDestList[teleDestIndex];
+
+		// Mostly just to push the updated region to game code for drawing the new destination
+		this.populateRegionProperties();
 	}
 
 	setRegionTeleDestOrientation() {
@@ -975,33 +1059,10 @@ class ZoneMenuHandler {
 			Number.isNaN(y) ? undefined : y,
 			Number.isNaN(z) ? undefined : z
 		];
-		this.selectedRegion.teleDestYaw = Number.isNaN(yaw) ? undefined : yaw;
+		this.selectedRegion.teleDestYaw = Number.isNaN(yaw) ? undefined : Math.round(yaw);
 
-		this.drawZones();
+		this.updateSelection(this.selectedZone);
 	}
-
-	updateRegionTeleportTextEntries() {
-		const enable = this.panels.regionTPDest.GetSelected()?.GetAttributeInt('value', 0) === 1;
-		this.panels.regionTPPos.x.enabled = enable;
-		this.panels.regionTPPos.y.enabled = enable;
-		this.panels.regionTPPos.z.enabled = enable;
-		this.panels.regionTPPosButton.enabled = enable;
-		this.panels.regionTPYaw.enabled = enable;
-		this.panels.regionTPYawButton.enabled = enable;
-
-		if (enable) {
-			this.panels.regionTPPos.x.text = this.selectedRegion?.teleDestPos?.at(0)?.toFixed(2) ?? '';
-			this.panels.regionTPPos.y.text = this.selectedRegion?.teleDestPos?.at(1)?.toFixed(2) ?? '';
-			this.panels.regionTPPos.z.text = this.selectedRegion?.teleDestPos?.at(2)?.toFixed(2) ?? '';
-			this.panels.regionTPYaw.text = this.selectedRegion?.teleDestYaw?.toFixed(2) ?? '';
-		} else {
-			this.panels.regionTPPos.x.text = '';
-			this.panels.regionTPPos.y.text = '';
-			this.panels.regionTPPos.z.text = '';
-			this.panels.regionTPYaw.text = '';
-		}
-	}
-
 	onRegionEditCompleted(newRegion: Region) {
 		if (this.selectedZone.globalRegion?.index != null) {
 			this.deepCopyRegion(
@@ -1016,7 +1077,7 @@ class ZoneMenuHandler {
 		}
 
 		this.setInfoPanelShown(false);
-		this.drawZones();
+		this.updateEditorRegions();
 	}
 
 	deepCopyRegion(to: Region, from: Region) {
@@ -1039,7 +1100,7 @@ class ZoneMenuHandler {
 			this.deleteRegion();
 		}
 
-		this.drawZones();
+		this.updateEditorRegions();
 	}
 
 	setInfoPanelShown(show: boolean) {
@@ -1047,7 +1108,7 @@ class ZoneMenuHandler {
 		this.panels.infoPanel.SetHasClass('hide', !show);
 
 		if (!show) {
-			this.populateRegionProperties();
+			this.populateZoneProperties(false);
 		}
 	}
 
@@ -1284,7 +1345,7 @@ class ZoneMenuHandler {
 	setMaxVelocity() {
 		if (!this.mapZoneData) return;
 		const velocity = Number.parseFloat(this.panels.maxVelocity.text);
-		this.mapZoneData.maxVelocity = !Number.isNaN(velocity) && velocity > 0 ? velocity : 0;
+		this.mapZoneData.maxVelocity = !Number.isNaN(velocity) && velocity > 0 ? Math.round(velocity) : 0;
 	}
 
 	setStageEndAtStageStarts() {
@@ -1367,7 +1428,7 @@ class ZoneMenuHandler {
 		// update segment name in trasklist tree
 	}
 
-	drawZones() {
+	updateEditorRegions() {
 		if (!this.mapZoneData || !this.selectedZone) return;
 
 		const renderRegions: ZoneEditorRegion[] = [];
@@ -1381,7 +1442,7 @@ class ZoneMenuHandler {
 						renderMode:
 							checkpointNumber === 0
 								? segmentNumber === 0
-									? RegionRenderMode.START
+									? RegionRenderMode.START_WITH_SAFE_HEIGHT
 									: RegionRenderMode.MAJOR_CHECKPOINT
 								: RegionRenderMode.MINOR_CHECKPOINT,
 						editing: this.hasSelectedZone() && region === this.selectedRegion
@@ -1410,7 +1471,7 @@ class ZoneMenuHandler {
 		for (const region of this.mapZoneData.globalRegions?.allowBhop ?? []) {
 			renderRegions.push({
 				region: region,
-				renderMode: RegionRenderMode.NONE,
+				renderMode: RegionRenderMode.ALLOW_BHOP,
 				editing: region === this.selectedRegion
 			});
 		}
@@ -1422,7 +1483,9 @@ class ZoneMenuHandler {
 			});
 		}
 
-		this.panels.zoningMenu.drawRegions(renderRegions);
+		// This initializes the regions we want to render, and also initializes
+		// the Region data for the region we have selected for editing.
+		this.panels.zoningMenu.updateEditorRegions(renderRegions);
 	}
 
 	saveZones() {
