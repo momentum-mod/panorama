@@ -77,7 +77,14 @@ class StrafeTrainer {
 
 	constructor() {
 		RegisterHUDPanelForGamemode({
-			gamemodes: [Gamemode.BHOP, Gamemode.SURF, Gamemode.CLIMB_KZT, Gamemode.CLIMB_MOM],
+			gamemodes: [
+				Gamemode.SURF,
+				Gamemode.BHOP,
+				Gamemode.BHOP_HL1,
+				Gamemode.CLIMB_MOM,
+				Gamemode.CLIMB_KZT,
+				Gamemode.CLIMB_16
+			],
 			onLoad: () => this.onLoad(),
 			events: [
 				{ event: 'OnJumpStarted', callback: () => this.onJump() },
