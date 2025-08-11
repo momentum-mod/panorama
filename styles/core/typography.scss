@@ -15,6 +15,11 @@
 		@include mixin.font-styles($use-header: true);
 		font-size: $size;
 	}
+
+	.text-light-#{$name} {
+		@include mixin.font-styles($use-header: true, $light-header: true);
+		font-size: $size;
+	}
 }
 
 @each $name, $size in $font-sizes {
@@ -33,12 +38,6 @@
 	.text-shadow-#{$name} {
 		text-shadow: $strength;
 	}
-}
-
-// This is a hack - Bebas Neue Light comes from an older version of Bebas Neue (see https://github.com/dharmatype/Bebas-Neue)
-// so we call the different font-family rather than use font-weight.
-.text-header-light {
-	font-family: $font-header-light;
 }
 
 .text-italic {

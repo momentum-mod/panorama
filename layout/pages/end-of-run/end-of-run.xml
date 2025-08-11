@@ -89,11 +89,11 @@
 					<Panel id="XPInfoBar" class="endofrun-xp__xp-info">
 						<Panel class="flow-right">
 							<Label id="XPCounter" class="endofrun-xp__xp-counter " text="{d:xp_counter} / {d:total_xp}" />
-							<Label class="endofrun-xp__xp-counter text-header-light ml-1" style="transform:translateY(1px)" text="#Common_XP" />
+							<Label class="endofrun-xp__xp-counter ml-1" style="font-weight:normal" text="#Common_XP" />
 						</Panel>
 						<Panel id="NewXP" class="endofrun-xp__new-stat-container">
 							<Label class="endofrun-xp__new-stat" text="+ {d:new_xp}" />
-							<Label class="endofrun-xp__new-stat text-header-light ml-1" style="transform:translateY(1px)" text="#Common_XP" />
+							<Label class="endofrun-xp__new-stat ml-1" style="font-weight:normal" text="#Common_XP" />
 						</Panel>
 					</Panel>
 				</Panel>

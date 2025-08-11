@@ -23,12 +23,12 @@
 					<Label class="text-h6" text="text-h6" />
 				</Panel>
 				<Panel class="col">
-					<Label class="text-h1 text-header-light" text="text-h1 text-header-light" />
-					<Label class="text-h2 text-header-light" text="text-h2 text-header-light" />
-					<Label class="text-h3 text-header-light" text="text-h3 text-header-light" />
-					<Label class="text-h4 text-header-light" text="text-h4 text-header-light" />
-					<Label class="text-h5 text-header-light" text="text-h5 text-header-light" />
-					<Label class="text-h6 text-header-light" text="text-h6 text-header-light" />
+					<Label class="text-light-h1" text="text-light-h1" />
+					<Label class="text-light-h2" text="text-light-h2" />
+					<Label class="text-light-h3" text="text-light-h3" />
+					<Label class="text-light-h4" text="text-light-h4" />
+					<Label class="text-light-h5" text="text-light-h5" />
+					<Label class="text-light-h6" text="text-light-h6" />
 				</Panel>
 				<Panel class="col">
 					<Label class="text-xxxl" text="text-xxxl" />
