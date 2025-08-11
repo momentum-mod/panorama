@@ -46,7 +46,7 @@
 	}
 
 	&__name {
-		@include mixin.font-styles($use-header: false);
+		@include mixin.font-regular();
 		font-size: 32px;
 		text-shadow: 0px 1px 3px rgba(0, 0, 0, 1);
 		font-weight: medium;
@@ -122,7 +122,7 @@
 	}
 
 	&__title {
-		@include mixin.font-styles($use-header: true, $light-header: true);
+		@include mixin.font-header();
 		font-size: 12px;
 		// horizontal-align: center;
 		// padding-left: 4px;

@@ -212,7 +212,8 @@
 	}
 
 	&__tier-label {
-		@include mixin.font-styles($use-header: true);
+		@include mixin.font-header();
+		font-weight: bold;
 		font-size: 22px;
 		margin-right: 8px;
 		vertical-align: center;
@@ -239,7 +240,7 @@ $notch-width: 10px;
 	}
 
 	&__number {
-		@include mixin.font-styles($use-header: false);
+		@include mixin.font-regular();
 		font-weight: bold;
 		font-size: 12px;
 		text-align: center;
@@ -406,7 +407,7 @@ $notch-width: 10px;
 
 	&__description {
 		height: 100%;
-		@include mixin.font-styles($use-header: false);
+		@include mixin.font-regular();
 		background-color: rgba(0, 0, 0, 0.5);
 	}
 
@@ -458,7 +459,8 @@ $notch-width: 10px;
 	&__h1,
 	&__h2,
 	&__h3 {
-		@include mixin.font-styles($use-header: true);
+		@include mixin.font-header();
+		font-weight: bold;
 		color: #eee;
 	}
 
@@ -515,9 +517,9 @@ $notch-width: 10px;
 	}
 
 	&__text {
-		@include mixin.font-styles($use-header: false);
-		font-size: 16px;
+		@include mixin.font-regular();
 		font-weight: medium;
+		font-size: 16px;
 		text-overflow: clip;
 		vertical-align: top;
 	}
@@ -608,7 +610,7 @@ $notch-width: 10px;
 	}
 
 	&__text {
-		@include mixin.font-styles($use-header: true, $light-header: true);
+		@include mixin.font-header();
 		font-size: 22px;
 		text-overflow: shrink;
 		margin-left: 6px;

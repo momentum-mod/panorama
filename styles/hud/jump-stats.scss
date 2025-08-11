@@ -13,7 +13,7 @@
 	}
 
 	&__label {
-		@include mixin.font-styles($use-header: false);
+		@include mixin.font-regular();
 		align: center bottom;
 		margin: 5px;
 		flow-children: up;

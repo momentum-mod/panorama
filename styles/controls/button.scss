@@ -35,7 +35,8 @@
 	}
 
 	&__text {
-		@include mixin.font-styles($use-header: $button-use-header-font, $light-header: $button-light-header-font);
+		@include mixin.font-header();
+		font-weight: bold;
 		font-size: $button-font-size;
 		color: $button-text-color;
 		margin: 0 $button-text-side-margin;

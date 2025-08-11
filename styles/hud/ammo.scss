@@ -7,7 +7,8 @@
 	align: center top;
 
 	&__label {
-		@include mixin.font-styles($use-header: true);
+		@include mixin.font-header();
+		font-weight: bold;
 		font-size: 96px;
 		horizontal-align: center;
 		text-overflow: ellipsis;

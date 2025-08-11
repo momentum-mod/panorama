@@ -325,9 +325,7 @@ $button-text-side-margin: 10px !default;
 $button-icon-with-text-side-margin: 4px !default;
 $button-icon-text-gap: 0px !default;
 
-$button-use-header-font: true !default;
 $button-font-size: 20px !default;
-$button-light-header-font: false !default;
 $button-text-shadow: 0 1px 2px 2 rgba(0, 0, 0, 0.35) !default;
 $button-icon-shadow: 0 1px 2px 1 rgba(0, 0, 0, 1) !default;
 
@@ -382,7 +380,6 @@ $dropdown-menu-shadow: fill rgba(0, 0, 0, 0.9) 0px 3px 6px 0px !default;
 $dropdown-menu-border: 1px solid rgba(0, 0, 0, 0.9) !default;
 $dropdown-menu-radius: 4px !default;
 
-$dropdown-item-use-header-font: true !default;
 $dropdown-item-font-size: 20px !default;
 $dropdown-item-padding: 4px 16px 4px 16px !default;
 $dropdown-item-background: rgba(0, 0, 0, 0) !default;
@@ -398,7 +395,6 @@ $contextmenu-background: $dropdown-menu-background !default;
 $contextmenu-radius: $dropdown-menu-radius !default;
 $contextmenu-shadow: $dropdown-menu-shadow !default;
 
-$contextmenu-item-use-header-font: $dropdown-item-use-header-font !default;
 $contextmenu-item-font-size: $dropdown-item-font-size !default;
 $contextmenu-item-padding: $dropdown-item-padding !default;
 $contextmenu-item-background: $dropdown-item-background !default;
@@ -416,8 +412,6 @@ $checkbox-background-disabled-selected: color.scale($checkbox-background-disable
 $checkbox-background-hover: color.scale($checkbox-background, $alpha: 20%) !default;
 $checkbox-background-selected: $blue !default;
 $checkbox-background-selected-hover: color.scale($checkbox-background-selected, $lightness: -10%) !default;
-
-$checkbox-use-header-font: false !default;
 
 $checkbox-shadow: rgba(0, 0, 0, 0.45) 0px 0px 2px 0px !default;
 
@@ -444,7 +438,6 @@ $radiobox-width: 24px !default;
 $radiobox-radius: 50% !default;
 $radiobox-shadow: rgba(0, 0, 0, 0.45) 0px 1px 2px 0px !default;
 
-$radiobutton-use-header-font: false !default;
 $radiobutton-gap: 8px !default;
 $radiobutton-text-color: $font-default-color !default;
 $radiobutton-text-disabled: $font-disabled-color !default;
@@ -478,8 +471,6 @@ $tab-lower-border-selected-color: rgba(255, 255, 255, 0.6);
 $tab-padding: 2px 8px 0px 8px;
 $tab-font-size: 20px;
 $tab-text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-$tab-use-header-font: true;
-$tab-light-header: false;
 $tab-text-padding: 4px 10px;
 
 // ================
@@ -567,9 +558,7 @@ $tooltip-padding: 8px 12px !default;
 $tooltip-radius: 4px !default;
 $tooltip-margin: 0px;
 
-$tooltip-title-use-header-font: true !default;
 $tooltip-title-font-size: 36px !default;
-$tooltip-text-use-header-font: false !default;
 $tooltip-text-font-size: 14px !default;
 $tooltip-image-size: 20px !default;
 
@@ -586,7 +575,6 @@ $popup-shadow: rgba(0, 0, 0, 1) 2px 2px 16px 2px !default;
 $popup-padding: 24px 32px !default;
 $popup-radius: 4px !default;
 
-$popup-title-use-header-font: true !default;
 $popup-title-font-size: 48px !default;
 $popup-text-use-header-font: false !default;
 $popup-text-font-size: 18px !default;
@@ -737,7 +725,7 @@ $timer-comp-font-size: 24px !default;
 // STATUS
 // ================
 $timer-hudstatus-font-size: 17px !default;
-$timer-hudstatus-font-weight: regular !default;
+$timer-hudstatus-font-weight: normal !default;
 $timer-hudstatus-color: $white !default;
 
 // ================

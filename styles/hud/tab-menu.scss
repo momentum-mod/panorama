@@ -129,7 +129,8 @@
 	}
 
 	&__map-name {
-		@include mixin.font-styles($use-header: true);
+		@include mixin.font-header();
+		font-weight: bold;
 		font-size: 48px;
 	}
 
@@ -150,7 +151,8 @@
 
 	&__credits-other-text,
 	&__credits-name {
-		@include mixin.font-styles($use-header: true);
+		@include mixin.font-header();
+		font-weight: bold;
 		font-size: 24px;
 	}
 
@@ -181,14 +183,16 @@
 		horizontal-align: right;
 		vertical-align: center;
 
-		@include mixin.font-styles($use-header: true);
+		@include mixin.font-header();
+		font-weight: bold;
 		font-size: 24px;
 	}
 }
 
 .hud-tab-menu-map-info-stats {
 	&__stat {
-		@include mixin.font-styles($use-header: true);
+		@include mixin.font-header();
+		font-weight: bold;
 		font-size: 24px;
 	}
 

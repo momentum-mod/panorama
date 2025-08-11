@@ -23,7 +23,8 @@
 	}
 
 	&__version {
-		@include mixin.font-styles($use-header: true);
+		@include mixin.font-header();
+		font-weight: bold;
 		vertical-align: bottom;
 		font-size: 24px;
 		margin-left: 8px;
@@ -67,8 +68,9 @@
 	}
 
 	&__header {
+		@include mixin.font-header();
+		font-weight: bold;
 		font-size: 42px;
-		@include mixin.font-styles($use-header: true);
 		horizontal-align: center;
 		margin-bottom: 4px;
 		margin-top: 12px;
@@ -76,14 +78,15 @@
 
 	&__subheader {
 		font-size: 24px;
-		@include mixin.font-styles($use-header: true, $light-header: true);
+		@include mixin.font-header();
 		horizontal-align: center;
 		margin-bottom: 4px;
 		margin-top: 4px;
 	}
 
 	&__name {
-		@include mixin.font-styles($use-header: true);
+		@include mixin.font-header();
+		font-weight: bold;
 		font-size: 28px;
 		padding: 0 2px;
 		text-align: center;

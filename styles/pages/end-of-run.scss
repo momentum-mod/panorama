@@ -35,7 +35,8 @@
 
 	&__time,
 	&__diff {
-		@include mixin.font-styles($use-header: true);
+		@include mixin.font-header();
+		font-weight: bold;
 		vertical-align: center;
 	}
 
@@ -277,7 +278,8 @@
 	}
 
 	&__name {
-		@include mixin.font-styles($use-header: true);
+		@include mixin.font-header();
+		font-weight: bold;
 		font-size: 20px;
 		text-align: left;
 		margin-bottom: 1px;
@@ -381,7 +383,7 @@ $graph-n-stats-height: 180px + $linegraph-axis-width;
 
 	&__title,
 	&__comparison-pre {
-		@include mixin.font-styles($use-header: true, $light-header: true);
+		@include mixin.font-header();
 	}
 
 	&__comparison-pre {
@@ -391,7 +393,7 @@ $graph-n-stats-height: 180px + $linegraph-axis-width;
 	&__comparison {
 		margin-left: 6px;
 		font-size: 16px;
-		@include mixin.font-styles($use-header: true, $light-header: true);
+		@include mixin.font-header();
 		color: $mid-blue;
 	}
 
@@ -508,9 +510,10 @@ $graph-n-stats-height: 180px + $linegraph-axis-width;
 	}
 
 	&__xp-counter {
-		font-size: 20px;
 		margin-bottom: -2px;
-		@include mixin.font-styles($use-header: true, $light-header: false);
+		@include mixin.font-header();
+		font-weight: bold;
+		font-size: 20px;
 	}
 
 	&__new-stat-container {
@@ -531,8 +534,9 @@ $graph-n-stats-height: 180px + $linegraph-axis-width;
 	}
 
 	&__new-stat {
+		@include mixin.font-header();
+		font-weight: bold;
 		font-size: 20px;
-		@include mixin.font-styles($use-header: true, $light-header: false);
 		color: $mid-blue;
 	}
 }

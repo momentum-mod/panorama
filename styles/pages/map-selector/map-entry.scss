@@ -82,7 +82,8 @@ $transition: 0.125s ease-out 0s;
 
 	&__text {
 		vertical-align: middle;
-		@include mixin.font-styles($use-header: true);
+		@include mixin.font-header();
+		font-weight: bold;
 		font-size: 26px;
 	}
 
@@ -126,7 +127,8 @@ $transition: 0.125s ease-out 0s;
 	}
 
 	&__tier {
-		@include mixin.font-styles($use-header: true);
+		@include mixin.font-header();
+		font-weight: bold;
 		text-align: center;
 		font-size: 26px;
 		visibility: collapse;
@@ -213,7 +215,7 @@ $transition: 0.125s ease-out 0s;
 			align: center center;
 			font-size: 14px;
 
-			@include mixin.font-styles($use-header: true, $light-header: true);
+			@include mixin.font-header();
 		}
 
 		#{$root}--new & {

@@ -47,7 +47,8 @@
 	}
 
 	&__weplabel {
-		@include mixin.font-styles($use-header: true);
+		@include mixin.font-header();
+		font-weight: bold;
 		font-size: $weapsel-name-font-size;
 		text-align: right;
 		text-overflow: clip;
@@ -59,7 +60,8 @@
 	}
 
 	&__keybind {
-		@include mixin.font-styles($use-header: true);
+		@include mixin.font-header();
+		font-weight: bold;
 		font-size: $weapsel-name-font-size;
 
 		color: $weapsel-keybind-color;

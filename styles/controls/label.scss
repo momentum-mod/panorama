@@ -3,7 +3,7 @@
 
 // Default styling for Labels, as used so commonly
 Label {
-	@include mixin.font-styles($use-header: false);
+	@include mixin.font-regular();
 	font-size: $font-default-size;
 
 	&:disabled {

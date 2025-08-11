@@ -3,7 +3,7 @@
 @use 'sass:color';
 
 TextEntry {
-	@include mixin.font-styles($use-header: false);
+	@include mixin.font-regular();
 	font-size: $font-default-size;
 	text-overflow: clip;
 	white-space: nowrap;

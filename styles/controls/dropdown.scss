@@ -62,8 +62,9 @@
 	}
 
 	Label {
-		@include mixin.font-styles($use-header: $dropdown-button-use-header-font);
+		@include mixin.font-header();
 		color: $dropdown-button-color;
+		font-weight: bold;
 		font-size: $dropdown-button-font-size;
 		text-overflow: ellipsis;
 		white-space: nowrap;
@@ -114,9 +115,10 @@
 		vertical-align: center;
 		padding: $dropdown-item-padding;
 
-		@include mixin.font-styles($use-header: $dropdown-item-use-header-font);
+		@include mixin.font-header();
+		font-weight: bold;
 		font-size: $dropdown-item-font-size;
-		text-shadow: 0 0 0;
+		text-shadow: none;
 
 		background-color: $dropdown-item-background;
 

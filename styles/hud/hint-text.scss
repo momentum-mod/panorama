@@ -18,7 +18,7 @@
 	}
 
 	&__label {
-		@include mixin.font-styles($use-header: false);
+		@include mixin.font-regular();
 		horizontal-align: center;
 		font-size: 18px;
 		font-weight: medium;

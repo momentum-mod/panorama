@@ -5,7 +5,8 @@
 	padding: 16px;
 
 	&__title {
-		@include mixin.font-styles($use-header: true);
+		@include mixin.font-header();
+		font-weight: bold;
 		font-size: 30px;
 		// horizontal-align: center;
 		margin-bottom: 16px;
@@ -31,7 +32,7 @@
 	}
 
 	&__prestige-title {
-		@include mixin.font-styles($use-header: true, $light-header: true);
+		@include mixin.font-header();
 		font-size: 14px;
 		horizontal-align: center;
 	}

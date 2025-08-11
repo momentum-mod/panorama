@@ -9,7 +9,8 @@
 	align: right center;
 
 	&__label {
-		@include mixin.font-styles($use-header: true);
+		@include mixin.font-header();
+		font-weight: bold;
 		font-size: 20px;
 		text-align: right;
 		text-overflow: ellipsis;

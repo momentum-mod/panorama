@@ -26,7 +26,8 @@
 	}
 
 	&__right-label {
-		@include mixin.font-styles($use-header: true);
+		@include mixin.font-header();
+		font-weight: bold;
 		text-align: right;
 		horizontal-align: right;
 		font-size: 42px; // Keep multi-line authors aligned with these!
@@ -37,16 +38,19 @@
 	}
 
 	&__map-name {
-		@include mixin.font-styles($use-header: true);
+		@include mixin.font-header();
+		font-weight: bold;
 		font-size: 64px;
 	}
 
 	&__author {
-		@include mixin.font-styles($use-header: true);
+		@include mixin.font-header();
+		font-weight: bold;
 		font-size: 42px;
 	}
 
 	&__tip {
+		@include mixin.font-regular();
 		vertical-align: bottom;
 		horizontal-align: center;
 		margin-bottom: 100px;
@@ -60,14 +64,16 @@
 	}
 
 	&__status-label {
-		@include mixin.font-styles($use-header: true);
+		@include mixin.font-header();
+		font-weight: bold;
 		vertical-align: bottom;
 		horizontal-align: left;
 		font-size: 64px;
 	}
 
 	&__percentage-label {
-		@include mixin.font-styles($use-header: true);
+		@include mixin.font-header();
+		font-weight: bold;
 		// Right-aligned items sometimes don't adjust their width properly,
 		// set a static width that'll always be large enough to fit the text
 		width: 300px;
