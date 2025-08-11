@@ -1,10 +1,8 @@
 Momentum uses the following fonts with their respective licenses below:
 
-1. Bebas Neue
-	a. 	"Bebas Neue 2.000" (2018)
-	b.  "Bebas Neue Light" (2010)
+1. Bebas Neue Momentum
 		
-Originally downloaded from https://github.com/dharmatype/Bebas-Neue
+Momentum Mod's edit of Bebas Neue (https://github.com/dharmatype/Bebas-Neue), maintained at https://github.com/momentum-mod/styling/tree/main/fonts/BebasNeue. 
 
 Copyright © 2010 by Dharma Type.
 
