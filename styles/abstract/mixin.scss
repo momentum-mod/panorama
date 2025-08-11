@@ -15,6 +15,7 @@
 		font-family: $font-header;
 		text-shadow: $font-header-shadow;
 		letter-spacing: $font-header-spacing;
+		text-transform: uppercase;
 	} @else {
 		font-weight: normal;
 		font-family: $font;
