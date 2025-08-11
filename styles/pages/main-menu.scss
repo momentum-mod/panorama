@@ -311,7 +311,7 @@ $drawer-width: 768px;
 	}
 
 	&__button-subtitle {
-		@include mixin.font-styles($use-header: true, $light-header: true);
+		@include mixin.font-header();
 		background-color: function.gradient-vertical($mid-blue, $blue);
 		border-radius: 6px;
 		border: 1px solid rgba(0, 0, 0, 0.35);
@@ -506,7 +506,8 @@ $drawer-width: 768px;
 	}
 
 	&__title {
-		@include mixin.font-styles($use-header: true);
+		@include mixin.font-header();
+		font-weight: bold;
 		font-size: 24px;
 	}
 
@@ -585,7 +586,8 @@ $drawer-width: 768px;
 	}
 
 	&__title {
-		@include mixin.font-styles($use-header: true);
+		@include mixin.font-header();
+		font-weight: bold;
 		font-size: 21px;
 	}
 
@@ -678,7 +680,8 @@ $drawer-width: 768px;
 		text-align: center;
 		overflow: squish;
 		text-overflow: shrink;
-		@include mixin.font-styles($use-header: true);
+		@include mixin.font-header();
+		font-weight: bold;
 	}
 
 	&__tooltip {

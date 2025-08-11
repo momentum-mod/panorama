@@ -4,27 +4,19 @@
 @use 'sass:list';
 @use 'sass:color';
 
-@mixin font-styles($use-header: false, $light-header: false) {
-	@if $use-header {
-		@if $light-header {
-			font-weight: normal;
-		} @else {
-			font-weight: bold;
-		}
-
-		font-family: $font-header;
-		text-shadow: $font-header-shadow;
-		letter-spacing: $font-header-spacing;
-		text-transform: uppercase;
-	} @else {
-		font-weight: normal;
-		font-family: $font;
-		text-shadow-fast: $font-shadow;
-		letter-spacing: $font-spacing;
-	}
-
+@mixin font-header() {
+	text-transform: uppercase;
+	font-family: $font-header;
+	text-shadow: $font-header-shadow;
+	letter-spacing: $font-header-spacing;
 	color: $font-default-color;
-	font-style: normal;
+}
+
+@mixin font-regular() {
+	font-family: $font;
+	text-shadow-fast: $font-shadow;
+	letter-spacing: $font-spacing;
+	color: $font-default-color;
 }
 
 @mixin gradient-themed($color: 'blue', $direction: 'down') {

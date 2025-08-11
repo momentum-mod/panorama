@@ -3,21 +3,23 @@
 @use 'sass:map';
 
 .text {
-	@include mixin.font-styles($use-header: false);
+	@include mixin.font-regular();
 }
 
 .text-h {
-	@include mixin.font-styles($use-header: true);
+	@include mixin.font-header();
+	font-weight: bold;
 }
 
 @each $name, $size in $font-header-sizes {
 	.text-#{$name} {
-		@include mixin.font-styles($use-header: true);
+		@include mixin.font-header();
+		font-weight: bold;
 		font-size: $size;
 	}
 
 	.text-light-#{$name} {
-		@include mixin.font-styles($use-header: true, $light-header: true);
+		@include mixin.font-header();
 		font-size: $size;
 	}
 }

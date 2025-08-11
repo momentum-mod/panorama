@@ -18,7 +18,8 @@
 
 	&__name {
 		font-size: 28px;
-		@include mixin.font-styles($use-header: true);
+		@include mixin.font-header();
+		font-weight: bold;
 		vertical-align: bottom;
 
 		#{$root}--contributor & {
@@ -29,7 +30,8 @@
 	&__username {
 		font-size: 48px;
 		margin-bottom: -4px;
-		@include mixin.font-styles($use-header: true);
+		@include mixin.font-header();
+		font-weight: bold;
 
 		padding: 0 8px;
 

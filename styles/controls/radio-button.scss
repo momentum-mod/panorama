@@ -65,7 +65,7 @@
 	}
 
 	&__text {
-		@include mixin.font-styles($use-header: $radiobutton-use-header-font);
+		@include mixin.font-regular();
 		vertical-align: middle;
 	}
 
@@ -167,7 +167,8 @@
 	}
 
 	&__text {
-		@include mixin.font-styles($use-header: $tab-use-header-font, $light-header: $tab-light-header);
+		@include mixin.font-header();
+		font-weight: bold;
 		font-size: $tab-font-size;
 		vertical-align: center;
 		horizontal-align: center;

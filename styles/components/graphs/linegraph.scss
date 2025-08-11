@@ -101,8 +101,9 @@
 	}
 
 	&__axis-name {
+		@include mixin.font-header();
+		font-weight: bold;
 		font-size: 26px;
-		@include mixin.font-styles($use-header: true);
 		opacity: 0.5;
 		text-shadow: none;
 
@@ -156,7 +157,7 @@
 
 	&__marker {
 		font-size: 12px;
-		@include mixin.font-styles($use-header: true, $light-header: true);
+		@include mixin.font-header();
 		overflow: squish;
 		text-overflow: shrink;
 

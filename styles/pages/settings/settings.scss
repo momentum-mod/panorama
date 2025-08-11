@@ -218,7 +218,8 @@ $page-width: 1920px - $rightnav-width;
 		width: 100%;
 		padding: 0 16px;
 
-		@include mixin.font-styles($use-header: true, $light-header: false);
+		@include mixin.font-header();
+		font-weight: bold;
 		font-size: 38px;
 		opacity: 0.85;
 		max-height: 50px;
@@ -260,7 +261,7 @@ $page-width: 1920px - $rightnav-width;
 	&__subitem-label {
 		padding-left: 24px;
 
-		@include mixin.font-styles($use-header: true, $light-header: true);
+		@include mixin.font-header();
 		font-size: 20px;
 	}
 
@@ -301,14 +302,9 @@ $page-width: 1920px - $rightnav-width;
 	}
 
 	&__title {
-		@include mixin.font-styles($use-header: true);
+		@include mixin.font-header();
+		font-weight: bold;
 		font-size: 59px;
-	}
-
-	&__subtitle {
-		@include mixin.font-styles($use-header: true);
-		font-size: 32px;
-		margin-bottom: 8px;
 	}
 
 	&__container {
@@ -362,12 +358,14 @@ $page-width: 1920px - $rightnav-width;
 	}
 
 	&__title {
-		@include mixin.font-styles($use-header: true);
+		@include mixin.font-header();
+		font-weight: bold;
 		font-size: 42px;
 	}
 
 	&__subtitle {
-		@include mixin.font-styles($use-header: true);
+		@include mixin.font-header();
+		font-weight: bold;
 		font-size: 32px;
 		margin-left: 4px;
 		margin-bottom: 4px;
@@ -424,7 +422,8 @@ $page-width: 1920px - $rightnav-width;
 		border-bottom: 1px solid rgba(255, 255, 255, 0.01);
 		background-color: gradient-horizontal(rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
 
-		@include mixin.font-styles($use-header: true);
+		@include mixin.font-header();
+		font-weight: bold;
 		font-size: 26px;
 	}
 }
@@ -456,13 +455,14 @@ $page-width: 1920px - $rightnav-width;
 	}
 
 	&__title {
-		@include mixin.font-styles($use-header: true, $light-header: false);
+		@include mixin.font-header();
+		font-weight: bold;
 		font-size: 44px;
 		margin-bottom: 8px;
 	}
 
 	&__description {
-		@include mixin.font-styles($use-header: false);
+		@include mixin.font-regular();
 		font-size: 18px;
 		margin-bottom: 8px;
 
@@ -474,7 +474,7 @@ $page-width: 1920px - $rightnav-width;
 	}
 
 	&__cvar {
-		@include mixin.font-styles($use-header: false);
+		@include mixin.font-regular();
 		font-size: 18px;
 		margin-bottom: 16px;
 	}
@@ -484,11 +484,13 @@ $page-width: 1920px - $rightnav-width;
 	height: 100%;
 
 	&__empty-header {
-		@include mixin.font-styles($use-header: true);
+		@include mixin.font-header();
+		font-weight: bold;
 		font-size: 36px;
 	}
 
 	&__empty-para {
+		@include mixin.font-regular();
 		margin: 8px;
 		font-size: 20px;
 	}

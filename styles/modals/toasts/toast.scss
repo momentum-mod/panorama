@@ -155,14 +155,15 @@
 	}
 
 	&__title {
-		@include mixin.font-styles($use-header: true);
+		@include mixin.font-header();
+		font-weight: bold;
 		vertical-align: center;
 		font-size: 20px;
 		margin-right: 8px;
 	}
 
 	&__message {
-		@include mixin.font-styles($use-header: false);
+		@include mixin.font-regular();
 		vertical-align: center;
 		font-size: 16px;
 	}

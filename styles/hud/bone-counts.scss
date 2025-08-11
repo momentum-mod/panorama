@@ -9,7 +9,8 @@
 	align: center top;
 
 	&__label {
-		@include mixin.font-styles($use-header: true);
+		@include mixin.font-regular();
+		font-weight: bold;
 		font-size: 16px;
 		horizontal-align: center;
 		text-align: center;

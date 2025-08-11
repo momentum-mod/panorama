@@ -12,7 +12,7 @@
 	}
 
 	&__label {
-		@include mixin.font-styles($use-header: false);
+		@include mixin.font-regular();
 
 		font-size: $timer-hudstatus-font-size;
 		font-weight: $timer-hudstatus-font-weight;

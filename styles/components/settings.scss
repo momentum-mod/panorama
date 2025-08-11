@@ -61,7 +61,7 @@
 
 	&__title {
 		vertical-align: center;
-		@include mixin.font-styles($use-header: false);
+		@include mixin.font-regular();
 		font-size: 18px;
 		overflow: squish;
 		text-overflow: shrink;
@@ -177,7 +177,7 @@
 	}
 
 	&__key {
-		@include mixin.font-styles($use-header: true, $light-header: true);
+		@include mixin.font-header();
 		font-size: 25px;
 		margin: 0 6px;
 		align: center center;

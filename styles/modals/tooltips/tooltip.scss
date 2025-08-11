@@ -42,14 +42,15 @@
 	&__title {
 		horizontal-align: left;
 		margin-bottom: 4px;
-		@include mixin.font-styles($use-header: $tooltip-title-use-header-font);
+		@include mixin.font-header();
+		font-weight: bold;
 		font-size: $tooltip-title-font-size;
 	}
 
 	&__text {
 		horizontal-align: left;
 		vertical-align: middle;
-		@include mixin.font-styles($use-header: $tooltip-text-use-header-font);
+		@include mixin.font-regular();
 		font-size: $tooltip-text-font-size;
 	}
 

@@ -110,7 +110,7 @@
 	}
 
 	& Label {
-		@include mixin.font-styles($use-header: $checkbox-use-header-font);
+		@include mixin.font-regular();
 		vertical-align: middle;
 	}
 }

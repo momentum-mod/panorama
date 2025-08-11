@@ -80,7 +80,7 @@
 	}
 
 	&__settinglabel {
-		@include mixin.font-styles($use-header: false);
+		@include mixin.font-regular();
 		horizontal-align: left;
 		vertical-align: center;
 		font-size: 18px;

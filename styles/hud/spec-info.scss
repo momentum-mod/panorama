@@ -9,7 +9,7 @@
 	align: right center;
 
 	&__count {
-		@include mixin.font-styles($use-header: false);
+		@include mixin.font-regular();
 		font-size: 20px;
 		text-align: right;
 		text-overflow: ellipsis;
@@ -25,7 +25,7 @@
 	align: right center;
 
 	&__name {
-		@include mixin.font-styles($use-header: false);
+		@include mixin.font-regular();
 		align: right center;
 		font-size: 20px;
 		text-align: right;

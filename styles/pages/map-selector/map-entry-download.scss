@@ -29,7 +29,8 @@
 		// width: 100%;
 		// height: 100%;
 
-		@include mixin.font-styles($use-header: true);
+		@include mixin.font-header();
+		font-weight: bold;
 		font-size: 26px;
 		visibility: visible;
 

@@ -14,7 +14,7 @@
 	&__time {
 		horizontal-align: center;
 
-		@include mixin.font-styles($use-header: false);
+		@include mixin.font-regular();
 		font-weight: $timer-font-weight;
 		font-size: $timer-font-size;
 		text-align: center;
@@ -34,7 +34,7 @@
 	&__comparison {
 		horizontal-align: center;
 
-		@include mixin.font-styles($use-header: false);
+		@include mixin.font-regular();
 		font-weight: $timer-comp-font-weight;
 		font-size: $timer-comp-font-size;
 		text-align: center;

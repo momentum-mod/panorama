@@ -34,8 +34,8 @@
 	&__title {
 		horizontal-align: left;
 		margin-bottom: 0px;
-		@include mixin.font-styles($use-header: $popup-title-use-header-font, $light-header: false);
-		color: $font-default-color;
+		@include mixin.font-header();
+		font-weight: bold;
 		font-size: $popup-title-font-size;
 	}
 
@@ -52,7 +52,7 @@
 		horizontal-align: left;
 		text-align: left;
 		margin-left: 4px;
-		@include mixin.font-styles($use-header: $popup-text-use-header-font);
+		@include mixin.font-regular();
 		vertical-align: center;
 		font-size: $popup-text-font-size;
 	}

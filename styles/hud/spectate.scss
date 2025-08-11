@@ -46,7 +46,8 @@
 	}
 
 	&__title {
-		@include mixin.font-styles($use-header: true);
+		@include mixin.font-header();
+		font-weight: bold;
 		vertical-align: center;
 		text-shadow: 0 1px 3px 2 rgba(0, 0, 0, 0.5);
 		font-size: 24px;
@@ -81,7 +82,7 @@
 	}
 
 	&__hint {
-		@include mixin.font-styles($use-header: false);
+		@include mixin.font-regular();
 		color: rgb(255, 255, 255, 0.9);
 		font-size: 12px;
 		font-style: italic;

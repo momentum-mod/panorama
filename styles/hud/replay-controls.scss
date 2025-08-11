@@ -24,7 +24,7 @@
 	}
 
 	&__text {
-		@include mixin.font-styles($use-header: false);
+		@include mixin.font-regular();
 		font-weight: medium;
 		vertical-align: center;
 		font-size: 18px;
@@ -241,12 +241,12 @@
 	&__label {
 		width: 100%;
 
-		@include mixin.font-styles($use-header: false);
+		@include mixin.font-regular();
 		font-size: 12px;
 		text-align: center;
 		color: rgb(211, 211, 211);
 		text-shadow: 0 1px 1px rgba(0, 0, 0, 1);
-		font-weight: regular;
+		font-weight: normal;
 
 		transition-property: color;
 		transition-timing-function: ease-out;

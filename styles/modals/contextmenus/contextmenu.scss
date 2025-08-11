@@ -63,7 +63,8 @@
 			horizontal-align: left;
 			vertical-align: center;
 			// min-width: 180px;
-			@include mixin.font-styles($use-header: $contextmenu-item-use-header-font);
+			@include mixin.font-header();
+			font-weight: bold;
 			font-size: $contextmenu-item-font-size;
 			text-shadow: 0 0 0;
 			width: fill-parent-flow(1);
