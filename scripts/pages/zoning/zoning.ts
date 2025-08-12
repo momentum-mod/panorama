@@ -733,6 +733,7 @@ class ZoneMenuHandler {
 		this.panels.defragModifiers.visible = this.hasSelectedDefragBonus();
 		this.panels.maxVelocity.text =
 			this.mapZoneData.maxVelocity === undefined ? '' : this.mapZoneData.maxVelocity.toFixed(0);
+		this.panels.bhopEnabled.checked = track.bhopEnabled ?? false;
 	}
 
 	updateZoneFilter() {
@@ -1403,7 +1404,7 @@ class ZoneMenuHandler {
 	}
 
 	setBhopEnabled() {
-		if (!this.hasSelectedMainTrack() || !this.hasSelectedBonusTrack()) return;
+		if (!this.hasSelectedMainTrack() && !this.hasSelectedBonusTrack()) return;
 		this.selectedZone.track.bhopEnabled = this.panels.bhopEnabled.checked;
 	}
 
