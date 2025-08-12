@@ -150,9 +150,9 @@
 					</Panel>
 				</Panel>
 
-				<ConVarColorDisplay text="#Settings_Zones_StartOutlineColor" convar="mom_zone_type_start_color" />
+				<ConVarColorDisplay text="#Settings_Zones_StartOutlineColor" convar="mom_zonetype_start_color" />
 
-				<SettingsEnumDropDown text="#Settings_Zones_StartOutlineStyle" convar="mom_zone_type_start_draw_style" tags="color,outline,edge">
+				<SettingsEnumDropDown text="#Settings_Zones_StartOutlineStyle" convar="mom_zonetype_start_draw_style" tags="color,outline,edge">
 					<Label id="colorize1" text="#Common_Off" value="0" />
 					<Label id="colorize2" text="#Settings_Zones_Style_Outlines" value="1" />
 					<Label id="colorize3" text="#Settings_Zones_Style_OutlineOverlays" value="2" />
@@ -160,9 +160,9 @@
 					<Label id="colorize5" text="#Settings_Zones_Style_SideOverlays" value="4" />
 				</SettingsEnumDropDown>
 
-				<ConVarColorDisplay text="#Settings_Zones_StageOutlineColor" convar="mom_zone_type_stage_color" tags="color,outline,edge" />
+				<ConVarColorDisplay text="#Settings_Zones_StageOutlineColor" convar="mom_zonetype_stage_color" tags="color,outline,edge" />
 
-				<SettingsEnumDropDown text="#Settings_Zones_StageOutlineStyle" convar="mom_zone_type_stage_draw_style" tags="color,outline,edge">
+				<SettingsEnumDropDown text="#Settings_Zones_StageOutlineStyle" convar="mom_zonetype_stage_draw_style" tags="color,outline,edge">
 					<Label id="colorize1" text="#Common_Off" value="0" />
 					<Label id="colorize2" text="#Settings_Zones_Style_Outlines" value="1" />
 					<Label id="colorize3" text="#Settings_Zones_Style_OutlineOverlays" value="2" />
@@ -170,9 +170,9 @@
 					<Label id="colorize5" text="#Settings_Zones_Style_SideOverlays" value="4" />
 				</SettingsEnumDropDown>
 
-				<ConVarColorDisplay text="#Settings_Zones_CheckpointOutlineColor" convar="mom_zone_type_checkpoint_color" tags="color,outline,edge" />
+				<ConVarColorDisplay text="#Settings_Zones_CheckpointOutlineColor" convar="mom_zonetype_checkpoint_color" tags="color,outline,edge" />
 
-				<SettingsEnumDropDown text="#Settings_Zones_CheckpointOutlineStyle" convar="mom_zone_type_checkpoint_draw_style" tags="color,outline,edge">
+				<SettingsEnumDropDown text="#Settings_Zones_CheckpointOutlineStyle" convar="mom_zonetype_checkpoint_draw_style" tags="color,outline,edge">
 					<Label id="colorize1" text="#Common_Off" value="0" />
 					<Label id="colorize2" text="#Settings_Zones_Style_Outlines" value="1" />
 					<Label id="colorize3" text="#Settings_Zones_Style_OutlineOverlays" value="2" />
@@ -181,9 +181,9 @@
 
 				</SettingsEnumDropDown>
 
-				<ConVarColorDisplay text="#Settings_Zones_EndOutlineColor" convar="mom_zone_type_end_color" tags="color,outline,edge" />
+				<ConVarColorDisplay text="#Settings_Zones_EndOutlineColor" convar="mom_zonetype_end_color" tags="color,outline,edge" />
 
-				<SettingsEnumDropDown text="#Settings_Zones_EndOutlineStyle" convar="mom_zone_type_end_draw_style" tags="color,outline,edge">
+				<SettingsEnumDropDown text="#Settings_Zones_EndOutlineStyle" convar="mom_zonetype_end_draw_style" tags="color,outline,edge">
 					<Label id="colorize1" text="#Common_Off" value="0" />
 					<Label id="colorize2" text="#Settings_Zones_Style_Outlines" value="1" />
 					<Label id="colorize3" text="#Settings_Zones_Style_OutlineOverlays" value="2" />
@@ -191,9 +191,9 @@
 					<Label id="colorize5" text="#Settings_Zones_Style_SideOverlays" value="4" />
 				</SettingsEnumDropDown>
 
-				<ConVarColorDisplay text="#Settings_Zones_CancelOutlineColor" convar="mom_zone_type_cancel_color" tags="color,outline,edge" />
+				<ConVarColorDisplay text="#Settings_Zones_CancelOutlineColor" convar="mom_zonetype_cancel_color" tags="color,outline,edge" />
 
-				<SettingsEnumDropDown text="#Settings_Zones_CancelOutlineStyle" convar="mom_zone_type_cancel_draw_style" tags="color,outline,edge">
+				<SettingsEnumDropDown text="#Settings_Zones_CancelOutlineStyle" convar="mom_zonetype_cancel_draw_style" tags="color,outline,edge">
 					<Label id="colorize1" text="#Common_Off" value="0" />
 					<Label id="colorize2" text="#Settings_Zones_Style_Outlines" value="1" />
 					<Label id="colorize3" text="#Settings_Zones_Style_OutlineOverlays" value="2" />
@@ -201,9 +201,9 @@
 					<Label id="colorize5" text="#Settings_Zones_Style_SideOverlays" value="4" />
 				</SettingsEnumDropDown>
 
-				<ConVarColorDisplay text="#Settings_Zones_BhopOutlineColor" convar="mom_zone_type_bhop_color" tags="color,outline,edge" />
+				<ConVarColorDisplay text="#Settings_Zones_BhopOutlineColor" convar="mom_zonetype_bhop_color" tags="color,outline,edge" />
 
-				<SettingsEnumDropDown text="#Settings_Zones_BhopOutlineStyle" convar="mom_zone_type_bhop_draw_style" tags="color,outline,edge">
+				<SettingsEnumDropDown text="#Settings_Zones_BhopOutlineStyle" convar="mom_zonetype_bhop_draw_style" tags="color,outline,edge">
 					<Label id="colorize1" text="#Common_Off" value="0" />
 					<Label id="colorize2" text="#Settings_Zones_Style_Outlines" value="1" />
 					<Label id="colorize3" text="#Settings_Zones_Style_OutlineOverlays" value="2" />
@@ -235,7 +235,7 @@
 					<RadioButton group="rjtrailparticle" text="#Common_On" value="1" />
 				</SettingsEnum>
 
-				<SettingsEnum text="#Settings_RJ_ExplosionParticle" convar="mom_tf2_rocket_explosion" infomessage="#Settings_RJ_ExplosionParticle_Info" tags="particle,explosion">
+				<SettingsEnum text="#Settings_RJ_ExplosionParticle" convar="mom_rocket_explosion" infomessage="#Settings_RJ_ExplosionParticle_Info" tags="particle,explosion">
 					<RadioButton group="rjexplodeparticle" text="#Common_Off" value="0" />
 					<RadioButton group="rjexplodeparticle" text="#Common_On" value="1" />
 				</SettingsEnum>
@@ -250,7 +250,7 @@
 					<RadioButton group="rjtrailsound" text="#Common_On" value="1" />
 				</SettingsEnum>
 
-				<SettingsEnum text="#Settings_RJ_ExplosionSound" convar="mom_tf2_rocket_sound_explosion" infomessage="#Settings_RJ_ExplosionSound_Info" tags="explosion,sound">
+				<SettingsEnum text="#Settings_RJ_ExplosionSound" convar="mom_rocket_sound_explosion" infomessage="#Settings_RJ_ExplosionSound_Info" tags="explosion,sound">
 					<RadioButton group="rjexplosionsoud" text="#Common_Off" value="0" />
 					<RadioButton group="rjexplosionsoud" text="#Common_On" value="1" />
 				</SettingsEnum>
