@@ -123,7 +123,8 @@ class ZoneMenuHandler {
 		maxVelocity: $<TextEntry>('#MaxVelocity')!,
 		defragModifiers: $<Panel>('#DefragFlags')!,
 		stagesEndAtStageStarts: $('#StagesEndAtStageStarts')!.FindChild<ToggleButton>('CheckBox')!,
-		bhopEnabled: $('#BhopEnabled')!.FindChild<ToggleButton>('CheckBox')!,
+		bhopEnabled: $('#BhopEnabled'),
+		bhopEnabledCheckbox: $('#BhopEnabled')!.FindChild<ToggleButton>('CheckBox')!,
 		propertiesSegment: $<Panel>('#SegmentProperties')!,
 		limitGroundSpeed: $('#LimitGroundSpeed')!.FindChild<ToggleButton>('CheckBox')!,
 		checkpointsRequired: $('#CheckpointsRequired')!.FindChild<ToggleButton>('CheckBox')!,
@@ -731,9 +732,10 @@ class ZoneMenuHandler {
 		parentPanel.visible = this.hasSelectedMainTrack();
 		this.panels.stagesEndAtStageStarts.SetSelected(Boolean((track as MainTrack).stagesEndAtStageStarts ?? false));
 		this.panels.defragModifiers.visible = this.hasSelectedDefragBonus();
+		this.panels.bhopEnabled.visible = !this.hasSelectedDefragBonus();
 		this.panels.maxVelocity.text =
 			this.mapZoneData.maxVelocity === undefined ? '' : this.mapZoneData.maxVelocity.toFixed(0);
-		this.panels.bhopEnabled.checked = track.bhopEnabled ?? false;
+		this.panels.bhopEnabledCheckbox.checked = track.bhopEnabled ?? false;
 	}
 
 	updateZoneFilter() {
@@ -1405,7 +1407,7 @@ class ZoneMenuHandler {
 
 	setBhopEnabled() {
 		if (!this.hasSelectedMainTrack() && !this.hasSelectedBonusTrack()) return;
-		this.selectedZone.track.bhopEnabled = this.panels.bhopEnabled.checked;
+		this.selectedZone.track.bhopEnabled = this.panels.bhopEnabledCheckbox.checked;
 	}
 
 	setLimitGroundSpeed() {
