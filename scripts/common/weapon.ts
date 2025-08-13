@@ -24,7 +24,8 @@ export enum WeaponID {
 	DF_LIGHTNINGGUN = 16,
 	DF_SHOTGUN = 17,
 	DF_KNIFE = 18,
-	CUBEMAP = 19
+	CUBEMAP = 19,
+	EMPTY = 20
 }
 
 export const WeaponNames: ReadonlyMap<WeaponID, string> = new Map([
@@ -46,5 +47,6 @@ export const WeaponNames: ReadonlyMap<WeaponID, string> = new Map([
 	[WeaponID.DF_LIGHTNINGGUN, '#Weapon_LightningGun'],
 	[WeaponID.DF_SHOTGUN, '#Weapon_Shotgun'],
 	[WeaponID.DF_KNIFE, '#Weapon_Knife'],
-	[WeaponID.CUBEMAP, '#Weapon_Cubemap']
+	[WeaponID.CUBEMAP, '#Weapon_Cubemap'],
+	[WeaponID.EMPTY, '#Weapon_Empty']
 ]);
