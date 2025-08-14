@@ -2,6 +2,7 @@ import { exposeToPanelContext, PanelHandler } from 'util/module-helpers';
 import { LeaderboardListType, LeaderboardStatusType, LeaderboardType, sortLeaderboard } from 'common/leaderboard';
 import { EndOfRunShowReason } from 'common/timer';
 import { MMap, TrackType } from 'common/web';
+import { RunStyleNames } from 'common/run-style';
 
 exposeToPanelContext({ LeaderboardListType, LeaderboardType });
 
@@ -20,6 +21,7 @@ class LeaderboardsHandler {
 		syncTrackButton: $<Button>('#SyncTrackButton'),
 		endOfRunButton: $<Button>('#EndOfRunButton'),
 		tracksDropdown: $<DropDown>('#TracksDropdown'),
+		stylesDropdown: $<DropDown>('#StylesDropdown'),
 		radioButtons: {
 			listTypes: {
 				global: $<RadioButton>('#TimesListGlobal'),
@@ -65,6 +67,9 @@ class LeaderboardsHandler {
 
 		this.panels.tracksDropdown.RemoveAllOptions();
 		this.panels.tracksDropdown.visible = false;
+
+		this.panels.stylesDropdown.RemoveAllOptions();
+		this.panels.stylesDropdown.visible = false;
 
 		this.panels.endOfRunButton.visible = false;
 		this.panels.syncTrackButton.visible = false;
@@ -171,9 +176,9 @@ class LeaderboardsHandler {
 	}
 
 	syncTrackWithLeaderboard() {
-		const selected = this.panels.tracksDropdown.GetSelected();
-		const trackType = selected.GetAttributeInt('trackType', TrackType.MAIN as number);
-		const trackNum = selected.GetAttributeInt('trackNum', 1);
+		const selectedTrack = this.panels.tracksDropdown.GetSelected();
+		const trackType = selectedTrack.GetAttributeInt('trackType', TrackType.MAIN as number);
+		const trackNum = selectedTrack.GetAttributeInt('trackNum', 1);
 
 		switch (trackType) {
 			case TrackType.MAIN:
@@ -186,6 +191,10 @@ class LeaderboardsHandler {
 				GameInterfaceAPI.ConsoleCommand(`mom_bonus ${trackNum}`);
 				break;
 		}
+
+		const selectedStyle = this.panels.stylesDropdown.GetSelected();
+		const style = selectedStyle.GetAttributeInt('value', 1);
+		GameInterfaceAPI.ConsoleCommand(`mom_style ${style}`);
 	}
 
 	showEndOfRun() {
@@ -205,10 +214,10 @@ class LeaderboardsHandler {
 	onOfficialMapLeaderboardsLoaded(map: MMap) {
 		this.panels.tracksDropdown.RemoveAllOptions();
 
-		const isTabMenu = this.panels.cp.id === 'TabMenuLeaderboard';
-		const currentMode = isTabMenu ? GameModeAPI.GetCurrentGameMode() : GameModeAPI.GetMetaGameMode();
+		const currentMode = this.getCurrentMode();
+		const currentStyle = GameModeAPI.GetCurrentRunStyle();
 		map.leaderboards
-			.filter((leaderboard) => leaderboard.gamemode === currentMode)
+			.filter((leaderboard) => leaderboard.gamemode === currentMode && leaderboard.style === currentStyle)
 			.sort(sortLeaderboard)
 			.forEach((leaderboard, index) => {
 				let trackStr;
@@ -235,6 +244,7 @@ class LeaderboardsHandler {
 			});
 
 		this.initTracksDropdown();
+		this.initRunStylesDropdown();
 	}
 
 	onLocalMapLeaderboardsLoaded() {
@@ -290,6 +300,7 @@ class LeaderboardsHandler {
 		}
 
 		this.initTracksDropdown();
+		this.initRunStylesDropdown();
 	}
 
 	initTracksDropdown() {
@@ -312,5 +323,41 @@ class LeaderboardsHandler {
 				selected.GetAttributeInt('trackNum', 1)
 			);
 		});
+	}
+
+	initRunStylesDropdown() {
+		this.panels.stylesDropdown.RemoveAllOptions();
+
+		const validStyles = GameModeAPI.GetValidRunStyles(this.getCurrentMode());
+		if (validStyles.length <= 1) {
+			this.panels.stylesDropdown.visible = false;
+			return;
+		}
+
+		validStyles.forEach((style) => {
+			const styleName = $.Localize(RunStyleNames.get(style));
+			const item = $.CreatePanel('Label', this.panels.stylesDropdown, styleName, {
+				text: styleName,
+				value: style
+			});
+			this.panels.stylesDropdown.AddOption(item);
+		});
+
+		this.panels.stylesDropdown.visible = true;
+		this.panels.stylesDropdown.SetSelectedIndex(0);
+
+		this.panels.stylesDropdown.SetPanelEvent('onuserinputsubmit', () => {
+			const selected = this.panels.stylesDropdown.GetSelected();
+			this.panels.cp.selectStyle(selected.GetAttributeInt('value', 0));
+		});
+	}
+
+	getCurrentMode() {
+		const isTabMenu = this.panels.cp.id === 'TabMenuLeaderboard';
+		if (isTabMenu) {
+			return GameModeAPI.GetCurrentGameMode();
+		} else {
+			return GameModeAPI.GetMetaGameMode();
+		}
 	}
 }
