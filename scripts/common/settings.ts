@@ -29,8 +29,8 @@ export const SettingsTabs = {
 		radioid: 'OnlineRadio',
 		children: {
 			ReplaySubSection: 'ReplayRadio',
-			OnlineGhostSubSection: 'OnlineGhostRadio',
 			GhostSubSection: 'GhostRadio',
+			OnlineGhostSubSection: 'OnlineGhostRadio',
 			RichPresenceSubSection: 'RichPresenceRadio'
 		}
 	},

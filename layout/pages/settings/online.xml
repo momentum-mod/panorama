@@ -2,7 +2,7 @@
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
-	
+
 	<scripts>
 		<include type="module" src="file://{scripts}/pages/settings/page.ts" />
 	</scripts>
@@ -51,6 +51,52 @@
 
 			<Panel class="settings-page__spacer" />
 
+			<Panel id="GhostSubSection" class="settings-group">
+				<Panel class="settings-group__header">
+					<Label class="settings-group__title" text="#Settings_OnlinePlayer_Title" />
+					<Panel class="flow-right h-align-right">
+						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_OnlinePlayer_Title', 'GhostSubSection')">
+							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
+						</Button>
+						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
+							<Button class="button" onactivate="SettingsPage.resetSettings('GhostSubSection');">
+								<Image class="button__icon" src="file://{images}/reset.svg" />
+							</Button>
+						</TooltipPanel>
+					</Panel>
+				</Panel>
+
+				<Panel class="w-full flow-right">
+					<Panel class="settings__ghost">
+						<ModelPanel id="GhostModelPreview" class="settings__ghost__model" src="models/player/mom_player.mdl" mouse_rotate="true" antialias="true" cubemap="cubemaps/cubemap_menu_model_bg.hdr" />
+						<Panel class="settings__ghost__colors">
+							<Panel id="GhostPrimaryColor" />
+							<Panel id="GhostSecondaryColor" />
+						</Panel>
+					</Panel>
+			
+					<Panel class="w-fill flow-down">
+						<SettingsSlider text="#Settings_OnlinePlayer_PrimaryColorHue" convar="mom_playercolor_primary_hue" min="0" max="360" displayprecision="0" infomessage="#Settings_OnlinePlayer_PrimaryColorHue_Info" tags="color,player,model" />
+						<SettingsSlider text="#Settings_OnlinePlayer_PrimaryColorSaturation" convar="mom_playercolor_primary_saturation" min="0" max="0.25" displayprecision="2" infomessage="#Settings_OnlinePlayer_PrimaryColorSaturation_Info" tags="color,player,model" />
+						<SettingsSlider text="#Settings_OnlinePlayer_PrimaryColorValue" convar="mom_playercolor_primary_value" min="0.3" max="1" displayprecision="2" infomessage="#Settings_OnlinePlayer_PrimaryColorValue" tags="color,player,model" />
+						<SettingsSlider text="#Settings_OnlinePlayer_SecondaryColorHue" convar="mom_playercolor_secondary_hue" min="0" max="360" displayprecision="0" infomessage="#Settings_OnlinePlayer_SecondaryColorHue_Info" tags="color,player,model" />
+						<SettingsSlider text="#Settings_OnlinePlayer_SecondaryColorSaturation" convar="mom_playercolor_secondary_saturation" min="0" max="1" displayprecision="2" infomessage="#Settings_OnlinePlayer_SecondaryColorSaturation_Color" tags="color,player,model" />
+
+						<SettingsEnum text="#Settings_OnlinePlayer_Trail" convar="mom_trail_enable" infomessage="#Settings_OnlinePlayer_Trail_Info" tags="trail">
+							<RadioButton group="playertrail" text="#Common_Off" value="0" />
+							<RadioButton group="playertrail" text="#Common_On" value="1" />
+						</SettingsEnum>
+
+						<ConVarColorDisplay text="#Settings_OnlinePlayer_TrailColor" convar="mom_trail_color" infomessage="#Settings_OnlinePlayer_TrailColor_Info" tags="trail,color" />
+
+						<SettingsSlider text="#Settings_OnlinePlayer_TrailLength" min="0.1" max="10" displayprecision="1" convar="mom_trail_duration" infomessage="#Settings_OnlinePlayer_TrailLength_Info" tags="trail,length" />
+
+					</Panel>
+				</Panel>
+			</Panel>
+
+			<Panel class="settings-page__spacer" />
+
 			<Panel id="OnlineGhostSubSection" class="settings-group">
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_OnlineGhost_Title" tags="online,ghost,multiplayer" />
@@ -71,55 +117,8 @@
 					<RadioButton group="ghostpanels" text="#Common_On" value="1" />
 				</SettingsEnum>
 
-				<SettingsEnum text="#Settings_OnlineGhost_Trails" convar="mom_ghost_trails" infomessage="#Settings_OnlineGhost_Trails_Info" tags="trail">
-					<RadioButton group="ghosttrail" text="#Common_Off" value="0" />
-					<RadioButton group="ghosttrail" text="#Common_On" value="1" />
-				</SettingsEnum>
+				<SettingsSlider text="#Settings_OnlineGhost_ExplosiveAlpha" convar="mom_ghost_projectile_alpha" min="0" max="255" percentage="true" infomessage="#Settings_OnlineGhost_ExplosiveAlpha_Info" tags="opacity,alpha" />
 
-				<!--
-				TODO: We should probably merge these two at some point.
-				I've added Settings_OnlineGhost_ExplosiveAlpha and Settings_OnlineGhost_ExplosiveAlpha_Info
-				to localisation preemptively. - Tom
-				-->
-
-			</Panel>
-
-			<Panel class="settings-page__spacer" />
-
-			<Panel id="GhostSubSection" class="settings-group">
-				<Panel class="settings-group__header">
-					<Label class="settings-group__title" text="#Settings_OnlinePlayer_Title" />
-					<Panel class="flow-right h-align-right">
-						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_OnlinePlayer_Title', 'GhostSubSection')">
-							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
-						</Button>
-						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-							<Button class="button" onactivate="SettingsPage.resetSettings('GhostSubSection');">
-								<Image class="button__icon" src="file://{images}/reset.svg" />
-							</Button>
-						</TooltipPanel>
-					</Panel>
-				</Panel>
-
-				<Panel class="w-full flow-right">
-
-					<ModelPanel id="GhostModelPreview" class="settings__ghost" src="models/player/mom_player.mdl" mouse_rotate="true" antialias="true" />
-
-					<Panel class="w-fill flow-down">
-						<ConVarColorDisplay text="#Settings_OnlinePlayer_PrimaryColor" convar="mom_player_color_primary" oncolorchange="SettingsPage.onlineSettingsUpdateModel()" infomessage="#Settings_OnlinePlayer_PrimaryColor_Info" tags="model,color" />
-						<ConVarColorDisplay text="#Settings_OnlinePlayer_SecondaryColor" convar="mom_player_color_secondary" oncolorchange="SettingsPage.onlineSettingsUpdateModel()" infomessage="#Settings_OnlinePlayer_SecondaryColor_Info" tags="model,color" />
-
-						<SettingsEnum text="#Settings_OnlinePlayer_Trail" convar="mom_trail_enable" infomessage="#Settings_OnlinePlayer_Trail_Info" tags="trail">
-							<RadioButton group="playertrail" text="#Common_Off" value="0" />
-							<RadioButton group="playertrail" text="#Common_On" value="1" />
-						</SettingsEnum>
-
-						<ConVarColorDisplay text="#Settings_OnlinePlayer_TrailColor" convar="mom_trail_color" infomessage="#Settings_OnlinePlayer_TrailColor_Info" tags="trail,color" />
-
-						<SettingsSlider text="#Settings_OnlinePlayer_TrailLength" min="0.1" max="10" displayprecision="1" convar="mom_trail_duration" infomessage="#Settings_OnlinePlayer_TrailLength_Info" tags="trail,length" />
-
-					</Panel>
-				</Panel>
 			</Panel>
 
 			<Panel class="settings-page__spacer" />
