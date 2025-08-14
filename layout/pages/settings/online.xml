@@ -2,7 +2,7 @@
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
-	
+
 	<scripts>
 		<include type="module" src="file://{scripts}/pages/settings/page.ts" />
 	</scripts>
@@ -67,15 +67,20 @@
 				</Panel>
 
 				<Panel class="w-full flow-right">
-
-					<ModelPanel id="GhostModelPreview" class="settings__ghost" src="models/player/mom_player.mdl" mouse_rotate="true" antialias="true" />
-
+					<Panel class="settings__ghost">
+						<ModelPanel id="GhostModelPreview" class="settings__ghost__model" src="models/player/mom_player.mdl" mouse_rotate="true" antialias="true" cubemap="cubemaps/cubemap_menu_model_bg.hdr" />
+						<Panel class="settings__ghost__colors">
+							<Panel id="GhostPrimaryColor" />
+							<Panel id="GhostSecondaryColor" />
+						</Panel>
+					</Panel>
+			
 					<Panel class="w-fill flow-down">
-						<SettingsSlider text="#Settings_OnlinePlayer_PrimaryColorHue" convar="mom_playercolor_primary_hue" min="0" max="360" displayprecision="0" infomessage="#Settings_OnlinePlayer_PrimaryColorHue_Info" tags="color,player,model" />
-						<SettingsSlider text="#Settings_OnlinePlayer_PrimaryColorSaturation" convar="mom_playercolor_primary_saturation" min="0" max="0.25" displayprecision="2" infomessage="#Settings_OnlinePlayer_PrimaryColorSaturation_Info" tags="color,player,model" />
-						<SettingsSlider text="#Settings_OnlinePlayer_PrimaryColorValue" convar="mom_playercolor_primary_value" min="0.3" max="1" displayprecision="2" infomessage="#Settings_OnlinePlayer_PrimaryColorValue_Info" tags="color,player,model" />
-						<SettingsSlider text="#Settings_OnlinePlayer_SecondaryColorHue" convar="mom_playercolor_secondary_hue" min="0" max="360" displayprecision="0" infomessage="#Settings_OnlinePlayer_SecondaryColorHue_Info" tags="color,player,model" />
-						<SettingsSlider text="#Settings_OnlinePlayer_SecondaryColorSaturation" convar="mom_playercolor_secondary_saturation" min="0" max="1" displayprecision="2" infomessage="#Settings_OnlinePlayer_SecondaryColorSaturation_Info" tags="color,player,model" />
+						<SettingsSlider text="#Settings_OnlinePlayer_PrimaryColorHue" convar="mom_playercolor_primary_hue" min="0" max="360" displayprecision="0" infomessage="#Settings_OnlinePlayer_PrimaryColorHue_Info" tags="color,player,model" onvaluechanged="SettingsPage.onlineSettingsUpdateModel();" />
+						<SettingsSlider text="#Settings_OnlinePlayer_PrimaryColorSaturation" convar="mom_playercolor_primary_saturation" min="0" max="0.25" displayprecision="2" infomessage="#Settings_OnlinePlayer_PrimaryColorSaturation_Info" tags="color,player,model" onvaluechanged="SettingsPage.onlineSettingsUpdateModel();" />
+						<SettingsSlider text="#Settings_OnlinePlayer_PrimaryColorValue" convar="mom_playercolor_primary_value" min="0.3" max="1" displayprecision="2" infomessage="#Settings_OnlinePlayer_PrimaryColorValue_Info" tags="color,player,model" onvaluechanged="SettingsPage.onlineSettingsUpdateModel();" />
+						<SettingsSlider text="#Settings_OnlinePlayer_SecondaryColorHue" convar="mom_playercolor_secondary_hue" min="0" max="360" displayprecision="0" infomessage="#Settings_OnlinePlayer_SecondaryColorHue_Info" tags="color,player,model" onvaluechanged="SettingsPage.onlineSettingsUpdateModel();" />
+						<SettingsSlider text="#Settings_OnlinePlayer_SecondaryColorSaturation" convar="mom_playercolor_secondary_saturation" min="0" max="1" displayprecision="2" infomessage="#Settings_OnlinePlayer_SecondaryColorSaturation_Info" tags="color,player,model" onvaluechanged="SettingsPage.onlineSettingsUpdateModel();" />
 
 						<SettingsEnum text="#Settings_OnlinePlayer_Trail" convar="mom_trail_enable" infomessage="#Settings_OnlinePlayer_Trail_Info" tags="trail">
 							<RadioButton group="playertrail" text="#Common_Off" value="0" />
