@@ -51,41 +51,6 @@
 
 			<Panel class="settings-page__spacer" />
 
-			<Panel id="OnlineGhostSubSection" class="settings-group">
-				<Panel class="settings-group__header">
-					<Label class="settings-group__title" text="#Settings_OnlineGhost_Title" tags="online,ghost,multiplayer" />
-					<Panel class="flow-right h-align-right">
-						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_OnlineGhost_Title', 'OnlineGhostSubSection')">
-							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
-						</Button>
-						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-							<Button class="button" onactivate="SettingsPage.resetSettings('OnlineGhostSubSection');">
-								<Image class="button__icon" src="file://{images}/reset.svg" />
-							</Button>
-						</TooltipPanel>
-					</Panel>
-				</Panel>
-
-				<SettingsEnum text="#Settings_OnlineGhost_Panels" convar="mom_hud_ghost_entpanels_enable" infomessage="#Settings_OnlineGhost_Panels_Info" tags="panel">
-					<RadioButton group="ghostpanels" text="#Common_Off" value="0" />
-					<RadioButton group="ghostpanels" text="#Common_On" value="1" />
-				</SettingsEnum>
-
-				<SettingsEnum text="#Settings_OnlineGhost_Trails" convar="mom_ghost_trails" infomessage="#Settings_OnlineGhost_Trails_Info" tags="trail">
-					<RadioButton group="ghosttrail" text="#Common_Off" value="0" />
-					<RadioButton group="ghosttrail" text="#Common_On" value="1" />
-				</SettingsEnum>
-
-				<!--
-				TODO: We should probably merge these two at some point.
-				I've added Settings_OnlineGhost_ExplosiveAlpha and Settings_OnlineGhost_ExplosiveAlpha_Info
-				to localisation preemptively. - Tom
-				-->
-
-			</Panel>
-
-			<Panel class="settings-page__spacer" />
-
 			<Panel id="GhostSubSection" class="settings-group">
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_OnlinePlayer_Title" />
@@ -106,6 +71,7 @@
 					<ModelPanel id="GhostModelPreview" class="settings__ghost" src="models/player/mom_player.mdl" mouse_rotate="true" antialias="true" />
 
 					<Panel class="w-fill flow-down">
+						<SettingsSlider text="#Settings_OnlinePlayer_TrailLength" min="0.1" max="10" displayprecision="1" convar="mom_trail_duration" infomessage="#Settings_OnlinePlayer_TrailLength_Info" tags="trail,length" />
 						<ConVarColorDisplay text="#Settings_OnlinePlayer_PrimaryColor" convar="mom_player_color_primary" oncolorchange="SettingsPage.onlineSettingsUpdateModel()" infomessage="#Settings_OnlinePlayer_PrimaryColor_Info" tags="model,color" />
 						<ConVarColorDisplay text="#Settings_OnlinePlayer_SecondaryColor" convar="mom_player_color_secondary" oncolorchange="SettingsPage.onlineSettingsUpdateModel()" infomessage="#Settings_OnlinePlayer_SecondaryColor_Info" tags="model,color" />
 
@@ -120,6 +86,32 @@
 
 					</Panel>
 				</Panel>
+			</Panel>
+
+			<Panel class="settings-page__spacer" />
+
+			<Panel id="OnlineGhostSubSection" class="settings-group">
+				<Panel class="settings-group__header">
+					<Label class="settings-group__title" text="#Settings_OnlineGhost_Title" tags="online,ghost,multiplayer" />
+					<Panel class="flow-right h-align-right">
+						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_OnlineGhost_Title', 'OnlineGhostSubSection')">
+							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
+						</Button>
+						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
+							<Button class="button" onactivate="SettingsPage.resetSettings('OnlineGhostSubSection');">
+								<Image class="button__icon" src="file://{images}/reset.svg" />
+							</Button>
+						</TooltipPanel>
+					</Panel>
+				</Panel>
+
+				<SettingsEnum text="#Settings_OnlineGhost_Panels" convar="mom_hud_ghost_entpanels_enable" infomessage="#Settings_OnlineGhost_Panels_Info" tags="panel">
+					<RadioButton group="ghostpanels" text="#Common_Off" value="0" />
+					<RadioButton group="ghostpanels" text="#Common_On" value="1" />
+				</SettingsEnum>
+
+				<SettingsSlider text="#Settings_OnlineGhost_ExplosiveAlpha" convar="mom_ghost_projectile_alpha" min="0" max="255" percentage="true" infomessage="#Settings_OnlineGhost_ExplosiveAlpha_Info" tags="opacity,alpha" />
+
 			</Panel>
 
 			<Panel class="settings-page__spacer" />
