@@ -88,12 +88,13 @@ export const MAX_REVIEW_COMMENT_LENGTH = 1000;
 export const MAX_TEST_INVITES = 20;
 export const MIN_PUBLIC_TESTING_DURATION = 7 * 24 * 60 * 60 * 1000;
 export const MAX_CREDITS_EXCEPT_TESTERS = 20;
+export const MAX_USER_ALIAS_LENGTH = 32; // Based on Steam username limit.
 export const MAX_BIO_LENGTH = 2000;
 export const MIN_MAP_DESCRIPTION_LENGTH = 10;
 export const MAX_MAP_DESCRIPTION_LENGTH = 1500;
 export const MIN_MAP_NAME_LENGTH = 3;
 export const MAX_MAP_NAME_LENGTH = 32; // Seems high but this is actually a constant in engine.
-export const MAX_OPEN_MAP_SUBMISSIONS = 20;
+export const MAX_OPEN_MAP_SUBMISSIONS = 100;
 export const MAX_MAP_SUGGESTION_COMMENT_LENGTH = 500;
 export const PRE_SIGNED_URL_EXPIRE_TIME = 5 * 60;
 
@@ -469,6 +470,7 @@ export enum ISOCountryCode {
 	VU = 'Vanuatu',
 	WF = 'Wallis and Futuna',
 	WS = 'Samoa',
+	XK = 'Kosovo', // Is not officially assigned, but supported by Steam
 	YE = 'Yemen',
 	YT = 'Mayotte',
 	ZA = 'South Africa',
@@ -587,6 +589,27 @@ export enum MapCreditType {
 	TESTER = 2,
 	/* Any miscellaneous contributions, e.g. donations, encouragement etc. */
 	SPECIAL_THANKS = 3
+}
+
+export enum MapSortType {
+	DATE_RELEASED_NEWEST = 0,
+	DATE_RELEASED_OLDEST = 1,
+	DATE_CREATED_NEWEST = 2,
+	DATE_CREATED_OLDEST = 3,
+	ALPHABETICAL = 4,
+	REVERSE_ALPHABETICAL = 5,
+	TIER_LOWEST = 6,
+	TIER_HIGHEST = 7,
+	PLAYED_NEWEST = 8,
+	PLAYED_OLDEST = 9,
+	PB_NEWEST = 10,
+	PB_OLDEST = 11,
+	FAVORITED_MOST = 12,
+	FAVORITED_LEAST = 13,
+	SUBMISSION_CREATED_NEWEST = 14,
+	SUBMISSION_CREATED_OLDEST = 15,
+	SUBMISSION_UPDATED_NEWEST = 16,
+	SUBMISSION_UPDATED_OLDEST = 17
 }
 
 export enum MapStatus {
@@ -996,7 +1019,7 @@ export const GamemodeInfo: ReadonlyMap<Gamemode, GamemodeInfoProperties> = new M
 // for future-proofing, for example 100t surf would have the exact same rules
 // as regular surf.
 // JAVASCRIPT PLEASE ADD CONSTEXPR!!!
-const G = Gamemode; //
+const G = Gamemode;
 const GC = GamemodeCategory;
 const Cats = (...gcs: GamemodeCategory[]) => gcs.flatMap((gc) => GamemodeCategories.get(gc)!);
 
@@ -1004,29 +1027,28 @@ const Cats = (...gcs: GamemodeCategory[]) => gcs.flatMap((gc) => GamemodeCategor
  * A non-reflexive map of gamemodes and collections of gamemodes they can
  * *never* have compatibile leaderboards for.
  *
- * For example, there's *never* a possible case
- * where a surf leaderboard should also have a bhop leaderboard, that'd just be
- * jank 100-tick surf.
+ * For example, there's *never* a possible case where a surf leaderboard should
+ * also have a bhop leaderboard, that'd just be jank 100-tick surf.
  *
- * Note the non-reflexivity, you might have a surf map that's worth a
- * leaderboard in ahop (e.g. utopia), but a ahop map would never have a surf
- * leaderboard, since that'd just be bhop with worse settings.
+ * Note the non-reflexivity, some bhop maps are playable in climb, but no climb
+ * map has a bhop leaderboard, as we don't want to have an easy mode of climb
+ * with autohop.
  */
 export const IncompatibleGamemodes: ReadonlyMap<Gamemode, ReadonlySet<Gamemode>> = new Map(
 	[
-		[G.SURF, [Cats(GC.BHOP, GC.CLIMB)]],
-		[G.BHOP, [Cats(GC.SURF, GC.CLIMB)]],
-		[G.BHOP_HL1, [Cats(GC.SURF, GC.CLIMB)]],
+		[G.SURF, [Cats(GC.BHOP), G.CLIMB_MOM, G.CLIMB_KZT]],
+		[G.BHOP, [Cats(GC.SURF), G.CLIMB_MOM, G.CLIMB_KZT]],
+		[G.BHOP_HL1, [Cats(GC.SURF), G.CLIMB_MOM, G.CLIMB_KZT]],
 		[G.CLIMB_MOM, [Cats(GC.SURF, GC.BHOP)]],
 		[G.CLIMB_KZT, [Cats(GC.SURF, GC.BHOP)]],
 		[G.CLIMB_16, [Cats(GC.SURF, GC.BHOP)]],
-		[G.RJ, [Cats(GC.SURF, GC.CLIMB, GC.BHOP, GC.AHOP)]],
-		[G.SJ, [Cats(GC.SURF, GC.CLIMB, GC.BHOP, GC.AHOP)]],
-		[G.AHOP, [Cats(GC.SURF, GC.CLIMB)]],
-		[G.CONC, [Cats(GC.SURF, GC.CLIMB, GC.BHOP, GC.AHOP)]],
-		[G.DEFRAG_CPM, [Cats(GC.SURF, GC.CLIMB)]],
-		[G.DEFRAG_VQ3, [Cats(GC.SURF, GC.CLIMB)]],
-		[G.DEFRAG_VTG, [Cats(GC.SURF, GC.CLIMB)]]
+		[G.RJ, []],
+		[G.SJ, []],
+		[G.AHOP, []],
+		[G.CONC, []],
+		[G.DEFRAG_CPM, []],
+		[G.DEFRAG_VQ3, []],
+		[G.DEFRAG_VTG, []]
 	].map(([k, v]) => [k as Gamemode, new Set((v as [Gamemode | Gamemode[]]).flat())])
 );
 
@@ -1041,6 +1063,29 @@ export const MapCreditNames: ReadonlyMap<MapCreditType, string> = new Map([
 	[MapCreditType.CONTRIBUTOR, 'Contributors'],
 	[MapCreditType.TESTER, 'Testers'],
 	[MapCreditType.SPECIAL_THANKS, 'Special Thanks']
+]);
+
+export const MapSortTypeName: ReadonlyMap<MapSortType, string> = new Map([
+	[MapSortType.DATE_RELEASED_NEWEST, 'Date Released (Newest)'],
+	[MapSortType.DATE_RELEASED_OLDEST, 'Date Released (Oldest)'],
+	[MapSortType.DATE_CREATED_NEWEST, 'Date Created (Newest)'],
+	[MapSortType.DATE_CREATED_OLDEST, 'Date Created (Oldest)'],
+	[MapSortType.ALPHABETICAL, 'Alphabetical (A-Z)'],
+	[MapSortType.REVERSE_ALPHABETICAL, 'Alphabetical (Z-A)'],
+	[MapSortType.TIER_LOWEST, 'Tier (1-10)'],
+	[MapSortType.TIER_HIGHEST, 'Tier (10-1)'],
+	[MapSortType.PLAYED_NEWEST, 'Last Played (Newest)'],
+	[MapSortType.PLAYED_OLDEST, 'Last Played (Oldest)'],
+	[MapSortType.PB_NEWEST, 'Last PB (Newest)'],
+	[MapSortType.PB_OLDEST, 'Last PB (Oldest)'],
+	[MapSortType.FAVORITED_MOST, 'Most Favorited'],
+	[MapSortType.FAVORITED_LEAST, 'Least Favorited'],
+	// Abbreviation hack to avoid text overflow on frontend,
+	// while still keeping same width and font-size.
+	[MapSortType.SUBMISSION_CREATED_NEWEST, 'Submission Created (New)'],
+	[MapSortType.SUBMISSION_CREATED_OLDEST, 'Submission Created (Old)'],
+	[MapSortType.SUBMISSION_UPDATED_NEWEST, 'Submission Updated (New)'],
+	[MapSortType.SUBMISSION_UPDATED_OLDEST, 'Submission Updated (Old)']
 ]);
 
 /**
@@ -1305,7 +1350,7 @@ export const SteamGamesImages: ReadonlyMap<SteamGame, string> = new Map([
 export const TickIntervals: ReadonlyMap<Gamemode, float> = new Map([
 	[Gamemode.AHOP, Math.fround(0.015)],
 	[Gamemode.BHOP, Math.fround(0.01)],
-	[Gamemode.BHOP_HL1, Math.fround(0.004)],
+	[Gamemode.BHOP_HL1, Math.fround(0.01)],
 	[Gamemode.CLIMB_MOM, Math.fround(0.01)],
 	[Gamemode.CLIMB_KZT, Math.fround(0.01)],
 	[Gamemode.CLIMB_16, Math.fround(0.01)],
@@ -1328,6 +1373,13 @@ export const MAP_NAME_REGEXP = /^[a-z][\d_a-z-]+$/;
 export const NON_WHITESPACE_REGEXP = /^(?![\s\u2800]*$).+/;
 
 export const YOUTUBE_ID_REGEXP = /^[\w-_]{11}$/;
+
+/**
+ * Set of gamemodes we won't generate leaderboards or allow suggestions for.
+ * In the future this will probably be empty, but helpful for handling
+ * in-development modes that don't have full leaderboards support yet.
+ */
+export const DisabledGamemodes = new Set<Gamemode>([Gamemode.CLIMB_MOM, Gamemode.CLIMB_KZT]);
 
 // Collection of models used throughout the codebase, as well as in Panorama.
 //
@@ -1509,7 +1561,8 @@ export interface MMap {
 export interface MapVersion {
 	id: string;
 	versionNum: number;
-	submitterID: number | null;
+	submitterID: number;
+	submitter?: User;
 	changelog: string;
 	zones: MapZones;
 	bspHash: string;
@@ -1523,6 +1576,7 @@ export interface MapInfo {
 	description: string;
 	youtubeID: string;
 	creationDate: DateString;
+	approvedDate: DateString | null;
 	requiredGames: SteamGame[];
 }
 
@@ -1620,7 +1674,6 @@ export interface MapReviewSuggestion {
 
 export interface MapStats {
 	reviews: number;
-	downloads: number;
 	subscriptions: number;
 	plays: number;
 	favorites: number;
@@ -1645,10 +1698,15 @@ export interface MapSubmissionApproval {
 	tags?: MapTag[];
 }
 
-export type MapSubmissionDate = {
+export interface MapSubmissionDate {
+	id: number;
 	status: MapStatus;
 	date: DateString;
-};
+	userID: number | null;
+	user?: User | null;
+	submissionMapID: number;
+	submission?: MapSubmission;
+}
 
 export interface MapSubmissionPlaceholder {
 	alias: string;
@@ -1688,6 +1746,7 @@ export interface MapZones {
 
 export interface GlobalRegions {
 	allowBhop?: Region[];
+	overbounce?: Region[];
 	cancel?: Region[];
 }
 
@@ -1704,6 +1763,7 @@ export interface MainTrack {
 
 export interface BonusTrack {
 	zones?: TrackZones;
+	/** Bitfield, value of 0 is functionality equivalent to being undefined */
 	defragModifiers?: number;
 	bhopEnabled?: boolean;
 }
@@ -1882,10 +1942,14 @@ export interface XpGain {
 }
 
 export interface CompletedRun {
+	time: number;
+	xp: XpGain;
 	isNewWorldRecord: boolean;
 	isNewPersonalBest: boolean;
-	run: LeaderboardRun;
-	xp: XpGain;
+	newPersonalBest?: LeaderboardRun;
+	lastPersonalBest?: LeaderboardRun;
+	worldRecord?: LeaderboardRun;
+	totalRuns: number;
 }
 
 //#endregion
@@ -1977,6 +2041,7 @@ type MapsGetAllBaseQuery = {
 	search?: string;
 	searchStartsWith?: string;
 	submitterID?: number;
+	sortType?: MapSortType;
 };
 
 export type MapsGetAllQuery = MapsGetAllBaseQuery & {
@@ -2227,7 +2292,12 @@ export type RunsGetQuery = {
 	expand?: RunsGetExpand;
 };
 
-export type CreateRunSession = Pick<RunSession, 'mapID' | 'gamemode' | 'trackType' | 'trackNum'>;
+export interface CreateRunSession {
+	mapID: number;
+	gamemode: Gamemode;
+	trackType: TrackType;
+	trackNum: number;
+}
 
 export interface UpdateRunSession {
 	majorNum: number;
@@ -2241,6 +2311,7 @@ export interface UpdateUser {
 	alias?: string;
 	bio?: string;
 	socials?: Socials;
+	resetAvatar?: boolean;
 }
 
 export interface AdminUpdateUser extends UpdateUser {
