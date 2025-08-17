@@ -1,7 +1,7 @@
 import { PanelHandler } from 'util/module-helpers';
 import { rgbaStringToTuple, RgbaTuple, tupleToRgbaString } from 'util/colors';
 import { SpeedometerColorType, SpeedometerDispNames, SpeedometerType } from 'common/speedometer';
-import { Gamemode } from 'common/web';
+import { Gamemode } from 'common/web_dontmodifyme';
 import { GamemodeInfo } from 'common/gamemode';
 
 const DEFAULT_GAMEMODE = Gamemode.SURF;

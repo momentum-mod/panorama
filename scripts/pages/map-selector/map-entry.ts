@@ -1,6 +1,6 @@
 import { PanelHandler } from 'util/module-helpers';
 import * as Enum from 'util/enum';
-import { MapStatuses, Gamemode, MapStatus } from 'common/web';
+import { MapStatuses, Gamemode, MapStatus } from 'common/web_dontmodifyme';
 import { GamemodeInfo } from 'common/gamemode';
 import { getUserMapDataTrack } from 'common/leaderboard';
 import { timetoHHMMSS } from 'util/time';

@@ -1,4 +1,4 @@
-import { Gamemode, Leaderboard, MMap, TrackType } from './web';
+import { Gamemode, Leaderboard, MMap, TrackType } from './web_dontmodifyme';
 
 export enum LeaderboardListType {
 	LOCAL = 0,
