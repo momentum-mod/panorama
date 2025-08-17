@@ -1,7 +1,7 @@
 import { PanelHandler } from 'util/module-helpers';
 import { HideHud } from 'common/state';
 import { TimerState } from 'common/timer';
-import { TrackType } from 'common/web';
+import { TrackType } from 'common/web_dontmodifyme';
 
 @PanelHandler()
 class HudStatusHandler {

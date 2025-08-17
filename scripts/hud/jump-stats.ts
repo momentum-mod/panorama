@@ -1,6 +1,6 @@
 import { PanelHandler } from 'util/module-helpers';
 import { RegisterHUDPanelForGamemode } from '../util/register-for-gamemodes';
-import { GamemodeCategories, GamemodeCategory } from '../common/web';
+import { GamemodeCategories, GamemodeCategory } from '../common/web_dontmodifyme';
 
 @PanelHandler()
 class JumpStatsHandler {

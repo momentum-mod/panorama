@@ -1,5 +1,5 @@
 import { OnPanelLoad, PanelHandler } from 'util/module-helpers';
-import { User } from 'common/web';
+import { User } from 'common/web_dontmodifyme';
 
 @PanelHandler({ exposeToPanel: true })
 export class PlayerCardHandler implements OnPanelLoad {

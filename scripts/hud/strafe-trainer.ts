@@ -2,7 +2,7 @@ import { PanelHandler } from 'util/module-helpers';
 import * as MomMath from 'util/math';
 import { rgbaStringLerp } from 'util/colors';
 import { RegisterHUDPanelForGamemode } from '../util/register-for-gamemodes';
-import { Gamemode } from '../common/web';
+import { Gamemode } from '../common/web_dontmodifyme';
 
 const Colors = {
 	EXTRA: ['rgba(24, 150, 211, 1)', 'rgba(87, 200, 255, 1)'],

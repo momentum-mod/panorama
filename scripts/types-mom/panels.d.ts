@@ -51,7 +51,7 @@ interface Leaderboards extends AbstractPanel<'Leaderboards'> {
 	/** Applies the currently selected filters to the times list */
 	applyFilters(): void;
 
-	selectTrack(trackType: import('common/web').TrackType, trackNum: int32): void;
+	selectTrack(trackType: import('common/web_dontmodifyme').TrackType, trackNum: int32): void;
 }
 
 interface LeaderboardEntry extends AbstractPanel<'LeaderboardEntry'> {
@@ -146,7 +146,7 @@ interface PlayerListPlayer extends AbstractPanel<'PlayerListPlayer'> {
 interface MomHudStrafeTrainer extends AbstractHudPanel<'MomHudStrafeTrainer'> {}
 
 interface ZoneEditorRegion {
-	region: import('common/web').Region;
+	region: import('common/web_dontmodifyme').Region;
 	renderMode: import('pages/zoning/zoning').RegionRenderMode;
 	editing: boolean;
 }
@@ -173,16 +173,16 @@ interface ZoneMenu extends AbstractPanel<'ZoneMenu'> {
 
 	getEntityList(): import('pages/zoning/zoning').EntityList;
 
-	moveToRegion(region: import('common/web').Region): void;
+	moveToRegion(region: import('common/web_dontmodifyme').Region): void;
 
 	updateEditorRegions(editorRegions: ZoneEditorRegion[]): void;
 
 	validateRegionPolygon(
-		points: import('common/web').Vector2D[],
+		points: import('common/web_dontmodifyme').Vector2D[],
 		closed: boolean
 	): import('pages/zoning/zoning').RegionPolygonProblem;
 
 	getZoningLimits(): ZoneEditorLimits;
 
-	createDefaultTeleDest(region: import('common/web').Region): import('common/web').Region;
+	createDefaultTeleDest(region: import('common/web_dontmodifyme').Region): import('common/web_dontmodifyme').Region;
 }

@@ -1,5 +1,5 @@
 import { PanelHandler } from 'util/module-helpers';
-import { GamemodeCategories, GamemodeCategory } from 'common/web';
+import { GamemodeCategories, GamemodeCategory } from 'common/web_dontmodifyme';
 import * as MomMath from 'util/math';
 import { enhanceAlpha, rgbaStringLerp, rgbaStringToRgb } from 'util/colors';
 import { RegisterHUDPanelForGamemode } from '../util/register-for-gamemodes';

@@ -1,4 +1,4 @@
-import { BonusTrack, MainTrack, MapZones, Region, Segment, Zone } from 'common/web';
+import { BonusTrack, MainTrack, MapZones, Region, Segment, Zone } from 'common/web_dontmodifyme';
 import { PanelHandler } from 'util/module-helpers';
 
 // future: get this from c++

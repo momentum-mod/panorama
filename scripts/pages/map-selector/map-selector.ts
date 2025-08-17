@@ -1,6 +1,6 @@
 import { OnPanelLoad, PanelHandler } from 'util/module-helpers';
 import { traverseChildren } from 'util/functions';
-import { MapCreditType, MapStatus, MapStatuses, MMap, TrackType } from 'common/web';
+import { MapCreditType, MapStatus, MapStatuses, MMap, TrackType } from 'common/web_dontmodifyme';
 import * as Maps from 'common/maps';
 import * as Leaderboards from 'common/leaderboard';
 import * as Time from 'util/time';

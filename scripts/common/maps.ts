@@ -1,4 +1,4 @@
-import { MapStatuses, MapCreditType, MMap, TrackType } from './web';
+import { MapStatuses, MapCreditType, MMap, TrackType } from './web_dontmodifyme';
 import { getTrack } from './leaderboard';
 
 export enum MapListType {

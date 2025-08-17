@@ -2,7 +2,7 @@ import {
 	Gamemode,
 	GamemodeInfo as GamemodeInfoWeb,
 	GamemodeInfoProperties as GamemodeInfoPropertiesWeb
-} from 'common/web';
+} from 'common/web_dontmodifyme';
 
 export interface GamemodeInfoProperties extends GamemodeInfoPropertiesWeb {
 	i18n: string;
@@ -30,5 +30,5 @@ for (const [gamemode, obj] of extraModeData) {
 	Object.assign(GamemodeInfoWeb.get(gamemode), obj);
 }
 
-/** Miscellaneous gamemode info. Use this version, not the common/web one!! */
+/** Miscellaneous gamemode info. Use this version, not the common/web_dontmodifyme one!! */
 export const GamemodeInfo = GamemodeInfoWeb as ReadonlyMap<Gamemode, GamemodeInfoProperties>;

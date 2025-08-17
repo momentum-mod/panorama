@@ -13,7 +13,7 @@ export default [
 			'**/__types_momentum.js',
 			'**/tools',
 			'scripts/types',
-			'scripts/common/web.ts'
+			'scripts/common/web_dontmodifyme.ts'
 		]
 	},
 	eslint.configs.recommended,
