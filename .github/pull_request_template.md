@@ -21,7 +21,8 @@ Closes momentum-mod/game/issues/<!--(issue number here)-->
 [
 	{
 		"term": "",
-		"definition": ""
+		"definition": "",
+	    "context": ""
 	}
 ]
 ```
