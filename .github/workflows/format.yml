@@ -10,6 +10,7 @@ jobs:
     - uses: actions/checkout@v3
       with:
         submodules: 'true'
+        fetch-depth: 0
 
     - name: Setup Node.js 18
       uses: actions/setup-node@v3
@@ -28,3 +29,16 @@ jobs:
       
     - name: TypeScript Build
       run: npm run ts:check
+
+    - name: Ban manual web.ts changes
+      run: |
+        set -e
+        if git diff --name-only origin/master..HEAD | grep -q "^scripts/common/web_dontmodifyme\.ts$"; then
+          for COMMIT in $(git log --pretty=format:"%H" origin/master..HEAD -- scripts/common/web_dontmodifyme.ts); do
+            MSG=$(git log -1 --pretty=format:"%s" $COMMIT)
+            if [ "$MSG" != "chore: update website dependencies" ]; then
+              echo "Error: Commit $COMMIT modifies scripts/common/web_dontmodifyme.ts but does not appear to be auto-generated. See notes at the top of that file."
+              exit 1
+            fi
+          done
+        fi
