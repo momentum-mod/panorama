@@ -24,6 +24,16 @@ declare namespace MomentumAPI {
 
 	function GetVersionInfo(): string;
 
+	const enum UserAuthConsent {
+		INVALID = 0,
+		OUTDATED = 1,
+		VALID = 2
+	}
+
+	function GetUserAuthConsent(): UserAuthConsent;
+
+	function GrantUserAuthConsent(): void;
+
 	const enum AuthenicationResult {
 		SUCCESS = 0,
 

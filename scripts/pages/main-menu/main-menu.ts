@@ -23,7 +23,8 @@ class MainMenuHandler implements OnPanelLoad {
 		mapSelectorBackground: $<Image>('#MainMenuBackgroundMapSelectorImage'),
 		topButtons: $<Panel>('#MainMenuTopButtons'),
 		homeButton: $<RadioButton>('#HomeButton'),
-		quitButtonIcon: $<Image>('#QuitButtonImage')
+		quitButtonIcon: $<Image>('#QuitButtonImage'),
+		legal: $<Panel>('#LegalConsent')
 	};
 
 	activePage: Page | null = null;
@@ -45,7 +46,7 @@ class MainMenuHandler implements OnPanelLoad {
 		$.DispatchEvent('HideIntroMovie');
 	}
 
-	onPanelLoad() {
+	async onPanelLoad() {
 		// These aren't accessible until the page has loaded fully, find them now
 		this.panels.movie = $('#MainMenuMovie');
 		this.panels.model = $('#MainMenuModel');
@@ -67,6 +68,8 @@ class MainMenuHandler implements OnPanelLoad {
 		}
 
 		this.setMainMenuBackground();
+
+		await this.checkUserLegalConsent();
 
 		this.showPlaytestWelcomePopup();
 
@@ -378,5 +381,33 @@ class MainMenuHandler implements OnPanelLoad {
 		}
 
 		UiToolkitAPI.ShowGenericPopupOk('#API_Auth_Failure', token, 'wide-popup', () => {});
+	}
+
+	checkUserLegalConsent(): Promise<void> {
+		return new Promise((resolve) => {
+			const consent = MomentumAPI.GetUserAuthConsent();
+			if (consent === MomentumAPI.UserAuthConsent.VALID) {
+				resolve();
+				return;
+			}
+
+			this.toggleAnnounceMode(true);
+			this.panels.legal.LoadLayoutSnippet(
+				consent === MomentumAPI.UserAuthConsent.INVALID ? 'UserConsentInitial' : 'UserConsentOutdated'
+			);
+			this.panels.legal.FindChildTraverse('OKButton')!.SetPanelEvent('onactivate', () => {
+				MomentumAPI.GrantUserAuthConsent();
+				this.toggleAnnounceMode(false);
+				resolve();
+			});
+		});
+	}
+
+	/**
+	 * Put the main menu into "announce" mode, when we want to show
+	 * big fullscreen stuff on startup like legal consent
+	 */
+	toggleAnnounceMode(enable: boolean) {
+		this.panels.cp.SetHasClass('--announce-mode', enable);
 	}
 }
