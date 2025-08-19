@@ -34,6 +34,16 @@ $page-transition-timing-func: ease-in-out;
 	visibility: visible;
 }
 
+// Apply to any panel that should be hidden when showing a startup announcement,
+// e.g. initial account creation consent.
+// Gross approach, but we want the main menu background to be visible, don't
+// want to duplicate all the image vs video, light vs dark mode logic etc.
+@mixin hide-in-announce-mode() {
+	.--announce-mode & {
+		visibility: collapse;
+	}
+}
+
 $topnav-height: 80px;
 $rightnav-width: 50px;
 $drawer-width: 768px;
@@ -134,6 +144,8 @@ $drawer-width: 768px;
 	width: 100%;
 	background-color: function.gradient-vertical(rgba(51, 51, 51, 0.3), rgba(20, 20, 20, 0.3));
 	z-index: 1;
+
+	@include hide-in-announce-mode();
 
 	&__home {
 		height: 100%;
@@ -241,6 +253,8 @@ $drawer-width: 768px;
 			color-stop(0.5, rgba(0, 0, 0, 0.275)),
 			to(rgba(0, 0, 0, 0.8))
 		);
+
+		@include hide-in-announce-mode();
 	}
 }
 
@@ -374,6 +388,8 @@ $drawer-width: 768px;
 	transform: translateX($drawer-width);
 	transition: transform 0.35s $easeOutQuart 0s;
 
+	@include hide-in-announce-mode();
+
 	$this: &;
 	&--expanded {
 		sound: 'UIPanorama.DrawerOpen';
@@ -460,6 +476,8 @@ $drawer-width: 768px;
 		transition-duration: 0.15s;
 		transition-timing-function: ease-in-out;
 
+		@include hide-in-announce-mode();
+
 		&--hidden {
 			opacity: 0;
 			transform: translateY(300px);
@@ -490,6 +508,8 @@ $drawer-width: 768px;
 			height: 0px;
 		}
 	}
+
+	@include hide-in-announce-mode();
 
 	&__wrapper {
 		flow-children: down;
@@ -642,6 +662,8 @@ $drawer-width: 768px;
 	margin: 24px;
 	width: 100%;
 
+	@include hide-in-announce-mode();
+
 	&__button {
 		width: 60px;
 		height: width-percentage(100%);
@@ -687,6 +709,50 @@ $drawer-width: 768px;
 		tooltip-position: top;
 		tooltip-arrow-position: 50% 50%;
 		tooltip-body-position: 50% 50%;
+	}
+}
+
+.legal {
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.8);
+	opacity: 0;
+	transition: opacity 0.6s ease-in-out 0s;
+
+	.--announce-mode & {
+		opacity: 1;
+	}
+
+	&__wrapper {
+		flow-children: down;
+		horizontal-align: center;
+		vertical-align: center;
+		max-width: 800px;
+	}
+
+	&__title {
+		@include mixin.font-header();
+		font-size: 64px;
+		font-weight: bold;
+		horizontal-align: left;
+		text-shadow: 0px 2px 4px 2px black;
+		margin-bottom: 16px;
+	}
+
+	&__parag {
+		@include mixin.font-regular();
+		horizontal-align: left;
+		margin-bottom: 12px;
+	}
+
+	&__links {
+		margin-top: 16px;
+		flow-children: right;
+		horizontal-align: left;
+	}
+
+	&__button {
+		horizontal-align: right;
 	}
 }
 

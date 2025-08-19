@@ -17,8 +17,53 @@
 				</Movie>
 			</Panel>
 		</snippet>
-	</snippets>
+		
+		<snippet name="UserConsentInitial">
+			<Panel>
+				<Panel class="legal__wrapper">
+					<Label class="legal__title" text="#Legal_AccountCreation_Title" />
+					<Label class="legal__parag" text="#Legal_Welcome"/>
+					<Label class="legal__parag" text="#Legal_AccountCreation_Body1" />
+					<Label class="legal__parag" text="#Legal_AccountCreation_Body2" />
+					<Panel class="legal__links">
+						<Button class="button button--blue mr-4" onactivate="SteamOverlayAPI.OpenURL('https://momentum-mod.org/legal/terms-of-service/');">
+							<Label class="button__text" text="#Legal_TermsOfService" />
+						</Button>
+						<Button class="button button--blue" onactivate="SteamOverlayAPI.OpenURL('https://momentum-mod.org/legal/privacy-policy/');">
+							<Label class="button__text" text="#Legal_PrivacyPolicy" />
+						</Button>
+						<Panel class="w-fill" />
+						<Button id="OKButton" class="button button--green">
+							<Label class="button__text" text="#Legal_AccountCreation_Create" />
+						</Button>
+					</Panel>
+				</Panel>
+			</Panel>
+		</snippet>
 
+		<snippet name="UserConsentOutdated">
+			<Panel>
+				<Panel class="legal__wrapper">
+					<Label class="legal__title" text="#Legal_Update_Title" />
+					<Label class="legal__parag" text="#Legal_Update_Body1" />
+					<Label class="legal__parag" text="#Legal_Update_Body2" />
+					<Panel class="legal__links">
+						<Button class="button button--blue mr-4" onactivate="SteamOverlayAPI.OpenURL('https://momentum-mod.org/legal/terms-of-service/');">
+							<Label class="button__text" text="#Legal_TermsOfService" />
+						</Button>
+						<Button class="button button--blue" onactivate="SteamOverlayAPI.OpenURL('https://momentum-mod.org/legal/privacy-policy/');">
+							<Label class="button__text" text="#Legal_PrivacyPolicy" />
+						</Button>
+						<Panel class="w-fill" />
+						<Button id="OKButton" class="button button--green">
+							<Label class="button__text" text="#Legal_Accept" />
+						</Button>
+					</Panel>
+				</Panel>
+			</Panel>
+		</snippet>
+	</snippets>
+	
 	<MainMenu class="InitialDisplay MainMenuRootPanel" hittest="false">
 
 		<Panel id="MainMenuInput" class="mainmenu">
@@ -99,7 +144,7 @@
 			<!-- /Drawer -->
 
 			<!-- Full page blur: used to blur everything below the drawer -->
-			<BaseBlurTarget id="MainMenuFullBlur" class="mainmenu__content-blur" blurrects="MainMenuDrawerContent MainMenuOptionListRight">
+			<BaseBlurTarget id="MainMenuFullBlur" class="mainmenu__content-blur" blurrects="MainMenuDrawerContent MainMenuOptionListRight LegalConsent">
 				<Panel class="mainmenu__container">
 					<!-- Backgrounds -->
 					<!-- Background blur: used to blur the backgrounds behind mainmenu pages -->
@@ -169,6 +214,8 @@
 				</Panel>
 			</BaseBlurTarget>
 		</Panel>
+		
+		<Panel id="LegalConsent" class="legal hidden" visible="false" />
 
 		<!-- Make sure these are at the bottom to get the z-order right -->
 		<ToastManager />
