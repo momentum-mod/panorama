@@ -1,8 +1,9 @@
-import { getHandlerInstance, PanelHandler } from 'util/module-helpers';
+import { getHandlerInstance, OnPanelLoad, PanelHandler } from 'util/module-helpers';
 import { traverseChildren } from 'util/functions';
 import { isSettingsPanel, SettingsTab, SettingsTabs, SettingsTabWithoutSearch } from 'common/settings';
 import './search';
-import { SettingsPage } from './page';
+
+
 
 @PanelHandler()
 export class SettingsHandler {
@@ -420,5 +421,24 @@ export class SettingsHandler {
 
 	isSpeedometerPanel(panel: GenericPanel) {
 		return ['SpeedometersContainer', 'RangeColorProfilesContainer'].includes(panel.id);
+	}
+}
+
+	showImportExportDialogue(localeString: string, panelID: string) {
+		const section = $.GetContextPanel().FindChildTraverse(panelID);
+
+		const cvars = traverseChildren(section)
+			.filter((panel) => isSettingsPanel(panel) && panel.paneltype !== 'SettingsKeyBinder')
+			.map((panel) => panel.convar)
+			.toArray();
+
+		let cvarParams = '';
+		for (const [i, cvar] of cvars.entries()) cvarParams += (i !== 0 ? '&' : '') + 'cvar' + (i + 1) + '=' + cvar;
+
+		UiToolkitAPI.ShowCustomLayoutPopupParameters(
+			'',
+			'file://{resources}/layout/modals/popups/import-export-settings.xml',
+			`${cvarParams}&name=${localeString}`
+		);
 	}
 }
