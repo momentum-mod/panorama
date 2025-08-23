@@ -196,6 +196,11 @@
 							<Label text="#Settings_TextureReplace_0" id="materrortype0" value="0" />
 							<Label text="#Settings_TextureReplace_1" id="materrortype1" value="1" />
 						</SettingsEnumDropDown>
+						
+						<SettingsEnumDropDown text="#Settings_TextureReplace_Type_Model" convar="mat_error_texture_type_model" id="MatErrorTypeModel" infomessage="#Settings_TextureReplace_Type_Model_Info">
+							<Label text="#Settings_TextureReplace_0" id="materrortypemodel0" value="0" />
+							<Label text="#Settings_TextureReplace_1" id="materrortypemodel1" value="1" />
+						</SettingsEnumDropDown>
 
 						<SettingsEnumDropDown text="#Settings_TextureReplace_TypeCubemap" convar="mat_error_texture_type_cubemap" infomessage="#Settings_TextureReplace_TypeCubemap_Info">
 							<Label text="#Settings_TextureReplace_TypeCubemap_0" id="materrortypecubemap0" value="0"/>
