@@ -324,25 +324,26 @@ $notch-width: 10px;
 	width: 100%;
 
 	$content-height: 290px;
+	$left-margin: 8px;
+	$right-width: 300px;
 
 	&__top {
 		flow-children: right;
 		width: 100%;
 		vertical-align: bottom;
+	}
 
-		&-left {
-			flow-children: down;
-			width: fill-parent-flow(1);
-			margin-right: 8px;
-			vertical-align: bottom;
-		}
+	&__top-left {
+		flow-children: none;
+		width: fill-parent-flow(1);
+		margin-right: $left-margin;
+	}
 
-		&-right {
-			flow-children: down;
-			width: fit-children;
-			horizontal-align: right;
-			vertical-align: bottom;
-		}
+	&__top-right {
+		flow-children: down;
+		width: $right-width;
+		horizontal-align: right;
+		vertical-align: bottom;
 	}
 
 	&__action {
@@ -362,7 +363,7 @@ $notch-width: 10px;
 
 		&-left {
 			width: fill-parent-flow(1);
-			margin-right: 8px;
+			margin-right: $left-margin;
 		}
 
 		&-right {
@@ -493,6 +494,51 @@ $notch-width: 10px;
 	&__changelog-text {
 		font-size: 16px;
 		margin-bottom: 6px;
+	}
+
+	&__required-game {
+		flow-children: none;
+		margin-left: 4px;
+		margin-right: 4px;
+		tooltip-position: bottom;
+		overflow: noclip;
+
+		$this: &;
+
+		&--hidden {
+			visibility: collapse;
+		}
+
+		&__game-icon {
+			width: 32px;
+			height: 32px;
+			img-shadow: 0 1px 2px black;
+		}
+
+		&__warning {
+			width: 24px;
+			height: 24px;
+			align: right bottom;
+			img-shadow: 1px 1px 1px 2 rgba(0, 0, 0, 0.6);
+			wash-color: #ff2f00;
+			transform: translateX(4px) translateY(6px);
+			visibility: collapse;
+
+			#{$this}--unmounted & {
+				visibility: visible;
+			}
+		}
+
+		&__tooltip {
+			&--left {
+				color: #e5e5e5;
+			}
+
+			&--right {
+				color: white;
+				font-weight: medium;
+			}
+		}
 	}
 }
 

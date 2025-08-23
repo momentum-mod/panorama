@@ -200,22 +200,44 @@
 				<Panel id="MapInfo" class="mapselector-map-info">
 					<Panel class="mapselector-map-info__top">
 						<Panel class="mapselector-map-info__top-left">
-							<Panel class="w-full">
-								<!-- Stacked labels to give double layers of shadow. I don't like it, but I'll have to go along with it. -->
-								<Label class="text-h1 text-shadow-outline" text="{s:name}" />
-								<Label class="text-h1 text-shadow-black color-transparent" text="{s:name}" />
+							<Panel class="flow-down w-full v-align-bottom">
+								<Panel>
+									<!-- Stacked labels to give double layers of shadow. I don't like it, but I'll have to go along with it. -->
+									<Label class="text-h1 text-shadow-outline" text="{s:name}" />
+									<Label class="text-h1 text-shadow-black color-transparent" text="{s:name}" />
+								</Panel>
+								<Panel class="flow-right">
+									<Label class="text-h4 text-shadow-outline" text="#MapInfo_Tier" />
+									<Label id="HudTabMenuLinearSeparator" class="text-h4 text-shadow-outline" text="|" />
+									<Label id="HudTabMenuLinearLabel" class="text-h4 text-shadow-outline" text="#MapInfo_Type_Linear" />
+									<Label id="HudTabMenuStageCountSeparator" class="text-h4 text-shadow-outline" text="|" />
+									<Label id="HudTabMenuStageCountLabel" class="text-h4 text-shadow-outline" text="#MapInfo_StageCount" />
+									<Label id="HudTabMenuBonusCountSeparator" class="text-h4 text-shadow-outline" text="|" />
+									<Label id="HudTabMenuBonusCountLabel" class="text-h4 text-shadow-outline" text="#MapInfo_BonusCount" />
+									<Label id="HudTabMenuBonusesCountLabel" class="text-h4 text-shadow-outline" text="#MapInfo_BonusesCount" />
+								</Panel>
 							</Panel>
-							<Panel class="w-full flow-right">
-								<Label class="text-h4 text-shadow-outline" text="#MapInfo_Tier" />
-								<Label id="HudTabMenuLinearSeparator" class="text-h4 text-shadow-outline" text="|" />
-								<Label id="HudTabMenuLinearLabel" class="text-h4 text-shadow-outline" text="#MapInfo_Type_Linear" />
-								<Label id="HudTabMenuStageCountSeparator" class="text-h4 text-shadow-outline" text="|" />
-								<Label id="HudTabMenuStageCountLabel" class="text-h4 text-shadow-outline" text="#MapInfo_StageCount" />
-								<Label id="HudTabMenuBonusCountSeparator" class="text-h4 text-shadow-outline" text="|" />
-								<Label id="HudTabMenuBonusCountLabel" class="text-h4 text-shadow-outline" text="#MapInfo_BonusCount" />
-								<Label id="HudTabMenuBonusesCountLabel" class="text-h4 text-shadow-outline" text="#MapInfo_BonusesCount" />
+							<Panel id="RequiredGames" class="v-align-bottom h-align-right flow-right">
+								<Panel id="CSS" class="mapselector-map-info__required-game" onmouseout="UiToolkitAPI.HideTextTooltip();">
+									<Image class="mapselector-map-info__required-game__game-icon" src="file://{images}/game-logos/css.png" />
+									<Image class="mapselector-map-info__required-game__warning" src="file://{images}/alert.svg" textureheight="48" />
+								</Panel>
+								<Panel id="CSGO" class="mapselector-map-info__required-game" onmouseout="UiToolkitAPI.HideTextTooltip();">
+									<Image class="mapselector-map-info__required-game__game-icon" src="file://{images}/game-logos/csgo.png" />
+									<Image class="mapselector-map-info__required-game__warning" src="file://{images}/alert.svg" textureheight="48" />
+								</Panel>
+								<Panel id="TF2" class="mapselector-map-info__required-game" onmouseout="UiToolkitAPI.HideTextTooltip();">
+									<Image class="mapselector-map-info__required-game__game-icon" src="file://{images}/game-logos/tf2.png" />
+									<Image class="mapselector-map-info__required-game__warning" src="file://{images}/alert.svg" textureheight="48" />
+								</Panel>
+								<Panel id="Portal2" class="mapselector-map-info__required-game" onmouseout="UiToolkitAPI.HideTextTooltip();">
+									<Image class="mapselector-map-info__required-game__game-icon" src="file://{images}/game-logos/portal2.png" />
+									<Image class="mapselector-map-info__required-game__warning" src="file://{images}/alert.svg" textureheight="48" />
+								</Panel>
 							</Panel>
 						</Panel>
+						<!-- Currently empty, could move big button back here in the future -->
+						<Panel class="mapselector-map-info__top-right" />
 					</Panel>
 					<Panel class="mapselector-map-info__content">
 						<Panel id="MapDescription" class="mapselector-map-info__content-left mapselector-map-info__description">
