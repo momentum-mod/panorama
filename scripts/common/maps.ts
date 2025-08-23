@@ -1,5 +1,40 @@
 import { MapStatuses, MapCreditType, MMap, TrackType } from './web_dontmodifyme';
 import { getTrack } from './leaderboard';
+import { checkDosa } from 'util/dont-show-again';
+
+/**
+ * Download or launch a map, show missing games popup first if required games are not mounted
+ */
+export function handlePlayMap(mapData: MapCacheAPI.MapData, gamemodeOverride: Gamemode = null) {
+	if (!mapData.mapFileExists) {
+		// Need to download
+		$.DispatchEvent('MapSelector_TryPlayMap', mapData.staticData.id);
+		return;
+	}
+
+	const requiredGames = mapData.staticData.info?.requiredGames;
+	const mountedGames = GameInterfaceAPI.GetMountedSteamApps();
+	const missingGames = requiredGames?.filter((game) => !mountedGames.includes(game));
+
+	if (missingGames?.length > 0 && !checkDosa('requiredGames')) {
+		let params = `mapID=${mapData.staticData.id}&games=${requiredGames.join(',')}&dosaKey=requiredGames&dosaNameToken=Dosa_RequiredGames`;
+		if (gamemodeOverride !== null) {
+			params += `&gamemodeOverride=${gamemodeOverride}`;
+		}
+
+		UiToolkitAPI.ShowCustomLayoutPopupParameters(
+			'RequiredGames',
+			'file://{resources}/layout/modals/popups/required-games.xml',
+			params
+		);
+	} else {
+		if (gamemodeOverride !== null) {
+			$.DispatchEvent('MapSelector_TryPlayMap_GameModeOverride', mapData.staticData.id, gamemodeOverride);
+		} else {
+			$.DispatchEvent('MapSelector_TryPlayMap', mapData.staticData.id);
+		}
+	}
+}
 
 export enum MapListType {
 	APPROVED = 0,

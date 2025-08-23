@@ -279,7 +279,7 @@
 
 						<Panel class="flow-down mapselector-map-info__content-right">
 							<Panel class="mapselector-map-info__action mb-1">
-								<Button id="MapInfoAction" class="button mapselector-action-button">
+								<Button id="MapInfoAction" class="button mapselector-action-button" onactivate="MapSelectorHandler.onActionButtonPressed();">
 									<Panel class="mapselector-action-button__typecontainer action-play">
 										<Image class="button__icon mapselector-action-button__icon" src="file://{images}/play-circle.svg" textureheight="40" />
 										<Label class="button__text mapselector-action-button__text" text="#MapSelector_Button_Play" />
