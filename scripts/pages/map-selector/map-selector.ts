@@ -342,6 +342,7 @@ class MapSelectorHandler implements OnPanelLoad {
 
 		this.updateSelectedMapInfo(mapData.staticData, mapData.userData);
 		this.updateSelectedMapCredits(mapData.staticData);
+		this.updateSelectedMapRequiredGames(mapData.staticData);
 
 		// Start loading spinner on live-updateing stats panels -- MapSelector_OnSelectedOnlineDataUpdate will kill it
 		this.panels.stats.AddClass('mapselector-stats--loading');
@@ -483,6 +484,50 @@ class MapSelectorHandler implements OnPanelLoad {
 					}
 				});
 			});
+	}
+
+	readonly requiredGames = [
+		[$('#CSS'), SteamGame.CSS] as const,
+		[$('#CSGO'), SteamGame.CSGO] as const,
+		[$('#TF2'), SteamGame.TF2] as const,
+		[$('#Portal2'), SteamGame.PORTAL2] as const
+	];
+
+	updateSelectedMapRequiredGames(staticData: MMap) {
+		if (!staticData.info?.requiredGames) {
+			this.requiredGames.forEach(([panel]) => {
+				panel.AddClass('mapselector-map-info__required-game--hidden');
+			});
+
+			return;
+		}
+
+		const mountedGames = GameInterfaceAPI.GetMountedSteamApps();
+		this.requiredGames.forEach(([panel, game]) => {
+			const unmounted = !mountedGames.includes(game);
+			panel.SetHasClass(
+				'mapselector-map-info__required-game--hidden',
+				!staticData.info.requiredGames.includes(game)
+			);
+			panel.SetHasClass('mapselector-map-info__required-game--unmounted', unmounted);
+
+			if (unmounted) {
+				panel.SetDialogVariable('game', SteamGamesNames.get(game));
+				panel.SetPanelEvent('onmouseover', () => {
+					// English is "Missing assets for game: "
+					UiToolkitAPI.ShowTextTooltip(
+						panel.id,
+						'<span class="mapselector-map-info__required-game__tooltip--left">' +
+							$.Localize('#MapSelector_RequiredGames_Tooltip') +
+							'</span><span class="mapselector-map-info__required-game__tooltip--right">' +
+							SteamGamesNames.get(game) +
+							'</span>'
+					);
+				});
+			} else {
+				panel.ClearPanelEvent('onmouseover');
+			}
+		});
 	}
 
 	onSelectedOnlineDataUpdated(onlineMapData: MMap) {
