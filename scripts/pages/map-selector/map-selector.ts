@@ -1,9 +1,18 @@
 import { OnPanelLoad, PanelHandler } from 'util/module-helpers';
 import { traverseChildren } from 'util/functions';
-import { MapCreditType, MapStatus, MapStatuses, MMap, TrackType } from 'common/web_dontmodifyme';
+import {
+	MapCreditType,
+	MapStatus,
+	MapStatuses,
+	MMap,
+	SteamGame,
+	SteamGamesNames,
+	TrackType
+} from 'common/web_dontmodifyme';
 import * as Maps from 'common/maps';
 import * as Leaderboards from 'common/leaderboard';
 import * as Time from 'util/time';
+import { handlePlayMap } from 'common/maps';
 
 const REFRESH_COOLDOWN = 1000 * 10; // 10 seconds
 
@@ -550,6 +559,12 @@ class MapSelectorHandler implements OnPanelLoad {
 			(run) => run.gamemode === gamemode && run.trackType === TrackType.MAIN && run.style === 0
 		);
 		statsPanel.SetDialogVariable('world_record', wr ? Time.timetoHHMMSS(wr.time) : $.Localize('#Common_NA'));
+	}
+
+	onActionButtonPressed() {
+		if (!this.selectedMapData) return;
+
+		handlePlayMap(this.selectedMapData);
 	}
 
 	/**

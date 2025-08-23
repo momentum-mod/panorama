@@ -4,7 +4,7 @@ import { MapStatuses, Gamemode, MapStatus } from 'common/web_dontmodifyme';
 import { GamemodeInfo } from 'common/gamemode';
 import { getUserMapDataTrack } from 'common/leaderboard';
 import { timetoHHMMSS } from 'util/time';
-import { getTier } from 'common/maps';
+import { getTier, handlePlayMap } from 'common/maps';
 
 const NEW_MAP_BANNER_CUTOFF = 1000 * 60 * 60 * 24 * 5; // 5 days
 
@@ -33,13 +33,14 @@ class MapEntryHandler {
 		bannerPrivate: $.Localize('#MapSelector_Banner_Private')
 	};
 
-	showGameModeOverrideMenu() {
-		const mapData = $.GetContextPanel<MapEntry>().mapData;
+	onActionButtonPressed() {
+		handlePlayMap($.GetContextPanel<MapEntry>().mapData);
+	}
 
+	showGameModeOverrideMenu() {
 		const items = Enum.fastValuesNumeric(Gamemode).map((gamemode) => ({
 			label: $.Localize(GamemodeInfo.get(gamemode)!.i18n),
-			jsCallback: () =>
-				$.DispatchEvent('MapSelector_TryPlayMap_GameModeOverride', mapData.staticData.id, gamemode)
+			jsCallback: () => handlePlayMap($.GetContextPanel<MapEntry>().mapData, gamemode)
 		}));
 
 		UiToolkitAPI.ShowSimpleContextMenu('', 'ControlsLibSimpleContextMenu', items);
@@ -57,7 +58,7 @@ class MapEntryHandler {
 					label: $.Localize('#Action_StartMap'),
 					icon: 'file://{images}/play.svg',
 					style: 'icon-color-green',
-					jsCallback: () => $.DispatchEvent('MapSelector_TryPlayMap', mapID)
+					jsCallback: () => handlePlayMap(mapData)
 				},
 				// Gamemode override submenu
 				{
@@ -114,10 +115,6 @@ class MapEntryHandler {
 		}
 
 		UiToolkitAPI.ShowSimpleContextMenu('', 'ControlsLibSimpleContextMenu', items);
-	}
-
-	tryPlayMap() {
-		$.DispatchEvent('MapSelector_TryPlayMap', $.GetContextPanel<MapEntry>().mapData.staticData.id);
 	}
 
 	update() {

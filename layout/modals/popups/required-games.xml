@@ -1,0 +1,42 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+
+	<snippets>
+		<snippet name="game">
+			<Panel class="flow-right mb-2">
+				<Image id="Icon" style="width: 20px; height: 20px;" />
+				<Label class="ml-2 mr-3 v-align-center text-medium" text="{s:game}" />
+				<Label id="MountedStatus" class="v-align-center text-medium mr-1" text="{s:mounted_status}" />
+				<Image id="MountedIcon" class="v-align-center" style="width: 12px; height: 12px;" />
+			</Panel>
+		</snippet>
+	</snippets>
+
+	<scripts>
+		<include type="module" src="file://{scripts}/modals/popups/required-games.ts" />
+	</scripts>
+
+	<PopupCustomLayout class="PopupPanel Hidden generic-popup generic-popup--large" popupbackground="blur">
+		<Panel class="flow-down">
+			<Label class="text-h2 mb-4 text-align-center" text="#MapSelector_RequiredGames_Title" />
+			<Label class="mb-2" text="#MapSelector_RequiredGames_PopupMessage1" />
+			<Label class="mb-4" text="#MapSelector_RequiredGames_PopupMessage2" />
+			<Panel id="Games" class="flow-down mb-3" />
+		</Panel>
+
+		<Panel class="flow-right h-align-right">
+			<ToggleButton id="DontShowAgainCheckbox" class="checkbox v-align-center mr-4">
+				<Label text="#Common_DontShowAgain" />
+			</ToggleButton>
+			<Button class="button button--blue mr-3" onactivate="RequiredGamesPopupHandler.submit()">
+				<Label class="button__text" text="#Common_IUnderstand" />
+			</Button>
+			<Button class="button button--red" onactivate="RequiredGamesPopupHandler.cancel()">
+				<Label class="button__text" text="#Common_Cancel" />
+			</Button>
+		</Panel>
+	</PopupCustomLayout>
+
+</root>
