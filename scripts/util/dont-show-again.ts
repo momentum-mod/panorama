@@ -2,7 +2,7 @@ import { PanelHandler } from './module-helpers';
 
 const PS_OBJECT_KEY = 'dosa';
 
-/** Store a DOSA */
+/** Store a DOSA. Name token is a localization token used in the reset settings. */
 export function addDosa(key: string, nameToken: string): void {
 	const dosas = getPSObject();
 	dosas[key] = nameToken;
@@ -46,9 +46,9 @@ export function getNameToken(key: string): string | undefined {
  * @returns Whether a DoSA was added
  */
 export function handleDosaCheckbox<Panel extends GenericPanel = GenericPanel>(
-	panel: Panel,
-	key: string,
-	nameToken: string
+	panel = $.GetContextPanel<Panel>(),
+	key?: string,
+	nameToken?: string
 ): boolean {
 	key ??= panel.GetAttributeString('dosaKey', '');
 	nameToken ??= panel.GetAttributeString('dosaNameToken', '');
