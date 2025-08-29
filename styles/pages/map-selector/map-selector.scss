@@ -658,6 +658,7 @@ $notch-width: 10px;
 	&__text {
 		@include mixin.font-header();
 		font-size: 22px;
+		overflow: squish;
 		text-overflow: shrink;
 		margin-left: 6px;
 		text-shadow: 0 1px 3px 2 rgba(0, 0, 0, 0.8);

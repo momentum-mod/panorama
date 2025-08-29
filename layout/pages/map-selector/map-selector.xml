@@ -341,7 +341,8 @@
 											<TooltipPanel class="mapselector-stat" tooltip="#Common_PersonalBest">
 												<Image class="mapselector-stat__icon" src="file://{images}/ranks/pb.svg" textureheight="48" />
 												<Panel class="h-full v-align-center">
-													<Label class="mapselector-stat__text" text="{s:personal_best}" />
+													<Label id="MapInfoPB" class="mapselector-stat__text" text="{g:time:3:personal_best}" />
+													<Label id="MapInfoNoPB" class="mapselector-stat__text" text="#Common_NA" />
 													<Image class="mapselector-stat__spinner" src="file://{images}/refresh.svg" textureheight="32" />
 												</Panel>
 											</TooltipPanel>
@@ -371,7 +372,8 @@
 											<TooltipPanel class="mapselector-stat" tooltip="#Common_WorldRecord">
 												<Image class="mapselector-stat__icon" src="file://{images}/ranks/wr.svg" textureheight="48" />
 												<Panel class="h-full v-align-center">
-													<Label class="mapselector-stat__text" text="{s:world_record}" />
+													<Label id="MapInfoWR" class="mapselector-stat__text" text="{g:time:3:world_record}" />
+													<Label id="MapInfoNoWR" class="mapselector-stat__text" text="#Common_NA" />
 													<Image class="mapselector-stat__spinner" src="file://{images}/refresh.svg" textureheight="32" />
 												</Panel>
 											</TooltipPanel>

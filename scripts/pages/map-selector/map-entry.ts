@@ -3,7 +3,6 @@ import * as Enum from 'util/enum';
 import { MapStatuses, Gamemode, MapStatus } from 'common/web_dontmodifyme';
 import { GamemodeInfo } from 'common/gamemode';
 import { getUserMapDataTrack } from 'common/leaderboard';
-import { timetoHHMMSS } from 'util/time';
 import { getTier, handlePlayMap } from 'common/maps';
 
 const NEW_MAP_BANNER_CUTOFF = 1000 * 60 * 60 * 24 * 5; // 5 days
@@ -138,13 +137,12 @@ class MapEntryHandler {
 		cp.SetHasClass('map-entry--completed', userTrackData?.completed ?? false);
 
 		if (userData && userTrackData && userTrackData.time > 0) {
-			const time = timetoHHMMSS(userTrackData.time);
+			cp.SetDialogVariableFloat('time', userTrackData.time);
 			// Current system doesn't know user ranks
 			const icon = /* track.pr.rank <= 10 ? 'file://{images}/ranks/top10.svg' : */ 'file://{images}/flag.svg';
 			this.panels.pbIcon.SetImage(icon);
-			this.panels.pbLabel.text = time;
 
-			let tooltip = `<b>${$.Localize('#Common_PersonalBest')}</b>: ${time}`;
+			let tooltip = `<b>${$.Localize('#Common_PersonalBest')}</b>: {g:time:time}`;
 			if (userData.lastPlayed > 0) {
 				// Derived from C time() function (unix time in seconds, JS is in milliseconds), so * 1000
 				const lastPlayed = new Date(userData.lastPlayed * 1000).toLocaleDateString();
