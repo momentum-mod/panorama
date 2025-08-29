@@ -11,7 +11,6 @@ import {
 } from 'common/web_dontmodifyme';
 import * as Maps from 'common/maps';
 import * as Leaderboards from 'common/leaderboard';
-import * as Time from 'util/time';
 import { handlePlayMap } from 'common/maps';
 
 const REFRESH_COOLDOWN = 1000 * 10; // 10 seconds
@@ -55,6 +54,8 @@ class MapSelectorHandler implements OnPanelLoad {
 		emptyContainer: $<Panel>('#MapListEmptyContainer'),
 		tierSlider: $<DualSlider>('#TierSlider'),
 		info: $<Panel>('#MapInfo'),
+		infoPB: $<Panel>('#MapInfoPB'),
+		infoWR: $<Panel>('#MapInfoWR'),
 		linearSeparator: $<Label>('#HudTabMenuLinearSeparator'),
 		linearLabel: $<Label>('#HudTabMenuLinearLabel'),
 		stageCountSeparator: $<Label>('#HudTabMenuStageCountSeparator'),
@@ -389,7 +390,14 @@ class MapSelectorHandler implements OnPanelLoad {
 		this.panels.datesContainer.SetHasClass('hide', !staticData.info?.creationDate);
 
 		const pb = Leaderboards.getUserMapDataTrack(userData, gamemode);
-		info.SetDialogVariable('personal_best', pb ? Time.timetoHHMMSS(pb.time) : $.Localize('#Common_NA'));
+		if (pb) {
+			info.SetDialogVariableFloat('personal_best', pb.time);
+			info.FindChildTraverse('MapInfoPB').visible = true;
+			info.FindChildTraverse('MapInfoNoPB').visible = false;
+		} else {
+			info.FindChildTraverse('MapInfoPB').visible = false;
+			info.FindChildTraverse('MapInfoNoPB').visible = true;
+		}
 
 		const inSubmission = MapStatuses.IN_SUBMISSION.includes(staticData.status);
 		info.SetHasClass('mapselector-map-info--submission', inSubmission);
@@ -558,7 +566,15 @@ class MapSelectorHandler implements OnPanelLoad {
 		const wr = onlineMapData.worldRecords?.find(
 			(run) => run.gamemode === gamemode && run.trackType === TrackType.MAIN && run.style === 0
 		);
-		statsPanel.SetDialogVariable('world_record', wr ? Time.timetoHHMMSS(wr.time) : $.Localize('#Common_NA'));
+
+		if (wr) {
+			statsPanel.SetDialogVariableFloat('world_record', wr?.time ?? 0);
+			statsPanel.FindChildTraverse('MapInfoWR').visible = true;
+			statsPanel.FindChildTraverse('MapInfoNoWR').visible = false;
+		} else {
+			statsPanel.FindChildTraverse('MapInfoWR').visible = false;
+			statsPanel.FindChildTraverse('MapInfoNoWR').visible = true;
+		}
 	}
 
 	onActionButtonPressed() {
