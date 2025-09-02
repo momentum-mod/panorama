@@ -63,7 +63,8 @@ export enum ItemType {
 export enum GlobalRegionType {
 	TYPES_LIST = 0,
 	ALLOW_BHOP = 1,
-	CANCEL_TIMER = 2
+	CANCEL_TIMER = 2,
+	OVERBOUNCE = 3
 }
 
 interface GlobalRegionSelection {
@@ -451,7 +452,8 @@ class ZoneMenuHandler {
 		if (this.selectedZone.globalRegion != null) {
 			const types = [
 				['#Zoning_AllowBhopZone', GlobalRegionType.ALLOW_BHOP, 'allowBhop'] as const,
-				['#Zoning_CancelZone', GlobalRegionType.CANCEL_TIMER, 'cancel'] as const
+				['#Zoning_CancelZone', GlobalRegionType.CANCEL_TIMER, 'cancel'] as const,
+				['#Zoning_OverbounceZone', GlobalRegionType.OVERBOUNCE, 'overbounce'] as const
 			];
 
 			this.mapZoneData.globalRegions = this.mapZoneData.globalRegions || {};
@@ -1483,6 +1485,13 @@ class ZoneMenuHandler {
 			renderRegions.push({
 				region: region,
 				renderMode: RegionRenderMode.CANCEL,
+				editing: region === this.selectedRegion
+			});
+		}
+		for (const region of this.mapZoneData.globalRegions?.overbounce ?? []) {
+			renderRegions.push({
+				region: region,
+				renderMode: RegionRenderMode.OVERBOUNCE,
 				editing: region === this.selectedRegion
 			});
 		}
