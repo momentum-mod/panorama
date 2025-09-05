@@ -675,9 +675,19 @@ class ZoneMenuHandler {
 		this.panels.propertiesSegment.visible = false;
 		this.panels.propertiesZone.visible = false;
 
-		if (newSelection.globalRegion?.index >= 0) {
-			this.panels.propertiesZone.visible = true;
-			this.populateRegionProperties();
+		$.Msg(newSelection);
+
+		if (newSelection.globalRegion) {
+			if (newSelection.globalRegion.type == 0) {
+				this.rebuildCenterList();
+				this.rebuildRightList();
+			} else if (newSelection.globalRegion.type > 0) {
+				this.rebuildRightList();
+			}
+			if (newSelection.globalRegion.index >= 0) {
+				this.panels.propertiesZone.visible = true;
+				this.populateRegionProperties();
+			}
 		} else if (this.hasSelectedZone()) {
 			this.panels.propertiesZone.visible = true;
 			this.panels.regionSelect.SetSelectedIndex(0);
@@ -685,12 +695,17 @@ class ZoneMenuHandler {
 		} else if (this.hasSelectedSegment()) {
 			this.panels.propertiesSegment.visible = true;
 			this.populateSegmentProperties();
+			this.rebuildRightList();
 		} else if (this.hasSelectedTrack()) {
 			this.panels.propertiesTrack.visible = true;
 			this.populateTrackProperties();
+			this.rebuildCenterList();
+			this.rebuildRightList();
+		} else {
+			this.rebuildLists();
 		}
 
-		this.rebuildLists();
+		//this.rebuildLists();
 
 		this.updateEditorRegions();
 	}
