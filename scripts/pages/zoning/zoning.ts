@@ -104,9 +104,11 @@ class ZoneMenuHandler {
 	readonly panels = {
 		zoningMenu: $.GetContextPanel<ZoneMenu>()!,
 
-		leftList: $<Panel>('#LeftList')!,
-		centerList: $<Panel>('#CenterList')!,
-		rightList: $<Panel>('#RightList')!,
+		selectionLists: {
+			left: $<Panel>('#LeftList')!,
+			center: $<Panel>('#CenterList')!,
+			right: $<Panel>('#RightList')!
+		},
 
 		createMainButton: $<Button>('#CreateMainButton')!,
 		addBonusButton: $<Button>('#AddBonusButton')!,
@@ -334,15 +336,23 @@ class ZoneMenuHandler {
 
 		if (!this.mapZoneData) return;
 
-		this.panels.leftList.RemoveAndDeleteChildren();
-		this.panels.centerList.RemoveAndDeleteChildren();
-		this.panels.rightList.RemoveAndDeleteChildren();
+		const oldScrollOffset = {};
+
+		// Record the current scroll position. If the panel is overflowing,
+		// this will be used to match the scroll position after updating list panels
+		for (const [listKey, panel] of Object.entries(this.panels.selectionLists)) {
+			oldScrollOffset[listKey] = panel.GetParent()!.scrolloffset_y ?? 0;
+		}
+
+		this.panels.selectionLists.left.RemoveAndDeleteChildren();
+		this.panels.selectionLists.center.RemoveAndDeleteChildren();
+		this.panels.selectionLists.right.RemoveAndDeleteChildren();
 
 		this.selectedHierarchyNames = [];
 
 		if (this.mapZoneData.tracks.main) {
 			this.addItemListItem(
-				this.panels.leftList,
+				this.panels.selectionLists.left,
 				$.Localize('#Zoning_Main'),
 				this.mapZoneData.tracks.main,
 				ItemType.TRACK,
@@ -354,7 +364,7 @@ class ZoneMenuHandler {
 		for (const [i, bonus] of this.mapZoneData.tracks.bonuses?.entries() ?? []) {
 			const selectionObj: ZoneSelection = { track: bonus };
 			const item = this.addItemListItem(
-				this.panels.leftList,
+				this.panels.selectionLists.left,
 				`${bonusTag} ${i + 1}`,
 				bonus,
 				ItemType.TRACK,
@@ -388,7 +398,7 @@ class ZoneMenuHandler {
 		}
 
 		this.addItemListItem(
-			this.panels.leftList,
+			this.panels.selectionLists.left,
 			$.Localize('#Zoning_GlobalRegions'),
 			GlobalRegionType.TYPES_LIST,
 			ItemType.GLOBAL_REGION_TYPE,
@@ -444,10 +454,26 @@ class ZoneMenuHandler {
 				this.selectedZone.globalRegion?.type == null ||
 				this.selectedZone.globalRegion.type === GlobalRegionType.TYPES_LIST
 		);
+
+		// Restore scroll offset recorded before lists were rebuilt
+		for (const [listKey, panel] of Object.entries(this.panels.selectionLists)) {
+			const scrollParent = panel.GetParent()!;
+			if (oldScrollOffset[listKey] <= 0) {
+				scrollParent.ScrollToFitRegion(
+					0,
+					0,
+					-oldScrollOffset[listKey],
+					scrollParent.actuallayoutheight - oldScrollOffset[listKey],
+					ScrollBehavior.SCROLL_TO_TOPLEFT_EDGE,
+					false,
+					true
+				);
+			}
+		}
 	}
 
 	rebuildCenterList() {
-		this.panels.centerList.RemoveAndDeleteChildren();
+		this.panels.selectionLists.center.RemoveAndDeleteChildren();
 
 		if (this.selectedZone.globalRegion != null) {
 			const types = [
@@ -460,9 +486,15 @@ class ZoneMenuHandler {
 
 			for (const [text, type, regionsKey] of types) {
 				this.mapZoneData.globalRegions[regionsKey] = this.mapZoneData.globalRegions[regionsKey] || [];
-				this.addItemListItem(this.panels.centerList, $.Localize(text), type, ItemType.GLOBAL_REGION_TYPE, {
-					globalRegion: { type: type, regions: this.mapZoneData.globalRegions[regionsKey] }
-				});
+				this.addItemListItem(
+					this.panels.selectionLists.center,
+					$.Localize(text),
+					type,
+					ItemType.GLOBAL_REGION_TYPE,
+					{
+						globalRegion: { type: type, regions: this.mapZoneData.globalRegions[regionsKey] }
+					}
+				);
 			}
 
 			return;
@@ -477,7 +509,13 @@ class ZoneMenuHandler {
 
 			const selectionObj = { track: this.selectedZone.track, segment: segment };
 
-			const item = this.addItemListItem(this.panels.centerList, majorId, segment, ItemType.SEGMENT, selectionObj);
+			const item = this.addItemListItem(
+				this.panels.selectionLists.center,
+				majorId,
+				segment,
+				ItemType.SEGMENT,
+				selectionObj
+			);
 
 			item.SetPanelEvent('oncontextmenu', () => {
 				if (!this.mayAddSegment()) {
@@ -507,7 +545,7 @@ class ZoneMenuHandler {
 
 		if (this.selectedZone.track.zones?.end.regions?.length > 0) {
 			this.addItemListItem(
-				this.panels.centerList,
+				this.panels.selectionLists.center,
 				$.Localize('#Zoning_EndZone'),
 				this.selectedZone.track.zones.end,
 				ItemType.ZONE,
@@ -517,7 +555,7 @@ class ZoneMenuHandler {
 	}
 
 	rebuildRightList() {
-		this.panels.rightList.RemoveAndDeleteChildren();
+		this.panels.selectionLists.right.RemoveAndDeleteChildren();
 
 		if (
 			this.selectedZone.globalRegion?.type != null &&
@@ -525,7 +563,7 @@ class ZoneMenuHandler {
 		) {
 			for (const [i, region] of this.selectedZone.globalRegion.regions.entries()) {
 				this.addItemListItem(
-					this.panels.rightList,
+					this.panels.selectionLists.right,
 					`${$.Localize('#Zoning_Region')} ${i + 1}`,
 					region,
 					ItemType.GLOBAL_REGION,
@@ -553,7 +591,13 @@ class ZoneMenuHandler {
 
 			const selectionObj = { track: this.selectedZone.track, segment: this.selectedZone.segment, zone: zone };
 
-			const item = this.addItemListItem(this.panels.rightList, minorId, zone, ItemType.ZONE, selectionObj);
+			const item = this.addItemListItem(
+				this.panels.selectionLists.right,
+				minorId,
+				zone,
+				ItemType.ZONE,
+				selectionObj
+			);
 
 			item.SetPanelEvent('oncontextmenu', () => {
 				if (!this.mayAddCheckpoint()) {
@@ -584,7 +628,7 @@ class ZoneMenuHandler {
 		for (const [i, zone] of this.selectedZone.segment.cancel?.entries() ?? []) {
 			const cancelTag = $.Localize('#Zoning_CancelZone');
 
-			this.addItemListItem(this.panels.rightList, `${cancelTag} ${i + 1}`, zone, ItemType.ZONE, {
+			this.addItemListItem(this.panels.selectionLists.right, `${cancelTag} ${i + 1}`, zone, ItemType.ZONE, {
 				track: this.selectedZone.track,
 				segment: this.selectedZone.segment,
 				zone: zone
