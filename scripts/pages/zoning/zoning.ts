@@ -252,17 +252,19 @@ class ZoneMenuHandler {
 
 		selectButton.SetPanelEvent('onactivate', () => {
 			this.updateSelection(selectionWhenActivated);
-		});
 
-		selectButton.SetPanelEvent('ondblclick', () => {
 			let region: Region = null;
 			if (selectionWhenActivated.zone) {
-				region = selectionWhenActivated.zone.regions[0];
+				region = selectionWhenActivated.zone?.regions[0];
 			} else if (selectionWhenActivated.segment) {
-				region = selectionWhenActivated.segment.checkpoints[0].regions[0];
+				region = selectionWhenActivated.segment?.checkpoints[0]?.regions[0];
 			} else if (selectionWhenActivated.track) {
-				region = selectionWhenActivated.track.zones.segments[0].checkpoints[0].regions[0];
-			} else if (selectionWhenActivated.globalRegion?.index >= 0) {
+				if (this.isDefragBonus(selectionWhenActivated.track)) {
+					region = this.mapZoneData.tracks?.main.zones.segments[0].checkpoints[0]?.regions[0];
+				} else {
+					region = selectionWhenActivated.track?.zones.segments[0].checkpoints[0]?.regions[0];
+				}
+			} else if (selectionWhenActivated?.globalRegion?.index >= 0) {
 				region = this.selectedZone.globalRegion.regions[this.selectedZone.globalRegion.index];
 			}
 			if (region) {
