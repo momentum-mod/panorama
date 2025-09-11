@@ -1628,6 +1628,9 @@ class ZoneMenuHandler {
 		for (const bonus of this.mapZoneData.tracks.bonuses ?? []) {
 			regionCount += countTrackRegions(bonus);
 		}
+		for (const [regions] of Object.values(this.mapZoneData.globalRegions ?? {})) {
+			regionCount += regions?.length ?? 0;
+		}
 
 		return regionCount;
 	}
