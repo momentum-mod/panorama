@@ -198,9 +198,9 @@ declare namespace MomentumReplayAPI {
 }
 
 declare namespace ChatAPI {
-	function ChangeMuteState(steamID: number, mute: boolean): void;
+	function ChangeMuteState(steamID: steamID, mute: boolean): void;
 
-	function BIsUserMuted(steamID: number): boolean;
+	function BIsUserMuted(steamID: steamID): boolean;
 }
 
 declare namespace SteamLobbyAPI {

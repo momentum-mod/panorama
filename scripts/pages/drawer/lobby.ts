@@ -341,7 +341,7 @@ class LobbyHandler {
 					icon: 'file://{images}/volume-' + (isMuted ? 'high' : 'mute') + '.svg',
 					style: 'icon-color-' + (isMuted ? 'green' : 'red'),
 					jsCallback: () => {
-						ChatAPI.ChangeMuteState(+memberSteamID, !isMuted);
+						ChatAPI.ChangeMuteState(memberSteamID, !isMuted);
 						if (isMuted) {
 							memberData.isMuted = false;
 						}

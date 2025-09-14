@@ -136,7 +136,7 @@ interface MomHudDFJump extends AbstractHudPanel<'MomHudDFJump'> {}
 interface MomHudJumpTiming extends AbstractHudPanel<'MomHudJumpTiming'> {}
 
 interface PlayerListPlayer extends AbstractPanel<'PlayerListPlayer'> {
-	readonly steamId: number;
+	readonly steamId: steamID;
 	readonly isSelf: boolean;
 	readonly connected: boolean;
 	readonly spectating: boolean;
