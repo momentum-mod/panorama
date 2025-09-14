@@ -131,7 +131,7 @@
 
 				<Label class="settings-group__subtitle" text="#Settings_Keybinds_Savestates" />
 
-				<SettingsKeyBinder text="#Keybind_Savestate_Menu" bind="hud_menu_show savelocmenu" tags="saveloc,savestate" />
+				<SettingsKeyBinder text="#Keybind_Savestate_Menu" bind="hud_menu_show savestate" tags="saveloc,savestate" />
 				<SettingsKeyBinder text="#Keybind_Savestate_Create" bind="mom_savestate_create" tags="saveloc,savestate" />
 				<SettingsKeyBinder text="#Keybind_Savestate_Goto" bind="+mom_savestate_load" tags="saveloc,savestate" />
 				<SettingsKeyBinder text="#Keybind_StartMark_Set" bind="mom_start_mark_set" tags="saveloc,savestate" />
@@ -151,9 +151,9 @@
 				<SettingsKeyBinder text="#Keybind_Fullbright" bind="toggle mat_fullbright" tags="fullbright,light" infomessage="#Keybind_Fullbright_Info" />
 				<!-- Disabled until we work on this more -->
 				<!-- <SettingsKeyBinder text="#Keybind_Practice" bind="mom_practice" tags="practice" /> -->
-				<SettingsKeyBinder text="#Keybind_ClimbMenu" bind="hud_menu_show climbtpmenu" tags="climb,tp,teleport" />
-				<SettingsKeyBinder text="#Keybind_MapCommands" bind="hud_menu_show mapcmdsmenu" tags="mapping" />
-				<SettingsKeyBinder text="#Keybind_Ruler" bind="hud_menu_show rulermenu" tags="ruler,measure,distance" />
+				<SettingsKeyBinder text="#Keybind_ClimbMenu" bind="hud_menu_show climbtp" tags="climb,tp,teleport" />
+				<SettingsKeyBinder text="#Keybind_MapCommands" bind="hud_menu_show mapcmds" tags="mapping" />
+				<SettingsKeyBinder text="#Keybind_Ruler" bind="hud_menu_show ruler" tags="ruler,measure,distance" />
 
 				<Label class="settings-group__subtitle" text="#Settings_Input_Keybinds_Misc" />
 
