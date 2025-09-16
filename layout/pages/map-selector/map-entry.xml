@@ -45,7 +45,7 @@
 					</Panel>
 				</Panel>
 				<Panel id="MapEntryPB" class="map-entry__pb" onmouseout="UiToolkitAPI.HideTextTooltip()">
-					<Label id="MapEntryPBLabel" class="map-entry__text map-entry__pb-text" text="{g:time:1:time}" />
+					<Label id="MapEntryPBLabel" class="map-entry__text map-entry__pb-text" text="{g:time:time}" />
 					<Image id="MapEntryPBIcon" class="map-entry__pb-icon" textureheight="32" />
 				</Panel>
 			</Panel>
