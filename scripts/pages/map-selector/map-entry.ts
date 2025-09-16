@@ -141,6 +141,7 @@ class MapEntryHandler {
 			// Current system doesn't know user ranks
 			const icon = /* track.pr.rank <= 10 ? 'file://{images}/ranks/top10.svg' : */ 'file://{images}/flag.svg';
 			this.panels.pbIcon.SetImage(icon);
+			this.panels.pbLabel.SetTextWithDialogVariables('{g:time:time}'); // BUG: This is already set in the XML, but for some reason this is needed for the time to always display
 
 			let tooltip = `<b>${$.Localize('#Common_PersonalBest')}</b>: {g:time:time}`;
 			if (userData.lastPlayed > 0) {
