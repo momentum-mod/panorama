@@ -1022,7 +1022,6 @@ class ZoneMenuHandler {
 
 		const height = Number.parseFloat(this.panels.regionHeight.text);
 		this.selectedRegion.height = Math.max(Number.isNaN(height) ? 0 : height, 1);
-		this.panels.regionHeight.text = this.selectedRegion.height.toFixed(2);
 
 		this.updateEditorRegions();
 	}
