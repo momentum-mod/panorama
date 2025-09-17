@@ -793,6 +793,11 @@ class ZoneMenuHandler {
 		this.selectedZone.zone.filtername = filterIndex ? this.filternameList[filterIndex] : '';
 	}
 
+	onRegionDropdownChanged() {
+		this.populateRegionProperties();
+		if (this.selectedRegion) this.panels.zoningMenu.moveToRegion(this.selectedRegion);
+	}
+
 	populateRegionProperties() {
 		let region = null;
 
