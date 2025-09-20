@@ -175,6 +175,8 @@ interface ZoneMenu extends AbstractPanel<'ZoneMenu'> {
 
 	moveToRegion(region: import('common/web_dontmodifyme').Region): void;
 
+	previewTeleDest(region: import('common/web_dontmodifyme').Region): void;
+
 	updateEditorRegions(editorRegions: ZoneEditorRegion[]): void;
 
 	validateRegionPolygon(
