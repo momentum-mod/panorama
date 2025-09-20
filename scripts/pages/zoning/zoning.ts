@@ -1006,10 +1006,10 @@ class ZoneMenuHandler {
 		}
 	}
 
-	teleportToRegion() {
+	previewTeleDest() {
 		if (!this.selectedZone || !this.selectedRegion) return;
 
-		this.panels.zoningMenu.moveToRegion(this.selectedRegion);
+		this.panels.zoningMenu.previewTeleDest(this.selectedRegion);
 	}
 
 	pickCorners() {
