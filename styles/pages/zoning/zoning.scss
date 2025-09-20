@@ -218,6 +218,14 @@ $properties_inset: 24px;
 		horizontal-align: right;
 	}
 
+	&__property-button-teleport {
+		horizontal-align: right;
+
+		&:hover {
+			wash-color: $green;
+		}
+	}
+
 	&__region-property-container {
 		horizontal-align: right;
 		flow-children: right;

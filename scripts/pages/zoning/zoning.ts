@@ -1005,6 +1005,12 @@ class ZoneMenuHandler {
 		this.panels.zoningMenu.moveToRegion(this.selectedRegion);
 	}
 
+	previewTeleDest() {
+		if (!this.selectedZone || !this.selectedRegion) return;
+
+		this.panels.zoningMenu.previewTeleDest(this.selectedRegion);
+	}
+
 	pickCorners() {
 		if (!this.selectedZone || !this.selectedRegion) return;
 		this.panels.zoningMenu.editRegion(PickType.CORNER);
