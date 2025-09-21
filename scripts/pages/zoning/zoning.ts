@@ -623,7 +623,7 @@ class ZoneMenuHandler {
 
 	createSegment(withStartZone: boolean = true): Segment {
 		return {
-			limitStartGroundSpeed: false,
+			limitStartGroundSpeed: true,
 			checkpointsRequired: true,
 			checkpointsOrdered: true,
 			checkpoints: withStartZone ? [this.createZone()] : undefined,
