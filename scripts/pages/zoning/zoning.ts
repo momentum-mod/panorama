@@ -1,4 +1,4 @@
-import { BonusTrack, MainTrack, MapZones, Region, Segment, Zone } from 'common/web_dontmodifyme';
+import { BonusTrack, Gamemode, MainTrack, MapZones, Region, Segment, Zone } from 'common/web_dontmodifyme';
 import { PanelHandler } from 'util/module-helpers';
 
 // future: get this from c++
@@ -623,7 +623,7 @@ class ZoneMenuHandler {
 
 	createSegment(withStartZone: boolean = true): Segment {
 		return {
-			limitStartGroundSpeed: true,
+			limitStartGroundSpeed: GameModeAPI.GetCurrentGameMode() === Gamemode.SURF,
 			checkpointsRequired: true,
 			checkpointsOrdered: true,
 			checkpoints: withStartZone ? [this.createZone()] : undefined,
