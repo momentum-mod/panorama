@@ -6,6 +6,24 @@ export function magnitude2D(vec: vec2 | vec3): number {
 	return Math.sqrt(sumOfSquares2D(vec));
 }
 
+export function normalizeVector(vec: vec3): vec3 {
+	const mag = magnitude(vec);
+	if (mag === 0) {
+		return { x: 0, y: 0, z: 0 };
+	}
+
+	return { x: vec.x / mag, y: vec.y / mag, z: vec.z / mag };
+}
+
+export function normalizeVector2D(vec: vec2): vec2 {
+	const mag = magnitude2D(vec);
+	if (mag === 0) {
+		return { x: 0, y: 0 };
+	}
+
+	return { x: vec.x / mag, y: vec.y / mag };
+}
+
 // Note: Math.hypot performs additional bounds checking on V8 which which makes it considerably
 // slower than below implementations.
 export function sumOfSquares2D(vec: vec2 | vec3): number {
