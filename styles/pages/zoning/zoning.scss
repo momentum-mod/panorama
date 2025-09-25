@@ -2,7 +2,6 @@
 @use '../../abstract/mixin';
 @use 'sass:color';
 
-$smaller: 12px;
 $small: 16px;
 $medium: 28px;
 
@@ -134,7 +133,7 @@ $properties_inset: 24px;
 		font-size: $small;
 
 		&--add {
-			font-size: $smaller;
+			font-size: 12px;
 			font-style: italic;
 			color: $gray-800;
 
@@ -152,6 +151,7 @@ $properties_inset: 24px;
 
 	&__checkbox {
 		horizontal-align: right;
+		vertical-align: center;
 	}
 
 	&__property {
@@ -178,6 +178,7 @@ $properties_inset: 24px;
 	}
 
 	&__property-label {
+		@include mixin.font-regular();
 		horizontal-align: left;
 		vertical-align: center;
 		color: white;
@@ -300,6 +301,14 @@ $properties_inset: 24px;
 }
 
 .zoning-info {
+	&__header {
+		@include mixin.font-regular();
+		font-size: 18px;
+		margin-top: 8px;
+		margin-left: 8px;
+		font-weight: semi-bold;
+	}
+
 	&__binds-list {
 		width: 100%;
 		padding: 8px;
@@ -314,14 +323,25 @@ $properties_inset: 24px;
 	&__bind {
 		width: 100%;
 		flow-children: right;
+
+		&:not(&--last) {
+			border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+		}
 	}
 
 	&__bind-action {
+		@include mixin.font-regular();
 		horizontal-align: left;
+		vertical-align: center;
+		font-size: 14px;
 	}
 
 	&__bind-key {
-		width: 160px;
+		@include mixin.font-regular();
+		font-family: $font-monospace;
+		vertical-align: center;
+		font-size: 14px;
+		width: 180px;
 		horizontal-align: right;
 		text-align: left;
 	}
