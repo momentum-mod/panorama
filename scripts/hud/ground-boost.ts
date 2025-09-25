@@ -82,7 +82,7 @@ class GroundboostHandler {
 		let bUpdateMeter = false;
 
 		// Only toggle visibility on if the player is grounded
-		if (lastMoveData.moveStatus === 1) {
+		if (lastMoveData.moveStatus === MomentumMovementAPI.PlayerMoveStatus.WALK) {
 			if (timerFlags & TimerFlags.KNOCKBACK) {
 				// Knockback is what causes no-friction condition
 				// Crashland extends the timer to max duration

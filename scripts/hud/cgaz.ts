@@ -524,7 +524,6 @@ class CgazHandler {
 		const speedSquared = speed * speed;
 		const dropSpeedSquared = dropSpeed * dropSpeed;
 
-		const velDir = MomMath.normal2D(velocity, 0.001);
 		const velAngle = Math.atan2(velocity.y, velocity.x);
 		const wishDir = lastMoveData.wishdir;
 		const wishAngle = MomMath.sumOfSquares2D(wishDir) > 0.001 ? Math.atan2(wishDir.y, wishDir.x) : 0;
@@ -537,7 +536,7 @@ class CgazHandler {
 		const forwardMove = Math.round(MomMath.dot2D(viewDir, wishDir));
 		const rightMove = Math.round(MomMath.cross2D(viewDir, wishDir));
 
-		const bIsFalling = lastMoveData.moveStatus === 0;
+		const bIsFalling = lastMoveData.moveStatus === MomentumMovementAPI.PlayerMoveStatus.AIR;
 		const bHasAirControl = phyMode && MomMath.approxEquals(wishAngle, viewAngle, 0.01) && bIsFalling;
 		const bSnapShift =
 			!MomMath.approxEquals(Math.abs(forwardMove), Math.abs(rightMove), 0.01) && !(phyMode && bIsFalling);
