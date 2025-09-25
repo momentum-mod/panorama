@@ -261,7 +261,11 @@ class ZoneMenuHandler {
 			} else if (selectionWhenActivated.segment) {
 				region = selectionWhenActivated.segment.checkpoints[0].regions[0];
 			} else if (selectionWhenActivated.track) {
-				region = selectionWhenActivated.track.zones.segments[0].checkpoints[0].regions[0];
+				if (this.isDefragBonus(selectionWhenActivated.track)) {
+					region = this.mapZoneData.tracks?.main.zones.segments[0].checkpoints[0].regions[0];
+				} else {
+					region = selectionWhenActivated.track.zones.segments[0].checkpoints[0].regions[0];
+				}
 			} else if (selectionWhenActivated.globalRegion?.index >= 0) {
 				region = this.selectedZone.globalRegion.regions[this.selectedZone.globalRegion.index];
 			}
