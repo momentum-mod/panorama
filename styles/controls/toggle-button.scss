@@ -51,7 +51,7 @@
 
 .checkbox {
 	flow-children: right;
-	height: $checkbox-width;
+	min-height: $checkbox-width;
 	border: 0px solid white;
 	transition-property: background-color;
 	transition-duration: 0.1s;
@@ -59,15 +59,16 @@
 
 	// This gets inserted in code
 	.TickBox {
-		height: 100%;
-		width: height-percentage(100%);
-		vertical-align: middle;
+		height: $checkbox-width;
+		width: $checkbox-width;
+		vertical-align: top;
 		background-color: $checkbox-background;
 		border-radius: $checkbox-radius;
 		z-index: 1;
 		margin-left: 0;
 		margin-right: $checkbox-gap;
 		box-shadow: $checkbox-shadow;
+		img-shadow: $checkbox-check-shadow;
 		transition: background-color 0.1s ease-in-out 0s;
 	}
 
