@@ -414,6 +414,7 @@ $checkbox-background-selected: $blue !default;
 $checkbox-background-selected-hover: color.scale($checkbox-background-selected, $lightness: -10%) !default;
 
 $checkbox-shadow: rgba(0, 0, 0, 0.45) 0px 0px 2px 0px !default;
+$checkbox-check-shadow: rgba(0, 0, 0, 0.5) 1px 2px 0.5px 0px !default;
 
 $checkbox-radius: 4px !default;
 $checkbox-width: 24px !default;
