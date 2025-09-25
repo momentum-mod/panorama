@@ -56,13 +56,16 @@ declare namespace MomentumMovementAPI {
 		WATERJUMP = 3
 	}
 
-	interface LastMove {
-		wishdir: vec3;
+	const enum PlayerMoveFlags {
+		AIRSTRAFING = 1 << 0,
+		SLICK = 1 << 1
+	}
+
+	interface HudData {
+		wishDir: vec3;
 		moveStatus: PlayerMoveStatus;
-		wishspeed: float;
-		acceleration: float;
-		maxspeed: float;
-		friction: float;
+		moveFlags: PlayerMoveFlags;
+		wishSpeed: float;
 		hasteTime: int32;
 		damageBoostTime: int32;
 		slickTime: int32;
@@ -120,8 +123,8 @@ declare namespace MomentumMovementAPI {
 	/** Gets the player's movetype (eg. normal, on a ladder, noclip, etc) */
 	function GetMoveType(): MoveType;
 
-	/** Gets an object containing the last move data */
-	function GetLastMoveData(): LastMove;
+	/** Gets an object containing the HUD data */
+	function GetHudData(): HudData;
 
 	/* Gets an object containing stats from the last jump */
 	function GetLastJumpStats(): LastJump;
