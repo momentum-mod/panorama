@@ -1130,13 +1130,9 @@ class CgazHandler {
 			Math.round(MomMath.magnitude2D(wishDir)) * (1 << Math.round(2 * Math.pow(cross, 2))) +
 			(Math.round(cross) > 0 ? 1 : 0);
 
-		const angleOffset = MomMath.remapAngle(velAngle - wishAngle);
-		const targetOffset = MomMath.remapAngle(velAngle - viewAngle);
-		const inputAngle = MomMath.remapAngle(viewAngle - wishAngle) * MomMath.sumOfSquares2D(wishDir);
 		const velocity = MomentumPlayerAPI.GetVelocity();
 		const gainZonesMap = new Map();
 		const phyMode = DefragAPI.GetDFPhysicsMode();
-		const lastMoveData = MomentumMovementAPI.GetLastMoveData();
 
 		let speedGain = 0;
 		let gainMax = -this.primeAccel;
