@@ -72,27 +72,33 @@
 		}
 	}
 
-	&__zoning {
-		width: 560px;
+	$footer-height: 36px;
 
-		background-color: rgba(0, 0, 0, 0.5);
-
-		&--hidden {
-			visibility: collapse;
-		}
-	}
-
-	&__zoning-button {
-		height: $button-height;
-		width: height-percentage(100%);
-		margin: 2px;
+	&__footer-button {
+		height: $footer-height;
+		width: $footer-height;
 		horizontal-align: left;
 		vertical-align: center;
+		border-right: 1px solid rgba(255, 255, 255, 0.0125);
 		background-position: center;
 		background-repeat: no-repeat;
+		background-color: gradient(radial, 50% 50%, 0% 0%, 100% 100%, from(rgba(0, 0, 0, 0.1)), to(rgba(0, 0, 0, 0.3)));
+		background-size: 75% 75%;
 		background-image: url('file://{images}/pencil-outline.svg');
 		img-shadow: $button-icon-shadow;
 		wash-color: $button-text-color;
+		transition: background-color 0.05s ease-out 0s;
+
+		&:hover {
+			background-color: gradient(
+				radial,
+				50% 50%,
+				0% 0%,
+				100% 100%,
+				from(rgba(0, 0, 0, 0.3)),
+				to(rgba(0, 0, 0, 0.6))
+			);
+		}
 
 		&:selected {
 			background-image: url('file://{images}/pencil-off-outline.svg');
@@ -102,6 +108,7 @@
 	&__footer {
 		border-top: 1px solid rgba(0, 0, 0, 0.4);
 		width: 100%;
+		height: $footer-height;
 		padding-right: 24px;
 		vertical-align: bottom;
 		background-color: rgba(0, 0, 0, 0.6);
@@ -110,7 +117,7 @@
 	&__enable-cursor-tip {
 		font-size: 11px;
 		color: rgba(255, 255, 255, 0.6);
-		padding: 12px 0;
+		vertical-align: center;
 		horizontal-align: right;
 	}
 }
