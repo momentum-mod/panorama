@@ -120,14 +120,14 @@ class StrafeTrainer {
 	}
 
 	onUpdate() {
-		const lastMoveData = MomentumMovementAPI.GetLastMoveData();
+		const hudData = MomentumMovementAPI.GetMoveHudData();
 		const lastTickStats = MomentumMovementAPI.GetLastTickStats();
 
 		//zero buffers
 		this.addToBuffer(this.gainRatioHistory, 0);
 		this.addToBuffer(this.yawRatioHistory, 0);
 
-		const bValidWishMove = MomMath.magnitude2D(lastMoveData.wishdir) > 0.1;
+		const bValidWishMove = MomMath.magnitude2D(hudData.wishDir) > 0.1;
 		const strafeRight = (bValidWishMove ? 1 : 0) * lastTickStats.strafeRight;
 		const direction = this.dynamicEnable ? strafeRight : 1;
 		const flip = this.flipEnable ? -1 : 1;
