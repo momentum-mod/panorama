@@ -73,16 +73,16 @@ class GroundboostHandler {
 	}
 
 	onHudUpdate() {
-		const lastMoveData = MomentumMovementAPI.GetLastMoveData();
-		let timer = lastMoveData.defragTimer;
-		const timerFlags = lastMoveData.defragTimerFlags;
+		const hudData = MomentumMovementAPI.GetMoveHudData();
+		let timer = hudData.defragTimer;
+		const timerFlags = hudData.defragTimerFlags;
 		const curTime = MomentumMovementAPI.GetCurrentTime();
 		const speed = magnitude2D(MomentumPlayerAPI.GetVelocity());
 		const deltaSpeed = speed - this.startSpeed;
 		let bUpdateMeter = false;
 
 		// Only toggle visibility on if the player is grounded
-		if (lastMoveData.moveStatus === MomentumMovementAPI.PlayerMoveStatus.WALK) {
+		if (hudData.moveStatus === MomentumMovementAPI.PlayerMoveStatus.WALK) {
 			if (timerFlags & TimerFlags.KNOCKBACK) {
 				// Knockback is what causes no-friction condition
 				// Crashland extends the timer to max duration

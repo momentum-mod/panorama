@@ -476,14 +476,14 @@ class CgazHandler {
 		this.hFov = Math.atan((this.vFovTangent * this.screenX) / this.screenY);
 
 		const phyMode = DefragAPI.GetDFPhysicsMode();
-		const lastMoveData = MomentumMovementAPI.GetLastMoveData();
+		const hudData = MomentumMovementAPI.GetMoveHudData();
 
 		const tickInterval = MomentumMovementAPI.GetTickInterval();
-		const maxSpeed = this.accelScaleEnable ? lastMoveData.wishspeed : lastMoveData.maxspeed;
-		const accel = lastMoveData.acceleration;
+		const maxSpeed = this.accelScaleEnable ? hudData.wishSpeed : hudData.maxspeed;
+		const accel = hudData.acceleration;
 		const maxAccel = accel * maxSpeed * tickInterval;
 
-		if (lastMoveData.hasteTime) {
+		if (hudData.hasteTime) {
 			if (this.snapAccel !== HASTE_ACCEL) {
 				this.snapAccel = HASTE_ACCEL;
 				MAX_GROUND_SPEED = HASTE_SPEED;
@@ -520,12 +520,12 @@ class CgazHandler {
 		const velocity = MomentumPlayerAPI.GetVelocity();
 		const speed = MomMath.magnitude2D(velocity);
 		const stopSpeed = Math.max(speed, MomentumMovementAPI.GetStopspeed());
-		const dropSpeed = Math.max(speed - stopSpeed * lastMoveData.friction * tickInterval, 0);
+		const dropSpeed = Math.max(speed - stopSpeed * hudData.friction * tickInterval, 0);
 		const speedSquared = speed * speed;
 		const dropSpeedSquared = dropSpeed * dropSpeed;
 
 		const velAngle = Math.atan2(velocity.y, velocity.x);
-		const wishDir = lastMoveData.wishdir;
+		const wishDir = hudData.wishDir;
 		const wishAngle = MomMath.sumOfSquares2D(wishDir) > 0.001 ? Math.atan2(wishDir.y, wishDir.x) : 0;
 		const viewAngle = (MomentumPlayerAPI.GetAngles().y * Math.PI) / 180;
 		const viewDir = {
@@ -536,7 +536,7 @@ class CgazHandler {
 		const forwardMove = Math.round(MomMath.dot2D(viewDir, wishDir));
 		const rightMove = Math.round(MomMath.cross2D(viewDir, wishDir));
 
-		const bIsFalling = lastMoveData.moveStatus === MomentumMovementAPI.PlayerMoveStatus.AIR;
+		const bIsFalling = hudData.moveStatus === MomentumMovementAPI.PlayerMoveStatus.AIR;
 		const bHasAirControl = phyMode && MomMath.approxEquals(wishAngle, viewAngle, 0.01) && bIsFalling;
 		const bSnapShift =
 			!MomMath.approxEquals(Math.abs(forwardMove), Math.abs(rightMove), 0.01) && !(phyMode && bIsFalling);
@@ -700,8 +700,8 @@ class CgazHandler {
 					this.primeTruenessMode & TruenessMode.CPM_TURN || phyMode === DefragAPI.DefragPhysics.VQ3
 				);
 				const primeMaxSpeed =
-					this.primeTruenessMode & TruenessMode.PROJECTED ? lastMoveData.wishspeed : lastMoveData.maxspeed;
-				const primeMaxAccel = lastMoveData.acceleration * maxSpeed * tickInterval;
+					this.primeTruenessMode & TruenessMode.PROJECTED ? hudData.wishSpeed : hudData.maxspeed;
+				const primeMaxAccel = hudData.acceleration * maxSpeed * tickInterval;
 				const primeSightSpeed = useSnapAccel ? MAX_GROUND_SPEED : primeMaxSpeed;
 				const primeSightAccel = useSnapAccel ? this.snapAccel : primeMaxAccel;
 
