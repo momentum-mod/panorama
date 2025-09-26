@@ -127,7 +127,7 @@ class StrafeTrainer {
 		this.addToBuffer(this.gainRatioHistory, 0);
 		this.addToBuffer(this.yawRatioHistory, 0);
 
-		const bValidWishMove = MomMath.magnitude2D(hudData.wishDir) > 0.1;
+		const bValidWishMove = MomMath.magnitude2D(hudData.wishVel) > 0.1;
 		const strafeRight = (bValidWishMove ? 1 : 0) * lastTickStats.strafeRight;
 		const direction = this.dynamicEnable ? strafeRight : 1;
 		const flip = this.flipEnable ? -1 : 1;

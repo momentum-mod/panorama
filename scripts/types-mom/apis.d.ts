@@ -62,10 +62,9 @@ declare namespace MomentumMovementAPI {
 	}
 
 	interface HudData {
-		wishDir: vec3;
+		wishVel: vec3;
 		moveStatus: PlayerMoveStatus;
 		moveFlags: PlayerMoveFlags;
-		wishSpeed: float;
 		hasteTime: int32;
 		damageBoostTime: int32;
 		slickTime: int32;
