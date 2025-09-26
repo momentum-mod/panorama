@@ -487,7 +487,8 @@ class CgazHandler {
 		const [realAccelerate, realMaxSpeed] = this.calcAccelAndMaxSpeed(hudData, velocity);
 		const realFriction = this.calcFriction(hudData, speed);
 
-		const maxSpeed = this.accelScaleEnable ? hudData.wishSpeed : realMaxSpeed;
+		const wishSpeed = MomMath.magnitude2D(hudData.wishVel);
+		const maxSpeed = this.accelScaleEnable ? wishSpeed : realMaxSpeed;
 		const accel = realAccelerate;
 		const maxAccel = accel * maxSpeed * tickInterval;
 
@@ -531,7 +532,7 @@ class CgazHandler {
 		const dropSpeedSquared = dropSpeed * dropSpeed;
 
 		const velAngle = Math.atan2(velocity.y, velocity.x);
-		const wishDir = hudData.wishDir;
+		const wishDir = MomMath.normalizeVector(hudData.wishVel);
 		const wishAngle = MomMath.sumOfSquares2D(wishDir) > 0.001 ? Math.atan2(wishDir.y, wishDir.x) : 0;
 		const viewAngle = (MomentumPlayerAPI.GetAngles().y * Math.PI) / 180;
 		const viewDir = {
@@ -706,8 +707,7 @@ class CgazHandler {
 					this.primeTruenessMode & TruenessMode.CPM_TURN || phyMode === DefragAPI.DefragPhysics.VQ3
 				);
 
-				const primeMaxSpeed =
-					this.primeTruenessMode & TruenessMode.PROJECTED ? hudData.wishSpeed : realMaxSpeed;
+				const primeMaxSpeed = this.primeTruenessMode & TruenessMode.PROJECTED ? wishSpeed : realMaxSpeed;
 				const primeMaxAccel = realAccelerate * maxSpeed * tickInterval;
 				const primeSightSpeed = useSnapAccel ? MAX_GROUND_SPEED : primeMaxSpeed;
 				const primeSightAccel = useSnapAccel ? this.snapAccel : primeMaxAccel;
@@ -905,7 +905,7 @@ class CgazHandler {
 							vel2Ddir = MomMath.normalizeVector2D(vel2Ddir);
 							if (
 								airDecelerate >= 0 &&
-								MomMath.rad2deg(Math.acos(MomMath.dot2D(vel2Ddir, hudData.wishDir))) >
+								MomMath.rad2deg(Math.acos(MomMath.dot2D(vel2Ddir, hudData.wishVel))) >
 									airDecelerateAngle
 							) {
 								accelerate = airDecelerate;
