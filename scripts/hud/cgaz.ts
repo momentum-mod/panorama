@@ -479,7 +479,7 @@ class CgazHandler {
 		const hudData = MomentumMovementAPI.GetMoveHudData();
 
 		const tickInterval = MomentumMovementAPI.GetTickInterval();
-		const maxSpeed = this.accelScaleEnable ? hudData.wishSpeed : hudData.maxspeed;
+		const maxSpeed = this.accelScaleEnable ? MomMath.magnitude(hudData.wishVel) : hudData.maxspeed;
 		const accel = hudData.acceleration;
 		const maxAccel = accel * maxSpeed * tickInterval;
 
@@ -525,7 +525,7 @@ class CgazHandler {
 		const dropSpeedSquared = dropSpeed * dropSpeed;
 
 		const velAngle = Math.atan2(velocity.y, velocity.x);
-		const wishDir = hudData.wishDir;
+		const wishDir = MomMath.normalizeVector(hudData.wishVel);
 		const wishAngle = MomMath.sumOfSquares2D(wishDir) > 0.001 ? Math.atan2(wishDir.y, wishDir.x) : 0;
 		const viewAngle = (MomentumPlayerAPI.GetAngles().y * Math.PI) / 180;
 		const viewDir = {
@@ -700,7 +700,9 @@ class CgazHandler {
 					this.primeTruenessMode & TruenessMode.CPM_TURN || phyMode === DefragAPI.DefragPhysics.VQ3
 				);
 				const primeMaxSpeed =
-					this.primeTruenessMode & TruenessMode.PROJECTED ? hudData.wishSpeed : hudData.maxspeed;
+					this.primeTruenessMode & TruenessMode.PROJECTED
+						? MomMath.magnitude(hudData.wishVel)
+						: hudData.maxspeed;
 				const primeMaxAccel = hudData.acceleration * maxSpeed * tickInterval;
 				const primeSightSpeed = useSnapAccel ? MAX_GROUND_SPEED : primeMaxSpeed;
 				const primeSightAccel = useSnapAccel ? this.snapAccel : primeMaxAccel;

@@ -67,9 +67,8 @@ declare namespace MomentumMovementAPI {
 	}
 
 	interface MoveHudData {
-		wishDir: vec3;
+		wishVel: vec3;
 		moveStatus: PlayerMoveStatus;
-		wishSpeed: float;
 		acceleration: float;
 		maxspeed: float;
 		friction: float;
