@@ -37,6 +37,7 @@
 				<SettingsSlider text="#Settings_Volume_Movement" min="0" max="1" percentage="true" convar="snd_volume_footsteps" tags="movement,footsteps" hasdocspage="false" />
 				<SettingsSlider text="#Settings_Volume_Ghosts" min="0" max="1" percentage="true" convar="mom_ghost_volume" infomessage="#Settings_Volume_Ghost_Info" tags="ghosts" hasdocspage="false" />
 				<SettingsSlider text="#Settings_Volume_UI" min="0" max="1" percentage="true" convar="snd_volume_ui" tags="ui,interface" hasdocspage="false" />
+				<SettingsSlider text="#Settings_Volume_Timer" min="0" max="1" percentage="true" convar="mom_timer_volume" tags="timer" hasdocspage="false" />
 			</Panel>
 
 			<Panel class="settings-page__spacer" />
