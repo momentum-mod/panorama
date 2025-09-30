@@ -52,6 +52,7 @@
 		vertical-align: middle;
 		@include mixin.font-regular();
 		font-size: $tooltip-text-font-size;
+		line-height: 24px;
 	}
 
 	&__image {
