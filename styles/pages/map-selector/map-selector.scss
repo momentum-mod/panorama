@@ -64,6 +64,7 @@
 			#{$root}__maps {
 				visibility: collapse;
 			}
+
 			#{$root}__playlists {
 				visibility: visible;
 			}
@@ -111,6 +112,7 @@
 
 		&:not(:selected) {
 			background-color: rgba(0, 0, 0, 0.4);
+
 			&:hover {
 				background-color: rgba(0, 0, 0, 0.18);
 			}
@@ -140,12 +142,12 @@
 		vertical-align: bottom;
 		border: 0 none;
 		border-radius: 4px;
-		margin-right: 8px;
 	}
 
 	&__tab {
 		padding: 2px 8px;
 		border-bottom: 1px solid $tab-lower-border-color;
+		flow-children: none;
 
 		&:hover {
 			border-bottom: 1px solid rgba(255, 255, 255, 0.5);
@@ -156,9 +158,40 @@
 		}
 	}
 
+	&__tab-tooltip {
+		tooltip-position: top;
+	}
+
+	&__tryme {
+		flow-children: none;
+		width: 1px;
+		overflow: noclip;
+		z-index: 10;
+
+		// Trust me, it's needed lol.
+		// translateX by % uses parent width so need panel with width of child
+		&__middle {
+			overflow: noclip;
+		}
+
+		&__inner {
+			transform-origin: 0% 0%;
+			z-index: 10;
+
+			background-color: color.scale($red, $lightness: -10%);
+			border-radius: 4px;
+			padding: 1px 3px;
+			font-weight: bold;
+			box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.7);
+			transform: translateX(-70%) translateY(-6px) rotateZ(10deg) scale3d(0.9, 0.9, 1);
+			@include mixin.font-header();
+		}
+	}
+
 	&__search {
 		width: fill-parent-flow(1);
-		margin-right: 6px;
+		margin-left: 7px;
+		margin-right: 8px;
 	}
 }
 
@@ -175,6 +208,7 @@
 		&:selected {
 			sound: 'UIPanorama.ModeSelect';
 		}
+
 		// IMPORTANT: `button` class gives vertical-align: center which is buggy with flow wrapping!!
 		vertical-align: top;
 		margin-bottom: 4px;
@@ -197,6 +231,7 @@
 
 		& > #HorizontalScrollBar {
 			height: 2px;
+
 			& > #ScrollThumb {
 				opacity: 1;
 			}
@@ -579,6 +614,7 @@ $notch-width: 10px;
 			font-style: normal;
 
 			transition: color 0.1s ease-in-out 0s;
+
 			&:hover {
 				color: color.scale($light-blue, $lightness: 50%);
 			}
@@ -666,6 +702,7 @@ $notch-width: 10px;
 
 		transition: opacity 0.1s ease-out 0s;
 		opacity: 1;
+
 		.mapselector-stats--loading & {
 			opacity: 0;
 		}
@@ -680,6 +717,7 @@ $notch-width: 10px;
 
 		transition: opacity 0.1s ease-out 0s;
 		opacity: 0;
+
 		.mapselector-stats--loading & {
 			opacity: 1;
 		}
@@ -699,6 +737,7 @@ $notch-width: 10px;
 	.action-play {
 		visibility: collapse;
 	}
+
 	.action-download {
 		visibility: visible;
 	}
@@ -709,6 +748,7 @@ $notch-width: 10px;
 		.action-download {
 			visibility: collapse;
 		}
+
 		.action-play {
 			visibility: visible;
 		}
