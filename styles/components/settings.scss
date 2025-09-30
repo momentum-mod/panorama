@@ -221,29 +221,49 @@ ConVarEnabler > .colordisplay {
 	}
 }
 
-// Toggle - I don't know where this is from or how it's supposed
-// to work so not going to style it
+// Toggle: We don't actually use this in the settings menu.
+// Rather, it's styled like a button and used in other parts of game UI.
 
-// SettingsToggle {
-// 	height: 48px;
-// 	flow-children: right;
-// 	padding: 0 4px 0 12px;
-// 	width: 100%;
-// 	vertical-align: middle;
-// }
+.settings-toggle {
+	@include button.button();
+	flow-children: left;
 
-// SettingsToggle #TitleContainer {
-// 	vertical-align: middle;
-// 	width: 35%;
-// 	padding-right: 50px;
-// }
+	&__text {
+		// tickbox margin causing some weird layouting, hack to fix
+		margin-left: -8px;
+	}
 
-// SettingsToggle #Title {
-// 	vertical-align: middle;
-// 	horizontal-align: left;
-// }
+	.TickBox {
+		height: 100%;
+		width: height-percentage(100%);
+		margin: 6px;
+		margin-left: 4px;
+		border-radius: 4px;
+		border: 1px solid rgba(255, 255, 255, 0.2);
+		background-color: rgba(0, 0, 0, 0.7);
 
-// SettingsToggle #Toggle {
-// 	vertical-align: middle;
-// 	horizontal-align: right;
-// }
+		img-shadow: rgba(0, 0, 0, 0.5) 0px 1px 0.5px 0px;
+		transition-property: background-color, border;
+		transition-duration: 0.1s;
+		transition-timing-function: ease-in-out;
+	}
+
+	&:hover {
+		.TickBox {
+			border: 1px solid rgba(255, 255, 255, 0.3);
+			background-color: rgba(0, 0, 0, 0.75);
+		}
+	}
+
+	&:selected {
+		.TickBox {
+			background-color: rgba(0, 0, 0, 0.8);
+			//@include mixin.button-gradient();
+			//background-color: rgb(66, 94, 108);
+			background-image: url('file://{images}/checkmark.svg');
+			background-size: 60% 60%;
+			background-repeat: no-repeat;
+			background-position: center;
+		}
+	}
+}

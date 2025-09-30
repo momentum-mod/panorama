@@ -3,15 +3,10 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 
-	<!-- Unused, doesn't have styling -->
-
 	<SettingsToggle>
-		<Panel class="flow-right v-align-center w-full">
-			<Panel id="TitleContainer">
-				<Label id="Title" />
-			</Panel>
-			<ToggleButton id="Toggle" />
-		</Panel>
+		<ToggleButton id="Toggle" class="settings-toggle">
+			<Label id="Title" class="settings-toggle__text" />
+		</ToggleButton>
 	</SettingsToggle>
 
 </root>
