@@ -14,10 +14,10 @@ class LobbyCreateHandler implements OnPanelLoad {
 	onPanelLoad() {
 		if (this.panels.cp.GetAttributeInt('islobbyowner', 0)) {
 			this.panels.warningRow.visible = true;
-			this.panels.cp.SetDialogVariable('warning', '#Lobby_Create_TransferWarning');
+			this.panels.cp.SetDialogVariable('warning', $.Localize('#Lobby_Create_TransferWarning'));
 		} else if (this.panels.cp.GetAttributeInt('isinlobby', 0)) {
 			this.panels.warningRow.visible = true;
-			this.panels.cp.SetDialogVariable('warning', '#Lobby_Create_LeaveWarning');
+			this.panels.cp.SetDialogVariable('warning', $.Localize('#Lobby_Create_LeaveWarning'));
 		} else {
 			this.panels.warningRow.visible = false;
 		}
