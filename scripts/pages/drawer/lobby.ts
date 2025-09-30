@@ -285,7 +285,7 @@ class LobbyHandler {
 		this.panels.detailsType.SetImage(`file://{images}/online/${LobbyProperties.get(type).icon}.svg`);
 
 		// Only enable settings if you're lobby owner
-		this.panels.detailsSettingsButton.enabled = UserAPI.GetXUID() === owner;
+		this.panels.detailsSettingsButton.enabled = UserAPI.GetXUID() === owner && !is_map_lobby;
 
 		$.GetContextPanel().SetDialogVariable(
 			'lobbyTitle',
