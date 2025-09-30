@@ -204,9 +204,7 @@ class LobbyHandler {
 
 				const ownerSteamID = lobbyData.owner;
 				const lobbyType = lobbyData.type;
-				const lobbyName = lobbyData.is_map_lobby
-					? `${$.Localize('#Lobby_MapLobby')} (${MapCacheAPI.GetMapName()})`
-					: $.Localize('#Lobby_Owner').replace('%owner%', FriendsAPI.GetNameForXUID(ownerSteamID));
+				const lobbyName = this.getLobbyName(ownerSteamID, lobbyData.is_map_lobby === 1);
 
 				// Only show items that match the search. Always true if search is empty
 				if (!lobbyName.includes(this.panels.search.text)) {
@@ -258,7 +256,7 @@ class LobbyHandler {
 						if (newPanel.IsValid()) {
 							newPanel.SetDialogVariable(
 								'lobbyTitle',
-								$.Localize('#Lobby_Owner').replace('%owner%', FriendsAPI.GetNameForXUID(ownerSteamID))
+								this.getLobbyName(ownerSteamID, lobbyData.is_map_lobby === 1)
 							);
 							$.UnregisterEventHandler('PanelLoaded', avatarPanel, hackId);
 						}
@@ -287,12 +285,7 @@ class LobbyHandler {
 		// Only enable settings if you're lobby owner
 		this.panels.detailsSettingsButton.enabled = UserAPI.GetXUID() === owner && !is_map_lobby;
 
-		$.GetContextPanel().SetDialogVariable(
-			'lobbyTitle',
-			is_map_lobby
-				? `${$.Localize('#Lobby_MapLobby')} (${MapCacheAPI.GetMapName()})`
-				: $.Localize('#Lobby_Owner').replace('%owner%', FriendsAPI.GetNameForXUID(owner))
-		);
+		$.GetContextPanel().SetDialogVariable('lobbyTitle', this.getLobbyName(owner, is_map_lobby === 1));
 		$.GetContextPanel().SetDialogVariable('lobbyPlayerCount', `${members}/${members_limit}`);
 	}
 
@@ -497,5 +490,11 @@ class LobbyHandler {
 
 	getLobbyMemberCount() {
 		return Object.values(this.lobbyCurrentData)[0]?.members;
+	}
+
+	getLobbyName(ownerSteamID: steamID, isMapLobby: boolean) {
+		return isMapLobby
+			? `${$.Localize('#Lobby_MapLobby')} (${MapCacheAPI.GetMapName()})`
+			: $.Localize('#Lobby_Owner').replace('%owner%', FriendsAPI.GetNameForXUID(ownerSteamID));
 	}
 }
