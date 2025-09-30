@@ -204,7 +204,8 @@ class LobbyHandler {
 
 				const ownerSteamID = lobbyData.owner;
 				const lobbyType = lobbyData.type;
-				const lobbyName = this.getLobbyName(ownerSteamID, lobbyData.is_map_lobby === 1);
+				const isMapLobby = lobbyData.is_map_lobby === 1;
+				const lobbyName = this.getLobbyName(ownerSteamID, isMapLobby);
 
 				// Only show items that match the search. Always true if search is empty
 				if (!lobbyName.includes(this.panels.search.text)) {
@@ -238,26 +239,29 @@ class LobbyHandler {
 				}
 
 				const avatarPanel = newPanel.FindChildTraverse<AvatarImage>('LobbyPlayerAvatar');
-				avatarPanel.steamid = ownerSteamID;
-
-				avatarPanel.SetPanelEvent('oncontextmenu', () =>
-					UiToolkitAPI.ShowSimpleContextMenu('', '', [
-						{
-							label: $.Localize('#Action_ShowSteamProfile'),
-							icon: 'file://{images}/social/steam.svg',
-							style: 'icon-color-steam-online',
-							jsCallback: () => SteamOverlayAPI.OpenToProfileID(ownerSteamID)
-						}
-					])
-				);
+				if (isMapLobby) {
+					avatarPanel.AddClass('lobby-lobbies__avatar--maplobby');
+					avatarPanel.steamid = '0';
+					avatarPanel.ClearPanelEvent('oncontextmenu');
+				} else {
+					avatarPanel.RemoveClass('lobby-lobbies__avatar--maplobby');
+					avatarPanel.steamid = ownerSteamID;
+					avatarPanel.SetPanelEvent('oncontextmenu', () =>
+						UiToolkitAPI.ShowSimpleContextMenu('', '', [
+							{
+								label: $.Localize('#Action_ShowSteamProfile'),
+								icon: 'file://{images}/social/steam.svg',
+								style: 'icon-color-steam-online',
+								jsCallback: () => SteamOverlayAPI.OpenToProfileID(ownerSteamID)
+							}
+						])
+					);
+				}
 
 				const hackId = $.RegisterEventHandler('PanelLoaded', avatarPanel, () => {
 					$.Schedule(2.5, () => {
 						if (newPanel.IsValid()) {
-							newPanel.SetDialogVariable(
-								'lobbyTitle',
-								this.getLobbyName(ownerSteamID, lobbyData.is_map_lobby === 1)
-							);
+							newPanel.SetDialogVariable('lobbyTitle', this.getLobbyName(ownerSteamID, isMapLobby));
 							$.UnregisterEventHandler('PanelLoaded', avatarPanel, hackId);
 						}
 					});

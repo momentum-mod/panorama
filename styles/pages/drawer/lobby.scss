@@ -173,6 +173,15 @@
 			blur: fastgaussian(3, 3, 3);
 			brightness: 0.5;
 		}
+
+		&--maplobby {
+			box-shadow: none;
+
+			&:hover {
+				brightness: 1;
+				box-shadow: none;
+			}
+		}
 	}
 
 	&__text {
