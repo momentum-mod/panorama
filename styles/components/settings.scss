@@ -226,7 +226,11 @@ ConVarEnabler > .colordisplay {
 
 .settings-toggle {
 	@include button.button();
-	flow-children: left;
+
+	// See: https://sass-lang.com/documentation/breaking-changes/mixed-decls/
+	& {
+		flow-children: left;
+	}
 
 	&__text {
 		// tickbox margin causing some weird layouting, hack to fix

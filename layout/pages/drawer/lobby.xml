@@ -2,11 +2,11 @@
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
-	
+
 	<scripts>
 		<include type="module" src="file://{scripts}/pages/drawer/lobby.ts" />
 	</scripts>
-	
+
 	<snippets>
 		<snippet name="lobby-list-entry">
 			<Panel class="lobby-lobbies__wrapper" acceptsinput="true">
@@ -24,7 +24,7 @@
 				</Panel>
 			</Panel>
 		</snippet>
-		
+
 		<snippet name="lobby-member-entry">
 			<Panel class="lobby-members__entry" acceptsinput="true">
 				<AvatarImage id="MemberAvatar" class="lobby-members__avatar" />
@@ -53,14 +53,17 @@
 					<Label class="text-h lobby-list__title" text="#Lobby_List_Title" />
 				</Panel>
 				<Panel class="lobby-list__config-bar">
-					<Button class="button lobby-list__config-item" onactivate="LobbyHandler.create()">
+					<Button class="button mr-2" onactivate="LobbyHandler.create()">
 						<Image class="button__icon button__icon--left" src="file://{images}/add.svg" textureheight="32" />
 						<Label class="button__text button__text--right" text="#Common_Create" />
 					</Button>
-					<Button id="LobbyRefreshButton" class="button lobby-list__config-item" onactivate="$.DispatchEvent('RefreshLobbyList');" onmouseout="UiToolkitAPI.HideTextTooltip();">
+					<Button id="LobbyRefreshButton" class="button mr-2" onactivate="$.DispatchEvent('RefreshLobbyList');" onmouseout="UiToolkitAPI.HideTextTooltip();">
 						<Image id="LobbyRefreshIcon" class="button__icon button__icon--left" src="file://{images}/refresh.svg" textureheight="32" />
 						<Label class="button__text button__text--right" text="#Common_Refresh" />
 					</Button>
+					<TooltipPanel class="mr-2" tooltip="#Lobby_MapLobby_Info">
+						<SettingsToggle text="#Lobby_MapLobby_Enable" convar="mom_map_lobbies" />
+					</TooltipPanel>
 					<Panel class="search lobby-list__search" acceptsfocus="true">
 						<Image class="search__icon" src="file://{images}/search.svg" textureheight="32" />
 						<TextEntry id="LobbySearch" class="search__textentry" maxchars="30" placeholder="#Common_SearchEllipsis" />
