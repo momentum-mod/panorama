@@ -33,17 +33,28 @@
 							<Panel id="MapSelector" class="mapselector__maps">
 								<Panel class="mapselector-header">
 									<Panel class="tabs mapselector-header__tabs">
-										<RadioButton id="MapListRanked" class="tabs__tab mapselector-header__tab" group="MapListNavBar">
-											<Label class="tabs__text" text="#MapSelector_Tabs_Ranked" />
-										</RadioButton>
+										<TooltipPanel class="mapselector-header__tab-tooltip" tooltip="#MapSelector_Tabs_Ranked_Tooltip">
+											<RadioButton id="MapListRanked" class="tabs__tab mapselector-header__tab" group="MapListNavBar">
+												<Label class="tabs__text" text="#MapSelector_Tabs_Ranked" />
+											</RadioButton>
+										</TooltipPanel>
 										<Panel class="tabs__gap" />
-										<RadioButton id="MapListUnranked" class="tabs__tab mapselector-header__tab" group="MapListNavBar">
-											<Label class="tabs__text" text="#MapSelector_Tabs_Unranked" />
-										</RadioButton>
+										<TooltipPanel class="mapselector-header__tab-tooltip" tooltip="#MapSelector_Tabs_Unranked_Tooltip">
+											<RadioButton id="MapListUnranked" class="tabs__tab mapselector-header__tab" group="MapListNavBar">
+												<Label class="tabs__text" text="#MapSelector_Tabs_Unranked" />
+											</RadioButton>
+										</TooltipPanel>
 										<Panel class="tabs__gap" />
-										<RadioButton id="MapListBeta" class="tabs__tab mapselector-header__tab" group="MapListNavBar" selected="true">
-											<Label class="tabs__text" text="#MapSelector_Tabs_Beta" />
-										</RadioButton>
+										<TooltipPanel class="mapselector-header__tab-tooltip" tooltip="#MapSelector_Tabs_Beta_Tooltip">
+											<RadioButton id="MapListBeta" class="tabs__tab mapselector-header__tab" group="MapListNavBar" selected="true">
+												<Label class="tabs__text" text="#MapSelector_Tabs_Beta" />
+											</RadioButton>
+										</TooltipPanel>
+									</Panel>
+									<Panel class="mapselector-header__tryme">
+										<Panel class="mapselector-header__tryme__middle">
+											<Label class="mapselector-header__tryme__inner" text="#Common_TryMe" />
+										</Panel>
 									</Panel>
 									<Panel class="search mapselector-header__search">
 										<Image class="search__icon" src="file://{images}/search.svg" textureheight="32" />
