@@ -7,7 +7,7 @@ export interface Lobby {
 
 	members_limit: number;
 
-	is_map_lobby: boolean;
+	is_map_lobby: 0 | 1;
 }
 
 /* List of all lobbies grouped by currrent/friends/global */
