@@ -185,3 +185,16 @@
 	&__message {
 	}
 }
+
+.chatmsg-lobby,
+.chatmsg-maplobby {
+	&__map {
+		font-weight: bold;
+	}
+
+	&__players {
+		font-weight: medium;
+		color: #ccc;
+		font-size: 14px;
+	}
+}
