@@ -26,15 +26,18 @@
 					<Label class="legal__parag" text="#Legal_AccountCreation_Body1" />
 					<Label class="legal__parag" text="#Legal_AccountCreation_Body2" />
 					<Panel class="legal__links">
-						<Button class="button button--blue mr-4" onactivate="SteamOverlayAPI.OpenURL('https://momentum-mod.org/legal/terms-of-service/');">
+						<Button class="button button--blue mr-3" onactivate="SteamOverlayAPI.OpenURL('https://momentum-mod.org/legal/terms-of-service/');">
 							<Label class="button__text" text="#Legal_TermsOfService" />
 						</Button>
 						<Button class="button button--blue" onactivate="SteamOverlayAPI.OpenURL('https://momentum-mod.org/legal/privacy-policy/');">
 							<Label class="button__text" text="#Legal_PrivacyPolicy" />
 						</Button>
 						<Panel class="w-fill" />
-						<Button id="OKButton" class="button button--green">
+						<Button id="OKButton" class="button button--green mr-3">
 							<Label class="button__text" text="#Legal_AccountCreation_Create" />
+						</Button>
+						<Button id="DeclineButton" class="button button--red">
+							<Label class="button__text" text="#Legal_Decline" />
 						</Button>
 					</Panel>
 				</Panel>
@@ -48,15 +51,18 @@
 					<Label class="legal__parag" text="#Legal_Update_Body1" />
 					<Label class="legal__parag" text="#Legal_Update_Body2" />
 					<Panel class="legal__links">
-						<Button class="button button--blue mr-4" onactivate="SteamOverlayAPI.OpenURL('https://momentum-mod.org/legal/terms-of-service/');">
+						<Button class="button button--blue mr-3" onactivate="SteamOverlayAPI.OpenURL('https://momentum-mod.org/legal/terms-of-service/');">
 							<Label class="button__text" text="#Legal_TermsOfService" />
 						</Button>
 						<Button class="button button--blue" onactivate="SteamOverlayAPI.OpenURL('https://momentum-mod.org/legal/privacy-policy/');">
 							<Label class="button__text" text="#Legal_PrivacyPolicy" />
 						</Button>
 						<Panel class="w-fill" />
-						<Button id="OKButton" class="button button--green">
+						<Button id="OKButton" class="button button--green mr-3">
 							<Label class="button__text" text="#Legal_Accept" />
+						</Button>
+						<Button id="DeclineButton" class="button button--red">
+							<Label class="button__text" text="#Legal_Decline" />
 						</Button>
 					</Panel>
 				</Panel>

@@ -391,10 +391,15 @@ class MainMenuHandler implements OnPanelLoad {
 			this.panels.legal.LoadLayoutSnippet(
 				consent === MomentumAPI.UserAuthConsent.INVALID ? 'UserConsentInitial' : 'UserConsentOutdated'
 			);
+
 			this.panels.legal.FindChildTraverse('OKButton')!.SetPanelEvent('onactivate', () => {
 				MomentumAPI.GrantUserAuthConsent();
 				this.toggleAnnounceMode(false);
 				resolve();
+			});
+
+			this.panels.legal.FindChildTraverse('DeclineButton')!.SetPanelEvent('onactivate', () => {
+				GameInterfaceAPI.ConsoleCommand('quit');
 			});
 		});
 	}
