@@ -115,6 +115,11 @@
 				<!-- Rightnav -->
 				<Panel id="MainMenuOptionListRight" class="rightnav">
 					<Panel class="rightnav__wrapper">
+						<Panel id="LobbyTryMe" class="rightnav__tryme" onload="$('#LobbyTryMe').visible = $.persistentStorage.getItem('tryme.lobby') !== 'true';">
+							<Panel class="rightnav__tryme__middle">
+								<Label class="rightnav__tryme__inner" text="#Common_TryMe" />
+							</Panel>
+						</Panel>
 						<RadioButton id="LobbyButton" group="RightNavRadio" class="rightnav__button" onactivate="DrawerHandler.extendAndNavigateToTab('LobbyDrawer')">
 							<Image id="LobbyButtonImage" class="rightnav__icon" src="file://{images}/lobby.svg" textureheight="32" />
 							<Label id="LobbyPlayerCountLabel" class="rightnav__button-subtitle rightnav__button-subtitle--hidden" />
