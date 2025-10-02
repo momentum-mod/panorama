@@ -39,10 +39,10 @@ enum CreditType {
 
 const CreditTypeProps = {
 	[CreditType.PROJECT_LEAD]: {
-		title: '#Credits_MomentumTeam'
+		title: '#Credits_ProjectLead'
 	},
 	[CreditType.DEPARTMENT_HEAD]: {
-		title: '#Credits_ProjectLead'
+		title: '#Credits_DepartmentHead'
 	},
 	[CreditType.TEAM]: {
 		title: '#Credits_Team'
