@@ -418,7 +418,7 @@ $drawer-width: 768px;
 
 	@include hide-in-announce-mode();
 
-	overflow: noclip;
+	overflow: noclip squish;
 
 	$this: &;
 	&--expanded {
