@@ -116,6 +116,11 @@ class DrawerHandler {
 		if (this.activeTab === 'LobbyDrawer') {
 			$.DispatchEvent('RefreshLobbyList');
 		}
+
+		if ($.persistentStorage.getItem('tryme.lobby') !== 'true') {
+			$.persistentStorage.setItem('tryme.lobby', 'true');
+			$('#LobbyTryMe').visible = false;
+		}
 	}
 
 	/** Retract the drawer */
