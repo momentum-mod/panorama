@@ -34,7 +34,7 @@
 								<Panel class="mapselector-header">
 									<Panel class="tabs mapselector-header__tabs">
 										<TooltipPanel class="mapselector-header__tab-tooltip" tooltip="#MapSelector_Tabs_Ranked_Tooltip">
-											<RadioButton id="MapListRanked" class="tabs__tab mapselector-header__tab" group="MapListNavBar">
+											<RadioButton id="MapListRanked" class="tabs__tab mapselector-header__tab" group="MapListNavBar" selected="true">
 												<Label class="tabs__text" text="#MapSelector_Tabs_Ranked" />
 											</RadioButton>
 										</TooltipPanel>
@@ -46,7 +46,7 @@
 										</TooltipPanel>
 										<Panel class="tabs__gap" />
 										<TooltipPanel class="mapselector-header__tab-tooltip" tooltip="#MapSelector_Tabs_Beta_Tooltip">
-											<RadioButton id="MapListBeta" class="tabs__tab mapselector-header__tab" group="MapListNavBar" selected="true">
+											<RadioButton id="MapListBeta" class="tabs__tab mapselector-header__tab" group="MapListNavBar">
 												<Label class="tabs__text" text="#MapSelector_Tabs_Beta" />
 											</RadioButton>
 										</TooltipPanel>
