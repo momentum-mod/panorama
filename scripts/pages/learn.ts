@@ -229,11 +229,12 @@ class Learn {
 	}
 
 	static teleportToLessonStart() {
-		if (!GameInterfaceAPI.GetSettingBool('sv_cheats')) {
-			// For some reason SetSettingBool errors here
-			GameInterfaceAPI.ConsoleCommand('sv_cheats 1');
-		}
-
+		// TODO: This is fucking with playtesters, also stupid anyway
+		// if (!GameInterfaceAPI.GetSettingBool('sv_cheats')) {
+		// 	// For some reason SetSettingBool errors here
+		// 	GameInterfaceAPI.ConsoleCommand('sv_cheats 1');
+		// }
+		//
 		if (this.currentLessonData['TeleTarget']) {
 			const target = this.currentLessonData['TeleTarget'];
 			GameInterfaceAPI.ConsoleCommand(`ent_fire teleport_send_player addoutput "target ${target}"`);
