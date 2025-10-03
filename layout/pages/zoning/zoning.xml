@@ -74,7 +74,7 @@
 				<Panel class="zoning__menu-separator">
 					<Panel id="MapMaxVelocity" class="zoning__property">
 						<Label class="zoning__property-label" text="#Zoning_MaxVelocity" />
-						<TextEntry id="MaxVelocity" class="textentry zoning__textentry" textmode="numeric" text="" ontextentrychange="ZoneMenuHandler?.setMaxVelocity?.()" />
+						<TextEntry id="MaxVelocity" class="textentry zoning__textentry" textmode="numeric" text="" ontextentrysubmit="ZoneMenuHandler?.setMaxVelocity?.()" />
 					</Panel>
 					<Panel id="StagesEndAtStageStarts" class="zoning__property">
 						<Label class="zoning__property-label" text="#Zoning_StagesEndAtStageStarts" />
@@ -108,7 +108,7 @@
 					</Panel>
 					<Panel id="Name" class="zoning__property">
 						<Label class="zoning__property-label" text="#Zoning_Name" />
-						<TextEntry id="SegmentName" class="textentry zoning__textentry" maxchars="255" text="" ontextentrychange="ZoneMenuHandler?.setSegmentName?.()" />
+						<TextEntry id="SegmentName" class="textentry zoning__textentry" maxchars="255" text="" ontextentrysubmit="ZoneMenuHandler?.setSegmentName?.()" />
 					</Panel>
 				</Panel>
 			</Panel>
@@ -126,7 +126,7 @@
 						<Panel class="w-full">
 							<Panel class="w-fit-children h-align-left flow-right">
 								<Label class="zoning__property-label not-global-region" text="#Zoning_Region" />
-								<DropDown id="RegionSelect" class="dropdown zoning__dropdown not-global-region" menuclass="dropdown-menu" onuserinputsubmit="ZoneMenuHandler.onRegionDropdownChanged()">
+								<DropDown id="RegionSelect" class="dropdown zoning__dropdown not-global-region" menuclass="dropdown-menu" onuserinputsubmit="ZoneMenuHandler.populateRegionProperties()">
 									<!-- Populated in js -->
 								</DropDown>
 								<Label id="RegionCountLabel" class="zoning__property-label not-global-region" text="/ ?" />
@@ -154,7 +154,7 @@
 								<Button id='SetHeightButton' class="zoning__region-point-pick" onactivate="ZoneMenuHandler.pickHeight()" onmouseover="UiToolkitAPI.ShowTextTooltip('SetHeightButton', '#Zoning_SetHeight_Tooltip');" onmouseout="UiToolkitAPI.HideTextTooltip();">
 									<Image class="zoning__region-point-pick__icon" src="file://{images}/adjust.svg" />
 								</Button>
-								<TextEntry id="RegionHeight" class="textentry zoning__textentry" maxchars="9" textmode="numeric" ontextentrychange="ZoneMenuHandler?.setRegionHeight?.()" />
+								<TextEntry id="RegionHeight" class="textentry zoning__textentry" maxchars="9" textmode="numeric" ontextentrysubmit="ZoneMenuHandler?.setRegionHeight?.()" />
 							</Panel>
 						</Panel>
 						<Panel id="RegionSafeHeightSection" class="not-global-region w-full col">
@@ -178,7 +178,7 @@
 									<Button id='SetSafeHeightButton' class="zoning__region-point-pick" onactivate="ZoneMenuHandler.pickSafeHeight()" onmouseover="UiToolkitAPI.ShowTextTooltip('SetSafeHeightButton', '#Zoning_SetSafeHeight_Tooltip');" onmouseout="UiToolkitAPI.HideTextTooltip();">
 										<Image class="zoning__region-point-pick__icon" src="file://{images}/adjust.svg" />
 									</Button>
-									<TextEntry id="RegionSafeHeight" class="textentry zoning__textentry" maxchars="9" textmode="numeric" ontextentrychange="ZoneMenuHandler?.setRegionSafeHeight?.()" />
+									<TextEntry id="RegionSafeHeight" class="textentry zoning__textentry" maxchars="9" textmode="numeric" ontextentrysubmit="ZoneMenuHandler?.setRegionSafeHeight?.()" />
 								</Panel>
 							</Panel>
 						</Panel>
@@ -218,9 +218,9 @@
 											<Button id="SetTeleDestPosButton" class="zoning__region-point-pick" onactivate="ZoneMenuHandler.pickTeleDestPos()" onmouseover="UiToolkitAPI.ShowTextTooltip('SetTeleDestPosButton', '#Zoning_SetTeleDestPos_Tooltip');" onmouseout="UiToolkitAPI.HideTextTooltip();">
 												<Image class="zoning__region-point-pick__icon" src="file://{images}/adjust.svg" />
 											</Button>
-											<TextEntry id="TeleX" class="textentry zoning__textentry" maxchars="9" textmode="numeric" ontextentrychange="ZoneMenuHandler?.setRegionTeleDestOrientation?.()" />
-											<TextEntry id="TeleY" class="textentry zoning__textentry" maxchars="9" textmode="numeric" ontextentrychange="ZoneMenuHandler?.setRegionTeleDestOrientation?.()" />
-											<TextEntry id="TeleZ" class="textentry zoning__textentry" maxchars="9" textmode="numeric" ontextentrychange="ZoneMenuHandler?.setRegionTeleDestOrientation?.()" />
+											<TextEntry id="TeleX" class="textentry zoning__textentry" maxchars="9" textmode="numeric" ontextentrysubmit="ZoneMenuHandler?.setRegionTeleDestOrientation?.()" />
+											<TextEntry id="TeleY" class="textentry zoning__textentry" maxchars="9" textmode="numeric" ontextentrysubmit="ZoneMenuHandler?.setRegionTeleDestOrientation?.()" />
+											<TextEntry id="TeleZ" class="textentry zoning__textentry" maxchars="9" textmode="numeric" ontextentrysubmit="ZoneMenuHandler?.setRegionTeleDestOrientation?.()" />
 										</Panel>
 									</Panel>
 									<Panel class="zoning__property">
@@ -229,7 +229,7 @@
 											<Button id="SetTeleDestYawButton" class="zoning__region-point-pick" onactivate="ZoneMenuHandler.pickTeleDestYaw()" onmouseover="UiToolkitAPI.ShowTextTooltip('SetTeleDestYawButton', '#Zoning_SetTeleDestYaw_Tooltip');" onmouseout="UiToolkitAPI.HideTextTooltip();">
 												<Image class="zoning__region-point-pick__icon" src="file://{images}/adjust.svg" />
 											</Button>
-											<TextEntry id="TeleYaw" class="textentry zoning__textentry" maxchars="4" textmode="numeric" ontextentrychange="ZoneMenuHandler?.setRegionTeleDestOrientation?.()" />
+											<TextEntry id="TeleYaw" class="textentry zoning__textentry" maxchars="4" textmode="numeric" ontextentrysubmit="ZoneMenuHandler?.setRegionTeleDestOrientation?.()" />
 										</Panel>
 									</Panel>
 									<Panel class="zoning__property">
