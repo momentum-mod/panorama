@@ -2,7 +2,7 @@
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
-	
+
 	<scripts>
 		<include type="module" src="file://{scripts}/pages/settings/page.ts" />
 	</scripts>
@@ -618,7 +618,7 @@
 							<RadioButton group="primearrowenable" text="#Common_Off" value="0" />
 							<RadioButton group="primearrowenable" text="#Common_On" value="1" />
 						</SettingsEnum>
-						
+
 						<ConVarEnabler convar="mom_hud_df_prime_arrow_enable"  class="flow-down">
 							<SettingsSlider text="#Settings_Defrag_PrimeSight_ArrowSize" min="1" max="10" convar="mom_hud_df_prime_arrow_size" displayprecision="0" infomessage="#Settings_Defrag_PrimeSight_ArrowSize_Info" tags="prime,sight" />
 
@@ -662,7 +662,7 @@
 						<SettingsSlider text="#Settings_Defrag_CompassArrowSize" min="0" max="25" convar="mom_hud_df_compass_arrow_size" displayprecision="0" infomessage="#Settings_Defrag_CompassArrowSize_Info" tags="compass" />
 
 						<SettingsSlider text="#Settings_Defrag_CompassTickSize" min="0" max="50" convar="mom_hud_df_compass_tick_size" displayprecision="0" infomessage="#Settings_Defrag_CompassTickSize_Info" tags="compass" />
-						
+
 						<SettingsSlider text="#Settings_Defrag_CompassOffset" min="-200" max="200" convar="mom_hud_df_compass_vertical_offset" displayprecision="0" infomessage="#Settings_Defrag_CompassOffset_Info" tags="compass" />
 
 					</ConVarEnabler>
@@ -708,7 +708,7 @@
 						<SettingsSlider text="#Settings_Defrag_WIndicatorArrowSize" min="0" max="25" convar="mom_hud_df_windicator_size" displayprecision="0" infomessage="#Settings_Defrag_WIndicatorArrowSize_Info" />
 
 						<ConVarColorDisplay text="#Settings_Defrag_WIndicatorArrowColor" convar="mom_hud_df_windicator_color" infomessage="#Settings_Defrag_WIndicatorArrowColor_Info" />
-					
+
 						<SettingsSlider text="#Settings_Defrag_WIndicatorBorder" min="0" max="10" convar="mom_hud_df_windicator_border" displayprecision="0" infomessage="#Settings_Defrag_WIndicatorBorder_Info" />
 					</ConVarEnabler>
 
@@ -716,15 +716,15 @@
 
 				<Panel class="settings-group__combo">
 
-					<SettingsEnum text="Display jump visualizer" convar="mom_hud_df_jump_enable" infomessage="Display jump visualizer. Draws an upward bar to show how long +jump was held after leaving the ground, and a downward bar to show how early/late +jump was pressed before jumping.">
+					<SettingsEnum text="#Settings_Defrag_Jump_Visualizer" convar="mom_hud_df_jump_enable" infomessage="#Settings_Defrag_Jump_Visualizer_Info">
 						<RadioButton group="dfjumpenable" text="#Common_Off" value="0" />
 						<RadioButton group="dfjumpenable" text="#Common_On" value="1" />
 					</SettingsEnum>
 
 					<ConVarEnabler convar="mom_hud_df_jump_enable" class="flow-down">
-						<SettingsSlider text="Maximum delay time (ms)" min="50" max="1000" convar="mom_hud_df_jump_max_delay" displayprecision="0" infomessage="Length of time (in milliseconds) corresponding to 100% full press or release bars" />
+						<SettingsSlider text="#Settings_Defrag_Jump_VisualizerMaxDelay" min="50" max="1000" convar="mom_hud_df_jump_max_delay" displayprecision="0" infomessage="#Settings_Defrag_Jump_VisualizerMaxDelay_Info" />
 
-						<SettingsEnum text="Display time labels" convar="mom_hud_df_jump_text" infomessage="Display times (in milliseconds) next to jump sync bars. At the top is late release time, at the bottom early/late press time, and in the middle is combined time for a single jump.">
+						<SettingsEnum text="#Settings_Defrag_Jump_VisualizerLabels" convar="mom_hud_df_jump_text" infomessage="#Settings_Defrag_Jump_VisualizerLabels_Info">
 							<RadioButton group="dfjumptextenable" text="#Common_Off" value="0" />
 							<RadioButton group="dfjumptextenable" text="#Common_On" value="1" />
 						</SettingsEnum>
@@ -747,7 +747,7 @@
 							<Label id="gblabel1" text="#Settings_Defrag_Groundboost_TextMode_Type1" value="1" />
 							<Label id="gblabel2" text="#Settings_Defrag_Groundboost_TextMode_Type2" value="2" />
 						</SettingsEnumDropDown>
-						
+
 						<ConVarEnabler convar="mom_hud_df_groundboost_text_mode" class="flow-down">
 							<SettingsEnumDropDown text="#Settings_Defrag_Groundboost_TextColorMode" convar="mom_hud_df_groundboost_text_color_mode" infomessage="#Settings_Defrag_Groundboost_TextColorMode_Info" tags="groundboost">
 								<Label id="gbcolor0" text="#Settings_Defrag_Groundboost_TextColorMode_Type0" value="0" />
@@ -755,12 +755,12 @@
 								<Label id="gbcolor2" text="#Settings_Defrag_Groundboost_TextColorMode_Type2" value="2" />
 							</SettingsEnumDropDown>
 						</ConVarEnabler>
-						
+
 						<SettingsEnum text="#Settings_Defrag_Groundboost_Overshoot" convar="mom_hud_df_groundboost_overshoot" infomessage="#Settings_Defrag_Groundboost_Overshoot_Info" tags="groundboost">
 							<RadioButton group="gbovershootenable" text="#Common_Off" value="0" />
 							<RadioButton group="gbovershootenable" text="#Common_On" value="1" />
 						</SettingsEnum>
-						
+
 						<SettingsEnum text="#Settings_Defrag_Groundboost_CrashHighlight" convar="mom_hud_df_groundboost_crash_highlight" infomessage="#Settings_Defrag_Groundboost_CrashHighlight_Info" tags="groundboost">
 							<RadioButton group="gbcrashhlenable" text="#Common_Off" value="0" />
 							<RadioButton group="gbcrashhlenable" text="#Common_On" value="1" />
