@@ -996,8 +996,9 @@ class ZoneMenuHandler {
 			// It is safe to delete just this region
 			const index = this.panels.regionSelect.GetSelected()?.GetAttributeInt('value', -1);
 			this.selectedZone.zone?.regions.splice(index, 1);
+			this.populateZoneProperties(true);
 			this.panels.regionSelect.SetSelectedIndex(Math.max(index - 1, 0));
-			this.populateZoneProperties(false);
+			this.populateRegionProperties();
 
 			this.updateEditorRegions();
 		}
