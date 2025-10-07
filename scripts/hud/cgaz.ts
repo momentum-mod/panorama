@@ -113,7 +113,7 @@ class CgazHandler {
 	primeHighlightZone = this.initZonePanel($.CreatePanel('Panel', this.primeContainer, 'PrimeHighlightZone'));
 	primeArrow = $('#PrimeArrow');
 	primeArrowIcon = $<Image>('#PrimeArrowIcon');
-	primeAccel: number;
+	primeAccel: number = DEFAULT_ACCEL;
 
 	compassArrow = $('#CompassArrow');
 	compassArrowIcon = $<Image>('#CompassArrowIcon');
@@ -1260,7 +1260,7 @@ class CgazHandler {
 			this.fillActivePrimeZones(zoneRange, rightOffset, rightAngles, gainZonesMap, gainMax, velocity, wishDir);
 		}
 
-		const scale = 1 / (gainMax > 0 ? gainMax : this.primeAccel);
+		const scale = this.NaNCheck(1 / (gainMax > 0 ? gainMax : this.primeAccel), 1);
 		for (const [zone, gain] of gainZonesMap.entries()) {
 			const gainFactor = Math.min(Math.abs(gain * scale), 1);
 			const secondLine = gain < 0 && !this.primeLockOneLine;
