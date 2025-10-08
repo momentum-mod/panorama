@@ -11,6 +11,11 @@ export interface EntityList {
 	teleport: string[];
 }
 
+export enum savedZoneStatus {
+	LOCAL = 1 << 0,
+	ONLINE = 1 << 1
+}
+
 enum DefragFlags {
 	HASTE = 1 << 0,
 	SLICK = 1 << 1,
@@ -182,6 +187,8 @@ class ZoneMenuHandler {
 	selectedHierarchyNames: string[] = [];
 
 	didInit = false;
+	savedZones: savedZoneStatus | null = null;
+	useLocal: boolean | null = null;
 
 	constructor() {
 		$.RegisterForUnhandledEvent('ZoneMenu_Show', () => this.showZoneMenu());
@@ -203,6 +210,8 @@ class ZoneMenuHandler {
 		this.zoningLimits = this.panels.zoningMenu.getZoningLimits();
 
 		this.didInit = true;
+		this.savedZones = null;
+		this.useLocal = null;
 	}
 
 	onLevelInit() {
@@ -647,6 +656,37 @@ class ZoneMenuHandler {
 	}
 
 	showZoneMenu() {
+		if (this.savedZones === null) {
+			this.savedZones = MomentumTimerAPI.GetSavedZoneStatus();
+
+			if (this.savedZones & savedZoneStatus.LOCAL && this.savedZones & savedZoneStatus.ONLINE) {
+				UiToolkitAPI.ShowGenericPopupTwoOptionsBgStyle(
+					$.Localize('#Zoning_FileSelect'),
+					$.Localize('#Zoning_FileSelect_Message'),
+					'generic-popup',
+					$.Localize('#Zoning_UseLocal'),
+					() => {
+						MomentumTimerAPI.LoadZoneDefs(true);
+						this.useLocal = true;
+					},
+					$.Localize('#Zoning_UseOnline'),
+					() => {
+						MomentumTimerAPI.LoadZoneDefs(false);
+						this.useLocal = false;
+					},
+					'none'
+				);
+			} else if (this.savedZones & savedZoneStatus.ONLINE) {
+				MomentumTimerAPI.LoadZoneDefs(false);
+				this.useLocal = false;
+			} else if (this.savedZones & savedZoneStatus.LOCAL) {
+				MomentumTimerAPI.LoadZoneDefs(true);
+				this.useLocal = true;
+			} else {
+				this.useLocal = true;
+			}
+		}
+
 		this.updateSelection({});
 	}
 
@@ -1564,7 +1604,7 @@ class ZoneMenuHandler {
 	cancelEdit() {
 		this.mapZoneData = null;
 
-		MomentumTimerAPI.LoadZoneDefs(false);
+		MomentumTimerAPI.LoadZoneDefs(this.useLocal ?? false);
 
 		this.updateSelection({});
 	}

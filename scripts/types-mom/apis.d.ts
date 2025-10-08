@@ -306,6 +306,9 @@ declare namespace MomentumTimerAPI {
 
 	/** Load ZoneDefs from newzones file */
 	function LoadZoneDefs(useLocal: boolean): boolean;
+
+	/** Check whether local or online zone files exist */
+	function GetSavedZoneStatus(): import('pages/zoning/zoning').savedZoneStatus;
 }
 
 declare namespace MapCacheAPI {
