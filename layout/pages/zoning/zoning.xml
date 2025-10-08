@@ -23,7 +23,12 @@
 	</snippets>
 
 	<ZoneMenu class="zoning" acceptsinput="true" acceptsfocus="true" tabindex="auto">
-		<Label class="zoning__title" text="#Zoning_Menu" />
+		<Panel class="w-full">
+			<Label class="zoning__title" text="#Zoning_Menu" />
+			<Button class="button button--red h-align-right" onactivate="GameInterfaceAPI.ConsoleCommand('mom_zoning_enable 0');">
+				<Image class="button__icon" src="file://{images}/close.svg" />
+			</Button>
+		</Panel>
 		<Panel id="ItemListsContainer" class="zoning__itemlists">
         	<Panel class="zoning__menu-section zoning__itemlist">
         		<Panel id="LeftList" class="w-full flow-down">
