@@ -11,6 +11,14 @@ export interface EntityList {
 	teleport: string[];
 }
 
+export enum savedZoneStatus {
+	UNSET = -1,
+	NONE = 0,
+	LOCAL = 1,
+	ONLINE = 2,
+	BOTH = 3
+}
+
 enum DefragFlags {
 	HASTE = 1 << 0,
 	SLICK = 1 << 1,
@@ -182,6 +190,8 @@ class ZoneMenuHandler {
 	selectedHierarchyNames: string[] = [];
 
 	didInit = false;
+	savedZones: savedZoneStatus = savedZoneStatus.UNSET;
+	useLocal = false;
 
 	constructor() {
 		$.RegisterForUnhandledEvent('ZoneMenu_Show', () => this.showZoneMenu());
@@ -203,6 +213,7 @@ class ZoneMenuHandler {
 		this.zoningLimits = this.panels.zoningMenu.getZoningLimits();
 
 		this.didInit = true;
+		this.useLocal = false;
 	}
 
 	onLevelInit() {
@@ -647,6 +658,49 @@ class ZoneMenuHandler {
 	}
 
 	showZoneMenu() {
+		if (this.savedZones === savedZoneStatus.UNSET) {
+			this.savedZones = MomentumTimerAPI.GetSavedZoneStatus();
+
+			switch (this.savedZones) {
+				case savedZoneStatus.NONE: {
+					this.useLocal = true;
+					break;
+				}
+
+				case savedZoneStatus.LOCAL: {
+					MomentumTimerAPI.LoadZoneDefs(true);
+					this.useLocal = true;
+					break;
+				}
+
+				case savedZoneStatus.ONLINE: {
+					MomentumTimerAPI.LoadZoneDefs(false);
+					this.useLocal = false;
+					break;
+				}
+
+				case savedZoneStatus.BOTH: {
+					UiToolkitAPI.ShowGenericPopupTwoOptionsBgStyle(
+						$.Localize('#Zoning_FileSelect'),
+						$.Localize('#Zoning_FileSelect_Message'),
+						'generic-popup',
+						$.Localize('#Zoning_UseLocal'),
+						() => {
+							MomentumTimerAPI.LoadZoneDefs(true);
+							this.useLocal = true;
+						},
+						$.Localize('#Zoning_UseOnline'),
+						() => {
+							MomentumTimerAPI.LoadZoneDefs(false);
+							this.useLocal = false;
+						},
+						'none'
+					);
+					break;
+				}
+			}
+		}
+
 		this.updateSelection({});
 	}
 
@@ -1564,7 +1618,7 @@ class ZoneMenuHandler {
 	cancelEdit() {
 		this.mapZoneData = null;
 
-		MomentumTimerAPI.LoadZoneDefs(false);
+		MomentumTimerAPI.LoadZoneDefs(this.useLocal);
 
 		this.updateSelection({});
 	}
