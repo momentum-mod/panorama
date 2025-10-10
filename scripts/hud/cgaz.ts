@@ -1,5 +1,5 @@
 import { PanelHandler } from 'util/module-helpers';
-import { GamemodeCategories, GamemodeCategory } from 'common/web_dontmodifyme';
+import { GamemodeCategories, GamemodeCategory, Gamemode } from 'common/web_dontmodifyme';
 import * as MomMath from 'util/math';
 import { enhanceAlpha, rgbaStringLerp, rgbaStringToRgb } from 'util/colors';
 import { RegisterHUDPanelForGamemode } from '../util/register-for-gamemodes';
@@ -10,6 +10,8 @@ const DEFAULT_ACCEL = 2.56;
 const DEFAULT_SPEED = 320;
 const HASTE_ACCEL = 3.328; // (max speed) * (air accel = 1) * (tick interval) * (haste factor)
 const HASTE_SPEED = 416;
+const HASTE_FACTOR = 1.3;
+const AIR_MAX_WISHSPEED = 30;
 
 enum TruenessMode {
 	GROUND = 1 << 0, // show ground zones
@@ -476,14 +478,21 @@ class CgazHandler {
 		this.hFov = Math.atan((this.vFovTangent * this.screenX) / this.screenY);
 
 		const phyMode = DefragAPI.GetDFPhysicsMode();
-		const lastMoveData = MomentumMovementAPI.GetLastMoveData();
-
+		const hudData = MomentumMovementAPI.GetHudData();
 		const tickInterval = MomentumMovementAPI.GetTickInterval();
-		const maxSpeed = this.accelScaleEnable ? lastMoveData.wishspeed : lastMoveData.maxspeed;
-		const accel = lastMoveData.acceleration;
+
+		const velocity = MomentumPlayerAPI.GetVelocity();
+		const speed = MomMath.magnitude2D(velocity);
+
+		const [realAccelerate, realMaxSpeed] = this.calcAccelAndMaxSpeed(hudData, velocity);
+		const realFriction = this.calcFriction(hudData, speed);
+
+		const wishSpeed = MomMath.magnitude2D(hudData.wishVel);
+		const maxSpeed = this.accelScaleEnable ? wishSpeed : realMaxSpeed;
+		const accel = realAccelerate;
 		const maxAccel = accel * maxSpeed * tickInterval;
 
-		if (lastMoveData.hasteTime) {
+		if (hudData.hasteTime) {
 			if (this.snapAccel !== HASTE_ACCEL) {
 				this.snapAccel = HASTE_ACCEL;
 				MAX_GROUND_SPEED = HASTE_SPEED;
@@ -517,16 +526,13 @@ class CgazHandler {
 			this.onSnapConfigChange();
 		}
 
-		const velocity = MomentumPlayerAPI.GetVelocity();
-		const speed = MomMath.magnitude2D(velocity);
 		const stopSpeed = Math.max(speed, MomentumMovementAPI.GetStopspeed());
-		const dropSpeed = Math.max(speed - stopSpeed * lastMoveData.friction * tickInterval, 0);
+		const dropSpeed = Math.max(speed - stopSpeed * realFriction * tickInterval, 0);
 		const speedSquared = speed * speed;
 		const dropSpeedSquared = dropSpeed * dropSpeed;
 
-		const velDir = MomMath.normal2D(velocity, 0.001);
 		const velAngle = Math.atan2(velocity.y, velocity.x);
-		const wishDir = lastMoveData.wishdir;
+		const wishDir = MomMath.normalizeVector(hudData.wishVel);
 		const wishAngle = MomMath.sumOfSquares2D(wishDir) > 0.001 ? Math.atan2(wishDir.y, wishDir.x) : 0;
 		const viewAngle = (MomentumPlayerAPI.GetAngles().y * Math.PI) / 180;
 		const viewDir = {
@@ -537,7 +543,7 @@ class CgazHandler {
 		const forwardMove = Math.round(MomMath.dot2D(viewDir, wishDir));
 		const rightMove = Math.round(MomMath.cross2D(viewDir, wishDir));
 
-		const bIsFalling = lastMoveData.moveStatus === 0;
+		const bIsFalling = hudData.moveStatus === MomentumMovementAPI.PlayerMoveStatus.AIR;
 		const bHasAirControl = phyMode && MomMath.approxEquals(wishAngle, viewAngle, 0.01) && bIsFalling;
 		const bSnapShift =
 			!MomMath.approxEquals(Math.abs(forwardMove), Math.abs(rightMove), 0.01) && !(phyMode && bIsFalling);
@@ -700,9 +706,9 @@ class CgazHandler {
 				const useSnapAccel = !(
 					this.primeTruenessMode & TruenessMode.CPM_TURN || phyMode === DefragAPI.DefragPhysics.VQ3
 				);
-				const primeMaxSpeed =
-					this.primeTruenessMode & TruenessMode.PROJECTED ? lastMoveData.wishspeed : lastMoveData.maxspeed;
-				const primeMaxAccel = lastMoveData.acceleration * maxSpeed * tickInterval;
+
+				const primeMaxSpeed = this.primeTruenessMode & TruenessMode.PROJECTED ? wishSpeed : realMaxSpeed;
+				const primeMaxAccel = realAccelerate * maxSpeed * tickInterval;
 				const primeSightSpeed = useSnapAccel ? MAX_GROUND_SPEED : primeMaxSpeed;
 				const primeSightAccel = useSnapAccel ? this.snapAccel : primeMaxAccel;
 
@@ -873,6 +879,85 @@ class CgazHandler {
 			this.windicatorArrow.visible = false;
 			this.windicatorZone.style.width = '0px';
 		}
+	}
+
+	calcAccelAndMaxSpeed(hudData: MomentumMovementAPI.HudData, velocity: vec3): [float, float] {
+		let accelerate: float;
+		let maxSpeed: float;
+		const hasteFactor = hudData.hasteTime > 0 ? HASTE_FACTOR : 1.0;
+		switch (hudData.moveStatus) {
+			case MomentumMovementAPI.PlayerMoveStatus.AIR: {
+				switch (GameModeAPI.GetCurrentGameMode()) {
+					case Gamemode.DEFRAG_VQ3:
+						accelerate = GameInterfaceAPI.GetSettingFloat('sv_airaccelerate');
+						maxSpeed = GameInterfaceAPI.GetSettingFloat('sv_maxspeed') * hasteFactor;
+						break;
+					case Gamemode.DEFRAG_CPM:
+						if (hudData.moveFlags & MomentumMovementAPI.PlayerMoveFlags.AIRSTRAFING) {
+							accelerate = GameInterfaceAPI.GetSettingFloat('mom_mv_df_airstrafeaccelerate');
+							maxSpeed = AIR_MAX_WISHSPEED;
+						} else {
+							maxSpeed = GameInterfaceAPI.GetSettingFloat('sv_maxspeed') * hasteFactor;
+
+							const airDecelerate = GameInterfaceAPI.GetSettingFloat('mom_mv_airdecelerate');
+							const airDecelerateAngle = GameInterfaceAPI.GetSettingFloat('mom_mv_airdecelerate_angle');
+							let vel2Ddir = { x: velocity.x, y: velocity.y };
+							vel2Ddir = MomMath.normalizeVector2D(vel2Ddir);
+							if (
+								airDecelerate >= 0 &&
+								MomMath.rad2deg(
+									Math.acos(MomMath.dot2D(vel2Ddir, MomMath.normalizeVector2D(hudData.wishVel)))
+								) > airDecelerateAngle
+							) {
+								accelerate = airDecelerate;
+							} else {
+								accelerate = GameInterfaceAPI.GetSettingFloat('sv_airaccelerate');
+							}
+						}
+						break;
+					case Gamemode.DEFRAG_VTG:
+						accelerate = GameInterfaceAPI.GetSettingFloat('sv_airaccelerate');
+						maxSpeed = AIR_MAX_WISHSPEED * hasteFactor;
+						break;
+				}
+				break;
+			}
+			case MomentumMovementAPI.PlayerMoveStatus.WALK:
+				accelerate =
+					hudData.moveFlags & MomentumMovementAPI.PlayerMoveFlags.SLICK
+						? GameInterfaceAPI.GetSettingFloat('mom_mv_df_slick_accelerate')
+						: GameInterfaceAPI.GetSettingFloat('sv_accelerate');
+				maxSpeed = GameInterfaceAPI.GetSettingFloat('sv_maxspeed') * hasteFactor;
+				break;
+			case MomentumMovementAPI.PlayerMoveStatus.WATER:
+				accelerate = GameInterfaceAPI.GetSettingFloat('sv_wateraccelerate');
+				maxSpeed = GameInterfaceAPI.GetSettingFloat('sv_maxspeed') * hasteFactor;
+				break;
+		}
+
+		return [accelerate, maxSpeed];
+	}
+
+	calcFriction(hudData: MomentumMovementAPI.HudData, speed: float): float {
+		if (
+			hudData.moveStatus === MomentumMovementAPI.PlayerMoveStatus.AIR ||
+			hudData.moveStatus === MomentumMovementAPI.PlayerMoveStatus.WATERJUMP ||
+			hudData.moveFlags & MomentumMovementAPI.PlayerMoveFlags.SLICK
+		) {
+			return 0;
+		}
+
+		const svFriction = GameInterfaceAPI.GetSettingFloat('sv_friction');
+
+		if (speed < 1) {
+			return svFriction;
+		}
+
+		if (hudData.moveStatus === MomentumMovementAPI.PlayerMoveStatus.WATER) {
+			return GameInterfaceAPI.GetSettingFloat('sv_waterfriction');
+		}
+
+		return svFriction;
 	}
 
 	findSlowAngle(dropSpeed: number, dropSpeedSquared: number, speedSquared: number, maxSpeed: number) {
@@ -1131,13 +1216,9 @@ class CgazHandler {
 			Math.round(MomMath.magnitude2D(wishDir)) * (1 << Math.round(2 * Math.pow(cross, 2))) +
 			(Math.round(cross) > 0 ? 1 : 0);
 
-		const angleOffset = MomMath.remapAngle(velAngle - wishAngle);
-		const targetOffset = MomMath.remapAngle(velAngle - viewAngle);
-		const inputAngle = MomMath.remapAngle(viewAngle - wishAngle) * MomMath.sumOfSquares2D(wishDir);
 		const velocity = MomentumPlayerAPI.GetVelocity();
 		const gainZonesMap = new Map();
 		const phyMode = DefragAPI.GetDFPhysicsMode();
-		const lastMoveData = MomentumMovementAPI.GetLastMoveData();
 
 		let speedGain = 0;
 		let gainMax = -this.primeAccel;

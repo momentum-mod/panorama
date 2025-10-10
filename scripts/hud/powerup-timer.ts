@@ -27,7 +27,7 @@ class PowerupTimerHandler {
 	}
 
 	onUpdate() {
-		const { damageBoostTime, hasteTime, slickTime } = MomentumMovementAPI.GetLastMoveData();
+		const { damageBoostTime, hasteTime, slickTime } = MomentumMovementAPI.GetHudData();
 
 		this.updatePanel(this.panels.damageBoost, damageBoostTime);
 		this.updatePanel(this.panels.haste, hasteTime);
