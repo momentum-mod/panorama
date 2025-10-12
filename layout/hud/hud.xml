@@ -35,7 +35,6 @@
 		<MomHudJumpTiming /> <!-- TODO: HudCenter, not added to customizer -->
 
 		<HudComparisons id="Comparisons" customizable="true" />
-		<MomHudSynchronizer id="Synchronizer" customizable="true" />
 		<ConVarEnabler convar="mom_zoning_enable" togglevisibility="true">
 			<MomHudZoning /> <!-- TODO: HudBottomCenter, not in customizer -->
 		</ConVarEnabler>
