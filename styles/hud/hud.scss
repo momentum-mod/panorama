@@ -177,7 +177,7 @@
 
 	&__name {
 		align: center center;
-		@include mixin.font-styles($use-header: true);
+		@include mixin.font-header();
 		opacity: 0.3;
 
 		#{$root}--dragging & {
