@@ -11,7 +11,7 @@ const DEFAULT_SPEED = 320;
 const HASTE_ACCEL = 3.328; // (max speed) * (air accel = 1) * (tick interval) * (haste factor)
 const HASTE_SPEED = 416;
 
-enum TruenessMode {
+export enum TruenessMode {
 	GROUND = 1 << 0, // show ground zones
 	PROJECTED = 1 << 1, // show zones scaled by +jump/+crouch
 	CPM_TURN = 1 << 2 // show a/d and ground zones

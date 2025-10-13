@@ -1,0 +1,20 @@
+@use '../../abstract/mixin';
+
+.settings-prime-sight {
+    &__checkbox {
+        height: 100%;
+        width: fill-parent-flow(1);
+        vertical-align: center;
+        margin-left: 12px;
+
+        .TickBox {
+            vertical-align: center;
+        }
+    }
+
+    &__checkbox-group{
+        width: 100%;
+        height: 100%;
+        flow-children: right;
+    }
+}

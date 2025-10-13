@@ -5,6 +5,7 @@
 
 	<scripts>
 		<include type="module" src="file://{scripts}/pages/settings/page.ts" />
+		<include type="module" src="file://{scripts}/pages/settings/prime-sight.ts" />
 	</scripts>
 
 	<Panel class="settings-page">
@@ -614,6 +615,23 @@
 
 						<ConVarColorDisplay text="#Settings_Defrag_PrimeSight_LossColor" convar="mom_hud_df_prime_loss_color" infomessage="#Settings_Defrag_PrimeSight_LossColor_Info" tags="prime,sight" />
 
+						<Panel class="settings-enum" infomessage="#Settings_Defrag_PrimeSight_Trueness_Info" tags="prime,sight,trueness">
+							<Panel class="settings-enum__title-container">
+								<Label id="title" text="#Settings_Defrag_PrimeSight_Trueness" class="settings-enum__title" />
+							</Panel>
+							<Panel id="values" class="settings-enum__values settings-prime-sight__checkbox-group">
+								<ToggleButton id="GroundTrueness" class="checkbox checkbox--right settings-prime-sight__checkbox" onactivate="PrimeSightSettingsHandler.setTruenessMode()">
+									<Label text="#Settings_Defrag_PrimeSight_Trueness_Ground"/>
+								</ToggleButton>
+								<ToggleButton id="ProjectedTrueness" class="checkbox checkbox--right settings-prime-sight__checkbox" onactivate="PrimeSightSettingsHandler.setTruenessMode()">
+									<Label text="#Settings_Defrag_PrimeSight_Trueness_Projected"/>
+								</ToggleButton>
+								<ToggleButton id="CPMTurnTrueness" class="checkbox checkbox--right settings-prime-sight__checkbox" onactivate="PrimeSightSettingsHandler.setTruenessMode()">
+									<Label text="#Settings_Defrag_PrimeSight_Trueness_CPMTurn"/>
+								</ToggleButton>
+							</Panel>
+						</Panel>
+
 						<SettingsEnum text="#Settings_Defrag_PrimeSight_ArrowEnable" convar="mom_hud_df_prime_arrow_enable" infomessage="#Settings_Defrag_PrimeSight_ArrowEnable_Info" tags="prime,sight">
 							<RadioButton group="primearrowenable" text="#Common_Off" value="0" />
 							<RadioButton group="primearrowenable" text="#Common_On" value="1" />
@@ -624,8 +642,6 @@
 
 							<ConVarColorDisplay text="#Settings_Defrag_PrimeSight_ArrowColor" convar="mom_hud_df_prime_arrow_color" infomessage="#Settings_Defrag_PrimeSight_ArrowColor_Info" tags="prime,sight" />
 						</ConVarEnabler>
-
-						<!-- Trueness Mode -->
 
 						<SettingsEnum text="#Settings_Defrag_PrimeSight_OneLineEnable" convar="mom_hud_df_prime_one_line" infomessage="#Settings_Defrag_PrimeSight_OneLineEnable_Info" tags="prime,sight">
 							<RadioButton group="primeonelineenable" text="#Common_Off" value="0" />
