@@ -615,11 +615,8 @@
 
 						<ConVarColorDisplay text="#Settings_Defrag_PrimeSight_LossColor" convar="mom_hud_df_prime_loss_color" infomessage="#Settings_Defrag_PrimeSight_LossColor_Info" tags="prime,sight" />
 
-						<Panel class="settings-enum" infomessage="#Settings_Defrag_PrimeSight_Trueness_Info" tags="prime,sight,trueness">
-							<Panel class="settings-enum__title-container">
-								<Label id="title" text="#Settings_Defrag_PrimeSight_Trueness" class="settings-enum__title" />
-							</Panel>
-							<Panel id="values" class="settings-enum__values settings-prime-sight__checkbox-group">
+						<SettingsEnum id="TruenessSetting" text="#Settings_Defrag_PrimeSight_Trueness" convar="mom_hud_df_prime_trueness_mode" infomessage="#Settings_Defrag_PrimeSight_Trueness_Info" tags="prime,sight,trueness">
+							<Panel class="settings-prime-sight__checkbox-group">
 								<ToggleButton id="GroundTrueness" class="checkbox checkbox--right settings-prime-sight__checkbox" onactivate="PrimeSightSettingsHandler.setTruenessMode()">
 									<Label text="#Settings_Defrag_PrimeSight_Trueness_Ground"/>
 								</ToggleButton>
@@ -630,7 +627,7 @@
 									<Label text="#Settings_Defrag_PrimeSight_Trueness_CPMTurn"/>
 								</ToggleButton>
 							</Panel>
-						</Panel>
+						</SettingsEnum>
 
 						<SettingsEnum text="#Settings_Defrag_PrimeSight_ArrowEnable" convar="mom_hud_df_prime_arrow_enable" infomessage="#Settings_Defrag_PrimeSight_ArrowEnable_Info" tags="prime,sight">
 							<RadioButton group="primearrowenable" text="#Common_Off" value="0" />
