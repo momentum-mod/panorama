@@ -296,6 +296,8 @@ class LobbyHandler {
 	/** Update the panel for a specific lobby member */
 	updateMemberListItem(memberSteamID: steamID) {
 		const memberData = this.lobbyMemberData[memberSteamID];
+		if (memberData) return;
+
 		let panel = memberData.panel;
 
 		if (!panel) {
@@ -471,8 +473,8 @@ class LobbyHandler {
 	}
 
 	onLobbyMemberStateChanged(memberSteamID: steamID, changeType: LobbyMemberStateChange) {
-		if (changeType === 'leave') {
-			this.lobbyMemberData[memberSteamID]['panel'].DeleteAsync(0);
+		if (changeType === 'leave' && memberSteamID in this.lobbyMemberData) {
+			this.lobbyMemberData[memberSteamID].panel?.DeleteAsync(0);
 			delete this.lobbyMemberData[memberSteamID];
 		}
 	}
