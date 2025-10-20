@@ -48,7 +48,7 @@
 		</Panel>
 
 		<Panel class="about-credits__row">
-			<Label id="TENK1SHUN" class="about-credits__col about-credits__name about-credits__name--team" text="TENK1SHUN" username="TENK1SHUN" name="Ellis K." section="team" roles="UI/UX Programming, HUD tools/helpers" pronouns="" bio="" steamID="76561198312641066" discord="tekn1shun" email="" github="" html="true" />
+			<Label id="TEKN1SHUN" class="about-credits__col about-credits__name about-credits__name--team" text="TEKN1SHUN" username="TEKN1SHUN" name="Ellis K." section="team" roles="UI/UX Programming, HUD tools/helpers" pronouns="" bio="" steamID="76561198312641066" discord="tekn1shun" email="" github="" html="true" />
 			<Label id="VortexPDX" class="about-credits__col about-credits__name about-credits__name--team" text="VortexPDX" username="VortexPDX" name="" section="team" roles="Animator, VFX, Rigging Artist, General 3D Artist" pronouns="" bio="Allan please add details" steamID="76561198259136519" discord="vortexpdx" email="vxpdxEMMMAAAIIIILLLLmomentum-mod.org" github="VortexParadox" html="true" />
 			<Label id="Xbmann" class="about-credits__col about-credits__name about-credits__name--team" text="Xbmann" username="Xbmann" name="Patrick M." section="team" roles="Level Design, Documentation, Web Development, Moderation" pronouns="any/all" bio="Former ReSurfed (TF2 surf) admin and mapper, invested in all TF2 movement gamemodes. Creator of surf_monotony, surf_minigolf, surf_zealand and many others. UNB BCS graduate and game dev hobbyist. Deer fursona." steamID="76561198041017977" discord="xbmann" email="" github="patrickmoc" html="true" />
 		</Panel>
