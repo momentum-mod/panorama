@@ -296,7 +296,7 @@ class LobbyHandler {
 	/** Update the panel for a specific lobby member */
 	updateMemberListItem(memberSteamID: steamID) {
 		const memberData = this.lobbyMemberData[memberSteamID];
-		if (memberData) return;
+		if (!memberData) return;
 
 		let panel = memberData.panel;
 
