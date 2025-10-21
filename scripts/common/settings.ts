@@ -42,6 +42,7 @@ export const SettingsTabs = {
 			PaintSubSection: 'PaintRadio',
 			SafeguardsSubSection: 'SafeguardsRadio',
 			ZonesSubSection: 'ZonesRadio',
+			AhopSubSection: 'AhopRadio',
 			RocketJumpSubSection: 'RocketJumpRadio',
 			StickyJumpSubSection: 'StickyJumpRadio',
 			ConcSubSection: 'ConcRadio',
