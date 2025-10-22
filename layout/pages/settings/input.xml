@@ -2,7 +2,7 @@
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
-	
+
 	<scripts>
 		<include type="module" src="file://{scripts}/pages/settings/page.ts" />
 		<include type="module" src="file://{scripts}/pages/settings/mouse-sensitivity.ts" />
@@ -31,10 +31,10 @@
 						</TooltipPanel>
 					</Panel>
 				</Panel>
-				
+
 				<Panel class="settings-group__combo">
 					<SettingsSlider text="#Settings_Mouse_Sens" min="0.1" max="10" displayprecision="2" convar="sensitivity" tags="sensitivity" hasdocspage="false" />
-				
+
 					<Panel class="settings-enum__values pr-2 pl-4 mb-1">
 						<Label text="#Settings_DPI_Input" class="settings-enum__title" />
 						<TextEntry id="DPI" class="textentry settings-slider__textentry ml-4" maxchars="5" multiline="false" textmode="numeric" ontextentrychange="MouseSensitivitySettingsHandler.saveDPI()" />
@@ -94,8 +94,8 @@
 				<SettingsKeyBinder text="#Keybind_Move_Back" bind="+back" tags="backwards" />
 				<SettingsKeyBinder text="#Keybind_Move_Left" bind="+moveleft" tags="left,strafe" />
 				<SettingsKeyBinder text="#Keybind_Move_Right" bind="+moveright" tags="right,strafe" />
-				<SettingsKeyBinder text="#Keybind_Turn_Right" bind="+right" tags="right,turnbind" />
 				<SettingsKeyBinder text="#Keybind_Turn_Left" bind="+left" tags="left,turnbind" />
+				<SettingsKeyBinder text="#Keybind_Turn_Right" bind="+right" tags="right,turnbind" />
 				<SettingsKeyBinder text="#Keybind_Jump" bind="+jump" tags="jump" />
 				<SettingsKeyBinder text="#Keybind_Toggle_Jump" bind="toggle_jump" tags="toggle,jump" />
 				<SettingsKeyBinder text="#Keybind_Duck" bind="+duck" tags="duck,crouch" />
