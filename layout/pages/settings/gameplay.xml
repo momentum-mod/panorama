@@ -5,7 +5,6 @@
 
 	<scripts>
 		<include type="module" src="file://{scripts}/pages/settings/page.ts" />
-		<include type="module" src="file://{scripts}/pages/settings/prime-sight.ts" />
 	</scripts>
 
 	<Panel class="settings-page">
