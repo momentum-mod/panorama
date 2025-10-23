@@ -319,7 +319,7 @@ export class SettingsHandler {
 				message,
 				hasDocs,
 				panel.paneltype,
-				(panel as SettingsEnum | SettingsEnumDropDown | SettingsSlider).convar ??
+				(panel as SettingsEnum | SettingsEnumBitField | SettingsEnumDropDown | SettingsSlider).convar ??
 					(panel as SettingsKeyBinder)?.bind
 			);
 		});

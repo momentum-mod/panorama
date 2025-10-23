@@ -1,0 +1,12 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+
+	<SettingsEnumBitField class="settings-enum-bitfield">
+		<Panel id ="TitleContainer" class="settings-enum-bitfield__title-container">
+			<Label id="Title" class="settings-enum-bitfield__title" />
+		</Panel>
+		<Panel id="Flags" class="settings-enum-bitfield__flags-container" />
+	</SettingsEnumBitField>
+</root>

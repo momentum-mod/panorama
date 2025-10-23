@@ -79,6 +79,7 @@ export function isSettingsPanel(panel: GenericPanel): panel is SettingsPanel {
 	return [
 		'SettingsEnum',
 		'SettingsSlider',
+		'SettingsEnumBitField',
 		'SettingsEnumDropDown',
 		'SettingsKeyBinder',
 		'SettingsToggle',

@@ -412,6 +412,7 @@ $page-width: 1920px - $rightnav-width;
 
 		// TODO: This could use an @extend if Sass was set up better, do during loading refactor
 		& .settings-enum,
+		& .settings-enum-bitfield,
 		& .settings-enum-dropdown,
 		& .settings-slider,
 		& .settings-keybinder,
