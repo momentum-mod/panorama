@@ -3,6 +3,7 @@
 @use '../abstract/function';
 @use '../controls/button';
 @use '../controls/radio-button';
+//@use '../controls/toggle-button.scss';
 
 .settings-enum,
 .settings-enum-bitfield,
@@ -99,9 +100,84 @@
 	&__values {
 		flow-children: left-wrap;
 		horizontal-align: right;
-		width: fit-children;
+		width: 100%;//fit-children;
 		height: 38px;
 		vertical-align: center;
+
+		> ToggleButton {
+			@extend .button;
+			@extend .radiobutton;
+			@extend .radiobutton--blue;
+
+			width: fit-children;
+			min-width: 140px;
+			height: 100%;
+			margin-left: 6px;
+		}
+		/*> ToggleButton {
+			@extend .checkbox !optional;
+			//@extend .togglebutton;
+			//@extend .togglebutton--blue;
+			flow-children: right;
+			min-height: $checkbox-width;
+			border: 0px solid white;
+			transition-property: background-color;
+			transition-duration: 0.1s;
+			transition-timing-function: ease-in-out;
+
+			// This gets inserted in code
+			.TickBox {
+				height: $checkbox-width;
+				width: $checkbox-width;
+				vertical-align: top;
+				background-color: $checkbox-background;
+				border-radius: $checkbox-radius;
+				z-index: 1;
+				margin-left: 0;
+				margin-right: $checkbox-gap;
+				box-shadow: $checkbox-shadow;
+				img-shadow: $checkbox-check-shadow;
+				transition: background-color 0.1s ease-in-out 0s;
+			}
+
+			&:hover .TickBox {
+				background-color: $checkbox-background-hover;
+			}
+
+			&:disabled .TickBox,
+			&:disabled:hover .TickBox {
+				background-color: $checkbox-background-disabled;
+			}
+
+			&:selected .TickBox {
+				box-shadow: $checkbox-shadow;
+
+				background-color: $checkbox-background-selected;
+				background-image: url('file://{images}/checkmark.svg');
+				background-size: 60% 60%;
+				background-repeat: no-repeat;
+				background-position: center;
+			}
+
+			&:selected:hover .TickBox {
+				background-color: $checkbox-background-selected-hover;
+			}
+
+			&:disabled:selected .TickBox {
+				background-color: $checkbox-background-disabled-selected;
+				opacity: 0.5;
+			}
+
+			width: 25%;
+			//min-width: 100px;
+			height: 100%;
+			margin-left: 6px;
+		}*/
+
+		& > ToggleButton > Label {
+			@include mixin.font-regular();
+			vertical-align: middle;
+		}
 	}
 }
 
