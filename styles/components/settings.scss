@@ -5,6 +5,7 @@
 @use '../controls/radio-button';
 
 .settings-enum,
+.settings-enum-bitfield,
 .settings-enum-dropdown,
 .settings-slider,
 .settings-keybinder,
@@ -91,6 +92,16 @@
 			@extend .button__text;
 			font-size: 22px;
 		}
+	}
+}
+
+.settings-enum-bitfield {
+	&__values {
+		flow-children: left-wrap;
+		horizontal-align: right;
+		width: fit-children;
+		height: 38px;
+		vertical-align: center;
 	}
 }
 
@@ -209,6 +220,7 @@
 }
 
 ConVarEnabler > .settings-enum,
+ConVarEnabler > .settings-enum-bitfield,
 ConVarEnabler > .settings-enum-dropdown,
 ConVarEnabler > .settings-slider,
 ConVarEnabler > .settings-keybinder,
