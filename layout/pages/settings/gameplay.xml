@@ -614,6 +614,14 @@
 
 						<ConVarColorDisplay text="#Settings_Defrag_PrimeSight_LossColor" convar="mom_hud_df_prime_loss_color" infomessage="#Settings_Defrag_PrimeSight_LossColor_Info" tags="prime,sight" />
 
+						<SettingsEnumBitField text="#Settings_Defrag_PrimeSight_Trueness" convar="mom_hud_df_prime_trueness_mode" infomessage="#Settings_Defrag_PrimeSight_Trueness_Info" tags="prime,sight,trueness">
+							<Panel class="settings-enum-bitfield__flags settings-enum-bitfield__flags--rows-1">
+								<ToggleButton text="#Settings_Defrag_PrimeSight_Trueness_Ground" flag="0" />
+								<ToggleButton text="#Settings_Defrag_PrimeSight_Trueness_Projected" flag="1" />
+								<ToggleButton text="#Settings_Defrag_PrimeSight_Trueness_CPMTurn" flag="2" />
+							</Panel>
+						</SettingsEnumBitField>
+
 						<SettingsEnum text="#Settings_Defrag_PrimeSight_ArrowEnable" convar="mom_hud_df_prime_arrow_enable" infomessage="#Settings_Defrag_PrimeSight_ArrowEnable_Info" tags="prime,sight">
 							<RadioButton group="primearrowenable" text="#Common_Off" value="0" />
 							<RadioButton group="primearrowenable" text="#Common_On" value="1" />
