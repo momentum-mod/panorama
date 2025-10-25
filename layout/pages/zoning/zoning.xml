@@ -119,14 +119,6 @@
 			</Panel>
 			<Panel id="ZoneProperties" class="zoning__property-container">
 				<Panel class="zoning__menu-separator">
-					<Panel id="Filter" class="zoning__property not-global-region">
-						<Label class="zoning__property-label" text="#Zoning_Filter" />
-						<DropDown id="FilterSelect" class="dropdown zoning__dropdown" menuclass="dropdown-menu" onuserinputsubmit="ZoneMenuHandler?.updateZoneFilter?.()">
-							<Label text="#Zoning_Filter_None" value="0" />
-							<!-- Populated in js -->
-						</DropDown>
-					</Panel>
-					<Panel class="zoning__divider not-global-region"></Panel>
 					<Panel id="Region" class="zoning__property">
 						<Panel class="w-full">
 							<Panel class="w-fit-children h-align-left flow-right">
@@ -246,6 +238,28 @@
 							</Panel>
 						</Panel>
 					</Panel>
+					
+					<Panel class="not-global-region w-full col">
+						<Panel class="zoning__divider"></Panel>
+
+						<Panel id="Filter" class="zoning__property">
+							<Label class="zoning__property-label" text="#Zoning_Filter" />
+							<DropDown id="FilterSelect" class="dropdown zoning__dropdown" menuclass="dropdown-menu" onuserinputsubmit="ZoneMenuHandler?.updateZoneFilter?.()">
+								<Label text="#Zoning_Filter_None" value="0" />
+								<!-- Populated in js -->
+							</DropDown>
+						</Panel>
+						
+						<Panel class="zoning__property-inset w-full">
+							<Panel id="NegateFilter" class="w-full col">
+								<Panel class="zoning__property">
+									<Label class="zoning__property-label" text="#Zoning_NegateFilter" />
+									<ToggleButton id="CheckBox" class="checkbox checkbox--right zoning__checkbox" onactivate="ZoneMenuHandler.setFilterNegated()" />
+								</Panel>
+							</Panel>
+						</Panel>
+					</Panel>
+
 				</Panel>
 			</Panel>
 		</Panel>

@@ -142,6 +142,8 @@ class ZoneMenuHandler {
 		infoPanel: $<Panel>('#InfoPanel')!,
 		selectionMode: $<Label>('#SelectionMode')!,
 		filterSelect: $<DropDown>('#FilterSelect')!,
+		negateFilterSection: $('#NegateFilter'),
+		negateFilterCheckbox: $('#NegateFilter')!.FindChildTraverse<ToggleButton>('CheckBox')!,
 		regionProperties: $<Panel>('#RegionProperties')!,
 		regionSelect: $<DropDown>('#RegionSelect')!,
 		regionCountLabel: $<Label>('#RegionCountLabel')!,
@@ -788,8 +790,13 @@ class ZoneMenuHandler {
 
 		if (this.hasSelectedZone()) {
 			const zone = this.selectedZone.zone;
+
 			const filterIndex = zone.filtername ? (this.filternameList?.indexOf(zone.filtername) ?? 0) : 0;
 			this.panels.filterSelect.SetSelectedIndex(filterIndex);
+
+			this.panels.negateFilterSection.visible = filterIndex > 0;
+			this.panels.negateFilterCheckbox.checked = zone.filterNegated || false;
+
 			const regionNumbers = [];
 			for (let i = 0; i < zone.regions.length; i++) {
 				regionNumbers.push(`${i + 1}`);
@@ -833,6 +840,17 @@ class ZoneMenuHandler {
 
 		const filterIndex = this.panels.filterSelect.GetSelected()?.GetAttributeInt('value', 0);
 		this.selectedZone.zone.filtername = filterIndex ? this.filternameList[filterIndex] : '';
+		this.panels.negateFilterSection.visible = filterIndex > 0;
+		if (filterIndex === 0) {
+			// dont remember this setting when filter is unset
+			this.selectedZone.zone.filterNegated = false;
+			this.panels.negateFilterCheckbox.checked = false;
+		}
+	}
+
+	setFilterNegated() {
+		if (!this.selectedZone || !this.selectedZone.zone || !this.filternameList) return;
+		this.selectedZone.zone.filterNegated = this.panels.negateFilterCheckbox.checked;
 	}
 
 	populateRegionProperties() {
