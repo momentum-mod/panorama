@@ -3,7 +3,7 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 
-	<MomHudAmmo class="w-full">
+	<MomHudAmmo> <!-- Rebase: removed w-full class to match other widgets -->
 		<Label class="ammo__label" text="{i:ammoCount}" />
 	</MomHudAmmo>
 </root>
