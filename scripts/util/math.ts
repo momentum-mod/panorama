@@ -131,3 +131,7 @@ export function deg2rad(x: number): number {
 export function rad2deg(x: number): number {
 	return (x * 180) / Math.PI;
 }
+
+export function lerp(a: number, b: number, t: number): number {
+	return a + (b - a) * t;
+}
