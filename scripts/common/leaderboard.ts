@@ -1,4 +1,5 @@
-import { Gamemode, Leaderboard, MMap, TrackType } from './web_dontmodifyme';
+import type { Leaderboard, MMap } from './web/types/models/models';
+import { TrackType } from './web/enums/track-type.enum';
 
 export enum LeaderboardListType {
 	LOCAL = 0,

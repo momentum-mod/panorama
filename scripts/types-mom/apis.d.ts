@@ -1,10 +1,10 @@
 type RunMetadata = import('common/timer').RunMetadata;
 type RunSplits = import('common/timer').RunSplits;
-type Gamemode = import('common/web_dontmodifyme').Gamemode;
+type Gamemode = import('common/web/enums/gamemode.enum').Gamemode;
 
 declare namespace MomentumAPI {
 	/** Gets the entire User object with profile and stats. May be disk-cached data. */
-	function GetPlayerUserData(): import('common/web_dontmodifyme').User;
+	function GetPlayerUserData(): import('common/web/types/models/models').User;
 
 	/** Fetch new user data from backend, fires MomAPI_UserUpdate when complete. */
 	function RefreshPlayerUserData(): void;
@@ -242,7 +242,7 @@ declare namespace SteamLobbyAPI {
 }
 
 declare namespace GameModeAPI {
-	type Gamemode = import('common/web_dontmodifyme').Gamemode;
+	type Gamemode = import('common/web/enums/gamemode.enum').Gamemode;
 
 	/** Gets a random tip for the given gamemode. On first call, will load tips from file. */
 	function GetRandomTipForGameMode(gamemode: Gamemode): string;
@@ -283,7 +283,7 @@ declare namespace GameModeAPI {
 }
 
 declare namespace MomentumTimerAPI {
-	type Zones = import('common/web_dontmodifyme').MapZones;
+	type Zones = import('common/web/types/models/models').MapZones;
 
 	/** Gets the observed timer status */
 	function GetObservedTimerStatus(): import('common/timer').TimerStatus;
@@ -322,7 +322,7 @@ declare namespace MapCacheAPI {
 		tracks: Record<number, UserTrackData>;
 	}
 
-	type StaticData = import('common/web_dontmodifyme').MMap;
+	type StaticData = import('common/web/types/models/models').MMap;
 
 	interface MapData {
 		staticData: StaticData;

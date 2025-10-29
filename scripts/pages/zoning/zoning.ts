@@ -1,5 +1,6 @@
-import { BonusTrack, Gamemode, MainTrack, MapZones, Region, Segment, Zone } from 'common/web_dontmodifyme';
 import { PanelHandler } from 'util/module-helpers';
+import { Gamemode } from 'common/web/enums/gamemode.enum';
+import type { BonusTrack, MainTrack, MapZones, Region, Segment, Zone } from 'common/web/types/models/models';
 
 // future: get this from c++
 const FORMAT_VERSION = 1;

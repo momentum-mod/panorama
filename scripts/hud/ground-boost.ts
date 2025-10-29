@@ -1,7 +1,8 @@
 import { PanelHandler } from 'util/module-helpers';
 import { magnitude2D } from 'util/math';
 import { RegisterHUDPanelForGamemode } from 'util/register-for-gamemodes';
-import { GamemodeCategories, GamemodeCategory } from 'common/web_dontmodifyme';
+import { GamemodeCategory } from 'common/web/enums/gamemode.enum';
+import { GamemodeCategories } from 'common/web/maps/gamemodes.map';
 
 enum TimerFlags {
 	NONE = 0,
