@@ -1,7 +1,7 @@
 import { PanelHandler } from 'util/module-helpers';
 import { GamemodeCategories, GamemodeCategory } from 'common/web_dontmodifyme';
 import * as MomMath from 'util/math';
-import { enhanceAlpha, rgbaStringLerp, rgbaStringToRgb } from 'util/colors';
+import { rgbaStringLerp, rgbaStringToRgb, rgbaStringToTuple, tupleToRgbaString } from 'util/colors';
 import { RegisterHUDPanelForGamemode } from '../util/register-for-gamemodes';
 
 let MAX_GROUND_SPEED = 320; // initialized to 320. Changes with haste status.
@@ -181,6 +181,7 @@ class CgazHandler {
 	primeLossColor: rgbaColor;
 	primeAltColor: rgbaColor;
 	primeHlEnable: boolean;
+	primeHlStrength: float;
 	primeHlBorder: int32;
 	primeHlColor: rgbaColor;
 	primeHeightgainEnable: boolean;
@@ -327,6 +328,7 @@ class CgazHandler {
 		this.primeLossColor = primeConfig.lossColor;
 		this.primeAltColor = primeConfig.altColor;
 		this.primeHlEnable = primeConfig.highlightEnable;
+		this.primeHlStrength = primeConfig.highlightStrength;
 		this.primeHlBorder = Math.round(primeConfig.highlightBorder);
 		this.primeHlColor = primeConfig.highlightColor;
 		this.primeHeightgainEnable = primeConfig.scaleHeightEnable;
@@ -1286,7 +1288,9 @@ class CgazHandler {
 				this.zoneCopy(this.primeHighlightZone, zone);
 				this.drawZone(this.primeHighlightZone);
 				this.primeHighlightZone.style.marginTop = (gain < 0 ? this.primeHeight : 0) + 'px';
-				zone.color = enhanceAlpha(zone.color);
+
+				const [r, g, b, a = 255] = rgbaStringToTuple(zone.color);
+				zone.color = tupleToRgbaString([r, g, b, MomMath.lerp(a, 255, this.primeHlStrength)]);
 			}
 
 			zone.style.backgroundColor = zone.color;

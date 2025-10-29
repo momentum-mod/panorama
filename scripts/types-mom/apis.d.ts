@@ -454,6 +454,7 @@ declare namespace DefragAPI {
 		lossColor: rgbaColor;
 		altColor: rgbaColor;
 		highlightEnable: boolean;
+		highlightStrength: float;
 		highlightBorder: float;
 		highlightColor: rgbaColor;
 		scaleHeightEnable: boolean;
