@@ -33,11 +33,11 @@ jobs:
     - name: Ban manual web.ts changes
       run: |
         set -e
-        if git diff --name-only origin/master..HEAD | grep -q "^scripts/common/web_dontmodifyme\.ts$"; then
-          for COMMIT in $(git log --pretty=format:"%H" origin/master..HEAD -- scripts/common/web_dontmodifyme.ts); do
+        if git diff --name-only origin/master..HEAD | grep -qE "^scripts/common/web/.*\.ts$"; then
+          for COMMIT in $(git log --pretty=format:"%H" origin/master..HEAD -- scripts/common/web); do
             MSG=$(git log -1 --pretty=format:"%s" $COMMIT)
-            if [ "$MSG" != "chore: update website dependencies" ]; then
-              echo "Error: Commit $COMMIT modifies scripts/common/web_dontmodifyme.ts but does not appear to be auto-generated. See notes at the top of that file."
+            if [[ "$MSG" != "chore: update website dependencies"* ]]; then
+              echo "Error: Commit $COMMIT modifies files under scripts/common/web/ but does not appear to be auto-generated."
               exit 1
             fi
           done
