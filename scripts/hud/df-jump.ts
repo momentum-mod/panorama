@@ -1,6 +1,7 @@
 import { PanelHandler } from 'util/module-helpers';
 import { RegisterHUDPanelForGamemode } from 'util/register-for-gamemodes';
-import { GamemodeCategories, GamemodeCategory } from 'common/web_dontmodifyme';
+import { GamemodeCategory } from 'common/web/enums/gamemode.enum';
+import { GamemodeCategories } from 'common/web/maps/gamemodes.map';
 
 enum ColorClass {
 	AIR = 'dfjump__press--air',

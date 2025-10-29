@@ -24,7 +24,7 @@ interface GlobalEventNameMap {
 	/** Like MapSelector_TryPlayMap, but takes the gamemode to override to before passing it along. */
 	MapSelector_TryPlayMap_GameModeOverride: (
 		mapID: number,
-		gamemode: import('common/web_dontmodifyme').Gamemode
+		gamemode: import('common/web/enums/gamemode.enum').Gamemode
 	) => void;
 
 	/** Toggles adding/removing a map to/from favorites */
@@ -48,7 +48,7 @@ interface GlobalEventNameMap {
 	 * the event fires once we get a response from backend, otherwise it fires immediately after
 	 * `MapSelector_SelectedDataUpdate`.
 	 */
-	MapSelector_SelectedOnlineDataUpdate: (stats: import('common/web_dontmodifyme').MMap) => void;
+	MapSelector_SelectedOnlineDataUpdate: (stats: import('common/web/types/models/models').MMap) => void;
 
 	PanoramaComponent_SteamLobby_OnListUpdated: (lobbyList: import('common/online').GroupedLobbyLists) => void;
 
@@ -108,7 +108,7 @@ interface GlobalEventNameMap {
 
 	MapDownload_End: (mapID: uint32, error: boolean) => void;
 
-	Game_MetaModeChanged: (gamemode: import('common/web_dontmodifyme').Gamemode) => void;
+	Game_MetaModeChanged: (gamemode: import('common/web/enums/gamemode.enum').Gamemode) => void;
 
 	OnMomentumWeaponStateChange: (
 		state: import('common/weapon').WeaponStateChangeMode,
@@ -306,7 +306,7 @@ interface GlobalEventNameMap {
 
 	ZoneMenu_Hide: () => void;
 
-	OnRegionEditCompleted: (region: import('common/web_dontmodifyme').Region) => void;
+	OnRegionEditCompleted: (region: import('common/web/types/models/models').Region) => void;
 
 	OnRegionEditCanceled: () => void;
 
@@ -341,7 +341,7 @@ interface GlobalEventNameMap {
 	Leaderboards_MapDataSet: (isOfficial: boolean) => void;
 
 	/** Fired when the official map leaderboard data has loaded */
-	Leaderboards_OfficialMapLeaderboardsLoaded: (map: import('common/web_dontmodifyme').MMap) => void;
+	Leaderboards_OfficialMapLeaderboardsLoaded: (map: import('common/web/types/models/models').MMap) => void;
 
 	/** Fired when the local map leaderboard data has loaded */
 	Leaderboards_LocalMapLeaderboardsLoaded: () => void;
@@ -358,7 +358,7 @@ interface GlobalEventNameMap {
 	LeaderboardEntry_DeleteReplay: (itemIndex: int32) => void;
 
 	/** Fired when local user data is loaded from disk or fetched from backend. */
-	MomAPI_UserUpdate: (user: import('common/web_dontmodifyme').User) => void;
+	MomAPI_UserUpdate: (user: import('common/web/types/models/models').User) => void;
 
 	/** Fired on API authenticate success or failure. */
 	MomAPI_Authenticated: (result: MomentumAPI.AuthenicationResult) => void;
