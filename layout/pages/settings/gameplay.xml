@@ -596,8 +596,8 @@
 						</SettingsEnum>
 
 						<ConVarEnabler convar="mom_hud_df_prime_highlight_enable" class="flow-down">
+							<SettingsSlider text="#Settings_Defrag_PrimeSight_HighlightStrength" min="0" max="1" convar="mom_hud_df_prime_highlight_strength" displayprecision="2" infomessage="#Settings_Defrag_PrimeSight_HighlightStrength_Info" tags="prime,sight" />
 							<ConVarColorDisplay text="#Settings_Defrag_PrimeSight_HighlightColor" convar="mom_hud_df_prime_highlight_color" infomessage="#Settings_Defrag_PrimeSight_HighlightColor_Info" tags="prime,sight" />
-
 							<SettingsSlider text="#Settings_Defrag_PrimeSight_HighlightBorder" min="0" max="10" convar="mom_hud_df_prime_highlight_border" displayprecision="0" infomessage="#Settings_Defrag_PrimeSight_HighlightBorder_Info" tags="prime,sight" />
 						</ConVarEnabler>
 
