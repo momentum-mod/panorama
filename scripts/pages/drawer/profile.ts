@@ -1,5 +1,5 @@
 import { OnPanelLoad, PanelHandler } from 'util/module-helpers';
-import { User } from 'common/web_dontmodifyme';
+import { User } from 'common/web/types/models/models';
 
 @PanelHandler()
 class ProfileHandler implements OnPanelLoad {

@@ -1,14 +1,11 @@
 import { OnPanelLoad, PanelHandler } from 'util/module-helpers';
 import { traverseChildren } from 'util/functions';
-import {
-	MapCreditType,
-	MapStatus,
-	MapStatuses,
-	MMap,
-	SteamGame,
-	SteamGamesNames,
-	TrackType
-} from 'common/web_dontmodifyme';
+import type { MMap } from 'common/web/types/models/models';
+import { MapStatus, MapStatuses } from 'common/web/enums/map-status.enum';
+import { MapCreditType } from 'common/web/enums/map-credit-type.enum';
+import { TrackType } from 'common/web/enums/track-type.enum';
+import { SteamGame } from 'common/web/enums/steam-game.enum';
+import { SteamGamesNames } from 'common/web/maps/steam-games.map';
 import * as Maps from 'common/maps';
 import * as Leaderboards from 'common/leaderboard';
 import { handlePlayMap } from 'common/maps';

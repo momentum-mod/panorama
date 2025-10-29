@@ -1,6 +1,7 @@
 import { PanelHandler } from 'util/module-helpers';
 import * as Enum from 'util/enum';
-import { MapStatuses, Gamemode, MapStatus } from 'common/web_dontmodifyme';
+import { Gamemode } from 'common/web/enums/gamemode.enum';
+import { MapStatus, MapStatuses } from 'common/web/enums/map-status.enum';
 import { GamemodeInfo } from 'common/gamemode';
 import { getUserMapDataTrack } from 'common/leaderboard';
 import { getTier, handlePlayMap } from 'common/maps';

@@ -1,6 +1,8 @@
 import { PanelHandler } from 'util/module-helpers';
 import { EndOfRunShowReason } from 'common/timer';
-import { GamemodeInfo, MapCreditType, MMap } from 'common/web_dontmodifyme';
+import { GamemodeInfo } from 'common/gamemode';
+import { MapCreditType } from 'common/web/enums/map-credit-type.enum';
+import type { MMap } from 'common/web/types/models/models';
 import { getNumStages } from 'common/leaderboard';
 import { getAllCredits, getTier, SimpleMapCredit } from 'common/maps';
 

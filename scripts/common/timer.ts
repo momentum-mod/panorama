@@ -1,4 +1,4 @@
-type Gamemode = import('common/web_dontmodifyme').Gamemode;
+type Gamemode = import('./web/enums/gamemode.enum').Gamemode;
 
 //#region Types
 

@@ -1,7 +1,8 @@
 import { exposeToPanelContext, PanelHandler } from 'util/module-helpers';
 import { LeaderboardListType, LeaderboardStatusType, LeaderboardType, sortLeaderboard } from 'common/leaderboard';
 import { EndOfRunShowReason } from 'common/timer';
-import { MMap, TrackType } from 'common/web_dontmodifyme';
+import { TrackType } from 'common/web/enums/track-type.enum';
+import type { MMap } from 'common/web/types/models/models';
 
 exposeToPanelContext({ LeaderboardListType, LeaderboardType });
 

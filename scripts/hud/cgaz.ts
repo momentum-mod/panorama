@@ -1,8 +1,9 @@
 import { PanelHandler } from 'util/module-helpers';
-import { GamemodeCategories, GamemodeCategory } from 'common/web_dontmodifyme';
+import { GamemodeCategory } from 'common/web/enums/gamemode.enum';
+import { GamemodeCategories } from 'common/web/maps/gamemodes.map';
 import * as MomMath from 'util/math';
 import { rgbaStringLerp, rgbaStringToRgb, rgbaStringToTuple, tupleToRgbaString } from 'util/colors';
-import { RegisterHUDPanelForGamemode } from '../util/register-for-gamemodes';
+import { RegisterHUDPanelForGamemode } from 'util/register-for-gamemodes';
 
 let MAX_GROUND_SPEED = 320; // initialized to 320. Changes with haste status.
 const AIR_ACCEL = 1;

@@ -1,7 +1,8 @@
 import { PanelHandler } from 'util/module-helpers';
 import { RegisterHUDPanelForGamemode } from 'util/register-for-gamemodes';
-import { GamemodeCategories, GamemodeCategory } from 'common/web_dontmodifyme';
 import { RgbaTuple, rgbaTupleLerp, tupleToRgbaString } from 'util/colors';
+import { GamemodeCategory } from 'common/web/enums/gamemode.enum';
+import { GamemodeCategories } from 'common/web/maps/gamemodes.map';
 
 const Colors = {
 	RED: [255, 0, 0, 255] as RgbaTuple,

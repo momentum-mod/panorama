@@ -1,14 +1,14 @@
 import {
-	Gamemode,
 	GamemodeInfo as GamemodeInfoWeb,
 	GamemodeInfoProperties as GamemodeInfoPropertiesWeb
-} from 'common/web_dontmodifyme';
+} from './web/maps/gamemodes.map';
+import { Gamemode } from './web/enums/gamemode.enum';
 
 export interface GamemodeInfoProperties extends GamemodeInfoPropertiesWeb {
 	i18n: string;
 }
 
-// Website repo has majority of gamemode info using this file for any pano-specific stuff
+// Website repo has the majority of gamemode info using this file for any pano-specific stuff
 const extraModeData = [
 	[Gamemode.SURF, { i18n: '#Gamemode_Surf' }],
 	[Gamemode.BHOP, { i18n: '#Gamemode_Bhop' }],
@@ -30,5 +30,5 @@ for (const [gamemode, obj] of extraModeData) {
 	Object.assign(GamemodeInfoWeb.get(gamemode), obj);
 }
 
-/** Miscellaneous gamemode info. Use this version, not the common/web_dontmodifyme one!! */
+/** Miscellaneous gamemode info. Use this version, not the common/web/gamemodes.map.ts one!! */
 export const GamemodeInfo = GamemodeInfoWeb as ReadonlyMap<Gamemode, GamemodeInfoProperties>;
