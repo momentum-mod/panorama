@@ -160,11 +160,9 @@ class MapEntryHandler {
 		}
 
 		const isPrivate = MapStatuses.PRIVATE.includes(staticData.status);
-		// TODO: This is wrong, should use mapData.static.info.approvedData once added to backend
-		// (https://github.com/momentum-mod/website/issues/903)
 		const isNew =
 			staticData.status === MapStatus.APPROVED &&
-			Date.now() - new Date(staticData.createdAt).getTime() < NEW_MAP_BANNER_CUTOFF;
+			Date.now() - new Date(staticData.info.approvedDate).getTime() < NEW_MAP_BANNER_CUTOFF;
 
 		if (isPrivate) {
 			cp.SetDialogVariable('banner', this.strings.bannerPrivate);
