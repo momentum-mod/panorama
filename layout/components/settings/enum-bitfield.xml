@@ -7,6 +7,7 @@
 		<Panel class="settings-enum-bitfield__title-container">
 			<Label id="title" class="settings-enum-bitfield__title" />
 		</Panel>
-		<Panel id="flags" class="settings-enum-bitfield__flags" />
+		<Panel id="flags0-3" class="settings-enum-bitfield__flags" />
+		<Panel id="flags4-7" class="settings-enum-bitfield__flags" />
 	</SettingsEnumBitField>
 </root>

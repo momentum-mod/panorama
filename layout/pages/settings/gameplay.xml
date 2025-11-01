@@ -618,6 +618,9 @@
 							<ToggleButton text="#Settings_Defrag_PrimeSight_Trueness_Ground" flag="0" />
 							<ToggleButton text="#Settings_Defrag_PrimeSight_Trueness_Projected" flag="1" />
 							<ToggleButton text="#Settings_Defrag_PrimeSight_Trueness_CPMTurn" flag="2" />
+							<ToggleButton text="option 4" flag="3" />
+							<ToggleButton text="option 5" flag="4" />
+							<ToggleButton text="option 6" flag="5" />
 						</SettingsEnumBitField>
 
 						<SettingsEnum text="#Settings_Defrag_PrimeSight_ArrowEnable" convar="mom_hud_df_prime_arrow_enable" infomessage="#Settings_Defrag_PrimeSight_ArrowEnable_Info" tags="prime,sight">
