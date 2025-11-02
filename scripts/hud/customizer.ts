@@ -1,6 +1,6 @@
 import * as LayoutUtil from 'common/layout';
 import * as Enum from 'util/enum';
-import { PanelHandler, OnPanelLoad } from 'util/module-helpers';
+import { exposeToPanelContext } from '../util/module-helpers';
 
 enum Axis {
 	X = 0,
@@ -85,68 +85,35 @@ interface Gridline {
 
 type GridlineForAxis = [Gridline[], Gridline[]];
 
-const SNAPS: Record<
-	Axis,
-	Record<
-		SnapMode,
-		{
-			name: string;
-			button: RadioButton;
-			sizeFactor: number;
-		}
-	>
-> = {
+const SNAPS: Record<Axis, Record<SnapMode, { name: string; button: RadioButton; sizeFactor: number }>> = {
 	[Axis.X]: {
-		[SnapMode.MIN]: {
-			name: 'Left',
-			button: $<RadioButton>('#HudCustomizerSnapsXMin')!,
-			sizeFactor: 0
-		},
-		[SnapMode.MID]: {
-			name: 'Center',
-			button: $<RadioButton>('#HudCustomizerSnapsXMid')!,
-			sizeFactor: 0.5
-		},
-		[SnapMode.MAX]: {
-			name: 'Right',
-			button: $<RadioButton>('#HudCustomizerSnapsXMax')!,
-			sizeFactor: 1
-		},
-		[SnapMode.OFF]: {
-			name: 'None',
-			button: $<RadioButton>('#HudCustomizerSnapsXOff')!,
-			sizeFactor: 0
-		}
+		[SnapMode.MIN]: { name: 'Left', button: $<RadioButton>('#HudCustomizerSnapsXMin')!, sizeFactor: 0 },
+		[SnapMode.MID]: { name: 'Center', button: $<RadioButton>('#HudCustomizerSnapsXMid')!, sizeFactor: 0.5 },
+		[SnapMode.MAX]: { name: 'Right', button: $<RadioButton>('#HudCustomizerSnapsXMax')!, sizeFactor: 1 },
+		[SnapMode.OFF]: { name: 'None', button: $<RadioButton>('#HudCustomizerSnapsXOff')!, sizeFactor: 0 }
 	},
 	[Axis.Y]: {
-		[SnapMode.MIN]: {
-			name: 'Top',
-			button: $<RadioButton>('#HudCustomizerSnapsYMin')!,
-			sizeFactor: 0
-		},
-		[SnapMode.MID]: {
-			name: 'Center',
-			button: $<RadioButton>('#HudCustomizerSnapsYMid')!,
-			sizeFactor: 0.5
-		},
-		[SnapMode.MAX]: {
-			name: 'Bottom',
-			button: $<RadioButton>('#HudCustomizerSnapsYMax')!,
-			sizeFactor: 1
-		},
-		[SnapMode.OFF]: {
-			name: 'None',
-			button: $<RadioButton>('#HudCustomizerSnapsYOff')!,
-			sizeFactor: 0
-		}
+		[SnapMode.MIN]: { name: 'Top', button: $<RadioButton>('#HudCustomizerSnapsYMin')!, sizeFactor: 0 },
+		[SnapMode.MID]: { name: 'Center', button: $<RadioButton>('#HudCustomizerSnapsYMid')!, sizeFactor: 0.5 },
+		[SnapMode.MAX]: { name: 'Bottom', button: $<RadioButton>('#HudCustomizerSnapsYMax')!, sizeFactor: 1 },
+		[SnapMode.OFF]: { name: 'None', button: $<RadioButton>('#HudCustomizerSnapsYOff')!, sizeFactor: 0 }
 	}
 };
 
-$.Msg(
-	`HudCustomizer: ASNDHIJKGISDASD. ${$.GetContextSecurityToken()} ctx object: ${JSON.stringify($.GetContextObject())}`
-);
+const cp = $.GetContextPanel<HudCustomizer>();
+
+// $.Msg(
+// 	`HudCustomizer: ASNDHIJKGISDASD. ${$.GetContextSecurityToken()} ctx object: ${JSON.stringify($.GetContextObject())}`
+// );
 $.RegisterForUnhandledEvent('HudChat_Show', () => enableEditing());
 $.RegisterForUnhandledEvent('HudChat_Hide', () => disableEditing());
+
+exposeToPanelContext({
+	setSnapMode,
+	updateGridSize,
+	showSnapTooltip,
+	hideSnapTooltip
+});
 
 const PANELS = {
 	customizer: $('#HudCustomizer')!,
@@ -211,12 +178,10 @@ function save(): void {
 
 	for (const [id, component] of Object.entries(components)) {
 		const posX = fixFloatingImprecision(
-			LayoutUtil.getX(component.panel) +
-				LayoutUtil.getWidth(component.panel) * SNAPS[Axis.X][component.snaps[Axis.X]].sizeFactor
+			LayoutUtil.getX(component.panel) + LayoutUtil.getWidth(component.panel) * SNAPS[Axis.X][component.snaps[Axis.X]].sizeFactor
 		);
 		const posY = fixFloatingImprecision(
-			LayoutUtil.getY(component.panel) +
-				LayoutUtil.getHeight(component.panel) * SNAPS[Axis.Y][component.snaps[Axis.Y]].sizeFactor
+			LayoutUtil.getY(component.panel) + LayoutUtil.getHeight(component.panel) * SNAPS[Axis.Y][component.snaps[Axis.Y]].sizeFactor
 		);
 		const size = LayoutUtil.getSize(component.panel);
 		saveData.components[id] = {
@@ -226,7 +191,7 @@ function save(): void {
 		};
 	}
 
-	HudCustomizerAPI.SaveLayoutFromJS(saveData);
+	cp.saveLayout(saveData);
 }
 
 function load(): void {
@@ -236,7 +201,7 @@ function load(): void {
 
 	let layoutData: HudConfig;
 	try {
-		layoutData = HudCustomizerAPI.GetLayout() as HudConfig;
+		layoutData = cp.getLayout() as HudConfig;
 	} catch {
 		$.Warning('HudCustomizer: Failed to parse layout file!');
 		return;
@@ -633,10 +598,3 @@ function parsePx(str: string): number | undefined {
 function getMinSize(panel: GenericPanel): [number, number] {
 	return [parsePx(panel.style.minWidth) ?? 0, parsePx(panel.style.minHeight) ?? 0];
 }
-
-$.GetContextObject()['HudCustomizer'] = {
-	setSnapMode,
-	updateGridSize,
-	showSnapTooltip,
-	hideSnapTooltip
-};

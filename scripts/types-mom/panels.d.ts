@@ -23,6 +23,7 @@ interface PanelTagNameMap {
 	MomHudStrafeTrainer: MomHudStrafeTrainer;
 	MomHudSpectate: MomHudSpectate;
 	ZoneMenu: ZoneMenu;
+	HudCustomizer: HudCustomizer;
 }
 
 interface MomentumChat extends AbstractPanel<'MomentumChat'> {
@@ -187,4 +188,27 @@ interface ZoneMenu extends AbstractPanel<'ZoneMenu'> {
 	getZoningLimits(): ZoneEditorLimits;
 
 	createDefaultTeleDest(region: import('common/web_dontmodifyme').Region): import('common/web_dontmodifyme').Region;
+}
+
+/**
+ * Panel methods responsible for reading and writing HUD config files.
+ *
+ * C++ side is agnostic to what you pass it, and we're not decided on the format of HUD layouts -
+ * so types here are deliberately very weak; types in the HUD customizer files are much stronger.
+ *
+ * Note that cfg/hud_default.kv3 is stored in the licensee-only game repo, just let someone
+ * (probably Tom) know if you need to update it.
+ */
+interface HudCustomizer extends AbstractPanel<'HudCustomizer'> {
+	/** Saves the given object to cfg/hud.kv3. */
+	saveLayout(data: Record<string, any>): void;
+
+	/**
+	 * Tries to get the contents of cfg/hud.kv3 as a JS object.
+	 * If cfg/hud.kv3 doesn't exist, loads cfg/hud_default.kv3.
+	 */
+	getLayout(): Record<string, any>;
+
+	/** Gets the contents of cfg/hud_default.kv3 as a JS object. */
+	getDefaultLayout(): Record<string, any>;
 }
