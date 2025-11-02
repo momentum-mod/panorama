@@ -1,5 +1,6 @@
 import { OnPanelLoad, PanelHandler } from 'util/module-helpers';
 import AuthenicationResult = MomentumAPI.AuthenicationResult;
+import { Role } from 'common/web/enums/role.enum';
 
 export enum Page {
 	MAP_SELECTOR = 'MapSelection',
@@ -344,18 +345,18 @@ class MainMenuHandler implements OnPanelLoad {
 	}
 
 	onAuthenticated(result: MomentumAPI.AuthenicationResult) {
-		if (result === MomentumAPI.AuthenicationResult.SUCCESS) return;
-
-		if (result === AuthenicationResult.FAILURE_ACCOUNT_LIMITED) {
-			UiToolkitAPI.ShowGenericPopupTwoOptions(
-				'#API_Auth_Failure',
-				'#API_Auth_LimitedSteamAccount',
-				'wide-popup',
-				'#API_Auth_SteamLimitedInfo',
-				() => SteamOverlayAPI.OpenURL('https://help.steampowered.com/en/faqs/view/71D3-35C2-AD96-AA3A'),
-				'#Common_OK',
-				() => {}
-			);
+		if (result === MomentumAPI.AuthenicationResult.SUCCESS) {
+			if ((MomentumAPI.GetPlayerUserData().roles & Role.LIMITED) !== 0) {
+				UiToolkitAPI.ShowGenericPopupTwoOptions(
+					'#API_Auth_LimitedSteamAccount',
+					'#API_Auth_LimitedSteamAccount_Info',
+					'wide-popup',
+					'#API_Auth_LimitedSteamAccount_Link',
+					() => SteamOverlayAPI.OpenURL('https://help.steampowered.com/en/faqs/view/71D3-35C2-AD96-AA3A'),
+					'#Common_OK',
+					() => {}
+				);
+			}
 
 			return;
 		}
