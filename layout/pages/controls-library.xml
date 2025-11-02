@@ -758,11 +758,21 @@
 			</Panel>
 
 			<Label class="text-h3 mt-3" text="Settings" />
-			<Panel class="flow-down w-half">
+			<Panel class="flow-down w-1000">
 				<SettingsEnum text="SettingsEnum">
 					<RadioButton group="settingsenum" text="1" value="0" />
 					<RadioButton group="settingsenum" text="2" value="1" />
 				</SettingsEnum>
+				<SettingsEnumBitField text="SettingsEnumBitField">
+					<Panel class="settings-enum-bitfield__flags settings-enum-bitfield__flags--rows-2">
+						<ToggleButton text="1" flag="0" />
+						<ToggleButton text="2" flag="1" />
+						<ToggleButton text="4" flag="2" />
+						<ToggleButton text="8" flag="3" />
+						<ToggleButton text="16" flag="4" />
+						<ToggleButton text="32" flag="5" />
+					</Panel>
+				</SettingsEnumBitField>
 				<SettingsEnumDropDown text="SettingsEnumDropDown">
 					<Label text="1" value="0" id="settingsenumdropdown1" />
 					<Label text="2" value="1" id="settingsenumdropdown2" />
