@@ -2,7 +2,7 @@
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
-	
+
 	<scripts>
 		<include type="module" src="file://{scripts}/hud/customizer.ts" />
 	</scripts>
@@ -10,7 +10,7 @@
 	<HudCustomizer class="hud-comparisons">
 		<Panel class="hud-customizer__settings">
 			<Button onactivate="HudCustomizer.disableEditing()">
-				<Image class="hud-customizer-settings__close" src="file://{images}/close.svg"/>
+				<Image class="hud-customizer-settings__close" src="file://{images}/close.svg" />
 			</Button>
 			<NumberEntry id="HudCustomizerGridSize" class="hud-customizer-settings__gridsize" min="4" max="12" onvaluechanged="HudCustomizer.updateGridSize()" />
 		</Panel>

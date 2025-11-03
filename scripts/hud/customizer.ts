@@ -1,6 +1,6 @@
 import * as LayoutUtil from 'common/layout';
 import * as Enum from 'util/enum';
-import { exposeToPanelContext } from '../util/module-helpers';
+import { exposeToPanelContext } from 'util/module-helpers';
 
 enum Axis {
 	X = 0,
@@ -85,7 +85,7 @@ interface Gridline {
 
 type GridlineForAxis = [Gridline[], Gridline[]];
 
-const SNAPS: Record<Axis, Record<SnapMode, { name: string; button: RadioButton; sizeFactor: number }>> = {
+const snaps: Record<Axis, Record<SnapMode, { name: string; button: RadioButton; sizeFactor: number }>> = {
 	[Axis.X]: {
 		[SnapMode.MIN]: { name: 'Left', button: $<RadioButton>('#HudCustomizerSnapsXMin')!, sizeFactor: 0 },
 		[SnapMode.MID]: { name: 'Center', button: $<RadioButton>('#HudCustomizerSnapsXMid')!, sizeFactor: 0.5 },
@@ -100,7 +100,7 @@ const SNAPS: Record<Axis, Record<SnapMode, { name: string; button: RadioButton; 
 	}
 };
 
-const cp = $.GetContextPanel<HudCustomizer>();
+const contextPanel = $.GetContextPanel<HudCustomizer>();
 
 // $.Msg(
 // 	`HudCustomizer: ASNDHIJKGISDASD. ${$.GetContextSecurityToken()} ctx object: ${JSON.stringify($.GetContextObject())}`
@@ -115,7 +115,7 @@ exposeToPanelContext({
 	hideSnapTooltip
 });
 
-const PANELS = {
+const panels = {
 	customizer: $('#HudCustomizer')!,
 	virtual: $<Panel>('#HudCustomizerVirtual')!,
 	virtualName: $<Label>('#HudCustomizerVirtualName')!,
@@ -153,7 +153,7 @@ function enableEditing(): void {
 		load();
 	}
 
-	PANELS.customizer.AddClass('hud-customizer--enabled');
+	panels.customizer.AddClass('hud-customizer--enabled');
 	for (const component of Object.values(components)) {
 		component.panel.AddClass('hud-customizable');
 		component.panel.SetPanelEvent('onmouseover', () => onComponentMouseOver(component));
@@ -162,12 +162,12 @@ function enableEditing(): void {
 
 function disableEditing(): void {
 	$.Msg('HudCustomizer: disabling editing mode.');
-	PANELS.customizer.RemoveClass('hud-customizer--enabled');
+	panels.customizer.RemoveClass('hud-customizer--enabled');
 	for (const component of Object.values(components)) {
 		component.panel.RemoveClass('hud-customizable');
 		component.panel.ClearPanelEvent('onmouseover');
 	}
-	$.UnregisterEventHandler('DragStart', PANELS.virtual, dragStartHandle);
+	$.UnregisterEventHandler('DragStart', panels.virtual, dragStartHandle);
 }
 
 function save(): void {
@@ -178,10 +178,10 @@ function save(): void {
 
 	for (const [id, component] of Object.entries(components)) {
 		const posX = fixFloatingImprecision(
-			LayoutUtil.getX(component.panel) + LayoutUtil.getWidth(component.panel) * SNAPS[Axis.X][component.snaps[Axis.X]].sizeFactor
+			LayoutUtil.getX(component.panel) + LayoutUtil.getWidth(component.panel) * snaps[Axis.X][component.snaps[Axis.X]].sizeFactor
 		);
 		const posY = fixFloatingImprecision(
-			LayoutUtil.getY(component.panel) + LayoutUtil.getHeight(component.panel) * SNAPS[Axis.Y][component.snaps[Axis.Y]].sizeFactor
+			LayoutUtil.getY(component.panel) + LayoutUtil.getHeight(component.panel) * snaps[Axis.Y][component.snaps[Axis.Y]].sizeFactor
 		);
 		const size = LayoutUtil.getSize(component.panel);
 		saveData.components[id] = {
@@ -191,7 +191,7 @@ function save(): void {
 		};
 	}
 
-	cp.saveLayout(saveData);
+	contextPanel.saveLayout(saveData);
 }
 
 function load(): void {
@@ -201,27 +201,27 @@ function load(): void {
 
 	let layoutData: HudConfig;
 	try {
-		layoutData = cp.getLayout() as HudConfig;
+		layoutData = contextPanel.getLayout() as HudConfig;
 	} catch {
 		$.Warning('HudCustomizer: Failed to parse layout file!');
 		return;
 	}
 
 	gridSize = layoutData?.settings?.gridSize ?? DEFAULT_GRID_SIZE;
-	PANELS.gridSize.value = gridSize;
+	panels.gridSize.value = gridSize;
 
 	createGridLines();
 
 	resizeKnobs = {} as Record<any, any>;
 	for (const dir of Enum.fastValuesNumeric(DragMode)) {
 		if (dir === DragMode.MOVE) continue; // handled in onComponentMouseOver
-		resizeKnobs[dir] = $.CreatePanel('Button', PANELS.customizer, `Resize_${DragMode[dir]}`, {
+		resizeKnobs[dir] = $.CreatePanel('Button', panels.customizer, `Resize_${DragMode[dir]}`, {
 			class: 'hud-customizer__resize-knob',
 			draggable: true,
 			hittest: true
 		});
 		$.RegisterEventHandler('DragStart', resizeKnobs[dir], (...args) =>
-			onStartDrag(dir, PANELS.virtualKnob, ...args)
+			onStartDrag(dir, panels.virtualKnob, ...args)
 		);
 		$.RegisterEventHandler('DragEnd', resizeKnobs[dir], () => onEndDrag());
 	}
@@ -248,7 +248,7 @@ function loadComponentPanel(panel: GenericPanel, component: Pick<Component, 'pos
 
 		const isX = axis === 0;
 		const max = isX ? MAX_X_POS : MAX_Y_POS;
-		const sf = SNAPS[axis][component.snaps[axis]].sizeFactor;
+		const sf = snaps[axis][component.snaps[axis]].sizeFactor;
 		const panelLen = component.size[axis];
 		let layoutLen = len - panelLen * sf;
 
@@ -320,32 +320,32 @@ function onComponentMouseOver(component: Component): void {
 	const [position, size] = LayoutUtil.getPositionAndSize(component.panel);
 
 	// Set the virtual panel's position and size to the component we just hovered over
-	LayoutUtil.setPositionAndSize(PANELS.virtual, position, size);
+	LayoutUtil.setPositionAndSize(panels.virtual, position, size);
 
 	updateResizeKnobs(position, size);
 
 	// This is going to be weird to localise, but I guess we could do it, probably in V2 when we can
 	// define the locale string in the `customisable` XML property.
-	PANELS.virtualName.text = activeComponent.panel.id;
+	panels.virtualName.text = activeComponent.panel.id;
 	// TODO: This text looks TERRIBLE. Better to just have a constant size text for every component
 	// place text above component (left-aligned)
 
 	updateVirtualPanelFontSize();
 
-	SNAPS[Axis.X][activeComponent.snaps[Axis.X]].button.SetSelected(true);
-	SNAPS[Axis.Y][activeComponent.snaps[Axis.Y]].button.SetSelected(true);
+	snaps[Axis.X][activeComponent.snaps[Axis.X]].button.SetSelected(true);
+	snaps[Axis.Y][activeComponent.snaps[Axis.Y]].button.SetSelected(true);
 
 	if (dragStartHandle) {
-		$.UnregisterEventHandler('DragStart', PANELS.virtual, dragStartHandle);
+		$.UnregisterEventHandler('DragStart', panels.virtual, dragStartHandle);
 	}
 	if (dragEndHandle) {
-		$.UnregisterEventHandler('DragEnd', PANELS.virtual, dragEndHandle);
+		$.UnregisterEventHandler('DragEnd', panels.virtual, dragEndHandle);
 	}
 
-	dragStartHandle = $.RegisterEventHandler('DragStart', PANELS.virtual, (...args) =>
-		onStartDrag(DragMode.MOVE, PANELS.virtual, ...args)
+	dragStartHandle = $.RegisterEventHandler('DragStart', panels.virtual, (...args) =>
+		onStartDrag(DragMode.MOVE, panels.virtual, ...args)
 	);
-	dragEndHandle = $.RegisterEventHandler('DragEnd', PANELS.virtual, () => onEndDrag());
+	dragEndHandle = $.RegisterEventHandler('DragEnd', panels.virtual, () => onEndDrag());
 }
 
 function onStartDrag(mode: DragMode, displayPanel: Panel, _panelID: string, callback: DragEventInfo) {
@@ -373,10 +373,10 @@ function onDragThink(): void {
 	const minSize = getMinSize(activeComponent.panel);
 
 	if (dragMode === DragMode.MOVE) {
-		panelPos = LayoutUtil.getPosition(PANELS.virtual);
+		panelPos = LayoutUtil.getPosition(panels.virtual);
 	} else {
 		const resizeDir = RESIZE_VECTOR[dragMode] ?? [0, 0];
-		const knobPos = LayoutUtil.getPosition(PANELS.virtualKnob);
+		const knobPos = LayoutUtil.getPosition(panels.virtualKnob);
 		for (const i of Axes) {
 			if (resizeDir[i] === 1) {
 				panelSize[i] = Math.max(knobPos[i] - panelPos[i], minSize[i]);
@@ -391,7 +391,7 @@ function onDragThink(): void {
 
 	updateVirtualPanelFontSize();
 
-	LayoutUtil.setPositionAndSize(PANELS.virtual, panelPos, panelSize);
+	LayoutUtil.setPositionAndSize(panels.virtual, panelPos, panelSize);
 
 	// snapping
 	if (dragMode === DragMode.MOVE) {
@@ -399,7 +399,7 @@ function onDragThink(): void {
 			const isX = axis === 0;
 
 			if (activeComponent.snaps[axis] !== SnapMode.OFF) {
-				const sizeFactor = SNAPS[axis][activeComponent.snaps[axis]].sizeFactor;
+				const sizeFactor = snaps[axis][activeComponent.snaps[axis]].sizeFactor;
 
 				const offset = panelSize[axis] * sizeFactor;
 
@@ -431,10 +431,10 @@ function onEndDrag() {
 
 	$.UnregisterEventHandler('HudThink', $.GetContextPanel(), onThinkHandle);
 
-	LayoutUtil.setPositionAndSize(PANELS.virtual, activeComponent.position, activeComponent.size);
+	LayoutUtil.setPositionAndSize(panels.virtual, activeComponent.position, activeComponent.size);
 
 	activeComponent.panel.RemoveClass('hud-customizable--dragging');
-	PANELS.virtual.RemoveClass('hud-customizer-virtual--dragging');
+	panels.virtual.RemoveClass('hud-customizer-virtual--dragging');
 
 	activeGridlines?.forEach((line) => line?.panel.RemoveClass('hud-customizer__gridline--highlight'));
 	activeGridlines = [undefined, undefined];
@@ -497,7 +497,7 @@ function updateVirtualPanelFontSize() {
 	const [width, height] = activeComponent.size;
 	const stupidFontSizeThing = Math.min(width / 2, height / 2);
 
-	PANELS.virtualName.style.fontSize = stupidFontSizeThing;
+	panels.virtualName.style.fontSize = stupidFontSizeThing;
 }
 
 function getNearestGridLine(axis: Axis, sizeFactor: number): Gridline {
@@ -507,14 +507,14 @@ function getNearestGridLine(axis: Axis, sizeFactor: number): Gridline {
 				0,
 				Math.min(
 					MAX_X_POS,
-					(PANELS.virtual.actualxoffset + PANELS.virtual.actuallayoutwidth * sizeFactor) / scaleX
+					(panels.virtual.actualxoffset + panels.virtual.actuallayoutwidth * sizeFactor) / scaleX
 				)
 			)
 		: Math.max(
 				0,
 				Math.min(
 					MAX_Y_POS,
-					(PANELS.virtual.actualyoffset + PANELS.virtual.actuallayoutheight * sizeFactor) / scaleY
+					(panels.virtual.actualyoffset + panels.virtual.actuallayoutheight * sizeFactor) / scaleY
 				)
 			);
 	const glIndex = Math.round((relativeOffset / (isX ? MAX_X_POS : MAX_Y_POS)) * gridlines[axis].length);
@@ -522,7 +522,7 @@ function getNearestGridLine(axis: Axis, sizeFactor: number): Gridline {
 }
 
 function createGridLines(): void {
-	PANELS.grid.RemoveAndDeleteChildren();
+	panels.grid.RemoveAndDeleteChildren();
 
 	const numXLines = 2 ** gridSize;
 	const numYLines = Math.floor(numXLines * (9 / 16));
@@ -542,7 +542,7 @@ function createGridLines(): void {
 			if (i === numLines / 2) cssClass += ' hud-customizer__gridline--mid';
 			if (i === 0 || i === numLines) cssClass += 'hud-customizer__gridline--edge';
 
-			const gridline = $.CreatePanel('Panel', PANELS.grid, '', { class: cssClass });
+			const gridline = $.CreatePanel('Panel', panels.grid, '', { class: cssClass });
 
 			LayoutUtil.setPosition(gridline, isX ? [offset, 0] : [0, offset]);
 
@@ -555,7 +555,7 @@ function createGridLines(): void {
 }
 
 function updateGridSize(): void {
-	const newSize = PANELS.gridSize.value;
+	const newSize = panels.gridSize.value;
 
 	if (newSize !== gridSize) {
 		gridSize = newSize;
@@ -573,10 +573,10 @@ function setSnapMode(axis: keyof Axis, mode: SnapMode): void {
 function showSnapTooltip(): void {
 	if (!activeComponent) return;
 	UiToolkitAPI.ShowTextTooltip(
-		PANELS.snaps.id,
+		panels.snaps.id,
 		'<b><i>Snapping Mode</i></b>\n' +
-			`Horizontal: <b>${SNAPS[Axis.X][activeComponent.snaps[Axis.X]].name}</b>\n` +
-			`Vertical: <b>${SNAPS[Axis.Y][activeComponent.snaps[Axis.Y]].name}</b>`
+			`Horizontal: <b>${snaps[Axis.X][activeComponent.snaps[Axis.X]].name}</b>\n` +
+			`Vertical: <b>${snaps[Axis.Y][activeComponent.snaps[Axis.Y]].name}</b>`
 	);
 }
 
