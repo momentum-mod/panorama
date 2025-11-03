@@ -1,0 +1,231 @@
+@use '../config' as *;
+@use '../abstract/mixin';
+@use 'sass:color';
+
+.hud-customizable {
+	$border-len: 1px;
+	//border: $border-len solid rgba($blue, 0.7);
+	box-shadow: 0px 0px 16px 0px rgba(0, 0, 0, 0.7);
+
+	//&--active {
+	//	//animation: HudCustomizerActivePulse 1s ease-in-out 0s infinite normal forwards;
+	//
+	//	box-shadow: 0px 0px 16px 0px rgba(0, 0, 0, 1);
+	//
+	//	@at-root {
+	//		@keyframes HudCustomizerActivePulse {
+	//			0% {
+	//				border: $border-len solid rgba($green, 0.7);
+	//			}
+	//			50% {
+	//				border: $border-len solid rgba($green, 1);
+	//			}
+	//			100% {
+	//				border: $border-len solid rgba($green, 0.7);
+	//			}
+	//		}
+	//	}
+	//}
+}
+
+.hud-customizer {
+	width: 100%;
+	height: 100%;
+
+	visibility: collapse;
+	z-index: 1000;
+
+	&--enabled {
+		visibility: visible;
+	}
+
+	&__settings {
+		align: right top;
+		margin-right: 32px;
+		margin-top: 32px;
+		flow-children: right;
+		padding: 8px;
+		background-color: rgba(0, 0, 0, 0.8);
+		border-radius: 2px;
+		border: 1px solid rgba(255, 255, 255, 0.1);
+	}
+
+	&__resize-knob {
+		width: 16px;
+		height: 16px;
+		transform: translateX(-8px) translateY(-8px);
+		border-radius: 50%;
+		background-color: rgba(255, 255, 255, 0.8);
+		border: 1px solid rgba(0, 0, 0, 0.2);
+		box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.4);
+
+		transition-property: border, box-shadow, background-color;
+		transition-timing-function: ease-in-out;
+		transition-duration: 0.1s;
+
+		&:hover {
+			background-color: rgba(200, 200, 200, 1);
+			border: 1px solid rgba(0, 0, 0, 0.4);
+			box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.9);
+		}
+	}
+}
+
+.hud-customizer-grid {
+	width: 100%;
+	height: 100%;
+	
+	&__gridline {
+		$this: &;
+		$color: rgb(255, 255, 255);
+
+		background-color: rgba(255, 255, 255, 0.03);
+		transition: background-color 0.05s ease-out 0s;
+
+		&--edge {
+			background-color: none;
+		}
+
+		&--x {
+			margin-left: -1px;
+			width: 1px;
+			height: 100%;
+		}
+
+		&--y {
+			margin-top: -1px;
+			width: 100%;
+			height: 1px;
+		}
+
+		&--highlight {
+			background-color: rgba($color, 0.3);
+		}
+
+		&--center {
+			background-color: rgba($color, 0.1);
+
+			&#{$this}--highlight {
+				background-color: rgba($color, 1);
+			}
+		}
+	}
+}
+
+.hud-customizer-settings {
+	&__close {
+		vertical-align: center;
+		width: 16px;
+		height: 16px;
+	}
+
+	&__gridsize {
+		width: 92px;
+	}
+}
+
+.hud-customizer-dragpanel {
+	//border: 1px solid orange;
+}
+
+.hud-customizer-overlay {
+	$root: &;
+
+	flow-children: down;
+
+	//border: 1px solid rgb(225, 0, 255);
+	overflow: noclip;
+
+	&--dragging {
+		animation: HudCustomizerDraggingPulse 1s ease-in-out 0s infinite normal forwards;
+
+		@at-root {
+			@keyframes HudCustomizerDraggingPulse {
+				0% {
+					border: 1px solid rgba($red, 1);
+				}
+				50% {
+					border: 1px solid rgba(color.scale($red, $saturation: 20%, $lightness: -10%), 1);
+				}
+				100% {
+					border: 1px solid rgba($red, 1);
+				}
+			}
+		}
+
+		& > .hud-customizer-overlay-snaps {
+			opacity: 0;
+			transition: opacity 0.05s ease-in 0s;
+		}
+	}
+
+	&__name {
+		align: center center;
+		@include mixin.font-header();
+		opacity: 0.3;
+	}
+}
+
+.hud-customizer-overlay-snaps {
+	$root: &;
+	width: fit-children;
+	height: fit-children;
+
+	horizontal-align: right;
+	flow-children: down;
+
+	margin: 2px;
+	border-radius: 2px;
+	border: 1px solid rgba(0, 0, 0, 0.9);
+
+	opacity: 0.7;
+	transition: opacity 0.1s ease-in-out 0s;
+
+	&:hover {
+		opacity: 1;
+	}
+
+	tooltip-position: bottom;
+
+	&__row {
+		width: fit-children;
+		height: fit-children;
+		flow-children: right;
+		border-bottom: 1px solid rgba(0, 0, 0, 0.95);
+
+		&--last {
+			border-bottom: 0px solid none;
+		}
+	}
+
+	&__button {
+		width: 16px;
+		height: 16px;
+		background-color: rgba(0, 0, 0, 0.8);
+
+		transition: background-color 0.075s ease-in-out 0s;
+
+		&--last {
+			border-right: 0px solid none;
+		}
+
+		&:selected {
+			background-color: rgba(90, 90, 90, 0.5);
+
+			& > #{$root}__icon {
+				opacity: 1;
+			}
+		}
+
+		&:hover {
+			background-color: rgba(99, 99, 99, 0.5);
+		}
+	}
+
+	&__icon {
+		width: 100%;
+		height: 100%;
+		padding: 0px;
+		opacity: 0.5;
+	}
+}

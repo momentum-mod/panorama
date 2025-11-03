@@ -257,7 +257,7 @@ class LeaderboardsHandler {
 			}
 
 			// Stage tracks
-			const segments = mapZoneData.tracks.main.zones.segments;
+			const segments = mapZoneData.tracks.main?.zones?.segments;
 			if (segments && segments.length > 1) {
 				segments.forEach((_, index) => {
 					const trackStr = `${$.Localize('#Leaderboards_Tracks_Stage')} ${index + 1}`;

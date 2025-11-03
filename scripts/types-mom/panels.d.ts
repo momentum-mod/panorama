@@ -193,22 +193,22 @@ interface ZoneMenu extends AbstractPanel<'ZoneMenu'> {
 /**
  * Panel methods responsible for reading and writing HUD config files.
  *
- * C++ side is agnostic to what you pass it, and we're not decided on the format of HUD layouts -
- * so types here are deliberately very weak; types in the HUD customizer files are much stronger.
+ * C++ side is agnostic to what you pass it, just saves and loads until builtin KV3 <-> JSO mappings.
  *
- * Note that cfg/hud_default.kv3 is stored in the licensee-only game repo, just let someone
- * (probably Tom) know if you need to update it.
+ * Note that cfg/hud_default.kv3 is stored in the licensee-only game repo, just let someone (probably Tom)
+ * know if you need to update it.
  */
 interface HudCustomizer extends AbstractPanel<'HudCustomizer'> {
 	/** Saves the given object to cfg/hud.kv3. */
-	saveLayout(data: Record<string, any>): void;
+	saveLayout(data: import('hud/customizer').HudLayout): void;
 
 	/**
 	 * Tries to get the contents of cfg/hud.kv3 as a JS object.
 	 * If cfg/hud.kv3 doesn't exist, loads cfg/hud_default.kv3.
+	 * If neither hud.kv3 or hud_default.kv3 exists, we crash.
 	 */
-	getLayout(): Record<string, any>;
+	getLayout(): import('hud/customizer').HudLayout;
 
 	/** Gets the contents of cfg/hud_default.kv3 as a JS object. */
-	getDefaultLayout(): Record<string, any>;
+	getDefaultLayout(): import('hud/customizer').HudLayout;
 }
