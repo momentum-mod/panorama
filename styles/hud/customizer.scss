@@ -5,7 +5,7 @@
 .hud-customizable {
 	$border-len: 1px;
 	//border: $border-len solid rgba($blue, 0.7);
-	box-shadow: 0px 0px 16px 0px rgba(0, 0, 0, 0.7);
+	//box-shadow: 0px 0px 16px 0px rgba(0, 0, 0, 0.7);
 
 	//&--active {
 	//	//animation: HudCustomizerActivePulse 1s ease-in-out 0s infinite normal forwards;
@@ -38,48 +38,22 @@
 	&--enabled {
 		visibility: visible;
 	}
-
-	&__settings {
-		align: right top;
-		margin-right: 32px;
-		margin-top: 32px;
-		flow-children: right;
-		padding: 8px;
-		background-color: rgba(0, 0, 0, 0.8);
-		border-radius: 2px;
-		border: 1px solid rgba(255, 255, 255, 0.1);
-	}
-
-	&__resize-knob {
-		width: 16px;
-		height: 16px;
-		transform: translateX(-8px) translateY(-8px);
-		border-radius: 50%;
-		background-color: rgba(255, 255, 255, 0.8);
-		border: 1px solid rgba(0, 0, 0, 0.2);
-		box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.4);
-
-		transition-property: border, box-shadow, background-color;
-		transition-timing-function: ease-in-out;
-		transition-duration: 0.1s;
-
-		&:hover {
-			background-color: rgba(200, 200, 200, 1);
-			border: 1px solid rgba(0, 0, 0, 0.4);
-			box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.9);
-		}
-	}
 }
 
 .hud-customizer-grid {
 	width: 100%;
 	height: 100%;
-	
-	&__gridline {
+	visibility: collapse;
+
+	&--enabled {
+		visibility: visible;
+	}
+
+	&__line {
 		$this: &;
 		$color: rgb(255, 255, 255);
 
-		background-color: rgba(255, 255, 255, 0.03);
+		background-color: rgba(255, 255, 255, 0.05);
 		transition: background-color 0.05s ease-out 0s;
 
 		&--edge {
@@ -113,14 +87,87 @@
 }
 
 .hud-customizer-settings {
-	&__close {
-		vertical-align: center;
-		width: 16px;
-		height: 16px;
+	width: 180px;
+	flow-children: down;
+	align: right top;
+	margin-right: 32px;
+	margin-top: 32px;
+	background-color: rgba(0, 0, 0, 0.9);
+	border-radius: 2px;
+	border: 1px solid rgba(255, 255, 255, 0.1);
+
+	&__header {
+		width: 100%;
+		background-color: rgba(0, 0, 0, 0.5);
+		padding: 4px;
+
+		&__close {
+			horizontal-align: right;
+			width: 12px;
+			height: 12px;
+			img-shadow: 0 1px 2px black;
+		}
 	}
 
-	&__gridsize {
-		width: 92px;
+	// TODO: Nick styles from zoning
+	&__components {
+	}
+
+	&__settings {
+		width: 100%;
+		flow-children: down;
+		margin: 8px;
+	}
+
+	&__setting-label:not(.specificity-hack-fuck-css) {
+		@include mixin.font-regular();
+		font-family: $font-monospace;
+		font-size: 11px;
+		vertical-align: center;
+	}
+
+	&__numberentry {
+		horizontal-align: right;
+		height: 18px;
+		margin-left: 4px;
+
+		& Button {
+			background-color: rgba(17, 17, 17, 0.7);
+			wash-color: none;
+
+			& Image {
+				padding: 4px;
+			}
+		}
+
+		& TextEntry {
+			width: fit-children;
+			text-align: center;
+			min-width: 24px;
+			horizontal-align: center;
+			padding: 2px 0 2px 6px;
+			
+			@include mixin.font-regular();
+			font-family: $font-monospace;
+			font-size: 11px;
+		}
+	}
+
+	&__togglebutton {
+		width: 100%;
+		flow-children: none;
+
+		& Label {
+			horizontal-align: left;
+		}
+
+		& .TickBox {
+			horizontal-align: right;
+			vertical-align: center;
+			width: 12px;
+			height: 12px;
+			margin-right: 0;
+		}
 	}
 }
 
@@ -130,14 +177,15 @@
 
 .hud-customizer-overlay {
 	$root: &;
+	$header-height: 24px;
 
+	z-index: 10;
 	flow-children: down;
-
-	//border: 1px solid rgb(225, 0, 255);
 	overflow: noclip;
 
+	// TODO:make this work!!!
 	&--dragging {
-		animation: HudCustomizerDraggingPulse 1s ease-in-out 0s infinite normal forwards;
+		//animation: HudCustomizerDraggingPulse 1s ease-in-out 0s infinite normal forwards;
 
 		@at-root {
 			@keyframes HudCustomizerDraggingPulse {
@@ -152,80 +200,99 @@
 				}
 			}
 		}
+	}
 
-		& > .hud-customizer-overlay-snaps {
-			opacity: 0;
-			transition: opacity 0.05s ease-in 0s;
+	&__resize-knobs {
+		width: 100%;
+		height: 100%;
+		overflow: noclip;
+
+		$size: 8px;
+		$half: calc($size / 2);
+
+		&__knob {
+			width: $size;
+			height: $size;
+			border-radius: 1px;
+			background-color: rgba(255, 255, 255, 0.8);
+			border: 1px solid rgba(0, 0, 0, 0.2);
+			box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.4);
+
+			transition-property: border, box-shadow, background-color;
+			transition-timing-function: ease-in-out;
+			transition-duration: 0.1s;
+
+			&:hover {
+				background-color: rgba(200, 200, 200, 1);
+				border: 1px solid rgba(0, 0, 0, 0.4);
+				box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.9);
+			}
+
+			&--top {
+				align: center top;
+				transform: translateY(-$half);
+			}
+
+			&--top-left {
+				align: left top;
+				transform: translateX(-$half) translateY(-$half);
+			}
+
+			&--top-right {
+				align: right top;
+				transform: translateX($half) translateY(-$half);
+			}
+
+			&--left {
+				align: left center;
+				transform: translateX(-$half);
+			}
+
+			&--right {
+				align: right center;
+				transform: translateX($half);
+			}
+
+			&--bottom {
+				align: center bottom;
+				transform: translateY($half);
+			}
+
+			&--bottom-left {
+				align: left bottom;
+				transform: translateX(-$half) translateY($half);
+			}
+
+			&--bottom-right {
+				align: right bottom;
+				transform: translateX($half) translateY($half);
+			}
 		}
+	}
+
+	$border: rgb(23, 255, 0);
+	&__main {
+		height: fill-parent-flow(1);
+		width: 100%;
+
+		border: 1px solid $border;
 	}
 
 	&__name {
-		align: center center;
-		@include mixin.font-header();
-		opacity: 0.3;
-	}
-}
-
-.hud-customizer-overlay-snaps {
-	$root: &;
-	width: fit-children;
-	height: fit-children;
-
-	horizontal-align: right;
-	flow-children: down;
-
-	margin: 2px;
-	border-radius: 2px;
-	border: 1px solid rgba(0, 0, 0, 0.9);
-
-	opacity: 0.7;
-	transition: opacity 0.1s ease-in-out 0s;
-
-	&:hover {
-		opacity: 1;
-	}
-
-	tooltip-position: bottom;
-
-	&__row {
+		align: left top;
+		margin-left: 16px;
+		height: $header-height;
 		width: fit-children;
-		height: fit-children;
-		flow-children: right;
-		border-bottom: 1px solid rgba(0, 0, 0, 0.95);
 
-		&--last {
-			border-bottom: 0px solid none;
-		}
-	}
+		border-left: 1px solid $border;
+		border-top: 1px solid $border;
+		border-right: 1px solid $border;
+		background-color: rgba(0, 0, 0, 0.5);
+		padding: 2px 4px;
 
-	&__button {
-		width: 16px;
-		height: 16px;
-		background-color: rgba(0, 0, 0, 0.8);
-
-		transition: background-color 0.075s ease-in-out 0s;
-
-		&--last {
-			border-right: 0px solid none;
-		}
-
-		&:selected {
-			background-color: rgba(90, 90, 90, 0.5);
-
-			& > #{$root}__icon {
-				opacity: 1;
-			}
-		}
-
-		&:hover {
-			background-color: rgba(99, 99, 99, 0.5);
-		}
-	}
-
-	&__icon {
-		width: 100%;
-		height: 100%;
-		padding: 0px;
-		opacity: 0.5;
+		@include mixin.font-regular();
+		font-family: $font-monospace;
+		font-size: 11px;
+		font-weight: medium;
 	}
 }

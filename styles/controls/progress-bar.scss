@@ -25,7 +25,7 @@
 .progressbar-hudmeter {
 	@extend .progressbar;
 
-	width: $progressbar-hudmeter-width;
+	width: 100%;
 	height: $progressbar-hudmeter-height;
 	border-radius: $progressbar-hudmeter-border-radius;
 

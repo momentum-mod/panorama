@@ -8,26 +8,38 @@
 	</scripts>
 
 	<HudCustomizer class="hud-customizer" hittest="false">
-		<Panel class="hud-customizer__settings">
-			<Button onactivate="disableEditing()">
-				<Image class="hud-customizer-settings__close" src="file://{images}/close.svg" />
+		<Panel class="hud-customizer-settings" hittest="true" draggable="true">
+			<Button class="hud-customizer-settings__header" onactivate="HudCustomizerHandler.disableEditing()">
+				<Image class="hud-customizer-settings__header__close" src="file://{images}/close.svg" />
 			</Button>
-			<NumberEntry id="GridSize" class="hud-customizer-settings__gridsize" min="4" max="12" onvaluechanged="HudCustomizerHandler.updateGridSize()" />
+			<Panel class="hud-customizer-settings__settings">
+				<ToggleButton id="GridToggle" class="checkbox hud-customizer-settings__togglebutton" onactivate="HudCustomizerHandler.updateGridVisibility()">
+					<Label class="hud-customizer-settings__setting-label" text="Enable Grid" />
+				</ToggleButton>
+				<Panel class="w-full">
+					<Label class="hud-customizer-settings__setting-label" text="Grid Size" />
+					<NumberEntry id="GridSize" class="hud-customizer-settings__numberentry" min="4" max="12" onvaluechanged="HudCustomizerHandler.updateGridSize()" />
+				</Panel>
+				<ToggleButton id="SnappingToggle" class="checkbox hud-customizer-settings__togglebutton">
+					<Label class="hud-customizer-settings__setting-label" text="Enable Snapping" />
+				</ToggleButton>
+			</Panel>
 		</Panel>
 
-		<!--
-			 Panel overlaid over the active component.
-			 Like the active component, it's moved around via JS with snapping as the DragPanel is dragged.
-		 -->
+		<!-- Panel overlaid over the active component.
+			 Like the active component, it's moved around via JS with snapping as the DragPanel is dragged. -->
 		<Panel id="Overlay" class="hud-customizer-overlay">
-			<Panel id="ResizeKnobs" />
 			<Label id="ActiveName" class="hud-customizer-overlay__name" />
+			<Panel class="hud-customizer-overlay__main">
+				<Panel id="ResizeKnobs" class="hud-customizer-overlay__resize-knobs" />
+			</Panel>
 		</Panel>
 
-		<!--
-			 Invisible panel that is actually dragged by the user.
-			 Its position is used to update the Overlay and the active component.
-		 -->
+		<!-- Invisible panel that is actually dragged by the user.
+			 Its position is used to update the overlay and the active component. -->
 		<Panel id="DragPanel" draggable="true" class="hud-customizer-dragpanel" />
+
+		<!-- Another invisible panel for handling resizing. -->
+		<Panel id="DragKnob" />
 	</HudCustomizer>
 </root>
