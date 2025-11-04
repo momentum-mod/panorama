@@ -2,32 +2,6 @@
 @use '../abstract/mixin';
 @use 'sass:color';
 
-.hud-customizable {
-	$border-len: 1px;
-	//border: $border-len solid rgba($blue, 0.7);
-	//box-shadow: 0px 0px 16px 0px rgba(0, 0, 0, 0.7);
-
-	//&--active {
-	//	//animation: HudCustomizerActivePulse 1s ease-in-out 0s infinite normal forwards;
-	//
-	//	box-shadow: 0px 0px 16px 0px rgba(0, 0, 0, 1);
-	//
-	//	@at-root {
-	//		@keyframes HudCustomizerActivePulse {
-	//			0% {
-	//				border: $border-len solid rgba($green, 0.7);
-	//			}
-	//			50% {
-	//				border: $border-len solid rgba($green, 1);
-	//			}
-	//			100% {
-	//				border: $border-len solid rgba($green, 0.7);
-	//			}
-	//		}
-	//	}
-	//}
-}
-
 .hud-customizer {
 	width: 100%;
 	height: 100%;
@@ -45,7 +19,7 @@
 	height: 100%;
 	visibility: collapse;
 
-	&--enabled {
+	.hud--customizer-enabled &--enabled {
 		visibility: visible;
 	}
 
@@ -87,48 +61,117 @@
 }
 
 .hud-customizer-settings {
-	width: 180px;
+	width: 260px;
 	flow-children: down;
 	align: right top;
 	margin-right: 32px;
 	margin-top: 32px;
-	background-color: rgba(0, 0, 0, 0.9);
+	background-color: #222;
 	border-radius: 2px;
 	border: 1px solid rgba(255, 255, 255, 0.1);
+	box-shadow: 0px 1px 4px black;
 
 	&__header {
 		width: 100%;
 		background-color: rgba(0, 0, 0, 0.5);
-		padding: 4px;
+		padding: 4px 8px;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+		&__title {
+			font-family: $font-monospace;
+			font-size: 12px;
+			font-weight: medium;
+			vertical-align: center;
+		}
 
 		&__close {
 			horizontal-align: right;
+			vertical-align: center;
 			width: 12px;
 			height: 12px;
-			img-shadow: 0 1px 2px black;
+			wash-color: #bbb;
+			transition: wash-color 0.1s ease-in-out 0s;
+
+			&:hover {
+				wash-color: #fff;
+			}
 		}
 	}
 
-	// TODO: Nick styles from zoning
-	&__components {
+	&__component-list {
+		flow-children: down;
+		margin: 0px 6px;
+		border-radius: 2px;
+		width: 100%;
+		border: 1px solid rgba(255, 255, 255, 0.025);
+		background-color: rgba(0, 0, 0, 0.4);
 	}
 
-	&__settings {
+	&__component {
+		flow-children: right;
+		width: 100%;
+		padding: 2px 6px;
+
+		background-color: rgba(255, 255, 255, 0);
+		transition: background-color 0.1s ease-in-out 0s;
+
+		&:hover {
+			background-color: rgba(255, 255, 255, 0.05);
+		}
+
+		&:selected {
+			background-color: rgba(255, 255, 255, 0.1);
+		}
+
+		&__name {
+			font-family: $font-monospace;
+			font-size: 12px;
+			font-weight: medium;
+		}
+	}
+
+	&__global {
 		width: 100%;
 		flow-children: down;
-		margin: 8px;
+		margin: 4px 10px 6px 10px;
+	}
+
+	&__active {
+		flow-children: down;
+		width: 100%;
+		margin: 4px 12px 6px 10px;
+
+		&__header {
+			flow-children: right;
+			font-size: 18px;
+
+			&__name {
+				font-family: $font-monospace;
+				font-weight: bold;
+				vertical-align: center;
+			}
+		}
+
+		&__contents {
+			width: 100%;
+			flow-children: down;
+		}
+	}
+
+	&__row {
+		height: 20px;
 	}
 
 	&__setting-label:not(.specificity-hack-fuck-css) {
-		@include mixin.font-regular();
 		font-family: $font-monospace;
-		font-size: 11px;
+		font-size: 12px;
 		vertical-align: center;
 	}
 
 	&__numberentry {
 		horizontal-align: right;
-		height: 18px;
+		vertical-align: center;
+		height: 16px;
 		margin-left: 4px;
 
 		& Button {
@@ -145,9 +188,8 @@
 			text-align: center;
 			min-width: 24px;
 			horizontal-align: center;
-			padding: 2px 0 2px 6px;
-			
-			@include mixin.font-regular();
+			padding: 1px 0 1px 6px;
+
 			font-family: $font-monospace;
 			font-size: 11px;
 		}
@@ -156,6 +198,7 @@
 	&__togglebutton {
 		width: 100%;
 		flow-children: none;
+		min-height: 16px;
 
 		& Label {
 			horizontal-align: left;
@@ -164,10 +207,17 @@
 		& .TickBox {
 			horizontal-align: right;
 			vertical-align: center;
-			width: 12px;
-			height: 12px;
+			width: 14px;
+			height: 14px;
 			margin-right: 0;
 		}
+	}
+
+	&__divider {
+		width: 100%;
+		height: 1px;
+		margin: 4px 0px;
+		background-color: rgba(255, 255, 255, 0.1);
 	}
 }
 
@@ -290,7 +340,6 @@
 		background-color: rgba(0, 0, 0, 0.5);
 		padding: 2px 4px;
 
-		@include mixin.font-regular();
 		font-family: $font-monospace;
 		font-size: 11px;
 		font-weight: medium;

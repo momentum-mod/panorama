@@ -71,6 +71,9 @@ declare interface GlobalEventNameMap {
 	ColorPickerSave: (currColor: rgbaColor) => void;
 
 	ColorPickerCancel: () => void;
+
+	/** Fired when the HUD customizer TS side is ready to accept registrations */
+	HudCustomizer_Ready: () => void;
 }
 
 $.DefineEvent('ReloadMainMenuBackground', 0);
@@ -91,3 +94,4 @@ $.DefineEvent('MapSelector_HideLeaderboards', 0);
 $.DefineEvent('HudTabMenu_ForceClose', 0);
 $.DefineEvent('ColorPickerSave', 1, 'color');
 $.DefineEvent('ColorPickerCancel', 0);
+$.DefineEvent('HudCustomizer_Ready', 0);

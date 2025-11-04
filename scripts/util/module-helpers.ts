@@ -113,13 +113,8 @@ export function PanelHandler(
 		// event registration this way, and I'd rather not have two competing approaches to event registration, besides
 		// PanelLoaded for which this system is drastically better. Note that Panorama doesn't have a `PanelDestroyed` event or
 		// similar.
-		$.Msg("Yo I'm loading yolo xD " + className);
-
 		if ('onPanelLoad' in instance) {
-			$.RegisterEventHandler('PanelLoaded', $.GetContextPanel(), (...args) => {
-				$.Msg('wowzers ' + className);
-				instance['onPanelLoad'].call(instance, ...args);
-			});
+			$.RegisterEventHandler('PanelLoaded', $.GetContextPanel(), instance['onPanelLoad'].bind(instance));
 		}
 	};
 }
