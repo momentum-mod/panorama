@@ -77,17 +77,27 @@
 	&__footer-button {
 		height: $footer-height;
 		width: $footer-height;
-		horizontal-align: left;
 		vertical-align: center;
-		border-right: 1px solid rgba(255, 255, 255, 0.0125);
+		border-right: 1px solid rgba(255, 255, 255, 0.01);
 		background-position: center;
 		background-repeat: no-repeat;
 		background-color: gradient(radial, 50% 50%, 0% 0%, 100% 100%, from(rgba(0, 0, 0, 0.1)), to(rgba(0, 0, 0, 0.3)));
-		background-size: 75% 75%;
-		background-image: url('file://{images}/pencil-outline.svg');
+		background-size: 70% 70%;
 		img-shadow: $button-icon-shadow;
 		wash-color: $button-text-color;
 		transition: background-color 0.05s ease-out 0s;
+
+		&--hud-customizer {
+			background-image: url('file://{images}/television-guide.svg');
+		}
+
+		&--zoning {
+			background-image: url('file://{images}/pencil-outline.svg');
+			
+			&:selected {
+				background-image: url('file://{images}/pencil-off-outline.svg');
+			}
+		}
 
 		&:hover {
 			background-color: gradient(
@@ -98,10 +108,6 @@
 				from(rgba(0, 0, 0, 0.3)),
 				to(rgba(0, 0, 0, 0.6))
 			);
-		}
-
-		&:selected {
-			background-image: url('file://{images}/pencil-off-outline.svg');
 		}
 	}
 

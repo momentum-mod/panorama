@@ -1,6 +1,14 @@
 import * as LayoutUtil from 'common/layout';
 import * as Enum from 'util/enum';
 import { PanelHandler } from 'util/module-helpers';
+import {
+	CustomizerComponentProperties,
+	CustomizerPropertyType,
+	DynamicStyle,
+	IHudCustomizerHandler,
+	QuerySelector,
+	registerHUDCustomizerComponent
+} from 'common/hud-customizer';
 
 /** Structure of layout stored out to KV3 */
 export interface HudLayout {
@@ -8,6 +16,7 @@ export interface HudLayout {
 		[id: string]: {
 			position: LayoutUtil.Position;
 			size: LayoutUtil.Size;
+			dynamicStyles?: Array<{ name: string; style: keyof Style; value: unknown }>;
 		};
 	};
 	settings: {
@@ -53,6 +62,7 @@ const OVERLAY_HEADER_HEIGHT = 21;
 
 interface Component {
 	panel: GenericPanel;
+	dynamicStyles?: Array<DynamicStyle & { value: unknown }>;
 	// Temp values for position and size that makes a lot of code simpler.
 	// These do *not* update the actual panel until you use LayoutUtil to set them.
 	position: LayoutUtil.Position;
@@ -67,14 +77,17 @@ interface Gridline {
 type GridlineForAxis = [Gridline[], Gridline[]];
 
 @PanelHandler()
-class HudCustomizerHandler {
+class HudCustomizerHandler implements IHudCustomizerHandler {
 	readonly panels = {
 		hudRoot: $.GetContextPanel().GetParent()!,
 		customizer: $.GetContextPanel<HudCustomizer>()!,
 		dragPanel: $<Panel>('#DragPanel')!,
 		dragResizeKnob: $<Panel>('#DragKnob')!,
 		overlay: $<Panel>('#Overlay')!,
-		activeName: $<Label>('#ActiveName')!,
+		settings: $<Panel>('#CustomizerSettings')!,
+		componentList: $<Panel>('#ComponentList')!,
+		activeComponentSettings: $<Panel>('#ActiveComponentSettings')!,
+		activeComponentSettingsList: $<Panel>('#ActiveComponentSettingsList')!,
 		resizeKnobs: $<Panel>('#ResizeKnobs')!,
 		grid: $.GetContextPanel().GetParent()!.FindChildTraverse('HudCustomizerGrid')!,
 		gridToggle: $<ToggleButton>('#GridToggle')!,
@@ -82,104 +95,110 @@ class HudCustomizerHandler {
 		snappingToggle: $<ToggleButton>('#SnappingToggle')!
 	};
 
-	private components: Record<string, Component> = undefined!;
-	private gridlines: GridlineForAxis = [[], []];
-	private activeComponent?: Component | undefined;
-	private activeGridlines: [Gridline | undefined, Gridline | undefined] = [undefined, undefined];
+	components: Record<string, Component> = {};
+	gridlines: GridlineForAxis = [[], []];
+	activeComponent?: Component | undefined;
+	activeGridlines: [Gridline | undefined, Gridline | undefined] = [undefined, undefined];
 
-	private resizeKnobs: Record<ResizeMode, Button> = undefined!;
+	resizeKnobs: Record<ResizeMode, Button> = undefined!;
 
-	private dragStartHandle?: number;
-	private dragEndHandle?: number;
-	private onThinkHandle?: number;
+	dragStartHandle?: number;
+	dragEndHandle?: number;
+	onThinkHandle?: number;
 
-	private dragMode?: DragMode;
+	dragMode?: DragMode;
 
-	private gridSize: number = undefined!;
-	private enableGrid: boolean = undefined!;
-	private enableSnapping: boolean = undefined!;
+	gridSize: number = undefined!;
+	enableGrid: boolean = undefined!;
+	enableSnapping: boolean = undefined!;
 
-	private defaultLayout?: HudLayout;
+	layout?: HudLayout;
+	defaultLayout?: HudLayout;
 
 	constructor() {
-		// TODO: Move to own thing! Zonemenu will be v helpful reference
-		$.RegisterForUnhandledEvent('HudChat_Show', () => this.enableEditing());
-		$.RegisterForUnhandledEvent('HudChat_Hide', () => this.disableEditing());
-
 		if ((this.panels.hudRoot.paneltype as string) !== 'Hud') {
 			throw new Error("Hud Customizer: Customizer's parent panel is not the HUD.");
 		}
 
-		// TODO: I *think* we're gonna need this event to cover all cases where the HUD is reloaded.
+		$.RegisterForUnhandledEvent('HudCustomizer_Enabled', () => this.enableEditing());
+		$.RegisterForUnhandledEvent('HudCustomizer_Disabled', () => this.disableEditing());
+
+		// TODO: Below todo is *probably* fine now using events like this, but be very careful everything
+		// is getting registered okay.
+		// TODO (Old): I *think* we're gonna need this event to cover all cases where the HUD is reloaded.
 		// Looks like some stuff like HudSpecInfoHandler listening for PanelLoaded is getting
 		// called later than this though...
 		$.RegisterForUnhandledEvent('HudInit' as any, () => {
-			this.load();
+			// Once HUD is fully initialized, let components awaiting registration know to load component
+			$.DispatchEvent('HudCustomizer_Ready');
+
+			// TODO: not working :(
+			registerHUDCustomizerComponent(this.panels.settings, { resizeY: false, resizeX: false });
 		});
-	}
 
-	public enableEditing(): void {
-		if (!this.components || Object.keys(this.components).length === 0) {
-			throw new Error('We werent loaded! Fuck!!');
-		}
+		// TODO: This was just for case of someone changin layout via file and wanting to update ingame.
+		// Not  sure if we should even support, and dont wanna think about rn.
+		// $.RegisterEventHandler('HudCustomizer_LayoutReloaded', this.panels.customizer, () => {
+		// 	this.load();
+		// });
 
-		this.panels.customizer.AddClass('hud-customizer--enabled');
-
-		for (const component of Object.values(this.components)) {
-			component.panel.AddClass('hud-customizable');
-			component.panel.SetPanelEvent('onmouseover', () => this.onComponentMouseOver(component));
-		}
-	}
-
-	public disableEditing(): void {
-		this.panels.customizer.RemoveClass('hud-customizer--enabled');
-		for (const component of Object.values(this.components)) {
-			component.panel.RemoveClass('hud-customizable');
-			component.panel.ClearPanelEvent('onmouseover');
-		}
-
-		if (this.dragStartHandle) {
-			$.UnregisterEventHandler('DragStart', this.panels.dragPanel, this.dragStartHandle);
-		}
-	}
-
-	private load(): void {
 		this.gridlines = [[], []];
 		this.activeGridlines = [undefined, undefined];
 		this.activeComponent = undefined;
 
-		const layoutData = this.panels.customizer.getLayout();
+		this.layout = this.panels.customizer.getLayout();
 
-		this.loadSettings(layoutData);
-		this.loadComponents(layoutData);
-		this.createGridLines();
-		this.updateGridVisibility();
-		this.createResizeKnobs();
-	}
-
-	private loadSettings(layoutData: HudLayout): void {
-		this.gridSize = layoutData.settings?.gridSize ?? DEFAULT_GRID_SIZE;
+		this.gridSize = this.layout.settings?.gridSize ?? DEFAULT_GRID_SIZE;
 		this.panels.gridSize.value = this.gridSize;
 
-		this.enableGrid = layoutData?.settings?.enableGrid ?? DEFAULT_GRID_ENABLED;
+		this.enableGrid = this.layout?.settings?.enableGrid ?? DEFAULT_GRID_ENABLED;
 		this.panels.gridToggle.checked = this.enableGrid;
 
-		this.enableSnapping = layoutData?.settings?.enableSnapping ?? DEFAULT_SNAP_ENABLED;
+		this.enableSnapping = this.layout?.settings?.enableSnapping ?? DEFAULT_SNAP_ENABLED;
 		this.panels.snappingToggle.checked = this.enableSnapping;
+
+		this.panels.activeComponentSettings.visible = false;
+
+		UiToolkitAPI.GetGlobalObject()['HudCustomizerHandler'] = this;
 	}
 
-	private loadComponents(layoutData: HudLayout): void {
-		this.components = {};
-		for (const panel of this.getCustomizablePanels()) {
-			const component = layoutData?.components?.[panel.id] ?? this.getDefaultComponent(panel);
-			if (component) {
-				const pos = this.fixWonkyBounds(panel, component.position, component.size);
-				this.components[panel.id] = { panel, position: pos, size: component.size };
-			}
+	loadComponent(panel: GenericPanel, properties: CustomizerComponentProperties): void {
+		if (!panel) return;
+
+		const component = this.layout?.components?.[panel.id] ?? this.getDefaultComponent(panel);
+		if (component) {
+			const pos = this.fixWonkyBounds(panel, component.position, component.size);
+			this.components[panel.id] = {
+				panel,
+				position: pos,
+				size: component.size,
+				dynamicStyles: properties.dynamicStyles as any // TODO:, have to parse saved values into dynamic stuff
+			};
 		}
+
+		this.generateComponentList();
 	}
 
-	private save(): void {
+	getDefaultComponent(panel: GenericPanel): Component {
+		// Load and cache defaults
+		this.defaultLayout ??= this.panels.customizer.getDefaultLayout();
+
+		const defaults = this.defaultLayout.components[panel.id];
+		if (!defaults || !Array.isArray(defaults.position) || !Array.isArray(defaults.size)) {
+			// TODO: Should probably make this an error when proejct is completed, too annoying to do rn.
+			$.Warning(
+				`HudCustomizer: Found a customizable HUD element ${panel.paneltype} that doesn't have a default layout!`
+			);
+
+			return { panel, position: LayoutUtil.getPosition(panel), size: LayoutUtil.getSize(panel) };
+		}
+
+		return { panel, position: defaults.position, size: defaults.size };
+	}
+
+	save(): void {
+		// TODO: Check we don't potentially lose data if a component fails to register once, which would
+		// cause previous data to get wiped.
 		const saveData: HudLayout = {
 			settings: {
 				gridSize: this.gridSize,
@@ -200,38 +219,52 @@ class HudCustomizerHandler {
 		this.panels.customizer.saveLayout(saveData);
 	}
 
-	private getCustomizablePanels() {
-		return this.panels.hudRoot
-			.Children()
-			.filter((panel) => panel.GetAttributeString('customizable', 'false') === 'true');
-	}
-
-	private getDefaultComponent(panel: GenericPanel): Component {
-		// Load and cache defaults
-		this.defaultLayout ??= this.panels.customizer.getDefaultLayout();
-
-		const defaults = this.defaultLayout.components[panel.id];
-		if (!defaults || !Array.isArray(defaults.position) || !Array.isArray(defaults.size)) {
-			// TODO: Should probably make this an error when proejct is completed, too annoying to do rn.
-			$.Warning(
-				`HudCustomizer: Found a customizable HUD element ${panel.paneltype} that doesn't have a default layout!`
-			);
-
-			return { panel, position: LayoutUtil.getPosition(panel), size: LayoutUtil.getSize(panel) };
+	enableEditing(): void {
+		if (!this.components || Object.keys(this.components).length === 0) {
+			throw new Error('We werent loaded! Fuck!!');
 		}
 
-		return { panel, position: defaults.position, size: defaults.size };
+		for (const component of Object.values(this.components)) {
+			component.panel.SetPanelEvent('onmouseover', () => this.selectComponent(component));
+		}
+
+		this.createGridLines();
+		this.updateGridVisibility();
+		this.createResizeKnobs();
 	}
 
-	private onComponentMouseOver(component: Component): void {
+	disableEditing(): void {
+		for (const component of Object.values(this.components)) {
+			component.panel.ClearPanelEvent('onmouseover');
+		}
+
+		if (this.dragStartHandle) {
+			$.UnregisterEventHandler('DragStart', this.panels.dragPanel, this.dragStartHandle);
+		}
+	}
+
+	toggle(enable: boolean) {
+		this.panels.customizer.toggleUI(enable);
+	}
+
+	generateComponentList() {
+		this.panels.componentList.RemoveAndDeleteChildren();
+
+		for (const [id, component] of Object.entries(this.components)) {
+			const panel = $.CreatePanel('ToggleButton', this.panels.componentList, `${id}Settings`);
+			panel.LoadLayoutSnippet('component');
+			panel.SetDialogVariable('name', id);
+			panel.SetSelected(this.activeComponent === component);
+			panel.SetPanelEvent('onactivate', () => {
+				this.selectComponent(component);
+			});
+		}
+	}
+
+	selectComponent(component: Component): void {
 		if (this.activeComponent && this.activeComponent === component) return;
 
-		// TODO: Can probably apply all this kind of stylign to the overlay, not the underlying component panel.
-		this.activeComponent?.panel.RemoveClass('hud-customizable--active');
-
 		this.activeComponent = component;
-
-		this.activeComponent.panel.AddClass('hud-customizable--active');
 
 		const [[x, y], [w, h]] = LayoutUtil.getPositionAndSize(component.panel);
 
@@ -245,7 +278,8 @@ class HudCustomizerHandler {
 		LayoutUtil.setPositionAndSize(this.panels.dragPanel, [x, y], [w, h]);
 
 		// TODO: This is going to be weird to localise!
-		this.panels.activeName.text = this.activeComponent.panel.id;
+		this.panels.overlay.SetDialogVariable('name', this.activeComponent.panel.id);
+		this.updateActiveComponentSettings();
 
 		if (this.dragStartHandle) {
 			$.UnregisterEventHandler('DragStart', this.panels.dragPanel, this.dragStartHandle);
@@ -261,7 +295,86 @@ class HudCustomizerHandler {
 		});
 	}
 
-	private onStartDrag(mode: DragMode, displayPanel: Panel, _panelID: string, callback: DragEventInfo) {
+	updateActiveComponentSettings(): void {
+		this.panels.activeComponentSettingsList.RemoveAndDeleteChildren();
+
+		if (!this.activeComponent || (this.activeComponent.dynamicStyles?.length ?? 0) === 0) {
+			this.panels.activeComponentSettings.visible = false;
+			return;
+		}
+
+		this.panels.activeComponentSettings.visible = true;
+		this.panels.settings.SetDialogVariable('active_name', this.activeComponent.panel.id);
+
+		for (const dynamicStyle of this.activeComponent.dynamicStyles ?? []) {
+			const panel = $.CreatePanel('Panel', this.panels.activeComponentSettingsList, '');
+			switch (dynamicStyle.type) {
+				case CustomizerPropertyType.NUMBER_ENTRY: {
+					panel.LoadLayoutSnippet('dynamic-numberentry');
+					panel.SetDialogVariable('name', dynamicStyle.name);
+					const numberEntry = panel.FindChildTraverse<NumberEntry>('NumberEntry')!;
+
+					if (dynamicStyle.settingProps) {
+						Object.assign(numberEntry, dynamicStyle.settingProps);
+						numberEntry.SetPanelEvent('onvaluechanged', () =>
+							this.applyDynamicStyle(this.activeComponent, dynamicStyle, numberEntry.value)
+						);
+					}
+				}
+			}
+		}
+	}
+
+	applyDynamicStyle(component: Component | undefined, dynamicStyle: DynamicStyle, value: unknown): void {
+		if (!component) return;
+
+		const targetPanels: GenericPanel[] = [];
+
+		if (dynamicStyle.targetPanel) {
+			if (Array.isArray(dynamicStyle.targetPanel)) {
+				for (const selector of dynamicStyle.targetPanel) {
+					const target = dollarSignLookup(component.panel, selector);
+					if (Array.isArray(target)) {
+						for (const t of target) {
+							targetPanels.push(t);
+						}
+					} else {
+						targetPanels.push(target);
+					}
+				}
+			} else {
+				const target = dollarSignLookup(component.panel, dynamicStyle.targetPanel);
+				if (Array.isArray(target)) {
+					for (const t of target) {
+						targetPanels.push(t);
+					}
+				} else {
+					targetPanels.push(target);
+				}
+			}
+		} else {
+			targetPanels.push(component.panel);
+		}
+
+		if ('styleProperty' in dynamicStyle) {
+			const styleValue = dynamicStyle.valueFn?.(value) ?? value;
+			if (styleValue != null) {
+				for (const panel of targetPanels) {
+					(panel.style as any)[dynamicStyle.styleProperty] = styleValue;
+				}
+			}
+		} else {
+			if (!('func' in dynamicStyle)) {
+				throw new Error('Invalid dynamic style, missing styleProperty or className');
+			}
+
+			for (const panel of targetPanels) {
+				dynamicStyle.func(panel, value);
+			}
+		}
+	}
+
+	onStartDrag(mode: DragMode, displayPanel: Panel, _panelID: string, callback: DragEventInfo) {
 		if (!this.activeComponent) return;
 
 		this.dragMode = mode;
@@ -279,7 +392,7 @@ class HudCustomizerHandler {
 		callback.removePositionBeforeDrop = false;
 	}
 
-	private onDragThink(): void {
+	onDragThink(): void {
 		if (!this.activeComponent || this.dragMode === undefined) return;
 
 		if (this.dragMode === DragMode.MOVE) {
@@ -308,9 +421,14 @@ class HudCustomizerHandler {
 				[this.activeComponent.size[0], this.activeComponent.size[1] + OVERLAY_HEADER_HEIGHT]
 			);
 		}
+
+		this.panels.overlay.SetDialogVariable('x', fixFloat(this.activeComponent.position[0]).toString());
+		this.panels.overlay.SetDialogVariable('y', fixFloat(this.activeComponent.position[1]).toString());
+		this.panels.overlay.SetDialogVariable('width', fixFloat(this.activeComponent.size[0]).toString());
+		this.panels.overlay.SetDialogVariable('height', fixFloat(this.activeComponent.size[1]).toString());
 	}
 
-	private onEndDrag() {
+	onEndDrag() {
 		if (!this.activeComponent) return;
 
 		if (this.onThinkHandle == null) {
@@ -335,7 +453,7 @@ class HudCustomizerHandler {
 		this.dragMode = undefined;
 	}
 
-	private handleMoveSnapping(): void {
+	handleMoveSnapping(): void {
 		if (!this.activeComponent) return;
 
 		const shouldSnap = this.panels.snappingToggle.checked;
@@ -408,7 +526,7 @@ class HudCustomizerHandler {
 		}
 	}
 
-	private setActiveGridline(axis: Axis, gridline: Gridline | undefined): void {
+	setActiveGridline(axis: Axis, gridline: Gridline | undefined): void {
 		const activeGridline = this.activeGridlines[axis];
 
 		if (gridline !== activeGridline) {
@@ -423,7 +541,7 @@ class HudCustomizerHandler {
 		}
 	}
 
-	private readonly ResizeVectors = {
+	readonly ResizeVectors = {
 		[DragMode.RESIZE_TOP]: [0, -1],
 		[DragMode.RESIZE_TOP_RIGHT]: [1, -1],
 		[DragMode.RESIZE_RIGHT]: [1, 0],
@@ -434,7 +552,7 @@ class HudCustomizerHandler {
 		[DragMode.RESIZE_TOP_LEFT]: [1, -1]
 	};
 
-	private handleResizeSnapping(): void {
+	handleResizeSnapping(): void {
 		if (!this.activeComponent || this.dragMode === undefined) return;
 
 		const minSize = getMinSize(this.activeComponent.panel);
@@ -472,7 +590,7 @@ class HudCustomizerHandler {
 		}
 	}
 
-	private createGridLines(): void {
+	createGridLines(): void {
 		this.panels.grid.RemoveAndDeleteChildren();
 
 		const numXLines = 2 ** this.gridSize;
@@ -505,14 +623,14 @@ class HudCustomizerHandler {
 		}
 	}
 
-	public updateGridVisibility(): void {
+	updateGridVisibility(): void {
 		const enabled = this.panels.gridToggle.checked;
 		this.panels.grid.SetHasClass('hud-customizer-grid--enabled', enabled);
 		this.panels.gridSize.enabled = enabled;
 		this.panels.snappingToggle.enabled = enabled;
 	}
 
-	public updateGridSize(): void {
+	updateGridSize(): void {
 		const newSize = this.panels.gridSize.value;
 
 		if (newSize !== this.gridSize) {
@@ -521,12 +639,13 @@ class HudCustomizerHandler {
 		}
 	}
 
-	private getGridGapLength(axis: Axis): number {
+	getGridGapLength(axis: Axis): number {
 		return (axis === Axis.X ? MAX_X_POS : MAX_Y_POS) / this.gridlines[axis].length;
 	}
 
-	private createResizeKnobs(): void {
+	createResizeKnobs(): void {
 		this.resizeKnobs = {} as Record<any, any>;
+		this.panels.resizeKnobs.RemoveAndDeleteChildren();
 
 		Enum.fastValuesNumeric(DragMode)
 			.filter((dir) => dir !== DragMode.MOVE) // handled in onComponentMouseOver
@@ -550,11 +669,7 @@ class HudCustomizerHandler {
 			});
 	}
 
-	private fixWonkyBounds(
-		panel: GenericPanel,
-		position: LayoutUtil.Position,
-		size: LayoutUtil.Size
-	): LayoutUtil.Position {
+	fixWonkyBounds(panel: GenericPanel, position: LayoutUtil.Position, size: LayoutUtil.Size): LayoutUtil.Position {
 		return position.map((len, axis) => {
 			if (Number.isNaN(len)) {
 				$.Warning(`HudCustomizer: Loaded invalid position ${len} for axis ${Axis[Axes[axis]]}, setting to 0.`);
@@ -579,7 +694,7 @@ class HudCustomizerHandler {
 }
 
 function fixFloat(n: number) {
-	return +n.toFixed(3);
+	return +n.toFixed(4);
 }
 
 function parsePx(str: string): number | undefined {
@@ -591,4 +706,11 @@ function parsePx(str: string): number | undefined {
 
 function getMinSize(panel: GenericPanel): [number, number] {
 	return [parsePx(panel.style.minWidth) ?? 0, parsePx(panel.style.minHeight) ?? 0];
+}
+
+/** JSDollarSign $. style lookup in JS */
+function dollarSignLookup<T extends Panel>(panel: GenericPanel, selector: QuerySelector): T | T[] | null {
+	return selector.startsWith('#')
+		? (panel.FindChildTraverse(selector.slice(1)) as T | null)
+		: (panel.FindChildrenWithClassTraverse(selector.slice(1)) as T[] | null);
 }

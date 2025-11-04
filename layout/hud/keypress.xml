@@ -3,6 +3,10 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 
+	<scripts>
+		<include type="module" src="file://{scripts}/hud/keypress.ts" />
+	</scripts>
+	
 	<MomHudKeyPress class="keypress">
 		<Panel>
 			<Panel class="keypress__arrows keypress-arrows">
