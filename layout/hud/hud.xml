@@ -21,35 +21,35 @@
 		<MomHudSafeguardIndicator /> <!-- TODO: HudCenter, not in customizer -->
 		<MomHudJumpTiming /> <!-- TODO: HudCenter, not added to customizer -->
 
-		<HudComparisons id="Comparisons" customizable="true" />
+		<HudComparisons id="Comparisons" />
 		<ConVarEnabler convar="mom_zoning_enable" togglevisibility="true">
 			<MomHudZoning /> <!-- TODO: HudBottomCenter, not in customizer -->
 		</ConVarEnabler>
 		<MomHudStrafeTrainer /> <!-- TODO: HudBottomCenter, not in customizer -->
-		<MomHudSpeedometer id="Speedometer" customizable="true" />
-		<MomHudConcCooktime id="ConcCooktime" customizable="true" />
-		<MomHudStickyCharge id="StickyCharge" customizable="true" />
-		<MomHudStickyCount id="StickyCount" customizable="true" />
+		<MomHudSpeedometer id="Speedometer" />
+		<MomHudConcCooktime id="ConcCooktime" />
+		<MomHudStickyCharge id="StickyCharge" />
+		<MomHudStickyCount id="StickyCount" />
 		<ConVarEnabler convar="mom_zoning_enable" invert="true" togglevisibility="true">
-			<MomHudStatus id="Status" customizable="true" />
+			<MomHudStatus id="Status" />
 		</ConVarEnabler>
 		<ConVarEnabler convar="mom_zoning_enable" invert="true" togglevisibility="true">
-			<MomHudTimer id="Timer" customizable="true" />
+			<MomHudTimer id="Timer" />
 		</ConVarEnabler>
-		<MomHudStrafeSync id="StrafeSync" customizable="true" />
-		<MomHudGroundboost id="MomHudGroundboost" customizable="true" />
-		<HudHintText id="HudHintText" customizable="true" />
+		<MomHudStrafeSync id="StrafeSync" />
+		<MomHudGroundboost id="MomHudGroundboost" />
+		<HudHintText id="HudHintText" />
 		<MomHudPowerupTimer /> <!-- TODO: LowerLeft, not added to customizer -->
-		<HudStaticMenu id="StaticMenu" customizable="true" />
-		<MomHudChat id="Chat" customizable="true" />
+		<HudStaticMenu id="StaticMenu" />
+		<MomHudChat id="Chat" />
 		<MomHudDFJump /> <!-- TODO: BottomRight, not added to customizer -->
 		<MomHudAmmo /> <!-- TODO: BottomRight, not added to customizer -->
-		<MomHudKeyPress id="KeyPress" customizable="true" />
-		<MomHudVersionInfo id="VersionInfo" customizable="true" />
-		<MomHudMapInfo id="MapInfo" customizable="true" />
-		<MomHudSpecInfo id="SpecInfo" customizable="true" />
-		<MomHudWeaponSelection id="WeaponSelection" customizable="true" />
-		<HudShowPos id="ShowPos" customizable="true" />
+		<MomHudKeyPress id="KeyPress" />
+		<MomHudVersionInfo id="VersionInfo" />
+		<MomHudMapInfo id="MapInfo" />
+		<MomHudSpecInfo id="SpecInfo" />
+		<MomHudWeaponSelection id="WeaponSelection" />
+		<HudShowPos id="ShowPos" />
 		<HudBoneCounts id="BoneCount" /> <!-- TODO: HudTopCenter, not in customizer -->
 		<MomHudSpectate id="Spectator" /> <!-- TODO: HudTopCenter, not in customizer -->
 		<MomHudJumpStats /> <!-- TODO: HudTopCenter, not in customizer -->

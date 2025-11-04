@@ -13,9 +13,11 @@
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
+	
 	<scripts>
-
+		<include type="module" src="file://{scripts}/hud/chat.ts" />
 	</scripts>
+	
 	<Panel class="hud-chat">
 		<MomentumChat id="RaisedChat" class="w-full h-full" />
 		<ToastContainer id="LoweredChat" class="toast-chat" thinkwheninvisible="true" />

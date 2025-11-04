@@ -2,7 +2,7 @@
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
-	
+
 	<scripts>
 		<include type="module" src="file://{scripts}/hud/tab-menu.ts" />
 	</scripts>
@@ -14,11 +14,11 @@
 				<Panel class="hud-tab-menu__map-info">
 					<Panel class="hud-tab-menu-map-info__top">
 						<Label class="hud-tab-menu-map-info__map-name" text="{s:map}" />
-<!--						<TooltipPanel tooltip="View showcase run" class="hud-tab-menu-map-info__showcase">-->
-<!--							<Button class="button full">-->
-<!--								<Image class="button__icon" src="file://{images}/filmstrip.svg" textureheight="64" />-->
-<!--							</Button>-->
-<!--						</TooltipPanel>-->
+						<!--						<TooltipPanel tooltip="View showcase run" class="hud-tab-menu-map-info__showcase">-->
+						<!--							<Button class="button full">-->
+						<!--								<Image class="button__icon" src="file://{images}/filmstrip.svg" textureheight="64" />-->
+						<!--							</Button>-->
+						<!--						</TooltipPanel>-->
 					</Panel>
 					<Panel class="hud-tab-menu-map-info__bottom">
 						<Panel id="HudTabMenuMapCredits" class="hud-tab-menu-map-info__credits">
@@ -40,7 +40,7 @@
 			<Panel id="SideBySideContainer" class="hud-tab-menu__sidebysidecontainer">
 				<Panel id="PlayerListContainer" class="" hittestchildren="true">
 					<PlayerList id="PlayerList" hittest="true" hittestchildren="true" />
-				</Panel>	
+				</Panel>
 
 				<Panel id="LeaderboardsContainer" class="hud-tab-menu__leaderboards" hittestchildren="true">
 					<Leaderboards id="TabMenuLeaderboards" hittest="true" hittestchildren="true" />
@@ -53,12 +53,19 @@
 
 			<Panel class="hud-tab-menu__stats">
 			</Panel>
-			
+
 			<Panel id="TabMenuFooter" class="hud-tab-menu__footer">
-				<ConVarEnabler convar="sv_cheats" class="h-full" togglevisibility="true">
-					<ToggleButton id="ZoningToggle" class="hud-tab-menu__footer-button" convar="mom_zoning_enable" />
-				</ConVarEnabler>
-				<Label class="hud-tab-menu__enable-cursor-tip" text="#HudTabMenu_EnableCursorTip"/> 
+				<Panel class="flow-right">
+					<TooltipPanel tooltip="#HudCustomizer_Menu">
+						<ToggleButton class="hud-tab-menu__footer-button hud-tab-menu__footer-button--hud-customizer" convar="mom_hudcustomizer_enable" />
+					</TooltipPanel>
+					<ConVarEnabler convar="sv_cheats" togglevisibility="true">
+						<TooltipPanel tooltip="#Zoning_Menu">
+							<ToggleButton id="ZoningToggle" class="hud-tab-menu__footer-button hud-tab-menu__footer-button--zoning" convar="mom_zoning_enable" />
+						</TooltipPanel>
+					</ConVarEnabler>
+				</Panel>
+				<Label class="hud-tab-menu__enable-cursor-tip" text="#HudTabMenu_EnableCursorTip" />
 			</Panel>
 		</Panel>
 	</HudTabMenu>

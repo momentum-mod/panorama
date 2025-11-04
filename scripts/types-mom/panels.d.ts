@@ -199,6 +199,13 @@ interface ZoneMenu extends AbstractPanel<'ZoneMenu'> {
  * know if you need to update it.
  */
 interface HudCustomizer extends AbstractPanel<'HudCustomizer'> {
+	/**
+	 * Enables/disables HUD customizer mode.
+	 * Must be in map.
+	 * Same as mom_hudcustomizer_enable.
+	 * */
+	toggleUI(enabled: boolean): void;
+
 	/** Saves the given object to cfg/hud.kv3. */
 	saveLayout(data: import('hud/customizer').HudLayout): void;
 

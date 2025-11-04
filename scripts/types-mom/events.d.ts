@@ -379,6 +379,21 @@ interface GlobalEventNameMap {
 
 	/** Called when the player completes a safeguarded command. */
 	OnSafeguardCommandComplete: () => void;
+
+	/** Called when HUD layout has been enabled. */
+	HudCustomizer_Enabled: () => void;
+
+	/** Called when HUD layout has been disabled. */
+	HudCustomizer_Disabled: () => void;
+
+	/** Called when HUD layout has been loaded. */
+	HudCustomizer_LayoutLoaded: (success: boolean) => void;
+
+	/** Called when HUD layout has been reloaded (probably by mom_hudcustomizer_reloadlayout). */
+	HudCustomizer_LayoutReloaded: (success: boolean) => void;
+
+	/** Called when HUD layout has been saved. */
+	HudCustomizer_LayoutSaved: (success: boolean) => void;
 }
 
 interface PanelEventNameMap {

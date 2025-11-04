@@ -7,29 +7,66 @@
 		<include type="module" src="file://{scripts}/hud/customizer.ts" />
 	</scripts>
 
+	<snippets>
+		<snippet name="component">
+			<ToggleButton class="hud-customizer-settings__component">
+				<Label class="hud-customizer-settings__component__name" text="{s:name}" />
+				<!-- TODO -->
+				<!--ToggleButton id="Hidden"/>-->
+			</ToggleButton>
+		</snippet>
+
+		<snippet name="dynamic-togglebutton">
+			<ToggleButton class="checkbox hud-customizer-settings__row hud-customizer-settings__togglebutton">
+				<Label class="hud-customizer-settings__setting-label" text="{s:name}" />
+			</ToggleButton>
+		</snippet>
+
+		<snippet name="dynamic-numberentry">
+			<Panel class="hud-customizer-settings__row w-full">
+				<Label class="hud-customizer-settings__setting-label" text="{s:name}" />
+				<NumberEntry id="NumberEntry" class="hud-customizer-settings__numberentry" />
+			</Panel>
+		</snippet>
+	</snippets>
+
+	<!-- Outer panel (full width) has no hittest, hittestchildren is controlled by C++ -->
 	<HudCustomizer class="hud-customizer" hittest="false">
-		<Panel class="hud-customizer-settings" hittest="true" draggable="true">
-			<Button class="hud-customizer-settings__header" onactivate="HudCustomizerHandler.disableEditing()">
-				<Image class="hud-customizer-settings__header__close" src="file://{images}/close.svg" />
-			</Button>
-			<Panel class="hud-customizer-settings__settings">
-				<ToggleButton id="GridToggle" class="checkbox hud-customizer-settings__togglebutton" onactivate="HudCustomizerHandler.updateGridVisibility()">
+		<Panel id="CustomizerSettings" class="hud-customizer-settings" acceptsinput="true" acceptsfocus="true" tabindex="auto">
+			<Panel class="hud-customizer-settings__header" draggable="true" hittest="true" hittestchildren="true">
+				<Label class="hud-customizer-settings__header__title" text="#HudCustomizer_Menu" />
+				<Image class="hud-customizer-settings__header__close" onactivate="HudCustomizerHandler.toggle(false)" src="file://{images}/close.svg" />
+			</Panel>
+			<Panel class="hud-customizer-settings__global">
+				<!-- i18n -->
+				<ToggleButton id="GridToggle" class="checkbox hud-customizer-settings__row hud-customizer-settings__togglebutton" onactivate="HudCustomizerHandler.updateGridVisibility()">
 					<Label class="hud-customizer-settings__setting-label" text="Enable Grid" />
 				</ToggleButton>
-				<Panel class="w-full">
+				<Panel class="hud-customizer-settings__row w-full">
 					<Label class="hud-customizer-settings__setting-label" text="Grid Size" />
 					<NumberEntry id="GridSize" class="hud-customizer-settings__numberentry" min="4" max="12" onvaluechanged="HudCustomizerHandler.updateGridSize()" />
 				</Panel>
-				<ToggleButton id="SnappingToggle" class="checkbox hud-customizer-settings__togglebutton">
+				<ToggleButton id="SnappingToggle" class="checkbox hud-customizer-settings__togglebutton hud-customizer-settings__row">
 					<Label class="hud-customizer-settings__setting-label" text="Enable Snapping" />
 				</ToggleButton>
+			</Panel>
+			<Panel id="ComponentList" class="hud-customizer-settings__component-list">
+				<!-- Populated by JS -->
+			</Panel>
+			<Panel id="ActiveComponentSettings" class="hud-customizer-settings__active"> 
+				<Panel class="hud-customizer-settings__active__header">
+					<Label class="hud-customizer-settings__active__header__name" text="{s:active_name}" />
+				</Panel>
+				<Panel id="ActiveComponentSettingsList" class="hud-customizer-settings__active__contents">
+					<!-- Populated by JS -->
+				</Panel>
 			</Panel>
 		</Panel>
 
 		<!-- Panel overlaid over the active component.
 			 Like the active component, it's moved around via JS with snapping as the DragPanel is dragged. -->
 		<Panel id="Overlay" class="hud-customizer-overlay">
-			<Label id="ActiveName" class="hud-customizer-overlay__name" />
+			<Label class="hud-customizer-overlay__name" text="{s:name}    x:{s:x} y:{s:y}    w:{s:width} h:{s:height}" />
 			<Panel class="hud-customizer-overlay__main">
 				<Panel id="ResizeKnobs" class="hud-customizer-overlay__resize-knobs" />
 			</Panel>
