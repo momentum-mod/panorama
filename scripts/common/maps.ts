@@ -1,6 +1,9 @@
-import { MapStatuses, MapCreditType, MMap, TrackType } from './web_dontmodifyme';
 import { getTrack } from './leaderboard';
 import { checkDosa } from 'util/dont-show-again';
+import type { MMap } from './web/types/models/models';
+import { MapStatuses } from './web/enums/map-status.enum';
+import { MapCreditType } from './web/enums/map-credit-type.enum';
+import { TrackType } from './web/enums/track-type.enum';
 
 /**
  * Download or launch a map, show missing games popup first if required games are not mounted

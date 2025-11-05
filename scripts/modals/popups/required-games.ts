@@ -1,6 +1,7 @@
 import { OnPanelLoad, PanelHandler } from 'util/module-helpers';
 import { handleDosaCheckbox } from 'util/dont-show-again';
-import { SteamGame, SteamGamesNames } from 'common/web_dontmodifyme';
+import { SteamGame } from 'common/web/enums/steam-game.enum';
+import { SteamGamesNames } from 'common/web/maps/steam-games.map';
 
 @PanelHandler()
 class RequiredGamesPopupHandler implements OnPanelLoad {

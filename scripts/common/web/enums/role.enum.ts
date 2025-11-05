@@ -1,0 +1,19 @@
+// prettier-ignore
+export enum Role {
+  ADMIN       = 0b000000001,
+  MODERATOR   = 0b000000010,
+  VERIFIED    = 0b000000100,
+  PLACEHOLDER = 0b000001000,
+  DELETED     = 0b000010000,
+  REVIEWER    = 0b000100000,
+  MAPPER      = 0b001000000,
+  PORTER      = 0b010000000,
+  LIMITED     = 0b100000000,
+}
+
+export const CombinedRoles = Object.freeze({
+	MOD_OR_ADMIN: Role.MODERATOR | Role.ADMIN,
+	REVIEWER_AND_ABOVE: Role.REVIEWER | Role.MODERATOR | Role.ADMIN,
+	MAPPER_OR_PORTER: Role.MAPPER | Role.PORTER,
+	MAPPER_AND_ABOVE: Role.MAPPER | Role.PORTER | Role.REVIEWER | Role.MODERATOR | Role.ADMIN
+});
