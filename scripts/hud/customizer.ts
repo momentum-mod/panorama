@@ -11,12 +11,12 @@ import {
 } from 'common/hud-customizer';
 
 /** Structure of layout stored out to KV3 */
-export interface HudLayout {
+interface HudLayout {
 	components: {
 		[id: string]: {
 			position: LayoutUtil.Position;
 			size: LayoutUtil.Size;
-			dynamicStyles?: Array<{ name: string; style: keyof Style; value: unknown }>;
+			dynamicStyles?: Array<{ name: string; value: unknown }>;
 		};
 	};
 	settings: {
@@ -166,15 +166,17 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		if (!panel) return;
 
 		const component = this.layout?.components?.[panel.id] ?? this.getDefaultComponent(panel);
-		if (component) {
-			const pos = this.fixWonkyBounds(panel, component.position, component.size);
-			this.components[panel.id] = {
-				panel,
-				position: pos,
-				size: component.size,
-				dynamicStyles: properties.dynamicStyles as any // TODO:, have to parse saved values into dynamic stuff
-			};
-		}
+		if (!component) return;
+
+		const pos = this.fixWonkyBounds(panel, component.position, component.size);
+		this.components[panel.id] = {
+			panel,
+			position: pos,
+			size: component.size,
+			dynamicStyles: properties.dynamicStyles as any // TODO:, have to parse saved values into dynamic stuff
+		};
+
+		LayoutUtil.setPositionAndSize(panel, pos, component.size);
 
 		this.generateComponentList();
 	}
@@ -308,18 +310,46 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 		for (const dynamicStyle of this.activeComponent.dynamicStyles ?? []) {
 			const panel = $.CreatePanel('Panel', this.panels.activeComponentSettingsList, '');
+
 			switch (dynamicStyle.type) {
 				case CustomizerPropertyType.NUMBER_ENTRY: {
 					panel.LoadLayoutSnippet('dynamic-numberentry');
 					panel.SetDialogVariable('name', dynamicStyle.name);
 					const numberEntry = panel.FindChildTraverse<NumberEntry>('NumberEntry')!;
 
-					if (dynamicStyle.settingProps) {
-						Object.assign(numberEntry, dynamicStyle.settingProps);
-						numberEntry.SetPanelEvent('onvaluechanged', () =>
-							this.applyDynamicStyle(this.activeComponent, dynamicStyle, numberEntry.value)
-						);
-					}
+					if (dynamicStyle.settingProps) Object.assign(numberEntry, dynamicStyle.settingProps);
+
+					numberEntry.SetPanelEvent('onvaluechanged', () =>
+						this.applyDynamicStyle(this.activeComponent, dynamicStyle, numberEntry.value)
+					);
+
+					break;
+				}
+
+				case CustomizerPropertyType.CHECKBOX: {
+					panel.LoadLayoutSnippet('dynamic-checkbox');
+					panel.SetDialogVariable('name', dynamicStyle.name);
+					const checkbox = panel.FindChildTraverse<ToggleButton>('ToggleButton')!;
+
+					if (dynamicStyle.settingProps) Object.assign(checkbox, dynamicStyle.settingProps);
+
+					checkbox.SetPanelEvent('onactivate', () =>
+						this.applyDynamicStyle(this.activeComponent, dynamicStyle, checkbox.checked)
+					);
+
+					break;
+				}
+
+				case CustomizerPropertyType.COLOR_PICKER: {
+					panel.LoadLayoutSnippet('dynamic-colorpicker');
+					const colorDisplay = panel.FindChild<ColorDisplay>('ColorDisplay')!;
+					colorDisplay.title = dynamicStyle.name;
+
+					colorDisplay.SetPanelEvent('oncolorchange', () =>
+						this.applyDynamicStyle(this.activeComponent, dynamicStyle, colorDisplay.color)
+					);
+
+					break;
 				}
 			}
 		}
@@ -357,7 +387,10 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		}
 
 		if ('styleProperty' in dynamicStyle) {
-			const styleValue = dynamicStyle.valueFn?.(value) ?? value;
+			// Note: We have extremely strong types in the common/hud-customizer.ts stuff
+			// to constrain dynamicStyles to valid combinations. Proving to the TS that everything
+			// is valid here is a pain though, not worth it.
+			const styleValue = dynamicStyle.valueFn?.(value as any) ?? value;
 			if (styleValue != null) {
 				for (const panel of targetPanels) {
 					(panel.style as any)[dynamicStyle.styleProperty] = styleValue;
@@ -369,7 +402,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			}
 
 			for (const panel of targetPanels) {
-				dynamicStyle.func(panel, value);
+				dynamicStyle.func(panel, value as any);
 			}
 		}
 	}
@@ -573,6 +606,8 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 						break;
 					}
 				}
+			} else {
+				this.setActiveGridline(axis, undefined);
 			}
 
 			if (resizeDir[axis] === 1) {
