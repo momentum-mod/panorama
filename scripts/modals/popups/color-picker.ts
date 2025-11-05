@@ -8,7 +8,7 @@ class ColorPickerPopup implements OnPanelLoad {
 	}
 
 	onPanelLoad() {
-		const color = $.GetContextPanel().GetAttributeString('color', 'rgba(0, 0, 0, 1)');
+		const color = $.GetContextPanel().GetAttributeString('color', 'rgba(0, 0, 0, 1)') as color;
 		const colorPicker = $<ColorPicker>('#ColorPicker');
 		colorPicker.prevColor = color;
 		colorPicker.currColor = color;

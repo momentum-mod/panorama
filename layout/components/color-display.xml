@@ -7,7 +7,7 @@
 		<include type="module" src="file://{scripts}/components/color-display.ts" />
 	</scripts>
 
-	<Panel class="colordisplay" onload="ColorDisplayHandler.onLoad()">
+	<Panel onload="ColorDisplayHandler.onLoad()">
 		<Label id="Title" class="colordisplay__title" />
 		<Panel id="Display" class="colordisplay__display" onactivate="ColorDisplayHandler.showPopup()" acceptsinput="true" />
 		<TextEntry id="Hex" class="textentry colordisplay__hexentry" textmode="hex" maxchars="8" />

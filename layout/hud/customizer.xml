@@ -16,16 +16,24 @@
 			</ToggleButton>
 		</snippet>
 
-		<snippet name="dynamic-togglebutton">
-			<ToggleButton class="checkbox hud-customizer-settings__row hud-customizer-settings__togglebutton">
-				<Label class="hud-customizer-settings__setting-label" text="{s:name}" />
-			</ToggleButton>
+		<snippet name="dynamic-checkbox">
+			<Panel class="hud-customizer-settings__row">
+				<ToggleButton id="ToggleButton" class="checkbox hud-customizer-settings__togglebutton">
+					<Label class="hud-customizer-settings__setting-label" text="{s:name}" />
+				</ToggleButton>
+			</Panel>
 		</snippet>
 
 		<snippet name="dynamic-numberentry">
-			<Panel class="hud-customizer-settings__row w-full">
+			<Panel class="hud-customizer-settings__row">
 				<Label class="hud-customizer-settings__setting-label" text="{s:name}" />
 				<NumberEntry id="NumberEntry" class="hud-customizer-settings__numberentry" />
+			</Panel>
+		</snippet>
+
+		<snippet name="dynamic-colorpicker">
+			<Panel class="hud-customizer-settings__row">
+				<ColorDisplay id="ColorDisplay" class="hud-customizer-settings__colordisplay" />
 			</Panel>
 		</snippet>
 	</snippets>
@@ -42,7 +50,7 @@
 				<ToggleButton id="GridToggle" class="checkbox hud-customizer-settings__row hud-customizer-settings__togglebutton" onactivate="HudCustomizerHandler.updateGridVisibility()">
 					<Label class="hud-customizer-settings__setting-label" text="Enable Grid" />
 				</ToggleButton>
-				<Panel class="hud-customizer-settings__row w-full">
+				<Panel class="hud-customizer-settings__row">
 					<Label class="hud-customizer-settings__setting-label" text="Grid Size" />
 					<NumberEntry id="GridSize" class="hud-customizer-settings__numberentry" min="4" max="12" onvaluechanged="HudCustomizerHandler.updateGridSize()" />
 				</Panel>
@@ -53,7 +61,7 @@
 			<Panel id="ComponentList" class="hud-customizer-settings__component-list">
 				<!-- Populated by JS -->
 			</Panel>
-			<Panel id="ActiveComponentSettings" class="hud-customizer-settings__active"> 
+			<Panel id="ActiveComponentSettings" class="hud-customizer-settings__active">
 				<Panel class="hud-customizer-settings__active__header">
 					<Label class="hud-customizer-settings__active__header__name" text="{s:active_name}" />
 				</Panel>

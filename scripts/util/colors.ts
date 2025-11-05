@@ -5,7 +5,7 @@ export type RgbaTuple = [number, number, number, number];
  * Returns a string formatted `rgba(R, G, B, A)` from RGBA number tuple, where
  * `R`, `G`, `B` are values ranged [0, 255], `A` ranged [0, 1].
  */
-export function tupleToRgbaString([r, g, b, a = 255]: RgbaTuple): string {
+export function tupleToRgbaString([r, g, b, a = 255]: RgbaTuple): rgbaColor {
 	return `rgba(${r}, ${g}, ${b}, ${a / 255})`;
 }
 
@@ -131,13 +131,13 @@ export function rgbaToHsva([r, g, b, a]: RgbaTuple): RgbaTuple {
 }
 
 /** Removes A value from string formatted `rgba(R, G, B, A)`. */
-export function rgbaStringToRgb(str: string): string {
+export function rgbaStringToRgb(str: rgbaColor): rgbColor {
 	const [r, g, b] = rgbaStringToTuple(str);
 	return `rgb(${r}, ${g}, ${b})`;
 }
 
 /** Compresses A value from string formatted `rgba(R, G, B, A)` to the range `[0.75, 1]` */
-export function enhanceAlpha(str: string): string {
+export function enhanceAlpha(str: rgbaColor): rgbaColor {
 	const [r, g, b, a = 255] = rgbaStringToTuple(str);
 	return tupleToRgbaString([r, g, b, Math.min(0.25 * a + 192, 255)]);
 }

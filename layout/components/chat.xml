@@ -25,9 +25,11 @@
 
 	<Panel class="chat" defaultfocus="ChatInput">
 		<!-- CAUTION: inverse flow everywhere!!-->
-		<ConVarEnabler convar="mom_chat_typing_indicator_incoming" togglevisibility="true">
+		<!-- TODO: debating whether acceptable to remove this cvar, always enable in main menu, in hud have configurable
+		     using customizer. -->
+<!--		<ConVarEnabler convar="mom_chat_typing_indicator_incoming" togglevisibility="true">-->
 			<Label id="ChatMemberTypingLabel" class="chat__member-typing" text=" " />
-		</ConVarEnabler>
+<!--		</ConVarEnabler>-->
 		<Panel class="chat__input-container">
 			<TextEntry id="ChatInput" class="chat__elem chat__input" oninputsubmit="ChatHandler.submitText()" maxchars="127" clearaftersubmit="true" />
 			<Button class="chat__elem chat__send" onactivate="$('#ChatInput').Submit()">

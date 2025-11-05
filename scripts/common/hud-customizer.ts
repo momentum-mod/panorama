@@ -1,3 +1,5 @@
+// TODO: *VERY* detailed docs here, the types are unreadable!
+
 export enum CustomizerPropertyType {
 	NUMBER_ENTRY,
 	CHECKBOX,
@@ -9,7 +11,14 @@ interface PropertyTypeMap {
 	[CustomizerPropertyType.NUMBER_ENTRY]: NumberEntry;
 	[CustomizerPropertyType.CHECKBOX]: ToggleButton;
 	[CustomizerPropertyType.SLIDER]: Slider;
-	[CustomizerPropertyType.COLOR_PICKER]: ColorPicker;
+	[CustomizerPropertyType.COLOR_PICKER]: never;
+}
+
+interface PropertyTypeToValueTypeMap {
+	[CustomizerPropertyType.NUMBER_ENTRY]: NumberEntry['value'];
+	[CustomizerPropertyType.CHECKBOX]: ToggleButton['checked'];
+	[CustomizerPropertyType.SLIDER]: Slider['value'];
+	[CustomizerPropertyType.COLOR_PICKER]: TextEntry['text'];
 }
 
 export type QuerySelector = `#${string}` | `.${string}`;
@@ -17,7 +26,9 @@ export type QuerySelector = `#${string}` | `.${string}`;
 interface DynamicStyleBase<PropertyType extends CustomizerPropertyType> {
 	/**
 	 * Selector or array of selectors.
-	 * Prefix # for ID, . for class, same as JSDollarSign. Will throw without prefix.
+	 *
+	 * Prefix # for ID, . for class, same as JSDollarSign.
+	 *
 	 * If not provided, applies to the root panel of the component.
 	 */
 	targetPanel?: QuerySelector | QuerySelector[];
@@ -33,8 +44,6 @@ interface DynamicStyleBase<PropertyType extends CustomizerPropertyType> {
 	 * Must be properties unique to that panel type.
 	 */
 	settingProps?: {
-		// Psycho type mappings to ensure limit allowed properties to those
-		// on the panel type corresponding to PropertyType
 		[K in keyof PropertyTypeMap[PropertyType]]?: K extends keyof GenericPanel
 			? never
 			: PropertyTypeMap[PropertyType][K] extends (...args: any) => any
@@ -43,22 +52,28 @@ interface DynamicStyleBase<PropertyType extends CustomizerPropertyType> {
 	};
 }
 
-interface DynamicStyleWithProperty {
+interface DynamicStyleWithProperty<PropertyType extends CustomizerPropertyType, StyleProperty extends keyof Style>
+	extends DynamicStyleBase<PropertyType> {
 	/** Style property to modify. */
-	styleProperty: keyof Style;
-	valueFn?: (value: unknown) => Style[keyof Style];
+	styleProperty: StyleProperty;
+
+	/**
+	 * Function to convert stored/configured value to style string.
+	 * IMPORTANT: This defaults to the identity function. If you're mapping a number, you need to do
+	 * appropriate conversion to string with units here! E.g. (value) => `${value}px`.
+	 * @default identity function
+	 */
+	valueFn?: (value: PropertyTypeToValueTypeMap[PropertyType]) => Style[StyleProperty];
 }
 
-interface DynamicStyleWithFunction {
-	func: (panel: GenericPanel, value: unknown) => void;
+interface DynamicStyleWithFunction<PropertyType extends CustomizerPropertyType> extends DynamicStyleBase<PropertyType> {
+	func: (panel: GenericPanel, value: PropertyTypeToValueTypeMap[PropertyType]) => void;
 }
 
-export type DynamicStyle<PropertyType extends CustomizerPropertyType = CustomizerPropertyType> =
-	DynamicStyleBase<PropertyType> &
-		(
-			| (DynamicStyleWithProperty & { [K in keyof DynamicStyleWithFunction]?: never }) // Mutually exclusive types
-			| (DynamicStyleWithFunction & { [K in keyof DynamicStyleWithProperty]?: never })
-		);
+export type DynamicStyle<
+	PropertyType extends CustomizerPropertyType = CustomizerPropertyType,
+	StyleProperty extends keyof Style = keyof Style
+> = DynamicStyleWithProperty<PropertyType, StyleProperty> | DynamicStyleWithFunction<PropertyType>;
 
 export interface CustomizerComponentProperties {
 	/** Allow resizing in the X direction. */
@@ -68,7 +83,13 @@ export interface CustomizerComponentProperties {
 	resizeY: boolean;
 
 	/** Styling properties of provided panel or children, for which we generate UI and store values for. */
-	dynamicStyles?: Array<{ [K in CustomizerPropertyType]: DynamicStyle<K> }[CustomizerPropertyType]>;
+	dynamicStyles?: Array<
+		{
+			[K in CustomizerPropertyType]: {
+				[P in keyof Style]: DynamicStyle<K, P>;
+			}[keyof Style];
+		}[CustomizerPropertyType]
+	>;
 }
 
 export interface IHudCustomizerHandler {

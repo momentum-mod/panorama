@@ -32,13 +32,28 @@
 	}
 
 	&__member-typing {
-		margin: 0px 24px 8px 8px;
+		margin-top: 6px;
+		margin-bottom: 6px;
+		margin-right: 24px;
+		margin-left: 8px;
+		
 		font-size: 16px;
+
+		visibility: visible;
+
+		@for $i from 10 through 24 {
+			.hud-chat--size-#{$i} & {
+				font-size: #{$i - 2}px;
+			}
+		}
+
+		.chat--disable-users-typing & {
+			visibility: collapse;
+		}
 	}
 
 	&__input-container {
 		width: 100%;
-		margin-bottom: 6px;
 		flow-children: right;
 	}
 
@@ -109,7 +124,7 @@
 		vertical-align: center;
 		wash-color: #d3d3d3;
 		img-shadow: 0 1px 2px rgba(0, 0, 0, 1);
-		
+
 		@for $i from 10 through 24 {
 			.hud-chat--size-#{$i} & {
 				width: #{$i}px;
