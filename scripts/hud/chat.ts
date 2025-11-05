@@ -6,8 +6,8 @@ const sizeMax = 24;
 registerHUDCustomizerComponent($.GetContextPanel(), {
 	resizeX: true,
 	resizeY: true,
-	dynamicStyles: [
-		{
+	dynamicStyles: {
+		scale: {
 			name: 'Scale',
 			type: CustomizerPropertyType.NUMBER_ENTRY,
 			func: (panel, value) => {
@@ -17,14 +17,14 @@ registerHUDCustomizerComponent($.GetContextPanel(), {
 			},
 			settingProps: { min: sizeMin, max: sizeMax }
 		},
-		{
+		showTyping: {
 			name: 'Show Users Typing',
 			type: CustomizerPropertyType.CHECKBOX,
 			func: (panel, value) => {
 				panel.SetHasClass('chat--disable-users-typing', !value);
 			}
 		},
-		{
+		borderRadius: {
 			name: 'Border Radius',
 			type: CustomizerPropertyType.NUMBER_ENTRY,
 			styleProperty: 'borderRadius',
@@ -32,11 +32,11 @@ registerHUDCustomizerComponent($.GetContextPanel(), {
 			valueFn: (value) => `${value}px`,
 			settingProps: { min: 0, max: 20 }
 		},
-		{
+		backgroundColor: {
 			name: 'Background Color',
 			type: CustomizerPropertyType.COLOR_PICKER,
 			styleProperty: 'backgroundColor',
 			targetPanel: '.chat__elem'
 		}
-	]
+	}
 });
