@@ -21,9 +21,14 @@ interface PropertyTypeToValueTypeMap {
 	[CustomizerPropertyType.COLOR_PICKER]: TextEntry['text'];
 }
 
+export type StyleID = string;
+
 export type QuerySelector = `#${string}` | `.${string}`;
 
 interface DynamicStyleBase<PropertyType extends CustomizerPropertyType> {
+	/** Name of the property to display in UI. Please localize! */
+	name: string;
+
 	/**
 	 * Selector or array of selectors.
 	 *
@@ -32,9 +37,6 @@ interface DynamicStyleBase<PropertyType extends CustomizerPropertyType> {
 	 * If not provided, applies to the root panel of the component.
 	 */
 	targetPanel?: QuerySelector | QuerySelector[];
-
-	/** Name of the property to display in UI. Please localize! */
-	name: string;
 
 	/** Type of UI for the customizer to generate to modify this style. */
 	type: PropertyType;
@@ -83,7 +85,8 @@ export interface CustomizerComponentProperties {
 	resizeY: boolean;
 
 	/** Styling properties of provided panel or children, for which we generate UI and store values for. */
-	dynamicStyles?: Array<
+	dynamicStyles?: Record<
+		StyleID,
 		{
 			[K in CustomizerPropertyType]: {
 				[P in keyof Style]: DynamicStyle<K, P>;

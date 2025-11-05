@@ -7,7 +7,8 @@ import {
 	DynamicStyle,
 	IHudCustomizerHandler,
 	QuerySelector,
-	registerHUDCustomizerComponent
+	registerHUDCustomizerComponent,
+	StyleID
 } from 'common/hud-customizer';
 
 /** Structure of layout stored out to KV3 */
@@ -16,7 +17,7 @@ interface HudLayout {
 		[id: string]: {
 			position: LayoutUtil.Position;
 			size: LayoutUtil.Size;
-			dynamicStyles?: Array<{ name: string; value: unknown }>;
+			dynamicStyles?: Record<StyleID, unknown>;
 		};
 	};
 	settings: {
@@ -62,7 +63,7 @@ const OVERLAY_HEADER_HEIGHT = 21;
 
 interface Component {
 	panel: GenericPanel;
-	dynamicStyles?: Array<DynamicStyle & { value: unknown }>;
+	dynamicStyles?: Record<StyleID, DynamicStyle & { value: unknown }>;
 	// Temp values for position and size that makes a lot of code simpler.
 	// These do *not* update the actual panel until you use LayoutUtil to set them.
 	position: LayoutUtil.Position;
@@ -148,7 +149,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 		this.layout = this.panels.customizer.getLayout();
 
-		this.gridSize = this.layout.settings?.gridSize ?? DEFAULT_GRID_SIZE;
+		this.gridSize = this.layout?.settings?.gridSize ?? DEFAULT_GRID_SIZE;
 		this.panels.gridSize.value = this.gridSize;
 
 		this.enableGrid = this.layout?.settings?.enableGrid ?? DEFAULT_GRID_ENABLED;
@@ -178,12 +179,30 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 		LayoutUtil.setPositionAndSize(panel, pos, component.size);
 
+		if (properties.dynamicStyles) {
+			for (const styleID of Object.keys(properties.dynamicStyles)) {
+				const savedValue = this.layout?.components?.[panel.id]?.dynamicStyles?.[styleID];
+				if (savedValue != null) {
+					this.applyDynamicStyle(
+						this.components[panel.id],
+						styleID,
+						properties.dynamicStyles[styleID] as DynamicStyle,
+						savedValue
+					);
+				}
+			}
+		}
+
 		this.generateComponentList();
 	}
 
 	getDefaultComponent(panel: GenericPanel): Component {
 		// Load and cache defaults
 		this.defaultLayout ??= this.panels.customizer.getDefaultLayout();
+
+		if (!this.defaultLayout) {
+			throw new Error('HudCustomizer: Could not load default layout for HUD customizer!');
+		}
 
 		const defaults = this.defaultLayout.components[panel.id];
 		if (!defaults || !Array.isArray(defaults.position) || !Array.isArray(defaults.size)) {
@@ -214,7 +233,10 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			const [[x, y], [w, h]] = LayoutUtil.getPositionAndSize(component.panel);
 			saveData.components[id] = {
 				position: [fixFloat(x), fixFloat(y)],
-				size: [fixFloat(w), fixFloat(h)]
+				size: [fixFloat(w), fixFloat(h)],
+				dynamicStyles: Object.fromEntries(
+					Object.entries(component.dynamicStyles ?? {}).map(([styleID, { value }]) => [styleID, value])
+				)
 			};
 		}
 
@@ -300,7 +322,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 	updateActiveComponentSettings(): void {
 		this.panels.activeComponentSettingsList.RemoveAndDeleteChildren();
 
-		if (!this.activeComponent || (this.activeComponent.dynamicStyles?.length ?? 0) === 0) {
+		if (!this.activeComponent?.dynamicStyles || Object.keys(this.activeComponent.dynamicStyles).length === 0) {
 			this.panels.activeComponentSettings.visible = false;
 			return;
 		}
@@ -308,7 +330,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		this.panels.activeComponentSettings.visible = true;
 		this.panels.settings.SetDialogVariable('active_name', this.activeComponent.panel.id);
 
-		for (const dynamicStyle of this.activeComponent.dynamicStyles ?? []) {
+		for (const [styleID, dynamicStyle] of Object.entries(this.activeComponent.dynamicStyles ?? {})) {
 			const panel = $.CreatePanel('Panel', this.panels.activeComponentSettingsList, '');
 
 			switch (dynamicStyle.type) {
@@ -320,7 +342,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 					if (dynamicStyle.settingProps) Object.assign(numberEntry, dynamicStyle.settingProps);
 
 					numberEntry.SetPanelEvent('onvaluechanged', () =>
-						this.applyDynamicStyle(this.activeComponent, dynamicStyle, numberEntry.value)
+						this.applyDynamicStyle(this.activeComponent, styleID, dynamicStyle, numberEntry.value)
 					);
 
 					break;
@@ -334,7 +356,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 					if (dynamicStyle.settingProps) Object.assign(checkbox, dynamicStyle.settingProps);
 
 					checkbox.SetPanelEvent('onactivate', () =>
-						this.applyDynamicStyle(this.activeComponent, dynamicStyle, checkbox.checked)
+						this.applyDynamicStyle(this.activeComponent, styleID, dynamicStyle, checkbox.checked)
 					);
 
 					break;
@@ -346,7 +368,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 					colorDisplay.title = dynamicStyle.name;
 
 					colorDisplay.SetPanelEvent('oncolorchange', () =>
-						this.applyDynamicStyle(this.activeComponent, dynamicStyle, colorDisplay.color)
+						this.applyDynamicStyle(this.activeComponent, styleID, dynamicStyle, colorDisplay.color)
 					);
 
 					break;
@@ -355,7 +377,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		}
 	}
 
-	applyDynamicStyle(component: Component | undefined, dynamicStyle: DynamicStyle, value: unknown): void {
+	applyDynamicStyle(component: Component | undefined, id: string, dynamicStyle: DynamicStyle, value: unknown): void {
 		if (!component) return;
 
 		const targetPanels: GenericPanel[] = [];
@@ -368,7 +390,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 						for (const t of target) {
 							targetPanels.push(t);
 						}
-					} else {
+					} else if (target) {
 						targetPanels.push(target);
 					}
 				}
@@ -378,7 +400,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 					for (const t of target) {
 						targetPanels.push(t);
 					}
-				} else {
+				} else if (target) {
 					targetPanels.push(target);
 				}
 			}
@@ -391,6 +413,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			// to constrain dynamicStyles to valid combinations. Proving to the TS that everything
 			// is valid here is a pain though, not worth it.
 			const styleValue = dynamicStyle.valueFn?.(value as any) ?? value;
+
 			if (styleValue != null) {
 				for (const panel of targetPanels) {
 					(panel.style as any)[dynamicStyle.styleProperty] = styleValue;
@@ -405,6 +428,9 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 				dynamicStyle.func(panel, value as any);
 			}
 		}
+
+		component.dynamicStyles ??= {};
+		component.dynamicStyles[id].value = value;
 	}
 
 	onStartDrag(mode: DragMode, displayPanel: Panel, _panelID: string, callback: DragEventInfo) {
