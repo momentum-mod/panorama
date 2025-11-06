@@ -188,6 +188,7 @@ class ZoneMenuHandler {
 	selectedHierarchyNames: string[] = [];
 
 	didInit = false;
+	requestedReloadZones = false;
 	savedZones: savedZoneStatus | null = null;
 	useLocal: boolean | null = null;
 
@@ -197,7 +198,7 @@ class ZoneMenuHandler {
 		$.RegisterForUnhandledEvent('OnRegionEditCompleted', (region) => this.onRegionEditCompleted(region));
 		$.RegisterForUnhandledEvent('OnRegionEditCanceled', () => this.onRegionEditCanceled());
 		$.RegisterForUnhandledEvent('LevelInitPostEntity', () => this.onLevelInit());
-		$.RegisterForUnhandledEvent('ActiveZoneDefsChanged', () => this.onActiveZoneDefsChanged());
+		$.RegisterForUnhandledEvent('OnZoneDefsSet', (newDefs) => this.onZoneDefsSet(newDefs));
 	}
 
 	initialize() {
@@ -220,9 +221,13 @@ class ZoneMenuHandler {
 		this.initialize();
 	}
 
-	onActiveZoneDefsChanged() {
-		this.mapZoneData = MomentumTimerAPI.GetActiveZoneDefs();
-		this.updateSelection(this.selectedZone ?? {});
+	onZoneDefsSet(newDefs) {
+		if (this.requestedReloadZones) {
+			this.mapZoneData = newDefs;
+			this.requestedReloadZones = false;
+
+			this.updateSelection(this.selectedZone ?? {});
+		}
 	}
 
 	getZoneData() {
@@ -667,6 +672,7 @@ class ZoneMenuHandler {
 			this.savedZones = MomentumTimerAPI.GetSavedZoneStatus();
 
 			if (this.savedZones & savedZoneStatus.LOCAL && this.savedZones & savedZoneStatus.ONLINE) {
+				this.requestedReloadZones = true;
 				UiToolkitAPI.ShowGenericPopupTwoOptionsBgStyle(
 					$.Localize('#Zoning_FileSelect'),
 					$.Localize('#Zoning_FileSelect_Message'),
@@ -684,10 +690,8 @@ class ZoneMenuHandler {
 					'none'
 				);
 			} else if (this.savedZones & savedZoneStatus.ONLINE) {
-				MomentumTimerAPI.LoadZoneDefs(false);
 				this.useLocal = false;
 			} else if (this.savedZones & savedZoneStatus.LOCAL) {
-				MomentumTimerAPI.LoadZoneDefs(true);
 				this.useLocal = true;
 			} else {
 				this.useLocal = true;
@@ -1610,13 +1614,8 @@ class ZoneMenuHandler {
 
 	discardChanges() {
 		this.mapZoneData = null;
-		this.selectedZone = {
-			track: null as MainTrack | BonusTrack | null,
-			segment: null as Segment | null,
-			zone: null as Zone | null,
-			globalRegion: null
-		};
-		this.panels.zoningMenu.updateEditorRegions([]);
+		this.selectedZone = null;
+		this.requestedReloadZones = true;
 		MomentumTimerAPI.LoadZoneDefs(this.useLocal ?? false);
 	}
 
