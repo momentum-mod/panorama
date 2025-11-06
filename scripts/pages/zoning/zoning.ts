@@ -200,6 +200,8 @@ class ZoneMenuHandler {
 	}
 
 	initialize() {
+		this.panels.zoningMenu.updateEditorRegions([]);
+
 		const entList: EntityList = this.panels.zoningMenu.getEntityList();
 		this.filternameList = entList.filter ?? [];
 		this.filternameList.unshift($.Localize('#Zoning_Filter_None'));
