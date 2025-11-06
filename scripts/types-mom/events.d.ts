@@ -365,6 +365,8 @@ interface GlobalEventNameMap {
 
 	ActiveZoneDefsChanged: () => void;
 
+	OnZoneDefsSet: (newDefs: import('common/web/types/models/models').MapZones) => void;
+
 	/** Fired after updating the map cache with the latest map lobby player counts. */
 	MapEntry_MapLobbiesUpdated: (playerCount: number) => void;
 
