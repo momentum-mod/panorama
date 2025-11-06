@@ -24,6 +24,8 @@ class JumpTimingHandler {
 	maxEarlyTiming: number;
 	maxLateTiming: number;
 	bufferedJumpingEnabled: boolean;
+	displayTime: number;
+	displayStartTime: number;
 
 	constructor() {
 		RegisterHUDPanelForGamemode({
@@ -33,6 +35,10 @@ class JumpTimingHandler {
 				{
 					event: 'JumpTimingSettingChanged',
 					callback: () => this.updateSettings()
+				},
+				{
+					event: 'HudThink',
+					callback: () => this.updateVisibility()
 				}
 			],
 			handledEvents: [
@@ -44,7 +50,7 @@ class JumpTimingHandler {
 			]
 		});
 
-		this.panels.earlyBarProgress.style.backgroundColor = tupleToRgbaString(Colors.ORANGE);
+		this.panels.container.visible = false;
 	}
 
 	onMapInit() {
@@ -56,10 +62,17 @@ class JumpTimingHandler {
 		this.maxLateTiming = GameInterfaceAPI.GetSettingInt('mom_hud_late_jump_timing');
 		this.perfWindow = GameInterfaceAPI.GetSettingInt('mom_mv_buffered_jump_no_penalty_window');
 		this.bufferedJumpingEnabled = GameInterfaceAPI.GetSettingInt('mom_mv_autohop_mode') === 2;
+		this.displayTime = GameInterfaceAPI.GetSettingFloat('mom_hud_jump_timing_display_time');
 
 		this.panels.earlyLabel.visible = this.bufferedJumpingEnabled;
 		this.panels.earlyBar.visible = this.bufferedJumpingEnabled;
 		this.panels.lateBar.style.width = this.bufferedJumpingEnabled ? '50%' : '100%';
+	}
+
+	updateVisibility() {
+		if (MomentumMovementAPI.GetCurrentTime() - this.displayStartTime > this.displayTime) {
+			this.panels.container.visible = false;
+		}
 	}
 
 	onJumpTimingUpdate(jumpTiming: number) {
@@ -84,5 +97,8 @@ class JumpTimingHandler {
 
 		const lateTimingColor = Colors.RED;
 		this.panels.lateBarProgress.style.backgroundColor = tupleToRgbaString(lateTimingColor);
+
+		this.panels.container.visible = true;
+		this.displayStartTime = MomentumMovementAPI.GetCurrentTime();
 	}
 }
