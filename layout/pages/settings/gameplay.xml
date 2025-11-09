@@ -659,12 +659,12 @@
 
 					<Label class="settings-group__combo-header" text="#Settings_Defrag_Compass_Title" />
 
-					<SettingsEnumDropDown text="#Settings_Defrag_Compass" convar="mom_hud_df_compass_mode" infomessage="#Settings_Defrag_Compass_Info" tags="compass">
-						<Label id="compass0" text="#Settings_Defrag_CompassMode_Type0" value="0" />
-						<Label id="compass1" text="#Settings_Defrag_CompassMode_Type1" value="1" />
-						<Label id="compass2" text="#Settings_Defrag_CompassMode_Type2" value="2" />
-						<Label id="compass3" text="#Settings_Defrag_CompassMode_Type3" value="3" />
-					</SettingsEnumDropDown>
+					<SettingsEnumBitField text="#Settings_Defrag_Compass" convar="mom_hud_df_compass_mode" infomessage="#Settings_Defrag_Compass_Info" tags="compass">
+						<Panel class="settings-enum-bitfield__flags settings-enum-bitfield__flags--rows-1">
+							<ToggleButton text="#Settings_Defrag_CompassMode_ShowArrow" flag="0" />
+							<ToggleButton text="#Settings_Defrag_CompassMode_ShowTicks" flag="1" />
+						</Panel>
+					</SettingsEnumBitField>
 
 					<ConVarEnabler convar="mom_hud_df_compass_mode" class="flow-down">
 						<SettingsSlider text="#Settings_Defrag_CompassArrowSize" min="0" max="25" convar="mom_hud_df_compass_arrow_size" displayprecision="0" infomessage="#Settings_Defrag_CompassArrowSize_Info" tags="compass" />
@@ -688,12 +688,12 @@
 						<SettingsSlider text="#Settings_Defrag_PitchOffset" min="-200" max="200" convar="mom_hud_df_pitch_offset" displayprecision="1" infomessage="#Settings_Defrag_PitchOffset_Info" tags="compass,pitch" />
 					</ConVarEnabler>
 
-					<SettingsEnumDropDown text="#Settings_Defrag_Compass_Stat_Mode" convar="mom_hud_df_compass_stat_mode" infomessage="#Settings_Defrag_Compass_Stat_Mode_Info" tags="compass">
-						<Label id="compassstat0" text="#Settings_Defrag_Compass_StatMode_Type0" value="0" />
-						<Label id="compassstat1" text="#Settings_Defrag_Compass_StatMode_Type1" value="1" />
-						<Label id="compassstat2" text="#Settings_Defrag_Compass_StatMode_Type2" value="2" />
-						<Label id="compassstat3" text="#Settings_Defrag_Compass_StatMode_Type3" value="3" />
-					</SettingsEnumDropDown>
+					<SettingsEnumBitField text="#Settings_Defrag_Compass_Stat_Mode" convar="mom_hud_df_compass_stat_mode" infomessage="#Settings_Defrag_Compass_Stat_Mode_Info" tags="compass">
+						<Panel class="settings-enum-bitfield__flags settings-enum-bitfield__flags--rows-1">
+							<ToggleButton text="#Settings_Defrag_Compass_StatMode_ShowPitch" flag="0" />
+							<ToggleButton text="#Settings_Defrag_Compass_StatMode_ShowYaw" flag="1" />
+						</Panel>
+					</SettingsEnumBitField>
 
 					<ConVarColorDisplay text="#Settings_Defrag_CompassColor" convar="mom_hud_df_compass_color" infomessage="#Settings_Defrag_CompassColor_Info" tags="compass" />
 
