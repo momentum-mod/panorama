@@ -1,6 +1,3 @@
-import * as LayoutUtil from 'common/layout';
-import * as Enum from 'util/enum';
-import { PanelHandler } from 'util/module-helpers';
 import {
 	CustomizerComponentProperties,
 	CustomizerPropertyType,
@@ -10,9 +7,12 @@ import {
 	registerHUDCustomizerComponent,
 	StyleID
 } from 'common/hud-customizer';
+import * as LayoutUtil from 'common/layout';
+import * as Enum from 'util/enum';
+import { PanelHandler } from 'util/module-helpers';
 
 /** Structure of layout stored out to KV3 */
-interface HudLayout {
+export interface HudLayout {
 	components: {
 		[id: string]: {
 			position: LayoutUtil.Position;
@@ -249,12 +249,15 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		}
 
 		for (const component of Object.values(this.components)) {
-			component.panel.SetPanelEvent('onmouseover', () => this.selectComponent(component));
+			component.panel.SetPanelEvent('onmouseover', () => this.setActiveComponent(component));
 		}
 
 		this.createGridLines();
 		this.updateGridVisibility();
 		this.createResizeKnobs();
+
+		this.activeComponent ??= this.components[Object.keys(this.components)[0]];
+		this.setActiveComponent(this.activeComponent);
 	}
 
 	disableEditing(): void {
@@ -275,19 +278,17 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		this.panels.componentList.RemoveAndDeleteChildren();
 
 		for (const [id, component] of Object.entries(this.components)) {
-			const panel = $.CreatePanel('ToggleButton', this.panels.componentList, `${id}Settings`);
+			const panel = $.CreatePanel('RadioButton', this.panels.componentList, `${id}Settings`);
 			panel.LoadLayoutSnippet('component');
 			panel.SetDialogVariable('name', id);
 			panel.SetSelected(this.activeComponent === component);
 			panel.SetPanelEvent('onactivate', () => {
-				this.selectComponent(component);
+				this.setActiveComponent(component);
 			});
 		}
 	}
 
-	selectComponent(component: Component): void {
-		if (this.activeComponent && this.activeComponent === component) return;
-
+	setActiveComponent(component: Component): void {
 		this.activeComponent = component;
 
 		const [[x, y], [w, h]] = LayoutUtil.getPositionAndSize(component.panel);
@@ -304,6 +305,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		// TODO: This is going to be weird to localise!
 		this.panels.overlay.SetDialogVariable('name', this.activeComponent.panel.id);
 		this.updateActiveComponentSettings();
+		this.updateActiveComponentDialogVars();
 
 		if (this.dragStartHandle) {
 			$.UnregisterEventHandler('DragStart', this.panels.dragPanel, this.dragStartHandle);
@@ -339,7 +341,11 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 					panel.SetDialogVariable('name', dynamicStyle.name);
 					const numberEntry = panel.FindChildTraverse<NumberEntry>('NumberEntry')!;
 
-					if (dynamicStyle.settingProps) Object.assign(numberEntry, dynamicStyle.settingProps);
+					if (dynamicStyle.settingProps) {
+						Object.assign(numberEntry, dynamicStyle.settingProps);
+					}
+
+					numberEntry.value = (this.activeComponent.dynamicStyles?.[styleID]?.value as number) ?? 0;
 
 					numberEntry.SetPanelEvent('onvaluechanged', () =>
 						this.applyDynamicStyle(this.activeComponent, styleID, dynamicStyle, numberEntry.value)
@@ -353,7 +359,11 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 					panel.SetDialogVariable('name', dynamicStyle.name);
 					const checkbox = panel.FindChildTraverse<ToggleButton>('ToggleButton')!;
 
-					if (dynamicStyle.settingProps) Object.assign(checkbox, dynamicStyle.settingProps);
+					if (dynamicStyle.settingProps) {
+						Object.assign(checkbox, dynamicStyle.settingProps);
+					}
+
+					checkbox.checked = (this.activeComponent.dynamicStyles?.[styleID]?.value as boolean) ?? false;
 
 					checkbox.SetPanelEvent('onactivate', () =>
 						this.applyDynamicStyle(this.activeComponent, styleID, dynamicStyle, checkbox.checked)
@@ -363,14 +373,51 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 				}
 
 				case CustomizerPropertyType.COLOR_PICKER: {
+					// Duplicating quite a lot from ColorDisplay here, because styles are a huge pain and want to
+					// be able to control inner panels directly.
+
+					// TODO: some fuckass layout shifting going on just after creating this
+
 					panel.LoadLayoutSnippet('dynamic-colorpicker');
-					const colorDisplay = panel.FindChild<ColorDisplay>('ColorDisplay')!;
+
+					const colorDisplay = panel.FindChildTraverse<ColorDisplay>('ColorDisplay')!;
 					colorDisplay.title = dynamicStyle.name;
 
+					// Note, we use hex for display here since it's more compact, but internally is rgba
+					// since that's what PanoramaTypeToV8Param<Color> uses, don't want to change that.
+					const color =
+						(this.activeComponent.dynamicStyles?.[styleID]?.value as rgbaColor) ?? 'rgba(255, 255, 255, 1)';
+					// const swatch = panel.FindChildTraverse<Panel>('Swatch')!;
+					// const hex = panel.FindChildTraverse<TextEntry>('Hex')!;
+
+					// swatch.SetPanelEvent('onactivate', () => {
+					// 	const color = $.GetContextPanel<ColorDisplay>().color;
+					// 	const popup = UiToolkitAPI.ShowCustomLayoutPopupParameters(
+					// 		'HudCustomizer_ColorPicker',
+					// 		'file://{resources}/layout/modals/popups/color-picker.xml',
+					// 		'color=' + color
+					// 	);
+					//
+					// 	const handler = $.RegisterEventHandler('ColorPickerSave', popup, (color) => {
+					// 		$.UnregisterEventHandler('ColorPickerSave', popup, handler);
+					// 		hex.text = color;
+					// 	});
+					// });
+					//
+					// hex.SetPanelEvent('ontextentrychange', () => {
+					// 	swatch.style.backgroundColor = color;
+					// 	swatch.style.backgroundImgOpacity =
+					// 		1 -
+					// 		(color.startsWith('#')
+					// 			? Number.parseInt(color.slice(7, 9), 16) / 255
+					// 			: rgbaStringToTuple(color)[3] / 255);
+					// 	this.applyDynamicStyle(this.activeComponent, styleID, dynamicStyle, hex.text);
+					// });
 					colorDisplay.SetPanelEvent('oncolorchange', () =>
 						this.applyDynamicStyle(this.activeComponent, styleID, dynamicStyle, colorDisplay.color)
 					);
 
+					colorDisplay.color = color;
 					break;
 				}
 			}
@@ -480,11 +527,6 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 				[this.activeComponent.size[0], this.activeComponent.size[1] + OVERLAY_HEADER_HEIGHT]
 			);
 		}
-
-		this.panels.overlay.SetDialogVariable('x', fixFloat(this.activeComponent.position[0]).toString());
-		this.panels.overlay.SetDialogVariable('y', fixFloat(this.activeComponent.position[1]).toString());
-		this.panels.overlay.SetDialogVariable('width', fixFloat(this.activeComponent.size[0]).toString());
-		this.panels.overlay.SetDialogVariable('height', fixFloat(this.activeComponent.size[1]).toString());
 	}
 
 	onEndDrag() {
@@ -598,6 +640,15 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 				this.activeGridlines[axis] = gridline;
 			}
 		}
+	}
+
+	updateActiveComponentDialogVars(): void {
+		if (!this.activeComponent) return;
+
+		this.panels.overlay.SetDialogVariable('x', fixFloat(this.activeComponent.position[0]).toString());
+		this.panels.overlay.SetDialogVariable('y', fixFloat(this.activeComponent.position[1]).toString());
+		this.panels.overlay.SetDialogVariable('width', fixFloat(this.activeComponent.size[0]).toString());
+		this.panels.overlay.SetDialogVariable('height', fixFloat(this.activeComponent.size[1]).toString());
 	}
 
 	readonly ResizeVectors = {

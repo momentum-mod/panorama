@@ -9,11 +9,11 @@
 
 	<snippets>
 		<snippet name="component">
-			<ToggleButton class="hud-customizer-settings__component">
+			<RadioButton class="hud-customizer-settings__component" group="ComponentList">
 				<Label class="hud-customizer-settings__component__name" text="{s:name}" />
 				<!-- TODO -->
 				<!--ToggleButton id="Hidden"/>-->
-			</ToggleButton>
+			</RadioButton>
 		</snippet>
 
 		<snippet name="dynamic-checkbox">
@@ -34,6 +34,9 @@
 		<snippet name="dynamic-colorpicker">
 			<Panel class="hud-customizer-settings__row">
 				<ColorDisplay id="ColorDisplay" class="hud-customizer-settings__colordisplay" />
+<!--				<Label text="{s:name}" />-->
+<!--				<Panel id="Swatch" acceptsinput="true" />-->
+<!--				<TextEntry id="Hex" class="textentry" textmode="hex" maxchars="9" />-->
 			</Panel>
 		</snippet>
 	</snippets>

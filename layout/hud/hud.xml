@@ -33,9 +33,7 @@
 		<ConVarEnabler convar="mom_zoning_enable" invert="true" togglevisibility="true">
 			<MomHudStatus id="Status" />
 		</ConVarEnabler>
-		<ConVarEnabler convar="mom_zoning_enable" invert="true" togglevisibility="true">
-			<MomHudTimer id="Timer" />
-		</ConVarEnabler>
+		<MomHudTimer id="Timer" />
 		<MomHudStrafeSync id="StrafeSync" />
 		<MomHudGroundboost id="MomHudGroundboost" />
 		<HudHintText id="HudHintText" />

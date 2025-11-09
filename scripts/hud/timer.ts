@@ -1,6 +1,7 @@
 import { PanelHandler } from 'util/module-helpers';
 import { HideHud } from 'common/state';
 import * as Timer from 'common/timer';
+import { registerHUDCustomizerComponent } from '../common/hud-customizer';
 
 const DIFF_DISPLAY_TIME = 5;
 const HIDDEN_CLASS = 'hudtimer--hidden';
@@ -68,6 +69,11 @@ class HudTimerHandler {
 			// some way - same as HudStatus.
 			this.panels.cp.AddClass(HIDDEN_CLASS);
 			this.forceHideComparison();
+		});
+
+		registerHUDCustomizerComponent($.GetContextPanel(), {
+			resizeX: false,
+			resizeY: false
 		});
 	}
 

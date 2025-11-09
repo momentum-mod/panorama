@@ -100,7 +100,9 @@
 
 	&__component-list {
 		flow-children: down;
-		margin: 0px 6px;
+		margin-left: 6px;
+		margin-right: 6px;
+		margin-bottom: 8px;
 		border-radius: 2px;
 		width: 100%;
 		border: 1px solid rgba(255, 255, 255, 0.025);
@@ -125,7 +127,7 @@
 
 		&__name {
 			font-family: $font-monospace;
-			font-size: 12px;
+			font-size: 11px;
 			font-weight: medium;
 		}
 	}
@@ -139,26 +141,27 @@
 	&__active {
 		flow-children: down;
 		width: 100%;
-		margin: 8px 12px 6px 10px;
+		margin: 0px 10px 6px 10px;
 
 		&__header {
 			width: 100%;
-			flow-children: right;
+
 			font-size: 18px;
 			border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 
 			&__name {
 				font-family: $font-monospace;
-				font-weight: bold;
+				font-weight: medium;
 				vertical-align: center;
+				font-size: 14px;
+				padding-bottom: 2px;
 			}
 		}
 
 		&__contents {
 			width: 100%;
 			flow-children: down;
-			margin-left: 4px;
-			margin-top: 8px;
+			margin-top: 4px;
 		}
 	}
 
@@ -168,10 +171,10 @@
 		flow-children: right;
 		margin-bottom: 4px;
 	}
-	
+
 	@mixin name {
 		font-family: $font-monospace;
-		font-size: 10px;
+		font-size: 11px;
 		vertical-align: center;
 		horizontal-align: left;
 	}
@@ -201,7 +204,6 @@
 			min-width: 24px;
 			horizontal-align: center;
 			padding: 1px 0 1px 6px;
-
 			font-family: $font-monospace;
 			font-size: 11px;
 		}
@@ -225,28 +227,40 @@
 			margin-right: 0;
 		}
 	}
-	
-	&__colordisplay {
+
+	&__colordisplay:not(.spec-hack) {
 		flow-children: right;
-		height: 100%;
-		
-		& Label {
+		width: 100%;
+		height: 20px;
+		border-width: 0;
+		margin: 0;
+		padding: 0;
+
+		// todo: random layout shifting bullshit going on. start with fill-parent-flow usage?
+		& Label:not(.spec-hack) {
 			@include name;
-			width: fill-parent-flow(1);
-			margin-right: 8px;
-		}
-		
-		& Panel {
-			width: 16px;
-			height: 100%;
-		}
-		
-		& TextEntry {
 			width: fit-children;
-			min-width: 40px;
-			
-			font-family: $font-monospace;
+			height: 20px;
+			vertical-align: center;
+		}
+
+		& Panel:not(.spec-hack) {
+			width: 16px;
+			margin: 0;
+			margin-right: 6px;
+			vertical-align: center;
+			border-radius: 2px;
+		}
+
+		& TextEntry:not(.spec-hack) {
+			//width: fill-parent-flow(1);
 			font-size: 10px;
+			width: 100px;
+			padding: 1px 0 1px 6px;
+			font-family: $font-monospace;
+			vertical-align: center;
+			height: 16px;
+			margin: 0;
 		}
 	}
 }
