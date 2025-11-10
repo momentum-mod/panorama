@@ -2,6 +2,9 @@
 @use '../abstract/mixin';
 @use 'sass:color';
 
+$input-background: rgb(91, 91, 91);
+$input-background-hover: rgb(110, 110, 110);
+
 .hud-customizer {
 	width: 100%;
 	height: 100%;
@@ -103,14 +106,13 @@
 		margin-left: 6px;
 		margin-right: 6px;
 		margin-bottom: 8px;
-		border-radius: 2px;
+		//border-radius: 2px;
 		width: 100%;
 		border: 1px solid rgba(255, 255, 255, 0.025);
 		background-color: rgba(0, 0, 0, 0.4);
 	}
 
 	&__component {
-		flow-children: right;
 		width: 100%;
 		padding: 2px 6px;
 
@@ -126,9 +128,52 @@
 		}
 
 		&__name {
+			vertical-align: center;
+			horizontal-align: left;
+
 			font-family: $font-monospace;
 			font-size: 11px;
 			font-weight: medium;
+		}
+
+		&__right {
+			flow-children: right;
+			horizontal-align: right;
+			height: 100%;
+			vertical-align: center;
+		}
+
+		&__checkbox:not(.spec-hack) {
+			margin-left: 4px;
+			width: 12px;
+			height: 12px;
+			vertical-align: center;
+
+			.TickBox {
+				width: 12px;
+				height: 12px;
+				margin: 0;
+				padding: 0;
+			}
+		}
+
+		&__button {
+			width: 16px;
+			height: 16px;
+			margin-left: 4px;
+			vertical-align: center;
+
+			& Image {
+				padding: 1px;
+				opacity: 0.4;
+				transition: opacity 0.1s ease-in-out 0s;
+			}
+
+			&:hover {
+				& Image {
+					opacity: 1;
+				}
+			}
 		}
 	}
 
@@ -206,10 +251,15 @@
 			padding: 1px 0 1px 6px;
 			font-family: $font-monospace;
 			font-size: 11px;
+			background-color: $input-background;
+
+			&:hover {
+				background-color: $input-background-hover;
+			}
 		}
 	}
 
-	&__togglebutton {
+	&__checkbox {
 		width: 100%;
 		flow-children: none;
 		min-height: 16px;
@@ -225,6 +275,12 @@
 			width: 16px;
 			height: 16px;
 			margin-right: 0;
+
+			background-color: $input-background;
+
+			.hud-customizer-settings__checkbox:hover & {
+				background-color: $input-background-hover;
+			}
 		}
 	}
 
@@ -236,10 +292,9 @@
 		margin: 0;
 		padding: 0;
 
-		// todo: random layout shifting bullshit going on. start with fill-parent-flow usage?
 		& Label:not(.spec-hack) {
 			@include name;
-			width: fit-children;
+			width: fill-parent-flow(1);
 			height: 20px;
 			vertical-align: center;
 		}
@@ -247,20 +302,41 @@
 		& Panel:not(.spec-hack) {
 			width: 16px;
 			margin: 0;
-			margin-right: 6px;
+			margin-right: 4px;
 			vertical-align: center;
 			border-radius: 2px;
 		}
 
 		& TextEntry:not(.spec-hack) {
-			//width: fill-parent-flow(1);
 			font-size: 10px;
-			width: 100px;
+			width: 60px;
 			padding: 1px 0 1px 6px;
 			font-family: $font-monospace;
 			vertical-align: center;
 			height: 16px;
 			margin: 0;
+			background-color: $input-background;
+
+			&:hover {
+				background-color: $input-background-hover;
+			}
+		}
+	}
+
+	&__dropdown {
+		height: 16px;
+		background-color: $input-background;
+
+		& Label {
+			@include name;
+			font-size: 10px;
+			text-transform: none;
+		}
+
+		.DropDownIcon {
+			width: 12px;
+			height: 12px;
+			align: center center;
 		}
 	}
 }
@@ -276,25 +352,6 @@
 	z-index: 10;
 	flow-children: down;
 	overflow: noclip;
-
-	// TODO:make this work!!!
-	&--dragging {
-		//animation: HudCustomizerDraggingPulse 1s ease-in-out 0s infinite normal forwards;
-
-		@at-root {
-			@keyframes HudCustomizerDraggingPulse {
-				0% {
-					border: 1px solid rgba($red, 1);
-				}
-				50% {
-					border: 1px solid rgba(color.scale($red, $saturation: 20%, $lightness: -10%), 1);
-				}
-				100% {
-					border: 1px solid rgba($red, 1);
-				}
-			}
-		}
-	}
 
 	&__resize-knobs {
 		width: 100%;

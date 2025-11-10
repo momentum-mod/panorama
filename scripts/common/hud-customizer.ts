@@ -4,7 +4,8 @@ export enum CustomizerPropertyType {
 	NUMBER_ENTRY,
 	CHECKBOX,
 	SLIDER,
-	COLOR_PICKER
+	COLOR_PICKER,
+	FONT_PICKER
 }
 
 interface PropertyTypeMap {
@@ -12,6 +13,7 @@ interface PropertyTypeMap {
 	[CustomizerPropertyType.CHECKBOX]: ToggleButton;
 	[CustomizerPropertyType.SLIDER]: Slider;
 	[CustomizerPropertyType.COLOR_PICKER]: never;
+	[CustomizerPropertyType.FONT_PICKER]: never;
 }
 
 interface PropertyTypeToValueTypeMap {
@@ -19,11 +21,12 @@ interface PropertyTypeToValueTypeMap {
 	[CustomizerPropertyType.CHECKBOX]: ToggleButton['checked'];
 	[CustomizerPropertyType.SLIDER]: Slider['value'];
 	[CustomizerPropertyType.COLOR_PICKER]: TextEntry['text'];
+	[CustomizerPropertyType.FONT_PICKER]: string;
 }
 
 export type StyleID = string;
 
-export type QuerySelector = `#${string}` | `.${string}`;
+export type QuerySelector = `#${string}` | `.${string}` | keyof PanelTagNameMap;
 
 interface DynamicStyleBase<PropertyType extends CustomizerPropertyType> {
 	/** Name of the property to display in UI. Please localize! */
@@ -52,6 +55,8 @@ interface DynamicStyleBase<PropertyType extends CustomizerPropertyType> {
 				? never
 				: PropertyTypeMap[PropertyType][K];
 	};
+
+	eventListeners?: any;
 }
 
 interface DynamicStyleWithProperty<PropertyType extends CustomizerPropertyType, StyleProperty extends keyof Style>
@@ -83,6 +88,13 @@ export interface CustomizerComponentProperties {
 
 	/** Allow resizing in the Y direction. */
 	resizeY: boolean;
+	
+	/** Generate margin settings. */
+	marginSettings: boolean;
+	
+	paddingSettings: boolean;
+	
+	backgroundColorSettings: boolean;
 
 	/** Styling properties of provided panel or children, for which we generate UI and store values for. */
 	dynamicStyles?: Record<

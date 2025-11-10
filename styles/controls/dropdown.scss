@@ -115,7 +115,7 @@
 		vertical-align: center;
 		padding: $dropdown-item-padding;
 
-		@include mixin.font-header();
+		//@include mixin.font-header();
 		font-weight: bold;
 		font-size: $dropdown-item-font-size;
 		text-shadow: none;

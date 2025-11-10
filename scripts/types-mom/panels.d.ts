@@ -195,7 +195,7 @@ interface ZoneMenu extends AbstractPanel<'ZoneMenu'> {
  *
  * C++ side is agnostic to what you pass it, just saves and loads until builtin KV3 <-> JSO mappings.
  *
- * Note that cfg/hud_default.kv3 is stored in the licensee-only game repo, just let someone (probably Tom)
+ * Note that cfg/hud_default.json is stored in the licensee-only game repo, just let someone (probably Tom)
  * know if you need to update it.
  */
 interface HudCustomizer extends AbstractPanel<'HudCustomizer'> {
@@ -206,16 +206,16 @@ interface HudCustomizer extends AbstractPanel<'HudCustomizer'> {
 	 * */
 	toggleUI(enabled: boolean): void;
 
-	/** Saves the given object to cfg/hud.kv3. */
+	/** Saves the given object to cfg/hud.json. */
 	saveLayout(data: import('hud/customizer').HudLayout): void;
 
 	/**
-	 * Tries to get the contents of cfg/hud.kv3 as a JS object.
-	 * If cfg/hud.kv3 doesn't exist, loads cfg/hud_default.kv3.
-	 * If neither hud.kv3 or hud_default.kv3 exists, we crash.
+	 * Tries to get the contents of cfg/hud.json as a JS object.
+	 * If cfg/hud.json doesn't exist, loads cfg/hud_default.json.
+	 * If neither hud.json nor hud_default.json exists, we crash.
 	 */
 	getLayout(): import('hud/customizer').HudLayout;
 
-	/** Gets the contents of cfg/hud_default.kv3 as a JS object. */
+	/** Gets the contents of cfg/hud_default.json as a JS object. */
 	getDefaultLayout(): import('hud/customizer').HudLayout;
 }

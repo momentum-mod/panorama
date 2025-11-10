@@ -11,14 +11,13 @@
 		<snippet name="component">
 			<RadioButton class="hud-customizer-settings__component" group="ComponentList">
 				<Label class="hud-customizer-settings__component__name" text="{s:name}" />
-				<!-- TODO -->
-				<!--ToggleButton id="Hidden"/>-->
+				<Panel id="Right" class="hud-customizer-settings__component__right" />
 			</RadioButton>
 		</snippet>
 
 		<snippet name="dynamic-checkbox">
 			<Panel class="hud-customizer-settings__row">
-				<ToggleButton id="ToggleButton" class="checkbox hud-customizer-settings__togglebutton">
+				<ToggleButton id="Checkbox" class="checkbox hud-customizer-settings__checkbox">
 					<Label class="hud-customizer-settings__setting-label" text="{s:name}" />
 				</ToggleButton>
 			</Panel>
@@ -34,9 +33,13 @@
 		<snippet name="dynamic-colorpicker">
 			<Panel class="hud-customizer-settings__row">
 				<ColorDisplay id="ColorDisplay" class="hud-customizer-settings__colordisplay" />
-<!--				<Label text="{s:name}" />-->
-<!--				<Panel id="Swatch" acceptsinput="true" />-->
-<!--				<TextEntry id="Hex" class="textentry" textmode="hex" maxchars="9" />-->
+			</Panel>
+		</snippet>
+
+		<snippet name="dynamic-fontpicker">
+			<Panel class="hud-customizer-settings__row">
+				<Label class="hud-customizer-settings__setting-label" text="{s:name}" />
+				<DropDown id="DropDown" class="dropdown hud-customizer-settings__dropdown" menuclass="dropdown-menu" />
 			</Panel>
 		</snippet>
 	</snippets>
@@ -50,14 +53,14 @@
 			</Panel>
 			<Panel class="hud-customizer-settings__global">
 				<!-- i18n -->
-				<ToggleButton id="GridToggle" class="checkbox hud-customizer-settings__row hud-customizer-settings__togglebutton" onactivate="HudCustomizerHandler.updateGridVisibility()">
+				<ToggleButton id="GridToggle" class="checkbox hud-customizer-settings__row hud-customizer-settings__checkbox" onactivate="HudCustomizerHandler.updateGridVisibility()">
 					<Label class="hud-customizer-settings__setting-label" text="Enable Grid" />
 				</ToggleButton>
 				<Panel class="hud-customizer-settings__row">
 					<Label class="hud-customizer-settings__setting-label" text="Grid Size" />
 					<NumberEntry id="GridSize" class="hud-customizer-settings__numberentry" min="4" max="12" onvaluechanged="HudCustomizerHandler.updateGridSize()" />
 				</Panel>
-				<ToggleButton id="SnappingToggle" class="checkbox hud-customizer-settings__togglebutton hud-customizer-settings__row">
+				<ToggleButton id="SnappingToggle" class="checkbox hud-customizer-settings__checkbox hud-customizer-settings__row">
 					<Label class="hud-customizer-settings__setting-label" text="Enable Snapping" />
 				</ToggleButton>
 			</Panel>
