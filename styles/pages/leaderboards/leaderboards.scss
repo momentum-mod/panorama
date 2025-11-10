@@ -22,7 +22,16 @@
 	}
 
 	&__button {
-		margin-left: 8px;
+		border-top-left-radius: 0px;
+		border-bottom-left-radius: 0px;
+	}
+
+	&__dropdown {
+		border-top-right-radius: 0px;
+		border-bottom-right-radius: 0px;
+		& .DropDownIcon {
+			border-radius: 0px;
+		}
 	}
 }
 
