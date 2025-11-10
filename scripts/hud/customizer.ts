@@ -9,12 +9,18 @@ import {
 } from 'common/hud-customizer';
 import * as LayoutUtil from 'common/layout';
 import * as Enum from 'util/enum';
+import { traverseChildren } from 'util/functions';
 import { PanelHandler } from 'util/module-helpers';
+
+// TODO: need to do a *ton* of localization when this is done, including components!
 
 /** Structure of layout stored out to KV3 */
 export interface HudLayout {
 	components: {
 		[id: string]: {
+			enabled: boolean;
+			// Pairs of numbers.
+			// Keep in mind these are arrays, so have *reference* semantics. Use $.DeepClone where needed!
 			position: LayoutUtil.Position;
 			size: LayoutUtil.Size;
 			dynamicStyles?: Record<StyleID, unknown>;
@@ -68,6 +74,8 @@ interface Component {
 	// These do *not* update the actual panel until you use LayoutUtil to set them.
 	position: LayoutUtil.Position;
 	size: LayoutUtil.Size;
+	enabled: boolean;
+	settings?: Omit<CustomizerComponentProperties, 'dynamicStyles'>;
 }
 
 interface Gridline {
@@ -100,6 +108,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 	gridlines: GridlineForAxis = [[], []];
 	activeComponent?: Component | undefined;
 	activeGridlines: [Gridline | undefined, Gridline | undefined] = [undefined, undefined];
+	fonts: string[] = [];
 
 	resizeKnobs: Record<ResizeMode, Button> = undefined!;
 
@@ -134,7 +143,13 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			$.DispatchEvent('HudCustomizer_Ready');
 
 			// TODO: not working :(
-			registerHUDCustomizerComponent(this.panels.settings, { resizeY: false, resizeX: false });
+			registerHUDCustomizerComponent(this.panels.settings, {
+				resizeY: false,
+				resizeX: false,
+				marginSettings: false,
+				paddingSettings: false,
+				backgroundColorSettings: false
+			});
 		});
 
 		// TODO: This was just for case of someone changin layout via file and wanting to update ingame.
@@ -160,6 +175,8 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 		this.panels.activeComponentSettings.visible = false;
 
+		this.fonts = UiToolkitAPI.GetSortedValidFontNames().toSorted((a, b) => a.localeCompare(b));
+
 		UiToolkitAPI.GetGlobalObject()['HudCustomizerHandler'] = this;
 	}
 
@@ -170,25 +187,27 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		if (!component) return;
 
 		const pos = this.fixWonkyBounds(panel, component.position, component.size);
+
+		// TODO: Can't we get rid of the size/position/enabled duplication and just rely on panel state?
+		// I guess we can't do that with dynamicStyles though, since settings panels for them only exist when
+		// selected in customizer.
 		this.components[panel.id] = {
 			panel,
 			position: pos,
-			size: component.size,
-			dynamicStyles: properties.dynamicStyles as any // TODO:, have to parse saved values into dynamic stuff
+			size: $.DeepClone(component.size),
+			enabled: component.enabled ?? true,
+			settings: properties,
+			dynamicStyles: properties.dynamicStyles as any // Not worth type headache of deriving this
 		};
 
 		LayoutUtil.setPositionAndSize(panel, pos, component.size);
+		panel.enabled = this.components[panel.id].enabled;
 
 		if (properties.dynamicStyles) {
 			for (const styleID of Object.keys(properties.dynamicStyles)) {
 				const savedValue = this.layout?.components?.[panel.id]?.dynamicStyles?.[styleID];
 				if (savedValue != null) {
-					this.applyDynamicStyle(
-						this.components[panel.id],
-						styleID,
-						properties.dynamicStyles[styleID] as DynamicStyle,
-						savedValue
-					);
+					this.applyDynamicStyle(this.components[panel.id], styleID, savedValue);
 				}
 			}
 		}
@@ -206,15 +225,23 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 		const defaults = this.defaultLayout.components[panel.id];
 		if (!defaults || !Array.isArray(defaults.position) || !Array.isArray(defaults.size)) {
-			// TODO: Should probably make this an error when proejct is completed, too annoying to do rn.
-			$.Warning(
+			throw new Error(
 				`HudCustomizer: Found a customizable HUD element ${panel.paneltype} that doesn't have a default layout!`
 			);
-
-			return { panel, position: LayoutUtil.getPosition(panel), size: LayoutUtil.getSize(panel) };
 		}
 
-		return { panel, position: defaults.position, size: defaults.size };
+		return {
+			panel,
+			enabled: defaults.enabled ?? true,
+			position: $.DeepClone(defaults.position),
+			size: $.DeepClone(defaults.size),
+			dynamicStyles: Object.fromEntries(
+				Object.entries(this.components[panel.id]?.dynamicStyles ?? {}).map(([styleID, style]) => [
+					styleID,
+					{ ...style, value: defaults.dynamicStyles?.[styleID] }
+				])
+			)
+		};
 	}
 
 	save(): void {
@@ -234,6 +261,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			saveData.components[id] = {
 				position: [fixFloat(x), fixFloat(y)],
 				size: [fixFloat(w), fixFloat(h)],
+				enabled: component.enabled,
 				dynamicStyles: Object.fromEntries(
 					Object.entries(component.dynamicStyles ?? {}).map(([styleID, { value }]) => [styleID, value])
 				)
@@ -282,9 +310,36 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			panel.LoadLayoutSnippet('component');
 			panel.SetDialogVariable('name', id);
 			panel.SetSelected(this.activeComponent === component);
-			panel.SetPanelEvent('onactivate', () => {
-				this.setActiveComponent(component);
+			panel.SetPanelEvent('onactivate', () => this.setActiveComponent(component));
+
+			// These need unique IDs for tooltips to work so constructing via code instead of snippet. Grr.
+			const right = panel.FindChild('Right')!;
+
+			const resetButton = $.CreatePanel('Button', right, `${id}ResetButton`, {
+				class: 'hud-customizer-settings__component__button'
 			});
+			$.CreatePanel('Image', resetButton, '', { src: 'file://{images}/backup-restore.svg' });
+			resetButton.SetPanelEvent('onmouseover', () => UiToolkitAPI.ShowTextTooltip(`${id}ResetButton`, 'Reset'));
+			resetButton.SetPanelEvent('onmouseout', () => UiToolkitAPI.HideTextTooltip());
+			resetButton.SetPanelEvent('onactivate', () =>
+				UiToolkitAPI.ShowGenericPopupOkCancel(
+					'Reset Component',
+					`Are you sure you want to reset ${id}?`,
+					'Reset',
+					() => this.resetComponent(component),
+					() => {}
+				)
+			);
+
+			const visButton = $.CreatePanel('ToggleButton', right, `${id}VisButton`, {
+				class: 'checkbox hud-customizer-settings__checkbox hud-customizer-settings__component__checkbox'
+			});
+			visButton.checked = component.enabled;
+			visButton.SetPanelEvent('onmouseover', () =>
+				UiToolkitAPI.ShowTextTooltip(`${id}VisButton`, 'Toggle Visibility')
+			);
+			visButton.SetPanelEvent('onmouseout', () => UiToolkitAPI.HideTextTooltip());
+			visButton.SetPanelEvent('onactivate', () => this.updateComponentEnabled(component, visButton.checked));
 		}
 	}
 
@@ -300,9 +355,9 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			[x, y - OVERLAY_HEADER_HEIGHT],
 			[w, h + OVERLAY_HEADER_HEIGHT]
 		);
+
 		LayoutUtil.setPositionAndSize(this.panels.dragPanel, [x, y], [w, h]);
 
-		// TODO: This is going to be weird to localise!
 		this.panels.overlay.SetDialogVariable('name', this.activeComponent.panel.id);
 		this.updateActiveComponentSettings();
 		this.updateActiveComponentDialogVars();
@@ -348,7 +403,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 					numberEntry.value = (this.activeComponent.dynamicStyles?.[styleID]?.value as number) ?? 0;
 
 					numberEntry.SetPanelEvent('onvaluechanged', () =>
-						this.applyDynamicStyle(this.activeComponent, styleID, dynamicStyle, numberEntry.value)
+						this.applyDynamicStyle(this.activeComponent, styleID, numberEntry.value)
 					);
 
 					break;
@@ -357,7 +412,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 				case CustomizerPropertyType.CHECKBOX: {
 					panel.LoadLayoutSnippet('dynamic-checkbox');
 					panel.SetDialogVariable('name', dynamicStyle.name);
-					const checkbox = panel.FindChildTraverse<ToggleButton>('ToggleButton')!;
+					const checkbox = panel.FindChildTraverse<ToggleButton>('Checkbox')!;
 
 					if (dynamicStyle.settingProps) {
 						Object.assign(checkbox, dynamicStyle.settingProps);
@@ -366,89 +421,76 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 					checkbox.checked = (this.activeComponent.dynamicStyles?.[styleID]?.value as boolean) ?? false;
 
 					checkbox.SetPanelEvent('onactivate', () =>
-						this.applyDynamicStyle(this.activeComponent, styleID, dynamicStyle, checkbox.checked)
+						this.applyDynamicStyle(this.activeComponent, styleID, checkbox.checked)
 					);
 
 					break;
 				}
 
 				case CustomizerPropertyType.COLOR_PICKER: {
-					// Duplicating quite a lot from ColorDisplay here, because styles are a huge pain and want to
-					// be able to control inner panels directly.
-
-					// TODO: some fuckass layout shifting going on just after creating this
-
 					panel.LoadLayoutSnippet('dynamic-colorpicker');
 
 					const colorDisplay = panel.FindChildTraverse<ColorDisplay>('ColorDisplay')!;
-					colorDisplay.title = dynamicStyle.name;
-
-					// Note, we use hex for display here since it's more compact, but internally is rgba
-					// since that's what PanoramaTypeToV8Param<Color> uses, don't want to change that.
-					const color =
-						(this.activeComponent.dynamicStyles?.[styleID]?.value as rgbaColor) ?? 'rgba(255, 255, 255, 1)';
-					// const swatch = panel.FindChildTraverse<Panel>('Swatch')!;
-					// const hex = panel.FindChildTraverse<TextEntry>('Hex')!;
-
-					// swatch.SetPanelEvent('onactivate', () => {
-					// 	const color = $.GetContextPanel<ColorDisplay>().color;
-					// 	const popup = UiToolkitAPI.ShowCustomLayoutPopupParameters(
-					// 		'HudCustomizer_ColorPicker',
-					// 		'file://{resources}/layout/modals/popups/color-picker.xml',
-					// 		'color=' + color
-					// 	);
-					//
-					// 	const handler = $.RegisterEventHandler('ColorPickerSave', popup, (color) => {
-					// 		$.UnregisterEventHandler('ColorPickerSave', popup, handler);
-					// 		hex.text = color;
-					// 	});
-					// });
-					//
-					// hex.SetPanelEvent('ontextentrychange', () => {
-					// 	swatch.style.backgroundColor = color;
-					// 	swatch.style.backgroundImgOpacity =
-					// 		1 -
-					// 		(color.startsWith('#')
-					// 			? Number.parseInt(color.slice(7, 9), 16) / 255
-					// 			: rgbaStringToTuple(color)[3] / 255);
-					// 	this.applyDynamicStyle(this.activeComponent, styleID, dynamicStyle, hex.text);
-					// });
+					colorDisplay.text = dynamicStyle.name;
 					colorDisplay.SetPanelEvent('oncolorchange', () =>
-						this.applyDynamicStyle(this.activeComponent, styleID, dynamicStyle, colorDisplay.color)
+						this.applyDynamicStyle(this.activeComponent, styleID, colorDisplay.color)
 					);
 
-					colorDisplay.color = color;
+					// We use hex for display here since it's more compact, but internally is rgba
+					// since that's what PanoramaTypeToV8Param<Color> uses, don't want to change that.
+					colorDisplay.color =
+						(this.activeComponent.dynamicStyles?.[styleID]?.value as rgbaColor) ?? 'rgba(255, 255, 255, 1)';
+
 					break;
+				}
+
+				// TODO: More generic DROPDOWN version that takes array of entries
+				case CustomizerPropertyType.FONT_PICKER: {
+					panel.LoadLayoutSnippet('dynamic-fontpicker');
+					panel.SetDialogVariable('name', dynamicStyle.name);
+					const dropdown = panel.FindChildTraverse<DropDown>('DropDown')!;
+
+					for (const font of this.fonts) {
+						const panel = $.CreatePanel('Label', dropdown, font);
+						panel.text = font;
+						panel.style.fontFamily = font;
+						dropdown.AddOption(panel);
+					}
+
+					const ref = { value: undefined! as string };
+
+					dropdown.SetPanelEvent('oninputsubmit', () => {
+						ref.value = dropdown.GetSelected().id;
+						this.applyDynamicStyle(this.activeComponent, styleID, ref.value);
+					});
+					dropdown.SetSelected(this.activeComponent.dynamicStyles?.[styleID]?.value as string);
+
+					if (dynamicStyle.eventListeners) {
+						for (const { event, panel: targetPanel, callback } of dynamicStyle.eventListeners) {
+							$.RegisterEventHandler(event, targetPanel, (panel) => {
+								callback(panel, ref.value);
+							});
+						}
+					}
 				}
 			}
 		}
 	}
 
-	applyDynamicStyle(component: Component | undefined, id: string, dynamicStyle: DynamicStyle, value: unknown): void {
-		if (!component) return;
+	applyDynamicStyle(component: Component | undefined, id: string, value: unknown): void {
+		const dynamicStyle = component?.dynamicStyles?.[id];
+		if (!dynamicStyle) return;
 
 		const targetPanels: GenericPanel[] = [];
 
 		if (dynamicStyle.targetPanel) {
-			if (Array.isArray(dynamicStyle.targetPanel)) {
-				for (const selector of dynamicStyle.targetPanel) {
-					const target = dollarSignLookup(component.panel, selector);
-					if (Array.isArray(target)) {
-						for (const t of target) {
-							targetPanels.push(t);
-						}
-					} else if (target) {
-						targetPanels.push(target);
-					}
-				}
-			} else {
-				const target = dollarSignLookup(component.panel, dynamicStyle.targetPanel);
-				if (Array.isArray(target)) {
-					for (const t of target) {
-						targetPanels.push(t);
-					}
-				} else if (target) {
-					targetPanels.push(target);
+			const selectors = Array.isArray(dynamicStyle.targetPanel)
+				? dynamicStyle.targetPanel
+				: [dynamicStyle.targetPanel];
+			for (const selector of selectors) {
+				const targets = cssPanelLookup(component.panel, selector);
+				if (targets) {
+					targetPanels.push(...(Array.isArray(targets) ? targets : [targets]));
 				}
 			}
 		} else {
@@ -456,9 +498,8 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		}
 
 		if ('styleProperty' in dynamicStyle) {
-			// Note: We have extremely strong types in the common/hud-customizer.ts stuff
-			// to constrain dynamicStyles to valid combinations. Proving to the TS that everything
-			// is valid here is a pain though, not worth it.
+			// We have extremely strong types in the common/hud-customizer.ts stuff to constrain dynamicStyles to
+			// valid combinations. Proving to the TS that everything is valid here is a pain though, not worth it.
 			const styleValue = dynamicStyle.valueFn?.(value as any) ?? value;
 
 			if (styleValue != null) {
@@ -476,8 +517,30 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			}
 		}
 
-		component.dynamicStyles ??= {};
-		component.dynamicStyles[id].value = value;
+		dynamicStyle.value = value;
+	}
+
+	updateComponentEnabled(component: Component, enabled: boolean): void {
+		component.panel.enabled = enabled;
+		component.enabled = enabled;
+	}
+
+	resetComponent(component: Component): void {
+		const defaultComponent = this.getDefaultComponent(component.panel);
+
+		if (!defaultComponent) return;
+
+		component.position = defaultComponent.position;
+		component.size = defaultComponent.size;
+		LayoutUtil.setPositionAndSize(component.panel, component.position, component.size);
+
+		component.enabled = defaultComponent.enabled;
+		component.panel.enabled = component.enabled;
+
+		component.dynamicStyles = defaultComponent.dynamicStyles;
+
+		// TODO NEXT: something funky going on here, isn't moving overlay, and dragging no longer causes w/h/x/y values to update?
+		this.setActiveComponent(component);
 	}
 
 	onStartDrag(mode: DragMode, displayPanel: Panel, _panelID: string, callback: DragEventInfo) {
@@ -491,7 +554,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			callback.offsetX = 0;
 			callback.offsetY = 0;
 		} else {
-			this.panels.overlay.AddClass('hud-customizer-overlay--dragging');
+			this.panels.overlay.AddClass('hud-customizer-overlay-dragging');
 		}
 
 		callback.displayPanel = displayPanel;
@@ -542,8 +605,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 		LayoutUtil.setPositionAndSize(this.panels.dragPanel, this.activeComponent.position, this.activeComponent.size);
 
-		this.activeComponent.panel.RemoveClass('hud-customizable--dragging');
-		this.panels.dragPanel.RemoveClass('hud-customizer-overlay--dragging');
+		this.panels.overlay.RemoveClass('hud-customizer-overlay--dragging');
 
 		this.activeGridlines?.forEach((line) => line?.panel.RemoveClass('hud-customizer-grid__line--highlight'));
 		this.activeGridlines = [undefined, undefined];
@@ -599,6 +661,13 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 				}
 			}
 
+			// Nothing to snap, set to wherever the drag panel is
+			if (leftIndex === undefined && rightIndex === undefined) {
+				this.activeComponent.position[axis] = LayoutUtil.getPosition(this.panels.dragPanel)[axis];
+				this.setActiveGridline(axis, undefined);
+				continue;
+			}
+
 			if (leftIndex !== undefined && rightIndex !== undefined) {
 				// Both sides are in range, snap to the closest
 				const leftDist = Math.abs(this.gridlines[axis][leftIndex].offset - panelPos);
@@ -608,13 +677,6 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 				} else {
 					leftIndex = undefined;
 				}
-			}
-
-			// Nothing to snap, set to wherever the drag panel is
-			if (leftIndex === undefined && rightIndex === undefined) {
-				this.activeComponent.position[axis] = LayoutUtil.getPosition(this.panels.dragPanel)[axis];
-				this.setActiveGridline(axis, undefined);
-				continue;
 			}
 
 			if (leftIndex !== undefined) {
@@ -820,9 +882,15 @@ function getMinSize(panel: GenericPanel): [number, number] {
 	return [parsePx(panel.style.minWidth) ?? 0, parsePx(panel.style.minHeight) ?? 0];
 }
 
-/** JSDollarSign $. style lookup in JS */
-function dollarSignLookup<T extends Panel>(panel: GenericPanel, selector: QuerySelector): T | T[] | null {
-	return selector.startsWith('#')
-		? (panel.FindChildTraverse(selector.slice(1)) as T | null)
-		: (panel.FindChildrenWithClassTraverse(selector.slice(1)) as T[] | null);
+/** CSS-style panel lookup utility */
+function cssPanelLookup<T extends Panel>(panel: GenericPanel, selector: QuerySelector): T | T[] | null {
+	if (selector.startsWith('#')) {
+		return panel.FindChildTraverse(selector.slice(1)) as T | null;
+	} else if (selector.startsWith('.')) {
+		return panel.FindChildrenWithClassTraverse(selector.slice(1)) as T[] | null;
+	} else {
+		return traverseChildren(panel)
+			.filter((p) => p.paneltype === selector)
+			.toArray() as T[];
+	}
 }
