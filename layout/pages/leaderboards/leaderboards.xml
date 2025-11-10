@@ -45,13 +45,13 @@
 
 			<Panel class="w-fill mr-4"/>
 
-			<DropDown id="TracksDropdown" class="dropdown" menuclass="dropdown-menu">
+			<DropDown id="TracksDropdown" class="dropdown leaderboards__dropdown" menuclass="dropdown-menu">
 				<Panel id="placeholder" /> <!-- This is needed to unfuck the dynamic dropdown -->
 			</DropDown>
 
 			<TooltipPanel tooltip="#Leaderboards_SyncTrackButton" class="v-align-center">
 				<Button id="SyncTrackButton" class="button leaderboards__button" onactivate="LeaderboardsHandler.syncTrackWithLeaderboard();">
-					<Image class="button__icon" src="file://{images}/sync.svg" textureheight="32" />
+					<Image class="button__icon" src="file://{images}/swap-horizontal-bold.svg" textureheight="32" />
 				</Button>
 			</TooltipPanel>
 
