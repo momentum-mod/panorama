@@ -28,7 +28,7 @@ export type StyleID = string;
 
 export type QuerySelector = `#${string}` | `.${string}` | keyof PanelTagNameMap;
 
-interface DynamicStyleBase<PropertyType extends CustomizerPropertyType> {
+interface DynamicStylePropertiesBase<PropertyType extends CustomizerPropertyType> {
 	/** Name of the property to display in UI. Please localize! */
 	name: string;
 
@@ -56,11 +56,14 @@ interface DynamicStyleBase<PropertyType extends CustomizerPropertyType> {
 				: PropertyTypeMap[PropertyType][K];
 	};
 
+	// TODO
 	eventListeners?: any;
 }
 
-interface DynamicStyleWithProperty<PropertyType extends CustomizerPropertyType, StyleProperty extends keyof Style>
-	extends DynamicStyleBase<PropertyType> {
+interface DynamicStylePropertiesWithProperty<
+	PropertyType extends CustomizerPropertyType,
+	StyleProperty extends keyof Style
+> extends DynamicStylePropertiesBase<PropertyType> {
 	/** Style property to modify. */
 	styleProperty: StyleProperty;
 
@@ -73,14 +76,15 @@ interface DynamicStyleWithProperty<PropertyType extends CustomizerPropertyType, 
 	valueFn?: (value: PropertyTypeToValueTypeMap[PropertyType]) => Style[StyleProperty];
 }
 
-interface DynamicStyleWithFunction<PropertyType extends CustomizerPropertyType> extends DynamicStyleBase<PropertyType> {
+interface DynamicStylePropertiesWithFunction<PropertyType extends CustomizerPropertyType>
+	extends DynamicStylePropertiesBase<PropertyType> {
 	func: (panel: GenericPanel, value: PropertyTypeToValueTypeMap[PropertyType]) => void;
 }
 
-export type DynamicStyle<
+export type DynamicStyleProperties<
 	PropertyType extends CustomizerPropertyType = CustomizerPropertyType,
 	StyleProperty extends keyof Style = keyof Style
-> = DynamicStyleWithProperty<PropertyType, StyleProperty> | DynamicStyleWithFunction<PropertyType>;
+> = DynamicStylePropertiesWithProperty<PropertyType, StyleProperty> | DynamicStylePropertiesWithFunction<PropertyType>;
 
 export interface CustomizerComponentProperties {
 	/** Allow resizing in the X direction. */
@@ -88,12 +92,12 @@ export interface CustomizerComponentProperties {
 
 	/** Allow resizing in the Y direction. */
 	resizeY: boolean;
-	
+
 	/** Generate margin settings. */
 	marginSettings: boolean;
-	
+
 	paddingSettings: boolean;
-	
+
 	backgroundColorSettings: boolean;
 
 	/** Styling properties of provided panel or children, for which we generate UI and store values for. */
@@ -101,7 +105,7 @@ export interface CustomizerComponentProperties {
 		StyleID,
 		{
 			[K in CustomizerPropertyType]: {
-				[P in keyof Style]: DynamicStyle<K, P>;
+				[P in keyof Style]: DynamicStyleProperties<K, P>;
 			}[keyof Style];
 		}[CustomizerPropertyType]
 	>;

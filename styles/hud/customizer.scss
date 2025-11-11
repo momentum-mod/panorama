@@ -358,6 +358,8 @@ $input-background-hover: rgb(110, 110, 110);
 		height: 100%;
 		overflow: noclip;
 
+		$knobs: &;
+
 		$size: 8px;
 		$half: calc($size / 2);
 
@@ -368,6 +370,8 @@ $input-background-hover: rgb(110, 110, 110);
 			background-color: rgba(255, 255, 255, 0.8);
 			border: 1px solid rgba(0, 0, 0, 0.2);
 			box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.4);
+
+			visibility: collapse;
 
 			transition-property: border, box-shadow, background-color;
 			transition-timing-function: ease-in-out;
@@ -382,41 +386,73 @@ $input-background-hover: rgb(110, 110, 110);
 			&--top {
 				align: center top;
 				transform: translateY(-$half);
+
+				#{$knobs}--resize-y & {
+					visibility: visible;
+				}
 			}
 
 			&--top-left {
 				align: left top;
 				transform: translateX(-$half) translateY(-$half);
+
+				#{$knobs}--resize-y#{$knobs}--resize-x & {
+					visibility: visible;
+				}
 			}
 
 			&--top-right {
 				align: right top;
 				transform: translateX($half) translateY(-$half);
+
+				#{$knobs}--resize-y#{$knobs}--resize-x & {
+					visibility: visible;
+				}
 			}
 
 			&--left {
 				align: left center;
 				transform: translateX(-$half);
+
+				#{$knobs}--resize-x & {
+					visibility: visible;
+				}
 			}
 
 			&--right {
 				align: right center;
 				transform: translateX($half);
+
+				#{$knobs}--resize-x & {
+					visibility: visible;
+				}
 			}
 
 			&--bottom {
 				align: center bottom;
 				transform: translateY($half);
+
+				#{$knobs}--resize-y & {
+					visibility: visible;
+				}
 			}
 
 			&--bottom-left {
 				align: left bottom;
 				transform: translateX(-$half) translateY($half);
+
+				#{$knobs}--resize-y#{$knobs}--resize-x & {
+					visibility: visible;
+				}
 			}
 
 			&--bottom-right {
 				align: right bottom;
 				transform: translateX($half) translateY($half);
+
+				#{$knobs}--resize-y#{$knobs}--resize-x & {
+					visibility: visible;
+				}
 			}
 		}
 	}

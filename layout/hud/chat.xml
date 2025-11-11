@@ -14,7 +14,7 @@
 		<include type="module" src="file://{scripts}/hud/chat.ts" />
 	</scripts>
 	
-	<Panel>
+	<Panel style="min-width: 400px;">
 		<MomentumChat id="RaisedChat" class="w-full h-full" />
 		<ToastContainer id="LoweredChat" class="toast-chat" thinkwheninvisible="true" />
 	</Panel>
