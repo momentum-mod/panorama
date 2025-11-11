@@ -23,6 +23,14 @@ class HudTimerHandler {
 	fadeoutScheduleId: uuid | null = null;
 
 	constructor() {
+		registerHUDCustomizerComponent($.GetContextPanel(), {
+			resizeX: false,
+			resizeY: false,
+			marginSettings: true,
+			paddingSettings: true,
+			backgroundColorSettings: true
+		});
+
 		this.panels.cp.SetDialogVariableFloat('runtime', 0);
 		this.panels.cp.hiddenHUDBits = HideHud.TABMENU;
 
@@ -69,11 +77,6 @@ class HudTimerHandler {
 			// some way - same as HudStatus.
 			this.panels.cp.AddClass(HIDDEN_CLASS);
 			this.forceHideComparison();
-		});
-
-		registerHUDCustomizerComponent($.GetContextPanel(), {
-			resizeX: false,
-			resizeY: false
 		});
 	}
 
