@@ -21,9 +21,13 @@
 		}
 	}
 
-	&__button {
+	&__sync-button {
 		border-top-left-radius: 0px;
 		border-bottom-left-radius: 0px;
+	}
+
+	&__end-of-run-button {
+		margin-left: 8px;
 	}
 
 	&__dropdown {
