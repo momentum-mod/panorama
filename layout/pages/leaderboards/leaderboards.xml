@@ -50,13 +50,13 @@
 			</DropDown>
 
 			<TooltipPanel tooltip="#Leaderboards_SyncTrackButton" class="v-align-center">
-				<Button id="SyncTrackButton" class="button leaderboards__button" onactivate="LeaderboardsHandler.syncTrackWithLeaderboard();">
+				<Button id="SyncTrackButton" class="button leaderboards__sync-button" onactivate="LeaderboardsHandler.syncTrackWithLeaderboard();">
 					<Image class="button__icon" src="file://{images}/swap-horizontal-bold.svg" textureheight="32" />
 				</Button>
 			</TooltipPanel>
 
 			<TooltipPanel tooltip="#Leaderboards_EndOfRunButton" class="v-align-center">
-				<Button id="EndOfRunButton" class="button leaderboards__button" onactivate="LeaderboardsHandler.showEndOfRun();">
+				<Button id="EndOfRunButton" class="button leaderboards__end-of-run-button" onactivate="LeaderboardsHandler.showEndOfRun();">
 					<Image class="button__icon button__icon--left" src="file://{images}/arrow-thick-right.svg" textureheight="64" />
 				</Button>
 			</TooltipPanel>
