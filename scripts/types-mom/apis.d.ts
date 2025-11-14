@@ -157,6 +157,12 @@ declare namespace MomentumPlayerAPI {
 
 	/** Gets whether the player is ducking. */
 	function IsDucking(): boolean;
+
+	/** Gets whether the player is sprinting (ahop only). */
+	function IsSprinting(): boolean;
+
+	/** Gets whether the player is walking (ahop only). */
+	function IsWalking(): boolean;
 }
 
 declare namespace MomentumWeaponAPI {
