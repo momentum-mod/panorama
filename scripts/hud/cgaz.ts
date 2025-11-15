@@ -706,7 +706,7 @@ class CgazHandler {
 					this.primeTruenessMode & TruenessMode.PROJECTED
 						? MomMath.magnitude(hudData.wishVel)
 						: hudData.maxspeed;
-				const primeMaxAccel = hudData.acceleration * maxSpeed * tickInterval;
+				const primeMaxAccel = hudData.acceleration * primeMaxSpeed * tickInterval;
 				const primeSightSpeed = useSnapAccel ? MAX_GROUND_SPEED : primeMaxSpeed;
 				const primeSightAccel = useSnapAccel ? this.snapAccel : primeMaxAccel;
 
