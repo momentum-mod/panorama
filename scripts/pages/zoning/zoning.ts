@@ -196,9 +196,12 @@ class ZoneMenuHandler {
 		$.RegisterForUnhandledEvent('OnRegionEditCompleted', (region) => this.onRegionEditCompleted(region));
 		$.RegisterForUnhandledEvent('OnRegionEditCanceled', () => this.onRegionEditCanceled());
 		$.RegisterForUnhandledEvent('LevelInitPostEntity', () => this.onLevelInit());
+		$.RegisterForUnhandledEvent('ActiveZoneDefsChanged', () => this.onActiveZoneDefsChanged());
 	}
 
 	initialize() {
+		this.panels.zoningMenu.updateEditorRegions([]);
+
 		const entList: EntityList = this.panels.zoningMenu.getEntityList();
 		this.filternameList = entList.filter ?? [];
 		this.filternameList.unshift($.Localize('#Zoning_Filter_None'));
@@ -216,6 +219,11 @@ class ZoneMenuHandler {
 
 	onLevelInit() {
 		this.initialize();
+	}
+
+	onActiveZoneDefsChanged() {
+		this.mapZoneData = MomentumTimerAPI.GetActiveZoneDefs();
+		this.updateSelection(this.selectedZone ?? {});
 	}
 
 	getZoneData() {
@@ -1603,10 +1611,14 @@ class ZoneMenuHandler {
 
 	cancelEdit() {
 		this.mapZoneData = null;
-
+		this.selectedZone = {
+			track: null as MainTrack | BonusTrack | null,
+			segment: null as Segment | null,
+			zone: null as Zone | null,
+			globalRegion: null
+		};
+		this.panels.zoningMenu.updateEditorRegions([]);
 		MomentumTimerAPI.LoadZoneDefs(this.useLocal ?? false);
-
-		this.updateSelection({});
 	}
 
 	isStartZone(zone: Zone | null): boolean {
