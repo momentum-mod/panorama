@@ -3,7 +3,7 @@
 export enum CustomizerPropertyType {
 	NUMBER_ENTRY,
 	CHECKBOX,
-	SLIDER,
+	SLIDER, // TODO: do we actually want this for anything?
 	COLOR_PICKER,
 	FONT_PICKER
 }
@@ -99,6 +99,11 @@ export interface CustomizerComponentProperties {
 	paddingSettings: boolean;
 
 	backgroundColorSettings: boolean;
+	
+	dragPanel?: GenericPanel;
+	
+	// TODO: impl me. don't let people disable the settings menu lol
+	canDisabled?: boolean;
 
 	/** Styling properties of provided panel or children, for which we generate UI and store values for. */
 	dynamicStyles?: Record<
