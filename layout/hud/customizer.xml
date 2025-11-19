@@ -47,7 +47,7 @@
 	<!-- Outer panel (full width) has no hittest, hittestchildren is controlled by C++ -->
 	<HudCustomizer class="hud-customizer" hittest="false">
 		<Panel id="CustomizerSettings" class="hud-customizer-settings" acceptsinput="true" acceptsfocus="true" tabindex="auto">
-			<Panel class="hud-customizer-settings__header" draggable="true" hittest="true" hittestchildren="true">
+			<Panel id="CustomizerSettingsHeader" class="hud-customizer-settings__header" draggable="true" hittest="true" hittestchildren="true">
 				<Label class="hud-customizer-settings__header__title" text="#HudCustomizer_Menu" />
 				<Image class="hud-customizer-settings__header__close" onactivate="HudCustomizerHandler.toggle(false)" src="file://{images}/close.svg" />
 			</Panel>
@@ -79,16 +79,24 @@
 
 		<!-- Panel overlaid over the active component.
 			 Like the active component, it's moved around via JS with snapping as the DragPanel is dragged. -->
-		<Panel id="Overlay" class="hud-customizer-overlay">
-			<Label class="hud-customizer-overlay__name" text="{s:name}    x:{s:x} y:{s:y}    w:{s:width} h:{s:height}" />
-			<Panel class="hud-customizer-overlay__main">
-				<Panel id="ResizeKnobs" class="hud-customizer-overlay__resize-knobs" />
-			</Panel>
+		<Panel id="Overlay" class="hud-customizer-overlay" hittest="false">
+			<!-- TODO: w/h/x/y are taking up too much space. should move to the settings panel and have numberentries there
+			 	 Will be annoying since stuff is very similar to DynamicStyle stuff but don't really want to integrate the two.
+			 	 Probably going to do the settings list here in XML and setup event handlers in setActiveComponent,
+			 	 then make width+height disabled if resizeX/Y are disabled.-->
+<!--			<Label class="hud-customizer-overlay__name" text="{s:name}  x={s:x} y={s:y}  w={s:width} h={s:height}" />-->
+<!--			<Label class="hud-customizer-overlay__name" text="{s:name}  x={s:x} y={s:y}  w={s:width} h={s:height}" />-->
+			<Label class="hud-customizer-overlay__name" text="{s:name}" hittest="false" />
+			<!-- Big block in the middle of the panel, doesn't do much besides display a border.
+			 	 Putting ResizeKnobs in here doesn't work - we need them to be able to clip outside of this panel,
+			 	 `cursor` property doesn't work if they're out of the bounds of the parent panel. -->
+			<Panel id="OverlayInner" class="hud-customizer-overlay__main" hittest="false" />
+			<Panel id="ResizeKnobs" class="hud-customizer-overlay__resize-knobs" hittest="false" hittestchildren="true" />
 		</Panel>
 
 		<!-- Invisible panel that is actually dragged by the user.
 			 Its position is used to update the overlay and the active component. -->
-		<Panel id="DragPanel" draggable="true" class="hud-customizer-dragpanel" />
+		<Panel id="DragPanel" draggable="true" class="hud-customizer-dragpanel" hittest="true" />
 
 		<!-- Another invisible panel for handling resizing. -->
 		<Panel id="DragKnob" />
