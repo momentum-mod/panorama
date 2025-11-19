@@ -770,6 +770,56 @@
 				<SettingsSlider text="SettingsSlider" min="0.1" max="10" />
 			</Panel>
 
+			<Label class="text-h3 mt-3" text="Cursors" />
+			<Panel class="flow-right">
+				<Button class="button mr-2" hittestchildren="false" style="cursor: none;">
+					<Label class="button__text" text="none" />
+				</Button>
+				<Button class="button mr-2" hittestchildren="false" style="cursor: arrow;">
+					<Label class="button__text" text="arrow" />
+				</Button>
+				<Button class="button mr-2" hittestchildren="false" style="cursor: ibeam;">
+					<Label class="button__text" text="ibeam" />
+				</Button>
+				<Button class="button mr-2" hittestchildren="false" style="cursor: hourglass;">
+					<Label class="button__text" text="hourglass" />
+				</Button>
+				<Button class="button mr-2" hittestchildren="false" style="cursor: crosshair;">
+					<Label class="button__text" text="crosshair" />
+				</Button>
+				<Button class="button mr-2" hittestchildren="false" style="cursor: waitarrow;">
+					<Label class="button__text" text="waitarrow" />
+				</Button>
+				<Button class="button mr-2" hittestchildren="false" style="cursor: up;">
+					<Label class="button__text" text="up" />
+				</Button>
+				<Button class="button mr-2" hittestchildren="false" style="cursor: size-we;">
+					<Label class="button__text" text="size-we" />
+				</Button>
+				<Button class="button mr-2" hittestchildren="false" style="cursor: size-ns;">
+					<Label class="button__text" text="size-ns" />
+				</Button>
+				<Button class="button mr-2" hittestchildren="false" style="cursor: size-nw-se;">
+					<Label class="button__text" text="size-nw-se" />
+				</Button>
+				<Button class="button mr-2" hittestchildren="false" style="cursor: size-ne-sw;">
+					<Label class="button__text" text="size-ne-sw" />
+				</Button>
+				<Button class="button mr-2" hittestchildren="false" style="cursor: size-all;">
+					<Label class="button__text" text="size-all" />
+				</Button>
+				<Button class="button mr-2" hittestchildren="false" style="cursor: no;">
+					<Label class="button__text" text="no" />
+				</Button>
+				<Button class="button mr-2" hittestchildren="false" style="cursor: hand;">
+					<Label class="button__text" text="hand" />
+				</Button>
+<!--				<Button class="button mr-2" hittestchildren="false" style="cursor: hand-closed;">-->
+<!--					<Label class="button__text" text="hand-closed" />-->
+<!--				</Button>-->
+				
+			</Panel>
+
 			<Label class="text-h1 mt-3 overflow-noclip" text="THIS LETS ME SEE THE STUFF AT THE BOTTOM IN WINDOWED MODE :)" />
 		</Panel>
 	</Panel>

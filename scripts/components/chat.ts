@@ -4,8 +4,10 @@ import { MemberData } from 'common/online';
 @PanelHandler()
 class ChatHandler {
 	membersTyping: string[] = [];
-	typingLabel = $<Label>('#ChatMemberTypingLabel');
-	history = $('#ChatHistory');
+	typingLabel = $<Label>('#ChatMemberTypingLabel')!;
+	history = $('#ChatHistory')!;
+
+	lastLayoutHeight: number = 0;
 
 	constructor() {
 		$.RegisterEventHandler('OnNewChatEntry', $.GetContextPanel(), (panel) => this.onNewChatEntry(panel));
@@ -64,6 +66,21 @@ class ChatHandler {
 	}
 
 	onNewChatEntry(_panel: GenericPanel) {
+		const scrollOffset = -this.history.scrolloffset_y; // scrolloffset_y is always negative
+		const containerHeight = this.history.contentheight;
+		const containerScreenHeight = this.history.actuallayoutheight;
+		const proportionScrolled = scrollOffset / (containerHeight - containerScreenHeight);
+
+		$.Msg({
+			scrollOffset,
+			containerHeight,
+			containerScreenHeight,
+			proportionScrolled
+		});
+
+		// $.Schedule(0.1, () => (this.lastLayoutHeight = this.history.actuallayoutheight));
+		this.lastLayoutHeight = this.history.actuallayoutheight;
+
 		this.history.ScrollToBottom();
 	}
 

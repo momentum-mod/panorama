@@ -64,11 +64,10 @@ $input-background-hover: rgb(110, 110, 110);
 }
 
 .hud-customizer-settings {
-	width: 260px;
+	width: 280px;
+	height: fit-children;
+	
 	flow-children: down;
-	align: right top;
-	margin-right: 32px;
-	margin-top: 32px;
 	background-color: #222;
 	border-radius: 2px;
 	border: 1px solid rgba(255, 255, 255, 0.1);
@@ -341,51 +340,83 @@ $input-background-hover: rgb(110, 110, 110);
 	}
 }
 
-.hud-customizer-dragpanel {
-	//border: 1px solid orange;
-}
-
 .hud-customizer-overlay {
-	$root: &;
-	$header-height: 24px;
+	$border: $mid-blue;
 
 	z-index: 10;
-	flow-children: down;
-	overflow: noclip;
+	flow-children: none;
+
+	&__name {
+		align: left top;
+		margin-left: 32px;
+		margin-top: 12px;
+		width: fit-children;
+
+		border: 1px solid $border;
+		border-bottom-width: 0px;
+		background-color: rgba(0, 0, 0, 0.7);
+		padding: 2px 8px;
+
+		font-family: $font-monospace;
+		font-size: 11px;
+		font-weight: medium;
+
+		// Set when component is positioned at top edge and this panel would otherwise be clipped
+		.hud-customizer-overlay--at-top & {
+			align: left bottom;
+			margin-top: 0px;
+			margin-bottom: 12px;
+			border-top-width: 0px;
+			border-bottom-width: 1px;
+		}
+	}
+
+	&__main {
+		height: 100%;
+		width: 100%;
+		border: 1px solid $border;
+		margin: 32px;
+
+		.hud-customizer-overlay--dragging & {
+			animation-name: hud-customizer-overlay-blink;
+			animation-duration: 2s;
+			animation-iteration-count: infinite;
+			animation-timing-function: ease-in-out;
+		}
+
+		@at-root {
+			@keyframes hud-customizer-overlay-blink {
+				0% {
+					background-color: rgba($blue, 0.05);
+				}
+				50% {
+					background-color: rgba($blue, 0.1);
+				}
+				100% {
+					background-color: rgba($blue, 0.05);
+				}
+			}
+		}
+	}
 
 	&__resize-knobs {
 		width: 100%;
 		height: 100%;
-		overflow: noclip;
 
 		$knobs: &;
-
-		$size: 8px;
+		$size: 14px;
 		$half: calc($size / 2);
+
+		margin: 32px - calc($size / 2);
 
 		&__knob {
 			width: $size;
 			height: $size;
-			border-radius: 1px;
-			background-color: rgba(255, 255, 255, 0.8);
-			border: 1px solid rgba(0, 0, 0, 0.2);
-			box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.4);
-
 			visibility: collapse;
-
-			transition-property: border, box-shadow, background-color;
-			transition-timing-function: ease-in-out;
-			transition-duration: 0.1s;
-
-			&:hover {
-				background-color: rgba(200, 200, 200, 1);
-				border: 1px solid rgba(0, 0, 0, 0.4);
-				box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.9);
-			}
 
 			&--top {
 				align: center top;
-				transform: translateY(-$half);
+				cursor: size-ns;
 
 				#{$knobs}--resize-y & {
 					visibility: visible;
@@ -394,7 +425,7 @@ $input-background-hover: rgb(110, 110, 110);
 
 			&--top-left {
 				align: left top;
-				transform: translateX(-$half) translateY(-$half);
+				cursor: size-nw-se;
 
 				#{$knobs}--resize-y#{$knobs}--resize-x & {
 					visibility: visible;
@@ -403,7 +434,7 @@ $input-background-hover: rgb(110, 110, 110);
 
 			&--top-right {
 				align: right top;
-				transform: translateX($half) translateY(-$half);
+				cursor: size-ne-sw;
 
 				#{$knobs}--resize-y#{$knobs}--resize-x & {
 					visibility: visible;
@@ -412,7 +443,7 @@ $input-background-hover: rgb(110, 110, 110);
 
 			&--left {
 				align: left center;
-				transform: translateX(-$half);
+				cursor: size-we;
 
 				#{$knobs}--resize-x & {
 					visibility: visible;
@@ -421,7 +452,7 @@ $input-background-hover: rgb(110, 110, 110);
 
 			&--right {
 				align: right center;
-				transform: translateX($half);
+				cursor: size-we;
 
 				#{$knobs}--resize-x & {
 					visibility: visible;
@@ -430,7 +461,7 @@ $input-background-hover: rgb(110, 110, 110);
 
 			&--bottom {
 				align: center bottom;
-				transform: translateY($half);
+				cursor: size-ns;
 
 				#{$knobs}--resize-y & {
 					visibility: visible;
@@ -439,7 +470,7 @@ $input-background-hover: rgb(110, 110, 110);
 
 			&--bottom-left {
 				align: left bottom;
-				transform: translateX(-$half) translateY($half);
+				cursor: size-ne-sw;
 
 				#{$knobs}--resize-y#{$knobs}--resize-x & {
 					visibility: visible;
@@ -448,37 +479,36 @@ $input-background-hover: rgb(110, 110, 110);
 
 			&--bottom-right {
 				align: right bottom;
-				transform: translateX($half) translateY($half);
+				cursor: size-nw-se;
 
 				#{$knobs}--resize-y#{$knobs}--resize-x & {
 					visibility: visible;
 				}
 			}
+
+			& Panel {
+				width: 100%;
+				height: 100%;
+				margin: 3px;
+				border-radius: 1px;
+				background-color: rgba(255, 255, 255, 0.8);
+				border: 1px solid rgba(0, 0, 0, 0.2);
+				box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.4);
+
+				transition-property: border, box-shadow, background-color;
+				transition-timing-function: ease-in-out;
+				transition-duration: 0.1s;
+			}
+
+			&:hover Panel {
+				background-color: rgba(180, 180, 180, 1);
+				border: 1px solid rgba(0, 0, 0, 0.4);
+				box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.9);
+			}
 		}
 	}
+}
 
-	$border: rgb(23, 255, 0);
-	&__main {
-		height: fill-parent-flow(1);
-		width: 100%;
-
-		border: 1px solid $border;
-	}
-
-	&__name {
-		align: left top;
-		margin-left: 16px;
-		height: $header-height;
-		width: fit-children;
-
-		border-left: 1px solid $border;
-		border-top: 1px solid $border;
-		border-right: 1px solid $border;
-		background-color: rgba(0, 0, 0, 0.5);
-		padding: 2px 4px;
-
-		font-family: $font-monospace;
-		font-size: 11px;
-		font-weight: medium;
-	}
+.hud-customizer-dragpanel {
+	cursor: size-all;
 }
