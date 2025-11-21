@@ -17,7 +17,7 @@ declare interface PanelTagNameMap {
 	MomHudStatus: MomHudStatus;
 	MomHudMapInfo: MomHudMapInfo;
 	MomHudWeaponSelection: MomHudWeaponSelection;
-	MomHudCgaz: MomHudCgaz;
+	MomHudDefrag: MomHudDefrag;
 	MomHudGroundboost: MomHudGroundboost;
 	MomHudDFJump: MomHudDFJump;
 	MomHudJumpStats: MomHudJumpStats;
@@ -69,8 +69,8 @@ UiToolkitAPI.RegisterHUDPanel2d('MomHudMapInfo', 'file://{resources}/layout/hud/
 declare interface MomHudWeaponSelection extends AbstractHudPanel<'MomHudWeaponSelection'> {}
 UiToolkitAPI.RegisterHUDPanel2d('MomHudWeaponSelection', 'file://{resources}/layout/hud/weapon-selection.xml');
 
-declare interface MomHudCgaz extends AbstractHudPanel<'MomHudCgaz'> {}
-UiToolkitAPI.RegisterHUDPanel2d('MomHudCgaz', 'file://{resources}/layout/hud/cgaz.xml');
+declare interface MomHudDefrag extends AbstractHudPanel<'MomHudDefrag'> {}
+UiToolkitAPI.RegisterHUDPanel2d('MomHudDefrag', 'file://{resources}/layout/hud/df-hud.xml');
 
 declare interface MomHudGroundboost extends AbstractHudPanel<'MomHudGroundboost'> {}
 UiToolkitAPI.RegisterHUDPanel2d('MomHudGroundboost', 'file://{resources}/layout/hud/ground-boost.xml');

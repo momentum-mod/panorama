@@ -52,7 +52,7 @@ Most of our larger systems and components require significant work with (closed-
 licensed C++ access or working in tandem with a licensed C++ developer. Our work until now has been done internally by
 the core team. For 0.9.1 and onwards, we have exposed enough events and APIs that non-team developers should be able to
 work on areas like HUD components (for a good example of non-licensed HUD work, see
-[`scripts/hud/cgaz.ts`](scripts/hud/cgaz.ts)). We will continue to expose data as we best see fit for custom panels.
+[`scripts/hud/df-hud.ts`](scripts/hud/df-hud.ts)). We will continue to expose data as we best see fit for custom panels.
 
 Those looking to contribute should look for issues **NOT** marked with "Needs C++". We also greatly encourage you to
 check out the the #panorama channel in our [Discord](https://discord.gg/momentummod) - whilst Panorama itself is poorly

@@ -4,11 +4,11 @@
 	</styles>
 	
 	<scripts>
-		<include type="module" src="file://{scripts}/hud/cgaz.ts" />
+		<include type="module" src="file://{scripts}/hud/df-hud.ts" />
 	</scripts>
 
-	<MomHudCgaz class="w-full h-full" alternateTicks="false">
-		<ConVarEnabler id="AccelContainer" class="cgaz__container" convar="mom_hud_df_accel_enable" togglevisibility="true">
+	<MomHudDefrag class="w-full h-full" alternateTicks="false">
+		<ConVarEnabler id="AccelContainer" class="defrag__container" convar="mom_hud_df_accel_enable" togglevisibility="true">
 			<Panel id="LeftTurnZone" />
 			<Panel id="LeftFastZone" />
 			<Panel id="LeftSlowZone" />
@@ -22,33 +22,33 @@
 			<Panel id="MirrorSplitZone" />
 			<Panel id="WindicatorZone" />
 		</ConVarEnabler>
-		<ConVarEnabler id="SnapContainer" class="cgaz__container" convar="mom_hud_df_snap_enable" togglevisibility="true" />
-		<ConVarEnabler id="PrimeContainer" class="cgaz__container" convar="mom_hud_df_prime_enable" togglevisibility="true" />
+		<ConVarEnabler id="SnapContainer" class="defrag__container" convar="mom_hud_df_snap_enable" togglevisibility="true" />
+		<ConVarEnabler id="PrimeContainer" class="defrag__container" convar="mom_hud_df_prime_enable" togglevisibility="true" />
 		<Panel id="PrimeArrow">
 			<ConVarEnabler class="h-full" convar="mom_hud_df_prime_arrow_enable" togglevisibility="true">
-				<Image id="PrimeArrowIcon" class="arrow__down" src="file://{images}/hud/cgaz-arrow.svg" textureheight="48" />
+				<Image id="PrimeArrowIcon" class="arrow__down" src="file://{images}/hud/defrag-arrow.svg" textureheight="48" />
 			</ConVarEnabler>
 		</Panel>
 		<Panel id="CompassArrow">
 			<ConVarEnabler class="h-full" convar="mom_hud_df_compass_mode" togglevisibility="true">
-				<Image id="CompassArrowIcon" class="arrow__up" src="file://{images}/hud/cgaz-arrow.svg" textureheight="48" />
+				<Image id="CompassArrowIcon" class="arrow__up" src="file://{images}/hud/defrag-arrow.svg" textureheight="48" />
 			</ConVarEnabler>
 		</Panel>
 		<ConVarEnabler class="h-full" convar="mom_hud_df_pitch_enable" togglevisibility="true">
-			<Panel id="PitchLines" class="cgaz-line__container" />
+			<Panel id="PitchLines" class="defrag-line__container" />
 		</ConVarEnabler>
 		<ConVarEnabler class="h-full" convar="mom_hud_df_compass_stat_mode" togglevisibility="true">
-			<Panel id="StatsBox" class="cgaz-stats__container">
-				<Label id="PitchStat" class="cgaz-stats cgaz-stats__pitch" />
-				<Label id="YawStat" class="cgaz-stats cgaz-stats__yaw" />
+			<Panel id="StatsBox" class="defrag-stats__container">
+				<Label id="PitchStat" class="defrag-stats defrag-stats__pitch" />
+				<Label id="YawStat" class="defrag-stats defrag-stats__yaw" />
 			</Panel>
 		</ConVarEnabler>
-		<Panel id="CompassTicks" class="cgaz-tick__container" />
+		<Panel id="CompassTicks" class="defrag-tick__container" />
 		<Panel id="WindicatorArrow">
 			<ConVarEnabler class="h-full" convar="mom_hud_df_windicator_enable" togglevisibility="true">
-				<Image id="WindicatorArrowIcon" class="arrow__down" src="file://{images}/hud/cgaz-arrow.svg" textureheight="48" />
+				<Image id="WindicatorArrowIcon" class="arrow__down" src="file://{images}/hud/defrag-arrow.svg" textureheight="48" />
 			</ConVarEnabler>
 		</Panel>
-	</MomHudCgaz>
+	</MomHudDefrag>
 
 </root>

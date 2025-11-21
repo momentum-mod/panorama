@@ -531,7 +531,7 @@ declare namespace DefragAPI {
 
 	function GetDFPhysicsMode(): DefragPhysics;
 
-	function GetHUDProjection(): import('hud/cgaz').ProjectionMode;
+	function GetHUDProjection(): import('hud/df-hud').ProjectionMode;
 
 	function GetHUDFOV(): float;
 

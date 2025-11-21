@@ -73,7 +73,7 @@ class StyleObject {
 }
 
 @PanelHandler()
-class CgazHandler {
+class DefragHandler {
 	accelContainer = $('#AccelContainer');
 	accelZones: ZonePanel[] = [
 		'LeftTurnZone',
@@ -420,7 +420,7 @@ class CgazHandler {
 		if (this.compassPitchTarget.length > pitchLines?.length) {
 			for (let i = pitchLines?.length; i < this.compassPitchTarget.length; ++i) {
 				$.CreatePanel('Panel', this.pitchLineContainer, `PitchTarget${i}`, {
-					class: 'cgaz-line'
+					class: 'defrag-line'
 				});
 			}
 		}
@@ -439,9 +439,9 @@ class CgazHandler {
 			// needed to represent all potentially visible 45-degree marks
 			for (let i = compassTicks?.length; i < 4; ++i) {
 				const newTick = $.CreatePanel('Panel', this.tickContainer, `CompassTick${i}`, {
-					class: 'cgaz-tick'
+					class: 'defrag-tick'
 				});
-				newTick.AddClass(i % 2 ? 'cgaz-tick__half' : 'cgaz-tick__full');
+				newTick.AddClass(i % 2 ? 'defrag-tick__half' : 'defrag-tick__full');
 			}
 		}
 
