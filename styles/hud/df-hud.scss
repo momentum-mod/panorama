@@ -1,6 +1,6 @@
 @use '../config' as *;
 
-.cgaz {
+.defrag {
 	vertical-align: middle;
 
 	&__container {
@@ -20,7 +20,7 @@
 	}
 }
 
-.cgaz-line {
+.defrag-line {
 	width: 100%;
 	height: 2px;
 	align: center top;
@@ -33,7 +33,7 @@
 	}
 }
 
-.cgaz-tick {
+.defrag-tick {
 	width: 2px;
 	transform: translatex(-1px);
 	vertical-align: top;
@@ -53,7 +53,7 @@
 	}
 }
 
-.cgaz-stats {
+.defrag-stats {
 	width: 50px;
 	height: 24px;
 	font-size: 20px;

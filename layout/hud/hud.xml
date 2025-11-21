@@ -11,7 +11,7 @@
 			<MomHudGhostEntities />
 			<MomHudConcEntities />
 			<MomHudDamageIndicator />
-			<MomHudCgaz />
+			<MomHudDefrag />
 			<MomHudReticle />
 		</Panel>
 
