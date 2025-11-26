@@ -59,7 +59,7 @@
 					<Label text="#Settings_AudioDevices_Speaker_51" id="speakerconfig4" value="5" />
 				</SettingsEnumDropDown>
 
-				<ConVarEnabler convar="snd_surround_speakers" invert="true" togglevisibility="true">
+				<ConVarEnabler convar="snd_surround_speakers" invert="true" togglevisibility="true" class="settings__convarenabler">
 					<SettingsEnum text="#Settings_AudioDevices_HWCompat" infomessage="#Settings_HRTF_Info" convar="snd_hrtf_enable" hasdocspage="false">
 						<RadioButton group="hwcompat" text="#Common_Off" value="0" />
 						<RadioButton group="hwcompat" text="#Common_On" value="1" />

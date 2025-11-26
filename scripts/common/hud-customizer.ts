@@ -57,7 +57,9 @@ interface DynamicStylePropertiesBase<PropertyType extends CustomizerPropertyType
 	};
 
 	// TODO
-	eventListeners?: any;
+	eventListeners?: Array<{
+		
+	}>;
 }
 
 interface DynamicStylePropertiesWithProperty<

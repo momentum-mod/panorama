@@ -151,7 +151,7 @@
 					<RadioButton group="speedometer" text="#Common_On" value="1" />
 				</SettingsEnum>
 
-				<ConVarEnabler convar="mom_hud_speedometer_show" togglevisibility="true" class="flow-down">
+				<ConVarEnabler convar="mom_hud_speedometer_show" togglevisibility="true" class="settings__convarenabler">
 					<SettingsSlider text="#Settings_Speedometer_FPS" min="0" max="400" convar="mom_hud_speedometer_refresh_rate" infomessage="#Settings_Speedometer_FPS_Info" hasdocspage="true" tags="speedometer" />
 
 					<Panel id="SpeedometersContainer" class="flow-down w-full" infotitle="#Settings_Speedometer_Gamemode_Long" infomessage="#Settings_Speedometer_Container_Info" tags="speedometer">
@@ -237,7 +237,7 @@
 								<RadioButton group="xhairenable" text="#Common_On" value="1" />
 							</SettingsEnum>
 
-							<ConVarEnabler convar="crosshair" class="flow-down">
+							<ConVarEnabler convar="crosshair" class="settings__convarenabler">
 								<ConVarColorDisplay text="#Settings_Crosshair_Color" convar="cl_crosshair_color" hasdocspage="false" />
 
 								<SettingsSlider text="#Settings_Crosshair_Size" min="0" max="20" convar="cl_crosshair_size" displayprecision="2" infomessage="" hasdocspage="false" tags="color,size" />
@@ -256,7 +256,7 @@
 									<RadioButton group="xhairoutline" text="#Common_On" value="1" />
 								</SettingsEnum>
 
-								<ConVarEnabler convar="cl_crosshair_drawoutline">
+								<ConVarEnabler convar="cl_crosshair_drawoutline" class="settings__convarenabler">
 									<SettingsSlider style="margin-bottom: 0px;" text="#Settings_Crosshair_OutlineThickness" min="0" max="3" convar="cl_crosshair_outlinethickness" displayprecision="2" infomessage="" hasdocspage="false" tags="outline" />
 								</ConVarEnabler>
 							</ConVarEnabler>
@@ -379,7 +379,7 @@
 					<RadioButton group="showwepsel" text="#Common_On" value="1" />
 				</SettingsEnum>
 
-				<ConVarEnabler convar="mom_hud_weapon_select" togglevisibility="true" class="flow-down">
+				<ConVarEnabler convar="mom_hud_weapon_select" togglevisibility="true" class="settings__convarenabler">
 					<SettingsEnum text="#Settings_WeaponSelection_ShowKeybind" convar="mom_hud_weapon_select_keys" infomessage="#Settings_WeaponSelection_ShowKeybind_Info">
 						<RadioButton group="showwepselkb" text="#Common_Off" value="0" />
 						<RadioButton group="showwepselkb" text="#Common_On" value="1" />
@@ -414,7 +414,7 @@
 					<RadioButton group="jumpstatsenable" text="#Common_On" value="1" />
 				</SettingsEnum>
 
-				<ConVarEnabler convar="mom_hud_jstats_enable" class="flow-down">
+				<ConVarEnabler convar="mom_hud_jstats_enable" class="settings__convarenabler">
 					<SettingsSlider text="#Settings_JumpStats_First" min="1" max="10" convar="mom_hud_jstats_first_jump" displayprecision="0" infomessage="#Settings_JumpStats_First_Info" hasdocspage="false" />
 
 					<SettingsSlider text="#Settings_JumpStats_Interval" min="0" max="10" convar="mom_hud_jstats_interval" displayprecision="0" infomessage="#Settings_JumpStats_Interval_Info" hasdocspage="false" />
@@ -546,7 +546,7 @@
 					<RadioButton group="damageindicatorenable" text="#Common_On" value="1" />
 				</SettingsEnum>
 
-				<ConVarEnabler convar="mom_hud_damage_indicator_enable" class="flow-down">
+				<ConVarEnabler convar="mom_hud_damage_indicator_enable" class="settings__convarenabler">
 
 					<ConVarColorDisplay convar="mom_hud_damage_indicator_color" text="#Settings_DamageIndicator_Color" tags="color" />
 
@@ -592,7 +592,7 @@
 					<Label id="mode4" text="#Settings_StrafeTrainer_DisplayMode_Mode4" value="4" />
 				</SettingsEnumDropDown>
 
-				<ConVarEnabler convar="mom_hud_strafetrainer_mode" class="flow-down">
+				<ConVarEnabler convar="mom_hud_strafetrainer_mode" class="settings__convarenabler">
 					<SettingsEnum text="#Settings_StrafeTrainer_Color" convar="mom_hud_strafetrainer_color_enable" infomessage="#Settings_StrafeTrainer_Color_Info" tags="color">
 						<RadioButton group="strafetrainercolor" text="#Common_Off" value="0" />
 						<RadioButton group="strafetrainercolor" text="#Common_On" value="1" />
@@ -653,7 +653,7 @@
 					<RadioButton group="mapinfoenable" text="#Common_On" value="1" />
 				</SettingsEnum>
 
-				<ConVarEnabler convar="mom_hud_map_info" togglevisibility="true" class="flow-down">
+				<ConVarEnabler convar="mom_hud_map_info" togglevisibility="true" class="settings__convarenabler">
 
 					<SettingsEnum text="#Settings_MapInfo_MapName" convar="mom_hud_map_name" infomessage="#Settings_MapInfo_MapName_Info">
 						<RadioButton group="mapinfonameenable" text="#Common_Off" value="0" />

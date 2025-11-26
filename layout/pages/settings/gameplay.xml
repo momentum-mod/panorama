@@ -48,7 +48,7 @@
 					<RadioButton group="showviewmodel" text="#Common_On" value="1" />
 				</SettingsEnum>
 
-				<ConVarEnabler convar="r_drawviewmodel" class="flow-down">
+				<ConVarEnabler convar="r_drawviewmodel" class="settings__convarenabler">
 					<SettingsSlider text="#Settings_Gameplay_ViewmodelFOV" convar="fov_viewmodel" infomessage="#Settings_Gameplay_ViewmodelFOV_Info" tags="viewmodel,weaponmodel,fov" min="45" max="135" />
 				</ConVarEnabler>
 
@@ -481,7 +481,7 @@
 						<RadioButton group="accelenable" text="#Common_On" value="1" />
 					</SettingsEnum>
 
-					<ConVarEnabler convar="mom_hud_df_accel_enable" class="flow-down">
+					<ConVarEnabler convar="mom_hud_df_accel_enable" class="settings__convarenabler">
 						<SettingsSlider text="#Settings_Defrag_CGAZ_Height" min="1" max="50" convar="mom_hud_df_accel_height" displayprecision="0" infomessage="#Settings_Defrag_CGAZ_Height_Info" tags="cgaz" />
 
 						<SettingsSlider text="#Settings_Defrag_CGAZ_Offset" min="-200" max="200" convar="mom_hud_df_accel_vertical_offset" displayprecision="0" infomessage="#Settings_Defrag_CGAZ_Offset_Info" tags="cgaz" />
@@ -501,7 +501,7 @@
 							<RadioButton group="accelmirrorenable" text="#Common_On" value="1" />
 						</SettingsEnum>
 
-						<ConVarEnabler convar="mom_hud_df_accel_mirror" class="flow-down">
+						<ConVarEnabler convar="mom_hud_df_accel_mirror" class="settings__convarenabler">
 							<SettingsSlider text="#Settings_Defrag_CGAZ_MirrorBorder" min="0" max="10" convar="mom_hud_df_accel_mirror_border" displayprecision="0" infomessage="#Settings_Defrag_CGAZ_MirrorBorder_Info" tags="cgaz" />
 						</ConVarEnabler>
 
@@ -522,7 +522,7 @@
 						<RadioButton group="snapenable" text="#Common_On" value="1" />
 					</SettingsEnum>
 
-					<ConVarEnabler convar="mom_hud_df_snap_enable" class="flow-down">
+					<ConVarEnabler convar="mom_hud_df_snap_enable" class="settings__convarenabler">
 						<SettingsSlider text="#Settings_Defrag_Snaps_Height" min="1" max="50" convar="mom_hud_df_snap_height" displayprecision="0" infomessage="#Settings_Defrag_Snaps_Height_Info" tags="snaps" />
 
 						<SettingsSlider text="#Settings_Defrag_Snaps_Offset" min="-200" max="200" convar="mom_hud_df_snap_offset" displayprecision="0" infomessage="#Settings_Defrag_Snaps_Offset_Info" tags="snaps" />
@@ -539,7 +539,7 @@
 							<Label id="highlight3" text="#Settings_Defrag_Snaps_Highlight_Type2" value="2" />
 						</SettingsEnumDropDown>
 
-						<ConVarEnabler convar="mom_hud_df_snap_highlight_mode" class="flow-down">
+						<ConVarEnabler convar="mom_hud_df_snap_highlight_mode" class="settings__convarenabler">
 							<ConVarColorDisplay text="#Settings_Defrag_Snaps_HighlightColor" convar="mom_hud_df_snap_highlight_color" infomessage="#Settings_Defrag_Snaps_HighlightColor_Info" tags="snaps" />
 
 							<ConVarColorDisplay text="#Settings_Defrag_Snaps_HighlightAltColor" convar="mom_hud_df_snap_highlight_color_alt" infomessage="#Settings_Defrag_Snaps_HighlightAltColor_Info" tags="snaps" />
@@ -550,7 +550,7 @@
 							<RadioButton group="snapcolormode" text="#Common_On" value="1" />
 						</SettingsEnum>
 
-						<ConVarEnabler convar="mom_hud_df_snap_color_mode" class="flow-down">
+						<ConVarEnabler convar="mom_hud_df_snap_color_mode" class="settings__convarenabler">
 							<ConVarColorDisplay text="#Settings_Defrag_Snaps_SlowColor" convar="mom_hud_df_snap_slow_color" infomessage="#Settings_Defrag_Snaps_SlowColor_Info" tags="snaps" />
 
 							<ConVarColorDisplay text="#Settings_Defrag_Snaps_FastColor" convar="mom_hud_df_snap_fast_color" infomessage="#Settings_Defrag_Snaps_FastColor_Info" tags="snaps" />
@@ -573,7 +573,7 @@
 						<RadioButton group="primeenable" text="#Common_On" value="1" />
 					</SettingsEnum>
 
-					<ConVarEnabler convar="mom_hud_df_prime_enable"  class="flow-down">
+					<ConVarEnabler convar="mom_hud_df_prime_enable" class="settings__convarenabler">
 						<SettingsSlider text="#Settings_Defrag_PrimeSight_Height" min="1" max="50" convar="mom_hud_df_prime_height" displayprecision="0" infomessage="#Settings_Defrag_PrimeSight_Height_Info" tags="prime,sight" />
 
 						<SettingsSlider text="#Settings_Defrag_PrimeSight_Offset" min="-200" max="200" convar="mom_hud_df_prime_vertical_offset" displayprecision="0" infomessage="#Settings_Defrag_PrimeSight_Offset_Info" tags="prime,sight" />
@@ -595,7 +595,7 @@
 							<RadioButton group="primehlenable" text="#Common_On" value="1" />
 						</SettingsEnum>
 
-						<ConVarEnabler convar="mom_hud_df_prime_highlight_enable" class="flow-down">
+						<ConVarEnabler convar="mom_hud_df_prime_highlight_enable" class="settings__convarenabler">
 							<SettingsSlider text="#Settings_Defrag_PrimeSight_HighlightStrength" min="0" max="1" convar="mom_hud_df_prime_highlight_strength" displayprecision="2" infomessage="#Settings_Defrag_PrimeSight_HighlightStrength_Info" tags="prime,sight" />
 							<ConVarColorDisplay text="#Settings_Defrag_PrimeSight_HighlightColor" convar="mom_hud_df_prime_highlight_color" infomessage="#Settings_Defrag_PrimeSight_HighlightColor_Info" tags="prime,sight" />
 							<SettingsSlider text="#Settings_Defrag_PrimeSight_HighlightBorder" min="0" max="10" convar="mom_hud_df_prime_highlight_border" displayprecision="0" infomessage="#Settings_Defrag_PrimeSight_HighlightBorder_Info" tags="prime,sight" />
@@ -606,7 +606,7 @@
 							<RadioButton group="primeinactiveenable" text="#Common_On" value="1" />
 						</SettingsEnum>
 
-						<ConVarEnabler convar="mom_hud_df_prime_inactive">
+						<ConVarEnabler convar="mom_hud_df_prime_inactive" class="settings__convarenabler">
 							<ConVarColorDisplay text="#Settings_Defrag_PrimeSight_AltColor" convar="mom_hud_df_prime_color_alt" infomessage="#Settings_Defrag_PrimeSight_AltColor_Info" tags="prime,sight" />
 						</ConVarEnabler>
 
@@ -619,7 +619,7 @@
 							<RadioButton group="primearrowenable" text="#Common_On" value="1" />
 						</SettingsEnum>
 
-						<ConVarEnabler convar="mom_hud_df_prime_arrow_enable"  class="flow-down">
+						<ConVarEnabler convar="mom_hud_df_prime_arrow_enable" class="settings__convarenabler">
 							<SettingsSlider text="#Settings_Defrag_PrimeSight_ArrowSize" min="1" max="10" convar="mom_hud_df_prime_arrow_size" displayprecision="0" infomessage="#Settings_Defrag_PrimeSight_ArrowSize_Info" tags="prime,sight" />
 
 							<ConVarColorDisplay text="#Settings_Defrag_PrimeSight_ArrowColor" convar="mom_hud_df_prime_arrow_color" infomessage="#Settings_Defrag_PrimeSight_ArrowColor_Info" tags="prime,sight" />
@@ -658,7 +658,7 @@
 						<Label id="compass3" text="#Settings_Defrag_CompassMode_Type3" value="3" />
 					</SettingsEnumDropDown>
 
-					<ConVarEnabler convar="mom_hud_df_compass_mode" class="flow-down">
+					<ConVarEnabler convar="mom_hud_df_compass_mode" class="settings__convarenabler">
 						<SettingsSlider text="#Settings_Defrag_CompassArrowSize" min="0" max="25" convar="mom_hud_df_compass_arrow_size" displayprecision="0" infomessage="#Settings_Defrag_CompassArrowSize_Info" tags="compass" />
 
 						<SettingsSlider text="#Settings_Defrag_CompassTickSize" min="0" max="50" convar="mom_hud_df_compass_tick_size" displayprecision="0" infomessage="#Settings_Defrag_CompassTickSize_Info" tags="compass" />
@@ -672,7 +672,7 @@
 						<RadioButton group="pitchenable" text="#Common_On" value="1" />
 					</SettingsEnum>
 
-					<ConVarEnabler convar="mom_hud_df_pitch_enable" class="flow-down">
+					<ConVarEnabler convar="mom_hud_df_pitch_enable" class="settings__convarenabler">
 						<SettingsSlider text="#Settings_Defrag_PitchTarget" min="-90" max="90" convar="mom_hud_df_pitch_target" displayprecision="1" infomessage="#Settings_Defrag_PitchTarget_Info" tags="compass,pitch" />
 
 						<SettingsSlider text="#Settings_Defrag_PitchWidth" min="10" max="200" convar="mom_hud_df_pitch_width" displayprecision="1" infomessage="#Settings_Defrag_PitchWidth_Info" tags="compass,pitch" />
@@ -700,7 +700,7 @@
 						<RadioButton group="windicatorenable" text="#Common_On" value="1" />
 					</SettingsEnum>
 
-					<ConVarEnabler convar="mom_hud_df_windicator_enable" class="flow-down">
+					<ConVarEnabler convar="mom_hud_df_windicator_enable" class="settings__convarenabler">
 						<SettingsSlider text="#Settings_Defrag_WIndicatorZoneHeight" min="0" max="50" convar="mom_hud_df_windicator_height" displayprecision="0" infomessage="#Settings_Defrag_WIndicatorZoneHeight_Info" />
 
 						<SettingsSlider text="#Settings_Defrag_WIndicatorZoneOffset" min="-200" max="200" convar="mom_hud_df_windicator_offset" displayprecision="0" infomessage="#Settings_Defrag_WIndicatorZoneOffset_Info" />
@@ -721,7 +721,7 @@
 						<RadioButton group="dfjumpenable" text="#Common_On" value="1" />
 					</SettingsEnum>
 
-					<ConVarEnabler convar="mom_hud_df_jump_enable" class="flow-down">
+					<ConVarEnabler convar="mom_hud_df_jump_enable" class="settings__convarenabler">
 						<SettingsSlider text="#Settings_Defrag_Jump_VisualizerMaxDelay" min="50" max="1000" convar="mom_hud_df_jump_max_delay" displayprecision="0" infomessage="#Settings_Defrag_Jump_VisualizerMaxDelay_Info" />
 
 						<SettingsEnum text="#Settings_Defrag_Jump_VisualizerLabels" convar="mom_hud_df_jump_text" infomessage="#Settings_Defrag_Jump_VisualizerLabels_Info">
@@ -741,14 +741,14 @@
 						<RadioButton group="gbenable" text="#Common_On" value="1" />
 					</SettingsEnum>
 
-					<ConVarEnabler convar="mom_hud_df_groundboost_enable" class="flow-down">
+					<ConVarEnabler convar="mom_hud_df_groundboost_enable" class="settings__convarenabler">
 						<SettingsEnumDropDown text="#Settings_Defrag_Groundboost_TextMode" convar="mom_hud_df_groundboost_text_mode" infomessage="#Settings_Defrag_Groundboost_TextMode_Info" tags="groundboost">
 							<Label id="gblabel0" text="#Settings_Defrag_Groundboost_TextMode_Type0" value="0" />
 							<Label id="gblabel1" text="#Settings_Defrag_Groundboost_TextMode_Type1" value="1" />
 							<Label id="gblabel2" text="#Settings_Defrag_Groundboost_TextMode_Type2" value="2" />
 						</SettingsEnumDropDown>
 
-						<ConVarEnabler convar="mom_hud_df_groundboost_text_mode" class="flow-down">
+						<ConVarEnabler convar="mom_hud_df_groundboost_text_mode" class="settings__convarenabler">
 							<SettingsEnumDropDown text="#Settings_Defrag_Groundboost_TextColorMode" convar="mom_hud_df_groundboost_text_color_mode" infomessage="#Settings_Defrag_Groundboost_TextColorMode_Info" tags="groundboost">
 								<Label id="gbcolor0" text="#Settings_Defrag_Groundboost_TextColorMode_Type0" value="0" />
 								<Label id="gbcolor1" text="#Settings_Defrag_Groundboost_TextColorMode_Type1" value="1" />
