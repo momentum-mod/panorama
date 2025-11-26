@@ -28,7 +28,7 @@ class HudTimerHandler {
 			resizeY: false,
 			marginSettings: true,
 			paddingSettings: true,
-			backgroundColorSettings: true
+			backgroundSettings: true
 		});
 
 		this.panels.cp.SetDialogVariableFloat('runtime', 0);
