@@ -1,5 +1,13 @@
 import { PanelHandler } from 'util/module-helpers';
 import * as Timer from 'common/timer';
+import {
+	BackgroundColorStyle,
+	BorderStyles,
+	CustomizerPropertyType,
+	MarginStyles,
+	PaddingStyles,
+	registerHUDCustomizerComponent
+} from '../common/hud-customizer';
 
 // MomTV networking limits max numbers of networked splits to 10; this value is
 // immutable and used to build out our split panel arrays.
@@ -145,6 +153,53 @@ class HudComparisonsHandler {
 
 		$.RegisterForUnhandledEvent('LevelInitPostEntity', () => {
 			this.clearSplits();
+		});
+
+		$.RegisterForUnhandledEvent('HudCustomizer_Enabled', () => {
+			// Usually players using HUD customizer won't be in a run, so generate dummy splits. If they *are* in a run,
+			// don't alter them in any way.
+			const { state } = MomentumTimerAPI.GetObservedTimerStatus();
+
+			if (state === Timer.TimerState.DISABLED || state === Timer.TimerState.PRIMED) {
+				this.createDummySplits();
+			}
+
+			$.Schedule(0, () => {
+				$.DispatchEvent('HudCustomizer_ComponentInitialized');
+			});
+		});
+
+		$.RegisterForUnhandledEvent('HudCustomizer_Disabled', () => {
+			const { state } = MomentumTimerAPI.GetObservedTimerStatus();
+			if (state === Timer.TimerState.DISABLED || state === Timer.TimerState.PRIMED) {
+				this.clearSplits();
+			}
+		});
+
+		registerHUDCustomizerComponent($.GetContextPanel(), {
+			resizeX: false,
+			resizeY: false,
+			dynamicStyles: {
+				...MarginStyles,
+				...PaddingStyles,
+				...BackgroundColorStyle,
+				...BorderStyles,
+				// TODO: Blurring blurs the entire panel, not the backbuffer. Adding #ChatInput to #HudBlur's blurrects has
+				// same issue, no idea what's different about that panel from say, TabMenu/Spectator
+				blur: {
+					name: 'Background Blur',
+					type: CustomizerPropertyType.CHECKBOX,
+					callbackFunc: (panel, value) => {
+						const blurTarget = $.GetContextPanel().GetParent()!.FindChild<HudBlurTarget>('HudBlur')!;
+						if (value) {
+							blurTarget.AddBlurPanel(panel);
+						} else {
+							blurTarget.RemoveBlurPanel(panel);
+						}
+					}
+				}
+			}
+			// asyncInit: true
 		});
 	}
 
@@ -325,5 +380,22 @@ class HudComparisonsHandler {
 	// show pointless +0:00 comparisons by comparing a run to itself.
 	hasUniqueComparison(): this is { comparison: Timer.RunMetadata } {
 		return this.comparison !== null && this.comparison.tempId !== this.controlledReplayID;
+	}
+
+	createDummySplits() {
+		for (let i = 0; i < MAX_SPLITS; i++) {
+			this.updateSplit(this.splitRows[i], {
+				majorNum: i + 1,
+				minorNum: 1,
+				segmentsCount: MAX_SPLITS,
+				segmentCheckpointsCount: 1,
+				name: `${i + 1}`,
+				time: (i + 1) * 10,
+				segmentTime: 10,
+				delta: Math.random() * 4 - 2,
+				diff: Math.random() * 4 - 2,
+				hasComparison: true
+			});
+		}
 	}
 }

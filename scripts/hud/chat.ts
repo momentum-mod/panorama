@@ -5,12 +5,12 @@ registerHUDCustomizerComponent($.GetContextPanel(), {
 	resizeY: true,
 	marginSettings: true,
 	paddingSettings: false,
-	backgroundColorSettings: false,
+	backgroundSettings: false,
 	dynamicStyles: {
 		showTyping: {
 			name: 'Show Users Typing',
 			type: CustomizerPropertyType.CHECKBOX,
-			func: (panel, value) => {
+			callbackFunc: (panel, value) => {
 				panel.SetHasClass('chat--disable-users-typing', !value);
 			}
 		},
@@ -19,11 +19,11 @@ registerHUDCustomizerComponent($.GetContextPanel(), {
 			type: CustomizerPropertyType.FONT_PICKER,
 			styleProperty: 'fontFamily',
 			targetPanel: ['.chat-entry__message', '.chat__input', '.chat__send-text'],
-			eventListeners: [
+			events: [
 				{
 					event: 'OnNewChatEntry',
-					panel: $.GetContextPanel().FindChildInLayoutFile('RaisedChat'),
-					callback: (panel: Panel, value: string) => {
+					panel: $.GetContextPanel().FindChildInLayoutFile('RaisedChat')!,
+					callback: (value: string, panel: GenericPanel) => {
 						const text = panel.FindChild('Text')!;
 						text.style.fontFamily = value;
 						// TODO: Need a better approach than this. Why does this work?
@@ -32,7 +32,7 @@ registerHUDCustomizerComponent($.GetContextPanel(), {
 						// mouseovered.
 						// Looks like setrepaint(full) *is* getting called in afterstylesapplied... so we need to do
 						// more than repaint to update styles? worth looking into comment on styles.cpp l952
-						// @ts-ignore
+						// @ts-expect-error asdhjaskfodsf
 						panel.MarkStylesDirty(true);
 					}
 				}
@@ -47,7 +47,7 @@ registerHUDCustomizerComponent($.GetContextPanel(), {
 		scale: {
 			name: 'Scale',
 			type: CustomizerPropertyType.NUMBER_ENTRY,
-			func: (panel, value) => {
+			callbackFunc: (panel, value) => {
 				for (let i = 10; i <= 24; i++) {
 					panel.SetHasClass(`hud-chat--size-${i}`, i === value);
 				}
@@ -57,7 +57,7 @@ registerHUDCustomizerComponent($.GetContextPanel(), {
 		innerGap: {
 			name: 'Gap',
 			type: CustomizerPropertyType.NUMBER_ENTRY,
-			func: (panel, value) => {
+			callbackFunc: (panel, value) => {
 				for (let i = 0; i <= 8; i++) {
 					panel.SetHasClass(`hud-chat--gap-${i}`, i === value);
 				}
@@ -71,6 +71,21 @@ registerHUDCustomizerComponent($.GetContextPanel(), {
 			targetPanel: '.chat__elem',
 			valueFn: (value) => `${value}px`,
 			settingProps: { min: 0, max: 20 }
-		}
+		},
+		// TODO: Blurring blurs the entire panel, not the backbuffer. Adding #ChatInput to #HudBlur's blurrects has
+		// same issue, no idea what's different about that panel from say, TabMenu/Spectator
+		// blur: {
+		// 	name: 'Background Blur',
+		// 	type: CustomizerPropertyType.CHECKBOX,
+		// 	targetPanel: '.chat__elem',
+		// 	callbackFunc: (panel, value) => {
+		// 		const blurTarget = $.GetContextPanel().GetParent()!.FindChild<HudBlurTarget>('HudBlur')!;
+		// 		if (value) {
+		// 			blurTarget.AddBlurPanel(panel);
+		// 		} else {
+		// 			blurTarget.RemoveBlurPanel(panel);
+		// 		}
+		// 	}
+		// }
 	}
 });

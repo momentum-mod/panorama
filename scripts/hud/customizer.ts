@@ -31,7 +31,8 @@ interface ComponentLayout {
 	/** If not provided, gets fit-children */
 	height?: number;
 
-	dynamicStyles?: Record<StyleID, unknown>;
+	/** Stored dynamicStyle values, usually string / number / bool */
+	dynamicStyles?: Record<StyleID, any>;
 }
 
 export interface HudLayout {
@@ -159,24 +160,39 @@ class Component {
 			this.dynamicStyles = {};
 
 			for (const [styleID, styleProps] of Object.entries(properties.dynamicStyles)) {
+				const value =
+					componentLayout.dynamicStyles?.[styleID as StyleID] ??
+					defaultComponentLayout?.dynamicStyles?.[styleID as StyleID];
+				if (value === undefined) {
+					throw new Error(
+						`HudCustomizer: Could not load dynamic style value for ${styleID} in component ${this.id}`
+					);
+				}
+
 				const dynamicStyle = {
 					properties: styleProps as DynamicStyleProperties,
-					// Just in case we see a user layout with missing dynamic style values, fall back to default
-					value: componentLayout.dynamicStyles?.[styleID] ?? defaultComponentLayout?.dynamicStyles?.[styleID]
+					value
 				};
 
-				if (styleProps.eventListeners?.length) {
-					for (const { event, panel, callback } of styleProps.eventListeners) {
-						// Register provided callbacks events requested on the given panel. When that event fires, we
-						// call the callback with the current DynamicStyle's value, allowing components to style panels
-						// they generate.
-						// Not cleaning these handlers up since customizer is reloaded at same time as everything else,
-						// Panorama cleans them up.
-						$.RegisterEventHandler(event, panel, (...args) => {
-							callback(...args, this.dynamicStyles![styleID].value);
-							$.Schedule(0.5, () => panel.ApplyStyles(true));
-						});
-					}
+				for (const { event, panel, callback } of styleProps.events ?? []) {
+					// Register provided callbacks events requested on the given panel. When that event fires, we
+					// call the callback with the current DynamicStyle's value, allowing components to style panels
+					// they generate.
+					// Not cleaning these handlers up since customizer is reloaded at same time as everything else,
+					// Panorama cleans them up.
+					$.RegisterEventHandler(event, panel, (...args: any[]) => {
+						const styleValue =
+							dynamicStyle.properties.valueFn?.(dynamicStyle.value as any) ?? dynamicStyle.value;
+						(callback as any)(styleValue, ...args);
+					});
+				}
+
+				for (const { event, callback } of styleProps.unhandledEvents ?? []) {
+					$.RegisterForUnhandledEvent(event, (...args: any[]) => {
+						const styleValue =
+							dynamicStyle.properties.valueFn?.(dynamicStyle.value as any) ?? dynamicStyle.value;
+						(callback as any)(styleValue, ...args);
+					});
 				}
 
 				this.dynamicStyles[styleID] = dynamicStyle;
@@ -312,25 +328,23 @@ class Component {
 			targetPanels.push(this.panel);
 		}
 
-		if ('styleProperty' in style.properties) {
+		if (style.properties.styleProperty) {
 			// We have extremely strong types in the common/hud-customizer.ts stuff to constrain dynamicStyles to
 			// valid combinations. Proving to the TS that everything is valid here is a pain though, not worth it.
 			const styleValue = style.properties.valueFn?.(style.value as any) ?? style.value;
 
 			if (styleValue !== undefined) {
 				for (const panel of targetPanels) {
-					(panel.style as any)[style.properties.styleProperty] = styleValue;
-					// @ts-ignore
+					(panel as any).style[style.properties.styleProperty] = styleValue;
+					// @ts-expect-error wadsasdasd
 					panel.MarkStylesDirty(true);
 				}
 			}
-		} else {
-			if (!('func' in style.properties)) {
-				throw new Error('Invalid dynamic style, missing styleProperty or className');
-			}
+		}
 
+		if (style.properties.callbackFunc) {
 			for (const panel of targetPanels) {
-				style.properties.func(panel, style.value as any);
+				style.properties.callbackFunc(panel, style.value as any);
 			}
 		}
 	}
@@ -381,12 +395,12 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			dragPanel: $('#CustomizerSettingsHeader')!,
 			resizeY: false,
 			resizeX: false,
-			marginSettings: false,
-			paddingSettings: false,
-			backgroundColorSettings: false
+			// marginSettings: false,
+			// paddingSettings: false,
+			// backgroundSettings: false
 		});
 
-		$.RegisterForUnhandledEvent('HudCustomizer_Enabled', () => this.enableEditing());
+		$.RegisterForUnhandledEvent('HudCustomizer_EnabledInternal', () => this.enableEditing());
 		$.RegisterForUnhandledEvent('HudCustomizer_Disabled', () => this.disableEditing());
 
 		// TODO: Below todo is *probably* fine now using events like this, but be very careful everything
@@ -482,7 +496,18 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		this.createResizeKnobs();
 
 		this.activeComponent ??= this.components[Object.keys(this.components)[0]];
-		this.setActiveComponent(this.activeComponent);
+
+		// // Some components like Comparisons need to populate themselves with dummy data when editing gets enabled.
+		// // If they're going to be the first component selected, we need to wait until they finish initing before
+		// // setting them active.
+		// if (this.activeComponent.properties.asyncInit) {
+		// 	const handle = $.RegisterForUnhandledEvent('HudCustomizer_ComponentInitialized', () => {
+		// 		this.setActiveComponent(this.activeComponent!);
+		// 		$.UnregisterForUnhandledEvent('HudCustomizer_ComponentInitialized', handle);
+		// 	});
+		// } else {
+			this.setActiveComponent(this.activeComponent);
+		// }
 	}
 
 	disableEditing(): void {
@@ -725,15 +750,6 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 						component.setDynamicStyle(styleID, value);
 					});
 					dropdown.SetSelected(component.dynamicStyles[styleID]?.value as string);
-
-					// TODO: shit
-					if (dynamicStyle.properties.eventListeners) {
-						for (const { event, panel: targetPanel, callback } of dynamicStyle.properties.eventListeners) {
-							$.RegisterEventHandler(event, targetPanel, (panel) => {
-								callback(panel, value);
-							});
-						}
-					}
 				}
 			}
 		}
