@@ -83,8 +83,11 @@ const SNAPPING_THRESHOLD = 0.1;
 // Fraction of grid spacing to snap within for the center line
 const CENTER_SNAPPING_THRESHOLD = 0.15;
 
-// Margin around the overlay panel. Needed so that resize handles etc don't get cut off.
+// Margin around the overlay panel. Needed so that resize handles etc. don't get cut off.
 const OVERLAY_MARGIN = 32;
+
+// TODO: This behaviour is super annoying, almost certainly want to remove
+const SELECT_COMPONENT_ON_HOVER = false;
 
 interface DynamicStyle {
 	properties: Readonly<DynamicStyleProperties>;
@@ -161,6 +164,20 @@ class Component {
 					// Just in case we see a user layout with missing dynamic style values, fall back to default
 					value: componentLayout.dynamicStyles?.[styleID] ?? defaultComponentLayout?.dynamicStyles?.[styleID]
 				};
+
+				if (styleProps.eventListeners?.length) {
+					for (const { event, panel, callback } of styleProps.eventListeners) {
+						// Register provided callbacks events requested on the given panel. When that event fires, we
+						// call the callback with the current DynamicStyle's value, allowing components to style panels
+						// they generate.
+						// Not cleaning these handlers up since customizer is reloaded at same time as everything else,
+						// Panorama cleans them up.
+						$.RegisterEventHandler(event, panel, (...args) => {
+							callback(...args, this.dynamicStyles![styleID].value);
+							$.Schedule(0.5, () => panel.ApplyStyles(true));
+						});
+					}
+				}
 
 				this.dynamicStyles[styleID] = dynamicStyle;
 				this.applyDynamicStyle(dynamicStyle);
@@ -303,6 +320,8 @@ class Component {
 			if (styleValue !== undefined) {
 				for (const panel of targetPanels) {
 					(panel.style as any)[style.properties.styleProperty] = styleValue;
+					// @ts-ignore
+					panel.MarkStylesDirty(true);
 				}
 			}
 		} else {
@@ -448,11 +467,13 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			throw new Error("HudCustomizer: Tried to enable editing, but we weren't loaded!");
 		}
 
-		for (const component of Object.values(this.components)) {
-			if (component.dragPanel) {
-				component.dragPanel.SetPanelEvent('onmouseover', () => this.setActiveComponent(component));
-			} else {
-				component.panel.SetPanelEvent('onmouseover', () => this.setActiveComponent(component));
+		if (SELECT_COMPONENT_ON_HOVER) {
+			for (const component of Object.values(this.components)) {
+				if (component.dragPanel) {
+					component.dragPanel.SetPanelEvent('onmouseover', () => this.setActiveComponent(component));
+				} else {
+					component.panel.SetPanelEvent('onmouseover', () => this.setActiveComponent(component));
+				}
 			}
 		}
 
@@ -476,6 +497,9 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		if (this.dragStartHandle) {
 			$.UnregisterEventHandler('DragStart', this.panels.dragPanel, this.dragStartHandle);
 		}
+
+		// Customizer closing, write to disk
+		this.save();
 	}
 
 	/**
@@ -808,9 +832,6 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		this.activeGridlines?.forEach((line) => line?.panel.RemoveClass('hud-customizer-grid__line--highlight'));
 		this.activeGridlines = [undefined, undefined];
 
-		// TODO: this is just for testing
-		this.save();
-
 		this.dragMode = undefined;
 	}
 
@@ -952,6 +973,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			const offsetX = this.activeComponent.offsetX;
 			let newX = knobX;
 
+			// TODO: unset gridline if nothing found
 			if (shouldSnap) {
 				for (const gl of this.gridlines[Axis.X]) {
 					const dist = Math.abs(gl.offset - knobX);

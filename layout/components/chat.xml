@@ -33,7 +33,7 @@
 		<Panel class="chat__input-container">
 			<TextEntry id="ChatInput" class="chat__elem chat__input" oninputsubmit="ChatHandler.submitText()" maxchars="127" clearaftersubmit="true" />
 			<Button class="chat__elem chat__send" onactivate="$('#ChatInput').Submit()">
-				<Label class="button__text chat__send-text" text="#Chat_Send" />
+				<Label class="chat__send-text" text="#Chat_Send" />
 			</Button>
 		</Panel>
 		<Panel class="chat__elem chat__history-wrapper">
