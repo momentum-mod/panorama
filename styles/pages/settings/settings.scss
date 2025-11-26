@@ -41,6 +41,11 @@ $page-width: 1920px - $rightnav-width;
 		margin-top: 4px;
 	}
 
+	&__convarenabler {
+		flow-children: down;
+		width: 100%;
+	}
+
 	&__crosshair {
 		// We could scale the crosshair here to be more visible, but that would stop this being
 		// the actual ingame size, plus it'd have to be a bitmap level transform.

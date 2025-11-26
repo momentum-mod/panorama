@@ -39,7 +39,7 @@
 		<snippet name="dynamic-fontpicker">
 			<Panel class="hud-customizer-settings__row">
 				<Label class="hud-customizer-settings__setting-label" text="{s:name}" />
-				<DropDown id="DropDown" class="dropdown hud-customizer-settings__dropdown" menuclass="dropdown-menu" />
+				<DropDown id="DropDown" class="dropdown hud-customizer-settings__dropdown" menuclass="dropdown-menu hud-customizer-settings__dropdown-menu" />
 			</Panel>
 		</snippet>
 	</snippets>

@@ -18,23 +18,25 @@ registerHUDCustomizerComponent($.GetContextPanel(), {
 			name: 'Font',
 			type: CustomizerPropertyType.FONT_PICKER,
 			styleProperty: 'fontFamily',
-			targetPanel: ['.chat__input', '.chat__history'],
-			// TODO: not working!!!!
+			targetPanel: ['.chat-entry__message', '.chat__input', '.chat__send-text'],
 			eventListeners: [
 				{
 					event: 'OnNewChatEntry',
 					panel: $.GetContextPanel().FindChildInLayoutFile('RaisedChat'),
-					callback: (panel, value) => {
-						panel.style.fontFamily = value;
+					callback: (panel: Panel, value: string) => {
+						const text = panel.FindChild('Text')!;
+						text.style.fontFamily = value;
+						// TODO: Need a better approach than this. Why does this work?
+						// If works because causes a repaint, why doesn't the repaint setting the font do it?
+						// Currently the size is always wrong when changing or for new messages, until they're
+						// mouseovered.
+						// Looks like setrepaint(full) *is* getting called in afterstylesapplied... so we need to do
+						// more than repaint to update styles? worth looking into comment on styles.cpp l952
+						// @ts-ignore
+						panel.MarkStylesDirty(true);
 					}
 				}
 			]
-		},
-		sendFont: {
-			name: 'Send Button Font',
-			type: CustomizerPropertyType.FONT_PICKER,
-			styleProperty: 'fontFamily',
-			targetPanel: '.chat__send'
 		},
 		backgroundColor: {
 			name: 'Background Color',
@@ -50,15 +52,6 @@ registerHUDCustomizerComponent($.GetContextPanel(), {
 					panel.SetHasClass(`hud-chat--size-${i}`, i === value);
 				}
 			},
-			eventListeners: [
-				{
-					event: 'OnNewChatEntry',
-					panel: $.GetContextPanel().FindChildInLayoutFile('RaisedChat'),
-					callback: (panel, value) => {
-						panel.style.fontFamily = value;
-					}
-				}
-			],
 			settingProps: { min: 10, max: 24 }
 		},
 		innerGap: {
