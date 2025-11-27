@@ -15,7 +15,7 @@
 		</snippet>
 	</snippets>
 
-	<MomHudSpecInfo class="w-full flow-down">
+	<MomHudSpecInfo>
 		<!-- So we can toggle visibility for the whole panel -->
 		<Panel id="SpecInfoContainer" class="hudspecinfo">
 			<ConVarEnabler class="flow-down w-fit-children h-align-right v-align-center" convar="mom_hud_spectator_list_show" togglevisibility="true">
