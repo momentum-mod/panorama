@@ -121,7 +121,7 @@ interface GlobalEventNameMap {
 
 	OnDefragHUDFOVChange: () => void;
 
-	OnDefragHUDAccelChange: () => void;
+	OnDefragHUDCgazChange: () => void;
 
 	OnDefragHUDSnapChange: () => void;
 

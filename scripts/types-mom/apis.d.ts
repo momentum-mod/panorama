@@ -440,7 +440,7 @@ declare namespace SpeedometerSettingsAPI {
 }
 
 declare namespace DefragAPI {
-	interface AccelConfig {
+	interface CgazConfig {
 		enable: boolean;
 		mirrorEnable: boolean;
 		mirrorBorder: float;
@@ -535,7 +535,7 @@ declare namespace DefragAPI {
 
 	function GetHUDFOV(): float;
 
-	function GetHUDAccelCFG(): AccelConfig;
+	function GetHUDCgazCFG(): CgazConfig;
 
 	function GetHUDPrimeCFG(): PrimeConfig;
 

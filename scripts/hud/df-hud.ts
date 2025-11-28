@@ -227,7 +227,7 @@ class DefragHandler {
 
 		$.RegisterForUnhandledEvent('OnDefragHUDProjectionChange', () => this.onProjectionChange());
 		$.RegisterForUnhandledEvent('OnDefragHUDFOVChange', () => this.onHudFovChange());
-		$.RegisterForUnhandledEvent('OnDefragHUDAccelChange', () => this.onAccelConfigChange());
+		$.RegisterForUnhandledEvent('OnDefragHUDCgazChange', () => this.onCgazConfigChange());
 		$.RegisterForUnhandledEvent('OnDefragHUDSnapChange', () => this.onSnapConfigChange());
 		$.RegisterForUnhandledEvent('OnDefragHUDPrimeChange', () => this.onPrimeConfigChange());
 		$.RegisterForUnhandledEvent('OnDefragHUDWIndicatorChange', () => this.onWindicatorConfigChange());
@@ -235,7 +235,7 @@ class DefragHandler {
 	}
 
 	onLoad() {
-		this.onAccelConfigChange();
+		this.onCgazConfigChange();
 		this.onSnapConfigChange();
 		this.onPrimeConfigChange();
 		this.onProjectionChange();
@@ -255,19 +255,19 @@ class DefragHandler {
 		this.bShouldUpdateStyles = true;
 	}
 
-	onAccelConfigChange() {
-		const accelConfig = DefragAPI.GetHUDAccelCFG();
-		this.accelEnable = accelConfig.enable;
-		this.accelMinSpeed = accelConfig.minSpeed;
-		this.accelHeight = accelConfig.height;
-		this.accelOffset = accelConfig.offset;
-		this.accelSlowColor = accelConfig.slowColor;
-		this.accelFastColor = accelConfig.fastColor;
-		this.accelTurnColor = accelConfig.turnColor;
-		this.accelDzColor = accelConfig.dzColor;
-		this.accelScaleEnable = accelConfig.scaleEnable;
-		this.accelMirrorEnable = accelConfig.mirrorEnable;
-		this.accelMirrorBorder = Math.round(accelConfig.mirrorBorder);
+	onCgazConfigChange() {
+		const CgazConfig = DefragAPI.GetHUDCgazCFG();
+		this.accelEnable = CgazConfig.enable;
+		this.accelMinSpeed = CgazConfig.minSpeed;
+		this.accelHeight = CgazConfig.height;
+		this.accelOffset = CgazConfig.offset;
+		this.accelSlowColor = CgazConfig.slowColor;
+		this.accelFastColor = CgazConfig.fastColor;
+		this.accelTurnColor = CgazConfig.turnColor;
+		this.accelDzColor = CgazConfig.dzColor;
+		this.accelScaleEnable = CgazConfig.scaleEnable;
+		this.accelMirrorEnable = CgazConfig.mirrorEnable;
+		this.accelMirrorBorder = Math.round(CgazConfig.mirrorBorder);
 
 		NEUTRAL_CLASS = new StyleObject(this.accelHeight, this.accelOffset, this.accelDzColor);
 		SLOW_CLASS = new StyleObject(this.accelHeight, this.accelOffset, this.accelSlowColor);
