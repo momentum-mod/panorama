@@ -1,0 +1,24 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+	
+	<scripts>
+		<include type="module" src="file://{scripts}/hud/cgaz.ts" />
+	</scripts>
+
+	<MomHudCgaz class="cgaz__container">
+		<Panel id="LeftTurnZone" class="cgaz__turn" />
+		<Panel id="LeftFastZone" class="cgaz__fast" />
+		<Panel id="LeftSlowZone" class="cgaz__slow" />
+		<Panel id="DeadZone" class="cgaz__deadzone" />
+		<Panel id="RightSlowZone" class="cgaz__slow" />
+		<Panel id="RightFastZone" class="cgaz__fast" />
+		<Panel id="RightTurnZone" class="cgaz__turn" />
+		<Panel id="CgazWrapZone" />
+		<Panel id="LeftMirrorZone" class="cgaz__mirror" />
+		<Panel id="RightMirrorZone" class="cgaz__mirror" />
+		<Panel id="MirrorWrapZone" class="cgaz__mirror" />
+	</MomHudCgaz>
+
+</root>

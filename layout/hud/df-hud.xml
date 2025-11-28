@@ -8,7 +8,7 @@
 	</scripts>
 
 	<MomHudDefrag class="w-full h-full" alternateTicks="false">
-		<ConVarEnabler id="AccelContainer" class="defrag__container" convar="mom_hud_df_accel_enable" togglevisibility="true">
+		<ConVarEnabler id="AccelContainer" class="defrag__container" convar="mom_hud_df_cgaz_enable" togglevisibility="true">
 			<Panel id="LeftTurnZone" />
 			<Panel id="LeftFastZone" />
 			<Panel id="LeftSlowZone" />

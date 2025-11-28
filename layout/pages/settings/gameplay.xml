@@ -476,36 +476,36 @@
 
 					<Label class="settings-group__combo-header" text="#Settings_Defrag_CGAZ_Title" />
 
-					<SettingsEnum text="#Settings_Defrag_CGAZ_Enable" convar="mom_hud_df_accel_enable" infomessage="#Settings_Defrag_CGAZ_Enable_Info" tags="cgaz">
+					<SettingsEnum text="#Settings_Defrag_CGAZ_Enable" convar="mom_hud_df_cgaz_enable" infomessage="#Settings_Defrag_CGAZ_Enable_Info" tags="cgaz">
 						<RadioButton group="accelenable" text="#Common_Off" value="0" />
 						<RadioButton group="accelenable" text="#Common_On" value="1" />
 					</SettingsEnum>
 
-					<ConVarEnabler convar="mom_hud_df_accel_enable" class="flow-down">
-						<SettingsSlider text="#Settings_Defrag_CGAZ_Height" min="1" max="50" convar="mom_hud_df_accel_height" displayprecision="0" infomessage="#Settings_Defrag_CGAZ_Height_Info" tags="cgaz" />
+					<ConVarEnabler convar="mom_hud_df_cgaz_enable" class="flow-down">
+						<SettingsSlider text="#Settings_Defrag_CGAZ_Height" min="1" max="50" convar="mom_hud_df_cgaz_height" displayprecision="0" infomessage="#Settings_Defrag_CGAZ_Height_Info" tags="cgaz" />
 
-						<SettingsSlider text="#Settings_Defrag_CGAZ_Offset" min="-200" max="200" convar="mom_hud_df_accel_vertical_offset" displayprecision="0" infomessage="#Settings_Defrag_CGAZ_Offset_Info" tags="cgaz" />
+						<SettingsSlider text="#Settings_Defrag_CGAZ_Offset" min="-200" max="200" convar="mom_hud_df_cgaz_vertical_offset" displayprecision="0" infomessage="#Settings_Defrag_CGAZ_Offset_Info" tags="cgaz" />
 
-						<SettingsSlider text="#Settings_Defrag_CGAZ_MinSpeed" min="1" max="1000" convar="mom_hud_df_accel_min_speed" displayprecision="0" infomessage="#Settings_Defrag_CGAZ_MinSpeed_Info" tags="cgaz" />
+						<SettingsSlider text="#Settings_Defrag_CGAZ_MinSpeed" min="1" max="1000" convar="mom_hud_df_cgaz_min_speed" displayprecision="0" infomessage="#Settings_Defrag_CGAZ_MinSpeed_Info" tags="cgaz" />
 
-						<ConVarColorDisplay text="#Settings_Defrag_CGAZ_SlowColor" convar="mom_hud_df_accel_slow_color" infomessage="#Settings_Defrag_CGAZ_SlowColor_Info" tags="cgaz" />
+						<ConVarColorDisplay text="#Settings_Defrag_CGAZ_SlowColor" convar="mom_hud_df_cgaz_slow_color" infomessage="#Settings_Defrag_CGAZ_SlowColor_Info" tags="cgaz" />
 
-						<ConVarColorDisplay text="#Settings_Defrag_CGAZ_FastColor" convar="mom_hud_df_accel_fast_color" infomessage="#Settings_Defrag_CGAZ_FastColor_Info" tags="cgaz" />
+						<ConVarColorDisplay text="#Settings_Defrag_CGAZ_FastColor" convar="mom_hud_df_cgaz_fast_color" infomessage="#Settings_Defrag_CGAZ_FastColor_Info" tags="cgaz" />
 
-						<ConVarColorDisplay text="#Settings_Defrag_CGAZ_TurnColor" convar="mom_hud_df_accel_turn_color" infomessage="#Settings_Defrag_CGAZ_TurnColor_Info" tags="cgaz" />
+						<ConVarColorDisplay text="#Settings_Defrag_CGAZ_TurnColor" convar="mom_hud_df_cgaz_turn_color" infomessage="#Settings_Defrag_CGAZ_TurnColor_Info" tags="cgaz" />
 
-						<ConVarColorDisplay text="#Settings_Defrag_CGAZ_DeadzoneColor" convar="mom_hud_df_accel_deadzone_color" infomessage="#Settings_Defrag_CGAZ_DeadzoneColor_Info" tags="cgaz" />
+						<ConVarColorDisplay text="#Settings_Defrag_CGAZ_DeadzoneColor" convar="mom_hud_df_cgaz_deadzone_color" infomessage="#Settings_Defrag_CGAZ_DeadzoneColor_Info" tags="cgaz" />
 
-						<SettingsEnum text="#Settings_Defrag_CGAZ_Mirrored" convar="mom_hud_df_accel_mirror" infomessage="#Settings_Defrag_CGAZ_Mirrored_Info" tags="cgaz">
+						<SettingsEnum text="#Settings_Defrag_CGAZ_Mirrored" convar="mom_hud_df_cgaz_mirror" infomessage="#Settings_Defrag_CGAZ_Mirrored_Info" tags="cgaz">
 							<RadioButton group="accelmirrorenable" text="#Common_Off" value="0" />
 							<RadioButton group="accelmirrorenable" text="#Common_On" value="1" />
 						</SettingsEnum>
 
-						<ConVarEnabler convar="mom_hud_df_accel_mirror" class="flow-down">
-							<SettingsSlider text="#Settings_Defrag_CGAZ_MirrorBorder" min="0" max="10" convar="mom_hud_df_accel_mirror_border" displayprecision="0" infomessage="#Settings_Defrag_CGAZ_MirrorBorder_Info" tags="cgaz" />
+						<ConVarEnabler convar="mom_hud_df_cgaz_mirror" class="flow-down">
+							<SettingsSlider text="#Settings_Defrag_CGAZ_MirrorBorder" min="0" max="10" convar="mom_hud_df_cgaz_mirror_border" displayprecision="0" infomessage="#Settings_Defrag_CGAZ_MirrorBorder_Info" tags="cgaz" />
 						</ConVarEnabler>
 
-						<SettingsEnum text="#Settings_Defrag_CGAZ_True" convar="mom_hud_df_accel_scale" infomessage="#Settings_Defrag_CGAZ_True_Info" tags="cgaz">
+						<SettingsEnum text="#Settings_Defrag_CGAZ_True" convar="mom_hud_df_cgaz_scale" infomessage="#Settings_Defrag_CGAZ_True_Info" tags="cgaz">
 							<RadioButton group="accelscaleenable" text="#Common_Off" value="0" />
 							<RadioButton group="accelscaleenable" text="#Common_On" value="1" />
 						</SettingsEnum>
