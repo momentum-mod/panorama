@@ -197,6 +197,7 @@ class ZoneMenuHandler {
 		$.RegisterForUnhandledEvent('OnRegionEditCompleted', (region) => this.onRegionEditCompleted(region));
 		$.RegisterForUnhandledEvent('OnRegionEditCanceled', () => this.onRegionEditCanceled());
 		$.RegisterForUnhandledEvent('LevelInitPostEntity', () => this.onLevelInit());
+		$.RegisterForUnhandledEvent('ActiveZoneDefsChanged', () => this.onActiveZoneDefsChanged());
 	}
 
 	initialize() {
@@ -217,6 +218,11 @@ class ZoneMenuHandler {
 
 	onLevelInit() {
 		this.initialize();
+	}
+
+	onActiveZoneDefsChanged() {
+		this.mapZoneData = MomentumTimerAPI.GetActiveZoneDefs();
+		this.updateSelection(this.selectedZone ?? {});
 	}
 
 	getZoneData() {
@@ -1604,10 +1610,14 @@ class ZoneMenuHandler {
 
 	cancelEdit() {
 		this.mapZoneData = null;
-
+		this.selectedZone = {
+			track: null as MainTrack | BonusTrack | null,
+			segment: null as Segment | null,
+			zone: null as Zone | null,
+			globalRegion: null
+		};
+		this.panels.zoningMenu.updateEditorRegions([]);
 		MomentumTimerAPI.LoadZoneDefs(this.useLocal ?? false);
-
-		this.updateSelection({});
 	}
 
 	isStartZone(zone: Zone | null): boolean {
