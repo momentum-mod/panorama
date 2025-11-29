@@ -368,8 +368,8 @@ $input-background-hover: rgb(110, 110, 110);
 		margin-top: 12px;
 		width: fit-children;
 
-		border: 1px solid $border;
-		border-bottom-width: 0px;
+		border: 1px $border none;
+		//border-bottom-width: 0px;
 		background-color: rgba(0, 0, 0, 0.7);
 		padding: 2px 8px;
 
@@ -390,9 +390,13 @@ $input-background-hover: rgb(110, 110, 110);
 	&__main {
 		height: 100%;
 		width: 100%;
-		border: 1px solid $border;
+		border: 1px none $border;
 		margin: 32px;
 		transition: background-color 0.1s ease-in-out 0s;
+
+		.hud-customizer-overlay--selected-border {
+			border-style: solid;
+		}
 
 		.hud-customizer-overlay--dragging & {
 			animation-name: hud-customizer-overlay-blink;
@@ -404,13 +408,13 @@ $input-background-hover: rgb(110, 110, 110);
 		@at-root {
 			@keyframes hud-customizer-overlay-blink {
 				0% {
-					background-color: rgba($blue, 0.05);
-				}
-				50% {
 					background-color: rgba($blue, 0.1);
 				}
+				50% {
+					background-color: rgba($blue, 0.2);
+				}
 				100% {
-					background-color: rgba($blue, 0.05);
+					background-color: rgba($blue, 0.1);
 				}
 			}
 		}

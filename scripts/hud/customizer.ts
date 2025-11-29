@@ -38,6 +38,8 @@ interface ComponentLayout {
 export interface HudLayout {
 	components: Record<string, ComponentLayout>;
 	settings: {
+		selectOnHover: boolean;
+		selectedBorder: boolean;
 		enableGrid: boolean;
 		gridSize: number;
 		enableSnapping: boolean;
@@ -72,9 +74,6 @@ interface Gridline {
 
 type GridlineForAxis = [Gridline[], Gridline[]];
 
-const DEFAULT_GRID_SIZE = 5;
-const DEFAULT_GRID_ENABLED = true;
-const DEFAULT_SNAP_ENABLED = true;
 const MAX_X_POS = 1920;
 const MAX_Y_POS = 1080;
 
@@ -86,9 +85,6 @@ const CENTER_SNAPPING_THRESHOLD = 0.15;
 
 // Margin around the overlay panel. Needed so that resize handles etc. don't get cut off.
 const OVERLAY_MARGIN = 32;
-
-// TODO: This behaviour is super annoying, almost certainly want to remove
-const SELECT_COMPONENT_ON_HOVER = false;
 
 interface DynamicStyle {
 	properties: Readonly<DynamicStyleProperties>;
@@ -364,6 +360,8 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		activeComponentSettingsList: $<Panel>('#ActiveComponentSettingsList')!,
 		resizeKnobs: $<Panel>('#ResizeKnobs')!,
 		grid: $.GetContextPanel().GetParent()!.FindChildTraverse('HudCustomizerGrid')!,
+		selectedBorder: $<ToggleButton>('#SelectedBorder')!,
+		selectOnHoverToggle: $<ToggleButton>('#SelectOnHover')!,
 		gridToggle: $<ToggleButton>('#GridToggle')!,
 		gridSize: $<NumberEntry>('#GridSize')!,
 		snappingToggle: $<ToggleButton>('#SnappingToggle')!
@@ -383,6 +381,8 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 	dragMode?: DragMode;
 
+	selectedBorder: boolean = undefined!;
+	selectOnHover: boolean = undefined!;
 	gridSize: number = undefined!;
 	enableGrid: boolean = undefined!;
 	enableSnapping: boolean = undefined!;
@@ -394,14 +394,13 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		registerHUDCustomizerComponent(this.panels.settings, {
 			dragPanel: $('#CustomizerSettingsHeader')!,
 			resizeY: false,
-			resizeX: false,
-			// marginSettings: false,
-			// paddingSettings: false,
-			// backgroundSettings: false
+			resizeX: false
 		});
 
-		$.RegisterForUnhandledEvent('HudCustomizer_EnabledInternal', () => this.enableEditing());
-		$.RegisterForUnhandledEvent('HudCustomizer_Disabled', () => this.disableEditing());
+		// Registers the *internal* variant of this event -- HudCustomizer_OpenedInternal is dispatched first and lets
+		// components with special handling know to prepare for editing mode.
+		$.RegisterForUnhandledEvent('HudCustomizer_OpenedInternal', () => this.enableEditing());
+		$.RegisterForUnhandledEvent('HudCustomizer_Closed', () => this.disableEditing());
 
 		// TODO: Below todo is *probably* fine now using events like this, but be very careful everything
 		// is getting registered okay.
@@ -424,14 +423,22 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		this.activeComponent = undefined;
 
 		this.layout = this.panels.customizer.getLayout();
+		this.defaultLayout = this.panels.customizer.getDefaultLayout();
 
-		this.gridSize = this.layout?.settings?.gridSize ?? DEFAULT_GRID_SIZE;
+		this.selectedBorder =
+			this.layout?.settings?.selectedBorder ?? this.defaultLayout?.settings?.selectedBorder ?? true;
+
+		this.selectOnHover =
+			this.layout?.settings?.selectOnHover ?? this.defaultLayout?.settings?.selectOnHover ?? false;
+
+		this.gridSize = this.layout?.settings?.gridSize ?? this.defaultLayout?.settings?.gridSize ?? 5;
 		this.panels.gridSize.value = this.gridSize;
 
-		this.enableGrid = this.layout?.settings?.enableGrid ?? DEFAULT_GRID_ENABLED;
+		this.enableGrid = this.layout?.settings?.enableGrid ?? this.defaultLayout?.settings?.enableGrid ?? true;
 		this.panels.gridToggle.checked = this.enableGrid;
 
-		this.enableSnapping = this.layout?.settings?.enableSnapping ?? DEFAULT_SNAP_ENABLED;
+		this.enableSnapping =
+			this.layout?.settings?.enableSnapping ?? this.defaultLayout?.settings?.enableSnapping ?? true;
 		this.panels.snappingToggle.checked = this.enableSnapping;
 
 		this.panels.activeComponentSettings.visible = false;
@@ -439,6 +446,9 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		this.fonts = UiToolkitAPI.GetSortedValidFontNames().toSorted((a, b) => a.localeCompare(b));
 
 		UiToolkitAPI.GetGlobalObject()['HudCustomizerHandler'] = this;
+
+		// Display editing in case was enabled before a reload -- state is convar-based so persists across HUD reloads.
+		this.panels.customizer.toggleUI(false);
 	}
 
 	/**
@@ -461,6 +471,8 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		// cause previous data to get wiped.
 		const saveData: HudLayout = {
 			settings: {
+				selectedBorder: this.selectedBorder,
+				selectOnHover: this.selectOnHover,
 				gridSize: this.gridSize,
 				enableGrid: this.enableGrid,
 				enableSnapping: this.enableSnapping
@@ -481,14 +493,8 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			throw new Error("HudCustomizer: Tried to enable editing, but we weren't loaded!");
 		}
 
-		if (SELECT_COMPONENT_ON_HOVER) {
-			for (const component of Object.values(this.components)) {
-				if (component.dragPanel) {
-					component.dragPanel.SetPanelEvent('onmouseover', () => this.setActiveComponent(component));
-				} else {
-					component.panel.SetPanelEvent('onmouseover', () => this.setActiveComponent(component));
-				}
-			}
+		if (this.selectOnHover) {
+			this.toggleSelectOnHover(true);
 		}
 
 		this.createGridLines();
@@ -497,26 +503,13 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 		this.activeComponent ??= this.components[Object.keys(this.components)[0]];
 
-		// // Some components like Comparisons need to populate themselves with dummy data when editing gets enabled.
-		// // If they're going to be the first component selected, we need to wait until they finish initing before
-		// // setting them active.
-		// if (this.activeComponent.properties.asyncInit) {
-		// 	const handle = $.RegisterForUnhandledEvent('HudCustomizer_ComponentInitialized', () => {
-		// 		this.setActiveComponent(this.activeComponent!);
-		// 		$.UnregisterForUnhandledEvent('HudCustomizer_ComponentInitialized', handle);
-		// 	});
-		// } else {
-			this.setActiveComponent(this.activeComponent);
-		// }
+		this.setActiveComponent(this.activeComponent);
+		this.waitForActiveComponentLayouting();
 	}
 
 	disableEditing(): void {
-		for (const component of Object.values(this.components)) {
-			if (component.dragPanel) {
-				component.dragPanel.ClearPanelEvent('onmouseover');
-			} else {
-				component.panel.ClearPanelEvent('onmouseover');
-			}
+		if (this.selectOnHover) {
+			this.toggleSelectOnHover(false);
 		}
 
 		if (this.dragStartHandle) {
@@ -534,10 +527,14 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 	 * - Game input -- currently *handled* mouse events, and key inputs,
 	 * - The `hud--customizer-enabled` class on the `<Hud />` panel,
 	 * - `hittestchildren` on `<HudCustomizer />`,
-	 * - Dispatches `HudCustomizer_Enabled` or `HudCustomizer_Disabled`.
+	 * - Dispatches `HudCustomizer_OpenedInternal` or `HudCustomizer_Closed`.
 	 */
 	toggle(enable: boolean) {
 		this.panels.customizer.toggleUI(enable);
+	}
+
+	isOpen(): boolean {
+		return this.panels.customizer.isOpen();
 	}
 
 	generateComponentList() {
@@ -598,6 +595,43 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 	setActiveComponentInternal(component: Component): void {
 		this.activeComponent = component;
 
+		this.panels.overlay.SetDialogVariable('name', this.activeComponent.panel.id);
+		this.updateActiveComponentOverlayPosition();
+		this.updateActiveComponentSettings();
+		this.updateActiveComponentDialogVars();
+
+		this.panels.overlay.SetHasClass('hud-customizer-overlay--selected-border', this.selectedBorder);
+
+		// CSS handles visibility of appropriate knobs based on this
+		this.panels.resizeKnobs.SetHasClass(
+			'hud-customizer-overlay__resize-knobs--resize-x',
+			component.properties.resizeX
+		);
+		this.panels.resizeKnobs.SetHasClass(
+			'hud-customizer-overlay__resize-knobs--resize-y',
+			component.properties.resizeY
+		);
+
+		// Set up drag handles
+		if (this.dragStartHandle) {
+			$.UnregisterEventHandler('DragStart', this.panels.dragPanel, this.dragStartHandle);
+		}
+		this.dragStartHandle = $.RegisterEventHandler('DragStart', this.panels.dragPanel, (...args) => {
+			this.onStartDrag(DragMode.MOVE, this.panels.dragPanel, ...args);
+		});
+		if (this.dragEndHandle) {
+			$.UnregisterEventHandler('DragEnd', this.panels.dragPanel, this.dragEndHandle);
+		}
+		this.dragEndHandle = $.RegisterEventHandler('DragEnd', this.panels.dragPanel, () => {
+			this.onEndDrag();
+		});
+	}
+
+	updateActiveComponentOverlayPosition(): void {
+		const component = this.activeComponent;
+
+		if (!component) return;
+
 		// If a width is provided in the config, use that. Otherwise, we let the component's size get set by
 		// fit-children -- for lots of components this is essential.
 		const width = component.width ?? LayoutUtil.getWidth(component.panel);
@@ -633,34 +667,6 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 				LayoutUtil.getHeight(component.dragPanel)
 			);
 		}
-
-		this.panels.overlay.SetDialogVariable('name', this.activeComponent.panel.id);
-		this.updateActiveComponentSettings();
-		this.updateActiveComponentDialogVars();
-
-		// CSS handles visibility of appropriate knobs based on this
-		this.panels.resizeKnobs.SetHasClass(
-			'hud-customizer-overlay__resize-knobs--resize-x',
-			component.properties.resizeX
-		);
-		this.panels.resizeKnobs.SetHasClass(
-			'hud-customizer-overlay__resize-knobs--resize-y',
-			component.properties.resizeY
-		);
-
-		// Set up drag handles
-		if (this.dragStartHandle) {
-			$.UnregisterEventHandler('DragStart', this.panels.dragPanel, this.dragStartHandle);
-		}
-		this.dragStartHandle = $.RegisterEventHandler('DragStart', this.panels.dragPanel, (...args) => {
-			this.onStartDrag(DragMode.MOVE, this.panels.dragPanel, ...args);
-		});
-		if (this.dragEndHandle) {
-			$.UnregisterEventHandler('DragEnd', this.panels.dragPanel, this.dragEndHandle);
-		}
-		this.dragEndHandle = $.RegisterEventHandler('DragEnd', this.panels.dragPanel, () => {
-			this.onEndDrag();
-		});
 	}
 
 	updateActiveComponentSettings(): void {
@@ -691,9 +697,10 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 					}
 
 					numberEntry.value = (component.dynamicStyles[styleID]?.value as number) ?? 0;
-					numberEntry.SetPanelEvent('onvaluechanged', () =>
-						component.setDynamicStyle(styleID, numberEntry.value)
-					);
+					numberEntry.SetPanelEvent('onvaluechanged', () => {
+						component.setDynamicStyle(styleID, numberEntry.value);
+						this.updateActiveComponentOverlayPosition();
+					});
 
 					break;
 				}
@@ -709,7 +716,10 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 					checkbox.checked = (component.dynamicStyles[styleID]?.value as boolean) ?? false;
 
-					checkbox.SetPanelEvent('onactivate', () => component.setDynamicStyle(styleID, checkbox.checked));
+					checkbox.SetPanelEvent('onactivate', () => {
+						component.setDynamicStyle(styleID, checkbox.checked);
+						this.updateActiveComponentOverlayPosition();
+					});
 
 					break;
 				}
@@ -719,9 +729,9 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 					const colorDisplay = panel.FindChildTraverse<ColorDisplay>('ColorDisplay')!;
 					colorDisplay.text = dynamicStyle.properties.name;
-					colorDisplay.SetPanelEvent('oncolorchange', () =>
-						component.setDynamicStyle(styleID, colorDisplay.color)
-					);
+					colorDisplay.SetPanelEvent('oncolorchange', () => {
+						component.setDynamicStyle(styleID, colorDisplay.color);
+					});
 
 					// We use hex for display here since it's more compact, but internally is rgba
 					// since that's what PanoramaTypeToV8Param<Color> uses, don't want to change that.
@@ -750,8 +760,40 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 						component.setDynamicStyle(styleID, value);
 					});
 					dropdown.SetSelected(component.dynamicStyles[styleID]?.value as string);
+					this.updateActiveComponentOverlayPosition();
 				}
 			}
+		}
+	}
+
+	// Hacky stuff to wait for layouting to finish if needed. Hate doing this, but Panorama doesn't expose any
+	// kind of event for layout traversal completion to JS (and I *really* don't want to add that, too low level).
+	waitForActiveComponentLayouting(): void {
+		const component = this.activeComponent;
+
+		if (!component) return;
+
+		const expectedW = component.properties.expectedMinWidth ?? 0;
+		const expectedH = component.properties.expectedMinHeight ?? 0;
+		if (component.properties.expectedMinWidth || component.properties.expectedMinHeight) {
+			let w = component.panel.actuallayoutwidth ?? 0;
+			let h = component.panel.actuallayoutheight ?? 0;
+			let iters = 0;
+			const handle = $.RegisterForUnhandledEvent('HudThink', () => {
+				w = component.panel.actuallayoutwidth ?? 0;
+				h = component.panel.actuallayoutwidth ?? 0;
+				iters++;
+				if ((w >= expectedW && h >= expectedH) || iters > 500) {
+					if (iters > 500) {
+						$.Warning(
+							`HudCustomizer: Expected size for component ${component.id} not reached after 500 frames! Killing HudThink handler.`
+						);
+					}
+
+					this.updateActiveComponentOverlayPosition();
+					$.UnregisterForUnhandledEvent('HudThink', handle);
+				}
+			});
 		}
 	}
 
@@ -761,6 +803,26 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		// Calling this ensures overlay panel and stuff get updated if you have the component selected already.
 		// If you don't, you probably want it to be!
 		this.setActiveComponent(component);
+	}
+
+	toggleSelectOnHover(enabled: boolean): void {
+		if (enabled) {
+			for (const component of Object.values(this.components)) {
+				if (component.dragPanel) {
+					component.dragPanel.SetPanelEvent('onmouseover', () => this.setActiveComponent(component));
+				} else {
+					component.panel.SetPanelEvent('onmouseover', () => this.setActiveComponent(component));
+				}
+			}
+		} else {
+			for (const component of Object.values(this.components)) {
+				if (component.dragPanel) {
+					component.dragPanel.ClearPanelEvent('onmouseover');
+				} else {
+					component.panel.ClearPanelEvent('onmouseover');
+				}
+			}
+		}
 	}
 
 	onStartDrag(mode: DragMode, displayPanel: Panel, _panelID: string, callback: DragEventInfo) {
@@ -1131,6 +1193,16 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 				this.resizeKnobs[dir] = knob;
 			});
+	}
+
+	toggleSelectedBorder(): void {
+		this.selectedBorder = this.panels.selectedBorder.checked;
+		this.panels.overlay.SetHasClass('hud-customizer-overlay--selected-border', this.selectedBorder);
+	}
+
+	updateSelectOnHover(): void {
+		this.selectOnHover = this.panels.selectOnHoverToggle.checked;
+		this.toggleSelectOnHover(this.selectOnHover);
 	}
 }
 

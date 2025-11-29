@@ -3,9 +3,6 @@ import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/h
 registerHUDCustomizerComponent($.GetContextPanel(), {
 	resizeX: true,
 	resizeY: true,
-	marginSettings: true,
-	paddingSettings: false,
-	backgroundSettings: false,
 	dynamicStyles: {
 		showTyping: {
 			name: 'Show Users Typing',
