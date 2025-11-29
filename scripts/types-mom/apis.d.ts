@@ -11,7 +11,9 @@ declare namespace MomentumAPI {
 
 	/** Fetch new user data from backend, fires MomAPI_LocalUserUpdate when complete. */
 	function RefreshLocalUserData(): void;
-	
+
+	/** Whether local user is allowed to submit runs. */
+	function AllowRunSubmission(): boolean;
 
 	/** Gets the local players level */
 	function GetPlayerXp(): int32;
