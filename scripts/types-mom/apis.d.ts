@@ -3,11 +3,15 @@ type RunSplits = import('common/timer').RunSplits;
 type Gamemode = import('common/web/enums/gamemode.enum').Gamemode;
 
 declare namespace MomentumAPI {
-	/** Gets the entire User object with profile and stats. May be disk-cached data. */
-	function GetPlayerUserData(): import('common/web/types/models/models').User;
+	/** Whether we're currently authenticated with the backend. */
+	function IsAuthenticated(): boolean;
 
-	/** Fetch new user data from backend, fires MomAPI_UserUpdate when complete. */
-	function RefreshPlayerUserData(): void;
+	/** Gets the entire User object with profile and stats. May be disk-cached data. */
+	function GetLocalUserData(): import('common/web/types/models/models').User;
+
+	/** Fetch new user data from backend, fires MomAPI_LocalUserUpdate when complete. */
+	function RefreshLocalUserData(): void;
+	
 
 	/** Gets the local players level */
 	function GetPlayerXp(): int32;

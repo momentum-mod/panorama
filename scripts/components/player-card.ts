@@ -11,7 +11,7 @@ export class PlayerCardHandler implements OnPanelLoad {
 
 	onPanelLoad() {
 		this.update();
-		$.RegisterForUnhandledEvent('MomAPI_UserUpdate', (_user: User) => this.update());
+		$.RegisterForUnhandledEvent('MomAPI_LocalUserUpdate', (_user: User) => this.update());
 	}
 
 	update() {
