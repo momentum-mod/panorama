@@ -346,17 +346,21 @@ class MainMenuHandler implements OnPanelLoad {
 
 	onAuthenticated(result: MomentumAPI.AuthenicationResult) {
 		if (result === MomentumAPI.AuthenicationResult.SUCCESS) {
-			if ((MomentumAPI.GetPlayerUserData().roles & Role.LIMITED) !== 0) {
-				UiToolkitAPI.ShowGenericPopupTwoOptions(
-					'#API_Auth_LimitedSteamAccount',
-					'#API_Auth_LimitedSteamAccount_Info',
-					'wide-popup',
-					'#API_Auth_LimitedSteamAccount_Link',
-					() => SteamOverlayAPI.OpenURL('https://help.steampowered.com/en/faqs/view/71D3-35C2-AD96-AA3A'),
-					'#Common_OK',
-					() => {}
-				);
-			}
+			const handle = $.RegisterForUnhandledEvent('MomAPI_LocalUserUpdate', (user) => {
+				if ((user.roles & Role.LIMITED) !== 0) {
+					UiToolkitAPI.ShowGenericPopupTwoOptions(
+						'#API_Auth_LimitedSteamAccount',
+						'#API_Auth_LimitedSteamAccount_Info',
+						'wide-popup',
+						'#API_Auth_LimitedSteamAccount_Link',
+						() => SteamOverlayAPI.OpenURL('https://help.steampowered.com/en/faqs/view/71D3-35C2-AD96-AA3A'),
+						'#Common_OK',
+						() => {}
+					);
+				}
+
+				$.UnregisterForUnhandledEvent('MomAPI_LocalUserUpdate', handle);
+			});
 
 			return;
 		}
