@@ -222,6 +222,8 @@ class EndOfRunHandler {
 		} else {
 			this.setSingleRunStats();
 		}
+
+		this.panels.uploadStatus.visible = MomentumAPI.AllowRunSubmission();
 	}
 
 	/**
