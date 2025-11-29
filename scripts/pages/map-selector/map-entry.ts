@@ -5,6 +5,7 @@ import { MapStatus, MapStatuses } from 'common/web/enums/map-status.enum';
 import { GamemodeInfo } from 'common/gamemode';
 import { getUserMapDataTrack } from 'common/leaderboard';
 import { getTier, handlePlayMap } from 'common/maps';
+import { Role } from 'common/web/enums/role.enum';
 
 const NEW_MAP_BANNER_CUTOFF = 1000 * 60 * 60 * 24 * 5; // 5 days
 
@@ -98,20 +99,23 @@ class MapEntryHandler {
 				});
 			}
 		}
-		if (mapData.userData?.inFavorites) {
-			items.push({
-				label: $.Localize('#Action_RemoveFromFavorites'),
-				icon: 'file://{images}/favorite-remove.svg',
-				style: 'icon-color-yellow',
-				jsCallback: () => $.DispatchEvent('MapSelector_ToggleMapFavorite', mapID, false)
-			});
-		} else {
-			items.push({
-				label: $.Localize('#Action_AddToFavorites'),
-				icon: 'file://{images}/star.svg',
-				style: 'icon-color-yellow',
-				jsCallback: () => $.DispatchEvent('MapSelector_ToggleMapFavorite', mapID, true)
-			});
+
+		if ((MomentumAPI.GetLocalUserData().roles & Role.LIMITED) === 0) {
+			if (mapData.userData?.inFavorites) {
+				items.push({
+					label: $.Localize('#Action_RemoveFromFavorites'),
+					icon: 'file://{images}/favorite-remove.svg',
+					style: 'icon-color-yellow',
+					jsCallback: () => $.DispatchEvent('MapSelector_ToggleMapFavorite', mapID, false)
+				});
+			} else {
+				items.push({
+					label: $.Localize('#Action_AddToFavorites'),
+					icon: 'file://{images}/star.svg',
+					style: 'icon-color-yellow',
+					jsCallback: () => $.DispatchEvent('MapSelector_ToggleMapFavorite', mapID, true)
+				});
+			}
 		}
 
 		UiToolkitAPI.ShowSimpleContextMenu('', 'ControlsLibSimpleContextMenu', items);
