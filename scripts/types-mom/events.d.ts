@@ -380,11 +380,14 @@ interface GlobalEventNameMap {
 	/** Called when the player completes a safeguarded command. */
 	OnSafeguardCommandComplete: () => void;
 
-	/** Called when HUD layout has been enabled. */
-	HudCustomizer_Enabled: () => void;
+	/** Called when HUD customizer edit UI has been enabled. */
+	HudCustomizer_Opened: () => void;
+	
+	/** Called when HUD customizer edit UI has been enabled, straight after Closed. Just for use in customizer.ts! */
+	HudCustomizer_OpenedInternal: () => void;
 
-	/** Called when HUD layout has been disabled. */
-	HudCustomizer_Disabled: () => void;
+	/** Called when HUD customizer edit UI has been disabled. */
+	HudCustomizer_Closed: () => void;
 
 	/** Called when HUD layout has been loaded. */
 	HudCustomizer_LayoutLoaded: (success: boolean) => void;

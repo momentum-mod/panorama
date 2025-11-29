@@ -52,7 +52,12 @@
 				<Image class="hud-customizer-settings__header__close" onactivate="HudCustomizerHandler.toggle(false)" src="file://{images}/close.svg" />
 			</Panel>
 			<Panel class="hud-customizer-settings__global">
-				<!-- i18n -->
+				<ToggleButton id="SelectedBorder" class="checkbox hud-customizer-settings__row hud-customizer-settings__checkbox" onactivate="HudCustomizerHandler.toggleSelectedBorder()">
+					<Label class="hud-customizer-settings__setting-label" text="Enable Selected Component Border" />
+				</ToggleButton>
+				<ToggleButton id="SelectOnHover" class="checkbox hud-customizer-settings__row hud-customizer-settings__checkbox" onactivate="HudCustomizerHandler.updateSelectOnHover()">
+					<Label class="hud-customizer-settings__setting-label" text="Select Component on Hover" />
+				</ToggleButton>
 				<ToggleButton id="GridToggle" class="checkbox hud-customizer-settings__row hud-customizer-settings__checkbox" onactivate="HudCustomizerHandler.updateGridVisibility()">
 					<Label class="hud-customizer-settings__setting-label" text="Enable Grid" />
 				</ToggleButton>

@@ -150,32 +150,37 @@ export interface CustomizerComponentProperties {
 
 	/** Allow resizing in the Y direction. */
 	resizeY: boolean;
-	//
-	// /** Generate margin settings. */
-	// marginSettings: boolean;
-	//
-	// paddingSettings: boolean;
-	//
-	// backgroundSettings: boolean;
-	//
-	// /**
-	//  * Whether the component needs to initialize itself with dummy data.
-	//  * If so, it must fire HudCustomizer_ComponentInitialized when done.
-	//  */
-	// asyncInit?: boolean;
 
+	/** Panel to use as the drag handle for moving the component. If not provided, whole panel is draggable. */
 	dragPanel?: GenericPanel;
 
 	// TODO: impl me. don't let people disable the settings menu lol
 	canDisabled?: boolean;
+
+	/**
+	 * Expected minimum width of a component once it's been layed out in edit mode.
+	 *
+	 * This is for when layouting in edit mode can take multiple frames (currently happening with Comparisons).
+	 * If provided, customizer will listen to the HudThink event and wait until the panel's width is at least
+	 * this value so it can position the overlay panel correctly.
+	 * 
+	 * If layouting takes more than 500 frames, we give up and just use whatever size the panel is at.
+	 */
+	expectedMinWidth?: number;
+
+	/** @see expectedMinWidth */
+	expectedMinHeight?: number;
 
 	/** Styling properties of provided panel or children, for which we generate UI and store values for. */
 	dynamicStyles?: MappedStyles;
 }
 
 export interface IHudCustomizerHandler {
-	/** Enable or disable the HUD customizer UI. */
+	/** Open or close the HUD customizer UI. */
 	toggle(enable: boolean): void;
+
+	/** Whether the HUD customizer edit UI is open. */
+	isOpen(): boolean;
 
 	/**
 	 * Load a customizable HUD component.

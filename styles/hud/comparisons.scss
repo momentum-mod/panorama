@@ -70,7 +70,6 @@
 
 	&__name {
 		font-family: $font-header;
-		margin-right: 16px;
 		color: #e0e0e0;
 		padding-top: 1px;
 
@@ -80,11 +79,12 @@
 	}
 
 	&__time {
+		margin-left: 16px;
 		font-weight: medium;
-		margin-right: 14px;
 	}
 
 	&__diff {
+		margin-left: 14px;
 		font-weight: bold;
 		horizontal-align: right;
 

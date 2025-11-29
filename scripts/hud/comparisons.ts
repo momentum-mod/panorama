@@ -4,10 +4,11 @@ import {
 	BackgroundColorStyle,
 	BorderStyles,
 	CustomizerPropertyType,
+	getHudCustomizer,
 	MarginStyles,
 	PaddingStyles,
 	registerHUDCustomizerComponent
-} from '../common/hud-customizer';
+} from 'common/hud-customizer';
 
 // MomTV networking limits max numbers of networked splits to 10; this value is
 // immutable and used to build out our split panel arrays.
@@ -155,23 +156,25 @@ class HudComparisonsHandler {
 			this.clearSplits();
 		});
 
-		$.RegisterForUnhandledEvent('HudCustomizer_Enabled', () => {
+		let tempComparison: any;
+		let tempReplayID: any;
+		$.RegisterForUnhandledEvent('HudCustomizer_Opened', () => {
 			// Usually players using HUD customizer won't be in a run, so generate dummy splits. If they *are* in a run,
 			// don't alter them in any way.
 			const { state } = MomentumTimerAPI.GetObservedTimerStatus();
 
 			if (state === Timer.TimerState.DISABLED || state === Timer.TimerState.PRIMED) {
+				tempComparison = this.comparison;
+				tempReplayID = this.controlledReplayID;
 				this.createDummySplits();
 			}
-
-			$.Schedule(0, () => {
-				$.DispatchEvent('HudCustomizer_ComponentInitialized');
-			});
 		});
 
-		$.RegisterForUnhandledEvent('HudCustomizer_Disabled', () => {
+		$.RegisterForUnhandledEvent('HudCustomizer_Closed', () => {
 			const { state } = MomentumTimerAPI.GetObservedTimerStatus();
 			if (state === Timer.TimerState.DISABLED || state === Timer.TimerState.PRIMED) {
+				this.comparison = tempComparison;
+				this.controlledReplayID = tempReplayID;
 				this.clearSplits();
 			}
 		});
@@ -179,13 +182,24 @@ class HudComparisonsHandler {
 		registerHUDCustomizerComponent($.GetContextPanel(), {
 			resizeX: false,
 			resizeY: false,
+			// Layouting out dummy splits can take like 100 (!!) frames in debug, until then the panel has 0 and overlay
+			// panel gets mispositioned. So just wait until width is at least 64px.
+			expectedMinWidth: 64,
 			dynamicStyles: {
 				...MarginStyles,
 				...PaddingStyles,
+				// TODO(customizer): Currently always takes up full height, so background takes up a lot of space.
+				// Adding making empty rows 0-height is quite hard, if doing so, try to follow the layouting and CSS
+				// carefully before changing, it's complicated!
+				// Also if someone wanted this is a flow group, the height shifts would be very annoying, maybe put the
+				// fixed height behaviour being a checkbox.
 				...BackgroundColorStyle,
+				// TODO(customizer): Border is visible when you have no comparisons (e.g. in start zone).
+				// Need to apply a class to outermost panel conditionally.
 				...BorderStyles,
-				// TODO: Blurring blurs the entire panel, not the backbuffer. Adding #ChatInput to #HudBlur's blurrects has
-				// same issue, no idea what's different about that panel from say, TabMenu/Spectator
+				// TODO(customizer): Blurring blurs the entire panel, not the backbuffer. Adding #ChatInput to
+				// #HudBlur's blurrects has same issue, no idea what's different about that panel from say,
+				// TabMenu/Spectator.
 				blur: {
 					name: 'Background Blur',
 					type: CustomizerPropertyType.CHECKBOX,
@@ -199,7 +213,6 @@ class HudComparisonsHandler {
 					}
 				}
 			}
-			// asyncInit: true
 		});
 	}
 
@@ -342,14 +355,15 @@ class HudComparisonsHandler {
 
 		const { trackId } = MomentumTimerAPI.GetObservedTimerStatus();
 		const hasComparison =
-			split.hasComparison &&
-			// hasUniqueComparison is based on controlledReplayID which is updated whenever observed timer
-			// changes, so `split` will be derived from current timer
-			this.hasUniqueComparison() &&
-			// Ensure we're definitely on the same track, currently possible that the comparison could be
-			// on a different one
-			trackId.type === this.comparison.trackId.type &&
-			trackId.number === this.comparison.trackId.number;
+			getHudCustomizer()?.isOpen() ||
+			(split.hasComparison &&
+				// hasUniqueComparison is based on controlledReplayID which is updated whenever observed timer
+				// changes, so `split` will be derived from current timer
+				this.hasUniqueComparison() &&
+				// Ensure we're definitely on the same track, currently possible that the comparison could be
+				// on a different one
+				trackId.type === this.comparison.trackId.type &&
+				trackId.number === this.comparison.trackId.number);
 
 		diff.SetHasClass('hud-splits__diff--hidden', !hasComparison);
 
@@ -383,15 +397,22 @@ class HudComparisonsHandler {
 	}
 
 	createDummySplits() {
+		const times = new Array(MAX_SPLITS);
+		let t = 0;
 		for (let i = 0; i < MAX_SPLITS; i++) {
-			this.updateSplit(this.splitRows[i], {
+			t += 10 + Math.random() * 10;
+			times[i] = t;
+		}
+
+		for (let i = MAX_SPLITS - 1; i >= 0; i--) {
+			this.updateSplit(this.splitRows[MAX_SPLITS - 1 - i], {
 				majorNum: i + 1,
 				minorNum: 1,
 				segmentsCount: MAX_SPLITS,
 				segmentCheckpointsCount: 1,
 				name: `${i + 1}`,
-				time: (i + 1) * 10,
-				segmentTime: 10,
+				time: times[i],
+				segmentTime: times[i],
 				delta: Math.random() * 4 - 2,
 				diff: Math.random() * 4 - 2,
 				hasComparison: true

@@ -202,9 +202,15 @@ interface HudCustomizer extends AbstractPanel<'HudCustomizer'> {
 	/**
 	 * Enables/disables HUD customizer mode.
 	 * Must be in map.
-	 * Same as mom_hudcustomizer_enable.
+	 * Same as toggling mom_hudcustomizer_open 0/1.
 	 * */
 	toggleUI(enabled: boolean): void;
+
+	/**
+	 * Whether the HUD customizer UI is open.
+	 * Precisely, it's whether the input capture is enabled.
+	 */
+	isOpen(): boolean;
 
 	/** Saves the given object to cfg/hud.json. */
 	saveLayout(data: import('hud/customizer').HudLayout): void;
