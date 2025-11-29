@@ -15,7 +15,7 @@ class ProfileHandler implements OnPanelLoad {
 	onPanelLoad() {
 		this.update();
 
-		$.RegisterForUnhandledEvent('MomAPI_UserUpdate', (user: User) => {
+		$.RegisterForUnhandledEvent('MomAPI_LocalUserUpdate', (user: User) => {
 			this.user = user;
 			this.update();
 		});

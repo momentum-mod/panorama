@@ -358,7 +358,7 @@ interface GlobalEventNameMap {
 	LeaderboardEntry_DeleteReplay: (itemIndex: int32) => void;
 
 	/** Fired when local user data is loaded from disk or fetched from backend. */
-	MomAPI_UserUpdate: (user: import('common/web/types/models/models').User) => void;
+	MomAPI_LocalUserUpdate: (user: import('common/web/types/models/models').User) => void;
 
 	/** Fired on API authenticate success or failure. */
 	MomAPI_Authenticated: (result: MomentumAPI.AuthenicationResult) => void;
