@@ -215,6 +215,40 @@
 
 			<Panel class="settings-page__spacer" />
 
+			<Panel id="AhopSubSection" class="settings-group">
+				<Panel class="settings-group__header">
+					<Label class="settings-group__title" text="#Settings_Ahop_Title" tags="ahop, sprint" />
+					<Panel class="flow-right h-align-right">
+						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_Ahop_Title', 'AhopSubSection')">
+							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
+						</Button>
+						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
+							<Button class="button" onactivate="SettingsPage.resetSettings('AhopSubSection');">
+								<Image class="button__icon" src="file://{images}/reset.svg" />
+							</Button>
+						</TooltipPanel>
+					</Panel>
+				</Panel>
+
+				<SettingsEnum text="#Settings_Ahop_Sprint_Enable" convar="mom_hud_ahop_sprint_enable" infomessage="#Settings_Ahop_Sprint_Enable_Info" tags="ahop, sprint">
+						<RadioButton group="sprintenable" text="#Common_Off" value="0" />
+						<RadioButton group="sprintenable" text="#Common_On" value="1" />
+				</SettingsEnum>
+
+				<ConVarEnabler convar="mom_hud_ahop_sprint_enable" class="flow-down">
+					<SettingsSlider text="#Settings_Ahop_Sprint_Distance" min="10" max="200" value="40" convar="mom_hud_ahop_distance" displayprecision="0" infomessage="#Settings_Ahop_Sprint_Distance_Info" tags="distance, separation, width" />
+					<SettingsSlider text="#Settings_Ahop_Sprint_Size" min="10" max="200" convar="mom_hud_ahop_size" displayprecision="0" infomessage="#Settings_Ahop_Sprint_Distance_Info" tags="size, height" />
+					<SettingsSlider text="#Settings_Ahop_Sprint_Thickness" min="1" max="20" convar="mom_hud_ahop_thickness" displayprecision="1" infomessage="#Settings_Ahop_Sprint_Thickness_Info" tags="thickness, width" />
+					<SettingsSlider text="#Settings_Ahop_Sprint_Rotation" min="-90" max="90" convar="mom_hud_ahop_rotation" displayprecision="1" infomessage="#Settings_Ahop_Sprint_Rotation_Info" tags="rotation" />
+					<SettingsSlider text="#Settings_Ahop_Sprint_Arc_Length" min="10" max="360" convar="mom_hud_ahop_arclength" displayprecision="1" infomessage="#Settings_Ahop_Sprint_Arc_Length_Info" tags="arc, length" />
+					<ConVarColorDisplay text="#Settings_Ahop_Sprint_AvailableColor" convar="mom_hud_ahop_available_color" infomessage="#Settings_Ahop_Sprint_AvailableColor_Info" tags="sprint, available" />
+					<ConVarColorDisplay text="#Settings_Ahop_Sprint_ActiveColor" convar="mom_hud_ahop_active_color" infomessage="#Settings_Ahop_Sprint_ActiveColor_Info" tags="sprint, active" />
+					<ConVarColorDisplay text="#Settings_Ahop_Sprint_BlockedColor" convar="mom_hud_ahop_blocked_color" infomessage="#Settings_Ahop_Sprint_BlockedColor_Info" tags="sprint, blocked" />
+					<ConVarColorDisplay text="#Settings_Ahop_Sprint_DisabledColor" convar="mom_hud_ahop_disabled_color" infomessage="#Settings_Ahop_Sprint_DisabledColor_Info" tags="sprint, disabled" />
+				</ConVarEnabler>
+
+			</Panel>
+
 			<Panel id="RocketJumpSubSection" class="settings-group">
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_RJ_Title" tags="rj,rocketjump,soldier" />
