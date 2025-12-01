@@ -10,11 +10,11 @@
 		overflow: noclip noclip;
 	}
 
-	&__uncolored{
+	&__uncolored {
 		height: 100%;
 		background-color: $white;
 		opacity: 0;
-		
+
 		&--highlight {
 			margin: -2px;
 			border-width: 2px;
@@ -22,11 +22,11 @@
 		}
 	}
 
-	&__colored{
+	&__colored {
 		height: 100%;
-		background-color: $blue;
+		background-color: $white;
 		opacity: 0.6;
-		
+
 		&--highlight {
 			margin: -2px;
 			border-width: 2px;
