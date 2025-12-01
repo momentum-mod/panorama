@@ -2,6 +2,13 @@ import { PanelHandler } from 'util/module-helpers';
 import { RegisterHUDPanelForGamemode } from '../util/register-for-gamemodes';
 import { GamemodeCategory } from 'common/web/enums/gamemode.enum';
 import { GamemodeCategories } from 'common/web/maps/gamemodes.map';
+import { Button } from 'common/buttons';
+
+enum StrafeDirection {
+	None,
+	Left,
+	Right
+}
 
 @PanelHandler()
 class JumpStatsHandler {
@@ -27,34 +34,111 @@ class JumpStatsHandler {
 	distanceBuffer: string[];
 	efficiencyBuffer: string[];
 
+	//Temporary fix, MomentumMovementAPI.GetLastJumpStats().jumpCount and .strafeCount is always returning 0
+	jumpCounter = 0;
+	strafeCounter = 0;
+	prevStrafeDirection: StrafeDirection = StrafeDirection.None;
+	prevBothPressed = false;
+
 	constructor() {
 		RegisterHUDPanelForGamemode({
 			gamemodes: GamemodeCategories.get(GamemodeCategory.BHOP),
 			onLoad: () => this.onMapInit(),
-			handledEvents: [{ event: 'OnJumpStarted', panel: this.panels.container, callback: () => this.onJump() }],
-			events: [{ event: 'OnJumpStatsCFGChange', callback: () => this.onConfigChange() }]
+			//HudProcessInput, OnObservedTimerStateChange, MomentumSpectateStart, ObserverTargetChanged will need to be
+			//removed/rewriten when MomentumMovementAPI.GetLastJumpStats().jumpCount and .strafeCount is fixed
+			handledEvents: [
+				{ event: 'OnJumpStarted', panel: this.panels.container, callback: () => this.onJump() },
+				{ event: 'HudProcessInput', panel: $.GetContextPanel(), callback: () => this.onUpdate() }
+			],
+			events: [
+				{ event: 'OnJumpStatsCFGChange', callback: () => this.onConfigChange() },
+				{ event: 'OnObservedTimerStateChange', callback: () => this.onRunStart() },
+				{ event: 'MomentumSpectateStart', callback: () => this.resetStats() },
+				{ event: 'ObserverTargetChanged', callback: () => this.resetStats() }
+			]
 		});
+	}
+	//Temporary fix due to MomentumMovementAPI.GetLastJumpStats().jumpCount always returning 0, remove it from events too after it's fixed
+	onRunStart() {
+		const timerState = MomentumTimerAPI.GetObservedTimerStatus().state;
+		if (timerState !== 2) this.resetStats();
+	}
+
+	resetStats() {
+		this.jumpCounter = 0;
+		this.strafeCounter = 0;
+		this.prevStrafeDirection = StrafeDirection.None;
+		this.prevBothPressed = false;
+	}
+
+	//Temporary fix due to MomentumMovementAPI.GetLastJumpStats().strafeCount always returning 0, remove it from events too after it's fixed
+	onUpdate() {
+		const pressed = MomentumInputAPI.GetButtons().physicalButtons;
+		const left = !!(pressed & Button.MOVELEFT);
+		const right = !!(pressed & Button.MOVERIGHT);
+		const both = left && right;
+
+		const flip = (dir: StrafeDirection) =>
+			dir === StrafeDirection.Left ? StrafeDirection.Right : StrafeDirection.Left;
+
+		// --- FIRST JUMP ---
+		if (this.prevStrafeDirection === StrafeDirection.None) {
+			if (!left && !right) {
+				this.prevBothPressed = false;
+				return;
+			}
+
+			this.prevStrafeDirection = left ? StrafeDirection.Left : StrafeDirection.Right;
+
+			this.strafeCounter++;
+			this.prevBothPressed = both;
+			return;
+		}
+
+		// --- BOTH PRESSED ---
+		if (both) {
+			if (!this.prevBothPressed) {
+				this.prevStrafeDirection = flip(this.prevStrafeDirection);
+				this.strafeCounter++;
+			}
+			this.prevBothPressed = true;
+			return;
+		}
+
+		// --- SINGLE KEY ---
+		if (this.prevStrafeDirection === StrafeDirection.Left && right) {
+			this.prevStrafeDirection = StrafeDirection.Right;
+			this.strafeCounter++;
+			this.prevBothPressed = false;
+			return;
+		}
+
+		if (this.prevStrafeDirection === StrafeDirection.Right && left) {
+			this.prevStrafeDirection = StrafeDirection.Left;
+			this.strafeCounter++;
+			this.prevBothPressed = false;
+			return;
+		}
+
+		this.prevBothPressed = both;
 	}
 
 	onJump() {
+		//MomentumMovementAPI.GetLastJumpStats().jumpCount is always returning 0, jumpCounter is a temporary fix
 		const lastJumpStats = MomentumMovementAPI.GetLastJumpStats();
-		if (lastJumpStats.jumpCount < this.jumpStatsConfig.statsFirstPrint) {
-			return;
-		}
+		this.jumpCounter++;
+
+		if (this.jumpCounter < this.jumpStatsConfig.statsFirstPrint) return;
 
 		if (this.jumpStatsConfig.statsInterval === 0) {
-			if (lastJumpStats.jumpCount !== this.jumpStatsConfig.statsFirstPrint) return;
-		} else if (
-			(lastJumpStats.jumpCount - this.jumpStatsConfig.statsFirstPrint) % this.jumpStatsConfig.statsInterval !==
-			0
-		) {
+			if (this.jumpCounter !== this.jumpStatsConfig.statsFirstPrint) return;
+		} else if ((this.jumpCounter - this.jumpStatsConfig.statsFirstPrint) % this.jumpStatsConfig.statsInterval !== 0)
 			return;
-		}
 
-		if (lastJumpStats.jumpCount === 1) {
+		if (this.jumpCounter === 1) {
 			// Most stats are noise on the first jump when tracking jumps like css
 			// Only show takeoff speed
-			this.addToBuffer(this.countBuffer, lastJumpStats.jumpCount + ':');
+			this.addToBuffer(this.countBuffer, this.jumpCounter + ':');
 			this.addToBuffer(this.takeoffSpeedBuffer, lastJumpStats.takeoffSpeed.toFixed(0));
 			this.addToBuffer(this.speedDeltaBuffer, '');
 			this.addToBuffer(this.takeoffTimeBuffer, '');
@@ -67,12 +151,12 @@ class JumpStatsHandler {
 			this.addToBuffer(this.distanceBuffer, '');
 			this.addToBuffer(this.efficiencyBuffer, '');
 		} else {
-			this.addToBuffer(this.countBuffer, lastJumpStats.jumpCount + ':');
+			this.addToBuffer(this.countBuffer, this.jumpCounter + ':');
 			this.addToBuffer(this.takeoffSpeedBuffer, lastJumpStats.takeoffSpeed.toFixed(0));
 			this.addToBuffer(this.speedDeltaBuffer, lastJumpStats.jumpSpeedDelta.toFixed(0));
 			this.addToBuffer(this.takeoffTimeBuffer, this.makeTime(lastJumpStats.takeoffTime));
 			this.addToBuffer(this.timeDeltaBuffer, lastJumpStats.timeDelta.toFixed(3));
-			this.addToBuffer(this.strafesBuffer, lastJumpStats.strafeCount.toFixed(0));
+			this.addToBuffer(this.strafesBuffer, this.strafeCounter.toFixed(0));
 			this.addToBuffer(this.syncBuffer, this.makePercentage(lastJumpStats.strafeSync));
 			this.addToBuffer(this.gainBuffer, this.makePercentage(lastJumpStats.speedGain));
 			this.addToBuffer(this.yawRatioBuffer, this.makePercentage(lastJumpStats.yawRatio));
@@ -85,6 +169,10 @@ class JumpStatsHandler {
 		}
 
 		this.setText();
+
+		//Temporary fix due to MomentumMovementAPI.GetLastJumpStats().strafeCount always returning 0
+		this.strafeCounter = 0;
+		this.prevStrafeDirection = StrafeDirection.None;
 	}
 
 	initializeBuffer(size: number): string[] {
