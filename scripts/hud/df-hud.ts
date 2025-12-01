@@ -291,8 +291,6 @@ class DefragHandler {
 
 	onSnapConfigChange() {
 		const snapConfig = DefragAPI.GetHUDSnapCFG();
-		this.snapEnable = snapConfig.enable;
-		this.snapMinSpeed = snapConfig.minSpeed;
 		this.snapHeight = snapConfig.height;
 		this.snapOffset = snapConfig.offset;
 		this.snapColor = snapConfig.color;
@@ -301,9 +299,6 @@ class DefragHandler {
 		this.snapSlowColor = snapConfig.slowColor;
 		this.snapHlColor = snapConfig.highlightColor;
 		this.snapHlAltColor = snapConfig.altHighlightColor;
-		this.snapHlMode = snapConfig.highlightMode;
-		this.snapColorMode = snapConfig.colorMode;
-		this.snapHeightgainEnable = snapConfig.enableHeightGain;
 
 		COLORED_SNAP_CLASS = new StyleObject(this.snapHeight, this.snapOffset, this.snapColor);
 		UNCOLORED_SNAP_CLASS = new StyleObject(this.snapHeight, this.snapOffset, this.snapAltColor);

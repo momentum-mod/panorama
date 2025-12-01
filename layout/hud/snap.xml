@@ -1,0 +1,14 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+	
+	<scripts>
+		<include type="module" src="file://{scripts}/hud/snap.ts" />
+	</scripts>
+
+	<MomHudCgaz class="snap__container">
+		<Panel id="DebugPanel" class="snap__colored" />
+	</MomHudCgaz>
+
+</root>

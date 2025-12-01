@@ -1,0 +1,36 @@
+@use '../config' as *;
+
+.snap {
+	vertical-align: middle;
+
+	&__container {
+		width: 100%;
+		height: 10px;
+		horizontal-align: left;
+		overflow: noclip noclip;
+	}
+
+	&__uncolored{
+		height: 100%;
+		background-color: $white;
+		opacity: 0;
+		
+		&--highlight {
+			margin: -2px;
+			border-width: 2px;
+			border-color: $white;
+		}
+	}
+
+	&__colored{
+		height: 100%;
+		background-color: $blue;
+		opacity: 0.6;
+		
+		&--highlight {
+			margin: -2px;
+			border-width: 2px;
+			border-color: $white;
+		}
+	}
+}

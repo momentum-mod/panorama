@@ -13,6 +13,7 @@
 			<MomHudDamageIndicator />
 			<!-- MomHudDefrag / -->
 			<MomHudCgaz />
+			<MomHudSnap />
 			<MomHudReticle />
 		</Panel>
 
