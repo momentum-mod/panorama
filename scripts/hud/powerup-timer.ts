@@ -17,6 +17,10 @@ class PowerupTimerHandler {
 		slick: {
 			panel: $('#SlickTimer')!,
 			label: $<Label>('#SlickLabel')!
+		},
+		flight: {
+			panel: $('#FlightTimer')!,
+			label: $<Label>('#FlightLabel')!
 		}
 	};
 
@@ -28,11 +32,12 @@ class PowerupTimerHandler {
 	}
 
 	onUpdate() {
-		const { damageBoostTime, hasteTime, slickTime } = MomentumMovementAPI.GetMoveHudData();
+		const { damageBoostTime, hasteTime, slickTime, flightTime } = MomentumMovementAPI.GetMoveHudData();
 
 		this.updatePanel(this.panels.damageBoost, damageBoostTime);
 		this.updatePanel(this.panels.haste, hasteTime);
 		this.updatePanel(this.panels.slick, slickTime);
+		this.updatePanel(this.panels.flight, flightTime);
 	}
 
 	updatePanel({ panel, label }: { panel: GenericPanel; label: Label }, time: number) {
