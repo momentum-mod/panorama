@@ -11,7 +11,7 @@
 			<MomHudGhostEntities />
 			<MomHudConcEntities />
 			<MomHudDamageIndicator />
-			<!-- MomHudDefrag / -->
+			<MomHudDefrag />
 			<MomHudCgaz />
 			<MomHudSnap />
 			<MomHudReticle />

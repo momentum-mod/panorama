@@ -441,6 +441,11 @@ declare namespace SpeedometerSettingsAPI {
 
 declare namespace DefragAPI {
 	interface CgazConfig {
+		enable: boolean;
+		mirrorEnable: boolean;
+		mirrorBorder: float;
+		scaleEnable: boolean;
+		minSpeed: float;
 		height: float;
 		offset: float;
 		dzColor: rgbaColor;
@@ -472,6 +477,11 @@ declare namespace DefragAPI {
 	}
 
 	interface SnapConfig {
+		enable: boolean;
+		enableHeightGain: boolean;
+		highlightMode: int32;
+		colorMode: int32;
+		minSpeed: float;
 		height: float;
 		offset: float;
 		color: rgbaColor;
