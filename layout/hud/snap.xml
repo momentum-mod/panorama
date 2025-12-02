@@ -7,8 +7,8 @@
 		<include type="module" src="file://{scripts}/hud/snap.ts" />
 	</scripts>
 
-	<MomHudCgaz class="snap snap__container">
-		<Panel id="DebugPanel" class="snap__colored" />
+	<MomHudCgaz class="snap">
+		<Panel id="SnapContainer" class="snap__container" />
 	</MomHudCgaz>
 
 </root>
