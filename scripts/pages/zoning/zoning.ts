@@ -212,6 +212,7 @@ class ZoneMenuHandler {
 		this.zoningLimits = this.panels.zoningMenu.getZoningLimits();
 
 		this.didInit = true;
+		this.mapZoneData = null;
 		this.savedZones = null;
 		this.useLocal = null;
 	}
@@ -221,8 +222,12 @@ class ZoneMenuHandler {
 	}
 
 	onActiveZoneDefsChanged() {
-		this.mapZoneData = MomentumTimerAPI.GetActiveZoneDefs();
-		this.updateSelection(this.selectedZone ?? {});
+		// Zone definitions are loaded each time the menu is opened. Only update
+		// the editor map zone data if we haven't since the map was loaded.
+		if (this.mapZoneData === null) {
+			this.mapZoneData = MomentumTimerAPI.GetActiveZoneDefs();
+			this.updateSelection(this.selectedZone ?? {});
+		}
 	}
 
 	getZoneData() {
