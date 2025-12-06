@@ -161,6 +161,8 @@
 												</NStateButton>
 											</TooltipPanel>
 											<DropDown id="SortByDropdown" class="dropdown sorting__dropdown" menuclass="dropdown-menu">
+												<Label text="#MapSelector_Sorting_Popularity_Asc" id="popularityAsc" value="10" />
+												<Label text="#MapSelector_Sorting_Popularity_Desc" id="popularityDesc" value="11" />
 												<Label text="#MapSelector_Sorting_DateReleased_Asc" id="dateRelAsc" value="6" />
 												<Label text="#MapSelector_Sorting_DateReleased_Desc" id="dateRelDesc" value="7" />
 												<Label text="#MapSelector_Sorting_Alphabetical_Asc" id="alphaAsc" value="0" />
