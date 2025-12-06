@@ -1,0 +1,16 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+	
+	<scripts>
+		<include type="module" src="file://{scripts}/hud/ahop-sprint.ts" />
+	</scripts>
+
+	<MomHudAhopSprint class="h-align-center v-align-center">
+		<Panel id="AhopSprint">
+			<Panel id="AhopSprintLeft"/>
+			<Panel id="AhopSprintRight"/>
+		</Panel>
+	</MomHudAhopSprint>
+</root>
