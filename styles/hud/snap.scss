@@ -1,38 +1,37 @@
 @use '../config' as *;
 
-.snap {
+$snap-vertical-offset: 40px;
+$snap-vertical-center: 540px;
+
+.snap-container {
 	width: 100%;
-	height: fit-children;
-	vertical-align: middle;
+	height: 10px;
+	horizontal-align: left;
+	//vertical-align: bottom;
+	//position: 0px $snap-vertical-offset 0px;
+	overflow: noclip noclip;
+}
 
-	&__container {
-		width: 100%;
-		height: 10px;
-		horizontal-align: left;
-		overflow: noclip noclip;
-	}
-
-	&__uncolored {
+.snap-zone {
+	&--uncolored {
 		height: 100%;
-		background-color: $white;
-		opacity: 0;
+		background-color: rgba(0, 0, 0, 0);
 
 		&--highlight {
-			margin: -2px;
-			border-width: 2px;
-			border-color: $white;
+			padding: -2px;
+			border: 2px solid $white;
+			background-color: rgba(240, 240, 240, 0.15);
 		}
 	}
 
-	&__colored {
+	&--colored {
 		height: 100%;
-		background-color: $white;
-		opacity: 0.6;
+		background-color: rgba(210, 210, 210, 0.6);
 
 		&--highlight {
-			margin: -2px;
-			border-width: 2px;
-			border-color: $white;
+			padding: -2px;
+			border: 2px solid $white;
+			background-color: rgba(240, 240, 240, 0.7);
 		}
 	}
 }
