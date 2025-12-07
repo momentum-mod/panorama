@@ -30,7 +30,7 @@ registerHUDCustomizerComponent($.GetContextPanel(), {
 						// Looks like setrepaint(full) *is* getting called in afterstylesapplied... so we need to do
 						// more than repaint to update styles? worth looking into comment on styles.cpp l952
 						// @ts-expect-error asdhjaskfodsf
-						panel.MarkStylesDirty(true);
+						panel.ApplyStyles(true);
 					}
 				}
 			]
