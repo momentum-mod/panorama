@@ -728,7 +728,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 					panel.LoadLayoutSnippet('dynamic-colorpicker');
 
 					const colorDisplay = panel.FindChildTraverse<ColorDisplay>('ColorDisplay')!;
-					colorDisplay.text = dynamicStyle.properties.name;
+					colorDisplay.title = dynamicStyle.properties.name;
 					colorDisplay.SetPanelEvent('oncolorchange', () => {
 						component.setDynamicStyle(styleID, colorDisplay.color);
 					});
