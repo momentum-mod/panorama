@@ -1608,7 +1608,7 @@ class ZoneMenuHandler {
 		MomentumTimerAPI.SaveZoneDefs(this.mapZoneData);
 	}
 
-	cancelEdit() {
+	discardChanges() {
 		this.mapZoneData = null;
 		this.selectedZone = {
 			track: null as MainTrack | BonusTrack | null,
