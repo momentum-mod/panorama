@@ -8,17 +8,20 @@
 	</scripts>
 	
 	<MomHudJumpTiming class="bhopjump__component">
-		<ConVarEnabler id="JumpTimingContainer" class="bhopjump__container" convar="mom_hud_jump_timing" togglevisibility="true">
-			<ConVarEnabler convar="mom_hud_jump_timing_text" class="bhopjump__text-wrapper" togglevisibility="true">
-				<Label id="JumpEarlyLabel" class="bhopjump__text-wrapper--early" text="0" />
-			</ConVarEnabler>
-			<Panel class="bhopjump__bar-wrapper" alternateTicks="false">
-				<ProgressBar id="JumpEarlyBar" class="bhopjump__early" min="0" max="1" />
-				<ProgressBar id="JumpLateBar" class="bhopjump__late" min="0" max="1" />
+		<ConVarEnabler id="JumpTimingContainer" class="bhopjump__outer-container" convar="mom_hud_jump_timing" togglevisibility="true">
+			<Panel class="bhopjump__bar-container">
+				<ConVarEnabler convar="mom_hud_jump_timing_text" class="bhopjump__text-wrapper" togglevisibility="true">
+					<Label id="JumpEarlyLabel" class="bhopjump__text-wrapper--early" text="0" />
+				</ConVarEnabler>
+				<Panel class="bhopjump__bar-wrapper" alternateTicks="false">
+					<ProgressBar id="JumpEarlyBar" class="bhopjump__early" min="0" max="1" />
+					<ProgressBar id="JumpLateBar" class="bhopjump__late" min="0" max="1" />
+				</Panel>
+				<ConVarEnabler convar="mom_hud_jump_timing_text" class="bhopjump__text-wrapper" togglevisibility="true">
+					<Label id="JumpLateLabel" class="bhopjump__text-wrapper--late" text="0" />
+				</ConVarEnabler>
 			</Panel>
-			<ConVarEnabler convar="mom_hud_jump_timing_text" class="bhopjump__text-wrapper" togglevisibility="true">
-				<Label id="JumpLateLabel" class="bhopjump__text-wrapper--late" text="0" />
-			</ConVarEnabler>
+			<Label id="JumpPerfPercentLabel" class="bhopjump__perf-percent" text="#JumpTiming_Label_PerfPercent" />
 		</ConVarEnabler>
 	</MomHudJumpTiming>
 </root>
