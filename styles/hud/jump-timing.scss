@@ -8,7 +8,15 @@
 		transform: translateY(34px);
 	}
 
-	&__container {
+	&__outer-container {
+		width: fit-children;
+		height: fit-children;
+		flow-children: down;
+		horizontal-align: center;
+		vertical-align: center;
+	}
+
+	&__bar-container {
 		width: fit-children;
 		height: $bhopjump-height;
 		flow-children: right;
@@ -69,5 +77,10 @@
 			horizontal-align: right;
 			padding-left: $bhopjump-padding;
 		}
+	}
+
+	&__perf-percent {
+		horizontal-align: center;
+		margin-top: 4px;
 	}
 }
