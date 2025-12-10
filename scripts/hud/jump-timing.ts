@@ -18,7 +18,8 @@ class JumpTimingHandler {
 		earlyLabel: $<Label>('#JumpEarlyLabel'),
 		lateLabel: $<Label>('#JumpLateLabel'),
 		earlyBarProgress: $<Panel>('#JumpEarlyBar_Left'),
-		lateBarProgress: $<Panel>('#JumpLateBar_Left')
+		lateBarProgress: $<Panel>('#JumpLateBar_Left'),
+		perfPercentLabel: $<Label>('#JumpPerfPercentLabel')
 	};
 
 	perfWindow: number;
@@ -46,7 +47,7 @@ class JumpTimingHandler {
 				{
 					event: 'JumpTimingDataUpdate',
 					panel: this.panels.container,
-					callback: (jumpTiming) => this.onJumpTimingUpdate(jumpTiming)
+					callback: (jumpTiming, perfPercent) => this.onJumpTimingUpdate(jumpTiming, perfPercent)
 				}
 			]
 		});
@@ -76,7 +77,10 @@ class JumpTimingHandler {
 		}
 	}
 
-	onJumpTimingUpdate(jumpTiming: number) {
+	onJumpTimingUpdate(jumpTiming: number, perfPercent: float) {
+		this.panels.container.visible = true;
+		this.displayStartTime = MomentumMovementAPI.GetCurrentTime();
+
 		const clampedJumpTiming = Math.max(Math.min(jumpTiming, this.maxLateTiming), -this.maxEarlyTiming);
 
 		if (this.bufferedJumpingEnabled) {
@@ -99,7 +103,12 @@ class JumpTimingHandler {
 		const lateTimingColor = Colors.RED;
 		this.panels.lateBarProgress.style.backgroundColor = tupleToRgbaString(lateTimingColor);
 
-		this.panels.container.visible = true;
-		this.displayStartTime = MomentumMovementAPI.GetCurrentTime();
+		// Display perfect jump percent
+		if (perfPercent < 0) {
+			this.panels.perfPercentLabel.visible = false;
+		} else {
+			this.panels.perfPercentLabel.visible = true;
+			this.panels.perfPercentLabel.SetDialogVariable('perf_percent', Math.round(perfPercent * 100).toString());
+		}
 	}
 }
