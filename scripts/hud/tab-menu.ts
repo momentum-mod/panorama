@@ -22,7 +22,8 @@ class HudTabMenuHandler {
 		linearSeparator: $<Label>('#HudTabMenuLinearSeparator'),
 		linearLabel: $<Label>('#HudTabMenuLinearLabel'),
 		stageCountSeparator: $<Panel>('#HudTabMenuStageCountSeparator'),
-		stageCountLabel: $<Label>('#HudTabMenuStageCountLabel')
+		stageCountLabel: $<Label>('#HudTabMenuStageCountLabel'),
+		betaInfoContainer: $<Panel>('#BetaInfoContainer')
 	};
 
 	constructor() {
@@ -31,6 +32,23 @@ class HudTabMenuHandler {
 		$.RegisterForUnhandledEvent('EndOfRun_Show', (reason) => this.showEndOfRun(reason));
 		$.RegisterForUnhandledEvent('EndOfRun_Hide', () => this.hideEndOfRun());
 		$.RegisterForUnhandledEvent('ActiveZoneDefsChanged', () => this.updateMapStats());
+		$.RegisterForUnhandledEvent('MapCache_MapLoad', () => this.onMapLoad());
+	}
+
+	openInSteamOverlay() {
+		const mapData = MapCacheAPI.GetCurrentMapData();
+		const frontendUrl = GameInterfaceAPI.GetSettingString('mom_api_url_frontend');
+		if (mapData && frontendUrl) {
+			SteamOverlayAPI.OpenURL(`${frontendUrl}/maps/${mapData.staticData.name}`);
+		}
+	}
+
+	onMapLoad() {
+		const mapData = MapCacheAPI.GetCurrentMapData();
+		$.Msg(mapData.staticData.status);
+		if (mapData.staticData.status === 3)
+			this.panels.betaInfoContainer.RemoveClass('hud-tab-menu__beta-info--hidden');
+		else this.panels.betaInfoContainer.AddClass('hud-tab-menu__beta-info--hidden');
 	}
 
 	showEndOfRun(reason: EndOfRunShowReason) {
