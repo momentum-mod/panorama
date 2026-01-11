@@ -5,6 +5,7 @@ import { MapCreditType } from 'common/web/enums/map-credit-type.enum';
 import type { MMap } from 'common/web/types/models/models';
 import { getNumStages } from 'common/leaderboard';
 import { getAllCredits, getTier, SimpleMapCredit } from 'common/maps';
+import { MapStatuses } from 'common/web/enums/map-status.enum';
 
 /**
  * Class for the HUD tab menu panel, which contains the leaderboards, end of run, and zoning.
@@ -45,10 +46,9 @@ class HudTabMenuHandler {
 
 	onMapLoad() {
 		const mapData = MapCacheAPI.GetCurrentMapData();
-		$.Msg(mapData.staticData.status);
-		if (mapData.staticData.status === 3)
-			this.panels.betaInfoContainer.RemoveClass('hud-tab-menu__beta-info--hidden');
-		else this.panels.betaInfoContainer.AddClass('hud-tab-menu__beta-info--hidden');
+		if (MapStatuses.IN_SUBMISSION.includes(mapData.staticData.status))
+			this.panels.betaInfoContainer.SetHasClass('hide', false);
+		else this.panels.betaInfoContainer.SetHasClass('hide', true);
 	}
 
 	showEndOfRun(reason: EndOfRunShowReason) {

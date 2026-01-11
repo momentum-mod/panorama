@@ -121,22 +121,15 @@
 		horizontal-align: right;
 	}
 
-	$beta-info-height: 60px;
-	$beta-info-button-width: 100px;
-
 	&__beta-info {
 		width: 100%;
-		height: $beta-info-height;
+		height: 60px;
 		background-color: rgba(128, 128, 128, 0.089);
 		padding: 5px;
-
-		&--hidden {
-			visibility: collapse;
-		}
 	}
 
 	&__website-button {
-		width: $beta-info-button-width;
+		width: 100px;
 		horizontal-align: right;
 		vertical-align: center;
 		padding: 5px;
