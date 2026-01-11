@@ -33,10 +33,11 @@
 
 				<SettingsSlider text="#Settings_Gameplay_YawSpeed" min="0" max="360" convar="cl_yawspeed" tags="yawspeed,turnbind,spin" infomessage="#Settings_Gameplay_YawSpeed_Info" hasdocspage="false" />
 
-				<SettingsEnum text="#Settings_Gameplay_OverlappingKeys" convar="mom_null_binds" infomessage="#Settings_Gameplay_OverlappingKeys_Info" tags="overlapping,nulls">
-					<RadioButton group="allowoverlap" text="#Settings_Gameplay_OverlappingKeys_Off" value="0" />
-					<RadioButton group="allowoverlap" text="#Settings_Gameplay_OverlappingKeys_On" value="1" />
-				</SettingsEnum>
+				<SettingsEnumDropDown text="#Settings_Gameplay_OverlappingKeys" convar="mom_null_binds" infomessage="#Settings_Gameplay_OverlappingKeys_Info" tags="overlapping,nulls">
+					<Label id="allowoverlap1" text="#Settings_Gameplay_OverlappingKeys_Off" value="0" />
+					<Label id="allowoverlap2" text="#Settings_Gameplay_OverlappingKeys_On_InAirOnly" value="1" />
+					<Label id="allowoverlap3" text="#Settings_Gameplay_OverlappingKeys_On_Always" value="2" />
+				</SettingsEnumDropDown>
 
 				<SettingsEnum text="#Settings_Gameplay_ReleaseForwardOnJump" convar="mom_release_forward_on_jump" infomessage="#Settings_Gameplay_ReleaseForwardOnJump_Info" tags="jump,forward">
 					<RadioButton group="releaseforward" text="#Common_Off" value="0" />
