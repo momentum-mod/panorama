@@ -45,6 +45,7 @@
 				<Panel id="LeaderboardsContainer" class="hud-tab-menu__leaderboards" hittestchildren="true">
 					<Leaderboards id="TabMenuLeaderboards" hittest="true" hittestchildren="true" />
 				</Panel>
+				
 			</Panel>
 
 			<Panel id="EndOfRunContainer" class="hud-tab-menu__endofrun" hittestchildren="true">
@@ -59,6 +60,16 @@
 					<ToggleButton id="ZoningToggle" class="hud-tab-menu__footer-button" convar="mom_zoning_enable" />
 				</ConVarEnabler>
 				<Label class="hud-tab-menu__enable-cursor-tip" text="#HudTabMenu_EnableCursorTip"/> 
+			</Panel>
+
+			<Panel id="BetaInfoContainer" class="hud-tab-menu__beta-info hud-tab-menu__beta-info--hidden" hittestchildren="true">
+					<Label id="BetaInfoLabel" class="hud-tab-menu__beta-info-label" text="#HudTabMenu_BetaInfo"/>
+					<Button id="BetaInfoButton" class="button mapselector-map-info__big-button button--blue hud-tab-menu__website-button mr-1" onactivate="HudTabMenuHandler.openInSteamOverlay();">
+							<Panel class="flow-right v-align-center h-align-center">
+									<Image class="button__icon mapselector-map-info__big-button__icon" src="file://{images}/globe.svg" textureheight="40" />
+									<Label class="button__text mapselector-map-info__big-button__text" text="#MapSelector_Button_Webpage" />
+							</Panel>
+					</Button>
 			</Panel>
 		</Panel>
 	</HudTabMenu>

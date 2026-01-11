@@ -5,6 +5,7 @@ import { MapCreditType } from 'common/web/enums/map-credit-type.enum';
 import type { MMap } from 'common/web/types/models/models';
 import { getNumStages } from 'common/leaderboard';
 import { getAllCredits, getTier, SimpleMapCredit } from 'common/maps';
+import { MapStatuses } from 'common/web/enums/map-status.enum';
 
 /**
  * Class for the HUD tab menu panel, which contains the leaderboards, end of run, and zoning.
@@ -22,7 +23,8 @@ class HudTabMenuHandler {
 		linearSeparator: $<Label>('#HudTabMenuLinearSeparator'),
 		linearLabel: $<Label>('#HudTabMenuLinearLabel'),
 		stageCountSeparator: $<Panel>('#HudTabMenuStageCountSeparator'),
-		stageCountLabel: $<Label>('#HudTabMenuStageCountLabel')
+		stageCountLabel: $<Label>('#HudTabMenuStageCountLabel'),
+		betaInfoContainer: $<Panel>('#BetaInfoContainer')
 	};
 
 	constructor() {
@@ -31,6 +33,23 @@ class HudTabMenuHandler {
 		$.RegisterForUnhandledEvent('EndOfRun_Show', (reason) => this.showEndOfRun(reason));
 		$.RegisterForUnhandledEvent('EndOfRun_Hide', () => this.hideEndOfRun());
 		$.RegisterForUnhandledEvent('ActiveZoneDefsChanged', () => this.updateMapStats());
+		$.RegisterForUnhandledEvent('MapCache_MapLoad', () => this.onMapLoad());
+	}
+
+	openInSteamOverlay() {
+		const mapData = MapCacheAPI.GetCurrentMapData();
+		const frontendUrl = GameInterfaceAPI.GetSettingString('mom_api_url_frontend');
+		if (mapData && frontendUrl) {
+			SteamOverlayAPI.OpenURL(`${frontendUrl}/maps/${mapData.staticData.name}`);
+		}
+	}
+
+	onMapLoad() {
+		const mapData = MapCacheAPI.GetCurrentMapData();
+		this.panels.betaInfoContainer.SetHasClass(
+			'hide',
+			!MapStatuses.IN_SUBMISSION.includes(mapData.staticData.status)
+		);
 	}
 
 	showEndOfRun(reason: EndOfRunShowReason) {
