@@ -46,6 +46,8 @@ class HudTabMenuHandler {
 
 	onMapLoad() {
 		const mapData = MapCacheAPI.GetCurrentMapData();
+		if (!mapData) return;
+
 		this.panels.betaInfoContainer.SetHasClass(
 			'hide',
 			!MapStatuses.IN_SUBMISSION.includes(mapData.staticData.status)

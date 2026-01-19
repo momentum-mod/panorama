@@ -62,7 +62,7 @@
 				<Label class="hud-tab-menu__enable-cursor-tip" text="#HudTabMenu_EnableCursorTip"/> 
 			</Panel>
 
-			<Panel id="BetaInfoContainer" class="hud-tab-menu__beta-info hud-tab-menu__beta-info--hidden" hittestchildren="true">
+			<Panel id="BetaInfoContainer" class="hud-tab-menu__beta-info hide" hittestchildren="true">
 					<Label id="BetaInfoLabel" class="hud-tab-menu__beta-info-label" text="#HudTabMenu_BetaInfo"/>
 					<Button id="BetaInfoButton" class="button mapselector-map-info__big-button button--blue hud-tab-menu__website-button mr-1" onactivate="HudTabMenuHandler.openInSteamOverlay();">
 							<Panel class="flow-right v-align-center h-align-center">
