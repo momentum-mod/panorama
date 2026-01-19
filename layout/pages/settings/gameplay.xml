@@ -53,6 +53,11 @@
 					<SettingsSlider text="#Settings_Gameplay_ViewmodelFOV" convar="fov_viewmodel" infomessage="#Settings_Gameplay_ViewmodelFOV_Info" tags="viewmodel,weaponmodel,fov" min="45" max="135" />
 				</ConVarEnabler>
 
+				<SettingsEnumDropDown text="Settings_Gameplay_ViewmodelMainHand" convar="cl_righthand" hasdocspage="false" infomessage="Settings_Gameplay_ViewmodelMainHand_Info" tags="viewmodel,weaponmodel">
+					<Label id="mainhand1" text="Settings_Gameplay_ViewmodelMainHand_Left" value="0" />
+					<Label id="mainhand2" text="Settings_Gameplay_ViewmodelMainHand_Right" value="1" />
+				</SettingsEnumDropDown>
+
 				<SettingsEnumDropDown text="#Settings_Gameplay_WeaponDesirability" convar="mom_weapon_preference" infomessage="#Settings_Gameplay_WeaponDesirability_Info" tags="weapon,spawn,desirability">
 					<Label id="wepdes1" text="#Settings_Gameplay_WeaponDesirability_Required" value="0" />
 					<Label id="wepdes2" text="#Settings_Gameplay_WeaponDesirability_Recommended" value="1" />
