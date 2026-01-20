@@ -5,6 +5,7 @@ import { TrackType } from 'common/web/enums/track-type.enum';
 import type { MMap } from 'common/web/types/models/models';
 import { getRunStyleName } from 'common/style';
 import { Style } from 'common/web/enums/style.enum';
+import { GamemodeDefaultStyle } from 'common/web/maps/gamemode-styles.map';
 
 exposeToPanelContext({ LeaderboardListType, LeaderboardType });
 
@@ -347,8 +348,17 @@ class LeaderboardsHandler {
 			this.panels.stylesDropdown.AddOption(item);
 		});
 
+		const defaultStyle = GamemodeDefaultStyle.get(currentMode) ?? Style.NORMAL;
+		let defaultStyleIndex = validStyles.indexOf(defaultStyle);
+		if (defaultStyleIndex === -1) {
+			$.Warning(
+				`Warning: Default style ${defaultStyle} for gamemode ${currentMode} not found in valid styles: ${validStyles}`
+			);
+			defaultStyleIndex = 0;
+		}
+
 		this.panels.stylesDropdown.visible = true;
-		this.panels.stylesDropdown.SetSelectedIndex(0);
+		this.panels.stylesDropdown.SetSelectedIndex(defaultStyleIndex);
 
 		this.panels.stylesDropdown.SetPanelEvent('onuserinputsubmit', () => {
 			const selected = this.panels.stylesDropdown.GetSelected();
