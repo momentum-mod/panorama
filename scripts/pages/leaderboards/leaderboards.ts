@@ -54,7 +54,7 @@ class LeaderboardsHandler {
 		);
 
 		// Note: Can't set radio button groups in the XML because it causes multiple leaderboard instances to interfere with eachother
-		const lbType = this.panels.cp.id === 'TabMenuLeaderboards' ? 'TabMenu' : 'MapSelector';
+		const lbType = this.isInGameLeaderboard() ? 'TabMenu' : 'MapSelector';
 		Object.entries(this.panels.radioButtons).forEach(([group, buttons]) => {
 			Object.values(buttons).forEach((button) => (button.group = lbType + group));
 		});
@@ -314,7 +314,7 @@ class LeaderboardsHandler {
 		}
 
 		// Allow player to sync their current track to the value selected in the dropdown
-		if (this.panels.cp.id === 'TabMenuLeaderboards') {
+		if (this.isInGameLeaderboard()) {
 			this.panels.syncTrackButton.visible = true;
 		}
 
@@ -367,11 +367,15 @@ class LeaderboardsHandler {
 	}
 
 	getCurrentMode() {
-		const isTabMenu = this.panels.cp.id === 'TabMenuLeaderboard';
+		const isTabMenu = this.isInGameLeaderboard();
 		if (isTabMenu) {
 			return GameModeAPI.GetCurrentGameMode();
 		} else {
 			return GameModeAPI.GetMetaGameMode();
 		}
+	}
+
+	isInGameLeaderboard() {
+		return this.panels.cp.id === 'TabMenuLeaderboards';
 	}
 }
