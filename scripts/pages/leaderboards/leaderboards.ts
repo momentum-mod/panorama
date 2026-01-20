@@ -367,7 +367,7 @@ class LeaderboardsHandler {
 	}
 
 	getCurrentMode() {
-		const isTabMenu = this.panels.cp.id === 'TabMenuLeaderboard';
+		const isTabMenu = this.panels.cp.id === 'TabMenuLeaderboards';
 		if (isTabMenu) {
 			return GameModeAPI.GetCurrentGameMode();
 		} else {
