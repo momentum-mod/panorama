@@ -20,5 +20,9 @@
 			<Image id="SlickIcon" class="powerup-timer__icon" src="file://{images}/logo.svg" textureheight="72"/>
 			<Label id="SlickLabel" class="powerup-timer__label" text="" />
 		</Panel>
+		<Panel id="FlightTimer" class="powerup-timer__item">
+			<Image id="FlightIcon" class="powerup-timer__icon" src="file://{images}/logo.svg" textureheight="72"/>
+			<Label id="FlightLabel" class="powerup-timer__label" text="" />
+		</Panel>
 	</MomHudPowerupTimer>
 </root>

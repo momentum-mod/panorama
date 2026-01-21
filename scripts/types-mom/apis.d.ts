@@ -81,6 +81,7 @@ declare namespace MomentumMovementAPI {
 		hasteTime: int32;
 		damageBoostTime: int32;
 		slickTime: int32;
+		flightTime: int32;
 		defragTimer: int32;
 		defragTimerFlags: int32;
 	}
