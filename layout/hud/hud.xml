@@ -3,11 +3,15 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 
-	<Hud hittest="false">
+	<scripts>
+		<include type="module" src="file://{scripts}/hud/customizer.ts" />
+	</scripts>
+
+	<Hud class="hud" hittest="false" useglobalcontext="false">
 		<!-- Non-interactive HUD elements have hit test disabled for efficiency -->
 
 		<!-- In world UI is first to make sure it shows up behind all "screen-looking" UI -->
-		<Panel id="HudInWorld" hittest="false" hittestchildren="false">
+		<Panel class="hud__in-world" hittest="false" hittestchildren="false">
 			<MomHudGhostEntities />
 			<MomHudConcEntities />
 			<MomHudDamageIndicator />
@@ -15,61 +19,53 @@
 			<MomHudReticle />
 		</Panel>
 
-		<!-- Center of screen HUD laid out vertically top-to-bottom -->
-		<Panel id="HudCenter" hittest="false" hittestchildren="false">
-			<MomHudSafeguardIndicator />
-			<MomHudJumpTiming />
+		<Panel id="HudCustomizer" class="hud-customizer hud-customizer--disabled" hittest="false">
+			<Panel class="hud-customizer__settings">
+				<Button onactivate="HudCustomizer.disableEditing()">
+					<Image class="hud-customizer-settings__close" src="file://{images}/close.svg"/>
+				</Button>
+				<NumberEntry id="HudCustomizerGridSize" class="hud-customizer-settings__gridsize" min="4" max="12" onvaluechanged="HudCustomizer.updateGridSize()" />
+			</Panel>
+
+			<Panel id="HudCustomizerGrid" class="hud-customizer__grid" hittest="false" hittestchildren="false" />
+			<Panel id="HudCustomizerVirtualKnob" />
 		</Panel>
 
-		<!-- HUD anchored to top-left corner of screen, laid out vertically top-to-bottom -->
-		<Panel id="HudTopLeft" hittest="false" hittestchildren="false">
-			<HudComparisons />
-		</Panel>
+		<MomHudSafeguardIndicator /> <!-- TODO: HudCenter, not in customizer -->
+		<MomHudJumpTiming /> <!-- TODO: HudCenter, not added to customizer -->
 
-		<!-- Anchored to below the center of the screen, laid out from top to bottom -->
-		<!-- misleading name, not 'bottom-center' but 'below center' -->
-		<Panel id="HudBottomCenter" hittest="false" hittestchildren="false">
-			<!-- Anchored on Bottom-center, laid out from top to bottom -->
-			<ConVarEnabler convar="mom_zoning_enable" togglevisibility="true">
-				<MomHudZoning />
-			</ConVarEnabler>
-			<MomHudStrafeTrainer />
-			<MomHudSpeedometer />
-			<MomHudConcCooktime />
-			<MomHudStickyCharge />
-			<MomHudStickyCount />
-			<ConVarEnabler convar="mom_zoning_enable" invert="true" togglevisibility="true">
-				<MomHudStatus />
-			</ConVarEnabler>
-			<ConVarEnabler convar="mom_zoning_enable" invert="true" togglevisibility="true">
-				<MomHudTimer />
-			</ConVarEnabler>
-			<MomHudStrafeSync />
-			<MomHudGroundboost />
-			<HudHintText id="HudHintText" />
-		</Panel>
-
-		<!-- Anchored to the bottom-left corner of the screen, laid out from top to bottom -->
-		<Panel id="HudLowerLeft" hittest="false" hittestchildren="true">
-			<MomHudPowerupTimer />
-			<HudStaticMenu />
-			<MomHudChat />
-		</Panel>
-
-		<!-- Anchored on lower-right corner, laid out from top to bottom -->
-		<Panel id="HudBottomRight" hittest="false" hittestchildren="false">
-			<MomHudDFJump />
-			<MomHudAmmo />
-			<MomHudKeyPress />
-		</Panel>
-
-		<!-- Anchored in top right corner of screen, laid out from top-to-bottom -->
-		<Panel id="HudTopRight" hittest="false" hittestchildren="false">
-			<MomHudVersionInfo />
-			<MomHudMapInfo />
-			<MomHudSpecInfo />
-			<MomHudWeaponSelection />
-		</Panel>
+		<HudComparisons id="Comparisons" customizable="true" />
+		<ConVarEnabler convar="mom_zoning_enable" togglevisibility="true">
+			<MomHudZoning /> <!-- TODO: HudBottomCenter, not in customizer -->
+		</ConVarEnabler>
+		<MomHudStrafeTrainer /> <!-- TODO: HudBottomCenter, not in customizer -->
+		<MomHudSpeedometer id="Speedometer" customizable="true" />
+		<MomHudConcCooktime id="ConcCooktime" customizable="true" />
+		<MomHudStickyCharge id="StickyCharge" customizable="true" />
+		<MomHudStickyCount id="StickyCount" customizable="true" />
+		<ConVarEnabler convar="mom_zoning_enable" invert="true" togglevisibility="true">
+			<MomHudStatus id="Status" customizable="true" />
+		</ConVarEnabler>
+		<ConVarEnabler convar="mom_zoning_enable" invert="true" togglevisibility="true">
+			<MomHudTimer id="Timer" customizable="true" />
+		</ConVarEnabler>
+		<MomHudStrafeSync id="StrafeSync" customizable="true" />
+		<MomHudGroundboost id="MomHudGroundboost" customizable="true" />
+		<HudHintText id="HudHintText" customizable="true" />
+		<MomHudPowerupTimer /> <!-- TODO: LowerLeft, not added to customizer -->
+		<HudStaticMenu id="StaticMenu" customizable="true" />
+		<MomHudChat id="Chat" customizable="true" />
+		<MomHudDFJump /> <!-- TODO: BottomRight, not added to customizer -->
+		<MomHudAmmo /> <!-- TODO: BottomRight, not added to customizer -->
+		<MomHudKeyPress id="KeyPress" customizable="true" />
+		<MomHudVersionInfo id="VersionInfo" customizable="true" />
+		<MomHudMapInfo id="MapInfo" customizable="true" />
+		<MomHudSpecInfo id="SpecInfo" customizable="true" />
+		<MomHudWeaponSelection id="WeaponSelection" customizable="true" />
+		<HudShowPos id="ShowPos" customizable="true" />
+		<HudBoneCounts id="BoneCount" /> <!-- TODO: HudTopCenter, not in customizer -->
+		<MomHudSpectate id="Spectator" /> <!-- TODO: HudTopCenter, not in customizer -->
+		<MomHudJumpStats /> <!-- TODO: HudTopCenter, not in customizer -->
 
 		<HudBlurTarget id="HudBlur" blurrects="TabMenu Spectator" class="hud-blur" hittest="false" hittestchildren="false">
 			<BackbufferImagePanel class="full" />
@@ -79,26 +75,48 @@
 			<BackbufferImagePanel class="full" />
 		</HudBlurTarget>
 
-		<!-- HUD anchored to top center of screen, laid out vertically top-to-bottom
-		-  NOTE: Not really set up properly - HudTeamCounter should dynamically move
-		-        between HudTopCenter and HudBottomCenter, but instead it just moves
-		-        itself via code.  So nothing can go in here that should appear
-		-        while HudTeamCounter is visible
-		-->
-		<Panel id="HudTopCenter" hittest="false">
-			<HudShowPos />
-			<HudBoneCounts />
-			<MomHudSpectate id="Spectator" />
-			<MomHudJumpStats />
-		</Panel>
-
 		<Panel id="ZoningContainer" hittestchildren="true">
-			<ZoneMenu id="ZoneMenu" hittest="true" hittestchildren="true" />
+			<ZoneMenu id="ZoneMenu" hittest="true" hittestchildren="true" /> <!-- TODO: standalone panel, not in customizer -->
 		</Panel>
 
 		<!-- This container is here so we can move the leaderboard in and out of it during the end-of-match sequence -->
-		<Panel id="TabMenuContainer" class="w-full h-full" hittest="false" hittestchildren="true">
+		<!-- TODO: HudLeaderboards had w-full h-full removed before -->
+		<Panel id="TabMenuContainer" hittest="false" hittestchildren="true">
 			<HudTabMenu id="TabMenu" hittest="true" />
+		</Panel>
+
+		<Panel id="HudCustomizerVirtual" class="hud-customizer-virtual" draggable="true">
+			<Label id="HudCustomizerVirtualName" class="hud-customizer-virtual__name" />
+			<Panel id="HudCustomizerSnaps" class="hud-customizer-virtual-snaps" onmouseover="HudCustomizer.showSnapTooltip();" onmouseout="HudCustomizer.hideSnapTooltip();">
+				<Panel class="hud-customizer-virtual-snaps__row">
+					<RadioButton id="HudCustomizerSnapsXMin" class="hud-customizer-virtual-snaps__button" onactivate="HudCustomizer.setSnapMode(0, 1);" group="SnapX">
+						<Image class="hud-customizer-virtual-snaps__icon" src="file://{images}/hudcustomizer/snap-x-min.svg" texturewidth="32" textureheight="32" />
+					</RadioButton>
+					<RadioButton id="HudCustomizerSnapsXMid" class="hud-customizer-virtual-snaps__button" onactivate="HudCustomizer.setSnapMode(0, 2);" group="SnapX">
+						<Image class="hud-customizer-virtual-snaps__icon" src="file://{images}/hudcustomizer/snap-x-mid.svg" texturewidth="32" textureheight="32" />
+					</RadioButton>
+					<RadioButton id="HudCustomizerSnapsXMax" class="hud-customizer-virtual-snaps__button" onactivate="HudCustomizer.setSnapMode(0, 3);" group="SnapX">
+						<Image class="hud-customizer-virtual-snaps__icon" src="file://{images}/hudcustomizer/snap-x-max.svg" texturewidth="32" textureheight="32" />
+					</RadioButton>
+					<RadioButton id="HudCustomizerSnapsXOff" class="hud-customizer-virtual-snaps__button hud-customizer-virtual-snaps__button--last" onactivate="HudCustomizer.setSnapMode(0, 4);" group="SnapX">
+						<Image class="hud-customizer-virtual-snaps__icon" src="file://{images}/hudcustomizer/snap-off.svg" texturewidth="32" textureheight="32" />
+					</RadioButton>
+				</Panel>
+				<Panel class="hud-customizer-virtual-snaps__row hud-customizer-virtual-snaps__row--last">
+					<RadioButton id="HudCustomizerSnapsYMin" class="hud-customizer-virtual-snaps__button" onactivate="HudCustomizer.setSnapMode(1, 1);" group="SnapY">
+						<Image class="hud-customizer-virtual-snaps__icon" src="file://{images}/hudcustomizer/snap-y-min.svg" texturewidth="32" textureheight="32" />
+					</RadioButton>
+					<RadioButton id="HudCustomizerSnapsYMid" class="hud-customizer-virtual-snaps__button" onactivate="HudCustomizer.setSnapMode(1, 2);" group="SnapY">
+						<Image class="hud-customizer-virtual-snaps__icon" src="file://{images}/hudcustomizer/snap-y-mid.svg" texturewidth="32" textureheight="32" />
+					</RadioButton>
+					<RadioButton id="HudCustomizerSnapsYMax" class="hud-customizer-virtual-snaps__button" onactivate="HudCustomizer.setSnapMode(1, 3);" group="SnapY">
+						<Image class="hud-customizer-virtual-snaps__icon" src="file://{images}/hudcustomizer/snap-y-max.svg" texturewidth="32" textureheight="32" />
+					</RadioButton>
+					<RadioButton id="HudCustomizerSnapsYOff" class="hud-customizer-virtual-snaps__button hud-customizer-virtual-snaps__button--last" onactivate="HudCustomizer.setSnapMode(1, 4);" group="SnapY">
+						<Image class="hud-customizer-virtual-snaps__icon" src="file://{images}/hudcustomizer/snap-off.svg" texturewidth="32" textureheight="32" />
+					</RadioButton>
+				</Panel>
+			</Panel>
 		</Panel>
 
 		<!-- Make sure these are at the bottom to get the z-order right -->

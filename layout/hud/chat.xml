@@ -16,7 +16,7 @@
 	<scripts>
 
 	</scripts>
-	<Panel class="hud-chat no-flow">
+	<Panel class="hud-chat">
 		<MomentumChat id="RaisedChat" class="w-full h-full" />
 		<ToastContainer id="LoweredChat" class="toast-chat" thinkwheninvisible="true" />
 	</Panel>
