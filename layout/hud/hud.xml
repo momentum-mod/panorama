@@ -36,6 +36,7 @@
 			<MomHudStrafeTrainer />
 			<MomHudSpeedometer />
 			<MomHudConcCooktime />
+                        <MomHudSpeedoBar />
 			<MomHudStickyCharge />
 			<MomHudStickyCount />
 			<ConVarEnabler convar="mom_zoning_enable" invert="true" togglevisibility="true">

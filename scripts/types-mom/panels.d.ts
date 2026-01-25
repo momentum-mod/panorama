@@ -17,6 +17,7 @@ interface PanelTagNameMap {
 	MomHudJumpStats: MomHudJumpStats;
 	MomHudReplayControls: MomHudReplayControls;
 	MomHudStickyCharge: MomHudStickyCharge;
+	MomHudSpeedoBar: MomHudSpeedoBar;
 	MomHudStrafeSync: MomHudStrafeSync;
 	MomHudDFJump: MomHudDFJump;
 	MomHudJumpTiming: MomHudJumpTiming;
@@ -125,6 +126,8 @@ interface MomHudReplayControls extends AbstractHudPanel<'MomHudReplayControls'> 
 interface MomHudStickyCharge extends AbstractHudPanel<'MomHudStickyCharge'> {
 	readonly stickyChargeUnitType: import('hud/sticky-charge').StickyChargeUnit;
 }
+
+interface MomHudSpeedoBar extends AbstractHudPanel<'MomHudSpeedoBar'> {}
 
 interface MomHudStrafeSync extends AbstractHudPanel<'MomHudStrafeSync'> {
 	readonly strafesyncType: 0 | 1;

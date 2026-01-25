@@ -1,0 +1,15 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+	
+	<scripts>
+		<include type="module" src="file://{scripts}/hud/speedo-bar.ts" />
+	</scripts>
+
+	<MomHudSpeedoBar class="h-align-center">
+		<Panel id="SpeedoBarContainer" class="speedobar h-align-center">
+			<ProgressBar id="HorizontalSpeedoBarMeter" class="h-align-center progressbar-hudmeter" />
+		</Panel>
+	</MomHudSpeedoBar>
+</root>
