@@ -1,5 +1,13 @@
 import { SpeedometerColorType, SpeedometerType } from 'common/speedometer';
+import { tupleToRgbaString } from 'util/colors';
 import { PanelHandler } from 'util/module-helpers';
+
+interface Range {
+	min: number;
+	max: number;
+	color: rgbaColor;
+}
+type RuntimeSettings = SpeedometerSettingsAPI.Settings & { range_colors?: Range[] };
 
 @PanelHandler()
 class SpeedoBarHandler {
@@ -10,17 +18,24 @@ class SpeedoBarHandler {
 	};
 
 	constructor() {
-		$.RegisterEventHandler('OnSpeedometerUpdate', this.panels.container, () => {
+		// DOESNT WORK
+		// $.RegisterEventHandler('OnSpeedometerUpdate', this.panels.cp, (deltaTime) => {
+		// 	GameInterfaceAPI.ConsoleCommand('echo RUNNING----------------------------SPEEDOBAR');
+		// 	this.onSpeedoBarUpdate();
+		// });
+		// WORKS
+		$.RegisterForUnhandledEvent('OnSpeedometerUpdate', () => {
 			this.onSpeedoBarUpdate();
 		});
 	}
 
 	onSpeedoBarUpdate() {
-		const settings: SpeedometerSettingsAPI.Settings = {
+		const settings: RuntimeSettings = {
 			enabled_axes: [true, true, false],
 			custom_label: 'speedoBar',
 			type: SpeedometerType.OVERALL_VELOCITY,
-			color_type: SpeedometerColorType.NONE
+			color_type: SpeedometerColorType.RANGE,
+			range_colors: []
 		};
 
 		const maxMeterSpeed = 1800;
@@ -28,9 +43,27 @@ class SpeedoBarHandler {
 
 		const speed = this.getSpeedFromVelocity(velocity as vec3, settings);
 
-		const speedPercentage = (speed / maxMeterSpeed) * 100;
+		const speedPercentage = speed / maxMeterSpeed;
 
 		this.panels.horizontalMeter.value = speedPercentage;
+
+		// const colorProfiles = SpeedometerSettingsAPI.GetColorProfiles();
+		// this.appendRangeColorProfileInfo(settings, colorProfiles);
+
+		// if (settings.color_type === SpeedometerColorType.RANGE && settings.range_colors) {
+		// 	let found = false;
+		// 	for (const range of settings.range_colors) {
+		// 		// GameInterfaceAPI.ConsoleCommand('echo ----------------------------SPEEDOBARRANGE-----');
+		// 		// GameInterfaceAPI.ConsoleCommand(`echo SPEED ${speed}`);
+		// 		if (speed >= range.min && speed <= range.max) {
+		// 			GameInterfaceAPI.ConsoleCommand(`echo SPEED IN RANGE`);
+		// 			this.panels.horizontalMeter.style.backgroundColor = range.color;
+		// 			found = true;
+		// 		}
+		// 	}
+		// 	// backup to white
+		// 	if (!found) this.panels.horizontalMeter.style.backgroundColor = 'rgba(255, 255, 255, 1)';
+		// }
 	}
 
 	getSpeedFromVelocity({ x, y, z }: vec3, settings: SpeedometerSettingsAPI.Settings): float {
@@ -52,5 +85,28 @@ class SpeedoBarHandler {
 			$.Warning('Speedometer with no enabled axes found');
 			return 0;
 		}
+	}
+	appendRangeColorProfileInfo(
+		speedoData: RuntimeSettings,
+		colorProfData: SpeedometerSettingsAPI.ColorProfile[]
+	): Range {
+		if (speedoData.color_type !== SpeedometerColorType.RANGE) return;
+
+		// const colorProf = speedoData.range_color_profile;
+		// if (!colorProf) return;
+
+		// const foundProfile = colorProfData.find((profile) => colorProf === profile.profile_name);
+		// if (!foundProfile) return;
+
+		// const ranges = foundProfile.profile_ranges;
+		// if (!ranges) return;
+
+		// speedoData.range_colors = ranges.map((range) => ({
+		// 	min: range.min,
+		// 	max: range.max,
+		// 	color: tupleToRgbaString(range.color)
+		// }));
+
+		speedoData.range_colors = [{ min: 850, max: 900, color: tupleToRgbaString([255, 0, 255, 255]) }];
 	}
 }
