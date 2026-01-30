@@ -319,6 +319,9 @@ interface GlobalEventNameMap {
 	/** Fired when the primary timer of the UI entity effectively starts a segment. */
 	OnObservedTimerSegmentEffectiveStart: () => void;
 
+	/** Fired when the primary timer of the UI entity changes style. */
+	OnObservedTimerStyleChanged: () => void;
+
 	/**
 	 * Fired when the primary timer of the observed entity changes arbitrarily, such as
 	 * when changing spectate targets or seeking during replay playback

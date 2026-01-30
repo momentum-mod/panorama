@@ -1,3 +1,4 @@
+import { Style } from 'common/web/enums/style.enum';
 type Gamemode = import('./web/enums/gamemode.enum').Gamemode;
 
 //#region Types
@@ -21,6 +22,7 @@ export interface TimerStatus {
 	runTimeTickstamp: int32;
 	majorNum: uint8;
 	minorNum: uint8;
+	style: Style;
 	segmentsCount: uint8;
 	segmentCheckpointsCount: uint8;
 }

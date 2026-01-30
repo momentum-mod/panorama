@@ -2,6 +2,8 @@ import { PanelHandler } from 'util/module-helpers';
 import { HideHud } from 'common/state';
 import { TimerState } from 'common/timer';
 import { TrackType } from 'common/web/enums/track-type.enum';
+import { Style } from 'common/web/enums/style.enum';
+import { getRunStyleName } from 'common/style';
 
 @PanelHandler()
 class HudStatusHandler {
@@ -19,6 +21,11 @@ class HudStatusHandler {
 		});
 
 		$.RegisterForUnhandledEvent('OnObservedTimerCheckpointProgressed', () => {
+			this.hasTimerStateUpdated = true;
+			this.update();
+		});
+
+		$.RegisterForUnhandledEvent('OnObservedTimerStyleChanged', () => {
 			this.hasTimerStateUpdated = true;
 			this.update();
 		});
@@ -90,7 +97,7 @@ class HudStatusHandler {
 	}
 
 	private getTimerText(): string {
-		const { state, trackId, segmentsCount, segmentCheckpointsCount, majorNum, minorNum } =
+		const { state, trackId, segmentsCount, segmentCheckpointsCount, majorNum, minorNum, style } =
 			MomentumTimerAPI.GetObservedTimerStatus();
 
 		const gamemode = GameModeAPI.GetCurrentGameMode();
@@ -114,6 +121,10 @@ class HudStatusHandler {
 				str += `${this.strs.bonus} ${trackId.number}`;
 			}
 
+			if (style !== Style.NORMAL) {
+				str += ` | ${$.Localize(getRunStyleName(style))}`;
+			}
+
 			return str;
 		}
 
@@ -122,24 +133,34 @@ class HudStatusHandler {
 		}
 
 		// state is TimerState.RUNNING
+		let str = '';
 		if (trackId.type === TrackType.MAIN) {
 			if (segmentsCount === 1) {
-				return segmentCheckpointsCount > 1 ? `${checkpointTerm} ${minorNum}/${segmentCheckpointsCount}` : '';
+				str = segmentCheckpointsCount > 1 ? `${checkpointTerm} ${minorNum}/${segmentCheckpointsCount}` : '';
 			} else {
-				return segmentCheckpointsCount > 1
-					? `${segmentTerm} ${majorNum}/${segmentsCount} | ${checkpointTerm} ${minorNum}/${segmentCheckpointsCount}`
-					: `${segmentTerm} ${majorNum}/${segmentsCount}`;
+				str =
+					segmentCheckpointsCount > 1
+						? `${segmentTerm} ${majorNum}/${segmentsCount} | ${checkpointTerm} ${minorNum}/${segmentCheckpointsCount}`
+						: `${segmentTerm} ${majorNum}/${segmentsCount}`;
 			}
 		} else if (trackId.type === TrackType.STAGE) {
-			return segmentCheckpointsCount > 1
-				? `${segmentTerm} ${trackId.number} | ${checkpointTerm} ${minorNum}/${segmentCheckpointsCount}`
-				: `${segmentTerm} ${trackId.number}`;
+			str =
+				segmentCheckpointsCount > 1
+					? `${segmentTerm} ${trackId.number} | ${checkpointTerm} ${minorNum}/${segmentCheckpointsCount}`
+					: `${segmentTerm} ${trackId.number}`;
 		} else {
 			// Bonus
-			return segmentCheckpointsCount > 1
-				? `${this.strs.bonus} ${trackId.number} | ${checkpointTerm} ${minorNum}/${segmentCheckpointsCount}`
-				: `${this.strs.bonus} ${trackId.number}`;
+			str =
+				segmentCheckpointsCount > 1
+					? `${this.strs.bonus} ${trackId.number} | ${checkpointTerm} ${minorNum}/${segmentCheckpointsCount}`
+					: `${this.strs.bonus} ${trackId.number}`;
 		}
+
+		if (style !== Style.NORMAL) {
+			str += ` | ${$.Localize(getRunStyleName(style))}`;
+		}
+
+		return str;
 	}
 
 	// Cache strings to save endless $.Localize calls
