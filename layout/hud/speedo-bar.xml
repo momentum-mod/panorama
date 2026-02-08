@@ -8,10 +8,6 @@
 	</scripts>
 
 	<Panel class="speedobars">
-                <Panel class="speedobar__horizontal__overlay__1"></Panel>
-                <Panel class="speedobar__horizontal__overlay__2"></Panel>
-                <Panel class="speedobar__vertical__overlay__1"></Panel>
-                <Panel class="speedobar__vertical__overlay__2"></Panel>
                 <ProgressBar id="HorizontalSpeedoBarMeter" class="progressbar-hudmeter speedobar__horizontal" />
                 <ProgressBar id="VerticalSpeedoBarMeter" class="progressbar-hudmeter speedobar__vertical" />
 	</Panel>

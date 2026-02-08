@@ -9,6 +9,16 @@ interface Range {
 }
 type RuntimeSettings = SpeedometerSettingsAPI.Settings & { range_colors?: Range[] };
 
+const overlays = {
+	horizontal: [855, 895],
+	vertical: [450, 1100]
+};
+
+const maxSpeed = {
+	horizontal: 1750,
+	vertical: 2200
+};
+
 @PanelHandler()
 class SpeedoBarHandler {
 	readonly panels = {
@@ -21,11 +31,15 @@ class SpeedoBarHandler {
 		$.RegisterForUnhandledEvent('OnSpeedometerUpdate', () => {
 			this.onSpeedoBarUpdate();
 		});
+		$.RegisterForUnhandledEvent('MapLoaded', () => {
+			this.onMapLoaded();
+		});
 	}
 
 	onSpeedoBarUpdate() {
-		this.updateMeter(this.panels.horizontalMeter, [true, true, false], 1750);
-		this.updateMeter(this.panels.verticalMeter, [false, false, true], 2200);
+		const velocity = MomentumPlayerAPI.GetVelocity();
+		this.updateMeter(this.panels.horizontalMeter, velocity, [true, true, false], maxSpeed.horizontal);
+		this.updateMeter(this.panels.verticalMeter, velocity, [false, false, true], maxSpeed.vertical);
 
 		// const colorProfiles = SpeedometerSettingsAPI.GetColorProfiles();
 		// this.appendRangeColorProfileInfo(settings, colorProfiles);
@@ -46,7 +60,7 @@ class SpeedoBarHandler {
 		// }
 	}
 
-	updateMeter(panel: ProgressBar, axes: [boolean, boolean, boolean], maxSpeed: number) {
+	updateMeter(panel: ProgressBar, velocity: vec3, axes: [boolean, boolean, boolean], maxSpeed: number) {
 		const settings: RuntimeSettings = {
 			enabled_axes: axes,
 			custom_label: 'speedoBar',
@@ -54,11 +68,25 @@ class SpeedoBarHandler {
 			color_type: SpeedometerColorType.RANGE,
 			range_colors: []
 		};
-
-		const velocity = MomentumPlayerAPI.GetVelocity();
-		const speed = this.getSpeedFromVelocity(velocity as vec3, settings);
+		const speed = this.getSpeedFromVelocity(velocity, settings);
 		const speedPercentage = speed / maxSpeed;
 		panel.value = speedPercentage;
+	}
+	onMapLoaded() {
+		this.updateOverlays();
+	}
+
+	updateOverlays() {
+		for (const speed of overlays.horizontal) {
+			let speedPercentage = (speed / maxSpeed.horizontal) * 100;
+			const newPanel = $.CreatePanel('Panel', this.panels.cp, '', { class: `speedobar__overlay__horizontal` });
+			newPanel.style.position = `${speedPercentage}% 0 0`;
+		}
+		for (const speed of overlays.vertical) {
+			let speedPercentage = (speed / maxSpeed.vertical) * 100;
+			const newPanel = $.CreatePanel('Panel', this.panels.cp, '', { class: `speedobar__overlay__vertical` });
+			newPanel.style.position = `0 ${-speedPercentage}% 0`;
+		}
 	}
 
 	getSpeedFromVelocity({ x, y, z }: vec3, settings: SpeedometerSettingsAPI.Settings): float {
