@@ -1,3 +1,17 @@
-.speedobar {
-	margin: 6px 0px 6px 0;
+.speedobars {
+	horizontal-align: center;
+	vertical-align: center;
+	height: 30%;
+
+	.speedobar {
+		&__vertical {
+			transform: rotateZ(270deg);
+			horizontal-align: left;
+			vertical-align: middle;
+			x: -150px;
+		}
+		&__horizontal {
+			vertical-align: bottom;
+		}
+	}
 }

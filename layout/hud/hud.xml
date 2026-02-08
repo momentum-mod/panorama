@@ -17,6 +17,7 @@
 
 		<!-- Center of screen HUD laid out vertically top-to-bottom -->
 		<Panel id="HudCenter" hittest="false" hittestchildren="false">
+                        <MomHudSpeedoBar />
 			<MomHudSafeguardIndicator />
 			<MomHudJumpTiming />
 		</Panel>
@@ -36,7 +37,6 @@
 			<MomHudStrafeTrainer />
 			<MomHudSpeedometer />
 			<MomHudConcCooktime />
-                        <MomHudSpeedoBar />
 			<MomHudStickyCharge />
 			<MomHudStickyCount />
 			<ConVarEnabler convar="mom_zoning_enable" invert="true" togglevisibility="true">

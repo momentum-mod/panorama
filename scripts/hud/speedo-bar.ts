@@ -13,39 +13,19 @@ type RuntimeSettings = SpeedometerSettingsAPI.Settings & { range_colors?: Range[
 class SpeedoBarHandler {
 	readonly panels = {
 		cp: $.GetContextPanel<MomHudSpeedoBar>(),
-		container: $<Panel>('#SpeedoBarContainer'),
-		horizontalMeter: $<ProgressBar>('#HorizontalSpeedoBarMeter')
+		horizontalMeter: $<ProgressBar>('#HorizontalSpeedoBarMeter'),
+		verticalMeter: $<ProgressBar>('#VerticalSpeedoBarMeter')
 	};
 
 	constructor() {
-		// DOESNT WORK
-		// $.RegisterEventHandler('OnSpeedometerUpdate', this.panels.cp, (deltaTime) => {
-		// 	GameInterfaceAPI.ConsoleCommand('echo RUNNING----------------------------SPEEDOBAR');
-		// 	this.onSpeedoBarUpdate();
-		// });
-		// WORKS
 		$.RegisterForUnhandledEvent('OnSpeedometerUpdate', () => {
 			this.onSpeedoBarUpdate();
 		});
 	}
 
 	onSpeedoBarUpdate() {
-		const settings: RuntimeSettings = {
-			enabled_axes: [true, true, false],
-			custom_label: 'speedoBar',
-			type: SpeedometerType.OVERALL_VELOCITY,
-			color_type: SpeedometerColorType.RANGE,
-			range_colors: []
-		};
-
-		const maxMeterSpeed = 1800;
-		const velocity = MomentumPlayerAPI.GetVelocity();
-
-		const speed = this.getSpeedFromVelocity(velocity as vec3, settings);
-
-		const speedPercentage = speed / maxMeterSpeed;
-
-		this.panels.horizontalMeter.value = speedPercentage;
+		this.updateMeter(this.panels.horizontalMeter, [true, true, false], 1800);
+		this.updateMeter(this.panels.verticalMeter, [false, false, true], 2200);
 
 		// const colorProfiles = SpeedometerSettingsAPI.GetColorProfiles();
 		// this.appendRangeColorProfileInfo(settings, colorProfiles);
@@ -64,6 +44,21 @@ class SpeedoBarHandler {
 		// 	// backup to white
 		// 	if (!found) this.panels.horizontalMeter.style.backgroundColor = 'rgba(255, 255, 255, 1)';
 		// }
+	}
+
+	updateMeter(panel: ProgressBar, axes: [boolean, boolean, boolean], maxSpeed: number) {
+		const settings: RuntimeSettings = {
+			enabled_axes: axes,
+			custom_label: 'speedoBar',
+			type: SpeedometerType.OVERALL_VELOCITY,
+			color_type: SpeedometerColorType.RANGE,
+			range_colors: []
+		};
+
+		const velocity = MomentumPlayerAPI.GetVelocity();
+		const speed = this.getSpeedFromVelocity(velocity as vec3, settings);
+		const speedPercentage = speed / maxSpeed;
+		panel.value = speedPercentage;
 	}
 
 	getSpeedFromVelocity({ x, y, z }: vec3, settings: SpeedometerSettingsAPI.Settings): float {
