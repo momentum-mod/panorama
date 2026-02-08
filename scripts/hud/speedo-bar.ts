@@ -24,7 +24,7 @@ class SpeedoBarHandler {
 	}
 
 	onSpeedoBarUpdate() {
-		this.updateMeter(this.panels.horizontalMeter, [true, true, false], 1800);
+		this.updateMeter(this.panels.horizontalMeter, [true, true, false], 1750);
 		this.updateMeter(this.panels.verticalMeter, [false, false, true], 2200);
 
 		// const colorProfiles = SpeedometerSettingsAPI.GetColorProfiles();

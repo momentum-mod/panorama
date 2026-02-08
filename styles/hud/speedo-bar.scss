@@ -1,17 +1,76 @@
+$speedobar_thickness: 18px;
+$speedobar_length: 300px;
+$speedobar_overlay_thickness: 2px;
+$speedobar_overlay_color: rgb(188, 195, 211);
+$speedobar_border_radius: 3px;
+
 .speedobars {
 	horizontal-align: center;
 	vertical-align: center;
-	height: 30%;
+	width: $speedobar_length;
+	height: $speedobar_length;
+
+	.progressbar-hudmeter {
+		border-radius: $speedobar_border_radius;
+		.ProgressBarLeft {
+			border-radius: $speedobar_border_radius;
+		}
+	}
 
 	.speedobar {
 		&__vertical {
+			width: $speedobar_length;
+			height: $speedobar_thickness;
 			transform: rotateZ(270deg);
 			horizontal-align: left;
 			vertical-align: middle;
-			x: -150px;
+			x: calc(($speedobar_length - $speedobar_thickness) / -2);
+
+			&__overlay {
+				&__1 {
+					z-index: 1;
+					horizontal-align: left;
+					vertical-align: middle;
+					background-color: $speedobar_overlay_color;
+					width: $speedobar_thickness;
+					height: $speedobar_overlay_thickness;
+				}
+				// &__2 {
+				// 	z-index: 1;
+				// 	horizontal-align: center;
+				// 	vertical-align: bottom;
+				// 	background-color: white;
+				// 	width: $speedobar_overlay_thickness;
+				// 	height: $speedobar_thickness;
+				// 	x: 5px;
+				// }
+			}
 		}
 		&__horizontal {
+			height: $speedobar_thickness;
+			width: $speedobar_length;
 			vertical-align: bottom;
+
+			&__overlay {
+				&__1 {
+					z-index: 1;
+					horizontal-align: center;
+					vertical-align: bottom;
+					background-color: $speedobar_overlay_color;
+					width: $speedobar_overlay_thickness;
+					height: $speedobar_thickness;
+					x: -4px;
+				}
+				&__2 {
+					z-index: 1;
+					horizontal-align: center;
+					vertical-align: bottom;
+					background-color: $speedobar_overlay_color;
+					width: $speedobar_overlay_thickness;
+					height: $speedobar_thickness;
+					x: 4px;
+				}
+			}
 		}
 	}
 }
