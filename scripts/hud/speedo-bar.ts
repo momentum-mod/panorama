@@ -1,6 +1,9 @@
 import { SpeedometerColorType, SpeedometerType } from 'common/speedometer';
+import { GamemodeCategory } from 'common/web/enums/gamemode.enum';
+import { GamemodeCategories } from 'common/web/maps/gamemodes.map';
 import { tupleToRgbaString } from 'util/colors';
 import { PanelHandler } from 'util/module-helpers';
+import { RegisterHUDPanelForGamemode } from 'util/register-for-gamemodes';
 
 interface Range {
 	min: number;
@@ -28,12 +31,19 @@ class SpeedoBarHandler {
 	};
 
 	constructor() {
-		$.RegisterForUnhandledEvent('OnSpeedometerUpdate', () => {
-			this.onSpeedoBarUpdate();
+		RegisterHUDPanelForGamemode({
+			gamemodes: GamemodeCategories.get(GamemodeCategory.SJ),
+			onLoad: () => this.OnLoad(),
+			events: [
+				{
+					event: 'OnSpeedometerUpdate',
+					callback: () => this.onSpeedoBarUpdate()
+				}
+			]
 		});
-		$.RegisterForUnhandledEvent('MapLoaded', () => {
-			this.onMapLoaded();
-		});
+		// $.RegisterForUnhandledEvent('OnSpeedometerUpdate', () => {
+		// 	this.onSpeedoBarUpdate();
+		// });
 	}
 
 	onSpeedoBarUpdate() {
@@ -72,7 +82,7 @@ class SpeedoBarHandler {
 		const speedPercentage = speed / maxSpeed;
 		panel.value = speedPercentage;
 	}
-	onMapLoaded() {
+	OnLoad() {
 		this.updateOverlays();
 	}
 
