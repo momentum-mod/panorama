@@ -1,7 +1,7 @@
 import { SpeedometerColorType, SpeedometerType } from 'common/speedometer';
 import { GamemodeCategory } from 'common/web/enums/gamemode.enum';
 import { GamemodeCategories } from 'common/web/maps/gamemodes.map';
-import { tupleToRgbaString } from 'util/colors';
+import { RgbaTuple, rgbaStringToTuple, tupleToRgbaString } from 'util/colors';
 import { PanelHandler } from 'util/module-helpers';
 import { RegisterHUDPanelForGamemode } from 'util/register-for-gamemodes';
 
@@ -47,41 +47,82 @@ class SpeedoBarHandler {
 	}
 
 	onSpeedoBarUpdate() {
-		const velocity = MomentumPlayerAPI.GetVelocity();
-		this.updateMeter(this.panels.horizontalMeter, velocity, [true, true, false], maxSpeed.horizontal);
-		this.updateMeter(this.panels.verticalMeter, velocity, [false, false, true], maxSpeed.vertical);
-
-		// const colorProfiles = SpeedometerSettingsAPI.GetColorProfiles();
-		// this.appendRangeColorProfileInfo(settings, colorProfiles);
-
-		// if (settings.color_type === SpeedometerColorType.RANGE && settings.range_colors) {
-		// 	let found = false;
-		// 	for (const range of settings.range_colors) {
-		// 		// GameInterfaceAPI.ConsoleCommand('echo ----------------------------SPEEDOBARRANGE-----');
-		// 		// GameInterfaceAPI.ConsoleCommand(`echo SPEED ${speed}`);
-		// 		if (speed >= range.min && speed <= range.max) {
-		// 			GameInterfaceAPI.ConsoleCommand(`echo SPEED IN RANGE`);
-		// 			this.panels.horizontalMeter.style.backgroundColor = range.color;
-		// 			found = true;
-		// 		}
-		// 	}
-		// 	// backup to white
-		// 	if (!found) this.panels.horizontalMeter.style.backgroundColor = 'rgba(255, 255, 255, 1)';
-		// }
-	}
-
-	updateMeter(panel: ProgressBar, velocity: vec3, axes: [boolean, boolean, boolean], maxSpeed: number) {
 		const settings: RuntimeSettings = {
-			enabled_axes: axes,
+			enabled_axes: [false, false, false],
 			custom_label: 'speedoBar',
 			type: SpeedometerType.OVERALL_VELOCITY,
 			color_type: SpeedometerColorType.RANGE,
 			range_colors: []
 		};
+
+		const horizontalSettings: RuntimeSettings = {
+			enabled_axes: [true, true, false],
+			custom_label: settings.custom_label,
+			type: settings.type,
+			color_type: settings.color_type,
+			range_colors: [
+				{ min: 0, max: 700, color: 'rgba(147, 147, 147, 1)' },
+				{ min: 700, max: 855, color: 'rgba(35, 125, 235, 1)' },
+				{ min: 855, max: 895, color: 'rgba(0, 255, 85, 1)' },
+				{ min: 895, max: 1200, color: 'rgba(35, 125, 235, 1)' },
+				{ min: 1200, max: 3500, color: 'rgba(147, 147, 147, 1)' }
+			]
+		};
+
+		const verticalSettings: RuntimeSettings = {
+			enabled_axes: [false, false, true],
+			custom_label: settings.custom_label,
+			type: settings.type,
+			color_type: settings.color_type,
+			range_colors: [
+				{ min: 0, max: 900, color: 'rgba(147, 147, 147, 1)' },
+				{ min: 900, max: 1100, color: 'rgba(35, 125, 235, 1)' },
+				{ min: 1100, max: 1200, color: 'rgba(0, 255, 85, 1)' },
+				{ min: 1200, max: 1400, color: 'rgba(35, 125, 235, 1)' },
+				{ min: 1400, max: 3500, color: 'rgba(147, 147, 147, 1)' }
+			]
+		};
+
+		const velocity = MomentumPlayerAPI.GetVelocity();
+		this.updateMeter(this.panels.horizontalMeter, velocity, horizontalSettings, maxSpeed.horizontal);
+		this.updateMeter(this.panels.verticalMeter, velocity, verticalSettings, maxSpeed.vertical);
+	}
+
+	updateMeter(panel: ProgressBar, velocity: vec3, settings: RuntimeSettings, maxSpeed: number) {
 		const speed = this.getSpeedFromVelocity(velocity, settings);
 		const speedPercentage = speed / maxSpeed;
 		panel.value = speedPercentage;
+
+		this.colorMeter(panel, speed, settings);
 	}
+
+	colorMeter(panel: ProgressBar, speed: number, settings: RuntimeSettings) {
+		let panelfg = panel.FindChildrenWithClassTraverse('ProgressBarLeft');
+
+		if (settings.color_type === SpeedometerColorType.RANGE && settings.range_colors) {
+			for (const range of settings.range_colors) {
+				if (speed >= range.min && speed <= range.max) {
+					// set highlight color to a lighter shade of range color
+					let highlightColorTuple: RgbaTuple = rgbaStringToTuple(range.color);
+					for (let i = 0; i < highlightColorTuple.length - 1; i++) {
+						highlightColorTuple[i] += 75;
+						if (highlightColorTuple[i] > 255) {
+							highlightColorTuple[i] = 255;
+						}
+					}
+					let highlightColor: rgbaColor = tupleToRgbaString(highlightColorTuple);
+
+					panelfg[0].style.backgroundColor =
+						'gradient(linear, 0% 0%, 100% 0%, from(' +
+						range.color +
+						'), to(' +
+						highlightColor +
+						')) !default';
+				}
+			}
+		}
+	}
+
 	OnLoad() {
 		this.updateOverlays();
 	}

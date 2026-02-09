@@ -1,5 +1,5 @@
 $speedobar_thickness: 18px;
-$speedobar_length: 300px;
+$speedobar_length: 350px;
 $speedobar_overlay_thickness: 1.5px;
 $speedobar_overlay_color: rgb(188, 195, 211);
 $speedobar_border_radius: 3px;
@@ -18,7 +18,7 @@ $speedobar_background: rgba(93, 100, 113, 0.208);
 			transform: rotateZ(270deg);
 			horizontal-align: left;
 			vertical-align: middle;
-			x: calc(($speedobar_length - $speedobar_thickness) / -2);
+			x: calc(($speedobar_length - $speedobar_thickness + 1px) / -2);
 		}
 		&__horizontal {
 			height: $speedobar_thickness;
@@ -31,7 +31,7 @@ $speedobar_background: rgba(93, 100, 113, 0.208);
 				horizontal-align: left;
 				vertical-align: bottom;
 				background-color: $speedobar_overlay_color;
-				width: $speedobar_thickness;
+				width: calc($speedobar_thickness - 1px);
 				height: $speedobar_overlay_thickness;
 			}
 			&__horizontal {
