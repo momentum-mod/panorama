@@ -3,9 +3,7 @@ import { LeaderboardListType, LeaderboardStatusType, LeaderboardType, sortLeader
 import { EndOfRunShowReason } from 'common/timer';
 import { TrackType } from 'common/web/enums/track-type.enum';
 import type { MMap } from 'common/web/types/models/models';
-import { getRunStyleName } from 'common/style';
 import { Style } from 'common/web/enums/style.enum';
-import { GamemodeDefaultUIStyle } from 'common/web/maps/gamemode-styles.map';
 
 exposeToPanelContext({ LeaderboardListType, LeaderboardType });
 
@@ -70,9 +68,6 @@ class LeaderboardsHandler {
 
 		this.panels.tracksDropdown.RemoveAllOptions();
 		this.panels.tracksDropdown.visible = false;
-
-		this.panels.stylesDropdown.RemoveAllOptions();
-		this.panels.stylesDropdown.visible = false;
 
 		this.panels.endOfRunButton.visible = false;
 		this.panels.syncTrackButton.visible = false;
@@ -248,7 +243,6 @@ class LeaderboardsHandler {
 			});
 
 		this.initTracksDropdown();
-		this.initRunStylesDropdown();
 	}
 
 	onLocalMapLeaderboardsLoaded() {
@@ -304,7 +298,6 @@ class LeaderboardsHandler {
 		}
 
 		this.initTracksDropdown();
-		this.initRunStylesDropdown();
 	}
 
 	initTracksDropdown() {
@@ -326,43 +319,6 @@ class LeaderboardsHandler {
 				selected.GetAttributeInt('trackType', TrackType.MAIN as number),
 				selected.GetAttributeInt('trackNum', 1)
 			);
-		});
-	}
-
-	initRunStylesDropdown() {
-		this.panels.stylesDropdown.RemoveAllOptions();
-
-		const currentMode = this.getCurrentMode();
-		const validStyles = GameModeAPI.GetValidRunStyles(currentMode);
-		if (validStyles.length <= 1) {
-			this.panels.stylesDropdown.visible = false;
-			return;
-		}
-
-		validStyles.forEach((style) => {
-			const styleName = $.Localize(getRunStyleName(style));
-			const item = $.CreatePanel('Label', this.panels.stylesDropdown, styleName, {
-				text: styleName,
-				value: style
-			});
-			this.panels.stylesDropdown.AddOption(item);
-		});
-
-		const defaultStyle = GamemodeDefaultUIStyle.get(currentMode) ?? Style.NORMAL;
-		let defaultStyleIndex = validStyles.indexOf(defaultStyle);
-		if (defaultStyleIndex === -1) {
-			$.Warning(
-				`Warning: Default style ${defaultStyle} for gamemode ${currentMode} not found in valid styles: ${validStyles}`
-			);
-			defaultStyleIndex = 0;
-		}
-
-		this.panels.stylesDropdown.visible = true;
-		this.panels.stylesDropdown.SetSelectedIndex(defaultStyleIndex);
-
-		this.panels.stylesDropdown.SetPanelEvent('onuserinputsubmit', () => {
-			const selected = this.panels.stylesDropdown.GetSelected();
-			this.panels.cp.selectStyle(selected.GetAttributeInt('value', 0));
 		});
 	}
 
