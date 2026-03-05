@@ -121,23 +121,30 @@ class HudStatusHandler {
 			return this.strs.finished;
 		}
 
+		// Use the subsegment count as the checkpoint number if checkpoints aren't ordered
+		const splits = MomentumTimerAPI.GetObservedTimerRunSplits();
+		const segment = splits.segments[majorNum - 1];
+		const checkpointNum = segment.checkpointsOrdered ? minorNum : segment.subsegments.length;
+
 		// state is TimerState.RUNNING
 		if (trackId.type === TrackType.MAIN) {
 			if (segmentsCount === 1) {
-				return segmentCheckpointsCount > 1 ? `${checkpointTerm} ${minorNum}/${segmentCheckpointsCount}` : '';
+				return segmentCheckpointsCount > 1
+					? `${checkpointTerm} ${checkpointNum}/${segmentCheckpointsCount}`
+					: '';
 			} else {
 				return segmentCheckpointsCount > 1
-					? `${segmentTerm} ${majorNum}/${segmentsCount} | ${checkpointTerm} ${minorNum}/${segmentCheckpointsCount}`
+					? `${segmentTerm} ${majorNum}/${segmentsCount} | ${checkpointTerm} ${checkpointNum}/${segmentCheckpointsCount}`
 					: `${segmentTerm} ${majorNum}/${segmentsCount}`;
 			}
 		} else if (trackId.type === TrackType.STAGE) {
 			return segmentCheckpointsCount > 1
-				? `${segmentTerm} ${trackId.number} | ${checkpointTerm} ${minorNum}/${segmentCheckpointsCount}`
+				? `${segmentTerm} ${trackId.number} | ${checkpointTerm} ${checkpointNum}/${segmentCheckpointsCount}`
 				: `${segmentTerm} ${trackId.number}`;
 		} else {
 			// Bonus
 			return segmentCheckpointsCount > 1
-				? `${this.strs.bonus} ${trackId.number} | ${checkpointTerm} ${minorNum}/${segmentCheckpointsCount}`
+				? `${this.strs.bonus} ${trackId.number} | ${checkpointTerm} ${checkpointNum}/${segmentCheckpointsCount}`
 				: `${this.strs.bonus} ${trackId.number}`;
 		}
 	}
