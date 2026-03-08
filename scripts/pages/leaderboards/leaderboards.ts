@@ -3,6 +3,7 @@ import { LeaderboardListType, LeaderboardStatusType, LeaderboardType, sortLeader
 import { EndOfRunShowReason } from 'common/timer';
 import { TrackType } from 'common/web/enums/track-type.enum';
 import type { MMap } from 'common/web/types/models/models';
+import { Style } from 'common/web/enums/style.enum';
 
 exposeToPanelContext({ LeaderboardListType, LeaderboardType });
 
@@ -21,6 +22,7 @@ class LeaderboardsHandler {
 		syncTrackButton: $<Button>('#SyncTrackButton'),
 		endOfRunButton: $<Button>('#EndOfRunButton'),
 		tracksDropdown: $<DropDown>('#TracksDropdown'),
+		stylesDropdown: $<DropDown>('#StylesDropdown'),
 		radioButtons: {
 			listTypes: {
 				global: $<RadioButton>('#TimesListGlobal'),
@@ -50,7 +52,7 @@ class LeaderboardsHandler {
 		);
 
 		// Note: Can't set radio button groups in the XML because it causes multiple leaderboard instances to interfere with eachother
-		const lbType = this.panels.cp.id === 'TabMenuLeaderboards' ? 'TabMenu' : 'MapSelector';
+		const lbType = this.isInGameLeaderboard() ? 'TabMenu' : 'MapSelector';
 		Object.entries(this.panels.radioButtons).forEach(([group, buttons]) => {
 			Object.values(buttons).forEach((button) => (button.group = lbType + group));
 		});
@@ -172,9 +174,9 @@ class LeaderboardsHandler {
 	}
 
 	syncTrackWithLeaderboard() {
-		const selected = this.panels.tracksDropdown.GetSelected();
-		const trackType = selected.GetAttributeInt('trackType', TrackType.MAIN as number);
-		const trackNum = selected.GetAttributeInt('trackNum', 1);
+		const selectedTrack = this.panels.tracksDropdown.GetSelected();
+		const trackType = selectedTrack.GetAttributeInt('trackType', TrackType.MAIN as number);
+		const trackNum = selectedTrack.GetAttributeInt('trackNum', 1);
 
 		switch (trackType) {
 			case TrackType.MAIN:
@@ -187,6 +189,10 @@ class LeaderboardsHandler {
 				GameInterfaceAPI.ConsoleCommand(`mom_bonus ${trackNum}`);
 				break;
 		}
+
+		const selectedStyle = this.panels.stylesDropdown.GetSelected();
+		const style = selectedStyle.GetAttributeInt('value', Style.NORMAL);
+		GameInterfaceAPI.ConsoleCommand(`mom_style ${style}`);
 	}
 
 	showEndOfRun() {
@@ -206,10 +212,11 @@ class LeaderboardsHandler {
 	onOfficialMapLeaderboardsLoaded(map: MMap) {
 		this.panels.tracksDropdown.RemoveAllOptions();
 
-		const isTabMenu = this.panels.cp.id === 'TabMenuLeaderboard';
-		const currentMode = isTabMenu ? GameModeAPI.GetCurrentGameMode() : GameModeAPI.GetMetaGameMode();
+		const currentMode = this.getCurrentMode();
+		const currentStyle =
+			this.panels.stylesDropdown.GetSelected()?.GetAttributeInt('value', Style.NORMAL) ?? Style.NORMAL;
 		map.leaderboards
-			.filter((leaderboard) => leaderboard.gamemode === currentMode)
+			.filter((leaderboard) => leaderboard.gamemode === currentMode && leaderboard.style === currentStyle)
 			.sort(sortLeaderboard)
 			.forEach((leaderboard, index) => {
 				let trackStr;
@@ -300,7 +307,7 @@ class LeaderboardsHandler {
 		}
 
 		// Allow player to sync their current track to the value selected in the dropdown
-		if (this.panels.cp.id === 'TabMenuLeaderboards') {
+		if (this.isInGameLeaderboard()) {
 			this.panels.syncTrackButton.visible = true;
 		}
 
@@ -313,5 +320,18 @@ class LeaderboardsHandler {
 				selected.GetAttributeInt('trackNum', 1)
 			);
 		});
+	}
+
+	getCurrentMode() {
+		const isTabMenu = this.isInGameLeaderboard();
+		if (isTabMenu) {
+			return GameModeAPI.GetCurrentGameMode();
+		} else {
+			return GameModeAPI.GetMetaGameMode();
+		}
+	}
+
+	isInGameLeaderboard() {
+		return this.panels.cp.id === 'TabMenuLeaderboards';
 	}
 }
