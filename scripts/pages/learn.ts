@@ -229,22 +229,14 @@ class Learn {
 	}
 
 	static teleportToLessonStart() {
-		// TODO: This is fucking with playtesters, also stupid anyway
-		// if (!GameInterfaceAPI.GetSettingBool('sv_cheats')) {
-		// 	// For some reason SetSettingBool errors here
-		// 	GameInterfaceAPI.ConsoleCommand('sv_cheats 1');
-		// }
-		//
 		if (this.currentLessonData['TeleTarget']) {
 			const target = this.currentLessonData['TeleTarget'];
-			GameInterfaceAPI.ConsoleCommand(`ent_fire teleport_send_player addoutput "target ${target}"`);
-			$.Schedule(0.05, () => GameInterfaceAPI.ConsoleCommand('mom_restart_track'));
+			GameInterfaceAPI.ConsoleCommand(`mom_learn_teleport ${target}`);
 			$.Msg(`Learn: Teleporting to TeleTarget ${target}`);
 		} else if (this.currentLessonData['Position']) {
 			const pos = this.currentLessonData['Position'];
 			const angles = this.currentLessonData['Angle'] ?? '0 0 0';
-			GameInterfaceAPI.ConsoleCommand(`setpos ${pos}`);
-			GameInterfaceAPI.ConsoleCommand(`setang ${angles}`);
+			GameInterfaceAPI.ConsoleCommand(`mom_learn_teleport ${pos} ${angles}`);
 			$.Msg(`Learn: Teleporting to Position ${pos}, Angles ${angles} `);
 		} else {
 			$.Warning(
