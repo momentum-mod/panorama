@@ -258,9 +258,10 @@ export class SettingsPage {
 				// The $.Localize() is rather silly but once the panel's text has been set to a localised string, it differs
 				// for the token `texturename`. We could localize the object keys in `textures` themselves, but I'm worried
 				// V8 would have issues with weird chars in there.
-				path = Object.entries(textures).find(
-					([textureName, _]) => selected.text === $.Localize(textureName)
-				)[1];
+
+				path = Object.entries(textures).find(([textureName, _]) => {
+					return selected.text.toUpperCase() === $.Localize(textureName).toUpperCase();
+				})[1];
 			}
 
 			// Find and destroy the label because it's not a real option
