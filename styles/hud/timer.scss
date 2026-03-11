@@ -1,11 +1,10 @@
 @use '../config' as *;
 @use '../abstract/mixin';
 
-.hudtimer {
+.hud-timer {
 	flow-children: down;
-	width: 100%;
-	align: center center;
-	margin: 6px 0px 6px 0;
+	width: fit-children;
+	height: fit-children;
 
 	&--hidden {
 		opacity: 0;
