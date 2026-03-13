@@ -319,7 +319,7 @@
 			<Button class="button button--blue ml-2 h-align-right" onactivate="ZoneMenuHandler.saveZones()">
 				<Label class="button__text" text="#Zoning_Save" />
 			</Button>
-			<Button class="button ml-2 h-align-right" onactivate="ZoneMenuHandler.cancelEdit()">
+			<Button class="button ml-2 h-align-right" onactivate="ZoneMenuHandler.discardChanges()">
 				<Label class="button__text" text="#Zoning_Discard" />
 			</Button>
 		</Panel>
