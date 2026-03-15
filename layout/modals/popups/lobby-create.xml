@@ -14,6 +14,10 @@
 		<Panel id="WarningRow" class="row my-2">
 			<Label id="WarningLabel" class="generic-popup__text text-sm text-italic color-gray-800" text="{s:warning}" />
 		</Panel>
+		<Panel class="row mt-3">
+			<Label class="mr-3 v-align-center" text="Lobby Name" />
+			<TextEntry id="LobbyName" class="textentry pl-3" maxchars="64" placeholder="Lobby Name" ontextentrychange="LobbyCreateHandler.onChanged()" />
+		</Panel>
 		<Panel class="row h-align-center mt-3">
 			<RadioButton id="LobbyCreatePublicButton" class="button radiobutton radiobutton--blue mr-2" selected="true" onactivate="LobbyCreateHandler.onChanged()">
 				<Image class="button__icon button__icon--left" src="file://{images}/online/publiclobby.svg" textureheight="32" />

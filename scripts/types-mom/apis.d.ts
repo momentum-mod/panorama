@@ -232,8 +232,8 @@ declare namespace SteamLobbyAPI {
 	 */
 	function RefreshList(filters: Record<string, never>): boolean;
 
-	/** Create a new lobby with the given visibility */
-	function Create(type: 0 | 1 | 2, memberLimit: number): void;
+	/** Create a new lobby with the given visibility and optional custom name */
+	function Create(type: 0 | 1 | 2, memberLimit: number, lobbyName: string): void;
 
 	/** Joins a lobby of the given SteamID */
 	function Join(steamID: steamID): void;

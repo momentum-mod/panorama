@@ -8,6 +8,7 @@ class LobbyCreateHandler implements OnPanelLoad {
 		warningRow: $<Panel>('#WarningRow'),
 		warningLabel: $<Label>('#WarningLabel'),
 		updateButton: $<Button>('#UpdateButton'),
+		lobbyName: $<TextEntry>('#LobbyName'),
 		maxPlayers: $<TextEntry>('#MaxPlayers')
 	};
 
@@ -55,7 +56,7 @@ class LobbyCreateHandler implements OnPanelLoad {
 			type = LobbyType.PUBLIC;
 		}
 
-		SteamLobbyAPI.Create(+type as 0 | 1 | 2, this.getMaxPlayersEntered());
+		SteamLobbyAPI.Create(+type as 0 | 1 | 2, this.getMaxPlayersEntered(), this.getLobbyNameEntered());
 
 		$.RegisterForUnhandledEvent('SteamLobby_Enter', () => {
 			UiToolkitAPI.CloseAllVisiblePopups();
@@ -68,6 +69,10 @@ class LobbyCreateHandler implements OnPanelLoad {
 
 	getMaxPlayersEntered() {
 		return +this.panels.maxPlayers.text;
+	}
+
+	getLobbyNameEntered() {
+		return this.panels.lobbyName.text.trim();
 	}
 
 	isChecked(buttonID: string) {
