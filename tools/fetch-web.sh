@@ -45,7 +45,7 @@ rm -rf types/queries/*
 cd ../../..
 
 echo "Running prettier"
-npx prettier --write ./scripts/common/web/**/*.ts ./scripts/util/enum.ts
+npx prettier --write "./scripts/common/web/**/*.ts" "./scripts/util/enum.ts"
 
 echo "Creating Git commit"
 git reset
