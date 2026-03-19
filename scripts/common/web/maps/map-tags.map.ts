@@ -47,7 +47,8 @@ export const GamemodeTags = {
 		MapTag.Climb,
 		MapTag.Booster,
 		MapTag.Fast_Paced,
-		MapTag.Forced_Bhop
+		MapTag.Forced_Bhop,
+		MapTag.Ladder
 	],
 	[GamemodeCategory.CLIMB]: [
 		MapTag.Ladder,
@@ -119,7 +120,8 @@ export const GamemodeTags = {
 		MapTag.Lightning_Gun,
 		MapTag.Staged__Linear,
 		MapTag.Funkyboost,
-		MapTag.Gauntlet
+		MapTag.Gauntlet,
+		MapTag.Flight
 	]
 } satisfies Record<GamemodeCategory, number[]>;
 
