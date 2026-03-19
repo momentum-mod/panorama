@@ -25,14 +25,14 @@ if [ "$1" == "-b" ] || [ "$1" == "" ]; then
   fi 
   
   mkdir -p ./scripts/common/web
-  mv ./website-tmp/libs/constants/src/* ./scripts/common/web
-  mv ./website-tmp/libs/enum/src/enum.ts ./scripts/util/enum.ts
+  cp -rf ./website-tmp/libs/constants/src/* ./scripts/common/web
+  cp -f ./website-tmp/libs/enum/src/enum.ts ./scripts/util/enum.ts
   rm -rf ./website-tmp
 elif [ "$1" == "-l" ]; then
   echo "Copying constants from local path"
   mkdir -p ./scripts/common/web
-  cp -r "$2"/libs/constants/src/* ./scripts/common/web
-  cp -r "$2"/libs/enum/src/enum.ts ./scripts/util/enum.ts
+  cp -rf "$2"/libs/constants/src/* ./scripts/common/web
+  cp -f "$2"/libs/enum/src/enum.ts ./scripts/util/enum.ts
 elif [ "$1" == "-h" ]; then
   echo "usage: fetch-web.sh [-b branch] [-l local-path] [-h]"
   exit 0
