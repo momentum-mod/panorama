@@ -227,6 +227,15 @@ $transition: 0.125s ease-out 0s;
 			visibility: visible;
 			@include mixin.gradient-themed($color: 'purple', $direction: 'down');
 		}
+
+		#{$root}--featured & {
+			visibility: visible;
+			@include mixin.gradient-themed($color: 'orange', $direction: 'down');
+		}
+
+		#{$root}--featured &-text {
+			font-size: 12px;
+		}
 	}
 
 	&__lobby {

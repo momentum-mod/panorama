@@ -31,7 +31,8 @@ class MapEntryHandler {
 
 	strings = {
 		bannerNew: $.Localize('#MapSelector_Banner_New'),
-		bannerPrivate: $.Localize('#MapSelector_Banner_Private')
+		bannerPrivate: $.Localize('#MapSelector_Banner_Private'),
+		bannerFeatured: $.Localize('#MapSelector_Banner_Featured')
 	};
 
 	onActionButtonPressed() {
@@ -168,18 +169,29 @@ class MapEntryHandler {
 		const isNew =
 			staticData.status === MapStatus.APPROVED &&
 			Date.now() - new Date(staticData.info.approvedDate).getTime() < NEW_MAP_BANNER_CUTOFF;
+		const isFeatured =
+			GameInterfaceAPI.GetSettingBool('mom_map_lobbies') &&
+			($.GetContextPanel<MapEntry>().mapData.featuredGamemodeMask & (1 << gamemode)) !== 0;
 
 		if (isPrivate) {
 			cp.SetDialogVariable('banner', this.strings.bannerPrivate);
 			cp.SetHasClass('map-entry--private', true);
 			cp.SetHasClass('map-entry--new', false);
+			cp.SetHasClass('map-entry--featured', false);
+		} else if (isFeatured) {
+			cp.SetDialogVariable('banner', this.strings.bannerFeatured);
+			cp.SetHasClass('map-entry--private', false);
+			cp.SetHasClass('map-entry--new', false);
+			cp.SetHasClass('map-entry--featured', true);
 		} else if (isNew) {
 			cp.SetDialogVariable('banner', this.strings.bannerNew);
 			cp.SetHasClass('map-entry--private', false);
 			cp.SetHasClass('map-entry--new', true);
+			cp.SetHasClass('map-entry--featured', false);
 		} else {
 			cp.SetHasClass('map-entry--private', false);
 			cp.SetHasClass('map-entry--new', false);
+			cp.SetHasClass('map-entry--featured', false);
 		}
 	}
 
