@@ -7,33 +7,33 @@
 		<include type="module" src="file://{scripts}/hud/map-info.ts" />
 	</scripts>
 
-	<MomHudMapInfo class="hudmapinfo">
+	<MomHudMapInfo class="hud-map-info">
 		<ConVarEnabler class="flow-down w-full" convar="mom_hud_map_info" togglevisibility="true">
 
 			<ConVarEnabler class="w-full" convar="mom_hud_map_name" togglevisibility="true">
-				<Label class="hudmapinfo__label h-align-right" text="{s:mapname} ({s:gamemode})" />
+				<Label class="hud-map-info__label h-align-right" text="{s:mapname} ({s:gamemode})" />
 			</ConVarEnabler>
 
 			<Panel id="CachedInfoContainer" class="flow-down w-fit-children h-align-right v-align-center">
 
 				<ConVarEnabler class="flow-right w-fit-children h-align-right" convar="mom_hud_map_author" togglevisibility="true">
-					<Label class="hudmapinfo__label" text="#MapInfo_Author" />
+					<Label class="hud-map-info__label" text="#MapInfo_Author" />
 				</ConVarEnabler>
 
 				<Panel class="flow-left w-fit-children h-align-right v-align-center">
 					<ConVarEnabler class="flow-right w-fit-children h-align-right" convar="mom_hud_map_stages" togglevisibility="true">
-						<Label id="StageCountLabel" class="hudmapinfo__label" text="#MapInfo_StageCount" />
+						<Label id="StageCountLabel" class="hud-map-info__label" text="#MapInfo_StageCount" />
 					</ConVarEnabler>
 
 					<ConVarEnabler class="flow-right w-fit-children h-align-right" convar="mom_hud_map_type" togglevisibility="true">
 						<ConVarEnabler class="w-fit-children h-align-right" convar="mom_hud_map_tier" togglevisibility="true">
-							<Label class="hudmapinfo__label" text=" - " />
+							<Label class="hud-map-info__label" text=" - " />
 						</ConVarEnabler>
-						<Label id="LinearLabel" class="hudmapinfo__label" text="#MapInfo_Type_Linear" />
+						<Label id="LinearLabel" class="hud-map-info__label" text="#MapInfo_Type_Linear" />
 					</ConVarEnabler>
 
 					<ConVarEnabler class="flow-right w-fit-children h-align-right" convar="mom_hud_map_tier" togglevisibility="true">
-						<Label id="TierLabel" class="hudmapinfo__label" text="#MapInfo_Tier" />
+						<Label id="TierLabel" class="hud-map-info__label" text="#MapInfo_Tier" />
 					</ConVarEnabler>
 				</Panel>
 
