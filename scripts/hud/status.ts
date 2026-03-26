@@ -134,6 +134,14 @@ class HudStatusHandler {
 
 		// Use the subsegment count as the checkpoint number if checkpoints aren't ordered
 		const splits = MomentumTimerAPI.GetObservedTimerRunSplits();
+
+		// Very rarely we see a start zone close enough but not touching a cancel zone, that results in timer status
+		// being RUNNING, but splits.segments being undefined. Just return empty string, OnObservedTimerStateChange
+		// will fire straight after this with TimerState.DISABLED.
+		if (!splits || !splits.segments) {
+			return '';
+		}
+
 		const segment = splits.segments[majorNum - 1];
 		const checkpointNum = segment.checkpointsOrdered ? minorNum : segment.subsegments.length;
 
