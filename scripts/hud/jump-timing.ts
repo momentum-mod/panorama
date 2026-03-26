@@ -1,8 +1,7 @@
 import { PanelHandler } from 'util/module-helpers';
 import { RegisterHUDPanelForGamemode } from 'util/register-for-gamemodes';
 import { RgbaTuple, tupleToRgbaString } from 'util/colors';
-import { GamemodeCategory } from 'common/web/enums/gamemode.enum';
-import { GamemodeCategories } from 'common/web/maps/gamemodes.map';
+import { Gamemode } from 'common/web/enums/gamemode.enum';
 
 const Colors = {
 	RED: [255, 0, 0, 255] as RgbaTuple,
@@ -30,7 +29,7 @@ class JumpTimingHandler {
 
 	constructor() {
 		RegisterHUDPanelForGamemode({
-			gamemodes: GamemodeCategories.get(GamemodeCategory.BHOP), // TODO: Add stamina bhop game mode
+			gamemodes: [Gamemode.BHOP_STAMINA, Gamemode.CLIMB_KZT, Gamemode.CLIMB_16],
 			onLoad: () => this.onMapInit(),
 			events: [
 				{
