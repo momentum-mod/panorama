@@ -10,7 +10,9 @@ export enum Style {
 	S_ONLY = 6,
 	BACKWARDS = 7,
 	PRO = 8,
-	TELEPORT = 9
+	TELEPORT = 9,
+	SCROLL = 10,
+	_400VEL = 11
 }
 
 const StyleNames: ReadonlyMap<Style, string> = new Map([
@@ -23,7 +25,9 @@ const StyleNames: ReadonlyMap<Style, string> = new Map([
 	[Style.S_ONLY, 'S-Only'],
 	[Style.BACKWARDS, 'Backwards'],
 	[Style.PRO, 'Pro'],
-	[Style.TELEPORT, 'Teleport']
+	[Style.TELEPORT, 'Teleport'],
+	[Style.SCROLL, 'Scroll'],
+	[Style._400VEL, '400 Vel']
 ]) satisfies CompleteMap<Style>;
 
 /** Get the English name of a style */
@@ -41,5 +45,7 @@ export const CompatibleStyles: ReadonlyMap<Style, Style[]> = new Map([
 	[Style.S_ONLY, [Style.NORMAL]],
 	[Style.BACKWARDS, [Style.NORMAL]],
 	[Style.PRO, [Style.TELEPORT]],
-	[Style.TELEPORT, []]
+	[Style.TELEPORT, []],
+	[Style.SCROLL, [Style.NORMAL]],
+	[Style._400VEL, []]
 ]) satisfies CompleteMap<Style>;

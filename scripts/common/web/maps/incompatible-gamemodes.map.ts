@@ -27,6 +27,7 @@ const Cats = (...gcs: GamemodeCategory[]) => gcs.flatMap((gc) => GamemodeCategor
 export const IncompatibleGamemodes: ReadonlyMap<Gamemode, ReadonlySet<Gamemode>> = new Map([
   [G.SURF,        new Set([...Cats(GC.BHOP), G.CLIMB_MOM, G.CLIMB_KZT])],
   [G.BHOP,        new Set([...Cats(GC.SURF), G.CLIMB_MOM, G.CLIMB_KZT])],
+  [G.BHOP_STAMINA, new Set([...Cats(GC.SURF), G.CLIMB_MOM, G.CLIMB_KZT])],
   [G.BHOP_HL1,    new Set([...Cats(GC.SURF), G.CLIMB_MOM, G.CLIMB_KZT])],
   [G.CLIMB_MOM,   new Set(Cats(GC.SURF, GC.BHOP))],
   [G.CLIMB_KZT,   new Set(Cats(GC.SURF, GC.BHOP))],
