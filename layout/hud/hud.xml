@@ -18,6 +18,7 @@
 		<!-- Center of screen HUD laid out vertically top-to-bottom -->
 		<Panel id="HudCenter" hittest="false" hittestchildren="false">
 			<MomHudSafeguardIndicator />
+			<MomHudAhopSprint />
 			<MomHudJumpTiming />
 		</Panel>
 

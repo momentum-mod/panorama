@@ -104,7 +104,7 @@
 
 						<RadioButton id="GameplayRadio" class="settings-nav__item" group="SettingsNav" onactivate="SettingsHandler.navigateToTab('GameplaySettings')">
 							<Label class="settings-nav__item-label" text="#Settings_Gameplay" />
-							<Panel class="settings-nav__subsection settings-nav__subsection--8 settings-nav__subsection--hidden">
+							<Panel class="settings-nav__subsection settings-nav__subsection--9 settings-nav__subsection--hidden">
 								<RadioButton id="GameplayGeneralRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="SettingsHandler.navigateToSubsection('GameplaySettings', 'GameplayGeneralSubSection')">
 									<Label class="settings-nav__subitem-label" text="#Settings_Gameplay" />
 								</RadioButton>
@@ -117,6 +117,9 @@
 								<!-- TODO: Rename -->
 								<RadioButton id="ZonesRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="SettingsHandler.navigateToSubsection('GameplaySettings', 'ZonesSubSection')">
 									<Label class="settings-nav__subitem-label" text="#Settings_Zones_Title" />
+								</RadioButton>
+								<RadioButton id="AhopRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="SettingsHandler.navigateToSubsection('GameplaySettings', 'AhopSubSection')">
+									<Label class="settings-nav__subitem-label" text="#Settings_Ahop_Title" />
 								</RadioButton>
 								<RadioButton id="RocketJumpRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="SettingsHandler.navigateToSubsection('GameplaySettings', 'RocketJumpSubSection')">
 									<Label class="settings-nav__subitem-label" text="#Settings_RJ_Title" />
