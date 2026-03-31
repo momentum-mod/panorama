@@ -134,8 +134,19 @@ class HudStatusHandler {
 
 		// Use the subsegment count as the checkpoint number if checkpoints aren't ordered
 		const splits = MomentumTimerAPI.GetObservedTimerRunSplits();
-		const segment = splits.segments[majorNum - 1];
-		const checkpointNum = segment.checkpointsOrdered ? minorNum : segment.subsegments.length;
+		let segment, checkpointNum;
+		if (
+		    splits &&
+		    Array.isArray(splits.segments) &&
+		    splits.segments.length >= majorNum &&
+		    splits.segments[majorNum - 1]
+		) {
+		    segment = splits.segments[majorNum - 1];
+		    checkpointNum = segment.checkpointsOrdered ? minorNum : segment.subsegments.length;
+		} else {
+		    segment = null;
+		    checkpointNum = minorNum || 1;
+		}
 
 		// state is TimerState.RUNNING
 		let str = '';
