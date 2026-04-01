@@ -12,6 +12,7 @@ export interface GamemodeInfoProperties extends GamemodeInfoPropertiesWeb {
 const extraModeData = [
 	[Gamemode.SURF, { i18n: '#Gamemode_Surf' }],
 	[Gamemode.BHOP, { i18n: '#Gamemode_Bhop' }],
+	[Gamemode.BHOP_STAMINA, { i18n: '#Gamemode_BhopStamina' }],
 	[Gamemode.BHOP_HL1, { i18n: '#Gamemode_BhopHL1' }],
 	[Gamemode.CLIMB_MOM, { i18n: '#Gamemode_KzMom' }],
 	[Gamemode.CLIMB_KZT, { i18n: '#Gamemode_KzKzt' }],

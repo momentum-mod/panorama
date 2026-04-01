@@ -294,8 +294,8 @@ declare namespace GameModeAPI {
 	 */
 	function GetGameModeCheckpointToken(gamemode: Gamemode): string;
 
-	/** Gets all valid run styles for the provided gamemode. */
-	function GetValidRunStyles(gamemode: Gamemode): number[];
+	/** Gets all leaderboard run styles for the provided gamemode. */
+	function GetLeaderboardRunStyles(gamemode: Gamemode): number[];
 }
 
 declare namespace MomentumTimerAPI {

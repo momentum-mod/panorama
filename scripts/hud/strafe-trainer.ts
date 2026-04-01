@@ -80,6 +80,7 @@ class StrafeTrainer {
 			gamemodes: [
 				Gamemode.SURF,
 				Gamemode.BHOP,
+				Gamemode.BHOP_STAMINA,
 				Gamemode.BHOP_HL1,
 				Gamemode.CLIMB_MOM,
 				Gamemode.CLIMB_KZT,
