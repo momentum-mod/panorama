@@ -1,5 +1,7 @@
 import type { Leaderboard, MMap } from './web/types/models/models';
 import { TrackType } from './web/enums/track-type.enum';
+import { Style } from './web/enums/style.enum';
+import { GamemodeDefaultUIStyle } from './web/maps/gamemode-styles.map';
 
 export enum LeaderboardListType {
 	LOCAL = 0,
@@ -38,8 +40,12 @@ export function getTrack(
 	gamemode: Gamemode,
 	trackType: TrackType = TrackType.MAIN,
 	trackNum: number = 1,
-	style: number = 0
+	style?: Style
 ): Leaderboard | undefined {
+	if (style === undefined) {
+		style = GamemodeDefaultUIStyle.get(gamemode);
+	}
+
 	return mapData.leaderboards.find(
 		(leaderboard) =>
 			leaderboard.gamemode === gamemode &&
