@@ -1,0 +1,15 @@
+{
+    "version": "0.2.0",
+	// Example debug configuration. Change remoteRoot to your local panorama path!
+    "configurations": [
+        {
+            "type": "node",
+            "request": "attach",
+            "name": "Debug",
+            "address": "127.0.0.1",
+            "port": 42000,
+            "localRoot": "${workspaceFolder}",
+            "remoteRoot": "F:/MomentumDev/game/momentum/panorama"
+        }
+    ]
+}
