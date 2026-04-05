@@ -6,10 +6,12 @@
             "type": "node",
             "request": "attach",
             "name": "Debug",
-            "address": "127.0.0.1",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
             "port": 42000,
-            "localRoot": "${workspaceFolder}",
-            "remoteRoot": "F:/MomentumDev/game/momentum/panorama"
+            "restart": true,
+            "address": "127.0.0.1"
         }
     ]
 }
