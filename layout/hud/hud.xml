@@ -43,7 +43,6 @@
 		<MomHudDFJump /> <!-- TODO: BottomRight, not added to customizer -->
 		<MomHudAmmo /> <!-- TODO: BottomRight, not added to customizer -->
 		<MomHudKeyPress id="KeyPress" />
-		<MomHudVersionInfo id="VersionInfo" />
 		<MomHudMapInfo id="MapInfo" />
 		<MomHudSpecInfo id="SpecInfo" />
 		<MomHudWeaponSelection id="WeaponSelection" />
