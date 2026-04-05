@@ -11,7 +11,7 @@
 		"isolatedModules": false,
 		// Enable every strict mode option *besides* strictNullChecks, which we don't support yet
 		"strict": true,
-		"strictNullChecks": true,
+		"strictNullChecks": false,
 		"experimentalDecorators": true,
 		"typeRoots": ["./scripts/types-mom"], // If you error here, you don't have the submodule installed! (git submodule update --init --recursive)
 		"sourceMap": true,
