@@ -5,13 +5,9 @@
 	flow-children: down;
 	width: 350px;
 	height: fit-children;
-
 	&__label {
 		@include mixin.font-header();
 		font-weight: bold;
-		font-size: 20px;
-		text-align: right;
 		text-overflow: ellipsis;
-		color: $white;
 	}
 }
