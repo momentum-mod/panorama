@@ -18,6 +18,7 @@ export enum CustomizerPropertyType {
 	CHECKBOX,
 	SLIDER, // TODO: do we actually want this for anything?
 	COLOR_PICKER,
+	GRADIENT_PICKER,
 	FONT_PICKER
 }
 
@@ -26,6 +27,7 @@ interface PropertyTypeMap {
 	[CustomizerPropertyType.CHECKBOX]: ToggleButton;
 	[CustomizerPropertyType.SLIDER]: Slider;
 	[CustomizerPropertyType.COLOR_PICKER]: never;
+	[CustomizerPropertyType.GRADIENT_PICKER]: never;
 	[CustomizerPropertyType.FONT_PICKER]: never;
 }
 
@@ -34,6 +36,7 @@ interface PropertyTypeToValueTypeMap {
 	[CustomizerPropertyType.CHECKBOX]: ToggleButton['checked'];
 	[CustomizerPropertyType.SLIDER]: Slider['value'];
 	[CustomizerPropertyType.COLOR_PICKER]: TextEntry['text'];
+	[CustomizerPropertyType.GRADIENT_PICKER]: [string, string];
 	[CustomizerPropertyType.FONT_PICKER]: string;
 }
 
@@ -163,7 +166,7 @@ export interface CustomizerComponentProperties {
 	 * This is for when layouting in edit mode can take multiple frames (currently happening with Comparisons).
 	 * If provided, customizer will listen to the HudThink event and wait until the panel's width is at least
 	 * this value so it can position the overlay panel correctly.
-	 * 
+	 *
 	 * If layouting takes more than 500 frames, we give up and just use whatever size the panel is at.
 	 */
 	expectedMinWidth?: number;

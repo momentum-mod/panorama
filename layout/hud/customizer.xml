@@ -36,6 +36,16 @@
 			</Panel>
 		</snippet>
 
+        <snippet name="dynamic-gradientpicker">
+            <Panel class="hud-customizer-settings__row">
+                <Label class="hud-customizer-settings__setting-label" text="{s:name}" />
+                <Panel class="dynamic-gradientpicker__container">
+                    <ColorDisplay id="StartColor" class="hud-customizer-settings__colordisplay dynamic-gradientpicker__colordisplay" />
+                    <ColorDisplay id="EndColor" class="hud-customizer-settings__colordisplay dynamic-gradientpicker__colordisplay" />
+                </Panel>
+            </Panel>
+        </snippet>
+        
 		<snippet name="dynamic-fontpicker">
 			<Panel class="hud-customizer-settings__row">
 				<Label class="hud-customizer-settings__setting-label" text="{s:name}" />
