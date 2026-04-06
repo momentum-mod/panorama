@@ -4,6 +4,8 @@ import { rgbaStringLerp } from 'util/colors';
 import { RegisterHUDPanelForGamemode } from '../util/register-for-gamemodes';
 import { Gamemode } from 'common/web/enums/gamemode.enum';
 
+import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
+
 const Colors = {
 	EXTRA: ['rgba(24, 150, 211, 1)', 'rgba(87, 200, 255, 1)'],
 	PERFECT: ['rgba(87, 200, 255, 1)', 'rgba(113, 240, 255, 1)'],
@@ -23,7 +25,6 @@ const RAD2DEG = 180 / Math.PI;
 const DEG2RAD = 1 / RAD2DEG;
 
 enum DisplayMode {
-	DISABLED,
 	HALF_WIDTH_THROTTLE,
 	FULL_WIDTH_THROTTLE,
 	STRAFE_INDICATOR,
@@ -46,34 +47,33 @@ class StrafeTrainer {
 		stats: [$<Label>('#StatsUpper'), $<Label>('#StatsLower')]
 	};
 
-	indicatorPercentage = 90; // this value shows ~90% gain or better when strafe indicator touches needle
-	isFirstPanelColored = true; // gets toggled in wrapValueToRange()
-	maxSegmentWidth = 25; // percentage of total element width
-	firstPanelWidth = this.maxSegmentWidth;
-	syncGain = 10; // scale how fast the bars move
-	altColor = 'rgba(0, 0, 0, 0.0)';
-	statMode: StatMode;
+	//Customizable
 	displayMode: DisplayMode;
-	colorEnable: boolean;
+	indicatorPercentage = 90; // this value shows ~90% gain or better when strafe indicator touches needle
+	syncGain = 10; // scale how fast the bars move
+	colorByGainEnable: boolean;
 	dynamicEnable: boolean;
-	statColorEnable: boolean;
 	flipEnable: boolean;
 	interpFrames: number;
 	minSpeed: number;
+	showJumpCount: boolean;
+	showTakeoffSpeed: boolean;
+	showYawRatio: boolean;
+	showGain: boolean;
+	statColorEnable: boolean;
+	//If this doesn't have a color assigned by default the game breaks
+	//It immediately gets overridden by hud/hud_default.kv3 anyway
+	//Can't figure it out
+	altColor = 'rgba(0,0,0,0)' as color;
+
+	//Not yet customizable
+	isFirstPanelColored = true; // gets toggled in wrapValueToRange()
+	maxSegmentWidth = 25; // percentage of total element width
+	firstPanelWidth = this.maxSegmentWidth;
+
 	sampleWeight: number;
 	gainRatioHistory: number[];
 	yawRatioHistory: number[];
-
-	initializeSettings() {
-		this.setDisplayMode(GameInterfaceAPI.GetSettingInt('mom_hud_strafetrainer_mode') as DisplayMode);
-		this.setColorMode(GameInterfaceAPI.GetSettingBool('mom_hud_strafetrainer_color_enable'));
-		this.setDynamicMode(GameInterfaceAPI.GetSettingBool('mom_hud_strafetrainer_dynamic_enable'));
-		this.setDirection(GameInterfaceAPI.GetSettingBool('mom_hud_strafetrainer_flip_enable'));
-		this.setBufferLength(GameInterfaceAPI.GetSettingFloat('mom_hud_strafetrainer_buffer_size'));
-		this.setMinSpeed(GameInterfaceAPI.GetSettingFloat('mom_hud_strafetrainer_min_speed'));
-		this.setStatMode(GameInterfaceAPI.GetSettingInt('mom_hud_strafetrainer_stat_mode'));
-		this.setStatColorMode(GameInterfaceAPI.GetSettingBool('mom_hud_strafetrainer_stat_color_enable'));
-	}
 
 	constructor() {
 		RegisterHUDPanelForGamemode({
@@ -85,38 +85,150 @@ class StrafeTrainer {
 				Gamemode.CLIMB_KZT,
 				Gamemode.CLIMB_16
 			],
-			onLoad: () => this.onLoad(),
-			events: [
-				{ event: 'OnJumpStarted', callback: () => this.onJump() },
-				{ event: 'OnStrafeTrainerModeChanged', callback: (cvarValue) => this.setDisplayMode(cvarValue) },
-				{
-					event: 'OnStrafeTrainerColorModeChanged',
-					callback: (cvarValue) => this.setColorMode(cvarValue === 1)
-				},
-				{
-					event: 'OnStrafeTrainerDynamicModeChanged',
-					callback: (cvarValue) => this.setDynamicMode(cvarValue === 1)
-				},
-				{
-					event: 'OnStrafeTrainerDirectionChanged',
-					callback: (cvarValue) => this.setDirection(cvarValue === 1)
-				},
-				{ event: 'OnStrafeTrainerBufferChanged', callback: (cvarValue) => this.setBufferLength(cvarValue) },
-				{ event: 'OnStrafeTrainerMinSpeedChanged', callback: (cvarValue) => this.setMinSpeed(cvarValue) },
-				{ event: 'OnStrafeTrainerStatModeChanged', callback: (cvarValue) => this.setStatMode(cvarValue) },
-				{
-					event: 'OnStrafeTrainerStatColorModeChanged',
-					callback: (cvarValue) => this.setStatColorMode(cvarValue === 1)
-				}
-			],
+			events: [{ event: 'OnJumpStarted', callback: () => this.updateStats() }],
 			handledEvents: [{ event: 'HudProcessInput', panel: $.GetContextPanel(), callback: () => this.onUpdate() }]
 		});
-	}
 
-	onLoad() {
-		this.initializeSettings();
-
-		if (this.statMode) this.onJump(); // show stats if enabled
+		registerHUDCustomizerComponent($.GetContextPanel(), {
+			//TODO: Add resizing width, it needs to target a specific panel, not the root
+			resizeX: true,
+			resizeY: false,
+			expectedMinWidth: 300,
+			//TODO: Add generic border, font settings
+			//TODO: Add options to edit all the colors in the colors const. They need to be expandable or they will take way too much space
+			dynamicStyles: {
+				//TODO: Use proper CustomizerPropertyType when available
+				displayMode: {
+					name: 'Display Mode',
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					callbackFunc: (_, value) => {
+						this.updateDisplayMode(value);
+					},
+					settingProps: { min: 0, max: 3 }
+				},
+				//TODO: ONLY SHOW WHEN DISPLAY MODE = 2
+				indicatorPercentage: {
+					name: 'Indicator Gain Percentage',
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					callbackFunc: (_, value) => {
+						this.indicatorPercentage = value;
+						this.updateDisplayMode(this.displayMode);
+					},
+					settingProps: { min: 80, max: 99 }
+				},
+				//TODO: ONLY SHOW WHEN DISPLAY MODE = 3
+				synchronizerSpeed: {
+					name: 'Synchronizer Speed',
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					callbackFunc: (_, value) => {
+						this.syncGain = value;
+					},
+					settingProps: { min: 1, max: 20 }
+				},
+				colorByGain: {
+					name: 'Color By Speed Gain',
+					type: CustomizerPropertyType.CHECKBOX,
+					callbackFunc: (_, value) => {
+						this.colorByGainEnable = value;
+					}
+				},
+				dynamicMode: {
+					name: 'Follow Strafe Direction',
+					type: CustomizerPropertyType.CHECKBOX,
+					callbackFunc: (_, value) => {
+						this.dynamicEnable = value;
+					}
+				},
+				flipDirections: {
+					name: 'Flip Directions',
+					type: CustomizerPropertyType.CHECKBOX,
+					callbackFunc: (_, value) => {
+						this.flipEnable = value;
+					}
+				},
+				averagingWindow: {
+					name: 'Averaging Window',
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					callbackFunc: (_, value) => {
+						this.updateBufferLength(value);
+					},
+					settingProps: { min: 1, max: 20 }
+				},
+				//TODO: Use slider when implemented?
+				minSpeed: {
+					name: 'Minimum required speed',
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					callbackFunc: (_, value) => {
+						this.minSpeed = value;
+					},
+					settingProps: { min: 30, max: 250 }
+				},
+				//TODO: Put everything below into an expandable menu option when that's available
+				showJumpCount: {
+					name: 'Show Jump Count',
+					type: CustomizerPropertyType.CHECKBOX,
+					callbackFunc: (_, value) => {
+						this.showJumpCount = value;
+						this.updateStats();
+					}
+				},
+				showTakeoffSpeed: {
+					name: 'Show Take Off Speed',
+					type: CustomizerPropertyType.CHECKBOX,
+					callbackFunc: (_, value) => {
+						this.showTakeoffSpeed = value;
+						this.updateStats();
+					}
+				},
+				showYawRatio: {
+					name: 'Show Yaw Ratio',
+					type: CustomizerPropertyType.CHECKBOX,
+					callbackFunc: (_, value) => {
+						this.showYawRatio = value;
+						this.updateStats();
+					}
+				},
+				showGain: {
+					name: 'Show Gain',
+					type: CustomizerPropertyType.CHECKBOX,
+					callbackFunc: (_, value) => {
+						this.showGain = value;
+						this.updateStats();
+					}
+				},
+				//Todo: Don't show if stats are enabled
+				colorStats: {
+					name: 'Color Stats Based On Gain',
+					type: CustomizerPropertyType.CHECKBOX,
+					callbackFunc: (_, value) => {
+						this.statColorEnable = value;
+						this.updateStats();
+					}
+				},
+				backgroundColor: {
+					name: 'Background Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					callbackFunc: (_, value) => {
+						this.altColor = value as color;
+						this.updateDisplayMode(this.displayMode);
+					}
+				},
+				needleColor: {
+					name: 'Needle Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					targetPanel: '.strafetrainer__needle',
+					styleProperty: 'backgroundColor'
+				},
+				fontSize: {
+					name: 'Font Size',
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					targetPanel: ['.strafetrainer__stats--upper', '.strafetrainer__stats--lower'],
+					styleProperty: 'fontSize',
+					valueFn: (value) => `${value}px`,
+					settingProps: { min: 10, max: 20 }
+				}
+			}
+		});
 	}
 
 	onUpdate() {
@@ -136,28 +248,27 @@ class StrafeTrainer {
 			this.gainRatioHistory[this.interpFrames - 1] =
 				this.sampleWeight * this.NaNCheck(lastTickStats.speedGain / lastTickStats.idealGain, 0);
 
-			const ratio = this.displayMode > 2 ? 1 - lastTickStats.yawRatio : lastTickStats.yawRatio;
+			const ratio = this.displayMode > 1 ? 1 - lastTickStats.yawRatio : lastTickStats.yawRatio;
 			this.yawRatioHistory[this.interpFrames - 1] = this.sampleWeight * this.NaNCheck(ratio, 0);
 		}
 
 		const gainRatio = this.getBufferedSum(this.gainRatioHistory);
 		const yawRatio = this.getBufferedSum(this.yawRatioHistory);
 
-		const colorTuple = this.colorEnable
+		const colorTuple = this.colorByGainEnable
 			? this.getColorPair(gainRatio, false) //strafeRight * yawRatio > 1)
 			: Colors.NEUTRAL;
-		const color = `gradient(linear, 0% 0%, 0% 100%, from(${colorTuple[0]}), to(${colorTuple[1]}))`;
+		const color = `gradient(linear, 0% 0%, 0% 100%, from(${colorTuple[0]}), to(${colorTuple[1]}))` as color;
 		let flow;
 
 		switch (this.displayMode) {
-			case 1: // "w-half throttle"
+			case DisplayMode.HALF_WIDTH_THROTTLE:
 				flow = direction * flip;
 				this.panels.container.style.flowChildren = flow < 0 ? 'left' : 'right';
 				this.panels.segments[0].style.backgroundColor = color;
 				this.panels.segments[0].style.width = (yawRatio * 50).toFixed(3) + '%';
 				break;
-			case 2: {
-				// "w-full throttle"
+			case DisplayMode.FULL_WIDTH_THROTTLE: {
 				const absRatio = Math.abs(gainRatio);
 				flow = direction * (yawRatio > 1 ? -1 : 1) * flip;
 				this.panels.container.style.flowChildren = flow < 0 ? 'left' : 'right';
@@ -165,8 +276,7 @@ class StrafeTrainer {
 				this.panels.segments[0].style.width = (absRatio * 100).toFixed(3) + '%';
 				break;
 			}
-			case 3: {
-				// "Strafe indicator"
+			case DisplayMode.STRAFE_INDICATOR: {
 				this.panels.container.style.flowChildren = flip < 0 ? 'left' : 'right';
 				//const offset = Math.min(Math.max(0.5 - (0.5 * direction * syncDelta) / idealDelta, 0), 1);
 				const offset = Math.min(Math.max(0.5 - 0.5 * direction * yawRatio, 0), 1);
@@ -174,7 +284,7 @@ class StrafeTrainer {
 				this.panels.segments[1].style.backgroundColor = color;
 				break;
 			}
-			case 4: // "Synchronizer"
+			case DisplayMode.SYNCHRONIZER:
 				this.panels.container.style.flowChildren = flip < 0 ? 'left' : 'right';
 				this.firstPanelWidth += this.syncGain * direction * yawRatio * lastTickStats.idealGain;
 				this.firstPanelWidth = this.wrapValueToRange(this.firstPanelWidth, 0, this.maxSegmentWidth, true);
@@ -188,13 +298,27 @@ class StrafeTrainer {
 		}
 	}
 
-	onJump() {
+	//Happens onJump and whenever any setting related to stats is changed
+	updateStats() {
 		const lastJumpStats = MomentumMovementAPI.GetLastJumpStats();
-		this.panels.stats[0].text =
-			`${lastJumpStats.jumpCount}: `.padStart(6, ' ') +
-			`${lastJumpStats.takeoffSpeed.toFixed(0)} `.padStart(6, ' ') +
-			`(${(lastJumpStats.yawRatio * 100).toFixed(2)}%)`.padStart(10, ' ');
-		this.panels.stats[1].text = (lastJumpStats.speedGain * 100).toFixed(2);
+		const statsTopText = [];
+		if (this.showJumpCount) {
+			const colon = this.showTakeoffSpeed || this.showYawRatio ? ': ' : '';
+			statsTopText.push(`${lastJumpStats.jumpCount}${colon}`);
+		}
+
+		if (this.showTakeoffSpeed) {
+			const takeoffSpeed = `${lastJumpStats.takeoffSpeed.toFixed(0)}`;
+			statsTopText.push(this.showJumpCount ? takeoffSpeed.padStart(5, ' ') : takeoffSpeed);
+		}
+
+		if (this.showYawRatio) {
+			const yaw = `${(lastJumpStats.yawRatio * 100).toFixed(2)}%`;
+			statsTopText.push(this.showTakeoffSpeed ? `(${yaw})`.padStart(10, ' ') : yaw);
+		}
+
+		this.panels.stats[0].text = statsTopText.join(' ');
+		this.panels.stats[1].text = this.showGain ? (lastJumpStats.speedGain * 100).toFixed(2) : ' ';
 
 		const colorPair = this.statColorEnable
 			? this.getColorPair(lastJumpStats.speedGain, lastJumpStats.yawRatio > 0)
@@ -264,8 +388,8 @@ class StrafeTrainer {
 		return history.reduce((sum, element) => sum + element, 0);
 	}
 
-	setDisplayMode(newMode: DisplayMode) {
-		this.displayMode = newMode ?? DisplayMode.DISABLED;
+	updateDisplayMode(newMode: DisplayMode) {
+		this.displayMode = newMode;
 		switch (this.displayMode) {
 			case DisplayMode.HALF_WIDTH_THROTTLE:
 				for (const segment of this.panels.segments) {
@@ -297,37 +421,12 @@ class StrafeTrainer {
 		}
 	}
 
-	setColorMode(newColorMode: boolean) {
-		this.colorEnable = newColorMode ?? false;
-	}
-
-	setDynamicMode(newDynamicMode: boolean) {
-		this.dynamicEnable = newDynamicMode ?? false;
-	}
-
-	setDirection(newDirection: boolean) {
-		this.flipEnable = newDirection ?? false;
-	}
-
-	setBufferLength(newBufferLength: float) {
+	updateBufferLength(newBufferLength: float) {
 		this.interpFrames = newBufferLength ?? DEFAULT_BUFFER_LENGTH;
 		this.sampleWeight = 1 / this.interpFrames;
 
 		this.gainRatioHistory = this.initializeBuffer(this.interpFrames);
 		this.yawRatioHistory = this.initializeBuffer(this.interpFrames);
-	}
-
-	setMinSpeed(newMinSpeed: number) {
-		this.minSpeed = newMinSpeed ?? DEFAULT_MIN_SPEED;
-	}
-
-	setStatMode(newStatMode: StatMode) {
-		this.statMode = newStatMode ?? StatMode.OFF;
-		this.panels.wrapper.style.visibility = newStatMode === StatMode.HIDE_BAR ? 'collapse' : 'visible';
-	}
-
-	setStatColorMode(newColorMode: boolean) {
-		this.statColorEnable = newColorMode ?? false;
 	}
 
 	NaNCheck(val: any, def: any) {

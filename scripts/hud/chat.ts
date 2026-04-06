@@ -68,7 +68,7 @@ registerHUDCustomizerComponent($.GetContextPanel(), {
 			targetPanel: '.chat__elem',
 			valueFn: (value) => `${value}px`,
 			settingProps: { min: 0, max: 20 }
-		},
+		}
 		// TODO: Blurring blurs the entire panel, not the backbuffer. Adding #ChatInput to #HudBlur's blurrects has
 		// same issue, no idea what's different about that panel from say, TabMenu/Spectator
 		// blur: {

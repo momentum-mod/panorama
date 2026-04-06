@@ -25,7 +25,7 @@
 		<ConVarEnabler convar="mom_zoning_enable" togglevisibility="true">
 			<MomHudZoning /> <!-- TODO: HudBottomCenter, not in customizer -->
 		</ConVarEnabler>
-		<MomHudStrafeTrainer /> <!-- TODO: HudBottomCenter, not in customizer -->
+		<MomHudStrafeTrainer id="StrafeTrainer"/> <!-- TODO: HudBottomCenter, not in customizer -->
 		<MomHudSpeedometer id="Speedometer" />
 		<MomHudConcCooktime id="ConcCooktime" />
 		<MomHudStickyCharge id="StickyCharge" />

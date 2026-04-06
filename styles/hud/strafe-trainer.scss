@@ -6,17 +6,18 @@ $border-color: rgba(255, 255, 255, 0.3);
 
 .strafetrainer {
 	height: 80px;
-	horizontal-align: center;
+	min-width: 300px;
 	overflow: noclip;
 
 	&__bar-wrapper {
 		margin-bottom: 32px;
 		transform: translateY(32px);
+		width: 100%;
 	}
 
 	&__background {
 		height: 16px;
-		width: 300px;
+		width: 100%;
 		background-color: color.scale(rgba($progressbar-background, 1), $lightness: 2%);
 		border-radius: 8px;
 	}
@@ -50,13 +51,11 @@ $border-color: rgba(255, 255, 255, 0.3);
 
 		&--upper {
 			align: center top;
-			font-size: 20px;
 			font-weight: bold;
 		}
 
 		&--lower {
 			align: center bottom;
-			font-size: 20px;
 			font-weight: bold;
 		}
 	}
