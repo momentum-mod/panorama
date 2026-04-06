@@ -3,7 +3,7 @@
 
 .hud-map-info {
 	flow-children: down;
-	width: 350px;
+	min-width: 350px;
 	height: fit-children;
 	&__label {
 		@include mixin.font-header();
