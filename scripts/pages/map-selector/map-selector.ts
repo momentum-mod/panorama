@@ -3,7 +3,6 @@ import { traverseChildren } from 'util/functions';
 import type { MMap } from 'common/web/types/models/models';
 import { MapStatus, MapStatuses } from 'common/web/enums/map-status.enum';
 import { MapCreditType } from 'common/web/enums/map-credit-type.enum';
-import { TrackType } from 'common/web/enums/track-type.enum';
 import { SteamGame } from 'common/web/enums/steam-game.enum';
 import { SteamGamesNames } from 'common/web/maps/steam-games.map';
 import * as Maps from 'common/maps';
@@ -559,11 +558,7 @@ class MapSelectorHandler implements OnPanelLoad {
 		statsPanel.SetDialogVariableInt('total_completions', onlineMapData.stats.completions);
 		statsPanel.SetDialogVariableInt('favorites', onlineMapData.stats.favorites);
 
-		const gamemode = GameModeAPI.GetMetaGameMode();
-		const wr = onlineMapData.worldRecords?.find(
-			(run) => run.gamemode === gamemode && run.trackType === TrackType.MAIN && run.style === 0
-		);
-
+		const wr = onlineMapData.worldRecord;
 		if (wr) {
 			statsPanel.SetDialogVariableFloat('world_record', wr?.time ?? 0);
 			statsPanel.FindChildTraverse('MapInfoWR').visible = true;
