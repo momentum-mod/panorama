@@ -741,6 +741,30 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 					break;
 				}
 
+				case CustomizerPropertyType.GRADIENT_PICKER: {
+					panel.LoadLayoutSnippet('dynamic-gradientpicker');
+					panel.SetDialogVariable('name', dynamicStyle.properties.name);
+
+					const startColor = panel.FindChildTraverse<ColorDisplay>('StartColor')!;
+					startColor.text = 'From: ';
+					startColor.SetPanelEvent('oncolorchange', () => {
+						component.setDynamicStyle(styleID, [startColor.color, endColor.color]);
+					});
+
+					const endColor = panel.FindChildTraverse<ColorDisplay>('EndColor')!;
+					endColor.text = 'To: ';
+					endColor.SetPanelEvent('oncolorchange', () => {
+						component.setDynamicStyle(styleID, [startColor.color, endColor.color]);
+					});
+
+					const gradientValue = component.dynamicStyles[styleID]?.value;
+
+					startColor.color = (gradientValue[0] as rgbaColor) ?? 'rgba(255, 255, 255, 1)';
+					endColor.color = (gradientValue[1] as rgbaColor) ?? 'rgba(255, 255, 255, 1)';
+
+					break;
+				}
+
 				// TODO: More generic DROPDOWN version that takes array of entries
 				case CustomizerPropertyType.FONT_PICKER: {
 					panel.LoadLayoutSnippet('dynamic-fontpicker');

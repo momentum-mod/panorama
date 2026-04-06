@@ -1,4 +1,5 @@
 import { PanelHandler } from 'util/module-helpers';
+import { registerHUDCustomizerComponent } from 'common/hud-customizer';
 
 export enum StickyState {
 	NOSTICKY = 0,
@@ -19,6 +20,11 @@ const StickyPanelClasses = new Map([
 class StickyCountHandler {
 	constructor() {
 		$.RegisterEventHandler('OnStickyPanelStateChanged', $.GetContextPanel(), this.onStickyPanelStateChanged);
+
+		registerHUDCustomizerComponent($.GetContextPanel(), {
+			resizeX: false,
+			resizeY: false
+		});
 	}
 
 	onStickyPanelStateChanged(stickyPanel: Panel, state: StickyState, prevstate: StickyState) {

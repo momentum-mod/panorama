@@ -533,3 +533,25 @@ $input-background-hover: rgb(110, 110, 110);
 .hud-customizer-dragpanel {
 	cursor: size-all;
 }
+
+.dynamic-gradientpicker__container {
+	horizontal-align: right;
+	flow-children: right;
+}
+.dynamic-gradientpicker__colordisplay {
+	width: fit-children;
+	margin-left: 10px;
+}
+
+.dynamic-gradientpicker__colordisplay Label {
+	width: fit-children;
+	margin: 0;
+}
+
+.dynamic-gradientpicker__colordisplay Panel {
+	margin: 0;
+}
+
+.dynamic-gradientpicker__colordisplay TextEntry {
+	visibility: collapse;
+}

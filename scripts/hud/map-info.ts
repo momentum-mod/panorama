@@ -133,13 +133,8 @@ class HudMapInfoHandler {
 
 	constructString() {
 		const mapInfoString = [];
-		if (this.showTiers) {
-			mapInfoString.push($.Localize('#MapInfo_Tier', this.panels.mapInfoLabel));
-			$.Msg(mapInfoString[0]);
-		}
-		if (this.showMapType) {
-			mapInfoString.push(this.mapTypeText);
-		}
+		if (this.showTiers) mapInfoString.push($.Localize('#MapInfo_Tier', this.panels.mapInfoLabel));
+		if (this.showMapType) mapInfoString.push(this.mapTypeText);
 		this.panels.mapInfoLabel.text = mapInfoString.join(' - ');
 	}
 
