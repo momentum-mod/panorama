@@ -19,12 +19,11 @@ class HudMapInfoHandler {
 		$.RegisterForUnhandledEvent('MapCache_MapLoad', (mapName: string) => this.onOfficialMapLoad(mapName));
 
 		//TODO: Add generic border styles
-		//TODO: Handle variable width?
+		//TODO: Handle variable width? Kinda done, Customizer needs to be able to have minimum width set
 
 		registerHUDCustomizerComponent($.GetContextPanel(), {
-			resizeX: false,
+			resizeX: true,
 			resizeY: false,
-			expectedMinWidth: 350,
 			dynamicStyles: {
 				showVersion: {
 					name: 'Show Version',
