@@ -11,12 +11,11 @@ export enum StickyState {
 	BLOCKED = 3
 }
 
-//These values don't matter, defaults should be set through momentum/cfg/hud_default.kv3
-const Colors = {
-	BACKGROUND: 'rgba(35, 50, 57, 1)',
-	ARMING: 'rgba(35, 50, 57, 1)',
-	ARMED: 'gradient(linear, 0% 0%, 100% 0%, from (rgba(24, 150, 211, 1), to(rgba(113, 240, 255, 1)))',
-	BLOCKED: 'gradient(linear, 0% 0%, 100% 0%, from (rgba(134, 65, 65, 1), to(rgba(170, 65, 65, 1)))'
+const StateColors: Record<StickyState, string> = {
+	[StickyState.NOSTICKY]: 'rgba(35, 50, 57, 1)',
+	[StickyState.ARMING]: 'rgba(35, 50, 57, 1)',
+	[StickyState.ARMED]: 'gradient(linear, 0% 0%, 100% 0%, from (rgba(24, 150, 211, 1), to(rgba(113, 240, 255, 1)))',
+	[StickyState.BLOCKED]: 'gradient(linear, 0% 0%, 100% 0%, from (rgba(134, 65, 65, 1), to(rgba(170, 65, 65, 1)))'
 };
 
 @PanelHandler()
@@ -24,6 +23,8 @@ class StickyCountHandler {
 	readonly panels = {
 		countContainer: $('#StickyCountContainer')
 	};
+
+	private panelStates: Map<GenericPanel, StickyState> = new Map();
 
 	constructor() {
 		RegisterHUDPanelForGamemode({
@@ -82,29 +83,36 @@ class StickyCountHandler {
 					name: 'Background Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
-						Colors.BACKGROUND = value;
+						StateColors[StickyState.NOSTICKY] = value;
 						this.stupidInitializeHack();
+						this.updateColors();
 					}
 				},
 				armingGradient: {
 					name: 'Arming Gradient',
 					type: CustomizerPropertyType.GRADIENT_PICKER,
 					callbackFunc: (_, value) => {
-						Colors.ARMING = `gradient(linear, 0% 0%, 100% 0%, from (${value[0]}, to(${value[1]}))`;
+						StateColors[StickyState.ARMING] =
+							`gradient(linear, 0% 0%, 100% 0%, from (${value[0]}, to(${value[1]}))`;
+						this.updateColors();
 					}
 				},
 				armedGradient: {
 					name: 'Armed Gradient',
 					type: CustomizerPropertyType.GRADIENT_PICKER,
 					callbackFunc: (_, value) => {
-						Colors.ARMED = `gradient(linear, 0% 0%, 100% 0%, from (${value[0]}, to(${value[1]}))`;
+						StateColors[StickyState.ARMED] =
+							`gradient(linear, 0% 0%, 100% 0%, from (${value[0]}, to(${value[1]}))`;
+						this.updateColors();
 					}
 				},
 				blockedGradient: {
 					name: 'Blocked Gradient',
 					type: CustomizerPropertyType.GRADIENT_PICKER,
 					callbackFunc: (_, value) => {
-						Colors.BLOCKED = `gradient(linear, 0% 0%, 100% 0%, from (${value[0]}, to(${value[1]}))`;
+						StateColors[StickyState.BLOCKED] =
+							`gradient(linear, 0% 0%, 100% 0%, from (${value[0]}, to(${value[1]}))`;
+						this.updateColors();
 					}
 				}
 			}
@@ -114,24 +122,19 @@ class StickyCountHandler {
 	stupidInitializeHack() {
 		const stickyPanels = this.panels.countContainer.Children();
 		stickyPanels.forEach((panel) => {
-			panel.style.backgroundColor = Colors.BACKGROUND as color;
+			panel.style.backgroundColor = StateColors[StickyState.NOSTICKY] as color;
+			this.panelStates.set(panel, StickyState.NOSTICKY);
+		});
+	}
+
+	updateColors() {
+		this.panelStates.forEach((state, panel) => {
+			panel.style.backgroundColor = StateColors[state] as color;
 		});
 	}
 
 	onStickyPanelStateChanged(stickyPanel: Panel, state: StickyState, prevstate: StickyState) {
-		switch (state) {
-			case StickyState.ARMED:
-				stickyPanel.style.backgroundColor = Colors.ARMED as color;
-				break;
-			case StickyState.ARMING:
-				stickyPanel.style.backgroundColor = Colors.ARMING as color;
-				break;
-			case StickyState.BLOCKED:
-				stickyPanel.style.backgroundColor = Colors.BLOCKED as color;
-				break;
-			case StickyState.NOSTICKY:
-				stickyPanel.style.backgroundColor = Colors.BACKGROUND as color;
-				break;
-		}
+		this.panelStates.set(stickyPanel, state);
+		stickyPanel.style.backgroundColor = StateColors[state] as color;
 	}
 }
