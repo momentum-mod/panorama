@@ -4,6 +4,7 @@
 	margin: 6px 0 6px 0;
 
 	// assigned in code
+	// A lot of settings should be removed from here, can't figure out how to initialize them in the customizer yet
 	.sticky-panel {
 		margin: 0 8px 0 8px;
 		width: 24px;
@@ -15,25 +16,26 @@
 		background-color: $progressbar-background;
 		border: 0px solid transparent;
 
-		&--nosticky {
-			background-color: $progressbar-background;
-			border: 0px solid transparent;
-		}
+		// &--nosticky {
+		// 	// background-color: rgba(35, 50, 57, 1);
+		// 	border: 0px solid transparent;
+		// }
 
-		&--sticky-arming {
-		}
+		// &--sticky-arming {
+		// 	background-color: green;
+		// }
 
-		&--sticky-armed {
-			background-color: $progressbar-background-progress;
-		}
+		// &--sticky-armed {
+		// 	background-color: $progressbar-background-progress;
+		// }
 
-		&--sticky-blocked {
-			animation-name: none;
-			background-color: $progressbar-background-disabled;
-			border: 0px solid transparent;
+		// &--sticky-blocked {
+		// 	animation-name: none;
+		// 	background-color: $progressbar-background-disabled;
+		// 	border: 0px solid transparent;
 
-			transition-property: background-color;
-			transition-duration: 0.25s;
-		}
+		// 	transition-property: background-color;
+		// 	transition-duration: 0.25s;
+		// }
 	}
 }
