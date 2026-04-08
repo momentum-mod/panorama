@@ -30,9 +30,7 @@
 		<MomHudConcCooktime id="ConcCooktime" />
 		<MomHudStickyCharge id="StickyCharge" />
 		<MomHudStickyCount id="StickyCount" />
-		<ConVarEnabler convar="mom_zoning_enable" invert="true" togglevisibility="true">
-			<MomHudStatus id="Status" />
-		</ConVarEnabler>
+		<MomHudStatus id="Status" />
 		<MomHudTimer id="Timer" />
 		<MomHudStrafeSync id="StrafeSync" />
 		<MomHudGroundboost id="MomHudGroundboost" />
