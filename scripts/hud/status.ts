@@ -5,6 +5,8 @@ import { TrackType } from 'common/web/enums/track-type.enum';
 import { Style } from 'common/web/enums/style.enum';
 import { getRunStyleName } from 'common/style';
 
+import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
+
 @PanelHandler()
 class HudStatusHandler {
 	readonly panels = {
@@ -63,6 +65,58 @@ class HudStatusHandler {
 			this.saveStatesActive = false;
 			this.inPracticeMode = false;
 			this.update();
+		});
+
+		registerHUDCustomizerComponent($.GetContextPanel(), {
+			resizeX: true,
+			resizeY: false,
+			//TODO: Add text shadow settings
+			dynamicStyles: {
+				alignText: {
+					name: 'Align Text',
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					targetPanel: '.hudstatus',
+					callbackFunc: (panel, value) => {
+						switch (value) {
+							case 0:
+								panel.style.horizontalAlign = 'left';
+								break;
+							case 1:
+								panel.style.horizontalAlign = 'center';
+								break;
+							case 2:
+								panel.style.horizontalAlign = 'right';
+								break;
+						}
+					},
+					settingProps: { min: 0, max: 2 }
+				},
+				backgroundColor: {
+					name: 'Background Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					targetPanel: '.hudstatus',
+					styleProperty: 'backgroundColor'
+				},
+				font: {
+					name: 'Font',
+					type: CustomizerPropertyType.FONT_PICKER,
+					targetPanel: '.hudstatus__label',
+					styleProperty: 'fontFamily'
+				},
+				fontColor: {
+					name: 'Font Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					targetPanel: '.hudstatus__label',
+					styleProperty: 'color'
+				},
+				fontSize: {
+					name: 'Font Size',
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					targetPanel: '.hudstatus__label',
+					styleProperty: 'fontSize',
+					valueFn: (value) => `${value}px`
+				}
+			}
 		});
 	}
 
