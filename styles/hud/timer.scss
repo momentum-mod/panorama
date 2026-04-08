@@ -1,10 +1,10 @@
 @use '../config' as *;
 @use '../abstract/mixin';
 
-.hud-timer {
+.hudtimer {
 	flow-children: down;
-	width: fit-children;
-	height: fit-children;
+	width: 100%;
+	align: center center;
 
 	&--hidden {
 		opacity: 0;
@@ -12,44 +12,20 @@
 
 	&__time {
 		horizontal-align: center;
-
-		@include mixin.font-regular();
-		font-weight: $timer-font-weight;
-		font-size: $timer-font-size;
-		text-align: center;
-		color: $timer-color;
-
+		text-shadow-fast: 0px 1px rgba(0, 0, 0, 0.9);
+		font-weight: black;
 		transition: color 0.15s ease-out 0s;
-
-		&--inactive {
-			color: $timer-color-inactive;
-		}
-
-		&--finished {
-			color: $timer-color-finished;
-		}
 	}
 
 	&__comparison {
 		horizontal-align: center;
+		text-shadow-fast: 0px 1px rgba(0, 0, 0, 0.9);
 
-		@include mixin.font-regular();
-		font-weight: $timer-comp-font-weight;
-		font-size: $timer-comp-font-size;
-		text-align: center;
-		color: $timer-comp-color;
+		font-weight: bold;
 
 		transition-property: opacity;
 		transition-timing-function: ease-out;
 		transition-duration: 0s;
-
-		&--increase {
-			color: $timer-comp-color-increase;
-		}
-
-		&--decrease {
-			color: $timer-comp-color-decrease;
-		}
 
 		&--enable-fade {
 			transition-duration: 0.2s;
