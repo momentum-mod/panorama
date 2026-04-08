@@ -1,15 +1,24 @@
 import { PanelHandler } from 'util/module-helpers';
 import { HideHud } from 'common/state';
 import * as Timer from 'common/timer';
-import { registerHUDCustomizerComponent } from '../common/hud-customizer';
+
+import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
 
 const DIFF_DISPLAY_TIME = 5;
 const HIDDEN_CLASS = 'hudtimer--hidden';
-const INACTIVE_CLASS = 'hudtimer__time--inactive';
-const FINISHED_CLASS = 'hudtimer__time--finished';
-const INCREASE_CLASS = 'hudtimer__comparison--increase';
-const DECREASE_CLASS = 'hudtimer__comparison--decrease';
 const ENABLE_FADE_CLASS = 'hudtimer__comparison--enable-fade';
+
+const Colors = {
+	//Main timer colors
+	INACTIVE: 'rgba(200, 200, 200, 1)',
+	PRIMED: 'rgba(200, 200, 200, 1)',
+	RUNNING: 'rgba(255, 255, 255, 1)',
+	FINISHED: 'rgba(122, 238, 122, 1)',
+	//Comparison colors
+	INCREASE: 'rgba(16, 118, 168, 1)',
+	DECREASE: 'rgba(255, 106, 106, 1)',
+	INVISIBLE: 'rgba(0, 0, 0, 0)'
+};
 
 @PanelHandler()
 class HudTimerHandler {
@@ -20,17 +29,10 @@ class HudTimerHandler {
 	};
 
 	comparison: RunMetadata | null = null;
+	showComparison: boolean;
 	fadeoutScheduleId: uuid | null = null;
 
 	constructor() {
-		registerHUDCustomizerComponent($.GetContextPanel(), {
-			resizeX: false,
-			resizeY: false,
-			marginSettings: true,
-			paddingSettings: true,
-			backgroundSettings: true
-		});
-
 		this.panels.cp.SetDialogVariableFloat('runtime', 0);
 		this.panels.cp.hiddenHUDBits = HideHud.TABMENU;
 
@@ -78,6 +80,117 @@ class HudTimerHandler {
 			this.panels.cp.AddClass(HIDDEN_CLASS);
 			this.forceHideComparison();
 		});
+
+		registerHUDCustomizerComponent($.GetContextPanel(), {
+			resizeX: true,
+			resizeY: false,
+			dynamicStyles: {
+				showComparisons: {
+					name: 'Show Comparisons',
+					type: CustomizerPropertyType.CHECKBOX,
+					callbackFunc: (_, value) => {
+						this.showComparison = value;
+					}
+				},
+				alignText: {
+					name: 'Align Text',
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					targetPanel: ['.hudtimer__time', '.hudtimer__comparison'],
+					callbackFunc: (panel, value) => {
+						switch (value) {
+							case 0:
+								panel.style.horizontalAlign = 'left';
+								break;
+							case 1:
+								panel.style.horizontalAlign = 'center';
+								break;
+							case 2:
+								panel.style.horizontalAlign = 'right';
+								break;
+						}
+					},
+					settingProps: { min: 0, max: 2 }
+				},
+				backgroundColor: {
+					name: 'Background Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					targetPanel: ['.hudtimer__time', '.hudtimer__comparison'],
+					styleProperty: 'backgroundColor'
+				},
+				font: {
+					name: 'Font',
+					type: CustomizerPropertyType.FONT_PICKER,
+					targetPanel: '.hudtimer__time',
+					styleProperty: 'fontFamily'
+				},
+				fontSize: {
+					name: 'Font Size',
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					targetPanel: '.hudtimer__time',
+					styleProperty: 'fontSize',
+					valueFn: (value) => `${value}px`
+				},
+				comparisonFont: {
+					name: 'Comparison Font',
+					type: CustomizerPropertyType.FONT_PICKER,
+					targetPanel: '.hudtimer__comparison',
+					styleProperty: 'fontFamily'
+				},
+				comparisonFontSize: {
+					name: 'Comparison Font Size',
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					targetPanel: '.hudtimer__comparison',
+					styleProperty: 'fontSize',
+					valueFn: (value) => `${value}px`
+				},
+				inactiveColor: {
+					name: 'Inactive Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					callbackFunc: (_, value) => {
+						Colors.INACTIVE = value as color;
+						this.updateMainState();
+					}
+				},
+				primedColor: {
+					name: 'Primed Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					callbackFunc: (_, value) => {
+						Colors.PRIMED = value as color;
+						this.updateMainState();
+					}
+				},
+				runningColor: {
+					name: 'Running Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					callbackFunc: (_, value) => {
+						Colors.RUNNING = value as color;
+						this.updateMainState();
+					}
+				},
+				finishedColor: {
+					name: 'Finished Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					callbackFunc: (_, value) => {
+						Colors.FINISHED = value as color;
+						this.updateMainState();
+					}
+				},
+				comparisonIncreaseColor: {
+					name: 'Comparison Increase Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					callbackFunc: (_, value) => {
+						Colors.INCREASE = value as color;
+					}
+				},
+				comparisonDecreaseColor: {
+					name: 'Comparison Decrease Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					callbackFunc: (_, value) => {
+						Colors.DECREASE = value as color;
+					}
+				}
+			}
+		});
 	}
 
 	updateMainState() {
@@ -85,23 +198,20 @@ class HudTimerHandler {
 
 		switch (state) {
 			case Timer.TimerState.DISABLED:
-				this.panels.time.AddClass(INACTIVE_CLASS);
-				this.panels.time.RemoveClass(FINISHED_CLASS);
+				this.panels.time.style.color = Colors.INACTIVE;
+				this.panels.cp.RemoveClass(HIDDEN_CLASS);
 				this.forceHideComparison();
 				break;
 			case Timer.TimerState.RUNNING:
-				this.panels.time.RemoveClass(INACTIVE_CLASS);
-				this.panels.time.RemoveClass(FINISHED_CLASS);
+				this.panels.time.style.color = Colors.RUNNING;
 				this.panels.cp.RemoveClass(HIDDEN_CLASS);
 				break;
 			case Timer.TimerState.FINISHED:
-				this.panels.time.AddClass(FINISHED_CLASS);
-				this.panels.time.RemoveClass(INACTIVE_CLASS);
+				this.panels.time.style.color = Colors.FINISHED;
 				this.panels.cp.RemoveClass(HIDDEN_CLASS);
 				break;
 			case Timer.TimerState.PRIMED:
-				this.panels.time.AddClass(INACTIVE_CLASS);
-				this.panels.time.RemoveClass(FINISHED_CLASS);
+				this.panels.time.style.color = Colors.PRIMED;
 				this.panels.cp.RemoveClass(HIDDEN_CLASS);
 				this.forceHideComparison();
 				break;
@@ -109,7 +219,7 @@ class HudTimerHandler {
 	}
 
 	updateDiff() {
-		if (!this.comparison) return;
+		if (!this.comparison || !this.showComparison) return;
 
 		const { state, trackId, majorNum, minorNum, runTime, segmentsCount, segmentCheckpointsCount } =
 			MomentumTimerAPI.GetObservedTimerStatus();
@@ -149,16 +259,13 @@ class HudTimerHandler {
 
 		let diffSymbol: string;
 		if (diff > 0) {
-			this.panels.comparison.AddClass(DECREASE_CLASS);
-			this.panels.comparison.RemoveClass(INCREASE_CLASS);
+			this.panels.comparison.style.color = Colors.DECREASE;
 			diffSymbol = '+';
 		} else if (diff < 0) {
-			this.panels.comparison.AddClass(INCREASE_CLASS);
-			this.panels.comparison.RemoveClass(DECREASE_CLASS);
+			this.panels.comparison.style.color = Colors.INCREASE;
 			diffSymbol = '-';
 		} else {
-			this.panels.comparison.RemoveClass(INCREASE_CLASS);
-			this.panels.comparison.RemoveClass(DECREASE_CLASS);
+			this.panels.comparison.style.color = Colors.INVISIBLE;
 			diffSymbol = '';
 		}
 

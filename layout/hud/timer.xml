@@ -8,7 +8,9 @@
 	</scripts>
 
 	<MomHudTimer>
-		<Label id="HudTimerTime" class="hudtimer__time hudtimer__time--inactive" text="{g:time:runtime}" />
-		<Label id="HudTimerComparison" class="hudtimer__comparison hudtimer__comparison--remove-fade" text="{s:diff_symbol}{g:time:runtime_diff}" />
+		<Panel class="hudtimer">
+			<Label id="HudTimerTime" class="hudtimer__time" text="{g:time:runtime}" />
+			<Label id="HudTimerComparison" class="hudtimer__comparison hudtimer__comparison--remove-fade" text="{s:diff_symbol}{g:time:runtime_diff}" />
+		</Panel>
 	</MomHudTimer>
 </root>
