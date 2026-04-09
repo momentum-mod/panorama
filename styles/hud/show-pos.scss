@@ -1,28 +1,20 @@
-@use '../config' as *;
-@use '../abstract/mixin';
-
 .showpos {
-	margin: 5px;
 	flow-children: down;
 	height: fit-children;
-	width: fit-children;
-	align: center top;
 }
 
 .showpos-entry {
 	flow-children: down;
+	horizontal-align: center;
 	height: fit-children;
 	width: fit-children;
 
 	&__label {
-		@include mixin.font-regular();
 		font-weight: bold;
 		font-size: 16px;
 		horizontal-align: center;
 		text-align: center;
 		text-overflow: ellipsis;
-		color: $white;
-		text-shadow-fast: $font-shadow;
-		font-family: $font-monospace;
+		text-shadow-fast: 0px 1px rgba(0, 0, 0, 0.9);
 	}
 }

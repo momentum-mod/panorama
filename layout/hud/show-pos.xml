@@ -3,6 +3,10 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 
+    <scripts>
+		<include type="module" src="file://{scripts}/hud/show-pos.ts" />
+	</scripts>
+
 	<snippets>
 		<snippet name="showpos-snippet">
 			<Panel class="showpos-entry">

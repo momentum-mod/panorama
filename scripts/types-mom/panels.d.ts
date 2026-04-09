@@ -6,6 +6,7 @@ interface PanelTagNameMap {
 	LeaderboardEntry: LeaderboardEntry;
 	RangeColorDisplay: RangeColorDisplay;
 	PlayerListPlayer: PlayerListPlayer;
+	HudShowPos: HudShowPos;
 	HudComparisons: HudComparisons;
 	MomConcEntityPanel: MomConcEntityPanel;
 	MomHudTabMenu: MomHudTabMenu;
