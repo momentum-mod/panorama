@@ -18,18 +18,24 @@
 		<!-- Customizer grid needs to live outside HudCustomizer layout so it's below everything else in z-order -->
 		<Panel id="HudCustomizerGrid" class="hud-customizer-grid" hittest="false" hittestchildren="false" />
 
+        <!-- General HUD Elements -->
         <MomHudMapInfo id="MapInfo" />
         <MomHudStatus id="Status" />
 		<MomHudTimer id="Timer" />
         <MomHudChat id="Chat" />
 		<HudComparisons id="Comparisons" />
+        <HudShowPos id="ShowPos" />
 
+        <!-- Gamemode Specific HUD elements -->
         <MomHudStrafeTrainer id="StrafeTrainer"/> 
         <MomHudJumpStats id="JumpStats"/>
         <MomHudStickyCharge id="StickyCharge" />
 		<MomHudStickyCount id="StickyCount" />
         <MomHudConcCooktime id="ConcCooktime" />
 
+
+
+        <!-- NOT IN CUSTOMIZER -->
 		<ConVarEnabler convar="mom_zoning_enable" togglevisibility="true">
 			<MomHudZoning /> <!-- TODO: HudBottomCenter, not in customizer -->
 		</ConVarEnabler>
@@ -46,7 +52,7 @@
 		<MomHudKeyPress id="KeyPress" /> <!-- TODO: Not really in customizer, needs a rework -->
 		<MomHudSpecInfo id="SpecInfo" /> <!-- TODO: not in customizer -->
 		<MomHudWeaponSelection id="WeaponSelection" /> <!-- TODO: not in customizer -->
-		<HudShowPos id="ShowPos" /> <!-- TODO: not in customizer -->
+		
 		<HudBoneCounts id="BoneCount" /> <!-- TODO: HudTopCenter, not in customizer -->
 		<MomHudSpectate id="Spectator" /> <!-- TODO: HudTopCenter, not in customizer -->
 		
