@@ -9,45 +9,49 @@
 		<!-- In world UI is first to make sure it shows up behind all "screen-looking" UI -->
 		<Panel class="hud__in-world" hittest="false" hittestchildren="false">
 			<MomHudGhostEntities />
-			<MomHudConcEntities />
+			<MomHudConcEntities /> <!-- TODO: Not in customizer -->
 			<MomHudDamageIndicator />
-			<MomHudCgaz />
+			<MomHudCgaz /> <!-- TODO: Not in customizer -->
 			<MomHudReticle />
 		</Panel>
 
 		<!-- Customizer grid needs to live outside HudCustomizer layout so it's below everything else in z-order -->
 		<Panel id="HudCustomizerGrid" class="hud-customizer-grid" hittest="false" hittestchildren="false" />
 
-		<MomHudSafeguardIndicator /> <!-- TODO: HudCenter, not in customizer -->
-		<MomHudJumpTiming /> <!-- TODO: HudCenter, not added to customizer -->
-
+        <MomHudMapInfo id="MapInfo" />
+        <MomHudStatus id="Status" />
+		<MomHudTimer id="Timer" />
+        <MomHudChat id="Chat" />
 		<HudComparisons id="Comparisons" />
+
+        <MomHudStrafeTrainer id="StrafeTrainer"/> 
+        <MomHudJumpStats id="JumpStats"/>
+        <MomHudStickyCharge id="StickyCharge" />
+		<MomHudStickyCount id="StickyCount" />
+        <MomHudConcCooktime id="ConcCooktime" />
+
 		<ConVarEnabler convar="mom_zoning_enable" togglevisibility="true">
 			<MomHudZoning /> <!-- TODO: HudBottomCenter, not in customizer -->
 		</ConVarEnabler>
-		<MomHudStrafeTrainer id="StrafeTrainer"/> <!-- TODO: HudBottomCenter, not in customizer -->
-		<MomHudSpeedometer id="Speedometer" />
-		<MomHudConcCooktime id="ConcCooktime" />
-		<MomHudStickyCharge id="StickyCharge" />
-		<MomHudStickyCount id="StickyCount" />
-		<MomHudStatus id="Status" />
-		<MomHudTimer id="Timer" />
-		<MomHudStrafeSync id="StrafeSync" />
-		<MomHudGroundboost id="MomHudGroundboost" />
-		<HudHintText id="HudHintText" />
+
+        <MomHudSafeguardIndicator /> <!-- TODO: HudCenter, not in customizer -->
+		<MomHudJumpTiming /> <!-- TODO: HudCenter, not added to customizer -->
+		<MomHudSpeedometer id="Speedometer" /> <!-- TODO: HudBottomCenter, not in customizer -->
+		<MomHudGroundboost id="MomHudGroundboost" /> <!-- TODO: HudBottomCenter, not in customizer -->
+		<HudHintText id="HudHintText" /> <!-- TODO: not in customizer -->
 		<MomHudPowerupTimer /> <!-- TODO: LowerLeft, not added to customizer -->
-		<HudStaticMenu id="StaticMenu" />
-		<MomHudChat id="Chat" />
+		<HudStaticMenu id="StaticMenu" /> <!-- TODO: not in customizer -->
 		<MomHudDFJump /> <!-- TODO: BottomRight, not added to customizer -->
 		<MomHudAmmo /> <!-- TODO: BottomRight, not added to customizer -->
-		<MomHudKeyPress id="KeyPress" />
-		<MomHudMapInfo id="MapInfo" />
-		<MomHudSpecInfo id="SpecInfo" />
-		<MomHudWeaponSelection id="WeaponSelection" />
-		<HudShowPos id="ShowPos" />
+		<MomHudKeyPress id="KeyPress" /> <!-- TODO: Not really in customizer, needs a rework -->
+		<MomHudSpecInfo id="SpecInfo" /> <!-- TODO: not in customizer -->
+		<MomHudWeaponSelection id="WeaponSelection" /> <!-- TODO: not in customizer -->
+		<HudShowPos id="ShowPos" /> <!-- TODO: not in customizer -->
 		<HudBoneCounts id="BoneCount" /> <!-- TODO: HudTopCenter, not in customizer -->
 		<MomHudSpectate id="Spectator" /> <!-- TODO: HudTopCenter, not in customizer -->
-		<MomHudJumpStats /> <!-- TODO: HudTopCenter, not in customizer -->
+		
+
+        <!-- <MomHudStrafeSync id="StrafeSync" /> This is broken and probably not worth fixing --> 
 
 		<HudBlurTarget id="HudBlur" blurrects="TabMenu Spectator" class="hud-blur" hittest="false" hittestchildren="false">
 			<BackbufferImagePanel class="full" />
