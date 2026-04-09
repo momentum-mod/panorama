@@ -19,13 +19,14 @@
 		<Panel id="HudCustomizerGrid" class="hud-customizer-grid" hittest="false" hittestchildren="false" />
 
         <!-- General HUD Elements -->
+        <HudShowPos id="ShowPos" />
         <MomHudMapInfo id="MapInfo" />
         <MomHudStatus id="Status" />
 		<MomHudTimer id="Timer" />
         <MomHudChat id="Chat" />
 		<HudComparisons id="Comparisons" />
-        <HudShowPos id="ShowPos" />
-
+        <MomHudSpecInfo id="SpecInfo" />
+        
         <!-- Gamemode Specific HUD elements -->
         <MomHudStrafeTrainer id="StrafeTrainer"/> 
         <MomHudJumpStats id="JumpStats"/>
@@ -50,7 +51,7 @@
 		<MomHudDFJump /> <!-- TODO: BottomRight, not added to customizer -->
 		<MomHudAmmo /> <!-- TODO: BottomRight, not added to customizer -->
 		<MomHudKeyPress id="KeyPress" /> <!-- TODO: Not really in customizer, needs a rework -->
-		<MomHudSpecInfo id="SpecInfo" /> <!-- TODO: not in customizer -->
+		
 		<MomHudWeaponSelection id="WeaponSelection" /> <!-- TODO: not in customizer -->
 		
 		<HudBoneCounts id="BoneCount" /> <!-- TODO: HudTopCenter, not in customizer -->
