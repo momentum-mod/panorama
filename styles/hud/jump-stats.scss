@@ -1,44 +1,41 @@
-@use '../config' as *;
-@use '../abstract/mixin';
-
 .jumpstats {
-	align: center top;
+	align: left top;
 
 	&__container {
-		width: fit-children; //$jump-stats-width;
-		height: fit-children; //$jump-stats-height;
+		width: fit-children;
+		height: fit-children;
 		flow-children: right;
+		align: center top;
 		padding: 5px;
 		background-color: rgba(0, 0, 0, 0.3);
 	}
 
 	&__label {
-		@include mixin.font-regular();
+		text-shadow-fast: 0px 1px rgba(0, 0, 0, 0.9);
 		align: center bottom;
 		margin: 5px;
 		flow-children: up;
 		vertical-align: top;
-		color: $jump-stats-color-default;
 
 		&--name {
 			width: 100%;
-			font-size: $jump-stats-font-size;
+			font-size: 16px;
 			text-align: center;
 			border-top: 1px solid white;
 		}
 
 		&--values {
 			horizontal-align: center;
-			font-size: $jump-stats-font-size;
+			font-size: 16px;
 			text-align: right;
 		}
 
 		&--increase {
-			color: $jump-stats-color-increase;
+			color: rgba(16, 118, 168, 1);
 		}
 
 		&--decrease {
-			color: $jump-stats-color-decrease;
+			color: rgba(255, 106, 106, 1);
 		}
 
 		&--count {
