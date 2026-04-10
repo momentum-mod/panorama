@@ -3,7 +3,13 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 
-	<MomHudAmmo> <!-- Rebase: removed w-full class to match other widgets -->
-		<Label class="ammo__label" text="{i:ammoCount}" />
+    <scripts>
+		<include type="module" src="file://{scripts}/hud/ammo.ts" />
+	</scripts>
+
+	<MomHudAmmo>
+        <Panel class="ammo"> 
+		    <Label id="AmmoLabel" class="ammo__label"/>
+        </Panel>
 	</MomHudAmmo>
 </root>

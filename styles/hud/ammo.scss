@@ -1,17 +1,11 @@
-@use '../config' as *;
-@use '../abstract/mixin';
-
 .ammo {
-	width: 100%;
-	margin: 25px;
-	align: center top;
+	horizontal-align: right;
+	vertical-align: center;
 
 	&__label {
-		@include mixin.font-header();
+		text-transform: uppercase;
+		letter-spacing: 1px;
+		text-shadow: 0px 1px 1.5px 1 rgba(0, 0, 0, 1);
 		font-weight: bold;
-		font-size: 96px;
-		horizontal-align: center;
-		text-overflow: ellipsis;
-		color: $white;
 	}
 }
