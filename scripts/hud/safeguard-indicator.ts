@@ -1,9 +1,12 @@
 import { PanelHandler } from 'util/module-helpers';
 
+import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
+
 @PanelHandler()
 class SafeguardHandler {
 	readonly panels = {
-		container: $<Panel>('#SafeguardContainer')
+		container: $<Panel>('#SafeguardContainer'),
+		meter: $<Image>('#SafeguardMeter')
 	};
 
 	holdTime: number;
@@ -21,6 +24,28 @@ class SafeguardHandler {
 		});
 		$.RegisterForUnhandledEvent('OnSafeguardCommandComplete', () => {
 			this.updateVisibility(false);
+		});
+
+		registerHUDCustomizerComponent($.GetContextPanel(), {
+			resizeX: false,
+			resizeY: false,
+			//TODO: Add safeguard cvars?
+			dynamicStyles: {
+				color: {
+					name: 'Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					targetPanel: '.safeguard__meter',
+					styleProperty: 'washColor'
+				},
+				opacity: {
+					name: 'Opacity',
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					targetPanel: '.safeguard__meter',
+					styleProperty: 'opacity',
+					valueFn: (value) => value / 100,
+					settingProps: { min: 0, max: 100 }
+				}
+			}
 		});
 	}
 

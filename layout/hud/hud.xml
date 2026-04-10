@@ -20,6 +20,7 @@
 
         <!-- General HUD Elements -->
         <HudShowPos id="ShowPos" />
+        <MomHudSafeguardIndicator id="SafeguardIndicator"/>
         <MomHudMapInfo id="MapInfo" />
         <MomHudStatus id="Status" />
 		<MomHudTimer id="Timer" />
@@ -42,7 +43,7 @@
 			<MomHudZoning /> <!-- TODO: HudBottomCenter, not in customizer -->
 		</ConVarEnabler>
 
-        <MomHudSafeguardIndicator /> <!-- TODO: HudCenter, not in customizer -->
+        
 		<MomHudJumpTiming /> <!-- TODO: HudCenter, not added to customizer -->
 		<MomHudSpeedometer id="Speedometer" /> <!-- TODO: HudBottomCenter, not in customizer -->
 		<MomHudGroundboost id="MomHudGroundboost" /> <!-- TODO: HudBottomCenter, not in customizer -->
