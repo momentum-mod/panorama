@@ -34,8 +34,12 @@ class HudSpecInfoHandler implements OnPanelLoad {
 	constructor() {
 		$.RegisterForUnhandledEvent('ObserverTargetChanged', () => this.onSpectatorChanged());
 		$.RegisterForUnhandledEvent('MomentumSpectatorUpdate', () => this.onSpectatorChanged());
+		$.RegisterForUnhandledEvent('LevelInitPostEntity', () => this.onSpectatorChanged());
 
-		$.RegisterForUnhandledEvent('HudCustomizer_Opened', () => this.createDummySpectators());
+		$.RegisterForUnhandledEvent('HudCustomizer_Opened', () => {
+			this.dummySpectatorsEnabled = true;
+			this.createDummySpectators();
+		});
 		$.RegisterForUnhandledEvent('HudCustomizer_Closed', () => {
 			this.dummySpectatorsEnabled = false;
 			this.onSpectatorChanged();
@@ -125,7 +129,6 @@ class HudSpecInfoHandler implements OnPanelLoad {
 		$.GetContextPanel().SetDialogVariableInt('numspec', this.maxNames);
 		this.panels.namesContainer.RemoveAndDeleteChildren();
 		this.panels.container.visible = true;
-		this.dummySpectatorsEnabled = true;
 
 		if (!this.specConfig.showNameList) return;
 
