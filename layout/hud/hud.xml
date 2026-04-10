@@ -28,6 +28,7 @@
         <MomHudSpecInfo id="SpecInfo" />
         
         <!-- Gamemode Specific HUD elements -->
+        <MomHudAmmo id="Ammo"/>
         <MomHudStrafeTrainer id="StrafeTrainer"/> 
         <MomHudJumpStats id="JumpStats"/>
         <MomHudStickyCharge id="StickyCharge" />
@@ -49,10 +50,10 @@
 		<MomHudPowerupTimer /> <!-- TODO: LowerLeft, not added to customizer -->
 		<HudStaticMenu id="StaticMenu" /> <!-- TODO: not in customizer -->
 		<MomHudDFJump /> <!-- TODO: BottomRight, not added to customizer -->
-		<MomHudAmmo /> <!-- TODO: BottomRight, not added to customizer -->
+		
 		<MomHudKeyPress id="KeyPress" /> <!-- TODO: Not really in customizer, needs a rework -->
 		
-		<MomHudWeaponSelection id="WeaponSelection" /> <!-- TODO: not in customizer -->
+		<MomHudWeaponSelection id="WeaponSelection" /> <!-- TODO: not in customizer, probably needs C++ work-->
 		
 		<HudBoneCounts id="BoneCount" /> <!-- TODO: HudTopCenter, not in customizer -->
 		<MomHudSpectate id="Spectator" /> <!-- TODO: HudTopCenter, not in customizer -->

@@ -60,6 +60,9 @@ UiToolkitAPI.RegisterPanel2d('ToastGeneric', 'file://{resources}/layout/modals/t
 declare interface HudShowPos extends AbstractPanel<'HudShowPos'> {}
 UiToolkitAPI.RegisterPanel2d('HudShowPos', 'file://{resources}/layout/hud/show-pos.xml');
 
+declare interface MomHudAmmo extends AbstractPanel<'MomHudAmmo'> {}
+UiToolkitAPI.RegisterPanel2d('MomHudAmmo', 'file://{resources}/layout/hud/ammo.xml');
+
 declare interface MomHudTimer extends AbstractHudPanel<'MomHudTimer'> {}
 UiToolkitAPI.RegisterHUDPanel2d('MomHudTimer', 'file://{resources}/layout/hud/timer.xml');
 

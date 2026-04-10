@@ -8,6 +8,7 @@ interface PanelTagNameMap {
 	PlayerListPlayer: PlayerListPlayer;
 	HudShowPos: HudShowPos;
 	HudComparisons: HudComparisons;
+	MomHudAmmo: MomHudAmmo;
 	MomConcEntityPanel: MomConcEntityPanel;
 	MomHudTabMenu: MomHudTabMenu;
 	MomHudStatus: MomHudStatus;
