@@ -4,6 +4,8 @@ import { RegisterHUDPanelForGamemode } from 'util/register-for-gamemodes';
 import { GamemodeCategory } from 'common/web/enums/gamemode.enum';
 import { GamemodeCategories } from 'common/web/maps/gamemodes.map';
 
+import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
+
 enum TimerFlags {
 	NONE = 0,
 	LANDING = 1 << 0,
@@ -11,60 +13,271 @@ enum TimerFlags {
 	WATERJUMP = 1 << 2
 }
 
-enum ColorClass {
-	FRICTION = 'groundboost__meter--friction',
-	SLICK = 'groundboost__meter--slick',
-	CRASH = 'groundboost__meter--crash'
+//Defaults should be set in /config/hud_defaults.kv3
+const MeterColor = {
+	FRICTION: 'rgba(255, 106, 106, 1)',
+	NO_CRASH: 'rgba(255, 255, 255, 1)',
+	SLICK: 'rgba(16, 118, 168, 1)'
+};
+
+//Defaults should be set in /config/hud_defaults.kv3
+const LabelColor = {
+	GAIN: 'rgba(16, 118, 168, 1)',
+	FLAT: 'rgba(255, 255, 255, 1)',
+	LOSS: 'rgba(255, 106, 106, 1)'
+};
+
+enum LabelMode {
+	HIDE = 'hide',
+	TIME = 'time',
+	SPEED = 'speed'
 }
 
-enum LabelClass {
-	GAIN = 'groundboost__label--gain',
-	FLAT = 'groundboost__label--flat',
-	LOSS = 'groundboost__label--loss',
-	HIDE = 'groundboost__label--hide'
-}
+type GroundboostConfig = {
+	showFrictionTime: boolean;
+	showNoCrashHighlight: boolean;
+	labelTextMode: LabelMode;
+	labelColorMode: LabelMode;
+	idealEndMs: int32;
+};
 
 const MAX_TIMER_MS = 250;
 const MS_2_DEG = 360 / MAX_TIMER_MS;
-const IDEAL_END_MS = 40; // 5 ticks
 
 @PanelHandler()
 class GroundboostHandler {
 	readonly panels = {
 		container: $<Panel>('#GroundboostContainer'),
-		groundboostMeter: $<Panel>('#GroundboostMeter'),
+		groundboostBackground: $<Image>('#GroundboostBackground'),
+		groundboostMeter: $<Image>('#GroundboostMeter'),
 		groundboostLabel: $<Label>('#GroundboostLabel')
 	};
 
+	config = {} as GroundboostConfig;
+
 	visible: boolean;
-	overshootEnable: boolean;
-	crashHlEnable: boolean;
-	colorClass: ColorClass;
-	labelClass: LabelClass;
 	missedJumpTimer = 0;
 	peakSpeed = 0;
 	startSpeed = 0;
-	textMode: number;
-	textColorMode: number;
+	dummyGB = false;
+	dummyGBColors = {
+		meterColor: MeterColor.SLICK,
+		labelColor: LabelColor.GAIN
+	};
 
 	constructor() {
 		RegisterHUDPanelForGamemode({
 			gamemodes: GamemodeCategories.get(GamemodeCategory.DEFRAG),
 			onLoad: () => this.onMapInit(),
-			events: [{ event: 'OnDefragHUDGroundboostChange', callback: () => this.onConfigChange() }],
 			handledEvents: [
 				{ event: 'HudProcessInput', panel: $.GetContextPanel(), callback: () => this.onHudUpdate() }
 			]
 		});
+
+		$.RegisterForUnhandledEvent('HudCustomizer_Opened', () => {
+			this.dummyGB = true;
+			this.dummyGBColors = {
+				meterColor: MeterColor.SLICK,
+				labelColor: LabelColor.GAIN
+			};
+
+			this.startDummyGB();
+		});
+
+		$.RegisterForUnhandledEvent('HudCustomizer_Closed', () => {
+			this.dummyGB = false;
+			this.fadeOut();
+		});
+
+		registerHUDCustomizerComponent($.GetContextPanel(), {
+			resizeX: false,
+			resizeY: false,
+			dynamicStyles: {
+				//As of writing this there is no way to re-rasterize an svg as the textureheight needs to be set on panel creation
+				//There should be some way to rerasterize an image added to panorama, perhaps it should even happen automatically when textureheight is changed
+				//Blame @GordiNoki for this awful code
+
+				//TODO: For whatever reason the panel is white after resizing and needs to be moved to regain proper color
+				size: {
+					name: 'Size',
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					callbackFunc: (_, value) => {
+						this.panels.container.RemoveAndDeleteChildren();
+
+						this.panels.groundboostBackground = $.CreatePanel(
+							'Image',
+							this.panels.container,
+							'GroundboostBackground',
+							{
+								textureheight: value,
+								class: 'groundboost__background-meter'
+							}
+						);
+
+						this.panels.groundboostBackground.SetImage('file://{images}/hud/meter-ring.svg');
+
+						this.panels.groundboostMeter = $.CreatePanel(
+							'Image',
+							this.panels.container,
+							'GroundboostMeter',
+							{
+								textureheight: value,
+								class: 'groundboost__meter'
+							}
+						);
+
+						this.panels.groundboostMeter.SetImage('file://{images}/hud/meter-ring.svg');
+
+						this.panels.groundboostLabel = $.CreatePanel(
+							'Label',
+							this.panels.container,
+							'GroundboostLabel',
+							{
+								class: 'groundboost__label'
+							}
+						);
+
+						this.panels.container.style.width = `${value}px`;
+						this.panels.container.style.height = `${value}px`;
+
+						this.startDummyGB();
+					}
+				},
+				font: {
+					name: 'Font',
+					type: CustomizerPropertyType.FONT_PICKER,
+					targetPanel: '.groundboost__label',
+					styleProperty: 'fontFamily'
+				},
+				fontSize: {
+					name: 'Font Size',
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					targetPanel: '.groundboost__label',
+					styleProperty: 'fontSize'
+				},
+				showFrictionTime: {
+					name: 'Show Friction Time',
+					type: CustomizerPropertyType.CHECKBOX,
+					callbackFunc: (_, value) => {
+						this.config.showFrictionTime = value;
+					}
+				},
+				noCrashHighlight: {
+					name: 'Highlight lack of crash landing',
+					type: CustomizerPropertyType.CHECKBOX,
+					callbackFunc: (_, value) => {
+						this.config.showNoCrashHighlight = value;
+						if (this.config.showNoCrashHighlight) this.dummyGBColors.meterColor = MeterColor.NO_CRASH;
+						if (!this.config.showNoCrashHighlight) this.dummyGBColors.meterColor = MeterColor.SLICK;
+						this.startDummyGB();
+					}
+				},
+				labelTextMode: {
+					name: 'Label Mode',
+					type: CustomizerPropertyType.DROPDOWN,
+					options: [
+						{ label: 'Hide', value: LabelMode.HIDE },
+						{ label: 'Remaining Time', value: LabelMode.TIME },
+						{ label: 'Speed Gain', value: LabelMode.SPEED }
+					],
+					callbackFunc: (_, value) => {
+						this.config.labelTextMode = value as LabelMode;
+						if (this.config.labelTextMode === LabelMode.HIDE)
+							this.panels.groundboostLabel.style.visibility = 'collapse';
+						else this.panels.groundboostLabel.style.visibility = 'visible';
+					}
+				},
+				labelColorMode: {
+					name: 'Label Color Mode',
+					type: CustomizerPropertyType.DROPDOWN,
+					options: [
+						{ label: 'No Coloring', value: LabelMode.HIDE },
+						{ label: 'Remaining Time', value: LabelMode.TIME },
+						{ label: 'Speed Gain', value: LabelMode.SPEED }
+					],
+					callbackFunc: (_, value) => {
+						this.config.labelColorMode = value as LabelMode;
+					}
+				},
+				//TODO: Make this a child of labelColorMode and only show when it's LabelMode.TIME
+				idealTimeRemaining: {
+					name: 'Ticks Left For Ideal End',
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					callbackFunc: (_, value) => {
+						this.config.idealEndMs = value * 8;
+					},
+					settingProps: { min: 1, max: 31 }
+				},
+				backgroundColor: {
+					name: 'Background Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					targetPanel: '.groundboost__background-meter',
+					callbackFunc: (panel, value) => {
+						const splitRGBA = this.splitRgbFromAlpha(value);
+						panel.style.washColor = splitRGBA[0];
+						panel.style.opacity = splitRGBA[1];
+					}
+				},
+				meterSlickColor: {
+					name: 'Meter Slick Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					callbackFunc: (_, value) => {
+						MeterColor.SLICK = value;
+						this.dummyGBColors.meterColor = MeterColor.SLICK;
+						this.startDummyGB();
+					}
+				},
+				meterFrictionColor: {
+					name: 'Meter Friction Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					callbackFunc: (_, value) => {
+						MeterColor.FRICTION = value;
+						this.dummyGBColors.meterColor = MeterColor.FRICTION;
+						this.startDummyGB();
+					}
+				},
+				meterNoCrashHighlight: {
+					name: 'Meter No Crash Landing Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					callbackFunc: (_, value) => {
+						MeterColor.NO_CRASH = value;
+						this.dummyGBColors.meterColor = MeterColor.NO_CRASH;
+						this.startDummyGB();
+					}
+				},
+				labelFlatColor: {
+					name: 'Label Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					callbackFunc: (_, value) => {
+						LabelColor.FLAT = value;
+						this.dummyGBColors.labelColor = LabelColor.FLAT;
+						this.startDummyGB();
+					}
+				},
+				labelGainColor: {
+					name: 'Label Gain Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					callbackFunc: (_, value) => {
+						LabelColor.GAIN = value;
+						this.dummyGBColors.labelColor = LabelColor.GAIN;
+						this.startDummyGB();
+					}
+				},
+				labelLossColor: {
+					name: 'Label Loss Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					callbackFunc: (_, value) => {
+						LabelColor.LOSS = value;
+						this.dummyGBColors.labelColor = LabelColor.LOSS;
+						this.startDummyGB();
+					}
+				}
+			}
+		});
 	}
 
 	onMapInit() {
-		this.onConfigChange();
-
-		this.colorClass = ColorClass.SLICK;
-		this.panels.groundboostMeter.AddClass(this.colorClass);
-
-		this.labelClass = LabelClass.FLAT;
+		this.panels.groundboostMeter.style.washColor = MeterColor.NO_CRASH;
 
 		this.panels.container.AddClass('groundboost__container--hide');
 		this.visible = false;
@@ -74,6 +287,8 @@ class GroundboostHandler {
 	}
 
 	onHudUpdate() {
+		if (this.dummyGB) return;
+
 		const hudData = MomentumMovementAPI.GetMoveHudData();
 		let timer = hudData.defragTimer;
 		const timerFlags = hudData.defragTimerFlags;
@@ -93,11 +308,11 @@ class GroundboostHandler {
 				bUpdateMeter = true;
 			} else if (this.visible) {
 				bUpdateMeter = true;
-				if (this.overshootEnable) {
+				if (this.config.showFrictionTime) {
 					// Player is grounded and no longer has the friction flag
 					if (this.missedJumpTimer === 0) {
 						this.missedJumpTimer = curTime;
-						this.setMeterColor(ColorClass.FRICTION);
+						this.setMeterColor(MeterColor.FRICTION);
 					}
 					timer = Math.min(MAX_TIMER_MS, Math.round(1000 * (curTime - this.missedJumpTimer)));
 					if (timer === MAX_TIMER_MS) this.fadeOut();
@@ -113,7 +328,11 @@ class GroundboostHandler {
 				this.peakSpeed = Math.max(speed, this.peakSpeed);
 				this.updateTextColor(speed, timer);
 				this.panels.groundboostLabel.text =
-					this.textMode === 2 ? Number(deltaSpeed).toFixed(0) : this.missedJumpTimer ? -timer : timer;
+					this.config.labelTextMode === LabelMode.SPEED
+						? Number(deltaSpeed).toFixed(0)
+						: this.missedJumpTimer
+							? -timer
+							: timer;
 			}
 		} else if (this.visible && !(timerFlags & TimerFlags.KNOCKBACK)) {
 			// Player no longer grounded, freeze meter and fade out
@@ -127,49 +346,61 @@ class GroundboostHandler {
 		this.peakSpeed = this.startSpeed;
 		this.missedJumpTimer = 0;
 		this.panels.container.RemoveClass('groundboost__container--hide');
-		this.setMeterColor(this.crashHlEnable && !bCrashLand ? ColorClass.SLICK : ColorClass.CRASH);
-		this.setTextColor(this.textColorMode === 2 ? LabelClass.GAIN : LabelClass.FLAT);
+		this.setMeterColor(this.config.showNoCrashHighlight && !bCrashLand ? MeterColor.NO_CRASH : MeterColor.SLICK);
+		this.setTextColor(this.config.labelColorMode === LabelMode.SPEED ? LabelColor.GAIN : LabelColor.FLAT);
 	}
 
-	setMeterColor(color: ColorClass) {
-		if (this.colorClass === color) return;
+	startDummyGB() {
+		if (!this.dummyGB) return;
+		this.startGB(false);
 
-		this.panels.groundboostMeter.RemoveClass(this.colorClass);
-		this.colorClass = color;
-		this.panels.groundboostMeter.AddClass(this.colorClass);
+		this.setMeterColor(this.dummyGBColors.meterColor);
+		this.setTextColor(this.dummyGBColors.labelColor);
+
+		const randomFill = Math.floor(Math.random() * 180) + 90 - 360;
+		const start = this.dummyGBColors.meterColor === MeterColor.FRICTION ? -randomFill : 0;
+
+		let randomText = Math.floor(Math.random() * 100 + 50).toString();
+		if (this.dummyGBColors.labelColor === LabelColor.LOSS) randomText = '-' + randomText;
+
+		this.panels.groundboostMeter.style.clip = `radial(50% 50%, ${start}deg, ${randomFill}deg)`;
+		this.panels.groundboostLabel.text = randomText;
+	}
+
+	setMeterColor(color: string) {
+		const splitRGBA = this.splitRgbFromAlpha(color);
+		this.panels.groundboostMeter.style.washColor = splitRGBA[0];
+		this.panels.groundboostMeter.style.opacity = splitRGBA[1];
 	}
 
 	updateTextColor(speed: number, timer: number) {
-		if (!this.textMode || !this.textColorMode) return;
+		if (this.config.labelTextMode === LabelMode.HIDE || this.config.labelColorMode === LabelMode.HIDE) return;
 
-		switch (this.textColorMode) {
-			case 1:
+		switch (this.config.labelColorMode) {
+			case LabelMode.TIME:
 				if (!this.missedJumpTimer) {
-					this.setTextColor(timer <= IDEAL_END_MS ? LabelClass.GAIN : LabelClass.FLAT);
+					this.setTextColor(timer <= this.config.idealEndMs ? LabelColor.GAIN : LabelColor.FLAT);
 				} else {
-					this.setTextColor(LabelClass.LOSS);
+					this.setTextColor(LabelColor.LOSS);
 				}
 				break;
-			case 2:
+			case LabelMode.SPEED:
 				if (speed < this.peakSpeed && speed >= this.startSpeed) {
-					this.setTextColor(LabelClass.FLAT);
+					this.setTextColor(LabelColor.FLAT);
 				} else if (speed < this.startSpeed) {
-					this.setTextColor(LabelClass.LOSS);
+					this.setTextColor(LabelColor.LOSS);
 				}
 				break;
-			case 0:
 			default:
-				this.setTextColor(LabelClass.FLAT);
+				this.setTextColor(LabelColor.FLAT);
 				break;
 		}
 	}
 
-	setTextColor(color: LabelClass) {
-		if (!this.textMode || !this.textColorMode || this.labelClass === color) return;
+	setTextColor(color: string) {
+		if (this.config.labelTextMode === LabelMode.HIDE || this.config.labelColorMode === LabelMode.HIDE) return;
 
-		this.panels.groundboostLabel.RemoveClass(this.labelClass);
-		this.labelClass = color;
-		this.panels.groundboostLabel.AddClass(this.labelClass);
+		this.panels.groundboostLabel.style.color = color;
 	}
 
 	fadeOut() {
@@ -177,17 +408,8 @@ class GroundboostHandler {
 		this.visible = false;
 	}
 
-	onConfigChange() {
-		const groundboostConfig = DefragAPI.GetHUDGroundboostCFG();
-		this.overshootEnable = groundboostConfig.overshootEnable;
-		this.textMode = groundboostConfig.textMode;
-		this.textColorMode = groundboostConfig.textColorMode;
-		this.crashHlEnable = groundboostConfig.crashHlEnable;
-
-		if (!this.textMode) {
-			this.panels.groundboostLabel.AddClass(LabelClass.HIDE);
-		} else {
-			this.panels.groundboostLabel.RemoveClass(LabelClass.HIDE);
-		}
+	splitRgbFromAlpha(rgbaString: string) {
+		const values = rgbaString.match(/[\d.]+%?/g);
+		return [`rgba(${values[0]}, ${values[1]}, ${values[2]}, 1)`, values[3]];
 	}
 }
