@@ -943,6 +943,9 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		const shouldSnap = this.panels.snappingToggle.checked;
 
 		for (const axis of Axes) {
+			if (axis === Axis.X && this.activeComponent.properties.moveX === false) continue;
+			if (axis === Axis.Y && this.activeComponent.properties.moveY === false) continue;
+
 			const gridGapLength = this.getGridGapLength(axis);
 			const panelPos = LayoutUtil.getPosition(this.panels.dragPanel)[axis];
 			const panelSize = LayoutUtil.getSize(this.panels.dragPanel)[axis];

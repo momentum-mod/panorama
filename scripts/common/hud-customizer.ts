@@ -154,6 +154,12 @@ export interface CustomizerComponentProperties {
 	/** Allow resizing in the Y direction. */
 	resizeY: boolean;
 
+	/** Allow movement on X axis. Defaults to true */
+	moveX?: boolean;
+
+	/** Allow movement on Y axis. Defaults to true */
+	moveY?: boolean;
+
 	/** Panel to use as the drag handle for moving the component. If not provided, whole panel is draggable. */
 	dragPanel?: GenericPanel;
 
