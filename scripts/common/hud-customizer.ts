@@ -17,6 +17,7 @@ export enum CustomizerPropertyType {
 	NUMBER_ENTRY,
 	CHECKBOX,
 	SLIDER, // TODO: do we actually want this for anything?
+	DROPDOWN,
 	COLOR_PICKER,
 	GRADIENT_PICKER,
 	FONT_PICKER
@@ -26,6 +27,7 @@ interface PropertyTypeMap {
 	[CustomizerPropertyType.NUMBER_ENTRY]: NumberEntry;
 	[CustomizerPropertyType.CHECKBOX]: ToggleButton;
 	[CustomizerPropertyType.SLIDER]: Slider;
+	[CustomizerPropertyType.DROPDOWN]: DropDown;
 	[CustomizerPropertyType.COLOR_PICKER]: never;
 	[CustomizerPropertyType.GRADIENT_PICKER]: never;
 	[CustomizerPropertyType.FONT_PICKER]: never;
@@ -35,6 +37,7 @@ interface PropertyTypeToValueTypeMap {
 	[CustomizerPropertyType.NUMBER_ENTRY]: NumberEntry['value'];
 	[CustomizerPropertyType.CHECKBOX]: ToggleButton['checked'];
 	[CustomizerPropertyType.SLIDER]: Slider['value'];
+	[CustomizerPropertyType.DROPDOWN]: string;
 	[CustomizerPropertyType.COLOR_PICKER]: TextEntry['text'];
 	[CustomizerPropertyType.GRADIENT_PICKER]: [string, string];
 	[CustomizerPropertyType.FONT_PICKER]: string;
@@ -67,6 +70,10 @@ export interface DynamicStyleProperties<
 	 * Style property to modify. For all matching panels, this CSS property is set to the current style value.
 	 * Should at least supply this, callbackFunc, or eventlisteners (todo: maybe more stuff) */
 	styleProperty?: StyleProperty;
+
+	/**
+	 * Defines options and their respective values for CustomizerPropertyType.DROPDOWN */
+	options?: PropertyType extends CustomizerPropertyType.DROPDOWN ? Array<{ label: string; value: string }> : never;
 
 	/**
 	 * Function to convert stored/configured value to style string.

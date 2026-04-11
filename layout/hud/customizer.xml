@@ -30,6 +30,13 @@
 			</Panel>
 		</snippet>
 
+        <snippet name="dynamic-dropdown">
+			<Panel class="hud-customizer-settings__row">
+				<Label class="hud-customizer-settings__setting-label" text="{s:name}" />
+				<DropDown id="DropDown" class="dropdown hud-customizer-settings__dropdown" menuclass="dropdown-menu hud-customizer-settings__dropdown-menu" />
+			</Panel>
+		</snippet>
+
 		<snippet name="dynamic-colorpicker">
 			<Panel class="hud-customizer-settings__row">
 				<ColorDisplay id="ColorDisplay" class="hud-customizer-settings__colordisplay" />
