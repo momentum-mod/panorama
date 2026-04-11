@@ -724,6 +724,34 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 					break;
 				}
 
+				case CustomizerPropertyType.DROPDOWN: {
+					panel.LoadLayoutSnippet('dynamic-dropdown');
+					panel.SetDialogVariable('name', dynamicStyle.properties.name);
+					const dropdown = panel.FindChildTraverse<DropDown>('DropDown')!;
+
+					if (!dynamicStyle.properties.options?.length) {
+						$.Warning(
+							`HudCustomizer: DROPDOWN style '${styleID}' on component '${component.id}' has no options defined.`
+						);
+						break;
+					}
+
+					for (const option of dynamicStyle.properties.options) {
+						const optionPanel = $.CreatePanel('Label', dropdown, option.value);
+						optionPanel.text = option.label;
+						dropdown.AddOption(optionPanel);
+					}
+
+					dropdown.SetPanelEvent('oninputsubmit', () => {
+						component.setDynamicStyle(styleID, dropdown.GetSelected().id);
+					});
+
+					dropdown.SetSelected(component.dynamicStyles[styleID]?.value as string);
+
+					this.updateActiveComponentOverlayPosition();
+					break;
+				}
+
 				case CustomizerPropertyType.COLOR_PICKER: {
 					panel.LoadLayoutSnippet('dynamic-colorpicker');
 
