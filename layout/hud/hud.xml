@@ -21,6 +21,7 @@
         <!-- General HUD Elements -->
         <HudShowPos id="ShowPos" />
         <MomHudSafeguardIndicator id="SafeguardIndicator"/>
+        
         <MomHudMapInfo id="MapInfo" />
         <MomHudStatus id="Status" />
 		<MomHudTimer id="Timer" />
@@ -43,23 +44,24 @@
 			<MomHudZoning /> <!-- TODO: HudBottomCenter, not in customizer -->
 		</ConVarEnabler>
 
-        
-		<MomHudJumpTiming /> <!-- TODO: HudCenter, not added to customizer -->
+        <MomHudJumpTiming /> <!-- TODO: HudCenter, not added to customizer -->
 		<MomHudSpeedometer id="Speedometer" /> <!-- TODO: HudBottomCenter, not in customizer -->
 		<MomHudGroundboost id="MomHudGroundboost" /> <!-- TODO: HudBottomCenter, not in customizer -->
-		<HudHintText id="HudHintText" /> <!-- TODO: not in customizer -->
 		<MomHudPowerupTimer /> <!-- TODO: LowerLeft, not added to customizer -->
-		<HudStaticMenu id="StaticMenu" /> <!-- TODO: not in customizer -->
 		<MomHudDFJump /> <!-- TODO: BottomRight, not added to customizer -->
-		
-		<MomHudKeyPress id="KeyPress" /> <!-- TODO: Not really in customizer, needs a rework -->
-		
-		<MomHudWeaponSelection id="WeaponSelection" /> <!-- TODO: not in customizer, probably needs C++ work-->
-		
-		<HudBoneCounts id="BoneCount" /> <!-- TODO: HudTopCenter, not in customizer -->
-		<MomHudSpectate id="Spectator" /> <!-- TODO: HudTopCenter, not in customizer -->
+        <MomHudKeyPress id="KeyPress" /> <!-- TODO: Not really in customizer, needs a rework -->
+
+
+        <!-- NEEDS C++ WORK -->
+        <MomHudSpectate id="Spectator" /> <!-- TODO: backbuffer issues need to be resolved to finish this -->
+		<HudStaticMenu id="StaticMenu" /> <!-- TODO: not in customizer, needs c++ work -->
+		<MomHudWeaponSelection id="WeaponSelection" /> <!-- TODO: not in customizer, needs C++ work-->
 		
 
+        <!-- Most likely gonna get removed -->
+
+        <!-- <HudHintText id="HudHintText" /> TODO: not in customizer, no idea how to even check what this does -->
+		<!-- <HudBoneCounts id="BoneCount" /> TODO: HudTopCenter, not in customizer, probably gonna get nuked -->
         <!-- <MomHudStrafeSync id="StrafeSync" /> This is broken and probably not worth fixing --> 
 
 		<HudBlurTarget id="HudBlur" blurrects="TabMenu Spectator" class="hud-blur" hittest="false" hittestchildren="false">
