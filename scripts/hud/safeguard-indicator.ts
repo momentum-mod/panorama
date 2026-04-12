@@ -30,20 +30,37 @@ class SafeguardHandler {
 			resizeX: false,
 			resizeY: false,
 			//TODO: Add safeguard cvars?
+			//TODO: Figure out how to add a dummy indicator without breaking clips
 			dynamicStyles: {
+				//As of writing this there is no way to re-rasterize an svg as the textureheight needs to be set on panel creation
+				//There should be some way to rerasterize an image added to panorama, perhaps it should even happen automatically when textureheight is changed
+				size: {
+					name: 'Size',
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					callbackFunc: (_, value) => {
+						this.panels.container.RemoveAndDeleteChildren();
+
+						this.panels.meter = $.CreatePanel('Image', this.panels.container, 'SafeguardMeter', {
+							textureheight: value,
+							class: 'safeguard__meter'
+						});
+
+						this.panels.meter.SetImage('file://{images}/hud/safeguard-indicator.svg');
+
+						this.panels.container.style.width = `${value}px`;
+						this.panels.container.style.height = `${value}px`;
+					}
+				},
 				color: {
 					name: 'Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
 					targetPanel: '.safeguard__meter',
-					styleProperty: 'washColor'
-				},
-				opacity: {
-					name: 'Opacity',
-					type: CustomizerPropertyType.NUMBER_ENTRY,
-					targetPanel: '.safeguard__meter',
-					styleProperty: 'opacity',
-					valueFn: (value) => value / 100,
-					settingProps: { min: 0, max: 100 }
+					callbackFunc: (panel, value) => {
+						const splitRGBA = this.splitRgbFromAlpha(value);
+
+						panel.style.washColor = splitRGBA[0];
+						panel.style.opacity = splitRGBA[1];
+					}
 				}
 			}
 		});
@@ -68,5 +85,10 @@ class SafeguardHandler {
 			this.panels.container.AddClass('safeguard__container--hide');
 			this.panels.container.style.transitionDuration = `${this.holdTime}s`;
 		}
+	}
+
+	splitRgbFromAlpha(rgbaString: string) {
+		const values = rgbaString.match(/[\d.]+%?/g);
+		return [`rgba(${values[0]}, ${values[1]}, ${values[2]}, 1)`, values[3]];
 	}
 }
