@@ -2,8 +2,7 @@ import { PanelHandler } from 'util/module-helpers';
 import * as MomMath from 'util/math';
 import { rgbaStringLerp } from 'util/colors';
 import { RegisterHUDPanelForGamemode } from '../util/register-for-gamemodes';
-import { Gamemode } from 'common/web/enums/gamemode.enum';
-
+import { Gamemode, GamemodeCategory, GamemodeCategoryToGamemode } from 'common/web/enums/gamemode.enum';
 import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
 
 const Colors = {
@@ -93,6 +92,12 @@ class StrafeTrainer {
 			//TODO: Add resizing width, it needs to target a specific panel, not the root
 			resizeX: true,
 			resizeY: false,
+			gamemode: [
+				Gamemode.SURF,
+				Gamemode.BHOP,
+				Gamemode.BHOP_HL1,
+				...GamemodeCategoryToGamemode.get(GamemodeCategory.CLIMB)
+			],
 			expectedMinWidth: 300,
 			//TODO: Add generic border, font settings
 			//TODO: Add options to edit all the colors in the colors const. They need to be expandable or they will take way too much space

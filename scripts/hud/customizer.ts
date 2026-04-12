@@ -356,6 +356,9 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		overlayInner: $<Panel>('#OverlayInner')!,
 		settings: $<Panel>('#CustomizerSettings')!,
 		componentList: $<Panel>('#ComponentList')!,
+		generalComponentList: $<Panel>('#GeneralComponentList')!,
+		GamemodeComponentsContainer: $<Panel>('#GamemodeComponentsContainer')!,
+		gamemodeComponentList: $<Panel>('#GamemodeComponentList')!,
 		activeComponentSettings: $<Panel>('#ActiveComponentSettings')!,
 		activeComponentSettingsList: $<Panel>('#ActiveComponentSettingsList')!,
 		resizeKnobs: $<Panel>('#ResizeKnobs')!,
@@ -459,6 +462,17 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 	loadComponent(panel: GenericPanel, properties: CustomizerComponentProperties): void {
 		if (!panel) return;
 
+		if (properties.gamemode) {
+			const current = GameModeAPI.GetCurrentGameMode();
+			const allowed = Array.isArray(properties.gamemode) ? properties.gamemode : [properties.gamemode];
+			if (!allowed.includes(current)) {
+				//Hud_Customizer_Ready is called before a new gamemode is set, can't disable panels like this yet
+				// panel.enabled = false;
+				// return;
+			}
+		}
+		// panel.enabled = true;
+
 		const component = Component.register(panel, properties);
 		this.components[component.id] = component;
 
@@ -539,10 +553,15 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 	generateComponentList() {
 		// Infrequent and fast enough to just remake every time this changes.
-		this.panels.componentList.RemoveAndDeleteChildren();
+		this.panels.generalComponentList.RemoveAndDeleteChildren();
+		this.panels.gamemodeComponentList.RemoveAndDeleteChildren();
 
 		for (const [id, component] of Object.entries(this.components)) {
-			const panel = $.CreatePanel('RadioButton', this.panels.componentList, `${id}Settings`);
+			const parent = component.properties.gamemode
+				? this.panels.gamemodeComponentList
+				: this.panels.generalComponentList;
+
+			const panel = $.CreatePanel('RadioButton', parent, `${id}Settings`);
 			panel.LoadLayoutSnippet('component');
 			panel.SetDialogVariable('name', id);
 			panel.SetSelected(this.activeComponent === component);
@@ -577,10 +596,15 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			visButton.SetPanelEvent('onmouseout', () => UiToolkitAPI.HideTextTooltip());
 			visButton.SetPanelEvent('onactivate', () => (component.enabled = visButton.checked));
 		}
+
+		this.panels.GamemodeComponentsContainer.SetHasClass(
+			'hide',
+			this.panels.gamemodeComponentList.GetChildCount() === 0
+		);
 	}
 
 	setActiveComponent(component: Component): void {
-		const componentRadioButton = this.panels.componentList.FindChildTraverse<RadioButton>(
+		const componentRadioButton = this.panels.generalComponentList.FindChildTraverse<RadioButton>(
 			`${component.id}Settings`
 		);
 

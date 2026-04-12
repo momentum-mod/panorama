@@ -1,6 +1,6 @@
 import { PanelHandler } from 'util/module-helpers';
 import { RegisterHUDPanelForGamemode } from 'util/register-for-gamemodes';
-import { GamemodeCategory } from 'common/web/enums/gamemode.enum';
+import { GamemodeCategory, GamemodeCategoryToGamemode } from 'common/web/enums/gamemode.enum';
 import { GamemodeCategories } from 'common/web/maps/gamemodes.map';
 
 import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
@@ -49,6 +49,7 @@ class DFJumpHandler {
 		registerHUDCustomizerComponent($.GetContextPanel(), {
 			resizeX: false,
 			resizeY: false,
+			gamemode: GamemodeCategoryToGamemode.get(GamemodeCategory.DEFRAG),
 			//TODO: Add border styles
 			dynamicStyles: {
 				showLabels: {

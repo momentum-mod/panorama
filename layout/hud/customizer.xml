@@ -86,9 +86,24 @@
 					<Label class="hud-customizer-settings__setting-label" text="Enable Snapping" />
 				</ToggleButton>
 			</Panel>
-			<Panel id="ComponentList" class="hud-customizer-settings__component-list">
-				<!-- Populated by JS -->
-			</Panel>
+            <Panel id="GeneralComponentsContainer" class="hud-customizer-settings__component-list-container">
+                <Panel class="hud-customizer-settings__active">
+                    <Label class="hud-customizer-settings__active__header__name" text="General HUD" />
+                </Panel>
+                <Panel id="GeneralComponentList" class="hud-customizer-settings__component-list">
+                    <!-- Populated by JS -->
+                </Panel>
+            </Panel>
+
+            <Panel id="GamemodeComponentsContainer" class="hud-customizer-settings__component-list-container">
+                <Panel class="hud-customizer-settings__active">
+                    <Label class="hud-customizer-settings__active__header__name" text="Gamemode HUD" />
+                </Panel>
+                <Panel id="GamemodeComponentList" class="hud-customizer-settings__component-list">
+                    <!-- Populated by JS -->
+                </Panel>
+            </Panel>
+
 			<Panel id="ActiveComponentSettings" class="hud-customizer-settings__active">
 				<Panel class="hud-customizer-settings__active__header">
 					<Label class="hud-customizer-settings__active__header__name" text="{s:active_name}" />

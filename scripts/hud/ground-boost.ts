@@ -1,7 +1,7 @@
 import { PanelHandler } from 'util/module-helpers';
 import { magnitude2D } from 'util/math';
 import { RegisterHUDPanelForGamemode } from 'util/register-for-gamemodes';
-import { GamemodeCategory } from 'common/web/enums/gamemode.enum';
+import { GamemodeCategory, GamemodeCategoryToGamemode } from 'common/web/enums/gamemode.enum';
 import { GamemodeCategories } from 'common/web/maps/gamemodes.map';
 
 import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
@@ -92,6 +92,7 @@ class GroundboostHandler {
 		registerHUDCustomizerComponent($.GetContextPanel(), {
 			resizeX: false,
 			resizeY: false,
+			gamemode: GamemodeCategoryToGamemode.get(GamemodeCategory.DEFRAG),
 			dynamicStyles: {
 				//As of writing this there is no way to re-rasterize an svg as the textureheight needs to be set on panel creation
 				//There should be some way to rerasterize an image added to panorama, perhaps it should even happen automatically when textureheight is changed

@@ -1,5 +1,5 @@
 import { PanelHandler } from 'util/module-helpers';
-
+import { Gamemode, GamemodeCategory, GamemodeCategoryToGamemode } from 'common/web/enums/gamemode.enum';
 import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
 
 @PanelHandler()
@@ -19,6 +19,12 @@ class MomHudAmmoHandler {
 		registerHUDCustomizerComponent($.GetContextPanel(), {
 			resizeX: true,
 			resizeY: false,
+			gamemode: [
+				Gamemode.RJ,
+				Gamemode.SJ,
+				Gamemode.CONC,
+				...GamemodeCategoryToGamemode.get(GamemodeCategory.DEFRAG)
+			],
 			dynamicStyles: {
 				testAmmoCount: {
 					name: 'Test Ammo Count',
