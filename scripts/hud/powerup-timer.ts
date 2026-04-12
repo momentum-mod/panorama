@@ -3,6 +3,8 @@ import { RegisterHUDPanelForGamemode } from 'util/register-for-gamemodes';
 import { GamemodeCategory } from 'common/web/enums/gamemode.enum';
 import { GamemodeCategories } from 'common/web/maps/gamemodes.map';
 
+import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
+
 @PanelHandler()
 class PowerupTimerHandler {
 	readonly panels = {
@@ -28,6 +30,34 @@ class PowerupTimerHandler {
 		RegisterHUDPanelForGamemode({
 			gamemodes: GamemodeCategories.get(GamemodeCategory.DEFRAG),
 			handledEvents: [{ event: 'HudProcessInput', panel: $.GetContextPanel(), callback: () => this.onUpdate() }]
+		});
+
+		registerHUDCustomizerComponent($.GetContextPanel(), {
+			resizeX: false,
+			resizeY: false,
+
+			//TODO: Add resizing, background effects
+			dynamicStyles: {
+				font: {
+					name: 'Font',
+					type: CustomizerPropertyType.FONT_PICKER,
+					targetPanel: '.powerup-timer__label',
+					styleProperty: 'fontFamily'
+				},
+				fontSize: {
+					name: 'Font Size',
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					targetPanel: '.powerup-timer__label',
+					styleProperty: 'fontSize',
+					valueFn: (value) => `${value}px`
+				},
+				fontColor: {
+					name: 'Font Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					targetPanel: '.powerup-timer__label',
+					styleProperty: 'color'
+				}
+			}
 		});
 	}
 
