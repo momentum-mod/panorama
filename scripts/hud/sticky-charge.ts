@@ -38,6 +38,7 @@ class StickyChargeHandler {
 		registerHUDCustomizerComponent($.GetContextPanel(), {
 			resizeX: true,
 			resizeY: false,
+			gamemode: Gamemode.SJ,
 			//TODO: Add generic font settings
 			//TODO: Add box shadow customization
 			//TODO: Add vertical resizing ( after CustomizerPropertyType.SLIDER is implemented )

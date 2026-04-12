@@ -57,6 +57,7 @@ class StickyCountHandler {
 		registerHUDCustomizerComponent($.GetContextPanel(), {
 			resizeX: false,
 			resizeY: false,
+			gamemode: Gamemode.SJ,
 			//TODO: Add box shadow setting
 			dynamicStyles: {
 				//TODO: Make first 3 options sliders?

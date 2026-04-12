@@ -29,6 +29,7 @@ class ConcCookHandler {
 		registerHUDCustomizerComponent($.GetContextPanel(), {
 			resizeX: true,
 			resizeY: false,
+			gamemode: Gamemode.CONC,
 			//TODO: Add entpanels
 			//TODO: Add box shadow setting
 			dynamicStyles: {

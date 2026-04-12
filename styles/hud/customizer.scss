@@ -100,6 +100,11 @@ $input-background-hover: rgb(110, 110, 110);
 		}
 	}
 
+	&__component-list-container {
+		flow-children: down;
+		width: 100%;
+	}
+
 	&__component-list {
 		flow-children: down;
 		margin-left: 6px;

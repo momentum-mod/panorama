@@ -167,6 +167,9 @@ export interface CustomizerComponentProperties {
 	/** Allow movement on Y axis. Defaults to true */
 	moveY?: boolean;
 
+	/** Defines in which gamemodes the panel should be enabled. When not provided it's always enabled */
+	gamemode?: Gamemode | Gamemode[];
+
 	/** Panel to use as the drag handle for moving the component. If not provided, whole panel is draggable. */
 	dragPanel?: GenericPanel;
 
