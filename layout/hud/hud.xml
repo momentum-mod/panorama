@@ -38,6 +38,7 @@
         <MomHudConcCooktime id="ConcCooktime" />
         <MomHudGroundboost id="Groundboost" />
         <MomHudDFJump id="DFJump"/>
+        <MomHudPowerupTimer id="PowerupTimer"/>
 
 
         <!-- NOT IN CUSTOMIZER -->
@@ -48,9 +49,8 @@
         <MomHudJumpTiming /> <!-- TODO: HudCenter, not added to customizer -->
 		<MomHudSpeedometer id="Speedometer" /> <!-- TODO: HudBottomCenter, not in customizer -->
 		
-		<MomHudPowerupTimer /> <!-- TODO: LowerLeft, not added to customizer -->
-		
         <MomHudKeyPress id="KeyPress" /> <!-- TODO: Not really in customizer, needs a rework -->
+
 
 
         <!-- NEEDS C++ WORK -->
