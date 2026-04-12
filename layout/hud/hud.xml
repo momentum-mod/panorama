@@ -36,7 +36,8 @@
         <MomHudStickyCharge id="StickyCharge" />
 		<MomHudStickyCount id="StickyCount" />
         <MomHudConcCooktime id="ConcCooktime" />
-        <MomHudGroundboost id="Groundboost" /> <!-- TODO: HudBottomCenter, not in customizer -->
+        <MomHudGroundboost id="Groundboost" />
+        <MomHudDFJump id="DFJump"/>
 
 
         <!-- NOT IN CUSTOMIZER -->
@@ -48,7 +49,7 @@
 		<MomHudSpeedometer id="Speedometer" /> <!-- TODO: HudBottomCenter, not in customizer -->
 		
 		<MomHudPowerupTimer /> <!-- TODO: LowerLeft, not added to customizer -->
-		<MomHudDFJump /> <!-- TODO: BottomRight, not added to customizer -->
+		
         <MomHudKeyPress id="KeyPress" /> <!-- TODO: Not really in customizer, needs a rework -->
 
 
