@@ -710,6 +710,19 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		this.panels.activeComponentSettings.visible = true;
 		this.panels.settings.SetDialogVariable('active_name', component.id);
 
+		const childVisibilityMap = new Map<StyleID, Array<{ panel: Panel; showWhen?: any[] }>>();
+
+		const updateChildVisibility = (styleID: StyleID, newValue: any) => {
+			const entries = childVisibilityMap.get(styleID);
+			if (!entries) return;
+			for (const { panel, showWhen } of entries) {
+				if (showWhen) {
+					const normalized = Array.isArray(showWhen) ? showWhen : [showWhen];
+					panel.style.visibility = normalized.includes(newValue) ? 'visible' : 'collapse';
+				}
+			}
+		};
+
 		const createStylePanel = (styleID: StyleID, dynamicStyle: DynamicStyle, parent: Panel) => {
 			const panel = $.CreatePanel('Panel', parent, '');
 
@@ -752,6 +765,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 					numberEntry.value = (component.dynamicStyles[styleID]?.value as number) ?? 0;
 					numberEntry.SetPanelEvent('onvaluechanged', () => {
 						component.setDynamicStyle(styleID, numberEntry.value);
+						updateChildVisibility(styleID, numberEntry.value);
 						this.updateActiveComponentOverlayPosition();
 					});
 
@@ -771,6 +785,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 					checkbox.SetPanelEvent('onactivate', () => {
 						component.setDynamicStyle(styleID, checkbox.checked);
+						updateChildVisibility(styleID, checkbox.checked);
 						this.updateActiveComponentOverlayPosition();
 					});
 
@@ -796,7 +811,9 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 					}
 
 					dropdown.SetPanelEvent('oninputsubmit', () => {
-						component.setDynamicStyle(styleID, dropdown.GetSelected().id);
+						const value = dropdown.GetSelected().id;
+						component.setDynamicStyle(styleID, value);
+						updateChildVisibility(styleID, value);
 					});
 
 					dropdown.SetSelected(component.dynamicStyles[styleID]?.value as string);
@@ -811,7 +828,9 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 					const colorDisplay = panel.FindChildTraverse<ColorDisplay>('ColorDisplay')!;
 					colorDisplay.text = dynamicStyle.properties.name;
 					colorDisplay.SetPanelEvent('oncolorchange', () => {
-						component.setDynamicStyle(styleID, colorDisplay.color);
+						const value = colorDisplay.color;
+						component.setDynamicStyle(styleID, value);
+						updateChildVisibility(styleID, value);
 					});
 
 					// We use hex for display here since it's more compact, but internally is rgba
@@ -829,13 +848,17 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 					const startColor = panel.FindChildTraverse<ColorDisplay>('StartColor')!;
 					startColor.text = 'From: ';
 					startColor.SetPanelEvent('oncolorchange', () => {
-						component.setDynamicStyle(styleID, [startColor.color, endColor.color]);
+						const value = [startColor.color, endColor.color];
+						component.setDynamicStyle(styleID, value);
+						updateChildVisibility(styleID, value);
 					});
 
 					const endColor = panel.FindChildTraverse<ColorDisplay>('EndColor')!;
 					endColor.text = 'To: ';
 					endColor.SetPanelEvent('oncolorchange', () => {
-						component.setDynamicStyle(styleID, [startColor.color, endColor.color]);
+						const value = [startColor.color, endColor.color];
+						component.setDynamicStyle(styleID, value);
+						updateChildVisibility(styleID, value);
 					});
 
 					const gradientValue = component.dynamicStyles[styleID]?.value;
@@ -863,11 +886,14 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 					dropdown.SetPanelEvent('oninputsubmit', () => {
 						value = dropdown.GetSelected().id;
 						component.setDynamicStyle(styleID, value);
+						updateChildVisibility(styleID, value);
 					});
 					dropdown.SetSelected(component.dynamicStyles[styleID]?.value as string);
 					this.updateActiveComponentOverlayPosition();
 				}
 			}
+
+			return panel;
 		};
 
 		const childrenStyleIDs = new Set<StyleID>();
@@ -890,13 +916,26 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 				const childrenWrapper = $.CreatePanel('Panel', parentWrapper, 'ChildrenWrapper');
 				childrenWrapper.AddClass('hud-customizer-settings__row-wrapper--children');
-				childrenWrapper.AddClass('hud-customizer-settings__row-wrapper--children-hidden');
+
+				if (parentStyle.properties.expandable)
+					childrenWrapper.AddClass('hud-customizer-settings__row-wrapper--children-hidden');
 
 				for (const child of normalizedChildren) {
 					const childStyle = component.dynamicStyles[child.styleID];
 					if (!childStyle) continue;
 
-					createStylePanel(child.styleID, childStyle, childrenWrapper);
+					const childPanel = createStylePanel(child.styleID, childStyle, childrenWrapper);
+
+					if (!childVisibilityMap.has(parentStyleID)) {
+						childVisibilityMap.set(parentStyleID, []);
+					}
+					childVisibilityMap.get(parentStyleID)!.push({ panel: childPanel, showWhen: child.showWhen });
+
+					if (child.showWhen) {
+						const parentValue = component.dynamicStyles[parentStyleID]?.value;
+						const normalizedShowWhen = Array.isArray(child.showWhen) ? child.showWhen : [child.showWhen];
+						childPanel.visible = normalizedShowWhen.includes(parentValue);
+					}
 
 					if (childStyle.properties.children) appendChildren(child.styleID, childrenWrapper);
 				}

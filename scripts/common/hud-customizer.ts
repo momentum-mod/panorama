@@ -63,7 +63,10 @@ export interface DynamicStyleProperties<
 	name: string;
 
 	/** Defines which styles should be the children of this style.
-	 * TODO: Implement showWhen
+	 * styleID: id of the child
+	 * showWhen: value of the parent
+	 * When parent's value is the value defined in showWhen the child will be visible
+	 * If showWhen is not provided the child is always visible unless hidden by the expandable property
 	 */
 	children?: DynamicStyleChild | DynamicStyleChild[];
 
