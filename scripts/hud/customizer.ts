@@ -415,7 +415,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		// TODO (Old): I *think* we're gonna need this event to cover all cases where the HUD is reloaded.
 		// Looks like some stuff like HudSpecInfoHandler listening for PanelLoaded is getting
 		// called later than this though...
-		$.RegisterForUnhandledEvent('HudInit' as any, () => {
+		$.RegisterForUnhandledEvent('MapCache_MapLoad' as any, () => {
 			// Once HUD is fully initialized, let components awaiting registration know to load component
 			$.DispatchEvent('HudCustomizer_Ready');
 		});
@@ -471,12 +471,11 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			const current = GameModeAPI.GetCurrentGameMode();
 			const allowed = Array.isArray(properties.gamemode) ? properties.gamemode : [properties.gamemode];
 			if (!allowed.includes(current)) {
-				//Hud_Customizer_Ready is called before a new gamemode is set, can't disable panels like this yet
-				// panel.enabled = false;
-				// return;
+				panel.enabled = false;
+				return;
 			}
 		}
-		// panel.enabled = true;
+		panel.enabled = true;
 
 		const component = Component.register(panel, properties);
 		this.components[component.id] = component;
