@@ -2,6 +2,8 @@ import { PanelHandler } from 'util/module-helpers';
 import { tupleToRgbaString } from 'util/colors';
 import { SpeedometerColorType, SpeedometerType } from 'common/speedometer';
 
+import { registerHUDCustomizerComponent } from 'common/hud-customizer';
+
 // arbitrary value to determine how much speed needs to change to be considered an increase/decrease
 // adjusted by speedometer update delta time
 const COLORIZE_DEADZONE = 2;
@@ -94,6 +96,11 @@ class SpeedometerHandler {
 		// do want to register when color profiles are saved though as that can happen independently
 		$.RegisterForUnhandledEvent('OnSpeedometerSettingsSaved', (succ: boolean) => this.onSettingsUpdate(succ));
 		$.RegisterForUnhandledEvent('OnRangeColorProfilesSaved', (succ: boolean) => this.onSettingsUpdate(succ));
+
+		registerHUDCustomizerComponent($.GetContextPanel(), {
+			resizeX: false,
+			resizeY: false
+		});
 	}
 
 	registerFadeoutEventHandlers() {
