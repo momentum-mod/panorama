@@ -14,6 +14,7 @@ export function registerHUDCustomizerComponent(panel: GenericPanel, properties: 
 }
 
 export enum CustomizerPropertyType {
+	NONE,
 	NUMBER_ENTRY,
 	CHECKBOX,
 	SLIDER, // TODO: do we actually want this for anything?
@@ -24,6 +25,7 @@ export enum CustomizerPropertyType {
 }
 
 interface PropertyTypeMap {
+	[CustomizerPropertyType.NONE]: never;
 	[CustomizerPropertyType.NUMBER_ENTRY]: NumberEntry;
 	[CustomizerPropertyType.CHECKBOX]: ToggleButton;
 	[CustomizerPropertyType.SLIDER]: Slider;
@@ -34,6 +36,7 @@ interface PropertyTypeMap {
 }
 
 interface PropertyTypeToValueTypeMap {
+	[CustomizerPropertyType.NONE]: null;
 	[CustomizerPropertyType.NUMBER_ENTRY]: NumberEntry['value'];
 	[CustomizerPropertyType.CHECKBOX]: ToggleButton['checked'];
 	[CustomizerPropertyType.SLIDER]: Slider['value'];
@@ -41,6 +44,11 @@ interface PropertyTypeToValueTypeMap {
 	[CustomizerPropertyType.COLOR_PICKER]: TextEntry['text'];
 	[CustomizerPropertyType.GRADIENT_PICKER]: [string, string];
 	[CustomizerPropertyType.FONT_PICKER]: string;
+}
+
+interface DynamicStyleChild {
+	styleID: StyleID;
+	showWhen?: any | any[];
 }
 
 export type StyleID = string;
@@ -53,6 +61,15 @@ export interface DynamicStyleProperties<
 > {
 	/** Name of the property to display in UI. Please localize! */
 	name: string;
+
+	/** Defines which styles should be the children of this style.
+	 * TODO: Implement showWhen
+	 */
+	children?: DynamicStyleChild | DynamicStyleChild[];
+
+	/**
+	 * When true, the style can be manually expanded to show it's children, otherwise children are only shown through showWhen property */
+	expandable?: boolean;
 
 	/**
 	 * Selector or array of selectors.
@@ -67,13 +84,13 @@ export interface DynamicStyleProperties<
 	type: PropertyType;
 
 	/**
+	 * Defines options and their respective values for CustomizerPropertyType.DROPDOWN */
+	options?: PropertyType extends CustomizerPropertyType.DROPDOWN ? Array<{ label: string; value: string }> : never;
+
+	/**
 	 * Style property to modify. For all matching panels, this CSS property is set to the current style value.
 	 * Should at least supply this, callbackFunc, or eventlisteners (todo: maybe more stuff) */
 	styleProperty?: StyleProperty;
-
-	/**
-	 * Defines options and their respective values for CustomizerPropertyType.DROPDOWN */
-	options?: PropertyType extends CustomizerPropertyType.DROPDOWN ? Array<{ label: string; value: string }> : never;
 
 	/**
 	 * Function to convert stored/configured value to style string.

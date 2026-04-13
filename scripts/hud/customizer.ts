@@ -88,7 +88,7 @@ const OVERLAY_MARGIN = 32;
 
 interface DynamicStyle {
 	properties: Readonly<DynamicStyleProperties>;
-	value: any;
+	value?: any;
 }
 
 /**
@@ -160,6 +160,11 @@ class Component {
 					componentLayout.dynamicStyles?.[styleID as StyleID] ??
 					defaultComponentLayout?.dynamicStyles?.[styleID as StyleID];
 				if (value === undefined) {
+					if (styleProps.type === CustomizerPropertyType.NONE) {
+						// NONE types have no value
+						this.dynamicStyles[styleID] = { properties: styleProps as DynamicStyleProperties };
+						continue;
+					}
 					throw new Error(
 						`HudCustomizer: Could not load dynamic style value for ${styleID} in component ${this.id}`
 					);
@@ -706,11 +711,36 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		this.panels.activeComponentSettings.visible = true;
 		this.panels.settings.SetDialogVariable('active_name', component.id);
 
-		// Generate settings based on CustomizerPropertyType
-		for (const [styleID, dynamicStyle] of Object.entries(component.dynamicStyles)) {
-			const panel = $.CreatePanel('Panel', this.panels.activeComponentSettingsList, '');
+		const createStylePanel = (styleID: StyleID, dynamicStyle: DynamicStyle, parent: Panel) => {
+			const panel = $.CreatePanel('Panel', parent, '');
+
+			if (dynamicStyle.properties.expandable) {
+				const button = $.CreatePanel('Button', panel, 'ExpandArrowButton', {
+					class: 'hud-customizer-settings__expand-arrow'
+				});
+
+				const arrow = $.CreatePanel('Image', button, 'ExpandArrow', {
+					textureheight: 10,
+					class: 'hud-customizer-settings__expand-arrow--image'
+				});
+				arrow.SetImage('file://{images}/down-arrow.svg');
+
+				let expanded = false;
+				button.SetPanelEvent('onactivate', () => {
+					expanded = !expanded;
+					arrow.SetHasClass('hud-customizer-settings__expand-arrow--expanded', expanded);
+
+					const childrenWrapper = button.GetParent().GetParent().FindChild('ChildrenWrapper');
+					childrenWrapper.SetHasClass('hud-customizer-settings__row-wrapper--children-hidden', !expanded);
+				});
+			}
 
 			switch (dynamicStyle.properties.type) {
+				case CustomizerPropertyType.NONE: {
+					panel.LoadLayoutSnippet('dynamic-none');
+					panel.SetDialogVariable('name', dynamicStyle.properties.name);
+					break;
+				}
 				case CustomizerPropertyType.NUMBER_ENTRY: {
 					panel.LoadLayoutSnippet('dynamic-numberentry');
 					panel.SetDialogVariable('name', dynamicStyle.properties.name);
@@ -839,6 +869,51 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 					this.updateActiveComponentOverlayPosition();
 				}
 			}
+		};
+
+		const childrenStyleIDs = new Set<StyleID>();
+
+		for (const [_, dynamicStyle] of Object.entries(component.dynamicStyles)) {
+			const child = dynamicStyle.properties.children;
+			if (child) {
+				const normalized = Array.isArray(child) ? child : [child];
+				for (const c of normalized) {
+					childrenStyleIDs.add(c.styleID);
+				}
+			}
+		}
+
+		const appendChildren = (parentStyleID: StyleID, parentWrapper: Panel) => {
+			const parentStyle = component.dynamicStyles[parentStyleID];
+			const children = parentStyle.properties.children;
+			if (children) {
+				const normalizedChildren = Array.isArray(children) ? children : [children];
+
+				const childrenWrapper = $.CreatePanel('Panel', parentWrapper, 'ChildrenWrapper');
+				childrenWrapper.AddClass('hud-customizer-settings__row-wrapper--children');
+				childrenWrapper.AddClass('hud-customizer-settings__row-wrapper--children-hidden');
+
+				for (const child of normalizedChildren) {
+					const childStyle = component.dynamicStyles[child.styleID];
+					if (!childStyle) continue;
+
+					createStylePanel(child.styleID, childStyle, childrenWrapper);
+
+					if (childStyle.properties.children) appendChildren(child.styleID, childrenWrapper);
+				}
+			}
+		};
+
+		// Generate settings based on CustomizerPropertyType
+		for (const [styleID, dynamicStyle] of Object.entries(component.dynamicStyles)) {
+			if (childrenStyleIDs.has(styleID)) continue;
+
+			const wrapper = $.CreatePanel('Panel', this.panels.activeComponentSettingsList, 'ParentWrapper');
+			wrapper.AddClass('hud-customizer-settings__row-wrapper');
+
+			createStylePanel(styleID, dynamicStyle, wrapper);
+
+			if (dynamicStyle.properties.children) appendChildren(styleID, wrapper);
 		}
 	}
 

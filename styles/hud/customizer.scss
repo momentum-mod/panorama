@@ -214,6 +214,22 @@ $input-background-hover: rgb(110, 110, 110);
 		}
 	}
 
+	&__row-wrapper {
+		height: fit-children;
+		width: 100%;
+		flow-children: down;
+
+		&--children {
+			width: 100%;
+			flow-children: down;
+			margin-left: 8px;
+		}
+
+		&--children-hidden {
+			height: 0px;
+		}
+	}
+
 	&__row {
 		height: 16px;
 		width: 100%;
@@ -230,6 +246,24 @@ $input-background-hover: rgb(110, 110, 110);
 
 	&__setting-label:not(.specificity-hack-fuck-css) {
 		@include name;
+	}
+
+	&__expand-arrow {
+		width: 16px;
+		height: 100%;
+
+		&--image {
+			vertical-align: center;
+			horizontal-align: left;
+			height: 10px;
+			width: 10px;
+			transform: rotateZ(-90deg);
+			wash-color: rgb(180, 180, 180);
+			transition: transform 0.15s ease-in-out 0s;
+		}
+		&--expanded {
+			transform: rotateZ(0deg);
+		}
 	}
 
 	&__numberentry {

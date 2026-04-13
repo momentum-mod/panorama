@@ -15,6 +15,12 @@
 			</RadioButton>
 		</snippet>
 
+        <snippet name="dynamic-none">
+			<Panel class="hud-customizer-settings__row">
+					<Label class="hud-customizer-settings__setting-label" text="{s:name}" />
+			</Panel>
+		</snippet>
+
 		<snippet name="dynamic-checkbox">
 			<Panel class="hud-customizer-settings__row">
 				<ToggleButton id="Checkbox" class="checkbox hud-customizer-settings__checkbox">
