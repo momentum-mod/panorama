@@ -2,7 +2,7 @@ import { PanelHandler } from 'util/module-helpers';
 import { getNumStages } from 'common/leaderboard';
 import { getAuthorNames, getTier } from '../common/maps';
 
-import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
+import { CustomizerPropertyType, registerHUDCustomizerComponent, FontStyles } from 'common/hud-customizer';
 
 @PanelHandler()
 class HudMapInfoHandler {
@@ -18,13 +18,23 @@ class HudMapInfoHandler {
 	constructor() {
 		$.RegisterForUnhandledEvent('MapCache_MapLoad', (mapName: string) => this.onOfficialMapLoad(mapName));
 
-		//TODO: Add generic border styles
-		//TODO: Handle variable width? Kinda done, Customizer needs to be able to have minimum width set
-
 		registerHUDCustomizerComponent($.GetContextPanel(), {
 			resizeX: true,
 			resizeY: false,
 			dynamicStyles: {
+				...FontStyles('.hud-map-info__label'),
+				showLabels: {
+					name: 'Show Labels',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [
+						{ styleID: 'showVersion' },
+						{ styleID: 'showMapName' },
+						{ styleID: 'showAuthors' },
+						{ styleID: 'showTier' },
+						{ styleID: 'showMapType' }
+					]
+				},
 				showVersion: {
 					name: 'Show Version',
 					type: CustomizerPropertyType.CHECKBOX,
@@ -37,6 +47,7 @@ class HudMapInfoHandler {
 					name: 'Show Map Name',
 					type: CustomizerPropertyType.CHECKBOX,
 					targetPanel: '#MapNameLabel',
+					children: { styleID: 'showGamemode', showWhen: true },
 					callbackFunc: (panel, value) => {
 						panel.SetHasClass('hide', !value);
 					}
@@ -75,57 +86,23 @@ class HudMapInfoHandler {
 						this.constructString();
 					}
 				},
-
-				//TODO: Remake this using a proper CustomizerPropertyType when added
-				alignText: {
-					name: 'Align Text',
-					type: CustomizerPropertyType.NUMBER_ENTRY,
-					targetPanel: ['.hud-map-info__label', '#CachedInfoContainer'],
-					callbackFunc: (panel, value) => {
-						switch (value) {
-							case 0:
-								panel.style.horizontalAlign = 'left';
-								panel.style.textAlign = 'left';
-								break;
-							case 1:
-								panel.style.horizontalAlign = 'center';
-								panel.style.textAlign = 'center';
-								break;
-							case 2:
-								panel.style.horizontalAlign = 'right';
-								panel.style.textAlign = 'right';
-								break;
-						}
-					},
-					settingProps: { min: 0, max: 2 }
-				},
 				gap: {
 					name: 'Gap',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					targetPanel: '.hud-map-info__label',
 					styleProperty: 'marginBottom',
-					valueFn: (value) => `${value}px`,
-					settingProps: { min: 0, max: 20 }
+					valueFn: (value) => `${value}px`
 				},
-				font: {
-					name: 'Font',
-					type: CustomizerPropertyType.FONT_PICKER,
-					targetPanel: '.hud-map-info__label',
-					styleProperty: 'fontFamily'
-				},
-				fontColor: {
-					name: 'Font Color',
-					type: CustomizerPropertyType.COLOR_PICKER,
-					targetPanel: '.hud-map-info__label',
-					styleProperty: 'color'
-				},
-				fontSize: {
-					name: 'Font Size',
-					type: CustomizerPropertyType.NUMBER_ENTRY,
-					targetPanel: '.hud-map-info__label',
-					styleProperty: 'fontSize',
-					valueFn: (value) => `${value}px`,
-					settingProps: { min: 10, max: 50 }
+				alignText: {
+					name: 'Align Text',
+					type: CustomizerPropertyType.DROPDOWN,
+					options: [
+						{ label: 'Left', value: 'left' },
+						{ label: 'Center', value: 'center' },
+						{ label: 'Right', value: 'right' }
+					],
+					targetPanel: ['.hud-map-info__label', '#CachedInfoContainer'],
+					styleProperty: 'horizontalAlign'
 				}
 			}
 		});
