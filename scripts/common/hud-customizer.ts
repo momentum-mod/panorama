@@ -228,6 +228,35 @@ export interface IHudCustomizerHandler {
 	loadComponent(panel: GenericPanel, properties: CustomizerComponentProperties): void;
 }
 
+export const FontStyles = (targetPanel: QuerySelector | QuerySelector[]): MappedStyles => {
+	return {
+		fontStyling: {
+			name: 'Font Styling',
+			type: CustomizerPropertyType.NONE,
+			expandable: true,
+			children: [{ styleID: 'font' }, { styleID: 'fontSize' }, { styleID: 'fontColor' }]
+		},
+		font: {
+			name: 'Font',
+			type: CustomizerPropertyType.FONT_PICKER,
+			targetPanel: targetPanel,
+			styleProperty: 'fontFamily'
+		},
+		fontSize: {
+			name: 'Font Size',
+			type: CustomizerPropertyType.NUMBER_ENTRY,
+			targetPanel: targetPanel,
+			styleProperty: 'fontSize'
+		},
+		fontColor: {
+			name: 'Font Color',
+			type: CustomizerPropertyType.COLOR_PICKER,
+			targetPanel: targetPanel,
+			styleProperty: 'color'
+		}
+	};
+};
+
 export const MarginStyles = {
 	marginTop: {
 		name: 'Margin Top',
