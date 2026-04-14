@@ -322,6 +322,41 @@ $input-background-hover: rgb(110, 110, 110);
 		}
 	}
 
+	&__slider {
+		width: fill-parent-flow(1);
+		min-height: 16px;
+		padding: 0 8px;
+
+		#SliderTrack,
+		#SliderTrackProgress {
+			width: fill-parent-flow(1);
+			height: 8px;
+		}
+
+		#SliderTrackProgress {
+			background-color: gradient(linear, 0% 0%, 100% 0%, from(#1076a8), to(#57c8ff));
+		}
+
+		#SliderDefault,
+		#SliderDefault2 {
+			visibility: collapse;
+		}
+
+		&--text-entry {
+			width: 27px;
+			text-align: center;
+			horizontal-align: center;
+			padding: 1px 0 1px 6px;
+			font-family: $font-monospace;
+			font-size: 11px;
+			background-color: $input-background;
+
+			&:hover {
+				background-color: $input-background-hover;
+			}
+		}
+	}
+
 	&__colordisplay {
 		flow-children: right;
 		width: 100%;

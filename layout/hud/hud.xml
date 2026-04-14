@@ -59,9 +59,11 @@
 		<MomHudWeaponSelection id="WeaponSelection" /> <!-- TODO: not in customizer, needs C++ work-->
 		
 
-        <!-- Most likely gonna get removed -->
+        <!-- No idea -->
+        <HudHintText id="HudHintText" /> <!-- TODO: not in customizer, no idea how to even check what this does -->
 
-        <!-- <HudHintText id="HudHintText" /> TODO: not in customizer, no idea how to even check what this does -->
+        
+        <!-- Most likely gonna get removed -->
 		<!-- <HudBoneCounts id="BoneCount" /> TODO: HudTopCenter, not in customizer, probably gonna get nuked -->
         <!-- <MomHudStrafeSync id="StrafeSync" /> This is broken and probably not worth fixing --> 
 

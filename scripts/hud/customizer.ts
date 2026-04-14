@@ -753,6 +753,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 					panel.SetDialogVariable('name', dynamicStyle.properties.name);
 					break;
 				}
+
 				case CustomizerPropertyType.NUMBER_ENTRY: {
 					panel.LoadLayoutSnippet('dynamic-numberentry');
 					panel.SetDialogVariable('name', dynamicStyle.properties.name);
@@ -786,6 +787,37 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 					checkbox.SetPanelEvent('onactivate', () => {
 						component.setDynamicStyle(styleID, checkbox.checked);
 						updateChildVisibility(styleID, checkbox.checked);
+						this.updateActiveComponentOverlayPosition();
+					});
+
+					break;
+				}
+
+				case CustomizerPropertyType.SLIDER: {
+					panel.LoadLayoutSnippet('dynamic-slider');
+					panel.SetDialogVariable('name', dynamicStyle.properties.name);
+					const slider = panel.FindChildTraverse<Slider>('Slider')!;
+					const textEntry = panel.FindChildTraverse<TextEntry>('Value')!;
+
+					textEntry.text = component.dynamicStyles[styleID]?.value.toString() ?? 0;
+
+					if (dynamicStyle.properties.settingProps) {
+						Object.assign(slider, dynamicStyle.properties.settingProps);
+					}
+
+					slider.SetPanelEvent('onvaluechanged', () => {
+						textEntry.text = slider.value.toFixed(0);
+
+						component.setDynamicStyle(styleID, slider.value);
+						updateChildVisibility(styleID, slider.value);
+						this.updateActiveComponentOverlayPosition();
+					});
+
+					textEntry.SetPanelEvent('ontextentrychange', () => {
+						slider.value = +textEntry.text;
+
+						component.setDynamicStyle(styleID, slider.value);
+						updateChildVisibility(styleID, slider.value);
 						this.updateActiveComponentOverlayPosition();
 					});
 

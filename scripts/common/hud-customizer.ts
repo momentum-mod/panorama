@@ -17,7 +17,7 @@ export enum CustomizerPropertyType {
 	NONE,
 	NUMBER_ENTRY,
 	CHECKBOX,
-	SLIDER, // TODO: do we actually want this for anything?
+	SLIDER,
 	DROPDOWN,
 	COLOR_PICKER,
 	GRADIENT_PICKER,
