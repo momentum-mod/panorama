@@ -29,6 +29,14 @@
 			</Panel>
 		</snippet>
 
+        <snippet name="dynamic-slider">
+			<Panel class="hud-customizer-settings__row">
+                <Label class="hud-customizer-settings__setting-label" text="{s:name}" />
+                <Slider class="slider hud-customizer-settings__slider" showdefault="true" direction="horizontal" id="Slider" min="0" max="100" value="50"/>
+                <TextEntry class="textentry numberentry__textentry hud-customizer-settings__slider--text-entry" maxchars="6" textmode="numeric" id="Value" />
+			</Panel>
+		</snippet>
+
 		<snippet name="dynamic-numberentry">
 			<Panel class="hud-customizer-settings__row">
 				<Label class="hud-customizer-settings__setting-label" text="{s:name}" />
