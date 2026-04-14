@@ -716,7 +716,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			const entries = childVisibilityMap.get(styleID);
 			if (!entries) return;
 			for (const { panel, showWhen } of entries) {
-				if (showWhen) {
+				if (showWhen !== undefined) {
 					const normalized = Array.isArray(showWhen) ? showWhen : [showWhen];
 					panel.style.visibility = normalized.includes(newValue) ? 'visible' : 'collapse';
 				}
