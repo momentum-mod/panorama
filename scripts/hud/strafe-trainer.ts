@@ -5,7 +5,9 @@ import { RegisterHUDPanelForGamemode } from '../util/register-for-gamemodes';
 import { Gamemode, GamemodeCategory, GamemodeCategoryToGamemode } from 'common/web/enums/gamemode.enum';
 import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
 
-const Colors = {
+type ColorPair = [color, color];
+
+const Colors: Record<string, ColorPair> = {
 	EXTRA: ['rgba(24, 150, 211, 1)', 'rgba(87, 200, 255, 1)'],
 	PERFECT: ['rgba(87, 200, 255, 1)', 'rgba(113, 240, 255, 1)'],
 	GOOD: ['rgba(21, 152, 86, 1)', 'rgba(122, 238, 122, 1)'],
@@ -13,12 +15,9 @@ const Colors = {
 	NEUTRAL: ['rgba(178, 178, 178, 1)', 'rgba(255, 255, 255, 1)'],
 	LOSS: ['rgba(220, 116, 13, 1)', 'rgba(255, 188, 0, 1)'],
 	STOP: ['rgba(211, 24, 24, 1)', 'rgba(255, 87, 87, 1)']
-} satisfies Record<string, [color, color]>;
+};
 
 const DEFAULT_BUFFER_LENGTH = 10;
-const DEFAULT_MIN_SPEED = 200;
-const DEFAULT_SETTING_ON = 1;
-const DEFAULT_SETTING_OFF = 0;
 
 const RAD2DEG = 180 / Math.PI;
 const DEG2RAD = 1 / RAD2DEG;
@@ -64,6 +63,7 @@ class StrafeTrainer {
 	//It immediately gets overridden by hud/hud_default.kv3 anyway
 	//Can't figure it out
 	altColor = 'rgba(0,0,0,0)' as color;
+	strafeBarGradient = ['rgba(178, 178, 178, 1)', 'rgba(255, 255, 255, 1)'];
 
 	//Not yet customizable
 	isFirstPanelColored = true; // gets toggled in wrapValueToRange()
@@ -100,28 +100,65 @@ class StrafeTrainer {
 			],
 			expectedMinWidth: 300,
 			//TODO: Add generic border, font settings
-			//TODO: Add options to edit all the colors in the colors const. They need to be expandable or they will take way too much space
 			dynamicStyles: {
-				//TODO: Use proper CustomizerPropertyType when available
 				displayMode: {
 					name: 'Display Mode',
-					type: CustomizerPropertyType.NUMBER_ENTRY,
+					type: CustomizerPropertyType.DROPDOWN,
+					options: [
+						{
+							label: 'Half Width',
+							value: DisplayMode.HALF_WIDTH_THROTTLE.toString()
+						},
+						{
+							label: 'Full Width',
+							value: DisplayMode.FULL_WIDTH_THROTTLE.toString()
+						},
+						{
+							label: 'Indicator',
+							value: DisplayMode.STRAFE_INDICATOR.toString()
+						},
+						{
+							label: 'Synchronizer',
+							value: DisplayMode.SYNCHRONIZER.toString()
+						}
+					],
+					children: [
+						{
+							styleID: 'indicatorPercentage',
+							showWhen: DisplayMode.STRAFE_INDICATOR.toString()
+						},
+						{
+							styleID: 'synchronizerSpeed',
+							showWhen: DisplayMode.SYNCHRONIZER.toString()
+						},
+						{
+							styleID: 'needleWidth',
+							showWhen: [
+								DisplayMode.HALF_WIDTH_THROTTLE.toString(),
+								DisplayMode.STRAFE_INDICATOR.toString()
+							]
+						},
+						{
+							styleID: 'needleColor',
+							showWhen: [
+								DisplayMode.HALF_WIDTH_THROTTLE.toString(),
+								DisplayMode.STRAFE_INDICATOR.toString()
+							]
+						}
+					],
 					callbackFunc: (_, value) => {
-						this.updateDisplayMode(value);
-					},
-					settingProps: { min: 0, max: 3 }
+						this.updateDisplayMode(+value);
+					}
 				},
-				//TODO: ONLY SHOW WHEN DISPLAY MODE = 2
 				indicatorPercentage: {
 					name: 'Indicator Gain Percentage',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
-					callbackFunc: (_, value) => {
+					callbackFunc: (panel, value) => {
 						this.indicatorPercentage = value;
 						this.updateDisplayMode(this.displayMode);
 					},
 					settingProps: { min: 80, max: 99 }
 				},
-				//TODO: ONLY SHOW WHEN DISPLAY MODE = 3
 				synchronizerSpeed: {
 					name: 'Synchronizer Speed',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
@@ -130,12 +167,35 @@ class StrafeTrainer {
 					},
 					settingProps: { min: 1, max: 20 }
 				},
-				colorByGain: {
-					name: 'Color By Speed Gain',
-					type: CustomizerPropertyType.CHECKBOX,
+				needleWidth: {
+					name: 'Needle Width',
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					targetPanel: '.strafetrainer__needle',
+					styleProperty: 'width',
+					valueFn: (value) => `${value}px`
+				},
+				needleColor: {
+					name: 'Needle Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					targetPanel: '.strafetrainer__needle',
+					styleProperty: 'backgroundColor'
+				},
+				averagingWindow: {
+					name: 'Averaging Window',
+					type: CustomizerPropertyType.NUMBER_ENTRY,
 					callbackFunc: (_, value) => {
-						this.colorByGainEnable = value;
-					}
+						this.updateBufferLength(value);
+					},
+					settingProps: { min: 1, max: 20 }
+				},
+				//TODO: Use slider when implemented?
+				minSpeed: {
+					name: 'Required Speed',
+					type: CustomizerPropertyType.SLIDER,
+					callbackFunc: (_, value) => {
+						this.minSpeed = value;
+					},
+					settingProps: { min: 30, max: 250 }
 				},
 				dynamicMode: {
 					name: 'Follow Strafe Direction',
@@ -151,24 +211,18 @@ class StrafeTrainer {
 						this.flipEnable = value;
 					}
 				},
-				averagingWindow: {
-					name: 'Averaging Window',
-					type: CustomizerPropertyType.NUMBER_ENTRY,
-					callbackFunc: (_, value) => {
-						this.updateBufferLength(value);
-					},
-					settingProps: { min: 1, max: 20 }
+				showLabels: {
+					name: 'Show Labels',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [
+						{ styleID: 'showJumpCount' },
+						{ styleID: 'showTakeoffSpeed' },
+						{ styleID: 'showYawRatio' },
+						{ styleID: 'showGain' },
+						{ styleID: 'colorStats' }
+					]
 				},
-				//TODO: Use slider when implemented?
-				minSpeed: {
-					name: 'Minimum required speed',
-					type: CustomizerPropertyType.NUMBER_ENTRY,
-					callbackFunc: (_, value) => {
-						this.minSpeed = value;
-					},
-					settingProps: { min: 30, max: 250 }
-				},
-				//TODO: Put everything below into an expandable menu option when that's available
 				showJumpCount: {
 					name: 'Show Jump Count',
 					type: CustomizerPropertyType.CHECKBOX,
@@ -201,7 +255,6 @@ class StrafeTrainer {
 						this.updateStats();
 					}
 				},
-				//Todo: Don't show if stats are enabled
 				colorStats: {
 					name: 'Color Stats Based On Gain',
 					type: CustomizerPropertyType.CHECKBOX,
@@ -210,20 +263,111 @@ class StrafeTrainer {
 						this.updateStats();
 					}
 				},
+				colors: {
+					name: 'Colors',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [{ styleID: 'backgroundColor' }, { styleID: 'needleColor' }, { styleID: 'colorByGain' }]
+				},
+				//TODO: Add highlight color ( this.altColor );
 				backgroundColor: {
 					name: 'Background Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
-					callbackFunc: (_, value) => {
-						this.altColor = value as color;
-						this.updateDisplayMode(this.displayMode);
+					targetPanel: ['.strafetrainer__background', '.strafetrainer__container'],
+					callbackFunc: (panel, value) => {
+						const splitRGBA = this.splitRgbFromAlpha(value);
+						if (panel.id === 'Container') {
+							panel.style.boxShadow = `fill 0px 0px 12px -6px rgba(0, 0, 0, ${splitRGBA[1]})`;
+							panel.style.backgroundColor =
+								`gradient(linear, 0% 0%, 0% 100%, from(rgba(255, 255, 255, ${+splitRGBA[1] * 0.02})), to(rgba(0, 0, 0, ${+splitRGBA[1] * 0.5})))` as color;
+						} else panel.style.backgroundColor = value as color;
+						// this.altColor = value as color;
+						// this.updateDisplayMode(this.displayMode);
 					}
 				},
-				needleColor: {
-					name: 'Needle Color',
-					type: CustomizerPropertyType.COLOR_PICKER,
-					targetPanel: '.strafetrainer__needle',
-					styleProperty: 'backgroundColor'
+
+				colorByGain: {
+					name: 'Color By Speed Gain',
+					type: CustomizerPropertyType.CHECKBOX,
+					children: [
+						{ styleID: 'gainColors', showWhen: true },
+						{ styleID: 'strafeBarColor', showWhen: false }
+					],
+					callbackFunc: (_, value) => {
+						this.colorByGainEnable = value;
+					}
 				},
+				strafeBarColor: {
+					name: 'Strafe Bar Color',
+					type: CustomizerPropertyType.GRADIENT_PICKER,
+					callbackFunc: (_, value) => {
+						this.strafeBarGradient = value;
+					}
+				},
+				gainColors: {
+					name: 'Gain Colors',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [
+						{ styleID: 'gainExtra' },
+						{ styleID: 'gainPerfect' },
+						{ styleID: 'gainGood' },
+						{ styleID: 'gainSlow' },
+						{ styleID: 'gainNeutral' },
+						{ styleID: 'gainLoss' },
+						{ styleID: 'gainStop' }
+					]
+				},
+				gainExtra: {
+					name: 'Extra',
+					type: CustomizerPropertyType.GRADIENT_PICKER,
+					callbackFunc: (_, value) => {
+						Colors.EXTRA = value as [color, color];
+					}
+				},
+				gainPerfect: {
+					name: 'Perfect',
+					type: CustomizerPropertyType.GRADIENT_PICKER,
+					callbackFunc: (_, value) => {
+						Colors.PERFECT = value as [color, color];
+					}
+				},
+				gainGood: {
+					name: 'Good',
+					type: CustomizerPropertyType.GRADIENT_PICKER,
+					callbackFunc: (_, value) => {
+						Colors.GOOD = value as [color, color];
+					}
+				},
+				gainSlow: {
+					name: 'Slow',
+					type: CustomizerPropertyType.GRADIENT_PICKER,
+					callbackFunc: (_, value) => {
+						Colors.SLOW = value as [color, color];
+					}
+				},
+				gainNeutral: {
+					name: 'Neutral',
+					type: CustomizerPropertyType.GRADIENT_PICKER,
+					callbackFunc: (_, value) => {
+						Colors.NEUTRAL = value as [color, color];
+					}
+				},
+				gainLoss: {
+					name: 'Loss',
+					type: CustomizerPropertyType.GRADIENT_PICKER,
+					callbackFunc: (_, value) => {
+						Colors.LOSS = value as [color, color];
+					}
+				},
+				gainStop: {
+					name: 'Stop',
+					type: CustomizerPropertyType.GRADIENT_PICKER,
+					callbackFunc: (_, value) => {
+						Colors.STOP = value as [color, color];
+					}
+				},
+
 				fontSize: {
 					name: 'Font Size',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
@@ -261,8 +405,8 @@ class StrafeTrainer {
 		const yawRatio = this.getBufferedSum(this.yawRatioHistory);
 
 		const colorTuple = this.colorByGainEnable
-			? this.getColorPair(gainRatio, false) //strafeRight * yawRatio > 1)
-			: Colors.NEUTRAL;
+			? this.getColorPair(gainRatio, false) //strafeRight * yawRatio > 1
+			: this.strafeBarGradient;
 		const color = `gradient(linear, 0% 0%, 0% 100%, from(${colorTuple[0]}), to(${colorTuple[1]}))` as color;
 		let flow;
 
@@ -436,5 +580,10 @@ class StrafeTrainer {
 
 	NaNCheck(val: any, def: any) {
 		return Number.isNaN(Number(val)) ? def : val;
+	}
+
+	splitRgbFromAlpha(rgbaString: string) {
+		const values = rgbaString.match(/[\d.]+%?/g);
+		return [`rgba(${values[0]}, ${values[1]}, ${values[2]}, 1)`, values[3]];
 	}
 }

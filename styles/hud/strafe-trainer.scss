@@ -18,7 +18,6 @@ $border-color: rgba(255, 255, 255, 0.3);
 	&__background {
 		height: 16px;
 		width: 100%;
-		background-color: color.scale(rgba($progressbar-background, 1), $lightness: 2%);
 		border-radius: 8px;
 	}
 
@@ -26,7 +25,6 @@ $border-color: rgba(255, 255, 255, 0.3);
 		height: 100%;
 		width: 100%;
 		box-shadow: fill 0px 0px 12px -6px rgba(0, 0, 0, 1);
-		background-color: function.gradient-vertical(rgba(255, 255, 255, 0.02), rgba(0, 0, 0, 0.5));
 	}
 
 	&__segment {
@@ -38,8 +36,8 @@ $border-color: rgba(255, 255, 255, 0.3);
 		width: 1px;
 		height: 100%;
 		horizontal-align: center;
-		background-color: rgba(0, 0, 0, 0.75);
-		box-shadow: 0 0 2px rgba(255, 255, 255, 0.05);
+		//Breaks HUD Customizer background styling
+		// box-shadow: 0 0 2px rgba(255, 255, 255, 0.05);
 	}
 
 	&__stats {
