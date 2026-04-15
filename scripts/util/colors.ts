@@ -141,3 +141,12 @@ export function enhanceAlpha(str: rgbaColor): rgbaColor {
 	const [r, g, b, a = 255] = rgbaStringToTuple(str);
 	return tupleToRgbaString([r, g, b, Math.min(0.25 * a + 192, 255)]);
 }
+
+/** Splits an rgba string into { rgb: rgbColor, alpha: float } */
+export function splitRgbFromAlpha(str: rgbaColor): { rgb: rgbColor; alpha: float } {
+	const [r, g, b, a] = str.match(/[\d.]+/g) ?? [];
+	return {
+		rgb: `rgb(${r}, ${g}, ${b})` as rgbColor,
+		alpha: +a
+	};
+}
