@@ -5,16 +5,12 @@
 
 .showpos-entry {
 	flow-children: down;
-	horizontal-align: center;
 	height: fit-children;
 	width: fit-children;
 
 	&__label {
 		font-weight: bold;
-		font-size: 16px;
-		horizontal-align: center;
 		text-align: center;
 		text-overflow: ellipsis;
-		text-shadow-fast: 0px 1px rgba(0, 0, 0, 0.9);
 	}
 }
