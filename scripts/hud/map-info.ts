@@ -2,7 +2,8 @@ import { PanelHandler } from 'util/module-helpers';
 import { getNumStages } from 'common/leaderboard';
 import { getAuthorNames, getTier } from '../common/maps';
 
-import { CustomizerPropertyType, registerHUDCustomizerComponent, FontStyles } from 'common/hud-customizer';
+import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
+import { splitRgbFromAlpha } from 'util/colors';
 
 @PanelHandler()
 class HudMapInfoHandler {
@@ -22,7 +23,33 @@ class HudMapInfoHandler {
 			resizeX: true,
 			resizeY: false,
 			dynamicStyles: {
-				...FontStyles('.hud-map-info__label'),
+				fontStyling: {
+					name: 'Font Styling',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [{ styleID: 'font' }, { styleID: 'fontSize' }, { styleID: 'fontColor' }]
+				},
+				font: {
+					name: 'Font',
+					type: CustomizerPropertyType.FONT_PICKER,
+					targetPanel: '.hud-map-info__label',
+					styleProperty: 'fontFamily'
+				},
+				fontSize: {
+					name: 'Font Size',
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					targetPanel: '.hud-map-info__label',
+					styleProperty: 'fontSize'
+				},
+				fontColor: {
+					name: 'Font Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					targetPanel: '.hud-map-info__label',
+					styleProperty: 'color',
+					callbackFunc: (panel, value) => {
+						panel.style.textShadowFast = this.getAdjustedTextShadow(value as rgbaColor);
+					}
+				},
 				showLabels: {
 					name: 'Show Labels',
 					type: CustomizerPropertyType.NONE,
@@ -144,5 +171,10 @@ class HudMapInfoHandler {
 		} else {
 			this.panels.cachedInfoContainer.visible = false;
 		}
+	}
+
+	getAdjustedTextShadow(color: rgbaColor) {
+		const splitRGBA = splitRgbFromAlpha(color);
+		return `0px 1px rgba(0, 0, 0, ${splitRGBA.alpha * 0.9})`;
 	}
 }

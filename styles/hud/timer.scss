@@ -11,18 +11,14 @@
 	}
 
 	&__time {
-		horizontal-align: center;
-		text-shadow-fast: 0px 1px rgba(0, 0, 0, 0.9);
 		font-weight: black;
-		transition: color 0.15s ease-out 0s;
+		transition:
+			color 0.15s ease-out 0s,
+			text-shadow-fast 0.15s ease-out 0s;
 	}
 
 	&__comparison {
-		horizontal-align: center;
-		text-shadow-fast: 0px 1px rgba(0, 0, 0, 0.9);
-
 		font-weight: bold;
-
 		transition-property: opacity;
 		transition-timing-function: ease-out;
 		transition-duration: 0s;
