@@ -4,6 +4,7 @@ import { GamemodeCategory, GamemodeCategoryToGamemode } from 'common/web/enums/g
 import { GamemodeCategories } from 'common/web/maps/gamemodes.map';
 
 import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
+import { splitRgbFromAlpha } from 'util/colors';
 
 type JumpStatsType = {
 	statsFirstPrint: int32;
@@ -48,25 +49,18 @@ class JumpStatsHandler {
 			resizeY: false,
 			gamemode: GamemodeCategoryToGamemode.get(GamemodeCategory.BHOP),
 			dynamicStyles: {
+				fontStyling: {
+					name: 'Font Styling',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [{ styleID: 'font' }, { styleID: 'fontSize' }, { styleID: 'fontColor' }]
+				},
 				font: {
 					name: 'Font',
 					type: CustomizerPropertyType.FONT_PICKER,
 					targetPanel: ['.jumpstats__label', '.jumpstats__label--name', '.jumpstats__label--values'],
 					styleProperty: 'fontFamily'
 				},
-				fontColor: {
-					name: 'Font Color',
-					type: CustomizerPropertyType.COLOR_PICKER,
-					targetPanel: ['.jumpstats__label', '.jumpstats__label--name', '.jumpstats__label--values'],
-					styleProperty: 'color',
-					callbackFunc: (panel, value) => {
-						const nameLabel = panel.GetChild(0);
-						if (nameLabel) {
-							nameLabel.style.borderTop = `1px solid ${value}`;
-						}
-					}
-				},
-				//TODO: Proper font scaling, currently it's limited because of label wrapping
 				fontSize: {
 					name: 'Font Size',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
@@ -75,11 +69,24 @@ class JumpStatsHandler {
 					valueFn: (value) => `${value}px`,
 					settingProps: { min: 7, max: 19 }
 				},
-				backgroundColor: {
-					name: 'Background Color',
+				fontColor: {
+					name: 'Font Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
-					targetPanel: '.jumpstats__container',
-					styleProperty: 'backgroundColor'
+					targetPanel: ['.jumpstats__label', '.jumpstats__label--name', '.jumpstats__label--values'],
+					styleProperty: 'color',
+					callbackFunc: (panel, value) => {
+						panel.style.textShadowFast = this.getAdjustedTextShadow(value as rgbaColor);
+						const nameLabel = panel.GetChild(0);
+						if (nameLabel) {
+							nameLabel.style.borderTop = `1px solid ${value}`;
+						}
+					}
+				},
+				logSettings: {
+					name: 'Log Settings',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [{ styleID: 'statsFirstPrint' }, { styleID: 'statsInterval' }, { styleID: 'statsLog' }]
 				},
 				statsFirstPrint: {
 					name: 'First Print',
@@ -103,6 +110,24 @@ class JumpStatsHandler {
 						this.onConfigChange();
 					}
 				},
+				toggleStats: {
+					name: 'Toggle Stats',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [
+						{ styleID: 'showTakeoffSpeed' },
+						{ styleID: 'showSpeedDelta' },
+						{ styleID: 'showGain' },
+						{ styleID: 'showYawRatio' },
+						{ styleID: 'showStrafeSync' },
+						{ styleID: 'showEfficiency' },
+						{ styleID: 'showStrafeCount' },
+						{ styleID: 'showTakeoffTime' },
+						{ styleID: 'showTimeDelta' },
+						{ styleID: 'showDistance' },
+						{ styleID: 'showHeightDelta' }
+					]
+				},
 				showTakeoffSpeed: {
 					name: 'Show Take Off Speed',
 					type: CustomizerPropertyType.CHECKBOX,
@@ -119,7 +144,6 @@ class JumpStatsHandler {
 						panel.SetHasClass('hide', !value);
 					}
 				},
-
 				showGain: {
 					name: 'Show Gain',
 					type: CustomizerPropertyType.CHECKBOX,
@@ -191,6 +215,12 @@ class JumpStatsHandler {
 					callbackFunc: (panel, value) => {
 						panel.SetHasClass('hide', !value);
 					}
+				},
+				backgroundColor: {
+					name: 'Background Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					targetPanel: '.jumpstats__container',
+					styleProperty: 'backgroundColor'
 				}
 				// I have no idea what this is
 				// enviroAccelEnable: {
@@ -308,5 +338,10 @@ class JumpStatsHandler {
 
 	makePercentage(ratio: number): string {
 		return (ratio * 100).toFixed(1) + '%';
+	}
+
+	getAdjustedTextShadow(color: rgbaColor) {
+		const splitRGBA = splitRgbFromAlpha(color);
+		return `0px 1px rgba(0, 0, 0, ${splitRGBA.alpha * 0.9})`;
 	}
 }
