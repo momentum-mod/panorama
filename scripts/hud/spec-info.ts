@@ -1,6 +1,7 @@
 import { OnPanelLoad, PanelHandler } from 'util/module-helpers';
 
 import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
+import { splitRgbFromAlpha } from 'util/colors';
 
 type specConfigType = {
 	fontFamily: string;
@@ -27,7 +28,7 @@ class HudSpecInfoHandler implements OnPanelLoad {
 		fontFamily: 'Roboto',
 		fontSize: 20,
 		fontColor: 'rgba(255, 255, 255, 1)',
-		horizontalAlign: 'center',
+		horizontalAlign: 'right',
 		showNameList: true
 	} as specConfigType;
 
@@ -57,28 +58,6 @@ class HudSpecInfoHandler implements OnPanelLoad {
 						this.createDummySpectators();
 					}
 				},
-				alignText: {
-					name: 'Align Text',
-					type: CustomizerPropertyType.NUMBER_ENTRY,
-					targetPanel: ['.hudspecinfo__count', '.specinfo-list-entry'],
-					callbackFunc: (panel, value) => {
-						let alignment: 'center' | 'left' | 'right';
-						switch (value) {
-							case 0:
-								alignment = 'left';
-								break;
-							case 1:
-								alignment = 'center';
-								break;
-							case 2:
-								alignment = 'right';
-								break;
-						}
-						this.specConfig.horizontalAlign = alignment;
-						panel.style.horizontalAlign = alignment;
-					},
-					settingProps: { min: 0, max: 2 }
-				},
 				maxPlayerCount: {
 					name: 'Max Player Count',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
@@ -88,11 +67,11 @@ class HudSpecInfoHandler implements OnPanelLoad {
 					},
 					settingProps: { min: 0, max: 100 }
 				},
-				backgroundColor: {
-					name: 'Background Color',
-					type: CustomizerPropertyType.COLOR_PICKER,
-					targetPanel: '.hudspecinfo__container',
-					styleProperty: 'backgroundColor'
+				fontStyling: {
+					name: 'Font Styling',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [{ styleID: 'font' }, { styleID: 'fontSize' }, { styleID: 'fontColor' }]
 				},
 				font: {
 					name: 'Font',
@@ -103,15 +82,6 @@ class HudSpecInfoHandler implements OnPanelLoad {
 						this.specConfig.fontFamily = value;
 					}
 				},
-				fontColor: {
-					name: 'Font Color',
-					type: CustomizerPropertyType.COLOR_PICKER,
-					targetPanel: ['.hudspecinfo__count', '.specinfo-list-entry__name'],
-					styleProperty: 'color',
-					callbackFunc: (_, value) => {
-						this.specConfig.fontColor = value;
-					}
-				},
 				fontSize: {
 					name: 'Font Size',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
@@ -119,6 +89,38 @@ class HudSpecInfoHandler implements OnPanelLoad {
 					styleProperty: 'fontSize',
 					callbackFunc: (_, value) => {
 						this.specConfig.fontSize = value;
+					}
+				},
+				fontColor: {
+					name: 'Font Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					targetPanel: ['.hudspecinfo__count', '.specinfo-list-entry__name'],
+					styleProperty: 'color',
+					callbackFunc: (_, value) => {
+						this.panels.numSpecLabel.style.textShadowFast = this.getAdjustedTextShadow(value as rgbaColor);
+						this.specConfig.fontColor = value;
+						this.createDummySpectators();
+					}
+				},
+				backgroundColor: {
+					name: 'Background Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					targetPanel: '.hudspecinfo__container',
+					styleProperty: 'backgroundColor'
+				},
+				alignText: {
+					name: 'Align Text',
+					type: CustomizerPropertyType.DROPDOWN,
+					options: [
+						{ label: 'Left', value: 'left' },
+						{ label: 'Center', value: 'center' },
+						{ label: 'Right', value: 'right' }
+					],
+					targetPanel: ['.hudspecinfo__count', '.specinfo-list-entry'],
+					styleProperty: 'horizontalAlign',
+					callbackFunc: (_, value) => {
+						this.specConfig.horizontalAlign = value as 'center' | 'left' | 'right';
+						this.createDummySpectators();
 					}
 				}
 			}
@@ -180,7 +182,14 @@ class HudSpecInfoHandler implements OnPanelLoad {
 		const nameLabel = snippetCont.FindChildInLayoutFile<Label>('FriendlySpecName');
 		nameLabel.text = text;
 		nameLabel.style.fontFamily = this.specConfig.fontFamily;
-		nameLabel.style.color = this.specConfig.fontColor as color;
+		nameLabel.style.color = this.specConfig.fontColor as rgbaColor;
+		nameLabel.style.textShadowFast = this.getAdjustedTextShadow(this.specConfig.fontColor as rgbaColor);
 		nameLabel.style.fontSize = `${this.specConfig.fontSize}px`;
+		nameLabel.style.horizontalAlign = this.specConfig.horizontalAlign;
+	}
+
+	getAdjustedTextShadow(color: rgbaColor) {
+		const splitRGBA = splitRgbFromAlpha(color);
+		return `0px 1px rgba(0, 0, 0, ${splitRGBA.alpha * 0.9})`;
 	}
 }

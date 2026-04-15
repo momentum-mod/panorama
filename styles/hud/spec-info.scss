@@ -4,8 +4,6 @@
 	height: fit-children;
 
 	&__count {
-		text-shadow-fast: 0px 1px rgba(0, 0, 0, 0.9);
-		text-align: right;
 		text-overflow: ellipsis;
 	}
 
@@ -15,18 +13,16 @@
 
 	&__names-container {
 		width: 100%;
-		horizontal-align: right;
 	}
 }
 
 .specinfo-list-entry {
 	margin: 2px 15px 0 0;
 	flow-children: down;
-	width: fill-parent-flow();
+	width: fill-parent-flow(1);
 	height: fit-children;
 
 	&__name {
-		text-shadow-fast: 0px 1px rgba(0, 0, 0, 0.9);
 		text-overflow: ellipsis;
 	}
 }
