@@ -3,6 +3,7 @@ import { RegisterHUDPanelForGamemode } from '../util/register-for-gamemodes';
 import { Gamemode } from 'common/web/enums/gamemode.enum';
 
 import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
+import { splitRgbFromAlpha } from 'util/colors';
 
 export enum StickyState {
 	NOSTICKY = 0,
@@ -19,6 +20,15 @@ const StateColors: Record<StickyState, string> = {
 	[StickyState.BLOCKED]: 'gradient(linear, 0% 0%, 100% 0%, from (rgba(134, 65, 65, 1), to(rgba(170, 65, 65, 1)))'
 };
 
+type StickyCountConfigType = {
+	width: string;
+	height: string;
+	borderRadius: string;
+	borderWidth: string;
+	borderColor: rgbaColor;
+	margin: string;
+};
+
 @PanelHandler()
 class StickyCountHandler {
 	readonly panels = {
@@ -27,13 +37,16 @@ class StickyCountHandler {
 
 	private panelStates: Map<GenericPanel, StickyState> = new Map();
 
+	//Needs random values for intialization, set defaults in /config/hud_default.kv3
+	config = {
+		width: '24px',
+		height: '24px',
+		borderRadius: '50%',
+		borderWidth: '0px',
+		borderColor: 'rgba(0, 0, 0, 1)' as rgbaColor
+	} as StickyCountConfigType;
+
 	initHandler: number;
-
-	width: number;
-	height: number;
-	borderRadius: number;
-	gap: number;
-
 	constructor() {
 		RegisterHUDPanelForGamemode({
 			gamemodes: [Gamemode.SJ],
@@ -60,53 +73,28 @@ class StickyCountHandler {
 			gamemode: Gamemode.SJ,
 			//TODO: Add box shadow setting
 			dynamicStyles: {
-				//TODO: Make first 3 options sliders?
-				width: {
-					name: 'Width',
-					type: CustomizerPropertyType.NUMBER_ENTRY,
-					callbackFunc: (_, value) => {
-						this.width = value;
-						this.updateStickyPanels();
-					},
-					settingProps: { min: 1, max: 50 }
+				colors: {
+					name: 'Colors',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [
+						{ styleID: 'backgroundGradient' },
+						{ styleID: 'armingGradient' },
+						{ styleID: 'armedGradient' },
+						{ styleID: 'blockedGradient' }
+					]
 				},
-				height: {
-					name: 'Height',
-					type: CustomizerPropertyType.NUMBER_ENTRY,
+				backgroundGradient: {
+					name: 'Background',
+					type: CustomizerPropertyType.GRADIENT_PICKER,
 					callbackFunc: (_, value) => {
-						this.height = value;
-						this.updateStickyPanels();
-					},
-					settingProps: { min: 1, max: 50 }
-				},
-				borderRadius: {
-					name: 'Border Radius',
-					type: CustomizerPropertyType.NUMBER_ENTRY,
-					callbackFunc: (_, value) => {
-						this.borderRadius = value;
-						this.updateStickyPanels();
-					},
-					settingProps: { min: 0, max: 50 }
-				},
-				gap: {
-					name: 'Gap',
-					type: CustomizerPropertyType.NUMBER_ENTRY,
-					callbackFunc: (_, value) => {
-						this.gap = value;
-						this.updateStickyPanels();
-					}
-				},
-				//TODO: Consider allowing for a gradient
-				backgroundColor: {
-					name: 'Background Color',
-					type: CustomizerPropertyType.COLOR_PICKER,
-					callbackFunc: (_, value) => {
-						StateColors[StickyState.NOSTICKY] = value;
+						StateColors[StickyState.NOSTICKY] =
+							`gradient(linear, 0% 0%, 100% 0%, from (${value[0]}, to(${value[1]}))`;
 						this.updateStickyPanels();
 					}
 				},
 				armingGradient: {
-					name: 'Arming Gradient',
+					name: 'Arming',
 					type: CustomizerPropertyType.GRADIENT_PICKER,
 					callbackFunc: (_, value) => {
 						StateColors[StickyState.ARMING] =
@@ -115,7 +103,7 @@ class StickyCountHandler {
 					}
 				},
 				armedGradient: {
-					name: 'Armed Gradient',
+					name: 'Armed',
 					type: CustomizerPropertyType.GRADIENT_PICKER,
 					callbackFunc: (_, value) => {
 						StateColors[StickyState.ARMED] =
@@ -124,14 +112,71 @@ class StickyCountHandler {
 					}
 				},
 				blockedGradient: {
-					name: 'Blocked Gradient',
+					name: 'Blocked',
 					type: CustomizerPropertyType.GRADIENT_PICKER,
 					callbackFunc: (_, value) => {
 						StateColors[StickyState.BLOCKED] =
 							`gradient(linear, 0% 0%, 100% 0%, from (${value[0]}, to(${value[1]}))`;
 						this.updateStickyPanels();
 					}
+				},
+				borderStyling: {
+					name: 'Border Styling',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [{ styleID: 'borderWidth' }, { styleID: 'borderColor' }, { styleID: 'borderRadius' }]
+				},
+				borderWidth: {
+					name: 'Border Width',
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					callbackFunc: (_, value) => {
+						this.config.borderWidth = `${value}px`;
+						this.updateStickyPanels();
+					}
+				},
+				borderColor: {
+					name: 'Border Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					callbackFunc: (_, value) => {
+						this.config.borderColor = value as rgbaColor;
+						this.updateStickyPanels();
+					}
+				},
+				borderRadius: {
+					name: 'Border Radius',
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					callbackFunc: (_, value) => {
+						this.config.borderRadius = `${value}%`;
+						this.updateStickyPanels();
+					},
+					settingProps: { min: 0, max: 50 }
+				},
+				width: {
+					name: 'Width',
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					callbackFunc: (_, value) => {
+						this.config.width = `${value}px`;
+						this.updateStickyPanels();
+					}
+				},
+				height: {
+					name: 'Height',
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					callbackFunc: (_, value) => {
+						this.config.height = `${value}px`;
+						this.updateStickyPanels();
+					}
+				},
+
+				gap: {
+					name: 'Gap',
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					callbackFunc: (_, value) => {
+						this.config.margin = `0 ${value}px`;
+						this.updateStickyPanels();
+					}
 				}
+				//TODO: Consider allowing for a gradient
 			}
 		});
 	}
@@ -139,12 +184,14 @@ class StickyCountHandler {
 	initPanels() {
 		const stickyPanels = this.panels.countContainer.Children();
 		if (stickyPanels.length === 8) {
+			const splitRGBA = splitRgbFromAlpha(StateColors[StickyState.NOSTICKY] as rgbaColor);
+
 			stickyPanels.forEach((panel) => {
-				panel.style.width = `${this.width}px`;
-				panel.style.height = `${this.height}px`;
-				panel.style.borderRadius = `${this.borderRadius}px`;
-				panel.style.margin = `0px ${this.gap}px 0px ${this.gap}px`;
+				for (const [key, value] of Object.entries(this.config)) {
+					panel.style[key] = value;
+				}
 				panel.style.backgroundColor = StateColors[StickyState.NOSTICKY] as color;
+				panel.style.boxShadow = `rgba(0, 0, 0, ${splitRGBA.alpha * 0.5}) 0px 0px 3px 0px`;
 				this.panelStates.set(panel, StickyState.NOSTICKY);
 			});
 			$.UnregisterEventHandler('HudThink', $.GetContextPanel(), this.initHandler);
@@ -153,11 +200,13 @@ class StickyCountHandler {
 
 	updateStickyPanels() {
 		this.panelStates.forEach((state, panel) => {
-			panel.style.width = `${this.width}px`;
-			panel.style.height = `${this.height}px`;
-			panel.style.borderRadius = `${this.borderRadius}px`;
-			panel.style.margin = `0px ${this.gap}px 0px ${this.gap}px`;
+			const splitRGBA = splitRgbFromAlpha(StateColors[state] as rgbaColor);
+			for (const [key, value] of Object.entries(this.config)) {
+				panel.style[key] = value;
+			}
+
 			panel.style.backgroundColor = StateColors[state] as color;
+			panel.style.boxShadow = `rgba(0, 0, 0, ${splitRGBA.alpha * 0.5}) 0px 0px 3px 0px`;
 		});
 	}
 

@@ -9,21 +9,13 @@
 	width: 100%;
 	height: 18px;
 	border-radius: 9px;
+	border-style: solid;
 	font-size: 16px;
-	box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 3px 0px;
-	background-color: rgb(34.6, 49.9, 57.4);
-	text-shadow: rgba(0, 0, 0, 0.5) 0px 1px 2px 2.5;
+
+	//Breaks Customization
+	// box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 3px 0px;
 }
 
 .stickycharge__meter .ProgressBarLeft {
-	background-color: gradient(linear, 0% 0%, 100% 0%, from($blue), to($light-blue));
 	border-radius: 9px;
-}
-
-.stickycharge__meter .ProgressBarRight {
-	background-color: rgb(34.6, 49.9, 57.4);
-}
-
-.stickycharge__meter:disabled .ProgressBarRight {
-	background-color: gradient(linear, 0% 0%, 100% 0%, from(rgba(134, 65, 65, 1)), to(rgba(170, 65, 65, 1)));
 }
