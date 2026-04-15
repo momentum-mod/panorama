@@ -6,6 +6,7 @@ import { Style } from 'common/web/enums/style.enum';
 import { getRunStyleName } from 'common/style';
 
 import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
+import { splitRgbFromAlpha } from 'util/colors';
 
 @PanelHandler()
 class HudStatusHandler {
@@ -72,30 +73,11 @@ class HudStatusHandler {
 			resizeY: false,
 			//TODO: Add text shadow settings
 			dynamicStyles: {
-				alignText: {
-					name: 'Align Text',
-					type: CustomizerPropertyType.NUMBER_ENTRY,
-					targetPanel: '.hudstatus',
-					callbackFunc: (panel, value) => {
-						switch (value) {
-							case 0:
-								panel.style.horizontalAlign = 'left';
-								break;
-							case 1:
-								panel.style.horizontalAlign = 'center';
-								break;
-							case 2:
-								panel.style.horizontalAlign = 'right';
-								break;
-						}
-					},
-					settingProps: { min: 0, max: 2 }
-				},
-				backgroundColor: {
-					name: 'Background Color',
-					type: CustomizerPropertyType.COLOR_PICKER,
-					targetPanel: '.hudstatus',
-					styleProperty: 'backgroundColor'
+				fontStyling: {
+					name: 'Font Styling',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [{ styleID: 'font' }, { styleID: 'fontSize' }, { styleID: 'fontColor' }]
 				},
 				font: {
 					name: 'Font',
@@ -103,18 +85,37 @@ class HudStatusHandler {
 					targetPanel: '.hudstatus__label',
 					styleProperty: 'fontFamily'
 				},
-				fontColor: {
-					name: 'Font Color',
-					type: CustomizerPropertyType.COLOR_PICKER,
-					targetPanel: '.hudstatus__label',
-					styleProperty: 'color'
-				},
 				fontSize: {
 					name: 'Font Size',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					targetPanel: '.hudstatus__label',
-					styleProperty: 'fontSize',
-					valueFn: (value) => `${value}px`
+					styleProperty: 'fontSize'
+				},
+				fontColor: {
+					name: 'Font Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					targetPanel: '.hudstatus__label',
+					styleProperty: 'color',
+					callbackFunc: (panel, value) => {
+						panel.style.textShadowFast = this.getAdjustedTextShadow(value as rgbaColor);
+					}
+				},
+				backgroundColor: {
+					name: 'Background Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					targetPanel: '.hudstatus',
+					styleProperty: 'backgroundColor'
+				},
+				alignText: {
+					name: 'Align Text',
+					type: CustomizerPropertyType.DROPDOWN,
+					options: [
+						{ label: 'Left', value: 'left' },
+						{ label: 'Center', value: 'center' },
+						{ label: 'Right', value: 'right' }
+					],
+					targetPanel: '.hudstatus',
+					styleProperty: 'horizontalAlign'
 				}
 			}
 		});
@@ -233,4 +234,9 @@ class HudStatusHandler {
 		saveState: $.Localize('#Timer_SaveState'),
 		practiceMode: $.Localize('#Timer_PracticeMode')
 	};
+
+	getAdjustedTextShadow(color: rgbaColor) {
+		const splitRGBA = splitRgbFromAlpha(color);
+		return `0px 1px rgba(0, 0, 0, ${splitRGBA.alpha * 0.9})`;
+	}
 }

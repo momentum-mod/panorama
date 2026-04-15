@@ -3,6 +3,7 @@ import { HideHud } from 'common/state';
 import * as Timer from 'common/timer';
 
 import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
+import { splitRgbFromAlpha } from 'util/colors';
 
 const DIFF_DISPLAY_TIME = 5;
 const HIDDEN_CLASS = 'hudtimer--hidden';
@@ -10,14 +11,14 @@ const ENABLE_FADE_CLASS = 'hudtimer__comparison--enable-fade';
 
 const Colors = {
 	//Main timer colors
-	INACTIVE: 'rgba(200, 200, 200, 1)',
-	PRIMED: 'rgba(200, 200, 200, 1)',
-	RUNNING: 'rgba(255, 255, 255, 1)',
-	FINISHED: 'rgba(122, 238, 122, 1)',
+	INACTIVE: 'rgba(200, 200, 200, 1)' as rgbaColor,
+	PRIMED: 'rgba(200, 200, 200, 1)' as rgbaColor,
+	RUNNING: 'rgba(255, 255, 255, 1)' as rgbaColor,
+	FINISHED: 'rgba(122, 238, 122, 1)' as rgbaColor,
 	//Comparison colors
-	INCREASE: 'rgba(16, 118, 168, 1)',
-	DECREASE: 'rgba(255, 106, 106, 1)',
-	INVISIBLE: 'rgba(0, 0, 0, 0)'
+	INCREASE: 'rgba(16, 118, 168, 1)' as rgbaColor,
+	DECREASE: 'rgba(255, 106, 106, 1)' as rgbaColor,
+	INVISIBLE: 'rgba(0, 0, 0, 0)' as rgbaColor
 };
 
 @PanelHandler()
@@ -92,62 +93,72 @@ class HudTimerHandler {
 						this.showComparison = value;
 					}
 				},
-				alignText: {
-					name: 'Align Text',
-					type: CustomizerPropertyType.NUMBER_ENTRY,
-					targetPanel: ['.hudtimer__time', '.hudtimer__comparison'],
-					callbackFunc: (panel, value) => {
-						switch (value) {
-							case 0:
-								panel.style.horizontalAlign = 'left';
-								break;
-							case 1:
-								panel.style.horizontalAlign = 'center';
-								break;
-							case 2:
-								panel.style.horizontalAlign = 'right';
-								break;
-						}
-					},
-					settingProps: { min: 0, max: 2 }
+				fontStyling: {
+					name: 'Font Styling',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [{ styleID: 'timerFontStyling' }, { styleID: 'comparisonFontStyling' }]
 				},
-				backgroundColor: {
-					name: 'Background Color',
-					type: CustomizerPropertyType.COLOR_PICKER,
-					targetPanel: ['.hudtimer__time', '.hudtimer__comparison'],
-					styleProperty: 'backgroundColor'
+				timerFontStyling: {
+					name: 'Timer Font Styling',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [{ styleID: 'timerFont' }, { styleID: 'timerFontSize' }]
 				},
-				font: {
+				timerFont: {
 					name: 'Font',
 					type: CustomizerPropertyType.FONT_PICKER,
 					targetPanel: '.hudtimer__time',
 					styleProperty: 'fontFamily'
 				},
-				fontSize: {
+				timerFontSize: {
 					name: 'Font Size',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					targetPanel: '.hudtimer__time',
 					styleProperty: 'fontSize',
 					valueFn: (value) => `${value}px`
 				},
+				comparisonFontStyling: {
+					name: 'Comparison Font Styling',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [{ styleID: 'comparisonFont' }, { styleID: 'comparisonFontSize' }]
+				},
 				comparisonFont: {
-					name: 'Comparison Font',
+					name: 'Font',
 					type: CustomizerPropertyType.FONT_PICKER,
 					targetPanel: '.hudtimer__comparison',
 					styleProperty: 'fontFamily'
 				},
 				comparisonFontSize: {
-					name: 'Comparison Font Size',
+					name: 'Font Size',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					targetPanel: '.hudtimer__comparison',
 					styleProperty: 'fontSize',
 					valueFn: (value) => `${value}px`
 				},
+				colors: {
+					name: 'Colors',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [{ styleID: 'timerColors' }, { styleID: 'comparisonColors' }]
+				},
+				timerColors: {
+					name: 'Timer Colors',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [
+						{ styleID: 'inactiveColor' },
+						{ styleID: 'primedColor' },
+						{ styleID: 'runningColor' },
+						{ styleID: 'finishedColor' }
+					]
+				},
 				inactiveColor: {
 					name: 'Inactive Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
-						Colors.INACTIVE = value as color;
+						Colors.INACTIVE = value as rgbaColor;
 						this.updateMainState();
 					}
 				},
@@ -155,7 +166,7 @@ class HudTimerHandler {
 					name: 'Primed Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
-						Colors.PRIMED = value as color;
+						Colors.PRIMED = value as rgbaColor;
 						this.updateMainState();
 					}
 				},
@@ -163,7 +174,7 @@ class HudTimerHandler {
 					name: 'Running Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
-						Colors.RUNNING = value as color;
+						Colors.RUNNING = value as rgbaColor;
 						this.updateMainState();
 					}
 				},
@@ -171,23 +182,46 @@ class HudTimerHandler {
 					name: 'Finished Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
-						Colors.FINISHED = value as color;
+						Colors.FINISHED = value as rgbaColor;
 						this.updateMainState();
 					}
+				},
+				comparisonColors: {
+					name: 'Comparison Colors',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [{ styleID: 'comparisonIncreaseColor' }, { styleID: 'comparisonDecreaseColor' }]
 				},
 				comparisonIncreaseColor: {
 					name: 'Comparison Increase Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
-						Colors.INCREASE = value as color;
+						Colors.INCREASE = value as rgbaColor;
 					}
 				},
 				comparisonDecreaseColor: {
 					name: 'Comparison Decrease Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
-						Colors.DECREASE = value as color;
+						Colors.DECREASE = value as rgbaColor;
 					}
+				},
+				alignText: {
+					name: 'Align Text',
+					type: CustomizerPropertyType.DROPDOWN,
+					options: [
+						{ label: 'Left', value: 'left' },
+						{ label: 'Center', value: 'center' },
+						{ label: 'Right', value: 'right' }
+					],
+					targetPanel: ['.hudtimer__time', '.hudtimer__comparison'],
+					styleProperty: 'horizontalAlign'
+				},
+				backgroundColor: {
+					name: 'Background Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					targetPanel: ['.hudtimer__time', '.hudtimer__comparison'],
+					styleProperty: 'backgroundColor'
 				}
 			}
 		});
@@ -199,19 +233,23 @@ class HudTimerHandler {
 		switch (state) {
 			case Timer.TimerState.DISABLED:
 				this.panels.time.style.color = Colors.INACTIVE;
+				this.panels.time.style.textShadowFast = this.getAdjustedTextShadow(Colors.INACTIVE);
 				this.panels.cp.RemoveClass(HIDDEN_CLASS);
 				this.forceHideComparison();
 				break;
 			case Timer.TimerState.RUNNING:
 				this.panels.time.style.color = Colors.RUNNING;
+				this.panels.time.style.textShadowFast = this.getAdjustedTextShadow(Colors.RUNNING);
 				this.panels.cp.RemoveClass(HIDDEN_CLASS);
 				break;
 			case Timer.TimerState.FINISHED:
 				this.panels.time.style.color = Colors.FINISHED;
+				this.panels.time.style.textShadowFast = this.getAdjustedTextShadow(Colors.FINISHED);
 				this.panels.cp.RemoveClass(HIDDEN_CLASS);
 				break;
 			case Timer.TimerState.PRIMED:
 				this.panels.time.style.color = Colors.PRIMED;
+				this.panels.time.style.textShadowFast = this.getAdjustedTextShadow(Colors.PRIMED);
 				this.panels.cp.RemoveClass(HIDDEN_CLASS);
 				this.forceHideComparison();
 				break;
@@ -260,12 +298,15 @@ class HudTimerHandler {
 		let diffSymbol: string;
 		if (diff > 0) {
 			this.panels.comparison.style.color = Colors.DECREASE;
+			this.panels.comparison.style.textShadowFast = this.getAdjustedTextShadow(Colors.DECREASE);
 			diffSymbol = '+';
 		} else if (diff < 0) {
 			this.panels.comparison.style.color = Colors.INCREASE;
+			this.panels.comparison.style.textShadowFast = this.getAdjustedTextShadow(Colors.INCREASE);
 			diffSymbol = '-';
 		} else {
 			this.panels.comparison.style.color = Colors.INVISIBLE;
+			this.panels.comparison.style.textShadowFast = this.getAdjustedTextShadow(Colors.INVISIBLE);
 			diffSymbol = '';
 		}
 
@@ -338,5 +379,10 @@ class HudTimerHandler {
 
 	get isStopSoundEnabled(): boolean {
 		return GameInterfaceAPI.GetSettingBool('mom_timer_disable_sound');
+	}
+
+	getAdjustedTextShadow(color: rgbaColor) {
+		const splitRGBA = splitRgbFromAlpha(color);
+		return `0px 1px rgba(0, 0, 0, ${splitRGBA.alpha * 0.9})`;
 	}
 }

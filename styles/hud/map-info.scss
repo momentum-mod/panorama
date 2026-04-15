@@ -6,8 +6,9 @@
 	min-width: 350px;
 	height: fit-children;
 	&__label {
-		@include mixin.font-header();
+		text-transform: uppercase;
 		font-weight: bold;
 		text-overflow: ellipsis;
+		letter-spacing: 1px;
 	}
 }
