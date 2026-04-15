@@ -3,6 +3,7 @@ import { RegisterHUDPanelForGamemode } from '../util/register-for-gamemodes';
 import { Gamemode } from 'common/web/enums/gamemode.enum';
 
 import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
+import { splitRgbFromAlpha } from 'util/colors';
 
 export enum StickyChargeUnit {
 	NONE = 0,
@@ -39,20 +40,54 @@ class StickyChargeHandler {
 			resizeX: true,
 			resizeY: false,
 			gamemode: Gamemode.SJ,
-			//TODO: Add generic font settings
-			//TODO: Add box shadow customization
-			//TODO: Add vertical resizing ( after CustomizerPropertyType.SLIDER is implemented )
 			dynamicStyles: {
 				chargeMeterUnits: {
 					name: 'Charge Meter Units',
-					type: CustomizerPropertyType.NUMBER_ENTRY,
+					type: CustomizerPropertyType.DROPDOWN,
+					options: [
+						{ label: 'None', value: StickyChargeUnit.NONE.toString() },
+						{ label: 'Units', value: StickyChargeUnit.UPS.toString() },
+						{ label: 'Percentage', value: StickyChargeUnit.PERCENT.toString() }
+					],
+					children: [
+						{
+							styleID: 'fontStyling',
+							showWhen: [StickyChargeUnit.UPS.toString(), StickyChargeUnit.PERCENT.toString()]
+						}
+					],
 					callbackFunc: (_, value) => {
-						this.stickyChargeUnit = value;
+						this.stickyChargeUnit = +value;
 						this.onChargeUpdate(this.isEnabled, 900, 0);
 					}
 				},
+				borderStyles: {
+					name: 'Border Styles',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [{ styleID: 'borderWidth' }, { styleID: 'borderColor' }, { styleID: 'borderRadius' }]
+				},
+				borderWidth: {
+					name: 'Border Width',
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					targetPanel: '.stickycharge__meter',
+					styleProperty: 'borderWidth',
+					valueFn: (value) => `${value}px`
+				},
+				borderColor: {
+					name: 'Border Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					targetPanel: '.stickycharge__meter',
+					styleProperty: 'borderColor'
+				},
+				//TODO: WHY THE FUCK DOES THIS NEED DEFAULTS IN CSS
 				borderRadius: {
 					name: 'Border Radius',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [{ styleID: 'backgroundRadius' }, { styleID: 'fillRadius' }]
+				},
+				backgroundRadius: {
+					name: 'Background',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					targetPanel: '.stickycharge__meter',
 					styleProperty: 'borderRadius',
@@ -60,23 +95,65 @@ class StickyChargeHandler {
 					settingProps: { min: 0, max: 10 }
 				},
 				fillRadius: {
-					name: 'Fill Radius',
+					name: 'Fill',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
-					targetPanel: '#StickyChargeMeter_Left',
+					targetPanel: '.ProgressBarLeft',
 					styleProperty: 'borderRadius',
 					valueFn: (value) => `${value}px`,
 					settingProps: { min: 0, max: 10 }
 				},
-				backgroundColor: {
-					name: 'Background Color',
+				fontStyling: {
+					name: 'Font Styling',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [{ styleID: 'font' }, { styleID: 'fontSize' }, { styleID: 'fontColor' }]
+				},
+				font: {
+					name: 'Font',
+					type: CustomizerPropertyType.FONT_PICKER,
+					targetPanel: '.stickycharge__label',
+					styleProperty: 'fontFamily'
+				},
+				fontSize: {
+					name: 'Font Size',
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					targetPanel: '.stickycharge__label',
+					styleProperty: 'fontSize',
+					valueFn: (value) => `${value}px`
+				},
+				fontColor: {
+					name: 'Font Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
-					callbackFunc: (_, value) => {
-						this.backgroundColor = value;
+					targetPanel: '.stickycharge__label',
+					styleProperty: 'color',
+					callbackFunc: (panel, value) => {
+						const splitRGBA = splitRgbFromAlpha(value as rgbaColor);
+						const adjustedAlpha = splitRGBA.alpha * 0.9;
+						panel.style.textShadow = `rgba(0, 0, 0, ${adjustedAlpha}) 0px 1px 2px 2.5`;
+					}
+				},
+				colors: {
+					name: 'Colors',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [
+						{ styleID: 'backgroundGradient' },
+						{ styleID: 'fillGradient' },
+						{ styleID: 'disabledGradient' }
+					]
+				},
+				backgroundGradient: {
+					name: 'Background',
+					type: CustomizerPropertyType.GRADIENT_PICKER,
+					targetPanel: '#StickyChargeMeter_Right',
+					callbackFunc: (panel, value) => {
+						this.backgroundColor =
+							`gradient(linear, 0% 0%, 100% 0%, from (${value[0]}), to(${value[1]}))` as color;
 						this.onChargeUpdate(this.isEnabled, 900, 0);
 					}
 				},
 				fillGradient: {
-					name: 'Fill Gradient',
+					name: 'Fill',
 					type: CustomizerPropertyType.GRADIENT_PICKER,
 					targetPanel: '#StickyChargeMeter_Left',
 					styleProperty: 'backgroundColor',
@@ -85,7 +162,7 @@ class StickyChargeHandler {
 					}
 				},
 				disabledGradient: {
-					name: 'Disabled Gradient',
+					name: 'Disabled',
 					type: CustomizerPropertyType.GRADIENT_PICKER,
 					callbackFunc: (_, value) => {
 						this.disabledGradient = value;

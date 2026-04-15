@@ -6,7 +6,8 @@
 	// assigned in code
 	.sticky-panel {
 		align: center center;
-		box-shadow: $progressbar-shadow;
-		border: 0px solid transparent;
+		border-style: solid;
+		//Breaks customization
+		// box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 3px 0px;
 	}
 }
