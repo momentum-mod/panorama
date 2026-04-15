@@ -742,7 +742,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 					expanded = !expanded;
 					arrow.SetHasClass('hud-customizer-settings__expand-arrow--expanded', expanded);
 
-					const childrenWrapper = button.GetParent().GetParent().FindChild('ChildrenWrapper');
+					const childrenWrapper = button.GetParent().GetParent().FindChild(`${styleID}Children`);
 					childrenWrapper.SetHasClass('hud-customizer-settings__row-wrapper--children-hidden', !expanded);
 				});
 			}
@@ -946,7 +946,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			if (children) {
 				const normalizedChildren = Array.isArray(children) ? children : [children];
 
-				const childrenWrapper = $.CreatePanel('Panel', parentWrapper, 'ChildrenWrapper');
+				const childrenWrapper = $.CreatePanel('Panel', parentWrapper, `${parentStyleID}Children`);
 				childrenWrapper.AddClass('hud-customizer-settings__row-wrapper--children');
 
 				if (parentStyle.properties.expandable)
