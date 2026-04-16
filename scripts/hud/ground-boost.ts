@@ -5,6 +5,7 @@ import { GamemodeCategory, GamemodeCategoryToGamemode } from 'common/web/enums/g
 import { GamemodeCategories } from 'common/web/maps/gamemodes.map';
 
 import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
+import { splitRgbFromAlpha } from 'util/colors';
 
 enum TimerFlags {
 	NONE = 0,
@@ -144,17 +145,42 @@ class GroundboostHandler {
 						this.startDummyGB();
 					}
 				},
-				font: {
-					name: 'Font',
-					type: CustomizerPropertyType.FONT_PICKER,
-					targetPanel: '.groundboost__label',
-					styleProperty: 'fontFamily'
+				labelTextMode: {
+					name: 'Label Mode',
+					type: CustomizerPropertyType.DROPDOWN,
+					options: [
+						{ label: 'Hide', value: LabelMode.HIDE },
+						{ label: 'Remaining Time', value: LabelMode.TIME },
+						{ label: 'Speed Gain', value: LabelMode.SPEED }
+					],
+					children: { styleID: 'labelColorMode', showWhen: [LabelMode.TIME, LabelMode.SPEED] },
+					callbackFunc: (_, value) => {
+						this.config.labelTextMode = value as LabelMode;
+						if (this.config.labelTextMode === LabelMode.HIDE)
+							this.panels.groundboostLabel.style.visibility = 'collapse';
+						else this.panels.groundboostLabel.style.visibility = 'visible';
+					}
 				},
-				fontSize: {
-					name: 'Font Size',
+				labelColorMode: {
+					name: 'Label Color Mode',
+					type: CustomizerPropertyType.DROPDOWN,
+					options: [
+						{ label: 'No Coloring', value: LabelMode.HIDE },
+						{ label: 'Remaining Time', value: LabelMode.TIME },
+						{ label: 'Speed Gain', value: LabelMode.SPEED }
+					],
+					children: [{ styleID: 'idealTimeRemaining', showWhen: LabelMode.TIME }],
+					callbackFunc: (_, value) => {
+						this.config.labelColorMode = value as LabelMode;
+					}
+				},
+				idealTimeRemaining: {
+					name: 'Ticks Left For Ideal End',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
-					targetPanel: '.groundboost__label',
-					styleProperty: 'fontSize'
+					callbackFunc: (_, value) => {
+						this.config.idealEndMs = value * 8;
+					},
+					settingProps: { min: 1, max: 31 }
 				},
 				showFrictionTime: {
 					name: 'Show Friction Time',
@@ -173,54 +199,63 @@ class GroundboostHandler {
 						this.startDummyGB();
 					}
 				},
-				labelTextMode: {
-					name: 'Label Mode',
-					type: CustomizerPropertyType.DROPDOWN,
-					options: [
-						{ label: 'Hide', value: LabelMode.HIDE },
-						{ label: 'Remaining Time', value: LabelMode.TIME },
-						{ label: 'Speed Gain', value: LabelMode.SPEED }
-					],
-					callbackFunc: (_, value) => {
-						this.config.labelTextMode = value as LabelMode;
-						if (this.config.labelTextMode === LabelMode.HIDE)
-							this.panels.groundboostLabel.style.visibility = 'collapse';
-						else this.panels.groundboostLabel.style.visibility = 'visible';
-					}
+				fontStyling: {
+					name: 'Font Styling',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [{ styleID: 'font' }, { styleID: 'fontSize' }]
 				},
-				labelColorMode: {
-					name: 'Label Color Mode',
-					type: CustomizerPropertyType.DROPDOWN,
-					options: [
-						{ label: 'No Coloring', value: LabelMode.HIDE },
-						{ label: 'Remaining Time', value: LabelMode.TIME },
-						{ label: 'Speed Gain', value: LabelMode.SPEED }
-					],
-					callbackFunc: (_, value) => {
-						this.config.labelColorMode = value as LabelMode;
-					}
+				font: {
+					name: 'Font',
+					type: CustomizerPropertyType.FONT_PICKER,
+					targetPanel: '.groundboost__label',
+					styleProperty: 'fontFamily'
 				},
-				//TODO: Make this a child of labelColorMode and only show when it's LabelMode.TIME
-				idealTimeRemaining: {
-					name: 'Ticks Left For Ideal End',
+				fontSize: {
+					name: 'Font Size',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
-					callbackFunc: (_, value) => {
-						this.config.idealEndMs = value * 8;
-					},
-					settingProps: { min: 1, max: 31 }
+					targetPanel: '.groundboost__label',
+					styleProperty: 'fontSize'
+				},
+				colors: {
+					name: 'Colors',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [{ styleID: 'meterColors' }, { styleID: 'labelColors' }]
+				},
+				meterColors: {
+					name: 'Meter',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [
+						{ styleID: 'backgroundColor' },
+						{ styleID: 'meterSlickColor' },
+						{ styleID: 'meterFrictionColor' },
+						{ styleID: 'meterNoCrashHighlight' }
+					]
+				},
+				labelColors: {
+					name: 'Label',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [
+						{ styleID: 'labelFlatColor' },
+						{ styleID: 'labelGainColor' },
+						{ styleID: 'labelLossColor' }
+					]
 				},
 				backgroundColor: {
-					name: 'Background Color',
+					name: 'Background',
 					type: CustomizerPropertyType.COLOR_PICKER,
 					targetPanel: '.groundboost__background-meter',
 					callbackFunc: (panel, value) => {
-						const splitRGBA = this.splitRgbFromAlpha(value);
-						panel.style.washColor = splitRGBA[0];
-						panel.style.opacity = splitRGBA[1];
+						const splitRGBA = splitRgbFromAlpha(value as rgbaColor);
+						panel.style.washColor = splitRGBA.rgb;
+						panel.style.opacity = splitRGBA.alpha;
 					}
 				},
 				meterSlickColor: {
-					name: 'Meter Slick Color',
+					name: 'Slick',
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
 						MeterColor.SLICK = value;
@@ -229,7 +264,7 @@ class GroundboostHandler {
 					}
 				},
 				meterFrictionColor: {
-					name: 'Meter Friction Color',
+					name: 'Friction',
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
 						MeterColor.FRICTION = value;
@@ -238,7 +273,7 @@ class GroundboostHandler {
 					}
 				},
 				meterNoCrashHighlight: {
-					name: 'Meter No Crash Landing Color',
+					name: 'No Crash Landing',
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
 						MeterColor.NO_CRASH = value;
@@ -247,7 +282,7 @@ class GroundboostHandler {
 					}
 				},
 				labelFlatColor: {
-					name: 'Label Color',
+					name: 'Flat',
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
 						LabelColor.FLAT = value;
@@ -256,7 +291,7 @@ class GroundboostHandler {
 					}
 				},
 				labelGainColor: {
-					name: 'Label Gain Color',
+					name: 'Gain',
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
 						LabelColor.GAIN = value;
@@ -265,7 +300,7 @@ class GroundboostHandler {
 					}
 				},
 				labelLossColor: {
-					name: 'Label Loss Color',
+					name: 'Loss',
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
 						LabelColor.LOSS = value;
@@ -369,9 +404,9 @@ class GroundboostHandler {
 	}
 
 	setMeterColor(color: string) {
-		const splitRGBA = this.splitRgbFromAlpha(color);
-		this.panels.groundboostMeter.style.washColor = splitRGBA[0];
-		this.panels.groundboostMeter.style.opacity = splitRGBA[1];
+		const splitRGBA = splitRgbFromAlpha(color as rgbaColor);
+		this.panels.groundboostMeter.style.washColor = splitRGBA.rgb;
+		this.panels.groundboostMeter.style.opacity = splitRGBA.alpha;
 	}
 
 	updateTextColor(speed: number, timer: number) {
@@ -399,9 +434,11 @@ class GroundboostHandler {
 	}
 
 	setTextColor(color: string) {
-		if (this.config.labelTextMode === LabelMode.HIDE || this.config.labelColorMode === LabelMode.HIDE) return;
+		if (this.config.labelTextMode === LabelMode.HIDE) return;
 
-		this.panels.groundboostLabel.style.color = color;
+		const c = this.config.labelColorMode === LabelMode.HIDE ? LabelColor.FLAT : color;
+		this.panels.groundboostLabel.style.color = c;
+		this.panels.groundboostLabel.style.textShadowFast = this.getAdjustedTextShadow(c as rgbaColor);
 	}
 
 	fadeOut() {
@@ -409,8 +446,8 @@ class GroundboostHandler {
 		this.visible = false;
 	}
 
-	splitRgbFromAlpha(rgbaString: string) {
-		const values = rgbaString.match(/[\d.]+%?/g);
-		return [`rgba(${values[0]}, ${values[1]}, ${values[2]}, 1)`, values[3]];
+	getAdjustedTextShadow(color: rgbaColor) {
+		const splitRGBA = splitRgbFromAlpha(color);
+		return `0px 1px rgba(0, 0, 0, ${splitRGBA.alpha * 0.9})`;
 	}
 }
