@@ -23,12 +23,13 @@
         <MomHudSafeguardIndicator id="SafeguardIndicator"/>
         
         <MomHudMapInfo id="MapInfo" />
+        <MomHudSpecInfo id="SpecInfo" />
+        <MomHudChat id="Chat" />
         <MomHudStatus id="Status" />
 		<MomHudTimer id="Timer" />
-        <MomHudChat id="Chat" />
-		<HudComparisons id="Comparisons" />
-        <MomHudSpecInfo id="SpecInfo" />
-        
+        <HudComparisons id="Comparisons" />
+        <MomHudSpeedometer id="Speedometer" />
+		
         <!-- Gamemode Specific HUD elements -->
         <MomHudAmmo id="Ammo"/>
         <MomHudStrafeTrainer id="StrafeTrainer"/> 
@@ -47,7 +48,7 @@
 		</ConVarEnabler>
 
         <MomHudJumpTiming /> <!-- TODO: HudCenter, not added to customizer -->
-		<MomHudSpeedometer id="Speedometer" /> <!-- TODO: HudBottomCenter, not in customizer -->
+		
 		
         <MomHudKeyPress id="KeyPress" /> <!-- TODO: Not really in customizer, needs a rework -->
 

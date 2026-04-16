@@ -2,15 +2,14 @@ import { PanelHandler } from 'util/module-helpers';
 import { tupleToRgbaString } from 'util/colors';
 import { SpeedometerColorType, SpeedometerType } from 'common/speedometer';
 
-import { registerHUDCustomizerComponent } from 'common/hud-customizer';
+import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
+import { splitRgbFromAlpha } from 'util/colors';
 
 // arbitrary value to determine how much speed needs to change to be considered an increase/decrease
 // adjusted by speedometer update delta time
 const COLORIZE_DEADZONE = 2;
 
 const HIDDEN_CLASS = 'speedometer--hidden';
-const INCREASE_CLASS = 'speedometer--increase';
-const DECREASE_CLASS = 'speedometer--decrease';
 const FADEOUT_CLASS = 'speedometer--fadeout';
 const FADEOUT_START_CLASS = 'speedometer--fade-start';
 
@@ -24,6 +23,27 @@ interface Range {
 	max: number;
 	color: rgbaColor;
 }
+
+const Colors = {
+	AXIS_FLAT: 'rgba(255, 255, 255, 1)',
+	AXIS_GAIN: 'rgba(16, 118, 168, 1)',
+	AXIS_LOSS: 'rgba(255, 106, 106, 1)',
+	COMPARISON_FLAT: 'rgba(255, 255, 255, 1)',
+	COMPARISON_GAIN: 'rgba(16, 118, 168, 1)',
+	COMPARISON_LOSS: 'rgba(255, 106, 106, 1)'
+};
+
+const Fonts = {
+	mainAxisFont: 'Roboto',
+	mainAxisFontSize: 26,
+	mainComparisonFont: 'Roboto',
+	mainComparisonFontSize: 22,
+
+	eventAxisFont: 'Roboto',
+	eventAxisFontSize: 18,
+	eventComparisonFont: 'Roboto',
+	eventComparisonFontSize: 16
+};
 
 type RuntimeSettings = SpeedometerSettingsAPI.Settings & { range_colors?: Range[] };
 
@@ -59,10 +79,9 @@ class Speedometer {
 		// remove status classes
 		this.speedometerPanel.RemoveClass(FADEOUT_START_CLASS);
 		this.speedometerPanel.RemoveClass(FADEOUT_CLASS);
-		this.speedometerLabel.RemoveClass(DECREASE_CLASS);
-		this.speedometerLabel.RemoveClass(INCREASE_CLASS);
-		this.comparisonLabel.RemoveClass(DECREASE_CLASS);
-		this.comparisonLabel.RemoveClass(INCREASE_CLASS);
+
+		this.speedometerLabel.style.color = Colors.AXIS_FLAT;
+		this.comparisonLabel.style.color = Colors.COMPARISON_FLAT;
 	}
 }
 
@@ -97,9 +116,196 @@ class SpeedometerHandler {
 		$.RegisterForUnhandledEvent('OnSpeedometerSettingsSaved', (succ: boolean) => this.onSettingsUpdate(succ));
 		$.RegisterForUnhandledEvent('OnRangeColorProfilesSaved', (succ: boolean) => this.onSettingsUpdate(succ));
 
+		//TODO: WHY THE FUCK IS THIS NOT INITIALIZED PROPERLY
 		registerHUDCustomizerComponent($.GetContextPanel(), {
-			resizeX: false,
-			resizeY: false
+			resizeX: true,
+			resizeY: false,
+			dynamicStyles: {
+				fontStyling: {
+					name: 'Font Styling',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [{ styleID: 'mainFontStyling' }, { styleID: 'eventFontStyling' }]
+				},
+				mainFontStyling: {
+					name: 'Main',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [{ styleID: 'mainAxisFontStyling' }, { styleID: 'mainComparisonFontStyling' }]
+				},
+				mainAxisFontStyling: {
+					name: 'Axis',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [{ styleID: 'mainAxisFont' }, { styleID: 'mainAxisFontSize' }]
+				},
+				mainAxisFont: {
+					name: 'Font',
+					type: CustomizerPropertyType.FONT_PICKER,
+					targetPanel: '.speedometer__axis',
+					styleProperty: 'fontFamily',
+					callbackFunc: (_, value) => {
+						Fonts.mainAxisFont = value;
+					}
+				},
+				mainAxisFontSize: {
+					name: 'Font Size',
+					targetPanel: '.speedometer__axis',
+					styleProperty: 'fontSize',
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					callbackFunc: (_, value) => {
+						Fonts.mainAxisFontSize = value;
+					}
+				},
+				mainComparisonFontStyling: {
+					name: 'Comparisons',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [{ styleID: 'mainComparisonFont' }, { styleID: 'mainComparisonFontSize' }]
+				},
+				mainComparisonFont: {
+					name: 'Font',
+					type: CustomizerPropertyType.FONT_PICKER,
+					targetPanel: '.speedometer__axis__comparison',
+					styleProperty: 'fontFamily',
+					callbackFunc: (_, value) => {
+						Fonts.mainComparisonFont = value;
+					}
+				},
+				mainComparisonFontSize: {
+					name: 'Font Size',
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					targetPanel: '.speedometer__axis__comparison',
+					styleProperty: 'fontSize',
+					callbackFunc: (_, value) => {
+						Fonts.mainComparisonFontSize = value;
+					}
+				},
+				eventFontStyling: {
+					name: 'Event',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [{ styleID: 'eventAxisFontStyling' }, { styleID: 'eventComparisonFontStyling' }]
+				},
+				eventAxisFontStyling: {
+					name: 'Axis',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [{ styleID: 'eventAxisFont' }, { styleID: 'eventAxisFontSize' }]
+				},
+				eventAxisFont: {
+					name: 'Font',
+					type: CustomizerPropertyType.FONT_PICKER,
+					targetPanel: '.speedometer__event',
+					styleProperty: 'fontFamily',
+					callbackFunc: (_, value) => {
+						Fonts.eventAxisFont = value;
+					}
+				},
+				eventAxisFontSize: {
+					name: 'Font Size',
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					targetPanel: '.speedometer__event',
+					styleProperty: 'fontSize',
+					callbackFunc: (_, value) => {
+						Fonts.eventAxisFontSize = value;
+					}
+				},
+				eventComparisonFontStyling: {
+					name: 'Comparisons',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [{ styleID: 'eventComparisonFont' }, { styleID: 'eventComparisonFontSize' }]
+				},
+				eventComparisonFont: {
+					name: 'Font',
+					type: CustomizerPropertyType.FONT_PICKER,
+					targetPanel: '.speedometer__event__comparison',
+					styleProperty: 'fontFamily',
+					callbackFunc: (_, value) => {
+						Fonts.eventComparisonFont = value;
+					}
+				},
+				eventComparisonFontSize: {
+					name: 'Font Size',
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					targetPanel: '.speedometer__event__comparison',
+					styleProperty: 'fontSize',
+					callbackFunc: (_, value) => {
+						Fonts.eventComparisonFontSize = value;
+					}
+				},
+				colors: {
+					name: 'Colors',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [{ styleID: 'axisSpeedometerColors' }, { styleID: 'comparisonSpeedometerColors' }]
+				},
+				axisSpeedometerColors: {
+					name: 'Axis Speedometers',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [{ styleID: 'axisFlatColor' }, { styleID: 'axisGainColor' }, { styleID: 'axisLossColor' }]
+				},
+				axisFlatColor: {
+					name: 'Flat',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					callbackFunc: (_, value) => {
+						Colors.AXIS_FLAT = value;
+					}
+				},
+				axisGainColor: {
+					name: 'Gain',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					callbackFunc: (_, value) => {
+						Colors.AXIS_GAIN = value;
+					}
+				},
+				axisLossColor: {
+					name: 'Loss',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					callbackFunc: (_, value) => {
+						Colors.AXIS_LOSS = value;
+					}
+				},
+				comparisonSpeedometerColors: {
+					name: 'Comparison Labels',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [
+						{ styleID: 'comparisonFlatColor' },
+						{ styleID: 'comparisonGainColor' },
+						{ styleID: 'comparisonLossColor' }
+					]
+				},
+				comparisonFlatColor: {
+					name: 'Flat',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					callbackFunc: (_, value) => {
+						Colors.COMPARISON_FLAT = value;
+					}
+				},
+				comparisonGainColor: {
+					name: 'Gain',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					callbackFunc: (_, value) => {
+						Colors.COMPARISON_GAIN = value;
+					}
+				},
+				comparisonLossColor: {
+					name: 'Loss',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					callbackFunc: (_, value) => {
+						Colors.COMPARISON_LOSS = value;
+					}
+				},
+				backgroundColor: {
+					name: 'Background Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					targetPanel: '.speedometers',
+					styleProperty: 'backgroundColor'
+				}
+			}
 		});
 	}
 
@@ -274,32 +480,41 @@ class SpeedometerHandler {
 		if (hasComparison && speedometerHasComparison) {
 			const diff = customdiff ?? speed - speedometer.prevVal;
 
-			const labelToColor = separateComparison ? speedometer.comparisonLabel : speedometer.speedometerLabel;
+			const [labelToColor, gainColor, lossColor, flatColor] = separateComparison
+				? [speedometer.comparisonLabel, Colors.COMPARISON_GAIN, Colors.COMPARISON_LOSS, Colors.COMPARISON_FLAT]
+				: [speedometer.speedometerLabel, Colors.AXIS_GAIN, Colors.AXIS_LOSS, Colors.AXIS_FLAT];
+
+			// const labelToColor = separateComparison ? speedometer.comparisonLabel : speedometer.speedometerLabel;
+
 			let diffSymbol: string;
 			if (diff - this.correctedColorizeDeadzone > 0) {
-				labelToColor.AddClass(INCREASE_CLASS);
-				labelToColor.RemoveClass(DECREASE_CLASS);
+				labelToColor.style.color = gainColor;
+				labelToColor.style.textShadowFast = this.getAdjustedTextShadow(gainColor as rgbaColor);
 				diffSymbol = '+';
 			} else if (diff + this.correctedColorizeDeadzone < 0) {
-				labelToColor.AddClass(DECREASE_CLASS);
-				labelToColor.RemoveClass(INCREASE_CLASS);
+				labelToColor.style.color = lossColor;
+				labelToColor.style.textShadowFast = this.getAdjustedTextShadow(lossColor as rgbaColor);
 				diffSymbol = '-';
 			} else {
-				labelToColor.RemoveClass(INCREASE_CLASS);
-				labelToColor.RemoveClass(DECREASE_CLASS);
+				labelToColor.style.color = flatColor;
+				labelToColor.style.textShadowFast = this.getAdjustedTextShadow(flatColor as rgbaColor);
 				diffSymbol = '';
 			}
 
 			if (separateComparison) {
 				speedometer.comparisonLabel.text = `${diffSymbol}${Math.round(Math.abs(diff))}`;
-				speedometer.speedometerLabel.RemoveClass(INCREASE_CLASS);
-				speedometer.speedometerLabel.RemoveClass(DECREASE_CLASS);
+				speedometer.speedometerLabel.style.color = Colors.AXIS_FLAT;
+				speedometer.speedometerLabel.style.textShadowFast = this.getAdjustedTextShadow(
+					Colors.AXIS_FLAT as rgbaColor
+				);
 			}
 
 			speedometer.prevVal = speed;
 		} else {
-			speedometer.speedometerLabel.RemoveClass(INCREASE_CLASS);
-			speedometer.speedometerLabel.RemoveClass(DECREASE_CLASS);
+			speedometer.speedometerLabel.style.color = Colors.AXIS_FLAT;
+			speedometer.speedometerLabel.style.textShadowFast = this.getAdjustedTextShadow(
+				Colors.AXIS_FLAT as rgbaColor
+			);
 
 			const rangeList = speedometer.settings.range_colors;
 			if (colorType === SpeedometerColorType.RANGE && rangeList) {
@@ -385,5 +600,45 @@ class SpeedometerHandler {
 		}
 
 		this.registerFadeoutEventHandlers();
+		this.setFontStyling();
+	}
+
+	setFontStyling() {
+		const FONT_MAP = [
+			{
+				selector: 'speedometer__axis',
+				family: Fonts.mainAxisFont,
+				size: Fonts.mainAxisFontSize
+			},
+			{
+				selector: 'speedometer__axis__comparison',
+				family: Fonts.mainComparisonFont,
+				size: Fonts.mainComparisonFontSize
+			},
+			{
+				selector: 'speedometer__event',
+				family: Fonts.eventAxisFont,
+				size: Fonts.eventAxisFontSize
+			},
+			{
+				selector: 'speedometer__event__comparison',
+				family: Fonts.eventComparisonFont,
+				size: Fonts.eventComparisonFontSize
+			}
+		];
+
+		const root = $.GetContextPanel();
+
+		for (const { selector, family, size } of FONT_MAP) {
+			for (const panel of root.FindChildrenWithClassTraverse(selector)) {
+				panel.style.fontFamily = family;
+				panel.style.fontSize = `${size}px`;
+			}
+		}
+	}
+
+	getAdjustedTextShadow(color: rgbaColor) {
+		const splitRGBA = splitRgbFromAlpha(color);
+		return `0px 1px rgba(0, 0, 0, ${splitRGBA.alpha * 0.9})`;
 	}
 }
