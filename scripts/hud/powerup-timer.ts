@@ -4,6 +4,7 @@ import { GamemodeCategory, GamemodeCategoryToGamemode } from 'common/web/enums/g
 import { GamemodeCategories } from 'common/web/maps/gamemodes.map';
 
 import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
+import { splitRgbFromAlpha } from 'util/colors';
 
 @PanelHandler()
 class PowerupTimerHandler {
@@ -36,7 +37,6 @@ class PowerupTimerHandler {
 			resizeX: false,
 			resizeY: false,
 			gamemode: GamemodeCategoryToGamemode.get(GamemodeCategory.DEFRAG),
-			//TODO: Add resizing, background effects
 			dynamicStyles: {
 				font: {
 					name: 'Font',
@@ -55,7 +55,10 @@ class PowerupTimerHandler {
 					name: 'Font Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
 					targetPanel: '.powerup-timer__label',
-					styleProperty: 'color'
+					styleProperty: 'color',
+					callbackFunc: (panel, value) => {
+						panel.style.textShadowFast = this.getAdjustedTextShadow(value as rgbaColor);
+					}
 				}
 			}
 		});
@@ -77,5 +80,10 @@ class PowerupTimerHandler {
 			panel.visible = true;
 			label.text = time < 0 ? '∞' : Math.ceil(time / 1000).toString();
 		}
+	}
+
+	getAdjustedTextShadow(color: rgbaColor) {
+		const splitRGBA = splitRgbFromAlpha(color);
+		return `0px 1px rgba(0, 0, 0, ${splitRGBA.alpha * 0.9})`;
 	}
 }
