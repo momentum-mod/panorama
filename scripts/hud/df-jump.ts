@@ -4,6 +4,7 @@ import { GamemodeCategory, GamemodeCategoryToGamemode } from 'common/web/enums/g
 import { GamemodeCategories } from 'common/web/maps/gamemodes.map';
 
 import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
+import { splitRgbFromAlpha } from 'util/colors';
 
 //This gets overridden on map load. Set defaults in cfg/hud_default.kv3
 const Colors = {
@@ -53,14 +54,21 @@ class DFJumpHandler {
 			//TODO: Add border styles
 			dynamicStyles: {
 				showLabels: {
-					name: 'Show Labes',
+					name: 'Show Labels',
 					type: CustomizerPropertyType.CHECKBOX,
 					targetPanel: '.dfjump__text-wrapper',
 					styleProperty: 'visibility',
+					children: [{ styleID: 'fontStyling', showWhen: true }],
 					valueFn: (value) => {
 						if (value) return 'visible';
 						else return 'collapse';
 					}
+				},
+				fontStyling: {
+					name: 'Font Styling',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [{ styleID: 'font' }, { styleID: 'fontSize' }, { styleID: 'fontColor' }]
 				},
 				font: {
 					name: 'Font',
@@ -91,10 +99,50 @@ class DFJumpHandler {
 						'.dfjump__text-wrapper--total',
 						'.dfjump__text-wrapper--press'
 					],
-					styleProperty: 'color'
+					styleProperty: 'color',
+					callbackFunc: (panel, value) => {
+						panel.style.textShadowFast = this.getAdjustedTextShadow(value as rgbaColor);
+					}
+				},
+				borderStyling: {
+					name: 'Border Styling',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [{ styleID: 'borderWidth' }, { styleID: 'borderColor' }, { styleID: 'borderRadius' }]
+				},
+				borderWidth: {
+					name: 'Border Width',
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					targetPanel: '.dfjump__bar-wrapper',
+					styleProperty: 'borderWidth',
+					valueFn: (value) => `${value}px`
+				},
+				borderColor: {
+					name: 'Border Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					targetPanel: '.dfjump__bar-wrapper',
+					styleProperty: 'borderColor'
+				},
+				borderRadius: {
+					name: 'Border Radius',
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					targetPanel: '.dfjump__bar-wrapper',
+					styleProperty: 'borderRadius',
+					valueFn: (value) => `${value}px`
+				},
+				colors: {
+					name: 'Colors',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [
+						{ styleID: 'backgroundGradient' },
+						{ styleID: 'airGradient' },
+						{ styleID: 'releaseGradient' },
+						{ styleID: 'groundGradient' }
+					]
 				},
 				backgroundGradient: {
-					name: 'Background Gradient',
+					name: 'Background',
 					type: CustomizerPropertyType.GRADIENT_PICKER,
 					targetPanel: ['.dfjump__release', '.dfjump__press'],
 					callbackFunc: (panel, value) => {
@@ -155,5 +203,10 @@ class DFJumpHandler {
 
 	initializeSettings() {
 		this.setMaxDelay(GameInterfaceAPI.GetSettingInt('mom_hud_df_jump_max_delay'));
+	}
+
+	getAdjustedTextShadow(color: rgbaColor) {
+		const splitRGBA = splitRgbFromAlpha(color);
+		return `0px 1px 1.5px 1 rgba(0, 0, 0, ${splitRGBA.alpha})`;
 	}
 }

@@ -1,6 +1,7 @@
 import { PanelHandler } from 'util/module-helpers';
 import { Gamemode, GamemodeCategory, GamemodeCategoryToGamemode } from 'common/web/enums/gamemode.enum';
 import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
+import { splitRgbFromAlpha } from 'util/colors';
 
 @PanelHandler()
 class MomHudAmmoHandler {
@@ -34,34 +35,17 @@ class MomHudAmmoHandler {
 						this.createDummyAmmo();
 					}
 				},
-				alignText: {
-					name: 'Align Text',
-					type: CustomizerPropertyType.NUMBER_ENTRY,
-					targetPanel: '.ammo',
-					styleProperty: 'horizontalAlign',
-					valueFn: (value) => {
-						switch (value) {
-							case 0:
-								return 'left';
-							case 1:
-								return 'center';
-							case 2:
-								return 'right';
-						}
-					},
-					settingProps: { min: 0, max: 2 }
+				fontStyling: {
+					name: 'Font Styling',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [{ styleID: 'font' }, { styleID: 'fontSize' }, { styleID: 'fontColor' }]
 				},
 				font: {
 					name: 'Font',
 					type: CustomizerPropertyType.FONT_PICKER,
 					targetPanel: '.ammo__label',
 					styleProperty: 'fontFamily'
-				},
-				fontColor: {
-					name: 'Font Color',
-					type: CustomizerPropertyType.COLOR_PICKER,
-					targetPanel: '.ammo__label',
-					styleProperty: 'color'
 				},
 				fontSize: {
 					name: 'Font Size',
@@ -70,11 +54,31 @@ class MomHudAmmoHandler {
 					styleProperty: 'fontSize',
 					valueFn: (value) => `${value}px`
 				},
+				fontColor: {
+					name: 'Font Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					targetPanel: '.ammo__label',
+					styleProperty: 'color',
+					callbackFunc: (panel, value) => {
+						panel.style.textShadowFast = this.getAdjustedTextShadow(value as rgbaColor);
+					}
+				},
 				backgroundColor: {
 					name: 'Background Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
 					targetPanel: '.ammo__label',
 					styleProperty: 'backgroundColor'
+				},
+				alignText: {
+					name: 'Align Text',
+					type: CustomizerPropertyType.DROPDOWN,
+					options: [
+						{ label: 'Left', value: 'left' },
+						{ label: 'Center', value: 'center' },
+						{ label: 'Right', value: 'right' }
+					],
+					targetPanel: '.ammo',
+					styleProperty: 'horizontalAlign'
 				}
 			}
 		});
@@ -86,5 +90,10 @@ class MomHudAmmoHandler {
 
 	restoreRealAmmo() {
 		this.panels.ammoLabel.SetTextWithDialogVariables('{i:ammoCount}');
+	}
+
+	getAdjustedTextShadow(color: rgbaColor) {
+		const splitRGBA = splitRgbFromAlpha(color);
+		return `0px 1px 1.5px 1 rgba(0, 0, 0, ${splitRGBA.alpha})`;
 	}
 }
