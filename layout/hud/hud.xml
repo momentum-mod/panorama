@@ -29,6 +29,8 @@
 		<MomHudTimer id="Timer" />
         <HudComparisons id="Comparisons" />
         <MomHudSpeedometer id="Speedometer" />
+
+        <MomHudKeypressNew id="KeyPress_New"/>
 		
         <!-- Gamemode Specific HUD elements -->
         <MomHudAmmo id="Ammo"/>
@@ -50,7 +52,7 @@
         <MomHudJumpTiming /> <!-- TODO: HudCenter, not added to customizer -->
 		
 		
-        <MomHudKeyPress id="KeyPress" /> <!-- TODO: Not really in customizer, needs a rework -->
+        
 
 
 
@@ -65,6 +67,7 @@
 
         
         <!-- Most likely gonna get removed -->
+        <!-- <MomHudKeyPress id="KeyPress" /> OLD HUD - REMOVE-->
 		<!-- <HudBoneCounts id="BoneCount" /> TODO: HudTopCenter, not in customizer, probably gonna get nuked -->
         <!-- <MomHudStrafeSync id="StrafeSync" /> This is broken and probably not worth fixing --> 
 
