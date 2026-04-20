@@ -95,49 +95,13 @@ class GroundboostHandler {
 			resizeY: false,
 			gamemode: GamemodeCategoryToGamemode.get(GamemodeCategory.DEFRAG),
 			dynamicStyles: {
-				//As of writing this there is no way to re-rasterize an svg as the textureheight needs to be set on panel creation
-				//There should be some way to rerasterize an image added to panorama, perhaps it should even happen automatically when textureheight is changed
-				//Blame @GordiNoki for this awful code
-
 				//TODO: For whatever reason the panel is white after resizing and needs to be moved to regain proper color
 				size: {
 					name: 'Size',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					callbackFunc: (_, value) => {
-						this.panels.container.RemoveAndDeleteChildren();
-
-						this.panels.groundboostBackground = $.CreatePanel(
-							'Image',
-							this.panels.container,
-							'GroundboostBackground',
-							{
-								textureheight: value,
-								class: 'groundboost__background-meter'
-							}
-						);
-
-						this.panels.groundboostBackground.SetImage('file://{images}/hud/meter-ring.svg');
-
-						this.panels.groundboostMeter = $.CreatePanel(
-							'Image',
-							this.panels.container,
-							'GroundboostMeter',
-							{
-								textureheight: value,
-								class: 'groundboost__meter'
-							}
-						);
-
-						this.panels.groundboostMeter.SetImage('file://{images}/hud/meter-ring.svg');
-
-						this.panels.groundboostLabel = $.CreatePanel(
-							'Label',
-							this.panels.container,
-							'GroundboostLabel',
-							{
-								class: 'groundboost__label'
-							}
-						);
+						this.panels.groundboostBackground.SetSvgTextureSize(value, value);
+						this.panels.groundboostMeter.SetSvgTextureSize(value, value);
 
 						this.panels.container.style.width = `${value}px`;
 						this.panels.container.style.height = `${value}px`;
