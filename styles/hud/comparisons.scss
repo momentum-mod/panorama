@@ -60,7 +60,6 @@
 	&__name,
 	&__time,
 	&__diff {
-		font-size: 22px;
 		vertical-align: center;
 
 		&--hidden {
@@ -69,8 +68,6 @@
 	}
 
 	&__name {
-		font-family: $font-header;
-		color: #e0e0e0;
 		padding-top: 1px;
 
 		// &--subsegment {

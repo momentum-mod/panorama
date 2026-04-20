@@ -1,14 +1,7 @@
 import { PanelHandler } from 'util/module-helpers';
 import * as Timer from 'common/timer';
-import {
-	BackgroundColorStyle,
-	BorderStyles,
-	CustomizerPropertyType,
-	getHudCustomizer,
-	MarginStyles,
-	PaddingStyles,
-	registerHUDCustomizerComponent
-} from 'common/hud-customizer';
+import { CustomizerPropertyType, getHudCustomizer, registerHUDCustomizerComponent } from 'common/hud-customizer';
+import { splitRgbFromAlpha } from 'util/colors';
 
 // MomTV networking limits max numbers of networked splits to 10; this value is
 // immutable and used to build out our split panel arrays.
@@ -22,6 +15,14 @@ interface SplitRow {
 	diff: Label;
 	split?: Timer.Split;
 }
+
+const COMPARISON_COLORS = {
+	neutral: { color: 'rgba(0, 0, 0, 0)', textShadow: '0px 1px rgba(0, 0, 0, 0)' },
+	ahead_gain: { color: 'rgba(0, 0, 0, 0)', textShadow: '0px 1px rgba(0, 0, 0, 0)' },
+	ahead_loss: { color: 'rgba(0, 0, 0, 0)', textShadow: '0px 1px rgba(0, 0, 0, 0)' },
+	behind_gain: { color: 'rgba(0, 0, 0, 0)', textShadow: '0px 1px rgba(0, 0, 0, 0)' },
+	behind_loss: { color: 'rgba(0, 0, 0, 0)', textShadow: '0px 1px rgba(0, 0, 0, 0)' }
+};
 
 @PanelHandler()
 class HudComparisonsHandler {
@@ -82,9 +83,9 @@ class HudComparisonsHandler {
 	//   - Generate progression split, set bottom-most split to it
 	//   - Push all other splits up by setting them to the previous split's properties
 	// - When timer state changes,
-	//   - To primed: Clear all splits
+	//   - To primed: Do nothing
 	//   - To running: Clear all splits
-	//   - To disabled: Clear all splits
+	//   - To disabled: Do nothing
 	//   - To finished: Generate final split, set bottom-most split to it
 	// - When comparison changes:
 	//   - Update all splits to use new comparison
@@ -110,7 +111,7 @@ class HudComparisonsHandler {
 						segmentCheckpointsCount
 					)
 				);
-			} else {
+			} else if (state === Timer.TimerState.RUNNING) {
 				this.clearSplits();
 			}
 		});
@@ -186,30 +187,134 @@ class HudComparisonsHandler {
 			// panel gets mispositioned. So just wait until width is at least 64px.
 			expectedMinWidth: 64,
 			dynamicStyles: {
-				...MarginStyles,
-				...PaddingStyles,
-				// TODO(customizer): Currently always takes up full height, so background takes up a lot of space.
-				// Adding making empty rows 0-height is quite hard, if doing so, try to follow the layouting and CSS
-				// carefully before changing, it's complicated!
-				// Also if someone wanted this is a flow group, the height shifts would be very annoying, maybe put the
-				// fixed height behaviour being a checkbox.
-				...BackgroundColorStyle,
-				// TODO(customizer): Border is visible when you have no comparisons (e.g. in start zone).
-				// Need to apply a class to outermost panel conditionally.
-				...BorderStyles,
-				// TODO(customizer): Blurring blurs the entire panel, not the backbuffer. Adding #ChatInput to
-				// #HudBlur's blurrects has same issue, no idea what's different about that panel from say,
-				// TabMenu/Spectator.
-				blur: {
-					name: 'Background Blur',
-					type: CustomizerPropertyType.CHECKBOX,
+				index: {
+					name: 'Index',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [{ styleID: 'indexFont' }, { styleID: 'indexSize' }, { styleID: 'indexColor' }]
+				},
+				indexFont: {
+					name: 'Font',
+					type: CustomizerPropertyType.FONT_PICKER,
+					targetPanel: '.hud-splits__name',
+					styleProperty: 'fontFamily'
+				},
+				indexSize: {
+					name: 'Size',
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					targetPanel: '.hud-splits__name',
+					styleProperty: 'fontSize',
+					valueFn: (value) => `${value}px`
+				},
+				indexColor: {
+					name: 'Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					targetPanel: '.hud-splits__name',
+					styleProperty: 'color',
 					callbackFunc: (panel, value) => {
-						const blurTarget = $.GetContextPanel().GetParent()!.FindChild<HudBlurTarget>('HudBlur')!;
-						if (value) {
-							blurTarget.AddBlurPanel(panel);
-						} else {
-							blurTarget.RemoveBlurPanel(panel);
-						}
+						panel.style.textShadowFast = this.getAdjustedTextShadow(value as rgbaColor);
+					}
+				},
+				time: {
+					name: 'Time',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [{ styleID: 'timeFont' }, { styleID: 'timeSize' }, { styleID: 'timeColor' }]
+				},
+				timeFont: {
+					name: 'Font',
+					type: CustomizerPropertyType.FONT_PICKER,
+					targetPanel: '.hud-splits__time',
+					styleProperty: 'fontFamily'
+				},
+				timeSize: {
+					name: 'Size',
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					targetPanel: '.hud-splits__time',
+					styleProperty: 'fontSize',
+					valueFn: (value) => `${value}px`
+				},
+				timeColor: {
+					name: 'Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					targetPanel: '.hud-splits__time',
+					styleProperty: 'color',
+					callbackFunc: (panel, value) => {
+						panel.style.textShadowFast = this.getAdjustedTextShadow(value as rgbaColor);
+					}
+				},
+				comparison: {
+					name: 'Comparison',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [
+						{ styleID: 'comparisonFont' },
+						{ styleID: 'comparisonFontSize' },
+						{ styleID: 'comparisonColors' }
+					]
+				},
+				comparisonFont: {
+					name: 'Font',
+					type: CustomizerPropertyType.FONT_PICKER,
+					targetPanel: '.hud-splits__diff',
+					styleProperty: 'fontFamily'
+				},
+				comparisonFontSize: {
+					name: 'Size',
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					targetPanel: '.hud-splits__diff',
+					styleProperty: 'fontSize'
+				},
+				comparisonColors: {
+					name: 'Colors',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [
+						{ styleID: 'comparsonNeutral' },
+						{ styleID: 'comparisonAheadGain' },
+						{ styleID: 'comparisonAheadLoss' },
+						{ styleID: 'comparisonBehindGain' },
+						{ styleID: 'comparisonBehindLoss' }
+					]
+				},
+				comparsonNeutral: {
+					name: 'Neutral',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					callbackFunc: (_, value) => {
+						COMPARISON_COLORS.neutral.color = value;
+						COMPARISON_COLORS.neutral.textShadow = this.getAdjustedTextShadow(value as rgbaColor);
+					}
+				},
+				comparisonAheadGain: {
+					name: 'Ahead - Gain',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					callbackFunc: (_, value) => {
+						COMPARISON_COLORS.ahead_gain.color = value;
+						COMPARISON_COLORS.ahead_gain.textShadow = this.getAdjustedTextShadow(value as rgbaColor);
+					}
+				},
+				comparisonAheadLoss: {
+					name: 'Ahead - Loss',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					callbackFunc: (_, value) => {
+						COMPARISON_COLORS.ahead_loss.color = value;
+						COMPARISON_COLORS.ahead_loss.textShadow = this.getAdjustedTextShadow(value as rgbaColor);
+					}
+				},
+				comparisonBehindGain: {
+					name: 'Behind - Gain',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					callbackFunc: (_, value) => {
+						COMPARISON_COLORS.behind_gain.color = value;
+						COMPARISON_COLORS.behind_gain.textShadow = this.getAdjustedTextShadow(value as rgbaColor);
+					}
+				},
+				comparisonBehindLoss: {
+					name: 'Behind - Loss',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					callbackFunc: (_, value) => {
+						COMPARISON_COLORS.behind_loss.color = value;
+						COMPARISON_COLORS.behind_loss.textShadow = this.getAdjustedTextShadow(value as rgbaColor);
 					}
 				}
 			}
@@ -371,10 +476,21 @@ class HudComparisonsHandler {
 
 		diff.SetDialogVariable('diff_sign', split.diff! > 0 ? '+' : split.diff === 0 ? '' : '-');
 		diff.SetDialogVariableFloat('diff', Math.abs(split.diff!));
-		diff.SetHasClass('--ahead', split.diff! < 0);
-		diff.SetHasClass('--behind', split.diff! > 0);
-		diff.SetHasClass('--gain', split.delta! <= 0);
-		diff.SetHasClass('--loss', split.delta! > 0);
+
+		const getSplitState = (diff: number, delta: number) => {
+			if (diff === 0) return 'neutral';
+			const isAhead = diff < 0;
+			const isGain = delta <= 0;
+
+			if (isAhead) return isGain ? 'ahead_gain' : 'ahead_loss';
+			return isGain ? 'behind_gain' : 'behind_loss';
+		};
+
+		const state = getSplitState(split.diff!, split.delta!);
+		const style = COMPARISON_COLORS[state];
+
+		diff.style.color = style.color;
+		diff.style.textShadowFast = style.textShadow;
 	}
 
 	clearSplits() {
@@ -418,5 +534,10 @@ class HudComparisonsHandler {
 				hasComparison: true
 			});
 		}
+	}
+
+	getAdjustedTextShadow(color: rgbaColor) {
+		const splitRGBA = splitRgbFromAlpha(color);
+		return `0px 1px rgba(0, 0, 0, ${splitRGBA.alpha * 0.9})`;
 	}
 }
