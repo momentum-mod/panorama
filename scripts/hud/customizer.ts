@@ -561,6 +561,10 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		this.panels.gamemodeComponentList.RemoveAndDeleteChildren();
 
 		for (const [id, component] of Object.entries(this.components)) {
+			//Tab Menu currently takes up the entire screen, clicking on it makes it impossible to interact anything else in the customizer
+			//This is a general issue, customizer should always have focus priority over components underneath it even if they are chosen.
+			//TODO: Remove this line when the issue is fixed
+			if (id === 'TabMenu') continue;
 			const parent = component.properties.gamemode
 				? this.panels.gamemodeComponentList
 				: this.panels.generalComponentList;
