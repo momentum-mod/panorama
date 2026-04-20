@@ -6,8 +6,6 @@
 .hud-tab-menu {
 	$root: &;
 
-	horizontal-align: center;
-	vertical-align: center;
 	visibility: visible;
 	background-color: rgba(0, 0, 0, 0.01); // Very slight background so the blur works
 
@@ -19,6 +17,8 @@
 	}
 
 	&__wrapper {
+		horizontal-align: center;
+		vertical-align: center;
 		flow-children: down;
 		box-shadow: 0 0 20px 0 rgba(0, 0, 0, 1);
 		border: 1px solid rgba(0, 0, 0, 0.65);
@@ -93,7 +93,7 @@
 
 		&--zoning {
 			background-image: url('file://{images}/pencil-outline.svg');
-			
+
 			&:selected {
 				background-image: url('file://{images}/pencil-off-outline.svg');
 			}

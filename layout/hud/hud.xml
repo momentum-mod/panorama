@@ -71,7 +71,7 @@
 		<!-- <HudBoneCounts id="BoneCount" /> TODO: HudTopCenter, not in customizer, probably gonna get nuked -->
         <!-- <MomHudStrafeSync id="StrafeSync" /> This is broken and probably not worth fixing --> 
 
-		<HudBlurTarget id="HudBlur" blurrects="TabMenu Spectator" class="hud-blur" hittest="false" hittestchildren="false">
+		<HudBlurTarget id="HudBlur" blurrects="TabMenuWrapper Spectator" class="hud-blur" hittest="false" hittestchildren="false">
 			<BackbufferImagePanel class="full" />
 		</HudBlurTarget>
 

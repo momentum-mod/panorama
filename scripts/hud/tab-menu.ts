@@ -7,6 +7,8 @@ import { getNumStages } from 'common/leaderboard';
 import { getAllCredits, getTier, SimpleMapCredit } from 'common/maps';
 import { MapStatuses } from 'common/web/enums/map-status.enum';
 
+import { registerHUDCustomizerComponent } from 'common/hud-customizer';
+
 /**
  * Class for the HUD tab menu panel, which contains the leaderboards, end of run, and zoning.
  */
@@ -34,6 +36,14 @@ class HudTabMenuHandler {
 		$.RegisterForUnhandledEvent('EndOfRun_Hide', () => this.hideEndOfRun());
 		$.RegisterForUnhandledEvent('ActiveZoneDefsChanged', () => this.updateMapStats());
 		$.RegisterForUnhandledEvent('MapCache_MapLoad', () => this.onMapLoad());
+
+		registerHUDCustomizerComponent($.GetContextPanel(), {
+			resizeX: false,
+			resizeY: false,
+			moveX: false,
+			moveY: false,
+			dynamicStyles: {}
+		});
 	}
 
 	openInSteamOverlay() {
