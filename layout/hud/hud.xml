@@ -9,7 +9,7 @@
 		<!-- In world UI is first to make sure it shows up behind all "screen-looking" UI -->
 		<Panel class="hud__in-world" hittest="false" hittestchildren="false">
 			<MomHudGhostEntities />
-			<MomHudConcEntities /> <!-- TODO: Not in customizer -->
+			<MomHudConcEntities id="ConcEntities" />
 			<MomHudDamageIndicator />
 			<MomHudCgaz /> <!-- TODO: Not in customizer -->
 			<MomHudReticle />

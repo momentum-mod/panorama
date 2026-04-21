@@ -33,7 +33,6 @@ class ConcCookHandler {
 			resizeX: true,
 			resizeY: false,
 			gamemode: Gamemode.CONC,
-			//TODO: Add entpanels
 			dynamicStyles: {
 				countDown: {
 					name: 'Count Down',
@@ -170,7 +169,7 @@ class ConcCookHandler {
 			return;
 		}
 
-		const displayTime = this.countDown ? 3.81 - time : time;
+		const displayTime = this.countDown ? GameInterfaceAPI.GetSettingFloat('mom_conc_handheld_fuse') - time : time;
 		this.panels.cookLabel.text = `${displayTime.toFixed(2)}${this.units}`;
 	}
 
