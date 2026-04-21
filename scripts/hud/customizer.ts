@@ -360,9 +360,8 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		overlay: $<Panel>('#Overlay')!,
 		overlayInner: $<Panel>('#OverlayInner')!,
 		settings: $<Panel>('#CustomizerSettings')!,
-		componentList: $<Panel>('#ComponentList')!,
 		generalComponentList: $<Panel>('#GeneralComponentList')!,
-		GamemodeComponentsContainer: $<Panel>('#GamemodeComponentsContainer')!,
+		gamemodeComponentsContainer: $<Panel>('#GamemodeComponentsContainer')!,
 		gamemodeComponentList: $<Panel>('#GamemodeComponentList')!,
 		activeComponentSettings: $<Panel>('#ActiveComponentSettings')!,
 		activeComponentSettingsList: $<Panel>('#ActiveComponentSettingsList')!,
@@ -601,16 +600,16 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			visButton.SetPanelEvent('onactivate', () => (component.enabled = visButton.checked));
 		}
 
-		this.panels.GamemodeComponentsContainer.SetHasClass(
+		this.panels.gamemodeComponentsContainer.SetHasClass(
 			'hide',
 			this.panels.gamemodeComponentList.GetChildCount() === 0
 		);
 	}
 
 	setActiveComponent(component: Component): void {
-		const componentRadioButton = this.panels.generalComponentList.FindChildTraverse<RadioButton>(
-			`${component.id}Settings`
-		);
+		const componentRadioButton =
+			this.panels.generalComponentList.FindChildTraverse<RadioButton>(`${component.id}Settings`) ??
+			this.panels.gamemodeComponentList.FindChildTraverse<RadioButton>(`${component.id}Settings`);
 
 		if (!componentRadioButton) {
 			throw new Error(`HudCustomizer: Could not find component radio button for ${component.id}`);
