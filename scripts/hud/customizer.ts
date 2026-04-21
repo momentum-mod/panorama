@@ -851,13 +851,13 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 						dropdown.AddOption(optionPanel);
 					}
 
+					dropdown.SetSelected(component.dynamicStyles[styleID]?.value as string);
+
 					dropdown.SetPanelEvent('oninputsubmit', () => {
 						const value = dropdown.GetSelected().id;
 						component.setDynamicStyle(styleID, value);
 						updateChildVisibility(styleID, value);
 					});
-
-					dropdown.SetSelected(component.dynamicStyles[styleID]?.value as string);
 
 					this.updateActiveComponentOverlayPosition();
 					break;
@@ -868,16 +868,16 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 					const colorDisplay = panel.FindChildTraverse<ColorDisplay>('ColorDisplay')!;
 					colorDisplay.text = dynamicStyle.properties.name;
+					// We use hex for display here since it's more compact, but internally is rgba
+					// since that's what PanoramaTypeToV8Param<Color> uses, don't want to change that.
+					colorDisplay.color =
+						(component.dynamicStyles[styleID]?.value as rgbaColor) ?? 'rgba(255, 255, 255, 1)';
+
 					colorDisplay.SetPanelEvent('oncolorchange', () => {
 						const value = colorDisplay.color;
 						component.setDynamicStyle(styleID, value);
 						updateChildVisibility(styleID, value);
 					});
-
-					// We use hex for display here since it's more compact, but internally is rgba
-					// since that's what PanoramaTypeToV8Param<Color> uses, don't want to change that.
-					colorDisplay.color =
-						(component.dynamicStyles[styleID]?.value as rgbaColor) ?? 'rgba(255, 255, 255, 1)';
 
 					break;
 				}
@@ -886,8 +886,12 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 					panel.LoadLayoutSnippet('dynamic-gradientpicker');
 					panel.SetDialogVariable('name', dynamicStyle.properties.name);
 
+					const gradientValue = component.dynamicStyles[styleID]?.value;
+
 					const startColor = panel.FindChildTraverse<ColorDisplay>('StartColor')!;
 					startColor.text = 'From: ';
+					startColor.color = (gradientValue[0] as rgbaColor) ?? 'rgba(255, 255, 255, 1)';
+
 					startColor.SetPanelEvent('oncolorchange', () => {
 						const value = [startColor.color, endColor.color];
 						component.setDynamicStyle(styleID, value);
@@ -896,16 +900,13 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 					const endColor = panel.FindChildTraverse<ColorDisplay>('EndColor')!;
 					endColor.text = 'To: ';
+					endColor.color = (gradientValue[1] as rgbaColor) ?? 'rgba(255, 255, 255, 1)';
+
 					endColor.SetPanelEvent('oncolorchange', () => {
 						const value = [startColor.color, endColor.color];
 						component.setDynamicStyle(styleID, value);
 						updateChildVisibility(styleID, value);
 					});
-
-					const gradientValue = component.dynamicStyles[styleID]?.value;
-
-					startColor.color = (gradientValue[0] as rgbaColor) ?? 'rgba(255, 255, 255, 1)';
-					endColor.color = (gradientValue[1] as rgbaColor) ?? 'rgba(255, 255, 255, 1)';
 
 					break;
 				}
@@ -923,13 +924,15 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 						dropdown.AddOption(panel);
 					}
 
+					dropdown.SetSelected(component.dynamicStyles[styleID]?.value as string);
+
 					let value: string;
 					dropdown.SetPanelEvent('oninputsubmit', () => {
 						value = dropdown.GetSelected().id;
 						component.setDynamicStyle(styleID, value);
 						updateChildVisibility(styleID, value);
 					});
-					dropdown.SetSelected(component.dynamicStyles[styleID]?.value as string);
+
 					this.updateActiveComponentOverlayPosition();
 				}
 			}
