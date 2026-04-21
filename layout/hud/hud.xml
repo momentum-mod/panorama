@@ -29,8 +29,8 @@
 		<MomHudTimer id="Timer" />
         <HudComparisons id="Comparisons" />
         <MomHudSpeedometer id="Speedometer" />
-
         <MomHudKeypressNew id="KeyPress_New"/>
+        <MomHudWeaponSelection id="WeaponSelection" /> 
 		
         <!-- Gamemode Specific HUD elements -->
         <MomHudAmmo id="Ammo"/>
@@ -51,21 +51,14 @@
 
         <MomHudJumpTiming /> <!-- TODO: HudCenter, not added to customizer -->
 		
-		
-        
-
-
 
         <!-- NEEDS C++ WORK -->
         <MomHudSpectate id="Spectator" /> <!-- TODO: backbuffer issues need to be resolved to finish this -->
 		<HudStaticMenu id="StaticMenu" /> <!-- TODO: not in customizer, needs c++ work -->
-		<MomHudWeaponSelection id="WeaponSelection" /> <!-- TODO: not in customizer, needs C++ work-->
 		
-
         <!-- No idea -->
         <HudHintText id="HudHintText" /> <!-- TODO: not in customizer, no idea how to even check what this does -->
 
-        
         <!-- Most likely gonna get removed -->
         <!-- <MomHudKeyPress id="KeyPress" /> OLD HUD - REMOVE-->
 		<!-- <HudBoneCounts id="BoneCount" /> TODO: HudTopCenter, not in customizer, probably gonna get nuked -->
