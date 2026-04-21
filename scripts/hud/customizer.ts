@@ -975,7 +975,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 					}
 					childVisibilityMap.get(parentStyleID)!.push({ panel: childPanel, showWhen: child.showWhen });
 
-					if (child.showWhen) {
+					if (child.showWhen !== undefined) {
 						const parentValue = component.dynamicStyles[parentStyleID]?.value;
 						const normalizedShowWhen = Array.isArray(child.showWhen) ? child.showWhen : [child.showWhen];
 						childPanel.visible = normalizedShowWhen.includes(parentValue);
