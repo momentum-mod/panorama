@@ -1014,7 +1014,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			let iters = 0;
 			const handle = $.RegisterForUnhandledEvent('HudThink', () => {
 				w = component.panel.actuallayoutwidth ?? 0;
-				h = component.panel.actuallayoutwidth ?? 0;
+				h = component.panel.actuallayoutheight ?? 0;
 				iters++;
 				if ((w >= expectedW && h >= expectedH) || iters > 500) {
 					if (iters > 500) {
@@ -1354,7 +1354,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			const numLines = isX ? numXLines : numYLines;
 			const totalLength = isX ? MAX_X_POS : MAX_Y_POS;
 
-			this.gridlines[axis] = Array.from({ length: numLines }, (_, i) => {
+			this.gridlines[axis] = Array.from({ length: numLines + 1 }, (_, i) => {
 				const offset = totalLength * (i / numLines);
 
 				let cssClass = `hud-customizer-grid__line hud-customizer-grid__line--${isX ? 'x' : 'y'}`;
