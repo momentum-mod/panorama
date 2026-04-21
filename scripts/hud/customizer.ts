@@ -561,10 +561,6 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		this.panels.gamemodeComponentList.RemoveAndDeleteChildren();
 
 		for (const [id, component] of Object.entries(this.components)) {
-			//Tab Menu currently takes up the entire screen, clicking on it makes it impossible to interact anything else in the customizer
-			//This is a general issue, customizer should always have focus priority over components underneath it even if they are chosen.
-			//TODO: Remove this line when the issue is fixed
-			if (id === 'TabMenu') continue;
 			const parent = component.properties.gamemode
 				? this.panels.gamemodeComponentList
 				: this.panels.generalComponentList;
@@ -648,15 +644,25 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		if (this.dragStartHandle) {
 			$.UnregisterEventHandler('DragStart', this.panels.dragPanel, this.dragStartHandle);
 		}
-		this.dragStartHandle = $.RegisterEventHandler('DragStart', this.panels.dragPanel, (...args) => {
-			this.onStartDrag(DragMode.MOVE, this.panels.dragPanel, ...args);
-		});
+
 		if (this.dragEndHandle) {
 			$.UnregisterEventHandler('DragEnd', this.panels.dragPanel, this.dragEndHandle);
 		}
-		this.dragEndHandle = $.RegisterEventHandler('DragEnd', this.panels.dragPanel, () => {
-			this.onEndDrag();
-		});
+
+		const canMove = component.properties.moveX !== false || component.properties.moveY !== false;
+
+		this.panels.dragPanel.hittest = canMove;
+		this.panels.dragPanel.SetDraggable(canMove);
+
+		if (canMove) {
+			this.dragStartHandle = $.RegisterEventHandler('DragStart', this.panels.dragPanel, (...args) => {
+				this.onStartDrag(DragMode.MOVE, this.panels.dragPanel, ...args);
+			});
+
+			this.dragEndHandle = $.RegisterEventHandler('DragEnd', this.panels.dragPanel, () => {
+				this.onEndDrag();
+			});
+		}
 	}
 
 	updateActiveComponentOverlayPosition(): void {
