@@ -4,10 +4,10 @@
 	</styles>
 	
 	<scripts>
-		<include type="module" src="file://{scripts}/hud/keypress_new.ts" />
+		<include type="module" src="file://{scripts}/hud/key-press.ts" />
 	</scripts>
 
-	<MomHudKeypressNew>
-	</MomHudKeypressNew>
+	<MomHudKeypress>
+	</MomHudKeypress>
 
 </root>

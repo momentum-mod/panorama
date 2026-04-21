@@ -29,7 +29,7 @@
 		<MomHudTimer id="Timer" />
         <HudComparisons id="Comparisons" />
         <MomHudSpeedometer id="Speedometer" />
-        <MomHudKeypressNew id="KeyPress_New"/>
+        <MomHudKeypress id="KeyPress"/>
         <MomHudWeaponSelection id="WeaponSelection" /> 
 		
         <!-- Gamemode Specific HUD elements -->
@@ -60,7 +60,6 @@
         <HudHintText id="HudHintText" /> <!-- TODO: not in customizer, no idea how to even check what this does -->
 
         <!-- Most likely gonna get removed -->
-        <!-- <MomHudKeyPress id="KeyPress" /> OLD HUD - REMOVE-->
 		<!-- <HudBoneCounts id="BoneCount" /> TODO: HudTopCenter, not in customizer, probably gonna get nuked -->
         <!-- <MomHudStrafeSync id="StrafeSync" /> This is broken and probably not worth fixing --> 
 

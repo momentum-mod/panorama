@@ -26,7 +26,7 @@ declare interface PanelTagNameMap {
 	MomHudStrafeTrainer: MomHudStrafeTrainer;
 	MomHudPowerupTimer: MomHudPowerupTimer;
 	MomHudSafeguardIndicator: MomHudSafeguardIndicator;
-	MomHudKeypressNew: MomHudKeypressNew;
+	MomHudKeypress: MomHudKeypress;
 	ToastContainer: ToastContainer;
 	ToastGeneric: ToastGeneric;
 	Gallery: Gallery;
@@ -91,5 +91,5 @@ UiToolkitAPI.RegisterHUDPanel2d('MomHudPowerupTimer', 'file://{resources}/layout
 declare interface MomHudSafeguardIndicator extends AbstractHudPanel<'MomHudSafeguardIndicator'> {}
 UiToolkitAPI.RegisterHUDPanel2d('MomHudSafeguardIndicator', 'file://{resources}/layout/hud/safeguard-indicator.xml');
 
-declare interface MomHudKeypressNew extends AbstractHudPanel<'MomHudKeypressNew'> {}
-UiToolkitAPI.RegisterHUDPanel2d('MomHudKeypressNew', 'file://{resources}/layout/hud/keypress_new.xml');
+declare interface MomHudKeypress extends AbstractHudPanel<'MomHudKeypress'> {}
+UiToolkitAPI.RegisterHUDPanel2d('MomHudKeypress', 'file://{resources}/layout/hud/key-press.xml');
