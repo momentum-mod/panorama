@@ -37,13 +37,6 @@ interface ComponentLayout {
 
 export interface HudLayout {
 	components: Record<string, ComponentLayout>;
-	settings: {
-		selectOnHover: boolean;
-		selectedBorder: boolean;
-		enableGrid: boolean;
-		gridSize: number;
-		enableSnapping: boolean;
-	};
 }
 
 enum Axis {
@@ -366,12 +359,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		activeComponentSettings: $<Panel>('#ActiveComponentSettings')!,
 		activeComponentSettingsList: $<Panel>('#ActiveComponentSettingsList')!,
 		resizeKnobs: $<Panel>('#ResizeKnobs')!,
-		grid: $.GetContextPanel().GetParent()!.FindChildTraverse('HudCustomizerGrid')!,
-		selectedBorder: $<ToggleButton>('#SelectedBorder')!,
-		selectOnHoverToggle: $<ToggleButton>('#SelectOnHover')!,
-		gridToggle: $<ToggleButton>('#GridToggle')!,
-		gridSize: $<NumberEntry>('#GridSize')!,
-		snappingToggle: $<ToggleButton>('#SnappingToggle')!
+		grid: $.GetContextPanel().GetParent()!.FindChildTraverse('HudCustomizerGrid')!
 	};
 
 	components: Record<string, Component> = {};
@@ -388,10 +376,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 	dragMode?: DragMode;
 
-	selectedBorder: boolean = undefined!;
-	selectOnHover: boolean = undefined!;
 	gridSize: number = undefined!;
-	enableGrid: boolean = undefined!;
 	enableSnapping: boolean = undefined!;
 
 	layout?: HudLayout;
@@ -402,7 +387,48 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			dragPanel: $('#CustomizerSettingsHeader')!,
 			resizeY: false,
 			resizeX: false,
-			canDisabled: false
+			canDisabled: false,
+			dynamicStyles: {
+				selectedBorder: {
+					name: 'Enable Selected Component Border',
+					type: CustomizerPropertyType.CHECKBOX,
+					callbackFunc: (_, value) => {
+						this.panels.dragPanel.SetHasClass('hud-customizer-dragpanel__selected-border', value);
+					}
+				},
+				selectOnHover: {
+					name: 'Select Component On Hover',
+					type: CustomizerPropertyType.CHECKBOX,
+					callbackFunc: (_, value) => {
+						this.toggleSelectOnHover(value);
+					}
+				},
+				enableGrid: {
+					name: 'Enable Grid',
+					type: CustomizerPropertyType.CHECKBOX,
+					children: [{ styleID: 'gridSize', showWhen: true }],
+					callbackFunc: (_, value) => {
+						this.panels.grid.SetHasClass('hud-customizer-grid--enabled', value);
+						this.createGridLines(this.gridSize);
+					}
+				},
+				gridSize: {
+					name: 'Grid Size',
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					callbackFunc: (_, value) => {
+						this.gridSize = value;
+						this.createGridLines(this.gridSize);
+					},
+					settingProps: { min: 4, max: 12 }
+				},
+				enableSnapping: {
+					name: 'Enable Snapping',
+					type: CustomizerPropertyType.CHECKBOX,
+					callbackFunc: (_, value) => {
+						this.enableSnapping = value;
+					}
+				}
+			}
 		});
 
 		// Registers the *internal* variant of this event -- HudCustomizer_OpenedInternal is dispatched first and lets
@@ -433,21 +459,11 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		this.layout = this.panels.customizer.getLayout();
 		this.defaultLayout = this.panels.customizer.getDefaultLayout();
 
-		this.selectedBorder =
-			this.layout?.settings?.selectedBorder ?? this.defaultLayout?.settings?.selectedBorder ?? true;
+		const settings = this.layout?.components?.CustomizerSettings?.dynamicStyles;
+		const defaultSettings = this.defaultLayout?.components?.CustomizerSettings?.dynamicStyles;
 
-		this.selectOnHover =
-			this.layout?.settings?.selectOnHover ?? this.defaultLayout?.settings?.selectOnHover ?? false;
-
-		this.gridSize = this.layout?.settings?.gridSize ?? this.defaultLayout?.settings?.gridSize ?? 5;
-		this.panels.gridSize.value = this.gridSize;
-
-		this.enableGrid = this.layout?.settings?.enableGrid ?? this.defaultLayout?.settings?.enableGrid ?? true;
-		this.panels.gridToggle.checked = this.enableGrid;
-
-		this.enableSnapping =
-			this.layout?.settings?.enableSnapping ?? this.defaultLayout?.settings?.enableSnapping ?? true;
-		this.panels.snappingToggle.checked = this.enableSnapping;
+		this.gridSize = settings?.gridSize ?? defaultSettings?.gridSize ?? 5;
+		this.enableSnapping = settings?.enableSnapping ?? defaultSettings?.enableSnapping ?? true;
 
 		this.panels.activeComponentSettings.visible = false;
 
@@ -488,13 +504,6 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		// TODO: Check we don't potentially lose data if a component fails to register once, which would
 		// cause previous data to get wiped.
 		const saveData: HudLayout = {
-			settings: {
-				selectedBorder: this.selectedBorder,
-				selectOnHover: this.selectOnHover,
-				gridSize: this.gridSize,
-				enableGrid: this.enableGrid,
-				enableSnapping: this.enableSnapping
-			},
 			components: {}
 		};
 
@@ -511,12 +520,6 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			throw new Error("HudCustomizer: Tried to enable editing, but we weren't loaded!");
 		}
 
-		if (this.selectOnHover) {
-			this.toggleSelectOnHover(true);
-		}
-
-		this.createGridLines();
-		this.updateGridVisibility();
 		this.createResizeKnobs();
 
 		this.activeComponent ??= this.components[Object.keys(this.components)[0]];
@@ -526,10 +529,6 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 	}
 
 	disableEditing(): void {
-		if (this.selectOnHover) {
-			this.toggleSelectOnHover(false);
-		}
-
 		if (this.dragStartHandle) {
 			$.UnregisterEventHandler('DragStart', this.panels.dragPanel, this.dragStartHandle);
 		}
@@ -589,17 +588,17 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 					() => {}
 				)
 			);
-			if (component.properties.canDisabled !== false) {
-				const visButton = $.CreatePanel('ToggleButton', right, `${id}VisButton`, {
-					class: 'checkbox hud-customizer-settings__checkbox hud-customizer-settings__component__checkbox'
-				});
-				visButton.checked = component.enabled;
-				visButton.SetPanelEvent('onmouseover', () =>
-					UiToolkitAPI.ShowTextTooltip(`${id}VisButton`, 'Toggle Visibility')
-				);
-				visButton.SetPanelEvent('onmouseout', () => UiToolkitAPI.HideTextTooltip());
-				visButton.SetPanelEvent('onactivate', () => (component.enabled = visButton.checked));
-			}
+
+			const visButton = $.CreatePanel('ToggleButton', right, `${id}VisButton`, {
+				class: 'checkbox hud-customizer-settings__checkbox hud-customizer-settings__component__checkbox'
+			});
+			visButton.checked = component.enabled;
+			visButton.SetPanelEvent('onmouseover', () =>
+				UiToolkitAPI.ShowTextTooltip(`${id}VisButton`, 'Toggle Visibility')
+			);
+			visButton.SetPanelEvent('onmouseout', () => UiToolkitAPI.HideTextTooltip());
+			visButton.SetPanelEvent('onactivate', () => (component.enabled = visButton.checked));
+			visButton.enabled = component.properties.canDisabled ?? true;
 		}
 
 		this.panels.gamemodeComponentsContainer.SetHasClass(
@@ -628,8 +627,6 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		this.updateActiveComponentOverlayPosition();
 		this.updateActiveComponentSettings();
 		this.updateActiveComponentDialogVars();
-
-		this.panels.overlay.SetHasClass('hud-customizer-overlay--selected-border', this.selectedBorder);
 
 		// CSS handles visibility of appropriate knobs based on this
 		this.panels.resizeKnobs.SetHasClass(
@@ -913,7 +910,6 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 					break;
 				}
 
-				// TODO: More generic DROPDOWN version that takes array of entries
 				case CustomizerPropertyType.FONT_PICKER: {
 					panel.LoadLayoutSnippet('dynamic-fontpicker');
 					panel.SetDialogVariable('name', dynamicStyle.properties.name);
@@ -922,7 +918,8 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 					for (const font of this.fonts) {
 						const panel = $.CreatePanel('Label', dropdown, font);
 						panel.text = font;
-						panel.style.fontFamily = font;
+						// Disabled because it causes extreme lag on linux ( can't test windows )
+						// panel.style.fontFamily = font;
 						dropdown.AddOption(panel);
 					}
 
@@ -1151,7 +1148,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 	handleMoveSnapping(): void {
 		if (!this.activeComponent) return;
 
-		const shouldSnap = this.panels.snappingToggle.checked;
+		const shouldSnap = this.enableSnapping;
 
 		for (const axis of Axes) {
 			if (axis === Axis.X && this.activeComponent.properties.moveX === false) continue;
@@ -1166,7 +1163,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			const centerPos = panelPos + panelSize / 2;
 			const centerGridline = this.gridlines[axis][Math.floor(this.gridlines[axis].length / 2)];
 			const centerDist = Math.abs(centerGridline.offset - centerPos);
-			if (centerDist <= CENTER_SNAPPING_THRESHOLD * gridGapLength) {
+			if (shouldSnap && centerDist <= CENTER_SNAPPING_THRESHOLD * gridGapLength) {
 				this.activeComponent[axis === Axis.X ? 'offsetX' : 'offsetY'] = centerGridline.offset - panelSize / 2;
 				this.setActiveGridline(axis, centerGridline);
 				continue;
@@ -1271,7 +1268,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 	handleResizeSnapping(): void {
 		if (!this.activeComponent || this.dragMode === undefined) return;
 
-		const shouldSnap = this.panels.snappingToggle.checked;
+		const shouldSnap = this.enableSnapping;
 
 		const [resizeX, resizeY] = this.ResizeVectors[this.dragMode] ?? [0, 0];
 		const [knobX, knobY] = LayoutUtil.getPosition(this.panels.dragResizeKnob);
@@ -1342,10 +1339,10 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		}
 	}
 
-	createGridLines(): void {
+	createGridLines(gridSize: number): void {
 		this.panels.grid.RemoveAndDeleteChildren();
 
-		const numXLines = 2 ** this.gridSize;
+		const numXLines = 2 ** gridSize;
 		const numYLines = Math.floor(numXLines * (9 / 16));
 
 		this.gridlines = [[], []];
@@ -1383,22 +1380,6 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		}
 	}
 
-	updateGridVisibility(): void {
-		const enabled = this.panels.gridToggle.checked;
-		this.panels.grid.SetHasClass('hud-customizer-grid--enabled', enabled);
-		this.panels.gridSize.enabled = enabled;
-		this.panels.snappingToggle.enabled = enabled;
-	}
-
-	updateGridSize(): void {
-		const newSize = this.panels.gridSize.value;
-
-		if (newSize !== this.gridSize) {
-			this.gridSize = newSize;
-			this.createGridLines();
-		}
-	}
-
 	getGridGapLength(axis: Axis): number {
 		return (axis === Axis.X ? MAX_X_POS : MAX_Y_POS) / this.gridlines[axis].length;
 	}
@@ -1431,16 +1412,6 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 				this.resizeKnobs[dir] = knob;
 			});
-	}
-
-	toggleSelectedBorder(): void {
-		this.selectedBorder = this.panels.selectedBorder.checked;
-		this.panels.overlay.SetHasClass('hud-customizer-overlay--selected-border', this.selectedBorder);
-	}
-
-	updateSelectOnHover(): void {
-		this.selectOnHover = this.panels.selectOnHoverToggle.checked;
-		this.toggleSelectOnHover(this.selectOnHover);
 	}
 }
 

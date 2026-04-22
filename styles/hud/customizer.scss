@@ -78,6 +78,7 @@ $input-background-hover: rgb(110, 110, 110);
 		background-color: rgba(0, 0, 0, 0.5);
 		padding: 4px 8px;
 		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+		margin-bottom: 5px;
 
 		&__title {
 			font-family: $font-monospace;
@@ -468,10 +469,6 @@ $input-background-hover: rgb(110, 110, 110);
 		margin: 32px;
 		transition: background-color 0.1s ease-in-out 0s;
 
-		.hud-customizer-overlay--selected-border {
-			border-style: solid;
-		}
-
 		.hud-customizer-overlay--dragging & {
 			animation-name: hud-customizer-overlay-blink;
 			animation-duration: 2s;
@@ -606,6 +603,12 @@ $input-background-hover: rgb(110, 110, 110);
 
 .hud-customizer-dragpanel {
 	cursor: size-all;
+
+	&__selected-border {
+		border-style: solid;
+		border-width: 1px;
+		border-color: black;
+	}
 }
 
 .dynamic-gradientpicker__container {

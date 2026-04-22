@@ -82,24 +82,7 @@
 				<Label class="hud-customizer-settings__header__title" text="#HudCustomizer_Menu" />
 				<Image class="hud-customizer-settings__header__close" onactivate="HudCustomizerHandler.toggle(false)" src="file://{images}/close.svg" />
 			</Panel>
-			<Panel class="hud-customizer-settings__global">
-				<ToggleButton id="SelectedBorder" class="checkbox hud-customizer-settings__row hud-customizer-settings__checkbox" onactivate="HudCustomizerHandler.toggleSelectedBorder()">
-					<Label class="hud-customizer-settings__setting-label" text="Enable Selected Component Border" />
-				</ToggleButton>
-				<ToggleButton id="SelectOnHover" class="checkbox hud-customizer-settings__row hud-customizer-settings__checkbox" onactivate="HudCustomizerHandler.updateSelectOnHover()">
-					<Label class="hud-customizer-settings__setting-label" text="Select Component on Hover" />
-				</ToggleButton>
-				<ToggleButton id="GridToggle" class="checkbox hud-customizer-settings__row hud-customizer-settings__checkbox" onactivate="HudCustomizerHandler.updateGridVisibility()">
-					<Label class="hud-customizer-settings__setting-label" text="Enable Grid" />
-				</ToggleButton>
-				<Panel class="hud-customizer-settings__row">
-					<Label class="hud-customizer-settings__setting-label" text="Grid Size" />
-					<NumberEntry id="GridSize" class="hud-customizer-settings__numberentry" min="4" max="12" onvaluechanged="HudCustomizerHandler.updateGridSize()" />
-				</Panel>
-				<ToggleButton id="SnappingToggle" class="checkbox hud-customizer-settings__checkbox hud-customizer-settings__row">
-					<Label class="hud-customizer-settings__setting-label" text="Enable Snapping" />
-				</ToggleButton>
-			</Panel>
+            
             <Panel id="GeneralComponentsContainer" class="hud-customizer-settings__component-list-container">
                 <Panel class="hud-customizer-settings__active">
                     <Label class="hud-customizer-settings__active__header__name" text="General HUD" />
