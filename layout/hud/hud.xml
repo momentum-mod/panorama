@@ -53,7 +53,7 @@
 		
 
         <!-- NEEDS C++ WORK -->
-        <MomHudSpectate id="Spectator" /> <!-- TODO: backbuffer issues need to be resolved to finish this -->
+       
 		<HudStaticMenu id="StaticMenu" /> <!-- TODO: not in customizer, needs c++ work -->
 		
         <!-- No idea -->
@@ -74,6 +74,9 @@
 		<Panel id="ZoningContainer" hittestchildren="true">
 			<ZoneMenu id="ZoneMenu" hittest="true" hittestchildren="true" /> <!-- TODO: standalone panel, not in customizer -->
 		</Panel>
+
+
+        <MomHudSpectate id="Spectator" />
 
 		<!-- This container is here so we can move the leaderboard in and out of it during the end-of-match sequence -->
 		<!-- TODO: HudLeaderboards had w-full h-full removed before -->

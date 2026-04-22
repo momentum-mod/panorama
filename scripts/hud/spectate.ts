@@ -22,7 +22,7 @@ class HudSpectateHandler implements OnPanelLoad {
 			resizeX: false,
 			resizeY: false,
 			moveX: false,
-			moveY: false
+			moveY: true
 		});
 	}
 
