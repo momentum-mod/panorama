@@ -401,7 +401,8 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		registerHUDCustomizerComponent(this.panels.settings, {
 			dragPanel: $('#CustomizerSettingsHeader')!,
 			resizeY: false,
-			resizeX: false
+			resizeX: false,
+			canDisabled: false
 		});
 
 		// Registers the *internal* variant of this event -- HudCustomizer_OpenedInternal is dispatched first and lets
@@ -588,16 +589,17 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 					() => {}
 				)
 			);
-
-			const visButton = $.CreatePanel('ToggleButton', right, `${id}VisButton`, {
-				class: 'checkbox hud-customizer-settings__checkbox hud-customizer-settings__component__checkbox'
-			});
-			visButton.checked = component.enabled;
-			visButton.SetPanelEvent('onmouseover', () =>
-				UiToolkitAPI.ShowTextTooltip(`${id}VisButton`, 'Toggle Visibility')
-			);
-			visButton.SetPanelEvent('onmouseout', () => UiToolkitAPI.HideTextTooltip());
-			visButton.SetPanelEvent('onactivate', () => (component.enabled = visButton.checked));
+			if (component.properties.canDisabled !== false) {
+				const visButton = $.CreatePanel('ToggleButton', right, `${id}VisButton`, {
+					class: 'checkbox hud-customizer-settings__checkbox hud-customizer-settings__component__checkbox'
+				});
+				visButton.checked = component.enabled;
+				visButton.SetPanelEvent('onmouseover', () =>
+					UiToolkitAPI.ShowTextTooltip(`${id}VisButton`, 'Toggle Visibility')
+				);
+				visButton.SetPanelEvent('onmouseout', () => UiToolkitAPI.HideTextTooltip());
+				visButton.SetPanelEvent('onactivate', () => (component.enabled = visButton.checked));
+			}
 		}
 
 		this.panels.gamemodeComponentsContainer.SetHasClass(

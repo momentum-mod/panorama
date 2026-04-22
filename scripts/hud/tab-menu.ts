@@ -42,6 +42,7 @@ class HudTabMenuHandler {
 			resizeY: false,
 			moveX: false,
 			moveY: false,
+			canDisabled: false,
 			dynamicStyles: {}
 		});
 	}
