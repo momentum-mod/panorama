@@ -1043,7 +1043,6 @@ class KeyPress {
 	}
 
 	onUpdate() {
-		// @ts-expect-error API Types
 		const { physicalButtons, disabledButtons, toggledButtons, forcedButtons } = MomentumInputAPI.GetButtons();
 
 		const getState = (button: Button): ButtonState => {

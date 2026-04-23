@@ -1,7 +1,5 @@
 import { PanelHandler } from 'util/module-helpers';
-import { RegisterHUDPanelForGamemode } from 'util/register-for-gamemodes';
 import { GamemodeCategory, GamemodeCategoryToGamemode } from 'common/web/enums/gamemode.enum';
-import { GamemodeCategories } from 'common/web/maps/gamemodes.map';
 
 import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
 import { splitRgbFromAlpha } from 'util/colors';
@@ -28,15 +26,11 @@ class PowerupTimerHandler {
 	};
 
 	constructor() {
-		RegisterHUDPanelForGamemode({
-			gamemodes: GamemodeCategories.get(GamemodeCategory.DEFRAG),
-			handledEvents: [{ event: 'HudProcessInput', panel: $.GetContextPanel(), callback: () => this.onUpdate() }]
-		});
-
 		registerHUDCustomizerComponent($.GetContextPanel(), {
 			resizeX: false,
 			resizeY: false,
 			gamemode: GamemodeCategoryToGamemode.get(GamemodeCategory.DEFRAG),
+			events: { event: 'HudProcessInput', panel: $.GetContextPanel(), callbackFn: () => this.onUpdate() },
 			dynamicStyles: {
 				font: {
 					name: 'Font',

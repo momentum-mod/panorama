@@ -1,7 +1,6 @@
 import { PanelHandler } from 'util/module-helpers';
 import * as MomMath from 'util/math';
 import { rgbaStringLerp } from 'util/colors';
-import { RegisterHUDPanelForGamemode } from '../util/register-for-gamemodes';
 import { Gamemode, GamemodeCategory, GamemodeCategoryToGamemode } from 'common/web/enums/gamemode.enum';
 import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
 
@@ -75,19 +74,6 @@ class StrafeTrainer {
 	yawRatioHistory: number[];
 
 	constructor() {
-		RegisterHUDPanelForGamemode({
-			gamemodes: [
-				Gamemode.SURF,
-				Gamemode.BHOP,
-				Gamemode.BHOP_HL1,
-				Gamemode.CLIMB_MOM,
-				Gamemode.CLIMB_KZT,
-				Gamemode.CLIMB_16
-			],
-			events: [{ event: 'OnJumpStarted', callback: () => this.updateStats() }],
-			handledEvents: [{ event: 'HudProcessInput', panel: $.GetContextPanel(), callback: () => this.onUpdate() }]
-		});
-
 		registerHUDCustomizerComponent($.GetContextPanel(), {
 			//TODO: Add resizing width, it needs to target a specific panel, not the root
 			resizeX: true,
@@ -98,6 +84,8 @@ class StrafeTrainer {
 				Gamemode.BHOP_HL1,
 				...GamemodeCategoryToGamemode.get(GamemodeCategory.CLIMB)
 			],
+			events: { event: 'HudProcessInput', panel: $.GetContextPanel(), callbackFn: () => this.onUpdate() },
+			unhandledEvents: { event: 'OnJumpStarted', callbackFn: () => this.updateStats() },
 			expectedMinWidth: 300,
 			//TODO: Add generic border, font settings
 			dynamicStyles: {

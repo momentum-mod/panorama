@@ -1,5 +1,4 @@
 import { PanelHandler } from 'util/module-helpers';
-import { RegisterHUDPanelForGamemode } from '../util/register-for-gamemodes';
 import { Gamemode } from 'common/web/enums/gamemode.enum';
 
 import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
@@ -19,20 +18,14 @@ class ConcCookHandler {
 	unfill = true;
 
 	constructor() {
-		RegisterHUDPanelForGamemode({
-			gamemodes: [Gamemode.CONC],
-			events: [
-				{
-					event: 'OnCookUpdate',
-					callback: (time, percentage) => this.onCookUpdate(time, percentage)
-				}
-			]
-		});
-
 		registerHUDCustomizerComponent($.GetContextPanel(), {
 			resizeX: true,
 			resizeY: false,
 			gamemode: Gamemode.CONC,
+			unhandledEvents: {
+				event: 'OnCookUpdate',
+				callbackFn: (time, percentage) => this.onCookUpdate(time, percentage)
+			},
 			dynamicStyles: {
 				countDown: {
 					name: 'Count Down',

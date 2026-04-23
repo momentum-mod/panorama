@@ -1,8 +1,6 @@
 import { PanelHandler } from 'util/module-helpers';
 import { magnitude2D } from 'util/math';
-import { RegisterHUDPanelForGamemode } from 'util/register-for-gamemodes';
 import { GamemodeCategory, GamemodeCategoryToGamemode } from 'common/web/enums/gamemode.enum';
-import { GamemodeCategories } from 'common/web/maps/gamemodes.map';
 
 import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
 import { splitRgbFromAlpha } from 'util/colors';
@@ -67,33 +65,39 @@ class GroundboostHandler {
 	};
 
 	constructor() {
-		RegisterHUDPanelForGamemode({
-			gamemodes: GamemodeCategories.get(GamemodeCategory.DEFRAG),
-			onLoad: () => this.onMapInit(),
-			handledEvents: [
-				{ event: 'HudProcessInput', panel: $.GetContextPanel(), callback: () => this.onHudUpdate() }
-			]
-		});
-
-		$.RegisterForUnhandledEvent('HudCustomizer_Opened', () => {
-			this.dummyGB = true;
-			this.dummyGBColors = {
-				meterColor: MeterColor.SLICK,
-				labelColor: LabelColor.GAIN
-			};
-
-			this.startDummyGB();
-		});
-
-		$.RegisterForUnhandledEvent('HudCustomizer_Closed', () => {
-			this.dummyGB = false;
-			this.fadeOut();
-		});
-
 		registerHUDCustomizerComponent($.GetContextPanel(), {
 			resizeX: false,
 			resizeY: false,
 			gamemode: GamemodeCategoryToGamemode.get(GamemodeCategory.DEFRAG),
+			events: {
+				event: 'HudProcessInput',
+				panel: $.GetContextPanel(),
+				callbackFn: () => this.onHudUpdate()
+			},
+			unhandledEvents: [
+				{
+					event: 'LevelInitPostEntity',
+					callbackFn: () => this.onMapInit()
+				},
+				{
+					event: 'HudCustomizer_Opened',
+					callbackFn: () => {
+						this.dummyGB = true;
+						this.dummyGBColors = {
+							meterColor: MeterColor.SLICK,
+							labelColor: LabelColor.GAIN
+						};
+						this.startDummyGB();
+					}
+				},
+				{
+					event: 'HudCustomizer_Closed',
+					callbackFn: () => {
+						this.dummyGB = false;
+						this.fadeOut();
+					}
+				}
+			],
 			dynamicStyles: {
 				//TODO: For whatever reason the panel is white after resizing and needs to be moved to regain proper color
 				size: {

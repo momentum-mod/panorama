@@ -30,14 +30,17 @@ class ConcEntitiesHandler {
 	container = $('#ConcEntPanelsContainer');
 
 	constructor() {
-		$.RegisterEventHandler('OnConcEntityPanelThink', this.container, () => this.onEntPanelThink());
-
 		registerHUDCustomizerComponent($.GetContextPanel(), {
 			resizeX: false,
 			resizeY: false,
 			moveX: false,
 			moveY: false,
 			gamemode: Gamemode.CONC,
+			events: {
+				event: 'OnConcEntityPanelThink',
+				panel: this.container,
+				callbackFn: () => this.onEntPanelThink()
+			},
 			dynamicStyles: {
 				countDown: {
 					name: 'Count Down',

@@ -12,11 +12,6 @@ class MomHudAmmoHandler {
 	testAmmoCount: string;
 
 	constructor() {
-		$.RegisterForUnhandledEvent('LevelInitPostEntity', () => this.restoreRealAmmo());
-
-		$.RegisterForUnhandledEvent('HudCustomizer_Opened', () => this.createDummyAmmo());
-		$.RegisterForUnhandledEvent('HudCustomizer_Closed', () => this.restoreRealAmmo());
-
 		registerHUDCustomizerComponent($.GetContextPanel(), {
 			resizeX: true,
 			resizeY: false,
@@ -25,6 +20,11 @@ class MomHudAmmoHandler {
 				Gamemode.SJ,
 				Gamemode.CONC,
 				...GamemodeCategoryToGamemode.get(GamemodeCategory.DEFRAG)
+			],
+			unhandledEvents: [
+				{ event: 'LevelInitPostEntity', callbackFn: () => this.restoreRealAmmo() },
+				{ event: 'HudCustomizer_Opened', callbackFn: () => this.createDummyAmmo() },
+				{ event: 'HudCustomizer_Closed', callbackFn: () => this.restoreRealAmmo() }
 			],
 			dynamicStyles: {
 				testAmmoCount: {

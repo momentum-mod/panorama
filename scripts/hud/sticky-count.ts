@@ -1,5 +1,4 @@
 import { PanelHandler } from 'util/module-helpers';
-import { RegisterHUDPanelForGamemode } from '../util/register-for-gamemodes';
 import { Gamemode } from 'common/web/enums/gamemode.enum';
 
 import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
@@ -48,29 +47,23 @@ class StickyCountHandler {
 
 	initHandler: number;
 	constructor() {
-		RegisterHUDPanelForGamemode({
-			gamemodes: [Gamemode.SJ],
-			events: [
-				{
-					event: 'OnStickyPanelStateChanged',
-					callback: (stickyPanel, state, prevstate) =>
-						this.onStickyPanelStateChanged(stickyPanel, state, prevstate)
-				}
-			]
-		});
-
-		//THIS IS A HACK FOR INITIALIZING SETTINGS
-		//#StickyCountContainer get populated by C++ with individual .sticky-panel
-		//This happens after load so the panels cannot be targetted by registerHUDCustomizerComponent
-		//initPanels is waiting for the #StickyCountContainer to have 8 children, assigns default values to them and then unregisters itself
-		//In order for default values to initialize registerHUDCustomizerComponent cannot target any panels, it won't call a callback if they don't exist
-		//this.updateStickyPanels() handles updating all settings, ugly but works for now
-		this.initHandler = $.RegisterEventHandler('HudThink', $.GetContextPanel(), () => this.initPanels());
-
 		registerHUDCustomizerComponent($.GetContextPanel(), {
 			resizeX: false,
 			resizeY: false,
 			gamemode: Gamemode.SJ,
+			unhandledEvents: [
+				{
+					event: 'OnStickyPanelStateChanged',
+					callbackFn: (stickyPanel, state) => this.onStickyPanelStateChanged(stickyPanel, state)
+				},
+				//THIS IS A HACK FOR INITIALIZING SETTINGS
+				//#StickyCountContainer get populated by C++ with individual .sticky-panel
+				//This happens after load so the panels cannot be targetted by registerHUDCustomizerComponent
+				//initPanels is waiting for the #StickyCountContainer to have 8 children, assigns default values to them and then unregisters itself
+				//In order for default values to initialize registerHUDCustomizerComponent cannot target any panels, it won't call a callback if they don't exist
+				//this.updateStickyPanels() handles updating all settings, ugly but works for now
+				{ event: 'LevelInitPostEntity', callbackFn: () => this.initPanels() }
+			],
 			//TODO: Add box shadow setting
 			dynamicStyles: {
 				colors: {
@@ -180,8 +173,11 @@ class StickyCountHandler {
 			}
 		});
 	}
-
 	initPanels() {
+		this.initHandler = $.RegisterEventHandler('HudThink', $.GetContextPanel(), () => this.checkForChildren());
+	}
+
+	checkForChildren() {
 		const stickyPanels = this.panels.countContainer.Children();
 		if (stickyPanels.length === 8) {
 			const splitRGBA = splitRgbFromAlpha(StateColors[StickyState.NOSTICKY] as rgbaColor);
@@ -210,7 +206,7 @@ class StickyCountHandler {
 		});
 	}
 
-	onStickyPanelStateChanged(stickyPanel: Panel, state: StickyState, prevstate: StickyState) {
+	onStickyPanelStateChanged(stickyPanel: Panel, state: StickyState) {
 		this.panelStates.set(stickyPanel, state);
 		stickyPanel.style.backgroundColor = StateColors[state] as color;
 	}

@@ -1,7 +1,5 @@
 import { PanelHandler } from 'util/module-helpers';
-import { RegisterHUDPanelForGamemode } from '../util/register-for-gamemodes';
 import { GamemodeCategory, GamemodeCategoryToGamemode } from 'common/web/enums/gamemode.enum';
-import { GamemodeCategories } from 'common/web/maps/gamemodes.map';
 
 import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
 import { splitRgbFromAlpha } from 'util/colors';
@@ -37,17 +35,11 @@ class JumpStatsHandler {
 	efficiencyBuffer: string[];
 
 	constructor() {
-		RegisterHUDPanelForGamemode({
-			gamemodes: GamemodeCategories.get(GamemodeCategory.BHOP),
-			onLoad: () => this.onMapInit(),
-			handledEvents: [{ event: 'OnJumpStarted', panel: this.panels.container, callback: () => this.onJump() }],
-			events: [{ event: 'OnJumpStatsCFGChange', callback: () => this.onConfigChange() }]
-		});
-
 		registerHUDCustomizerComponent($.GetContextPanel(), {
 			resizeX: false,
 			resizeY: false,
 			gamemode: GamemodeCategoryToGamemode.get(GamemodeCategory.BHOP),
+			events: { event: 'OnJumpStarted', panel: this.panels.container, callbackFn: () => this.onJump() },
 			dynamicStyles: {
 				fontStyling: {
 					name: 'Font Styling',

@@ -1,7 +1,5 @@
 import { PanelHandler } from 'util/module-helpers';
-import { RegisterHUDPanelForGamemode } from 'util/register-for-gamemodes';
 import { GamemodeCategory, GamemodeCategoryToGamemode } from 'common/web/enums/gamemode.enum';
-import { GamemodeCategories } from 'common/web/maps/gamemodes.map';
 
 import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
 import { splitRgbFromAlpha } from 'util/colors';
@@ -11,8 +9,6 @@ const Colors = {
 	AIR: 'gradient(linear, 30% 0%, 100% 0%, from(rgba(24, 150, 211, 1)), to(rgba(63, 74, 202, 1)))',
 	GROUND: 'gradient(linear, 30% 0%, 100% 0%, from(rgba(122, 238, 122, 1)), to(rgba(21, 152, 86, 1)))'
 };
-
-const DEFAULT_DELAY = 360;
 
 @PanelHandler()
 class DFJumpHandler {
@@ -28,31 +24,26 @@ class DFJumpHandler {
 	inverseMaxDelay: float;
 
 	constructor() {
-		RegisterHUDPanelForGamemode({
-			gamemodes: GamemodeCategories.get(GamemodeCategory.DEFRAG),
-			onLoad: () => this.onMapInit(),
-			events: [
-				{
-					event: 'DFJumpMaxDelayChanged',
-					callback: (newDelay) => this.setMaxDelay(newDelay)
-				}
-			],
-			handledEvents: [
-				{
-					event: 'DFJumpDataUpdate',
-					panel: this.panels.container,
-					callback: (releaseDelay, pressDelay, totalDelay) =>
-						this.onDFJumpUpdate(releaseDelay, pressDelay, totalDelay)
-				}
-			]
-		});
-
 		registerHUDCustomizerComponent($.GetContextPanel(), {
 			resizeX: false,
 			resizeY: false,
 			gamemode: GamemodeCategoryToGamemode.get(GamemodeCategory.DEFRAG),
+			events: {
+				event: 'DFJumpDataUpdate',
+				panel: this.panels.container,
+				callbackFn: (releaseDelay, pressDelay, totalDelay) =>
+					this.onDFJumpUpdate(releaseDelay, pressDelay, totalDelay)
+			},
 			//TODO: Add border styles
 			dynamicStyles: {
+				maxDelay: {
+					name: 'Jump Max Delay',
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					callbackFunc: (_, value) => {
+						this.setMaxDelay(value);
+					},
+					settingProps: { min: 1, max: 360 }
+				},
 				showLabels: {
 					name: 'Show Labels',
 					type: CustomizerPropertyType.CHECKBOX,
@@ -179,10 +170,6 @@ class DFJumpHandler {
 		});
 	}
 
-	onMapInit() {
-		this.initializeSettings();
-	}
-
 	onDFJumpUpdate(releaseDelay: float, pressDelay: float, totalDelay: float) {
 		const releaseRatio = releaseDelay * this.inverseMaxDelay;
 		const pressRatio = Math.abs(pressDelay) * this.inverseMaxDelay;
@@ -197,12 +184,8 @@ class DFJumpHandler {
 		this.panels.totalLabel.text = totalDelay.toFixed(0);
 	}
 
-	setMaxDelay(newDelay: float) {
-		this.inverseMaxDelay = 1 / (newDelay ?? DEFAULT_DELAY);
-	}
-
-	initializeSettings() {
-		this.setMaxDelay(GameInterfaceAPI.GetSettingInt('mom_hud_df_jump_max_delay'));
+	setMaxDelay(newDelay: number) {
+		this.inverseMaxDelay = 1 / newDelay;
 	}
 
 	getAdjustedTextShadow(color: rgbaColor) {
