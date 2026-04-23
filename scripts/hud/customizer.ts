@@ -35,9 +35,7 @@ interface ComponentLayout {
 	dynamicStyles?: Record<StyleID, any>;
 }
 
-export interface HudLayout {
-	components: Record<string, ComponentLayout>;
-}
+export interface HudLayout extends Record<string, ComponentLayout> {}
 
 enum Axis {
 	X = 0,
@@ -131,8 +129,8 @@ class Component {
 		this.id = panel.id;
 
 		// If we add new components after release, use layout from default for any missing components
-		const userComponentLayout = Component.userLayout?.components?.[this.id];
-		const defaultComponentLayout = Component.defaultLayout.components?.[this.id];
+		const userComponentLayout = Component.userLayout[this.id];
+		const defaultComponentLayout = Component.defaultLayout[this.id];
 		const componentLayout = userComponentLayout ?? defaultComponentLayout;
 
 		if (!componentLayout)
@@ -276,7 +274,7 @@ class Component {
 	/** Reset a component to its original state. */
 	// TODO: how tf will this work with groups lol
 	reset(): void {
-		const defaultComponentLayout = Component.defaultLayout.components?.[this.id];
+		const defaultComponentLayout = Component.defaultLayout[this.id];
 		if (!defaultComponentLayout)
 			throw new Error(`HudCustomizer: Could not load default layout for HUD customizer component ${this.id}`);
 
@@ -362,6 +360,8 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		grid: $.GetContextPanel().GetParent()!.FindChildTraverse('HudCustomizerGrid')!
 	};
 
+	ready = false;
+
 	components: Record<string, Component> = {};
 	gridlines: GridlineForAxis = [[], []];
 	activeComponent?: Component | undefined;
@@ -444,6 +444,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		$.RegisterForUnhandledEvent('MapCache_MapLoad' as any, () => {
 			// Once HUD is fully initialized, let components awaiting registration know to load component
 			$.DispatchEvent('HudCustomizer_Ready');
+			this.ready = true;
 		});
 
 		// TODO: This was just for case of someone changin layout via file and wanting to update ingame.
@@ -458,12 +459,6 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 		this.layout = this.panels.customizer.getLayout();
 		this.defaultLayout = this.panels.customizer.getDefaultLayout();
-
-		const settings = this.layout?.components?.CustomizerSettings?.dynamicStyles;
-		const defaultSettings = this.defaultLayout?.components?.CustomizerSettings?.dynamicStyles;
-
-		this.gridSize = settings?.gridSize ?? defaultSettings?.gridSize ?? 5;
-		this.enableSnapping = settings?.enableSnapping ?? defaultSettings?.enableSnapping ?? true;
 
 		this.panels.activeComponentSettings.visible = false;
 
@@ -503,12 +498,10 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 	save(): void {
 		// TODO: Check we don't potentially lose data if a component fails to register once, which would
 		// cause previous data to get wiped.
-		const saveData: HudLayout = {
-			components: {}
-		};
+		const saveData: HudLayout = {};
 
 		for (const [id, component] of Object.entries(this.components)) {
-			saveData.components[id] = component.getLayout();
+			saveData[id] = component.getLayout();
 		}
 
 		// Serialization and filesystem stuff done in C++.
@@ -534,7 +527,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		}
 
 		// Customizer closing, write to disk
-		this.save();
+		if (this.ready) this.save();
 	}
 
 	/**
