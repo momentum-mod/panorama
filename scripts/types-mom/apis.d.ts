@@ -326,6 +326,17 @@ declare namespace MomentumTimerAPI {
 	function GetSavedZoneStatus(): import('pages/zoning/zoning').savedZoneStatus;
 }
 
+declare namespace MomentumInputAPI {
+	interface KeypressButtons {
+		physicalButtons: int32;
+		toggledButtons: int32;
+		disabledButtons: int32;
+		forcedButtons: int32;
+	}
+
+	function GetButtons(): KeypressButtons;
+}
+
 declare namespace MapCacheAPI {
 	interface UserTrackData {
 		completed: boolean;
