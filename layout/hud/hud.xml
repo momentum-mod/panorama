@@ -84,6 +84,8 @@
 			<HudTabMenu id="TabMenu" hittest="true" />
 		</Panel>
 		
+
+        <!-- This must be placed after all panels registered with hud customizer -->
 		<HudCustomizer />
 
 		<!-- Make sure these are at the bottom to get the z-order right -->

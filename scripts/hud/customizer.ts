@@ -108,6 +108,9 @@ class Component {
 	private static userLayout: HudLayout | undefined;
 	private static defaultLayout: HudLayout;
 
+	static referencedValues: Record<string, any> = {};
+	static referencedValueListeners: Record<string, Set<string>> = {};
+
 	static {
 		Component.userLayout = $.GetContextPanel<HudCustomizer>().getLayout();
 		Component.defaultLayout = $.GetContextPanel<HudCustomizer>().getDefaultLayout();
@@ -165,6 +168,14 @@ class Component {
 					properties: styleProps as DynamicStyleProperties,
 					value
 				};
+
+				if (String(value).startsWith('$')) {
+					const refKey = value.slice(1);
+					if (!Component.referencedValueListeners[refKey]) {
+						Component.referencedValueListeners[refKey] = new Set();
+					}
+					Component.referencedValueListeners[refKey].add(this.id);
+				}
 
 				for (const { event, panel, callback } of styleProps.events ?? []) {
 					// Register provided callbacks events requested on the given panel. When that event fires, we
@@ -320,24 +331,35 @@ class Component {
 			targetPanels.push(this.panel);
 		}
 
-		if (style.properties.styleProperty) {
-			// We have extremely strong types in the common/hud-customizer.ts stuff to constrain dynamicStyles to
-			// valid combinations. Proving to the TS that everything is valid here is a pain though, not worth it.
-			const styleValue = style.properties.valueFn?.(style.value as any) ?? style.value;
+		let styleValue = style.value;
+		if (String(styleValue).startsWith('$')) {
+			const refKey = styleValue.slice(1);
+			styleValue = Component.referencedValues?.[refKey] ?? undefined;
+		}
 
-			if (styleValue !== undefined) {
+		if (style.properties.styleProperty && styleValue !== undefined) {
+			const modifiedValue = style.properties.valueFn?.(styleValue) ?? styleValue;
+
+			if (modifiedValue !== undefined) {
 				for (const panel of targetPanels) {
-					(panel as any).style[style.properties.styleProperty] = styleValue;
+					(panel as any).style[style.properties.styleProperty] = modifiedValue;
 					// @ts-expect-error wadsasdasd
 					panel.MarkStylesDirty(true);
 				}
 			}
 		}
 
-		if (style.properties.callbackFunc) {
+		if (style.properties.callbackFunc && styleValue !== undefined) {
 			for (const panel of targetPanels) {
-				style.properties.callbackFunc(panel, style.value as any);
+				style.properties.callbackFunc(panel, styleValue);
 			}
+		}
+	}
+
+	refreshDynamicStyles(): void {
+		if (!this.dynamicStyles) return;
+		for (const style of Object.values(this.dynamicStyles)) {
+			this.applyDynamicStyle(style);
 		}
 	}
 }
@@ -360,7 +382,8 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		grid: $.GetContextPanel().GetParent()!.FindChildTraverse('HudCustomizerGrid')!
 	};
 
-	ready = false;
+	//Makes sure layout isn't saved before hud is initialized
+	ready: boolean;
 
 	components: Record<string, Component> = {};
 	gridlines: GridlineForAxis = [[], []];
@@ -427,6 +450,79 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 					callbackFunc: (_, value) => {
 						this.enableSnapping = value;
 					}
+				},
+				defaultStyles: {
+					name: 'Default Styles',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [{ styleID: 'fontStyles' }, { styleID: 'colors' }]
+				},
+				fontStyles: {
+					name: 'Font Styles',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [{ styleID: 'fontPrimary' }, { styleID: 'fontSecondary' }]
+				},
+				fontPrimary: {
+					name: 'Primary',
+					type: CustomizerPropertyType.FONT_PICKER,
+					callbackFunc: (_, value) => {
+						this.updateReferencedValue('fontPrimary', value);
+					}
+				},
+				fontSecondary: {
+					name: 'Secondary',
+					type: CustomizerPropertyType.FONT_PICKER,
+					callbackFunc: (_, value) => {
+						this.updateReferencedValue('fontSecondary', value);
+					}
+				},
+				colors: {
+					name: 'Colors',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [
+						{ styleID: 'gainColor' },
+						{ styleID: 'lossColor' },
+						{ styleID: 'progressBarBackgroundGradient' },
+						{ styleID: 'progressBarFillGradient' },
+						{ styleID: 'progressBarBlockedGradient' }
+					]
+				},
+				gainColor: {
+					name: 'Gain',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					callbackFunc: (_, value) => {
+						this.updateReferencedValue('gainColor', value);
+					}
+				},
+				lossColor: {
+					name: 'Loss',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					callbackFunc: (_, value) => {
+						this.updateReferencedValue('lossColor', value);
+					}
+				},
+				progressBarBackgroundGradient: {
+					name: 'Bar Gradient',
+					type: CustomizerPropertyType.GRADIENT_PICKER,
+					callbackFunc: (_, value) => {
+						this.updateReferencedValue('progressBarBackgroundGradient', value);
+					}
+				},
+				progressBarFillGradient: {
+					name: 'Bar Fill Gradient',
+					type: CustomizerPropertyType.GRADIENT_PICKER,
+					callbackFunc: (_, value) => {
+						this.updateReferencedValue('progressBarFillGradient', value);
+					}
+				},
+				progressBarBlockedGradient: {
+					name: 'Bar Blocked Gradient',
+					type: CustomizerPropertyType.GRADIENT_PICKER,
+					callbackFunc: (_, value) => {
+						this.updateReferencedValue('progressBarBlockedGradient', value);
+					}
 				}
 			}
 		});
@@ -453,6 +549,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		// 	this.load();
 		// });
 
+		this.ready = false;
 		this.gridlines = [[], []];
 		this.activeGridlines = [undefined, undefined];
 		this.activeComponent = undefined;
@@ -468,6 +565,23 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 		// Display editing in case was enabled before a reload -- state is convar-based so persists across HUD reloads.
 		this.panels.customizer.toggleUI(false);
+	}
+
+	updateReferencedValue(refKey: string, newValue: any): void {
+		// 1. Update the static store
+		Component.referencedValues[refKey] = newValue;
+
+		// 2. Find all component IDs listening to this key
+		const listeners = Component.referencedValueListeners[refKey];
+		if (!listeners) return;
+
+		// 3. Loop through registered components and trigger refresh
+		listeners.forEach((componentID) => {
+			const component = this.components[componentID];
+			if (component) {
+				component.refreshDynamicStyles();
+			}
+		});
 	}
 
 	/**
@@ -701,6 +815,14 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 	updateActiveComponentSettings(): void {
 		this.panels.activeComponentSettingsList.RemoveAndDeleteChildren();
 
+		const resolveValue = (val: any) => {
+			if (typeof val === 'string' && val.startsWith('$')) {
+				const refKey = val.slice(1);
+				return Component.referencedValues[refKey];
+			}
+			return val;
+		};
+
 		const component = this.activeComponent;
 
 		if (!component || !component.dynamicStyles || Object.keys(component.dynamicStyles).length === 0) {
@@ -764,7 +886,9 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 						Object.assign(numberEntry, dynamicStyle.properties.settingProps);
 					}
 
-					numberEntry.value = (component.dynamicStyles[styleID]?.value as number) ?? 0;
+					const initialValue = resolveValue(component.dynamicStyles[styleID]?.value);
+					numberEntry.value = (initialValue as number) ?? 0;
+
 					numberEntry.SetPanelEvent('onvaluechanged', () => {
 						component.setDynamicStyle(styleID, numberEntry.value);
 						updateChildVisibility(styleID, numberEntry.value);
@@ -783,7 +907,8 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 						Object.assign(checkbox, dynamicStyle.properties.settingProps);
 					}
 
-					checkbox.checked = (component.dynamicStyles[styleID]?.value as boolean) ?? false;
+					const initialValue = resolveValue(component.dynamicStyles[styleID]?.value);
+					checkbox.checked = (initialValue as boolean) ?? false;
 
 					checkbox.SetPanelEvent('onactivate', () => {
 						component.setDynamicStyle(styleID, checkbox.checked);
@@ -843,7 +968,8 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 						dropdown.AddOption(optionPanel);
 					}
 
-					dropdown.SetSelected(component.dynamicStyles[styleID]?.value as string);
+					const initialValue = resolveValue(component.dynamicStyles[styleID]?.value);
+					dropdown.SetSelected(initialValue as string);
 
 					dropdown.SetPanelEvent('oninputsubmit', () => {
 						const value = dropdown.GetSelected().id;
@@ -862,8 +988,8 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 					colorDisplay.text = dynamicStyle.properties.name;
 					// We use hex for display here since it's more compact, but internally is rgba
 					// since that's what PanoramaTypeToV8Param<Color> uses, don't want to change that.
-					colorDisplay.color =
-						(component.dynamicStyles[styleID]?.value as rgbaColor) ?? 'rgba(255, 255, 255, 1)';
+					const initialValue = resolveValue(component.dynamicStyles[styleID]?.value);
+					colorDisplay.color = (initialValue as rgbaColor) ?? 'rgba(255, 255, 255, 1)';
 
 					colorDisplay.SetPanelEvent('oncolorchange', () => {
 						const value = colorDisplay.color;
@@ -878,11 +1004,11 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 					panel.LoadLayoutSnippet('dynamic-gradientpicker');
 					panel.SetDialogVariable('name', dynamicStyle.properties.name);
 
-					const gradientValue = component.dynamicStyles[styleID]?.value;
+					const initialValue = resolveValue(component.dynamicStyles[styleID]?.value);
 
 					const startColor = panel.FindChildTraverse<ColorDisplay>('StartColor')!;
 					startColor.text = 'From: ';
-					startColor.color = (gradientValue[0] as rgbaColor) ?? 'rgba(255, 255, 255, 1)';
+					startColor.color = (initialValue[0] as rgbaColor) ?? 'rgba(255, 255, 255, 1)';
 
 					startColor.SetPanelEvent('oncolorchange', () => {
 						const value = [startColor.color, endColor.color];
@@ -892,7 +1018,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 					const endColor = panel.FindChildTraverse<ColorDisplay>('EndColor')!;
 					endColor.text = 'To: ';
-					endColor.color = (gradientValue[1] as rgbaColor) ?? 'rgba(255, 255, 255, 1)';
+					endColor.color = (initialValue[1] as rgbaColor) ?? 'rgba(255, 255, 255, 1)';
 
 					endColor.SetPanelEvent('oncolorchange', () => {
 						const value = [startColor.color, endColor.color];
@@ -916,7 +1042,8 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 						dropdown.AddOption(panel);
 					}
 
-					dropdown.SetSelected(component.dynamicStyles[styleID]?.value as string);
+					const initialValue = resolveValue(component.dynamicStyles[styleID]?.value);
+					dropdown.SetSelected(initialValue as string);
 
 					let value: string;
 					dropdown.SetPanelEvent('oninputsubmit', () => {

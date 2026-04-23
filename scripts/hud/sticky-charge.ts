@@ -146,7 +146,7 @@ class StickyChargeHandler {
 					name: 'Background',
 					type: CustomizerPropertyType.GRADIENT_PICKER,
 					targetPanel: '#StickyChargeMeter_Right',
-					callbackFunc: (panel, value) => {
+					callbackFunc: (_, value) => {
 						this.backgroundColor =
 							`gradient(linear, 0% 0%, 100% 0%, from (${value[0]}), to(${value[1]}))` as color;
 						this.onChargeUpdate(this.isEnabled, 900, 0);
