@@ -23,7 +23,7 @@ type KeySettings = {
 	rotate?: 0 | 90 | -90 | 180;
 };
 
-type ButtonState = 'default' | 'pressed' | 'disabled' | 'toggled';
+type ButtonState = 'default' | 'pressed' | 'disabled' | 'toggled' | 'forced';
 
 type PanelInfoType = {
 	panel: Panel | Image | Label;
@@ -48,8 +48,8 @@ const Config = {
 				default: { bg: 'rgba(0, 0, 0, 0)', iconColor: 'rgba(0, 0, 0, 1)', iconOpacity: 0.45 },
 				pressed: { bg: 'rgba(0, 0, 0, 0)', iconColor: 'rgba(0, 0, 0, 1)', iconOpacity: 1 },
 				disabled: { bg: 'rgba(0, 0, 0, 0)', iconColor: 'rgba(0, 0, 0, 1)', iconOpacity: 0.45 },
-				//Not implemented
-				toggled: { bg: 'rgba(0, 0, 0, 0)', iconColor: 'rgba(0, 0, 0, 1)', iconOpacity: 0.45 }
+				toggled: { bg: 'rgba(0, 0, 0, 0)', iconColor: 'rgba(0, 0, 0, 1)', iconOpacity: 0.45 }, // Not Implemented
+				forced: { bg: 'rgba(0, 0, 0, 0)', iconColor: 'rgba(0, 0, 0, 1)', iconOpacity: 0.45 }
 			}
 		},
 		label: {
@@ -61,7 +61,8 @@ const Config = {
 				default: { color: 'rgba(0, 0, 0, 0)' },
 				pressed: { color: 'rgba(0, 0, 0, 0)' },
 				disabled: { color: 'rgba(0, 0, 0, 0)' },
-				toggled: { color: 'rgba(0, 0, 0, 0)' }
+				toggled: { color: 'rgba(0, 0, 0, 0)' },
+				forced: { color: 'rgba(0, 0, 0, 0)' }
 			}
 		},
 		turnbinds: {
@@ -74,8 +75,8 @@ const Config = {
 				default: { bg: 'rgba(0, 0, 0, 0)' },
 				pressed: { bg: 'rgba(0, 0, 0, 0)' },
 				disabled: { bg: 'rgba(0, 0, 0, 0)' },
-				//Not implemented
-				toggled: { bg: 'rgba(0, 0, 0, 0)' }
+				toggled: { bg: 'rgba(0, 0, 0, 0)' }, // Not Implemented
+				forced: { bg: 'rgba(0, 0, 0, 0)' }
 			}
 		}
 	},
@@ -91,8 +92,8 @@ const Config = {
 				default: { bg: 'rgba(0, 0, 0, 0)', opacity: 1 },
 				pressed: { bg: 'rgba(0, 0, 0, 0)', opacity: 1 },
 				disabled: { bg: 'rgba(0, 0, 0, 0)', opacity: 1 },
-				//Not implemented
-				toggled: { bg: 'rgba( 0, 0, 0, 0)', opacity: 1 }
+				toggled: { bg: 'rgba(0, 0, 0, 0)', opacity: 1 }, // Not Implemented
+				forced: { bg: 'rgba(0, 0, 0, 0)', opacity: 1 }
 			}
 		},
 		jump_duck: {
@@ -100,7 +101,8 @@ const Config = {
 				default: { bg: 'rgba(0, 0, 0, 0)', opacity: 1 },
 				pressed: { bg: 'rgba(0, 0, 0, 0)', opacity: 1 },
 				disabled: { bg: 'rgba(0, 0, 0, 0)', opacity: 1 },
-				toggled: { bg: 'rgba( 0, 0, 0, 0)', opacity: 1 }
+				toggled: { bg: 'rgba(0, 0, 0, 0)', opacity: 1 },
+				forced: { bg: 'rgba(0, 0, 0, 0)', opacity: 1 }
 			}
 		},
 		modifiers: {
@@ -108,7 +110,8 @@ const Config = {
 				default: { bg: 'rgba(0, 0, 0, 0)', opacity: 1 },
 				pressed: { bg: 'rgba(0, 0, 0, 0)', opacity: 1 },
 				disabled: { bg: 'rgba(0, 0, 0, 0)', opacity: 1 },
-				toggled: { bg: 'rgba( 0, 0, 0, 0)', opacity: 1 }
+				toggled: { bg: 'rgba(0, 0, 0, 0)', opacity: 1 },
+				forced: { bg: 'rgba(0, 0, 0, 0)', opacity: 1 }
 			}
 		}
 	}
@@ -216,7 +219,8 @@ class KeyPress {
 					children: [
 						{ styleID: 'textDirPanelDefaultBg' },
 						{ styleID: 'textDirPanelPressedBg' },
-						{ styleID: 'textDirPanelDisabledBg' }
+						{ styleID: 'textDirPanelDisabledBg' },
+						{ styleID: 'textDirPanelForcedBg' }
 					]
 				},
 				textDirPanelDefaultBg: {
@@ -243,6 +247,14 @@ class KeyPress {
 						this.updateStyles();
 					}
 				},
+				textDirPanelForcedBg: {
+					name: 'Forced Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					callbackFunc: (_, value) => {
+						Config.text.dir.states.forced.bg = value;
+						this.updateStyles();
+					}
+				},
 				textDirIcon: {
 					name: 'Icons',
 					type: CustomizerPropertyType.NONE,
@@ -250,7 +262,8 @@ class KeyPress {
 					children: [
 						{ styleID: 'textDirIconDefaultColor' },
 						{ styleID: 'textDirIconPressedColor' },
-						{ styleID: 'textDirIconDisabledColor' }
+						{ styleID: 'textDirIconDisabledColor' },
+						{ styleID: 'textDirIconForcedColor' }
 					]
 				},
 				textDirIconDefaultColor: {
@@ -283,6 +296,16 @@ class KeyPress {
 						this.updateStyles();
 					}
 				},
+				textDirIconForcedColor: {
+					name: 'Forced Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					callbackFunc: (_, value) => {
+						const splitRGBA = splitRgbFromAlpha(value as rgbaColor);
+						Config.text.dir.states.forced.iconColor = splitRGBA.rgb;
+						Config.text.dir.states.forced.iconOpacity = splitRGBA.alpha;
+						this.updateStyles();
+					}
+				},
 
 				// LABELS
 				textLabel: {
@@ -294,7 +317,8 @@ class KeyPress {
 						{ styleID: 'textLabelDefaultColor' },
 						{ styleID: 'textLabelPressedColor' },
 						{ styleID: 'textLabelDisabledColor' },
-						{ styleID: 'textLabelToggledColor' }
+						{ styleID: 'textLabelToggledColor' },
+						{ styleID: 'textLabelForcedColor' }
 					]
 				},
 				textLabelFont: {
@@ -334,6 +358,14 @@ class KeyPress {
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
 						Config.text.label.states.toggled.color = value;
+						this.updateStyles();
+					}
+				},
+				textLabelForcedColor: {
+					name: 'Forced Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					callbackFunc: (_, value) => {
+						Config.text.label.states.forced.color = value;
 						this.updateStyles();
 					}
 				},
@@ -407,7 +439,8 @@ class KeyPress {
 					children: [
 						{ styleID: 'textTurnbindsDefaultBg' },
 						{ styleID: 'textTurnbindsPressedBg' },
-						{ styleID: 'textTurnbindsDisabledBg' }
+						{ styleID: 'textTurnbindsDisabledBg' },
+						{ styleID: 'textTurnbindsForcedBg' }
 					]
 				},
 				textTurnbindsDefaultBg: {
@@ -434,6 +467,15 @@ class KeyPress {
 						this.updateStyles();
 					}
 				},
+				textTurnbindsForcedBg: {
+					name: 'Forced Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					callbackFunc: (_, value) => {
+						Config.text.turnbinds.states.forced.bg = value;
+						this.updateStyles();
+					}
+				},
+
 				/**
 				 * KEYPRESS - ICONS
 				 */
@@ -462,7 +504,8 @@ class KeyPress {
 					children: [
 						{ styleID: 'iconsDirDefaultColor' },
 						{ styleID: 'iconsDirPressedColor' },
-						{ styleID: 'iconsDirDisabledColor' }
+						{ styleID: 'iconsDirDisabledColor' },
+						{ styleID: 'iconsDirForcedColor' }
 					]
 				},
 				iconsDirDefaultColor: {
@@ -495,6 +538,16 @@ class KeyPress {
 						this.updateStyles();
 					}
 				},
+				iconsDirForcedColor: {
+					name: 'Forced Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					callbackFunc: (_, value) => {
+						const splitRGBA = splitRgbFromAlpha(value as rgbaColor);
+						Config.icons.dir.states.forced.bg = splitRGBA.rgb;
+						Config.icons.dir.states.forced.opacity = splitRGBA.alpha;
+						this.updateStyles();
+					}
+				},
 
 				//MODIFIER KEYS
 				iconsModifiers: {
@@ -505,7 +558,8 @@ class KeyPress {
 						{ styleID: 'iconsModifiersDefaultColor' },
 						{ styleID: 'iconsModifiersPressedColor' },
 						{ styleID: 'iconsModifiersDisabledColor' },
-						{ styleID: 'iconsModifiersToggledColor' }
+						{ styleID: 'iconsModifiersToggledColor' },
+						{ styleID: 'iconsModifiersForcedColor' }
 					]
 				},
 				iconsModifiersDefaultColor: {
@@ -548,6 +602,16 @@ class KeyPress {
 						this.updateStyles();
 					}
 				},
+				iconsModifiersForcedColor: {
+					name: 'Forced Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					callbackFunc: (_, value) => {
+						const splitRGBA = splitRgbFromAlpha(value as rgbaColor);
+						Config.icons.modifiers.states.forced.bg = splitRGBA.rgb;
+						Config.icons.modifiers.states.forced.opacity = splitRGBA.alpha;
+						this.updateStyles();
+					}
+				},
 
 				// JUMP_DUCK KEYS
 				iconsJumpDuck: {
@@ -558,7 +622,8 @@ class KeyPress {
 						{ styleID: 'iconsJumpDuckDefaultColor' },
 						{ styleID: 'iconsJumpDuckPressedColor' },
 						{ styleID: 'iconsJumpDuckDisabledColor' },
-						{ styleID: 'iconsJumpDuckToggledColor' }
+						{ styleID: 'iconsJumpDuckToggledColor' },
+						{ styleID: 'iconsJumpDuckForcedColor' }
 					]
 				},
 				iconsJumpDuckDefaultColor: {
@@ -598,6 +663,16 @@ class KeyPress {
 						const splitRGBA = splitRgbFromAlpha(value as rgbaColor);
 						Config.icons.jump_duck.states.toggled.bg = splitRGBA.rgb;
 						Config.icons.jump_duck.states.toggled.opacity = splitRGBA.alpha;
+						this.updateStyles();
+					}
+				},
+				iconsJumpDuckForcedColor: {
+					name: 'Forced Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					callbackFunc: (_, value) => {
+						const splitRGBA = splitRgbFromAlpha(value as rgbaColor);
+						Config.icons.jump_duck.states.forced.bg = splitRGBA.rgb;
+						Config.icons.jump_duck.states.forced.opacity = splitRGBA.alpha;
 						this.updateStyles();
 
 						//TODO: Hack to initialize to the proper type
@@ -975,9 +1050,7 @@ class KeyPress {
 			if ((disabledButtons & button) !== 0) return 'disabled';
 			if ((physicalButtons & button) !== 0) return 'pressed';
 			if ((toggledButtons & button) !== 0) return 'toggled';
-			//TODO: Doesn't work, forced buttons always return 0
-			//Maybe implemented forced style at some point? It's only relevant to ahop ducking
-			if ((forcedButtons & button) !== 0) return 'pressed';
+			if ((forcedButtons & button) !== 0) return 'forced';
 			return 'default';
 		};
 
