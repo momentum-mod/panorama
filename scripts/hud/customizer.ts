@@ -605,6 +605,22 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		const component = Component.register(panel, properties);
 		this.components[component.id] = component;
 
+		if (properties.events !== undefined) {
+			const events = Array.isArray(properties.events) ? properties.events : [properties.events];
+			events.forEach((event) => {
+				$.RegisterEventHandler(event.event, event.panel as any, event.callbackFn);
+			});
+		}
+
+		if (properties.unhandledEvents !== undefined) {
+			const events = Array.isArray(properties.unhandledEvents)
+				? properties.unhandledEvents
+				: [properties.unhandledEvents];
+			events.forEach((event) => {
+				$.RegisterForUnhandledEvent(event.event, event.callbackFn);
+			});
+		}
+
 		this.generateComponentList();
 	}
 

@@ -174,6 +174,21 @@ type MappedStyles = Record<
 	}[CustomizerPropertyType]
 >;
 
+type HandledEventRegistration = {
+	[K in keyof GlobalEventNameMap]: {
+		event: K;
+		panel: GenericPanel;
+		callbackFn: GlobalEventNameMap[K];
+	};
+}[keyof GlobalEventNameMap];
+
+type UnhandledEventRegistration = {
+	[K in keyof GlobalEventNameMap]: {
+		event: K;
+		callbackFn: GlobalEventNameMap[K];
+	};
+}[keyof GlobalEventNameMap];
+
 export interface CustomizerComponentProperties {
 	/** Allow resizing in the X direction. */
 	resizeX: boolean;
@@ -186,6 +201,12 @@ export interface CustomizerComponentProperties {
 
 	/** Allow movement on Y axis. Defaults to true */
 	moveY?: boolean;
+
+	/** A collection of handled events to register */
+	events?: HandledEventRegistration | Array<HandledEventRegistration>;
+
+	/** A collection of unhandled events to register */
+	unhandledEvents?: UnhandledEventRegistration | Array<UnhandledEventRegistration>;
 
 	/** Defines in which gamemodes the panel should be enabled. When not provided it's always enabled */
 	gamemode?: Gamemode | Gamemode[];
