@@ -108,7 +108,10 @@ class Component {
 	private static userLayout: HudLayout | undefined;
 	private static defaultLayout: HudLayout;
 
+	//A record of CustomizerSettings dynamic styles <StyleID, value>
 	static referencedValues: Record<string, any> = {};
+
+	//A record of CustomizerSettings dynamic styles <StyleID, Set of StyleID of components that use that style as reference>
 	static referencedValueListeners: Record<string, Set<string>> = {};
 
 	static {
@@ -567,15 +570,17 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		this.panels.customizer.toggleUI(false);
 	}
 
+	//CustomizerSettings dynamic styles are used as default global styles
+	//They can be referenced in hud_default.kv3 by using a string formatted like this: "$someStyleID"
+	//When a dynamic style is modified/loaded it calls this function with the it's styleID and a new value
+	//This functions then re-applies ALL styles on a component that uses that referenced value.
+	//Hud Customizer Panel in hud.xml MUST be placed after all other panels registered with hud customizer for this to initialize hud properly
 	updateReferencedValue(refKey: string, newValue: any): void {
-		// 1. Update the static store
 		Component.referencedValues[refKey] = newValue;
 
-		// 2. Find all component IDs listening to this key
 		const listeners = Component.referencedValueListeners[refKey];
 		if (!listeners) return;
 
-		// 3. Loop through registered components and trigger refresh
 		listeners.forEach((componentID) => {
 			const component = this.components[componentID];
 			if (component) {
