@@ -42,6 +42,7 @@
         <MomHudGroundboost id="Groundboost" />
         <MomHudDFJump id="DFJump"/>
         <MomHudPowerupTimer id="PowerupTimer"/>
+        <MomHudAhopSprint id="AhopSprint"/>
 
 
         <!-- NOT IN CUSTOMIZER -->
