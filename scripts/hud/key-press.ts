@@ -1067,10 +1067,10 @@ class KeyPress {
 	getGamemodeLabels() {
 		const gamemode = GameModeAPI.GetCurrentGameMode();
 		const labels = {
-			jump: $.Localize('#Jump'),
-			duck: $.Localize('#Duck'),
-			walk: $.Localize('#Walk'),
-			sprint: $.Localize('#Sprint')
+			jump: $.Localize('#Keypress_Jump'),
+			duck: $.Localize('#Keypress_Duck'),
+			walk: $.Localize('#Keypress_Walk'),
+			sprint: $.Localize('#Keypress_Sprint')
 		};
 
 		switch (gamemode) {
