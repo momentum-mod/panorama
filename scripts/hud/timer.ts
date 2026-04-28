@@ -193,14 +193,14 @@ class HudTimerHandler {
 					children: [{ styleID: 'comparisonGainColor' }, { styleID: 'comparisonLossColor' }]
 				},
 				comparisonGainColor: {
-					name: 'Comparison Increase Color',
+					name: 'Comparison Gain Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
 						Colors.INCREASE = value as rgbaColor;
 					}
 				},
 				comparisonLossColor: {
-					name: 'Comparison Decrease Color',
+					name: 'Comparison Loss Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
 						Colors.DECREASE = value as rgbaColor;

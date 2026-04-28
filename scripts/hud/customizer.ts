@@ -567,7 +567,8 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		UiToolkitAPI.GetGlobalObject()['HudCustomizerHandler'] = this;
 
 		// Display editing in case was enabled before a reload -- state is convar-based so persists across HUD reloads.
-		this.panels.customizer.toggleUI(false);
+		const isCustomizerOpen = GameInterfaceAPI.GetSettingBool('mom_hudcustomizer_enable');
+		this.panels.customizer.toggleUI(isCustomizerOpen);
 	}
 
 	//CustomizerSettings dynamic styles are used as default global styles
