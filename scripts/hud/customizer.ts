@@ -68,6 +68,9 @@ type GridlineForAxis = [Gridline[], Gridline[]];
 const MAX_X_POS = 1920;
 const MAX_Y_POS = 1080;
 
+/** Minimum width/height (px) a panel can be resized to. Overridden per-panel by in-line min-width/min-height. See onEndDrag() comments for more info */
+const MINIMUM_PANEL_SIZE = 10;
+
 // Fraction of grid spacing to snap within
 const SNAPPING_THRESHOLD = 0.1;
 
@@ -1273,11 +1276,16 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		$.UnregisterEventHandler('HudThink', this.panels.customizer, this.onThinkHandle);
 
 		LayoutUtil.setPosition(this.panels.dragPanel, this.activeComponent.offsetX, this.activeComponent.offsetY);
+
+		//TODO: This doesn't work when styles are defined in css, they must be defined in-line
+		//Maybe a better idea is to use minExpectedWidth and minExpectedHeight for this?
+		//It's not used on any panel right now so it can wait
+		const [minWidth, minHeight] = getMinSize(this.activeComponent.panel);
 		if (this.activeComponent.width !== undefined) {
-			LayoutUtil.setWidth(this.panels.dragPanel, this.activeComponent.width);
+			LayoutUtil.setWidth(this.panels.dragPanel, Math.max(this.activeComponent.width, minWidth));
 		}
 		if (this.activeComponent.height !== undefined) {
-			LayoutUtil.setHeight(this.panels.dragPanel, this.activeComponent.height);
+			LayoutUtil.setHeight(this.panels.dragPanel, Math.max(this.activeComponent.height, minHeight));
 		}
 
 		this.panels.overlay.RemoveClass('hud-customizer-overlay--dragging');
@@ -1566,7 +1574,7 @@ function parsePx(str: string): number | undefined {
 }
 
 function getMinSize(panel: GenericPanel): [number, number] {
-	return [parsePx(panel.style.minWidth) ?? 0, parsePx(panel.style.minHeight) ?? 0];
+	return [parsePx(panel.style.minWidth) ?? MINIMUM_PANEL_SIZE, parsePx(panel.style.minHeight) ?? MINIMUM_PANEL_SIZE];
 }
 
 /** CSS-style panel lookup utility */
