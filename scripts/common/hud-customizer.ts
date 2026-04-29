@@ -214,8 +214,7 @@ export interface CustomizerComponentProperties {
 	/** Panel to use as the drag handle for moving the component. If not provided, whole panel is draggable. */
 	dragPanel?: GenericPanel;
 
-	// TODO: impl me. don't let people disable the settings menu lol
-	canDisabled?: boolean;
+	canDisable?: boolean;
 
 	/**
 	 * Expected minimum width of a component once it's been layed out in edit mode.

@@ -99,7 +99,6 @@ class GroundboostHandler {
 				}
 			],
 			dynamicStyles: {
-				//TODO: For whatever reason the panel is white after resizing and needs to be moved to regain proper color
 				size: {
 					name: 'Size',
 					type: CustomizerPropertyType.NUMBER_ENTRY,

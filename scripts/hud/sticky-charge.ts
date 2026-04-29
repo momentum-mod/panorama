@@ -71,7 +71,6 @@ class StickyChargeHandler {
 					targetPanel: '.stickycharge__meter',
 					styleProperty: 'borderColor'
 				},
-				//TODO: WHY THE FUCK DOES THIS NEED DEFAULTS IN CSS
 				borderRadius: {
 					name: 'Border Radius',
 					type: CustomizerPropertyType.NONE,

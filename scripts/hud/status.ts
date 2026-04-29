@@ -71,7 +71,6 @@ class HudStatusHandler {
 		registerHUDCustomizerComponent($.GetContextPanel(), {
 			resizeX: true,
 			resizeY: false,
-			//TODO: Add text shadow settings
 			dynamicStyles: {
 				fontStyling: {
 					name: 'Font Styling',

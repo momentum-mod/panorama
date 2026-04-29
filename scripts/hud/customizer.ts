@@ -389,7 +389,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 	};
 
 	//Makes sure layout isn't saved before hud is initialized
-	ready: boolean;
+	readyToSave: boolean;
 
 	components: Record<string, Component> = {};
 	gridlines: GridlineForAxis = [[], []];
@@ -416,7 +416,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			dragPanel: $('#CustomizerSettingsHeader')!,
 			resizeY: false,
 			resizeX: false,
-			canDisabled: false,
+			canDisable: false,
 			dynamicStyles: {
 				selectedBorder: {
 					name: 'Enable Selected Component Border',
@@ -546,7 +546,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		$.RegisterForUnhandledEvent('MapCache_MapLoad' as any, () => {
 			// Once HUD is fully initialized, let components awaiting registration know to load component
 			$.DispatchEvent('HudCustomizer_Ready');
-			this.ready = true;
+			this.readyToSave = true;
 		});
 
 		// TODO: This was just for case of someone changin layout via file and wanting to update ingame.
@@ -555,7 +555,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		// 	this.load();
 		// });
 
-		this.ready = false;
+		this.readyToSave = false;
 		this.gridlines = [[], []];
 		this.activeGridlines = [undefined, undefined];
 		this.activeComponent = undefined;
@@ -667,7 +667,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		}
 
 		// Customizer closing, write to disk
-		if (this.ready) this.save();
+		if (this.readyToSave) this.save();
 	}
 
 	/**
@@ -731,7 +731,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			);
 			visButton.SetPanelEvent('onmouseout', () => UiToolkitAPI.HideTextTooltip());
 			visButton.SetPanelEvent('onactivate', () => (component.enabled = visButton.checked));
-			visButton.enabled = component.properties.canDisabled ?? true;
+			visButton.enabled = component.properties.canDisable ?? true;
 		}
 
 		this.panels.gamemodeComponentsContainer.SetHasClass(

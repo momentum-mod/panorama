@@ -87,7 +87,6 @@ class StrafeTrainer {
 			],
 			events: { event: 'HudProcessInput', panel: $.GetContextPanel(), callbackFn: () => this.onUpdate() },
 			unhandledEvents: { event: 'OnJumpStarted', callbackFn: () => this.updateStats() },
-			//TODO: Add generic border, font settings
 			dynamicStyles: {
 				displayMode: {
 					name: 'Display Mode',

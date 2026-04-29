@@ -64,7 +64,6 @@ class StickyCountHandler {
 				//this.updateStickyPanels() handles updating all settings, ugly but works for now
 				{ event: 'LevelInitPostEntity', callbackFn: () => this.initPanels() }
 			],
-			//TODO: Add box shadow setting
 			dynamicStyles: {
 				colors: {
 					name: 'Colors',
@@ -169,7 +168,6 @@ class StickyCountHandler {
 						this.updateStickyPanels();
 					}
 				}
-				//TODO: Consider allowing for a gradient
 			}
 		});
 	}

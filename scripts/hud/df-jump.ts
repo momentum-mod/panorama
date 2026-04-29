@@ -34,7 +34,6 @@ class DFJumpHandler {
 				callbackFn: (releaseDelay, pressDelay, totalDelay) =>
 					this.onDFJumpUpdate(releaseDelay, pressDelay, totalDelay)
 			},
-			//TODO: Add border styles
 			dynamicStyles: {
 				maxDelay: {
 					name: 'Jump Max Delay',

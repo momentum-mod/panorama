@@ -675,7 +675,7 @@ class KeyPress {
 						Config.icons.jump_duck.states.forced.opacity = splitRGBA.alpha;
 						this.updateStyles();
 
-						//TODO: Hack to initialize to the proper type
+						//Hack to initialize to the proper type
 						this.initHUD();
 					}
 				}
