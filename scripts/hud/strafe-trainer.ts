@@ -3,6 +3,7 @@ import * as MomMath from 'util/math';
 import { rgbaStringLerp } from 'util/colors';
 import { Gamemode, GamemodeCategory, GamemodeCategoryToGamemode } from 'common/web/enums/gamemode.enum';
 import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
+import { splitRgbFromAlpha } from 'util/colors';
 
 type ColorPair = [color, color];
 
@@ -58,16 +59,17 @@ class StrafeTrainer {
 	showYawRatio: boolean;
 	showGain: boolean;
 	statColorEnable: boolean;
-	//If this doesn't have a color assigned by default the game breaks
-	//It immediately gets overridden by hud/hud_default.kv3 anyway
-	//Can't figure it out
-	altColor = 'rgba(0,0,0,0)' as color;
 	strafeBarGradient = ['rgba(178, 178, 178, 1)', 'rgba(255, 255, 255, 1)'];
+	//Both are always the same, this is so that colorStatsByGain can be simplified
+	fontColor = ['rgba(255, 255, 255, 1)', 'rgba(255, 255, 255, 1)'];
 
 	//Not yet customizable
 	isFirstPanelColored = true; // gets toggled in wrapValueToRange()
 	maxSegmentWidth = 25; // percentage of total element width
 	firstPanelWidth = this.maxSegmentWidth;
+
+	//Unused, this is a highlight color for the strafe bar
+	altColor = 'rgba(0,0,0,0)' as color;
 
 	sampleWeight: number;
 	gainRatioHistory: number[];
@@ -75,7 +77,6 @@ class StrafeTrainer {
 
 	constructor() {
 		registerHUDCustomizerComponent($.GetContextPanel(), {
-			//TODO: Add resizing width, it needs to target a specific panel, not the root
 			resizeX: true,
 			resizeY: false,
 			gamemode: [
@@ -86,7 +87,6 @@ class StrafeTrainer {
 			],
 			events: { event: 'HudProcessInput', panel: $.GetContextPanel(), callbackFn: () => this.onUpdate() },
 			unhandledEvents: { event: 'OnJumpStarted', callbackFn: () => this.updateStats() },
-			expectedMinWidth: 300,
 			//TODO: Add generic border, font settings
 			dynamicStyles: {
 				displayMode: {
@@ -141,7 +141,7 @@ class StrafeTrainer {
 				indicatorPercentage: {
 					name: 'Indicator Gain Percentage',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
-					callbackFunc: (panel, value) => {
+					callbackFunc: (_, value) => {
 						this.indicatorPercentage = value;
 						this.updateDisplayMode(this.displayMode);
 					},
@@ -176,14 +176,12 @@ class StrafeTrainer {
 					},
 					settingProps: { min: 1, max: 20 }
 				},
-				//TODO: Use slider when implemented?
 				minSpeed: {
 					name: 'Required Speed',
-					type: CustomizerPropertyType.SLIDER,
+					type: CustomizerPropertyType.NUMBER_ENTRY,
 					callbackFunc: (_, value) => {
 						this.minSpeed = value;
-					},
-					settingProps: { min: 30, max: 250 }
+					}
 				},
 				dynamicMode: {
 					name: 'Follow Strafe Direction',
@@ -243,6 +241,59 @@ class StrafeTrainer {
 						this.updateStats();
 					}
 				},
+				fontStyling: {
+					name: 'Font Styling',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [{ styleID: 'font' }, { styleID: 'fontSize' }, { styleID: 'fontColor' }]
+				},
+				font: {
+					name: 'Font',
+					type: CustomizerPropertyType.FONT_PICKER,
+					targetPanel: ['.strafetrainer__stats--upper', '.strafetrainer__stats--lower'],
+					styleProperty: 'fontFamily'
+				},
+				fontSize: {
+					name: 'Font Size',
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					targetPanel: ['.strafetrainer__stats--upper', '.strafetrainer__stats--lower'],
+					styleProperty: 'fontSize',
+					valueFn: (value) => `${value}px`
+				},
+				fontColor: {
+					name: 'Font Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					targetPanel: ['.strafetrainer__stats--upper', '.strafetrainer__stats--lower'],
+					styleProperty: 'color',
+					callbackFunc: (_, value) => {
+						this.fontColor = [value, value];
+					}
+				},
+				colors: {
+					name: 'Colors',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [
+						{ styleID: 'backgroundColor' },
+						{ styleID: 'needleColor' },
+						{ styleID: 'colorStats' },
+						{ styleID: 'colorByGain' }
+					]
+				},
+				backgroundColor: {
+					name: 'Background Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					targetPanel: ['.strafetrainer__background', '.strafetrainer__container'],
+					callbackFunc: (panel, value) => {
+						const splitRGBA = splitRgbFromAlpha(value as rgbaColor);
+						if (panel.id === 'Container') {
+							panel.style.boxShadow = `fill 0px 0px 12px -6px rgba(0, 0, 0, ${splitRGBA.alpha})`;
+							panel.style.backgroundColor =
+								`gradient(linear, 0% 0%, 0% 100%, from(rgba(255, 255, 255, ${+splitRGBA.alpha * 0.02})), to(rgba(0, 0, 0, ${+splitRGBA.alpha * 0.5})))` as color;
+						} else panel.style.backgroundColor = value as color;
+					}
+				},
+				//TODO: It's annoying you can't see gainGradients when this changes. Not sure what to do about it
 				colorStats: {
 					name: 'Color Stats Based On Gain',
 					type: CustomizerPropertyType.CHECKBOX,
@@ -251,34 +302,12 @@ class StrafeTrainer {
 						this.updateStats();
 					}
 				},
-				colors: {
-					name: 'Colors',
-					type: CustomizerPropertyType.NONE,
-					expandable: true,
-					children: [{ styleID: 'backgroundColor' }, { styleID: 'needleColor' }, { styleID: 'colorByGain' }]
-				},
-				//TODO: Add highlight color ( this.altColor );
-				backgroundColor: {
-					name: 'Background Color',
-					type: CustomizerPropertyType.COLOR_PICKER,
-					targetPanel: ['.strafetrainer__background', '.strafetrainer__container'],
-					callbackFunc: (panel, value) => {
-						const splitRGBA = this.splitRgbFromAlpha(value);
-						if (panel.id === 'Container') {
-							panel.style.boxShadow = `fill 0px 0px 12px -6px rgba(0, 0, 0, ${splitRGBA[1]})`;
-							panel.style.backgroundColor =
-								`gradient(linear, 0% 0%, 0% 100%, from(rgba(255, 255, 255, ${+splitRGBA[1] * 0.02})), to(rgba(0, 0, 0, ${+splitRGBA[1] * 0.5})))` as color;
-						} else panel.style.backgroundColor = value as color;
-						// this.altColor = value as color;
-						// this.updateDisplayMode(this.displayMode);
-					}
-				},
 
 				colorByGain: {
 					name: 'Color By Speed Gain',
 					type: CustomizerPropertyType.CHECKBOX,
 					children: [
-						{ styleID: 'gainColors', showWhen: true },
+						{ styleID: 'gainGradients', showWhen: true },
 						{ styleID: 'strafeBarColor', showWhen: false }
 					],
 					callbackFunc: (_, value) => {
@@ -292,8 +321,8 @@ class StrafeTrainer {
 						this.strafeBarGradient = value;
 					}
 				},
-				gainColors: {
-					name: 'Gain Colors',
+				gainGradients: {
+					name: 'Gain Gradients',
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [
@@ -354,15 +383,6 @@ class StrafeTrainer {
 					callbackFunc: (_, value) => {
 						Colors.STOP = value as [color, color];
 					}
-				},
-
-				fontSize: {
-					name: 'Font Size',
-					type: CustomizerPropertyType.NUMBER_ENTRY,
-					targetPanel: ['.strafetrainer__stats--upper', '.strafetrainer__stats--lower'],
-					styleProperty: 'fontSize',
-					valueFn: (value) => `${value}px`,
-					settingProps: { min: 10, max: 20 }
 				}
 			}
 		});
@@ -459,7 +479,7 @@ class StrafeTrainer {
 
 		const colorPair = this.statColorEnable
 			? this.getColorPair(lastJumpStats.speedGain, lastJumpStats.yawRatio > 0)
-			: Colors.NEUTRAL;
+			: this.fontColor;
 		for (const stat of this.panels.stats) {
 			stat.style.color = colorPair[1];
 		}
@@ -568,10 +588,5 @@ class StrafeTrainer {
 
 	NaNCheck(val: any, def: any) {
 		return Number.isNaN(Number(val)) ? def : val;
-	}
-
-	splitRgbFromAlpha(rgbaString: string) {
-		const values = rgbaString.match(/[\d.]+%?/g);
-		return [`rgba(${values[0]}, ${values[1]}, ${values[2]}, 1)`, values[3]];
 	}
 }
