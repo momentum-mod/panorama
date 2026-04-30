@@ -395,21 +395,33 @@ class HudComparisonsHandler {
 	}
 
 	recomputeComparisons() {
+		const { state, runTime, segmentsCount, segmentCheckpointsCount } = MomentumTimerAPI.GetObservedTimerStatus();
 		const splits = MomentumTimerAPI.GetObservedTimerRunSplits();
 
 		this.splitRows.forEach((row) => {
 			if (!row.split) return;
 
 			if (this.hasUniqueComparison()) {
-				row.split = Timer.generateSplit(
-					splits,
-					this.comparison?.runSplits ?? null,
-					row.split.majorNum,
-					row.split.minorNum,
-					row.split.segmentsCount,
-					row.split.segmentCheckpointsCount,
-					true // round to float, could be networked data
-				);
+				if (state === Timer.TimerState.FINISHED && row === this.splitRows[0]) {
+					row.split = Timer.generateFinishSplit(
+						splits,
+						this.comparison?.runSplits ?? null,
+						runTime,
+						this.comparison?.runTime ?? 0,
+						segmentsCount,
+						segmentCheckpointsCount
+					);
+				} else {
+					row.split = Timer.generateSplit(
+						splits,
+						this.comparison?.runSplits ?? null,
+						row.split.majorNum,
+						row.split.minorNum,
+						row.split.segmentsCount,
+						row.split.segmentCheckpointsCount,
+						true // round to float, could be networked data
+					);
+				}
 			} else {
 				// Split obj might have some irrelevant properties, but they won't be used
 				row.split.hasComparison = false;
