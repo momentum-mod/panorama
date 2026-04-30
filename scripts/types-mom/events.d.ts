@@ -387,7 +387,7 @@ interface GlobalEventNameMap {
 
 	/** Called when HUD customizer edit UI has been enabled. */
 	HudCustomizer_Opened: () => void;
-	
+
 	/** Called when HUD customizer edit UI has been enabled, straight after Closed. Just for use in customizer.ts! */
 	HudCustomizer_OpenedInternal: () => void;
 
