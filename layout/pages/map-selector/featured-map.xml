@@ -1,0 +1,21 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+		<include src="file://{resources}/styles/pages/map-selector/featured-map.scss" />
+	</styles>
+
+	<FeaturedMap class="featured-map">
+		<Image id="MapImage" class="featured-map__image" scaling="stretch-to-cover-preserve-aspect" />
+
+		<Panel class="featured-map__info">
+			<Label id="TierLabel" class="featured-map__tier" text="T0" />
+			
+			<Panel class="featured-map__lobby">
+				<Image class="featured-map__lobby-icon" src="file://{images}/profile.svg" textureheight="40" />
+				<Label id="PlayerCountLabel" class="featured-map__lobby-playercount" text="?" />
+			</Panel>
+
+			<Label id="MapNameLabel" class="featured-map__name" text="map_name" />
+		</Panel>
+	</FeaturedMap>
+</root>

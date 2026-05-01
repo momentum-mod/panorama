@@ -4,6 +4,8 @@
 @use 'sass:map';
 @use 'sass:color';
 
+$panel-border: 1px solid rgba(255, 255, 255, 0.01);
+
 .mapselector {
 	$root: &;
 
@@ -30,7 +32,7 @@
 		flow-children: down;
 		height: 100%;
 		width: 100%;
-		border: 1px solid rgba(255, 255, 255, 0.01);
+		border: $panel-border;
 		box-shadow: 0 0 16px 0 rgba(0, 0, 0, 0.5);
 	}
 
@@ -41,15 +43,27 @@
 		height: fill-parent-flow(1);
 	}
 
-	&__maps,
 	&__playlists {
+		width: 100%;
 		flow-children: down;
 		padding: 16px;
 	}
 
+	&__maps-topsection {
+		width: 100%;
+		flow-children: down;
+		padding: 16px 16px 0 16px;
+	}
+
+	&__maps-bottomsection {
+		width: 100%;
+		// use more space on right for list scrollbar to slot into
+		padding: 0 8px 16px 16px;
+	}
+
 	&__maps {
+		flow-children: down;
 		visibility: visible;
-		padding-right: 8px;
 		width: 100%;
 	}
 
@@ -131,10 +145,114 @@
 	}
 }
 
+.mapselector-gamemodes {
+	margin-bottom: 4px;
+	flow-children: right-wrap;
+
+	& > #HorizontalScrollBar {
+		height: 2px;
+
+		& > #ScrollThumb {
+			opacity: 1;
+		}
+	}
+
+	&__gamemode-button {
+		&:selected {
+			sound: 'UIPanorama.ModeSelect';
+		}
+
+		// IMPORTANT: `button` class gives vertical-align: center which is buggy with flow wrapping!!
+		vertical-align: top;
+		margin-bottom: 4px;
+		margin-right: 4px;
+	}
+
+	&__text {
+		font-size: 20px;
+	}
+}
+
+#MapSelectorFeatured {
+	width: 100%;
+	margin-bottom: 12px;
+	flow-children: down;
+	background-color: rgba(0, 0, 0, 0.25);
+	padding: 4px;
+	border-radius: 4px;
+	border: $panel-border;
+}
+
+#MapSelectorFeaturedToggle {
+	flow-children: right;
+	width: 100%;
+	horizontal-align: center;
+	padding: 4px 6px;
+	border-radius: 4px;
+	transition: background-color 0.1s ease-in-out 0s;
+
+	&:hover {
+		background-color: rgba(255, 255, 255, 0.1);
+	}
+
+	.mapselector-featuredtoggle {
+		&__label {
+			@include mixin.font-header();
+			font-size: 20px;
+		}
+
+		&__expandicon {
+			background-image: url('file://{images}/mom-arrow-down.svg');
+			background-repeat: no-repeat;
+			background-position: right 50% 50%;
+			background-size: 14px 14px;
+			height: 100%;
+			width: height-percentage(100%);
+			img-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.5);
+
+			#MapSelectorFeatured.collapsed & {
+				transform: rotateZ(270deg);
+			}
+		}
+
+		&__totalplayers {
+			flow-children: right;
+			horizontal-align: right;
+
+			&-icon {
+				height: 20px;
+				width: 20px;
+			}
+
+			&-playercount {
+				font-size: 18px;
+				font-weight: medium;
+			}
+		}
+	}
+}
+
+#MapSelectorFeaturedList {
+	flow-children: right;
+	width: fit-children;
+	horizontal-align: center;
+	margin: 8px;
+
+	#MapSelectorFeatured.collapsed & {
+		visibility: collapse;
+	}
+}
+
+#MapSelectorNoFeaturedLabel {
+	@include mixin.font-header();
+	font-size: 20px;
+	opacity: 0.5;
+}
+
 .mapselector-header {
 	flow-children: right;
 	width: 100%;
-	padding-right: 8px;
+	margin-bottom: 8px;
 
 	&__tabs {
 		flow-children: right;
@@ -200,42 +318,12 @@
 
 	flow-children: down;
 	width: 100%;
-	padding-right: 8px;
 	margin-top: 2px;
 	margin-bottom: 8px;
-
-	&__gamemode-button {
-		&:selected {
-			sound: 'UIPanorama.ModeSelect';
-		}
-
-		// IMPORTANT: `button` class gives vertical-align: center which is buggy with flow wrapping!!
-		vertical-align: top;
-		margin-bottom: 4px;
-		margin-right: 4px;
-	}
-
-	&__text {
-		font-size: 20px;
-	}
 
 	&__row {
 		flow-children: right;
 		width: 100%;
-	}
-
-	&__gamemodes {
-		margin-top: 4px;
-		margin-bottom: 4px;
-		flow-children: right-wrap;
-
-		& > #HorizontalScrollBar {
-			height: 2px;
-
-			& > #ScrollThumb {
-				opacity: 1;
-			}
-		}
 	}
 
 	&__tiers {
