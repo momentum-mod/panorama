@@ -249,6 +249,29 @@ $panel-border: 1px solid rgba(255, 255, 255, 0.01);
 	opacity: 0.5;
 }
 
+#MapSelectorFeaturedUpdateTickerGroup {
+	flow-children: right;
+	horizontal-align: right;
+	margin: 0 4px;
+
+	#MapSelectorFeatured.collapsed & {
+		visibility: collapse;
+	}
+
+	.mapselector-featuredticker_icon {
+		width: 18px;
+		height: 18px;
+		margin-top: 1px;
+		margin-right: 2px;
+		img-shadow: $font-header-shadow;
+	}
+
+	#MapSelectorFeaturedUpdateTicker {
+		@include mixin.font-header();
+		font-size: 18px;
+	}
+}
+
 .mapselector-header {
 	flow-children: right;
 	width: 100%;

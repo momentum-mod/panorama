@@ -82,7 +82,13 @@
 												<Label id="MapSelectorFeaturedTotalPlayers" class="mapselector-featuredtoggle__totalplayers-playercount" text="0" />
 											</Panel>
 										</Button>
+
 										<Panel id="MapSelectorFeaturedList">
+										</Panel>
+
+										<Panel id="MapSelectorFeaturedUpdateTickerGroup">
+											<Image class="mapselector-featuredticker_icon" src="file://{images}/clock.svg" textureheight="20" />
+											<Label id="MapSelectorFeaturedUpdateTicker" text="00:00" />
 										</Panel>
 									</Panel>
 									<Panel class="mapselector-header">
