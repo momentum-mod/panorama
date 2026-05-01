@@ -12,14 +12,14 @@ enum TimerFlags {
 	WATERJUMP = 1 << 2
 }
 
-//Defaults should be set in /config/hud_defaults.kv3
+// Defaults should be set in /config/hud_defaults.kv3
 const MeterColor = {
 	FRICTION: 'rgba(255, 106, 106, 1)',
 	NO_CRASH: 'rgba(255, 255, 255, 1)',
 	SLICK: 'rgba(16, 118, 168, 1)'
 };
 
-//Defaults should be set in /config/hud_defaults.kv3
+// Defaults should be set in /config/hud_defaults.kv3
 const LabelColor = {
 	GAIN: 'rgba(16, 118, 168, 1)',
 	FLAT: 'rgba(255, 255, 255, 1)',

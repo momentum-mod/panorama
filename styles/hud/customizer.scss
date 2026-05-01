@@ -220,7 +220,7 @@ $input-background-hover: rgb(110, 110, 110);
 		width: 100%;
 		flow-children: down;
 
-		&--children {
+		&--has-children {
 			width: 100%;
 			flow-children: down;
 			margin-left: 8px;

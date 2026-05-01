@@ -111,10 +111,10 @@ class Component {
 	private static userLayout: HudLayout | undefined;
 	private static defaultLayout: HudLayout;
 
-	//A record of CustomizerSettings dynamic styles <StyleID, value>
+	// A record of CustomizerSettings dynamic styles <StyleID, value>
 	static referencedValues: Record<string, any> = {};
 
-	//A record of CustomizerSettings dynamic styles <StyleID, Set of StyleID of components that use that style as reference>
+	// A record of CustomizerSettings dynamic styles <StyleID, Set of StyleID of components that use that style as reference>
 	static referencedValueListeners: Record<string, Set<string>> = {};
 
 	static {
@@ -388,7 +388,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		grid: $.GetContextPanel().GetParent()!.FindChildTraverse('HudCustomizerGrid')!
 	};
 
-	//Makes sure layout isn't saved before hud is initialized
+	// Makes sure layout isn't saved before hud is initialized
 	readyToSave: boolean;
 
 	components: Record<string, Component> = {};
@@ -575,11 +575,11 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		if (isCustomizerOpen) this.createResizeKnobs();
 	}
 
-	//CustomizerSettings dynamic styles are used as default global styles
-	//They can be referenced in hud_default.kv3 by using a string formatted like this: "$someStyleID"
-	//When a dynamic style is modified/loaded it calls this function with the it's styleID and a new value
-	//This functions then re-applies ALL styles on a component that uses that referenced value.
-	//Hud Customizer Panel in hud.xml MUST be placed after all other panels registered with hud customizer for this to initialize hud properly
+	// CustomizerSettings dynamic styles are used as default global styles
+	// They can be referenced in hud_default.kv3 by using a string formatted like this: "$someStyleID"
+	// When a dynamic style is modified/loaded it calls this function with the it's styleID and a new value
+	// This functions then re-applies ALL styles on a component that uses that referenced value.
+	// Hud Customizer Panel in hud.xml MUST be placed after all other panels registered with hud customizer for this to initialize hud properly
 	updateReferencedValue(refKey: string, newValue: any): void {
 		Component.referencedValues[refKey] = newValue;
 
@@ -1087,7 +1087,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 		const childrenStyleIDs = new Set<StyleID>();
 
-		for (const [_, dynamicStyle] of Object.entries(component.dynamicStyles)) {
+		for (const dynamicStyle of Object.values(component.dynamicStyles)) {
 			const child = dynamicStyle.properties.children;
 			if (child) {
 				const normalized = Array.isArray(child) ? child : [child];
@@ -1103,8 +1103,9 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			if (children) {
 				const normalizedChildren = Array.isArray(children) ? children : [children];
 
-				const childrenWrapper = $.CreatePanel('Panel', parentWrapper, `${parentStyleID}Children`);
-				childrenWrapper.AddClass('hud-customizer-settings__row-wrapper--children');
+				const childrenWrapper = $.CreatePanel('Panel', parentWrapper, `${parentStyleID}Children`, {
+					class: 'hud-customizer-settings__row-wrapper--has-children'
+				});
 
 				if (parentStyle.properties.expandable)
 					childrenWrapper.AddClass('hud-customizer-settings__row-wrapper--children-hidden');
@@ -1135,8 +1136,9 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		for (const [styleID, dynamicStyle] of Object.entries(component.dynamicStyles)) {
 			if (childrenStyleIDs.has(styleID)) continue;
 
-			const wrapper = $.CreatePanel('Panel', this.panels.activeComponentSettingsList, 'ParentWrapper');
-			wrapper.AddClass('hud-customizer-settings__row-wrapper');
+			const wrapper = $.CreatePanel('Panel', this.panels.activeComponentSettingsList, 'ParentWrapper', {
+				class: 'hud-customizer-settings__row-wrapper'
+			});
 
 			createStylePanel(styleID, dynamicStyle, wrapper);
 
@@ -1277,9 +1279,9 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 		LayoutUtil.setPosition(this.panels.dragPanel, this.activeComponent.offsetX, this.activeComponent.offsetY);
 
-		//TODO: This doesn't work when styles are defined in css, they must be defined in-line
-		//Maybe a better idea is to use minExpectedWidth and minExpectedHeight for this?
-		//It's not used on any panel right now so it can wait
+		// TODO: This doesn't work when styles are defined in css, they must be defined in-line
+		// Maybe a better idea is to use minExpectedWidth and minExpectedHeight for this?
+		// It's not used on any panel right now so it can wait
 		const [minWidth, minHeight] = getMinSize(this.activeComponent.panel);
 		if (this.activeComponent.width !== undefined) {
 			LayoutUtil.setWidth(this.panels.dragPanel, Math.max(this.activeComponent.width, minWidth));

@@ -1,5 +1,5 @@
 import { PanelHandler } from 'util/module-helpers';
-import { Gamemode } from 'common/web/enums/gamemode.enum';
+import { GamemodeCategory, GamemodeCategoryToGamemode } from 'common/web/enums/gamemode.enum';
 import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
 import { splitRgbFromAlpha } from 'util/colors';
 
@@ -27,7 +27,7 @@ class StickyChargeHandler {
 		registerHUDCustomizerComponent($.GetContextPanel(), {
 			resizeX: true,
 			resizeY: false,
-			gamemode: Gamemode.SJ,
+			gamemode: GamemodeCategoryToGamemode.get(GamemodeCategory.SJ),
 			unhandledEvents: {
 				event: 'OnChargeUpdate',
 				callbackFn: (enabled, speed, percentage) => this.onChargeUpdate(enabled, speed, percentage)

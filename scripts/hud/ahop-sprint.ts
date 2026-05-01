@@ -1,5 +1,5 @@
 import { PanelHandler } from 'util/module-helpers';
-import { Gamemode } from 'common/web/enums/gamemode.enum';
+import { GamemodeCategory, GamemodeCategoryToGamemode } from 'common/web/enums/gamemode.enum';
 import { registerHUDCustomizerComponent, CustomizerPropertyType } from 'common/hud-customizer';
 import { Button } from 'common/buttons';
 
@@ -67,7 +67,7 @@ class AhopSprint {
 		registerHUDCustomizerComponent($.GetContextPanel(), {
 			resizeX: false,
 			resizeY: false,
-			gamemode: Gamemode.AHOP,
+			gamemode: GamemodeCategoryToGamemode.get(GamemodeCategory.AHOP),
 			events: { event: 'HudProcessInput', panel: $.GetContextPanel(), callbackFn: () => this.onUpdate() },
 			dynamicStyles: {
 				type: {
@@ -179,7 +179,7 @@ class AhopSprint {
 					}
 				},
 
-				//TYPE - DOT
+				// TYPE - DOT
 				dotWidth: {
 					name: 'Width',
 					type: CustomizerPropertyType.NUMBER_ENTRY,

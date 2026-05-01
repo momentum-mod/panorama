@@ -30,8 +30,8 @@ class SafeguardHandler {
 		registerHUDCustomizerComponent($.GetContextPanel(), {
 			resizeX: false,
 			resizeY: false,
-			//TODO: Add safeguard cvars?
-			//TODO: Figure out how to add a dummy indicator without breaking clips
+			// TODO: Add safeguard cvars?
+			// TODO: Figure out how to add a dummy indicator without breaking clips
 			dynamicStyles: {
 				size: {
 					name: 'Size',

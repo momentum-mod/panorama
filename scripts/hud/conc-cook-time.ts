@@ -1,5 +1,5 @@
 import { PanelHandler } from 'util/module-helpers';
-import { Gamemode } from 'common/web/enums/gamemode.enum';
+import { GamemodeCategory, GamemodeCategoryToGamemode } from 'common/web/enums/gamemode.enum';
 
 import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
 import { splitRgbFromAlpha } from 'util/colors';
@@ -21,7 +21,7 @@ class ConcCookHandler {
 		registerHUDCustomizerComponent($.GetContextPanel(), {
 			resizeX: true,
 			resizeY: false,
-			gamemode: Gamemode.CONC,
+			gamemode: GamemodeCategoryToGamemode.get(GamemodeCategory.CONC),
 			unhandledEvents: {
 				event: 'OnCookUpdate',
 				callbackFn: (time, percentage) => this.onCookUpdate(time, percentage)

@@ -23,7 +23,7 @@ class HudSpecInfoHandler implements OnPanelLoad {
 	maxNames = 10;
 	dummySpectatorsEnabled = false;
 
-	//Needs to be initialized to any values, they immediately get overridden. Set defaults in /cfg/hud_default.kv3
+	// Needs to be initialized to any values, they immediately get overridden. Set defaults in /cfg/hud_default.kv3
 	specConfig = {
 		fontFamily: 'Roboto',
 		fontSize: 20,

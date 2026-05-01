@@ -1,7 +1,7 @@
 import { PanelHandler } from 'util/module-helpers';
 import * as MomMath from 'util/math';
 import { rgbaStringLerp } from 'util/colors';
-import { Gamemode, GamemodeCategory, GamemodeCategoryToGamemode } from 'common/web/enums/gamemode.enum';
+import { GamemodeCategory, GamemodeCategoryToGamemode } from 'common/web/enums/gamemode.enum';
 import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
 import { splitRgbFromAlpha } from 'util/colors';
 
@@ -45,7 +45,7 @@ class StrafeTrainer {
 		stats: [$<Label>('#StatsUpper'), $<Label>('#StatsLower')]
 	};
 
-	//Customizable
+	// Customizable
 	displayMode: DisplayMode;
 	indicatorPercentage = 90; // this value shows ~90% gain or better when strafe indicator touches needle
 	syncGain = 10; // scale how fast the bars move
@@ -60,15 +60,15 @@ class StrafeTrainer {
 	showGain: boolean;
 	statColorEnable: boolean;
 	strafeBarGradient = ['rgba(178, 178, 178, 1)', 'rgba(255, 255, 255, 1)'];
-	//Both are always the same, this is so that colorStatsByGain can be simplified
+	// Both are always the same, this is so that colorStatsByGain can be simplified
 	fontColor = ['rgba(255, 255, 255, 1)', 'rgba(255, 255, 255, 1)'];
 
-	//Not yet customizable
+	// Not yet customizable
 	isFirstPanelColored = true; // gets toggled in wrapValueToRange()
 	maxSegmentWidth = 25; // percentage of total element width
 	firstPanelWidth = this.maxSegmentWidth;
 
-	//Unused, this is a highlight color for the strafe bar
+	// Unused, this is a highlight color for the strafe bar
 	altColor = 'rgba(0,0,0,0)' as color;
 
 	sampleWeight: number;
@@ -80,9 +80,8 @@ class StrafeTrainer {
 			resizeX: true,
 			resizeY: false,
 			gamemode: [
-				Gamemode.SURF,
-				Gamemode.BHOP,
-				Gamemode.BHOP_HL1,
+				...GamemodeCategoryToGamemode.get(GamemodeCategory.SURF),
+				...GamemodeCategoryToGamemode.get(GamemodeCategory.BHOP),
 				...GamemodeCategoryToGamemode.get(GamemodeCategory.CLIMB)
 			],
 			events: { event: 'HudProcessInput', panel: $.GetContextPanel(), callbackFn: () => this.onUpdate() },
@@ -292,7 +291,7 @@ class StrafeTrainer {
 						} else panel.style.backgroundColor = value as color;
 					}
 				},
-				//TODO: It's annoying you can't see gainGradients when this changes. Not sure what to do about it
+				// TODO: It's annoying you can't see gainGradients when this changes. Not sure what to do about it
 				colorStats: {
 					name: 'Color Stats Based On Gain',
 					type: CustomizerPropertyType.CHECKBOX,
@@ -391,7 +390,7 @@ class StrafeTrainer {
 		const hudData = MomentumMovementAPI.GetMoveHudData();
 		const lastTickStats = MomentumMovementAPI.GetLastTickStats();
 
-		//zero buffers
+		// zero buffers
 		this.addToBuffer(this.gainRatioHistory, 0);
 		this.addToBuffer(this.yawRatioHistory, 0);
 
@@ -434,7 +433,7 @@ class StrafeTrainer {
 			}
 			case DisplayMode.STRAFE_INDICATOR: {
 				this.panels.container.style.flowChildren = flip < 0 ? 'left' : 'right';
-				//const offset = Math.min(Math.max(0.5 - (0.5 * direction * syncDelta) / idealDelta, 0), 1);
+				// const offset = Math.min(Math.max(0.5 - (0.5 * direction * syncDelta) / idealDelta, 0), 1);
 				const offset = Math.min(Math.max(0.5 - 0.5 * direction * yawRatio, 0), 1);
 				this.panels.segments[0].style.width = (offset * this.indicatorPercentage).toFixed(3) + '%';
 				this.panels.segments[1].style.backgroundColor = color;
@@ -454,7 +453,7 @@ class StrafeTrainer {
 		}
 	}
 
-	//Happens onJump and whenever any setting related to stats is changed
+	// Happens onJump and whenever any setting related to stats is changed
 	updateStats() {
 		const lastJumpStats = MomentumMovementAPI.GetLastJumpStats();
 		const statsTopText = [];

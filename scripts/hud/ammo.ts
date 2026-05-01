@@ -1,5 +1,5 @@
 import { PanelHandler } from 'util/module-helpers';
-import { Gamemode, GamemodeCategory, GamemodeCategoryToGamemode } from 'common/web/enums/gamemode.enum';
+import { GamemodeCategory, GamemodeCategoryToGamemode } from 'common/web/enums/gamemode.enum';
 import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
 import { splitRgbFromAlpha } from 'util/colors';
 
@@ -16,10 +16,10 @@ class MomHudAmmoHandler {
 			resizeX: true,
 			resizeY: false,
 			gamemode: [
-				Gamemode.RJ,
-				Gamemode.SJ,
-				Gamemode.CONC,
-				...GamemodeCategoryToGamemode.get(GamemodeCategory.DEFRAG)
+				...GamemodeCategoryToGamemode.get(GamemodeCategory.DEFRAG),
+				...GamemodeCategoryToGamemode.get(GamemodeCategory.RJ),
+				...GamemodeCategoryToGamemode.get(GamemodeCategory.SJ),
+				...GamemodeCategoryToGamemode.get(GamemodeCategory.CONC)
 			],
 			unhandledEvents: [
 				{ event: 'LevelInitPostEntity', callbackFn: () => this.restoreRealAmmo() },

@@ -10,12 +10,12 @@ const HIDDEN_CLASS = 'hudtimer--hidden';
 const ENABLE_FADE_CLASS = 'hudtimer__comparison--enable-fade';
 
 const Colors = {
-	//Main timer colors
+	// Main timer colors
 	INACTIVE: 'rgba(200, 200, 200, 1)' as rgbaColor,
 	PRIMED: 'rgba(200, 200, 200, 1)' as rgbaColor,
 	RUNNING: 'rgba(255, 255, 255, 1)' as rgbaColor,
 	FINISHED: 'rgba(122, 238, 122, 1)' as rgbaColor,
-	//Comparison colors
+	// Comparison colors
 	INCREASE: 'rgba(16, 118, 168, 1)' as rgbaColor,
 	DECREASE: 'rgba(255, 106, 106, 1)' as rgbaColor,
 	INVISIBLE: 'rgba(0, 0, 0, 0)' as rgbaColor

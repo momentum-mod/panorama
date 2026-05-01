@@ -370,7 +370,7 @@ class KeyPress {
 					}
 				},
 
-				//TURNBINDS
+				// TURNBINDS
 				textTurnbinds: {
 					name: 'Turn Keys',
 					type: CustomizerPropertyType.NONE,
@@ -549,7 +549,7 @@ class KeyPress {
 					}
 				},
 
-				//MODIFIER KEYS
+				// MODIFIER KEYS
 				iconsModifiers: {
 					name: 'Modifiers',
 					type: CustomizerPropertyType.NONE,
@@ -675,7 +675,7 @@ class KeyPress {
 						Config.icons.jump_duck.states.forced.opacity = splitRGBA.alpha;
 						this.updateStyles();
 
-						//Hack to initialize to the proper type
+						// Hack to initialize to the proper type
 						this.initHUD();
 					}
 				}
@@ -692,7 +692,7 @@ class KeyPress {
 		this.keys.forEach((panels) => panels.forEach((panel) => this.applyStaticStyles(panel)));
 	}
 
-	//Styles applied regardless of panel state
+	// Styles applied regardless of panel state
 	applyStaticStyles(panelInfo: PanelInfoType) {
 		const panel = panelInfo.panel;
 
@@ -720,12 +720,12 @@ class KeyPress {
 		this.applyStateStyles(panelInfo);
 	}
 
-	//Styles depending on panel state
+	// Styles depending on panel state
 	applyStateStyles(panelInfo: PanelInfoType) {
 		const { panel, type, state } = panelInfo;
 
 		switch (type) {
-			//KEYPRESS - TEXT
+			// KEYPRESS - TEXT
 			case KeySettingsType.TEXT_DIR_PANEL:
 				panel.style.backgroundColor = Config.text.dir.states[state].bg as color;
 				break;
@@ -743,7 +743,7 @@ class KeyPress {
 				panel.style.backgroundColor = Config.text.turnbinds.states[state].bg as color;
 				break;
 
-			//KEYPRESS - ICONS
+			// KEYPRESS - ICONS
 			case KeySettingsType.ICONS_DIR:
 				panel.style.washColor = Config.icons.dir.states[state].bg as color;
 				panel.style.opacity = Config.icons.dir.states[state].opacity;
@@ -866,7 +866,7 @@ class KeyPress {
 			}
 		};
 
-		//TODO: Make this selectable when per-gamemode configs are available
+		// TODO: Make this selectable when per-gamemode configs are available
 		const createLabels = () => {
 			const labelContainer = $.CreatePanel('Panel', this.panels.keypress, '', {
 				style: `
@@ -905,7 +905,7 @@ class KeyPress {
 
 			const A1 = $.CreatePanel('Label', this.panels.keypress, '', {
 				text: 'A1',
-				//X is wrong when Config.text.size changes, it's not customizable anyway
+				// X is wrong when Config.text.size changes, it's not customizable anyway
 				style: `
                     x: ${Config.text.turnbinds.width * Config.text.scale_factor - 6}px;
                     y: ${-11 * Config.text.scale_factor}px;

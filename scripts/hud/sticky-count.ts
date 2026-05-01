@@ -1,5 +1,5 @@
 import { PanelHandler } from 'util/module-helpers';
-import { Gamemode } from 'common/web/enums/gamemode.enum';
+import { GamemodeCategory, GamemodeCategoryToGamemode } from 'common/web/enums/gamemode.enum';
 
 import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
 import { splitRgbFromAlpha } from 'util/colors';
@@ -11,7 +11,7 @@ export enum StickyState {
 	BLOCKED = 3
 }
 
-//Values get overridden on load, assign defaults in /cfg/hud_default.kv3
+// Values get overridden on load, assign defaults in /cfg/hud_default.kv3
 const StateColors: Record<StickyState, string> = {
 	[StickyState.NOSTICKY]: 'rgba(35, 50, 57, 1)',
 	[StickyState.ARMING]: 'rgba(35, 50, 57, 1)',
@@ -36,7 +36,7 @@ class StickyCountHandler {
 
 	private panelStates: Map<GenericPanel, StickyState> = new Map();
 
-	//Needs random values for intialization, set defaults in /config/hud_default.kv3
+	// Needs random values for intialization, set defaults in /config/hud_default.kv3
 	config = {
 		width: '24px',
 		height: '24px',
@@ -50,18 +50,18 @@ class StickyCountHandler {
 		registerHUDCustomizerComponent($.GetContextPanel(), {
 			resizeX: false,
 			resizeY: false,
-			gamemode: Gamemode.SJ,
+			gamemode: GamemodeCategoryToGamemode.get(GamemodeCategory.SJ),
 			unhandledEvents: [
 				{
 					event: 'OnStickyPanelStateChanged',
 					callbackFn: (stickyPanel, state) => this.onStickyPanelStateChanged(stickyPanel, state)
 				},
-				//THIS IS A HACK FOR INITIALIZING SETTINGS
-				//#StickyCountContainer get populated by C++ with individual .sticky-panel
-				//This happens after load so the panels cannot be targetted by registerHUDCustomizerComponent
-				//initPanels is waiting for the #StickyCountContainer to have 8 children, assigns default values to them and then unregisters itself
-				//In order for default values to initialize registerHUDCustomizerComponent cannot target any panels, it won't call a callback if they don't exist
-				//this.updateStickyPanels() handles updating all settings, ugly but works for now
+				// THIS IS A HACK FOR INITIALIZING SETTINGS
+				// #StickyCountContainer get populated by C++ with individual .sticky-panel
+				// This happens after load so the panels cannot be targetted by registerHUDCustomizerComponent
+				// initPanels is waiting for the #StickyCountContainer to have 8 children, assigns default values to them and then unregisters itself
+				// In order for default values to initialize registerHUDCustomizerComponent cannot target any panels, it won't call a callback if they don't exist
+				// this.updateStickyPanels() handles updating all settings, ugly but works for now
 				{ event: 'LevelInitPostEntity', callbackFn: () => this.initPanels() }
 			],
 			dynamicStyles: {

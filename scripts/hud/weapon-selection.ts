@@ -55,7 +55,7 @@ class WeaponSelectionHandler {
 		registerHUDCustomizerComponent($.GetContextPanel(), {
 			resizeX: false,
 			resizeY: false,
-			//TODO: Add switching sides for the notch, gotta figure out the css
+			// TODO: Add switching sides for the notch, gotta figure out the css
 			dynamicStyles: {
 				fadeout: {
 					name: 'Fadeout',
