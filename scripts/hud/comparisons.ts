@@ -530,6 +530,8 @@ class HudComparisonsHandler {
 	}
 
 	createDummySplits() {
+		if (!getHudCustomizer()?.isOpen()) return;
+
 		const times = new Array(MAX_SPLITS);
 		let t = 0;
 		for (let i = 0; i < MAX_SPLITS; i++) {
