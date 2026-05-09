@@ -374,7 +374,7 @@ class GroundboostHandler {
 	setMeterColor(color: string) {
 		const [r, g, b, alpha] = rgbaStringToTuple(color as rgbaColor);
 		this.panels.groundboostMeter.style.washColor = `rgb(${r}, ${g}, ${b})`;
-		this.panels.groundboostMeter.style.opacity = alpha;
+		this.panels.groundboostMeter.style.opacity = alpha / 255;
 	}
 
 	updateTextColor(speed: number, timer: number) {
