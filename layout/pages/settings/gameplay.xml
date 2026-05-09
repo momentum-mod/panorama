@@ -325,22 +325,6 @@
 
 				<SettingsSlider text="#Settings_SJ_ChargedShotSoundTheshold" min="0" max="5" displayprecision="1" convar="mom_stickybomb_sound_strong_launch_threshold" infomessage="#Settings_SJ_ChargedShotSoundTheshold_Info" tags="charge,sound" />
 
-				<SettingsEnum text="#Settings_SJ_ChargeMeter" convar="mom_hud_stickybomb_charge" infomessage="#Settings_SJ_ChargeMeter_Info" tags="charge,meter">
-					<RadioButton group="chargemeter" text="#Common_Off" value="0" />
-					<RadioButton group="chargemeter" text="#Common_On" value="1" />
-				</SettingsEnum>
-
-				<SettingsEnum text="#Settings_SJ_StickyCounter" convar="mom_hud_stickybomb_count" infomessage="#Settings_SJ_StickyCounter_Info" tags="counter">
-					<RadioButton group="stickycounter" text="#Common_Off" value="0" />
-					<RadioButton group="stickycounter" text="#Common_On" value="1" />
-				</SettingsEnum>
-
-				<SettingsEnumDropDown text="#Settings_SJ_ChargeMeterUnits" convar="mom_hud_stickybomb_charge_text" tags="charge,meter">
-					<Label id="sjunits1" text="#Settings_SJ_ChargeMeterUnits_Type_None" value="0" />
-					<Label id="sjunits2" text="#Settings_SJ_ChargeMeterUnits_Type_1" value="1" />
-					<Label id="sjunits3" text="#Settings_SJ_ChargeMeterUnits_Type_2" value="2" />
-				</SettingsEnumDropDown>
-
 				<SettingsSlider text="#Settings_SJ_DrawDelayEntry" min="0" max="1" displayprecision="2" convar="mom_stickybomb_draw_delay" infomessage="#Settings_SJ_DrawDelayEntry_Info" tags="delay" />
 			</Panel>
 
@@ -390,22 +374,6 @@
 					<RadioButton group="concfizzlesound" text="#Common_Off" value="0" />
 					<RadioButton group="concfizzlesound" text="#Common_On" value="1" />
 				</SettingsEnum>
-
-				<SettingsEnum text="#Settings_Conc_TimerBar" convar="mom_hud_conc_timer" infomessage="#Settings_Conc_TimerBar_Info" tags="timer,bar">
-					<RadioButton group="conctimerpanel" text="#Common_Off" value="0" />
-					<RadioButton group="conctimerpanel" text="#Common_On" value="1" />
-				</SettingsEnum>
-
-				<SettingsEnum text="#Settings_Conc_IngameTimer" convar="mom_hud_conc_entpanels_enable" infomessage="#Settings_Conc_IngameTimer_Info" tags="timer">
-					<RadioButton group="conccountdown" text="#Common_Off" value="0" />
-					<RadioButton group="conccountdown" text="#Common_On" value="1" />
-				</SettingsEnum>
-
-				<SettingsEnum text="#Settings_Conc_NumericalTimer" convar="mom_hud_conc_timer_countdown" infomessage="#Settings_Conc_NumericalTimer_Info" tags="timer">
-					<RadioButton group="concentpanels" text="#Common_Off" value="0" />
-					<RadioButton group="concentpanels" text="#Common_On" value="1" />
-				</SettingsEnum>
-
 			</Panel>
 
 			<Panel class="settings-page__spacer" />
@@ -713,61 +681,6 @@
 						<ConVarColorDisplay text="#Settings_Defrag_WIndicatorArrowColor" convar="mom_hud_df_windicator_color" infomessage="#Settings_Defrag_WIndicatorArrowColor_Info" />
 
 						<SettingsSlider text="#Settings_Defrag_WIndicatorBorder" min="0" max="10" convar="mom_hud_df_windicator_border" displayprecision="0" infomessage="#Settings_Defrag_WIndicatorBorder_Info" />
-					</ConVarEnabler>
-
-				</Panel>
-
-				<Panel class="settings-group__combo">
-
-					<SettingsEnum text="#Settings_Defrag_Jump_Visualizer" convar="mom_hud_df_jump_enable" infomessage="#Settings_Defrag_Jump_Visualizer_Info">
-						<RadioButton group="dfjumpenable" text="#Common_Off" value="0" />
-						<RadioButton group="dfjumpenable" text="#Common_On" value="1" />
-					</SettingsEnum>
-
-					<ConVarEnabler convar="mom_hud_df_jump_enable" class="settings__convarenabler">
-						<SettingsSlider text="#Settings_Defrag_Jump_VisualizerMaxDelay" min="50" max="1000" convar="mom_hud_df_jump_max_delay" displayprecision="0" infomessage="#Settings_Defrag_Jump_VisualizerMaxDelay_Info" />
-
-						<SettingsEnum text="#Settings_Defrag_Jump_VisualizerLabels" convar="mom_hud_df_jump_text" infomessage="#Settings_Defrag_Jump_VisualizerLabels_Info">
-							<RadioButton group="dfjumptextenable" text="#Common_Off" value="0" />
-							<RadioButton group="dfjumptextenable" text="#Common_On" value="1" />
-						</SettingsEnum>
-					</ConVarEnabler>
-
-				</Panel>
-
-				<Panel class="settings-group__combo">
-
-					<Label class="settings-group__combo-header" text="#Settings_Defrag_Groundboost_Title" />
-
-					<SettingsEnum text="#Settings_Defrag_Groundboost" convar="mom_hud_df_groundboost_enable" infomessage="#Settings_Defrag_Groundboost_Info" tags="groundboost">
-						<RadioButton group="gbenable" text="#Common_Off" value="0" />
-						<RadioButton group="gbenable" text="#Common_On" value="1" />
-					</SettingsEnum>
-
-					<ConVarEnabler convar="mom_hud_df_groundboost_enable" class="settings__convarenabler">
-						<SettingsEnumDropDown text="#Settings_Defrag_Groundboost_TextMode" convar="mom_hud_df_groundboost_text_mode" infomessage="#Settings_Defrag_Groundboost_TextMode_Info" tags="groundboost">
-							<Label id="gblabel0" text="#Settings_Defrag_Groundboost_TextMode_Type0" value="0" />
-							<Label id="gblabel1" text="#Settings_Defrag_Groundboost_TextMode_Type1" value="1" />
-							<Label id="gblabel2" text="#Settings_Defrag_Groundboost_TextMode_Type2" value="2" />
-						</SettingsEnumDropDown>
-
-						<ConVarEnabler convar="mom_hud_df_groundboost_text_mode" class="settings__convarenabler">
-							<SettingsEnumDropDown text="#Settings_Defrag_Groundboost_TextColorMode" convar="mom_hud_df_groundboost_text_color_mode" infomessage="#Settings_Defrag_Groundboost_TextColorMode_Info" tags="groundboost">
-								<Label id="gbcolor0" text="#Settings_Defrag_Groundboost_TextColorMode_Type0" value="0" />
-								<Label id="gbcolor1" text="#Settings_Defrag_Groundboost_TextColorMode_Type1" value="1" />
-								<Label id="gbcolor2" text="#Settings_Defrag_Groundboost_TextColorMode_Type2" value="2" />
-							</SettingsEnumDropDown>
-						</ConVarEnabler>
-
-						<SettingsEnum text="#Settings_Defrag_Groundboost_Overshoot" convar="mom_hud_df_groundboost_overshoot" infomessage="#Settings_Defrag_Groundboost_Overshoot_Info" tags="groundboost">
-							<RadioButton group="gbovershootenable" text="#Common_Off" value="0" />
-							<RadioButton group="gbovershootenable" text="#Common_On" value="1" />
-						</SettingsEnum>
-
-						<SettingsEnum text="#Settings_Defrag_Groundboost_CrashHighlight" convar="mom_hud_df_groundboost_crash_highlight" infomessage="#Settings_Defrag_Groundboost_CrashHighlight_Info" tags="groundboost">
-							<RadioButton group="gbcrashhlenable" text="#Common_Off" value="0" />
-							<RadioButton group="gbcrashhlenable" text="#Common_On" value="1" />
-						</SettingsEnum>
 					</ConVarEnabler>
 
 				</Panel>

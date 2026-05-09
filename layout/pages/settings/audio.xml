@@ -80,6 +80,63 @@
 
 				<SettingsSlider text="#Settings_AudioDevices_Background" infomessage="#Settings_Volume_Background_Info" convar="snd_mute_losefocus" hasdocspage="false" tags="focus,background" min="0" max="1" percentage="true" />
 			</Panel>
+
+            <Panel class="settings-page__spacer" />
+
+            <Panel id="TimerSubSection" class="settings-group">
+				<Panel class="settings-group__header">
+					<Label class="settings-group__title" text="#Settings_Timer_Title" tags="timer" />
+					<Panel class="flow-right h-align-right">
+						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_Timer_Title', 'TimerSubSection')">
+							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
+						</Button>
+						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
+							<Button class="button" onactivate="SettingsPage.resetSettings('TimerSubSection');">
+								<Image class="button__icon" src="file://{images}/reset.svg" />
+							</Button>
+						</TooltipPanel>
+					</Panel>
+				</Panel>
+
+				<SettingsEnum text="#Settings_Timer_SoundStart" convar="mom_timer_start_sound" infomessage="#Settings_Timer_SoundStart_Info" tags="sound">
+					<RadioButton group="timerstartsound" text="#Common_Off" value="0" />
+					<RadioButton group="timerstartsound" text="#Common_On" value="1" />
+				</SettingsEnum>
+
+				<SettingsEnum text="#Settings_Timer_SoundFinish" convar="mom_timer_finish_sound" infomessage="#Settings_Timer_SoundFinish_Info" tags="sound">
+					<RadioButton group="timerfinishsound" text="#Common_Off" value="0" />
+					<RadioButton group="timerfinishsound" text="#Common_On" value="1" />
+				</SettingsEnum>
+
+				<SettingsEnum text="#Settings_Timer_SoundStop" convar="mom_timer_disable_sound" infomessage="#Settings_Timer_SoundStop_Info" tags="sound">
+					<RadioButton group="timerstopsound" text="#Common_Off" value="0" />
+					<RadioButton group="timerstopsound" text="#Common_On" value="1" />
+				</SettingsEnum>
+			</Panel>
+
+            <Panel class="settings-page__spacer" />
+
+            <Panel id="WeaponSelSubSection" class="settings-group">
+				<Panel class="settings-group__header">
+					<Label class="settings-group__title" text="#Settings_WeaponSelection_Title" tags="weapon,hud" />
+					<Panel class="flow-right h-align-right">
+						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_WeaponSelection_Title', 'WeaponSelSubSection')">
+							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
+						</Button>
+
+						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
+							<Button class="button" onactivate="SettingsPage.resetSettings('WeaponSelSubSection');">
+								<Image class="button__icon" src="file://{images}/reset.svg" />
+							</Button>
+						</TooltipPanel>
+					</Panel>
+				</Panel>
+
+				<SettingsEnum text="#Settings_WeaponSelection_Sound" convar="mom_hud_weapon_select_sounds" infomessage="#Settings_WeaponSelection_Sound_Info" tags="sound">
+					<RadioButton group="showwepselsound" text="#Common_Off" value="0" />
+					<RadioButton group="showwepselsound" text="#Common_On" value="1" />
+				</SettingsEnum>
+			</Panel>
 		</BaseAudioSettings>
 	</Panel>
 </root>
