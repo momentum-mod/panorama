@@ -4,7 +4,9 @@
 		"lib": ["ESNext"],
 		// Dynamic imports, import.meta, top-level await and import attributes are all unsupported.
 		"module": "ES2015",
-		"baseUrl": "scripts/",
+		"paths": {
+			"*": ["./scripts/*"]
+		},
 		"rootDir": "scripts/",
 		"allowJs": true,
 		"alwaysStrict": true,
@@ -15,9 +17,7 @@
 		"experimentalDecorators": true,
 		"typeRoots": ["./scripts/types-mom"], // If you error here, you don't have the submodule installed! (git submodule update --init --recursive)
 		"sourceMap": true,
-		"noImplicitAny": false,
-		// Annoying error
-		"ignoreDeprecations": "6.0"
+		"noImplicitAny": false
 	},
 	"include": ["scripts/"],
 	"exclude": ["scripts/types/p2ce/**/*"]
