@@ -1112,7 +1112,12 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 				for (const child of normalizedChildren) {
 					const childStyle = component.dynamicStyles[child.styleID];
-					if (!childStyle) continue;
+					if (!childStyle) {
+						$.Warning(
+							`Couldn't find child "${child.styleID}" on dynamic style "${parentStyleID}" in panel "${this.activeComponent.panel.id}"`
+						);
+						continue;
+					}
 
 					const childPanel = createStylePanel(child.styleID, childStyle, childrenWrapper);
 
