@@ -243,78 +243,83 @@ class HudComparisonsHandler {
 						panel.style.textShadowFast = getTextShadowFast(value as rgbaColor, 0.9);
 					}
 				},
-				comparison: {
+				comparisons: {
 					name: 'Comparison',
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [
-						{ styleID: 'comparisonFont' },
-						{ styleID: 'comparisonFontSize' },
-						{ styleID: 'comparisonColors' }
+						{ styleID: 'comparisonsFont' },
+						{ styleID: 'comparisonsFontSize' },
+						{ styleID: 'comparisonsColors' }
 					]
 				},
-				comparisonFont: {
+				comparisonsFont: {
 					name: 'Font',
 					type: CustomizerPropertyType.FONT_PICKER,
 					targetPanel: '.hud-splits__diff',
 					styleProperty: 'fontFamily'
 				},
-				comparisonFontSize: {
+				comparisonsFontSize: {
 					name: 'Size',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					targetPanel: '.hud-splits__diff',
 					styleProperty: 'fontSize'
 				},
-				comparisonColors: {
+				comparisonsColors: {
 					name: 'Colors',
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [
-						{ styleID: 'comparsonNeutral' },
-						{ styleID: 'comparisonAheadGain' },
-						{ styleID: 'comparisonAheadLoss' },
-						{ styleID: 'comparisonBehindGain' },
-						{ styleID: 'comparisonBehindLoss' }
+						{ styleID: 'comparisonsNeutral' },
+						{ styleID: 'comparisonsAheadGain' },
+						{ styleID: 'comparisonsAheadLoss' },
+						{ styleID: 'comparisonsBehindGain' },
+						{ styleID: 'comparisonsBehindLoss' }
 					]
 				},
-				comparsonNeutral: {
+				comparisonsNeutral: {
 					name: 'Neutral',
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
 						COMPARISON_COLORS.neutral.color = value;
 						COMPARISON_COLORS.neutral.textShadow = getTextShadowFast(value as rgbaColor, 0.9);
+						this.createDummySplits();
 					}
 				},
-				comparisonAheadGain: {
+				comparisonsAheadGain: {
 					name: 'Ahead - Gain',
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
 						COMPARISON_COLORS.ahead_gain.color = value;
 						COMPARISON_COLORS.ahead_gain.textShadow = getTextShadowFast(value as rgbaColor, 0.9);
+						this.createDummySplits();
 					}
 				},
-				comparisonAheadLoss: {
+				comparisonsAheadLoss: {
 					name: 'Ahead - Loss',
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
 						COMPARISON_COLORS.ahead_loss.color = value;
 						COMPARISON_COLORS.ahead_loss.textShadow = getTextShadowFast(value as rgbaColor, 0.9);
+						this.createDummySplits();
 					}
 				},
-				comparisonBehindGain: {
+				comparisonsBehindGain: {
 					name: 'Behind - Gain',
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
 						COMPARISON_COLORS.behind_gain.color = value;
 						COMPARISON_COLORS.behind_gain.textShadow = getTextShadowFast(value as rgbaColor, 0.9);
+						this.createDummySplits();
 					}
 				},
-				comparisonBehindLoss: {
+				comparisonsBehindLoss: {
 					name: 'Behind - Loss',
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
 						COMPARISON_COLORS.behind_loss.color = value;
 						COMPARISON_COLORS.behind_loss.textShadow = getTextShadowFast(value as rgbaColor, 0.9);
+						this.createDummySplits();
 					}
 				}
 			}
