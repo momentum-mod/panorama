@@ -40,7 +40,7 @@ class DFJumpHandler {
 					callbackFunc: (_, value) => {
 						this.setMaxDelay(value);
 					},
-					settingProps: { min: 1, max: 360 }
+					settingProps: { min: 0, max: 1000 }
 				},
 				showLabels: {
 					name: 'Show Labels',
@@ -183,6 +183,9 @@ class DFJumpHandler {
 	}
 
 	setMaxDelay(newDelay: number) {
+		//Apparently c++ needs this for some reason
+		//TODO: Figure out why and ideally change it in c++, this is a hacky workaround
+		GameInterfaceAPI.SetSettingInt('mom_hud_df_jump_max_delay', newDelay);
 		this.inverseMaxDelay = 1 / newDelay;
 	}
 }
