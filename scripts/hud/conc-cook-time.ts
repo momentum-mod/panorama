@@ -2,7 +2,7 @@ import { PanelHandler } from 'util/module-helpers';
 import { GamemodeCategory, GamemodeCategoryToGamemode } from 'common/web/enums/gamemode.enum';
 
 import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
-import { splitRgbFromAlpha } from 'util/colors';
+import { getTextShadowFast } from 'common/hud-customizer';
 
 @PanelHandler()
 class ConcCookHandler {
@@ -77,7 +77,7 @@ class ConcCookHandler {
 					targetPanel: '.cooktime__label',
 					styleProperty: 'color',
 					callbackFunc: (panel, value) => {
-						panel.style.textShadowFast = this.getAdjustedTextShadow(value as rgbaColor);
+						panel.style.textShadowFast = getTextShadowFast(value as rgbaColor, 0.9);
 					}
 				},
 				borderStyling: {
@@ -164,10 +164,5 @@ class ConcCookHandler {
 
 		const displayTime = this.countDown ? GameInterfaceAPI.GetSettingFloat('mom_conc_handheld_fuse') - time : time;
 		this.panels.cookLabel.text = `${displayTime.toFixed(2)}${this.units}`;
-	}
-
-	getAdjustedTextShadow(color: rgbaColor) {
-		const splitRGBA = splitRgbFromAlpha(color);
-		return `0px 1px rgba(0, 0, 0, ${splitRGBA.alpha * 0.9})`;
 	}
 }

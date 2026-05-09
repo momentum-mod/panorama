@@ -1,7 +1,7 @@
 import { PanelHandler } from 'util/module-helpers';
 import { GamemodeCategory, GamemodeCategoryToGamemode } from 'common/web/enums/gamemode.enum';
 import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
-import { splitRgbFromAlpha } from 'util/colors';
+import { rgbaStringToTuple } from 'util/colors';
 
 export enum StickyChargeUnit {
 	NONE = 0,
@@ -118,9 +118,8 @@ class StickyChargeHandler {
 					targetPanel: '.stickycharge__label',
 					styleProperty: 'color',
 					callbackFunc: (panel, value) => {
-						const splitRGBA = splitRgbFromAlpha(value as rgbaColor);
-						const adjustedAlpha = splitRGBA.alpha * 0.9;
-						panel.style.textShadow = `rgba(0, 0, 0, ${adjustedAlpha}) 0px 1px 2px 2.5`;
+						const alpha = (rgbaStringToTuple(value as rgbaColor)[3] / 255) * 0.9;
+						panel.style.textShadow = `rgba(0, 0, 0, ${alpha}) 0px 1px 2px 2.5`;
 					}
 				},
 				colors: {

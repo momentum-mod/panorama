@@ -1,8 +1,8 @@
 import { PanelHandler } from 'util/module-helpers';
 import { Button } from 'common/buttons';
-import { registerHUDCustomizerComponent, CustomizerPropertyType } from 'common/hud-customizer';
-import { splitRgbFromAlpha } from 'util/colors';
+import { registerHUDCustomizerComponent, CustomizerPropertyType, getTextShadowFast } from 'common/hud-customizer';
 import { Gamemode } from 'common/web/enums/gamemode.enum';
+import { rgbaStringToTuple } from 'util/colors';
 
 enum KeySettingsType {
 	TEXT_DIR_PANEL,
@@ -270,9 +270,9 @@ class KeyPress {
 					name: 'Default Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
-						const splitRGBA = splitRgbFromAlpha(value as rgbaColor);
-						Config.text.dir.states.default.iconColor = splitRGBA.rgb;
-						Config.text.dir.states.default.iconOpacity = splitRGBA.alpha;
+						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
+						Config.text.dir.states.default.iconColor = `rgb(${r}, ${g}, ${b})`;
+						Config.text.dir.states.default.iconOpacity = alpha / 255;
 						this.updateStyles();
 					}
 				},
@@ -280,9 +280,9 @@ class KeyPress {
 					name: 'Pressed Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
-						const splitRGBA = splitRgbFromAlpha(value as rgbaColor);
-						Config.text.dir.states.pressed.iconColor = splitRGBA.rgb;
-						Config.text.dir.states.pressed.iconOpacity = splitRGBA.alpha;
+						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
+						Config.text.dir.states.pressed.iconColor = `rgb(${r}, ${g}, ${b})`;
+						Config.text.dir.states.pressed.iconOpacity = alpha / 255;
 						this.updateStyles();
 					}
 				},
@@ -290,9 +290,9 @@ class KeyPress {
 					name: 'Disabled Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
-						const splitRGBA = splitRgbFromAlpha(value as rgbaColor);
-						Config.text.dir.states.disabled.iconColor = splitRGBA.rgb;
-						Config.text.dir.states.disabled.iconOpacity = splitRGBA.alpha;
+						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
+						Config.text.dir.states.disabled.iconColor = `rgb(${r}, ${g}, ${b})`;
+						Config.text.dir.states.disabled.iconOpacity = alpha / 255;
 						this.updateStyles();
 					}
 				},
@@ -300,9 +300,9 @@ class KeyPress {
 					name: 'Forced Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
-						const splitRGBA = splitRgbFromAlpha(value as rgbaColor);
-						Config.text.dir.states.forced.iconColor = splitRGBA.rgb;
-						Config.text.dir.states.forced.iconOpacity = splitRGBA.alpha;
+						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
+						Config.text.dir.states.forced.iconColor = `rgb(${r}, ${g}, ${b})`;
+						Config.text.dir.states.forced.iconOpacity = alpha / 255;
 						this.updateStyles();
 					}
 				},
@@ -512,9 +512,9 @@ class KeyPress {
 					name: 'Default Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
-						const splitRGBA = splitRgbFromAlpha(value as rgbaColor);
-						Config.icons.dir.states.default.bg = splitRGBA.rgb;
-						Config.icons.dir.states.default.opacity = splitRGBA.alpha;
+						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
+						Config.icons.dir.states.default.bg = `rgb(${r}, ${g}, ${b})`;
+						Config.icons.dir.states.default.opacity = alpha / 255;
 						this.updateStyles();
 					}
 				},
@@ -522,9 +522,9 @@ class KeyPress {
 					name: 'Pressed Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
-						const splitRGBA = splitRgbFromAlpha(value as rgbaColor);
-						Config.icons.dir.states.pressed.bg = splitRGBA.rgb;
-						Config.icons.dir.states.pressed.opacity = splitRGBA.alpha;
+						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
+						Config.icons.dir.states.pressed.bg = `rgb(${r}, ${g}, ${b})`;
+						Config.icons.dir.states.pressed.opacity = alpha / 255;
 						this.updateStyles();
 					}
 				},
@@ -532,9 +532,9 @@ class KeyPress {
 					name: 'Disabled Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
-						const splitRGBA = splitRgbFromAlpha(value as rgbaColor);
-						Config.icons.dir.states.disabled.bg = splitRGBA.rgb;
-						Config.icons.dir.states.disabled.opacity = splitRGBA.alpha;
+						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
+						Config.icons.dir.states.disabled.bg = `rgb(${r}, ${g}, ${b})`;
+						Config.icons.dir.states.disabled.opacity = alpha / 255;
 						this.updateStyles();
 					}
 				},
@@ -542,9 +542,9 @@ class KeyPress {
 					name: 'Forced Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
-						const splitRGBA = splitRgbFromAlpha(value as rgbaColor);
-						Config.icons.dir.states.forced.bg = splitRGBA.rgb;
-						Config.icons.dir.states.forced.opacity = splitRGBA.alpha;
+						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
+						Config.icons.dir.states.forced.bg = `rgb(${r}, ${g}, ${b})`;
+						Config.icons.dir.states.forced.opacity = alpha / 255;
 						this.updateStyles();
 					}
 				},
@@ -566,9 +566,9 @@ class KeyPress {
 					name: 'Default Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
-						const splitRGBA = splitRgbFromAlpha(value as rgbaColor);
-						Config.icons.modifiers.states.default.bg = splitRGBA.rgb;
-						Config.icons.modifiers.states.default.opacity = splitRGBA.alpha;
+						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
+						Config.icons.modifiers.states.default.bg = `rgb(${r}, ${g}, ${b})`;
+						Config.icons.modifiers.states.default.opacity = alpha / 255;
 						this.updateStyles();
 					}
 				},
@@ -576,9 +576,9 @@ class KeyPress {
 					name: 'Pressed Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
-						const splitRGBA = splitRgbFromAlpha(value as rgbaColor);
-						Config.icons.modifiers.states.pressed.bg = splitRGBA.rgb;
-						Config.icons.modifiers.states.pressed.opacity = splitRGBA.alpha;
+						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
+						Config.icons.modifiers.states.pressed.bg = `rgb(${r}, ${g}, ${b})`;
+						Config.icons.modifiers.states.pressed.opacity = alpha / 255;
 						this.updateStyles();
 					}
 				},
@@ -586,9 +586,9 @@ class KeyPress {
 					name: 'Disabled Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
-						const splitRGBA = splitRgbFromAlpha(value as rgbaColor);
-						Config.icons.modifiers.states.disabled.bg = splitRGBA.rgb;
-						Config.icons.modifiers.states.disabled.opacity = splitRGBA.alpha;
+						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
+						Config.icons.modifiers.states.disabled.bg = `rgb(${r}, ${g}, ${b})`;
+						Config.icons.modifiers.states.disabled.opacity = alpha / 255;
 						this.updateStyles();
 					}
 				},
@@ -596,9 +596,9 @@ class KeyPress {
 					name: 'Toggled Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
-						const splitRGBA = splitRgbFromAlpha(value as rgbaColor);
-						Config.icons.modifiers.states.toggled.bg = splitRGBA.rgb;
-						Config.icons.modifiers.states.toggled.opacity = splitRGBA.alpha;
+						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
+						Config.icons.modifiers.states.toggled.bg = `rgb(${r}, ${g}, ${b})`;
+						Config.icons.modifiers.states.toggled.opacity = alpha / 255;
 						this.updateStyles();
 					}
 				},
@@ -606,9 +606,9 @@ class KeyPress {
 					name: 'Forced Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
-						const splitRGBA = splitRgbFromAlpha(value as rgbaColor);
-						Config.icons.modifiers.states.forced.bg = splitRGBA.rgb;
-						Config.icons.modifiers.states.forced.opacity = splitRGBA.alpha;
+						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
+						Config.icons.modifiers.states.forced.bg = `rgb(${r}, ${g}, ${b})`;
+						Config.icons.modifiers.states.forced.opacity = alpha / 255;
 						this.updateStyles();
 					}
 				},
@@ -630,9 +630,9 @@ class KeyPress {
 					name: 'Default Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
-						const splitRGBA = splitRgbFromAlpha(value as rgbaColor);
-						Config.icons.jump_duck.states.default.bg = splitRGBA.rgb;
-						Config.icons.jump_duck.states.default.opacity = splitRGBA.alpha;
+						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
+						Config.icons.jump_duck.states.default.bg = `rgb(${r}, ${g}, ${b})`;
+						Config.icons.jump_duck.states.default.opacity = alpha / 255;
 						this.updateStyles();
 					}
 				},
@@ -640,9 +640,9 @@ class KeyPress {
 					name: 'Pressed Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
-						const splitRGBA = splitRgbFromAlpha(value as rgbaColor);
-						Config.icons.jump_duck.states.pressed.bg = splitRGBA.rgb;
-						Config.icons.jump_duck.states.pressed.opacity = splitRGBA.alpha;
+						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
+						Config.icons.jump_duck.states.pressed.bg = `rgb(${r}, ${g}, ${b})`;
+						Config.icons.jump_duck.states.pressed.opacity = alpha / 255;
 						this.updateStyles();
 					}
 				},
@@ -650,9 +650,9 @@ class KeyPress {
 					name: 'Disabled Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
-						const splitRGBA = splitRgbFromAlpha(value as rgbaColor);
-						Config.icons.jump_duck.states.disabled.bg = splitRGBA.rgb;
-						Config.icons.jump_duck.states.disabled.opacity = splitRGBA.alpha;
+						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
+						Config.icons.jump_duck.states.disabled.bg = `rgb(${r}, ${g}, ${b})`;
+						Config.icons.jump_duck.states.disabled.opacity = alpha / 255;
 						this.updateStyles();
 					}
 				},
@@ -660,9 +660,9 @@ class KeyPress {
 					name: 'Toggled Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
-						const splitRGBA = splitRgbFromAlpha(value as rgbaColor);
-						Config.icons.jump_duck.states.toggled.bg = splitRGBA.rgb;
-						Config.icons.jump_duck.states.toggled.opacity = splitRGBA.alpha;
+						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
+						Config.icons.jump_duck.states.toggled.bg = `rgb(${r}, ${g}, ${b})`;
+						Config.icons.jump_duck.states.toggled.opacity = alpha / 255;
 						this.updateStyles();
 					}
 				},
@@ -670,9 +670,9 @@ class KeyPress {
 					name: 'Forced Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
-						const splitRGBA = splitRgbFromAlpha(value as rgbaColor);
-						Config.icons.jump_duck.states.forced.bg = splitRGBA.rgb;
-						Config.icons.jump_duck.states.forced.opacity = splitRGBA.alpha;
+						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
+						Config.icons.jump_duck.states.forced.bg = `rgb(${r}, ${g}, ${b})`;
+						Config.icons.jump_duck.states.forced.opacity = alpha / 255;
 						this.updateStyles();
 
 						// Hack to initialize to the proper type
@@ -736,7 +736,7 @@ class KeyPress {
 			case KeySettingsType.TEXT_LABEL: {
 				const color = Config.text.label.states[state].color;
 				panel.style.color = color;
-				panel.style.textShadow = this.getAdjustedTextShadow(color as rgbaColor);
+				panel.style.textShadow = getTextShadowFast(color as rgbaColor, 0.5);
 				break;
 			}
 			case KeySettingsType.TEXT_TURNBIND:
@@ -1099,10 +1099,5 @@ class KeyPress {
 					{ text: labels.walk, input: Button.SPEED }
 				];
 		}
-	}
-
-	getAdjustedTextShadow(color: rgbaColor) {
-		const splitRGBA = splitRgbFromAlpha(color);
-		return `0 3px 6px rgba(0, 0, 0, ${splitRGBA.alpha * 0.5})`;
 	}
 }

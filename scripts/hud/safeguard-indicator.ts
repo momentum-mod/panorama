@@ -1,7 +1,7 @@
 import { PanelHandler } from 'util/module-helpers';
 
 import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
-import { splitRgbFromAlpha } from 'util/colors';
+import { rgbaStringToTuple } from 'util/colors';
 
 @PanelHandler()
 class SafeguardHandler {
@@ -48,10 +48,10 @@ class SafeguardHandler {
 					type: CustomizerPropertyType.COLOR_PICKER,
 					targetPanel: '.safeguard__meter',
 					callbackFunc: (panel, value) => {
-						const splitRGBA = splitRgbFromAlpha(value as rgbaColor);
+						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
 
-						panel.style.washColor = splitRGBA.rgb;
-						panel.style.opacity = splitRGBA.alpha;
+						panel.style.washColor = `rgb(${r}, ${g}, ${b})`;
+						panel.style.opacity = alpha / 255;
 					}
 				}
 			}

@@ -1,8 +1,7 @@
 import { PanelHandler } from 'util/module-helpers';
 import { GamemodeCategory, GamemodeCategoryToGamemode } from 'common/web/enums/gamemode.enum';
-
 import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
-import { splitRgbFromAlpha } from 'util/colors';
+import { getTextShadowFast } from 'common/hud-customizer';
 
 // This gets overridden on map load. Set defaults in cfg/hud_default.kv3
 const Colors = {
@@ -91,7 +90,7 @@ class DFJumpHandler {
 					],
 					styleProperty: 'color',
 					callbackFunc: (panel, value) => {
-						panel.style.textShadowFast = this.getAdjustedTextShadow(value as rgbaColor);
+						panel.style.textShadowFast = getTextShadowFast(value as rgbaColor, 1);
 					}
 				},
 				borderStyling: {
@@ -185,10 +184,5 @@ class DFJumpHandler {
 
 	setMaxDelay(newDelay: number) {
 		this.inverseMaxDelay = 1 / newDelay;
-	}
-
-	getAdjustedTextShadow(color: rgbaColor) {
-		const splitRGBA = splitRgbFromAlpha(color);
-		return `0px 1px 1.5px 1 rgba(0, 0, 0, ${splitRGBA.alpha})`;
 	}
 }

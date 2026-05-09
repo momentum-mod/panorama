@@ -6,7 +6,7 @@ import { Style } from 'common/web/enums/style.enum';
 import { getRunStyleName } from 'common/style';
 
 import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
-import { splitRgbFromAlpha } from 'util/colors';
+import { getTextShadowFast } from 'common/hud-customizer';
 
 @PanelHandler()
 class HudStatusHandler {
@@ -96,7 +96,7 @@ class HudStatusHandler {
 					targetPanel: '.hudstatus__label',
 					styleProperty: 'color',
 					callbackFunc: (panel, value) => {
-						panel.style.textShadowFast = this.getAdjustedTextShadow(value as rgbaColor);
+						panel.style.textShadowFast = getTextShadowFast(value as rgbaColor, 0.9);
 					}
 				},
 				backgroundColor: {
@@ -244,9 +244,4 @@ class HudStatusHandler {
 		saveState: $.Localize('#Timer_SaveState'),
 		practiceMode: $.Localize('#Timer_PracticeMode')
 	};
-
-	getAdjustedTextShadow(color: rgbaColor) {
-		const splitRGBA = splitRgbFromAlpha(color);
-		return `0px 1px rgba(0, 0, 0, ${splitRGBA.alpha * 0.9})`;
-	}
 }

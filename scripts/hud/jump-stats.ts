@@ -2,7 +2,7 @@ import { PanelHandler } from 'util/module-helpers';
 import { GamemodeCategory, GamemodeCategoryToGamemode } from 'common/web/enums/gamemode.enum';
 
 import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
-import { splitRgbFromAlpha } from 'util/colors';
+import { getTextShadowFast } from 'common/hud-customizer';
 
 type JumpStatsType = {
 	statsFirstPrint: int32;
@@ -67,7 +67,7 @@ class JumpStatsHandler {
 					targetPanel: ['.jumpstats__label', '.jumpstats__label--name', '.jumpstats__label--values'],
 					styleProperty: 'color',
 					callbackFunc: (panel, value) => {
-						panel.style.textShadowFast = this.getAdjustedTextShadow(value as rgbaColor);
+						panel.style.textShadowFast = getTextShadowFast(value as rgbaColor, 0.9);
 						const nameLabel = panel.GetChild(0);
 						if (nameLabel) {
 							nameLabel.style.borderTop = `1px solid ${value}`;
@@ -330,10 +330,5 @@ class JumpStatsHandler {
 
 	makePercentage(ratio: number): string {
 		return (ratio * 100).toFixed(1) + '%';
-	}
-
-	getAdjustedTextShadow(color: rgbaColor) {
-		const splitRGBA = splitRgbFromAlpha(color);
-		return `0px 1px rgba(0, 0, 0, ${splitRGBA.alpha * 0.9})`;
 	}
 }

@@ -2,7 +2,7 @@ import { PanelHandler } from 'util/module-helpers';
 import { GamemodeCategory, GamemodeCategoryToGamemode } from 'common/web/enums/gamemode.enum';
 
 import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
-import { splitRgbFromAlpha } from 'util/colors';
+import { rgbaStringToTuple } from 'util/colors';
 
 export enum StickyState {
 	NOSTICKY = 0,
@@ -178,14 +178,14 @@ class StickyCountHandler {
 	checkForChildren() {
 		const stickyPanels = this.panels.countContainer.Children();
 		if (stickyPanels.length === 8) {
-			const splitRGBA = splitRgbFromAlpha(StateColors[StickyState.NOSTICKY] as rgbaColor);
+			const alpha = (rgbaStringToTuple(StateColors[StickyState.NOSTICKY] as rgbaColor)[3] / 255) * 0.5;
 
 			stickyPanels.forEach((panel) => {
 				for (const [key, value] of Object.entries(this.config)) {
 					panel.style[key] = value;
 				}
 				panel.style.backgroundColor = StateColors[StickyState.NOSTICKY] as color;
-				panel.style.boxShadow = `rgba(0, 0, 0, ${splitRGBA.alpha * 0.5}) 0px 0px 3px 0px`;
+				panel.style.boxShadow = `rgba(0, 0, 0, ${alpha}) 0px 0px 3px 0px`;
 				this.panelStates.set(panel, StickyState.NOSTICKY);
 			});
 			$.UnregisterEventHandler('HudThink', $.GetContextPanel(), this.initHandler);
@@ -194,13 +194,13 @@ class StickyCountHandler {
 
 	updateStickyPanels() {
 		this.panelStates.forEach((state, panel) => {
-			const splitRGBA = splitRgbFromAlpha(StateColors[state] as rgbaColor);
+			const alpha = (rgbaStringToTuple(StateColors[state] as rgbaColor)[3] / 255) * 0.5;
 			for (const [key, value] of Object.entries(this.config)) {
 				panel.style[key] = value;
 			}
 
 			panel.style.backgroundColor = StateColors[state] as color;
-			panel.style.boxShadow = `rgba(0, 0, 0, ${splitRGBA.alpha * 0.5}) 0px 0px 3px 0px`;
+			panel.style.boxShadow = `rgba(0, 0, 0, ${alpha}) 0px 0px 3px 0px`;
 		});
 	}
 

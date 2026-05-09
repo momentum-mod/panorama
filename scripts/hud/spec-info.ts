@@ -1,7 +1,7 @@
 import { OnPanelLoad, PanelHandler } from 'util/module-helpers';
 
 import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
-import { splitRgbFromAlpha } from 'util/colors';
+import { getTextShadowFast } from 'common/hud-customizer';
 
 type specConfigType = {
 	fontFamily: string;
@@ -97,7 +97,7 @@ class HudSpecInfoHandler implements OnPanelLoad {
 					targetPanel: ['.hudspecinfo__count', '.specinfo-list-entry__name'],
 					styleProperty: 'color',
 					callbackFunc: (_, value) => {
-						this.panels.numSpecLabel.style.textShadowFast = this.getAdjustedTextShadow(value as rgbaColor);
+						this.panels.numSpecLabel.style.textShadowFast = getTextShadowFast(value as rgbaColor, 0.9);
 						this.specConfig.fontColor = value;
 						this.createDummySpectators();
 					}
@@ -183,13 +183,8 @@ class HudSpecInfoHandler implements OnPanelLoad {
 		nameLabel.text = text;
 		nameLabel.style.fontFamily = this.specConfig.fontFamily;
 		nameLabel.style.color = this.specConfig.fontColor as rgbaColor;
-		nameLabel.style.textShadowFast = this.getAdjustedTextShadow(this.specConfig.fontColor as rgbaColor);
+		nameLabel.style.textShadowFast = getTextShadowFast(this.specConfig.fontColor as rgbaColor, 0.9);
 		nameLabel.style.fontSize = `${this.specConfig.fontSize}px`;
 		nameLabel.style.horizontalAlign = this.specConfig.horizontalAlign;
-	}
-
-	getAdjustedTextShadow(color: rgbaColor) {
-		const splitRGBA = splitRgbFromAlpha(color);
-		return `0px 1px rgba(0, 0, 0, ${splitRGBA.alpha * 0.9})`;
 	}
 }

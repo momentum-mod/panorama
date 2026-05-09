@@ -3,7 +3,8 @@ import { magnitude2D } from 'util/math';
 import { GamemodeCategory, GamemodeCategoryToGamemode } from 'common/web/enums/gamemode.enum';
 
 import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
-import { splitRgbFromAlpha } from 'util/colors';
+import { getTextShadowFast } from 'common/hud-customizer';
+import { rgbaStringToTuple } from 'util/colors';
 
 enum TimerFlags {
 	NONE = 0,
@@ -216,9 +217,9 @@ class GroundboostHandler {
 					type: CustomizerPropertyType.COLOR_PICKER,
 					targetPanel: '.groundboost__background-meter',
 					callbackFunc: (panel, value) => {
-						const splitRGBA = splitRgbFromAlpha(value as rgbaColor);
-						panel.style.washColor = splitRGBA.rgb;
-						panel.style.opacity = splitRGBA.alpha;
+						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
+						panel.style.washColor = `rgb(${r}, ${g}, ${b})`;
+						panel.style.opacity = alpha / 255;
 					}
 				},
 				meterSlickColor: {
@@ -371,9 +372,9 @@ class GroundboostHandler {
 	}
 
 	setMeterColor(color: string) {
-		const splitRGBA = splitRgbFromAlpha(color as rgbaColor);
-		this.panels.groundboostMeter.style.washColor = splitRGBA.rgb;
-		this.panels.groundboostMeter.style.opacity = splitRGBA.alpha;
+		const [r, g, b, alpha] = rgbaStringToTuple(color as rgbaColor);
+		this.panels.groundboostMeter.style.washColor = `rgb(${r}, ${g}, ${b})`;
+		this.panels.groundboostMeter.style.opacity = alpha;
 	}
 
 	updateTextColor(speed: number, timer: number) {
@@ -405,16 +406,11 @@ class GroundboostHandler {
 
 		const c = this.config.labelColorMode === LabelMode.HIDE ? LabelColor.FLAT : color;
 		this.panels.groundboostLabel.style.color = c;
-		this.panels.groundboostLabel.style.textShadowFast = this.getAdjustedTextShadow(c as rgbaColor);
+		this.panels.groundboostLabel.style.textShadowFast = getTextShadowFast(c as rgbaColor, 0.9);
 	}
 
 	fadeOut() {
 		this.panels.container.AddClass('groundboost__container--hide');
 		this.visible = false;
-	}
-
-	getAdjustedTextShadow(color: rgbaColor) {
-		const splitRGBA = splitRgbFromAlpha(color);
-		return `0px 1px rgba(0, 0, 0, ${splitRGBA.alpha * 0.9})`;
 	}
 }

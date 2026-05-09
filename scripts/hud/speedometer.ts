@@ -3,7 +3,7 @@ import { tupleToRgbaString } from 'util/colors';
 import { SpeedometerColorType, SpeedometerType } from 'common/speedometer';
 
 import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
-import { splitRgbFromAlpha } from 'util/colors';
+import { getTextShadowFast } from 'common/hud-customizer';
 
 // arbitrary value to determine how much speed needs to change to be considered an increase/decrease
 // adjusted by speedometer update delta time
@@ -488,32 +488,31 @@ class SpeedometerHandler {
 			let diffSymbol: string;
 			if (diff - this.correctedColorizeDeadzone > 0) {
 				labelToColor.style.color = gainColor;
-				labelToColor.style.textShadowFast = this.getAdjustedTextShadow(gainColor as rgbaColor);
+				labelToColor.style.textShadowFast = getTextShadowFast(gainColor as rgbaColor, 0.9);
 				diffSymbol = '+';
 			} else if (diff + this.correctedColorizeDeadzone < 0) {
 				labelToColor.style.color = lossColor;
-				labelToColor.style.textShadowFast = this.getAdjustedTextShadow(lossColor as rgbaColor);
+				labelToColor.style.textShadowFast = getTextShadowFast(lossColor as rgbaColor, 0.9);
 				diffSymbol = '-';
 			} else {
 				labelToColor.style.color = flatColor;
-				labelToColor.style.textShadowFast = this.getAdjustedTextShadow(flatColor as rgbaColor);
+				labelToColor.style.textShadowFast = getTextShadowFast(flatColor as rgbaColor, 0.9);
 				diffSymbol = '';
 			}
 
 			if (separateComparison) {
 				speedometer.comparisonLabel.text = `${diffSymbol}${Math.round(Math.abs(diff))}`;
 				speedometer.speedometerLabel.style.color = Colors.AXIS_FLAT;
-				speedometer.speedometerLabel.style.textShadowFast = this.getAdjustedTextShadow(
-					Colors.AXIS_FLAT as rgbaColor
+				speedometer.speedometerLabel.style.textShadowFast = getTextShadowFast(
+					Colors.AXIS_FLAT as rgbaColor,
+					0.9
 				);
 			}
 
 			speedometer.prevVal = speed;
 		} else {
 			speedometer.speedometerLabel.style.color = Colors.AXIS_FLAT;
-			speedometer.speedometerLabel.style.textShadowFast = this.getAdjustedTextShadow(
-				Colors.AXIS_FLAT as rgbaColor
-			);
+			speedometer.speedometerLabel.style.textShadowFast = getTextShadowFast(Colors.AXIS_FLAT as rgbaColor, 0.9);
 
 			const rangeList = speedometer.settings.range_colors;
 			if (colorType === SpeedometerColorType.RANGE && rangeList) {
@@ -634,10 +633,5 @@ class SpeedometerHandler {
 				panel.style.fontSize = `${size}px`;
 			}
 		}
-	}
-
-	getAdjustedTextShadow(color: rgbaColor) {
-		const splitRGBA = splitRgbFromAlpha(color);
-		return `0px 1px rgba(0, 0, 0, ${splitRGBA.alpha * 0.9})`;
 	}
 }

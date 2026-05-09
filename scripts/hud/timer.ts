@@ -3,7 +3,7 @@ import { HideHud } from 'common/state';
 import * as Timer from 'common/timer';
 
 import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
-import { splitRgbFromAlpha } from 'util/colors';
+import { getTextShadowFast } from 'common/hud-customizer';
 
 const DIFF_DISPLAY_TIME = 5;
 const HIDDEN_CLASS = 'hudtimer--hidden';
@@ -233,23 +233,23 @@ class HudTimerHandler {
 		switch (state) {
 			case Timer.TimerState.DISABLED:
 				this.panels.time.style.color = Colors.INACTIVE;
-				this.panels.time.style.textShadowFast = this.getAdjustedTextShadow(Colors.INACTIVE);
+				this.panels.time.style.textShadowFast = getTextShadowFast(Colors.INACTIVE, 0.9);
 				this.panels.cp.RemoveClass(HIDDEN_CLASS);
 				this.forceHideComparison();
 				break;
 			case Timer.TimerState.RUNNING:
 				this.panels.time.style.color = Colors.RUNNING;
-				this.panels.time.style.textShadowFast = this.getAdjustedTextShadow(Colors.RUNNING);
+				this.panels.time.style.textShadowFast = getTextShadowFast(Colors.RUNNING, 0.9);
 				this.panels.cp.RemoveClass(HIDDEN_CLASS);
 				break;
 			case Timer.TimerState.FINISHED:
 				this.panels.time.style.color = Colors.FINISHED;
-				this.panels.time.style.textShadowFast = this.getAdjustedTextShadow(Colors.FINISHED);
+				this.panels.time.style.textShadowFast = getTextShadowFast(Colors.FINISHED, 0.9);
 				this.panels.cp.RemoveClass(HIDDEN_CLASS);
 				break;
 			case Timer.TimerState.PRIMED:
 				this.panels.time.style.color = Colors.PRIMED;
-				this.panels.time.style.textShadowFast = this.getAdjustedTextShadow(Colors.PRIMED);
+				this.panels.time.style.textShadowFast = getTextShadowFast(Colors.PRIMED, 0.9);
 				this.panels.cp.RemoveClass(HIDDEN_CLASS);
 				this.forceHideComparison();
 				break;
@@ -298,15 +298,15 @@ class HudTimerHandler {
 		let diffSymbol: string;
 		if (diff > 0) {
 			this.panels.comparison.style.color = Colors.DECREASE;
-			this.panels.comparison.style.textShadowFast = this.getAdjustedTextShadow(Colors.DECREASE);
+			this.panels.comparison.style.textShadowFast = getTextShadowFast(Colors.DECREASE, 0.9);
 			diffSymbol = '+';
 		} else if (diff < 0) {
 			this.panels.comparison.style.color = Colors.INCREASE;
-			this.panels.comparison.style.textShadowFast = this.getAdjustedTextShadow(Colors.INCREASE);
+			this.panels.comparison.style.textShadowFast = getTextShadowFast(Colors.INCREASE, 0.9);
 			diffSymbol = '-';
 		} else {
 			this.panels.comparison.style.color = Colors.INVISIBLE;
-			this.panels.comparison.style.textShadowFast = this.getAdjustedTextShadow(Colors.INVISIBLE);
+			this.panels.comparison.style.textShadowFast = getTextShadowFast(Colors.INVISIBLE, 0.9);
 			diffSymbol = '';
 		}
 
@@ -379,10 +379,5 @@ class HudTimerHandler {
 
 	get isStopSoundEnabled(): boolean {
 		return GameInterfaceAPI.GetSettingBool('mom_timer_disable_sound');
-	}
-
-	getAdjustedTextShadow(color: rgbaColor) {
-		const splitRGBA = splitRgbFromAlpha(color);
-		return `0px 1px rgba(0, 0, 0, ${splitRGBA.alpha * 0.9})`;
 	}
 }

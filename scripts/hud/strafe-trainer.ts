@@ -3,7 +3,7 @@ import * as MomMath from 'util/math';
 import { rgbaStringLerp } from 'util/colors';
 import { GamemodeCategory, GamemodeCategoryToGamemode } from 'common/web/enums/gamemode.enum';
 import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
-import { splitRgbFromAlpha } from 'util/colors';
+import { rgbaStringToTuple } from 'util/colors';
 
 type ColorPair = [color, color];
 
@@ -283,11 +283,11 @@ class StrafeTrainer {
 					type: CustomizerPropertyType.COLOR_PICKER,
 					targetPanel: ['.strafetrainer__background', '.strafetrainer__container'],
 					callbackFunc: (panel, value) => {
-						const splitRGBA = splitRgbFromAlpha(value as rgbaColor);
+						const alpha = rgbaStringToTuple(value as rgbaColor)[3] / 255;
 						if (panel.id === 'Container') {
-							panel.style.boxShadow = `fill 0px 0px 12px -6px rgba(0, 0, 0, ${splitRGBA.alpha})`;
+							panel.style.boxShadow = `fill 0px 0px 12px -6px rgba(0, 0, 0, ${alpha})`;
 							panel.style.backgroundColor =
-								`gradient(linear, 0% 0%, 0% 100%, from(rgba(255, 255, 255, ${+splitRGBA.alpha * 0.02})), to(rgba(0, 0, 0, ${+splitRGBA.alpha * 0.5})))` as color;
+								`gradient(linear, 0% 0%, 0% 100%, from(rgba(255, 255, 255, ${alpha * 0.02})), to(rgba(0, 0, 0, ${alpha * 0.5})))` as color;
 						} else panel.style.backgroundColor = value as color;
 					}
 				},

@@ -1,3 +1,4 @@
+import { rgbaStringToTuple } from 'util/colors';
 // TODO: *VERY* detailed docs here, the types are unreadable!
 
 /**
@@ -248,102 +249,11 @@ export interface IHudCustomizerHandler {
 	loadComponent(panel: GenericPanel, properties: CustomizerComponentProperties): void;
 }
 
-export const MarginStyles = {
-	marginTop: {
-		name: 'Margin Top',
-		type: CustomizerPropertyType.NUMBER_ENTRY,
-		styleProperty: 'marginTop',
-		valueFn: (value) => `${value}px`
-	},
-	marginBottom: {
-		name: 'Margin Bottom',
-		type: CustomizerPropertyType.NUMBER_ENTRY,
-		styleProperty: 'marginBottom',
-		valueFn: (value) => `${value}px`
-	},
-	marginLeft: {
-		name: 'Margin Left',
-		type: CustomizerPropertyType.NUMBER_ENTRY,
-		styleProperty: 'marginLeft',
-		valueFn: (value) => `${value}px`
-	},
-	marginRight: {
-		name: 'Margin Right',
-		type: CustomizerPropertyType.NUMBER_ENTRY,
-		styleProperty: 'marginRight',
-		valueFn: (value) => `${value}px`
-	}
-} satisfies MappedStyles;
-
-export const PaddingStyles = {
-	paddingTop: {
-		name: 'Padding Top',
-		type: CustomizerPropertyType.NUMBER_ENTRY,
-		styleProperty: 'paddingTop',
-		valueFn: (value) => `${value}px`
-	},
-	paddingBottom: {
-		name: 'Padding Bottom',
-		type: CustomizerPropertyType.NUMBER_ENTRY,
-		styleProperty: 'paddingBottom',
-		valueFn: (value) => `${value}px`
-	},
-	paddingLeft: {
-		name: 'Padding Left',
-		type: CustomizerPropertyType.NUMBER_ENTRY,
-		styleProperty: 'paddingLeft',
-		valueFn: (value) => `${value}px`
-	},
-	paddingRight: {
-		name: 'Padding Right',
-		type: CustomizerPropertyType.NUMBER_ENTRY,
-		styleProperty: 'paddingRight',
-		valueFn: (value) => `${value}px`
-	}
-} satisfies MappedStyles;
-
-export const BackgroundColorStyle = {
-	backgroundColor: {
-		name: 'Background Color',
-		type: CustomizerPropertyType.COLOR_PICKER,
-		styleProperty: 'backgroundColor'
-	}
-} satisfies MappedStyles;
-
-export const BorderStyles = {
-	borderRadius: {
-		name: 'Border Radius',
-		type: CustomizerPropertyType.NUMBER_ENTRY,
-		styleProperty: 'borderRadius',
-		valueFn: (value) => `${value}px`
-	},
-	borderWidthTop: {
-		name: 'Border Top Width',
-		type: CustomizerPropertyType.NUMBER_ENTRY,
-		styleProperty: 'borderTopWidth',
-		valueFn: (value) => `${value}px`
-	},
-	borderWidthBottom: {
-		name: 'Border Bottom Width',
-		type: CustomizerPropertyType.NUMBER_ENTRY,
-		styleProperty: 'borderBottomWidth',
-		valueFn: (value) => `${value}px`
-	},
-	borderWidthLeft: {
-		name: 'Border Left Width',
-		type: CustomizerPropertyType.NUMBER_ENTRY,
-		styleProperty: 'borderLeftWidth',
-		valueFn: (value) => `${value}px`
-	},
-	borderWidthRight: {
-		name: 'Border Right Width',
-		type: CustomizerPropertyType.NUMBER_ENTRY,
-		styleProperty: 'borderRightWidth',
-		valueFn: (value) => `${value}px`
-	},
-	borderColor: {
-		name: 'Border Color',
-		type: CustomizerPropertyType.COLOR_PICKER,
-		styleProperty: 'borderColor'
-	}
-} satisfies MappedStyles;
+/** Almost all hud panels use fast text shadow on fonts that is black with some adjusted alpha
+ * This function is used to scale text shadow's alpha to font color alpha chosen for the player
+ * In the future we might add text shadow configuration to hud customizer, for now this is the workaround
+ */
+export function getTextShadowFast(color: rgbaColor, multiplier: number): string {
+	const alpha = rgbaStringToTuple(color)[3] / 255;
+	return `0px 1px 1.5px 1 rgba(0, 0, 0, ${alpha * multiplier})`;
+}

@@ -2,7 +2,7 @@ import { PanelHandler } from 'util/module-helpers';
 import { GamemodeCategory, GamemodeCategoryToGamemode } from 'common/web/enums/gamemode.enum';
 
 import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
-import { splitRgbFromAlpha } from 'util/colors';
+import { getTextShadowFast } from 'common/hud-customizer';
 
 @PanelHandler()
 class PowerupTimerHandler {
@@ -51,7 +51,7 @@ class PowerupTimerHandler {
 					targetPanel: '.powerup-timer__label',
 					styleProperty: 'color',
 					callbackFunc: (panel, value) => {
-						panel.style.textShadowFast = this.getAdjustedTextShadow(value as rgbaColor);
+						panel.style.textShadowFast = getTextShadowFast(value as rgbaColor, 0.9);
 					}
 				}
 			}
@@ -74,10 +74,5 @@ class PowerupTimerHandler {
 			panel.visible = true;
 			label.text = time < 0 ? '∞' : Math.ceil(time / 1000).toString();
 		}
-	}
-
-	getAdjustedTextShadow(color: rgbaColor) {
-		const splitRGBA = splitRgbFromAlpha(color);
-		return `0px 1px rgba(0, 0, 0, ${splitRGBA.alpha * 0.9})`;
 	}
 }

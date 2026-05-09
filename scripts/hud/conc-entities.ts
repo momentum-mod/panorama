@@ -1,7 +1,7 @@
 import { PanelHandler } from 'util/module-helpers';
 import { registerHUDCustomizerComponent, CustomizerPropertyType } from 'common/hud-customizer';
 import { Gamemode } from 'common/web/enums/gamemode.enum';
-import { splitRgbFromAlpha } from 'util/colors';
+import { rgbaStringToTuple } from 'util/colors';
 
 const Config = {
 	countDown: false,
@@ -190,7 +190,7 @@ class ConcEntitiesHandler {
 					label.style.fontFamily = Config.font.family;
 					label.style.fontSize = `${Config.font.size}px`;
 					label.style.color = Config.font.color;
-					label.style.textShadow = this.getAdjustedTextShadow(Config.font.color as rgbaColor);
+					label.style.textShadow = this.getTextShadow(Config.font.color as rgbaColor);
 
 					label.text = Config.countDown
 						? `${entpanel.concPrimedTime.toFixed(2)}s`
@@ -200,8 +200,8 @@ class ConcEntitiesHandler {
 			});
 	}
 
-	getAdjustedTextShadow(color: rgbaColor) {
-		const splitRGBA = splitRgbFromAlpha(color);
-		return `rgba(0, 0, 0, ${splitRGBA.alpha * 0.5}) 0px 1px 2px 2.5`;
+	getTextShadow(color: rgbaColor) {
+		const alpha = rgbaStringToTuple(color)[3] / 255;
+		return `rgba(0, 0, 0, ${alpha * 0.5}) 0px 1px 2px 2.5`;
 	}
 }

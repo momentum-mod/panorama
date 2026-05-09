@@ -1,7 +1,7 @@
 import { PanelHandler } from 'util/module-helpers';
 import { WeaponID, WeaponNames, WeaponStateChangeMode } from 'common/weapon';
 import { registerHUDCustomizerComponent, CustomizerPropertyType } from 'common/hud-customizer';
-import { splitRgbFromAlpha } from 'util/colors';
+import { getTextShadowFast } from 'common/hud-customizer';
 import * as Enum from 'util/enum';
 
 const FADEOUT_CLASS = 'weaponselection--fadeout';
@@ -268,15 +268,15 @@ class WeaponSelectionHandler {
 			if (panel.HasClass(DEPLOYED_CLASS)) {
 				panel.style.transform = Config.showNotch ? 'translateX(0)' : `translateX(${Config.notch.width}px)`;
 				keybind.style.color = Config.keybinds.activeColor;
-				keybind.style.textShadow = this.getAdjustedTextShadow(Config.keybinds.activeColor as rgbaColor);
+				keybind.style.textShadow = getTextShadowFast(Config.keybinds.activeColor as rgbaColor, 1);
 				weaponName.style.color = Config.weapon_name.activeColor;
-				weaponName.style.textShadow = this.getAdjustedTextShadow(Config.weapon_name.activeColor as rgbaColor);
+				weaponName.style.textShadow = getTextShadowFast(Config.weapon_name.activeColor as rgbaColor, 1);
 			} else {
 				panel.style.transform = `translateX(${Config.notch.width}px)`;
 				keybind.style.color = Config.keybinds.color;
-				keybind.style.textShadow = this.getAdjustedTextShadow(Config.keybinds.color as rgbaColor);
+				keybind.style.textShadow = getTextShadowFast(Config.keybinds.color as rgbaColor, 1);
 				weaponName.style.color = Config.weapon_name.color;
-				weaponName.style.textShadow = this.getAdjustedTextShadow(Config.weapon_name.color as rgbaColor);
+				weaponName.style.textShadow = getTextShadowFast(Config.weapon_name.color as rgbaColor, 1);
 			}
 
 			keybind.style.visibility = Config.showKeybinds ? 'visible' : 'collapse';
@@ -293,10 +293,5 @@ class WeaponSelectionHandler {
 	destroyWeaponPanel(id: WeaponID) {
 		this.weaponPanels.get(id)?.DeleteAsync(0);
 		this.weaponPanels.delete(id);
-	}
-
-	getAdjustedTextShadow(color: rgbaColor) {
-		const splitRGBA = splitRgbFromAlpha(color);
-		return `0px 1px 1.5px 1 rgba(0, 0, 0, ${splitRGBA.alpha})`;
 	}
 }

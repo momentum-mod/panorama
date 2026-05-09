@@ -1,7 +1,7 @@
 import { PanelHandler } from 'util/module-helpers';
 import * as Timer from 'common/timer';
 import { CustomizerPropertyType, getHudCustomizer, registerHUDCustomizerComponent } from 'common/hud-customizer';
-import { splitRgbFromAlpha } from 'util/colors';
+import { getTextShadowFast } from 'common/hud-customizer';
 
 // MomTV networking limits max numbers of networked splits to 10; this value is
 // immutable and used to build out our split panel arrays.
@@ -212,7 +212,7 @@ class HudComparisonsHandler {
 					targetPanel: '.hud-splits__name',
 					styleProperty: 'color',
 					callbackFunc: (panel, value) => {
-						panel.style.textShadowFast = this.getAdjustedTextShadow(value as rgbaColor);
+						panel.style.textShadowFast = getTextShadowFast(value as rgbaColor, 0.9);
 					}
 				},
 				time: {
@@ -240,7 +240,7 @@ class HudComparisonsHandler {
 					targetPanel: '.hud-splits__time',
 					styleProperty: 'color',
 					callbackFunc: (panel, value) => {
-						panel.style.textShadowFast = this.getAdjustedTextShadow(value as rgbaColor);
+						panel.style.textShadowFast = getTextShadowFast(value as rgbaColor, 0.9);
 					}
 				},
 				comparison: {
@@ -282,7 +282,7 @@ class HudComparisonsHandler {
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
 						COMPARISON_COLORS.neutral.color = value;
-						COMPARISON_COLORS.neutral.textShadow = this.getAdjustedTextShadow(value as rgbaColor);
+						COMPARISON_COLORS.neutral.textShadow = getTextShadowFast(value as rgbaColor, 0.9);
 					}
 				},
 				comparisonAheadGain: {
@@ -290,7 +290,7 @@ class HudComparisonsHandler {
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
 						COMPARISON_COLORS.ahead_gain.color = value;
-						COMPARISON_COLORS.ahead_gain.textShadow = this.getAdjustedTextShadow(value as rgbaColor);
+						COMPARISON_COLORS.ahead_gain.textShadow = getTextShadowFast(value as rgbaColor, 0.9);
 					}
 				},
 				comparisonAheadLoss: {
@@ -298,7 +298,7 @@ class HudComparisonsHandler {
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
 						COMPARISON_COLORS.ahead_loss.color = value;
-						COMPARISON_COLORS.ahead_loss.textShadow = this.getAdjustedTextShadow(value as rgbaColor);
+						COMPARISON_COLORS.ahead_loss.textShadow = getTextShadowFast(value as rgbaColor, 0.9);
 					}
 				},
 				comparisonBehindGain: {
@@ -306,7 +306,7 @@ class HudComparisonsHandler {
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
 						COMPARISON_COLORS.behind_gain.color = value;
-						COMPARISON_COLORS.behind_gain.textShadow = this.getAdjustedTextShadow(value as rgbaColor);
+						COMPARISON_COLORS.behind_gain.textShadow = getTextShadowFast(value as rgbaColor, 0.9);
 					}
 				},
 				comparisonBehindLoss: {
@@ -314,7 +314,7 @@ class HudComparisonsHandler {
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
 						COMPARISON_COLORS.behind_loss.color = value;
-						COMPARISON_COLORS.behind_loss.textShadow = this.getAdjustedTextShadow(value as rgbaColor);
+						COMPARISON_COLORS.behind_loss.textShadow = getTextShadowFast(value as rgbaColor, 0.9);
 					}
 				}
 			}
@@ -546,10 +546,5 @@ class HudComparisonsHandler {
 				hasComparison: true
 			});
 		}
-	}
-
-	getAdjustedTextShadow(color: rgbaColor) {
-		const splitRGBA = splitRgbFromAlpha(color);
-		return `0px 1px rgba(0, 0, 0, ${splitRGBA.alpha * 0.9})`;
 	}
 }
