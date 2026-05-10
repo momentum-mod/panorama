@@ -128,6 +128,7 @@ class Component {
 
 	/** @see registerHUDCustomizerComponent */
 	static register(panel: GenericPanel, properties: CustomizerComponentProperties): Component {
+		if (!Component.defaultLayout[panel.id]) return null;
 		return new Component(panel, properties);
 	}
 
@@ -603,6 +604,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 	loadComponent(panel: GenericPanel, properties: CustomizerComponentProperties): void {
 		if (!panel) return;
 
+		//Skip registering if the gamemode doesn't match. If the gamemode property doesn't exist always register
 		if (properties.gamemode) {
 			const current = GameModeAPI.GetCurrentGameMode();
 			const allowed = Array.isArray(properties.gamemode) ? properties.gamemode : [properties.gamemode];
@@ -614,6 +616,13 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		panel.enabled = true;
 
 		const component = Component.register(panel, properties);
+
+		//Skip registering if the component is missing from the default layout file
+		if (!component) {
+			$.Warning(`Could not register panel ${panel.id} because it's missing from the default layout file`);
+			return;
+		}
+
 		this.components[component.id] = component;
 
 		if (properties.events !== undefined) {
