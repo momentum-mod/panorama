@@ -298,8 +298,6 @@ class Component {
 		if (!defaultComponentLayout)
 			throw new Error(`HudCustomizer: Could not load default layout for HUD customizer component ${this.id}`);
 
-		this.enabled = defaultComponentLayout.enabled ?? true;
-
 		if (options.position) {
 			this.offsetX = defaultComponentLayout.offsetX;
 			this.offsetY = defaultComponentLayout.offsetY;
