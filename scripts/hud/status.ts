@@ -134,8 +134,19 @@ class HudStatusHandler {
 
 		// Use the subsegment count as the checkpoint number if checkpoints aren't ordered
 		const splits = MomentumTimerAPI.GetObservedTimerRunSplits();
-		const segment = splits.segments[majorNum - 1];
-		const checkpointNum = segment.checkpointsOrdered ? minorNum : segment.subsegments.length;
+
+		let checkpointNum: number;
+		const segment = splits.segments?.[majorNum - 1];
+		if (segment) {
+			checkpointNum = segment.checkpointsOrdered ? minorNum : segment.subsegments.length;
+		} else {
+			// If a start zone and cancel zone are very close together, it's possible that OnObservedTimerStateChange
+			// fires multiple times in one tick, first for timer starting, then for cancelling. But the splits networked
+			// to the client are the same for both, i.e. no segments, because the timer disabling cleared them.
+			// If that happens, just let checkpointNum be 1 -- the only time this should ever happen is if we just left
+			// a start zone.
+			checkpointNum = 1;
+		}
 
 		// state is TimerState.RUNNING
 		let str = '';
