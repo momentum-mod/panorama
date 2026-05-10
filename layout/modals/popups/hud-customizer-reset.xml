@@ -1,0 +1,32 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+
+    <scripts>
+		<include type="module" src="file://{scripts}/modals/popups/hud-customizer-reset.ts" />
+	</scripts>
+
+	<Panel class="PopupPanel Hidden w-fit-children" defaultfocus="Button0" popupbackground="blur">
+		<Label id="TitleLabel" class="generic-popup__title" allowrawtext="true" text="{s:resetTitle}"/>
+		<Panel class="generic-popup__message-panel">
+			<Label id="MessageLabel" class="generic-popup__message-label" html="true" allowrawtext="true" text="{s:resetMessage}"/>
+		</Panel>
+        <Panel class="flow-right h-align-center">
+            <ToggleButton id="ResetPositionButton" class="button mr-4 togglebutton togglebutton--blue">
+					<Label class="button__text" text="POSITION" />
+			</ToggleButton>
+            <ToggleButton id="ResetStylesButton" class="button togglebutton togglebutton--blue">
+					<Label class="button__text" text="STYLES" />
+			</ToggleButton>
+	    </Panel>
+		<Panel class="row h-align-center mt-4 generic-popup__button-row">
+			<Button id="CancelButton" class="button mr-4 button--red" onactivate="UiToolkitAPI.CloseAllVisiblePopups()">
+				<Label class="button__text" text="#Common_Cancel" />
+			</Button>
+			<Button id="OKButton" class="button button--green" onactivate="HudCustomizerResetHandler.OnOKPressed()">
+				<Label class="button__text" text="#Common_OK" />
+			</Button>
+		</Panel>
+	</Panel>
+</root>

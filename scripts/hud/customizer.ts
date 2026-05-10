@@ -35,6 +35,8 @@ interface ComponentLayout {
 	dynamicStyles?: Record<StyleID, any>;
 }
 
+type ResetOptions = { position: boolean; styles: boolean };
+
 export interface HudLayout extends Record<string, ComponentLayout> {}
 
 enum Axis {
@@ -291,22 +293,28 @@ class Component {
 
 	/** Reset a component to its original state. */
 	// TODO: how tf will this work with groups lol
-	reset(): void {
+	reset(options: ResetOptions): void {
 		const defaultComponentLayout = Component.defaultLayout[this.id];
 		if (!defaultComponentLayout)
 			throw new Error(`HudCustomizer: Could not load default layout for HUD customizer component ${this.id}`);
 
 		this.enabled = defaultComponentLayout.enabled ?? true;
-		this.offsetX = defaultComponentLayout.offsetX;
-		this.offsetY = defaultComponentLayout.offsetY;
-		this.width = defaultComponentLayout.width ?? undefined;
-		this.height = defaultComponentLayout.height ?? undefined;
 
-		for (const [styleID, dynamicStyle] of Object.entries(this.dynamicStyles ?? {})) {
-			const defaultValue = defaultComponentLayout.dynamicStyles?.[styleID];
-			if (defaultValue !== undefined) {
-				dynamicStyle.value = defaultValue;
-				this.applyDynamicStyle(dynamicStyle);
+		if (options.position) {
+			this.offsetX = defaultComponentLayout.offsetX;
+			this.offsetY = defaultComponentLayout.offsetY;
+		}
+
+		if (options.styles) {
+			this.width = defaultComponentLayout.width ?? undefined;
+			this.height = defaultComponentLayout.height ?? undefined;
+
+			for (const [styleID, dynamicStyle] of Object.entries(this.dynamicStyles ?? {})) {
+				const defaultValue = defaultComponentLayout.dynamicStyles?.[styleID];
+				if (defaultValue !== undefined) {
+					dynamicStyle.value = defaultValue;
+					this.applyDynamicStyle(dynamicStyle);
+				}
 			}
 		}
 	}
@@ -723,12 +731,10 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			resetButton.SetPanelEvent('onmouseover', () => UiToolkitAPI.ShowTextTooltip(`${id}ResetButton`, 'Reset'));
 			resetButton.SetPanelEvent('onmouseout', () => UiToolkitAPI.HideTextTooltip());
 			resetButton.SetPanelEvent('onactivate', () =>
-				UiToolkitAPI.ShowGenericPopupOkCancel(
-					'Reset Component',
-					`Are you sure you want to reset ${id}?`,
-					'Reset',
-					() => this.resetComponent(component),
-					() => {}
+				UiToolkitAPI.ShowCustomLayoutPopupParameters(
+					'ResetComponent',
+					'file://{resources}/layout/modals/popups/hud-customizer-reset.xml',
+					`resetTitle=Reset ${component.properties.name}&resetMessage=Are you sure you want to reset ${component.properties.name}?&callback=${UiToolkitAPI.RegisterJSCallback((options: ResetOptions) => this.resetComponent(component, options))}`
 				)
 			);
 
@@ -1192,8 +1198,8 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		}
 	}
 
-	resetComponent(component: Component): void {
-		component.reset();
+	resetComponent(component: Component, options: ResetOptions): void {
+		component.reset(options);
 
 		// Calling this ensures overlay panel and stuff get updated if you have the component selected already.
 		// If you don't, you probably want it to be!
