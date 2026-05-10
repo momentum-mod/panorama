@@ -15,6 +15,14 @@
 			</RadioButton>
 		</snippet>
 
+        <snippet name="save-for-all">
+			<Panel class="hud-customizer-settings__row mt-3">
+				<Button class="button hud-customizer-settings__button px-3 py-1">
+                    <Label text="Save For All Gamemodes" />
+                </Button>
+			</Panel>
+		</snippet>
+
         <snippet name="dynamic-none">
 			<Panel class="hud-customizer-settings__row">
 					<Label class="hud-customizer-settings__setting-label" text="{s:name}" />

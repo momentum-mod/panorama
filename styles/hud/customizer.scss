@@ -429,6 +429,18 @@ $input-background-hover: rgb(110, 110, 110);
 			font-size: 16px;
 		}
 	}
+
+	&__button {
+		height: fit-children;
+
+		Label {
+			font-family: 'Roboto Mono';
+			horizontal-align: center;
+			vertical-align: center;
+			font-weight: medium;
+			font-size: 12px;
+		}
+	}
 }
 
 .hud-customizer-overlay {

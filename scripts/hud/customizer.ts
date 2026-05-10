@@ -1163,6 +1163,13 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 			if (dynamicStyle.properties.children) appendChildren(styleID, wrapper);
 		}
+
+		// Append "Save For All Gamemodes" button
+		const saveForAllWrapper = $.CreatePanel('Panel', this.panels.activeComponentSettingsList, 'SaveForAllWrapper', {
+			class: 'hud-customizer-settings__row-wrapper h-fit-children'
+		});
+
+		saveForAllWrapper.LoadLayoutSnippet('save-for-all');
 	}
 
 	// Hacky stuff to wait for layouting to finish if needed. Hate doing this, but Panorama doesn't expose any
