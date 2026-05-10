@@ -126,6 +126,7 @@ class KeyPress {
 		$.RegisterEventHandler('HudProcessInput', $.GetContextPanel(), () => this.onUpdate());
 
 		registerHUDCustomizerComponent($.GetContextPanel(), {
+			name: 'Keypress',
 			resizeX: false,
 			resizeY: false,
 			dynamicStyles: {

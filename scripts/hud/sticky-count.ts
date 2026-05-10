@@ -48,6 +48,7 @@ class StickyCountHandler {
 	initHandler: number;
 	constructor() {
 		registerHUDCustomizerComponent($.GetContextPanel(), {
+			name: 'Sticky Count',
 			resizeX: false,
 			resizeY: false,
 			gamemode: GamemodeCategoryToGamemode.get(GamemodeCategory.SJ),

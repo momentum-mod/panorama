@@ -28,6 +28,7 @@ class SafeguardHandler {
 		});
 
 		registerHUDCustomizerComponent($.GetContextPanel(), {
+			name: 'Safeguard Indicator',
 			resizeX: false,
 			resizeY: false,
 			// TODO: Add safeguard cvars?

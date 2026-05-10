@@ -117,6 +117,7 @@ class SpeedometerHandler {
 		$.RegisterForUnhandledEvent('OnRangeColorProfilesSaved', (succ: boolean) => this.onSettingsUpdate(succ));
 
 		registerHUDCustomizerComponent($.GetContextPanel(), {
+			name: 'Speedometers',
 			resizeX: true,
 			resizeY: false,
 			dynamicStyles: {

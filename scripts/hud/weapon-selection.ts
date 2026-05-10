@@ -53,6 +53,7 @@ class WeaponSelectionHandler {
 		});
 
 		registerHUDCustomizerComponent($.GetContextPanel(), {
+			name: 'Weapon Selection',
 			resizeX: false,
 			resizeY: false,
 			// TODO: Add switching sides for the notch, gotta figure out the css

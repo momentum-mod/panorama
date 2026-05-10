@@ -20,6 +20,7 @@ class HudMapInfoHandler {
 		$.RegisterForUnhandledEvent('MapCache_MapLoad', (mapName: string) => this.onOfficialMapLoad(mapName));
 
 		registerHUDCustomizerComponent($.GetContextPanel(), {
+			name: 'Map Info',
 			resizeX: true,
 			resizeY: false,
 			dynamicStyles: {

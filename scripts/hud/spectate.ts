@@ -19,6 +19,7 @@ class HudSpectateHandler implements OnPanelLoad {
 		$.RegisterForUnhandledEvent('MomentumSpectatorModeChanged', (newMode) => this.onSpectatorModeChange(newMode));
 
 		registerHUDCustomizerComponent($.GetContextPanel(), {
+			name: 'Spectate Info',
 			resizeX: false,
 			resizeY: false,
 			moveX: false,

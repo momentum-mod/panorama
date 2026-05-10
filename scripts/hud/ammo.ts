@@ -13,6 +13,7 @@ class MomHudAmmoHandler {
 
 	constructor() {
 		registerHUDCustomizerComponent($.GetContextPanel(), {
+			name: 'Ammo Counter',
 			resizeX: true,
 			resizeY: false,
 			gamemode: [

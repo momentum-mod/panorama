@@ -83,6 +83,7 @@ class HudTimerHandler {
 		});
 
 		registerHUDCustomizerComponent($.GetContextPanel(), {
+			name: 'Timer',
 			resizeX: true,
 			resizeY: false,
 			dynamicStyles: {

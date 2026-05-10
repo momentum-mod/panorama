@@ -25,6 +25,7 @@ class StickyChargeHandler {
 
 	constructor() {
 		registerHUDCustomizerComponent($.GetContextPanel(), {
+			name: 'Sticky Charge',
 			resizeX: true,
 			resizeY: false,
 			gamemode: GamemodeCategoryToGamemode.get(GamemodeCategory.SJ),

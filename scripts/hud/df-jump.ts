@@ -24,6 +24,7 @@ class DFJumpHandler {
 
 	constructor() {
 		registerHUDCustomizerComponent($.GetContextPanel(), {
+			name: 'Jump Delay',
 			resizeX: false,
 			resizeY: false,
 			gamemode: GamemodeCategoryToGamemode.get(GamemodeCategory.DEFRAG),

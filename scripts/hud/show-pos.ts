@@ -6,6 +6,7 @@ import { getTextShadowFast } from 'common/hud-customizer';
 class HudShowPosHandler {
 	constructor() {
 		registerHUDCustomizerComponent($.GetContextPanel(), {
+			name: 'Position / Angle',
 			resizeX: true,
 			resizeY: false,
 			dynamicStyles: {

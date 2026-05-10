@@ -191,6 +191,9 @@ type UnhandledEventRegistration = {
 }[keyof GlobalEventNameMap];
 
 export interface CustomizerComponentProperties {
+	/** Name of the panel to be displayed in hud customizer */
+	name: string;
+
 	/** Allow resizing in the X direction. */
 	resizeX: boolean;
 
@@ -215,6 +218,7 @@ export interface CustomizerComponentProperties {
 	/** Panel to use as the drag handle for moving the component. If not provided, whole panel is draggable. */
 	dragPanel?: GenericPanel;
 
+	/** Allow disabling the panel. Defaults to true */
 	canDisable?: boolean;
 
 	/**

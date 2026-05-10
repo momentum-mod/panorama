@@ -1,6 +1,6 @@
 import { PanelHandler } from 'util/module-helpers';
 import { registerHUDCustomizerComponent, CustomizerPropertyType } from 'common/hud-customizer';
-import { Gamemode } from 'common/web/enums/gamemode.enum';
+import { GamemodeCategory, GamemodeCategoryToGamemode } from 'common/web/enums/gamemode.enum';
 import { rgbaStringToTuple } from 'util/colors';
 
 const Config = {
@@ -31,11 +31,12 @@ class ConcEntitiesHandler {
 
 	constructor() {
 		registerHUDCustomizerComponent($.GetContextPanel(), {
+			name: 'Conc Entity Timer Bar',
 			resizeX: false,
 			resizeY: false,
 			moveX: false,
 			moveY: false,
-			gamemode: Gamemode.CONC,
+			gamemode: GamemodeCategoryToGamemode.get(GamemodeCategory.CONC),
 			events: {
 				event: 'OnConcEntityPanelThink',
 				panel: this.container,

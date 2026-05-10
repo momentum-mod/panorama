@@ -47,6 +47,7 @@ class HudSpecInfoHandler implements OnPanelLoad {
 		});
 
 		registerHUDCustomizerComponent($.GetContextPanel(), {
+			name: 'Spectators',
 			resizeX: true,
 			resizeY: false,
 			dynamicStyles: {

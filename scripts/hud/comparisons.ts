@@ -181,6 +181,7 @@ class HudComparisonsHandler {
 		});
 
 		registerHUDCustomizerComponent($.GetContextPanel(), {
+			name: 'Comparisons',
 			resizeX: false,
 			resizeY: false,
 			// Layouting out dummy splits can take like 100 (!!) frames in debug, until then the panel has 0 and overlay

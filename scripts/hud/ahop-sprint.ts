@@ -65,6 +65,7 @@ class AhopSprint {
 
 	constructor() {
 		registerHUDCustomizerComponent($.GetContextPanel(), {
+			name: 'Sprint Indicator',
 			resizeX: false,
 			resizeY: false,
 			gamemode: GamemodeCategoryToGamemode.get(GamemodeCategory.AHOP),

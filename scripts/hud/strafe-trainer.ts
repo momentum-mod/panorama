@@ -77,6 +77,7 @@ class StrafeTrainer {
 
 	constructor() {
 		registerHUDCustomizerComponent($.GetContextPanel(), {
+			name: 'Strafe Trainer',
 			resizeX: true,
 			resizeY: false,
 			gamemode: [

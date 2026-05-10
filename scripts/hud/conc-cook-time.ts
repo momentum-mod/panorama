@@ -19,6 +19,7 @@ class ConcCookHandler {
 
 	constructor() {
 		registerHUDCustomizerComponent($.GetContextPanel(), {
+			name: 'Conc Timer Bar',
 			resizeX: true,
 			resizeY: false,
 			gamemode: GamemodeCategoryToGamemode.get(GamemodeCategory.CONC),

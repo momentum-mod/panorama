@@ -1,6 +1,7 @@
 import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
 
 registerHUDCustomizerComponent($.GetContextPanel(), {
+	name: 'Chat',
 	resizeX: true,
 	resizeY: true,
 	dynamicStyles: {

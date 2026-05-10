@@ -10,6 +10,7 @@ class HudMapInfoHandler {
 		});
 
 		registerHUDCustomizerComponent($.GetContextPanel(), {
+			name: 'Static Menu',
 			resizeX: false,
 			resizeY: false
 		});

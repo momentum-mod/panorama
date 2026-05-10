@@ -69,6 +69,7 @@ class HudStatusHandler {
 		});
 
 		registerHUDCustomizerComponent($.GetContextPanel(), {
+			name: 'Timer Status',
 			resizeX: true,
 			resizeY: false,
 			dynamicStyles: {

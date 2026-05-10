@@ -413,6 +413,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 	constructor() {
 		registerHUDCustomizerComponent(this.panels.settings, {
+			name: 'HUD Customizer Settings',
 			dragPanel: $('#CustomizerSettingsHeader')!,
 			resizeY: false,
 			resizeX: false,
@@ -699,7 +700,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 			const panel = $.CreatePanel('RadioButton', parent, `${id}Settings`);
 			panel.LoadLayoutSnippet('component');
-			panel.SetDialogVariable('name', id);
+			panel.SetDialogVariable('name', component.properties.name);
 			panel.SetSelected(this.activeComponent === component);
 			panel.SetPanelEvent('onactivate', () => this.setActiveComponentInternal(component));
 
