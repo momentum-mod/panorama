@@ -7,7 +7,7 @@
 		<include type="module" src="file://{scripts}/hud/conc-cook-time.ts" />
 	</scripts>
 
-	<MomHudConcCooktime class="h-align-center">
+	<MomHudConcCooktime>
 		<Panel id="ConcCooktimeContainer" class="conccook">
 			<ProgressBar id="ConcCookMeter" class="h-align-center progressbar-hudmeter" />
 			<Label id="ConcCookTime" text="" class="h-align-center v-align-center text-align-center progressbar-hudmeter__label" />
