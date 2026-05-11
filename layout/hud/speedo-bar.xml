@@ -1,0 +1,14 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+	
+	<scripts>
+		<include type="module" src="file://{scripts}/hud/speedo-bar.ts" />
+	</scripts>
+
+	<Panel class="speedobars">
+                <ProgressBar id="HorizontalSpeedoBarMeter" class="progressbar-hudmeter speedobar__horizontal" />
+                <ProgressBar id="VerticalSpeedoBarMeter" class="progressbar-hudmeter speedobar__vertical" />
+	</Panel>
+</root>
