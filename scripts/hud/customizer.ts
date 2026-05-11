@@ -35,7 +35,7 @@ interface ComponentLayout {
 	dynamicStyles?: Record<StyleID, any>;
 }
 
-type ResetOptions = { position: boolean; styles: boolean };
+export type ResetOptions = { position: boolean; styles: boolean };
 
 export interface HudLayout extends Record<string, ComponentLayout> {}
 
