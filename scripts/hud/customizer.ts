@@ -317,6 +317,12 @@ class Component {
 		}
 	}
 
+	/** Reset a single dynamic style to it's original state */
+	resetSingle(styleID: StyleID): void {
+		const defaultValue = Component.defaultLayout[this.id].dynamicStyles?.[styleID];
+		this.setDynamicStyle(styleID, defaultValue);
+	}
+
 	/** Applies the value (usually from stored layout/live settings) to a component */
 	setDynamicStyle(styleID: StyleID, value: any): void {
 		if (!this.dynamicStyles || !this.dynamicStyles[styleID])
@@ -329,7 +335,6 @@ class Component {
 
 	private applyDynamicStyle(style: DynamicStyle): void {
 		const targetPanels: GenericPanel[] = [];
-
 		if (style.properties.targetPanel) {
 			const selectors = Array.isArray(style.properties.targetPanel)
 				? style.properties.targetPanel
@@ -1094,6 +1099,20 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 					this.updateActiveComponentOverlayPosition();
 				}
+			}
+
+			if (dynamicStyle.properties.type !== CustomizerPropertyType.NONE) {
+				panel.SetPanelEvent('oncontextmenu', () => {
+					UiToolkitAPI.ShowSimpleContextMenu('', '', [
+						{
+							label: 'Reset Style',
+							jsCallback: () => {
+								component.resetSingle(styleID);
+								this.updateActiveComponentSettings();
+							}
+						}
+					]);
+				});
 			}
 
 			return panel;
