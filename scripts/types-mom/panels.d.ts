@@ -216,16 +216,18 @@ interface HudCustomizer extends AbstractPanel<'HudCustomizer'> {
 	 */
 	isOpen(): boolean;
 
-	/** Saves the given object to cfg/hud.json. */
-	saveLayout(data: import('hud/customizer').HudLayout): void;
+	/** Saves the given object to cfg/hud/{path}.kv3. */
+	saveLayout(path: string, data: import('hud/customizer').HudLayout): boolean;
 
-	/**
-	 * Tries to get the contents of cfg/hud.json as a JS object.
-	 * If cfg/hud.json doesn't exist, loads cfg/hud_default.json.
-	 * If neither hud.json nor hud_default.json exists, we crash.
-	 */
-	getLayout(): import('hud/customizer').HudLayout;
-
-	/** Gets the contents of cfg/hud_default.json as a JS object. */
-	getDefaultLayout(): import('hud/customizer').HudLayout;
+	/** Tries to load file from cfg/hud/{path}.kv3 */
+	loadLayout(path: string): import('hud/customizer').HudLayout | null;
+	
+	/** Tries to rename a layout file in cfg/hud/ */
+	renameLayout(oldPath: string, newPath: string): boolean;
+	
+	/** Tries to delete a layout file in cfg/hud */
+	deleteLayout(path: string): boolean;
+	
+	/** Lists all the filenames in cfg/hud/, omitting extension. */
+	listLayouts(): string[];
 }
