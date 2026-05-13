@@ -937,7 +937,9 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 					numberEntry.SetPanelEvent('onvaluechanged', () => {
 						component.setDynamicStyle(styleID, numberEntry.value);
 						updateChildVisibility(styleID, numberEntry.value);
-						this.updateActiveComponentOverlayPosition();
+
+						// Wait for panorama to layout the panel in case the size changes, disgusting hack
+						$.Schedule(0.1, () => this.updateActiveComponentOverlayPosition());
 					});
 
 					break;
@@ -958,7 +960,9 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 					checkbox.SetPanelEvent('onactivate', () => {
 						component.setDynamicStyle(styleID, checkbox.checked);
 						updateChildVisibility(styleID, checkbox.checked);
-						this.updateActiveComponentOverlayPosition();
+
+						// Wait for panorama to layout the panel in case the size changes
+						$.Schedule(0.1, () => this.updateActiveComponentOverlayPosition());
 					});
 
 					break;
@@ -981,7 +985,9 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 						component.setDynamicStyle(styleID, slider.value);
 						updateChildVisibility(styleID, slider.value);
-						this.updateActiveComponentOverlayPosition();
+
+						// Wait for panorama to layout the panel in case the size changes
+						$.Schedule(0.1, () => this.updateActiveComponentOverlayPosition());
 					});
 
 					textEntry.SetPanelEvent('ontextentrychange', () => {
@@ -989,7 +995,9 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 						component.setDynamicStyle(styleID, slider.value);
 						updateChildVisibility(styleID, slider.value);
-						this.updateActiveComponentOverlayPosition();
+
+						// Wait for panorama to layout the panel in case the size changes
+						$.Schedule(0.1, () => this.updateActiveComponentOverlayPosition());
 					});
 
 					break;
@@ -1020,9 +1028,11 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 						const value = dropdown.GetSelected().id;
 						component.setDynamicStyle(styleID, value);
 						updateChildVisibility(styleID, value);
+
+						// Wait for panorama to layout the panel in case the size changes
+						$.Schedule(0.1, () => this.updateActiveComponentOverlayPosition());
 					});
 
-					this.updateActiveComponentOverlayPosition();
 					break;
 				}
 
