@@ -179,14 +179,11 @@ class StickyCountHandler {
 	checkForChildren() {
 		const stickyPanels = this.panels.countContainer.Children();
 		if (stickyPanels.length === 8) {
-			const alpha = (rgbaStringToTuple(StateColors[StickyState.NOSTICKY] as rgbaColor)[3] / 255) * 0.5;
-
 			stickyPanels.forEach((panel) => {
 				for (const [key, value] of Object.entries(this.config)) {
 					panel.style[key] = value;
 				}
 				panel.style.backgroundColor = StateColors[StickyState.NOSTICKY] as color;
-				panel.style.boxShadow = `rgba(0, 0, 0, ${alpha}) 0px 0px 3px 0px`;
 				this.panelStates.set(panel, StickyState.NOSTICKY);
 			});
 			$.UnregisterEventHandler('HudThink', $.GetContextPanel(), this.initHandler);
