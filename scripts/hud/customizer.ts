@@ -431,18 +431,18 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			resizeX: false,
 			canDisable: false,
 			dynamicStyles: {
+				selectOnRightClick: {
+					name: 'Select Component With Right Click',
+					type: CustomizerPropertyType.CHECKBOX,
+					callbackFunc: (_, value) => {
+						this.toggleSelectOnRightClick(value);
+					}
+				},
 				selectedBorder: {
 					name: 'Enable Selected Component Border',
 					type: CustomizerPropertyType.CHECKBOX,
 					callbackFunc: (_, value) => {
 						this.panels.dragPanel.SetHasClass('hud-customizer-dragpanel__selected-border', value);
-					}
-				},
-				selectOnHover: {
-					name: 'Select Component On Hover',
-					type: CustomizerPropertyType.CHECKBOX,
-					callbackFunc: (_, value) => {
-						this.toggleSelectOnHover(value);
 					}
 				},
 				enableGrid: {
@@ -1240,21 +1240,21 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		this.setActiveComponent(component);
 	}
 
-	toggleSelectOnHover(enabled: boolean): void {
+	toggleSelectOnRightClick(enabled: boolean): void {
 		if (enabled) {
 			for (const component of Object.values(this.components)) {
 				if (component.dragPanel) {
-					component.dragPanel.SetPanelEvent('onmouseover', () => this.setActiveComponent(component));
+					component.dragPanel.SetPanelEvent('oncontextmenu', () => this.setActiveComponent(component));
 				} else {
-					component.panel.SetPanelEvent('onmouseover', () => this.setActiveComponent(component));
+					component.panel.SetPanelEvent('oncontextmenu', () => this.setActiveComponent(component));
 				}
 			}
 		} else {
 			for (const component of Object.values(this.components)) {
 				if (component.dragPanel) {
-					component.dragPanel.ClearPanelEvent('onmouseover');
+					component.dragPanel.ClearPanelEvent('oncontextmenu');
 				} else {
-					component.panel.ClearPanelEvent('onmouseover');
+					component.panel.ClearPanelEvent('oncontextmenu');
 				}
 			}
 		}
