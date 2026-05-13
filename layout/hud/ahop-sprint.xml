@@ -8,7 +8,7 @@
 	</scripts>
 
 	<MomHudAhopSprint>
-		<Panel id="AhopSprintCurveWrapper" class="h-fit-children">
+		<Panel id="AhopSprintCurveWrapper">
 			<Panel id="AhopSprintLeft" class="ahop-sprint__curve h-align-left" />
 			<Panel id="AhopSprintRight" class="ahop-sprint__curve h-align-right" />
 		</Panel>
