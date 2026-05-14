@@ -15,10 +15,24 @@
 			</RadioButton>
 		</snippet>
 
-        <snippet name="save-for-all">
+        <snippet name="save-to-other">
 			<Panel class="hud-customizer-settings__row mt-3">
 				<Button class="button hud-customizer-settings__button px-3 py-1">
-                    <Label text="Save For All Gamemodes" />
+                    <Label text="Save To Other Gamemodes" />
+                </Button>
+			</Panel>
+		</snippet>
+
+        <snippet name="preset-buttons">
+			<Panel class="hud-customizer-settings__row mt-3 h-fit-children">
+				<Button id="PresetCreateNew" class="button hud-customizer-settings__button button--green px-2 py-1 mr-3">
+                    <Label text="Create New" />
+                </Button>
+                <Button id="PresetRename" class="button hud-customizer-settings__button px-2 py-1 mr-3">
+                    <Label text="Rename" />
+                </Button>
+                <Button id="PresetDelete" class="button hud-customizer-settings__button button--red px-2 py-1">
+                    <Label text="Delete" />
                 </Button>
 			</Panel>
 		</snippet>
@@ -89,6 +103,15 @@
 			<Panel id="CustomizerSettingsHeader" class="hud-customizer-settings__header" draggable="true" hittest="true" hittestchildren="true">
 				<Label class="hud-customizer-settings__header__title" text="#HudCustomizer_Menu" />
 				<Image class="hud-customizer-settings__header__close" onactivate="HudCustomizerHandler.toggle(false)" src="file://{images}/close.svg" />
+			</Panel>
+
+            <Panel id="PresetSettings" class="hud-customizer-settings__active">
+				<Panel class="hud-customizer-settings__active__header">
+					<Label class="hud-customizer-settings__active__header__name" text="{s:preset_name}" />
+				</Panel>
+				<Panel id="PresetSettingsList" class="hud-customizer-settings__active__contents">
+					<!-- Populated by JS -->
+				</Panel>
 			</Panel>
             
             <Panel id="GeneralComponentsContainer" class="hud-customizer-settings__component-list-container">

@@ -23,11 +23,18 @@ const RAD2DEG = 180 / Math.PI;
 const DEG2RAD = 1 / RAD2DEG;
 
 enum DisplayMode {
-	HALF_WIDTH_THROTTLE,
-	FULL_WIDTH_THROTTLE,
-	STRAFE_INDICATOR,
-	SYNCHRONIZER
+	HALF_WIDTH_THROTTLE = 'half_width',
+	FULL_WIDTH_THROTTLE = 'full_width',
+	STRAFE_INDICATOR = 'indicator',
+	SYNCHRONIZER = 'synchronizer'
 }
+
+const SHOULD_INVERT_YAW_RATO = {
+	[DisplayMode.HALF_WIDTH_THROTTLE]: false,
+	[DisplayMode.FULL_WIDTH_THROTTLE]: true,
+	[DisplayMode.STRAFE_INDICATOR]: true,
+	[DisplayMode.SYNCHRONIZER]: true
+};
 
 enum StatMode {
 	OFF,
@@ -94,47 +101,41 @@ class StrafeTrainer {
 					options: [
 						{
 							label: 'Half Width',
-							value: DisplayMode.HALF_WIDTH_THROTTLE.toString()
+							value: DisplayMode.HALF_WIDTH_THROTTLE
 						},
 						{
 							label: 'Full Width',
-							value: DisplayMode.FULL_WIDTH_THROTTLE.toString()
+							value: DisplayMode.FULL_WIDTH_THROTTLE
 						},
 						{
 							label: 'Indicator',
-							value: DisplayMode.STRAFE_INDICATOR.toString()
+							value: DisplayMode.STRAFE_INDICATOR
 						},
 						{
 							label: 'Synchronizer',
-							value: DisplayMode.SYNCHRONIZER.toString()
+							value: DisplayMode.SYNCHRONIZER
 						}
 					],
 					children: [
 						{
 							styleID: 'indicatorPercentage',
-							showWhen: DisplayMode.STRAFE_INDICATOR.toString()
+							showWhen: DisplayMode.STRAFE_INDICATOR
 						},
 						{
 							styleID: 'synchronizerSpeed',
-							showWhen: DisplayMode.SYNCHRONIZER.toString()
+							showWhen: DisplayMode.SYNCHRONIZER
 						},
 						{
 							styleID: 'needleWidth',
-							showWhen: [
-								DisplayMode.HALF_WIDTH_THROTTLE.toString(),
-								DisplayMode.STRAFE_INDICATOR.toString()
-							]
+							showWhen: [DisplayMode.HALF_WIDTH_THROTTLE, DisplayMode.STRAFE_INDICATOR]
 						},
 						{
 							styleID: 'needleColor',
-							showWhen: [
-								DisplayMode.HALF_WIDTH_THROTTLE.toString(),
-								DisplayMode.STRAFE_INDICATOR.toString()
-							]
+							showWhen: [DisplayMode.HALF_WIDTH_THROTTLE, DisplayMode.STRAFE_INDICATOR]
 						}
 					],
 					callbackFunc: (_, value) => {
-						this.updateDisplayMode(+value);
+						this.updateDisplayMode(value as DisplayMode);
 					}
 				},
 				indicatorPercentage: {
@@ -404,7 +405,9 @@ class StrafeTrainer {
 			this.gainRatioHistory[this.interpFrames - 1] =
 				this.sampleWeight * this.NaNCheck(lastTickStats.speedGain / lastTickStats.idealGain, 0);
 
-			const ratio = this.displayMode > 1 ? 1 - lastTickStats.yawRatio : lastTickStats.yawRatio;
+			const ratio = SHOULD_INVERT_YAW_RATO[this.displayMode]
+				? 1 - lastTickStats.yawRatio
+				: lastTickStats.yawRatio;
 			this.yawRatioHistory[this.interpFrames - 1] = this.sampleWeight * this.NaNCheck(ratio, 0);
 		}
 

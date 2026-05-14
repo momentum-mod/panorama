@@ -10,6 +10,7 @@ import {
 import * as LayoutUtil from 'common/layout';
 import * as Enum from 'util/enum';
 import { traverseChildren } from 'util/functions';
+import { GamemodeInfo } from 'common/web/maps/gamemodes.map';
 import { PanelHandler } from 'util/module-helpers';
 
 // TODO: need to do a *ton* of localization when this is done, including components!
@@ -110,27 +111,15 @@ class Component {
 	private _width: number | undefined = undefined!;
 	private _height: number | undefined = undefined!;
 
-	private static userLayout: HudLayout | undefined;
-	private static defaultLayout: HudLayout;
-
 	// A record of CustomizerSettings dynamic styles <StyleID, value>
 	static referencedValues: Record<string, any> = {};
 
 	// A record of CustomizerSettings dynamic styles <StyleID, Set of StyleID of components that use that style as reference>
 	static referencedValueListeners: Record<string, Set<string>> = {};
 
-	static {
-		Component.userLayout = $.GetContextPanel<HudCustomizer>().getLayout();
-		Component.defaultLayout = $.GetContextPanel<HudCustomizer>().getDefaultLayout();
-
-		if (!Component.defaultLayout) {
-			throw new Error('HudCustomizer: Could not load default layout for HUD customizer!');
-		}
-	}
-
 	/** @see registerHUDCustomizerComponent */
 	static register(panel: GenericPanel, properties: CustomizerComponentProperties): Component {
-		if (!Component.defaultLayout[panel.id]) return null;
+		if (!HudCustomizerHandler.defaultLayout[panel.id]) return null;
 		return new Component(panel, properties);
 	}
 
@@ -140,10 +129,7 @@ class Component {
 		this.properties = properties;
 		this.id = panel.id;
 
-		// If we add new components after release, use layout from default for any missing components
-		const userComponentLayout = Component.userLayout[this.id];
-		const defaultComponentLayout = Component.defaultLayout[this.id];
-		const componentLayout = userComponentLayout ?? defaultComponentLayout;
+		const componentLayout = HudCustomizerHandler.presetLayout[this.id];
 
 		if (!componentLayout)
 			throw new Error(`HudCustomizer: Could not load layout for HUD customizer component ${this.id}`);
@@ -159,9 +145,8 @@ class Component {
 			this.dynamicStyles = {};
 
 			for (const [styleID, styleProps] of Object.entries(properties.dynamicStyles)) {
-				const value =
-					componentLayout.dynamicStyles?.[styleID as StyleID] ??
-					defaultComponentLayout?.dynamicStyles?.[styleID as StyleID];
+				const value = componentLayout.dynamicStyles?.[styleID as StyleID];
+
 				if (value === undefined) {
 					if (styleProps.type === CustomizerPropertyType.NONE) {
 						// NONE types have no value
@@ -284,6 +269,7 @@ class Component {
 			layout.dynamicStyles = {};
 
 			for (const [styleID, dynamicStyle] of Object.entries(this.dynamicStyles)) {
+				if (dynamicStyle.value === null) continue;
 				layout.dynamicStyles[styleID] = dynamicStyle.value;
 			}
 		}
@@ -294,7 +280,7 @@ class Component {
 	/** Reset a component to its original state. */
 	// TODO: how tf will this work with groups lol
 	reset(options: ResetOptions): void {
-		const defaultComponentLayout = Component.defaultLayout[this.id];
+		const defaultComponentLayout = HudCustomizerHandler.defaultLayout[this.id];
 		if (!defaultComponentLayout)
 			throw new Error(`HudCustomizer: Could not load default layout for HUD customizer component ${this.id}`);
 
@@ -319,7 +305,7 @@ class Component {
 
 	/** Reset a single dynamic style to it's original state */
 	resetSingle(styleID: StyleID): void {
-		const defaultValue = Component.defaultLayout[this.id].dynamicStyles?.[styleID];
+		const defaultValue = HudCustomizerHandler.defaultLayout[this.id].dynamicStyles?.[styleID];
 		this.setDynamicStyle(styleID, defaultValue);
 	}
 
@@ -374,7 +360,7 @@ class Component {
 		}
 	}
 
-	refreshDynamicStyles(): void {
+	reloadDynamicStyles(): void {
 		if (!this.dynamicStyles) return;
 		for (const style of Object.values(this.dynamicStyles)) {
 			this.applyDynamicStyle(style);
@@ -391,8 +377,11 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		overlay: $<Panel>('#Overlay')!,
 		overlayInner: $<Panel>('#OverlayInner')!,
 		settings: $<Panel>('#CustomizerSettings')!,
+		presetSettings: $<Panel>('#PresetSettings')!,
+		presetSettingList: $<Panel>('#PresetSettingsList')!,
+		generalComponentContainer: $<Panel>('#GeneralComponentsContainer')!,
 		generalComponentList: $<Panel>('#GeneralComponentList')!,
-		gamemodeComponentsContainer: $<Panel>('#GamemodeComponentsContainer')!,
+		gamemodeComponentContainer: $<Panel>('#GamemodeComponentsContainer')!,
 		gamemodeComponentList: $<Panel>('#GamemodeComponentList')!,
 		activeComponentSettings: $<Panel>('#ActiveComponentSettings')!,
 		activeComponentSettingsList: $<Panel>('#ActiveComponentSettingsList')!,
@@ -401,7 +390,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 	};
 
 	// Makes sure layout isn't saved before hud is initialized
-	readyToSave: boolean;
+	customizerReady: boolean;
 
 	components: Record<string, Component> = {};
 	gridlines: GridlineForAxis = [[], []];
@@ -420,8 +409,16 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 	gridSize: number = undefined!;
 	enableSnapping: boolean = undefined!;
 
-	layout?: HudLayout;
-	defaultLayout?: HudLayout;
+	presetList: Set<string>;
+	unsavedPresets: Set<string> = new Set();
+
+	static presetLayout: HudLayout;
+	static defaultLayout: HudLayout;
+
+	currentGamemode: Gamemode;
+	currentGamemodeInfo: ReturnType<typeof GamemodeInfo.get>;
+
+	currentPreset: string;
 
 	constructor() {
 		registerHUDCustomizerComponent(this.panels.settings, {
@@ -549,7 +546,10 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		// Registers the *internal* variant of this event -- HudCustomizer_OpenedInternal is dispatched first and lets
 		// components with special handling know to prepare for editing mode.
 		$.RegisterForUnhandledEvent('HudCustomizer_OpenedInternal', () => this.enableEditing());
-		$.RegisterForUnhandledEvent('HudCustomizer_Closed', () => this.disableEditing());
+		$.RegisterForUnhandledEvent('HudCustomizer_Closed', () => {
+			this.disableEditing();
+			if (this.customizerReady) this.save();
+		});
 
 		// TODO: Below todo is *probably* fine now using events like this, but be very careful everything
 		// is getting registered okay.
@@ -557,9 +557,20 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		// Looks like some stuff like HudSpecInfoHandler listening for PanelLoaded is getting
 		// called later than this though...
 		$.RegisterForUnhandledEvent('MapCache_MapLoad' as any, () => {
+			this.panels.customizer.toggleUI(false);
+			this.currentGamemode = GameModeAPI.GetCurrentGameMode();
+			this.currentGamemodeInfo = GamemodeInfo.get(this.currentGamemode);
+			this.initializeLayouts();
+			this.updatePresetSettings();
+			if (this.currentPreset === 'default') {
+				this.defaultPresetStateOn();
+			} else {
+				this.defaultPresetStateOff();
+			}
+
 			// Once HUD is fully initialized, let components awaiting registration know to load component
 			$.DispatchEvent('HudCustomizer_Ready');
-			this.readyToSave = true;
+			this.customizerReady = true;
 		});
 
 		// TODO: This was just for case of someone changin layout via file and wanting to update ingame.
@@ -568,24 +579,16 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		// 	this.load();
 		// });
 
-		this.readyToSave = false;
+		this.customizerReady = false;
 		this.gridlines = [[], []];
 		this.activeGridlines = [undefined, undefined];
 		this.activeComponent = undefined;
-
-		this.layout = this.panels.customizer.getLayout();
-		this.defaultLayout = this.panels.customizer.getDefaultLayout();
 
 		this.panels.activeComponentSettings.visible = false;
 
 		this.fonts = UiToolkitAPI.GetSortedValidFontNames().toSorted((a, b) => a.localeCompare(b));
 
 		UiToolkitAPI.GetGlobalObject()['HudCustomizerHandler'] = this;
-
-		// Display editing in case was enabled before a reload -- state is convar-based so persists across HUD reloads.
-		const isCustomizerOpen = GameInterfaceAPI.GetSettingBool('mom_hudcustomizer_enable');
-		this.panels.customizer.toggleUI(isCustomizerOpen);
-		if (isCustomizerOpen) this.createResizeKnobs();
 	}
 
 	// CustomizerSettings dynamic styles are used as default global styles
@@ -602,9 +605,228 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		listeners.forEach((componentID) => {
 			const component = this.components[componentID];
 			if (component) {
-				component.refreshDynamicStyles();
+				component.reloadDynamicStyles();
 			}
 		});
+	}
+
+	/**
+	 * Recreates the preset setting list
+	 */
+	updatePresetSettings() {
+		const panel = this.panels.presetSettingList;
+		panel.RemoveAndDeleteChildren();
+
+		const gamemode = this.currentGamemodeInfo.id;
+
+		if (!this.presetList) {
+			this.presetList = new Set(this.panels.customizer.listLayouts());
+		}
+
+		this.panels.settings.SetDialogVariable('preset_name', `${this.currentGamemodeInfo.name} Presets`);
+
+		const createDropdown = (parent: GenericPanel) => {
+			const panel = $.CreatePanel('Panel', parent, '');
+			panel.LoadLayoutSnippet('dynamic-dropdown');
+			panel.SetDialogVariable('name', 'Preset');
+			const dropdown = panel.FindChildTraverse<DropDown>('DropDown')!;
+
+			//Filters presetList to only those that match gamemodeID_<name> pattern, then strips gamemodeID + _
+			const gamemodeIdsByLength = [...GamemodeInfo.values()]
+				.map((info) => info.id)
+				.sort((a, b) => b.length - a.length);
+
+			const getGamemodeForFile = (name: string) => gamemodeIdsByLength.find((id) => name.startsWith(id + '_'));
+
+			const presets = [...this.presetList, ...this.unsavedPresets]
+				.filter((name) => getGamemodeForFile(name) === gamemode)
+				.map((name) => name.slice(gamemode.length + 1))
+				.sort((a, b) => {
+					if (a === 'default') return -1;
+					if (b === 'default') return 1;
+					return a.localeCompare(b);
+				});
+
+			for (const preset of presets) {
+				const optionPanel = $.CreatePanel('Label', dropdown, preset);
+				optionPanel.text = preset;
+				dropdown.AddOption(optionPanel);
+			}
+
+			dropdown.SetSelected(this.currentPreset ?? 'default');
+
+			dropdown.SetPanelEvent('oninputsubmit', () => {
+				//Attempt to save when changing presets
+				if (this.customizerReady) this.save();
+
+				const value = dropdown.GetSelected().id;
+				this.changePreset(value);
+			});
+		};
+
+		const createButtons = (parent: GenericPanel) => {
+			const panel = $.CreatePanel('Panel', parent, '');
+			panel.LoadLayoutSnippet('preset-buttons');
+
+			const isDefaultPreset = this.currentPreset === 'default';
+
+			const createPreset = panel.FindChild('PresetCreateNew');
+			createPreset.SetPanelEvent('onactivate', () => {
+				UiToolkitAPI.ShowCustomLayoutPopupParameters(
+					'CreateNewPreset',
+					'file://{resources}/layout/modals/popups/hud-customizer-layout-name.xml',
+					`title=Create New Preset&input_label=Preset Name&ok_btn_label=Create Preset&callback=${UiToolkitAPI.RegisterJSCallback(
+						(name: string) => {
+							this.save();
+							this.createNewPreset(name);
+						}
+					)}`
+				);
+			});
+
+			const renamePreset = panel.FindChild('PresetRename');
+			renamePreset.enabled = !isDefaultPreset;
+			renamePreset.SetPanelEvent('onactivate', () => {
+				UiToolkitAPI.ShowCustomLayoutPopupParameters(
+					'RenamePreset',
+					'file://{resources}/layout/modals/popups/hud-customizer-layout-name.xml',
+					`title=Rename Preset&input_label=Rename preset ${this.currentPreset}&ok_btn_label=Create Preset&callback=${UiToolkitAPI.RegisterJSCallback((name: string) => this.renamePreset(this.currentPreset, name))}`
+				);
+			});
+
+			const deletePreset = panel.FindChild('PresetDelete');
+			deletePreset.enabled = !isDefaultPreset;
+			deletePreset.SetPanelEvent('onactivate', () => {
+				UiToolkitAPI.ShowGenericPopupYesNo(
+					'DeletePreset',
+					`Do you want to delete preset "${this.currentPreset}"?`,
+					'',
+					() => this.deletePreset(this.currentPreset),
+					() => UiToolkitAPI.CloseAllVisiblePopups()
+				);
+			});
+		};
+
+		const wrapper = $.CreatePanel('Panel', panel, 'ParentWrapper', {
+			class: 'hud-customizer-settings__row-wrapper'
+		});
+
+		createDropdown(wrapper);
+		createButtons(wrapper);
+	}
+
+	createNewPreset(newPreset: string): boolean {
+		if (newPreset === 'default') {
+			displayToast(
+				'Reserved name!',
+				'Default preset is reserved.\nyou cannot rename it or rename other presets to it!'
+			);
+			return;
+		}
+		const gamemode = this.currentGamemodeInfo.id;
+
+		if (!this.presetList) {
+			this.presetList = new Set(this.panels.customizer.listLayouts());
+		}
+
+		const presets = [...this.presetList, ...this.unsavedPresets];
+
+		if (presets.includes(`${gamemode}_${newPreset}`)) {
+			displayToast('Failed to create preset!', `Preset ${newPreset} already exists!`);
+			return false;
+		}
+
+		this.unsavedPresets.add(`${gamemode}_${newPreset}`);
+		this.changePreset(newPreset);
+		this.updatePresetSettings();
+
+		return true;
+	}
+
+	/**
+	 * Changes the preset based on it's name. Updates the presetLayout, currentPreset and persistentStorage
+	 * @param name Name of the preset
+	 */
+	changePreset(name: string) {
+		const gamemode = this.currentGamemodeInfo.id;
+		const fullPresetName = `${gamemode}_${name}`;
+
+		if (this.presetList.has(fullPresetName)) {
+			HudCustomizerHandler.presetLayout = this.getPresetLayout(name);
+		}
+
+		this.currentPreset = name;
+		$.persistentStorage.setItem(`hud-customizer.preset.${gamemode}`, name);
+		this.reloadLayout();
+
+		if (name === 'default') {
+			this.defaultPresetStateOn();
+		} else {
+			this.defaultPresetStateOff();
+		}
+	}
+
+	/**
+	 * Reloads the layout from preset layout.
+	 * Assumes the exact same list of components exists
+	 */
+	reloadLayout() {
+		const previous = this.components;
+		this.components = {};
+		for (const component of Object.values(previous)) {
+			this.components[component.id] = component;
+			this.loadComponent(component.panel, component.properties);
+		}
+
+		//Panorama needs time to layout panels
+		this.setActiveComponent(this.activeComponent);
+	}
+
+	renamePreset(oldName: string, newName: string) {
+		if (oldName === 'default' || newName === 'default') {
+			displayToast(
+				'Reserved name!',
+				'Default preset is reserved.\nyou cannot rename it or rename other presets to it!'
+			);
+			return;
+		}
+
+		const gamemode = this.currentGamemodeInfo.id;
+
+		const fullOldName = `${gamemode}_${oldName}`;
+		const fullNewName = `${gamemode}_${newName}`;
+
+		this.panels.customizer.renameLayout(fullOldName, fullNewName);
+
+		this.presetList.delete(fullOldName);
+		this.presetList.add(fullNewName);
+
+		this.changePreset(newName);
+		this.updatePresetSettings();
+	}
+
+	deletePreset(name: string) {
+		if (name === 'default') {
+			displayToast('Preset not deleted!', 'You cannot delete the default preset!');
+			return;
+		}
+
+		const gamemode = this.currentGamemodeInfo.id;
+		const fullPresetName = `${gamemode}_${name}`;
+
+		const deleteSuccessful = this.panels.customizer.deleteLayout(fullPresetName);
+
+		// Delete saved presets when file deletion is successful
+		// Always delete unsaved presets
+		const deletedSaved = deleteSuccessful ? this.presetList.delete(fullPresetName) : false;
+		const deletedUnsaved = this.unsavedPresets.delete(fullPresetName);
+
+		if (deletedSaved || deletedUnsaved) {
+			this.changePreset('default');
+			this.updatePresetSettings();
+		} else {
+			$.Warning(`Failed to delete /cfg/hud/${fullPresetName}.kv3`);
+		}
 	}
 
 	/**
@@ -614,12 +836,10 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 	 */
 	loadComponent(panel: GenericPanel, properties: CustomizerComponentProperties): void {
 		if (!panel) return;
-
 		//Skip registering if the gamemode doesn't match. If the gamemode property doesn't exist always register
 		if (properties.gamemode) {
-			const current = GameModeAPI.GetCurrentGameMode();
 			const allowed = Array.isArray(properties.gamemode) ? properties.gamemode : [properties.gamemode];
-			if (!allowed.includes(current)) {
+			if (!allowed.includes(this.currentGamemode)) {
 				panel.enabled = false;
 				return;
 			}
@@ -655,21 +875,59 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		this.generateComponentList();
 	}
 
+	saveToOtherGamemodes(gamemodes: Gamemode | Gamemode[]) {
+		$.Msg('SAVE TO OTHER GAMEMODES WILL BE HERE');
+	}
+
 	/** Serializes all component and saves cfg/hud.json. */
 	save(): void {
+		if (this.currentPreset === 'default') return;
+
 		// TODO: Check we don't potentially lose data if a component fails to register once, which would
 		// cause previous data to get wiped.
 		const saveData: HudLayout = {};
 
+		//Strip out components that are exactly the same as default layout
 		for (const [id, component] of Object.entries(this.components)) {
-			saveData[id] = component.getLayout();
+			const layout = component.getLayout();
+			const defaultLayout = HudCustomizerHandler.defaultLayout[id];
+
+			if (!isDeepEqual(layout, defaultLayout)) {
+				saveData[id] = layout;
+			}
+		}
+		//It's possible there will be nothing to save, don't write files if that's the case
+		if (Object.keys(saveData).length === 0) {
+			return;
 		}
 
-		// Serialization and filesystem stuff done in C++.
-		this.panels.customizer.saveLayout(saveData);
+		//Check if remaining components are the same as current preset
+		//This is done to not save unnecessarily when switching between presets
+		const isSaveDataSameAsCurrentPreset = () => {
+			for (const [id, componentLayout] of Object.entries(saveData)) {
+				const presetLayout = HudCustomizerHandler.presetLayout[id];
+				if (!isDeepEqual(componentLayout, presetLayout)) return false;
+			}
+			return true;
+		};
+
+		const gamemode = this.currentGamemodeInfo.id;
+
+		if (!isSaveDataSameAsCurrentPreset()) {
+			const fullPresetName = `${gamemode}_${this.currentPreset}`;
+			// Serialization done in C++.
+			this.panels.customizer.saveLayout(fullPresetName, saveData);
+
+			if (this.unsavedPresets.has(fullPresetName)) {
+				this.unsavedPresets.delete(fullPresetName);
+				this.presetList.add(fullPresetName);
+			}
+		}
 	}
 
 	enableEditing(): void {
+		if (!this.customizerReady) return;
+
 		if (!this.components || Object.keys(this.components).length === 0) {
 			throw new Error("HudCustomizer: Tried to enable editing, but we weren't loaded!");
 		}
@@ -677,8 +935,10 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		this.createResizeKnobs();
 
 		this.activeComponent ??= this.components[Object.keys(this.components)[0]];
+		this.panels.overlay.style.visibility = 'visible';
 
 		this.setActiveComponent(this.activeComponent);
+		this.updatePresetSettings();
 		this.waitForActiveComponentLayouting();
 	}
 
@@ -687,8 +947,8 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			$.UnregisterEventHandler('DragStart', this.panels.dragPanel, this.dragStartHandle);
 		}
 
-		// Customizer closing, write to disk
-		if (this.readyToSave) this.save();
+		this.panels.overlay.style.visibility = 'collapse';
+		this.toggleSelectOnRightClick(false);
 	}
 
 	/**
@@ -706,6 +966,38 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 	isOpen(): boolean {
 		return this.panels.customizer.isOpen();
+	}
+
+	defaultPresetStateOn() {
+		this.panels.generalComponentContainer.style.visibility = 'collapse';
+		this.panels.gamemodeComponentContainer.style.visibility = 'collapse';
+		this.panels.activeComponentSettings.style.visibility = 'collapse';
+		this.panels.dragPanel.style.visibility = 'collapse';
+		this.panels.resizeKnobs.RemoveAndDeleteChildren();
+
+		this.panels.presetSettingList.FindChildTraverse('PresetRename').enabled = false;
+		this.panels.presetSettingList.FindChildTraverse('PresetDelete').enabled = false;
+
+		this.disableEditing();
+	}
+
+	defaultPresetStateOff() {
+		this.panels.generalComponentContainer.style.visibility = 'visible';
+		this.panels.gamemodeComponentContainer.style.visibility = 'visible';
+		this.panels.dragPanel.style.visibility = 'visible';
+
+		this.panels.overlay.style.visibility = 'visible';
+
+		this.panels.presetSettingList.FindChildTraverse('PresetRename').enabled = true;
+		this.panels.presetSettingList.FindChildTraverse('PresetDelete').enabled = true;
+
+		this.createResizeKnobs();
+
+		if (this.customizerReady) {
+			const customizerSettings = this.components['CustomizerSettings'];
+			Component.register(customizerSettings.panel, customizerSettings.properties);
+			this.panels.activeComponentSettings.style.visibility = 'visible';
+		}
 	}
 
 	generateComponentList() {
@@ -753,7 +1045,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			visButton.enabled = component.properties.canDisable ?? true;
 		}
 
-		this.panels.gamemodeComponentsContainer.SetHasClass(
+		this.panels.gamemodeComponentContainer.SetHasClass(
 			'hide',
 			this.panels.gamemodeComponentList.GetChildCount() === 0
 		);
@@ -859,6 +1151,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 	updateActiveComponentSettings(): void {
 		this.panels.activeComponentSettingsList.RemoveAndDeleteChildren();
+		if (this.currentPreset === 'default') return;
 
 		const resolveValue = (val: any) => {
 			if (typeof val === 'string' && val.startsWith('$')) {
@@ -876,7 +1169,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		}
 
 		this.panels.activeComponentSettings.visible = true;
-		this.panels.settings.SetDialogVariable('active_name', component.id);
+		this.panels.settings.SetDialogVariable('active_name', component.properties.name);
 
 		const childVisibilityMap = new Map<StyleID, Array<{ panel: Panel; showWhen?: any[] }>>();
 
@@ -1193,12 +1486,25 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			if (dynamicStyle.properties.children) appendChildren(styleID, wrapper);
 		}
 
-		// Append "Save For All Gamemodes" button
-		const saveForAllWrapper = $.CreatePanel('Panel', this.panels.activeComponentSettingsList, 'SaveForAllWrapper', {
-			class: 'hud-customizer-settings__row-wrapper h-fit-children'
-		});
+		// Append "Save To Other Gamemodes" button only if there are 2 or more gamemodes available.
+		// Panels without gamemodes specified are available in all gamemodes, therefore they have the button always appended
+		const gamemode = component.properties?.gamemode;
+		const availableGamemodes = Array.isArray(gamemode) ? gamemode.length : gamemode ? 1 : 2;
 
-		saveForAllWrapper.LoadLayoutSnippet('save-for-all');
+		if (availableGamemodes > 1) {
+			const saveToOtherGamemodes = $.CreatePanel(
+				'Panel',
+				this.panels.activeComponentSettingsList,
+				'SaveToOtherGamemodes',
+				{
+					class: 'hud-customizer-settings__row-wrapper h-fit-children'
+				}
+			);
+			saveToOtherGamemodes.SetPanelEvent('onactivate', () =>
+				this.saveToOtherGamemodes(component.properties.gamemode)
+			);
+			saveToOtherGamemodes.LoadLayoutSnippet('save-to-other');
+		}
 	}
 
 	// Hacky stuff to wait for layouting to finish if needed. Hate doing this, but Panorama doesn't expose any
@@ -1593,6 +1899,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 	}
 
 	createResizeKnobs(): void {
+		if (this.currentPreset === 'default') return;
 		this.resizeKnobs = {} as Record<any, any>;
 		this.panels.resizeKnobs.RemoveAndDeleteChildren();
 
@@ -1621,6 +1928,61 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 				this.resizeKnobs[dir] = knob;
 			});
 	}
+
+	getPresetLayout(preset: string) {
+		if (preset === 'default') {
+			return this.getDefaultLayout();
+		}
+		const gamemode = this.currentGamemodeInfo.id;
+		if (!gamemode) {
+			throw new Error(`Could not find gamemode id for gamemode:${this.currentGamemode}`);
+		}
+
+		const defaultLayout = this.getDefaultLayout();
+		const presetLayout = $.GetContextPanel<HudCustomizer>().loadLayout(`${gamemode}_${preset}`);
+
+		if (!presetLayout) {
+			$.persistentStorage.setItem(`hud-customizer.preset.${gamemode}`, 'default');
+			this.currentPreset = 'default';
+			$.Warning(`Could not load ${gamemode}_${preset}.kv3 from /cfg/hud`);
+		}
+
+		return deepMerge(defaultLayout, presetLayout);
+	}
+
+	getDefaultLayout() {
+		const gamemode = this.currentGamemodeInfo.id;
+		if (!gamemode) {
+			throw new Error(`Could not find gamemode id for gamemode:${this.currentGamemode}`);
+		}
+
+		const generalLayout = $.GetContextPanel<HudCustomizer>().loadLayout('hud_default');
+		const gamemodeLayout = $.GetContextPanel<HudCustomizer>().loadLayout(`${gamemode}_default`);
+
+		if (!generalLayout) {
+			throw new Error('Could not load hud_default.kv3 from /cfg/hud');
+		}
+		if (!gamemodeLayout) {
+			throw new Error(`Could not load ${gamemode}_default.kv3 from /cfg/hud`);
+		}
+
+		return { ...generalLayout, ...gamemodeLayout };
+	}
+
+	initializeLayouts() {
+		const gamemode = this.currentGamemodeInfo.id;
+		const preset = $.persistentStorage.getItem(`hud-customizer.preset.${gamemode}`) as string;
+
+		HudCustomizerHandler.defaultLayout = this.getDefaultLayout();
+
+		if (preset) {
+			this.currentPreset = preset;
+			HudCustomizerHandler.presetLayout = this.getPresetLayout(preset);
+		} else {
+			this.currentPreset = 'default';
+			HudCustomizerHandler.presetLayout = { ...HudCustomizerHandler.defaultLayout };
+		}
+	}
 }
 
 function parsePx(str: string): number | undefined {
@@ -1645,4 +2007,65 @@ function cssPanelLookup<T extends Panel>(panel: GenericPanel, selector: QuerySel
 			.filter((p) => p.paneltype === selector)
 			.toArray() as T[];
 	}
+}
+
+/**
+ * Compares two layouts of components.
+ * If B has properties that are missing from A, components are still treated as equal
+ * @param a Component Layout Object
+ * @param b Component Layout Object
+ * @returns boolean
+ */
+function isDeepEqual(a: any, b: any): boolean {
+	if (a === b) return true;
+
+	if (typeof a !== 'object' || a === null || typeof b !== 'object' || b === null) {
+		return false;
+	}
+
+	if (Array.isArray(a)) {
+		if (!Array.isArray(b) || a.length !== b.length) return false;
+		return a.every((val, index) => isDeepEqual(val, b[index]));
+	}
+
+	const keysA = Object.keys(a);
+
+	for (const key of keysA) {
+		// Combined the check for key existence and the recursive equality check
+		if (Object.hasOwn(b, key) && !isDeepEqual(a[key], b[key])) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
+/**
+ * Deeply merges multiple objects into a new object.
+ * Arrays and primitives are overwritten; nested objects are merged recursively.
+ */
+function deepMerge<T extends Record<string, any>>(...objects: Partial<T>[]): T {
+	const isObject = (item: unknown) => Boolean(item && typeof item === 'object' && !Array.isArray(item));
+
+	return objects.reduce((acc, obj) => {
+		if (!isObject(obj)) return acc;
+
+		Object.keys(obj).forEach((key) => {
+			const accValue = acc[key];
+			const objValue = obj[key];
+
+			if (isObject(accValue) && isObject(objValue)) {
+				acc[key] = deepMerge(accValue, objValue);
+			} else {
+				// Arrays and primitives are assigned directly
+				acc[key] = objValue;
+			}
+		});
+
+		return acc;
+	}, {} as any) as T;
+}
+
+function displayToast(title: string, message: string) {
+	ToastAPI.CreateToast('', title, message, 2, 10, '', 'red');
 }

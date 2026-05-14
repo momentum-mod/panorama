@@ -1,0 +1,29 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+	
+	<scripts>
+		<include type="module" src="file://{scripts}/modals/popups/hud-customizer-layout-name.ts" />
+	</scripts>
+	
+	<PopupCustomLayout class="PopupPanel Hidden" popupbackground="dim">
+		<Panel class="row h-align-center mt-0">
+			<Label id="TitleLabel" class="generic-popup__title" text="" />
+		</Panel>
+		<Panel class="row mt-4">
+			<Label id="InputLabel" class="mr-3 v-align-center" text="" />
+            <!-- Max chars is 64 enforced by c++. Leave a buffer for gamemode prefix -->
+			<TextEntry id="TextEntry" class="textentry pl-3 pr-0" maxchars="48" ontextentrysubmit="HudCustomizerLayoutNameHandler.onTextSubmitted()"/>
+		</Panel>
+		<Label id="InvalidNameLabel" class="text-m h-align-center hidden" text="" />
+		<Panel class="row h-align-center mt-4 generic-popup__button-row">
+			<Button class="button button--green mr-4">
+				<Label id="OkButtonLabel" class="button__text" text="" onactivate="HudCustomizerLayoutNameHandler.onOkButtonPressed()"/>
+			</Button>
+            <Button id="CancelButton" class="button" onactivate="HudCustomizerLayoutNameHandler.onCancelPressed();">
+				<Label class="button__text" text="#Common_Cancel" />
+			</Button>
+		</Panel>
+	</PopupCustomLayout>
+</root>
