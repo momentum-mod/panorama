@@ -12,30 +12,31 @@ registerHUDCustomizerComponent($.GetContextPanel(), {
 				panel.SetHasClass('chat--disable-users-typing', !value);
 			}
 		},
-		font: {
-			name: 'Font',
-			type: CustomizerPropertyType.FONT_PICKER,
-			styleProperty: 'fontFamily',
-			targetPanel: ['.chat-entry__message', '.chat__input', '.chat__send-text'],
-			events: [
-				{
-					event: 'OnNewChatEntry',
-					panel: $.GetContextPanel().FindChildInLayoutFile('RaisedChat')!,
-					callback: (value: string, panel: GenericPanel) => {
-						const text = panel.FindChild('Text')!;
-						text.style.fontFamily = value;
-						// TODO: Need a better approach than this. Why does this work?
-						// If works because causes a repaint, why doesn't the repaint setting the font do it?
-						// Currently the size is always wrong when changing or for new messages, until they're
-						// mouseovered.
-						// Looks like setrepaint(full) *is* getting called in afterstylesapplied... so we need to do
-						// more than repaint to update styles? worth looking into comment on styles.cpp l952
-						// @ts-expect-error asdhjaskfodsf
-						panel.ApplyStyles(true);
-					}
-				}
-			]
-		},
+		//BROKEN, GET'S RID OF THE BOLD STYLING IN SPANS
+		// font: {
+		// 	name: 'Font',
+		// 	type: CustomizerPropertyType.FONT_PICKER,
+		// 	styleProperty: 'fontFamily',
+		// 	targetPanel: ['.chat-entry__message', '.chat__input', '.chat__send-text'],
+		// 	events: [
+		// 		{
+		// 			event: 'OnNewChatEntry',
+		// 			panel: $.GetContextPanel().FindChildInLayoutFile('RaisedChat')!,
+		// 			callback: (value: string, panel: GenericPanel) => {
+		// 				const text = panel.FindChild('Text')!;
+		// 				text.style.fontFamily = value;
+		// 				// TODO: Need a better approach than this. Why does this work?
+		// 				// If works because causes a repaint, why doesn't the repaint setting the font do it?
+		// 				// Currently the size is always wrong when changing or for new messages, until they're
+		// 				// mouseovered.
+		// 				// Looks like setrepaint(full) *is* getting called in afterstylesapplied... so we need to do
+		// 				// more than repaint to update styles? worth looking into comment on styles.cpp l952
+		// 				// @ts-expect-error asdhjaskfodsf
+		// 				panel.ApplyStyles(true);
+		// 			}
+		// 		}
+		// 	]
+		// },
 		backgroundColor: {
 			name: 'Background Color',
 			type: CustomizerPropertyType.COLOR_PICKER,
