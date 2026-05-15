@@ -18,10 +18,10 @@
 		</Panel>
 		<Label id="InvalidNameLabel" class="text-m h-align-center hidden" text="" />
 		<Panel class="row h-align-center mt-4 generic-popup__button-row">
-			<Button class="button button--green mr-4">
-				<Label id="OkButtonLabel" class="button__text" text="" onactivate="HudCustomizerLayoutNameHandler.onOkButtonPressed()"/>
+			<Button class="button button--green mr-4" onactivate="HudCustomizerLayoutNameHandler.onOkButtonPressed()">
+				<Label id="OkButtonLabel" class="button__text" text=""/>
 			</Button>
-            <Button id="CancelButton" class="button" onactivate="HudCustomizerLayoutNameHandler.onCancelPressed();">
+            <Button id="CancelButton" class="button" onactivate="UiToolkitAPI.CloseAllVisiblePopups()">
 				<Label class="button__text" text="#Common_Cancel" />
 			</Button>
 		</Panel>

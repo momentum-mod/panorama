@@ -54,6 +54,7 @@ class HudSpecInfoHandler implements OnPanelLoad {
 				showNameList: {
 					name: 'Show Name List',
 					type: CustomizerPropertyType.CHECKBOX,
+					children: { styleID: 'maxPlayerCount', showWhen: true },
 					callbackFunc: (_, value) => {
 						this.specConfig.showNameList = value;
 						this.createDummySpectators();
@@ -138,6 +139,8 @@ class HudSpecInfoHandler implements OnPanelLoad {
 		for (let i = 0; i < this.maxNames; i++) {
 			this.createSpecNameLabel(`Player ${i + 1}`);
 		}
+
+		this.createSpecNameLabel('...');
 	}
 
 	onPanelLoad() {

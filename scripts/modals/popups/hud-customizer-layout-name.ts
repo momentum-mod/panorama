@@ -12,12 +12,9 @@ class HudCustomizerLayoutNameHandler implements OnPanelLoad {
 	};
 
 	onPanelLoad() {
-		this.panels.title.text = $.GetContextPanel().GetAttributeString('title', 'Input');
-		this.panels.input.text = $.GetContextPanel().GetAttributeString('input_label', 'Input Value');
-		this.panels.okButtonLabel.text = $.GetContextPanel().GetAttributeString(
-			'ok_btn_label',
-			$.Localize('#Common_OK')
-		);
+		this.panels.title.text = this.panels.cp.GetAttributeString('title', 'Input');
+		this.panels.input.text = this.panels.cp.GetAttributeString('input_label', 'Input Value');
+		this.panels.okButtonLabel.text = this.panels.cp.GetAttributeString('ok_btn_label', $.Localize('#Common_OK'));
 
 		this.panels.invalidName.visible = false;
 	}
@@ -25,10 +22,12 @@ class HudCustomizerLayoutNameHandler implements OnPanelLoad {
 	onTextSubmitted() {
 		if (!this.validateTextEntry()) return;
 
-		const callbackHandle = $.GetContextPanel().GetAttributeInt('callback', -1);
+		const callbackHandle = this.panels.cp.GetAttributeInt('callback', -1);
 
-		if (callbackHandle !== -1)
+		if (callbackHandle !== -1) {
 			UiToolkitAPI.InvokeJSCallback(callbackHandle, this.panels.textEntry.text.toLowerCase());
+		}
+
 		UiToolkitAPI.CloseAllVisiblePopups();
 	}
 
@@ -48,12 +47,5 @@ class HudCustomizerLayoutNameHandler implements OnPanelLoad {
 
 	onOkButtonPressed() {
 		this.panels.textEntry.Submit();
-	}
-
-	onCancelPressed() {
-		const callbackHandle = $.GetContextPanel().GetAttributeInt('closeCallback', -1);
-
-		if (callbackHandle !== -1) UiToolkitAPI.InvokeJSCallback(callbackHandle, this.panels.textEntry.text);
-		UiToolkitAPI.CloseAllVisiblePopups();
 	}
 }

@@ -15,10 +15,10 @@
 			</RadioButton>
 		</snippet>
 
-        <snippet name="save-to-other">
+        <snippet name="apply-to-other">
 			<Panel class="hud-customizer-settings__row mt-3">
 				<Button class="button hud-customizer-settings__button px-3 py-1">
-                    <Label text="Save To Other Gamemodes" />
+                    <Label text="Apply To Other Presets" />
                 </Button>
 			</Panel>
 		</snippet>

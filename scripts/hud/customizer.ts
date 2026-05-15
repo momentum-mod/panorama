@@ -617,7 +617,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		const panel = this.panels.presetSettingList;
 		panel.RemoveAndDeleteChildren();
 
-		const gamemode = this.currentGamemodeInfo.id;
+		const gamemodeID = this.currentGamemodeInfo.id;
 
 		if (!this.presetList) {
 			this.presetList = new Set(this.panels.customizer.listLayouts());
@@ -631,7 +631,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			panel.SetDialogVariable('name', 'Preset');
 			const dropdown = panel.FindChildTraverse<DropDown>('DropDown')!;
 
-			//Filters presetList to only those that match gamemodeID_<name> pattern, then strips gamemodeID + _
+			// Filters presetList + this.unsavedPresets to only those that match gamemodeID_<name> pattern, then strips gamemodeID + _
 			const gamemodeIdsByLength = [...GamemodeInfo.values()]
 				.map((info) => info.id)
 				.sort((a, b) => b.length - a.length);
@@ -639,8 +639,8 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			const getGamemodeForFile = (name: string) => gamemodeIdsByLength.find((id) => name.startsWith(id + '_'));
 
 			const presets = [...this.presetList, ...this.unsavedPresets]
-				.filter((name) => getGamemodeForFile(name) === gamemode)
-				.map((name) => name.slice(gamemode.length + 1))
+				.filter((name) => getGamemodeForFile(name) === gamemodeID)
+				.map((name) => name.slice(gamemodeID.length + 1))
 				.sort((a, b) => {
 					if (a === 'default') return -1;
 					if (b === 'default') return 1;
@@ -690,7 +690,9 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 				UiToolkitAPI.ShowCustomLayoutPopupParameters(
 					'RenamePreset',
 					'file://{resources}/layout/modals/popups/hud-customizer-layout-name.xml',
-					`title=Rename Preset&input_label=Rename preset ${this.currentPreset}&ok_btn_label=Create Preset&callback=${UiToolkitAPI.RegisterJSCallback((name: string) => this.renamePreset(this.currentPreset, name))}`
+					`title=Rename Preset&input_label=Rename preset ${this.currentPreset}&ok_btn_label=Create Preset&callback=${UiToolkitAPI.RegisterJSCallback(
+						(name: string) => this.renamePreset(this.currentPreset, name)
+					)}`
 				);
 			});
 
@@ -723,7 +725,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			);
 			return;
 		}
-		const gamemode = this.currentGamemodeInfo.id;
+		const gamemodeID = this.currentGamemodeInfo.id;
 
 		if (!this.presetList) {
 			this.presetList = new Set(this.panels.customizer.listLayouts());
@@ -731,12 +733,12 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 		const presets = [...this.presetList, ...this.unsavedPresets];
 
-		if (presets.includes(`${gamemode}_${newPreset}`)) {
+		if (presets.includes(`${gamemodeID}_${newPreset}`)) {
 			displayToast('Failed to create preset!', `Preset ${newPreset} already exists!`);
 			return false;
 		}
 
-		this.unsavedPresets.add(`${gamemode}_${newPreset}`);
+		this.unsavedPresets.add(`${gamemodeID}_${newPreset}`);
 		this.changePreset(newPreset);
 		this.updatePresetSettings();
 
@@ -748,15 +750,15 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 	 * @param name Name of the preset
 	 */
 	changePreset(name: string) {
-		const gamemode = this.currentGamemodeInfo.id;
-		const fullPresetName = `${gamemode}_${name}`;
+		const gamemodeID = this.currentGamemodeInfo.id;
+		const fullPresetName = `${gamemodeID}_${name}`;
 
 		if (this.presetList.has(fullPresetName)) {
 			HudCustomizerHandler.presetLayout = this.getPresetLayout(name);
 		}
 
 		this.currentPreset = name;
-		$.persistentStorage.setItem(`hud-customizer.preset.${gamemode}`, name);
+		$.persistentStorage.setItem(`hud-customizer.preset.${gamemodeID}`, name);
 		this.reloadLayout();
 
 		if (name === 'default') {
@@ -791,10 +793,10 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			return;
 		}
 
-		const gamemode = this.currentGamemodeInfo.id;
+		const gamemodeID = this.currentGamemodeInfo.id;
 
-		const fullOldName = `${gamemode}_${oldName}`;
-		const fullNewName = `${gamemode}_${newName}`;
+		const fullOldName = `${gamemodeID}_${oldName}`;
+		const fullNewName = `${gamemodeID}_${newName}`;
 
 		this.panels.customizer.renameLayout(fullOldName, fullNewName);
 
@@ -811,8 +813,8 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			return;
 		}
 
-		const gamemode = this.currentGamemodeInfo.id;
-		const fullPresetName = `${gamemode}_${name}`;
+		const gamemodeID = this.currentGamemodeInfo.id;
+		const fullPresetName = `${gamemodeID}_${name}`;
 
 		const deleteSuccessful = this.panels.customizer.deleteLayout(fullPresetName);
 
@@ -875,8 +877,28 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		this.generateComponentList();
 	}
 
-	saveToOtherGamemodes(gamemodes: Gamemode | Gamemode[]) {
-		$.Msg('SAVE TO OTHER GAMEMODES WILL BE HERE');
+	applyToOtherPresets(presetList: { gamemodeID: string; presetName: string }[]) {
+		const componentID = this.activeComponent.id;
+		const componentData: ComponentLayout = this.components[componentID].getLayout();
+
+		for (const preset of presetList) {
+			const fullPresetName = `${preset.gamemodeID}_${preset.presetName}`;
+			const presetData = this.panels.customizer.loadLayout(fullPresetName);
+			if (!presetData) {
+				const hudLayout: HudLayout = {
+					[componentID]: componentData
+				};
+				const saveSuccessful = this.panels.customizer.saveLayout(fullPresetName, hudLayout);
+
+				if (saveSuccessful) {
+					$.persistentStorage.setItem(`hud-customizer.preset.${preset.gamemodeID}`, preset.presetName);
+					this.presetList.add(fullPresetName);
+				}
+			} else {
+				presetData[componentID] = componentData;
+				this.panels.customizer.saveLayout(fullPresetName, presetData);
+			}
+		}
 	}
 
 	/** Serializes all component and saves cfg/hud.json. */
@@ -911,10 +933,10 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			return true;
 		};
 
-		const gamemode = this.currentGamemodeInfo.id;
+		const gamemodeID = this.currentGamemodeInfo.id;
 
 		if (!isSaveDataSameAsCurrentPreset()) {
-			const fullPresetName = `${gamemode}_${this.currentPreset}`;
+			const fullPresetName = `${gamemodeID}_${this.currentPreset}`;
 			// Serialization done in C++.
 			this.panels.customizer.saveLayout(fullPresetName, saveData);
 
@@ -1492,18 +1514,40 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		const availableGamemodes = Array.isArray(gamemode) ? gamemode.length : gamemode ? 1 : 2;
 
 		if (availableGamemodes > 1) {
-			const saveToOtherGamemodes = $.CreatePanel(
+			const applyToOtherPresets = $.CreatePanel(
 				'Panel',
 				this.panels.activeComponentSettingsList,
-				'SaveToOtherGamemodes',
+				'ApplyToOtherPresets',
 				{
 					class: 'hud-customizer-settings__row-wrapper h-fit-children'
 				}
 			);
-			saveToOtherGamemodes.SetPanelEvent('onactivate', () =>
-				this.saveToOtherGamemodes(component.properties.gamemode)
+
+			const getAvailableGamemodes = (gamemodes: Gamemode | Gamemode[]) => {
+				if (gamemodes === undefined || gamemodes === null) {
+					return [...GamemodeInfo.values()].map((info) => info.id).join(',');
+				} else {
+					const normalizedGamemodes = Array.isArray(gamemodes) ? gamemodes : [gamemodes];
+					return normalizedGamemodes.map((mode) => GamemodeInfo.get(mode).id).join(',');
+				}
+			};
+
+			const getPresetList = () => {
+				return [...this.presetList, ...this.unsavedPresets].join(',');
+			};
+
+			applyToOtherPresets.SetPanelEvent('onactivate', () =>
+				UiToolkitAPI.ShowCustomLayoutPopupParameters(
+					'ApplyToOtherPresets',
+					'file://{resources}/layout/modals/popups/hud-customizer-apply-to-other-presets.xml',
+					`gamemodes=${getAvailableGamemodes(component.properties.gamemode)}&presetList=${getPresetList()}&callback=${UiToolkitAPI.RegisterJSCallback(
+						(presetList: { gamemodeID: string; presetName: string }[]) =>
+							this.applyToOtherPresets(presetList)
+					)}`
+				)
 			);
-			saveToOtherGamemodes.LoadLayoutSnippet('save-to-other');
+
+			applyToOtherPresets.LoadLayoutSnippet('apply-to-other');
 		}
 	}
 
@@ -1933,45 +1977,45 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		if (preset === 'default') {
 			return this.getDefaultLayout();
 		}
-		const gamemode = this.currentGamemodeInfo.id;
-		if (!gamemode) {
+		const gamemodeID = this.currentGamemodeInfo.id;
+		if (!gamemodeID) {
 			throw new Error(`Could not find gamemode id for gamemode:${this.currentGamemode}`);
 		}
 
 		const defaultLayout = this.getDefaultLayout();
-		const presetLayout = $.GetContextPanel<HudCustomizer>().loadLayout(`${gamemode}_${preset}`);
+		const presetLayout = $.GetContextPanel<HudCustomizer>().loadLayout(`${gamemodeID}_${preset}`);
 
 		if (!presetLayout) {
-			$.persistentStorage.setItem(`hud-customizer.preset.${gamemode}`, 'default');
+			$.persistentStorage.setItem(`hud-customizer.preset.${gamemodeID}`, 'default');
 			this.currentPreset = 'default';
-			$.Warning(`Could not load ${gamemode}_${preset}.kv3 from /cfg/hud`);
+			$.Warning(`Could not load ${gamemodeID}_${preset}.kv3 from /cfg/hud`);
 		}
 
 		return deepMerge(defaultLayout, presetLayout);
 	}
 
 	getDefaultLayout() {
-		const gamemode = this.currentGamemodeInfo.id;
-		if (!gamemode) {
+		const gamemodeID = this.currentGamemodeInfo.id;
+		if (!gamemodeID) {
 			throw new Error(`Could not find gamemode id for gamemode:${this.currentGamemode}`);
 		}
 
 		const generalLayout = $.GetContextPanel<HudCustomizer>().loadLayout('hud_default');
-		const gamemodeLayout = $.GetContextPanel<HudCustomizer>().loadLayout(`${gamemode}_default`);
+		const gamemodeLayout = $.GetContextPanel<HudCustomizer>().loadLayout(`${gamemodeID}_default`);
 
 		if (!generalLayout) {
 			throw new Error('Could not load hud_default.kv3 from /cfg/hud');
 		}
 		if (!gamemodeLayout) {
-			throw new Error(`Could not load ${gamemode}_default.kv3 from /cfg/hud`);
+			throw new Error(`Could not load ${gamemodeID}_default.kv3 from /cfg/hud`);
 		}
 
 		return { ...generalLayout, ...gamemodeLayout };
 	}
 
 	initializeLayouts() {
-		const gamemode = this.currentGamemodeInfo.id;
-		const preset = $.persistentStorage.getItem(`hud-customizer.preset.${gamemode}`) as string;
+		const gamemodeID = this.currentGamemodeInfo.id;
+		const preset = $.persistentStorage.getItem(`hud-customizer.preset.${gamemodeID}`) as string;
 
 		HudCustomizerHandler.defaultLayout = this.getDefaultLayout();
 
