@@ -55,7 +55,7 @@
 
         <!-- NEEDS C++ WORK -->
        
-		<HudStaticMenu id="StaticMenu" /> <!-- TODO: not in customizer, needs c++ work -->
+		
 		
         <!-- No idea -->
         <HudHintText id="HudHintText" /> <!-- TODO: not in customizer, no idea how to even check what this does -->
@@ -78,6 +78,8 @@
 
 
         <MomHudSpectate id="Spectator" />
+
+        <HudStaticMenu id="StaticMenu" /> <!-- TODO: not in customizer, needs c++ work -->
 
 		<!-- This container is here so we can move the leaderboard in and out of it during the end-of-match sequence -->
 		<!-- TODO: HudLeaderboards had w-full h-full removed before -->
