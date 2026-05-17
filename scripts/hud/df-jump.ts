@@ -1,5 +1,5 @@
 import { PanelHandler } from 'util/module-helpers';
-import { GamemodeCategory, GamemodeCategoryToGamemode } from 'common/web/enums/gamemode.enum';
+import { Gamemode } from 'common/web/enums/gamemode.enum';
 import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
 import { getTextShadowFast } from 'common/hud-customizer';
 
@@ -27,7 +27,7 @@ class DFJumpHandler {
 			name: 'Jump Delay',
 			resizeX: false,
 			resizeY: false,
-			gamemode: GamemodeCategoryToGamemode.get(GamemodeCategory.DEFRAG),
+			gamemode: [Gamemode.DEFRAG_CPM, Gamemode.DEFRAG_VQ3],
 			events: {
 				event: 'DFJumpDataUpdate',
 				panel: this.panels.container,
