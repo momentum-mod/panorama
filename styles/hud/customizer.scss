@@ -220,6 +220,11 @@ $input-background-hover: rgb(110, 110, 110);
 		width: 100%;
 		flow-children: down;
 
+		&--hover:hover {
+			transition: background-color 0.15s ease-in-out 0s;
+			background-color: rgba(255, 255, 255, 0.05);
+		}
+
 		&--has-children {
 			width: 100%;
 			flow-children: down;

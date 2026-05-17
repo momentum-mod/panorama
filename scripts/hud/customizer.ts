@@ -1209,6 +1209,10 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		const createStylePanel = (styleID: StyleID, dynamicStyle: DynamicStyle, parent: Panel) => {
 			const panel = $.CreatePanel('Panel', parent, '');
 
+			if (dynamicStyle.properties.type !== CustomizerPropertyType.NONE) {
+				panel.AddClass('hud-customizer-settings__row-wrapper--hover');
+			}
+
 			if (dynamicStyle.properties.expandable) {
 				const button = $.CreatePanel('Button', panel, 'ExpandArrowButton', {
 					class: 'hud-customizer-settings__expand-arrow'
