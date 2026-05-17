@@ -385,6 +385,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		gamemodeComponentList: $<Panel>('#GamemodeComponentList')!,
 		activeComponentSettings: $<Panel>('#ActiveComponentSettings')!,
 		activeComponentSettingsList: $<Panel>('#ActiveComponentSettingsList')!,
+		applyToOtherPresetsButton: $<Button>('#ApplyToOtherPresetsButton')!,
 		resizeKnobs: $<Panel>('#ResizeKnobs')!,
 		grid: $.GetContextPanel().GetParent()!.FindChildTraverse('HudCustomizerGrid')!
 	};
@@ -1554,14 +1555,8 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		const availableGamemodes = Array.isArray(gamemode) ? gamemode.length : gamemode ? 1 : 2;
 
 		if (availableGamemodes > 1) {
-			const applyToOtherPresets = $.CreatePanel(
-				'Panel',
-				this.panels.activeComponentSettingsList,
-				'ApplyToOtherPresets',
-				{
-					class: 'hud-customizer-settings__row-wrapper h-fit-children'
-				}
-			);
+			const button = this.panels.applyToOtherPresetsButton;
+			button.visible = true;
 
 			const getAvailableGamemodes = (gamemodes: Gamemode | Gamemode[]) => {
 				if (gamemodes === undefined || gamemodes === null) {
@@ -1576,7 +1571,8 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 				return [...this.presetList, ...this.unsavedPresets].join(',');
 			};
 
-			applyToOtherPresets.SetPanelEvent('onactivate', () =>
+			button.ClearPanelEvent('onactivate');
+			button.SetPanelEvent('onactivate', () =>
 				UiToolkitAPI.ShowCustomLayoutPopupParameters(
 					'ApplyToOtherPresets',
 					'file://{resources}/layout/modals/popups/hud-customizer-apply-to-other-presets.xml',
@@ -1586,8 +1582,8 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 					)}`
 				)
 			);
-
-			applyToOtherPresets.LoadLayoutSnippet('apply-to-other');
+		} else {
+			this.panels.applyToOtherPresetsButton.visible = false;
 		}
 	}
 

@@ -15,14 +15,6 @@
 			</RadioButton>
 		</snippet>
 
-        <snippet name="apply-to-other">
-			<Panel class="hud-customizer-settings__row mt-3">
-				<Button class="button hud-customizer-settings__button px-3 py-1">
-                    <Label text="Apply To Other Presets" />
-                </Button>
-			</Panel>
-		</snippet>
-
         <snippet name="preset-buttons">
 			<Panel class="hud-customizer-settings__row mt-3 h-fit-children">
 				<Button id="PresetCreateNew" class="button hud-customizer-settings__button button--green px-2 py-1 mr-3">
@@ -132,13 +124,16 @@
                 </Panel>
             </Panel>
 
-			<Panel id="ActiveComponentSettings" class="hud-customizer-settings__active">
+			<Panel id="ActiveComponentSettings" class="hud-customizer-settings__active h-fit-children">
 				<Panel class="hud-customizer-settings__active__header">
 					<Label class="hud-customizer-settings__active__header__name" text="{s:active_name}" />
 				</Panel>
 				<Panel id="ActiveComponentSettingsList" class="hud-customizer-settings__active__contents">
 					<!-- Populated by JS -->
 				</Panel>
+                <Button id="ApplyToOtherPresetsButton" class="button hud-customizer-settings__button px-3 py-1 mt-3">
+                    <Label text="Apply To Other Presets" />
+                </Button>
 			</Panel>
 		</Panel>
 
