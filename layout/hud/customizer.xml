@@ -1,0 +1,169 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+
+	<scripts>
+		<include type="module" src="file://{scripts}/hud/customizer.ts" />
+	</scripts>
+
+	<snippets>
+		<snippet name="component">
+			<RadioButton class="hud-customizer-settings__component" group="ComponentList">
+				<Label class="hud-customizer-settings__component__name" text="{s:name}" />
+				<Panel id="Right" class="hud-customizer-settings__component__right" />
+			</RadioButton>
+		</snippet>
+
+        <snippet name="apply-to-other">
+			<Panel class="hud-customizer-settings__row mt-3">
+				<Button class="button hud-customizer-settings__button px-3 py-1">
+                    <Label text="Apply To Other Presets" />
+                </Button>
+			</Panel>
+		</snippet>
+
+        <snippet name="preset-buttons">
+			<Panel class="hud-customizer-settings__row mt-3 h-fit-children">
+				<Button id="PresetCreateNew" class="button hud-customizer-settings__button button--green px-2 py-1 mr-3">
+                    <Label text="Create New" />
+                </Button>
+                <Button id="PresetRename" class="button hud-customizer-settings__button px-2 py-1 mr-3">
+                    <Label text="Rename" />
+                </Button>
+                <Button id="PresetDelete" class="button hud-customizer-settings__button button--red px-2 py-1">
+                    <Label text="Delete" />
+                </Button>
+			</Panel>
+		</snippet>
+
+        <snippet name="dynamic-none">
+			<Panel class="hud-customizer-settings__row">
+					<Label class="hud-customizer-settings__setting-label" text="{s:name}" />
+			</Panel>
+		</snippet>
+
+		<snippet name="dynamic-checkbox">
+			<Panel class="hud-customizer-settings__row">
+				<ToggleButton id="Checkbox" class="checkbox hud-customizer-settings__checkbox">
+					<Label class="hud-customizer-settings__setting-label" text="{s:name}" />
+				</ToggleButton>
+			</Panel>
+		</snippet>
+
+        <snippet name="dynamic-slider">
+			<Panel class="hud-customizer-settings__row">
+                <Label class="hud-customizer-settings__setting-label" text="{s:name}" />
+                <Slider class="slider hud-customizer-settings__slider" showdefault="true" direction="horizontal" id="Slider" min="0" max="100" value="50"/>
+                <TextEntry class="textentry numberentry__textentry hud-customizer-settings__slider--text-entry" maxchars="6" textmode="numeric" id="Value" />
+			</Panel>
+		</snippet>
+
+		<snippet name="dynamic-numberentry">
+			<Panel class="hud-customizer-settings__row">
+				<Label class="hud-customizer-settings__setting-label" text="{s:name}" />
+				<NumberEntry id="NumberEntry" class="hud-customizer-settings__numberentry" />
+			</Panel>
+		</snippet>
+
+        <snippet name="dynamic-dropdown">
+			<Panel class="hud-customizer-settings__row">
+				<Label class="hud-customizer-settings__setting-label" text="{s:name}" />
+				<DropDown id="DropDown" class="dropdown hud-customizer-settings__dropdown" menuclass="dropdown-menu hud-customizer-settings__dropdown-menu" />
+			</Panel>
+		</snippet>
+
+		<snippet name="dynamic-colorpicker">
+			<Panel class="hud-customizer-settings__row">
+				<ColorDisplay id="ColorDisplay" class="hud-customizer-settings__colordisplay" />
+			</Panel>
+		</snippet>
+
+        <snippet name="dynamic-gradientpicker">
+            <Panel class="hud-customizer-settings__row">
+                <Label class="hud-customizer-settings__setting-label" text="{s:name}" />
+                <Panel class="dynamic-gradientpicker__container">
+                    <ColorDisplay id="StartColor" class="hud-customizer-settings__colordisplay dynamic-gradientpicker__colordisplay" />
+                    <ColorDisplay id="EndColor" class="hud-customizer-settings__colordisplay dynamic-gradientpicker__colordisplay" />
+                </Panel>
+            </Panel>
+        </snippet>
+        
+		<snippet name="dynamic-fontpicker">
+			<Panel class="hud-customizer-settings__row">
+				<Label class="hud-customizer-settings__setting-label" text="{s:name}" />
+				<DropDown id="DropDown" class="dropdown hud-customizer-settings__dropdown" menuclass="dropdown-menu hud-customizer-settings__dropdown-menu" />
+			</Panel>
+		</snippet>
+	</snippets>
+
+	<!-- Outer panel (full width) has no hittest, hittestchildren is controlled by C++ -->
+	<HudCustomizer class="hud-customizer" hittest="false">
+		<Panel id="CustomizerSettings" class="hud-customizer-settings" acceptsinput="true" acceptsfocus="true" tabindex="auto">
+			<Panel id="CustomizerSettingsHeader" class="hud-customizer-settings__header" draggable="true" hittest="true" hittestchildren="true">
+				<Label class="hud-customizer-settings__header__title" text="#HudCustomizer_Menu" />
+				<Image class="hud-customizer-settings__header__close" onactivate="HudCustomizerHandler.toggle(false)" src="file://{images}/close.svg" />
+			</Panel>
+
+            <Panel id="PresetSettings" class="hud-customizer-settings__active">
+				<Panel class="hud-customizer-settings__active__header">
+					<Label class="hud-customizer-settings__active__header__name" text="{s:preset_name}" />
+				</Panel>
+				<Panel id="PresetSettingsList" class="hud-customizer-settings__active__contents">
+					<!-- Populated by JS -->
+				</Panel>
+			</Panel>
+            
+            <Panel id="GeneralComponentsContainer" class="hud-customizer-settings__component-list-container">
+                <Panel class="hud-customizer-settings__active">
+                    <Label class="hud-customizer-settings__active__header__name" text="General HUD" />
+                </Panel>
+                <Panel id="GeneralComponentList" class="hud-customizer-settings__component-list">
+                    <!-- Populated by JS -->
+                </Panel>
+            </Panel>
+
+            <Panel id="GamemodeComponentsContainer" class="hud-customizer-settings__component-list-container">
+                <Panel class="hud-customizer-settings__active">
+                    <Label class="hud-customizer-settings__active__header__name" text="Gamemode HUD" />
+                </Panel>
+                <Panel id="GamemodeComponentList" class="hud-customizer-settings__component-list">
+                    <!-- Populated by JS -->
+                </Panel>
+            </Panel>
+
+			<Panel id="ActiveComponentSettings" class="hud-customizer-settings__active">
+				<Panel class="hud-customizer-settings__active__header">
+					<Label class="hud-customizer-settings__active__header__name" text="{s:active_name}" />
+				</Panel>
+				<Panel id="ActiveComponentSettingsList" class="hud-customizer-settings__active__contents">
+					<!-- Populated by JS -->
+				</Panel>
+			</Panel>
+		</Panel>
+
+		<!-- Panel overlaid over the active component.
+			 Like the active component, it's moved around via JS with snapping as the DragPanel is dragged. -->
+		<Panel id="Overlay" class="hud-customizer-overlay" hittest="false">
+			<!-- TODO: w/h/x/y are taking up too much space. should move to the settings panel and have numberentries there
+			 	 Will be annoying since stuff is very similar to DynamicStyle stuff but don't really want to integrate the two.
+			 	 Probably going to do the settings list here in XML and setup event handlers in setActiveComponent,
+			 	 then make width+height disabled if resizeX/Y are disabled.-->
+<!--			<Label class="hud-customizer-overlay__name" text="{s:name}  x={s:x} y={s:y}  w={s:width} h={s:height}" />-->
+<!--			<Label class="hud-customizer-overlay__name" text="{s:name}  x={s:x} y={s:y}  w={s:width} h={s:height}" />-->
+			<Label class="hud-customizer-overlay__name" text="{s:name}" hittest="false" />
+			<!-- Big block in the middle of the panel, doesn't do much besides display a border.
+			 	 Putting ResizeKnobs in here doesn't work - we need them to be able to clip outside of this panel,
+			 	 `cursor` property doesn't work if they're out of the bounds of the parent panel. -->
+			<Panel id="OverlayInner" class="hud-customizer-overlay__main" hittest="false" />
+			<Panel id="ResizeKnobs" class="hud-customizer-overlay__resize-knobs" hittest="false" hittestchildren="true" />
+		</Panel>
+
+		<!-- Invisible panel that is actually dragged by the user.
+			 Its position is used to update the overlay and the active component. -->
+		<Panel id="DragPanel" draggable="true" class="hud-customizer-dragpanel" hittest="true" />
+
+		<!-- Another invisible panel for handling resizing. -->
+		<Panel id="DragKnob" />
+	</HudCustomizer>
+</root>

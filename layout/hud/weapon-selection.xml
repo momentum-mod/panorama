@@ -11,16 +11,16 @@
 		<snippet name="Weapon">
 			<Panel class="weaponselection__wrapper">
 				<Panel class="weaponselection__notch" />
-				<ConVarEnabler class="w-fit-children h-fit-children v-align-center" convar="mom_hud_weapon_select_keys" togglevisibility="true">
+				<Panel class="w-fit-children h-fit-children v-align-center">
 					<Label id="WeaponKeyBind" class="weaponselection__keybind" text="" />
-				</ConVarEnabler>
+				</Panel>
 				<Label class="weaponselection__weplabel" text="{s:weapon}" />
 			</Panel>
 		</snippet>
 	</snippets>
 
-	<MomHudWeaponSelection class="w-full">
-		<ConVarEnabler id="WeaponSelection" class="weaponselection" convar="mom_hud_weapon_select" togglevisibility="true">
-		</ConVarEnabler>
+	<MomHudWeaponSelection>
+		<Panel id="WeaponSelection_Wrapper" class="weaponselection">
+		</Panel>
 	</MomHudWeaponSelection>
 </root>

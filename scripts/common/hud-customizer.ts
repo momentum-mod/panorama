@@ -1,0 +1,263 @@
+import { rgbaStringToTuple } from 'util/colors';
+// TODO: *VERY* detailed docs here, the types are unreadable!
+
+/**
+ * Gets the HUD customizer handler instance.
+ * Returns undefined if not initted. Be careful to check whether panel has been initialized yet.
+ */
+export function getHudCustomizer(): IHudCustomizerHandler | undefined {
+	return UiToolkitAPI.GetGlobalObject()['HudCustomizerHandler'] as IHudCustomizerHandler;
+}
+
+/** Register a panel to be handled by the HUD customizer. */
+export function registerHUDCustomizerComponent(panel: GenericPanel, properties: CustomizerComponentProperties): void {
+	$.RegisterForUnhandledEvent('HudCustomizer_Ready', () => getHudCustomizer()!.loadComponent(panel, properties));
+}
+
+export enum CustomizerPropertyType {
+	NONE,
+	NUMBER_ENTRY,
+	CHECKBOX,
+	SLIDER,
+	DROPDOWN,
+	COLOR_PICKER,
+	GRADIENT_PICKER,
+	FONT_PICKER
+}
+
+interface PropertyTypeMap {
+	[CustomizerPropertyType.NONE]: never;
+	[CustomizerPropertyType.NUMBER_ENTRY]: NumberEntry;
+	[CustomizerPropertyType.CHECKBOX]: ToggleButton;
+	[CustomizerPropertyType.SLIDER]: Slider;
+	[CustomizerPropertyType.DROPDOWN]: DropDown;
+	[CustomizerPropertyType.COLOR_PICKER]: never;
+	[CustomizerPropertyType.GRADIENT_PICKER]: never;
+	[CustomizerPropertyType.FONT_PICKER]: never;
+}
+
+interface PropertyTypeToValueTypeMap {
+	[CustomizerPropertyType.NONE]: null;
+	[CustomizerPropertyType.NUMBER_ENTRY]: NumberEntry['value'];
+	[CustomizerPropertyType.CHECKBOX]: ToggleButton['checked'];
+	[CustomizerPropertyType.SLIDER]: Slider['value'];
+	[CustomizerPropertyType.DROPDOWN]: string;
+	[CustomizerPropertyType.COLOR_PICKER]: TextEntry['text'];
+	[CustomizerPropertyType.GRADIENT_PICKER]: [string, string];
+	[CustomizerPropertyType.FONT_PICKER]: string;
+}
+
+interface DynamicStyleChild {
+	styleID: StyleID;
+	showWhen?: any | any[];
+}
+
+export type StyleID = string;
+
+export type QuerySelector = `#${string}` | `.${string}` | keyof PanelTagNameMap;
+
+export interface DynamicStyleProperties<
+	PropertyType extends CustomizerPropertyType = CustomizerPropertyType,
+	StyleProperty extends keyof Style | undefined = undefined
+> {
+	/** Name of the property to display in UI. Please localize! */
+	name: string;
+
+	/** Defines which styles should be the children of this style.
+	 * styleID: id of the child
+	 * showWhen: value of the parent
+	 * When parent's value is the value defined in showWhen the child will be visible
+	 * If showWhen is not provided the child is always visible unless hidden by the expandable property
+	 */
+	children?: DynamicStyleChild | DynamicStyleChild[];
+
+	/**
+	 * When true, the style can be manually expanded to show it's children, otherwise children are only shown through showWhen property */
+	expandable?: boolean;
+
+	/**
+	 * Selector or array of selectors.
+	 *
+	 * Prefix # for ID, . for class, same as JSDollarSign.
+	 *
+	 * If not provided, applies to the root panel of the component.
+	 */
+	targetPanel?: QuerySelector | QuerySelector[];
+
+	/** Type of UI for the customizer to generate to modify this style. */
+	type: PropertyType;
+
+	/**
+	 * Defines options and their respective values for CustomizerPropertyType.DROPDOWN */
+	options?: PropertyType extends CustomizerPropertyType.DROPDOWN ? Array<{ label: string; value: string }> : never;
+
+	/**
+	 * Style property to modify. For all matching panels, this CSS property is set to the current style value.
+	 * Should at least supply this, callbackFunc, or eventlisteners (todo: maybe more stuff) */
+	styleProperty?: StyleProperty;
+
+	/**
+	 * Function to convert stored/configured value to style string.
+	 * IMPORTANT: This defaults to the identity function. If you're mapping a number, you need to do
+	 * appropriate conversion to string with units here! E.g. (value) => `${value}px`.
+	 * @default identity function
+	 */
+	valueFn?: (
+		value: PropertyTypeToValueTypeMap[PropertyType]
+	) => StyleProperty extends keyof Style ? Style[StyleProperty] : never;
+
+	/**
+	 * Callback that's called with every matching panel, and the current style value.
+	 *
+	 * This gives you the ability to style whatever you want using JS, including capturing
+	 * the component's handler class. Use with care!
+	 */
+	callbackFunc?: (panel: GenericPanel, value: PropertyTypeToValueTypeMap[PropertyType]) => void;
+
+	/**
+	 * Collection properties to apply to generated panel, e.g. min/max on numberentry.
+	 * Must be properties unique to that panel type.
+	 */
+	settingProps?: {
+		[K in keyof PropertyTypeMap[PropertyType]]?: K extends keyof GenericPanel
+			? never
+			: PropertyTypeMap[PropertyType][K] extends (...args: any) => any
+				? never
+				: PropertyTypeMap[PropertyType][K];
+	};
+
+	/**
+	 * Collection of events to register on a provided panel. When the event fires, the callback is called with the
+	 * current style value, followed by the arguments the event was called with.
+	 *
+	 * Use this to set styles on panels that are generated *after* style values have initially been seen, e.g.
+	 * incoming chat messages.
+	 */
+	events?: Array<
+		{
+			[K in keyof GlobalEventNameMap]: {
+				event: K;
+				panel: GenericPanel;
+				callback: (
+					value: PropertyTypeToValueTypeMap[PropertyType],
+					...args: Parameters<GlobalEventNameMap[K]>
+				) => void;
+			};
+		}[keyof GlobalEventNameMap]
+	>;
+
+	/**
+	 * Collection of unhandled events to register. When the event fires, the callback is called with the
+	 * current style value, followed by the arguments the event was called with.
+	 
+	 * Use this to set styles on panels that are generated *after* style values have initially been seen, e.g.
+	 * incoming chat messages.
+	 */
+	unhandledEvents?: Array<
+		{
+			[K in keyof GlobalEventNameMap]: {
+				event: K;
+				callback: (
+					value: PropertyTypeToValueTypeMap[PropertyType],
+					...args: Parameters<GlobalEventNameMap[K]>
+				) => void;
+			};
+		}[keyof GlobalEventNameMap]
+	>;
+}
+
+type MappedStyles = Record<
+	StyleID,
+	{
+		[K in CustomizerPropertyType]: {
+			[P in keyof Style]: DynamicStyleProperties<K, P>;
+		}[keyof Style];
+	}[CustomizerPropertyType]
+>;
+
+type HandledEventRegistration = {
+	[K in keyof GlobalEventNameMap]: {
+		event: K;
+		panel: GenericPanel;
+		callbackFn: GlobalEventNameMap[K];
+	};
+}[keyof GlobalEventNameMap];
+
+type UnhandledEventRegistration = {
+	[K in keyof GlobalEventNameMap]: {
+		event: K;
+		callbackFn: GlobalEventNameMap[K];
+	};
+}[keyof GlobalEventNameMap];
+
+export interface CustomizerComponentProperties {
+	/** Name of the panel to be displayed in hud customizer */
+	name: string;
+
+	/** Allow resizing in the X direction. */
+	resizeX: boolean;
+
+	/** Allow resizing in the Y direction. */
+	resizeY: boolean;
+
+	/** Allow movement on X axis. Defaults to true */
+	moveX?: boolean;
+
+	/** Allow movement on Y axis. Defaults to true */
+	moveY?: boolean;
+
+	/** A collection of handled events to register */
+	events?: HandledEventRegistration | Array<HandledEventRegistration>;
+
+	/** A collection of unhandled events to register */
+	unhandledEvents?: UnhandledEventRegistration | Array<UnhandledEventRegistration>;
+
+	/** Defines in which gamemodes the panel should be enabled. When not provided it's always enabled */
+	gamemode?: Gamemode | Gamemode[];
+
+	/** Panel to use as the drag handle for moving the component. If not provided, whole panel is draggable. */
+	dragPanel?: GenericPanel;
+
+	/** Allow disabling the panel. Defaults to true */
+	canDisable?: boolean;
+
+	/**
+	 * Expected minimum width of a component once it's been layed out in edit mode.
+	 *
+	 * This is for when layouting in edit mode can take multiple frames (currently happening with Comparisons).
+	 * If provided, customizer will listen to the HudThink event and wait until the panel's width is at least
+	 * this value so it can position the overlay panel correctly.
+	 *
+	 * If layouting takes more than 500 frames, we give up and just use whatever size the panel is at.
+	 */
+	expectedMinWidth?: number;
+
+	/** @see expectedMinWidth */
+	expectedMinHeight?: number;
+
+	/** Styling properties of provided panel or children, for which we generate UI and store values for. */
+	dynamicStyles?: MappedStyles;
+}
+
+export interface IHudCustomizerHandler {
+	/** Open or close the HUD customizer UI. */
+	toggle(enable: boolean): void;
+
+	/** Whether the HUD customizer edit UI is open. */
+	isOpen(): boolean;
+
+	/**
+	 * Load a customizable HUD component.
+	 * Must be after HudCustomizer_Ready has fired!
+	 */
+	loadComponent(panel: GenericPanel, properties: CustomizerComponentProperties): void;
+}
+
+/** Almost all hud panels use fast text shadow on fonts that is black with some adjusted alpha
+ * This function is used to scale text shadow's alpha to font color alpha chosen for the player
+ * In the future we might add text shadow configuration to hud customizer, for now this is the workaround
+ */
+export function getTextShadowFast(color: rgbaColor, multiplier: number): string {
+	const alpha = rgbaStringToTuple(color)[3] / 255;
+	return `0px 1px 1.5px 1 rgba(0, 0, 0, ${alpha * multiplier})`;
+}

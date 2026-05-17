@@ -6,7 +6,9 @@ interface PanelTagNameMap {
 	LeaderboardEntry: LeaderboardEntry;
 	RangeColorDisplay: RangeColorDisplay;
 	PlayerListPlayer: PlayerListPlayer;
+	HudShowPos: HudShowPos;
 	HudComparisons: HudComparisons;
+	MomHudAmmo: MomHudAmmo;
 	MomConcEntityPanel: MomConcEntityPanel;
 	MomHudTabMenu: MomHudTabMenu;
 	MomHudStatus: MomHudStatus;
@@ -23,6 +25,7 @@ interface PanelTagNameMap {
 	MomHudStrafeTrainer: MomHudStrafeTrainer;
 	MomHudSpectate: MomHudSpectate;
 	ZoneMenu: ZoneMenu;
+	HudCustomizer: HudCustomizer;
 }
 
 interface MomentumChat extends AbstractPanel<'MomentumChat'> {
@@ -189,4 +192,42 @@ interface ZoneMenu extends AbstractPanel<'ZoneMenu'> {
 	createDefaultTeleDest(
 		region: import('common/web/types/models/models').Region
 	): import('common/web/types/models/models').Region;
+}
+
+/**
+ * Panel methods responsible for reading and writing HUD config files.
+ *
+ * C++ side is agnostic to what you pass it, just saves and loads until builtin KV3 <-> JSO mappings.
+ *
+ * Note that cfg/hud_default.json is stored in the licensee-only game repo, just let someone (probably Tom)
+ * know if you need to update it.
+ */
+interface HudCustomizer extends AbstractPanel<'HudCustomizer'> {
+	/**
+	 * Enables/disables HUD customizer mode.
+	 * Must be in map.
+	 * Same as toggling mom_hudcustomizer_open 0/1.
+	 * */
+	toggleUI(enabled: boolean): void;
+
+	/**
+	 * Whether the HUD customizer UI is open.
+	 * Precisely, it's whether the input capture is enabled.
+	 */
+	isOpen(): boolean;
+
+	/** Saves the given object to cfg/hud/{path}.kv3. */
+	saveLayout(path: string, data: import('hud/customizer').HudLayout): boolean;
+
+	/** Tries to load file from cfg/hud/{path}.kv3 */
+	loadLayout(path: string): import('hud/customizer').HudLayout | null;
+	
+	/** Tries to rename a layout file in cfg/hud/ */
+	renameLayout(oldPath: string, newPath: string): boolean;
+	
+	/** Tries to delete a layout file in cfg/hud */
+	deleteLayout(path: string): boolean;
+	
+	/** Lists all the filenames in cfg/hud/, omitting extension. */
+	listLayouts(): string[];
 }

@@ -5,6 +5,9 @@ import { TrackType } from 'common/web/enums/track-type.enum';
 import { Style } from 'common/web/enums/style.enum';
 import { getRunStyleName } from 'common/style';
 
+import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
+import { getTextShadowFast } from 'common/hud-customizer';
+
 @PanelHandler()
 class HudStatusHandler {
 	readonly panels = {
@@ -63,6 +66,58 @@ class HudStatusHandler {
 			this.saveStatesActive = false;
 			this.inPracticeMode = false;
 			this.update();
+		});
+
+		registerHUDCustomizerComponent($.GetContextPanel(), {
+			name: 'Timer Status',
+			resizeX: true,
+			resizeY: false,
+			dynamicStyles: {
+				fontStyling: {
+					name: 'Font Styling',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [{ styleID: 'font' }, { styleID: 'fontSize' }, { styleID: 'fontColor' }]
+				},
+				font: {
+					name: 'Font',
+					type: CustomizerPropertyType.FONT_PICKER,
+					targetPanel: '.hudstatus__label',
+					styleProperty: 'fontFamily'
+				},
+				fontSize: {
+					name: 'Font Size',
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					targetPanel: '.hudstatus__label',
+					styleProperty: 'fontSize'
+				},
+				fontColor: {
+					name: 'Font Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					targetPanel: '.hudstatus__label',
+					styleProperty: 'color',
+					callbackFunc: (panel, value) => {
+						panel.style.textShadowFast = getTextShadowFast(value as rgbaColor, 0.9);
+					}
+				},
+				backgroundColor: {
+					name: 'Background Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					targetPanel: '.hudstatus',
+					styleProperty: 'backgroundColor'
+				},
+				alignText: {
+					name: 'Align Text',
+					type: CustomizerPropertyType.DROPDOWN,
+					options: [
+						{ label: 'Left', value: 'left' },
+						{ label: 'Center', value: 'center' },
+						{ label: 'Right', value: 'right' }
+					],
+					targetPanel: '.hudstatus',
+					styleProperty: 'horizontalAlign'
+				}
+			}
 		});
 	}
 

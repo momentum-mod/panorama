@@ -4,8 +4,8 @@ import { MemberData } from 'common/online';
 @PanelHandler()
 class ChatHandler {
 	membersTyping: string[] = [];
-	typingLabel = $<Label>('#ChatMemberTypingLabel');
-	history = $('#ChatHistory');
+	typingLabel = $<Label>('#ChatMemberTypingLabel')!;
+	history = $('#ChatHistory')!;
 
 	constructor() {
 		$.RegisterEventHandler('OnNewChatEntry', $.GetContextPanel(), (panel) => this.onNewChatEntry(panel));
@@ -64,7 +64,7 @@ class ChatHandler {
 	}
 
 	onNewChatEntry(_panel: GenericPanel) {
-		this.history.ScrollToBottom();
+		$.Schedule(0.1, () => this.history.ScrollToBottom());
 	}
 
 	onSteamLobbyMemberDataUpdated(memberData: MemberData) {

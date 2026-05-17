@@ -1,3 +1,21 @@
+@use '../config' as *;
+
 .stickycharge {
+	width: 100%;
 	margin: 6px 0px 6px 0;
+}
+
+.stickycharge__meter {
+	width: 100%;
+	height: 18px;
+	border-radius: 9px;
+	border-style: solid;
+	font-size: 16px;
+
+	//Breaks Customization
+	// box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 3px 0px;
+}
+
+.stickycharge__meter .ProgressBarLeft {
+	border-radius: 9px;
 }

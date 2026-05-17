@@ -5,9 +5,7 @@
 
 .hud-comparisons {
 	flow-children: down;
-
-	margin: 20px;
-	margin-top: 120px;
+	border-style: solid;
 
 	&__splits {
 	}
@@ -62,7 +60,6 @@
 	&__name,
 	&__time,
 	&__diff {
-		font-size: 22px;
 		vertical-align: center;
 
 		&--hidden {
@@ -71,9 +68,6 @@
 	}
 
 	&__name {
-		font-family: $font-header;
-		margin-right: 16px;
-		color: #e0e0e0;
 		padding-top: 1px;
 
 		// &--subsegment {
@@ -82,11 +76,12 @@
 	}
 
 	&__time {
+		margin-left: 16px;
 		font-weight: medium;
-		margin-right: 14px;
 	}
 
 	&__diff {
+		margin-left: 14px;
 		font-weight: bold;
 		horizontal-align: right;
 

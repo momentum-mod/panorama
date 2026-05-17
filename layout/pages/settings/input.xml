@@ -52,7 +52,7 @@
 						<RadioButton group="maccel" text="#Common_On" value="3" />
 					</SettingsEnum>
 
-					<ConVarEnabler convar="m_customaccel" hasdocspage="false">
+					<ConVarEnabler convar="m_customaccel" hasdocspage="false" class="settings_convarenabler">
 						<SettingsSlider text="" min="0.1" max="10" displayprecision="2" convar="m_customaccel_exponent" tags="acceleration" />
 					</ConVarEnabler>
 				</Panel>

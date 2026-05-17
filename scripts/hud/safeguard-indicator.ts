@@ -1,9 +1,13 @@
 import { PanelHandler } from 'util/module-helpers';
 
+import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
+import { rgbaStringToTuple } from 'util/colors';
+
 @PanelHandler()
 class SafeguardHandler {
 	readonly panels = {
-		container: $<Panel>('#SafeguardContainer')
+		container: $<Panel>('#SafeguardContainer'),
+		meter: $<Image>('#SafeguardMeter')
 	};
 
 	holdTime: number;
@@ -21,6 +25,37 @@ class SafeguardHandler {
 		});
 		$.RegisterForUnhandledEvent('OnSafeguardCommandComplete', () => {
 			this.updateVisibility(false);
+		});
+
+		registerHUDCustomizerComponent($.GetContextPanel(), {
+			name: 'Safeguard Indicator',
+			resizeX: false,
+			resizeY: false,
+			// TODO: Add safeguard cvars?
+			// TODO: Figure out how to add a dummy indicator without breaking clips
+			dynamicStyles: {
+				size: {
+					name: 'Size',
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					callbackFunc: (_, value) => {
+						this.panels.meter.SetSvgTextureSize(value, value);
+
+						this.panels.container.style.width = `${value}px`;
+						this.panels.container.style.height = `${value}px`;
+					}
+				},
+				color: {
+					name: 'Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					targetPanel: '.safeguard__meter',
+					callbackFunc: (panel, value) => {
+						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
+
+						panel.style.washColor = `rgb(${r}, ${g}, ${b})`;
+						panel.style.opacity = alpha / 255;
+					}
+				}
+			}
 		});
 	}
 

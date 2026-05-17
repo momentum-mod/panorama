@@ -195,8 +195,8 @@ export class SettingsPage {
 		this.ghostPreview.LookAtModel();
 		this.ghostPreview.SetCameraOffset(-65, 0, 0);
 
-		this.ghostPreview.SetLightAmbient(1, 1, 1);
-		this.ghostPreview.SetDirectionalLightColor(0, 2, 2, 2);
+		this.ghostPreview.SetLightAmbient(0.5, 0.5, 0.5);
+		this.ghostPreview.SetDirectionalLightColor(0, 1, 1, 1);
 		this.ghostPreview.SetDirectionalLightDirection(0, 1, 1, -1);
 
 		this.ghostPrimaryColor.style.backgroundColor = Colors.tupleToRgbaString(

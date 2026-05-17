@@ -2,13 +2,24 @@ import { PanelHandler } from 'util/module-helpers';
 import { HideHud } from 'common/state';
 import * as Timer from 'common/timer';
 
+import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
+import { getTextShadowFast } from 'common/hud-customizer';
+
 const DIFF_DISPLAY_TIME = 5;
 const HIDDEN_CLASS = 'hudtimer--hidden';
-const INACTIVE_CLASS = 'hudtimer__time--inactive';
-const FINISHED_CLASS = 'hudtimer__time--finished';
-const INCREASE_CLASS = 'hudtimer__comparison--increase';
-const DECREASE_CLASS = 'hudtimer__comparison--decrease';
 const ENABLE_FADE_CLASS = 'hudtimer__comparison--enable-fade';
+
+const Colors = {
+	// Main timer colors
+	INACTIVE: 'rgba(200, 200, 200, 1)' as rgbaColor,
+	PRIMED: 'rgba(200, 200, 200, 1)' as rgbaColor,
+	RUNNING: 'rgba(255, 255, 255, 1)' as rgbaColor,
+	FINISHED: 'rgba(122, 238, 122, 1)' as rgbaColor,
+	// Comparison colors
+	INCREASE: 'rgba(16, 118, 168, 1)' as rgbaColor,
+	DECREASE: 'rgba(255, 106, 106, 1)' as rgbaColor,
+	INVISIBLE: 'rgba(0, 0, 0, 0)' as rgbaColor
+};
 
 @PanelHandler()
 class HudTimerHandler {
@@ -19,6 +30,7 @@ class HudTimerHandler {
 	};
 
 	comparison: RunMetadata | null = null;
+	showComparison: boolean;
 	fadeoutScheduleId: uuid | null = null;
 
 	constructor() {
@@ -69,6 +81,151 @@ class HudTimerHandler {
 			this.panels.cp.AddClass(HIDDEN_CLASS);
 			this.forceHideComparison();
 		});
+
+		registerHUDCustomizerComponent($.GetContextPanel(), {
+			name: 'Timer',
+			resizeX: true,
+			resizeY: false,
+			dynamicStyles: {
+				showComparisons: {
+					name: 'Show Comparisons',
+					type: CustomizerPropertyType.CHECKBOX,
+					callbackFunc: (_, value) => {
+						this.showComparison = value;
+					}
+				},
+				fontStyling: {
+					name: 'Font Styling',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [{ styleID: 'timerFontStyling' }, { styleID: 'comparisonFontStyling' }]
+				},
+				timerFontStyling: {
+					name: 'Timer Font Styling',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [{ styleID: 'timerFont' }, { styleID: 'timerFontSize' }]
+				},
+				timerFont: {
+					name: 'Font',
+					type: CustomizerPropertyType.FONT_PICKER,
+					targetPanel: '.hudtimer__time',
+					styleProperty: 'fontFamily'
+				},
+				timerFontSize: {
+					name: 'Font Size',
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					targetPanel: '.hudtimer__time',
+					styleProperty: 'fontSize',
+					valueFn: (value) => `${value}px`
+				},
+				comparisonFontStyling: {
+					name: 'Comparison Font Styling',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [{ styleID: 'comparisonFont' }, { styleID: 'comparisonFontSize' }]
+				},
+				comparisonFont: {
+					name: 'Font',
+					type: CustomizerPropertyType.FONT_PICKER,
+					targetPanel: '.hudtimer__comparison',
+					styleProperty: 'fontFamily'
+				},
+				comparisonFontSize: {
+					name: 'Font Size',
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					targetPanel: '.hudtimer__comparison',
+					styleProperty: 'fontSize',
+					valueFn: (value) => `${value}px`
+				},
+				colors: {
+					name: 'Colors',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [{ styleID: 'timerColors' }, { styleID: 'comparisonColors' }]
+				},
+				timerColors: {
+					name: 'Timer Colors',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [
+						{ styleID: 'inactiveColor' },
+						{ styleID: 'primedColor' },
+						{ styleID: 'runningColor' },
+						{ styleID: 'finishedColor' }
+					]
+				},
+				inactiveColor: {
+					name: 'Inactive Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					callbackFunc: (_, value) => {
+						Colors.INACTIVE = value as rgbaColor;
+						this.updateMainState();
+					}
+				},
+				primedColor: {
+					name: 'Primed Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					callbackFunc: (_, value) => {
+						Colors.PRIMED = value as rgbaColor;
+						this.updateMainState();
+					}
+				},
+				runningColor: {
+					name: 'Running Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					callbackFunc: (_, value) => {
+						Colors.RUNNING = value as rgbaColor;
+						this.updateMainState();
+					}
+				},
+				finishedColor: {
+					name: 'Finished Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					callbackFunc: (_, value) => {
+						Colors.FINISHED = value as rgbaColor;
+						this.updateMainState();
+					}
+				},
+				comparisonColors: {
+					name: 'Comparison Colors',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [{ styleID: 'comparisonGainColor' }, { styleID: 'comparisonLossColor' }]
+				},
+				comparisonGainColor: {
+					name: 'Comparison Gain Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					callbackFunc: (_, value) => {
+						Colors.INCREASE = value as rgbaColor;
+					}
+				},
+				comparisonLossColor: {
+					name: 'Comparison Loss Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					callbackFunc: (_, value) => {
+						Colors.DECREASE = value as rgbaColor;
+					}
+				},
+				alignText: {
+					name: 'Align Text',
+					type: CustomizerPropertyType.DROPDOWN,
+					options: [
+						{ label: 'Left', value: 'left' },
+						{ label: 'Center', value: 'center' },
+						{ label: 'Right', value: 'right' }
+					],
+					targetPanel: ['.hudtimer__time', '.hudtimer__comparison'],
+					styleProperty: 'horizontalAlign'
+				},
+				backgroundColor: {
+					name: 'Background Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					targetPanel: ['.hudtimer__time', '.hudtimer__comparison'],
+					styleProperty: 'backgroundColor'
+				}
+			}
+		});
 	}
 
 	updateMainState() {
@@ -76,23 +233,24 @@ class HudTimerHandler {
 
 		switch (state) {
 			case Timer.TimerState.DISABLED:
-				this.panels.time.AddClass(INACTIVE_CLASS);
-				this.panels.time.RemoveClass(FINISHED_CLASS);
+				this.panels.time.style.color = Colors.INACTIVE;
+				this.panels.time.style.textShadowFast = getTextShadowFast(Colors.INACTIVE, 0.9);
+				this.panels.cp.RemoveClass(HIDDEN_CLASS);
 				this.forceHideComparison();
 				break;
 			case Timer.TimerState.RUNNING:
-				this.panels.time.RemoveClass(INACTIVE_CLASS);
-				this.panels.time.RemoveClass(FINISHED_CLASS);
+				this.panels.time.style.color = Colors.RUNNING;
+				this.panels.time.style.textShadowFast = getTextShadowFast(Colors.RUNNING, 0.9);
 				this.panels.cp.RemoveClass(HIDDEN_CLASS);
 				break;
 			case Timer.TimerState.FINISHED:
-				this.panels.time.AddClass(FINISHED_CLASS);
-				this.panels.time.RemoveClass(INACTIVE_CLASS);
+				this.panels.time.style.color = Colors.FINISHED;
+				this.panels.time.style.textShadowFast = getTextShadowFast(Colors.FINISHED, 0.9);
 				this.panels.cp.RemoveClass(HIDDEN_CLASS);
 				break;
 			case Timer.TimerState.PRIMED:
-				this.panels.time.AddClass(INACTIVE_CLASS);
-				this.panels.time.RemoveClass(FINISHED_CLASS);
+				this.panels.time.style.color = Colors.PRIMED;
+				this.panels.time.style.textShadowFast = getTextShadowFast(Colors.PRIMED, 0.9);
 				this.panels.cp.RemoveClass(HIDDEN_CLASS);
 				this.forceHideComparison();
 				break;
@@ -100,7 +258,7 @@ class HudTimerHandler {
 	}
 
 	updateDiff() {
-		if (!this.comparison) return;
+		if (!this.comparison || !this.showComparison) return;
 
 		const { state, trackId, majorNum, minorNum, runTime, segmentsCount, segmentCheckpointsCount } =
 			MomentumTimerAPI.GetObservedTimerStatus();
@@ -140,16 +298,16 @@ class HudTimerHandler {
 
 		let diffSymbol: string;
 		if (diff > 0) {
-			this.panels.comparison.AddClass(DECREASE_CLASS);
-			this.panels.comparison.RemoveClass(INCREASE_CLASS);
+			this.panels.comparison.style.color = Colors.DECREASE;
+			this.panels.comparison.style.textShadowFast = getTextShadowFast(Colors.DECREASE, 0.9);
 			diffSymbol = '+';
 		} else if (diff < 0) {
-			this.panels.comparison.AddClass(INCREASE_CLASS);
-			this.panels.comparison.RemoveClass(DECREASE_CLASS);
+			this.panels.comparison.style.color = Colors.INCREASE;
+			this.panels.comparison.style.textShadowFast = getTextShadowFast(Colors.INCREASE, 0.9);
 			diffSymbol = '-';
 		} else {
-			this.panels.comparison.RemoveClass(INCREASE_CLASS);
-			this.panels.comparison.RemoveClass(DECREASE_CLASS);
+			this.panels.comparison.style.color = Colors.INVISIBLE;
+			this.panels.comparison.style.textShadowFast = getTextShadowFast(Colors.INVISIBLE, 0.9);
 			diffSymbol = '';
 		}
 

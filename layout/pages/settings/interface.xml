@@ -151,7 +151,7 @@
 					<RadioButton group="speedometer" text="#Common_On" value="1" />
 				</SettingsEnum>
 
-				<ConVarEnabler convar="mom_hud_speedometer_show" togglevisibility="true" class="flow-down">
+				<ConVarEnabler convar="mom_hud_speedometer_show" togglevisibility="true" class="settings__convarenabler">
 					<SettingsSlider text="#Settings_Speedometer_FPS" min="0" max="400" convar="mom_hud_speedometer_refresh_rate" infomessage="#Settings_Speedometer_FPS_Info" hasdocspage="true" tags="speedometer" />
 
 					<Panel id="SpeedometersContainer" class="flow-down w-full" infotitle="#Settings_Speedometer_Gamemode_Long" infomessage="#Settings_Speedometer_Container_Info" tags="speedometer">
@@ -237,7 +237,7 @@
 								<RadioButton group="xhairenable" text="#Common_On" value="1" />
 							</SettingsEnum>
 
-							<ConVarEnabler convar="crosshair" class="flow-down">
+							<ConVarEnabler convar="crosshair" class="settings__convarenabler">
 								<ConVarColorDisplay text="#Settings_Crosshair_Color" convar="cl_crosshair_color" hasdocspage="false" />
 
 								<SettingsSlider text="#Settings_Crosshair_Size" min="0" max="20" convar="cl_crosshair_size" displayprecision="2" infomessage="" hasdocspage="false" tags="color,size" />
@@ -256,7 +256,7 @@
 									<RadioButton group="xhairoutline" text="#Common_On" value="1" />
 								</SettingsEnum>
 
-								<ConVarEnabler convar="cl_crosshair_drawoutline">
+								<ConVarEnabler convar="cl_crosshair_drawoutline" class="settings__convarenabler">
 									<SettingsSlider style="margin-bottom: 0px;" text="#Settings_Crosshair_OutlineThickness" min="0" max="3" convar="cl_crosshair_outlinethickness" displayprecision="2" infomessage="" hasdocspage="false" tags="outline" />
 								</ConVarEnabler>
 							</ConVarEnabler>
@@ -267,278 +267,19 @@
 
 			<Panel class="settings-page__spacer" />
 
-			<Panel id="TimerSubSection" class="settings-group">
-				<Panel class="settings-group__header">
-					<Label class="settings-group__title" text="#Settings_Timer_Title" tags="timer" />
-					<Panel class="flow-right h-align-right">
-						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_Timer_Title', 'TimerSubSection')">
-							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
-						</Button>
-						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-							<Button class="button" onactivate="SettingsPage.resetSettings('TimerSubSection');">
-								<Image class="button__icon" src="file://{images}/reset.svg" />
-							</Button>
-						</TooltipPanel>
-					</Panel>
-				</Panel>
-
-				<SettingsEnum text="#Settings_Timer_Show" convar="mom_hud_timer" infomessage="#Settings_Timer_Show_Info">
-					<RadioButton group="timerenable" text="#Common_Off" value="0" />
-					<RadioButton group="timerenable" text="#Common_On" value="1" />
-				</SettingsEnum>
-
-				<SettingsEnum text="#Settings_Timer_SoundStart" convar="mom_timer_start_sound" infomessage="#Settings_Timer_SoundStart_Info" tags="sound">
-					<RadioButton group="timerstartsound" text="#Common_Off" value="0" />
-					<RadioButton group="timerstartsound" text="#Common_On" value="1" />
-				</SettingsEnum>
-
-				<SettingsEnum text="#Settings_Timer_SoundFinish" convar="mom_timer_finish_sound" infomessage="#Settings_Timer_SoundFinish_Info" tags="sound">
-					<RadioButton group="timerfinishsound" text="#Common_Off" value="0" />
-					<RadioButton group="timerfinishsound" text="#Common_On" value="1" />
-				</SettingsEnum>
-
-				<SettingsEnum text="#Settings_Timer_SoundStop" convar="mom_timer_disable_sound" infomessage="#Settings_Timer_SoundStop_Info" tags="sound">
-					<RadioButton group="timerstopsound" text="#Common_Off" value="0" />
-					<RadioButton group="timerstopsound" text="#Common_On" value="1" />
-				</SettingsEnum>
-			</Panel>
-
-			<Panel class="settings-page__spacer" />
-
-			<Panel id="PlayerStatusSubSection" class="settings-group">
-				<Panel class="settings-group__header">
-					<Label class="settings-group__title" text="#Settings_HUDStatus_Title" tags="hud,info,status" />
-					<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-						<Button class="button" onactivate="SettingsPage.resetSettings('PlayerStatusSubSection');">
-							<Image class="button__icon" src="file://{images}/reset.svg" />
-						</Button>
-					</TooltipPanel>
-				</Panel>
-				<SettingsEnum text="#Settings_HUDStatus_Enable" convar="mom_hud_status" infomessage="#Settings_HUDStatus_Enable_Info">
-					<RadioButton group="playerstatusenable" text="#Common_Off" value="0" />
-					<RadioButton group="playerstatusenable" text="#Common_On" value="1" />
-				</SettingsEnum>
-			</Panel>
-
-			<Panel class="settings-page__spacer" />
-
-			<Panel id="KeypressSubSection" class="settings-group">
-				<Panel class="settings-group__header">
-					<Label class="settings-group__title" text="#Settings_KeypressHUD_Title" tags="keypress,showkeys,hud" />
-					<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-						<Button class="button" onactivate="SettingsPage.resetSettings('KeypressSubSection');">
-							<Image class="button__icon" src="file://{images}/reset.svg" />
-						</Button>
-					</TooltipPanel>
-				</Panel>
-
-				<SettingsEnum text="#Settings_KeypressHUD_Enable" convar="mom_hud_keys" infomessage="#Settings_KeypressHUD_Enable_Info">
-					<RadioButton group="showkeys" text="#Common_Off" value="0" />
-					<RadioButton group="showkeys" text="#Common_On" value="1" />
-				</SettingsEnum>
-			</Panel>
-
-			<Panel class="settings-page__spacer" />
-			
-			<Panel id="ComparisonsSubSection" class="settings-group">
-				<Panel class="settings-group__header">
-					<Label class="settings-group__title" text="#Settings_ComparisonsHUD_Title" tags="comparisons,stages,checkpoints,time,hud" />
-					<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-						<Button class="button" onactivate="SettingsPage.resetSettings('ComparisonsSubSection');">
-							<Image class="button__icon" src="file://{images}/reset.svg" />
-						</Button>
-					</TooltipPanel>
-				</Panel>
-
-				<SettingsEnum text="#Settings_ComparisonsHUD_Enable" convar="mom_hud_comparisons" infomessage="#Settings_ComparisonsHUD_Enable_Info">
-					<RadioButton group="showcomparisons" text="#Common_Off" value="0" />
-					<RadioButton group="showcomparisons" text="#Common_On" value="1" />
-				</SettingsEnum>
-			</Panel>
-
-			<Panel class="settings-page__spacer" />
-
-			<Panel id="WeaponSelSubSection" class="settings-group">
-				<Panel class="settings-group__header">
-					<Label class="settings-group__title" text="#Settings_WeaponSelection_Title" tags="weapon,hud" />
-					<Panel class="flow-right h-align-right">
-						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_WeaponSelection_Title', 'WeaponSelSubSection')">
-							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
-						</Button>
-
-						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-							<Button class="button" onactivate="SettingsPage.resetSettings('WeaponSelSubSection');">
-								<Image class="button__icon" src="file://{images}/reset.svg" />
-							</Button>
-						</TooltipPanel>
-					</Panel>
-				</Panel>
-
-				<SettingsEnum text="#Settings_WeaponSelection_Enable" convar="mom_hud_weapon_select" infomessage="#Settings_WeaponSelection_Enable_Info">
-					<RadioButton group="showwepsel" text="#Common_Off" value="0" />
-					<RadioButton group="showwepsel" text="#Common_On" value="1" />
-				</SettingsEnum>
-
-				<ConVarEnabler convar="mom_hud_weapon_select" togglevisibility="true" class="flow-down">
-					<SettingsEnum text="#Settings_WeaponSelection_ShowKeybind" convar="mom_hud_weapon_select_keys" infomessage="#Settings_WeaponSelection_ShowKeybind_Info">
-						<RadioButton group="showwepselkb" text="#Common_Off" value="0" />
-						<RadioButton group="showwepselkb" text="#Common_On" value="1" />
-					</SettingsEnum>
-				</ConVarEnabler>
-
-				<SettingsEnum text="#Settings_WeaponSelection_Sound" convar="mom_hud_weapon_select_sounds" infomessage="#Settings_WeaponSelection_Sound_Info" tags="sound">
-					<RadioButton group="showwepselsound" text="#Common_Off" value="0" />
-					<RadioButton group="showwepselsound" text="#Common_On" value="1" />
-				</SettingsEnum>
-			</Panel>
-
-			<Panel class="settings-page__spacer" />
-
-			<Panel id="JumpStatsSubSection" class="settings-group">
-				<Panel class="settings-group__header">
-					<Label class="settings-group__title" text="#Settings_JumpStats_Title" />
-					<Panel class="flow-right h-align-right">
-						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Jump Stats', 'JumpStatsSubSection')">
-							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
-						</Button>
-						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-							<Button class="button" onactivate="SettingsPage.resetSettings('JumpStatsSubSection');">
-								<Image class="button__icon" src="file://{images}/reset.svg" />
-							</Button>
-						</TooltipPanel>
-					</Panel>
-				</Panel>
-
-				<SettingsEnum text="#Settings_JumpStats_Enable" convar="mom_hud_jstats_enable" infomessage="#Settings_JumpStats_Enable_Info">
-					<RadioButton group="jumpstatsenable" text="#Common_Off" value="0" />
-					<RadioButton group="jumpstatsenable" text="#Common_On" value="1" />
-				</SettingsEnum>
-
-				<ConVarEnabler convar="mom_hud_jstats_enable" class="flow-down">
-					<SettingsSlider text="#Settings_JumpStats_First" min="1" max="10" convar="mom_hud_jstats_first_jump" displayprecision="0" infomessage="#Settings_JumpStats_First_Info" hasdocspage="false" />
-
-					<SettingsSlider text="#Settings_JumpStats_Interval" min="0" max="10" convar="mom_hud_jstats_interval" displayprecision="0" infomessage="#Settings_JumpStats_Interval_Info" hasdocspage="false" />
-
-					<SettingsSlider text="#Settings_JumpStats_Log" min="1" max="10" convar="mom_hud_jstats_log_history" displayprecision="0" infomessage="#Settings_JumpStats_Log_Info" hasdocspage="false" />
-
-					<SettingsEnum text="#Settings_JumpStats_TakeoffSpeed" convar="mom_hud_jstats_takeoff_speed" infomessage="#Settings_JumpStats_TakeoffSpeed_Info">
-						<RadioButton group="takeoffspeed" text="#Common_Off" value="0" />
-						<RadioButton group="takeoffspeed" text="#Common_On" value="1" />
-					</SettingsEnum>
-
-					<SettingsEnum text="#Settings_JumpStats_SpeedDelta" convar="mom_hud_jstats_speed_delta" infomessage="#Settings_JumpStats_SpeedDelta_Info">
-						<RadioButton group="deltaspeed" text="#Common_Off" value="0" />
-						<RadioButton group="deltaspeed" text="#Common_On" value="1" />
-					</SettingsEnum>
-
-					<SettingsEnum text="#Settings_JumpStats_TakeoffTime" convar="mom_hud_jstats_takeoff_time" infomessage="#Settings_JumpStats_TakeoffTime_Info">
-						<RadioButton group="jumptime" text="#Common_Off" value="0" />
-						<RadioButton group="jumptime" text="#Common_On" value="1" />
-					</SettingsEnum>
-
-					<SettingsEnum text="#Settings_JumpStats_TimeDelta" convar="mom_hud_jstats_time_delta" infomessage="#Settings_JumpStats_TimeDelta_Info">
-						<RadioButton group="jumptimedelta" text="#Common_Off" value="0" />
-						<RadioButton group="jumptimedelta" text="#Common_On" value="1" />
-					</SettingsEnum>
-
-					<SettingsEnum text="#Settings_JumpStats_StrafeSync" convar="mom_hud_jstats_strafe_sync" infomessage="#Settings_JumpStats_StrafeSync_Info">
-						<RadioButton group="syncratio" text="#Common_Off" value="0" />
-						<RadioButton group="syncratio" text="#Common_On" value="1" />
-					</SettingsEnum>
-
-					<SettingsEnum text="#Settings_JumpStats_StrafeCount" convar="mom_hud_jstats_strafe_count" infomessage="#Settings_JumpStats_StrafeCount_Info">
-						<RadioButton group="jumpstrafes" text="#Common_Off" value="0" />
-						<RadioButton group="jumpstrafes" text="#Common_On" value="1" />
-					</SettingsEnum>
-
-					<SettingsEnum text="#Settings_JumpStats_SpeedGain" convar="mom_hud_jstats_speed_gain" infomessage="#Settings_JumpStats_SpeedGain_Info">
-						<RadioButton group="speedgain" text="#Common_Off" value="0" />
-						<RadioButton group="speedgain" text="#Common_On" value="1" />
-					</SettingsEnum>
-
-					<SettingsEnum text="#Settings_JumpStats_YawRatio" convar="mom_hud_jstats_yaw_ratio" infomessage="#Settings_JumpStats_YawRatio_Info">
-						<RadioButton group="yawratio" text="#Common_Off" value="0" />
-						<RadioButton group="yawratio" text="#Common_On" value="1" />
-					</SettingsEnum>
-
-					<SettingsEnum text="#Settings_JumpStats_HeightDelta" convar="mom_hud_jstats_height_delta" infomessage="#Settings_JumpStats_HeightDelta_Info">
-						<RadioButton group="heightdelta" text="#Common_Off" value="0" />
-						<RadioButton group="heightdelta" text="#Common_On" value="1" />
-					</SettingsEnum>
-
-					<SettingsEnum text="#Settings_JumpStats_Distance" convar="mom_hud_jstats_distance" infomessage="#Settings_JumpStats_Distance_Info">
-						<RadioButton group="distance" text="#Common_Off" value="0" />
-						<RadioButton group="distance" text="#Common_On" value="1" />
-					</SettingsEnum>
-
-					<SettingsEnum text="#Settings_JumpStats_Efficiency" convar="mom_hud_jstats_efficiency" infomessage="#Settings_JumpStats_Efficiency_Info">
-						<RadioButton group="efficiency" text="#Common_Off" value="0" />
-						<RadioButton group="efficiency" text="#Common_On" value="1" />
-					</SettingsEnum>
-				</ConVarEnabler>
-			</Panel>
-
-			<Panel class="settings-page__spacer" />
-
-			<!-- TODO: This is currently broken. Does anyone want this feature? -->
-			<!-- <Panel id="StrafeSyncSubSection" class="settings-group">
-				<Panel class="settings-group__header">
-					<Label class="settings-group__title" text="#Settings_TotalSync_Title" tags="sync,strafe" />
-					<Panel class="flow-right h-align-right">
-						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_TotalSync_Title', 'StrafeSyncSubSection')">
-							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
-						</Button>
-						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-							<Button class="button" onactivate="SettingsPage.resetSettings('StrafeSyncSubSection');">
-								<Image class="button__icon" src="file://{images}/reset.svg" />
-							</Button>
-						</TooltipPanel>
-					</Panel>
-				</Panel>
-
-				<SettingsEnum text="#Settings_TotalSync_Enable" convar="mom_hud_strafesync_draw" infomessage="#Settings_TotalSync_Enable_Info">
-					<RadioButton group="showsyncdata" text="#Common_Off" value="0" />
-					<RadioButton group="showsyncdata" text="#Common_On" value="1" />
-				</SettingsEnum>
-
-				<SettingsEnum text="#Settings_TotalSync_Bar" convar="mom_hud_strafesync_drawbar" infomessage="#Settings_TotalSync_Bar_Info">
-					<RadioButton group="showsyncbar" text="#Common_Off" value="0" />
-					<RadioButton group="showsyncbar" text="#Common_On" value="1" />
-				</SettingsEnum>
-
-				<SettingsEnumDropDown text="#Settings_TotalSync_Type" convar="mom_hud_strafesync_type" infomessage="#Settings_TotalSync_Type_Info">
-					<Label id="synctype1" text="#Settings_TotalSync_Type1" value="1" />
-					<Label id="synctype2" text="#Settings_TotalSync_Type2" value="2" />
-				</SettingsEnumDropDown>
-
-				<SettingsEnumDropDown text="#Settings_TotalSync_ColorType" convar="mom_hud_strafesync_colorize" infomessage="#Settings_TotalSync_ColorType_Info">
-					<Label id="colorize1" text="#Settings_TotalSync_Color_Type0" value="0" />
-					<Label id="colorize2" text="#Settings_TotalSync_Color_Type1" value="1" />
-					<Label id="colorize3" text="#Settings_TotalSync_Color_Type2" value="2" />
-				</SettingsEnumDropDown>
-			</Panel>
-			<Panel class="settings-page__spacer" /> -->
-
 			<Panel id="DamageIndicatorSubSection" class="settings-group">
-
 				<Panel class="settings-group__header">
-
 					<Label class="settings-group__title" text="#Settings_DamageIndicator_Title" />
-
 					<Panel class="flow-right h-align-right">
-
 						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Damage Indicator', 'DamageIndicatorSubSection')">
 							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
 						</Button>
-
 						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
 							<Button class="button" onactivate="SettingsPage.resetSettings('DamageIndicatorSubSection');">
 								<Image class="button__icon" src="file://{images}/reset.svg" />
 							</Button>
 						</TooltipPanel>
-
 					</Panel>
-
 				</Panel>
 
 				<SettingsEnum text="#Settings_DamageIndicator_Enable" convar="mom_hud_damage_indicator_enable" infomessage="#Settings_DamageIndicator_Enable_Info">
@@ -546,7 +287,7 @@
 					<RadioButton group="damageindicatorenable" text="#Common_On" value="1" />
 				</SettingsEnum>
 
-				<ConVarEnabler convar="mom_hud_damage_indicator_enable" class="flow-down">
+				<ConVarEnabler convar="mom_hud_damage_indicator_enable" class="settings__convarenabler">
 
 					<ConVarColorDisplay convar="mom_hud_damage_indicator_color" text="#Settings_DamageIndicator_Color" tags="color" />
 
@@ -563,122 +304,6 @@
 					<SettingsSlider text="#Settings_DamageIndicator_MaxLifetime" min="1" max="5" convar="mom_hud_damage_indicator_max_lifetime" displayprecision="1" infomessage="#Settings_DamageIndicator_MaxLifetime_Info" hasdocspage="false" />
 
 					<SettingsSlider text="#Settings_DamageIndicator_Radius" min="0" max="500" convar="mom_hud_damage_indicator_radius" displayprecision="0" infomessage="#Settings_DamageIndicator_Radius_Info" hasdocspage="false" />
-
-				</ConVarEnabler>
-			</Panel>
-
-			<Panel class="settings-page__spacer" />
-
-			<Panel id="StrafeTrainerSubSection" class="settings-group">
-				<Panel class="settings-group__header">
-					<Label class="settings-group__title" text="#Settings_StrafeTrainer_Title" tags="sync,strafe,trainer" />
-					<Panel class="flow-right h-align-right">
-						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_StrafeTrainer_Title', 'StrafeTrainerSubSection')">
-							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
-						</Button>
-						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-							<Button class="button" onactivate="SettingsPage.resetSettings('StrafeTrainerSubSection');">
-								<Image class="button__icon" src="file://{images}/reset.svg" />
-							</Button>
-						</TooltipPanel>
-					</Panel>
-				</Panel>
-
-				<SettingsEnumDropDown text="#Settings_StrafeTrainer_DisplayMode" convar="mom_hud_strafetrainer_mode" infomessage="#Settings_StrafeTrainer_DisplayMode_Info">
-					<Label id="mode0" text="#Settings_StrafeTrainer_DisplayMode_Mode0" value="0" />
-					<Label id="mode1" text="#Settings_StrafeTrainer_DisplayMode_Mode1" value="1" />
-					<Label id="mode2" text="#Settings_StrafeTrainer_DisplayMode_Mode2" value="2" />
-					<Label id="mode3" text="#Settings_StrafeTrainer_DisplayMode_Mode3" value="3" />
-					<Label id="mode4" text="#Settings_StrafeTrainer_DisplayMode_Mode4" value="4" />
-				</SettingsEnumDropDown>
-
-				<ConVarEnabler convar="mom_hud_strafetrainer_mode" class="flow-down">
-					<SettingsEnum text="#Settings_StrafeTrainer_Color" convar="mom_hud_strafetrainer_color_enable" infomessage="#Settings_StrafeTrainer_Color_Info" tags="color">
-						<RadioButton group="strafetrainercolor" text="#Common_Off" value="0" />
-						<RadioButton group="strafetrainercolor" text="#Common_On" value="1" />
-					</SettingsEnum>
-
-					<SettingsEnum text="Settings_StrafeTrainer_Dynamic_Mode" convar="mom_hud_strafetrainer_dynamic_enable" infomessage="#Settings_StrafeTrainer_Dynamic_Mode_Info">
-						<RadioButton group="strafetrainerdynamic" text="#Common_Off" value="0" />
-						<RadioButton group="strafetrainerdynamic" text="#Common_On" value="1" />
-					</SettingsEnum>
-
-					<SettingsEnum text="#Settings_StrafeTrainer_Direction" convar="mom_hud_strafetrainer_flip_enable" infomessage="#Settings_StrafeTrainer_Direction_Info">
-						<RadioButton group="strafetrainerdirection" text="#Settings_StrafeTrainer_Direction_Normal" value="0" />
-						<RadioButton group="strafetrainerdirection" text="#Settings_StrafeTrainer_Direction_Flipped" value="1" />
-					</SettingsEnum>
-
-					<SettingsEnumDropDown text="#Settings_StrafeTrainer_AveragingWindow" convar="mom_hud_strafetrainer_buffer_size" infomessage="#Settings_StrafeTrainer_AveragingWindow_Info">
-						<Label text="#Settings_StrafeTrainer_AveragingWindow_Mode1" value="1" id="buffer0" />
-						<Label text="#Settings_StrafeTrainer_AveragingWindow_Mode2" value="5" id="buffer1" />
-						<Label text="#Settings_StrafeTrainer_AveragingWindow_Mode3" value="10" id="buffer2" />
-						<Label text="#Settings_StrafeTrainer_AveragingWindow_Mode4" value="20" id="buffer3" />
-					</SettingsEnumDropDown>
-
-					<SettingsSlider text="#Settings_StrafeTrainer_MinSpeed" min="50" max="250" convar="mom_hud_strafetrainer_min_speed" displayprecision="0" infomessage="#Settings_StrafeTrainer_MinSpeed_Info" />
-
-					<SettingsEnumDropDown text="#Settings_StrafeTrainer_Stats_Mode" convar="mom_hud_strafetrainer_stat_mode" infomessage="#Settings_StrafeTrainer_Stats_Mode_Info">
-						<Label id="mode0" text="#Common_Off" value="0" />
-						<Label id="mode1" text="#Settings_StrafeTrainer_StatsMode_Mode1" value="1" />
-						<Label id="mode2" text="#Settings_StrafeTrainer_StatsMode_Mode2" value="2" />
-					</SettingsEnumDropDown>
-
-					<SettingsEnum text="#Settings_StrafeTrainer_StatColor" convar="mom_hud_strafetrainer_stat_color_enable" infomessage="#Settings_StrafeTrainer_StatColor_Info" tags="color">
-						<RadioButton group="strafetrainerstatcolor" text="#Common_Off" value="0" />
-						<RadioButton group="strafetrainerstatcolor" text="#Common_On" value="1" />
-					</SettingsEnum>
-				</ConVarEnabler>
-
-			</Panel>
-
-			<Panel class="settings-page__spacer" />
-
-			<Panel id="MapInfoSubSection" class="settings-group">
-				<Panel class="settings-group__header">
-					<Label class="settings-group__title" text="#Settings_MapInfo_Title" tags="info,hud" />
-					<Panel class="flow-right h-align-right">
-						<Button class="button mr-3" onactivate="SettingsPage.showImportExportDialogue('Settings_MapInfo_Title', 'MapInfoSubSection')">
-							<Label class="button__text" text="#Settings_ImportExport_ImportExport" />
-						</Button>
-						<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
-							<Button class="button" onactivate="SettingsPage.resetSettings('MapInfoSubSection');">
-								<Image class="button__icon" src="file://{images}/reset.svg" />
-							</Button>
-						</TooltipPanel>
-					</Panel>
-				</Panel>
-
-				<SettingsEnum text="#Settings_MapInfo_Enable" convar="mom_hud_map_info" infomessage="#Settings_MapInfo_Enable_Info">
-					<RadioButton group="mapinfoenable" text="#Common_Off" value="0" />
-					<RadioButton group="mapinfoenable" text="#Common_On" value="1" />
-				</SettingsEnum>
-
-				<ConVarEnabler convar="mom_hud_map_info" togglevisibility="true" class="flow-down">
-
-					<SettingsEnum text="#Settings_MapInfo_MapName" convar="mom_hud_map_name" infomessage="#Settings_MapInfo_MapName_Info">
-						<RadioButton group="mapinfonameenable" text="#Common_Off" value="0" />
-						<RadioButton group="mapinfonameenable" text="#Common_On" value="1" />
-					</SettingsEnum>
-
-					<SettingsEnum text="#Settings_MapInfo_MapAuthor" convar="mom_hud_map_author" infomessage="#Settings_MapInfo_MapAuthor_Info">
-						<RadioButton group="mapinfoauthorenable" text="#Common_Off" value="0" />
-						<RadioButton group="mapinfoauthorenable" text="#Common_On" value="1" />
-					</SettingsEnum>
-
-					<SettingsEnum text="#Settings_MapInfo_MapDifficulty" convar="mom_hud_map_tier" infomessage="#Settings_MapInfo_MapDifficulty_Info">
-						<RadioButton group="mapinfotierenable" text="#Common_Off" value="0" />
-						<RadioButton group="mapinfotierenable" text="#Common_On" value="1" />
-					</SettingsEnum>
-
-					<SettingsEnum text="#Settings_MapInfo_ZoneType" convar="mom_hud_map_type" infomessage="#Settings_MapInfo_ZoneType_Info">
-						<RadioButton group="mapinfozonetypeenable" text="#Common_Off" value="0" />
-						<RadioButton group="mapinfozonetypeenable" text="#Common_On" value="1" />
-					</SettingsEnum>
-
-					<SettingsEnum text="#Settings_MapInfo_ZoneNum" convar="mom_hud_map_stages" infomessage="#Settings_MapInfo_ZoneNum_Info">
-						<RadioButton group="mapinfonumzonesenable" text="#Common_Off" value="0" />
-						<RadioButton group="mapinfonumzonesenable" text="#Common_On" value="1" />
-					</SettingsEnum>
 
 				</ConVarEnabler>
 			</Panel>

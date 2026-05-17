@@ -1,3 +1,13 @@
 .conccook {
+	width: 100%;
 	margin: 6px 0px 6px 0;
+}
+
+.cooktime__meter {
+	width: 100%;
+	height: 18px;
+	border-style: solid;
+
+	//Breaks Customization
+	// box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 3px 0px;
 }

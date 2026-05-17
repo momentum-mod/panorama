@@ -1,20 +1,16 @@
-@use '../config' as *;
-
 .dfjump {
 	align: center center;
 
 	&__container {
 		width: fit-children;
-		height: $dfjump-height;
+		height: 300px;
 		flow-children: right;
 	}
 
 	&__bar-wrapper {
-		width: $dfjump-width;
-		height: $dfjump-height;
-		border: 1px solid $white;
-		border-radius: 3px;
-		opacity: $dfjump-opacity;
+		width: 20px;
+		height: 300px;
+		border-style: solid;
 	}
 
 	&__release {
@@ -24,15 +20,6 @@
 		vertical-align: top;
 		flow-children: up;
 		border-radius: 0px;
-		background-color: rgba(0, 0, 0, 0); //$progressbar-background;
-
-		.ProgressBarLeft {
-			background-color: $dfjump-color-release;
-		}
-
-		.ProgressBarRight {
-			background-color: $dfjump-color-background;
-		}
 	}
 
 	&__press {
@@ -42,30 +29,12 @@
 		vertical-align: bottom;
 		flow-children: down;
 		border-radius: 0px;
-		background-color: rgba(0, 0, 0, 0); //$progressbar-background;
-
-		&--air {
-			.ProgressBarLeft {
-				background-color: $dfjump-color-press-air;
-			}
-		}
-
-		&--ground {
-			.ProgressBarLeft {
-				background-color: $dfjump-color-press-ground;
-			}
-		}
-
-		.ProgressBarRight {
-			background-color: $dfjump-color-background;
-		}
 	}
 
 	&__text-wrapper {
 		width: fit-children;
-		height: $dfjump-height;
-		font-size: $dfjump-font-size;
-		padding-left: $dfjump-padding;
+		height: 300px;
+		padding-left: 6px;
 
 		&--release {
 			vertical-align: top;

@@ -14,7 +14,7 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 	<scripts>
-
+		<include type="module" src="file://{scripts}/hud/chat.ts" />
 	</scripts>
 	<Panel class="hud-chat no-flow">
 		<MomentumChat id="RaisedChat" class="w-full h-full" />

@@ -2,7 +2,6 @@
 @use '../abstract/mixin';
 
 .powerup-timer {
-	margin: 10px;
 	flow-children: down;
 	padding-left: 16px;
 
@@ -11,13 +10,11 @@
 	}
 
 	&__label {
-		@include mixin.font-header();
+		text-shadow: 0px 1px 1.5px 1 rgba(0, 0, 0, 1);
 		font-weight: bold;
-		font-size: 64px;
 		padding-left: 16px;
 		horizontal-align: left;
 		vertical-align: center;
-		color: $white;
 	}
 
 	&__icon {
@@ -26,11 +23,11 @@
 		width: 48px;
 
 		&--haste {
-			wash-color: $orange;
+			wash-color: rgba(255, 188, 0, 1);
 		}
 
 		&--damageboost {
-			wash-color: $light-blue;
+			wash-color: rgba(113, 240, 255, 1);
 		}
 	}
 }

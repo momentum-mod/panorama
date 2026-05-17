@@ -1,5 +1,7 @@
 import { PanelHandler } from 'util/module-helpers';
 import * as Timer from 'common/timer';
+import { CustomizerPropertyType, getHudCustomizer, registerHUDCustomizerComponent } from 'common/hud-customizer';
+import { getTextShadowFast } from 'common/hud-customizer';
 
 // MomTV networking limits max numbers of networked splits to 10; this value is
 // immutable and used to build out our split panel arrays.
@@ -13,6 +15,14 @@ interface SplitRow {
 	diff: Label;
 	split?: Timer.Split;
 }
+
+const COMPARISON_COLORS = {
+	neutral: { color: 'rgba(0, 0, 0, 0)', textShadow: '0px 1px rgba(0, 0, 0, 0)' },
+	ahead_gain: { color: 'rgba(0, 0, 0, 0)', textShadow: '0px 1px rgba(0, 0, 0, 0)' },
+	ahead_loss: { color: 'rgba(0, 0, 0, 0)', textShadow: '0px 1px rgba(0, 0, 0, 0)' },
+	behind_gain: { color: 'rgba(0, 0, 0, 0)', textShadow: '0px 1px rgba(0, 0, 0, 0)' },
+	behind_loss: { color: 'rgba(0, 0, 0, 0)', textShadow: '0px 1px rgba(0, 0, 0, 0)' }
+};
 
 @PanelHandler()
 class HudComparisonsHandler {
@@ -73,9 +83,9 @@ class HudComparisonsHandler {
 	//   - Generate progression split, set bottom-most split to it
 	//   - Push all other splits up by setting them to the previous split's properties
 	// - When timer state changes,
-	//   - To primed: Clear all splits
+	//   - To primed: Do nothing
 	//   - To running: Clear all splits
-	//   - To disabled: Clear all splits
+	//   - To disabled: Do nothing
 	//   - To finished: Generate final split, set bottom-most split to it
 	// - When comparison changes:
 	//   - Update all splits to use new comparison
@@ -101,7 +111,7 @@ class HudComparisonsHandler {
 						segmentCheckpointsCount
 					)
 				);
-			} else {
+			} else if (state === Timer.TimerState.RUNNING) {
 				this.clearSplits();
 			}
 		});
@@ -145,6 +155,175 @@ class HudComparisonsHandler {
 
 		$.RegisterForUnhandledEvent('LevelInitPostEntity', () => {
 			this.clearSplits();
+		});
+
+		let tempComparison: any;
+		let tempReplayID: any;
+		$.RegisterForUnhandledEvent('HudCustomizer_Opened', () => {
+			// Usually players using HUD customizer won't be in a run, so generate dummy splits. If they *are* in a run,
+			// don't alter them in any way.
+			const { state } = MomentumTimerAPI.GetObservedTimerStatus();
+
+			if (state === Timer.TimerState.DISABLED || state === Timer.TimerState.PRIMED) {
+				tempComparison = this.comparison;
+				tempReplayID = this.controlledReplayID;
+				this.createDummySplits();
+			}
+		});
+
+		$.RegisterForUnhandledEvent('HudCustomizer_Closed', () => {
+			const { state } = MomentumTimerAPI.GetObservedTimerStatus();
+			if (state === Timer.TimerState.DISABLED || state === Timer.TimerState.PRIMED) {
+				this.comparison = tempComparison;
+				this.controlledReplayID = tempReplayID;
+				this.clearSplits();
+			}
+		});
+
+		registerHUDCustomizerComponent($.GetContextPanel(), {
+			name: 'Comparisons',
+			resizeX: false,
+			resizeY: false,
+			// Layouting out dummy splits can take like 100 (!!) frames in debug, until then the panel has 0 and overlay
+			// panel gets mispositioned. So just wait until width is at least 64px.
+			expectedMinWidth: 64,
+			dynamicStyles: {
+				index: {
+					name: 'Index',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [{ styleID: 'indexFont' }, { styleID: 'indexSize' }, { styleID: 'indexColor' }]
+				},
+				indexFont: {
+					name: 'Font',
+					type: CustomizerPropertyType.FONT_PICKER,
+					targetPanel: '.hud-splits__name',
+					styleProperty: 'fontFamily'
+				},
+				indexSize: {
+					name: 'Size',
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					targetPanel: '.hud-splits__name',
+					styleProperty: 'fontSize',
+					valueFn: (value) => `${value}px`
+				},
+				indexColor: {
+					name: 'Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					targetPanel: '.hud-splits__name',
+					styleProperty: 'color',
+					callbackFunc: (panel, value) => {
+						panel.style.textShadowFast = getTextShadowFast(value as rgbaColor, 0.9);
+					}
+				},
+				time: {
+					name: 'Time',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [{ styleID: 'timeFont' }, { styleID: 'timeSize' }, { styleID: 'timeColor' }]
+				},
+				timeFont: {
+					name: 'Font',
+					type: CustomizerPropertyType.FONT_PICKER,
+					targetPanel: '.hud-splits__time',
+					styleProperty: 'fontFamily'
+				},
+				timeSize: {
+					name: 'Size',
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					targetPanel: '.hud-splits__time',
+					styleProperty: 'fontSize',
+					valueFn: (value) => `${value}px`
+				},
+				timeColor: {
+					name: 'Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					targetPanel: '.hud-splits__time',
+					styleProperty: 'color',
+					callbackFunc: (panel, value) => {
+						panel.style.textShadowFast = getTextShadowFast(value as rgbaColor, 0.9);
+					}
+				},
+				comparisons: {
+					name: 'Comparison',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [
+						{ styleID: 'comparisonsFont' },
+						{ styleID: 'comparisonsFontSize' },
+						{ styleID: 'comparisonsColors' }
+					]
+				},
+				comparisonsFont: {
+					name: 'Font',
+					type: CustomizerPropertyType.FONT_PICKER,
+					targetPanel: '.hud-splits__diff',
+					styleProperty: 'fontFamily'
+				},
+				comparisonsFontSize: {
+					name: 'Size',
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					targetPanel: '.hud-splits__diff',
+					styleProperty: 'fontSize'
+				},
+				comparisonsColors: {
+					name: 'Colors',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [
+						{ styleID: 'comparisonsNeutral' },
+						{ styleID: 'comparisonsAheadGain' },
+						{ styleID: 'comparisonsAheadLoss' },
+						{ styleID: 'comparisonsBehindGain' },
+						{ styleID: 'comparisonsBehindLoss' }
+					]
+				},
+				comparisonsNeutral: {
+					name: 'Neutral',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					callbackFunc: (_, value) => {
+						COMPARISON_COLORS.neutral.color = value;
+						COMPARISON_COLORS.neutral.textShadow = getTextShadowFast(value as rgbaColor, 0.9);
+						this.createDummySplits();
+					}
+				},
+				comparisonsAheadGain: {
+					name: 'Ahead - Gain',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					callbackFunc: (_, value) => {
+						COMPARISON_COLORS.ahead_gain.color = value;
+						COMPARISON_COLORS.ahead_gain.textShadow = getTextShadowFast(value as rgbaColor, 0.9);
+						this.createDummySplits();
+					}
+				},
+				comparisonsAheadLoss: {
+					name: 'Ahead - Loss',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					callbackFunc: (_, value) => {
+						COMPARISON_COLORS.ahead_loss.color = value;
+						COMPARISON_COLORS.ahead_loss.textShadow = getTextShadowFast(value as rgbaColor, 0.9);
+						this.createDummySplits();
+					}
+				},
+				comparisonsBehindGain: {
+					name: 'Behind - Gain',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					callbackFunc: (_, value) => {
+						COMPARISON_COLORS.behind_gain.color = value;
+						COMPARISON_COLORS.behind_gain.textShadow = getTextShadowFast(value as rgbaColor, 0.9);
+						this.createDummySplits();
+					}
+				},
+				comparisonsBehindLoss: {
+					name: 'Behind - Loss',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					callbackFunc: (_, value) => {
+						COMPARISON_COLORS.behind_loss.color = value;
+						COMPARISON_COLORS.behind_loss.textShadow = getTextShadowFast(value as rgbaColor, 0.9);
+						this.createDummySplits();
+					}
+				}
+			}
 		});
 	}
 
@@ -222,21 +401,33 @@ class HudComparisonsHandler {
 	}
 
 	recomputeComparisons() {
+		const { state, runTime, segmentsCount, segmentCheckpointsCount } = MomentumTimerAPI.GetObservedTimerStatus();
 		const splits = MomentumTimerAPI.GetObservedTimerRunSplits();
 
 		this.splitRows.forEach((row) => {
 			if (!row.split) return;
 
 			if (this.hasUniqueComparison()) {
-				row.split = Timer.generateSplit(
-					splits,
-					this.comparison?.runSplits ?? null,
-					row.split.majorNum,
-					row.split.minorNum,
-					row.split.segmentsCount,
-					row.split.segmentCheckpointsCount,
-					true // round to float, could be networked data
-				);
+				if (state === Timer.TimerState.FINISHED && row === this.splitRows[0]) {
+					row.split = Timer.generateFinishSplit(
+						splits,
+						this.comparison?.runSplits ?? null,
+						runTime,
+						this.comparison?.runTime ?? 0,
+						segmentsCount,
+						segmentCheckpointsCount
+					);
+				} else {
+					row.split = Timer.generateSplit(
+						splits,
+						this.comparison?.runSplits ?? null,
+						row.split.majorNum,
+						row.split.minorNum,
+						row.split.segmentsCount,
+						row.split.segmentCheckpointsCount,
+						true // round to float, could be networked data
+					);
+				}
 			} else {
 				// Split obj might have some irrelevant properties, but they won't be used
 				row.split.hasComparison = false;
@@ -287,14 +478,15 @@ class HudComparisonsHandler {
 
 		const { trackId } = MomentumTimerAPI.GetObservedTimerStatus();
 		const hasComparison =
-			split.hasComparison &&
-			// hasUniqueComparison is based on controlledReplayID which is updated whenever observed timer
-			// changes, so `split` will be derived from current timer
-			this.hasUniqueComparison() &&
-			// Ensure we're definitely on the same track, currently possible that the comparison could be
-			// on a different one
-			trackId.type === this.comparison.trackId.type &&
-			trackId.number === this.comparison.trackId.number;
+			getHudCustomizer()?.isOpen() ||
+			(split.hasComparison &&
+				// hasUniqueComparison is based on controlledReplayID which is updated whenever observed timer
+				// changes, so `split` will be derived from current timer
+				this.hasUniqueComparison() &&
+				// Ensure we're definitely on the same track, currently possible that the comparison could be
+				// on a different one
+				trackId.type === this.comparison.trackId.type &&
+				trackId.number === this.comparison.trackId.number);
 
 		diff.SetHasClass('hud-splits__diff--hidden', !hasComparison);
 
@@ -302,10 +494,21 @@ class HudComparisonsHandler {
 
 		diff.SetDialogVariable('diff_sign', split.diff! > 0 ? '+' : split.diff === 0 ? '' : '-');
 		diff.SetDialogVariableFloat('diff', Math.abs(split.diff!));
-		diff.SetHasClass('--ahead', split.diff! < 0);
-		diff.SetHasClass('--behind', split.diff! > 0);
-		diff.SetHasClass('--gain', split.delta! <= 0);
-		diff.SetHasClass('--loss', split.delta! > 0);
+
+		const getSplitState = (diff: number, delta: number) => {
+			if (diff === 0) return 'neutral';
+			const isAhead = diff < 0;
+			const isGain = delta <= 0;
+
+			if (isAhead) return isGain ? 'ahead_gain' : 'ahead_loss';
+			return isGain ? 'behind_gain' : 'behind_loss';
+		};
+
+		const state = getSplitState(split.diff!, split.delta!);
+		const style = COMPARISON_COLORS[state];
+
+		diff.style.color = style.color;
+		diff.style.textShadowFast = style.textShadow;
 	}
 
 	clearSplits() {
@@ -325,5 +528,31 @@ class HudComparisonsHandler {
 	// show pointless +0:00 comparisons by comparing a run to itself.
 	hasUniqueComparison(): this is { comparison: Timer.RunMetadata } {
 		return this.comparison !== null && this.comparison.tempId !== this.controlledReplayID;
+	}
+
+	createDummySplits() {
+		if (!getHudCustomizer()?.isOpen()) return;
+
+		const times = new Array(MAX_SPLITS);
+		let t = 0;
+		for (let i = 0; i < MAX_SPLITS; i++) {
+			t += 10 + Math.random() * 10;
+			times[i] = t;
+		}
+
+		for (let i = MAX_SPLITS - 1; i >= 0; i--) {
+			this.updateSplit(this.splitRows[MAX_SPLITS - 1 - i], {
+				majorNum: i + 1,
+				minorNum: 1,
+				segmentsCount: MAX_SPLITS,
+				segmentCheckpointsCount: 1,
+				name: `${i + 1}`,
+				time: times[i],
+				segmentTime: times[i],
+				delta: Math.random() * 4 - 2,
+				diff: Math.random() * 4 - 2,
+				hasComparison: true
+			});
+		}
 	}
 }

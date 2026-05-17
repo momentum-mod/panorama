@@ -1,5 +1,7 @@
 import { OnPanelLoad, PanelHandler } from 'util/module-helpers';
 
+import { registerHUDCustomizerComponent } from 'common/hud-customizer';
+
 @PanelHandler()
 class HudSpectateHandler implements OnPanelLoad {
 	readonly panels = {
@@ -15,6 +17,14 @@ class HudSpectateHandler implements OnPanelLoad {
 	constructor() {
 		$.RegisterForUnhandledEvent('ObserverTargetChanged', () => this.update());
 		$.RegisterForUnhandledEvent('MomentumSpectatorModeChanged', (newMode) => this.onSpectatorModeChange(newMode));
+
+		registerHUDCustomizerComponent($.GetContextPanel(), {
+			name: 'Spectating Menu',
+			resizeX: false,
+			resizeY: false,
+			moveX: false,
+			moveY: true
+		});
 	}
 
 	onPanelLoad() {

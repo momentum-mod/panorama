@@ -1,10 +1,5 @@
-@use '../config' as *;
-
 .safeguard {
 	&__container {
-		height: 64px;
-		width: 64px;
-
 		transition-property: clip;
 		transition-timing-function: linear;
 		opacity: 1;
@@ -19,8 +14,6 @@
 	&__meter {
 		height: 100%;
 		width: 100%;
-		color: $white;
-		opacity: 0.75;
 		img-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
 	}
 }

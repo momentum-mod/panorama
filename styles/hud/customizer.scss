@@ -1,0 +1,646 @@
+@use '../config' as *;
+@use '../abstract/mixin';
+@use 'sass:color';
+
+$input-background: rgb(91, 91, 91);
+$input-background-hover: rgb(110, 110, 110);
+
+.hud-customizer {
+	width: 100%;
+	height: 100%;
+
+	visibility: collapse;
+	z-index: 1000;
+
+	&--enabled {
+		visibility: visible;
+	}
+}
+
+.hud-customizer-grid {
+	width: 100%;
+	height: 100%;
+	visibility: collapse;
+
+	.hud--customizer-enabled &--enabled {
+		visibility: visible;
+	}
+
+	&__line {
+		$this: &;
+		$color: rgb(255, 255, 255);
+
+		background-color: rgba(255, 255, 255, 0.05);
+		transition: background-color 0.05s ease-out 0s;
+
+		&--edge {
+			background-color: none;
+		}
+
+		&--x {
+			margin-left: -1px;
+			width: 1px;
+			height: 100%;
+		}
+
+		&--y {
+			margin-top: -1px;
+			width: 100%;
+			height: 1px;
+		}
+
+		&--highlight {
+			background-color: rgba($color, 0.3);
+		}
+
+		&--center {
+			background-color: rgba($color, 0.1);
+
+			&#{$this}--highlight {
+				background-color: rgba($color, 1);
+			}
+		}
+	}
+}
+
+.hud-customizer-settings {
+	width: 330px;
+	height: fit-children;
+
+	flow-children: down;
+	background-color: #222;
+	border-radius: 2px;
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	box-shadow: 0px 1px 4px black;
+
+	&__header {
+		width: 100%;
+		background-color: rgba(0, 0, 0, 0.5);
+		padding: 4px 8px;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+		margin-bottom: 5px;
+
+		&__title {
+			font-family: $font-monospace;
+			font-size: 12px;
+			font-weight: medium;
+			vertical-align: center;
+		}
+
+		&__close {
+			horizontal-align: right;
+			vertical-align: center;
+			width: 12px;
+			height: 12px;
+			wash-color: #bbb;
+			transition: wash-color 0.1s ease-in-out 0s;
+
+			&:hover {
+				wash-color: #fff;
+			}
+		}
+	}
+
+	&__component-list-container {
+		flow-children: down;
+		width: 100%;
+	}
+
+	&__component-list {
+		flow-children: down;
+		margin-left: 6px;
+		margin-right: 6px;
+		margin-bottom: 8px;
+		//border-radius: 2px;
+		width: 100%;
+		border: 1px solid rgba(255, 255, 255, 0.025);
+		background-color: rgba(0, 0, 0, 0.4);
+	}
+
+	&__component {
+		width: 100%;
+		padding: 2px 6px;
+
+		background-color: rgba(255, 255, 255, 0);
+		transition: background-color 0.1s ease-in-out 0s;
+
+		&:hover {
+			background-color: rgba(255, 255, 255, 0.05);
+		}
+
+		&:selected {
+			background-color: rgba(255, 255, 255, 0.1);
+		}
+
+		&__name {
+			vertical-align: center;
+			horizontal-align: left;
+
+			font-family: $font-monospace;
+			font-size: 11px;
+			font-weight: medium;
+		}
+
+		&__right {
+			flow-children: right;
+			horizontal-align: right;
+			height: 100%;
+			vertical-align: center;
+		}
+
+		&__checkbox:not(.spec-hack) {
+			margin-left: 4px;
+			width: 12px;
+			height: 12px;
+			vertical-align: center;
+
+			.TickBox {
+				width: 12px;
+				height: 12px;
+				margin: 0;
+				padding: 0;
+			}
+		}
+
+		&__button {
+			width: 16px;
+			height: 16px;
+			margin-left: 4px;
+			vertical-align: center;
+
+			& Image {
+				padding: 1px;
+				opacity: 0.4;
+				transition: opacity 0.1s ease-in-out 0s;
+			}
+
+			&:hover {
+				& Image {
+					opacity: 1;
+				}
+			}
+		}
+	}
+
+	&__global {
+		width: 100%;
+		flow-children: down;
+		margin: 4px 10px 6px 10px;
+	}
+
+	&__active {
+		flow-children: down;
+		width: 100%;
+		margin: 0px 10px 6px 10px;
+
+		&__header {
+			width: 100%;
+
+			font-size: 18px;
+			border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+			&__name {
+				font-family: $font-monospace;
+				font-weight: medium;
+				vertical-align: center;
+				font-size: 14px;
+				padding-bottom: 2px;
+			}
+		}
+
+		&__contents {
+			width: 100%;
+			flow-children: down;
+			margin-top: 4px;
+		}
+	}
+
+	&__row-wrapper {
+		height: fit-children;
+		width: 100%;
+		flow-children: down;
+
+		&--has-children {
+			width: 100%;
+			flow-children: down;
+			margin-left: 8px;
+		}
+
+		&--children-hidden {
+			height: 0px;
+		}
+	}
+
+	&__row {
+		height: 16px;
+		width: 100%;
+		flow-children: right;
+		margin-bottom: 4px;
+	}
+
+	@mixin name {
+		font-family: $font-monospace;
+		font-size: 11px;
+		vertical-align: center;
+		horizontal-align: left;
+	}
+
+	&__setting-label:not(.specificity-hack-fuck-css) {
+		@include name;
+	}
+
+	&__expand-arrow {
+		width: 16px;
+		height: 100%;
+
+		&--image {
+			vertical-align: center;
+			horizontal-align: left;
+			height: 10px;
+			width: 10px;
+			transform: rotateZ(-90deg);
+			wash-color: rgb(180, 180, 180);
+			transition: transform 0.15s ease-in-out 0s;
+		}
+		&--expanded {
+			transform: rotateZ(0deg);
+		}
+	}
+
+	&__numberentry {
+		horizontal-align: right;
+		vertical-align: center;
+		height: 16px;
+		margin-left: 4px;
+
+		& Button {
+			background-color: rgba(17, 17, 17, 0.7);
+			wash-color: none;
+
+			& Image {
+				padding: 4px;
+			}
+		}
+
+		& TextEntry {
+			width: fit-children;
+			text-align: center;
+			min-width: 24px;
+			horizontal-align: center;
+			padding: 1px 0 1px 6px;
+			font-family: $font-monospace;
+			font-size: 11px;
+			background-color: $input-background;
+
+			&:hover {
+				background-color: $input-background-hover;
+			}
+		}
+	}
+
+	&__checkbox {
+		width: 100%;
+		flow-children: none;
+		min-height: 16px;
+
+		& Label {
+			horizontal-align: left;
+			@include name;
+		}
+
+		& .TickBox {
+			horizontal-align: right;
+			vertical-align: center;
+			width: 16px;
+			height: 16px;
+			margin-right: 0;
+
+			background-color: $input-background;
+		}
+
+		&:hover:not(:selected) .TickBox {
+			background-color: $input-background-hover;
+		}
+	}
+
+	&__slider {
+		width: fill-parent-flow(1);
+		min-height: 16px;
+		padding: 0 8px;
+
+		#SliderTrack,
+		#SliderTrackProgress {
+			width: fill-parent-flow(1);
+			height: 8px;
+		}
+
+		#SliderTrackProgress {
+			background-color: gradient(linear, 0% 0%, 100% 0%, from(#1076a8), to(#57c8ff));
+		}
+
+		#SliderDefault,
+		#SliderDefault2 {
+			visibility: collapse;
+		}
+
+		&--text-entry {
+			width: 27px;
+			text-align: center;
+			horizontal-align: center;
+			padding: 1px 0 1px 6px;
+			font-family: $font-monospace;
+			font-size: 11px;
+			background-color: $input-background;
+
+			&:hover {
+				background-color: $input-background-hover;
+			}
+		}
+	}
+
+	&__colordisplay {
+		flow-children: right;
+		width: 100%;
+		height: 20px;
+		border-width: 0;
+		margin: 0;
+		padding: 0;
+
+		& Label {
+			@include name;
+			width: fill-parent-flow(1);
+			height: 20px;
+			vertical-align: center;
+		}
+
+		& Panel {
+			width: 16px;
+			margin: 0;
+			margin-right: 4px;
+			vertical-align: center;
+			border-radius: 2px;
+		}
+
+		& TextEntry {
+			font-size: 10px;
+			width: 60px;
+			padding: 1px 0 1px 6px;
+			font-family: $font-monospace;
+			vertical-align: center;
+			height: 16px;
+			margin: 0;
+			background-color: $input-background;
+
+			&:hover {
+				background-color: $input-background-hover;
+			}
+		}
+	}
+
+	&__dropdown {
+		height: 16px;
+		background-color: $input-background;
+
+		& Label {
+			@include name;
+			font-size: 10px;
+			text-transform: none;
+			padding: 0px 2px 0 6px;
+			vertical-align: center;
+		}
+
+		.DropDownIcon {
+			width: 12px;
+			height: 12px;
+			background-size: 10px;
+			align: center center;
+			box-shadow: none;
+			background-color: none;
+			margin-right: 4px;
+		}
+
+		&:hover .DropDownIcon {
+			background-color: none;
+		}
+	}
+
+	&__dropdown-menu {
+		Label {
+			font-size: 16px;
+		}
+	}
+
+	&__button {
+		height: fit-children;
+
+		Label {
+			font-family: 'Roboto Mono';
+			horizontal-align: center;
+			vertical-align: center;
+			font-weight: medium;
+			font-size: 12px;
+		}
+	}
+}
+
+.hud-customizer-overlay {
+	$border: $mid-blue;
+
+	z-index: 10;
+	flow-children: none;
+
+	&__name {
+		align: left top;
+		margin-left: 32px;
+		margin-top: 12px;
+		width: fit-children;
+
+		border: 1px $border none;
+		//border-bottom-width: 0px;
+		background-color: rgba(0, 0, 0, 0.7);
+		padding: 2px 8px;
+
+		font-family: $font-monospace;
+		font-size: 11px;
+		font-weight: medium;
+
+		// Set when component is positioned at top edge and this panel would otherwise be clipped
+		.hud-customizer-overlay--at-top & {
+			align: left bottom;
+			margin-top: 0px;
+			margin-bottom: 12px;
+			border-top-width: 0px;
+			border-bottom-width: 1px;
+		}
+	}
+
+	&__main {
+		height: 100%;
+		width: 100%;
+		border: 1px none $border;
+		margin: 32px;
+		transition: background-color 0.1s ease-in-out 0s;
+
+		.hud-customizer-overlay--dragging & {
+			animation-name: hud-customizer-overlay-blink;
+			animation-duration: 2s;
+			animation-iteration-count: infinite;
+			animation-timing-function: ease-in-out;
+		}
+
+		@at-root {
+			@keyframes hud-customizer-overlay-blink {
+				0% {
+					background-color: rgba($blue, 0.1);
+				}
+				50% {
+					background-color: rgba($blue, 0.2);
+				}
+				100% {
+					background-color: rgba($blue, 0.1);
+				}
+			}
+		}
+	}
+
+	&__resize-knobs {
+		width: 100%;
+		height: 100%;
+
+		$knobs: &;
+		$size: 14px;
+		$half: calc($size / 2);
+
+		margin: 32px - calc($size / 2);
+
+		&__knob {
+			width: $size;
+			height: $size;
+			visibility: collapse;
+
+			&--top {
+				align: center top;
+				cursor: size-ns;
+
+				#{$knobs}--resize-y & {
+					visibility: visible;
+				}
+			}
+
+			&--top-left {
+				align: left top;
+				cursor: size-nw-se;
+
+				#{$knobs}--resize-y#{$knobs}--resize-x & {
+					visibility: visible;
+				}
+			}
+
+			&--top-right {
+				align: right top;
+				cursor: size-ne-sw;
+
+				#{$knobs}--resize-y#{$knobs}--resize-x & {
+					visibility: visible;
+				}
+			}
+
+			&--left {
+				align: left center;
+				cursor: size-we;
+
+				#{$knobs}--resize-x & {
+					visibility: visible;
+				}
+			}
+
+			&--right {
+				align: right center;
+				cursor: size-we;
+
+				#{$knobs}--resize-x & {
+					visibility: visible;
+				}
+			}
+
+			&--bottom {
+				align: center bottom;
+				cursor: size-ns;
+
+				#{$knobs}--resize-y & {
+					visibility: visible;
+				}
+			}
+
+			&--bottom-left {
+				align: left bottom;
+				cursor: size-ne-sw;
+
+				#{$knobs}--resize-y#{$knobs}--resize-x & {
+					visibility: visible;
+				}
+			}
+
+			&--bottom-right {
+				align: right bottom;
+				cursor: size-nw-se;
+
+				#{$knobs}--resize-y#{$knobs}--resize-x & {
+					visibility: visible;
+				}
+			}
+
+			& Panel {
+				width: 100%;
+				height: 100%;
+				margin: 3px;
+				border-radius: 1px;
+				background-color: rgba(255, 255, 255, 0.8);
+				border: 1px solid rgba(0, 0, 0, 0.2);
+				box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.4);
+
+				transition-property: border, box-shadow, background-color;
+				transition-timing-function: ease-in-out;
+				transition-duration: 0.1s;
+			}
+
+			&:hover Panel {
+				background-color: rgba(180, 180, 180, 1);
+				border: 1px solid rgba(0, 0, 0, 0.4);
+				box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.9);
+			}
+		}
+	}
+}
+
+.hud-customizer-dragpanel {
+	cursor: size-all;
+
+	&__selected-border {
+		border-style: solid;
+		border-width: 1px;
+		border-color: black;
+	}
+}
+
+.dynamic-gradientpicker__container {
+	horizontal-align: right;
+	flow-children: right;
+}
+.dynamic-gradientpicker__colordisplay {
+	width: fit-children;
+	margin-left: 10px;
+}
+
+.dynamic-gradientpicker__colordisplay Label {
+	width: fit-children;
+	margin: 0;
+}
+
+.dynamic-gradientpicker__colordisplay Panel {
+	margin: 0;
+}
+
+.dynamic-gradientpicker__colordisplay TextEntry {
+	visibility: collapse;
+}

@@ -7,8 +7,9 @@
 		<include type="module" src="file://{scripts}/hud/safeguard-indicator.ts" />
 	</scripts>
 
-	<MomHudSafeguardIndicator class="h-align-center v-align-center" alternateTicks="false">
+	<MomHudSafeguardIndicator alternateTicks="false">
 		<Panel id="SafeguardContainer" class="safeguard__container">
+        <!-- This is remade in js whenever the size changes to re-rasterize the svg -->
 			<Image id="SafeguardMeter" class="safeguard__meter" src="file://{images}/hud/safeguard-indicator.svg" textureheight="64" />
 		</Panel>
 	</MomHudSafeguardIndicator>

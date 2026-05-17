@@ -4,9 +4,6 @@
 .weaponselection {
 	$root: &;
 
-	// TODO: heavy top margin to separate from mapinfo, as we dont have a center-right hud space.
-	// Ideally this should be absolute layouted.
-	margin: 250px 0 5px 0;
 	flow-children: up;
 	width: 350px;
 	height: fit-children;
@@ -20,6 +17,10 @@
 		opacity: 0;
 	}
 
+	&--show {
+		opacity: 1;
+	}
+
 	$trans: 0.15s ease-out 0s;
 
 	&__wrapper {
@@ -30,26 +31,17 @@
 		height: fit-children;
 		align: right center;
 
-		transform: translatex($weapsel-notch-width); // hide notch till deployed
 		transition: transform $trans;
 
 		&--deployed {
-			background-color: $weapsel-deployed-background-color;
-			transform: translatex(0);
-
-			& #{$root}__weplabel {
-				color: $weapsel-deployed-name-color;
-			}
-			& #{$root}__keybind {
-				color: $weapsel-deployed-keybind-color;
-			}
+			//Used for detection in js
 		}
 	}
 
 	&__weplabel {
 		@include mixin.font-header();
+		letter-spacing: 1px;
 		font-weight: bold;
-		font-size: $weapsel-name-font-size;
 		text-align: right;
 		text-overflow: clip;
 

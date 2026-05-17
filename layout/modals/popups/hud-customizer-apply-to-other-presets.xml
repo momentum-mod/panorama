@@ -1,0 +1,47 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+	
+	<scripts>
+		<include type="module" src="file://{scripts}/modals/popups/hud-customizer-apply-to-other-presets.ts" />
+	</scripts>
+
+    <snippets>
+        <snippet name="preset-select">
+            <Panel>
+                <ToggleButton id="ToggleButton" class="button togglebutton togglebutton--blue h-align-left" style="min-width: 170px">
+                    <Label id="ToggleButtonLabel" class="button__text" text="" />
+                </ToggleButton>
+                <DropDown id="DropDown" class="dropdown h-align-right" menuclass="dropdown-menu" />
+            </Panel>
+        </snippet>
+    </snippets>
+	
+	<PopupCustomLayout class="PopupPanel Hidden" popupbackground="dim">
+		<Panel class="row h-align-center mt-0">
+			<Label id="TitleLabel" class="generic-popup__title" text="Apply Presets" />
+		</Panel>
+        <Panel class="row h-align-center mt-4 generic-popup__button-row">
+			<Button class="button mr-4" onactivate="HudCustomizerApplyToOtherPresetsHandler.setAllButtons(true)">
+				<Label class="button__text" text="Enable All" />
+			</Button>
+            <Button id="CancelButton" class="button" onactivate="HudCustomizerApplyToOtherPresetsHandler.setAllButtons(false)">
+				<Label class="button__text" text="Disable All" />
+			</Button>
+		</Panel>
+
+		<Panel id="GamemodePresetContainer" class="flow-down">
+            <!-- Populated by TS -->
+        </Panel>
+
+		<Panel class="row h-align-center mt-4 generic-popup__button-row">
+			<Button class="button button--green mr-4">
+				<Label class="button__text" text="Apply To Selected" onactivate="HudCustomizerApplyToOtherPresetsHandler.onOkButtonPressed()"/>
+			</Button>
+            <Button id="CancelButton" class="button" onactivate="UiToolkitAPI.CloseAllVisiblePopups()">
+				<Label class="button__text" text="#Common_Cancel" />
+			</Button>
+		</Panel>
+	</PopupCustomLayout>
+</root>

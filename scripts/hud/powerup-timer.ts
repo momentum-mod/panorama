@@ -1,7 +1,8 @@
 import { PanelHandler } from 'util/module-helpers';
-import { RegisterHUDPanelForGamemode } from 'util/register-for-gamemodes';
-import { GamemodeCategory } from 'common/web/enums/gamemode.enum';
-import { GamemodeCategories } from 'common/web/maps/gamemodes.map';
+import { GamemodeCategory, GamemodeCategoryToGamemode } from 'common/web/enums/gamemode.enum';
+
+import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
+import { getTextShadowFast } from 'common/hud-customizer';
 
 @PanelHandler()
 class PowerupTimerHandler {
@@ -25,9 +26,36 @@ class PowerupTimerHandler {
 	};
 
 	constructor() {
-		RegisterHUDPanelForGamemode({
-			gamemodes: GamemodeCategories.get(GamemodeCategory.DEFRAG),
-			handledEvents: [{ event: 'HudProcessInput', panel: $.GetContextPanel(), callback: () => this.onUpdate() }]
+		registerHUDCustomizerComponent($.GetContextPanel(), {
+			name: 'Powerup Timer',
+			resizeX: false,
+			resizeY: false,
+			gamemode: GamemodeCategoryToGamemode.get(GamemodeCategory.DEFRAG),
+			events: { event: 'HudProcessInput', panel: $.GetContextPanel(), callbackFn: () => this.onUpdate() },
+			dynamicStyles: {
+				font: {
+					name: 'Font',
+					type: CustomizerPropertyType.FONT_PICKER,
+					targetPanel: '.powerup-timer__label',
+					styleProperty: 'fontFamily'
+				},
+				fontSize: {
+					name: 'Font Size',
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					targetPanel: '.powerup-timer__label',
+					styleProperty: 'fontSize',
+					valueFn: (value) => `${value}px`
+				},
+				fontColor: {
+					name: 'Font Color',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					targetPanel: '.powerup-timer__label',
+					styleProperty: 'color',
+					callbackFunc: (panel, value) => {
+						panel.style.textShadowFast = getTextShadowFast(value as rgbaColor, 0.9);
+					}
+				}
+			}
 		});
 	}
 

@@ -3,75 +3,68 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 
-	<Hud hittest="false">
+	<Hud class="hud" hittest="false" useglobalcontext="false">
 		<!-- Non-interactive HUD elements have hit test disabled for efficiency -->
 
 		<!-- In world UI is first to make sure it shows up behind all "screen-looking" UI -->
-		<Panel id="HudInWorld" hittest="false" hittestchildren="false">
+		<Panel class="hud__in-world" hittest="false" hittestchildren="false">
 			<MomHudGhostEntities />
-			<MomHudConcEntities />
+			<MomHudConcEntities id="ConcEntities" />
 			<MomHudDamageIndicator />
-			<MomHudCgaz />
+			<MomHudCgaz /> <!-- TODO: Not in customizer -->
 			<MomHudReticle />
 		</Panel>
 
-		<!-- Center of screen HUD laid out vertically top-to-bottom -->
-		<Panel id="HudCenter" hittest="false" hittestchildren="false">
-			<MomHudSafeguardIndicator />
-			<MomHudJumpTiming />
-		</Panel>
+		<!-- Customizer grid needs to live outside HudCustomizer layout so it's below everything else in z-order -->
+		<Panel id="HudCustomizerGrid" class="hud-customizer-grid" hittest="false" hittestchildren="false" />
 
-		<!-- HUD anchored to top-left corner of screen, laid out vertically top-to-bottom -->
-		<Panel id="HudTopLeft" hittest="false" hittestchildren="false">
-			<HudComparisons />
-		</Panel>
+        <!-- General HUD Elements -->
+        <HudShowPos id="ShowPos" />
+        <MomHudSafeguardIndicator id="SafeguardIndicator"/>
+        
+        <MomHudMapInfo id="MapInfo" />
+        <MomHudSpecInfo id="SpecInfo" />
+        <MomHudChat id="Chat" />
+        <MomHudStatus id="Status" />
+		<MomHudTimer id="Timer" />
+        <HudComparisons id="Comparisons" />
+        <MomHudSpeedometer id="Speedometer" />
+        <MomHudKeypress id="KeyPress"/>
+        <MomHudWeaponSelection id="WeaponSelection" /> 
+		
+        <!-- Gamemode Specific HUD elements -->
+        <MomHudAmmo id="Ammo"/>
+        <MomHudStrafeTrainer id="StrafeTrainer"/> 
+        <MomHudJumpStats id="JumpStats"/>
+        <MomHudStickyCharge id="StickyCharge" />
+		<MomHudStickyCount id="StickyCount" />
+        <MomHudConcCooktime id="ConcCooktime" />
+        <MomHudGroundboost id="Groundboost" />
+        <MomHudDFJump id="DFJump"/>
+        <MomHudPowerupTimer id="PowerupTimer"/>
+        <MomHudAhopSprint id="AhopSprint"/>
 
-		<!-- Anchored to below the center of the screen, laid out from top to bottom -->
-		<!-- misleading name, not 'bottom-center' but 'below center' -->
-		<Panel id="HudBottomCenter" hittest="false" hittestchildren="false">
-			<!-- Anchored on Bottom-center, laid out from top to bottom -->
-			<ConVarEnabler convar="mom_zoning_enable" togglevisibility="true">
-				<MomHudZoning />
-			</ConVarEnabler>
-			<MomHudStrafeTrainer />
-			<MomHudSpeedometer />
-			<MomHudConcCooktime />
-			<MomHudStickyCharge />
-			<MomHudStickyCount />
-			<ConVarEnabler convar="mom_zoning_enable" invert="true" togglevisibility="true">
-				<MomHudStatus />
-			</ConVarEnabler>
-			<ConVarEnabler convar="mom_zoning_enable" invert="true" togglevisibility="true">
-				<MomHudTimer />
-			</ConVarEnabler>
-			<MomHudStrafeSync />
-			<MomHudGroundboost />
-			<HudHintText id="HudHintText" />
-		</Panel>
 
-		<!-- Anchored to the bottom-left corner of the screen, laid out from top to bottom -->
-		<Panel id="HudLowerLeft" hittest="false" hittestchildren="true">
-			<MomHudPowerupTimer />
-			<HudStaticMenu />
-			<MomHudChat />
-		</Panel>
+        <!-- NOT IN CUSTOMIZER -->
+		<ConVarEnabler convar="mom_zoning_enable" togglevisibility="true">
+			<MomHudZoning /> <!-- TODO: HudBottomCenter, not in customizer -->
+		</ConVarEnabler>
 
-		<!-- Anchored on lower-right corner, laid out from top to bottom -->
-		<Panel id="HudBottomRight" hittest="false" hittestchildren="false">
-			<MomHudDFJump />
-			<MomHudAmmo />
-			<MomHudKeyPress />
-		</Panel>
+        <MomHudJumpTiming /> <!-- TODO: HudCenter, not added to customizer -->
+		
 
-		<!-- Anchored in top right corner of screen, laid out from top-to-bottom -->
-		<Panel id="HudTopRight" hittest="false" hittestchildren="false">
-			<MomHudVersionInfo />
-			<MomHudMapInfo />
-			<MomHudSpecInfo />
-			<MomHudWeaponSelection />
-		</Panel>
+        <!-- NEEDS C++ WORK -->
+       
+		
+		
+        <!-- No idea -->
+        <HudHintText id="HudHintText" /> <!-- TODO: not in customizer, no idea how to even check what this does -->
 
-		<HudBlurTarget id="HudBlur" blurrects="TabMenu Spectator" class="hud-blur" hittest="false" hittestchildren="false">
+        <!-- Most likely gonna get removed -->
+		<!-- <HudBoneCounts id="BoneCount" /> TODO: HudTopCenter, not in customizer, probably gonna get nuked -->
+        <!-- <MomHudStrafeSync id="StrafeSync" /> This is broken and probably not worth fixing --> 
+
+		<HudBlurTarget id="HudBlur" blurrects="TabMenuWrapper Spectator" class="hud-blur" hittest="false" hittestchildren="false">
 			<BackbufferImagePanel class="full" />
 		</HudBlurTarget>
 
@@ -79,27 +72,24 @@
 			<BackbufferImagePanel class="full" />
 		</HudBlurTarget>
 
-		<!-- HUD anchored to top center of screen, laid out vertically top-to-bottom
-		-  NOTE: Not really set up properly - HudTeamCounter should dynamically move
-		-        between HudTopCenter and HudBottomCenter, but instead it just moves
-		-        itself via code.  So nothing can go in here that should appear
-		-        while HudTeamCounter is visible
-		-->
-		<Panel id="HudTopCenter" hittest="false">
-			<HudShowPos />
-			<HudBoneCounts />
-			<MomHudSpectate id="Spectator" />
-			<MomHudJumpStats />
+		<Panel id="ZoningContainer" hittestchildren="true">
+			<ZoneMenu id="ZoneMenu" hittest="true" hittestchildren="true" /> <!-- TODO: standalone panel, not in customizer -->
 		</Panel>
 
-		<Panel id="ZoningContainer" hittestchildren="true">
-			<ZoneMenu id="ZoneMenu" hittest="true" hittestchildren="true" />
-		</Panel>
+
+        <MomHudSpectate id="Spectator" />
+
+        <HudStaticMenu id="StaticMenu" /> <!-- TODO: not in customizer, needs c++ work -->
 
 		<!-- This container is here so we can move the leaderboard in and out of it during the end-of-match sequence -->
-		<Panel id="TabMenuContainer" class="w-full h-full" hittest="false" hittestchildren="true">
+		<!-- TODO: HudLeaderboards had w-full h-full removed before -->
+		<Panel id="TabMenuContainer" hittest="false" hittestchildren="true">
 			<HudTabMenu id="TabMenu" hittest="true" />
 		</Panel>
+		
+
+        <!-- This must be placed after all panels registered with hud customizer -->
+		<HudCustomizer />
 
 		<!-- Make sure these are at the bottom to get the z-order right -->
 		<ToastManager />
