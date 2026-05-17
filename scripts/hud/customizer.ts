@@ -1194,6 +1194,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		this.panels.settings.SetDialogVariable('active_name', component.properties.name);
 
 		const childVisibilityMap = new Map<StyleID, Array<{ panel: Panel; showWhen?: any[] }>>();
+		const refreshMap = new Map<StyleID, () => void>();
 
 		const updateChildVisibility = (styleID: StyleID, newValue: any) => {
 			const entries = childVisibilityMap.get(styleID);
@@ -1261,6 +1262,10 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 						$.Schedule(0.1, () => this.updateActiveComponentOverlayPosition());
 					});
 
+					refreshMap.set(styleID, () => {
+						numberEntry.value = (resolveValue(component.dynamicStyles[styleID]?.value) as number) ?? 0;
+					});
+
 					break;
 				}
 
@@ -1282,6 +1287,10 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 						// Wait for panorama to layout the panel in case the size changes
 						$.Schedule(0.1, () => this.updateActiveComponentOverlayPosition());
+					});
+
+					refreshMap.set(styleID, () => {
+						checkbox.checked = (resolveValue(component.dynamicStyles[styleID]?.value) as boolean) ?? false;
 					});
 
 					break;
@@ -1319,6 +1328,12 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 						$.Schedule(0.1, () => this.updateActiveComponentOverlayPosition());
 					});
 
+					refreshMap.set(styleID, () => {
+						const newValue = resolveValue(component.dynamicStyles[styleID]?.value) as number;
+						slider.value = newValue;
+						textEntry.text = newValue.toFixed(0);
+					});
+
 					break;
 				}
 
@@ -1352,6 +1367,10 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 						$.Schedule(0.1, () => this.updateActiveComponentOverlayPosition());
 					});
 
+					refreshMap.set(styleID, () => {
+						dropdown.SetSelected(resolveValue(component.dynamicStyles[styleID]?.value) as string);
+					});
+
 					break;
 				}
 
@@ -1369,6 +1388,12 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 						const value = colorDisplay.color;
 						component.setDynamicStyle(styleID, value);
 						updateChildVisibility(styleID, value);
+					});
+
+					refreshMap.set(styleID, () => {
+						colorDisplay.color =
+							(resolveValue(component.dynamicStyles[styleID]?.value) as rgbaColor) ??
+							'rgba(255, 255, 255, 1)';
 					});
 
 					break;
@@ -1400,6 +1425,12 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 						updateChildVisibility(styleID, value);
 					});
 
+					refreshMap.set(styleID, () => {
+						const newValue = resolveValue(component.dynamicStyles[styleID]?.value);
+						startColor.color = (newValue[0] as rgbaColor) ?? 'rgba(255, 255, 255, 1)';
+						endColor.color = (newValue[1] as rgbaColor) ?? 'rgba(255, 255, 255, 1)';
+					});
+
 					break;
 				}
 
@@ -1427,6 +1458,10 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 					});
 
 					this.updateActiveComponentOverlayPosition();
+
+					refreshMap.set(styleID, () => {
+						dropdown.SetSelected(resolveValue(component.dynamicStyles[styleID]?.value) as string);
+					});
 				}
 			}
 
@@ -1437,7 +1472,8 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 							label: 'Reset Style',
 							jsCallback: () => {
 								component.resetSingle(styleID);
-								this.updateActiveComponentSettings();
+								refreshMap.get(styleID)?.();
+								updateChildVisibility(styleID, resolveValue(component.dynamicStyles[styleID]?.value));
 							}
 						}
 					]);
