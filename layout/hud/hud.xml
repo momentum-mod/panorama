@@ -52,11 +52,7 @@
 
         <MomHudJumpTiming /> <!-- TODO: HudCenter, not added to customizer -->
 		
-
-        <!-- NEEDS C++ WORK -->
-       
-		
-		
+        
         <!-- No idea -->
         <HudHintText id="HudHintText" /> <!-- TODO: not in customizer, no idea how to even check what this does -->
 

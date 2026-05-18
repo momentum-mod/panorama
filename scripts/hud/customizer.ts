@@ -257,24 +257,20 @@ class Component {
 
 	/** Gets serializable parts of the components for saving */
 	getLayout(): ComponentLayout {
-		const layout: ComponentLayout = {
+		return {
 			enabled: this.enabled,
 			offsetX: this.offsetX,
 			offsetY: this.offsetY,
-			width: this.width,
-			height: this.height
+			...(this.width !== null && { width: this.width }),
+			...(this.height !== null && { height: this.height }),
+			...(this.dynamicStyles && {
+				dynamicStyles: Object.fromEntries(
+					Object.entries(this.dynamicStyles)
+						.filter(([_, dynamicStyle]) => dynamicStyle.value !== null)
+						.map(([styleID, dynamicStyle]) => [styleID, dynamicStyle.value])
+				)
+			})
 		};
-
-		if (this.dynamicStyles) {
-			layout.dynamicStyles = {};
-
-			for (const [styleID, dynamicStyle] of Object.entries(this.dynamicStyles)) {
-				if (dynamicStyle.value === null) continue;
-				layout.dynamicStyles[styleID] = dynamicStyle.value;
-			}
-		}
-
-		return layout;
 	}
 
 	/** Reset a component to its original state. */
@@ -906,45 +902,38 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 	save(): void {
 		if (this.currentPreset === 'default') return;
 
+		const currentLayout = Object.fromEntries(
+			Object.entries(this.components).map(([id, component]) => [id, component.getLayout()])
+		);
+
+		const getLayoutDelta = (layoutA: HudLayout, layoutB: HudLayout) => {
+			const delta: HudLayout = {};
+			for (const [id, componentLayout] of Object.entries(layoutA)) {
+				if (!isAsymmetricDeepEqual(componentLayout, layoutB[id])) {
+					delta[id] = componentLayout;
+				}
+			}
+			return delta;
+		};
+
 		// TODO: Check we don't potentially lose data if a component fails to register once, which would
 		// cause previous data to get wiped.
-		const saveData: HudLayout = {};
-
-		//Strip out components that are exactly the same as default layout
-		for (const [id, component] of Object.entries(this.components)) {
-			const layout = component.getLayout();
-			const defaultLayout = HudCustomizerHandler.defaultLayout[id];
-
-			if (!isDeepEqual(layout, defaultLayout)) {
-				saveData[id] = layout;
-			}
-		}
-		//It's possible there will be nothing to save, don't write files if that's the case
-		if (Object.keys(saveData).length === 0) {
-			return;
-		}
+		const saveData = getLayoutDelta(currentLayout, HudCustomizerHandler.defaultLayout);
 
 		//Check if remaining components are the same as current preset
 		//This is done to not save unnecessarily when switching between presets
-		const isSaveDataSameAsCurrentPreset = () => {
-			for (const [id, componentLayout] of Object.entries(saveData)) {
-				const presetLayout = HudCustomizerHandler.presetLayout[id];
-				if (!isDeepEqual(componentLayout, presetLayout)) return false;
-			}
-			return true;
-		};
+		const savedPreset = getLayoutDelta(HudCustomizerHandler.presetLayout, HudCustomizerHandler.defaultLayout);
+		if (isStrictDeepEqual(saveData, savedPreset)) return;
 
 		const gamemodeID = this.currentGamemodeInfo.id;
+		const fullPresetName = `${gamemodeID}_${this.currentPreset}`;
+		// Serialization done in C++.
+		$.Msg('SAVING');
+		this.panels.customizer.saveLayout(fullPresetName, saveData);
 
-		if (!isSaveDataSameAsCurrentPreset()) {
-			const fullPresetName = `${gamemodeID}_${this.currentPreset}`;
-			// Serialization done in C++.
-			this.panels.customizer.saveLayout(fullPresetName, saveData);
-
-			if (this.unsavedPresets.has(fullPresetName)) {
-				this.unsavedPresets.delete(fullPresetName);
-				this.presetList.add(fullPresetName);
-			}
+		if (this.unsavedPresets.has(fullPresetName)) {
+			this.unsavedPresets.delete(fullPresetName);
+			this.presetList.add(fullPresetName);
 		}
 	}
 
@@ -963,6 +952,10 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		this.setActiveComponent(this.activeComponent);
 		this.updatePresetSettings();
 		this.waitForActiveComponentLayouting();
+
+		if (this.currentPreset !== 'default' && this.currentPreset !== undefined) {
+			this.defaultPresetStateOff();
+		}
 	}
 
 	disableEditing(): void {
@@ -1021,6 +1014,8 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			Component.register(customizerSettings.panel, customizerSettings.properties);
 			this.panels.activeComponentSettings.style.visibility = 'visible';
 		}
+
+		$.Schedule(0.1, () => this.updateActiveComponentOverlayPosition());
 	}
 
 	generateComponentList() {
@@ -2096,7 +2091,7 @@ function cssPanelLookup<T extends Panel>(panel: GenericPanel, selector: QuerySel
  * @param b Component Layout Object
  * @returns boolean
  */
-function isDeepEqual(a: any, b: any): boolean {
+function isAsymmetricDeepEqual(a: any, b: any): boolean {
 	if (a === b) return true;
 
 	if (typeof a !== 'object' || a === null || typeof b !== 'object' || b === null) {
@@ -2105,14 +2100,13 @@ function isDeepEqual(a: any, b: any): boolean {
 
 	if (Array.isArray(a)) {
 		if (!Array.isArray(b) || a.length !== b.length) return false;
-		return a.every((val, index) => isDeepEqual(val, b[index]));
+		return a.every((val, index) => isAsymmetricDeepEqual(val, b[index]));
 	}
 
 	const keysA = Object.keys(a);
 
 	for (const key of keysA) {
-		// Combined the check for key existence and the recursive equality check
-		if (Object.hasOwn(b, key) && !isDeepEqual(a[key], b[key])) {
+		if (Object.hasOwn(b, key) && !isAsymmetricDeepEqual(a[key], b[key])) {
 			return false;
 		}
 	}
@@ -2120,10 +2114,28 @@ function isDeepEqual(a: any, b: any): boolean {
 	return true;
 }
 
-/**
- * Deeply merges multiple objects into a new object.
- * Arrays and primitives are overwritten; nested objects are merged recursively.
- */
+function isStrictDeepEqual(a: any, b: any): boolean {
+	if (a === b) return true;
+
+	if (typeof a !== 'object' || a === null || typeof b !== 'object' || b === null) return false;
+
+	if (Array.isArray(a)) {
+		if (!Array.isArray(b) || a.length !== b.length) return false;
+		return a.every((val, index) => isStrictDeepEqual(val, b[index]));
+	}
+
+	const keysA = Object.keys(a);
+	const keysB = Object.keys(b);
+
+	if (keysA.length !== keysB.length) return false;
+
+	for (const key of keysA) {
+		if (!Object.hasOwn(b, key) || !isStrictDeepEqual(a[key], b[key])) return false;
+	}
+
+	return true;
+}
+
 function deepMerge<T extends Record<string, any>>(...objects: Partial<T>[]): T {
 	const isObject = (item: unknown) => Boolean(item && typeof item === 'object' && !Array.isArray(item));
 
@@ -2137,7 +2149,6 @@ function deepMerge<T extends Record<string, any>>(...objects: Partial<T>[]): T {
 			if (isObject(accValue) && isObject(objValue)) {
 				acc[key] = deepMerge(accValue, objValue);
 			} else {
-				// Arrays and primitives are assigned directly
 				acc[key] = objValue;
 			}
 		});
