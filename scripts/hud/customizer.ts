@@ -953,7 +953,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		this.updatePresetSettings();
 		this.waitForActiveComponentLayouting();
 
-		if (this.currentPreset !== 'default' && this.currentPreset !== undefined) {
+		if (this.currentPreset !== undefined && this.currentPreset !== 'default') {
 			this.defaultPresetStateOff();
 		}
 	}
@@ -1011,7 +1011,10 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 		if (this.customizerReady) {
 			const customizerSettings = this.components['CustomizerSettings'];
-			Component.register(customizerSettings.panel, customizerSettings.properties);
+			this.components['CustomizerSettings'] = Component.register(
+				customizerSettings.panel,
+				customizerSettings.properties
+			);
 			this.panels.activeComponentSettings.style.visibility = 'visible';
 		}
 
@@ -1622,22 +1625,10 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 	}
 
 	toggleSelectOnRightClick(enabled: boolean): void {
-		if (enabled) {
-			for (const component of Object.values(this.components)) {
-				if (component.dragPanel) {
-					component.dragPanel.SetPanelEvent('oncontextmenu', () => this.setActiveComponent(component));
-				} else {
-					component.panel.SetPanelEvent('oncontextmenu', () => this.setActiveComponent(component));
-				}
-			}
-		} else {
-			for (const component of Object.values(this.components)) {
-				if (component.dragPanel) {
-					component.dragPanel.ClearPanelEvent('oncontextmenu');
-				} else {
-					component.panel.ClearPanelEvent('oncontextmenu');
-				}
-			}
+		for (const component of Object.values(this.components)) {
+			const target = component.dragPanel ?? component.panel;
+			if (enabled) target.SetPanelEvent('oncontextmenu', () => this.setActiveComponent(component));
+			else target.ClearPanelEvent('oncontextmenu');
 		}
 	}
 
@@ -1823,8 +1814,9 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 			if (gridline) {
 				gridline.panel.AddClass('hud-customizer-grid__line--highlight');
-				this.activeGridlines[axis] = gridline;
 			}
+
+			this.activeGridlines[axis] = gridline;
 		}
 	}
 
@@ -1984,7 +1976,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 				const knob = $.CreatePanel('Button', this.panels.resizeKnobs, `Resize_${DragMode[dir]}`, {
 					class:
 						'hud-customizer-overlay__resize-knobs__knob ' +
-						`hud-customizer-overlay__resize-knobs__knob${DragMode[dir].toLowerCase().replace('resize_', '--').replace('_', '-')}`,
+						`hud-customizer-overlay__resize-knobs__knob${DragMode[dir].toLowerCase().replaceAll('resize_', '--').replace('_', '-')}`,
 					draggable: true,
 					hittest: true,
 					hittestchildren: false
