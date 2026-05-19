@@ -928,12 +928,12 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		const gamemodeID = this.currentGamemodeInfo.id;
 		const fullPresetName = `${gamemodeID}_${this.currentPreset}`;
 		// Serialization done in C++.
-		$.Msg('SAVING');
-		this.panels.customizer.saveLayout(fullPresetName, saveData);
+		const isSaved = this.panels.customizer.saveLayout(fullPresetName, saveData);
 
-		if (this.unsavedPresets.has(fullPresetName)) {
+		if (isSaved) {
 			this.unsavedPresets.delete(fullPresetName);
 			this.presetList.add(fullPresetName);
+			ToastAPI.CreateToast('', 'Saved!', `Preset ${this.currentPreset} has been saved!`, 2, 10, '', 'blue');
 		}
 	}
 
