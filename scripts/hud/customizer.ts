@@ -919,11 +919,11 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		// TODO: Check we don't potentially lose data if a component fails to register once, which would
 		// cause previous data to get wiped.
 		const saveData = getLayoutDelta(currentLayout, HudCustomizerHandler.defaultLayout);
+		const savedPreset = getLayoutDelta(HudCustomizerHandler.presetLayout, HudCustomizerHandler.defaultLayout);
 
 		//Check if remaining components are the same as current preset
 		//This is done to not save unnecessarily when switching between presets
-		const savedPreset = getLayoutDelta(HudCustomizerHandler.presetLayout, HudCustomizerHandler.defaultLayout);
-		if (isStrictDeepEqual(saveData, savedPreset)) return;
+		if (isSymmetricDeepEqual(saveData, savedPreset)) return;
 
 		const gamemodeID = this.currentGamemodeInfo.id;
 		const fullPresetName = `${gamemodeID}_${this.currentPreset}`;
@@ -933,6 +933,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		if (isSaved) {
 			this.unsavedPresets.delete(fullPresetName);
 			this.presetList.add(fullPresetName);
+			HudCustomizerHandler.presetLayout = this.getPresetLayout(this.currentPreset);
 			ToastAPI.CreateToast('', 'Saved!', `Preset ${this.currentPreset} has been saved!`, 2, 10, '', 'blue');
 		}
 	}
@@ -2010,7 +2011,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 		if (!presetLayout) {
 			$.persistentStorage.setItem(`hud-customizer.preset.${gamemodeID}`, 'default');
-			this.currentPreset = 'default';
+			this.changePreset('default');
 			$.Warning(`Could not load ${gamemodeID}_${preset}.kv3 from /cfg/hud`);
 		}
 
@@ -2078,6 +2079,7 @@ function cssPanelLookup<T extends Panel>(panel: GenericPanel, selector: QuerySel
 
 /**
  * Compares two layouts of components.
+ * Used for saving
  * If B has properties that are missing from A, components are still treated as equal
  * @param a Component Layout Object
  * @param b Component Layout Object
@@ -2106,23 +2108,30 @@ function isAsymmetricDeepEqual(a: any, b: any): boolean {
 	return true;
 }
 
-function isStrictDeepEqual(a: any, b: any): boolean {
+/**
+ * Checks if two hud layout's are different symmetrically, ignores null values
+ * Used for saving
+ * @param a Hud Layout
+ * @param b Hud Layout
+ * @returns boolean
+ */
+function isSymmetricDeepEqual(a: any, b: any): boolean {
 	if (a === b) return true;
 
-	if (typeof a !== 'object' || a === null || typeof b !== 'object' || b === null) return false;
+	if (typeof a !== 'object' || typeof b !== 'object' || a === null || b === null) return false;
 
 	if (Array.isArray(a)) {
 		if (!Array.isArray(b) || a.length !== b.length) return false;
-		return a.every((val, index) => isStrictDeepEqual(val, b[index]));
+		return a.every((val, index) => isSymmetricDeepEqual(val, b[index]));
 	}
 
-	const keysA = Object.keys(a);
-	const keysB = Object.keys(b);
+	const keysA = Object.keys(a).filter((k) => a[k] !== null && a[k] !== undefined);
+	const keysB = Object.keys(b).filter((k) => b[k] !== null && b[k] !== undefined);
 
 	if (keysA.length !== keysB.length) return false;
 
 	for (const key of keysA) {
-		if (!Object.hasOwn(b, key) || !isStrictDeepEqual(a[key], b[key])) return false;
+		if (!Object.hasOwn(b, key) || !isSymmetricDeepEqual(a[key], b[key])) return false;
 	}
 
 	return true;
