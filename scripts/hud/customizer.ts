@@ -437,41 +437,32 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 				selectOnRightClick: {
 					name: 'Select Component With Right Click',
 					type: CustomizerPropertyType.CHECKBOX,
-					callbackFunc: (_, value) => {
-						this.toggleSelectOnRightClick(value);
-					}
+					callbackFunc: (_, value) => this.toggleSelectOnRightClick(value)
 				},
 				selectedBorder: {
 					name: 'Enable Selected Component Border',
 					type: CustomizerPropertyType.CHECKBOX,
-					callbackFunc: (_, value) => {
-						this.panels.dragPanel.SetHasClass('hud-customizer-dragpanel__selected-border', value);
-					}
+					callbackFunc: (_, value) =>
+						this.panels.dragPanel.SetHasClass('hud-customizer-dragpanel__selected-border', value)
 				},
 				enableGrid: {
 					name: 'Enable Grid',
 					type: CustomizerPropertyType.CHECKBOX,
 					children: [{ styleID: 'gridSize', showWhen: true }],
-					callbackFunc: (_, value) => {
-						this.panels.grid.SetHasClass('hud-customizer-grid--enabled', value);
-						this.createGridLines(this.gridSize);
-					}
+					callbackFunc: (_, value) => this.panels.grid.SetHasClass('hud-customizer-grid--enabled', value),
+					onChanged: () => this.createGridLines(this.gridSize)
 				},
 				gridSize: {
 					name: 'Grid Size',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
-					callbackFunc: (_, value) => {
-						this.gridSize = value;
-						this.createGridLines(this.gridSize);
-					},
+					callbackFunc: (_, value) => (this.gridSize = value),
+					onChanged: () => this.createGridLines(this.gridSize),
 					settingProps: { min: 4, max: 12 }
 				},
 				enableSnapping: {
 					name: 'Enable Snapping',
 					type: CustomizerPropertyType.CHECKBOX,
-					callbackFunc: (_, value) => {
-						this.enableSnapping = value;
-					}
+					callbackFunc: (_, value) => (this.enableSnapping = value)
 				},
 				defaultStyles: {
 					name: 'Default Styles',
@@ -488,16 +479,14 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 				fontPrimary: {
 					name: 'Primary',
 					type: CustomizerPropertyType.FONT_PICKER,
-					callbackFunc: (_, value) => {
-						this.updateReferencedValue('fontPrimary', value);
-					}
+					callbackFunc: (_, value) => (Component.referencedValues['fontPrimary'] = value),
+					onChanged: (value) => this.updateReferencedValue('fontPrimary', value)
 				},
 				fontSecondary: {
 					name: 'Secondary',
 					type: CustomizerPropertyType.FONT_PICKER,
-					callbackFunc: (_, value) => {
-						this.updateReferencedValue('fontSecondary', value);
-					}
+					callbackFunc: (_, value) => (Component.referencedValues['fontSecondary'] = value),
+					onChanged: (value) => this.updateReferencedValue('fontSecondary', value)
 				},
 				colors: {
 					name: 'Colors',
@@ -514,38 +503,40 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 				gainColor: {
 					name: 'Gain',
 					type: CustomizerPropertyType.COLOR_PICKER,
-					callbackFunc: (_, value) => {
-						this.updateReferencedValue('gainColor', value);
-					}
+					callbackFunc: (_, value) => (Component.referencedValues['gainColor'] = value),
+					onChanged: (value) => this.updateReferencedValue('gainColor', value)
 				},
 				lossColor: {
 					name: 'Loss',
 					type: CustomizerPropertyType.COLOR_PICKER,
-					callbackFunc: (_, value) => {
-						this.updateReferencedValue('lossColor', value);
-					}
+					callbackFunc: (_, value) => (Component.referencedValues['lossColor'] = value),
+					onChanged: (value) => this.updateReferencedValue('lossColor', value)
 				},
 				progressBarBackgroundGradient: {
 					name: 'Bar Gradient',
 					type: CustomizerPropertyType.GRADIENT_PICKER,
-					callbackFunc: (_, value) => {
-						this.updateReferencedValue('progressBarBackgroundGradient', value);
-					}
+					callbackFunc: (_, value) => (Component.referencedValues['progressBarBackgroundGradient'] = value),
+					onChanged: (value) => this.updateReferencedValue('progressBarBackgroundGradient', value)
 				},
 				progressBarFillGradient: {
 					name: 'Bar Fill Gradient',
 					type: CustomizerPropertyType.GRADIENT_PICKER,
-					callbackFunc: (_, value) => {
-						this.updateReferencedValue('progressBarFillGradient', value);
-					}
+					callbackFunc: (_, value) => (Component.referencedValues['progressBarFillGradient'] = value),
+					onChanged: (value) => this.updateReferencedValue('progressBarFillGradient', value)
 				},
 				progressBarBlockedGradient: {
 					name: 'Bar Blocked Gradient',
 					type: CustomizerPropertyType.GRADIENT_PICKER,
-					callbackFunc: (_, value) => {
-						this.updateReferencedValue('progressBarBlockedGradient', value);
-					}
+					callbackFunc: (_, value) => (Component.referencedValues['progressBarBlockedGradient'] = value),
+					onChanged: (value) => this.updateReferencedValue('progressBarBlockedGradient', value)
 				}
+			},
+			postInit: () => {
+				for (const refKey of Object.keys(Component.referencedValues)) {
+					this.updateReferencedValue(refKey, Component.referencedValues[refKey], true);
+				}
+
+				this.createGridLines(this.gridSize);
 			}
 		});
 
@@ -602,7 +593,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 	// When a dynamic style is modified/loaded it calls this function with the it's styleID and a new value
 	// This functions then re-applies ALL styles on a component that uses that referenced value.
 	// Hud Customizer Panel in hud.xml MUST be placed after all other panels registered with hud customizer for this to initialize hud properly
-	updateReferencedValue(refKey: string, newValue: any): void {
+	updateReferencedValue(refKey: string, newValue: any, isInit: boolean = false): void {
 		Component.referencedValues[refKey] = newValue;
 
 		const listeners = Component.referencedValueListeners[refKey];
@@ -613,7 +604,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			if (component) {
 				for (const styleID of styleIDs) {
 					const style = component.dynamicStyles?.[styleID];
-					if (style) component.applyDynamicStyle(style);
+					if (style) component.applyDynamicStyle(style, isInit);
 				}
 			}
 		});
