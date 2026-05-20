@@ -31,10 +31,8 @@ class MomHudAmmoHandler {
 				testAmmoCount: {
 					name: 'Test Ammo Count',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
-					callbackFunc: (_, value) => {
-						this.testAmmoCount = String(value);
-						this.createDummyAmmo();
-					}
+					callbackFunc: (_, value) => (this.testAmmoCount = String(value)),
+					onChanged: () => this.createDummyAmmo()
 				},
 				fontStyling: {
 					name: 'Font Styling',

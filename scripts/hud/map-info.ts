@@ -47,9 +47,8 @@ class HudMapInfoHandler {
 					type: CustomizerPropertyType.COLOR_PICKER,
 					targetPanel: '.hud-map-info__label',
 					styleProperty: 'color',
-					callbackFunc: (panel, value) => {
-						panel.style.textShadowFast = getTextShadowFast(value as rgbaColor, 0.9);
-					}
+					callbackFunc: (panel, value) =>
+						(panel.style.textShadowFast = getTextShadowFast(value as rgbaColor, 0.9))
 				},
 				showLabels: {
 					name: 'Show Labels',
@@ -67,18 +66,14 @@ class HudMapInfoHandler {
 					name: 'Show Version',
 					type: CustomizerPropertyType.CHECKBOX,
 					targetPanel: '#VersionLabel',
-					callbackFunc: (panel, value) => {
-						panel.SetHasClass('hide', !value);
-					}
+					callbackFunc: (panel, value) => panel.SetHasClass('hide', !value)
 				},
 				showMapName: {
 					name: 'Show Map Name',
 					type: CustomizerPropertyType.CHECKBOX,
 					targetPanel: '#MapNameLabel',
 					children: { styleID: 'showGamemode', showWhen: true },
-					callbackFunc: (panel, value) => {
-						panel.SetHasClass('hide', !value);
-					}
+					callbackFunc: (panel, value) => panel.SetHasClass('hide', !value)
 				},
 				showGamemode: {
 					name: 'Show Gamemode',
@@ -94,25 +89,19 @@ class HudMapInfoHandler {
 					name: 'Show Authors',
 					type: CustomizerPropertyType.CHECKBOX,
 					targetPanel: '#AuthorLabel',
-					callbackFunc: (panel, value) => {
-						panel.SetHasClass('hide', !value);
-					}
+					callbackFunc: (panel, value) => panel.SetHasClass('hide', !value)
 				},
 				showTier: {
 					name: 'Show Tier',
 					type: CustomizerPropertyType.CHECKBOX,
-					callbackFunc: (_, value) => {
-						this.showTiers = value;
-						this.constructString();
-					}
+					callbackFunc: (_, value) => (this.showTiers = value),
+					onChanged: () => this.constructString()
 				},
 				showMapType: {
 					name: 'Show Map Type',
 					type: CustomizerPropertyType.CHECKBOX,
-					callbackFunc: (_, value) => {
-						this.showMapType = value;
-						this.constructString();
-					}
+					callbackFunc: (_, value) => (this.showMapType = value),
+					onChanged: () => this.constructString()
 				},
 				gap: {
 					name: 'Gap',
@@ -132,7 +121,8 @@ class HudMapInfoHandler {
 					targetPanel: ['.hud-map-info__label', '#CachedInfoContainer'],
 					styleProperty: 'horizontalAlign'
 				}
-			}
+			},
+			postInit: () => this.constructString()
 		});
 	}
 

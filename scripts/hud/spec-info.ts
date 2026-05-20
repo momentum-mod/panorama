@@ -55,18 +55,14 @@ class HudSpecInfoHandler implements OnPanelLoad {
 					name: 'Show Name List',
 					type: CustomizerPropertyType.CHECKBOX,
 					children: { styleID: 'maxPlayerCount', showWhen: true },
-					callbackFunc: (_, value) => {
-						this.specConfig.showNameList = value;
-						this.createDummySpectators();
-					}
+					callbackFunc: (_, value) => (this.specConfig.showNameList = value),
+					onChanged: () => this.createDummySpectators()
 				},
 				maxPlayerCount: {
 					name: 'Max Player Count',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
-					callbackFunc: (_, value) => {
-						this.maxNames = value;
-						this.createDummySpectators();
-					},
+					callbackFunc: (_, value) => (this.maxNames = value),
+					onChanged: () => this.createDummySpectators(),
 					settingProps: { min: 0, max: 100 }
 				},
 				fontStyling: {
@@ -80,18 +76,14 @@ class HudSpecInfoHandler implements OnPanelLoad {
 					type: CustomizerPropertyType.FONT_PICKER,
 					targetPanel: ['.hudspecinfo__count', '.specinfo-list-entry__name'],
 					styleProperty: 'fontFamily',
-					callbackFunc: (_, value) => {
-						this.specConfig.fontFamily = value;
-					}
+					callbackFunc: (_, value) => (this.specConfig.fontFamily = value)
 				},
 				fontSize: {
 					name: 'Font Size',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					targetPanel: ['.hudspecinfo__count', '.specinfo-list-entry__name'],
 					styleProperty: 'fontSize',
-					callbackFunc: (_, value) => {
-						this.specConfig.fontSize = value;
-					}
+					callbackFunc: (_, value) => (this.specConfig.fontSize = value)
 				},
 				fontColor: {
 					name: 'Font Color',
@@ -101,8 +93,8 @@ class HudSpecInfoHandler implements OnPanelLoad {
 					callbackFunc: (_, value) => {
 						this.panels.numSpecLabel.style.textShadowFast = getTextShadowFast(value as rgbaColor, 0.9);
 						this.specConfig.fontColor = value;
-						this.createDummySpectators();
-					}
+					},
+					onChanged: () => this.createDummySpectators()
 				},
 				backgroundColor: {
 					name: 'Background Color',
@@ -120,10 +112,9 @@ class HudSpecInfoHandler implements OnPanelLoad {
 					],
 					targetPanel: ['.hudspecinfo__count', '.specinfo-list-entry'],
 					styleProperty: 'horizontalAlign',
-					callbackFunc: (_, value) => {
-						this.specConfig.horizontalAlign = value as 'center' | 'left' | 'right';
-						this.createDummySpectators();
-					}
+					callbackFunc: (_, value) =>
+						(this.specConfig.horizontalAlign = value as 'center' | 'left' | 'right'),
+					onChanged: () => this.createDummySpectators()
 				}
 			}
 		});

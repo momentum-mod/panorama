@@ -142,20 +142,14 @@ class SpeedometerHandler {
 				mainAxisFont: {
 					name: 'Font',
 					type: CustomizerPropertyType.FONT_PICKER,
-					targetPanel: '.speedometer__axis',
-					styleProperty: 'fontFamily',
-					callbackFunc: (_, value) => {
-						Fonts.mainAxisFont = value;
-					}
+					callbackFunc: (_, value) => (Fonts.mainAxisFont = value),
+					onChanged: () => this.setFontStyling()
 				},
 				mainAxisFontSize: {
 					name: 'Font Size',
-					targetPanel: '.speedometer__axis',
-					styleProperty: 'fontSize',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
-					callbackFunc: (_, value) => {
-						Fonts.mainAxisFontSize = value;
-					}
+					callbackFunc: (_, value) => (Fonts.mainAxisFontSize = value),
+					onChanged: () => this.setFontStyling()
 				},
 				mainComparisonFontStyling: {
 					name: 'Comparisons',
@@ -166,20 +160,14 @@ class SpeedometerHandler {
 				mainComparisonFont: {
 					name: 'Font',
 					type: CustomizerPropertyType.FONT_PICKER,
-					targetPanel: '.speedometer__axis__comparison',
-					styleProperty: 'fontFamily',
-					callbackFunc: (_, value) => {
-						Fonts.mainComparisonFont = value;
-					}
+					callbackFunc: (_, value) => (Fonts.mainComparisonFont = value),
+					onChanged: () => this.setFontStyling()
 				},
 				mainComparisonFontSize: {
 					name: 'Font Size',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
-					targetPanel: '.speedometer__axis__comparison',
-					styleProperty: 'fontSize',
-					callbackFunc: (_, value) => {
-						Fonts.mainComparisonFontSize = value;
-					}
+					callbackFunc: (_, value) => (Fonts.mainComparisonFontSize = value),
+					onChanged: () => this.setFontStyling()
 				},
 				eventFontStyling: {
 					name: 'Event',
@@ -196,20 +184,14 @@ class SpeedometerHandler {
 				eventAxisFont: {
 					name: 'Font',
 					type: CustomizerPropertyType.FONT_PICKER,
-					targetPanel: '.speedometer__event',
-					styleProperty: 'fontFamily',
-					callbackFunc: (_, value) => {
-						Fonts.eventAxisFont = value;
-					}
+					callbackFunc: (_, value) => (Fonts.eventAxisFont = value),
+					onChanged: () => this.setFontStyling()
 				},
 				eventAxisFontSize: {
 					name: 'Font Size',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
-					targetPanel: '.speedometer__event',
-					styleProperty: 'fontSize',
-					callbackFunc: (_, value) => {
-						Fonts.eventAxisFontSize = value;
-					}
+					callbackFunc: (_, value) => (Fonts.eventAxisFontSize = value),
+					onChanged: () => this.setFontStyling()
 				},
 				eventComparisonFontStyling: {
 					name: 'Comparisons',
@@ -220,20 +202,14 @@ class SpeedometerHandler {
 				eventComparisonFont: {
 					name: 'Font',
 					type: CustomizerPropertyType.FONT_PICKER,
-					targetPanel: '.speedometer__event__comparison',
-					styleProperty: 'fontFamily',
-					callbackFunc: (_, value) => {
-						Fonts.eventComparisonFont = value;
-					}
+					callbackFunc: (_, value) => (Fonts.eventComparisonFont = value),
+					onChanged: () => this.setFontStyling()
 				},
 				eventComparisonFontSize: {
 					name: 'Font Size',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
-					targetPanel: '.speedometer__event__comparison',
-					styleProperty: 'fontSize',
-					callbackFunc: (_, value) => {
-						Fonts.eventComparisonFontSize = value;
-					}
+					callbackFunc: (_, value) => (Fonts.eventComparisonFontSize = value),
+					onChanged: () => this.setFontStyling()
 				},
 				colors: {
 					name: 'Colors',
@@ -250,23 +226,17 @@ class SpeedometerHandler {
 				axisFlatColor: {
 					name: 'Flat',
 					type: CustomizerPropertyType.COLOR_PICKER,
-					callbackFunc: (_, value) => {
-						Colors.AXIS_FLAT = value;
-					}
+					callbackFunc: (_, value) => (Colors.AXIS_FLAT = value)
 				},
 				axisGainColor: {
 					name: 'Gain',
 					type: CustomizerPropertyType.COLOR_PICKER,
-					callbackFunc: (_, value) => {
-						Colors.AXIS_GAIN = value;
-					}
+					callbackFunc: (_, value) => (Colors.AXIS_GAIN = value)
 				},
 				axisLossColor: {
 					name: 'Loss',
 					type: CustomizerPropertyType.COLOR_PICKER,
-					callbackFunc: (_, value) => {
-						Colors.AXIS_LOSS = value;
-					}
+					callbackFunc: (_, value) => (Colors.AXIS_LOSS = value)
 				},
 				comparisonSpeedometerColors: {
 					name: 'Comparison Labels',
@@ -281,23 +251,17 @@ class SpeedometerHandler {
 				comparisonFlatColor: {
 					name: 'Flat',
 					type: CustomizerPropertyType.COLOR_PICKER,
-					callbackFunc: (_, value) => {
-						Colors.COMPARISON_FLAT = value;
-					}
+					callbackFunc: (_, value) => (Colors.COMPARISON_FLAT = value)
 				},
 				comparisonGainColor: {
 					name: 'Gain',
 					type: CustomizerPropertyType.COLOR_PICKER,
-					callbackFunc: (_, value) => {
-						Colors.COMPARISON_GAIN = value;
-					}
+					callbackFunc: (_, value) => (Colors.COMPARISON_GAIN = value)
 				},
 				comparisonLossColor: {
 					name: 'Loss',
 					type: CustomizerPropertyType.COLOR_PICKER,
-					callbackFunc: (_, value) => {
-						Colors.COMPARISON_LOSS = value;
-					}
+					callbackFunc: (_, value) => (Colors.COMPARISON_LOSS = value)
 				},
 				backgroundColor: {
 					name: 'Background Color',
@@ -305,7 +269,8 @@ class SpeedometerHandler {
 					targetPanel: '.speedometers',
 					styleProperty: 'backgroundColor'
 				}
-			}
+			},
+			postInit: () => this.setFontStyling()
 		});
 	}
 

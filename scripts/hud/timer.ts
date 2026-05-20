@@ -90,9 +90,7 @@ class HudTimerHandler {
 				showComparisons: {
 					name: 'Show Comparisons',
 					type: CustomizerPropertyType.CHECKBOX,
-					callbackFunc: (_, value) => {
-						this.showComparison = value;
-					}
+					callbackFunc: (_, value) => (this.showComparison = value)
 				},
 				fontStyling: {
 					name: 'Font Styling',
@@ -158,34 +156,26 @@ class HudTimerHandler {
 				inactiveColor: {
 					name: 'Inactive Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
-					callbackFunc: (_, value) => {
-						Colors.INACTIVE = value as rgbaColor;
-						this.updateMainState();
-					}
+					callbackFunc: (_, value) => (Colors.INACTIVE = value as rgbaColor),
+					onChanged: () => this.updateMainState()
 				},
 				primedColor: {
 					name: 'Primed Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
-					callbackFunc: (_, value) => {
-						Colors.PRIMED = value as rgbaColor;
-						this.updateMainState();
-					}
+					callbackFunc: (_, value) => (Colors.PRIMED = value as rgbaColor),
+					onChanged: () => this.updateMainState()
 				},
 				runningColor: {
 					name: 'Running Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
-					callbackFunc: (_, value) => {
-						Colors.RUNNING = value as rgbaColor;
-						this.updateMainState();
-					}
+					callbackFunc: (_, value) => (Colors.RUNNING = value as rgbaColor),
+					onChanged: () => this.updateMainState()
 				},
 				finishedColor: {
 					name: 'Finished Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
-					callbackFunc: (_, value) => {
-						Colors.FINISHED = value as rgbaColor;
-						this.updateMainState();
-					}
+					callbackFunc: (_, value) => (Colors.FINISHED = value as rgbaColor),
+					onChanged: () => this.updateMainState()
 				},
 				comparisonColors: {
 					name: 'Comparison Colors',
@@ -196,16 +186,12 @@ class HudTimerHandler {
 				comparisonGainColor: {
 					name: 'Comparison Gain Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
-					callbackFunc: (_, value) => {
-						Colors.INCREASE = value as rgbaColor;
-					}
+					callbackFunc: (_, value) => (Colors.INCREASE = value as rgbaColor)
 				},
 				comparisonLossColor: {
 					name: 'Comparison Loss Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
-					callbackFunc: (_, value) => {
-						Colors.DECREASE = value as rgbaColor;
-					}
+					callbackFunc: (_, value) => (Colors.DECREASE = value as rgbaColor)
 				},
 				alignText: {
 					name: 'Align Text',
@@ -224,7 +210,8 @@ class HudTimerHandler {
 					targetPanel: ['.hudtimer__time', '.hudtimer__comparison'],
 					styleProperty: 'backgroundColor'
 				}
-			}
+			},
+			postInit: () => this.updateMainState()
 		});
 	}
 

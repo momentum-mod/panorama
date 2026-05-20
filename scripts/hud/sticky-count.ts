@@ -2,7 +2,7 @@ import { PanelHandler } from 'util/module-helpers';
 import { GamemodeCategory, GamemodeCategoryToGamemode } from 'common/web/enums/gamemode.enum';
 
 import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
-import { rgbaStringToTuple } from 'util/colors';
+// import { rgbaStringToTuple } from 'util/colors';
 
 export enum StickyState {
 	NOSTICKY = 0,
@@ -56,14 +56,7 @@ class StickyCountHandler {
 				{
 					event: 'OnStickyPanelStateChanged',
 					callbackFn: (stickyPanel, state) => this.onStickyPanelStateChanged(stickyPanel, state)
-				},
-				// THIS IS A HACK FOR INITIALIZING SETTINGS
-				// #StickyCountContainer get populated by C++ with individual .sticky-panel
-				// This happens after load so the panels cannot be targetted by registerHUDCustomizerComponent
-				// initPanels is waiting for the #StickyCountContainer to have 8 children, assigns default values to them and then unregisters itself
-				// In order for default values to initialize registerHUDCustomizerComponent cannot target any panels, it won't call a callback if they don't exist
-				// this.updateStickyPanels() handles updating all settings, ugly but works for now
-				{ event: 'LevelInitPostEntity', callbackFn: () => this.initPanels() }
+				}
 			],
 			dynamicStyles: {
 				colors: {
@@ -80,38 +73,34 @@ class StickyCountHandler {
 				backgroundGradient: {
 					name: 'Background',
 					type: CustomizerPropertyType.GRADIENT_PICKER,
-					callbackFunc: (_, value) => {
-						StateColors[StickyState.NOSTICKY] =
-							`gradient(linear, 0% 0%, 100% 0%, from (${value[0]}, to(${value[1]}))`;
-						this.updateStickyPanels();
-					}
+					callbackFunc: (_, value) =>
+						(StateColors[StickyState.NOSTICKY] =
+							`gradient(linear, 0% 0%, 100% 0%, from (${value[0]}, to(${value[1]}))`),
+					onChanged: () => this.updateStickyPanels()
 				},
 				armingGradient: {
 					name: 'Arming',
 					type: CustomizerPropertyType.GRADIENT_PICKER,
-					callbackFunc: (_, value) => {
-						StateColors[StickyState.ARMING] =
-							`gradient(linear, 0% 0%, 100% 0%, from (${value[0]}, to(${value[1]}))`;
-						this.updateStickyPanels();
-					}
+					callbackFunc: (_, value) =>
+						(StateColors[StickyState.ARMING] =
+							`gradient(linear, 0% 0%, 100% 0%, from (${value[0]}, to(${value[1]}))`),
+					onChanged: () => this.updateStickyPanels()
 				},
 				armedGradient: {
 					name: 'Armed',
 					type: CustomizerPropertyType.GRADIENT_PICKER,
-					callbackFunc: (_, value) => {
-						StateColors[StickyState.ARMED] =
-							`gradient(linear, 0% 0%, 100% 0%, from (${value[0]}, to(${value[1]}))`;
-						this.updateStickyPanels();
-					}
+					callbackFunc: (_, value) =>
+						(StateColors[StickyState.ARMED] =
+							`gradient(linear, 0% 0%, 100% 0%, from (${value[0]}, to(${value[1]}))`),
+					onChanged: () => this.updateStickyPanels()
 				},
 				blockedGradient: {
 					name: 'Blocked',
 					type: CustomizerPropertyType.GRADIENT_PICKER,
-					callbackFunc: (_, value) => {
-						StateColors[StickyState.BLOCKED] =
-							`gradient(linear, 0% 0%, 100% 0%, from (${value[0]}, to(${value[1]}))`;
-						this.updateStickyPanels();
-					}
+					callbackFunc: (_, value) =>
+						(StateColors[StickyState.BLOCKED] =
+							`gradient(linear, 0% 0%, 100% 0%, from (${value[0]}, to(${value[1]}))`),
+					onChanged: () => this.updateStickyPanels()
 				},
 				borderStyling: {
 					name: 'Border Styling',
@@ -122,56 +111,54 @@ class StickyCountHandler {
 				borderWidth: {
 					name: 'Border Width',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
-					callbackFunc: (_, value) => {
-						this.config.borderWidth = `${value}px`;
-						this.updateStickyPanels();
-					}
+					callbackFunc: (_, value) => (this.config.borderWidth = `${value}px`),
+					onChanged: () => this.updateStickyPanels()
 				},
 				borderColor: {
 					name: 'Border Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
-					callbackFunc: (_, value) => {
-						this.config.borderColor = value as rgbaColor;
-						this.updateStickyPanels();
-					}
+					callbackFunc: (_, value) => (this.config.borderColor = value as rgbaColor),
+					onChanged: () => this.updateStickyPanels()
 				},
 				borderRadius: {
 					name: 'Border Radius',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
-					callbackFunc: (_, value) => {
-						this.config.borderRadius = `${value}%`;
-						this.updateStickyPanels();
-					},
+					callbackFunc: (_, value) => (this.config.borderRadius = `${value}%`),
+					onChanged: () => this.updateStickyPanels(),
 					settingProps: { min: 0, max: 50 }
 				},
 				width: {
 					name: 'Width',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
-					callbackFunc: (_, value) => {
-						this.config.width = `${value}px`;
-						this.updateStickyPanels();
-					}
+					callbackFunc: (_, value) => (this.config.width = `${value}px`),
+					onChanged: () => this.updateStickyPanels()
 				},
 				height: {
 					name: 'Height',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
-					callbackFunc: (_, value) => {
-						this.config.height = `${value}px`;
-						this.updateStickyPanels();
-					}
+					callbackFunc: (_, value) => (this.config.height = `${value}px`),
+					onChanged: () => this.updateStickyPanels()
 				},
 
 				gap: {
 					name: 'Gap',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
-					callbackFunc: (_, value) => {
-						this.config.margin = `0 ${value}px`;
-						this.updateStickyPanels();
-					}
+					callbackFunc: (_, value) => (this.config.margin = `0 ${value}px`),
+					onChanged: () => this.updateStickyPanels()
 				}
+			},
+			postInit: () => {
+				this.initPanels();
 			}
 		});
 	}
+
+	// THIS IS A HACK FOR INITIALIZING SETTINGS
+	// #StickyCountContainer get populated by C++ with individual .sticky-panel
+	// This happens after load so the panels cannot be targetted by registerHUDCustomizerComponent
+	// initPanels is waiting for the #StickyCountContainer to have 8 children, assigns default values to them and then unregisters itself
+	// In order for default values to initialize registerHUDCustomizerComponent cannot target any panels, it won't call a callback if they don't exist
+	// this.updateStickyPanels() handles updating all settings, ugly but works for now
 	initPanels() {
 		this.initHandler = $.RegisterEventHandler('HudThink', $.GetContextPanel(), () => this.checkForChildren());
 	}
@@ -187,18 +174,20 @@ class StickyCountHandler {
 				this.panelStates.set(panel, StickyState.NOSTICKY);
 			});
 			$.UnregisterEventHandler('HudThink', $.GetContextPanel(), this.initHandler);
+			this.updateStickyPanels();
 		}
 	}
 
 	updateStickyPanels() {
 		this.panelStates.forEach((state, panel) => {
-			const alpha = (rgbaStringToTuple(StateColors[state] as rgbaColor)[3] / 255) * 0.5;
+			// Gradient is breaking it. Not worth fixing imo
+			// const alpha = (rgbaStringToTuple(StateColors[state] as rgbaColor)[3] / 255) * 0.5;
 			for (const [key, value] of Object.entries(this.config)) {
 				panel.style[key] = value;
 			}
 
 			panel.style.backgroundColor = StateColors[state] as color;
-			panel.style.boxShadow = `rgba(0, 0, 0, ${alpha}) 0px 0px 3px 0px`;
+			// panel.style.boxShadow = `rgba(0, 0, 0, ${alpha}) 0px 0px 3px 0px`;
 		});
 	}
 

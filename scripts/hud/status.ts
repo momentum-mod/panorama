@@ -96,9 +96,8 @@ class HudStatusHandler {
 					type: CustomizerPropertyType.COLOR_PICKER,
 					targetPanel: '.hudstatus__label',
 					styleProperty: 'color',
-					callbackFunc: (panel, value) => {
-						panel.style.textShadowFast = getTextShadowFast(value as rgbaColor, 0.9);
-					}
+					callbackFunc: (panel, value) =>
+						(panel.style.textShadowFast = getTextShadowFast(value as rgbaColor, 0.9))
 				},
 				backgroundColor: {
 					name: 'Background Color',

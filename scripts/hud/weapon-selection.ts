@@ -69,19 +69,15 @@ class WeaponSelectionHandler {
 				showNotch: {
 					name: 'Show Notch',
 					type: CustomizerPropertyType.CHECKBOX,
-					callbackFunc: (_, value) => {
-						Config.showNotch = value;
-						this.updateStyles();
-					}
+					callbackFunc: (_, value) => (Config.showNotch = value),
+					onChanged: () => this.updateStyles()
 				},
 				showKeybinds: {
 					name: 'Show Keybinds',
 					type: CustomizerPropertyType.CHECKBOX,
 					children: [{ styleID: 'keybindsStyling', showWhen: true }],
-					callbackFunc: (_, value) => {
-						Config.showKeybinds = value;
-						this.updateStyles();
-					}
+					callbackFunc: (_, value) => (Config.showKeybinds = value),
+					onChanged: () => this.updateStyles()
 				},
 				keybindsStyling: {
 					name: 'Keybinds Styling',
@@ -97,34 +93,26 @@ class WeaponSelectionHandler {
 				keybindsFont: {
 					name: 'Font',
 					type: CustomizerPropertyType.FONT_PICKER,
-					callbackFunc: (_, value) => {
-						Config.keybinds.font = value;
-						this.updateStyles();
-					}
+					callbackFunc: (_, value) => (Config.keybinds.font = value),
+					onChanged: () => this.updateStyles()
 				},
 				keybindsFontSize: {
 					name: 'Font Size',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
-					callbackFunc: (_, value) => {
-						Config.keybinds.size = value;
-						this.updateStyles();
-					}
+					callbackFunc: (_, value) => (Config.keybinds.size = value),
+					onChanged: () => this.updateStyles()
 				},
 				keybindsFontColor: {
 					name: 'Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
-					callbackFunc: (_, value) => {
-						Config.keybinds.color = value;
-						this.updateStyles();
-					}
+					callbackFunc: (_, value) => (Config.keybinds.color = value),
+					onChanged: () => this.updateStyles()
 				},
 				keybindsFontActiveColor: {
 					name: 'Active Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
-					callbackFunc: (_, value) => {
-						Config.keybinds.activeColor = value;
-						this.updateStyles();
-					}
+					callbackFunc: (_, value) => (Config.keybinds.activeColor = value),
+					onChanged: () => this.updateStyles()
 				},
 				weaponNameStyling: {
 					name: 'Weapon Name Styling',
@@ -140,34 +128,26 @@ class WeaponSelectionHandler {
 				weaponNameFont: {
 					name: 'Font',
 					type: CustomizerPropertyType.FONT_PICKER,
-					callbackFunc: (_, value) => {
-						Config.weapon_name.font = value;
-						this.updateStyles();
-					}
+					callbackFunc: (_, value) => (Config.weapon_name.font = value),
+					onChanged: () => this.updateStyles()
 				},
 				weaponNameFontSize: {
 					name: 'Font Size',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
-					callbackFunc: (_, value) => {
-						Config.weapon_name.size = value;
-						this.updateStyles();
-					}
+					callbackFunc: (_, value) => (Config.weapon_name.size = value),
+					onChanged: () => this.updateStyles()
 				},
 				weaponNameFontColor: {
 					name: 'Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
-					callbackFunc: (_, value) => {
-						Config.weapon_name.color = value;
-						this.updateStyles();
-					}
+					callbackFunc: (_, value) => (Config.weapon_name.color = value),
+					onChanged: () => this.updateStyles()
 				},
 				weaponNameFontActiveColor: {
 					name: 'Active Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
-					callbackFunc: (_, value) => {
-						Config.weapon_name.activeColor = value;
-						this.updateStyles();
-					}
+					callbackFunc: (_, value) => (Config.weapon_name.activeColor = value),
+					onChanged: () => this.updateStyles()
 				},
 				notchStyling: {
 					name: 'Notch Styling',
@@ -178,20 +158,17 @@ class WeaponSelectionHandler {
 				notchWidth: {
 					name: 'Width',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
-					callbackFunc: (_, value) => {
-						Config.notch.width = value;
-						this.updateStyles();
-					}
+					callbackFunc: (_, value) => (Config.notch.width = value),
+					onChanged: () => this.updateStyles()
 				},
 				notchColor: {
 					name: 'Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
-					callbackFunc: (_, value) => {
-						Config.notch.color = value;
-						this.updateStyles();
-					}
+					callbackFunc: (_, value) => (Config.notch.color = value),
+					onChanged: () => this.updateStyles()
 				}
-			}
+			},
+			postInit: () => this.updateStyles()
 		});
 	}
 

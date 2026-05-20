@@ -38,9 +38,7 @@ class DFJumpHandler {
 				maxDelay: {
 					name: 'Jump Max Delay',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
-					callbackFunc: (_, value) => {
-						this.setMaxDelay(value);
-					},
+					callbackFunc: (_, value) => this.setMaxDelay(value),
 					settingProps: { min: 0, max: 1000 }
 				},
 				showLabels: {
@@ -90,9 +88,8 @@ class DFJumpHandler {
 						'.dfjump__text-wrapper--press'
 					],
 					styleProperty: 'color',
-					callbackFunc: (panel, value) => {
-						panel.style.textShadowFast = getTextShadowFast(value as rgbaColor, 1);
-					}
+					callbackFunc: (panel, value) =>
+						(panel.style.textShadowFast = getTextShadowFast(value as rgbaColor, 1))
 				},
 				borderStyling: {
 					name: 'Border Styling',
@@ -135,35 +132,31 @@ class DFJumpHandler {
 					name: 'Background',
 					type: CustomizerPropertyType.GRADIENT_PICKER,
 					targetPanel: ['.dfjump__release', '.dfjump__press'],
-					callbackFunc: (panel, value) => {
-						panel.GetLastChild().style.backgroundColor =
-							`gradient(linear, 0% 0%, 100% 0%, from(${value[0]}), to(${value[1]}))` as color;
-					}
+					callbackFunc: (panel, value) =>
+						(panel.GetLastChild().style.backgroundColor =
+							`gradient(linear, 0% 0%, 100% 0%, from(${value[0]}), to(${value[1]}))` as color)
 				},
 				airGradient: {
 					name: 'Air Gradient',
 					type: CustomizerPropertyType.GRADIENT_PICKER,
-					callbackFunc: (_, value) => {
-						Colors.AIR = `gradient(linear, 30% 0%, 100% 0%, from(${value[0]}), to(${value[1]}))`;
-						this.onDFJumpUpdate(0, 0, 0);
-					}
+					callbackFunc: (_, value) =>
+						(Colors.AIR = `gradient(linear, 30% 0%, 100% 0%, from(${value[0]}), to(${value[1]}))`),
+					onChanged: () => this.onDFJumpUpdate(0, 0, 0)
 				},
 				releaseGradient: {
 					name: 'Release Gradient',
 					type: CustomizerPropertyType.GRADIENT_PICKER,
 					targetPanel: '.dfjump__release',
-					callbackFunc: (panel, value) => {
-						panel.GetFirstChild().style.backgroundColor =
-							`gradient(linear, 30% 0%, 100% 0%, from(${value[0]}), to(${value[1]}))` as color;
-					}
+					callbackFunc: (panel, value) =>
+						(panel.GetFirstChild().style.backgroundColor =
+							`gradient(linear, 30% 0%, 100% 0%, from(${value[0]}), to(${value[1]}))` as color)
 				},
 				groundGradient: {
 					name: 'Ground Gradient',
 					type: CustomizerPropertyType.GRADIENT_PICKER,
-					callbackFunc: (_, value) => {
-						Colors.GROUND = `gradient(linear, 30% 0%, 100% 0%, from(${value[0]}), to(${value[1]}))`;
-						this.onDFJumpUpdate(0, 0, 0);
-					}
+					callbackFunc: (_, value) =>
+						(Colors.GROUND = `gradient(linear, 30% 0%, 100% 0%, from(${value[0]}), to(${value[1]}))`),
+					onChanged: () => this.onDFJumpUpdate(0, 0, 0)
 				}
 			}
 		});

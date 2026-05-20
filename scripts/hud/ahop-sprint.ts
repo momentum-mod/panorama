@@ -37,18 +37,18 @@ const StateColors: Record<SprintState, StateValue> = {
 const Config = {
 	type: 'curve',
 	curve: {
-		gap: 68,
-		size: 56,
-		thickness: 2.5,
+		gap: 0,
+		size: 0,
+		thickness: 0,
 		rotation: 0,
-		arcLength: 120
+		arcLength: 0
 	},
 	dot: {
-		width: 24,
-		height: 24,
-		borderRadius: 50,
-		borderWidth: 1,
-		borderColor: 'rgba(0, 0, 0, 1)'
+		width: 0,
+		height: 0,
+		borderRadius: 0,
+		borderWidth: 0,
+		borderColor: 'rgba(0, 0, 0, 0)'
 	}
 };
 
@@ -70,6 +70,7 @@ class AhopSprint {
 			resizeY: false,
 			gamemode: GamemodeCategoryToGamemode.get(GamemodeCategory.AHOP),
 			events: { event: 'HudProcessInput', panel: $.GetContextPanel(), callbackFn: () => this.onUpdate() },
+			unhandledEvents: { event: 'HudCustomizer_Ready', callbackFn: () => this.updateStyles() },
 			dynamicStyles: {
 				type: {
 					name: 'Type',
@@ -93,52 +94,40 @@ class AhopSprint {
 						{ styleID: 'dotBorderColor', showWhen: 'dot' },
 						{ styleID: 'dotColors', showWhen: 'dot' }
 					],
-					callbackFunc: (_, value) => {
-						Config.type = value;
-						this.updateStyles();
-					}
+					callbackFunc: (_, value) => (Config.type = value),
+					onChanged: () => this.updateStyles()
 				},
 
 				// TYPE - CURVE
 				curveSize: {
 					name: 'Size',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
-					callbackFunc: (_, value) => {
-						Config.curve.size = value;
-						this.updateStyles();
-					}
+					callbackFunc: (_, value) => (Config.curve.size = value),
+					onChanged: () => this.updateStyles()
 				},
 				curveGap: {
 					name: 'Gap',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
-					callbackFunc: (_, value) => {
-						Config.curve.gap = value;
-						this.updateStyles();
-					}
+					callbackFunc: (_, value) => (Config.curve.gap = value),
+					onChanged: () => this.updateStyles()
 				},
 				curveThickness: {
 					name: 'Thickness',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
-					callbackFunc: (_, value) => {
-						Config.curve.thickness = value / 10;
-						this.updateStyles();
-					}
+					callbackFunc: (_, value) => (Config.curve.thickness = value / 10),
+					onChanged: () => this.updateStyles()
 				},
 				curveRotation: {
 					name: 'Rotation',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
-					callbackFunc: (_, value) => {
-						Config.curve.rotation = value;
-						this.updateStyles();
-					}
+					callbackFunc: (_, value) => (Config.curve.rotation = value),
+					onChanged: () => this.updateStyles()
 				},
 				curveArcLength: {
 					name: 'Arc Length',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
-					callbackFunc: (_, value) => {
-						Config.curve.arcLength = value;
-						this.updateStyles();
-					}
+					callbackFunc: (_, value) => (Config.curve.arcLength = value),
+					onChanged: () => this.updateStyles()
 				},
 				curveColors: {
 					name: 'State Colors',
@@ -154,73 +143,55 @@ class AhopSprint {
 				curveActiveColor: {
 					name: 'Active',
 					type: CustomizerPropertyType.COLOR_PICKER,
-					callbackFunc: (_, value) => {
-						StateColors[SprintState.ACTIVE].curve = value as rgbaColor;
-					}
+					callbackFunc: (_, value) => (StateColors[SprintState.ACTIVE].curve = value as rgbaColor)
 				},
 				curveAvailableColor: {
 					name: 'Available',
 					type: CustomizerPropertyType.COLOR_PICKER,
-					callbackFunc: (_, value) => {
-						StateColors[SprintState.AVAILABLE].curve = value as rgbaColor;
-					}
+					callbackFunc: (_, value) => (StateColors[SprintState.AVAILABLE].curve = value as rgbaColor)
 				},
 				curveDisabledColor: {
 					name: 'Disabled',
 					type: CustomizerPropertyType.COLOR_PICKER,
-					callbackFunc: (_, value) => {
-						StateColors[SprintState.DISABLED].curve = value as rgbaColor;
-					}
+					callbackFunc: (_, value) => (StateColors[SprintState.DISABLED].curve = value as rgbaColor)
 				},
 				curveBlockedColor: {
 					name: 'Blocked',
 					type: CustomizerPropertyType.COLOR_PICKER,
-					callbackFunc: (_, value) => {
-						StateColors[SprintState.BLOCKED].curve = value as rgbaColor;
-					}
+					callbackFunc: (_, value) => (StateColors[SprintState.BLOCKED].curve = value as rgbaColor)
 				},
 
 				// TYPE - DOT
 				dotWidth: {
 					name: 'Width',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
-					callbackFunc: (_, value) => {
-						Config.dot.width = value;
-						this.updateStyles();
-					}
+					callbackFunc: (_, value) => (Config.dot.width = value),
+					onChanged: () => this.updateStyles()
 				},
 				dotHeight: {
 					name: 'Height',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
-					callbackFunc: (_, value) => {
-						Config.dot.height = value;
-						this.updateStyles();
-					}
+					callbackFunc: (_, value) => (Config.dot.height = value),
+					onChanged: () => this.updateStyles()
 				},
 				dotBorderRadius: {
 					name: 'Border Radius',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
-					callbackFunc: (_, value) => {
-						Config.dot.borderRadius = value;
-						this.updateStyles();
-					},
+					callbackFunc: (_, value) => (Config.dot.borderRadius = value),
+					onChanged: () => this.updateStyles(),
 					settingProps: { min: 0, max: 50 }
 				},
 				dotBorderWidth: {
 					name: 'Border Width',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
-					callbackFunc: (_, value) => {
-						Config.dot.borderWidth = value;
-						this.updateStyles();
-					}
+					callbackFunc: (_, value) => (Config.dot.borderWidth = value),
+					onChanged: () => this.updateStyles()
 				},
 				dotBorderColor: {
 					name: 'Border Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
-					callbackFunc: (_, value) => {
-						Config.dot.borderColor = value;
-						this.updateStyles();
-					}
+					callbackFunc: (_, value) => (Config.dot.borderColor = value),
+					onChanged: () => this.updateStyles()
 				},
 				dotGradients: {
 					name: 'State Gradients',
@@ -236,36 +207,33 @@ class AhopSprint {
 				dotActiveGradient: {
 					name: 'Active',
 					type: CustomizerPropertyType.GRADIENT_PICKER,
-					callbackFunc: (_, value) => {
-						StateColors[SprintState.ACTIVE].dot =
-							`gradient(linear, 0% 0%, 100% 0%, from (${value[0]}, to(${value[1]}))` as rgbaColor;
-					}
+					callbackFunc: (_, value) =>
+						(StateColors[SprintState.ACTIVE].dot =
+							`gradient(linear, 0% 0%, 100% 0%, from (${value[0]}, to(${value[1]}))` as rgbaColor)
 				},
 				dotAvailableGradient: {
 					name: 'Available',
 					type: CustomizerPropertyType.GRADIENT_PICKER,
-					callbackFunc: (_, value) => {
-						StateColors[SprintState.AVAILABLE].dot =
-							`gradient(linear, 0% 0%, 100% 0%, from (${value[0]}, to(${value[1]}))` as rgbaColor;
-					}
+					callbackFunc: (_, value) =>
+						(StateColors[SprintState.AVAILABLE].dot =
+							`gradient(linear, 0% 0%, 100% 0%, from (${value[0]}, to(${value[1]}))` as rgbaColor)
 				},
 				dotDisabledGradient: {
 					name: 'Disabled',
 					type: CustomizerPropertyType.GRADIENT_PICKER,
-					callbackFunc: (_, value) => {
-						StateColors[SprintState.DISABLED].dot =
-							`gradient(linear, 0% 0%, 100% 0%, from (${value[0]}, to(${value[1]}))` as rgbaColor;
-					}
+					callbackFunc: (_, value) =>
+						(StateColors[SprintState.DISABLED].dot =
+							`gradient(linear, 0% 0%, 100% 0%, from (${value[0]}, to(${value[1]}))` as rgbaColor)
 				},
 				dotBlockedGradient: {
 					name: 'Blocked',
 					type: CustomizerPropertyType.GRADIENT_PICKER,
-					callbackFunc: (_, value) => {
-						StateColors[SprintState.BLOCKED].dot =
-							`gradient(linear, 0% 0%, 100% 0%, from (${value[0]}, to(${value[1]}))` as rgbaColor;
-					}
+					callbackFunc: (_, value) =>
+						(StateColors[SprintState.BLOCKED].dot =
+							`gradient(linear, 0% 0%, 100% 0%, from (${value[0]}, to(${value[1]}))` as rgbaColor)
 				}
-			}
+			},
+			postInit: () => this.updateStyles()
 		});
 	}
 

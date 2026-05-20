@@ -16,13 +16,20 @@ interface SplitRow {
 	split?: Timer.Split;
 }
 
-const COMPARISON_COLORS = {
-	neutral: { color: 'rgba(0, 0, 0, 0)', textShadow: '0px 1px rgba(0, 0, 0, 0)' },
-	ahead_gain: { color: 'rgba(0, 0, 0, 0)', textShadow: '0px 1px rgba(0, 0, 0, 0)' },
-	ahead_loss: { color: 'rgba(0, 0, 0, 0)', textShadow: '0px 1px rgba(0, 0, 0, 0)' },
-	behind_gain: { color: 'rgba(0, 0, 0, 0)', textShadow: '0px 1px rgba(0, 0, 0, 0)' },
-	behind_loss: { color: 'rgba(0, 0, 0, 0)', textShadow: '0px 1px rgba(0, 0, 0, 0)' }
+type ColorStyle = {
+	color: rgbaColor;
+	textShadow: string;
 };
+
+enum ComparisonState {
+	NEUTRAL,
+	AHEAD_GAIN,
+	AHEAD_LOSS,
+	BEHIND_GAIN,
+	BEHIND_LOSS
+}
+
+type ColorConfig = Record<ComparisonState, ColorStyle>;
 
 @PanelHandler()
 class HudComparisonsHandler {
@@ -41,6 +48,8 @@ class HudComparisonsHandler {
 
 	tempComparison: any;
 	tempReplayID: any;
+
+	comparisonColors = {} as ColorConfig;
 
 	// Build out our permanent split panel array. This classes's job is ultimately to just tweak
 	// each panel's properties as needed.
@@ -205,9 +214,8 @@ class HudComparisonsHandler {
 					type: CustomizerPropertyType.COLOR_PICKER,
 					targetPanel: '.hud-splits__name',
 					styleProperty: 'color',
-					callbackFunc: (panel, value) => {
-						panel.style.textShadowFast = getTextShadowFast(value as rgbaColor, 0.9);
-					}
+					callbackFunc: (panel, value) =>
+						(panel.style.textShadowFast = getTextShadowFast(value as rgbaColor, 0.9))
 				},
 				time: {
 					name: 'Time',
@@ -233,9 +241,8 @@ class HudComparisonsHandler {
 					type: CustomizerPropertyType.COLOR_PICKER,
 					targetPanel: '.hud-splits__time',
 					styleProperty: 'color',
-					callbackFunc: (panel, value) => {
-						panel.style.textShadowFast = getTextShadowFast(value as rgbaColor, 0.9);
-					}
+					callbackFunc: (panel, value) =>
+						(panel.style.textShadowFast = getTextShadowFast(value as rgbaColor, 0.9))
 				},
 				comparisons: {
 					name: 'Comparison',
@@ -275,46 +282,61 @@ class HudComparisonsHandler {
 					name: 'Neutral',
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
-						COMPARISON_COLORS.neutral.color = value;
-						COMPARISON_COLORS.neutral.textShadow = getTextShadowFast(value as rgbaColor, 0.9);
-						this.createDummySplits();
-					}
+						const colors = {
+							color: value as rgbaColor,
+							textShadow: getTextShadowFast(value as rgbaColor, 0.9)
+						} as ColorStyle;
+						this.comparisonColors[ComparisonState.NEUTRAL] = colors;
+					},
+					onChanged: () => this.createDummySplits()
 				},
 				comparisonsAheadGain: {
 					name: 'Ahead - Gain',
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
-						COMPARISON_COLORS.ahead_gain.color = value;
-						COMPARISON_COLORS.ahead_gain.textShadow = getTextShadowFast(value as rgbaColor, 0.9);
-						this.createDummySplits();
-					}
+						const colors = {
+							color: value as rgbaColor,
+							textShadow: getTextShadowFast(value as rgbaColor, 0.9)
+						} as ColorStyle;
+						this.comparisonColors[ComparisonState.AHEAD_GAIN] = colors;
+					},
+					onChanged: () => this.createDummySplits()
 				},
 				comparisonsAheadLoss: {
 					name: 'Ahead - Loss',
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
-						COMPARISON_COLORS.ahead_loss.color = value;
-						COMPARISON_COLORS.ahead_loss.textShadow = getTextShadowFast(value as rgbaColor, 0.9);
-						this.createDummySplits();
-					}
+						const colors = {
+							color: value as rgbaColor,
+							textShadow: getTextShadowFast(value as rgbaColor, 0.9)
+						} as ColorStyle;
+						this.comparisonColors[ComparisonState.AHEAD_LOSS] = colors;
+					},
+					onChanged: () => this.createDummySplits()
 				},
 				comparisonsBehindGain: {
 					name: 'Behind - Gain',
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
-						COMPARISON_COLORS.behind_gain.color = value;
-						COMPARISON_COLORS.behind_gain.textShadow = getTextShadowFast(value as rgbaColor, 0.9);
-						this.createDummySplits();
-					}
+						const colors = {
+							color: value as rgbaColor,
+							textShadow: getTextShadowFast(value as rgbaColor, 0.9)
+						} as ColorStyle;
+						this.comparisonColors[ComparisonState.BEHIND_GAIN] = colors;
+					},
+					onChanged: () => this.createDummySplits()
 				},
 				comparisonsBehindLoss: {
 					name: 'Behind - Loss',
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
-						COMPARISON_COLORS.behind_loss.color = value;
-						COMPARISON_COLORS.behind_loss.textShadow = getTextShadowFast(value as rgbaColor, 0.9);
-						this.createDummySplits();
-					}
+						const colors = {
+							color: value as rgbaColor,
+							textShadow: getTextShadowFast(value as rgbaColor, 0.9)
+						} as ColorStyle;
+						this.comparisonColors[ComparisonState.BEHIND_LOSS] = colors;
+					},
+					onChanged: () => this.createDummySplits()
 				}
 			}
 		});
@@ -489,16 +511,16 @@ class HudComparisonsHandler {
 		diff.SetDialogVariableFloat('diff', Math.abs(split.diff!));
 
 		const getSplitState = (diff: number, delta: number) => {
-			if (diff === 0) return 'neutral';
+			if (diff === 0) return ComparisonState.NEUTRAL;
 			const isAhead = diff < 0;
 			const isGain = delta <= 0;
 
-			if (isAhead) return isGain ? 'ahead_gain' : 'ahead_loss';
-			return isGain ? 'behind_gain' : 'behind_loss';
+			if (isAhead) return isGain ? ComparisonState.AHEAD_GAIN : ComparisonState.AHEAD_LOSS;
+			return isGain ? ComparisonState.BEHIND_GAIN : ComparisonState.BEHIND_LOSS;
 		};
 
 		const state = getSplitState(split.diff!, split.delta!);
-		const style = COMPARISON_COLORS[state];
+		const style = this.comparisonColors[state];
 
 		diff.style.color = style.color;
 		diff.style.textShadowFast = style.textShadow;

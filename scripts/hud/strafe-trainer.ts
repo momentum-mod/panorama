@@ -141,18 +141,14 @@ class StrafeTrainer {
 				indicatorPercentage: {
 					name: 'Indicator Gain Percentage',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
-					callbackFunc: (_, value) => {
-						this.indicatorPercentage = value;
-						this.updateDisplayMode(this.displayMode);
-					},
+					callbackFunc: (_, value) => (this.indicatorPercentage = value),
+					onChanged: () => this.updateDisplayMode(this.displayMode),
 					settingProps: { min: 80, max: 99 }
 				},
 				synchronizerSpeed: {
 					name: 'Synchronizer Speed',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
-					callbackFunc: (_, value) => {
-						this.syncGain = value;
-					},
+					callbackFunc: (_, value) => (this.syncGain = value),
 					settingProps: { min: 1, max: 20 }
 				},
 				needleWidth: {
@@ -171,31 +167,23 @@ class StrafeTrainer {
 				averagingWindow: {
 					name: 'Averaging Window',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
-					callbackFunc: (_, value) => {
-						this.updateBufferLength(value);
-					},
+					callbackFunc: (_, value) => this.updateBufferLength(value),
 					settingProps: { min: 1, max: 20 }
 				},
 				minSpeed: {
 					name: 'Required Speed',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
-					callbackFunc: (_, value) => {
-						this.minSpeed = value;
-					}
+					callbackFunc: (_, value) => (this.minSpeed = value)
 				},
 				dynamicMode: {
 					name: 'Follow Strafe Direction',
 					type: CustomizerPropertyType.CHECKBOX,
-					callbackFunc: (_, value) => {
-						this.dynamicEnable = value;
-					}
+					callbackFunc: (_, value) => (this.dynamicEnable = value)
 				},
 				flipDirections: {
 					name: 'Flip Directions',
 					type: CustomizerPropertyType.CHECKBOX,
-					callbackFunc: (_, value) => {
-						this.flipEnable = value;
-					}
+					callbackFunc: (_, value) => (this.flipEnable = value)
 				},
 				showLabels: {
 					name: 'Show Labels',
@@ -212,34 +200,26 @@ class StrafeTrainer {
 				showJumpCount: {
 					name: 'Show Jump Count',
 					type: CustomizerPropertyType.CHECKBOX,
-					callbackFunc: (_, value) => {
-						this.showJumpCount = value;
-						this.updateStats();
-					}
+					callbackFunc: (_, value) => (this.showJumpCount = value),
+					onChanged: () => this.updateStats()
 				},
 				showTakeoffSpeed: {
 					name: 'Show Take Off Speed',
 					type: CustomizerPropertyType.CHECKBOX,
-					callbackFunc: (_, value) => {
-						this.showTakeoffSpeed = value;
-						this.updateStats();
-					}
+					callbackFunc: (_, value) => (this.showTakeoffSpeed = value),
+					onChanged: () => this.updateStats()
 				},
 				showYawRatio: {
 					name: 'Show Yaw Ratio',
 					type: CustomizerPropertyType.CHECKBOX,
-					callbackFunc: (_, value) => {
-						this.showYawRatio = value;
-						this.updateStats();
-					}
+					callbackFunc: (_, value) => (this.showYawRatio = value),
+					onChanged: () => this.updateStats()
 				},
 				showGain: {
 					name: 'Show Gain',
 					type: CustomizerPropertyType.CHECKBOX,
-					callbackFunc: (_, value) => {
-						this.showGain = value;
-						this.updateStats();
-					}
+					callbackFunc: (_, value) => (this.showGain = value),
+					onChanged: () => this.updateStats()
 				},
 				fontStyling: {
 					name: 'Font Styling',
@@ -265,9 +245,7 @@ class StrafeTrainer {
 					type: CustomizerPropertyType.COLOR_PICKER,
 					targetPanel: ['.strafetrainer__stats--upper', '.strafetrainer__stats--lower'],
 					styleProperty: 'color',
-					callbackFunc: (_, value) => {
-						this.fontColor = [value, value];
-					}
+					callbackFunc: (_, value) => (this.fontColor = [value, value])
 				},
 				colors: {
 					name: 'Colors',
@@ -297,10 +275,8 @@ class StrafeTrainer {
 				colorStats: {
 					name: 'Color Stats Based On Gain',
 					type: CustomizerPropertyType.CHECKBOX,
-					callbackFunc: (_, value) => {
-						this.statColorEnable = value;
-						this.updateStats();
-					}
+					callbackFunc: (_, value) => (this.statColorEnable = value),
+					onChanged: () => this.updateStats()
 				},
 
 				colorByGain: {
@@ -310,16 +286,12 @@ class StrafeTrainer {
 						{ styleID: 'gainGradients', showWhen: true },
 						{ styleID: 'strafeBarColor', showWhen: false }
 					],
-					callbackFunc: (_, value) => {
-						this.colorByGainEnable = value;
-					}
+					callbackFunc: (_, value) => (this.colorByGainEnable = value)
 				},
 				strafeBarColor: {
 					name: 'Strafe Bar Color',
 					type: CustomizerPropertyType.GRADIENT_PICKER,
-					callbackFunc: (_, value) => {
-						this.strafeBarGradient = value;
-					}
+					callbackFunc: (_, value) => (this.strafeBarGradient = value)
 				},
 				gainGradients: {
 					name: 'Gain Gradients',
@@ -338,53 +310,40 @@ class StrafeTrainer {
 				gainExtra: {
 					name: 'Extra',
 					type: CustomizerPropertyType.GRADIENT_PICKER,
-					callbackFunc: (_, value) => {
-						Colors.EXTRA = value as [color, color];
-					}
+					callbackFunc: (_, value) => (Colors.EXTRA = value as [color, color])
 				},
 				gainPerfect: {
 					name: 'Perfect',
 					type: CustomizerPropertyType.GRADIENT_PICKER,
-					callbackFunc: (_, value) => {
-						Colors.PERFECT = value as [color, color];
-					}
+					callbackFunc: (_, value) => (Colors.PERFECT = value as [color, color])
 				},
 				gainGood: {
 					name: 'Good',
 					type: CustomizerPropertyType.GRADIENT_PICKER,
-					callbackFunc: (_, value) => {
-						Colors.GOOD = value as [color, color];
-					}
+					callbackFunc: (_, value) => (Colors.GOOD = value as [color, color])
 				},
 				gainSlow: {
 					name: 'Slow',
 					type: CustomizerPropertyType.GRADIENT_PICKER,
-					callbackFunc: (_, value) => {
-						Colors.SLOW = value as [color, color];
-					}
+					callbackFunc: (_, value) => (Colors.SLOW = value as [color, color])
 				},
 				gainNeutral: {
 					name: 'Neutral',
 					type: CustomizerPropertyType.GRADIENT_PICKER,
-					callbackFunc: (_, value) => {
-						Colors.NEUTRAL = value as [color, color];
-					}
+					callbackFunc: (_, value) => (Colors.NEUTRAL = value as [color, color])
 				},
 				gainLoss: {
 					name: 'Loss',
 					type: CustomizerPropertyType.GRADIENT_PICKER,
-					callbackFunc: (_, value) => {
-						Colors.LOSS = value as [color, color];
-					}
+					callbackFunc: (_, value) => (Colors.LOSS = value as [color, color])
 				},
 				gainStop: {
 					name: 'Stop',
 					type: CustomizerPropertyType.GRADIENT_PICKER,
-					callbackFunc: (_, value) => {
-						Colors.STOP = value as [color, color];
-					}
+					callbackFunc: (_, value) => (Colors.STOP = value as [color, color])
 				}
-			}
+			},
+			postInit: () => this.updateStats()
 		});
 	}
 

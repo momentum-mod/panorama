@@ -148,8 +148,8 @@ class KeyPress {
 						{ styleID: 'iconsModifiers', showWhen: 'icons' },
 						{ styleID: 'iconsJumpDuck', showWhen: 'icons' }
 					],
-					callbackFunc: (_, value) => {
-						Config.type = value;
+					callbackFunc: (_, value) => (Config.type = value),
+					onChanged: () => {
 						if (Config.type === 'text') this.createTextType();
 						else this.createIconsType();
 					}
@@ -160,10 +160,8 @@ class KeyPress {
 				textSize: {
 					name: 'Size',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
-					callbackFunc: (_, value) => {
-						Config.text.scale_factor = value / 10;
-						this.createTextType();
-					}
+					callbackFunc: (_, value) => (Config.text.scale_factor = value / 10),
+					onChanged: () => this.createTextType()
 				},
 
 				// DIRECTIONAL KEYS
@@ -186,26 +184,20 @@ class KeyPress {
 				textDirPanelBorderWidth: {
 					name: 'Border Width',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
-					callbackFunc: (_, value) => {
-						Config.text.dir.borderWidth = value;
-						this.updateStyles();
-					}
+					callbackFunc: (_, value) => (Config.text.dir.borderWidth = value),
+					onChanged: () => this.updateStyles()
 				},
 				textDirPanelBorderColor: {
 					name: 'Border Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
-					callbackFunc: (_, value) => {
-						Config.text.dir.borderColor = value;
-						this.updateStyles();
-					}
+					callbackFunc: (_, value) => (Config.text.dir.borderColor = value),
+					onChanged: () => this.updateStyles()
 				},
 				textDirPanelBorderRadius: {
 					name: 'Border Radius',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
-					callbackFunc: (_, value) => {
-						Config.text.dir.borderRadius = value;
-						this.updateStyles();
-					}
+					callbackFunc: (_, value) => (Config.text.dir.borderRadius = value),
+					onChanged: () => this.updateStyles()
 				},
 				textColors: {
 					name: 'Colors',
@@ -227,34 +219,26 @@ class KeyPress {
 				textDirPanelDefaultBg: {
 					name: 'Default Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
-					callbackFunc: (_, value) => {
-						Config.text.dir.states.default.bg = value;
-						this.updateStyles();
-					}
+					callbackFunc: (_, value) => (Config.text.dir.states.default.bg = value),
+					onChanged: () => this.updateStyles()
 				},
 				textDirPanelPressedBg: {
 					name: 'Pressed Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
-					callbackFunc: (_, value) => {
-						Config.text.dir.states.pressed.bg = value;
-						this.updateStyles();
-					}
+					callbackFunc: (_, value) => (Config.text.dir.states.pressed.bg = value),
+					onChanged: () => this.updateStyles()
 				},
 				textDirPanelDisabledBg: {
 					name: 'Disabled Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
-					callbackFunc: (_, value) => {
-						Config.text.dir.states.disabled.bg = value;
-						this.updateStyles();
-					}
+					callbackFunc: (_, value) => (Config.text.dir.states.disabled.bg = value),
+					onChanged: () => this.updateStyles()
 				},
 				textDirPanelForcedBg: {
 					name: 'Forced Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
-					callbackFunc: (_, value) => {
-						Config.text.dir.states.forced.bg = value;
-						this.updateStyles();
-					}
+					callbackFunc: (_, value) => (Config.text.dir.states.forced.bg = value),
+					onChanged: () => this.updateStyles()
 				},
 				textDirIcon: {
 					name: 'Icons',
@@ -274,8 +258,8 @@ class KeyPress {
 						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
 						Config.text.dir.states.default.iconColor = `rgb(${r}, ${g}, ${b})`;
 						Config.text.dir.states.default.iconOpacity = alpha / 255;
-						this.updateStyles();
-					}
+					},
+					onChanged: () => this.updateStyles()
 				},
 				textDirIconPressedColor: {
 					name: 'Pressed Color',
@@ -284,8 +268,8 @@ class KeyPress {
 						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
 						Config.text.dir.states.pressed.iconColor = `rgb(${r}, ${g}, ${b})`;
 						Config.text.dir.states.pressed.iconOpacity = alpha / 255;
-						this.updateStyles();
-					}
+					},
+					onChanged: () => this.updateStyles()
 				},
 				textDirIconDisabledColor: {
 					name: 'Disabled Color',
@@ -294,8 +278,8 @@ class KeyPress {
 						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
 						Config.text.dir.states.disabled.iconColor = `rgb(${r}, ${g}, ${b})`;
 						Config.text.dir.states.disabled.iconOpacity = alpha / 255;
-						this.updateStyles();
-					}
+					},
+					onChanged: () => this.updateStyles()
 				},
 				textDirIconForcedColor: {
 					name: 'Forced Color',
@@ -304,8 +288,8 @@ class KeyPress {
 						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
 						Config.text.dir.states.forced.iconColor = `rgb(${r}, ${g}, ${b})`;
 						Config.text.dir.states.forced.iconOpacity = alpha / 255;
-						this.updateStyles();
-					}
+					},
+					onChanged: () => this.updateStyles()
 				},
 
 				// LABELS
@@ -325,50 +309,38 @@ class KeyPress {
 				textLabelFont: {
 					name: 'Font',
 					type: CustomizerPropertyType.FONT_PICKER,
-					callbackFunc: (_, value) => {
-						Config.text.label.fontFamily = value;
-						this.updateStyles();
-					}
+					callbackFunc: (_, value) => (Config.text.label.fontFamily = value),
+					onChanged: () => this.updateStyles()
 				},
 				textLabelDefaultColor: {
 					name: 'Default Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
-					callbackFunc: (_, value) => {
-						Config.text.label.states.default.color = value;
-						this.updateStyles();
-					}
+					callbackFunc: (_, value) => (Config.text.label.states.default.color = value),
+					onChanged: () => this.updateStyles()
 				},
 				textLabelPressedColor: {
 					name: 'Pressed Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
-					callbackFunc: (_, value) => {
-						Config.text.label.states.pressed.color = value;
-						this.updateStyles();
-					}
+					callbackFunc: (_, value) => (Config.text.label.states.pressed.color = value),
+					onChanged: () => this.updateStyles()
 				},
 				textLabelDisabledColor: {
 					name: 'Disabled Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
-					callbackFunc: (_, value) => {
-						Config.text.label.states.disabled.color = value;
-						this.updateStyles();
-					}
+					callbackFunc: (_, value) => (Config.text.label.states.disabled.color = value),
+					onChanged: () => this.updateStyles()
 				},
 				textLabelToggledColor: {
 					name: 'Toggled Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
-					callbackFunc: (_, value) => {
-						Config.text.label.states.toggled.color = value;
-						this.updateStyles();
-					}
+					callbackFunc: (_, value) => (Config.text.label.states.toggled.color = value),
+					onChanged: () => this.updateStyles()
 				},
 				textLabelForcedColor: {
 					name: 'Forced Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
-					callbackFunc: (_, value) => {
-						Config.text.label.states.forced.color = value;
-						this.updateStyles();
-					}
+					callbackFunc: (_, value) => (Config.text.label.states.forced.color = value),
+					onChanged: () => this.updateStyles()
 				},
 
 				// TURNBINDS
@@ -386,18 +358,14 @@ class KeyPress {
 				textTurnbindsWidth: {
 					name: 'Width',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
-					callbackFunc: (_, value) => {
-						Config.text.turnbinds.width = value;
-						this.createTextType();
-					}
+					callbackFunc: (_, value) => (Config.text.turnbinds.width = value),
+					onChanged: () => this.createTextType()
 				},
 				textTurnbindsHeight: {
 					name: 'Height',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
-					callbackFunc: (_, value) => {
-						Config.text.turnbinds.height = value;
-						this.createTextType();
-					}
+					callbackFunc: (_, value) => (Config.text.turnbinds.height = value),
+					onChanged: () => this.createTextType()
 				},
 				textTurnbindsBorderStyling: {
 					name: 'Border Styling',
@@ -412,26 +380,20 @@ class KeyPress {
 				textTurnbindBorderWidth: {
 					name: 'Border Width',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
-					callbackFunc: (_, value) => {
-						Config.text.turnbinds.borderWidth = value;
-						this.updateStyles();
-					}
+					callbackFunc: (_, value) => (Config.text.turnbinds.borderWidth = value),
+					onChanged: () => this.updateStyles()
 				},
 				textTurnbindBorderColor: {
 					name: 'Border Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
-					callbackFunc: (_, value) => {
-						Config.text.turnbinds.borderColor = value;
-						this.updateStyles();
-					}
+					callbackFunc: (_, value) => (Config.text.turnbinds.borderColor = value),
+					onChanged: () => this.updateStyles()
 				},
 				textTurnbindBorderRadius: {
 					name: 'Border Radius',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
-					callbackFunc: (_, value) => {
-						Config.text.turnbinds.borderRadius = value;
-						this.updateStyles();
-					}
+					callbackFunc: (_, value) => (Config.text.turnbinds.borderRadius = value),
+					onChanged: () => this.updateStyles()
 				},
 				textTurnbindsColors: {
 					name: 'Colors',
@@ -447,34 +409,26 @@ class KeyPress {
 				textTurnbindsDefaultBg: {
 					name: 'Default Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
-					callbackFunc: (_, value) => {
-						Config.text.turnbinds.states.default.bg = value;
-						this.updateStyles();
-					}
+					callbackFunc: (_, value) => (Config.text.turnbinds.states.default.bg = value),
+					onChanged: () => this.updateStyles()
 				},
 				textTurnbindsPressedBg: {
 					name: 'Pressed Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
-					callbackFunc: (_, value) => {
-						Config.text.turnbinds.states.pressed.bg = value;
-						this.updateStyles();
-					}
+					callbackFunc: (_, value) => (Config.text.turnbinds.states.pressed.bg = value),
+					onChanged: () => this.updateStyles()
 				},
 				textTurnbindsDisabledBg: {
 					name: 'Disabled Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
-					callbackFunc: (_, value) => {
-						Config.text.turnbinds.states.disabled.bg = value;
-						this.updateStyles();
-					}
+					callbackFunc: (_, value) => (Config.text.turnbinds.states.disabled.bg = value),
+					onChanged: () => this.updateStyles()
 				},
 				textTurnbindsForcedBg: {
 					name: 'Forced Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
-					callbackFunc: (_, value) => {
-						Config.text.turnbinds.states.forced.bg = value;
-						this.updateStyles();
-					}
+					callbackFunc: (_, value) => (Config.text.turnbinds.states.forced.bg = value),
+					onChanged: () => this.updateStyles()
 				},
 
 				/**
@@ -483,18 +437,14 @@ class KeyPress {
 				iconsSize: {
 					name: 'Size',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
-					callbackFunc: (_, value) => {
-						Config.icons.scale_factor = value / 10;
-						this.createIconsType();
-					}
+					callbackFunc: (_, value) => (Config.icons.scale_factor = value / 10),
+					onChanged: () => this.createIconsType()
 				},
 				iconsReplaceModifiers: {
 					name: 'Jump/Duck As Modifiers',
 					type: CustomizerPropertyType.CHECKBOX,
-					callbackFunc: (_, value) => {
-						Config.icons.replaceModifiers = value;
-						this.createIconsType();
-					}
+					callbackFunc: (_, value) => (Config.icons.replaceModifiers = value),
+					onChanged: () => this.createIconsType()
 				},
 
 				// DIRECTIONAL KEYS
@@ -516,8 +466,8 @@ class KeyPress {
 						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
 						Config.icons.dir.states.default.bg = `rgb(${r}, ${g}, ${b})`;
 						Config.icons.dir.states.default.opacity = alpha / 255;
-						this.updateStyles();
-					}
+					},
+					onChanged: () => this.updateStyles()
 				},
 				iconsDirPressedColor: {
 					name: 'Pressed Color',
@@ -526,8 +476,8 @@ class KeyPress {
 						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
 						Config.icons.dir.states.pressed.bg = `rgb(${r}, ${g}, ${b})`;
 						Config.icons.dir.states.pressed.opacity = alpha / 255;
-						this.updateStyles();
-					}
+					},
+					onChanged: () => this.updateStyles()
 				},
 				iconsDirDisabledColor: {
 					name: 'Disabled Color',
@@ -536,8 +486,8 @@ class KeyPress {
 						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
 						Config.icons.dir.states.disabled.bg = `rgb(${r}, ${g}, ${b})`;
 						Config.icons.dir.states.disabled.opacity = alpha / 255;
-						this.updateStyles();
-					}
+					},
+					onChanged: () => this.updateStyles()
 				},
 				iconsDirForcedColor: {
 					name: 'Forced Color',
@@ -546,8 +496,8 @@ class KeyPress {
 						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
 						Config.icons.dir.states.forced.bg = `rgb(${r}, ${g}, ${b})`;
 						Config.icons.dir.states.forced.opacity = alpha / 255;
-						this.updateStyles();
-					}
+					},
+					onChanged: () => this.updateStyles()
 				},
 
 				// MODIFIER KEYS
@@ -570,8 +520,8 @@ class KeyPress {
 						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
 						Config.icons.modifiers.states.default.bg = `rgb(${r}, ${g}, ${b})`;
 						Config.icons.modifiers.states.default.opacity = alpha / 255;
-						this.updateStyles();
-					}
+					},
+					onChanged: () => this.updateStyles()
 				},
 				iconsModifiersPressedColor: {
 					name: 'Pressed Color',
@@ -580,8 +530,8 @@ class KeyPress {
 						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
 						Config.icons.modifiers.states.pressed.bg = `rgb(${r}, ${g}, ${b})`;
 						Config.icons.modifiers.states.pressed.opacity = alpha / 255;
-						this.updateStyles();
-					}
+					},
+					onChanged: () => this.updateStyles()
 				},
 				iconsModifiersDisabledColor: {
 					name: 'Disabled Color',
@@ -590,8 +540,8 @@ class KeyPress {
 						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
 						Config.icons.modifiers.states.disabled.bg = `rgb(${r}, ${g}, ${b})`;
 						Config.icons.modifiers.states.disabled.opacity = alpha / 255;
-						this.updateStyles();
-					}
+					},
+					onChanged: () => this.updateStyles()
 				},
 				iconsModifiersToggledColor: {
 					name: 'Toggled Color',
@@ -600,8 +550,8 @@ class KeyPress {
 						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
 						Config.icons.modifiers.states.toggled.bg = `rgb(${r}, ${g}, ${b})`;
 						Config.icons.modifiers.states.toggled.opacity = alpha / 255;
-						this.updateStyles();
-					}
+					},
+					onChanged: () => this.updateStyles()
 				},
 				iconsModifiersForcedColor: {
 					name: 'Forced Color',
@@ -610,8 +560,8 @@ class KeyPress {
 						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
 						Config.icons.modifiers.states.forced.bg = `rgb(${r}, ${g}, ${b})`;
 						Config.icons.modifiers.states.forced.opacity = alpha / 255;
-						this.updateStyles();
-					}
+					},
+					onChanged: () => this.updateStyles()
 				},
 
 				// JUMP_DUCK KEYS
@@ -634,8 +584,8 @@ class KeyPress {
 						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
 						Config.icons.jump_duck.states.default.bg = `rgb(${r}, ${g}, ${b})`;
 						Config.icons.jump_duck.states.default.opacity = alpha / 255;
-						this.updateStyles();
-					}
+					},
+					onChanged: () => this.updateStyles()
 				},
 				iconsJumpDuckPressedColor: {
 					name: 'Pressed Color',
@@ -644,8 +594,8 @@ class KeyPress {
 						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
 						Config.icons.jump_duck.states.pressed.bg = `rgb(${r}, ${g}, ${b})`;
 						Config.icons.jump_duck.states.pressed.opacity = alpha / 255;
-						this.updateStyles();
-					}
+					},
+					onChanged: () => this.updateStyles()
 				},
 				iconsJumpDuckDisabledColor: {
 					name: 'Disabled Color',
@@ -654,8 +604,8 @@ class KeyPress {
 						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
 						Config.icons.jump_duck.states.disabled.bg = `rgb(${r}, ${g}, ${b})`;
 						Config.icons.jump_duck.states.disabled.opacity = alpha / 255;
-						this.updateStyles();
-					}
+					},
+					onChanged: () => this.updateStyles()
 				},
 				iconsJumpDuckToggledColor: {
 					name: 'Toggled Color',
@@ -664,8 +614,8 @@ class KeyPress {
 						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
 						Config.icons.jump_duck.states.toggled.bg = `rgb(${r}, ${g}, ${b})`;
 						Config.icons.jump_duck.states.toggled.opacity = alpha / 255;
-						this.updateStyles();
-					}
+					},
+					onChanged: () => this.updateStyles()
 				},
 				iconsJumpDuckForcedColor: {
 					name: 'Forced Color',
@@ -674,19 +624,17 @@ class KeyPress {
 						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
 						Config.icons.jump_duck.states.forced.bg = `rgb(${r}, ${g}, ${b})`;
 						Config.icons.jump_duck.states.forced.opacity = alpha / 255;
-						this.updateStyles();
-
-						// Hack to initialize to the proper type
-						this.initHUD();
-					}
+					},
+					onChanged: () => this.updateStyles()
 				}
+			},
+			postInit: () => {
+				if (Config.type === 'text') this.createTextType();
+				else this.createIconsType();
+
+				this.updateStyles();
 			}
 		});
-	}
-
-	initHUD() {
-		if (Config.type === 'text') this.createTextType();
-		else this.createIconsType();
 	}
 
 	updateStyles() {

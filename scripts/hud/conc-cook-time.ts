@@ -31,27 +31,21 @@ class ConcCookHandler {
 				countDown: {
 					name: 'Count Down',
 					type: CustomizerPropertyType.CHECKBOX,
-					callbackFunc: (_, value) => {
-						this.countDown = value;
-						this.onCookUpdate(0, 0);
-					}
+					callbackFunc: (_, value) => (this.countDown = value),
+					onChanged: () => this.onCookUpdate(0, 0)
 				},
 				unfill: {
 					name: 'Unfill',
 					type: CustomizerPropertyType.CHECKBOX,
-					callbackFunc: (_, value) => {
-						this.unfill = value;
-						this.onCookUpdate(0, 0);
-					}
+					callbackFunc: (_, value) => (this.unfill = value),
+					onChanged: () => this.onCookUpdate(0, 0)
 				},
 				showLabel: {
 					name: 'Show Label',
 					type: CustomizerPropertyType.CHECKBOX,
 					children: { styleID: 'fontStyling', showWhen: true },
-					callbackFunc: (_, value) => {
-						this.isLabelEnabled = value;
-						this.onCookUpdate(0, 0);
-					}
+					callbackFunc: (_, value) => (this.isLabelEnabled = value),
+					onChanged: () => this.onCookUpdate(0, 0)
 				},
 				fontStyling: {
 					name: 'Font Styling',

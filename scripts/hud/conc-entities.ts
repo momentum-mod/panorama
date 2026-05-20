@@ -46,24 +46,18 @@ class ConcEntitiesHandler {
 				countDown: {
 					name: 'Count Down',
 					type: CustomizerPropertyType.CHECKBOX,
-					callbackFunc: (_, value) => {
-						Config.countDown = value;
-					}
+					callbackFunc: (_, value) => (Config.countDown = value)
 				},
 				unfill: {
 					name: 'Unfill',
 					type: CustomizerPropertyType.CHECKBOX,
-					callbackFunc: (_, value) => {
-						Config.unfill = value;
-					}
+					callbackFunc: (_, value) => (Config.unfill = value)
 				},
 				showLabel: {
 					name: 'Show Label',
 					type: CustomizerPropertyType.CHECKBOX,
 					children: { styleID: 'fontStyling', showWhen: true },
-					callbackFunc: (_, value) => {
-						Config.isLabelEnabled = value;
-					}
+					callbackFunc: (_, value) => (Config.isLabelEnabled = value)
 				},
 				fontStyling: {
 					name: 'Font Styling',
@@ -74,23 +68,17 @@ class ConcEntitiesHandler {
 				font: {
 					name: 'Font',
 					type: CustomizerPropertyType.FONT_PICKER,
-					callbackFunc: (_, value) => {
-						Config.font.family = value;
-					}
+					callbackFunc: (_, value) => (Config.font.family = value)
 				},
 				fontSize: {
 					name: 'Font Size',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
-					callbackFunc: (_, value) => {
-						Config.font.size = value;
-					}
+					callbackFunc: (_, value) => (Config.font.size = value)
 				},
 				fontColor: {
 					name: 'Font Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
-					callbackFunc: (_, value) => {
-						Config.font.color = value;
-					}
+					callbackFunc: (_, value) => (Config.font.color = value)
 				},
 				borderStyling: {
 					name: 'Border Styling',
@@ -101,16 +89,12 @@ class ConcEntitiesHandler {
 				borderWidth: {
 					name: 'Border Width',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
-					callbackFunc: (_, value) => {
-						Config.border.width = value;
-					}
+					callbackFunc: (_, value) => (Config.border.width = value)
 				},
 				borderColor: {
 					name: 'Border Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
-					callbackFunc: (_, value) => {
-						Config.border.color = value;
-					}
+					callbackFunc: (_, value) => (Config.border.color = value)
 				},
 				borderRadius: {
 					name: 'Border Radius',
@@ -121,17 +105,13 @@ class ConcEntitiesHandler {
 				backgroundRadius: {
 					name: 'Background',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
-					callbackFunc: (_, value) => {
-						Config.border.backgroundRadius = value;
-					},
+					callbackFunc: (_, value) => (Config.border.backgroundRadius = value),
 					settingProps: { min: 0, max: 11 }
 				},
 				fillRadius: {
 					name: 'Fill',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
-					callbackFunc: (_, value) => {
-						Config.border.fillRadius = value;
-					},
+					callbackFunc: (_, value) => (Config.border.fillRadius = value),
 					settingProps: { min: 0, max: 11 }
 				},
 				colors: {
@@ -143,18 +123,16 @@ class ConcEntitiesHandler {
 				backgroundGradient: {
 					name: 'Background',
 					type: CustomizerPropertyType.GRADIENT_PICKER,
-					callbackFunc: (_, value) => {
-						Config.color.background =
-							`gradient(linear, 0% 0%, 100% 0%, from (${value[0]}), to(${value[1]}))` as color;
-					}
+					callbackFunc: (_, value) =>
+						(Config.color.background =
+							`gradient(linear, 0% 0%, 100% 0%, from (${value[0]}), to(${value[1]}))` as color)
 				},
 				fillGradient: {
 					name: 'Fill',
 					type: CustomizerPropertyType.GRADIENT_PICKER,
-					callbackFunc: (_, value) => {
-						Config.color.fill =
-							`gradient(linear, 0% 0%, 100% 0%, from (${value[0]}), to(${value[1]}))` as color;
-					}
+					callbackFunc: (_, value) =>
+						(Config.color.fill =
+							`gradient(linear, 0% 0%, 100% 0%, from (${value[0]}), to(${value[1]}))` as color)
 				}
 			}
 		});

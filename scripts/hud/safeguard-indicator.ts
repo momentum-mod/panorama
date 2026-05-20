@@ -13,7 +13,6 @@ class SafeguardHandler {
 	holdTime: number;
 
 	constructor() {
-		$.RegisterForUnhandledEvent('LevelInitPostEntity', () => this.onMapInit());
 		$.RegisterForUnhandledEvent('OnSafeguardSettingChanged', () => {
 			this.updateSettings();
 		});
@@ -55,14 +54,12 @@ class SafeguardHandler {
 						panel.style.opacity = alpha / 255;
 					}
 				}
+			},
+			postInit: () => {
+				this.updateSettings();
+				this.panels.container.AddClass('safeguard__container--hide');
 			}
 		});
-	}
-
-	onMapInit() {
-		this.updateSettings();
-
-		this.panels.container.AddClass('safeguard__container--hide');
 	}
 
 	updateSettings() {

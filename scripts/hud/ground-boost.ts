@@ -78,10 +78,6 @@ class GroundboostHandler {
 			},
 			unhandledEvents: [
 				{
-					event: 'LevelInitPostEntity',
-					callbackFn: () => this.onMapInit()
-				},
-				{
 					event: 'HudCustomizer_Opened',
 					callbackFn: () => {
 						this.dummyGB = true;
@@ -110,9 +106,8 @@ class GroundboostHandler {
 
 						this.panels.container.style.width = `${value}px`;
 						this.panels.container.style.height = `${value}px`;
-
-						this.startDummyGB();
-					}
+					},
+					onChanged: () => this.startDummyGB()
 				},
 				labelTextMode: {
 					name: 'Label Mode',
@@ -139,24 +134,18 @@ class GroundboostHandler {
 						{ label: 'Speed Gain', value: LabelMode.SPEED }
 					],
 					children: [{ styleID: 'idealTimeRemaining', showWhen: LabelMode.TIME }],
-					callbackFunc: (_, value) => {
-						this.config.labelColorMode = value as LabelMode;
-					}
+					callbackFunc: (_, value) => (this.config.labelColorMode = value as LabelMode)
 				},
 				idealTimeRemaining: {
 					name: 'Ticks Left For Ideal End',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
-					callbackFunc: (_, value) => {
-						this.config.idealEndMs = value * 8;
-					},
+					callbackFunc: (_, value) => (this.config.idealEndMs = value * 8),
 					settingProps: { min: 1, max: 31 }
 				},
 				showFrictionTime: {
 					name: 'Show Friction Time',
 					type: CustomizerPropertyType.CHECKBOX,
-					callbackFunc: (_, value) => {
-						this.config.showFrictionTime = value;
-					}
+					callbackFunc: (_, value) => (this.config.showFrictionTime = value)
 				},
 				noCrashHighlight: {
 					name: 'Highlight lack of crash landing',
@@ -165,8 +154,8 @@ class GroundboostHandler {
 						this.config.showNoCrashHighlight = value;
 						if (this.config.showNoCrashHighlight) this.dummyGBColors.meterColor = MeterColor.NO_CRASH;
 						if (!this.config.showNoCrashHighlight) this.dummyGBColors.meterColor = MeterColor.SLICK;
-						this.startDummyGB();
-					}
+					},
+					onChanged: () => this.startDummyGB()
 				},
 				fontStyling: {
 					name: 'Font Styling',
@@ -229,8 +218,8 @@ class GroundboostHandler {
 					callbackFunc: (_, value) => {
 						MeterColor.SLICK = value;
 						this.dummyGBColors.meterColor = MeterColor.SLICK;
-						this.startDummyGB();
-					}
+					},
+					onChanged: () => this.startDummyGB()
 				},
 				meterFrictionColor: {
 					name: 'Friction',
@@ -238,8 +227,8 @@ class GroundboostHandler {
 					callbackFunc: (_, value) => {
 						MeterColor.FRICTION = value;
 						this.dummyGBColors.meterColor = MeterColor.FRICTION;
-						this.startDummyGB();
-					}
+					},
+					onChanged: () => this.startDummyGB()
 				},
 				meterNoCrashHighlight: {
 					name: 'No Crash Landing',
@@ -247,8 +236,8 @@ class GroundboostHandler {
 					callbackFunc: (_, value) => {
 						MeterColor.NO_CRASH = value;
 						this.dummyGBColors.meterColor = MeterColor.NO_CRASH;
-						this.startDummyGB();
-					}
+					},
+					onChanged: () => this.startDummyGB()
 				},
 				labelFlatColor: {
 					name: 'Flat',
@@ -256,8 +245,8 @@ class GroundboostHandler {
 					callbackFunc: (_, value) => {
 						LabelColor.FLAT = value;
 						this.dummyGBColors.labelColor = LabelColor.FLAT;
-						this.startDummyGB();
-					}
+					},
+					onChanged: () => this.startDummyGB()
 				},
 				labelGainColor: {
 					name: 'Gain',
@@ -265,8 +254,8 @@ class GroundboostHandler {
 					callbackFunc: (_, value) => {
 						LabelColor.GAIN = value;
 						this.dummyGBColors.labelColor = LabelColor.GAIN;
-						this.startDummyGB();
-					}
+					},
+					onChanged: () => this.startDummyGB()
 				},
 				labelLossColor: {
 					name: 'Loss',
@@ -274,21 +263,11 @@ class GroundboostHandler {
 					callbackFunc: (_, value) => {
 						LabelColor.LOSS = value;
 						this.dummyGBColors.labelColor = LabelColor.LOSS;
-						this.startDummyGB();
-					}
+					},
+					onChanged: () => this.startDummyGB()
 				}
 			}
 		});
-	}
-
-	onMapInit() {
-		this.panels.groundboostMeter.style.washColor = MeterColor.NO_CRASH;
-
-		this.panels.container.AddClass('groundboost__container--hide');
-		this.visible = false;
-		this.missedJumpTimer = 0;
-		this.peakSpeed = 0;
-		this.startSpeed = 0;
 	}
 
 	onHudUpdate() {

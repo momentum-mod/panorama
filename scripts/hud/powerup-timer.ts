@@ -51,9 +51,8 @@ class PowerupTimerHandler {
 					type: CustomizerPropertyType.COLOR_PICKER,
 					targetPanel: '.powerup-timer__label',
 					styleProperty: 'color',
-					callbackFunc: (panel, value) => {
-						panel.style.textShadowFast = getTextShadowFast(value as rgbaColor, 0.9);
-					}
+					callbackFunc: (panel, value) =>
+						(panel.style.textShadowFast = getTextShadowFast(value as rgbaColor, 0.9))
 				}
 			}
 		});

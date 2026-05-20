@@ -48,10 +48,8 @@ class StickyChargeHandler {
 							showWhen: [StickyChargeUnit.UPS.toString(), StickyChargeUnit.PERCENT.toString()]
 						}
 					],
-					callbackFunc: (_, value) => {
-						this.stickyChargeUnit = +value;
-						this.onChargeUpdate(this.isEnabled, 900, 0);
-					}
+					callbackFunc: (_, value) => (this.stickyChargeUnit = +value),
+					onChanged: () => this.onChargeUpdate(this.isEnabled, 900, 0)
 				},
 				borderStyles: {
 					name: 'Border Styles',
@@ -137,11 +135,10 @@ class StickyChargeHandler {
 					name: 'Background',
 					type: CustomizerPropertyType.GRADIENT_PICKER,
 					targetPanel: '#StickyChargeMeter_Right',
-					callbackFunc: (_, value) => {
-						this.backgroundColor =
-							`gradient(linear, 0% 0%, 100% 0%, from (${value[0]}), to(${value[1]}))` as color;
-						this.onChargeUpdate(this.isEnabled, 900, 0);
-					}
+					callbackFunc: (_, value) =>
+						(this.backgroundColor =
+							`gradient(linear, 0% 0%, 100% 0%, from (${value[0]}), to(${value[1]}))` as color),
+					onChanged: () => this.onChargeUpdate(this.isEnabled, 900, 0)
 				},
 				fillGradient: {
 					name: 'Fill',
@@ -155,10 +152,8 @@ class StickyChargeHandler {
 				disabledGradient: {
 					name: 'Disabled',
 					type: CustomizerPropertyType.GRADIENT_PICKER,
-					callbackFunc: (_, value) => {
-						this.disabledGradient = value;
-						this.onChargeUpdate(this.isEnabled, 900, 0);
-					}
+					callbackFunc: (_, value) => (this.disabledGradient = value),
+					onChanged: () => this.onChargeUpdate(this.isEnabled, 900, 0)
 				}
 			}
 		});

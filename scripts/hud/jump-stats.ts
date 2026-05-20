@@ -70,9 +70,7 @@ class JumpStatsHandler {
 					callbackFunc: (panel, value) => {
 						panel.style.textShadowFast = getTextShadowFast(value as rgbaColor, 0.9);
 						const nameLabel = panel.GetChild(0);
-						if (nameLabel) {
-							nameLabel.style.borderTop = `1px solid ${value}`;
-						}
+						if (nameLabel) nameLabel.style.borderTop = `1px solid ${value}`;
 					}
 				},
 				logSettings: {
@@ -84,24 +82,18 @@ class JumpStatsHandler {
 				statsFirstPrint: {
 					name: 'First Print',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
-					callbackFunc: (_, value) => {
-						this.jumpStatsConfig.statsFirstPrint = value;
-					}
+					callbackFunc: (_, value) => (this.jumpStatsConfig.statsFirstPrint = value)
 				},
 				statsInterval: {
 					name: 'Interval',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
-					callbackFunc: (_, value) => {
-						this.jumpStatsConfig.statsInterval = value;
-					}
+					callbackFunc: (_, value) => (this.jumpStatsConfig.statsInterval = value)
 				},
 				statsLog: {
 					name: 'Log Window',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
-					callbackFunc: (_, value) => {
-						this.jumpStatsConfig.statsLog = value;
-						this.onConfigChange();
-					}
+					callbackFunc: (_, value) => (this.jumpStatsConfig.statsLog = value),
+					onChanged: () => this.onConfigChange()
 				},
 				toggleStats: {
 					name: 'Toggle Stats',
@@ -125,89 +117,67 @@ class JumpStatsHandler {
 					name: 'Show Take Off Speed',
 					type: CustomizerPropertyType.CHECKBOX,
 					targetPanel: '.jumpstats__label--speed',
-					callbackFunc: (panel, value) => {
-						panel.SetHasClass('hide', !value);
-					}
+					callbackFunc: (panel, value) => panel.SetHasClass('hide', !value)
 				},
 				showSpeedDelta: {
 					name: 'Show Speed Delta',
 					type: CustomizerPropertyType.CHECKBOX,
 					targetPanel: '.jumpstats__label--speed-delta',
-					callbackFunc: (panel, value) => {
-						panel.SetHasClass('hide', !value);
-					}
+					callbackFunc: (panel, value) => panel.SetHasClass('hide', !value)
 				},
 				showGain: {
 					name: 'Show Gain',
 					type: CustomizerPropertyType.CHECKBOX,
 					targetPanel: '.jumpstats__label--gain',
-					callbackFunc: (panel, value) => {
-						panel.SetHasClass('hide', !value);
-					}
+					callbackFunc: (panel, value) => panel.SetHasClass('hide', !value)
 				},
 				showYawRatio: {
 					name: 'Show Yaw Ratio',
 					type: CustomizerPropertyType.CHECKBOX,
 					targetPanel: '.jumpstats__label--yaw-ratio',
-					callbackFunc: (panel, value) => {
-						panel.SetHasClass('hide', !value);
-					}
+					callbackFunc: (panel, value) => panel.SetHasClass('hide', !value)
 				},
 				showStrafeSync: {
 					name: 'Show Strafe Sync',
 					type: CustomizerPropertyType.CHECKBOX,
 					targetPanel: '.jumpstats__label--sync',
-					callbackFunc: (panel, value) => {
-						panel.SetHasClass('hide', !value);
-					}
+					callbackFunc: (panel, value) => panel.SetHasClass('hide', !value)
 				},
 				showEfficiency: {
 					name: 'Show Efficiency',
 					type: CustomizerPropertyType.CHECKBOX,
 					targetPanel: '.jumpstats__label--efficiency',
-					callbackFunc: (panel, value) => {
-						panel.SetHasClass('hide', !value);
-					}
+					callbackFunc: (panel, value) => panel.SetHasClass('hide', !value)
 				},
 				showStrafeCount: {
 					name: 'Show Strafe Count',
 					type: CustomizerPropertyType.CHECKBOX,
 					targetPanel: '.jumpstats__label--strafes',
-					callbackFunc: (panel, value) => {
-						panel.SetHasClass('hide', !value);
-					}
+					callbackFunc: (panel, value) => panel.SetHasClass('hide', !value)
 				},
 				showTakeoffTime: {
 					name: 'Show Take Off Time',
 					type: CustomizerPropertyType.CHECKBOX,
 					targetPanel: '.jumpstats__label--time',
-					callbackFunc: (panel, value) => {
-						panel.SetHasClass('hide', !value);
-					}
+					callbackFunc: (panel, value) => panel.SetHasClass('hide', !value)
 				},
 				showTimeDelta: {
 					name: 'Show Time Delta',
 					type: CustomizerPropertyType.CHECKBOX,
 					targetPanel: '.jumpstats__label--time-delta',
-					callbackFunc: (panel, value) => {
-						panel.SetHasClass('hide', !value);
-					}
+					callbackFunc: (panel, value) => panel.SetHasClass('hide', !value)
 				},
 				showDistance: {
 					name: 'Show Distance',
 					type: CustomizerPropertyType.CHECKBOX,
 					targetPanel: '.jumpstats__label--distance',
-					callbackFunc: (panel, value) => {
-						panel.SetHasClass('hide', !value);
-					}
+					callbackFunc: (panel, value) => panel.SetHasClass('hide', !value)
 				},
 				showHeightDelta: {
 					name: 'Show Height Delta',
 					type: CustomizerPropertyType.CHECKBOX,
 					targetPanel: '.jumpstats__label--height-delta',
-					callbackFunc: (panel, value) => {
-						panel.SetHasClass('hide', !value);
-					}
+					callbackFunc: (panel, value) => panel.SetHasClass('hide', !value)
 				},
 				backgroundColor: {
 					name: 'Background Color',
@@ -225,7 +195,8 @@ class JumpStatsHandler {
 				// 		// this.jumpStatsConfig.enviroAccelEnable = value;
 				// 	}
 				// },
-			}
+			},
+			postInit: () => this.onConfigChange()
 		});
 	}
 
