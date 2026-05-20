@@ -928,13 +928,14 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		const gamemodeID = this.currentGamemodeInfo.id;
 		const fullPresetName = `${gamemodeID}_${this.currentPreset}`;
 		// Serialization done in C++.
+		//TODO: Why the fuck is this saving with null values
 		const isSaved = this.panels.customizer.saveLayout(fullPresetName, saveData);
 
 		if (isSaved) {
 			this.unsavedPresets.delete(fullPresetName);
 			this.presetList.add(fullPresetName);
 			HudCustomizerHandler.presetLayout = this.getPresetLayout(this.currentPreset);
-			ToastAPI.CreateToast('', 'Saved!', `Preset ${this.currentPreset} has been saved!`, 2, 10, '', 'blue');
+			ToastAPI.CreateToast('', 'Saved!', `Preset ${this.currentPreset} has been saved!`, 2, 5, '', 'blue');
 		}
 	}
 
