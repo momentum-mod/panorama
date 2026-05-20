@@ -56,17 +56,44 @@ export type StyleID = string;
 
 export type QuerySelector = `#${string}` | `.${string}` | keyof PanelTagNameMap;
 
-export interface DynamicStyleProperties<
+export type CallbackProps<PropertyType extends CustomizerPropertyType> =
+	| {
+			callbackFunc?: never;
+			onChanged?: never;
+	  }
+	| {
+			/**
+			 * Callback that's called with every matching panel, and the current style value.
+			 *
+			 * Called on initialization and whenever style changes **before** {@link onChanged}
+			 *
+			 * If a change **should not happen during initialization** it should be moved to {@link onChanged}
+			 */
+			callbackFunc: (panel: GenericPanel, value: PropertyTypeToValueTypeMap[PropertyType]) => void;
+
+			/**
+			 * Callback that's called only once, when a style value value **after {@link callbackFunc}
+			 *
+			 * @see {@link callbackFunc}
+			 */
+			onChanged?: (value: PropertyTypeToValueTypeMap[PropertyType]) => void;
+	  };
+
+export type DynamicStyleProperties<
 	PropertyType extends CustomizerPropertyType = CustomizerPropertyType,
 	StyleProperty extends keyof Style | undefined = undefined
-> {
+> = {
 	/** Name of the property to display in UI. Please localize! */
 	name: string;
 
 	/** Defines which styles should be the children of this style.
+	 *
 	 * styleID: id of the child
+	 *
 	 * showWhen: value of the parent
+	 *
 	 * When parent's value is the value defined in showWhen the child will be visible
+	 *
 	 * If showWhen is not provided the child is always visible unless hidden by the expandable property
 	 */
 	children?: DynamicStyleChild | DynamicStyleChild[];
@@ -105,14 +132,6 @@ export interface DynamicStyleProperties<
 	valueFn?: (
 		value: PropertyTypeToValueTypeMap[PropertyType]
 	) => StyleProperty extends keyof Style ? Style[StyleProperty] : never;
-
-	/**
-	 * Callback that's called with every matching panel, and the current style value.
-	 *
-	 * This gives you the ability to style whatever you want using JS, including capturing
-	 * the component's handler class. Use with care!
-	 */
-	callbackFunc?: (panel: GenericPanel, value: PropertyTypeToValueTypeMap[PropertyType]) => void;
 
 	/**
 	 * Collection properties to apply to generated panel, e.g. min/max on numberentry.
@@ -164,7 +183,7 @@ export interface DynamicStyleProperties<
 			};
 		}[keyof GlobalEventNameMap]
 	>;
-}
+} & CallbackProps<PropertyType>;
 
 type MappedStyles = Record<
 	StyleID,

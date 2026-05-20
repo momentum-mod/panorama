@@ -115,7 +115,7 @@ class Component {
 	static referencedValues: Record<string, any> = {};
 
 	// A record of CustomizerSettings dynamic styles <StyleID, Set of StyleID of components that use that style as reference>
-	static referencedValueListeners: Record<string, Set<string>> = {};
+	static referencedValueListeners: Record<string, Map<string, Set<string>>> = {};
 
 	/** @see registerHUDCustomizerComponent */
 	static register(panel: GenericPanel, properties: CustomizerComponentProperties): Component {
@@ -166,9 +166,12 @@ class Component {
 				if (String(value).startsWith('$')) {
 					const refKey = value.slice(1);
 					if (!Component.referencedValueListeners[refKey]) {
-						Component.referencedValueListeners[refKey] = new Set();
+						Component.referencedValueListeners[refKey] = new Map();
 					}
-					Component.referencedValueListeners[refKey].add(this.id);
+
+					const styleSet = Component.referencedValueListeners[refKey].get(this.id) ?? new Set<StyleID>();
+					styleSet.add(styleID as StyleID);
+					Component.referencedValueListeners[refKey].set(this.id, styleSet);
 				}
 
 				for (const { event, panel, callback } of styleProps.events ?? []) {
@@ -193,7 +196,7 @@ class Component {
 				}
 
 				this.dynamicStyles[styleID] = dynamicStyle;
-				this.applyDynamicStyle(dynamicStyle);
+				this.applyDynamicStyle(dynamicStyle, true);
 			}
 		}
 	}
@@ -315,7 +318,7 @@ class Component {
 		this.applyDynamicStyle(dynamicStyle);
 	}
 
-	private applyDynamicStyle(style: DynamicStyle): void {
+	applyDynamicStyle(style: DynamicStyle, isInit: boolean = false): void {
 		const targetPanels: GenericPanel[] = [];
 		if (style.properties.targetPanel) {
 			const selectors = Array.isArray(style.properties.targetPanel)
@@ -349,10 +352,14 @@ class Component {
 			}
 		}
 
-		if (style.properties.callbackFunc && styleValue !== undefined) {
+		if (styleValue !== undefined && style.properties.callbackFunc) {
 			for (const panel of targetPanels) {
 				style.properties.callbackFunc(panel, styleValue);
 			}
+		}
+
+		if (!isInit && style.properties.onChanged) {
+			style.properties.onChanged(styleValue);
 		}
 	}
 
@@ -599,10 +606,13 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		const listeners = Component.referencedValueListeners[refKey];
 		if (!listeners) return;
 
-		listeners.forEach((componentID) => {
+		listeners.forEach((styleIDs, componentID) => {
 			const component = this.components[componentID];
 			if (component) {
-				component.reloadDynamicStyles();
+				for (const styleID of styleIDs) {
+					const style = component.dynamicStyles?.[styleID];
+					if (style) component.applyDynamicStyle(style);
+				}
 			}
 		});
 	}
