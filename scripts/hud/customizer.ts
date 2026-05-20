@@ -199,6 +199,8 @@ class Component {
 				this.applyDynamicStyle(dynamicStyle, true);
 			}
 		}
+
+		properties.postInit?.();
 	}
 
 	get enabled(): boolean {

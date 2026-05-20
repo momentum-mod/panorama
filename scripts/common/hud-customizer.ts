@@ -256,6 +256,9 @@ export interface CustomizerComponentProperties {
 
 	/** Styling properties of provided panel or children, for which we generate UI and store values for. */
 	dynamicStyles?: MappedStyles;
+
+	/** Runs once, after all {@link dynamicStyles} have been initialized */
+	postInit?: () => void;
 }
 
 export interface IHudCustomizerHandler {
