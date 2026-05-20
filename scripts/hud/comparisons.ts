@@ -39,6 +39,9 @@ class HudComparisonsHandler {
 	controlledReplayID: number | null = null;
 	comparison: Timer.RunMetadata | null = null;
 
+	tempComparison: any;
+	tempReplayID: any;
+
 	// Build out our permanent split panel array. This classes's job is ultimately to just tweak
 	// each panel's properties as needed.
 	// Code is simpler is the most recent split is at the front of the array, and the container has a
@@ -157,25 +160,15 @@ class HudComparisonsHandler {
 			this.clearSplits();
 		});
 
-		let tempComparison: any;
-		let tempReplayID: any;
 		$.RegisterForUnhandledEvent('HudCustomizer_Opened', () => {
-			// Usually players using HUD customizer won't be in a run, so generate dummy splits. If they *are* in a run,
-			// don't alter them in any way.
-			const { state } = MomentumTimerAPI.GetObservedTimerStatus();
-
-			if (state === Timer.TimerState.DISABLED || state === Timer.TimerState.PRIMED) {
-				tempComparison = this.comparison;
-				tempReplayID = this.controlledReplayID;
-				this.createDummySplits();
-			}
+			this.createDummySplits();
 		});
 
 		$.RegisterForUnhandledEvent('HudCustomizer_Closed', () => {
 			const { state } = MomentumTimerAPI.GetObservedTimerStatus();
 			if (state === Timer.TimerState.DISABLED || state === Timer.TimerState.PRIMED) {
-				this.comparison = tempComparison;
-				this.controlledReplayID = tempReplayID;
+				this.comparison = this.tempComparison;
+				this.controlledReplayID = this.tempReplayID;
 				this.clearSplits();
 			}
 		});
@@ -531,6 +524,18 @@ class HudComparisonsHandler {
 	}
 
 	createDummySplits() {
+		// Usually players using HUD customizer won't be in a run, so generate dummy splits. If they *are* in a run,
+		// don't alter them in any way.
+		const { state } = MomentumTimerAPI.GetObservedTimerStatus();
+
+		if (state === Timer.TimerState.DISABLED || state === Timer.TimerState.PRIMED) {
+			this.tempComparison = this.comparison;
+			this.tempReplayID = this.controlledReplayID;
+			this._createDummySplits();
+		}
+	}
+
+	private _createDummySplits() {
 		if (!getHudCustomizer()?.isOpen()) return;
 
 		const times = new Array(MAX_SPLITS);
