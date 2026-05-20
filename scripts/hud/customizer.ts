@@ -1013,10 +1013,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 		if (this.customizerReady) {
 			const customizerSettings = this.components['CustomizerSettings'];
-			this.components['CustomizerSettings'] = Component.register(
-				customizerSettings.panel,
-				customizerSettings.properties
-			);
+			Component.register(customizerSettings.panel, customizerSettings.properties);
 			this.panels.activeComponentSettings.style.visibility = 'visible';
 		}
 
