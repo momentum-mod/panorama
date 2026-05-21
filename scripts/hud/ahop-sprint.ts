@@ -103,31 +103,31 @@ class AhopSprint {
 					name: 'Size',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					callbackFunc: (_, value) => (Config.curve.size = value),
-					onChanged: () => this.updateStyles()
+					onChanged: () => this.updateCurveType()
 				},
 				curveGap: {
 					name: 'Gap',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					callbackFunc: (_, value) => (Config.curve.gap = value),
-					onChanged: () => this.updateStyles()
+					onChanged: () => this.updateCurveType()
 				},
 				curveThickness: {
 					name: 'Thickness',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					callbackFunc: (_, value) => (Config.curve.thickness = value / 10),
-					onChanged: () => this.updateStyles()
+					onChanged: () => this.updateCurveType()
 				},
 				curveRotation: {
 					name: 'Rotation',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					callbackFunc: (_, value) => (Config.curve.rotation = value),
-					onChanged: () => this.updateStyles()
+					onChanged: () => this.updateCurveType()
 				},
 				curveArcLength: {
 					name: 'Arc Length',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					callbackFunc: (_, value) => (Config.curve.arcLength = value),
-					onChanged: () => this.updateStyles()
+					onChanged: () => this.updateCurveType()
 				},
 				curveColors: {
 					name: 'State Colors',
@@ -166,32 +166,32 @@ class AhopSprint {
 					name: 'Width',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					callbackFunc: (_, value) => (Config.dot.width = value),
-					onChanged: () => this.updateStyles()
+					onChanged: () => this.updateDotType()
 				},
 				dotHeight: {
 					name: 'Height',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					callbackFunc: (_, value) => (Config.dot.height = value),
-					onChanged: () => this.updateStyles()
+					onChanged: () => this.updateDotType()
 				},
 				dotBorderRadius: {
 					name: 'Border Radius',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					callbackFunc: (_, value) => (Config.dot.borderRadius = value),
-					onChanged: () => this.updateStyles(),
+					onChanged: () => this.updateDotType(),
 					settingProps: { min: 0, max: 50 }
 				},
 				dotBorderWidth: {
 					name: 'Border Width',
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					callbackFunc: (_, value) => (Config.dot.borderWidth = value),
-					onChanged: () => this.updateStyles()
+					onChanged: () => this.updateDotType()
 				},
 				dotBorderColor: {
 					name: 'Border Color',
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => (Config.dot.borderColor = value),
-					onChanged: () => this.updateStyles()
+					onChanged: () => this.updateDotType()
 				},
 				dotGradients: {
 					name: 'State Gradients',
@@ -243,8 +243,8 @@ class AhopSprint {
 			this.panels.dot.visible = false;
 			this.updateCurveType();
 		} else if (Config.type === 'dot') {
-			this.panels.curveWrapper.visible = true;
-			this.panels.dot.visible = false;
+			this.panels.curveWrapper.visible = false;
+			this.panels.dot.visible = true;
 			this.updateDotType();
 		}
 	}
