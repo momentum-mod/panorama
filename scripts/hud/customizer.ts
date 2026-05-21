@@ -426,6 +426,9 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 	currentPreset: string;
 
+	//Used because of a font bug
+	private os: 'windows' | 'linux';
+
 	constructor() {
 		registerHUDCustomizerComponent(this.panels.settings, {
 			name: 'HUD Customizer Settings',
@@ -575,6 +578,8 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		// $.RegisterEventHandler('HudCustomizer_LayoutReloaded', this.panels.customizer, () => {
 		// 	this.load();
 		// });
+
+		this.os = GameInterfaceAPI.GetOperatingSystem();
 
 		this.customizerReady = false;
 		this.gridlines = [[], []];
@@ -1443,8 +1448,12 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 					for (const font of this.fonts) {
 						const panel = $.CreatePanel('Label', dropdown, font);
 						panel.text = font;
-						// Disabled because it causes extreme lag on linux ( can't test windows )
-						// panel.style.fontFamily = font;
+
+						// Disabled on linux because it causes extreme lag
+						if (this.os === 'windows') {
+							panel.style.fontFamily = font;
+						}
+
 						dropdown.AddOption(panel);
 					}
 
