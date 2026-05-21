@@ -16,7 +16,7 @@ const Colors = {
 	RUNNING: 'rgba(255, 255, 255, 1)' as rgbaColor,
 	FINISHED: 'rgba(122, 238, 122, 1)' as rgbaColor,
 	// Comparison colors
-	INCREASE: 'rgba(16, 118, 168, 1)' as rgbaColor,
+	INCREASE: 'rgba(24, 150, 211, 1)' as rgbaColor,
 	DECREASE: 'rgba(255, 106, 106, 1)' as rgbaColor,
 	INVISIBLE: 'rgba(0, 0, 0, 0)' as rgbaColor
 };

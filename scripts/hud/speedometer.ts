@@ -26,10 +26,10 @@ interface Range {
 
 const Colors = {
 	AXIS_FLAT: 'rgba(255, 255, 255, 1)',
-	AXIS_GAIN: 'rgba(16, 118, 168, 1)',
+	AXIS_GAIN: 'rgba(24, 150, 211, 1)',
 	AXIS_LOSS: 'rgba(255, 106, 106, 1)',
 	COMPARISON_FLAT: 'rgba(255, 255, 255, 1)',
-	COMPARISON_GAIN: 'rgba(16, 118, 168, 1)',
+	COMPARISON_GAIN: 'rgba(24, 150, 211, 1)',
 	COMPARISON_LOSS: 'rgba(255, 106, 106, 1)'
 };
 
