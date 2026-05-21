@@ -239,12 +239,12 @@ class AhopSprint {
 
 	updateStyles() {
 		if (Config.type === 'curve') {
-			this.panels.curveWrapper.style.visibility = 'visible';
-			this.panels.dot.style.visibility = 'collapse';
+			this.panels.curveWrapper.visible = true;
+			this.panels.dot.visible = false;
 			this.updateCurveType();
 		} else if (Config.type === 'dot') {
-			this.panels.curveWrapper.style.visibility = 'collapse';
-			this.panels.dot.style.visibility = 'visible';
+			this.panels.curveWrapper.visible = true;
+			this.panels.dot.visible = false;
 			this.updateDotType();
 		}
 	}

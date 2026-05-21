@@ -12,6 +12,7 @@ import * as Enum from 'util/enum';
 import { traverseChildren } from 'util/functions';
 import { GamemodeInfo } from 'common/web/maps/gamemodes.map';
 import { PanelHandler } from 'util/module-helpers';
+import { mergeDeep, compareDeepIgnoreNull, compareDeepAsymmetric } from 'util/functions';
 
 // TODO: need to do a *ton* of localization when this is done, including components!
 
@@ -279,7 +280,6 @@ class Component {
 	}
 
 	/** Reset a component to its original state. */
-	// TODO: how tf will this work with groups lol
 	reset(options: ResetOptions): void {
 		const defaultComponentLayout = HudCustomizerHandler.defaultLayout[this.id];
 		if (!defaultComponentLayout)
@@ -912,7 +912,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		const getLayoutDelta = (layoutA: HudLayout, layoutB: HudLayout) => {
 			const delta: HudLayout = {};
 			for (const [id, componentLayout] of Object.entries(layoutA)) {
-				if (!isAsymmetricDeepEqual(componentLayout, layoutB[id])) {
+				if (!compareDeepAsymmetric(componentLayout, layoutB[id])) {
 					delta[id] = componentLayout;
 				}
 			}
@@ -926,7 +926,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 		//Check if remaining components are the same as current preset
 		//This is done to not save unnecessarily when switching between presets
-		if (isSymmetricDeepEqual(saveData, savedPreset)) return;
+		if (compareDeepIgnoreNull(saveData, savedPreset)) return;
 
 		const gamemodeID = this.currentGamemodeInfo.id;
 		const fullPresetName = `${gamemodeID}_${this.currentPreset}`;
@@ -2016,7 +2016,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			$.Warning(`Could not load ${gamemodeID}_${preset}.kv3 from /cfg/hud`);
 		}
 
-		return deepMerge(defaultLayout, presetLayout);
+		return mergeDeep(defaultLayout, presetLayout) as HudLayout;
 	}
 
 	getDefaultLayout() {
@@ -2076,87 +2076,6 @@ function cssPanelLookup<T extends Panel>(panel: GenericPanel, selector: QuerySel
 			.filter((p) => p.paneltype === selector)
 			.toArray() as T[];
 	}
-}
-
-/**
- * Compares two layouts of components.
- * Used for saving
- * If B has properties that are missing from A, components are still treated as equal
- * @param a Component Layout Object
- * @param b Component Layout Object
- * @returns boolean
- */
-function isAsymmetricDeepEqual(a: any, b: any): boolean {
-	if (a === b) return true;
-
-	if (typeof a !== 'object' || a === null || typeof b !== 'object' || b === null) {
-		return false;
-	}
-
-	if (Array.isArray(a)) {
-		if (!Array.isArray(b) || a.length !== b.length) return false;
-		return a.every((val, index) => isAsymmetricDeepEqual(val, b[index]));
-	}
-
-	const keysA = Object.keys(a);
-
-	for (const key of keysA) {
-		if (Object.hasOwn(b, key) && !isAsymmetricDeepEqual(a[key], b[key])) {
-			return false;
-		}
-	}
-
-	return true;
-}
-
-/**
- * Checks if two hud layout's are different symmetrically, ignores null values
- * Used for saving
- * @param a Hud Layout
- * @param b Hud Layout
- * @returns boolean
- */
-function isSymmetricDeepEqual(a: any, b: any): boolean {
-	if (a === b) return true;
-
-	if (typeof a !== 'object' || typeof b !== 'object' || a === null || b === null) return false;
-
-	if (Array.isArray(a)) {
-		if (!Array.isArray(b) || a.length !== b.length) return false;
-		return a.every((val, index) => isSymmetricDeepEqual(val, b[index]));
-	}
-
-	const keysA = Object.keys(a).filter((k) => a[k] !== null && a[k] !== undefined);
-	const keysB = Object.keys(b).filter((k) => b[k] !== null && b[k] !== undefined);
-
-	if (keysA.length !== keysB.length) return false;
-
-	for (const key of keysA) {
-		if (!Object.hasOwn(b, key) || !isSymmetricDeepEqual(a[key], b[key])) return false;
-	}
-
-	return true;
-}
-
-function deepMerge<T extends Record<string, any>>(...objects: Partial<T>[]): T {
-	const isObject = (item: unknown) => Boolean(item && typeof item === 'object' && !Array.isArray(item));
-
-	return objects.reduce((acc, obj) => {
-		if (!isObject(obj)) return acc;
-
-		Object.keys(obj).forEach((key) => {
-			const accValue = acc[key];
-			const objValue = obj[key];
-
-			if (isObject(accValue) && isObject(objValue)) {
-				acc[key] = deepMerge(accValue, objValue);
-			} else {
-				acc[key] = objValue;
-			}
-		});
-
-		return acc;
-	}, {} as any) as T;
 }
 
 function displayToast(title: string, message: string) {
