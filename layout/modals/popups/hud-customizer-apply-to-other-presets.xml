@@ -20,7 +20,7 @@
 	
 	<PopupCustomLayout class="PopupPanel Hidden" popupbackground="dim">
 		<Panel class="row h-align-center mt-0">
-			<Label id="TitleLabel" class="generic-popup__title" text="Apply Presets" />
+			<Label id="TitleLabel" class="generic-popup__title" text="Apply To Presets" />
 		</Panel>
         <Panel class="row h-align-center mt-4 generic-popup__button-row">
 			<Button class="button mr-4" onactivate="HudCustomizerApplyToOtherPresetsHandler.setAllButtons(true)">

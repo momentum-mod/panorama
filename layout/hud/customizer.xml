@@ -131,9 +131,11 @@
 				<Panel id="ActiveComponentSettingsList" class="hud-customizer-settings__active__contents">
 					<!-- Populated by JS -->
 				</Panel>
-                <Button id="ApplyToOtherPresetsButton" class="button hud-customizer-settings__button px-3 py-1 mt-3">
-                    <Label text="Apply To Other Presets" />
-                </Button>
+                <TooltipPanel tooltip="Allows you to copy styling to other presets/gamemodes">
+                    <Button id="ApplyToOtherPresetsButton" class="button hud-customizer-settings__button px-3 py-1 mt-3">
+                        <Label text="Apply To Other Presets" />
+                    </Button>
+                </TooltipPanel>
 			</Panel>
 		</Panel>
 
