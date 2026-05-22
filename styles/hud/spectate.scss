@@ -47,8 +47,6 @@
 		@include mixin.font-header();
 		font-weight: bold;
 		vertical-align: center;
-		text-shadow: 0 1px 3px 2 rgba(0, 0, 0, 0.5);
-		font-size: 24px;
 	}
 
 	&__avatar {

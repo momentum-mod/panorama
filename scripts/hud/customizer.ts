@@ -427,7 +427,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 	currentPreset: string;
 
 	//Used because of a font bug
-	private os: 'windows' | 'linux';
+	private os: string;
 
 	constructor() {
 		registerHUDCustomizerComponent(this.panels.settings, {
