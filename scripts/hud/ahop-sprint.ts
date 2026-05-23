@@ -88,11 +88,10 @@ class AhopSprint {
 						{ styleID: 'curveColors', showWhen: 'curve' },
 						{ styleID: 'dotWidth', showWhen: 'dot' },
 						{ styleID: 'dotHeight', showWhen: 'dot' },
-						{ styleID: 'dotRotation', showWhen: 'dot' },
 						{ styleID: 'dotBorderRadius', showWhen: 'dot' },
 						{ styleID: 'dotBorderWidth', showWhen: 'dot' },
 						{ styleID: 'dotBorderColor', showWhen: 'dot' },
-						{ styleID: 'dotColors', showWhen: 'dot' }
+						{ styleID: 'dotGradients', showWhen: 'dot' }
 					],
 					callbackFunc: (_, value) => (Config.type = value),
 					onChanged: () => this.updateStyles()
