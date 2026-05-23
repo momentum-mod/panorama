@@ -762,7 +762,8 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		const fullPresetName = `${gamemodeID}_${name}`;
 
 		if (this.presetList.has(fullPresetName)) {
-			HudCustomizerHandler.presetLayout = this.getPresetLayout(name);
+			const layout = this.getPresetLayout(name);
+			HudCustomizerHandler.presetLayout = layout ? layout : { ...HudCustomizerHandler.defaultLayout };
 		}
 
 		this.currentPreset = name;
@@ -2024,8 +2025,8 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 		if (!presetLayout) {
 			$.persistentStorage.setItem(`hud-customizer.preset.${gamemodeID}`, 'default');
-			this.changePreset('default');
 			$.Warning(`Could not load ${gamemodeID}_${preset}.kv3 from /cfg/hud`);
+			return null;
 		}
 
 		return mergeDeep(defaultLayout, presetLayout) as HudLayout;
@@ -2056,13 +2057,9 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 		HudCustomizerHandler.defaultLayout = this.getDefaultLayout();
 
-		if (preset) {
-			this.currentPreset = preset;
-			HudCustomizerHandler.presetLayout = this.getPresetLayout(preset);
-		} else {
-			this.currentPreset = 'default';
-			HudCustomizerHandler.presetLayout = { ...HudCustomizerHandler.defaultLayout };
-		}
+		const savedLayout = preset && this.getPresetLayout(preset);
+		this.currentPreset = savedLayout ? preset : 'default';
+		HudCustomizerHandler.presetLayout = savedLayout ? savedLayout : { ...HudCustomizerHandler.defaultLayout };
 	}
 }
 
