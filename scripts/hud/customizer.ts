@@ -302,6 +302,8 @@ class Component {
 				}
 			}
 		}
+
+		this.properties.postInit?.();
 	}
 
 	/** Reset a single dynamic style to it's original state */
