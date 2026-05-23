@@ -8,8 +8,14 @@ type specConfigType = {
 	fontColor: string;
 	fontSize: int32;
 	horizontalAlign: 'center' | 'left' | 'right';
-	showNameList: boolean;
+	labelOptions: labelOptions;
 };
+
+enum labelOptions {
+	numberAndList = 'numberAndList',
+	number = 'number',
+	list = 'list'
+}
 
 @PanelHandler()
 class HudSpecInfoHandler implements OnPanelLoad {
@@ -29,7 +35,7 @@ class HudSpecInfoHandler implements OnPanelLoad {
 		fontSize: 20,
 		fontColor: 'rgba(255, 255, 255, 1)',
 		horizontalAlign: 'right',
-		showNameList: true
+		labelOptions: 'numberAndList'
 	} as specConfigType;
 
 	constructor() {
@@ -51,11 +57,16 @@ class HudSpecInfoHandler implements OnPanelLoad {
 			resizeX: true,
 			resizeY: false,
 			dynamicStyles: {
-				showNameList: {
-					name: 'Show Name List',
-					type: CustomizerPropertyType.CHECKBOX,
-					children: { styleID: 'maxPlayerCount', showWhen: true },
-					callbackFunc: (_, value) => (this.specConfig.showNameList = value),
+				showLabels: {
+					name: 'Show Labels',
+					type: CustomizerPropertyType.DROPDOWN,
+					options: [
+						{ label: 'Number and List', value: labelOptions.numberAndList },
+						{ label: 'Number', value: labelOptions.number },
+						{ label: 'List', value: labelOptions.list }
+					],
+					children: { styleID: 'maxPlayerCount', showWhen: ['numberAndList', 'list'] },
+					callbackFunc: (_, value) => (this.specConfig.labelOptions = value as labelOptions),
 					onChanged: () => this.createDummySpectators()
 				},
 				maxPlayerCount: {
@@ -121,11 +132,18 @@ class HudSpecInfoHandler implements OnPanelLoad {
 	}
 
 	createDummySpectators() {
-		$.GetContextPanel().SetDialogVariableInt('numspec', this.maxNames);
 		this.panels.namesContainer.RemoveAndDeleteChildren();
+		$.GetContextPanel().SetDialogVariableInt('numspec', this.maxNames);
+
 		this.panels.container.visible = true;
 
-		if (!this.specConfig.showNameList) return;
+		if (this.specConfig.labelOptions === 'list') {
+			this.panels.numSpecLabel.visible = false;
+		} else {
+			this.panels.numSpecLabel.visible = true;
+		}
+
+		if (this.specConfig.labelOptions === 'number') return;
 
 		for (let i = 0; i < this.maxNames; i++) {
 			this.createSpecNameLabel(`Player ${i + 1}`);
@@ -150,7 +168,13 @@ class HudSpecInfoHandler implements OnPanelLoad {
 			$.GetContextPanel().SetDialogVariableInt('numspec', specCount);
 		} else this.panels.container.visible = false;
 
-		if (!this.specConfig.showNameList) return;
+		if (this.specConfig.labelOptions === 'list') {
+			this.panels.numSpecLabel.visible = false;
+		} else {
+			this.panels.numSpecLabel.visible = true;
+		}
+
+		if (this.specConfig.labelOptions === 'number') return;
 		// 0 max names means there is no max
 		const maxDisplayNames = this.maxNames > specCount || this.maxNames === 0 ? specCount : this.maxNames;
 
