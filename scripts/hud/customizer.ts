@@ -562,8 +562,9 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			this.panels.customizer.toggleUI(false);
 			this.currentGamemode = GameModeAPI.GetCurrentGameMode();
 			this.currentGamemodeInfo = GamemodeInfo.get(this.currentGamemode);
-			this.initializeLayouts();
 			this.updatePresetSettings();
+			this.initializeLayouts();
+
 			if (this.currentPreset === 'default') {
 				this.defaultPresetStateOn();
 			} else {
