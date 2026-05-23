@@ -49,6 +49,7 @@ class HudSpectateHandler implements OnPanelLoad {
 					expandable: true,
 					children: [
 						{ styleID: 'backgroundColor' },
+						{ styleID: 'shadowColor' },
 						{ styleID: 'replaySeekBarColor' },
 						{ styleID: 'replaySeekBarColorActive' }
 					]
@@ -57,6 +58,11 @@ class HudSpectateHandler implements OnPanelLoad {
 					name: 'Background',
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => (this.panels.cp.style.backgroundColor = value as rgbaColor)
+				},
+				shadowColor: {
+					name: 'Shadow',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					callbackFunc: (_, value) => (this.panels.cp.style.boxShadow = `0 1px 16px ${value}`)
 				},
 				replaySeekBarColor: {
 					name: 'Replay Seek Bar',
