@@ -145,6 +145,7 @@
 				<Label class="settings-group__subtitle" text="#Settings_Keybinds_Utility" />
 
 				<SettingsKeyBinder text="#Keybind_Noclip" bind="noclip" tags="noclip,freecam,practice" infomessage="#Keybind_Noclip_Info" />
+				<SettingsKeyBinder text="#Keybind_Customizer_Toggle" bind="toggle mom_hudcustomizer_enable" tags="hud,customizer" infomessage="#Keybind_Customizer_Toggle_Info" />
 				<SettingsKeyBinder text="#Keybind_Paint" bind="+paint" tags="paint" />
 				<SettingsKeyBinder text="#Keybind_Viewmodels" bind="toggle r_drawviewmodel" tags="viewmodel" />
 				<SettingsKeyBinder text="#Keybind_Flashlight" bind="impulse 100" tags="flashlight" />
