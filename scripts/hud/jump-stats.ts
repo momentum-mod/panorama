@@ -1,5 +1,5 @@
 import { PanelHandler } from 'util/module-helpers';
-import { GamemodeCategory, GamemodeCategoryToGamemode } from 'common/web/enums/gamemode.enum';
+import { Gamemode } from 'common/web/enums/gamemode.enum';
 
 import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
 import { getTextShadowFast } from 'common/hud-customizer';
@@ -39,7 +39,7 @@ class JumpStatsHandler {
 			name: 'Jump Stats (SSJ)',
 			resizeX: false,
 			resizeY: false,
-			gamemode: GamemodeCategoryToGamemode.get(GamemodeCategory.BHOP),
+			gamemode: Gamemode.BHOP,
 			events: { event: 'OnJumpStarted', panel: this.panels.container, callbackFn: () => this.onJump() },
 			dynamicStyles: {
 				fontStyling: {

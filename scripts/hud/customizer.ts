@@ -498,12 +498,19 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [
+						{ styleID: 'fontColor' },
 						{ styleID: 'gainColor' },
 						{ styleID: 'lossColor' },
 						{ styleID: 'progressBarBackgroundGradient' },
 						{ styleID: 'progressBarFillGradient' },
 						{ styleID: 'progressBarBlockedGradient' }
 					]
+				},
+				fontColor: {
+					name: 'Font Default',
+					type: CustomizerPropertyType.COLOR_PICKER,
+					callbackFunc: (_, value) => (Component.referencedValues['fontColor'] = value),
+					onChanged: (value) => this.updateReferencedValue('fontColor', value)
 				},
 				gainColor: {
 					name: 'Gain',
@@ -2048,7 +2055,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			throw new Error(`Could not load ${gamemodeID}_default.kv3 from /cfg/hud`);
 		}
 
-		return { ...generalLayout, ...gamemodeLayout };
+		return mergeDeep(generalLayout, gamemodeLayout) as HudLayout;
 	}
 
 	initializeLayouts() {
