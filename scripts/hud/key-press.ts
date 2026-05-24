@@ -57,6 +57,12 @@ const Config = {
 			fontFamily: 'Roboto',
 			fontSize: 21,
 			_fontWeight: 'bold',
+			enabled: {
+				jump: true,
+				duck: true,
+				walk: true,
+				sprint: true
+			},
 			states: {
 				default: { color: 'rgba(0, 0, 0, 0)' },
 				pressed: { color: 'rgba(0, 0, 0, 0)' },
@@ -119,7 +125,10 @@ const Config = {
 
 @PanelHandler()
 class KeyPress {
-	readonly panels = { keypress: $.GetContextPanel() };
+	panels = {
+		keypress: $.GetContextPanel(),
+		labelContainer: undefined
+	};
 	readonly keys: Map<Button, PanelInfoType[]> = new Map();
 
 	constructor() {
@@ -298,6 +307,7 @@ class KeyPress {
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [
+						{ styleID: 'textLabelShow' },
 						{ styleID: 'textLabelFont' },
 						{ styleID: 'textLabelDefaultColor' },
 						{ styleID: 'textLabelPressedColor' },
@@ -305,6 +315,41 @@ class KeyPress {
 						{ styleID: 'textLabelToggledColor' },
 						{ styleID: 'textLabelForcedColor' }
 					]
+				},
+				textLabelShow: {
+					name: 'Show Labels',
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [
+						{ styleID: 'textLabelShowJump' },
+						{ styleID: 'textLabelShowDuck' },
+						{ styleID: 'textLabelShowWalk' },
+						{ styleID: 'textLabelShowSprint' }
+					]
+				},
+				textLabelShowJump: {
+					name: 'Jump Label',
+					type: CustomizerPropertyType.CHECKBOX,
+					callbackFunc: (_, value) => (Config.text.label.enabled.jump = value),
+					onChanged: () => this.createTextType()
+				},
+				textLabelShowDuck: {
+					name: 'Duck Label',
+					type: CustomizerPropertyType.CHECKBOX,
+					callbackFunc: (_, value) => (Config.text.label.enabled.duck = value),
+					onChanged: () => this.createTextType()
+				},
+				textLabelShowWalk: {
+					name: 'Walk Label',
+					type: CustomizerPropertyType.CHECKBOX,
+					callbackFunc: (_, value) => (Config.text.label.enabled.walk = value),
+					onChanged: () => this.createTextType()
+				},
+				textLabelShowSprint: {
+					name: 'Sprint Label',
+					type: CustomizerPropertyType.CHECKBOX,
+					callbackFunc: (_, value) => (Config.text.label.enabled.sprint = value),
+					onChanged: () => this.createTextType()
 				},
 				textLabelFont: {
 					name: 'Font',
@@ -815,7 +860,6 @@ class KeyPress {
 			}
 		};
 
-		// TODO: Make this selectable when per-gamemode configs are available
 		const createLabels = () => {
 			const labelContainer = $.CreatePanel('Panel', this.panels.keypress, '', {
 				style: `
@@ -1021,32 +1065,20 @@ class KeyPress {
 			walk: $.Localize('#Keypress_Walk'),
 			sprint: $.Localize('#Keypress_Sprint')
 		};
+		const enabled = Config.text.label.enabled;
 
-		switch (gamemode) {
-			case Gamemode.RJ:
-			case Gamemode.SJ:
-			case Gamemode.CONC:
-			case Gamemode.DEFRAG_CPM:
-			case Gamemode.DEFRAG_VQ3:
-			case Gamemode.DEFRAG_VTG:
-				return [
-					{ text: labels.jump, input: Button.JUMP },
-					{ text: labels.duck, input: Button.DUCK }
-				];
-			case Gamemode.AHOP:
-				return [
-					{ text: labels.jump, input: Button.JUMP },
-					{ text: labels.duck, input: Button.DUCK },
-					{ text: labels.walk, input: Button.WALK },
-					{ text: labels.sprint, input: Button.SPEED }
-				];
+		// In all gamemodes except AHOP, walk is triggered by the sprint button. Sprint is mapped to the walk button but it does nothing
+		const isInverted = gamemode !== Gamemode.AHOP;
+		const walkInput = isInverted ? Button.SPEED : Button.WALK;
+		const sprintInput = isInverted ? Button.WALK : Button.SPEED;
 
-			default:
-				return [
-					{ text: labels.jump, input: Button.JUMP },
-					{ text: labels.duck, input: Button.DUCK },
-					{ text: labels.walk, input: Button.SPEED }
-				];
-		}
+		const entries = [
+			{ text: labels.jump, input: Button.JUMP, configKey: 'jump' },
+			{ text: labels.duck, input: Button.DUCK, configKey: 'duck' },
+			{ text: labels.walk, input: walkInput, configKey: 'walk' },
+			{ text: labels.sprint, input: sprintInput, configKey: 'sprint' }
+		];
+
+		return entries.filter(({ configKey }) => enabled[configKey]);
 	}
 }
