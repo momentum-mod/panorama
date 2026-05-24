@@ -26,6 +26,9 @@
                 <Button id="PresetDelete" class="button hud-customizer-settings__button button--red px-2 py-1">
                     <Label text="Delete" />
                 </Button>
+                <Button id="PresetCopy" class="button hud-customizer-settings__button ml-5 h-align-right px-2 py-1" >
+                    <Label text="Copy" />
+                </Button>
 			</Panel>
 		</snippet>
 
@@ -131,11 +134,6 @@
 				<Panel id="ActiveComponentSettingsList" class="hud-customizer-settings__active__contents">
 					<!-- Populated by JS -->
 				</Panel>
-                <TooltipPanel tooltip="Allows you to copy styling to other presets/gamemodes">
-                    <Button id="ApplyToOtherPresetsButton" class="button hud-customizer-settings__button px-3 py-1 mt-3">
-                        <Label text="Apply To Other Presets" />
-                    </Button>
-                </TooltipPanel>
 			</Panel>
 		</Panel>
 

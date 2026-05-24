@@ -2,10 +2,11 @@ import { OnPanelLoad, PanelHandler } from 'util/module-helpers';
 import { GamemodeInfo } from 'common/gamemode';
 
 @PanelHandler()
-class HudCustomizerApplyToOtherPresetsHandler implements OnPanelLoad {
+class HudCustomizerCopyToOtherPresetsHandler implements OnPanelLoad {
 	readonly panels = {
 		cp: $.GetContextPanel<Panel>(),
-		gamemodePresetContainer: $<Panel>('#GamemodePresetContainer')
+		gamemodePresetContainer: $<Panel>('#GamemodePresetContainer'),
+		titleLabel: $<Label>('#TitleLabel')
 	};
 
 	buttonList: Map<ToggleButton, { dropDown: DropDown; gamemodeID: string }> = new Map();
@@ -15,6 +16,9 @@ class HudCustomizerApplyToOtherPresetsHandler implements OnPanelLoad {
 	}
 
 	onPanelLoad() {
+		const copyTitle = this.panels.cp.GetAttributeString('copyTitle', 'Copy');
+		this.panels.titleLabel.text = copyTitle;
+
 		const gamemodes = this.panels.cp
 			.GetAttributeString('gamemodes', '')
 			.split(',')
@@ -26,11 +30,12 @@ class HudCustomizerApplyToOtherPresetsHandler implements OnPanelLoad {
 
 		const getGamemodeForFile = (name: string) => gamemodes.find((id) => name.startsWith(id + '_'));
 		const findFreeIndex = (gamemodeID: string, presetList: string[]) => {
+			const prefix = 'new_preset';
 			let i = 1;
-			while (presetList.includes(`${gamemodeID}_preset_${i}`)) {
+			while (presetList.includes(`${gamemodeID}_${prefix}_${i}`)) {
 				i++;
 			}
-			return `preset_${i}`;
+			return `${prefix}_${i}`;
 		};
 
 		const presetList = this.panels.cp.GetAttributeString('presetList', '').split(',');
@@ -59,9 +64,7 @@ class HudCustomizerApplyToOtherPresetsHandler implements OnPanelLoad {
 
 			const userPreset = $.persistentStorage.getItem(`hud-customizer.preset.${gamemodeID}`) as string;
 
-			if (presets.length === 0 || !userPreset || userPreset === 'default') {
-				presets.push(findFreeIndex(gamemodeID, presetList));
-			}
+			presets.push(findFreeIndex(gamemodeID, presetList));
 
 			for (const preset of presets) {
 				const presetPanel = $.CreatePanel('Label', dropdown, preset);
@@ -84,6 +87,7 @@ class HudCustomizerApplyToOtherPresetsHandler implements OnPanelLoad {
 
 	onOkButtonPressed() {
 		const callbackHandle = this.panels.cp.GetAttributeInt('callback', -1);
+		const componentID = this.panels.cp.GetAttributeString('componentID', '');
 
 		const activeValues = [...this.buttonList.entries()]
 			.filter(([toggleButton]) => toggleButton.checked)
@@ -93,7 +97,7 @@ class HudCustomizerApplyToOtherPresetsHandler implements OnPanelLoad {
 			});
 
 		if (callbackHandle !== -1) {
-			UiToolkitAPI.InvokeJSCallback(callbackHandle, activeValues);
+			UiToolkitAPI.InvokeJSCallback(callbackHandle, componentID, activeValues);
 		}
 		UiToolkitAPI.CloseAllVisiblePopups();
 	}

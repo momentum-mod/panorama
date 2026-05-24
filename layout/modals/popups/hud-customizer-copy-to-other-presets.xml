@@ -4,7 +4,7 @@
 	</styles>
 	
 	<scripts>
-		<include type="module" src="file://{scripts}/modals/popups/hud-customizer-apply-to-other-presets.ts" />
+		<include type="module" src="file://{scripts}/modals/popups/hud-customizer-copy-to-other-presets.ts" />
 	</scripts>
 
     <snippets>
@@ -20,13 +20,13 @@
 	
 	<PopupCustomLayout class="PopupPanel Hidden" popupbackground="dim">
 		<Panel class="row h-align-center mt-0">
-			<Label id="TitleLabel" class="generic-popup__title" text="Apply To Presets" />
+			<Label id="TitleLabel" class="generic-popup__title" text="" />
 		</Panel>
         <Panel class="row h-align-center mt-4 generic-popup__button-row">
-			<Button class="button mr-4" onactivate="HudCustomizerApplyToOtherPresetsHandler.setAllButtons(true)">
+			<Button class="button mr-4" onactivate="HudCustomizerCopyToOtherPresetsHandler.setAllButtons(true)">
 				<Label class="button__text" text="Enable All" />
 			</Button>
-            <Button id="CancelButton" class="button" onactivate="HudCustomizerApplyToOtherPresetsHandler.setAllButtons(false)">
+            <Button id="CancelButton" class="button" onactivate="HudCustomizerCopyToOtherPresetsHandler.setAllButtons(false)">
 				<Label class="button__text" text="Disable All" />
 			</Button>
 		</Panel>
@@ -37,7 +37,7 @@
 
 		<Panel class="row h-align-center mt-4 generic-popup__button-row">
 			<Button class="button button--green mr-4">
-				<Label class="button__text" text="Apply To Selected" onactivate="HudCustomizerApplyToOtherPresetsHandler.onOkButtonPressed()"/>
+				<Label class="button__text" text="Copy To Selected" onactivate="HudCustomizerCopyToOtherPresetsHandler.onOkButtonPressed()"/>
 			</Button>
             <Button id="CancelButton" class="button" onactivate="UiToolkitAPI.CloseAllVisiblePopups()">
 				<Label class="button__text" text="#Common_Cancel" />
