@@ -26,11 +26,11 @@ class HudCustomizerCopyToOtherPresetsHandler implements OnPanelLoad {
 
 		const orderedGamemodes = [...GamemodeInfo.values()]
 			.map((info) => info.id)
-			.filter((id) => gamemodes.includes(id));
+			.filter((id) => gamemodes[0] === '' || gamemodes.includes(id));
 
 		const getGamemodeForFile = (name: string) => gamemodes.find((id) => name.startsWith(id + '_'));
 		const findFreeIndex = (gamemodeID: string, presetList: string[]) => {
-			const prefix = 'new_preset';
+			const prefix = 'preset';
 			let i = 1;
 			while (presetList.includes(`${gamemodeID}_${prefix}_${i}`)) {
 				i++;
@@ -64,15 +64,19 @@ class HudCustomizerCopyToOtherPresetsHandler implements OnPanelLoad {
 
 			const userPreset = $.persistentStorage.getItem(`hud-customizer.preset.${gamemodeID}`) as string;
 
-			presets.push(findFreeIndex(gamemodeID, presetList));
-
 			for (const preset of presets) {
 				const presetPanel = $.CreatePanel('Label', dropdown, preset);
 				presetPanel.text = preset;
 				dropdown.AddOption(presetPanel);
 			}
 
-			dropdown.SetSelected(userPreset ?? presets.at(-1));
+			// Add 'Create New' option at the bottom of the preset list
+			const createNewOption = findFreeIndex(gamemodeID, presetList);
+			const presetPanel = $.CreatePanel('Label', dropdown, createNewOption);
+			presetPanel.text = 'Create New';
+			dropdown.AddOption(presetPanel);
+
+			dropdown.SetSelected(userPreset ?? createNewOption);
 
 			this.buttonList.set(toggleButton, { dropDown: dropdown, gamemodeID });
 		}
