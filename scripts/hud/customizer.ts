@@ -14,6 +14,7 @@ import { GamemodeInfo } from 'common/web/maps/gamemodes.map';
 import { Gamemode } from 'common/web/enums/gamemode.enum';
 import { PanelHandler } from 'util/module-helpers';
 import { mergeDeep, compareDeepIgnoreNull, compareDeepAsymmetric } from 'util/functions';
+import { CopyToOtherPresetsData } from 'modals/popups/hud-customizer-copy-to-other-presets';
 
 // TODO: need to do a *ton* of localization when this is done, including components!
 
@@ -732,15 +733,23 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 				return [...GamemodeInfo.values()].map((info) => info.id).join(',');
 			};
 
+			const copyPresetData = () => {
+				return {
+					title: 'Copy Preset',
+					gamemodes: [...GamemodeInfo.values()].map((info) => info.id),
+					presetList: [...this.presetList, ...this.unsavedPresets],
+					onConfirm: (_, presetList: { gamemodeID: string; presetName: string }[]) =>
+						this.copyPreset(presetList)
+				} as CopyToOtherPresetsData;
+			};
+
 			const copyPreset = panel.FindChild('PresetCopy');
 			copyPreset.enabled = !isDefaultPreset;
 			copyPreset.SetPanelEvent('onactivate', () =>
 				UiToolkitAPI.ShowCustomLayoutPopupParameters(
 					'CopyToOtherPresets',
 					'file://{resources}/layout/modals/popups/hud-customizer-copy-to-other-presets.xml',
-					`copyTitle=Copy Preset&gamemodes=${getGamemodeString()}&presetList=${getPresetList()}&callback=${UiToolkitAPI.RegisterJSCallback(
-						(_, presetList: { gamemodeID: string; presetName: string }[]) => this.copyPreset(presetList)
-					)}`
+					`data=${UiToolkitAPI.RegisterJSCallback(() => copyPresetData())}`
 				)
 			);
 			copyPreset.SetPanelEvent('onmouseover', () =>
@@ -1126,18 +1135,22 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 				);
 				copyButton.SetPanelEvent('onmouseout', () => UiToolkitAPI.HideTextTooltip());
 
-				const getPresetList = () => {
-					return [...this.presetList, ...this.unsavedPresets].join(',');
+				const copyButtonData = () => {
+					return {
+						title: 'Copy Preset',
+						gamemodes: [...GamemodeInfo.values()].map((info) => info.id),
+						presetList: [...this.presetList, ...this.unsavedPresets],
+						componentID: id,
+						onConfirm: (componentID: string, presetList: { gamemodeID: string; presetName: string }[]) =>
+							this.copyPanelToOtherPresets(componentID, presetList)
+					} as CopyToOtherPresetsData;
 				};
 
 				copyButton.SetPanelEvent('onactivate', () =>
 					UiToolkitAPI.ShowCustomLayoutPopupParameters(
 						'CopyToOtherPresets',
 						'file://{resources}/layout/modals/popups/hud-customizer-copy-to-other-presets.xml',
-						`copyTitle=Copy ${component.properties.name}&componentID=${id}&gamemodes=${getAvailableGamemodes(component.properties.gamemode)}&presetList=${getPresetList()}&callback=${UiToolkitAPI.RegisterJSCallback(
-							(componentID: string, presetList: { gamemodeID: string; presetName: string }[]) =>
-								this.copyPanelToOtherPresets(componentID, presetList)
-						)}`
+						`data=${UiToolkitAPI.RegisterJSCallback(() => copyButtonData())}`
 					)
 				);
 			}

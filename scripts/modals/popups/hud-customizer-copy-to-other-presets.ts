@@ -1,6 +1,14 @@
 import { OnPanelLoad, PanelHandler } from 'util/module-helpers';
 import { GamemodeInfo } from 'common/gamemode';
 
+export type CopyToOtherPresetsData = {
+	title: string;
+	gamemodes: string[];
+	presetList: string[];
+	componentID: string;
+	onConfirm: (componentID: string, presetList: { gamemodeID: string; presetName: string }[]) => void;
+};
+
 @PanelHandler()
 class HudCustomizerCopyToOtherPresetsHandler implements OnPanelLoad {
 	readonly panels = {
@@ -10,20 +18,20 @@ class HudCustomizerCopyToOtherPresetsHandler implements OnPanelLoad {
 	};
 
 	buttonList: Map<ToggleButton, { dropDown: DropDown; gamemodeID: string }> = new Map();
+	data: CopyToOtherPresetsData;
 
 	private getNameFromId(id: string): string | undefined {
 		return [...GamemodeInfo.values()].find((gamemode) => gamemode.id === id)?.name;
 	}
 
 	onPanelLoad() {
-		const copyTitle = this.panels.cp.GetAttributeString('copyTitle', 'Copy');
-		this.panels.titleLabel.text = copyTitle;
+		const callbackHandle = this.panels.cp.GetAttributeInt('data', -1);
+		if (callbackHandle !== -1) {
+			this.data = UiToolkitAPI.InvokeJSCallback(callbackHandle) as any as CopyToOtherPresetsData;
+		}
+		this.panels.titleLabel.text = this.data.title;
 
-		const gamemodes = this.panels.cp
-			.GetAttributeString('gamemodes', '')
-			.split(',')
-			.sort((a, b) => b.length - a.length);
-
+		const gamemodes = this.data.gamemodes.sort((a, b) => b.length - a.length);
 		const orderedGamemodes = [...GamemodeInfo.values()]
 			.map((info) => info.id)
 			.filter((id) => gamemodes[0] === '' || gamemodes.includes(id));
@@ -37,8 +45,6 @@ class HudCustomizerCopyToOtherPresetsHandler implements OnPanelLoad {
 			}
 			return `${prefix}_${i}`;
 		};
-
-		const presetList = this.panels.cp.GetAttributeString('presetList', '').split(',');
 
 		for (const gamemodeID of orderedGamemodes) {
 			const panel = $.CreatePanel('Panel', this.panels.gamemodePresetContainer, '', {
@@ -57,7 +63,7 @@ class HudCustomizerCopyToOtherPresetsHandler implements OnPanelLoad {
 			const toggleButtonLabel = panel.FindChildInLayoutFile<Label>('ToggleButtonLabel');
 			toggleButtonLabel.text = this.getNameFromId(gamemodeID);
 
-			const presets = presetList
+			const presets = this.data.presetList
 				.filter((name) => getGamemodeForFile(name) === gamemodeID)
 				.map((name) => name.slice(gamemodeID.length + 1))
 				.filter((name) => name !== 'default');
@@ -71,7 +77,7 @@ class HudCustomizerCopyToOtherPresetsHandler implements OnPanelLoad {
 			}
 
 			// Add 'Create New' option at the bottom of the preset list
-			const createNewOption = findFreeIndex(gamemodeID, presetList);
+			const createNewOption = findFreeIndex(gamemodeID, this.data.presetList);
 			const presetPanel = $.CreatePanel('Label', dropdown, createNewOption);
 			presetPanel.text = 'Create New';
 			dropdown.AddOption(presetPanel);
@@ -90,8 +96,7 @@ class HudCustomizerCopyToOtherPresetsHandler implements OnPanelLoad {
 	}
 
 	onOkButtonPressed() {
-		const callbackHandle = this.panels.cp.GetAttributeInt('callback', -1);
-		const componentID = this.panels.cp.GetAttributeString('componentID', '');
+		const componentID = this.data.componentID ?? null;
 
 		const activeValues = [...this.buttonList.entries()]
 			.filter(([toggleButton]) => toggleButton.checked)
@@ -100,9 +105,7 @@ class HudCustomizerCopyToOtherPresetsHandler implements OnPanelLoad {
 				return { gamemodeID: gamemodeID, presetName: option.id };
 			});
 
-		if (callbackHandle !== -1) {
-			UiToolkitAPI.InvokeJSCallback(callbackHandle, componentID, activeValues);
-		}
+		this.data.onConfirm(componentID, activeValues);
 		UiToolkitAPI.CloseAllVisiblePopups();
 	}
 }
