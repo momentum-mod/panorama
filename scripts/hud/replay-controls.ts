@@ -84,8 +84,9 @@ class ReplayControlsHandler {
 	}
 
 	applySeekBarColors() {
-		if (!this.sliderSegments) return;
+		if (this.panels.cp.visible === false || !this.sliderSegments) return;
 		for (const { progressPanel } of this.sliderSegments) {
+			if (!progressPanel) continue;
 			if (this.seekBarColor) progressPanel.style.backgroundColor = this.seekBarColor;
 		}
 	}
@@ -104,7 +105,7 @@ class ReplayControlsHandler {
 	}
 
 	applySegmentFontStyling() {
-		if (!this.sliderSegments) return;
+		if (this.panels.cp.visible === false || !this.sliderSegments) return;
 		for (const { labelPanel } of this.sliderSegments) {
 			if (!labelPanel) continue;
 			if (this.segmentFont) labelPanel.style.fontFamily = this.segmentFont;
