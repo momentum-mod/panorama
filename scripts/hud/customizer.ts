@@ -137,7 +137,7 @@ class Component {
 		if (!componentLayout)
 			throw new Error(`HudCustomizer: Could not load layout for HUD customizer component ${this.id}`);
 
-		this.enabled = componentLayout.enabled ?? true;
+		this.enabled = this.properties.canDisable === false ? true : (componentLayout.enabled ?? true);
 		this._offsetY = componentLayout.offsetY; // Stupid, but needed with current setPosition stuff. Move to C++!
 		this.offsetX = componentLayout.offsetX;
 		this.offsetY = componentLayout.offsetY;
