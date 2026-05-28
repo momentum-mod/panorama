@@ -434,68 +434,68 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 	constructor() {
 		registerHUDCustomizerComponent(this.panels.settings, {
-			name: 'HUD Customizer Settings',
+			name: $.Localize('#Customizer_Customizer_Name'),
 			dragPanel: $('#CustomizerSettingsHeader')!,
 			resizeY: false,
 			resizeX: false,
 			canDisable: false,
 			dynamicStyles: {
 				selectOnRightClick: {
-					name: 'Select Component With Right Click',
+					name: $.Localize('#Customizer_Customizer_SelectOnRightClick'),
 					type: CustomizerPropertyType.CHECKBOX,
 					callbackFunc: (_, value) => this.toggleSelectOnRightClick(value)
 				},
 				selectedBorder: {
-					name: 'Enable Selected Component Border',
+					name: $.Localize('#Customizer_Customizer_SelectedBorder'),
 					type: CustomizerPropertyType.CHECKBOX,
 					callbackFunc: (_, value) =>
 						this.panels.dragPanel.SetHasClass('hud-customizer-dragpanel__selected-border', value)
 				},
 				enableGrid: {
-					name: 'Enable Grid',
+					name: $.Localize('#Customizer_Customizer_EnableGrid'),
 					type: CustomizerPropertyType.CHECKBOX,
 					children: [{ styleID: 'gridSize', showWhen: true }],
 					callbackFunc: (_, value) => this.panels.grid.SetHasClass('hud-customizer-grid--enabled', value),
 					onChanged: () => this.createGridLines(this.gridSize)
 				},
 				gridSize: {
-					name: 'Grid Size',
+					name: $.Localize('#Customizer_Customizer_GridSize'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					callbackFunc: (_, value) => (this.gridSize = value),
 					onChanged: () => this.createGridLines(this.gridSize),
 					settingProps: { min: 4, max: 12 }
 				},
 				enableSnapping: {
-					name: 'Enable Snapping',
+					name: $.Localize('#Customizer_Customizer_EnableSnapping'),
 					type: CustomizerPropertyType.CHECKBOX,
 					callbackFunc: (_, value) => (this.enableSnapping = value)
 				},
 				defaultStyles: {
-					name: 'Default Styles',
+					name: $.Localize('#Customizer_Customizer_DefaultStyles'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [{ styleID: 'fontStyles' }, { styleID: 'colors' }]
 				},
 				fontStyles: {
-					name: 'Font Styles',
+					name: $.Localize('#Customizer_Customizer_FontStyles'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [{ styleID: 'fontPrimary' }, { styleID: 'fontSecondary' }]
 				},
 				fontPrimary: {
-					name: 'Primary',
+					name: $.Localize('#Customizer_Customizer_FontPrimary'),
 					type: CustomizerPropertyType.FONT_PICKER,
 					callbackFunc: (_, value) => (Component.referencedValues['fontPrimary'] = value),
 					onChanged: (value) => this.updateReferencedValue('fontPrimary', value)
 				},
 				fontSecondary: {
-					name: 'Secondary',
+					name: $.Localize('#Customizer_Customizer_FontSecondary'),
 					type: CustomizerPropertyType.FONT_PICKER,
 					callbackFunc: (_, value) => (Component.referencedValues['fontSecondary'] = value),
 					onChanged: (value) => this.updateReferencedValue('fontSecondary', value)
 				},
 				colors: {
-					name: 'Colors',
+					name: $.Localize('#Customizer_Colors'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [
@@ -508,37 +508,37 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 					]
 				},
 				fontColor: {
-					name: 'Font Default',
+					name: $.Localize('#Customizer_Customizer_FontColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => (Component.referencedValues['fontColor'] = value),
 					onChanged: (value) => this.updateReferencedValue('fontColor', value)
 				},
 				gainColor: {
-					name: 'Gain',
+					name: $.Localize('#Customizer_Customizer_GainColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => (Component.referencedValues['gainColor'] = value),
 					onChanged: (value) => this.updateReferencedValue('gainColor', value)
 				},
 				lossColor: {
-					name: 'Loss',
+					name: $.Localize('#Customizer_Customizer_LossColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => (Component.referencedValues['lossColor'] = value),
 					onChanged: (value) => this.updateReferencedValue('lossColor', value)
 				},
 				progressBarBackgroundGradient: {
-					name: 'Bar Gradient',
+					name: $.Localize('#Customizer_Customizer_ProgressBarBackgroundGradient'),
 					type: CustomizerPropertyType.GRADIENT_PICKER,
 					callbackFunc: (_, value) => (Component.referencedValues['progressBarBackgroundGradient'] = value),
 					onChanged: (value) => this.updateReferencedValue('progressBarBackgroundGradient', value)
 				},
 				progressBarFillGradient: {
-					name: 'Bar Fill Gradient',
+					name: $.Localize('#Customizer_Customizer_ProgressBarFillGradient'),
 					type: CustomizerPropertyType.GRADIENT_PICKER,
 					callbackFunc: (_, value) => (Component.referencedValues['progressBarFillGradient'] = value),
 					onChanged: (value) => this.updateReferencedValue('progressBarFillGradient', value)
 				},
 				progressBarBlockedGradient: {
-					name: 'Bar Blocked Gradient',
+					name: $.Localize('#Customizer_Customizer_ProgressBarBlockedGradient'),
 					type: CustomizerPropertyType.GRADIENT_PICKER,
 					callbackFunc: (_, value) => (Component.referencedValues['progressBarBlockedGradient'] = value),
 					onChanged: (value) => this.updateReferencedValue('progressBarBlockedGradient', value)
@@ -639,12 +639,15 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			this.presetList = new Set(this.panels.customizer.listLayouts());
 		}
 
-		this.panels.settings.SetDialogVariable('preset_name', `${this.currentGamemodeInfo.name} Presets`);
+		let settingsHeader = $.Localize('#Customizer_PresetSettings_Header');
+		settingsHeader = settingsHeader.replace('{gamemodeName}', this.currentGamemodeInfo.name);
+
+		this.panels.settings.SetDialogVariable('preset_name', settingsHeader);
 
 		const createDropdown = (parent: GenericPanel) => {
 			const panel = $.CreatePanel('Panel', parent, '');
 			panel.LoadLayoutSnippet('dynamic-dropdown');
-			panel.SetDialogVariable('name', 'Preset');
+			panel.SetDialogVariable('name', $.Localize('#Customizer_PresetSettings_Label'));
 			const dropdown = panel.FindChildTraverse<DropDown>('DropDown')!;
 
 			const gamemodeIdsByLength = [...GamemodeInfo.values()]
@@ -688,11 +691,14 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			const isDefaultPreset = this.currentPreset === 'default';
 
 			const createPreset = panel.FindChild('PresetCreateNew');
+			const createPresetLabel = createPreset.GetFirstChild() as Label;
+			createPresetLabel.text = $.Localize('#Customizer_Preset_CreateNew');
+
 			createPreset.SetPanelEvent('onactivate', () => {
 				UiToolkitAPI.ShowCustomLayoutPopupParameters(
 					'CreateNewPreset',
 					'file://{resources}/layout/modals/popups/hud-customizer-layout-name.xml',
-					`title=Create New Preset&input_label=Preset Name&ok_btn_label=Create Preset&callback=${UiToolkitAPI.RegisterJSCallback(
+					`title=${$.Localize('#Customizer_Preset_CreateNew_Header')}&input_label=${$.Localize('#Customizer_Preset_CreateNew_InputLabel')}&ok_btn_label=${$.Localize('#Customizer_Preset_CreateNew')}&callback=${UiToolkitAPI.RegisterJSCallback(
 						(name: string) => {
 							this.save();
 							this.createNewPreset(name);
@@ -702,36 +708,42 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			});
 
 			const renamePreset = panel.FindChild('PresetRename');
+			const renamePresetLabel = renamePreset.GetFirstChild() as Label;
+			renamePresetLabel.text = $.Localize('#Customizer_Preset_Rename');
+
 			renamePreset.enabled = !isDefaultPreset;
+
+			let renamePresetInputLabel = $.Localize('#Customizer_Preset_Rename_InputLabel');
+			renamePresetInputLabel = renamePresetInputLabel.replace('{currentPreset}', this.currentPreset);
+
 			renamePreset.SetPanelEvent('onactivate', () => {
 				UiToolkitAPI.ShowCustomLayoutPopupParameters(
 					'RenamePreset',
 					'file://{resources}/layout/modals/popups/hud-customizer-layout-name.xml',
-					`title=Rename Preset&input_label=Rename preset ${this.currentPreset}&ok_btn_label=Create Preset&callback=${UiToolkitAPI.RegisterJSCallback(
+					`title=${$.Localize('#Customizer_Preset_Rename_Header')}&input_label=${renamePresetInputLabel}&ok_btn_label=${$.Localize('#Customizer_Preset_Rename')}&callback=${UiToolkitAPI.RegisterJSCallback(
 						(name: string) => this.renamePreset(this.currentPreset, name)
 					)}`
 				);
 			});
 
 			const deletePreset = panel.FindChild('PresetDelete');
+			const deletePresetLabel = deletePreset.GetFirstChild() as Label;
+			deletePresetLabel.text = $.Localize('#Common_Delete');
+
 			deletePreset.enabled = !isDefaultPreset;
+
+			let deletePresetPopupLabel = $.Localize('#Customizer_Preset_Delete_PopupLabel');
+			deletePresetPopupLabel = deletePresetPopupLabel.replace('{currentPreset}', this.currentPreset);
+
 			deletePreset.SetPanelEvent('onactivate', () => {
 				UiToolkitAPI.ShowGenericPopupYesNo(
-					'DeletePreset',
-					`Do you want to delete preset "${this.currentPreset}"?`,
+					`${$.Localize('#Customizer_Preset_Delete_Header')}`,
+					deletePresetPopupLabel,
 					'',
 					() => this.deletePreset(this.currentPreset),
 					() => UiToolkitAPI.CloseAllVisiblePopups()
 				);
 			});
-
-			const getPresetList = () => {
-				return [...this.presetList, ...this.unsavedPresets].join(',');
-			};
-
-			const getGamemodeString = () => {
-				return [...GamemodeInfo.values()].map((info) => info.id).join(',');
-			};
 
 			const copyPresetData = () => {
 				return {
@@ -744,6 +756,9 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			};
 
 			const copyPreset = panel.FindChild('PresetCopy');
+			const copyPresetLabel = copyPreset.GetFirstChild() as Label;
+			copyPresetLabel.text = $.Localize('#Customizer_Preset_Copy');
+
 			copyPreset.enabled = !isDefaultPreset;
 			copyPreset.SetPanelEvent('onactivate', () =>
 				UiToolkitAPI.ShowCustomLayoutPopupParameters(

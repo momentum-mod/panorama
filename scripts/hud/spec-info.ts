@@ -53,12 +53,12 @@ class HudSpecInfoHandler implements OnPanelLoad {
 		});
 
 		registerHUDCustomizerComponent($.GetContextPanel(), {
-			name: 'Spectators',
+			name: $.Localize('#Customizer_Spec_Info_Name'),
 			resizeX: true,
 			resizeY: false,
 			dynamicStyles: {
 				showLabels: {
-					name: 'Show Labels',
+					name: $.Localize('#Customizer_ShowLabels'),
 					type: CustomizerPropertyType.DROPDOWN,
 					options: [
 						{ label: 'Number and List', value: labelOptions.numberAndList },
@@ -70,34 +70,34 @@ class HudSpecInfoHandler implements OnPanelLoad {
 					onChanged: () => this.createDummySpectators()
 				},
 				maxPlayerCount: {
-					name: 'Max Player Count',
+					name: $.Localize('#Customizer_Spec_Info_MaxPlayerCount'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					callbackFunc: (_, value) => (this.maxNames = value),
 					onChanged: () => this.createDummySpectators(),
 					settingProps: { min: 0, max: 100 }
 				},
 				fontStyling: {
-					name: 'Font Styling',
+					name: $.Localize('#Customizer_FontStyling'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [{ styleID: 'font' }, { styleID: 'fontSize' }, { styleID: 'fontColor' }]
 				},
 				font: {
-					name: 'Font',
+					name: $.Localize('#Customizer_Font'),
 					type: CustomizerPropertyType.FONT_PICKER,
 					targetPanel: ['.hudspecinfo__count', '.specinfo-list-entry__name'],
 					styleProperty: 'fontFamily',
 					callbackFunc: (_, value) => (this.specConfig.fontFamily = value)
 				},
 				fontSize: {
-					name: 'Font Size',
+					name: $.Localize('#Customizer_FontSize'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					targetPanel: ['.hudspecinfo__count', '.specinfo-list-entry__name'],
 					styleProperty: 'fontSize',
 					callbackFunc: (_, value) => (this.specConfig.fontSize = value)
 				},
 				fontColor: {
-					name: 'Font Color',
+					name: $.Localize('#Customizer_FontColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					targetPanel: ['.hudspecinfo__count', '.specinfo-list-entry__name'],
 					styleProperty: 'color',
@@ -108,13 +108,13 @@ class HudSpecInfoHandler implements OnPanelLoad {
 					onChanged: () => this.createDummySpectators()
 				},
 				backgroundColor: {
-					name: 'Background Color',
+					name: $.Localize('#Customizer_BackgroundColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					targetPanel: '.hudspecinfo__container',
 					styleProperty: 'backgroundColor'
 				},
 				alignText: {
-					name: 'Align Text',
+					name: $.Localize('#Customizer_AlignText'),
 					type: CustomizerPropertyType.DROPDOWN,
 					options: [
 						{ label: 'Left', value: 'left' },

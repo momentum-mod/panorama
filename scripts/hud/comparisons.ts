@@ -183,7 +183,7 @@ class HudComparisonsHandler {
 		});
 
 		registerHUDCustomizerComponent($.GetContextPanel(), {
-			name: 'Comparisons',
+			name: $.Localize('#Customizer_Comparisons_Name'),
 			resizeX: false,
 			resizeY: false,
 			// Layouting out dummy splits can take like 100 (!!) frames in debug, until then the panel has 0 and overlay
@@ -191,26 +191,26 @@ class HudComparisonsHandler {
 			expectedMinWidth: 64,
 			dynamicStyles: {
 				index: {
-					name: 'Index',
+					name: $.Localize('#Customizer_Comparisons_Index'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [{ styleID: 'indexFont' }, { styleID: 'indexSize' }, { styleID: 'indexColor' }]
 				},
 				indexFont: {
-					name: 'Font',
+					name: $.Localize('#Customizer_Font'),
 					type: CustomizerPropertyType.FONT_PICKER,
 					targetPanel: '.hud-splits__name',
 					styleProperty: 'fontFamily'
 				},
 				indexSize: {
-					name: 'Size',
+					name: $.Localize('#Customizer_Size'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					targetPanel: '.hud-splits__name',
 					styleProperty: 'fontSize',
 					valueFn: (value) => `${value}px`
 				},
 				indexColor: {
-					name: 'Color',
+					name: $.Localize('#Customizer_Color'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					targetPanel: '.hud-splits__name',
 					styleProperty: 'color',
@@ -218,26 +218,26 @@ class HudComparisonsHandler {
 						(panel.style.textShadowFast = getTextShadowFast(value as rgbaColor, 0.9))
 				},
 				time: {
-					name: 'Time',
+					name: $.Localize('#Customizer_Comparisons_Time'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [{ styleID: 'timeFont' }, { styleID: 'timeSize' }, { styleID: 'timeColor' }]
 				},
 				timeFont: {
-					name: 'Font',
+					name: $.Localize('#Customizer_Font'),
 					type: CustomizerPropertyType.FONT_PICKER,
 					targetPanel: '.hud-splits__time',
 					styleProperty: 'fontFamily'
 				},
 				timeSize: {
-					name: 'Size',
+					name: $.Localize('#Customizer_Size'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					targetPanel: '.hud-splits__time',
 					styleProperty: 'fontSize',
 					valueFn: (value) => `${value}px`
 				},
 				timeColor: {
-					name: 'Color',
+					name: $.Localize('#Customizer_Color'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					targetPanel: '.hud-splits__time',
 					styleProperty: 'color',
@@ -245,7 +245,7 @@ class HudComparisonsHandler {
 						(panel.style.textShadowFast = getTextShadowFast(value as rgbaColor, 0.9))
 				},
 				comparisons: {
-					name: 'Comparison',
+					name: $.Localize('#Customizer_Comparisons_Comparisons'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [
@@ -255,19 +255,19 @@ class HudComparisonsHandler {
 					]
 				},
 				comparisonsFont: {
-					name: 'Font',
+					name: $.Localize('#Customizer_Font'),
 					type: CustomizerPropertyType.FONT_PICKER,
 					targetPanel: '.hud-splits__diff',
 					styleProperty: 'fontFamily'
 				},
 				comparisonsFontSize: {
-					name: 'Size',
+					name: $.Localize('#Customizer_Size'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					targetPanel: '.hud-splits__diff',
 					styleProperty: 'fontSize'
 				},
 				comparisonsColors: {
-					name: 'Colors',
+					name: $.Localize('#Customizer_Colors'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [
@@ -279,7 +279,7 @@ class HudComparisonsHandler {
 					]
 				},
 				comparisonsNeutral: {
-					name: 'Neutral',
+					name: $.Localize('#Customizer_Neutral'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
 						const colors = {
@@ -291,7 +291,7 @@ class HudComparisonsHandler {
 					onChanged: () => this.createDummySplits()
 				},
 				comparisonsAheadGain: {
-					name: 'Ahead - Gain',
+					name: $.Localize('#Customizer_Comparisons_ComparisonsAheadGain'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
 						const colors = {
@@ -303,7 +303,7 @@ class HudComparisonsHandler {
 					onChanged: () => this.createDummySplits()
 				},
 				comparisonsAheadLoss: {
-					name: 'Ahead - Loss',
+					name: $.Localize('#Customizer_Comparisons_ComparisonsAheadLoss'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
 						const colors = {
@@ -315,7 +315,7 @@ class HudComparisonsHandler {
 					onChanged: () => this.createDummySplits()
 				},
 				comparisonsBehindGain: {
-					name: 'Behind - Gain',
+					name: $.Localize('#Customizer_Comparisons_ComparisonsBehindGain'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
 						const colors = {
@@ -327,7 +327,7 @@ class HudComparisonsHandler {
 					onChanged: () => this.createDummySplits()
 				},
 				comparisonsBehindLoss: {
-					name: 'Behind - Loss',
+					name: $.Localize('#Customizer_Comparisons_ComparisonsBehindLoss'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
 						const colors = {

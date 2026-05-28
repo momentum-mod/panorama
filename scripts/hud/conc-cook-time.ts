@@ -19,7 +19,7 @@ class ConcCookHandler {
 
 	constructor() {
 		registerHUDCustomizerComponent($.GetContextPanel(), {
-			name: 'Conc Timer Bar',
+			name: $.Localize('#Customizer_Conc_Cook_Time_Name'),
 			resizeX: true,
 			resizeY: false,
 			gamemode: GamemodeCategoryToGamemode.get(GamemodeCategory.CONC),
@@ -29,45 +29,45 @@ class ConcCookHandler {
 			},
 			dynamicStyles: {
 				countDown: {
-					name: 'Count Down',
+					name: $.Localize('#Customizer_Conc_Cook_Time_CountDown'),
 					type: CustomizerPropertyType.CHECKBOX,
 					callbackFunc: (_, value) => (this.countDown = value),
 					onChanged: () => this.onCookUpdate(0, 0)
 				},
 				unfill: {
-					name: 'Unfill',
+					name: $.Localize('#Customizer_Conc_Cook_Time_Unfill'),
 					type: CustomizerPropertyType.CHECKBOX,
 					callbackFunc: (_, value) => (this.unfill = value),
 					onChanged: () => this.onCookUpdate(0, 0)
 				},
 				showLabel: {
-					name: 'Show Label',
+					name: $.Localize('#Customizer_Conc_Cook_Time_ShowLabel'),
 					type: CustomizerPropertyType.CHECKBOX,
 					children: { styleID: 'fontStyling', showWhen: true },
 					callbackFunc: (_, value) => (this.isLabelEnabled = value),
 					onChanged: () => this.onCookUpdate(0, 0)
 				},
 				fontStyling: {
-					name: 'Font Styling',
+					name: $.Localize('#Customizer_FontStyling'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [{ styleID: 'font' }, { styleID: 'fontSize' }, { styleID: 'fontColor' }]
 				},
 				font: {
-					name: 'Font',
+					name: $.Localize('#Customizer_Font'),
 					type: CustomizerPropertyType.FONT_PICKER,
 					targetPanel: '.cooktime__label',
 					styleProperty: 'fontFamily'
 				},
 				fontSize: {
-					name: 'Font Size',
+					name: $.Localize('#Customizer_FontSize'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					targetPanel: '.cooktime__label',
 					styleProperty: 'fontSize',
 					valueFn: (value) => `${value}px`
 				},
 				fontColor: {
-					name: 'Font Color',
+					name: $.Localize('#Customizer_FontColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					targetPanel: '.cooktime__label',
 					styleProperty: 'color',
@@ -76,32 +76,32 @@ class ConcCookHandler {
 					}
 				},
 				borderStyling: {
-					name: 'Border Styling',
+					name: $.Localize('#Customizer_Conc_Cook_Time_BorderStyling'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [{ styleID: 'borderWidth' }, { styleID: 'borderColor' }, { styleID: 'borderRadius' }]
 				},
 				borderWidth: {
-					name: 'Border Width',
+					name: $.Localize('#Customizer_BorderWidth'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					targetPanel: '.cooktime__meter',
 					styleProperty: 'borderWidth',
 					valueFn: (value) => `${value}px`
 				},
 				borderColor: {
-					name: 'Border Color',
+					name: $.Localize('#Customizer_BorderColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					targetPanel: '.cooktime__meter',
 					styleProperty: 'borderColor'
 				},
 				borderRadius: {
-					name: 'Border Radius',
+					name: $.Localize('#Customizer_BorderRadius'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [{ styleID: 'backgroundRadius' }, { styleID: 'fillRadius' }]
 				},
 				backgroundRadius: {
-					name: 'Background',
+					name: $.Localize('#Customizer_Conc_Cook_Time_BackgroundRadius'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					targetPanel: '.cooktime__meter',
 					styleProperty: 'borderRadius',
@@ -109,7 +109,7 @@ class ConcCookHandler {
 					settingProps: { min: 0, max: 10 }
 				},
 				fillRadius: {
-					name: 'Fill',
+					name: $.Localize('#Customizer_Conc_Cook_Time_FillRadius'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					targetPanel: '#ConcCookMeter_Left',
 					styleProperty: 'borderRadius',
@@ -117,13 +117,13 @@ class ConcCookHandler {
 					settingProps: { min: 0, max: 10 }
 				},
 				colors: {
-					name: 'Colors',
+					name: $.Localize('#Customizer_Colors'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [{ styleID: 'backgroundGradient' }, { styleID: 'fillGradient' }]
 				},
 				backgroundGradient: {
-					name: 'Background',
+					name: $.Localize('#Customizer_Background'),
 					type: CustomizerPropertyType.GRADIENT_PICKER,
 					targetPanel: '.cooktime__meter',
 					callbackFunc: (panel, value) => {
@@ -135,7 +135,7 @@ class ConcCookHandler {
 					}
 				},
 				fillGradient: {
-					name: 'Fill',
+					name: $.Localize('#Customizer_Fill'),
 					type: CustomizerPropertyType.GRADIENT_PICKER,
 					targetPanel: '#ConcCookMeter_Left',
 					styleProperty: 'backgroundColor',

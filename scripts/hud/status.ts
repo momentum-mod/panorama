@@ -69,30 +69,30 @@ class HudStatusHandler {
 		});
 
 		registerHUDCustomizerComponent($.GetContextPanel(), {
-			name: 'Timer Status',
+			name: $.Localize('#Customizer_Status_Name'),
 			resizeX: true,
 			resizeY: false,
 			dynamicStyles: {
 				fontStyling: {
-					name: 'Font Styling',
+					name: $.Localize('#Customizer_FontStyling'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [{ styleID: 'font' }, { styleID: 'fontSize' }, { styleID: 'fontColor' }]
 				},
 				font: {
-					name: 'Font',
+					name: $.Localize('#Customizer_Font'),
 					type: CustomizerPropertyType.FONT_PICKER,
 					targetPanel: '.hudstatus__label',
 					styleProperty: 'fontFamily'
 				},
 				fontSize: {
-					name: 'Font Size',
+					name: $.Localize('#Customizer_FontSize'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					targetPanel: '.hudstatus__label',
 					styleProperty: 'fontSize'
 				},
 				fontColor: {
-					name: 'Font Color',
+					name: $.Localize('#Customizer_FontColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					targetPanel: '.hudstatus__label',
 					styleProperty: 'color',
@@ -100,13 +100,13 @@ class HudStatusHandler {
 						(panel.style.textShadowFast = getTextShadowFast(value as rgbaColor, 0.9))
 				},
 				backgroundColor: {
-					name: 'Background Color',
+					name: $.Localize('#Customizer_BackgroundColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					targetPanel: '.hudstatus',
 					styleProperty: 'backgroundColor'
 				},
 				alignText: {
-					name: 'Align Text',
+					name: $.Localize('#Customizer_AlignText'),
 					type: CustomizerPropertyType.DROPDOWN,
 					options: [
 						{ label: 'Left', value: 'left' },

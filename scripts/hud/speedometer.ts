@@ -117,129 +117,129 @@ class SpeedometerHandler {
 		$.RegisterForUnhandledEvent('OnRangeColorProfilesSaved', (succ: boolean) => this.onSettingsUpdate(succ));
 
 		registerHUDCustomizerComponent($.GetContextPanel(), {
-			name: 'Speedometers',
+			name: $.Localize('#Customizer_Speedometer_Name'),
 			resizeX: true,
 			resizeY: false,
 			dynamicStyles: {
 				fontStyling: {
-					name: 'Font Styling',
+					name: $.Localize('#Customizer_FontStyling'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [{ styleID: 'mainFontStyling' }, { styleID: 'eventFontStyling' }]
 				},
 				mainFontStyling: {
-					name: 'Main',
+					name: $.Localize('#Customizer_Speedometer_MainFontStyling'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [{ styleID: 'mainAxisFontStyling' }, { styleID: 'mainComparisonFontStyling' }]
 				},
 				mainAxisFontStyling: {
-					name: 'Axis',
+					name: $.Localize('#Customizer_Speedometer_MainAxisFontStyling'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [{ styleID: 'mainAxisFont' }, { styleID: 'mainAxisFontSize' }]
 				},
 				mainAxisFont: {
-					name: 'Font',
+					name: $.Localize('#Customizer_Font'),
 					type: CustomizerPropertyType.FONT_PICKER,
 					callbackFunc: (_, value) => (Fonts.mainAxisFont = value),
 					onChanged: () => this.setFontStyling()
 				},
 				mainAxisFontSize: {
-					name: 'Font Size',
+					name: $.Localize('#Customizer_FontSize'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					callbackFunc: (_, value) => (Fonts.mainAxisFontSize = value),
 					onChanged: () => this.setFontStyling()
 				},
 				mainComparisonFontStyling: {
-					name: 'Comparisons',
+					name: $.Localize('#Customizer_Comparisons'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [{ styleID: 'mainComparisonFont' }, { styleID: 'mainComparisonFontSize' }]
 				},
 				mainComparisonFont: {
-					name: 'Font',
+					name: $.Localize('#Customizer_Font'),
 					type: CustomizerPropertyType.FONT_PICKER,
 					callbackFunc: (_, value) => (Fonts.mainComparisonFont = value),
 					onChanged: () => this.setFontStyling()
 				},
 				mainComparisonFontSize: {
-					name: 'Font Size',
+					name: $.Localize('#Customizer_FontSize'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					callbackFunc: (_, value) => (Fonts.mainComparisonFontSize = value),
 					onChanged: () => this.setFontStyling()
 				},
 				eventFontStyling: {
-					name: 'Event',
+					name: $.Localize('#Customizer_Speedometer_EventFontStyling'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [{ styleID: 'eventAxisFontStyling' }, { styleID: 'eventComparisonFontStyling' }]
 				},
 				eventAxisFontStyling: {
-					name: 'Axis',
+					name: $.Localize('#Customizer_Axis'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [{ styleID: 'eventAxisFont' }, { styleID: 'eventAxisFontSize' }]
 				},
 				eventAxisFont: {
-					name: 'Font',
+					name: $.Localize('#Customizer_Font'),
 					type: CustomizerPropertyType.FONT_PICKER,
 					callbackFunc: (_, value) => (Fonts.eventAxisFont = value),
 					onChanged: () => this.setFontStyling()
 				},
 				eventAxisFontSize: {
-					name: 'Font Size',
+					name: $.Localize('#Customizer_FontSize'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					callbackFunc: (_, value) => (Fonts.eventAxisFontSize = value),
 					onChanged: () => this.setFontStyling()
 				},
 				eventComparisonFontStyling: {
-					name: 'Comparisons',
+					name: $.Localize('#Customizer_Comparisons'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [{ styleID: 'eventComparisonFont' }, { styleID: 'eventComparisonFontSize' }]
 				},
 				eventComparisonFont: {
-					name: 'Font',
+					name: $.Localize('#Customizer_Font'),
 					type: CustomizerPropertyType.FONT_PICKER,
 					callbackFunc: (_, value) => (Fonts.eventComparisonFont = value),
 					onChanged: () => this.setFontStyling()
 				},
 				eventComparisonFontSize: {
-					name: 'Font Size',
+					name: $.Localize('#Customizer_FontSize'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					callbackFunc: (_, value) => (Fonts.eventComparisonFontSize = value),
 					onChanged: () => this.setFontStyling()
 				},
 				colors: {
-					name: 'Colors',
+					name: $.Localize('#Customizer_Colors'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [{ styleID: 'axisSpeedometerColors' }, { styleID: 'comparisonSpeedometerColors' }]
 				},
 				axisSpeedometerColors: {
-					name: 'Axis Speedometers',
+					name: $.Localize('#Customizer_Speedometer_AxisSpeedometerColors'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [{ styleID: 'axisFlatColor' }, { styleID: 'axisGainColor' }, { styleID: 'axisLossColor' }]
 				},
 				axisFlatColor: {
-					name: 'Flat',
+					name: $.Localize('#Customizer_Flat'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => (Colors.AXIS_FLAT = value)
 				},
 				axisGainColor: {
-					name: 'Gain',
+					name: $.Localize('#Customizer_Gain'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => (Colors.AXIS_GAIN = value)
 				},
 				axisLossColor: {
-					name: 'Loss',
+					name: $.Localize('#Customizer_Loss'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => (Colors.AXIS_LOSS = value)
 				},
 				comparisonSpeedometerColors: {
-					name: 'Comparison Labels',
+					name: $.Localize('#Customizer_Speedometer_ComparisonSpeedometerColors'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [
@@ -249,22 +249,22 @@ class SpeedometerHandler {
 					]
 				},
 				comparisonFlatColor: {
-					name: 'Flat',
+					name: $.Localize('#Customizer_Flat'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => (Colors.COMPARISON_FLAT = value)
 				},
 				comparisonGainColor: {
-					name: 'Gain',
+					name: $.Localize('#Customizer_Gain'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => (Colors.COMPARISON_GAIN = value)
 				},
 				comparisonLossColor: {
-					name: 'Loss',
+					name: $.Localize('#Customizer_Loss'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => (Colors.COMPARISON_LOSS = value)
 				},
 				backgroundColor: {
-					name: 'Background Color',
+					name: $.Localize('#Customizer_BackgroundColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					targetPanel: '.speedometers',
 					styleProperty: 'backgroundColor'

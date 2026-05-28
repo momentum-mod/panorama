@@ -24,7 +24,7 @@ class HudSpectateHandler implements OnPanelLoad {
 		$.RegisterForUnhandledEvent('MomentumSpectatorModeChanged', (newMode) => this.onSpectatorModeChange(newMode));
 
 		registerHUDCustomizerComponent($.GetContextPanel(), {
-			name: 'Spectating Menu',
+			name: $.Localize('#Customizer_Spectate_Name'),
 			resizeX: false,
 			resizeY: false,
 			moveX: false,
@@ -32,19 +32,19 @@ class HudSpectateHandler implements OnPanelLoad {
 			canDisable: false,
 			dynamicStyles: {
 				showOnHover: {
-					name: 'Show Only On Hover',
+					name: $.Localize('#Customizer_Spectate_ShowOnHover'),
 					type: CustomizerPropertyType.CHECKBOX,
 					callbackFunc: (_, value) => (this.showOnHover = value),
 					onChanged: () => this.handleHoverAndBlur(this.showOnHover)
 				},
 				blur: {
-					name: 'Enable Blur',
+					name: $.Localize('#Customizer_Spectate_Blur'),
 					type: CustomizerPropertyType.CHECKBOX,
 					callbackFunc: (_, value) => (this.enableBlur = value),
 					onChanged: () => this.handleHoverAndBlur(this.showOnHover)
 				},
 				colors: {
-					name: 'Colors',
+					name: $.Localize('#Customizer_Colors'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [
@@ -55,23 +55,23 @@ class HudSpectateHandler implements OnPanelLoad {
 					]
 				},
 				backgroundColor: {
-					name: 'Background',
+					name: $.Localize('#Customizer_Background'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => (this.panels.cp.style.backgroundColor = value as rgbaColor)
 				},
 				shadowColor: {
-					name: 'Shadow',
+					name: $.Localize('#Customizer_Spectate_ShadowColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => (this.panels.cp.style.boxShadow = `0 1px 16px ${value}`)
 				},
 				replaySeekBarColor: {
-					name: 'Replay Seek Bar',
+					name: $.Localize('#Customizer_Spectate_ReplaySeekBarColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) =>
 						(this.panels.replayControls as ReplayStylingInterface).setSeekBarColor(value as rgbaColor)
 				},
 				replaySeekBarColorActive: {
-					name: 'Active Replay Segment',
+					name: $.Localize('#Customizer_Spectate_ReplaySeekBarColorActive'),
 					type: CustomizerPropertyType.GRADIENT_PICKER,
 					callbackFunc: (_, value) => {
 						const gradient =
@@ -80,13 +80,13 @@ class HudSpectateHandler implements OnPanelLoad {
 					}
 				},
 				fontStyling: {
-					name: 'Font Styling',
+					name: $.Localize('#Customizer_FontStyling'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [{ styleID: 'spectateStyling' }, { styleID: 'replayStyling' }]
 				},
 				spectateStyling: {
-					name: 'Spectate Panel',
+					name: $.Localize('#Customizer_Spectate_SpectateStyling'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [
@@ -96,20 +96,20 @@ class HudSpectateHandler implements OnPanelLoad {
 					]
 				},
 				spectateFont: {
-					name: 'Font',
+					name: $.Localize('#Customizer_Font'),
 					type: CustomizerPropertyType.FONT_PICKER,
 					targetPanel: '.spectate__title',
 					styleProperty: 'fontFamily'
 				},
 				spectateFontSize: {
-					name: 'Font Size',
+					name: $.Localize('#Customizer_FontSize'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					targetPanel: '.spectate__title',
 					styleProperty: 'fontSize',
 					valueFn: (value) => `${value}px`
 				},
 				spectateFontColor: {
-					name: 'Font Color',
+					name: $.Localize('#Customizer_FontColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					targetPanel: ['.spectate__title', '.spectate__hint'],
 					styleProperty: 'color',
@@ -117,7 +117,7 @@ class HudSpectateHandler implements OnPanelLoad {
 						(panel.style.textShadowFast = getTextShadowFast(value as rgbaColor, 0.9))
 				},
 				replayStyling: {
-					name: 'Replay Panel',
+					name: $.Localize('#Customizer_Spectate_ReplayStyling'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [
@@ -127,7 +127,7 @@ class HudSpectateHandler implements OnPanelLoad {
 					]
 				},
 				replayLabelStyling: {
-					name: 'Label',
+					name: $.Localize('#Customizer_Label'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [
@@ -137,20 +137,20 @@ class HudSpectateHandler implements OnPanelLoad {
 					]
 				},
 				replayLabelFont: {
-					name: 'Label Font',
+					name: $.Localize('#Customizer_Spectate_ReplayLabelFont'),
 					type: CustomizerPropertyType.FONT_PICKER,
 					targetPanel: '.replaycontrols__text--typeof',
 					styleProperty: 'fontFamily'
 				},
 				replayLabelFontSize: {
-					name: 'Label Font Size',
+					name: $.Localize('#Customizer_Spectate_ReplayLabelFontSize'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					targetPanel: '.replaycontrols__text--typeof',
 					styleProperty: 'fontSize',
 					valueFn: (value) => `${value}px`
 				},
 				replayLabelFontColor: {
-					name: 'Label Font Color',
+					name: $.Localize('#Customizer_Spectate_ReplayLabelFontColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					targetPanel: '.replaycontrols__text--typeof',
 					styleProperty: 'color',
@@ -158,7 +158,7 @@ class HudSpectateHandler implements OnPanelLoad {
 						(panel.style.textShadowFast = getTextShadowFast(value as rgbaColor, 0.9))
 				},
 				replayValueStyling: {
-					name: 'Value',
+					name: $.Localize('#Customizer_Spectate_ReplayValueStyling'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [
@@ -168,13 +168,13 @@ class HudSpectateHandler implements OnPanelLoad {
 					]
 				},
 				replayValueFont: {
-					name: 'Value Font',
+					name: $.Localize('#Customizer_Spectate_ReplayValueFont'),
 					type: CustomizerPropertyType.FONT_PICKER,
 					targetPanel: ['.replaycontrols__text--time', '.replaycontrols__text--ticks'],
 					styleProperty: 'fontFamily'
 				},
 				replayValueFontSize: {
-					name: 'Value Font Size',
+					name: $.Localize('#Customizer_Spectate_ReplayValueFontSize'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					targetPanel: ['.replaycontrols__text--time', '.replaycontrols__text--ticks'],
 					styleProperty: 'fontSize',
@@ -182,7 +182,7 @@ class HudSpectateHandler implements OnPanelLoad {
 					settingProps: { min: 0, max: 18 }
 				},
 				replayValueFontColor: {
-					name: 'Value Font Color',
+					name: $.Localize('#Customizer_Spectate_ReplayValueFontColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					targetPanel: ['.replaycontrols__text--time', '.replaycontrols__text--ticks'],
 					styleProperty: 'color',
@@ -190,7 +190,7 @@ class HudSpectateHandler implements OnPanelLoad {
 						(panel.style.textShadowFast = getTextShadowFast(value as rgbaColor, 0.9))
 				},
 				replaySegmentStyling: {
-					name: 'Segments',
+					name: $.Localize('#Customizer_Spectate_ReplaySegmentStyling'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [
@@ -200,20 +200,20 @@ class HudSpectateHandler implements OnPanelLoad {
 					]
 				},
 				replaySegmentFont: {
-					name: 'Segment Font',
+					name: $.Localize('#Customizer_Spectate_ReplaySegmentFont'),
 					type: CustomizerPropertyType.FONT_PICKER,
 					callbackFunc: (_, value) =>
 						(this.panels.replayControls as ReplayStylingInterface).setSegmentFont(value)
 				},
 				replaySegmentFontSize: {
-					name: 'Segment Font Size',
+					name: $.Localize('#Customizer_Spectate_ReplaySegmentFontSize'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					callbackFunc: (_, value) =>
 						(this.panels.replayControls as ReplayStylingInterface).setSegmentFontSize(value),
 					settingProps: { min: 0, max: 18 }
 				},
 				replaySegmentFontColor: {
-					name: 'Segment Font Color',
+					name: $.Localize('#Customizer_Spectate_ReplaySegmentFontColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) =>
 						(this.panels.replayControls as ReplayStylingInterface).setSegmentFontColor(value as rgbaColor)

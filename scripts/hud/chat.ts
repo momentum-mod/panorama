@@ -1,12 +1,12 @@
 import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
 
 registerHUDCustomizerComponent($.GetContextPanel(), {
-	name: 'Chat',
+	name: $.Localize('#Customizer_Chat_Name'),
 	resizeX: true,
 	resizeY: true,
 	dynamicStyles: {
 		showTyping: {
-			name: 'Show Users Typing',
+			name: $.Localize('#Customizer_Chat_ShowTyping'),
 			type: CustomizerPropertyType.CHECKBOX,
 			callbackFunc: (panel, value) => {
 				panel.SetHasClass('chat--disable-users-typing', !value);
@@ -14,7 +14,7 @@ registerHUDCustomizerComponent($.GetContextPanel(), {
 		},
 		// BROKEN, GET'S RID OF THE BOLD STYLING IN SPANS
 		// font: {
-		// 	name: 'Font',
+		// 	name: $.Localize('#Customizer_Font'),
 		// 	type: CustomizerPropertyType.FONT_PICKER,
 		// 	styleProperty: 'fontFamily',
 		// 	targetPanel: ['.chat-entry__message', '.chat__input', '.chat__send-text'],
@@ -31,13 +31,13 @@ registerHUDCustomizerComponent($.GetContextPanel(), {
 		// 	]
 		// },
 		backgroundColor: {
-			name: 'Background Color',
+			name: $.Localize('#Customizer_BackgroundColor'),
 			type: CustomizerPropertyType.COLOR_PICKER,
 			styleProperty: 'backgroundColor',
 			targetPanel: '.chat__elem'
 		},
 		scale: {
-			name: 'Scale',
+			name: $.Localize('#Customizer_Chat_Scale'),
 			type: CustomizerPropertyType.NUMBER_ENTRY,
 			callbackFunc: (panel, value) => {
 				for (let i = 10; i <= 24; i++) {
@@ -47,7 +47,7 @@ registerHUDCustomizerComponent($.GetContextPanel(), {
 			settingProps: { min: 10, max: 24 }
 		},
 		innerGap: {
-			name: 'Gap',
+			name: $.Localize('#Customizer_Gap'),
 			type: CustomizerPropertyType.NUMBER_ENTRY,
 			callbackFunc: (panel, value) => {
 				for (let i = 0; i <= 8; i++) {
@@ -57,7 +57,7 @@ registerHUDCustomizerComponent($.GetContextPanel(), {
 			settingProps: { min: 0, max: 8 }
 		},
 		borderRadius: {
-			name: 'Border Radius',
+			name: $.Localize('#Customizer_BorderRadius'),
 			type: CustomizerPropertyType.NUMBER_ENTRY,
 			styleProperty: 'borderRadius',
 			targetPanel: '.chat__elem',
@@ -67,7 +67,7 @@ registerHUDCustomizerComponent($.GetContextPanel(), {
 		// TODO: Blurring blurs the entire panel, not the backbuffer. Adding #ChatInput to #HudBlur's blurrects has
 		// same issue, no idea what's different about that panel from say, TabMenu/Spectator
 		// blur: {
-		// 	name: 'Background Blur',
+		// 	name: $.Localize('#Customizer_Chat_Blur'),
 		// 	type: CustomizerPropertyType.CHECKBOX,
 		// 	targetPanel: '.chat__elem',
 		// 	callbackFunc: (panel, value) => {

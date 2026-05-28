@@ -84,7 +84,7 @@ class StrafeTrainer {
 
 	constructor() {
 		registerHUDCustomizerComponent($.GetContextPanel(), {
-			name: 'Strafe Trainer',
+			name: $.Localize('#Customizer_Strafe_Trainer_Name'),
 			resizeX: true,
 			resizeY: false,
 			gamemode: [
@@ -96,7 +96,7 @@ class StrafeTrainer {
 			unhandledEvents: { event: 'OnJumpStarted', callbackFn: () => this.updateStats() },
 			dynamicStyles: {
 				displayMode: {
-					name: 'Display Mode',
+					name: $.Localize('#Customizer_Strafe_Trainer_DisplayMode'),
 					type: CustomizerPropertyType.DROPDOWN,
 					options: [
 						{
@@ -139,54 +139,54 @@ class StrafeTrainer {
 					}
 				},
 				indicatorPercentage: {
-					name: 'Indicator Gain Percentage',
+					name: $.Localize('#Customizer_Strafe_Trainer_IndicatorPercentage'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					callbackFunc: (_, value) => (this.indicatorPercentage = value),
 					onChanged: () => this.updateDisplayMode(this.displayMode),
 					settingProps: { min: 80, max: 99 }
 				},
 				synchronizerSpeed: {
-					name: 'Synchronizer Speed',
+					name: $.Localize('#Customizer_Strafe_Trainer_SynchronizerSpeed'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					callbackFunc: (_, value) => (this.syncGain = value),
 					settingProps: { min: 1, max: 20 }
 				},
 				needleWidth: {
-					name: 'Needle Width',
+					name: $.Localize('#Customizer_Strafe_Trainer_NeedleWidth'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					targetPanel: '.strafetrainer__needle',
 					styleProperty: 'width',
 					valueFn: (value) => `${value}px`
 				},
 				needleColor: {
-					name: 'Needle Color',
+					name: $.Localize('#Customizer_Strafe_Trainer_NeedleColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					targetPanel: '.strafetrainer__needle',
 					styleProperty: 'backgroundColor'
 				},
 				averagingWindow: {
-					name: 'Averaging Window',
+					name: $.Localize('#Customizer_Strafe_Trainer_AveragingWindow'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					callbackFunc: (_, value) => this.updateBufferLength(value),
 					settingProps: { min: 1, max: 20 }
 				},
 				minSpeed: {
-					name: 'Required Speed',
+					name: $.Localize('#Customizer_Strafe_Trainer_MinSpeed'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					callbackFunc: (_, value) => (this.minSpeed = value)
 				},
 				dynamicMode: {
-					name: 'Follow Strafe Direction',
+					name: $.Localize('#Customizer_Strafe_Trainer_DynamicMode'),
 					type: CustomizerPropertyType.CHECKBOX,
 					callbackFunc: (_, value) => (this.dynamicEnable = value)
 				},
 				flipDirections: {
-					name: 'Flip Directions',
+					name: $.Localize('#Customizer_Strafe_Trainer_FlipDirections'),
 					type: CustomizerPropertyType.CHECKBOX,
 					callbackFunc: (_, value) => (this.flipEnable = value)
 				},
 				showLabels: {
-					name: 'Show Labels',
+					name: $.Localize('#Customizer_ShowLabels'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [
@@ -198,57 +198,57 @@ class StrafeTrainer {
 					]
 				},
 				showJumpCount: {
-					name: 'Show Jump Count',
+					name: $.Localize('#Customizer_Strafe_Trainer_ShowJumpCount'),
 					type: CustomizerPropertyType.CHECKBOX,
 					callbackFunc: (_, value) => (this.showJumpCount = value),
 					onChanged: () => this.updateStats()
 				},
 				showTakeoffSpeed: {
-					name: 'Show Take Off Speed',
+					name: $.Localize('#Customizer_ShowTakeoffSpeed'),
 					type: CustomizerPropertyType.CHECKBOX,
 					callbackFunc: (_, value) => (this.showTakeoffSpeed = value),
 					onChanged: () => this.updateStats()
 				},
 				showYawRatio: {
-					name: 'Show Yaw Ratio',
+					name: $.Localize('#Customizer_ShowYawRatio'),
 					type: CustomizerPropertyType.CHECKBOX,
 					callbackFunc: (_, value) => (this.showYawRatio = value),
 					onChanged: () => this.updateStats()
 				},
 				showGain: {
-					name: 'Show Gain',
+					name: $.Localize('#Customizer_ShowGain'),
 					type: CustomizerPropertyType.CHECKBOX,
 					callbackFunc: (_, value) => (this.showGain = value),
 					onChanged: () => this.updateStats()
 				},
 				fontStyling: {
-					name: 'Font Styling',
+					name: $.Localize('#Customizer_FontStyling'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [{ styleID: 'font' }, { styleID: 'fontSize' }, { styleID: 'fontColor' }]
 				},
 				font: {
-					name: 'Font',
+					name: $.Localize('#Customizer_Font'),
 					type: CustomizerPropertyType.FONT_PICKER,
 					targetPanel: ['.strafetrainer__stats--upper', '.strafetrainer__stats--lower'],
 					styleProperty: 'fontFamily'
 				},
 				fontSize: {
-					name: 'Font Size',
+					name: $.Localize('#Customizer_FontSize'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					targetPanel: ['.strafetrainer__stats--upper', '.strafetrainer__stats--lower'],
 					styleProperty: 'fontSize',
 					valueFn: (value) => `${value}px`
 				},
 				fontColor: {
-					name: 'Font Color',
+					name: $.Localize('#Customizer_FontColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					targetPanel: ['.strafetrainer__stats--upper', '.strafetrainer__stats--lower'],
 					styleProperty: 'color',
 					callbackFunc: (_, value) => (this.fontColor = [value, value])
 				},
 				colors: {
-					name: 'Colors',
+					name: $.Localize('#Customizer_Colors'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [
@@ -259,7 +259,7 @@ class StrafeTrainer {
 					]
 				},
 				backgroundColor: {
-					name: 'Background Color',
+					name: $.Localize('#Customizer_BackgroundColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					targetPanel: ['.strafetrainer__background', '.strafetrainer__container'],
 					callbackFunc: (panel, value) => {
@@ -273,14 +273,14 @@ class StrafeTrainer {
 				},
 				// TODO: It's annoying you can't see gainGradients when this changes. Not sure what to do about it
 				colorStats: {
-					name: 'Color Stats Based On Gain',
+					name: $.Localize('#Customizer_Strafe_Trainer_ColorStats'),
 					type: CustomizerPropertyType.CHECKBOX,
 					callbackFunc: (_, value) => (this.statColorEnable = value),
 					onChanged: () => this.updateStats()
 				},
 
 				colorByGain: {
-					name: 'Color By Speed Gain',
+					name: $.Localize('#Customizer_Strafe_Trainer_ColorByGain'),
 					type: CustomizerPropertyType.CHECKBOX,
 					children: [
 						{ styleID: 'gainGradients', showWhen: true },
@@ -289,12 +289,12 @@ class StrafeTrainer {
 					callbackFunc: (_, value) => (this.colorByGainEnable = value)
 				},
 				strafeBarColor: {
-					name: 'Strafe Bar Color',
+					name: $.Localize('#Customizer_Strafe_Trainer_StrafeBarColor'),
 					type: CustomizerPropertyType.GRADIENT_PICKER,
 					callbackFunc: (_, value) => (this.strafeBarGradient = value)
 				},
 				gainGradients: {
-					name: 'Gain Gradients',
+					name: $.Localize('#Customizer_Strafe_Trainer_GainGradients'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [
@@ -308,37 +308,37 @@ class StrafeTrainer {
 					]
 				},
 				gainExtra: {
-					name: 'Extra',
+					name: $.Localize('#Customizer_Strafe_Trainer_GainExtra'),
 					type: CustomizerPropertyType.GRADIENT_PICKER,
 					callbackFunc: (_, value) => (Colors.EXTRA = value as [color, color])
 				},
 				gainPerfect: {
-					name: 'Perfect',
+					name: $.Localize('#Customizer_Strafe_Trainer_GainPerfect'),
 					type: CustomizerPropertyType.GRADIENT_PICKER,
 					callbackFunc: (_, value) => (Colors.PERFECT = value as [color, color])
 				},
 				gainGood: {
-					name: 'Good',
+					name: $.Localize('#Customizer_Strafe_Trainer_GainGood'),
 					type: CustomizerPropertyType.GRADIENT_PICKER,
 					callbackFunc: (_, value) => (Colors.GOOD = value as [color, color])
 				},
 				gainSlow: {
-					name: 'Slow',
+					name: $.Localize('#Customizer_Strafe_Trainer_GainSlow'),
 					type: CustomizerPropertyType.GRADIENT_PICKER,
 					callbackFunc: (_, value) => (Colors.SLOW = value as [color, color])
 				},
 				gainNeutral: {
-					name: 'Neutral',
+					name: $.Localize('#Customizer_Neutral'),
 					type: CustomizerPropertyType.GRADIENT_PICKER,
 					callbackFunc: (_, value) => (Colors.NEUTRAL = value as [color, color])
 				},
 				gainLoss: {
-					name: 'Loss',
+					name: $.Localize('#Customizer_Loss'),
 					type: CustomizerPropertyType.GRADIENT_PICKER,
 					callbackFunc: (_, value) => (Colors.LOSS = value as [color, color])
 				},
 				gainStop: {
-					name: 'Stop',
+					name: $.Localize('#Customizer_Strafe_Trainer_GainStop'),
 					type: CustomizerPropertyType.GRADIENT_PICKER,
 					callbackFunc: (_, value) => (Colors.STOP = value as [color, color])
 				}

@@ -48,7 +48,7 @@ class StickyCountHandler {
 	initHandler: number;
 	constructor() {
 		registerHUDCustomizerComponent($.GetContextPanel(), {
-			name: 'Sticky Count',
+			name: $.Localize('#Customizer_Sticky_Count_Name'),
 			resizeX: false,
 			resizeY: false,
 			gamemode: GamemodeCategoryToGamemode.get(GamemodeCategory.SJ),
@@ -60,7 +60,7 @@ class StickyCountHandler {
 			],
 			dynamicStyles: {
 				colors: {
-					name: 'Colors',
+					name: $.Localize('#Customizer_Colors'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [
@@ -71,7 +71,7 @@ class StickyCountHandler {
 					]
 				},
 				backgroundGradient: {
-					name: 'Background',
+					name: $.Localize('#Customizer_Background'),
 					type: CustomizerPropertyType.GRADIENT_PICKER,
 					callbackFunc: (_, value) =>
 						(StateColors[StickyState.NOSTICKY] =
@@ -79,7 +79,7 @@ class StickyCountHandler {
 					onChanged: () => this.updateStickyPanels()
 				},
 				armingGradient: {
-					name: 'Arming',
+					name: $.Localize('#Customizer_Sticky_Count_ArmingGradient'),
 					type: CustomizerPropertyType.GRADIENT_PICKER,
 					callbackFunc: (_, value) =>
 						(StateColors[StickyState.ARMING] =
@@ -87,7 +87,7 @@ class StickyCountHandler {
 					onChanged: () => this.updateStickyPanels()
 				},
 				armedGradient: {
-					name: 'Armed',
+					name: $.Localize('#Customizer_Sticky_Count_ArmedGradient'),
 					type: CustomizerPropertyType.GRADIENT_PICKER,
 					callbackFunc: (_, value) =>
 						(StateColors[StickyState.ARMED] =
@@ -95,7 +95,7 @@ class StickyCountHandler {
 					onChanged: () => this.updateStickyPanels()
 				},
 				blockedGradient: {
-					name: 'Blocked',
+					name: $.Localize('#Customizer_Blocked'),
 					type: CustomizerPropertyType.GRADIENT_PICKER,
 					callbackFunc: (_, value) =>
 						(StateColors[StickyState.BLOCKED] =
@@ -103,45 +103,45 @@ class StickyCountHandler {
 					onChanged: () => this.updateStickyPanels()
 				},
 				borderStyling: {
-					name: 'Border Styling',
+					name: $.Localize('#Customizer_BorderStyling'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [{ styleID: 'borderWidth' }, { styleID: 'borderColor' }, { styleID: 'borderRadius' }]
 				},
 				borderWidth: {
-					name: 'Border Width',
+					name: $.Localize('#Customizer_BorderWidth'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					callbackFunc: (_, value) => (this.config.borderWidth = `${value}px`),
 					onChanged: () => this.updateStickyPanels()
 				},
 				borderColor: {
-					name: 'Border Color',
+					name: $.Localize('#Customizer_BorderColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => (this.config.borderColor = value as rgbaColor),
 					onChanged: () => this.updateStickyPanels()
 				},
 				borderRadius: {
-					name: 'Border Radius',
+					name: $.Localize('#Customizer_BorderRadius'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					callbackFunc: (_, value) => (this.config.borderRadius = `${value}%`),
 					onChanged: () => this.updateStickyPanels(),
 					settingProps: { min: 0, max: 50 }
 				},
 				width: {
-					name: 'Width',
+					name: $.Localize('#Customizer_Width'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					callbackFunc: (_, value) => (this.config.width = `${value}px`),
 					onChanged: () => this.updateStickyPanels()
 				},
 				height: {
-					name: 'Height',
+					name: $.Localize('#Customizer_Height'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					callbackFunc: (_, value) => (this.config.height = `${value}px`),
 					onChanged: () => this.updateStickyPanels()
 				},
 
 				gap: {
-					name: 'Gap',
+					name: $.Localize('#Customizer_Gap'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					callbackFunc: (_, value) => (this.config.margin = `0 ${value}px`),
 					onChanged: () => this.updateStickyPanels()

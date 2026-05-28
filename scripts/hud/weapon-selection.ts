@@ -53,13 +53,13 @@ class WeaponSelectionHandler {
 		});
 
 		registerHUDCustomizerComponent($.GetContextPanel(), {
-			name: 'Weapon Selection',
+			name: $.Localize('#Customizer_Weapon_Selection_Name'),
 			resizeX: false,
 			resizeY: false,
 			// TODO: Add switching sides for the notch, gotta figure out the css
 			dynamicStyles: {
 				fadeout: {
-					name: 'Fadeout',
+					name: $.Localize('#Customizer_Weapon_Selection_Fadeout'),
 					type: CustomizerPropertyType.CHECKBOX,
 					callbackFunc: (_, value) => {
 						Config.fadeout = value;
@@ -67,20 +67,20 @@ class WeaponSelectionHandler {
 					}
 				},
 				showNotch: {
-					name: 'Show Notch',
+					name: $.Localize('#Customizer_Weapon_Selection_ShowNotch'),
 					type: CustomizerPropertyType.CHECKBOX,
 					callbackFunc: (_, value) => (Config.showNotch = value),
 					onChanged: () => this.updateStyles()
 				},
 				showKeybinds: {
-					name: 'Show Keybinds',
+					name: $.Localize('#Customizer_Weapon_Selection_ShowKeybinds'),
 					type: CustomizerPropertyType.CHECKBOX,
 					children: [{ styleID: 'keybindsStyling', showWhen: true }],
 					callbackFunc: (_, value) => (Config.showKeybinds = value),
 					onChanged: () => this.updateStyles()
 				},
 				keybindsStyling: {
-					name: 'Keybinds Styling',
+					name: $.Localize('#Customizer_Weapon_Selection_KeybindsStyling'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [
@@ -91,31 +91,31 @@ class WeaponSelectionHandler {
 					]
 				},
 				keybindsFont: {
-					name: 'Font',
+					name: $.Localize('#Customizer_Font'),
 					type: CustomizerPropertyType.FONT_PICKER,
 					callbackFunc: (_, value) => (Config.keybinds.font = value),
 					onChanged: () => this.updateStyles()
 				},
 				keybindsFontSize: {
-					name: 'Font Size',
+					name: $.Localize('#Customizer_FontSize'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					callbackFunc: (_, value) => (Config.keybinds.size = value),
 					onChanged: () => this.updateStyles()
 				},
 				keybindsFontColor: {
-					name: 'Color',
+					name: $.Localize('#Customizer_Color'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => (Config.keybinds.color = value),
 					onChanged: () => this.updateStyles()
 				},
 				keybindsFontActiveColor: {
-					name: 'Active Color',
+					name: $.Localize('#Customizer_Weapon_Selection_KeybindsFontActiveColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => (Config.keybinds.activeColor = value),
 					onChanged: () => this.updateStyles()
 				},
 				weaponNameStyling: {
-					name: 'Weapon Name Styling',
+					name: $.Localize('#Customizer_Weapon_Selection_WeaponNameStyling'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [
@@ -126,43 +126,43 @@ class WeaponSelectionHandler {
 					]
 				},
 				weaponNameFont: {
-					name: 'Font',
+					name: $.Localize('#Customizer_Font'),
 					type: CustomizerPropertyType.FONT_PICKER,
 					callbackFunc: (_, value) => (Config.weapon_name.font = value),
 					onChanged: () => this.updateStyles()
 				},
 				weaponNameFontSize: {
-					name: 'Font Size',
+					name: $.Localize('#Customizer_FontSize'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					callbackFunc: (_, value) => (Config.weapon_name.size = value),
 					onChanged: () => this.updateStyles()
 				},
 				weaponNameFontColor: {
-					name: 'Color',
+					name: $.Localize('#Customizer_Color'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => (Config.weapon_name.color = value),
 					onChanged: () => this.updateStyles()
 				},
 				weaponNameFontActiveColor: {
-					name: 'Active Color',
+					name: $.Localize('#Customizer_ActiveColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => (Config.weapon_name.activeColor = value),
 					onChanged: () => this.updateStyles()
 				},
 				notchStyling: {
-					name: 'Notch Styling',
+					name: $.Localize('#Customizer_Weapon_Selection_NotchStyling'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [{ styleID: 'notchWidth' }, { styleID: 'notchColor' }]
 				},
 				notchWidth: {
-					name: 'Width',
+					name: $.Localize('#Customizer_Width'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					callbackFunc: (_, value) => (Config.notch.width = value),
 					onChanged: () => this.updateStyles()
 				},
 				notchColor: {
-					name: 'Color',
+					name: $.Localize('#Customizer_Color'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => (Config.notch.color = value),
 					onChanged: () => this.updateStyles()

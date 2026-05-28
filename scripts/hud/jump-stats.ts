@@ -36,26 +36,26 @@ class JumpStatsHandler {
 
 	constructor() {
 		registerHUDCustomizerComponent($.GetContextPanel(), {
-			name: 'Jump Stats (SSJ)',
+			name: $.Localize('#Customizer_Jump_Stats_Name'),
 			resizeX: false,
 			resizeY: false,
 			gamemode: Gamemode.BHOP,
 			events: { event: 'OnJumpStarted', panel: this.panels.container, callbackFn: () => this.onJump() },
 			dynamicStyles: {
 				fontStyling: {
-					name: 'Font Styling',
+					name: $.Localize('#Customizer_FontStyling'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [{ styleID: 'font' }, { styleID: 'fontSize' }, { styleID: 'fontColor' }]
 				},
 				font: {
-					name: 'Font',
+					name: $.Localize('#Customizer_Font'),
 					type: CustomizerPropertyType.FONT_PICKER,
 					targetPanel: ['.jumpstats__label', '.jumpstats__label--name', '.jumpstats__label--values'],
 					styleProperty: 'fontFamily'
 				},
 				fontSize: {
-					name: 'Font Size',
+					name: $.Localize('#Customizer_FontSize'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					targetPanel: ['.jumpstats__label', '.jumpstats__label--name', '.jumpstats__label--values'],
 					styleProperty: 'fontSize',
@@ -63,7 +63,7 @@ class JumpStatsHandler {
 					settingProps: { min: 7, max: 19 }
 				},
 				fontColor: {
-					name: 'Font Color',
+					name: $.Localize('#Customizer_FontColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					targetPanel: ['.jumpstats__label', '.jumpstats__label--name', '.jumpstats__label--values'],
 					styleProperty: 'color',
@@ -74,29 +74,29 @@ class JumpStatsHandler {
 					}
 				},
 				logSettings: {
-					name: 'Log Settings',
+					name: $.Localize('#Customizer_Jump_Stats_LogSettings'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [{ styleID: 'statsFirstPrint' }, { styleID: 'statsInterval' }, { styleID: 'statsLog' }]
 				},
 				statsFirstPrint: {
-					name: 'First Print',
+					name: $.Localize('#Customizer_Jump_Stats_StatsFirstPrint'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					callbackFunc: (_, value) => (this.jumpStatsConfig.statsFirstPrint = value)
 				},
 				statsInterval: {
-					name: 'Interval',
+					name: $.Localize('#Customizer_Jump_Stats_StatsInterval'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					callbackFunc: (_, value) => (this.jumpStatsConfig.statsInterval = value)
 				},
 				statsLog: {
-					name: 'Log Window',
+					name: $.Localize('#Customizer_Jump_Stats_StatsLog'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					callbackFunc: (_, value) => (this.jumpStatsConfig.statsLog = value),
 					onChanged: () => this.onConfigChange()
 				},
 				toggleStats: {
-					name: 'Toggle Stats',
+					name: $.Localize('#Customizer_Jump_Stats_ToggleStats'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [
@@ -114,80 +114,80 @@ class JumpStatsHandler {
 					]
 				},
 				showTakeoffSpeed: {
-					name: 'Show Take Off Speed',
+					name: $.Localize('#Customizer_Jump_Stats_ShowTakeoffSpeed'),
 					type: CustomizerPropertyType.CHECKBOX,
 					targetPanel: '.jumpstats__label--speed',
 					callbackFunc: (panel, value) => panel.SetHasClass('hide', !value)
 				},
 				showSpeedDelta: {
-					name: 'Show Speed Delta',
+					name: $.Localize('#Customizer_Jump_Stats_ShowSpeedDelta'),
 					type: CustomizerPropertyType.CHECKBOX,
 					targetPanel: '.jumpstats__label--speed-delta',
 					callbackFunc: (panel, value) => panel.SetHasClass('hide', !value)
 				},
 				showGain: {
-					name: 'Show Gain',
+					name: $.Localize('#Customizer_Jump_Stats_ShowGain'),
 					type: CustomizerPropertyType.CHECKBOX,
 					targetPanel: '.jumpstats__label--gain',
 					callbackFunc: (panel, value) => panel.SetHasClass('hide', !value)
 				},
 				showYawRatio: {
-					name: 'Show Yaw Ratio',
+					name: $.Localize('#Customizer_Jump_Stats_ShowYawRatio'),
 					type: CustomizerPropertyType.CHECKBOX,
 					targetPanel: '.jumpstats__label--yaw-ratio',
 					callbackFunc: (panel, value) => panel.SetHasClass('hide', !value)
 				},
 				showStrafeSync: {
-					name: 'Show Strafe Sync',
+					name: $.Localize('#Customizer_Jump_Stats_ShowStrafeSync'),
 					type: CustomizerPropertyType.CHECKBOX,
 					targetPanel: '.jumpstats__label--sync',
 					callbackFunc: (panel, value) => panel.SetHasClass('hide', !value)
 				},
 				showEfficiency: {
-					name: 'Show Efficiency',
+					name: $.Localize('#Customizer_Jump_Stats_ShowEfficiency'),
 					type: CustomizerPropertyType.CHECKBOX,
 					targetPanel: '.jumpstats__label--efficiency',
 					callbackFunc: (panel, value) => panel.SetHasClass('hide', !value)
 				},
 				showStrafeCount: {
-					name: 'Show Strafe Count',
+					name: $.Localize('#Customizer_Jump_Stats_ShowStrafeCount'),
 					type: CustomizerPropertyType.CHECKBOX,
 					targetPanel: '.jumpstats__label--strafes',
 					callbackFunc: (panel, value) => panel.SetHasClass('hide', !value)
 				},
 				showTakeoffTime: {
-					name: 'Show Take Off Time',
+					name: $.Localize('#Customizer_Jump_Stats_ShowTakeoffTime'),
 					type: CustomizerPropertyType.CHECKBOX,
 					targetPanel: '.jumpstats__label--time',
 					callbackFunc: (panel, value) => panel.SetHasClass('hide', !value)
 				},
 				showTimeDelta: {
-					name: 'Show Time Delta',
+					name: $.Localize('#Customizer_Jump_Stats_ShowTimeDelta'),
 					type: CustomizerPropertyType.CHECKBOX,
 					targetPanel: '.jumpstats__label--time-delta',
 					callbackFunc: (panel, value) => panel.SetHasClass('hide', !value)
 				},
 				showDistance: {
-					name: 'Show Distance',
+					name: $.Localize('#Customizer_Jump_Stats_ShowDistance'),
 					type: CustomizerPropertyType.CHECKBOX,
 					targetPanel: '.jumpstats__label--distance',
 					callbackFunc: (panel, value) => panel.SetHasClass('hide', !value)
 				},
 				showHeightDelta: {
-					name: 'Show Height Delta',
+					name: $.Localize('#Customizer_Jump_Stats_ShowHeightDelta'),
 					type: CustomizerPropertyType.CHECKBOX,
 					targetPanel: '.jumpstats__label--height-delta',
 					callbackFunc: (panel, value) => panel.SetHasClass('hide', !value)
 				},
 				backgroundColor: {
-					name: 'Background Color',
+					name: $.Localize('#Customizer_BackgroundColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					targetPanel: '.jumpstats__container',
 					styleProperty: 'backgroundColor'
 				}
 				// I have no idea what this is
 				// enviroAccelEnable: {
-				// 	name: 'Show Enviroment Acceleration?????',
+				// 	name: $.Localize('#Customizer_Jump_Stats_EnviroAccelEnable'),
 				// 	type: CustomizerPropertyType.CHECKBOX,
 				//     targetPanel: ''
 				// 	callbackFunc: (panel, value) => {

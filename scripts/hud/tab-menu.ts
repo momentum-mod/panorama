@@ -38,7 +38,7 @@ class HudTabMenuHandler {
 		$.RegisterForUnhandledEvent('MapCache_MapLoad', () => this.onMapLoad());
 
 		registerHUDCustomizerComponent($.GetContextPanel(), {
-			name: 'Tab Menu',
+			name: $.Localize('#Customizer_Tab_Menu_Name'),
 			resizeX: false,
 			resizeY: false,
 			moveX: false,

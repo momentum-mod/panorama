@@ -25,7 +25,7 @@ class StickyChargeHandler {
 
 	constructor() {
 		registerHUDCustomizerComponent($.GetContextPanel(), {
-			name: 'Sticky Charge',
+			name: $.Localize('#Customizer_Sticky_Charge_Name'),
 			resizeX: true,
 			resizeY: false,
 			gamemode: GamemodeCategoryToGamemode.get(GamemodeCategory.SJ),
@@ -35,7 +35,7 @@ class StickyChargeHandler {
 			},
 			dynamicStyles: {
 				chargeMeterUnits: {
-					name: 'Charge Meter Units',
+					name: $.Localize('#Customizer_Sticky_Charge_ChargeMeterUnits'),
 					type: CustomizerPropertyType.DROPDOWN,
 					options: [
 						{ label: 'None', value: StickyChargeUnit.NONE.toString() },
@@ -52,32 +52,32 @@ class StickyChargeHandler {
 					onChanged: () => this.onChargeUpdate(this.isEnabled, 900, 0)
 				},
 				borderStyles: {
-					name: 'Border Styles',
+					name: $.Localize('#Customizer_Sticky_Charge_BorderStyles'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [{ styleID: 'borderWidth' }, { styleID: 'borderColor' }, { styleID: 'borderRadius' }]
 				},
 				borderWidth: {
-					name: 'Border Width',
+					name: $.Localize('#Customizer_BorderWidth'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					targetPanel: '.stickycharge__meter',
 					styleProperty: 'borderWidth',
 					valueFn: (value) => `${value}px`
 				},
 				borderColor: {
-					name: 'Border Color',
+					name: $.Localize('#Customizer_BorderColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					targetPanel: '.stickycharge__meter',
 					styleProperty: 'borderColor'
 				},
 				borderRadius: {
-					name: 'Border Radius',
+					name: $.Localize('#Customizer_BorderRadius'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [{ styleID: 'backgroundRadius' }, { styleID: 'fillRadius' }]
 				},
 				backgroundRadius: {
-					name: 'Background',
+					name: $.Localize('#Customizer_Background'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					targetPanel: '.stickycharge__meter',
 					styleProperty: 'borderRadius',
@@ -85,7 +85,7 @@ class StickyChargeHandler {
 					settingProps: { min: 0, max: 10 }
 				},
 				fillRadius: {
-					name: 'Fill',
+					name: $.Localize('#Customizer_Fill'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					targetPanel: '.ProgressBarLeft',
 					styleProperty: 'borderRadius',
@@ -93,26 +93,26 @@ class StickyChargeHandler {
 					settingProps: { min: 0, max: 10 }
 				},
 				fontStyling: {
-					name: 'Font Styling',
+					name: $.Localize('#Customizer_FontStyling'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [{ styleID: 'font' }, { styleID: 'fontSize' }, { styleID: 'fontColor' }]
 				},
 				font: {
-					name: 'Font',
+					name: $.Localize('#Customizer_Font'),
 					type: CustomizerPropertyType.FONT_PICKER,
 					targetPanel: '.stickycharge__label',
 					styleProperty: 'fontFamily'
 				},
 				fontSize: {
-					name: 'Font Size',
+					name: $.Localize('#Customizer_FontSize'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					targetPanel: '.stickycharge__label',
 					styleProperty: 'fontSize',
 					valueFn: (value) => `${value}px`
 				},
 				fontColor: {
-					name: 'Font Color',
+					name: $.Localize('#Customizer_FontColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					targetPanel: '.stickycharge__label',
 					styleProperty: 'color',
@@ -122,7 +122,7 @@ class StickyChargeHandler {
 					}
 				},
 				colors: {
-					name: 'Colors',
+					name: $.Localize('#Customizer_Colors'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [
@@ -132,7 +132,7 @@ class StickyChargeHandler {
 					]
 				},
 				backgroundGradient: {
-					name: 'Background',
+					name: $.Localize('#Customizer_Background'),
 					type: CustomizerPropertyType.GRADIENT_PICKER,
 					targetPanel: '#StickyChargeMeter_Right',
 					callbackFunc: (_, value) =>
@@ -141,7 +141,7 @@ class StickyChargeHandler {
 					onChanged: () => this.onChargeUpdate(this.isEnabled, 900, 0)
 				},
 				fillGradient: {
-					name: 'Fill',
+					name: $.Localize('#Customizer_Fill'),
 					type: CustomizerPropertyType.GRADIENT_PICKER,
 					targetPanel: '#StickyChargeMeter_Left',
 					styleProperty: 'backgroundColor',
@@ -150,7 +150,7 @@ class StickyChargeHandler {
 					}
 				},
 				disabledGradient: {
-					name: 'Disabled',
+					name: $.Localize('#Customizer_Disabled'),
 					type: CustomizerPropertyType.GRADIENT_PICKER,
 					callbackFunc: (_, value) => (this.disabledGradient = value),
 					onChanged: () => this.onChargeUpdate(this.isEnabled, 900, 0)

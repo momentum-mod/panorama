@@ -27,27 +27,27 @@ class PowerupTimerHandler {
 
 	constructor() {
 		registerHUDCustomizerComponent($.GetContextPanel(), {
-			name: 'Powerup Timer',
+			name: $.Localize('#Customizer_Powerup_Timer_Name'),
 			resizeX: false,
 			resizeY: false,
 			gamemode: GamemodeCategoryToGamemode.get(GamemodeCategory.DEFRAG),
 			events: { event: 'HudProcessInput', panel: $.GetContextPanel(), callbackFn: () => this.onUpdate() },
 			dynamicStyles: {
 				font: {
-					name: 'Font',
+					name: $.Localize('#Customizer_Font'),
 					type: CustomizerPropertyType.FONT_PICKER,
 					targetPanel: '.powerup-timer__label',
 					styleProperty: 'fontFamily'
 				},
 				fontSize: {
-					name: 'Font Size',
+					name: $.Localize('#Customizer_FontSize'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					targetPanel: '.powerup-timer__label',
 					styleProperty: 'fontSize',
 					valueFn: (value) => `${value}px`
 				},
 				fontColor: {
-					name: 'Font Color',
+					name: $.Localize('#Customizer_FontColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					targetPanel: '.powerup-timer__label',
 					styleProperty: 'color',

@@ -83,67 +83,67 @@ class HudTimerHandler {
 		});
 
 		registerHUDCustomizerComponent($.GetContextPanel(), {
-			name: 'Timer',
+			name: $.Localize('#Customizer_Timer_Name'),
 			resizeX: true,
 			resizeY: false,
 			dynamicStyles: {
 				showComparisons: {
-					name: 'Show Comparisons',
+					name: $.Localize('#Customizer_Timer_ShowComparisons'),
 					type: CustomizerPropertyType.CHECKBOX,
 					callbackFunc: (_, value) => (this.showComparison = value)
 				},
 				fontStyling: {
-					name: 'Font Styling',
+					name: $.Localize('#Customizer_FontStyling'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [{ styleID: 'timerFontStyling' }, { styleID: 'comparisonFontStyling' }]
 				},
 				timerFontStyling: {
-					name: 'Timer Font Styling',
+					name: $.Localize('#Customizer_Timer_TimerFontStyling'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [{ styleID: 'timerFont' }, { styleID: 'timerFontSize' }]
 				},
 				timerFont: {
-					name: 'Font',
+					name: $.Localize('#Customizer_Font'),
 					type: CustomizerPropertyType.FONT_PICKER,
 					targetPanel: '.hudtimer__time',
 					styleProperty: 'fontFamily'
 				},
 				timerFontSize: {
-					name: 'Font Size',
+					name: $.Localize('#Customizer_FontSize'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					targetPanel: '.hudtimer__time',
 					styleProperty: 'fontSize',
 					valueFn: (value) => `${value}px`
 				},
 				comparisonFontStyling: {
-					name: 'Comparison Font Styling',
+					name: $.Localize('#Customizer_Timer_ComparisonFontStyling'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [{ styleID: 'comparisonFont' }, { styleID: 'comparisonFontSize' }]
 				},
 				comparisonFont: {
-					name: 'Font',
+					name: $.Localize('#Customizer_Font'),
 					type: CustomizerPropertyType.FONT_PICKER,
 					targetPanel: '.hudtimer__comparison',
 					styleProperty: 'fontFamily'
 				},
 				comparisonFontSize: {
-					name: 'Font Size',
+					name: $.Localize('#Customizer_FontSize'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					targetPanel: '.hudtimer__comparison',
 					styleProperty: 'fontSize',
 					valueFn: (value) => `${value}px`
 				},
 				colors: {
-					name: 'Colors',
+					name: $.Localize('#Customizer_Colors'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [{ styleID: 'timerColors' }, { styleID: 'comparisonColors' }]
 				},
 				timerColors: {
-					name: 'Timer Colors',
+					name: $.Localize('#Customizer_Timer_TimerColors'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [
@@ -154,47 +154,47 @@ class HudTimerHandler {
 					]
 				},
 				inactiveColor: {
-					name: 'Inactive Color',
+					name: $.Localize('#Customizer_Timer_InactiveColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => (Colors.INACTIVE = value as rgbaColor),
 					onChanged: () => this.updateMainState()
 				},
 				primedColor: {
-					name: 'Primed Color',
+					name: $.Localize('#Customizer_Timer_PrimedColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => (Colors.PRIMED = value as rgbaColor),
 					onChanged: () => this.updateMainState()
 				},
 				runningColor: {
-					name: 'Running Color',
+					name: $.Localize('#Customizer_Timer_RunningColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => (Colors.RUNNING = value as rgbaColor),
 					onChanged: () => this.updateMainState()
 				},
 				finishedColor: {
-					name: 'Finished Color',
+					name: $.Localize('#Customizer_Timer_FinishedColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => (Colors.FINISHED = value as rgbaColor),
 					onChanged: () => this.updateMainState()
 				},
 				comparisonColors: {
-					name: 'Comparison Colors',
+					name: $.Localize('#Customizer_Timer_ComparisonColors'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [{ styleID: 'comparisonGainColor' }, { styleID: 'comparisonLossColor' }]
 				},
 				comparisonGainColor: {
-					name: 'Comparison Gain Color',
+					name: $.Localize('#Customizer_Timer_ComparisonGainColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => (Colors.INCREASE = value as rgbaColor)
 				},
 				comparisonLossColor: {
-					name: 'Comparison Loss Color',
+					name: $.Localize('#Customizer_Timer_ComparisonLossColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => (Colors.DECREASE = value as rgbaColor)
 				},
 				alignText: {
-					name: 'Align Text',
+					name: $.Localize('#Customizer_AlignText'),
 					type: CustomizerPropertyType.DROPDOWN,
 					options: [
 						{ label: 'Left', value: 'left' },
@@ -205,7 +205,7 @@ class HudTimerHandler {
 					styleProperty: 'horizontalAlign'
 				},
 				backgroundColor: {
-					name: 'Background Color',
+					name: $.Localize('#Customizer_BackgroundColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					targetPanel: ['.hudtimer__time', '.hudtimer__comparison'],
 					styleProperty: 'backgroundColor'

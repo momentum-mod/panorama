@@ -67,7 +67,7 @@ class GroundboostHandler {
 
 	constructor() {
 		registerHUDCustomizerComponent($.GetContextPanel(), {
-			name: 'Groundboost',
+			name: $.Localize('#Customizer_Ground_Boost_Name'),
 			resizeX: false,
 			resizeY: false,
 			gamemode: GamemodeCategoryToGamemode.get(GamemodeCategory.DEFRAG),
@@ -98,7 +98,7 @@ class GroundboostHandler {
 			],
 			dynamicStyles: {
 				size: {
-					name: 'Size',
+					name: $.Localize('#Customizer_Size'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					callbackFunc: (_, value) => {
 						this.panels.groundboostBackground.SetSvgTextureSize(value, value);
@@ -110,7 +110,7 @@ class GroundboostHandler {
 					onChanged: () => this.startDummyGB()
 				},
 				labelTextMode: {
-					name: 'Label Mode',
+					name: $.Localize('#Customizer_Ground_Boost_LabelTextMode'),
 					type: CustomizerPropertyType.DROPDOWN,
 					options: [
 						{ label: 'Hide', value: LabelMode.HIDE },
@@ -126,7 +126,7 @@ class GroundboostHandler {
 					}
 				},
 				labelColorMode: {
-					name: 'Label Color Mode',
+					name: $.Localize('#Customizer_Ground_Boost_LabelColorMode'),
 					type: CustomizerPropertyType.DROPDOWN,
 					options: [
 						{ label: 'No Coloring', value: LabelMode.HIDE },
@@ -137,18 +137,18 @@ class GroundboostHandler {
 					callbackFunc: (_, value) => (this.config.labelColorMode = value as LabelMode)
 				},
 				idealTimeRemaining: {
-					name: 'Ticks Left For Ideal End',
+					name: $.Localize('#Customizer_Ground_Boost_IdealTimeRemaining'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					callbackFunc: (_, value) => (this.config.idealEndMs = value * 8),
 					settingProps: { min: 1, max: 31 }
 				},
 				showFrictionTime: {
-					name: 'Show Friction Time',
+					name: $.Localize('#Customizer_Ground_Boost_ShowFrictionTime'),
 					type: CustomizerPropertyType.CHECKBOX,
 					callbackFunc: (_, value) => (this.config.showFrictionTime = value)
 				},
 				noCrashHighlight: {
-					name: 'Highlight lack of crash landing',
+					name: $.Localize('#Customizer_Ground_Boost_NoCrashHighlight'),
 					type: CustomizerPropertyType.CHECKBOX,
 					callbackFunc: (_, value) => {
 						this.config.showNoCrashHighlight = value;
@@ -158,31 +158,31 @@ class GroundboostHandler {
 					onChanged: () => this.startDummyGB()
 				},
 				fontStyling: {
-					name: 'Font Styling',
+					name: $.Localize('#Customizer_FontStyling'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [{ styleID: 'font' }, { styleID: 'fontSize' }]
 				},
 				font: {
-					name: 'Font',
+					name: $.Localize('#Customizer_Font'),
 					type: CustomizerPropertyType.FONT_PICKER,
 					targetPanel: '.groundboost__label',
 					styleProperty: 'fontFamily'
 				},
 				fontSize: {
-					name: 'Font Size',
+					name: $.Localize('#Customizer_FontSize'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					targetPanel: '.groundboost__label',
 					styleProperty: 'fontSize'
 				},
 				colors: {
-					name: 'Colors',
+					name: $.Localize('#Customizer_Colors'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [{ styleID: 'meterColors' }, { styleID: 'labelColors' }]
 				},
 				meterColors: {
-					name: 'Meter',
+					name: $.Localize('#Customizer_Ground_Boost_MeterColors'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [
@@ -193,7 +193,7 @@ class GroundboostHandler {
 					]
 				},
 				labelColors: {
-					name: 'Label',
+					name: $.Localize('#Customizer_Ground_Boost_LabelColors'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [
@@ -203,7 +203,7 @@ class GroundboostHandler {
 					]
 				},
 				backgroundColor: {
-					name: 'Background',
+					name: $.Localize('#Customizer_Background'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					targetPanel: '.groundboost__background-meter',
 					callbackFunc: (panel, value) => {
@@ -213,7 +213,7 @@ class GroundboostHandler {
 					}
 				},
 				meterSlickColor: {
-					name: 'Slick',
+					name: $.Localize('#Customizer_Ground_Boost_MeterSlickColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
 						MeterColor.SLICK = value;
@@ -222,7 +222,7 @@ class GroundboostHandler {
 					onChanged: () => this.startDummyGB()
 				},
 				meterFrictionColor: {
-					name: 'Friction',
+					name: $.Localize('#Customizer_Ground_Boost_MeterFrictionColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
 						MeterColor.FRICTION = value;
@@ -231,7 +231,7 @@ class GroundboostHandler {
 					onChanged: () => this.startDummyGB()
 				},
 				meterNoCrashHighlight: {
-					name: 'No Crash Landing',
+					name: $.Localize('#Customizer_Ground_Boost_MeterNoCrashHighlight'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
 						MeterColor.NO_CRASH = value;
@@ -240,7 +240,7 @@ class GroundboostHandler {
 					onChanged: () => this.startDummyGB()
 				},
 				labelFlatColor: {
-					name: 'Flat',
+					name: $.Localize('#Customizer_Ground_Boost_LabelFlatColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
 						LabelColor.FLAT = value;
@@ -249,7 +249,7 @@ class GroundboostHandler {
 					onChanged: () => this.startDummyGB()
 				},
 				labelGainColor: {
-					name: 'Gain',
+					name: $.Localize('#Customizer_Gain'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
 						LabelColor.GAIN = value;
@@ -258,7 +258,7 @@ class GroundboostHandler {
 					onChanged: () => this.startDummyGB()
 				},
 				labelLossColor: {
-					name: 'Loss',
+					name: $.Localize('#Customizer_Loss'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
 						LabelColor.LOSS = value;

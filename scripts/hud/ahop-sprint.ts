@@ -65,7 +65,7 @@ class AhopSprint {
 
 	constructor() {
 		registerHUDCustomizerComponent($.GetContextPanel(), {
-			name: 'Sprint Indicator',
+			name: $.Localize('#Customizer_Ahop_Sprint_Name'),
 			resizeX: false,
 			resizeY: false,
 			gamemode: GamemodeCategoryToGamemode.get(GamemodeCategory.AHOP),
@@ -73,7 +73,7 @@ class AhopSprint {
 			unhandledEvents: { event: 'HudCustomizer_Ready', callbackFn: () => this.updateStyles() },
 			dynamicStyles: {
 				type: {
-					name: 'Type',
+					name: $.Localize('#Customizer_Ahop_Sprint_Type'),
 					type: CustomizerPropertyType.DROPDOWN,
 					options: [
 						{ label: 'Curve', value: 'curve' },
@@ -99,37 +99,37 @@ class AhopSprint {
 
 				// TYPE - CURVE
 				curveSize: {
-					name: 'Size',
+					name: $.Localize('#Customizer_Ahop_Sprint_CurveSize'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					callbackFunc: (_, value) => (Config.curve.size = value),
 					onChanged: () => this.updateCurveType()
 				},
 				curveGap: {
-					name: 'Gap',
+					name: $.Localize('#Customizer_Ahop_Sprint_CurveGap'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					callbackFunc: (_, value) => (Config.curve.gap = value),
 					onChanged: () => this.updateCurveType()
 				},
 				curveThickness: {
-					name: 'Thickness',
+					name: $.Localize('#Customizer_Ahop_Sprint_CurveThickness'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					callbackFunc: (_, value) => (Config.curve.thickness = value / 10),
 					onChanged: () => this.updateCurveType()
 				},
 				curveRotation: {
-					name: 'Rotation',
+					name: $.Localize('#Customizer_Ahop_Sprint_CurveRotation'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					callbackFunc: (_, value) => (Config.curve.rotation = value),
 					onChanged: () => this.updateCurveType()
 				},
 				curveArcLength: {
-					name: 'Arc Length',
+					name: $.Localize('#Customizer_Ahop_Sprint_CurveArcLength'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					callbackFunc: (_, value) => (Config.curve.arcLength = value),
 					onChanged: () => this.updateCurveType()
 				},
 				curveColors: {
-					name: 'State Colors',
+					name: $.Localize('#Customizer_Ahop_Sprint_CurveColors'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [
@@ -140,60 +140,60 @@ class AhopSprint {
 					]
 				},
 				curveActiveColor: {
-					name: 'Active',
+					name: $.Localize('#Customizer_Ahop_Sprint_CurveActiveColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => (StateColors[SprintState.ACTIVE].curve = value as rgbaColor)
 				},
 				curveAvailableColor: {
-					name: 'Available',
+					name: $.Localize('#Customizer_Ahop_Sprint_CurveAvailableColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => (StateColors[SprintState.AVAILABLE].curve = value as rgbaColor)
 				},
 				curveDisabledColor: {
-					name: 'Disabled',
+					name: $.Localize('#Customizer_Ahop_Sprint_CurveDisabledColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => (StateColors[SprintState.DISABLED].curve = value as rgbaColor)
 				},
 				curveBlockedColor: {
-					name: 'Blocked',
+					name: $.Localize('#Customizer_Ahop_Sprint_CurveBlockedColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => (StateColors[SprintState.BLOCKED].curve = value as rgbaColor)
 				},
 
 				// TYPE - DOT
 				dotWidth: {
-					name: 'Width',
+					name: $.Localize('#Customizer_Ahop_Sprint_DotWidth'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					callbackFunc: (_, value) => (Config.dot.width = value),
 					onChanged: () => this.updateDotType()
 				},
 				dotHeight: {
-					name: 'Height',
+					name: $.Localize('#Customizer_Ahop_Sprint_DotHeight'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					callbackFunc: (_, value) => (Config.dot.height = value),
 					onChanged: () => this.updateDotType()
 				},
 				dotBorderRadius: {
-					name: 'Border Radius',
+					name: $.Localize('#Customizer_Ahop_Sprint_DotBorderRadius'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					callbackFunc: (_, value) => (Config.dot.borderRadius = value),
 					onChanged: () => this.updateDotType(),
 					settingProps: { min: 0, max: 50 }
 				},
 				dotBorderWidth: {
-					name: 'Border Width',
+					name: $.Localize('#Customizer_Ahop_Sprint_DotBorderWidth'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					callbackFunc: (_, value) => (Config.dot.borderWidth = value),
 					onChanged: () => this.updateDotType()
 				},
 				dotBorderColor: {
-					name: 'Border Color',
+					name: $.Localize('#Customizer_Ahop_Sprint_DotBorderColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => (Config.dot.borderColor = value),
 					onChanged: () => this.updateDotType()
 				},
 				dotGradients: {
-					name: 'State Gradients',
+					name: $.Localize('#Customizer_Ahop_Sprint_DotGradients'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [
@@ -204,28 +204,28 @@ class AhopSprint {
 					]
 				},
 				dotActiveGradient: {
-					name: 'Active',
+					name: $.Localize('#Customizer_Active'),
 					type: CustomizerPropertyType.GRADIENT_PICKER,
 					callbackFunc: (_, value) =>
 						(StateColors[SprintState.ACTIVE].dot =
 							`gradient(linear, 0% 0%, 100% 0%, from (${value[0]}, to(${value[1]}))` as rgbaColor)
 				},
 				dotAvailableGradient: {
-					name: 'Available',
+					name: $.Localize('#Customizer_Available'),
 					type: CustomizerPropertyType.GRADIENT_PICKER,
 					callbackFunc: (_, value) =>
 						(StateColors[SprintState.AVAILABLE].dot =
 							`gradient(linear, 0% 0%, 100% 0%, from (${value[0]}, to(${value[1]}))` as rgbaColor)
 				},
 				dotDisabledGradient: {
-					name: 'Disabled',
+					name: $.Localize('#Customizer_Disabled'),
 					type: CustomizerPropertyType.GRADIENT_PICKER,
 					callbackFunc: (_, value) =>
 						(StateColors[SprintState.DISABLED].dot =
 							`gradient(linear, 0% 0%, 100% 0%, from (${value[0]}, to(${value[1]}))` as rgbaColor)
 				},
 				dotBlockedGradient: {
-					name: 'Blocked',
+					name: $.Localize('#Customizer_Blocked'),
 					type: CustomizerPropertyType.GRADIENT_PICKER,
 					callbackFunc: (_, value) =>
 						(StateColors[SprintState.BLOCKED].dot =

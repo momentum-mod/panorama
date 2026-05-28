@@ -13,7 +13,7 @@ class MomHudAmmoHandler {
 
 	constructor() {
 		registerHUDCustomizerComponent($.GetContextPanel(), {
-			name: 'Ammo Counter',
+			name: $.Localize('#Customizer_Ammo_Name'),
 			resizeX: true,
 			resizeY: false,
 			gamemode: [
@@ -29,32 +29,32 @@ class MomHudAmmoHandler {
 			],
 			dynamicStyles: {
 				testAmmoCount: {
-					name: 'Test Ammo Count',
+					name: $.Localize('#Customizer_Ammo_TestAmmoCount'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					callbackFunc: (_, value) => (this.testAmmoCount = String(value)),
 					onChanged: () => this.createDummyAmmo()
 				},
 				fontStyling: {
-					name: 'Font Styling',
+					name: $.Localize('#Customizer_Ammo_FontStyling'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [{ styleID: 'font' }, { styleID: 'fontSize' }, { styleID: 'fontColor' }]
 				},
 				font: {
-					name: 'Font',
+					name: $.Localize('#Customizer_Ammo_Font'),
 					type: CustomizerPropertyType.FONT_PICKER,
 					targetPanel: '.ammo__label',
 					styleProperty: 'fontFamily'
 				},
 				fontSize: {
-					name: 'Font Size',
+					name: $.Localize('#Customizer_Ammo_FontSize'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					targetPanel: '.ammo__label',
 					styleProperty: 'fontSize',
 					valueFn: (value) => `${value}px`
 				},
 				fontColor: {
-					name: 'Font Color',
+					name: $.Localize('#Customizer_Ammo_FontColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					targetPanel: '.ammo__label',
 					styleProperty: 'color',
@@ -63,13 +63,13 @@ class MomHudAmmoHandler {
 					}
 				},
 				backgroundColor: {
-					name: 'Background Color',
+					name: $.Localize('#Customizer_Ammo_BackgroundColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					targetPanel: '.ammo__label',
 					styleProperty: 'backgroundColor'
 				},
 				alignText: {
-					name: 'Align Text',
+					name: $.Localize('#Customizer_Ammo_AlignText'),
 					type: CustomizerPropertyType.DROPDOWN,
 					options: [
 						{ label: 'Left', value: 'left' },

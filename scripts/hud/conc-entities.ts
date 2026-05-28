@@ -31,7 +31,7 @@ class ConcEntitiesHandler {
 
 	constructor() {
 		registerHUDCustomizerComponent($.GetContextPanel(), {
-			name: 'Conc Entity Timer Bar',
+			name: $.Localize('#Customizer_Conc_Entities_Name'),
 			resizeX: false,
 			resizeY: false,
 			moveX: false,
@@ -44,91 +44,91 @@ class ConcEntitiesHandler {
 			},
 			dynamicStyles: {
 				countDown: {
-					name: 'Count Down',
+					name: $.Localize('#Customizer_Conc_CountDown'),
 					type: CustomizerPropertyType.CHECKBOX,
 					callbackFunc: (_, value) => (Config.countDown = value)
 				},
 				unfill: {
-					name: 'Unfill',
+					name: $.Localize('#Customizer_Conc_Unfill'),
 					type: CustomizerPropertyType.CHECKBOX,
 					callbackFunc: (_, value) => (Config.unfill = value)
 				},
 				showLabel: {
-					name: 'Show Label',
+					name: $.Localize('#Customizer_ShowLabel'),
 					type: CustomizerPropertyType.CHECKBOX,
 					children: { styleID: 'fontStyling', showWhen: true },
 					callbackFunc: (_, value) => (Config.isLabelEnabled = value)
 				},
 				fontStyling: {
-					name: 'Font Styling',
+					name: $.Localize('#Customizer_FontStyling'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [{ styleID: 'font' }, { styleID: 'fontSize' }, { styleID: 'fontColor' }]
 				},
 				font: {
-					name: 'Font',
+					name: $.Localize('#Customizer_Font'),
 					type: CustomizerPropertyType.FONT_PICKER,
 					callbackFunc: (_, value) => (Config.font.family = value)
 				},
 				fontSize: {
-					name: 'Font Size',
+					name: $.Localize('#Customizer_FontSize'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					callbackFunc: (_, value) => (Config.font.size = value)
 				},
 				fontColor: {
-					name: 'Font Color',
+					name: $.Localize('#Customizer_FontColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => (Config.font.color = value)
 				},
 				borderStyling: {
-					name: 'Border Styling',
+					name: $.Localize('#Customizer_BorderStyling'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [{ styleID: 'borderWidth' }, { styleID: 'borderColor' }, { styleID: 'borderRadius' }]
 				},
 				borderWidth: {
-					name: 'Border Width',
+					name: $.Localize('#Customizer_BorderWidth'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					callbackFunc: (_, value) => (Config.border.width = value)
 				},
 				borderColor: {
-					name: 'Border Color',
+					name: $.Localize('#Customizer_BorderColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => (Config.border.color = value)
 				},
 				borderRadius: {
-					name: 'Border Radius',
+					name: $.Localize('#Customizer_BorderRadius'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [{ styleID: 'backgroundRadius' }, { styleID: 'fillRadius' }]
 				},
 				backgroundRadius: {
-					name: 'Background',
+					name: $.Localize('#Customizer_Background'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					callbackFunc: (_, value) => (Config.border.backgroundRadius = value),
 					settingProps: { min: 0, max: 11 }
 				},
 				fillRadius: {
-					name: 'Fill',
+					name: $.Localize('#Customizer_Fill'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					callbackFunc: (_, value) => (Config.border.fillRadius = value),
 					settingProps: { min: 0, max: 11 }
 				},
 				colors: {
-					name: 'Colors',
+					name: $.Localize('#Customizer_Colors'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [{ styleID: 'backgroundGradient' }, { styleID: 'fillGradient' }]
 				},
 				backgroundGradient: {
-					name: 'Background',
+					name: $.Localize('#Customizer_Background'),
 					type: CustomizerPropertyType.GRADIENT_PICKER,
 					callbackFunc: (_, value) =>
 						(Config.color.background =
 							`gradient(linear, 0% 0%, 100% 0%, from (${value[0]}), to(${value[1]}))` as color)
 				},
 				fillGradient: {
-					name: 'Fill',
+					name: $.Localize('#Customizer_Fill'),
 					type: CustomizerPropertyType.GRADIENT_PICKER,
 					callbackFunc: (_, value) =>
 						(Config.color.fill =

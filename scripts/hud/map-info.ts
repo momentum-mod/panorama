@@ -20,30 +20,30 @@ class HudMapInfoHandler {
 		$.RegisterForUnhandledEvent('MapCache_MapLoad', (mapName: string) => this.onOfficialMapLoad(mapName));
 
 		registerHUDCustomizerComponent($.GetContextPanel(), {
-			name: 'Map Info',
+			name: $.Localize('#Customizer_Map_Info_Name'),
 			resizeX: true,
 			resizeY: false,
 			dynamicStyles: {
 				fontStyling: {
-					name: 'Font Styling',
+					name: $.Localize('#Customizer_FontStyling'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [{ styleID: 'font' }, { styleID: 'fontSize' }, { styleID: 'fontColor' }]
 				},
 				font: {
-					name: 'Font',
+					name: $.Localize('#Customizer_Font'),
 					type: CustomizerPropertyType.FONT_PICKER,
 					targetPanel: '.hud-map-info__label',
 					styleProperty: 'fontFamily'
 				},
 				fontSize: {
-					name: 'Font Size',
+					name: $.Localize('#Customizer_FontSize'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					targetPanel: '.hud-map-info__label',
 					styleProperty: 'fontSize'
 				},
 				fontColor: {
-					name: 'Font Color',
+					name: $.Localize('#Customizer_FontColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					targetPanel: '.hud-map-info__label',
 					styleProperty: 'color',
@@ -51,7 +51,7 @@ class HudMapInfoHandler {
 						(panel.style.textShadowFast = getTextShadowFast(value as rgbaColor, 0.9))
 				},
 				showLabels: {
-					name: 'Show Labels',
+					name: $.Localize('#Customizer_ShowLabels'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [
@@ -63,20 +63,20 @@ class HudMapInfoHandler {
 					]
 				},
 				showVersion: {
-					name: 'Show Version',
+					name: $.Localize('#Customizer_Map_Info_ShowVersion'),
 					type: CustomizerPropertyType.CHECKBOX,
 					targetPanel: '#VersionLabel',
 					callbackFunc: (panel, value) => panel.SetHasClass('hide', !value)
 				},
 				showMapName: {
-					name: 'Show Map Name',
+					name: $.Localize('#Customizer_Map_Info_ShowMapName'),
 					type: CustomizerPropertyType.CHECKBOX,
 					targetPanel: '#MapNameLabel',
 					children: { styleID: 'showGamemode', showWhen: true },
 					callbackFunc: (panel, value) => panel.SetHasClass('hide', !value)
 				},
 				showGamemode: {
-					name: 'Show Gamemode',
+					name: $.Localize('#Customizer_Map_Info_ShowGamemode'),
 					type: CustomizerPropertyType.CHECKBOX,
 					targetPanel: '#MapNameLabel',
 					callbackFunc: (panel, value) => {
@@ -86,32 +86,32 @@ class HudMapInfoHandler {
 					}
 				},
 				showAuthors: {
-					name: 'Show Authors',
+					name: $.Localize('#Customizer_Map_Info_ShowAuthors'),
 					type: CustomizerPropertyType.CHECKBOX,
 					targetPanel: '#AuthorLabel',
 					callbackFunc: (panel, value) => panel.SetHasClass('hide', !value)
 				},
 				showTier: {
-					name: 'Show Tier',
+					name: $.Localize('#Customizer_Map_Info_ShowTier'),
 					type: CustomizerPropertyType.CHECKBOX,
 					callbackFunc: (_, value) => (this.showTiers = value),
 					onChanged: () => this.constructString()
 				},
 				showMapType: {
-					name: 'Show Map Type',
+					name: $.Localize('#Customizer_Map_Info_ShowMapType'),
 					type: CustomizerPropertyType.CHECKBOX,
 					callbackFunc: (_, value) => (this.showMapType = value),
 					onChanged: () => this.constructString()
 				},
 				gap: {
-					name: 'Gap',
+					name: $.Localize('#Customizer_Gap'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					targetPanel: '.hud-map-info__label',
 					styleProperty: 'marginBottom',
 					valueFn: (value) => `${value}px`
 				},
 				alignText: {
-					name: 'Align Text',
+					name: $.Localize('#Customizer_AlignText'),
 					type: CustomizerPropertyType.DROPDOWN,
 					options: [
 						{ label: 'Left', value: 'left' },

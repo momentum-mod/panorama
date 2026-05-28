@@ -24,7 +24,7 @@ class DFJumpHandler {
 
 	constructor() {
 		registerHUDCustomizerComponent($.GetContextPanel(), {
-			name: 'Jump Delay',
+			name: $.Localize('#Customizer_Df_Jump_Name'),
 			resizeX: false,
 			resizeY: false,
 			gamemode: [Gamemode.DEFRAG_CPM, Gamemode.DEFRAG_VQ3],
@@ -36,13 +36,13 @@ class DFJumpHandler {
 			},
 			dynamicStyles: {
 				maxDelay: {
-					name: 'Jump Max Delay',
+					name: $.Localize('#Customizer_Df_Jump_MaxDelay'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					callbackFunc: (_, value) => this.setMaxDelay(value),
 					settingProps: { min: 0, max: 1000 }
 				},
 				showLabels: {
-					name: 'Show Labels',
+					name: $.Localize('#Customizer_Df_Jump_ShowLabels'),
 					type: CustomizerPropertyType.CHECKBOX,
 					targetPanel: '.dfjump__text-wrapper',
 					styleProperty: 'visibility',
@@ -53,13 +53,13 @@ class DFJumpHandler {
 					}
 				},
 				fontStyling: {
-					name: 'Font Styling',
+					name: $.Localize('#Customizer_FontStyling'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [{ styleID: 'font' }, { styleID: 'fontSize' }, { styleID: 'fontColor' }]
 				},
 				font: {
-					name: 'Font',
+					name: $.Localize('#Customizer_Font'),
 					type: CustomizerPropertyType.FONT_PICKER,
 					targetPanel: [
 						'.dfjump__text-wrapper--release',
@@ -69,7 +69,7 @@ class DFJumpHandler {
 					styleProperty: 'fontFamily'
 				},
 				fontSize: {
-					name: 'Font Size',
+					name: $.Localize('#Customizer_FontSize'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					targetPanel: [
 						'.dfjump__text-wrapper--release',
@@ -80,7 +80,7 @@ class DFJumpHandler {
 					valueFn: (value) => `${value}px`
 				},
 				fontColor: {
-					name: 'Font Color',
+					name: $.Localize('#Customizer_FontColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					targetPanel: [
 						'.dfjump__text-wrapper--release',
@@ -92,33 +92,33 @@ class DFJumpHandler {
 						(panel.style.textShadowFast = getTextShadowFast(value as rgbaColor, 1))
 				},
 				borderStyling: {
-					name: 'Border Styling',
+					name: $.Localize('#Customizer_BorderStyling'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [{ styleID: 'borderWidth' }, { styleID: 'borderColor' }, { styleID: 'borderRadius' }]
 				},
 				borderWidth: {
-					name: 'Border Width',
+					name: $.Localize('#Customizer_BorderWidth'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					targetPanel: '.dfjump__bar-wrapper',
 					styleProperty: 'borderWidth',
 					valueFn: (value) => `${value}px`
 				},
 				borderColor: {
-					name: 'Border Color',
+					name: $.Localize('#Customizer_BorderColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					targetPanel: '.dfjump__bar-wrapper',
 					styleProperty: 'borderColor'
 				},
 				borderRadius: {
-					name: 'Border Radius',
+					name: $.Localize('#Customizer_BorderRadius'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					targetPanel: '.dfjump__bar-wrapper',
 					styleProperty: 'borderRadius',
 					valueFn: (value) => `${value}px`
 				},
 				colors: {
-					name: 'Colors',
+					name: $.Localize('#Customizer_Colors'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [
@@ -129,7 +129,7 @@ class DFJumpHandler {
 					]
 				},
 				backgroundGradient: {
-					name: 'Background',
+					name: $.Localize('#Customizer_Background'),
 					type: CustomizerPropertyType.GRADIENT_PICKER,
 					targetPanel: ['.dfjump__release', '.dfjump__press'],
 					callbackFunc: (panel, value) =>
@@ -137,14 +137,14 @@ class DFJumpHandler {
 							`gradient(linear, 0% 0%, 100% 0%, from(${value[0]}), to(${value[1]}))` as color)
 				},
 				airGradient: {
-					name: 'Air Gradient',
+					name: $.Localize('#Customizer_Df_Jump_AirGradient'),
 					type: CustomizerPropertyType.GRADIENT_PICKER,
 					callbackFunc: (_, value) =>
 						(Colors.AIR = `gradient(linear, 30% 0%, 100% 0%, from(${value[0]}), to(${value[1]}))`),
 					onChanged: () => this.onDFJumpUpdate(0, 0, 0)
 				},
 				releaseGradient: {
-					name: 'Release Gradient',
+					name: $.Localize('#Customizer_Df_Jump_ReleaseGradient'),
 					type: CustomizerPropertyType.GRADIENT_PICKER,
 					targetPanel: '.dfjump__release',
 					callbackFunc: (panel, value) =>
@@ -152,7 +152,7 @@ class DFJumpHandler {
 							`gradient(linear, 30% 0%, 100% 0%, from(${value[0]}), to(${value[1]}))` as color)
 				},
 				groundGradient: {
-					name: 'Ground Gradient',
+					name: $.Localize('#Customizer_Df_Jump_GroundGradient'),
 					type: CustomizerPropertyType.GRADIENT_PICKER,
 					callbackFunc: (_, value) =>
 						(Colors.GROUND = `gradient(linear, 30% 0%, 100% 0%, from(${value[0]}), to(${value[1]}))`),

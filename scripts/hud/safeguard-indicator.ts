@@ -27,14 +27,14 @@ class SafeguardHandler {
 		});
 
 		registerHUDCustomizerComponent($.GetContextPanel(), {
-			name: 'Safeguard Indicator',
+			name: $.Localize('#Customizer_Safeguard_Indicator_Name'),
 			resizeX: false,
 			resizeY: false,
 			// TODO: Add safeguard cvars?
 			// TODO: Figure out how to add a dummy indicator without breaking clips
 			dynamicStyles: {
 				size: {
-					name: 'Size',
+					name: $.Localize('#Customizer_Size'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					callbackFunc: (_, value) => {
 						this.panels.meter.SetSvgTextureSize(value, value);
@@ -44,7 +44,7 @@ class SafeguardHandler {
 					}
 				},
 				color: {
-					name: 'Color',
+					name: $.Localize('#Customizer_Color'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					targetPanel: '.safeguard__meter',
 					callbackFunc: (panel, value) => {
