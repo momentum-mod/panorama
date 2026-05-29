@@ -514,13 +514,13 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 					onChanged: (value) => this.updateReferencedValue('fontColor', value)
 				},
 				gainColor: {
-					name: $.Localize('#Customizer_Customizer_GainColor'),
+					name: $.Localize('#Customizer_Gain'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => (Component.referencedValues['gainColor'] = value),
 					onChanged: (value) => this.updateReferencedValue('gainColor', value)
 				},
 				lossColor: {
-					name: $.Localize('#Customizer_Customizer_LossColor'),
+					name: $.Localize('#Customizer_Loss'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => (Component.referencedValues['lossColor'] = value),
 					onChanged: (value) => this.updateReferencedValue('lossColor', value)

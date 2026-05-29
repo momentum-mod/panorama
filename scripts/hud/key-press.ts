@@ -175,7 +175,7 @@ class KeyPress {
 
 				// DIRECTIONAL KEYS
 				textDir: {
-					name: $.Localize('#Customizer_Key_Press_TextDir'),
+					name: $.Localize('#Customizer_Key_Press_DirectionalKeys'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [{ styleID: 'textDirBorderStyling' }, { styleID: 'textColors' }]
@@ -226,25 +226,25 @@ class KeyPress {
 					]
 				},
 				textDirPanelDefaultBg: {
-					name: $.Localize('#Customizer_Key_Press_TextDirPanelDefaultBg'),
+					name: $.Localize('#Customizer_Key_Press_DefaultColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => (Config.text.dir.states.default.bg = value),
 					onChanged: () => this.updateStyles()
 				},
 				textDirPanelPressedBg: {
-					name: $.Localize('#Customizer_Key_Press_TextDirPanelPressedBg'),
+					name: $.Localize('#Customizer_Key_Press_PressedColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => (Config.text.dir.states.pressed.bg = value),
 					onChanged: () => this.updateStyles()
 				},
 				textDirPanelDisabledBg: {
-					name: $.Localize('#Customizer_Key_Press_TextDirPanelDisabledBg'),
+					name: $.Localize('#Customizer_Key_Press_DisabledColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => (Config.text.dir.states.disabled.bg = value),
 					onChanged: () => this.updateStyles()
 				},
 				textDirPanelForcedBg: {
-					name: $.Localize('#Customizer_Key_Press_TextDirPanelForcedBg'),
+					name: $.Localize('#Customizer_Key_Press_ForcedColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => (Config.text.dir.states.forced.bg = value),
 					onChanged: () => this.updateStyles()
@@ -261,7 +261,7 @@ class KeyPress {
 					]
 				},
 				textDirIconDefaultColor: {
-					name: $.Localize('#Customizer_KeyPress_DefaultColor'),
+					name: $.Localize('#Customizer_Key_Press_DefaultColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
 						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
@@ -271,7 +271,7 @@ class KeyPress {
 					onChanged: () => this.updateStyles()
 				},
 				textDirIconPressedColor: {
-					name: $.Localize('#Customizer_KeyPress_PressedColor'),
+					name: $.Localize('#Customizer_Key_Press_PressedColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
 						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
@@ -281,7 +281,7 @@ class KeyPress {
 					onChanged: () => this.updateStyles()
 				},
 				textDirIconDisabledColor: {
-					name: $.Localize('#Customizer_KeyPress_DisabledColor'),
+					name: $.Localize('#Customizer_Key_Press_DisabledColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
 						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
@@ -291,7 +291,7 @@ class KeyPress {
 					onChanged: () => this.updateStyles()
 				},
 				textDirIconForcedColor: {
-					name: $.Localize('#Customizer_KeyPress_ForcedColor'),
+					name: $.Localize('#Customizer_Key_Press_ForcedColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
 						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
@@ -358,31 +358,31 @@ class KeyPress {
 					onChanged: () => this.updateStyles()
 				},
 				textLabelDefaultColor: {
-					name: $.Localize('#Customizer_KeyPress_DefaultColor'),
+					name: $.Localize('#Customizer_Key_Press_DefaultColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => (Config.text.label.states.default.color = value),
 					onChanged: () => this.updateStyles()
 				},
 				textLabelPressedColor: {
-					name: $.Localize('#Customizer_KeyPress_PressedColor'),
+					name: $.Localize('#Customizer_Key_Press_PressedColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => (Config.text.label.states.pressed.color = value),
 					onChanged: () => this.updateStyles()
 				},
 				textLabelDisabledColor: {
-					name: $.Localize('#Customizer_KeyPress_DisabledColor'),
+					name: $.Localize('#Customizer_Key_Press_DisabledColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => (Config.text.label.states.disabled.color = value),
 					onChanged: () => this.updateStyles()
 				},
 				textLabelToggledColor: {
-					name: $.Localize('#Customizer_Key_Press_TextLabelToggledColor'),
+					name: $.Localize('#Customizer_Key_Press_ToggledColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => (Config.text.label.states.toggled.color = value),
 					onChanged: () => this.updateStyles()
 				},
 				textLabelForcedColor: {
-					name: $.Localize('#Customizer_KeyPress_ForcedColor'),
+					name: $.Localize('#Customizer_Key_Press_ForcedColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => (Config.text.label.states.forced.color = value),
 					onChanged: () => this.updateStyles()
@@ -452,25 +452,25 @@ class KeyPress {
 					]
 				},
 				textTurnbindsDefaultBg: {
-					name: $.Localize('#Customizer_KeyPress_DefaultColor'),
+					name: $.Localize('#Customizer_Key_Press_DefaultColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => (Config.text.turnbinds.states.default.bg = value),
 					onChanged: () => this.updateStyles()
 				},
 				textTurnbindsPressedBg: {
-					name: $.Localize('#Customizer_KeyPress_PressedColor'),
+					name: $.Localize('#Customizer_Key_Press_PressedColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => (Config.text.turnbinds.states.pressed.bg = value),
 					onChanged: () => this.updateStyles()
 				},
 				textTurnbindsDisabledBg: {
-					name: $.Localize('#Customizer_KeyPress_DisabledColor'),
+					name: $.Localize('#Customizer_Key_Press_DisabledColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => (Config.text.turnbinds.states.disabled.bg = value),
 					onChanged: () => this.updateStyles()
 				},
 				textTurnbindsForcedBg: {
-					name: $.Localize('#Customizer_KeyPress_ForcedColor'),
+					name: $.Localize('#Customizer_Key_Press_ForcedColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => (Config.text.turnbinds.states.forced.bg = value),
 					onChanged: () => this.updateStyles()
@@ -494,7 +494,7 @@ class KeyPress {
 
 				// DIRECTIONAL KEYS
 				iconsDir: {
-					name: $.Localize('#Customizer_KeyPress_DirectionalKeys'),
+					name: $.Localize('#Customizer_Key_Press_DirectionalKeys'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [
@@ -505,7 +505,7 @@ class KeyPress {
 					]
 				},
 				iconsDirDefaultColor: {
-					name: $.Localize('#Customizer_KeyPress_DefaultColor'),
+					name: $.Localize('#Customizer_Key_Press_DefaultColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
 						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
@@ -515,7 +515,7 @@ class KeyPress {
 					onChanged: () => this.updateStyles()
 				},
 				iconsDirPressedColor: {
-					name: $.Localize('#Customizer_KeyPress_PressedColor'),
+					name: $.Localize('#Customizer_Key_Press_PressedColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
 						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
@@ -525,7 +525,7 @@ class KeyPress {
 					onChanged: () => this.updateStyles()
 				},
 				iconsDirDisabledColor: {
-					name: $.Localize('#Customizer_KeyPress_DisabledColor'),
+					name: $.Localize('#Customizer_Key_Press_DisabledColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
 						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
@@ -535,7 +535,7 @@ class KeyPress {
 					onChanged: () => this.updateStyles()
 				},
 				iconsDirForcedColor: {
-					name: $.Localize('#Customizer_KeyPress_ForcedColor'),
+					name: $.Localize('#Customizer_Key_Press_ForcedColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
 						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
@@ -559,7 +559,7 @@ class KeyPress {
 					]
 				},
 				iconsModifiersDefaultColor: {
-					name: $.Localize('#Customizer_KeyPress_DefaultColor'),
+					name: $.Localize('#Customizer_Key_Press_DefaultColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
 						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
@@ -569,7 +569,7 @@ class KeyPress {
 					onChanged: () => this.updateStyles()
 				},
 				iconsModifiersPressedColor: {
-					name: $.Localize('#Customizer_KeyPress_PressedColor'),
+					name: $.Localize('#Customizer_Key_Press_PressedColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
 						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
@@ -579,7 +579,7 @@ class KeyPress {
 					onChanged: () => this.updateStyles()
 				},
 				iconsModifiersDisabledColor: {
-					name: $.Localize('#Customizer_KeyPress_DisabledColor'),
+					name: $.Localize('#Customizer_Key_Press_DisabledColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
 						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
@@ -589,7 +589,7 @@ class KeyPress {
 					onChanged: () => this.updateStyles()
 				},
 				iconsModifiersToggledColor: {
-					name: $.Localize('#Customizer_KeyPress_ToggledColor'),
+					name: $.Localize('#Customizer_Key_Press_ToggledColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
 						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
@@ -599,7 +599,7 @@ class KeyPress {
 					onChanged: () => this.updateStyles()
 				},
 				iconsModifiersForcedColor: {
-					name: $.Localize('#Customizer_KeyPress_ForcedColor'),
+					name: $.Localize('#Customizer_Key_Press_ForcedColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
 						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
@@ -623,7 +623,7 @@ class KeyPress {
 					]
 				},
 				iconsJumpDuckDefaultColor: {
-					name: $.Localize('#Customizer_KeyPress_DefaultColor'),
+					name: $.Localize('#Customizer_Key_Press_DefaultColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
 						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
@@ -633,7 +633,7 @@ class KeyPress {
 					onChanged: () => this.updateStyles()
 				},
 				iconsJumpDuckPressedColor: {
-					name: $.Localize('#Customizer_KeyPress_PressedColor'),
+					name: $.Localize('#Customizer_Key_Press_PressedColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
 						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
@@ -643,7 +643,7 @@ class KeyPress {
 					onChanged: () => this.updateStyles()
 				},
 				iconsJumpDuckDisabledColor: {
-					name: $.Localize('#Customizer_KeyPress_DisabledColor'),
+					name: $.Localize('#Customizer_Key_Press_DisabledColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
 						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
@@ -653,7 +653,7 @@ class KeyPress {
 					onChanged: () => this.updateStyles()
 				},
 				iconsJumpDuckToggledColor: {
-					name: $.Localize('#Customizer_KeyPress_ToggledColor'),
+					name: $.Localize('#Customizer_Key_Press_ToggledColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
 						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
@@ -663,7 +663,7 @@ class KeyPress {
 					onChanged: () => this.updateStyles()
 				},
 				iconsJumpDuckForcedColor: {
-					name: $.Localize('#Customizer_KeyPress_ForcedColor'),
+					name: $.Localize('#Customizer_Key_Press_ForcedColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => {
 						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);

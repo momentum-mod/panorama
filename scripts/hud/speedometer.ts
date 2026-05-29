@@ -128,13 +128,13 @@ class SpeedometerHandler {
 					children: [{ styleID: 'mainFontStyling' }, { styleID: 'eventFontStyling' }]
 				},
 				mainFontStyling: {
-					name: $.Localize('#Customizer_Speedometer_MainFontStyling'),
+					name: $.Localize('#Customizer_Main'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [{ styleID: 'mainAxisFontStyling' }, { styleID: 'mainComparisonFontStyling' }]
 				},
 				mainAxisFontStyling: {
-					name: $.Localize('#Customizer_Speedometer_MainAxisFontStyling'),
+					name: $.Localize('#Customizer_Axis'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [{ styleID: 'mainAxisFont' }, { styleID: 'mainAxisFontSize' }]

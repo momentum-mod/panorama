@@ -61,7 +61,7 @@ class HudMapInfoHandler {
 					children: [{ styleID: 'keybindFontStyling' }, { styleID: 'descriptionFontStyling' }]
 				},
 				keybindFontStyling: {
-					name: $.Localize('#Customizer_Static_Menu_KeybindFontStyling'),
+					name: $.Localize('#Customizer_Keybind'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [

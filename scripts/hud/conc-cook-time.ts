@@ -29,19 +29,19 @@ class ConcCookHandler {
 			},
 			dynamicStyles: {
 				countDown: {
-					name: $.Localize('#Customizer_Conc_Cook_Time_CountDown'),
+					name: $.Localize('#Customizer_Conc_CountDown'),
 					type: CustomizerPropertyType.CHECKBOX,
 					callbackFunc: (_, value) => (this.countDown = value),
 					onChanged: () => this.onCookUpdate(0, 0)
 				},
 				unfill: {
-					name: $.Localize('#Customizer_Conc_Cook_Time_Unfill'),
+					name: $.Localize('#Customizer_Conc_Unfill'),
 					type: CustomizerPropertyType.CHECKBOX,
 					callbackFunc: (_, value) => (this.unfill = value),
 					onChanged: () => this.onCookUpdate(0, 0)
 				},
 				showLabel: {
-					name: $.Localize('#Customizer_Conc_Cook_Time_ShowLabel'),
+					name: $.Localize('#Customizer_ShowLabel'),
 					type: CustomizerPropertyType.CHECKBOX,
 					children: { styleID: 'fontStyling', showWhen: true },
 					callbackFunc: (_, value) => (this.isLabelEnabled = value),
@@ -76,7 +76,7 @@ class ConcCookHandler {
 					}
 				},
 				borderStyling: {
-					name: $.Localize('#Customizer_Conc_Cook_Time_BorderStyling'),
+					name: $.Localize('#Customizer_BorderStyling'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [{ styleID: 'borderWidth' }, { styleID: 'borderColor' }, { styleID: 'borderRadius' }]
@@ -101,7 +101,7 @@ class ConcCookHandler {
 					children: [{ styleID: 'backgroundRadius' }, { styleID: 'fillRadius' }]
 				},
 				backgroundRadius: {
-					name: $.Localize('#Customizer_Conc_Cook_Time_BackgroundRadius'),
+					name: $.Localize('#Customizer_Background'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					targetPanel: '.cooktime__meter',
 					styleProperty: 'borderRadius',
@@ -109,7 +109,7 @@ class ConcCookHandler {
 					settingProps: { min: 0, max: 10 }
 				},
 				fillRadius: {
-					name: $.Localize('#Customizer_Conc_Cook_Time_FillRadius'),
+					name: $.Localize('#Customizer_Fill'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					targetPanel: '#ConcCookMeter_Left',
 					styleProperty: 'borderRadius',

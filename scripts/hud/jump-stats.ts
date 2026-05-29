@@ -114,7 +114,7 @@ class JumpStatsHandler {
 					]
 				},
 				showTakeoffSpeed: {
-					name: $.Localize('#Customizer_Jump_Stats_ShowTakeoffSpeed'),
+					name: $.Localize('#Customizer_ShowTakeoffSpeed'),
 					type: CustomizerPropertyType.CHECKBOX,
 					targetPanel: '.jumpstats__label--speed',
 					callbackFunc: (panel, value) => panel.SetHasClass('hide', !value)
@@ -126,13 +126,13 @@ class JumpStatsHandler {
 					callbackFunc: (panel, value) => panel.SetHasClass('hide', !value)
 				},
 				showGain: {
-					name: $.Localize('#Customizer_Jump_Stats_ShowGain'),
+					name: $.Localize('#Customizer_ShowGain'),
 					type: CustomizerPropertyType.CHECKBOX,
 					targetPanel: '.jumpstats__label--gain',
 					callbackFunc: (panel, value) => panel.SetHasClass('hide', !value)
 				},
 				showYawRatio: {
-					name: $.Localize('#Customizer_Jump_Stats_ShowYawRatio'),
+					name: $.Localize('#Customizer_ShowYawRatio'),
 					type: CustomizerPropertyType.CHECKBOX,
 					targetPanel: '.jumpstats__label--yaw-ratio',
 					callbackFunc: (panel, value) => panel.SetHasClass('hide', !value)

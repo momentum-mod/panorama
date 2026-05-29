@@ -35,26 +35,26 @@ class MomHudAmmoHandler {
 					onChanged: () => this.createDummyAmmo()
 				},
 				fontStyling: {
-					name: $.Localize('#Customizer_Ammo_FontStyling'),
+					name: $.Localize('#Customizer_FontStyling'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
 					children: [{ styleID: 'font' }, { styleID: 'fontSize' }, { styleID: 'fontColor' }]
 				},
 				font: {
-					name: $.Localize('#Customizer_Ammo_Font'),
+					name: $.Localize('#Customizer_Font'),
 					type: CustomizerPropertyType.FONT_PICKER,
 					targetPanel: '.ammo__label',
 					styleProperty: 'fontFamily'
 				},
 				fontSize: {
-					name: $.Localize('#Customizer_Ammo_FontSize'),
+					name: $.Localize('#Customizer_FontSize'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					targetPanel: '.ammo__label',
 					styleProperty: 'fontSize',
 					valueFn: (value) => `${value}px`
 				},
 				fontColor: {
-					name: $.Localize('#Customizer_Ammo_FontColor'),
+					name: $.Localize('#Customizer_FontColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					targetPanel: '.ammo__label',
 					styleProperty: 'color',
@@ -63,13 +63,13 @@ class MomHudAmmoHandler {
 					}
 				},
 				backgroundColor: {
-					name: $.Localize('#Customizer_Ammo_BackgroundColor'),
+					name: $.Localize('#Customizer_BackgroundColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					targetPanel: '.ammo__label',
 					styleProperty: 'backgroundColor'
 				},
 				alignText: {
-					name: $.Localize('#Customizer_Ammo_AlignText'),
+					name: $.Localize('#Customizer_AlignText'),
 					type: CustomizerPropertyType.DROPDOWN,
 					options: [
 						{ label: 'Left', value: 'left' },

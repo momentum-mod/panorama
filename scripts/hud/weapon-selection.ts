@@ -109,7 +109,7 @@ class WeaponSelectionHandler {
 					onChanged: () => this.updateStyles()
 				},
 				keybindsFontActiveColor: {
-					name: $.Localize('#Customizer_Weapon_Selection_KeybindsFontActiveColor'),
+					name: $.Localize('#Customizer_ActiveColor'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => (Config.keybinds.activeColor = value),
 					onChanged: () => this.updateStyles()

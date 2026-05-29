@@ -73,7 +73,7 @@ class AhopSprint {
 			unhandledEvents: { event: 'HudCustomizer_Ready', callbackFn: () => this.updateStyles() },
 			dynamicStyles: {
 				type: {
-					name: $.Localize('#Customizer_Ahop_Sprint_Type'),
+					name: $.Localize('#Customizer_Type'),
 					type: CustomizerPropertyType.DROPDOWN,
 					options: [
 						{ label: 'Curve', value: 'curve' },
@@ -99,13 +99,13 @@ class AhopSprint {
 
 				// TYPE - CURVE
 				curveSize: {
-					name: $.Localize('#Customizer_Ahop_Sprint_CurveSize'),
+					name: $.Localize('#Customizer_Size'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					callbackFunc: (_, value) => (Config.curve.size = value),
 					onChanged: () => this.updateCurveType()
 				},
 				curveGap: {
-					name: $.Localize('#Customizer_Ahop_Sprint_CurveGap'),
+					name: $.Localize('#Customizer_Gap'),
 					type: CustomizerPropertyType.NUMBER_ENTRY,
 					callbackFunc: (_, value) => (Config.curve.gap = value),
 					onChanged: () => this.updateCurveType()
@@ -140,22 +140,22 @@ class AhopSprint {
 					]
 				},
 				curveActiveColor: {
-					name: $.Localize('#Customizer_Ahop_Sprint_CurveActiveColor'),
+					name: $.Localize('#Customizer_Active'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => (StateColors[SprintState.ACTIVE].curve = value as rgbaColor)
 				},
 				curveAvailableColor: {
-					name: $.Localize('#Customizer_Ahop_Sprint_CurveAvailableColor'),
+					name: $.Localize('#Customizer_Available'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => (StateColors[SprintState.AVAILABLE].curve = value as rgbaColor)
 				},
 				curveDisabledColor: {
-					name: $.Localize('#Customizer_Ahop_Sprint_CurveDisabledColor'),
+					name: $.Localize('#Customizer_Disabled'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => (StateColors[SprintState.DISABLED].curve = value as rgbaColor)
 				},
 				curveBlockedColor: {
-					name: $.Localize('#Customizer_Ahop_Sprint_CurveBlockedColor'),
+					name: $.Localize('#Customizer_Blocked'),
 					type: CustomizerPropertyType.COLOR_PICKER,
 					callbackFunc: (_, value) => (StateColors[SprintState.BLOCKED].curve = value as rgbaColor)
 				},
