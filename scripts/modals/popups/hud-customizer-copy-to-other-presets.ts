@@ -1,9 +1,9 @@
 import { OnPanelLoad, PanelHandler } from 'util/module-helpers';
-import { GamemodeInfo } from 'common/gamemode';
+import { GamemodeInfoProperties } from 'common/gamemode';
 
 export type CopyToOtherPresetsData = {
 	title: string;
-	gamemodes: string[];
+	gamemodes: GamemodeInfoProperties[];
 	presetList: string[];
 	componentID: string;
 	onConfirm: (componentID: string, presetList: { gamemodeID: string; presetName: string }[]) => void;
@@ -20,23 +20,19 @@ class HudCustomizerCopyToOtherPresetsHandler implements OnPanelLoad {
 	buttonList: Map<ToggleButton, { dropDown: DropDown; gamemodeID: string }> = new Map();
 	data: CopyToOtherPresetsData;
 
-	private getNameFromId(id: string): string | undefined {
-		return [...GamemodeInfo.values()].find((gamemode) => gamemode.id === id)?.name;
-	}
-
 	onPanelLoad() {
 		const callbackHandle = this.panels.cp.GetAttributeInt('data', -1);
 		if (callbackHandle !== -1) {
 			this.data = UiToolkitAPI.InvokeJSCallback(callbackHandle) as any as CopyToOtherPresetsData;
+		} else {
+			throw new Error('Missing callback for copy-to-other-presets data');
 		}
+
 		this.panels.titleLabel.text = this.data.title;
 
-		const gamemodes = this.data.gamemodes.sort((a, b) => b.length - a.length);
-		const orderedGamemodes = [...GamemodeInfo.values()]
-			.map((info) => info.id)
-			.filter((id) => gamemodes[0] === '' || gamemodes.includes(id));
+		const getGamemodeForFile = (name: string) =>
+			this.data.gamemodes.find((info) => name.startsWith(info.id + '_'))?.id;
 
-		const getGamemodeForFile = (name: string) => gamemodes.find((id) => name.startsWith(id + '_'));
 		const findFreeIndex = (gamemodeID: string, presetList: string[]) => {
 			const prefix = 'preset';
 			let i = 1;
@@ -46,7 +42,7 @@ class HudCustomizerCopyToOtherPresetsHandler implements OnPanelLoad {
 			return `${prefix}_${i}`;
 		};
 
-		for (const gamemodeID of orderedGamemodes) {
+		for (const { id: gamemodeID, name: gamemodeName } of this.data.gamemodes) {
 			const panel = $.CreatePanel('Panel', this.panels.gamemodePresetContainer, '', {
 				class: 'mt-3',
 				style: 'min-width: 400px'
@@ -61,7 +57,7 @@ class HudCustomizerCopyToOtherPresetsHandler implements OnPanelLoad {
 			toggleButton.checked = true;
 
 			const toggleButtonLabel = panel.FindChildInLayoutFile<Label>('ToggleButtonLabel');
-			toggleButtonLabel.text = this.getNameFromId(gamemodeID);
+			toggleButtonLabel.text = gamemodeName;
 
 			const presets = this.data.presetList
 				.filter((name) => getGamemodeForFile(name) === gamemodeID)
@@ -79,7 +75,7 @@ class HudCustomizerCopyToOtherPresetsHandler implements OnPanelLoad {
 			// Add 'Create New' option at the bottom of the preset list
 			const createNewOption = findFreeIndex(gamemodeID, this.data.presetList);
 			const presetPanel = $.CreatePanel('Label', dropdown, createNewOption);
-			presetPanel.text = 'Create New';
+			presetPanel.text = $.Localize('#Customizer_Preset_CreateNew');
 			dropdown.AddOption(presetPanel);
 
 			dropdown.SetSelected(userPreset ?? createNewOption);

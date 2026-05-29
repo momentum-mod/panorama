@@ -453,6 +453,7 @@ $input-background-hover: rgb(110, 110, 110);
 
 	z-index: 10;
 	flow-children: none;
+	overflow: noclip;
 
 	&__name {
 		align: left top;

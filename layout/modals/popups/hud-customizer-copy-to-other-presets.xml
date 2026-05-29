@@ -24,14 +24,14 @@
 		</Panel>
         <Panel class="row h-align-center mt-4 generic-popup__button-row">
 			<Button class="button mr-4" onactivate="HudCustomizerCopyToOtherPresetsHandler.setAllButtons(true)">
-				<Label class="button__text" text="Enable All" />
+				<Label class="button__text" text="#Customizer_EnableAll" />
 			</Button>
             <Button id="CancelButton" class="button" onactivate="HudCustomizerCopyToOtherPresetsHandler.setAllButtons(false)">
-				<Label class="button__text" text="Disable All" />
+				<Label class="button__text" text="#Customizer_DisableAll" />
 			</Button>
 		</Panel>
 
-		<Panel id="GamemodePresetContainer" class="flow-down">
+		<Panel id="GamemodePresetContainer" class="flow-down h-align-center">
             <!-- Populated by TS -->
         </Panel>
 
