@@ -34,7 +34,7 @@
 				<Image id="CompassArrowIcon" class="arrow__up" src="file://{images}/hud/cgaz-arrow.svg" textureheight="48" />
 			</ConVarEnabler>
 		</Panel>
-		<ConVarEnabler class="h-full" convar="mom_hud_df_pitch_enable" togglevisibility="true">
+		<ConVarEnabler class="h-full w-full" convar="mom_hud_df_pitch_enable" togglevisibility="true">
 			<Panel id="PitchLines" class="cgaz-line__container" />
 		</ConVarEnabler>
 		<ConVarEnabler class="h-full" convar="mom_hud_df_compass_stat_mode" togglevisibility="true">
