@@ -221,13 +221,13 @@ interface HudCustomizer extends AbstractPanel<'HudCustomizer'> {
 
 	/** Tries to load file from cfg/hud/{path}.kv3 */
 	loadLayout(path: string): import('hud/customizer').HudLayout | null;
-	
+
 	/** Tries to rename a layout file in cfg/hud/ */
 	renameLayout(oldPath: string, newPath: string): boolean;
-	
+
 	/** Tries to delete a layout file in cfg/hud */
 	deleteLayout(path: string): boolean;
-	
+
 	/** Lists all the filenames in cfg/hud/, omitting extension. */
 	listLayouts(): string[];
 }

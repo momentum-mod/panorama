@@ -171,7 +171,7 @@ export class SettingsPage {
 
 		const paintPanel = this.paintContainer.FindChild<Panel>('PaintBlob');
 
-		paintPanel.style.backgroundColor = color;
+		paintPanel.style.backgroundColor = color as color;
 		paintPanel.style.width = scale * width + 'px';
 	}
 

@@ -132,6 +132,7 @@ class ImportExportSettingsHandler implements OnPanelLoad {
 	}
 
 	exportSelectAll() {
+		//@ts-expect-error Argument not typed
 		this.panels.export.SetFocus(true);
 		this.panels.export.SelectAll();
 	}
