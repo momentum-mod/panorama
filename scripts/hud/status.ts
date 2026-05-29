@@ -83,7 +83,8 @@ class HudStatusHandler {
 					name: $.Localize('#Customizer_Font'),
 					type: CustomizerPropertyType.FONT_PICKER,
 					targetPanel: '.hudstatus__label',
-					styleProperty: 'fontFamily'
+					styleProperty: 'fontFamily',
+					valueFn: (value) => `"${value}"`
 				},
 				fontSize: {
 					name: $.Localize('#Customizer_FontSize'),

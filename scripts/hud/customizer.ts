@@ -1588,7 +1588,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 						// Disabled on linux because it causes extreme lag
 						if (this.os === 'windows') {
-							panel.style.fontFamily = font;
+							panel.style.fontFamily = `"${font}"`;
 						}
 
 						dropdown.AddOption(panel);

@@ -108,7 +108,8 @@ class HudTimerHandler {
 					name: $.Localize('#Customizer_Font'),
 					type: CustomizerPropertyType.FONT_PICKER,
 					targetPanel: '.hudtimer__time',
-					styleProperty: 'fontFamily'
+					styleProperty: 'fontFamily',
+					valueFn: (value) => `"${value}"`
 				},
 				timerFontSize: {
 					name: $.Localize('#Customizer_FontSize'),
@@ -127,7 +128,8 @@ class HudTimerHandler {
 					name: $.Localize('#Customizer_Font'),
 					type: CustomizerPropertyType.FONT_PICKER,
 					targetPanel: '.hudtimer__comparison',
-					styleProperty: 'fontFamily'
+					styleProperty: 'fontFamily',
+					valueFn: (value) => `"${value}"`
 				},
 				comparisonFontSize: {
 					name: $.Localize('#Customizer_FontSize'),

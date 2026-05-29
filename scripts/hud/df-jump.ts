@@ -66,7 +66,8 @@ class DFJumpHandler {
 						'.dfjump__text-wrapper--total',
 						'.dfjump__text-wrapper--press'
 					],
-					styleProperty: 'fontFamily'
+					styleProperty: 'fontFamily',
+					valueFn: (value) => `"${value}"`
 				},
 				fontSize: {
 					name: $.Localize('#Customizer_FontSize'),

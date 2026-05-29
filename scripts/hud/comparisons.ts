@@ -200,7 +200,8 @@ class HudComparisonsHandler {
 					name: $.Localize('#Customizer_Font'),
 					type: CustomizerPropertyType.FONT_PICKER,
 					targetPanel: '.hud-splits__name',
-					styleProperty: 'fontFamily'
+					styleProperty: 'fontFamily',
+					valueFn: (value) => `"${value}"`
 				},
 				indexSize: {
 					name: $.Localize('#Customizer_Size'),
@@ -227,7 +228,8 @@ class HudComparisonsHandler {
 					name: $.Localize('#Customizer_Font'),
 					type: CustomizerPropertyType.FONT_PICKER,
 					targetPanel: '.hud-splits__time',
-					styleProperty: 'fontFamily'
+					styleProperty: 'fontFamily',
+					valueFn: (value) => `"${value}"`
 				},
 				timeSize: {
 					name: $.Localize('#Customizer_Size'),
@@ -258,7 +260,8 @@ class HudComparisonsHandler {
 					name: $.Localize('#Customizer_Font'),
 					type: CustomizerPropertyType.FONT_PICKER,
 					targetPanel: '.hud-splits__diff',
-					styleProperty: 'fontFamily'
+					styleProperty: 'fontFamily',
+					valueFn: (value) => `"${value}"`
 				},
 				comparisonsFontSize: {
 					name: $.Localize('#Customizer_Size'),

@@ -166,7 +166,7 @@ class ConcEntitiesHandler {
 				const label = entpanel.FindChildTraverse<Label>('ConcTimeLabel');
 				label.visible = Config.isLabelEnabled;
 				if (Config.isLabelEnabled) {
-					label.style.fontFamily = Config.font.family;
+					label.style.fontFamily = `"${Config.font.family}"`;
 					label.style.fontSize = `${Config.font.size}px`;
 					label.style.color = Config.font.color;
 					label.style.textShadow = this.getTextShadow(Config.font.color as rgbaColor);

@@ -217,8 +217,8 @@ class HudMapInfoHandler {
 		this.panels.cp.style.border = `${Config.borderWidth}px solid ${Config.borderColor}`;
 
 		for (const panels of this.staticMenuPanels) {
-			panels.keybind.style.fontFamily = Config.keybind.font;
-			panels.description.style.fontFamily = Config.description.font;
+			panels.keybind.style.fontFamily = `"${Config.keybind.font}"`;
+			panels.description.style.fontFamily = `"${Config.description.font}"`;
 
 			panels.keybind.style.fontSize = `${Config.keybind.fontSize}px`;
 			panels.description.style.fontSize = `${Config.description.fontSize}px`;

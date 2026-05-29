@@ -99,7 +99,8 @@ class HudSpectateHandler implements OnPanelLoad {
 					name: $.Localize('#Customizer_Font'),
 					type: CustomizerPropertyType.FONT_PICKER,
 					targetPanel: '.spectate__title',
-					styleProperty: 'fontFamily'
+					styleProperty: 'fontFamily',
+					valueFn: (value) => `"${value}"`
 				},
 				spectateFontSize: {
 					name: $.Localize('#Customizer_FontSize'),
@@ -140,7 +141,8 @@ class HudSpectateHandler implements OnPanelLoad {
 					name: $.Localize('#Customizer_Spectate_ReplayLabelFont'),
 					type: CustomizerPropertyType.FONT_PICKER,
 					targetPanel: '.replaycontrols__text--typeof',
-					styleProperty: 'fontFamily'
+					styleProperty: 'fontFamily',
+					valueFn: (value) => `"${value}"`
 				},
 				replayLabelFontSize: {
 					name: $.Localize('#Customizer_Spectate_ReplayLabelFontSize'),
@@ -171,7 +173,8 @@ class HudSpectateHandler implements OnPanelLoad {
 					name: $.Localize('#Customizer_Spectate_ReplayValueFont'),
 					type: CustomizerPropertyType.FONT_PICKER,
 					targetPanel: ['.replaycontrols__text--time', '.replaycontrols__text--ticks'],
-					styleProperty: 'fontFamily'
+					styleProperty: 'fontFamily',
+					valueFn: (value) => `"${value}"`
 				},
 				replayValueFontSize: {
 					name: $.Localize('#Customizer_Spectate_ReplayValueFontSize'),

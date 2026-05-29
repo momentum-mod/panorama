@@ -87,7 +87,8 @@ class HudSpecInfoHandler implements OnPanelLoad {
 					type: CustomizerPropertyType.FONT_PICKER,
 					targetPanel: ['.hudspecinfo__count', '.specinfo-list-entry__name'],
 					styleProperty: 'fontFamily',
-					callbackFunc: (_, value) => (this.specConfig.fontFamily = value)
+					callbackFunc: (_, value) => (this.specConfig.fontFamily = value),
+					valueFn: (value) => `"${value}"`
 				},
 				fontSize: {
 					name: $.Localize('#Customizer_FontSize'),
@@ -200,7 +201,7 @@ class HudSpecInfoHandler implements OnPanelLoad {
 
 		const nameLabel = snippetCont.FindChildInLayoutFile<Label>('FriendlySpecName');
 		nameLabel.text = text;
-		nameLabel.style.fontFamily = this.specConfig.fontFamily;
+		nameLabel.style.fontFamily = `"${this.specConfig.fontFamily}"`;
 		nameLabel.style.color = this.specConfig.fontColor as rgbaColor;
 		nameLabel.style.textShadowFast = getTextShadowFast(this.specConfig.fontColor as rgbaColor, 0.9);
 		nameLabel.style.fontSize = `${this.specConfig.fontSize}px`;

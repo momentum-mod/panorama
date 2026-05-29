@@ -696,7 +696,7 @@ class KeyPress {
 				panel.style.borderRadius = `${Config.text.dir.borderRadius}px`;
 				break;
 			case KeySettingsType.TEXT_LABEL:
-				panel.style.fontFamily = Config.text.label.fontFamily;
+				panel.style.fontFamily = `"${Config.text.label.fontFamily}"`;
 				panel.style.fontWeight = Config.text.label._fontWeight as
 					| 'bold'
 					| 'light'

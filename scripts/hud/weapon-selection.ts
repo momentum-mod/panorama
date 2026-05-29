@@ -259,11 +259,11 @@ class WeaponSelectionHandler {
 
 			keybind.style.visibility = Config.showKeybinds ? 'visible' : 'collapse';
 			if (Config.showKeybinds) {
-				keybind.style.fontFamily = Config.keybinds.font;
+				keybind.style.fontFamily = `"${Config.keybinds.font}"`;
 				keybind.style.fontSize = `${Config.keybinds.size}px`;
 			}
 
-			weaponName.style.fontFamily = Config.weapon_name.font;
+			weaponName.style.fontFamily = `"${Config.weapon_name.font}"`;
 			weaponName.style.fontSize = `${Config.weapon_name.size}px`;
 		});
 	}

@@ -595,7 +595,7 @@ class SpeedometerHandler {
 
 		for (const { selector, family, size } of FONT_MAP) {
 			for (const panel of root.FindChildrenWithClassTraverse(selector)) {
-				panel.style.fontFamily = family;
+				panel.style.fontFamily = `"${family}"`;
 				panel.style.fontSize = `${size}px`;
 			}
 		}

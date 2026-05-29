@@ -108,7 +108,7 @@ class ReplayControlsHandler {
 		if (this.panels.cp.visible === false || !this.sliderSegments) return;
 		for (const { labelPanel } of this.sliderSegments) {
 			if (!labelPanel) continue;
-			if (this.segmentFont) labelPanel.style.fontFamily = this.segmentFont;
+			if (this.segmentFont) labelPanel.style.fontFamily = `"${this.segmentFont}"`;
 			if (this.segmentFontSize) labelPanel.style.fontSize = `${this.segmentFontSize}px`;
 			if (this.segmentFontColor) {
 				labelPanel.style.color = `${this.segmentFontColor}`;
@@ -224,7 +224,7 @@ class ReplayControlsHandler {
 		const labelPanel = outer.FindChildrenWithClassTraverse('replaysegment__label')?.[0] as Label;
 
 		if (labelPanel) {
-			if (this.segmentFont) labelPanel.style.fontFamily = this.segmentFont;
+			if (this.segmentFont) labelPanel.style.fontFamily = `"${this.segmentFont}"`;
 			if (this.segmentFontSize) labelPanel.style.fontSize = `${this.segmentFontSize}px`;
 			if (this.segmentFontColor) {
 				labelPanel.style.color = `${this.segmentFontColor}`;

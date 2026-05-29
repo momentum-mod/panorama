@@ -52,7 +52,8 @@ class JumpStatsHandler {
 					name: $.Localize('#Customizer_Font'),
 					type: CustomizerPropertyType.FONT_PICKER,
 					targetPanel: ['.jumpstats__label', '.jumpstats__label--name', '.jumpstats__label--values'],
-					styleProperty: 'fontFamily'
+					styleProperty: 'fontFamily',
+					valueFn: (value) => `"${value}"`
 				},
 				fontSize: {
 					name: $.Localize('#Customizer_FontSize'),

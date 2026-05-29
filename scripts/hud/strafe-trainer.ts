@@ -231,7 +231,8 @@ class StrafeTrainer {
 					name: $.Localize('#Customizer_Font'),
 					type: CustomizerPropertyType.FONT_PICKER,
 					targetPanel: ['.strafetrainer__stats--upper', '.strafetrainer__stats--lower'],
-					styleProperty: 'fontFamily'
+					styleProperty: 'fontFamily',
+					valueFn: (value) => `"${value}"`
 				},
 				fontSize: {
 					name: $.Localize('#Customizer_FontSize'),
