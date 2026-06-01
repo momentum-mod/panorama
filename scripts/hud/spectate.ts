@@ -228,7 +228,7 @@ class HudSpectateHandler implements OnPanelLoad {
 
 	handleHoverAndBlur(fadeout: boolean) {
 		if (fadeout) {
-			this.panels.cp.style.opacity = 0.0001;
+			this.panels.cp.style.opacity = 0.00001;
 			this.toggleBlur(false);
 
 			this.panels.cp.SetPanelEvent('onmouseover', () => {
@@ -237,7 +237,7 @@ class HudSpectateHandler implements OnPanelLoad {
 			});
 			this.panels.cp.SetPanelEvent('onmouseout', () => {
 				//panorama disables the panel if opacity is 0
-				this.panels.cp.style.opacity = 0.001;
+				this.panels.cp.style.opacity = 0.00001;
 				this.toggleBlur(false);
 			});
 		} else {
