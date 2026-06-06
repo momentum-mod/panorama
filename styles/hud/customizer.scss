@@ -453,13 +453,15 @@ $input-background-hover: rgb(110, 110, 110);
 
 	z-index: 10;
 	flow-children: none;
-	overflow: noclip;
 
 	&__name {
 		align: left top;
 		margin-left: 32px;
 		margin-top: 12px;
 		width: fit-children;
+
+		white-space: nowrap;
+		text-overflow: shrink;
 
 		border: 1px $border none;
 		//border-bottom-width: 0px;
