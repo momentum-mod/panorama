@@ -71,8 +71,8 @@ interface Gridline {
 
 type GridlineForAxis = [Gridline[], Gridline[]];
 
-const MAX_X_POS = 1920;
-const MAX_Y_POS = 1080;
+/**Returns currently set resolution, not actual window dimensions */
+const WINDOW_DIMENSIONS = GameInterfaceAPI.GetWindowDimensions();
 
 /** Minimum width/height (px) a panel can be resized to. Overridden per-panel by in-line min-width/min-height. See onEndDrag() comments for more info */
 const MINIMUM_PANEL_SIZE = 10;
@@ -2034,19 +2034,23 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 	createGridLines(gridSize: number): void {
 		this.panels.grid.RemoveAndDeleteChildren();
 
-		const numXLines = 2 ** gridSize;
-		const numYLines = Math.floor(numXLines * (9 / 16));
+		const numXLines = this.snapToEvenMin2(2 ** gridSize);
+		const numYLines = this.snapToEvenMin2(numXLines * (9 / 16));
 
 		this.gridlines = [[], []];
 		this.activeGridlines = [undefined, undefined];
 
+		const scaleFactor = WINDOW_DIMENSIONS.height / 1080;
+		const virtualWidth = WINDOW_DIMENSIONS.width / scaleFactor;
+		const virtualHeight = 1080;
+
 		for (const axis of Axes) {
 			const isX = axis === 0;
 			const numLines = isX ? numXLines : numYLines;
-			const totalLength = isX ? MAX_X_POS : MAX_Y_POS;
+			const totalLength = isX ? virtualWidth : virtualHeight;
 
 			this.gridlines[axis] = Array.from({ length: numLines + 1 }, (_, i) => {
-				const offset = totalLength * (i / numLines);
+				const offset = Math.round(totalLength * (i / numLines));
 
 				let cssClass = `hud-customizer-grid__line hud-customizer-grid__line--${isX ? 'x' : 'y'}`;
 				if (i === numLines / 2) {
@@ -2073,7 +2077,13 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 	}
 
 	getGridGapLength(axis: Axis): number {
-		return (axis === Axis.X ? MAX_X_POS : MAX_Y_POS) / this.gridlines[axis].length;
+		const lines = this.gridlines[axis];
+		return lines[1].offset - lines[0].offset;
+	}
+
+	snapToEvenMin2(value: number): number {
+		const n = Math.max(2, Math.round(value));
+		return n % 2 === 0 ? n : n + 1;
 	}
 
 	createResizeKnobs(): void {
