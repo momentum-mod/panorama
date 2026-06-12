@@ -152,13 +152,18 @@ class Component {
 		if (!componentLayout)
 			throw new Error(`HudCustomizer: Could not load layout for HUD customizer component ${this.id}`);
 
+		// Used for anchor detection so that very wide panels are still correctly positioned
+		const anchorX = componentLayout.width
+			? componentLayout.offsetX + componentLayout.width / 2
+			: componentLayout.offsetX;
+
 		let scaledX: number;
 
 		// Infers anchor based on original 1920x1080 position
-		if (componentLayout.offsetX < DEFAULT_WIDTH / 3) {
+		if (anchorX < DEFAULT_WIDTH / 3) {
 			// 1. Left Anchored: Distance from left edge remains constant
 			scaledX = componentLayout.offsetX;
-		} else if (componentLayout.offsetX > (DEFAULT_WIDTH / 3) * 2) {
+		} else if (anchorX > (DEFAULT_WIDTH / 3) * 2) {
 			// 2. Right Anchored: Distance from right edge remains constant
 			const distanceToRight = DEFAULT_WIDTH - componentLayout.offsetX;
 			scaledX = VIRTUAL_WIDTH - distanceToRight;
