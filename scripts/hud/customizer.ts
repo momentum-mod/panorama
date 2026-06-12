@@ -74,6 +74,15 @@ type GridlineForAxis = [Gridline[], Gridline[]];
 /**Returns currently set resolution, not actual window dimensions */
 const WINDOW_DIMENSIONS = GameInterfaceAPI.GetWindowDimensions();
 
+/** Panorama assumes 1920x1080 resolution as base */
+const DEFAULT_WIDTH = 1920;
+const DEFAULT_HEIGHT = 1080;
+
+/** Used to scale absolutely positioned panels on different aspect ratios */
+const SCALE_FACTOR = WINDOW_DIMENSIONS.height / DEFAULT_HEIGHT;
+const VIRTUAL_WIDTH = WINDOW_DIMENSIONS.width / SCALE_FACTOR;
+const VIRTUAL_CENTER_X = VIRTUAL_WIDTH / 2;
+
 /** Minimum width/height (px) a panel can be resized to. Overridden per-panel by in-line min-width/min-height. See onEndDrag() comments for more info */
 const MINIMUM_PANEL_SIZE = 10;
 
@@ -143,9 +152,25 @@ class Component {
 		if (!componentLayout)
 			throw new Error(`HudCustomizer: Could not load layout for HUD customizer component ${this.id}`);
 
+		let scaledX: number;
+
+		// Infers anchor based on original 1920x1080 position
+		if (componentLayout.offsetX < DEFAULT_WIDTH / 3) {
+			// 1. Left Anchored: Distance from left edge remains constant
+			scaledX = componentLayout.offsetX;
+		} else if (componentLayout.offsetX > (DEFAULT_WIDTH / 3) * 2) {
+			// 2. Right Anchored: Distance from right edge remains constant
+			const distanceToRight = DEFAULT_WIDTH - componentLayout.offsetX;
+			scaledX = VIRTUAL_WIDTH - distanceToRight;
+		} else {
+			// 3. Center Anchored: Distance from center remains constant
+			const distanceToCenter = componentLayout.offsetX - DEFAULT_WIDTH / 2;
+			scaledX = VIRTUAL_CENTER_X + distanceToCenter;
+		}
+
 		this.enabled = this.properties.canDisable === false ? true : (componentLayout.enabled ?? true);
 		this._offsetY = componentLayout.offsetY; // Stupid, but needed with current setPosition stuff. Move to C++!
-		this.offsetX = componentLayout.offsetX;
+		this.offsetX = scaledX;
 		this.offsetY = componentLayout.offsetY;
 		this.width = componentLayout.width ?? undefined;
 		this.height = componentLayout.height ?? undefined;
@@ -271,9 +296,24 @@ class Component {
 
 	/** Gets serializable parts of the components for saving */
 	getLayout(): ComponentLayout {
+		let rescaledOffsetX: number;
+
+		//Rescale back to offsets assuming 1920x1080 resolution. See component constructor for more info
+		// Infer anchor based on current position relative to the virtual screen width
+		if (this.offsetX < VIRTUAL_WIDTH / 3) {
+			// Left Anchored: Distance from left edge is 1:1
+			rescaledOffsetX = this.offsetX;
+		} else if (this.offsetX > (VIRTUAL_WIDTH / 3) * 2) {
+			// Right Anchored: Re-apply distance from the virtual right edge to 1920
+			rescaledOffsetX = this.offsetX - VIRTUAL_WIDTH + DEFAULT_WIDTH;
+		} else {
+			// Center Anchored: Re-apply distance from the virtual center to 960
+			rescaledOffsetX = this.offsetX - VIRTUAL_CENTER_X + DEFAULT_WIDTH / 2;
+		}
+
 		return {
 			enabled: this.enabled,
-			offsetX: this.offsetX,
+			offsetX: rescaledOffsetX,
 			offsetY: this.offsetY,
 			...(this.width !== null && { width: this.width }),
 			...(this.height !== null && { height: this.height }),
@@ -2040,14 +2080,10 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		this.gridlines = [[], []];
 		this.activeGridlines = [undefined, undefined];
 
-		const scaleFactor = WINDOW_DIMENSIONS.height / 1080;
-		const virtualWidth = WINDOW_DIMENSIONS.width / scaleFactor;
-		const virtualHeight = 1080;
-
 		for (const axis of Axes) {
 			const isX = axis === 0;
 			const numLines = isX ? numXLines : numYLines;
-			const totalLength = isX ? virtualWidth : virtualHeight;
+			const totalLength = isX ? VIRTUAL_WIDTH : DEFAULT_HEIGHT;
 
 			this.gridlines[axis] = Array.from({ length: numLines + 1 }, (_, i) => {
 				const offset = Math.round(totalLength * (i / numLines));
