@@ -152,33 +152,12 @@ class Component {
 		if (!componentLayout)
 			throw new Error(`HudCustomizer: Could not load layout for HUD customizer component ${this.id}`);
 
-		// Used for anchor detection so that very wide panels are still correctly positioned
-		const anchorX = componentLayout.width
-			? componentLayout.offsetX + componentLayout.width / 2
-			: componentLayout.offsetX;
-
-		let scaledX: number;
-
-		// Infers anchor based on original 1920x1080 position
-		if (anchorX < DEFAULT_WIDTH / 3) {
-			// 1. Left Anchored: Distance from left edge remains constant
-			scaledX = componentLayout.offsetX;
-		} else if (anchorX > (DEFAULT_WIDTH / 3) * 2) {
-			// 2. Right Anchored: Distance from right edge remains constant
-			const distanceToRight = DEFAULT_WIDTH - componentLayout.offsetX;
-			scaledX = VIRTUAL_WIDTH - distanceToRight;
-		} else {
-			// 3. Center Anchored: Distance from center remains constant
-			const distanceToCenter = componentLayout.offsetX - DEFAULT_WIDTH / 2;
-			scaledX = VIRTUAL_CENTER_X + distanceToCenter;
-		}
-
 		this.enabled = this.properties.canDisable === false ? true : (componentLayout.enabled ?? true);
-		this._offsetY = componentLayout.offsetY; // Stupid, but needed with current setPosition stuff. Move to C++!
-		this.offsetX = scaledX;
-		this.offsetY = componentLayout.offsetY;
 		this.width = componentLayout.width ?? undefined;
 		this.height = componentLayout.height ?? undefined;
+		this._offsetY = componentLayout.offsetY; // Stupid, but needed with current setPosition stuff. Move to C++!
+		this.offsetX = this.getScaledOffsetX(componentLayout.offsetX);
+		this.offsetY = componentLayout.offsetY;
 
 		if (properties.dynamicStyles) {
 			this.dynamicStyles = {};
@@ -280,9 +259,6 @@ class Component {
 		if (width !== undefined) {
 			LayoutUtil.setWidth(this.panel, width);
 		}
-
-		// Update position in case size change affects it (e.g. right-aligned panels)
-		LayoutUtil.setPosition(this.panel, this._offsetX, this._offsetY);
 	}
 
 	get height(): number | undefined {
@@ -295,30 +271,51 @@ class Component {
 		if (height !== undefined) {
 			LayoutUtil.setHeight(this.panel, height);
 		}
+	}
 
-		LayoutUtil.setPosition(this.panel, this._offsetX, this._offsetY);
+	/**
+	 * Scales the offset to current aspect ratio. If the component has static width, it uses the center as anchor point
+	 * @param offset: An offset in 1920x1080 resolution
+	 * @returns An offset scaled to current aspect ratio
+	 */
+	getScaledOffsetX(offset: number): number {
+		const anchor = this.width ? offset + this.width / 2 : offset;
+
+		if (anchor < DEFAULT_WIDTH / 3) {
+			// 1. Left Anchored: Distance from left edge remains constant
+			return offset;
+		} else if (anchor > (DEFAULT_WIDTH / 3) * 2) {
+			// 2. Right Anchored: Distance from right edge remains constant
+			const distanceToRight = DEFAULT_WIDTH - offset;
+			return VIRTUAL_WIDTH - distanceToRight;
+		} else {
+			// 3. Center Anchored: Distance from center remains constant
+			const distanceToCenter = offset - DEFAULT_WIDTH / 2;
+			return VIRTUAL_CENTER_X + distanceToCenter;
+		}
+	}
+
+	/**
+	 * Rescales current offsetX to 1920x1080 for saving
+	 */
+	getDefaultOffsetX() {
+		if (this.offsetX < VIRTUAL_WIDTH / 3) {
+			// Left Anchored: Distance from left edge is 1:1
+			return this.offsetX;
+		} else if (this.offsetX > (VIRTUAL_WIDTH / 3) * 2) {
+			// Right Anchored: Re-apply distance from the virtual right edge to 1920
+			return this.offsetX - VIRTUAL_WIDTH + DEFAULT_WIDTH;
+		} else {
+			// Center Anchored: Re-apply distance from the virtual center to 960
+			return this.offsetX - VIRTUAL_CENTER_X + DEFAULT_WIDTH / 2;
+		}
 	}
 
 	/** Gets serializable parts of the components for saving */
 	getLayout(): ComponentLayout {
-		let rescaledOffsetX: number;
-
-		//Rescale back to offsets assuming 1920x1080 resolution. See component constructor for more info
-		// Infer anchor based on current position relative to the virtual screen width
-		if (this.offsetX < VIRTUAL_WIDTH / 3) {
-			// Left Anchored: Distance from left edge is 1:1
-			rescaledOffsetX = this.offsetX;
-		} else if (this.offsetX > (VIRTUAL_WIDTH / 3) * 2) {
-			// Right Anchored: Re-apply distance from the virtual right edge to 1920
-			rescaledOffsetX = this.offsetX - VIRTUAL_WIDTH + DEFAULT_WIDTH;
-		} else {
-			// Center Anchored: Re-apply distance from the virtual center to 960
-			rescaledOffsetX = this.offsetX - VIRTUAL_CENTER_X + DEFAULT_WIDTH / 2;
-		}
-
 		return {
 			enabled: this.enabled,
-			offsetX: rescaledOffsetX,
+			offsetX: this.getDefaultOffsetX(),
 			offsetY: this.offsetY,
 			...(this.width !== null && { width: this.width }),
 			...(this.height !== null && { height: this.height }),
@@ -338,11 +335,6 @@ class Component {
 		if (!defaultComponentLayout)
 			throw new Error(`HudCustomizer: Could not load default layout for HUD customizer component ${this.id}`);
 
-		if (options.position) {
-			this.offsetX = defaultComponentLayout.offsetX;
-			this.offsetY = defaultComponentLayout.offsetY;
-		}
-
 		if (options.styles) {
 			this.width = defaultComponentLayout.width ?? undefined;
 			this.height = defaultComponentLayout.height ?? undefined;
@@ -354,6 +346,11 @@ class Component {
 					this.applyDynamicStyle(dynamicStyle);
 				}
 			}
+		}
+
+		if (options.position) {
+			this.offsetX = this.getScaledOffsetX(defaultComponentLayout.offsetX);
+			this.offsetY = defaultComponentLayout.offsetY;
 		}
 
 		this.properties.postInit?.();
