@@ -8,6 +8,8 @@
 
 	visibility: visible;
 	background-color: rgba(0, 0, 0, 0.01); // Very slight background so the blur works
+	width: 100%;
+	height: 100%;
 
 	&--unofficial {
 		.hud-tab-menu-map-info__bottom,
