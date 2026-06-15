@@ -162,7 +162,10 @@ class HudComparisonsHandler {
 
 		$.RegisterForUnhandledEvent('OnObservedTimerReplaced', () => {
 			this.controlledReplayID = MomentumTimerAPI.GetObservedRunMetadata()?.tempId ?? null;
-			this.regenerateSplits();
+			const { state } = MomentumTimerAPI.GetObservedTimerStatus();
+			if (state !== Timer.TimerState.FINISHED) {
+				this.regenerateSplits();
+			}
 		});
 
 		$.RegisterForUnhandledEvent('LevelInitPostEntity', () => {
