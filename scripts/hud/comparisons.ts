@@ -51,6 +51,7 @@ class HudComparisonsHandler {
 
 	comparisonColors = {} as ColorConfig;
 
+	currentRunSplits: Timer.RunSplits | null = null;
 	// Build out our permanent split panel array. This classes's job is ultimately to just tweak
 	// each panel's properties as needed.
 	// Code is simpler is the most recent split is at the front of the array, and the container has a
@@ -111,11 +112,11 @@ class HudComparisonsHandler {
 				MomentumTimerAPI.GetObservedTimerStatus();
 
 			if (state === Timer.TimerState.FINISHED && (segmentsCount > 1 || segmentCheckpointsCount > 1)) {
-				const splits = MomentumTimerAPI.GetObservedTimerRunSplits();
+				this.currentRunSplits = MomentumTimerAPI.GetObservedTimerRunSplits();
 
 				this.updateLatestSplit(
 					Timer.generateFinishSplit(
-						splits,
+						this.currentRunSplits,
 						this.comparison?.runSplits ?? null,
 						runTime,
 						this.comparison?.runTime ?? 0,
@@ -136,7 +137,7 @@ class HudComparisonsHandler {
 			// If timer just finished and we're not watching a replay, don't update - otherwise
 			// comparison will get set to the run you just finished when you PB which we
 			// obviously don't want to happen.
-			if (!(state === Timer.TimerState.FINISHED && this.controlledReplayID === null)) {
+			if (state !== Timer.TimerState.FINISHED && this.controlledReplayID !== null) {
 				this.recomputeComparisons();
 			}
 		});
@@ -145,11 +146,11 @@ class HudComparisonsHandler {
 			const { majorNum, minorNum, segmentsCount, segmentCheckpointsCount } =
 				MomentumTimerAPI.GetObservedTimerStatus();
 
-			const splits = MomentumTimerAPI.GetObservedTimerRunSplits();
+			this.currentRunSplits = MomentumTimerAPI.GetObservedTimerRunSplits();
 
 			this.updateLatestSplit(
 				Timer.generateSplit(
-					splits,
+					this.currentRunSplits,
 					this.comparison?.runSplits ?? null,
 					majorNum,
 					minorNum,
@@ -162,14 +163,7 @@ class HudComparisonsHandler {
 
 		$.RegisterForUnhandledEvent('OnObservedTimerReplaced', () => {
 			this.controlledReplayID = MomentumTimerAPI.GetObservedRunMetadata()?.tempId ?? null;
-			const { state } = MomentumTimerAPI.GetObservedTimerStatus();
-			if (state !== Timer.TimerState.FINISHED) {
-				this.regenerateSplits();
-			}
-		});
-
-		$.RegisterForUnhandledEvent('LevelInitPostEntity', () => {
-			this.clearSplits();
+			this.regenerateSplits();
 		});
 
 		$.RegisterForUnhandledEvent('HudCustomizer_Opened', () => {
@@ -367,7 +361,7 @@ class HudComparisonsHandler {
 			return;
 		}
 
-		const splits = MomentumTimerAPI.GetObservedTimerRunSplits();
+		this.currentRunSplits = MomentumTimerAPI.GetObservedTimerRunSplits();
 
 		let idx = 0; // Index into split rows
 
@@ -376,7 +370,7 @@ class HudComparisonsHandler {
 			this.updateSplit(
 				this.splitRows[0],
 				Timer.generateFinishSplit(
-					splits,
+					this.currentRunSplits,
 					this.comparison?.runSplits ?? null,
 					runTime,
 					this.comparison?.runTime ?? 0,
@@ -388,8 +382,8 @@ class HudComparisonsHandler {
 			idx++;
 		}
 
-		for (let segIdx = splits.segments.length - 1; segIdx >= 0 && idx < MAX_SPLITS; segIdx--) {
-			const segment = splits.segments[segIdx];
+		for (let segIdx = this.currentRunSplits.segments.length - 1; segIdx >= 0 && idx < MAX_SPLITS; segIdx--) {
+			const segment = this.currentRunSplits.segments[segIdx];
 			const majorNum = segIdx + 1;
 
 			for (let subIdx = segment.subsegments.length - 1; subIdx >= 0 && idx < MAX_SPLITS; subIdx--) {
@@ -401,11 +395,11 @@ class HudComparisonsHandler {
 				this.updateSplit(
 					this.splitRows[idx],
 					Timer.generateSplit(
-						splits,
+						this.currentRunSplits,
 						this.comparison?.runSplits ?? null,
 						majorNum,
 						subseg.minorNum,
-						splits.segments.length,
+						this.currentRunSplits.segments.length,
 						currMaj === majorNum ? segmentCheckpointsCount : segment.subsegments.length,
 						true
 					)
@@ -422,35 +416,31 @@ class HudComparisonsHandler {
 	}
 
 	recomputeComparisons() {
-		const { state, runTime, segmentsCount, segmentCheckpointsCount } = MomentumTimerAPI.GetObservedTimerStatus();
-		const splits = MomentumTimerAPI.GetObservedTimerRunSplits();
-
 		this.splitRows.forEach((row) => {
 			if (!row.split) return;
 
-			if (this.hasUniqueComparison()) {
-				if (state === Timer.TimerState.FINISHED && row === this.splitRows[0]) {
-					row.split = Timer.generateFinishSplit(
-						splits,
-						this.comparison?.runSplits ?? null,
-						runTime,
-						this.comparison?.runTime ?? 0,
-						segmentsCount,
-						segmentCheckpointsCount
-					);
-				} else {
-					row.split = Timer.generateSplit(
-						splits,
-						this.comparison?.runSplits ?? null,
-						row.split.majorNum,
-						row.split.minorNum,
-						row.split.segmentsCount,
-						row.split.segmentCheckpointsCount,
-						true // round to float, could be networked data
-					);
-				}
+			if (this.currentRunSplits && this.hasUniqueComparison()) {
+				const isFinishSplit = row.split.majorNum > row.split.segmentsCount;
+
+				row.split = isFinishSplit
+					? Timer.generateFinishSplit(
+							this.currentRunSplits,
+							this.comparison?.runSplits ?? null,
+							row.split.time,
+							this.comparison?.runTime ?? 0,
+							row.split.segmentsCount,
+							row.split.segmentCheckpointsCount
+						)
+					: Timer.generateSplit(
+							this.currentRunSplits,
+							this.comparison?.runSplits ?? null,
+							row.split.majorNum,
+							row.split.minorNum,
+							row.split.segmentsCount,
+							row.split.segmentCheckpointsCount,
+							true
+						);
 			} else {
-				// Split obj might have some irrelevant properties, but they won't be used
 				row.split.hasComparison = false;
 			}
 
@@ -533,6 +523,7 @@ class HudComparisonsHandler {
 	}
 
 	clearSplits() {
+		this.currentRunSplits = null;
 		this.splitRows.forEach((row) => this.clearSplit(row));
 	}
 
