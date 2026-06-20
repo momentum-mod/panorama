@@ -295,7 +295,8 @@ class MainMenuHandler implements OnPanelLoad {
 	 * Necessary to handle in here because map selector background is a part of the main menu background section.
 	 */
 	onMapSelectorLoaded() {
-		for (const panel of ['MapSelectorLeft', 'MapDescription', 'MapInfoStats', 'Leaderboards'])
+		// for (const panel of ['MapSelectorLeft', 'MapDescription', 'MapInfoStats', 'Leaderboards'])
+		for (const panel of ['MapSelectorLeft'])
 			this.panels.backgroundBlur?.AddBlurPanel($.GetContextPanel().FindChildTraverse(panel));
 	}
 
