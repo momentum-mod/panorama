@@ -219,7 +219,11 @@
 			</Panel>
 
 			<Panel class="mapselector__right">
-				
+                <Panel class="mapselector__track-selector-container">
+				    <TrackSelector id="TrackSelector" />
+                </Panel>
+                <!-- <NewLeaderboards id="NewLeaderboards" /> -->
+
 				
 			</Panel>
 		</Panel>
