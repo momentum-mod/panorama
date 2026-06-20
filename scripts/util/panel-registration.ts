@@ -13,6 +13,7 @@ declare interface PanelTagNameMap {
 	LineGraph: LineGraph;
 	LevelIndicator: LevelIndicator;
 	PlayerCard: PlayerCard;
+	TrackSelector: TrackSelector;
 	MomHudTimer: MomHudTimer;
 	MomHudStatus: MomHudStatus;
 	MomHudMapInfo: MomHudMapInfo;
@@ -52,6 +53,9 @@ UiToolkitAPI.RegisterPanel2d('LineGraph', 'file://{resources}/layout/components/
 declare interface Gallery extends AbstractPanel<'Gallery'> {
 	handler: import('components/gallery').GalleryHandler;
 }
+
+declare interface TrackSelector extends AbstractPanel<'TrackSelector'> {}
+UiToolkitAPI.RegisterPanel2d('TrackSelector', 'file://{resources}/layout/components/track-selector.xml');
 
 declare interface ToastContainer extends AbstractPanel<'ToastContainer'> {}
 UiToolkitAPI.RegisterPanel2d('ToastManager', 'file://{resources}/layout/util/toast-manager.xml');
