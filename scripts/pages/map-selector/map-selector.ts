@@ -1,14 +1,14 @@
 import { OnPanelLoad, PanelHandler } from 'util/module-helpers';
 import { traverseChildren } from 'util/functions';
 import type { MMap } from 'common/web/types/models/models';
-import { MapStatus, MapStatuses } from 'common/web/enums/map-status.enum';
-import { MapCreditType } from 'common/web/enums/map-credit-type.enum';
-import { SteamGame } from 'common/web/enums/steam-game.enum';
-import { SteamGamesNames } from 'common/web/maps/steam-games.map';
-import * as Maps from 'common/maps';
-import * as Leaderboards from 'common/leaderboard';
-import { handlePlayMap } from 'common/maps';
-import { getCompletionGroup, getGroupBoundaries } from 'common/completion-group';
+// PRE REWORK REMOVAL
+// import { MapStatus, MapStatuses } from 'common/web/enums/map-status.enum';
+// import { MapCreditType } from 'common/web/enums/map-credit-type.enum';
+// import { SteamGame } from 'common/web/enums/steam-game.enum';
+// import { SteamGamesNames } from 'common/web/maps/steam-games.map';
+// import * as Maps from 'common/maps';
+// import * as Leaderboards from 'common/leaderboard';
+// import { handlePlayMap } from 'common/maps';
 
 const REFRESH_COOLDOWN = 1000 * 10; // 10 seconds
 
@@ -50,26 +50,27 @@ class MapSelectorHandler implements OnPanelLoad {
 		],
 		emptyContainer: $<Panel>('#MapListEmptyContainer'),
 		tierSlider: $<DualSlider>('#TierSlider'),
-		info: $<Panel>('#MapInfo'),
-		infoPB: $<Panel>('#MapInfoPB'),
-		infoWR: $<Panel>('#MapInfoWR'),
-		linearSeparator: $<Label>('#HudTabMenuLinearSeparator'),
-		linearLabel: $<Label>('#HudTabMenuLinearLabel'),
-		stageCountSeparator: $<Label>('#HudTabMenuStageCountSeparator'),
-		stageCountLabel: $<Label>('#HudTabMenuStageCountLabel'),
-		bonusCountSeparator: $<Label>('#HudTabMenuBonusCountSeparator'),
-		bonusCountLabel: $<Label>('#HudTabMenuBonusCountLabel'),
-		bonusesCountLabel: $<Label>('#HudTabMenuBonusesCountLabel'),
-		leaderboardContainer: $<Panel>('#MapTimes'),
-		descriptionContainer: $<Panel>('#MapDescriptionContainer'),
-		creditsContainer: $<Panel>('#MapCreditsContainer'),
-		datesContainer: $<Panel>('#MapDatesContainer'),
-		credits: $<Panel>('#MapCredits'),
-		submissionStatus: $<Label>('#MapSubmissionStatus'),
-		changelog: $<Panel>('#MapChangelog'),
-		stats: $<Panel>('#MapInfoStats'),
-		websiteButton: $<Button>('#MapInfoWebsiteButton'),
-		tags: $<Label>('#MapTags'),
+		// PRE REWORK REMOVAL
+		// info: $<Panel>('#MapInfo'),
+		// infoPB: $<Panel>('#MapInfoPB'),
+		// infoWR: $<Panel>('#MapInfoWR'),
+		// linearSeparator: $<Label>('#HudTabMenuLinearSeparator'),
+		// linearLabel: $<Label>('#HudTabMenuLinearLabel'),
+		// stageCountSeparator: $<Label>('#HudTabMenuStageCountSeparator'),
+		// stageCountLabel: $<Label>('#HudTabMenuStageCountLabel'),
+		// bonusCountSeparator: $<Label>('#HudTabMenuBonusCountSeparator'),
+		// bonusCountLabel: $<Label>('#HudTabMenuBonusCountLabel'),
+		// bonusesCountLabel: $<Label>('#HudTabMenuBonusesCountLabel'),
+		// leaderboardContainer: $<Panel>('#MapTimes'),
+		// descriptionContainer: $<Panel>('#MapDescriptionContainer'),
+		// creditsContainer: $<Panel>('#MapCreditsContainer'),
+		// datesContainer: $<Panel>('#MapDatesContainer'),
+		// credits: $<Panel>('#MapCredits'),
+		// submissionStatus: $<Label>('#MapSubmissionStatus'),
+		// changelog: $<Panel>('#MapChangelog'),
+		// stats: $<Panel>('#MapInfoStats'),
+		// websiteButton: $<Button>('#MapInfoWebsiteButton'),
+		// tags: $<Label>('#MapTags'),
 		listTypes: {
 			ranked: $<Button>('#MapListRanked'),
 			unranked: $<Button>('#MapListUnranked'),
@@ -85,48 +86,49 @@ class MapSelectorHandler implements OnPanelLoad {
 		DualSlider: { event: 'onvaluechanged', properties: ['lowerValue', 'upperValue'] }
 	};
 
-	readonly strings = {
-		staged: $.Localize('#MapInfo_Type_Staged'),
-		linear: $.Localize('#MapInfo_Type_Linear'),
-		placeholder: $.Localize('#MapSelector_Info_Placeholder'),
-		changelogVersion: $.Localize('#MapSelector_Info_Changelog_Version'),
-		statuses: new Map([
-			[
-				MapStatus.PRIVATE_TESTING,
-				{
-					status: $.Localize('#MapSelector_Status_PrivateTesting'),
-					tooltip: $.Localize('#MapSelector_Status_PrivateTesting_Tooltip')
-				}
-			],
-			[
-				MapStatus.CONTENT_APPROVAL,
-				{
-					status: $.Localize('#MapSelector_Status_ContentApproval'),
-					tooltip: $.Localize('#MapSelector_Status_ContentApproval_Tooltip')
-				}
-			],
-			[
-				MapStatus.PUBLIC_TESTING,
-				{
-					status: $.Localize('#MapSelector_Status_PublicTesting'),
-					tooltip: $.Localize('#MapSelector_Status_PublicTesting_Tooltip')
-				}
-			],
-			[
-				MapStatus.FINAL_APPROVAL,
-				{
-					status: $.Localize('#MapSelector_Status_FinalApproval'),
-					tooltip: $.Localize('#MapSelector_Status_FinalApproval_Tooltip')
-				}
-			]
-		]),
-		credits: new Map([
-			[MapCreditType.AUTHOR, '#MapSelector_Info_Authors'],
-			[MapCreditType.CONTRIBUTOR, '#MapSelector_Info_Contributors'],
-			[MapCreditType.SPECIAL_THANKS, '#MapSelector_Info_SpecialThanks'],
-			[MapCreditType.TESTER, '#MapSelector_Info_Testers']
-		])
-	};
+	// PRE REWORK REMOVAL
+	// readonly strings = {
+	// 	staged: $.Localize('#MapInfo_Type_Staged'),
+	// 	linear: $.Localize('#MapInfo_Type_Linear'),
+	// 	placeholder: $.Localize('#MapSelector_Info_Placeholder'),
+	// 	changelogVersion: $.Localize('#MapSelector_Info_Changelog_Version'),
+	// 	statuses: new Map([
+	// 		[
+	// 			MapStatus.PRIVATE_TESTING,
+	// 			{
+	// 				status: $.Localize('#MapSelector_Status_PrivateTesting'),
+	// 				tooltip: $.Localize('#MapSelector_Status_PrivateTesting_Tooltip')
+	// 			}
+	// 		],
+	// 		[
+	// 			MapStatus.CONTENT_APPROVAL,
+	// 			{
+	// 				status: $.Localize('#MapSelector_Status_ContentApproval'),
+	// 				tooltip: $.Localize('#MapSelector_Status_ContentApproval_Tooltip')
+	// 			}
+	// 		],
+	// 		[
+	// 			MapStatus.PUBLIC_TESTING,
+	// 			{
+	// 				status: $.Localize('#MapSelector_Status_PublicTesting'),
+	// 				tooltip: $.Localize('#MapSelector_Status_PublicTesting_Tooltip')
+	// 			}
+	// 		],
+	// 		[
+	// 			MapStatus.FINAL_APPROVAL,
+	// 			{
+	// 				status: $.Localize('#MapSelector_Status_FinalApproval'),
+	// 				tooltip: $.Localize('#MapSelector_Status_FinalApproval_Tooltip')
+	// 			}
+	// 		]
+	// 	]),
+	// 	credits: new Map([
+	// 		[MapCreditType.AUTHOR, '#MapSelector_Info_Authors'],
+	// 		[MapCreditType.CONTRIBUTOR, '#MapSelector_Info_Contributors'],
+	// 		[MapCreditType.SPECIAL_THANKS, '#MapSelector_Info_SpecialThanks'],
+	// 		[MapCreditType.TESTER, '#MapSelector_Info_Testers']
+	// 	])
+	// };
 
 	readonly nStateButtonClasses: ReadonlyMap<NStateButtonState, string> = new Map([
 		[NStateButtonState.OFF, 'mapselector-filters__nstatebutton--off'],
@@ -145,14 +147,14 @@ class MapSelectorHandler implements OnPanelLoad {
 		);
 		$.RegisterForUnhandledEvent('MapSelector_ShowConfirmOverwrite', (mapID) => this.showConfirmOverwrite(mapID));
 		$.RegisterForUnhandledEvent('MapSelector_MapsFiltered', (count) => this.onMapsFiltered(count));
+
 		$.RegisterForUnhandledEvent('MapSelector_SelectedDataUpdate', (mapData) => this.onSelectedDataUpdated(mapData));
-		$.RegisterForUnhandledEvent('MapSelector_SelectedOnlineDataUpdate', (mapData) =>
-			this.onSelectedOnlineDataUpdated(mapData)
-		);
-		$.RegisterForUnhandledEvent('MapSelector_SelectedCompletionsUpdate', (completions) =>
-			this.onSelectedCompletionsUpdated(completions)
-		);
-		$.RegisterForUnhandledEvent('MapSelector_HideLeaderboards', () => this.toggleLeaderboards(false));
+
+		// PRE REWORK REMOVAL
+		// $.RegisterForUnhandledEvent('MapSelector_SelectedOnlineDataUpdate', (mapData) =>
+		// 	this.onSelectedOnlineDataUpdated(mapData)
+		// );
+		// $.RegisterForUnhandledEvent('MapSelector_HideLeaderboards', () => this.toggleLeaderboards(false));
 
 		this.panels.nStateButtons.forEach((panel) =>
 			$.RegisterEventHandler('NStateButtonStateChanged', panel, (panelID, state) =>
@@ -173,10 +175,11 @@ class MapSelectorHandler implements OnPanelLoad {
 		);
 
 		this.panels.cp.applyFilters(false);
-		this.panels.leaderboardContainer.SetHasClass(
-			'mapselector-leaderboards--open',
-			$.persistentStorage.getItem('mapSelector.leaderboardsOpen') ?? false
-		);
+		// PRE REWORK REMOVAL
+		// this.panels.leaderboardContainer.SetHasClass(
+		// 	'mapselector-leaderboards--open',
+		// 	$.persistentStorage.getItem('mapSelector.leaderboardsOpen') ?? false
+		// );
 
 		$.DispatchEvent('MapSelector_OnLoaded');
 	}
@@ -350,250 +353,240 @@ class MapSelectorHandler implements OnPanelLoad {
 		const baseImageUrl = this.parseMapImageUrl(mapData.staticData);
 		this.panels.cp.applyBackgroundMapImage(mapData.staticData.thumbnail.id, baseImageUrl);
 
-		this.updateSelectedMapInfo(mapData.staticData, mapData.userData);
-		this.updateSelectedMapCredits(mapData.staticData);
-		this.updateSelectedMapRequiredGames(mapData.staticData);
+		// PRE REWORK REMOVAL
+		// this.updateSelectedMapInfo(mapData.staticData, mapData.userData);
+		// this.updateSelectedMapCredits(mapData.staticData);
+		// this.updateSelectedMapRequiredGames(mapData.staticData);
 
 		// Start loading spinner on live-updateing stats panels -- MapSelector_OnSelectedOnlineDataUpdate will kill it
-		this.panels.stats.AddClass('mapselector-stats--loading');
+		// this.panels.stats.AddClass('mapselector-stats--loading');
 	}
 
-	updateSelectedMapInfo(staticData: MMap, userData?: MapCacheAPI.UserData) {
-		const gamemode = GameModeAPI.GetMetaGameMode();
-		const mainTrackTier = Maps.getTier(staticData, gamemode);
-		const numStages = Leaderboards.getNumStages(staticData);
-		const numBonuses = Leaderboards.getNumBonuses(staticData);
-		const isLinear = numStages <= 1;
-		const info = this.panels.info;
+	// PRE REWORK REMOVAL
+	// updateSelectedMapInfo(staticData: MMap, userData?: MapCacheAPI.UserData) {
+	// 	const gamemode = GameModeAPI.GetMetaGameMode();
+	// 	const mainTrackTier = Maps.getTier(staticData, gamemode);
+	// 	const numStages = Leaderboards.getNumStages(staticData);
+	// 	const numBonuses = Leaderboards.getNumBonuses(staticData);
+	// 	const isLinear = numStages <= 1;
+	// 	const info = this.panels.info;
 
-		info.SetDialogVariable('name', staticData.name);
+	// 	info.SetDialogVariable('name', staticData.name);
 
-		info.SetDialogVariableInt('tier', mainTrackTier ?? 0);
-		this.panels.linearSeparator.visible = isLinear;
-		this.panels.linearLabel.visible = isLinear;
-		this.panels.stageCountSeparator.visible = !isLinear;
-		this.panels.stageCountLabel.visible = !isLinear;
-		if (!isLinear) {
-			info.SetDialogVariableInt('stageCount', numStages);
-		}
-		this.panels.bonusCountSeparator.visible = numBonuses > 0;
-		this.panels.bonusCountLabel.visible = numBonuses === 1;
-		this.panels.bonusesCountLabel.visible = numBonuses > 1;
-		if (numBonuses > 0) {
-			info.SetDialogVariableInt('bonusCount', numBonuses);
-		}
+	// 	info.SetDialogVariableInt('tier', mainTrackTier ?? 0);
+	// 	this.panels.linearSeparator.visible = isLinear;
+	// 	this.panels.linearLabel.visible = isLinear;
+	// 	this.panels.stageCountSeparator.visible = !isLinear;
+	// 	this.panels.stageCountLabel.visible = !isLinear;
+	// 	if (!isLinear) {
+	// 		info.SetDialogVariableInt('stageCount', numStages);
+	// 	}
+	// 	this.panels.bonusCountSeparator.visible = numBonuses > 0;
+	// 	this.panels.bonusCountLabel.visible = numBonuses === 1;
+	// 	this.panels.bonusesCountLabel.visible = numBonuses > 1;
+	// 	if (numBonuses > 0) {
+	// 		info.SetDialogVariableInt('bonusCount', numBonuses);
+	// 	}
 
-		info.SetDialogVariable('description', staticData.info?.description);
-		this.panels.descriptionContainer.SetHasClass('hide', !staticData.info?.description);
+	// 	info.SetDialogVariable('description', staticData.info?.description);
+	// 	this.panels.descriptionContainer.SetHasClass('hide', !staticData.info?.description);
 
-		info.SetDialogVariable('date', new Date(staticData.info?.creationDate)?.toLocaleDateString());
-		this.panels.datesContainer.SetHasClass('hide', !staticData.info?.creationDate);
+	// 	info.SetDialogVariable('date', new Date(staticData.info?.creationDate)?.toLocaleDateString());
+	// 	this.panels.datesContainer.SetHasClass('hide', !staticData.info?.creationDate);
 
-		const pb = Leaderboards.getUserMapDataTrack(userData, gamemode);
-		if (pb) {
-			info.SetDialogVariableFloat('personal_best', pb.time);
-			info.FindChildTraverse('MapInfoPB').visible = true;
-			info.FindChildTraverse('MapInfoNoPB').visible = false;
-		} else {
-			info.FindChildTraverse('MapInfoPB').visible = false;
-			info.FindChildTraverse('MapInfoNoPB').visible = true;
-		}
+	// 	const pb = Leaderboards.getUserMapDataTrack(userData, gamemode);
+	// 	if (pb) {
+	// 		info.SetDialogVariableFloat('personal_best', pb.time);
+	// 		info.FindChildTraverse('MapInfoPB').visible = true;
+	// 		info.FindChildTraverse('MapInfoNoPB').visible = false;
+	// 	} else {
+	// 		info.FindChildTraverse('MapInfoPB').visible = false;
+	// 		info.FindChildTraverse('MapInfoNoPB').visible = true;
+	// 	}
 
-		const inSubmission = MapStatuses.IN_SUBMISSION.includes(staticData.status);
-		info.SetHasClass('mapselector-map-info--submission', inSubmission);
+	// 	const inSubmission = MapStatuses.IN_SUBMISSION.includes(staticData.status);
+	// 	info.SetHasClass('mapselector-map-info--submission', inSubmission);
 
-		if (inSubmission) {
-			const { status, tooltip } = this.strings.statuses.get(staticData.status);
-			this.panels.info.SetDialogVariable('status', status);
-			this.panels.info.SetDialogVariable('status_tooltip', tooltip);
+	// 	if (inSubmission) {
+	// 		const { status, tooltip } = this.strings.statuses.get(staticData.status);
+	// 		this.panels.info.SetDialogVariable('status', status);
+	// 		this.panels.info.SetDialogVariable('status_tooltip', tooltip);
 
-			this.panels.submissionStatus.visible = true;
+	// 		this.panels.submissionStatus.visible = true;
 
-			const hasChangelog = staticData.versions.length > 1;
-			this.panels.changelog.visible = hasChangelog;
-			if (hasChangelog) {
-				const container = this.panels.changelog.GetChild(1);
-				container.RemoveAndDeleteChildren();
+	// 		const hasChangelog = staticData.versions.length > 1;
+	// 		this.panels.changelog.visible = hasChangelog;
+	// 		if (hasChangelog) {
+	// 			const container = this.panels.changelog.GetChild(1);
+	// 			container.RemoveAndDeleteChildren();
 
-				staticData.versions
-					// Data doesn't seem always ordered by versionNum (?) so doing a sort
-					.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-					.forEach(({ changelog }, i, arr) => {
-						$.CreatePanel('Label', container, '', {
-							class: 'mapselector-map-info__h3',
-							text: $.Localize('#MapSelector_Info_Changelog_Version').replace(
-								'%version%',
-								(arr.length - i).toString()
-							)
-						});
-						// First version doesn't necessarily have a changelog
-						if (changelog) {
-							$.CreatePanel('Label', container, '', {
-								text: changelog,
-								class: 'mapselector-map-info__changelog-text'
-							});
-						}
-					});
-			}
-		} else {
-			this.panels.submissionStatus.visible = false;
-			this.panels.changelog.visible = false;
-			this.panels.info.SetDialogVariable('status', '');
-			this.panels.info.SetDialogVariable('status_tooltip', '');
-		}
-	}
+	// 			staticData.versions
+	// 				// Data doesn't seem always ordered by versionNum (?) so doing a sort
+	// 				.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+	// 				.forEach(({ changelog }, i, arr) => {
+	// 					$.CreatePanel('Label', container, '', {
+	// 						class: 'mapselector-map-info__h3',
+	// 						text: $.Localize('#MapSelector_Info_Changelog_Version').replace(
+	// 							'%version%',
+	// 							(arr.length - i).toString()
+	// 						)
+	// 					});
+	// 					// First version doesn't necessarily have a changelog
+	// 					if (changelog) {
+	// 						$.CreatePanel('Label', container, '', {
+	// 							text: changelog,
+	// 							class: 'mapselector-map-info__changelog-text'
+	// 						});
+	// 					}
+	// 				});
+	// 		}
+	// 	} else {
+	// 		this.panels.submissionStatus.visible = false;
+	// 		this.panels.changelog.visible = false;
+	// 		this.panels.info.SetDialogVariable('status', '');
+	// 		this.panels.info.SetDialogVariable('status_tooltip', '');
+	// 	}
+	// }
 
-	updateSelectedMapCredits(staticData: MMap) {
-		this.panels.credits.RemoveAndDeleteChildren();
+	// PRE REWORK REMOVAL
+	// updateSelectedMapCredits(staticData: MMap) {
+	// 	this.panels.credits.RemoveAndDeleteChildren();
 
-		// Panorama's buggy right-wrap behaviour makes doing layout for this with CSS very hard - just built out in JS.
-		this.strings.credits
-			.entries()
-			// Map to collections of both regular and placeholder suggestions, filter out empty credit types
-			.map(([type, heading]) => [heading, Maps.getAllCredits(staticData, type)] as const)
-			.filter(([_heading, credits]) => credits.length > 0)
-			.forEach(([heading, credits], i) => {
-				const row =
-					i % 2 === 0
-						? $.CreatePanel('Panel', this.panels.credits, '', { class: 'mapselector-credits__row' })
-						: this.panels.credits.Children().at(-1);
+	// 	// Panorama's buggy right-wrap behaviour makes doing layout for this with CSS very hard - just built out in JS.
+	// 	this.strings.credits
+	// 		.entries()
+	// 		// Map to collections of both regular and placeholder suggestions, filter out empty credit types
+	// 		.map(([type, heading]) => [heading, Maps.getAllCredits(staticData, type)] as const)
+	// 		.filter(([_heading, credits]) => credits.length > 0)
+	// 		.forEach(([heading, credits], i) => {
+	// 			const row =
+	// 				i % 2 === 0
+	// 					? $.CreatePanel('Panel', this.panels.credits, '', { class: 'mapselector-credits__row' })
+	// 					: this.panels.credits.Children().at(-1);
 
-				const col = $.CreatePanel('Panel', row, '', { class: 'mapselector-credits__col' });
-				$.CreatePanel('Label', col, '', { text: $.Localize(heading), class: 'mapselector-map-info__h2' });
+	// 			const col = $.CreatePanel('Panel', row, '', { class: 'mapselector-credits__col' });
+	// 			$.CreatePanel('Label', col, '', { text: $.Localize(heading), class: 'mapselector-map-info__h2' });
 
-				credits.forEach(({ alias, steamID }, i) => {
-					const panel = $.CreatePanel('Panel', col, '', { class: 'mapselector-credits__credit' });
+	// 			credits.forEach(({ alias, steamID }, i) => {
+	// 				const panel = $.CreatePanel('Panel', col, '', { class: 'mapselector-credits__credit' });
 
-					if (steamID) {
-						$.CreatePanel('AvatarImage', panel, '', {
-							class: 'mapselector-credits__avatar',
-							steamid: steamID
-						});
-					} else {
-						const placeholder = $.CreatePanel('Image', panel, `Placholder${i}`, {
-							class: 'mapselector-credits__placeholder',
-							src: 'file://{images}/help.svg',
-							textureheight: '32px'
-						});
-						placeholder.SetPanelEvent('onmouseover', () =>
-							UiToolkitAPI.ShowTextTooltip(placeholder.id, this.strings.placeholder)
-						);
-						placeholder.SetPanelEvent('onmouseout', () => UiToolkitAPI.HideTextTooltip());
-					}
+	// 				if (steamID) {
+	// 					$.CreatePanel('AvatarImage', panel, '', {
+	// 						class: 'mapselector-credits__avatar',
+	// 						steamid: steamID
+	// 					});
+	// 				} else {
+	// 					const placeholder = $.CreatePanel('Image', panel, `Placholder${i}`, {
+	// 						class: 'mapselector-credits__placeholder',
+	// 						src: 'file://{images}/help.svg',
+	// 						textureheight: '32px'
+	// 					});
+	// 					placeholder.SetPanelEvent('onmouseover', () =>
+	// 						UiToolkitAPI.ShowTextTooltip(placeholder.id, this.strings.placeholder)
+	// 					);
+	// 					placeholder.SetPanelEvent('onmouseout', () => UiToolkitAPI.HideTextTooltip());
+	// 				}
 
-					const namePanel = $.CreatePanel('Label', panel, '', {
-						text: alias,
-						class: 'mapselector-credits__text mapselector-credits__name'
-					});
+	// 				const namePanel = $.CreatePanel('Label', panel, '', {
+	// 					text: alias,
+	// 					class: 'mapselector-credits__text mapselector-credits__name'
+	// 				});
 
-					if (steamID) {
-						namePanel.AddClass('mapselector-credits__name--steam');
+	// 				if (steamID) {
+	// 					namePanel.AddClass('mapselector-credits__name--steam');
 
-						// This will become a player profile panel in the future
-						panel.SetPanelEvent('onactivate', () => {
-							UiToolkitAPI.ShowSimpleContextMenu(namePanel.id, '', [
-								{
-									label: $.Localize('#Action_ShowSteamProfile'),
-									jsCallback: () => SteamOverlayAPI.OpenToProfileID(steamID)
-								}
-							]);
-						});
-					}
-				});
-			});
-	}
+	// 					// This will become a player profile panel in the future
+	// 					panel.SetPanelEvent('onactivate', () => {
+	// 						UiToolkitAPI.ShowSimpleContextMenu(namePanel.id, '', [
+	// 							{
+	// 								label: $.Localize('#Action_ShowSteamProfile'),
+	// 								jsCallback: () => SteamOverlayAPI.OpenToProfileID(steamID)
+	// 							}
+	// 						]);
+	// 					});
+	// 				}
+	// 			});
+	// 		});
+	// }
 
-	readonly requiredGames = [
-		[$('#CSS'), SteamGame.CSS] as const,
-		[$('#CSGO'), SteamGame.CSGO] as const,
-		[$('#TF2'), SteamGame.TF2] as const,
-		[$('#Portal2'), SteamGame.PORTAL2] as const
-	];
+	// PRE REWORK REMOVAL
+	// readonly requiredGames = [
+	// 	[$('#CSS'), SteamGame.CSS] as const,
+	// 	[$('#CSGO'), SteamGame.CSGO] as const,
+	// 	[$('#TF2'), SteamGame.TF2] as const,
+	// 	[$('#Portal2'), SteamGame.PORTAL2] as const
+	// ];
 
-	updateSelectedMapRequiredGames(staticData: MMap) {
-		if (!staticData.info?.requiredGames) {
-			this.requiredGames.forEach(([panel]) => {
-				panel.AddClass('mapselector-map-info__required-game--hidden');
-			});
+	// updateSelectedMapRequiredGames(staticData: MMap) {
+	// 	if (!staticData.info?.requiredGames) {
+	// 		this.requiredGames.forEach(([panel]) => {
+	// 			panel.AddClass('mapselector-map-info__required-game--hidden');
+	// 		});
 
-			return;
-		}
+	// 		return;
+	// 	}
 
-		const mountedGames = GameInterfaceAPI.GetMountedSteamApps();
-		this.requiredGames.forEach(([panel, game]) => {
-			const unmounted = !mountedGames.includes(game);
-			panel.SetHasClass(
-				'mapselector-map-info__required-game--hidden',
-				!staticData.info.requiredGames.includes(game)
-			);
-			panel.SetHasClass('mapselector-map-info__required-game--unmounted', unmounted);
+	// 	const mountedGames = GameInterfaceAPI.GetMountedSteamApps();
+	// 	this.requiredGames.forEach(([panel, game]) => {
+	// 		const unmounted = !mountedGames.includes(game);
+	// 		panel.SetHasClass(
+	// 			'mapselector-map-info__required-game--hidden',
+	// 			!staticData.info.requiredGames.includes(game)
+	// 		);
+	// 		panel.SetHasClass('mapselector-map-info__required-game--unmounted', unmounted);
 
-			if (unmounted) {
-				panel.SetDialogVariable('game', SteamGamesNames.get(game));
-				panel.SetPanelEvent('onmouseover', () => {
-					// English is "Missing assets for game: "
-					UiToolkitAPI.ShowTextTooltip(
-						panel.id,
-						'<span class="mapselector-map-info__required-game__tooltip--left">' +
-							$.Localize('#MapSelector_RequiredGames_Tooltip') +
-							'</span><span class="mapselector-map-info__required-game__tooltip--right">' +
-							SteamGamesNames.get(game) +
-							'</span>'
-					);
-				});
-			} else {
-				panel.ClearPanelEvent('onmouseover');
-			}
-		});
-	}
+	// 		if (unmounted) {
+	// 			panel.SetDialogVariable('game', SteamGamesNames.get(game));
+	// 			panel.SetPanelEvent('onmouseover', () => {
+	// 				// English is "Missing assets for game: "
+	// 				UiToolkitAPI.ShowTextTooltip(
+	// 					panel.id,
+	// 					'<span class="mapselector-map-info__required-game__tooltip--left">' +
+	// 						$.Localize('#MapSelector_RequiredGames_Tooltip') +
+	// 						'</span><span class="mapselector-map-info__required-game__tooltip--right">' +
+	// 						SteamGamesNames.get(game) +
+	// 						'</span>'
+	// 				);
+	// 			});
+	// 		} else {
+	// 			panel.ClearPanelEvent('onmouseover');
+	// 		}
+	// 	});
+	// }
 
-	onSelectedOnlineDataUpdated(onlineMapData: MMap) {
-		const statsPanel = this.panels.stats;
+	// PRE REWORK REMOVAL
+	// onSelectedOnlineDataUpdated(onlineMapData: MMap) {
+	// 	const statsPanel = this.panels.stats;
 
-		statsPanel.RemoveClass('mapselector-stats--loading');
+	// 	statsPanel.RemoveClass('mapselector-stats--loading');
 
-		// Removing / omitting several stats here, so we only include the stats that ACTUALLY WORK
-		// - Subscriptions - No longer exists since removing map library.
-		// - Downloads - No longer tracked by the backend.
-		// - Plays - We *may* track this in the future but don't currently.
-		// - Time Played - We don't track this *yet*.
-		// Map stats is in a very WIP state at the moment and doesn't need to be perfect yet.
-		statsPanel.SetDialogVariableInt('unique_completions', onlineMapData.stats.uniqueCompletions);
-		statsPanel.SetDialogVariableInt('total_completions', onlineMapData.stats.completions);
-		statsPanel.SetDialogVariableInt('favorites', onlineMapData.stats.favorites);
+	// 	// Removing / omitting several stats here, so we only include the stats that ACTUALLY WORK
+	// 	// - Subscriptions - No longer exists since removing map library.
+	// 	// - Downloads - No longer tracked by the backend.
+	// 	// - Plays - We *may* track this in the future but don't currently.
+	// 	// - Time Played - We don't track this *yet*.
+	// 	// Map stats is in a very WIP state at the moment and doesn't need to be perfect yet.
+	// 	statsPanel.SetDialogVariableInt('unique_completions', onlineMapData.stats.uniqueCompletions);
+	// 	statsPanel.SetDialogVariableInt('total_completions', onlineMapData.stats.completions);
+	// 	statsPanel.SetDialogVariableInt('favorites', onlineMapData.stats.favorites);
 
-		const wr = onlineMapData.worldRecord;
-		if (wr) {
-			statsPanel.SetDialogVariableFloat('world_record', wr?.time ?? 0);
-			statsPanel.FindChildTraverse('MapInfoWR').visible = true;
-			statsPanel.FindChildTraverse('MapInfoNoWR').visible = false;
-		} else {
-			statsPanel.FindChildTraverse('MapInfoWR').visible = false;
-			statsPanel.FindChildTraverse('MapInfoNoWR').visible = true;
-		}
-	}
+	// 	const wr = onlineMapData.worldRecord;
+	// 	if (wr) {
+	// 		statsPanel.SetDialogVariableFloat('world_record', wr?.time ?? 0);
+	// 		statsPanel.FindChildTraverse('MapInfoWR').visible = true;
+	// 		statsPanel.FindChildTraverse('MapInfoNoWR').visible = false;
+	// 	} else {
+	// 		statsPanel.FindChildTraverse('MapInfoWR').visible = false;
+	// 		statsPanel.FindChildTraverse('MapInfoNoWR').visible = true;
+	// 	}
+	// }
 
-	// TODO: Temporary debug logging to validate completion data end-to-end. Remove once the completion table UI is built.
-	onSelectedCompletionsUpdated(completions: Maps.MapUserCompletions) {
-		$.Msg(
-			`[MapSelector] Completions for map ${completions.mapID} (gamemode ${completions.gamemode}, style ${completions.style}): ${completions.tracks.length} tracks`
-		);
+	// PRE REWORK REMOVAL
+	// onActionButtonPressed() {
+	// 	if (!this.selectedMapData) return;
 
-		for (const t of completions.tracks) {
-			const completed = t.time !== null;
-			const group = getCompletionGroup(t.rank, getGroupBoundaries(t.totalCompletions));
-			$.Msg(
-				`  track ${t.trackType}/${t.trackNum} tier=${t.tier} completed=${completed} ` +
-					`time=${t.time} rank=${t.rank}/${t.totalCompletions} group=${group}`
-			);
-		}
-	}
-
-	onActionButtonPressed() {
-		if (!this.selectedMapData) return;
-
-		handlePlayMap(this.selectedMapData);
-	}
+	// 	handlePlayMap(this.selectedMapData);
+	// }
 
 	/**
 	 * Figure out the base CDN URL from the map images.
@@ -612,13 +605,14 @@ class MapSelectorHandler implements OnPanelLoad {
 		return image.split('/').slice(0, -1).join('/');
 	}
 
-	openInSteamOverlay() {
-		const mapData = $.GetContextPanel<MomentumMapSelector>().selectedMapData;
-		const frontendUrl = GameInterfaceAPI.GetSettingString('mom_api_url_frontend');
-		if (mapData && frontendUrl) {
-			SteamOverlayAPI.OpenURL(`${frontendUrl}/maps/${mapData.staticData.name}`);
-		}
-	}
+	// PRE REWORK REMOVAL
+	// openInSteamOverlay() {
+	// 	const mapData = $.GetContextPanel<MomentumMapSelector>().selectedMapData;
+	// 	const frontendUrl = GameInterfaceAPI.GetSettingString('mom_api_url_frontend');
+	// 	if (mapData && frontendUrl) {
+	// 		SteamOverlayAPI.OpenURL(`${frontendUrl}/maps/${mapData.staticData.name}`);
+	// 	}
+	// }
 
 	/** When a NState button is pressed, update its styling classes */
 	onNStateBtnChanged(panelID: string, state: NStateButtonState) {
@@ -626,25 +620,27 @@ class MapSelectorHandler implements OnPanelLoad {
 		this.nStateButtonClasses.entries().forEach(([i, className]) => panel.SetHasClass(className, state === i));
 	}
 
-	toggleLeaderboards(open: boolean) {
-		this.panels.leaderboardContainer.SetHasClass('mapselector-leaderboards--open', open);
-		$.persistentStorage.setItem('mapSelector.leaderboardsOpen', open);
-	}
+	// PRE REWORK REMOVAL
+	// toggleLeaderboards(open: boolean) {
+	// 	this.panels.leaderboardContainer.SetHasClass('mapselector-leaderboards--open', open);
+	// 	$.persistentStorage.setItem('mapSelector.leaderboardsOpen', open);
+	// }
 
-	openGallery() {
-		if (!this.selectedMapData) return;
-
-		const gallery = UiToolkitAPI.ShowCustomLayoutPopup<Gallery>(
-			'MapSelectorGallery',
-			'file://{resources}/layout/components/gallery.xml'
-		);
-
-		gallery.handler.init(
-			this.panels.cp,
-			this.selectedMapData.staticData.images?.map(({ id }) => id) ?? [],
-			this.parseMapImageUrl(this.selectedMapData.staticData) ?? ''
-		);
-	}
+	// PRE REWORK REMOVAL
+	// openGallery() {
+	// 	if (!this.selectedMapData) return;
+	//
+	// 	const gallery = UiToolkitAPI.ShowCustomLayoutPopup<Gallery>(
+	// 		'MapSelectorGallery',
+	// 		'file://{resources}/layout/components/gallery.xml'
+	// 	);
+	//
+	// 	gallery.handler.init(
+	// 		this.panels.cp,
+	// 		this.selectedMapData.staticData.images?.map(({ id }) => id) ?? [],
+	// 		this.parseMapImageUrl(this.selectedMapData.staticData) ?? ''
+	// 	);
+	// }
 
 	checkingUpdates = false;
 	lastUpdateCheck = 0;
