@@ -1,6 +1,7 @@
 import { OnPanelLoad, PanelHandler } from 'util/module-helpers';
 import { traverseChildren } from 'util/functions';
 import type { MMap } from 'common/web/types/models/models';
+import { TrackSelectorInterface } from 'components/track-selector';
 // PRE REWORK REMOVAL
 // import { MapStatus, MapStatuses } from 'common/web/enums/map-status.enum';
 // import { MapCreditType } from 'common/web/enums/map-credit-type.enum';
@@ -76,7 +77,10 @@ class MapSelectorHandler implements OnPanelLoad {
 			unranked: $<Button>('#MapListUnranked'),
 			beta: $<Button>('#MapListBeta')
 		},
-		refreshIcon: $<Image>('#RefreshIcon')
+		refreshIcon: $<Image>('#RefreshIcon'),
+		trackSelector: $<TrackSelectorInterface>('#TrackSelector'),
+		//This is incredibly ugly. It would be better to define main menu handler as a global object and get it from there
+		blurPanel: $.GetContextPanel().GetParent().GetParent().GetParent().GetParent().GetFirstChild() as BaseBlurTarget
 	};
 
 	// Describing which data on which type of panel we want to store out to PS.
@@ -161,6 +165,8 @@ class MapSelectorHandler implements OnPanelLoad {
 				this.onNStateBtnChanged(panelID, state as NStateButtonState)
 			)
 		);
+
+		this.panels.trackSelector.setBlurPanel(this.panels.blurPanel);
 	}
 
 	onPanelLoad() {
@@ -352,6 +358,9 @@ class MapSelectorHandler implements OnPanelLoad {
 
 		const baseImageUrl = this.parseMapImageUrl(mapData.staticData);
 		this.panels.cp.applyBackgroundMapImage(mapData.staticData.thumbnail.id, baseImageUrl);
+
+		const gamemode = GameModeAPI.GetMetaGameMode();
+		this.panels.trackSelector.updateTrackData(this.selectedMapData, gamemode);
 
 		// PRE REWORK REMOVAL
 		// this.updateSelectedMapInfo(mapData.staticData, mapData.userData);
