@@ -1,0 +1,38 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+	
+	<scripts>
+		<include type="module" src="file://{scripts}/components/track-selector.ts" />
+	</scripts>
+
+    <snippets>
+        <snippet name="track-panel">
+            <Panel class="track-panel">
+                <Panel class="track-panel__track">
+                    <Label class="track-selector-label track-panel__track-label" text="{s:track}" />
+                </Panel>
+                <Panel class="track-panel__tier">
+                    <Label class="track-selector-label track-panel__tier-label" text="T{i:tier}"/>
+                </Panel>
+                <Panel class="track-panel__time">
+                    <Label class="track-selector-label track-panel__time-label" text="{g:time:time}"/>
+                </Panel>
+                <Panel class="track-panel__rank">
+                    <Label class="track-selector-label track-panel__rank-label" text="{i:rank}/{i:total}"/>
+                </Panel>
+                <Panel class="track-panel__group">
+                    <Label class="track-selector-label track-panel__group-label" text="G{i:group}"/>
+                </Panel>
+            </Panel>
+        </snippet>
+    </snippets>
+
+
+    <TrackSelector class="h-full w-full">
+        <Panel id="TrackSelectorContainer" class="h-full w-full">
+            <!-- Populated by JS -->
+        </Panel>
+    </TrackSelector>
+</root>
