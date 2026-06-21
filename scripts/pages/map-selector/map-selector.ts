@@ -2,11 +2,10 @@ import { OnPanelLoad, PanelHandler } from 'util/module-helpers';
 import { traverseChildren } from 'util/functions';
 import type { MMap } from 'common/web/types/models/models';
 import { TrackSelectorInterface } from 'components/track-selector';
+import { MapInfoInterface } from 'components/map-info';
 // PRE REWORK REMOVAL
 // import { MapStatus, MapStatuses } from 'common/web/enums/map-status.enum';
 // import { MapCreditType } from 'common/web/enums/map-credit-type.enum';
-// import { SteamGame } from 'common/web/enums/steam-game.enum';
-// import { SteamGamesNames } from 'common/web/maps/steam-games.map';
 // import * as Maps from 'common/maps';
 // import * as Leaderboards from 'common/leaderboard';
 // import { handlePlayMap } from 'common/maps';
@@ -52,16 +51,8 @@ class MapSelectorHandler implements OnPanelLoad {
 		emptyContainer: $<Panel>('#MapListEmptyContainer'),
 		tierSlider: $<DualSlider>('#TierSlider'),
 		// PRE REWORK REMOVAL
-		// info: $<Panel>('#MapInfo'),
 		// infoPB: $<Panel>('#MapInfoPB'),
 		// infoWR: $<Panel>('#MapInfoWR'),
-		// linearSeparator: $<Label>('#HudTabMenuLinearSeparator'),
-		// linearLabel: $<Label>('#HudTabMenuLinearLabel'),
-		// stageCountSeparator: $<Label>('#HudTabMenuStageCountSeparator'),
-		// stageCountLabel: $<Label>('#HudTabMenuStageCountLabel'),
-		// bonusCountSeparator: $<Label>('#HudTabMenuBonusCountSeparator'),
-		// bonusCountLabel: $<Label>('#HudTabMenuBonusCountLabel'),
-		// bonusesCountLabel: $<Label>('#HudTabMenuBonusesCountLabel'),
 		// leaderboardContainer: $<Panel>('#MapTimes'),
 		// descriptionContainer: $<Panel>('#MapDescriptionContainer'),
 		// creditsContainer: $<Panel>('#MapCreditsContainer'),
@@ -78,9 +69,20 @@ class MapSelectorHandler implements OnPanelLoad {
 			beta: $<Button>('#MapListBeta')
 		},
 		refreshIcon: $<Image>('#RefreshIcon'),
-		trackSelector: $<TrackSelectorInterface>('#TrackSelector'),
+
 		//This is incredibly ugly. It would be better to define main menu handler as a global object and get it from there
 		blurPanel: $.GetContextPanel().GetParent().GetParent().GetParent().GetParent().GetFirstChild() as BaseBlurTarget
+	};
+
+	/**
+	 * Control Flow:
+	 * Map Selector connects the Track Selector to Leaderboards - This is required since those components are reused in Tab Menu
+	 * Map Selector sends selected map data to Map Info and Track Selector
+	 * Track Selector forwards the data to Leaderboards
+	 */
+	readonly components = {
+		mapInfo: $<MapInfoInterface>('#MapInfo'),
+		trackSelector: $<TrackSelectorInterface>('#TrackSelector')
 	};
 
 	// Describing which data on which type of panel we want to store out to PS.
@@ -166,7 +168,8 @@ class MapSelectorHandler implements OnPanelLoad {
 			)
 		);
 
-		this.panels.trackSelector.setBlurPanel(this.panels.blurPanel);
+		this.components.trackSelector.setBlurPanel(this.panels.blurPanel);
+		this.components.mapInfo.setBlurPanel(this.panels.blurPanel);
 	}
 
 	onPanelLoad() {
@@ -360,102 +363,15 @@ class MapSelectorHandler implements OnPanelLoad {
 		this.panels.cp.applyBackgroundMapImage(mapData.staticData.thumbnail.id, baseImageUrl);
 
 		const gamemode = GameModeAPI.GetMetaGameMode();
-		this.panels.trackSelector.updateTrackData(this.selectedMapData, gamemode);
+		this.components.trackSelector.updateTrackData(this.selectedMapData, gamemode);
+		this.components.mapInfo.updateMapInfo(mapData);
 
 		// PRE REWORK REMOVAL
-		// this.updateSelectedMapInfo(mapData.staticData, mapData.userData);
 		// this.updateSelectedMapCredits(mapData.staticData);
-		// this.updateSelectedMapRequiredGames(mapData.staticData);
 
 		// Start loading spinner on live-updateing stats panels -- MapSelector_OnSelectedOnlineDataUpdate will kill it
 		// this.panels.stats.AddClass('mapselector-stats--loading');
 	}
-
-	// PRE REWORK REMOVAL
-	// updateSelectedMapInfo(staticData: MMap, userData?: MapCacheAPI.UserData) {
-	// 	const gamemode = GameModeAPI.GetMetaGameMode();
-	// 	const mainTrackTier = Maps.getTier(staticData, gamemode);
-	// 	const numStages = Leaderboards.getNumStages(staticData);
-	// 	const numBonuses = Leaderboards.getNumBonuses(staticData);
-	// 	const isLinear = numStages <= 1;
-	// 	const info = this.panels.info;
-
-	// 	info.SetDialogVariable('name', staticData.name);
-
-	// 	info.SetDialogVariableInt('tier', mainTrackTier ?? 0);
-	// 	this.panels.linearSeparator.visible = isLinear;
-	// 	this.panels.linearLabel.visible = isLinear;
-	// 	this.panels.stageCountSeparator.visible = !isLinear;
-	// 	this.panels.stageCountLabel.visible = !isLinear;
-	// 	if (!isLinear) {
-	// 		info.SetDialogVariableInt('stageCount', numStages);
-	// 	}
-	// 	this.panels.bonusCountSeparator.visible = numBonuses > 0;
-	// 	this.panels.bonusCountLabel.visible = numBonuses === 1;
-	// 	this.panels.bonusesCountLabel.visible = numBonuses > 1;
-	// 	if (numBonuses > 0) {
-	// 		info.SetDialogVariableInt('bonusCount', numBonuses);
-	// 	}
-
-	// 	info.SetDialogVariable('description', staticData.info?.description);
-	// 	this.panels.descriptionContainer.SetHasClass('hide', !staticData.info?.description);
-
-	// 	info.SetDialogVariable('date', new Date(staticData.info?.creationDate)?.toLocaleDateString());
-	// 	this.panels.datesContainer.SetHasClass('hide', !staticData.info?.creationDate);
-
-	// 	const pb = Leaderboards.getUserMapDataTrack(userData, gamemode);
-	// 	if (pb) {
-	// 		info.SetDialogVariableFloat('personal_best', pb.time);
-	// 		info.FindChildTraverse('MapInfoPB').visible = true;
-	// 		info.FindChildTraverse('MapInfoNoPB').visible = false;
-	// 	} else {
-	// 		info.FindChildTraverse('MapInfoPB').visible = false;
-	// 		info.FindChildTraverse('MapInfoNoPB').visible = true;
-	// 	}
-
-	// 	const inSubmission = MapStatuses.IN_SUBMISSION.includes(staticData.status);
-	// 	info.SetHasClass('mapselector-map-info--submission', inSubmission);
-
-	// 	if (inSubmission) {
-	// 		const { status, tooltip } = this.strings.statuses.get(staticData.status);
-	// 		this.panels.info.SetDialogVariable('status', status);
-	// 		this.panels.info.SetDialogVariable('status_tooltip', tooltip);
-
-	// 		this.panels.submissionStatus.visible = true;
-
-	// 		const hasChangelog = staticData.versions.length > 1;
-	// 		this.panels.changelog.visible = hasChangelog;
-	// 		if (hasChangelog) {
-	// 			const container = this.panels.changelog.GetChild(1);
-	// 			container.RemoveAndDeleteChildren();
-
-	// 			staticData.versions
-	// 				// Data doesn't seem always ordered by versionNum (?) so doing a sort
-	// 				.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-	// 				.forEach(({ changelog }, i, arr) => {
-	// 					$.CreatePanel('Label', container, '', {
-	// 						class: 'mapselector-map-info__h3',
-	// 						text: $.Localize('#MapSelector_Info_Changelog_Version').replace(
-	// 							'%version%',
-	// 							(arr.length - i).toString()
-	// 						)
-	// 					});
-	// 					// First version doesn't necessarily have a changelog
-	// 					if (changelog) {
-	// 						$.CreatePanel('Label', container, '', {
-	// 							text: changelog,
-	// 							class: 'mapselector-map-info__changelog-text'
-	// 						});
-	// 					}
-	// 				});
-	// 		}
-	// 	} else {
-	// 		this.panels.submissionStatus.visible = false;
-	// 		this.panels.changelog.visible = false;
-	// 		this.panels.info.SetDialogVariable('status', '');
-	// 		this.panels.info.SetDialogVariable('status_tooltip', '');
-	// 	}
-	// }
 
 	// PRE REWORK REMOVAL
 	// updateSelectedMapCredits(staticData: MMap) {
@@ -516,51 +432,6 @@ class MapSelectorHandler implements OnPanelLoad {
 	// 				}
 	// 			});
 	// 		});
-	// }
-
-	// PRE REWORK REMOVAL
-	// readonly requiredGames = [
-	// 	[$('#CSS'), SteamGame.CSS] as const,
-	// 	[$('#CSGO'), SteamGame.CSGO] as const,
-	// 	[$('#TF2'), SteamGame.TF2] as const,
-	// 	[$('#Portal2'), SteamGame.PORTAL2] as const
-	// ];
-
-	// updateSelectedMapRequiredGames(staticData: MMap) {
-	// 	if (!staticData.info?.requiredGames) {
-	// 		this.requiredGames.forEach(([panel]) => {
-	// 			panel.AddClass('mapselector-map-info__required-game--hidden');
-	// 		});
-
-	// 		return;
-	// 	}
-
-	// 	const mountedGames = GameInterfaceAPI.GetMountedSteamApps();
-	// 	this.requiredGames.forEach(([panel, game]) => {
-	// 		const unmounted = !mountedGames.includes(game);
-	// 		panel.SetHasClass(
-	// 			'mapselector-map-info__required-game--hidden',
-	// 			!staticData.info.requiredGames.includes(game)
-	// 		);
-	// 		panel.SetHasClass('mapselector-map-info__required-game--unmounted', unmounted);
-
-	// 		if (unmounted) {
-	// 			panel.SetDialogVariable('game', SteamGamesNames.get(game));
-	// 			panel.SetPanelEvent('onmouseover', () => {
-	// 				// English is "Missing assets for game: "
-	// 				UiToolkitAPI.ShowTextTooltip(
-	// 					panel.id,
-	// 					'<span class="mapselector-map-info__required-game__tooltip--left">' +
-	// 						$.Localize('#MapSelector_RequiredGames_Tooltip') +
-	// 						'</span><span class="mapselector-map-info__required-game__tooltip--right">' +
-	// 						SteamGamesNames.get(game) +
-	// 						'</span>'
-	// 				);
-	// 			});
-	// 		} else {
-	// 			panel.ClearPanelEvent('onmouseover');
-	// 		}
-	// 	});
 	// }
 
 	// PRE REWORK REMOVAL

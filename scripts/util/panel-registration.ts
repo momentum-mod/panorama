@@ -14,6 +14,7 @@ declare interface PanelTagNameMap {
 	LevelIndicator: LevelIndicator;
 	PlayerCard: PlayerCard;
 	TrackSelector: TrackSelector;
+	MapInfo: MapInfo;
 	MomHudTimer: MomHudTimer;
 	MomHudStatus: MomHudStatus;
 	MomHudMapInfo: MomHudMapInfo;
@@ -33,6 +34,10 @@ declare interface PanelTagNameMap {
 	ToastGeneric: ToastGeneric;
 	Gallery: Gallery;
 }
+
+/**
+ * COMPONENTS
+ */
 
 declare interface PlayerCard extends AbstractPanel<'PlayerCard'> {
 	handler: import('components/player-card').PlayerCardHandler;
@@ -57,11 +62,22 @@ declare interface Gallery extends AbstractPanel<'Gallery'> {
 declare interface TrackSelector extends AbstractPanel<'TrackSelector'> {}
 UiToolkitAPI.RegisterPanel2d('TrackSelector', 'file://{resources}/layout/components/track-selector.xml');
 
+declare interface MapInfo extends AbstractPanel<'MapInfo'> {}
+UiToolkitAPI.RegisterPanel2d('MapInfo', 'file://{resources}/layout/components/map-info.xml');
+
+/**
+ * MODALS
+ */
+
 declare interface ToastContainer extends AbstractPanel<'ToastContainer'> {}
 UiToolkitAPI.RegisterPanel2d('ToastManager', 'file://{resources}/layout/util/toast-manager.xml');
 
 declare interface ToastGeneric extends AbstractPanel<'ToastGeneric'> {}
 UiToolkitAPI.RegisterPanel2d('ToastGeneric', 'file://{resources}/layout/modals/toasts/generic.xml');
+
+/**
+ * HUD PANELS
+ */
 
 declare interface HudShowPos extends AbstractPanel<'HudShowPos'> {}
 UiToolkitAPI.RegisterPanel2d('HudShowPos', 'file://{resources}/layout/hud/show-pos.xml');
