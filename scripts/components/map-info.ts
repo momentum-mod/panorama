@@ -7,6 +7,7 @@ import * as Leaderboards from 'common/leaderboard';
 export interface MapInfoInterface extends MapInfo {
 	updateMapInfo: (mapData: MapCacheAPI.MapData) => void;
 	setBlurPanel: (panel: HudBlurTarget) => void;
+	setMapSelector: (panel: MomentumMapSelector) => void;
 }
 
 @PanelHandler()
@@ -36,11 +37,13 @@ class MapInfoHandler {
 	];
 
 	blurPanel: HudBlurTarget | null = null;
+	mapSelector: MomentumMapSelector | null = null;
 
 	constructor() {
 		const mapInfoInterface = this.panels.cp as MapInfoInterface;
 		mapInfoInterface.updateMapInfo = (mapData: MapCacheAPI.MapData) => this.updateMapInfo(mapData);
 		mapInfoInterface.setBlurPanel = (panel: HudBlurTarget) => this.setBlurPanel(panel);
+		mapInfoInterface.setMapSelector = (panel: MomentumMapSelector) => (this.mapSelector = panel);
 	}
 
 	setBlurPanel(panel: HudBlurTarget) {
@@ -82,6 +85,10 @@ class MapInfoHandler {
 		}
 
 		this.updateRequiredGames(mapData.staticData);
+
+		this.panels.container.SetPanelEvent('onactivate', () => {
+			this.openGallery(mapData);
+		});
 
 		// info.SetDialogVariable('description', staticData.info?.description);
 		// this.panels.descriptionContainer.SetHasClass('hide', !staticData.info?.description);
@@ -178,5 +185,24 @@ class MapInfoHandler {
 				panel.ClearPanelEvent('onmouseover');
 			}
 		});
+	}
+
+	openGallery(mapData: MapCacheAPI.MapData) {
+		if (!this.mapSelector) {
+			$.Warning("Map info doesn't have access to Map Selector panel");
+			return;
+		}
+
+		const gallery = UiToolkitAPI.ShowCustomLayoutPopup<Gallery>(
+			'MapSelectorGallery',
+			'file://{resources}/layout/components/gallery.xml'
+		);
+
+		gallery.handler.init(
+			this.mapSelector,
+			mapData.staticData
+			// mapData.staticData.images?.map(({ id }) => id) ?? [],
+			// parseMapImageUrl(mapData.staticData) ?? ''
+		);
 	}
 }
