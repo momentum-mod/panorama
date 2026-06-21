@@ -103,3 +103,14 @@ export function randomInt(min: number, max: number): number {
 
 	return Math.floor(Math.random() * (max - min + 1) + min);
 }
+
+export function parseMapImageUrl(staticData: MapCacheAPI.StaticData): string | null {
+	// Pick any image, check URL makes sense
+	const image = staticData.images?.[0]?.small;
+	if (!image || !/http.+\/[\da-z-]{36}-small.jpg/.test(image)) {
+		$.Warning(`Map Selector: Invalid image URL "${image}", not opening gallery`);
+		return null;
+	}
+
+	return image.split('/').slice(0, -1).join('/');
+}

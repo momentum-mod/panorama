@@ -1,6 +1,6 @@
 import { OnPanelLoad, PanelHandler } from 'util/module-helpers';
 import { traverseChildren } from 'util/functions';
-import type { MMap } from 'common/web/types/models/models';
+import { parseMapImageUrl } from 'util/functions';
 import { TrackSelectorInterface } from 'components/track-selector';
 import { MapInfoInterface } from 'components/map-info';
 // PRE REWORK REMOVAL
@@ -170,6 +170,7 @@ class MapSelectorHandler implements OnPanelLoad {
 
 		this.components.trackSelector.setBlurPanel(this.panels.blurPanel);
 		this.components.mapInfo.setBlurPanel(this.panels.blurPanel);
+		this.components.mapInfo.setMapSelector(this.panels.cp);
 	}
 
 	onPanelLoad() {
@@ -359,7 +360,7 @@ class MapSelectorHandler implements OnPanelLoad {
 
 		this.selectedMapData = mapData;
 
-		const baseImageUrl = this.parseMapImageUrl(mapData.staticData);
+		const baseImageUrl = parseMapImageUrl(mapData.staticData);
 		this.panels.cp.applyBackgroundMapImage(mapData.staticData.thumbnail.id, baseImageUrl);
 
 		const gamemode = GameModeAPI.GetMetaGameMode();
@@ -474,16 +475,6 @@ class MapSelectorHandler implements OnPanelLoad {
 	 * Data returned from the backend is a bit unwieldy (would be better to just return the CDN url and array of the
 	 * image IDs), don't want to spend the time refactoring.
 	 */
-	parseMapImageUrl(staticData: MMap): string | null {
-		// Pick any image, check URL makes sense
-		const image = staticData.images?.[0]?.small;
-		if (!image || !/http.+\/[\da-z-]{36}-small.jpg/.test(image)) {
-			$.Warning(`Map Selector: Invalid image URL "${image}", not opening gallery`);
-			return null;
-		}
-
-		return image.split('/').slice(0, -1).join('/');
-	}
 
 	// PRE REWORK REMOVAL
 	// openInSteamOverlay() {
@@ -504,22 +495,6 @@ class MapSelectorHandler implements OnPanelLoad {
 	// toggleLeaderboards(open: boolean) {
 	// 	this.panels.leaderboardContainer.SetHasClass('mapselector-leaderboards--open', open);
 	// 	$.persistentStorage.setItem('mapSelector.leaderboardsOpen', open);
-	// }
-
-	// PRE REWORK REMOVAL
-	// openGallery() {
-	// 	if (!this.selectedMapData) return;
-	//
-	// 	const gallery = UiToolkitAPI.ShowCustomLayoutPopup<Gallery>(
-	// 		'MapSelectorGallery',
-	// 		'file://{resources}/layout/components/gallery.xml'
-	// 	);
-	//
-	// 	gallery.handler.init(
-	// 		this.panels.cp,
-	// 		this.selectedMapData.staticData.images?.map(({ id }) => id) ?? [],
-	// 		this.parseMapImageUrl(this.selectedMapData.staticData) ?? ''
-	// 	);
 	// }
 
 	checkingUpdates = false;
