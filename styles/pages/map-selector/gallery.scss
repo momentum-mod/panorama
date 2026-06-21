@@ -1,3 +1,8 @@
+@use '../../abstract/mixin';
+@use '../../config' as *;
+@use 'sass:map';
+@use 'sass:color';
+
 .gallery {
 	flow-children: none;
 
@@ -7,6 +12,13 @@
 	height: 100%;
 
 	background-color: none;
+
+	&__h2 {
+		@include mixin.font-header();
+		font-weight: bold;
+		color: #eee;
+		font-size: 24px;
+	}
 
 	&__container {
 		width: 100%;
@@ -23,12 +35,13 @@
 	}
 
 	&__bottom {
-		height: 80%;
+		height: 90%;
 		width: 100%;
+		flow-children: right;
 	}
 
 	&__bottom-left {
-		width: 80%;
+		width: fit-children;
 		height: 100%;
 		padding: 16px;
 		flow-children: down;
@@ -38,6 +51,9 @@
 	&__bottom-right {
 		width: fill-parent-flow(1);
 		height: 100%;
+		padding-top: 16px;
+		padding-right: 16px;
+		flow-children: down;
 	}
 
 	&__image-container {
@@ -78,6 +94,84 @@
 		&:not(&--first) {
 			margin-left: 16px;
 		}
+	}
+
+	&__credits-container {
+		width: 100%;
+		flow-children: down;
+		background-color: rgba(0, 0, 0, 0.7);
+		border: 1px solid rgb(15, 15, 15);
+		padding-top: 16px;
+		padding-left: 16px;
+		border-radius: 2px;
+	}
+
+	&__credits-type-row {
+		flow-children: down;
+		margin-bottom: 16px;
+		width: 100%;
+	}
+
+	&__credits-grid {
+		flow-children: down;
+		width: 100%;
+		margin-top: 4px;
+	}
+
+	&__credits-row {
+		flow-children: right;
+		width: 100%;
+		margin-bottom: 4px;
+	}
+
+	&__credits-credit {
+		flow-children: right;
+		width: 50%;
+		vertical-align: center;
+		horizontal-align: left;
+	}
+
+	&__credits-avatar {
+		width: 24px;
+		height: 24px;
+		margin-right: 6px;
+	}
+
+	&__credits-placeholder {
+		width: 24px;
+		height: 24px;
+		margin-right: 6px;
+		opacity: 0.6;
+	}
+
+	&__credits-text {
+		vertical-align: center;
+	}
+
+	&__credits-name {
+		transition: color 0s ease-in-out 0s;
+		color: gradient(linear, 0% 0%, 0% 100%, from(#ffffff), to(#cccccc));
+
+		&--steam {
+			color: $light-blue;
+			font-style: normal;
+
+			transition: color 0.1s ease-in-out 0s;
+
+			&:hover {
+				color: color.scale($light-blue, $lightness: 50%);
+			}
+		}
+	}
+
+	&__description-container {
+		width: 100%;
+		max-height: 365px;
+		background-color: rgba(0, 0, 0, 0.7);
+		border: 1px solid rgb(15, 15, 15);
+		padding: 16px;
+		border-radius: 2px;
+		overflow: squish scroll;
 	}
 
 	&__background {

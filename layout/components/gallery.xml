@@ -25,6 +25,11 @@
                     </Panel>
                 </Panel>
                 <Panel class="gallery__bottom-right">
+                    <Panel id="Credits" class="gallery__credits-container">
+                    </Panel>
+                    <Panel id="DescriptionContainer" class="gallery__description-container mt-4">
+                        <Label id="Description" class="gallery__description" />
+                    </Panel>
                 </Panel>
             </Panel>
 		</Panel>
