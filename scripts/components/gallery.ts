@@ -1,5 +1,5 @@
 import { PanelHandler } from 'util/module-helpers';
-
+import { parseMapImageUrl } from 'util/functions';
 /**
  * Fullscreen gallery component.
  * Currently dependent on Map Selector functionality to work, could be generalized in future if needed.
@@ -7,15 +7,23 @@ import { PanelHandler } from 'util/module-helpers';
 @PanelHandler({ exposeToPanel: true })
 export class GalleryHandler {
 	readonly panels = {
+		top: $<Panel>('#Top'),
 		mainImage: $<Image>('#MainImage'),
 		thumbnails: $('#Thumbnails')
 	};
 
-	init(mapSelector: MomentumMapSelector, imageIDs: string[], baseUrl: string) {
+	init(mapSelector: MomentumMapSelector, staticData: MapCacheAPI.StaticData) {
+		const imageIDs = staticData.images?.map(({ id }) => id) ?? [];
+
 		if (imageIDs.length === 0) {
 			$.Warning('GalleryHandler: No images provided, cannot initialize gallery.');
 			return;
 		}
+
+		$.Msg("WE'RE IN GALLERY");
+		this.panels.top.SetDialogVariable('name', staticData.name);
+
+		const baseUrl = parseMapImageUrl(staticData) ?? '';
 
 		const thumbs = imageIDs.map((id, i) => {
 			const thumbnail = $.CreatePanel('Image', this.panels.thumbnails, '', {
