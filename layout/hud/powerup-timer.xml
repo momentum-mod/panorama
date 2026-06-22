@@ -24,5 +24,9 @@
 			<Image id="FlightIcon" class="powerup-timer__icon" src="file://{images}/logo.svg" textureheight="72"/>
 			<Label id="FlightLabel" class="powerup-timer__label" text="" />
 		</Panel>
+		<Panel id="DoubleJumpIndicator" class="powerup-timer__item">
+			<!-- MOM_TODO: replace with a dedicated double jump powerup icon -->
+			<Image id="DoubleJumpIcon" class="powerup-timer__icon" src="file://{images}/logo.svg" textureheight="72"/>
+		</Panel>
 	</MomHudPowerupTimer>
 </root>
