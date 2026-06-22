@@ -9,7 +9,7 @@
 
     <snippets>
         <snippet name="track-panel">
-            <Panel class="track-panel">
+            <RadioButton group="track-selector" class="track-panel">
                 <Panel class="track-panel__track">
                     <Label class="track-selector-label track-panel__track-label" text="{s:track}" />
                 </Panel>
@@ -25,7 +25,7 @@
                 <Panel class="track-panel__group">
                     <Label class="track-selector-label track-panel__group-label" text="G{i:group}"/>
                 </Panel>
-            </Panel>
+            </RadioButton>
         </snippet>
     </snippets>
 
