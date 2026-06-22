@@ -2,6 +2,7 @@ import { PanelHandler } from 'util/module-helpers';
 import * as Maps from 'common/maps';
 import * as Leaderboards from 'common/leaderboard';
 import { TrackType } from 'common/web/enums/track-type.enum';
+import { randomInt } from 'util/functions';
 
 export interface TrackSelectorInterface extends TrackSelector {
 	updateTrackData: (mapData: MapCacheAPI.MapData, gamemode: Gamemode) => void;
@@ -17,6 +18,55 @@ interface TrackDisplayData {
 	group?: number;
 }
 
+const GROUP_PILL = {
+	NONE: {
+		text: 'rgba(0, 0, 0, 0)',
+		background: 'rgba(0, 0, 0, 0)'
+	},
+	WR: {
+		text: 'rgba(113, 240, 255, 1)',
+		background: 'rgba(0, 100, 112, 0.6)'
+	},
+	TOP10: {
+		text: 'rgba(190, 113, 255, 1)',
+		background: 'rgba(61, 0, 112, 0.6)'
+	},
+	G1: {
+		text: 'rgba(255, 188, 0, 1)',
+		background: 'rgba(112, 83, 0, 0.6)'
+	},
+	G2: {
+		text: 'rgba(201, 226, 241, 1)',
+		background: 'rgba(35, 45, 52, 0.6)'
+	},
+	G3: {
+		text: 'rgba(199, 115, 63, 1)',
+		background: 'rgba(56, 32, 16, 0.6)'
+	},
+	G4_G6: {
+		text: 'rgba(220, 220, 220, 1)',
+		background: 'rgba(58, 58, 58, 0.6)'
+	}
+} as const;
+
+function getGroupColor(group: number, rank: number) {
+	if (rank === 1 && group === 0) return GROUP_PILL.WR;
+	if (group === undefined) return GROUP_PILL.NONE;
+
+	switch (group) {
+		case 0:
+			return GROUP_PILL.TOP10;
+		case 1:
+			return GROUP_PILL.G1;
+		case 2:
+			return GROUP_PILL.G2;
+		case 3:
+			return GROUP_PILL.G3;
+		default:
+			return GROUP_PILL.G4_G6;
+	}
+}
+
 @PanelHandler()
 export class TrackSelectorHandler {
 	readonly panels = {
@@ -24,6 +74,7 @@ export class TrackSelectorHandler {
 		container: $<Panel>('#TrackSelectorContainer')
 	};
 
+	// TODO: Blur broken when scrolling
 	blurPanel: BaseBlurTarget | null = null;
 
 	constructor() {
@@ -54,9 +105,9 @@ export class TrackSelectorHandler {
 			track: 'Main',
 			tier,
 			time: userMapData?.time,
-			rank: undefined,
-			total: 1000,
-			group: undefined
+			rank: randomInt(1, 1000),
+			total: randomInt(1000, 2000),
+			group: randomInt(0, 6)
 		});
 	}
 
@@ -77,9 +128,9 @@ export class TrackSelectorHandler {
 			this.populateTrackPanel(trackPanel, {
 				track: `Stage ${i}`,
 				time: userStageData?.time,
-				rank: undefined,
-				total: 4645,
-				group: undefined
+				rank: randomInt(1, 2),
+				total: randomInt(5654, 10000),
+				group: randomInt(0, 6)
 			});
 
 			this.applyColorBanding(trackPanel, i);
@@ -90,7 +141,7 @@ export class TrackSelectorHandler {
 		const bonuses = Leaderboards.getNumBonuses(mapData.staticData);
 		if (bonuses < 1) return;
 
-		const userBonusData = Leaderboards.getUserMapDataTrack(mapData.userData, gamemode, TrackType.BONUS);
+		const userBonusData = Leaderboards.getUserMapDataTrack(mapData.userData, gamemode, TrackType.BONUS, 2);
 
 		const container = $.CreatePanel('Panel', this.panels.container, 'TracksContainer');
 		this.blurPanel?.AddBlurPanel(container);
@@ -105,9 +156,9 @@ export class TrackSelectorHandler {
 				track: `Bonus ${i}`,
 				tier: tier,
 				time: userBonusData?.time,
-				rank: 432,
-				total: 67457,
-				group: 1
+				rank: randomInt(1, 654),
+				total: randomInt(654, 3545),
+				group: randomInt(0, 6)
 			});
 
 			this.applyColorBanding(trackPanel, i);
@@ -121,7 +172,6 @@ export class TrackSelectorHandler {
 			trackPanel.SetSelected(true);
 		}
 
-		// Tier — empty label if not present (stages)
 		const tierLabel = trackPanel.FindChildrenWithClassTraverse('track-panel__tier-label')[0] as Label;
 		if (data.tier !== undefined) {
 			trackPanel.SetDialogVariableInt('tier', data.tier);
@@ -129,7 +179,6 @@ export class TrackSelectorHandler {
 			tierLabel.text = '';
 		}
 
-		// Time
 		this.setOptionalFloat(trackPanel, 'track-panel__time-label', 'time', data.time);
 
 		const rankLabel = trackPanel.FindChildrenWithClassTraverse('track-panel__rank-label')[0] as Label;
@@ -141,12 +190,26 @@ export class TrackSelectorHandler {
 			rankLabel.style.color = 'rgb(160, 160, 160)';
 		}
 
-		// Group — empty label if not present
 		const groupLabel = trackPanel.FindChildrenWithClassTraverse('track-panel__group-label')[0] as Label;
-		if (data.group !== undefined) {
-			trackPanel.SetDialogVariableInt('group', data.group);
-		} else {
+		const groupPill = trackPanel.FindChildrenWithClassTraverse('track-panel__group-pill')[0] as Panel;
+
+		if (data.group === undefined) {
 			groupLabel.text = '';
+			groupPill.style.backgroundColor = GROUP_PILL.NONE.background as color;
+			groupLabel.style.color = GROUP_PILL.NONE.text as color;
+		} else if (data.group === 0 && data.rank === 1) {
+			groupLabel.text = 'WR';
+			groupPill.style.backgroundColor = GROUP_PILL.WR.background as color;
+			groupLabel.style.color = GROUP_PILL.WR.text as color;
+		} else if (data.group === 0) {
+			groupLabel.text = 'TOP10';
+			groupPill.style.backgroundColor = GROUP_PILL.TOP10.background as color;
+			groupLabel.style.color = GROUP_PILL.TOP10.text as color;
+		} else {
+			trackPanel.SetDialogVariableInt('group', data.group);
+			const colors = getGroupColor(data.group, data.rank);
+			groupPill.style.backgroundColor = colors.background as color;
+			groupLabel.style.color = colors.text as color;
 		}
 	}
 
