@@ -8,6 +8,15 @@ export interface TrackSelectorInterface extends TrackSelector {
 	setBlurPanel: (blurPanel: BaseBlurTarget) => void;
 }
 
+interface TrackDisplayData {
+	track: string;
+	tier?: number;
+	time?: number;
+	rank?: number;
+	total: number;
+	group?: number;
+}
+
 @PanelHandler()
 export class TrackSelectorHandler {
 	readonly panels = {
@@ -38,19 +47,17 @@ export class TrackSelectorHandler {
 		const container = $.CreatePanel('Panel', this.panels.container, 'TracksContainer');
 		this.blurPanel?.AddBlurPanel(container);
 
-		const trackPanel = $.CreatePanel('Panel', container, '');
+		const trackPanel = $.CreatePanel('RadioButton', container, '');
 		trackPanel.LoadLayoutSnippet('track-panel');
 
-		trackPanel.SetDialogVariable('track', 'Main');
-		trackPanel.SetDialogVariableInt('tier', tier);
-
-		if (userMapData?.time) {
-			trackPanel.SetDialogVariableFloat('time', userMapData.time);
-		} else {
-			const timeLabel = trackPanel.FindChildrenWithClassTraverse('track-panel__time-label')[0] as Label;
-			timeLabel.text = '—';
-			timeLabel.style.color = 'rgb(160, 160, 160)';
-		}
+		this.populateTrackPanel(trackPanel, {
+			track: 'Main',
+			tier,
+			time: userMapData?.time,
+			rank: undefined,
+			total: 1000,
+			group: undefined
+		});
 	}
 
 	createStageSection(mapData: MapCacheAPI.MapData, gamemode: Gamemode) {
@@ -63,13 +70,19 @@ export class TrackSelectorHandler {
 		this.blurPanel?.AddBlurPanel(container);
 
 		for (let i = 1; i <= stages; i++) {
-			const trackPanel = $.CreatePanel('Panel', container, '');
+			const trackPanel = $.CreatePanel('RadioButton', container, '');
 			trackPanel.LoadLayoutSnippet('track-panel');
 			trackPanel.SetDialogVariable('track', `Stage ${i}`);
 
-			if (i % 2 === 0) {
-				trackPanel.style.backgroundColor = 'rgba(54, 54, 54, 0.7)';
-			}
+			this.populateTrackPanel(trackPanel, {
+				track: `Stage ${i}`,
+				time: userStageData?.time,
+				rank: undefined,
+				total: 4645,
+				group: undefined
+			});
+
+			this.applyColorBanding(trackPanel, i);
 		}
 	}
 
@@ -77,17 +90,77 @@ export class TrackSelectorHandler {
 		const bonuses = Leaderboards.getNumBonuses(mapData.staticData);
 		if (bonuses < 1) return;
 
+		const userBonusData = Leaderboards.getUserMapDataTrack(mapData.userData, gamemode, TrackType.BONUS);
+
 		const container = $.CreatePanel('Panel', this.panels.container, 'TracksContainer');
 		this.blurPanel?.AddBlurPanel(container);
 
 		for (let i = 1; i <= bonuses; i++) {
-			const trackPanel = $.CreatePanel('Panel', container, '');
+			const trackPanel = $.CreatePanel('RadioButton', container, '');
 			trackPanel.LoadLayoutSnippet('track-panel');
-			trackPanel.SetDialogVariable('track', `Bonus ${i}`);
 
-			if (i % 2 === 0) {
-				trackPanel.style.backgroundColor = 'rgba(40, 40, 40, 0.6)';
-			}
+			const tier = Maps.getTier(mapData.staticData, gamemode, TrackType.BONUS, i);
+
+			this.populateTrackPanel(trackPanel, {
+				track: `Bonus ${i}`,
+				tier: tier,
+				time: userBonusData?.time,
+				rank: 432,
+				total: 67457,
+				group: 1
+			});
+
+			this.applyColorBanding(trackPanel, i);
 		}
+	}
+
+	populateTrackPanel(trackPanel: RadioButton, data: TrackDisplayData) {
+		trackPanel.SetDialogVariable('track', data.track);
+
+		if (data.track === 'Main') {
+			trackPanel.SetSelected(true);
+		}
+
+		// Tier — empty label if not present (stages)
+		const tierLabel = trackPanel.FindChildrenWithClassTraverse('track-panel__tier-label')[0] as Label;
+		if (data.tier !== undefined) {
+			trackPanel.SetDialogVariableInt('tier', data.tier);
+		} else {
+			tierLabel.text = '';
+		}
+
+		// Time
+		this.setOptionalFloat(trackPanel, 'track-panel__time-label', 'time', data.time);
+
+		const rankLabel = trackPanel.FindChildrenWithClassTraverse('track-panel__rank-label')[0] as Label;
+		trackPanel.SetDialogVariableInt('total', data.total);
+		if (data.rank !== undefined) {
+			trackPanel.SetDialogVariableInt('rank', data.rank);
+		} else {
+			rankLabel.text = `— /${data.total}`;
+			rankLabel.style.color = 'rgb(160, 160, 160)';
+		}
+
+		// Group — empty label if not present
+		const groupLabel = trackPanel.FindChildrenWithClassTraverse('track-panel__group-label')[0] as Label;
+		if (data.group !== undefined) {
+			trackPanel.SetDialogVariableInt('group', data.group);
+		} else {
+			groupLabel.text = '';
+		}
+	}
+
+	setOptionalFloat(panel: RadioButton, className: string, dialogVar: string, value?: number) {
+		const label = panel.FindChildrenWithClassTraverse(className)[0] as Label;
+		if (value !== undefined) {
+			panel.SetDialogVariableFloat(dialogVar, value);
+		} else {
+			label.text = '—';
+			label.style.color = 'rgb(160, 160, 160)';
+		}
+	}
+
+	applyColorBanding(panel: GenericPanel, index: number) {
+		if (index % 2 === 0) panel.AddClass('track-panel--alt-color');
 	}
 }

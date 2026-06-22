@@ -12,7 +12,7 @@ TrackSelector {
 #TracksContainer {
 	width: 100%;
 	border-radius: 2px;
-	border: 1px solid rgb(36, 36, 36);
+	border: 1px solid rgb(20, 20, 20, 1);
 	margin-bottom: 16px;
 	flow-children: down;
 }
@@ -20,8 +20,20 @@ TrackSelector {
 .track-panel {
 	width: 100%;
 	height: 40px;
-	background-color: rgba(20, 20, 20, 0.25);
 	flow-children: right;
+	background-color: rgba(0, 0, 0, 0.7);
+
+	&--alt-color {
+		background-color: rgba(10, 10, 10, 0.2);
+	}
+
+	&:hover {
+		background-color: rgba(100, 100, 100, 0.5);
+	}
+
+	&:selected {
+		background-color: rgba(150, 150, 150, 0.7);
+	}
 
 	&__track {
 		height: 100%;
@@ -42,6 +54,7 @@ TrackSelector {
 		width: 20%;
 		Label {
 			font-weight: normal;
+			text-overflow: shrink;
 		}
 	}
 
@@ -50,12 +63,14 @@ TrackSelector {
 		width: 20%;
 		Label {
 			font-weight: normal;
+			text-overflow: shrink;
 		}
 	}
 
 	&__group {
 		height: 100%;
-		width: 20%;
+		width: 5%;
+		margin-left: 32px;
 		Label {
 			font-weight: normal;
 		}
