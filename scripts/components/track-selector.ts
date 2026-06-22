@@ -18,17 +18,48 @@ interface TrackDisplayData {
 	group?: number;
 }
 
+// const GROUP_PILL = {
+// 	NONE: 'rgba(0, 0, 0, 0)',
+// 	WR: 'rgba(24, 150, 211, 1)',
+// 	TOP10: 'rgba(113, 240, 255, 1)',
+// 	G1: 'rgba(212, 175, 55, 1)',
+// 	G2: 'rgba(168, 186, 200, 1)',
+// 	G3: 'rgba(140, 80, 40, 1)',
+// 	G4_G6: 'rgba(80, 85, 95, 1)'
+// } as const;
+
 const GROUP_PILL = {
-	NONE: 'rgba(0, 0, 0, 0)',
-	WR: 'rgba(24, 150, 211, 1)',
-	TOP10: 'rgba(113, 240, 255, 1)',
-	G1: 'rgba(212, 175, 55, 1)',
-	G2: 'rgba(168, 186, 200, 1)',
-	G3: 'rgba(140, 80, 40, 1)',
-	G4_G6: 'rgba(80, 85, 95, 1)'
+	NONE: {
+		text: 'rgba(0, 0, 0, 0)',
+		background: 'rgba(0, 0, 0, 0)'
+	},
+	WR: {
+		text: 'rgba(113, 240, 255, 1)',
+		background: 'rgba(0, 100, 112, 0.6)'
+	},
+	TOP10: {
+		text: 'rgba(190, 113, 255, 1)',
+		background: 'rgba(61, 0, 112, 0.6)'
+	},
+	G1: {
+		text: 'rgba(255, 188, 0, 1)',
+		background: 'rgba(112, 83, 0, 0.6)'
+	},
+	G2: {
+		text: 'rgba(201, 226, 241, 1)',
+		background: 'rgba(35, 45, 52, 0.6)'
+	},
+	G3: {
+		text: 'rgba(199, 115, 63, 1)',
+		background: 'rgba(56, 32, 16, 0.6)'
+	},
+	G4_G6: {
+		text: 'rgba(220, 220, 220, 1)',
+		background: 'rgba(58, 58, 58, 0.6)'
+	}
 } as const;
 
-function getGroupColor(group: number, rank: number): string {
+function getGroupColor(group: number, rank: number) {
 	if (rank === 1 && group === 0) return GROUP_PILL.WR;
 	if (group === undefined) return GROUP_PILL.NONE;
 
@@ -176,16 +207,21 @@ export class TrackSelectorHandler {
 
 		if (data.group === undefined) {
 			groupLabel.text = '';
-			groupPill.style.borderColor = GROUP_PILL.NONE as color;
+			groupPill.style.backgroundColor = GROUP_PILL.NONE.background as color;
+			groupLabel.style.color = GROUP_PILL.NONE.text as color;
 		} else if (data.group === 0 && data.rank === 1) {
 			groupLabel.text = 'WR';
-			groupPill.style.borderColor = GROUP_PILL.WR as color;
+			groupPill.style.backgroundColor = GROUP_PILL.WR.background as color;
+			groupLabel.style.color = GROUP_PILL.WR.text as color;
 		} else if (data.group === 0) {
 			groupLabel.text = 'TOP10';
-			groupPill.style.borderColor = GROUP_PILL.TOP10 as color;
+			groupPill.style.backgroundColor = GROUP_PILL.TOP10.background as color;
+			groupLabel.style.color = GROUP_PILL.TOP10.text as color;
 		} else {
 			trackPanel.SetDialogVariableInt('group', data.group);
-			groupPill.style.borderColor = getGroupColor(data.group, data.rank) as color;
+			const colors = getGroupColor(data.group, data.rank);
+			groupPill.style.backgroundColor = colors.background as color;
+			groupLabel.style.color = colors.text as color;
 		}
 	}
 

@@ -33,7 +33,7 @@
 
 
     <TrackSelector class="h-full w-full">
-        <Panel id="TrackSelectorContainer" class="h-full w-full">
+        <Panel id="TrackSelectorContainer" class="h-full w-full overflow-vscroll">
             <!-- Populated by JS -->
         </Panel>
     </TrackSelector>
