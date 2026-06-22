@@ -2,6 +2,7 @@ import { PanelHandler } from 'util/module-helpers';
 import * as Maps from 'common/maps';
 import * as Leaderboards from 'common/leaderboard';
 import { TrackType } from 'common/web/enums/track-type.enum';
+import { randomInt } from 'util/functions';
 
 export interface TrackSelectorInterface extends TrackSelector {
 	updateTrackData: (mapData: MapCacheAPI.MapData, gamemode: Gamemode) => void;
@@ -15,6 +16,34 @@ interface TrackDisplayData {
 	rank?: number;
 	total: number;
 	group?: number;
+}
+
+const GROUP_PILL = {
+	NONE: 'rgba(0, 0, 0, 0)',
+	WR: 'rgba(24, 150, 211, 1)',
+	TOP10: 'rgba(113, 240, 255, 1)',
+	G1: 'rgba(212, 175, 55, 1)',
+	G2: 'rgba(168, 186, 200, 1)',
+	G3: 'rgba(140, 80, 40, 1)',
+	G4_G6: 'rgba(80, 85, 95, 1)'
+} as const;
+
+function getGroupColor(group: number, rank: number): string {
+	if (rank === 1 && group === 0) return GROUP_PILL.WR;
+	if (group === undefined) return GROUP_PILL.NONE;
+
+	switch (group) {
+		case 0:
+			return GROUP_PILL.TOP10;
+		case 1:
+			return GROUP_PILL.G1;
+		case 2:
+			return GROUP_PILL.G2;
+		case 3:
+			return GROUP_PILL.G3;
+		default:
+			return GROUP_PILL.G4_G6;
+	}
 }
 
 @PanelHandler()
@@ -54,9 +83,9 @@ export class TrackSelectorHandler {
 			track: 'Main',
 			tier,
 			time: userMapData?.time,
-			rank: undefined,
-			total: 1000,
-			group: undefined
+			rank: randomInt(1, 1000),
+			total: randomInt(1000, 2000),
+			group: randomInt(0, 6)
 		});
 	}
 
@@ -77,9 +106,9 @@ export class TrackSelectorHandler {
 			this.populateTrackPanel(trackPanel, {
 				track: `Stage ${i}`,
 				time: userStageData?.time,
-				rank: undefined,
-				total: 4645,
-				group: undefined
+				rank: randomInt(1, 2),
+				total: randomInt(5654, 10000),
+				group: randomInt(0, 6)
 			});
 
 			this.applyColorBanding(trackPanel, i);
@@ -105,9 +134,9 @@ export class TrackSelectorHandler {
 				track: `Bonus ${i}`,
 				tier: tier,
 				time: userBonusData?.time,
-				rank: 432,
-				total: 67457,
-				group: 1
+				rank: randomInt(1, 654),
+				total: randomInt(654, 3545),
+				group: randomInt(0, 6)
 			});
 
 			this.applyColorBanding(trackPanel, i);
@@ -143,10 +172,20 @@ export class TrackSelectorHandler {
 
 		// Group — empty label if not present
 		const groupLabel = trackPanel.FindChildrenWithClassTraverse('track-panel__group-label')[0] as Label;
-		if (data.group !== undefined) {
-			trackPanel.SetDialogVariableInt('group', data.group);
-		} else {
+		const groupPill = trackPanel.FindChildrenWithClassTraverse('track-panel__group-pill')[0] as Panel;
+
+		if (data.group === undefined) {
 			groupLabel.text = '';
+			groupPill.style.borderColor = GROUP_PILL.NONE as color;
+		} else if (data.group === 0 && data.rank === 1) {
+			groupLabel.text = 'WR';
+			groupPill.style.borderColor = GROUP_PILL.WR as color;
+		} else if (data.group === 0) {
+			groupLabel.text = 'TOP10';
+			groupPill.style.borderColor = GROUP_PILL.TOP10 as color;
+		} else {
+			trackPanel.SetDialogVariableInt('group', data.group);
+			groupPill.style.borderColor = getGroupColor(data.group, data.rank) as color;
 		}
 	}
 
