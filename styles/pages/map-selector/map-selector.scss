@@ -43,17 +43,85 @@ $panel-border: 1px solid rgba(255, 255, 255, 0.01);
 	}
 
 	$right-top-height: 14%;
+	$right-center-threshold: 95%;
 
 	&__right-top {
 		width: 100%;
 		height: $right-top-height;
 	}
 
-	&__right-bottom {
+	&__right-center {
 		width: 100%;
-		height: 100% - $right-top-height;
+		height: $right-center-threshold - $right-top-height;
 	}
 
+	&__right-bottom {
+		width: 100%;
+		height: 100% - $right-center-threshold;
+		flow-children: right;
+		vertical-align: bottom;
+	}
+
+	&__right-bottom-action {
+		flow-children: none;
+		vertical-align: center;
+		width: 200px;
+		height: 36px;
+
+		.map-download-status {
+			width: 200px;
+			height: 36px;
+		}
+	}
+
+	&__right-bottom-spacer {
+		width: fill-parent-flow(1);
+		height: 100%;
+	}
+
+	&__right-bottom-favorite {
+		height: 36px;
+		width: 120px;
+
+		&__icon {
+			padding: 0;
+			margin: 0;
+			width: 20px;
+			height: 20px;
+		}
+
+		&__text {
+			font-size: 18px;
+			margin: 0;
+			margin-left: 4px;
+			margin-right: 1px;
+			vertical-align: center;
+			overflow: squish;
+			text-overflow: shrink;
+		}
+	}
+
+	&__right-bottom-website {
+		height: 36px;
+		width: 120px;
+
+		&__icon {
+			padding: 0;
+			margin: 0;
+			width: 20px;
+			height: 20px;
+		}
+
+		&__text {
+			font-size: 18px;
+			margin: 0;
+			margin-left: 4px;
+			margin-right: 1px;
+			vertical-align: center;
+			overflow: squish;
+			text-overflow: shrink;
+		}
+	}
 	&__track-selector-container {
 		width: 45%;
 		height: 100%;
@@ -482,9 +550,10 @@ $notch-width: 10px;
 
 .mapselector-action-button {
 	flow-children: none;
+	horizontal-align: right;
 
-	width: 100%;
-	height: 100%;
+	width: 200px;
+	height: 36px;
 
 	@include mixin.button-gradient($color: 'blue');
 

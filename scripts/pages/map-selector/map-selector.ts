@@ -8,7 +8,7 @@ import { MapInfoInterface } from 'components/map-info';
 // import { MapCreditType } from 'common/web/enums/map-credit-type.enum';
 // import * as Maps from 'common/maps';
 // import * as Leaderboards from 'common/leaderboard';
-// import { handlePlayMap } from 'common/maps';
+import { handlePlayMap } from 'common/maps';
 
 const REFRESH_COOLDOWN = 1000 * 10; // 10 seconds
 
@@ -51,15 +51,8 @@ class MapSelectorHandler implements OnPanelLoad {
 		emptyContainer: $<Panel>('#MapListEmptyContainer'),
 		tierSlider: $<DualSlider>('#TierSlider'),
 		// PRE REWORK REMOVAL
-		// infoPB: $<Panel>('#MapInfoPB'),
-		// infoWR: $<Panel>('#MapInfoWR'),
 		// leaderboardContainer: $<Panel>('#MapTimes'),
-		// descriptionContainer: $<Panel>('#MapDescriptionContainer'),
-		// creditsContainer: $<Panel>('#MapCreditsContainer'),
 		// datesContainer: $<Panel>('#MapDatesContainer'),
-		// credits: $<Panel>('#MapCredits'),
-		// submissionStatus: $<Label>('#MapSubmissionStatus'),
-		// changelog: $<Panel>('#MapChangelog'),
 		// stats: $<Panel>('#MapInfoStats'),
 		// websiteButton: $<Button>('#MapInfoWebsiteButton'),
 		// tags: $<Label>('#MapTags'),
@@ -128,12 +121,6 @@ class MapSelectorHandler implements OnPanelLoad {
 	// 			}
 	// 		]
 	// 	]),
-	// 	credits: new Map([
-	// 		[MapCreditType.AUTHOR, '#MapSelector_Info_Authors'],
-	// 		[MapCreditType.CONTRIBUTOR, '#MapSelector_Info_Contributors'],
-	// 		[MapCreditType.SPECIAL_THANKS, '#MapSelector_Info_SpecialThanks'],
-	// 		[MapCreditType.TESTER, '#MapSelector_Info_Testers']
-	// 	])
 	// };
 
 	readonly nStateButtonClasses: ReadonlyMap<NStateButtonState, string> = new Map([
@@ -375,67 +362,6 @@ class MapSelectorHandler implements OnPanelLoad {
 	}
 
 	// PRE REWORK REMOVAL
-	// updateSelectedMapCredits(staticData: MMap) {
-	// 	this.panels.credits.RemoveAndDeleteChildren();
-
-	// 	// Panorama's buggy right-wrap behaviour makes doing layout for this with CSS very hard - just built out in JS.
-	// 	this.strings.credits
-	// 		.entries()
-	// 		// Map to collections of both regular and placeholder suggestions, filter out empty credit types
-	// 		.map(([type, heading]) => [heading, Maps.getAllCredits(staticData, type)] as const)
-	// 		.filter(([_heading, credits]) => credits.length > 0)
-	// 		.forEach(([heading, credits], i) => {
-	// 			const row =
-	// 				i % 2 === 0
-	// 					? $.CreatePanel('Panel', this.panels.credits, '', { class: 'mapselector-credits__row' })
-	// 					: this.panels.credits.Children().at(-1);
-
-	// 			const col = $.CreatePanel('Panel', row, '', { class: 'mapselector-credits__col' });
-	// 			$.CreatePanel('Label', col, '', { text: $.Localize(heading), class: 'mapselector-map-info__h2' });
-
-	// 			credits.forEach(({ alias, steamID }, i) => {
-	// 				const panel = $.CreatePanel('Panel', col, '', { class: 'mapselector-credits__credit' });
-
-	// 				if (steamID) {
-	// 					$.CreatePanel('AvatarImage', panel, '', {
-	// 						class: 'mapselector-credits__avatar',
-	// 						steamid: steamID
-	// 					});
-	// 				} else {
-	// 					const placeholder = $.CreatePanel('Image', panel, `Placholder${i}`, {
-	// 						class: 'mapselector-credits__placeholder',
-	// 						src: 'file://{images}/help.svg',
-	// 						textureheight: '32px'
-	// 					});
-	// 					placeholder.SetPanelEvent('onmouseover', () =>
-	// 						UiToolkitAPI.ShowTextTooltip(placeholder.id, this.strings.placeholder)
-	// 					);
-	// 					placeholder.SetPanelEvent('onmouseout', () => UiToolkitAPI.HideTextTooltip());
-	// 				}
-
-	// 				const namePanel = $.CreatePanel('Label', panel, '', {
-	// 					text: alias,
-	// 					class: 'mapselector-credits__text mapselector-credits__name'
-	// 				});
-
-	// 				if (steamID) {
-	// 					namePanel.AddClass('mapselector-credits__name--steam');
-
-	// 					// This will become a player profile panel in the future
-	// 					panel.SetPanelEvent('onactivate', () => {
-	// 						UiToolkitAPI.ShowSimpleContextMenu(namePanel.id, '', [
-	// 							{
-	// 								label: $.Localize('#Action_ShowSteamProfile'),
-	// 								jsCallback: () => SteamOverlayAPI.OpenToProfileID(steamID)
-	// 							}
-	// 						]);
-	// 					});
-	// 				}
-	// 			});
-	// 		});
-	// }
-
-	// PRE REWORK REMOVAL
 	// onSelectedOnlineDataUpdated(onlineMapData: MMap) {
 	// 	const statsPanel = this.panels.stats;
 
@@ -463,11 +389,11 @@ class MapSelectorHandler implements OnPanelLoad {
 	// }
 
 	// PRE REWORK REMOVAL
-	// onActionButtonPressed() {
-	// 	if (!this.selectedMapData) return;
+	onActionButtonPressed() {
+		if (!this.selectedMapData) return;
 
-	// 	handlePlayMap(this.selectedMapData);
-	// }
+		handlePlayMap(this.selectedMapData);
+	}
 
 	/**
 	 * Figure out the base CDN URL from the map images.
@@ -476,14 +402,13 @@ class MapSelectorHandler implements OnPanelLoad {
 	 * image IDs), don't want to spend the time refactoring.
 	 */
 
-	// PRE REWORK REMOVAL
-	// openInSteamOverlay() {
-	// 	const mapData = $.GetContextPanel<MomentumMapSelector>().selectedMapData;
-	// 	const frontendUrl = GameInterfaceAPI.GetSettingString('mom_api_url_frontend');
-	// 	if (mapData && frontendUrl) {
-	// 		SteamOverlayAPI.OpenURL(`${frontendUrl}/maps/${mapData.staticData.name}`);
-	// 	}
-	// }
+	openInSteamOverlay() {
+		const mapData = $.GetContextPanel<MomentumMapSelector>().selectedMapData;
+		const frontendUrl = GameInterfaceAPI.GetSettingString('mom_api_url_frontend');
+		if (mapData && frontendUrl) {
+			SteamOverlayAPI.OpenURL(`${frontendUrl}/maps/${mapData.staticData.name}`);
+		}
+	}
 
 	/** When a NState button is pressed, update its styling classes */
 	onNStateBtnChanged(panelID: string, state: NStateButtonState) {
