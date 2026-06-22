@@ -69,8 +69,20 @@ TrackSelector {
 
 	&__group {
 		height: 100%;
-		width: 5%;
+		width: 15%;
 		margin-left: 32px;
+	}
+
+	&__group-pill {
+		height: 80%;
+		width: 83%;
+
+		horizontal-align: center;
+		vertical-align: center;
+		border-radius: 6px;
+		border-width: 3px;
+		border-style: solid;
+		align: center center;
 		Label {
 			font-weight: normal;
 		}
