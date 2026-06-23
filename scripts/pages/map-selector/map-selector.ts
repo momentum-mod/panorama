@@ -52,10 +52,6 @@ class MapSelectorHandler implements OnPanelLoad {
 		tierSlider: $<DualSlider>('#TierSlider'),
 		// PRE REWORK REMOVAL
 		// leaderboardContainer: $<Panel>('#MapTimes'),
-		// datesContainer: $<Panel>('#MapDatesContainer'),
-		// stats: $<Panel>('#MapInfoStats'),
-		// websiteButton: $<Button>('#MapInfoWebsiteButton'),
-		// tags: $<Label>('#MapTags'),
 		listTypes: {
 			ranked: $<Button>('#MapListRanked'),
 			unranked: $<Button>('#MapListUnranked'),
@@ -140,14 +136,7 @@ class MapSelectorHandler implements OnPanelLoad {
 		);
 		$.RegisterForUnhandledEvent('MapSelector_ShowConfirmOverwrite', (mapID) => this.showConfirmOverwrite(mapID));
 		$.RegisterForUnhandledEvent('MapSelector_MapsFiltered', (count) => this.onMapsFiltered(count));
-
 		$.RegisterForUnhandledEvent('MapSelector_SelectedDataUpdate', (mapData) => this.onSelectedDataUpdated(mapData));
-
-		// PRE REWORK REMOVAL
-		// $.RegisterForUnhandledEvent('MapSelector_SelectedOnlineDataUpdate', (mapData) =>
-		// 	this.onSelectedOnlineDataUpdated(mapData)
-		// );
-		// $.RegisterForUnhandledEvent('MapSelector_HideLeaderboards', () => this.toggleLeaderboards(false));
 
 		this.panels.nStateButtons.forEach((panel) =>
 			$.RegisterEventHandler('NStateButtonStateChanged', panel, (panelID, state) =>
@@ -172,11 +161,6 @@ class MapSelectorHandler implements OnPanelLoad {
 		);
 
 		this.panels.cp.applyFilters(false);
-		// PRE REWORK REMOVAL
-		// this.panels.leaderboardContainer.SetHasClass(
-		// 	'mapselector-leaderboards--open',
-		// 	$.persistentStorage.getItem('mapSelector.leaderboardsOpen') ?? false
-		// );
 
 		$.DispatchEvent('MapSelector_OnLoaded');
 	}
@@ -355,40 +339,10 @@ class MapSelectorHandler implements OnPanelLoad {
 		this.components.mapInfo.updateMapInfo(mapData);
 
 		// PRE REWORK REMOVAL
-		// this.updateSelectedMapCredits(mapData.staticData);
-
 		// Start loading spinner on live-updateing stats panels -- MapSelector_OnSelectedOnlineDataUpdate will kill it
 		// this.panels.stats.AddClass('mapselector-stats--loading');
 	}
 
-	// PRE REWORK REMOVAL
-	// onSelectedOnlineDataUpdated(onlineMapData: MMap) {
-	// 	const statsPanel = this.panels.stats;
-
-	// 	statsPanel.RemoveClass('mapselector-stats--loading');
-
-	// 	// Removing / omitting several stats here, so we only include the stats that ACTUALLY WORK
-	// 	// - Subscriptions - No longer exists since removing map library.
-	// 	// - Downloads - No longer tracked by the backend.
-	// 	// - Plays - We *may* track this in the future but don't currently.
-	// 	// - Time Played - We don't track this *yet*.
-	// 	// Map stats is in a very WIP state at the moment and doesn't need to be perfect yet.
-	// 	statsPanel.SetDialogVariableInt('unique_completions', onlineMapData.stats.uniqueCompletions);
-	// 	statsPanel.SetDialogVariableInt('total_completions', onlineMapData.stats.completions);
-	// 	statsPanel.SetDialogVariableInt('favorites', onlineMapData.stats.favorites);
-
-	// 	const wr = onlineMapData.worldRecord;
-	// 	if (wr) {
-	// 		statsPanel.SetDialogVariableFloat('world_record', wr?.time ?? 0);
-	// 		statsPanel.FindChildTraverse('MapInfoWR').visible = true;
-	// 		statsPanel.FindChildTraverse('MapInfoNoWR').visible = false;
-	// 	} else {
-	// 		statsPanel.FindChildTraverse('MapInfoWR').visible = false;
-	// 		statsPanel.FindChildTraverse('MapInfoNoWR').visible = true;
-	// 	}
-	// }
-
-	// PRE REWORK REMOVAL
 	onActionButtonPressed() {
 		if (!this.selectedMapData) return;
 
@@ -415,12 +369,6 @@ class MapSelectorHandler implements OnPanelLoad {
 		const panel = this.panels.cp.FindChildTraverse(panelID);
 		this.nStateButtonClasses.entries().forEach(([i, className]) => panel.SetHasClass(className, state === i));
 	}
-
-	// PRE REWORK REMOVAL
-	// toggleLeaderboards(open: boolean) {
-	// 	this.panels.leaderboardContainer.SetHasClass('mapselector-leaderboards--open', open);
-	// 	$.persistentStorage.setItem('mapSelector.leaderboardsOpen', open);
-	// }
 
 	checkingUpdates = false;
 	lastUpdateCheck = 0;

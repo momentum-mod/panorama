@@ -225,7 +225,6 @@
                 <Panel class="mapselector__right-center">
                     <Panel class="mapselector__track-selector-container">
                         <TrackSelector id="TrackSelector" />
-                        <!-- <NewLeaderboards id="NewLeaderboards" /> -->
                     </Panel>
                 </Panel>
                 <Panel class="mapselector__right-bottom">

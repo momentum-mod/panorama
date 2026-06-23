@@ -18,16 +18,6 @@ interface TrackDisplayData {
 	group?: number;
 }
 
-// const GROUP_PILL = {
-// 	NONE: 'rgba(0, 0, 0, 0)',
-// 	WR: 'rgba(24, 150, 211, 1)',
-// 	TOP10: 'rgba(113, 240, 255, 1)',
-// 	G1: 'rgba(212, 175, 55, 1)',
-// 	G2: 'rgba(168, 186, 200, 1)',
-// 	G3: 'rgba(140, 80, 40, 1)',
-// 	G4_G6: 'rgba(80, 85, 95, 1)'
-// } as const;
-
 const GROUP_PILL = {
 	NONE: {
 		text: 'rgba(0, 0, 0, 0)',
@@ -84,6 +74,7 @@ export class TrackSelectorHandler {
 		container: $<Panel>('#TrackSelectorContainer')
 	};
 
+	// TODO: Blur broken when scrolling
 	blurPanel: BaseBlurTarget | null = null;
 
 	constructor() {
@@ -150,7 +141,7 @@ export class TrackSelectorHandler {
 		const bonuses = Leaderboards.getNumBonuses(mapData.staticData);
 		if (bonuses < 1) return;
 
-		const userBonusData = Leaderboards.getUserMapDataTrack(mapData.userData, gamemode, TrackType.BONUS);
+		const userBonusData = Leaderboards.getUserMapDataTrack(mapData.userData, gamemode, TrackType.BONUS, 2);
 
 		const container = $.CreatePanel('Panel', this.panels.container, 'TracksContainer');
 		this.blurPanel?.AddBlurPanel(container);
@@ -181,7 +172,6 @@ export class TrackSelectorHandler {
 			trackPanel.SetSelected(true);
 		}
 
-		// Tier — empty label if not present (stages)
 		const tierLabel = trackPanel.FindChildrenWithClassTraverse('track-panel__tier-label')[0] as Label;
 		if (data.tier !== undefined) {
 			trackPanel.SetDialogVariableInt('tier', data.tier);
@@ -189,7 +179,6 @@ export class TrackSelectorHandler {
 			tierLabel.text = '';
 		}
 
-		// Time
 		this.setOptionalFloat(trackPanel, 'track-panel__time-label', 'time', data.time);
 
 		const rankLabel = trackPanel.FindChildrenWithClassTraverse('track-panel__rank-label')[0] as Label;
@@ -201,7 +190,6 @@ export class TrackSelectorHandler {
 			rankLabel.style.color = 'rgb(160, 160, 160)';
 		}
 
-		// Group — empty label if not present
 		const groupLabel = trackPanel.FindChildrenWithClassTraverse('track-panel__group-label')[0] as Label;
 		const groupPill = trackPanel.FindChildrenWithClassTraverse('track-panel__group-pill')[0] as Panel;
 
