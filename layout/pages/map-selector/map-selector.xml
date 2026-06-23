@@ -226,6 +226,9 @@
                     <Panel class="mapselector__track-selector-container">
                         <TrackSelector id="TrackSelector" />
                     </Panel>
+                    <Panel class="mapselector__leaderboards-container">
+                        <Leaderboards id="Leaderboards" class="mapselector-leaderboards__list"/>
+                    </Panel>
                 </Panel>
                 <Panel class="mapselector__right-bottom">
                     <Panel class="mapselector__right-bottom-spacer" />
@@ -269,7 +272,7 @@
 
         <!-- ALL OF THIS NEEDS TO LIVE HERE OR THE GAME CRASHES.-->
         <Panel id="MapTimes" class="mapselector-leaderboards hide">
-                <Leaderboards id="Leaderboards" class="mapselector-leaderboards__list mapselector-leaderboards__list-FUCK XML-hidden leaderboards-FUCK XML-in-map-selector" />
+                <Leaderboards id="Leaderboards" class="mapselector-leaderboards__list mapselector-leaderboards__list--hidden leaderboards--in-map-selector" />
         </Panel>
         <Panel id="MapInfoStats" class="mapselector-stats hide" />
 	</MomentumMapSelect>
