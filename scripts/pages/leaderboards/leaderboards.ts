@@ -21,19 +21,20 @@ class LeaderboardsHandler {
 
 	readonly panels = {
 		cp: $.GetContextPanel<Leaderboards>(),
-		subtypeButtons: $<Panel>('#FilterButtonsSubtype'),
+		// subtypeButtons: $<Panel>('#FilterButtonsSubtype'),
 		lobbyButton: $<Button>('#TimesListLobby'),
 		timesContainer: $<Panel>('#LeaderboardTimesContainer'),
 		emptyWarningText: $<Label>('#LeaderboardEmptyWarningText'),
 		syncTrackButton: $<Button>('#SyncTrackButton'),
-		endOfRunButton: $<Button>('#EndOfRunButton'),
-		tracksDropdown: $<DropDown>('#TracksDropdown'),
+		// endOfRunButton: $<Button>('#EndOfRunButton'),
+		// tracksDropdown: $<DropDown>('#TracksDropdown'),
 		stylesDropdown: $<DropDown>('#StylesDropdown'),
 		radioButtons: {
 			listTypes: {
 				global: $<RadioButton>('#TimesListGlobal'),
-				local: $<RadioButton>('#TimesListLocal'),
-				lobby: $<RadioButton>('#TimesListLobby')
+				friends: $<RadioButton>('#TimesListFriends'),
+				lobby: $<RadioButton>('#TimesListLobby'),
+				local: $<RadioButton>('#TimesListLocal')
 			},
 			local: {
 				runs: $<RadioButton>('#LocalTypeRuns'),
@@ -49,13 +50,13 @@ class LeaderboardsHandler {
 
 	constructor() {
 		$.RegisterEventHandler('Leaderboards_TimesFiltered', this.panels.cp, (count) => this.onTimesUpdated(count));
-		$.RegisterEventHandler('EndOfRun_Show', this.panels.cp, (reason) => this.onShowEndOfRun(reason));
+		// $.RegisterEventHandler('EndOfRun_Show', this.panels.cp, (reason) => this.onShowEndOfRun(reason));
 		$.RegisterEventHandler('Leaderboards_OfficialMapLeaderboardsLoaded', this.panels.cp, (map) =>
 			this.onOfficialMapLeaderboardsLoaded(map)
 		);
-		$.RegisterEventHandler('Leaderboards_LocalMapLeaderboardsLoaded', this.panels.cp, () =>
-			this.onLocalMapLeaderboardsLoaded()
-		);
+		// $.RegisterEventHandler('Leaderboards_LocalMapLeaderboardsLoaded', this.panels.cp, () =>
+		// 	this.onLocalMapLeaderboardsLoaded()
+		// );
 
 		// DEBUG: log the loaded page whenever a getLeaderboardRecords() request completes.
 		$.RegisterEventHandler('LeaderboardRecords_Loaded', this.panels.cp, (requestToken) =>
@@ -73,15 +74,17 @@ class LeaderboardsHandler {
 		this.panels.radioButtons.online.top10.SetSelected(true);
 
 		// Default to Top 10
-		this.setSelectedTimesList(LeaderboardListType.GLOBAL);
-		this.setSelectedListType(LeaderboardListType.GLOBAL, LeaderboardType.TOP10);
-		this.setSelectedListType(LeaderboardListType.LOCAL, LeaderboardType.LOCAL);
+		// this.setSelectedTimesList(LeaderboardListType.GLOBAL);
+		// this.setSelectedListType(LeaderboardListType.GLOBAL, LeaderboardType.TOP10);
+		// this.setSelectedListType(LeaderboardListType.LOCAL, LeaderboardType.LOCAL);
 
-		this.panels.tracksDropdown.RemoveAllOptions();
-		this.panels.tracksDropdown.visible = false;
+		// this.panels.tracksDropdown.RemoveAllOptions();
+		// this.panels.tracksDropdown.visible = false;
 
-		this.panels.endOfRunButton.visible = false;
-		this.panels.syncTrackButton.visible = false;
+		// this.panels.endOfRunButton.visible = false;
+		// this.panels.syncTrackButton.visible = false;
+
+		this.panels.stylesDropdown.visible = false;
 	}
 
 	onTimesUpdated(count: number) {
@@ -148,34 +151,38 @@ class LeaderboardsHandler {
 	}
 
 	setSelectedTimesList(timesList: LeaderboardListType) {
-		this.panels.subtypeButtons.SetHasClass(
-			'leaderboard-filter-buttons__subtypes--online',
-			timesList === LeaderboardListType.GLOBAL
-		);
-		this.panels.subtypeButtons.SetHasClass(
-			'leaderboard-filter-buttons__subtypes--lobby',
-			timesList === LeaderboardListType.LOBBY
-		);
+		// this.panels.subtypeButtons.SetHasClass(
+		// 	'leaderboard-filter-buttons__subtypes--online',
+		// 	timesList === LeaderboardListType.GLOBAL
+		// );
+		// this.panels.subtypeButtons.SetHasClass(
+		// 	'leaderboard-filter-buttons__subtypes--lobby',
+		// 	timesList === LeaderboardListType.LOBBY
+		// );
 
-		this.selectedTimesList = timesList;
+		this.selectedTimesList = LeaderboardListType.GLOBAL;
+		this.panels.radioButtons.online.top10.SetSelected(true);
 	}
 
-	setSelectedListType(timesList: LeaderboardListType, listType: LeaderboardType) {
-		if (timesList === LeaderboardListType.LOCAL) {
-			this.selectedLocalListType = listType;
-		} else if (timesList === LeaderboardListType.GLOBAL) {
-			this.selectedGlobalListType = listType;
-		}
-	}
+	// setSelectedListType(timesList: LeaderboardListType, listType: LeaderboardType) {
+	// 	if (timesList === LeaderboardListType.LOCAL) {
+	// 		this.selectedLocalListType = listType;
+	// 	} else if (timesList === LeaderboardListType.GLOBAL) {
+	// 		this.selectedGlobalListType = listType;
+	// 	}
+	// }
 
 	getSelectedListType() {
-		if (this.selectedTimesList === LeaderboardListType.LOCAL) {
-			return this.selectedLocalListType;
-		} else if (this.selectedTimesList === LeaderboardListType.GLOBAL) {
-			return this.selectedGlobalListType;
-		} else {
-			return LeaderboardType.LOBBY;
-		}
+		// if (this.selectedTimesList === LeaderboardListType.LOCAL) {
+		// 	return this.selectedLocalListType;
+		// } else if (this.selectedTimesList === LeaderboardListType.GLOBAL) {
+		// 	return this.selectedGlobalListType;
+		// } else {
+		// 	return LeaderboardType.LOBBY;
+		// }
+
+		this.panels.radioButtons.online.top10.SetSelected(true);
+		return LeaderboardType.TOP10;
 	}
 
 	showLobbyTooltip() {
@@ -184,27 +191,27 @@ class LeaderboardsHandler {
 		}
 	}
 
-	syncTrackWithLeaderboard() {
-		const selectedTrack = this.panels.tracksDropdown.GetSelected();
-		const trackType = selectedTrack.GetAttributeInt('trackType', TrackType.MAIN as number);
-		const trackNum = selectedTrack.GetAttributeInt('trackNum', 1);
+	// syncTrackWithLeaderboard() {
+	// 	const selectedTrack = this.panels.tracksDropdown.GetSelected();
+	// 	const trackType = selectedTrack.GetAttributeInt('trackType', TrackType.MAIN as number);
+	// 	const trackNum = selectedTrack.GetAttributeInt('trackNum', 1);
 
-		switch (trackType) {
-			case TrackType.MAIN:
-				GameInterfaceAPI.ConsoleCommand('mom_main');
-				break;
-			case TrackType.STAGE:
-				GameInterfaceAPI.ConsoleCommand(`mom_stage ${trackNum}`);
-				break;
-			case TrackType.BONUS:
-				GameInterfaceAPI.ConsoleCommand(`mom_bonus ${trackNum}`);
-				break;
-		}
+	// 	switch (trackType) {
+	// 		case TrackType.MAIN:
+	// 			GameInterfaceAPI.ConsoleCommand('mom_main');
+	// 			break;
+	// 		case TrackType.STAGE:
+	// 			GameInterfaceAPI.ConsoleCommand(`mom_stage ${trackNum}`);
+	// 			break;
+	// 		case TrackType.BONUS:
+	// 			GameInterfaceAPI.ConsoleCommand(`mom_bonus ${trackNum}`);
+	// 			break;
+	// 	}
 
-		const selectedStyle = this.panels.stylesDropdown.GetSelected();
-		const style = selectedStyle.GetAttributeInt('value', Style.NORMAL);
-		GameInterfaceAPI.ConsoleCommand(`mom_style ${style}`);
-	}
+	// 	const selectedStyle = this.panels.stylesDropdown.GetSelected();
+	// 	const style = selectedStyle.GetAttributeInt('value', Style.NORMAL);
+	// 	GameInterfaceAPI.ConsoleCommand(`mom_style ${style}`);
+	// }
 
 	showEndOfRun() {
 		$.DispatchEvent('EndOfRun_Show', EndOfRunShowReason.MANUALLY_SHOWN);
@@ -214,18 +221,18 @@ class LeaderboardsHandler {
 	 * Show the button to go to the end of run page.
 	 * Should only be shown if you're completing a run in the current session on the current map.
 	 */
-	onShowEndOfRun(showReason: EndOfRunShowReason) {
-		if (showReason === EndOfRunShowReason.PLAYER_FINISHED_RUN) {
-			this.panels.endOfRunButton.visible = true;
-		}
-	}
+	// onShowEndOfRun(showReason: EndOfRunShowReason) {
+	// 	if (showReason === EndOfRunShowReason.PLAYER_FINISHED_RUN) {
+	// 		this.panels.endOfRunButton.visible = true;
+	// 	}
+	// }
 
 	onOfficialMapLeaderboardsLoaded(map: MMap) {
-		this.panels.tracksDropdown.RemoveAllOptions();
+		// this.panels.tracksDropdown.RemoveAllOptions();
 
 		const currentMode = this.getCurrentMode();
-		const currentStyle =
-			this.panels.stylesDropdown.GetSelected()?.GetAttributeInt('value', Style.NORMAL) ?? Style.NORMAL;
+		const currentStyle = Style.NORMAL;
+		// this.panels.stylesDropdown.GetSelected()?.GetAttributeInt('value', Style.NORMAL) ?? Style.NORMAL;
 		map.leaderboards
 			.filter((leaderboard) => leaderboard.gamemode === currentMode && leaderboard.style === currentStyle)
 			.sort(sortLeaderboard)
@@ -243,17 +250,17 @@ class LeaderboardsHandler {
 						break;
 				}
 
-				const item = $.CreatePanel('Label', this.panels.tracksDropdown, trackStr, {
-					text: trackStr,
-					value: index
-				});
-				item.SetAttributeInt('trackNum', leaderboard.trackNum);
-				item.SetAttributeInt('trackType', leaderboard.trackType);
+				// const item = $.CreatePanel('Label', this.panels.tracksDropdown, trackStr, {
+				// 	text: trackStr,
+				// 	value: index
+				// });
+				// item.SetAttributeInt('trackNum', leaderboard.trackNum);
+				// item.SetAttributeInt('trackType', leaderboard.trackType);
 
-				this.panels.tracksDropdown.AddOption(item);
+				// this.panels.tracksDropdown.AddOption(item);
 			});
 
-		this.initTracksDropdown();
+		// this.initTracksDropdown();
 
 		// DEBUG: fetch and log the first page of global records for the newly selected map.
 		this.debugFetchFirstPage(map);
@@ -291,82 +298,82 @@ class LeaderboardsHandler {
 		}
 	}
 
-	onLocalMapLeaderboardsLoaded() {
-		this.panels.tracksDropdown.RemoveAllOptions();
+	// onLocalMapLeaderboardsLoaded() {
+	// 	this.panels.tracksDropdown.RemoveAllOptions();
 
-		// Try to load tracks from local zones
-		const mapZoneData = MomentumTimerAPI.GetActiveZoneDefs();
-		if (mapZoneData) {
-			// Main track
-			{
-				const trackStr = $.Localize('#Leaderboards_Tracks_Main');
-				const item = $.CreatePanel('Label', this.panels.tracksDropdown, trackStr, {
-					text: trackStr,
-					value: 0
-				});
-				item.SetAttributeInt('trackNum', 1);
-				item.SetAttributeInt('trackType', TrackType.MAIN);
+	// 	// Try to load tracks from local zones
+	// 	const mapZoneData = MomentumTimerAPI.GetActiveZoneDefs();
+	// 	if (mapZoneData) {
+	// 		// Main track
+	// 		{
+	// 			const trackStr = $.Localize('#Leaderboards_Tracks_Main');
+	// 			const item = $.CreatePanel('Label', this.panels.tracksDropdown, trackStr, {
+	// 				text: trackStr,
+	// 				value: 0
+	// 			});
+	// 			item.SetAttributeInt('trackNum', 1);
+	// 			item.SetAttributeInt('trackType', TrackType.MAIN);
 
-				this.panels.tracksDropdown.AddOption(item);
-			}
+	// 			this.panels.tracksDropdown.AddOption(item);
+	// 		}
 
-			// Stage tracks
-			const segments = mapZoneData.tracks.main?.zones?.segments;
-			if (segments && segments.length > 1) {
-				segments.forEach((_, index) => {
-					const trackStr = `${$.Localize('#Leaderboards_Tracks_Stage')} ${index + 1}`;
-					const item = $.CreatePanel('Label', this.panels.tracksDropdown, trackStr, {
-						text: trackStr,
-						value: index + 1
-					});
-					item.SetAttributeInt('trackNum', index + 1);
-					item.SetAttributeInt('trackType', TrackType.STAGE);
+	// 		// Stage tracks
+	// 		const segments = mapZoneData.tracks.main?.zones?.segments;
+	// 		if (segments && segments.length > 1) {
+	// 			segments.forEach((_, index) => {
+	// 				const trackStr = `${$.Localize('#Leaderboards_Tracks_Stage')} ${index + 1}`;
+	// 				const item = $.CreatePanel('Label', this.panels.tracksDropdown, trackStr, {
+	// 					text: trackStr,
+	// 					value: index + 1
+	// 				});
+	// 				item.SetAttributeInt('trackNum', index + 1);
+	// 				item.SetAttributeInt('trackType', TrackType.STAGE);
 
-					this.panels.tracksDropdown.AddOption(item);
-				});
-			}
+	// 				this.panels.tracksDropdown.AddOption(item);
+	// 			});
+	// 		}
 
-			// Bonus tracks
-			const bonuses = mapZoneData.tracks.bonuses;
-			if (bonuses) {
-				bonuses.forEach((_, index) => {
-					const trackStr = `${$.Localize('#Leaderboards_Tracks_Bonus')} ${index + 1}`;
-					const item = $.CreatePanel('Label', this.panels.tracksDropdown, trackStr, {
-						text: trackStr,
-						value: index + 1
-					});
-					item.SetAttributeInt('trackNum', index + 1);
-					item.SetAttributeInt('trackType', TrackType.BONUS);
+	// 		// Bonus tracks
+	// 		const bonuses = mapZoneData.tracks.bonuses;
+	// 		if (bonuses) {
+	// 			bonuses.forEach((_, index) => {
+	// 				const trackStr = `${$.Localize('#Leaderboards_Tracks_Bonus')} ${index + 1}`;
+	// 				const item = $.CreatePanel('Label', this.panels.tracksDropdown, trackStr, {
+	// 					text: trackStr,
+	// 					value: index + 1
+	// 				});
+	// 				item.SetAttributeInt('trackNum', index + 1);
+	// 				item.SetAttributeInt('trackType', TrackType.BONUS);
 
-					this.panels.tracksDropdown.AddOption(item);
-				});
-			}
-		}
+	// 				this.panels.tracksDropdown.AddOption(item);
+	// 			});
+	// 		}
+	// 	}
 
-		this.initTracksDropdown();
-	}
+	// 	this.initTracksDropdown();
+	// }
 
-	initTracksDropdown() {
-		if (this.panels.tracksDropdown.AccessDropDownMenu().GetChildCount() === 0) {
-			this.panels.tracksDropdown.visible = false;
-			return;
-		}
+	// initTracksDropdown() {
+	// 	if (this.panels.tracksDropdown.AccessDropDownMenu().GetChildCount() === 0) {
+	// 		this.panels.tracksDropdown.visible = false;
+	// 		return;
+	// 	}
 
-		// Allow player to sync their current track to the value selected in the dropdown
-		if (this.isInGameLeaderboard()) {
-			this.panels.syncTrackButton.visible = true;
-		}
+	// 	// Allow player to sync their current track to the value selected in the dropdown
+	// 	if (this.isInGameLeaderboard()) {
+	// 		this.panels.syncTrackButton.visible = true;
+	// 	}
 
-		this.panels.tracksDropdown.visible = true;
-		this.panels.tracksDropdown.SetSelectedIndex(0);
-		this.panels.tracksDropdown.SetPanelEvent('onuserinputsubmit', () => {
-			const selected = this.panels.tracksDropdown.GetSelected();
-			this.panels.cp.selectTrack(
-				selected.GetAttributeInt('trackType', TrackType.MAIN as number),
-				selected.GetAttributeInt('trackNum', 1)
-			);
-		});
-	}
+	// 	this.panels.tracksDropdown.visible = true;
+	// 	this.panels.tracksDropdown.SetSelectedIndex(0);
+	// 	this.panels.tracksDropdown.SetPanelEvent('onuserinputsubmit', () => {
+	// 		const selected = this.panels.tracksDropdown.GetSelected();
+	// 		this.panels.cp.selectTrack(
+	// 			selected.GetAttributeInt('trackType', TrackType.MAIN as number),
+	// 			selected.GetAttributeInt('trackNum', 1)
+	// 		);
+	// 	});
+	// }
 
 	getCurrentMode() {
 		const isTabMenu = this.isInGameLeaderboard();
