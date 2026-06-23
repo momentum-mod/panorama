@@ -7,78 +7,26 @@
 		<include type="module" src="file://{scripts}/pages/leaderboards/leaderboards.ts" />
 	</scripts>
 
-	<Leaderboards class="leaderboards" acceptsinput="true" acceptsfocus="true" hittest="true" hittestchildren="true">
-		<Panel class="leaderboard-filter-buttons online">
-			<Panel class="tabs">
-				<RadioButton id="TimesListGlobal" class="tabs__tab" onactivate="LeaderboardsHandler.setSelectedTimesList(LeaderboardListType.GLOBAL);">
-					<Label class="tabs__text" text="#Leaderboards_Category_Global" />
+	<Leaderboards class="leaderboards leaderboards__list" acceptsinput="true" acceptsfocus="true" hittest="true" hittestchildren="true">
+		<Panel class="leaderboard-top">
+			<Panel class="leaderboard-radio">
+				<RadioButton id="TimesListGlobal" class="leaderboard-radio__radio-button" >
+					<Label class="leaderboard-radio__radio-button__label" text="#Leaderboards_Category_Global" />
 				</RadioButton>
-				<RadioButton id="TimesListLocal" class="tabs__tab" onactivate="LeaderboardsHandler.setSelectedTimesList(LeaderboardListType.LOCAL);">
-					<Label class="tabs__text" text="#Leaderboards_Category_Local" />
+				<RadioButton id="TimesListFriends" class="leaderboard-radio__radio-button" >
+					<Label class="leaderboard-radio__radio-button__label" text="#Leaderboards_Category_Friends" />
 				</RadioButton>
-				<RadioButton id="TimesListLobby" class="tabs__tab" onactivate="LeaderboardsHandler.setSelectedTimesList(LeaderboardListType.LOBBY);" onmouseover="LeaderboardsHandler.showLobbyTooltip();" onmouseout="UiToolkitAPI.HideTextTooltip();">
-					<Label class="tabs__text" text="#Leaderboards_Category_Lobby" />
+				<RadioButton id="TimesListLobby" class="leaderboard-radio__radio-button" onmouseout="UiToolkitAPI.HideTextTooltip();">
+					<Label class="leaderboard-radio__radio-button__label" text="#Leaderboards_Category_Lobby" />
+				</RadioButton>
+				<RadioButton id="TimesListLocal" class="leaderboard-radio__radio-button leaderboard-radio__radio-button--saved" >
+					<Label class="leaderboard-radio__radio-button__label" text="Saved Replays" />
 				</RadioButton>
 			</Panel>
-
-			<Panel id="FilterButtonsSubtype" class="leaderboard-filter-buttons__subtypes">
-				<Panel class="leaderboard-filter-buttons__local tabs">
-					<RadioButton id="LocalTypeRuns" class="tabs__tab" onactivate="LeaderboardsHandler.setSelectedListType(LeaderboardListType.LOCAL, LeaderboardType.LOCAL);">
-						<Label class="tabs__text" text="#Leaderboards_Category_YourRuns" />
-					</RadioButton>
-					<RadioButton id="LocalTypeDownloaded" class="tabs__tab" onactivate="LeaderboardsHandler.setSelectedListType(LeaderboardListType.LOCAL, LeaderboardType.LOCAL_DOWNLOADED);">
-						<Label class="tabs__text" text="#Leaderboards_Category_Downloaded" />
-					</RadioButton>
-				</Panel>
-				<Panel class="leaderboard-filter-buttons__online tabs">
-					<RadioButton id="OnlineTypeTop10" class="tabs__tab" onactivate="LeaderboardsHandler.setSelectedListType(LeaderboardListType.GLOBAL, LeaderboardType.TOP10);">
-						<Label class="tabs__text" text="#Leaderboards_Category_Top10" />
-					</RadioButton>
-					<RadioButton id="OnlineTypeAround" class="tabs__tab" onactivate="LeaderboardsHandler.setSelectedListType(LeaderboardListType.GLOBAL, LeaderboardType.AROUND);">
-						<Label class="tabs__text" text="#Leaderboards_Category_Around" />
-					</RadioButton>
-					<RadioButton id="OnlineTypeFriends" class="tabs__tab" onactivate="LeaderboardsHandler.setSelectedListType(LeaderboardListType.GLOBAL, LeaderboardType.FRIENDS);">
-						<Label class="tabs__text" text="#Leaderboards_Category_Friends" />
-					</RadioButton>
-				</Panel>
-			</Panel>
-
-			<Panel class="w-fill mr-4"/>
-
-			<DropDown id="StylesDropdown" class="dropdown leaderboards__style-dropdown" menuclass="dropdown-menu">
-				<Panel id="placeholder" /> <!-- This is needed to dynamically add dropdown items from code -->
-			</DropDown>
-
-			<DropDown id="TracksDropdown" class="dropdown leaderboards__dropdown" menuclass="dropdown-menu">
-				<Panel id="placeholder" /> <!-- This is needed to dynamically add dropdown items from code -->
-			</DropDown>
-
-			<TooltipPanel tooltip="#Leaderboards_SyncTrackButton" class="v-align-center">
-				<Button id="SyncTrackButton" class="button leaderboards__sync-button" onactivate="LeaderboardsHandler.syncTrackWithLeaderboard();">
-					<Image class="button__icon" src="file://{images}/swap-horizontal-bold.svg" textureheight="32" />
-				</Button>
-			</TooltipPanel>
-
-			<TooltipPanel tooltip="#Leaderboards_EndOfRunButton" class="v-align-center">
-				<Button id="EndOfRunButton" class="button leaderboards__end-of-run-button" onactivate="LeaderboardsHandler.showEndOfRun();">
-					<Image class="button__icon button__icon--left" src="file://{images}/arrow-thick-right.svg" textureheight="64" />
-				</Button>
-			</TooltipPanel>
-
-			<Button class="button button--blue leaderboards__hide-button" onactivate="$.DispatchEvent('MapSelector_HideLeaderboards');">
-				<Image class="button__icon button__icon--left" src="file://{images}/chart-timeline.svg" textureheight="40" />
-				<Label class="button__text button__icon--right mr-3" text="#MapSelector_Button_Leaderboards" />
-			</Button>
 		</Panel>
-		<Panel class="leaderboard-times">
-			<Panel class="leaderboard-times__header">
-				<Label class="leaderboard-entry__rank leaderboard-times__header-item" text="#Leaderboards_Column_Rank" />
-				<Label class="leaderboard-entry__player leaderboard-times__header-item" text="#Leaderboards_Column_Player" />
-				<Label class="leaderboard-entry__time leaderboard-times__header-item" text="#Leaderboards_Column_Time" />
-				<Label class="leaderboard-entry__achieved leaderboard-times__header-item" text="#Leaderboards_Column_Date" />
-			</Panel>
-			<Panel id="LeaderboardTimesContainer" class="leaderboard-times__main">
-				<DelayLoadList id="TimesList" class="leaderboard-times__list" itemheight="30px" itemwidth="100%" spacersize="0px" spacerperiod="1">
+		<Panel class="leaderboard-center">
+			<Panel id="LeaderboardTimesContainer" class="leaderboard-times">
+				<DelayLoadList id="TimesList" class="leaderboard-times__list" itemheight="35px" itemwidth="100%" spacersize="0px" spacerperiod="1">
 					<!-- Populated via code -->
 				</DelayLoadList>
 				<Panel class="leaderboard-times__empty">
@@ -95,5 +43,44 @@
 				</Panel>
 			</Panel>
 		</Panel>
+
+		<Panel class="leaderboard-bottom">
+		</Panel>
+
+
+		<!-- REQUIRED BY C++ -->
+
+		<DropDown id="StylesDropdown" class="dropdown leaderboards__style-dropdown hide" menuclass="dropdown-menu">
+				<Panel id="placeholder" /> <!-- This is needed to dynamically add dropdown items from code -->
+		</DropDown>
+
+		
+		<Panel id="FilterButtonsSubtype" class="leaderboard-filter-buttons__subtypes">
+			<Panel class="leaderboard-filter-buttons__local tabs hide">
+				<RadioButton id="LocalTypeRuns" class="tabs__tab hide">
+					<Label class="tabs__text" text="#Leaderboards_Category_YourRuns" />
+				</RadioButton>
+				<RadioButton id="LocalTypeDownloaded" class="tabs__tab hide">
+					<Label class="tabs__text" text="#Leaderboards_Category_Downloaded" />
+				</RadioButton>
+			</Panel>
+
+			<!-- What the actual fuck is going on here. Something is specifically requring one of these buttons to be selected to load leaderboards.
+			It's not enough that the function .setSelectedListType runs, the button NEEDS to be selected or leaderboards won't load -->
+			<Panel class="leaderboard-filter-buttons__online tabs w-full h-full">
+				<RadioButton id="OnlineTypeTop10" class="tabs__tab">
+					<Label class="tabs__text" text="#Leaderboards_Category_Top10" />
+				</RadioButton>
+				<RadioButton id="OnlineTypeAround" class="tabs__tab">
+					<Label class="tabs__text" text="#Leaderboards_Category_Around" />
+				</RadioButton>
+				<RadioButton id="OnlineTypeFriends" class="tabs__tab">
+					<Label class="tabs__text" text="#Leaderboards_Category_Friends" />
+				</RadioButton>
+			</Panel>
+		</Panel>
+
+
+
 	</Leaderboards>
 </root>
