@@ -296,7 +296,7 @@ class MainMenuHandler implements OnPanelLoad {
 	 */
 	onMapSelectorLoaded() {
 		// for (const panel of ['MapSelectorLeft', 'MapDescription', 'MapInfoStats', 'Leaderboards'])
-		for (const panel of ['MapSelectorLeft'])
+		for (const panel of ['MapSelectorLeft', 'Leaderboards'])
 			this.panels.backgroundBlur?.AddBlurPanel($.GetContextPanel().FindChildTraverse(panel));
 	}
 

@@ -4,11 +4,11 @@
 // Handled by C++
 .leaderboard-time {
 	&--even {
-		background-color: rgba(255, 255, 255, 0.03);
+		background-color: rgba(0, 0, 0, 0.4);
 	}
 
 	&--odd {
-		background-color: rgba(255, 255, 255, 0.01);
+		background-color: rgba(0, 0, 0, 0.4);
 	}
 
 	&--even,
@@ -23,8 +23,9 @@
 .leaderboard-entry {
 	flow-children: right;
 	width: 100%;
-	height: 30px; // Must be same as the DelayLoadList itemheight!
+	height: 35px; // Must be same as the DelayLoadList itemheight!
 	padding: 0 8px;
+	border-bottom: 1px solid rgba(44, 44, 44, 0.4);
 
 	&--localplayer {
 		background-color: color.scale(rgba($blue, 0.7), $lightness: -20%);
@@ -35,27 +36,31 @@
 	}
 
 	&__item {
-		font-size: 16px;
+		font-size: 14px;
 		vertical-align: center;
+		color: rgba(255, 255, 255, 0.7);
+	}
+
+	&__spacer {
+		width: fill-parent-flow(0);
 	}
 
 	&__rank {
 		width: fill-parent-flow(0.1);
+		text-align: right;
+		padding-right: 8px;
 	}
 
 	&__player {
-		width: fill-parent-flow(0.45);
+		width: fill-parent-flow(1);
 		flow-children: right;
 		height: 100%;
 	}
 
 	&__time {
 		width: fill-parent-flow(0.25);
-	}
-
-	&__achieved {
 		text-align: right;
-		width: fill-parent-flow(0.2);
+		color: rgba(255, 255, 255, 0.7);
 	}
 
 	&__avatar {

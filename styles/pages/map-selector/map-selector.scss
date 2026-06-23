@@ -53,6 +53,7 @@ $panel-border: 1px solid rgba(255, 255, 255, 0.01);
 	&__right-center {
 		width: 100%;
 		height: $right-center-threshold - $right-top-height;
+		flow-children: right;
 	}
 
 	&__right-bottom {
@@ -126,6 +127,11 @@ $panel-border: 1px solid rgba(255, 255, 255, 0.01);
 		width: 45%;
 		height: 100%;
 		margin-right: 8px;
+	}
+
+	&__leaderboards-container {
+		width: 65%;
+		height: 100%;
 	}
 
 	&__playlists {
@@ -517,13 +523,6 @@ $notch-width: 10px;
 
 	width: 100%;
 	flow-children: none;
-
-	&__list {
-		width: 100%;
-		height: fit-children;
-		background-color: rgba(0, 0, 0, 0.6);
-		padding: 16px;
-	}
 
 	&__list-wrapper {
 		width: 100%;
