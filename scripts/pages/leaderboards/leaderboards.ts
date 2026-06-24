@@ -10,6 +10,7 @@ import { EndOfRunShowReason } from 'common/timer';
 import { TrackType } from 'common/web/enums/track-type.enum';
 import type { MMap } from 'common/web/types/models/models';
 import { Style } from 'common/web/enums/style.enum';
+import { randomInt } from 'util/functions';
 
 exposeToPanelContext({ LeaderboardListType, LeaderboardType });
 
@@ -21,13 +22,10 @@ class LeaderboardsHandler {
 
 	readonly panels = {
 		cp: $.GetContextPanel<Leaderboards>(),
-		// subtypeButtons: $<Panel>('#FilterButtonsSubtype'),
 		lobbyButton: $<Button>('#TimesListLobby'),
 		timesContainer: $<Panel>('#LeaderboardTimesContainer'),
 		emptyWarningText: $<Label>('#LeaderboardEmptyWarningText'),
 		syncTrackButton: $<Button>('#SyncTrackButton'),
-		// endOfRunButton: $<Button>('#EndOfRunButton'),
-		// tracksDropdown: $<DropDown>('#TracksDropdown'),
 		stylesDropdown: $<DropDown>('#StylesDropdown'),
 		radioButtons: {
 			listTypes: {
@@ -45,18 +43,28 @@ class LeaderboardsHandler {
 				around: $<RadioButton>('#OnlineTypeAround'),
 				friends: $<RadioButton>('#OnlineTypeFriends')
 			}
+		},
+		controls: {
+			container: $<Panel>('#ControlsContainer'),
+			pagePrev: $<Button>('#PagePrev'),
+			pageNext: $<Button>('#PageNext'),
+			groupPrev: $<Button>('#GroupPrev'),
+			groupNext: $<Button>('#GroupNext'),
+			pageSelect: $<TextEntry>('#PageSelect'),
+			totalPages: $<Label>('#TotalPages')
 		}
 	};
 
+	currentPage = 1;
+	totalPages = 1;
+	blockTextEntryEvent = false;
+
 	constructor() {
+		// C++ is probably sending this event 3 times per map selection slowing down leaderboards loading
 		$.RegisterEventHandler('Leaderboards_TimesFiltered', this.panels.cp, (count) => this.onTimesUpdated(count));
-		// $.RegisterEventHandler('EndOfRun_Show', this.panels.cp, (reason) => this.onShowEndOfRun(reason));
 		$.RegisterEventHandler('Leaderboards_OfficialMapLeaderboardsLoaded', this.panels.cp, (map) =>
 			this.onOfficialMapLeaderboardsLoaded(map)
 		);
-		// $.RegisterEventHandler('Leaderboards_LocalMapLeaderboardsLoaded', this.panels.cp, () =>
-		// 	this.onLocalMapLeaderboardsLoaded()
-		// );
 
 		// DEBUG: log the loaded page whenever a getLeaderboardRecords() request completes.
 		$.RegisterEventHandler('LeaderboardRecords_Loaded', this.panels.cp, (requestToken) =>
@@ -69,20 +77,11 @@ class LeaderboardsHandler {
 			Object.values(buttons).forEach((button) => (button.group = lbType + group));
 		});
 
-		this.panels.radioButtons.listTypes.global.SetSelected(true);
-		this.panels.radioButtons.local.runs.SetSelected(true);
-		this.panels.radioButtons.online.top10.SetSelected(true);
-
-		// Default to Top 10
-		// this.setSelectedTimesList(LeaderboardListType.GLOBAL);
-		// this.setSelectedListType(LeaderboardListType.GLOBAL, LeaderboardType.TOP10);
-		// this.setSelectedListType(LeaderboardListType.LOCAL, LeaderboardType.LOCAL);
-
-		// this.panels.tracksDropdown.RemoveAllOptions();
-		// this.panels.tracksDropdown.visible = false;
-
-		// this.panels.endOfRunButton.visible = false;
-		// this.panels.syncTrackButton.visible = false;
+		this.panels.controls.pageSelect.SetPanelEvent('ontextentrychange', () => {
+			if (!this.blockTextEntryEvent) {
+				this.selectPage(this.panels.controls.pageSelect.text as any as number);
+			}
+		});
 
 		this.panels.stylesDropdown.visible = false;
 	}
@@ -151,37 +150,18 @@ class LeaderboardsHandler {
 	}
 
 	setSelectedTimesList(timesList: LeaderboardListType) {
-		// this.panels.subtypeButtons.SetHasClass(
-		// 	'leaderboard-filter-buttons__subtypes--online',
-		// 	timesList === LeaderboardListType.GLOBAL
-		// );
-		// this.panels.subtypeButtons.SetHasClass(
-		// 	'leaderboard-filter-buttons__subtypes--lobby',
-		// 	timesList === LeaderboardListType.LOBBY
-		// );
-
 		this.selectedTimesList = LeaderboardListType.GLOBAL;
 		this.panels.radioButtons.online.top10.SetSelected(true);
 	}
 
-	// setSelectedListType(timesList: LeaderboardListType, listType: LeaderboardType) {
-	// 	if (timesList === LeaderboardListType.LOCAL) {
-	// 		this.selectedLocalListType = listType;
-	// 	} else if (timesList === LeaderboardListType.GLOBAL) {
-	// 		this.selectedGlobalListType = listType;
-	// 	}
-	// }
-
 	getSelectedListType() {
-		// if (this.selectedTimesList === LeaderboardListType.LOCAL) {
-		// 	return this.selectedLocalListType;
-		// } else if (this.selectedTimesList === LeaderboardListType.GLOBAL) {
-		// 	return this.selectedGlobalListType;
-		// } else {
-		// 	return LeaderboardType.LOBBY;
-		// }
-
 		this.panels.radioButtons.online.top10.SetSelected(true);
+
+		this.totalPages = randomInt(1, 2000);
+		this.panels.controls.totalPages.SetDialogVariableInt('total-pages', this.totalPages);
+
+		this.selectPage(1);
+
 		return LeaderboardType.TOP10;
 	}
 
@@ -191,48 +171,13 @@ class LeaderboardsHandler {
 		}
 	}
 
-	// syncTrackWithLeaderboard() {
-	// 	const selectedTrack = this.panels.tracksDropdown.GetSelected();
-	// 	const trackType = selectedTrack.GetAttributeInt('trackType', TrackType.MAIN as number);
-	// 	const trackNum = selectedTrack.GetAttributeInt('trackNum', 1);
-
-	// 	switch (trackType) {
-	// 		case TrackType.MAIN:
-	// 			GameInterfaceAPI.ConsoleCommand('mom_main');
-	// 			break;
-	// 		case TrackType.STAGE:
-	// 			GameInterfaceAPI.ConsoleCommand(`mom_stage ${trackNum}`);
-	// 			break;
-	// 		case TrackType.BONUS:
-	// 			GameInterfaceAPI.ConsoleCommand(`mom_bonus ${trackNum}`);
-	// 			break;
-	// 	}
-
-	// 	const selectedStyle = this.panels.stylesDropdown.GetSelected();
-	// 	const style = selectedStyle.GetAttributeInt('value', Style.NORMAL);
-	// 	GameInterfaceAPI.ConsoleCommand(`mom_style ${style}`);
-	// }
-
 	showEndOfRun() {
 		$.DispatchEvent('EndOfRun_Show', EndOfRunShowReason.MANUALLY_SHOWN);
 	}
 
-	/**
-	 * Show the button to go to the end of run page.
-	 * Should only be shown if you're completing a run in the current session on the current map.
-	 */
-	// onShowEndOfRun(showReason: EndOfRunShowReason) {
-	// 	if (showReason === EndOfRunShowReason.PLAYER_FINISHED_RUN) {
-	// 		this.panels.endOfRunButton.visible = true;
-	// 	}
-	// }
-
 	onOfficialMapLeaderboardsLoaded(map: MMap) {
-		// this.panels.tracksDropdown.RemoveAllOptions();
-
 		const currentMode = this.getCurrentMode();
 		const currentStyle = Style.NORMAL;
-		// this.panels.stylesDropdown.GetSelected()?.GetAttributeInt('value', Style.NORMAL) ?? Style.NORMAL;
 		map.leaderboards
 			.filter((leaderboard) => leaderboard.gamemode === currentMode && leaderboard.style === currentStyle)
 			.sort(sortLeaderboard)
@@ -249,16 +194,8 @@ class LeaderboardsHandler {
 						trackStr = `${$.Localize('#Leaderboards_Tracks_Bonus')} ${leaderboard.trackNum}`;
 						break;
 				}
-
-				// const item = $.CreatePanel('Label', this.panels.tracksDropdown, trackStr, {
-				// 	text: trackStr,
-				// 	value: index
-				// });
-				// item.SetAttributeInt('trackNum', leaderboard.trackNum);
-				// item.SetAttributeInt('trackType', leaderboard.trackType);
-
-				// this.panels.tracksDropdown.AddOption(item);
 			});
+<<<<<<< HEAD
 
 		// this.initTracksDropdown();
 
@@ -296,84 +233,46 @@ class LeaderboardsHandler {
 		for (const r of result.records) {
 			$.Msg(`  #${r.rank}  ${r.playerName}  ${r.runTime}s  ${r.steamID}`);
 		}
+=======
+>>>>>>> cdaf35de (WIP: Add Leaderboards Part 2)
 	}
 
-	// onLocalMapLeaderboardsLoaded() {
-	// 	this.panels.tracksDropdown.RemoveAllOptions();
+	// $.Localize('#Leaderboards_Tracks_Main')
+	// $.Localize('#Leaderboards_Tracks_Stage')
+	// $.Localize('#Leaderboards_Tracks_Bonus')
 
-	// 	// Try to load tracks from local zones
-	// 	const mapZoneData = MomentumTimerAPI.GetActiveZoneDefs();
-	// 	if (mapZoneData) {
-	// 		// Main track
-	// 		{
-	// 			const trackStr = $.Localize('#Leaderboards_Tracks_Main');
-	// 			const item = $.CreatePanel('Label', this.panels.tracksDropdown, trackStr, {
-	// 				text: trackStr,
-	// 				value: 0
-	// 			});
-	// 			item.SetAttributeInt('trackNum', 1);
-	// 			item.SetAttributeInt('trackType', TrackType.MAIN);
+	previousPage() {
+		if (this.currentPage <= 1) this.currentPage = 1;
+		else this.currentPage = +this.currentPage - 1;
 
-	// 			this.panels.tracksDropdown.AddOption(item);
-	// 		}
+		this.setTextEntry(this.currentPage);
+	}
 
-	// 		// Stage tracks
-	// 		const segments = mapZoneData.tracks.main?.zones?.segments;
-	// 		if (segments && segments.length > 1) {
-	// 			segments.forEach((_, index) => {
-	// 				const trackStr = `${$.Localize('#Leaderboards_Tracks_Stage')} ${index + 1}`;
-	// 				const item = $.CreatePanel('Label', this.panels.tracksDropdown, trackStr, {
-	// 					text: trackStr,
-	// 					value: index + 1
-	// 				});
-	// 				item.SetAttributeInt('trackNum', index + 1);
-	// 				item.SetAttributeInt('trackType', TrackType.STAGE);
+	nextPage() {
+		if (this.currentPage >= this.totalPages) this.currentPage = +this.totalPages;
+		else this.currentPage = +this.currentPage + 1;
 
-	// 				this.panels.tracksDropdown.AddOption(item);
-	// 			});
-	// 		}
+		this.setTextEntry(this.currentPage);
+	}
 
-	// 		// Bonus tracks
-	// 		const bonuses = mapZoneData.tracks.bonuses;
-	// 		if (bonuses) {
-	// 			bonuses.forEach((_, index) => {
-	// 				const trackStr = `${$.Localize('#Leaderboards_Tracks_Bonus')} ${index + 1}`;
-	// 				const item = $.CreatePanel('Label', this.panels.tracksDropdown, trackStr, {
-	// 					text: trackStr,
-	// 					value: index + 1
-	// 				});
-	// 				item.SetAttributeInt('trackNum', index + 1);
-	// 				item.SetAttributeInt('trackType', TrackType.BONUS);
+	previousGroup() {
+		$.Msg('NO GROUPS YET');
+	}
 
-	// 				this.panels.tracksDropdown.AddOption(item);
-	// 			});
-	// 		}
-	// 	}
+	nextGroup() {
+		$.Msg('NO GROUPS YET');
+	}
 
-	// 	this.initTracksDropdown();
-	// }
+	selectPage(page: number) {
+		if (page < 1) page = 1;
+		if (page > this.totalPages) page = +this.totalPages;
 
-	// initTracksDropdown() {
-	// 	if (this.panels.tracksDropdown.AccessDropDownMenu().GetChildCount() === 0) {
-	// 		this.panels.tracksDropdown.visible = false;
-	// 		return;
-	// 	}
+		this.currentPage = page;
 
-	// 	// Allow player to sync their current track to the value selected in the dropdown
-	// 	if (this.isInGameLeaderboard()) {
-	// 		this.panels.syncTrackButton.visible = true;
-	// 	}
+		this.setTextEntry(this.currentPage);
 
-	// 	this.panels.tracksDropdown.visible = true;
-	// 	this.panels.tracksDropdown.SetSelectedIndex(0);
-	// 	this.panels.tracksDropdown.SetPanelEvent('onuserinputsubmit', () => {
-	// 		const selected = this.panels.tracksDropdown.GetSelected();
-	// 		this.panels.cp.selectTrack(
-	// 			selected.GetAttributeInt('trackType', TrackType.MAIN as number),
-	// 			selected.GetAttributeInt('trackNum', 1)
-	// 		);
-	// 	});
-	// }
+		//updateLeaderboards(this.currentPage);
+	}
 
 	getCurrentMode() {
 		const isTabMenu = this.isInGameLeaderboard();
@@ -386,5 +285,11 @@ class LeaderboardsHandler {
 
 	isInGameLeaderboard() {
 		return this.panels.cp.id === 'TabMenuLeaderboards';
+	}
+
+	setTextEntry(val: number) {
+		this.blockTextEntryEvent = true;
+		this.panels.controls.pageSelect.text = `${val}`;
+		this.blockTextEntryEvent = false;
 	}
 }
