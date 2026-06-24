@@ -10,6 +10,11 @@
 	vertical-align: top;
 	width: 100%;
 	transition: background-color 0.1s ease-in-out 0s;
+	border: 1px solid transparent;
+
+	&:hover {
+		border: 1px solid rgba(50, 50, 50, 0.4);
+	}
 
 	&__required-game {
 		flow-children: none;
