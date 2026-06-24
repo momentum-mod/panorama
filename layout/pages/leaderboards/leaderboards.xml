@@ -45,6 +45,26 @@
 		</Panel>
 
 		<Panel class="leaderboard-bottom">
+            <Panel id="ControlsContainer" class="leaderboard-controls">
+                <Panel class="leaderboard-controls__change-page leaderboard-controls__change-page--group" onactivate="LeaderboardsHandler.previousGroup()">
+                    <Image id="GroupPrev" textureheight="24" src="file://{images}/double-chevron-left.svg" />
+                </Panel>
+
+                <Button class="leaderboard-controls__change-page" onactivate="LeaderboardsHandler.previousPage()">
+                    <Image id="PagePrev" textureheight="24" src="file://{images}/chevron-left.svg" />
+                </Button>
+
+                <TextEntry id="PageSelect" class="leaderboard-controls__select-page" textmode="numeric" text="1" />
+                <Label id="TotalPages" class="leaderboard-controls__total-pages" text="/ {i:total-pages}"/>
+
+                <Button class="leaderboard-controls__change-page" onactivate="LeaderboardsHandler.nextPage()">
+                    <Image id="PageNext" textureheight="24" src="file://{images}/chevron-right.svg" />
+                </Button>
+
+                <Button class="leaderboard-controls__change-page leaderboard-controls__change-page--group" onactivate="LeaderboardsHandler.nextGroup()">
+                    <Image id="GroupNext" textureheight="24" src="file://{images}/double-chevron-right.svg" />
+                </Button>
+            </Panel>
 		</Panel>
 
 
