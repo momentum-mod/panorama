@@ -6,6 +6,7 @@ import type { MMap } from 'common/web/types/models/models';
 import { getNumStages } from 'common/leaderboard';
 import { getAllCredits, getTier, SimpleMapCredit } from 'common/maps';
 import { MapStatuses } from 'common/web/enums/map-status.enum';
+import { TrackSelectorInterface } from 'components/track-selector';
 
 import { registerHUDCustomizerComponent } from 'common/hud-customizer';
 
@@ -26,7 +27,12 @@ class HudTabMenuHandler {
 		linearLabel: $<Label>('#HudTabMenuLinearLabel'),
 		stageCountSeparator: $<Panel>('#HudTabMenuStageCountSeparator'),
 		stageCountLabel: $<Label>('#HudTabMenuStageCountLabel'),
-		betaInfoContainer: $<Panel>('#BetaInfoContainer')
+		betaInfoContainer: $<Panel>('#BetaInfoContainer'),
+		leaderboards: $<Leaderboards>('#HudLeaderboards')
+	};
+
+	readonly components = {
+		trackSelector: $<TrackSelectorInterface>('#HudTrackSelector')
 	};
 
 	constructor() {
@@ -59,6 +65,11 @@ class HudTabMenuHandler {
 	onMapLoad() {
 		const mapData = MapCacheAPI.GetCurrentMapData();
 		if (!mapData) return;
+
+		const gamemode = GameModeAPI.GetCurrentGameMode();
+
+		this.components.trackSelector.connectLeaderboards(this.panels.leaderboards);
+		this.components.trackSelector.updateTrackData(mapData, gamemode);
 
 		this.panels.betaInfoContainer.SetHasClass(
 			'hide',
