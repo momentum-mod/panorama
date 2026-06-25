@@ -71,7 +71,8 @@ class MapSelectorHandler implements OnPanelLoad {
 	 */
 	readonly components = {
 		mapInfo: $<MapInfoInterface>('#MapInfo'),
-		trackSelector: $<TrackSelectorInterface>('#TrackSelector')
+		trackSelector: $<TrackSelectorInterface>('#TrackSelector'),
+		leaderboards: $<Leaderboards>('#Leaderboards')
 	};
 
 	// Describing which data on which type of panel we want to store out to PS.
@@ -145,6 +146,7 @@ class MapSelectorHandler implements OnPanelLoad {
 		);
 
 		this.components.trackSelector.setBlurPanel(this.panels.blurPanel);
+		this.components.trackSelector.connectLeaderboards(this.components.leaderboards);
 		this.components.mapInfo.setBlurPanel(this.panels.blurPanel);
 		this.components.mapInfo.setMapSelector(this.panels.cp);
 	}
