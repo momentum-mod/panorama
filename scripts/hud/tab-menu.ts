@@ -6,6 +6,7 @@ import type { MMap } from 'common/web/types/models/models';
 import { getNumStages } from 'common/leaderboard';
 import { getAllCredits, getTier, SimpleMapCredit } from 'common/maps';
 import { MapStatuses } from 'common/web/enums/map-status.enum';
+import { TrackSelectorInterface } from 'components/track-selector';
 
 import { registerHUDCustomizerComponent } from 'common/hud-customizer';
 
@@ -27,7 +28,11 @@ class HudTabMenuHandler {
 		stageCountSeparator: $<Panel>('#HudTabMenuStageCountSeparator'),
 		stageCountLabel: $<Label>('#HudTabMenuStageCountLabel'),
 		betaInfoContainer: $<Panel>('#BetaInfoContainer'),
-		voiceToggle: $<Panel>('#VoiceToggle')
+		leaderboards: $<Leaderboards>('#HudLeaderboards')
+	};
+
+	readonly components = {
+		trackSelector: $<TrackSelectorInterface>('#HudTrackSelector')
 	};
 
 	constructor() {
@@ -37,11 +42,6 @@ class HudTabMenuHandler {
 		$.RegisterForUnhandledEvent('EndOfRun_Hide', () => this.hideEndOfRun());
 		$.RegisterForUnhandledEvent('ActiveZoneDefsChanged', () => this.updateMapStats());
 		$.RegisterForUnhandledEvent('MapCache_MapLoad', () => this.onMapLoad());
-
-		// Voice chat only works in a lobby, so only show its toggle while in one.
-		$.RegisterForUnhandledEvent('SteamLobby_Enter', () => this.updateVoiceToggleVisibility());
-		$.RegisterForUnhandledEvent('SteamLobby_Exit', () => this.updateVoiceToggleVisibility());
-		this.updateVoiceToggleVisibility();
 
 		registerHUDCustomizerComponent($.GetContextPanel(), {
 			name: $.Localize('#Customizer_Tab_Menu_Name'),
@@ -62,13 +62,14 @@ class HudTabMenuHandler {
 		}
 	}
 
-	updateVoiceToggleVisibility() {
-		this.panels.voiceToggle.visible = SteamLobbyAPI.IsInLobby();
-	}
-
 	onMapLoad() {
 		const mapData = MapCacheAPI.GetCurrentMapData();
 		if (!mapData) return;
+
+		const gamemode = GameModeAPI.GetCurrentGameMode();
+
+		this.components.trackSelector.connectLeaderboards(this.panels.leaderboards);
+		this.components.trackSelector.updateTrackData(mapData, gamemode);
 
 		this.panels.betaInfoContainer.SetHasClass(
 			'hide',
