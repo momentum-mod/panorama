@@ -2,6 +2,7 @@ import { PanelHandler } from 'util/module-helpers';
 import { TrackType } from 'common/web/enums/track-type.enum';
 import { MapUserCompletions } from 'common/maps';
 import { CompletionGroup } from 'common/web/enums/completion-group.enum';
+import { getCompletionGroup } from 'common/completion-group';
 
 interface TrackDisplayData {
 	track: string;
@@ -39,7 +40,6 @@ export class TrackSelectorHandler {
 
 	updateTrackData(completions: MapUserCompletions) {
 		if (!this.leaderboards) return;
-
 		this.leaderboards.handler.setMapID(completions.mapID);
 		this.leaderboards.handler.setGamemode(completions.gamemode);
 
@@ -88,7 +88,7 @@ export class TrackSelectorHandler {
 				time: track.time,
 				rank: track.rank,
 				total: track.totalCompletions,
-				group: track.group
+				group: getCompletionGroup(track.rank, track.totalCompletions)
 			});
 
 			if (isMain) {
