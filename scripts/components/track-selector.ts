@@ -7,6 +7,7 @@ import { randomInt } from 'util/functions';
 export interface TrackSelectorInterface extends TrackSelector {
 	updateTrackData: (mapData: MapCacheAPI.MapData, gamemode: Gamemode) => void;
 	setBlurPanel: (blurPanel: BaseBlurTarget) => void;
+	connectLeaderboards: (leaderboards: Leaderboards) => void;
 }
 
 interface TrackDisplayData {
@@ -74,11 +75,14 @@ export class TrackSelectorHandler {
 		container: $<Panel>('#TrackSelectorContainer')
 	};
 
+	leaderboards: Leaderboards | null = null;
+
 	// TODO: Blur broken when scrolling
 	blurPanel: BaseBlurTarget | null = null;
 
 	constructor() {
 		const trackSelectorInterface = this.panels.cp as TrackSelectorInterface;
+		trackSelectorInterface.connectLeaderboards = (leaderboards: Leaderboards) => (this.leaderboards = leaderboards);
 		trackSelectorInterface.updateTrackData = (mapData, gamemode) => this.updateTrackData(mapData, gamemode);
 		trackSelectorInterface.setBlurPanel = (panel: BaseBlurTarget) => (this.blurPanel = panel);
 	}
@@ -101,6 +105,12 @@ export class TrackSelectorHandler {
 		const trackPanel = $.CreatePanel('RadioButton', container, '');
 		trackPanel.LoadLayoutSnippet('track-panel');
 
+		if (this.leaderboards) {
+			trackPanel.SetPanelEvent('onselect', () => {
+				this.leaderboards.selectTrack(TrackType.MAIN, 1);
+			});
+		}
+
 		this.populateTrackPanel(trackPanel, {
 			track: 'Main',
 			tier,
@@ -109,25 +119,33 @@ export class TrackSelectorHandler {
 			total: randomInt(1000, 2000),
 			group: randomInt(0, 6)
 		});
+
+		trackPanel.SetSelected(true);
 	}
 
 	createStageSection(mapData: MapCacheAPI.MapData, gamemode: Gamemode) {
 		const stages = Leaderboards.getNumStages(mapData.staticData);
 		if (stages < 2) return;
 
-		const userStageData = Leaderboards.getUserMapDataTrack(mapData.userData, gamemode, TrackType.STAGE);
-
 		const container = $.CreatePanel('Panel', this.panels.container, 'TracksContainer');
 		this.blurPanel?.AddBlurPanel(container);
 
 		for (let i = 1; i <= stages; i++) {
+			const stageData = Leaderboards.getUserMapDataTrack(mapData.userData, gamemode, TrackType.STAGE, i);
+
 			const trackPanel = $.CreatePanel('RadioButton', container, '');
 			trackPanel.LoadLayoutSnippet('track-panel');
 			trackPanel.SetDialogVariable('track', `Stage ${i}`);
 
+			if (this.leaderboards) {
+				trackPanel.SetPanelEvent('onselect', () => {
+					this.leaderboards.selectTrack(TrackType.STAGE, i);
+				});
+			}
+
 			this.populateTrackPanel(trackPanel, {
 				track: `Stage ${i}`,
-				time: userStageData?.time,
+				time: stageData?.time,
 				rank: randomInt(1, 2),
 				total: randomInt(5654, 10000),
 				group: randomInt(0, 6)
@@ -141,21 +159,27 @@ export class TrackSelectorHandler {
 		const bonuses = Leaderboards.getNumBonuses(mapData.staticData);
 		if (bonuses < 1) return;
 
-		const userBonusData = Leaderboards.getUserMapDataTrack(mapData.userData, gamemode, TrackType.BONUS, 2);
-
 		const container = $.CreatePanel('Panel', this.panels.container, 'TracksContainer');
 		this.blurPanel?.AddBlurPanel(container);
 
 		for (let i = 1; i <= bonuses; i++) {
+			const bonusData = Leaderboards.getUserMapDataTrack(mapData.userData, gamemode, TrackType.BONUS, i);
+
 			const trackPanel = $.CreatePanel('RadioButton', container, '');
 			trackPanel.LoadLayoutSnippet('track-panel');
+
+			if (this.leaderboards) {
+				trackPanel.SetPanelEvent('onselect', () => {
+					this.leaderboards.selectTrack(TrackType.BONUS, i);
+				});
+			}
 
 			const tier = Maps.getTier(mapData.staticData, gamemode, TrackType.BONUS, i);
 
 			this.populateTrackPanel(trackPanel, {
 				track: `Bonus ${i}`,
 				tier: tier,
-				time: userBonusData?.time,
+				time: bonusData?.time,
 				rank: randomInt(1, 654),
 				total: randomInt(654, 3545),
 				group: randomInt(0, 6)
@@ -167,10 +191,6 @@ export class TrackSelectorHandler {
 
 	populateTrackPanel(trackPanel: RadioButton, data: TrackDisplayData) {
 		trackPanel.SetDialogVariable('track', data.track);
-
-		if (data.track === 'Main') {
-			trackPanel.SetSelected(true);
-		}
 
 		const tierLabel = trackPanel.FindChildrenWithClassTraverse('track-panel__tier-label')[0] as Label;
 		if (data.tier !== undefined) {

@@ -13,7 +13,6 @@ import { Style } from 'common/web/enums/style.enum';
 import { randomInt } from 'util/functions';
 
 exposeToPanelContext({ LeaderboardListType, LeaderboardType });
-
 @PanelHandler()
 class LeaderboardsHandler {
 	selectedTimesList: LeaderboardListType;
