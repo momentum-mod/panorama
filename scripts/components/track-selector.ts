@@ -112,7 +112,7 @@ export class TrackSelectorHandler {
 		}
 
 		this.populateTrackPanel(trackPanel, {
-			track: 'Main',
+			track: 'Main', //$.Localize('#Leaderboards_Tracks_Main'),
 			tier,
 			time: userMapData?.time,
 			rank: randomInt(1, 1000),
@@ -144,7 +144,7 @@ export class TrackSelectorHandler {
 			}
 
 			this.populateTrackPanel(trackPanel, {
-				track: `Stage ${i}`,
+				track: `${$.Localize('#Leaderboards_Tracks_Stage')} ${i}`,
 				time: stageData?.time,
 				rank: randomInt(1, 2),
 				total: randomInt(5654, 10000),
@@ -177,7 +177,7 @@ export class TrackSelectorHandler {
 			const tier = Maps.getTier(mapData.staticData, gamemode, TrackType.BONUS, i);
 
 			this.populateTrackPanel(trackPanel, {
-				track: `Bonus ${i}`,
+				track: `${$.Localize('#Leaderboards_Tracks_Bonus')} ${i}`,
 				tier: tier,
 				time: bonusData?.time,
 				rank: randomInt(1, 654),
