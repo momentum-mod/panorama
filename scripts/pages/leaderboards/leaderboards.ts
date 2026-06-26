@@ -236,10 +236,6 @@ class LeaderboardsHandler {
 >>>>>>> cdaf35de (WIP: Add Leaderboards Part 2)
 	}
 
-	// $.Localize('#Leaderboards_Tracks_Main')
-	// $.Localize('#Leaderboards_Tracks_Stage')
-	// $.Localize('#Leaderboards_Tracks_Bonus')
-
 	previousPage() {
 		if (this.currentPage <= 1) this.currentPage = 1;
 		else this.currentPage = +this.currentPage - 1;
