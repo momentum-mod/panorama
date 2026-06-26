@@ -16,7 +16,9 @@ $panel-border: 1px solid rgba(255, 255, 255, 0.01);
 	&__left-container {
 		horizontal-align: left;
 		// Warning: using percentage widths here cause ugly raster scaling
-		width: 820px;
+		// Width is scaled based on aspect ratio in js with a default of 820 on 1920x1080 res
+		// TODO: Consider applying max-width for ultrawide
+		// max-width: 820px;
 		height: 100%;
 		margin-right: 8px;
 	}
