@@ -4,6 +4,10 @@
 		<include src="file://{resources}/styles/pages/map-selector/featured-map.scss" />
 	</styles>
 
+    <scripts>
+		<include type="module" src="file://{scripts}/components/featured-map.ts" />
+	</scripts>
+
 	<FeaturedMap class="featured-map">
 		<Image id="MapImage" class="featured-map__image" scaling="stretch-to-cover-preserve-aspect" />
 

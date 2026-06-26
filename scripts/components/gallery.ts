@@ -1,6 +1,7 @@
 import { PanelHandler } from 'util/module-helpers';
 import { parseMapImageUrl } from 'util/functions';
 import { MapCreditType } from 'common/web/enums/map-credit-type.enum';
+import { waitForLayout } from 'common/layout';
 import * as Maps from 'common/maps';
 /**
  * Fullscreen gallery component.
@@ -13,7 +14,9 @@ export class GalleryHandler {
 		mainImage: $<Image>('#MainImage'),
 		thumbnails: $('#Thumbnails'),
 		credits: $<Panel>('#Credits'),
-		descLabel: $<Label>('#Description')
+		descLabel: $<Label>('#Description'),
+		bottom: $<Panel>('#Bottom'),
+		imageContainer: $<Panel>('#ImageContainer')
 	};
 
 	readonly strings = {
@@ -60,7 +63,34 @@ export class GalleryHandler {
 		this.updateCredits(staticData);
 		this.updateDescription(staticData);
 
+		// TODO: Waiting for panorama layouting, figure out if onlayout event for panels is possible
+		waitForLayout(this.panels.bottom, () => this.scaleImageContainer());
+
 		$.DispatchEvent('Activated', thumbs[0], PanelEventSource.MOUSE);
+	}
+
+	scaleImageContainer() {
+		const parent = this.panels.bottom;
+		const container = this.panels.imageContainer;
+
+		// Layout size - padding ( currently 8px everywhere )
+		const availableWidth = parent.actuallayoutwidth - 16;
+		const availableHeight = parent.actuallayoutheight - 16;
+
+		const targetRatio = 16 / 9;
+
+		const finalWidth = availableWidth;
+		const finalHeight = availableWidth / targetRatio;
+
+		// If the calculated height overflows, clamp it by height instead
+		if (finalHeight > availableHeight) {
+			container.style.height = '100%';
+			container.style.width = `${availableHeight * targetRatio}px`;
+			return;
+		}
+
+		container.style.width = `${finalWidth}px`;
+		container.style.height = `${finalHeight}px`;
 	}
 
 	updateCredits(staticData: MapCacheAPI.StaticData) {
@@ -133,7 +163,7 @@ export class GalleryHandler {
 			});
 
 		// Wait for panorama layouting
-		$.Schedule(0.05, () => {
+		waitForLayout(this.panels.credits, () => {
 			const maxHeight = this.panels.credits.GetParent()!.actuallayoutheight * 0.43;
 			if (this.panels.credits.actuallayoutheight > maxHeight) {
 				this.panels.credits.style.height = `${maxHeight}px`;

@@ -3,6 +3,7 @@ import { traverseChildren } from 'util/functions';
 import { parseMapImageUrl } from 'util/functions';
 import { TrackSelectorInterface } from 'components/track-selector';
 import { MapInfoInterface } from 'components/map-info';
+import { scaleWidthToAspectRatio } from 'util/functions';
 // PRE REWORK REMOVAL
 // import { MapStatus, MapStatuses } from 'common/web/enums/map-status.enum';
 // import { MapCreditType } from 'common/web/enums/map-credit-type.enum';
@@ -40,6 +41,7 @@ type StoredFilters = {
 class MapSelectorHandler implements OnPanelLoad {
 	readonly panels = {
 		cp: $.GetContextPanel<MomentumMapSelector>(),
+		leftContainer: $<Panel>('#MapSelectorLeftContainer'),
 		searchText: $<TextEntry>('#MapSearchTextEntry'),
 		searchClear: $<Button>('#MapSearchClear'),
 		filtersPanel: $<Panel>('#MapFilters'),
@@ -50,8 +52,6 @@ class MapSelectorHandler implements OnPanelLoad {
 		],
 		emptyContainer: $<Panel>('#MapListEmptyContainer'),
 		tierSlider: $<DualSlider>('#TierSlider'),
-		// PRE REWORK REMOVAL
-		// leaderboardContainer: $<Panel>('#MapTimes'),
 		listTypes: {
 			ranked: $<Button>('#MapListRanked'),
 			unranked: $<Button>('#MapListUnranked'),
@@ -144,6 +144,9 @@ class MapSelectorHandler implements OnPanelLoad {
 				this.onNStateBtnChanged(panelID, state as NStateButtonState)
 			)
 		);
+
+		const scaledWidth = scaleWidthToAspectRatio(820);
+		this.panels.leftContainer.style.width = `${scaledWidth}px`;
 
 		this.components.trackSelector.setBlurPanel(this.panels.blurPanel);
 		this.components.trackSelector.connectLeaderboards(this.components.leaderboards);

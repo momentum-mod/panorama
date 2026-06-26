@@ -82,6 +82,7 @@ $times-border: 1px solid rgba(24, 24, 24, 0.4);
 			horizontal-align: center;
 			margin: 0px;
 			opacity: 0.9;
+			text-overflow: shrink;
 
 			#{$root}:selected & {
 				color: #fff;
