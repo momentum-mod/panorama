@@ -40,6 +40,7 @@ type StoredFilters = {
 class MapSelectorHandler implements OnPanelLoad {
 	readonly panels = {
 		cp: $.GetContextPanel<MomentumMapSelector>(),
+		leftContainer: $<Panel>('#MapSelectorLeftContainer'),
 		searchText: $<TextEntry>('#MapSearchTextEntry'),
 		searchClear: $<Button>('#MapSearchClear'),
 		filtersPanel: $<Panel>('#MapFilters'),
@@ -144,6 +145,17 @@ class MapSelectorHandler implements OnPanelLoad {
 				this.onNStateBtnChanged(panelID, state as NStateButtonState)
 			)
 		);
+
+		// Constant for panorama, do not change
+		const defaultAspectRatio = 1920 / 1080;
+		const currentAspectRatio = GameInterfaceAPI.GetWindowDimensions().aspectRatio;
+
+		// Map selector width on 1920x1080
+		const selectorWidth = 820;
+
+		// Floored to avoid ugly rasterization
+		const scaledWidth = Math.floor(selectorWidth * (currentAspectRatio / defaultAspectRatio));
+		this.panels.leftContainer.style.width = `${scaledWidth}px`;
 
 		this.components.trackSelector.setBlurPanel(this.panels.blurPanel);
 		this.components.trackSelector.connectLeaderboards(this.components.leaderboards);
