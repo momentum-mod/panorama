@@ -114,3 +114,17 @@ export function parseMapImageUrl(staticData: MapCacheAPI.StaticData): string | n
 
 	return image.split('/').slice(0, -1).join('/');
 }
+
+/**
+ * Scales width defined in 1920x1080 to current aspect ratio
+ * @param width Desired width in 1920x1080
+ * @returns Scaled width: number
+ */
+export function scaleWidthToAspectRatio(width: number) {
+	const defaultAspectRatio = 1920 / 1080;
+	const currentAspectRatio = GameInterfaceAPI.GetWindowDimensions().aspectRatio;
+
+	// Rounded to avoid ugly rasterization
+	const scaledWidth = Math.round(width * (currentAspectRatio / defaultAspectRatio));
+	return scaledWidth;
+}

@@ -40,12 +40,16 @@ TrackSelector {
 		margin-left: 8px;
 		Label {
 			horizontal-align: left;
+			text-overflow: shrink;
 		}
 	}
 
 	&__tier {
 		height: 100%;
 		width: 6%;
+		Label {
+			text-overflow: shrink;
+		}
 	}
 
 	&__time {
@@ -84,6 +88,7 @@ TrackSelector {
 		align: center center;
 		Label {
 			font-weight: normal;
+			text-overflow: shrink;
 		}
 	}
 }

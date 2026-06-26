@@ -194,7 +194,6 @@ class LeaderboardsHandler {
 						break;
 				}
 			});
-<<<<<<< HEAD
 
 		// this.initTracksDropdown();
 
@@ -232,8 +231,6 @@ class LeaderboardsHandler {
 		for (const r of result.records) {
 			$.Msg(`  #${r.rank}  ${r.playerName}  ${r.runTime}s  ${r.steamID}`);
 		}
-=======
->>>>>>> cdaf35de (WIP: Add Leaderboards Part 2)
 	}
 
 	previousPage() {
