@@ -51,8 +51,6 @@ class MapSelectorHandler implements OnPanelLoad {
 		],
 		emptyContainer: $<Panel>('#MapListEmptyContainer'),
 		tierSlider: $<DualSlider>('#TierSlider'),
-		// PRE REWORK REMOVAL
-		// leaderboardContainer: $<Panel>('#MapTimes'),
 		listTypes: {
 			ranked: $<Button>('#MapListRanked'),
 			unranked: $<Button>('#MapListUnranked'),
