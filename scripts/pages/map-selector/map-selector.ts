@@ -3,6 +3,7 @@ import { traverseChildren } from 'util/functions';
 import { parseMapImageUrl } from 'util/functions';
 import { TrackSelectorInterface } from 'components/track-selector';
 import { MapInfoInterface } from 'components/map-info';
+import { scaleWidthToAspectRatio } from 'util/functions';
 // PRE REWORK REMOVAL
 // import { MapStatus, MapStatuses } from 'common/web/enums/map-status.enum';
 // import { MapCreditType } from 'common/web/enums/map-credit-type.enum';
@@ -144,15 +145,7 @@ class MapSelectorHandler implements OnPanelLoad {
 			)
 		);
 
-		// Constant for panorama, do not change
-		const defaultAspectRatio = 1920 / 1080;
-		const currentAspectRatio = GameInterfaceAPI.GetWindowDimensions().aspectRatio;
-
-		// Map selector width on 1920x1080
-		const selectorWidth = 820;
-
-		// Floored to avoid ugly rasterization
-		const scaledWidth = Math.floor(selectorWidth * (currentAspectRatio / defaultAspectRatio));
+		const scaledWidth = scaleWidthToAspectRatio(820);
 		this.panels.leftContainer.style.width = `${scaledWidth}px`;
 
 		this.components.trackSelector.setBlurPanel(this.panels.blurPanel);
