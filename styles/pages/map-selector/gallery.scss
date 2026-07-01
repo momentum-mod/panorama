@@ -49,9 +49,12 @@ $image-shadow: 4px 4px 64px black;
 	}
 
 	&__bottom-left {
-		width: fit-children;
+		width: fill-parent-flow(3.5);
 		height: 100%;
-		padding: 16px;
+
+		// Adjust scaleImageContainer() in gallery.ts when changing padding
+		padding: 8px;
+
 		flow-children: down;
 		horizontal-align: left;
 	}
@@ -59,21 +62,20 @@ $image-shadow: 4px 4px 64px black;
 	&__bottom-right {
 		width: fill-parent-flow(1);
 		height: 100%;
-		padding-top: 16px;
+		padding-top: 8px;
 		padding-right: 16px;
 		flow-children: down;
 	}
 
 	&__image-container {
-		// width = (main-image width-to-height ratio %) × (main-image height %)
-		// fit-children doesn't work here, could be calculated in js, this works for now
-		width: height-percentage(151.1111%);
+		// Width and Height set in JS to account for aspect ratio
 		flow-children: down;
+		horizontal-align: center;
 	}
 
 	&__main-image {
-		width: height-percentage(177.77777777778%);
-		height: 85%;
+		width: 100%;
+		height: width-percentage(56.25%);
 		border-radius: 4px;
 		box-shadow: $image-shadow;
 	}
@@ -81,7 +83,7 @@ $image-shadow: 4px 4px 64px black;
 	&__thumbnails {
 		flow-children: right;
 		horizontal-align: center;
-		height: fill-parent-flow(1);
+		height: 20%;
 		margin-top: 16px;
 	}
 
