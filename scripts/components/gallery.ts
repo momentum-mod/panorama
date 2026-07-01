@@ -79,13 +79,14 @@ export class GalleryHandler {
 
 		const targetRatio = 16 / 9;
 
-		let finalWidth = availableWidth;
-		let finalHeight = availableWidth / targetRatio;
+		const finalWidth = availableWidth;
+		const finalHeight = availableWidth / targetRatio;
 
 		// If the calculated height overflows, clamp it by height instead
 		if (finalHeight > availableHeight) {
-			finalHeight = availableHeight;
-			finalWidth = availableHeight * targetRatio;
+			container.style.height = '100%';
+			container.style.width = `${availableHeight * targetRatio}px`;
+			return;
 		}
 
 		container.style.width = `${finalWidth}px`;
