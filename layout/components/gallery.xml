@@ -14,9 +14,9 @@
                 <Label class="text-h1 text-shadow-outline ml-2" text="{s:name}" />
                 <Label class="text-h1 text-shadow-black color-transparent ml-2" text="{s:name}" />
             </Panel>
-            <Panel class="gallery__bottom">
+            <Panel id="Bottom" class="gallery__bottom">
                 <Panel class="gallery__bottom-left">
-                    <Panel class="gallery__image-container">
+                    <Panel id="ImageContainer" class="gallery__image-container">
                         <!-- Empty event to stop left-click hitting background panel and closing the popup -->
                         <Image id="MainImage" class="gallery__main-image" hittest="true" onactivate="" />
                         <Panel id="Thumbnails" class="gallery__thumbnails">
