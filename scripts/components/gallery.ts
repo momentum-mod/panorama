@@ -13,7 +13,9 @@ export class GalleryHandler {
 		mainImage: $<Image>('#MainImage'),
 		thumbnails: $('#Thumbnails'),
 		credits: $<Panel>('#Credits'),
-		descLabel: $<Label>('#Description')
+		descLabel: $<Label>('#Description'),
+		bottom: $<Panel>('#Bottom'),
+		imageContainer: $<Panel>('#ImageContainer')
 	};
 
 	readonly strings = {
@@ -60,7 +62,33 @@ export class GalleryHandler {
 		this.updateCredits(staticData);
 		this.updateDescription(staticData);
 
+		// TODO: Waiting for panorama layouting, figure out if onlayout event for panels is possible
+		$.Schedule(0.1, () => this.scaleImageContainer());
+
 		$.DispatchEvent('Activated', thumbs[0], PanelEventSource.MOUSE);
+	}
+
+	scaleImageContainer() {
+		const parent = this.panels.bottom;
+		const container = this.panels.imageContainer;
+
+		// Layout size - padding ( currently 8px everywhere )
+		const availableWidth = parent.actuallayoutwidth - 16;
+		const availableHeight = parent.actuallayoutheight - 16;
+
+		const targetRatio = 16 / 9;
+
+		let finalWidth = availableWidth;
+		let finalHeight = availableWidth / targetRatio;
+
+		// If the calculated height overflows, clamp it by height instead
+		if (finalHeight > availableHeight) {
+			finalHeight = availableHeight;
+			finalWidth = availableHeight * targetRatio;
+		}
+
+		container.style.width = `${finalWidth}px`;
+		container.style.height = `${finalHeight}px`;
 	}
 
 	updateCredits(staticData: MapCacheAPI.StaticData) {
