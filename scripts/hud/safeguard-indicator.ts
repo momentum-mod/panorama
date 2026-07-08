@@ -30,7 +30,7 @@ class SafeguardHandler {
 			name: $.Localize('#Customizer_Safeguard_Indicator_Name'),
 			resizeX: false,
 			resizeY: false,
-			// TODO: Add safeguard cvars?
+			// TODO: Consider adding safeguard cvars
 			// TODO: Figure out how to add a dummy indicator without breaking clips
 			dynamicStyles: {
 				size: {

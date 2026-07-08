@@ -1,5 +1,4 @@
 import { rgbaStringToTuple } from 'util/colors';
-// TODO: *VERY* detailed docs here, the types are unreadable!
 
 /**
  * Gets the HUD customizer handler instance.

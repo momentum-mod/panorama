@@ -11,7 +11,7 @@
 			<MomHudGhostEntities />
 			<MomHudConcEntities id="ConcEntities" />
 			<MomHudDamageIndicator />
-			<MomHudCgaz /> <!-- TODO: Not in customizer -->
+			<MomHudCgaz /> <!-- TODO: Not in customizer, requires c++ work -->
 			<MomHudReticle />
 		</Panel>
 
@@ -44,22 +44,19 @@
         <MomHudPowerupTimer id="PowerupTimer"/>
         <MomHudAhopSprint id="AhopSprint"/>
 
-
-        <!-- NOT IN CUSTOMIZER -->
+        <!-- Not in customizer -->
 		<ConVarEnabler convar="mom_zoning_enable" togglevisibility="true">
-			<MomHudZoning /> <!-- TODO: HudBottomCenter, not in customizer -->
+			<MomHudZoning />
 		</ConVarEnabler>
+        <MomHudJumpTiming />
+        <HudHintText id="HudHintText" /> <!-- TODO: No idea how to even check what this does -->
 
-        <MomHudJumpTiming /> <!-- TODO: HudCenter, not added to customizer -->
-		
-        
-        <!-- No idea -->
-        <HudHintText id="HudHintText" /> <!-- TODO: not in customizer, no idea how to even check what this does -->
-
-        <!-- Most likely gonna get removed -->
+        <!-- Old, broken hud elements, might get revived some day, not important -->
 		<!-- <HudBoneCounts id="BoneCount" /> TODO: HudTopCenter, not in customizer, probably gonna get nuked -->
         <!-- <MomHudStrafeSync id="StrafeSync" /> This is broken and probably not worth fixing --> 
 
+
+        <!-- Hud panels using blur must be placed below blur definitions -->
 		<HudBlurTarget id="HudBlur" blurrects="TabMenuWrapper Spectator" class="hud-blur" hittest="false" hittestchildren="false">
 			<BackbufferImagePanel class="full" />
 		</HudBlurTarget>
@@ -69,21 +66,19 @@
 		</HudBlurTarget>
 
 		<Panel id="ZoningContainer" hittestchildren="true">
-			<ZoneMenu id="ZoneMenu" hittest="true" hittestchildren="true" /> <!-- TODO: standalone panel, not in customizer -->
+			<ZoneMenu id="ZoneMenu" hittest="true" hittestchildren="true" /> <!-- Standalone panel, not in customizer -->
 		</Panel>
 
 
         <MomHudSpectate id="Spectator" />
-
-        <HudStaticMenu id="StaticMenu" /> <!-- TODO: not in customizer, needs c++ work -->
+        <HudStaticMenu id="StaticMenu" />
 
 		<!-- This container is here so we can move the leaderboard in and out of it during the end-of-match sequence -->
-		<!-- TODO: HudLeaderboards had w-full h-full removed before -->
+		<!-- Will be fully reworked in map selector rework PR -->
 		<Panel id="TabMenuContainer" class="w-full h-full" hittest="false" hittestchildren="true">
 			<HudTabMenu id="TabMenu" hittest="true" />
 		</Panel>
 		
-
         <!-- This must be placed after all panels registered with hud customizer -->
 		<HudCustomizer />
 

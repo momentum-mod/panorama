@@ -12,7 +12,7 @@ registerHUDCustomizerComponent($.GetContextPanel(), {
 				panel.SetHasClass('chat--disable-users-typing', !value);
 			}
 		},
-		// BROKEN, GET'S RID OF THE BOLD STYLING IN SPANS
+		// TODO: Broken for now, requires c++ rework, changing fonts breaks styling
 		// font: {
 		// 	name: $.Localize('#Customizer_Font'),
 		// 	type: CustomizerPropertyType.FONT_PICKER,
@@ -64,8 +64,6 @@ registerHUDCustomizerComponent($.GetContextPanel(), {
 			valueFn: (value) => `${value}px`,
 			settingProps: { min: 0, max: 20 }
 		}
-		// TODO: Blurring blurs the entire panel, not the backbuffer. Adding #ChatInput to #HudBlur's blurrects has
-		// same issue, no idea what's different about that panel from say, TabMenu/Spectator
 		// blur: {
 		// 	name: $.Localize('#Customizer_Chat_Blur'),
 		// 	type: CustomizerPropertyType.CHECKBOX,

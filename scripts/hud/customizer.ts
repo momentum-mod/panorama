@@ -16,8 +16,6 @@ import { PanelHandler } from 'util/module-helpers';
 import { mergeDeep, compareDeepIgnoreNull, compareDeepAsymmetric } from 'util/functions';
 import { CopyToOtherPresetsData } from 'modals/popups/hud-customizer-copy-to-other-presets';
 
-// TODO: need to do a *ton* of localization when this is done, including components!
-
 /** Structure of layout stored out to JSON */
 interface ComponentLayout {
 	/** Whether the panel is visible, and its event handler logic runs (TODO: verify this. does HudPRocessInput and stuff fire when this is off?) */
@@ -608,11 +606,6 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			if (this.customizerReady) this.save();
 		});
 
-		// TODO: Below todo is *probably* fine now using events like this, but be very careful everything
-		// is getting registered okay.
-		// TODO (Old): I *think* we're gonna need this event to cover all cases where the HUD is reloaded.
-		// Looks like some stuff like HudSpecInfoHandler listening for PanelLoaded is getting
-		// called later than this though...
 		$.RegisterForUnhandledEvent('MapCache_MapLoad' as any, () => {
 			this.panels.customizer.toggleUI(false);
 
@@ -1071,7 +1064,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		const gamemodeID = this.gamemodeInfo.id;
 		const fullPresetName = `${gamemodeID}_${this.currentPreset}`;
 		// Serialization done in C++.
-		//TODO: Why the fuck is this saving with null values
+		//TODO: This is saving with null values even though they are wiped from saveData. No idea why, it doesn't affect anything negatively
 		const isSaved = this.panels.customizer.saveLayout(fullPresetName, saveData);
 
 		if (isSaved) {
@@ -2020,7 +2013,6 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			const offsetX = this.activeComponent.offsetX;
 			let newX = knobX;
 
-			// TODO: unset gridline if nothing found
 			if (shouldSnap) {
 				for (const gl of this.gridlines[Axis.X]) {
 					const dist = Math.abs(gl.offset - knobX);
