@@ -356,6 +356,12 @@ interface GlobalEventNameMap {
 	/** Fired when the local map leaderboard data has loaded */
 	Leaderboards_LocalMapLeaderboardsLoaded: () => void;
 
+	/**
+	 * Fired when a page requested via `getLeaderboardRecords()` has loaded (or failed). The token
+	 * matches the one returned by that call; call `getLoadedLeaderboardRecords()` to read the result.
+	 */
+	LeaderboardRecords_Loaded: (requestToken: int32) => void;
+
 	/** Fired when the leaderboards has attempted to play a replay. */
 	Leaderboards_OnPlayReplay: () => void;
 
