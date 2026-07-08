@@ -35,6 +35,54 @@ export enum LeaderboardStatusType {
 	UNAUTHORIZED_FRIENDS_LIST = 6
 }
 
+/**
+ * Source/filter for the paginated records API (`Leaderboards.getLeaderboardRecords`).
+ * Mirrors the engine's `LeaderboardRecordsFilter_t`.
+ */
+export enum LeaderboardRecordsFilter {
+	GLOBAL = 0,
+	FRIENDS = 1,
+	LOBBY = 2,
+	SAVED_REPLAYS = 3,
+	AROUND = 4
+}
+
+/** Records are always fetched in fixed-size pages. Mirrors the engine's `LEADERBOARD_RECORDS_PER_PAGE`. */
+export const LEADERBOARD_RECORDS_PER_PAGE = 20;
+
+/**
+ * A single leaderboard record row, as returned by `Leaderboards.getLoadedLeaderboardRecords`.
+ * Mirrors the engine's `LeaderboardTime` JS shape.
+ */
+export interface LeaderboardRecord {
+	rank: int32;
+	playerName: string;
+	steamID: string;
+	runTime: float;
+	/** Run date as a Unix timestamp (seconds); a uint64 marshalled to a JS string. */
+	date: uint64_str;
+	trackId: int32;
+	style: Style;
+	replayHash: string;
+	fileURL: string;
+	userRoles: int32;
+	userBans: int32;
+}
+
+/** A loaded page of leaderboard records, as returned by `Leaderboards.getLoadedLeaderboardRecords`. */
+export interface LoadedLeaderboardRecords {
+	requestToken: int32;
+	filter: LeaderboardRecordsFilter;
+	/**
+	 * The 0-based page of the result. For {@link LeaderboardRecordsFilter.AROUND} this is the page
+	 * the engine resolved to (the one containing the local user's PB), not the page that was requested.
+	 */
+	page: int32;
+	totalPages: int32;
+	status: LeaderboardStatusType;
+	records: LeaderboardRecord[];
+}
+
 export function getTrack(
 	mapData: MMap,
 	gamemode: Gamemode,
