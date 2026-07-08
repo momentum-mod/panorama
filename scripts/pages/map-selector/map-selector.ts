@@ -148,6 +148,9 @@ class MapSelectorHandler implements OnPanelLoad {
 		$.RegisterForUnhandledEvent('MapSelector_SelectedOnlineDataUpdate', (mapData) =>
 			this.onSelectedOnlineDataUpdated(mapData)
 		);
+		$.RegisterForUnhandledEvent('MapSelector_SelectedCompletionsUpdate', (completions) =>
+			this.onSelectedCompletionsUpdated(completions)
+		);
 		$.RegisterForUnhandledEvent('MapSelector_HideLeaderboards', () => this.toggleLeaderboards(false));
 
 		this.panels.nStateButtons.forEach((panel) =>
@@ -566,6 +569,20 @@ class MapSelectorHandler implements OnPanelLoad {
 		} else {
 			statsPanel.FindChildTraverse('MapInfoWR').visible = false;
 			statsPanel.FindChildTraverse('MapInfoNoWR').visible = true;
+		}
+	}
+
+	// TODO: Temporary debug logging to validate completion data end-to-end. Remove once the completion table UI is built.
+	onSelectedCompletionsUpdated(completions: Maps.MapUserCompletions) {
+		$.Msg(
+			`[MapSelector] Completions for map ${completions.mapID} (gamemode ${completions.gamemode}, style ${completions.style}): ${completions.tracks.length} tracks`
+		);
+		for (const t of completions.tracks) {
+			const completed = t.time !== null;
+			$.Msg(
+				`  track ${t.trackType}/${t.trackNum} tier=${t.tier} completed=${completed} ` +
+					`time=${t.time} rank=${t.rank}/${t.totalCompletions} group=${t.group}`
+			);
 		}
 	}
 
