@@ -1,5 +1,11 @@
 import { exposeToPanelContext, PanelHandler } from 'util/module-helpers';
-import { LeaderboardListType, LeaderboardStatusType, LeaderboardType, sortLeaderboard } from 'common/leaderboard';
+import {
+	LeaderboardListType,
+	LeaderboardRecordsFilter,
+	LeaderboardStatusType,
+	LeaderboardType,
+	sortLeaderboard
+} from 'common/leaderboard';
 import { EndOfRunShowReason } from 'common/timer';
 import { TrackType } from 'common/web/enums/track-type.enum';
 import type { MMap } from 'common/web/types/models/models';
@@ -49,6 +55,11 @@ class LeaderboardsHandler {
 		);
 		$.RegisterEventHandler('Leaderboards_LocalMapLeaderboardsLoaded', this.panels.cp, () =>
 			this.onLocalMapLeaderboardsLoaded()
+		);
+
+		// DEBUG: log the loaded page whenever a getLeaderboardRecords() request completes.
+		$.RegisterEventHandler('LeaderboardRecords_Loaded', this.panels.cp, (requestToken) =>
+			this.debugLogLoadedRecords(requestToken)
 		);
 
 		// Note: Can't set radio button groups in the XML because it causes multiple leaderboard instances to interfere with eachother
@@ -243,6 +254,41 @@ class LeaderboardsHandler {
 			});
 
 		this.initTracksDropdown();
+
+		// DEBUG: fetch and log the first page of global records for the newly selected map.
+		this.debugFetchFirstPage(map);
+	}
+
+	/** DEBUG: request page 0 of the global leaderboard for the main track of the given map. */
+	debugFetchFirstPage(map: MMap) {
+		const currentMode = this.getCurrentMode();
+		const currentStyle =
+			this.panels.stylesDropdown.GetSelected()?.GetAttributeInt('value', Style.NORMAL) ?? Style.NORMAL;
+
+		const token = this.panels.cp.getLeaderboardRecords(
+			map.id,
+			currentMode,
+			TrackType.MAIN,
+			1,
+			currentStyle,
+			LeaderboardRecordsFilter.GLOBAL,
+			0 /* page */
+		);
+
+		$.Msg(`[LeaderboardRecords] Requested page 0 for map ${map.name} (id ${map.id}), token ${token}`);
+	}
+
+	/** DEBUG: dump a completed getLeaderboardRecords() page to the console. */
+	debugLogLoadedRecords(requestToken: int32) {
+		const result = this.panels.cp.getLoadedLeaderboardRecords();
+		if (result.requestToken !== requestToken) return; // superseded by a newer request
+
+		$.Msg(
+			`[LeaderboardRecords] Loaded token ${requestToken}: filter=${result.filter} page=${result.page}/${result.totalPages} status=${result.status} count=${result.records.length}`
+		);
+		for (const r of result.records) {
+			$.Msg(`  #${r.rank}  ${r.playerName}  ${r.runTime}s  ${r.steamID}`);
+		}
 	}
 
 	onLocalMapLeaderboardsLoaded() {
