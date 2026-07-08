@@ -38,6 +38,25 @@
 				<SettingsSlider text="#Settings_Volume_Ghosts" min="0" max="1" percentage="true" convar="mom_ghost_volume" infomessage="#Settings_Volume_Ghost_Info" tags="ghosts" hasdocspage="false" />
 				<SettingsSlider text="#Settings_Volume_UI" min="0" max="1" percentage="true" convar="snd_volume_ui" tags="ui,interface" hasdocspage="false" />
 				<SettingsSlider text="#Settings_Volume_Timer" min="0" max="1" percentage="true" convar="mom_timer_volume" tags="timer" hasdocspage="false" />
+				<SettingsSlider text="#Settings_Volume_Voice" min="0" max="1" percentage="true" convar="voice_scale" tags="voice,microphone,chat" hasdocspage="false" />
+			</Panel>
+
+			<Panel class="settings-page__spacer" />
+
+			<Panel id="VoiceSubSection" class="settings-group">
+				<Panel class="settings-group__header">
+					<Label class="settings-group__title" text="#Settings_Voice_Title" tags="voice,microphone,chat" />
+					<TooltipPanel class="settings-group__reset" tooltip="#Settings_General_Reset">
+						<Button class="button" onactivate="SettingsPage.resetSettings('VoiceSubSection');">
+							<Image class="button__icon" src="file://{images}/reset.svg" />
+						</Button>
+					</TooltipPanel>
+				</Panel>
+
+				<SettingsEnum text="#Settings_Voice_Enable" infomessage="#Settings_Voice_Enable_Info" convar="voice_enable" tags="voice,microphone,chat" hasdocspage="false">
+					<RadioButton group="voiceenable" text="#Common_Off" value="0" />
+					<RadioButton group="voiceenable" text="#Common_On" value="1" />
+				</SettingsEnum>
 			</Panel>
 
 			<Panel class="settings-page__spacer" />
