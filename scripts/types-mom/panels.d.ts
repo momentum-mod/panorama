@@ -55,6 +55,28 @@ interface Leaderboards extends AbstractPanel<'Leaderboards'> {
 	applyFilters(): void;
 
 	selectTrack(trackType: import('common/web/enums/track-type.enum').TrackType, trackNum: int32): void;
+
+	/**
+	 * Fetches a page (20 records) of leaderboard records for a map/track/gamemode/style/filter.
+	 * Returns a request token; listen for `LeaderboardRecords_Loaded` (which passes the same
+	 * token) then call `getLoadedLeaderboardRecords()` to read the result. A newer call
+	 * supersedes any in-flight one.
+	 *
+	 * `filter` is a LeaderboardRecordsFilter: 0=global, 1=friends, 2=lobby, 3=savedReplays, 4=around.
+	 * `page` is 0-based (ignored for `around`, which resolves to the page containing the user's PB).
+	 */
+	getLeaderboardRecords(
+		mapID: int32,
+		gamemode: import('common/web/enums/gamemode.enum').Gamemode,
+		trackType: import('common/web/enums/track-type.enum').TrackType,
+		trackNum: int32,
+		style: import('common/web/enums/style.enum').Style,
+		filter: import('common/leaderboard').LeaderboardRecordsFilter,
+		page: int32
+	): int32;
+
+	/** Returns the most recently loaded page of leaderboard records fetched via `getLeaderboardRecords`. */
+	getLoadedLeaderboardRecords(): import('common/leaderboard').LoadedLeaderboardRecords;
 }
 
 interface LeaderboardEntry extends AbstractPanel<'LeaderboardEntry'> {
