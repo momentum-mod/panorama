@@ -33,6 +33,7 @@ declare interface PanelTagNameMap {
 	ToastContainer: ToastContainer;
 	ToastGeneric: ToastGeneric;
 	Gallery: Gallery;
+	GroupPill: GroupPill;
 }
 
 /**
@@ -59,10 +60,19 @@ declare interface Gallery extends AbstractPanel<'Gallery'> {
 	handler: import('components/gallery').GalleryHandler;
 }
 
-declare interface TrackSelector extends AbstractPanel<'TrackSelector'> {}
+declare interface GroupPill extends AbstractPanel<'GroupPill'> {
+	handler: import('components/group-pill').GroupPillHandler;
+}
+UiToolkitAPI.RegisterPanel2d('GroupPill', 'file://{resources}/layout/components/group-pill.xml');
+
+declare interface TrackSelector extends AbstractPanel<'TrackSelector'> {
+	handler: import('components/track-selector').TrackSelectorHandler;
+}
 UiToolkitAPI.RegisterPanel2d('TrackSelector', 'file://{resources}/layout/components/track-selector.xml');
 
-declare interface MapInfo extends AbstractPanel<'MapInfo'> {}
+declare interface MapInfo extends AbstractPanel<'MapInfo'> {
+	handler: import('components/map-info').MapInfoHandler;
+}
 UiToolkitAPI.RegisterPanel2d('MapInfo', 'file://{resources}/layout/components/map-info.xml');
 
 /**

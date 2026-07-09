@@ -76,20 +76,11 @@ TrackSelector {
 		margin-left: 32px;
 	}
 
-	&__group-pill {
+	&__group-pill-container {
 		height: 80%;
 		width: 83%;
-
-		horizontal-align: center;
 		vertical-align: center;
-		border-radius: 6px;
-		border-width: 3px;
-		border-style: solid;
-		align: center center;
-		Label {
-			font-weight: normal;
-			text-overflow: shrink;
-		}
+		horizontal-align: center;
 	}
 }
 

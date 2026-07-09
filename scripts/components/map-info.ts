@@ -4,14 +4,8 @@ import { SteamGamesNames } from 'common/web/maps/steam-games.map';
 import * as Maps from 'common/maps';
 import * as Leaderboards from 'common/leaderboard';
 
-export interface MapInfoInterface extends MapInfo {
-	updateMapInfo: (mapData: MapCacheAPI.MapData) => void;
-	setBlurPanel: (panel: HudBlurTarget) => void;
-	setMapSelector: (panel: MomentumMapSelector) => void;
-}
-
-@PanelHandler()
-class MapInfoHandler {
+@PanelHandler({ exposeToPanel: true })
+export class MapInfoHandler {
 	readonly panels = {
 		cp: $.GetContextPanel<MapInfo>(),
 		container: $<Panel>('#MapInfoContainer'),
@@ -39,13 +33,6 @@ class MapInfoHandler {
 	blurPanel: HudBlurTarget | null = null;
 	mapSelector: MomentumMapSelector | null = null;
 
-	constructor() {
-		const mapInfoInterface = this.panels.cp as MapInfoInterface;
-		mapInfoInterface.updateMapInfo = (mapData: MapCacheAPI.MapData) => this.updateMapInfo(mapData);
-		mapInfoInterface.setBlurPanel = (panel: HudBlurTarget) => this.setBlurPanel(panel);
-		mapInfoInterface.setMapSelector = (panel: MomentumMapSelector) => (this.mapSelector = panel);
-	}
-
 	setBlurPanel(panel: HudBlurTarget) {
 		this.blurPanel = panel;
 
@@ -58,6 +45,10 @@ class MapInfoHandler {
 			this.panels.container.style.backgroundColor = 'rgba(0, 0, 0, 0)';
 			this.blurPanel.RemoveBlurPanel(this.panels.container);
 		});
+	}
+
+	setMapSelector(panel: MomentumMapSelector) {
+		this.mapSelector = panel;
 	}
 
 	updateMapInfo(mapData: MapCacheAPI.MapData) {
@@ -150,7 +141,7 @@ class MapInfoHandler {
 		// }
 	}
 
-	updateRequiredGames(staticData: MapCacheAPI.StaticData) {
+	private updateRequiredGames(staticData: MapCacheAPI.StaticData) {
 		if (!staticData.info?.requiredGames) {
 			this.requiredGames.forEach(([panel]) => {
 				panel.AddClass('map-info-container__required-game--hidden');
@@ -187,7 +178,7 @@ class MapInfoHandler {
 		});
 	}
 
-	openGallery(mapData: MapCacheAPI.MapData) {
+	private openGallery(mapData: MapCacheAPI.MapData) {
 		if (!this.mapSelector) {
 			$.Warning("Map info doesn't have access to Map Selector panel");
 			return;

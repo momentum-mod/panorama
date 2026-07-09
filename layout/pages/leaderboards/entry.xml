@@ -13,7 +13,7 @@
 			<Label class="leaderboard-entry__item leaderboard-entry__name" text="{s:player}" />
 		</Panel>
 
-		<Label class="leaderboard-entry__item leaderboard-entry__time" text="{s:time}" />
+		<Label class="leaderboard-entry__item leaderboard-entry__time" text="{g:time:time}" />
 		<!-- TODO: Tags -->
 
 	</LeaderboardEntry>

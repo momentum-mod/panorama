@@ -5,8 +5,8 @@
 @use 'sass:list';
 
 $main-border: 1px solid rgba(43, 43, 43, 0.4);
-$radio-border: 1px solid rgba(64, 64, 64, 0.4);
-$times-border: 1px solid rgba(24, 24, 24, 0.4);
+$radio-border: 1px solid rgba(86, 86, 86, 0.4);
+$times-border: 0px solid rgba(24, 24, 24, 0.4);
 
 // ─── Main Container ───────────────────────────────────────────────────────────
 
@@ -155,6 +155,17 @@ $times-border: 1px solid rgba(24, 24, 24, 0.4);
 			margin-bottom: 4px;
 		}
 	}
+
+	&__group-pills {
+		width: 100%;
+		height: 100%;
+		overflow: noclip noclip; // let children escape this panel's bounds
+
+		.leaderboard-group-pill {
+			width: fit-children;
+			height: 22px;
+		}
+	}
 }
 
 .leaderboard-controls {
@@ -192,5 +203,37 @@ $times-border: 1px solid rgba(24, 24, 24, 0.4);
 		margin-left: 6px;
 		vertical-align: center;
 		margin-right: 4px;
+	}
+}
+
+.leaderboard-around {
+	width: 32px;
+	height: 32px;
+	margin: 8px 16px;
+	border-radius: 2px;
+	align: right center;
+
+	&:not(:disabled):hover {
+		background-color: rgba(58, 58, 58, 0.4);
+	}
+
+	&:not(:disabled):active {
+		background-color: rgba(81, 81, 81, 0.6);
+	}
+
+	&:disabled {
+		.leaderboard-around__icon {
+			wash-color: rgb(85, 85, 85);
+		}
+	}
+
+	&__icon-container {
+		width: fit-children;
+		height: fit-children;
+		align: center center;
+	}
+
+	&__icon {
+		align: center center;
 	}
 }
