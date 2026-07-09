@@ -23,8 +23,8 @@
                     <Label class="track-selector-label track-panel__rank-label" text="{i:rank}/{i:total}"/>
                 </Panel>
                 <Panel class="track-panel__group">
-                    <Panel class="track-panel__group-pill">
-                        <Label class="track-selector-label track-panel__group-label" text="G{i:group}"/>
+                    <Panel class="track-panel__group-pill-container">
+                        <GroupPill id="GroupPill" />
                     </Panel>
                 </Panel>
             </RadioButton>
