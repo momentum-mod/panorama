@@ -18,7 +18,7 @@ class Speedometer {
 		toggle: ToggleButton;
 		discard: Button;
 		delete: Button;
-		axes: Panel;
+		axesSetting: Panel;
 		xaxisToggle: ToggleButton;
 		yaxisToggle: ToggleButton;
 		zaxisToggle: ToggleButton;
@@ -43,7 +43,7 @@ class Speedometer {
 			toggle: container.FindChildInLayoutFile('SpeedometerToggleBtn'),
 			discard: container.FindChildInLayoutFile('SpeedometerDiscardBtn'),
 			delete: container.FindChildInLayoutFile('SpeedometerDeleteBtn'),
-			axes: container.FindChildInLayoutFile('SpeedometerAxesContainer'),
+			axesSetting: container.FindChildInLayoutFile('SpeedometerAxesSettingContainer'),
 			xaxisToggle: container.FindChildInLayoutFile('SpeedometerXAxisToggleButton'),
 			yaxisToggle: container.FindChildInLayoutFile('SpeedometerYAxisToggleButton'),
 			zaxisToggle: container.FindChildInLayoutFile('SpeedometerZAxisToggleButton'),
@@ -59,6 +59,12 @@ class Speedometer {
 		this.panels.xaxisToggle.SetSelected(enabledAxes[0]);
 		this.panels.yaxisToggle.SetSelected(enabledAxes[1]);
 		this.panels.zaxisToggle.SetSelected(enabledAxes[2]);
+
+		// Energy is a scalar quantity, so per-axis selection is meaningless for it; hide the whole row.
+		this.panels.axesSetting.SetHasClass(
+			'settings-speedometer__settingcontainer--hidden',
+			this.type === SpeedometerType.ENERGY
+		);
 
 		this.panels.colorMode.SetSelectedIndex(speedo.color_type);
 

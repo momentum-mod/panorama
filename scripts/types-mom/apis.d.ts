@@ -155,6 +155,9 @@ declare namespace MomentumPlayerAPI {
 	/** Gets the player or spec target's current view angles */
 	function GetAngles(): vec3;
 
+	/** Gets the player or spec target's current mechanical energy, expressed as the height (in units) reachable above their last jump position */
+	function GetEnergy(): float;
+
 	/** Gets the player or spec target's percentage of sync'd strafe ticks according to calculation type */
 	function GetStrafeSync(type: 0 | 1): float;
 

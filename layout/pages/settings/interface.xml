@@ -30,7 +30,7 @@
 					</ToggleButton>
 				</Panel>
 				<Panel id="SpeedometerDetailContainer" class="settings-speedometer__detail settings-speedometer__detail--hidden">
-					<Panel class="settings-speedometer__settingcontainer mt-2">
+					<Panel id="SpeedometerAxesSettingContainer" class="settings-speedometer__settingcontainer mt-2">
 						<Label class="settings-speedometer__settinglabel" text="#Settings_Speedometer_EnabledAxes" />
 						<Panel id="SpeedometerAxesContainer" class="settings-speedometer__axestogglebuttoncontainer">
 							<ToggleButton id="SpeedometerXAxisToggleButton" class="button togglebutton togglebutton--blue mr-2" >
