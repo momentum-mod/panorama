@@ -1,0 +1,12 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+		<include src="file://{resources}/styles/hud/voice.scss" />
+	</styles>
+
+	<VoiceSpeaker class="voice-speaker voice-row">
+		<Image class="voice-row__icon" src="file://{images}/volume-high.svg" textureheight="24" />
+		<AvatarImage id="SpeakerAvatar" class="voice-row__avatar" />
+		<Label id="SpeakerName" class="voice-row__name" />
+	</VoiceSpeaker>
+</root>
