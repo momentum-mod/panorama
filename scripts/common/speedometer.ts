@@ -4,7 +4,8 @@ export enum SpeedometerType {
 	EXPLOSION_VELOCITY = 1,
 	JUMP_VELOCITY = 2,
 	RAMP_VELOCITY = 3,
-	ZONE_VELOCITY = 4
+	ZONE_VELOCITY = 4,
+	ENERGY = 5
 }
 
 export enum SpeedometerColorType {
@@ -19,5 +20,6 @@ export const SpeedometerDispNames: ReadonlyMap<SpeedometerType, string> = new Ma
 	[SpeedometerType.EXPLOSION_VELOCITY, '#Speedometer_Type_ExplosiveJump'],
 	[SpeedometerType.JUMP_VELOCITY, '#Speedometer_Type_Jump'],
 	[SpeedometerType.RAMP_VELOCITY, '#Speedometer_Type_Ramp'],
-	[SpeedometerType.ZONE_VELOCITY, '#Speedometer_Type_Zone']
+	[SpeedometerType.ZONE_VELOCITY, '#Speedometer_Type_Zone'],
+	[SpeedometerType.ENERGY, '#Speedometer_Type_Energy']
 ]);

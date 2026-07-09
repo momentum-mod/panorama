@@ -64,12 +64,11 @@ class Speedometer {
 		this.settings = settings;
 		this.prevVal = 0;
 
-		this.speedometerLabel.AddClass(
-			this.type === SpeedometerType.OVERALL_VELOCITY ? AXIS_LABEL_CLASS : EVENT_LABEL_CLASS
-		);
-		this.comparisonLabel.AddClass(
-			this.type === SpeedometerType.OVERALL_VELOCITY ? AXIS_COMPLABEL_CLASS : EVENT_COMPLABEL_CLASS
-		);
+		// Overall velocity and energy update continuously, so they use the persistent "axis" styling
+		// rather than the transient "event" styling used by one-shot speedometers.
+		const isContinuous = this.type === SpeedometerType.OVERALL_VELOCITY || this.type === SpeedometerType.ENERGY;
+		this.speedometerLabel.AddClass(isContinuous ? AXIS_LABEL_CLASS : EVENT_LABEL_CLASS);
+		this.comparisonLabel.AddClass(isContinuous ? AXIS_COMPLABEL_CLASS : EVENT_COMPLABEL_CLASS);
 
 		this.comparisonLabel.SetHasClass(
 			HIDDEN_CLASS,
@@ -314,6 +313,7 @@ class SpeedometerHandler {
 
 		this.correctedColorizeDeadzone = deltaTime * COLORIZE_DEADZONE;
 		this.updateSpeedometersOfType(SpeedometerType.OVERALL_VELOCITY, velocity);
+		this.updateSpeedometersOfType(SpeedometerType.ENERGY, MomentumPlayerAPI.GetEnergy());
 	}
 
 	/* TODO: replace with updates based on new timer events
@@ -421,8 +421,10 @@ class SpeedometerHandler {
 		for (const speedometer of speedometers) {
 			// HACK: last jump speedometer type don't have full velocity vector, and so the velocity they pass in is actually speed
 			// Refactor runstats to fix
+			// Energy is also a scalar rather than a velocity vector, and unlike speeds it can be negative,
+			// so it must be passed through as-is without axis selection or Math.abs.
 			const speed =
-				type === SpeedometerType.JUMP_VELOCITY
+				type === SpeedometerType.JUMP_VELOCITY || type === SpeedometerType.ENERGY
 					? (velocity as number)
 					: this.getSpeedFromVelocity(velocity as vec3, speedometer.settings);
 
@@ -502,9 +504,9 @@ class SpeedometerHandler {
 		}
 	}
 
-	// Overall velocity speedometers shouldn't fade out as they constantly update
+	// Overall velocity and energy speedometers shouldn't fade out as they constantly update
 	canSpeedometerTypeFadeOut(type: SpeedometerType): boolean {
-		return type !== SpeedometerType.OVERALL_VELOCITY;
+		return type !== SpeedometerType.OVERALL_VELOCITY && type !== SpeedometerType.ENERGY;
 	}
 
 	appendRangeColorProfileInfo(
