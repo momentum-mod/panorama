@@ -10,25 +10,42 @@
 	<Leaderboards class="leaderboards leaderboards__list" acceptsinput="true" acceptsfocus="true" hittest="true" hittestchildren="true">
 		<Panel class="leaderboard-top">
 			<Panel class="leaderboard-radio">
-				<RadioButton id="TimesListGlobal" class="leaderboard-radio__radio-button" >
+				<RadioButton id="TimesListGlobal" class="leaderboard-radio__radio-button" onactivate="LeaderboardsHandler.setFilter(LeaderboardRecordsFilter.GLOBAL)">
 					<Label class="leaderboard-radio__radio-button__label" text="#Leaderboards_Category_Global" />
 				</RadioButton>
-				<RadioButton id="TimesListFriends" class="leaderboard-radio__radio-button" >
+				<RadioButton id="TimesListFriends" class="leaderboard-radio__radio-button" onactivate="LeaderboardsHandler.setFilter(LeaderboardRecordsFilter.FRIENDS)">
 					<Label class="leaderboard-radio__radio-button__label" text="#Leaderboards_Category_Friends" />
 				</RadioButton>
-				<RadioButton id="TimesListLobby" class="leaderboard-radio__radio-button" onmouseout="UiToolkitAPI.HideTextTooltip();">
+				<RadioButton id="TimesListLobby" class="leaderboard-radio__radio-button" onactivate="LeaderboardsHandler.setFilter(LeaderboardRecordsFilter.LOBBY)">
 					<Label class="leaderboard-radio__radio-button__label" text="#Leaderboards_Category_Lobby" />
 				</RadioButton>
-				<RadioButton id="TimesListLocal" class="leaderboard-radio__radio-button leaderboard-radio__radio-button--saved" >
+				<RadioButton id="TimesListLocal" class="leaderboard-radio__radio-button leaderboard-radio__radio-button--saved" onactivate="LeaderboardsHandler.setFilter(LeaderboardRecordsFilter.SAVED_REPLAYS)">
 					<Label class="leaderboard-radio__radio-button__label" text="Saved Replays" />
 				</RadioButton>
 			</Panel>
 		</Panel>
 		<Panel class="leaderboard-center">
 			<Panel id="LeaderboardTimesContainer" class="leaderboard-times">
-				<DelayLoadList id="TimesList" class="leaderboard-times__list" itemheight="35px" itemwidth="100%" spacersize="0px" spacerperiod="1">
+                <Panel id="TimesList2" class="leaderboard-times__list">
+                    <!-- Populated via code -->
+                </Panel>
+
+                <Panel id="GroupPillsLayer" class="leaderboard-times__group-pills" hittest="false" hittestchildren="false">
+                    <!-- Populated via code -->
+                </Panel>
+
+
+
+
+                <!-- REQUIRED BY C++ -->
+				<DelayLoadList id="TimesList" class="leaderboard-times__list hide" itemheight="35px" itemwidth="100%" spacersize="0px" spacerperiod="1">
 					<!-- Populated via code -->
 				</DelayLoadList>
+
+
+
+
+
 				<Panel class="leaderboard-times__empty">
 					<Panel class="v-align-center h-align-center flow-down">
 						<Label id="LeaderboardEmptyWarningTitle" class="text-h3 h-align-center mb-3" text="#Leaderboards_NoRunsFound" />
@@ -65,6 +82,12 @@
                     <Image id="GroupNext" textureheight="24" src="file://{images}/double-chevron-right.svg" />
                 </Button>
             </Panel>
+
+            <Button id="Around" class="leaderboard-around" onactivate="LeaderboardsHandler.showAroundPage()">
+                <Panel class="leaderboard-around__icon-container">
+                    <Image id="Icon" class="leaderboard-around__icon" src="file://{images}/jump-to.svg" textureheight="24" />
+                </Panel>
+            </Button>
 		</Panel>
 
 

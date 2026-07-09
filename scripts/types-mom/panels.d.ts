@@ -46,6 +46,8 @@ interface MapEntry extends AbstractPanel<'MapEntry'> {
 }
 
 interface Leaderboards extends AbstractPanel<'Leaderboards'> {
+	handler: import('/pages/leaderboards/leaderboards').LeaderboardsHandler;
+
 	/** Gets the status of the given times list. 0 means loaded */
 	getTimesListStatus(
 		type: import('common/leaderboard').LeaderboardType

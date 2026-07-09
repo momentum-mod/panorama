@@ -1,14 +1,7 @@
 import { PanelHandler } from 'util/module-helpers';
-import * as Maps from 'common/maps';
-import * as Leaderboards from 'common/leaderboard';
 import { TrackType } from 'common/web/enums/track-type.enum';
-import { randomInt } from 'util/functions';
-
-export interface TrackSelectorInterface extends TrackSelector {
-	updateTrackData: (mapData: MapCacheAPI.MapData, gamemode: Gamemode) => void;
-	setBlurPanel: (blurPanel: BaseBlurTarget) => void;
-	connectLeaderboards: (leaderboards: Leaderboards) => void;
-}
+import { MapUserCompletions } from 'common/maps';
+import { CompletionGroup } from 'common/web/enums/completion-group.enum';
 
 interface TrackDisplayData {
 	track: string;
@@ -19,56 +12,7 @@ interface TrackDisplayData {
 	group?: number;
 }
 
-const GROUP_PILL = {
-	NONE: {
-		text: 'rgba(0, 0, 0, 0)',
-		background: 'rgba(0, 0, 0, 0)'
-	},
-	WR: {
-		text: 'rgba(113, 240, 255, 1)',
-		background: 'rgba(0, 100, 112, 0.6)'
-	},
-	TOP10: {
-		text: 'rgba(190, 113, 255, 1)',
-		background: 'rgba(61, 0, 112, 0.6)'
-	},
-	G1: {
-		text: 'rgba(255, 188, 0, 1)',
-		background: 'rgba(112, 83, 0, 0.6)'
-	},
-	G2: {
-		text: 'rgba(201, 226, 241, 1)',
-		background: 'rgba(35, 45, 52, 0.6)'
-	},
-	G3: {
-		text: 'rgba(199, 115, 63, 1)',
-		background: 'rgba(56, 32, 16, 0.6)'
-	},
-	G4_G6: {
-		text: 'rgba(220, 220, 220, 1)',
-		background: 'rgba(58, 58, 58, 0.6)'
-	}
-} as const;
-
-function getGroupColor(group: number, rank: number) {
-	if (rank === 1 && group === 0) return GROUP_PILL.WR;
-	if (group === undefined) return GROUP_PILL.NONE;
-
-	switch (group) {
-		case 0:
-			return GROUP_PILL.TOP10;
-		case 1:
-			return GROUP_PILL.G1;
-		case 2:
-			return GROUP_PILL.G2;
-		case 3:
-			return GROUP_PILL.G3;
-		default:
-			return GROUP_PILL.G4_G6;
-	}
-}
-
-@PanelHandler()
+@PanelHandler({ exposeToPanel: true })
 export class TrackSelectorHandler {
 	readonly panels = {
 		cp: $.GetContextPanel<TrackSelector>(),
@@ -76,124 +20,90 @@ export class TrackSelectorHandler {
 	};
 
 	leaderboards: Leaderboards | null = null;
+	currentMapData: MapCacheAPI.StaticData;
 
-	// TODO: Blur broken when scrolling
+	// TODO: Blur broken when scrolling / Fixed in panzer's pr
 	blurPanel: BaseBlurTarget | null = null;
 
-	constructor() {
-		const trackSelectorInterface = this.panels.cp as TrackSelectorInterface;
-		trackSelectorInterface.connectLeaderboards = (leaderboards: Leaderboards) => (this.leaderboards = leaderboards);
-		trackSelectorInterface.updateTrackData = (mapData, gamemode) => this.updateTrackData(mapData, gamemode);
-		trackSelectorInterface.setBlurPanel = (panel: BaseBlurTarget) => (this.blurPanel = panel);
+	setBlurPanel(panel: BaseBlurTarget) {
+		this.blurPanel = panel;
 	}
 
-	updateTrackData(mapData: MapCacheAPI.MapData, gamemode: Gamemode) {
-		this.createMainSection(mapData, gamemode);
-		this.createStageSection(mapData, gamemode);
-		this.createBonusSection(mapData, gamemode);
+	connectLeaderboards(leaderboards: Leaderboards) {
+		this.leaderboards = leaderboards;
 	}
 
-	createMainSection(mapData: MapCacheAPI.MapData, gamemode: Gamemode) {
+	updateMapData(data: MapCacheAPI.StaticData) {
+		this.currentMapData = data;
+	}
+
+	updateTrackData(completions: MapUserCompletions) {
+		if (!this.leaderboards) return;
+
+		this.leaderboards.handler.setMapID(completions.mapID);
+		this.leaderboards.handler.setGamemode(completions.gamemode);
+
 		this.panels.container.RemoveAndDeleteChildren();
 
-		const userMapData = Leaderboards.getUserMapDataTrack(mapData.userData, gamemode);
-		const tier = Maps.getTier(mapData.staticData, gamemode);
+		const groupedContainers = new Map<TrackType, Panel>();
+		const getGroupContainer = (type: TrackType) => {
+			if (!groupedContainers.has(type)) {
+				const container = $.CreatePanel('Panel', this.panels.container, 'TracksContainer');
+				this.blurPanel?.AddBlurPanel(container);
+				groupedContainers.set(type, container);
+			}
+			return groupedContainers.get(type)!;
+		};
+		completions.tracks.forEach((track) => {
+			const container = getGroupContainer(track.trackType);
 
-		const container = $.CreatePanel('Panel', this.panels.container, 'TracksContainer');
-		this.blurPanel?.AddBlurPanel(container);
+			const trackPanel = $.CreatePanel('RadioButton', container, '');
+			trackPanel.LoadLayoutSnippet('track-panel');
 
-		const trackPanel = $.CreatePanel('RadioButton', container, '');
-		trackPanel.LoadLayoutSnippet('track-panel');
+			if (this.leaderboards) {
+				trackPanel.SetPanelEvent('onselect', () => {
+					this.leaderboards.handler.setCurrentUserRank(track.rank);
+					this.leaderboards.handler.setTotalCompletions(track.totalCompletions);
+					this.leaderboards.handler.setTrack(track.trackType, track.trackNum);
+				});
+			}
 
-		if (this.leaderboards) {
-			trackPanel.SetPanelEvent('onselect', () => {
-				this.leaderboards.selectTrack(TrackType.MAIN, 1);
+			const isMain = track.trackType === TrackType.MAIN;
+			const isStage = track.trackType === TrackType.STAGE;
+
+			const trackLabel = isMain
+				? 'Main'
+				: isStage
+					? `${$.Localize('#Leaderboards_Tracks_Stage')} ${track.trackNum}`
+					: `${$.Localize('#Leaderboards_Tracks_Bonus')} ${track.trackNum}`;
+
+			if (!isMain) {
+				const dialogPrefix = isStage ? 'Stage' : 'Bonus';
+				trackPanel.SetDialogVariable('track', `${dialogPrefix} ${track.trackNum}`);
+			}
+
+			this.populateTrackPanel(trackPanel, {
+				track: trackLabel,
+				tier: track.tier,
+				time: track.time,
+				rank: track.rank,
+				total: track.totalCompletions,
+				group: track.group
 			});
-		}
 
-		this.populateTrackPanel(trackPanel, {
-			track: 'Main', //$.Localize('#Leaderboards_Tracks_Main'),
-			tier,
-			time: userMapData?.time,
-			rank: randomInt(1, 1000),
-			total: randomInt(1000, 2000),
-			group: randomInt(0, 6)
+			if (isMain) {
+				trackPanel.SetSelected(true);
+			} else {
+				this.applyColorBanding(trackPanel, track.trackNum);
+			}
 		});
-
-		trackPanel.SetSelected(true);
 	}
 
-	createStageSection(mapData: MapCacheAPI.MapData, gamemode: Gamemode) {
-		const stages = Leaderboards.getNumStages(mapData.staticData);
-		if (stages < 2) return;
-
-		const container = $.CreatePanel('Panel', this.panels.container, 'TracksContainer');
-		this.blurPanel?.AddBlurPanel(container);
-
-		for (let i = 1; i <= stages; i++) {
-			const stageData = Leaderboards.getUserMapDataTrack(mapData.userData, gamemode, TrackType.STAGE, i);
-
-			const trackPanel = $.CreatePanel('RadioButton', container, '');
-			trackPanel.LoadLayoutSnippet('track-panel');
-			trackPanel.SetDialogVariable('track', `Stage ${i}`);
-
-			if (this.leaderboards) {
-				trackPanel.SetPanelEvent('onselect', () => {
-					this.leaderboards.selectTrack(TrackType.STAGE, i);
-				});
-			}
-
-			this.populateTrackPanel(trackPanel, {
-				track: `${$.Localize('#Leaderboards_Tracks_Stage')} ${i}`,
-				time: stageData?.time,
-				rank: randomInt(1, 2),
-				total: randomInt(5654, 10000),
-				group: randomInt(0, 6)
-			});
-
-			this.applyColorBanding(trackPanel, i);
-		}
-	}
-
-	createBonusSection(mapData: MapCacheAPI.MapData, gamemode: Gamemode) {
-		const bonuses = Leaderboards.getNumBonuses(mapData.staticData);
-		if (bonuses < 1) return;
-
-		const container = $.CreatePanel('Panel', this.panels.container, 'TracksContainer');
-		this.blurPanel?.AddBlurPanel(container);
-
-		for (let i = 1; i <= bonuses; i++) {
-			const bonusData = Leaderboards.getUserMapDataTrack(mapData.userData, gamemode, TrackType.BONUS, i);
-
-			const trackPanel = $.CreatePanel('RadioButton', container, '');
-			trackPanel.LoadLayoutSnippet('track-panel');
-
-			if (this.leaderboards) {
-				trackPanel.SetPanelEvent('onselect', () => {
-					this.leaderboards.selectTrack(TrackType.BONUS, i);
-				});
-			}
-
-			const tier = Maps.getTier(mapData.staticData, gamemode, TrackType.BONUS, i);
-
-			this.populateTrackPanel(trackPanel, {
-				track: `${$.Localize('#Leaderboards_Tracks_Bonus')} ${i}`,
-				tier: tier,
-				time: bonusData?.time,
-				rank: randomInt(1, 654),
-				total: randomInt(654, 3545),
-				group: randomInt(0, 6)
-			});
-
-			this.applyColorBanding(trackPanel, i);
-		}
-	}
-
-	populateTrackPanel(trackPanel: RadioButton, data: TrackDisplayData) {
+	private populateTrackPanel(trackPanel: RadioButton, data: TrackDisplayData) {
 		trackPanel.SetDialogVariable('track', data.track);
 
 		const tierLabel = trackPanel.FindChildrenWithClassTraverse('track-panel__tier-label')[0] as Label;
-		if (data.tier !== undefined) {
+		if (data.tier > 0) {
 			trackPanel.SetDialogVariableInt('tier', data.tier);
 		} else {
 			tierLabel.text = '';
@@ -203,39 +113,22 @@ export class TrackSelectorHandler {
 
 		const rankLabel = trackPanel.FindChildrenWithClassTraverse('track-panel__rank-label')[0] as Label;
 		trackPanel.SetDialogVariableInt('total', data.total);
-		if (data.rank !== undefined) {
+		if (data.rank != null) {
 			trackPanel.SetDialogVariableInt('rank', data.rank);
 		} else {
-			rankLabel.text = `— /${data.total}`;
+			rankLabel.text = `—/${data.total}`;
 			rankLabel.style.color = 'rgb(160, 160, 160)';
 		}
 
-		const groupLabel = trackPanel.FindChildrenWithClassTraverse('track-panel__group-label')[0] as Label;
-		const groupPill = trackPanel.FindChildrenWithClassTraverse('track-panel__group-pill')[0] as Panel;
-
-		if (data.group === undefined) {
-			groupLabel.text = '';
-			groupPill.style.backgroundColor = GROUP_PILL.NONE.background as color;
-			groupLabel.style.color = GROUP_PILL.NONE.text as color;
-		} else if (data.group === 0 && data.rank === 1) {
-			groupLabel.text = 'WR';
-			groupPill.style.backgroundColor = GROUP_PILL.WR.background as color;
-			groupLabel.style.color = GROUP_PILL.WR.text as color;
-		} else if (data.group === 0) {
-			groupLabel.text = 'TOP10';
-			groupPill.style.backgroundColor = GROUP_PILL.TOP10.background as color;
-			groupLabel.style.color = GROUP_PILL.TOP10.text as color;
-		} else {
-			trackPanel.SetDialogVariableInt('group', data.group);
-			const colors = getGroupColor(data.group, data.rank);
-			groupPill.style.backgroundColor = colors.background as color;
-			groupLabel.style.color = colors.text as color;
-		}
+		const groupPill = trackPanel.FindChildTraverse<GroupPill>('GroupPill');
+		groupPill.AddClass('group-pill--solid');
+		const group: CompletionGroup = data.group;
+		groupPill.handler.setGroup(group);
 	}
 
-	setOptionalFloat(panel: RadioButton, className: string, dialogVar: string, value?: number) {
+	private setOptionalFloat(panel: RadioButton, className: string, dialogVar: string, value?: number) {
 		const label = panel.FindChildrenWithClassTraverse(className)[0] as Label;
-		if (value !== undefined) {
+		if (value != null) {
 			panel.SetDialogVariableFloat(dialogVar, value);
 		} else {
 			label.text = '—';
@@ -243,7 +136,7 @@ export class TrackSelectorHandler {
 		}
 	}
 
-	applyColorBanding(panel: GenericPanel, index: number) {
+	private applyColorBanding(panel: GenericPanel, index: number) {
 		if (index % 2 === 0) panel.AddClass('track-panel--alt-color');
 	}
 }
