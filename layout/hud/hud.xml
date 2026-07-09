@@ -24,6 +24,8 @@
         
         <MomHudMapInfo id="MapInfo" />
         <MomHudSpecInfo id="SpecInfo" />
+        <!-- Not customizer-managed; positioned above the chat box via voice.scss -->
+        <MomHudVoice />
         <MomHudChat id="Chat" />
         <MomHudStatus id="Status" />
 		<MomHudTimer id="Timer" />
@@ -53,7 +55,7 @@
 
         <!-- Old, broken hud elements, might get revived some day, not important -->
 		<!-- <HudBoneCounts id="BoneCount" /> TODO: HudTopCenter, not in customizer, probably gonna get nuked -->
-        <!-- <MomHudStrafeSync id="StrafeSync" /> This is broken and probably not worth fixing --> 
+        <!-- <MomHudStrafeSync id="StrafeSync" /> This is broken and probably not worth fixing -->
 
 
         <!-- Hud panels using blur must be placed below blur definitions -->
