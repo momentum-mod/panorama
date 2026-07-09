@@ -1,9 +1,8 @@
 import { OnPanelLoad, PanelHandler } from 'util/module-helpers';
 import { traverseChildren } from 'util/functions';
 import { parseMapImageUrl } from 'util/functions';
-import { TrackSelectorInterface } from 'components/track-selector';
-import { MapInfoInterface } from 'components/map-info';
 import { scaleWidthToAspectRatio } from 'util/functions';
+import { MapUserCompletions } from 'common/maps';
 // PRE REWORK REMOVAL
 // import { MapStatus, MapStatuses } from 'common/web/enums/map-status.enum';
 // import { MapCreditType } from 'common/web/enums/map-credit-type.enum';
@@ -70,8 +69,8 @@ class MapSelectorHandler implements OnPanelLoad {
 	 * Track Selector forwards the data to Leaderboards
 	 */
 	readonly components = {
-		mapInfo: $<MapInfoInterface>('#MapInfo'),
-		trackSelector: $<TrackSelectorInterface>('#TrackSelector'),
+		mapInfo: $<MapInfo>('#MapInfo'),
+		trackSelector: $<TrackSelector>('#TrackSelector'),
 		leaderboards: $<Leaderboards>('#Leaderboards')
 	};
 
@@ -138,6 +137,9 @@ class MapSelectorHandler implements OnPanelLoad {
 		$.RegisterForUnhandledEvent('MapSelector_ShowConfirmOverwrite', (mapID) => this.showConfirmOverwrite(mapID));
 		$.RegisterForUnhandledEvent('MapSelector_MapsFiltered', (count) => this.onMapsFiltered(count));
 		$.RegisterForUnhandledEvent('MapSelector_SelectedDataUpdate', (mapData) => this.onSelectedDataUpdated(mapData));
+		$.RegisterForUnhandledEvent('MapSelector_SelectedCompletionsUpdate', (completions: MapUserCompletions) => {
+			this.components.trackSelector.handler.updateTrackData(completions);
+		});
 
 		this.panels.nStateButtons.forEach((panel) =>
 			$.RegisterEventHandler('NStateButtonStateChanged', panel, (panelID, state) =>
@@ -148,10 +150,10 @@ class MapSelectorHandler implements OnPanelLoad {
 		const scaledWidth = scaleWidthToAspectRatio(820);
 		this.panels.leftContainer.style.width = `${scaledWidth}px`;
 
-		this.components.trackSelector.setBlurPanel(this.panels.blurPanel);
-		this.components.trackSelector.connectLeaderboards(this.components.leaderboards);
-		this.components.mapInfo.setBlurPanel(this.panels.blurPanel);
-		this.components.mapInfo.setMapSelector(this.panels.cp);
+		this.components.trackSelector.handler.setBlurPanel(this.panels.blurPanel);
+		this.components.trackSelector.handler.connectLeaderboards(this.components.leaderboards);
+		this.components.mapInfo.handler.setBlurPanel(this.panels.blurPanel);
+		this.components.mapInfo.handler.setMapSelector(this.panels.cp);
 	}
 
 	onPanelLoad() {
@@ -339,9 +341,8 @@ class MapSelectorHandler implements OnPanelLoad {
 		const baseImageUrl = parseMapImageUrl(mapData.staticData);
 		this.panels.cp.applyBackgroundMapImage(mapData.staticData.thumbnail.id, baseImageUrl);
 
-		const gamemode = GameModeAPI.GetMetaGameMode();
-		this.components.trackSelector.updateTrackData(this.selectedMapData, gamemode);
-		this.components.mapInfo.updateMapInfo(mapData);
+		this.components.mapInfo.handler.updateMapInfo(mapData);
+		this.components.trackSelector.handler.updateMapData(mapData.staticData);
 
 		// PRE REWORK REMOVAL
 		// Start loading spinner on live-updateing stats panels -- MapSelector_OnSelectedOnlineDataUpdate will kill it
