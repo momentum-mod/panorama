@@ -4,6 +4,7 @@ import type { MMap, MapCompletion } from './web/types/models/models';
 import { MapStatuses } from './web/enums/map-status.enum';
 import { MapCreditType } from './web/enums/map-credit-type.enum';
 import { TrackType } from './web/enums/track-type.enum';
+import { Style } from './web/enums/style.enum';
 
 /**
  * A track's REST completion status plus per-track data the game adds from its map
