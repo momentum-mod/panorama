@@ -29,34 +29,68 @@
 }
 
 .tab-menu-center {
+	$root: &;
+
 	width: 100%;
+	margin: 0 64px;
 	height: fill-parent-flow(1);
 	flow-children: right;
-	// background-color: rgba(0, 128, 0, 0.105);
+
+	&__main-container {
+		width: 100%;
+		height: 100%;
+		flow-children: right;
+	}
 
 	&__left {
-		width: fill-parent-flow(1);
+		width: 33%;
 		height: 100%;
-		// background-color: rgba(133, 40, 40, 0.78);
 	}
 
 	&__center {
-		width: fill-parent-flow(1);
+		width: 33%;
+		margin: 0 16px;
 		height: 100%;
-		// background-color: rgba(20, 20, 165, 0.747);
 	}
 
 	&__right {
-		width: fill-parent-flow(1);
+		width: 33%;
 		height: 100%;
-		// background-color: rgba(199, 199, 27, 0.679);
+	}
+
+	&--no-playerlist {
+		#{$root}__center {
+			margin-left: 17%; // (100% - 33% - 33%) / 2, recenters the remaining pair
+		}
 	}
 }
 
 .tab-menu-bottom {
 	width: 100%;
-	height: fill-parent-flow(0.1);
+	height: fill-parent-flow(0.153);
 	// background-color: rgba(0, 0, 255, 0.681);
 }
 
 // ─── Content containers ───────────────────────────────────────────────────────
+
+.tab-menu-name-container {
+	width: fit-children;
+	height: fit-children;
+	flow-children: right;
+	align: center center;
+
+	&__name-label-container {
+		vertical-align: center;
+	}
+}
+
+.tab-menu-endofrun {
+	width: 100%;
+	height: 100%;
+
+	&__frame {
+		width: 50%;
+		height: fit-children;
+		align: center center;
+	}
+}
