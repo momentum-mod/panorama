@@ -10,26 +10,41 @@
 	<HudTabMenu class="hud-tab-menu" oncancel="HudTabMenuHandler.close();">
         <Panel id="TabMenuWrapper" class="hud-tab-menu__wrapper">
             <Panel class="tab-menu-top">
+                <Panel id="NameContainer" class="tab-menu-name-container">
+                    <Image id="HudTabMenuGamemodeImage" class="hud-tab-menu__header-image" textureheight="128" />
+                    <Panel class="tab-menu-name-container__name-label-container">
+                        <!-- Stacked labels to give double layers of shadow. I don't like it, but I'll have to go along with it. -->
+                        <Label class="text-h1 text-shadow-outline ml-2" text="{s:name}" />
+                        <Label class="text-h1 text-shadow-black color-transparent ml-2" text="{s:name}" />
+                    </Panel>
+                </Panel>
             </Panel>
-            <Panel class="tab-menu-center">
-                <Panel class="tab-menu-center__left">
+            <Panel id="TabMenuCenter" class="tab-menu-center">
+
+                <Panel id="CenterMainContainer" class="tab-menu-center__main-container">
+                    <Panel id="TabMenuPlayerListContainer" class="tab-menu-center__left">
+                        <PlayerList id="PlayerList" hittest="true" hittestchildren="true" />
+                    </Panel>
+                    <Panel class="tab-menu-center__center">
+                        <TrackSelector id="HudTrackSelector" />
+                    </Panel>
+                    <Panel class="tab-menu-center__right">
+                        <Leaderboards id="HudLeaderboards" />
+                    </Panel>
                 </Panel>
-                <Panel class="tab-menu-center__center">
-                    <TrackSelector id="HudTrackSelector" />
-                </Panel>
-                <Panel class="tab-menu-center__right">
-                    <Leaderboards id="HudLeaderboards" />
+
+                <Panel id="EndOfRunContainer" class="tab-menu-endofrun" hittestchildren="true">
+                    <Frame id="EndOfRunFrame" class="tab-menu-endofrun__frame" src="file://{resources}/layout/pages/end-of-run/end-of-run.xml" hittest="true" hittestchildren="true" />
                 </Panel>
             </Panel>
             <Panel class="tab-menu-bottom">
             </Panel>
-            
-            
+
             
         </Panel>
 
         <Panel id="TabMenuHeader" class="hud-tab-menu__header hide">
-                <Image id="HudTabMenuGamemodeImage" class="hud-tab-menu__header-image" textureheight="128" />
+                <!-- <Image id="HudTabMenuGamemodeImage" class="hud-tab-menu__header-image" textureheight="128" /> -->
                 <Panel class="hud-tab-menu__map-info">
                     <Panel class="hud-tab-menu-map-info__top">
                         <Label class="hud-tab-menu-map-info__map-name" text="{s:map}" />
@@ -57,9 +72,6 @@
             </Panel>
 
             <Panel id="SideBySideContainer" class="hud-tab-menu__sidebysidecontainer hide">
-                <Panel id="PlayerListContainer" class="" hittestchildren="true">
-                    <PlayerList id="PlayerList" hittest="true" hittestchildren="true" />
-                </Panel>
 
                 <Panel id="LeaderboardsContainer" class="hud-tab-menu__leaderboards" hittestchildren="true">
                     <Leaderboards id="TabMenuLeaderboards" hittest="true" hittestchildren="true" />
@@ -67,9 +79,7 @@
                 
             </Panel>
 
-            <Panel id="EndOfRunContainer" class="hud-tab-menu__endofrun hide" hittestchildren="true">
-                <Frame src="file://{resources}/layout/pages/end-of-run/end-of-run.xml" hittest="true" hittestchildren="true" />
-            </Panel>
+            
 
             <Panel class="hud-tab-menu__stats">
             </Panel>
