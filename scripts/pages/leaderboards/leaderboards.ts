@@ -21,6 +21,7 @@ const ENTRY_HEIGHT = 32;
 // Keep in sync with the backend
 const RUNS_PER_PAGE = 20;
 
+// Offsets for the group pills
 const GROUP_BORDER_LEFT_ALIGN = -10;
 const GROUP_BORDER_TOP_ALIGN = -13;
 
@@ -80,10 +81,8 @@ export class LeaderboardsHandler {
 		);
 
 		// Note: Can't set radio button groups in the XML because it causes multiple leaderboard instances to interfere with eachother
-		// TODO: Derive from ID
-		const lbType = this.isInGameLeaderboard() ? 'TabMenu' : 'MapSelector';
 		Object.entries(this.panels.radioButtons).forEach(([_, button]) => {
-			button.group = lbType + 'Group';
+			button.group = this.panels.cp.id + 'Group';
 		});
 
 		this.panels.controls.pageSelect.SetPanelEvent('ontextentrychange', () => {
@@ -305,10 +304,6 @@ export class LeaderboardsHandler {
 		if (this.state.page !== newPage) {
 			this.selectPage(newPage);
 		}
-	}
-
-	private isInGameLeaderboard() {
-		return this.panels.cp.id === 'TabMenuLeaderboards';
 	}
 
 	private setTextEntry(val: number) {
