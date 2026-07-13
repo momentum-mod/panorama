@@ -8,7 +8,7 @@ import { SteamGamesNames } from 'common/web/maps/steam-games.map';
 import * as Maps from 'common/maps';
 import * as Leaderboards from 'common/leaderboard';
 import { handlePlayMap } from 'common/maps';
-import { getCompletionGroup } from 'common/completion-group';
+import { getCompletionGroup, getGroupBoundaries } from 'common/completion-group';
 
 const REFRESH_COOLDOWN = 1000 * 10; // 10 seconds
 
@@ -578,9 +578,10 @@ class MapSelectorHandler implements OnPanelLoad {
 		$.Msg(
 			`[MapSelector] Completions for map ${completions.mapID} (gamemode ${completions.gamemode}, style ${completions.style}): ${completions.tracks.length} tracks`
 		);
+
 		for (const t of completions.tracks) {
 			const completed = t.time !== null;
-			const group = getCompletionGroup(t.rank, t.totalCompletions);
+			const group = getCompletionGroup(t.rank, getGroupBoundaries(t.totalCompletions));
 			$.Msg(
 				`  track ${t.trackType}/${t.trackNum} tier=${t.tier} completed=${completed} ` +
 					`time=${t.time} rank=${t.rank}/${t.totalCompletions} group=${group}`
