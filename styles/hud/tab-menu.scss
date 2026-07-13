@@ -26,6 +26,13 @@
 	width: 100%;
 	height: fill-parent-flow(0.2);
 	// background-color: rgba(255, 0, 0, 0.289);
+
+	&__center-group {
+		width: fit-children;
+		height: fit-children;
+		flow-children: right;
+		align: center center;
+	}
 }
 
 .tab-menu-center {
@@ -92,5 +99,27 @@
 		width: 50%;
 		height: fit-children;
 		align: center center;
+	}
+}
+
+.tab-menu-endofrun-arrow {
+	width: fit-children;
+	height: fit-children;
+	vertical-align: center;
+	padding: 8px;
+	margin: 0 8px;
+	border-radius: 2px;
+	opacity: 0.00000001;
+
+	&:hover {
+		background-color: rgba(167, 167, 167, 0.2);
+	}
+
+	&:active {
+		background-color: rgba(255, 255, 255, 0.2);
+	}
+
+	&--spacer {
+		opacity: 0.00000001;
 	}
 }
