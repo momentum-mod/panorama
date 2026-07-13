@@ -13,6 +13,7 @@ import { LeaderboardRecordsFilter } from 'common/leaderboard';
 import { Gamemode } from 'common/web/enums/gamemode.enum';
 import { CompletionGroup } from 'common/web/enums/completion-group.enum';
 import { LeaderboardRecord } from 'common/leaderboard';
+import { GroupBoundaries, getGroupBoundaries, getCompletionGroup } from 'common/completion-group';
 
 // Keep in sync with entry.scss
 const ENTRY_HEIGHT = 32;
@@ -71,7 +72,7 @@ export class LeaderboardsHandler {
 	blockTextEntryEvent = false;
 	totalCompletions: number = null;
 	currentUserRank = null;
-	groupBoundaries: Record<number, { group: CompletionGroup; page: number }>;
+	groupBoundaries: GroupBoundaries;
 
 	constructor() {
 		$.RegisterEventHandler('LeaderboardRecords_Loaded', this.panels.cp, (requestToken) =>
@@ -172,7 +173,7 @@ export class LeaderboardsHandler {
 		this.state.totalPages = data.totalPages;
 		this.panels.controls.container.SetDialogVariableInt('total-pages', this.state.totalPages);
 
-		this.groupBoundaries = this.getGroupBoundaries();
+		this.groupBoundaries = getGroupBoundaries(this.totalCompletions);
 
 		this.panels.timesList.RemoveAndDeleteChildren();
 		this.panels.groupPillsLayer.RemoveAndDeleteChildren();
@@ -189,7 +190,7 @@ export class LeaderboardsHandler {
 			) {
 				this.createMembershipGroupIndicators(data.records, record.rank, lbEntry, index);
 			} else if (this.state.filter === LeaderboardRecordsFilter.GLOBAL) {
-				const matchedGroup: CompletionGroup | undefined = this.groupBoundaries[record.rank]?.group;
+				const matchedGroup = this.groupBoundaries[record.rank];
 				this.createBoundaryGroupIndicators(matchedGroup, lbEntry, index);
 			}
 
@@ -220,12 +221,12 @@ export class LeaderboardsHandler {
 		lbEntry: LeaderboardEntry,
 		index: number
 	) {
-		const currentGroup = this.getGroupForRank(rank);
+		const currentGroup = getCompletionGroup(rank, this.groupBoundaries);
 		if (currentGroup === undefined || currentGroup === CompletionGroup.WORLD_RECORD) return;
 
 		const nextRecord = records[index + 1];
 
-		if (nextRecord && this.getGroupForRank(nextRecord.rank) === currentGroup) {
+		if (nextRecord && getCompletionGroup(nextRecord.rank, this.groupBoundaries) === currentGroup) {
 			return;
 		}
 
@@ -259,15 +260,10 @@ export class LeaderboardsHandler {
 		if (!this.groupBoundaries) return;
 
 		const currentPage = this.state.page;
-		const boundaryPages = Object.values(this.groupBoundaries).map((b) => b.page);
+		const boundaryPages = this.getBoundaryPages();
 		const pastPages = boundaryPages.filter((page) => page < currentPage);
 
-		let targetPage: number;
-		if (pastPages.length > 0) {
-			targetPage = Math.max(...pastPages);
-		} else {
-			targetPage = 1;
-		}
+		const targetPage = pastPages.length > 0 ? Math.max(...pastPages) : 1;
 
 		this.selectPage(targetPage);
 	}
@@ -276,17 +272,20 @@ export class LeaderboardsHandler {
 		if (!this.groupBoundaries) return;
 
 		const currentPage = this.state.page;
-		const boundaryPages = Object.values(this.groupBoundaries).map((b) => b.page);
+		const boundaryPages = this.getBoundaryPages();
 		const futurePages = boundaryPages.filter((page) => page > currentPage);
 
-		let targetPage: number;
-		if (futurePages.length > 0) {
-			targetPage = Math.min(...futurePages);
-		} else {
-			targetPage = this.state.totalPages;
-		}
+		const targetPage = futurePages.length > 0 ? Math.min(...futurePages) : this.state.totalPages;
 
 		this.selectPage(targetPage);
+	}
+
+	private getBoundaryPages(): number[] {
+		if (!this.groupBoundaries) return [];
+
+		const pages = Object.keys(this.groupBoundaries).map((rank) => Math.ceil(Number(rank) / 20));
+
+		return Array.from(new Set(pages)).sort((a, b) => a - b);
 	}
 
 	selectPage(page: number) {
@@ -316,54 +315,5 @@ export class LeaderboardsHandler {
 		this.blockTextEntryEvent = true;
 		this.panels.controls.pageSelect.text = `${val}`;
 		this.blockTextEntryEvent = false;
-	}
-
-	// TODO: TEMPORARY FOR TESTING
-	private getGroupBoundaries(): Record<number, { group: CompletionGroup; page: number }> {
-		// Helper to calculate group size based on the formula: max(SF * (totalCompletions^E), minSize)
-		const calcSize = (sf: number, e: number, minSize: number): number => {
-			const ax = sf * Math.pow(this.totalCompletions, e);
-			return Math.max(ax, minSize);
-		};
-
-		// Helper to calculate 1-based page index assuming 20 items per page
-		const calcPage = (rank: number): number => Math.ceil(rank / 20);
-
-		// 1. Determine sizes for each bracket
-		const wrSize = 1;
-		const top10Size = 9; // Ranks 2 through 10
-
-		const g1Size = Math.round(calcSize(1, 0.5, 10));
-		const g2Size = Math.round(calcSize(1.5, 0.56, 45));
-		const g3Size = Math.round(calcSize(2, 0.62, 125));
-		const g4Size = Math.round(calcSize(2.5, 0.68, 250));
-
-		// 2. Calculate the last rank of each group sequentially
-		const wrLast = wrSize; // 1
-		const top10Last = wrLast + top10Size; // 10
-		const g1Last = top10Last + g1Size;
-		const g2Last = g1Last + g2Size;
-		const g3Last = g2Last + g3Size;
-		const g4Last = g3Last + g4Size;
-
-		// 3. Return as a direct key-value mapping with pages included
-		return {
-			[wrLast]: { group: CompletionGroup.WORLD_RECORD, page: calcPage(wrLast) },
-			[top10Last]: { group: CompletionGroup.TOP_10, page: calcPage(top10Last) },
-			[g1Last]: { group: CompletionGroup.GROUP_1, page: calcPage(g1Last) },
-			[g2Last]: { group: CompletionGroup.GROUP_2, page: calcPage(g2Last) },
-			[g3Last]: { group: CompletionGroup.GROUP_3, page: calcPage(g3Last) },
-			[g4Last]: { group: CompletionGroup.GROUP_4, page: calcPage(g4Last) }
-		};
-	}
-
-	private getGroupForRank(rank: number): CompletionGroup | undefined {
-		for (const boundary in this.groupBoundaries) {
-			if (rank <= Number(boundary)) {
-				return this.groupBoundaries[boundary].group;
-			}
-		}
-
-		return undefined;
 	}
 }
