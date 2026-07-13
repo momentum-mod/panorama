@@ -23,6 +23,7 @@ class HudTabMenuHandler {
 		tabMenuCenter: $<Panel>('#TabMenuCenter'),
 		centerMainContainer: $<Panel>('#CenterMainContainer'),
 		endOfRunFrame: $<Frame>('#EndOfRunFrame'),
+		endOfRunButton: $<Button>('#EndOfRunButton'),
 		zoningOpen: $<Button>('#ZoningOpen'),
 		zoningClose: $<Button>('#ZoningClose'),
 		gamemodeIcon: $<Image>('#HudTabMenuGamemodeImage'),
@@ -40,6 +41,8 @@ class HudTabMenuHandler {
 		leaderboards: $<Leaderboards>('#HudLeaderboards'),
 		playerList: $<Panel>('#PlayerList')
 	};
+
+	endOfRunAvailable = false;
 
 	constructor() {
 		$.RegisterForUnhandledEvent('Leaderboards_MapDataSet', (isOfficial) => this.setMapData(isOfficial));
@@ -136,12 +139,17 @@ class HudTabMenuHandler {
 	}
 
 	showEndOfRun(reason: EndOfRunShowReason) {
+		if (reason === EndOfRunShowReason.PLAYER_FINISHED_RUN) {
+			this.endOfRunAvailable = true;
+		}
 		this.panels.centerMainContainer.AddClass('hide');
 		this.panels.nameContainer.AddClass('hide');
+		this.panels.endOfRunButton.style.opacity = 0.00001;
 		this.panels.endOfRunContainer.RemoveClass('hide');
 	}
 
 	hideEndOfRun() {
+		if (this.endOfRunAvailable) this.panels.endOfRunButton.style.opacity = 1;
 		this.panels.centerMainContainer.RemoveClass('hide');
 		this.panels.nameContainer.RemoveClass('hide');
 		this.panels.endOfRunContainer.AddClass('hide');

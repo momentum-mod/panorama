@@ -181,6 +181,10 @@ $times-border: 0px solid rgba(24, 24, 24, 0.4);
 		border-radius: 2px;
 
 		&:hover {
+			background-color: rgba(167, 167, 167, 0.2);
+		}
+
+		&:active {
 			background-color: rgba(255, 255, 255, 0.2);
 		}
 
@@ -209,16 +213,16 @@ $times-border: 0px solid rgba(24, 24, 24, 0.4);
 .leaderboard-around {
 	width: 32px;
 	height: 32px;
-	margin: 8px 16px;
+	margin: 0 16px 5px 0;
 	border-radius: 2px;
 	align: right center;
 
 	&:not(:disabled):hover {
-		background-color: rgba(58, 58, 58, 0.4);
+		background-color: rgba(167, 167, 167, 0.2);
 	}
 
 	&:not(:disabled):active {
-		background-color: rgba(81, 81, 81, 0.6);
+		background-color: rgba(255, 255, 255, 0.2);
 	}
 
 	&:disabled {
