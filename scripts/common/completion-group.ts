@@ -17,18 +17,19 @@ const GROUP_PARAMS = {
 } as const;
 
 /**
- * Classify a PB's rank into a {@link CompletionGroup}, given the total number of
- * completions on the leaderboard. Returns null when the user hasn't completed the
- * track (null rank).
- *
- * Ported verbatim from the backend (previously `LeaderboardRunsService`'s
- * `getCompletionGroup` + `XpSystems.getRankXpForRank`): WR and Top10 take priority,
- * otherwise the numbered groups are sized dynamically from the completion count.
+ * Record of last rank for each group eg. groupBoundaries[10] = CompletionGroup.TOP_10
  */
-export function getCompletionGroup(rank: number | null, totalCompletions: number): CompletionGroup | null {
-	if (rank == null) return null;
-	if (rank === 1) return CompletionGroup.WORLD_RECORD;
-	if (rank <= 10) return CompletionGroup.TOP_10;
+export type GroupBoundaries = Record<number, CompletionGroup>;
+
+/**
+ * Returns {@link GroupBoundaries} based on total completions
+ * Calculations based on the backend
+ */
+export function getGroupBoundaries(totalCompletions: number): GroupBoundaries {
+	const boundaries: GroupBoundaries = {
+		1: CompletionGroup.WORLD_RECORD,
+		10: CompletionGroup.TOP_10
+	};
 
 	const numberedGroups = [
 		CompletionGroup.GROUP_1,
@@ -43,12 +44,29 @@ export function getCompletionGroup(rank: number | null, totalCompletions: number
 			GROUP_PARAMS.scaleFactors[i] * totalCompletions ** GROUP_PARAMS.exponents[i],
 			GROUP_PARAMS.minSizes[i]
 		);
-		if (rank < rankOffset + groupSize) {
-			return numberedGroups[i];
-		}
-		rankOffset += groupSize;
+		const threshold = rankOffset + groupSize;
+		const lastRank = Math.ceil(threshold - 1);
+		boundaries[lastRank] = numberedGroups[i];
+		rankOffset = threshold;
 	}
 
-	// Rank falls beyond the last group - bottom group, matching the backend default.
-	return CompletionGroup.GROUP_4;
+	return boundaries;
+}
+
+/**
+ * Classify a PB's rank into a {@link CompletionGroup}, given {@link GroupBoundaries}
+ * Returns null when the user hasn't completed the track (null rank).
+ */
+export function getCompletionGroup(rank: number | null, boundaries: GroupBoundaries): CompletionGroup | null {
+	if (rank == null) return null;
+	if (rank === 1) return CompletionGroup.WORLD_RECORD;
+	if (rank <= 10) return CompletionGroup.TOP_10;
+
+	for (const [boundary, group] of Object.entries(boundaries)) {
+		if (rank <= +boundary) {
+			return group;
+		}
+	}
+
+	return null;
 }
