@@ -2,7 +2,7 @@ import { PanelHandler } from 'util/module-helpers';
 import { TrackType } from 'common/web/enums/track-type.enum';
 import { MapUserCompletions } from 'common/maps';
 import { CompletionGroup } from 'common/web/enums/completion-group.enum';
-import { getCompletionGroup } from 'common/completion-group';
+import { getCompletionGroup, getGroupBoundaries } from 'common/completion-group';
 
 interface TrackDisplayData {
 	track: string;
@@ -88,7 +88,7 @@ export class TrackSelectorHandler {
 				time: track.time,
 				rank: track.rank,
 				total: track.totalCompletions,
-				group: getCompletionGroup(track.rank, track.totalCompletions)
+				group: getCompletionGroup(track.rank, getGroupBoundaries(track.totalCompletions))
 			});
 
 			if (isMain) {
