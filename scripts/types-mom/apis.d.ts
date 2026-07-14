@@ -301,6 +301,9 @@ declare namespace GameModeAPI {
 
 	/** Gets all valid run styles for the provided gamemode. */
 	function GetValidRunStyles(gamemode: Gamemode): number[];
+
+	/** Gets the run style whose leaderboard is shown by default for the provided gamemode. */
+	function GetDefaultLeaderboardRunStyle(gamemode: Gamemode): import('common/web/enums/style.enum').Style;
 }
 
 declare namespace MomentumTimerAPI {
@@ -379,6 +382,38 @@ declare namespace MapCacheAPI {
 
 	/** Fetches private maps visible to the user */
 	function FetchPrivateMaps(): void;
+
+	/**
+	 * Gets the local user's cached per-track completions for a map in a gamemode + style, merging
+	 * the cached rank/total completions, static track tier, and persistent PB time. Returns empty
+	 * tracks until {@link RefreshCompletions} has populated the cache.
+	 */
+	function GetCompletions(
+		mapID: uint32,
+		gamemode: import('common/web/enums/gamemode.enum').Gamemode,
+		style: import('common/web/enums/style.enum').Style
+	): import('common/maps').MapUserCompletions;
+
+	/**
+	 * Refetches a map's completions from online if the cache is stale/missing (60s cooldown),
+	 * firing MapCache_CompletionsUpdate when fresh data lands. No-op if already fresh.
+	 */
+	function RefreshCompletions(
+		mapID: uint32,
+		gamemode: import('common/web/enums/gamemode.enum').Gamemode,
+		style: import('common/web/enums/style.enum').Style
+	): void;
+
+	/**
+	 * Fetches the local user's PB times for a map into the cache (once per session), firing
+	 * MapCache_CompletionsUpdate for the given gamemode + style when they land. Lets a console-loaded
+	 * map show PB times without opening it in the map selector first.
+	 */
+	function RefreshUserPersonalBests(
+		mapID: uint32,
+		gamemode: import('common/web/enums/gamemode.enum').Gamemode,
+		style: import('common/web/enums/style.enum').Style
+	): void;
 }
 
 declare namespace SpectatorAPI {
