@@ -28,15 +28,23 @@ TrackSelector {
 
 	&:hover {
 		background-color: rgba(100, 100, 100, 0.5);
+
+		.track-selector-play {
+			opacity: 1;
+		}
 	}
 
 	&:selected {
 		background-color: rgba(150, 150, 150, 0.7);
+
+		.track-selector-play {
+			opacity: 1;
+		}
 	}
 
 	&__track {
+		width: fill-parent-flow(4);
 		height: 100%;
-		width: 20%;
 		margin-left: 8px;
 		Label {
 			horizontal-align: left;
@@ -45,16 +53,17 @@ TrackSelector {
 	}
 
 	&__tier {
+		width: fill-parent-flow(1);
 		height: 100%;
-		width: 6%;
+
 		Label {
 			text-overflow: shrink;
 		}
 	}
 
 	&__time {
+		width: fill-parent-flow(4);
 		height: 100%;
-		width: 20%;
 		Label {
 			font-weight: normal;
 			text-overflow: shrink;
@@ -62,8 +71,8 @@ TrackSelector {
 	}
 
 	&__rank {
+		width: fill-parent-flow(4);
 		height: 100%;
-		width: 20%;
 		Label {
 			font-weight: normal;
 			text-overflow: shrink;
@@ -71,9 +80,9 @@ TrackSelector {
 	}
 
 	&__group {
+		width: fill-parent-flow(3);
 		height: 100%;
-		width: 15%;
-		margin-left: 32px;
+		padding-left: 16px;
 	}
 
 	&__group-pill-container {
@@ -81,6 +90,11 @@ TrackSelector {
 		width: 83%;
 		vertical-align: center;
 		horizontal-align: center;
+	}
+
+	&__play {
+		width: fill-parent-flow(4);
+		height: 100%;
 	}
 }
 
@@ -90,4 +104,19 @@ TrackSelector {
 	font-size: 20px;
 	text-align: center;
 	align: center center;
+}
+
+.track-selector-play {
+	width: 32px;
+	height: 32px;
+	border-radius: 4px;
+	margin-right: 8px;
+	align: right center;
+	opacity: 0;
+
+	#PlayTrack {
+		&:active {
+			background-color: rgb(10, 192, 10);
+		}
+	}
 }

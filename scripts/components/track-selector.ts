@@ -71,6 +71,17 @@ export class TrackSelectorHandler {
 				});
 			}
 
+			const playButton = trackPanel.FindChildTraverse('PlayTrack');
+			playButton.SetPanelEvent('onactivate', () => {
+				if (track.trackType === TrackType.MAIN) GameInterfaceAPI.ConsoleCommand('mom_main');
+				else if (track.trackType === TrackType.STAGE)
+					GameInterfaceAPI.ConsoleCommand(`mom_stage ${track.trackNum}`);
+				else if (track.trackType === TrackType.BONUS)
+					GameInterfaceAPI.ConsoleCommand(`mom_bonus ${track.trackNum}`);
+
+				trackPanel.SetSelected(true);
+			});
+
 			const isMain = track.trackType === TrackType.MAIN;
 			const isStage = track.trackType === TrackType.STAGE;
 
