@@ -6,7 +6,6 @@ import type { MMap } from 'common/web/types/models/models';
 import { getNumStages } from 'common/leaderboard';
 import { getAllCredits, getTier, MapUserCompletions, SimpleMapCredit } from 'common/maps';
 import { MapStatuses } from 'common/web/enums/map-status.enum';
-import { Style } from 'common/web/enums/style.enum';
 
 import { registerHUDCustomizerComponent } from 'common/hud-customizer';
 
@@ -49,6 +48,9 @@ class HudTabMenuHandler {
 		$.RegisterForUnhandledEvent('EndOfRun_Hide', () => this.hideEndOfRun());
 		$.RegisterForUnhandledEvent('ActiveZoneDefsChanged', () => this.updateMapStats());
 		$.RegisterForUnhandledEvent('MapCache_MapLoad', () => this.onMapLoad());
+		$.RegisterForUnhandledEvent('MapCache_CompletionsUpdate', (completions) =>
+			this.onCompletionsUpdate(completions)
+		);
 		$.RegisterForUnhandledEvent('Drawer_UpdateLobbyButton', (_, playerCount) =>
 			this.updatePlayerListVisibility(playerCount <= 1)
 		);
@@ -84,41 +86,6 @@ class HudTabMenuHandler {
 
 		const blur: HudBlurTarget = this.panels.cp.GetParent().GetParent().FindChild('HudBlur');
 
-		// TEMPORARY MOCK DATA
-		const completions: MapUserCompletions = {
-			mapID: mapData.staticData.id,
-			gamemode: gamemode,
-			style: Style.NORMAL,
-			tracks: [
-				// trackType: 0 (1 item)
-				{ trackType: 0, trackNum: 1, tier: 2, totalCompletions: 6909, time: null, rank: null, group: 0 },
-
-				// trackType: 1 (10 items)
-				{ trackType: 1, trackNum: 1, tier: 0, totalCompletions: 10664, time: null, rank: null, group: 1 },
-				{ trackType: 1, trackNum: 2, tier: 0, totalCompletions: 10167, time: null, rank: null, group: 2 },
-				{ trackType: 1, trackNum: 3, tier: 0, totalCompletions: 9825, time: null, rank: 9819, group: 3 },
-				{ trackType: 1, trackNum: 4, tier: 0, totalCompletions: 9745, time: null, rank: null, group: 4 },
-				{ trackType: 1, trackNum: 5, tier: 0, totalCompletions: 8640, time: null, rank: 8623, group: 5 },
-				{ trackType: 1, trackNum: 6, tier: 0, totalCompletions: 8336, time: null, rank: 1867, group: 5 },
-				{ trackType: 1, trackNum: 7, tier: 0, totalCompletions: 6969, time: null, rank: 1115, group: 5 },
-				{ trackType: 1, trackNum: 8, tier: 1, totalCompletions: 42069, time: null, rank: 420, group: 0 },
-				{ trackType: 1, trackNum: 9, tier: 2, totalCompletions: 80085, time: null, rank: 69, group: 1 },
-				{ trackType: 1, trackNum: 10, tier: 3, totalCompletions: 1337, time: null, rank: null, group: 2 },
-
-				// trackType: 2 (10 items)
-				{ trackType: 2, trackNum: 1, tier: 0, totalCompletions: 69420, time: null, rank: null, group: 3 },
-				{ trackType: 2, trackNum: 2, tier: 1, totalCompletions: 9001, time: null, rank: 1337, group: 4 },
-				{ trackType: 2, trackNum: 3, tier: 2, totalCompletions: 8008, time: null, rank: null, group: 5 },
-				{ trackType: 2, trackNum: 4, tier: 3, totalCompletions: 420, time: null, rank: 69, group: 0 },
-				{ trackType: 2, trackNum: 5, tier: 4, totalCompletions: 666, time: null, rank: null, group: 1 },
-				{ trackType: 2, trackNum: 6, tier: 5, totalCompletions: 777, time: null, rank: 777, group: 2 },
-				{ trackType: 2, trackNum: 7, tier: 0, totalCompletions: 58008, time: null, rank: null, group: 3 },
-				{ trackType: 2, trackNum: 8, tier: 1, totalCompletions: 31415, time: null, rank: 42, group: 4 },
-				{ trackType: 2, trackNum: 9, tier: 2, totalCompletions: 8675309, time: null, rank: 80085, group: 5 },
-				{ trackType: 2, trackNum: 10, tier: 3, totalCompletions: 1337420, time: null, rank: 6969, group: 0 }
-			]
-		};
-
 		this.components.trackSelector.handler.setBlurPanel(blur);
 		blur.AddBlurPanel(this.components.leaderboards);
 		blur.AddBlurPanel(this.components.playerList.GetFirstChild());
@@ -126,12 +93,41 @@ class HudTabMenuHandler {
 
 		this.components.trackSelector.handler.connectLeaderboards(this.panels.leaderboards);
 		this.components.trackSelector.handler.updateMapData(mapData.staticData);
-		this.components.trackSelector.handler.updateTrackData(completions);
+
+		// Render the cached completions immediately, then refresh from online if stale. Updated data
+		// (a late fetch, or a new PB patched by the run poster) arrives via MapCache_CompletionsUpdate.
+		// The tab menu shows the mode's default leaderboard style; a future style switcher will pass
+		// the selected style instead.
+		const style = GameModeAPI.GetDefaultLeaderboardRunStyle(gamemode);
+		this.components.trackSelector.handler.updateTrackData(
+			MapCacheAPI.GetCompletions(mapData.staticData.id, gamemode, style)
+		);
+		MapCacheAPI.RefreshCompletions(mapData.staticData.id, gamemode, style);
+		// Also load PB times, so a map loaded via console (never opened in the map selector) still
+		// shows them. No-op if the map selector already fetched them this session.
+		MapCacheAPI.RefreshUserPersonalBests(mapData.staticData.id, gamemode, style);
 
 		this.panels.betaInfoContainer.SetHasClass(
 			'hide',
 			!MapStatuses.IN_SUBMISSION.includes(mapData.staticData.status)
 		);
+	}
+
+	onCompletionsUpdate(completions: MapUserCompletions) {
+		// Fires for every map/mode/style; ignore updates that aren't for what we're showing (the
+		// current map in the current mode's default style).
+		const mapData = MapCacheAPI.GetCurrentMapData();
+		if (!mapData || completions.mapID !== mapData.staticData.id) return;
+
+		const gamemode = GameModeAPI.GetCurrentGameMode();
+		if (
+			completions.gamemode !== gamemode ||
+			completions.style !== GameModeAPI.GetDefaultLeaderboardRunStyle(gamemode)
+		) {
+			return;
+		}
+
+		this.components.trackSelector.handler.updateTrackData(completions);
 	}
 
 	updatePlayerListVisibility(isEmpty: boolean) {
