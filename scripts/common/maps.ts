@@ -23,7 +23,8 @@ export interface TrackCompletionInfo extends MapCompletion {
 
 /**
  * The local user's per-track completions for a map, in a single gamemode + style.
- * Sent from the game to the map selector via `MapSelector_SelectedCompletionsUpdate`.
+ * Read from the map cache via `MapCacheAPI.GetCompletions` and pushed to the map selector /
+ * tab menu via the `MapCache_CompletionsUpdate` event.
  *
  * This is a game-only wrapper around the website's `MapCompletion[]` (the REST API
  * returns a bare array), so it lives here rather than in the web-synced `common/web`.
