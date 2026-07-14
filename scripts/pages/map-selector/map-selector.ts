@@ -137,9 +137,9 @@ class MapSelectorHandler implements OnPanelLoad {
 		$.RegisterForUnhandledEvent('MapSelector_ShowConfirmOverwrite', (mapID) => this.showConfirmOverwrite(mapID));
 		$.RegisterForUnhandledEvent('MapSelector_MapsFiltered', (count) => this.onMapsFiltered(count));
 		$.RegisterForUnhandledEvent('MapSelector_SelectedDataUpdate', (mapData) => this.onSelectedDataUpdated(mapData));
-		$.RegisterForUnhandledEvent('MapSelector_SelectedCompletionsUpdate', (completions: MapUserCompletions) => {
-			this.components.trackSelector.handler.updateTrackData(completions);
-		});
+		$.RegisterForUnhandledEvent('MapCache_CompletionsUpdate', (completions) =>
+			this.onCompletionsUpdate(completions)
+		);
 
 		this.panels.nStateButtons.forEach((panel) =>
 			$.RegisterEventHandler('NStateButtonStateChanged', panel, (panelID, state) =>
@@ -344,9 +344,35 @@ class MapSelectorHandler implements OnPanelLoad {
 		this.components.mapInfo.handler.updateMapInfo(mapData);
 		this.components.trackSelector.handler.updateMapData(mapData.staticData);
 
+		// Render the cached completions immediately, then refresh rank/total from online if stale.
+		// Updates (a late fetch, GetMap populating PB times, or a new PB) arrive via
+		// MapCache_CompletionsUpdate. The map selector always views the meta mode's default style.
+		const gamemode = GameModeAPI.GetMetaGameMode();
+		const style = GameModeAPI.GetDefaultLeaderboardRunStyle(gamemode);
+		this.components.trackSelector.handler.updateTrackData(
+			MapCacheAPI.GetCompletions(mapData.staticData.id, gamemode, style)
+		);
+		MapCacheAPI.RefreshCompletions(mapData.staticData.id, gamemode, style);
+
 		// PRE REWORK REMOVAL
 		// Start loading spinner on live-updateing stats panels -- MapSelector_OnSelectedOnlineDataUpdate will kill it
 		// this.panels.stats.AddClass('mapselector-stats--loading');
+	}
+
+	/** Re-render the completion table when the selected map's completions change (fetch or new PB). */
+	onCompletionsUpdate(completions: MapUserCompletions) {
+		if (!this.selectedMapData || completions.mapID !== this.selectedMapData.staticData.id) return;
+
+		// Only apply updates for the mode + style we're currently showing.
+		const gamemode = GameModeAPI.GetMetaGameMode();
+		if (
+			completions.gamemode !== gamemode ||
+			completions.style !== GameModeAPI.GetDefaultLeaderboardRunStyle(gamemode)
+		) {
+			return;
+		}
+
+		this.components.trackSelector.handler.updateTrackData(completions);
 	}
 
 	onActionButtonPressed() {

@@ -50,13 +50,6 @@ interface GlobalEventNameMap {
 	 */
 	MapSelector_SelectedOnlineDataUpdate: (stats: import('common/web/types/models/models').MMap) => void;
 
-	/**
-	 * Fired when the local user's per-track completion status for the selected map is updated from online.
-	 * Fetched from the backend on every map selection (not yet cached, so no cooldown - unlike
-	 * `MapSelector_SelectedOnlineDataUpdate`).
-	 */
-	MapSelector_SelectedCompletionsUpdate: (completions: import('common/maps').MapUserCompletions) => void;
-
 	PanoramaComponent_SteamLobby_OnListUpdated: (lobbyList: import('common/online').GroupedLobbyLists) => void;
 
 	PanoramaComponent_SteamLobby_OnDataUpdated: (lobbyData: import('common/online').LobbyList) => void;
@@ -104,6 +97,9 @@ interface GlobalEventNameMap {
 
 	/** Fired when the private map lists are updated from online */
 	MapCache_PrivateMapsUpdate: (success: boolean) => void;
+
+	/** Fired when a map's per-track completions are refreshed from online or patched by a new PB */
+	MapCache_CompletionsUpdate: (completions: import('common/maps').MapUserCompletions) => void;
 
 	MapDownload_Queued: (mapID: uint32, added: boolean) => void;
 

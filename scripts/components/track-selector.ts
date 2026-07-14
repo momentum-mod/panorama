@@ -54,7 +54,10 @@ export class TrackSelectorHandler {
 			}
 			return groupedContainers.get(type)!;
 		};
-		completions.tracks.forEach((track) => {
+		// `tracks` can be absent: an empty CUtlVector serializes to JSON without the key, which
+		// happens whenever completions are dispatched before the cache is populated (e.g. on map
+		// selection, before the online fetch lands). Render an empty table in that case.
+		(completions.tracks ?? []).forEach((track) => {
 			const container = getGroupContainer(track.trackType);
 
 			const trackPanel = $.CreatePanel('RadioButton', container, '');
