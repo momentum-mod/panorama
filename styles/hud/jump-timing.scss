@@ -8,7 +8,15 @@
 		transform: translateY(34px);
 	}
 
-	&__container {
+	&__outer-container {
+		width: fit-children;
+		height: fit-children;
+		flow-children: down;
+		horizontal-align: center;
+		vertical-align: center;
+	}
+
+	&__bar-container {
 		width: fit-children;
 		height: $bhopjump-height;
 		flow-children: right;
@@ -16,58 +24,55 @@
 		vertical-align: center;
 	}
 
-	&__bar-wrapper {
+	&__bar-tick-container {
 		width: $bhopjump-width;
-		height: $bhopjump-bar-height;
+		height: 20px;
 		vertical-align: center;
+	}
+
+	&__bar-wrapper {
+		width: 100%;
+		height: 16px;
 		border: 1px solid $white;
 		border-radius: 3px;
 		opacity: $bhopjump-opacity;
-	}
-
-	&__early {
-		width: 50%;
-		height: 100%;
-		horizontal-align: left;
-		vertical-align: center;
-		flow-children: left;
-		border-radius: 0px;
-		background-color: rgba(0, 0, 0, 0);
-
-		.ProgressBarRight {
-			background-color: $bhopjump-color-background;
-		}
-	}
-
-	&__late {
-		width: 50%;
-		height: 100%;
-		horizontal-align: right;
-		vertical-align: center;
 		flow-children: right;
-		border-radius: 0px;
-		background-color: rgba(0, 0, 0, 0);
-
-		.ProgressBarRight {
-			background-color: $bhopjump-color-background;
-		}
+		vertical-align: center;
 	}
 
 	&__text-wrapper {
-		width: fit-children;
+		width: 64px;
 		height: $bhopjump-height;
 		vertical-align: top;
 		font-size: $bhopjump-font-size;
 		font-weight: $bhopjump-font-weight;
 
 		&--early {
-			horizontal-align: left;
+			horizontal-align: right;
 			padding-right: $bhopjump-padding;
 		}
 
 		&--late {
-			horizontal-align: right;
+			horizontal-align: left;
 			padding-left: $bhopjump-padding;
 		}
+	}
+
+	&__zone {
+		height: 100%;
+		vertical-align: center;
+	}
+
+	&__tick-marker {
+		width: 2px;
+		height: 100%;
+		background-color: $white;
+		vertical-align: center;
+		visibility: collapse;
+	}
+
+	&__perf-percent {
+		horizontal-align: center;
+		margin-top: 4px;
 	}
 }

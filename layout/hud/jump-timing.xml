@@ -8,17 +8,28 @@
 	</scripts>
 	
 	<MomHudJumpTiming class="bhopjump__component">
-		<ConVarEnabler id="JumpTimingContainer" class="bhopjump__container" convar="mom_hud_jump_timing" togglevisibility="true">
-			<ConVarEnabler convar="mom_hud_jump_timing_text" class="bhopjump__text-wrapper" togglevisibility="true">
-				<Label id="JumpEarlyLabel" class="bhopjump__text-wrapper--early" text="0" />
-			</ConVarEnabler>
-			<Panel class="bhopjump__bar-wrapper" alternateTicks="false">
-				<ProgressBar id="JumpEarlyBar" class="bhopjump__early" min="0" max="1" />
-				<ProgressBar id="JumpLateBar" class="bhopjump__late" min="0" max="1" />
+		<ConVarEnabler id="JumpTimingContainer" class="bhopjump__outer-container" convar="mom_hud_jump_timing" togglevisibility="true">
+			<Panel class="bhopjump__bar-container">
+				<ConVarEnabler convar="mom_hud_jump_timing_text" class="bhopjump__text-wrapper" togglevisibility="true">
+					<Label id="JumpEarlyLabel" class="bhopjump__text-wrapper--early" text="0" />
+				</ConVarEnabler>
+				<Panel class="bhopjump__bar-tick-container">
+					<Panel id="BufferedJumpZones" class="bhopjump__bar-wrapper">
+						<Panel id="JumpEarlyZone" class="bhopjump__zone" />
+						<Panel id="JumpPerfectZone" class="bhopjump__zone" />
+						<Panel id="JumpLateZone" class="bhopjump__zone" />
+					</Panel>
+					<Panel id="ScrollZones" class="bhopjump__bar-wrapper">
+						<Panel id="ScrollLateZone1" class="bhopjump__zone" />
+						<Panel id="ScrollLateZone2" class="bhopjump__zone" />
+					</Panel>
+					<Panel id="JumpTickMarker" class="bhopjump__tick-marker" />
+				</Panel>
+				<ConVarEnabler convar="mom_hud_jump_timing_text" class="bhopjump__text-wrapper" togglevisibility="true">
+					<Label id="JumpLateLabel" class="bhopjump__text-wrapper--late" text="0" />
+				</ConVarEnabler>
 			</Panel>
-			<ConVarEnabler convar="mom_hud_jump_timing_text" class="bhopjump__text-wrapper" togglevisibility="true">
-				<Label id="JumpLateLabel" class="bhopjump__text-wrapper--late" text="0" />
-			</ConVarEnabler>
+			<Label id="JumpPerfPercentLabel" class="bhopjump__perf-percent" text="#JumpTiming_Label_PerfPercent" />
 		</ConVarEnabler>
 	</MomHudJumpTiming>
 </root>
