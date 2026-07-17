@@ -37,7 +37,10 @@ class JumpTimingHandler {
 
 	constructor() {
 		RegisterHUDPanelForGamemode({
-			gamemodes: GamemodeCategories.get(GamemodeCategory.BHOP), // TODO: Add stamina bhop game mode when it's in the game
+			gamemodes: [
+				//...GamemodeCategories.get(GamemodeCategory.BHOP), // TODO: Add stamina bhop game mode when it's in the game
+				...GamemodeCategories.get(GamemodeCategory.CLIMB)
+			],
 			onLoad: () => this.onMapInit(),
 			events: [
 				{
