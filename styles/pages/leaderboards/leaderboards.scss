@@ -73,6 +73,12 @@ $times-border: 0px solid rgba(24, 24, 24, 0.4);
 			border-bottom: 0px;
 		}
 
+		// Maps with no online data only have saved replays, so the online categories get disabled
+		&:disabled,
+		&:disabled:hover {
+			background-color: rgba(10, 10, 10, 0.7);
+		}
+
 		&__label {
 			@include mixin.font-header();
 			color: rgba(138, 138, 138, 0.8);
@@ -86,6 +92,10 @@ $times-border: 0px solid rgba(24, 24, 24, 0.4);
 
 			#{$root}:selected & {
 				color: #fff;
+			}
+
+			#{$root}:disabled & {
+				color: $font-disabled-color;
 			}
 		}
 	}
