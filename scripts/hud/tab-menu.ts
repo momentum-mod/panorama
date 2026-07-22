@@ -49,7 +49,7 @@ class HudTabMenuHandler {
 		$.RegisterForUnhandledEvent('HudTabMenu_ForceClose', () => this.close());
 		$.RegisterForUnhandledEvent('EndOfRun_Show', (reason) => this.showEndOfRun(reason));
 		$.RegisterForUnhandledEvent('EndOfRun_Hide', () => this.hideEndOfRun());
-		$.RegisterForUnhandledEvent('ActiveZoneDefsChanged', () => this.updateMapStats());
+		$.RegisterForUnhandledEvent('ActiveZoneDefsChanged', () => this.onActiveZoneDefsChanged());
 		$.RegisterForUnhandledEvent('MapCache_MapLoad', () => this.onMapLoad());
 		$.RegisterForUnhandledEvent('MapCache_CompletionsUpdate', (completions) =>
 			this.onCompletionsUpdate(completions)
@@ -81,11 +81,6 @@ class HudTabMenuHandler {
 
 	onMapLoad() {
 		const mapData = MapCacheAPI.GetCurrentMapData();
-		if (!mapData) return;
-
-		this.panels.nameContainer.SetDialogVariable('name', mapData.staticData.name);
-
-		const gamemode = GameModeAPI.GetCurrentGameMode();
 
 		const blur: HudBlurTarget = this.panels.cp.GetParent().GetParent().FindChild('HudBlur');
 
@@ -95,6 +90,19 @@ class HudTabMenuHandler {
 		blur.AddBlurPanel(this.panels.endOfRunFrame);
 
 		this.components.trackSelector.handler.connectLeaderboards(this.panels.leaderboards);
+
+		// An offline map: nothing online exists for it, so drive the selector off its local zones.
+		if (!mapData) {
+			this.panels.nameContainer.SetDialogVariable('name', MapCacheAPI.GetMapName());
+			this.panels.betaInfoContainer.AddClass('hide');
+			this.components.trackSelector.handler.updateLocalTrackData();
+			return;
+		}
+
+		this.panels.nameContainer.SetDialogVariable('name', mapData.staticData.name);
+
+		const gamemode = GameModeAPI.GetCurrentGameMode();
+
 		this.components.trackSelector.handler.updateMapData(mapData.staticData);
 
 		// Render the cached completions immediately, then refresh from online if stale. Updated data
@@ -131,6 +139,16 @@ class HudTabMenuHandler {
 		}
 
 		this.components.trackSelector.handler.updateTrackData(completions);
+	}
+
+	onActiveZoneDefsChanged() {
+		this.updateMapStats();
+
+		// An offline map's tracks come from its zones, which can load (or be edited in the zone
+		// editor) after the map itself, so rebuild the selector whenever they change.
+		if (!MapCacheAPI.GetCurrentMapData()) {
+			this.components.trackSelector.handler.updateLocalTrackData();
+		}
 	}
 
 	updatePlayerListVisibility(isEmpty: boolean) {
