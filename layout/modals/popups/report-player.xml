@@ -1,0 +1,32 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+
+	<scripts>
+		<include type="module" src="file://{scripts}/modals/popups/report-player.ts" />
+	</scripts>
+
+	<PopupCustomLayout class="PopupPanel Hidden generic-popup report-player" popupbackground="dim">
+		<Panel class="row mt-0">
+			<Label class="generic-popup__title" text="#Report_Player_Title" />
+		</Panel>
+		<Panel class="row my-2">
+			<Label class="generic-popup__text text-sm color-gray-800" text="{s:subtitle}" />
+		</Panel>
+		<Panel class="row mt-3">
+			<Label class="v-align-center" text="#Report_Player_Reason" />
+		</Panel>
+		<Panel class="w-full mt-1">
+			<TextEntry id="ReportMessage" class="textentry report-player__reason" maxchars="1000" multiline="true" placeholder="#Report_Player_Reason_Placeholder" ontextentrychange="ReportPlayerHandler.onChanged()" />
+		</Panel>
+		<Panel class="row h-align-right mt-4">
+			<Button id="SubmitButton" class="button button--green mr-3" disabled="true" onactivate="ReportPlayerHandler.submit()">
+				<Label class="button__text" text="#Report_Player_Submit" />
+			</Button>
+			<Button class="button button--red" onactivate="ReportPlayerHandler.cancel()">
+				<Label class="button__text" text="#Common_Cancel" />
+			</Button>
+		</Panel>
+	</PopupCustomLayout>
+</root>
