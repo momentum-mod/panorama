@@ -1,0 +1,24 @@
+.report-player {
+	&__reason {
+		width: 100%;
+		height: 120px;
+		color: white;
+		overflow: squish scroll;
+		white-space: normal;
+
+		background-color: rgba(0, 0, 0, 0.35);
+		border: 1px solid rgba(255, 255, 255, 0.4);
+		border-radius: 4px;
+
+		&:hover,
+		&:focus {
+			border-color: rgba(255, 255, 255, 0.55);
+		}
+
+		#PlaceholderText {
+			vertical-align: top;
+			font-size: 14px;
+			color: rgba(255, 255, 255, 0.35);
+		}
+	}
+}
