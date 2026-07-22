@@ -4,13 +4,49 @@ import { MapUserCompletions } from 'common/maps';
 import { CompletionGroup } from 'common/web/enums/completion-group.enum';
 import { getCompletionGroup, getGroupBoundaries } from 'common/completion-group';
 
+/**
+ * A track to render, whatever its source. Online maps source these from the map's completions;
+ * maps without online data source them from the loaded map's zones, and so have no tier/time/rank.
+ */
+interface TrackEntry {
+	trackType: TrackType;
+	trackNum: number;
+	tier?: number;
+	time?: number;
+	rank?: number;
+	totalCompletions?: number;
+}
+
 interface TrackDisplayData {
 	track: string;
 	tier?: number;
 	time?: number;
 	rank?: number;
-	total: number;
+	total?: number;
 	group?: number;
+}
+
+/**
+ * The tracks defined by the loaded map's active zones, used for maps that have no online data.
+ * Always includes the main track, so a map with no zones at all still gets an entry.
+ */
+function getActiveZoneTracks(): TrackEntry[] {
+	const tracks: TrackEntry[] = [{ trackType: TrackType.MAIN, trackNum: 1 }];
+
+	const zones = MomentumTimerAPI.GetActiveZoneDefs();
+	if (!zones) return tracks;
+
+	// A single segment is a linear track, which has no stages to pick between.
+	const segments = zones.tracks?.main?.zones?.segments ?? [];
+	if (segments.length > 1) {
+		segments.forEach((_, index) => tracks.push({ trackType: TrackType.STAGE, trackNum: index + 1 }));
+	}
+
+	(zones.tracks?.bonuses ?? []).forEach((_, index) =>
+		tracks.push({ trackType: TrackType.BONUS, trackNum: index + 1 })
+	);
+
+	return tracks;
 }
 
 @PanelHandler({ exposeToPanel: true })
@@ -39,10 +75,37 @@ export class TrackSelectorHandler {
 	}
 
 	updateTrackData(completions: MapUserCompletions) {
-		if (!this.leaderboards) return;
+		if (!this.leaderboards || !completions) return;
+
 		this.leaderboards.handler.setMapID(completions.mapID);
 		this.leaderboards.handler.setGamemode(completions.gamemode);
+		this.leaderboards.handler.setLocalOnly(false);
 
+		// `tracks` can be absent: an empty CUtlVector serializes to JSON without the key, which
+		// happens whenever completions are dispatched before the cache is populated (e.g. on map
+		// selection, before the online fetch lands). Render an empty table in that case.
+		this.renderTracks(completions.tracks ?? []);
+	}
+
+	/**
+	 * Populate the selector for a map with no online data, typically an offline map. Tracks come
+	 * from the loaded map's zones, falling back to just the main track when it has none. Only
+	 * locally saved replays exist for such a map, so the leaderboard is restricted to those.
+	 */
+	updateLocalTrackData() {
+		if (!this.leaderboards) return;
+
+		// There's no map ID to give. CLeaderboards::GetLeaderboardRecords doesn't read one for
+		// SAVED_REPLAYS -- it serves those from the runs it loaded off disk for the current map --
+		// but gamemode and track do get matched against, so those have to be right.
+		this.leaderboards.handler.setMapID(0);
+		this.leaderboards.handler.setGamemode(GameModeAPI.GetCurrentGameMode());
+		this.leaderboards.handler.setLocalOnly(true);
+
+		this.renderTracks(getActiveZoneTracks());
+	}
+
+	private renderTracks(tracks: TrackEntry[]) {
 		this.panels.container.RemoveAndDeleteChildren();
 
 		const groupedContainers = new Map<TrackType, Panel>();
@@ -54,10 +117,8 @@ export class TrackSelectorHandler {
 			}
 			return groupedContainers.get(type)!;
 		};
-		// `tracks` can be absent: an empty CUtlVector serializes to JSON without the key, which
-		// happens whenever completions are dispatched before the cache is populated (e.g. on map
-		// selection, before the online fetch lands). Render an empty table in that case.
-		(completions.tracks ?? []).forEach((track) => {
+
+		tracks.forEach((track) => {
 			const container = getGroupContainer(track.trackType);
 
 			const trackPanel = $.CreatePanel('RadioButton', container, '');
@@ -102,7 +163,10 @@ export class TrackSelectorHandler {
 				time: track.time,
 				rank: track.rank,
 				total: track.totalCompletions,
-				group: getCompletionGroup(track.rank, getGroupBoundaries(track.totalCompletions))
+				group:
+					track.rank == null
+						? null
+						: getCompletionGroup(track.rank, getGroupBoundaries(track.totalCompletions))
 			});
 
 			if (isMain) {
@@ -126,12 +190,17 @@ export class TrackSelectorHandler {
 		this.setOptionalFloat(trackPanel, 'track-panel__time-label', 'time', data.time);
 
 		const rankLabel = trackPanel.FindChildrenWithClassTraverse('track-panel__rank-label')[0] as Label;
-		trackPanel.SetDialogVariableInt('total', data.total);
-		if (data.rank != null) {
-			trackPanel.SetDialogVariableInt('rank', data.rank);
+		if (data.total == null) {
+			// No online leaderboard for this map, so there's nothing to be ranked against.
+			rankLabel.text = '';
 		} else {
-			rankLabel.text = `—/${data.total}`;
-			rankLabel.style.color = 'rgb(160, 160, 160)';
+			trackPanel.SetDialogVariableInt('total', data.total);
+			if (data.rank != null) {
+				trackPanel.SetDialogVariableInt('rank', data.rank);
+			} else {
+				rankLabel.text = `—/${data.total}`;
+				rankLabel.style.color = 'rgb(160, 160, 160)';
+			}
 		}
 
 		const groupPill = trackPanel.FindChildTraverse<GroupPill>('GroupPill');
