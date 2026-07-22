@@ -75,6 +75,9 @@ export class LeaderboardsHandler {
 	currentUserRank = null;
 	groupBoundaries: GroupBoundaries;
 
+	/** null until the first map is shown, so that the first {@link setLocalOnly} always applies. */
+	localOnly: boolean | null = null;
+
 	constructor() {
 		$.RegisterEventHandler('LeaderboardRecords_Loaded', this.panels.cp, (requestToken) =>
 			this.updateLeaderboardsWithToken(requestToken)
@@ -129,6 +132,33 @@ export class LeaderboardsHandler {
 		this.state.page = 1;
 		this.setTextEntry(this.state.page);
 		this.updateLeaderboards();
+	}
+
+	/**
+	 * Restrict the leaderboard to locally saved replays, for maps with no online data. The other
+	 * categories are all served by the backend, which knows nothing about such a map, so they're
+	 * disabled rather than left to come back empty.
+	 *
+	 * Lobby is left to the engine (CLeaderboards tracks lobby membership and toggles it itself), and
+	 * it re-runs on every SetMap so it'll be right for the map we're on either way -- so we only
+	 * force it off when going local-only, and never force it back on.
+	 */
+	setLocalOnly(localOnly: boolean) {
+		if (this.localOnly === localOnly) return;
+		this.localOnly = localOnly;
+
+		const { global, friends, lobby, local } = this.panels.radioButtons;
+		global.enabled = !localOnly;
+		friends.enabled = !localOnly;
+
+		if (localOnly) {
+			lobby.enabled = false;
+			local.SetSelected(true);
+			this.setFilter(LeaderboardRecordsFilter.SAVED_REPLAYS);
+		} else {
+			global.SetSelected(true);
+			this.setFilter(LeaderboardRecordsFilter.GLOBAL);
+		}
 	}
 
 	setCurrentUserRank(rank: number) {
