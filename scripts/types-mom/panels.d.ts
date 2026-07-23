@@ -48,16 +48,6 @@ interface MapEntry extends AbstractPanel<'MapEntry'> {
 interface Leaderboards extends AbstractPanel<'Leaderboards'> {
 	handler: import('/pages/leaderboards/leaderboards').LeaderboardsHandler;
 
-	/** Gets the status of the given times list. 0 means loaded */
-	getTimesListStatus(
-		type: import('common/leaderboard').LeaderboardType
-	): import('common/leaderboard').LeaderboardStatusType;
-
-	/** Applies the currently selected filters to the times list */
-	applyFilters(): void;
-
-	selectTrack(trackType: import('common/web/enums/track-type.enum').TrackType, trackNum: int32): void;
-
 	/**
 	 * Fetches a page (20 records) of leaderboard records for a map/track/gamemode/style/filter.
 	 * Returns a request token; listen for `LeaderboardRecords_Loaded` (which passes the same
@@ -81,9 +71,7 @@ interface Leaderboards extends AbstractPanel<'Leaderboards'> {
 	getLoadedLeaderboardRecords(): import('common/leaderboard').LoadedLeaderboardRecords;
 }
 
-interface LeaderboardEntry extends AbstractPanel<'LeaderboardEntry'> {
-	readonly timeData: any;
-}
+interface LeaderboardEntry extends AbstractPanel<'LeaderboardEntry'> {}
 
 interface RangeColorDisplay extends AbstractPanel<'RangeColorDisplay'> {
 	min: float;
