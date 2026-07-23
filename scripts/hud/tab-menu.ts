@@ -16,7 +16,6 @@ import { registerHUDCustomizerComponent } from 'common/hud-customizer';
 class HudTabMenuHandler {
 	readonly panels = {
 		cp: $.GetContextPanel<MomHudTabMenu>(),
-		sidebysideContainer: $<Panel>('#SideBySideContainer'),
 		endOfRunContainer: $<Panel>('#EndOfRunContainer'),
 		nameContainer: $<Panel>('#NameContainer'),
 		playerListContainer: $<Panel>('#TabMenuPlayerListContainer'),
