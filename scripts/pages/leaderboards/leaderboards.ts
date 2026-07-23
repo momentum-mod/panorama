@@ -239,7 +239,52 @@ export class LeaderboardsHandler {
 
 			const avatar = lbEntry.FindChildTraverse<AvatarImage>('LeaderboardEntryAvatarPanel');
 			avatar.steamid = record.steamID;
+
+			lbEntry.SetPanelEvent('oncontextmenu', () => this.showEntryContextMenu(index, record));
 		});
+	}
+
+	private showEntryContextMenu(index: number, record: LeaderboardRecord) {
+		const items: UiToolkitAPI.SimpleContextMenuItem[] = [
+			{
+				label: $.Localize('#Action_WatchReplay'),
+				icon: 'file://{images}/movie-open-outline.svg',
+				style: 'icon-color-mid-blue',
+				jsCallback: () => this.panels.cp.playRecordReplay(index)
+			},
+			{
+				label: $.Localize('#Action_SetComparisonRun'),
+				icon: 'file://{images}/chart-timeline.svg',
+				style: 'icon-color-light-blue',
+				jsCallback: () => this.panels.cp.setRecordComparisonRun(index)
+			}
+		];
+
+		// Only saved replays live on disk and can be deleted.
+		if (this.state.filter === LeaderboardRecordsFilter.SAVED_REPLAYS) {
+			items.push({
+				label: $.Localize('#Action_DeleteReplay'),
+				icon: 'file://{images}/delete.svg',
+				style: 'icon-color-red',
+				jsCallback: () =>
+					UiToolkitAPI.ShowGenericPopupOkCancel(
+						$.Localize('#Action_DeleteReplay'),
+						$.Localize('#Action_DeleteReplay_Confirm'),
+						'ok-cancel-popup',
+						() => this.panels.cp.deleteRecordReplay(index),
+						() => {}
+					)
+			});
+		}
+
+		items.push({
+			label: $.Localize('#Action_ShowSteamProfile'),
+			icon: 'file://{images}/social/steam.svg',
+			style: 'icon-color-steam-online',
+			jsCallback: () => SteamOverlayAPI.OpenToProfileID(record.steamID)
+		});
+
+		UiToolkitAPI.ShowSimpleContextMenu('', 'ControlsLibSimpleContextMenu', items);
 	}
 
 	private createBoundaryGroupIndicators(matchedGroup: CompletionGroup, lbEntry: LeaderboardEntry, index: number) {

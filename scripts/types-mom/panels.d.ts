@@ -69,6 +69,19 @@ interface Leaderboards extends AbstractPanel<'Leaderboards'> {
 
 	/** Returns the most recently loaded page of leaderboard records fetched via `getLeaderboardRecords`. */
 	getLoadedLeaderboardRecords(): import('common/leaderboard').LoadedLeaderboardRecords;
+
+	/**
+	 * Watches the replay for the loaded record at the given 0-based page index (its position in
+	 * `getLoadedLeaderboardRecords().records`). Online replays are downloaded first. No-op if the
+	 * index is out of range.
+	 */
+	playRecordReplay(index: int32): void;
+
+	/** Sets the loaded record at the given 0-based page index as the comparison run (downloads it first for online records). */
+	setRecordComparisonRun(index: int32): void;
+
+	/** Deletes the saved-replay record at the given 0-based page index from disk. No-op for online records. */
+	deleteRecordReplay(index: int32): void;
 }
 
 interface LeaderboardEntry extends AbstractPanel<'LeaderboardEntry'> {}
