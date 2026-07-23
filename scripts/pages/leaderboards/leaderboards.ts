@@ -40,7 +40,6 @@ export class LeaderboardsHandler {
 		groupPillsLayer: $<Panel>('#GroupPillsLayer'),
 		emptyWarningText: $<Label>('#LeaderboardEmptyWarningText'),
 		syncTrackButton: $<Button>('#SyncTrackButton'),
-		stylesDropdown: $<DropDown>('#StylesDropdown'),
 		around: $<Button>('#Around'),
 		radioButtons: {
 			global: $<RadioButton>('#TimesListGlobal'),
@@ -84,10 +83,10 @@ export class LeaderboardsHandler {
 		);
 
 		// Saved replays are read off disk asynchronously (CLeaderboards::AsyncGetLocalMapRuns), and
-		// finish loading after we've already requested the page on map load. The engine only signals
-		// that via Leaderboards_TimesFiltered (the old list path) -- it never re-fires
-		// LeaderboardRecords_Loaded -- so re-request the page ourselves when it fires while local-only.
-		$.RegisterEventHandler('Leaderboards_TimesFiltered', this.panels.cp, () => {
+		// finish loading after we've already requested the page on map load. The engine signals that
+		// via Leaderboards_LocalRunsLoaded -- it never re-fires LeaderboardRecords_Loaded -- so
+		// re-request the page ourselves when it fires while local-only.
+		$.RegisterEventHandler('Leaderboards_LocalRunsLoaded', this.panels.cp, () => {
 			if (this.localOnly) this.updateLeaderboards();
 		});
 
@@ -106,8 +105,6 @@ export class LeaderboardsHandler {
 				this.selectPage(parsed);
 			}
 		});
-
-		this.panels.stylesDropdown.visible = false;
 	}
 
 	setMapID(mapID: number) {
