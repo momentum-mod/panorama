@@ -129,11 +129,20 @@ $panel-border: 1px solid rgba(255, 255, 255, 0.01);
 		width: 45%;
 		height: 100%;
 		margin-right: 8px;
+		flow-children: down;
+
+		TrackSelector {
+			height: fill-parent-flow(1);
+		}
 	}
 
 	&__leaderboards-container {
 		width: 65%;
 		height: 100%;
+	}
+
+	&__style-selector {
+		margin-bottom: 16px;
 	}
 
 	&__playlists {

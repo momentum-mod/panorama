@@ -14,6 +14,7 @@ declare interface PanelTagNameMap {
 	LevelIndicator: LevelIndicator;
 	PlayerCard: PlayerCard;
 	TrackSelector: TrackSelector;
+	StyleSelector: StyleSelector;
 	MapInfo: MapInfo;
 	MomHudTimer: MomHudTimer;
 	MomHudStatus: MomHudStatus;
@@ -69,6 +70,11 @@ declare interface TrackSelector extends AbstractPanel<'TrackSelector'> {
 	handler: import('components/track-selector').TrackSelectorHandler;
 }
 UiToolkitAPI.RegisterPanel2d('TrackSelector', 'file://{resources}/layout/components/track-selector.xml');
+
+declare interface StyleSelector extends AbstractPanel<'StyleSelector'> {
+	handler: import('components/style-selector').StyleSelectorHandler;
+}
+UiToolkitAPI.RegisterPanel2d('StyleSelector', 'file://{resources}/layout/components/style-selector.xml');
 
 declare interface MapInfo extends AbstractPanel<'MapInfo'> {
 	handler: import('components/map-info').MapInfoHandler;
