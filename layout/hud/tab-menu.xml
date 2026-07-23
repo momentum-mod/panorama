@@ -80,16 +80,6 @@
                 </Panel>
             </Panel>
 
-            <Panel id="SideBySideContainer" class="hud-tab-menu__sidebysidecontainer hide">
-
-                <Panel id="LeaderboardsContainer" class="hud-tab-menu__leaderboards" hittestchildren="true">
-                    <Leaderboards id="TabMenuLeaderboards" hittest="true" hittestchildren="true" />
-                </Panel>
-                
-            </Panel>
-
-            
-
             <Panel class="hud-tab-menu__stats">
             </Panel>
 
