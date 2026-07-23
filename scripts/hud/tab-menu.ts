@@ -6,6 +6,7 @@ import type { MMap } from 'common/web/types/models/models';
 import { getNumStages } from 'common/leaderboard';
 import { getAllCredits, getTier, MapUserCompletions, SimpleMapCredit } from 'common/maps';
 import { MapStatuses } from 'common/web/enums/map-status.enum';
+import { Style } from 'common/web/enums/style.enum';
 
 import { registerHUDCustomizerComponent } from 'common/hud-customizer';
 
@@ -37,6 +38,7 @@ class HudTabMenuHandler {
 
 	readonly components = {
 		trackSelector: $<TrackSelector>('#HudTrackSelector'),
+		styleSelector: $<StyleSelector>('#HudStyleSelector'),
 		leaderboards: $<Leaderboards>('#HudLeaderboards'),
 		playerList: $<Panel>('#PlayerList')
 	};
@@ -67,6 +69,8 @@ class HudTabMenuHandler {
 			dynamicStyles: {}
 		});
 
+		this.components.styleSelector.handler.setStyleChangedCallback((style) => this.onStyleSelected(style));
+
 		this.updatePlayerListVisibility(true);
 	}
 
@@ -84,11 +88,17 @@ class HudTabMenuHandler {
 		const blur: HudBlurTarget = this.panels.cp.GetParent().GetParent().FindChild('HudBlur');
 
 		this.components.trackSelector.handler.setBlurPanel(blur);
+		blur.AddBlurPanel(this.components.styleSelector);
 		blur.AddBlurPanel(this.components.leaderboards);
 		blur.AddBlurPanel(this.components.playerList.GetFirstChild());
 		blur.AddBlurPanel(this.panels.endOfRunFrame);
 
 		this.components.trackSelector.handler.connectLeaderboards(this.panels.leaderboards);
+
+		// Styles are per-gamemode, so the selector rebuilds (and resets to the mode's default style)
+		// whenever the mode changes. Otherwise it keeps whatever the user last picked.
+		this.components.styleSelector.handler.setGamemode(GameModeAPI.GetCurrentGameMode());
+		this.panels.leaderboards.handler.setStyle(this.components.styleSelector.handler.style);
 
 		// An offline map: nothing online exists for it, so drive the selector off its local zones.
 		if (!mapData) {
@@ -106,9 +116,7 @@ class HudTabMenuHandler {
 
 		// Render the cached completions immediately, then refresh from online if stale. Updated data
 		// (a late fetch, or a new PB patched by the run poster) arrives via MapCache_CompletionsUpdate.
-		// The tab menu shows the mode's default leaderboard style; a future style switcher will pass
-		// the selected style instead.
-		const style = GameModeAPI.GetDefaultLeaderboardRunStyle(gamemode);
+		const style = this.components.styleSelector.handler.style;
 		this.components.trackSelector.handler.updateTrackData(
 			MapCacheAPI.GetCompletions(mapData.staticData.id, gamemode, style)
 		);
@@ -125,19 +133,33 @@ class HudTabMenuHandler {
 
 	onCompletionsUpdate(completions: MapUserCompletions) {
 		// Fires for every map/mode/style; ignore updates that aren't for what we're showing (the
-		// current map in the current mode's default style).
+		// current map in the current mode, in the selected style).
 		const mapData = MapCacheAPI.GetCurrentMapData();
 		if (!mapData || completions.mapID !== mapData.staticData.id) return;
 
-		const gamemode = GameModeAPI.GetCurrentGameMode();
 		if (
-			completions.gamemode !== gamemode ||
-			completions.style !== GameModeAPI.GetDefaultLeaderboardRunStyle(gamemode)
+			completions.gamemode !== GameModeAPI.GetCurrentGameMode() ||
+			completions.style !== this.components.styleSelector.handler.style
 		) {
 			return;
 		}
 
 		this.components.trackSelector.handler.updateTrackData(completions);
+	}
+
+	/** Switch the leaderboard, and the tracks' times/ranks, over to a newly picked style. */
+	onStyleSelected(style: Style) {
+		this.panels.leaderboards.handler.setStyle(style);
+
+		const mapData = MapCacheAPI.GetCurrentMapData();
+		if (!mapData) return;
+
+		const mapID = mapData.staticData.id;
+		const gamemode = GameModeAPI.GetCurrentGameMode();
+
+		this.components.trackSelector.handler.updateTrackData(MapCacheAPI.GetCompletions(mapID, gamemode, style));
+		MapCacheAPI.RefreshCompletions(mapID, gamemode, style);
+		MapCacheAPI.RefreshUserPersonalBests(mapID, gamemode, style);
 	}
 
 	onActiveZoneDefsChanged() {
