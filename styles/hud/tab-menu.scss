@@ -58,6 +58,15 @@
 		width: 33%;
 		margin: 0 16px;
 		height: 100%;
+		flow-children: down;
+
+		TrackSelector {
+			height: fill-parent-flow(1);
+		}
+	}
+
+	&__style-selector {
+		margin-bottom: 16px;
 	}
 
 	&__right {

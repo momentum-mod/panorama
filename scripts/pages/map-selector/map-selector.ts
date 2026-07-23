@@ -3,6 +3,7 @@ import { traverseChildren } from 'util/functions';
 import { parseMapImageUrl } from 'util/functions';
 import { scaleWidthToAspectRatio } from 'util/functions';
 import { MapUserCompletions } from 'common/maps';
+import { Style } from 'common/web/enums/style.enum';
 // PRE REWORK REMOVAL
 // import { MapStatus, MapStatuses } from 'common/web/enums/map-status.enum';
 // import { MapCreditType } from 'common/web/enums/map-credit-type.enum';
@@ -71,6 +72,7 @@ class MapSelectorHandler implements OnPanelLoad {
 	readonly components = {
 		mapInfo: $<MapInfo>('#MapInfo'),
 		trackSelector: $<TrackSelector>('#TrackSelector'),
+		styleSelector: $<StyleSelector>('#StyleSelector'),
 		leaderboards: $<Leaderboards>('#Leaderboards')
 	};
 
@@ -152,6 +154,10 @@ class MapSelectorHandler implements OnPanelLoad {
 
 		this.components.trackSelector.handler.setBlurPanel(this.panels.blurPanel);
 		this.components.trackSelector.handler.connectLeaderboards(this.components.leaderboards);
+		this.components.styleSelector.handler.setStyleChangedCallback((style) => this.onStyleSelected(style));
+		this.panels.blurPanel.AddBlurPanel(this.components.styleSelector);
+		// Populate before any map is selected, so the selector isn't empty on first open
+		this.components.styleSelector.handler.setGamemode(GameModeAPI.GetMetaGameMode());
 		this.components.mapInfo.handler.setBlurPanel(this.panels.blurPanel);
 		this.components.mapInfo.handler.setMapSelector(this.panels.cp);
 	}
@@ -344,11 +350,16 @@ class MapSelectorHandler implements OnPanelLoad {
 		this.components.mapInfo.handler.updateMapInfo(mapData);
 		this.components.trackSelector.handler.updateMapData(mapData.staticData);
 
+		// Styles are per-gamemode, so the selector rebuilds (and resets to the mode's default style)
+		// whenever the meta mode changes. Otherwise it keeps whatever the user last picked.
+		const gamemode = GameModeAPI.GetMetaGameMode();
+		this.components.styleSelector.handler.setGamemode(gamemode);
+
 		// Render the cached completions immediately, then refresh rank/total from online if stale.
 		// Updates (a late fetch, GetMap populating PB times, or a new PB) arrive via
-		// MapCache_CompletionsUpdate. The map selector always views the meta mode's default style.
-		const gamemode = GameModeAPI.GetMetaGameMode();
-		const style = GameModeAPI.GetDefaultLeaderboardRunStyle(gamemode);
+		// MapCache_CompletionsUpdate.
+		const style = this.components.styleSelector.handler.style;
+		this.components.leaderboards.handler.setStyle(style);
 		this.components.trackSelector.handler.updateTrackData(
 			MapCacheAPI.GetCompletions(mapData.staticData.id, gamemode, style)
 		);
@@ -364,15 +375,27 @@ class MapSelectorHandler implements OnPanelLoad {
 		if (!this.selectedMapData || completions.mapID !== this.selectedMapData.staticData.id) return;
 
 		// Only apply updates for the mode + style we're currently showing.
-		const gamemode = GameModeAPI.GetMetaGameMode();
 		if (
-			completions.gamemode !== gamemode ||
-			completions.style !== GameModeAPI.GetDefaultLeaderboardRunStyle(gamemode)
+			completions.gamemode !== GameModeAPI.GetMetaGameMode() ||
+			completions.style !== this.components.styleSelector.handler.style
 		) {
 			return;
 		}
 
 		this.components.trackSelector.handler.updateTrackData(completions);
+	}
+
+	/** Switch the leaderboard, and the tracks' times/ranks, over to a newly picked style. */
+	onStyleSelected(style: Style) {
+		this.components.leaderboards.handler.setStyle(style);
+
+		if (!this.selectedMapData) return;
+
+		const mapID = this.selectedMapData.staticData.id;
+		const gamemode = GameModeAPI.GetMetaGameMode();
+
+		this.components.trackSelector.handler.updateTrackData(MapCacheAPI.GetCompletions(mapID, gamemode, style));
+		MapCacheAPI.RefreshCompletions(mapID, gamemode, style);
 	}
 
 	onActionButtonPressed() {
