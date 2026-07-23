@@ -129,6 +129,15 @@ export class LeaderboardsHandler {
 		this.state.gamemode = gamemode;
 	}
 
+	setStyle(style: Style) {
+		if (this.state.style === style) return;
+
+		this.state.style = style;
+		this.state.page = 1;
+		this.setTextEntry(this.state.page);
+		this.updateLeaderboards();
+	}
+
 	setTotalCompletions(completions: number) {
 		this.totalCompletions = completions;
 	}
