@@ -37,14 +37,6 @@
 
 
 
-                <!-- REQUIRED BY C++ -->
-				<DelayLoadList id="TimesList" class="leaderboard-times__list hide" itemheight="35px" itemwidth="100%" spacersize="0px" spacerperiod="1">
-					<!-- Populated via code -->
-				</DelayLoadList>
-
-
-
-
 
 				<Panel class="leaderboard-times__empty">
 					<Panel class="v-align-center h-align-center flow-down">
@@ -89,41 +81,5 @@
                 </Panel>
             </Button>
 		</Panel>
-
-
-		<!-- REQUIRED BY C++ -->
-
-		<DropDown id="StylesDropdown" class="dropdown leaderboards__style-dropdown hide" menuclass="dropdown-menu">
-				<Panel id="placeholder" /> <!-- This is needed to dynamically add dropdown items from code -->
-		</DropDown>
-
-		
-		<Panel id="FilterButtonsSubtype" class="leaderboard-filter-buttons__subtypes">
-			<Panel class="leaderboard-filter-buttons__local tabs hide">
-				<RadioButton id="LocalTypeRuns" class="tabs__tab hide">
-					<Label class="tabs__text" text="#Leaderboards_Category_YourRuns" />
-				</RadioButton>
-				<RadioButton id="LocalTypeDownloaded" class="tabs__tab hide">
-					<Label class="tabs__text" text="#Leaderboards_Category_Downloaded" />
-				</RadioButton>
-			</Panel>
-
-			<!-- What the actual fuck is going on here. Something is specifically requring one of these buttons to be selected to load leaderboards.
-			It's not enough that the function .setSelectedListType runs, the button NEEDS to be selected or leaderboards won't load -->
-			<Panel class="leaderboard-filter-buttons__online tabs w-full h-full">
-				<RadioButton id="OnlineTypeTop10" class="tabs__tab">
-					<Label class="tabs__text" text="#Leaderboards_Category_Top10" />
-				</RadioButton>
-				<RadioButton id="OnlineTypeAround" class="tabs__tab">
-					<Label class="tabs__text" text="#Leaderboards_Category_Around" />
-				</RadioButton>
-				<RadioButton id="OnlineTypeFriends" class="tabs__tab">
-					<Label class="tabs__text" text="#Leaderboards_Category_Friends" />
-				</RadioButton>
-			</Panel>
-		</Panel>
-
-
-
 	</Leaderboards>
 </root>
