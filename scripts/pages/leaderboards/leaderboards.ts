@@ -83,6 +83,14 @@ export class LeaderboardsHandler {
 			this.updateLeaderboardsWithToken(requestToken)
 		);
 
+		// Saved replays are read off disk asynchronously (CLeaderboards::AsyncGetLocalMapRuns), and
+		// finish loading after we've already requested the page on map load. The engine only signals
+		// that via Leaderboards_TimesFiltered (the old list path) -- it never re-fires
+		// LeaderboardRecords_Loaded -- so re-request the page ourselves when it fires while local-only.
+		$.RegisterEventHandler('Leaderboards_TimesFiltered', this.panels.cp, () => {
+			if (this.localOnly) this.updateLeaderboards();
+		});
+
 		// Note: Can't set radio button groups in the XML because it causes multiple leaderboard instances to interfere with eachother
 		Object.entries(this.panels.radioButtons).forEach(([_, button]) => {
 			button.group = this.panels.cp.id + 'Group';
