@@ -340,34 +340,20 @@ interface GlobalEventNameMap {
 		newType: import('common/leaderboard').LeaderboardType
 	) => void;
 
-	/** Fired when the leaderboards is applying filters to the list, and passes the number of maps to display */
-	Leaderboards_TimesFiltered: (numMaps: int32) => void;
-
 	/** Fired when the leaderboards has its map data set but before times are loaded */
 	Leaderboards_MapDataSet: (isOfficial: boolean) => void;
 
-	/** Fired when the official map leaderboard data has loaded */
-	Leaderboards_OfficialMapLeaderboardsLoaded: (map: import('common/web/types/models/models').MMap) => void;
-
-	/** Fired when the local map leaderboard data has loaded */
-	Leaderboards_LocalMapLeaderboardsLoaded: () => void;
+	/**
+	 * Fired when the map's local (saved/downloaded) runs have finished loading off disk. The
+	 * frontend re-requests the page if it's currently showing saved replays.
+	 */
+	Leaderboards_LocalRunsLoaded: () => void;
 
 	/**
 	 * Fired when a page requested via `getLeaderboardRecords()` has loaded (or failed). The token
 	 * matches the one returned by that call; call `getLoadedLeaderboardRecords()` to read the result.
 	 */
 	LeaderboardRecords_Loaded: (requestToken: int32) => void;
-
-	/** Fired when the leaderboards has attempted to play a replay. */
-	Leaderboards_OnPlayReplay: () => void;
-
-	LeaderboardEntry_TimeDataUpdated: () => void;
-
-	LeaderboardEntry_PlayReplay: (itemIndex: int32) => void;
-
-	LeaderboardEntry_SetComparisonRun: (itemIndex: int32) => void;
-
-	LeaderboardEntry_DeleteReplay: (itemIndex: int32) => void;
 
 	/** Fired when local user data is loaded from disk or fetched from backend. */
 	MomAPI_LocalUserUpdate: (user: import('common/web/types/models/models').User) => void;
