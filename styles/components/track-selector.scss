@@ -36,10 +36,6 @@ TrackSelector {
 
 	&:selected {
 		background-color: rgba(150, 150, 150, 0.7);
-
-		.track-selector-play {
-			opacity: 1;
-		}
 	}
 
 	&__track {
