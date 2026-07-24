@@ -414,6 +414,17 @@ declare namespace MapCacheAPI {
 		gamemode: import('common/web/enums/gamemode.enum').Gamemode,
 		style: import('common/web/enums/style.enum').Style
 	): void;
+
+	/**
+	 * Reloads the current (offline) map's saved replays off disk and rebuilds the local user's
+	 * per-track PBs, computed game-side from only their own replays (matched by SteamID, so
+	 * downloaded runs never count). Fires MapCache_CompletionsUpdate (with mapID 0) for the given
+	 * gamemode + style when they land.
+	 */
+	function RefreshLocalCompletions(
+		gamemode: import('common/web/enums/gamemode.enum').Gamemode,
+		style: import('common/web/enums/style.enum').Style
+	): void;
 }
 
 declare namespace SpectatorAPI {
