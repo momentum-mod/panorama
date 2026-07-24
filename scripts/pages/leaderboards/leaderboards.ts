@@ -218,6 +218,8 @@ export class LeaderboardsHandler {
 
 		this.groupBoundaries = getGroupBoundaries(this.totalCompletions);
 
+		this.updateControlButtons();
+
 		this.panels.timesList.RemoveAndDeleteChildren();
 		this.panels.groupPillsLayer.RemoveAndDeleteChildren();
 		data.records.forEach((record, index) => {
@@ -347,25 +349,31 @@ export class LeaderboardsHandler {
 	previousGroup() {
 		if (!this.groupBoundaries) return;
 
-		const currentPage = this.state.page;
-		const boundaryPages = this.getBoundaryPages();
-		const pastPages = boundaryPages.filter((page) => page < currentPage);
-
-		const targetPage = pastPages.length > 0 ? Math.max(...pastPages) : 1;
-
-		this.selectPage(targetPage);
+		this.selectPage(this.getPreviousGroupPage());
 	}
 
 	nextGroup() {
 		if (!this.groupBoundaries) return;
 
-		const currentPage = this.state.page;
-		const boundaryPages = this.getBoundaryPages();
-		const futurePages = boundaryPages.filter((page) => page > currentPage);
+		this.selectPage(this.getNextGroupPage());
+	}
 
-		const targetPage = futurePages.length > 0 ? Math.min(...futurePages) : this.state.totalPages;
+	/** Page the "previous group" button would jump to, or the current page if there's none. */
+	private getPreviousGroupPage(): number {
+		const pastPages = this.getBoundaryPages().filter((page) => page < this.state.page);
 
-		this.selectPage(targetPage);
+		return pastPages.length > 0 ? Math.max(...pastPages) : 1;
+	}
+
+	/** Page the "next group" button would jump to, or the current page if there's none. */
+	private getNextGroupPage(): number {
+		// Group boundaries are derived from total completions and routinely fall beyond the last
+		// page of records (the min group sizes are large), so ignore any that aren't reachable.
+		const futurePages = this.getBoundaryPages().filter(
+			(page) => page > this.state.page && page <= this.state.totalPages
+		);
+
+		return futurePages.length > 0 ? Math.min(...futurePages) : this.state.totalPages;
 	}
 
 	private getBoundaryPages(): number[] {
@@ -374,6 +382,18 @@ export class LeaderboardsHandler {
 		const pages = Object.keys(this.groupBoundaries).map((rank) => Math.ceil(Number(rank) / 20));
 
 		return Array.from(new Set(pages)).sort((a, b) => a - b);
+	}
+
+	/** Disable page/group navigation buttons that wouldn't move anywhere from the current page. */
+	private updateControlButtons() {
+		const { pagePrev, pageNext, groupPrev, groupNext } = this.panels.controls;
+		const { page, totalPages } = this.state;
+
+		pagePrev.enabled = page > 1;
+		pageNext.enabled = page < totalPages;
+
+		groupPrev.enabled = this.getPreviousGroupPage() !== page;
+		groupNext.enabled = this.getNextGroupPage() !== page;
 	}
 
 	selectPage(page: number) {
