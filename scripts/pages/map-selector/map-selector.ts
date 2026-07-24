@@ -154,6 +154,7 @@ class MapSelectorHandler implements OnPanelLoad {
 
 		this.components.trackSelector.handler.setBlurPanel(this.panels.blurPanel);
 		this.components.trackSelector.handler.connectLeaderboards(this.components.leaderboards);
+		this.components.trackSelector.handler.connectStyleSelector(this.components.styleSelector);
 		this.components.styleSelector.handler.setStyleChangedCallback((style) => this.onStyleSelected(style));
 		this.panels.blurPanel.AddBlurPanel(this.components.styleSelector);
 		// Populate before any map is selected, so the selector isn't empty on first open
