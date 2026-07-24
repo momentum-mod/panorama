@@ -75,7 +75,7 @@ $times-border: 0px solid rgba(24, 24, 24, 0.4);
 
 		&__label {
 			@include mixin.font-header();
-			color: rgba(138, 138, 138, 0.8);
+			color: $font-disabled-color;
 			font-weight: bold;
 			font-size: $tab-font-size;
 			vertical-align: center;
@@ -89,7 +89,7 @@ $times-border: 0px solid rgba(24, 24, 24, 0.4);
 			}
 
 			#{$root}:disabled & {
-				color: $font-disabled-color;
+				color: rgba(138, 138, 138, 0.8);
 			}
 		}
 	}
