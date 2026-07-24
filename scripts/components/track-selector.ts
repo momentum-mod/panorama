@@ -1,5 +1,6 @@
 import { PanelHandler } from 'util/module-helpers';
 import { TrackType } from 'common/web/enums/track-type.enum';
+import { Style } from 'common/web/enums/style.enum';
 import { MapUserCompletions } from 'common/maps';
 import { CompletionGroup } from 'common/web/enums/completion-group.enum';
 import { getCompletionGroup, getGroupBoundaries } from 'common/completion-group';
@@ -90,19 +91,50 @@ export class TrackSelectorHandler {
 	/**
 	 * Populate the selector for a map with no online data, typically an offline map. Tracks come
 	 * from the loaded map's zones, falling back to just the main track when it has none. Only
-	 * locally saved replays exist for such a map, so the leaderboard is restricted to those.
+	 * locally saved replays exist for such a map, so the leaderboard is restricted to those, and
+	 * each track's PB time comes from the local user's own saved replays for the given style.
 	 */
-	updateLocalTrackData() {
+	updateLocalTrackData(style: Style) {
 		if (!this.leaderboards) return;
+
+		const gamemode = GameModeAPI.GetCurrentGameMode();
 
 		// There's no map ID to give. CLeaderboards::GetLeaderboardRecords doesn't read one for
 		// SAVED_REPLAYS -- it serves those from the runs it loaded off disk for the current map --
 		// but gamemode and track do get matched against, so those have to be right.
 		this.leaderboards.handler.setMapID(0);
-		this.leaderboards.handler.setGamemode(GameModeAPI.GetCurrentGameMode());
+		this.leaderboards.handler.setGamemode(gamemode);
 		this.leaderboards.handler.setLocalOnly(true);
 
-		this.renderTracks(getActiveZoneTracks());
+		// Render the tracks now (no times yet), then reload PBs off disk; they arrive via
+		// onLocalCompletionsUpdate.
+		this.renderLocalTracks(null);
+		MapCacheAPI.RefreshLocalCompletions(gamemode, style);
+	}
+
+	/**
+	 * Re-render the offline track table when a local-PB reload lands. The engine only dispatches for
+	 * the latest request, so this is always for the currently shown style.
+	 */
+	onLocalCompletionsUpdate(completions: MapUserCompletions) {
+		this.renderLocalTracks(completions);
+	}
+
+	/** Render the map's zone-derived tracks, overlaying each with its local PB time if there is one. */
+	private renderLocalTracks(completions: MapUserCompletions | null) {
+		const tracks = getActiveZoneTracks();
+
+		for (const track of tracks) {
+			// TrackId treats all MAIN tracks as equal regardless of number, so match MAIN by type.
+			const match = completions?.tracks?.find(
+				(c) =>
+					c.trackType === track.trackType &&
+					(track.trackType === TrackType.MAIN || c.trackNum === track.trackNum)
+			);
+			if (match?.time != null) track.time = match.time;
+		}
+
+		this.renderTracks(tracks);
 	}
 
 	private renderTracks(tracks: TrackEntry[]) {

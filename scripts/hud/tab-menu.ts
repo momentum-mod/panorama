@@ -104,7 +104,7 @@ class HudTabMenuHandler {
 		if (!mapData) {
 			this.panels.nameContainer.SetDialogVariable('name', MapCacheAPI.GetMapName());
 			this.panels.betaInfoContainer.AddClass('hide');
-			this.components.trackSelector.handler.updateLocalTrackData();
+			this.components.trackSelector.handler.updateLocalTrackData(this.components.styleSelector.handler.style);
 			return;
 		}
 
@@ -135,7 +135,14 @@ class HudTabMenuHandler {
 		// Fires for every map/mode/style; ignore updates that aren't for what we're showing (the
 		// current map in the current mode, in the selected style).
 		const mapData = MapCacheAPI.GetCurrentMapData();
-		if (!mapData || completions.mapID !== mapData.staticData.id) return;
+
+		// Offline map: local-replay PBs arrive here too (tagged mapID 0), routed to the local table.
+		if (!mapData) {
+			this.components.trackSelector.handler.onLocalCompletionsUpdate(completions);
+			return;
+		}
+
+		if (completions.mapID !== mapData.staticData.id) return;
 
 		if (
 			completions.gamemode !== GameModeAPI.GetCurrentGameMode() ||
@@ -152,7 +159,12 @@ class HudTabMenuHandler {
 		this.panels.leaderboards.handler.setStyle(style);
 
 		const mapData = MapCacheAPI.GetCurrentMapData();
-		if (!mapData) return;
+
+		// Offline map: PBs are per style, so rebuild the local track table for the new one.
+		if (!mapData) {
+			this.components.trackSelector.handler.updateLocalTrackData(style);
+			return;
+		}
 
 		const mapID = mapData.staticData.id;
 		const gamemode = GameModeAPI.GetCurrentGameMode();
@@ -168,7 +180,7 @@ class HudTabMenuHandler {
 		// An offline map's tracks come from its zones, which can load (or be edited in the zone
 		// editor) after the map itself, so rebuild the selector whenever they change.
 		if (!MapCacheAPI.GetCurrentMapData()) {
-			this.components.trackSelector.handler.updateLocalTrackData();
+			this.components.trackSelector.handler.updateLocalTrackData(this.components.styleSelector.handler.style);
 		}
 	}
 
