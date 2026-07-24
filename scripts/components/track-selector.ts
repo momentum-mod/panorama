@@ -58,6 +58,7 @@ export class TrackSelectorHandler {
 	};
 
 	leaderboards: Leaderboards | null = null;
+	styleSelector: StyleSelector | null = null;
 	currentMapData: MapCacheAPI.StaticData;
 
 	// TODO: Blur broken when scrolling / Fixed in panzer's pr
@@ -69,6 +70,10 @@ export class TrackSelectorHandler {
 
 	connectLeaderboards(leaderboards: Leaderboards) {
 		this.leaderboards = leaderboards;
+	}
+
+	connectStyleSelector(styleSelector: StyleSelector) {
+		this.styleSelector = styleSelector;
 	}
 
 	updateMapData(data: MapCacheAPI.StaticData) {
@@ -166,6 +171,9 @@ export class TrackSelectorHandler {
 
 			const playButton = trackPanel.FindChildTraverse('PlayTrack');
 			playButton.SetPanelEvent('onactivate', () => {
+				const style = this.styleSelector?.handler.style;
+				if (style != null) GameInterfaceAPI.ConsoleCommand(`mom_style ${style}`);
+
 				if (track.trackType === TrackType.MAIN) GameInterfaceAPI.ConsoleCommand('mom_main');
 				else if (track.trackType === TrackType.STAGE)
 					GameInterfaceAPI.ConsoleCommand(`mom_stage ${track.trackNum}`);

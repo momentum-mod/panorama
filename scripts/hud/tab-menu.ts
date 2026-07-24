@@ -94,6 +94,7 @@ class HudTabMenuHandler {
 		blur.AddBlurPanel(this.panels.endOfRunFrame);
 
 		this.components.trackSelector.handler.connectLeaderboards(this.panels.leaderboards);
+		this.components.trackSelector.handler.connectStyleSelector(this.components.styleSelector);
 
 		// Styles are per-gamemode, so the selector rebuilds (and resets to the mode's default style)
 		// whenever the mode changes. Otherwise it keeps whatever the user last picked.
