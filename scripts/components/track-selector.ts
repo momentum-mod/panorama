@@ -75,6 +75,8 @@ export class TrackSelectorHandler {
 	private selectedTrackKey: string | null = null;
 	private currentMapKey: string | null = null;
 
+	private showPlayButton = true;
+
 	// TODO: Blur broken when scrolling / Fixed in panzer's pr
 	blurPanel: BaseBlurTarget | null = null;
 
@@ -84,6 +86,10 @@ export class TrackSelectorHandler {
 
 	connectLeaderboards(leaderboards: Leaderboards) {
 		this.leaderboards = leaderboards;
+	}
+
+	setPlayButtonVisible(visible: boolean) {
+		this.showPlayButton = visible;
 	}
 
 	connectStyleSelector(styleSelector: StyleSelector) {
@@ -228,6 +234,7 @@ export class TrackSelectorHandler {
 				// The play button reads only the track's type/number (stable across styles) and the
 				// live style selection, so it's bound once at creation.
 				const playButton = panel.FindChildTraverse('PlayTrack');
+				playButton.visible = this.showPlayButton;
 				playButton.SetPanelEvent('onactivate', () => {
 					const style = this.styleSelector?.handler.style;
 					if (style != null) GameInterfaceAPI.ConsoleCommand(`mom_style ${style}`);
