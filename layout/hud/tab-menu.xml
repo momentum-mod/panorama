@@ -29,16 +29,16 @@
                 </Panel>
             </Panel>
             <Panel id="TabMenuCenter" class="tab-menu-center">
-
                 <Panel id="CenterMainContainer" class="tab-menu-center__main-container">
                     <Panel id="TabMenuPlayerListContainer" class="tab-menu-center__left">
                         <PlayerList id="PlayerList" hittest="true" hittestchildren="true" />
                     </Panel>
                     <Panel class="tab-menu-center__center">
-                        <StyleSelector id="HudStyleSelector" class="tab-menu-center__style-selector" />
                         <TrackSelector id="HudTrackSelector" />
                     </Panel>
                     <Panel class="tab-menu-center__right">
+                        <!-- Above the leaderboard; right edge tracks the leaderboard column's -->
+                        <StyleSelector id="HudStyleSelector" class="tab-menu-center__style-selector" />
                         <Leaderboards id="HudLeaderboards" />
                     </Panel>
                 </Panel>
@@ -49,8 +49,6 @@
             </Panel>
             <Panel class="tab-menu-bottom">
             </Panel>
-
-            
         </Panel>
 
         <Panel id="TabMenuHeader" class="hud-tab-menu__header hide">

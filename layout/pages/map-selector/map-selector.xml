@@ -221,10 +221,11 @@
 			<Panel class="mapselector__right">
                 <Panel class="mapselector__right-top">
                     <MapInfo id="MapInfo" />
+                    <!-- Overlaid top-right of the header, above the leaderboard -->
+                    <StyleSelector id="StyleSelector" class="mapselector__style-selector" />
                 </Panel>
                 <Panel class="mapselector__right-center">
                     <Panel id="MapSelectorTrackSelectorColumn" class="mapselector__track-selector-container">
-                        <StyleSelector id="StyleSelector" class="mapselector__style-selector" />
                         <TrackSelector id="TrackSelector" />
                     </Panel>
                     <Panel class="mapselector__leaderboards-container">

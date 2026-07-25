@@ -16,16 +16,17 @@
 	&__wrapper {
 		width: 100%;
 		height: 100%;
-		flow-children: down;
+		flow-children: none;
 	}
 }
 
 // ─── Layout regions ───────────────────────────────────────────────────────────
 
 .tab-menu-top {
+	horizontal-align: center;
+	vertical-align: top;
 	width: 100%;
-	height: fill-parent-flow(0.2);
-	// background-color: rgba(255, 0, 0, 0.289);
+	height: 190px;
 
 	&__center-group {
 		width: fit-children;
@@ -38,10 +39,15 @@
 .tab-menu-center {
 	$root: &;
 
+	horizontal-align: center;
+	vertical-align: center;
 	width: 100%;
-	margin: 0 64px;
-	height: fill-parent-flow(1);
+	height: 800px;
 	flow-children: right;
+
+	// The style selector sits at the top of the leaderboard column; this is the height it and its
+	// gap occupy, which the track selector is offset by to keep both columns' tops aligned.
+	$style-selector-slot: $dropdown-button-height + 16px;
 
 	&__main-container {
 		width: 100%;
@@ -60,18 +66,29 @@
 		height: 100%;
 		flow-children: down;
 
+		// Offset by the style selector's slot so the track list lines up with the leaderboard below it
 		TrackSelector {
+			margin-top: $style-selector-slot;
 			height: fill-parent-flow(1);
 		}
-	}
-
-	&__style-selector {
-		margin-bottom: 16px;
 	}
 
 	&__right {
 		width: 33%;
 		height: 100%;
+		flow-children: down;
+
+		// Fill the space left below the style selector rather than the default 100%, which would
+		// overflow the column
+		Leaderboards {
+			height: fill-parent-flow(1);
+		}
+	}
+
+	// Sits above the leaderboard in its own column, so its right edge tracks the leaderboard's
+	// regardless of how the columns are centered.
+	&__style-selector {
+		margin-bottom: 16px;
 	}
 
 	&--no-playerlist {
@@ -82,9 +99,9 @@
 }
 
 .tab-menu-bottom {
+	vertical-align: bottom;
 	width: 100%;
-	height: fill-parent-flow(0.153);
-	// background-color: rgba(0, 0, 255, 0.681);
+	height: 140px;
 }
 
 // ─── Content containers ───────────────────────────────────────────────────────
