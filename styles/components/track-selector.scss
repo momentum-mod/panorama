@@ -14,6 +14,12 @@ TrackSelector {
 	border: 1px solid rgb(20, 20, 20, 1);
 	margin-bottom: 16px;
 	flow-children: down;
+
+	// Set on the last group by track-selector.ts: the margin exists to separate the groups, so keeping
+	// it on the final one just adds scrollable dead space below the last track.
+	&.tracks-container--last {
+		margin-bottom: 0;
+	}
 }
 
 .track-panel {
