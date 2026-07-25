@@ -70,6 +70,11 @@ export class TrackSelectorHandler {
 	private renderedSignature: string | null = null;
 	private renderedMapID = 0;
 
+	// The user's picked track, kept across re-renders so a style switch doesn't snap back to main.
+	// Reset (via onMapContext) when the shown map changes, so a new map starts on main.
+	private selectedTrackKey: string | null = null;
+	private currentMapKey: string | null = null;
+
 	// TODO: Blur broken when scrolling / Fixed in panzer's pr
 	blurPanel: BaseBlurTarget | null = null;
 
@@ -95,6 +100,8 @@ export class TrackSelectorHandler {
 		this.leaderboards.handler.setMapID(completions.mapID);
 		this.leaderboards.handler.setGamemode(completions.gamemode);
 		this.leaderboards.handler.setLocalOnly(false);
+
+		this.onMapContext(`online:${completions.mapID}`);
 
 		// `tracks` can be absent: an empty CUtlVector serializes to JSON without the key. This happens
 		// before a (gamemode, style) has been fetched -- GetCompletions has no cached entry and returns
@@ -134,6 +141,10 @@ export class TrackSelectorHandler {
 		// same-map skip can't match a real map ID and hold these tracks by mistake.
 		this.renderedMapID = 0;
 
+		// Keyed by name (there's no map ID offline) so loading a different offline map resets the
+		// selection, while style switches -- same map -- keep it.
+		this.onMapContext(`local:${MapCacheAPI.GetMapName()}`);
+
 		// Render the tracks now (no times yet), then reload PBs off disk; they arrive via
 		// onLocalCompletionsUpdate.
 		this.renderLocalTracks(null);
@@ -166,7 +177,16 @@ export class TrackSelectorHandler {
 	}
 
 	private static trackKey(track: TrackEntry): string {
-		return `${track.trackType}:${track.trackNum}`;
+		// All MAIN tracks are equivalent regardless of number (see renderLocalTracks), so key them the
+		// same, keeping both the render signature and a remembered selection stable.
+		return track.trackType === TrackType.MAIN ? 'MAIN' : `${track.trackType}:${track.trackNum}`;
+	}
+
+	/** Reset the remembered track selection when the shown map changes, so a new map starts on main. */
+	private onMapContext(mapKey: string) {
+		if (this.currentMapKey === mapKey) return;
+		this.currentMapKey = mapKey;
+		this.selectedTrackKey = null;
 	}
 
 	private renderTracks(tracks: TrackEntry[]) {
@@ -231,9 +251,8 @@ export class TrackSelectorHandler {
 			// Rebound every render: rank/total vary by style, so the closure must see fresh data.
 			if (this.leaderboards) {
 				trackPanel.SetPanelEvent('onselect', () => {
-					this.leaderboards.handler.setCurrentUserRank(track.rank);
-					this.leaderboards.handler.setTotalCompletions(track.totalCompletions);
-					this.leaderboards.handler.setTrack(track.trackType, track.trackNum);
+					this.selectedTrackKey = key;
+					this.applyTrackSelection(track);
 				});
 			}
 
@@ -254,11 +273,38 @@ export class TrackSelectorHandler {
 						? null
 						: getCompletionGroup(track.rank, getGroupBoundaries(track.totalCompletions))
 			});
-
-			if (isMain) {
-				trackPanel.SetSelected(true);
-			}
 		});
+
+		// Keep the user's track selection across re-renders instead of snapping back to main.
+		const remembered = tracks.find((t) => TrackSelectorHandler.trackKey(t) === this.selectedTrackKey);
+		if (reuse && remembered) {
+			// The selected panel stays selected through an in-place update, so don't reselect (that
+			// would reset the leaderboard's page) -- just refresh its rank/total for the current style.
+			// The records themselves are refetched by the caller's setStyle on a style switch.
+			this.refreshSelectedTrackStats(remembered);
+		} else {
+			// Rebuilt panels start unselected: select the remembered track, or main if it's gone.
+			// SetSelected fires onselect, which loads that track's leaderboard.
+			const target = remembered ?? tracks.find((t) => t.trackType === TrackType.MAIN) ?? tracks[0];
+			if (target) {
+				this.selectedTrackKey = TrackSelectorHandler.trackKey(target);
+				this.trackPanels.get(this.selectedTrackKey)?.SetSelected(true);
+			}
+		}
+	}
+
+	/** Point the leaderboard at a track: rank/total for group boundaries, plus a records refetch. */
+	private applyTrackSelection(track: TrackEntry) {
+		if (!this.leaderboards) return;
+		this.refreshSelectedTrackStats(track);
+		this.leaderboards.handler.setTrack(track.trackType, track.trackNum);
+	}
+
+	/** Update just the selected track's rank/total -- no records refetch, so the page isn't reset. */
+	private refreshSelectedTrackStats(track: TrackEntry) {
+		if (!this.leaderboards) return;
+		this.leaderboards.handler.setCurrentUserRank(track.rank);
+		this.leaderboards.handler.setTotalCompletions(track.totalCompletions);
 	}
 
 	private populateTrackPanel(trackPanel: RadioButton, data: TrackDisplayData) {
