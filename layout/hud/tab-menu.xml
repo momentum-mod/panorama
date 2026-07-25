@@ -35,10 +35,11 @@
                         <PlayerList id="PlayerList" hittest="true" hittestchildren="true" />
                     </Panel>
                     <Panel class="tab-menu-center__center">
-                        <StyleSelector id="HudStyleSelector" class="tab-menu-center__style-selector" />
                         <TrackSelector id="HudTrackSelector" />
                     </Panel>
                     <Panel class="tab-menu-center__right">
+                        <!-- Above the leaderboard; right edge tracks the leaderboard column's -->
+                        <StyleSelector id="HudStyleSelector" class="tab-menu-center__style-selector" />
                         <Leaderboards id="HudLeaderboards" />
                     </Panel>
                 </Panel>
