@@ -31,25 +31,6 @@ export function styleEnglishName(style: Style): string {
 	return StyleNames.get(style) ?? 'Unknown';
 }
 
-/** Abbreviated style names, for space-constrained UI like the style selector. */
-const StyleShortNames: ReadonlyMap<Style, string> = new Map([
-	[Style.NORMAL, 'NORMAL'],
-	[Style.BHOP_HALF_SIDEWAYS, 'HSW'],
-	[Style.SURF_HALF_SIDEWAYS, 'HSW'],
-	[Style.SIDEWAYS, 'SW'],
-	[Style.W_ONLY, 'W-ONLY'],
-	[Style.AD_ONLY, 'AD-ONLY'],
-	[Style.S_ONLY, 'S-ONLY'],
-	[Style.BACKWARDS, 'BW'],
-	[Style.PRO, 'Pro'],
-	[Style.TELEPORT, 'TELEPORT']
-]) satisfies CompleteMap<Style>;
-
-/** Get the abbreviated name of a style */
-export function styleShortName(style: Style): string {
-	return StyleShortNames.get(style) ?? 'Unknown';
-}
-
 export const CompatibleStyles: ReadonlyMap<Style, Style[]> = new Map([
 	[Style.NORMAL, []],
 	[Style.BHOP_HALF_SIDEWAYS, [Style.NORMAL]],
