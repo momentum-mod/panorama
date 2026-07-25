@@ -213,7 +213,7 @@ export class LeaderboardsHandler {
 		const data = this.panels.cp.getLoadedLeaderboardRecords();
 		if (data.requestToken !== requestToken) return; //superseded by a newer request;
 
-		this.state.totalPages = data.totalPages;
+		this.state.totalPages = Math.max(data.totalPages, 1);
 		this.panels.controls.container.SetDialogVariableInt('total-pages', this.state.totalPages);
 
 		this.groupBoundaries = getGroupBoundaries(this.totalCompletions);
