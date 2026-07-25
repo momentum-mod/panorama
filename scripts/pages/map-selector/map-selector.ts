@@ -42,6 +42,7 @@ class MapSelectorHandler implements OnPanelLoad {
 	readonly panels = {
 		cp: $.GetContextPanel<MomentumMapSelector>(),
 		leftContainer: $<Panel>('#MapSelectorLeftContainer'),
+		trackSelectorColumn: $<Panel>('#MapSelectorTrackSelectorColumn'),
 		searchText: $<TextEntry>('#MapSearchTextEntry'),
 		searchClear: $<Button>('#MapSearchClear'),
 		filtersPanel: $<Panel>('#MapFilters'),
@@ -149,8 +150,15 @@ class MapSelectorHandler implements OnPanelLoad {
 			)
 		);
 
-		const scaledWidth = scaleWidthToAspectRatio(820);
-		this.panels.leftContainer.style.width = `${scaledWidth}px`;
+		this.updateAspectScaledWidths();
+
+		// Applying video settings is what changes the aspect ratio in game. The engine may not have
+		// switched mode by the time the event fires, so rescale again shortly after -- the call only
+		// assigns widths, so running it twice is harmless.
+		$.RegisterForUnhandledEvent('ApplyVideoSettings', () => {
+			this.updateAspectScaledWidths();
+			$.Schedule(0.25, () => this.updateAspectScaledWidths());
+		});
 
 		this.components.trackSelector.handler.setBlurPanel(this.panels.blurPanel);
 		this.components.trackSelector.handler.connectLeaderboards(this.components.leaderboards);
@@ -162,6 +170,17 @@ class MapSelectorHandler implements OnPanelLoad {
 		this.components.styleSelector.handler.setGamemode(GameModeAPI.GetMetaGameMode());
 		this.components.mapInfo.handler.setBlurPanel(this.panels.blurPanel);
 		this.components.mapInfo.handler.setMapSelector(this.panels.cp);
+	}
+
+	/**
+	 * Widths of the two columns sized in px rather than percentages -- percentages land the track
+	 * panels' 1px right border on a fractional pixel, which drops it at some resolutions. Being fixed
+	 * px, they have to be rescaled by hand for the current aspect ratio: taller ratios get a narrower
+	 * layout, so a 16:9 width would otherwise crowd out the leaderboard at 16:10 and 4:3.
+	 */
+	private updateAspectScaledWidths() {
+		this.panels.leftContainer.style.width = `${scaleWidthToAspectRatio(820)}px`;
+		this.panels.trackSelectorColumn.style.width = `${scaleWidthToAspectRatio(429)}px`;
 	}
 
 	onPanelLoad() {
