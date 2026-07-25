@@ -61,6 +61,15 @@ export class TrackSelectorHandler {
 	styleSelector: StyleSelector | null = null;
 	currentMapData: MapCacheAPI.StaticData;
 
+	// Existing track panels keyed by track, reused across renders. The track set is the same across
+	// styles, so a style switch updates these in place rather than tearing them down and rebuilding,
+	// which flickers. renderedSignature is the key list of what's currently rendered; renderedMapID is
+	// the online map it's for (0 for the offline/local table), used to hold the tracks through a
+	// same-map style switch while its completions are still being fetched.
+	private trackPanels = new Map<string, RadioButton>();
+	private renderedSignature: string | null = null;
+	private renderedMapID = 0;
+
 	// TODO: Blur broken when scrolling / Fixed in panzer's pr
 	blurPanel: BaseBlurTarget | null = null;
 
@@ -87,10 +96,20 @@ export class TrackSelectorHandler {
 		this.leaderboards.handler.setGamemode(completions.gamemode);
 		this.leaderboards.handler.setLocalOnly(false);
 
-		// `tracks` can be absent: an empty CUtlVector serializes to JSON without the key, which
-		// happens whenever completions are dispatched before the cache is populated (e.g. on map
-		// selection, before the online fetch lands). Render an empty table in that case.
-		this.renderTracks(completions.tracks ?? []);
+		// `tracks` can be absent: an empty CUtlVector serializes to JSON without the key. This happens
+		// before a (gamemode, style) has been fetched -- GetCompletions has no cached entry and returns
+		// nothing (see BuildCompletions). A style switch hits this for the newly picked style, so
+		// skipping the empty render (rather than wiping the identical track set we already show for this
+		// map) avoids a flicker; the refreshed data arrives via MapCache_CompletionsUpdate and fills the
+		// existing rows in place. Only skip within the same map, so selecting a different map still
+		// clears the previous one's tracks instead of showing them stale.
+		const tracks = completions.tracks ?? [];
+		if (tracks.length === 0 && completions.mapID !== 0 && completions.mapID === this.renderedMapID) {
+			return;
+		}
+
+		this.renderedMapID = completions.mapID;
+		this.renderTracks(tracks);
 	}
 
 	/**
@@ -110,6 +129,10 @@ export class TrackSelectorHandler {
 		this.leaderboards.handler.setMapID(0);
 		this.leaderboards.handler.setGamemode(gamemode);
 		this.leaderboards.handler.setLocalOnly(true);
+
+		// The local table isn't for any online map; keep renderedMapID at 0 so updateTrackData's
+		// same-map skip can't match a real map ID and hold these tracks by mistake.
+		this.renderedMapID = 0;
 
 		// Render the tracks now (no times yet), then reload PBs off disk; they arrive via
 		// onLocalCompletionsUpdate.
@@ -142,8 +165,21 @@ export class TrackSelectorHandler {
 		this.renderTracks(tracks);
 	}
 
+	private static trackKey(track: TrackEntry): string {
+		return `${track.trackType}:${track.trackNum}`;
+	}
+
 	private renderTracks(tracks: TrackEntry[]) {
-		this.panels.container.RemoveAndDeleteChildren();
+		const signature = tracks.map((t) => TrackSelectorHandler.trackKey(t)).join('|');
+
+		// Reuse existing panels when the track set is unchanged (i.e. a style switch), so only the
+		// per-track data is refreshed. Rebuild from scratch only when the set actually differs.
+		const reuse = signature === this.renderedSignature;
+		if (!reuse) {
+			this.panels.container.RemoveAndDeleteChildren();
+			this.trackPanels.clear();
+			this.renderedSignature = signature;
+		}
 
 		const groupedContainers = new Map<TrackType, Panel>();
 		const getGroupContainer = (type: TrackType) => {
@@ -156,11 +192,43 @@ export class TrackSelectorHandler {
 		};
 
 		tracks.forEach((track) => {
-			const container = getGroupContainer(track.trackType);
+			const key = TrackSelectorHandler.trackKey(track);
+			const isMain = track.trackType === TrackType.MAIN;
+			const isStage = track.trackType === TrackType.STAGE;
 
-			const trackPanel = $.CreatePanel('RadioButton', container, '');
-			trackPanel.LoadLayoutSnippet('track-panel');
+			let trackPanel = reuse ? this.trackPanels.get(key) : undefined;
+			if (!trackPanel) {
+				const container = getGroupContainer(track.trackType);
 
+				const panel = $.CreatePanel('RadioButton', container, '');
+				panel.LoadLayoutSnippet('track-panel');
+				this.trackPanels.set(key, panel);
+				trackPanel = panel;
+
+				// The play button reads only the track's type/number (stable across styles) and the
+				// live style selection, so it's bound once at creation.
+				const playButton = panel.FindChildTraverse('PlayTrack');
+				playButton.SetPanelEvent('onactivate', () => {
+					const style = this.styleSelector?.handler.style;
+					if (style != null) GameInterfaceAPI.ConsoleCommand(`mom_style ${style}`);
+
+					if (track.trackType === TrackType.MAIN) GameInterfaceAPI.ConsoleCommand('mom_main');
+					else if (track.trackType === TrackType.STAGE)
+						GameInterfaceAPI.ConsoleCommand(`mom_stage ${track.trackNum}`);
+					else if (track.trackType === TrackType.BONUS)
+						GameInterfaceAPI.ConsoleCommand(`mom_bonus ${track.trackNum}`);
+
+					panel.SetSelected(true);
+				});
+
+				if (!isMain) {
+					const dialogPrefix = isStage ? 'Stage' : 'Bonus';
+					panel.SetDialogVariable('track', `${dialogPrefix} ${track.trackNum}`);
+					this.applyColorBanding(panel, track.trackNum);
+				}
+			}
+
+			// Rebound every render: rank/total vary by style, so the closure must see fresh data.
 			if (this.leaderboards) {
 				trackPanel.SetPanelEvent('onselect', () => {
 					this.leaderboards.handler.setCurrentUserRank(track.rank);
@@ -169,33 +237,11 @@ export class TrackSelectorHandler {
 				});
 			}
 
-			const playButton = trackPanel.FindChildTraverse('PlayTrack');
-			playButton.SetPanelEvent('onactivate', () => {
-				const style = this.styleSelector?.handler.style;
-				if (style != null) GameInterfaceAPI.ConsoleCommand(`mom_style ${style}`);
-
-				if (track.trackType === TrackType.MAIN) GameInterfaceAPI.ConsoleCommand('mom_main');
-				else if (track.trackType === TrackType.STAGE)
-					GameInterfaceAPI.ConsoleCommand(`mom_stage ${track.trackNum}`);
-				else if (track.trackType === TrackType.BONUS)
-					GameInterfaceAPI.ConsoleCommand(`mom_bonus ${track.trackNum}`);
-
-				trackPanel.SetSelected(true);
-			});
-
-			const isMain = track.trackType === TrackType.MAIN;
-			const isStage = track.trackType === TrackType.STAGE;
-
 			const trackLabel = isMain
 				? 'Main'
 				: isStage
 					? `${$.Localize('#Leaderboards_Tracks_Stage')} ${track.trackNum}`
 					: `${$.Localize('#Leaderboards_Tracks_Bonus')} ${track.trackNum}`;
-
-			if (!isMain) {
-				const dialogPrefix = isStage ? 'Stage' : 'Bonus';
-				trackPanel.SetDialogVariable('track', `${dialogPrefix} ${track.trackNum}`);
-			}
 
 			this.populateTrackPanel(trackPanel, {
 				track: trackLabel,
@@ -211,8 +257,6 @@ export class TrackSelectorHandler {
 
 			if (isMain) {
 				trackPanel.SetSelected(true);
-			} else {
-				this.applyColorBanding(trackPanel, track.trackNum);
 			}
 		});
 	}
@@ -220,14 +264,19 @@ export class TrackSelectorHandler {
 	private populateTrackPanel(trackPanel: RadioButton, data: TrackDisplayData) {
 		trackPanel.SetDialogVariable('track', data.track);
 
+		// Panels are reused across renders (see renderTracks), so a label whose text a prior render
+		// replaced with a placeholder must have its token template restored: SetDialogVariable* alone
+		// won't revive a clobbered binding, but SetTextWithDialogVariables re-applies the template
+		// against the current variables. The tokens mirror the label text in track-selector.xml.
 		const tierLabel = trackPanel.FindChildrenWithClassTraverse('track-panel__tier-label')[0] as Label;
 		if (data.tier > 0) {
 			trackPanel.SetDialogVariableInt('tier', data.tier);
+			tierLabel.SetTextWithDialogVariables('T{i:tier}');
 		} else {
 			tierLabel.text = '';
 		}
 
-		this.setOptionalFloat(trackPanel, 'track-panel__time-label', 'time', data.time);
+		this.setOptionalFloat(trackPanel, 'track-panel__time-label', 'time', '{g:time:time}', data.time);
 
 		const rankLabel = trackPanel.FindChildrenWithClassTraverse('track-panel__rank-label')[0] as Label;
 		if (data.total == null) {
@@ -237,9 +286,11 @@ export class TrackSelectorHandler {
 			trackPanel.SetDialogVariableInt('total', data.total);
 			if (data.rank != null) {
 				trackPanel.SetDialogVariableInt('rank', data.rank);
+				rankLabel.SetTextWithDialogVariables('{i:rank}/{i:total}');
+				rankLabel.SetHasClass('track-selector-label--muted', false);
 			} else {
 				rankLabel.text = `—/${data.total}`;
-				rankLabel.style.color = 'rgb(160, 160, 160)';
+				rankLabel.SetHasClass('track-selector-label--muted', true);
 			}
 		}
 
@@ -249,13 +300,15 @@ export class TrackSelectorHandler {
 		groupPill.handler.setGroup(group);
 	}
 
-	private setOptionalFloat(panel: RadioButton, className: string, dialogVar: string, value?: number) {
+	private setOptionalFloat(panel: RadioButton, className: string, dialogVar: string, token: string, value?: number) {
 		const label = panel.FindChildrenWithClassTraverse(className)[0] as Label;
 		if (value != null) {
 			panel.SetDialogVariableFloat(dialogVar, value);
+			label.SetTextWithDialogVariables(token);
+			label.SetHasClass('track-selector-label--muted', false);
 		} else {
 			label.text = '—';
-			label.style.color = 'rgb(160, 160, 160)';
+			label.SetHasClass('track-selector-label--muted', true);
 		}
 	}
 
