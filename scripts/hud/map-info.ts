@@ -129,7 +129,6 @@ class HudMapInfoHandler {
 
 	constructString() {
 		const mapInfoString = [];
-		//@ts-expect-error Second argument not typed
 		if (this.showTiers) mapInfoString.push($.Localize('#MapInfo_Tier', this.panels.mapInfoLabel));
 		if (this.showMapType) mapInfoString.push(this.mapTypeText);
 		this.panels.mapInfoLabel.text = mapInfoString.join(' - ');
@@ -158,8 +157,7 @@ class HudMapInfoHandler {
 
 			this.mapTypeText = isLinear
 				? $.Localize('#MapInfo_Type_Linear')
-				: //@ts-expect-error Second argument not typed
-					$.Localize('#MapInfo_StageCount', this.panels.mapInfoLabel);
+				: $.Localize('#MapInfo_StageCount', this.panels.mapInfoLabel);
 
 			this.constructString();
 		} else {
