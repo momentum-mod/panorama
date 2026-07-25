@@ -1,15 +1,18 @@
 import { PanelHandler } from 'util/module-helpers';
 
+import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
+import { rgbaStringToTuple } from 'util/colors';
+
 @PanelHandler()
 class SafeguardHandler {
 	readonly panels = {
-		container: $<Panel>('#SafeguardContainer')
+		container: $<Panel>('#SafeguardContainer'),
+		meter: $<Image>('#SafeguardMeter')
 	};
 
 	holdTime: number;
 
 	constructor() {
-		$.RegisterForUnhandledEvent('LevelInitPostEntity', () => this.onMapInit());
 		$.RegisterForUnhandledEvent('OnSafeguardSettingChanged', () => {
 			this.updateSettings();
 		});
@@ -22,12 +25,41 @@ class SafeguardHandler {
 		$.RegisterForUnhandledEvent('OnSafeguardCommandComplete', () => {
 			this.updateVisibility(false);
 		});
-	}
 
-	onMapInit() {
-		this.updateSettings();
+		registerHUDCustomizerComponent($.GetContextPanel(), {
+			name: $.Localize('#Customizer_Safeguard_Indicator_Name'),
+			resizeX: false,
+			resizeY: false,
+			// TODO: Consider adding safeguard cvars
+			// TODO: Figure out how to add a dummy indicator without breaking clips
+			dynamicStyles: {
+				size: {
+					name: $.Localize('#Customizer_Size'),
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					callbackFunc: (_, value) => {
+						this.panels.meter.SetSvgTextureSize(value, value);
 
-		this.panels.container.AddClass('safeguard__container--hide');
+						this.panels.container.style.width = `${value}px`;
+						this.panels.container.style.height = `${value}px`;
+					}
+				},
+				color: {
+					name: $.Localize('#Customizer_Color'),
+					type: CustomizerPropertyType.COLOR_PICKER,
+					targetPanel: '.safeguard__meter',
+					callbackFunc: (panel, value) => {
+						const [r, g, b, alpha] = rgbaStringToTuple(value as rgbaColor);
+
+						panel.style.washColor = `rgb(${r}, ${g}, ${b})`;
+						panel.style.opacity = alpha / 255;
+					}
+				}
+			},
+			postInit: () => {
+				this.updateSettings();
+				this.panels.container.AddClass('safeguard__container--hide');
+			}
+		});
 	}
 
 	updateSettings() {

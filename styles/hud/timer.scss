@@ -5,52 +5,23 @@
 	flow-children: down;
 	width: 100%;
 	align: center center;
-	margin: 6px 0px 6px 0;
 
 	&--hidden {
 		opacity: 0;
 	}
 
 	&__time {
-		horizontal-align: center;
-
-		@include mixin.font-regular();
-		font-weight: $timer-font-weight;
-		font-size: $timer-font-size;
-		text-align: center;
-		color: $timer-color;
-
-		transition: color 0.15s ease-out 0s;
-
-		&--inactive {
-			color: $timer-color-inactive;
-		}
-
-		&--finished {
-			color: $timer-color-finished;
-		}
+		font-weight: black;
+		transition:
+			color 0.15s ease-out 0s,
+			text-shadow-fast 0.15s ease-out 0s;
 	}
 
 	&__comparison {
-		horizontal-align: center;
-
-		@include mixin.font-regular();
-		font-weight: $timer-comp-font-weight;
-		font-size: $timer-comp-font-size;
-		text-align: center;
-		color: $timer-comp-color;
-
+		font-weight: bold;
 		transition-property: opacity;
 		transition-timing-function: ease-out;
 		transition-duration: 0s;
-
-		&--increase {
-			color: $timer-comp-color-increase;
-		}
-
-		&--decrease {
-			color: $timer-comp-color-decrease;
-		}
 
 		&--enable-fade {
 			transition-duration: 0.2s;

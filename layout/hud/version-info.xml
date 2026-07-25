@@ -1,9 +1,0 @@
-<root>
-	<styles>
-		<include src="file://{resources}/styles/main.scss" />
-	</styles>
-
-	<MomHudVersionInfo class="hud-version-info">
-		<Label id="VersionLabel" text="#Momentum_Mod_Version" class="text-h6 h-align-right text-align-right" />
-	</MomHudVersionInfo>
-</root>

@@ -27,13 +27,11 @@
 		@include mixin.font-regular();
 		font-weight: medium;
 		vertical-align: center;
-		font-size: 18px;
 
 		&--typeof {
 			color: #bbb;
 			margin-right: 6px;
 			margin-top: 1px;
-			font-size: 14px;
 			text-transform: uppercase;
 		}
 
@@ -231,11 +229,6 @@
 
 	&__progress {
 		height: 100%;
-		background-color: $blue;
-
-		#{$segment}--active & {
-			background-color: function.gradient-horizontal($blue, $mid-blue);
-		}
 	}
 
 	&__label {

@@ -1,3 +1,4 @@
+@use 'ahop-sprint';
 @use 'ammo';
 @use 'bone-counts';
 @use 'cgaz';
@@ -5,18 +6,17 @@
 @use 'conc-entities';
 @use 'console-notify';
 @use 'crosshair';
+@use 'customizer';
 @use 'damage-indicator';
 @use 'df-jump';
 @use 'ghost-entities';
 @use 'ground-boost';
 @use 'hud';
 @use 'comparisons';
-@use 'chat';
 @use 'hint-text';
 @use 'reticle';
 @use 'jump-stats';
 @use 'jump-timing';
-@use 'key-press';
 @use 'map-info';
 @use 'powerup-timer';
 @use 'replay-controls';
@@ -33,5 +33,4 @@
 @use 'strafe-trainer';
 @use 'tab-menu';
 @use 'timer';
-@use 'version-info';
 @use 'weapon-selection';

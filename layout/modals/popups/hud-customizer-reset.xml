@@ -1,0 +1,35 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+
+    <scripts>
+		<include type="module" src="file://{scripts}/modals/popups/hud-customizer-reset.ts" />
+	</scripts>
+
+	<Panel class="PopupPanel Hidden w-fit-children" defaultfocus="Button0" popupbackground="blur">
+		<Label id="TitleLabel" class="generic-popup__title" allowrawtext="true" text="{s:resetTitle}"/>
+		<Panel class="generic-popup__message-panel">
+			<Label id="MessageLabel" class="generic-popup__message-label" html="true" allowrawtext="true" text="{s:resetMessage}"/>
+		</Panel>
+        <Panel class="flow-right connected-radiobuttons h-align-center">
+            <RadioButton id="ResetPositionButton" class="button radiobutton radiobutton--blue" onactivate="HudCustomizerResetHandler.setResetOptions('position')">
+					<Label class="button__text" text="Position" />
+			</RadioButton>
+            <RadioButton id="ResetStylesButton" class="button radiobutton radiobutton--blue" onactivate="HudCustomizerResetHandler.setResetOptions('styles')">
+					<Label class="button__text" text="Styles" />
+			</RadioButton>
+            <RadioButton id="ResetBothButton" class="button radiobutton radiobutton--blue" onactivate="HudCustomizerResetHandler.setResetOptions('both')">
+					<Label class="button__text" text="Both" />
+			</RadioButton>
+	    </Panel>
+		<Panel class="row h-align-center mt-4 generic-popup__button-row">
+            <Button id="ResetSelectedButton" class="button button--green mr-3" onactivate="HudCustomizerResetHandler.onResetSelectedPressed()">
+				<Label class="button__text" text="Reset Selected" />
+			</Button>
+			<Button id="CancelButton" class="button button--red" onactivate="UiToolkitAPI.CloseAllVisiblePopups()">
+				<Label class="button__text" text="#Common_Cancel" />
+			</Button>
+		</Panel>
+	</Panel>
+</root>

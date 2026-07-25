@@ -42,6 +42,46 @@ export function compareDeep(object1: Record<string, unknown>, object2: Record<st
 	return true;
 }
 
+/** Deep compare two Objects, ignore null values */
+export function compareDeepIgnoreNull(a: any, b: any): boolean {
+	if (a === b) return true;
+	if (typeof a !== 'object' || typeof b !== 'object' || a === null || b === null) return false;
+	if (Array.isArray(a)) {
+		if (!Array.isArray(b) || a.length !== b.length) return false;
+		return a.every((val, index) => compareDeepIgnoreNull(val, b[index]));
+	}
+	const keysA = Object.keys(a).filter((k) => a[k] !== null && a[k] !== undefined);
+	const keysB = Object.keys(b).filter((k) => b[k] !== null && b[k] !== undefined);
+	if (keysA.length !== keysB.length) return false;
+	for (const key of keysA) {
+		if (!Object.hasOwn(b, key) || !compareDeepIgnoreNull(a[key], b[key])) return false;
+	}
+	return true;
+}
+
+/**
+ * Compares two layouts of components.
+ * Used for saving
+ * If B has properties that are missing from A, components are still treated as equal
+ */
+export function compareDeepAsymmetric(a: any, b: any): boolean {
+	if (a === b) return true;
+	if (typeof a !== 'object' || a === null || typeof b !== 'object' || b === null) {
+		return false;
+	}
+	if (Array.isArray(a)) {
+		if (!Array.isArray(b) || a.length !== b.length) return false;
+		return a.every((val, index) => compareDeepAsymmetric(val, b[index]));
+	}
+	const keysA = Object.keys(a);
+	for (const key of keysA) {
+		if (Object.hasOwn(b, key) && !compareDeepAsymmetric(a[key], b[key])) {
+			return false;
+		}
+	}
+	return true;
+}
+
 /**
  * Traverse all descendents of a Panel (depth-first). Use this to avoid ugly recursive search functions.
  * This is a generator iterator function, meaning it returns an iterable you can iterate over it directly with a

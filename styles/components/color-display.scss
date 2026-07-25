@@ -1,5 +1,4 @@
-// rangecolordisplay has its own layouting for this component
-:not(.rangecolordisplay) > .colordisplay {
+.colordisplay {
 	height: 48px;
 	width: 100%;
 	padding: 0 4px 0 12px;

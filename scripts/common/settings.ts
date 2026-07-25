@@ -12,7 +12,9 @@ export const SettingsTabs = {
 		radioid: 'AudioRadio',
 		children: {
 			VolumeSubSection: 'VolumeRadio',
-			AudioDeviceSubSection: 'AudioDeviceRadio'
+			AudioDeviceSubSection: 'AudioDeviceRadio',
+			TimerSubSection: 'TimerRadio',
+			WeaponSelSubSection: 'WeaponSelRadio'
 		}
 	},
 	VideoSettings: {
@@ -55,15 +57,6 @@ export const SettingsTabs = {
 			UISubSection: 'UIRadio',
 			SpeedometerSubSection: 'SpeedometerRadio',
 			CrosshairSubSection: 'CrosshairRadio',
-			TimerSubSection: 'TimerRadio',
-			PlayerStatusSubSection: 'PlayerStatusRadio',
-			KeypressSubSection: 'KeypressRadio',
-			ComparisonsSubSection: 'ComparisonsRadio',
-			JumpStatsSubSection: 'JumpStatsRadio',
-			WeaponSelSubSection: 'WeaponSelRadio',
-			StrafeSyncSubSection: 'StrafeSyncRadio',
-			StrafeTrainerSubSection: 'StrafeTrainerRadio',
-			MapInfoSubSection: 'MapInfoRadio',
 			DamageIndicatorSubSection: 'DamageIndicatorRadio'
 		}
 	},
