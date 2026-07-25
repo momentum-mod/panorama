@@ -8,7 +8,7 @@
 	$root: &;
 	flow-children: down;
 	vertical-align: top;
-	width: 100%;
+	width: fit-children;
 	transition: background-color 0.1s ease-in-out 0s;
 	border: 1px solid transparent;
 
