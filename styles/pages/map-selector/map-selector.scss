@@ -132,11 +132,6 @@ $panel-border: 1px solid rgba(255, 255, 255, 0.01);
 		width: 429px;
 		height: 100%;
 		margin-right: 8px;
-		flow-children: down;
-
-		TrackSelector {
-			height: fill-parent-flow(1);
-		}
 	}
 
 	&__leaderboards-container {
@@ -145,8 +140,10 @@ $panel-border: 1px solid rgba(255, 255, 255, 0.01);
 		height: 100%;
 	}
 
+	// Overlaid in the top-right of the header row, right edge aligned with the leaderboard's (which
+	// sits flush against the column's right edge) and top border level with the map selector's top
 	&__style-selector {
-		margin-bottom: 16px;
+		vertical-align: top;
 	}
 
 	&__playlists {
