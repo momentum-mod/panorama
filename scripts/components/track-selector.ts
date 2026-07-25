@@ -282,6 +282,11 @@ export class TrackSelectorHandler {
 			});
 		});
 
+		// The group containers' bottom margin is what separates main from the stages from the bonuses,
+		// but on the last group it leaves an empty strip you can scroll past, so drop it there.
+		const groups = this.panels.container.Children();
+		groups.forEach((group, index) => group.SetHasClass('tracks-container--last', index === groups.length - 1));
+
 		// Keep the user's track selection across re-renders instead of snapping back to main.
 		const remembered = tracks.find((t) => TrackSelectorHandler.trackKey(t) === this.selectedTrackKey);
 		if (reuse && remembered) {
