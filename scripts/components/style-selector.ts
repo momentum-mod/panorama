@@ -1,22 +1,30 @@
 import { PanelHandler } from 'util/module-helpers';
-import { Style, styleShortName } from 'common/web/enums/style.enum';
+import { Style, styleEnglishName } from 'common/web/enums/style.enum';
 import { GamemodeStyles } from 'common/web/maps/gamemode-styles.map';
 
 /**
- * Horizontal radio list of the gamemode's run styles, sitting above the track selector.
+ * Dropdown of the gamemode's run styles, shown in the top-right of the map selector and tab menu.
+ * Exactly one style is selected at a time; picking a different one fires the registered callback so
+ * the owner can reload its leaderboard/completions for that style.
  */
 @PanelHandler({ exposeToPanel: true })
 export class StyleSelectorHandler {
 	readonly panels = {
 		cp: $.GetContextPanel<StyleSelector>(),
-		items: $<Panel>('#StyleSelectorItems')
+		dropdown: $<DropDown>('#StyleDropdown')
 	};
 
-	private readonly buttons = new Map<Style, RadioButton>();
+	// Dropdown option ids are panel ids, so they can't be bare numbers. Prefix the style value.
+	private static readonly OPTION_ID_PREFIX = 'Style_';
+
 	private gamemode: Gamemode | null = null;
 	private styles: Style[] = [];
 	private selectedStyle: Style = Style.NORMAL;
 	private onStyleChanged: ((style: Style) => void) | null = null;
+
+	constructor() {
+		this.panels.dropdown.SetPanelEvent('oninputsubmit', () => this.onDropdownChanged());
+	}
 
 	/** The style currently selected. */
 	get style(): Style {
@@ -47,33 +55,35 @@ export class StyleSelectorHandler {
 	}
 
 	private render() {
-		this.panels.items.RemoveAndDeleteChildren();
-		this.buttons.clear();
-
-		// A shared group makes the buttons behave as a radio set: selecting one deselects the rest.
-		const group = this.panels.cp.id + 'StyleGroup';
+		this.panels.dropdown.RemoveAllOptions();
 
 		for (const style of this.styles) {
-			const button = $.CreatePanel('RadioButton', this.panels.items, '', { class: 'style-selector__item' });
-			button.group = group;
-			$.CreatePanel('Label', button, '', {
-				class: 'style-selector__item-label',
-				text: styleShortName(style)
-			});
-
-			// Set the default selection before wiring the handler, so it doesn't fire the callback.
-			if (style === this.selectedStyle) button.SetSelected(true);
-			button.SetPanelEvent('onactivate', () => this.selectStyle(style));
-
-			this.buttons.set(style, button);
+			const option = $.CreatePanel('Label', this.panels.dropdown, StyleSelectorHandler.optionId(style));
+			option.text = styleEnglishName(style);
+			this.panels.dropdown.AddOption(option);
 		}
+
+		// Programmatic; doesn't fire oninputsubmit, so it won't re-trigger the change callback.
+		this.panels.dropdown.SetSelected(StyleSelectorHandler.optionId(this.selectedStyle));
+
+		// Nothing to pick between for a single-style mode.
+		this.panels.dropdown.enabled = this.styles.length > 1;
 	}
 
-	private selectStyle(style: Style) {
-		if (style === this.selectedStyle) return;
+	private onDropdownChanged() {
+		const selected = StyleSelectorHandler.styleFromOptionId(this.panels.dropdown.GetSelected()?.id);
+		if (selected == null || selected === this.selectedStyle) return;
 
-		this.selectedStyle = style;
-		this.buttons.get(style)?.SetSelected(true);
-		this.onStyleChanged?.(style);
+		this.selectedStyle = selected;
+		this.onStyleChanged?.(selected);
+	}
+
+	private static optionId(style: Style): string {
+		return `${StyleSelectorHandler.OPTION_ID_PREFIX}${style}`;
+	}
+
+	private static styleFromOptionId(id: string | undefined): Style | null {
+		if (!id?.startsWith(StyleSelectorHandler.OPTION_ID_PREFIX)) return null;
+		return Number(id.slice(StyleSelectorHandler.OPTION_ID_PREFIX.length)) as Style;
 	}
 }
