@@ -126,7 +126,10 @@ $panel-border: 1px solid rgba(255, 255, 255, 0.01);
 		}
 	}
 	&__track-selector-container {
-		width: 45%;
+		// Use fixed width instead of percentage. Percentage scaling at certain resolutions causes the
+		// right border to clip.
+		// Overridden in js, scaled by aspect ratio like __left-container; 429 is the 16:9 value.
+		width: 429px;
 		height: 100%;
 		margin-right: 8px;
 		flow-children: down;
@@ -137,7 +140,8 @@ $panel-border: 1px solid rgba(255, 255, 255, 0.01);
 	}
 
 	&__leaderboards-container {
-		width: 65%;
+		// Takes the exact remainder so the row totals 100% width.
+		width: fill-parent-flow(1);
 		height: 100%;
 	}
 
