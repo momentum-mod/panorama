@@ -8,8 +8,8 @@
 	</scripts>
 
 	<StyleSelector class="style-selector">
-		<Panel id="StyleSelectorItems" class="style-selector__items">
-			<!-- Populated via code -->
-		</Panel>
+		<DropDown id="StyleDropdown" class="dropdown style-selector__dropdown" menuclass="dropdown-menu style-selector__menu">
+			<!-- Options populated via code -->
+		</DropDown>
 	</StyleSelector>
 </root>

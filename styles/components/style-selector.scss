@@ -1,45 +1,45 @@
 @use '../config' as *;
-@use '../abstract/mixin';
 
-// Horizontal radio bar of styles, styled to match the UI's dropdowns/tabs.
+// A native dropdown, restyled dark/translucent to match the leaderboard it sits above rather than
+// the default light dropdown. Positioned top-right by the page it's placed in.
+$style-selector-border: 1px solid rgba(255, 255, 255, 0.1);
+
 .style-selector {
-	flow-children: right;
-	width: 100%;
-	height: $dropdown-button-height;
-	background-color: $dropdown-button-background;
-	border-radius: $dropdown-button-radius;
-	border: $dropdown-button-border;
-	box-shadow: $dropdown-button-shadow;
+	width: fit-children;
+	height: fit-children;
+	horizontal-align: right;
+	vertical-align: center;
 
-	&__items {
-		flow-children: right;
-		width: 100%;
-		height: 100%;
-	}
-
-	&__item {
-		width: fill-parent-flow(1);
-		height: 100%;
-		border-right: 1px solid rgba(255, 255, 255, 0.1);
-		background-color: rgba(255, 255, 255, 0);
-		transition: background-color 0.15s ease-in-out 0s;
+	&__dropdown {
+		min-width: 120px;
+		background-color: rgba(0, 0, 0, 0.6);
+		border: $style-selector-border;
 
 		&:hover {
-			background-color: $dropdown-button-background-hover;
+			background-color: rgba(35, 35, 35, 0.7);
 		}
 
-		&:selected {
-			background-color: $button-background-selected;
+		// Class the engine adds while the menu is open
+		&.DropDownMenuVisible {
+			background-color: rgba(0, 0, 0, 0.8);
+		}
+
+		Label {
+			color: rgba(255, 255, 255, 0.9);
+		}
+
+		&:disabled Label {
+			color: $font-disabled-color;
 		}
 	}
 
-	&__item-label {
-		@include mixin.font-header();
+	// menuclass targets the popped-out menu, which the engine reparents to an overlay layer
+	&__menu {
+		background-color: rgba(0, 0, 0, 0.85);
+		border: $style-selector-border;
 
-		font-weight: bold;
-		font-size: $dropdown-button-font-size;
-		text-shadow: $dropdown-button-text-shadow;
-		align: center center;
-		text-overflow: shrink;
+		Label {
+			color: rgba(255, 255, 255, 0.85);
+		}
 	}
 }
