@@ -223,7 +223,7 @@
                     <MapInfo id="MapInfo" />
                 </Panel>
                 <Panel class="mapselector__right-center">
-                    <Panel class="mapselector__track-selector-container">
+                    <Panel id="MapSelectorTrackSelectorColumn" class="mapselector__track-selector-container">
                         <StyleSelector id="StyleSelector" class="mapselector__style-selector" />
                         <TrackSelector id="TrackSelector" />
                     </Panel>
