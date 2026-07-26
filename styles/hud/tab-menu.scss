@@ -16,16 +16,17 @@
 	&__wrapper {
 		width: 100%;
 		height: 100%;
-		flow-children: down;
+		flow-children: none;
 	}
 }
 
 // ─── Layout regions ───────────────────────────────────────────────────────────
 
 .tab-menu-top {
+	horizontal-align: center;
+	vertical-align: top;
 	width: 100%;
-	height: fill-parent-flow(0.2);
-	// background-color: rgba(255, 0, 0, 0.289);
+	height: 190px;
 
 	&__center-group {
 		width: fit-children;
@@ -38,9 +39,10 @@
 .tab-menu-center {
 	$root: &;
 
+	horizontal-align: center;
+	vertical-align: center;
 	width: 100%;
-	margin: 0 64px;
-	height: fill-parent-flow(1);
+	height: 800px;
 	flow-children: right;
 
 	// The style selector sits at the top of the leaderboard column; this is the height it and its
@@ -97,9 +99,9 @@
 }
 
 .tab-menu-bottom {
+	vertical-align: bottom;
 	width: 100%;
-	height: fill-parent-flow(0.153);
-	// background-color: rgba(0, 0, 255, 0.681);
+	height: 140px;
 }
 
 // ─── Content containers ───────────────────────────────────────────────────────
