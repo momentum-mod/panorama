@@ -29,7 +29,6 @@
                 </Panel>
             </Panel>
             <Panel id="TabMenuCenter" class="tab-menu-center">
-
                 <Panel id="CenterMainContainer" class="tab-menu-center__main-container">
                     <Panel id="TabMenuPlayerListContainer" class="tab-menu-center__left">
                         <PlayerList id="PlayerList" hittest="true" hittestchildren="true" />
@@ -50,8 +49,6 @@
             </Panel>
             <Panel class="tab-menu-bottom">
             </Panel>
-
-            
         </Panel>
 
         <Panel id="TabMenuHeader" class="hud-tab-menu__header hide">
