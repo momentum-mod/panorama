@@ -51,7 +51,7 @@ class HudTabMenuHandler {
 		$.RegisterForUnhandledEvent('EndOfRun_Show', (reason) => this.showEndOfRun(reason));
 		$.RegisterForUnhandledEvent('EndOfRun_Hide', () => this.hideEndOfRun());
 		$.RegisterForUnhandledEvent('ActiveZoneDefsChanged', () => this.onActiveZoneDefsChanged());
-		$.RegisterForUnhandledEvent('MapCache_MapLoad', () => this.onMapLoad());
+		$.RegisterForUnhandledEvent('MapCache_MapLoad', (mapName) => this.onMapLoad(mapName));
 		$.RegisterForUnhandledEvent('MapCache_CompletionsUpdate', (completions) =>
 			this.onCompletionsUpdate(completions)
 		);
@@ -82,7 +82,7 @@ class HudTabMenuHandler {
 		}
 	}
 
-	onMapLoad() {
+	onMapLoad(mapName: string) {
 		const mapData = MapCacheAPI.GetCurrentMapData();
 
 		const blur: HudBlurTarget = this.panels.cp.GetParent().GetParent().FindChild('HudBlur');
@@ -103,7 +103,7 @@ class HudTabMenuHandler {
 
 		// An offline map: nothing online exists for it, so drive the selector off its local zones.
 		if (!mapData) {
-			this.panels.nameContainer.SetDialogVariable('name', MapCacheAPI.GetMapName());
+			this.panels.nameContainer.SetDialogVariable('name', mapName);
 			this.panels.betaInfoContainer.AddClass('hide');
 			this.components.trackSelector.handler.updateLocalTrackData(this.components.styleSelector.handler.style);
 			return;
