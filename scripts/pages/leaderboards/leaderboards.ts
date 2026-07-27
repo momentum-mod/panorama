@@ -40,6 +40,7 @@ export class LeaderboardsHandler {
 		groupPillsLayer: $<Panel>('#GroupPillsLayer'),
 		emptyWarningText: $<Label>('#LeaderboardEmptyWarningText'),
 		syncTrackButton: $<Button>('#SyncTrackButton'),
+		aroundTooltip: $<TooltipPanel>('#AroundTooltip'),
 		around: $<Button>('#Around'),
 		tools: $<Panel>('#LeaderboardTools'),
 		radioButtons: {
@@ -179,12 +180,8 @@ export class LeaderboardsHandler {
 	}
 
 	setCurrentUserRank(rank: number) {
-		if (rank == null) {
-			this.panels.around.enabled = false;
-		} else {
-			this.panels.around.enabled = true;
-		}
 		this.currentUserRank = rank;
+		this.updateAroundButton();
 	}
 
 	showLobbyTooltip() {
@@ -397,6 +394,24 @@ export class LeaderboardsHandler {
 
 		groupPrev.enabled = this.getPreviousGroupPage() !== page;
 		groupNext.enabled = this.getNextGroupPage() !== page;
+
+		this.updateAroundButton();
+	}
+
+	/** Page holding the player's own run, or null if they have no run on this track. */
+	private getPersonalBestPage(): number | null {
+		return this.currentUserRank ? Math.ceil(this.currentUserRank / RUNS_PER_PAGE) : null;
+	}
+
+	private updateAroundButton() {
+		const pbPage = this.getPersonalBestPage();
+		const enabled = pbPage !== null && pbPage !== this.state.page;
+
+		this.panels.around.enabled = enabled;
+
+		// Toggle tooltip display on hover
+		this.panels.aroundTooltip.hittest = enabled;
+		this.panels.aroundTooltip.hittestchildren = enabled;
 	}
 
 	selectPage(page: number) {
@@ -411,11 +426,10 @@ export class LeaderboardsHandler {
 	}
 
 	showAroundPage() {
-		if (!this.currentUserRank) return;
-		const newPage = Math.ceil(this.currentUserRank / RUNS_PER_PAGE);
-		if (this.state.page !== newPage) {
-			this.selectPage(newPage);
-		}
+		const pbPage = this.getPersonalBestPage();
+		if (pbPage === null || pbPage === this.state.page) return;
+
+		this.selectPage(pbPage);
 	}
 
 	setToolsAvailable(available: boolean) {
