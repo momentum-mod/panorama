@@ -41,6 +41,7 @@ export class LeaderboardsHandler {
 		emptyWarningText: $<Label>('#LeaderboardEmptyWarningText'),
 		syncTrackButton: $<Button>('#SyncTrackButton'),
 		around: $<Button>('#Around'),
+		zoningOpenContainer: $<Panel>('#ZoningOpenContainer'),
 		radioButtons: {
 			global: $<RadioButton>('#TimesListGlobal'),
 			friends: $<RadioButton>('#TimesListFriends'),
@@ -105,6 +106,8 @@ export class LeaderboardsHandler {
 				this.selectPage(parsed);
 			}
 		});
+
+		this.setZoneEditorAvailable(false);
 	}
 
 	setMapID(mapID: number) {
@@ -413,6 +416,15 @@ export class LeaderboardsHandler {
 		if (this.state.page !== newPage) {
 			this.selectPage(newPage);
 		}
+	}
+
+	setZoneEditorAvailable(available: boolean) {
+		this.panels.zoningOpenContainer.visible = available;
+	}
+
+	openZoneEditor() {
+		GameInterfaceAPI.ConsoleCommand('mom_zoning_enable 1');
+		$.DispatchEvent('HudTabMenu_ForceClose');
 	}
 
 	private setTextEntry(val: number) {
