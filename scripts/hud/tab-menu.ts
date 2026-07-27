@@ -72,8 +72,8 @@ class HudTabMenuHandler {
 		this.components.styleSelector.handler.setStyleChangedCallback((style) => this.onStyleSelected(style));
 
 		// The leaderboard layout is shared with the map selector, which has no use for the zone
-		// editor, so the button is only available for the in-game tab menu version.
-		this.panels.leaderboards.handler.setZoneEditorAvailable(true);
+		// editor or HUD customizer, so those buttons are only available for the in-game tab menu version.
+		this.panels.leaderboards.handler.setToolsAvailable(true);
 
 		this.updatePlayerListVisibility(true);
 	}

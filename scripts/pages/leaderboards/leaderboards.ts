@@ -41,7 +41,7 @@ export class LeaderboardsHandler {
 		emptyWarningText: $<Label>('#LeaderboardEmptyWarningText'),
 		syncTrackButton: $<Button>('#SyncTrackButton'),
 		around: $<Button>('#Around'),
-		zoningOpenContainer: $<Panel>('#ZoningOpenContainer'),
+		tools: $<Panel>('#LeaderboardTools'),
 		radioButtons: {
 			global: $<RadioButton>('#TimesListGlobal'),
 			friends: $<RadioButton>('#TimesListFriends'),
@@ -107,7 +107,7 @@ export class LeaderboardsHandler {
 			}
 		});
 
-		this.setZoneEditorAvailable(false);
+		this.setToolsAvailable(false);
 	}
 
 	setMapID(mapID: number) {
@@ -418,12 +418,17 @@ export class LeaderboardsHandler {
 		}
 	}
 
-	setZoneEditorAvailable(available: boolean) {
-		this.panels.zoningOpenContainer.visible = available;
+	setToolsAvailable(available: boolean) {
+		this.panels.tools.visible = available;
 	}
 
 	openZoneEditor() {
 		GameInterfaceAPI.ConsoleCommand('mom_zoning_enable 1');
+		$.DispatchEvent('HudTabMenu_ForceClose');
+	}
+
+	openHudCustomizer() {
+		GameInterfaceAPI.ConsoleCommand('mom_hudcustomizer_enable 1');
 		$.DispatchEvent('HudTabMenu_ForceClose');
 	}
 
