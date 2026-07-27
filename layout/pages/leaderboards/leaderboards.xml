@@ -54,6 +54,16 @@
 		</Panel>
 
 		<Panel class="leaderboard-bottom">
+            <ConVarEnabler class="leaderboard-zoning" convar="sv_cheats" togglevisibility="true">
+                <TooltipPanel id="ZoningOpenContainer" class="leaderboard-zoning__tooltip" tooltip="#Zoning_Menu">
+                    <Button id="ZoningOpen" class="leaderboard-zoning__button" onactivate="LeaderboardsHandler.openZoneEditor()">
+                        <Panel class="leaderboard-zoning__icon-container">
+                            <Image class="leaderboard-zoning__icon" src="file://{images}/pencil-outline.svg" textureheight="24" />
+                        </Panel>
+                    </Button>
+                </TooltipPanel>
+            </ConVarEnabler>
+
             <Panel id="ControlsContainer" class="leaderboard-controls">
                 <Button id="GroupPrev" class="leaderboard-controls__change-page leaderboard-controls__change-page--group" onactivate="LeaderboardsHandler.previousGroup()">
                     <Image textureheight="24" src="file://{images}/double-chevron-left.svg" />
