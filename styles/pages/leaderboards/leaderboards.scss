@@ -250,3 +250,39 @@ $times-border: 0px solid rgba(24, 24, 24, 0.4);
 		align: center center;
 	}
 }
+
+.leaderboard-zoning {
+	width: 32px;
+	height: 32px;
+	margin: 0 0 5px 16px;
+	align: left center;
+
+	&__tooltip {
+		width: 100%;
+		height: 100%;
+	}
+
+	&__button {
+		width: 100%;
+		height: 100%;
+		border-radius: 2px;
+
+		&:hover {
+			background-color: rgba(167, 167, 167, 0.2);
+		}
+
+		&:active {
+			background-color: rgba(255, 255, 255, 0.2);
+		}
+	}
+
+	&__icon-container {
+		width: fit-children;
+		height: fit-children;
+		align: center center;
+	}
+
+	&__icon {
+		align: center center;
+	}
+}
