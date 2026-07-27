@@ -251,15 +251,23 @@ $times-border: 0px solid rgba(24, 24, 24, 0.4);
 	}
 }
 
-.leaderboard-zoning {
-	width: 32px;
+.leaderboard-tools {
+	width: fit-children;
 	height: 32px;
 	margin: 0 0 5px 16px;
 	align: left center;
+	flow-children: right;
+
+	// Collapses itself when sv_cheats is off, dropping the button it wraps out of the flow above
+	&__cheat-gate {
+		width: fit-children;
+		height: 100%;
+	}
 
 	&__tooltip {
-		width: 100%;
+		width: 32px;
 		height: 100%;
+		margin-right: 4px;
 	}
 
 	&__button {
