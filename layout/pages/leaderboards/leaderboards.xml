@@ -91,7 +91,7 @@
                 </Button>
             </Panel>
 
-            <TooltipPanel class="leaderboard-around" tooltip="#Leaderboards_PersonalBestTooltip">
+            <TooltipPanel id="AroundTooltip" class="leaderboard-around" tooltip="#Leaderboards_PersonalBestTooltip">
                 <Button id="Around" class="leaderboard-around__button" onactivate="LeaderboardsHandler.showAroundPage()">
                     <Panel class="leaderboard-around__icon-container">
                         <Image id="Icon" class="leaderboard-around__icon" src="file://{images}/jump-to.svg" textureheight="24" />
