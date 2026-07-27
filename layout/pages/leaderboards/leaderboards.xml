@@ -91,11 +91,13 @@
                 </Button>
             </Panel>
 
-            <Button id="Around" class="leaderboard-around" onactivate="LeaderboardsHandler.showAroundPage()">
-                <Panel class="leaderboard-around__icon-container">
-                    <Image id="Icon" class="leaderboard-around__icon" src="file://{images}/jump-to.svg" textureheight="24" />
-                </Panel>
-            </Button>
+            <TooltipPanel class="leaderboard-around" tooltip="#Leaderboards_PersonalBestTooltip">
+                <Button id="Around" class="leaderboard-around__button" onactivate="LeaderboardsHandler.showAroundPage()">
+                    <Panel class="leaderboard-around__icon-container">
+                        <Image id="Icon" class="leaderboard-around__icon" src="file://{images}/jump-to.svg" textureheight="24" />
+                    </Panel>
+                </Button>
+            </TooltipPanel>
 		</Panel>
 	</Leaderboards>
 </root>
