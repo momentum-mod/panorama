@@ -223,20 +223,25 @@ $times-border: 0px solid rgba(24, 24, 24, 0.4);
 	width: 32px;
 	height: 32px;
 	margin: 0 16px 5px 0;
-	border-radius: 2px;
 	align: right center;
 
-	&:not(:disabled):hover {
-		background-color: rgba(167, 167, 167, 0.2);
-	}
+	&__button {
+		width: 100%;
+		height: 100%;
+		border-radius: 2px;
 
-	&:not(:disabled):active {
-		background-color: rgba(255, 255, 255, 0.2);
-	}
+		&:not(:disabled):hover {
+			background-color: rgba(167, 167, 167, 0.2);
+		}
 
-	&:disabled {
-		.leaderboard-around__icon {
-			wash-color: rgb(85, 85, 85);
+		&:not(:disabled):active {
+			background-color: rgba(255, 255, 255, 0.2);
+		}
+
+		&:disabled {
+			.leaderboard-around__icon {
+				wash-color: rgb(85, 85, 85);
+			}
 		}
 	}
 
