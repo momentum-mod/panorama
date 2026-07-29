@@ -2,10 +2,6 @@
 
 .groundboost {
 	&__container {
-		height: 100px;
-		width: 100px;
-		margin: 6px 0px;
-
 		transition-property: opacity;
 		transition-delay: 0.5s;
 		transition-timing-function: ease-in-out;
@@ -21,49 +17,17 @@
 	&__meter {
 		height: 100%;
 		width: 100%;
-
-		&--friction {
-			wash-color: $red;
-		}
-
-		&--slick {
-			wash-color: $white;
-		}
-
-		&--crash {
-			wash-color: $blue;
-		}
 	}
 
 	&__background-meter {
 		height: 100%;
 		width: 100%;
-		opacity: 0.5;
-		wash-color: $progressbar-background;
 		img-shadow: 1px 1px 3px 0.8 rgba(0, 0, 0, 0.35);
 	}
 
 	&__label {
 		align: center center;
 		text-align: center;
-		font-size: 20px;
 		font-weight: bold;
-		text-shadow: rgba(0, 0, 0, 0.5) 0px 1px 2px 2.5;
-
-		&--gain {
-			color: $blue;
-		}
-
-		&--flat {
-			color: $white;
-		}
-
-		&--loss {
-			color: $red;
-		}
-
-		&--hide {
-			visibility: collapse;
-		}
 	}
 }

@@ -1,4 +1,28 @@
 import { PanelHandler } from 'util/module-helpers';
+import { registerHUDCustomizerComponent, CustomizerPropertyType } from 'common/hud-customizer';
+import { GamemodeCategory, GamemodeCategoryToGamemode } from 'common/web/enums/gamemode.enum';
+import { rgbaStringToTuple } from 'util/colors';
+
+const Config = {
+	countDown: false,
+	unfill: false,
+	isLabelEnabled: false,
+	font: {
+		family: 'Roboto',
+		size: 20,
+		color: 'rgba(255, 255, 255, 1)'
+	},
+	border: {
+		width: 0,
+		color: 'rgba(0, 0, 0, 1)',
+		backgroundRadius: 11,
+		fillRadius: 11
+	},
+	color: {
+		background: 'gradient(linear, 0% 0%, 100% 0%, from (rgba(35, 50, 57, 1)), to(rgba(35, 50, 57, 1)))',
+		fill: 'gradient(linear, 0% 0%, 100% 0%, from (rgba(24, 150, 211, 1)), to(rgba(113, 240, 255, 1)))'
+	}
+};
 
 @PanelHandler()
 class ConcEntitiesHandler {
@@ -6,7 +30,112 @@ class ConcEntitiesHandler {
 	container = $('#ConcEntPanelsContainer');
 
 	constructor() {
-		$.RegisterEventHandler('OnConcEntityPanelThink', this.container, () => this.onEntPanelThink());
+		registerHUDCustomizerComponent($.GetContextPanel(), {
+			name: $.Localize('#Customizer_Conc_Entities_Name'),
+			resizeX: false,
+			resizeY: false,
+			moveX: false,
+			moveY: false,
+			gamemode: GamemodeCategoryToGamemode.get(GamemodeCategory.CONC),
+			events: {
+				event: 'OnConcEntityPanelThink',
+				panel: this.container,
+				callbackFn: () => this.onEntPanelThink()
+			},
+			dynamicStyles: {
+				countDown: {
+					name: $.Localize('#Customizer_Conc_CountDown'),
+					type: CustomizerPropertyType.CHECKBOX,
+					callbackFunc: (_, value) => (Config.countDown = value)
+				},
+				unfill: {
+					name: $.Localize('#Customizer_Conc_Unfill'),
+					type: CustomizerPropertyType.CHECKBOX,
+					callbackFunc: (_, value) => (Config.unfill = value)
+				},
+				showLabel: {
+					name: $.Localize('#Customizer_ShowLabel'),
+					type: CustomizerPropertyType.CHECKBOX,
+					children: { styleID: 'fontStyling', showWhen: true },
+					callbackFunc: (_, value) => (Config.isLabelEnabled = value)
+				},
+				fontStyling: {
+					name: $.Localize('#Customizer_FontStyling'),
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [{ styleID: 'font' }, { styleID: 'fontSize' }, { styleID: 'fontColor' }]
+				},
+				font: {
+					name: $.Localize('#Customizer_Font'),
+					type: CustomizerPropertyType.FONT_PICKER,
+					callbackFunc: (_, value) => (Config.font.family = value)
+				},
+				fontSize: {
+					name: $.Localize('#Customizer_FontSize'),
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					callbackFunc: (_, value) => (Config.font.size = value)
+				},
+				fontColor: {
+					name: $.Localize('#Customizer_FontColor'),
+					type: CustomizerPropertyType.COLOR_PICKER,
+					callbackFunc: (_, value) => (Config.font.color = value)
+				},
+				borderStyling: {
+					name: $.Localize('#Customizer_BorderStyling'),
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [{ styleID: 'borderWidth' }, { styleID: 'borderColor' }, { styleID: 'borderRadius' }]
+				},
+				borderWidth: {
+					name: $.Localize('#Customizer_BorderWidth'),
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					callbackFunc: (_, value) => (Config.border.width = value)
+				},
+				borderColor: {
+					name: $.Localize('#Customizer_BorderColor'),
+					type: CustomizerPropertyType.COLOR_PICKER,
+					callbackFunc: (_, value) => (Config.border.color = value)
+				},
+				borderRadius: {
+					name: $.Localize('#Customizer_BorderRadius'),
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [{ styleID: 'backgroundRadius' }, { styleID: 'fillRadius' }]
+				},
+				backgroundRadius: {
+					name: $.Localize('#Customizer_Background'),
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					callbackFunc: (_, value) => (Config.border.backgroundRadius = value),
+					settingProps: { min: 0, max: 11 }
+				},
+				fillRadius: {
+					name: $.Localize('#Customizer_Fill'),
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					callbackFunc: (_, value) => (Config.border.fillRadius = value),
+					settingProps: { min: 0, max: 11 }
+				},
+				colors: {
+					name: $.Localize('#Customizer_Colors'),
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [{ styleID: 'backgroundGradient' }, { styleID: 'fillGradient' }]
+				},
+				backgroundGradient: {
+					name: $.Localize('#Customizer_Background'),
+					type: CustomizerPropertyType.GRADIENT_PICKER,
+					callbackFunc: (_, value) =>
+						(Config.color.background =
+							`gradient(linear, 0% 0%, 100% 0%, from (${value[0]}), to(${value[1]}))` as color)
+				},
+				fillGradient: {
+					name: $.Localize('#Customizer_Fill'),
+					type: CustomizerPropertyType.GRADIENT_PICKER,
+					callbackFunc: (_, value) =>
+						(Config.color.fill =
+							`gradient(linear, 0% 0%, 100% 0%, from (${value[0]}), to(${value[1]}))` as color)
+				}
+			}
+		});
 	}
 
 	onEntPanelThink() {
@@ -16,19 +145,42 @@ class ConcEntitiesHandler {
 			.forEach((entpanel) => {
 				const meterEnabled = this.cp.concEntPanelProgressBarEnabled;
 				const meter = entpanel.FindChildTraverse<ProgressBar>('ConcTimeMeter');
+				const meterBackground = meter.GetLastChild();
+				const meterFill = meter.GetFirstChild();
+
 				meter.visible = meterEnabled;
+
 				if (meterEnabled) {
-					meter.value = entpanel.concPrimedPercent;
+					meter.style.backgroundColor = Config.color.background as color;
+					meter.style.border = `${Config.border.width}px solid ${Config.border.color}`;
+					meter.style.borderRadius = `${Config.border.backgroundRadius}px`;
+
+					meterBackground.style.backgroundColor = Config.color.background as color;
+
+					meterFill.style.backgroundColor = Config.color.fill as color;
+					meterFill.style.borderRadius = `${Config.border.fillRadius}px`;
+
+					meter.value = Config.unfill ? entpanel.concPrimedPercent : 1 - entpanel.concPrimedPercent;
 				}
 
-				const labelEnabled = this.cp.concEntPanelTimerLabelEnabled;
 				const label = entpanel.FindChildTraverse<Label>('ConcTimeLabel');
-				label.visible = labelEnabled;
-				if (labelEnabled) {
-					label.text = `${entpanel.concPrimedTime.toFixed(2)}s`;
-				}
+				label.visible = Config.isLabelEnabled;
+				if (Config.isLabelEnabled) {
+					label.style.fontFamily = `"${Config.font.family}"`;
+					label.style.fontSize = `${Config.font.size}px`;
+					label.style.color = Config.font.color;
+					label.style.textShadow = this.getTextShadow(Config.font.color as rgbaColor);
 
+					label.text = Config.countDown
+						? `${entpanel.concPrimedTime.toFixed(2)}s`
+						: `${(GameInterfaceAPI.GetSettingFloat('mom_conc_thrown_fuse') - entpanel.concPrimedTime).toFixed(2)}s`;
+				}
 				entpanel.style.opacity = entpanel.concDistanceFadeAlpha;
 			});
+	}
+
+	getTextShadow(color: rgbaColor) {
+		const alpha = rgbaStringToTuple(color)[3] / 255;
+		return `rgba(0, 0, 0, ${alpha * 0.5}) 0px 1px 2px 2.5`;
 	}
 }

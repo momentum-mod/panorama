@@ -132,7 +132,7 @@ class ImportExportSettingsHandler implements OnPanelLoad {
 	}
 
 	exportSelectAll() {
-		this.panels.export.SetFocus(true);
+		this.panels.export.SetFocus();
 		this.panels.export.SelectAll();
 	}
 }

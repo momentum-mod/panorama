@@ -15,14 +15,14 @@
 		</snippet>
 	</snippets>
 
-	<MomHudSpecInfo class="w-full flow-down">
+	<MomHudSpecInfo>
 		<!-- So we can toggle visibility for the whole panel -->
 		<Panel id="SpecInfoContainer" class="hudspecinfo">
-			<ConVarEnabler class="flow-down w-fit-children h-align-right v-align-center" convar="mom_hud_spectator_list_show" togglevisibility="true">
-				<Label id="NumSpecLabel" class="hudspecinfo__count h-align-right" text="{d:numspec} Spectator(s)" />
+			<Panel class="hudspecinfo__container flow-down">
+				<Label id="NumSpecLabel" class="hudspecinfo__count" text="{d:numspec} Spectator(s)" />
 				<!-- Filled with specinfo-list-entry snippets -->
-				<ConVarEnabler id="NamesContainer" class="flow-down w-fit-children h-align-right" convar="mom_hud_spectator_list_names" togglevisibility="true" />
-			</ConVarEnabler>
+				<Panel id="NamesContainer" class="flow-down hudspecinfo__names-container"/>
+			</Panel>
 		</Panel>
 	</MomHudSpecInfo>
 </root>

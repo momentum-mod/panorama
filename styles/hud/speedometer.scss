@@ -1,9 +1,6 @@
-@use '../config' as *;
-
 .speedometers {
-	margin: 6px 0px 6px 0;
-	align: center center;
 	flow-children: down;
+	width: 320px;
 }
 
 .speedometer {
@@ -11,35 +8,25 @@
 	flow-children: right;
 
 	&__axis {
-		font-weight: $speedometer-axis-font-weight;
-		font-size: $speedometer-axis-font-size;
+		font-weight: black;
 		&__comparison {
-			font-weight: $speedometer-axis-comparison-font-weight;
-			font-size: $speedometer-axis-comparison-font-size;
+			font-weight: bold;
 		}
 	}
 	&__event {
-		font-weight: $speedometer-event-font-weight;
-		font-size: $speedometer-event-font-size;
+		font-weight: medium;
+
 		&__comparison {
 			margin-left: 2px;
-			font-weight: $speedometer-event-comparison-font-weight;
-			font-size: $speedometer-event-comparison-font-size;
+			font-weight: normal;
 		}
-	}
-
-	&--increase {
-		color: $speedometer-color-increase;
-	}
-	&--decrease {
-		color: $speedometer-color-decrease;
 	}
 	&--hidden {
 		visibility: collapse;
 	}
 	&--fade-start {
 		transition-property: opacity;
-		transition-duration: $speedometer-event-fadeout-time;
+		transition-duration: 5s;
 		transition-timing-function: cubic-bezier(1, 0, 1, 0);
 	}
 	&--fadeout {

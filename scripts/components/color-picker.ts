@@ -8,7 +8,7 @@ class ColorPickerHandler implements OnPanelLoad {
 
 	// Having these events inline in the xml apparently messes up the context panel stack and in turn, event dispatch
 	onSave() {
-		$.DispatchEvent('ColorPickerSave', $.GetContextPanel<ColorPicker>().currColor);
+		$.DispatchEvent('ColorPickerSave', $.GetContextPanel<ColorPicker>().currColor as rgbaColor);
 	}
 
 	onCancel() {

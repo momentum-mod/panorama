@@ -1,5 +1,6 @@
 import { PanelHandler } from 'util/module-helpers';
 import { computeDiff, RunSubsegment } from 'common/timer';
+import { getTextShadowFast } from 'common/hud-customizer';
 
 enum ReplayState {
 	NONE = 0,
@@ -12,6 +13,7 @@ interface SliderSegment {
 	endTime: number;
 	panel: Panel;
 	progressPanel: Panel;
+	labelPanel?: Label;
 }
 
 interface CreateSliderSegmentArgs {
@@ -30,6 +32,14 @@ interface CreateSliderSegmentArgs {
 // visual bugs we bail and draw a single big segment.
 const MAX_DISTINCT_SEGMENTS = 48;
 
+export interface ReplayStylingInterface extends MomHudReplayControls {
+	setSeekBarColor: (color: rgbaColor) => void;
+	setSeekBarColorActive: (color: color) => void;
+	setSegmentFont: (font: string) => void;
+	setSegmentFontSize: (fontSize: number) => void;
+	setSegmentFontColor: (fontColor: rgbaColor) => void;
+}
+
 @PanelHandler()
 class ReplayControlsHandler {
 	readonly panels = {
@@ -43,10 +53,68 @@ class ReplayControlsHandler {
 
 	sliderSegments?: SliderSegment[];
 
+	seekBarColor: rgbaColor;
+	seekBarColorActive: color;
+
+	segmentFont: string;
+	segmentFontSize: number;
+	segmentFontColor: rgbaColor;
+
 	constructor() {
+		const controlsInterface = this.panels.cp as ReplayStylingInterface;
+		controlsInterface.setSeekBarColor = (color) => this.setSeekBarColor(color);
+		controlsInterface.setSeekBarColorActive = (color) => this.setSeekBarColorActive(color);
+		controlsInterface.setSegmentFont = (font) => this.setSegmentFont(font);
+		controlsInterface.setSegmentFontSize = (size) => this.setSegmentFontSize(size);
+		controlsInterface.setSegmentFontColor = (color) => this.setSegmentFontColor(color);
+
 		$.RegisterForUnhandledEvent('OnControlledReplaySet', () => this.onReplaySelect());
 		$.RegisterEventHandler('HudProcessInput', $.GetContextPanel(), () => this.onUpdate());
 		$.RegisterEventHandler('SliderValueChanged', $.GetContextPanel(), (_, value) => MomentumReplayAPI.GoTo(value));
+	}
+
+	setSeekBarColor(color: rgbaColor) {
+		this.seekBarColor = color;
+		this.applySeekBarColors();
+	}
+
+	setSeekBarColorActive(color: color) {
+		this.seekBarColorActive = color;
+		this.applySeekBarColors();
+	}
+
+	applySeekBarColors() {
+		if (this.panels.cp.visible === false || !this.sliderSegments) return;
+		for (const { progressPanel } of this.sliderSegments) {
+			if (!progressPanel) continue;
+			if (this.seekBarColor) progressPanel.style.backgroundColor = this.seekBarColor;
+		}
+	}
+
+	setSegmentFont(font: string) {
+		this.segmentFont = font;
+		this.applySegmentFontStyling();
+	}
+	setSegmentFontSize(size: number) {
+		this.segmentFontSize = size;
+		this.applySegmentFontStyling();
+	}
+	setSegmentFontColor(color: rgbaColor) {
+		this.segmentFontColor = color;
+		this.applySegmentFontStyling();
+	}
+
+	applySegmentFontStyling() {
+		if (this.panels.cp.visible === false || !this.sliderSegments) return;
+		for (const { labelPanel } of this.sliderSegments) {
+			if (!labelPanel) continue;
+			if (this.segmentFont) labelPanel.style.fontFamily = `"${this.segmentFont}"`;
+			if (this.segmentFontSize) labelPanel.style.fontSize = `${this.segmentFontSize}px`;
+			if (this.segmentFontColor) {
+				labelPanel.style.color = `${this.segmentFontColor}`;
+				labelPanel.style.textShadowFast = getTextShadowFast(this.segmentFontColor, 0.9);
+			}
+		}
 	}
 
 	onReplaySelect() {
@@ -153,6 +221,16 @@ class ReplayControlsHandler {
 		outer.SetDialogVariable('num', hasLabels && segmentTotalTime / segmentEndTime > 0.02 ? `${index + 1}` : '');
 
 		const progressPanel = inner.FindChild<Panel>('Progress')!;
+		const labelPanel = outer.FindChildrenWithClassTraverse('replaysegment__label')?.[0] as Label;
+
+		if (labelPanel) {
+			if (this.segmentFont) labelPanel.style.fontFamily = `"${this.segmentFont}"`;
+			if (this.segmentFontSize) labelPanel.style.fontSize = `${this.segmentFontSize}px`;
+			if (this.segmentFontColor) {
+				labelPanel.style.color = `${this.segmentFontColor}`;
+				labelPanel.style.textShadowFast = getTextShadowFast(this.segmentFontColor, 0.9);
+			}
+		}
 
 		const ssLen = subsegments?.length ?? 1;
 		const subsegmentContainer = inner.FindChild('Subsegments')!;
@@ -169,7 +247,7 @@ class ReplayControlsHandler {
 			first = false;
 		}
 
-		return { startTime: segmentStartTime, endTime: segmentEndTime, panel: outer, progressPanel };
+		return { startTime: segmentStartTime, endTime: segmentEndTime, panel: outer, progressPanel, labelPanel };
 	}
 
 	createPrerunSegment(prerunLength: number, runtime: number) {
@@ -235,16 +313,22 @@ class ReplayControlsHandler {
 		this.sliderSegments.forEach(({ startTime, endTime, panel, progressPanel }) => {
 			// For iters on later segments after current one
 			if (foundActive) {
-				panel.SetHasClass('replaysegment--active', false);
+				if (this.seekBarColor) {
+					progressPanel.style.backgroundColor = this.seekBarColor;
+				}
 				progressPanel.style.width = '0%';
 			} else if (startTime <= curtime && curtime < endTime) {
 				foundActive = true;
-				panel.SetHasClass('replaysegment--active', true);
+				if (this.seekBarColorActive) {
+					progressPanel.style.backgroundColor = this.seekBarColorActive;
+				}
 				const progressPercent = (curtime - startTime) / (endTime - startTime);
 				// Without toFixed JS sometimes stringifies with exponential notation (js lol)
 				progressPanel.style.width = `${(progressPercent * 100).toFixed(10)}%`;
 			} else {
-				panel.SetHasClass('replaysegment--active', false);
+				if (this.seekBarColor) {
+					progressPanel.style.backgroundColor = this.seekBarColor;
+				}
 				progressPanel.style.width = '100%';
 			}
 		});

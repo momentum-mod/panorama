@@ -94,7 +94,7 @@ export class LineGraphHandler {
 			// Loop through all the gridlines and markers we want to draw
 			for (let j = lineMin; j <= lineMax; j += axis.interval) {
 				// Round out any floating point imprecision errors
-				j = Number.parseFloat(j.toPrecision(7));
+				j = Number.parseFloat(j.toFixed(7));
 				// Lerp for distance along the axis
 				const dist = Math.round(((j - axis.min) / (axis.max - axis.min)) * panelLength);
 

@@ -47,12 +47,18 @@
 
 						<RadioButton id="AudioRadio" class="settings-nav__item" group="SettingsNav" onactivate="SettingsHandler.navigateToTab('AudioSettings')">
 							<Label class="settings-nav__item-label" text="#Settings_Audio" />
-							<Panel class="settings-nav__subsection settings-nav__subsection--2 settings-nav__subsection--hidden">
+							<Panel class="settings-nav__subsection settings-nav__subsection--4 settings-nav__subsection--hidden">
 								<RadioButton id="VolumeRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="SettingsHandler.navigateToSubsection('AudioSettings', 'VolumeSubSection')">
 									<Label class="settings-nav__subitem-label" text="#Settings_Volume_Title" />
 								</RadioButton>
 								<RadioButton id="AudioDeviceRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="SettingsHandler.navigateToSubsection('AudioSettings', 'AudioDevicesSubSection')">
 									<Label class="settings-nav__subitem-label" text="#Settings_AudioDevices_Title" />
+								</RadioButton>
+                                <RadioButton id="TimerRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="SettingsHandler.navigateToSubsection('AudioSettings', 'TimerSubSection')">
+									<Label class="settings-nav__subitem-label" text="#Settings_Timer_Title" />
+								</RadioButton>
+                                <RadioButton id="WeaponSelRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="SettingsHandler.navigateToSubsection('AudioSettings', 'WeaponSelSubSection')">
+									<Label class="settings-nav__subitem-label" text="#Settings_WeaponSelection_Title" />
 								</RadioButton>
 							</Panel>
 						</RadioButton>
@@ -139,7 +145,7 @@
 
 						<RadioButton id="InterfaceRadio" class="settings-nav__item" group="SettingsNav" onactivate="SettingsHandler.navigateToTab('InterfaceSettings')">
 							<Label class="settings-nav__item-label" text="#Settings_Interface" />
-							<Panel class="settings-nav__subsection settings-nav__subsection--13 settings-nav__subsection--hidden">
+							<Panel class="settings-nav__subsection settings-nav__subsection--4 settings-nav__subsection--hidden">
 								<RadioButton id="UIRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="SettingsHandler.navigateToSubsection('InterfaceSettings', 'UISubSection')">
 									<Label class="settings-nav__subitem-label" text="#Settings_Menu_Title" />
 								</RadioButton>
@@ -149,36 +155,8 @@
 								<RadioButton id="CrosshairRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="SettingsHandler.navigateToSubsection('InterfaceSettings', 'CrosshairSubSection')">
 									<Label class="settings-nav__subitem-label" text="#Settings_Crosshair_Title" />
 								</RadioButton>
-								<RadioButton id="TimerRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="SettingsHandler.navigateToSubsection('InterfaceSettings', 'TimerSubSection')">
-									<Label class="settings-nav__subitem-label" text="#Settings_Timer_Title" />
-								</RadioButton>
-								<RadioButton id="PlayerStatusRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="SettingsHandler.navigateToSubsection('InterfaceSettings', 'PlayerStatusSubSection')">
-									<Label class="settings-nav__subitem-label" text="#Settings_HUDStatus_Title" />
-								</RadioButton>
-								<RadioButton id="KeypressRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="SettingsHandler.navigateToSubsection('InterfaceSettings', 'KeypressSubSection')">
-									<Label class="settings-nav__subitem-label" text="#Settings_KeypressHUD_Title" />
-								</RadioButton>
-								<RadioButton id="ComparisonsRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="SettingsHandler.navigateToSubsection('InterfaceSettings', 'ComparisonsSubSection')">
-									<Label class="settings-nav__subitem-label" text="#Settings_ComparisonsHUD_Title" />
-								</RadioButton>
-								<RadioButton id="WeaponSelRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="SettingsHandler.navigateToSubsection('InterfaceSettings', 'WeaponSelSubSection')">
-									<Label class="settings-nav__subitem-label" text="#Settings_WeaponSelection_Title" />
-								</RadioButton>
-								<RadioButton id="JumpStatsRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="SettingsHandler.navigateToSubsection('InterfaceSettings', 'JumpStatsSubSection')">
-									<Label class="settings-nav__subitem-label" text="#Settings_JumpStats_Title" />
-								</RadioButton>
 								<RadioButton id="DamageIndicatorRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="SettingsHandler.navigateToSubsection('InterfaceSettings', 'DamageIndicatorSubSection')">
 									<Label class="settings-nav__subitem-label" text="#Settings_DamageIndicator_Title" />
-								</RadioButton>
-								<!-- TODO: This is currently broken. Does anyone want this feature? -->
-								<!-- <RadioButton id="StrafeSyncRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="SettingsHandler.navigateToSubsection('InterfaceSettings', 'StrafeSyncSubSection')">
-									<Label class="settings-nav__subitem-label" text="#Settings_TotalSync_Title" />
-								</RadioButton> -->
-								<RadioButton id="StrafeTrainerRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="SettingsHandler.navigateToSubsection('InterfaceSettings', 'StrafeTrainerSubSection')">
-									<Label class="settings-nav__subitem-label" text="#Settings_StrafeTrainer_Title" />
-								</RadioButton>
-								<RadioButton id="MapInfoRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="SettingsHandler.navigateToSubsection('InterfaceSettings', 'MapInfoSubSection')">
-									<Label class="settings-nav__subitem-label" text="#Settings_MapInfo_Title" />
 								</RadioButton>
 							</Panel>
 						</RadioButton>

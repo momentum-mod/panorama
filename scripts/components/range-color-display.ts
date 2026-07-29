@@ -8,7 +8,7 @@ class RangeColorDisplayHandler {
 
 	// need to forward the colordisplay panelevent to parent
 	onColorChange() {
-		$.GetContextPanel<RangeColorDisplay>().color = this.colorDisplay.color;
+		$.GetContextPanel<RangeColorDisplay>().color = this.colorDisplay.color as color;
 		$.RegisterEventHandler('InputFocusLost', $.GetContextPanel(), () => this.onFocusLost());
 	}
 

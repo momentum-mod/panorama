@@ -93,7 +93,7 @@
 						<Image class="topnav__icon" src="file://{images}/settings.svg" textureheight="64" />
 					</RadioButton>
 				</Panel>
-
+                
 				<Panel class="h-full flow-right h-align-right">
 					<RadioButton id="NotificationsButton" class="topnav__button">
 						<Image class="topnav__icon" src="file://{images}/notification.svg" textureheight="64" />

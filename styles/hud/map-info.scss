@@ -1,19 +1,13 @@
 @use '../config' as *;
 @use '../abstract/mixin';
 
-.hudmapinfo {
-	margin: 0 5px 5px 5px;
+.hud-map-info {
 	flow-children: down;
-	width: 350px;
 	height: fit-children;
-	align: right center;
-
 	&__label {
-		@include mixin.font-header();
+		text-transform: uppercase;
 		font-weight: bold;
-		font-size: 20px;
-		text-align: right;
 		text-overflow: ellipsis;
-		color: $white;
+		letter-spacing: 1px;
 	}
 }

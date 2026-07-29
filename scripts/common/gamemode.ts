@@ -32,3 +32,9 @@ for (const [gamemode, obj] of extraModeData) {
 
 /** Miscellaneous gamemode info. Use this version, not the common/web/gamemodes.map.ts one!! */
 export const GamemodeInfo = GamemodeInfoWeb as ReadonlyMap<Gamemode, GamemodeInfoProperties>;
+
+// Sorted longest-first to handle prefix collisions when matching filenames
+// e.g. "bhop" is a prefix of "bhop_hl", so "bhop_hl" must be checked first.
+export const GamemodeInfoList: ReadonlyArray<GamemodeInfoProperties> = [...GamemodeInfo.values()].sort(
+	(a, b) => b.id.length - a.id.length
+);

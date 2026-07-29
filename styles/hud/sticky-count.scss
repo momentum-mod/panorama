@@ -5,35 +5,9 @@
 
 	// assigned in code
 	.sticky-panel {
-		margin: 0 8px 0 8px;
-		width: 24px;
-		height: 24px;
-		border-radius: 12px;
 		align: center center;
-
-		box-shadow: $progressbar-shadow;
-		background-color: $progressbar-background;
-		border: 0px solid transparent;
-
-		&--nosticky {
-			background-color: $progressbar-background;
-			border: 0px solid transparent;
-		}
-
-		&--sticky-arming {
-		}
-
-		&--sticky-armed {
-			background-color: $progressbar-background-progress;
-		}
-
-		&--sticky-blocked {
-			animation-name: none;
-			background-color: $progressbar-background-disabled;
-			border: 0px solid transparent;
-
-			transition-property: background-color;
-			transition-duration: 0.25s;
-		}
+		border-style: solid;
+		//Breaks customization
+		// box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 3px 0px;
 	}
 }

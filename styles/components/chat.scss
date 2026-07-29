@@ -15,8 +15,14 @@
 	&__history-wrapper {
 		height: 100%;
 		width: 100%;
-		margin: 8px;
+		margin-bottom: 8px;
 		padding: 8px 0;
+
+		@for $i from 0 through 8 {
+			.hud-chat--gap-#{$i} & {
+				margin-bottom: #{$i}px;
+			}
+		}
 
 		&:hover {
 			background-color: rgba(0, 0, 0, 0.82);
@@ -32,39 +38,78 @@
 	}
 
 	&__member-typing {
-		margin: 0px 24px 8px 8px;
+		margin-top: 6px;
+		margin-bottom: 6px;
+		margin-right: 24px;
+		margin-left: 8px;
+
 		font-size: 16px;
+
+		visibility: visible;
+
+		@for $i from 10 through 24 {
+			.hud-chat--size-#{$i} & {
+				font-size: #{$i}px;
+			}
+		}
+
+		.chat--disable-users-typing & {
+			visibility: collapse;
+		}
 	}
 
+	// Both text input and send button use same font and scaling to ensure height of both containers
+	// stay equal when modified by hud customizer
 	&__input-container {
 		width: 100%;
-		margin: 0 8px 6px 8px;
+		height: fit-children;
 		flow-children: right;
 	}
 
 	&__input {
 		width: fill-parent-flow(1);
-		height: 34px;
-		vertical-align: bottom;
+		height: fit-children;
+		vertical-align: center;
 		horizontal-align: left;
 		padding: 6px 12px;
 
 		& > #PlaceholderText {
 			visibility: collapse;
 		}
+
+		@for $i from 10 through 24 {
+			.hud-chat--size-#{$i} & {
+				font-size: #{$i}px;
+			}
+		}
 	}
 
 	&__send {
-		height: 100%;
+		height: fit-children;
+		vertical-align: center;
 		margin-left: 8px;
-		padding: 4px;
+		padding: 6px 12px;
+
+		@for $i from 0 through 8 {
+			.hud-chat--gap-#{$i} & {
+				margin-left: #{$i}px;
+			}
+		}
 	}
 
 	$this: &;
 	&__send-text {
 		color: rgba(255, 255, 255, 0.8);
+		font-weight: bold;
+
 		#{$this}:hover {
 			color: rgba(255, 255, 255, 1);
+		}
+
+		@for $i from 10 through 24 {
+			.hud-chat--size-#{$i} & {
+				font-size: #{$i}px;
+			}
 		}
 	}
 
@@ -92,16 +137,30 @@
 		text-overflow: clip;
 		vertical-align: center;
 		font-size: 18px;
+
+		@for $i from 10 through 24 {
+			.hud-chat--size-#{$i} & {
+				font-size: #{$i}px;
+			}
+		}
 	}
 
 	&__icon {
-		width: 16px;
-		height: 16px;
+		width: 18px;
+		height: 18px;
+		padding: 1px;
 		margin-left: 8px;
 		margin-right: 6px;
-		margin-top: 5px;
+		vertical-align: center;
 		wash-color: #d3d3d3;
 		img-shadow: 0 1px 2px rgba(0, 0, 0, 1);
+
+		@for $i from 10 through 24 {
+			.hud-chat--size-#{$i} & {
+				width: #{$i + 2}px;
+				height: #{$i + 2}px;
+			}
+		}
 	}
 
 	&:hover {
@@ -195,6 +254,5 @@
 	&__players {
 		font-weight: medium;
 		color: #ccc;
-		font-size: 14px;
 	}
 }

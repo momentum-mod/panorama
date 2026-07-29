@@ -34,10 +34,10 @@
 				<Image id="CompassArrowIcon" class="arrow__up" src="file://{images}/hud/cgaz-arrow.svg" textureheight="48" />
 			</ConVarEnabler>
 		</Panel>
-		<ConVarEnabler class="h-full" convar="mom_hud_df_pitch_enable" togglevisibility="true">
+		<ConVarEnabler class="h-full w-full" convar="mom_hud_df_pitch_enable" togglevisibility="true">
 			<Panel id="PitchLines" class="cgaz-line__container" />
 		</ConVarEnabler>
-		<ConVarEnabler class="h-full" convar="mom_hud_df_compass_stat_mode" togglevisibility="true">
+		<ConVarEnabler class="h-full h-align-center" convar="mom_hud_df_compass_stat_mode" togglevisibility="true">
 			<Panel id="StatsBox" class="cgaz-stats__container">
 				<Label id="PitchStat" class="cgaz-stats cgaz-stats__pitch" />
 				<Label id="YawStat" class="cgaz-stats cgaz-stats__yaw" />

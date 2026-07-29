@@ -1,7 +1,14 @@
 import { PanelHandler } from 'util/module-helpers';
-import { RegisterHUDPanelForGamemode } from '../util/register-for-gamemodes';
-import { GamemodeCategory } from 'common/web/enums/gamemode.enum';
-import { GamemodeCategories } from 'common/web/maps/gamemodes.map';
+import { Gamemode } from 'common/web/enums/gamemode.enum';
+
+import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
+import { getTextShadowFast } from 'common/hud-customizer';
+
+type JumpStatsType = {
+	statsFirstPrint: int32;
+	statsInterval: int32;
+	statsLog: int32;
+};
 
 @PanelHandler()
 class JumpStatsHandler {
@@ -11,7 +18,7 @@ class JumpStatsHandler {
 		container: $<MomHudJumpStats>('#JumpStatsContainer')
 	};
 
-	jumpStatsConfig: typeof this.panels.cp.jumpStatsCFG;
+	jumpStatsConfig = {} as JumpStatsType;
 
 	bufferLength: number;
 	countBuffer: string[];
@@ -28,11 +35,169 @@ class JumpStatsHandler {
 	efficiencyBuffer: string[];
 
 	constructor() {
-		RegisterHUDPanelForGamemode({
-			gamemodes: GamemodeCategories.get(GamemodeCategory.BHOP),
-			onLoad: () => this.onMapInit(),
-			handledEvents: [{ event: 'OnJumpStarted', panel: this.panels.container, callback: () => this.onJump() }],
-			events: [{ event: 'OnJumpStatsCFGChange', callback: () => this.onConfigChange() }]
+		registerHUDCustomizerComponent($.GetContextPanel(), {
+			name: $.Localize('#Customizer_Jump_Stats_Name'),
+			resizeX: false,
+			resizeY: false,
+			gamemode: Gamemode.BHOP,
+			events: { event: 'OnJumpStarted', panel: this.panels.container, callbackFn: () => this.onJump() },
+			dynamicStyles: {
+				fontStyling: {
+					name: $.Localize('#Customizer_FontStyling'),
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [{ styleID: 'font' }, { styleID: 'fontSize' }, { styleID: 'fontColor' }]
+				},
+				font: {
+					name: $.Localize('#Customizer_Font'),
+					type: CustomizerPropertyType.FONT_PICKER,
+					targetPanel: ['.jumpstats__label', '.jumpstats__label--name', '.jumpstats__label--values'],
+					styleProperty: 'fontFamily',
+					valueFn: (value) => `"${value}"`
+				},
+				fontSize: {
+					name: $.Localize('#Customizer_FontSize'),
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					targetPanel: ['.jumpstats__label', '.jumpstats__label--name', '.jumpstats__label--values'],
+					styleProperty: 'fontSize',
+					valueFn: (value) => `${value}px`,
+					settingProps: { min: 7, max: 19 }
+				},
+				fontColor: {
+					name: $.Localize('#Customizer_FontColor'),
+					type: CustomizerPropertyType.COLOR_PICKER,
+					targetPanel: ['.jumpstats__label', '.jumpstats__label--name', '.jumpstats__label--values'],
+					styleProperty: 'color',
+					callbackFunc: (panel, value) => {
+						panel.style.textShadowFast = getTextShadowFast(value as rgbaColor, 0.9);
+						const nameLabel = panel.GetChild(0);
+						if (nameLabel) nameLabel.style.borderTop = `1px solid ${value}`;
+					}
+				},
+				logSettings: {
+					name: $.Localize('#Customizer_Jump_Stats_LogSettings'),
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [{ styleID: 'statsFirstPrint' }, { styleID: 'statsInterval' }, { styleID: 'statsLog' }]
+				},
+				statsFirstPrint: {
+					name: $.Localize('#Customizer_Jump_Stats_StatsFirstPrint'),
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					callbackFunc: (_, value) => (this.jumpStatsConfig.statsFirstPrint = value)
+				},
+				statsInterval: {
+					name: $.Localize('#Customizer_Jump_Stats_StatsInterval'),
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					callbackFunc: (_, value) => (this.jumpStatsConfig.statsInterval = value)
+				},
+				statsLog: {
+					name: $.Localize('#Customizer_Jump_Stats_StatsLog'),
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					callbackFunc: (_, value) => (this.jumpStatsConfig.statsLog = value),
+					onChanged: () => this.onConfigChange()
+				},
+				toggleStats: {
+					name: $.Localize('#Customizer_Jump_Stats_ToggleStats'),
+					type: CustomizerPropertyType.NONE,
+					expandable: true,
+					children: [
+						{ styleID: 'showTakeoffSpeed' },
+						{ styleID: 'showSpeedDelta' },
+						{ styleID: 'showGain' },
+						{ styleID: 'showYawRatio' },
+						{ styleID: 'showStrafeSync' },
+						{ styleID: 'showEfficiency' },
+						{ styleID: 'showStrafeCount' },
+						{ styleID: 'showTakeoffTime' },
+						{ styleID: 'showTimeDelta' },
+						{ styleID: 'showDistance' },
+						{ styleID: 'showHeightDelta' }
+					]
+				},
+				showTakeoffSpeed: {
+					name: $.Localize('#Customizer_ShowTakeoffSpeed'),
+					type: CustomizerPropertyType.CHECKBOX,
+					targetPanel: '.jumpstats__label--speed',
+					callbackFunc: (panel, value) => panel.SetHasClass('hide', !value)
+				},
+				showSpeedDelta: {
+					name: $.Localize('#Customizer_Jump_Stats_ShowSpeedDelta'),
+					type: CustomizerPropertyType.CHECKBOX,
+					targetPanel: '.jumpstats__label--speed-delta',
+					callbackFunc: (panel, value) => panel.SetHasClass('hide', !value)
+				},
+				showGain: {
+					name: $.Localize('#Customizer_ShowGain'),
+					type: CustomizerPropertyType.CHECKBOX,
+					targetPanel: '.jumpstats__label--gain',
+					callbackFunc: (panel, value) => panel.SetHasClass('hide', !value)
+				},
+				showYawRatio: {
+					name: $.Localize('#Customizer_ShowYawRatio'),
+					type: CustomizerPropertyType.CHECKBOX,
+					targetPanel: '.jumpstats__label--yaw-ratio',
+					callbackFunc: (panel, value) => panel.SetHasClass('hide', !value)
+				},
+				showStrafeSync: {
+					name: $.Localize('#Customizer_Jump_Stats_ShowStrafeSync'),
+					type: CustomizerPropertyType.CHECKBOX,
+					targetPanel: '.jumpstats__label--sync',
+					callbackFunc: (panel, value) => panel.SetHasClass('hide', !value)
+				},
+				showEfficiency: {
+					name: $.Localize('#Customizer_Jump_Stats_ShowEfficiency'),
+					type: CustomizerPropertyType.CHECKBOX,
+					targetPanel: '.jumpstats__label--efficiency',
+					callbackFunc: (panel, value) => panel.SetHasClass('hide', !value)
+				},
+				showStrafeCount: {
+					name: $.Localize('#Customizer_Jump_Stats_ShowStrafeCount'),
+					type: CustomizerPropertyType.CHECKBOX,
+					targetPanel: '.jumpstats__label--strafes',
+					callbackFunc: (panel, value) => panel.SetHasClass('hide', !value)
+				},
+				showTakeoffTime: {
+					name: $.Localize('#Customizer_Jump_Stats_ShowTakeoffTime'),
+					type: CustomizerPropertyType.CHECKBOX,
+					targetPanel: '.jumpstats__label--time',
+					callbackFunc: (panel, value) => panel.SetHasClass('hide', !value)
+				},
+				showTimeDelta: {
+					name: $.Localize('#Customizer_Jump_Stats_ShowTimeDelta'),
+					type: CustomizerPropertyType.CHECKBOX,
+					targetPanel: '.jumpstats__label--time-delta',
+					callbackFunc: (panel, value) => panel.SetHasClass('hide', !value)
+				},
+				showDistance: {
+					name: $.Localize('#Customizer_Jump_Stats_ShowDistance'),
+					type: CustomizerPropertyType.CHECKBOX,
+					targetPanel: '.jumpstats__label--distance',
+					callbackFunc: (panel, value) => panel.SetHasClass('hide', !value)
+				},
+				showHeightDelta: {
+					name: $.Localize('#Customizer_Jump_Stats_ShowHeightDelta'),
+					type: CustomizerPropertyType.CHECKBOX,
+					targetPanel: '.jumpstats__label--height-delta',
+					callbackFunc: (panel, value) => panel.SetHasClass('hide', !value)
+				},
+				backgroundColor: {
+					name: $.Localize('#Customizer_BackgroundColor'),
+					type: CustomizerPropertyType.COLOR_PICKER,
+					targetPanel: '.jumpstats__container',
+					styleProperty: 'backgroundColor'
+				}
+				// I have no idea what this is
+				// enviroAccelEnable: {
+				// 	name: $.Localize('#Customizer_Jump_Stats_EnviroAccelEnable'),
+				// 	type: CustomizerPropertyType.CHECKBOX,
+				//     targetPanel: ''
+				// 	callbackFunc: (panel, value) => {
+				// 		panel.SetHasClass('hide', !value);
+				// 		// this.jumpStatsConfig.enviroAccelEnable = value;
+				// 	}
+				// },
+			},
+			postInit: () => this.onConfigChange()
 		});
 	}
 
@@ -88,7 +253,6 @@ class JumpStatsHandler {
 	}
 
 	onConfigChange() {
-		this.jumpStatsConfig = this.panels.cp.jumpStatsCFG;
 		if (this.jumpStatsConfig.statsLog !== this.bufferLength) {
 			this.bufferLength = this.jumpStatsConfig.statsLog;
 			this.initializeStats();
@@ -96,7 +260,6 @@ class JumpStatsHandler {
 	}
 
 	onMapInit() {
-		this.onConfigChange();
 		this.initializeStats();
 		this.setText();
 	}

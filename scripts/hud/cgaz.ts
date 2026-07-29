@@ -1056,7 +1056,7 @@ class CgazHandler {
 			this.updateZone(zone, left, right, 0, snapClass, this.snapSplitZone);
 
 			if (this.snapColorMode) {
-				snapColor = rgbaStringLerp(this.snapSlowColor, this.snapFastColor, alpha);
+				snapColor = rgbaStringLerp(this.snapSlowColor, this.snapFastColor, alpha) as rgbaColor;
 			}
 
 			let bHighlight = false;
@@ -1111,7 +1111,8 @@ class CgazHandler {
 							bHighlight = true;
 						}
 						if (bHighlight) {
-							hlSnapColor = `gradient(linear, ${direction}, from(${hlSnapColor}), color-stop( ${stopPoint}, ${hlSnapColor} ), color-stop( ${stopPoint}, ${snapColor} ), to(${snapColor}))`;
+							hlSnapColor =
+								`gradient(linear, ${direction}, from(${hlSnapColor}), color-stop( ${stopPoint}, ${hlSnapColor} ), color-stop( ${stopPoint}, ${snapColor} ), to(${snapColor}))` as rgbaColor;
 						}
 					}
 					break;
@@ -1447,14 +1448,14 @@ class CgazHandler {
 		return Number.isNaN(Number(val)) ? def : (val as number);
 	}
 
-	initZonePanel(panel: Panel) {
+	initZonePanel(panel: Panel): ZonePanel {
 		return Object.assign(panel, {
 			leftAngle: 0,
 			rightAngle: 0,
 			leftPx: 0,
 			rightPx: 0,
 			isInactive: false,
-			color: ''
+			color: '' as rgbaColor
 		});
 	}
 }
