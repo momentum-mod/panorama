@@ -29,5 +29,11 @@
 		&--damageboost {
 			wash-color: rgba(113, 240, 255, 1);
 		}
+
+		// Greyed-out state, used when a double jump has been spent and is not yet refreshed
+		&--disabled {
+			wash-color: $gray-800;
+			opacity: 0.4;
+		}
 	}
 }
