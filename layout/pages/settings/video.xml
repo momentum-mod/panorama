@@ -153,6 +153,14 @@
 					<Label text="#Settings_General_Disabled" value="0" id="colorcorrection0" />
 					<Label text="#Settings_General_Enabled" value="1" id="colorcorrection1" />
 				</SettingsEnumDropDown>
+				
+				<SettingsEnumDropDown text="#Settings_Render_VolumetricsQuality" onuserinputsubmit="SettingsPage.videoSettingsOnUserInputSubmit()" id="VolumetricsQualityLevel" infomessage="#Settings_Render_VolumetricsQuality_Info">
+					<Label text="#Settings_General_VeryLow" value="0" id="volumetricsqualitylevel0" />
+					<Label text="#Settings_General_Low" value="1" id="volumetricsqualitylevel1" />
+					<Label text="#Settings_General_Medium" value="2" id="volumetricsqualitylevel2" />
+					<Label text="#Settings_General_High" value="3" id="volumetricsqualitylevel3" />
+					<Label text="#Settings_General_Autodetect" value="9999999" id="volumetricqualitylevel4" />
+				</SettingsEnumDropDown>
 			</Panel>
 
 			<Panel class="settings-page__spacer" />
