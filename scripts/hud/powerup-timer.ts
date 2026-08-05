@@ -23,9 +23,9 @@ class PowerupTimerHandler {
 			panel: $('#FlightTimer')!,
 			label: $<Label>('#FlightLabel')!
 		},
-		doubleJump: {
-			panel: $('#DoubleJumpIndicator')!,
-			icon: $<Image>('#DoubleJumpIcon')!
+		airJump: {
+			panel: $('#AirJumpIndicator')!,
+			icon: $<Image>('#AirJumpIcon')!
 		}
 	};
 
@@ -64,14 +64,14 @@ class PowerupTimerHandler {
 	}
 
 	onUpdate() {
-		const { damageBoostTime, hasteTime, slickTime, flightTime, doubleJumpEnabled, canDoubleJump } =
+		const { damageBoostTime, hasteTime, slickTime, flightTime, airJumpEnabled, canAirJump } =
 			MomentumMovementAPI.GetMoveHudData();
 
 		this.updatePanel(this.panels.damageBoost, damageBoostTime);
 		this.updatePanel(this.panels.haste, hasteTime);
 		this.updatePanel(this.panels.slick, slickTime);
 		this.updatePanel(this.panels.flight, flightTime);
-		this.updateDoubleJump(doubleJumpEnabled, canDoubleJump);
+		this.updateAirJump(airJumpEnabled, canAirJump);
 	}
 
 	updatePanel({ panel, label }: { panel: GenericPanel; label: Label }, time: number) {
@@ -83,14 +83,14 @@ class PowerupTimerHandler {
 		}
 	}
 
-	updateDoubleJump(enabled: boolean, canDoubleJump: boolean) {
-		const { panel, icon } = this.panels.doubleJump;
+	updateAirJump(enabled: boolean, canAirJump: boolean) {
+		const { panel, icon } = this.panels.airJump;
 
-		// Only show the indicator while the player has the double jump powerup
+		// Only show the indicator while the player has the air jump powerup
 		panel.visible = enabled;
 		if (!enabled) return;
 
 		// Grey the icon out when the air jump has already been used
-		icon.SetHasClass('powerup-timer__icon--disabled', !canDoubleJump);
+		icon.SetHasClass('powerup-timer__icon--disabled', !canAirJump);
 	}
 }
