@@ -24,8 +24,8 @@
 			<Image id="FlightIcon" class="powerup-timer__icon" src="file://{images}/hud/flight-powerup.svg" textureheight="72"/>
 			<Label id="FlightLabel" class="powerup-timer__label" text="" />
 		</Panel>
-		<Panel id="DoubleJumpIndicator" class="powerup-timer__item">
-			<Image id="DoubleJumpIcon" class="powerup-timer__icon" src="file://{images}/hud/doublejump-powerup.svg" textureheight="72"/>
+		<Panel id="AirJumpIndicator" class="powerup-timer__item">
+			<Image id="AirJumpIcon" class="powerup-timer__icon" src="file://{images}/hud/airjump-powerup.svg" textureheight="72"/>
 		</Panel>
 	</MomHudPowerupTimer>
 </root>
