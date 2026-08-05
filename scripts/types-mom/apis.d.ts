@@ -84,8 +84,8 @@ declare namespace MomentumMovementAPI {
 		flightTime: int32;
 		defragTimer: int32;
 		defragTimerFlags: int32;
-		doubleJumpEnabled: boolean;
-		canDoubleJump: boolean;
+		airJumpEnabled: boolean;
+		canAirJump: boolean;
 	}
 
 	interface LastJump {
