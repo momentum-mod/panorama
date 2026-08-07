@@ -23,7 +23,7 @@
                             <Label class="text-h1 text-shadow-black color-transparent ml-2" text="{s:name}" />
                         </Panel>
                     </Panel>
-                    <Button id="EndOfRunButton" class="tab-menu-endofrun-arrow">
+                    <Button id="EndOfRunButton" class="tab-menu-endofrun-arrow" onactivate="HudTabMenuHandler.openEndOfRun();">
                         <Image src="file://{images}/arrow-thick-right.svg" textureheight="64" />
                     </Button>
                 </Panel>

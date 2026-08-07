@@ -2,6 +2,7 @@
 @use '../abstract/mixin';
 @use '../abstract/function';
 @use 'sass:color';
+@use 'sass:map';
 
 // ─── Main Container ───────────────────────────────────────────────────────────
 
@@ -136,6 +137,10 @@
 	margin: 0 8px;
 	border-radius: 2px;
 	opacity: 0.00000001;
+
+	Image {
+		img-shadow: map.get($font-shadows, 'outline');
+	}
 
 	&:hover {
 		background-color: rgba(167, 167, 167, 0.2);
