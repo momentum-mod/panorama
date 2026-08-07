@@ -57,6 +57,9 @@
 
             <Panel id="TabMenuFooter" class="hud-tab-menu__footer">
                 <Panel class="flow-right">
+                    <TooltipPanel id="VoiceToggle" tooltip="#HudTabMenu_ToggleVoice" class="hud-tab-menu__footer-voice">
+                        <ToggleButton class="hud-tab-menu__footer-button hud-tab-menu__footer-button--voice" convar="voice_enable" />
+                    </TooltipPanel>
                     <TooltipPanel tooltip="#HudCustomizer_Menu">
                         <ToggleButton class="hud-tab-menu__footer-button hud-tab-menu__footer-button--hud-customizer" convar="mom_hudcustomizer_enable" />
                     </TooltipPanel>
