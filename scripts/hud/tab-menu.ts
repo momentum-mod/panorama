@@ -194,6 +194,12 @@ class HudTabMenuHandler {
 		this.panels.tabMenuCenter.SetHasClass('tab-menu-center--no-playerlist', isEmpty);
 	}
 
+	openEndOfRun() {
+		if (!this.endOfRunAvailable) return;
+
+		this.showEndOfRun(EndOfRunShowReason.MANUALLY_SHOWN);
+	}
+
 	showEndOfRun(reason: EndOfRunShowReason) {
 		if (reason === EndOfRunShowReason.PLAYER_FINISHED_RUN) {
 			this.endOfRunAvailable = true;
