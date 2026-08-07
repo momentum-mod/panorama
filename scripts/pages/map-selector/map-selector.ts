@@ -166,7 +166,10 @@ class MapSelectorHandler implements OnPanelLoad {
 		this.components.trackSelector.handler.setPlayButtonVisible(false);
 		this.components.styleSelector.handler.setStyleChangedCallback((style) => this.onStyleSelected(style));
 		this.panels.blurPanel.AddBlurPanel(this.components.styleSelector);
-		// Populate before any map is selected, so the selector isn't empty on first open
+		// Populate before any map is selected, so the selector isn't empty on first open. Don't push
+		// the style to C++ here: this constructor runs from inside the map selector panel's own
+		// construction, before its filter panels are bound. Nothing to sync anyway - C++ falls back
+		// to the meta mode's default style, which is exactly what setGamemode just selected.
 		this.components.styleSelector.handler.setGamemode(GameModeAPI.GetMetaGameMode());
 		this.components.mapInfo.handler.setBlurPanel(this.panels.blurPanel);
 		this.components.mapInfo.handler.setMapSelector(this.panels.cp);
@@ -375,6 +378,7 @@ class MapSelectorHandler implements OnPanelLoad {
 		// whenever the meta mode changes. Otherwise it keeps whatever the user last picked.
 		const gamemode = GameModeAPI.GetMetaGameMode();
 		this.components.styleSelector.handler.setGamemode(gamemode);
+		this.syncSelectedStyle();
 
 		// Render the cached completions immediately, then refresh rank/total from online if stale.
 		// Updates (a late fetch, GetMap populating PB times, or a new PB) arrive via
@@ -410,6 +414,10 @@ class MapSelectorHandler implements OnPanelLoad {
 	onStyleSelected(style: Style) {
 		this.components.leaderboards.handler.setStyle(style);
 
+		// Before the early-out below: the completed filter applies to the whole map list, so it has
+		// to follow the style whether or not a map happens to be selected.
+		this.syncSelectedStyle();
+
 		if (!this.selectedMapData) return;
 
 		const mapID = this.selectedMapData.staticData.id;
@@ -417,6 +425,15 @@ class MapSelectorHandler implements OnPanelLoad {
 
 		this.components.trackSelector.handler.updateTrackData(MapCacheAPI.GetCompletions(mapID, gamemode, style));
 		MapCacheAPI.RefreshCompletions(mapID, gamemode, style);
+	}
+
+	/**
+	 * Push the style on show down to C++, which owns the completed filter and picks the style it
+	 * dispatches completion updates for. Needed after any style change, including the silent reset
+	 * {@link StyleSelectorHandler.setGamemode} does - it deliberately doesn't fire the change callback.
+	 */
+	private syncSelectedStyle() {
+		this.panels.cp.setSelectedStyle(this.components.styleSelector.handler.style);
 	}
 
 	onActionButtonPressed() {
