@@ -243,7 +243,7 @@ export class SettingsHandler {
 	initPanelsRecursive(panel: GenericPanel) {
 		for (const child of traverseChildren(panel)) {
 			// Initialise info panel event handlers
-			if (isSettingsPanel(child) || this.isSpeedometerPanel(child)) {
+			if (isSettingsPanel(child) || this.isInfoPanel(child)) {
 				this.setPanelInfoEvents(child);
 			}
 
@@ -418,7 +418,11 @@ export class SettingsHandler {
 		GameInterfaceAPI.ConsoleCommand('host_writeconfig');
 	}
 
-	isSpeedometerPanel(panel: GenericPanel) {
-		return ['SpeedometersContainer', 'RangeColorProfilesContainer'].includes(panel.id);
+	/**
+	 * Panels that aren't settings panels, but still want to show a description in the info panel.
+	 * They opt in by ID here, and provide `infotitle`/`infomessage` attributes in XML.
+	 */
+	isInfoPanel(panel: GenericPanel) {
+		return ['SpeedometersContainer', 'RangeColorProfilesContainer', 'HudCustomizerOpenRow'].includes(panel.id);
 	}
 }
