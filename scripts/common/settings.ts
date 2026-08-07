@@ -54,6 +54,7 @@ export const SettingsTabs = {
 		xml: 'interface',
 		radioid: 'InterfaceRadio',
 		children: {
+			HudCustomizerSubSection: 'HudCustomizerRadio',
 			UISubSection: 'UIRadio',
 			SpeedometerSubSection: 'SpeedometerRadio',
 			CrosshairSubSection: 'CrosshairRadio',

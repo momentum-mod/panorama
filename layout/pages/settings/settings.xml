@@ -145,7 +145,10 @@
 
 						<RadioButton id="InterfaceRadio" class="settings-nav__item" group="SettingsNav" onactivate="SettingsHandler.navigateToTab('InterfaceSettings')">
 							<Label class="settings-nav__item-label" text="#Settings_Interface" />
-							<Panel class="settings-nav__subsection settings-nav__subsection--4 settings-nav__subsection--hidden">
+							<Panel class="settings-nav__subsection settings-nav__subsection--5 settings-nav__subsection--hidden">
+								<RadioButton id="HudCustomizerRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="SettingsHandler.navigateToSubsection('InterfaceSettings', 'HudCustomizerSubSection')">
+									<Label class="settings-nav__subitem-label" text="#Settings_HudCustomizer_Title" />
+								</RadioButton>
 								<RadioButton id="UIRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="SettingsHandler.navigateToSubsection('InterfaceSettings', 'UISubSection')">
 									<Label class="settings-nav__subitem-label" text="#Settings_Menu_Title" />
 								</RadioButton>

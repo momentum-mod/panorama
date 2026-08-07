@@ -108,6 +108,20 @@
 		</Panel>
 
 		<Panel id="SettingsPageContainer" class="settings-page__container">
+			<Panel id="HudCustomizerSubSection" class="settings-group">
+				<Panel class="settings-group__header">
+					<Label class="settings-group__title" text="#Settings_HudCustomizer_Title" tags="hud,customizer" />
+				</Panel>
+
+				<Panel id="HudCustomizerOpenRow" class="settings-group__combo" infotitle="#Settings_HudCustomizer_Open" infomessage="#Settings_HudCustomizer_Open_Info">
+					<Button id="HudCustomizerOpenButton" class="h-align-center button my-2" onactivate="SettingsPage.openHudCustomizer()" onmouseover="SettingsPage.showHudCustomizerTooltip()" onmouseout="UiToolkitAPI.HideTextTooltip()">
+						<Label class="button__text" text="#Settings_HudCustomizer_Open" />
+					</Button>
+				</Panel>
+			</Panel>
+
+			<Panel class="settings-page__spacer" />
+
 			<Panel id="UISubSection" class="settings-group">
 				<Panel class="settings-group__header">
 					<Label class="settings-group__title" text="#Settings_Menu_Title" tags="menu,ui" />
