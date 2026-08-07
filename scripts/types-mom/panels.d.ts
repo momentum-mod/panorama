@@ -36,6 +36,12 @@ interface MomentumMapSelector extends AbstractPanel<'MomentumMapSelector'> {
 	readonly selectedMapData: MapCacheAPI.MapData;
 
 	applyFilters(totalChange: boolean): void;
+	/**
+	 * Tell the C++ side which run style is on show, so the per-style data it owns (the completed
+	 * filter, and the style it dispatches completion updates for) matches the style selector.
+	 * Re-applies filters, since completion is per style.
+	 */
+	setSelectedStyle(style: import('common/web/enums/style.enum').Style): void;
 	applyBackgroundMapImage(id: string, baseUrl: string | null): void;
 	applyMapImageToImagePanel(imagePanel: Image, id: string, small: boolean, baseUrl: string): void;
 }
