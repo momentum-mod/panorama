@@ -9,10 +9,13 @@
 		background-color: rgba(0, 0, 0, 0.35);
 		border: 1px solid rgba(255, 255, 255, 0.4);
 		border-radius: 4px;
+		box-shadow: fill rgba(0, 0, 0, 0.3) 0px 0px 3px 0px;
 
 		&:hover,
 		&:focus {
-			border-color: rgba(255, 255, 255, 0.55);
+			background-color: rgba(0, 0, 0, 0.35);
+			border-color: rgba(255, 255, 255, 0.4);
+			box-shadow: fill rgba(0, 0, 0, 0.3) 0px 0px 3px 0px;
 		}
 
 		#PlaceholderText {
