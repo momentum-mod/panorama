@@ -18,7 +18,7 @@
 			<Label class="v-align-center" text="#Report_Player_Reason" />
 		</Panel>
 		<Panel class="w-full mt-1">
-			<TextEntry id="ReportMessage" class="textentry report-player__reason" maxchars="1000" multiline="true" placeholder="#Report_Player_Reason_Placeholder" ontextentrychange="ReportPlayerHandler.onChanged()" />
+			<TextEntry id="ReportMessage" class="textentry report-player__reason" maxchars="500" multiline="true" placeholder="#Report_Player_Reason_Placeholder" ontextentrychange="ReportPlayerHandler.onChanged()" />
 		</Panel>
 		<Panel class="row h-align-right mt-4">
 			<Button id="SubmitButton" class="button button--green mr-3" disabled="true" onactivate="ReportPlayerHandler.submit()">
