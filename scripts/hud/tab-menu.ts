@@ -52,6 +52,7 @@ class HudTabMenuHandler {
 		$.RegisterForUnhandledEvent('EndOfRun_Hide', () => this.hideEndOfRun());
 		$.RegisterForUnhandledEvent('ActiveZoneDefsChanged', () => this.onActiveZoneDefsChanged());
 		$.RegisterForUnhandledEvent('MapCache_MapLoad', (mapName) => this.onMapLoad(mapName));
+		$.RegisterForUnhandledEvent('HudTabMenu_Opened', () => this.onOpened());
 		$.RegisterForUnhandledEvent('MapCache_CompletionsUpdate', (completions) =>
 			this.onCompletionsUpdate(completions)
 		);
@@ -134,6 +135,25 @@ class HudTabMenuHandler {
 			'hide',
 			!MapStatuses.IN_SUBMISSION.includes(mapData.staticData.status)
 		);
+	}
+
+	/**
+	 * Pull the freshest per-track rank/total for the completion table whenever the menu is opened,
+	 * in the style currently selected. Cooldown-gated inside RefreshCompletions, so opening the tab
+	 * menu often is cheap.
+	 */
+	onOpened() {
+		const mapData = MapCacheAPI.GetCurrentMapData();
+		if (!mapData) return;
+
+		const mapID = mapData.staticData.id;
+		const gamemode = GameModeAPI.GetCurrentGameMode();
+		const style = this.components.styleSelector.handler.style;
+
+		MapCacheAPI.RefreshCompletions(mapID, gamemode, style);
+		// Also (re)try loading PB times - no-op once fetched, so this just covers a console-loaded
+		// map whose initial map-load fetch hasn't succeeded yet.
+		MapCacheAPI.RefreshUserPersonalBests(mapID, gamemode, style);
 	}
 
 	onCompletionsUpdate(completions: MapUserCompletions) {
