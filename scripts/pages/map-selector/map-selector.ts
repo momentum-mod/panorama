@@ -166,9 +166,11 @@ class MapSelectorHandler implements OnPanelLoad {
 		this.components.trackSelector.handler.setPlayButtonVisible(false);
 		this.components.styleSelector.handler.setStyleChangedCallback((style) => this.onStyleSelected(style));
 		this.panels.blurPanel.AddBlurPanel(this.components.styleSelector);
-		// Populate before any map is selected, so the selector isn't empty on first open
+		// Populate before any map is selected, so the selector isn't empty on first open. Don't push
+		// the style to C++ here: this constructor runs from inside the map selector panel's own
+		// construction, before its filter panels are bound. Nothing to sync anyway - C++ falls back
+		// to the meta mode's default style, which is exactly what setGamemode just selected.
 		this.components.styleSelector.handler.setGamemode(GameModeAPI.GetMetaGameMode());
-		this.syncSelectedStyle();
 		this.components.mapInfo.handler.setBlurPanel(this.panels.blurPanel);
 		this.components.mapInfo.handler.setMapSelector(this.panels.cp);
 	}
