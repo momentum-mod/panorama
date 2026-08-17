@@ -22,7 +22,7 @@
 
 	</snippets>
 
-	<ZoneMenu class="zoning" acceptsinput="true" acceptsfocus="true" tabindex="auto">
+	<ZoneMenu class="zoning" acceptsinput="true" acceptsfocus="true" tabindex="0">
 		<Panel class="w-full">
 			<Label class="zoning__title" text="#Zoning_Menu" />
 			<Button class="button button--red h-align-right" onactivate="GameInterfaceAPI.ConsoleCommand('mom_zoning_enable 0');">
