@@ -94,7 +94,7 @@
 
 	<!-- Outer panel (full width) has no hittest, hittestchildren is controlled by C++ -->
 	<HudCustomizer class="hud-customizer" hittest="false">
-		<Panel id="CustomizerSettings" class="hud-customizer-settings" acceptsinput="true" acceptsfocus="true" tabindex="auto">
+		<Panel id="CustomizerSettings" class="hud-customizer-settings" acceptsinput="true" acceptsfocus="true" tabindex="0">
 			<Panel id="CustomizerSettingsHeader" class="hud-customizer-settings__header" draggable="true" hittest="true" hittestchildren="true">
 				<Label class="hud-customizer-settings__header__title" text="#HudCustomizer_Menu" />
 				<Image class="hud-customizer-settings__header__close" onactivate="HudCustomizerHandler.toggle(false)" src="file://{images}/close.svg" />
