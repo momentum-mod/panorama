@@ -27,6 +27,9 @@ interface GlobalEventNameMap {
 		gamemode: import('common/web/enums/gamemode.enum').Gamemode
 	) => void;
 
+	/** Downloads the given mapID's BSP + online zones only, without playing it once the download finishes. */
+	MapSelector_DownloadMap: (mapID: number) => void;
+
 	/** Toggles adding/removing a map to/from favorites */
 	MapSelector_ToggleMapFavorite: (mapID: number, isAdding: boolean) => void;
 
