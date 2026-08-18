@@ -11,7 +11,7 @@ import { TrackType } from './web/enums/track-type.enum';
 export function handlePlayMap(mapData: MapCacheAPI.MapData, gamemodeOverride: Gamemode = null) {
 	if (!mapData.mapFileExists) {
 		// Need to download
-		$.DispatchEvent('MapSelector_TryPlayMap', mapData.staticData.id);
+		$.DispatchEvent('MapSelector_DownloadMap', mapData.staticData.id);
 		return;
 	}
 
