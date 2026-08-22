@@ -15,6 +15,34 @@ declare namespace MomentumAPI {
 	/** Whether local user is allowed to submit runs. */
 	function AllowRunSubmission(): boolean;
 
+	/** Kind of communication a timed ban applies to. */
+	const enum ChatBanType {
+		CHAT = 0,
+		VOICE = 1
+	}
+
+	/** Whether the local user is currently banned from this kind of communication. */
+	function IsChatBanned(type: ChatBanType): boolean;
+
+	/** Seconds until the ban expires. -1 if it never expires, 0 if not banned. */
+	function GetChatBanSecondsRemaining(type: ChatBanType): number;
+
+	/** Reason the ban was issued, empty if none was given or not banned. */
+	function GetChatBanReason(type: ChatBanType): string;
+
+	const enum ReportCategory {
+		OTHER = 0,
+		INAPPROPRIATE_CONTENT = 1,
+		PLAGIARISM = 2,
+		SPAM = 3
+	}
+
+	/**
+	 * Report another player. Resolves their SteamID against the backend first, so
+	 * this makes two requests; fires MomAPI_PlayerReported when complete.
+	 */
+	function ReportPlayer(steamID: steamID, category: ReportCategory, message: string): void;
+
 	/** Gets the local players level */
 	function GetPlayerXp(): int32;
 
