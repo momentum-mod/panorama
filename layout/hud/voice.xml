@@ -1,0 +1,13 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+		<include src="file://{resources}/styles/hud/voice.scss" />
+	</styles>
+
+	<MomHudVoice class="voice-hud">
+		<Panel id="VoiceSpeakers" class="voice-hud__speakers" />
+		<Panel id="VoiceSelfIndicator" class="voice-hud__self voice-row voice-row--icon-only">
+			<Image class="voice-row__icon" src="file://{images}/microphone.svg" textureheight="24" />
+		</Panel>
+	</MomHudVoice>
+</root>
