@@ -31,8 +31,8 @@ class HudTabMenuHandler {
 		linearLabel: $<Label>('#HudTabMenuLinearLabel'),
 		stageCountSeparator: $<Panel>('#HudTabMenuStageCountSeparator'),
 		stageCountLabel: $<Label>('#HudTabMenuStageCountLabel'),
-		betaInfoContainer: $<Panel>('#BetaInfoContainer'),
-		leaderboards: $<Leaderboards>('#HudLeaderboards')
+		leaderboards: $<Leaderboards>('#HudLeaderboards'),
+		betaInfoContainer: $<Panel>('#BetaInfoContainer')
 	};
 
 	readonly components = {
