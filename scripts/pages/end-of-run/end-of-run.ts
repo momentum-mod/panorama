@@ -1,9 +1,36 @@
 import { PanelHandler } from 'util/module-helpers';
 import * as Timer from 'common/timer';
 import * as LineGraph from 'components/graphs/line-graph';
+import { Style } from 'common/web/enums/style.enum';
+import { TrackType } from 'common/web/enums/track-type.enum';
 
-@PanelHandler()
-class EndOfRunHandler {
+type Comparison = {
+	base: Timer.RunMetadata;
+	comparison: Timer.RunMetadata;
+};
+
+class RunCache {
+	private readonly cache = new Map<string, Comparison>();
+
+	private key(style: Style, trackType: TrackType, trackNum: number): string {
+		return `${style}:${trackType}:${trackNum}`;
+	}
+
+	get(style: Style, trackType: TrackType, trackNum: number): Comparison | undefined {
+		return this.cache.get(this.key(style, trackType, trackNum));
+	}
+
+	set(style: Style, trackType: TrackType, trackNum: number, run: Comparison): void {
+		this.cache.set(this.key(style, trackType, trackNum), run);
+	}
+
+	has(style: Style, trackType: TrackType, trackNum: number): boolean {
+		return this.cache.has(this.key(style, trackType, trackNum));
+	}
+}
+
+@PanelHandler({ exposeToPanel: true })
+export class EndOfRunHandler {
 	readonly panels = {
 		cp: $.GetContextPanel<Panel>(),
 		time: $<Label>('#RunTime')!,
@@ -19,10 +46,13 @@ class EndOfRunHandler {
 		selectedGraphPoint: null as Button | null
 	};
 
+	trackSelector: TrackSelector | null = null;
+
 	baseRun?: Timer.RunMetadata | null;
 	comparisonRun?: Timer.RunMetadata | null;
 	comparison?: Timer.Comparison | null;
 	selectedSplit?: Timer.Split | null;
+	runCache: RunCache;
 
 	constructor() {
 		// End of run goes through 3 stages in sequence:
@@ -36,16 +66,22 @@ class EndOfRunHandler {
 		);
 		$.RegisterForUnhandledEvent('Leaderboards_MapDataSet', (isOfficial) => this.initOnMapLoad(isOfficial));
 		$.RegisterForUnhandledEvent('ComparisonRunUpdated', () => this.onComparisonUpdated());
+
+		this.runCache = new RunCache();
+	}
+
+	connectTrackSelector(trackSelector: TrackSelector) {
+		this.trackSelector = trackSelector;
 	}
 
 	/** Hides the end of run panel, when a new map is loaded. */
-	initOnMapLoad(isOfficial: boolean) {
+	private initOnMapLoad(isOfficial: boolean) {
 		this.panels.uploadStatus.SetHasClass('hide', !isOfficial);
 
 		this.hideEndOfRun(true, false);
 	}
 
-	updateRunStatusIndicator(status: Timer.RunStatusStates, type: Timer.RunStatusTypes) {
+	private updateRunStatusIndicator(status: Timer.RunStatusStates, type: Timer.RunStatusTypes) {
 		const statusPanel = type === Timer.RunStatusTypes.UPLOAD ? this.panels.uploadStatus : this.panels.saveStatus;
 
 		statusPanel.SetHasClass('spin-clockwise', status === Timer.RunStatusStates.PROGRESS);
@@ -96,19 +132,28 @@ class EndOfRunHandler {
 		}
 	}
 
-	onRunFinished(run: Timer.RunMetadata) {
+	private onRunFinished(run: Timer.RunMetadata) {
 		const observedStatus = MomentumTimerAPI.GetObservedTimerStatus();
 		if (observedStatus.trackId.type !== run.trackId.type || observedStatus.trackId.number !== run.trackId.number) {
 			return;
 		}
 
+		const comparison: Comparison = {
+			base: run,
+			comparison: RunComparisonsAPI.GetComparisonRun()
+		};
+
+		this.runCache.set(observedStatus.style, run.trackId.type, run.trackId.number, comparison);
+
 		this.baseRun = run;
 		this.comparisonRun = RunComparisonsAPI.GetComparisonRun();
 
 		this.showNewEndOfRun(Timer.EndOfRunShowReason.PLAYER_FINISHED_RUN);
+
+		this.trackSelector.handler.updateEorButtonVisibility();
 	}
 
-	onComparisonUpdated() {
+	private onComparisonUpdated() {
 		// When a local PB is set, it's automatically made comparison. If it was the run we just did,
 		// obviously we don't want to compare against ourselves, but we *do* want the new run to be
 		// the comparison run if another run is completed in the future.
@@ -129,7 +174,7 @@ class EndOfRunHandler {
 		}
 	}
 
-	updateRunSavedStatus(saved: boolean, run: Timer.RunMetadata) {
+	private updateRunSavedStatus(saved: boolean, run: Timer.RunMetadata) {
 		const observedStatus = MomentumTimerAPI.GetObservedTimerStatus();
 		if (observedStatus.trackId.type !== run.trackId.type || observedStatus.trackId.number !== run.trackId.number) {
 			return;
@@ -144,14 +189,14 @@ class EndOfRunHandler {
 		);
 	}
 
-	updateRunUploadStatus(uploaded: boolean, _cosXp: number, _rankXp: number, _lvlGain: number) {
+	private updateRunUploadStatus(uploaded: boolean, _cosXp: number, _rankXp: number, _lvlGain: number) {
 		this.updateRunStatusIndicator(
 			uploaded ? Timer.RunStatusStates.SUCCESS : Timer.RunStatusStates.ERROR,
 			Timer.RunStatusTypes.UPLOAD
 		);
 	}
 
-	watchReplay() {
+	private watchReplay() {
 		if (!this.baseRun || !this.baseRun.filePath) {
 			return;
 		}
@@ -160,12 +205,12 @@ class EndOfRunHandler {
 		this.hideEndOfRun(false, true);
 	}
 
-	restartMap() {
+	private restartMap() {
 		GameInterfaceAPI.ConsoleCommand('mom_restart_track');
 		this.hideEndOfRun(true, true);
 	}
 
-	hideEndOfRun(hideEndOfRun = true, hideTabMenu = false) {
+	private hideEndOfRun(hideEndOfRun = true, hideTabMenu = false) {
 		if (hideEndOfRun) $.DispatchEvent('EndOfRun_Hide');
 
 		if (hideTabMenu) $.DispatchEvent('HudTabMenu_ForceClose');
@@ -177,7 +222,7 @@ class EndOfRunHandler {
 	 * Fired when either when the local player's run ends, a replay run ends,
 	 * you go back to a last EoR from leaderboards, or in the future when the player compares two runs.
 	 */
-	showNewEndOfRun(showReason: Timer.EndOfRunShowReason) {
+	private showNewEndOfRun(showReason: Timer.EndOfRunShowReason) {
 		if (!this.baseRun) return;
 
 		if (showReason === Timer.EndOfRunShowReason.PLAYER_FINISHED_RUN) {
@@ -198,7 +243,16 @@ class EndOfRunHandler {
 		this.generateEndOfRunPage();
 	}
 
-	generateEndOfRunPage() {
+	generateCachedEOR(style: Style, trackType: TrackType, trackNum: number) {
+		const run = this.runCache.get(style, trackType, trackNum);
+
+		this.baseRun = run.base;
+		this.comparisonRun = run.comparison;
+
+		this.generateEndOfRunPage();
+	}
+
+	private generateEndOfRunPage() {
 		if (!this.baseRun) return;
 
 		// Remove the previous splits, if any
@@ -229,7 +283,7 @@ class EndOfRunHandler {
 	/**
 	 * Generate the end of run panel for the current base run, with no comparison.
 	 */
-	setSingleRunStats() {
+	private setSingleRunStats() {
 		if (!this.baseRun) return;
 
 		const { runSplits, runTime } = this.baseRun;
@@ -296,7 +350,7 @@ class EndOfRunHandler {
 	/**
 	 * Generate the end of run panel comparisons from the two active runs.
 	 */
-	setComparisionStats() {
+	private setComparisionStats() {
 		if (!this.baseRun || !this.comparisonRun) return;
 
 		const comparison = Timer.generateComparison(this.baseRun, this.comparisonRun);
@@ -362,7 +416,7 @@ class EndOfRunHandler {
 		this.panels.detailedStats.RemoveClass('endofrun__stats--hidden');
 	}
 
-	updateSplitPanel(panel: Panel, split: Timer.Split) {
+	private updateSplitPanel(panel: Panel, split: Timer.Split) {
 		panel.SetDialogVariable('name', split.name);
 		panel.SetDialogVariableFloat('time', split.time);
 		panel.SetHasClass('endofrun-split--no-comparison', !split.hasComparison);
@@ -378,7 +432,7 @@ class EndOfRunHandler {
 	}
 
 	/** Generate a graph for the given comparison */
-	updateGraph(comparison: Timer.Comparison, statName: Timer.RunStatType | 'time') {
+	private updateGraph(comparison: Timer.Comparison, statName: Timer.RunStatType | 'time') {
 		// Grab the actual LineGraph class attached to the panel
 		const lineGraph = this.panels.graph.handler;
 
@@ -580,7 +634,7 @@ class EndOfRunHandler {
 	}
 
 	/** Set the selected graph point and stats for a given split */
-	setSelectedSplit(split: Timer.Split, comparison: Timer.Comparison) {
+	private setSelectedSplit(split: Timer.Split, comparison: Timer.Comparison) {
 		this.selectedSplit = split;
 
 		this.panels.cp.SetDialogVariable('selected_zone', split.name);
@@ -659,7 +713,7 @@ class EndOfRunHandler {
 	/**
 	 * Set the selected point of the graph to whatever split is currently selected.
 	 */
-	setSelectedGraphPoint() {
+	private setSelectedGraphPoint() {
 		const split = this.selectedSplit;
 
 		if (!split) return;
@@ -679,15 +733,15 @@ class EndOfRunHandler {
 		}
 	}
 
-	getPanelID({ majorNum, minorNum }: Timer.Split): string {
+	private getPanelID({ majorNum, minorNum }: Timer.Split): string {
 		return `${majorNum}x${minorNum}`;
 	}
 
-	roundFloat(n: number, precision: number) {
+	private roundFloat(n: number, precision: number) {
 		return +n.toFixed(precision);
 	}
 
-	getDiffSign(diff: number) {
+	private getDiffSign(diff: number) {
 		return diff > 0 ? '+' : '';
 	}
 }

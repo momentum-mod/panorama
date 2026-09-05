@@ -128,29 +128,3 @@
 		align: center center;
 	}
 }
-
-.tab-menu-endofrun-arrow {
-	width: fit-children;
-	height: fit-children;
-	vertical-align: center;
-	padding: 8px;
-	margin: 0 8px;
-	border-radius: 2px;
-	opacity: 0.00000001;
-
-	Image {
-		img-shadow: map.get($font-shadows, 'outline');
-	}
-
-	&:hover {
-		background-color: rgba(167, 167, 167, 0.2);
-	}
-
-	&:active {
-		background-color: rgba(255, 255, 255, 0.2);
-	}
-
-	&--spacer {
-		opacity: 0.00000001;
-	}
-}
