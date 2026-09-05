@@ -21,6 +21,7 @@ export class StyleSelectorHandler {
 	private styles: Style[] = [];
 	private selectedStyle: Style = Style.NORMAL;
 	private onStyleChanged: ((style: Style) => void) | null = null;
+	private trackSelector: TrackSelector | null = null;
 
 	constructor() {
 		this.panels.dropdown.SetPanelEvent('oninputsubmit', () => this.onDropdownChanged());
@@ -29,6 +30,10 @@ export class StyleSelectorHandler {
 	/** The style currently selected. */
 	get style(): Style {
 		return this.selectedStyle;
+	}
+
+	connectTrackSelector(trackSelector: TrackSelector) {
+		this.trackSelector = trackSelector;
 	}
 
 	/** Register the callback fired whenever the user picks a different style. */
@@ -76,6 +81,7 @@ export class StyleSelectorHandler {
 
 		this.selectedStyle = selected;
 		this.onStyleChanged?.(selected);
+		this.trackSelector?.handler.updateEorButtonVisibility();
 	}
 
 	private static optionId(style: Style): string {

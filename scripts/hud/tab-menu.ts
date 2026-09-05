@@ -9,6 +9,7 @@ import { MapStatuses } from 'common/web/enums/map-status.enum';
 import { Style } from 'common/web/enums/style.enum';
 
 import { registerHUDCustomizerComponent } from 'common/hud-customizer';
+import { TrackType } from 'common/web/enums/track-type.enum';
 
 /**
  * Class for the HUD tab menu panel, which contains the leaderboards, end of run, and zoning.
@@ -22,8 +23,6 @@ class HudTabMenuHandler {
 		playerListContainer: $<Panel>('#TabMenuPlayerListContainer'),
 		tabMenuCenter: $<Panel>('#TabMenuCenter'),
 		centerMainContainer: $<Panel>('#CenterMainContainer'),
-		endOfRunFrame: $<Frame>('#EndOfRunFrame'),
-		endOfRunButton: $<Button>('#EndOfRunButton'),
 		zoningOpen: $<Button>('#ZoningOpen'),
 		zoningClose: $<Button>('#ZoningClose'),
 		gamemodeIcon: $<Image>('#HudTabMenuGamemodeImage'),
@@ -40,7 +39,8 @@ class HudTabMenuHandler {
 		trackSelector: $<TrackSelector>('#HudTrackSelector'),
 		styleSelector: $<StyleSelector>('#HudStyleSelector'),
 		leaderboards: $<Leaderboards>('#HudLeaderboards'),
-		playerList: $<Panel>('#PlayerList')
+		playerList: $<Panel>('#PlayerList'),
+		endOfRun: $<EndOfRun>('#TabMenuEndOfRun')
 	};
 
 	endOfRunAvailable = false;
@@ -48,7 +48,7 @@ class HudTabMenuHandler {
 	constructor() {
 		$.RegisterForUnhandledEvent('Leaderboards_MapDataSet', (isOfficial) => this.setMapData(isOfficial));
 		$.RegisterForUnhandledEvent('HudTabMenu_ForceClose', () => this.close());
-		$.RegisterForUnhandledEvent('EndOfRun_Show', (reason) => this.showEndOfRun(reason));
+		$.RegisterForUnhandledEvent('EndOfRun_Show', (reason) => this.openEndOfRun(reason));
 		$.RegisterForUnhandledEvent('EndOfRun_Hide', () => this.hideEndOfRun());
 		$.RegisterForUnhandledEvent('ActiveZoneDefsChanged', () => this.onActiveZoneDefsChanged());
 		$.RegisterForUnhandledEvent('MapCache_MapLoad', (mapName) => this.onMapLoad(mapName));
@@ -71,6 +71,8 @@ class HudTabMenuHandler {
 		});
 
 		this.components.styleSelector.handler.setStyleChangedCallback((style) => this.onStyleSelected(style));
+		this.components.endOfRun.handler.connectTrackSelector(this.components.trackSelector);
+		this.components.trackSelector.handler.connectEndOfRun(this.components.endOfRun);
 
 		// The leaderboard layout is shared with the map selector, which has no use for the zone
 		// editor or HUD customizer, so those buttons are only available for the in-game tab menu version.
@@ -96,7 +98,7 @@ class HudTabMenuHandler {
 		blur.AddBlurPanel(this.components.styleSelector);
 		blur.AddBlurPanel(this.components.leaderboards);
 		blur.AddBlurPanel(this.components.playerList.GetFirstChild());
-		blur.AddBlurPanel(this.panels.endOfRunFrame);
+		blur.AddBlurPanel(this.components.endOfRun.GetFirstChild());
 
 		this.components.trackSelector.handler.connectLeaderboards(this.panels.leaderboards);
 		this.components.trackSelector.handler.connectStyleSelector(this.components.styleSelector);
@@ -119,6 +121,13 @@ class HudTabMenuHandler {
 		const gamemode = GameModeAPI.GetCurrentGameMode();
 
 		this.components.trackSelector.handler.updateMapData(mapData.staticData);
+		this.components.trackSelector.handler.endOfRunCallback = (
+			trackStyle: Style,
+			trackType: TrackType,
+			trackNum: number
+		) => this.openEndOfRun(EndOfRunShowReason.MANUALLY_SHOWN, { trackStyle, trackType, trackNum });
+
+		this.components.styleSelector.handler.connectTrackSelector(this.components.trackSelector);
 
 		// Render the cached completions immediately, then refresh from online if stale. Updated data
 		// (a late fetch, or a new PB patched by the run poster) arrives via MapCache_CompletionsUpdate.
@@ -214,24 +223,26 @@ class HudTabMenuHandler {
 		this.panels.tabMenuCenter.SetHasClass('tab-menu-center--no-playerlist', isEmpty);
 	}
 
-	openEndOfRun() {
-		if (!this.endOfRunAvailable) return;
-
-		this.showEndOfRun(EndOfRunShowReason.MANUALLY_SHOWN);
-	}
-
-	showEndOfRun(reason: EndOfRunShowReason) {
+	openEndOfRun(
+		reason: EndOfRunShowReason,
+		trackInfo?: { trackStyle: Style; trackType: TrackType; trackNum: number }
+	) {
 		if (reason === EndOfRunShowReason.PLAYER_FINISHED_RUN) {
 			this.endOfRunAvailable = true;
+		} else {
+			this.components.endOfRun.handler.generateCachedEOR(
+				trackInfo.trackStyle,
+				trackInfo.trackType,
+				trackInfo.trackNum
+			);
 		}
+
 		this.panels.centerMainContainer.AddClass('hide');
 		this.panels.nameContainer.AddClass('hide');
-		this.panels.endOfRunButton.style.opacity = 0.00001;
 		this.panels.endOfRunContainer.RemoveClass('hide');
 	}
 
 	hideEndOfRun() {
-		if (this.endOfRunAvailable) this.panels.endOfRunButton.style.opacity = 1;
 		this.panels.centerMainContainer.RemoveClass('hide');
 		this.panels.nameContainer.RemoveClass('hide');
 		this.panels.endOfRunContainer.AddClass('hide');
