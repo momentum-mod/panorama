@@ -11,10 +11,6 @@
         <Panel id="TabMenuWrapper" class="hud-tab-menu__wrapper">
             <Panel class="tab-menu-top">
                 <Panel class="tab-menu-top__center-group">
-                    <!-- Invisible spacer to properly align the rest -->
-                    <Button class="tab-menu-endofrun-arrow tab-menu-endofrun-arrow--spacer" enabled="false">
-                        <Image src="file://{images}/arrow-thick-right.svg" textureheight="64" />
-                    </Button>
                     <Panel id="NameContainer" class="tab-menu-name-container">
                         <Image id="HudTabMenuGamemodeImage" class="hud-tab-menu__header-image" textureheight="128" />
                         <Panel class="tab-menu-name-container__name-label-container">
@@ -23,9 +19,6 @@
                             <Label class="text-h1 text-shadow-black color-transparent ml-2" text="{s:name}" />
                         </Panel>
                     </Panel>
-                    <Button id="EndOfRunButton" class="tab-menu-endofrun-arrow" onactivate="HudTabMenuHandler.openEndOfRun();">
-                        <Image src="file://{images}/arrow-thick-right.svg" textureheight="64" />
-                    </Button>
                 </Panel>
             </Panel>
             <Panel id="TabMenuCenter" class="tab-menu-center">
@@ -44,7 +37,7 @@
                 </Panel>
 
                 <Panel id="EndOfRunContainer" class="tab-menu-endofrun" hittestchildren="true">
-                    <Frame id="EndOfRunFrame" class="tab-menu-endofrun__frame" src="file://{resources}/layout/pages/end-of-run/end-of-run.xml" hittest="true" hittestchildren="true" />
+                    <EndOfRun id="TabMenuEndOfRun" class="tab-menu-endofrun__frame" hittest="true" hittestchildren="true"/>
                 </Panel>
             </Panel>
             <Panel class="tab-menu-bottom">
