@@ -54,50 +54,25 @@
         </Panel>
 
         <Panel id="TabMenuHeader" class="hud-tab-menu__header hide">
-                <!-- <Image id="HudTabMenuGamemodeImage" class="hud-tab-menu__header-image" textureheight="128" /> -->
-                <Panel class="hud-tab-menu__map-info">
-                    <Panel class="hud-tab-menu-map-info__top">
-                        <Label class="hud-tab-menu-map-info__map-name" text="{s:map}" />
-                        <!--						<TooltipPanel tooltip="View showcase run" class="hud-tab-menu-map-info__showcase">-->
-                        <!--							<Button class="button full">-->
-                        <!--								<Image class="button__icon" src="file://{images}/filmstrip.svg" textureheight="64" />-->
-                        <!--							</Button>-->
-                        <!--						</TooltipPanel>-->
-                    </Panel>
-                    <Panel class="hud-tab-menu-map-info__bottom">
-                        <Panel id="HudTabMenuMapCredits" class="hud-tab-menu-map-info__credits">
-                            <!-- Author names inserted by JS -->
-                        </Panel>
-                        <Panel class="hud-tab-menu-map-info__stats">
-                            <Label class="hud-tab-menu-map-info-stats__stat" text="#MapInfo_Tier" />
-                            <Panel id="HudTabMenuLinearSeparator" class="hud-tab-menu-map-info-stats__separator" />
-                            <Label id="HudTabMenuLinearLabel" class="hud-tab-menu-map-info-stats__stat" text="#MapInfo_Type_Linear" />
-                            <Panel id="HudTabMenuStageCountSeparator" class="hud-tab-menu-map-info-stats__separator" />
-                            <Label id="HudTabMenuStageCountLabel" class="hud-tab-menu-map-info-stats__stat" text="#MapInfo_StageCount" />
-                            <Panel class="hud-tab-menu-map-info-stats__separator" />
-                            <Label class="hud-tab-menu-map-info-stats__stat" text="#MapInfo_Runs" />
-                        </Panel>
-                    </Panel>
+            <Panel class="hud-tab-menu__map-info">
+                <Panel class="hud-tab-menu-map-info__top">
+                    <Label class="hud-tab-menu-map-info__map-name" text="{s:map}" />
                 </Panel>
             </Panel>
+        </Panel>
 
-            <Panel class="hud-tab-menu__stats">
-            </Panel>
-
-            <Panel id="TabMenuFooter" class="hud-tab-menu__footer hide">
-                <Panel class="flow-right">
-                    <TooltipPanel tooltip="#HudCustomizer_Menu">
-                        <ToggleButton class="hud-tab-menu__footer-button hud-tab-menu__footer-button--hud-customizer" convar="mom_hudcustomizer_enable" />
+        <Panel id="TabMenuFooter" class="hud-tab-menu__footer hide">
+            <Panel class="flow-right">
+                <TooltipPanel tooltip="#HudCustomizer_Menu">
+                    <ToggleButton class="hud-tab-menu__footer-button hud-tab-menu__footer-button--hud-customizer" convar="mom_hudcustomizer_enable" />
+                </TooltipPanel>
+                <ConVarEnabler convar="sv_cheats" togglevisibility="true">
+                    <TooltipPanel tooltip="#Zoning_Menu">
+                        <ToggleButton id="ZoningToggle" class="hud-tab-menu__footer-button hud-tab-menu__footer-button--zoning" convar="mom_zoning_enable" />
                     </TooltipPanel>
-                    <ConVarEnabler convar="sv_cheats" togglevisibility="true">
-                        <TooltipPanel tooltip="#Zoning_Menu">
-                            <ToggleButton id="ZoningToggle" class="hud-tab-menu__footer-button hud-tab-menu__footer-button--zoning" convar="mom_zoning_enable" />
-                        </TooltipPanel>
-                    </ConVarEnabler>
-                </Panel>
-                <Label class="hud-tab-menu__enable-cursor-tip" text="#HudTabMenu_EnableCursorTip" />
+                </ConVarEnabler>
             </Panel>
-
-
+            <Label class="hud-tab-menu__enable-cursor-tip" text="#HudTabMenu_EnableCursorTip" />
+		</Panel>
 	</HudTabMenu>
 </root>
