@@ -25,6 +25,9 @@ const RUNS_PER_PAGE = 20;
 const GROUP_BORDER_LEFT_ALIGN = -10;
 const GROUP_BORDER_TOP_ALIGN = -13;
 
+// Show the loading spinner if the request takes longer than this in seconds
+const LOADING_SPINNER_DELAY = 0.2;
+
 exposeToPanelContext({ LeaderboardListType, LeaderboardType, LeaderboardRecordsFilter });
 @PanelHandler({ exposeToPanel: true })
 export class LeaderboardsHandler {
@@ -75,6 +78,9 @@ export class LeaderboardsHandler {
 	totalCompletions: number = null;
 	currentUserRank = null;
 	groupBoundaries: GroupBoundaries;
+
+	/** handles loading spinner for quick leaderboard requests */
+	private loadingHandle: number = null;
 
 	/** null until the first map is shown, so that the first {@link setLocalOnly} always applies. */
 	localOnly: boolean | null = null;
@@ -195,9 +201,50 @@ export class LeaderboardsHandler {
 		$.DispatchEvent('EndOfRun_Show', EndOfRunShowReason.MANUALLY_SHOWN);
 	}
 
+	private updateEmptyState(isEmpty: boolean) {
+		this.cancelLoadingSchedule();
+
+		this.panels.timesContainer.RemoveClass('leaderboard-times--loading');
+		this.panels.timesContainer.SetHasClass('leaderboard-times--empty', isEmpty);
+		if (isEmpty) {
+			this.panels.cp.SetDialogVariable('empty-warning', $.Localize(this.getEmptyWarningText()));
+		}
+	}
+
+	private getEmptyWarningText() {
+		switch (this.state.filter) {
+			case LeaderboardRecordsFilter.GLOBAL:
+				return '#Leaderboards_Error_NoCompletions';
+			case LeaderboardRecordsFilter.FRIENDS:
+				return '#Leaderboards_Error_NoFriendTimes';
+			case LeaderboardRecordsFilter.LOBBY:
+				return '#Leaderboards_Error_NoLobbyTimes';
+			case LeaderboardRecordsFilter.SAVED_REPLAYS:
+				return '#Leaderboards_Error_NoLocalReplays';
+		}
+	}
+
+	private beginLoading() {
+		this.panels.timesContainer.RemoveClass('leaderboard-times--empty');
+		this.cancelLoadingSchedule();
+		this.loadingHandle = $.Schedule(LOADING_SPINNER_DELAY, () => {
+			this.loadingHandle = null; // fired naturally, nothing left to cancel
+			this.panels.timesContainer.AddClass('leaderboard-times--loading');
+		});
+	}
+
+	private cancelLoadingSchedule() {
+		if (this.loadingHandle !== null) {
+			$.CancelScheduled(this.loadingHandle);
+			this.loadingHandle = null;
+		}
+	}
+
 	updateLeaderboards() {
 		// When this request finishes it fires LeaderboardRecords_Loaded event
 		// That event runs updateLeaderboardWithToken() using this data
+		this.beginLoading();
+
 		this.panels.cp.getLeaderboardRecords(
 			this.state.mapID,
 			this.state.gamemode,
@@ -244,6 +291,8 @@ export class LeaderboardsHandler {
 
 			lbEntry.SetPanelEvent('oncontextmenu', () => this.showEntryContextMenu(index, record));
 		});
+
+		this.updateEmptyState(data.records.length === 0);
 	}
 
 	private showEntryContextMenu(index: number, record: LeaderboardRecord) {
