@@ -1,13 +1,9 @@
 import { PanelHandler } from 'util/module-helpers';
 import { EndOfRunShowReason } from 'common/timer';
 import { GamemodeInfo } from 'common/gamemode';
-import { MapCreditType } from 'common/web/enums/map-credit-type.enum';
-import type { MMap } from 'common/web/types/models/models';
-import { getNumStages } from 'common/leaderboard';
-import { getAllCredits, getTier, MapUserCompletions, SimpleMapCredit } from 'common/maps';
+import { MapUserCompletions } from 'common/maps';
 import { MapStatuses } from 'common/web/enums/map-status.enum';
 import { Style } from 'common/web/enums/style.enum';
-
 import { registerHUDCustomizerComponent } from 'common/hud-customizer';
 import { TrackType } from 'common/web/enums/track-type.enum';
 
@@ -23,14 +19,7 @@ class HudTabMenuHandler {
 		playerListContainer: $<Panel>('#TabMenuPlayerListContainer'),
 		tabMenuCenter: $<Panel>('#TabMenuCenter'),
 		centerMainContainer: $<Panel>('#CenterMainContainer'),
-		zoningOpen: $<Button>('#ZoningOpen'),
-		zoningClose: $<Button>('#ZoningClose'),
 		gamemodeIcon: $<Image>('#HudTabMenuGamemodeImage'),
-		credits: $<Panel>('#HudTabMenuMapCredits'),
-		linearSeparator: $<Label>('#HudTabMenuLinearSeparator'),
-		linearLabel: $<Label>('#HudTabMenuLinearLabel'),
-		stageCountSeparator: $<Panel>('#HudTabMenuStageCountSeparator'),
-		stageCountLabel: $<Label>('#HudTabMenuStageCountLabel'),
 		leaderboards: $<Leaderboards>('#HudLeaderboards'),
 		betaInfoContainer: $<Panel>('#BetaInfoContainer')
 	};
@@ -209,8 +198,6 @@ class HudTabMenuHandler {
 	}
 
 	onActiveZoneDefsChanged() {
-		this.updateMapStats();
-
 		// An offline map's tracks come from its zones, which can load (or be edited in the zone
 		// editor) after the map itself, so rebuild the selector whenever they change.
 		if (!MapCacheAPI.GetCurrentMapData()) {
@@ -256,82 +243,6 @@ class HudTabMenuHandler {
 		this.panels.gamemodeIcon.SetImage(`file://{images}/gamemodes/${img}.svg`);
 
 		const mapData = MapCacheAPI.GetCurrentMapData();
-
-		if (mapData && isOfficial) {
-			this.setMapStats(mapData.staticData);
-			this.setMapAuthorCredits(getAllCredits(mapData.staticData, MapCreditType.AUTHOR));
-		}
-	}
-
-	setMapAuthorCredits(credits: SimpleMapCredit[]) {
-		// Delete existing name labels
-		this.panels.credits.Children()?.forEach((label) => label.DeleteAsync(0));
-
-		if (credits.length === 0) {
-			return;
-		}
-
-		$.CreatePanel('Label', this.panels.credits, '', {
-			class: 'hud-tab-menu-map-info__credits-other-text',
-			text: $.Localize('#Common_By')
-		});
-
-		for (const [idx, { alias, steamID }] of credits.entries()) {
-			const namePanel = $.CreatePanel('Label', this.panels.credits, '', {
-				text: alias
-			});
-
-			namePanel.AddClass('hud-tab-menu-map-info__credits-name');
-
-			if (steamID) {
-				namePanel.AddClass('hud-tab-menu-map-info__credits-name--steam');
-
-				// TODO: Should be an onactivate (left click, not right), and open player card component,
-				// once that's made.
-				namePanel.SetPanelEvent('oncontextmenu', () => {
-					UiToolkitAPI.ShowSimpleContextMenu('', '', [
-						{
-							label: $.Localize('#Action_ShowSteamProfile'),
-							jsCallback: () => {
-								SteamOverlayAPI.OpenToProfileID(steamID);
-							}
-						}
-					]);
-				});
-			}
-
-			// hoped this would make contextmenu work but it doesn't
-			if (idx < credits.length - 1) {
-				const commaPanel = $.CreatePanel('Label', this.panels.credits, '');
-				commaPanel.AddClass('hud-tab-menu-map-info__credits-other-text');
-				commaPanel.text = ',';
-			}
-		}
-	}
-
-	updateMapStats() {
-		const mapData = MapCacheAPI.GetCurrentMapData();
-		if (mapData) {
-			this.setMapStats(mapData.staticData);
-		}
-	}
-
-	setMapStats(mapData: MMap) {
-		this.panels.cp.forceCloseTabMenu();
-
-		const mainTrackTier = getTier(mapData, GameModeAPI.GetCurrentGameMode());
-		const numStages = getNumStages(mapData);
-		const isLinear = numStages <= 1;
-
-		this.panels.cp.SetDialogVariableInt('tier', mainTrackTier ?? 0);
-		this.panels.linearSeparator.visible = isLinear;
-		this.panels.linearLabel.visible = isLinear;
-		this.panels.stageCountSeparator.visible = !isLinear;
-		this.panels.stageCountLabel.visible = !isLinear;
-		if (!isLinear) {
-			this.panels.cp.SetDialogVariableInt('stageCount', numStages);
-		}
-		this.panels.cp.SetDialogVariableInt('runs', mapData.stats?.completions);
 	}
 
 	close() {
