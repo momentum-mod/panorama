@@ -41,6 +41,15 @@
                 </Panel>
             </Panel>
             <Panel class="tab-menu-bottom">
+                <Panel id="BetaInfoContainer" class="tab-menu-bottom__beta-info hide" hittestchildren="true">
+                    <Label id="BetaInfoLabel" class="tab-menu-bottom__beta-info-label" text="#HudTabMenu_BetaInfo" />
+                    <Button id="BetaInfoButton" class="button button--blue tab-menu-bottom__website-button" onactivate="HudTabMenuHandler.openInSteamOverlay();">
+                        <Panel class="flow-right v-align-center h-align-center">
+                            <Image class="button__icon" src="file://{images}/globe.svg" textureheight="32" />
+                            <Label class="button__text" text="#MapSelector_Button_Webpage" />
+                        </Panel>
+                    </Button>
+                </Panel>
             </Panel>
         </Panel>
 
@@ -89,14 +98,6 @@
                 <Label class="hud-tab-menu__enable-cursor-tip" text="#HudTabMenu_EnableCursorTip" />
             </Panel>
 
-            <Panel id="BetaInfoContainer" class="hud-tab-menu__beta-info hide" hittestchildren="true">
-                    <Label id="BetaInfoLabel" class="hud-tab-menu__beta-info-label" text="#HudTabMenu_BetaInfo"/>
-                    <Button id="BetaInfoButton" class="button mapselector-map-info__big-button button--blue hud-tab-menu__website-button mr-1" onactivate="HudTabMenuHandler.openInSteamOverlay();">
-                            <Panel class="flow-right v-align-center h-align-center">
-                                    <Image class="button__icon mapselector-map-info__big-button__icon" src="file://{images}/globe.svg" textureheight="40" />
-                                    <Label class="button__text mapselector-map-info__big-button__text" text="#MapSelector_Button_Webpage" />
-                            </Panel>
-                    </Button>
-            </Panel>
+
 	</HudTabMenu>
 </root>

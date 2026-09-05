@@ -103,6 +103,43 @@
 	vertical-align: bottom;
 	width: 100%;
 	height: 140px;
+
+	&__beta-info {
+		align: center center;
+		flow-children: right;
+		background-color: rgba(0, 0, 0, 0.6);
+		border: 1px solid rgba(255, 255, 255, 0.08);
+		border-radius: 2px;
+		padding: 12px 20px;
+
+		&.hide {
+			visibility: collapse;
+		}
+	}
+
+	&__beta-info-label {
+		vertical-align: center;
+		margin-right: 20px;
+		font-size: 20px;
+		font-weight: bold;
+		color: rgba(255, 255, 255, 0.9);
+		text-shadow: 0px 2px 4px 2 rgba(0, 0, 0, 0.5);
+	}
+
+	&__website-button {
+		vertical-align: center;
+		padding: 8px 16px;
+
+		.button__text {
+			font-size: 24px;
+			font-weight: bold;
+		}
+
+		.button__icon {
+			vertical-align: center;
+			padding: 0px;
+		}
+	}
 }
 
 // ─── Content containers ───────────────────────────────────────────────────────
