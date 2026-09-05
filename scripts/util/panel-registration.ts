@@ -31,6 +31,7 @@ declare interface PanelTagNameMap {
 	MomHudSafeguardIndicator: MomHudSafeguardIndicator;
 	MomHudKeypress: MomHudKeypress;
 	MomHudAhopSprint: MomHudAhopSprint;
+	EndOfRun: EndOfRun;
 	ToastContainer: ToastContainer;
 	ToastGeneric: ToastGeneric;
 	Gallery: Gallery;
@@ -70,6 +71,11 @@ declare interface TrackSelector extends AbstractPanel<'TrackSelector'> {
 	handler: import('components/track-selector').TrackSelectorHandler;
 }
 UiToolkitAPI.RegisterPanel2d('TrackSelector', 'file://{resources}/layout/components/track-selector.xml');
+
+declare interface EndOfRun extends AbstractPanel<'EndOfRun'> {
+	handler: import('pages/end-of-run/end-of-run').EndOfRunHandler;
+}
+UiToolkitAPI.RegisterPanel2d('EndOfRun', 'file://{resources}/layout/pages/end-of-run/end-of-run.xml');
 
 declare interface StyleSelector extends AbstractPanel<'StyleSelector'> {
 	handler: import('components/style-selector').StyleSelectorHandler;
