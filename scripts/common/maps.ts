@@ -1,9 +1,40 @@
 import { getTrack } from './leaderboard';
 import { checkDosa } from 'util/dont-show-again';
-import type { MMap } from './web/types/models/models';
+import type { MMap, MapCompletion } from './web/types/models/models';
 import { MapStatuses } from './web/enums/map-status.enum';
 import { MapCreditType } from './web/enums/map-credit-type.enum';
 import { TrackType } from './web/enums/track-type.enum';
+import { Style } from './web/enums/style.enum';
+
+/**
+ * A track's REST completion status plus per-track data the game adds from its map
+ * cache, which the website deliberately doesn't return (it's only needed by the
+ * front end):
+ * - `tier`: Leaderboard.tier is null for submission maps, so the game sources it.
+ * - `time`: the user's PB time, cached per track/style since it only changes when
+ *   they submit a run (so it's not refetched on every map selection).
+ */
+export interface TrackCompletionInfo extends MapCompletion {
+	/** Track tier, sourced game-side from the map cache. 0 for stages (no tier). */
+	tier: number;
+	/** The user's PB time, from the map cache. null if not completed. */
+	time: number | null;
+}
+
+/**
+ * The local user's per-track completions for a map, in a single gamemode + style.
+ * Read from the map cache via `MapCacheAPI.GetCompletions` and pushed to the map selector /
+ * tab menu via the `MapCache_CompletionsUpdate` event.
+ *
+ * This is a game-only wrapper around the website's `MapCompletion[]` (the REST API
+ * returns a bare array), so it lives here rather than in the web-synced `common/web`.
+ */
+export interface MapUserCompletions {
+	mapID: number;
+	gamemode: Gamemode;
+	style: Style;
+	tracks: TrackCompletionInfo[];
+}
 
 /**
  * Download or launch a map, show missing games popup first if required games are not mounted

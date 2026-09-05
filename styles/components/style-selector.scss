@@ -1,0 +1,45 @@
+@use '../config' as *;
+
+// A native dropdown, restyled dark/translucent to match the leaderboard it sits above rather than
+// the default light dropdown. Positioned top-right by the page it's placed in.
+$style-selector-border: 1px solid rgba(255, 255, 255, 0.1);
+
+.style-selector {
+	width: fit-children;
+	height: fit-children;
+	horizontal-align: right;
+	vertical-align: center;
+
+	&__dropdown {
+		min-width: 120px;
+		background-color: rgba(0, 0, 0, 0.6);
+		border: $style-selector-border;
+
+		&:hover {
+			background-color: rgba(35, 35, 35, 0.7);
+		}
+
+		// Class the engine adds while the menu is open
+		&.DropDownMenuVisible {
+			background-color: rgba(0, 0, 0, 0.8);
+		}
+
+		Label {
+			color: rgba(255, 255, 255, 0.9);
+		}
+
+		&:disabled Label {
+			color: $font-disabled-color;
+		}
+	}
+
+	// menuclass targets the popped-out menu, which the engine reparents to an overlay layer
+	&__menu {
+		background-color: rgba(0, 0, 0, 0.85);
+		border: $style-selector-border;
+
+		Label {
+			color: rgba(255, 255, 255, 0.85);
+		}
+	}
+}

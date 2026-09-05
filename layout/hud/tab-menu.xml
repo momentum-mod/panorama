@@ -9,75 +9,70 @@
 
 	<HudTabMenu class="hud-tab-menu" oncancel="HudTabMenuHandler.close();">
         <Panel id="TabMenuWrapper" class="hud-tab-menu__wrapper">
-            <Panel id="TabMenuHeader" class="hud-tab-menu__header">
-                <Image id="HudTabMenuGamemodeImage" class="hud-tab-menu__header-image" textureheight="128" />
-                <Panel class="hud-tab-menu__map-info">
-                    <Panel class="hud-tab-menu-map-info__top">
-                        <Label class="hud-tab-menu-map-info__map-name" text="{s:map}" />
-                        <!--						<TooltipPanel tooltip="View showcase run" class="hud-tab-menu-map-info__showcase">-->
-                        <!--							<Button class="button full">-->
-                        <!--								<Image class="button__icon" src="file://{images}/filmstrip.svg" textureheight="64" />-->
-                        <!--							</Button>-->
-                        <!--						</TooltipPanel>-->
-                    </Panel>
-                    <Panel class="hud-tab-menu-map-info__bottom">
-                        <Panel id="HudTabMenuMapCredits" class="hud-tab-menu-map-info__credits">
-                            <!-- Author names inserted by JS -->
-                        </Panel>
-                        <Panel class="hud-tab-menu-map-info__stats">
-                            <Label class="hud-tab-menu-map-info-stats__stat" text="#MapInfo_Tier" />
-                            <Panel id="HudTabMenuLinearSeparator" class="hud-tab-menu-map-info-stats__separator" />
-                            <Label id="HudTabMenuLinearLabel" class="hud-tab-menu-map-info-stats__stat" text="#MapInfo_Type_Linear" />
-                            <Panel id="HudTabMenuStageCountSeparator" class="hud-tab-menu-map-info-stats__separator" />
-                            <Label id="HudTabMenuStageCountLabel" class="hud-tab-menu-map-info-stats__stat" text="#MapInfo_StageCount" />
-                            <Panel class="hud-tab-menu-map-info-stats__separator" />
-                            <Label class="hud-tab-menu-map-info-stats__stat" text="#MapInfo_Runs" />
+            <Panel class="tab-menu-top">
+                <Panel class="tab-menu-top__center-group">
+                    <Panel id="NameContainer" class="tab-menu-name-container">
+                        <Image id="HudTabMenuGamemodeImage" class="hud-tab-menu__header-image" textureheight="128" />
+                        <Panel class="tab-menu-name-container__name-label-container">
+                            <!-- Stacked labels to give double layers of shadow. I don't like it, but I'll have to go along with it. -->
+                            <Label class="text-h1 text-shadow-outline ml-2" text="{s:name}" />
+                            <Label class="text-h1 text-shadow-black color-transparent ml-2" text="{s:name}" />
                         </Panel>
                     </Panel>
                 </Panel>
             </Panel>
-
-            <Panel id="SideBySideContainer" class="hud-tab-menu__sidebysidecontainer">
-                <Panel id="PlayerListContainer" class="" hittestchildren="true">
-                    <PlayerList id="PlayerList" hittest="true" hittestchildren="true" />
+            <Panel id="TabMenuCenter" class="tab-menu-center">
+                <Panel id="CenterMainContainer" class="tab-menu-center__main-container">
+                    <Panel id="TabMenuPlayerListContainer" class="tab-menu-center__left">
+                        <PlayerList id="PlayerList" hittest="true" hittestchildren="true" />
+                    </Panel>
+                    <Panel class="tab-menu-center__center">
+                        <TrackSelector id="HudTrackSelector" />
+                    </Panel>
+                    <Panel class="tab-menu-center__right">
+                        <!-- Above the leaderboard; right edge tracks the leaderboard column's -->
+                        <StyleSelector id="HudStyleSelector" class="tab-menu-center__style-selector" />
+                        <Leaderboards id="HudLeaderboards" />
+                    </Panel>
                 </Panel>
 
-                <Panel id="LeaderboardsContainer" class="hud-tab-menu__leaderboards" hittestchildren="true">
-                    <Leaderboards id="TabMenuLeaderboards" hittest="true" hittestchildren="true" />
+                <Panel id="EndOfRunContainer" class="tab-menu-endofrun" hittestchildren="true">
+                    <EndOfRun id="TabMenuEndOfRun" class="tab-menu-endofrun__frame" hittest="true" hittestchildren="true"/>
                 </Panel>
-                
             </Panel>
-
-            <Panel id="EndOfRunContainer" class="hud-tab-menu__endofrun" hittestchildren="true">
-                <Frame src="file://{resources}/layout/pages/end-of-run/end-of-run.xml" hittest="true" hittestchildren="true" />
-            </Panel>
-
-            <Panel class="hud-tab-menu__stats">
-            </Panel>
-
-            <Panel id="TabMenuFooter" class="hud-tab-menu__footer">
-                <Panel class="flow-right">
-                    <TooltipPanel tooltip="#HudCustomizer_Menu">
-                        <ToggleButton class="hud-tab-menu__footer-button hud-tab-menu__footer-button--hud-customizer" convar="mom_hudcustomizer_enable" />
-                    </TooltipPanel>
-                    <ConVarEnabler convar="sv_cheats" togglevisibility="true">
-                        <TooltipPanel tooltip="#Zoning_Menu">
-                            <ToggleButton id="ZoningToggle" class="hud-tab-menu__footer-button hud-tab-menu__footer-button--zoning" convar="mom_zoning_enable" />
-                        </TooltipPanel>
-                    </ConVarEnabler>
-                </Panel>
-                <Label class="hud-tab-menu__enable-cursor-tip" text="#HudTabMenu_EnableCursorTip" />
-            </Panel>
-
-            <Panel id="BetaInfoContainer" class="hud-tab-menu__beta-info hide" hittestchildren="true">
-                    <Label id="BetaInfoLabel" class="hud-tab-menu__beta-info-label" text="#HudTabMenu_BetaInfo"/>
-                    <Button id="BetaInfoButton" class="button mapselector-map-info__big-button button--blue hud-tab-menu__website-button mr-1" onactivate="HudTabMenuHandler.openInSteamOverlay();">
-                            <Panel class="flow-right v-align-center h-align-center">
-                                    <Image class="button__icon mapselector-map-info__big-button__icon" src="file://{images}/globe.svg" textureheight="40" />
-                                    <Label class="button__text mapselector-map-info__big-button__text" text="#MapSelector_Button_Webpage" />
-                            </Panel>
+            <Panel class="tab-menu-bottom">
+                <Panel id="BetaInfoContainer" class="tab-menu-bottom__beta-info hide" hittestchildren="true">
+                    <Label id="BetaInfoLabel" class="tab-menu-bottom__beta-info-label" text="#HudTabMenu_BetaInfo" />
+                    <Button id="BetaInfoButton" class="button button--blue tab-menu-bottom__website-button" onactivate="HudTabMenuHandler.openInSteamOverlay();">
+                        <Panel class="flow-right v-align-center h-align-center">
+                            <Image class="button__icon" src="file://{images}/globe.svg" textureheight="32" />
+                            <Label class="button__text" text="#MapSelector_Button_Webpage" />
+                        </Panel>
                     </Button>
+                </Panel>
             </Panel>
         </Panel>
+
+        <Panel id="TabMenuHeader" class="hud-tab-menu__header hide">
+            <Panel class="hud-tab-menu__map-info">
+                <Panel class="hud-tab-menu-map-info__top">
+                    <Label class="hud-tab-menu-map-info__map-name" text="{s:map}" />
+                </Panel>
+            </Panel>
+        </Panel>
+
+        <Panel id="TabMenuFooter" class="hud-tab-menu__footer hide">
+            <Panel class="flow-right">
+                <TooltipPanel tooltip="#HudCustomizer_Menu">
+                    <ToggleButton class="hud-tab-menu__footer-button hud-tab-menu__footer-button--hud-customizer" convar="mom_hudcustomizer_enable" />
+                </TooltipPanel>
+                <ConVarEnabler convar="sv_cheats" togglevisibility="true">
+                    <TooltipPanel tooltip="#Zoning_Menu">
+                        <ToggleButton id="ZoningToggle" class="hud-tab-menu__footer-button hud-tab-menu__footer-button--zoning" convar="mom_zoning_enable" />
+                    </TooltipPanel>
+                </ConVarEnabler>
+            </Panel>
+            <Label class="hud-tab-menu__enable-cursor-tip" text="#HudTabMenu_EnableCursorTip" />
+		</Panel>
 	</HudTabMenu>
 </root>
