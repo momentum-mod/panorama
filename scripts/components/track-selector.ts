@@ -59,7 +59,9 @@ export class TrackSelectorHandler {
 
 	leaderboards: Leaderboards | null = null;
 	styleSelector: StyleSelector | null = null;
+	endOfRun: EndOfRun | null = null;
 	currentMapData: MapCacheAPI.StaticData;
+	endOfRunCallback: (style: Style, trackType: TrackType, trackNum: number) => void;
 
 	// Existing track panels keyed by track, reused across renders. The track set is the same across
 	// styles, so a style switch updates these in place rather than tearing them down and rebuilding,
@@ -75,7 +77,7 @@ export class TrackSelectorHandler {
 	private selectedTrackKey: string | null = null;
 	private currentMapKey: string | null = null;
 
-	private showPlayButton = true;
+	private showActionButtons = true;
 
 	// TODO: Blur broken when scrolling / Fixed in panzer's pr
 	blurPanel: BaseBlurTarget | null = null;
@@ -89,11 +91,15 @@ export class TrackSelectorHandler {
 	}
 
 	setPlayButtonVisible(visible: boolean) {
-		this.showPlayButton = visible;
+		this.showActionButtons = visible;
 	}
 
 	connectStyleSelector(styleSelector: StyleSelector) {
 		this.styleSelector = styleSelector;
+	}
+
+	connectEndOfRun(endOfRun: EndOfRun) {
+		this.endOfRun = endOfRun;
 	}
 
 	updateMapData(data: MapCacheAPI.StaticData) {
@@ -231,10 +237,15 @@ export class TrackSelectorHandler {
 				this.trackPanels.set(key, panel);
 				trackPanel = panel;
 
-				// The play button reads only the track's type/number (stable across styles) and the
-				// live style selection, so it's bound once at creation.
+				const eorButton = panel.FindChildTraverse('OpenEOR');
+				eorButton.visible = false;
+				eorButton.SetPanelEvent('onactivate', () => {
+					this.OpenEndOfRun(this.styleSelector?.handler.style, track.trackType, track.trackNum);
+					panel.SetSelected(true);
+				});
+
 				const playButton = panel.FindChildTraverse('PlayTrack');
-				playButton.visible = this.showPlayButton;
+				playButton.visible = this.showActionButtons;
 				playButton.SetPanelEvent('onactivate', () => {
 					const style = this.styleSelector?.handler.style;
 					if (style != null) GameInterfaceAPI.ConsoleCommand(`mom_style ${style}`);
@@ -303,6 +314,35 @@ export class TrackSelectorHandler {
 				this.trackPanels.get(this.selectedTrackKey)?.SetSelected(true);
 			}
 		}
+	}
+
+	updateEorButtonVisibility(): void {
+		const currentStyle = this.styleSelector?.handler.style;
+		if (currentStyle == null) return;
+
+		this.trackPanels.forEach((panel, panelKey) => {
+			const eorButton = panel.FindChildTraverse('OpenEOR');
+			if (!eorButton) return;
+
+			let trackType: TrackType;
+			let trackNum: number;
+
+			if (panelKey === 'MAIN') {
+				trackType = TrackType.MAIN;
+				trackNum = 1;
+			} else {
+				const [type, num] = panelKey.split(':');
+				trackType = Number(type);
+				trackNum = Number(num);
+			}
+
+			const hasRun = this.endOfRun.handler.runCache?.has(currentStyle, trackType, trackNum);
+			eorButton.visible = this.showActionButtons && hasRun;
+		});
+	}
+
+	OpenEndOfRun(trackStyle: Style, trackType: TrackType, trackNum: number) {
+		this.endOfRunCallback(trackStyle, trackType, trackNum);
 	}
 
 	/** Point the leaderboard at a track: rank/total for group boundaries, plus a records refetch. */
