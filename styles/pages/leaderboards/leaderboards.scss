@@ -112,6 +112,9 @@ $times-border: 0px solid rgba(24, 24, 24, 0.4);
 		#{$root}__empty {
 			opacity: 1;
 		}
+		#{$root}__group-pills {
+			opacity: 0;
+		}
 	}
 
 	&--loading {
@@ -123,6 +126,9 @@ $times-border: 0px solid rgba(24, 24, 24, 0.4);
 			transition: opacity 0.05s ease-in 0s;
 		}
 		#{$root}__empty {
+			opacity: 0;
+		}
+		#{$root}__group-pills {
 			opacity: 0;
 		}
 	}
@@ -165,6 +171,8 @@ $times-border: 0px solid rgba(24, 24, 24, 0.4);
 		width: 100%;
 		height: 100%;
 		overflow: noclip noclip; // let children escape this panel's bounds
+		transition: opacity 0.1s ease-in-out 0s;
+		opacity: 1;
 
 		.leaderboard-group-pill {
 			width: fit-children;
