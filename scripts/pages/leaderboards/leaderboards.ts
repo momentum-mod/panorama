@@ -267,9 +267,19 @@ export class LeaderboardsHandler {
 
 		this.updateControlButtons();
 
+		// The backend always includes local player's run in the friends filter response
+		// If only one run was returned and the local player has a PB remove it from the timesList
+		const isOwnRunOnly =
+			this.state.filter === LeaderboardRecordsFilter.FRIENDS &&
+			data.totalPages === 1 &&
+			data.records.length === 1 &&
+			this.currentUserRank != null;
+
+		const records = isOwnRunOnly ? [] : data.records;
+
 		this.panels.timesList.RemoveAndDeleteChildren();
 		this.panels.groupPillsLayer.RemoveAndDeleteChildren();
-		data.records.forEach((record, index) => {
+		records.forEach((record, index) => {
 			const lbEntry = $.CreatePanel('LeaderboardEntry', this.panels.timesList, '');
 			if (index === 0) lbEntry.AddClass('leaderboard-entry--first');
 			lbEntry.SetDialogVariableInt('rank', record.rank);
@@ -280,7 +290,7 @@ export class LeaderboardsHandler {
 				this.state.filter === LeaderboardRecordsFilter.FRIENDS ||
 				this.state.filter === LeaderboardRecordsFilter.LOBBY
 			) {
-				this.createMembershipGroupIndicators(data.records, record.rank, lbEntry, index);
+				this.createMembershipGroupIndicators(records, record.rank, lbEntry, index);
 			} else if (this.state.filter === LeaderboardRecordsFilter.GLOBAL) {
 				const matchedGroup = this.groupBoundaries[record.rank];
 				this.createBoundaryGroupIndicators(matchedGroup, lbEntry, index);
@@ -292,7 +302,7 @@ export class LeaderboardsHandler {
 			lbEntry.SetPanelEvent('oncontextmenu', () => this.showEntryContextMenu(index, record));
 		});
 
-		this.updateEmptyState(data.records.length === 0);
+		this.updateEmptyState(records.length === 0);
 	}
 
 	private showEntryContextMenu(index: number, record: LeaderboardRecord) {
