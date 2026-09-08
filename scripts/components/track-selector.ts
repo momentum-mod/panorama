@@ -312,6 +312,10 @@ export class TrackSelectorHandler {
 			if (target) {
 				this.selectedTrackKey = TrackSelectorHandler.trackKey(target);
 				this.trackPanels.get(this.selectedTrackKey)?.SetSelected(true);
+
+				if (reuse) {
+					this.applyTrackSelection(target);
+				}
 			}
 		}
 	}
