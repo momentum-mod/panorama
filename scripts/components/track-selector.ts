@@ -336,7 +336,7 @@ export class TrackSelectorHandler {
 				trackNum = Number(num);
 			}
 
-			const hasRun = this.endOfRun.handler.runCache?.has(currentStyle, trackType, trackNum);
+			const hasRun = this.endOfRun?.handler.runCache?.has(currentStyle, trackType, trackNum);
 			eorButton.visible = this.showActionButtons && hasRun;
 		});
 	}
