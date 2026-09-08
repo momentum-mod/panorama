@@ -57,7 +57,7 @@
 
 
         <!-- Hud panels using blur must be placed below blur definitions -->
-		<HudBlurTarget id="HudBlur" blurrects="TabMenuWrapper Spectator" class="hud-blur" hittest="false" hittestchildren="false">
+		<HudBlurTarget id="HudBlur" blurrects="Spectator" class="hud-blur" hittest="false" hittestchildren="false">
 			<BackbufferImagePanel class="full" />
 		</HudBlurTarget>
 

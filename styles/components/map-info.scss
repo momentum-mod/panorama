@@ -1,0 +1,63 @@
+@use '../config' as *;
+@use '../abstract/mixin';
+@use '../core/animations';
+@use 'sass:map';
+@use 'sass:color';
+
+.map-info-container {
+	$root: &;
+	flow-children: down;
+	vertical-align: top;
+	width: fit-children;
+	transition: background-color 0.1s ease-in-out 0s;
+	border: 1px solid transparent;
+
+	&:hover {
+		border: 1px solid rgba(50, 50, 50, 0.4);
+	}
+
+	&__required-game {
+		flow-children: none;
+		margin-left: 4px;
+		margin-right: 4px;
+		tooltip-position: bottom;
+		overflow: noclip;
+
+		$this: &;
+
+		&--hidden {
+			visibility: collapse;
+		}
+
+		&__game-icon {
+			width: 32px;
+			height: 32px;
+			img-shadow: 0 1px 2px black;
+		}
+
+		&__warning {
+			width: 24px;
+			height: 24px;
+			align: right bottom;
+			img-shadow: 1px 1px 1px 2 rgba(0, 0, 0, 0.6);
+			wash-color: #ff2f00;
+			transform: translateX(4px) translateY(6px);
+			visibility: collapse;
+
+			#{$this}--unmounted & {
+				visibility: visible;
+			}
+		}
+
+		&__tooltip {
+			&--left {
+				color: #e5e5e5;
+			}
+
+			&--right {
+				color: white;
+				font-weight: medium;
+			}
+		}
+	}
+}

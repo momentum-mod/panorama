@@ -28,6 +28,62 @@ $colors-primary: (
 	'green': $green
 ) !default;
 
+// Keep names the same as completion-group.enum.ts
+$colors-group-pill: (
+	'WORLD_RECORD': (
+		bg: rgba(0, 100, 112, 0.6),
+		text: rgba(113, 240, 255, 1)
+	),
+	'TOP_10': (
+		bg: rgba(61, 0, 112, 0.6),
+		text: rgba(190, 113, 255, 1)
+	),
+	'GROUP_1': (
+		bg: rgba(125, 0, 0, 0.6),
+		text: rgba(255, 110, 110, 1)
+	),
+	'GROUP_2': (
+		bg: rgba(115, 80, 0, 0.6),
+		text: rgba(255, 200, 80, 1)
+	),
+	'GROUP_3': (
+		bg: rgba(0, 100, 30, 0.6),
+		text: rgba(120, 255, 160, 1)
+	),
+	'GROUP_4': (
+		bg: rgba(15, 50, 100, 0.6),
+		text: rgba(150, 190, 255, 1)
+	)
+) !default;
+
+// OLD
+// $colors-group-pill: (
+// 	'WORLD_RECORD': (
+// 		bg: rgba(0, 100, 112, 0.6),
+// 		text: rgba(113, 240, 255, 1)
+// 	),
+// 	'TOP_10': (
+// 		bg: rgba(61, 0, 112, 0.6),
+// 		text: rgba(190, 113, 255, 1)
+// 	),
+// 	'GROUP_1': (
+// 		bg: rgba(112, 83, 0, 0.6),
+// 		text: rgba(255, 188, 0, 1)
+// 	),
+// 	'GROUP_2': (
+// 		bg: rgba(35, 45, 52, 0.6),
+// 		text: rgba(201, 226, 241, 1)
+// 	),
+// 	'GROUP_3': (
+// 		bg: rgba(56, 32, 16, 0.6),
+// 		text: rgba(199, 115, 63, 1)
+// 	),
+// 	'GROUP_4': (
+// 		bg: rgba(58, 58, 58, 0.6),
+// 		text: rgba(220, 220, 220, 1)
+// 	)
+// ) !default;
+
 $disabled: #7e7e7e !default;
 $error: #f32424 !default;
 $warning: #ff7300 !default;
