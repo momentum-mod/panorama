@@ -485,11 +485,13 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			resizeX: false,
 			canDisable: false,
 			dynamicStyles: {
-				selectOnRightClick: {
-					name: $.Localize('#Customizer_Customizer_SelectOnRightClick'),
-					type: CustomizerPropertyType.CHECKBOX,
-					callbackFunc: (_, value) => this.toggleSelectOnRightClick(value)
-				},
+				// DISABLED UNTIL INPUT ISSUES ARE SOLVED, REFER TO CONVERSATION HERE:
+				// https://discord.com/channels/235111289435717633/1337923493177589790/1540681350309224488
+				// selectOnRightClick: {
+				// 	name: $.Localize('#Customizer_Customizer_SelectOnRightClick'),
+				// 	type: CustomizerPropertyType.CHECKBOX,
+				// 	callbackFunc: (_, value) => this.toggleSelectOnRightClick(value)
+				// },
 				selectedBorder: {
 					name: $.Localize('#Customizer_Customizer_SelectedBorder'),
 					type: CustomizerPropertyType.CHECKBOX,
@@ -1102,7 +1104,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		}
 
 		this.panels.overlay.style.visibility = 'collapse';
-		this.toggleSelectOnRightClick(false);
+		// this.toggleSelectOnRightClick(false);
 	}
 
 	/**
