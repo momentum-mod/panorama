@@ -7,6 +7,7 @@ class HudShowPosHandler {
 	constructor() {
 		registerHUDCustomizerComponent($.GetContextPanel(), {
 			name: $.Localize('#Customizer_Show_Pos_Name'),
+			canDisable: false,
 			resizeX: true,
 			resizeY: false,
 			dynamicStyles: {
