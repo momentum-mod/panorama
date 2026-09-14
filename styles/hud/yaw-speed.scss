@@ -10,21 +10,13 @@
 	transition-duration: 0.2s;
 	transition-timing-function: ease-in-out;
 
-	&:disabled {
-		visibility: collapse;
-	}
-
 	&--hidden {
 		opacity: 0;
 	}
 
 	&__label {
 		width: 100%;
-		font-family: $font-primary;
-		font-size: 26px;
 		font-weight: bold;
-		color: $font-default-color;
 		text-align: center;
-		text-shadow-fast: 0px 1px 2px rgba(0, 0, 0, 0.8);
 	}
 }

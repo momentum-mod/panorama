@@ -7,7 +7,7 @@
 		<include type="module" src="file://{scripts}/hud/yaw-speed.ts" />
 	</scripts>
 	
-	<MomHudYawSpeed class="yawspeed yawspeed--hidden" hittest="false">
-		<Label id="YawSpeedLabel" class="yawspeed__label" text="#Yaw_Label" />
+	<MomHudYawSpeed class="yawspeed" hittest="false">
+		<Label id="YawSpeedLabel" class="yawspeed__label" text="{s:yawspeed}" />
 	</MomHudYawSpeed>
 </root>
