@@ -45,12 +45,25 @@ class PlayerListPlayerHandler {
 
 		if (!player.isSelf) {
 			const muted = ChatAPI.BIsUserMuted(player.steamId);
-			items.push({
-				label: $.Localize(muted ? '#Lobby_UnmutePlayer' : '#Lobby_MutePlayer'),
-				icon: 'file://{images}/volume-' + (muted ? 'high' : 'mute') + '.svg',
-				style: 'icon-color-' + (muted ? 'green' : 'red'),
-				jsCallback: () => ChatAPI.ChangeMuteState(player.steamId, !muted)
-			});
+			items.push(
+				{
+					label: $.Localize(muted ? '#Lobby_UnmutePlayer' : '#Lobby_MutePlayer'),
+					icon: 'file://{images}/volume-' + (muted ? 'high' : 'mute') + '.svg',
+					style: 'icon-color-' + (muted ? 'green' : 'red'),
+					jsCallback: () => ChatAPI.ChangeMuteState(player.steamId, !muted)
+				},
+				{
+					label: $.Localize('#Report_Player'),
+					icon: 'file://{images}/alert-octagon.svg',
+					style: 'icon-color-red',
+					jsCallback: () =>
+						UiToolkitAPI.ShowCustomLayoutPopupParameters(
+							'',
+							'file://{resources}/layout/modals/popups/report-player.xml',
+							`steamid=${player.steamId}`
+						)
+				}
+			);
 		}
 
 		UiToolkitAPI.ShowSimpleContextMenu('', 'ControlsLibSimpleContextMenu', items);

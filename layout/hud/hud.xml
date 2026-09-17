@@ -3,6 +3,10 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 
+	<scripts>
+		<include type="module" src="file://{scripts}/hud/moderation.ts" />
+	</scripts>
+
 	<Hud class="hud" hittest="false" useglobalcontext="false">
 		<!-- Non-interactive HUD elements have hit test disabled for efficiency -->
 

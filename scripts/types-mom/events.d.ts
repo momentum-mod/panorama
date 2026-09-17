@@ -366,6 +366,12 @@ interface GlobalEventNameMap {
 	/** Fired on API authenticate success or failure. */
 	MomAPI_Authenticated: (result: MomentumAPI.AuthenicationResult) => void;
 
+	/** Fired when a player report finishes, successfully or not. */
+	MomAPI_PlayerReported: (success: boolean) => void;
+
+	/** Fired when the local user tried to communicate but is banned from doing so. */
+	MomAPI_CommunicationBlocked: (type: MomentumAPI.ChatBanType) => void;
+
 	ActiveZoneDefsChanged: () => void;
 
 	OnZoneDefsSet: (newDefs: import('common/web/types/models/models').MapZones) => void;
