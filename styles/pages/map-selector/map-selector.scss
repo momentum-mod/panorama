@@ -841,28 +841,12 @@ $notch-width: 10px;
 	width: 100%;
 	height: 100%;
 
-	@include mixin.button-gradient($color: 'blue');
+	@include mixin.button-gradient($color: 'grey');
 
-	transition: background-color 0.1s ease-in-out 0s;
-
-	.action-play {
-		visibility: collapse;
-	}
-
-	.action-download {
-		visibility: visible;
-	}
+	$root: &;
 
 	&.playable {
 		@include mixin.button-gradient($color: 'green');
-
-		.action-download {
-			visibility: collapse;
-		}
-
-		.action-play {
-			visibility: visible;
-		}
 	}
 
 	&__typecontainer {
@@ -871,9 +855,28 @@ $notch-width: 10px;
 		horizontal-align: center;
 	}
 
+	&__icons {
+		flow-children: none;
+		height: 100%;
+		width: height-percentage(100%);
+		vertical-align: center;
+	}
+
 	&__icon {
 		margin-left: 0;
 		padding: 6px;
+	}
+
+	&__icon-download {
+		height: 55%;
+		width: height-percentage(100%);
+		horizontal-align: right;
+		vertical-align: bottom;
+		padding: 0;
+
+		#{$root}.playable & {
+			visibility: collapse;
+		}
 	}
 
 	&__text {
