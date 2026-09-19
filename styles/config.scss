@@ -176,6 +176,10 @@ $gradients-primary: (
 	'green': (
 		#7aee7a,
 		#159856
+	),
+	'grey': (
+		$gray-800,
+		$gray-600
 	)
 ) !default;
 

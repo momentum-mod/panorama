@@ -311,13 +311,12 @@
 						<Panel class="flow-down mapselector-map-info__content-right">
 							<Panel class="mapselector-map-info__action mb-1">
 								<Button id="MapInfoAction" class="button mapselector-action-button" onactivate="MapSelectorHandler.onActionButtonPressed();">
-									<Panel class="mapselector-action-button__typecontainer action-play">
-										<Image class="button__icon mapselector-action-button__icon" src="file://{images}/play-circle.svg" textureheight="40" />
+									<Panel class="mapselector-action-button__typecontainer">
+										<Panel class="mapselector-action-button__icons">
+											<Image class="button__icon mapselector-action-button__icon" src="file://{images}/play-circle.svg" textureheight="40" />
+											<Image class="button__icon mapselector-action-button__icon-download" src="file://{images}/download.svg" textureheight="40" />
+										</Panel>
 										<Label class="button__text mapselector-action-button__text" text="#MapSelector_Button_Play" />
-									</Panel>
-									<Panel class="mapselector-action-button__typecontainer action-download">
-										<Image class="button__icon mapselector-action-button__icon" src="file://{images}/download.svg" textureheight="40" />
-										<Label class="button__text mapselector-action-button__text" text="#MapSelector_Button_Download" />
 									</Panel>
 								</Button>
 								<MapDownloadStatus id="MapInfoDownloadStatus" class="map-download-status" />
