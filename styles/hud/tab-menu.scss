@@ -101,6 +101,14 @@
 			}
 		}
 
+		&--voice {
+			background-image: url('file://{images}/voice-disable.svg');
+
+			&:selected {
+				background-image: url('file://{images}/voice-enable.svg');
+			}
+		}
+
 		&:hover {
 			background-color: gradient(
 				radial,
@@ -111,6 +119,10 @@
 				to(rgba(0, 0, 0, 0.6))
 			);
 		}
+	}
+
+	&__footer-voice {
+		margin-right: 8px;
 	}
 
 	&__footer {

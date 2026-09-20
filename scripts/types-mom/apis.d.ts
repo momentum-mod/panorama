@@ -257,6 +257,9 @@ declare namespace SteamLobbyAPI {
 
 	/** Get the maximum member limit a lobby may have */
 	function GetMaxAllowedMemberLimit(): number;
+
+	/** Returns true if the local player is currently in a lobby */
+	function IsInLobby(): boolean;
 }
 
 declare namespace GameModeAPI {

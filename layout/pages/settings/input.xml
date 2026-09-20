@@ -141,6 +141,7 @@
 
 				<SettingsKeyBinder text="#Keybind_ToggleTimes" bind="+showtimes" tags="leaderboard,tab,times" />
 				<SettingsKeyBinder text="#Keybind_Chat" bind="chat_open" tags="chat,talk" />
+				<SettingsKeyBinder text="#Keybind_VoiceChat" bind="+voicerecord" tags="voice,chat,talk,mic,push,ptt" />
 
 				<Label class="settings-group__subtitle" text="#Settings_Keybinds_Utility" />
 

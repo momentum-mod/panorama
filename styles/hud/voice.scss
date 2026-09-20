@@ -1,0 +1,65 @@
+$voice-bg: rgba(0, 0, 0, 0.5);
+$voice-row-height: 30px;
+$voice-icon-size: 18px;
+$voice-avatar-size: $voice-row-height - 8px;
+
+// Green mic = you are transmitting
+$voice-self-color: #4caf50;
+// Warm orange = incoming voice from others
+$voice-speaker-color: #e8913c;
+
+.voice-hud {
+	flow-children: down;
+	horizontal-align: left;
+	vertical-align: bottom;
+
+	// Place directly above the chat box's default position
+	margin: 0 0 366px 60px;
+
+	&__speakers {
+		flow-children: down;
+	}
+}
+
+.voice-row {
+	flow-children: right;
+	height: $voice-row-height;
+	margin-top: 3px;
+	padding: 0 10px 0 6px;
+	border-radius: 4px;
+	background-color: $voice-bg;
+
+	Image,
+	AvatarImage,
+	Label {
+		vertical-align: middle;
+	}
+
+	&__icon {
+		width: $voice-icon-size;
+		height: $voice-icon-size;
+		wash-color: $voice-self-color;
+	}
+
+	&__avatar {
+		width: $voice-avatar-size;
+		height: $voice-avatar-size;
+		margin-left: 8px;
+		border-radius: 3px;
+	}
+
+	&__name {
+		margin-left: 8px;
+		font-size: 14px;
+		color: white;
+		white-space: nowrap;
+	}
+}
+
+.voice-row--icon-only {
+	padding: 0 8px;
+}
+
+.voice-speaker .voice-row__icon {
+	wash-color: $voice-speaker-color;
+}

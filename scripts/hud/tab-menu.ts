@@ -26,7 +26,8 @@ class HudTabMenuHandler {
 		linearLabel: $<Label>('#HudTabMenuLinearLabel'),
 		stageCountSeparator: $<Panel>('#HudTabMenuStageCountSeparator'),
 		stageCountLabel: $<Label>('#HudTabMenuStageCountLabel'),
-		betaInfoContainer: $<Panel>('#BetaInfoContainer')
+		betaInfoContainer: $<Panel>('#BetaInfoContainer'),
+		voiceToggle: $<Panel>('#VoiceToggle')
 	};
 
 	constructor() {
@@ -36,6 +37,11 @@ class HudTabMenuHandler {
 		$.RegisterForUnhandledEvent('EndOfRun_Hide', () => this.hideEndOfRun());
 		$.RegisterForUnhandledEvent('ActiveZoneDefsChanged', () => this.updateMapStats());
 		$.RegisterForUnhandledEvent('MapCache_MapLoad', () => this.onMapLoad());
+
+		// Voice chat only works in a lobby, so only show its toggle while in one.
+		$.RegisterForUnhandledEvent('SteamLobby_Enter', () => this.updateVoiceToggleVisibility());
+		$.RegisterForUnhandledEvent('SteamLobby_Exit', () => this.updateVoiceToggleVisibility());
+		this.updateVoiceToggleVisibility();
 
 		registerHUDCustomizerComponent($.GetContextPanel(), {
 			name: $.Localize('#Customizer_Tab_Menu_Name'),
@@ -54,6 +60,10 @@ class HudTabMenuHandler {
 		if (mapData && frontendUrl) {
 			SteamOverlayAPI.OpenURL(`${frontendUrl}/maps/${mapData.staticData.name}`);
 		}
+	}
+
+	updateVoiceToggleVisibility() {
+		this.panels.voiceToggle.visible = SteamLobbyAPI.IsInLobby();
 	}
 
 	onMapLoad() {
