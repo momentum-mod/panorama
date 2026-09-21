@@ -300,6 +300,10 @@ export class LeaderboardsHandler {
 			avatar.steamid = record.steamID;
 
 			lbEntry.SetPanelEvent('oncontextmenu', () => this.showEntryContextMenu(index, record));
+
+			if (this.currentUserRank === record.rank) {
+				lbEntry.AddClass('leaderboard-entry--localplayer');
+			}
 		});
 
 		this.updateEmptyState(records.length === 0);
