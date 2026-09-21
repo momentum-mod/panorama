@@ -156,5 +156,6 @@ TrackSelector {
 	// an inline color) so it clears cleanly when a panel is reused and the value later appears.
 	&--muted {
 		color: rgb(160, 160, 160);
+		text-shadow: 0px 0px 2px 3 rgba(0, 0, 0, 0.3);
 	}
 }
