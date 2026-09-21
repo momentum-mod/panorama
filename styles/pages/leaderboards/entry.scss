@@ -38,10 +38,10 @@ $entry-border: 1px solid rgba(44, 44, 44, 0.6);
 		border-top: $entry-border;
 	}
 	&--localplayer {
-		background-color: color.scale(rgba($blue, 0.7), $lightness: -20%);
+		background-color: color.scale(rgba($blue, 0.5), $lightness: -20%);
 
 		&:hover {
-			background-color: rgba($blue, 0.7);
+			background-color: rgba($blue, 0.5);
 		}
 	}
 
