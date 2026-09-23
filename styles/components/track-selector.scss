@@ -29,11 +29,11 @@ TrackSelector {
 	background-color: rgba(0, 0, 0, 0.7);
 
 	&--alt-color {
-		background-color: rgba(10, 10, 10, 0.2);
+		background-color: rgba(10, 10, 10, 0.6);
 	}
 
 	&:hover {
-		background-color: rgba(100, 100, 100, 0.5);
+		background-color: rgba(80, 80, 80, 0.5);
 
 		.track-selector-button-container {
 			opacity: 1;
@@ -41,7 +41,7 @@ TrackSelector {
 	}
 
 	&:selected {
-		background-color: rgba(150, 150, 150, 0.7);
+		background-color: rgba(120, 120, 120, 0.5);
 
 		.track-selector-button-container {
 			opacity: 1;
