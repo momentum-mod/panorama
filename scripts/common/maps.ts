@@ -10,7 +10,7 @@ import { TrackType } from './web/enums/track-type.enum';
  */
 export function handlePlayMap(mapData: MapCacheAPI.MapData, gamemodeOverride: Gamemode = null) {
 	if (!mapData.mapFileExists) {
-		// Need to download
+		// Not downloaded yet - always autoplay once it finishes.
 		$.DispatchEvent('MapSelector_TryPlayMap', mapData.staticData.id);
 		return;
 	}

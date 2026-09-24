@@ -173,18 +173,29 @@ $transition: 0.125s ease-out 0s;
 		vertical-align: middle;
 		padding: 6px 6px 6px 0;
 
+		// Container for download + play icons
+		&__icons {
+			flow-children: none;
+			height: 100%;
+			width: height-percentage(100%);
+			horizontal-align: center;
+			vertical-align: center;
+		}
+
 		&__button {
 			flow-children: none;
 			width: 100%;
 			height: 100%;
 
-			transition: background-color 0.1s ease-in-out 0s;
+			@include mixin.button-gradient($color: 'grey');
 
-			.icon-play {
-				visibility: collapse;
-			}
 			.icon-download {
-				visibility: visible;
+				height: 55%;
+				width: height-percentage(100%);
+				horizontal-align: right;
+				vertical-align: bottom;
+				padding: 0;
+				img-shadow: 0 1px 4px 3 rgba(0, 0, 0, 0.5);
 			}
 
 			&.playable {
@@ -192,9 +203,6 @@ $transition: 0.125s ease-out 0s;
 
 				.icon-download {
 					visibility: collapse;
-				}
-				.icon-play {
-					visibility: visible;
 				}
 			}
 

@@ -95,7 +95,7 @@ class MapEntryHandler {
 					label: $.Localize('#Action_DownloadMap'),
 					icon: 'file://{images}/play.svg',
 					style: 'icon-color-mid-blue',
-					jsCallback: () => $.DispatchEvent('MapSelector_TryPlayMap', mapID)
+					jsCallback: () => $.DispatchEvent('MapSelector_DownloadMap', mapID)
 				});
 			}
 		}

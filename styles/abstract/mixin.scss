@@ -47,6 +47,23 @@
 	}
 }
 
+@function _gradient-hover-tint($color) {
+	@if (color.saturation($color) == 0%) {
+		@return color.scale(
+			$color,
+			$lightness: list.nth($gradient-hover-transform, 2),
+			$alpha: list.nth($gradient-hover-transform, 3)
+		);
+	} @else {
+		@return color.scale(
+			$color,
+			$saturation: list.nth($gradient-hover-transform, 1),
+			$lightness: list.nth($gradient-hover-transform, 2),
+			$alpha: list.nth($gradient-hover-transform, 3)
+		);
+	}
+}
+
 @mixin button-gradient($color: 'blue') {
 	@if (map.has-key($gradients-primary, $color)) {
 		$colors: map.get($gradients-primary, $color);
@@ -55,18 +72,8 @@
 
 		&:hover {
 			background-color: function.gradient-vertical(
-				color.scale(
-					list.nth($colors, 1),
-					$saturation: list.nth($gradient-hover-transform, 1),
-					$lightness: list.nth($gradient-hover-transform, 2),
-					$alpha: list.nth($gradient-hover-transform, 3)
-				),
-				color.scale(
-					list.nth($colors, 2),
-					$saturation: list.nth($gradient-hover-transform, 1),
-					$lightness: list.nth($gradient-hover-transform, 2),
-					$alpha: list.nth($gradient-hover-transform, 3)
-				)
+				_gradient-hover-tint(list.nth($colors, 1)),
+				_gradient-hover-tint(list.nth($colors, 2))
 			);
 		}
 
