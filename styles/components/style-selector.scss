@@ -1,7 +1,5 @@
 @use '../config' as *;
 
-// A native dropdown, restyled dark/translucent to match the leaderboard it sits above rather than
-// the default light dropdown. Positioned top-right by the page it's placed in.
 $style-selector-border: 1px solid rgba(255, 255, 255, 0.1);
 
 .style-selector {
@@ -33,7 +31,7 @@ $style-selector-border: 1px solid rgba(255, 255, 255, 0.1);
 		}
 	}
 
-	// menuclass targets the popped-out menu, which the engine reparents to an overlay layer
+	// menu class targets the popped-out menu, which the engine reparents to an overlay layer
 	&__menu {
 		background-color: rgba(0, 0, 0, 0.85);
 		border: $style-selector-border;
