@@ -135,13 +135,10 @@ $panel-border: 1px solid rgba(255, 255, 255, 0.01);
 	}
 
 	&__leaderboards-container {
-		// Takes the exact remainder so the row totals 100% width.
 		width: fill-parent-flow(1);
 		height: 100%;
 	}
 
-	// Overlaid in the top-right of the header row, right edge aligned with the leaderboard's (which
-	// sits flush against the column's right edge) and top border level with the map selector's top
 	&__style-selector {
 		vertical-align: top;
 	}
