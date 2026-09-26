@@ -13,6 +13,9 @@ declare interface PanelTagNameMap {
 	LineGraph: LineGraph;
 	LevelIndicator: LevelIndicator;
 	PlayerCard: PlayerCard;
+	TrackSelector: TrackSelector;
+	StyleSelector: StyleSelector;
+	MapInfo: MapInfo;
 	MomHudTimer: MomHudTimer;
 	MomHudStatus: MomHudStatus;
 	MomHudMapInfo: MomHudMapInfo;
@@ -28,10 +31,16 @@ declare interface PanelTagNameMap {
 	MomHudSafeguardIndicator: MomHudSafeguardIndicator;
 	MomHudKeypress: MomHudKeypress;
 	MomHudAhopSprint: MomHudAhopSprint;
+	EndOfRun: EndOfRun;
 	ToastContainer: ToastContainer;
 	ToastGeneric: ToastGeneric;
 	Gallery: Gallery;
+	GroupPill: GroupPill;
 }
+
+/**
+ * COMPONENTS
+ */
 
 declare interface PlayerCard extends AbstractPanel<'PlayerCard'> {
 	handler: import('components/player-card').PlayerCardHandler;
@@ -53,11 +62,44 @@ declare interface Gallery extends AbstractPanel<'Gallery'> {
 	handler: import('components/gallery').GalleryHandler;
 }
 
+declare interface GroupPill extends AbstractPanel<'GroupPill'> {
+	handler: import('components/group-pill').GroupPillHandler;
+}
+UiToolkitAPI.RegisterPanel2d('GroupPill', 'file://{resources}/layout/components/group-pill.xml');
+
+declare interface TrackSelector extends AbstractPanel<'TrackSelector'> {
+	handler: import('components/track-selector').TrackSelectorHandler;
+}
+UiToolkitAPI.RegisterPanel2d('TrackSelector', 'file://{resources}/layout/components/track-selector.xml');
+
+declare interface EndOfRun extends AbstractPanel<'EndOfRun'> {
+	handler: import('pages/end-of-run/end-of-run').EndOfRunHandler;
+}
+UiToolkitAPI.RegisterPanel2d('EndOfRun', 'file://{resources}/layout/pages/end-of-run/end-of-run.xml');
+
+declare interface StyleSelector extends AbstractPanel<'StyleSelector'> {
+	handler: import('components/style-selector').StyleSelectorHandler;
+}
+UiToolkitAPI.RegisterPanel2d('StyleSelector', 'file://{resources}/layout/components/style-selector.xml');
+
+declare interface MapInfo extends AbstractPanel<'MapInfo'> {
+	handler: import('components/map-info').MapInfoHandler;
+}
+UiToolkitAPI.RegisterPanel2d('MapInfo', 'file://{resources}/layout/components/map-info.xml');
+
+/**
+ * MODALS
+ */
+
 declare interface ToastContainer extends AbstractPanel<'ToastContainer'> {}
 UiToolkitAPI.RegisterPanel2d('ToastManager', 'file://{resources}/layout/util/toast-manager.xml');
 
 declare interface ToastGeneric extends AbstractPanel<'ToastGeneric'> {}
 UiToolkitAPI.RegisterPanel2d('ToastGeneric', 'file://{resources}/layout/modals/toasts/generic.xml');
+
+/**
+ * HUD PANELS
+ */
 
 declare interface HudShowPos extends AbstractPanel<'HudShowPos'> {}
 UiToolkitAPI.RegisterPanel2d('HudShowPos', 'file://{resources}/layout/hud/show-pos.xml');

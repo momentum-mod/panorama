@@ -1,44 +1,96 @@
 @use '../../abstract/function';
+@use '../../config' as *;
+@use '../../abstract/mixin';
+@use 'sass:color';
+@use 'sass:list';
+
+$main-border: 1px solid rgba(43, 43, 43, 0.4);
+$radio-border: 1px solid rgba(86, 86, 86, 0.4);
+$times-border: 0px solid rgba(24, 24, 24, 0.4);
+
+// ─── Main Container ───────────────────────────────────────────────────────────
 
 .leaderboards {
-	$root: &;
-
 	flow-children: down;
-	width: 950px;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.6);
+	border: $main-border;
+}
 
-	&__filters {
-		flow-children: right;
-		horizontal-align: center;
-		width: 100%;
-	}
+// ─── Layout regions ───────────────────────────────────────────────────────────
 
-	&__hide-button {
-		margin-left: 8px;
-		visibility: collapse;
+.leaderboard-top {
+	flow-children: right;
+	width: 100%;
+	height: fill-parent-flow(1);
+}
 
-		.leaderboards--in-map-selector & {
-			visibility: visible;
+.leaderboard-center {
+	width: 100%;
+	flow-children: down;
+	height: fill-parent-flow(14);
+}
+
+.leaderboard-bottom {
+	width: 100%;
+	height: fill-parent-flow(1);
+}
+
+// ─── Content containers ───────────────────────────────────────────────────────
+
+.leaderboard-radio {
+	width: 100%;
+	height: 40px;
+	flow-children: right;
+
+	&__radio-button {
+		$root: &;
+
+		width: fill-parent-flow(1);
+		background-color: rgba(10, 10, 10, 0.5);
+		padding: 8px 16px;
+		border-right: $radio-border;
+		border-bottom: $radio-border;
+
+		&--saved {
+			width: fill-parent-flow(1.5);
+			border-right: 0px;
 		}
-	}
 
-	&__sync-button {
-		border-top-left-radius: 0px;
-		border-bottom-left-radius: 0px;
-	}
+		&:hover {
+			background-color: rgba(72, 72, 72, 0.4);
+		}
 
-	&__end-of-run-button {
-		margin-left: 8px;
-	}
+		&:selected {
+			background-color: rgba(0, 0, 0, 0);
+			border-bottom: 0px;
+		}
 
-	&__style-dropdown {
-		margin-right: 8px;
-	}
+		// Maps with no online data only have saved replays, so the online categories get disabled
+		&:disabled,
+		&:disabled:hover {
+			background-color: rgba(10, 10, 10, 0.7);
+		}
 
-	&__dropdown {
-		border-top-right-radius: 0px;
-		border-bottom-right-radius: 0px;
-		& .DropDownIcon {
-			border-radius: 0px;
+		&__label {
+			@include mixin.font-header();
+			color: $font-disabled-color;
+			font-weight: bold;
+			font-size: $tab-font-size;
+			vertical-align: center;
+			horizontal-align: center;
+			margin: 0px;
+			opacity: 0.9;
+			text-overflow: shrink;
+
+			#{$root}:selected & {
+				color: #fff;
+			}
+
+			#{$root}:disabled & {
+				color: rgba(138, 138, 138, 0.8);
+			}
 		}
 	}
 }
@@ -47,72 +99,48 @@
 	$root: &;
 
 	width: 100%;
-	margin-top: 16px;
-	flow-children: down;
+	height: 100%;
+	padding: 8px 16px;
 
-	&__header {
-		flow-children: right;
-		width: 100%;
-		padding: 4px 8px;
-
-		background-color: rgba(0, 0, 0, 0.4);
-		border: 1px solid rgba(0, 0, 0, 0.4);
-		border-bottom: 1px solid rgba(0, 0, 0, 0.3);
-	}
-
-	&__header-item {
-		font-size: 14px;
-	}
-
-	&__main {
-		width: 100%;
-		height: 300px;
-		vertical-align: top;
-
-		&--empty {
-			#{$root}__list {
-				opacity: 0;
-			}
-
-			#{$root}__loading {
-				opacity: 0;
-			}
-
-			#{$root}__empty {
-				opacity: 1;
-			}
+	&--empty {
+		#{$root}__list {
+			opacity: 0;
 		}
+		#{$root}__loading {
+			opacity: 0;
+		}
+		#{$root}__empty {
+			opacity: 1;
+		}
+		#{$root}__group-pills {
+			opacity: 0;
+		}
+	}
 
-		&--loading {
-			#{$root}__list {
-				opacity: 0;
-			}
-
-			#{$root}__loading {
-				opacity: 1;
-				transition: opacity 0.05s ease-in 0s;
-			}
-
-			#{$root}__empty {
-				opacity: 0;
-			}
+	&--loading {
+		#{$root}__list {
+			opacity: 0;
+		}
+		#{$root}__loading {
+			opacity: 1;
+			transition: opacity 0.05s ease-in 0s;
+		}
+		#{$root}__empty {
+			opacity: 0;
+		}
+		#{$root}__group-pills {
+			opacity: 0;
 		}
 	}
 
 	&__list {
-		flow-children: down;
 		width: 100%;
 		height: 100%;
-		background-color: rgba(0, 0, 0, 0.4);
-		border: 1px solid rgba(0, 0, 0, 0.4);
-		border-top: 0px none;
+		flow-children: down;
+		overflow: squish noclip;
+		border: $times-border;
 		transition: opacity 0.1s ease-in-out 0s;
 		opacity: 1;
-		overflow: squish clip;
-
-		& > VerticalScrollBar .ScrollThumb {
-			opacity: 1;
-		}
 	}
 
 	&__empty {
@@ -120,7 +148,6 @@
 		height: 100%;
 		background-color: rgba(0, 0, 0, 0.4);
 		padding-bottom: 36px;
-
 		transition: opacity 0.1s ease-in-out 0s;
 		opacity: 0;
 	}
@@ -130,7 +157,6 @@
 		height: 100%;
 		background-color: rgba(0, 0, 0, 0.4);
 		padding-bottom: 36px;
-
 		transition: opacity 0.3s ease-in-out 0s;
 		opacity: 0;
 
@@ -140,43 +166,144 @@
 			margin-bottom: 4px;
 		}
 	}
+
+	&__group-pills {
+		width: 100%;
+		height: 100%;
+		overflow: noclip noclip; // let children escape this panel's bounds
+		transition: opacity 0.1s ease-in-out 0s;
+		opacity: 1;
+
+		.leaderboard-group-pill {
+			width: fit-children;
+			height: 22px;
+		}
+	}
 }
 
-.leaderboard-filter-buttons {
-	$root: &;
+.leaderboard-controls {
+	width: fit-children;
+	height: 100%;
+	align: center center;
 	flow-children: right;
-	width: 100%;
 
-	&__local {
-		visibility: visible;
+	&__change-page {
+		width: fit-children;
+		height: fit-children;
+		align: center center;
+		border-radius: 2px;
+
+		&:not(:disabled):hover {
+			background-color: rgba(167, 167, 167, 0.2);
+		}
+
+		&:not(:disabled):active {
+			background-color: rgba(255, 255, 255, 0.2);
+		}
+
+		&:disabled Image {
+			wash-color: rgb(85, 85, 85);
+		}
+
+		Image {
+			vertical-align: center;
+		}
 	}
 
-	&__online {
-		visibility: collapse;
+	&__select-page {
+		width: 45px;
+		height: 25px;
+		background-color: rgba(0, 0, 0, 0.7);
+		padding: 3px 4px;
+		vertical-align: center;
+		border-radius: 2px;
+		margin-left: 4px;
 	}
 
-	&__subtypes {
-		margin-left: 8px;
-		flow-children: right;
-
-		&--online > #{$root}__local {
-			visibility: collapse;
-		}
-
-		&--online > #{$root}__online {
-			visibility: visible;
-		}
-
-		&--lobby > #{$root}__local {
-			visibility: collapse;
-		}
-
-		&--lobby > #{$root}__online {
-			visibility: collapse;
-		}
+	&__total-pages {
+		margin-left: 6px;
+		vertical-align: center;
+		margin-right: 4px;
 	}
 }
 
-.leaderboard-dropdown {
-	vertical-align: center;
+.leaderboard-around {
+	width: 32px;
+	height: 32px;
+	margin: 0 16px 5px 0;
+	align: right center;
+
+	&__button {
+		width: 100%;
+		height: 100%;
+		border-radius: 2px;
+
+		&:not(:disabled):hover {
+			background-color: rgba(167, 167, 167, 0.2);
+		}
+
+		&:not(:disabled):active {
+			background-color: rgba(255, 255, 255, 0.2);
+		}
+
+		&:disabled {
+			.leaderboard-around__icon {
+				wash-color: rgb(85, 85, 85);
+			}
+		}
+	}
+
+	&__icon-container {
+		width: fit-children;
+		height: fit-children;
+		align: center center;
+	}
+
+	&__icon {
+		align: center center;
+	}
+}
+
+.leaderboard-tools {
+	width: fit-children;
+	height: 32px;
+	margin: 0 0 5px 16px;
+	align: left center;
+	flow-children: right;
+
+	// Collapses itself when sv_cheats is off, dropping the button it wraps out of the flow above
+	&__cheat-gate {
+		width: fit-children;
+		height: 100%;
+	}
+
+	&__tooltip {
+		width: 32px;
+		height: 100%;
+		margin-right: 4px;
+	}
+
+	&__button {
+		width: 100%;
+		height: 100%;
+		border-radius: 2px;
+
+		&:hover {
+			background-color: rgba(167, 167, 167, 0.2);
+		}
+
+		&:active {
+			background-color: rgba(255, 255, 255, 0.2);
+		}
+	}
+
+	&__icon-container {
+		width: fit-children;
+		height: fit-children;
+		align: center center;
+	}
+
+	&__icon {
+		align: center center;
+	}
 }

@@ -1,12 +1,14 @@
 import { OnPanelLoad, PanelHandler } from 'util/module-helpers';
 import { traverseChildren } from 'util/functions';
-import type { MMap } from 'common/web/types/models/models';
-import { MapStatus, MapStatuses } from 'common/web/enums/map-status.enum';
-import { MapCreditType } from 'common/web/enums/map-credit-type.enum';
-import { SteamGame } from 'common/web/enums/steam-game.enum';
-import { SteamGamesNames } from 'common/web/maps/steam-games.map';
-import * as Maps from 'common/maps';
-import * as Leaderboards from 'common/leaderboard';
+import { parseMapImageUrl } from 'util/functions';
+import { scaleWidthToAspectRatio } from 'util/functions';
+import { MapUserCompletions } from 'common/maps';
+import { Style } from 'common/web/enums/style.enum';
+// PRE REWORK REMOVAL
+// import { MapStatus, MapStatuses } from 'common/web/enums/map-status.enum';
+// import { MapCreditType } from 'common/web/enums/map-credit-type.enum';
+// import * as Maps from 'common/maps';
+// import * as Leaderboards from 'common/leaderboard';
 import { handlePlayMap } from 'common/maps';
 
 const REFRESH_COOLDOWN = 1000 * 10; // 10 seconds
@@ -39,6 +41,8 @@ type StoredFilters = {
 class MapSelectorHandler implements OnPanelLoad {
 	readonly panels = {
 		cp: $.GetContextPanel<MomentumMapSelector>(),
+		leftContainer: $<Panel>('#MapSelectorLeftContainer'),
+		trackSelectorColumn: $<Panel>('#MapSelectorTrackSelectorColumn'),
 		searchText: $<TextEntry>('#MapSearchTextEntry'),
 		searchClear: $<Button>('#MapSearchClear'),
 		filtersPanel: $<Panel>('#MapFilters'),
@@ -49,32 +53,28 @@ class MapSelectorHandler implements OnPanelLoad {
 		],
 		emptyContainer: $<Panel>('#MapListEmptyContainer'),
 		tierSlider: $<DualSlider>('#TierSlider'),
-		info: $<Panel>('#MapInfo'),
-		infoPB: $<Panel>('#MapInfoPB'),
-		infoWR: $<Panel>('#MapInfoWR'),
-		linearSeparator: $<Label>('#HudTabMenuLinearSeparator'),
-		linearLabel: $<Label>('#HudTabMenuLinearLabel'),
-		stageCountSeparator: $<Label>('#HudTabMenuStageCountSeparator'),
-		stageCountLabel: $<Label>('#HudTabMenuStageCountLabel'),
-		bonusCountSeparator: $<Label>('#HudTabMenuBonusCountSeparator'),
-		bonusCountLabel: $<Label>('#HudTabMenuBonusCountLabel'),
-		bonusesCountLabel: $<Label>('#HudTabMenuBonusesCountLabel'),
-		leaderboardContainer: $<Panel>('#MapTimes'),
-		descriptionContainer: $<Panel>('#MapDescriptionContainer'),
-		creditsContainer: $<Panel>('#MapCreditsContainer'),
-		datesContainer: $<Panel>('#MapDatesContainer'),
-		credits: $<Panel>('#MapCredits'),
-		submissionStatus: $<Label>('#MapSubmissionStatus'),
-		changelog: $<Panel>('#MapChangelog'),
-		stats: $<Panel>('#MapInfoStats'),
-		websiteButton: $<Button>('#MapInfoWebsiteButton'),
-		tags: $<Label>('#MapTags'),
 		listTypes: {
 			ranked: $<Button>('#MapListRanked'),
 			unranked: $<Button>('#MapListUnranked'),
 			beta: $<Button>('#MapListBeta')
 		},
-		refreshIcon: $<Image>('#RefreshIcon')
+		refreshIcon: $<Image>('#RefreshIcon'),
+
+		//This is incredibly ugly. It would be better to define main menu handler as a global object and get it from there
+		blurPanel: $.GetContextPanel().GetParent().GetParent().GetParent().GetParent().GetFirstChild() as BaseBlurTarget
+	};
+
+	/**
+	 * Control Flow:
+	 * Map Selector connects the Track Selector to Leaderboards - This is required since those components are reused in Tab Menu
+	 * Map Selector sends selected map data to Map Info and Track Selector
+	 * Track Selector forwards the data to Leaderboards
+	 */
+	readonly components = {
+		mapInfo: $<MapInfo>('#MapInfo'),
+		trackSelector: $<TrackSelector>('#TrackSelector'),
+		styleSelector: $<StyleSelector>('#StyleSelector'),
+		leaderboards: $<Leaderboards>('#Leaderboards')
 	};
 
 	// Describing which data on which type of panel we want to store out to PS.
@@ -84,48 +84,43 @@ class MapSelectorHandler implements OnPanelLoad {
 		DualSlider: { event: 'onvaluechanged', properties: ['lowerValue', 'upperValue'] }
 	};
 
-	readonly strings = {
-		staged: $.Localize('#MapInfo_Type_Staged'),
-		linear: $.Localize('#MapInfo_Type_Linear'),
-		placeholder: $.Localize('#MapSelector_Info_Placeholder'),
-		changelogVersion: $.Localize('#MapSelector_Info_Changelog_Version'),
-		statuses: new Map([
-			[
-				MapStatus.PRIVATE_TESTING,
-				{
-					status: $.Localize('#MapSelector_Status_PrivateTesting'),
-					tooltip: $.Localize('#MapSelector_Status_PrivateTesting_Tooltip')
-				}
-			],
-			[
-				MapStatus.CONTENT_APPROVAL,
-				{
-					status: $.Localize('#MapSelector_Status_ContentApproval'),
-					tooltip: $.Localize('#MapSelector_Status_ContentApproval_Tooltip')
-				}
-			],
-			[
-				MapStatus.PUBLIC_TESTING,
-				{
-					status: $.Localize('#MapSelector_Status_PublicTesting'),
-					tooltip: $.Localize('#MapSelector_Status_PublicTesting_Tooltip')
-				}
-			],
-			[
-				MapStatus.FINAL_APPROVAL,
-				{
-					status: $.Localize('#MapSelector_Status_FinalApproval'),
-					tooltip: $.Localize('#MapSelector_Status_FinalApproval_Tooltip')
-				}
-			]
-		]),
-		credits: new Map([
-			[MapCreditType.AUTHOR, '#MapSelector_Info_Authors'],
-			[MapCreditType.CONTRIBUTOR, '#MapSelector_Info_Contributors'],
-			[MapCreditType.SPECIAL_THANKS, '#MapSelector_Info_SpecialThanks'],
-			[MapCreditType.TESTER, '#MapSelector_Info_Testers']
-		])
-	};
+	// PRE REWORK REMOVAL
+	// readonly strings = {
+	// 	staged: $.Localize('#MapInfo_Type_Staged'),
+	// 	linear: $.Localize('#MapInfo_Type_Linear'),
+	// 	placeholder: $.Localize('#MapSelector_Info_Placeholder'),
+	// 	changelogVersion: $.Localize('#MapSelector_Info_Changelog_Version'),
+	// 	statuses: new Map([
+	// 		[
+	// 			MapStatus.PRIVATE_TESTING,
+	// 			{
+	// 				status: $.Localize('#MapSelector_Status_PrivateTesting'),
+	// 				tooltip: $.Localize('#MapSelector_Status_PrivateTesting_Tooltip')
+	// 			}
+	// 		],
+	// 		[
+	// 			MapStatus.CONTENT_APPROVAL,
+	// 			{
+	// 				status: $.Localize('#MapSelector_Status_ContentApproval'),
+	// 				tooltip: $.Localize('#MapSelector_Status_ContentApproval_Tooltip')
+	// 			}
+	// 		],
+	// 		[
+	// 			MapStatus.PUBLIC_TESTING,
+	// 			{
+	// 				status: $.Localize('#MapSelector_Status_PublicTesting'),
+	// 				tooltip: $.Localize('#MapSelector_Status_PublicTesting_Tooltip')
+	// 			}
+	// 		],
+	// 		[
+	// 			MapStatus.FINAL_APPROVAL,
+	// 			{
+	// 				status: $.Localize('#MapSelector_Status_FinalApproval'),
+	// 				tooltip: $.Localize('#MapSelector_Status_FinalApproval_Tooltip')
+	// 			}
+	// 		]
+	// 	]),
+	// };
 
 	readonly nStateButtonClasses: ReadonlyMap<NStateButtonState, string> = new Map([
 		[NStateButtonState.OFF, 'mapselector-filters__nstatebutton--off'],
@@ -145,16 +140,52 @@ class MapSelectorHandler implements OnPanelLoad {
 		$.RegisterForUnhandledEvent('MapSelector_ShowConfirmOverwrite', (mapID) => this.showConfirmOverwrite(mapID));
 		$.RegisterForUnhandledEvent('MapSelector_MapsFiltered', (count) => this.onMapsFiltered(count));
 		$.RegisterForUnhandledEvent('MapSelector_SelectedDataUpdate', (mapData) => this.onSelectedDataUpdated(mapData));
-		$.RegisterForUnhandledEvent('MapSelector_SelectedOnlineDataUpdate', (mapData) =>
-			this.onSelectedOnlineDataUpdated(mapData)
+		$.RegisterForUnhandledEvent('MapCache_CompletionsUpdate', (completions) =>
+			this.onCompletionsUpdate(completions)
 		);
-		$.RegisterForUnhandledEvent('MapSelector_HideLeaderboards', () => this.toggleLeaderboards(false));
 
 		this.panels.nStateButtons.forEach((panel) =>
 			$.RegisterEventHandler('NStateButtonStateChanged', panel, (panelID, state) =>
 				this.onNStateBtnChanged(panelID, state as NStateButtonState)
 			)
 		);
+
+		this.updateAspectScaledWidths();
+
+		// Applying video settings is what changes the aspect ratio in game. The engine may not have
+		// switched mode by the time the event fires, so rescale again shortly after -- the call only
+		// assigns widths, so running it twice is harmless.
+		$.RegisterForUnhandledEvent('ApplyVideoSettings', () => {
+			this.updateAspectScaledWidths();
+			$.Schedule(0.25, () => this.updateAspectScaledWidths());
+		});
+
+		this.components.trackSelector.handler.setBlurPanel(this.panels.blurPanel);
+		this.components.trackSelector.handler.connectLeaderboards(this.components.leaderboards);
+		this.components.trackSelector.handler.connectStyleSelector(this.components.styleSelector);
+		this.components.trackSelector.handler.setPlayButtonVisible(false);
+		this.components.styleSelector.handler.setStyleChangedCallback((style) => this.onStyleSelected(style));
+		this.panels.blurPanel.AddBlurPanel(this.components.styleSelector);
+		// Populate before any map is selected, so the selector isn't empty on first open. Don't push
+		// the style to C++ here: this constructor runs from inside the map selector panel's own
+		// construction, before its filter panels are bound. Nothing to sync anyway - C++ falls back
+		// to the meta mode's default style, which is exactly what setGamemode just selected.
+		this.components.styleSelector.handler.setGamemode(GameModeAPI.GetMetaGameMode());
+		this.components.mapInfo.handler.setBlurPanel(this.panels.blurPanel);
+		this.components.mapInfo.handler.setMapSelector(this.panels.cp);
+
+		this.components.styleSelector.handler.connectTrackSelector(this.components.trackSelector);
+	}
+
+	/**
+	 * Widths of the two columns sized in px rather than percentages -- percentages land the track
+	 * panels' 1px right border on a fractional pixel, which drops it at some resolutions. Being fixed
+	 * px, they have to be rescaled by hand for the current aspect ratio: taller ratios get a narrower
+	 * layout, so a 16:9 width would otherwise crowd out the leaderboard at 16:10 and 4:3.
+	 */
+	private updateAspectScaledWidths() {
+		this.panels.leftContainer.style.width = `${scaleWidthToAspectRatio(820)}px`;
+		this.panels.trackSelectorColumn.style.width = `${scaleWidthToAspectRatio(429)}px`;
 	}
 
 	onPanelLoad() {
@@ -169,10 +200,6 @@ class MapSelectorHandler implements OnPanelLoad {
 		);
 
 		this.panels.cp.applyFilters(false);
-		this.panels.leaderboardContainer.SetHasClass(
-			'mapselector-leaderboards--open',
-			$.persistentStorage.getItem('mapSelector.leaderboardsOpen') ?? false
-		);
 
 		$.DispatchEvent('MapSelector_OnLoaded');
 	}
@@ -343,230 +370,72 @@ class MapSelectorHandler implements OnPanelLoad {
 
 		this.selectedMapData = mapData;
 
-		const baseImageUrl = this.parseMapImageUrl(mapData.staticData);
+		const baseImageUrl = parseMapImageUrl(mapData.staticData);
 		this.panels.cp.applyBackgroundMapImage(mapData.staticData.thumbnail.id, baseImageUrl);
 
-		this.updateSelectedMapInfo(mapData.staticData, mapData.userData);
-		this.updateSelectedMapCredits(mapData.staticData);
-		this.updateSelectedMapRequiredGames(mapData.staticData);
+		this.components.mapInfo.handler.updateMapInfo(mapData);
+		this.components.trackSelector.handler.updateMapData(mapData.staticData);
 
-		// Start loading spinner on live-updateing stats panels -- MapSelector_OnSelectedOnlineDataUpdate will kill it
-		this.panels.stats.AddClass('mapselector-stats--loading');
-	}
-
-	updateSelectedMapInfo(staticData: MMap, userData?: MapCacheAPI.UserData) {
+		// Styles are per-gamemode, so the selector rebuilds (and resets to the mode's default style)
+		// whenever the meta mode changes. Otherwise it keeps whatever the user last picked.
 		const gamemode = GameModeAPI.GetMetaGameMode();
-		const mainTrackTier = Maps.getTier(staticData, gamemode);
-		const numStages = Leaderboards.getNumStages(staticData);
-		const numBonuses = Leaderboards.getNumBonuses(staticData);
-		const isLinear = numStages <= 1;
-		const info = this.panels.info;
+		this.components.styleSelector.handler.setGamemode(gamemode);
+		this.syncSelectedStyle();
 
-		info.SetDialogVariable('name', staticData.name);
+		// Render the cached completions immediately, then refresh rank/total from online if stale.
+		// Updates (a late fetch, GetMap populating PB times, or a new PB) arrive via
+		// MapCache_CompletionsUpdate.
+		const style = this.components.styleSelector.handler.style;
+		this.components.leaderboards.handler.setStyle(style);
+		this.components.trackSelector.handler.updateTrackData(
+			MapCacheAPI.GetCompletions(mapData.staticData.id, gamemode, style)
+		);
+		MapCacheAPI.RefreshCompletions(mapData.staticData.id, gamemode, style);
 
-		info.SetDialogVariableInt('tier', mainTrackTier ?? 0);
-		this.panels.linearSeparator.visible = isLinear;
-		this.panels.linearLabel.visible = isLinear;
-		this.panels.stageCountSeparator.visible = !isLinear;
-		this.panels.stageCountLabel.visible = !isLinear;
-		if (!isLinear) {
-			info.SetDialogVariableInt('stageCount', numStages);
-		}
-		this.panels.bonusCountSeparator.visible = numBonuses > 0;
-		this.panels.bonusCountLabel.visible = numBonuses === 1;
-		this.panels.bonusesCountLabel.visible = numBonuses > 1;
-		if (numBonuses > 0) {
-			info.SetDialogVariableInt('bonusCount', numBonuses);
-		}
-
-		info.SetDialogVariable('description', staticData.info?.description);
-		this.panels.descriptionContainer.SetHasClass('hide', !staticData.info?.description);
-
-		info.SetDialogVariable('date', new Date(staticData.info?.creationDate)?.toLocaleDateString());
-		this.panels.datesContainer.SetHasClass('hide', !staticData.info?.creationDate);
-
-		const pb = Leaderboards.getUserMapDataTrack(userData, gamemode);
-		if (pb) {
-			info.SetDialogVariableFloat('personal_best', pb.time);
-			info.FindChildTraverse('MapInfoPB').visible = true;
-			info.FindChildTraverse('MapInfoNoPB').visible = false;
-		} else {
-			info.FindChildTraverse('MapInfoPB').visible = false;
-			info.FindChildTraverse('MapInfoNoPB').visible = true;
-		}
-
-		const inSubmission = MapStatuses.IN_SUBMISSION.includes(staticData.status);
-		info.SetHasClass('mapselector-map-info--submission', inSubmission);
-
-		if (inSubmission) {
-			const { status, tooltip } = this.strings.statuses.get(staticData.status);
-			this.panels.info.SetDialogVariable('status', status);
-			this.panels.info.SetDialogVariable('status_tooltip', tooltip);
-
-			this.panels.submissionStatus.visible = true;
-
-			const hasChangelog = staticData.versions.length > 1;
-			this.panels.changelog.visible = hasChangelog;
-			if (hasChangelog) {
-				const container = this.panels.changelog.GetChild(1);
-				container.RemoveAndDeleteChildren();
-
-				staticData.versions
-					// Data doesn't seem always ordered by versionNum (?) so doing a sort
-					.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-					.forEach(({ changelog }, i, arr) => {
-						$.CreatePanel('Label', container, '', {
-							class: 'mapselector-map-info__h3',
-							text: $.Localize('#MapSelector_Info_Changelog_Version').replace(
-								'%version%',
-								(arr.length - i).toString()
-							)
-						});
-						// First version doesn't necessarily have a changelog
-						if (changelog) {
-							$.CreatePanel('Label', container, '', {
-								text: changelog,
-								class: 'mapselector-map-info__changelog-text'
-							});
-						}
-					});
-			}
-		} else {
-			this.panels.submissionStatus.visible = false;
-			this.panels.changelog.visible = false;
-			this.panels.info.SetDialogVariable('status', '');
-			this.panels.info.SetDialogVariable('status_tooltip', '');
-		}
+		// PRE REWORK REMOVAL
+		// Start loading spinner on live-updateing stats panels -- MapSelector_OnSelectedOnlineDataUpdate will kill it
+		// this.panels.stats.AddClass('mapselector-stats--loading');
 	}
 
-	updateSelectedMapCredits(staticData: MMap) {
-		this.panels.credits.RemoveAndDeleteChildren();
+	/** Re-render the completion table when the selected map's completions change (fetch or new PB). */
+	onCompletionsUpdate(completions: MapUserCompletions) {
+		if (!this.selectedMapData || completions.mapID !== this.selectedMapData.staticData.id) return;
 
-		// Panorama's buggy right-wrap behaviour makes doing layout for this with CSS very hard - just built out in JS.
-		this.strings.credits
-			.entries()
-			// Map to collections of both regular and placeholder suggestions, filter out empty credit types
-			.map(([type, heading]) => [heading, Maps.getAllCredits(staticData, type)] as const)
-			.filter(([_heading, credits]) => credits.length > 0)
-			.forEach(([heading, credits], i) => {
-				const row =
-					i % 2 === 0
-						? $.CreatePanel('Panel', this.panels.credits, '', { class: 'mapselector-credits__row' })
-						: this.panels.credits.Children().at(-1);
-
-				const col = $.CreatePanel('Panel', row, '', { class: 'mapselector-credits__col' });
-				$.CreatePanel('Label', col, '', { text: $.Localize(heading), class: 'mapselector-map-info__h2' });
-
-				credits.forEach(({ alias, steamID }, i) => {
-					const panel = $.CreatePanel('Panel', col, '', { class: 'mapselector-credits__credit' });
-
-					if (steamID) {
-						$.CreatePanel('AvatarImage', panel, '', {
-							class: 'mapselector-credits__avatar',
-							steamid: steamID
-						});
-					} else {
-						const placeholder = $.CreatePanel('Image', panel, `Placholder${i}`, {
-							class: 'mapselector-credits__placeholder',
-							src: 'file://{images}/help.svg',
-							textureheight: '32px'
-						});
-						placeholder.SetPanelEvent('onmouseover', () =>
-							UiToolkitAPI.ShowTextTooltip(placeholder.id, this.strings.placeholder)
-						);
-						placeholder.SetPanelEvent('onmouseout', () => UiToolkitAPI.HideTextTooltip());
-					}
-
-					const namePanel = $.CreatePanel('Label', panel, '', {
-						text: alias,
-						class: 'mapselector-credits__text mapselector-credits__name'
-					});
-
-					if (steamID) {
-						namePanel.AddClass('mapselector-credits__name--steam');
-
-						// This will become a player profile panel in the future
-						panel.SetPanelEvent('onactivate', () => {
-							UiToolkitAPI.ShowSimpleContextMenu(namePanel.id, '', [
-								{
-									label: $.Localize('#Action_ShowSteamProfile'),
-									jsCallback: () => SteamOverlayAPI.OpenToProfileID(steamID)
-								}
-							]);
-						});
-					}
-				});
-			});
-	}
-
-	readonly requiredGames = [
-		[$('#CSS'), SteamGame.CSS] as const,
-		[$('#CSGO'), SteamGame.CSGO] as const,
-		[$('#TF2'), SteamGame.TF2] as const,
-		[$('#Portal2'), SteamGame.PORTAL2] as const
-	];
-
-	updateSelectedMapRequiredGames(staticData: MMap) {
-		if (!staticData.info?.requiredGames) {
-			this.requiredGames.forEach(([panel]) => {
-				panel.AddClass('mapselector-map-info__required-game--hidden');
-			});
-
+		// Only apply updates for the mode + style we're currently showing.
+		if (
+			completions.gamemode !== GameModeAPI.GetMetaGameMode() ||
+			completions.style !== this.components.styleSelector.handler.style
+		) {
 			return;
 		}
 
-		const mountedGames = GameInterfaceAPI.GetMountedSteamApps();
-		this.requiredGames.forEach(([panel, game]) => {
-			const unmounted = !mountedGames.includes(game);
-			panel.SetHasClass(
-				'mapselector-map-info__required-game--hidden',
-				!staticData.info.requiredGames.includes(game)
-			);
-			panel.SetHasClass('mapselector-map-info__required-game--unmounted', unmounted);
-
-			if (unmounted) {
-				panel.SetDialogVariable('game', SteamGamesNames.get(game));
-				panel.SetPanelEvent('onmouseover', () => {
-					// English is "Missing assets for game: "
-					UiToolkitAPI.ShowTextTooltip(
-						panel.id,
-						'<span class="mapselector-map-info__required-game__tooltip--left">' +
-							$.Localize('#MapSelector_RequiredGames_Tooltip') +
-							'</span><span class="mapselector-map-info__required-game__tooltip--right">' +
-							SteamGamesNames.get(game) +
-							'</span>'
-					);
-				});
-			} else {
-				panel.ClearPanelEvent('onmouseover');
-			}
-		});
+		this.components.trackSelector.handler.updateTrackData(completions);
 	}
 
-	onSelectedOnlineDataUpdated(onlineMapData: MMap) {
-		const statsPanel = this.panels.stats;
+	/** Switch the leaderboard, and the tracks' times/ranks, over to a newly picked style. */
+	onStyleSelected(style: Style) {
+		this.components.leaderboards.handler.setStyle(style);
 
-		statsPanel.RemoveClass('mapselector-stats--loading');
+		// Before the early-out below: the completed filter applies to the whole map list, so it has
+		// to follow the style whether or not a map happens to be selected.
+		this.syncSelectedStyle();
 
-		// Removing / omitting several stats here, so we only include the stats that ACTUALLY WORK
-		// - Subscriptions - No longer exists since removing map library.
-		// - Downloads - No longer tracked by the backend.
-		// - Plays - We *may* track this in the future but don't currently.
-		// - Time Played - We don't track this *yet*.
-		// Map stats is in a very WIP state at the moment and doesn't need to be perfect yet.
-		statsPanel.SetDialogVariableInt('unique_completions', onlineMapData.stats.uniqueCompletions);
-		statsPanel.SetDialogVariableInt('total_completions', onlineMapData.stats.completions);
-		statsPanel.SetDialogVariableInt('favorites', onlineMapData.stats.favorites);
+		if (!this.selectedMapData) return;
 
-		const wr = onlineMapData.worldRecord;
-		if (wr) {
-			statsPanel.SetDialogVariableFloat('world_record', wr?.time ?? 0);
-			statsPanel.FindChildTraverse('MapInfoWR').visible = true;
-			statsPanel.FindChildTraverse('MapInfoNoWR').visible = false;
-		} else {
-			statsPanel.FindChildTraverse('MapInfoWR').visible = false;
-			statsPanel.FindChildTraverse('MapInfoNoWR').visible = true;
-		}
+		const mapID = this.selectedMapData.staticData.id;
+		const gamemode = GameModeAPI.GetMetaGameMode();
+
+		this.components.trackSelector.handler.updateTrackData(MapCacheAPI.GetCompletions(mapID, gamemode, style));
+		MapCacheAPI.RefreshCompletions(mapID, gamemode, style);
+	}
+
+	/**
+	 * Push the style on show down to C++, which owns the completed filter and picks the style it
+	 * dispatches completion updates for. Needed after any style change, including the silent reset
+	 * {@link StyleSelectorHandler.setGamemode} does - it deliberately doesn't fire the change callback.
+	 */
+	private syncSelectedStyle() {
+		this.panels.cp.setSelectedStyle(this.components.styleSelector.handler.style);
 	}
 
 	onActionButtonPressed() {
@@ -581,16 +450,6 @@ class MapSelectorHandler implements OnPanelLoad {
 	 * Data returned from the backend is a bit unwieldy (would be better to just return the CDN url and array of the
 	 * image IDs), don't want to spend the time refactoring.
 	 */
-	parseMapImageUrl(staticData: MMap): string | null {
-		// Pick any image, check URL makes sense
-		const image = staticData.images?.[0]?.small;
-		if (!image || !/http.+\/[\da-z-]{36}-small.jpg/.test(image)) {
-			$.Warning(`Map Selector: Invalid image URL "${image}", not opening gallery`);
-			return null;
-		}
-
-		return image.split('/').slice(0, -1).join('/');
-	}
 
 	openInSteamOverlay() {
 		const mapData = $.GetContextPanel<MomentumMapSelector>().selectedMapData;
@@ -604,26 +463,6 @@ class MapSelectorHandler implements OnPanelLoad {
 	onNStateBtnChanged(panelID: string, state: NStateButtonState) {
 		const panel = this.panels.cp.FindChildTraverse(panelID);
 		this.nStateButtonClasses.entries().forEach(([i, className]) => panel.SetHasClass(className, state === i));
-	}
-
-	toggleLeaderboards(open: boolean) {
-		this.panels.leaderboardContainer.SetHasClass('mapselector-leaderboards--open', open);
-		$.persistentStorage.setItem('mapSelector.leaderboardsOpen', open);
-	}
-
-	openGallery() {
-		if (!this.selectedMapData) return;
-
-		const gallery = UiToolkitAPI.ShowCustomLayoutPopup<Gallery>(
-			'MapSelectorGallery',
-			'file://{resources}/layout/components/gallery.xml'
-		);
-
-		gallery.handler.init(
-			this.panels.cp,
-			this.selectedMapData.staticData.images?.map(({ id }) => id) ?? [],
-			this.parseMapImageUrl(this.selectedMapData.staticData) ?? ''
-		);
 	}
 
 	checkingUpdates = false;
