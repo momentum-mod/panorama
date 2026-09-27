@@ -59,9 +59,7 @@ class MapSelectorHandler implements OnPanelLoad {
 			beta: $<Button>('#MapListBeta')
 		},
 		refreshIcon: $<Image>('#RefreshIcon'),
-
-		//This is incredibly ugly. It would be better to define main menu handler as a global object and get it from there
-		blurPanel: $.GetContextPanel().GetParent().GetParent().GetParent().GetParent().GetFirstChild() as BaseBlurTarget
+		blurPanel: this.findBackgroundBlurPanel()
 	};
 
 	/**
@@ -83,44 +81,6 @@ class MapSelectorHandler implements OnPanelLoad {
 		NStateButton: { event: 'onactivate', properties: ['currentstate'] },
 		DualSlider: { event: 'onvaluechanged', properties: ['lowerValue', 'upperValue'] }
 	};
-
-	// PRE REWORK REMOVAL
-	// readonly strings = {
-	// 	staged: $.Localize('#MapInfo_Type_Staged'),
-	// 	linear: $.Localize('#MapInfo_Type_Linear'),
-	// 	placeholder: $.Localize('#MapSelector_Info_Placeholder'),
-	// 	changelogVersion: $.Localize('#MapSelector_Info_Changelog_Version'),
-	// 	statuses: new Map([
-	// 		[
-	// 			MapStatus.PRIVATE_TESTING,
-	// 			{
-	// 				status: $.Localize('#MapSelector_Status_PrivateTesting'),
-	// 				tooltip: $.Localize('#MapSelector_Status_PrivateTesting_Tooltip')
-	// 			}
-	// 		],
-	// 		[
-	// 			MapStatus.CONTENT_APPROVAL,
-	// 			{
-	// 				status: $.Localize('#MapSelector_Status_ContentApproval'),
-	// 				tooltip: $.Localize('#MapSelector_Status_ContentApproval_Tooltip')
-	// 			}
-	// 		],
-	// 		[
-	// 			MapStatus.PUBLIC_TESTING,
-	// 			{
-	// 				status: $.Localize('#MapSelector_Status_PublicTesting'),
-	// 				tooltip: $.Localize('#MapSelector_Status_PublicTesting_Tooltip')
-	// 			}
-	// 		],
-	// 		[
-	// 			MapStatus.FINAL_APPROVAL,
-	// 			{
-	// 				status: $.Localize('#MapSelector_Status_FinalApproval'),
-	// 				tooltip: $.Localize('#MapSelector_Status_FinalApproval_Tooltip')
-	// 			}
-	// 		]
-	// 	]),
-	// };
 
 	readonly nStateButtonClasses: ReadonlyMap<NStateButtonState, string> = new Map([
 		[NStateButtonState.OFF, 'mapselector-filters__nstatebutton--off'],
@@ -184,6 +144,18 @@ class MapSelectorHandler implements OnPanelLoad {
 	private updateAspectScaledWidths() {
 		this.panels.leftContainer.style.width = `${scaleWidthToAspectRatio(820)}px`;
 		this.panels.trackSelectorColumn.style.width = `${scaleWidthToAspectRatio(429)}px`;
+	}
+
+	private findBackgroundBlurPanel(): BaseBlurTarget | null {
+		let root = $.GetContextPanel() as GenericPanel;
+
+		while (true) {
+			const parent = root.GetParent();
+			if (!parent) break;
+			root = parent;
+		}
+
+		return root.FindChildTraverse('MainMenuBackgroundBlur') as BaseBlurTarget | null;
 	}
 
 	onPanelLoad() {
