@@ -173,8 +173,6 @@ class MapSelectorHandler implements OnPanelLoad {
 		this.components.styleSelector.handler.setGamemode(GameModeAPI.GetMetaGameMode());
 		this.components.mapInfo.handler.setBlurPanel(this.panels.blurPanel);
 		this.components.mapInfo.handler.setMapSelector(this.panels.cp);
-
-		this.components.styleSelector.handler.connectTrackSelector(this.components.trackSelector);
 	}
 
 	/**

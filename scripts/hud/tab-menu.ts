@@ -116,8 +116,6 @@ class HudTabMenuHandler {
 			trackNum: number
 		) => this.openEndOfRun(EndOfRunShowReason.MANUALLY_SHOWN, { trackStyle, trackType, trackNum });
 
-		this.components.styleSelector.handler.connectTrackSelector(this.components.trackSelector);
-
 		// Render the cached completions immediately, then refresh from online if stale. Updated data
 		// (a late fetch, or a new PB patched by the run poster) arrives via MapCache_CompletionsUpdate.
 		const style = this.components.styleSelector.handler.style;
@@ -180,6 +178,7 @@ class HudTabMenuHandler {
 	/** Switch the leaderboard, and the tracks' times/ranks, over to a newly picked style. */
 	onStyleSelected(style: Style) {
 		this.panels.leaderboards.handler.setStyle(style);
+		this.components.trackSelector.handler.updateEorButtonVisibility();
 
 		const mapData = MapCacheAPI.GetCurrentMapData();
 
