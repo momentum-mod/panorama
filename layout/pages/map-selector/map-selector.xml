@@ -262,20 +262,5 @@
                 </Panel>
 			</Panel>
 		</Panel>
-
-
-
-
-
-
-
-
-
-
-        <!-- ALL OF THIS NEEDS TO LIVE HERE OR THE GAME CRASHES.-->
-        <Panel id="MapTimes" class="mapselector-leaderboards hide">
-                <!-- <Leaderboards id="Leaderboards" class="mapselector-leaderboards__list mapselector-leaderboards__list- -hidden leaderboards- -in-map-selector" /> -->
-        </Panel>
-        <Panel id="MapInfoStats" class="mapselector-stats hide" />
 	</MomentumMapSelect>
 </root>
