@@ -1,0 +1,7 @@
+.hud-zoning {
+	horizontal-align: center;
+	vertical-align: center;
+	flow-children: down;
+	// Above the crosshair
+	transform: translateY(-80px);
+}
