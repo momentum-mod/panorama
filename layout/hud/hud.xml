@@ -45,7 +45,7 @@
         <MomHudAhopSprint id="AhopSprint"/>
 
         <!-- Not in customizer -->
-		<ConVarEnabler convar="mom_zoning_enable" togglevisibility="true">
+		<ConVarEnabler class="full" convar="mom_zoning_enable" togglevisibility="true" hittest="false" hittestchildren="false">
 			<MomHudZoning />
 		</ConVarEnabler>
         <MomHudJumpTiming />
