@@ -4,6 +4,7 @@ import { Style } from 'common/web/enums/style.enum';
 import { MapUserCompletions } from 'common/maps';
 import { CompletionGroup } from 'common/web/enums/completion-group.enum';
 import { getCompletionGroup, getGroupBoundaries } from 'common/completion-group';
+import { LeaderboardType } from 'common/web/enums/leaderboard-type.enum';
 
 /**
  * A track to render, whatever its source. Online maps source these from the map's completions;
@@ -13,6 +14,7 @@ interface TrackEntry {
 	trackType: TrackType;
 	trackNum: number;
 	tier?: number;
+	type?: LeaderboardType;
 	time?: number;
 	rank?: number;
 	totalCompletions?: number;
@@ -21,6 +23,7 @@ interface TrackEntry {
 interface TrackDisplayData {
 	track: string;
 	tier?: number;
+	type: LeaderboardType;
 	time?: number;
 	rank?: number;
 	total?: number;
@@ -77,7 +80,7 @@ export class TrackSelectorHandler {
 	private selectedTrackKey: string | null = null;
 	private currentMapKey: string | null = null;
 
-	private showActionButtons = true;
+	private isOnMapSelector = false;
 
 	// TODO: Blur broken when scrolling / Fixed in panzer's pr
 	blurPanel: BaseBlurTarget | null = null;
@@ -90,8 +93,8 @@ export class TrackSelectorHandler {
 		this.leaderboards = leaderboards;
 	}
 
-	setPlayButtonVisible(visible: boolean) {
-		this.showActionButtons = visible;
+	setIsOnMapSelector(visible: boolean) {
+		this.isOnMapSelector = visible;
 	}
 
 	connectStyleSelector(styleSelector: StyleSelector) {
@@ -224,9 +227,12 @@ export class TrackSelectorHandler {
 		};
 
 		tracks.forEach((track) => {
+			if (track.type === LeaderboardType.HIDDEN && this.isOnMapSelector) return;
+
 			const key = TrackSelectorHandler.trackKey(track);
 			const isMain = track.trackType === TrackType.MAIN;
 			const isStage = track.trackType === TrackType.STAGE;
+			const isUnranked = track.type === LeaderboardType.UNRANKED;
 
 			let trackPanel = reuse ? this.trackPanels.get(key) : undefined;
 			if (!trackPanel) {
@@ -237,6 +243,12 @@ export class TrackSelectorHandler {
 				this.trackPanels.set(key, panel);
 				trackPanel = panel;
 
+				const trackLabel = trackPanel.FindChildrenWithClassTraverse('track-panel__track-label')[0] as Label;
+				if (isUnranked) {
+					trackLabel.AddClass('track-selector-label--muted');
+					trackLabel.GetFirstChild().RemoveClass('hide');
+				}
+
 				const eorButton = panel.FindChildTraverse('OpenEOR');
 				eorButton.visible = false;
 				eorButton.SetPanelEvent('onactivate', () => {
@@ -245,7 +257,7 @@ export class TrackSelectorHandler {
 				});
 
 				const playButton = panel.FindChildTraverse('PlayTrack');
-				playButton.visible = this.showActionButtons;
+				playButton.visible = !this.isOnMapSelector;
 				playButton.SetPanelEvent('onactivate', () => {
 					const style = this.styleSelector?.handler.style;
 					if (style != null) GameInterfaceAPI.ConsoleCommand(`mom_style ${style}`);
@@ -283,6 +295,7 @@ export class TrackSelectorHandler {
 			this.populateTrackPanel(trackPanel, {
 				track: trackLabel,
 				tier: track.tier,
+				type: track.type,
 				time: track.time,
 				rank: track.rank,
 				total: track.totalCompletions,
@@ -341,7 +354,7 @@ export class TrackSelectorHandler {
 			}
 
 			const hasRun = this.endOfRun?.handler.runCache?.has(currentStyle, trackType, trackNum);
-			eorButton.visible = this.showActionButtons && hasRun;
+			eorButton.visible = !this.isOnMapSelector && hasRun;
 		});
 	}
 
@@ -371,6 +384,7 @@ export class TrackSelectorHandler {
 		// won't revive a clobbered binding, but SetTextWithDialogVariables re-applies the template
 		// against the current variables. The tokens mirror the label text in track-selector.xml.
 		const tierLabel = trackPanel.FindChildrenWithClassTraverse('track-panel__tier-label')[0] as Label;
+
 		if (data.tier > 0) {
 			trackPanel.SetDialogVariableInt('tier', data.tier);
 			tierLabel.SetTextWithDialogVariables('T{i:tier}');
