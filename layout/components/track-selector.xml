@@ -11,9 +11,7 @@
         <snippet name="track-panel">
             <RadioButton group="track-selector" class="track-panel">
                 <Panel class="track-panel__track">
-                    <Label class="track-selector-label track-panel__track-label" text="{s:track}">
-                    	<Image class="track-selector-unranked hide" src="file://{images}/numeric-off-mirrored.svg" textureheight="20" />
-                    </Label>
+                    <Label class="track-selector-label track-panel__track-label" text="{s:track}" />
                 </Panel>
                 <Panel class="track-panel__tier">
                     <Label class="track-selector-label track-panel__tier-label" text="T{i:tier}"/>
