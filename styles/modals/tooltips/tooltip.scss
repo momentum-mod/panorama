@@ -7,7 +7,10 @@
 	$root: &;
 	flow-children: down;
 	opacity: 0;
-	transition: opacity 0.1s ease-out 0s;
+	transition: opacity 0.05s ease-out 0s;
+	border: 1px solid rgba(40, 40, 40, 1);
+	box-shadow: 0 1px 2px 2px rgba(0, 0, 0, 0.35);
+	border-radius: 8px;
 	margin: $tooltip-margin;
 
 	&__row {
@@ -52,7 +55,7 @@
 		vertical-align: middle;
 		@include mixin.font-regular();
 		font-size: $tooltip-text-font-size;
-		line-height: 24px;
+		line-height: 20px;
 	}
 
 	&__image {
