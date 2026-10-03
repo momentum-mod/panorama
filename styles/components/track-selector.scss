@@ -151,6 +151,7 @@ TrackSelector {
 	font-size: 20px;
 	text-align: center;
 	align: center center;
+	overflow: noclip;
 
 	// Placeholder state for a missing time/rank, toggled from track-selector.ts. A class (rather than
 	// an inline color) so it clears cleanly when a panel is reused and the value later appears.
