@@ -7,80 +7,33 @@
 		<include type="module" src="file://{scripts}/pages/leaderboards/leaderboards.ts" />
 	</scripts>
 
-	<Leaderboards class="leaderboards" acceptsinput="true" acceptsfocus="true" hittest="true" hittestchildren="true">
-		<Panel class="leaderboard-filter-buttons online">
-			<Panel class="tabs">
-				<RadioButton id="TimesListGlobal" class="tabs__tab" onactivate="LeaderboardsHandler.setSelectedTimesList(LeaderboardListType.GLOBAL);">
-					<Label class="tabs__text" text="#Leaderboards_Category_Global" />
+	<Leaderboards class="leaderboards leaderboards__list" acceptsinput="true" acceptsfocus="true" hittest="true" hittestchildren="true">
+		<Panel class="leaderboard-top">
+			<Panel class="leaderboard-radio">
+				<RadioButton id="TimesListGlobal" class="leaderboard-radio__radio-button" onactivate="LeaderboardsHandler.setFilter(LeaderboardRecordsFilter.GLOBAL)">
+					<Label class="leaderboard-radio__radio-button__label" text="#Leaderboards_Category_Global" />
 				</RadioButton>
-				<RadioButton id="TimesListLocal" class="tabs__tab" onactivate="LeaderboardsHandler.setSelectedTimesList(LeaderboardListType.LOCAL);">
-					<Label class="tabs__text" text="#Leaderboards_Category_Local" />
+				<RadioButton id="TimesListFriends" class="leaderboard-radio__radio-button" onactivate="LeaderboardsHandler.setFilter(LeaderboardRecordsFilter.FRIENDS)">
+					<Label class="leaderboard-radio__radio-button__label" text="#Leaderboards_Category_Friends" />
 				</RadioButton>
-				<RadioButton id="TimesListLobby" class="tabs__tab" onactivate="LeaderboardsHandler.setSelectedTimesList(LeaderboardListType.LOBBY);" onmouseover="LeaderboardsHandler.showLobbyTooltip();" onmouseout="UiToolkitAPI.HideTextTooltip();">
-					<Label class="tabs__text" text="#Leaderboards_Category_Lobby" />
+				<RadioButton id="TimesListLobby" class="leaderboard-radio__radio-button" onactivate="LeaderboardsHandler.setFilter(LeaderboardRecordsFilter.LOBBY)">
+					<Label class="leaderboard-radio__radio-button__label" text="#Leaderboards_Category_Lobby" />
+				</RadioButton>
+				<RadioButton id="TimesListLocal" class="leaderboard-radio__radio-button leaderboard-radio__radio-button--saved" onactivate="LeaderboardsHandler.setFilter(LeaderboardRecordsFilter.SAVED_REPLAYS)">
+					<Label class="leaderboard-radio__radio-button__label" text="Saved Replays" />
 				</RadioButton>
 			</Panel>
-
-			<Panel id="FilterButtonsSubtype" class="leaderboard-filter-buttons__subtypes">
-				<Panel class="leaderboard-filter-buttons__local tabs">
-					<RadioButton id="LocalTypeRuns" class="tabs__tab" onactivate="LeaderboardsHandler.setSelectedListType(LeaderboardListType.LOCAL, LeaderboardType.LOCAL);">
-						<Label class="tabs__text" text="#Leaderboards_Category_YourRuns" />
-					</RadioButton>
-					<RadioButton id="LocalTypeDownloaded" class="tabs__tab" onactivate="LeaderboardsHandler.setSelectedListType(LeaderboardListType.LOCAL, LeaderboardType.LOCAL_DOWNLOADED);">
-						<Label class="tabs__text" text="#Leaderboards_Category_Downloaded" />
-					</RadioButton>
-				</Panel>
-				<Panel class="leaderboard-filter-buttons__online tabs">
-					<RadioButton id="OnlineTypeTop10" class="tabs__tab" onactivate="LeaderboardsHandler.setSelectedListType(LeaderboardListType.GLOBAL, LeaderboardType.TOP10);">
-						<Label class="tabs__text" text="#Leaderboards_Category_Top10" />
-					</RadioButton>
-					<RadioButton id="OnlineTypeAround" class="tabs__tab" onactivate="LeaderboardsHandler.setSelectedListType(LeaderboardListType.GLOBAL, LeaderboardType.AROUND);">
-						<Label class="tabs__text" text="#Leaderboards_Category_Around" />
-					</RadioButton>
-					<RadioButton id="OnlineTypeFriends" class="tabs__tab" onactivate="LeaderboardsHandler.setSelectedListType(LeaderboardListType.GLOBAL, LeaderboardType.FRIENDS);">
-						<Label class="tabs__text" text="#Leaderboards_Category_Friends" />
-					</RadioButton>
-				</Panel>
-			</Panel>
-
-			<Panel class="w-fill mr-4"/>
-
-			<DropDown id="StylesDropdown" class="dropdown leaderboards__style-dropdown" menuclass="dropdown-menu">
-				<Panel id="placeholder" /> <!-- This is needed to dynamically add dropdown items from code -->
-			</DropDown>
-
-			<DropDown id="TracksDropdown" class="dropdown leaderboards__dropdown" menuclass="dropdown-menu">
-				<Panel id="placeholder" /> <!-- This is needed to dynamically add dropdown items from code -->
-			</DropDown>
-
-			<TooltipPanel tooltip="#Leaderboards_SyncTrackButton" class="v-align-center">
-				<Button id="SyncTrackButton" class="button leaderboards__sync-button" onactivate="LeaderboardsHandler.syncTrackWithLeaderboard();">
-					<Image class="button__icon" src="file://{images}/swap-horizontal-bold.svg" textureheight="32" />
-				</Button>
-			</TooltipPanel>
-
-			<TooltipPanel tooltip="#Leaderboards_EndOfRunButton" class="v-align-center">
-				<Button id="EndOfRunButton" class="button leaderboards__end-of-run-button" onactivate="LeaderboardsHandler.showEndOfRun();">
-					<Image class="button__icon button__icon--left" src="file://{images}/arrow-thick-right.svg" textureheight="64" />
-				</Button>
-			</TooltipPanel>
-
-			<Button class="button button--blue leaderboards__hide-button" onactivate="$.DispatchEvent('MapSelector_HideLeaderboards');">
-				<Image class="button__icon button__icon--left" src="file://{images}/chart-timeline.svg" textureheight="40" />
-				<Label class="button__text button__icon--right mr-3" text="#MapSelector_Button_Leaderboards" />
-			</Button>
 		</Panel>
-		<Panel class="leaderboard-times">
-			<Panel class="leaderboard-times__header">
-				<Label class="leaderboard-entry__rank leaderboard-times__header-item" text="#Leaderboards_Column_Rank" />
-				<Label class="leaderboard-entry__player leaderboard-times__header-item" text="#Leaderboards_Column_Player" />
-				<Label class="leaderboard-entry__time leaderboard-times__header-item" text="#Leaderboards_Column_Time" />
-				<Label class="leaderboard-entry__achieved leaderboard-times__header-item" text="#Leaderboards_Column_Date" />
-			</Panel>
-			<Panel id="LeaderboardTimesContainer" class="leaderboard-times__main">
-				<DelayLoadList id="TimesList" class="leaderboard-times__list" itemheight="30px" itemwidth="100%" spacersize="0px" spacerperiod="1">
-					<!-- Populated via code -->
-				</DelayLoadList>
+		<Panel class="leaderboard-center">
+			<Panel id="LeaderboardTimesContainer" class="leaderboard-times">
+                <Panel id="TimesList2" class="leaderboard-times__list">
+                    <!-- Populated via code -->
+                </Panel>
+
+                <Panel id="GroupPillsLayer" class="leaderboard-times__group-pills" hittest="false" hittestchildren="false">
+                    <!-- Populated via code -->
+                </Panel>
+
 				<Panel class="leaderboard-times__empty">
 					<Panel class="v-align-center h-align-center flow-down">
 						<Label id="LeaderboardEmptyWarningTitle" class="text-h3 h-align-center mb-3" text="#Leaderboards_NoRunsFound" />
@@ -94,6 +47,57 @@
 					</Panel>
 				</Panel>
 			</Panel>
+		</Panel>
+
+		<Panel class="leaderboard-bottom">
+            <Panel id="LeaderboardTools" class="leaderboard-tools">
+                <TooltipPanel class="leaderboard-tools__tooltip" tooltip="#HudCustomizer_Menu">
+                    <Button id="CustomizerOpen" class="leaderboard-tools__button" onactivate="LeaderboardsHandler.openHudCustomizer()">
+                        <Panel class="leaderboard-tools__icon-container">
+                            <Image class="leaderboard-tools__icon" src="file://{images}/vector-two-click.svg" textureheight="24" />
+                        </Panel>
+                    </Button>
+                </TooltipPanel>
+
+                <ConVarEnabler class="leaderboard-tools__cheat-gate" convar="sv_cheats" togglevisibility="true">
+                    <TooltipPanel class="leaderboard-tools__tooltip" tooltip="#Zoning_Menu">
+                        <Button id="ZoningOpen" class="leaderboard-tools__button" onactivate="LeaderboardsHandler.openZoneEditor()">
+                            <Panel class="leaderboard-tools__icon-container">
+                                <Image class="leaderboard-tools__icon" src="file://{images}/timer-edit.svg" textureheight="24" />
+                            </Panel>
+                        </Button>
+                    </TooltipPanel>
+                </ConVarEnabler>
+            </Panel>
+
+            <Panel id="ControlsContainer" class="leaderboard-controls">
+                <Button id="GroupPrev" class="leaderboard-controls__change-page leaderboard-controls__change-page--group" onactivate="LeaderboardsHandler.previousGroup()">
+                    <Image textureheight="24" src="file://{images}/double-chevron-left.svg" />
+                </Button>
+
+                <Button id="PagePrev" class="leaderboard-controls__change-page" onactivate="LeaderboardsHandler.previousPage()">
+                    <Image textureheight="24" src="file://{images}/chevron-left.svg" />
+                </Button>
+
+                <TextEntry id="PageSelect" class="leaderboard-controls__select-page" textmode="numeric" text="1" />
+                <Label id="TotalPages" class="leaderboard-controls__total-pages" text="/ {i:total-pages}"/>
+
+                <Button id="PageNext" class="leaderboard-controls__change-page" onactivate="LeaderboardsHandler.nextPage()">
+                    <Image textureheight="24" src="file://{images}/chevron-right.svg" />
+                </Button>
+
+                <Button id="GroupNext" class="leaderboard-controls__change-page leaderboard-controls__change-page--group" onactivate="LeaderboardsHandler.nextGroup()">
+                    <Image textureheight="24" src="file://{images}/double-chevron-right.svg" />
+                </Button>
+            </Panel>
+
+            <TooltipPanel id="AroundTooltip" class="leaderboard-around" tooltip="#Leaderboards_PersonalBestTooltip">
+                <Button id="Around" class="leaderboard-around__button" onactivate="LeaderboardsHandler.showAroundPage()">
+                    <Panel class="leaderboard-around__icon-container">
+                        <Image id="Icon" class="leaderboard-around__icon" src="file://{images}/jump-to.svg" textureheight="24" />
+                    </Panel>
+                </Button>
+            </TooltipPanel>
 		</Panel>
 	</Leaderboards>
 </root>

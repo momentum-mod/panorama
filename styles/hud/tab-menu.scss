@@ -2,6 +2,9 @@
 @use '../abstract/mixin';
 @use '../abstract/function';
 @use 'sass:color';
+@use 'sass:map';
+
+// ─── Main Container ───────────────────────────────────────────────────────────
 
 .hud-tab-menu {
 	$root: &;
@@ -11,240 +14,154 @@
 	width: 100%;
 	height: 100%;
 
-	&--unofficial {
-		.hud-tab-menu-map-info__bottom,
-		.hud-tab-menu-map-info__showcase {
-			visibility: collapse;
-		}
-	}
-
 	&__wrapper {
-		horizontal-align: center;
-		vertical-align: center;
-		flow-children: down;
-		box-shadow: 0 0 20px 0 rgba(0, 0, 0, 1);
-		border: 1px solid rgba(0, 0, 0, 0.65);
-	}
-
-	&__header {
-		flow-children: right;
 		width: 100%;
-		background-color: rgba(0, 0, 0, 0.5);
-	}
-
-	&__header-image {
 		height: 100%;
-		width: height-percentage(100%);
-		margin: 24px 16px 24px 24px;
-		padding: -4px; // >:)
-		img-shadow: 0 1px 3px rgba(0, 0, 0, 1);
+		flow-children: none;
 	}
+}
 
-	&__stats {
+// ─── Layout regions ───────────────────────────────────────────────────────────
+
+.tab-menu-top {
+	horizontal-align: center;
+	vertical-align: top;
+	width: 100%;
+	height: 190px;
+
+	&__center-group {
+		width: fit-children;
+		height: fit-children;
+		flow-children: right;
+		align: center center;
+	}
+}
+
+.tab-menu-center {
+	$root: &;
+
+	horizontal-align: center;
+	vertical-align: center;
+	width: 100%;
+	height: 800px;
+	flow-children: right;
+
+	// The style selector sits at the top of the leaderboard column; this is the height it and its
+	// gap occupy, which the track selector is offset by to keep both columns' tops aligned.
+	$style-selector-slot: $dropdown-button-height + 16px;
+
+	&__main-container {
 		width: 100%;
-		height: fit-children; // Don't show the stats panel until we actually make it
-		background-color: rgba(36, 36, 36, 0.9);
-	}
-
-	&__map-info {
-		flow-children: down;
-		margin: 24px 24px 24px 0px;
-	}
-
-	&__sidebysidecontainer {
+		height: 100%;
 		flow-children: right;
 	}
 
-	&__leaderboards {
-		padding: 24px;
-		padding-top: 16px;
-		padding-bottom: 14px;
-		background-color: rgba(0, 0, 0, 0.6);
+	&__left {
+		width: 33%;
+		height: 100%;
+	}
 
-		&--hidden {
-			visibility: collapse;
+	&__center {
+		width: 33%;
+		margin: 0 16px;
+		height: 100%;
+		flow-children: down;
+
+		// Offset by the style selector's slot so the track list lines up with the leaderboard below it
+		TrackSelector {
+			margin-top: $style-selector-slot;
+			height: fill-parent-flow(1);
 		}
 	}
 
-	&__endofrun {
-		width: 1000px;
+	&__right {
+		width: 33%;
+		height: 100%;
+		flow-children: down;
 
-		&--hidden {
-			visibility: collapse;
+		// Fill the space left below the style selector rather than the default 100%, which would
+		// overflow the column
+		Leaderboards {
+			height: fill-parent-flow(1);
 		}
 	}
 
-	$footer-height: 36px;
-
-	&__footer-button {
-		height: $footer-height;
-		width: $footer-height;
-		vertical-align: center;
-		border-right: 1px solid rgba(255, 255, 255, 0.01);
-		background-position: center;
-		background-repeat: no-repeat;
-		background-color: gradient(radial, 50% 50%, 0% 0%, 100% 100%, from(rgba(0, 0, 0, 0.1)), to(rgba(0, 0, 0, 0.3)));
-		background-size: 70% 70%;
-		img-shadow: $button-icon-shadow;
-		wash-color: $button-text-color;
-		transition: background-color 0.05s ease-out 0s;
-
-		&--hud-customizer {
-			background-image: url('file://{images}/television-guide.svg');
-		}
-
-		&--zoning {
-			background-image: url('file://{images}/pencil-outline.svg');
-
-			&:selected {
-				background-image: url('file://{images}/pencil-off-outline.svg');
-			}
-		}
-
-		&:hover {
-			background-color: gradient(
-				radial,
-				50% 50%,
-				0% 0%,
-				100% 100%,
-				from(rgba(0, 0, 0, 0.3)),
-				to(rgba(0, 0, 0, 0.6))
-			);
-		}
+	// Sits above the leaderboard in its own column, so its right edge tracks the leaderboard's
+	// regardless of how the columns are centered.
+	&__style-selector {
+		margin-bottom: 16px;
 	}
 
-	&__footer {
-		border-top: 1px solid rgba(0, 0, 0, 0.4);
-		width: 100%;
-		height: $footer-height;
-		padding-right: 24px;
-		vertical-align: bottom;
-		background-color: rgba(0, 0, 0, 0.6);
+	&--no-playerlist {
+		#{$root}__center {
+			margin-left: 17%; // (100% - 33% - 33%) / 2, recenters the remaining pair
+		}
 	}
+}
 
-	&__enable-cursor-tip {
-		font-size: 11px;
-		color: rgba(255, 255, 255, 0.6);
-		vertical-align: center;
-		horizontal-align: right;
-	}
+.tab-menu-bottom {
+	vertical-align: bottom;
+	width: 100%;
+	height: 140px;
 
 	&__beta-info {
-		width: 100%;
-		height: 60px;
-		background-color: rgba(128, 128, 128, 0.089);
-		padding: 5px;
-	}
+		align: center center;
+		flow-children: right;
+		background-color: rgba(0, 0, 0, 0.6);
+		border: 1px solid rgba(255, 255, 255, 0.08);
+		border-radius: 2px;
+		padding: 12px 20px;
 
-	&__website-button {
-		width: 100px;
-		horizontal-align: right;
-		vertical-align: center;
-		padding: 5px;
+		&.hide {
+			visibility: collapse;
+		}
 	}
 
 	&__beta-info-label {
-		width: 100%;
 		vertical-align: center;
-		text-align: center;
-		font-size: 18px;
-		text-shadow: 1px 1px 2px black;
+		margin-right: 20px;
+		font-size: 20px;
+		font-weight: bold;
+		color: rgba(255, 255, 255, 0.9);
+		text-shadow: 0px 2px 4px 2 rgba(0, 0, 0, 0.5);
+	}
+
+	&__website-button {
+		vertical-align: center;
+		padding: 8px 16px;
+
+		.button__text {
+			font-size: 24px;
+			font-weight: bold;
+		}
+
+		.button__icon {
+			vertical-align: center;
+			padding: 0px;
+		}
 	}
 }
 
-.hud-tab-menu-map-info {
-	&__top {
-		flow-children: right;
-		width: fill-parent-flow(1);
-	}
+// ─── Content containers ───────────────────────────────────────────────────────
 
-	&__bottom {
-		flow-children: right;
-		width: 100%;
-		margin-bottom: 4px;
-		// height: 28px;
-	}
+.tab-menu-name-container {
+	width: fit-children;
+	height: fit-children;
+	flow-children: right;
+	align: center center;
 
-	&__map-name {
-		@include mixin.font-header();
-		font-weight: bold;
-		font-size: 48px;
-	}
-
-	&__credits {
-		flow-children: right;
-		width: fill-parent-flow(1);
-		height: 100%;
-		margin-right: 8px;
-		overflow: scroll squish;
-
-		& > HorizontalScrollBar {
-			.ScrollThumb {
-				transform: translateY(6px);
-				max-height: 2px;
-			}
-		}
-	}
-
-	&__credits-other-text,
-	&__credits-name {
-		@include mixin.font-header();
-		font-weight: bold;
-		font-size: 24px;
-	}
-
-	&__credits-name {
-		margin-left: 4px;
-		color: color.scale($mid-blue, $lightness: 75%);
-
-		&--steam {
-			color: $mid-blue;
-			transition: color 0.1s ease-in-out 0s;
-
-			&:hover {
-				color: color.scale($mid-blue, $lightness: 50%);
-			}
-		}
-	}
-
-	&__showcase {
-		height: 100%;
-		width: height-percentage(100%);
-		horizontal-align: right;
+	&__name-label-container {
 		vertical-align: center;
-		margin: 12px 0px 12px 24px;
-	}
-
-	&__stats {
-		flow-children: right;
-		horizontal-align: right;
-		vertical-align: center;
-
-		@include mixin.font-header();
-		font-weight: bold;
-		font-size: 24px;
 	}
 }
 
-.hud-tab-menu-map-info-stats {
-	&__stat {
-		@include mixin.font-header();
-		font-weight: bold;
-		font-size: 24px;
-	}
+.tab-menu-endofrun {
+	width: 100%;
+	height: 100%;
 
-	&__icon {
-		height: 100%;
-		width: height-percentage(100%);
-		margin-right: 12px;
-		img-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
-	}
-
-	&__separator {
-		margin: 4px 6px;
-		width: 2px;
-		height: 100%;
-		box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.8);
-		background-color: white;
+	&__frame {
+		width: 50%;
+		height: fit-children;
+		align: center center;
 	}
 }

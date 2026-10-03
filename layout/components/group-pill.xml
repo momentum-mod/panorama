@@ -1,0 +1,14 @@
+<root>
+    <styles>
+		<include src="file://{resources}/styles/main.scss" />
+		<include src="file://{resources}/styles/components/group-pill.scss" />
+	</styles>
+	
+	<scripts>
+		<include type="module" src="file://{scripts}/components/group-pill.ts" />
+	</scripts>
+
+    <GroupPill class="group-pill">
+            <Label id="GroupPillLabel" class="group-pill__label" text="G{i:group}"/>
+    </GroupPill>
+</root>
