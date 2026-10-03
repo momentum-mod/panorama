@@ -244,9 +244,15 @@ export class TrackSelectorHandler {
 				trackPanel = panel;
 
 				const trackLabel = trackPanel.FindChildrenWithClassTraverse('track-panel__track-label')[0] as Label;
+
 				if (isUnranked) {
 					trackLabel.AddClass('track-selector-label--muted');
-					trackLabel.GetFirstChild().RemoveClass('hide');
+					trackLabel.SetPanelEvent('onmouseover', () => {
+						UiToolkitAPI.ShowTextTooltipOnPanel(trackLabel, $.Localize('MapSelector_Tabs_Unranked'));
+					});
+					trackLabel.SetPanelEvent('onmouseout', () => {
+						UiToolkitAPI.HideTextTooltip();
+					});
 				}
 
 				const eorButton = panel.FindChildTraverse('OpenEOR');
