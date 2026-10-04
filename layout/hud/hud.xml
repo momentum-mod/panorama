@@ -43,6 +43,7 @@
         <MomHudDFJump id="DFJump"/>
         <MomHudPowerupTimer id="PowerupTimer"/>
         <MomHudAhopSprint id="AhopSprint"/>
+        <MomHudYawSpeed id="YawSpeed"/>
 
         <!-- Not in customizer -->
 		<ConVarEnabler convar="mom_zoning_enable" togglevisibility="true">
