@@ -190,6 +190,8 @@
 													<Label text="#MapSelector_Sorting_LastPlayed_Desc" id="lastPlayDesc" value="5" />
 													<Label text="#MapSelector_Sorting_DateCreated_Asc" id="dateCreatedAsc" value="8" />
 													<Label text="#MapSelector_Sorting_DateCreated_Desc" id="dateCreatedDesc" value="9" />
+													<Label text="#MapSelector_Sorting_LobbyActivity_Asc" id="lobbyActivityAsc" value="10" />
+													<Label text="#MapSelector_Sorting_LobbyActivity_Desc" id="lobbyActivityDesc" value="11" />
 												</DropDown>
 											</Panel>
 										</Panel>
