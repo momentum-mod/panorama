@@ -25,6 +25,9 @@
                 <Panel id="CenterMainContainer" class="tab-menu-center__main-container">
                     <Panel id="TabMenuPlayerListContainer" class="tab-menu-center__left">
                         <PlayerList id="PlayerList" hittest="true" hittestchildren="true" />
+                        <TooltipPanel id="VoiceToggle" tooltip="#HudTabMenu_ToggleVoice" class="tab-menu-voice-toggle">
+                            <ToggleButton class="tab-menu-voice-toggle__button" convar="voice_enable" />
+                        </TooltipPanel>
                     </Panel>
                     <Panel class="tab-menu-center__center">
                         <TrackSelector id="HudTrackSelector" />
