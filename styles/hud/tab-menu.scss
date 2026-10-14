@@ -59,6 +59,7 @@
 	&__left {
 		width: 33%;
 		height: 100%;
+		flow-children: down;
 	}
 
 	&__center {
@@ -152,6 +153,35 @@
 
 	&__name-label-container {
 		vertical-align: center;
+	}
+}
+
+// Sits under the bottom-left corner of the lobby player list
+.tab-menu-voice-toggle {
+	margin-top: 6px;
+
+	&__button {
+		$size: 34px; // Matches the player list row height
+
+		width: $size;
+		height: $size;
+		background-image: url('file://{images}/voice-disable.svg');
+		background-position: center;
+		background-repeat: no-repeat;
+		background-size: 70% 70%;
+		background-color: rgba(0, 0, 0, 0.5);
+		border: 1px solid rgba(70, 70, 70, 0.5);
+		img-shadow: $button-icon-shadow;
+		wash-color: $button-text-color;
+		transition: background-color 0.05s ease-out 0s;
+
+		&:selected {
+			background-image: url('file://{images}/voice-enable.svg');
+		}
+
+		&:hover {
+			background-color: rgba(100, 100, 100, 0.4);
+		}
 	}
 }
 
