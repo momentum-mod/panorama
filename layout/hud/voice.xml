@@ -5,9 +5,6 @@
 	</styles>
 
 	<MomHudVoice class="voice-hud">
-		<Panel id="VoiceSpeakers" class="voice-hud__speakers" />
-		<Panel id="VoiceSelfIndicator" class="voice-hud__self voice-row voice-row--icon-only">
-			<Image class="voice-row__icon" src="file://{images}/microphone.svg" textureheight="24" />
-		</Panel>
+		<MomentumVoice />
 	</MomHudVoice>
 </root>
