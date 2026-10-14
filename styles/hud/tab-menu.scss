@@ -47,7 +47,7 @@
 	flow-children: right;
 
 	// The style selector sits at the top of the leaderboard column; this is the height it and its
-	// gap occupy, which the track selector is offset by to keep both columns' tops aligned.
+	// gap occupy, which the player list and track selector are offset by to keep all columns' tops aligned.
 	$style-selector-slot: $dropdown-button-height + 16px;
 
 	&__main-container {
@@ -60,6 +60,10 @@
 		width: 33%;
 		height: 100%;
 		flow-children: down;
+
+		PlayerList {
+			margin-top: $style-selector-slot;
+		}
 	}
 
 	&__center {
