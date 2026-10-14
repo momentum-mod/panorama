@@ -1,0 +1,22 @@
+@use '../config' as *;
+
+.yawspeed {
+	width: 320px;
+	height: fit-children;
+	flow-children: none;
+
+	opacity: 1;
+	transition-property: opacity;
+	transition-duration: 0.2s;
+	transition-timing-function: ease-in-out;
+
+	&--hidden {
+		opacity: 0;
+	}
+
+	&__label {
+		width: 100%;
+		font-weight: bold;
+		text-align: center;
+	}
+}
