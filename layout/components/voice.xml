@@ -1,0 +1,12 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+
+	<Panel class="voice" hittest="false" hittestchildren="false">
+		<Panel id="VoiceSpeakers" class="voice__speakers" />
+		<Panel id="VoiceSelfIndicator" class="voice-row voice-row--icon-only">
+			<Image class="voice-row__icon" src="file://{images}/microphone.svg" textureheight="24" />
+		</Panel>
+	</Panel>
+</root>
