@@ -126,6 +126,14 @@ $drawer-width: 768px;
 		background-color: rgba(0, 0, 0, 0.875);
 	}
 
+	&__voice {
+		horizontal-align: left;
+		vertical-align: bottom;
+
+		// Above the home page's bottom bar
+		margin: 0 0 120px 24px;
+	}
+
 	&__page {
 		flow-children: down;
 		width: 100%;
