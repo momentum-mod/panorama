@@ -1,0 +1,14 @@
+.dfpitch {
+	&__lines {
+		//width set in js
+		height: 100%;
+		horizontal-align: center;
+	}
+
+	&__line {
+		width: 100%;
+		height: 2px;
+		align: center top;
+		transform: translatey(-1px);
+	}
+}
