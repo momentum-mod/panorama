@@ -1,0 +1,17 @@
+.dfhud {
+	&__strip {
+		width: 100%;
+		horizontal-align: left;
+		overflow: noclip noclip;
+	}
+
+	&__arrow {
+		&--up {
+			transform: rotatez(0deg);
+		}
+
+		&--down {
+			transform: rotatez(180deg);
+		}
+	}
+}
