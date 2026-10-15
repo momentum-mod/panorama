@@ -463,7 +463,7 @@ declare namespace SpeedometerSettingsAPI {
 }
 
 declare namespace DefragAPI {
-	interface AccelConfig {
+	interface CgazConfig {
 		enable: boolean;
 		mirrorEnable: boolean;
 		mirrorBorder: float;
@@ -529,11 +529,17 @@ declare namespace DefragAPI {
 		compassArrowSize: float;
 		compassTickSize: float;
 		compassOffset: float;
+		pitchTarget: string;
+		statMode: int32;
+		color: rgbaColor;
+		highlightColor: rgbaColor;
+	}
+
+	interface PitchConfig {
 		pitchEnable: boolean;
 		pitchTarget: string;
 		pitchWidth: float;
 		pitchOffset: float;
-		statMode: int32;
 		color: rgbaColor;
 		highlightColor: rgbaColor;
 	}
@@ -552,21 +558,46 @@ declare namespace DefragAPI {
 		VTG = 2
 	}
 
+	/** DF HUD state for one frame, built once per frame by the engine. Angles from the view are in degrees, derived angles in radians. */
+	interface HUDFrameState {
+		frame: int32;
+		valid: boolean;
+		viewYaw: float;
+		viewPitch: float;
+		/** Full horizontal FOV in degrees, scaled by the screen aspect ratio */
+		hFov: float;
+		/** Full vertical FOV in degrees */
+		vFov: float;
+		screenWidth: int32;
+		screenHeight: int32;
+		uiScale: float;
+		velocity: vec3;
+		speed: float;
+		dropSpeed: float;
+		wishVel: vec3;
+		acceleration: float;
+		friction: float;
+		maxspeed: float;
+		moveStatus: int32;
+		hasteTime: int32;
+		physicsMode: DefragPhysics;
+		tickInterval: float;
+		wishDir: vec3;
+		wishAngle: float;
+		velAngle: float;
+		forwardMove: int32;
+		rightMove: int32;
+		inputMode: int32;
+		falling: boolean;
+		snapShift: boolean;
+		airControl: boolean;
+	}
+
 	function GetDFPhysicsMode(): DefragPhysics;
 
-	function GetHUDProjection(): import('hud/cgaz').ProjectionMode;
+	function GetHUDFrameState(): HUDFrameState;
 
-	function GetHUDFOV(): float;
-
-	function GetHUDAccelCFG(): AccelConfig;
-
-	function GetHUDPrimeCFG(): PrimeConfig;
-
-	function GetHUDSnapCFG(): SnapConfig;
-
-	function GetHUDWIndicatorCFG(): WIndicatorConfig;
-
-	function GetHUDCompassCFG(): CompassConfig;
+	function GetHUDProjection(): import('common/df-hud').ProjectionMode;
 
 	function GetHUDGroundboostCFG(): GroundboostConfig;
 }
