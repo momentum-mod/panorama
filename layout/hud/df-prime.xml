@@ -1,0 +1,18 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+
+	<scripts>
+		<include type="module" src="file://{scripts}/hud/df-prime.ts" />
+	</scripts>
+
+	<MomHudDFPrime class="w-full h-full" hittest="false">
+		<ConVarEnabler id="PrimeContainer" class="dfhud__strip" convar="mom_hud_df_prime_enable" togglevisibility="true" />
+		<Panel id="PrimeArrow">
+			<ConVarEnabler class="h-full" convar="mom_hud_df_prime_arrow_enable" togglevisibility="true">
+				<Image id="PrimeArrowIcon" class="dfhud__arrow dfhud__arrow--down" src="file://{images}/hud/cgaz-arrow.svg" textureheight="48" />
+			</ConVarEnabler>
+		</Panel>
+	</MomHudDFPrime>
+</root>

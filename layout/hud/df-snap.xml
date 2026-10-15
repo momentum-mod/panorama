@@ -1,0 +1,13 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+
+	<scripts>
+		<include type="module" src="file://{scripts}/hud/df-snap.ts" />
+	</scripts>
+
+	<MomHudDFSnap class="w-full h-full" hittest="false">
+		<ConVarEnabler id="SnapContainer" class="dfhud__strip" convar="mom_hud_df_snap_enable" togglevisibility="true" />
+	</MomHudDFSnap>
+</root>

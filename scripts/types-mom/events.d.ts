@@ -122,9 +122,7 @@ interface GlobalEventNameMap {
 
 	OnDefragHUDProjectionChange: () => void;
 
-	OnDefragHUDFOVChange: () => void;
-
-	OnDefragHUDAccelChange: () => void;
+	OnDefragHUDCgazChange: () => void;
 
 	OnDefragHUDSnapChange: () => void;
 

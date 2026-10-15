@@ -11,7 +11,11 @@
 			<MomHudGhostEntities />
 			<MomHudConcEntities id="ConcEntities" />
 			<MomHudDamageIndicator />
-			<MomHudCgaz /> <!-- TODO: Not in customizer, requires c++ work -->
+			<MomHudDFCgaz />
+			<MomHudDFSnap />
+			<MomHudDFPrime />
+			<MomHudDFCompass />
+			<MomHudDFPitch />
 			<MomHudReticle />
 		</Panel>
 

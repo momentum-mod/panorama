@@ -21,6 +21,11 @@ interface PanelTagNameMap {
 	MomHudStickyCharge: MomHudStickyCharge;
 	MomHudStrafeSync: MomHudStrafeSync;
 	MomHudDFJump: MomHudDFJump;
+	MomHudDFCgaz: MomHudDFCgaz;
+	MomHudDFSnap: MomHudDFSnap;
+	MomHudDFPrime: MomHudDFPrime;
+	MomHudDFCompass: MomHudDFCompass;
+	MomHudDFPitch: MomHudDFPitch;
 	MomHudJumpTiming: MomHudJumpTiming;
 	MomHudStrafeTrainer: MomHudStrafeTrainer;
 	MomHudSpectate: MomHudSpectate;
@@ -135,6 +140,27 @@ interface MomHudStrafeSync extends AbstractHudPanel<'MomHudStrafeSync'> {
 }
 
 interface MomHudDFJump extends AbstractHudPanel<'MomHudDFJump'> {}
+
+interface MomHudDFCgaz extends AbstractHudPanel<'MomHudDFCgaz'> {
+	GetCgazCFG(): DefragAPI.CgazConfig;
+	GetWIndicatorCFG(): DefragAPI.WIndicatorConfig;
+}
+
+interface MomHudDFSnap extends AbstractHudPanel<'MomHudDFSnap'> {
+	GetSnapCFG(): DefragAPI.SnapConfig;
+}
+
+interface MomHudDFPrime extends AbstractHudPanel<'MomHudDFPrime'> {
+	GetPrimeCFG(): DefragAPI.PrimeConfig;
+}
+
+interface MomHudDFCompass extends AbstractHudPanel<'MomHudDFCompass'> {
+	GetCompassCFG(): DefragAPI.CompassConfig;
+}
+
+interface MomHudDFPitch extends AbstractHudPanel<'MomHudDFPitch'> {
+	GetPitchCFG(): DefragAPI.PitchConfig;
+}
 
 interface MomHudJumpTiming extends AbstractHudPanel<'MomHudJumpTiming'> {}
 
