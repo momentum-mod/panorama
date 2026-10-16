@@ -187,16 +187,20 @@ class DFSnapHandler extends DFHudComponent {
 			const heightFactor = 0.8 * alpha + 0.2;
 			const height = this.NaNCheck(this.snapHeight, 0);
 
-			if (this.snapHeightgainEnable && !Number.isNaN(heightFactor)) {
-				zone.style.height = heightFactor * height + 'px';
-				zone.style.marginBottom = height + 'px';
-				zone.style.verticalAlign = 'bottom';
-			} else {
-				zone.style.height = height + 'px';
-				zone.style.marginBottom = height + 'px';
-			}
+			const bSplit = this.handleSplitZoneWrap(zone, left, right, snapClass, this.snapSplitZone);
+			if (bSplit) this.applyClass(this.snapSplitZone, snapClass);
+			const zoneParts = bSplit ? [zone, this.snapSplitZone] : [zone];
 
-			this.updateZone(zone, left, right, 0, snapClass, this.snapSplitZone);
+			for (const part of zoneParts) {
+				if (this.snapHeightgainEnable && !Number.isNaN(heightFactor)) {
+					part.style.height = heightFactor * height + 'px';
+					part.style.marginBottom = height + 'px';
+					part.style.verticalAlign = 'bottom';
+				} else {
+					part.style.height = height + 'px';
+					part.style.marginBottom = height + 'px';
+				}
+			}
 
 			if (this.snapColorMode) {
 				snapColor = rgbaStringLerp(this.snapSlowColor, this.snapFastColor, alpha) as rgbaColor;
@@ -247,7 +251,25 @@ class DFSnapHandler extends DFHudComponent {
 					break;
 			}
 
-			zone.style.backgroundColor = bHighlight ? hlSnapColor : snapColor;
+			for (const part of zoneParts) {
+				part.style.backgroundColor = bHighlight ? hlSnapColor : snapColor;
+			}
 		}
+	}
+
+	/**
+	 * Updates a zone whose edges were wrapped into [-pi/2, pi/2].
+	 * A zone crossing the +-pi/2 seam comes in with left > right, so its part past the seam is drawn on splitZone.
+	 * Returns whether splitZone was used.
+	 */
+	handleSplitZoneWrap(zone: ZonePanel, left: number, right: number, zoneClass: StyleObject, splitZone: ZonePanel) {
+		if (left <= right) {
+			this.updateZone(zone, left, right, 0, zoneClass);
+			return false;
+		}
+
+		this.updateZone(splitZone, -Math.PI * 0.5, right, 0, zoneClass);
+		this.updateZone(zone, left, Math.PI * 0.5, 0, zoneClass);
+		return true;
 	}
 }
