@@ -259,11 +259,14 @@ class DFPrimeHandler extends DFHudComponent {
 		let leftWishOffset = bForward ? strafeOffset : -strafeOffset;
 		let rightWishOffset = -leftWishOffset;
 		let bFill = false;
+		const bVQ3 = phyMode === DefragAPI.DefragPhysics.VQ3;
+		// W or S alone is air control in CPM, but VQ3 accelerates the same way in every direction
+		const bForwardOnly = inputMode === InputMode.AIR_CONTROL && bVQ3;
 
-		if (inputMode === InputMode.STRAFE_LEFT || inputMode === InputMode.STRAFE_RIGHT) {
+		if (inputMode === InputMode.STRAFE_LEFT || inputMode === InputMode.STRAFE_RIGHT || bForwardOnly) {
 			bFill = true;
 		} else if (inputMode === InputMode.TURN_LEFT || inputMode === InputMode.TURN_RIGHT) {
-			bFill = Boolean(this.primeTruenessMode & TruenessMode.CPM_TURN || phyMode === DefragAPI.DefragPhysics.VQ3);
+			bFill = Boolean(this.primeTruenessMode & TruenessMode.CPM_TURN || bVQ3);
 		}
 
 		// The active chain is on whichever side of the velocity the wish direction is
@@ -278,7 +281,9 @@ class DFPrimeHandler extends DFHudComponent {
 			// and the inactive side mirrors it across the view axis
 			const sideSign = Math.sign(wishOffset);
 			const activeOffset = bFill ? wishOffset : sideSign * strafeOffset;
-			const inactiveOffset = bTurn ? -sideSign * strafeOffset : -wishOffset;
+			let inactiveOffset = bTurn ? -sideSign * strafeOffset : -wishOffset;
+			// W or S alone lies on the view axis, so there is nothing to mirror: the inactive side uses the same keys
+			if (bForwardOnly) inactiveOffset = wishOffset;
 			if (this.primeActiveLeft) {
 				leftWishOffset = activeOffset;
 				rightWishOffset = inactiveOffset;
