@@ -57,6 +57,8 @@ class DFPrimeHandler extends DFHudComponent {
 	primeArrowEnable: boolean;
 	primeArrowSize: float;
 	primeArrowColor: rgbaColor;
+	/** Which side of the velocity the active chain is on, kept while the wish direction is on the velocity line */
+	primeActiveLeft = true;
 
 	constructor() {
 		super();
@@ -207,7 +209,7 @@ class DFPrimeHandler extends DFHudComponent {
 				dropSpeedSquared,
 				targetAngle
 			);
-			this.updatePrimeSight(state, viewDir, viewAngle, targetAngle, boundaryAngle, velAngle, wishDir);
+			this.updatePrimeSight(state, viewDir, viewAngle, targetAngle, boundaryAngle, velAngle);
 
 			if (this.primeArrowEnable) {
 				if (MomMath.sumOfSquares2D(wishDir) > 0) {
@@ -234,8 +236,7 @@ class DFPrimeHandler extends DFHudComponent {
 		viewAngle: number,
 		targetAngle: number,
 		boundaryAngle: number,
-		velAngle: number,
-		wishDir: vec2
+		velAngle: number
 	) {
 		const inputMode = state.inputMode;
 		const velocity = state.velocity;
@@ -244,46 +245,61 @@ class DFPrimeHandler extends DFHudComponent {
 
 		let speedGain = 0;
 		let gainMax = -this.primeAccel;
-		let fillLeftZones = false;
-		let fillRightZones = false;
-		let leftOffset = -Math.PI * 0.25 - viewAngle;
-		let rightOffset = Math.PI * 0.25 - viewAngle;
 		let leftTarget = -targetAngle - velAngle;
 		let rightTarget = targetAngle - velAngle;
 
-		switch (inputMode) {
-			case InputMode.NONE: // Fall-through
-			case InputMode.AIR_CONTROL: // Fall-through
-			default:
-				break;
+		// Wish direction relative to the view, positive to the left. Strafe keys put it 45 degrees off the view
+		// axis when moving forward (W+A, W+D) and 135 degrees off when moving backward (S+A, S+D).
+		const wishOffset = MomMath.remapAngle(state.wishAngle - viewAngle);
+		const strafeOffset = Math.PI * (Math.cos(velAngle - viewAngle) >= 0 ? 0.25 : 0.75);
 
-			case InputMode.TURN_LEFT: {
-				fillLeftZones = Boolean(
-					this.primeTruenessMode & TruenessMode.CPM_TURN || phyMode === DefragAPI.DefragPhysics.VQ3
-				);
-				if (fillLeftZones) leftOffset = -Math.PI * 0.5 - viewAngle;
-				const mirrorTarget = this.findFastAngle(state.speed, this.maxGroundSpeed, AIR_ACCEL);
-				rightTarget = mirrorTarget - velAngle;
-				break;
-			}
-			case InputMode.TURN_RIGHT: {
-				fillRightZones = Boolean(
-					this.primeTruenessMode & TruenessMode.CPM_TURN || phyMode === DefragAPI.DefragPhysics.VQ3
-				);
-				if (fillRightZones) rightOffset = Math.PI * 0.5 - viewAngle;
-				const mirrorTarget = this.findFastAngle(state.speed, this.maxGroundSpeed, AIR_ACCEL);
-				leftTarget = -mirrorTarget - velAngle;
-				break;
-			}
-			case InputMode.STRAFE_LEFT: {
-				fillLeftZones = true;
-				break;
-			}
-			case InputMode.STRAFE_RIGHT: {
-				fillRightZones = true;
-				break;
+		// The left chain's wish direction sits strafeOffset to the left of the view when moving forward and to the
+		// right when moving backward, so it stays on the left of the velocity either way.
+		const bForward = strafeOffset < Math.PI * 0.5;
+		let leftWishOffset = bForward ? strafeOffset : -strafeOffset;
+		let rightWishOffset = -leftWishOffset;
+		let bFill = false;
+
+		if (inputMode === InputMode.STRAFE_LEFT || inputMode === InputMode.STRAFE_RIGHT) {
+			bFill = true;
+		} else if (inputMode === InputMode.TURN_LEFT || inputMode === InputMode.TURN_RIGHT) {
+			bFill = Boolean(this.primeTruenessMode & TruenessMode.CPM_TURN || phyMode === DefragAPI.DefragPhysics.VQ3);
+		}
+
+		// The active chain is on whichever side of the velocity the wish direction is
+		const wishFromVel = MomMath.remapAngle(state.wishAngle - velAngle);
+		if (Math.abs(wishFromVel) > 0.01 && Math.abs(wishFromVel) < Math.PI - 0.01) {
+			this.primeActiveLeft = wishFromVel > 0;
+		}
+
+		const bTurn = inputMode === InputMode.TURN_LEFT || inputMode === InputMode.TURN_RIGHT;
+		if (bFill || bTurn) {
+			// the active side uses the actual wish direction (or its strafe equivalent when a turn isn't filled),
+			// and the inactive side mirrors it across the view axis
+			const sideSign = Math.sign(wishOffset);
+			const activeOffset = bFill ? wishOffset : sideSign * strafeOffset;
+			const inactiveOffset = bTurn ? -sideSign * strafeOffset : -wishOffset;
+			if (this.primeActiveLeft) {
+				leftWishOffset = activeOffset;
+				rightWishOffset = inactiveOffset;
+			} else {
+				leftWishOffset = inactiveOffset;
+				rightWishOffset = activeOffset;
 			}
 		}
+
+		if (bTurn) {
+			const mirrorTarget = this.findFastAngle(state.speed, this.maxGroundSpeed, AIR_ACCEL);
+			if (this.primeActiveLeft) rightTarget = mirrorTarget - velAngle;
+			else leftTarget = -mirrorTarget - velAngle;
+		}
+
+		const fillLeftZones = bFill && this.primeActiveLeft;
+		const fillRightZones = bFill && !this.primeActiveLeft;
+		const leftOffset = -leftWishOffset - viewAngle;
+		const rightOffset = -rightWishOffset - viewAngle;
+		const leftWishDir = MomMath.rotateVector2D(viewDir, leftWishOffset);
+		const rightWishDir = MomMath.rotateVector2D(viewDir, rightWishOffset);
 
 		const leftAngles = fillLeftZones ? this.primeAngles : this.snapAngles;
 		const rightAngles = fillRightZones ? this.primeAngles : this.snapAngles;
@@ -301,11 +317,7 @@ class DFPrimeHandler extends DFHudComponent {
 			this.clearZones([this.primeFirstZoneLeft]);
 		}
 
-		speedGain = this.findPrimeGain(
-			0.5 * (firstLeftEdge + firstLeftEnd),
-			velocity,
-			MomMath.rotateVector2D(viewDir, 0.25 * Math.PI)
-		);
+		speedGain = this.findPrimeGain(0.5 * (firstLeftEdge + firstLeftEnd), velocity, leftWishDir);
 		gainZonesMap.set(this.primeFirstZoneLeft, speedGain);
 		if (speedGain > gainMax) gainMax = speedGain;
 
@@ -318,23 +330,35 @@ class DFPrimeHandler extends DFHudComponent {
 			this.clearZones([this.primeFirstZoneRight]);
 		}
 
-		speedGain = this.findPrimeGain(
-			0.5 * (firstRightStart + firstRightEdge),
-			velocity,
-			MomMath.rotateVector2D(viewDir, -0.25 * Math.PI)
-		);
+		speedGain = this.findPrimeGain(0.5 * (firstRightStart + firstRightEdge), velocity, rightWishDir);
 		gainZonesMap.set(this.primeFirstZoneRight, speedGain);
 		if (speedGain > gainMax) gainMax = speedGain;
 
 		// the boundary lies (boundaryAngle - targetAngle) further out from the target, on the same side
 		if (fillLeftZones) {
 			const leftBoundary = leftChain.target - (boundaryAngle - targetAngle);
-			gainMax = this.fillActivePrimeZones(leftChain, -1, leftBoundary, gainZonesMap, gainMax, velocity, wishDir);
+			gainMax = this.fillActivePrimeZones(
+				leftChain,
+				-1,
+				leftBoundary,
+				gainZonesMap,
+				gainMax,
+				velocity,
+				leftWishDir
+			);
 		}
 
 		if (fillRightZones) {
 			const rightBoundary = rightChain.target + (boundaryAngle - targetAngle);
-			gainMax = this.fillActivePrimeZones(rightChain, 1, rightBoundary, gainZonesMap, gainMax, velocity, wishDir);
+			gainMax = this.fillActivePrimeZones(
+				rightChain,
+				1,
+				rightBoundary,
+				gainZonesMap,
+				gainMax,
+				velocity,
+				rightWishDir
+			);
 		}
 
 		const scale = this.NaNCheck(1 / (gainMax > 0 ? gainMax : this.primeAccel), 1);
