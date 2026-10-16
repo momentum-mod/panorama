@@ -480,7 +480,13 @@ declare namespace DefragAPI {
 	interface PrimeConfig {
 		enable: boolean;
 		truenessMode: int32;
+		chainEnable: boolean;
 		inactiveEnable: boolean;
+		inactiveHalfBeatMode: int32;
+		inactiveChainEnable: boolean;
+		inactiveOutlineEnable: boolean;
+		inactiveOutlineWidth: float;
+		inactiveGainColorEnable: boolean;
 		oneLineEnable: boolean;
 		minSpeed: float;
 		height: float;
