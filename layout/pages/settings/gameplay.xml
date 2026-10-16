@@ -564,12 +564,33 @@
 							<SettingsSlider text="#Settings_Defrag_PrimeSight_HighlightBorder" min="0" max="10" convar="mom_hud_df_prime_highlight_border" displayprecision="0" infomessage="#Settings_Defrag_PrimeSight_HighlightBorder_Info" tags="prime,sight" />
 						</ConVarEnabler>
 
-						<SettingsEnum text="#Settings_Defrag_PrimeSight_InactiveEnable" convar="mom_hud_df_prime_inactive" infomessage="#Settings_Defrag_PrimeSight_InactiveEnable_Info" tags="prime,sight">
+						<SettingsEnum text="#Settings_Defrag_PrimeSight_InactiveEnable" convar="mom_hud_df_prime_inactive_enable" infomessage="#Settings_Defrag_PrimeSight_InactiveEnable_Info" tags="prime,sight,inactive,mirror">
 							<RadioButton group="primeinactiveenable" text="#Common_Off" value="0" />
 							<RadioButton group="primeinactiveenable" text="#Common_On" value="1" />
 						</SettingsEnum>
 
-						<ConVarEnabler convar="mom_hud_df_prime_inactive" class="settings__convarenabler">
+						<ConVarEnabler convar="mom_hud_df_prime_inactive_enable" class="settings__convarenabler">
+							<SettingsEnum text="#Settings_Defrag_PrimeSight_InactiveHalfBeat" convar="mom_hud_df_prime_inactive_halfbeat" infomessage="#Settings_Defrag_PrimeSight_InactiveHalfBeat_Info" tags="prime,sight,inactive,half-beat,vq3">
+								<RadioButton group="primeinactivehalfbeat" text="#Common_Off" value="0" />
+								<RadioButton group="primeinactivehalfbeat" text="#Common_On" value="1" />
+								<RadioButton group="primeinactivehalfbeat" text="#Settings_Defrag_PrimeSight_InactiveHalfBeat_Early" value="2" />
+							</SettingsEnum>
+
+							<SettingsEnum text="#Settings_Defrag_PrimeSight_InactiveChain" convar="mom_hud_df_prime_inactive_chain" infomessage="#Settings_Defrag_PrimeSight_InactiveChain_Info" tags="prime,sight,inactive,mirror">
+								<RadioButton group="primeinactivechain" text="#Settings_Defrag_PrimeSight_InactiveChain_Optimal" value="0" />
+								<RadioButton group="primeinactivechain" text="#Settings_Defrag_PrimeSight_InactiveChain_Full" value="1" />
+							</SettingsEnum>
+
+							<SettingsEnum text="#Settings_Defrag_PrimeSight_InactiveOutline" convar="mom_hud_df_prime_inactive_outline" infomessage="#Settings_Defrag_PrimeSight_InactiveOutline_Info" tags="prime,sight,inactive,mirror">
+								<RadioButton group="primeinactiveoutline" text="#Common_Off" value="0" />
+								<RadioButton group="primeinactiveoutline" text="#Common_On" value="1" />
+							</SettingsEnum>
+
+							<SettingsEnum text="#Settings_Defrag_PrimeSight_InactiveGainColor" convar="mom_hud_df_prime_inactive_gain_color" infomessage="#Settings_Defrag_PrimeSight_InactiveGainColor_Info" tags="prime,sight,inactive,mirror">
+								<RadioButton group="primeinactivegaincolor" text="#Common_Off" value="0" />
+								<RadioButton group="primeinactivegaincolor" text="#Common_On" value="1" />
+							</SettingsEnum>
+
 							<ConVarColorDisplay text="#Settings_Defrag_PrimeSight_AltColor" convar="mom_hud_df_prime_color_alt" infomessage="#Settings_Defrag_PrimeSight_AltColor_Info" tags="prime,sight" />
 						</ConVarEnabler>
 

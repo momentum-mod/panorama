@@ -481,6 +481,10 @@ declare namespace DefragAPI {
 		enable: boolean;
 		truenessMode: int32;
 		inactiveEnable: boolean;
+		inactiveHalfBeatMode: int32;
+		inactiveChainEnable: boolean;
+		inactiveOutlineEnable: boolean;
+		inactiveGainColorEnable: boolean;
 		oneLineEnable: boolean;
 		minSpeed: float;
 		height: float;

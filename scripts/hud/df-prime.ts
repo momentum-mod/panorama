@@ -23,6 +23,8 @@ interface PrimeChain {
 	target: number;
 }
 
+const INACTIVE_BORDER = 2;
+
 let HIGHLIGHT_CLASS: StyleObject;
 let PRIME_SIGHT_CLASS: StyleObject;
 
@@ -30,6 +32,10 @@ let PRIME_SIGHT_CLASS: StyleObject;
 class DFPrimeHandler extends DFHudComponent {
 	primeContainer = $('#PrimeContainer');
 	primeZones: ZonePanel[] = [];
+	primeInactiveZonesLeft: ZonePanel[] = [];
+	primeInactiveZonesRight: ZonePanel[] = [];
+	primeHalfBeatZones: ZonePanel[] = [];
+	primeHalfBeatFirstZone = this.initInactiveZone('PrimeHalfBeatFirstZone');
 	primeFirstZoneLeft = this.initZonePanel($.CreatePanel('Panel', this.primeContainer, 'PrimeFirstZoneLeft'));
 	primeFirstZoneRight = this.initZonePanel($.CreatePanel('Panel', this.primeContainer, 'PrimeFirstZoneRight'));
 	primeHighlightZone = this.initZonePanel($.CreatePanel('Panel', this.primeContainer, 'PrimeHighlightZone'));
@@ -41,6 +47,11 @@ class DFPrimeHandler extends DFHudComponent {
 	primeEnable: boolean;
 	primeTruenessMode: int32;
 	primeShowInactive: boolean;
+	primeShowHalfBeat: boolean;
+	primeHalfBeatEarly: boolean;
+	primeInactiveChain: boolean;
+	primeInactiveOutline: boolean;
+	primeInactiveGainColor: boolean;
 	primeLockOneLine: boolean;
 	primeMinSpeed: float;
 	primeHeight: float;
@@ -88,6 +99,11 @@ class DFPrimeHandler extends DFHudComponent {
 		this.primeEnable = primeConfig.enable;
 		this.primeTruenessMode = primeConfig.truenessMode;
 		this.primeShowInactive = primeConfig.inactiveEnable;
+		this.primeShowHalfBeat = primeConfig.inactiveEnable && primeConfig.inactiveHalfBeatMode > 0;
+		this.primeHalfBeatEarly = primeConfig.inactiveHalfBeatMode === 2;
+		this.primeInactiveChain = primeConfig.inactiveChainEnable;
+		this.primeInactiveOutline = primeConfig.inactiveOutlineEnable;
+		this.primeInactiveGainColor = primeConfig.inactiveGainColorEnable;
 		this.primeLockOneLine = primeConfig.oneLineEnable;
 		this.primeMinSpeed = primeConfig.minSpeed;
 		this.primeHeight = primeConfig.height;
@@ -111,7 +127,13 @@ class DFPrimeHandler extends DFHudComponent {
 		this.setupContainer(this.primeContainer, this.primeOffset);
 		this.primeContainer.style.verticalAlign = 'center';
 		this.primeContainer.style.height = 2 * this.primeHeight + 'px';
-		for (const zone of this.primeZones) {
+		for (const zone of [
+			...this.primeZones,
+			...this.primeInactiveZonesLeft,
+			...this.primeInactiveZonesRight,
+			...this.primeHalfBeatZones,
+			this.primeHalfBeatFirstZone
+		]) {
 			this.applyClass(zone, PRIME_SIGHT_CLASS);
 			zone.style.verticalAlign = 'top';
 		}
@@ -143,7 +165,12 @@ class DFPrimeHandler extends DFHudComponent {
 		if (!state.valid) return;
 
 		// clear last frame's special zones
-		this.clearZones([this.primeFirstZoneLeft, this.primeFirstZoneRight, this.primeHighlightZone]);
+		this.clearZones([
+			this.primeFirstZoneLeft,
+			this.primeFirstZoneRight,
+			this.primeHighlightZone,
+			this.primeHalfBeatFirstZone
+		]);
 
 		this.updateView(state);
 		this.updateSnapAccel(state.hasteTime);
@@ -165,6 +192,9 @@ class DFPrimeHandler extends DFHudComponent {
 		};
 
 		this.clearZones(this.primeZones);
+		this.clearZones(this.primeInactiveZonesLeft);
+		this.clearZones(this.primeInactiveZonesRight);
+		this.clearZones(this.primeHalfBeatZones);
 
 		if (this.primeEnable && phyMode !== DefragAPI.DefragPhysics.VTG && speed > this.primeMinSpeed) {
 			const useSnapAccel = !(
@@ -316,7 +346,6 @@ class DFPrimeHandler extends DFHudComponent {
 		const [firstLeftEdge, firstLeftEnd] = this.primeZoneEdges(leftChain, leftChain.first);
 		if (fillLeftZones || this.primeShowInactive) {
 			this.drawPrimeZone(this.primeFirstZoneLeft, firstLeftEdge, leftChain.target);
-			this.primeFirstZoneLeft.style.backgroundColor = this.primeAltColor;
 			this.primeFirstZoneLeft.isInactive = !fillLeftZones;
 		} else {
 			this.clearZones([this.primeFirstZoneLeft]);
@@ -329,7 +358,6 @@ class DFPrimeHandler extends DFHudComponent {
 		const [firstRightStart, firstRightEdge] = this.primeZoneEdges(rightChain, rightChain.first);
 		if (fillRightZones || this.primeShowInactive) {
 			this.drawPrimeZone(this.primeFirstZoneRight, rightChain.target, firstRightEdge);
-			this.primeFirstZoneRight.style.backgroundColor = this.primeAltColor;
 			this.primeFirstZoneRight.isInactive = !fillRightZones;
 		} else {
 			this.clearZones([this.primeFirstZoneRight]);
@@ -342,10 +370,11 @@ class DFPrimeHandler extends DFHudComponent {
 		// the boundary lies (boundaryAngle - targetAngle) further out from the target, on the same side
 		if (fillLeftZones) {
 			const leftBoundary = leftChain.target - (boundaryAngle - targetAngle);
-			gainMax = this.fillActivePrimeZones(
+			gainMax = this.fillPrimeZones(
 				leftChain,
 				-1,
 				leftBoundary,
+				this.primeZones,
 				gainZonesMap,
 				gainMax,
 				velocity,
@@ -355,15 +384,91 @@ class DFPrimeHandler extends DFHudComponent {
 
 		if (fillRightZones) {
 			const rightBoundary = rightChain.target + (boundaryAngle - targetAngle);
-			gainMax = this.fillActivePrimeZones(
+			gainMax = this.fillPrimeZones(
 				rightChain,
 				1,
 				rightBoundary,
+				this.primeZones,
 				gainZonesMap,
 				gainMax,
 				velocity,
 				rightWishDir
 			);
+		}
+
+		// inactive sides always draw their first zone (above); the rest of their chain is optional
+		if (this.primeShowInactive && this.primeInactiveChain) {
+			const boundaryDistance = boundaryAngle - targetAngle;
+			if (!fillLeftZones) {
+				this.fillInactiveChain(
+					leftChain,
+					-1,
+					leftChain.target - boundaryDistance,
+					this.primeInactiveZonesLeft,
+					'PrimeInactiveZoneLeft',
+					gainZonesMap,
+					velocity,
+					leftWishDir
+				);
+			}
+			if (!fillRightZones) {
+				this.fillInactiveChain(
+					rightChain,
+					1,
+					rightChain.target + boundaryDistance,
+					this.primeInactiveZonesRight,
+					'PrimeInactiveZoneRight',
+					gainZonesMap,
+					velocity,
+					rightWishDir
+				);
+			}
+		}
+
+		// VQ3 half-beat: the opposite single key (D while holding W+A), with its target mirrored about the velocity
+		// onto the inactive side. Shown once its target lies past the active diagonal's target (W+A) on the inactive
+		// side, so its chain, which runs outward from the target, never overlaps the diagonal zones. With the early
+		// option, shown as soon as its target is closer to the crosshair than the mirrored diagonal's (W+D).
+		const bDiagonal = inputMode === InputMode.STRAFE_LEFT || inputMode === InputMode.STRAFE_RIGHT;
+		if (this.primeShowHalfBeat && bVQ3 && bDiagonal) {
+			const halfBeatWishOffset = -Math.sign(wishOffset) * Math.PI * 0.5;
+			const halfBeatWishDir = MomMath.rotateVector2D(viewDir, halfBeatWishOffset);
+			const bLeft = !this.primeActiveLeft;
+			const halfBeatChain = this.findPrimeChain(
+				bLeft ? -targetAngle - velAngle : targetAngle - velAngle,
+				-halfBeatWishOffset - viewAngle,
+				this.primeAngles
+			);
+			const mirrorTarget = (bLeft ? leftChain : rightChain).target;
+			const activeTarget = (bLeft ? rightChain : leftChain).target;
+			const halfBeatDirection = bLeft ? -1 : 1;
+			const bShowHalfBeat = this.primeHalfBeatEarly
+				? Math.abs(halfBeatChain.target) < Math.abs(mirrorTarget)
+				: (halfBeatChain.target - activeTarget) * halfBeatDirection > 0;
+
+			if (bShowHalfBeat) {
+				const [firstStart, firstEnd] = this.primeZoneEdges(halfBeatChain, halfBeatChain.first);
+				if (bLeft) this.drawPrimeZone(this.primeHalfBeatFirstZone, firstStart, halfBeatChain.target);
+				else this.drawPrimeZone(this.primeHalfBeatFirstZone, halfBeatChain.target, firstEnd);
+				gainZonesMap.set(
+					this.primeHalfBeatFirstZone,
+					this.findPrimeGain(0.5 * (firstStart + firstEnd), velocity, halfBeatWishDir)
+				);
+
+				if (this.primeInactiveChain) {
+					const direction = bLeft ? -1 : 1;
+					this.fillInactiveChain(
+						halfBeatChain,
+						direction,
+						halfBeatChain.target + direction * (boundaryAngle - targetAngle),
+						this.primeHalfBeatZones,
+						'PrimeHalfBeatZone',
+						gainZonesMap,
+						velocity,
+						halfBeatWishDir
+					);
+				}
+			}
 		}
 
 		const scale = this.NaNCheck(1 / (gainMax > 0 ? gainMax : this.primeAccel), 1);
@@ -380,15 +485,19 @@ class DFPrimeHandler extends DFHudComponent {
 			if (zone.isInactive) {
 				if (inputMode === InputMode.TURN_LEFT || inputMode === InputMode.TURN_RIGHT)
 					zone.style.height = this.NaNCheck(this.primeHeight.toFixed(), 0) + 'px';
+				this.styleInactiveZone(
+					zone,
+					this.primeInactiveGainColor ? this.findGainColor(gain, gainFactor) : this.primeAltColor
+				);
 				continue;
 			}
 
-			if (gain < 0) {
-				zone.color = this.primeLossColor;
-			} else if (this.primeColorgainEnable) {
-				zone.color = rgbaStringLerp(this.primeAltColor, this.primeGainColor, gainFactor);
-			} else {
-				zone.color = this.primeGainColor;
+			zone.color = this.findGainColor(gain, gainFactor);
+
+			// first zones switch between active and inactive, so drop any inactive outline
+			if (zone === this.primeFirstZoneLeft || zone === this.primeFirstZoneRight) {
+				zone.style.border = '0px solid rgba(0, 0, 0, 0)';
+				zone.style.padding = '0px';
 			}
 
 			if (this.primeHlEnable && this.shouldHighlight(zone)) {
@@ -402,6 +511,50 @@ class DFPrimeHandler extends DFHudComponent {
 
 			zone.style.backgroundColor = zone.color;
 		}
+	}
+
+	/** Zone color for a gain: loss color, or gain color (scaled from the alt color when coloring by gain). */
+	findGainColor(gain: number, gainFactor: number): rgbaColor {
+		if (gain < 0) return this.primeLossColor;
+		if (this.primeColorgainEnable)
+			return rgbaStringLerp(this.primeAltColor, this.primeGainColor, gainFactor) as rgbaColor;
+		return this.primeGainColor;
+	}
+
+	/** Inactive and half-beat zones are either filled or outlined with the given color. */
+	styleInactiveZone(zone: ZonePanel, color: rgbaColor) {
+		const border = this.primeInactiveOutline ? INACTIVE_BORDER : 0;
+		zone.style.backgroundColor = this.primeInactiveOutline ? 'rgba(0, 0, 0, 0)' : color;
+		zone.style.border = `${border}px solid ${color}`;
+		zone.style.padding = border ? `-${border}px` : '0px';
+	}
+
+	/** Creates a panel for an inactive or half-beat chain. */
+	initInactiveZone(id: string): ZonePanel {
+		const zone = this.initZonePanel($.CreatePanel('Panel', this.primeContainer, id));
+		zone.isInactive = true;
+		if (PRIME_SIGHT_CLASS) this.applyClass(zone, PRIME_SIGHT_CLASS);
+		zone.style.verticalAlign = 'top';
+		return zone;
+	}
+
+	/**
+	 * Fills an inactive or half-beat chain. Its gains stay out of gainMax so they don't rescale the active chain,
+	 * and its panel pool is sized to the chain's angle table.
+	 */
+	fillInactiveChain(
+		chain: PrimeChain,
+		direction: number,
+		boundary: number,
+		pool: ZonePanel[],
+		idPrefix: string,
+		gainZonesMap: Map<ZonePanel, number>,
+		velocity: vec3,
+		wishDir: vec2
+	) {
+		while (pool.length < chain.angles.length) pool.push(this.initInactiveZone(`${idPrefix}${pool.length}`));
+		while (pool.length > chain.angles.length) pool.pop().DeleteAsync(0);
+		this.fillPrimeZones(chain, direction, boundary, pool, gainZonesMap, 0, velocity, wishDir);
 	}
 
 	/**
@@ -438,13 +591,14 @@ class DFPrimeHandler extends DFHudComponent {
 	}
 
 	/**
-	 * Fills a chain's active zones outward from its first zone, up to the first zone past the cgaz boundary.
+	 * Fills a chain's zones outward from its first zone, up to the first zone past the cgaz boundary.
 	 * Returns gainMax raised to the largest gain among them.
 	 */
-	fillActivePrimeZones(
+	fillPrimeZones(
 		chain: PrimeChain,
 		direction: number,
 		boundary: number,
+		zones: ZonePanel[],
 		gainZonesMap: Map<ZonePanel, number>,
 		gainMax: number,
 		velocity: vec3,
@@ -453,7 +607,7 @@ class DFPrimeHandler extends DFHudComponent {
 		const count = chain.angles.length;
 		for (let step = 1; step < count; ++step) {
 			const k = chain.first + direction * step;
-			const zone = this.primeZones[((k % count) + count) % count];
+			const zone = zones[((k % count) + count) % count];
 			const [left, right] = this.primeZoneEdges(chain, k);
 			this.drawPrimeZone(zone, left, right);
 
