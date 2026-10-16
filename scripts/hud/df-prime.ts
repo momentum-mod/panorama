@@ -329,12 +329,12 @@ class DFPrimeHandler extends DFHudComponent {
 		// the boundary lies (boundaryAngle - targetAngle) further out from the target, on the same side
 		if (fillLeftZones) {
 			const leftBoundary = leftChain.target - (boundaryAngle - targetAngle);
-			this.fillActivePrimeZones(leftChain, -1, leftBoundary, gainZonesMap, gainMax, velocity, wishDir);
+			gainMax = this.fillActivePrimeZones(leftChain, -1, leftBoundary, gainZonesMap, gainMax, velocity, wishDir);
 		}
 
 		if (fillRightZones) {
 			const rightBoundary = rightChain.target + (boundaryAngle - targetAngle);
-			this.fillActivePrimeZones(rightChain, 1, rightBoundary, gainZonesMap, gainMax, velocity, wishDir);
+			gainMax = this.fillActivePrimeZones(rightChain, 1, rightBoundary, gainZonesMap, gainMax, velocity, wishDir);
 		}
 
 		const scale = this.NaNCheck(1 / (gainMax > 0 ? gainMax : this.primeAccel), 1);
@@ -408,7 +408,10 @@ class DFPrimeHandler extends DFHudComponent {
 		this.drawZone(zone);
 	}
 
-	/** Fills a chain's active zones outward from its first zone, up to the first zone past the cgaz boundary. */
+	/**
+	 * Fills a chain's active zones outward from its first zone, up to the first zone past the cgaz boundary.
+	 * Returns gainMax raised to the largest gain among them.
+	 */
 	fillActivePrimeZones(
 		chain: PrimeChain,
 		direction: number,
@@ -434,6 +437,7 @@ class DFPrimeHandler extends DFHudComponent {
 			const innerEdge = direction > 0 ? left : right;
 			if (direction * (innerEdge - boundary) >= 0) break;
 		}
+		return gainMax;
 	}
 
 	/** Check whether center screen falls between zone left and right edge (inclusive). */
