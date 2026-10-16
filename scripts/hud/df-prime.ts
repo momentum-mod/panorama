@@ -12,6 +12,17 @@ enum TruenessMode {
 	CPM_TURN = 1 << 2 // show a/d and ground zones
 }
 
+/** One side's chain of prime zones, laid out from the zone containing its target. */
+interface PrimeChain {
+	angles: number[];
+	/** The target wrapped into the angle table's [-pi/2, pi/2] range */
+	tableTarget: number;
+	/** Index of the zone containing the target, from -1 to angles.length - 1 */
+	first: number;
+	/** The target as a view-relative angle in [-pi, pi], never wrapped to [-pi/2, pi/2] */
+	target: number;
+}
+
 let HIGHLIGHT_CLASS: StyleObject;
 let PRIME_SIGHT_CLASS: StyleObject;
 
@@ -21,7 +32,6 @@ class DFPrimeHandler extends DFHudComponent {
 	primeZones: ZonePanel[] = [];
 	primeFirstZoneLeft = this.initZonePanel($.CreatePanel('Panel', this.primeContainer, 'PrimeFirstZoneLeft'));
 	primeFirstZoneRight = this.initZonePanel($.CreatePanel('Panel', this.primeContainer, 'PrimeFirstZoneRight'));
-	primeSplitZone = this.initZonePanel($.CreatePanel('Panel', this.primeContainer, 'PrimeSplitZone'));
 	primeHighlightZone = this.initZonePanel($.CreatePanel('Panel', this.primeContainer, 'PrimeHighlightZone'));
 	primeArrow = $('#PrimeArrow');
 	primeArrowIcon = $<Image>('#PrimeArrowIcon');
@@ -107,8 +117,6 @@ class DFPrimeHandler extends DFHudComponent {
 		this.primeFirstZoneLeft.style.verticalAlign = 'top';
 		this.applyClass(this.primeFirstZoneRight, PRIME_SIGHT_CLASS);
 		this.primeFirstZoneRight.style.verticalAlign = 'top';
-		this.applyClass(this.primeSplitZone, PRIME_SIGHT_CLASS);
-		this.primeSplitZone.style.verticalAlign = 'top';
 
 		this.applyClassBorder(this.primeHighlightZone, this.primeHlBorder, HIGHLIGHT_CLASS);
 		this.primeHighlightZone.style.verticalAlign = 'top';
@@ -133,12 +141,7 @@ class DFPrimeHandler extends DFHudComponent {
 		if (!state.valid) return;
 
 		// clear last frame's special zones
-		this.clearZones([
-			this.primeSplitZone,
-			this.primeFirstZoneLeft,
-			this.primeFirstZoneRight,
-			this.primeHighlightZone
-		]);
+		this.clearZones([this.primeFirstZoneLeft, this.primeFirstZoneRight, this.primeHighlightZone]);
 
 		this.updateView(state);
 		this.updateSnapAccel(state.hasteTime);
@@ -231,8 +234,8 @@ class DFPrimeHandler extends DFHudComponent {
 		let fillRightZones = false;
 		let leftOffset = -Math.PI * 0.25 - viewAngle;
 		let rightOffset = Math.PI * 0.25 - viewAngle;
-		let leftTarget = MomMath.wrapToHalfPi(-targetAngle - velAngle);
-		let rightTarget = MomMath.wrapToHalfPi(targetAngle - velAngle);
+		let leftTarget = -targetAngle - velAngle;
+		let rightTarget = targetAngle - velAngle;
 
 		switch (inputMode) {
 			case InputMode.NONE: // Fall-through
@@ -246,7 +249,7 @@ class DFPrimeHandler extends DFHudComponent {
 				);
 				if (fillLeftZones) leftOffset = -Math.PI * 0.5 - viewAngle;
 				const mirrorTarget = this.findFastAngle(state.speed, this.maxGroundSpeed, AIR_ACCEL);
-				rightTarget = MomMath.wrapToHalfPi(mirrorTarget - velAngle);
+				rightTarget = mirrorTarget - velAngle;
 				break;
 			}
 			case InputMode.TURN_RIGHT: {
@@ -255,7 +258,7 @@ class DFPrimeHandler extends DFHudComponent {
 				);
 				if (fillRightZones) rightOffset = Math.PI * 0.5 - viewAngle;
 				const mirrorTarget = this.findFastAngle(state.speed, this.maxGroundSpeed, AIR_ACCEL);
-				leftTarget = MomMath.wrapToHalfPi(-mirrorTarget - velAngle);
+				leftTarget = -mirrorTarget - velAngle;
 				break;
 			}
 			case InputMode.STRAFE_LEFT: {
@@ -271,37 +274,38 @@ class DFPrimeHandler extends DFHudComponent {
 		const leftAngles = fillLeftZones ? this.primeAngles : this.snapAngles;
 		const rightAngles = fillRightZones ? this.primeAngles : this.snapAngles;
 
-		const iLeft = this.updateFirstPrimeZone(leftTarget, leftOffset, this.primeFirstZoneLeft, leftAngles);
-		const iRight = this.updateFirstPrimeZone(rightTarget, rightOffset, this.primeFirstZoneRight, rightAngles);
+		const leftChain = this.findPrimeChain(leftTarget, leftOffset, leftAngles);
+		const rightChain = this.findPrimeChain(rightTarget, rightOffset, rightAngles);
 
+		// first zones are drawn from the target outward, but their gain uses the whole zone
+		const [firstLeftEdge, firstLeftEnd] = this.primeZoneEdges(leftChain, leftChain.first);
 		if (fillLeftZones || this.primeShowInactive) {
-			this.primeFirstZoneLeft.rightPx = this.mapToScreen(MomMath.wrapToHalfPi(leftTarget - leftOffset));
+			this.drawPrimeZone(this.primeFirstZoneLeft, firstLeftEdge, leftChain.target);
 			this.primeFirstZoneLeft.style.backgroundColor = this.primeAltColor;
-			this.drawZone(this.primeFirstZoneLeft);
 			this.primeFirstZoneLeft.isInactive = !fillLeftZones;
 		} else {
 			this.clearZones([this.primeFirstZoneLeft]);
 		}
 
 		speedGain = this.findPrimeGain(
-			this.primeFirstZoneLeft,
+			0.5 * (firstLeftEdge + firstLeftEnd),
 			velocity,
 			MomMath.rotateVector2D(viewDir, 0.25 * Math.PI)
 		);
 		gainZonesMap.set(this.primeFirstZoneLeft, speedGain);
 		if (speedGain > gainMax) gainMax = speedGain;
 
+		const [firstRightStart, firstRightEdge] = this.primeZoneEdges(rightChain, rightChain.first);
 		if (fillRightZones || this.primeShowInactive) {
-			this.primeFirstZoneRight.leftPx = this.mapToScreen(MomMath.wrapToHalfPi(rightTarget - rightOffset));
+			this.drawPrimeZone(this.primeFirstZoneRight, rightChain.target, firstRightEdge);
 			this.primeFirstZoneRight.style.backgroundColor = this.primeAltColor;
-			this.drawZone(this.primeFirstZoneRight);
 			this.primeFirstZoneRight.isInactive = !fillRightZones;
 		} else {
 			this.clearZones([this.primeFirstZoneRight]);
 		}
 
 		speedGain = this.findPrimeGain(
-			this.primeFirstZoneRight,
+			0.5 * (firstRightStart + firstRightEdge),
 			velocity,
 			MomMath.rotateVector2D(viewDir, -0.25 * Math.PI)
 		);
@@ -309,25 +313,13 @@ class DFPrimeHandler extends DFHudComponent {
 		if (speedGain > gainMax) gainMax = speedGain;
 
 		if (fillLeftZones) {
-			const leftBoundary = MomMath.wrapToHalfPi(-boundaryAngle - velAngle);
-			const jLeft = this.findArrayInfimum(this.primeAngles, leftBoundary);
-			const zoneRange = {
-				start: iLeft,
-				end: jLeft,
-				direction: -1
-			};
-			this.fillActivePrimeZones(zoneRange, leftOffset, leftAngles, gainZonesMap, gainMax, velocity, wishDir);
+			const leftBoundary = leftChain.target - (boundaryAngle - targetAngle);
+			this.fillActivePrimeZones(leftChain, -1, leftBoundary, gainZonesMap, gainMax, velocity, wishDir);
 		}
 
 		if (fillRightZones) {
-			const rightBoundary = MomMath.wrapToHalfPi(boundaryAngle - velAngle);
-			const jRight = this.findArrayInfimum(this.primeAngles, rightBoundary);
-			const zoneRange = {
-				start: iRight,
-				end: jRight,
-				direction: 1
-			};
-			this.fillActivePrimeZones(zoneRange, rightOffset, rightAngles, gainZonesMap, gainMax, velocity, wishDir);
+			const rightBoundary = rightChain.target + (boundaryAngle - targetAngle);
+			this.fillActivePrimeZones(rightChain, 1, rightBoundary, gainZonesMap, gainMax, velocity, wishDir);
 		}
 
 		const scale = this.NaNCheck(1 / (gainMax > 0 ? gainMax : this.primeAccel), 1);
@@ -368,52 +360,64 @@ class DFPrimeHandler extends DFHudComponent {
 		}
 	}
 
-	/** Updates zones that overlap cgaz zones. Returns the max potential gain from updated zones. */
+	/**
+	 * Finds where a chain starts. The angle table covers [-pi/2, pi/2] and repeats every pi, but the chain is laid
+	 * out from its view-relative target in [-pi, pi], so its zones keep their real directions and never wrap.
+	 */
+	findPrimeChain(target: number, offset: number, angles: number[]): PrimeChain {
+		const tableTarget = MomMath.wrapToHalfPi(target);
+		let first = -1;
+		while (first + 1 < angles.length && angles[first + 1] <= tableTarget) ++first;
+		return { angles, tableTarget, first, target: MomMath.remapAngle(target - offset) };
+	}
+
+	/** View-relative left and right edges of the chain's zone k, where k may run past either end of the table. */
+	primeZoneEdges(chain: PrimeChain, k: number): [number, number] {
+		const count = chain.angles.length;
+		const edge = (j: number) =>
+			chain.angles[((j % count) + count) % count] +
+			Math.PI * Math.floor(j / count) -
+			chain.tableTarget +
+			chain.target;
+		return [edge(k), edge(k + 1)];
+	}
+
+	/** Draws a zone from unwrapped view-relative angles. Anything outside the FOV is clipped by mapToScreen. */
+	drawPrimeZone(zone: ZonePanel, left: number, right: number) {
+		// a chain can run past +-pi; shift by whole turns so the zone sits at its real direction
+		const turns = 2 * Math.PI * Math.round((left + right) / (4 * Math.PI));
+		zone.leftAngle = left - turns;
+		zone.rightAngle = right - turns;
+		zone.leftPx = this.mapToScreen(zone.leftAngle);
+		zone.rightPx = this.mapToScreen(zone.rightAngle);
+		this.drawZone(zone);
+	}
+
+	/** Fills a chain's active zones outward from its first zone, up to the first zone past the cgaz boundary. */
 	fillActivePrimeZones(
-		zoneRange: { direction: number; start: number; end: number },
-		offset: number,
-		angles: number[],
+		chain: PrimeChain,
+		direction: number,
+		boundary: number,
 		gainZonesMap: Map<ZonePanel, number>,
 		gainMax: number,
 		velocity: vec3,
 		wishDir: vec2
 	) {
-		const angleCount = angles.length;
-		let count = (zoneRange.direction * (zoneRange.end - zoneRange.start) + angleCount) % angleCount;
-		let index = zoneRange.start;
-		let zone;
-		while (count-- >= 0) {
-			index = (index + zoneRange.direction + angleCount) % angleCount;
-			zone = this.primeZones[index];
+		const count = chain.angles.length;
+		for (let step = 1; step < count; ++step) {
+			const k = chain.first + direction * step;
+			const zone = this.primeZones[((k % count) + count) % count];
+			const [left, right] = this.primeZoneEdges(chain, k);
+			this.drawPrimeZone(zone, left, right);
 
-			const left = MomMath.wrapToHalfPi(angles[index] - offset);
-			const right = MomMath.wrapToHalfPi(angles[(index + 1) % angleCount] - offset);
-			this.updateZone(zone, left, right, 0, PRIME_SIGHT_CLASS, this.primeSplitZone);
-			const speedGain = this.findPrimeGain(zone, velocity, wishDir);
+			const speedGain = this.findPrimeGain(0.5 * (left + right), velocity, wishDir);
 			gainZonesMap.set(zone, speedGain);
 			if (speedGain < 0) break;
 			if (speedGain > gainMax) gainMax = speedGain;
-		}
-	}
 
-	/**
-	 * Get the index of the largest entry less than (or equal to) the target value - Greatest Lower Bound
-	 * Array argument assumed to be sorted.
-	 */
-	findArrayInfimum(arr: number[], val: number): number {
-		let lower = 0;
-		let upper = arr.length - 1;
-		if (val < arr[lower] || val > arr[upper]) return upper;
-
-		while (lower < upper) {
-			const i = Math.floor(0.5 * (lower + upper));
-			if (val > arr[i]) {
-				lower = i + 1;
-			} else {
-				upper = i;
-			}
+			const innerEdge = direction > 0 ? left : right;
+			if (direction * (innerEdge - boundary) >= 0) break;
 		}
-		return (lower - 1 + arr.length) % arr.length;
 	}
 
 	/** Creates a panel for the active chains. Zones are never deleted: ones past the angle table stay cleared. */
@@ -431,9 +435,9 @@ class DFPrimeHandler extends DFHudComponent {
 		return zone.rightPx - center >= 0 && zone.leftPx - center <= 0;
 	}
 
-	findPrimeGain(zone: ZonePanel, velocity: vec2, wishDir: vec2): number {
-		const avgAngle = 0.5 * (zone.leftAngle + zone.rightAngle);
-		const zoneVector = MomMath.rotateVector2D(wishDir, -avgAngle);
+	/** Speed gain from aiming at a view-relative angle. */
+	findPrimeGain(angle: number, velocity: vec2, wishDir: vec2): number {
+		const zoneVector = MomMath.rotateVector2D(wishDir, -angle);
 		const snapProject = {
 			x: Math.round(zoneVector.x * this.primeAccel),
 			y: Math.round(zoneVector.y * this.primeAccel)
@@ -445,14 +449,6 @@ class DFPrimeHandler extends DFHudComponent {
 		});
 
 		return newSpeed - MomMath.magnitude2D(velocity);
-	}
-
-	updateFirstPrimeZone(target: number, offset: number, zone: ZonePanel, angles: number[]) {
-		const i = this.findArrayInfimum(angles, target);
-		const left = MomMath.wrapToHalfPi(angles[i] - offset);
-		const right = MomMath.wrapToHalfPi(angles[(i + 1) % angles.length] - offset);
-		this.updateZone(zone, left, right, 0, PRIME_SIGHT_CLASS, this.primeSplitZone);
-		return i;
 	}
 
 	zoneCopy(pasteZone: ZonePanel, copyZone: ZonePanel) {
