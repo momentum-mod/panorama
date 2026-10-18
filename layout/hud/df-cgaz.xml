@@ -20,12 +20,6 @@
 			<Panel id="LeftMirrorZone" />
 			<Panel id="RightMirrorZone" />
 			<Panel id="MirrorSplitZone" />
-			<Panel id="WindicatorZone" />
 		</ConVarEnabler>
-		<Panel id="WindicatorArrow">
-			<ConVarEnabler class="h-full" convar="mom_hud_df_windicator_enable" togglevisibility="true">
-				<Image id="WindicatorArrowIcon" class="dfhud__arrow dfhud__arrow--down" src="file://{images}/hud/cgaz-arrow.svg" textureheight="48" />
-			</ConVarEnabler>
-		</Panel>
 	</MomHudDFCgaz>
 </root>

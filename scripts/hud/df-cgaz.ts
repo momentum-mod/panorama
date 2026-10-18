@@ -9,7 +9,6 @@ let NEUTRAL_CLASS: StyleObject;
 let SLOW_CLASS: StyleObject;
 let FAST_CLASS: StyleObject;
 let TURN_CLASS: StyleObject;
-let WIN_ZONE_CLASS: StyleObject;
 let MIRROR_CLASS: StyleObject;
 
 @PanelHandler()
@@ -42,12 +41,6 @@ class DFCgazHandler extends DFHudComponent {
 	rightMirrorZone = this.cgazZones[9];
 	mirrorSplitZone = this.cgazZones[10];
 
-	windicatorArrow = $('#WindicatorArrow');
-	windicatorArrowIcon = $<Image>('#WindicatorArrowIcon');
-	windicatorZone = this.initZonePanel($('#WindicatorZone'));
-
-	theta = Math.PI * 0.5 - 2 * Math.atan(Math.sqrt(2 + Math.sqrt(3)));
-
 	cgazEnable: boolean;
 	cgazMinSpeed: float;
 	cgazHeight: float;
@@ -59,16 +52,6 @@ class DFCgazHandler extends DFHudComponent {
 	cgazScaleEnable: boolean;
 	cgazMirrorEnable: boolean;
 	cgazMirrorBorder: int32;
-
-	windicatorEnable: boolean;
-	windicatorHeight: float;
-	windicatorOffset: float;
-	windicatorSize: float;
-	windicatorColor: rgbaColor;
-	windicatorBorder: int32;
-
-	/** The windicator angle follows the compass arrow's behind-view flip, so it needs the compass mode */
-	compassMode: int32;
 
 	constructor() {
 		super();
@@ -86,15 +69,11 @@ class DFCgazHandler extends DFHudComponent {
 		});
 
 		$.RegisterForUnhandledEvent('OnDefragHUDCgazChange', () => this.onCgazConfigChange());
-		$.RegisterForUnhandledEvent('OnDefragHUDWIndicatorChange', () => this.onWindicatorConfigChange());
-		$.RegisterForUnhandledEvent('OnDefragHUDCompassChange', () => this.onCompassConfigChange());
 	}
 
 	onLoad() {
 		this.projection = DefragAPI.GetHUDProjection();
 		this.onCgazConfigChange();
-		this.onWindicatorConfigChange();
-		this.onCompassConfigChange();
 	}
 
 	onCgazConfigChange() {
@@ -131,35 +110,6 @@ class DFCgazHandler extends DFHudComponent {
 		this.applyClassBorder(this.mirrorSplitZone, this.cgazMirrorBorder, MIRROR_CLASS);
 	}
 
-	onWindicatorConfigChange() {
-		const windicatorConfig = $.GetContextPanel<MomHudDFCgaz>().GetWIndicatorCFG();
-		this.windicatorEnable = windicatorConfig.enable;
-		this.windicatorHeight = windicatorConfig.height;
-		this.windicatorOffset = windicatorConfig.offset;
-		this.windicatorSize = windicatorConfig.size;
-		this.windicatorColor = windicatorConfig.color;
-		this.windicatorBorder = Math.round(windicatorConfig.border);
-
-		const arrowWidth = 2 * this.windicatorSize;
-		const arrowHeight = 2 * arrowWidth;
-		this.setupArrow(
-			this.windicatorArrow,
-			this.windicatorArrowIcon,
-			arrowHeight,
-			arrowWidth,
-			this.windicatorOffset,
-			'top',
-			this.windicatorColor
-		);
-
-		WIN_ZONE_CLASS = new StyleObject(this.windicatorHeight, this.windicatorOffset, this.windicatorColor);
-		this.applyClassBorder(this.windicatorZone, this.windicatorBorder, WIN_ZONE_CLASS);
-	}
-
-	onCompassConfigChange() {
-		this.compassMode = GameInterfaceAPI.GetSettingInt('mom_hud_df_compass_mode');
-	}
-
 	onUpdate() {
 		const state = DefragAPI.GetHUDFrameState();
 		if (!state.valid) return;
@@ -185,7 +135,6 @@ class DFCgazHandler extends DFHudComponent {
 		const viewAngle = MomMath.deg2rad(state.viewYaw);
 
 		const bIsFalling = state.falling;
-		const bHasAirControl = state.airControl;
 
 		// find cgaz angles
 		const angleOffset = MomMath.remapAngle(velAngle - wishAngle);
@@ -317,33 +266,6 @@ class DFCgazHandler extends DFHudComponent {
 			} else {
 				this.clearZones([this.leftMirrorZone, this.rightMirrorZone]);
 			}
-		}
-
-		let velocityAngle = MomMath.remapAngle(viewAngle - velAngle);
-		// Matches the compass arrow flipping to the behind-view direction
-		if (this.compassMode && !(Math.abs(velocityAngle) < this.halfHFov)) {
-			velocityAngle = MomMath.remapAngle(velocityAngle - Math.PI);
-		}
-
-		const wTurnAngle = velocityAngle > 0 ? velocityAngle + this.theta : velocityAngle - this.theta;
-		// draw w-turn indicator
-		if (this.windicatorEnable && Math.abs(wTurnAngle) < this.halfHFov && speed >= this.cgazMinSpeed) {
-			this.windicatorArrow.visible = true;
-			const leftEdge = this.mapToScreen(wTurnAngle) - this.windicatorSize;
-			this.windicatorArrow.style.position = `${this.NaNCheck(leftEdge, 0)}px 0px 0px`;
-
-			const minAngle = Math.min(wTurnAngle, 0);
-			const maxAngle = Math.max(wTurnAngle, 0);
-
-			if (bHasAirControl) {
-				this.updateZone(this.windicatorZone, minAngle, maxAngle, 0, WIN_ZONE_CLASS);
-			} else {
-				this.windicatorZone.style.width = '0px';
-			}
-		} else {
-			// hide arrow & box
-			this.windicatorArrow.visible = false;
-			this.windicatorZone.style.width = '0px';
 		}
 	}
 }

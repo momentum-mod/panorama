@@ -45,6 +45,11 @@ export class StyleObject {
 	}
 }
 
+/** Walking on slick, which turns friction off; the frame state reports no friction then */
+export function isOnSlick(state: DefragAPI.HUDFrameState): boolean {
+	return state.moveStatus === MomentumMovementAPI.PlayerMoveStatus.WALK && state.friction === 0;
+}
+
 /**
  * Shared base for the DF HUD components. Each component is a late-updating C++ shell (MomHudDF<Component>) whose
  * HudProcessInput runs once per rendered frame, after the view is set up, and reads everything view- and
