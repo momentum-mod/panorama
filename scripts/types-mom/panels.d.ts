@@ -24,6 +24,7 @@ interface PanelTagNameMap {
 	MomHudDFCgaz: MomHudDFCgaz;
 	MomHudDFSnap: MomHudDFSnap;
 	MomHudDFPrime: MomHudDFPrime;
+	MomHudDFTurnt: MomHudDFTurnt;
 	MomHudDFCompass: MomHudDFCompass;
 	MomHudDFPitch: MomHudDFPitch;
 	MomHudJumpTiming: MomHudJumpTiming;
@@ -143,7 +144,6 @@ interface MomHudDFJump extends AbstractHudPanel<'MomHudDFJump'> {}
 
 interface MomHudDFCgaz extends AbstractHudPanel<'MomHudDFCgaz'> {
 	GetCgazCFG(): DefragAPI.CgazConfig;
-	GetWIndicatorCFG(): DefragAPI.WIndicatorConfig;
 }
 
 interface MomHudDFSnap extends AbstractHudPanel<'MomHudDFSnap'> {
@@ -152,6 +152,11 @@ interface MomHudDFSnap extends AbstractHudPanel<'MomHudDFSnap'> {
 
 interface MomHudDFPrime extends AbstractHudPanel<'MomHudDFPrime'> {
 	GetPrimeCFG(): DefragAPI.PrimeConfig;
+}
+
+interface MomHudDFTurnt extends AbstractHudPanel<'MomHudDFTurnt'> {
+	GetTurntCFG(): DefragAPI.TurntConfig;
+	GetTurntPhysics(): DefragAPI.TurntPhysics;
 }
 
 interface MomHudDFCompass extends AbstractHudPanel<'MomHudDFCompass'> {

@@ -505,6 +505,37 @@ declare namespace DefragAPI {
 		arrowColor: rgbaColor;
 	}
 
+	interface TurntConfig {
+		enable: boolean;
+		minSpeed: float;
+		height: float;
+		offset: float;
+		tickWidth: float;
+		/** Degrees between ticks */
+		spacing: float;
+		/** Degrees from the crosshair at which ticks have faded out */
+		span: float;
+		/** Rate error, as a fraction of the optimal rate, still drawn in the on-rate color */
+		tolerance: float;
+		/** Seconds */
+		smoothing: float;
+		/** Seconds */
+		fadeTime: float;
+		arrowEnable: boolean;
+		arrowSize: float;
+		arrowColor: rgbaColor;
+	}
+
+	/** Movement values the turnt-meter's optimal turn rate depends on. All zero outside CPM. */
+	interface TurntPhysics {
+		airAccelerate: float;
+		airStrafeAccelerate: float;
+		airControl: float;
+		airDecelerate: float;
+		/** Degrees */
+		airDecelerateAngle: float;
+	}
+
 	interface SnapConfig {
 		enable: boolean;
 		enableHeightGain: boolean;
@@ -519,15 +550,6 @@ declare namespace DefragAPI {
 		altHighlightColor: rgbaColor;
 		fastColor: rgbaColor;
 		slowColor: rgbaColor;
-	}
-
-	interface WIndicatorConfig {
-		enable: boolean;
-		height: float;
-		offset: float;
-		size: float;
-		color: rgbaColor;
-		border: float;
 	}
 
 	interface CompassConfig {
@@ -584,10 +606,14 @@ declare namespace DefragAPI {
 		acceleration: float;
 		friction: float;
 		maxspeed: float;
+		/** Uncapped speed the acceleration adds per tick */
+		accelSpeed: float;
 		moveStatus: int32;
 		hasteTime: int32;
 		physicsMode: DefragPhysics;
 		tickInterval: float;
+		/** Seconds since the last rendered frame */
+		frameTime: float;
 		wishDir: vec3;
 		wishAngle: float;
 		velAngle: float;
