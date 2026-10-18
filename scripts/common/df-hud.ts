@@ -54,6 +54,8 @@ export abstract class DFHudComponent {
 	screenY = $.GetContextPanel().actuallayoutheight;
 	screenX = $.GetContextPanel().actuallayoutwidth;
 	scale = $.GetContextPanel().actualuiscale_y;
+	/** Screen pixels per layout px horizontally; Panorama scales every px length by this */
+	scaleX = $.GetContextPanel().actualuiscale_x;
 	/** Half of the horizontal FOV (crosshair to screen edge), in radians */
 	halfHFov = 0;
 	/** Half of the vertical FOV (crosshair to screen edge), in radians */
@@ -75,6 +77,7 @@ export abstract class DFHudComponent {
 		this.screenY = $.GetContextPanel().actuallayoutheight;
 		this.screenX = $.GetContextPanel().actuallayoutwidth;
 		this.scale = $.GetContextPanel().actualuiscale_y;
+		this.scaleX = $.GetContextPanel().actualuiscale_x;
 		this.halfHFov = MomMath.deg2rad(state.hFov) * 0.5;
 		this.halfVFov = MomMath.deg2rad(state.vFov) * 0.5;
 	}
@@ -92,8 +95,26 @@ export abstract class DFHudComponent {
 		return true;
 	}
 
+	/**
+	 * Maps an angle to a layout px position that lands exactly on a screen pixel. Layout px are scaled by the UI
+	 * scale (1080p reference), so rounding in layout px would put edges between screen pixels at 1440p and 4K.
+	 */
 	mapToScreen(angle: number): number {
-		return MomMath.mapAngleToScreenDist(angle, this.halfHFov, this.screenX, this.scale, this.projection);
+		return MomMath.mapAngleToScreenDist(angle, this.halfHFov, this.screenX, 1, this.projection) / this.scaleX;
+	}
+
+	/**
+	 * A layout px length as a style value covering exactly the given number of whole screen pixels. Panorama rounds
+	 * a panel's scaled size up to a whole pixel, so the length is pulled just under it to keep the next pixel free.
+	 */
+	pixelLength(length: number, uiScale: number): string {
+		const pixels = Math.round(this.NaNCheck(length, 0) * uiScale);
+		return pixels > 0 ? ((pixels - 0.01) / uiScale).toFixed(4) + 'px' : '0px';
+	}
+
+	/** A layout px offset as a style value landing exactly on a screen pixel. */
+	pixelOffset(offset: number, uiScale: number): string {
+		return (Math.round(this.NaNCheck(offset, 0) * uiScale) / uiScale).toFixed(4) + 'px';
 	}
 
 	findSlowAngle(dropSpeed: number, dropSpeedSquared: number, speedSquared: number, maxSpeed: number) {
@@ -193,12 +214,11 @@ export abstract class DFHudComponent {
 	}
 
 	drawZone(zone: ZonePanel) {
-		// assign widths
-		const width = zone.rightPx - zone.leftPx;
-		zone.style.width = this.NaNCheck(Number(width).toFixed(0), 0) + 'px';
+		// edges are already on screen pixels, so neighbouring zones meet without a gap or an overlap
+		zone.style.width = this.pixelLength(zone.rightPx - zone.leftPx, this.scaleX);
 
 		// assign position via position (center screen at 0)
-		zone.style.position = `${this.NaNCheck(Number(zone.leftPx).toFixed(0), 0)}px 0px 0px`;
+		zone.style.position = `${this.pixelOffset(zone.leftPx, this.scaleX)} 0px 0px`;
 	}
 
 	setupContainer(container: GenericPanel, offset: number) {

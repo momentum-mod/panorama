@@ -471,20 +471,26 @@ class DFPrimeHandler extends DFHudComponent {
 			}
 		}
 
+		// heights are worked out in screen pixels, so every zone meets the center line on the same pixel row
+		const uiScale = this.scale;
+		const linePixels = Math.round(this.primeHeight * uiScale);
 		const scale = this.NaNCheck(1 / (gainMax > 0 ? gainMax : this.primeAccel), 1);
 		for (const [zone, gain] of gainZonesMap.entries()) {
 			const gainFactor = this.NaNCheck(Math.min(Math.abs(gain * scale), 1), 1);
 			const secondLine = gain < 0 && !this.primeLockOneLine;
 			const height = this.NaNCheck(this.primeHeight * (this.primeHeightgainEnable ? gainFactor : 1), 0);
-			const margin = secondLine ? this.primeHeight : this.primeHeight - height;
-			zone.style.height = Number(height).toFixed(0) + 'px';
-			zone.style.marginTop = Number(margin).toFixed(0) + 'px';
-			zone.style.marginBottom =
-				Number(secondLine ? this.primeHeight - height : this.primeHeight).toFixed(0) + 'px';
+			const heightPixels = Math.min(Math.round(height * uiScale), linePixels);
+			const marginPixels = secondLine ? linePixels : linePixels - heightPixels;
+			zone.style.height = this.pixelLength(heightPixels / uiScale, uiScale);
+			zone.style.marginTop = this.pixelOffset(marginPixels / uiScale, uiScale);
+			zone.style.marginBottom = this.pixelOffset(
+				(secondLine ? linePixels - heightPixels : linePixels) / uiScale,
+				uiScale
+			);
 
 			if (zone.isInactive) {
 				if (inputMode === InputMode.TURN_LEFT || inputMode === InputMode.TURN_RIGHT)
-					zone.style.height = this.NaNCheck(this.primeHeight.toFixed(), 0) + 'px';
+					zone.style.height = this.pixelLength(this.primeHeight, uiScale);
 				this.styleInactiveZone(
 					zone,
 					this.primeInactiveGainColor ? this.findGainColor(gain, gainFactor) : this.primeAltColor
@@ -503,7 +509,11 @@ class DFPrimeHandler extends DFHudComponent {
 			if (this.primeHlEnable && this.shouldHighlight(zone)) {
 				this.zoneCopy(this.primeHighlightZone, zone);
 				this.drawZone(this.primeHighlightZone);
-				this.primeHighlightZone.style.marginTop = (gain < 0 ? this.primeHeight : 0) + 'px';
+				this.primeHighlightZone.style.height = this.pixelLength(linePixels / uiScale, uiScale);
+				this.primeHighlightZone.style.marginTop = this.pixelOffset(
+					(gain < 0 ? linePixels : 0) / uiScale,
+					uiScale
+				);
 
 				const [r, g, b, a = 255] = rgbaStringToTuple(zone.color);
 				zone.color = tupleToRgbaString([r, g, b, MomMath.lerp(a, 255, this.primeHlStrength)]);
@@ -625,7 +635,7 @@ class DFPrimeHandler extends DFHudComponent {
 
 	/** Check whether center screen falls between zone left and right edge (inclusive). */
 	shouldHighlight(zone: ZonePanel): boolean {
-		const center = (0.5 * this.screenX) / this.scale;
+		const center = (0.5 * this.screenX) / this.scaleX;
 		return zone.rightPx - center >= 0 && zone.leftPx - center <= 0;
 	}
 
