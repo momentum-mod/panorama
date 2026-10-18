@@ -351,9 +351,12 @@ class DFPrimeHandler extends DFHudComponent {
 			this.clearZones([this.primeFirstZoneLeft]);
 		}
 
+		// both first zones count toward the height scale, so diagonal strafing shows which side has more gain;
+		// CPM a/d turn zones scale by their own gain, since the mirrored strafe side's would always dwarf them
+		const bTurnScaleOnly = bTurn && bFill && !bVQ3;
 		speedGain = this.findPrimeGain(0.5 * (firstLeftEdge + firstLeftEnd), velocity, leftWishDir);
 		gainZonesMap.set(this.primeFirstZoneLeft, speedGain);
-		if (speedGain > gainMax) gainMax = speedGain;
+		if ((fillLeftZones || !bTurnScaleOnly) && speedGain > gainMax) gainMax = speedGain;
 
 		const [firstRightStart, firstRightEdge] = this.primeZoneEdges(rightChain, rightChain.first);
 		if (fillRightZones || this.primeShowInactive) {
@@ -365,7 +368,7 @@ class DFPrimeHandler extends DFHudComponent {
 
 		speedGain = this.findPrimeGain(0.5 * (firstRightStart + firstRightEdge), velocity, rightWishDir);
 		gainZonesMap.set(this.primeFirstZoneRight, speedGain);
-		if (speedGain > gainMax) gainMax = speedGain;
+		if ((fillRightZones || !bTurnScaleOnly) && speedGain > gainMax) gainMax = speedGain;
 
 		// the boundary lies (boundaryAngle - targetAngle) further out from the target, on the same side
 		if (fillLeftZones) {
@@ -475,8 +478,18 @@ class DFPrimeHandler extends DFHudComponent {
 		const uiScale = this.scale;
 		const linePixels = Math.round(this.primeHeight * uiScale);
 		const scale = this.NaNCheck(1 / (gainMax > 0 ? gainMax : this.primeAccel), 1);
+		// in CPM a/d turns the inactive zones scale by their own best gain, like the turn zones do
+		let inactiveScale = scale;
+		if (bTurnScaleOnly) {
+			let inactiveGainMax = 0;
+			for (const [zone, gain] of gainZonesMap.entries()) {
+				if (zone.isInactive && gain > inactiveGainMax) inactiveGainMax = gain;
+			}
+			inactiveScale = this.NaNCheck(1 / (inactiveGainMax > 0 ? inactiveGainMax : this.primeAccel), 1);
+		}
 		for (const [zone, gain] of gainZonesMap.entries()) {
-			const gainFactor = this.NaNCheck(Math.min(Math.abs(gain * scale), 1), 1);
+			const zoneScale = zone.isInactive ? inactiveScale : scale;
+			const gainFactor = this.NaNCheck(Math.min(Math.abs(gain * zoneScale), 1), 1);
 			const secondLine = gain < 0 && !this.primeLockOneLine;
 			const height = this.NaNCheck(this.primeHeight * (this.primeHeightgainEnable ? gainFactor : 1), 0);
 			const heightPixels = Math.min(Math.round(height * uiScale), linePixels);
@@ -489,8 +502,6 @@ class DFPrimeHandler extends DFHudComponent {
 			);
 
 			if (zone.isInactive) {
-				if (inputMode === InputMode.TURN_LEFT || inputMode === InputMode.TURN_RIGHT)
-					zone.style.height = this.pixelLength(this.primeHeight, uiScale);
 				this.styleInactiveZone(
 					zone,
 					this.primeInactiveGainColor ? this.findGainColor(gain, gainFactor) : this.primeAltColor
