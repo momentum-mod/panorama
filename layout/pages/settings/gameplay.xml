@@ -627,6 +627,48 @@
 
 				</Panel>
 
+				<Panel class="settings-group__combo">
+
+					<Label class="settings-group__combo-header" text="#Settings_Defrag_Turnt_Title" />
+
+					<SettingsEnum text="#Settings_Defrag_Turnt_Enable" convar="mom_hud_df_turnt_enable" infomessage="#Settings_Defrag_Turnt_Enable_Info" tags="turnt,turn,rate,aircontrol">
+						<RadioButton group="turntenable" text="#Common_Off" value="0" />
+						<RadioButton group="turntenable" text="#Common_On" value="1" />
+					</SettingsEnum>
+
+					<ConVarEnabler convar="mom_hud_df_turnt_enable" class="settings__convarenabler">
+						<SettingsSlider text="#Settings_Defrag_Turnt_Height" min="1" max="50" convar="mom_hud_df_turnt_height" displayprecision="0" infomessage="#Settings_Defrag_Turnt_Height_Info" tags="turnt" />
+
+						<SettingsSlider text="#Settings_Defrag_Turnt_Offset" min="-200" max="200" convar="mom_hud_df_turnt_vertical_offset" displayprecision="0" infomessage="#Settings_Defrag_Turnt_Offset_Info" tags="turnt" />
+
+						<SettingsSlider text="#Settings_Defrag_Turnt_MinSpeed" min="1" max="1000" convar="mom_hud_df_turnt_min_speed" displayprecision="0" infomessage="#Settings_Defrag_Turnt_MinSpeed_Info" tags="turnt" />
+
+						<SettingsSlider text="#Settings_Defrag_Turnt_TickWidth" min="1" max="10" convar="mom_hud_df_turnt_tick_width" displayprecision="0" infomessage="#Settings_Defrag_Turnt_TickWidth_Info" tags="turnt" />
+
+						<SettingsSlider text="#Settings_Defrag_Turnt_Spacing" min="1" max="45" convar="mom_hud_df_turnt_spacing" displayprecision="1" infomessage="#Settings_Defrag_Turnt_Spacing_Info" tags="turnt" />
+
+						<SettingsSlider text="#Settings_Defrag_Turnt_Span" min="5" max="90" convar="mom_hud_df_turnt_span" displayprecision="0" infomessage="#Settings_Defrag_Turnt_Span_Info" tags="turnt" />
+
+						<SettingsSlider text="#Settings_Defrag_Turnt_Tolerance" min="0" max="0.5" convar="mom_hud_df_turnt_tolerance" displayprecision="2" infomessage="#Settings_Defrag_Turnt_Tolerance_Info" tags="turnt" />
+
+						<SettingsSlider text="#Settings_Defrag_Turnt_Smoothing" min="0" max="1" convar="mom_hud_df_turnt_smoothing" displayprecision="2" infomessage="#Settings_Defrag_Turnt_Smoothing_Info" tags="turnt" />
+
+						<SettingsSlider text="#Settings_Defrag_Turnt_FadeTime" min="0" max="1" convar="mom_hud_df_turnt_fade_time" displayprecision="2" infomessage="#Settings_Defrag_Turnt_FadeTime_Info" tags="turnt" />
+
+						<SettingsEnum text="#Settings_Defrag_Turnt_ArrowEnable" convar="mom_hud_df_turnt_arrow_enable" infomessage="#Settings_Defrag_Turnt_ArrowEnable_Info" tags="turnt,arrow,windicator">
+							<RadioButton group="turntarrowenable" text="#Common_Off" value="0" />
+							<RadioButton group="turntarrowenable" text="#Common_On" value="1" />
+						</SettingsEnum>
+
+						<ConVarEnabler convar="mom_hud_df_turnt_arrow_enable" class="settings__convarenabler">
+							<SettingsSlider text="#Settings_Defrag_Turnt_ArrowSize" min="1" max="25" convar="mom_hud_df_turnt_arrow_size" displayprecision="0" infomessage="#Settings_Defrag_Turnt_ArrowSize_Info" tags="turnt,arrow" />
+
+							<ConVarColorDisplay text="#Settings_Defrag_Turnt_ArrowColor" convar="mom_hud_df_turnt_arrow_color" infomessage="#Settings_Defrag_Turnt_ArrowColor_Info" tags="turnt,arrow" />
+						</ConVarEnabler>
+					</ConVarEnabler>
+
+				</Panel>
+
 				<SettingsEnumDropDown text="#Settings_Defrag_ProjectionMode" convar="mom_hud_df_projection" infomessage="#Settings_Defrag_ProjectionMode_Info">
 					<Label id="projection0" text="#Settings_Defrag_ProjectionMode_Type0" value="0" />
 					<Label id="projection1" text="#Settings_Defrag_ProjectionMode_Type1" value="1" />
@@ -682,27 +724,6 @@
 					<ConVarColorDisplay text="#Settings_Defrag_CompassColor" convar="mom_hud_df_compass_color" infomessage="#Settings_Defrag_CompassColor_Info" tags="compass" />
 
 					<ConVarColorDisplay text="#Settings_Defrag_Compass_Highlight_Color" convar="mom_hud_df_compass_highlight_color" infomessage="#Settings_Defrag_Compass_Highlight_Color_Info" tags="compass" />
-
-				</Panel>
-
-				<Panel class="settings-group__combo">
-
-					<SettingsEnum text="#Settings_Defrag_WIndicator" convar="mom_hud_df_windicator_enable" infomessage="#Settings_Defrag_WIndicator_Info">
-						<RadioButton group="windicatorenable" text="#Common_Off" value="0" />
-						<RadioButton group="windicatorenable" text="#Common_On" value="1" />
-					</SettingsEnum>
-
-					<ConVarEnabler convar="mom_hud_df_windicator_enable" class="settings__convarenabler">
-						<SettingsSlider text="#Settings_Defrag_WIndicatorZoneHeight" min="0" max="50" convar="mom_hud_df_windicator_height" displayprecision="0" infomessage="#Settings_Defrag_WIndicatorZoneHeight_Info" />
-
-						<SettingsSlider text="#Settings_Defrag_WIndicatorZoneOffset" min="-200" max="200" convar="mom_hud_df_windicator_offset" displayprecision="0" infomessage="#Settings_Defrag_WIndicatorZoneOffset_Info" />
-
-						<SettingsSlider text="#Settings_Defrag_WIndicatorArrowSize" min="0" max="25" convar="mom_hud_df_windicator_size" displayprecision="0" infomessage="#Settings_Defrag_WIndicatorArrowSize_Info" />
-
-						<ConVarColorDisplay text="#Settings_Defrag_WIndicatorArrowColor" convar="mom_hud_df_windicator_color" infomessage="#Settings_Defrag_WIndicatorArrowColor_Info" />
-
-						<SettingsSlider text="#Settings_Defrag_WIndicatorBorder" min="0" max="10" convar="mom_hud_df_windicator_border" displayprecision="0" infomessage="#Settings_Defrag_WIndicatorBorder_Info" />
-					</ConVarEnabler>
 
 				</Panel>
 			</Panel>

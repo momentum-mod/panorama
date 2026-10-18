@@ -130,7 +130,7 @@ interface GlobalEventNameMap {
 
 	OnDefragHUDPrimeChange: () => void;
 
-	OnDefragHUDWIndicatorChange: () => void;
+	OnDefragHUDTurntChange: () => void;
 
 	OnDefragHUDCompassChange: () => void;
 
