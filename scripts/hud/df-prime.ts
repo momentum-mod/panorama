@@ -9,7 +9,7 @@ import { AIR_ACCEL, DFHudComponent, InputMode, StyleObject, ZonePanel } from 'co
 enum TruenessMode {
 	GROUND = 1 << 0, // show ground zones
 	PROJECTED = 1 << 1, // show zones scaled by +jump/+crouch
-	CPM_TURN = 1 << 2 // show a/d and ground zones
+	CPM_TURN = 1 << 2 // show a/d turn zones in the air
 }
 
 /** One side's chain of prime zones, laid out from the zone containing its target. */
@@ -197,11 +197,16 @@ class DFPrimeHandler extends DFHudComponent {
 		this.clearZones(this.primeHalfBeatZones);
 
 		if (this.primeEnable && phyMode !== DefragAPI.DefragPhysics.VTG && speed > this.primeMinSpeed) {
-			const useSnapAccel = !(
-				this.primeTruenessMode & TruenessMode.CPM_TURN || phyMode === DefragAPI.DefragPhysics.VQ3
-			);
+			// the real acceleration gives ground zones on the ground (GROUND) and a/d turn zones in the air (CPM_TURN,
+			// always in VQ3); otherwise the zones use the air strafe acceleration
+			const useSnapAccel = state.falling
+				? !(this.primeTruenessMode & TruenessMode.CPM_TURN || phyMode === DefragAPI.DefragPhysics.VQ3)
+				: !(this.primeTruenessMode & TruenessMode.GROUND);
+			// with no keys held the wish velocity is zero, which would push the targets out to 90 degrees; use the
+			// max speed so the inactive zones sit where a key press would put them
+			const wishSpeed = MomMath.magnitude(state.wishVel);
 			const primeMaxSpeed =
-				this.primeTruenessMode & TruenessMode.PROJECTED ? MomMath.magnitude(state.wishVel) : state.maxspeed;
+				this.primeTruenessMode & TruenessMode.PROJECTED && wishSpeed > 0 ? wishSpeed : state.maxspeed;
 			const primeMaxAccel = state.acceleration * primeMaxSpeed * tickInterval;
 			const primeSightSpeed = useSnapAccel ? this.maxGroundSpeed : primeMaxSpeed;
 			const primeSightAccel = useSnapAccel ? this.snapAccel : primeMaxAccel;
