@@ -92,6 +92,8 @@ const CENTER_SNAPPING_THRESHOLD = 0.15;
 
 // Margin around the overlay panel. Needed so that resize handles etc. don't get cut off.
 const OVERLAY_MARGIN = 32;
+/** Distance within which an edge or center snaps to another component's edge or center, in 1080p layout px */
+const ELEMENT_SNAPPING_THRESHOLD = 8;
 
 interface DynamicStyle {
 	properties: Readonly<DynamicStyleProperties>;
@@ -463,6 +465,14 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 	gridSize: number = undefined!;
 	enableSnapping: boolean = undefined!;
+	snapToElements: boolean = undefined!;
+
+	/** Edges and centers of the other visible components and the screen, per axis, gathered when a drag starts */
+	elementSnapLines: [number[], number[]] = [[], []];
+	/** Lines showing which element edge or center a drag snapped to, per axis */
+	elementGuides?: [Panel, Panel];
+	/** Where the active component was when the drag started, for locking a move to one axis */
+	dragStartOffset: [number, number] = [0, 0];
 
 	presetList: Set<string>;
 	unsavedPresets: Set<string> = new Set();
@@ -516,6 +526,12 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 					name: $.Localize('#Customizer_Customizer_EnableSnapping'),
 					type: CustomizerPropertyType.CHECKBOX,
 					callbackFunc: (_, value) => (this.enableSnapping = value)
+				},
+				snapToElements: {
+					name: $.Localize('#Customizer_Customizer_SnapToElements'),
+					tooltip: $.Localize('#Customizer_Customizer_SnapToElements_Tooltip'),
+					type: CustomizerPropertyType.CHECKBOX,
+					callbackFunc: (_, value) => (this.snapToElements = value)
 				},
 				defaultStyles: {
 					name: $.Localize('#Customizer_Customizer_DefaultStyles'),
@@ -1388,7 +1404,16 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		};
 
 		const createStylePanel = (styleID: StyleID, dynamicStyle: DynamicStyle, parent: Panel) => {
-			const panel = $.CreatePanel('Panel', parent, '');
+			const tooltip = dynamicStyle.properties.tooltip;
+			const panel = $.CreatePanel('Panel', parent, tooltip ? `${styleID}Row` : '');
+
+			if (tooltip) {
+				panel.AddClass('hud-customizer-settings__row-wrapper--tooltip');
+				panel.SetPanelEvent('onmouseover', () =>
+					UiToolkitAPI.ShowTextTooltipStyled(panel.id, tooltip, 'tooltip--wrap')
+				);
+				panel.SetPanelEvent('onmouseout', () => UiToolkitAPI.HideTextTooltip());
+			}
 
 			if (dynamicStyle.properties.type !== CustomizerPropertyType.NONE) {
 				panel.AddClass('hud-customizer-settings__row-wrapper--hover');
@@ -1784,6 +1809,8 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		if (!this.activeComponent) return;
 
 		this.dragMode = mode;
+		this.dragStartOffset = [this.activeComponent.offsetX, this.activeComponent.offsetY];
+		this.gatherElementSnapLines();
 
 		this.onThinkHandle = $.RegisterEventHandler('HudThink', this.panels.customizer, () => this.onDragThink());
 
@@ -1871,20 +1898,54 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		this.activeGridlines = [undefined, undefined];
 
 		this.dragMode = undefined;
+		this.setElementGuide(Axis.X, undefined);
+		this.setElementGuide(Axis.Y, undefined);
 	}
 
 	handleMoveSnapping(): void {
 		if (!this.activeComponent) return;
 
 		const shouldSnap = this.enableSnapping;
+		const bElementSnapping = this.isElementSnapping();
+
+		// holding shift keeps the move on whichever axis the drag has gone further along
+		const bCanMoveBoth =
+			this.activeComponent.properties.moveX !== false && this.activeComponent.properties.moveY !== false;
+		let lockedAxis: Axis | undefined;
+		if (bCanMoveBoth && this.panels.customizer.isShiftDown()) {
+			const [dragX, dragY] = LayoutUtil.getPosition(this.panels.dragPanel);
+			const movedX = Math.abs(dragX - this.dragStartOffset[Axis.X]);
+			const movedY = Math.abs(dragY - this.dragStartOffset[Axis.Y]);
+			lockedAxis = movedX >= movedY ? Axis.Y : Axis.X;
+		}
 
 		for (const axis of Axes) {
 			if (axis === Axis.X && this.activeComponent.properties.moveX === false) continue;
 			if (axis === Axis.Y && this.activeComponent.properties.moveY === false) continue;
 
-			const gridGapLength = this.getGridGapLength(axis);
 			const panelPos = LayoutUtil.getPosition(this.panels.dragPanel)[axis];
 			const panelSize = LayoutUtil.getSize(this.panels.dragPanel)[axis];
+
+			if (axis === lockedAxis) {
+				this.activeComponent[axis === Axis.X ? 'offsetX' : 'offsetY'] = this.dragStartOffset[axis];
+				this.setActiveGridline(axis, undefined);
+				this.setElementGuide(axis, undefined);
+				continue;
+			}
+
+			// snapping to other elements replaces the grid, so the grid lines aren't highlighted
+			if (bElementSnapping) {
+				const snap = this.findElementSnap(axis, [panelPos, panelPos + panelSize / 2, panelPos + panelSize]);
+				this.activeComponent[axis === Axis.X ? 'offsetX' : 'offsetY'] = snap
+					? snap.line - (snap.edge * panelSize) / 2
+					: panelPos;
+				this.setActiveGridline(axis, undefined);
+				this.setElementGuide(axis, snap?.line);
+				continue;
+			}
+			this.setElementGuide(axis, undefined);
+
+			const gridGapLength = this.getGridGapLength(axis);
 			const panelRightPos = panelPos + panelSize;
 
 			// Centering takes precendence, if we can center within thresold of SNAPPING_THRESHOLD, do that
@@ -1952,6 +2013,65 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		}
 	}
 
+	/** Whether drags snap to other components instead of the grid: the setting, or holding ctrl */
+	isElementSnapping(): boolean {
+		return this.snapToElements || this.panels.customizer.isControlDown();
+	}
+
+	/** Collects the edges and centers of the screen and every other visible component, as snap lines per axis. */
+	gatherElementSnapLines(): void {
+		const lines: [number[], number[]] = [
+			[0, VIRTUAL_CENTER_X, VIRTUAL_WIDTH],
+			[0, DEFAULT_HEIGHT / 2, DEFAULT_HEIGHT]
+		];
+
+		for (const component of Object.values(this.components)) {
+			if (component === this.activeComponent || component.id === 'CustomizerSettings') continue;
+			if (!component.enabled || !component.panel.visible) continue;
+
+			const [width, height] = LayoutUtil.getSize(component.panel);
+			if (width <= 0 || height <= 0) continue;
+
+			lines[Axis.X].push(component.offsetX, component.offsetX + width / 2, component.offsetX + width);
+			lines[Axis.Y].push(component.offsetY, component.offsetY + height / 2, component.offsetY + height);
+		}
+
+		this.elementSnapLines = lines;
+	}
+
+	/**
+	 * Finds the element snap line nearest any of the given positions (the dragged panel's start edge, center and end
+	 * edge, in that order), within the snapping threshold. edge is the index of the position that snapped.
+	 */
+	findElementSnap(axis: Axis, positions: number[]): { line: number; edge: number } | undefined {
+		let best: { line: number; edge: number; dist: number } | undefined;
+		for (const line of this.elementSnapLines[axis]) {
+			for (const [edge, pos] of positions.entries()) {
+				const dist = Math.abs(line - pos);
+				if (dist <= ELEMENT_SNAPPING_THRESHOLD && (!best || dist < best.dist)) best = { line, edge, dist };
+			}
+		}
+		return best;
+	}
+
+	/** Shows the guide line for an element snap on the given axis, or hides it. */
+	setElementGuide(axis: Axis, line: number | undefined): void {
+		this.elementGuides ??= [
+			$.CreatePanel('Panel', this.panels.customizer, 'ElementGuideX', {
+				class: 'hud-customizer-guide hud-customizer-guide--x',
+				hittest: false
+			}),
+			$.CreatePanel('Panel', this.panels.customizer, 'ElementGuideY', {
+				class: 'hud-customizer-guide hud-customizer-guide--y',
+				hittest: false
+			})
+		];
+
+		const guide = this.elementGuides[axis];
+		guide.visible = line !== undefined;
+		if (line !== undefined) LayoutUtil.setPosition(guide, axis === Axis.X ? line : 0, axis === Axis.Y ? line : 0);
+	}
+
 	setActiveGridline(axis: Axis, gridline: Gridline | undefined): void {
 		const activeGridline = this.activeGridlines[axis];
 
@@ -1997,10 +2117,25 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 	handleResizeSnapping(): void {
 		if (!this.activeComponent || this.dragMode === undefined) return;
 
-		const shouldSnap = this.enableSnapping;
+		const shouldSnap = this.enableSnapping && !this.isElementSnapping();
 
 		const [resizeX, resizeY] = this.ResizeVectors[this.dragMode] ?? [0, 0];
-		const [knobX, knobY] = LayoutUtil.getPosition(this.panels.dragResizeKnob);
+		let [knobX, knobY] = LayoutUtil.getPosition(this.panels.dragResizeKnob);
+
+		// snapping to other elements replaces the grid: the dragged edge snaps to the nearest element edge or center
+		if (this.isElementSnapping()) {
+			const snapX = resizeX ? this.findElementSnap(Axis.X, [knobX]) : undefined;
+			const snapY = resizeY ? this.findElementSnap(Axis.Y, [knobY]) : undefined;
+			if (snapX) knobX = snapX.line;
+			if (snapY) knobY = snapY.line;
+			this.setActiveGridline(Axis.X, undefined);
+			this.setActiveGridline(Axis.Y, undefined);
+			this.setElementGuide(Axis.X, snapX?.line);
+			this.setElementGuide(Axis.Y, snapY?.line);
+		} else {
+			this.setElementGuide(Axis.X, undefined);
+			this.setElementGuide(Axis.Y, undefined);
+		}
 		const [minWidth, minHeight] = getMinSize(this.activeComponent.panel);
 
 		// Possible to make this code shorter by indexing into X,Y, W/H tuples but gets confusing, and important
