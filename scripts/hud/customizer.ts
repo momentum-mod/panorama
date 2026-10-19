@@ -95,6 +95,11 @@ const OVERLAY_MARGIN = 32;
 /** Distance within which an edge or center snaps to another component's edge or center, in 1080p layout px */
 const ELEMENT_SNAPPING_THRESHOLD = 8;
 
+/** Space kept free below the customizer menu, in 1080p layout px */
+const SETTINGS_BOTTOM_MARGIN = 16;
+/** Smallest height the active component's settings list is squeezed to, in 1080p layout px */
+const SETTINGS_MIN_HEIGHT = 120;
+
 interface DynamicStyle {
 	properties: Readonly<DynamicStyleProperties>;
 	value?: any;
@@ -1886,6 +1891,25 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 			if (dynamicStyle.properties.children) appendChildren(styleID, wrapper);
 		}
+
+		// wait for the new rows to be laid out before measuring where the list starts
+		$.Schedule(0, () => this.fitActiveComponentSettingsToScreen());
+	}
+
+	/**
+	 * Caps the active component's settings list so the customizer menu ends above the bottom of the screen, scrolling
+	 * whatever doesn't fit, since component settings can be much taller than the space left below the component lists.
+	 */
+	fitActiveComponentSettingsToScreen(): void {
+		const list = this.panels.activeComponentSettingsList;
+		const scale = list.actualuiscale_y;
+		if (!scale) return;
+
+		const screenHeight = this.panels.customizer.actuallayoutheight / scale;
+		const listTop =
+			LayoutUtil.getY(this.panels.settings) +
+			(this.panels.activeComponentSettings.actualyoffset + list.actualyoffset) / scale;
+		list.style.maxHeight = `${Math.max(screenHeight - listTop - SETTINGS_BOTTOM_MARGIN, SETTINGS_MIN_HEIGHT)}px`;
 	}
 
 	// Hacky stuff to wait for layouting to finish if needed. Hate doing this, but Panorama doesn't expose any
@@ -1974,6 +1998,10 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 				'hud-customizer-overlay--at-top',
 				this.activeComponent.offsetY <= OVERLAY_MARGIN
 			);
+
+			if (this.activeComponent === this.components['CustomizerSettings']) {
+				this.fitActiveComponentSettingsToScreen();
+			}
 		} else {
 			// Resize component JS size and position knob position, possibly snapping
 			this.handleResizeSnapping();
