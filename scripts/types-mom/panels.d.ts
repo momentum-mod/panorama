@@ -247,6 +247,12 @@ interface HudCustomizer extends AbstractPanel<'HudCustomizer'> {
 	 */
 	isOpen(): boolean;
 
+	/** Whether either ctrl key is held. */
+	isControlDown(): boolean;
+
+	/** Whether either shift key is held. */
+	isShiftDown(): boolean;
+
 	/** Saves the given object to cfg/hud/{path}.kv3. */
 	saveLayout(path: string, data: import('hud/customizer').HudLayout): boolean;
 
