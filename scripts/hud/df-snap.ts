@@ -109,8 +109,8 @@ class DFSnapHandler extends DFHudComponent {
 			}
 			this.onSnapConfigChange();
 		} else if (this.snapAngles.length < this.snapZones?.length) {
-			const start = this.snapZones?.length;
-			const end = this.snapAngles.length;
+			const start = this.snapAngles.length;
+			const end = this.snapZones?.length;
 			for (let i = start; i < end; ++i) {
 				this.snapZones.pop().DeleteAsync(0);
 			}
