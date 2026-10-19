@@ -32,8 +32,9 @@ class DFPrimeHandler extends DFHudComponent {
 	primeZones: ZonePanel[] = [];
 	primeInactiveZonesLeft: ZonePanel[] = [];
 	primeInactiveZonesRight: ZonePanel[] = [];
-	primeHalfBeatZones: ZonePanel[] = [];
-	primeHalfBeatFirstZone = this.initInactiveZone('PrimeHalfBeatFirstZone');
+	/** A second inactive chain: VQ3 half-beat, or the same-side diagonal in CPM a/d turns */
+	primeExtraZones: ZonePanel[] = [];
+	primeExtraFirstZone = this.initInactiveZone('PrimeExtraFirstZone');
 	primeFirstZoneLeft = this.initZonePanel($.CreatePanel('Panel', this.primeContainer, 'PrimeFirstZoneLeft'));
 	primeFirstZoneRight = this.initZonePanel($.CreatePanel('Panel', this.primeContainer, 'PrimeFirstZoneRight'));
 	primeHighlightZone = this.initZonePanel($.CreatePanel('Panel', this.primeContainer, 'PrimeHighlightZone'));
@@ -133,8 +134,8 @@ class DFPrimeHandler extends DFHudComponent {
 			...this.primeZones,
 			...this.primeInactiveZonesLeft,
 			...this.primeInactiveZonesRight,
-			...this.primeHalfBeatZones,
-			this.primeHalfBeatFirstZone
+			...this.primeExtraZones,
+			this.primeExtraFirstZone
 		]) {
 			this.applyClass(zone, PRIME_SIGHT_CLASS);
 			zone.style.verticalAlign = 'top';
@@ -171,7 +172,7 @@ class DFPrimeHandler extends DFHudComponent {
 			this.primeFirstZoneLeft,
 			this.primeFirstZoneRight,
 			this.primeHighlightZone,
-			this.primeHalfBeatFirstZone
+			this.primeExtraFirstZone
 		]);
 
 		this.updateView(state);
@@ -195,7 +196,7 @@ class DFPrimeHandler extends DFHudComponent {
 		this.clearZones(this.primeZones);
 		this.clearZones(this.primeInactiveZonesLeft);
 		this.clearZones(this.primeInactiveZonesRight);
-		this.clearZones(this.primeHalfBeatZones);
+		this.clearZones(this.primeExtraZones);
 
 		if (this.primeEnable && phyMode !== DefragAPI.DefragPhysics.VTG && speed > this.primeMinSpeed) {
 			// the real acceleration gives ground zones on the ground (GROUND) and a/d turn zones in the air (CPM_TURN,
@@ -288,14 +289,19 @@ class DFPrimeHandler extends DFHudComponent {
 		// axis when moving forward (W+A, W+D) and 135 degrees off when moving backward (S+A, S+D).
 		const wishOffset = this.findKeyWish(state).offset;
 		const strafeOffset = Math.PI * (Math.cos(velAngle - viewAngle) >= 0 ? 0.25 : 0.75);
-
-		// The left chain's wish direction sits strafeOffset to the left of the view when moving forward and to the
-		// right when moving backward, so it stays on the left of the velocity either way.
-		const bForward = strafeOffset < Math.PI * 0.5;
-		let leftWishOffset = bForward ? strafeOffset : -strafeOffset;
-		let rightWishOffset = -leftWishOffset;
-		let bFill = false;
+		const velFromView = MomMath.remapAngle(velAngle - viewAngle);
 		const bVQ3 = phyMode === DefragAPI.DefragPhysics.VQ3;
+
+		// With no keys held, the zones use the two inputs 45 degrees either side of the input nearest the velocity,
+		// the left chain taking the one on the left so it stays on the left of the velocity. VQ3 accelerates the same
+		// way for all 8 inputs, so that can be any of them: W+A/W+D moving along W, A/S moving along S+A. CPM single
+		// keys turn instead, so it always uses the diagonals around the nearest key: W+A/W+D when the velocity points
+		// forward, S+A/S+D backward, W+A/S+A to the left and W+D/S+D to the right.
+		const noKeyStep = Math.PI * (bVQ3 ? 0.25 : 0.5);
+		const nearestInputOffset = Math.round(velFromView / noKeyStep) * noKeyStep;
+		let leftWishOffset = MomMath.remapAngle(nearestInputOffset + Math.PI * 0.25);
+		let rightWishOffset = MomMath.remapAngle(nearestInputOffset - Math.PI * 0.25);
+		let bFill = false;
 		// W or S alone is air control in CPM, but VQ3 accelerates the same way in every direction
 		const bForwardOnly = inputMode === InputMode.AIR_CONTROL && bVQ3;
 
@@ -316,14 +322,29 @@ class DFPrimeHandler extends DFHudComponent {
 		}
 
 		const bTurn = inputMode === InputMode.TURN_LEFT || inputMode === InputMode.TURN_RIGHT;
+		// VQ3 only: the half-beat input drawn beside the mirrored one on the inactive side, when shown
+		let halfBeatOffset: number = null;
 		if (bFill || bTurn) {
 			// the active side uses the actual wish direction (or its strafe equivalent when a turn isn't filled),
-			// and the inactive side mirrors it across the view axis
+			// and the inactive side mirrors it across the velocity
 			const sideSign = Math.sign(wishOffset);
 			const activeOffset = bFill ? wishOffset : sideSign * strafeOffset;
-			let inactiveOffset = bTurn ? -sideSign * strafeOffset : -wishOffset;
-			// W or S alone lies on the view axis, so there is nothing to mirror: the inactive side uses the same keys
-			if (bForwardOnly) inactiveOffset = wishOffset;
+			let inactiveOffset: number;
+			if (bVQ3) {
+				inactiveOffset = this.findVQ3MirrorOffset(wishOffset, velFromView, targetAngle);
+				halfBeatOffset = this.findVQ3HalfBeatOffset(wishOffset, velFromView, targetAngle, inactiveOffset);
+			} else {
+				// CPM: a diagonal mirrors across whichever of its two keys is nearer the velocity (W+A pairs with W+D
+				// around W, or with S+A around A), so the pair matches the no-key zones and the inactive side stays
+				// across the velocity. A/D turns mirror to the strafe diagonal on the other side.
+				const keyA = wishOffset - Math.PI * 0.25;
+				const keyB = wishOffset + Math.PI * 0.25;
+				const mirrorKey =
+					Math.abs(MomMath.remapAngle(velFromView - keyA)) <= Math.abs(MomMath.remapAngle(velFromView - keyB))
+						? keyA
+						: keyB;
+				inactiveOffset = bTurn ? -sideSign * strafeOffset : MomMath.remapAngle(2 * mirrorKey - wishOffset);
+			}
 			if (this.primeActiveLeft) {
 				leftWishOffset = activeOffset;
 				rightWishOffset = inactiveOffset;
@@ -333,7 +354,9 @@ class DFPrimeHandler extends DFHudComponent {
 			}
 		}
 
-		if (bTurn) {
+		// CPM a/d turns mirror to an air strafe diagonal, so that side uses the air strafe target. VQ3 single keys
+		// mirror to another single key with the same acceleration.
+		if (bTurn && !bVQ3) {
 			if (this.primeActiveLeft) rightTarget = strafeTargetAngle - velAngle;
 			else leftTarget = -strafeTargetAngle - velAngle;
 		}
@@ -436,58 +459,71 @@ class DFPrimeHandler extends DFHudComponent {
 			}
 		}
 
-		// VQ3 half-beat: the input 135 degrees from the held one on the inactive side (D while holding W+A and moving
-		// along W, S+D while holding W and moving along W+D), with its target mirrored about the velocity onto the
-		// inactive side. Diagonals have one, and so do single keys when the velocity is nearer a diagonal, which makes
-		// the key a strafe input; an input within 22.5 degrees of the velocity isn't strafing. Shown once its target
-		// lies past the active target on the inactive side, so its chain, which runs outward from the target, never
-		// overlaps the active zones. With the early option, shown as soon as its target is closer to the crosshair than
-		// the mirrored input's.
-		const keyStep = Math.PI * 0.5;
-		const diagonalFromVel = MomMath.remapAngle(wishFromVel - Math.PI * 0.25);
-		const bVelOnDiagonal =
-			Math.abs(MomMath.remapAngle(diagonalFromVel - Math.round(diagonalFromVel / keyStep) * keyStep)) <
-			Math.PI * 0.125;
-		const bDiagonal = inputMode === InputMode.STRAFE_LEFT || inputMode === InputMode.STRAFE_RIGHT;
-		const bHalfBeatInput = bDiagonal || ((bTurn || bForwardOnly) && bVelOnDiagonal);
-		if (this.primeShowHalfBeat && bVQ3 && bHalfBeatInput && Math.abs(wishFromVel) > Math.PI * 0.125) {
-			const halfBeatWishOffset = MomMath.remapAngle(wishOffset + (this.primeActiveLeft ? -0.75 : 0.75) * Math.PI);
-			const halfBeatWishDir = MomMath.rotateVector2D(viewDir, halfBeatWishOffset);
+		// VQ3 half-beat (see findVQ3HalfBeatOffset), drawn as an extra inactive chain beside the mirrored one
+		if (halfBeatOffset !== null) {
+			const halfBeatWishDir = MomMath.rotateVector2D(viewDir, halfBeatOffset);
 			const bLeft = !this.primeActiveLeft;
 			const halfBeatChain = this.findPrimeChain(
 				bLeft ? -targetAngle - velAngle : targetAngle - velAngle,
-				-halfBeatWishOffset - viewAngle,
+				-halfBeatOffset - viewAngle,
 				this.primeAngles
 			);
-			const mirrorTarget = (bLeft ? leftChain : rightChain).target;
-			const activeTarget = (bLeft ? rightChain : leftChain).target;
-			const halfBeatDirection = bLeft ? -1 : 1;
-			const bShowHalfBeat = this.primeHalfBeatEarly
-				? Math.abs(halfBeatChain.target) < Math.abs(mirrorTarget)
-				: (halfBeatChain.target - activeTarget) * halfBeatDirection > 0;
+			const [firstStart, firstEnd] = this.primeZoneEdges(halfBeatChain, halfBeatChain.first);
+			if (bLeft) this.drawPrimeZone(this.primeExtraFirstZone, firstStart, halfBeatChain.target);
+			else this.drawPrimeZone(this.primeExtraFirstZone, halfBeatChain.target, firstEnd);
+			gainZonesMap.set(
+				this.primeExtraFirstZone,
+				this.findPrimeGain(0.5 * (firstStart + firstEnd), velocity, halfBeatWishDir)
+			);
 
-			if (bShowHalfBeat) {
-				const [firstStart, firstEnd] = this.primeZoneEdges(halfBeatChain, halfBeatChain.first);
-				if (bLeft) this.drawPrimeZone(this.primeHalfBeatFirstZone, firstStart, halfBeatChain.target);
-				else this.drawPrimeZone(this.primeHalfBeatFirstZone, halfBeatChain.target, firstEnd);
-				gainZonesMap.set(
-					this.primeHalfBeatFirstZone,
-					this.findPrimeGain(0.5 * (firstStart + firstEnd), velocity, halfBeatWishDir)
+			if (this.primeInactiveChain) {
+				const direction = bLeft ? -1 : 1;
+				this.fillInactiveChain(
+					halfBeatChain,
+					direction,
+					halfBeatChain.target + direction * (boundaryAngle - targetAngle),
+					this.primeExtraZones,
+					'PrimeExtraZone',
+					gainZonesMap,
+					velocity,
+					halfBeatWishDir
 				);
+			}
+		}
 
-				if (this.primeInactiveChain) {
-					const direction = bLeft ? -1 : 1;
-					this.fillInactiveChain(
-						halfBeatChain,
-						direction,
-						halfBeatChain.target + direction * (boundaryAngle - targetAngle),
-						this.primeHalfBeatZones,
-						'PrimeHalfBeatZone',
-						gainZonesMap,
-						velocity,
-						halfBeatWishDir
-					);
-				}
+		// CPM a/d turns: the inactive side shows the opposite diagonal (W+D while holding A), so also show the
+		// same-side diagonal (W+A) as inactive zones; either can have more gain depending on the velocity. Half-beat
+		// is VQ3-only, so the extra chain's panels are free here.
+		if (bTurnScaleOnly && this.primeShowInactive) {
+			const sameWishOffset = Math.sign(wishOffset) * strafeOffset;
+			const sameWishDir = MomMath.rotateVector2D(viewDir, sameWishOffset);
+			const bLeft = MomMath.remapAngle(viewAngle + sameWishOffset - velAngle) > 0;
+			const sameChain = this.findPrimeChain(
+				bLeft ? -strafeTargetAngle - velAngle : strafeTargetAngle - velAngle,
+				-sameWishOffset - viewAngle,
+				this.snapAngles
+			);
+			const direction = bLeft ? -1 : 1;
+
+			const [firstStart, firstEnd] = this.primeZoneEdges(sameChain, sameChain.first);
+			if (bLeft) this.drawPrimeZone(this.primeExtraFirstZone, firstStart, sameChain.target);
+			else this.drawPrimeZone(this.primeExtraFirstZone, sameChain.target, firstEnd);
+			gainZonesMap.set(
+				this.primeExtraFirstZone,
+				this.findPrimeGain(0.5 * (firstStart + firstEnd), velocity, sameWishDir)
+			);
+
+			if (this.primeInactiveChain) {
+				this.fillInactiveChain(
+					sameChain,
+					direction,
+					sameChain.target + direction * (boundaryAngle - targetAngle),
+					this.primeExtraZones,
+					'PrimeExtraZone',
+					gainZonesMap,
+					velocity,
+					sameWishDir
+				);
 			}
 		}
 
@@ -495,7 +531,7 @@ class DFPrimeHandler extends DFHudComponent {
 		const uiScale = this.scale;
 		const linePixels = Math.round(this.primeHeight * uiScale);
 		const scale = this.NaNCheck(1 / (gainMax > 0 ? gainMax : this.primeAccel), 1);
-		// in CPM a/d turns the inactive zones scale by their own best gain, like the turn zones do
+		// in CPM a/d turns the inactive zones (both diagonals) scale by their own best gain, like the turn zones do
 		let inactiveScale = scale;
 		if (bTurnScaleOnly) {
 			let inactiveGainMax = 0;
@@ -549,6 +585,47 @@ class DFPrimeHandler extends DFHudComponent {
 
 			zone.style.backgroundColor = zone.color;
 		}
+	}
+
+	/**
+	 * Wish offset of the VQ3 inactive side. VQ3 accelerates the same way for all 8 inputs, so it takes the input of the
+	 * same kind as the held one (diagonal or single key) whose target across the velocity is nearest the crosshair.
+	 * Holding W+A that's W+D moving along W, S+A along A and S+D along S+A; holding A it's D moving along W. An input
+	 * within 22.5 degrees of the velocity isn't strafing, so the inactive side uses the same keys.
+	 */
+	findVQ3MirrorOffset(wishOffset: number, velFromView: number, targetAngle: number): number {
+		if (Math.abs(MomMath.remapAngle(wishOffset - velFromView)) <= Math.PI * 0.125) return wishOffset;
+
+		const keyStep = Math.PI * 0.5;
+		const bDiagonal =
+			Math.abs(MomMath.remapAngle(wishOffset - Math.round(wishOffset / keyStep) * keyStep)) > Math.PI * 0.125;
+		const kindOffset = bDiagonal ? Math.PI * 0.25 : 0;
+		const ideal = velFromView + (this.primeActiveLeft ? -targetAngle : targetAngle);
+		return MomMath.remapAngle(Math.round((ideal - kindOffset) / keyStep) * keyStep + kindOffset);
+	}
+
+	/**
+	 * Wish offset of the VQ3 half-beat, or null when it isn't shown: the input 135 degrees from the held one on the
+	 * inactive side (D while holding W+A and moving along W, S+A while holding W and moving along W+A, A while holding
+	 * W+D and moving along W+A). It's shown once its target lies past the active target on the inactive side, so its
+	 * chain, which runs outward from the target, never overlaps the active zones, or with the early option, as soon as
+	 * its target is closer to the crosshair than the mirrored input's. An input within 22.5 degrees of the velocity
+	 * isn't strafing, so it has none.
+	 */
+	findVQ3HalfBeatOffset(wishOffset: number, velFromView: number, targetAngle: number, mirrorOffset: number): number {
+		if (!this.primeShowHalfBeat || Math.abs(MomMath.remapAngle(wishOffset - velFromView)) <= Math.PI * 0.125)
+			return null;
+
+		// view-relative chain target of a wish offset on a side of the velocity (1 left, -1 right)
+		const findTarget = (offset: number, side: number) =>
+			MomMath.remapAngle(offset - velFromView - side * targetAngle);
+		const inactiveSide = this.primeActiveLeft ? -1 : 1;
+		const halfBeatOffset = MomMath.remapAngle(wishOffset + inactiveSide * 0.75 * Math.PI);
+		const halfBeatTarget = findTarget(halfBeatOffset, inactiveSide);
+		const bShowHalfBeat = this.primeHalfBeatEarly
+			? Math.abs(halfBeatTarget) < Math.abs(findTarget(mirrorOffset, inactiveSide))
+			: (halfBeatTarget - findTarget(wishOffset, -inactiveSide)) * -inactiveSide > 0;
+		return bShowHalfBeat ? halfBeatOffset : null;
 	}
 
 	/** Zone color for a gain: loss color, or gain color (scaled from the alt color when coloring by gain). */
