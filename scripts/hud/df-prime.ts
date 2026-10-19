@@ -4,12 +4,12 @@ import { GamemodeCategories } from 'common/web/maps/gamemodes.map';
 import * as MomMath from 'util/math';
 import { rgbaStringLerp, rgbaStringToTuple, tupleToRgbaString } from 'util/colors';
 import { RegisterHUDPanelForGamemode } from 'util/register-for-gamemodes';
-import { DFHudComponent, InputMode, StyleObject, ZonePanel } from 'common/df-hud';
+import { DFHudComponent, InputMode, isOnSlick, StyleObject, ZonePanel } from 'common/df-hud';
 
 enum TruenessMode {
 	GROUND = 1 << 0, // show ground zones
 	PROJECTED = 1 << 1, // show zones scaled by +jump/+crouch
-	CPM_TURN = 1 << 2 // show a/d and ground zones
+	CPM_TURN = 1 << 2 // show a/d turn zones in the air
 }
 
 /** One side's chain of prime zones, laid out from the zone containing its target. */
@@ -198,14 +198,25 @@ class DFPrimeHandler extends DFHudComponent {
 		this.clearZones(this.primeHalfBeatZones);
 
 		if (this.primeEnable && phyMode !== DefragAPI.DefragPhysics.VTG && speed > this.primeMinSpeed) {
-			const useSnapAccel = !(
-				this.primeTruenessMode & TruenessMode.CPM_TURN || phyMode === DefragAPI.DefragPhysics.VQ3
-			);
-			const primeMaxSpeed =
-				this.primeTruenessMode & TruenessMode.PROJECTED ? MomMath.magnitude(state.wishVel) : state.maxspeed;
+			// the real acceleration gives ground zones on the ground (GROUND) and a/d turn zones in the air (CPM_TURN,
+			// always in VQ3); otherwise the zones use the air strafe acceleration. VQ3 slick accelerates the same way
+			// as VQ3 air, so it gets the air zones whatever GROUND is set to
+			const bAirAccel = state.falling || (phyMode === DefragAPI.DefragPhysics.VQ3 && isOnSlick(state));
+			const useSnapAccel = bAirAccel
+				? !(this.primeTruenessMode & TruenessMode.CPM_TURN || phyMode === DefragAPI.DefragPhysics.VQ3)
+				: !(this.primeTruenessMode & TruenessMode.GROUND);
+			// PROJECTED scales the zones by how much +jump/+crouch cut the wish speed below the max speed, for the air
+			// strafe zones as well as the real ones. With no keys held the wish velocity is zero, which would push the
+			// targets out to 90 degrees; leave those unscaled so the inactive zones sit where a key press would put them
+			const wishSpeed = MomMath.magnitude(state.wishVel);
+			const projectedScale =
+				this.primeTruenessMode & TruenessMode.PROJECTED && wishSpeed > 0 && state.maxspeed > 0
+					? Math.min(wishSpeed / state.maxspeed, 1)
+					: 1;
+			const primeMaxSpeed = state.maxspeed * projectedScale;
 			const primeMaxAccel = state.acceleration * primeMaxSpeed * tickInterval;
-			const primeSightSpeed = useSnapAccel ? this.maxGroundSpeed : primeMaxSpeed;
-			const primeSightAccel = useSnapAccel ? this.snapAccel : primeMaxAccel;
+			const primeSightSpeed = useSnapAccel ? this.maxGroundSpeed * projectedScale : primeMaxSpeed;
+			const primeSightAccel = useSnapAccel ? this.snapAccel * projectedScale : primeMaxAccel;
 
 			if (this.primeAccel !== primeSightAccel) {
 				this.primeAccel = primeSightAccel;
@@ -218,6 +229,12 @@ class DFPrimeHandler extends DFHudComponent {
 				this.primeZones.push(this.initPrimeZone(`PrimeZone${this.primeZones.length}`));
 
 			const targetAngle = this.findFastAngle(dropSpeed, primeSightSpeed, primeSightAccel);
+			// the air strafe target, for the a/d turn chains drawn with the air strafe angles
+			const strafeTargetAngle = this.findFastAngle(
+				dropSpeed,
+				this.maxGroundSpeed * projectedScale,
+				this.snapAccel * projectedScale
+			);
 			const boundaryAngle = this.findStopAngle(
 				primeSightAccel,
 				speedSquared,
@@ -225,7 +242,7 @@ class DFPrimeHandler extends DFHudComponent {
 				dropSpeedSquared,
 				targetAngle
 			);
-			this.updatePrimeSight(state, viewDir, viewAngle, targetAngle, boundaryAngle, velAngle);
+			this.updatePrimeSight(state, viewDir, viewAngle, targetAngle, strafeTargetAngle, boundaryAngle, velAngle);
 
 			if (this.primeArrowEnable) {
 				if (MomMath.sumOfSquares2D(wishDir) > 0) {
@@ -253,6 +270,7 @@ class DFPrimeHandler extends DFHudComponent {
 		viewDir: vec2,
 		viewAngle: number,
 		targetAngle: number,
+		strafeTargetAngle: number,
 		boundaryAngle: number,
 		velAngle: number
 	) {
@@ -316,9 +334,8 @@ class DFPrimeHandler extends DFHudComponent {
 		}
 
 		if (bTurn) {
-			const mirrorTarget = this.findFastAngle(state.dropSpeed, this.maxGroundSpeed, this.snapAccel);
-			if (this.primeActiveLeft) rightTarget = mirrorTarget - velAngle;
-			else leftTarget = -mirrorTarget - velAngle;
+			if (this.primeActiveLeft) rightTarget = strafeTargetAngle - velAngle;
+			else leftTarget = -strafeTargetAngle - velAngle;
 		}
 
 		const fillLeftZones = bFill && this.primeActiveLeft;
