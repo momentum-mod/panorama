@@ -232,6 +232,13 @@ $input-background-hover: rgb(110, 110, 110);
 			width: 100%;
 			flow-children: down;
 			margin: 0 4px;
+
+			// max-height is set in JS to keep the menu on screen
+			&--scroll {
+				overflow: squish scroll;
+				// keep the rows' right-aligned controls clear of the scroll bar
+				padding-right: $scrollbar-width + 4px;
+			}
 		}
 	}
 
