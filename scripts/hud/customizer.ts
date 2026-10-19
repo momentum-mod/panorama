@@ -1474,6 +1474,122 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 					break;
 				}
 
+				case CustomizerPropertyType.NUMBER_LIST: {
+					// A dropdown picks the item to edit (or adds one), an entry per field edits it, and a button
+					// deletes it. The stored value is every item's fields one after another.
+					const fields = dynamicStyle.properties.listFields ?? [];
+					const labels = dynamicStyle.properties.listLabels;
+					const stride = Math.max(fields.length, 1);
+					const getList = () => {
+						const value = resolveValue(component.dynamicStyles[styleID]?.value);
+						return Array.isArray(value) ? [...(value as number[])] : [];
+					};
+					let selected = 0;
+					let bRefreshing = false;
+
+					// no snippet gives this panel a size, so it needs one for its rows' 100% widths to resolve
+					panel.style.width = '100%';
+					panel.style.flowChildren = 'down';
+					const addRow = (snippet: string, name: string) => {
+						const row = $.CreatePanel('Panel', panel, '');
+						row.LoadLayoutSnippet(snippet);
+						row.SetDialogVariable('name', name);
+						return row;
+					};
+
+					const dropdown = addRow(
+						'dynamic-dropdown',
+						dynamicStyle.properties.name
+					).FindChildTraverse<DropDown>('DropDown')!;
+					const fieldRows = fields.map((field) => addRow('dynamic-numberentry', field.name));
+					const fieldEntries = fieldRows.map((row, f) => {
+						const entry = row.FindChildTraverse<NumberEntry>('NumberEntry')!;
+						entry.min = fields[f].min;
+						entry.max = fields[f].max;
+						return entry;
+					});
+					const deleteRow = addRow('dynamic-list-delete', labels?.delete ?? '');
+
+					const itemID = (i: number) => `${styleID}Item${i}`;
+					const addID = `${styleID}Add`;
+
+					const refresh = () => {
+						bRefreshing = true;
+						const list = getList();
+						const count = Math.floor(list.length / stride);
+						selected = Math.max(Math.min(selected, count - 1), 0);
+
+						dropdown.RemoveAllOptions();
+						const addOption = (id: string, text: string) => {
+							const option = $.CreatePanel('Label', dropdown, id);
+							option.text = text;
+							dropdown.AddOption(option);
+						};
+						for (let i = 0; i < count; ++i)
+							addOption(itemID(i), (labels?.item ?? '%n%').replace('%n%', `${i + 1}`));
+						if (count === 0) addOption(`${styleID}None`, labels?.none ?? '');
+						addOption(addID, labels?.add ?? '+');
+						dropdown.SetSelected(count > 0 ? itemID(selected) : `${styleID}None`);
+
+						for (const [f, entry] of fieldEntries.entries()) {
+							fieldRows[f].visible = count > 0;
+							entry.value = list[selected * stride + f] ?? 0;
+						}
+						deleteRow.visible = count > 0;
+						bRefreshing = false;
+
+						// Wait for panorama to layout the panel in case the size changes
+						$.Schedule(0.1, () => this.updateActiveComponentOverlayPosition());
+					};
+
+					dropdown.SetPanelEvent('oninputsubmit', () => {
+						if (bRefreshing) return;
+						const id = dropdown.GetSelected()?.id ?? '';
+						if (id === addID) {
+							// a new item starts as a copy of the one being edited, so nearby ones are quick to make
+							const list = getList();
+							const count = Math.floor(list.length / stride);
+							list.push(
+								...(count > 0
+									? list.slice(selected * stride, (selected + 1) * stride)
+									: fields.map((field) => field.default ?? 0))
+							);
+							selected = count;
+							component.setDynamicStyle(styleID, list);
+						} else if (id.startsWith(`${styleID}Item`)) {
+							const index = Number(id.slice(`${styleID}Item`.length));
+							if (index === selected) return;
+							selected = index;
+						} else {
+							return;
+						}
+						refresh();
+					});
+
+					for (const [f, entry] of fieldEntries.entries()) {
+						entry.SetPanelEvent('onvaluechanged', () => {
+							if (bRefreshing) return;
+							const list = getList();
+							const index = selected * stride + f;
+							if (index >= list.length || list[index] === entry.value) return;
+							list[index] = entry.value;
+							component.setDynamicStyle(styleID, list);
+						});
+					}
+
+					deleteRow.FindChildTraverse('DeleteButton')!.SetPanelEvent('onactivate', () => {
+						const list = getList();
+						list.splice(selected * stride, stride);
+						component.setDynamicStyle(styleID, list);
+						refresh();
+					});
+
+					refresh();
+					refreshMap.set(styleID, refresh);
+
+					break;
+				}
+
 				case CustomizerPropertyType.CHECKBOX: {
 					panel.LoadLayoutSnippet('dynamic-checkbox');
 					panel.SetDialogVariable('name', dynamicStyle.properties.name);
