@@ -85,6 +85,9 @@ export type DynamicStyleProperties<
 	/** Name of the property to display in UI. Please localize! */
 	name: string;
 
+	/** Tooltip shown while hovering the setting's row. Please localize! */
+	tooltip?: string;
+
 	/** Defines which styles should be the children of this style.
 	 *
 	 * styleID: id of the child
