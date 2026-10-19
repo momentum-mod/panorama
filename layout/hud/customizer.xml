@@ -54,6 +54,14 @@
 			</Panel>
 		</snippet>
 
+		<snippet name="dynamic-list-delete">
+			<Panel class="hud-customizer-settings__row">
+				<Button id="DeleteButton" class="button button--red hud-customizer-settings__list-delete">
+					<Label text="{s:name}" />
+				</Button>
+			</Panel>
+		</snippet>
+
 		<snippet name="dynamic-numberentry">
 			<Panel class="hud-customizer-settings__row">
 				<Label class="hud-customizer-settings__setting-label" text="{s:name}" />
