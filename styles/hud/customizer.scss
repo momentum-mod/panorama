@@ -293,6 +293,18 @@ $input-background-hover: rgb(110, 110, 110);
 		}
 	}
 
+	&__list-delete {
+		horizontal-align: right;
+		height: 16px;
+		padding: 0px 6px;
+
+		Label {
+			font-family: $font-monospace;
+			font-size: 10px;
+			vertical-align: center;
+		}
+	}
+
 	&__numberentry {
 		horizontal-align: right;
 		vertical-align: center;
