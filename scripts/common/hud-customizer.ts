@@ -21,7 +21,8 @@ export enum CustomizerPropertyType {
 	DROPDOWN,
 	COLOR_PICKER,
 	GRADIENT_PICKER,
-	FONT_PICKER
+	FONT_PICKER,
+	NUMBER_LIST
 }
 
 interface PropertyTypeMap {
@@ -33,6 +34,7 @@ interface PropertyTypeMap {
 	[CustomizerPropertyType.COLOR_PICKER]: never;
 	[CustomizerPropertyType.GRADIENT_PICKER]: never;
 	[CustomizerPropertyType.FONT_PICKER]: never;
+	[CustomizerPropertyType.NUMBER_LIST]: NumberEntry;
 }
 
 interface PropertyTypeToValueTypeMap {
@@ -44,6 +46,7 @@ interface PropertyTypeToValueTypeMap {
 	[CustomizerPropertyType.COLOR_PICKER]: TextEntry['text'];
 	[CustomizerPropertyType.GRADIENT_PICKER]: [string, string];
 	[CustomizerPropertyType.FONT_PICKER]: string;
+	[CustomizerPropertyType.NUMBER_LIST]: number[];
 }
 
 interface DynamicStyleChild {
@@ -119,6 +122,20 @@ export type DynamicStyleProperties<
 	/**
 	 * Defines options and their respective values for CustomizerPropertyType.DROPDOWN */
 	options?: PropertyType extends CustomizerPropertyType.DROPDOWN ? Array<{ label: string; value: string }> : never;
+
+	/**
+	 * Defines the number entries of each item for CustomizerPropertyType.NUMBER_LIST. The value is a flat list holding
+	 * every item's fields one after another. */
+	listFields?: PropertyType extends CustomizerPropertyType.NUMBER_LIST
+		? Array<{ name: string; min: number; max: number; default?: number }>
+		: never;
+
+	/**
+	 * Labels for CustomizerPropertyType.NUMBER_LIST: an item in the selector (%n% is its number), the selector's entry
+	 * that adds an item, its entry when there are none, and the button that deletes the selected item. Please localize! */
+	listLabels?: PropertyType extends CustomizerPropertyType.NUMBER_LIST
+		? { item: string; add: string; none: string; delete: string }
+		: never;
 
 	/**
 	 * Style property to modify. For all matching panels, this CSS property is set to the current style value.
