@@ -1,8 +1,6 @@
 import { PanelHandler } from 'util/module-helpers';
-import { GamemodeCategory } from 'common/web/enums/gamemode.enum';
-import { GamemodeCategories } from 'common/web/maps/gamemodes.map';
+import { GamemodeCategory, GamemodeCategoryToGamemode } from 'common/web/enums/gamemode.enum';
 import * as MomMath from 'util/math';
-import { RegisterHUDPanelForGamemode } from 'util/register-for-gamemodes';
 import { AIR_ACCEL, DFHudComponent, StyleObject, ZonePanel } from 'common/df-hud';
 
 let NEUTRAL_CLASS: StyleObject;
@@ -41,62 +39,71 @@ class DFCgazHandler extends DFHudComponent {
 	rightMirrorZone = this.cgazZones[9];
 	mirrorSplitZone = this.cgazZones[10];
 
-	cgazEnable: boolean;
-	cgazMinSpeed: float;
-	cgazHeight: float;
-	cgazOffset: float;
+	cgazMinSpeed: number;
+	cgazHeight: number;
 	cgazSlowColor: rgbaColor;
 	cgazFastColor: rgbaColor;
 	cgazTurnColor: rgbaColor;
 	cgazDzColor: rgbaColor;
 	cgazScaleEnable: boolean;
 	cgazMirrorEnable: boolean;
-	cgazMirrorBorder: int32;
+	cgazMirrorBorder: number;
 
 	constructor() {
 		super();
 
-		RegisterHUDPanelForGamemode({
-			gamemodes: GamemodeCategories.get(GamemodeCategory.DEFRAG),
-			onLoad: () => this.onLoad(),
-			handledEvents: [
-				{
-					event: 'HudProcessInput',
-					panel: $.GetContextPanel(),
-					callback: () => this.onUpdate()
-				}
-			]
-		});
-
-		$.RegisterForUnhandledEvent('OnDefragHUDCgazChange', () => this.onCgazConfigChange());
+		this.registerComponent(
+			'#Customizer_Df_Cgaz_Name',
+			GamemodeCategoryToGamemode.get(GamemodeCategory.DEFRAG),
+			{
+				minSpeed: this.numberStyle('#Customizer_Df_MinSpeed', 0, 10000, (value) => (this.cgazMinSpeed = value)),
+				height: this.numberStyle('#Customizer_Height', 1, 50, (value) => (this.cgazHeight = value)),
+				scaleEnable: this.checkboxStyle(
+					'#Customizer_Df_Cgaz_Scale',
+					(value) => (this.cgazScaleEnable = value),
+					{ tooltip: '#Customizer_Df_Cgaz_Scale_Tooltip' }
+				),
+				mirrorEnable: this.checkboxStyle(
+					'#Customizer_Df_Cgaz_Mirror',
+					(value) => (this.cgazMirrorEnable = value),
+					{
+						tooltip: '#Customizer_Df_Cgaz_Mirror_Tooltip',
+						children: [{ styleID: 'mirrorBorder', showWhen: true }]
+					}
+				),
+				mirrorBorder: this.numberStyle(
+					'#Customizer_Df_Cgaz_MirrorBorder',
+					1,
+					10,
+					(value) => (this.cgazMirrorBorder = value)
+				),
+				colors: this.groupStyle('#Customizer_Colors', ['dzColor', 'slowColor', 'fastColor', 'turnColor']),
+				dzColor: this.colorStyle('#Customizer_Df_Cgaz_DeadzoneColor', (value) => (this.cgazDzColor = value), {
+					tooltip: '#Customizer_Df_Cgaz_DeadzoneColor_Tooltip'
+				}),
+				slowColor: this.colorStyle('#Customizer_Df_Cgaz_SlowColor', (value) => (this.cgazSlowColor = value), {
+					tooltip: '#Customizer_Df_Cgaz_SlowColor_Tooltip'
+				}),
+				fastColor: this.colorStyle('#Customizer_Df_Cgaz_FastColor', (value) => (this.cgazFastColor = value), {
+					tooltip: '#Customizer_Df_Cgaz_FastColor_Tooltip'
+				}),
+				turnColor: this.colorStyle('#Customizer_Df_Cgaz_TurnColor', (value) => (this.cgazTurnColor = value), {
+					tooltip: '#Customizer_Df_Cgaz_TurnColor_Tooltip'
+				})
+			},
+			{ resizeY: true, heightStyle: { styleID: 'height' }, description: '#Customizer_Df_Cgaz_Name_Tooltip' }
+		);
 	}
 
-	onLoad() {
-		this.projection = DefragAPI.GetHUDProjection();
-		this.onCgazConfigChange();
-	}
+	applyConfig() {
+		NEUTRAL_CLASS = new StyleObject(this.cgazHeight, this.cgazDzColor);
+		SLOW_CLASS = new StyleObject(this.cgazHeight, this.cgazSlowColor);
+		FAST_CLASS = new StyleObject(this.cgazHeight, this.cgazFastColor);
+		TURN_CLASS = new StyleObject(this.cgazHeight, this.cgazTurnColor);
+		MIRROR_CLASS = new StyleObject(this.cgazHeight, this.cgazSlowColor);
 
-	onCgazConfigChange() {
-		const cgazConfig = $.GetContextPanel<MomHudDFCgaz>().GetCgazCFG();
-		this.cgazEnable = cgazConfig.enable;
-		this.cgazMinSpeed = cgazConfig.minSpeed;
-		this.cgazHeight = cgazConfig.height;
-		this.cgazOffset = cgazConfig.offset;
-		this.cgazSlowColor = cgazConfig.slowColor;
-		this.cgazFastColor = cgazConfig.fastColor;
-		this.cgazTurnColor = cgazConfig.turnColor;
-		this.cgazDzColor = cgazConfig.dzColor;
-		this.cgazScaleEnable = cgazConfig.scaleEnable;
-		this.cgazMirrorEnable = cgazConfig.mirrorEnable;
-		this.cgazMirrorBorder = Math.round(cgazConfig.mirrorBorder);
-
-		NEUTRAL_CLASS = new StyleObject(this.cgazHeight, this.cgazOffset, this.cgazDzColor);
-		SLOW_CLASS = new StyleObject(this.cgazHeight, this.cgazOffset, this.cgazSlowColor);
-		FAST_CLASS = new StyleObject(this.cgazHeight, this.cgazOffset, this.cgazFastColor);
-		TURN_CLASS = new StyleObject(this.cgazHeight, this.cgazOffset, this.cgazTurnColor);
-		MIRROR_CLASS = new StyleObject(this.cgazHeight, this.cgazOffset, this.cgazSlowColor);
-
-		this.setupContainer(this.cgazContainer, this.cgazOffset);
+		this.setStripHeight(this.cgazHeight);
+		this.setupContainer(this.cgazContainer);
 		this.applyClass(this.leftTurnZone, TURN_CLASS);
 		this.applyClass(this.leftFastZone, FAST_CLASS);
 		this.applyClass(this.leftSlowZone, SLOW_CLASS);
@@ -111,7 +118,7 @@ class DFCgazHandler extends DFHudComponent {
 	}
 
 	onUpdate() {
-		const state = DefragAPI.GetHUDFrameState();
+		const state = this.getFrameState();
 		if (!state.valid) return;
 
 		// clear last frame's special zones
@@ -143,130 +150,123 @@ class DFCgazHandler extends DFHudComponent {
 		const turnCgazAngle = this.findTurnAngle(speed, dropSpeed, maxAccel, fastCgazAngle);
 		const stopCgazAngle = this.findStopAngle(maxAccel, speedSquared, dropSpeed, dropSpeedSquared, turnCgazAngle);
 
-		if (this.cgazEnable) {
-			// draw accel zones
-			if (speed >= this.cgazMinSpeed) {
+		// draw accel zones
+		if (speed >= this.cgazMinSpeed) {
+			this.updateZone(
+				this.leftTurnZone,
+				-stopCgazAngle,
+				-turnCgazAngle,
+				angleOffset,
+				TURN_CLASS,
+				this.cgazSplitZone
+			);
+			this.updateZone(
+				this.leftFastZone,
+				-turnCgazAngle,
+				-fastCgazAngle,
+				angleOffset,
+				FAST_CLASS,
+				this.cgazSplitZone
+			);
+			this.updateZone(
+				this.leftSlowZone,
+				-fastCgazAngle,
+				-slowCgazAngle,
+				angleOffset,
+				SLOW_CLASS,
+				this.cgazSplitZone
+			);
+			this.updateZone(
+				this.deadZone,
+				-slowCgazAngle,
+				slowCgazAngle,
+				angleOffset,
+				NEUTRAL_CLASS,
+				this.cgazSplitZone
+			);
+			this.updateZone(
+				this.rightSlowZone,
+				slowCgazAngle,
+				fastCgazAngle,
+				angleOffset,
+				SLOW_CLASS,
+				this.cgazSplitZone
+			);
+			this.updateZone(
+				this.rightFastZone,
+				fastCgazAngle,
+				turnCgazAngle,
+				angleOffset,
+				FAST_CLASS,
+				this.cgazSplitZone
+			);
+			this.updateZone(
+				this.rightTurnZone,
+				turnCgazAngle,
+				stopCgazAngle,
+				angleOffset,
+				TURN_CLASS,
+				this.cgazSplitZone
+			);
+		} else {
+			this.clearZones(this.cgazZones);
+		}
+
+		// draw mirrored strafe zones
+		if (speed >= this.cgazMinSpeed && this.cgazMirrorEnable) {
+			const mirrorAccel = (bIsFalling ? AIR_ACCEL : accel) * this.maxGroundSpeed * tickInterval;
+			const minMirrorAngle = this.findSlowAngle(dropSpeed, dropSpeedSquared, speedSquared, this.maxGroundSpeed);
+			const fastMirrorAngle = this.findFastAngle(dropSpeed, this.maxGroundSpeed, mirrorAccel);
+			const turnMirrorAngle = this.findTurnAngle(speed, dropSpeed, mirrorAccel, fastMirrorAngle);
+			const maxMirrorAngle = this.findStopAngle(
+				mirrorAccel,
+				speedSquared,
+				dropSpeed,
+				dropSpeedSquared,
+				turnMirrorAngle
+			);
+
+			let mirrorOffset = MomMath.remapAngle(velAngle - viewAngle);
+			const inputAngle = MomMath.remapAngle(viewAngle - wishAngle);
+
+			if (MomMath.approxEquals(Math.abs(inputAngle), 0.25 * Math.PI, 0.01)) {
+				mirrorOffset += (inputAngle > 0 ? -1 : 1) * Math.PI * 0.25;
 				this.updateZone(
-					this.leftTurnZone,
-					-stopCgazAngle,
-					-turnCgazAngle,
-					angleOffset,
-					TURN_CLASS,
-					this.cgazSplitZone
+					this.leftMirrorZone,
+					-maxMirrorAngle,
+					-minMirrorAngle,
+					mirrorOffset,
+					MIRROR_CLASS,
+					this.mirrorSplitZone
 				);
 				this.updateZone(
-					this.leftFastZone,
-					-turnCgazAngle,
-					-fastCgazAngle,
-					angleOffset,
-					FAST_CLASS,
-					this.cgazSplitZone
-				);
-				this.updateZone(
-					this.leftSlowZone,
-					-fastCgazAngle,
-					-slowCgazAngle,
-					angleOffset,
-					SLOW_CLASS,
-					this.cgazSplitZone
-				);
-				this.updateZone(
-					this.deadZone,
-					-slowCgazAngle,
-					slowCgazAngle,
-					angleOffset,
-					NEUTRAL_CLASS,
-					this.cgazSplitZone
-				);
-				this.updateZone(
-					this.rightSlowZone,
-					slowCgazAngle,
-					fastCgazAngle,
-					angleOffset,
-					SLOW_CLASS,
-					this.cgazSplitZone
-				);
-				this.updateZone(
-					this.rightFastZone,
-					fastCgazAngle,
-					turnCgazAngle,
-					angleOffset,
-					FAST_CLASS,
-					this.cgazSplitZone
-				);
-				this.updateZone(
-					this.rightTurnZone,
-					turnCgazAngle,
-					stopCgazAngle,
-					angleOffset,
-					TURN_CLASS,
-					this.cgazSplitZone
+					this.rightMirrorZone,
+					minMirrorAngle,
+					maxMirrorAngle,
+					mirrorOffset,
+					MIRROR_CLASS,
+					this.mirrorSplitZone
 				);
 			} else {
-				this.clearZones(this.cgazZones);
-			}
-
-			// draw mirrored strafe zones
-			if (speed >= this.cgazMinSpeed && this.cgazMirrorEnable) {
-				const mirrorAccel = (bIsFalling ? AIR_ACCEL : accel) * this.maxGroundSpeed * tickInterval;
-				const minMirrorAngle = this.findSlowAngle(
-					dropSpeed,
-					dropSpeedSquared,
-					speedSquared,
-					this.maxGroundSpeed
+				this.updateZone(
+					this.leftMirrorZone,
+					-maxMirrorAngle,
+					-minMirrorAngle,
+					mirrorOffset - Math.PI * 0.25,
+					MIRROR_CLASS,
+					this.mirrorSplitZone
 				);
-				const fastMirrorAngle = this.findFastAngle(dropSpeed, this.maxGroundSpeed, mirrorAccel);
-				const turnMirrorAngle = this.findTurnAngle(speed, dropSpeed, mirrorAccel, fastMirrorAngle);
-				const maxMirrorAngle = this.findStopAngle(
-					mirrorAccel,
-					speedSquared,
-					dropSpeed,
-					dropSpeedSquared,
-					turnMirrorAngle
+				this.updateZone(
+					this.rightMirrorZone,
+					minMirrorAngle,
+					maxMirrorAngle,
+					mirrorOffset + Math.PI * 0.25,
+					MIRROR_CLASS,
+					this.mirrorSplitZone
 				);
-
-				let mirrorOffset = MomMath.remapAngle(velAngle - viewAngle);
-				const inputAngle = MomMath.remapAngle(viewAngle - wishAngle);
-
-				if (MomMath.approxEquals(Math.abs(inputAngle), 0.25 * Math.PI, 0.01)) {
-					mirrorOffset += (inputAngle > 0 ? -1 : 1) * Math.PI * 0.25;
-					this.updateZone(
-						this.leftMirrorZone,
-						-maxMirrorAngle,
-						-minMirrorAngle,
-						mirrorOffset,
-						MIRROR_CLASS,
-						this.mirrorSplitZone
-					);
-					this.updateZone(
-						this.rightMirrorZone,
-						minMirrorAngle,
-						maxMirrorAngle,
-						mirrorOffset,
-						MIRROR_CLASS,
-						this.mirrorSplitZone
-					);
-				} else {
-					this.updateZone(
-						this.leftMirrorZone,
-						-maxMirrorAngle,
-						-minMirrorAngle,
-						mirrorOffset - Math.PI * 0.25,
-						MIRROR_CLASS,
-						this.mirrorSplitZone
-					);
-					this.updateZone(
-						this.rightMirrorZone,
-						minMirrorAngle,
-						maxMirrorAngle,
-						mirrorOffset + Math.PI * 0.25,
-						MIRROR_CLASS,
-						this.mirrorSplitZone
-					);
-				}
-			} else {
-				this.clearZones([this.leftMirrorZone, this.rightMirrorZone]);
 			}
+		} else {
+			this.clearZones([this.leftMirrorZone, this.rightMirrorZone]);
 		}
 	}
 }

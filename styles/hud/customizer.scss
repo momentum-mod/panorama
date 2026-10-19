@@ -8,6 +8,9 @@ $input-background-hover: rgb(110, 110, 110);
 .hud-customizer {
 	width: 100%;
 	height: 100%;
+	// the overlay's margin around full-width or full-height components reaches off screen, and squishing it back on
+	// pulls the middle resize knobs off center
+	overflow: noclip;
 
 	visibility: collapse;
 	z-index: 1000;
@@ -563,7 +566,8 @@ $input-background-hover: rgb(110, 110, 110);
 		$size: 14px;
 		$half: calc($size / 2);
 
-		margin: 32px - calc($size / 2);
+		// the handles sit just outside the component, so they don't cover it or each other on thin components
+		margin: 32px - $size;
 
 		&__knob {
 			width: $size;
@@ -654,6 +658,46 @@ $input-background-hover: rgb(110, 110, 110);
 				transition-property: border, box-shadow, background-color;
 				transition-timing-function: ease-in-out;
 				transition-duration: 0.1s;
+			}
+
+			// handles that would sit off screen move back over the component
+			#{$knobs}--inset-left &--left,
+			#{$knobs}--inset-left &--top-left,
+			#{$knobs}--inset-left &--bottom-left {
+				margin-left: $size;
+			}
+
+			#{$knobs}--inset-right &--right,
+			#{$knobs}--inset-right &--top-right,
+			#{$knobs}--inset-right &--bottom-right {
+				margin-right: $size;
+			}
+
+			#{$knobs}--inset-top &--top,
+			#{$knobs}--inset-top &--top-left,
+			#{$knobs}--inset-top &--top-right {
+				margin-top: $size;
+			}
+
+			#{$knobs}--inset-bottom &--bottom,
+			#{$knobs}--inset-bottom &--bottom-left,
+			#{$knobs}--inset-bottom &--bottom-right {
+				margin-bottom: $size;
+			}
+
+			// components that keep their shape resize from the corners only
+			#{$knobs}--corners &--top,
+			#{$knobs}--corners &--bottom,
+			#{$knobs}--corners &--left,
+			#{$knobs}--corners &--right {
+				visibility: collapse;
+			}
+
+			#{$knobs}--corners &--top-left,
+			#{$knobs}--corners &--top-right,
+			#{$knobs}--corners &--bottom-left,
+			#{$knobs}--corners &--bottom-right {
+				visibility: visible;
 			}
 
 			&:hover Panel {

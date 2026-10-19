@@ -241,6 +241,16 @@ export interface CustomizerComponentProperties {
 	/** Allow resizing in the Y direction. */
 	resizeY: boolean;
 
+	/**
+	 * Number entry dynamic style the component's height comes from, for components that size themselves from a
+	 * setting. Resizing sets it to the height divided by scale (default 1), and setting it resizes the component.
+	 * A scale function is read again whenever any of the component's settings changes.
+	 */
+	heightStyle?: { styleID: string; scale?: number | (() => number) };
+
+	/** Resize from the corner handles only, for components whose size setting scales them evenly. */
+	resizeCorners?: boolean;
+
 	/** Allow movement on X axis. Defaults to true */
 	moveX?: boolean;
 
@@ -289,6 +299,9 @@ export interface IHudCustomizerHandler {
 
 	/** Whether the HUD customizer edit UI is open. */
 	isOpen(): boolean;
+
+	/** Whether this component's panel is the one selected for editing. */
+	isActiveComponent(panel: GenericPanel): boolean;
 
 	/**
 	 * Load a customizable HUD component.

@@ -2,7 +2,7 @@
 	&__ticks {
 		//height set in js
 		width: 100%;
-		vertical-align: center;
+		vertical-align: top;
 	}
 
 	&__tick {
@@ -16,31 +16,6 @@
 
 		&--half {
 			height: 50%;
-		}
-	}
-
-	&__stats {
-		width: 200px;
-		height: 100px;
-		horizontal-align: center;
-		vertical-align: center;
-		overflow: noclip;
-	}
-
-	&__stat {
-		width: 50px;
-		height: 24px;
-		font-size: 20px;
-		text-align: right;
-
-		&--pitch {
-			horizontal-align: left;
-			transform: translatex(-40px);
-		}
-
-		&--yaw {
-			horizontal-align: left;
-			transform: translatex(175px);
 		}
 	}
 }

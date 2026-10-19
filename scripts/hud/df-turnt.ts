@@ -1,11 +1,18 @@
 import { PanelHandler } from 'util/module-helpers';
-import { GamemodeCategory } from 'common/web/enums/gamemode.enum';
-import { GamemodeCategories } from 'common/web/maps/gamemodes.map';
+import { Gamemode } from 'common/web/enums/gamemode.enum';
 import * as MomMath from 'util/math';
 import { rgbaStringLerp } from 'util/colors';
 import { ColorPair, SyncColors } from 'common/sync-colors';
-import { RegisterHUDPanelForGamemode } from 'util/register-for-gamemodes';
-import { DFHudComponent, InputMode, StyleObject, ZonePanel } from 'common/df-hud';
+import { getHudCustomizer } from 'common/hud-customizer';
+import {
+	AIR_ACCEL,
+	DEFAULT_SPEED,
+	DFHudComponent,
+	InputMode,
+	PREVIEW_SPEED,
+	StyleObject,
+	ZonePanel
+} from 'common/df-hud';
 
 /** A view change bigger than this in one frame is a teleport or spectator switch, not mouse movement */
 const MAX_YAW_DELTA = Math.PI * 0.25;
@@ -13,6 +20,14 @@ const MAX_YAW_DELTA = Math.PI * 0.25;
 const FULL_COLOR_ERROR = 0.5;
 /** Newton steps for the W turn cubic, starting from the small-k root cos^2 = 2/3 */
 const CUBIC_STEPS = 6;
+/** Angle of the velocity from the wish direction in the customizer preview, in radians */
+const PREVIEW_WISH_OFFSET = 0.6;
+/** How far off the reference turn rate the customizer preview sways, as a fraction of it */
+const PREVIEW_RATE_SWAY = 0.1;
+/** Seconds for one sway of the customizer preview's turn rate */
+const PREVIEW_SWAY_PERIOD = 4;
+/** How far each frame of the customizer preview's turn rate jitters off its sway, as a fraction of the reference rate */
+const PREVIEW_RATE_JITTER = 0.1;
 
 /**
  * Velocity turn per tick, in radians, for holding a wish angle. pinned is the turn the ticks follow. A/D also has the
@@ -42,19 +57,26 @@ class DFTurntHandler extends DFHudComponent {
 	turntArrowIcon = $<Image>('#TurntArrowIcon');
 	ticks: ZonePanel[] = [];
 
-	turntEnable: boolean;
-	turntMinSpeed: float;
-	turntHeight: float;
-	turntOffset: float;
-	turntTickWidth: float;
+	turntMinSpeed: number;
+	turntHeight: number;
+	turntTickWidth: number;
+	/** Radians */
 	turntSpacing: number;
+	/** Radians */
 	turntSpan: number;
-	turntTolerance: float;
-	turntSmoothing: float;
-	turntFadeTime: float;
+	/** Fraction of the optimal rate */
+	turntTolerance: number;
+	/** Seconds */
+	turntSmoothing: number;
+	/** Seconds */
+	turntFadeTime: number;
 	turntArrowEnable: boolean;
-	turntArrowSize: float;
+	turntArrowSize: number;
 	turntArrowColor: rgbaColor;
+	/** How much farther apart the ticks are drawn at the span than at the crosshair, as a fraction */
+	turntEdgeSpread: number;
+	turntDynamicColor: boolean;
+	turntColor: rgbaColor;
 
 	physics: DefragAPI.TurntPhysics;
 	/** The last turn rates worked out, kept while fading out */
@@ -69,52 +91,101 @@ class DFTurntHandler extends DFHudComponent {
 	/** Which way the velocity turns, kept while the wish direction is on the velocity line */
 	turnSign = 1;
 	lastViewYaw: number | undefined;
+	/** Seconds the customizer preview has been running, for its turn rate sway */
+	previewTime = 0;
 	bWasRelevant = false;
 
 	constructor() {
 		super();
 
-		RegisterHUDPanelForGamemode({
-			gamemodes: GamemodeCategories.get(GamemodeCategory.DEFRAG),
-			onLoad: () => this.onLoad(),
-			handledEvents: [
-				{
-					event: 'HudProcessInput',
-					panel: $.GetContextPanel(),
-					callback: () => this.onUpdate()
-				}
-			]
-		});
-
-		$.RegisterForUnhandledEvent('OnDefragHUDTurntChange', () => this.onTurntConfigChange());
-	}
-
-	onLoad() {
-		this.projection = DefragAPI.GetHUDProjection();
 		this.physics = $.GetContextPanel<MomHudDFTurnt>().GetTurntPhysics();
-		this.onTurntConfigChange();
+
+		this.registerComponent(
+			'#Customizer_Df_Turnt_Name',
+			Gamemode.DEFRAG_CPM,
+			{
+				minSpeed: this.numberStyle(
+					'#Customizer_Df_MinSpeed',
+					0,
+					10000,
+					(value) => (this.turntMinSpeed = value)
+				),
+				height: this.numberStyle('#Customizer_Height', 1, 50, (value) => (this.turntHeight = value)),
+				tickWidth: this.numberStyle(
+					'#Customizer_Df_Turnt_TickWidth',
+					1,
+					10,
+					(value) => (this.turntTickWidth = value)
+				),
+				spacing: this.numberStyle(
+					'#Customizer_Df_Turnt_Spacing',
+					1,
+					45,
+					(value) => (this.turntSpacing = MomMath.deg2rad(value))
+				),
+				span: this.numberStyle(
+					'#Customizer_Df_Turnt_Span',
+					5,
+					90,
+					(value) => (this.turntSpan = MomMath.deg2rad(value)),
+					{ tooltip: '#Customizer_Df_Turnt_Span_Tooltip' }
+				),
+				tolerance: this.numberStyle(
+					'#Customizer_Df_Turnt_Tolerance',
+					0,
+					50,
+					(value) => (this.turntTolerance = value / 100),
+					{ tooltip: '#Customizer_Df_Turnt_Tolerance_Tooltip' }
+				),
+				smoothing: this.numberStyle(
+					'#Customizer_Df_Turnt_Smoothing',
+					0,
+					1000,
+					(value) => (this.turntSmoothing = value / 1000),
+					{ tooltip: '#Customizer_Df_Turnt_Smoothing_Tooltip' }
+				),
+				fadeTime: this.numberStyle(
+					'#Customizer_Df_Turnt_FadeTime',
+					0,
+					1000,
+					(value) => (this.turntFadeTime = value / 1000)
+				),
+				edgeSpread: this.numberStyle(
+					'#Customizer_Df_Turnt_EdgeSpread',
+					0,
+					500,
+					(value) => (this.turntEdgeSpread = value / 100),
+					{ tooltip: '#Customizer_Df_Turnt_EdgeSpread_Tooltip' }
+				),
+				dynamicColor: this.checkboxStyle(
+					'#Customizer_Df_Turnt_DynamicColor',
+					(value) => (this.turntDynamicColor = value),
+					{ children: [{ styleID: 'color', showWhen: false }] }
+				),
+				color: this.colorStyle('#Customizer_Color', (value) => (this.turntColor = value)),
+				arrowEnable: this.checkboxStyle('#Customizer_Df_Arrow', (value) => (this.turntArrowEnable = value), {
+					children: [
+						{ styleID: 'arrowSize', showWhen: true },
+						{ styleID: 'arrowColor', showWhen: true }
+					]
+				}),
+				arrowSize: this.numberStyle(
+					'#Customizer_Df_ArrowSize',
+					1,
+					25,
+					(value) => (this.turntArrowSize = value)
+				),
+				arrowColor: this.colorStyle('#Customizer_Df_ArrowColor', (value) => (this.turntArrowColor = value))
+			},
+			{ resizeY: true, heightStyle: { styleID: 'height' }, description: '#Customizer_Df_Turnt_Name_Tooltip' }
+		);
 	}
 
-	onTurntConfigChange() {
-		const turntConfig = $.GetContextPanel<MomHudDFTurnt>().GetTurntCFG();
-		this.turntEnable = turntConfig.enable;
-		this.turntMinSpeed = turntConfig.minSpeed;
-		this.turntHeight = turntConfig.height;
-		this.turntOffset = turntConfig.offset;
-		this.turntTickWidth = turntConfig.tickWidth;
-		this.turntSpacing = MomMath.deg2rad(turntConfig.spacing);
-		this.turntSpan = MomMath.deg2rad(turntConfig.span);
-		this.turntTolerance = turntConfig.tolerance;
-		this.turntSmoothing = turntConfig.smoothing;
-		this.turntFadeTime = turntConfig.fadeTime;
-		this.turntArrowEnable = turntConfig.arrowEnable;
-		this.turntArrowSize = turntConfig.arrowSize;
-		this.turntArrowColor = turntConfig.arrowColor;
+	applyConfig() {
+		TICK_CLASS = new StyleObject(this.turntHeight, SyncColors.PERFECT[0] as rgbaColor);
 
-		TICK_CLASS = new StyleObject(this.turntHeight, this.turntOffset, SyncColors.PERFECT[0] as rgbaColor);
-
-		this.setupContainer(this.turntContainer, this.turntOffset);
-		this.turntContainer.style.height = this.turntHeight + 'px';
+		this.setStripHeight(this.turntHeight);
+		this.setupContainer(this.turntContainer);
 
 		// the arrow sits on top of the tick row, pointing down at it
 		const arrowWidth = 2 * this.turntArrowSize;
@@ -123,7 +194,6 @@ class DFTurntHandler extends DFHudComponent {
 			this.turntArrowIcon,
 			this.turntHeight + 2 * arrowWidth,
 			arrowWidth,
-			this.turntOffset,
 			'top',
 			this.turntArrowColor
 		);
@@ -141,8 +211,21 @@ class DFTurntHandler extends DFHudComponent {
 		this.clearZones(this.ticks);
 	}
 
+	/** The turnt-meter only shows for W or S alone, or A or D alone, so the preview holds W in a CPM air strafe. */
+	override previewState(state: DefragAPI.HUDFrameState): DefragAPI.HUDFrameState {
+		const viewAngle = MomMath.deg2rad(state.viewYaw);
+		const maxSpeed = state.maxspeed > 0 ? state.maxspeed : DEFAULT_SPEED;
+		return this.withMovement(state, {
+			speed: Math.max(PREVIEW_SPEED, this.turntMinSpeed),
+			velAngle: MomMath.remapAngle(viewAngle - PREVIEW_WISH_OFFSET),
+			wishAngle: viewAngle,
+			wishSpeed: maxSpeed,
+			acceleration: AIR_ACCEL
+		});
+	}
+
 	onUpdate() {
-		const state = DefragAPI.GetHUDFrameState();
+		const state = this.getFrameState();
 		if (!state.valid) return;
 
 		this.updateView(state);
@@ -156,7 +239,6 @@ class DFTurntHandler extends DFHudComponent {
 		const inputMode = state.inputMode;
 		const bTurn = inputMode === InputMode.TURN_LEFT || inputMode === InputMode.TURN_RIGHT;
 		let bRelevant =
-			this.turntEnable &&
 			state.physicsMode === DefragAPI.DefragPhysics.CPM &&
 			state.falling &&
 			(inputMode === InputMode.AIR_CONTROL || bTurn) &&
@@ -180,6 +262,23 @@ class DFTurntHandler extends DFHudComponent {
 
 			// ticks are pinned to the view the reference turn would have, so they move by however much this frame missed it
 			const ticksPerFrame = frameTime / state.tickInterval;
+
+			// the customizer preview's view stands still, which would spin the ticks at the full reference rate, so it
+			// turns the view near the reference rate instead, swaying slowly between under- and over-rotating
+			// it only sways while selected for editing, and holds still on the reference rate otherwise
+			if (this.bPreview) {
+				const bEditing = getHudCustomizer()?.isActiveComponent($.GetContextPanel()) ?? false;
+				let rateScale = 1;
+				if (bEditing) {
+					this.previewTime += frameTime;
+					const sway = PREVIEW_RATE_SWAY * Math.sin((2 * Math.PI * this.previewTime) / PREVIEW_SWAY_PERIOD);
+					// frame to frame noise like a real mouse, which the smoothing averages out of the color
+					const jitter = PREVIEW_RATE_JITTER * (2 * Math.random() - 1);
+					rateScale += sway + jitter;
+				}
+				yawDelta = this.turnSign * rates.pinned * ticksPerFrame * rateScale;
+			}
+
 			this.phase = this.wrapToSpacing(this.phase + yawDelta - this.turnSign * rates.pinned * ticksPerFrame);
 
 			const turn = (this.turnSign * yawDelta) / ticksPerFrame;
@@ -197,20 +296,25 @@ class DFTurntHandler extends DFHudComponent {
 
 		this.updateArrow(state);
 
-		const color =
-			this.rates.maxTurn === undefined
+		const color = !this.turntDynamicColor
+			? this.turntColor
+			: this.rates.maxTurn === undefined
 				? this.findRateColor(this.turnRate / this.rates.pinned)
 				: this.findStrafeTurnColor();
 		const half = Math.floor(this.ticks.length / 2);
 		for (const [i, tick] of this.ticks.entries()) {
 			const angle = (i - half) * this.turntSpacing + this.phase;
 			const fade = 1 - Math.pow(Math.abs(angle) / this.turntSpan, 2);
-			if (fade <= 0 || Math.abs(angle) >= this.halfHFov) {
+			// spread the ticks apart toward the span: true to the view at the crosshair, the gap between them
+			// growing by the edge spread at the span
+			const spread = Math.abs(angle) / this.turntSpan;
+			const drawAngle = angle * (1 + (this.turntEdgeSpread / 3) * spread * spread);
+			if (fade <= 0 || Math.abs(drawAngle) >= this.halfHFov) {
 				this.clearZones([tick]);
 				continue;
 			}
 
-			const center = this.mapToScreen(angle);
+			const center = this.mapToScreen(drawAngle);
 			tick.leftPx = center - 0.5 * this.turntTickWidth;
 			tick.rightPx = tick.leftPx + this.turntTickWidth;
 			this.drawZone(tick);
