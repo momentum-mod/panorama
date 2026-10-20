@@ -3,7 +3,7 @@ import { TrackType } from 'common/web/enums/track-type.enum';
 import { Style } from 'common/web/enums/style.enum';
 import { MapUserCompletions } from 'common/maps';
 import { CompletionGroup } from 'common/web/enums/completion-group.enum';
-import { getCompletionGroup, getGroupBoundaries } from 'common/completion-group';
+import { getCompletionGroup, getRankGroupEnds } from 'common/web/consts/rank-groups.const';
 import { LeaderboardType } from 'common/web/enums/leaderboard-type.enum';
 
 /**
@@ -27,7 +27,7 @@ interface TrackDisplayData {
 	time?: number;
 	rank?: number;
 	total?: number;
-	group?: number;
+	group?: CompletionGroup | null;
 }
 
 /**
@@ -306,9 +306,7 @@ export class TrackSelectorHandler {
 				rank: track.rank,
 				total: track.totalCompletions,
 				group:
-					track.rank == null
-						? null
-						: getCompletionGroup(track.rank, getGroupBoundaries(track.totalCompletions))
+					track.rank == null ? null : getCompletionGroup(track.rank, getRankGroupEnds(track.totalCompletions))
 			});
 		});
 
