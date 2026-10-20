@@ -17,6 +17,7 @@ import type { Flags } from '../utils/flags.type';
 import type { ActivityType } from '../../enums/activity-type.enum';
 import type { AdminActivityType } from '../../enums/admin-activity-type.enum';
 import type { ReportType } from '../../enums/report-type.enum';
+import type { ChatBanType } from '../../enums/chat-ban.enum';
 import type { KillswitchType } from '../../enums/killswitch.enum';
 import type { ReportCategory } from '../../enums/report-category.enum';
 import type { SteamGame } from '../../enums/steam-game.enum';
@@ -46,6 +47,7 @@ export interface User {
 	createdAt: DateString;
 	profile?: Profile;
 	userStats?: UserStats;
+	chatBans?: ActiveChatBan[];
 }
 
 export interface Profile {
@@ -163,6 +165,26 @@ export interface Report {
 	createdAt: DateString;
 	updatedAt: DateString;
 }
+
+//#endregion
+//#region Bans
+
+export interface ChatBan {
+	id: number;
+	type: ChatBanType;
+	expiresAt: DateString | null;
+	reason: string | null;
+	targetID: number;
+	target?: User;
+	issuerID: number | null;
+	issuer?: User;
+	reportID: number | null;
+	report?: Report;
+	createdAt: DateString;
+	updatedAt: DateString;
+}
+
+export type ActiveChatBan = Pick<ChatBan, 'type' | 'expiresAt' | 'reason'>;
 
 //#endregion
 //#region Maps
@@ -483,9 +505,38 @@ export interface Leaderboard {
 	linear: boolean;
 }
 
+/**
+ * The components that uniquely identify a leaderboard. Leaderboards have no
+ * numeric ID; they are defined purely in terms of these.
+ */
+export interface LeaderboardIdentifier {
+	mapID: number;
+	gamemode: Gamemode;
+	trackType: TrackType;
+	trackNum: number;
+	style: Style;
+}
+
 export interface LeaderboardStats {
 	leaderboard: Leaderboard;
 	totalRuns: number;
+}
+
+/** A single row of a gamemode+style rank points ladder. */
+export interface RankEntry {
+	rank: number;
+	userID: number;
+	points: number;
+	user: User;
+}
+
+/** A user's position on a single gamemode+style rank points ladder. */
+export interface UserRank {
+	gamemode: Gamemode;
+	style: Style;
+	rank: number;
+	points: number;
+	totalPlayers: number;
 }
 
 /**
@@ -519,7 +570,17 @@ export interface LeaderboardRun {
 	flags: Style[];
 	splits?: RunSplits.Splits;
 	rank: number;
-	// rankXP: number;
+	/**
+	 * Rank points this run is worth. Only present for runs on leaderboards that
+	 * award points (RANKED main tracks on approved maps), and only on endpoints
+	 * that look them up.
+	 */
+	points?: number;
+	/**
+	 * Total number of runs on the run's leaderboard. Only present on endpoints
+	 * that look it up (e.g. a user's runs).
+	 */
+	totalRuns?: number;
 	userID: number;
 	user?: User;
 	mapID: number;
