@@ -375,7 +375,7 @@ export class LeaderboardsHandler {
 		index: number
 	) {
 		const currentGroup = getCompletionGroup(rank, this.groupBoundaries);
-		if (currentGroup === undefined || currentGroup === CompletionGroup.WORLD_RECORD) return;
+		if (currentGroup == null || currentGroup === CompletionGroup.WORLD_RECORD) return;
 
 		const nextRecord = records[index + 1];
 
