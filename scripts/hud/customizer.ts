@@ -441,6 +441,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		gamemodeComponentContainer: $<Panel>('#GamemodeComponentsContainer')!,
 		gamemodeComponentList: $<Panel>('#GamemodeComponentList')!,
 		activeComponentSettings: $<Panel>('#ActiveComponentSettings')!,
+		activeComponentName: $<Label>('#ActiveComponentName')!,
 		activeComponentSettingsList: $<Panel>('#ActiveComponentSettingsList')!,
 		resizeKnobs: $<Panel>('#ResizeKnobs')!,
 		grid: $.GetContextPanel().GetParent()!.FindChildTraverse('HudCustomizerGrid')!
@@ -1388,6 +1389,19 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 		this.panels.activeComponentSettings.visible = true;
 		this.panels.settings.SetDialogVariable('active_name', component.properties.name);
+
+		// the component's description, if it has one, shows when hovering its name
+		const description = component.properties.description;
+		const nameLabel = this.panels.activeComponentName;
+		if (description) {
+			nameLabel.SetPanelEvent('onmouseover', () =>
+				UiToolkitAPI.ShowTextTooltipStyled(nameLabel.id, description, 'tooltip--wrap')
+			);
+			nameLabel.SetPanelEvent('onmouseout', () => UiToolkitAPI.HideTextTooltip());
+		} else {
+			nameLabel.ClearPanelEvent('onmouseover');
+			nameLabel.ClearPanelEvent('onmouseout');
+		}
 
 		const childVisibilityMap = new Map<StyleID, Array<{ panel: Panel; showWhen?: any[] }>>();
 		const refreshMap = new Map<StyleID, () => void>();
