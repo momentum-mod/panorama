@@ -232,6 +232,9 @@ export interface CustomizerComponentProperties {
 	/** Name of the panel to be displayed in hud customizer */
 	name: string;
 
+	/** Description shown while hovering the component's name in its settings. Please localize! */
+	description?: string;
+
 	/** Allow resizing in the X direction. */
 	resizeX: boolean;
 

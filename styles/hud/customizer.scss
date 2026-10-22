@@ -221,6 +221,10 @@ $input-background-hover: rgb(110, 110, 110);
 				vertical-align: center;
 				font-size: 14px;
 				padding-bottom: 2px;
+				// spans the header so the description tooltip opens beside the whole window, on its left unless
+				// there isn't room
+				width: 100%;
+				tooltip-position: left;
 			}
 		}
 
