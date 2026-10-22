@@ -137,7 +137,7 @@
 
 			<Panel id="ActiveComponentSettings" class="hud-customizer-settings__active h-fit-children">
 				<Panel class="hud-customizer-settings__active__header">
-					<Label class="hud-customizer-settings__active__header__name" text="{s:active_name}" />
+					<Label id="ActiveComponentName" class="hud-customizer-settings__active__header__name" text="{s:active_name}" />
 				</Panel>
 				<Panel id="ActiveComponentSettingsList" class="hud-customizer-settings__active__contents">
 					<!-- Populated by JS -->
