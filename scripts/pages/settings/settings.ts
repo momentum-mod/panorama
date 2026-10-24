@@ -108,6 +108,10 @@ export class SettingsHandler {
 
 		const container = newPanel.FindChildTraverse('SettingsPageContainer');
 
+		// Clicking empty space in the container would focus its first focusable child and scroll it into view,
+		// jumping the page back to the top
+		container.SetDisableFocusOnMouseDown(true);
+
 		// Register the page scroll event with onPageScrolled
 		if (tab !== 'SearchSettings') {
 			$.RegisterEventHandler(
