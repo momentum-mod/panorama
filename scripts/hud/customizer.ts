@@ -35,6 +35,12 @@ interface ComponentLayout {
 
 	/** Stored dynamicStyle values, usually string / number / bool */
 	dynamicStyles?: Record<StyleID, any>;
+
+	/**
+	 * Position in its layer stack, 0 being the backmost. If not provided, components keep the order they're in in
+	 * hud.xml. @see HudCustomizerHandler.getLayerStack
+	 */
+	layer?: number;
 }
 
 export type ResetOptions = { position: boolean; styles: boolean };
@@ -97,6 +103,9 @@ const RESIZE_KNOB_SIZE = 14;
 /** Distance within which an edge or center snaps to another component's edge or center, in 1080p layout px */
 const ELEMENT_SNAPPING_THRESHOLD = 8;
 
+/** Panels the customizer doesn't manage that layered components can be moved past without splitting their stack */
+const LAYER_TRANSPARENT_PANEL_TYPES: ReadonlySet<string> = new Set(['MomHudVoice']);
+
 /** Space kept free below the customizer menu, in 1080p layout px */
 const SETTINGS_BOTTOM_MARGIN = 16;
 /** Smallest height the active component's settings list is squeezed to, in 1080p layout px */
@@ -136,6 +145,9 @@ class Component {
 	private _width: number | undefined = undefined!;
 	private _height: number | undefined = undefined!;
 
+	/** @see ComponentLayout.layer */
+	layer: number | undefined;
+
 	// A record of CustomizerSettings dynamic styles <StyleID, value>
 	static referencedValues: Record<string, any> = {};
 
@@ -165,6 +177,7 @@ class Component {
 		this._offsetY = componentLayout.offsetY; // Stupid, but needed with current setPosition stuff. Move to C++!
 		this.offsetX = this.getScaledOffsetX(componentLayout.offsetX);
 		this.offsetY = componentLayout.offsetY;
+		this.layer = componentLayout.layer ?? undefined;
 
 		if (properties.dynamicStyles) {
 			this.dynamicStyles = {};
@@ -335,6 +348,7 @@ class Component {
 			...(this.width !== null && { width: this.width }),
 			// a height that comes from a setting is stored as that setting
 			...(this.height !== null && !this.properties.heightStyle && { height: this.height }),
+			...(this.layer !== undefined && { layer: this.layer }),
 			...(this.dynamicStyles && {
 				dynamicStyles: Object.fromEntries(
 					Object.entries(this.dynamicStyles)
@@ -516,6 +530,11 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 	/** Where the active component was when the drag started, for locking a move to one axis */
 	dragStartOffset: [number, number] = [0, 0];
 
+	/** IDs of every panel the customizer can manage in any gamemode, which don't split layer stacks */
+	customizerPanelIDs: Set<string> = new Set();
+	/** Each layer stack parent's children in their hud.xml order, from before any were reordered */
+	layerParentChildren = new Map<GenericPanel, GenericPanel[]>();
+
 	presetList: Set<string>;
 	unsavedPresets: Set<string> = new Set();
 
@@ -686,9 +705,17 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 				this.defaultPresetStateOff();
 			}
 
+			const activeComponentID = this.activeComponent?.id;
+			// Every component registers again below, so drop the last map's. Otherwise ones from a gamemode this map
+			// doesn't have would stay listed, saved and counted in layer stacks.
+			this.components = {};
+
 			// Once HUD is fully initialized, let components awaiting registration know to load component
 			$.DispatchEvent('HudCustomizer_Ready');
 			this.customizerReady = true;
+
+			// Keep the selection if it's still registered, as its new instance
+			this.activeComponent = activeComponentID ? this.components[activeComponentID] : undefined;
 		});
 
 		// TODO: This was just for case of someone changin layout via file and wanting to update ingame.
@@ -1016,6 +1043,10 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			const fullPresetName = `${gamemodeID}_${presetName}`;
 			const layout: HudLayout = this.panels.customizer.loadLayout(fullPresetName) ?? {};
 
+			// layers are positions in this gamemode's stack, so other gamemodes, whose stacks have different members,
+			// keep their own
+			const bSameGamemode = gamemodeID === this.gamemodeInfo.id;
+
 			for (const [componentID, component] of Object.entries(this.components)) {
 				const availableGamemodes = getAvailableGamemodes(component.properties.gamemode);
 
@@ -1023,8 +1054,17 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 					(gamemode) => GamemodeInfo.get(gamemode)?.id === gamemodeID
 				);
 
-				if (componentAvailable) {
+				if (!componentAvailable) continue;
+
+				if (bSameGamemode) {
 					layout[componentID] = component.getLayout();
+				} else {
+					const { layer: _layer, ...componentData } = component.getLayout();
+					const existingLayer = layout[componentID]?.layer;
+					layout[componentID] = {
+						...componentData,
+						...(existingLayer !== undefined && { layer: existingLayer })
+					};
 				}
 			}
 
@@ -1040,13 +1080,24 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 	}
 
 	copyPanelToOtherPresets(componentID: string, presetList: { gamemodeID: string; presetName: string }[]) {
-		const componentData: ComponentLayout = this.components[componentID].getLayout();
+		const componentLayout = this.components[componentID].getLayout();
+		const { layer: _layer, ...componentData } = componentLayout;
 
 		for (const { gamemodeID, presetName } of presetList) {
 			const fullPresetName = `${gamemodeID}_${presetName}`;
 
-			const existingLayout = this.panels.customizer.loadLayout(fullPresetName) ?? {};
-			const updatedLayout: HudLayout = { ...existingLayout, [componentID]: componentData };
+			const existingLayout: HudLayout = this.panels.customizer.loadLayout(fullPresetName) ?? {};
+
+			// layers are positions in this gamemode's stack, so other gamemodes, whose stacks have different members,
+			// keep their own
+			const bSameGamemode = gamemodeID === this.gamemodeInfo.id;
+			const existingLayer = existingLayout[componentID]?.layer;
+			const updatedLayout: HudLayout = {
+				...existingLayout,
+				[componentID]: bSameGamemode
+					? componentLayout
+					: { ...componentData, ...(existingLayer !== undefined && { layer: existingLayer }) }
+			};
 
 			const saveSuccessful = this.panels.customizer.saveLayout(fullPresetName, updatedLayout);
 
@@ -1084,6 +1135,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		}
 
 		this.components[component.id] = component;
+		this.applyLayerOrder(component);
 
 		if (properties.events !== undefined) {
 			const events = Array.isArray(properties.events) ? properties.events : [properties.events];
@@ -1359,6 +1411,13 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			$.UnregisterEventHandler('DragEnd', this.panels.dragPanel, this.dragEndHandle);
 		}
 
+		// The settings are dragged by the drag panel over their header while they're the active component, so only
+		// raise them over the drag panel while another component is active
+		this.panels.settings.SetHasClass(
+			'hud-customizer-settings--above-overlay',
+			component !== this.components['CustomizerSettings']
+		);
+
 		const canMove = component.properties.moveX !== false || component.properties.moveY !== false;
 
 		this.panels.dragPanel.hittest = canMove;
@@ -1453,8 +1512,10 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		};
 
 		const component = this.activeComponent;
+		const hasStyles = component?.dynamicStyles && Object.keys(component.dynamicStyles).length > 0;
+		const hasLayers = component && this.getLayerStack(component).length > 1;
 
-		if (!component || !component.dynamicStyles || Object.keys(component.dynamicStyles).length === 0) {
+		if (!component || (!hasStyles && !hasLayers)) {
 			this.panels.activeComponentSettings.visible = false;
 			return;
 		}
@@ -1898,9 +1959,11 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			return panel;
 		};
 
+		if (hasLayers) this.createLayerRow(component);
+
 		const childrenStyleIDs = new Set<StyleID>();
 
-		for (const dynamicStyle of Object.values(component.dynamicStyles)) {
+		for (const dynamicStyle of Object.values(component.dynamicStyles ?? {})) {
 			const child = dynamicStyle.properties.children;
 			if (child) {
 				const normalized = Array.isArray(child) ? child : [child];
@@ -1964,7 +2027,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		};
 
 		// Generate settings based on CustomizerPropertyType
-		for (const [styleID, dynamicStyle] of Object.entries(component.dynamicStyles)) {
+		for (const [styleID, dynamicStyle] of Object.entries(component.dynamicStyles ?? {})) {
 			if (childrenStyleIDs.has(styleID) || !this.isShownInGamemode(dynamicStyle.properties.gamemode)) continue;
 
 			const wrapper = $.CreatePanel('Panel', this.panels.activeComponentSettingsList, 'ParentWrapper', {
@@ -1984,6 +2047,130 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 	isShownInGamemode(gamemode?: Gamemode | Gamemode[]): boolean {
 		if (gamemode === undefined) return true;
 		return (Array.isArray(gamemode) ? gamemode : [gamemode]).includes(this.gamemodeInfo.gamemode);
+	}
+
+	/** Adds the row of buttons moving the component through its layer stack to the top of its settings */
+	createLayerRow(component: Component): void {
+		const wrapper = $.CreatePanel('Panel', this.panels.activeComponentSettingsList, 'LayerWrapper', {
+			class: 'hud-customizer-settings__row-wrapper hud-customizer-settings__row-wrapper--hover'
+		});
+		wrapper.LoadLayoutSnippet('layer');
+
+		const buttons: Array<[id: string, tooltip: string, target: (index: number, count: number) => number]> = [
+			['LayerSendToBack', '#Customizer_Layer_SendToBack', () => 0],
+			['LayerSendBackward', '#Customizer_Layer_SendBackward', (index) => index - 1],
+			['LayerBringForward', '#Customizer_Layer_BringForward', (index) => index + 1],
+			['LayerBringToFront', '#Customizer_Layer_BringToFront', (_, count) => count - 1]
+		];
+
+		const refresh = () => {
+			const stack = this.getLayerOrder(component);
+			const index = stack.indexOf(component);
+			wrapper.SetDialogVariable('layer_position', `${index + 1} / ${stack.length}`);
+			for (const [id, _, target] of buttons) {
+				const newIndex = target(index, stack.length);
+				wrapper.FindChildTraverse(id).enabled = newIndex !== index && newIndex >= 0 && newIndex < stack.length;
+			}
+		};
+
+		for (const [id, tooltip, target] of buttons) {
+			const button = wrapper.FindChildTraverse(id);
+			button.SetPanelEvent('onmouseover', () => UiToolkitAPI.ShowTextTooltip(id, $.Localize(tooltip)));
+			button.SetPanelEvent('onmouseout', () => UiToolkitAPI.HideTextTooltip());
+			button.SetPanelEvent('onactivate', () => {
+				const stack = this.getLayerOrder(component);
+				this.moveLayer(component, target(stack.indexOf(component), stack.length));
+				refresh();
+			});
+		}
+
+		refresh();
+	}
+
+	/**
+	 * Gets the components the given one can be layered against, in hud.xml order: its siblings that the customizer
+	 * manages, up to the nearest sibling it doesn't (menus, blur, the grid, the customizer itself, ...), so moving
+	 * components through a stack never moves them past panels outside it. The DF components in the in-world container
+	 * are a stack of their own, always behind the rest of the HUD.
+	 */
+	getLayerStack(component: Component): Component[] {
+		const parent = component.panel.GetParent();
+		if (!parent) return [component];
+
+		let children = this.layerParentChildren.get(parent);
+		if (!children) {
+			children = parent.Children();
+			this.layerParentChildren.set(parent, children);
+		}
+
+		const index = children.findIndex((child) => child.id === component.id);
+		if (index === -1) return [component];
+
+		const inStack = (panel: GenericPanel) =>
+			this.customizerPanelIDs.has(panel.id) || LAYER_TRANSPARENT_PANEL_TYPES.has(panel.paneltype);
+
+		let start = index;
+		while (start > 0 && inStack(children[start - 1])) start--;
+		let end = index;
+		while (end < children.length - 1 && inStack(children[end + 1])) end++;
+
+		return children
+			.slice(start, end + 1)
+			.map((panel) => this.components[panel.id])
+			.filter((member) => member !== undefined);
+	}
+
+	/** Gets the component's layer stack from back to front, as it's currently drawn */
+	getLayerOrder(component: Component): Component[] {
+		const parent = component.panel.GetParent();
+		return this.getLayerStack(component).sort(
+			(a, b) => parent.GetChildIndex(a.panel) - parent.GetChildIndex(b.panel)
+		);
+	}
+
+	/** Puts the component's layer stack in the order of its components' saved layers */
+	applyLayerOrder(component: Component): void {
+		const stack = this.getLayerStack(component);
+		if (stack.length < 2) return;
+
+		// components without a saved layer keep their hud.xml position
+		const order = stack
+			.map((member, rank) => ({ member, rank, layer: member.layer ?? rank }))
+			.sort((a, b) => a.layer - b.layer || a.rank - b.rank)
+			.map(({ member }) => member);
+
+		this.setLayerOrder(order);
+	}
+
+	/** Moves the component to the given position in its layer stack, 0 being the back */
+	moveLayer(component: Component, index: number): void {
+		const order = this.getLayerOrder(component).filter((member) => member !== component);
+		order.splice(Math.max(0, Math.min(index, order.length)), 0, component);
+		this.setLayerOrder(order);
+
+		// save layers only for stacks that are out of their hud.xml order
+		const isDefaultOrder = this.getLayerStack(component).every((member, i) => member === order[i]);
+		order.forEach((member, i) => (member.layer = isDefaultOrder ? undefined : i));
+	}
+
+	/**
+	 * Reorders a layer stack's panels, from back to front, among the child slots they already take up, so panels
+	 * outside the stack keep their place in the draw order.
+	 */
+	setLayerOrder(order: Component[]): void {
+		const parent = order[0].panel.GetParent();
+		const slots = order.map((member) => parent.GetChildIndex(member.panel)).sort((a, b) => a - b);
+
+		order.forEach((member, i) => {
+			const index = parent.GetChildIndex(member.panel);
+			if (index === slots[i]) return;
+
+			// swap with the panel in the slot; the member is always further on, as the slots before are already done
+			const occupant = parent.GetChild(slots[i]);
+			const beforeMember = parent.GetChild(index - 1);
+			parent.MoveChildBefore(member.panel, occupant);
+			if (index - 1 !== slots[i]) parent.MoveChildAfter(occupant, beforeMember);
+		});
 	}
 
 	/**
@@ -2595,7 +2782,8 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 	getLayoutDelta(layoutA: HudLayout, layoutB: HudLayout) {
 		const delta: HudLayout = {};
 		for (const [id, componentLayout] of Object.entries(layoutA)) {
-			if (!compareDeepAsymmetric(componentLayout, layoutB[id])) {
+			// default layouts have no layers, which compareDeepAsymmetric skips over
+			if (!compareDeepAsymmetric(componentLayout, layoutB[id]) || componentLayout.layer !== layoutB[id]?.layer) {
 				delta[id] = componentLayout;
 			}
 		}
@@ -2607,6 +2795,12 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		const preset = $.persistentStorage.getItem(`hud-customizer.preset.${gamemodeID}`) as string;
 
 		HudCustomizerHandler.defaultLayout = this.getDefaultLayout();
+
+		this.customizerPanelIDs = new Set(
+			['hud_default', ...GamemodeInfoList.map((info) => `${info.id}_default`)].flatMap((name) =>
+				Object.keys(this.panels.customizer.loadLayout(name) ?? {})
+			)
+		);
 
 		const savedLayout = preset && this.getPresetLayout(preset);
 		this.currentPreset = savedLayout ? preset : 'default';
