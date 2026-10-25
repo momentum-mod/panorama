@@ -11,8 +11,8 @@
 		width: 100%;
 		height: 100%;
 
-		background-color: function.gradient-vertical(rgba(49, 49, 49, 0.5), rgba(0, 0, 0, 0.7));
-		border: 1px solid rgba(0, 0, 0, 0.05);
+		background-color: function.gradient-vertical(rgba(49, 49, 49, 0.619), rgba(0, 0, 0, 0.421));
+		border: 1px solid rgba(0, 0, 0, 0.023);
 		margin: -1px;
 	}
 
@@ -38,7 +38,7 @@
 		z-index: 5;
 		background-color: white;
 		border-radius: 50% 50%;
-		box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+		box-shadow: 0 0 4px rgba(0, 0, 0, 0.27);
 		align: center center;
 		width: 7px;
 		height: 7px;
@@ -66,10 +66,10 @@
 
 	&__gridline {
 		z-index: 2;
-		background-color: rgba(255, 255, 255, 0.05);
+		background-color: rgba(255, 255, 255, 0.202);
 
 		&--axis {
-			background-color: rgba(255, 255, 255, 0.3);
+			background-color: rgba(255, 255, 255, 0.545);
 		}
 
 		&--x {
@@ -84,7 +84,7 @@
 	}
 
 	&__axis {
-		opacity: 0.5;
+		opacity: 0.708;
 
 		&--y {
 			height: 100%;
@@ -104,7 +104,7 @@
 		@include mixin.font-header();
 		font-weight: bold;
 		font-size: 26px;
-		opacity: 0.5;
+		opacity: 0.708;
 		text-shadow: none;
 
 		&--x {

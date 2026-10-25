@@ -1,4 +1,4 @@
-import { rgbaStringToTuple } from 'util/colors';
+import { darkOverlayAlpha, rgbaStringToTuple } from 'util/colors';
 
 /**
  * Gets the HUD customizer handler instance.
@@ -280,5 +280,5 @@ export interface IHudCustomizerHandler {
  */
 export function getTextShadowFast(color: rgbaColor, multiplier: number): string {
 	const alpha = rgbaStringToTuple(color)[3] / 255;
-	return `0px 1px 1.5px 1 rgba(0, 0, 0, ${alpha * multiplier})`;
+	return `0px 1px 1.5px 1 rgba(0, 0, 0, ${darkOverlayAlpha(alpha * multiplier)})`;
 }

@@ -31,7 +31,7 @@
 	border-radius: $button-radius;
 	.radiobutton {
 		border-radius: 0;
-		border-left: 1px solid rgba(0, 0, 0, 0.6);
+		border-left: 1px solid rgba(0, 0, 0, 0.341);
 	}
 }
 
@@ -174,7 +174,7 @@
 		horizontal-align: center;
 		margin: 0px;
 		padding: $tab-text-padding;
-		opacity: 0.9;
+		opacity: 0.949;
 
 		transition: opacity 0.1s ease-in-out 0s;
 
@@ -184,7 +184,7 @@
 		}
 
 		#{$root}__tab:disabled & {
-			opacity: 0.2;
+			opacity: 0.44;
 		}
 	}
 
@@ -196,7 +196,7 @@
 		horizontal-align: center;
 		img-shadow: $button-icon-shadow;
 		wash-color: $button-text-color;
-		opacity: 0.9;
+		opacity: 0.949;
 
 		transition: opacity 0.1s ease-in-out 0s;
 
@@ -206,7 +206,7 @@
 		}
 
 		#{$root}__tab:disabled & {
-			opacity: 0.2;
+			opacity: 0.44;
 		}
 	}
 

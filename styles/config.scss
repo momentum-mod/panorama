@@ -70,15 +70,15 @@ $color-grays: (
 	'black': $black
 ) !default;
 
-$light-100: rgba(255, 255, 255, 0.05) !default;
-$light-200: rgba(255, 255, 255, 0.075) !default;
-$light-300: rgba(255, 255, 255, 0.1) !default;
-$light-400: rgba(255, 255, 255, 0.125) !default;
-$light-500: rgba(255, 255, 255, 0.15) !default;
-$light-600: rgba(255, 255, 255, 0.2) !default;
-$light-700: rgba(255, 255, 255, 0.25) !default;
-$light-800: rgba(255, 255, 255, 0.3) !default;
-$light-900: rgba(255, 255, 255, 0.4) !default;
+$light-100: rgba(255, 255, 255, 0.202) !default;
+$light-200: rgba(255, 255, 255, 0.256) !default;
+$light-300: rgba(255, 255, 255, 0.302) !default;
+$light-400: rgba(255, 255, 255, 0.341) !default;
+$light-500: rgba(255, 255, 255, 0.377) !default;
+$light-600: rgba(255, 255, 255, 0.44) !default;
+$light-700: rgba(255, 255, 255, 0.496) !default;
+$light-800: rgba(255, 255, 255, 0.545) !default;
+$light-900: rgba(255, 255, 255, 0.632) !default;
 
 $color-light-bgs: (
 	'light-100': $light-100,
@@ -92,15 +92,15 @@ $color-light-bgs: (
 	'light-900': $light-900
 ) !default;
 
-$dark-100: rgba(0, 0, 0, 0.6) !default;
-$dark-200: rgba(0, 0, 0, 0.7) !default;
-$dark-300: rgba(0, 0, 0, 0.8) !default;
-$dark-400: rgba(0, 0, 0, 0.85) !default;
-$dark-500: rgba(0, 0, 0, 0.9) !default;
-$dark-600: rgba(0, 0, 0, 0.925) !default;
-$dark-700: rgba(0, 0, 0, 0.95) !default;
-$dark-800: rgba(0, 0, 0, 0.975) !default;
-$dark-900: rgba(0, 0, 0, 0.99) !default;
+$dark-100: rgba(0, 0, 0, 0.341) !default;
+$dark-200: rgba(0, 0, 0, 0.421) !default;
+$dark-300: rgba(0, 0, 0, 0.519) !default;
+$dark-400: rgba(0, 0, 0, 0.578) !default;
+$dark-500: rgba(0, 0, 0, 0.649) !default;
+$dark-600: rgba(0, 0, 0, 0.692) !default;
+$dark-700: rgba(0, 0, 0, 0.744) !default;
+$dark-800: rgba(0, 0, 0, 0.813) !default;
+$dark-900: rgba(0, 0, 0, 0.877) !default;
 
 $color-dark-bgs: (
 	'dark-100': $dark-100,
@@ -200,11 +200,11 @@ $gradient-selected-hover-transform:
 
 $font-shadows: (
 	'black': 2px 3px 8px 2 rgba(0, 0, 0, 1),
-	'bold': 1px 3px 8px 2 rgba(0, 0, 0, 0.35),
+	'bold': 1px 3px 8px 2 rgba(0, 0, 0, 0.178),
 	'medium': 0px 1px 6px 1 rgba(0, 0, 0, 1),
 	'regular': 0px 1px 1.5px 1 rgba(0, 0, 0, 1),
-	'light': 0px 1px 1.5px 1 rgba(0, 0, 0, 0.7),
-	'thin': 0px 1px 2px rgba(0, 0, 0, 0.5),
+	'light': 0px 1px 1.5px 1 rgba(0, 0, 0, 0.421),
+	'thin': 0px 1px 2px rgba(0, 0, 0, 0.27),
 	'outline': 0px 1px 2px 2 rgba(0, 0, 0, 1),
 	'none': 0 0 0 0 rgba(0, 0, 0, 0)
 ) !default;
@@ -238,7 +238,7 @@ $html-font-header-sizes: (
 ) !default;
 
 $font: $font-primary !default;
-$font-shadow: 0px 1px rgba(0, 0, 0, 0.9) !default; // This is a text-shadow-fast
+$font-shadow: 0px 1px rgba(0, 0, 0, 0.649) !default; // This is a text-shadow-fast
 $font-spacing: 0px !default;
 $font-sizes: (
 	'xxxl': 42px,
@@ -289,7 +289,7 @@ $separator-height: 1px !default;
 $separator-vertical-margin: 8px !default;
 $seperator-radius: 1px !default;
 $separator-background: $dark-100 !default;
-$separator-box-shadow: 0 0px 1px rgba(0, 0, 0, 0.25) !default;
+$separator-box-shadow: 0 0px 1px rgba(0, 0, 0, 0.123) !default;
 
 $spacers: (4px, 6px, 8px, 16px, 32px) !default;
 
@@ -319,9 +319,9 @@ $button-text-color: $font-default-color !default;
 $button-text-disabled: $font-disabled-color !default;
 $button-text-hover: $button-text-color !default;
 
-$button-shadow: fill rgba(0, 0, 0, 0.6) 0px 1px 1px 0px !default;
+$button-shadow: fill rgba(0, 0, 0, 0.341) 0px 1px 1px 0px !default;
 $button-radius: 2px !default;
-$button-border: 0px solid rgba(255, 255, 255, 0.025) !default;
+$button-border: 0px solid rgba(255, 255, 255, 0.131) !default;
 
 $button-height: 34px !default;
 $button-icon-padding: 6px !default;
@@ -330,7 +330,7 @@ $button-icon-with-text-side-margin: 4px !default;
 $button-icon-text-gap: 0px !default;
 
 $button-font-size: 20px !default;
-$button-text-shadow: 0 1px 2px 2 rgba(0, 0, 0, 0.35) !default;
+$button-text-shadow: 0 1px 2px 2 rgba(0, 0, 0, 0.178) !default;
 $button-icon-shadow: 0 1px 2px 1 rgba(0, 0, 0, 1) !default;
 
 // ================
@@ -361,8 +361,8 @@ $dropdown-button-icon-background-menuvisible: color.scale(
 	$alpha: 20%
 ) !default;
 $dropdown-button-icon-border: 0px solid rgba(0, 0, 0, 0) !default;
-$dropdown-button-icon-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.3) !default;
-$dropdown-button-icon-icon-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.5) !default;
+$dropdown-button-icon-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.15) !default;
+$dropdown-button-icon-icon-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.27) !default;
 
 $dropdown-button-shadow: $button-shadow !default;
 $dropdown-button-radius: 2px !default;
@@ -380,8 +380,8 @@ $dropdown-button-icon-width: 24px !default;
 
 $dropdown-menu-background: $gray-100 !default;
 $dropdown-menu-padding-y: 8px !default;
-$dropdown-menu-shadow: fill rgba(0, 0, 0, 0.9) 0px 3px 6px 0px !default;
-$dropdown-menu-border: 1px solid rgba(0, 0, 0, 0.9) !default;
+$dropdown-menu-shadow: fill rgba(0, 0, 0, 0.649) 0px 3px 6px 0px !default;
+$dropdown-menu-border: 1px solid rgba(0, 0, 0, 0.649) !default;
 $dropdown-menu-radius: 4px !default;
 
 $dropdown-item-font-size: 20px !default;
@@ -417,8 +417,8 @@ $checkbox-background-hover: color.scale($checkbox-background, $alpha: 20%) !defa
 $checkbox-background-selected: $blue !default;
 $checkbox-background-selected-hover: color.scale($checkbox-background-selected, $lightness: -10%) !default;
 
-$checkbox-shadow: rgba(0, 0, 0, 0.45) 0px 0px 2px 0px !default;
-$checkbox-check-shadow: rgba(0, 0, 0, 0.5) 1px 2px 0.5px 0px !default;
+$checkbox-shadow: rgba(0, 0, 0, 0.238) 0px 0px 2px 0px !default;
+$checkbox-check-shadow: rgba(0, 0, 0, 0.27) 1px 2px 0.5px 0px !default;
 
 $checkbox-radius: 4px !default;
 $checkbox-width: 24px !default;
@@ -441,7 +441,7 @@ $radiobutton-background-selected: $white !default;
 
 $radiobox-width: 24px !default;
 $radiobox-radius: 50% !default;
-$radiobox-shadow: rgba(0, 0, 0, 0.45) 0px 1px 2px 0px !default;
+$radiobox-shadow: rgba(0, 0, 0, 0.238) 0px 1px 2px 0px !default;
 
 $radiobutton-gap: 8px !default;
 $radiobutton-text-color: $font-default-color !default;
@@ -461,21 +461,21 @@ $nstatebutton-colors: ('blue', 'red') !default;
 // TABS
 // ================
 
-$tab-background: gradient-vertical(rgba(148, 148, 148, 0.3), rgba(120, 120, 120, 0.3));
-$tab-background-hover: rgba(255, 255, 255, 0.05);
-$tab-background-selected: rgba(0, 0, 0, 0.5);
+$tab-background: gradient-vertical(rgba(148, 148, 148, 0.521), rgba(120, 120, 120, 0.508));
+$tab-background-hover: rgba(255, 255, 255, 0.202);
+$tab-background-selected: rgba(0, 0, 0, 0.27);
 $tab-background-disabled: rgba(0, 0, 0, 0);
-$tab-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.5);
+$tab-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.27);
 $tab-border-width: 1px;
-$tab-border-color: rgba(0, 0, 0, 0.3);
+$tab-border-color: rgba(0, 0, 0, 0.15);
 $tab-lower-border-height: 2px;
-$tab-lower-border-color: rgba(0, 0, 0, 0.4);
-$tab-lower-gap-color: rgba(0, 0, 0, 0.075);
-$tab-lower-border-hover-color: rgba(255, 255, 255, 0.4);
-$tab-lower-border-selected-color: rgba(255, 255, 255, 0.6);
+$tab-lower-border-color: rgba(0, 0, 0, 0.207);
+$tab-lower-gap-color: rgba(0, 0, 0, 0.035);
+$tab-lower-border-hover-color: rgba(255, 255, 255, 0.632);
+$tab-lower-border-selected-color: rgba(255, 255, 255, 0.776);
 $tab-padding: 2px 8px 0px 8px;
 $tab-font-size: 20px;
-$tab-text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+$tab-text-shadow: 0 1px 2px rgba(0, 0, 0, 0.27);
 $tab-text-padding: 4px 10px;
 
 // ================
@@ -491,8 +491,8 @@ $textentry-width: 256px !default;
 $textentry-padding: 6px 16px 6px 8px !default;
 $textentry-border: 0 solid none !default;
 $textentry-radius: 4px !default;
-$textentry-shadow: fill rgba(0, 0, 0, 0.3) 0px 0px 3px 0px !default;
-$textentry-shadow-hover: fill rgba(0, 0, 0, 0.5) 0px 0px 3px 0px !default;
+$textentry-shadow: fill rgba(0, 0, 0, 0.15) 0px 0px 3px 0px !default;
+$textentry-shadow-hover: fill rgba(0, 0, 0, 0.27) 0px 0px 3px 0px !default;
 
 $textentry-font-size: 18px !default;
 $textentry-placeholder-font-size: 18px !default;
@@ -509,7 +509,7 @@ $slider-padding-height: 8px !default;
 $slider-track-height: 8px !default;
 
 $slider-track: $gray-900 !default;
-$slider-track-shadow: rgba(0, 0, 0, 0.2) 0px 0px 8px 0px !default;
+$slider-track-shadow: rgba(0, 0, 0, 0.096) 0px 0px 8px 0px !default;
 $slider-track-progress-horizontal: gradient-horizontal($blue, $mid-blue) !default;
 $slider-track-progress-vertical: gradient-vertical($blue, $mid-blue) !default;
 
@@ -518,7 +518,7 @@ $slider-thumb-color-hover: color.scale($slider-thumb-color, $lightness: -15%) !d
 $slider-thumb-width: 16px !default;
 $slider-thumb-height: 16px !default;
 $slider-thumb-radius: 4px !default;
-$slider-thumb-shadow: rgba(0, 0, 0, 0.3) 0px 1px 2px 0px !default;
+$slider-thumb-shadow: rgba(0, 0, 0, 0.15) 0px 1px 2px 0px !default;
 
 $slider-default-color: $red !default;
 $slider-default-width: 4px !default;
@@ -552,7 +552,7 @@ $progressbar-background-disabled: gradient(
 );
 $progressbar-background-progress: gradient(linear, 0% 0%, 100% 0%, from($blue), to($light-blue)) !default;
 
-$progressbar-shadow: rgba(0, 0, 0, 0.5) 0px 0px 3px 0px !default;
+$progressbar-shadow: rgba(0, 0, 0, 0.27) 0px 0px 3px 0px !default;
 
 // ================
 // TOOLTIPS
@@ -596,12 +596,12 @@ $linegraph-axis-width: 40px;
 // ================
 
 $toast-default: rgba(25, 25, 25, 0.975) !default;
-$toast-white: rgba(240, 240, 240, 0.975) !default;
+$toast-white: rgba(240, 240, 240, 0.988) !default;
 
-$toast-blue: rgba(24, 150, 211, 0.975) !default;
-$toast-red: rgba(211, 36, 36, 0.975) !default;
-$toast-orange: rgba(255, 123, 0, 0.975) !default;
-$toast-green: rgba(88, 170, 11, 0.975) !default;
+$toast-blue: rgba(24, 150, 211, 0.987) !default;
+$toast-red: rgba(211, 36, 36, 0.986) !default;
+$toast-orange: rgba(255, 123, 0, 0.985) !default;
+$toast-green: rgba(88, 170, 11, 0.987) !default;
 
 $toast-colors: (
 	'blue': $toast-blue,
@@ -631,15 +631,15 @@ $comparison-neutral: rgb(210, 210, 210);
 
 $comparison-ahead: $blue;
 $comparison-ahead-gain: color.scale($comparison-ahead, $lightness: 10%, $saturation: 0%);
-$comparison-ahead-gain-background: color.scale(rgba($comparison-ahead, 0.5), $lightness: -15%, $saturation: 50%);
+$comparison-ahead-gain-background: color.scale(rgba($comparison-ahead, 0.694), $lightness: -15%, $saturation: 50%);
 $comparison-ahead-loss: color.scale($comparison-ahead, $lightness: 50%, $saturation: -40%);
-$comparison-ahead-loss-background: color.scale(rgba($comparison-ahead, 0.5), $lightness: 15%, $saturation: -60%);
+$comparison-ahead-loss-background: color.scale(rgba($comparison-ahead, 0.694), $lightness: 15%, $saturation: -60%);
 
 $comparison-behind: $red;
 $comparison-behind-loss: color.scale($comparison-behind, $lightness: 0%, $saturation: 0%);
-$comparison-behind-loss-background: color.scale(rgba($comparison-behind, 0.5), $lightness: -35%, $saturation: -40%);
+$comparison-behind-loss-background: color.scale(rgba($comparison-behind, 0.69), $lightness: -35%, $saturation: -40%);
 $comparison-behind-gain: color.scale($comparison-behind, $lightness: 35%, $saturation: 0%);
-$comparison-behind-gain-background: color.scale(rgba($comparison-behind, 0.5), $lightness: -20%, $saturation: -60%);
+$comparison-behind-gain-background: color.scale(rgba($comparison-behind, 0.69), $lightness: -20%, $saturation: -60%);
 
 // ================
 // HUDMETER (Conc timer bar & SJ charge meter)
@@ -649,7 +649,7 @@ $progressbar-hudmeter-width: 320px !default;
 $progressbar-hudmeter-height: 18px !default;
 $progressbar-hudmeter-border-radius: 9px !default;
 $progressbar-hudmeter-font-size: 16px !default;
-$progressbar-hudmeter-text-shadow: rgba(0, 0, 0, 0.5) 0px 1px 2px 2.5 !default;
+$progressbar-hudmeter-text-shadow: rgba(0, 0, 0, 0.27) 0px 1px 2px 2.5 !default;
 
 // ================
 // SPEEDOMETER
@@ -677,7 +677,7 @@ $dfjump-opacity: 0.7 !default;
 $dfjump-color-release: gradient(linear, 30% 0%, 100% 0%, from(#ff5757), to(#d31818)) !default;
 $dfjump-color-press-air: gradient(linear, 30% 0%, 100% 0%, from(#1896d3), to(#3f4aca)) !default;
 $dfjump-color-press-ground: gradient(linear, 30% 0%, 100% 0%, from(#7aee7a), to(#159856)) !default;
-$dfjump-color-background: gradient(linear, 0% 0%, 100% 0%, from(#5f5f5f80), to(#c8c8c880)) !default;
+$dfjump-color-background: gradient(linear, 0% 0%, 100% 0%, from(#5f5f5fac), to(#c8c8c8b3)) !default;
 $dfjump-font-size: 22px !default;
 $dfjump-padding: 6px !default;
 
@@ -688,7 +688,7 @@ $bhopjump-width: 300px !default;
 $bhopjump-height: 20px !default;
 $bhopjump-bar-height: 16px !default;
 $bhopjump-opacity: 0.7 !default;
-$bhopjump-color-background: #5f5f5f80 !default;
+$bhopjump-color-background: #5f5f5fac !default;
 $bhopjump-font-size: 22px !default;
 $bhopjump-font-weight: medium !default;
 $bhopjump-padding: 8px !default;

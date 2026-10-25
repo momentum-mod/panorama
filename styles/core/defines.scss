@@ -18,18 +18,18 @@
 @define negativeColor: #c21b1b;
 @define warningColor: #b1af2d;
 @define positiveColor: #4caf50;
-@define contentPanelBackground: rgba(20, 20, 20, 0.4);
-@define blurBackgroundColor: rgba(40, 40, 40, 0.3);
-@define tileBlurBackgroundColor: rgba(0, 0, 0, 0.5);
-@define itemBackgroundGradient: gradient(linear, 0% 0%, 0% 100%, from(#1e2a38dd), to(#19232fdd));
-@define contextMenuBackground : rgba(44, 44, 44, 0.98);
+@define contentPanelBackground: rgba(20, 20, 20, 0.207);
+@define blurBackgroundColor: rgba(40, 40, 40, 0.395);
+@define tileBlurBackgroundColor: rgba(0, 0, 0, 0.27);
+@define itemBackgroundGradient: gradient(linear, 0% 0%, 0% 100%, from(#1e2a38e6), to(#19232fe5));
+@define contextMenuBackground : rgba(44, 44, 44, 0.986);
 @define btnBorderRadius: 2px;
 @define backgroundGradient: gradient(linear, 75% 100%, 0% 0%, from(#14202b), to(#1e2d3d));
 @define textBlueGradient: gradient(linear, 0% 100%, 0% 0%, from(blueColor), to(blueColorDark));
 
 @define baseText: #ffffffff;
 @define baseBorder: #444444ff;
-@define selectedTextBackgroundColor: #0D354Abb;
+@define selectedTextBackgroundColor: #0D354Acf;
 
 @define Chaoslevelgradient: gradient(linear, 0% 0%, 0% 100%, from(#BBCAEA), color-stop(0.5, #ffffff), color-stop(0.5, #D9DFEC), to(#BBCAEA));
 @define Chaosplaytimegradient: gradient(linear, 0% 0%, 0% 100%, from(#3db451), color-stop(0.5, #beffc7), color-stop(0.5, #91d69a), to(#3db451));
@@ -51,7 +51,7 @@
 @define stratum2monoFontBold: Stratum2 Bold Monodigit,
 "Arial Unicode MS";
 
-@define shadowOffset: fill #000000aa 0px 0px 8px 4px;
+@define shadowOffset: fill #00000064 0px 0px 8px 4px;
 
 /* anim times */
 @define subMenuFadoutTime: 0.25s;

@@ -10,7 +10,7 @@ $properties_inset: 24px;
 #ZoningContainer {
 	margin: 24px;
 	width: 560px;
-	background-color: rgba(0, 0, 0, 0.5);
+	background-color: rgba(0, 0, 0, 0.27);
 }
 
 .zoning {
@@ -20,7 +20,7 @@ $properties_inset: 24px;
 	overflow: squish;
 
 	&.nomousecapture {
-		opacity: 0.5;
+		opacity: 0.708;
 	}
 
 	&__title {
@@ -41,7 +41,7 @@ $properties_inset: 24px;
 		margin: 2px 0px;
 		padding: 4px;
 		border-radius: 6px;
-		border: 1px solid rgba(50, 50, 50, 0.7);
+		border: 1px solid rgba(50, 50, 50, 0.787);
 		flow-children: down;
 		overflow: squish scroll;
 	}
@@ -333,7 +333,7 @@ $properties_inset: 24px;
 		flow-children: right;
 
 		&:not(&--last) {
-			border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+			border-bottom: 1px solid rgba(255, 255, 255, 0.113);
 		}
 	}
 

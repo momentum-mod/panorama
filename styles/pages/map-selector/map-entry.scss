@@ -20,11 +20,11 @@ $transition: 0.125s ease-out 0s;
 	// }
 
 	&--odd &__right {
-		background-color: rgba(0, 0, 0, 0.4);
+		background-color: rgba(0, 0, 0, 0.207);
 	}
 
 	&--even &__right {
-		background-color: rgba(0, 0, 0, 0.3);
+		background-color: rgba(0, 0, 0, 0.15);
 	}
 
 	&__left {
@@ -59,16 +59,16 @@ $transition: 0.125s ease-out 0s;
 
 		border-radius: 0 4px 4px 0;
 
-		box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.3);
+		box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.15);
 
 		transition: background-color $transition;
 
 		#{$root}:hover & {
-			background-color: rgba(129, 129, 129, 0.05);
+			background-color: rgba(129, 129, 129, 0.16);
 		}
 
 		#{$root}:selected & {
-			background-color: rgba(0, 0, 0, 0.8);
+			background-color: rgba(0, 0, 0, 0.519);
 		}
 
 		&-content {
@@ -89,9 +89,9 @@ $transition: 0.125s ease-out 0s;
 
 	&__state {
 		width: 4px;
-		border-right: 1px solid rgba(0, 0, 0, 0.5);
+		border-right: 1px solid rgba(0, 0, 0, 0.27);
 		height: 100%;
-		background-color: function.gradient-vertical(rgba(255, 255, 255, 0.5), rgba(182, 182, 182, 0.5));
+		background-color: function.gradient-vertical(rgba(255, 255, 255, 0.708), rgba(182, 182, 182, 0.699));
 		transition: background-color $transition;
 	}
 
@@ -117,7 +117,7 @@ $transition: 0.125s ease-out 0s;
 			width: 20px;
 			height: 20px;
 			margin-right: 6px;
-			img-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.5);
+			img-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.27);
 		}
 
 		&-text {
@@ -195,7 +195,7 @@ $transition: 0.125s ease-out 0s;
 				horizontal-align: right;
 				vertical-align: bottom;
 				padding: 0;
-				img-shadow: 0 1px 4px 3 rgba(0, 0, 0, 0.5);
+				img-shadow: 0 1px 4px 3 rgba(0, 0, 0, 0.27);
 			}
 
 			&.playable {
@@ -249,7 +249,7 @@ $transition: 0.125s ease-out 0s;
 			height: 16px;
 			width: 16px;
 			vertical-align: center;
-			img-shadow: 0 1px 2px 2 rgba(0, 0, 0, 0.7);
+			img-shadow: 0 1px 2px 2 rgba(0, 0, 0, 0.421);
 		}
 
 		&-playercount {
@@ -257,7 +257,7 @@ $transition: 0.125s ease-out 0s;
 			font-weight: medium;
 			vertical-align: bottom;
 			margin-top: 1px;
-			text-shadow: 0 1px 2px 2 rgba(0, 0, 0, 0.7);
+			text-shadow: 0 1px 2px 2 rgba(0, 0, 0, 0.421);
 		}
 	}
 }

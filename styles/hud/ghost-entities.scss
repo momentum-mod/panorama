@@ -1,6 +1,6 @@
 @use '../config' as *;
 
-$ghost-ent-shadow: 0 1.5px 6px 0 rgba(0, 0, 0, 0.5);
+$ghost-ent-shadow: 0 1.5px 6px 0 rgba(0, 0, 0, 0.27);
 
 .ghost-ent {
 	height: 34px;
@@ -11,7 +11,7 @@ $ghost-ent-shadow: 0 1.5px 6px 0 rgba(0, 0, 0, 0.5);
 	&__avatar {
 		height: 100%;
 		width: height-percentage(100%);
-		border: 1px solid rgba(255, 255, 255, 0.25);
+		border: 1px solid rgba(255, 255, 255, 0.496);
 		box-shadow: $ghost-ent-shadow;
 	}
 }

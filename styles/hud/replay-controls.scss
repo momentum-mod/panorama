@@ -57,8 +57,8 @@
 	// Used by contextmenu
 	&__textentry {
 		height: 28px;
-		background-color: rgba(255, 255, 255, 0.05);
-		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+		background-color: rgba(255, 255, 255, 0.202);
+		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.096);
 		vertical-align: center;
 		font-size: 14px;
 
@@ -67,11 +67,11 @@
 		}
 
 		&:focus {
-			background-color: rgba(255, 255, 255, 0.065);
+			background-color: rgba(255, 255, 255, 0.236);
 		}
 
 		&:hover {
-			background-color: rgba(255, 255, 255, 0.075);
+			background-color: rgba(255, 255, 255, 0.256);
 		}
 	}
 
@@ -82,11 +82,11 @@
 		flow-children: none;
 
 		&:selected {
-			background-color: rgba($blue, 0.7);
+			background-color: rgba($blue, 0.83);
 		}
 
 		&:selected:hover {
-			background-color: rgba($blue, 0.9);
+			background-color: rgba($blue, 0.947);
 		}
 	}
 
@@ -121,7 +121,7 @@
 		margin-right: 4px;
 
 		img-shadow: 0 1px 2px black;
-		opacity: 0.6;
+		opacity: 0.776;
 		transition: opacity 0.1s ease-out 0s;
 
 		&:hover {
@@ -196,7 +196,7 @@
 		margin-bottom: 4px;
 
 		border-radius: 1px;
-		box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.7);
+		box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.421);
 		background-color: color.scale($blue, $lightness: -60%, $saturation: -60%);
 
 		transition: height 0.1s ease-out 0s;
@@ -266,7 +266,7 @@
 // Though note this only affects maps with both major and minor CPs, so fairly rare.
 .replaysubsegment {
 	height: 100%;
-	//border-left: 1px solid rgba(0, 0, 0, 0.4);
+	//border-left: 1px solid rgba(0, 0, 0, 0.207);
 
 	&--first {
 		opacity: 0.001;

@@ -25,7 +25,7 @@
 .profile-global {
 	flow-children: right;
 	padding: 16px 20px 26px 26px;
-	background-color: function.gradient-vertical(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2));
+	background-color: function.gradient-vertical(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.096));
 
 	&__left {
 		padding-top: 6px;
@@ -67,7 +67,7 @@
 
 	&__avatar {
 		height: 100px;
-		border: 1px solid rgba(0, 0, 0, 0.5);
+		border: 1px solid rgba(0, 0, 0, 0.27);
 		width: height-percentage(100%);
 		box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 1);
 		margin-right: 12px;
@@ -126,7 +126,7 @@
 		font-size: 12px;
 		// horizontal-align: center;
 		// padding-left: 4px;
-		text-shadow: 0px 1px 4px rgba(0, 0, 0, 0.5);
+		text-shadow: 0px 1px 4px rgba(0, 0, 0, 0.27);
 
 		&--prestige {
 			horizontal-align: center;
@@ -184,7 +184,7 @@
 	&__info-button {
 		height: fit-children;
 		align: right top;
-		// background-color: rgba(204, 204, 204, 0.5);
+		// background-color: rgba(204, 204, 204, 0.703);
 		transform: translate3d(6px, -6px, 0);
 	}
 

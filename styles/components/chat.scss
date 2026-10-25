@@ -6,7 +6,7 @@
 	width: 100%;
 
 	&__elem {
-		background-color: rgba(0, 0, 0, 0.75);
+		background-color: rgba(0, 0, 0, 0.467);
 		border-radius: 4px;
 		box-shadow: 0 0 8px 0px rgb(0, 0, 0, 0.5);
 		transition: background-color 0.2s ease-in-out 0s;
@@ -25,7 +25,7 @@
 		}
 
 		&:hover {
-			background-color: rgba(0, 0, 0, 0.82);
+			background-color: rgba(0, 0, 0, 0.541);
 		}
 	}
 
@@ -99,7 +99,7 @@
 
 	$this: &;
 	&__send-text {
-		color: rgba(255, 255, 255, 0.8);
+		color: rgba(255, 255, 255, 0.896);
 		font-weight: bold;
 
 		#{$this}:hover {
@@ -115,7 +115,7 @@
 
 	&__input:hover,
 	&__send:hover {
-		background-color: rgba(0, 0, 0, 0.85);
+		background-color: rgba(0, 0, 0, 0.578);
 	}
 
 	&__spec-icon {
@@ -164,7 +164,7 @@
 	}
 
 	&:hover {
-		background-color: rgba(0, 0, 0, 0.3);
+		background-color: rgba(0, 0, 0, 0.15);
 	}
 }
 
@@ -174,7 +174,7 @@
 	height: 100%;
 	& .ToastPanel {
 		// width: 100%;
-		background-color: rgba(0, 0, 0, 0.5);
+		background-color: rgba(0, 0, 0, 0.27);
 	}
 
 	& .chat-entry__message {

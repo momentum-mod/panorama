@@ -9,10 +9,10 @@
 
 	flow-children: down;
 	padding: 4px 6px;
-	background-color: rgba(0, 0, 0, 0.2);
+	background-color: rgba(0, 0, 0, 0.096);
 	//Breaks customization
-	// border-bottom: 1px solid rgba(255, 255, 255, 0.005);
-	box-shadow: 0 1px 16px rgba(0, 0, 0, 0.75);
+	// border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+	box-shadow: 0 1px 16px rgba(0, 0, 0, 0.467);
 
 	&__top-row {
 		width: 100%;
@@ -31,7 +31,7 @@
 		vertical-align: center;
 		margin-right: 8px;
 		margin-bottom: 2px;
-		img-shadow: 0 1px 3px 2 rgba(0, 0, 0, 0.4);
+		img-shadow: 0 1px 3px 2 rgba(0, 0, 0, 0.207);
 	}
 
 	&__playerinfo {
@@ -62,11 +62,11 @@
 	&__button {
 		height: 28px;
 		margin-left: 4px;
-		background-color: rgba(255, 255, 255, 0.1);
-		box-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);
+		background-color: rgba(255, 255, 255, 0.302);
+		box-shadow: 0 2px 2px rgba(0, 0, 0, 0.15);
 
 		&:hover {
-			background-color: rgba(255, 255, 255, 0.2);
+			background-color: rgba(255, 255, 255, 0.44);
 		}
 
 		& .button__text {

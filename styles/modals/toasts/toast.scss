@@ -126,9 +126,9 @@
 	z-index: 1000;
 
 	background-color: $toast-default;
-	box-shadow: 1px 1px 8px 1px rgba(0, 0, 0, 0.8);
+	box-shadow: 1px 1px 8px 1px rgba(0, 0, 0, 0.519);
 	border-radius: 2px;
-	border: 1px solid rgba(0, 0, 0, 0.25);
+	border: 1px solid rgba(0, 0, 0, 0.123);
 
 	max-width: 100%;
 
@@ -180,9 +180,9 @@
 		// height: 100%;
 		// width: height-percentage(100%);
 		// padding: 8px;
-		// background-color: rgba(0, 0, 0, 0.4);
+		// background-color: rgba(0, 0, 0, 0.207);
 		// img-shadow: 0 1px 1px rgba(0, 0, 0, 1);
-		// border-right: 1px solid rgba(0, 0, 0, 0.3);
+		// border-right: 1px solid rgba(0, 0, 0, 0.15);
 	}
 }
 

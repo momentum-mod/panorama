@@ -7,21 +7,21 @@
 	min-width: 200px;
 	height: $button-height;
 	padding: 4px 0;
-	background-color: rgba(0, 0, 0, 0.5);
+	background-color: rgba(0, 0, 0, 0.27);
 	border-radius: 4px;
-	box-shadow: fill rgba(255, 255, 255, 0.01) 0px 0px 2px 0px;
+	box-shadow: fill rgba(255, 255, 255, 0.069) 0px 0px 2px 0px;
 
 	transition-property: background-color, border;
 	transition-duration: 0.2s;
 
 	&:hover {
-		background-color: rgba(0, 0, 0, 0.7);
+		background-color: rgba(0, 0, 0, 0.421);
 	}
 
 	&__icon {
 		height: 100%;
 		width: height-percentage(100%);
-		opacity: 0.8;
+		opacity: 0.896;
 		vertical-align: middle;
 		margin: 0 4px;
 
@@ -51,7 +51,7 @@
 		}
 
 		#{$root}:hover & #PlaceholderText {
-			color: rgba(255, 255, 255, 0.8);
+			color: rgba(255, 255, 255, 0.896);
 		}
 	}
 
@@ -77,12 +77,12 @@
 
 	&__clearicon {
 		vertical-align: middle;
-		opacity: 0.25;
+		opacity: 0.496;
 
 		transition: opacity 0.2s ease-in-out 0s;
 
 		#{$root}:hover & {
-			opacity: 0.5;
+			opacity: 0.708;
 		}
 
 		&:hover {

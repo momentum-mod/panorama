@@ -136,6 +136,14 @@ export function rgbaStringToRgb(str: rgbaColor): rgbColor {
 	return `rgb(${r}, ${g}, ${b})`;
 }
 
+/**
+ * Converts the alpha of a black overlay (e.g. a shadow) tuned for linear-space blending to the
+ * alpha that looks the same now that Panorama blends in sRGB space, like browsers do.
+ */
+export function darkOverlayAlpha(alpha: number): number {
+	return 1 - Math.pow(1 - Math.max(Math.min(alpha, 1), 0), 1 / 2.2);
+}
+
 /** Compresses A value from string formatted `rgba(R, G, B, A)` to the range `[0.75, 1]` */
 export function enhanceAlpha(str: rgbaColor): rgbaColor {
 	const [r, g, b, a = 255] = rgbaStringToTuple(str);

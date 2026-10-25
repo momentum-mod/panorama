@@ -17,12 +17,12 @@
 	&__background-image {
 		width: 100%;
 		height: 100%;
-		wash-color: rgba(0, 0, 0, 0.6);
+		wash-color: rgba(0, 0, 0, 0.341);
 
 		transition: wash-color 0.15s ease-in-out 0s;
 
 		#{$root}:hover & {
-			wash-color: rgba(85, 85, 85, 0.4);
+			wash-color: rgba(85, 85, 85, 0.579);
 		}
 	}
 
@@ -37,7 +37,7 @@
 		#{$root}:hover & {
 			brightness: 1.1;
 		}
-		// border: 1px solid rgba(255, 255, 255, 0.06);
+		// border: 1px solid rgba(255, 255, 255, 0.225);
 	}
 
 	&__details-panel {
@@ -87,7 +87,7 @@
 		margin-right: $card-margin;
 		height: 8px;
 		width: 100%;
-		box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+		box-shadow: 0 0 3px rgba(0, 0, 0, 0.27);
 	}
 
 	&__xp {

@@ -6,7 +6,7 @@
 		height: 768px;
 		min-width: 200px; /* Used for resize dragging! */
 		min-height: 200px; /* ditto */
-		background-color: rgba(0, 0, 0, 0.99);
+		background-color: rgba(0, 0, 0, 0.877);
 		flow-children: down;
 		border-radius: 4px;
 		padding-left: 8px;
@@ -31,7 +31,7 @@
 	&__top-splitter {
 		height: $separator-height;
 		min-width: 100%;
-		background-color: gradient(linear, 0% 0%, 100% 0%, from(#d7d7d73f), to(#a0a0a03f), color-stop(0.9, #b4b4b43f));
+		background-color: gradient(linear, 0% 0%, 100% 0%, from(#d7d7d77c), to(#a0a0a078), color-stop(0.9, #b4b4b47a));
 	}
 
 	&__message-target {

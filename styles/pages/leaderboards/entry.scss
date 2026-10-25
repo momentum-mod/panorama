@@ -4,18 +4,18 @@
 // Handled by C++
 .leaderboard-time {
 	&--even {
-		background-color: rgba(255, 255, 255, 0.03);
+		background-color: rgba(255, 255, 255, 0.147);
 	}
 
 	&--odd {
-		background-color: rgba(255, 255, 255, 0.01);
+		background-color: rgba(255, 255, 255, 0.069);
 	}
 
 	&--even,
 	&--odd {
 		transition: background-color 0.1s linear 0s;
 		&:hover {
-			background-color: rgba(255, 255, 255, 0.1);
+			background-color: rgba(255, 255, 255, 0.302);
 		}
 	}
 }
@@ -27,10 +27,10 @@
 	padding: 0 8px;
 
 	&--localplayer {
-		background-color: color.scale(rgba($blue, 0.7), $lightness: -20%);
+		background-color: color.scale(rgba($blue, 0.83), $lightness: -20%);
 
 		&:hover {
-			background-color: rgba($blue, 0.7);
+			background-color: rgba($blue, 0.83);
 		}
 	}
 

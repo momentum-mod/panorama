@@ -1,4 +1,4 @@
-$player-border: 1px solid rgba(70, 70, 70, 0.5);
+$player-border: 1px solid rgba(70, 70, 70, 0.651);
 
 .playerlist {
 	flow-children: down;
@@ -26,9 +26,9 @@ $player-border: 1px solid rgba(70, 70, 70, 0.5);
 	border-top: $player-border;
 	padding: 0 10px;
 
-	background-color: rgba(0, 0, 0, 0.5);
+	background-color: rgba(0, 0, 0, 0.27);
 	&:hover {
-		background-color: rgba(100, 100, 100, 0.4);
+		background-color: rgba(100, 100, 100, 0.59);
 	}
 
 	Image,
@@ -58,6 +58,6 @@ $player-border: 1px solid rgba(70, 70, 70, 0.5);
 	}
 
 	#StatusLabel {
-		opacity: 0.6;
+		opacity: 0.776;
 	}
 }

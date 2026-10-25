@@ -20,21 +20,21 @@
 		border: 0px none;
 		box-shadow: fill rgba(0, 0, 0, 0) 0px 0px 3px 0px;
 		border-radius: 0px;
-		background-color: rgba(255, 255, 255, 0.025);
+		background-color: rgba(255, 255, 255, 0.131);
 	}
 
 	&__button {
 		height: 100%;
 		// width: height-percentage(100%);
-		background-color: rgba(0, 0, 0, 0.4);
+		background-color: rgba(0, 0, 0, 0.207);
 
 		transition-property: background-color, wash-color;
 		transition-duration: 0.1s;
 		transition-timing-function: ease-in-out;
-		wash-color: rgba(0, 0, 0, 0.4);
+		wash-color: rgba(0, 0, 0, 0.207);
 
 		&:hover {
-			background-color: rgba(0, 0, 0, 0.6);
+			background-color: rgba(0, 0, 0, 0.341);
 			wash-color: rgba(0, 0, 0, 0);
 		}
 	}

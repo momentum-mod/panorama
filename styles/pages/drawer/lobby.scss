@@ -143,15 +143,15 @@
 		flow-children: right;
 		margin: 4px 0;
 		padding: 8px 24px;
-		background-color: gradient(linear, 0% 50%, 100% 50%, from(rgba(0, 0, 0, 0.55)), to(rgba(0, 0, 0, 0)));
+		background-color: gradient(linear, 0% 50%, 100% 50%, from(rgba(0, 0, 0, 0.304)), to(rgba(0, 0, 0, 0)));
 		transition: background-color 0.1s linear 0s;
 
 		&:hover {
-			background-color: gradient(linear, 0% 50%, 100% 50%, from(rgba(0, 0, 0, 0.8)), to(rgba(0, 0, 0, 0)));
+			background-color: gradient(linear, 0% 50%, 100% 50%, from(rgba(0, 0, 0, 0.519)), to(rgba(0, 0, 0, 0)));
 		}
 
 		&--muted {
-			opacity: 0.5;
+			opacity: 0.708;
 		}
 	}
 
@@ -159,7 +159,7 @@
 		horizontal-align: left;
 		height: 40px;
 		width: 40px;
-		box-shadow: -1px -1px 4px 3px rgba(0, 0, 0, 0.5);
+		box-shadow: -1px -1px 4px 3px rgba(0, 0, 0, 0.27);
 		transition-property: brightness, box-shadow, blur;
 		transition-duration: 0.1s;
 		transition-timing-function: ease-in-out;
@@ -207,7 +207,7 @@
 		width: 2px;
 		height: 100%;
 		opacity: 0.5;
-		border-right: 1px solid rgba(0, 0, 0, 0.5);
+		border-right: 1px solid rgba(0, 0, 0, 0.27);
 
 		&--current {
 			@include mixin.gradient-themed($color: 'green', $direction: 'down');
@@ -272,7 +272,7 @@
 		transition-duration: 0.1s;
 
 		#{$root}__entry--muted & {
-			opacity: 0.5;
+			opacity: 0.708;
 		}
 	}
 

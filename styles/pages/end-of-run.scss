@@ -7,22 +7,22 @@
 	$root: &;
 	flow-children: down;
 	width: 100%;
-	background-color: rgba(0, 0, 0, 0.6);
+	background-color: rgba(0, 0, 0, 0.341);
 
 	&__header {
 		// flow-children: right;
-		border-top: 1px solid rgba(0, 0, 0, 0.3);
-		border-bottom: 1px solid rgba(0, 0, 0, 0.6);
+		border-top: 1px solid rgba(0, 0, 0, 0.15);
+		border-bottom: 1px solid rgba(0, 0, 0, 0.341);
 		width: 100%;
 
 		#{$root}--ahead & {
-			background-color: rgba($comparison-ahead-gain-background, 0.3);
+			background-color: rgba($comparison-ahead-gain-background, 0.524);
 		}
 		#{$root}--behind & {
-			background-color: rgba($comparison-behind-loss-background, 0.3);
+			background-color: rgba($comparison-behind-loss-background, 0.524);
 		}
 		#{$root}--first & {
-			background-color: rgba($comparison-neutral-background, 0.3);
+			background-color: rgba($comparison-neutral-background, 0.507);
 		}
 	}
 
@@ -83,8 +83,8 @@
 		vertical-align: center;
 		width: 36px;
 		height: 36px;
-		opacity: 0.9;
-		img-shadow: 0 0 4px rgba(0, 0, 0, 0.7);
+		opacity: 0.949;
+		img-shadow: 0 0 4px rgba(0, 0, 0, 0.421);
 		tooltip-position: bottom;
 
 		&--progress {
@@ -103,7 +103,7 @@
 	&__header-buttons {
 		flow-children: down;
 		height: 100%;
-		border-left: 1px solid rgba(0, 0, 0, 0.3);
+		border-left: 1px solid rgba(0, 0, 0, 0.15);
 	}
 
 	&__header-button {
@@ -112,13 +112,13 @@
 		width: 160px;
 		height: fill-parent-flow(1);
 		padding: 2px 4px;
-		background-color: function.gradient-vertical(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.3));
-		border-bottom: 0px solid rgba(0, 0, 0, 0.2);
-		box-shadow: 0 0 16px 0 rgba(0, 0, 0, 0.1);
+		background-color: function.gradient-vertical(rgba(0, 0, 0, 0.096), rgba(0, 0, 0, 0.15));
+		border-bottom: 0px solid rgba(0, 0, 0, 0.096);
+		box-shadow: 0 0 16px 0 rgba(0, 0, 0, 0.047);
 		transition: background-color 0.1s ease-in-out 0s;
 
 		&:hover {
-			background-color: function.gradient-vertical(rgba(80, 80, 80, 0.2), rgba(80, 80, 80, 0.3));
+			background-color: function.gradient-vertical(rgba(80, 80, 80, 0.361), rgba(80, 80, 80, 0.476));
 		}
 
 		&--back-button {
@@ -142,12 +142,12 @@
 	&__comparison {
 		flow-children: down;
 		width: 100%;
-		background-color: rgba(0, 0, 0, 0.1);
+		background-color: rgba(0, 0, 0, 0.047);
 	}
 
 	&__splits-container {
 		width: 100%;
-		background-color: rgba(0, 0, 0, 0.5);
+		background-color: rgba(0, 0, 0, 0.27);
 	}
 
 	&__splits {
@@ -165,14 +165,14 @@
 		& > HorizontalScrollBar {
 			height: 2px;
 			border-radius: 0;
-			opacity: 0.2;
+			opacity: 0.44;
 		}
 	}
 
 	&__split-button {
 		margin: 0 2px;
 		box-shadow: 1px 1px 12px 0 rgba(0, 0, 0, 1);
-		border: 1px solid rgba(0, 0, 0, 0.7);
+		border: 1px solid rgba(0, 0, 0, 0.421);
 
 		transition-property: border, brightness;
 		transition-duration: 0.08s;
@@ -186,7 +186,7 @@
 		}
 
 		&:hover {
-			border: 1px solid rgba(255, 255, 255, 0.3);
+			border: 1px solid rgba(255, 255, 255, 0.545);
 			& > .endofrun-split {
 				brightness: 1.1;
 			}
@@ -203,7 +203,7 @@
 	}
 
 	&__xp {
-		background-color: rgba(0, 0, 0, 0.3);
+		background-color: rgba(0, 0, 0, 0.15);
 
 		height: 200px;
 		width: 100%;
@@ -229,7 +229,7 @@
 	overflow: noclip;
 
 	box-shadow: 1px 1px 12px 0 rgba(0, 0, 0, 1);
-	border: 1px solid rgba(0, 0, 0, 0.7);
+	border: 1px solid rgba(0, 0, 0, 0.421);
 	background-color: $comparison-neutral-background;
 
 	&--no-comparison {
@@ -264,10 +264,10 @@
 	&__left {
 		width: fit-children;
 		height: 100%;
-		background-color: rgba(0, 0, 0, 0.3);
+		background-color: rgba(0, 0, 0, 0.15);
 		padding-right: 7px;
 		padding-left: 8px;
-		border-right: 1px solid rgba(0, 0, 0, 0.5);
+		border-right: 1px solid rgba(0, 0, 0, 0.27);
 		margin-right: 0px;
 	}
 
@@ -318,10 +318,10 @@ $graph-n-stats-height: 180px + $linegraph-axis-width;
 	}
 
 	&__positive {
-		background-color: color.scale(rgba($comparison-behind, 0.15), $lightness: 0%);
+		background-color: color.scale(rgba($comparison-behind, 0.345), $lightness: 0%);
 	}
 	&__negative {
-		background-color: color.scale(rgba($comparison-ahead, 0.15), $lightness: 0%);
+		background-color: color.scale(rgba($comparison-ahead, 0.351), $lightness: 0%);
 	}
 
 	&__point {
@@ -329,7 +329,7 @@ $graph-n-stats-height: 180px + $linegraph-axis-width;
 			& > .linegraph__point {
 				width: 11px;
 				height: 11px;
-				box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+				box-shadow: 0 0 4px rgba(0, 0, 0, 0.27);
 				background-color: color.scale($mid-blue, $saturation: 100%, $lightness: -30%);
 				animation: PointScalePulse 1.25s ease-in-out 0s infinite normal forwards;
 			}
@@ -411,14 +411,14 @@ $graph-n-stats-height: 180px + $linegraph-axis-width;
 		transition-duration: 0.1s;
 
 		&--odd {
-			background-color: rgba(0, 0, 0, 0.2);
+			background-color: rgba(0, 0, 0, 0.096);
 		}
 
 		&:not(&--header) {
 			padding-left: 2px;
 			&:hover {
-				border-left: 1px solid rgba(255, 255, 255, 0.05);
-				background-color: rgba(255, 255, 255, 0.01);
+				border-left: 1px solid rgba(255, 255, 255, 0.202);
+				background-color: rgba(255, 255, 255, 0.069);
 
 				& #{$root}__name {
 					transform: translateX(2px);
@@ -426,8 +426,8 @@ $graph-n-stats-height: 180px + $linegraph-axis-width;
 			}
 
 			&:selected {
-				background-color: rgba(255, 255, 255, 0.02);
-				border-left: 1px solid rgba(255, 255, 255, 0.1);
+				background-color: rgba(255, 255, 255, 0.113);
+				border-left: 1px solid rgba(255, 255, 255, 0.302);
 
 				& #{$root}__name {
 					transform: translateX(4px);
@@ -470,7 +470,7 @@ $graph-n-stats-height: 180px + $linegraph-axis-width;
 	$root: &;
 	flow-children: down;
 	padding: 12px 16px;
-	border-top: 1px solid rgba(0, 0, 0, 0.3);
+	border-top: 1px solid rgba(0, 0, 0, 0.15);
 	height: 64px;
 
 	transition-property: height;
@@ -486,7 +486,7 @@ $graph-n-stats-height: 180px + $linegraph-axis-width;
 		padding: 3px 9px;
 		max-width: 140px;
 		border-radius: 2px;
-		box-shadow: fill 1px 3px 8px 0px rgba(0, 0, 0, 0.5);
+		box-shadow: fill 1px 3px 8px 0px rgba(0, 0, 0, 0.27);
 
 		& .levelindicator__icon {
 			height: 28px;
@@ -549,7 +549,7 @@ $graph-n-stats-height: 180px + $linegraph-axis-width;
 	margin-bottom: 6px;
 
 	background-color: $progressbar-background;
-	box-shadow: fill 1px 3px 8px 0px rgba(0, 0, 0, 0.5);
+	box-shadow: fill 1px 3px 8px 0px rgba(0, 0, 0, 0.27);
 
 	&__primary {
 		height: 100%;

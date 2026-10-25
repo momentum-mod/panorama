@@ -4,7 +4,7 @@
 @use 'sass:map';
 @use 'sass:color';
 
-$panel-border: 1px solid rgba(255, 255, 255, 0.01);
+$panel-border: 1px solid rgba(255, 255, 255, 0.069);
 
 .mapselector {
 	$root: &;
@@ -25,7 +25,7 @@ $panel-border: 1px solid rgba(255, 255, 255, 0.01);
 		horizontal-align: middle;
 		width: 100%;
 		height: 100%;
-		background-color: rgba(0, 0, 0, 0.3);
+		background-color: rgba(0, 0, 0, 0.15);
 	}
 
 	&__left-wrapper {
@@ -33,7 +33,7 @@ $panel-border: 1px solid rgba(255, 255, 255, 0.01);
 		height: 100%;
 		width: 100%;
 		border: $panel-border;
-		box-shadow: 0 0 16px 0 rgba(0, 0, 0, 0.5);
+		box-shadow: 0 0 16px 0 rgba(0, 0, 0, 0.27);
 	}
 
 	&__right {
@@ -92,7 +92,7 @@ $panel-border: 1px solid rgba(255, 255, 255, 0.01);
 		horizontal-align: center;
 		padding: 50px 100px 50px 100px;
 		margin-right: 8px;
-		background-color: rgba(0, 0, 0, 0.3);
+		background-color: rgba(0, 0, 0, 0.15);
 
 		&--hidden {
 			visibility: collapse;
@@ -125,10 +125,10 @@ $panel-border: 1px solid rgba(255, 255, 255, 0.01);
 		transition: background-color 0.1s ease-in-out 0s;
 
 		&:not(:selected) {
-			background-color: rgba(0, 0, 0, 0.4);
+			background-color: rgba(0, 0, 0, 0.207);
 
 			&:hover {
-				background-color: rgba(0, 0, 0, 0.18);
+				background-color: rgba(0, 0, 0, 0.086);
 			}
 		}
 	}
@@ -177,7 +177,7 @@ $panel-border: 1px solid rgba(255, 255, 255, 0.01);
 	width: 100%;
 	margin-bottom: 12px;
 	flow-children: down;
-	background-color: rgba(0, 0, 0, 0.25);
+	background-color: rgba(0, 0, 0, 0.123);
 	padding: 4px;
 	border-radius: 4px;
 	border: $panel-border;
@@ -192,7 +192,7 @@ $panel-border: 1px solid rgba(255, 255, 255, 0.01);
 	transition: background-color 0.1s ease-in-out 0s;
 
 	&:hover {
-		background-color: rgba(255, 255, 255, 0.1);
+		background-color: rgba(255, 255, 255, 0.302);
 	}
 
 	.mapselector-featuredtoggle {
@@ -208,7 +208,7 @@ $panel-border: 1px solid rgba(255, 255, 255, 0.01);
 			background-size: 14px 14px;
 			height: 100%;
 			width: height-percentage(100%);
-			img-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.5);
+			img-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.27);
 
 			#MapSelectorFeatured.collapsed & {
 				transform: rotateZ(270deg);
@@ -246,7 +246,7 @@ $panel-border: 1px solid rgba(255, 255, 255, 0.01);
 #MapSelectorNoFeaturedLabel {
 	@include mixin.font-header();
 	font-size: 20px;
-	opacity: 0.5;
+	opacity: 0.708;
 }
 
 #MapSelectorFeaturedUpdateTickerGroup {
@@ -291,11 +291,11 @@ $panel-border: 1px solid rgba(255, 255, 255, 0.01);
 		flow-children: none;
 
 		&:hover {
-			border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+			border-bottom: 1px solid rgba(255, 255, 255, 0.708);
 		}
 
 		&:selected {
-			border-bottom: 1px solid rgba(255, 255, 255, 0.8);
+			border-bottom: 1px solid rgba(255, 255, 255, 0.896);
 		}
 	}
 
@@ -323,7 +323,7 @@ $panel-border: 1px solid rgba(255, 255, 255, 0.01);
 			border-radius: 4px;
 			padding: 1px 3px;
 			font-weight: bold;
-			box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.7);
+			box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.421);
 			transform: translateX(-70%) translateY(-6px) rotateZ(10deg) scale3d(0.9, 0.9, 1);
 			@include mixin.font-header();
 		}
@@ -436,14 +436,14 @@ $notch-width: 10px;
 	&__list {
 		width: 100%;
 		height: fit-children;
-		background-color: rgba(0, 0, 0, 0.6);
+		background-color: rgba(0, 0, 0, 0.341);
 		padding: 16px;
 	}
 
 	&__list-wrapper {
 		width: 100%;
 		height: fit-children;
-		box-shadow: 0 0 16px 0 rgba(0, 0, 0, 0.5);
+		box-shadow: 0 0 16px 0 rgba(0, 0, 0, 0.27);
 
 		visibility: collapse;
 
@@ -525,7 +525,7 @@ $notch-width: 10px;
 	}
 
 	&__leaderboard-button {
-		box-shadow: fill 0 0 1px 0 rgba(0, 0, 0, 0.8);
+		box-shadow: fill 0 0 1px 0 rgba(0, 0, 0, 0.519);
 	}
 
 	&__big-button {
@@ -555,7 +555,7 @@ $notch-width: 10px;
 	&__description {
 		height: 100%;
 		@include mixin.font-regular();
-		background-color: rgba(0, 0, 0, 0.5);
+		background-color: rgba(0, 0, 0, 0.27);
 	}
 
 	&__description-scroll {
@@ -566,7 +566,7 @@ $notch-width: 10px;
 
 		& > VerticalScrollBar {
 			width: 4px;
-			opacity: 0.4;
+			opacity: 0.632;
 		}
 	}
 
@@ -596,7 +596,7 @@ $notch-width: 10px;
 		width: 100%;
 		height: 100%;
 		padding: 12px;
-		box-shadow: 0 0 16px 0 rgba(0, 0, 0, 0.5);
+		box-shadow: 0 0 16px 0 rgba(0, 0, 0, 0.27);
 
 		&--unpadded {
 			padding: 0;
@@ -634,7 +634,7 @@ $notch-width: 10px;
 	&__text,
 	&__changelog-text {
 		font-size: 16px;
-		text-shadow: 1px 1px 2px 1 rgba(0, 0, 0, 0.8);
+		text-shadow: 1px 1px 2px 1 rgba(0, 0, 0, 0.519);
 	}
 
 	&__changelog-text {
@@ -665,7 +665,7 @@ $notch-width: 10px;
 			width: 24px;
 			height: 24px;
 			align: right bottom;
-			img-shadow: 1px 1px 1px 2 rgba(0, 0, 0, 0.6);
+			img-shadow: 1px 1px 1px 2 rgba(0, 0, 0, 0.341);
 			wash-color: #ff2f00;
 			transform: translateX(4px) translateY(6px);
 			visibility: collapse;
@@ -738,7 +738,7 @@ $notch-width: 10px;
 		border-radius: 1px;
 		margin-right: 6px;
 		vertical-align: center;
-		box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.8);
+		box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.519);
 	}
 
 	&__placeholder {
@@ -760,7 +760,7 @@ $notch-width: 10px;
 .mapselector-stats {
 	height: fill-parent-flow(1);
 	width: 100%;
-	background-color: rgba(0, 0, 0, 0.6);
+	background-color: rgba(0, 0, 0, 0.341);
 
 	&__container {
 		width: 100%;
@@ -808,7 +808,7 @@ $notch-width: 10px;
 		overflow: squish;
 		text-overflow: shrink;
 		margin-left: 6px;
-		text-shadow: 0 1px 3px 2 rgba(0, 0, 0, 0.8);
+		text-shadow: 0 1px 3px 2 rgba(0, 0, 0, 0.519);
 		vertical-align: center;
 
 		transition: opacity 0.1s ease-out 0s;
