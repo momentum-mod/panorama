@@ -32,6 +32,27 @@
 			</Panel>
 		</snippet>
 
+        <snippet name="layer">
+			<Panel class="hud-customizer-settings__row">
+				<Label class="hud-customizer-settings__setting-label" text="#Customizer_Layer" />
+				<Panel class="hud-customizer-settings__layer">
+					<Label class="hud-customizer-settings__layer__position" text="{s:layer_position}" />
+					<Button id="LayerSendToBack" class="hud-customizer-settings__layer__button">
+						<Image src="file://{images}/arrange-send-to-back.svg" />
+					</Button>
+					<Button id="LayerSendBackward" class="hud-customizer-settings__layer__button">
+						<Image src="file://{images}/arrange-send-backward.svg" />
+					</Button>
+					<Button id="LayerBringForward" class="hud-customizer-settings__layer__button">
+						<Image src="file://{images}/arrange-bring-forward.svg" />
+					</Button>
+					<Button id="LayerBringToFront" class="hud-customizer-settings__layer__button">
+						<Image src="file://{images}/arrange-bring-to-front.svg" />
+					</Button>
+				</Panel>
+			</Panel>
+		</snippet>
+
         <snippet name="dynamic-none">
 			<Panel class="hud-customizer-settings__row">
 					<Label class="hud-customizer-settings__setting-label" text="{s:name}" />
