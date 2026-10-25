@@ -433,6 +433,13 @@ $input-background-hover: rgb(110, 110, 110);
 		Label {
 			font-size: 16px;
 		}
+
+		// Font names are shown in their own case, and font picker options set their own font-family inline
+		&.dropdown-menu Label {
+			text-transform: none;
+			font-family: $font;
+			letter-spacing: $font-spacing;
+		}
 	}
 
 	&__button {
