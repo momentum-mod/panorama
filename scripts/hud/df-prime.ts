@@ -331,19 +331,11 @@ class DFPrimeHandler extends DFHudComponent {
 			const activeOffset = bFill ? wishOffset : sideSign * strafeOffset;
 			let inactiveOffset: number;
 			if (bVQ3) {
-				inactiveOffset = this.findVQ3MirrorOffset(wishOffset, velFromView, targetAngle);
+				inactiveOffset = this.findVQ3MirrorOffset(wishOffset, velFromView, targetAngle, this.primeActiveLeft);
 				halfBeatOffset = this.findVQ3HalfBeatOffset(wishOffset, velFromView, targetAngle, inactiveOffset);
 			} else {
-				// CPM: a diagonal mirrors across whichever of its two keys is nearer the velocity (W+A pairs with W+D
-				// around W, or with S+A around A), so the pair matches the no-key zones and the inactive side stays
-				// across the velocity. A/D turns mirror to the strafe diagonal on the other side.
-				const keyA = wishOffset - Math.PI * 0.25;
-				const keyB = wishOffset + Math.PI * 0.25;
-				const mirrorKey =
-					Math.abs(MomMath.remapAngle(velFromView - keyA)) <= Math.abs(MomMath.remapAngle(velFromView - keyB))
-						? keyA
-						: keyB;
-				inactiveOffset = bTurn ? -sideSign * strafeOffset : MomMath.remapAngle(2 * mirrorKey - wishOffset);
+				// CPM: A/D turns mirror to the strafe diagonal on the other side
+				inactiveOffset = bTurn ? -sideSign * strafeOffset : this.findCPMMirrorOffset(wishOffset, velFromView);
 			}
 			if (this.primeActiveLeft) {
 				leftWishOffset = activeOffset;
@@ -585,23 +577,6 @@ class DFPrimeHandler extends DFHudComponent {
 
 			zone.style.backgroundColor = zone.color;
 		}
-	}
-
-	/**
-	 * Wish offset of the VQ3 inactive side. VQ3 accelerates the same way for all 8 inputs, so it takes the input of the
-	 * same kind as the held one (diagonal or single key) whose target across the velocity is nearest the crosshair.
-	 * Holding W+A that's W+D moving along W, S+A along A and S+D along S+A; holding A it's D moving along W. An input
-	 * within 22.5 degrees of the velocity isn't strafing, so the inactive side uses the same keys.
-	 */
-	findVQ3MirrorOffset(wishOffset: number, velFromView: number, targetAngle: number): number {
-		if (Math.abs(MomMath.remapAngle(wishOffset - velFromView)) <= Math.PI * 0.125) return wishOffset;
-
-		const keyStep = Math.PI * 0.5;
-		const bDiagonal =
-			Math.abs(MomMath.remapAngle(wishOffset - Math.round(wishOffset / keyStep) * keyStep)) > Math.PI * 0.125;
-		const kindOffset = bDiagonal ? Math.PI * 0.25 : 0;
-		const ideal = velFromView + (this.primeActiveLeft ? -targetAngle : targetAngle);
-		return MomMath.remapAngle(Math.round((ideal - kindOffset) / keyStep) * keyStep + kindOffset);
 	}
 
 	/**

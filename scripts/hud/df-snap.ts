@@ -4,7 +4,7 @@ import { GamemodeCategories } from 'common/web/maps/gamemodes.map';
 import * as MomMath from 'util/math';
 import { rgbaStringLerp } from 'util/colors';
 import { RegisterHUDPanelForGamemode } from 'util/register-for-gamemodes';
-import { DFHudComponent, StyleObject, ZonePanel } from 'common/df-hud';
+import { DFHudComponent, InputMode, StyleObject, ZonePanel } from 'common/df-hud';
 
 let COLORED_SNAP_CLASS: StyleObject;
 let UNCOLORED_SNAP_CLASS: StyleObject;
@@ -34,6 +34,8 @@ class DFSnapHandler extends DFHudComponent {
 
 	/** Target highlighting only applies above the cgaz minimum speed */
 	cgazMinSpeed: float;
+	/** Whether the held input's target is on the left of the velocity, kept while the wish runs along the velocity */
+	snapActiveLeft = true;
 
 	constructor() {
 		super();
@@ -131,14 +133,15 @@ class DFSnapHandler extends DFHudComponent {
 			);
 
 			if (speed >= this.snapMinSpeed) {
-				const targetOffset = MomMath.remapAngle(velAngle - viewAngle);
 				const targetAngle = this.findFastAngle(
 					dropSpeed,
 					this.maxGroundSpeed,
 					this.maxGroundSpeed * tickInterval
 				);
-				const leftTarget = -targetAngle - targetOffset + Math.PI * 0.25;
-				const rightTarget = targetAngle - targetOffset - Math.PI * 0.25;
+				// view-relative targets of the held input and its mirror, placed like prime sight's, in [-pi, pi]
+				const [leftWishOffset, rightWishOffset] = this.findTargetWishOffsets(state, viewAngle, targetAngle);
+				const leftTarget = MomMath.remapAngle(-targetAngle - velAngle + leftWishOffset + viewAngle);
+				const rightTarget = MomMath.remapAngle(targetAngle - velAngle + rightWishOffset + viewAngle);
 				this.updateSnaps(snapOffset, leftTarget, rightTarget, speed);
 			} else {
 				this.clearZones(this.snapZones);
@@ -146,6 +149,51 @@ class DFSnapHandler extends DFHudComponent {
 		} else {
 			this.clearZones(this.snapZones);
 		}
+	}
+
+	/**
+	 * Wish offsets (relative to the view, positive to the left) of the inputs whose targets the left and right zones
+	 * highlight: the held input on its side of the velocity and its mirror on the other, as prime sight picks them. They
+	 * are of the kind the drawn zones are laid out for (diagonals, or single keys when the zones are shifted), so each
+	 * target lands in a zone of its own input. With no keys held it's the diagonals around the key nearest the velocity.
+	 */
+	findTargetWishOffsets(state: DefragAPI.HUDFrameState, viewAngle: number, targetAngle: number): [number, number] {
+		const inputMode = state.inputMode;
+		const velFromView = MomMath.remapAngle(state.velAngle - viewAngle);
+		const wishOffset = this.findKeyWish(state).offset;
+		const bStrafe = inputMode === InputMode.STRAFE_LEFT || inputMode === InputMode.STRAFE_RIGHT;
+		const bTurn = inputMode === InputMode.TURN_LEFT || inputMode === InputMode.TURN_RIGHT;
+		// VQ3 accelerates the same way for all 8 inputs, and so do single keys on the ground, where the zones shift
+		const bSameAccel = state.snapShift || state.physicsMode === DefragAPI.DefragPhysics.VQ3;
+		const bForwardOnly = inputMode === InputMode.AIR_CONTROL && bSameAccel;
+
+		if (!bStrafe && !bTurn && !bForwardOnly) {
+			const nearestKeyOffset = Math.round(velFromView / (Math.PI * 0.5)) * Math.PI * 0.5;
+			return [
+				MomMath.remapAngle(nearestKeyOffset + Math.PI * 0.25),
+				MomMath.remapAngle(nearestKeyOffset - Math.PI * 0.25)
+			];
+		}
+
+		const wishFromVel = MomMath.remapAngle(viewAngle + wishOffset - state.velAngle);
+		if (Math.abs(wishFromVel) > 0.01 && Math.abs(wishFromVel) < Math.PI - 0.01) {
+			this.snapActiveLeft = wishFromVel > 0;
+		}
+
+		let activeOffset = wishOffset;
+		let inactiveOffset: number;
+		if (bSameAccel) {
+			inactiveOffset = this.findVQ3MirrorOffset(wishOffset, velFromView, targetAngle, this.snapActiveLeft);
+		} else if (bStrafe) {
+			inactiveOffset = this.findCPMMirrorOffset(wishOffset, velFromView);
+		} else {
+			// CPM a/d turns use the strafe diagonals on either side
+			const strafeOffset = Math.PI * (Math.cos(velFromView) >= 0 ? 0.25 : 0.75);
+			activeOffset = Math.sign(wishOffset) * strafeOffset;
+			inactiveOffset = -activeOffset;
+		}
+
+		return this.snapActiveLeft ? [activeOffset, inactiveOffset] : [inactiveOffset, activeOffset];
 	}
 
 	findSnapGains(): number[] {
@@ -177,7 +225,7 @@ class DFSnapHandler extends DFHudComponent {
 			const right = MomMath.wrapToHalfPi(this.snapAngles[(i + 1) % zones.length] - snapOffset);
 			const bUseUncolored = !this.snapHeightgainEnable && !this.snapColorMode && i % 2;
 			let snapColor = bUseUncolored ? this.snapAltColor : this.snapColor;
-			let hlSnapColor = bUseUncolored ? this.snapHlAltColor : this.snapHlColor;
+			const hlSnapColor = bUseUncolored ? this.snapHlAltColor : this.snapHlColor;
 			const snapClass = bUseUncolored ? UNCOLORED_SNAP_CLASS : COLORED_SNAP_CLASS;
 
 			const minGain = this.snapGainRange[0];
@@ -189,16 +237,22 @@ class DFSnapHandler extends DFHudComponent {
 
 			const bSplit = this.handleSplitZoneWrap(zone, left, right, snapClass, this.snapSplitZone);
 			if (bSplit) this.applyClass(this.snapSplitZone, snapClass);
-			const zoneParts = bSplit ? [zone, this.snapSplitZone] : [zone];
+			// a split zone is drawn as [left, pi/2] on the zone and [-pi/2, right] on the split zone
+			const zoneParts = bSplit
+				? [
+						{ panel: zone, left, right: Math.PI * 0.5 },
+						{ panel: this.snapSplitZone, left: -Math.PI * 0.5, right }
+					]
+				: [{ panel: zone, left, right }];
 
 			for (const part of zoneParts) {
 				if (this.snapHeightgainEnable && !Number.isNaN(heightFactor)) {
-					part.style.height = heightFactor * height + 'px';
-					part.style.marginBottom = height + 'px';
-					part.style.verticalAlign = 'bottom';
+					part.panel.style.height = heightFactor * height + 'px';
+					part.panel.style.marginBottom = height + 'px';
+					part.panel.style.verticalAlign = 'bottom';
 				} else {
-					part.style.height = height + 'px';
-					part.style.marginBottom = height + 'px';
+					part.panel.style.height = height + 'px';
+					part.panel.style.marginBottom = height + 'px';
 				}
 			}
 
@@ -207,6 +261,8 @@ class DFSnapHandler extends DFHudComponent {
 			}
 
 			let bHighlight = false;
+			// target mode colors each part on its own, since a zone can hold both targets or have them on different parts
+			const partColors = new Map<ZonePanel, string>();
 			switch (this.snapHlMode) {
 				case 0:
 					bHighlight = false;
@@ -217,44 +273,66 @@ class DFSnapHandler extends DFHudComponent {
 				case 2:
 					// "target" zones only highlight when moving
 					if (speed > this.cgazMinSpeed) {
-						let stopPoint, direction;
-						if (left - leftTarget <= 0 && right - leftTarget >= 0) {
-							stopPoint = MomMath.approxEquals(zone.rightPx, zone.leftPx, 1)
-								? 0
-								: this.NaNCheck(
-										(
-											(this.mapToScreen(leftTarget) - zone.leftPx) /
-											(zone.rightPx - zone.leftPx)
-										).toFixed(3),
-										0
-									);
-							direction = '0% 0%, 100% 0%';
-							bHighlight = true;
-						} else if (left - rightTarget <= 0 && right - rightTarget >= 0) {
-							stopPoint = MomMath.approxEquals(zone.rightPx, zone.leftPx, 1)
-								? 0
-								: this.NaNCheck(
-										(
-											(zone.rightPx - this.mapToScreen(rightTarget)) /
-											(zone.rightPx - zone.leftPx)
-										).toFixed(3),
-										0
-									);
-							direction = '100% 0%, 0% 0%';
-							bHighlight = true;
-						}
-						if (bHighlight) {
-							hlSnapColor =
-								`gradient(linear, ${direction}, from(${hlSnapColor}), color-stop( ${stopPoint}, ${hlSnapColor} ), color-stop( ${stopPoint}, ${snapColor} ), to(${snapColor}))` as rgbaColor;
+						for (const part of zoneParts) {
+							const color = this.findTargetGradient(
+								part,
+								leftTarget,
+								rightTarget,
+								hlSnapColor,
+								snapColor
+							);
+							if (color) partColors.set(part.panel, color);
 						}
 					}
 					break;
 			}
 
 			for (const part of zoneParts) {
-				part.style.backgroundColor = bHighlight ? hlSnapColor : snapColor;
+				part.panel.style.backgroundColor = partColors.get(part.panel) ?? (bHighlight ? hlSnapColor : snapColor);
 			}
 		}
+	}
+
+	/**
+	 * Background for a zone part highlighted from its left edge up to the left target and from the right target to its
+	 * right edge, or null when it holds neither target. Both targets in one part highlight both ends, or all of it when
+	 * they cross.
+	 */
+	findTargetGradient(
+		part: { panel: ZonePanel; left: number; right: number },
+		leftTarget: number,
+		rightTarget: number,
+		hlColor: string,
+		color: string
+	): string {
+		const panel = part.panel;
+		const bLeft = part.left <= leftTarget && leftTarget <= part.right;
+		const bRight = part.left <= rightTarget && rightTarget <= part.right;
+		if (!bLeft && !bRight) return null;
+
+		const width = panel.rightPx - panel.leftPx;
+		// fraction of the part's width from its left edge to a target
+		const stop = (target: number) =>
+			MomMath.approxEquals(panel.rightPx, panel.leftPx, 1)
+				? 0
+				: Math.min(Math.max(this.NaNCheck((this.mapToScreen(target) - panel.leftPx) / width, 0), 0), 1);
+		const leftStop = bLeft ? stop(leftTarget) : 0;
+		const rightStop = bRight ? stop(rightTarget) : 1;
+		if (leftStop >= rightStop) return hlColor;
+
+		const stops = [];
+		if (bLeft)
+			stops.push(
+				`color-stop(${leftStop.toFixed(4)}, ${hlColor})`,
+				`color-stop(${leftStop.toFixed(4)}, ${color})`
+			);
+		if (bRight)
+			stops.push(
+				`color-stop(${rightStop.toFixed(4)}, ${color})`,
+				`color-stop(${rightStop.toFixed(4)}, ${hlColor})`
+			);
+		const ends = [bLeft ? hlColor : color, bRight ? hlColor : color];
+		return `gradient(linear, 0% 0%, 100% 0%, from(${ends[0]}), ${stops.join(', ')}, to(${ends[1]}))`;
 	}
 
 	/**
