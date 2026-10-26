@@ -572,14 +572,6 @@ declare namespace DefragAPI {
 		highlightColor: rgbaColor;
 	}
 
-	interface GroundboostConfig {
-		enable: boolean;
-		overshootEnable: boolean;
-		textMode: int32;
-		textColorMode: int32;
-		crashHlEnable: boolean;
-	}
-
 	const enum DefragPhysics {
 		VQ3 = 0,
 		CPM = 1,
@@ -630,8 +622,6 @@ declare namespace DefragAPI {
 	function GetHUDFrameState(): HUDFrameState;
 
 	function GetHUDProjection(): import('common/df-hud').ProjectionMode;
-
-	function GetHUDGroundboostCFG(): GroundboostConfig;
 }
 
 declare namespace ToastAPI {
