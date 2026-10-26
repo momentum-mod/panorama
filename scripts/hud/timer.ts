@@ -61,7 +61,9 @@ class HudTimerHandler {
 			this.comparison = RunComparisonsAPI.GetComparisonRun();
 		});
 
-		$.RegisterForUnhandledEvent('OnSaveStateUpdate', () => {
+		$.RegisterForUnhandledEvent('OnSaveStateUpdate', (_count, _current, usingMenu) => {
+			//based on scripts/hud/status.ts, usingMenu is set to true when loading a saveloc, not when creating one
+			if (!usingMenu) return;
 			// If we load a savestate, update base timer classes based on whatever
 			// the run state is, don't bother with comparisons.
 			this.updateMainState();
