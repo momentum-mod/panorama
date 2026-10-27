@@ -1,0 +1,53 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+	
+	<scripts>
+		<include type="module" src="file://{scripts}/components/track-selector.ts" />
+	</scripts>
+
+    <snippets>
+        <snippet name="track-panel">
+            <RadioButton group="track-selector" class="track-panel">
+                <Panel class="track-panel__track">
+                    <Label class="track-selector-label track-panel__track-label" text="{s:track}" />
+                </Panel>
+                <Panel class="track-panel__tier">
+                    <Label class="track-selector-label track-panel__tier-label" text="T{i:tier}"/>
+                </Panel>
+                <Panel class="track-panel__time">
+                    <Label class="track-selector-label track-panel__time-label" text="{g:time:time}"/>
+                </Panel>
+                <Panel class="track-panel__rank">
+                    <Label class="track-selector-label track-panel__rank-label" text="{i:rank}/{i:total}"/>
+                </Panel>
+                <Panel class="track-panel__group">
+                    <Panel class="track-panel__group-pill-container">
+                        <GroupPill id="GroupPill" />
+                    </Panel>
+                </Panel>
+                <Panel class="track-panel__actions">
+                	<Panel class="track-panel__actions--spacer" />
+	                <Panel class="track-selector-button-container">
+	                    <Button id="OpenEOR" class="track-selector-button-container__button">
+	                        <Image class="button__icon icon-play" src="file://{images}/eye.svg" textureheight="20"/>
+	                    </Button>
+	                </Panel>
+                    <Panel class="track-selector-button-container">
+                        <Button id="PlayTrack" class="map-entry-action__button playable">
+                            <Image class="button__icon icon-play" src="file://{images}/play-circle.svg" textureheight="20"/>
+                        </Button>
+                    </Panel>
+                </Panel>
+            </RadioButton>
+        </snippet>
+    </snippets>
+
+
+    <TrackSelector class="h-full w-full">
+        <Panel id="TrackSelectorContainer" class="h-full w-full overflow-vscroll">
+            <!-- Populated by JS -->
+        </Panel>
+    </TrackSelector>
+</root>

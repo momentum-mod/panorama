@@ -1,0 +1,15 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+
+	<scripts>
+		<include type="module" src="file://{scripts}/components/style-selector.ts" />
+	</scripts>
+
+	<StyleSelector class="style-selector">
+		<DropDown id="StyleDropdown" class="dropdown style-selector__dropdown" menuclass="dropdown-menu style-selector__menu">
+			<!-- Options populated via code -->
+		</DropDown>
+	</StyleSelector>
+</root>

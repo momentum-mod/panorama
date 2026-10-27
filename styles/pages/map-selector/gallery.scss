@@ -1,3 +1,16 @@
+@use '../../abstract/mixin';
+@use '../../config' as *;
+@use 'sass:map';
+@use 'sass:color';
+
+%panel-card {
+	background-color: rgba(0, 0, 0, 0.7);
+	border: 1px solid rgb(15, 15, 15);
+	border-radius: 2px;
+}
+
+$image-shadow: 4px 4px 64px black;
+
 .gallery {
 	flow-children: none;
 
@@ -8,33 +21,77 @@
 
 	background-color: none;
 
+	&__h2 {
+		@include mixin.font-header();
+		font-weight: bold;
+		color: #eee;
+		font-size: 24px;
+	}
+
 	&__container {
-		padding: 16px;
-		flow-children: down;
+		width: 100%;
 		height: 100%;
+		flow-children: down;
+	}
+
+	&__top {
+		width: 100%;
+		height: 10%;
+		Label {
+			align: center center;
+		}
+	}
+
+	&__bottom {
+		height: 90%;
+		width: 100%;
+		flow-children: right;
+	}
+
+	&__bottom-left {
+		width: fill-parent-flow(3.5);
+		height: 100%;
+
+		// Adjust scaleImageContainer() in gallery.ts when changing padding
+		padding: 8px;
+
+		flow-children: down;
+		horizontal-align: left;
+	}
+
+	&__bottom-right {
+		width: fill-parent-flow(1);
+		height: 100%;
+		padding-top: 8px;
+		padding-right: 16px;
+		flow-children: down;
+	}
+
+	&__image-container {
+		// Width and Height set in JS to account for aspect ratio
+		flow-children: down;
 		horizontal-align: center;
-		width: fit-children;
 	}
 
 	&__main-image {
-		width: height-percentage(177.77777777778%);
-		height: 85%;
+		width: 100%;
+		height: width-percentage(56.25%);
 		border-radius: 4px;
-		box-shadow: 4px 4px 64px black;
+		box-shadow: $image-shadow;
 	}
 
 	&__thumbnails {
 		flow-children: right;
 		horizontal-align: center;
-		height: fill-parent-flow(1);
+		height: 100%;
 		margin-top: 16px;
 	}
 
 	&__thumbnail {
-		width: 240px;
+		width: 200px;
 		height: 135px;
 		border-radius: 4px;
-		box-shadow: 4px 4px 64px black;
+		box-shadow: $image-shadow;
 		brightness: 0.6;
 		transition-property: brightness;
 		transition-duration: 0.15s;
@@ -47,6 +104,80 @@
 		&:not(&--first) {
 			margin-left: 16px;
 		}
+	}
+
+	&__credits-container {
+		@extend %panel-card;
+		width: 100%;
+		flow-children: down;
+		padding-top: 16px;
+		padding-left: 16px;
+	}
+
+	&__credits-type-row {
+		flow-children: down;
+		margin-bottom: 16px;
+		width: 100%;
+	}
+
+	&__credits-grid {
+		flow-children: down;
+		width: 100%;
+		margin-top: 4px;
+	}
+
+	&__credits-row {
+		flow-children: right;
+		width: 100%;
+		margin-bottom: 4px;
+	}
+
+	&__credits-credit {
+		flow-children: right;
+		width: 50%;
+		vertical-align: center;
+		horizontal-align: left;
+	}
+
+	&__credits-avatar {
+		width: 24px;
+		height: 24px;
+		margin-right: 6px;
+	}
+
+	&__credits-placeholder {
+		width: 24px;
+		height: 24px;
+		margin-right: 6px;
+		opacity: 0.6;
+	}
+
+	&__credits-text {
+		vertical-align: center;
+	}
+
+	&__credits-name {
+		transition: color 0s ease-in-out 0s;
+		color: gradient(linear, 0% 0%, 0% 100%, from(#ffffff), to(#cccccc));
+
+		&--steam {
+			color: $light-blue;
+			font-style: normal;
+
+			transition: color 0.1s ease-in-out 0s;
+
+			&:hover {
+				color: color.scale($light-blue, $lightness: 50%);
+			}
+		}
+	}
+
+	&__description-container {
+		@extend %panel-card;
+		width: 100%;
+		max-height: 365px;
+		padding: 16px;
+		overflow: squish scroll;
 	}
 
 	&__background {
