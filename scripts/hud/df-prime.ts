@@ -292,15 +292,12 @@ class DFPrimeHandler extends DFHudComponent {
 		const velFromView = MomMath.remapAngle(velAngle - viewAngle);
 		const bVQ3 = phyMode === DefragAPI.DefragPhysics.VQ3;
 
-		// With no keys held, the zones use the two inputs 45 degrees either side of the input nearest the velocity,
-		// the left chain taking the one on the left so it stays on the left of the velocity. VQ3 accelerates the same
-		// way for all 8 inputs, so that can be any of them: W+A/W+D moving along W, A/S moving along S+A. CPM single
-		// keys turn instead, so it always uses the diagonals around the nearest key: W+A/W+D when the velocity points
-		// forward, S+A/S+D backward, W+A/S+A to the left and W+D/S+D to the right.
-		const noKeyStep = Math.PI * (bVQ3 ? 0.25 : 0.5);
-		const nearestInputOffset = Math.round(velFromView / noKeyStep) * noKeyStep;
-		let leftWishOffset = MomMath.remapAngle(nearestInputOffset + Math.PI * 0.25);
-		let rightWishOffset = MomMath.remapAngle(nearestInputOffset - Math.PI * 0.25);
+		// With no keys held, the zones use the two diagonals around the key nearest the velocity relative to the view:
+		// W+A/W+D when it points forwards, S+A/S+D backwards, W+A/S+A to the left and W+D/S+D to the right. The left
+		// chain takes the diagonal 45 degrees left of that key, so it stays on the left of the velocity.
+		const nearestKeyOffset = Math.round(velFromView / (Math.PI * 0.5)) * Math.PI * 0.5;
+		let leftWishOffset = MomMath.remapAngle(nearestKeyOffset + Math.PI * 0.25);
+		let rightWishOffset = MomMath.remapAngle(nearestKeyOffset - Math.PI * 0.25);
 		let bFill = false;
 		// W or S alone is air control in CPM, but VQ3 accelerates the same way in every direction
 		const bForwardOnly = inputMode === InputMode.AIR_CONTROL && bVQ3;
@@ -331,7 +328,7 @@ class DFPrimeHandler extends DFHudComponent {
 			const activeOffset = bFill ? wishOffset : sideSign * strafeOffset;
 			let inactiveOffset: number;
 			if (bVQ3) {
-				inactiveOffset = this.findVQ3MirrorOffset(wishOffset, velFromView, targetAngle, this.primeActiveLeft);
+				inactiveOffset = this.findVQ3MirrorOffset(wishOffset, velFromView);
 				halfBeatOffset = this.findVQ3HalfBeatOffset(wishOffset, velFromView, targetAngle, inactiveOffset);
 			} else {
 				// CPM: A/D turns mirror to the strafe diagonal on the other side
@@ -346,8 +343,8 @@ class DFPrimeHandler extends DFHudComponent {
 			}
 		}
 
-		// CPM a/d turns mirror to an air strafe diagonal, so that side uses the air strafe target. VQ3 single keys
-		// mirror to another single key with the same acceleration.
+		// CPM a/d turns mirror to an air strafe diagonal, so that side uses the air strafe target. VQ3 inputs all
+		// accelerate the same way, so both sides use the same target.
 		if (bTurn && !bVQ3) {
 			if (this.primeActiveLeft) rightTarget = strafeTargetAngle - velAngle;
 			else leftTarget = -strafeTargetAngle - velAngle;
@@ -580,22 +577,25 @@ class DFPrimeHandler extends DFHudComponent {
 	}
 
 	/**
-	 * Wish offset of the VQ3 half-beat, or null when it isn't shown: the input 135 degrees from the held one on the
-	 * inactive side (D while holding W+A and moving along W, S+A while holding W and moving along W+A, A while holding
-	 * W+D and moving along W+A). It's shown once its target lies past the active target on the inactive side, so its
-	 * chain, which runs outward from the target, never overlaps the active zones, or with the early option, as soon as
-	 * its target is closer to the crosshair than the mirrored input's. An input within 22.5 degrees of the velocity
-	 * isn't strafing, so it has none.
+	 * Wish offset of the VQ3 half-beat, or null when it isn't shown: with a strafe input held, the half-beat on the
+	 * inactive side, the single key 90 degrees from the travel input (D while holding W+A and travelling forwards, A
+	 * while holding S+D and travelling right). A held half-beat already has the strafe input as its inactive side, so
+	 * it has none. It's shown once its target lies past the active target on the inactive side, so its chain, which runs
+	 * outward from the target, never overlaps the active zones, or with the early option, as soon as its target is
+	 * closer to the crosshair than the mirrored input's.
 	 */
 	findVQ3HalfBeatOffset(wishOffset: number, velFromView: number, targetAngle: number, mirrorOffset: number): number {
-		if (!this.primeShowHalfBeat || Math.abs(MomMath.remapAngle(wishOffset - velFromView)) <= Math.PI * 0.125)
-			return null;
+		if (!this.primeShowHalfBeat) return null;
+
+		const { travelOffset, steps } = this.findVQ3TravelSteps(wishOffset, velFromView);
+		const inactiveSide = this.primeActiveLeft ? -1 : 1;
+		// only strafe inputs, and only while the held input is on the side of the travel input it's drawn on
+		if (steps !== -inactiveSide) return null;
 
 		// view-relative chain target of a wish offset on a side of the velocity (1 left, -1 right)
 		const findTarget = (offset: number, side: number) =>
 			MomMath.remapAngle(offset - velFromView - side * targetAngle);
-		const inactiveSide = this.primeActiveLeft ? -1 : 1;
-		const halfBeatOffset = MomMath.remapAngle(wishOffset + inactiveSide * 0.75 * Math.PI);
+		const halfBeatOffset = MomMath.remapAngle(travelOffset + inactiveSide * Math.PI * 0.5);
 		const halfBeatTarget = findTarget(halfBeatOffset, inactiveSide);
 		const bShowHalfBeat = this.primeHalfBeatEarly
 			? Math.abs(halfBeatTarget) < Math.abs(findTarget(mirrorOffset, inactiveSide))
