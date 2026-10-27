@@ -139,7 +139,7 @@ class DFSnapHandler extends DFHudComponent {
 					this.maxGroundSpeed * tickInterval
 				);
 				// view-relative targets of the held input and its mirror, placed like prime sight's, in [-pi, pi]
-				const [leftWishOffset, rightWishOffset] = this.findTargetWishOffsets(state, viewAngle, targetAngle);
+				const [leftWishOffset, rightWishOffset] = this.findTargetWishOffsets(state, viewAngle);
 				const leftTarget = MomMath.remapAngle(-targetAngle - velAngle + leftWishOffset + viewAngle);
 				const rightTarget = MomMath.remapAngle(targetAngle - velAngle + rightWishOffset + viewAngle);
 				this.updateSnaps(snapOffset, leftTarget, rightTarget, speed);
@@ -157,7 +157,7 @@ class DFSnapHandler extends DFHudComponent {
 	 * are of the kind the drawn zones are laid out for (diagonals, or single keys when the zones are shifted), so each
 	 * target lands in a zone of its own input. With no keys held it's the diagonals around the key nearest the velocity.
 	 */
-	findTargetWishOffsets(state: DefragAPI.HUDFrameState, viewAngle: number, targetAngle: number): [number, number] {
+	findTargetWishOffsets(state: DefragAPI.HUDFrameState, viewAngle: number): [number, number] {
 		const inputMode = state.inputMode;
 		const velFromView = MomMath.remapAngle(state.velAngle - viewAngle);
 		const wishOffset = this.findKeyWish(state).offset;
@@ -183,7 +183,9 @@ class DFSnapHandler extends DFHudComponent {
 		let activeOffset = wishOffset;
 		let inactiveOffset: number;
 		if (bSameAccel) {
-			inactiveOffset = this.findVQ3MirrorOffset(wishOffset, velFromView, targetAngle, this.snapActiveLeft);
+			// VQ3 uses the same travel input as prime sight; CPM ground single keys keep a diagonal one
+			const travelStep = Math.PI * (state.physicsMode === DefragAPI.DefragPhysics.VQ3 ? 0.5 : 0.25);
+			inactiveOffset = this.findVQ3MirrorOffset(wishOffset, velFromView, travelStep);
 		} else if (bStrafe) {
 			inactiveOffset = this.findCPMMirrorOffset(wishOffset, velFromView);
 		} else {

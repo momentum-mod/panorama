@@ -146,20 +146,35 @@ export abstract class DFHudComponent {
 	}
 
 	/**
-	 * Wish offset of the VQ3 inactive side. VQ3 accelerates the same way for all 8 inputs, so it takes the input of the
-	 * same kind as the held one (diagonal or single key) whose target across the velocity is nearest the crosshair.
-	 * Holding W+A that's W+D moving along W, S+A along A and S+D along S+A; holding A it's D moving along W. An input
-	 * within 22.5 degrees of the velocity isn't strafing, so the inactive side uses the same keys.
+	 * Where the held input sits when all 8 inputs accelerate the same way: the travel input, the key whose direction
+	 * the velocity points nearest relative to the view (W forwards, A or D sideways, S backwards), and how many 45 degree
+	 * steps the held input is from it, positive to the left. One step is a strafe input and two a half-beat: travelling
+	 * forwards, W+A is a strafe and A a half-beat. The velocity sits targetAngle off the held strafe input, so forwards
+	 * strafing keeps it within 45 degrees of the view at any speed. CPM ground single keys pass a 45 degree travel step,
+	 * so a diagonal can be the travel input there.
 	 */
-	findVQ3MirrorOffset(wishOffset: number, velFromView: number, targetAngle: number, bActiveLeft: boolean): number {
-		if (Math.abs(MomMath.remapAngle(wishOffset - velFromView)) <= Math.PI * 0.125) return wishOffset;
+	findVQ3TravelSteps(
+		wishOffset: number,
+		velFromView: number,
+		travelStep = Math.PI * 0.5
+	): { travelOffset: number; steps: number } {
+		const step = Math.PI * 0.25;
+		const travelOffset = MomMath.remapAngle(Math.round(velFromView / travelStep) * travelStep);
+		return { travelOffset, steps: Math.round(MomMath.remapAngle(wishOffset - travelOffset) / step) };
+	}
 
-		const keyStep = Math.PI * 0.5;
-		const bDiagonal =
-			Math.abs(MomMath.remapAngle(wishOffset - Math.round(wishOffset / keyStep) * keyStep)) > Math.PI * 0.125;
-		const kindOffset = bDiagonal ? Math.PI * 0.25 : 0;
-		const ideal = velFromView + (bActiveLeft ? -targetAngle : targetAngle);
-		return MomMath.remapAngle(Math.round((ideal - kindOffset) / keyStep) * keyStep + kindOffset);
+	/**
+	 * Wish offset of the inactive side when all 8 inputs accelerate the same way. A held strafe input mirrors across the
+	 * travel input (W+A gives W+D travelling forwards), and a held half-beat gives the strafe input on the other side (A
+	 * gives W+D travelling forwards), since that takes less mouse movement than the opposite half-beat (D) up to well
+	 * past normal speeds. The travel input itself, or its opposite, isn't strafing, so the inactive side uses the same
+	 * keys.
+	 */
+	findVQ3MirrorOffset(wishOffset: number, velFromView: number, travelStep = Math.PI * 0.5): number {
+		const { travelOffset, steps } = this.findVQ3TravelSteps(wishOffset, velFromView, travelStep);
+		if (steps === 0 || Math.abs(steps) === 4) return wishOffset;
+		if (Math.abs(steps) === 2) return MomMath.remapAngle(travelOffset - Math.sign(steps) * Math.PI * 0.25);
+		return MomMath.remapAngle(2 * travelOffset - wishOffset);
 	}
 
 	/**
