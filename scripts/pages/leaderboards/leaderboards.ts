@@ -13,7 +13,7 @@ import { LeaderboardRecordsFilter } from 'common/leaderboard';
 import { Gamemode } from 'common/web/enums/gamemode.enum';
 import { CompletionGroup } from 'common/web/enums/completion-group.enum';
 import { LeaderboardRecord } from 'common/leaderboard';
-import { GroupBoundaries, getGroupBoundaries, getCompletionGroup } from 'common/completion-group';
+import { getRankGroupEnds, getCompletionGroup } from 'common/web/consts/rank-groups.const';
 
 // Keep in sync with entry.scss
 const ENTRY_HEIGHT = 32;
@@ -77,7 +77,7 @@ export class LeaderboardsHandler {
 	blockTextEntryEvent = false;
 	totalCompletions: number = null;
 	currentUserRank = null;
-	groupBoundaries: GroupBoundaries;
+	groupEnds: number[];
 
 	/** handles loading spinner for quick leaderboard requests */
 	private loadingHandle: number = null;
@@ -263,7 +263,7 @@ export class LeaderboardsHandler {
 		this.state.totalPages = Math.max(data.totalPages, 1);
 		this.panels.controls.container.SetDialogVariableInt('total-pages', this.state.totalPages);
 
-		this.groupBoundaries = getGroupBoundaries(this.totalCompletions);
+		this.groupEnds = getRankGroupEnds(this.totalCompletions);
 
 		this.updateControlButtons();
 
@@ -292,7 +292,8 @@ export class LeaderboardsHandler {
 			) {
 				this.createMembershipGroupIndicators(records, record.rank, lbEntry, index);
 			} else if (this.state.filter === LeaderboardRecordsFilter.GLOBAL) {
-				const matchedGroup = this.groupBoundaries[record.rank];
+				const group = getCompletionGroup(record.rank, this.groupEnds);
+				const matchedGroup = group !== getCompletionGroup(record.rank + 1, this.groupEnds) ? group : undefined;
 				this.createBoundaryGroupIndicators(matchedGroup, lbEntry, index);
 			}
 
@@ -353,19 +354,17 @@ export class LeaderboardsHandler {
 	}
 
 	private createBoundaryGroupIndicators(matchedGroup: CompletionGroup, lbEntry: LeaderboardEntry, index: number) {
-		if (matchedGroup !== undefined && matchedGroup !== CompletionGroup.WORLD_RECORD) {
-			const groupName = CompletionGroup[matchedGroup];
+		if (matchedGroup === undefined || matchedGroup === CompletionGroup.WORLD_RECORD) return;
 
-			lbEntry.AddClass(`leaderboard-entry--group-${groupName}`);
+		const groupName = CompletionGroup[matchedGroup];
+		lbEntry.AddClass(`leaderboard-entry--group-${groupName}`);
 
-			const borderY = (index + 1) * ENTRY_HEIGHT; // pixel Y of the border line
-
-			const pill = $.CreatePanel('GroupPill', this.panels.groupPillsLayer, '', {
-				class: 'group-pill group-pill--leaderboards-pill group-pill--solid'
-			});
-			pill.style.transform = `translate3d(${GROUP_BORDER_LEFT_ALIGN}px, ${borderY}px, 0px) translateY(${GROUP_BORDER_TOP_ALIGN}px)`;
-			pill.handler.setGroup(matchedGroup);
-		}
+		const borderY = (index + 1) * ENTRY_HEIGHT; // pixel Y of the border line
+		const pill = $.CreatePanel('GroupPill', this.panels.groupPillsLayer, '', {
+			class: 'group-pill group-pill--leaderboards-pill group-pill--solid'
+		});
+		pill.style.transform = `translate3d(${GROUP_BORDER_LEFT_ALIGN}px, ${borderY}px, 0px) translateY(${GROUP_BORDER_TOP_ALIGN}px)`;
+		pill.handler.setGroup(matchedGroup);
 	}
 
 	private createMembershipGroupIndicators(
@@ -374,12 +373,17 @@ export class LeaderboardsHandler {
 		lbEntry: LeaderboardEntry,
 		index: number
 	) {
-		const currentGroup = getCompletionGroup(rank, this.groupBoundaries);
+		const currentGroup = getCompletionGroup(rank, this.groupEnds);
 		if (currentGroup == null || currentGroup === CompletionGroup.WORLD_RECORD) return;
 
 		const nextRecord = records[index + 1];
 
-		if (nextRecord && getCompletionGroup(nextRecord.rank, this.groupBoundaries) === currentGroup) {
+		if (nextRecord && getCompletionGroup(nextRecord.rank, this.groupEnds) === currentGroup) {
+			return;
+		}
+
+		const groupEnd = this.groupEnds.find((end) => getCompletionGroup(end, this.groupEnds) === currentGroup);
+		if (groupEnd != null && rank < groupEnd) {
 			return;
 		}
 
@@ -410,13 +414,13 @@ export class LeaderboardsHandler {
 	}
 
 	previousGroup() {
-		if (!this.groupBoundaries) return;
+		if (!this.groupEnds) return;
 
 		this.selectPage(this.getPreviousGroupPage());
 	}
 
 	nextGroup() {
-		if (!this.groupBoundaries) return;
+		if (!this.groupEnds) return;
 
 		this.selectPage(this.getNextGroupPage());
 	}
@@ -440,9 +444,9 @@ export class LeaderboardsHandler {
 	}
 
 	private getBoundaryPages(): number[] {
-		if (!this.groupBoundaries) return [];
+		if (!this.groupEnds) return [];
 
-		const pages = Object.keys(this.groupBoundaries).map((rank) => Math.ceil(Number(rank) / 20));
+		const pages = this.groupEnds.map((rank) => Math.ceil(rank / RUNS_PER_PAGE));
 
 		return Array.from(new Set(pages)).sort((a, b) => a - b);
 	}
