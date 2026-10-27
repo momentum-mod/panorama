@@ -10,7 +10,7 @@
 	<MapEntry class="w-full map-entry" oncontextmenu="MapEntryHandler.showContextMenu()" ondblclick="MapEntryHandler.onActionButtonPressed()">
 		<Panel class="map-entry__left">
 			<Panel id="MapEntryImageContainer" class=" map-entry__image">
-				<Image id="MapEntryImage" scaling="stretch-to-cover-preserve-aspect" />
+				<Image id="MapEntryImage" scaling="stretch-to-cover-preserve-aspect" delaysetuntilload="false" />
 				<Panel class="map-entry__banner">
 					<Label class="map-entry__banner-text" text="{s:banner}" />
 				</Panel>
