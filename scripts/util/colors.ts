@@ -70,14 +70,17 @@ export function rgbaStringLerp(colorA: string, colorB: string, alpha: number, us
 			toHsv[0] += 360;
 		}
 	}
-	const newHsv = rgbaTupleLerp(fromHsv, toHsv, alpha);
+
+	// Saturation and value are in [0, 1], so blend without the rounding rgbaTupleLerp does
+	const interp: number = Math.max(Math.min(alpha, 1), 0);
+	const newHsv = fromHsv.map((from, i) => from + interp * (toHsv[i] - from)) as RgbaTuple;
 
 	newHsv[0] = newHsv[0] % 360;
 	if (newHsv[0] < 0) {
 		newHsv[0] += 360;
 	}
 
-	const newRgb: RgbaTuple = hsvaToRgba(newHsv) as RgbaTuple;
+	const newRgb: RgbaTuple = hsvaToRgba(newHsv).map(Math.round) as RgbaTuple;
 
 	return tupleToRgbaString(newRgb);
 }
