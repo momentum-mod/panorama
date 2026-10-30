@@ -7,9 +7,7 @@
 		<include type="module" src="file://{scripts}/hud/df-pitch.ts" />
 	</scripts>
 
-	<MomHudDFPitch class="w-full h-full" hittest="false">
-		<ConVarEnabler class="h-full w-full" convar="mom_hud_df_pitch_enable" togglevisibility="true">
-			<Panel id="PitchLines" class="dfpitch__lines" />
-		</ConVarEnabler>
+	<MomHudDFPitch class="h-full" hittest="false">
+		<Panel id="PitchLines" class="dfpitch__lines" />
 	</MomHudDFPitch>
 </root>
