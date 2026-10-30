@@ -1,5 +1,5 @@
 import * as MomMath from 'util/math';
-import { rgbaStringToRgb } from 'util/colors';
+import { rgbaStringLerp, rgbaStringToRgb } from 'util/colors';
 import { Gamemode } from 'common/web/enums/gamemode.enum';
 import {
 	CustomizerComponentProperties,
@@ -71,6 +71,154 @@ export function isOnSlick(state: DefragAPI.HUDFrameState): boolean {
 }
 
 export type DFHudStyle = NonNullable<CustomizerComponentProperties['dynamicStyles']>[string];
+
+/** The 8 inputs in 45 degree steps from the view, counterclockwise (positive to the left) */
+export const INPUT_NAMES = ['W', 'WA', 'A', 'SA', 'S', 'SD', 'D', 'WD'] as const;
+
+/** VQ3 zones for single-key inputs that aren't held */
+export enum SingleKeyMode {
+	OFF = 'off',
+	/** Only where they don't overlap a two-key zone */
+	CLEAR = 'clear',
+	ALWAYS = 'always'
+}
+
+/** Ways to color the zones of inputs that aren't held by their input. Components add their own modes next to these. */
+export enum InputColorMode {
+	/** One color for single keys and one for two-key inputs */
+	KEY_COUNT = 'keyCount',
+	/** A color for each of W, A, S and D, with two-key inputs blending their keys' colors */
+	KEYS = 'keys',
+	/** A color for each of the 8 inputs */
+	DIRECTION = 'direction'
+}
+
+/** One side of the velocity to draw an input's zones on, for an input that isn't held */
+export interface InputSide {
+	/** Wish offset from the view, positive to the left */
+	offset: number;
+	bLeft: boolean;
+	bTwoKey: boolean;
+}
+
+/** Size of a cell of the customizer's input color legend and the gap between cells, in layout px */
+const LEGEND_CELL = 28;
+const LEGEND_GAP = 2;
+const LEGEND_SIZE = 3 * LEGEND_CELL + 2 * LEGEND_GAP;
+/** Row and column of each input in the 3x3 legend, in INPUT_NAMES order: W on top, A on the left */
+const LEGEND_CELLS = [
+	[0, 1],
+	[0, 0],
+	[1, 0],
+	[2, 0],
+	[2, 1],
+	[2, 2],
+	[1, 2],
+	[0, 2]
+] as const;
+
+/** An input's direction followed by its keys as in the legend, e.g. "Forward-Left (W+A)" */
+export function inputName(input: string) {
+	return `${$.Localize(`#Customizer_Df_Input_${input}`)} (${input.split('').join('+')})`;
+}
+
+/** The input color settings of a component's zones for inputs that aren't held, and its settings legend */
+export class InputColors {
+	/** An InputColorMode, or one of the component's own modes */
+	mode: string;
+	oneKeyColor: rgbaColor;
+	twoKeyColor: rgbaColor;
+	/** W, A, S, D colors of the KEYS mode */
+	keyColors: rgbaColor[] = [];
+	/** Colors of the DIRECTION mode, in INPUT_NAMES order */
+	dirColors: rgbaColor[] = [];
+	/** Color of each input in INPUT_NAMES order, or null when the mode doesn't color by input */
+	colors: rgbaColor[] = null;
+	/** Cells of the customizer's input color legend in INPUT_NAMES order, rebuilt with the settings panel */
+	legendCells: Panel[] = [];
+
+	/** Names the legend panels */
+	readonly idPrefix: string;
+
+	constructor(idPrefix: string) {
+		this.idPrefix = idPrefix;
+	}
+
+	/** Works out the colors from the current settings and recolors the legend. */
+	update() {
+		this.colors = this.findColors();
+		this.colorLegend();
+	}
+
+	/**
+	 * Each input's color in INPUT_NAMES order: one or two keys, each key with two-key inputs blending their keys in
+	 * HSV, or each input.
+	 */
+	findColors(): rgbaColor[] {
+		switch (this.mode) {
+			case InputColorMode.KEY_COUNT:
+				return INPUT_NAMES.map((_, i) => (i % 2 ? this.twoKeyColor : this.oneKeyColor));
+			case InputColorMode.KEYS:
+				return INPUT_NAMES.map((_, i) => {
+					const key = this.keyColors[(i >> 1) % 4];
+					if (i % 2 === 0) return key;
+					return rgbaStringLerp(key, this.keyColors[((i + 1) >> 1) % 4], 0.5, true) as rgbaColor;
+				});
+			case InputColorMode.DIRECTION:
+				return [...this.dirColors];
+			default:
+				return null;
+		}
+	}
+
+	/** Color of the input at a wish offset, or null when the mode doesn't color by input. */
+	colorAt(wishOffset: number): rgbaColor | null {
+		if (!this.colors) return null;
+		const step = Math.round(wishOffset / (Math.PI * 0.25));
+		return this.colors[((step % 8) + 8) % 8];
+	}
+
+	/** Builds the legend in its customizer settings row: W on top and A on the left, like the keys. */
+	buildLegend(row: Panel) {
+		// the name on top and the legend under it, since the row is too narrow for both side by side
+		row.style.flowChildren = 'down';
+		row.style.height = 'fit-children';
+		const legend = $.CreatePanel('Panel', row, `${this.idPrefix}Legend`);
+		legend.style.width = `${LEGEND_SIZE}px`;
+		legend.style.height = `${LEGEND_SIZE}px`;
+		legend.style.horizontalAlign = 'center';
+		legend.style.margin = '4px 0px 6px 0px';
+
+		const pitch = LEGEND_CELL + LEGEND_GAP;
+		this.legendCells = INPUT_NAMES.map((input, i) => {
+			const [cellRow, column] = LEGEND_CELLS[i];
+			const cell = $.CreatePanel('Panel', legend, `${this.idPrefix}Legend${input}`);
+			cell.style.width = `${LEGEND_CELL}px`;
+			cell.style.height = `${LEGEND_CELL}px`;
+			cell.style.position = `${column * pitch}px ${cellRow * pitch}px 0px`;
+			cell.style.border = '1px solid rgba(0, 0, 0, 0.6)';
+
+			const label = $.CreatePanel('Label', cell, `${this.idPrefix}LegendLabel${input}`);
+			label.text = input.split('').join('+');
+			label.style.horizontalAlign = 'center';
+			label.style.verticalAlign = 'center';
+			label.style.fontSize = '10px';
+			label.style.fontWeight = 'bold';
+			label.style.color = 'rgba(255, 255, 255, 1)';
+			label.style.textShadow = 'rgba(0, 0, 0, 0.8) 0px 1px 2px 2.5';
+			return cell;
+		});
+		this.colorLegend();
+	}
+
+	/** Colors the legend with the current input colors, once the settings panel has built it. */
+	colorLegend() {
+		if (!this.colors) return;
+		this.legendCells.forEach((cell, i) => {
+			if (cell.IsValid()) cell.style.backgroundColor = this.colors[i];
+		});
+	}
+}
 
 /** Extra properties for a style, where `tooltip` is a localization token */
 type DFHudStyleExtra = { tooltip?: string } & Record<string, unknown>;
@@ -214,6 +362,139 @@ export abstract class DFHudComponent {
 			children: children.map((styleID) => ({ styleID })),
 			...localizeExtra(extra)
 		} as DFHudStyle;
+	}
+
+	/**
+	 * The dropdown choosing how zones of inputs that aren't held are colored, with its color pickers and legend, as
+	 * style IDs `<prefix>Color`, `<prefix>Legend`, `<prefix>OneKeyColor`, `<prefix>TwoKeyColor`,
+	 * `<prefix>KeyColor<W|A|S|D>` and `<prefix>DirColor<input>`. `extraOptions` are the component's own modes, listed
+	 * after the shared ones.
+	 */
+	inputColorStyles(
+		prefix: string,
+		colors: InputColors,
+		name: string,
+		tooltip: string,
+		extraOptions: Array<{ label: string; value: string }>
+	): Record<string, DFHudStyle> {
+		const keys = ['W', 'A', 'S', 'D'];
+		const styles: Record<string, DFHudStyle> = {};
+		styles[`${prefix}Color`] = this.dropdownStyle(
+			name,
+			[
+				{ label: '#Customizer_Df_InputColor_KeyCount', value: InputColorMode.KEY_COUNT },
+				{ label: '#Customizer_Df_InputColor_Keys', value: InputColorMode.KEYS },
+				{ label: '#Customizer_Df_InputColor_Direction', value: InputColorMode.DIRECTION },
+				...extraOptions
+			],
+			(value) => (colors.mode = value),
+			{
+				tooltip,
+				children: [
+					{ styleID: `${prefix}OneKeyColor`, showWhen: InputColorMode.KEY_COUNT },
+					{ styleID: `${prefix}TwoKeyColor`, showWhen: InputColorMode.KEY_COUNT },
+					...keys.map((key) => ({ styleID: `${prefix}KeyColor${key}`, showWhen: InputColorMode.KEYS })),
+					...INPUT_NAMES.map((input) => ({
+						styleID: `${prefix}DirColor${input}`,
+						showWhen: InputColorMode.DIRECTION
+					})),
+					{
+						styleID: `${prefix}Legend`,
+						showWhen: [InputColorMode.KEY_COUNT, InputColorMode.KEYS, InputColorMode.DIRECTION]
+					}
+				]
+			}
+		);
+		// the inputs laid out like the keys, each in its color, so the color settings can be seen together
+		styles[`${prefix}Legend`] = {
+			name: $.Localize('#Customizer_Df_InputColor_Preview'),
+			type: CustomizerPropertyType.NONE,
+			render: (row: Panel) => colors.buildLegend(row)
+		} as DFHudStyle;
+		styles[`${prefix}OneKeyColor`] = this.colorStyle(
+			'#Customizer_Df_InputColor_OneKey',
+			(value) => (colors.oneKeyColor = value)
+		);
+		styles[`${prefix}TwoKeyColor`] = this.colorStyle(
+			'#Customizer_Df_InputColor_TwoKeys',
+			(value) => (colors.twoKeyColor = value)
+		);
+		keys.forEach((key, i) => {
+			styles[`${prefix}KeyColor${key}`] = this.colorStyle(
+				inputName(key),
+				(value) => (colors.keyColors[i] = value)
+			);
+		});
+		INPUT_NAMES.forEach((input, i) => {
+			styles[`${prefix}DirColor${input}`] = this.colorStyle(
+				inputName(input),
+				(value) => (colors.dirColors[i] = value)
+			);
+		});
+		return styles;
+	}
+
+	/** The VQ3 Single-Key Zones dropdown. */
+	singleKeyStyle(set: (value: SingleKeyMode) => void) {
+		return this.dropdownStyle(
+			'#Customizer_Df_SingleKeyZones',
+			[
+				{ label: '#Common_Off', value: SingleKeyMode.OFF },
+				{ label: '#Customizer_Df_SingleKeyZones_Clear', value: SingleKeyMode.CLEAR },
+				{ label: '#Customizer_Df_SingleKeyZones_Always', value: SingleKeyMode.ALWAYS }
+			],
+			(value) => set(value as SingleKeyMode),
+			{ tooltip: '#Customizer_Df_SingleKeyZones_Tooltip', gamemode: Gamemode.DEFRAG_VQ3 }
+		);
+	}
+
+	/** The VQ3 Input Range number entry in degrees, set in radians rounded to 5 degree steps. */
+	inputRangeStyle(set: (value: number) => void) {
+		return this.numberStyle(
+			'#Customizer_Df_InputRange',
+			45,
+			180,
+			(value) => set(MomMath.deg2rad(5 * Math.round(value / 5))),
+			{
+				tooltip: '#Customizer_Df_InputRange_Tooltip',
+				gamemode: Gamemode.DEFRAG_VQ3,
+				settingProps: { min: 45, max: 180, increment: 5 }
+			}
+		);
+	}
+
+	/**
+	 * The inputs that aren't held to draw zones for when all 8 inputs accelerate the same way (VQ3). Each input within
+	 * `range` of the velocity gets the side of the velocity its wish is on; the input nearest the velocity can strafe
+	 * either way, so it gets both sides. Single keys only with a Single-Key Zones mode. The held input's sides are left
+	 * out: its active side, or with `bSkipHeld` both sides.
+	 */
+	findVQ3InputSides(
+		velFromView: number,
+		range: number,
+		singleKeyMode: SingleKeyMode,
+		heldOffset: number | null,
+		bActiveLeft: boolean,
+		bSkipHeld: boolean
+	): InputSide[] {
+		const step = Math.PI * 0.25;
+		const sides: InputSide[] = [];
+		for (let i = 0; i < INPUT_NAMES.length; ++i) {
+			const bTwoKey = i % 2 === 1;
+			if (!bTwoKey && singleKeyMode === SingleKeyMode.OFF) continue;
+
+			const offset = MomMath.remapAngle(i * step);
+			const fromVel = MomMath.remapAngle(offset - velFromView);
+			if (Math.abs(fromVel) > range + 0.001) continue;
+
+			const bHeld = heldOffset !== null && Math.abs(MomMath.remapAngle(offset - heldOffset)) < 0.01;
+			if (bHeld && bSkipHeld) continue;
+			for (const bLeft of Math.abs(fromVel) <= 0.5 * step ? [true, false] : [fromVel > 0]) {
+				if (bHeld && bLeft === bActiveLeft) continue;
+				sides.push({ offset, bLeft, bTwoKey });
+			}
+		}
+		return sides;
 	}
 
 	/** Sets the strip's height, which is what the customizer shows and drags. */
