@@ -17,9 +17,6 @@
 			<Panel id="RightFastZone" />
 			<Panel id="RightTurnZone" />
 			<Panel id="CgazSplitZone" />
-			<Panel id="LeftMirrorZone" />
-			<Panel id="RightMirrorZone" />
-			<Panel id="MirrorSplitZone" />
 		</Panel>
 	</MomHudDFCgaz>
 </root>
