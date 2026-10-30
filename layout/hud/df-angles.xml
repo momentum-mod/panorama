@@ -1,0 +1,14 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+
+	<scripts>
+		<include type="module" src="file://{scripts}/hud/df-angles.ts" />
+	</scripts>
+
+	<MomHudDFAngles class="dfangles" hittest="false">
+		<Label id="PitchStat" class="dfangles__stat dfangles__stat--pitch" />
+		<Label id="YawStat" class="dfangles__stat dfangles__stat--yaw" />
+	</MomHudDFAngles>
+</root>

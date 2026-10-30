@@ -7,8 +7,8 @@
 		<include type="module" src="file://{scripts}/hud/df-cgaz.ts" />
 	</scripts>
 
-	<MomHudDFCgaz class="w-full h-full" hittest="false">
-		<ConVarEnabler id="CgazContainer" class="dfhud__strip" convar="mom_hud_df_cgaz_enable" togglevisibility="true">
+	<MomHudDFCgaz class="w-full" hittest="false">
+		<Panel id="CgazContainer" class="dfhud__strip">
 			<Panel id="LeftTurnZone" />
 			<Panel id="LeftFastZone" />
 			<Panel id="LeftSlowZone" />
@@ -20,6 +20,6 @@
 			<Panel id="LeftMirrorZone" />
 			<Panel id="RightMirrorZone" />
 			<Panel id="MirrorSplitZone" />
-		</ConVarEnabler>
+		</Panel>
 	</MomHudDFCgaz>
 </root>

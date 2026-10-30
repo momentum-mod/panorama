@@ -14,4 +14,9 @@
 			transform: rotatez(180deg);
 		}
 	}
+
+	// set by DFHudComponent.getFrameState
+	&--invalid {
+		opacity: 0;
+	}
 }

@@ -463,69 +463,6 @@ declare namespace SpeedometerSettingsAPI {
 }
 
 declare namespace DefragAPI {
-	interface CgazConfig {
-		enable: boolean;
-		mirrorEnable: boolean;
-		mirrorBorder: float;
-		scaleEnable: boolean;
-		minSpeed: float;
-		height: float;
-		offset: float;
-		dzColor: rgbaColor;
-		fastColor: rgbaColor;
-		slowColor: rgbaColor;
-		turnColor: rgbaColor;
-	}
-
-	interface PrimeConfig {
-		enable: boolean;
-		truenessMode: int32;
-		chainEnable: boolean;
-		inactiveEnable: boolean;
-		inactiveHalfBeatMode: int32;
-		inactiveChainEnable: boolean;
-		inactiveOutlineEnable: boolean;
-		inactiveOutlineWidth: float;
-		inactiveGainColorEnable: boolean;
-		oneLineEnable: boolean;
-		minSpeed: float;
-		height: float;
-		offset: float;
-		gainColor: rgbaColor;
-		lossColor: rgbaColor;
-		altColor: rgbaColor;
-		highlightEnable: boolean;
-		highlightStrength: float;
-		highlightBorder: float;
-		highlightColor: rgbaColor;
-		scaleHeightEnable: boolean;
-		scaleColorEnable: boolean;
-		arrowEnable: boolean;
-		arrowSize: float;
-		arrowColor: rgbaColor;
-	}
-
-	interface TurntConfig {
-		enable: boolean;
-		minSpeed: float;
-		height: float;
-		offset: float;
-		tickWidth: float;
-		/** Degrees between ticks */
-		spacing: float;
-		/** Degrees from the crosshair at which ticks have faded out */
-		span: float;
-		/** Rate error, as a fraction of the optimal rate, still drawn in the on-rate color */
-		tolerance: float;
-		/** Seconds */
-		smoothing: float;
-		/** Seconds */
-		fadeTime: float;
-		arrowEnable: boolean;
-		arrowSize: float;
-		arrowColor: rgbaColor;
-	}
-
 	/** Movement values the turnt-meter's optimal turn rate depends on. All zero outside CPM. */
 	interface TurntPhysics {
 		airAccelerate: float;
@@ -534,42 +471,6 @@ declare namespace DefragAPI {
 		airDecelerate: float;
 		/** Degrees */
 		airDecelerateAngle: float;
-	}
-
-	interface SnapConfig {
-		enable: boolean;
-		enableHeightGain: boolean;
-		highlightMode: int32;
-		colorMode: int32;
-		minSpeed: float;
-		height: float;
-		offset: float;
-		color: rgbaColor;
-		altColor: rgbaColor;
-		highlightColor: rgbaColor;
-		altHighlightColor: rgbaColor;
-		fastColor: rgbaColor;
-		slowColor: rgbaColor;
-	}
-
-	interface CompassConfig {
-		compassMode: int32;
-		compassArrowSize: float;
-		compassTickSize: float;
-		compassOffset: float;
-		pitchTarget: string;
-		statMode: int32;
-		color: rgbaColor;
-		highlightColor: rgbaColor;
-	}
-
-	interface PitchConfig {
-		pitchEnable: boolean;
-		pitchTarget: string;
-		pitchWidth: float;
-		pitchOffset: float;
-		color: rgbaColor;
-		highlightColor: rgbaColor;
 	}
 
 	const enum DefragPhysics {
