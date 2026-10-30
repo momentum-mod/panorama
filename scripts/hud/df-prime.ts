@@ -1,8 +1,9 @@
 import { PanelHandler } from 'util/module-helpers';
-import { GamemodeCategory, GamemodeCategoryToGamemode } from 'common/web/enums/gamemode.enum';
+import { Gamemode } from 'common/web/enums/gamemode.enum';
 import * as MomMath from 'util/math';
 import { rgbaStringLerp, rgbaStringToTuple, tupleToRgbaString } from 'util/colors';
-import { DFHudComponent, InputMode, isOnSlick, StyleObject, ZonePanel } from 'common/df-hud';
+import { CustomizerPropertyType } from 'common/hud-customizer';
+import { DFHudComponent, DFHudStyle, InputMode, isOnSlick, StyleObject, ZonePanel } from 'common/df-hud';
 
 enum TruenessMode {
 	GROUND = 1 << 0, // show ground zones
@@ -21,12 +22,46 @@ interface PrimeChain {
 	target: number;
 }
 
-enum HalfBeatMode {
+/** VQ3 single-key inactive zones */
+enum SingleKeyMode {
 	OFF = 'off',
-	ON = 'on',
-	/** Show the half-beat zones before their target passes the diagonal one */
-	EARLY = 'early'
+	/** Only where they don't overlap a two-key zone */
+	CLEAR = 'clear',
+	ALWAYS = 'always'
 }
+
+/** z-index of the active zones; inactive zones stack below them by gain */
+const ACTIVE_ZONE_Z = 1000;
+
+enum InactiveColorMode {
+	/** One color for single keys and one for two-key inputs */
+	KEY_COUNT = 'keyCount',
+	/** A color for each of W, A, S and D, with two-key inputs blending their keys' colors */
+	KEYS = 'keys',
+	/** A color for each of the 8 inputs */
+	DIRECTION = 'direction',
+	/** The gain or loss color, like active zones */
+	GAIN = 'gain'
+}
+
+/** The 8 inputs in 45 degree steps from the view, counterclockwise (positive to the left) */
+const INPUT_NAMES = ['W', 'WA', 'A', 'SA', 'S', 'SD', 'D', 'WD'] as const;
+
+/** Size of a cell of the customizer's input color legend and the gap between cells, in layout px */
+const LEGEND_CELL = 28;
+const LEGEND_GAP = 2;
+const LEGEND_SIZE = 3 * LEGEND_CELL + 2 * LEGEND_GAP;
+/** Row and column of each input in the 3x3 legend, in INPUT_NAMES order: W on top, A on the left */
+const LEGEND_CELLS = [
+	[0, 1],
+	[0, 0],
+	[1, 0],
+	[2, 0],
+	[2, 1],
+	[2, 2],
+	[1, 2],
+	[0, 2]
+] as const;
 
 let HIGHLIGHT_CLASS: StyleObject;
 let PRIME_SIGHT_CLASS: StyleObject;
@@ -37,7 +72,7 @@ class DFPrimeHandler extends DFHudComponent {
 	primeZones: ZonePanel[] = [];
 	primeInactiveZonesLeft: ZonePanel[] = [];
 	primeInactiveZonesRight: ZonePanel[] = [];
-	/** A second inactive chain: VQ3 half-beat, or the same-side diagonal in CPM a/d turns */
+	/** A second inactive chain: the same-side diagonal in CPM a/d turns */
 	primeExtraZones: ZonePanel[] = [];
 	primeExtraFirstZone = this.initInactiveZone('PrimeExtraFirstZone');
 	primeFirstZoneLeft = this.initZonePanel($.CreatePanel('Panel', this.primeContainer, 'PrimeFirstZoneLeft'));
@@ -51,13 +86,29 @@ class DFPrimeHandler extends DFHudComponent {
 	primeTruenessMode: number;
 	primeChain: boolean;
 	primeShowInactive: boolean;
-	primeHalfBeatMode: HalfBeatMode;
-	primeShowHalfBeat: boolean;
-	primeHalfBeatEarly: boolean;
+	primeSingleKeyMode: SingleKeyMode;
+	/** VQ3 inactive zones show for inputs up to this far from the velocity, in radians */
+	primeInactiveRange: number;
+	/** First zones of the VQ3 inactive inputs, one per input side drawn this frame */
+	primeVQ3FirstZones: ZonePanel[] = [];
+	/** Chain panels of the VQ3 inactive inputs, a pool for each first zone */
+	primeVQ3ChainZones: ZonePanel[][] = [];
+	/** Cells of the customizer's input color legend in INPUT_NAMES order, rebuilt with the settings panel */
+	primeLegendCells: Panel[] = [];
 	primeInactiveChain: boolean;
 	primeInactiveOutline: boolean;
 	primeInactiveOutlineWidth: number;
-	primeInactiveGainColor: boolean;
+	primeInactiveColorMode: InactiveColorMode;
+	primeOneKeyColor: rgbaColor;
+	primeTwoKeyColor: rgbaColor;
+	/** W, A, S, D colors of the KEYS mode */
+	primeKeyColors: rgbaColor[] = [];
+	/** Colors of the DIRECTION mode, in INPUT_NAMES order */
+	primeDirColors: rgbaColor[] = [];
+	/** Inactive zone color for each input in INPUT_NAMES order, or null when inactive zones aren't colored by input */
+	primeInputColors: rgbaColor[] = null;
+	/** Wish offset of the input each of this frame's inactive zones is drawn for */
+	inactiveWishOffsets = new Map<ZonePanel, number>();
 	primeLockOneLine: boolean;
 	primeMinSpeed: number;
 	primeHeight: number;
@@ -92,7 +143,8 @@ class DFPrimeHandler extends DFHudComponent {
 
 		this.registerComponent(
 			'#Customizer_Df_Prime_Name',
-			GamemodeCategoryToGamemode.get(GamemodeCategory.DEFRAG),
+			// snap zones don't apply to VTG
+			[Gamemode.DEFRAG_CPM, Gamemode.DEFRAG_VQ3],
 			{
 				minSpeed: this.numberStyle(
 					'#Customizer_Df_MinSpeed',
@@ -101,6 +153,19 @@ class DFPrimeHandler extends DFHudComponent {
 					(value) => (this.primeMinSpeed = value)
 				),
 				height: this.numberStyle('#Customizer_Height', 1, 50, (value) => (this.primeHeight = value)),
+				oneLine: this.checkboxStyle(
+					'#Customizer_Df_Prime_OneLine',
+					(value) => (this.primeLockOneLine = value),
+					{ tooltip: '#Customizer_Df_Prime_OneLine_Tooltip' }
+				),
+				colors: this.groupStyle('#Customizer_Colors', ['gainColor', 'lossColor', 'altColor']),
+				gainColor: this.colorStyle(
+					'#Customizer_Df_Snap_HighGainColor',
+					(value) => (this.primeGainColor = value)
+				),
+				lossColor: this.colorStyle('#Customizer_Loss', (value) => (this.primeLossColor = value)),
+				// the low end of color by gain, also used by inactive zones without an input or gain color
+				altColor: this.colorStyle('#Customizer_Df_Snap_LowGainColor', (value) => (this.primeAltColor = value)),
 				heightGain: this.checkboxStyle(
 					'#Customizer_Df_HeightGain',
 					(value) => (this.primeHeightgainEnable = value),
@@ -111,56 +176,44 @@ class DFPrimeHandler extends DFHudComponent {
 					(value) => (this.primeColorgainEnable = value),
 					{ tooltip: '#Customizer_Df_ColorByGain_Tooltip' }
 				),
-				oneLine: this.checkboxStyle(
-					'#Customizer_Df_Prime_OneLine',
-					(value) => (this.primeLockOneLine = value),
-					{ tooltip: '#Customizer_Df_Prime_OneLine_Tooltip' }
-				),
 				fullChain: this.checkboxStyle('#Customizer_Df_Prime_FullChain', (value) => (this.primeChain = value), {
 					tooltip: '#Customizer_Df_Prime_FullChain_Tooltip'
 				}),
-				trueness: this.groupStyle(
-					'#Customizer_Df_Prime_Trueness',
-					['truenessGround', 'truenessProjected', 'truenessCpmTurn'],
-					{ tooltip: '#Customizer_Df_Prime_Trueness_Tooltip' }
-				),
-				truenessGround: truenessStyle(
-					'#Customizer_Df_Prime_TruenessGround',
-					'#Customizer_Df_Prime_TruenessGround_Tooltip',
-					TruenessMode.GROUND
-				),
-				truenessProjected: truenessStyle(
-					'#Customizer_Df_Prime_TruenessProjected',
-					'#Customizer_Df_Prime_TruenessProjected_Tooltip',
-					TruenessMode.PROJECTED
-				),
-				truenessCpmTurn: truenessStyle(
-					'#Customizer_Df_Prime_TruenessCpmTurn',
-					'#Customizer_Df_Prime_TruenessCpmTurn_Tooltip',
-					TruenessMode.CPM_TURN
-				),
 				inactiveEnable: this.checkboxStyle(
 					'#Customizer_Df_Prime_Inactive',
 					(value) => (this.primeShowInactive = value),
 					{
 						tooltip: '#Customizer_Df_Prime_Inactive_Tooltip',
 						children: [
-							{ styleID: 'inactiveHalfBeat', showWhen: true },
+							{ styleID: 'inactiveSingleKey', showWhen: true },
+							{ styleID: 'inactiveRange', showWhen: true },
 							{ styleID: 'inactiveChain', showWhen: true },
 							{ styleID: 'inactiveOutline', showWhen: true },
-							{ styleID: 'inactiveGainColor', showWhen: true }
+							{ styleID: 'inactiveColor', showWhen: true }
 						]
 					}
 				),
-				inactiveHalfBeat: this.dropdownStyle(
-					'#Customizer_Df_Prime_InactiveHalfBeat',
+				inactiveSingleKey: this.dropdownStyle(
+					'#Customizer_Df_Prime_InactiveSingleKey',
 					[
-						{ label: '#Common_Off', value: HalfBeatMode.OFF },
-						{ label: '#Common_On', value: HalfBeatMode.ON },
-						{ label: '#Customizer_Df_Prime_InactiveHalfBeat_Early', value: HalfBeatMode.EARLY }
+						{ label: '#Common_Off', value: SingleKeyMode.OFF },
+						{ label: '#Customizer_Df_Prime_InactiveSingleKey_Clear', value: SingleKeyMode.CLEAR },
+						{ label: '#Customizer_Df_Prime_InactiveSingleKey_Always', value: SingleKeyMode.ALWAYS }
 					],
-					(value) => (this.primeHalfBeatMode = value as HalfBeatMode),
-					{ tooltip: '#Customizer_Df_Prime_InactiveHalfBeat_Tooltip' }
+					(value) => (this.primeSingleKeyMode = value as SingleKeyMode),
+					{ tooltip: '#Customizer_Df_Prime_InactiveSingleKey_Tooltip', gamemode: Gamemode.DEFRAG_VQ3 }
+				),
+				// in 5 degree steps
+				inactiveRange: this.numberStyle(
+					'#Customizer_Df_Prime_InactiveRange',
+					45,
+					180,
+					(value) => (this.primeInactiveRange = MomMath.deg2rad(5 * Math.round(value / 5))),
+					{
+						tooltip: '#Customizer_Df_Prime_InactiveRange_Tooltip',
+						gamemode: Gamemode.DEFRAG_VQ3,
+						settingProps: { min: 45, max: 180, increment: 5 }
+					}
 				),
 				inactiveChain: this.checkboxStyle(
 					'#Customizer_Df_Prime_FullChain',
@@ -178,9 +231,70 @@ class DFPrimeHandler extends DFHudComponent {
 					10,
 					(value) => (this.primeInactiveOutlineWidth = value)
 				),
-				inactiveGainColor: this.checkboxStyle(
-					'#Customizer_Df_Prime_InactiveGainColor',
-					(value) => (this.primeInactiveGainColor = value)
+				inactiveColor: this.dropdownStyle(
+					'#Customizer_Df_Prime_InactiveColorMode',
+					[
+						{
+							label: '#Customizer_Df_Prime_InactiveColorMode_KeyCount',
+							value: InactiveColorMode.KEY_COUNT
+						},
+						{ label: '#Customizer_Df_Prime_InactiveColorMode_Keys', value: InactiveColorMode.KEYS },
+						{
+							label: '#Customizer_Df_Prime_InactiveColorMode_Direction',
+							value: InactiveColorMode.DIRECTION
+						},
+						{ label: '#Customizer_Df_Prime_InactiveColorMode_Gain', value: InactiveColorMode.GAIN }
+					],
+					(value) => (this.primeInactiveColorMode = value as InactiveColorMode),
+					{
+						tooltip: '#Customizer_Df_Prime_InactiveColorMode_Tooltip',
+						children: [
+							{ styleID: 'inactiveOneKeyColor', showWhen: InactiveColorMode.KEY_COUNT },
+							{ styleID: 'inactiveTwoKeyColor', showWhen: InactiveColorMode.KEY_COUNT },
+							...['W', 'A', 'S', 'D'].map((key) => ({
+								styleID: `inactiveKeyColor${key}`,
+								showWhen: InactiveColorMode.KEYS
+							})),
+							...INPUT_NAMES.map((input) => ({
+								styleID: `inactiveDirColor${input}`,
+								showWhen: InactiveColorMode.DIRECTION
+							})),
+							{
+								styleID: 'inactiveLegend',
+								showWhen: [
+									InactiveColorMode.KEY_COUNT,
+									InactiveColorMode.KEYS,
+									InactiveColorMode.DIRECTION
+								]
+							}
+						]
+					}
+				),
+				// the inputs laid out like the keys, each in its color, so the color settings can be seen together
+				inactiveLegend: {
+					name: $.Localize('#Customizer_Df_Prime_InactiveLegend'),
+					type: CustomizerPropertyType.NONE,
+					render: (row: Panel) => this.buildLegend(row)
+				} as DFHudStyle,
+				inactiveOneKeyColor: this.colorStyle(
+					'#Customizer_Df_Prime_OneKey',
+					(value) => (this.primeOneKeyColor = value)
+				),
+				inactiveTwoKeyColor: this.colorStyle(
+					'#Customizer_Df_Prime_TwoKeys',
+					(value) => (this.primeTwoKeyColor = value)
+				),
+				...Object.fromEntries(
+					['W', 'A', 'S', 'D'].map((key, i) => [
+						`inactiveKeyColor${key}`,
+						this.colorStyle(this.inputName(key), (value) => (this.primeKeyColors[i] = value))
+					])
+				),
+				...Object.fromEntries(
+					INPUT_NAMES.map((input, i) => [
+						`inactiveDirColor${input}`,
+						this.colorStyle(this.inputName(input), (value) => (this.primeDirColors[i] = value))
+					])
 				),
 				highlightEnable: this.checkboxStyle(
 					'#Customizer_Df_Highlight',
@@ -218,10 +332,30 @@ class DFPrimeHandler extends DFHudComponent {
 				}),
 				arrowSize: this.numberStyle('#Customizer_Size', 1, 25, (value) => (this.primeArrowSize = value)),
 				arrowColor: this.colorStyle('#Customizer_Color', (value) => (this.primeArrowColor = value)),
-				colors: this.groupStyle('#Customizer_Colors', ['gainColor', 'lossColor', 'altColor']),
-				gainColor: this.colorStyle('#Customizer_Gain', (value) => (this.primeGainColor = value)),
-				lossColor: this.colorStyle('#Customizer_Loss', (value) => (this.primeLossColor = value)),
-				altColor: this.colorStyle('#Customizer_Df_Prime_InactiveColor', (value) => (this.primeAltColor = value))
+				trueness: this.groupStyle(
+					'#Customizer_Df_Prime_Trueness',
+					['truenessGround', 'truenessProjected', 'truenessCpmTurn'],
+					{ tooltip: '#Customizer_Df_Prime_Trueness_Tooltip' }
+				),
+				truenessGround: truenessStyle(
+					'#Customizer_Df_Prime_TruenessGround',
+					'#Customizer_Df_Prime_TruenessGround_Tooltip',
+					TruenessMode.GROUND
+				),
+				truenessProjected: truenessStyle(
+					'#Customizer_Df_Prime_TruenessProjected',
+					'#Customizer_Df_Prime_TruenessProjected_Tooltip',
+					TruenessMode.PROJECTED
+				),
+				// VQ3 always uses the real a/d turn acceleration
+				truenessCpmTurn: {
+					...truenessStyle(
+						'#Customizer_Df_Prime_TruenessCpmTurn',
+						'#Customizer_Df_Prime_TruenessCpmTurn_Tooltip',
+						TruenessMode.CPM_TURN
+					),
+					gamemode: Gamemode.DEFRAG_CPM
+				}
 			},
 			{
 				resizeY: true,
@@ -237,8 +371,8 @@ class DFPrimeHandler extends DFHudComponent {
 	}
 
 	applyConfig() {
-		this.primeShowHalfBeat = this.primeShowInactive && this.primeHalfBeatMode !== HalfBeatMode.OFF;
-		this.primeHalfBeatEarly = this.primeHalfBeatMode === HalfBeatMode.EARLY;
+		this.primeInputColors = this.findInputColors();
+		this.colorLegend();
 
 		PRIME_SIGHT_CLASS = new StyleObject(this.primeHeight, this.primeAltColor);
 		HIGHLIGHT_CLASS = new StyleObject(this.primeHeight, this.primeHlColor);
@@ -252,7 +386,9 @@ class DFPrimeHandler extends DFHudComponent {
 			...this.primeInactiveZonesLeft,
 			...this.primeInactiveZonesRight,
 			...this.primeExtraZones,
-			this.primeExtraFirstZone
+			this.primeExtraFirstZone,
+			...this.primeVQ3FirstZones,
+			...this.primeVQ3ChainZones.flat()
 		]) {
 			this.applyClass(zone, PRIME_SIGHT_CLASS);
 			zone.style.verticalAlign = 'top';
@@ -264,12 +400,58 @@ class DFPrimeHandler extends DFHudComponent {
 
 		this.applyClassBorder(this.primeHighlightZone, this.primeHlBorder, HIGHLIGHT_CLASS);
 		this.primeHighlightZone.style.verticalAlign = 'top';
-		this.primeHighlightZone.style.zIndex = 1;
+		this.primeHighlightZone.style.zIndex = ACTIVE_ZONE_Z + 1;
 
 		const width = 2 * this.primeArrowSize;
 		const height = containerHeight + 2 * width;
 		this.setupArrow(this.primeArrow, this.primeArrowIcon, height, width, 'top', this.primeArrowColor);
 		if (!this.primeArrowEnable) this.primeArrow.visible = false;
+	}
+
+	/** An input's direction followed by its keys as in the legend, e.g. "Forward-Left (W+A)" */
+	inputName(input: string) {
+		return `${$.Localize(`#Customizer_Df_Prime_Input_${input}`)} (${input.split('').join('+')})`;
+	}
+
+	/** Builds the input color legend in its customizer settings row: W on top and A on the left, like the keys. */
+	buildLegend(row: Panel) {
+		// the name on top and the legend under it, since the row is too narrow for both side by side
+		row.style.flowChildren = 'down';
+		row.style.height = 'fit-children';
+		const legend = $.CreatePanel('Panel', row, 'PrimeLegend');
+		legend.style.width = `${LEGEND_SIZE}px`;
+		legend.style.height = `${LEGEND_SIZE}px`;
+		legend.style.horizontalAlign = 'center';
+		legend.style.margin = '4px 0px 6px 0px';
+
+		const pitch = LEGEND_CELL + LEGEND_GAP;
+		this.primeLegendCells = INPUT_NAMES.map((input, i) => {
+			const [cellRow, column] = LEGEND_CELLS[i];
+			const cell = $.CreatePanel('Panel', legend, `PrimeLegend${input}`);
+			cell.style.width = `${LEGEND_CELL}px`;
+			cell.style.height = `${LEGEND_CELL}px`;
+			cell.style.position = `${column * pitch}px ${cellRow * pitch}px 0px`;
+			cell.style.border = '1px solid rgba(0, 0, 0, 0.6)';
+
+			const label = $.CreatePanel('Label', cell, `PrimeLegendLabel${input}`);
+			label.text = input.split('').join('+');
+			label.style.horizontalAlign = 'center';
+			label.style.verticalAlign = 'center';
+			label.style.fontSize = '10px';
+			label.style.fontWeight = 'bold';
+			label.style.color = 'rgba(255, 255, 255, 1)';
+			label.style.textShadow = 'rgba(0, 0, 0, 0.8) 0px 1px 2px 2.5';
+			return cell;
+		});
+		this.colorLegend();
+	}
+
+	/** Colors the legend with the current input colors, once the settings panel has built it. */
+	colorLegend() {
+		if (!this.primeInputColors) return;
+		this.primeLegendCells.forEach((cell, i) => {
+			if (cell.IsValid()) cell.style.backgroundColor = this.primeInputColors[i];
+		});
 	}
 
 	onUpdate() {
@@ -306,6 +488,8 @@ class DFPrimeHandler extends DFHudComponent {
 		this.clearZones(this.primeInactiveZonesLeft);
 		this.clearZones(this.primeInactiveZonesRight);
 		this.clearZones(this.primeExtraZones);
+		this.clearZones(this.primeVQ3FirstZones);
+		for (const pool of this.primeVQ3ChainZones) this.clearZones(pool);
 
 		if (phyMode !== DefragAPI.DefragPhysics.VTG && speed > this.primeMinSpeed) {
 			// the real acceleration gives ground zones on the ground (GROUND) and a/d turn zones in the air (CPM_TURN,
@@ -387,6 +571,7 @@ class DFPrimeHandler extends DFHudComponent {
 		const inputMode = state.inputMode;
 		const velocity = state.velocity;
 		const gainZonesMap = new Map<ZonePanel, number>();
+		this.inactiveWishOffsets.clear();
 		const phyMode = state.physicsMode;
 
 		let speedGain = 0;
@@ -428,19 +613,14 @@ class DFPrimeHandler extends DFHudComponent {
 		}
 
 		const bTurn = inputMode === InputMode.TURN_LEFT || inputMode === InputMode.TURN_RIGHT;
-		// VQ3 only: the half-beat input drawn beside the mirrored one on the inactive side, when shown
-		let halfBeatOffset: number = null;
 		if (bFill || bTurn) {
 			// the active side uses the actual wish direction (or its strafe equivalent when a turn isn't filled),
-			// and the inactive side mirrors it across the velocity
+			// and in CPM the inactive side mirrors it across the velocity (A/D turns mirror to the strafe diagonal on
+			// the other side). VQ3 draws its inactive zones per input instead, see drawVQ3InactiveZones
 			const sideSign = Math.sign(wishOffset);
 			const activeOffset = bFill ? wishOffset : sideSign * strafeOffset;
-			let inactiveOffset: number;
-			if (bVQ3) {
-				inactiveOffset = this.findVQ3MirrorOffset(wishOffset, velFromView);
-				halfBeatOffset = this.findVQ3HalfBeatOffset(wishOffset, velFromView, targetAngle, inactiveOffset);
-			} else {
-				// CPM: A/D turns mirror to the strafe diagonal on the other side
+			let inactiveOffset = activeOffset;
+			if (!bVQ3) {
 				inactiveOffset = bTurn ? -sideSign * strafeOffset : this.findCPMMirrorOffset(wishOffset, velFromView);
 			}
 			if (this.primeActiveLeft) {
@@ -472,11 +652,13 @@ class DFPrimeHandler extends DFHudComponent {
 		const leftChain = this.findPrimeChain(leftTarget, leftOffset, leftAngles);
 		const rightChain = this.findPrimeChain(rightTarget, rightOffset, rightAngles);
 
-		// first zones are drawn from the target outward, but their gain uses the whole zone
+		// first zones are drawn from the target outward, but their gain uses the whole zone. VQ3 has no mirrored side
+		const bShowMirror = this.primeShowInactive && !bVQ3;
 		const [firstLeftEdge, firstLeftEnd] = this.primeZoneEdges(leftChain, leftChain.first);
-		if (fillLeftZones || this.primeShowInactive) {
+		if (fillLeftZones || bShowMirror) {
 			this.drawPrimeZone(this.primeFirstZoneLeft, firstLeftEdge, leftChain.target);
 			this.primeFirstZoneLeft.isInactive = !fillLeftZones;
+			this.inactiveWishOffsets.set(this.primeFirstZoneLeft, leftWishOffset);
 		} else {
 			this.clearZones([this.primeFirstZoneLeft]);
 		}
@@ -484,21 +666,26 @@ class DFPrimeHandler extends DFHudComponent {
 		// both first zones count toward the height scale, so diagonal strafing shows which side has more gain;
 		// CPM a/d turn zones scale by their own gain, since the mirrored strafe side's would always dwarf them
 		const bTurnScaleOnly = bTurn && bFill && !bVQ3;
-		speedGain = this.findPrimeGain(0.5 * (firstLeftEdge + firstLeftEnd), velocity, leftWishDir);
-		gainZonesMap.set(this.primeFirstZoneLeft, speedGain);
-		if ((fillLeftZones || !bTurnScaleOnly) && speedGain > gainMax) gainMax = speedGain;
+		if (fillLeftZones || !bVQ3) {
+			speedGain = this.findPrimeGain(0.5 * (firstLeftEdge + firstLeftEnd), velocity, leftWishDir);
+			gainZonesMap.set(this.primeFirstZoneLeft, speedGain);
+			if ((fillLeftZones || !bTurnScaleOnly) && speedGain > gainMax) gainMax = speedGain;
+		}
 
 		const [firstRightStart, firstRightEdge] = this.primeZoneEdges(rightChain, rightChain.first);
-		if (fillRightZones || this.primeShowInactive) {
+		if (fillRightZones || bShowMirror) {
 			this.drawPrimeZone(this.primeFirstZoneRight, rightChain.target, firstRightEdge);
 			this.primeFirstZoneRight.isInactive = !fillRightZones;
+			this.inactiveWishOffsets.set(this.primeFirstZoneRight, rightWishOffset);
 		} else {
 			this.clearZones([this.primeFirstZoneRight]);
 		}
 
-		speedGain = this.findPrimeGain(0.5 * (firstRightStart + firstRightEdge), velocity, rightWishDir);
-		gainZonesMap.set(this.primeFirstZoneRight, speedGain);
-		if ((fillRightZones || !bTurnScaleOnly) && speedGain > gainMax) gainMax = speedGain;
+		if (fillRightZones || !bVQ3) {
+			speedGain = this.findPrimeGain(0.5 * (firstRightStart + firstRightEdge), velocity, rightWishDir);
+			gainZonesMap.set(this.primeFirstZoneRight, speedGain);
+			if ((fillRightZones || !bTurnScaleOnly) && speedGain > gainMax) gainMax = speedGain;
+		}
 
 		if (fillLeftZones && this.primeChain) {
 			const leftBoundary = leftChain.target - (boundaryAngle - targetAngle);
@@ -529,7 +716,7 @@ class DFPrimeHandler extends DFHudComponent {
 		}
 
 		// inactive sides always draw their first zone (above); the rest of their chain is optional
-		if (this.primeShowInactive && this.primeInactiveChain) {
+		if (bShowMirror && this.primeInactiveChain) {
 			const boundaryDistance = boundaryAngle - targetAngle;
 			if (!fillLeftZones) {
 				this.fillInactiveChain(
@@ -540,7 +727,8 @@ class DFPrimeHandler extends DFHudComponent {
 					'PrimeInactiveZoneLeft',
 					gainZonesMap,
 					velocity,
-					leftWishDir
+					leftWishDir,
+					leftWishOffset
 				);
 			}
 			if (!fillRightZones) {
@@ -552,46 +740,29 @@ class DFPrimeHandler extends DFHudComponent {
 					'PrimeInactiveZoneRight',
 					gainZonesMap,
 					velocity,
-					rightWishDir
+					rightWishDir,
+					rightWishOffset
 				);
 			}
 		}
 
-		// VQ3 half-beat (see findVQ3HalfBeatOffset), drawn as an extra inactive chain beside the mirrored one
-		if (halfBeatOffset !== null) {
-			const halfBeatWishDir = MomMath.rotateVector2D(viewDir, halfBeatOffset);
-			const bLeft = !this.primeActiveLeft;
-			const halfBeatChain = this.findPrimeChain(
-				bLeft ? -targetAngle - velAngle : targetAngle - velAngle,
-				-halfBeatOffset - viewAngle,
-				this.primeAngles
+		if (bVQ3 && this.primeShowInactive) {
+			gainMax = this.drawVQ3InactiveZones(
+				viewDir,
+				viewAngle,
+				velAngle,
+				velFromView,
+				targetAngle,
+				boundaryAngle,
+				velocity,
+				bFill ? wishOffset : null,
+				gainZonesMap,
+				gainMax
 			);
-			const [firstStart, firstEnd] = this.primeZoneEdges(halfBeatChain, halfBeatChain.first);
-			if (bLeft) this.drawPrimeZone(this.primeExtraFirstZone, firstStart, halfBeatChain.target);
-			else this.drawPrimeZone(this.primeExtraFirstZone, halfBeatChain.target, firstEnd);
-			gainZonesMap.set(
-				this.primeExtraFirstZone,
-				this.findPrimeGain(0.5 * (firstStart + firstEnd), velocity, halfBeatWishDir)
-			);
-
-			if (this.primeInactiveChain) {
-				const direction = bLeft ? -1 : 1;
-				this.fillInactiveChain(
-					halfBeatChain,
-					direction,
-					halfBeatChain.target + direction * (boundaryAngle - targetAngle),
-					this.primeExtraZones,
-					'PrimeExtraZone',
-					gainZonesMap,
-					velocity,
-					halfBeatWishDir
-				);
-			}
 		}
 
 		// CPM a/d turns: the inactive side shows the opposite diagonal (W+D while holding A), so also show the
-		// same-side diagonal (W+A) as inactive zones; either can have more gain depending on the velocity. Half-beat
-		// is VQ3-only, so the extra chain's panels are free here.
+		// same-side diagonal (W+A) as inactive zones; either can have more gain depending on the velocity.
 		if (bTurnScaleOnly && this.primeShowInactive) {
 			const sameWishOffset = Math.sign(wishOffset) * strafeOffset;
 			const sameWishDir = MomMath.rotateVector2D(viewDir, sameWishOffset);
@@ -610,6 +781,7 @@ class DFPrimeHandler extends DFHudComponent {
 				this.primeExtraFirstZone,
 				this.findPrimeGain(0.5 * (firstStart + firstEnd), velocity, sameWishDir)
 			);
+			this.inactiveWishOffsets.set(this.primeExtraFirstZone, sameWishOffset);
 
 			if (this.primeInactiveChain) {
 				this.fillInactiveChain(
@@ -620,7 +792,8 @@ class DFPrimeHandler extends DFHudComponent {
 					'PrimeExtraZone',
 					gainZonesMap,
 					velocity,
-					sameWishDir
+					sameWishDir,
+					sameWishOffset
 				);
 			}
 		}
@@ -638,6 +811,13 @@ class DFPrimeHandler extends DFHudComponent {
 			}
 			inactiveScale = this.NaNCheck(1 / (inactiveGainMax > 0 ? inactiveGainMax : this.primeAccel), 1);
 		}
+		// overlapping inactive zones show the one with more gain on top, and active zones above them all
+		const inactiveByGain = [...gainZonesMap.entries()]
+			.filter(([zone]) => zone.isInactive)
+			.sort(([, a], [, b]) => a - b)
+			.map(([zone]) => zone);
+		for (const [i, zone] of inactiveByGain.entries()) zone.style.zIndex = i + 1;
+
 		for (const [zone, gain] of gainZonesMap.entries()) {
 			const zoneScale = zone.isInactive ? inactiveScale : scale;
 			const gainFactor = this.NaNCheck(Math.min(Math.abs(gain * zoneScale), 1), 1);
@@ -653,14 +833,12 @@ class DFPrimeHandler extends DFHudComponent {
 			);
 
 			if (zone.isInactive) {
-				this.styleInactiveZone(
-					zone,
-					this.primeInactiveGainColor ? this.findGainColor(gain, gainFactor) : this.primeAltColor
-				);
+				this.styleInactiveZone(zone, this.findInactiveColor(zone, gain, gainFactor));
 				continue;
 			}
 
 			zone.color = this.findGainColor(gain, gainFactor);
+			zone.style.zIndex = ACTIVE_ZONE_Z;
 
 			// first zones switch between active and inactive, so drop any inactive outline
 			if (zone === this.primeFirstZoneLeft || zone === this.primeFirstZoneRight) {
@@ -686,38 +864,170 @@ class DFPrimeHandler extends DFHudComponent {
 	}
 
 	/**
-	 * Wish offset of the VQ3 half-beat, or null when it isn't shown: with a strafe input held, the half-beat on the
-	 * inactive side, the single key 90 degrees from the travel input (D while holding W+A and travelling forwards, A
-	 * while holding S+D and travelling right). A held half-beat already has the strafe input as its inactive side, so
-	 * it has none. It's shown once its target lies past the active target on the inactive side, so its chain, which runs
-	 * outward from the target, never overlaps the active zones, or with the early option, as soon as its target is
-	 * closer to the crosshair than the mirrored input's.
+	 * VQ3 inactive zones. Every input accelerates the same way in VQ3, so each input within the Input Range of the
+	 * velocity gets the zones on the side of the velocity its wish is on, except the held input's active side; the
+	 * input nearest the velocity can strafe either way, so it gets both sides. Two-key inputs always show. Single keys
+	 * show with the Single-Key Zones option, and with No Overlap only the zones that don't overlap a two-key zone,
+	 * active or not. The first zones count toward the height scale like the mirrored side does in CPM. Returns the new
+	 * gainMax.
 	 */
-	findVQ3HalfBeatOffset(wishOffset: number, velFromView: number, targetAngle: number, mirrorOffset: number): number {
-		if (!this.primeShowHalfBeat) return null;
+	drawVQ3InactiveZones(
+		viewDir: vec2,
+		viewAngle: number,
+		velAngle: number,
+		velFromView: number,
+		targetAngle: number,
+		boundaryAngle: number,
+		velocity: vec3,
+		heldOffset: number | null,
+		gainZonesMap: Map<ZonePanel, number>,
+		gainMax: number
+	): number {
+		const step = Math.PI * 0.25;
+		const singleKeyZones: ZonePanel[] = [];
+		const twoKeyZones: ZonePanel[] = [];
+		const firstZones: ZonePanel[] = [];
+		let slot = 0;
 
-		const { travelOffset, steps } = this.findVQ3TravelSteps(wishOffset, velFromView);
-		const inactiveSide = this.primeActiveLeft ? -1 : 1;
-		// only strafe inputs, and only while the held input is on the side of the travel input it's drawn on
-		if (steps !== -inactiveSide) return null;
+		for (let i = 0; i < INPUT_NAMES.length; ++i) {
+			const bTwoKey = i % 2 === 1;
+			if (!bTwoKey && this.primeSingleKeyMode === SingleKeyMode.OFF) continue;
 
-		// view-relative chain target of a wish offset on a side of the velocity (1 left, -1 right)
-		const findTarget = (offset: number, side: number) =>
-			MomMath.remapAngle(offset - velFromView - side * targetAngle);
-		const halfBeatOffset = MomMath.remapAngle(travelOffset + inactiveSide * Math.PI * 0.5);
-		const halfBeatTarget = findTarget(halfBeatOffset, inactiveSide);
-		const bShowHalfBeat = this.primeHalfBeatEarly
-			? Math.abs(halfBeatTarget) < Math.abs(findTarget(mirrorOffset, inactiveSide))
-			: (halfBeatTarget - findTarget(wishOffset, -inactiveSide)) * -inactiveSide > 0;
-		return bShowHalfBeat ? halfBeatOffset : null;
+			const offset = MomMath.remapAngle(i * step);
+			const fromVel = MomMath.remapAngle(offset - velFromView);
+			if (Math.abs(fromVel) > this.primeInactiveRange + 0.001) continue;
+
+			const sides = Math.abs(fromVel) <= 0.5 * step ? [true, false] : [fromVel > 0];
+			const bHeld = heldOffset !== null && Math.abs(MomMath.remapAngle(offset - heldOffset)) < 0.01;
+			for (const bLeft of sides) {
+				if (bHeld && bLeft === this.primeActiveLeft) continue;
+
+				const zones = this.drawVQ3InactiveInput(
+					slot++,
+					offset,
+					bLeft,
+					viewDir,
+					viewAngle,
+					velAngle,
+					targetAngle,
+					boundaryAngle,
+					velocity,
+					gainZonesMap
+				);
+				firstZones.push(zones[0]);
+				(bTwoKey ? twoKeyZones : singleKeyZones).push(...zones);
+			}
+		}
+
+		if (this.primeSingleKeyMode === SingleKeyMode.CLEAR) {
+			// a held two-key input's zones count too
+			if (heldOffset !== null && Math.round(heldOffset / step) % 2 !== 0) {
+				for (const zone of gainZonesMap.keys()) if (!zone.isInactive) twoKeyZones.push(zone);
+			}
+			const overlaps = (a: ZonePanel, b: ZonePanel) => a.leftPx < b.rightPx && b.leftPx < a.rightPx;
+			for (const zone of singleKeyZones) {
+				if (twoKeyZones.some((other) => overlaps(zone, other))) {
+					this.clearZones([zone]);
+					gainZonesMap.delete(zone);
+				}
+			}
+		}
+
+		for (const zone of firstZones) {
+			const gain = gainZonesMap.get(zone);
+			if (gain !== undefined && gain > gainMax) gainMax = gain;
+		}
+		return gainMax;
 	}
 
-	/** Zone color for a gain: loss color, or gain color (scaled from the alt color when coloring by gain). */
+	/** Draws one VQ3 inactive input's first zone, and its chain with Full Chain on. Returns the zones drawn. */
+	drawVQ3InactiveInput(
+		slot: number,
+		offset: number,
+		bLeft: boolean,
+		viewDir: vec2,
+		viewAngle: number,
+		velAngle: number,
+		targetAngle: number,
+		boundaryAngle: number,
+		velocity: vec3,
+		gainZonesMap: Map<ZonePanel, number>
+	): ZonePanel[] {
+		// panels only grow, like the other pools
+		while (this.primeVQ3FirstZones.length <= slot) {
+			const index = this.primeVQ3FirstZones.length;
+			this.primeVQ3FirstZones.push(this.initInactiveZone(`PrimeVQ3FirstZone${index}`));
+			this.primeVQ3ChainZones.push([]);
+		}
+		const firstZone = this.primeVQ3FirstZones[slot];
+		const wishDir = MomMath.rotateVector2D(viewDir, offset);
+		const chain = this.findPrimeChain(
+			bLeft ? -targetAngle - velAngle : targetAngle - velAngle,
+			-offset - viewAngle,
+			this.primeAngles
+		);
+
+		const [firstStart, firstEnd] = this.primeZoneEdges(chain, chain.first);
+		if (bLeft) this.drawPrimeZone(firstZone, firstStart, chain.target);
+		else this.drawPrimeZone(firstZone, chain.target, firstEnd);
+		gainZonesMap.set(firstZone, this.findPrimeGain(0.5 * (firstStart + firstEnd), velocity, wishDir));
+		this.inactiveWishOffsets.set(firstZone, offset);
+		if (!this.primeInactiveChain) return [firstZone];
+
+		const direction = bLeft ? -1 : 1;
+		const pool = this.primeVQ3ChainZones[slot];
+		this.fillInactiveChain(
+			chain,
+			direction,
+			chain.target + direction * (boundaryAngle - targetAngle),
+			pool,
+			`PrimeVQ3Zone${slot}_`,
+			gainZonesMap,
+			velocity,
+			wishDir,
+			offset
+		);
+		return [firstZone, ...pool.filter((zone) => gainZonesMap.has(zone))];
+	}
+
+	/** Zone color for a gain: loss color, or high-gain color (blended from the low-gain color when coloring by gain). */
 	findGainColor(gain: number, gainFactor: number): rgbaColor {
 		if (gain < 0) return this.primeLossColor;
 		if (this.primeColorgainEnable)
 			return rgbaStringLerp(this.primeAltColor, this.primeGainColor, gainFactor) as rgbaColor;
 		return this.primeGainColor;
+	}
+
+	/**
+	 * Inactive zone colors for each input in the input color modes, in INPUT_NAMES order: one or two keys, each key with
+	 * two-key inputs blending their keys in HSV, or each input. Null in the other modes.
+	 */
+	findInputColors(): rgbaColor[] {
+		switch (this.primeInactiveColorMode) {
+			case InactiveColorMode.KEY_COUNT:
+				return INPUT_NAMES.map((_, i) => (i % 2 ? this.primeTwoKeyColor : this.primeOneKeyColor));
+			case InactiveColorMode.KEYS:
+				return INPUT_NAMES.map((_, i) => {
+					const key = this.primeKeyColors[(i >> 1) % 4];
+					if (i % 2 === 0) return key;
+					return rgbaStringLerp(key, this.primeKeyColors[((i + 1) >> 1) % 4], 0.5, true) as rgbaColor;
+				});
+			case InactiveColorMode.DIRECTION:
+				return [...this.primeDirColors];
+			default:
+				return null;
+		}
+	}
+
+	/** Color of an inactive zone: its input's color, or the gain color by gain. Falls back to the low-gain color. */
+	findInactiveColor(zone: ZonePanel, gain: number, gainFactor: number): rgbaColor {
+		if (this.primeInactiveColorMode === InactiveColorMode.GAIN) return this.findGainColor(gain, gainFactor);
+
+		const wishOffset = this.inactiveWishOffsets.get(zone);
+		if (!this.primeInputColors || wishOffset === undefined) return this.primeAltColor;
+
+		const step = Math.round(wishOffset / (Math.PI * 0.25));
+		return this.primeInputColors[((step % 8) + 8) % 8];
 	}
 
 	/** Inactive and half-beat zones are either filled or outlined with the given color. */
@@ -747,8 +1057,8 @@ class DFPrimeHandler extends DFHudComponent {
 	}
 
 	/**
-	 * Fills an inactive or half-beat chain. Its gains stay out of gainMax so they don't rescale the active chain,
-	 * and its panel pool grows to the chain's angle table.
+	 * Fills an inactive or half-beat chain for the input at a wish offset. Its gains stay out of gainMax so they don't
+	 * rescale the active chain, and its panel pool grows to the chain's angle table.
 	 */
 	fillInactiveChain(
 		chain: PrimeChain,
@@ -758,10 +1068,12 @@ class DFPrimeHandler extends DFHudComponent {
 		idPrefix: string,
 		gainZonesMap: Map<ZonePanel, number>,
 		velocity: vec3,
-		wishDir: vec2
+		wishDir: vec2,
+		wishOffset: number
 	) {
 		while (pool.length < chain.angles.length) pool.push(this.initInactiveZone(`${idPrefix}${pool.length}`));
 		this.fillPrimeZones(chain, direction, boundary, pool, gainZonesMap, 0, velocity, wishDir);
+		for (const zone of pool) if (gainZonesMap.has(zone)) this.inactiveWishOffsets.set(zone, wishOffset);
 	}
 
 	/**
