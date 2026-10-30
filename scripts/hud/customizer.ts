@@ -92,6 +92,8 @@ const CENTER_SNAPPING_THRESHOLD = 0.15;
 
 // Margin around the overlay panel. Needed so that resize handles etc. don't get cut off.
 const OVERLAY_MARGIN = 32;
+/** Size of a resize handle, which sits just outside the component. Matches the knob size in customizer.scss */
+const RESIZE_KNOB_SIZE = 14;
 /** Distance within which an edge or center snaps to another component's edge or center, in 1080p layout px */
 const ELEMENT_SNAPPING_THRESHOLD = 8;
 
@@ -276,6 +278,14 @@ class Component {
 		if (height !== undefined) {
 			LayoutUtil.setHeight(this.panel, height);
 		}
+
+		// resizing a component sized by a setting changes the setting, which settles the height on a whole value
+		const heightStyle = this.properties.heightStyle;
+		const style = heightStyle && this.dynamicStyles?.[heightStyle.styleID];
+		if (style && height !== undefined) {
+			style.value = Math.round(height / this.getHeightScale());
+			this.applyDynamicStyle(style);
+		}
 	}
 
 	/**
@@ -323,7 +333,8 @@ class Component {
 			offsetX: this.getDefaultOffsetX(),
 			offsetY: this.offsetY,
 			...(this.width !== null && { width: this.width }),
-			...(this.height !== null && { height: this.height }),
+			// a height that comes from a setting is stored as that setting
+			...(this.height !== null && !this.properties.heightStyle && { height: this.height }),
 			...(this.dynamicStyles && {
 				dynamicStyles: Object.fromEntries(
 					Object.entries(this.dynamicStyles)
@@ -420,6 +431,25 @@ class Component {
 		if (!isInit && style.properties.onChanged) {
 			style.properties.onChanged(styleValue);
 		}
+
+		// any setting can change the height scale, so this follows every setting, after the component has seen it
+		this.syncHeightFromStyle();
+	}
+
+	/** How many px of height one unit of the height style is */
+	getHeightScale(): number {
+		const scale = this.properties.heightStyle?.scale ?? 1;
+		return typeof scale === 'function' ? scale() : scale;
+	}
+
+	/** Takes the height from the height style, for components sized by a setting */
+	syncHeightFromStyle(): void {
+		const heightStyle = this.properties.heightStyle;
+		const value = heightStyle && this.dynamicStyles?.[heightStyle.styleID]?.value;
+		if (!Number.isFinite(value)) return;
+
+		this._height = value * this.getHeightScale();
+		LayoutUtil.setHeight(this.panel, this._height);
 	}
 
 	reloadDynamicStyles(): void {
@@ -462,6 +492,12 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 	fonts: string[] = [];
 
 	resizeKnobs: Record<ResizeMode, Button> = undefined!;
+
+	/** Puts each of the active component's settings controls back in step with its value, by style ID */
+	settingRefreshers = new Map<StyleID, () => void>();
+
+	/** Where the cursor was from the dragged edges when a resize started, so the edges don't jump to the cursor */
+	resizeGrabOffset?: [number, number];
 
 	dragStartHandle?: number;
 	dragEndHandle?: number;
@@ -1146,6 +1182,10 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		return this.panels.customizer.isOpen();
 	}
 
+	isActiveComponent(panel: GenericPanel): boolean {
+		return this.activeComponent?.panel === panel;
+	}
+
 	defaultPresetStateOn() {
 		this.panels.generalComponentContainer.style.visibility = 'collapse';
 		this.panels.gamemodeComponentContainer.style.visibility = 'collapse';
@@ -1305,6 +1345,10 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			'hud-customizer-overlay__resize-knobs--resize-y',
 			component.properties.resizeY
 		);
+		this.panels.resizeKnobs.SetHasClass(
+			'hud-customizer-overlay__resize-knobs--corners',
+			component.properties.resizeCorners ?? false
+		);
 
 		// Set up drag handles
 		if (this.dragStartHandle) {
@@ -1371,10 +1415,33 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 				LayoutUtil.getHeight(component.dragPanel)
 			);
 		}
+
+		this.updateResizeKnobInsets();
+	}
+
+	/** Moves handles that would sit off screen back over the component */
+	updateResizeKnobInsets(): void {
+		const component = this.activeComponent;
+		if (!component) return;
+
+		const width = component.width ?? LayoutUtil.getWidth(component.panel);
+		const height = component.height ?? LayoutUtil.getHeight(component.panel);
+		const knobs = this.panels.resizeKnobs;
+		knobs.SetHasClass('hud-customizer-overlay__resize-knobs--inset-left', component.offsetX < RESIZE_KNOB_SIZE);
+		knobs.SetHasClass(
+			'hud-customizer-overlay__resize-knobs--inset-right',
+			component.offsetX + width > VIRTUAL_WIDTH - RESIZE_KNOB_SIZE
+		);
+		knobs.SetHasClass('hud-customizer-overlay__resize-knobs--inset-top', component.offsetY < RESIZE_KNOB_SIZE);
+		knobs.SetHasClass(
+			'hud-customizer-overlay__resize-knobs--inset-bottom',
+			component.offsetY + height > DEFAULT_HEIGHT - RESIZE_KNOB_SIZE
+		);
 	}
 
 	updateActiveComponentSettings(): void {
 		this.panels.activeComponentSettingsList.RemoveAndDeleteChildren();
+		this.settingRefreshers = new Map();
 		if (this.currentPreset === 'default') return;
 
 		const resolveValue = (val: any) => {
@@ -1409,7 +1476,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		}
 
 		const childVisibilityMap = new Map<StyleID, Array<{ panel: Panel; showWhen?: any[] }>>();
-		const refreshMap = new Map<StyleID, () => void>();
+		const refreshMap = this.settingRefreshers;
 
 		const updateChildVisibility = (styleID: StyleID, newValue: any) => {
 			const entries = childVisibilityMap.get(styleID);
@@ -1463,6 +1530,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 				case CustomizerPropertyType.NONE: {
 					panel.LoadLayoutSnippet('dynamic-none');
 					panel.SetDialogVariable('name', dynamicStyle.properties.name);
+					dynamicStyle.properties.render?.(panel);
 					break;
 				}
 
@@ -1682,14 +1750,17 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 					panel.SetDialogVariable('name', dynamicStyle.properties.name);
 					const dropdown = panel.FindChildTraverse<DropDown>('DropDown')!;
 
-					if (!dynamicStyle.properties.options?.length) {
+					const options = dynamicStyle.properties.options?.filter((option) =>
+						this.isShownInGamemode(option.gamemode)
+					);
+					if (!options?.length) {
 						$.Warning(
 							`HudCustomizer: DROPDOWN style '${styleID}' on component '${component.id}' has no options defined.`
 						);
 						break;
 					}
 
-					for (const option of dynamicStyle.properties.options) {
+					for (const option of options) {
 						const optionPanel = $.CreatePanel('Label', dropdown, option.value);
 						optionPanel.text = option.label;
 						dropdown.AddOption(optionPanel);
@@ -1839,7 +1910,8 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			}
 		}
 
-		const appendChildren = (parentStyleID: StyleID, parentWrapper: Panel) => {
+		/** Adds a style's children in a wrapper below it, and returns the wrapper */
+		const appendChildren = (parentStyleID: StyleID, parentWrapper: Panel): Panel | undefined => {
 			const parentStyle = component.dynamicStyles[parentStyleID];
 			const children = parentStyle.properties.children;
 			if (children) {
@@ -1860,6 +1932,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 						);
 						continue;
 					}
+					if (!this.isShownInGamemode(childStyle.properties.gamemode)) continue;
 
 					const childPanel = createStylePanel(child.styleID, childStyle, childrenWrapper);
 
@@ -1874,14 +1947,25 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 						childPanel.visible = normalizedShowWhen.includes(parentValue);
 					}
 
-					if (childStyle.properties.children) appendChildren(child.styleID, childrenWrapper);
+					// the child's own children sit beside it in their wrapper, so they hide along with it
+					const grandchildrenWrapper = childStyle.properties.children
+						? appendChildren(child.styleID, childrenWrapper)
+						: undefined;
+					if (grandchildrenWrapper && child.showWhen !== undefined) {
+						childVisibilityMap
+							.get(parentStyleID)!
+							.push({ panel: grandchildrenWrapper, showWhen: child.showWhen });
+						grandchildrenWrapper.visible = childPanel.visible;
+					}
 				}
+				return childrenWrapper;
 			}
+			return undefined;
 		};
 
 		// Generate settings based on CustomizerPropertyType
 		for (const [styleID, dynamicStyle] of Object.entries(component.dynamicStyles)) {
-			if (childrenStyleIDs.has(styleID)) continue;
+			if (childrenStyleIDs.has(styleID) || !this.isShownInGamemode(dynamicStyle.properties.gamemode)) continue;
 
 			const wrapper = $.CreatePanel('Panel', this.panels.activeComponentSettingsList, 'ParentWrapper', {
 				class: 'hud-customizer-settings__row-wrapper'
@@ -1894,6 +1978,12 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 		// wait for the new rows to be laid out before measuring where the list starts
 		$.Schedule(0, () => this.fitActiveComponentSettingsToScreen());
+	}
+
+	/** Whether a setting or dropdown option limited to some gamemodes is shown in the current one */
+	isShownInGamemode(gamemode?: Gamemode | Gamemode[]): boolean {
+		if (gamemode === undefined) return true;
+		return (Array.isArray(gamemode) ? gamemode : [gamemode]).includes(this.gamemodeInfo.gamemode);
 	}
 
 	/**
@@ -1964,6 +2054,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 		this.dragMode = mode;
 		this.dragStartOffset = [this.activeComponent.offsetX, this.activeComponent.offsetY];
+		this.resizeGrabOffset = undefined;
 		this.gatherElementSnapLines();
 
 		this.onThinkHandle = $.RegisterEventHandler('HudThink', this.panels.customizer, () => this.onDragThink());
@@ -2023,6 +2114,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		}
 
 		this.updateActiveComponentDialogVars();
+		this.updateResizeKnobInsets();
 	}
 
 	onEndDrag() {
@@ -2037,12 +2129,16 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 		$.UnregisterEventHandler('HudThink', this.panels.customizer, this.onThinkHandle);
 
+		// a resize may have changed the setting the component's height comes from
+		const heightStyle = this.activeComponent.properties.heightStyle;
+		if (heightStyle) this.settingRefreshers.get(heightStyle.styleID)?.();
+
 		LayoutUtil.setPosition(this.panels.dragPanel, this.activeComponent.offsetX, this.activeComponent.offsetY);
 
 		// TODO: This doesn't work when styles are defined in css, they must be defined in-line
 		// Maybe a better idea is to use minExpectedWidth and minExpectedHeight for this?
 		// It's not used on any panel right now so it can wait
-		const [minWidth, minHeight] = getMinSize(this.activeComponent.panel);
+		const [minWidth, minHeight] = getMinSize(this.activeComponent);
 		if (this.activeComponent.width !== undefined) {
 			LayoutUtil.setWidth(this.panels.dragPanel, Math.max(this.activeComponent.width, minWidth));
 		}
@@ -2280,6 +2376,19 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		const [resizeX, resizeY] = this.ResizeVectors[this.dragMode] ?? [0, 0];
 		let [knobX, knobY] = LayoutUtil.getPosition(this.panels.dragResizeKnob);
 
+		// the handles sit outside the component, so the edges keep the distance from the cursor they had when grabbed
+		if (!this.resizeGrabOffset) {
+			const component = this.activeComponent;
+			const width = component.width ?? LayoutUtil.getWidth(component.panel);
+			const height = component.height ?? LayoutUtil.getHeight(component.panel);
+			this.resizeGrabOffset = [
+				knobX - (resizeX === 1 ? component.offsetX + width : component.offsetX),
+				knobY - (resizeY === 1 ? component.offsetY + height : component.offsetY)
+			];
+		}
+		knobX -= this.resizeGrabOffset[0];
+		knobY -= this.resizeGrabOffset[1];
+
 		// snapping to other elements replaces the grid: the dragged edge snaps to the nearest element edge or center
 		if (this.isElementSnapping()) {
 			const snapX = resizeX ? this.findElementSnap(Axis.X, [knobX]) : undefined;
@@ -2294,7 +2403,8 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			this.setElementGuide(Axis.X, undefined);
 			this.setElementGuide(Axis.Y, undefined);
 		}
-		const [minWidth, minHeight] = getMinSize(this.activeComponent.panel);
+		const [minWidth, minHeight] = getMinSize(this.activeComponent);
+		const maxHeight = getMaxHeight(this.activeComponent);
 
 		// Possible to make this code shorter by indexing into X,Y, W/H tuples but gets confusing, and important
 		// that offsetX, offsetY, width and height setters are actually called, not just the underlying arrays modified;
@@ -2349,13 +2459,13 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 				this.setActiveGridline(Axis.Y, undefined);
 			}
 
+			// the height is set once, clamped, and read back, since a height setting can round it
 			if (resizeY === 1) {
-				this.activeComponent.height = Math.max(newY - offsetY, minHeight);
+				this.activeComponent.height = Math.min(Math.max(newY - offsetY, minHeight), maxHeight);
 			} else if (resizeY === -1) {
-				this.activeComponent.height = this.activeComponent.height + this.activeComponent.offsetY - newY;
-				const minHeightOffset = Math.max(this.activeComponent.height, minHeight) - this.activeComponent.height;
-				this.activeComponent.height += minHeightOffset;
-				this.activeComponent.offsetY = newY - minHeightOffset;
+				const bottom = offsetY + this.activeComponent.height;
+				this.activeComponent.height = Math.min(Math.max(bottom - newY, minHeight), maxHeight);
+				this.activeComponent.offsetY = bottom - this.activeComponent.height;
 			}
 		}
 	}
@@ -2511,8 +2621,27 @@ function parsePx(str: string): number | undefined {
 	return undefined;
 }
 
-function getMinSize(panel: GenericPanel): [number, number] {
-	return [parsePx(panel.style.minWidth) ?? MINIMUM_PANEL_SIZE, parsePx(panel.style.minHeight) ?? MINIMUM_PANEL_SIZE];
+function getMinSize(component: Component): [number, number] {
+	const panel = component.panel;
+	return [
+		parsePx(panel.style.minWidth) ?? MINIMUM_PANEL_SIZE,
+		getHeightStyleRange(component)?.[0] ?? parsePx(panel.style.minHeight) ?? MINIMUM_PANEL_SIZE
+	];
+}
+
+function getMaxHeight(component: Component): number {
+	return getHeightStyleRange(component)?.[1] ?? Infinity;
+}
+
+/** Heights (px) a component sized by a setting can take, from the setting's min and max */
+function getHeightStyleRange(component: Component): [number, number] | undefined {
+	const heightStyle = component.properties.heightStyle;
+	const settingProps = heightStyle && component.dynamicStyles?.[heightStyle.styleID]?.properties.settingProps;
+	if (!settingProps) return undefined;
+
+	const scale = component.getHeightScale();
+	const { min, max } = settingProps as { min?: number; max?: number };
+	return [(min ?? 1) * scale, (max ?? Infinity) * scale];
 }
 
 /** CSS-style panel lookup utility */
