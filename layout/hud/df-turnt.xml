@@ -7,12 +7,10 @@
 		<include type="module" src="file://{scripts}/hud/df-turnt.ts" />
 	</scripts>
 
-	<MomHudDFTurnt class="w-full h-full" hittest="false">
-		<ConVarEnabler id="TurntContainer" class="dfhud__strip" convar="mom_hud_df_turnt_enable" togglevisibility="true" />
+	<MomHudDFTurnt class="w-full" hittest="false">
+		<Panel id="TurntContainer" class="dfhud__strip" />
 		<Panel id="TurntArrow">
-			<ConVarEnabler class="h-full" convar="mom_hud_df_turnt_arrow_enable" togglevisibility="true">
-				<Image id="TurntArrowIcon" class="dfhud__arrow dfhud__arrow--down" src="file://{images}/hud/cgaz-arrow.svg" textureheight="48" />
-			</ConVarEnabler>
+			<Image id="TurntArrowIcon" class="dfhud__arrow dfhud__arrow--down" src="file://{images}/hud/cgaz-arrow.svg" textureheight="48" />
 		</Panel>
 	</MomHudDFTurnt>
 </root>

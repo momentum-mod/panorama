@@ -122,16 +122,6 @@ interface GlobalEventNameMap {
 
 	OnDefragHUDProjectionChange: () => void;
 
-	OnDefragHUDCgazChange: () => void;
-
-	OnDefragHUDSnapChange: () => void;
-
-	OnDefragHUDPrimeChange: () => void;
-
-	OnDefragHUDTurntChange: () => void;
-
-	OnDefragHUDCompassChange: () => void;
-
 	DFJumpDataUpdate: (releaseDelay: float, pressDelay: float, totalDelay: float) => void;
 
 	DFJumpMaxDelayChanged: (newDelay: float) => void;
