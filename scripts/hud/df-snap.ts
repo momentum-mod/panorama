@@ -1,15 +1,17 @@
 import { PanelHandler } from 'util/module-helpers';
-import { GamemodeCategory } from 'common/web/enums/gamemode.enum';
-import { GamemodeCategories } from 'common/web/maps/gamemodes.map';
+import { GamemodeCategory, GamemodeCategoryToGamemode } from 'common/web/enums/gamemode.enum';
 import * as MomMath from 'util/math';
 import { rgbaStringLerp } from 'util/colors';
-import { RegisterHUDPanelForGamemode } from 'util/register-for-gamemodes';
 import { DFHudComponent, InputMode, StyleObject, ZonePanel } from 'common/df-hud';
 
 let COLORED_SNAP_CLASS: StyleObject;
 let UNCOLORED_SNAP_CLASS: StyleObject;
-let HIGHLIGHTED_SNAP_CLASS: StyleObject;
-let HIGHLIGHTED_ALT_SNAP_CLASS: StyleObject;
+
+enum HighlightMode {
+	NONE = 'none',
+	CENTER = 'center',
+	TARGET = 'target'
+}
 
 @PanelHandler()
 class DFSnapHandler extends DFHudComponent {
@@ -18,83 +20,103 @@ class DFSnapHandler extends DFHudComponent {
 	snapSplitZone = this.initZonePanel($.CreatePanel('Panel', this.snapContainer, 'SnapSplitZone'));
 	snapGainRange: number[] = []; // stored as [min, max]
 
-	snapEnable: boolean;
-	snapMinSpeed: float;
-	snapHeight: float;
-	snapOffset: float;
+	snapMinSpeed: number;
+	snapHeight: number;
 	snapColor: rgbaColor;
 	snapAltColor: rgbaColor;
 	snapFastColor: rgbaColor;
 	snapSlowColor: rgbaColor;
 	snapHlColor: rgbaColor;
 	snapHlAltColor: rgbaColor;
-	snapHlMode: int32;
-	snapColorMode: int32;
+	snapHlMode: HighlightMode;
+	snapColorByGain: boolean;
 	snapHeightgainEnable: boolean;
 
-	/** Target highlighting only applies above the cgaz minimum speed */
-	cgazMinSpeed: float;
+	/** Target highlighting only applies when moving faster than this */
+	snapTargetMinSpeed: number;
 	/** Whether the held input's target is on the left of the velocity, kept while the wish runs along the velocity */
 	snapActiveLeft = true;
 
 	constructor() {
 		super();
 
-		RegisterHUDPanelForGamemode({
-			gamemodes: GamemodeCategories.get(GamemodeCategory.DEFRAG),
-			onLoad: () => this.onLoad(),
-			handledEvents: [
-				{
-					event: 'HudProcessInput',
-					panel: $.GetContextPanel(),
-					callback: () => this.onUpdate()
-				}
-			]
-		});
-
-		$.RegisterForUnhandledEvent('OnDefragHUDSnapChange', () => this.onSnapConfigChange());
-		$.RegisterForUnhandledEvent('OnDefragHUDCgazChange', () => this.onCgazConfigChange());
+		this.registerComponent(
+			'#Customizer_Df_Snap_Name',
+			GamemodeCategoryToGamemode.get(GamemodeCategory.DEFRAG),
+			{
+				minSpeed: this.numberStyle('#Customizer_Df_MinSpeed', 0, 10000, (value) => (this.snapMinSpeed = value)),
+				height: this.numberStyle('#Customizer_Height', 1, 50, (value) => (this.snapHeight = value)),
+				colors: this.groupStyle('#Customizer_Colors', ['color', 'altColor']),
+				color: this.colorStyle('#Customizer_Color', (value) => (this.snapColor = value)),
+				altColor: this.colorStyle('#Customizer_Df_Snap_AltColor', (value) => (this.snapAltColor = value)),
+				heightGain: this.checkboxStyle(
+					'#Customizer_Df_HeightGain',
+					(value) => (this.snapHeightgainEnable = value),
+					{ tooltip: '#Customizer_Df_HeightGain_Tooltip' }
+				),
+				colorByGain: this.checkboxStyle(
+					'#Customizer_Df_ColorByGain',
+					(value) => (this.snapColorByGain = value),
+					{
+						tooltip: '#Customizer_Df_ColorByGain_Tooltip',
+						children: [
+							{ styleID: 'slowColor', showWhen: true },
+							{ styleID: 'fastColor', showWhen: true }
+						]
+					}
+				),
+				slowColor: this.colorStyle('#Customizer_Df_Snap_LowGainColor', (value) => (this.snapSlowColor = value)),
+				fastColor: this.colorStyle(
+					'#Customizer_Df_Snap_HighGainColor',
+					(value) => (this.snapFastColor = value)
+				),
+				highlightMode: this.dropdownStyle(
+					'#Customizer_Df_Highlight',
+					[
+						{ label: '#Common_Off', value: HighlightMode.NONE },
+						{ label: '#Customizer_Df_Snap_HighlightMode_Center', value: HighlightMode.CENTER },
+						{ label: '#Customizer_Df_Snap_HighlightMode_Target', value: HighlightMode.TARGET }
+					],
+					(value) => (this.snapHlMode = value as HighlightMode),
+					{
+						tooltip: '#Customizer_Df_Snap_HighlightMode_Tooltip',
+						children: [
+							{ styleID: 'targetMinSpeed', showWhen: HighlightMode.TARGET },
+							{ styleID: 'highlightColor', showWhen: [HighlightMode.CENTER, HighlightMode.TARGET] },
+							{ styleID: 'highlightAltColor', showWhen: [HighlightMode.CENTER, HighlightMode.TARGET] }
+						]
+					}
+				),
+				targetMinSpeed: this.numberStyle(
+					'#Customizer_Df_Snap_TargetMinSpeed',
+					0,
+					10000,
+					(value) => (this.snapTargetMinSpeed = value),
+					{ tooltip: '#Customizer_Df_Snap_TargetMinSpeed_Tooltip' }
+				),
+				highlightColor: this.colorStyle('#Customizer_Df_HighlightColor', (value) => (this.snapHlColor = value)),
+				highlightAltColor: this.colorStyle(
+					'#Customizer_Df_Snap_HighlightAltColor',
+					(value) => (this.snapHlAltColor = value)
+				)
+			},
+			{ resizeY: true, heightStyle: { styleID: 'height' }, description: '#Customizer_Df_Snap_Name_Tooltip' }
+		);
 	}
 
-	onLoad() {
-		this.projection = DefragAPI.GetHUDProjection();
-		this.onCgazConfigChange();
-		this.onSnapConfigChange();
-	}
+	applyConfig() {
+		COLORED_SNAP_CLASS = new StyleObject(this.snapHeight, this.snapColor);
+		UNCOLORED_SNAP_CLASS = new StyleObject(this.snapHeight, this.snapAltColor);
 
-	onCgazConfigChange() {
-		this.cgazMinSpeed = GameInterfaceAPI.GetSettingFloat('mom_hud_df_cgaz_min_speed');
-	}
-
-	onSnapConfigChange() {
-		const snapConfig = $.GetContextPanel<MomHudDFSnap>().GetSnapCFG();
-		this.snapEnable = snapConfig.enable;
-		this.snapMinSpeed = snapConfig.minSpeed;
-		this.snapHeight = snapConfig.height;
-		this.snapOffset = snapConfig.offset;
-		this.snapColor = snapConfig.color;
-		this.snapAltColor = snapConfig.altColor;
-		this.snapFastColor = snapConfig.fastColor;
-		this.snapSlowColor = snapConfig.slowColor;
-		this.snapHlColor = snapConfig.highlightColor;
-		this.snapHlAltColor = snapConfig.altHighlightColor;
-		this.snapHlMode = snapConfig.highlightMode;
-		this.snapColorMode = snapConfig.colorMode;
-		this.snapHeightgainEnable = snapConfig.enableHeightGain;
-
-		COLORED_SNAP_CLASS = new StyleObject(this.snapHeight, this.snapOffset, this.snapColor);
-		UNCOLORED_SNAP_CLASS = new StyleObject(this.snapHeight, this.snapOffset, this.snapAltColor);
-		HIGHLIGHTED_SNAP_CLASS = new StyleObject(this.snapHeight, this.snapOffset, this.snapHlColor);
-		HIGHLIGHTED_ALT_SNAP_CLASS = new StyleObject(this.snapHeight, this.snapOffset, this.snapHlAltColor);
-
-		this.setupContainer(this.snapContainer, this.snapOffset);
+		this.setStripHeight(this.snapHeight);
+		this.setupContainer(this.snapContainer);
 		for (const [i, snapZone] of this.snapZones.entries()) {
 			this.applyClass(snapZone, i % 2 ? UNCOLORED_SNAP_CLASS : COLORED_SNAP_CLASS);
 		}
 	}
 
 	onUpdate() {
-		const state = DefragAPI.GetHUDFrameState();
+		const state = this.getFrameState();
 		if (!state.valid) return;
 
 		// clear last frame's special zones
@@ -109,14 +131,14 @@ class DFSnapHandler extends DFHudComponent {
 			for (let i = start; i < end; ++i) {
 				this.snapZones.push(this.initZonePanel($.CreatePanel('Panel', this.snapContainer, `SnapZone${i}`)));
 			}
-			this.onSnapConfigChange();
+			this.applyConfig();
 		} else if (this.snapAngles.length < this.snapZones?.length) {
 			const start = this.snapAngles.length;
 			const end = this.snapZones?.length;
 			for (let i = start; i < end; ++i) {
 				this.snapZones.pop().DeleteAsync(0);
 			}
-			this.onSnapConfigChange();
+			this.applyConfig();
 		}
 
 		const tickInterval = state.tickInterval;
@@ -127,7 +149,7 @@ class DFSnapHandler extends DFHudComponent {
 		const rightMove = state.rightMove;
 		const bSnapShift = state.snapShift;
 
-		if (this.snapEnable && this.snapAccel) {
+		if (this.snapAccel) {
 			const snapOffset = MomMath.remapAngle(
 				(bSnapShift ? 0 : Math.PI * 0.25 * (rightMove > 0 ? -1 : 1)) - viewAngle
 			);
@@ -225,7 +247,7 @@ class DFSnapHandler extends DFHudComponent {
 			// wrap the angles to only [-pi/2, pi/2]
 			const left = MomMath.wrapToHalfPi(this.snapAngles[i] - snapOffset);
 			const right = MomMath.wrapToHalfPi(this.snapAngles[(i + 1) % zones.length] - snapOffset);
-			const bUseUncolored = !this.snapHeightgainEnable && !this.snapColorMode && i % 2;
+			const bUseUncolored = !this.snapHeightgainEnable && !this.snapColorByGain && i % 2;
 			let snapColor = bUseUncolored ? this.snapAltColor : this.snapColor;
 			const hlSnapColor = bUseUncolored ? this.snapHlAltColor : this.snapHlColor;
 			const snapClass = bUseUncolored ? UNCOLORED_SNAP_CLASS : COLORED_SNAP_CLASS;
@@ -248,17 +270,13 @@ class DFSnapHandler extends DFHudComponent {
 				: [{ panel: zone, left, right }];
 
 			for (const part of zoneParts) {
-				if (this.snapHeightgainEnable && !Number.isNaN(heightFactor)) {
-					part.panel.style.height = heightFactor * height + 'px';
-					part.panel.style.marginBottom = height + 'px';
-					part.panel.style.verticalAlign = 'bottom';
-				} else {
-					part.panel.style.height = height + 'px';
-					part.panel.style.marginBottom = height + 'px';
-				}
+				// zones stand on the bottom of the strip, so height gain grows them upwards
+				part.panel.style.height =
+					(this.snapHeightgainEnable && !Number.isNaN(heightFactor) ? heightFactor * height : height) + 'px';
+				part.panel.style.verticalAlign = 'bottom';
 			}
 
-			if (this.snapColorMode) {
+			if (this.snapColorByGain) {
 				snapColor = rgbaStringLerp(this.snapSlowColor, this.snapFastColor, alpha) as rgbaColor;
 			}
 
@@ -266,15 +284,15 @@ class DFSnapHandler extends DFHudComponent {
 			// target mode colors each part on its own, since a zone can hold both targets or have them on different parts
 			const partColors = new Map<ZonePanel, string>();
 			switch (this.snapHlMode) {
-				case 0:
+				case HighlightMode.NONE:
 					bHighlight = false;
 					break;
-				case 1:
+				case HighlightMode.CENTER:
 					bHighlight = left < 0 && right > 0;
 					break;
-				case 2:
+				case HighlightMode.TARGET:
 					// "target" zones only highlight when moving
-					if (speed > this.cgazMinSpeed) {
+					if (speed > this.snapTargetMinSpeed) {
 						for (const part of zoneParts) {
 							const color = this.findTargetGradient(
 								part,

@@ -1,9 +1,7 @@
 import { PanelHandler } from 'util/module-helpers';
-import { GamemodeCategory } from 'common/web/enums/gamemode.enum';
-import { GamemodeCategories } from 'common/web/maps/gamemodes.map';
+import { GamemodeCategory, GamemodeCategoryToGamemode } from 'common/web/enums/gamemode.enum';
 import * as MomMath from 'util/math';
 import { rgbaStringLerp, rgbaStringToTuple, tupleToRgbaString } from 'util/colors';
-import { RegisterHUDPanelForGamemode } from 'util/register-for-gamemodes';
 import { DFHudComponent, InputMode, isOnSlick, StyleObject, ZonePanel } from 'common/df-hud';
 
 enum TruenessMode {
@@ -21,6 +19,13 @@ interface PrimeChain {
 	first: number;
 	/** The target as a view-relative angle in [-pi, pi], never wrapped to [-pi/2, pi/2] */
 	target: number;
+}
+
+enum HalfBeatMode {
+	OFF = 'off',
+	ON = 'on',
+	/** Show the half-beat zones before their target passes the diagonal one */
+	EARLY = 'early'
 }
 
 let HIGHLIGHT_CLASS: StyleObject;
@@ -43,31 +48,31 @@ class DFPrimeHandler extends DFHudComponent {
 	primeAccel: number;
 	primeAngles: number[] = [];
 
-	primeEnable: boolean;
-	primeTruenessMode: int32;
+	primeTruenessMode: number;
 	primeChain: boolean;
 	primeShowInactive: boolean;
+	primeHalfBeatMode: HalfBeatMode;
 	primeShowHalfBeat: boolean;
 	primeHalfBeatEarly: boolean;
 	primeInactiveChain: boolean;
 	primeInactiveOutline: boolean;
-	primeInactiveOutlineWidth: float;
+	primeInactiveOutlineWidth: number;
 	primeInactiveGainColor: boolean;
 	primeLockOneLine: boolean;
-	primeMinSpeed: float;
-	primeHeight: float;
-	primeOffset: float;
+	primeMinSpeed: number;
+	primeHeight: number;
 	primeGainColor: rgbaColor;
 	primeLossColor: rgbaColor;
 	primeAltColor: rgbaColor;
 	primeHlEnable: boolean;
-	primeHlStrength: float;
-	primeHlBorder: int32;
+	/** 0 to 1 */
+	primeHlStrength: number;
+	primeHlBorder: number;
 	primeHlColor: rgbaColor;
 	primeHeightgainEnable: boolean;
 	primeColorgainEnable: boolean;
 	primeArrowEnable: boolean;
-	primeArrowSize: float;
+	primeArrowSize: number;
 	primeArrowColor: rgbaColor;
 	/** Which side of the velocity the active chain is on, kept while the wish direction is on the velocity line */
 	primeActiveLeft = true;
@@ -75,61 +80,173 @@ class DFPrimeHandler extends DFHudComponent {
 	constructor() {
 		super();
 
-		RegisterHUDPanelForGamemode({
-			gamemodes: GamemodeCategories.get(GamemodeCategory.DEFRAG),
-			onLoad: () => this.onLoad(),
-			handledEvents: [
-				{
-					event: 'HudProcessInput',
-					panel: $.GetContextPanel(),
-					callback: () => this.onUpdate()
-				}
-			]
-		});
+		this.primeTruenessMode = 0;
+		const truenessStyle = (name: string, tooltip: string, flag: TruenessMode) =>
+			this.checkboxStyle(
+				name,
+				(value) => {
+					this.primeTruenessMode = value ? this.primeTruenessMode | flag : this.primeTruenessMode & ~flag;
+				},
+				{ tooltip }
+			);
 
-		$.RegisterForUnhandledEvent('OnDefragHUDPrimeChange', () => this.onPrimeConfigChange());
+		this.registerComponent(
+			'#Customizer_Df_Prime_Name',
+			GamemodeCategoryToGamemode.get(GamemodeCategory.DEFRAG),
+			{
+				minSpeed: this.numberStyle(
+					'#Customizer_Df_MinSpeed',
+					0,
+					10000,
+					(value) => (this.primeMinSpeed = value)
+				),
+				height: this.numberStyle('#Customizer_Height', 1, 50, (value) => (this.primeHeight = value)),
+				heightGain: this.checkboxStyle(
+					'#Customizer_Df_HeightGain',
+					(value) => (this.primeHeightgainEnable = value),
+					{ tooltip: '#Customizer_Df_HeightGain_Tooltip' }
+				),
+				colorGain: this.checkboxStyle(
+					'#Customizer_Df_ColorByGain',
+					(value) => (this.primeColorgainEnable = value),
+					{ tooltip: '#Customizer_Df_ColorByGain_Tooltip' }
+				),
+				oneLine: this.checkboxStyle(
+					'#Customizer_Df_Prime_OneLine',
+					(value) => (this.primeLockOneLine = value),
+					{ tooltip: '#Customizer_Df_Prime_OneLine_Tooltip' }
+				),
+				fullChain: this.checkboxStyle('#Customizer_Df_Prime_FullChain', (value) => (this.primeChain = value), {
+					tooltip: '#Customizer_Df_Prime_FullChain_Tooltip'
+				}),
+				trueness: this.groupStyle(
+					'#Customizer_Df_Prime_Trueness',
+					['truenessGround', 'truenessProjected', 'truenessCpmTurn'],
+					{ tooltip: '#Customizer_Df_Prime_Trueness_Tooltip' }
+				),
+				truenessGround: truenessStyle(
+					'#Customizer_Df_Prime_TruenessGround',
+					'#Customizer_Df_Prime_TruenessGround_Tooltip',
+					TruenessMode.GROUND
+				),
+				truenessProjected: truenessStyle(
+					'#Customizer_Df_Prime_TruenessProjected',
+					'#Customizer_Df_Prime_TruenessProjected_Tooltip',
+					TruenessMode.PROJECTED
+				),
+				truenessCpmTurn: truenessStyle(
+					'#Customizer_Df_Prime_TruenessCpmTurn',
+					'#Customizer_Df_Prime_TruenessCpmTurn_Tooltip',
+					TruenessMode.CPM_TURN
+				),
+				inactiveEnable: this.checkboxStyle(
+					'#Customizer_Df_Prime_Inactive',
+					(value) => (this.primeShowInactive = value),
+					{
+						tooltip: '#Customizer_Df_Prime_Inactive_Tooltip',
+						children: [
+							{ styleID: 'inactiveHalfBeat', showWhen: true },
+							{ styleID: 'inactiveChain', showWhen: true },
+							{ styleID: 'inactiveOutline', showWhen: true },
+							{ styleID: 'inactiveGainColor', showWhen: true }
+						]
+					}
+				),
+				inactiveHalfBeat: this.dropdownStyle(
+					'#Customizer_Df_Prime_InactiveHalfBeat',
+					[
+						{ label: '#Common_Off', value: HalfBeatMode.OFF },
+						{ label: '#Common_On', value: HalfBeatMode.ON },
+						{ label: '#Customizer_Df_Prime_InactiveHalfBeat_Early', value: HalfBeatMode.EARLY }
+					],
+					(value) => (this.primeHalfBeatMode = value as HalfBeatMode),
+					{ tooltip: '#Customizer_Df_Prime_InactiveHalfBeat_Tooltip' }
+				),
+				inactiveChain: this.checkboxStyle(
+					'#Customizer_Df_Prime_FullChain',
+					(value) => (this.primeInactiveChain = value),
+					{ tooltip: '#Customizer_Df_Prime_FullChain_Tooltip' }
+				),
+				inactiveOutline: this.checkboxStyle(
+					'#Customizer_Df_Prime_InactiveOutline',
+					(value) => (this.primeInactiveOutline = value),
+					{ children: [{ styleID: 'inactiveOutlineWidth', showWhen: true }] }
+				),
+				inactiveOutlineWidth: this.numberStyle(
+					'#Customizer_BorderWidth',
+					1,
+					10,
+					(value) => (this.primeInactiveOutlineWidth = value)
+				),
+				inactiveGainColor: this.checkboxStyle(
+					'#Customizer_Df_Prime_InactiveGainColor',
+					(value) => (this.primeInactiveGainColor = value)
+				),
+				highlightEnable: this.checkboxStyle(
+					'#Customizer_Df_Highlight',
+					(value) => (this.primeHlEnable = value),
+					{
+						tooltip: '#Customizer_Df_Prime_Highlight_Tooltip',
+						children: [
+							{ styleID: 'highlightStrength', showWhen: true },
+							{ styleID: 'highlightBorder', showWhen: true },
+							{ styleID: 'highlightColor', showWhen: true }
+						]
+					}
+				),
+				highlightStrength: this.numberStyle(
+					'#Customizer_Df_Prime_HighlightStrength',
+					0,
+					100,
+					(value) => (this.primeHlStrength = value / 100)
+				),
+				highlightBorder: this.numberStyle(
+					'#Customizer_BorderWidth',
+					0,
+					10,
+					(value) => (this.primeHlBorder = value)
+				),
+				highlightColor: this.colorStyle(
+					'#Customizer_Df_HighlightColor',
+					(value) => (this.primeHlColor = value)
+				),
+				arrowEnable: this.checkboxStyle('#Customizer_Df_Arrow', (value) => (this.primeArrowEnable = value), {
+					children: [
+						{ styleID: 'arrowSize', showWhen: true },
+						{ styleID: 'arrowColor', showWhen: true }
+					]
+				}),
+				arrowSize: this.numberStyle('#Customizer_Size', 1, 25, (value) => (this.primeArrowSize = value)),
+				arrowColor: this.colorStyle('#Customizer_Color', (value) => (this.primeArrowColor = value)),
+				colors: this.groupStyle('#Customizer_Colors', ['gainColor', 'lossColor', 'altColor']),
+				gainColor: this.colorStyle('#Customizer_Gain', (value) => (this.primeGainColor = value)),
+				lossColor: this.colorStyle('#Customizer_Loss', (value) => (this.primeLossColor = value)),
+				altColor: this.colorStyle('#Customizer_Df_Prime_InactiveColor', (value) => (this.primeAltColor = value))
+			},
+			{
+				resizeY: true,
+				heightStyle: { styleID: 'height', scale: () => this.lineCount() },
+				description: '#Customizer_Df_Prime_Name_Tooltip'
+			}
+		);
 	}
 
-	onLoad() {
-		this.projection = DefragAPI.GetHUDProjection();
-		this.onPrimeConfigChange();
+	/** Lines the strip holds: gains and losses each get one, or share one in one-line mode */
+	lineCount(): number {
+		return this.primeLockOneLine ? 1 : 2;
 	}
 
-	onPrimeConfigChange() {
-		const primeConfig = $.GetContextPanel<MomHudDFPrime>().GetPrimeCFG();
-		this.primeEnable = primeConfig.enable;
-		this.primeTruenessMode = primeConfig.truenessMode;
-		this.primeChain = primeConfig.chainEnable;
-		this.primeShowInactive = primeConfig.inactiveEnable;
-		this.primeShowHalfBeat = primeConfig.inactiveEnable && primeConfig.inactiveHalfBeatMode > 0;
-		this.primeHalfBeatEarly = primeConfig.inactiveHalfBeatMode === 2;
-		this.primeInactiveChain = primeConfig.inactiveChainEnable;
-		this.primeInactiveOutline = primeConfig.inactiveOutlineEnable;
-		this.primeInactiveOutlineWidth = primeConfig.inactiveOutlineWidth;
-		this.primeInactiveGainColor = primeConfig.inactiveGainColorEnable;
-		this.primeLockOneLine = primeConfig.oneLineEnable;
-		this.primeMinSpeed = primeConfig.minSpeed;
-		this.primeHeight = primeConfig.height;
-		this.primeOffset = primeConfig.offset;
-		this.primeGainColor = primeConfig.gainColor;
-		this.primeLossColor = primeConfig.lossColor;
-		this.primeAltColor = primeConfig.altColor;
-		this.primeHlEnable = primeConfig.highlightEnable;
-		this.primeHlStrength = primeConfig.highlightStrength;
-		this.primeHlBorder = Math.round(primeConfig.highlightBorder);
-		this.primeHlColor = primeConfig.highlightColor;
-		this.primeHeightgainEnable = primeConfig.scaleHeightEnable;
-		this.primeColorgainEnable = primeConfig.scaleColorEnable;
-		this.primeArrowEnable = primeConfig.arrowEnable;
-		this.primeArrowSize = primeConfig.arrowSize;
-		this.primeArrowColor = primeConfig.arrowColor;
+	applyConfig() {
+		this.primeShowHalfBeat = this.primeShowInactive && this.primeHalfBeatMode !== HalfBeatMode.OFF;
+		this.primeHalfBeatEarly = this.primeHalfBeatMode === HalfBeatMode.EARLY;
 
-		PRIME_SIGHT_CLASS = new StyleObject(this.primeHeight, this.primeOffset, this.primeAltColor);
-		HIGHLIGHT_CLASS = new StyleObject(this.primeHeight, this.primeOffset, this.primeHlColor);
+		PRIME_SIGHT_CLASS = new StyleObject(this.primeHeight, this.primeAltColor);
+		HIGHLIGHT_CLASS = new StyleObject(this.primeHeight, this.primeHlColor);
 
-		this.setupContainer(this.primeContainer, this.primeOffset);
-		this.primeContainer.style.verticalAlign = 'center';
-		this.primeContainer.style.height = 2 * this.primeHeight + 'px';
+		// gains draw on the top line and losses on the bottom one, unless they share one
+		const containerHeight = this.lineCount() * this.primeHeight;
+		this.setStripHeight(containerHeight);
+		this.setupContainer(this.primeContainer);
 		for (const zone of [
 			...this.primeZones,
 			...this.primeInactiveZonesLeft,
@@ -149,22 +266,14 @@ class DFPrimeHandler extends DFHudComponent {
 		this.primeHighlightZone.style.verticalAlign = 'top';
 		this.primeHighlightZone.style.zIndex = 1;
 
-		const containerHeight = 2 * this.primeHeight;
 		const width = 2 * this.primeArrowSize;
 		const height = containerHeight + 2 * width;
-		this.setupArrow(
-			this.primeArrow,
-			this.primeArrowIcon,
-			height,
-			width,
-			this.primeOffset,
-			'top',
-			this.primeArrowColor
-		);
+		this.setupArrow(this.primeArrow, this.primeArrowIcon, height, width, 'top', this.primeArrowColor);
+		if (!this.primeArrowEnable) this.primeArrow.visible = false;
 	}
 
 	onUpdate() {
-		const state = DefragAPI.GetHUDFrameState();
+		const state = this.getFrameState();
 		if (!state.valid) return;
 
 		// clear last frame's special zones
@@ -198,7 +307,7 @@ class DFPrimeHandler extends DFHudComponent {
 		this.clearZones(this.primeInactiveZonesRight);
 		this.clearZones(this.primeExtraZones);
 
-		if (this.primeEnable && phyMode !== DefragAPI.DefragPhysics.VTG && speed > this.primeMinSpeed) {
+		if (phyMode !== DefragAPI.DefragPhysics.VTG && speed > this.primeMinSpeed) {
 			// the real acceleration gives ground zones on the ground (GROUND) and a/d turn zones in the air (CPM_TURN,
 			// always in VQ3); otherwise the zones use the air strafe acceleration. VQ3 slick accelerates the same way
 			// as VQ3 air, so it gets the air zones whatever GROUND is set to
@@ -539,7 +648,7 @@ class DFPrimeHandler extends DFHudComponent {
 			zone.style.height = this.pixelLength(heightPixels / uiScale, uiScale);
 			zone.style.marginTop = this.pixelOffset(marginPixels / uiScale, uiScale);
 			zone.style.marginBottom = this.pixelOffset(
-				(secondLine ? linePixels - heightPixels : linePixels) / uiScale,
+				(secondLine ? linePixels - heightPixels : (this.lineCount() - 1) * linePixels) / uiScale,
 				uiScale
 			);
 
@@ -564,7 +673,7 @@ class DFPrimeHandler extends DFHudComponent {
 				this.drawZone(this.primeHighlightZone);
 				this.primeHighlightZone.style.height = this.pixelLength(linePixels / uiScale, uiScale);
 				this.primeHighlightZone.style.marginTop = this.pixelOffset(
-					(gain < 0 ? linePixels : 0) / uiScale,
+					(secondLine ? linePixels : 0) / uiScale,
 					uiScale
 				);
 

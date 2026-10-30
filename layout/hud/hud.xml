@@ -11,12 +11,14 @@
 			<MomHudGhostEntities />
 			<MomHudConcEntities id="ConcEntities" />
 			<MomHudDamageIndicator />
-			<MomHudDFCgaz />
-			<MomHudDFSnap />
-			<MomHudDFPrime />
-			<MomHudDFTurnt />
-			<MomHudDFCompass />
-			<MomHudDFPitch />
+			<MomHudDFCgaz id="DFCgaz" />
+			<MomHudDFSnap id="DFSnap" />
+			<MomHudDFPrime id="DFPrime" />
+			<MomHudDFTurnt id="DFTurnt" />
+			<MomHudDFCompass id="DFCompass" />
+			<MomHudDFCompassArrow id="DFCompassArrow" />
+			<MomHudDFPitch id="DFPitch" />
+			<MomHudDFAngles id="DFAngles" />
 			<MomHudReticle />
 		</Panel>
 
