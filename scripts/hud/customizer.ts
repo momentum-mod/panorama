@@ -297,10 +297,12 @@ class Component {
 	 * Rescales current offsetX to 1920x1080 for saving
 	 */
 	getDefaultOffsetX() {
-		if (this.offsetX < VIRTUAL_WIDTH / 3) {
+		const anchor = this.width ? this.offsetX + this.width / 2 : this.offsetX;
+
+		if (anchor < DEFAULT_WIDTH / 3) {
 			// Left Anchored: Distance from left edge is 1:1
 			return this.offsetX;
-		} else if (this.offsetX > (VIRTUAL_WIDTH / 3) * 2) {
+		} else if (anchor > VIRTUAL_WIDTH - DEFAULT_WIDTH / 3) {
 			// Right Anchored: Re-apply distance from the virtual right edge to 1920
 			return this.offsetX - VIRTUAL_WIDTH + DEFAULT_WIDTH;
 		} else {
