@@ -8,12 +8,31 @@ $input-background-hover: rgb(110, 110, 110);
 .hud-customizer {
 	width: 100%;
 	height: 100%;
+	// the overlay's margin around full-width or full-height components reaches off screen, and squishing it back on
+	// pulls the middle resize knobs off center
+	overflow: noclip;
 
 	visibility: collapse;
 	z-index: 1000;
 
 	&--enabled {
 		visibility: visible;
+	}
+}
+
+.hud-customizer-guide {
+	background-color: rgb(255, 170, 0);
+
+	&--x {
+		margin-left: -1px;
+		width: 1px;
+		height: 100%;
+	}
+
+	&--y {
+		margin-top: -1px;
+		width: 100%;
+		height: 1px;
 	}
 }
 
@@ -72,6 +91,11 @@ $input-background-hover: rgb(110, 110, 110);
 	border-radius: 2px;
 	border: 1px solid rgba(255, 255, 255, 0.1);
 	box-shadow: 0px 1px 4px black;
+
+	// above the active component's overlay and drag panel, so a component behind the settings can't take its clicks
+	&--above-overlay {
+		z-index: 20;
+	}
 
 	&__header {
 		width: 100%;
@@ -205,6 +229,10 @@ $input-background-hover: rgb(110, 110, 110);
 				vertical-align: center;
 				font-size: 14px;
 				padding-bottom: 2px;
+				// spans the header so the description tooltip opens beside the whole window, on its left unless
+				// there isn't room
+				width: 100%;
+				tooltip-position: left;
 			}
 		}
 
@@ -212,6 +240,13 @@ $input-background-hover: rgb(110, 110, 110);
 			width: 100%;
 			flow-children: down;
 			margin: 0 4px;
+
+			// max-height is set in JS to keep the menu on screen
+			&--scroll {
+				overflow: squish scroll;
+				// keep the rows' right-aligned controls clear of the scroll bar
+				padding-right: $scrollbar-width + 4px;
+			}
 		}
 	}
 
@@ -219,6 +254,11 @@ $input-background-hover: rgb(110, 110, 110);
 		height: fit-children;
 		width: 100%;
 		flow-children: down;
+
+		// setting tooltips open beside the window, on its left unless there isn't room
+		&--tooltip {
+			tooltip-position: left;
+		}
 
 		&--hover:hover {
 			transition: background-color 0.15s ease-in-out 0s;
@@ -269,6 +309,56 @@ $input-background-hover: rgb(110, 110, 110);
 		}
 		&--expanded {
 			transform: rotateZ(0deg);
+		}
+	}
+
+	&__list-delete {
+		horizontal-align: right;
+		height: 16px;
+		padding: 0px 6px;
+
+		Label {
+			font-family: $font-monospace;
+			font-size: 10px;
+			vertical-align: center;
+		}
+	}
+
+	&__layer {
+		flow-children: right;
+		horizontal-align: right;
+		height: 100%;
+
+		&__position {
+			margin-right: 4px;
+			vertical-align: center;
+
+			font-family: $font-monospace;
+			font-size: 11px;
+			color: rgba(255, 255, 255, 0.6);
+		}
+
+		&__button {
+			width: 16px;
+			height: 16px;
+			margin-left: 4px;
+			vertical-align: center;
+
+			& Image {
+				width: 100%;
+				height: 100%;
+				padding: 1px;
+				opacity: 0.6;
+				transition: opacity 0.1s ease-in-out 0s;
+			}
+
+			&:hover Image {
+				opacity: 1;
+			}
+
+			&:disabled Image {
+				opacity: 0.15;
+			}
 		}
 	}
 
@@ -519,7 +609,8 @@ $input-background-hover: rgb(110, 110, 110);
 		$size: 14px;
 		$half: calc($size / 2);
 
-		margin: 32px - calc($size / 2);
+		// the handles sit just outside the component, so they don't cover it or each other on thin components
+		margin: 32px - $size;
 
 		&__knob {
 			width: $size;
@@ -610,6 +701,46 @@ $input-background-hover: rgb(110, 110, 110);
 				transition-property: border, box-shadow, background-color;
 				transition-timing-function: ease-in-out;
 				transition-duration: 0.1s;
+			}
+
+			// handles that would sit off screen move back over the component
+			#{$knobs}--inset-left &--left,
+			#{$knobs}--inset-left &--top-left,
+			#{$knobs}--inset-left &--bottom-left {
+				margin-left: $size;
+			}
+
+			#{$knobs}--inset-right &--right,
+			#{$knobs}--inset-right &--top-right,
+			#{$knobs}--inset-right &--bottom-right {
+				margin-right: $size;
+			}
+
+			#{$knobs}--inset-top &--top,
+			#{$knobs}--inset-top &--top-left,
+			#{$knobs}--inset-top &--top-right {
+				margin-top: $size;
+			}
+
+			#{$knobs}--inset-bottom &--bottom,
+			#{$knobs}--inset-bottom &--bottom-left,
+			#{$knobs}--inset-bottom &--bottom-right {
+				margin-bottom: $size;
+			}
+
+			// components that keep their shape resize from the corners only
+			#{$knobs}--corners &--top,
+			#{$knobs}--corners &--bottom,
+			#{$knobs}--corners &--left,
+			#{$knobs}--corners &--right {
+				visibility: collapse;
+			}
+
+			#{$knobs}--corners &--top-left,
+			#{$knobs}--corners &--top-right,
+			#{$knobs}--corners &--bottom-left,
+			#{$knobs}--corners &--bottom-right {
+				visibility: visible;
 			}
 
 			&:hover Panel {

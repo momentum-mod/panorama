@@ -64,6 +64,16 @@
 	}
 
 	$this: &;
+
+	// Caps the width so long text wraps close to the panel being hovered, with a gap so it doesn't touch it
+	&--wrap {
+		margin: 0 10px;
+
+		#{$this}__text {
+			max-width: 300px;
+		}
+	}
+
 	&--notitle {
 		#{$this}__title {
 			height: 0;

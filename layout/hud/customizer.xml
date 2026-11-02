@@ -32,6 +32,27 @@
 			</Panel>
 		</snippet>
 
+        <snippet name="layer">
+			<Panel class="hud-customizer-settings__row">
+				<Label class="hud-customizer-settings__setting-label" text="#Customizer_Layer" />
+				<Panel class="hud-customizer-settings__layer">
+					<Label class="hud-customizer-settings__layer__position" text="{s:layer_position}" />
+					<Button id="LayerSendToBack" class="hud-customizer-settings__layer__button">
+						<Image src="file://{images}/arrange-send-to-back.svg" />
+					</Button>
+					<Button id="LayerSendBackward" class="hud-customizer-settings__layer__button">
+						<Image src="file://{images}/arrange-send-backward.svg" />
+					</Button>
+					<Button id="LayerBringForward" class="hud-customizer-settings__layer__button">
+						<Image src="file://{images}/arrange-bring-forward.svg" />
+					</Button>
+					<Button id="LayerBringToFront" class="hud-customizer-settings__layer__button">
+						<Image src="file://{images}/arrange-bring-to-front.svg" />
+					</Button>
+				</Panel>
+			</Panel>
+		</snippet>
+
         <snippet name="dynamic-none">
 			<Panel class="hud-customizer-settings__row">
 					<Label class="hud-customizer-settings__setting-label" text="{s:name}" />
@@ -51,6 +72,14 @@
                 <Label class="hud-customizer-settings__setting-label" text="{s:name}" />
                 <Slider class="slider hud-customizer-settings__slider" showdefault="true" direction="horizontal" id="Slider" min="0" max="100" value="50"/>
                 <TextEntry class="textentry numberentry__textentry hud-customizer-settings__slider--text-entry" maxchars="6" textmode="numeric" id="Value" />
+			</Panel>
+		</snippet>
+
+		<snippet name="dynamic-list-delete">
+			<Panel class="hud-customizer-settings__row">
+				<Button id="DeleteButton" class="button button--red hud-customizer-settings__list-delete">
+					<Label text="{s:name}" />
+				</Button>
 			</Panel>
 		</snippet>
 
@@ -129,9 +158,9 @@
 
 			<Panel id="ActiveComponentSettings" class="hud-customizer-settings__active h-fit-children">
 				<Panel class="hud-customizer-settings__active__header">
-					<Label class="hud-customizer-settings__active__header__name" text="{s:active_name}" />
+					<Label id="ActiveComponentName" class="hud-customizer-settings__active__header__name" text="{s:active_name}" />
 				</Panel>
-				<Panel id="ActiveComponentSettingsList" class="hud-customizer-settings__active__contents">
+				<Panel id="ActiveComponentSettingsList" class="hud-customizer-settings__active__contents hud-customizer-settings__active__contents--scroll">
 					<!-- Populated by JS -->
 				</Panel>
 			</Panel>

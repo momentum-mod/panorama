@@ -1,0 +1,21 @@
+.dfcompass {
+	&__ticks {
+		//height set in js
+		width: 100%;
+		vertical-align: top;
+	}
+
+	&__tick {
+		width: 2px;
+		transform: translatex(-1px);
+		vertical-align: top;
+
+		&--full {
+			height: 100%;
+		}
+
+		&--half {
+			height: 50%;
+		}
+	}
+}
