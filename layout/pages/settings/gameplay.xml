@@ -99,6 +99,11 @@
 							<RadioButton group="paintlimit" text="#Common_On" value="1" />
 						</SettingsEnum>
 
+						<SettingsEnum text="#Settings_Paint_HideOthers" convar="mom_paint_hide_others" infomessage="#Settings_Paint_HideOthers_Info" tags="players,hide,multiplayer">
+							<RadioButton group="painthideothers" text="#Common_Off" value="0" />
+							<RadioButton group="painthideothers" text="#Common_On" value="1" />
+						</SettingsEnum>
+
 						<SettingsEnum text="#Settings_Paint_ColorFromNormal" convar="mom_paint_normal_based_color" infomessage="#Settings_Paint_ColorFromNormal_Info" tags="color,angle">
 							<RadioButton group="paintanglecolor" text="#Common_Off" value="0" />
 							<RadioButton group="paintanglecolor" text="#Common_On" value="1" />
