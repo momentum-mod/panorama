@@ -4,13 +4,18 @@
 		<include src="file://{resources}/styles/overlay/playerlist.scss" />
 	</styles>
 
+	<scripts>
+		<include type="module" src="file://{scripts}/overlay/playerlist-toggles.ts" />
+	</scripts>
+
 	<PlayerList class="playerlist" acceptsinput="true" acceptsfocus="true" hittest="true" hittestchildren="true">
 		<Panel id="PlayerListFrame" class="playerlist__frame">
 			<Panel id="PlayerListConnectedSection" class="playerlist__section" />
 			<Panel id="PlayerListNotconnectedSection" class="playerlist__section" />
 		</Panel>
-		<TooltipPanel id="VoiceToggle" tooltip="#HudTabMenu_ToggleVoice" class="tab-menu-voice-toggle">
-			<ToggleButton class="tab-menu-voice-toggle__button" convar="voice_enable" />
-		</TooltipPanel>
+		<Panel class="tab-menu-toggles">
+			<ToggleButton id="VoiceToggle" class="tab-menu-toggles__button tab-menu-toggles__button--voice" convar="voice_enable" />
+			<ToggleButton id="PaintToggle" class="tab-menu-toggles__button tab-menu-toggles__button--paint" convar="mom_paint_hide_others" />
+		</Panel>
 	</PlayerList>
 </root>

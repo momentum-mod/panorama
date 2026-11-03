@@ -45,12 +45,19 @@ class PlayerListPlayerHandler {
 
 		if (!player.isSelf) {
 			const muted = ChatAPI.BIsUserMuted(player.steamId);
+			const paintHidden = ChatAPI.BIsUserPaintHidden(player.steamId);
 			items.push(
 				{
 					label: $.Localize(muted ? '#Lobby_UnmutePlayer' : '#Lobby_MutePlayer'),
 					icon: 'file://{images}/volume-' + (muted ? 'high' : 'mute') + '.svg',
 					style: 'icon-color-' + (muted ? 'green' : 'red'),
 					jsCallback: () => ChatAPI.ChangeMuteState(player.steamId, !muted)
+				},
+				{
+					label: $.Localize(paintHidden ? '#Lobby_ShowPaint' : '#Lobby_HidePaint'),
+					icon: 'file://{images}/paint-bucket' + (paintHidden ? '' : '-off') + '.svg',
+					style: 'icon-color-' + (paintHidden ? 'green' : 'red'),
+					jsCallback: () => ChatAPI.ChangePaintHiddenState(player.steamId, !paintHidden)
 				},
 				{
 					label: $.Localize('#Report_Player'),
