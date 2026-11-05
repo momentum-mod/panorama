@@ -12,6 +12,7 @@
 		<Image id="GameModeImage" />
 		<AvatarImage id="AvatarImage" />
 		<Label id="NameLabel" />
+		<Image id="MutedImage" src="file://{images}/volume-mute.svg" textureheight="32" />
 		<Label id="StatusLabel" />
 	</PlayerListPlayer>
 </root>
