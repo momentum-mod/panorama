@@ -382,11 +382,6 @@ export class LeaderboardsHandler {
 			return;
 		}
 
-		const groupEnd = this.groupEnds.find((end) => getCompletionGroup(end, this.groupEnds) === currentGroup);
-		if (groupEnd != null && rank < groupEnd) {
-			return;
-		}
-
 		const groupName = CompletionGroup[currentGroup];
 
 		lbEntry.AddClass(`leaderboard-entry--group-${groupName}`);
