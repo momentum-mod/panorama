@@ -226,6 +226,11 @@
 			</BaseBlurTarget>
 		</Panel>
 		
+		<!-- Lobby voice activity, the same panel the HUD shows in-game -->
+		<Panel class="mainmenu__voice" hittest="false" hittestchildren="false">
+			<MomentumVoice />
+		</Panel>
+
 		<Panel id="LegalConsent" class="legal hidden" visible="false" />
 
 		<!-- Make sure these are at the bottom to get the z-order right -->
