@@ -3,6 +3,10 @@
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
 
+	<scripts>
+		<include type="module" src="file://{scripts}/hud/moderation.ts" />
+	</scripts>
+
 	<Hud class="hud" hittest="false" useglobalcontext="false">
 		<!-- Non-interactive HUD elements have hit test disabled for efficiency -->
 
@@ -59,7 +63,7 @@
 
 
         <!-- Hud panels using blur must be placed below blur definitions -->
-		<HudBlurTarget id="HudBlur" blurrects="TabMenuWrapper Spectator" class="hud-blur" hittest="false" hittestchildren="false">
+		<HudBlurTarget id="HudBlur" blurrects="Spectator" class="hud-blur" hittest="false" hittestchildren="false">
 			<BackbufferImagePanel class="full" />
 		</HudBlurTarget>
 

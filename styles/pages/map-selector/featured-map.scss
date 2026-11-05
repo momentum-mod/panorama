@@ -3,9 +3,8 @@
 .featured-map {
 	$root: &;
 
+	// Width and Height set in JS
 	margin: 0 10px;
-	width: 200px;
-	height: width-percentage(56.25%);
 
 	&__image {
 		width: 100%;
