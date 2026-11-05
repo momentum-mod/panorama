@@ -1,7 +1,6 @@
 import ChatBanType = MomentumAPI.ChatBanType;
 
-// Toasts for the moderation systems. Lives on the HUD since both the chat/voice
-// ban and the player report flows are only reachable in-game.
+// Toasts for the moderation systems.
 
 /** Turns seconds remaining into something like "2 days" or "35 minutes". */
 function formatDuration(seconds: number): string {
