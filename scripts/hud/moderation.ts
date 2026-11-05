@@ -1,8 +1,7 @@
 import { formatDuration } from 'util/strings';
 import ChatBanType = MomentumAPI.ChatBanType;
 
-// Toasts for the moderation systems. Lives on the HUD since both the chat/voice
-// ban and the player report flows are only reachable in-game.
+// Toasts for the moderation systems.
 
 const shownBanToasts = new Set<ChatBanType>();
 
