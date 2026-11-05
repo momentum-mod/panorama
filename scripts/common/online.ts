@@ -25,9 +25,6 @@ export interface LobbyMember {
 
 	isSpectating: '1' | undefined;
 
-	/** Not passed by C++, but used in JS code */
-	isMuted: boolean | undefined;
-
 	specTargetID: steamID;
 }
 
