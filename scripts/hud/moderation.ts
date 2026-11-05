@@ -4,7 +4,13 @@ import ChatBanType = MomentumAPI.ChatBanType;
 // Toasts for the moderation systems. Lives on the HUD since both the chat/voice
 // ban and the player report flows are only reachable in-game.
 
+const shownBanToasts = new Set<ChatBanType>();
+
 function onCommunicationBlocked(type: ChatBanType) {
+	// Banned players can keep talking, so this would otherwise show on every message
+	if (shownBanToasts.has(type)) return;
+	shownBanToasts.add(type);
+
 	const secondsRemaining = MomentumAPI.GetChatBanSecondsRemaining(type);
 	const reason = MomentumAPI.GetChatBanReason(type);
 
@@ -20,16 +26,7 @@ function onCommunicationBlocked(type: ChatBanType) {
 		message += `\n${$.Localize('#Ban_Reason').replace('%reason%', () => reason)}`;
 	}
 
-	ToastAPI.CreateToast(
-		// Reusing an ID per ban type so spamming the key doesn't stack toasts
-		type === ChatBanType.VOICE ? 'voice-ban' : 'chat-ban',
-		title,
-		message,
-		ToastAPI.ToastLocation.RIGHT,
-		10,
-		'',
-		ToastAPI.ToastStyle.ERROR
-	);
+	ToastAPI.CreateToast('', title, message, ToastAPI.ToastLocation.RIGHT, 10, '', ToastAPI.ToastStyle.ERROR);
 }
 
 function onPlayerReported(success: boolean) {
@@ -44,5 +41,6 @@ function onPlayerReported(success: boolean) {
 	);
 }
 
+$.RegisterForUnhandledEvent('LevelInitPostEntity', () => shownBanToasts.clear());
 $.RegisterForUnhandledEvent('MomAPI_CommunicationBlocked', (type) => onCommunicationBlocked(type));
 $.RegisterForUnhandledEvent('MomAPI_PlayerReported', (success) => onPlayerReported(success));
