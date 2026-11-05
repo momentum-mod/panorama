@@ -319,9 +319,13 @@
 						<Label class="zoning-info__bind-action" text="#Zoning_Keybind_ForceGridSnap" />
 						<Label class="zoning-info__bind-key" text="SHIFT" />
 					</Panel>
-					<Panel class="zoning-info__bind zoning-info__bind--last">
+					<Panel class="zoning-info__bind">
 						<Label class="zoning-info__bind-action" text="#Zoning_Keybind_ForceReticleDist" />
 						<Label class="zoning-info__bind-key" text="ALT" />
+					</Panel>
+					<Panel class="zoning-info__bind zoning-info__bind--last">
+						<Label class="zoning-info__bind-action" text="#Zoning_Keybind_IgnorePlayerClips" />
+						<Label class="zoning-info__bind-key" text="CTRL" />
 					</Panel>
 				</Panel>
 				<Panel id="GridSlider" class="zoning__property">
