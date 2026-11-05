@@ -1,0 +1,46 @@
+@use '../config' as *;
+@use 'sass:color';
+@use 'sass:map';
+
+.group-pill {
+	width: 100%;
+	height: 100%;
+
+	horizontal-align: center;
+	vertical-align: center;
+	border-radius: 6px;
+	border-width: 3px;
+	border-style: solid;
+	align: center center;
+
+	@each $key, $colors in $colors-group-pill {
+		&--#{$key} {
+			background-color: map.get($colors, 'bg');
+
+			.group-pill__label {
+				color: map.get($colors, 'text');
+			}
+
+			&.group-pill--solid {
+				$translucent-bg: map.get($colors, 'bg');
+				$opaque-base: color.change($translucent-bg, $alpha: 1);
+				background-color: color.mix($opaque-base, #000000, 60%);
+			}
+		}
+	}
+
+	&__label {
+		font-weight: normal;
+		text-overflow: shrink;
+		font-family: 'Bebas Neue Momentum';
+		font-size: 20px;
+		text-align: center;
+		align: center center;
+	}
+
+	&--leaderboards-pill {
+		width: 36px;
+		height: 23px;
+		align: left top;
+	}
+}
