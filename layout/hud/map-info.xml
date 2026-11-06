@@ -8,11 +8,12 @@
 	</scripts>
 
 	<MomHudMapInfo class="hud-map-info">
-    <Label id="VersionLabel" text="#Momentum_Mod_Version" class="hud-map-info__label" />
-    <Label id="MapNameLabel" class="hud-map-info__label" text="{s:mapname} ({s:gamemode})" />
-        <Panel id="CachedInfoContainer" class="flow-down w-fit-children">      
-            <Label id="AuthorLabel" class="hud-map-info__label" text="#MapInfo_Author" />
+		<Label id="VersionLabel" text="#Momentum_Mod_Version" class="hud-map-info__label" />
+		<Label id="MapNameLabel" class="hud-map-info__label" text="{s:mapname} ({s:gamemode})" />
+		<Panel id="CachedInfoContainer" class="flow-down w-fit-children">      
+			<Label id="AuthorLabel" class="hud-map-info__label" text="#MapInfo_Author" />
 			<Label id="MapInfoLabel" class="hud-map-info__label" text="#MapInfo_StageCount" />
-	    </Panel>
+			<Label id="BonusInfoLabel" class="hud-map-info__label" />
+		</Panel>
 	</MomHudMapInfo>
 </root>
