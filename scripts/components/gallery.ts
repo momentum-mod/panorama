@@ -131,13 +131,13 @@ export class GalleryHandler {
 							steamid: steamID
 						});
 					} else {
-						const placeholder = $.CreatePanel('Image', panel, `Placholder${i}`, {
+						const placeholder = $.CreatePanel('Image', panel, `Placeholder${i}`, {
 							class: 'gallery__credits-placeholder',
 							src: 'file://{images}/help.svg',
 							textureheight: '32px'
 						});
 						placeholder.SetPanelEvent('onmouseover', () =>
-							UiToolkitAPI.ShowTextTooltip(placeholder.id, this.strings.placeholder)
+							UiToolkitAPI.ShowTextTooltipOnPanel(placeholder, this.strings.placeholder)
 						);
 						placeholder.SetPanelEvent('onmouseout', () => UiToolkitAPI.HideTextTooltip());
 					}
@@ -175,7 +175,7 @@ export class GalleryHandler {
 	}
 
 	updateDescription(staticData: MapCacheAPI.StaticData) {
-		const description = staticData.info.description;
+		const description = staticData.info?.description;
 		this.panels.descLabel.text = description;
 	}
 }
