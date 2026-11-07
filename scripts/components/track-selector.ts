@@ -248,7 +248,7 @@ export class TrackSelectorHandler {
 				if (isUnranked) {
 					trackLabel.AddClass('track-selector-label--muted');
 					trackLabel.SetPanelEvent('onmouseover', () => {
-						UiToolkitAPI.ShowTextTooltipOnPanel(trackLabel, $.Localize('MapSelector_Tabs_Unranked'));
+						UiToolkitAPI.ShowTextTooltipOnPanel(trackLabel, $.Localize('#MapSelector_Tabs_Unranked'));
 					});
 					trackLabel.SetPanelEvent('onmouseout', () => {
 						UiToolkitAPI.HideTextTooltip();
