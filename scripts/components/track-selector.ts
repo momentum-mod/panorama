@@ -248,7 +248,7 @@ export class TrackSelectorHandler {
 				if (isUnranked) {
 					trackLabel.AddClass('track-selector-label--muted');
 					trackLabel.SetPanelEvent('onmouseover', () => {
-						UiToolkitAPI.ShowTextTooltipOnPanel(trackLabel, $.Localize('MapSelector_Tabs_Unranked'));
+						UiToolkitAPI.ShowTextTooltipOnPanel(trackLabel, $.Localize('#MapSelector_Tabs_Unranked'));
 					});
 					trackLabel.SetPanelEvent('onmouseout', () => {
 						UiToolkitAPI.HideTextTooltip();
@@ -293,7 +293,7 @@ export class TrackSelectorHandler {
 			}
 
 			const trackLabel = isMain
-				? 'Main'
+				? $.Localize('#TrackSelector_Main')
 				: isStage
 					? `${$.Localize('#Leaderboards_Tracks_Stage')} ${track.trackNum}`
 					: `${$.Localize('#Leaderboards_Tracks_Bonus')} ${track.trackNum}`;
