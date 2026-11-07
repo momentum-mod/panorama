@@ -45,8 +45,8 @@ class HudTabMenuHandler {
 		$.RegisterForUnhandledEvent('MapCache_CompletionsUpdate', (completions) =>
 			this.onCompletionsUpdate(completions)
 		);
-		$.RegisterForUnhandledEvent('Drawer_UpdateLobbyButton', (_, playerCount) =>
-			this.updatePlayerListVisibility(playerCount <= 1)
+		$.RegisterForUnhandledEvent('PanoramaComponent_SteamLobby_OnMemberStateChanged', () =>
+			this.updatePlayerListVisibility()
 		);
 
 		registerHUDCustomizerComponent($.GetContextPanel(), {
@@ -67,7 +67,7 @@ class HudTabMenuHandler {
 		// editor or HUD customizer, so those buttons are only available for the in-game tab menu version.
 		this.panels.leaderboards.handler.setToolsAvailable(true);
 
-		this.updatePlayerListVisibility(true);
+		this.updatePlayerListVisibility();
 	}
 
 	openInSteamOverlay() {
@@ -204,7 +204,8 @@ class HudTabMenuHandler {
 		}
 	}
 
-	updatePlayerListVisibility(isEmpty: boolean) {
+	updatePlayerListVisibility() {
+		const isEmpty = SteamLobbyAPI.GetCurrentLobbyMemberCount() <= 1;
 		this.panels.playerListContainer.visible = !isEmpty;
 		this.panels.tabMenuCenter.SetHasClass('tab-menu-center--no-playerlist', isEmpty);
 	}
