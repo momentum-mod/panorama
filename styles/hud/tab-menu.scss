@@ -45,6 +45,7 @@
 	width: 100%;
 	height: 800px;
 	flow-children: right;
+	padding: 0 39px; // Padding needs to be an odd number because panorama refuses to display borders correctly
 
 	// The style selector sits at the top of the leaderboard column; this is the height it and its
 	// gap occupy, which the player list and track selector are offset by to keep all columns' tops aligned.
