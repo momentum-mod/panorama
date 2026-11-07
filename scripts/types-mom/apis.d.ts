@@ -260,6 +260,9 @@ declare namespace SteamLobbyAPI {
 
 	/** Returns true if the local player is currently in a lobby */
 	function IsInLobby(): boolean;
+
+	/** Returns the member count of the current lobby */
+	function GetCurrentLobbyMemberCount(): number;
 }
 
 declare namespace GameModeAPI {
