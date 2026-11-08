@@ -467,7 +467,8 @@ export class LeaderboardsHandler {
 
 	private updateAroundButton() {
 		const pbPage = this.getPersonalBestPage();
-		const enabled = pbPage !== null && pbPage !== this.state.page;
+		const enabled =
+			pbPage !== null && pbPage !== this.state.page && this.state.filter === LeaderboardRecordsFilter.GLOBAL;
 
 		this.panels.around.enabled = enabled;
 
