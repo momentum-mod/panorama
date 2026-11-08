@@ -79,6 +79,9 @@ interface GlobalEventNameMap {
 
 	OnCookUpdate: (time: float, percentage: float) => void; // Conc thing!
 
+	/** Conc crouch slide state: time left in seconds, ConcSlideFlags */
+	OnConcSlideUpdate: (timeLeft: float, flags: int32) => void;
+
 	OnConcEntityPanelThink: () => void;
 
 	OnAimOverGhostChange: (panel: MomHudGhostEntityPanel, aimOver: boolean) => void;

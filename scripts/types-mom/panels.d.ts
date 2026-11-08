@@ -13,6 +13,7 @@ interface PanelTagNameMap {
 	MomHudTabMenu: MomHudTabMenu;
 	MomHudStatus: MomHudStatus;
 	MomHudConcCookTime: MomHudConcCookTime;
+	MomHudConcSlide: MomHudConcSlide;
 	MomHudConcEntities: MomHudConcEntities;
 	MomHudGhostEntities: MomHudGhostEntities;
 	MomHudGhostEntityPanel: MomHudGhostEntityPanel;
@@ -83,6 +84,8 @@ interface MomHudStatus extends AbstractHudPanel<'MomHudStatus'> {}
 interface MomHudConcCookTime extends AbstractHudPanel<'MomHudConcCookTime'> {
 	concTimerLabelEnabled: boolean;
 }
+
+interface MomHudConcSlide extends AbstractHudPanel<'MomHudConcSlide'> {}
 
 interface MomHudConcEntities extends AbstractHudPanel<'MomHudConcEntities'> {
 	readonly concEntPanelProgressBarEnabled: boolean;

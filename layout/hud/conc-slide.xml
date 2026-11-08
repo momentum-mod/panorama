@@ -1,0 +1,27 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+
+	<scripts>
+		<include type="module" src="file://{scripts}/hud/conc-slide.ts" />
+	</scripts>
+
+	<MomHudConcSlide>
+		<Panel id="ConcSlideContainer" class="concslide concslide--hide">
+			<Panel id="ConcSlideCircle" class="concslide__circle">
+				<Image id="ConcSlideCircleBackground" class="concslide__ring concslide__ring--background" src="file://{images}/hud/meter-ring.svg" textureheight="100" />
+				<Image id="ConcSlideCircleFill" class="concslide__ring" src="file://{images}/hud/meter-ring.svg" textureheight="100" />
+				<Panel id="ConcSlideCircleMarker" class="concslide__marker concslide__marker--circle" />
+				<Label id="ConcSlideCircleLabel" text="" class="concslide__label concslide__label--center" />
+			</Panel>
+			<Panel id="ConcSlideBar" class="concslide__bar-container">
+				<Panel id="ConcSlideBarBackground" class="concslide__bar">
+					<Panel id="ConcSlideBarFill" class="concslide__bar-fill" />
+					<Panel id="ConcSlideBarMarker" class="concslide__marker concslide__marker--bar" />
+				</Panel>
+				<Label id="ConcSlideBarLabel" text="" class="concslide__label concslide__label--below" />
+			</Panel>
+		</Panel>
+	</MomHudConcSlide>
+</root>

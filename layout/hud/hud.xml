@@ -41,6 +41,7 @@
         <MomHudStickyCharge id="StickyCharge" />
 		<MomHudStickyCount id="StickyCount" />
         <MomHudConcCooktime id="ConcCooktime" />
+        <MomHudConcSlide id="ConcSlide" />
         <MomHudGroundboost id="Groundboost" />
         <MomHudDFJump id="DFJump"/>
         <MomHudPowerupTimer id="PowerupTimer"/>
