@@ -29,6 +29,39 @@
 					<Label id="BoardStatsRun" class="boardstats__label boardstats__label--text boardstats__label--run" text="#BoardStats_Run" />
 				</Panel>
 			</Panel>
+			<Panel id="BoardStatsTable" class="boardstats__table hide">
+				<Panel class="boardstats__table-columns">
+					<Panel class="boardstats__column">
+						<Label text="#BoardStats_Table_Index" class="boardstats__label boardstats__label--text boardstats__column-name" />
+						<Label text="{s:table_index}" class="boardstats__label boardstats__label--text boardstats__column-values" />
+					</Panel>
+					<Panel class="boardstats__column">
+						<Label text="#BoardStats_Table_Grade" class="boardstats__label boardstats__label--text boardstats__column-name" />
+						<Label text="{s:table_grade}" class="boardstats__label boardstats__label--text boardstats__column-values" />
+					</Panel>
+					<Panel class="boardstats__column">
+						<Label text="#BoardStats_Table_Loss" class="boardstats__label boardstats__label--text boardstats__column-name" />
+						<Label text="{s:table_loss}" class="boardstats__label boardstats__label--text boardstats__column-values" />
+					</Panel>
+					<Panel class="boardstats__column">
+						<Label text="#BoardStats_Table_Angle" class="boardstats__label boardstats__label--text boardstats__column-name" />
+						<Label text="{s:table_angle}" class="boardstats__label boardstats__label--text boardstats__column-values" />
+					</Panel>
+					<Panel class="boardstats__column">
+						<Label text="#BoardStats_Table_Split" class="boardstats__label boardstats__label--text boardstats__column-name" />
+						<Label text="{s:table_split}" class="boardstats__label boardstats__label--text boardstats__column-values" />
+					</Panel>
+					<Panel class="boardstats__column">
+						<Label text="#BoardStats_Table_Window" class="boardstats__label boardstats__label--text boardstats__column-name" />
+						<Label text="{s:table_window}" class="boardstats__label boardstats__label--text boardstats__column-values" />
+					</Panel>
+					<Panel class="boardstats__column">
+						<Label text="#BoardStats_Table_Why" class="boardstats__label boardstats__label--text boardstats__column-name" />
+						<Label text="{s:table_why}" class="boardstats__label boardstats__label--text boardstats__column-values boardstats__column-values--left" />
+					</Panel>
+				</Panel>
+				<Label text="#BoardStats_Table_Footer" class="boardstats__label boardstats__label--text boardstats__table-footer" />
+			</Panel>
 		</Panel>
 	</MomHudBoardStats>
 </root>

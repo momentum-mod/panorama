@@ -4,6 +4,7 @@
 	&__container {
 		width: fit-children;
 		height: fit-children;
+		flow-children: right;
 	}
 
 	&__meter {
@@ -64,6 +65,43 @@
 		flow-children: down;
 		vertical-align: center;
 		margin-left: 8px;
+		min-width: 200px;
+	}
+
+	&__table {
+		flow-children: down;
+		margin-left: 12px;
+		padding: 5px;
+		background-color: rgba(0, 0, 0, 0.3);
+	}
+
+	&__table-columns {
+		flow-children: right;
+	}
+
+	&__column {
+		flow-children: down;
+		margin: 0px 5px;
+	}
+
+	&__column-name {
+		width: 100%;
+		text-align: center;
+		border-top: 1px solid rgba(255, 255, 255, 1);
+	}
+
+	&__column-values {
+		horizontal-align: right;
+		text-align: right;
+
+		&--left {
+			horizontal-align: left;
+			text-align: left;
+		}
+	}
+
+	&__table-footer {
+		margin: 5px 5px 0px 5px;
 	}
 
 	&__label {

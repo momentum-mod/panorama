@@ -52,7 +52,9 @@ const BOARD_STATS = {
 	/** Extra loss after the board, in u/s, needed before the window result marker is shown */
 	WINDOW_MARKER_MIN_EXTRA_LOSS: 1,
 	/** Line thickness of the average, best and window markers, in px */
-	LINE_THICKNESS: 2
+	LINE_THICKNESS: 2,
+	/** Most recent boards listed in the end of run table; the footer still covers every board */
+	TABLE_MAX_ROWS: 20
 } as const;
 
 const GRADE_INFO: Readonly<Record<Grade, { name: string; colors: ColorPair }>> = {
@@ -85,6 +87,13 @@ const PREVIEW_BOARD: BoardStats = {
 	planeChanges: 1,
 	flags: BoardStatsFlags.NONE
 };
+
+/** Boards listed in the end of run table while the HUD customizer is open */
+const PREVIEW_RUN: BoardStats[] = [
+	PREVIEW_BOARD,
+	{ ...PREVIEW_BOARD, velOut: { x: -399, y: 2940, z: -399 }, endSpeed: 2990 },
+	{ ...PREVIEW_BOARD, velOut: { x: -300, y: 2860, z: -300 }, clipLoss: 30, endSpeed: 2830 }
+];
 
 /** Everything the meter and the end of run table show about one board */
 interface BoardResult {
@@ -191,12 +200,14 @@ class BoardStatsHandler {
 		grade: $<Label>('#BoardStatsGrade'),
 		loss: $<Label>('#BoardStatsLoss'),
 		why: $<Label>('#BoardStatsWhy'),
-		run: $<Label>('#BoardStatsRun')
+		run: $<Label>('#BoardStatsRun'),
+		table: $<Panel>('#BoardStatsTable')
 	};
 
 	// Defaults are set in hud_default.kv3
 	barHeight = 100;
 	showWindowMarker = true;
+	showRunTable = true;
 
 	/** Boards of the current run, oldest first */
 	runBoards: BoardResult[] = [];
@@ -250,7 +261,8 @@ class BoardStatsHandler {
 						{ styleID: 'showLoss' },
 						{ styleID: 'showWhy' },
 						{ styleID: 'showRun' },
-						{ styleID: 'showWindowMarker' }
+						{ styleID: 'showWindowMarker' },
+						{ styleID: 'showRunTable' }
 					]
 				},
 				showGrade: {
@@ -281,6 +293,12 @@ class BoardStatsHandler {
 					name: $.Localize('#Customizer_Board_Stats_ShowWindowMarker'),
 					type: CustomizerPropertyType.CHECKBOX,
 					callbackFunc: (_, value) => (this.showWindowMarker = value),
+					onChanged: () => this.refreshPreview()
+				},
+				showRunTable: {
+					name: $.Localize('#Customizer_Board_Stats_ShowRunTable'),
+					type: CustomizerPropertyType.CHECKBOX,
+					callbackFunc: (_, value) => (this.showRunTable = value),
 					onChanged: () => this.refreshPreview()
 				},
 				fontStyling: {
@@ -336,23 +354,91 @@ class BoardStatsHandler {
 	onTimerStateChange() {
 		const state = MomentumTimerAPI.GetObservedTimerStatus().state;
 		if (state === TimerState.RUNNING && this.lastTimerState !== TimerState.RUNNING) this.resetRun();
+
+		if (state === TimerState.FINISHED && this.lastTimerState === TimerState.RUNNING) this.showTable(this.runBoards);
+		else if (state !== TimerState.FINISHED) this.hideTable();
+
 		this.lastTimerState = state;
 	}
 
 	onTimerReplaced() {
 		this.lastTimerState = MomentumTimerAPI.GetObservedTimerStatus().state;
 		this.resetRun();
+		this.hideTable();
 	}
 
 	resetRun() {
 		this.runBoards = [];
 	}
 
-	runSummary(): { average: number; best: number } | null {
-		if (this.runBoards.length === 0) return null;
+	runSummary(boards = this.runBoards): { average: number; best: number } | null {
+		if (boards.length === 0) return null;
 
-		const fills = this.runBoards.map((board) => board.fill);
+		const fills = boards.map((board) => board.fill);
 		return { average: fills.reduce((sum, fill) => sum + fill, 0) / fills.length, best: Math.max(...fills) };
+	}
+
+	/** End of run table: the last TABLE_MAX_ROWS boards, then a footer covering the whole run */
+	showTable(boards: BoardResult[]) {
+		const { cp, table } = this.panels;
+		const summary = this.runSummary(boards);
+		if (!this.showRunTable || !summary) {
+			this.hideTable();
+			return;
+		}
+
+		const firstRow = Math.max(0, boards.length - BOARD_STATS.TABLE_MAX_ROWS);
+		const rows = boards.slice(firstRow);
+		const column = (cell: (board: BoardResult) => string) => rows.map(cell).join('\n');
+		const ups = (value: number) => Math.max(value, 0).toFixed(0);
+
+		cp.SetDialogVariable('table_index', rows.map((_, i) => `${firstRow + i + 1}`).join('\n'));
+		cp.SetDialogVariable(
+			'table_grade',
+			column((board) => $.Localize(GRADE_INFO[board.grade].name))
+		);
+		cp.SetDialogVariable(
+			'table_loss',
+			column((board) => ups(board.lossFirst))
+		);
+		cp.SetDialogVariable(
+			'table_angle',
+			column((board) => `${board.approachAngle.toFixed(1)}°`)
+		);
+		cp.SetDialogVariable(
+			'table_split',
+			column((board) => `${(board.steepShare * 100).toFixed(0)}/${(board.wideShare * 100).toFixed(0)}`)
+		);
+		cp.SetDialogVariable(
+			'table_window',
+			column((board) => (board.windowLoss === null ? '-' : ups(board.windowLoss)))
+		);
+		cp.SetDialogVariable(
+			'table_why',
+			column((board) => $.Localize(CAUSE_NAMES[board.cause]))
+		);
+
+		// Worst board is the one that kept the least of its speed
+		const worstIndex = boards.reduce((worst, board, i) => (board.fill < boards[worst].fill ? i : worst), 0);
+		const worst = boards[worstIndex];
+		const lostOnBoards = boards.reduce((sum, board) => sum + Math.max(board.lossFirst, 0), 0);
+		const lostAfterBoards = boards.reduce(
+			(sum, board) => sum + (board.windowLoss === null ? 0 : Math.max(board.windowLoss - board.lossFirst, 0)),
+			0
+		);
+
+		cp.SetDialogVariable('table_average', (summary.average * 100).toFixed(0));
+		cp.SetDialogVariable('table_worst_index', `${worstIndex + 1}`);
+		cp.SetDialogVariable('table_worst_grade', $.Localize(GRADE_INFO[worst.grade].name));
+		cp.SetDialogVariable('table_worst_fill', (worst.fill * 100).toFixed(0));
+		cp.SetDialogVariable('table_lost_boards', lostOnBoards.toFixed(0));
+		cp.SetDialogVariable('table_lost_after', lostAfterBoards.toFixed(0));
+
+		table.RemoveClass('hide');
+	}
+
+	hideTable() {
+		this.panels.table.AddClass('hide');
 	}
 
 	show(result: BoardResult) {
@@ -422,11 +508,20 @@ class BoardStatsHandler {
 		this.preview = enable;
 		this.cancelFade();
 
-		if (enable) this.show(analyzeBoard(PREVIEW_BOARD));
-		else this.hide(true);
+		if (enable) {
+			this.refreshPreview();
+		} else {
+			this.hide(true);
+			// Back to what the run shows: the table only stays up after a finished run
+			if (this.lastTimerState === TimerState.FINISHED) this.showTable(this.runBoards);
+			else this.hideTable();
+		}
 	}
 
 	refreshPreview() {
-		if (this.preview) this.show(analyzeBoard(PREVIEW_BOARD));
+		if (!this.preview) return;
+
+		this.show(analyzeBoard(PREVIEW_BOARD));
+		this.showTable(PREVIEW_RUN.map((stats) => analyzeBoard(stats)));
 	}
 }
