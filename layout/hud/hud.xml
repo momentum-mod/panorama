@@ -38,6 +38,7 @@
         <MomHudAmmo id="Ammo"/>
         <MomHudStrafeTrainer id="StrafeTrainer"/> 
         <MomHudJumpStats id="JumpStats"/>
+        <MomHudBoardStats id="BoardStats"/>
         <MomHudStickyCharge id="StickyCharge" />
 		<MomHudStickyCount id="StickyCount" />
         <MomHudConcCooktime id="ConcCooktime" />

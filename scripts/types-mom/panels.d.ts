@@ -17,6 +17,7 @@ interface PanelTagNameMap {
 	MomHudGhostEntities: MomHudGhostEntities;
 	MomHudGhostEntityPanel: MomHudGhostEntityPanel;
 	MomHudJumpStats: MomHudJumpStats;
+	MomHudBoardStats: MomHudBoardStats;
 	MomHudReplayControls: MomHudReplayControls;
 	MomHudStickyCharge: MomHudStickyCharge;
 	MomHudStrafeSync: MomHudStrafeSync;
@@ -100,6 +101,8 @@ interface MomHudGhostEntities extends AbstractHudPanel<'MomHudGhostEntities'> {
 }
 
 interface MomHudGhostEntityPanel extends AbstractHudPanel<'MomHudGhostEntityPanel'> {}
+
+interface MomHudBoardStats extends AbstractHudPanel<'MomHudBoardStats'> {}
 
 interface MomHudJumpStats extends AbstractHudPanel<'MomHudJumpStats'> {
 	readonly jumpStatsCFG: {

@@ -1,0 +1,83 @@
+.boardstats {
+	align: left top;
+
+	&__container {
+		width: fit-children;
+		height: fit-children;
+	}
+
+	&__meter {
+		flow-children: right;
+		opacity: 1;
+		transition-property: opacity;
+		transition-timing-function: ease-in;
+
+		&--hide {
+			opacity: 0;
+		}
+	}
+
+	&__bar {
+		width: 12px;
+		height: 100px;
+		background-color: rgba(0, 0, 0, 0.35);
+		border-radius: 2px;
+		overflow: noclip;
+	}
+
+	&__fill {
+		width: 100%;
+		height: 0%;
+		vertical-align: bottom;
+		border-radius: 2px;
+	}
+
+	&__line {
+		width: 100%;
+		height: 2px;
+		vertical-align: top;
+
+		&--average {
+			background-color: rgba(255, 255, 255, 1);
+			box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.8);
+		}
+
+		&--best {
+			background-color: rgba(255, 255, 255, 0.35);
+		}
+
+		&--window {
+			width: fit-children;
+			horizontal-align: center;
+			flow-children: right;
+		}
+	}
+
+	&__dot {
+		width: 2px;
+		height: 2px;
+		margin: 0px 1px;
+		background-color: rgba(255, 255, 255, 0.9);
+	}
+
+	&__labels {
+		flow-children: down;
+		vertical-align: center;
+		margin-left: 8px;
+	}
+
+	&__label {
+		font-size: 16px;
+		color: rgba(255, 255, 255, 1);
+		text-shadow-fast: 0px 1px rgba(0, 0, 0, 0.9);
+
+		&--grade {
+			font-weight: bold;
+			font-size: 20px;
+		}
+
+		&--empty {
+			visibility: collapse;
+		}
+	}
+}

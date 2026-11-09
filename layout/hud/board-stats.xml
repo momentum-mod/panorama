@@ -1,0 +1,34 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+
+	<scripts>
+		<include type="module" src="file://{scripts}/hud/board-stats.ts" />
+	</scripts>
+
+	<MomHudBoardStats class="boardstats">
+		<Panel id="BoardStatsContainer" class="boardstats__container">
+			<Panel id="BoardStatsMeter" class="boardstats__meter boardstats__meter--hide">
+				<Panel id="BoardStatsBar" class="boardstats__bar">
+					<Panel id="BoardStatsBarFill" class="boardstats__fill" />
+					<Panel id="BoardStatsBestLine" class="boardstats__line boardstats__line--best" />
+					<Panel id="BoardStatsAverageLine" class="boardstats__line boardstats__line--average" />
+					<Panel id="BoardStatsWindowMarker" class="boardstats__line boardstats__line--window">
+						<Panel class="boardstats__dot" />
+						<Panel class="boardstats__dot" />
+						<Panel class="boardstats__dot" />
+						<Panel class="boardstats__dot" />
+						<Panel class="boardstats__dot" />
+					</Panel>
+				</Panel>
+				<Panel class="boardstats__labels">
+					<Label id="BoardStatsGrade" class="boardstats__label boardstats__label--grade" text="" />
+					<Label id="BoardStatsLoss" class="boardstats__label boardstats__label--text" text="#BoardStats_Loss" />
+					<Label id="BoardStatsWhy" class="boardstats__label boardstats__label--text" text="" />
+					<Label id="BoardStatsRun" class="boardstats__label boardstats__label--text boardstats__label--run" text="#BoardStats_Run" />
+				</Panel>
+			</Panel>
+		</Panel>
+	</MomHudBoardStats>
+</root>

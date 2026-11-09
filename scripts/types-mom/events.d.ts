@@ -150,6 +150,9 @@ interface GlobalEventNameMap {
 
 	OnJumpStarted: () => void;
 
+	/** A surf ramp board's measuring window has closed (CMom_HudBoardStats) */
+	OnBoardStatsUpdate: (stats: BoardStats) => void;
+
 	/** Called when the player changes strafe trainer display mode setting (mom_hud_strafetrainer_mode). */
 	OnStrafeTrainerModeChanged: (cvarValue: int32) => void;
 
@@ -409,4 +412,28 @@ interface GlobalEventNameMap {
 
 interface PanelEventNameMap {
 	MapEntry_MapDataUpdate: () => void;
+}
+
+/** One closed surf trainer board window, see OnBoardStatsUpdate. Speeds in u/s. */
+interface BoardStats {
+	/** Normal of the ramp plane that was boarded */
+	normal: vec3;
+	/** Velocity before the board clip */
+	velIn: vec3;
+	/** Velocity after the board clip */
+	velOut: vec3;
+	/** Server tick of the board */
+	tick: int32;
+	/** Speed removed by clips after the board clip (seams, second planes) */
+	clipLoss: float;
+	/** Speed change from air acceleration during the window */
+	accelGain: float;
+	/** Speed change from gravity during the window */
+	gravityDelta: float;
+	/** Speed when the window closed */
+	endSpeed: float;
+	/** How often the contact plane changed during the window */
+	planeChanges: int32;
+	/** BoardStatsFlags_t: 1 = left the ramp, 2 = cut short by a death, teleport or reset */
+	flags: int32;
 }
