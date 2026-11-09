@@ -98,6 +98,10 @@ export class LeaderboardsHandler {
 			if (this.localOnly) this.updateLeaderboards();
 		});
 
+		$.RegisterForUnhandledEvent('EndOfRun_Result_RunUpload', () => {
+			this.updateLeaderboards();
+		});
+
 		// Note: Can't set radio button groups in the XML because it causes multiple leaderboard instances to interfere with eachother
 		Object.entries(this.panels.radioButtons).forEach(([_, button]) => {
 			button.group = this.panels.cp.id + 'Group';
