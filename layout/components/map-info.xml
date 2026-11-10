@@ -9,11 +9,14 @@
 
     <MapInfo class="h-full w-full">
         <Panel id="MapInfoContainer" class="map-info-container ml-2 v-align-center" acceptsinput="true">
-            <Panel>
-                <!-- Stacked labels to give double layers of shadow. I don't like it, but I'll have to go along with it. -->
-                <Label class="text-h1 text-shadow-outline ml-2" text="{s:name}" />
-                <Label class="text-h1 text-shadow-black color-transparent ml-2" text="{s:name}" />
-            </Panel>
+        	<Panel class="map-info-container__title-container">
+         		<Image class="map-info-container__title-container__icon" src="file://{images}/panorama-outline.svg" textureheight="64" />
+	            <Panel>
+	                <!-- Stacked labels to give double layers of shadow. I don't like it, but I'll have to go along with it. -->
+	                <Label class="text-h1 text-shadow-outline ml-2" text="{s:name}" />
+	                <Label class="text-h1 text-shadow-black color-transparent ml-2" text="{s:name}" />
+	            </Panel>
+         	</Panel>
             <Panel class="flow-right ml-2">
                 <Label class="text-h4 text-shadow-outline" text="#MapInfo_Tier" />
                 <Label id="HudTabMenuLinearSeparator" class="text-h4 text-shadow-outline" text="|" />

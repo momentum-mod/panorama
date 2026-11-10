@@ -16,6 +16,16 @@
 		border: 1px solid rgba(50, 50, 50, 0.4);
 	}
 
+	&__title-container {
+		flow-children: right;
+		padding: 0 4px;
+
+		&__icon {
+			vertical-align: center;
+			img-shadow: 1px 2px 5px 2 black;
+		}
+	}
+
 	&__required-game {
 		flow-children: none;
 		margin-left: 4px;

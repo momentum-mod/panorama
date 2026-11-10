@@ -80,65 +80,6 @@ export class MapInfoHandler {
 		this.panels.container.SetPanelEvent('onactivate', () => {
 			this.openGallery(mapData);
 		});
-
-		// info.SetDialogVariable('description', staticData.info?.description);
-		// this.panels.descriptionContainer.SetHasClass('hide', !staticData.info?.description);
-
-		// info.SetDialogVariable('date', new Date(staticData.info?.creationDate)?.toLocaleDateString());
-		// this.panels.datesContainer.SetHasClass('hide', !staticData.info?.creationDate);
-
-		// const pb = Leaderboards.getUserMapDataTrack(userData, gamemode);
-		// if (pb) {
-		// 	info.SetDialogVariableFloat('personal_best', pb.time);
-		// 	info.FindChildTraverse('MapInfoPB').visible = true;
-		// 	info.FindChildTraverse('MapInfoNoPB').visible = false;
-		// } else {
-		// 	info.FindChildTraverse('MapInfoPB').visible = false;
-		// 	info.FindChildTraverse('MapInfoNoPB').visible = true;
-		// }
-
-		// const inSubmission = MapStatuses.IN_SUBMISSION.includes(staticData.status);
-		// info.SetHasClass('mapselector-map-info--submission', inSubmission);
-
-		// if (inSubmission) {
-		// 	const { status, tooltip } = this.strings.statuses.get(staticData.status);
-		// 	this.panels.info.SetDialogVariable('status', status);
-		// 	this.panels.info.SetDialogVariable('status_tooltip', tooltip);
-
-		// 	this.panels.submissionStatus.visible = true;
-
-		// 	const hasChangelog = staticData.versions.length > 1;
-		// 	this.panels.changelog.visible = hasChangelog;
-		// 	if (hasChangelog) {
-		// 		const container = this.panels.changelog.GetChild(1);
-		// 		container.RemoveAndDeleteChildren();
-
-		// 		staticData.versions
-		// 			// Data doesn't seem always ordered by versionNum (?) so doing a sort
-		// 			.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-		// 			.forEach(({ changelog }, i, arr) => {
-		// 				$.CreatePanel('Label', container, '', {
-		// 					class: 'mapselector-map-info__h3',
-		// 					text: $.Localize('#MapSelector_Info_Changelog_Version').replace(
-		// 						'%version%',
-		// 						(arr.length - i).toString()
-		// 					)
-		// 				});
-		// 				// First version doesn't necessarily have a changelog
-		// 				if (changelog) {
-		// 					$.CreatePanel('Label', container, '', {
-		// 						text: changelog,
-		// 						class: 'mapselector-map-info__changelog-text'
-		// 					});
-		// 				}
-		// 			});
-		// 	}
-		// } else {
-		// 	this.panels.submissionStatus.visible = false;
-		// 	this.panels.changelog.visible = false;
-		// 	this.panels.info.SetDialogVariable('status', '');
-		// 	this.panels.info.SetDialogVariable('status_tooltip', '');
-		// }
 	}
 
 	private updateRequiredGames(staticData: MapCacheAPI.StaticData) {
@@ -189,11 +130,6 @@ export class MapInfoHandler {
 			'file://{resources}/layout/components/gallery.xml'
 		);
 
-		gallery.handler.init(
-			this.mapSelector,
-			mapData.staticData
-			// mapData.staticData.images?.map(({ id }) => id) ?? [],
-			// parseMapImageUrl(mapData.staticData) ?? ''
-		);
+		gallery.handler.init(this.mapSelector, mapData.staticData);
 	}
 }
