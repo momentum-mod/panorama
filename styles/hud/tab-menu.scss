@@ -146,6 +146,14 @@
 			padding: 0px;
 		}
 	}
+
+	&__enable-cursor-tip {
+		font-style: italic;
+		horizontal-align: right;
+		vertical-align: bottom;
+		margin-bottom: 20px;
+		margin-right: 20px;
+	}
 }
 
 // ─── Content containers ───────────────────────────────────────────────────────
