@@ -341,7 +341,7 @@ export class LeaderboardsHandler {
 						$.Localize('#Action_DeleteReplay'),
 						$.Localize('#Action_DeleteReplay_Confirm'),
 						'ok-cancel-popup',
-						() => this.panels.cp.deleteRecordReplay(index),
+						() => this.deleteReplay(index),
 						() => {}
 					)
 			});
@@ -517,5 +517,10 @@ export class LeaderboardsHandler {
 		this.blockTextEntryEvent = true;
 		this.panels.controls.pageSelect.text = `${val}`;
 		this.blockTextEntryEvent = false;
+	}
+
+	private deleteReplay(index: number) {
+		this.panels.cp.deleteRecordReplay(index);
+		this.updateLeaderboards();
 	}
 }
