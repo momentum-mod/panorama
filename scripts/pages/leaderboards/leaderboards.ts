@@ -101,6 +101,18 @@ export class LeaderboardsHandler {
 			this.updateLeaderboards();
 		});
 
+		// The engine builds the lobby filter from the lobby's members at request time
+		$.RegisterForUnhandledEvent('PanoramaComponent_SteamLobby_OnMemberStateChanged', () => {
+			if (this.state.filter === LeaderboardRecordsFilter.LOBBY) this.updateLeaderboards();
+		});
+
+		$.RegisterForUnhandledEvent('SteamLobby_Exit', () => {
+			if (this.state.filter !== LeaderboardRecordsFilter.LOBBY) return;
+
+			this.panels.radioButtons.global.SetSelected(true);
+			this.setFilter(LeaderboardRecordsFilter.GLOBAL);
+		});
+
 		// Note: Can't set radio button groups in the XML because it causes multiple leaderboard instances to interfere with eachother
 		Object.entries(this.panels.radioButtons).forEach(([_, button]) => {
 			button.group = this.panels.cp.id + 'Group';
