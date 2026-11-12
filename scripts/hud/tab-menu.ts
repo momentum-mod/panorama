@@ -56,6 +56,10 @@ class HudTabMenuHandler {
 		$.RegisterForUnhandledEvent('MapCache_CompletionsUpdate', (completions) =>
 			this.onCompletionsUpdate(completions)
 		);
+		// Fired when the leaderboard's saved replays load, gain a new run, or lose a deleted one
+		$.RegisterEventHandler('Leaderboards_LocalRunsLoaded', this.panels.leaderboards, () =>
+			this.onLocalRunsChanged()
+		);
 
 		$.RegisterForUnhandledEvent('SteamLobby_Enter', () => this.updatePlayerListVisibility());
 		$.RegisterForUnhandledEvent('SteamLobby_Exit', () => this.updatePlayerListVisibility());
@@ -215,6 +219,13 @@ class HudTabMenuHandler {
 			loading
 		);
 		MapCacheAPI.RefreshUserPersonalBests(mapID, gamemode, style);
+	}
+
+	/** An offline map's PBs come from its saved replays, so reload them whenever those change. */
+	onLocalRunsChanged() {
+		if (!MapCacheAPI.GetCurrentMapData()) {
+			this.components.trackSelector.handler.refreshLocalCompletions(this.components.styleSelector.handler.style);
+		}
 	}
 
 	onActiveZoneDefsChanged() {
