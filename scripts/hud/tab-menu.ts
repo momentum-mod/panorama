@@ -83,6 +83,7 @@ class HudTabMenuHandler {
 
 	onMapLoad(mapName: string) {
 		const mapData = MapCacheAPI.GetCurrentMapData();
+		this.components.endOfRun.handler.setMapName(mapData?.staticData.name ?? mapName);
 
 		const blur: HudBlurTarget = this.panels.cp.GetParent().GetParent().FindChild('HudBlur');
 
@@ -90,7 +91,7 @@ class HudTabMenuHandler {
 		blur.AddBlurPanel(this.components.styleSelector);
 		blur.AddBlurPanel(this.components.leaderboards);
 		blur.AddBlurPanel(this.components.playerList.GetFirstChild());
-		blur.AddBlurPanel(this.components.endOfRun.GetFirstChild());
+		this.components.endOfRun.handler.setBlurPanel(blur);
 
 		this.components.trackSelector.handler.connectLeaderboards(this.panels.leaderboards);
 		this.components.trackSelector.handler.connectStyleSelector(this.components.styleSelector);

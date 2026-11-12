@@ -22,8 +22,25 @@
 		</snippet>
 	</snippets>
 
-	<EndOfRun hittestchildren="true">
-		<Panel class="endofrun" acceptsinput="true" acceptsfocus="true">
+	<EndOfRun class="endofrun-root" hittestchildren="true">
+		<Panel id="EndOfRunInfo" class="endofrun-info">
+			<Panel class="endofrun-info__header-left">
+				<Label class="endofrun-info__map" text="{s:eor_map}" />
+				<Panel class="endofrun-info__details">
+					<Label class="endofrun-info__text" text="{s:eor_track}" />
+					<Label class="endofrun-info__text endofrun-info__text--secondary" text="{s:eor_style}" />
+				</Panel>
+			</Panel>
+			<Panel id="EndOfRunHeaderRight" class="endofrun-info__header-right">
+				<!-- The result row is collapsed until a run upload succeeds, then slides in below the player -->
+				<Panel id="EndOfRunPlayer" class="endofrun-info__player" />
+				<Panel id="EndOfRunResults" class="endofrun-info__results">
+					<Label class="endofrun-info__rank" text="{s:eor_rank}" />
+					<GroupPill id="EndOfRunGroupPill" class="group-pill group-pill--leaderboards-pill group-pill--solid endofrun-info__group-pill" />
+				</Panel>
+			</Panel>
+		</Panel>
+		<Panel id="EndOfRunBody" class="endofrun" acceptsinput="true" acceptsfocus="true">
 			<Panel class="endofrun__header">
 				<Panel class="endofrun__header-left">
 					<Button class="endofrun__header-button endofrun__header-button--back-button" onactivate="EndOfRunHandler.hideEndOfRun();">
