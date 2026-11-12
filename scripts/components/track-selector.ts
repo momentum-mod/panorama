@@ -82,6 +82,9 @@ export class TrackSelectorHandler {
 
 	private isOnMapSelector = false;
 
+	// Set while the shown map has no tracks yet because their fetch is still in flight.
+	private waitingForTracks = false;
+
 	// TODO: Blur broken when scrolling / Fixed in panzer's pr
 	blurPanel: BaseBlurTarget | null = null;
 
@@ -109,7 +112,8 @@ export class TrackSelectorHandler {
 		this.currentMapData = data;
 	}
 
-	updateTrackData(completions: MapUserCompletions) {
+	/** `loading`: a completions fetch for this map is in flight, so an empty track list isn't final. */
+	updateTrackData(completions: MapUserCompletions, loading = false) {
 		if (!this.leaderboards || !completions) return;
 
 		this.leaderboards.handler.setMapID(completions.mapID);
@@ -126,12 +130,26 @@ export class TrackSelectorHandler {
 		// existing rows in place. Only skip within the same map, so selecting a different map still
 		// clears the previous one's tracks instead of showing them stale.
 		const tracks = completions.tracks ?? [];
-		if (tracks.length === 0 && completions.mapID !== 0 && completions.mapID === this.renderedMapID) {
+		if (
+			tracks.length === 0 &&
+			completions.mapID !== 0 &&
+			completions.mapID === this.renderedMapID &&
+			!this.waitingForTracks
+		) {
 			return;
 		}
 
 		this.renderedMapID = completions.mapID;
+		this.setWaitingForTracks(loading && tracks.length === 0);
 		this.renderTracks(tracks);
+
+		// No track gets selected, so nothing would replace the previous map's records
+		if (tracks.length === 0) this.leaderboards.handler.clearRecords(loading);
+	}
+
+	private setWaitingForTracks(waiting: boolean) {
+		this.waitingForTracks = waiting;
+		this.panels.cp.SetHasClass('track-selector--loading', waiting);
 	}
 
 	/**
@@ -155,6 +173,7 @@ export class TrackSelectorHandler {
 		// The local table isn't for any online map; keep renderedMapID at 0 so updateTrackData's
 		// same-map skip can't match a real map ID and hold these tracks by mistake.
 		this.renderedMapID = 0;
+		this.setWaitingForTracks(false);
 
 		// Keyed by name (there's no map ID offline) so loading a different offline map resets the
 		// selection, while style switches -- same map -- keep it.
