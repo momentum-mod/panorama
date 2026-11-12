@@ -34,6 +34,8 @@ export interface MapUserCompletions {
 	gamemode: Gamemode;
 	style: Style;
 	tracks: TrackCompletionInfo[];
+	/** The latest fetch failed, so `tracks` is only what was cached before it. */
+	fetchFailed: boolean;
 }
 
 /**

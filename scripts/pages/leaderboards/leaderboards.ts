@@ -2,7 +2,7 @@ import { exposeToPanelContext, PanelHandler } from 'util/module-helpers';
 import {
 	LeaderboardListType,
 	// LeaderboardRecordsFilter,
-	// LeaderboardStatusType,
+	LeaderboardStatusType,
 	LeaderboardType
 	// sortLeaderboard
 } from 'common/leaderboard';
@@ -213,17 +213,28 @@ export class LeaderboardsHandler {
 			UiToolkitAPI.ShowTextTooltip(this.panels.lobbyButton.id, $.Localize('#Leaderboards_JoinLobbyTooltip'));
 		}
 	}
-	private updateEmptyState(isEmpty: boolean) {
+	private updateEmptyState(isEmpty: boolean, status = LeaderboardStatusType.NO_TIMES_RETURNED) {
 		this.cancelLoadingSchedule();
 
 		this.panels.timesContainer.RemoveClass('leaderboard-times--loading');
 		this.panels.timesContainer.SetHasClass('leaderboard-times--empty', isEmpty);
 		if (isEmpty) {
-			this.panels.cp.SetDialogVariable('empty-warning', $.Localize(this.getEmptyWarningText()));
+			this.panels.cp.SetDialogVariable('empty-warning', $.Localize(this.getEmptyWarningText(status)));
 		}
 	}
 
-	private getEmptyWarningText() {
+	private getEmptyWarningText(status: LeaderboardStatusType) {
+		switch (status) {
+			case LeaderboardStatusType.SERVER_ERROR:
+				return '#Leaderboards_Error_ServerError';
+			case LeaderboardStatusType.NO_FRIENDS:
+				return '#Leaderboards_Error_NoFriends';
+			case LeaderboardStatusType.UNAUTHORIZED_FRIENDS_LIST:
+				return '#Leaderboards_Error_FriendsPrivate';
+			case LeaderboardStatusType.NO_PB_SET:
+				return '#Leaderboards_Error_NoPB';
+		}
+
 		switch (this.state.filter) {
 			case LeaderboardRecordsFilter.GLOBAL:
 				return '#Leaderboards_Error_NoCompletions';
@@ -270,17 +281,18 @@ export class LeaderboardsHandler {
 
 	/**
 	 * Drop the shown records while there's no track to request them for, e.g. while a newly
-	 * selected map's tracks are still loading. Shows the spinner if `loading`, else the empty state.
+	 * selected map's tracks are still loading. Shows the spinner for TIMES_LOADING, else the empty
+	 * state with the message for `status`.
 	 */
-	clearRecords(loading: boolean) {
+	clearRecords(status: LeaderboardStatusType) {
 		this.pendingRequestToken = null;
 		this.panels.timesList.RemoveAndDeleteChildren();
 		this.panels.groupPillsLayer.RemoveAndDeleteChildren();
 
-		if (loading) {
+		if (status === LeaderboardStatusType.TIMES_LOADING) {
 			this.beginLoading();
 		} else {
-			this.updateEmptyState(true);
+			this.updateEmptyState(true, status);
 		}
 	}
 
@@ -336,7 +348,7 @@ export class LeaderboardsHandler {
 			}
 		});
 
-		this.updateEmptyState(records.length === 0);
+		this.updateEmptyState(records.length === 0, data.status);
 	}
 
 	private showEntryContextMenu(index: number, record: LeaderboardRecord) {
