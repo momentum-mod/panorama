@@ -402,13 +402,14 @@ declare namespace MapCacheAPI {
 
 	/**
 	 * Refetches a map's completions from online if the cache is stale/missing (60s cooldown),
-	 * firing MapCache_CompletionsUpdate when fresh data lands. No-op if already fresh.
+	 * firing MapCache_CompletionsUpdate when the fetch finishes, including on failure. No-op if
+	 * already fresh. Returns whether a fetch was started.
 	 */
 	function RefreshCompletions(
 		mapID: uint32,
 		gamemode: import('common/web/enums/gamemode.enum').Gamemode,
 		style: import('common/web/enums/style.enum').Style
-	): void;
+	): boolean;
 
 	/**
 	 * Fetches the local user's PB times for a map into the cache (once per session), firing

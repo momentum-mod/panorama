@@ -352,15 +352,16 @@ class MapSelectorHandler implements OnPanelLoad {
 		this.components.styleSelector.handler.setGamemode(gamemode);
 		this.syncSelectedStyle();
 
-		// Render the cached completions immediately, then refresh rank/total from online if stale.
+		// Render the cached completions immediately, refreshing rank/total from online if stale.
 		// Updates (a late fetch, GetMap populating PB times, or a new PB) arrive via
 		// MapCache_CompletionsUpdate.
 		const style = this.components.styleSelector.handler.style;
 		this.components.leaderboards.handler.setStyle(style);
+		const loading = MapCacheAPI.RefreshCompletions(mapData.staticData.id, gamemode, style);
 		this.components.trackSelector.handler.updateTrackData(
-			MapCacheAPI.GetCompletions(mapData.staticData.id, gamemode, style)
+			MapCacheAPI.GetCompletions(mapData.staticData.id, gamemode, style),
+			loading
 		);
-		MapCacheAPI.RefreshCompletions(mapData.staticData.id, gamemode, style);
 
 		// PRE REWORK REMOVAL
 		// Start loading spinner on live-updateing stats panels -- MapSelector_OnSelectedOnlineDataUpdate will kill it
@@ -395,8 +396,11 @@ class MapSelectorHandler implements OnPanelLoad {
 		const mapID = this.selectedMapData.staticData.id;
 		const gamemode = GameModeAPI.GetMetaGameMode();
 
-		this.components.trackSelector.handler.updateTrackData(MapCacheAPI.GetCompletions(mapID, gamemode, style));
-		MapCacheAPI.RefreshCompletions(mapID, gamemode, style);
+		const loading = MapCacheAPI.RefreshCompletions(mapID, gamemode, style);
+		this.components.trackSelector.handler.updateTrackData(
+			MapCacheAPI.GetCompletions(mapID, gamemode, style),
+			loading
+		);
 	}
 
 	/**

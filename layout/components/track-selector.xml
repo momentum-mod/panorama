@@ -49,5 +49,8 @@
         <Panel id="TrackSelectorContainer" class="h-full w-full overflow-vscroll">
             <!-- Populated by JS -->
         </Panel>
+        <Panel class="track-selector__loading">
+            <Image class="spin-clockwise track-selector__loading-spinner" src="file://{images}/refresh.svg" textureheight="64" />
+        </Panel>
     </TrackSelector>
 </root>

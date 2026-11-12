@@ -8,6 +8,23 @@ TrackSelector {
 	flow-children: down;
 }
 
+.track-selector__loading {
+	width: 100%;
+	height: 96px;
+	visibility: collapse;
+
+	&-spinner {
+		width: 48px;
+		height: 48px;
+		horizontal-align: center;
+		vertical-align: center;
+	}
+}
+
+.track-selector--loading .track-selector__loading {
+	visibility: visible;
+}
+
 #TracksContainer {
 	width: 100%;
 	border-radius: 2px;

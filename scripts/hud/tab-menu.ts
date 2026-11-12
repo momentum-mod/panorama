@@ -133,13 +133,14 @@ class HudTabMenuHandler {
 			trackNum: number
 		) => this.openEndOfRun(EndOfRunShowReason.MANUALLY_SHOWN, { trackStyle, trackType, trackNum });
 
-		// Render the cached completions immediately, then refresh from online if stale. Updated data
+		// Render the cached completions immediately, refreshing from online if stale. Updated data
 		// (a late fetch, or a new PB patched by the run poster) arrives via MapCache_CompletionsUpdate.
 		const style = this.components.styleSelector.handler.style;
+		const loading = MapCacheAPI.RefreshCompletions(mapData.staticData.id, gamemode, style);
 		this.components.trackSelector.handler.updateTrackData(
-			MapCacheAPI.GetCompletions(mapData.staticData.id, gamemode, style)
+			MapCacheAPI.GetCompletions(mapData.staticData.id, gamemode, style),
+			loading
 		);
-		MapCacheAPI.RefreshCompletions(mapData.staticData.id, gamemode, style);
 		// Also load PB times, so a map loaded via console (never opened in the map selector) still
 		// shows them. No-op if the map selector already fetched them this session.
 		MapCacheAPI.RefreshUserPersonalBests(mapData.staticData.id, gamemode, style);
@@ -208,8 +209,11 @@ class HudTabMenuHandler {
 		const mapID = mapData.staticData.id;
 		const gamemode = GameModeAPI.GetCurrentGameMode();
 
-		this.components.trackSelector.handler.updateTrackData(MapCacheAPI.GetCompletions(mapID, gamemode, style));
-		MapCacheAPI.RefreshCompletions(mapID, gamemode, style);
+		const loading = MapCacheAPI.RefreshCompletions(mapID, gamemode, style);
+		this.components.trackSelector.handler.updateTrackData(
+			MapCacheAPI.GetCompletions(mapID, gamemode, style),
+			loading
+		);
 		MapCacheAPI.RefreshUserPersonalBests(mapID, gamemode, style);
 	}
 

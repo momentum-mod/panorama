@@ -81,6 +81,9 @@ export class LeaderboardsHandler {
 	/** handles loading spinner for quick leaderboard requests */
 	private loadingHandle: number = null;
 
+	/** The only records request whose result gets shown; null while none is wanted. */
+	private pendingRequestToken: number | null = null;
+
 	/** null until the first map is shown, so that the first {@link setLocalOnly} always applies. */
 	localOnly: boolean | null = null;
 
@@ -254,7 +257,7 @@ export class LeaderboardsHandler {
 		// That event runs updateLeaderboardWithToken() using this data
 		this.beginLoading();
 
-		this.panels.cp.getLeaderboardRecords(
+		this.pendingRequestToken = this.panels.cp.getLeaderboardRecords(
 			this.state.mapID,
 			this.state.gamemode,
 			this.state.trackType,
@@ -265,7 +268,24 @@ export class LeaderboardsHandler {
 		);
 	}
 
+	/**
+	 * Drop the shown records while there's no track to request them for, e.g. while a newly
+	 * selected map's tracks are still loading. Shows the spinner if `loading`, else the empty state.
+	 */
+	clearRecords(loading: boolean) {
+		this.pendingRequestToken = null;
+		this.panels.timesList.RemoveAndDeleteChildren();
+		this.panels.groupPillsLayer.RemoveAndDeleteChildren();
+
+		if (loading) {
+			this.beginLoading();
+		} else {
+			this.updateEmptyState(true);
+		}
+	}
+
 	private updateLeaderboardsWithToken(requestToken: number) {
+		if (requestToken !== this.pendingRequestToken) return; // superseded or cleared
 		const data = this.panels.cp.getLoadedLeaderboardRecords();
 		if (data.requestToken !== requestToken) return; //superseded by a newer request;
 
