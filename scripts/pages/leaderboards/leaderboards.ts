@@ -6,7 +6,6 @@ import {
 	LeaderboardType
 	// sortLeaderboard
 } from 'common/leaderboard';
-import { EndOfRunShowReason } from 'common/timer';
 import { TrackType } from 'common/web/enums/track-type.enum';
 import { Style } from 'common/web/enums/style.enum';
 import { LeaderboardRecordsFilter } from 'common/leaderboard';
@@ -199,12 +198,6 @@ export class LeaderboardsHandler {
 			UiToolkitAPI.ShowTextTooltip(this.panels.lobbyButton.id, $.Localize('#Leaderboards_JoinLobbyTooltip'));
 		}
 	}
-
-	// TODO: Why would this be here? Investigate later
-	showEndOfRun() {
-		$.DispatchEvent('EndOfRun_Show', EndOfRunShowReason.MANUALLY_SHOWN);
-	}
-
 	private updateEmptyState(isEmpty: boolean) {
 		this.cancelLoadingSchedule();
 
