@@ -1,7 +1,7 @@
 import { PanelHandler } from 'util/module-helpers';
 import { parseMapImageUrl } from 'util/functions';
 import { MapCreditType } from 'common/web/enums/map-credit-type.enum';
-import { waitForLayout } from 'common/layout';
+import { waitForLayoutHack } from 'common/layout';
 import * as Maps from 'common/maps';
 /**
  * Fullscreen gallery component.
@@ -64,7 +64,7 @@ export class GalleryHandler {
 		this.updateDescription(staticData);
 
 		// TODO: Waiting for panorama layouting, figure out if onlayout event for panels is possible
-		waitForLayout(this.panels.bottom, () => this.scaleImageContainer());
+		waitForLayoutHack(this.panels.bottom, () => this.scaleImageContainer());
 
 		$.DispatchEvent('Activated', thumbs[0], PanelEventSource.MOUSE);
 	}
@@ -163,7 +163,7 @@ export class GalleryHandler {
 			});
 
 		// Wait for panorama layouting
-		waitForLayout(this.panels.credits, () => {
+		waitForLayoutHack(this.panels.credits, () => {
 			const maxHeight = this.panels.credits.GetParent()!.actuallayoutheight * 0.43;
 			if (this.panels.credits.actuallayoutheight > maxHeight) {
 				this.panels.credits.style.height = `${maxHeight}px`;
