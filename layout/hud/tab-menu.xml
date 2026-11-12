@@ -40,7 +40,9 @@
                 </Panel>
 
                 <Panel id="EndOfRunContainer" class="tab-menu-endofrun" hittestchildren="true">
-                    <EndOfRun id="TabMenuEndOfRun" class="tab-menu-endofrun__frame" hittest="true" hittestchildren="true"/>
+                    <Panel id="EndOfRunFrame" class="tab-menu-endofrun__frame">
+                        <EndOfRun id="TabMenuEndOfRun" class="tab-menu-endofrun__eor" hittest="true" hittestchildren="true"/>
+                    </Panel>
                 </Panel>
             </Panel>
             <Panel class="tab-menu-bottom">

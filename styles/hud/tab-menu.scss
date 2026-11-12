@@ -203,8 +203,16 @@
 	height: 100%;
 
 	&__frame {
-		width: 50%;
+		width: fit-children;
+		min-width: 50%;
+		max-width: 100%;
 		height: fit-children;
 		align: center center;
+		flow-children: down;
+	}
+
+	&__eor {
+		width: fit-children;
+		height: fit-children;
 	}
 }

@@ -3,6 +3,11 @@
 @use 'sass:color';
 @use '../abstract/function';
 
+// The EndOfRun root: the info header stacked above the run itself
+.endofrun-root {
+	flow-children: down;
+}
+
 .endofrun {
 	$root: &;
 	flow-children: down;
@@ -561,5 +566,151 @@ $graph-n-stats-height: 180px + $linegraph-axis-width;
 		height: 100%;
 		@include mixin.gradient-themed($color: 'green', $direction: 'left');
 		transition-property: width;
+	}
+}
+
+// Map/track/runner header above the run itself
+.endofrun-info {
+	width: fit-children;
+	min-width: 50%;
+	height: fit-children;
+	flow-children: right;
+	padding: 12px 16px;
+	background-color: rgba(0, 0, 0, 0.6);
+
+	&__header-left {
+		width: fit-children;
+		height: fit-children;
+		flow-children: right;
+		vertical-align: center;
+		horizontal-align: left;
+	}
+
+	&__header-right {
+		$root: &;
+
+		width: fit-children;
+		// Must stay fit-children: a percent height inside the fit-children header collapses it
+		height: fit-children;
+		vertical-align: center;
+		flow-children: down;
+		horizontal-align: right;
+		margin-left: 32px;
+
+		// Upload succeeded: the player rises to the top while the rank and group slide in below.
+		// The pill trails the rank slightly so the result reads as two beats.
+		&--results {
+			.endofrun-info__results {
+				height: 34px;
+				opacity: 1;
+				transform: translateY(0px);
+			}
+
+			.endofrun-info__group-pill {
+				opacity: 1;
+				pre-transform-scale2d: 1;
+				transition:
+					opacity 0.25s ease-out 0.2s,
+					pre-transform-scale2d 0.25s ease-out 0.2s;
+			}
+		}
+	}
+
+	&__player {
+		width: fit-children;
+		height: fit-children;
+		flow-children: right;
+		horizontal-align: right;
+	}
+
+	&__results {
+		width: fit-children;
+		horizontal-align: right;
+		height: 0px;
+		flow-children: right;
+		overflow: clip;
+		opacity: 0;
+		transform: translateY(-8px);
+		transition:
+			height 0.3s ease-in-out 0s,
+			opacity 0.25s ease-out 0.1s,
+			transform 0.3s ease-out 0.1s;
+
+		&--no-group {
+			.endofrun-info__rank {
+				margin-right: 0;
+			}
+
+			.endofrun-info__group-pill {
+				visibility: collapse;
+			}
+		}
+	}
+
+	&__rank {
+		@include mixin.font-header();
+		font-size: 26px;
+		color: rgba(255, 255, 255, 0.9);
+		vertical-align: center;
+		margin-right: 8px;
+	}
+
+	// Sized by group-pill--leaderboards-pill (same as the leaderboards); only the reveal animation and offset are added here
+	&__group-pill {
+		margin-top: 6px; // Centers the 23px pill in the 34px result row
+		opacity: 0;
+		pre-transform-scale2d: 0.7;
+		transition:
+			opacity 0.1s ease-in 0s,
+			pre-transform-scale2d 0.1s ease-in 0s;
+	}
+
+	&__map {
+		@include mixin.font-header();
+		font-weight: bold;
+		font-size: 58px;
+		vertical-align: center;
+		margin-right: 20px;
+	}
+
+	&__details {
+		width: fit-children;
+		height: fit-children;
+		flow-children: down;
+		vertical-align: center;
+	}
+
+	&__text {
+		@include mixin.font-header();
+		font-size: 26px;
+		color: rgba(255, 255, 255, 0.9);
+
+		&--secondary {
+			color: rgba(255, 255, 255, 0.6);
+		}
+
+		&--right {
+			horizontal-align: right;
+		}
+
+		&--truncate {
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+
+		&--name {
+			margin-left: 4px;
+			color: color.scale($mid-blue, $lightness: 75%);
+		}
+
+		&--steam {
+			margin-left: 4px;
+			color: $mid-blue;
+			transition: color 0.1s ease-in-out 0s;
+
+			&:hover {
+				color: color.scale($mid-blue, $lightness: 50%);
+			}
+		}
 	}
 }
