@@ -193,6 +193,11 @@ export class TrackSelectorHandler {
 		this.renderLocalTracks(completions);
 	}
 
+	/** Reload the offline map's PBs off disk without re-rendering, keeping the current times shown meanwhile. */
+	refreshLocalCompletions(style: Style) {
+		MapCacheAPI.RefreshLocalCompletions(GameModeAPI.GetCurrentGameMode(), style);
+	}
+
 	/** Render the map's zone-derived tracks, overlaying each with its local PB time if there is one. */
 	private renderLocalTracks(completions: MapUserCompletions | null) {
 		const tracks = getActiveZoneTracks();
