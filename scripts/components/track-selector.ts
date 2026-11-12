@@ -5,6 +5,7 @@ import { MapUserCompletions } from 'common/maps';
 import { CompletionGroup } from 'common/web/enums/completion-group.enum';
 import { getCompletionGroup, getRankGroupEnds } from 'common/web/consts/rank-groups.const';
 import { LeaderboardType } from 'common/web/enums/leaderboard-type.enum';
+import { LeaderboardStatusType } from 'common/leaderboard';
 
 /**
  * A track to render, whatever its source. Online maps source these from the map's completions;
@@ -144,7 +145,15 @@ export class TrackSelectorHandler {
 		this.renderTracks(tracks);
 
 		// No track gets selected, so nothing would replace the previous map's records
-		if (tracks.length === 0) this.leaderboards.handler.clearRecords(loading);
+		if (tracks.length === 0) {
+			this.leaderboards.handler.clearRecords(
+				loading
+					? LeaderboardStatusType.TIMES_LOADING
+					: completions.fetchFailed
+						? LeaderboardStatusType.SERVER_ERROR
+						: LeaderboardStatusType.NO_TIMES_RETURNED
+			);
+		}
 	}
 
 	private setWaitingForTracks(waiting: boolean) {
