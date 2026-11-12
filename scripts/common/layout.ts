@@ -88,19 +88,22 @@ export function setHeight<P extends GenericPanel>(panel: P, height: number): P {
 }
 
 /**
- * Waits for panorama to layout the panel before calling the callback
+ * Waits for panorama to layout the panel before calling the callback.
+ * Some functions require using .actuallayoutheight and .actuallayoutwidth during construction but those properties
+ * aren't updated until layouting has finished. There is currently no onLayoutFinished event so we have to wait
+ * until those values are ready
  * @param panel
  * @param callback
  * @param limit Maximum amount of time to wait ( in seconds ) before executing the callback, 1s by default
  */
-export function waitForLayout<P extends GenericPanel>(panel: P, callback: () => void, limit: number = 1): void {
+export function waitForLayoutHack<P extends GenericPanel>(panel: P, callback: () => void, limit: number = 1): void {
 	if (!panel || !panel.IsValid()) return;
 
 	const w = panel.actuallayoutwidth;
 	const h = panel.actuallayoutheight;
 
 	if ((w === 0 || h === 0) && limit > 0) {
-		$.Schedule(0.01, () => waitForLayout(panel, callback, limit - 0.01));
+		$.Schedule(0.01, () => waitForLayoutHack(panel, callback, limit - 0.01));
 		return;
 	}
 
