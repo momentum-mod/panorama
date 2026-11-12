@@ -206,5 +206,93 @@
 		width: 50%;
 		height: fit-children;
 		align: center center;
+		flow-children: down;
+	}
+
+	&__eor {
+		width: 100%;
+		height: fit-children;
+	}
+
+	&__header {
+		width: 100%;
+		height: fit-children;
+		padding: 12px 16px;
+		background-color: rgba(0, 0, 0, 0.6);
+	}
+
+	&__header-left,
+	&__header-right {
+		height: fit-children;
+		flow-children: right;
+		vertical-align: center;
+	}
+
+	&__header-left {
+		width: fit-children;
+		horizontal-align: left;
+	}
+
+	&__header-right {
+		width: fit-children;
+		flow-children: down;
+		horizontal-align: right;
+	}
+
+	&__map {
+		@include mixin.font-header();
+		font-weight: bold;
+		font-size: 58px;
+		vertical-align: center;
+		margin-right: 20px;
+	}
+
+	&__info {
+		width: fit-children;
+		height: fit-children;
+		flow-children: down;
+		vertical-align: center;
+	}
+
+	&__info-text {
+		@include mixin.font-header();
+		font-size: 26px;
+		color: rgba(255, 255, 255, 0.9);
+
+		&--secondary {
+			color: rgba(255, 255, 255, 0.6);
+		}
+
+		&--right {
+			horizontal-align: right;
+		}
+
+		&--truncate {
+			max-width: 220px;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+
+		&--name {
+			margin-left: 4px;
+			color: color.scale($mid-blue, $lightness: 75%);
+		}
+
+		&--steam {
+			margin-left: 4px;
+			color: $mid-blue;
+			transition: color 0.1s ease-in-out 0s;
+
+			&:hover {
+				color: color.scale($mid-blue, $lightness: 50%);
+			}
+		}
+	}
+
+	&__authors {
+		width: fit-children;
+		height: fit-children;
+		flow-children: right;
+		horizontal-align: right;
 	}
 }

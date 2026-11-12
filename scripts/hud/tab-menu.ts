@@ -1,11 +1,16 @@
 import { PanelHandler } from 'util/module-helpers';
-import { EndOfRunShowReason } from 'common/timer';
+import { EndOfRunShowReason, RunMetadata } from 'common/timer';
 import { GamemodeInfo } from 'common/gamemode';
-import { MapUserCompletions } from 'common/maps';
+import { MapUserCompletions, SimpleMapCredit, getAllCredits } from 'common/maps';
+import { MapCreditType } from 'common/web/enums/map-credit-type.enum';
 import { MapStatuses } from 'common/web/enums/map-status.enum';
 import { Style } from 'common/web/enums/style.enum';
 import { registerHUDCustomizerComponent } from 'common/hud-customizer';
 import { TrackType } from 'common/web/enums/track-type.enum';
+import { getRunStyleName } from 'common/style';
+
+/** Most map authors listed in the end of run header before the list is cut off with an ellipsis. */
+const MAX_HEADER_AUTHORS = 3;
 
 /**
  * Class for the HUD tab menu panel, which contains the leaderboards, end of run, and zoning.
@@ -15,6 +20,9 @@ class HudTabMenuHandler {
 	readonly panels = {
 		cp: $.GetContextPanel<MomHudTabMenu>(),
 		endOfRunContainer: $<Panel>('#EndOfRunContainer'),
+		endOfRunHeader: $<Panel>('#EndOfRunHeader'),
+		endOfRunAuthors: $<Panel>('#EndOfRunAuthors'),
+		endOfRunPlayer: $<Panel>('#EndOfRunPlayer'),
 		nameContainer: $<Panel>('#NameContainer'),
 		playerListContainer: $<Panel>('#TabMenuPlayerListContainer'),
 		tabMenuCenter: $<Panel>('#TabMenuCenter'),
@@ -33,11 +41,14 @@ class HudTabMenuHandler {
 	};
 
 	endOfRunAvailable = false;
+	private mapName = '';
+	private mapAuthors: SimpleMapCredit[] = [];
 
 	constructor() {
 		$.RegisterForUnhandledEvent('Leaderboards_MapDataSet', (isOfficial) => this.setMapData(isOfficial));
 		$.RegisterForUnhandledEvent('HudTabMenu_ForceClose', () => this.close());
 		$.RegisterForUnhandledEvent('EndOfRun_Show', (reason) => this.openEndOfRun(reason));
+		$.RegisterForUnhandledEvent('EndOfRun_Result_RunFinish', (run) => this.onRunFinished(run));
 		$.RegisterForUnhandledEvent('EndOfRun_Hide', () => this.hideEndOfRun());
 		$.RegisterForUnhandledEvent('ActiveZoneDefsChanged', () => this.onActiveZoneDefsChanged());
 		$.RegisterForUnhandledEvent('MapCache_MapLoad', (mapName) => this.onMapLoad(mapName));
@@ -83,6 +94,8 @@ class HudTabMenuHandler {
 
 	onMapLoad(mapName: string) {
 		const mapData = MapCacheAPI.GetCurrentMapData();
+		this.mapName = mapData?.staticData.name ?? mapName;
+		this.mapAuthors = mapData ? getAllCredits(mapData.staticData, MapCreditType.AUTHOR) : [];
 
 		const blur: HudBlurTarget = this.panels.cp.GetParent().GetParent().FindChild('HudBlur');
 
@@ -90,6 +103,7 @@ class HudTabMenuHandler {
 		blur.AddBlurPanel(this.components.styleSelector);
 		blur.AddBlurPanel(this.components.leaderboards);
 		blur.AddBlurPanel(this.components.playerList.GetFirstChild());
+		blur.AddBlurPanel(this.panels.endOfRunHeader);
 		blur.AddBlurPanel(this.components.endOfRun.GetFirstChild());
 
 		this.components.trackSelector.handler.connectLeaderboards(this.panels.leaderboards);
@@ -219,17 +233,130 @@ class HudTabMenuHandler {
 	) {
 		if (reason === EndOfRunShowReason.PLAYER_FINISHED_RUN) {
 			this.endOfRunAvailable = true;
+			const status = MomentumTimerAPI.GetObservedTimerStatus();
+			this.setEndOfRunHeader(status.style, status.trackId.type, status.trackId.number);
 		} else {
+			this.setEndOfRunHeader(trackInfo.trackStyle, trackInfo.trackType, trackInfo.trackNum);
 			this.components.endOfRun.handler.generateCachedEOR(
 				trackInfo.trackStyle,
 				trackInfo.trackType,
 				trackInfo.trackNum
 			);
+			this.setEndOfRunPlayer(this.components.endOfRun.handler.baseRun);
 		}
 
 		this.panels.centerMainContainer.AddClass('hide');
 		this.panels.nameContainer.AddClass('hide');
 		this.panels.endOfRunContainer.RemoveClass('hide');
+	}
+
+	private onRunFinished(run: RunMetadata) {
+		this.setEndOfRunPlayer(run);
+	}
+
+	private setEndOfRunPlayer(run?: RunMetadata | null) {
+		const steamID = HudTabMenuHandler.resolveSteamID(run?.playerSteamId);
+		this.populateLinkedRow(this.panels.endOfRunPlayer, '#Common_RunBy', 'player', [
+			{ alias: run?.playerName ?? '', steamID }
+		]);
+	}
+
+	/**
+	 * Run metadata types playerSteamId as a number, which can't hold a SteamID64 exactly (rounds to a different
+	 * profile). Handle every shape it could actually arrive in: an exact string (what Panorama returns for uint64s),
+	 * a 32-bit account ID, or a rounded double belonging to the local player (whose exact ID we can get).
+	 * TODO: Remove once the engine sends playerSteamId as an exact string.
+	 */
+	private static resolveSteamID(raw: string | number | undefined): steamID | undefined {
+		if (!raw) return undefined;
+
+		if (typeof raw === 'string') return /^\d{15,}$/.test(raw) ? raw : undefined;
+
+		const local = UserAPI.GetXUID();
+		if (raw === Number(local)) return local;
+
+		if (Number.isSafeInteger(raw) && raw > 0 && raw < 2 ** 32) {
+			// SteamID64 = 76561197960265728 + accountID, done in two decimal halves to avoid precision loss
+			const low = 960265728 + raw;
+			const high = 76561197 + Math.floor(low / 1e9);
+			return `${high}${String(low % 1e9).padStart(9, '0')}`;
+		}
+
+		return undefined;
+	}
+
+	private populateAuthors() {
+		this.populateLinkedRow(
+			this.panels.endOfRunAuthors,
+			'#MapInfo_Author',
+			'author',
+			this.mapAuthors.slice(0, MAX_HEADER_AUTHORS),
+			// Too many authors would push the row over the map name, so cut it off
+			this.mapAuthors.length > MAX_HEADER_AUTHORS
+		);
+	}
+
+	/**
+	 * Fills a container with a localized row like "By <name>, <name>", where each name with a Steam ID is clickable
+	 * and opens their Steam profile. The localized string is split around a marker so the surrounding text stays
+	 * translatable.
+	 */
+	private populateLinkedRow(
+		container: Panel,
+		token: string,
+		variable: string,
+		entries: SimpleMapCredit[],
+		truncated = false
+	) {
+		container.RemoveAndDeleteChildren();
+
+		const header = this.panels.endOfRunHeader;
+		const marker = '\u0001';
+		header.SetDialogVariable(variable, marker);
+		const [prefix, suffix] = $.Localize(token, header).split(marker);
+
+		const textClass = 'tab-menu-endofrun__info-text';
+		const addLabel = (text: string, classes = '') =>
+			$.CreatePanel('Label', container, '', { text, class: `${textClass} ${classes}`.trim() });
+
+		// Names carry their own left margin, so drop any trailing space from the localized text
+		if (prefix.trim()) addLabel(prefix.trimEnd());
+
+		entries.forEach(({ alias, steamID }, i) => {
+			const label = addLabel(alias, `${textClass}--name ${textClass}--truncate`);
+			if (steamID) {
+				label.RemoveClass(`${textClass}--name`);
+				label.AddClass(`${textClass}--steam`);
+				label.SetPanelEvent('onactivate', () => SteamOverlayAPI.OpenToProfileID(steamID));
+			}
+			if (i < entries.length - 1) addLabel(',');
+		});
+
+		if (truncated) {
+			addLabel(',');
+			addLabel('…', `${textClass}--name`);
+		}
+		if (suffix?.trim()) addLabel(suffix.trimStart());
+	}
+
+	private setEndOfRunHeader(style: Style, trackType: TrackType, trackNum: number) {
+		let track: string;
+		switch (trackType) {
+			case TrackType.STAGE:
+				track = `${$.Localize('#Leaderboards_Tracks_Stage')} ${trackNum}`;
+				break;
+			case TrackType.BONUS:
+				track = `${$.Localize('#Leaderboards_Tracks_Bonus')} ${trackNum}`;
+				break;
+			default:
+				track = $.Localize('#TrackSelector_Main');
+		}
+
+		const header = this.panels.endOfRunHeader;
+		header.SetDialogVariable('eor_map', this.mapName);
+		header.SetDialogVariable('eor_track', track);
+		this.populateAuthors();
+		header.SetDialogVariable('eor_style', $.Localize(getRunStyleName(style)));
 	}
 
 	hideEndOfRun() {
