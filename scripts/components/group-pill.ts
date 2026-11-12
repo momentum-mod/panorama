@@ -1,5 +1,6 @@
 import { CompletionGroup } from 'common/web/enums/completion-group.enum';
 import { PanelHandler } from 'util/module-helpers';
+import * as Enum from 'util/enum';
 
 @PanelHandler({ exposeToPanel: true })
 export class GroupPillHandler {
@@ -12,7 +13,7 @@ export class GroupPillHandler {
 		// Pills are reused (e.g. the track selector across style switches), so strip whatever group
 		// class a previous group applied -- its background paints via group-pill--<NAME> CSS and would
 		// otherwise linger when the group is cleared or changes.
-		for (const name of Object.values(CompletionGroup)) {
+		for (const name of Enum.fastKeysNumeric(CompletionGroup)) {
 			if (typeof name === 'string') this.panels.cp.RemoveClass(`group-pill--${name}`);
 		}
 
