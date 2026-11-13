@@ -203,7 +203,9 @@
 	height: 100%;
 
 	&__frame {
-		width: 50%;
+		width: fit-children;
+		min-width: 50%;
+		max-width: 100%;
 		height: fit-children;
 		align: center center;
 		flow-children: down;
@@ -215,8 +217,10 @@
 	}
 
 	&__header {
-		width: 100%;
+		width: fit-children;
+		min-width: 50%;
 		height: fit-children;
+		flow-children: right;
 		padding: 12px 16px;
 		background-color: rgba(0, 0, 0, 0.6);
 	}
@@ -237,6 +241,7 @@
 		width: fit-children;
 		flow-children: down;
 		horizontal-align: right;
+		margin-left: 32px;
 	}
 
 	&__map {
@@ -268,7 +273,6 @@
 		}
 
 		&--truncate {
-			max-width: 220px;
 			text-overflow: ellipsis;
 			white-space: nowrap;
 		}
