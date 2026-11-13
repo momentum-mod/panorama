@@ -41,19 +41,6 @@
 
                 <Panel id="EndOfRunContainer" class="tab-menu-endofrun" hittestchildren="true">
                     <Panel id="EndOfRunFrame" class="tab-menu-endofrun__frame">
-                        <Panel id="EndOfRunHeader" class="tab-menu-endofrun__header">
-                            <Panel class="tab-menu-endofrun__header-left">
-                                <Label class="tab-menu-endofrun__map" text="{s:eor_map}" />
-                                <Panel class="tab-menu-endofrun__info">
-                                    <Label class="tab-menu-endofrun__info-text" text="{s:eor_track}" />
-                                    <Label class="tab-menu-endofrun__info-text tab-menu-endofrun__info-text--secondary" text="{s:eor_style}" />
-                                </Panel>
-                            </Panel>
-                            <Panel class="tab-menu-endofrun__header-right">
-                                <Panel id="EndOfRunAuthors" class="tab-menu-endofrun__authors" />
-                                <Panel id="EndOfRunPlayer" class="tab-menu-endofrun__authors" />
-                            </Panel>
-                        </Panel>
                         <EndOfRun id="TabMenuEndOfRun" class="tab-menu-endofrun__eor" hittest="true" hittestchildren="true"/>
                     </Panel>
                 </Panel>

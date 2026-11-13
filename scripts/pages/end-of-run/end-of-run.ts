@@ -3,10 +3,27 @@ import * as Timer from 'common/timer';
 import * as LineGraph from 'components/graphs/line-graph';
 import { Style } from 'common/web/enums/style.enum';
 import { TrackType } from 'common/web/enums/track-type.enum';
+import { CompletionGroup } from 'common/web/enums/completion-group.enum';
+import { getRunStyleName } from 'common/style';
+import { getCompletionGroup, getRankGroupEnds } from 'common/web/consts/rank-groups.const';
+
+/** Class on the header's right side that reveals the uploaded run's rank and group (animated in CSS). */
+const RESULTS_CLASS = 'endofrun-info__header-right--results';
+
+/** Where an uploaded run placed on its track's leaderboard. */
+type UploadResult = {
+	rank: number;
+	total: number;
+	group: CompletionGroup | null;
+};
 
 type Comparison = {
 	base: Timer.RunMetadata;
 	comparison: Timer.RunMetadata;
+	style: Style;
+	/** Set once the run's upload has succeeded and its rank is known. Kept so the result shows again when revisited. */
+	uploaded?: boolean;
+	result?: UploadResult;
 };
 
 class RunCache {
@@ -33,6 +50,12 @@ class RunCache {
 export class EndOfRunHandler {
 	readonly panels = {
 		cp: $.GetContextPanel<Panel>(),
+		info: $<Panel>('#EndOfRunInfo')!,
+		body: $<Panel>('#EndOfRunBody')!,
+		infoRight: $<Panel>('#EndOfRunHeaderRight')!,
+		player: $<Panel>('#EndOfRunPlayer')!,
+		results: $<Panel>('#EndOfRunResults')!,
+		groupPill: $<GroupPill>('#EndOfRunGroupPill')!,
 		time: $<Label>('#RunTime')!,
 		diff: $<Label>('#RunDiff')!,
 		splits: $<Panel>('#Splits')!,
@@ -47,6 +70,12 @@ export class EndOfRunHandler {
 	};
 
 	trackSelector: TrackSelector | null = null;
+
+	private mapName = '';
+
+	/** The cache entry of the run being displayed, and the most recently finished run (which an upload belongs to). */
+	private currentEntry?: Comparison;
+	private latestEntry?: Comparison;
 
 	baseRun?: Timer.RunMetadata | null;
 	comparisonRun?: Timer.RunMetadata | null;
@@ -66,12 +95,24 @@ export class EndOfRunHandler {
 		);
 		$.RegisterForUnhandledEvent('Leaderboards_MapDataSet', (isOfficial) => this.initOnMapLoad(isOfficial));
 		$.RegisterForUnhandledEvent('ComparisonRunUpdated', () => this.onComparisonUpdated());
+		$.RegisterForUnhandledEvent('EndOfRun_Hide', () => this.applyResult());
+		// The run poster patches the new PB into the completions cache, which can land before or after the upload event
+		$.RegisterForUnhandledEvent('MapCache_CompletionsUpdate', () => this.updateLatestResult());
 
 		this.runCache = new RunCache();
 	}
 
 	connectTrackSelector(trackSelector: TrackSelector) {
 		this.trackSelector = trackSelector;
+	}
+
+	setMapName(name: string) {
+		this.mapName = name;
+	}
+
+	setBlurPanel(blur: BaseBlurTarget) {
+		blur.AddBlurPanel(this.panels.info);
+		blur.AddBlurPanel(this.panels.body);
 	}
 
 	/** Hides the end of run panel, when a new map is loaded. */
@@ -140,14 +181,18 @@ export class EndOfRunHandler {
 
 		const comparison: Comparison = {
 			base: run,
-			comparison: RunComparisonsAPI.GetComparisonRun()
+			comparison: RunComparisonsAPI.GetComparisonRun(),
+			style: observedStatus.style
 		};
 
 		this.runCache.set(observedStatus.style, run.trackId.type, run.trackId.number, comparison);
+		this.currentEntry = comparison;
+		this.latestEntry = comparison;
 
 		this.baseRun = run;
 		this.comparisonRun = RunComparisonsAPI.GetComparisonRun();
 
+		this.updateInfoHeader(comparison);
 		this.showNewEndOfRun(Timer.EndOfRunShowReason.PLAYER_FINISHED_RUN);
 
 		this.trackSelector.handler.updateEorButtonVisibility();
@@ -190,6 +235,11 @@ export class EndOfRunHandler {
 	}
 
 	private updateRunUploadStatus(uploaded: boolean, _cosXp: number, _rankXp: number, _lvlGain: number) {
+		if (this.latestEntry) {
+			this.latestEntry.uploaded = uploaded;
+			this.updateLatestResult();
+		}
+
 		this.updateRunStatusIndicator(
 			uploaded ? Timer.RunStatusStates.SUCCESS : Timer.RunStatusStates.ERROR,
 			Timer.RunStatusTypes.UPLOAD
@@ -246,9 +296,11 @@ export class EndOfRunHandler {
 	generateCachedEOR(style: Style, trackType: TrackType, trackNum: number) {
 		const run = this.runCache.get(style, trackType, trackNum);
 
+		this.currentEntry = run;
 		this.baseRun = run.base;
 		this.comparisonRun = run.comparison;
 
+		this.updateInfoHeader(run);
 		this.generateEndOfRunPage();
 	}
 
@@ -278,6 +330,131 @@ export class EndOfRunHandler {
 		}
 
 		this.panels.uploadStatus.visible = MomentumAPI.AllowRunSubmission();
+	}
+
+	/**
+	 * Fills in the map, track, style and runner shown above the run, for a run that just finished or a cached
+	 * one being revisited. Any rank/group is cleared unless the run already has one from its upload.
+	 */
+	private updateInfoHeader(entry: Comparison) {
+		const { type, number } = entry.base.trackId;
+		let track: string;
+		switch (type) {
+			case TrackType.STAGE:
+				track = `${$.Localize('#Leaderboards_Tracks_Stage')} ${number}`;
+				break;
+			case TrackType.BONUS:
+				track = `${$.Localize('#Leaderboards_Tracks_Bonus')} ${number}`;
+				break;
+			default:
+				track = $.Localize('#TrackSelector_Main');
+		}
+
+		const info = this.panels.info;
+		info.SetDialogVariable('eor_map', this.mapName);
+		info.SetDialogVariable('eor_track', track);
+		info.SetDialogVariable('eor_style', $.Localize(getRunStyleName(entry.style)));
+
+		this.setPlayer(entry.base);
+		this.applyResult(entry);
+	}
+
+	/**
+	 * Looks up the latest run's rank in the completions cache once its upload has succeeded, and stores it on
+	 * the run's cache entry. Called for both the upload event and completions updates, as either can arrive first.
+	 */
+	private updateLatestResult() {
+		const entry = this.latestEntry;
+		const mapData = MapCacheAPI.GetCurrentMapData();
+		if (!entry?.uploaded || !mapData) return;
+
+		const completions = MapCacheAPI.GetCompletions(
+			mapData.staticData.id,
+			GameModeAPI.GetCurrentGameMode(),
+			entry.style
+		);
+		const { type, number } = entry.base.trackId;
+		const track = completions?.tracks?.find(
+			(t) => t.trackType === type && (t.trackType === TrackType.MAIN || t.trackNum === number)
+		);
+		// The cache holds the user's current PB, so only trust its rank once it's this run's PB (the run poster
+		// may not have patched it in yet, in which case it's still an older run's rank). A later completions
+		// update will call back in.
+		if (track?.rank == null || track.time == null || Math.abs(track.time - entry.base.runTime) > 0.001) return;
+
+		entry.result = {
+			rank: track.rank,
+			total: track.totalCompletions,
+			group: getCompletionGroup(track.rank, getRankGroupEnds(track.totalCompletions))
+		};
+
+		if (entry === this.currentEntry) this.applyResult(entry);
+	}
+
+	/**
+	 * Shows the given run's rank and group in the header, or hides them if it has none. Adding the class is a
+	 * no-op when already shown, so a refresh just updates the text instead of replaying the animation.
+	 */
+	private applyResult(entry?: Comparison) {
+		const result = entry?.result;
+		this.panels.infoRight.SetHasClass(RESULTS_CLASS, !!result);
+		if (!result) return;
+
+		this.panels.info.SetDialogVariable('eor_rank', `${result.rank}/${result.total}`);
+		this.panels.groupPill.handler.setGroup(result.group);
+		// Without a group the pill would otherwise still take up its space beside the rank
+		this.panels.results.SetHasClass('endofrun-info__results--no-group', result.group == null);
+	}
+
+	private setPlayer(run: Timer.RunMetadata) {
+		const steamID = EndOfRunHandler.resolveSteamID(run.playerSteamId);
+		const container = this.panels.player;
+		container.RemoveAndDeleteChildren();
+
+		const info = this.panels.info;
+		const marker = '\u0001';
+		info.SetDialogVariable('player', marker);
+		const [prefix, suffix] = $.Localize('#Common_RunBy', info).split(marker);
+
+		const textClass = 'endofrun-info__text';
+		const addLabel = (text: string, classes = '') =>
+			$.CreatePanel('Label', container, '', { text, class: `${textClass} ${classes}`.trim() });
+
+		// The name carries its own left margin, so drop any trailing space from the localized text
+		if (prefix.trim()) addLabel(prefix.trimEnd());
+
+		const name = addLabel(run.playerName ?? '', `${textClass}--name ${textClass}--truncate`);
+		if (steamID) {
+			name.RemoveClass(`${textClass}--name`);
+			name.AddClass(`${textClass}--steam`);
+			name.SetPanelEvent('onactivate', () => SteamOverlayAPI.OpenToProfileID(steamID));
+		}
+
+		if (suffix?.trim()) addLabel(suffix.trimStart());
+	}
+
+	/**
+	 * Run metadata types playerSteamId as a number, which can't hold a SteamID64 exactly (rounds to a different
+	 * profile). Handle every shape it could actually arrive in: an exact string (what Panorama returns for uint64s),
+	 * a 32-bit account ID, or a rounded double belonging to the local player (whose exact ID we can get).
+	 * TODO: Remove once the engine sends playerSteamId as an exact string.
+	 */
+	private static resolveSteamID(raw: string | number | undefined): steamID | undefined {
+		if (!raw) return undefined;
+
+		if (typeof raw === 'string') return /^\d{15,}$/.test(raw) ? raw : undefined;
+
+		const local = UserAPI.GetXUID();
+		if (raw === Number(local)) return local;
+
+		if (Number.isSafeInteger(raw) && raw > 0 && raw < 2 ** 32) {
+			// SteamID64 = 76561197960265728 + accountID, done in two decimal halves to avoid precision loss
+			const low = 960265728 + raw;
+			const high = 76561197 + Math.floor(low / 1e9);
+			return `${high}${String(low % 1e9).padStart(9, '0')}`;
+		}
+
+		return undefined;
 	}
 
 	/**
