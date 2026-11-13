@@ -227,9 +227,7 @@ export class TrackSelectorHandler {
 	private static trackKey(track: TrackEntry): string {
 		// All MAIN tracks are equivalent regardless of number (see renderLocalTracks), so key them the
 		// same, keeping both the render signature and a remembered selection stable.
-		return track.trackType === TrackType.MAIN
-			? $.Localize('#TrackSelector_Main')
-			: `${track.trackType}:${track.trackNum}`;
+		return track.trackType === TrackType.MAIN ? 'MAIN' : `${track.trackType}:${track.trackNum}`;
 	}
 
 	/** Reset the remembered track selection when the shown map changes, so a new map starts on main. */
@@ -328,7 +326,7 @@ export class TrackSelectorHandler {
 			}
 
 			const trackLabel = isMain
-				? 'Main'
+				? $.Localize('#TrackSelector_Main')
 				: isStage
 					? `${$.Localize('#Leaderboards_Tracks_Stage')} ${track.trackNum}`
 					: `${$.Localize('#Leaderboards_Tracks_Bonus')} ${track.trackNum}`;
