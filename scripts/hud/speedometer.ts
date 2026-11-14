@@ -1,9 +1,17 @@
 import { PanelHandler } from 'util/module-helpers';
 import { tupleToRgbaString } from 'util/colors';
-import { SpeedometerColorType, SpeedometerType } from 'common/speedometer';
+import {
+	normalizeColorProfiles,
+	normalizeSpeedometers,
+	RangeColorProfile,
+	SpeedometerColorType,
+	SpeedometerSettings,
+	SpeedometerType
+} from 'common/speedometer';
 
 import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
 import { getTextShadowFast } from 'common/hud-customizer';
+import { renderColorProfileEditor, renderSpeedometerEditor, SpeedometerEditorContext } from 'hud/speedometer-editor';
 
 // arbitrary value to determine how much speed needs to change to be considered an increase/decrease
 // adjusted by speedometer update delta time
@@ -45,7 +53,7 @@ const Fonts = {
 	eventComparisonFontSize: 16
 };
 
-type RuntimeSettings = SpeedometerSettingsAPI.Settings & { range_colors?: Range[] };
+type RuntimeSettings = SpeedometerSettings & { range_colors?: Range[] };
 
 class Speedometer {
 	type: SpeedometerType;
@@ -56,7 +64,7 @@ class Speedometer {
 	prevVal: number;
 	fadeoutEventHandle: number;
 
-	constructor(type: SpeedometerType, speedometerPanel: Panel, settings: SpeedometerSettingsAPI.Settings) {
+	constructor(type: SpeedometerType, speedometerPanel: Panel, settings: RuntimeSettings) {
 		this.type = type;
 		this.speedometerPanel = speedometerPanel;
 		this.speedometerLabel = speedometerPanel.FindChildInLayoutFile('SpeedometerLabel');
@@ -92,6 +100,14 @@ class SpeedometerHandler {
 
 	speedometers: Map<SpeedometerType, Array<Speedometer>> = new Map();
 
+	/** Speedometer list from the current HUD preset. Always a fresh copy, never the customizer's stored value. */
+	speedoSettings: SpeedometerSettings[] = [];
+	colorProfiles: RangeColorProfile[] = [];
+
+	editorContext: SpeedometerEditorContext = {
+		getColorProfiles: () => this.colorProfiles
+	};
+
 	constructor() {
 		$.RegisterEventHandler('OnExplosiveHitSpeedUpdate', this.container, (velocity: vec3) =>
 			this.updateSpeedometersOfType(SpeedometerType.EXPLOSION_VELOCITY, velocity)
@@ -109,17 +125,28 @@ class SpeedometerHandler {
 			this.onSpeedometerUpdate(deltaTime)
 		);
 
-		// color profiles load before speedo settings, so listening to just the speedo settings load event should be enough
-		$.RegisterForUnhandledEvent('OnSpeedometerSettingsLoaded', (succ: boolean) => this.onSettingsUpdate(succ));
-		// do want to register when color profiles are saved though as that can happen independently
-		$.RegisterForUnhandledEvent('OnSpeedometerSettingsSaved', (succ: boolean) => this.onSettingsUpdate(succ));
-		$.RegisterForUnhandledEvent('OnRangeColorProfilesSaved', (succ: boolean) => this.onSettingsUpdate(succ));
-
 		registerHUDCustomizerComponent($.GetContextPanel(), {
 			name: $.Localize('#Customizer_Speedometer_Name'),
 			resizeX: true,
 			resizeY: false,
 			dynamicStyles: {
+				speedometers: {
+					name: $.Localize('#Settings_Speedometer_Title'),
+					type: CustomizerPropertyType.CUSTOM,
+					callbackFunc: (_, value) => (this.speedoSettings = normalizeSpeedometers(value)),
+					onChanged: () => this.rebuild(),
+					render: (row, api) => renderSpeedometerEditor(row, api, this.editorContext)
+				},
+				rangeColorProfiles: {
+					name: $.Localize('#Settings_Speedometer_ColorRange_Title'),
+					type: CustomizerPropertyType.CUSTOM,
+					callbackFunc: (_, value) => (this.colorProfiles = normalizeColorProfiles(value)),
+					onChanged: () => {
+						this.rebuild();
+						this.editorContext.refreshSpeedometerEditor?.();
+					},
+					render: (row, api) => renderColorProfileEditor(row, api)
+				},
 				fontStyling: {
 					name: $.Localize('#Customizer_FontStyling'),
 					type: CustomizerPropertyType.NONE,
@@ -269,7 +296,8 @@ class SpeedometerHandler {
 					styleProperty: 'backgroundColor'
 				}
 			},
-			postInit: () => this.setFontStyling()
+			// onChanged doesn't run during init, so the initial panels are built here
+			postInit: () => this.rebuild()
 		});
 	}
 
@@ -368,7 +396,7 @@ class SpeedometerHandler {
 		speedometer.prevVal = 0;
 	}
 
-	getSpeedFromVelocity({ x, y, z }: vec3, settings: SpeedometerSettingsAPI.Settings): float {
+	getSpeedFromVelocity({ x, y, z }: vec3, settings: SpeedometerSettings): float {
 		const [xEnabled, yEnabled, zEnabled] = settings.enabled_axes;
 		// @ts-expect-error - fastest way to do this, using type coercion (false = 0, true = 1)
 		const numAxes = xEnabled + yEnabled + zEnabled;
@@ -509,56 +537,42 @@ class SpeedometerHandler {
 		return type !== SpeedometerType.OVERALL_VELOCITY && type !== SpeedometerType.ENERGY;
 	}
 
-	appendRangeColorProfileInfo(
-		speedoData: RuntimeSettings,
-		colorProfData: SpeedometerSettingsAPI.ColorProfile[]
-	): Range {
-		if (speedoData.color_type !== SpeedometerColorType.RANGE) return;
+	/** Builds the runtime copy of a speedometer's settings. Never writes into the settings it is given. */
+	getRuntimeSettings(speedo: SpeedometerSettings): RuntimeSettings {
+		const runtime: RuntimeSettings = { ...speedo };
+		if (speedo.color_type !== SpeedometerColorType.RANGE) return runtime;
 
-		const colorProf = speedoData.range_color_profile;
-		if (!colorProf) return;
+		const colorProf = speedo.range_color_profile;
+		if (!colorProf) return runtime;
 
-		const foundProfile = colorProfData.find((profile) => colorProf === profile.profile_name);
-		if (!foundProfile) return;
+		const foundProfile = this.colorProfiles.find((profile) => colorProf === profile.profile_name);
+		if (!foundProfile) return runtime;
 
-		const ranges = foundProfile.profile_ranges;
-		if (!ranges) return;
-
-		speedoData.range_colors = ranges.map((range) => ({
+		runtime.range_colors = foundProfile.profile_ranges.map((range) => ({
 			min: range.min,
 			max: range.max,
 			color: tupleToRgbaString(range.color)
 		}));
+
+		return runtime;
 	}
 
-	onSettingsUpdate(success: boolean) {
-		if (!success) {
-			$.Warning('Failed to load speedometer settings from speedometer!');
-			return;
-		}
-
-		const settings = SpeedometerSettingsAPI.GetCurrentGamemodeSettings();
-		if (!settings) return;
-
-		const colorProfiles = SpeedometerSettingsAPI.GetColorProfiles();
-		if (!colorProfiles) return;
-
+	rebuild() {
 		this.unregisterFadeoutEventHandlers();
 		this.container.RemoveAndDeleteChildren();
 
 		this.speedometers = new Map();
-		for (const speedo of settings) {
+		for (const speedo of this.speedoSettings) {
 			const speedoType = speedo.type;
-			if (speedoType == null) continue;
 
-			this.appendRangeColorProfileInfo(speedo, colorProfiles);
+			const runtimeSettings = this.getRuntimeSettings(speedo);
 
 			const newPanel = $.CreatePanel('Panel', this.container, '');
 			newPanel.LoadLayoutSnippet('speedometer-entry');
 
 			const speedometerContainer = newPanel.FindChildInLayoutFile<Panel>('SpeedometerContainer');
 
-			const speedoObject = new Speedometer(speedoType, speedometerContainer, speedo);
+			const speedoObject = new Speedometer(speedoType, speedometerContainer, runtimeSettings);
 
 			const speedometersArray = this.speedometers.get(speedoType) ?? [];
 			speedometersArray.push(speedoObject);

@@ -21,7 +21,13 @@ export enum CustomizerPropertyType {
 	DROPDOWN,
 	COLOR_PICKER,
 	GRADIENT_PICKER,
-	FONT_PICKER
+	FONT_PICKER,
+
+	/**
+	 * The component draws its own editor in {@link DynamicStyleProperties.render}. The customizer still owns the
+	 * stored value, "Reset Style" and the selection overlay refresh. The value can be any serializable type.
+	 */
+	CUSTOM
 }
 
 interface PropertyTypeMap {
@@ -33,6 +39,7 @@ interface PropertyTypeMap {
 	[CustomizerPropertyType.COLOR_PICKER]: never;
 	[CustomizerPropertyType.GRADIENT_PICKER]: never;
 	[CustomizerPropertyType.FONT_PICKER]: never;
+	[CustomizerPropertyType.CUSTOM]: never;
 }
 
 interface PropertyTypeToValueTypeMap {
@@ -44,6 +51,16 @@ interface PropertyTypeToValueTypeMap {
 	[CustomizerPropertyType.COLOR_PICKER]: TextEntry['text'];
 	[CustomizerPropertyType.GRADIENT_PICKER]: [string, string];
 	[CustomizerPropertyType.FONT_PICKER]: string;
+	[CustomizerPropertyType.CUSTOM]: any;
+}
+
+/** Handed to {@link DynamicStyleProperties.render} so a CUSTOM editor can read and write its stored value. */
+export interface CustomizerRenderApi<T = any> {
+	/** Deep clone of the current value. Safe to modify, then pass to setValue. */
+	getValue(): T;
+
+	/** Stores the value, runs callbackFunc/onChanged, and refreshes the selection overlay. */
+	setValue(value: T): void;
 }
 
 interface DynamicStyleChild {
@@ -131,6 +148,14 @@ export type DynamicStyleProperties<
 	valueFn?: (
 		value: PropertyTypeToValueTypeMap[PropertyType]
 	) => StyleProperty extends keyof Style ? Style[StyleProperty] : never;
+
+	/**
+	 * CustomizerPropertyType.CUSTOM only: builds the editor UI inside `row`.
+	 *
+	 * Called again whenever the style is reset, after the old contents of `row` are deleted.
+	 * Never modify a value you were given, use {@link CustomizerRenderApi.getValue} and build a new value.
+	 */
+	render?: (row: Panel, api: CustomizerRenderApi) => void;
 
 	/**
 	 * Collection properties to apply to generated panel, e.g. min/max on numberentry.

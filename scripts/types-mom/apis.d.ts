@@ -413,53 +413,22 @@ declare namespace NewsAPI {
 	function GetRSSFeed(): void;
 }
 
+/**
+ * Read-only access to the legacy cfg/speedometer files, only used by the one-time import into HUD presets.
+ * @see import('common/speedometer-legacy-import')
+ */
 declare namespace SpeedometerSettingsAPI {
-	interface Settings {
-		custom_label: string;
-		enabled_axes: [boolean, boolean, boolean];
-		type: import('common/speedometer').SpeedometerType;
-		color_type: import('common/speedometer').SpeedometerColorType;
-		range_color_profile?: string;
-	}
+	/**
+	 * Gets the speedometers of a gamemode from cfg/speedometer/speedometer.kv3.
+	 * Null if the file doesn't exist or doesn't have the gamemode. Unvalidated, normalise before use.
+	 */
+	function GetLegacySettings(gamemode: Gamemode): unknown[] | null;
 
 	/**
-	 * The naming of "Range" color as related is a bit confusing but too much work to refactor.
-	 * When you see a "RangeColor" it's better thought of as "Color Range".
+	 * Gets the range color profiles from cfg/speedometer/speedometer_colorprof.kv3.
+	 * Null if the file doesn't exist. Unvalidated, normalise before use.
 	 */
-	interface RangeColorProfile {
-		min: number;
-		max: number;
-		color: [number, number, number, number];
-	}
-
-	interface ColorProfile {
-		profile_name: string;
-		profile_ranges: RangeColorProfile[];
-	}
-
-	/** Gets speedometer settings for the current gamemode */
-	function GetCurrentGamemodeSettings(): Settings[];
-
-	/** Gets speedometer settings for a specific gamemode */
-	function GetSettings(gamemode: Gamemode): Settings[];
-
-	/** Resets speedometers for a specific gamemode to default */
-	function SaveSpeedometersFromJS(gamemode: Gamemode, settings: Settings[]): boolean;
-
-	/** Saves the range color profiles to file */
-	function ResetSpeedometersToDefault(gamemode: Gamemode): boolean;
-
-	/** Gets speedometer color profiles */
-	function GetColorProfiles(): ColorProfile[];
-
-	/** Gets a specified speedometer color profile */
-	function GetColorProfile(name: string): ColorProfile;
-
-	/** Saves the range color profiles to file */
-	function SaveColorProfilesFromJS(profiles: ColorProfile[]): boolean;
-
-	/** Resets color profiles to the default */
-	function ResetColorProfilesToDefault(): boolean;
+	function GetLegacyColorProfiles(): unknown[] | null;
 }
 
 declare namespace DefragAPI {

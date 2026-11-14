@@ -427,6 +427,6 @@ export class SettingsHandler {
 	 * They opt in by ID here, and provide `infotitle`/`infomessage` attributes in XML.
 	 */
 	isInfoPanel(panel: GenericPanel) {
-		return ['SpeedometersContainer', 'RangeColorProfilesContainer', 'HudCustomizerOpenRow'].includes(panel.id);
+		return ['HudCustomizerOpenRow'].includes(panel.id);
 	}
 }

@@ -198,18 +198,6 @@ interface GlobalEventNameMap {
 	/** Called on ramp leave speed update */
 	OnRampLeaveSpeedUpdate: (velocity: vec3) => void;
 
-	/** Called when speedometer settings have been loaded */
-	OnSpeedometerSettingsLoaded: (success: boolean) => void;
-
-	/** Called when range color profiles have been loaded */
-	OnRangeColorProfilesLoaded: (success: boolean) => void;
-
-	/** Called when speedometer settings have been saved */
-	OnSpeedometerSettingsSaved: (success: boolean) => void;
-
-	/** Called when range color profiles have been saved */
-	OnRangeColorProfilesSaved: (success: boolean) => void;
-
 	/**
 	 * Fired from C++ when we want to create a standard Toast panel.
 	 * @internal Don't use these, import ToastManager and use that directly.
