@@ -10,11 +10,28 @@
 	<PopupCustomLayout class="PopupPanel Hidden gallery" popupbackground="blur">
 		<Panel class="gallery__background" onactivate="UiToolkitAPI.CloseAllVisiblePopups();"/>
 		<Panel class="gallery__container">
-			<!-- Empty event to stop left-click hitting background panel and closing the popup -->
-			<Image id="MainImage" class="gallery__main-image" hittest="true" onactivate="" />
-			<Panel id="Thumbnails" class="gallery__thumbnails">
-				<!-- Populated by JS -->
-			</Panel>
+            <Panel id="Top" class="gallery__top">
+                <Label class="text-h1 text-shadow-outline ml-2" text="{s:name}" />
+                <Label class="text-h1 text-shadow-black color-transparent ml-2" text="{s:name}" />
+            </Panel>
+            <Panel id="Bottom" class="gallery__bottom">
+                <Panel class="gallery__bottom-left">
+                    <Panel id="ImageContainer" class="gallery__image-container">
+                        <!-- Empty event to stop left-click hitting background panel and closing the popup -->
+                        <Image id="MainImage" class="gallery__main-image" hittest="true" onactivate="" />
+                        <Panel id="Thumbnails" class="gallery__thumbnails">
+                            <!-- Populated by JS -->
+                        </Panel>
+                    </Panel>
+                </Panel>
+                <Panel class="gallery__bottom-right">
+                    <Panel id="Credits" class="gallery__credits-container">
+                    </Panel>
+                    <Panel id="DescriptionContainer" class="gallery__description-container mt-4">
+                        <Label id="Description" class="gallery__description" />
+                    </Panel>
+                </Panel>
+            </Panel>
 		</Panel>
 		<!-- Using a big clear close button, though clicking anywhere on the background will close -->
 		<Image class="gallery__close-button" src="file://{images}/close.svg" textureheight="64" onactivate="UiToolkitAPI.CloseAllVisiblePopups();"/>

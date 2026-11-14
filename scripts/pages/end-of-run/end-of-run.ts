@@ -1,11 +1,61 @@
 import { PanelHandler } from 'util/module-helpers';
 import * as Timer from 'common/timer';
 import * as LineGraph from 'components/graphs/line-graph';
+import { Style } from 'common/web/enums/style.enum';
+import { TrackType } from 'common/web/enums/track-type.enum';
+import { CompletionGroup } from 'common/web/enums/completion-group.enum';
+import { getRunStyleName } from 'common/style';
+import { getCompletionGroup, getRankGroupEnds } from 'common/web/consts/rank-groups.const';
 
-@PanelHandler()
-class EndOfRunHandler {
+/** Class on the header's right side that reveals the uploaded run's rank and group (animated in CSS). */
+const RESULTS_CLASS = 'endofrun-info__header-right--results';
+
+/** Where an uploaded run placed on its track's leaderboard. */
+type UploadResult = {
+	rank: number;
+	total: number;
+	group: CompletionGroup | null;
+};
+
+type Comparison = {
+	base: Timer.RunMetadata;
+	comparison: Timer.RunMetadata;
+	style: Style;
+	/** Set once the run's upload has succeeded and its rank is known. Kept so the result shows again when revisited. */
+	uploaded?: boolean;
+	result?: UploadResult;
+};
+
+class RunCache {
+	private readonly cache = new Map<string, Comparison>();
+
+	private key(style: Style, trackType: TrackType, trackNum: number): string {
+		return `${style}:${trackType}:${trackNum}`;
+	}
+
+	get(style: Style, trackType: TrackType, trackNum: number): Comparison | undefined {
+		return this.cache.get(this.key(style, trackType, trackNum));
+	}
+
+	set(style: Style, trackType: TrackType, trackNum: number, run: Comparison): void {
+		this.cache.set(this.key(style, trackType, trackNum), run);
+	}
+
+	has(style: Style, trackType: TrackType, trackNum: number): boolean {
+		return this.cache.has(this.key(style, trackType, trackNum));
+	}
+}
+
+@PanelHandler({ exposeToPanel: true })
+export class EndOfRunHandler {
 	readonly panels = {
 		cp: $.GetContextPanel<Panel>(),
+		info: $<Panel>('#EndOfRunInfo')!,
+		body: $<Panel>('#EndOfRunBody')!,
+		infoRight: $<Panel>('#EndOfRunHeaderRight')!,
+		player: $<Panel>('#EndOfRunPlayer')!,
+		results: $<Panel>('#EndOfRunResults')!,
+		groupPill: $<GroupPill>('#EndOfRunGroupPill')!,
 		time: $<Label>('#RunTime')!,
 		diff: $<Label>('#RunDiff')!,
 		splits: $<Panel>('#Splits')!,
@@ -19,10 +69,19 @@ class EndOfRunHandler {
 		selectedGraphPoint: null as Button | null
 	};
 
+	trackSelector: TrackSelector | null = null;
+
+	private mapName = '';
+
+	/** The cache entry of the run being displayed, and the most recently finished run (which an upload belongs to). */
+	private currentEntry?: Comparison;
+	private latestEntry?: Comparison;
+
 	baseRun?: Timer.RunMetadata | null;
 	comparisonRun?: Timer.RunMetadata | null;
 	comparison?: Timer.Comparison | null;
 	selectedSplit?: Timer.Split | null;
+	runCache: RunCache;
 
 	constructor() {
 		// End of run goes through 3 stages in sequence:
@@ -36,16 +95,34 @@ class EndOfRunHandler {
 		);
 		$.RegisterForUnhandledEvent('Leaderboards_MapDataSet', (isOfficial) => this.initOnMapLoad(isOfficial));
 		$.RegisterForUnhandledEvent('ComparisonRunUpdated', () => this.onComparisonUpdated());
+		$.RegisterForUnhandledEvent('EndOfRun_Hide', () => this.applyResult());
+		// The run poster patches the new PB into the completions cache, which can land before or after the upload event
+		$.RegisterForUnhandledEvent('MapCache_CompletionsUpdate', () => this.updateLatestResult());
+
+		this.runCache = new RunCache();
+	}
+
+	connectTrackSelector(trackSelector: TrackSelector) {
+		this.trackSelector = trackSelector;
+	}
+
+	setMapName(name: string) {
+		this.mapName = name;
+	}
+
+	setBlurPanel(blur: BaseBlurTarget) {
+		blur.AddBlurPanel(this.panels.info);
+		blur.AddBlurPanel(this.panels.body);
 	}
 
 	/** Hides the end of run panel, when a new map is loaded. */
-	initOnMapLoad(isOfficial: boolean) {
+	private initOnMapLoad(isOfficial: boolean) {
 		this.panels.uploadStatus.SetHasClass('hide', !isOfficial);
 
 		this.hideEndOfRun(true, false);
 	}
 
-	updateRunStatusIndicator(status: Timer.RunStatusStates, type: Timer.RunStatusTypes) {
+	private updateRunStatusIndicator(status: Timer.RunStatusStates, type: Timer.RunStatusTypes) {
 		const statusPanel = type === Timer.RunStatusTypes.UPLOAD ? this.panels.uploadStatus : this.panels.saveStatus;
 
 		statusPanel.SetHasClass('spin-clockwise', status === Timer.RunStatusStates.PROGRESS);
@@ -96,19 +173,32 @@ class EndOfRunHandler {
 		}
 	}
 
-	onRunFinished(run: Timer.RunMetadata) {
+	private onRunFinished(run: Timer.RunMetadata) {
 		const observedStatus = MomentumTimerAPI.GetObservedTimerStatus();
 		if (observedStatus.trackId.type !== run.trackId.type || observedStatus.trackId.number !== run.trackId.number) {
 			return;
 		}
 
+		const comparison: Comparison = {
+			base: run,
+			comparison: RunComparisonsAPI.GetComparisonRun(),
+			style: observedStatus.style
+		};
+
+		this.runCache.set(observedStatus.style, run.trackId.type, run.trackId.number, comparison);
+		this.currentEntry = comparison;
+		this.latestEntry = comparison;
+
 		this.baseRun = run;
 		this.comparisonRun = RunComparisonsAPI.GetComparisonRun();
 
+		this.updateInfoHeader(comparison);
 		this.showNewEndOfRun(Timer.EndOfRunShowReason.PLAYER_FINISHED_RUN);
+
+		this.trackSelector.handler.updateEorButtonVisibility();
 	}
 
-	onComparisonUpdated() {
+	private onComparisonUpdated() {
 		// When a local PB is set, it's automatically made comparison. If it was the run we just did,
 		// obviously we don't want to compare against ourselves, but we *do* want the new run to be
 		// the comparison run if another run is completed in the future.
@@ -129,7 +219,7 @@ class EndOfRunHandler {
 		}
 	}
 
-	updateRunSavedStatus(saved: boolean, run: Timer.RunMetadata) {
+	private updateRunSavedStatus(saved: boolean, run: Timer.RunMetadata) {
 		const observedStatus = MomentumTimerAPI.GetObservedTimerStatus();
 		if (observedStatus.trackId.type !== run.trackId.type || observedStatus.trackId.number !== run.trackId.number) {
 			return;
@@ -144,14 +234,20 @@ class EndOfRunHandler {
 		);
 	}
 
-	updateRunUploadStatus(uploaded: boolean, _cosXp: number, _rankXp: number, _lvlGain: number) {
+	private updateRunUploadStatus(uploaded: boolean, _cosXp: number, _rankXp: number, _lvlGain: number) {
+		if (this.latestEntry) {
+			this.latestEntry.uploaded = uploaded;
+			// TODO: Disabled for now, discuss more before re-enabling
+			// this.updateLatestResult();
+		}
+
 		this.updateRunStatusIndicator(
 			uploaded ? Timer.RunStatusStates.SUCCESS : Timer.RunStatusStates.ERROR,
 			Timer.RunStatusTypes.UPLOAD
 		);
 	}
 
-	watchReplay() {
+	private watchReplay() {
 		if (!this.baseRun || !this.baseRun.filePath) {
 			return;
 		}
@@ -160,12 +256,12 @@ class EndOfRunHandler {
 		this.hideEndOfRun(false, true);
 	}
 
-	restartMap() {
+	private restartMap() {
 		GameInterfaceAPI.ConsoleCommand('mom_restart_track');
 		this.hideEndOfRun(true, true);
 	}
 
-	hideEndOfRun(hideEndOfRun = true, hideTabMenu = false) {
+	private hideEndOfRun(hideEndOfRun = true, hideTabMenu = false) {
 		if (hideEndOfRun) $.DispatchEvent('EndOfRun_Hide');
 
 		if (hideTabMenu) $.DispatchEvent('HudTabMenu_ForceClose');
@@ -177,7 +273,7 @@ class EndOfRunHandler {
 	 * Fired when either when the local player's run ends, a replay run ends,
 	 * you go back to a last EoR from leaderboards, or in the future when the player compares two runs.
 	 */
-	showNewEndOfRun(showReason: Timer.EndOfRunShowReason) {
+	private showNewEndOfRun(showReason: Timer.EndOfRunShowReason) {
 		if (!this.baseRun) return;
 
 		if (showReason === Timer.EndOfRunShowReason.PLAYER_FINISHED_RUN) {
@@ -198,7 +294,18 @@ class EndOfRunHandler {
 		this.generateEndOfRunPage();
 	}
 
-	generateEndOfRunPage() {
+	generateCachedEOR(style: Style, trackType: TrackType, trackNum: number) {
+		const run = this.runCache.get(style, trackType, trackNum);
+
+		this.currentEntry = run;
+		this.baseRun = run.base;
+		this.comparisonRun = run.comparison;
+
+		this.updateInfoHeader(run);
+		this.generateEndOfRunPage();
+	}
+
+	private generateEndOfRunPage() {
 		if (!this.baseRun) return;
 
 		// Remove the previous splits, if any
@@ -227,9 +334,134 @@ class EndOfRunHandler {
 	}
 
 	/**
+	 * Fills in the map, track, style and runner shown above the run, for a run that just finished or a cached
+	 * one being revisited. Any rank/group is cleared unless the run already has one from its upload.
+	 */
+	private updateInfoHeader(entry: Comparison) {
+		const { type, number } = entry.base.trackId;
+		let track: string;
+		switch (type) {
+			case TrackType.STAGE:
+				track = `${$.Localize('#Leaderboards_Tracks_Stage')} ${number}`;
+				break;
+			case TrackType.BONUS:
+				track = `${$.Localize('#Leaderboards_Tracks_Bonus')} ${number}`;
+				break;
+			default:
+				track = $.Localize('#TrackSelector_Main');
+		}
+
+		const info = this.panels.info;
+		info.SetDialogVariable('eor_map', this.mapName);
+		info.SetDialogVariable('eor_track', track);
+		info.SetDialogVariable('eor_style', $.Localize(getRunStyleName(entry.style)));
+
+		this.setPlayer(entry.base);
+		this.applyResult(entry);
+	}
+
+	/**
+	 * Looks up the latest run's rank in the completions cache once its upload has succeeded, and stores it on
+	 * the run's cache entry. Called for both the upload event and completions updates, as either can arrive first.
+	 */
+	private updateLatestResult() {
+		const entry = this.latestEntry;
+		const mapData = MapCacheAPI.GetCurrentMapData();
+		if (!entry?.uploaded || !mapData) return;
+
+		const completions = MapCacheAPI.GetCompletions(
+			mapData.staticData.id,
+			GameModeAPI.GetCurrentGameMode(),
+			entry.style
+		);
+		const { type, number } = entry.base.trackId;
+		const track = completions?.tracks?.find(
+			(t) => t.trackType === type && (t.trackType === TrackType.MAIN || t.trackNum === number)
+		);
+		// The cache holds the user's current PB, so only trust its rank once it's this run's PB (the run poster
+		// may not have patched it in yet, in which case it's still an older run's rank). A later completions
+		// update will call back in.
+		if (track?.rank == null || track.time == null || Math.abs(track.time - entry.base.runTime) > 0.001) return;
+
+		entry.result = {
+			rank: track.rank,
+			total: track.totalCompletions,
+			group: getCompletionGroup(track.rank, getRankGroupEnds(track.totalCompletions))
+		};
+
+		if (entry === this.currentEntry) this.applyResult(entry);
+	}
+
+	/**
+	 * Shows the given run's rank and group in the header, or hides them if it has none. Adding the class is a
+	 * no-op when already shown, so a refresh just updates the text instead of replaying the animation.
+	 */
+	private applyResult(entry?: Comparison) {
+		const result = entry?.result;
+		this.panels.infoRight.SetHasClass(RESULTS_CLASS, !!result);
+		if (!result) return;
+
+		this.panels.info.SetDialogVariable('eor_rank', `${result.rank}/${result.total}`);
+		this.panels.groupPill.handler.setGroup(result.group);
+		// Without a group the pill would otherwise still take up its space beside the rank
+		this.panels.results.SetHasClass('endofrun-info__results--no-group', result.group == null);
+	}
+
+	private setPlayer(run: Timer.RunMetadata) {
+		const steamID = EndOfRunHandler.resolveSteamID(run.playerSteamId);
+		const container = this.panels.player;
+		container.RemoveAndDeleteChildren();
+
+		const info = this.panels.info;
+		const marker = '\u0001';
+		info.SetDialogVariable('player', marker);
+		const [prefix, suffix] = $.Localize('#Common_RunBy', info).split(marker);
+
+		const textClass = 'endofrun-info__text';
+		const addLabel = (text: string, classes = '') =>
+			$.CreatePanel('Label', container, '', { text, class: `${textClass} ${classes}`.trim() });
+
+		// The name carries its own left margin, so drop any trailing space from the localized text
+		if (prefix.trim()) addLabel(prefix.trimEnd());
+
+		const name = addLabel(run.playerName ?? '', `${textClass}--name ${textClass}--truncate`);
+		if (steamID) {
+			name.RemoveClass(`${textClass}--name`);
+			name.AddClass(`${textClass}--steam`);
+			name.SetPanelEvent('onactivate', () => SteamOverlayAPI.OpenToProfileID(steamID));
+		}
+
+		if (suffix?.trim()) addLabel(suffix.trimStart());
+	}
+
+	/**
+	 * Run metadata types playerSteamId as a number, which can't hold a SteamID64 exactly (rounds to a different
+	 * profile). Handle every shape it could actually arrive in: an exact string (what Panorama returns for uint64s),
+	 * a 32-bit account ID, or a rounded double belonging to the local player (whose exact ID we can get).
+	 * TODO: Remove once the engine sends playerSteamId as an exact string.
+	 */
+	private static resolveSteamID(raw: string | number | undefined): steamID | undefined {
+		if (!raw) return undefined;
+
+		if (typeof raw === 'string') return /^\d{15,}$/.test(raw) ? raw : undefined;
+
+		const local = UserAPI.GetXUID();
+		if (raw === Number(local)) return local;
+
+		if (Number.isSafeInteger(raw) && raw > 0 && raw < 2 ** 32) {
+			// SteamID64 = 76561197960265728 + accountID, done in two decimal halves to avoid precision loss
+			const low = 960265728 + raw;
+			const high = 76561197 + Math.floor(low / 1e9);
+			return `${high}${String(low % 1e9).padStart(9, '0')}`;
+		}
+
+		return undefined;
+	}
+
+	/**
 	 * Generate the end of run panel for the current base run, with no comparison.
 	 */
-	setSingleRunStats() {
+	private setSingleRunStats() {
 		if (!this.baseRun) return;
 
 		const { runSplits, runTime } = this.baseRun;
@@ -296,7 +528,7 @@ class EndOfRunHandler {
 	/**
 	 * Generate the end of run panel comparisons from the two active runs.
 	 */
-	setComparisionStats() {
+	private setComparisionStats() {
 		if (!this.baseRun || !this.comparisonRun) return;
 
 		const comparison = Timer.generateComparison(this.baseRun, this.comparisonRun);
@@ -362,7 +594,7 @@ class EndOfRunHandler {
 		this.panels.detailedStats.RemoveClass('endofrun__stats--hidden');
 	}
 
-	updateSplitPanel(panel: Panel, split: Timer.Split) {
+	private updateSplitPanel(panel: Panel, split: Timer.Split) {
 		panel.SetDialogVariable('name', split.name);
 		panel.SetDialogVariableFloat('time', split.time);
 		panel.SetHasClass('endofrun-split--no-comparison', !split.hasComparison);
@@ -378,7 +610,7 @@ class EndOfRunHandler {
 	}
 
 	/** Generate a graph for the given comparison */
-	updateGraph(comparison: Timer.Comparison, statName: Timer.RunStatType | 'time') {
+	private updateGraph(comparison: Timer.Comparison, statName: Timer.RunStatType | 'time') {
 		// Grab the actual LineGraph class attached to the panel
 		const lineGraph = this.panels.graph.handler;
 
@@ -580,7 +812,7 @@ class EndOfRunHandler {
 	}
 
 	/** Set the selected graph point and stats for a given split */
-	setSelectedSplit(split: Timer.Split, comparison: Timer.Comparison) {
+	private setSelectedSplit(split: Timer.Split, comparison: Timer.Comparison) {
 		this.selectedSplit = split;
 
 		this.panels.cp.SetDialogVariable('selected_zone', split.name);
@@ -659,7 +891,7 @@ class EndOfRunHandler {
 	/**
 	 * Set the selected point of the graph to whatever split is currently selected.
 	 */
-	setSelectedGraphPoint() {
+	private setSelectedGraphPoint() {
 		const split = this.selectedSplit;
 
 		if (!split) return;
@@ -679,15 +911,15 @@ class EndOfRunHandler {
 		}
 	}
 
-	getPanelID({ majorNum, minorNum }: Timer.Split): string {
+	private getPanelID({ majorNum, minorNum }: Timer.Split): string {
 		return `${majorNum}x${minorNum}`;
 	}
 
-	roundFloat(n: number, precision: number) {
+	private roundFloat(n: number, precision: number) {
 		return +n.toFixed(precision);
 	}
 
-	getDiffSign(diff: number) {
+	private getDiffSign(diff: number) {
 		return diff > 0 ? '+' : '';
 	}
 }
