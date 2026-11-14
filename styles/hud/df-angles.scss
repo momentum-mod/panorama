@@ -1,0 +1,20 @@
+.dfangles {
+	width: 265px;
+	height: 24px;
+	overflow: noclip;
+
+	&__stat {
+		width: 50px;
+		height: 24px;
+		font-size: 20px;
+		text-align: right;
+
+		&--pitch {
+			horizontal-align: left;
+		}
+
+		&--yaw {
+			horizontal-align: right;
+		}
+	}
+}
