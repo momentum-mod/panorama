@@ -2,7 +2,7 @@ $player-border: 1px solid rgba(70, 70, 70, 0.5);
 
 .playerlist {
 	flow-children: down;
-	width: 550px;
+	width: 100%;
 
 	&__section {
 		flow-children: down;
@@ -54,7 +54,19 @@ $player-border: 1px solid rgba(70, 70, 70, 0.5);
 	}
 
 	#NameLabel {
-		width: 210px;
+		width: 188px;
+	}
+
+	// Always takes up space so status labels stay aligned
+	#MutedImage {
+		width: 18px;
+		height: 18px;
+		margin-left: 4px;
+		opacity: 0;
+	}
+
+	&--muted #MutedImage {
+		opacity: 1;
 	}
 
 	#StatusLabel {

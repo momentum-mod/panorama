@@ -52,7 +52,8 @@ class LobbyHandler {
 		$.RegisterForUnhandledEvent('PanoramaComponent_SteamLobby_OnLobbyStateChanged', (newState) =>
 			this.onLobbyStateChanged(newState)
 		);
-		$.RegisterForUnhandledEvent('PanoramaComponent_Chat_OnPlayerMuted', (steamID) => this.onPlayerMuted(steamID));
+		$.RegisterForUnhandledEvent('PanoramaComponent_Chat_OnPlayerMuted', (steamID) => this.onMuteChanged(steamID));
+		$.RegisterForUnhandledEvent('PanoramaComponent_Chat_OnPlayerUnmuted', (steamID) => this.onMuteChanged(steamID));
 		$.RegisterForUnhandledEvent('RefreshLobbyList', () => this.refreshLobbyList());
 
 		this.panels.search.SetPanelEvent('ontextentrychanged', () => this.recreateLobbyListChildren());
@@ -306,8 +307,7 @@ class LobbyHandler {
 			this.lobbyMemberData[memberSteamID]['panel'] = panel;
 		}
 
-		// Will be null until you mute or unmute them as it's not pass in with the rest of the data, we set it and track it in JS ¯\_(ツ)_/¯
-		const isMuted = memberData.isMuted ?? false;
+		const isMuted = ChatAPI.BIsUserMuted(memberSteamID);
 
 		panel.SetHasClass('lobby-members__entry--muted', isMuted);
 
@@ -339,13 +339,7 @@ class LobbyHandler {
 					label: $.Localize(isMuted ? '#Lobby_UnmutePlayer' : '#Lobby_MutePlayer'),
 					icon: 'file://{images}/volume-' + (isMuted ? 'high' : 'mute') + '.svg',
 					style: 'icon-color-' + (isMuted ? 'green' : 'red'),
-					jsCallback: () => {
-						ChatAPI.ChangeMuteState(memberSteamID, !isMuted);
-						if (isMuted) {
-							memberData.isMuted = false;
-						}
-						this.updateMemberListItem(memberSteamID);
-					}
+					jsCallback: () => ChatAPI.ChangeMuteState(memberSteamID, !isMuted)
 				},
 				{
 					label: $.Localize('#Action_ShowSteamProfile'),
@@ -479,9 +473,8 @@ class LobbyHandler {
 		}
 	}
 
-	onPlayerMuted(steamID: steamID) {
+	onMuteChanged(steamID: steamID) {
 		if (steamID in this.lobbyMemberData) {
-			this.lobbyMemberData[steamID].isMuted = true;
 			this.updateMemberListItem(steamID);
 		}
 	}
