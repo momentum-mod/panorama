@@ -237,7 +237,8 @@ export class EndOfRunHandler {
 	private updateRunUploadStatus(uploaded: boolean, _cosXp: number, _rankXp: number, _lvlGain: number) {
 		if (this.latestEntry) {
 			this.latestEntry.uploaded = uploaded;
-			this.updateLatestResult();
+			// TODO: Disabled for now, discuss more before re-enabling
+			// this.updateLatestResult();
 		}
 
 		this.updateRunStatusIndicator(
