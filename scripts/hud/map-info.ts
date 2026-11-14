@@ -1,5 +1,5 @@
 import { PanelHandler } from 'util/module-helpers';
-import { getNumStages } from 'common/leaderboard';
+import { getNumBonuses, getNumStages } from 'common/leaderboard';
 import { getAuthorNames, getTier } from '../common/maps';
 
 import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
@@ -9,12 +9,18 @@ import { getTextShadowFast } from 'common/hud-customizer';
 class HudMapInfoHandler {
 	readonly panels = {
 		cachedInfoContainer: $<Panel>('#CachedInfoContainer'),
-		mapInfoLabel: $<Label>('#MapInfoLabel')
+		mapInfoLabel: $<Label>('#MapInfoLabel'),
+		bonusInfoLabel: $<Label>('#BonusInfoLabel')
 	};
 
 	mapTypeText: string;
 	showTiers = true;
 	showMapType = true;
+	showBonuses = false;
+	showReleaseYear = true;
+	authorNames = '';
+	releaseYear = '';
+	numBonuses?: number;
 
 	constructor() {
 		$.RegisterForUnhandledEvent('MapCache_MapLoad', (mapName: string) => this.onOfficialMapLoad(mapName));
@@ -60,7 +66,8 @@ class HudMapInfoHandler {
 						{ styleID: 'showMapName' },
 						{ styleID: 'showAuthors' },
 						{ styleID: 'showTier' },
-						{ styleID: 'showMapType' }
+						{ styleID: 'showMapType' },
+						{ styleID: 'showBonuses' }
 					]
 				},
 				showVersion: {
@@ -90,7 +97,14 @@ class HudMapInfoHandler {
 					name: $.Localize('#Customizer_Map_Info_ShowAuthors'),
 					type: CustomizerPropertyType.CHECKBOX,
 					targetPanel: '#AuthorLabel',
+					children: { styleID: 'showReleaseYear', showWhen: true },
 					callbackFunc: (panel, value) => panel.SetHasClass('hide', !value)
+				},
+				showReleaseYear: {
+					name: $.Localize('#Customizer_Map_Info_ShowReleaseYear'),
+					type: CustomizerPropertyType.CHECKBOX,
+					callbackFunc: (_, value) => (this.showReleaseYear = value),
+					onChanged: () => this.constructAuthorString()
 				},
 				showTier: {
 					name: $.Localize('#Customizer_Map_Info_ShowTier'),
@@ -103,6 +117,12 @@ class HudMapInfoHandler {
 					type: CustomizerPropertyType.CHECKBOX,
 					callbackFunc: (_, value) => (this.showMapType = value),
 					onChanged: () => this.constructString()
+				},
+				showBonuses: {
+					name: $.Localize('#Customizer_Map_Info_ShowBonuses'),
+					type: CustomizerPropertyType.CHECKBOX,
+					callbackFunc: (_, value) => (this.showBonuses = value),
+					onChanged: () => this.constructBonusString()
 				},
 				gap: {
 					name: $.Localize('#Customizer_Gap'),
@@ -123,8 +143,18 @@ class HudMapInfoHandler {
 					styleProperty: 'horizontalAlign'
 				}
 			},
-			postInit: () => this.constructString()
+			postInit: () => {
+				this.constructAuthorString();
+				this.constructString();
+				this.constructBonusString();
+			}
 		});
+	}
+
+	constructAuthorString() {
+		const authorString =
+			this.showReleaseYear && this.releaseYear ? `${this.authorNames} (${this.releaseYear})` : this.authorNames;
+		$.GetContextPanel().SetDialogVariable('author', authorString);
 	}
 
 	constructString() {
@@ -132,6 +162,18 @@ class HudMapInfoHandler {
 		if (this.showTiers) mapInfoString.push($.Localize('#MapInfo_Tier', this.panels.mapInfoLabel));
 		if (this.showMapType) mapInfoString.push(this.mapTypeText);
 		this.panels.mapInfoLabel.text = mapInfoString.join(' - ');
+	}
+
+	constructBonusString() {
+		if (!this.showBonuses || this.numBonuses === undefined || this.numBonuses <= 0) {
+			this.panels.bonusInfoLabel.text = '';
+			this.panels.bonusInfoLabel.SetHasClass('hide', true);
+			return;
+		}
+
+		const token = this.numBonuses === 1 ? '#MapInfo_BonusCount' : '#MapInfo_BonusesCount';
+		this.panels.bonusInfoLabel.text = $.Localize(token, this.panels.bonusInfoLabel);
+		this.panels.bonusInfoLabel.SetHasClass('hide', false);
 	}
 
 	onOfficialMapLoad(mapName: string) {
@@ -146,7 +188,11 @@ class HudMapInfoHandler {
 		if (mapData) {
 			this.panels.cachedInfoContainer.visible = true;
 
-			cp.SetDialogVariable('author', getAuthorNames(mapData.staticData));
+			const rawDate = mapData.staticData.info?.creationDate ?? mapData.staticData.info?.approvedDate;
+			this.releaseYear =
+				rawDate && !isNaN(new Date(rawDate).getTime()) ? new Date(rawDate).getUTCFullYear().toString() : '';
+
+			this.authorNames = getAuthorNames(mapData.staticData);
 
 			const mainTrackTier = getTier(mapData.staticData, GameModeAPI.GetCurrentGameMode());
 			const numStages = getNumStages(mapData.staticData);
@@ -158,8 +204,12 @@ class HudMapInfoHandler {
 			this.mapTypeText = isLinear
 				? $.Localize('#MapInfo_Type_Linear')
 				: $.Localize('#MapInfo_StageCount', this.panels.mapInfoLabel);
+			this.numBonuses = getNumBonuses(mapData.staticData);
+			cp.SetDialogVariableInt('bonusCount', this.numBonuses);
 
+			this.constructAuthorString();
 			this.constructString();
+			this.constructBonusString();
 		} else {
 			this.panels.cachedInfoContainer.visible = false;
 		}
