@@ -84,6 +84,57 @@
             </Panel>
         </snippet>
         
+		<snippet name="dynamic-togglegroup">
+			<Panel class="hud-customizer-settings__row">
+				<Label class="hud-customizer-settings__setting-label" text="{s:name}" />
+				<Panel class="hud-customizer-settings__togglegroup">
+					<ToggleButton id="Toggle0" class="button togglebutton togglebutton--blue hud-customizer-settings__togglegroup__button">
+						<Label id="Toggle0Label" />
+					</ToggleButton>
+					<ToggleButton id="Toggle1" class="button togglebutton togglebutton--blue hud-customizer-settings__togglegroup__button">
+						<Label id="Toggle1Label" />
+					</ToggleButton>
+					<ToggleButton id="Toggle2" class="button togglebutton togglebutton--blue hud-customizer-settings__togglegroup__button">
+						<Label id="Toggle2Label" />
+					</ToggleButton>
+				</Panel>
+			</Panel>
+		</snippet>
+
+		<snippet name="dynamic-list-buttons">
+			<Panel class="hud-customizer-settings__row hud-customizer-settings__row--buttons">
+				<Button id="MoveUpButton" class="button hud-customizer-settings__button hud-customizer-settings__list-button mr-2">
+					<Image class="button__icon rot-270" src="file://{images}/mom-arrow-right.svg" textureheight="16" />
+				</Button>
+				<Button id="MoveDownButton" class="button hud-customizer-settings__button hud-customizer-settings__list-button mr-2">
+					<Image class="button__icon rot-90" src="file://{images}/mom-arrow-right.svg" textureheight="16" />
+				</Button>
+				<Button id="RenameButton" class="button hud-customizer-settings__button hud-customizer-settings__list-button px-2 py-1 mr-2">
+					<Label text="{s:rename}" />
+				</Button>
+				<Button id="DeleteButton" class="button hud-customizer-settings__button hud-customizer-settings__list-button button--red px-2 py-1 h-align-right">
+					<Label text="{s:delete}" />
+				</Button>
+			</Panel>
+		</snippet>
+
+		<snippet name="dynamic-button">
+			<Panel class="hud-customizer-settings__row hud-customizer-settings__row--buttons">
+				<Button id="Button" class="button hud-customizer-settings__button hud-customizer-settings__list-button px-2 py-1">
+					<Label text="{s:name}" />
+				</Button>
+			</Panel>
+		</snippet>
+
+		<snippet name="dynamic-rangecolor">
+			<Panel class="hud-customizer-settings__row hud-customizer-settings__row--rangecolor">
+				<RangeColorDisplay id="RangeColorDisplay" class="hud-customizer-settings__rangecolor" />
+				<Button id="DeleteButton" class="button button--red hud-customizer-settings__button hud-customizer-settings__rangecolor-delete">
+					<Image class="button__icon" src="file://{images}/delete.svg" textureheight="16" />
+				</Button>
+			</Panel>
+		</snippet>
+
 		<snippet name="dynamic-fontpicker">
 			<Panel class="hud-customizer-settings__row">
 				<Label class="hud-customizer-settings__setting-label" text="{s:name}" />

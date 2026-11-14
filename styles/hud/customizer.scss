@@ -254,6 +254,71 @@ $input-background-hover: rgb(110, 110, 110);
 		@include name;
 	}
 
+	// Body of CustomizerPropertyType.CUSTOM rows, the component fills it with its own rows
+	&__custom {
+		width: 100%;
+		height: fit-children;
+		flow-children: down;
+	}
+
+	&__row--buttons {
+		height: fit-children;
+	}
+
+	&__list-button {
+		min-width: 20px;
+
+		// The generic __button rule (later in this file) makes buttons fit their children, so size the icons
+		& .button__icon {
+			width: 16px;
+			height: 16px;
+			margin: 2px;
+		}
+	}
+
+	&__togglegroup {
+		horizontal-align: right;
+		vertical-align: center;
+		width: fit-children;
+		height: 16px;
+		flow-children: right;
+
+		&__button {
+			height: 16px;
+			min-width: 24px;
+			margin-left: 4px;
+
+			& Label {
+				@include name;
+				horizontal-align: center;
+				font-size: 10px;
+			}
+		}
+	}
+
+	&__row--rangecolor {
+		height: fit-children;
+		vertical-align: center;
+	}
+
+	// Root of the RangeColorDisplay. Its children are styled by .rangecolordisplay--compact in the control's own stylesheet
+	&__rangecolor {
+		width: fill-parent-flow(1);
+		height: 20px;
+		padding: 0;
+	}
+
+	&__rangecolor-delete {
+		margin-left: 4px;
+		vertical-align: center;
+
+		& .button__icon {
+			width: 14px;
+			height: 14px;
+			margin: 2px;
+		}
+	}
+
 	&__expand-arrow {
 		width: 16px;
 		height: 100%;

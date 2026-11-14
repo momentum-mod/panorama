@@ -1,6 +1,7 @@
 import {
 	CustomizerComponentProperties,
 	CustomizerPropertyType,
+	CustomizerRenderApi,
 	DynamicStyleProperties,
 	IHudCustomizerHandler,
 	QuerySelector,
@@ -14,6 +15,7 @@ import { GamemodeInfo, GamemodeInfoList } from 'common/gamemode';
 import { Gamemode } from 'common/web/enums/gamemode.enum';
 import { PanelHandler } from 'util/module-helpers';
 import { mergeDeep, compareDeepIgnoreNull, compareDeepAsymmetric } from 'util/functions';
+import { importLegacySpeedometers } from 'common/speedometer-legacy-import';
 import { CopyToOtherPresetsData } from 'modals/popups/hud-customizer-copy-to-other-presets';
 
 /** Structure of layout stored out to JSON */
@@ -620,6 +622,11 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 				id: info.id,
 				name: $.Localize(info.i18n)
 			};
+
+			// One-time import of the legacy speedometer files, may create presets and select them
+			if (importLegacySpeedometers(this.panels.customizer)) {
+				this.presetList = new Set(this.panels.customizer.listLayouts());
+			}
 
 			this.updatePresetSettings();
 			this.initializeLayouts();
@@ -1392,7 +1399,10 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		const createStylePanel = (styleID: StyleID, dynamicStyle: DynamicStyle, parent: Panel) => {
 			const panel = $.CreatePanel('Panel', parent, '');
 
-			if (dynamicStyle.properties.type !== CustomizerPropertyType.NONE) {
+			if (
+				dynamicStyle.properties.type !== CustomizerPropertyType.NONE &&
+				dynamicStyle.properties.type !== CustomizerPropertyType.CUSTOM
+			) {
 				panel.AddClass('hud-customizer-settings__row-wrapper--hover');
 			}
 
@@ -1648,6 +1658,36 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 					refreshMap.set(styleID, () => {
 						dropdown.SetSelected(resolveValue(component.dynamicStyles[styleID]?.value) as string);
 					});
+
+					break;
+				}
+
+				case CustomizerPropertyType.CUSTOM: {
+					panel.style.width = '100%';
+					panel.style.flowChildren = 'down';
+					const body = $.CreatePanel('Panel', panel, '', { class: 'hud-customizer-settings__custom' });
+
+					const api: CustomizerRenderApi = {
+						getValue: () => {
+							// Deep clone so editors can't touch the stored value. It is plain KV3 data, so JSON is enough
+							// eslint-disable-next-line unicorn/prefer-structured-clone
+							return JSON.parse(
+								JSON.stringify(resolveValue(component.dynamicStyles[styleID]?.value) ?? null)
+							);
+						},
+						setValue: (value) => {
+							component.setDynamicStyle(styleID, value);
+							$.Schedule(0.1, () => this.updateActiveComponentOverlayPosition());
+						}
+					};
+
+					const build = () => {
+						body.RemoveAndDeleteChildren();
+						dynamicStyle.properties.render?.(body, api);
+					};
+
+					build();
+					refreshMap.set(styleID, build);
 				}
 			}
 

@@ -1,3 +1,9 @@
+@use '../config' as *;
+
+// Same as the HUD customizer's inputs, the compact variant below is only used there
+$input-background: rgb(91, 91, 91);
+$input-background-hover: rgb(110, 110, 110);
+
 .rangecolordisplay {
 	height: 48px;
 	width: 100%;
@@ -51,5 +57,63 @@
 		margin-right: 10px;
 		vertical-align: center;
 		wash-color: #ffffff;
+	}
+
+	// Smaller variant for the speedometer color profile editor in the HUD customizer
+	&.rangecolordisplay--compact {
+		height: 20px;
+		padding: 0;
+
+		& .rangecolordisplay__minentry,
+		& .rangecolordisplay__maxentry {
+			width: 56px;
+			height: 16px;
+			margin-right: 4px;
+			padding: 1px 0 1px 6px;
+			font-size: 10px;
+			font-family: $font-monospace;
+			vertical-align: center;
+			background-color: $input-background;
+
+			&:hover {
+				background-color: $input-background-hover;
+			}
+		}
+
+		& .rangecolordisplay__arrowicon {
+			width: 12px;
+			height: 12px;
+			margin-right: 4px;
+		}
+
+		& .rangecolordisplay__display {
+			width: fill-parent-flow(1);
+			height: 20px;
+			padding-left: 0;
+
+			& .colordisplay {
+				height: 20px;
+			}
+
+			& .colordisplay__display {
+				width: 16px;
+				height: 16px;
+				border-radius: 2px;
+			}
+
+			& .colordisplay__hexentry {
+				width: 60px;
+				height: 16px;
+				margin-left: 4px;
+				padding: 1px 0 1px 6px;
+				font-size: 10px;
+				font-family: $font-monospace;
+				background-color: $input-background;
+
+				&:hover {
+					background-color: $input-background-hover;
+				}
+			}
+		}
 	}
 }
