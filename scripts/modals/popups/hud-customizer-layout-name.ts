@@ -15,6 +15,7 @@ class HudCustomizerLayoutNameHandler implements OnPanelLoad {
 		this.panels.title.text = this.panels.cp.GetAttributeString('title', 'Input');
 		this.panels.input.text = this.panels.cp.GetAttributeString('input_label', 'Input Value');
 		this.panels.okButtonLabel.text = this.panels.cp.GetAttributeString('ok_btn_label', $.Localize('#Common_OK'));
+		this.panels.textEntry.text = this.panels.cp.GetAttributeString('prefilled_text', '');
 
 		this.panels.invalidName.visible = false;
 	}

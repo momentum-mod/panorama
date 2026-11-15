@@ -1,5 +1,6 @@
 import { OnPanelLoad, PanelHandler } from 'util/module-helpers';
-import { GamemodeInfoProperties } from 'common/gamemode';
+import { GamemodeInfoList, GamemodeInfoProperties } from 'common/gamemode';
+import { gamemodeIDForFile, isReservedLayoutName } from 'common/hud-layers';
 
 export type CopyToOtherPresetsData = {
 	title: string;
@@ -30,8 +31,10 @@ class HudCustomizerCopyToOtherPresetsHandler implements OnPanelLoad {
 
 		this.panels.titleLabel.text = this.data.title;
 
+		// Match against every gamemode ID, so a bhop_hl_ preset is never taken for a bhop one
+		const gamemodeIDs = GamemodeInfoList.map((info) => info.id);
 		const getGamemodeForFile = (name: string) =>
-			this.data.gamemodes.find((info) => name.startsWith(info.id + '_'))?.id;
+			isReservedLayoutName(name) ? undefined : gamemodeIDForFile(name, gamemodeIDs);
 
 		const findFreeIndex = (gamemodeID: string, presetList: string[]) => {
 			const prefix = 'preset';

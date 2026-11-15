@@ -17,6 +17,25 @@ import { PanelHandler } from 'util/module-helpers';
 import { mergeDeep, compareDeepIgnoreNull, compareDeepAsymmetric } from 'util/functions';
 import { importLegacySpeedometers } from 'common/speedometer-legacy-import';
 import { CopyToOtherPresetsData } from 'modals/popups/hud-customizer-copy-to-other-presets';
+import {
+	BASE_FILE_PREFIX,
+	cloneData,
+	equalData,
+	EXPORT_FILE_PREFIX,
+	fieldDelta,
+	gamemodeIDForFile,
+	isPinned,
+	isReservedLayoutName,
+	LayerObject,
+	mergeLayers,
+	parseBaseFile,
+	PINNED_KEY,
+	PresetFile,
+	serializeBaseFile,
+	splitPresetFile,
+	updateBaseEntry,
+	withoutPinned
+} from 'common/hud-layers';
 
 /** Structure of layout stored out to JSON */
 interface ComponentLayout {
@@ -331,9 +350,9 @@ class Component {
 		};
 	}
 
-	/** Reset a component to its original state. */
+	/** Reset a component to the layer below the one being edited (the base, or the shipped default). */
 	reset(options: ResetOptions): void {
-		const defaultComponentLayout = HudCustomizerHandler.defaultLayout[this.id];
+		const defaultComponentLayout = HudCustomizerHandler.parentLayout[this.id];
 		if (!defaultComponentLayout)
 			throw new Error(`HudCustomizer: Could not load default layout for HUD customizer component ${this.id}`);
 
@@ -360,7 +379,7 @@ class Component {
 
 	/** Reset a single dynamic style to it's original state */
 	resetSingle(styleID: StyleID): void {
-		const defaultValue = HudCustomizerHandler.defaultLayout[this.id].dynamicStyles?.[styleID];
+		const defaultValue = HudCustomizerHandler.parentLayout[this.id].dynamicStyles?.[styleID];
 		this.setDynamicStyle(styleID, defaultValue);
 	}
 
@@ -471,8 +490,24 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 	presetList: Set<string>;
 	unsavedPresets: Set<string> = new Set();
 
+	/** What the components show: the resolved layout of the current edit target */
 	static presetLayout: HudLayout;
+	/** Shipped layout of the current gamemode, hud_default + <mode>_default (L0 + L1) */
 	static defaultLayout: HudLayout;
+	/** What the current edit target is saved relative to, and what Reset goes back to */
+	static parentLayout: HudLayout;
+
+	/**
+	 * Name of the base profile, cfg/hud/base_<name>.kv3. One global base for now; presets store the name they follow
+	 * so several named bases can be added later without changing the file format.
+	 */
+	readonly baseName = 'main';
+	/** The base profile's component deltas on L0 + L1 (L2), null if the base file doesn't exist */
+	baseLayout: LayerObject | null = null;
+	/** The current preset file as stored (L3). Null for the default preset and for presets not saved yet */
+	presetFile: PresetFile | null = null;
+	/** Whether edits go to the current preset or to the base profile (all modes) */
+	editTarget: 'preset' | 'base' = 'preset';
 
 	gamemodeInfo: ActiveGamemodeInfo;
 
@@ -710,14 +745,9 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			panel.SetDialogVariable('name', $.Localize('#Customizer_PresetSettings_Label'));
 			const dropdown = panel.FindChildTraverse<DropDown>('DropDown')!;
 
-			// Longest matching ID, since some IDs are prefixes of others (bhop and bhop_hl)
-			const getGamemodeForFile = (name: string) => {
-				let best: string | undefined;
-				for (const { id } of GamemodeInfoList) {
-					if (name.startsWith(id + '_') && (!best || id.length > best.length)) best = id;
-				}
-				return best;
-			};
+			const gamemodeIDs = GamemodeInfoList.map((info) => info.id);
+			const getGamemodeForFile = (name: string) =>
+				isReservedLayoutName(name) ? undefined : gamemodeIDForFile(name, gamemodeIDs);
 
 			// Filters presetList + this.unsavedPresets to only those that match gamemodeID_<name> pattern, then strips gamemodeID + _
 			// Sorts by name except for default which is always at the top
@@ -844,6 +874,74 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 		createDropdown(wrapper);
 		createButtons(wrapper);
+		this.createBaseControls(wrapper);
+	}
+
+	/** Base profile controls under the preset buttons: edit target and detach, or "use base" for detached presets. */
+	createBaseControls(parent: GenericPanel): void {
+		this.panels.settings.SetHasClass('hud-customizer-settings--base-edit', this.editTarget === 'base');
+
+		const buttonRow = $.CreatePanel('Panel', parent, '', {
+			class: 'hud-customizer-settings__row mt-2 h-fit-children'
+		});
+		const addButton = (id: string, token: string, tooltipToken: string, onActivate: () => void, cls = '') => {
+			const button = $.CreatePanel('Button', buttonRow, id, {
+				class: `button hud-customizer-settings__button px-2 py-1 ${cls}`
+			});
+			$.CreatePanel('Label', button, '', { text: $.Localize(token) });
+			button.SetPanelEvent('onactivate', onActivate);
+			button.SetPanelEvent('onmouseover', () => UiToolkitAPI.ShowTextTooltip(id, $.Localize(tooltipToken)));
+			button.SetPanelEvent('onmouseout', () => UiToolkitAPI.HideTextTooltip());
+		};
+
+		if (this.currentPreset !== 'default') {
+			if (this.isAttached()) {
+				addButton('PresetDetachBase', '#Customizer_Base_Detach', '#Customizer_Base_Detach_Tooltip', () =>
+					this.detachFromBase()
+				);
+			} else {
+				addButton('PresetUseBase', '#Customizer_Base_Attach', '#Customizer_Base_Attach_Tooltip', () =>
+					this.attachToBase()
+				);
+			}
+		}
+
+		// Pushes export / import to the right
+		const spacer = $.CreatePanel('Panel', buttonRow, '');
+		spacer.style.width = 'fill-parent-flow(1)';
+
+		addButton(
+			'PresetExport',
+			'#Customizer_Preset_Export',
+			'#Customizer_Preset_Export_Tooltip',
+			() => this.exportPreset(),
+			'mr-2'
+		);
+		addButton('PresetImport', '#Customizer_Preset_Import', '#Customizer_Preset_Import_Tooltip', () =>
+			this.showImportMenu()
+		);
+
+		if (this.isAttached()) {
+			const dropdownRow = $.CreatePanel('Panel', parent, '');
+			dropdownRow.LoadLayoutSnippet('dynamic-dropdown');
+			dropdownRow.SetDialogVariable('name', $.Localize('#Customizer_Base_EditTarget'));
+			dropdownRow.AddClass('mt-3');
+			const dropdown = dropdownRow.FindChildTraverse<DropDown>('DropDown')!;
+
+			for (const [id, token] of [
+				['preset', '#Customizer_Base_EditTarget_Preset'],
+				['base', '#Customizer_Base_EditTarget_Base']
+			]) {
+				const option = $.CreatePanel('Label', dropdown, id);
+				option.text = $.Localize(token);
+				dropdown.AddOption(option);
+			}
+			dropdown.SetSelected(this.editTarget);
+			dropdown.SetPanelEvent('oninputsubmit', () => {
+				const target = dropdown.GetSelected()?.id;
+				if (target === 'preset' || target === 'base') this.setEditTarget(target);
+			});
+		}
 	}
 
 	createNewPreset(newPreset: string): boolean {
@@ -882,12 +980,25 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		const gamemodeID = this.gamemodeInfo.id;
 		const fullPresetName = `${gamemodeID}_${name}`;
 
-		if (this.presetList.has(fullPresetName)) {
-			const layout = this.getPresetLayout(name);
-			HudCustomizerHandler.presetLayout = layout ? layout : { ...HudCustomizerHandler.defaultLayout };
+		this.editTarget = 'preset';
+		this.currentPreset = name;
+
+		if (name === 'default') {
+			this.presetFile = null;
+			this.updateLayers();
+		} else if (this.presetList.has(fullPresetName)) {
+			this.presetFile = this.loadPresetFile(name);
+			this.updateLayers();
+		} else if (this.baseLayout) {
+			// New preset while a base exists: it starts out following the base, with no changes of its own
+			this.presetFile = { base: this.baseName, components: {} };
+			this.updateLayers();
+		} else {
+			// New preset without a base: it starts as a copy of what is shown now (presetLayout stays as it is)
+			this.presetFile = null;
+			HudCustomizerHandler.parentLayout = HudCustomizerHandler.defaultLayout;
 		}
 
-		this.currentPreset = name;
 		$.persistentStorage.setItem(`hud-customizer.preset.${gamemodeID}`, name);
 		this.reloadLayout();
 
@@ -969,8 +1080,26 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			return Array.isArray(gamemodes) ? gamemodes : [gamemodes];
 		};
 
+		// An attached preset copies its own changes, so each target follows its own gamemode defaults and the base
+		if (this.isAttached()) {
+			this.setEditTarget('preset');
+			this.save();
+		}
+		const attachedSource = this.isAttached() ? this.presetFile : null;
+
 		for (const { gamemodeID, presetName } of presetList) {
 			const fullPresetName = `${gamemodeID}_${presetName}`;
+
+			if (attachedSource) {
+				const data = { base: attachedSource.base, ...attachedSource.components };
+				if (this.panels.customizer.saveLayout(fullPresetName, data as unknown as HudLayout)) {
+					$.persistentStorage.setItem(`hud-customizer.preset.${gamemodeID}`, presetName);
+					this.presetList.add(fullPresetName);
+					this.updatePresetSettings();
+				}
+				continue;
+			}
+
 			const layout: HudLayout = this.panels.customizer.loadLayout(fullPresetName) ?? {};
 
 			for (const [componentID, component] of Object.entries(this.components)) {
@@ -999,11 +1128,28 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 	copyPanelToOtherPresets(componentID: string, presetList: { gamemodeID: string; presetName: string }[]) {
 		const componentData: ComponentLayout = this.components[componentID].getLayout();
 
+		// From an attached preset into an attached one, copy the component's own changes (its entry in the preset
+		// file), so the target keeps following its own gamemode defaults and the base
+		if (this.isAttached()) {
+			this.setEditTarget('preset');
+			this.save();
+		}
+		const sourceEntry = this.isAttached() ? this.presetFile!.components[componentID] : undefined;
+
 		for (const { gamemodeID, presetName } of presetList) {
 			const fullPresetName = `${gamemodeID}_${presetName}`;
 
 			const existingLayout = this.panels.customizer.loadLayout(fullPresetName) ?? {};
-			const updatedLayout: HudLayout = { ...existingLayout, [componentID]: componentData };
+			const targetAttached = splitPresetFile(existingLayout).base !== undefined;
+
+			let updatedLayout: HudLayout;
+			if (this.isAttached() && targetAttached) {
+				updatedLayout = { ...existingLayout };
+				if (sourceEntry) updatedLayout[componentID] = sourceEntry as unknown as ComponentLayout;
+				else delete updatedLayout[componentID];
+			} else {
+				updatedLayout = { ...existingLayout, [componentID]: componentData };
+			}
 
 			const saveSuccessful = this.panels.customizer.saveLayout(fullPresetName, updatedLayout);
 
@@ -1061,13 +1207,26 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		this.generateComponentList();
 	}
 
-	/** Serializes all component and saves cfg/hud.json. */
-	save(): void {
+	/** Serializes all components and saves the current edit target: the preset file, or the base profile. */
+	save(force = false): void {
 		if (this.currentPreset === 'default') return;
 
 		const currentLayout = Object.fromEntries(
 			Object.entries(this.components).map(([id, component]) => [id, component.getLayout()])
 		);
+
+		if (this.editTarget === 'base' || this.isAttached()) {
+			// Components that can't be disabled are always shown, whatever their stored `enabled` says. Leave it out
+			// so it never shows up as a difference
+			for (const [id, component] of Object.entries(this.components)) {
+				if (component.properties.canDisable === false)
+					delete (currentLayout[id] as Partial<ComponentLayout>).enabled;
+			}
+
+			if (this.editTarget === 'base') this.saveBase(currentLayout);
+			else this.saveAttachedPreset(currentLayout, force);
+			return;
+		}
 
 		// TODO: Check we don't potentially lose data if a component fails to register once, which would
 		// cause previous data to get wiped.
@@ -1087,9 +1246,381 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		if (isSaved) {
 			this.unsavedPresets.delete(fullPresetName);
 			this.presetList.add(fullPresetName);
+			this.presetFile = this.loadPresetFile(this.currentPreset);
 			HudCustomizerHandler.presetLayout = this.getPresetLayout(this.currentPreset);
 			ToastAPI.CreateToast('', 'Saved!', `Preset ${this.currentPreset} has been saved!`, 2, 5, '', 'blue');
 		}
+	}
+
+	/** Whether the current preset follows the base profile (stores only its differences from it). */
+	isAttached(): boolean {
+		return this.currentPreset !== 'default' && this.presetFile?.base !== undefined;
+	}
+
+	/**
+	 * Saves an attached preset: per component, only the fields that differ from the base (or from the shipped default
+	 * for pinned components). Entries of components that aren't registered in this gamemode are kept as they are.
+	 */
+	saveAttachedPreset(currentLayout: HudLayout, force = false): void {
+		const previous = this.presetFile!;
+		const components: LayerObject = { ...previous.components };
+
+		for (const [id, layout] of Object.entries(currentLayout)) {
+			const pinned = isPinned(previous.components[id]);
+			const delta = fieldDelta(HudCustomizerHandler.parentLayout[id], layout) as LayerObject | undefined;
+
+			if (pinned) components[id] = { ...delta, [PINNED_KEY]: true };
+			else if (delta) components[id] = delta;
+			else delete components[id];
+		}
+
+		const isNew = !this.presetList.has(this.getFullPresetName());
+		if (!force && !isNew && equalData(components, previous.components)) return;
+
+		if (this.writePresetFile(this.currentPreset, { base: previous.base, components })) {
+			this.presetFile = { ...previous, components };
+			HudCustomizerHandler.presetLayout = currentLayout;
+			ToastAPI.CreateToast('', 'Saved!', `Preset ${this.currentPreset} has been saved!`, 2, 5, '', 'blue');
+		}
+	}
+
+	/**
+	 * Saves the base profile, stored as field deltas on the shipped default. A new base is seeded with every field that
+	 * differs from the current gamemode's shipped default. An existing base only takes the fields changed since it was
+	 * loaded (see updateBaseEntry), so values set from another gamemode are not lost. Entries of components that aren't
+	 * registered in this gamemode are kept as they are.
+	 */
+	saveBase(currentLayout: HudLayout): void {
+		const previous = this.baseLayout ?? {};
+		const layout: LayerObject = { ...previous };
+		const shown = HudCustomizerHandler.presetLayout;
+
+		for (const [id, componentLayout] of Object.entries(currentLayout)) {
+			const shippedDefault = HudCustomizerHandler.defaultLayout[id];
+			const entry = this.baseLayout
+				? updateBaseEntry(previous[id], shown?.[id], componentLayout, shippedDefault)
+				: (fieldDelta(shippedDefault, componentLayout) as LayerObject | undefined);
+			if (entry) layout[id] = entry;
+			else delete layout[id];
+		}
+
+		if (this.baseLayout && equalData(layout, previous)) return;
+
+		const isSaved = this.panels.customizer.saveLayout(
+			BASE_FILE_PREFIX + this.baseName,
+			serializeBaseFile({ name: this.baseName, layout }) as unknown as HudLayout
+		);
+
+		if (isSaved) {
+			this.baseLayout = layout;
+			HudCustomizerHandler.presetLayout = currentLayout;
+			ToastAPI.CreateToast(
+				'',
+				$.Localize('#Customizer_Base_Saved_Header'),
+				$.Localize('#Customizer_Base_Saved'),
+				2,
+				5,
+				'',
+				'blue'
+			);
+		}
+	}
+
+	getFullPresetName(preset: string = this.currentPreset): string {
+		return `${this.gamemodeInfo.id}_${preset}`;
+	}
+
+	/** Writes a preset file and keeps the preset lists up to date. */
+	writePresetFile(preset: string, file: PresetFile): boolean {
+		const fullPresetName = this.getFullPresetName(preset);
+		const data = {
+			...(file.base !== undefined && { base: file.base }),
+			...(file.meta && { meta: file.meta }),
+			...file.components
+		};
+
+		const isSaved = this.panels.customizer.saveLayout(fullPresetName, data as unknown as HudLayout);
+		if (isSaved) {
+			this.unsavedPresets.delete(fullPresetName);
+			this.presetList.add(fullPresetName);
+		}
+		return isSaved;
+	}
+
+	/** Loads and splits a preset file of the current gamemode. Null if it doesn't exist. */
+	loadPresetFile(preset: string): PresetFile | null {
+		if (preset === 'default') return null;
+		const raw = this.panels.customizer.loadLayout(this.getFullPresetName(preset));
+		return raw ? splitPresetFile(raw) : null;
+	}
+
+	/** Loads the base profile file, null if there is none. */
+	loadBase(): LayerObject | null {
+		const raw = this.panels.customizer.loadLayout(BASE_FILE_PREFIX + this.baseName);
+		return raw ? parseBaseFile(raw, this.baseName).layout : null;
+	}
+
+	/**
+	 * Recomputes parentLayout and presetLayout from the loaded files (defaultLayout, baseLayout, presetFile) and the
+	 * edit target. Does not touch the components, call reloadLayout() for that.
+	 */
+	updateLayers(): void {
+		const defaults = HudCustomizerHandler.defaultLayout;
+		const file = this.presetFile;
+
+		if (this.currentPreset === 'default' && !file) {
+			HudCustomizerHandler.parentLayout = defaults;
+			HudCustomizerHandler.presetLayout = { ...defaults };
+			return;
+		}
+
+		if (!file || file.base === undefined) {
+			// Detached preset, stored the way presets always were
+			HudCustomizerHandler.parentLayout = defaults;
+			HudCustomizerHandler.presetLayout = file
+				? (mergeDeep(defaults, file.components) as HudLayout)
+				: { ...defaults };
+			return;
+		}
+
+		// Only components that exist in this gamemode, the base may hold other gamemodes' components too
+		const base: LayerObject = {};
+		for (const [id, entry] of Object.entries(this.baseLayout ?? {})) {
+			if (defaults[id]) base[id] = entry;
+		}
+		const withBase = mergeLayers([defaults as unknown as LayerObject, base]) as unknown as HudLayout;
+
+		if (this.editTarget === 'base') {
+			// Shows the base as it looks in this gamemode, without the preset's own changes
+			HudCustomizerHandler.parentLayout = defaults;
+			HudCustomizerHandler.presetLayout = withBase;
+			return;
+		}
+
+		const parent: HudLayout = {};
+		const resolved: HudLayout = {};
+		for (const id of Object.keys(defaults)) {
+			const entry = file.components[id] as LayerObject | undefined;
+			parent[id] = isPinned(entry) ? defaults[id] : withBase[id];
+			resolved[id] = mergeLayers([
+				parent[id] as unknown as LayerObject,
+				entry && withoutPinned(entry)
+			]) as unknown as ComponentLayout;
+		}
+
+		HudCustomizerHandler.parentLayout = parent;
+		HudCustomizerHandler.presetLayout = resolved;
+	}
+
+	/** Current component layouts, without `enabled` on components that can't be disabled (see save()). */
+	getCurrentLayoutForDelta(): HudLayout {
+		const layout: HudLayout = {};
+		for (const [id, component] of Object.entries(this.components)) {
+			layout[id] = component.getLayout();
+			if (component.properties.canDisable === false) delete (layout[id] as Partial<ComponentLayout>).enabled;
+		}
+		return layout;
+	}
+
+	/**
+	 * Makes the current (detached) preset follow the base. Without a base yet, the preset becomes the base. Nothing
+	 * visible changes.
+	 */
+	attachToBase(): void {
+		if (this.currentPreset === 'default' || this.isAttached()) return;
+
+		const current = this.getCurrentLayoutForDelta();
+		const toastArg = $.Localize(this.baseLayout ? '#Customizer_Base_Attached' : '#Customizer_Base_Created');
+
+		if (!this.baseLayout) {
+			// The first preset to use the base seeds it
+			this.editTarget = 'base';
+			this.saveBase(current);
+			this.editTarget = 'preset';
+			if (!this.baseLayout) return;
+		}
+
+		this.presetFile = { base: this.baseName, components: {} };
+		this.updateLayers();
+		this.saveAttachedPreset(current, true);
+		this.updateLayers();
+		this.reloadLayout();
+		this.updatePresetSettings();
+
+		displayInfoToast($.Localize('#Customizer_Base_Attach'), toastArg.replace('{preset}', this.currentPreset));
+	}
+
+	/** Stops the current preset from following the base. It is written the way presets were stored before bases. */
+	detachFromBase(): void {
+		if (!this.isAttached()) return;
+
+		this.setEditTarget('preset');
+		this.save();
+
+		const current = Object.fromEntries(
+			Object.entries(this.components).map(([id, component]) => [id, component.getLayout()])
+		) as HudLayout;
+		const components = this.getLayoutDelta(current, HudCustomizerHandler.defaultLayout) as unknown as LayerObject;
+
+		if (!this.writePresetFile(this.currentPreset, { components })) return;
+
+		this.presetFile = { components };
+		this.updateLayers();
+		this.reloadLayout();
+		this.updatePresetSettings();
+
+		displayInfoToast(
+			$.Localize('#Customizer_Base_Detach'),
+			$.Localize('#Customizer_Base_Detached').replace('{preset}', this.currentPreset)
+		);
+	}
+
+	/** Switches between editing the current preset and editing the base profile. Saves the previous target first. */
+	setEditTarget(target: 'preset' | 'base'): void {
+		if (target === this.editTarget) return;
+		if (target === 'base' && !this.isAttached()) return;
+
+		this.save();
+		this.editTarget = target;
+		this.updateLayers();
+		this.reloadLayout();
+		this.panels.settings.SetHasClass('hud-customizer-settings--base-edit', target === 'base');
+	}
+
+	/**
+	 * Pins a component to the current preset (base changes no longer affect it here), or unpins it. Its current look
+	 * is kept either way.
+	 */
+	togglePin(component: Component): void {
+		if (!this.isAttached() || this.editTarget !== 'preset') return;
+
+		this.save();
+
+		const file = this.presetFile!;
+		const entry = file.components[component.id] as LayerObject | undefined;
+		if (isPinned(entry)) {
+			file.components[component.id] = withoutPinned(entry!);
+		} else {
+			file.components[component.id] = { ...entry, [PINNED_KEY]: true };
+		}
+
+		// Saving recomputes the entry against the new parent (shipped default when pinned, the base otherwise)
+		const current = this.getCurrentLayoutForDelta();
+		this.updateLayers();
+		this.saveAttachedPreset(current, true);
+		this.updateLayers();
+		this.generateComponentList();
+	}
+
+	isComponentPinned(component: Component): boolean {
+		return this.isAttached() && isPinned(this.presetFile?.components[component.id]);
+	}
+
+	/**
+	 * Writes the current preset as a standalone file, cfg/hud/export_<mode>_<preset>.kv3, in the format presets had
+	 * before bases (whole components that differ from the shipped default), so it works without the base.
+	 */
+	exportPreset(): void {
+		this.setEditTarget('preset');
+		this.save();
+
+		const current = Object.fromEntries(
+			Object.entries(this.components).map(([id, component]) => [id, component.getLayout()])
+		) as HudLayout;
+		const components = this.getLayoutDelta(current, HudCustomizerHandler.defaultLayout);
+		const fileName = `${EXPORT_FILE_PREFIX}${this.getFullPresetName()}`;
+		const data = { meta: { mode: this.gamemodeInfo.id }, ...components };
+
+		const write = () => {
+			if (this.panels.customizer.saveLayout(fileName, data as unknown as HudLayout)) {
+				displayInfoToast(
+					$.Localize('#Customizer_Preset_Export'),
+					$.Localize('#Customizer_Preset_Exported').replace('{file}', fileName)
+				);
+			}
+		};
+
+		if (!this.panels.customizer.listLayouts().includes(fileName)) {
+			write();
+			return;
+		}
+
+		UiToolkitAPI.ShowGenericPopupYesNo(
+			$.Localize('#Customizer_Preset_Export'),
+			$.Localize('#Customizer_Preset_Export_Overwrite').replace('{file}', fileName),
+			'',
+			write,
+			() => UiToolkitAPI.CloseAllVisiblePopups()
+		);
+	}
+
+	/** Lists the exported presets of the current gamemode to import. */
+	showImportMenu(): void {
+		const prefix = `${EXPORT_FILE_PREFIX}${this.gamemodeInfo.id}_`;
+		const gamemodeIDs = GamemodeInfoList.map((info) => info.id);
+		const files = this.panels.customizer
+			.listLayouts()
+			.filter(
+				(name) =>
+					name.startsWith(EXPORT_FILE_PREFIX) &&
+					gamemodeIDForFile(name.slice(EXPORT_FILE_PREFIX.length), gamemodeIDs) === this.gamemodeInfo.id
+			)
+			.sort((a, b) => a.localeCompare(b));
+
+		if (files.length === 0) {
+			displayToast(
+				$.Localize('#Customizer_Preset_Import'),
+				$.Localize('#Customizer_Preset_Import_None').replace('{gamemode}', this.gamemodeInfo.id)
+			);
+			return;
+		}
+
+		UiToolkitAPI.ShowSimpleContextMenu(
+			'PresetImport',
+			'',
+			files.map((file) => ({ label: file.slice(prefix.length), jsCallback: () => this.promptImport(file) }))
+		);
+	}
+
+	promptImport(file: string): void {
+		const suggested = file.slice(`${EXPORT_FILE_PREFIX}${this.gamemodeInfo.id}_`.length);
+		UiToolkitAPI.ShowCustomLayoutPopupParameters(
+			'ImportPreset',
+			'file://{resources}/layout/modals/popups/hud-customizer-layout-name.xml',
+			`title=${$.Localize('#Customizer_Preset_Import_Header')}&input_label=${$.Localize('#Customizer_Preset_Import_InputLabel')}&ok_btn_label=${$.Localize('#Customizer_Preset_Import')}&prefilled_text=${suggested}&callback=${UiToolkitAPI.RegisterJSCallback(
+				(name: string) => this.importPreset(file, name)
+			)}`
+		);
+	}
+
+	/** Copies an exported file into a new preset of the current gamemode and selects it. It follows the base if one exists. */
+	importPreset(file: string, name: string): void {
+		if (name === 'default' || this.presetList.has(this.getFullPresetName(name))) {
+			displayToast(
+				$.Localize('#Customizer_Preset_Import'),
+				$.Localize('#Customizer_Preset_Exists').replace('{preset}', name)
+			);
+			return;
+		}
+
+		const raw = this.panels.customizer.loadLayout(file);
+		if (!raw) return;
+
+		// Exports are stored like detached presets; drop any base / meta keys
+		const { components } = splitPresetFile(raw);
+
+		this.setEditTarget('preset');
+		this.save();
+		if (!this.writePresetFile(name, { components })) return;
+
+		this.changePreset(name);
+		if (this.baseLayout) this.attachToBase();
+		this.updatePresetSettings();
+
+		displayInfoToast(
+			$.Localize('#Customizer_Preset_Import'),
+			$.Localize('#Customizer_Preset_Imported').replace('{file}', file).replace('{preset}', name)
+		);
 	}
 
 	enableEditing(): void {
@@ -1236,6 +1767,25 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 				);
 			}
 
+			if (this.isAttached() && this.editTarget === 'preset') {
+				const pinned = this.isComponentPinned(component);
+				const pinButton = $.CreatePanel('Button', right, `${id}PinButton`, {
+					class: 'hud-customizer-settings__component__button'
+				});
+				pinButton.SetHasClass('hud-customizer-settings__component__button--active', pinned);
+				$.CreatePanel('Image', pinButton, '', {
+					src: pinned ? 'file://{images}/pin.svg' : 'file://{images}/pin-off.svg'
+				});
+				pinButton.SetPanelEvent('onmouseover', () =>
+					UiToolkitAPI.ShowTextTooltip(
+						`${id}PinButton`,
+						$.Localize(pinned ? '#Customizer_Base_Unpin_Tooltip' : '#Customizer_Base_Pin_Tooltip')
+					)
+				);
+				pinButton.SetPanelEvent('onmouseout', () => UiToolkitAPI.HideTextTooltip());
+				pinButton.SetPanelEvent('onactivate', () => this.togglePin(component));
+			}
+
 			const resetButton = $.CreatePanel('Button', right, `${id}ResetButton`, {
 				class: 'hud-customizer-settings__component__button'
 			});
@@ -1246,7 +1796,9 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 				UiToolkitAPI.ShowCustomLayoutPopupParameters(
 					'ResetComponent',
 					'file://{resources}/layout/modals/popups/hud-customizer-reset.xml',
-					`resetTitle=Reset ${component.properties.name}&resetMessage=Are you sure you want to reset ${component.properties.name}?&callback=${UiToolkitAPI.RegisterJSCallback((options: ResetOptions) => this.resetComponent(component, options))}`
+					this.editTarget === 'base'
+						? `resetTitle=${$.Localize('#Customizer_Base_Reset_Header')}&resetMessage=${$.Localize('#Customizer_Base_Reset_Message').replace('{panelName}', component.properties.name)}&callback=${UiToolkitAPI.RegisterJSCallback((options: ResetOptions) => this.resetComponent(component, options))}`
+						: `resetTitle=Reset ${component.properties.name}&resetMessage=Are you sure you want to reset ${component.properties.name}?&callback=${UiToolkitAPI.RegisterJSCallback((options: ResetOptions) => this.resetComponent(component, options))}`
 				)
 			);
 
@@ -1675,11 +2227,8 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 					const api: CustomizerRenderApi = {
 						getValue: () => {
-							// Deep clone so editors can't touch the stored value. It is plain KV3 data, so JSON is enough
-							// eslint-disable-next-line unicorn/prefer-structured-clone
-							return JSON.parse(
-								JSON.stringify(resolveValue(component.dynamicStyles[styleID]?.value) ?? null)
-							);
+							// Deep clone so editors can't touch the stored value
+							return cloneData(resolveValue(component.dynamicStyles[styleID]?.value) ?? null);
 						},
 						setValue: (value) => {
 							component.setDynamicStyle(styleID, value);
@@ -2215,7 +2764,8 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			return null;
 		}
 
-		return mergeDeep(defaultLayout, presetLayout) as HudLayout;
+		// Reserved keys (base, meta) aren't components
+		return mergeDeep(defaultLayout, splitPresetFile(presetLayout).components) as HudLayout;
 	}
 
 	getDefaultLayout() {
@@ -2253,9 +2803,25 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 		HudCustomizerHandler.defaultLayout = this.getDefaultLayout();
 
-		const savedLayout = preset && this.getPresetLayout(preset);
-		this.currentPreset = savedLayout ? preset : 'default';
-		HudCustomizerHandler.presetLayout = savedLayout ? savedLayout : { ...HudCustomizerHandler.defaultLayout };
+		this.baseLayout = this.loadBase();
+		this.editTarget = 'preset';
+
+		const presetFile = preset && preset !== 'default' ? this.loadPresetFile(preset) : null;
+		if (preset && preset !== 'default' && !presetFile) {
+			$.persistentStorage.setItem(`hud-customizer.preset.${gamemodeID}`, 'default');
+			$.Warning(`Could not load ${gamemodeID}_${preset}.kv3 from /cfg/hud`);
+		}
+
+		this.currentPreset = presetFile ? preset : 'default';
+		this.presetFile = presetFile;
+
+		if (presetFile?.base !== undefined && presetFile.base !== this.baseName) {
+			// Only one base for now. A preset that names another base follows the current one and is re-pointed on save
+			$.Warning(`HudCustomizer: preset ${preset} follows base "${presetFile.base}", using "${this.baseName}"`);
+			presetFile.base = this.baseName;
+		}
+
+		this.updateLayers();
 	}
 }
 
@@ -2285,4 +2851,8 @@ function cssPanelLookup<T extends Panel>(panel: GenericPanel, selector: QuerySel
 
 function displayToast(title: string, message: string) {
 	ToastAPI.CreateToast('', title, message, 2, 10, '', 'red');
+}
+
+function displayInfoToast(title: string, message: string) {
+	ToastAPI.CreateToast('', title, message, 2, 5, '', 'blue');
 }

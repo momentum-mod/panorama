@@ -4,6 +4,8 @@
 
 $input-background: rgb(91, 91, 91);
 $input-background-hover: rgb(110, 110, 110);
+// Marks things that belong to the base profile (all gamemodes)
+$base-profile-accent: #6fb8ff;
 
 .hud-customizer {
 	width: 100%;
@@ -72,6 +74,11 @@ $input-background-hover: rgb(110, 110, 110);
 	border-radius: 2px;
 	border: 1px solid rgba(255, 255, 255, 0.1);
 	box-shadow: 0px 1px 4px black;
+
+	// Editing the base profile, which applies to every gamemode
+	&--base-edit {
+		border: 1px solid $base-profile-accent;
+	}
 
 	&__header {
 		width: 100%;
@@ -178,6 +185,12 @@ $input-background-hover: rgb(110, 110, 110);
 				& Image {
 					opacity: 1;
 				}
+			}
+
+			// Pinned to the preset (ignores the base)
+			&--active Image {
+				opacity: 0.9;
+				wash-color: $base-profile-accent;
 			}
 		}
 	}
