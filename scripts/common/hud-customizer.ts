@@ -61,6 +61,19 @@ export interface CustomizerRenderApi<T = any> {
 
 	/** Stores the value, runs callbackFunc/onChanged, and refreshes the selection overlay. */
 	setValue(value: T): void;
+
+	/**
+	 * Keyed lists only (see hud-keyed-lists.ts). While editing a preset that follows the base: whether the item with
+	 * this key comes from the base (or the shipped default under it), or exists in this preset only. Undefined when
+	 * the distinction doesn't apply (default or standalone preset, base edit, pinned component).
+	 */
+	getItemScope?(key: string): 'base' | 'preset' | undefined;
+
+	/** Keyed lists only: adds the item, as it is now, to the base so every gamemode has it. */
+	moveItemToBase?(key: string): void;
+
+	/** Keyed lists only: removes the item from the base (every gamemode) and keeps it in this preset only. */
+	makeItemPresetOnly?(key: string): void;
 }
 
 interface DynamicStyleChild {

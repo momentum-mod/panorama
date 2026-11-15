@@ -91,8 +91,15 @@ export function renderSpeedometerEditor(row: Panel, api: CustomizerRenderApi, ct
 	buttonsRow.FindChildTraverse<Button>('RenameButton')!.visible = false;
 	const deleteButton = buttonsRow.FindChildTraverse<Button>('DeleteButton')!;
 
-	const getLabel = ({ custom_label, type }: SpeedometerSettings) =>
-		`${$.Localize(custom_label)} (${$.Localize(SpeedometerDispNames.get(type)!)})`;
+	// Presets that follow the base: move the selected speedometer between the base and this gamemode only
+	const scopeRow = addRow(row, 'dynamic-button', { name: '' });
+	const scopeButton = scopeRow.FindChildTraverse<Button>('Button')!;
+	const getScope = (speedo?: SpeedometerSettings) => (speedo ? api.getItemScope?.(speedo.custom_label) : undefined);
+
+	const getLabel = (speedo: SpeedometerSettings) => {
+		const label = `${$.Localize(speedo.custom_label)} (${$.Localize(SpeedometerDispNames.get(speedo.type)!)})`;
+		return getScope(speedo) === 'preset' ? `${label} - ${$.Localize('#Customizer_List_ModeOnly')}` : label;
+	};
 
 	const refresh = () => {
 		if (!selector.IsValid()) return;
@@ -114,6 +121,15 @@ export function renderSpeedometerEditor(row: Panel, api: CustomizerRenderApi, ct
 		colorRow.visible = hasItems;
 		profileRow.visible = hasItems && current.color_type === SpeedometerColorType.RANGE;
 		buttonsRow.visible = hasItems;
+
+		const scope = getScope(current);
+		scopeRow.visible = scope !== undefined;
+		if (scope) {
+			scopeRow.SetDialogVariable(
+				'name',
+				$.Localize(scope === 'preset' ? '#Customizer_List_MoveToBase' : '#Customizer_List_MakeModeOnly')
+			);
+		}
 
 		if (current) {
 			for (const [i, toggle] of axisToggles.entries()) toggle.checked = current.enabled_axes[i];
@@ -227,6 +243,26 @@ export function renderSpeedometerEditor(row: Panel, api: CustomizerRenderApi, ct
 		list.splice(selected, 1);
 		commit(list);
 	});
+
+	scopeButton.SetPanelEvent('onactivate', () => {
+		const current = getList()[selected];
+		const scope = getScope(current);
+		if (!current || !scope) return;
+		if (scope === 'preset') api.moveItemToBase?.(current.custom_label);
+		else api.makeItemPresetOnly?.(current.custom_label);
+		refresh();
+	});
+	scopeButton.SetPanelEvent('onmouseover', () => {
+		const scope = getScope(getList()[selected]);
+		if (!scope) return;
+		UiToolkitAPI.ShowTextTooltipOnPanel(
+			scopeButton,
+			$.Localize(
+				scope === 'preset' ? '#Customizer_List_MoveToBase_Tooltip' : '#Customizer_List_MakeModeOnly_Tooltip'
+			)
+		);
+	});
+	scopeButton.SetPanelEvent('onmouseout', () => UiToolkitAPI.HideTextTooltip());
 
 	refresh();
 	ctx.refreshSpeedometerEditor = refresh;

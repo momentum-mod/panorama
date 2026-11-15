@@ -36,6 +36,9 @@ import {
 import {
 	componentLayerDelta,
 	GLOBAL_STYLES,
+	KEYED_LISTS,
+	keyOf,
+	KeyedListSpec,
 	materializeLayer,
 	resolveEntry,
 	resolveLayers,
@@ -1615,6 +1618,78 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		this.generateComponentList();
 	}
 
+	/** See CustomizerRenderApi.getItemScope. */
+	getListItemScope(component: Component, spec: KeyedListSpec, key: string): 'base' | 'preset' | undefined {
+		if (!this.isAttached() || this.editTarget !== 'preset' || this.isComponentPinned(component)) return undefined;
+
+		const parentList = HudCustomizerHandler.parentLayout[component.id]?.dynamicStyles?.[spec.style];
+		const lowerKey = key.toLowerCase();
+		const inParent =
+			Array.isArray(parentList) && parentList.some((item: unknown) => keyOf(item, spec.key) === lowerKey);
+		return inParent ? 'base' : 'preset';
+	}
+
+	/**
+	 * Moves a keyed list item of the current preset into the base (`toBase`), or out of the base so only this preset
+	 * keeps it. The preset looks the same afterwards; other gamemodes that follow the base gain or lose the item.
+	 */
+	moveListItem(component: Component, spec: KeyedListSpec, key: string, toBase: boolean): void {
+		const scope = this.getListItemScope(component, spec, key);
+		if (!scope || (scope === 'base') === toBase) return;
+
+		const id = component.id;
+		const lowerKey = key.toLowerCase();
+		const keyOfItem = (item: unknown) => keyOf(item, spec.key);
+		const matches = (item: unknown) => keyOfItem(item) === lowerKey;
+		const listOf = (layout: ComponentLayout | undefined): LayerObject[] => {
+			const list: unknown = layout?.dynamicStyles?.[spec.style];
+			return Array.isArray(list) ? list : [];
+		};
+
+		const current = this.getCurrentLayoutForDelta();
+		const currentList = listOf(current[id]);
+		const item = currentList.find(matches);
+		if (!item) return;
+
+		const shown = this.getBaseResolvedLayout()[id];
+		const editedBase = cloneData(shown);
+		const list = listOf(editedBase).filter((other) => !matches(other));
+
+		if (toBase) {
+			// Insert after the closest item before it in this preset that the base also has, so the order matches
+			const before = new Set(currentList.slice(0, currentList.findIndex(matches)).map(keyOfItem));
+			let index = 0;
+			for (const [i, other] of list.entries()) if (before.has(keyOfItem(other))) index = i + 1;
+			list.splice(index, 0, cloneData(item));
+		}
+		editedBase.dynamicStyles = { ...editedBase.dynamicStyles, [spec.style]: list };
+
+		const entry = updateBaseComponentEntry(
+			id,
+			this.baseLayout?.[id],
+			shown,
+			editedBase,
+			HudCustomizerHandler.defaultLayout[id]
+		);
+		const base: LayerObject = { ...this.baseLayout };
+		if (entry) base[id] = entry;
+		else delete base[id];
+		if (!this.writeBaseFile(base)) return;
+
+		// The preset keeps what it shows; its own changes are recomputed against the new base
+		this.updateLayers();
+		this.saveAttachedPreset(current, true);
+		this.updateLayers();
+
+		displayInfoToast(
+			$.Localize(toBase ? '#Customizer_List_MoveToBase' : '#Customizer_List_MakeModeOnly'),
+			$.Localize(toBase ? '#Customizer_List_MovedToBase' : '#Customizer_List_MadeModeOnly').replace(
+				'{item}',
+				$.Localize(key)
+			)
+		);
+	}
+
 	isComponentPinned(component: Component): boolean {
 		return this.isAttached() && isPinned(this.presetFile?.components[component.id]);
 	}
@@ -2348,7 +2423,15 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 					panel.style.flowChildren = 'down';
 					const body = $.CreatePanel('Panel', panel, '', { class: 'hud-customizer-settings__custom' });
 
+					const keyedList = KEYED_LISTS.find(
+						(spec) => spec.component === component.id && spec.style === styleID
+					);
 					const api: CustomizerRenderApi = {
+						...(keyedList && {
+							getItemScope: (key: string) => this.getListItemScope(component, keyedList, key),
+							moveItemToBase: (key: string) => this.moveListItem(component, keyedList, key, true),
+							makeItemPresetOnly: (key: string) => this.moveListItem(component, keyedList, key, false)
+						}),
 						getValue: () => {
 							// Deep clone so editors can't touch the stored value
 							return cloneData(resolveValue(component.dynamicStyles[styleID]?.value) ?? null);
