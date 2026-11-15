@@ -710,8 +710,14 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			panel.SetDialogVariable('name', $.Localize('#Customizer_PresetSettings_Label'));
 			const dropdown = panel.FindChildTraverse<DropDown>('DropDown')!;
 
-			const getGamemodeForFile = (name: string) =>
-				GamemodeInfoList.find((info) => name.startsWith(info.id + '_'))?.id;
+			// Longest matching ID, since some IDs are prefixes of others (bhop and bhop_hl)
+			const getGamemodeForFile = (name: string) => {
+				let best: string | undefined;
+				for (const { id } of GamemodeInfoList) {
+					if (name.startsWith(id + '_') && (!best || id.length > best.length)) best = id;
+				}
+				return best;
+			};
 
 			// Filters presetList + this.unsavedPresets to only those that match gamemodeID_<name> pattern, then strips gamemodeID + _
 			// Sorts by name except for default which is always at the top
