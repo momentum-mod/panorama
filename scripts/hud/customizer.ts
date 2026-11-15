@@ -16,6 +16,8 @@ import { Gamemode } from 'common/web/enums/gamemode.enum';
 import { PanelHandler } from 'util/module-helpers';
 import { mergeDeep, compareDeepIgnoreNull, compareDeepAsymmetric } from 'util/functions';
 import { importLegacySpeedometers } from 'common/speedometer-legacy-import';
+import { LayerObject } from 'common/hud-layers';
+import { resolveLayers } from 'common/hud-keyed-lists';
 import { CopyToOtherPresetsData } from 'modals/popups/hud-customizer-copy-to-other-presets';
 
 /** Structure of layout stored out to JSON */
@@ -2228,7 +2230,11 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			throw new Error(`Could not load ${gamemodeID}_default.kv3 from /cfg/hud`);
 		}
 
-		return mergeDeep(generalLayout, gamemodeLayout) as HudLayout;
+		// Gamemode defaults may store list deltas on base_default's lists (e.g. KZ adds the jump speedometer)
+		return resolveLayers([
+			generalLayout as unknown as LayerObject,
+			gamemodeLayout as unknown as LayerObject
+		]) as unknown as HudLayout;
 	}
 
 	getLayoutDelta(layoutA: HudLayout, layoutB: HudLayout) {

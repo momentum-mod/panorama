@@ -73,20 +73,32 @@ function normalizeColor(raw: unknown): RgbaTuple {
 /**
  * Turns anything read from disk (hand edited or legacy files included) into a valid list of speedometers.
  * Always returns fresh objects, never the input.
+ *
+ * Labels identify speedometers in base profile list deltas, so they are made unique (case-insensitively): a missing
+ * label becomes the type's name, and a label that is already taken gets a number, "<label> 2" and so on.
  */
 export function normalizeSpeedometers(raw: unknown): SpeedometerSettings[] {
 	if (!Array.isArray(raw)) return [];
 
 	const result: SpeedometerSettings[] = [];
+	const labels = new Set<string>();
 	for (const entry of raw) {
 		if (!isRecord(entry)) continue;
 
 		const type = entry.type as SpeedometerType;
 		if (typeof type !== 'number' || !SpeedometerDispNames.has(type)) continue;
 
+		const wantedLabel =
+			typeof entry.custom_label === 'string' && entry.custom_label !== ''
+				? entry.custom_label
+				: SpeedometerDispNames.get(type)!;
+		let label = wantedLabel;
+		for (let i = 2; labels.has(label.toLowerCase()); i++) label = `${wantedLabel} ${i}`;
+		labels.add(label.toLowerCase());
+
 		const colorType = entry.color_type as SpeedometerColorType;
 		result.push({
-			custom_label: typeof entry.custom_label === 'string' ? entry.custom_label : '',
+			custom_label: label,
 			type,
 			enabled_axes: normalizeAxes(entry.enabled_axes),
 			color_type:

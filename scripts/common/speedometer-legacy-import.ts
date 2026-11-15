@@ -1,7 +1,9 @@
 import type { HudLayout } from 'hud/customizer';
 import { GamemodeInfo } from 'common/gamemode';
 import { normalizeColorProfiles, normalizeSpeedometers, SpeedometerColorType } from 'common/speedometer';
-import { compareDeepIgnoreNull, isObject, mergeDeep } from 'util/functions';
+import { isObject } from 'util/functions';
+import { resolveLayers } from 'common/hud-keyed-lists';
+import { equalData, LayerObject } from 'common/hud-layers';
 
 const IMPORTED_FLAG = 'hud-customizer.speedometerLegacyImported';
 const IMPORTED_PRESET = 'imported';
@@ -34,7 +36,7 @@ export function importLegacySpeedometers(customizer: HudCustomizer): boolean {
 	const defaultProfiles = normalizeColorProfiles(
 		(general.Speedometer?.dynamicStyles as Record<string, unknown> | undefined)?.rangeColorProfiles
 	);
-	const profilesDiffer = legacyProfiles !== null && !compareDeepIgnoreNull(legacyProfiles, defaultProfiles);
+	const profilesDiffer = legacyProfiles !== null && !equalData(legacyProfiles, defaultProfiles);
 
 	const savedPresets = new Set(customizer.listLayouts());
 	let wroteAny = false;
@@ -46,12 +48,16 @@ export function importLegacySpeedometers(customizer: HudCustomizer): boolean {
 
 		const legacy = normalizeSpeedometers(rawLegacy);
 
-		const modeDefault = mergeDeep(general, customizer.loadLayout(`${info.id}_default`) ?? {}) as HudLayout;
+		// Gamemode defaults may store list deltas on the shipped base's lists
+		const modeDefault = resolveLayers([
+			general as unknown as LayerObject,
+			(customizer.loadLayout(`${info.id}_default`) ?? {}) as unknown as LayerObject
+		]) as unknown as HudLayout;
 		const defaultSpeedometers = normalizeSpeedometers(
 			(modeDefault.Speedometer?.dynamicStyles as Record<string, unknown> | undefined)?.speedometers
 		);
 
-		const speedometersDiffer = !compareDeepIgnoreNull(legacy, defaultSpeedometers);
+		const speedometersDiffer = !equalData(legacy, defaultSpeedometers);
 		const usesRangeProfiles = legacy.some(({ color_type }) => color_type === SpeedometerColorType.RANGE);
 		if (!speedometersDiffer && !(profilesDiffer && usesRangeProfiles)) continue;
 
@@ -67,6 +73,7 @@ export function importLegacySpeedometers(customizer: HudCustomizer): boolean {
 		const layout = (customizer.loadLayout(fullPresetName) ?? {}) as Record<string, any>;
 		const speedometerLayout = isObject(layout.Speedometer) ? { ...layout.Speedometer } : {};
 		const dynamicStyles = isObject(speedometerLayout.dynamicStyles) ? { ...speedometerLayout.dynamicStyles } : {};
+		delete dynamicStyles.speedometersDelta;
 		dynamicStyles.speedometers = legacy;
 		if (legacyProfiles) dynamicStyles.rangeColorProfiles = legacyProfiles;
 		speedometerLayout.dynamicStyles = dynamicStyles;
