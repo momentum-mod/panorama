@@ -14,6 +14,7 @@ import { traverseChildren } from 'util/functions';
 import { GamemodeInfo, GamemodeInfoList, GamemodeInfoProperties } from 'common/gamemode';
 import { Gamemode } from 'common/web/enums/gamemode.enum';
 import { PanelHandler } from 'util/module-helpers';
+import { compareDeepAsymmetric } from 'util/functions';
 import { importLegacySpeedometers } from 'common/speedometer-legacy-import';
 import { CopyToOtherPresetsData } from 'modals/popups/hud-customizer-copy-to-other-presets';
 import {
@@ -23,6 +24,7 @@ import {
 	cloneData,
 	DEFAULT_PRESET,
 	equalData,
+	EXPORT_FILE_PREFIX,
 	gamemodeForPreset,
 	LayerObject,
 	parseBaseFile,
@@ -967,6 +969,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 	/**
 	 * Under the preset buttons: which base the profile has and how many gamemodes use it, then Use preset as base
+	 * and Export / Import
 	 */
 	createBaseControls(parent: GenericPanel): void {
 		const isDefaultPreset = this.currentPreset === DEFAULT_PRESET;
@@ -992,6 +995,8 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			this.confirmUsePresetAsBase()
 		);
 		usePreset.enabled = !isDefaultPreset;
+		setupButton('PresetExport', '#Customizer_Preset_Export_Tooltip', () => this.exportPreset());
+		setupButton('PresetImport', '#Customizer_Preset_Import_Tooltip', () => this.showImportMenu());
 	}
 
 	/** Every cfg/hud layout file name: presets, bases and exports. */
@@ -1837,6 +1842,152 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		return Object.fromEntries(
 			Object.entries(this.components).map(([id, component]) => [id, this.getLayoutForDelta(component)])
 		) as HudLayout;
+	}
+
+	/**
+	 * Writes the current preset as a standalone file, cfg/hud/export_<mode>_<preset>.kv3: whole components that differ
+	 * from the shipped default, with the base's values in them, so it works without the base.
+	 */
+	exportPreset(): void {
+		this.save(false);
+
+		// Whole components, not field deltas, so an export is a complete description of the components it has
+		const components = this.getLayoutDelta(this.getCurrentLayout(), HudCustomizerHandler.defaultLayout);
+
+		// Self-contained: only the color profiles the speedometers use; importing adds them to the existing ones
+		const speedometerStyles = components.Speedometer?.dynamicStyles;
+		if (speedometerStyles && Array.isArray(speedometerStyles.rangeColorProfiles)) {
+			const used = new Set(
+				(Array.isArray(speedometerStyles.speedometers) ? speedometerStyles.speedometers : []).map(
+					(speedometer: { range_color_profile?: string }) => speedometer.range_color_profile
+				)
+			);
+			components.Speedometer = {
+				...components.Speedometer,
+				dynamicStyles: {
+					...speedometerStyles,
+					rangeColorProfiles: speedometerStyles.rangeColorProfiles.filter(
+						(profile: { profile_name?: string }) => used.has(profile.profile_name)
+					)
+				}
+			};
+		}
+
+		const fileName = `${EXPORT_FILE_PREFIX}${this.getFullPresetName()}`;
+		const data = { meta: { mode: this.gamemodeInfo.id }, ...components };
+
+		const write = () => {
+			if (this.panels.customizer.saveLayout(fileName, data as unknown as HudLayout)) {
+				this.presetList.add(fileName);
+				displayInfoToast(
+					$.Localize('#Customizer_Preset_Export'),
+					$.Localize('#Customizer_Preset_Exported').replace('{file}', fileName)
+				);
+			}
+		};
+
+		if (!this.panels.customizer.listLayouts().includes(fileName)) {
+			write();
+			return;
+		}
+
+		UiToolkitAPI.ShowGenericPopupYesNo(
+			$.Localize('#Customizer_Preset_Export'),
+			$.Localize('#Customizer_Preset_Export_Overwrite').replace('{file}', fileName),
+			'',
+			write,
+			() => UiToolkitAPI.CloseAllVisiblePopups()
+		);
+	}
+
+	/** File name prefix of the current gamemode's exports, `export_<mode>_`. */
+	getExportPrefix(): string {
+		return `${EXPORT_FILE_PREFIX}${this.gamemodeInfo.id}_`;
+	}
+
+	/** Lists the exported presets of the current gamemode to import. */
+	showImportMenu(): void {
+		const prefix = this.getExportPrefix();
+		const ids = this.getGamemodeIDs();
+		// An export is named like the preset it was made from, behind the prefix
+		const gamemodeOf = (name: string) =>
+			name.startsWith(EXPORT_FILE_PREFIX)
+				? gamemodeForPreset(name.slice(EXPORT_FILE_PREFIX.length), ids)
+				: undefined;
+		const files = this.panels.customizer
+			.listLayouts()
+			.filter((name) => gamemodeOf(name) === this.gamemodeInfo.id)
+			.sort((a, b) => a.localeCompare(b));
+
+		if (files.length === 0) {
+			displayToast(
+				$.Localize('#Customizer_Preset_Import'),
+				$.Localize('#Customizer_Preset_Import_None').replace('{gamemode}', this.gamemodeInfo.id)
+			);
+			return;
+		}
+
+		UiToolkitAPI.ShowSimpleContextMenu(
+			'PresetImport',
+			'',
+			files.map((file) => ({ label: file.slice(prefix.length), jsCallback: () => this.promptImport(file) }))
+		);
+	}
+
+	promptImport(file: string): void {
+		this.showNamePopup(
+			$.Localize('#Customizer_Preset_Import_Header'),
+			$.Localize('#Customizer_Preset_Import_InputLabel'),
+			$.Localize('#Customizer_Preset_Import'),
+			this.getJoinBaseNote(),
+			(name: string) => this.importPreset(file, name),
+			file.slice(this.getExportPrefix().length)
+		);
+	}
+
+	/**
+	 * Copies an exported file (whole components) into a new preset of the current gamemode and selects it. With
+	 * base_<name> the preset follows that base, and the color profiles the export brings are added to the base's.
+	 * Without one, they are added to the shipped ones and the preset keeps them.
+	 */
+	importPreset(file: string, name: string): void {
+		if (!this.checkNewPresetName(name)) return;
+
+		const raw = this.panels.customizer.loadLayout(file);
+		if (!raw) return;
+
+		// Exports are stored like presets; drop the meta block
+		const { components } = splitPresetFile(raw);
+		const layout = components as unknown as HudLayout;
+
+		this.save(false);
+		const base = this.loadBase(name);
+		if (base) {
+			this.addProfilesToNamedBase(name, base.layout, base.renames, layout);
+			for (const [id, entry] of Object.entries(components)) {
+				const withoutProfiles = withoutBaseStyles(id, entry);
+				if (withoutProfiles) components[id] = withoutProfiles;
+				else delete components[id];
+			}
+		} else {
+			const styles = layout.Speedometer?.dynamicStyles;
+			if (styles?.rangeColorProfiles) {
+				const shipped = this.shippedBaseLayout.Speedometer?.dynamicStyles?.rangeColorProfiles;
+				const merged = mergeColorProfiles(shipped, styles.rangeColorProfiles, styles.speedometers);
+				styles.rangeColorProfiles = merged.profiles;
+				if (styles.speedometers !== undefined) styles.speedometers = merged.speedometers;
+			}
+		}
+
+		if (!this.writePresetFile(name, { components })) return;
+
+		this.changePreset(name);
+		this.updatePresetSettings();
+
+		displayInfoToast(
+			$.Localize('#Customizer_Preset_Import'),
+			$.Localize('#Customizer_Preset_Imported').replace('{file}', file).replace('{preset}', name)
+		);
 	}
 
 	enableEditing(): void {
@@ -3011,6 +3162,17 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			this.shippedBaseLayout as unknown as LayerObject,
 			gamemodeLayout as unknown as LayerObject
 		]) as unknown as HudLayout;
+	}
+
+	/** Whole components of `layoutA` that differ from `layoutB` (what exports store) */
+	getLayoutDelta(layoutA: HudLayout, layoutB: HudLayout) {
+		const delta: HudLayout = {};
+		for (const [id, componentLayout] of Object.entries(layoutA)) {
+			if (!compareDeepAsymmetric(componentLayout, layoutB[id])) {
+				delta[id] = componentLayout;
+			}
+		}
+		return delta;
 	}
 
 	/** Loads the layers of the preset persistent storage has selected for this gamemode. Needs shippedBaseLayout. */

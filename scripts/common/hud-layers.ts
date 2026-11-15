@@ -112,6 +112,9 @@ export function fieldDelta(parent: unknown, edited: unknown): unknown {
 /** File name prefix of base profiles, `cfg/hud/base_<name>.kv3` */
 export const BASE_FILE_PREFIX = 'base_';
 
+/** File name prefix of exported presets, `cfg/hud/export_<mode>_<preset>.kv3` */
+export const EXPORT_FILE_PREFIX = 'export_';
+
 /** Name of the read-only preset every gamemode has, and of the shipped base (`base_default.kv3`) */
 export const DEFAULT_PRESET = 'default';
 
@@ -187,6 +190,7 @@ export function serializeBaseFile(layout: LayerObject, renames: Record<string, s
 
 /** Whether a cfg/hud file name belongs to a base profile or an export rather than a preset. */
 export function isReservedLayoutName(fileName: string): boolean {
+	if (fileName.startsWith(EXPORT_FILE_PREFIX)) return true;
 	return fileName.startsWith(BASE_FILE_PREFIX);
 }
 

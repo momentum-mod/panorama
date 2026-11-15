@@ -265,6 +265,11 @@ $base-profile-accent: $mid-blue;
 		@include name;
 	}
 
+	// Pushes the buttons after it to the end of a row
+	&__spacer {
+		width: fill-parent-flow(1);
+	}
+
 	// "Profile tek · base_tek · ..." under the preset buttons
 	&__profile-info {
 		@include name;

@@ -39,6 +39,13 @@
 					<Button id="PresetUseAsBase" class="button hud-customizer-settings__button px-2 py-1">
 						<Label text="#Customizer_Base_UsePreset" />
 					</Button>
+					<Panel class="hud-customizer-settings__spacer" />
+					<Button id="PresetExport" class="button hud-customizer-settings__button px-2 py-1 mr-2">
+						<Label text="#Customizer_Preset_Export" />
+					</Button>
+					<Button id="PresetImport" class="button hud-customizer-settings__button px-2 py-1">
+						<Label text="#Customizer_Preset_Import" />
+					</Button>
 				</Panel>
 			</Panel>
 		</snippet>
