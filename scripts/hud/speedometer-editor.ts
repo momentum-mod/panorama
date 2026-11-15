@@ -260,6 +260,14 @@ export function renderColorProfileEditor(row: Panel, api: CustomizerRenderApi, c
 
 	const getList = () => normalizeColorProfiles(api.getValue());
 
+	// A preset that follows a base edits the base's profiles, which every preset of that name shares
+	const baseName = api.getBaseName?.();
+	if (baseName) {
+		addRow(row, 'dynamic-none', {
+			name: $.Localize('#Customizer_ColorProfile_BaseLine').replace('{base}', baseName)
+		});
+	}
+
 	const selectorRow = addRow(row, 'dynamic-dropdown', { name: $.Localize('#Settings_Speedometer_ColorRange_Title') });
 	const selector = selectorRow.FindChildTraverse<DropDown>('DropDown')!;
 
@@ -412,13 +420,14 @@ export function renderColorProfileEditor(row: Panel, api: CustomizerRenderApi, c
 		const profile = getList()[selected];
 		if (!profile) return;
 
-		// The speedometers of the list being edited follow the new name. Other presets that use the profile don't,
-		// they show it as no profile
+		// The speedometers of the list being edited follow the new name. With a base, so does every preset that follows
+		// it (the base records the rename). Other presets show the profile as no profile
 		openNamePopup(profile.profile_name, $.Localize('#Common_Edit'), (name: string) => {
 			const list = getList();
 			if (!list[selected]) return;
 			const oldName = list[selected].profile_name;
 			list[selected].profile_name = name;
+			api.recordRename?.(oldName, name);
 			commit(list);
 			ctx.renameProfileReferences?.(oldName, name);
 		});

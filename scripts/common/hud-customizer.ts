@@ -61,6 +61,15 @@ export interface CustomizerRenderApi<T = any> {
 
 	/** Stores the value, runs callbackFunc/onChanged, and refreshes the selection overlay. */
 	setValue(value: T): void;
+
+	/**
+	 * Base styles only (the color profiles): the base file whose profiles are being edited (base_<name>), or
+	 * undefined when the preset has no base and keeps its own.
+	 */
+	getBaseName?(): string | undefined;
+
+	/** Base styles only: records that an item was renamed, so presets that follow the base repoint their references. */
+	recordRename?(from: string, to: string): void;
 }
 
 interface DynamicStyleChild {

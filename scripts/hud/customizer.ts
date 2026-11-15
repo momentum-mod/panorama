@@ -26,6 +26,7 @@ import {
 	gamemodeForPreset,
 	LayerObject,
 	parseBaseFile,
+	parseBaseRenames,
 	planProfileRename,
 	PRESET_NAME_PATTERN,
 	PresetFile,
@@ -38,11 +39,18 @@ import { componentLayerDelta, resolveLayers } from 'common/hud-keyed-lists';
 import {
 	applyComponentToBase,
 	explicitComponents,
+	isBaseStyle,
+	onlyBaseStyles,
+	pruneRenames,
+	SPEEDOMETER_PROFILES,
+	withBaseStyles,
+	withoutBaseStyles,
 	LayerParts,
 	pickParts,
 	resetComponentLayout,
 	resolvePreset
 } from 'common/hud-presets';
+import { addProfilesToBase, mergeColorProfiles } from 'common/speedometer';
 
 /** Structure of layout stored out to JSON */
 interface ComponentLayout {
@@ -534,6 +542,10 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 	 * it exists. Always null for the default preset, which follows the shipped base_default.
 	 */
 	baseLayout: LayerObject | null = null;
+	/** Color profile renames recorded in the base, see hud-layers' parseBaseRenames */
+	baseRenames: Record<string, string> = {};
+	/** Color profiles renamed in the editor since the last save, written into the base on save */
+	pendingRenames: Record<string, string> = {};
 	/** The current preset file as stored (L3). Null for the default preset */
 	presetFile: PresetFile | null = null;
 
@@ -1092,6 +1104,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 	 * Save as new: a new preset of this gamemode that looks like the current one. Without base_<new>, the current base
 	 * (if any) is copied to it and the new preset gets the current one's own settings. With base_<new>, the new preset
 	 * follows it and stores whatever differs from it.
+	 * The color profiles it uses are added to that base.
 	 */
 	saveAsNewPreset(name: string): void {
 		if (!this.checkNewPresetName(name)) return;
@@ -1102,16 +1115,20 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 		const loaded = this.loadBase(name);
 		let base: LayerObject | null = loaded?.layout ?? null;
+		let renames: Record<string, string> = loaded?.renames ?? {};
 		if (!base && this.baseLayout) {
 			base = cloneData(this.baseLayout);
-			const data = serializeBaseFile(base);
+			renames = { ...this.baseRenames };
+			const data = serializeBaseFile(base, renames);
 			if (!this.panels.customizer.saveLayout(targetBase, data as unknown as HudLayout)) return;
 			this.presetList.add(targetBase);
+		} else if (base) {
+			base = this.addProfilesToNamedBase(name, base, renames, current);
 		}
 
 		const defaults = HudCustomizerHandler.defaultLayout as unknown as LayerObject;
-		const parent = resolvePreset(defaults, base, {}).parent;
-		const components = explicitComponents(parent, current as unknown as LayerObject);
+		const parent = resolvePreset(defaults, base, {}, renames).parent;
+		const components = explicitComponents(parent, current as unknown as LayerObject, base !== null);
 		if (!this.writePresetFile(name, { components })) return;
 
 		this.changePreset(name);
@@ -1124,6 +1141,36 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			$.Localize('#Customizer_Preset_Saved_Header'),
 			$.Localize('#Customizer_Preset_Saved').replace('{preset}', this.currentPreset)
 		);
+	}
+
+	/**
+	 * Adds the color profiles `layout` uses to the profiles of base_<name> (see addProfilesToBase), writes the base
+	 * when that changed it, and points `layout`'s speedometers at renamed clashes. Returns the base.
+	 */
+	addProfilesToNamedBase(
+		name: string,
+		base: LayerObject,
+		renames: Record<string, string>,
+		layout: HudLayout
+	): LayerObject {
+		const styles = layout.Speedometer?.dynamicStyles;
+		if (!styles?.rangeColorProfiles) return base;
+
+		const result = addProfilesToBase(
+			base,
+			this.shippedBaseLayout.Speedometer?.dynamicStyles?.rangeColorProfiles,
+			styles.rangeColorProfiles,
+			styles.speedometers
+		);
+		if (styles.speedometers !== undefined) styles.speedometers = result.speedometers;
+		styles.rangeColorProfiles = result.profiles;
+		if (result.changed) {
+			const data = serializeBaseFile(result.base, renames) as unknown as HudLayout;
+			if (!this.panels.customizer.saveLayout(BASE_FILE_PREFIX + name, data)) {
+				$.Warning(`Failed to save /cfg/hud/${BASE_FILE_PREFIX + name}.kv3`);
+			}
+		}
+		return result.base;
 	}
 
 	/**
@@ -1296,6 +1343,8 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 	 * block alone. Only components that exist in the target's gamemode are copied. The target gets the values shown
 	 * here as its own settings wherever they differ from its parent (its gamemode's shipped default and its base), so
 	 * it looks like this preset.
+	 * A target that follows a base uses the base's color profiles, so the ones the copied speedometers use are added
+	 * to that base.
 	 */
 	copyComponentsToPreset(gamemodeID: string, presetName: string, ids: string[]): void {
 		const raw = this.panels.customizer.loadLayout(this.getFullPresetName(presetName, gamemodeID));
@@ -1306,12 +1355,15 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		const shipped = this.getShippedLayout(gamemodeID) as unknown as LayerObject;
 		const targetBase = this.loadBase(presetName);
 		const copied = cloneData(this.getCurrentLayoutForDelta());
-		const base = targetBase?.layout ?? null;
+		let base = targetBase?.layout ?? null;
+		if (base && available.includes(SPEEDOMETER_PROFILES.component)) {
+			base = this.addProfilesToNamedBase(presetName, base, targetBase.renames, copied);
+		}
 
 		const shown: LayerObject = {};
 		for (const id of available) shown[id] = copied[id];
-		const parent = resolvePreset(shipped, base, {}).parent;
-		const explicit = explicitComponents(parent, shown);
+		const parent = resolvePreset(shipped, base, {}, targetBase?.renames ?? {}).parent;
+		const explicit = explicitComponents(parent, shown, base !== null);
 		for (const id of available) {
 			if (explicit[id]) components[id] = explicit[id];
 			else delete components[id];
@@ -1373,17 +1425,28 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 	 * Serializes all components and saves the current preset: per component, only the fields that differ from its
 	 * parent (its base, or the shipped default without one). Entries of components that aren't registered in this
 	 * gamemode are kept as they are.
+	 * In a preset that follows a base, color profile edits are written to the base.
 	 */
 	save(showToast = true): void {
 		if (this.currentPreset === DEFAULT_PRESET || !this.presetFile) return;
 
 		const current = this.getCurrentLayoutForDelta();
+		const savedBase = this.saveBaseStyles(current);
+		if (savedBase === 'failed') {
+			// The preset alone can't keep the profile edits (it follows the base's), so save nothing
+			displayToast(
+				$.Localize('#Customizer_Base_SaveFailed_Header'),
+				$.Localize('#Customizer_Base_SaveFailed').replace('{base}', this.getBaseFileName())
+			);
+			return;
+		}
 
 		const previous = this.presetFile;
 		const components: LayerObject = { ...previous.components };
 		const explicit = explicitComponents(
 			HudCustomizerHandler.parentLayout as unknown as LayerObject,
-			current as unknown as LayerObject
+			current as unknown as LayerObject,
+			this.baseLayout !== null
 		);
 		for (const id of Object.keys(current)) {
 			if (explicit[id]) components[id] = explicit[id];
@@ -1392,7 +1455,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 		const isNew = !this.presetList.has(this.getFullPresetName());
 		const changed = isNew || !equalData(components, previous.components);
-		if (!changed) return;
+		if (!changed && savedBase === 'unchanged') return;
 
 		if (changed && !this.writePresetFile(this.currentPreset, { ...previous, components })) return;
 
@@ -1412,13 +1475,54 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		this.explicitEntries.clear();
 	}
 
+	/**
+	 * In a preset that follows a base, writes edited base styles (color profiles) and profile renames into the base,
+	 * and updates parentLayout so the preset stores no difference for them.
+	 */
+	saveBaseStyles(current: HudLayout): 'unchanged' | 'saved' | 'failed' {
+		if (!this.baseLayout) return 'unchanged';
+
+		const { component: id, style } = SPEEDOMETER_PROFILES;
+		const base: LayerObject = { ...this.baseLayout };
+		const edited = current[id]?.dynamicStyles?.[style];
+		let changed = false;
+		if (edited !== undefined && !equalData(edited, HudCustomizerHandler.parentLayout[id]?.dynamicStyles?.[style])) {
+			const entry = { ...((base[id] as LayerObject | undefined) ?? {}) };
+			entry.dynamicStyles = {
+				...((entry.dynamicStyles as LayerObject | undefined) ?? {}),
+				[style]: cloneData(edited)
+			};
+			base[id] = entry;
+			changed = true;
+		}
+
+		// Renames that can't repoint anything anymore are dropped
+		const renames = pruneRenames({ ...this.baseRenames, ...this.pendingRenames }, current[id]);
+		this.pendingRenames = {};
+		changed ||= !equalData(renames, this.baseRenames);
+
+		if (!changed) return 'unchanged';
+		if (!this.writeBaseFile(base, renames)) return 'failed';
+
+		this.setParentLayout(
+			resolvePreset(
+				HudCustomizerHandler.defaultLayout as unknown as LayerObject,
+				this.baseLayout,
+				{},
+				this.baseRenames
+			).parent
+		);
+		return 'saved';
+	}
+
 	/** Writes base_<current preset> and keeps baseLayout up to date. */
-	writeBaseFile(layout: LayerObject): boolean {
-		const data = serializeBaseFile(layout);
+	writeBaseFile(layout: LayerObject, renames: Record<string, string> = this.baseRenames): boolean {
+		const data = serializeBaseFile(layout, renames);
 		const fileName = this.getBaseFileName();
 		const isSaved = this.panels.customizer.saveLayout(fileName, data as unknown as HudLayout);
 		if (isSaved) {
 			this.baseLayout = layout;
+			this.baseRenames = renames;
 			this.presetList.add(fileName);
 		} else {
 			$.Warning(`Failed to save /cfg/hud/${fileName}.kv3`);
@@ -1428,6 +1532,8 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 	setBase(base: LoadedBase | null): void {
 		this.baseLayout = base?.layout ?? null;
+		this.baseRenames = base?.renames ?? {};
+		this.pendingRenames = {};
 	}
 
 	/** Number of presets, in every gamemode, of the current profile name (they all follow its base). */
@@ -1496,6 +1602,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 	 * Moves the preset's own settings of `ids` (the ticked parts) into base_<name>, creating it if needed, merged over
 	 * what the base has (see applyComponentToBase). The base is written first, then the preset, which looks exactly
 	 * the same afterwards.
+	 * A new base starts with the shipped color profiles plus the preset's own.
 	 */
 	applyToBase(ids: string[], parts: LayerParts): void {
 		if (this.currentPreset === DEFAULT_PRESET || (!parts.position && !parts.styles)) return;
@@ -1504,6 +1611,16 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		const current = this.getCurrentLayoutForDelta();
 		const defaults = HudCustomizerHandler.defaultLayout;
 		const base: LayerObject = { ...(this.baseLayout ?? {}) };
+
+		if (this.baseLayout === null) {
+			// The preset's own color profiles join the shipped ones; its speedometers follow any renamed clash
+			const styles = current.Speedometer?.dynamicStyles;
+			const shipped = this.shippedBaseLayout.Speedometer?.dynamicStyles?.rangeColorProfiles;
+			const merged = mergeColorProfiles(shipped, styles?.rangeColorProfiles, styles?.speedometers);
+			if (styles?.speedometers !== undefined) styles.speedometers = merged.speedometers;
+			if (styles) styles.rangeColorProfiles = merged.profiles;
+			base.Speedometer = { dynamicStyles: { rangeColorProfiles: merged.profiles } };
+		}
 
 		const parent = HudCustomizerHandler.parentLayout;
 		for (const id of ids) {
@@ -1515,9 +1632,9 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 		if (!this.writeBaseFile(base)) return;
 
-		const newParent = resolvePreset(defaults as unknown as LayerObject, base, {}).parent;
+		const newParent = resolvePreset(defaults as unknown as LayerObject, base, {}, this.baseRenames).parent;
 		this.setParentLayout(newParent);
-		const explicit = explicitComponents(newParent, current as unknown as LayerObject);
+		const explicit = explicitComponents(newParent, current as unknown as LayerObject, true);
 		const components: LayerObject = { ...this.presetFile!.components };
 		for (const id of Object.keys(current)) {
 			if (explicit[id]) components[id] = explicit[id];
@@ -1540,13 +1657,14 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		);
 	}
 
-	/** Whether base_<name> has settings for the component. */
+	/** Whether base_<name> has settings for the component, besides its color profiles. */
 	baseHasComponent(componentID: string): boolean {
-		return this.baseLayout?.[componentID] !== undefined;
+		return withoutBaseStyles(componentID, this.baseLayout?.[componentID]) !== undefined;
 	}
 
 	/**
 	 * Reset base to default for one component: removes it from base_<name>
+	 * (keeping color profiles)
 	 * , so every preset of that name without its own settings shows its gamemode's shipped component again.
 	 */
 	confirmResetBaseElement(component: Component): void {
@@ -1567,7 +1685,9 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 		this.save(false);
 		const base: LayerObject = { ...this.baseLayout };
-		delete base[component.id];
+		const entry = onlyBaseStyles(component.id, base[component.id]);
+		if (entry) base[component.id] = entry;
+		else delete base[component.id];
 		if (!this.writeBaseFile(base)) return;
 
 		this.updateLayers();
@@ -1596,7 +1716,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		if (!this.explicitEntries.has(component.id)) {
 			const layout = this.getLayoutForDelta(component);
 			const parent = HudCustomizerHandler.parentLayout[component.id];
-			const edited = layout;
+			const edited = this.baseLayout ? withBaseStyles(component.id, layout, parent) : layout;
 			this.explicitEntries.set(component.id, componentLayerDelta(component.id, parent, edited));
 		}
 		return this.explicitEntries.get(component.id);
@@ -1657,7 +1777,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		if (name === DEFAULT_PRESET) return null;
 		const raw = this.panels.customizer.loadLayout(BASE_FILE_PREFIX + name);
 		if (!raw) return null;
-		return { layout: parseBaseFile(raw) };
+		return { layout: parseBaseFile(raw), renames: parseBaseRenames(raw) };
 	}
 
 	/**
@@ -1676,7 +1796,8 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		const { parent, resolved } = resolvePreset(
 			defaults as unknown as LayerObject,
 			this.baseLayout,
-			this.presetFile.components
+			this.presetFile.components,
+			this.baseRenames
 		);
 		this.setParentLayout(parent);
 		HudCustomizerHandler.presetLayout = resolved as unknown as HudLayout;
@@ -2307,6 +2428,12 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 					const body = $.CreatePanel('Panel', panel, '', { class: 'hud-customizer-settings__custom' });
 
 					const api: CustomizerRenderApi = {
+						...(isBaseStyle(component.id, styleID) && {
+							getBaseName: () => (this.baseLayout ? this.getBaseFileName() : undefined),
+							recordRename: (from: string, to: string) => {
+								if (this.baseLayout && from !== to) this.pendingRenames[from] = to;
+							}
+						}),
 						getValue: () => {
 							// Deep clone so editors can't touch the stored value
 							return cloneData(resolveValue(component.dynamicStyles[styleID]?.value) ?? null);
@@ -2327,7 +2454,8 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 				}
 			}
 
-			if (dynamicStyle.properties.type !== CustomizerPropertyType.NONE) {
+			// Color profiles are only ever removed by deleting them in the profile editor
+			if (dynamicStyle.properties.type !== CustomizerPropertyType.NONE && !isBaseStyle(component.id, styleID)) {
 				panel.SetPanelEvent('oncontextmenu', () => {
 					UiToolkitAPI.ShowSimpleContextMenu('', '', [
 						{
@@ -2871,6 +2999,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 /** A loaded base_<name> file */
 interface LoadedBase {
 	layout: LayerObject;
+	renames: Record<string, string>;
 }
 
 /** Shows `text` as the panel's tooltip while hovered */

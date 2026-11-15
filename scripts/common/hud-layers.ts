@@ -165,8 +165,24 @@ export function parseBaseFile(raw: unknown): LayerObject {
 	return components;
 }
 
-export function serializeBaseFile(layout: LayerObject): LayerObject {
-	return { layout: cloneData(layout) };
+/**
+ * Color profile renames recorded in a base file (`renamedProfiles = { "<old name>" = "<new name>" }`). Presets that
+ * follow the base point their speedometers' references at the new names, see hud-presets' repointProfileRefs.
+ */
+export function parseBaseRenames(raw: unknown): Record<string, string> {
+	const renames = isPlainObject(raw) && isPlainObject(raw.renamedProfiles) ? raw.renamedProfiles : {};
+	const out: Record<string, string> = {};
+	for (const [from, to] of Object.entries(renames)) {
+		if (typeof to === 'string' && to !== '' && to !== from) out[from] = to;
+	}
+	return out;
+}
+
+export function serializeBaseFile(layout: LayerObject, renames: Record<string, string> = {}): LayerObject {
+	return {
+		layout: cloneData(layout),
+		...(Object.keys(renames).length > 0 && { renamedProfiles: { ...renames } })
+	};
 }
 
 /** Whether a cfg/hud file name belongs to a base profile or an export rather than a preset. */

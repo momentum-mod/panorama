@@ -1,4 +1,5 @@
 import type { RgbaTuple } from 'util/colors';
+import { equalData, isPlainObject, LayerObject } from 'common/hud-layers';
 
 // We need to iterate over this prick so not using const enum.
 export enum SpeedometerType {
@@ -137,4 +138,81 @@ export function normalizeColorProfiles(raw: unknown): RangeColorProfile[] {
 	}
 
 	return result;
+}
+
+/** The text a stored color profile name stands for: shipped profiles store a localization token. */
+export function profileDisplayName(name: string): string {
+	return name.startsWith('#') ? $.Localize(name) : name;
+}
+
+/**
+ * Adds color profiles to `profiles` (a base's, or the shipped ones), for when a preset joins a base or is imported. A
+ * profile with the same name and ranges as an existing one is reused. A name already taken by different ranges is
+ * stored as "<name> (imported)" (then "(imported 2)" and so on), and the speedometers that used it are pointed at the
+ * new name. Names are compared exactly, as the speedometers look them up.
+ *
+ * @param displayName Turns a stored name (may be a localization token) into the text the new name is built from.
+ */
+export function mergeColorProfiles(
+	profilesRaw: unknown,
+	incomingRaw: unknown,
+	speedometersRaw: unknown,
+	displayName: (name: string) => string = profileDisplayName
+): { profiles: RangeColorProfile[]; speedometers: SpeedometerSettings[] } {
+	const profiles = normalizeColorProfiles(profilesRaw);
+	const speedometers = normalizeSpeedometers(speedometersRaw);
+
+	for (const incoming of normalizeColorProfiles(incomingRaw)) {
+		const existing = profiles.find((profile) => profile.profile_name === incoming.profile_name);
+		if (!existing) {
+			profiles.push(incoming);
+			continue;
+		}
+		if (equalData(existing.profile_ranges, incoming.profile_ranges)) continue;
+
+		// Same ranges already imported under a new name before: reuse that one
+		const base = `${displayName(incoming.profile_name)} (imported`;
+		const candidates = profiles.filter((profile) => profile.profile_name.startsWith(base));
+		let newName = candidates.find((profile) =>
+			equalData(profile.profile_ranges, incoming.profile_ranges)
+		)?.profile_name;
+
+		if (!newName) {
+			const taken = new Set(profiles.map((profile) => profile.profile_name));
+			newName = `${base})`;
+			for (let i = 2; taken.has(newName); i++) newName = `${base} ${i})`;
+			profiles.push({ profile_name: newName, profile_ranges: incoming.profile_ranges });
+		}
+
+		for (const speedometer of speedometers) {
+			if (speedometer.range_color_profile === incoming.profile_name) speedometer.range_color_profile = newName;
+		}
+	}
+
+	return { profiles, speedometers };
+}
+
+/**
+ * Adds color profiles to the ones a base (its parsed components) gives its presets: the base's own, or
+ * `shippedProfiles` when it has none yet. See mergeColorProfiles. Returns the base with the merged profiles (the same
+ * object when nothing was added), whether it changed, and the speedometers pointed at renamed clashes. The caller
+ * saves the base.
+ */
+export function addProfilesToBase(
+	base: LayerObject,
+	shippedProfiles: unknown,
+	profiles: unknown,
+	speedometers: unknown,
+	displayName: (name: string) => string = profileDisplayName
+): { base: LayerObject; profiles: RangeColorProfile[]; speedometers: SpeedometerSettings[]; changed: boolean } {
+	const entry = isPlainObject(base.Speedometer) ? base.Speedometer : {};
+	const styles = isPlainObject(entry.dynamicStyles) ? entry.dynamicStyles : {};
+	const baseProfiles = styles.rangeColorProfiles ?? shippedProfiles;
+
+	const merged = mergeColorProfiles(baseProfiles, profiles, speedometers, displayName);
+	const changed = !equalData(merged.profiles, normalizeColorProfiles(baseProfiles));
+	const updated = changed
+		? { ...base, Speedometer: { ...entry, dynamicStyles: { ...styles, rangeColorProfiles: merged.profiles } } }
+		: base;
+	return { base: updated, profiles: merged.profiles, speedometers: merged.speedometers, changed };
 }
