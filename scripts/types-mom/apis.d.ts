@@ -391,8 +391,8 @@ declare namespace MapCacheAPI {
 
 	/**
 	 * Gets the local user's cached per-track completions for a map in a gamemode + style, merging
-	 * the cached rank/total completions, static track tier, and persistent PB time. Returns empty
-	 * tracks until {@link RefreshCompletions} has populated the cache.
+	 * the cached rank/total completions, static track tier, and persistent PB time. Tracks have no
+	 * rank or total completions until {@link RefreshCompletions} has populated the cache.
 	 */
 	function GetCompletions(
 		mapID: uint32,

@@ -14,7 +14,9 @@ import { Style } from './web/enums/style.enum';
  * - `time`: the user's PB time, cached per track/style since it only changes when
  *   they submit a run (so it's not refetched on every map selection).
  */
-export interface TrackCompletionInfo extends MapCompletion {
+export interface TrackCompletionInfo extends Omit<MapCompletion, 'totalCompletions'> {
+	/** Absent until the map's completions have been fetched, as is `rank`. */
+	totalCompletions?: number;
 	/** Track tier, sourced game-side from the map cache. 0 for stages (no tier). */
 	tier: number;
 	/** The user's PB time, from the map cache. null if not completed. */
