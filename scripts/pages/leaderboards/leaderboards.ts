@@ -32,7 +32,7 @@ export class LeaderboardsHandler {
 
 	readonly panels = {
 		cp: $.GetContextPanel<Leaderboards>(),
-		timesList: $<Panel>('#TimesList2'),
+		timesList: $<Panel>('#TimesList'),
 		lobbyButton: $<Button>('#TimesListLobby'),
 		timesContainer: $<Panel>('#LeaderboardTimesContainer'),
 		groupPillsLayer: $<Panel>('#GroupPillsLayer'),
