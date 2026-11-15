@@ -55,6 +55,14 @@ function getSelectedID(dropdown: DropDown): string {
 	return dropdown.GetSelected()?.id ?? '';
 }
 
+/** The customizer's divergence dot in front of a dropdown option's text */
+function markDiverged(option: Label): void {
+	const text = option.text.replaceAll('&', '&amp;').replaceAll('<', '&lt;');
+	option.html = true;
+	// Label HTML takes no classes, so this is $mid-blue (styles/config.scss) written out
+	option.text = `<font color="#57c8ff">●</font> ${text}`;
+}
+
 export function renderSpeedometerEditor(row: Panel, api: CustomizerRenderApi, ctx: SpeedometerEditorContext): void {
 	const ITEM_PREFIX = 'SpeedometerItem';
 	const ADD_ID = 'SpeedometerAdd';
@@ -108,7 +116,12 @@ export function renderSpeedometerEditor(row: Panel, api: CustomizerRenderApi, ct
 		const current: SpeedometerSettings | undefined = list[selected];
 
 		selector.RemoveAllOptions();
-		for (const [i, speedo] of list.entries()) addOption(selector, `${ITEM_PREFIX}${i}`, getLabel(speedo));
+		for (const [i, speedo] of list.entries()) {
+			const option = addOption(selector, `${ITEM_PREFIX}${i}`, getLabel(speedo));
+			// Divergence dot: this preset stores the speedometer itself, rather than taking it from its base or the
+			// shipped default
+			if (api.isItemExplicit?.(speedo.custom_label)) markDiverged(option);
+		}
 		if (!hasItems) addOption(selector, NONE_ID, $.Localize('#Customizer_Speedometer_None'));
 		addOption(selector, ADD_ID, $.Localize('#Settings_Speedometer_Add'));
 		selector.SetSelected(hasItems ? `${ITEM_PREFIX}${selected}` : NONE_ID);

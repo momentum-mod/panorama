@@ -39,6 +39,8 @@ import { componentLayerDelta, resolveLayers } from 'common/hud-keyed-lists';
 import {
 	applyComponentToBase,
 	explicitComponents,
+	hasExplicitStyle,
+	isKeyedItemExplicit,
 	isBaseStyle,
 	onlyBaseStyles,
 	pruneRenames,
@@ -555,6 +557,8 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 	changedComponents = new Set<Component>();
 	/** Set while reloadLayout registers the components, so the component list is built once at the end */
 	reloading = false;
+	/** Divergence dots of the active component's settings, by style */
+	divergenceDots = new Map<StyleID, Panel>();
 	/** Apply to base buttons of the component list, by component */
 	applyButtons = new Map<string, GenericPanel>();
 
@@ -1724,6 +1728,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 	/**
 	 * A component changed (a style, Reset, visibility). Its explicit entry is recomputed and its Apply to base button
+	 * and divergence dots
 	 * updated a moment later, once for a burst of changes such as dragging a slider.
 	 */
 	onComponentChanged(component: Component): void {
@@ -1738,14 +1743,31 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		this.changedComponents.add(component);
 	}
 
+	/** Whether the preset stores its own value for a style, or for any style under it (see getExplicitEntry). */
+	isStyleDiverged(component: Component, explicit: LayerObject | undefined, styleID: StyleID, depth = 0): boolean {
+		// Children are listed by ID, so a style that lists itself (directly or not) would recurse forever
+		if (!explicit || depth > 8) return false;
+		if (hasExplicitStyle(component.id, explicit, styleID)) return true;
+		const children = component.dynamicStyles?.[styleID]?.properties.children;
+		return (Array.isArray(children) ? children : children ? [children] : []).some((child) =>
+			this.isStyleDiverged(component, explicit, child.styleID, depth + 1)
+		);
+	}
+
 	/**
 	 * Updates the Apply to base button
+	 * and the divergence dots
 	 * of a component.
 	 */
 	refreshDivergence(component: Component): void {
 		const explicit = this.getExplicitEntry(component);
 		const applyButton = this.applyButtons.get(component.id);
 		if (applyButton?.IsValid()) applyButton.enabled = canApply(explicit);
+
+		if (component !== this.activeComponent) return;
+		for (const [styleID, dot] of this.divergenceDots) {
+			if (dot.IsValid()) dot.visible = this.isStyleDiverged(component, explicit, styleID);
+		}
 	}
 
 	getFullPresetName(preset: string = this.currentPreset, gamemodeID: string = this.gamemodeInfo.id): string {
@@ -2123,6 +2145,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 	updateActiveComponentSettings(): void {
 		this.panels.activeComponentSettingsList.RemoveAndDeleteChildren();
+		this.divergenceDots.clear();
 		if (this.currentPreset === DEFAULT_PRESET) return;
 
 		const resolveValue = (val: any) => {
@@ -2143,6 +2166,8 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		this.panels.activeComponentSettings.visible = true;
 		this.panels.settings.SetDialogVariable('active_name', component.properties.name);
 
+		const explicit = this.getExplicitEntry(component);
+
 		const childVisibilityMap = new Map<StyleID, Array<{ panel: Panel; showWhen?: any[] }>>();
 		const refreshMap = new Map<StyleID, () => void>();
 
@@ -2159,6 +2184,8 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 		const createStylePanel = (styleID: StyleID, dynamicStyle: DynamicStyle, parent: Panel) => {
 			const panel = $.CreatePanel('Panel', parent, '');
+			// Leaves room for the divergence dot on the left
+			panel.AddClass('hud-customizer-settings__setting');
 
 			if (
 				dynamicStyle.properties.type !== CustomizerPropertyType.NONE &&
@@ -2428,6 +2455,8 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 					const body = $.CreatePanel('Panel', panel, '', { class: 'hud-customizer-settings__custom' });
 
 					const api: CustomizerRenderApi = {
+						isItemExplicit: (key: string) =>
+							isKeyedItemExplicit(component.id, this.getExplicitEntry(component), styleID, key),
 						...(isBaseStyle(component.id, styleID) && {
 							getBaseName: () => (this.baseLayout ? this.getBaseFileName() : undefined),
 							recordRename: (from: string, to: string) => {
@@ -2452,6 +2481,15 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 					build();
 					refreshMap.set(styleID, build);
 				}
+			}
+
+			if (dynamicStyle.properties.type !== CustomizerPropertyType.NONE || dynamicStyle.properties.children) {
+				// Set in this preset rather than coming from its base / the shipped default. A group shows it when
+				// anything inside it is, so it is seen while the group is collapsed
+				const dot = $.CreatePanel('Panel', panel, '', { class: 'hud-customizer-settings__diverged' });
+				setTooltip(dot, $.Localize('#Customizer_Base_DivergedMarker'));
+				dot.visible = this.isStyleDiverged(component, explicit, styleID);
+				this.divergenceDots.set(styleID, dot);
 			}
 
 			// Color profiles are only ever removed by deleting them in the profile editor

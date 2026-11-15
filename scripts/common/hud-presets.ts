@@ -17,6 +17,8 @@ import { applyToBaseEntry, cloneData, isPlainObject, LayerObject } from 'common/
 import {
 	componentLayerDelta,
 	dynamicStylesOf,
+	keyedListFor,
+	keyOf,
 	normalizeKeyedDelta,
 	resolveEntry,
 	setDeltaStyle,
@@ -298,4 +300,24 @@ export function resetComponentLayout(
 	}
 
 	return out;
+}
+
+/** Whether a component entry has an explicit value for a dynamic style (its list delta, for keyed lists). */
+export function hasExplicitStyle(componentID: string, entry: unknown, styleID: string): boolean {
+	const styles = dynamicStylesOf(entry);
+	if (!styles) return false;
+	if (styles[styleID] !== undefined) return true;
+	const spec = keyedListFor(componentID, styleID);
+	return spec !== undefined && styles[spec.deltaStyle] !== undefined;
+}
+
+/** Whether a keyed list item (by key) is added, changed or replaced by a component entry's list delta. */
+export function isKeyedItemExplicit(componentID: string, entry: unknown, styleID: string, key: string): boolean {
+	const spec = keyedListFor(componentID, styleID);
+	const styles = dynamicStylesOf(entry);
+	if (!spec || !styles) return false;
+	if (Array.isArray(styles[spec.style])) return true;
+	const lower = key.toLowerCase();
+	const delta = normalizeKeyedDelta(styles[spec.deltaStyle]);
+	return [...delta.override, ...delta.append].some((item) => keyOf(item, spec.key) === lower);
 }

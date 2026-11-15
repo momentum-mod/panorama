@@ -272,6 +272,23 @@ $base-profile-accent: $mid-blue;
 		color: $gray-900;
 	}
 
+	// One setting in the active panel's list, indented for its divergence dot
+	&__setting {
+		padding-left: 10px;
+	}
+
+	// Divergence dot: the setting is stored in this preset rather than coming from its base or the shipped default.
+	// Sits in the setting's left padding
+	&__diverged {
+		width: 5px;
+		height: 5px;
+		margin-top: 6px;
+		border-radius: 50%;
+		background-color: $base-profile-accent;
+		horizontal-align: left;
+		vertical-align: top;
+	}
+
 	// Body of CustomizerPropertyType.CUSTOM rows, the component fills it with its own rows
 	&__custom {
 		width: 100%;

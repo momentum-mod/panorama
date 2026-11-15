@@ -70,6 +70,12 @@ export interface CustomizerRenderApi<T = any> {
 
 	/** Base styles only: records that an item was renamed, so presets that follow the base repoint their references. */
 	recordRename?(from: string, to: string): void;
+
+	/**
+	 * Keyed lists only (see hud-keyed-lists.ts): whether the current preset stores the item with this key itself
+	 * (added or changed here) rather than taking it from its base or the shipped default. Drives the divergence dot.
+	 */
+	isItemExplicit?(key: string): boolean;
 }
 
 interface DynamicStyleChild {
