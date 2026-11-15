@@ -11,7 +11,7 @@ export enum StickyState {
 	BLOCKED = 3
 }
 
-// Values get overridden on load, assign defaults in /cfg/hud_default.kv3
+// Values get overridden on load, assign defaults in /cfg/hud/base_default.kv3
 const StateColors: Record<StickyState, string> = {
 	[StickyState.NOSTICKY]: 'rgba(35, 50, 57, 1)',
 	[StickyState.ARMING]: 'rgba(35, 50, 57, 1)',
@@ -36,7 +36,7 @@ class StickyCountHandler {
 
 	private panelStates: Map<GenericPanel, StickyState> = new Map();
 
-	// Needs random values for intialization, set defaults in /config/hud_default.kv3
+	// Needs random values for intialization, set defaults in /cfg/hud/base_default.kv3
 	config = {
 		width: '24px',
 		height: '24px',

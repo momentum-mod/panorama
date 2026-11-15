@@ -663,7 +663,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 	}
 
 	// CustomizerSettings dynamic styles are used as default global styles
-	// They can be referenced in hud_default.kv3 by using a string formatted like this: "$someStyleID"
+	// They can be referenced in base_default.kv3 by using a string formatted like this: "$someStyleID"
 	// When a dynamic style is modified/loaded it calls this function with the it's styleID and a new value
 	// This functions then re-applies ALL styles on a component that uses that referenced value.
 	// Hud Customizer Panel in hud.xml MUST be placed after all other panels registered with hud customizer for this to initialize hud properly
@@ -2218,11 +2218,11 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			throw new Error(`Could not find gamemode id for gamemode: ${this.gamemodeInfo.name}`);
 		}
 
-		const generalLayout = $.GetContextPanel<HudCustomizer>().loadLayout('hud_default');
+		const generalLayout = $.GetContextPanel<HudCustomizer>().loadLayout('base_default');
 		const gamemodeLayout = $.GetContextPanel<HudCustomizer>().loadLayout(`${gamemodeID}_default`);
 
 		if (!generalLayout) {
-			throw new Error('Could not load hud_default.kv3 from /cfg/hud');
+			throw new Error('Could not load base_default.kv3 from /cfg/hud');
 		}
 		if (!gamemodeLayout) {
 			throw new Error(`Could not load ${gamemodeID}_default.kv3 from /cfg/hud`);

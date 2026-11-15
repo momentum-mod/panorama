@@ -199,8 +199,8 @@ interface ZoneMenu extends AbstractPanel<'ZoneMenu'> {
  *
  * C++ side is agnostic to what you pass it, just saves and loads until builtin KV3 <-> JSO mappings.
  *
- * Note that cfg/hud_default.json is stored in the licensee-only game repo, just let someone (probably Tom)
- * know if you need to update it.
+ * Note that cfg/hud/base_default.kv3 and the <mode>_default.kv3 files are stored in the licensee-only game repo,
+ * just let someone (probably Tom) know if you need to update them.
  */
 interface HudCustomizer extends AbstractPanel<'HudCustomizer'> {
 	/**

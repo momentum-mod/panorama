@@ -3,7 +3,7 @@ import { Gamemode } from 'common/web/enums/gamemode.enum';
 import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
 import { getTextShadowFast } from 'common/hud-customizer';
 
-// This gets overridden on map load. Set defaults in cfg/hud_default.kv3
+// This gets overridden on map load. Set defaults in cfg/hud/base_default.kv3
 const Colors = {
 	AIR: 'gradient(linear, 30% 0%, 100% 0%, from(rgba(24, 150, 211, 1)), to(rgba(63, 74, 202, 1)))',
 	GROUND: 'gradient(linear, 30% 0%, 100% 0%, from(rgba(122, 238, 122, 1)), to(rgba(21, 152, 86, 1)))'

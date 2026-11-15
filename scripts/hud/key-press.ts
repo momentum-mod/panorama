@@ -32,7 +32,7 @@ type PanelInfoType = {
 };
 
 // Properties prepended with _ are not editable through customizer, everything else gets overwritten on map load.
-// Set defaults in /cfg/hud_default.kv3
+// Set defaults in /cfg/hud/base_default.kv3
 const Config = {
 	type: 'text',
 	text: {

@@ -26,7 +26,7 @@ export function importLegacySpeedometers(customizer: HudCustomizer): boolean {
 		return false;
 	}
 
-	const general = customizer.loadLayout('hud_default');
+	const general = customizer.loadLayout('base_default');
 	if (!general) return false; // Don't set the flag, try again next time
 
 	const rawLegacyProfiles = SpeedometerSettingsAPI.GetLegacyColorProfiles();
