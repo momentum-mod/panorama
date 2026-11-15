@@ -15,9 +15,10 @@ const IMPORTED_PRESET = 'imported';
  * preset the player currently has selected for that gamemode, or into a new "imported" preset if they're on the
  * default preset (which is read-only). The legacy files are left on disk untouched.
  *
+ * @param shippedBase cfg/hud/base_default.kv3, which every gamemode's default starts from
  * @returns Whether any preset file was written.
  */
-export function importLegacySpeedometers(customizer: HudCustomizer): boolean {
+export function importLegacySpeedometers(customizer: HudCustomizer, shippedBase: HudLayout): boolean {
 	if ($.persistentStorage.getItem(IMPORTED_FLAG)) return false;
 
 	// Binaries that predate the legacy reader don't have these, nothing we can import from.
@@ -28,8 +29,8 @@ export function importLegacySpeedometers(customizer: HudCustomizer): boolean {
 		return false;
 	}
 
-	const general = customizer.loadLayout('base_default');
-	if (!general) return false; // Don't set the flag, try again next time
+	const general = shippedBase;
+	if (!general || Object.keys(general).length === 0) return false; // Don't set the flag, try again next time
 
 	const rawLegacyProfiles = SpeedometerSettingsAPI.GetLegacyColorProfiles();
 	const legacyProfiles = rawLegacyProfiles ? normalizeColorProfiles(rawLegacyProfiles) : null;

@@ -182,6 +182,96 @@ export function computeKeyedDelta(parent: unknown, edited: unknown, spec: KeyedL
 	return delta;
 }
 
+/**
+ * Updates the base profile's list delta after an edit in one gamemode, item by item. Only the items and fields that
+ * changed between `shownList` (the list as the base looked in this gamemode) and `editedList` are written onto
+ * `previous`. Everything else stays as stored, even where it matches this gamemode's shipped list, because other
+ * gamemodes ship different lists. `shippedList` is this gamemode's shipped list.
+ */
+export function updateBaseKeyedDelta(
+	previous: unknown,
+	shownList: unknown,
+	editedList: unknown,
+	shippedList: unknown,
+	spec: KeyedListSpec
+): KeyedListDelta {
+	const { key, fixed } = spec;
+	const delta = normalizeKeyedDelta(previous);
+	const shown = new Map(keyedItemsOf(shownList, key).map((item) => [keyOf(item, key), item]));
+	const edited = keyedItemsOf(editedList, key);
+	const editedKeys = new Set(edited.map((item) => keyOf(item, key)));
+	const shipped = new Set(keyedItemsOf(shippedList, key).map((item) => keyOf(item, key)));
+
+	const indexIn = (entries: Item[], label: string) => entries.findIndex((entry) => keyOf(entry, key) === label);
+	const without = (entries: Item[], label: string) => entries.filter((entry) => keyOf(entry, key) !== label);
+
+	for (const [label, item] of shown) {
+		if (editedKeys.has(label)) continue;
+		// Deleted here: drop what the base stores for it, and remove it if a gamemode ships it
+		delta.override = without(delta.override, label);
+		delta.append = without(delta.append, label);
+		if (shipped.has(label)) delta.remove.push(item[key] as string);
+	}
+
+	for (const item of edited) {
+		const label = keyOf(item, key);
+		const before = shown.get(label);
+		if (before && equalData(before, item)) continue;
+
+		// New here, a changed fixed field, or a label that only differs in case: the base stores the whole item
+		if (!before || before[key] !== item[key] || fixed.some((f) => !equalData(before[f], item[f]))) {
+			delta.remove = delta.remove.filter((removed) => removed.toLowerCase() !== label);
+			delta.override = without(delta.override, label);
+			const index = indexIn(delta.append, label);
+			if (index >= 0) delta.append[index] = cloneData(item);
+			else delta.append.push(cloneData(item));
+			continue;
+		}
+
+		const changes: Item = {};
+		for (const [field, value] of Object.entries(item)) {
+			if (field !== key && !equalData(before[field], value)) changes[field] = cloneData(value);
+		}
+
+		const appendIndex = indexIn(delta.append, label);
+		const overrideIndex = indexIn(delta.override, label);
+		if (appendIndex >= 0) delta.append[appendIndex] = { ...delta.append[appendIndex], ...changes };
+		else if (overrideIndex >= 0) delta.override[overrideIndex] = { ...delta.override[overrideIndex], ...changes };
+		else delta.override.push({ [key]: item[key], ...changes });
+	}
+
+	// Keep the stored order while it still gives this gamemode the edited order
+	const labelsOf = (list: unknown) => itemsOf(list).map((item) => keyOf(item, key));
+	if (!equalData(labelsOf(applyKeyedDelta(shippedList, delta, spec)), labelsOf(edited))) {
+		delta.order = mergeOrder(delta.order, edited, delta.remove, key);
+	}
+
+	return delta;
+}
+
+/**
+ * The edited order, with the labels of `previous` that this gamemode doesn't show kept after the label that came
+ * before them, so an order set in another gamemode survives.
+ */
+function mergeOrder(previous: string[], edited: Item[], removed: string[], key: string): string[] {
+	const order = edited.map((item) => item[key] as string);
+	const position = (label: string) => order.findIndex((other) => other.toLowerCase() === label);
+	const removedKeys = new Set(removed.map((label) => label.toLowerCase()));
+
+	let anchor = -1;
+	for (const label of previous) {
+		const lower = label.toLowerCase();
+		const index = position(lower);
+		if (index >= 0) {
+			anchor = index;
+		} else if (!removedKeys.has(lower)) {
+			order.splice(anchor + 1, 0, label);
+			anchor++;
+		}
+	}
+	return order;
+}
+
 export function dynamicStylesOf(entry: unknown): LayerObject | undefined {
 	return isPlainObject(entry) && isPlainObject(entry.dynamicStyles) ? entry.dynamicStyles : undefined;
 }

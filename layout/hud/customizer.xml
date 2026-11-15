@@ -32,6 +32,17 @@
 			</Panel>
 		</snippet>
 
+        <snippet name="preset-base-buttons">
+			<Panel class="hud-customizer-settings__row-wrapper mt-2">
+				<Label id="PresetProfileInfo" class="hud-customizer-settings__profile-info" text="" />
+				<Panel class="hud-customizer-settings__row mt-2 h-fit-children">
+					<Button id="PresetUseAsBase" class="button hud-customizer-settings__button px-2 py-1">
+						<Label text="#Customizer_Base_UsePreset" />
+					</Button>
+				</Panel>
+			</Panel>
+		</snippet>
+
         <snippet name="dynamic-none">
 			<Panel class="hud-customizer-settings__row">
 					<Label class="hud-customizer-settings__setting-label" text="{s:name}" />

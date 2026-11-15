@@ -4,6 +4,8 @@
 
 $input-background: rgb(91, 91, 91);
 $input-background-hover: rgb(110, 110, 110);
+// Marks what belongs to a preset's base profile
+$base-profile-accent: $mid-blue;
 
 .hud-customizer {
 	width: 100%;
@@ -179,6 +181,15 @@ $input-background-hover: rgb(110, 110, 110);
 					opacity: 1;
 				}
 			}
+
+			// Reset base to default, next to the preset's own Reset
+			&--base Image {
+				wash-color: $base-profile-accent;
+			}
+
+			&:disabled Image {
+				opacity: 0.15;
+			}
 		}
 	}
 
@@ -252,6 +263,13 @@ $input-background-hover: rgb(110, 110, 110);
 
 	&__setting-label:not(.specificity-hack-fuck-css) {
 		@include name;
+	}
+
+	// "Profile tek · base_tek · ..." under the preset buttons
+	&__profile-info {
+		@include name;
+		margin-top: 6px;
+		color: $gray-900;
 	}
 
 	// Body of CustomizerPropertyType.CUSTOM rows, the component fills it with its own rows
