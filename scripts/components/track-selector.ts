@@ -69,12 +69,9 @@ export class TrackSelectorHandler {
 
 	// Existing track panels keyed by track, reused across renders. The track set is the same across
 	// styles, so a style switch updates these in place rather than tearing them down and rebuilding,
-	// which flickers. renderedSignature is the key list of what's currently rendered; renderedMapID is
-	// the online map it's for (0 for the offline/local table), used to hold the tracks through a
-	// same-map style switch while its completions are still being fetched.
+	// which flickers. renderedSignature is the key list of what's currently rendered.
 	private trackPanels = new Map<string, RadioButton>();
 	private renderedSignature: string | null = null;
-	private renderedMapID = 0;
 
 	// The user's picked track, kept across re-renders so a style switch doesn't snap back to main.
 	// Reset (via onMapContext) when the shown map changes, so a new map starts on main.
@@ -113,7 +110,10 @@ export class TrackSelectorHandler {
 		this.currentMapData = data;
 	}
 
-	/** `loading`: a completions fetch for this map is in flight, so an empty track list isn't final. */
+	/**
+	 * Tracks whose completions haven't been fetched yet come without a rank or total completions.
+	 * `loading`: a completions fetch for this map is in flight, so an empty track list isn't final.
+	 */
 	updateTrackData(completions: MapUserCompletions, loading = false) {
 		if (!this.leaderboards || !completions) return;
 
@@ -123,24 +123,9 @@ export class TrackSelectorHandler {
 
 		this.onMapContext(`online:${completions.mapID}`);
 
-		// `tracks` can be absent: an empty CUtlVector serializes to JSON without the key. This happens
-		// before a (gamemode, style) has been fetched -- GetCompletions has no cached entry and returns
-		// nothing (see BuildCompletions). A style switch hits this for the newly picked style, so
-		// skipping the empty render (rather than wiping the identical track set we already show for this
-		// map) avoids a flicker; the refreshed data arrives via MapCache_CompletionsUpdate and fills the
-		// existing rows in place. Only skip within the same map, so selecting a different map still
-		// clears the previous one's tracks instead of showing them stale.
+		// `tracks` can be absent: an empty CUtlVector serializes to JSON without the key.
 		const tracks = completions.tracks ?? [];
-		if (
-			tracks.length === 0 &&
-			completions.mapID !== 0 &&
-			completions.mapID === this.renderedMapID &&
-			!this.waitingForTracks
-		) {
-			return;
-		}
 
-		this.renderedMapID = completions.mapID;
 		this.setWaitingForTracks(loading && tracks.length === 0);
 		this.renderTracks(tracks);
 
@@ -179,9 +164,6 @@ export class TrackSelectorHandler {
 		this.leaderboards.handler.setGamemode(gamemode);
 		this.leaderboards.handler.setLocalOnly(true);
 
-		// The local table isn't for any online map; keep renderedMapID at 0 so updateTrackData's
-		// same-map skip can't match a real map ID and hold these tracks by mistake.
-		this.renderedMapID = 0;
 		this.setWaitingForTracks(false);
 
 		// Keyed by name (there's no map ID offline) so loading a different offline map resets the
@@ -433,7 +415,7 @@ export class TrackSelectorHandler {
 
 		const rankLabel = trackPanel.FindChildrenWithClassTraverse('track-panel__rank-label')[0] as Label;
 		if (data.total == null) {
-			// No online leaderboard for this map, so there's nothing to be ranked against.
+			// Either not fetched yet, or the map has no online leaderboard to be ranked against.
 			rankLabel.text = '';
 		} else {
 			trackPanel.SetDialogVariableInt('total', data.total);
