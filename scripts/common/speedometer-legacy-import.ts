@@ -1,7 +1,16 @@
 import type { HudLayout } from 'hud/customizer';
 import { GamemodeInfo } from 'common/gamemode';
-import { normalizeColorProfiles, normalizeSpeedometers, SpeedometerColorType } from 'common/speedometer';
+import {
+	mergeColorProfilesIntoGlobal,
+	normalizeColorProfiles,
+	normalizeSpeedometers,
+	RangeColorProfile,
+	SpeedometerColorType,
+	SpeedometerSettings
+} from 'common/speedometer';
 import { compareDeepIgnoreNull, isObject, mergeDeep } from 'util/functions';
+import { materializeLayer } from 'common/hud-keyed-lists';
+import { BASE_FILE_PREFIX, equalData, isPlainObject, parseBaseFile, serializeBaseFile } from 'common/hud-layers';
 
 const IMPORTED_FLAG = 'hud-customizer.speedometerLegacyImported';
 const IMPORTED_PRESET = 'imported';
@@ -12,6 +21,9 @@ const IMPORTED_PRESET = 'imported';
  * For every gamemode whose legacy speedometers differ from the HUD default, the speedometers are written into the
  * preset the player currently has selected for that gamemode, or into a new "imported" preset if they're on the
  * default preset (which is read-only). The legacy files are left on disk untouched.
+ *
+ * A preset that follows a base profile takes its color profiles from the base, so for those the legacy profiles are
+ * added to the base's instead (see mergeColorProfilesIntoGlobal).
  *
  * @returns Whether any preset file was written.
  */
@@ -45,7 +57,8 @@ export function importLegacySpeedometers(customizer: HudCustomizer): boolean {
 
 		const legacy = normalizeSpeedometers(rawLegacy);
 
-		const modeDefault = mergeDeep(general, customizer.loadLayout(`${info.id}_default`) ?? {}) as HudLayout;
+		const modeLayout = customizer.loadLayout(`${info.id}_default`) ?? {};
+		const modeDefault = mergeDeep(general, materializeLayer(modeLayout, general)) as HudLayout;
 		const defaultSpeedometers = normalizeSpeedometers(
 			(modeDefault.Speedometer?.dynamicStyles as Record<string, unknown> | undefined)?.speedometers
 		);
@@ -66,8 +79,13 @@ export function importLegacySpeedometers(customizer: HudCustomizer): boolean {
 		const layout = (customizer.loadLayout(fullPresetName) ?? {}) as Record<string, any>;
 		const speedometerLayout = isObject(layout.Speedometer) ? { ...layout.Speedometer } : {};
 		const dynamicStyles = isObject(speedometerLayout.dynamicStyles) ? { ...speedometerLayout.dynamicStyles } : {};
-		dynamicStyles.speedometers = legacy;
-		if (legacyProfiles) dynamicStyles.rangeColorProfiles = legacyProfiles;
+		const baseName = typeof layout.base === 'string' && layout.base !== '' ? layout.base : undefined;
+		if (legacyProfiles && baseName) {
+			dynamicStyles.speedometers = addProfilesToBase(customizer, baseName, legacyProfiles, legacy, general);
+		} else {
+			dynamicStyles.speedometers = legacy;
+			if (legacyProfiles) dynamicStyles.rangeColorProfiles = legacyProfiles;
+		}
 		speedometerLayout.dynamicStyles = dynamicStyles;
 		layout.Speedometer = speedometerLayout;
 
@@ -82,4 +100,37 @@ export function importLegacySpeedometers(customizer: HudCustomizer): boolean {
 	$.persistentStorage.setItem(IMPORTED_FLAG, true);
 
 	return wroteAny;
+}
+
+/**
+ * Adds color profiles to those of the base profile `baseName` and writes the base if that changed anything. Returns
+ * the speedometers with their profile references updated for profiles that had to be renamed.
+ */
+function addProfilesToBase(
+	customizer: HudCustomizer,
+	baseName: string,
+	profiles: RangeColorProfile[],
+	speedometers: SpeedometerSettings[],
+	general: HudLayout
+): SpeedometerSettings[] {
+	const fileName = BASE_FILE_PREFIX + baseName;
+	const base = parseBaseFile(customizer.loadLayout(fileName), baseName);
+	const entry = isPlainObject(base.layout.Speedometer) ? base.layout.Speedometer : {};
+	const styles = isPlainObject(entry.dynamicStyles) ? entry.dynamicStyles : {};
+	const global =
+		styles.rangeColorProfiles ??
+		(general.Speedometer?.dynamicStyles as Record<string, unknown> | undefined)?.rangeColorProfiles;
+
+	const merged = mergeColorProfilesIntoGlobal(global, profiles, speedometers, (name) =>
+		name.startsWith('#') ? $.Localize(name) : name
+	);
+
+	if (!equalData(merged.profiles, normalizeColorProfiles(global))) {
+		base.layout.Speedometer = { ...entry, dynamicStyles: { ...styles, rangeColorProfiles: merged.profiles } };
+		if (!customizer.saveLayout(fileName, serializeBaseFile(base) as unknown as HudLayout)) {
+			$.Warning(`Failed to add legacy color profiles to ${fileName}`);
+		}
+	}
+
+	return merged.speedometers;
 }

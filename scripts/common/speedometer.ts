@@ -73,20 +73,32 @@ function normalizeColor(raw: unknown): RgbaTuple {
 /**
  * Turns anything read from disk (hand edited or legacy files included) into a valid list of speedometers.
  * Always returns fresh objects, never the input.
+ *
+ * Labels identify speedometers in base profile list deltas, so they are made unique (case-insensitively): a missing
+ * label becomes the type's name, and a label that is already taken gets a number, "<label> 2" and so on.
  */
 export function normalizeSpeedometers(raw: unknown): SpeedometerSettings[] {
 	if (!Array.isArray(raw)) return [];
 
 	const result: SpeedometerSettings[] = [];
+	const labels = new Set<string>();
 	for (const entry of raw) {
 		if (!isRecord(entry)) continue;
 
 		const type = entry.type as SpeedometerType;
 		if (typeof type !== 'number' || !SpeedometerDispNames.has(type)) continue;
 
+		const wantedLabel =
+			typeof entry.custom_label === 'string' && entry.custom_label !== ''
+				? entry.custom_label
+				: SpeedometerDispNames.get(type)!;
+		let label = wantedLabel;
+		for (let i = 2; labels.has(label.toLowerCase()); i++) label = `${wantedLabel} ${i}`;
+		labels.add(label.toLowerCase());
+
 		const colorType = entry.color_type as SpeedometerColorType;
 		result.push({
-			custom_label: typeof entry.custom_label === 'string' ? entry.custom_label : '',
+			custom_label: label,
 			type,
 			enabled_axes: normalizeAxes(entry.enabled_axes),
 			color_type:
@@ -125,4 +137,52 @@ export function normalizeColorProfiles(raw: unknown): RangeColorProfile[] {
 	}
 
 	return result;
+}
+
+/**
+ * Adds a preset's own color profiles to the global ones (the base's), for when the preset starts following the base
+ * or is imported. A profile with the same name and ranges as a global one is reused. A name already taken by
+ * different ranges is stored as "<name> (imported)" (then "(imported 2)" and so on), and the speedometers that used it
+ * are pointed at the new name. Names are compared exactly, as the speedometers look them up.
+ *
+ * @param displayName Turns a stored name (may be a localization token) into the text the new name is built from.
+ */
+export function mergeColorProfilesIntoGlobal(
+	globalRaw: unknown,
+	incomingRaw: unknown,
+	speedometersRaw: unknown,
+	displayName: (name: string) => string
+): { profiles: RangeColorProfile[]; speedometers: SpeedometerSettings[] } {
+	const profiles = normalizeColorProfiles(globalRaw);
+	const speedometers = normalizeSpeedometers(speedometersRaw);
+	const sameRanges = (a: ColorRange[], b: ColorRange[]) => JSON.stringify(a) === JSON.stringify(b);
+
+	for (const incoming of normalizeColorProfiles(incomingRaw)) {
+		const existing = profiles.find((profile) => profile.profile_name === incoming.profile_name);
+		if (!existing) {
+			profiles.push(incoming);
+			continue;
+		}
+		if (sameRanges(existing.profile_ranges, incoming.profile_ranges)) continue;
+
+		// Same ranges already imported under a new name before: reuse that one
+		const base = `${displayName(incoming.profile_name)} (imported`;
+		const candidates = profiles.filter((profile) => profile.profile_name.startsWith(base));
+		let newName = candidates.find((profile) =>
+			sameRanges(profile.profile_ranges, incoming.profile_ranges)
+		)?.profile_name;
+
+		if (!newName) {
+			const taken = new Set(profiles.map((profile) => profile.profile_name));
+			newName = `${base})`;
+			for (let i = 2; taken.has(newName); i++) newName = `${base} ${i})`;
+			profiles.push({ profile_name: newName, profile_ranges: incoming.profile_ranges });
+		}
+
+		for (const speedometer of speedometers) {
+			if (speedometer.range_color_profile === incoming.profile_name) speedometer.range_color_profile = newName;
+		}
+	}
+
+	return { profiles, speedometers };
 }
