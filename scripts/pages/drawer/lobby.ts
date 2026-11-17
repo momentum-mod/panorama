@@ -333,7 +333,8 @@ class LobbyHandler {
 
 		if (memberSteamID === localSteamID) return;
 
-		panel.SetPanelEvent('oncontextmenu', () =>
+		panel.SetPanelEvent('oncontextmenu', () => {
+			const paintHidden = ChatAPI.BIsUserPaintHidden(memberSteamID);
 			UiToolkitAPI.ShowSimpleContextMenu(panel.id, '', [
 				{
 					label: $.Localize(isMuted ? '#Lobby_UnmutePlayer' : '#Lobby_MutePlayer'),
@@ -348,13 +349,19 @@ class LobbyHandler {
 					}
 				},
 				{
+					label: $.Localize(paintHidden ? '#Lobby_ShowPaint' : '#Lobby_HidePaint'),
+					icon: 'file://{images}/pencil-' + (paintHidden ? '' : 'off-') + 'outline.svg',
+					style: 'icon-color-' + (paintHidden ? 'green' : 'red'),
+					jsCallback: () => ChatAPI.ChangePaintHiddenState(memberSteamID, !paintHidden)
+				},
+				{
 					label: $.Localize('#Action_ShowSteamProfile'),
 					icon: 'file://{images}/social/steam.svg',
 					style: 'icon-color-steam-online',
 					jsCallback: () => SteamOverlayAPI.OpenToProfileID(memberSteamID.toString())
 				}
-			])
-		);
+			]);
+		});
 
 		if (!memberMap) return;
 

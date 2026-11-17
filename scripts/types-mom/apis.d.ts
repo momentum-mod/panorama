@@ -228,6 +228,10 @@ declare namespace ChatAPI {
 	function ChangeMuteState(steamID: steamID, mute: boolean): void;
 
 	function BIsUserMuted(steamID: steamID): boolean;
+
+	function ChangePaintHiddenState(steamID: steamID, hidden: boolean): void;
+
+	function BIsUserPaintHidden(steamID: steamID): boolean;
 }
 
 declare namespace SteamLobbyAPI {

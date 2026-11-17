@@ -51,6 +51,14 @@ class PlayerListPlayerHandler {
 				style: 'icon-color-' + (muted ? 'green' : 'red'),
 				jsCallback: () => ChatAPI.ChangeMuteState(player.steamId, !muted)
 			});
+
+			const paintHidden = ChatAPI.BIsUserPaintHidden(player.steamId);
+			items.push({
+				label: $.Localize(paintHidden ? '#Lobby_ShowPaint' : '#Lobby_HidePaint'),
+				icon: 'file://{images}/pencil-' + (paintHidden ? '' : 'off-') + 'outline.svg',
+				style: 'icon-color-' + (paintHidden ? 'green' : 'red'),
+				jsCallback: () => ChatAPI.ChangePaintHiddenState(player.steamId, !paintHidden)
+			});
 		}
 
 		UiToolkitAPI.ShowSimpleContextMenu('', 'ControlsLibSimpleContextMenu', items);
