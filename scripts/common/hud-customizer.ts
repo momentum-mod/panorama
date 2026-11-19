@@ -21,7 +21,8 @@ export enum CustomizerPropertyType {
 	DROPDOWN,
 	COLOR_PICKER,
 	GRADIENT_PICKER,
-	FONT_PICKER
+	FONT_PICKER,
+	NUMBER_LIST
 }
 
 interface PropertyTypeMap {
@@ -33,6 +34,7 @@ interface PropertyTypeMap {
 	[CustomizerPropertyType.COLOR_PICKER]: never;
 	[CustomizerPropertyType.GRADIENT_PICKER]: never;
 	[CustomizerPropertyType.FONT_PICKER]: never;
+	[CustomizerPropertyType.NUMBER_LIST]: NumberEntry;
 }
 
 interface PropertyTypeToValueTypeMap {
@@ -44,6 +46,7 @@ interface PropertyTypeToValueTypeMap {
 	[CustomizerPropertyType.COLOR_PICKER]: TextEntry['text'];
 	[CustomizerPropertyType.GRADIENT_PICKER]: [string, string];
 	[CustomizerPropertyType.FONT_PICKER]: string;
+	[CustomizerPropertyType.NUMBER_LIST]: number[];
 }
 
 interface DynamicStyleChild {
@@ -85,6 +88,9 @@ export type DynamicStyleProperties<
 	/** Name of the property to display in UI. Please localize! */
 	name: string;
 
+	/** Tooltip shown while hovering the setting's row. Please localize! */
+	tooltip?: string;
+
 	/** Defines which styles should be the children of this style.
 	 *
 	 * styleID: id of the child
@@ -101,6 +107,9 @@ export type DynamicStyleProperties<
 	 * When true, the style can be manually expanded to show it's children, otherwise children are only shown through showWhen property */
 	expandable?: boolean;
 
+	/** CustomizerPropertyType.NONE only: builds extra UI in the setting's row, such as a preview of other settings */
+	render?: (row: Panel) => void;
+
 	/**
 	 * Selector or array of selectors.
 	 *
@@ -114,8 +123,30 @@ export type DynamicStyleProperties<
 	type: PropertyType;
 
 	/**
-	 * Defines options and their respective values for CustomizerPropertyType.DROPDOWN */
-	options?: PropertyType extends CustomizerPropertyType.DROPDOWN ? Array<{ label: string; value: string }> : never;
+	 * Gamemodes the style's setting is shown in, along with its children. Its value still loads and saves in every
+	 * gamemode. When not provided it's always shown */
+	gamemode?: Gamemode | Gamemode[];
+
+	/**
+	 * Defines options and their respective values for CustomizerPropertyType.DROPDOWN. An option with gamemodes is only
+	 * offered in those */
+	options?: PropertyType extends CustomizerPropertyType.DROPDOWN
+		? Array<{ label: string; value: string; gamemode?: Gamemode | Gamemode[] }>
+		: never;
+
+	/**
+	 * Defines the number entries of each item for CustomizerPropertyType.NUMBER_LIST. The value is a flat list holding
+	 * every item's fields one after another. */
+	listFields?: PropertyType extends CustomizerPropertyType.NUMBER_LIST
+		? Array<{ name: string; min: number; max: number; default?: number }>
+		: never;
+
+	/**
+	 * Labels for CustomizerPropertyType.NUMBER_LIST: an item in the selector (%n% is its number), the selector's entry
+	 * that adds an item, its entry when there are none, and the button that deletes the selected item. Please localize! */
+	listLabels?: PropertyType extends CustomizerPropertyType.NUMBER_LIST
+		? { item: string; add: string; none: string; delete: string }
+		: never;
 
 	/**
 	 * Style property to modify. For all matching panels, this CSS property is set to the current style value.
@@ -212,11 +243,24 @@ export interface CustomizerComponentProperties {
 	/** Name of the panel to be displayed in hud customizer */
 	name: string;
 
+	/** Description shown while hovering the component's name in its settings. Please localize! */
+	description?: string;
+
 	/** Allow resizing in the X direction. */
 	resizeX: boolean;
 
 	/** Allow resizing in the Y direction. */
 	resizeY: boolean;
+
+	/**
+	 * Number entry dynamic style the component's height comes from, for components that size themselves from a
+	 * setting. Resizing sets it to the height divided by scale (default 1), and setting it resizes the component.
+	 * A scale function is read again whenever any of the component's settings changes.
+	 */
+	heightStyle?: { styleID: string; scale?: number | (() => number) };
+
+	/** Resize from the corner handles only, for components whose size setting scales them evenly. */
+	resizeCorners?: boolean;
 
 	/** Allow movement on X axis. Defaults to true */
 	moveX?: boolean;
@@ -266,6 +310,9 @@ export interface IHudCustomizerHandler {
 
 	/** Whether the HUD customizer edit UI is open. */
 	isOpen(): boolean;
+
+	/** Whether this component's panel is the one selected for editing. */
+	isActiveComponent(panel: GenericPanel): boolean;
 
 	/**
 	 * Load a customizable HUD component.

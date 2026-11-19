@@ -21,6 +21,14 @@ interface PanelTagNameMap {
 	MomHudStickyCharge: MomHudStickyCharge;
 	MomHudStrafeSync: MomHudStrafeSync;
 	MomHudDFJump: MomHudDFJump;
+	MomHudDFCgaz: MomHudDFCgaz;
+	MomHudDFSnap: MomHudDFSnap;
+	MomHudDFPrime: MomHudDFPrime;
+	MomHudDFTurnt: MomHudDFTurnt;
+	MomHudDFCompass: MomHudDFCompass;
+	MomHudDFCompassArrow: MomHudDFCompassArrow;
+	MomHudDFPitch: MomHudDFPitch;
+	MomHudDFAngles: MomHudDFAngles;
 	MomHudJumpTiming: MomHudJumpTiming;
 	MomHudStrafeTrainer: MomHudStrafeTrainer;
 	MomHudSpectate: MomHudSpectate;
@@ -136,6 +144,24 @@ interface MomHudStrafeSync extends AbstractHudPanel<'MomHudStrafeSync'> {
 
 interface MomHudDFJump extends AbstractHudPanel<'MomHudDFJump'> {}
 
+interface MomHudDFCgaz extends AbstractHudPanel<'MomHudDFCgaz'> {}
+
+interface MomHudDFSnap extends AbstractHudPanel<'MomHudDFSnap'> {}
+
+interface MomHudDFPrime extends AbstractHudPanel<'MomHudDFPrime'> {}
+
+interface MomHudDFTurnt extends AbstractHudPanel<'MomHudDFTurnt'> {
+	GetTurntPhysics(): DefragAPI.TurntPhysics;
+}
+
+interface MomHudDFCompass extends AbstractHudPanel<'MomHudDFCompass'> {}
+
+interface MomHudDFCompassArrow extends AbstractHudPanel<'MomHudDFCompassArrow'> {}
+
+interface MomHudDFPitch extends AbstractHudPanel<'MomHudDFPitch'> {}
+
+interface MomHudDFAngles extends AbstractHudPanel<'MomHudDFAngles'> {}
+
 interface MomHudJumpTiming extends AbstractHudPanel<'MomHudJumpTiming'> {}
 
 interface PlayerListPlayer extends AbstractPanel<'PlayerListPlayer'> {
@@ -215,6 +241,12 @@ interface HudCustomizer extends AbstractPanel<'HudCustomizer'> {
 	 * Precisely, it's whether the input capture is enabled.
 	 */
 	isOpen(): boolean;
+
+	/** Whether either ctrl key is held. */
+	isControlDown(): boolean;
+
+	/** Whether either shift key is held. */
+	isShiftDown(): boolean;
 
 	/** Saves the given object to cfg/hud/{path}.kv3. */
 	saveLayout(path: string, data: import('hud/customizer').HudLayout): boolean;

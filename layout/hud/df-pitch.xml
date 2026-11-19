@@ -1,0 +1,13 @@
+<root>
+	<styles>
+		<include src="file://{resources}/styles/main.scss" />
+	</styles>
+
+	<scripts>
+		<include type="module" src="file://{scripts}/hud/df-pitch.ts" />
+	</scripts>
+
+	<MomHudDFPitch class="h-full" hittest="false">
+		<Panel id="PitchLines" class="dfpitch__lines" />
+	</MomHudDFPitch>
+</root>
