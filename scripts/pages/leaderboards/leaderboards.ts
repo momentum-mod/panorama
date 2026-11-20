@@ -339,7 +339,7 @@ export class LeaderboardsHandler {
 
 			lbEntry.SetPanelEvent('oncontextmenu', () => this.showEntryContextMenu(index, record));
 
-			if (this.currentUserRank === record.rank) {
+			if (record.steamID === UserAPI.GetXUID()) {
 				lbEntry.AddClass('leaderboard-entry--localplayer');
 			}
 		});
