@@ -1,24 +1,20 @@
 import { exposeToPanelContext, PanelHandler } from 'util/module-helpers';
 import {
 	LeaderboardListType,
-	// LeaderboardRecordsFilter,
+	LeaderboardRecord,
+	LeaderboardRecordsFilter,
 	LeaderboardStatusType,
-	LeaderboardType
-	// sortLeaderboard
+	LeaderboardType,
+	LEADERBOARD_RECORDS_PER_PAGE
 } from 'common/leaderboard';
 import { TrackType } from 'common/web/enums/track-type.enum';
 import { Style } from 'common/web/enums/style.enum';
-import { LeaderboardRecordsFilter } from 'common/leaderboard';
 import { Gamemode } from 'common/web/enums/gamemode.enum';
 import { CompletionGroup } from 'common/web/enums/completion-group.enum';
-import { LeaderboardRecord } from 'common/leaderboard';
 import { getRankGroupEnds, getCompletionGroup } from 'common/web/consts/rank-groups.const';
 
 // Keep in sync with entry.scss
 const ENTRY_HEIGHT = 32;
-
-// Keep in sync with the backend
-const RUNS_PER_PAGE = 20;
 
 // Offsets for the group pills
 const GROUP_BORDER_LEFT_ALIGN = -10;
@@ -482,7 +478,7 @@ export class LeaderboardsHandler {
 	private getBoundaryPages(): number[] {
 		if (!this.groupEnds) return [];
 
-		const pages = this.groupEnds.map((rank) => Math.ceil(rank / RUNS_PER_PAGE));
+		const pages = this.groupEnds.map((rank) => Math.ceil(rank / LEADERBOARD_RECORDS_PER_PAGE));
 
 		return Array.from(new Set(pages)).sort((a, b) => a - b);
 	}
@@ -503,7 +499,7 @@ export class LeaderboardsHandler {
 
 	/** Page holding the player's own run, or null if they have no run on this track. */
 	private getPersonalBestPage(): number | null {
-		return this.currentUserRank ? Math.ceil(this.currentUserRank / RUNS_PER_PAGE) : null;
+		return this.currentUserRank ? Math.ceil(this.currentUserRank / LEADERBOARD_RECORDS_PER_PAGE) : null;
 	}
 
 	private updateAroundButton() {

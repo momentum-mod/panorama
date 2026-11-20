@@ -173,11 +173,6 @@ $times-border: 0px solid rgba(24, 24, 24, 0.4);
 		overflow: noclip noclip; // let children escape this panel's bounds
 		transition: opacity 0.1s ease-in-out 0s;
 		opacity: 1;
-
-		.leaderboard-group-pill {
-			width: fit-children;
-			height: 22px;
-		}
 	}
 }
 
