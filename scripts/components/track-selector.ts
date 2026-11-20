@@ -80,9 +80,6 @@ export class TrackSelectorHandler {
 
 	private isOnMapSelector = false;
 
-	// Set while the shown map has no tracks yet because their fetch is still in flight.
-	private waitingForTracks = false;
-
 	// TODO: Blur broken when scrolling / Fixed in panzer's pr
 	blurPanel: BaseBlurTarget | null = null;
 
@@ -142,7 +139,6 @@ export class TrackSelectorHandler {
 	}
 
 	private setWaitingForTracks(waiting: boolean) {
-		this.waitingForTracks = waiting;
 		this.panels.cp.SetHasClass('track-selector--loading', waiting);
 	}
 

@@ -260,8 +260,6 @@ class HudTabMenuHandler {
 		const img = GamemodeInfo.get(GameModeAPI.GetCurrentGameMode()).icon;
 
 		this.panels.gamemodeIcon.SetImage(`file://{images}/gamemodes/${img}.svg`);
-
-		const mapData = MapCacheAPI.GetCurrentMapData();
 	}
 
 	close() {

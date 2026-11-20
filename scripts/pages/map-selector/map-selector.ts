@@ -4,11 +4,6 @@ import { parseMapImageUrl } from 'util/functions';
 import { scaleWidthToAspectRatio } from 'util/functions';
 import { MapUserCompletions } from 'common/maps';
 import { Style } from 'common/web/enums/style.enum';
-// PRE REWORK REMOVAL
-// import { MapStatus, MapStatuses } from 'common/web/enums/map-status.enum';
-// import { MapCreditType } from 'common/web/enums/map-credit-type.enum';
-// import * as Maps from 'common/maps';
-// import * as Leaderboards from 'common/leaderboard';
 import { handlePlayMap } from 'common/maps';
 
 const REFRESH_COOLDOWN = 1000 * 10; // 10 seconds
@@ -362,10 +357,6 @@ class MapSelectorHandler implements OnPanelLoad {
 			MapCacheAPI.GetCompletions(mapData.staticData.id, gamemode, style),
 			loading
 		);
-
-		// PRE REWORK REMOVAL
-		// Start loading spinner on live-updateing stats panels -- MapSelector_OnSelectedOnlineDataUpdate will kill it
-		// this.panels.stats.AddClass('mapselector-stats--loading');
 	}
 
 	/** Re-render the completion table when the selected map's completions change (fetch or new PB). */
