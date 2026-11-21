@@ -50,12 +50,6 @@ class HudTabMenuHandler {
 			this.onLocalRunsChanged()
 		);
 
-		$.RegisterForUnhandledEvent('SteamLobby_Enter', () => this.updatePlayerListVisibility());
-		$.RegisterForUnhandledEvent('SteamLobby_Exit', () => this.updatePlayerListVisibility());
-		$.RegisterForUnhandledEvent('PanoramaComponent_SteamLobby_OnMemberStateChanged', () =>
-			this.updatePlayerListVisibility()
-		);
-
 		registerHUDCustomizerComponent($.GetContextPanel(), {
 			name: $.Localize('#Customizer_Tab_Menu_Name'),
 			resizeX: false,
@@ -73,8 +67,6 @@ class HudTabMenuHandler {
 		// The leaderboard layout is shared with the map selector, which has no use for the zone
 		// editor or HUD customizer, so those buttons are only available for the in-game tab menu version.
 		this.panels.leaderboards.handler.setToolsAvailable(true);
-
-		this.updatePlayerListVisibility();
 	}
 
 	openInSteamOverlay() {
@@ -91,10 +83,11 @@ class HudTabMenuHandler {
 
 		const blur: HudBlurTarget = this.panels.cp.GetParent().GetParent().FindChild('HudBlur');
 
+		// TODO: These elements should initialize their own styles and not rely on their parent container for that
 		this.components.trackSelector.handler.setBlurPanel(blur);
 		blur.AddBlurPanel(this.components.styleSelector);
 		blur.AddBlurPanel(this.components.leaderboards);
-		blur.AddBlurPanel(this.components.playerList.GetFirstChild());
+		blur.AddBlurPanel(this.components.playerList.FindChildTraverse('PlayerListFrame'));
 		this.components.endOfRun.handler.setBlurPanel(blur);
 
 		this.components.trackSelector.handler.connectLeaderboards(this.panels.leaderboards);
@@ -221,12 +214,6 @@ class HudTabMenuHandler {
 		if (!MapCacheAPI.GetCurrentMapData()) {
 			this.components.trackSelector.handler.updateLocalTrackData(this.components.styleSelector.handler.style);
 		}
-	}
-
-	updatePlayerListVisibility() {
-		const isEmpty = SteamLobbyAPI.GetCurrentLobbyMemberCount() <= 1;
-		this.panels.playerListContainer.visible = !isEmpty;
-		this.panels.tabMenuCenter.SetHasClass('tab-menu-center--no-playerlist', isEmpty);
 	}
 
 	openEndOfRun(

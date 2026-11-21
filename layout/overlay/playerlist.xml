@@ -5,7 +5,12 @@
 	</styles>
 
 	<PlayerList class="playerlist" acceptsinput="true" acceptsfocus="true" hittest="true" hittestchildren="true">
-		<Panel id="PlayerListConnectedSection" class="playerlist__section" />
-		<Panel id="PlayerListNotconnectedSection" class="playerlist__section" />
+		<Panel id="PlayerListFrame" class="playerlist__frame">
+			<Panel id="PlayerListConnectedSection" class="playerlist__section" />
+			<Panel id="PlayerListNotconnectedSection" class="playerlist__section" />
+		</Panel>
+		<TooltipPanel id="VoiceToggle" tooltip="#HudTabMenu_ToggleVoice" class="tab-menu-voice-toggle">
+			<ToggleButton class="tab-menu-voice-toggle__button" convar="voice_enable" />
+		</TooltipPanel>
 	</PlayerList>
 </root>
