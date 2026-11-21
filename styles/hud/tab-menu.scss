@@ -27,7 +27,7 @@
 	horizontal-align: center;
 	vertical-align: top;
 	width: 100%;
-	height: 190px;
+	height: 145px;
 
 	&__center-group {
 		width: fit-children;
@@ -42,8 +42,6 @@
 
 	horizontal-align: center;
 	vertical-align: center;
-	width: 100%;
-	height: 800px;
 	flow-children: right;
 	padding: 0 39px; // Padding needs to be an odd number because panorama refuses to display borders correctly
 
@@ -52,37 +50,26 @@
 	$style-selector-slot: $dropdown-button-height + 16px;
 
 	&__main-container {
-		width: 100%;
-		height: 100%;
 		flow-children: right;
+		horizontal-align: center;
 	}
 
 	&__left {
-		width: 33%;
-		height: 100%;
-		flow-children: down;
-
-		PlayerList {
-			margin-top: $style-selector-slot;
-		}
+		padding-top: $style-selector-slot;
 	}
 
 	&__center {
-		width: 33%;
+		width: 430px;
 		margin: 0 16px;
 		height: 100%;
 		flow-children: down;
 
-		// Offset by the style selector's slot so the track list lines up with the leaderboard below it
-		TrackSelector {
-			margin-top: $style-selector-slot;
-			height: fill-parent-flow(1);
-		}
+		padding-top: $style-selector-slot;
 	}
 
 	&__right {
-		width: 33%;
-		height: 100%;
+		width: 550px;
+		height: 813px;
 		flow-children: down;
 
 		// Fill the space left below the style selector rather than the default 100%, which would
@@ -96,12 +83,6 @@
 	// regardless of how the columns are centered.
 	&__style-selector {
 		margin-bottom: 16px;
-	}
-
-	&--no-playerlist {
-		#{$root}__center {
-			margin-left: 17%; // (100% - 33% - 33%) / 2, recenters the remaining pair
-		}
 	}
 }
 
@@ -199,9 +180,6 @@
 }
 
 .tab-menu-endofrun {
-	width: 100%;
-	height: 100%;
-
 	&__frame {
 		width: fit-children;
 		min-width: 50%;

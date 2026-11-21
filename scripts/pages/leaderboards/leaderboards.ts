@@ -15,6 +15,7 @@ import { getRankGroupEnds, getCompletionGroup } from 'common/web/consts/rank-gro
 
 // Keep in sync with entry.scss
 const ENTRY_HEIGHT = 32;
+const PILL_VERTICAL_ADJUSTMENT = 2;
 
 // Offsets for the group pills
 const GROUP_BORDER_LEFT_ALIGN = -10;
@@ -318,7 +319,12 @@ export class LeaderboardsHandler {
 		this.panels.groupPillsLayer.RemoveAndDeleteChildren();
 		records.forEach((record, index) => {
 			const lbEntry = $.CreatePanel('LeaderboardEntry', this.panels.timesList, '');
-			if (index === 0) lbEntry.AddClass('leaderboard-entry--first');
+			if (index === 0) {
+				lbEntry.AddClass('leaderboard-entry--first');
+			}
+			if (records.length < LEADERBOARD_RECORDS_PER_PAGE && index === records.length - 1) {
+				lbEntry.AddClass('leaderboard-entry--short-page-end');
+			}
 			lbEntry.SetDialogVariableInt('rank', record.rank);
 			lbEntry.SetDialogVariable('player', record.playerName);
 			lbEntry.SetDialogVariableFloat('time', record.runTime);
@@ -396,7 +402,7 @@ export class LeaderboardsHandler {
 		const groupName = CompletionGroup[matchedGroup];
 		lbEntry.AddClass(`leaderboard-entry--group-${groupName}`);
 
-		const borderY = (index + 1) * ENTRY_HEIGHT; // pixel Y of the border line
+		const borderY = (index + 1) * ENTRY_HEIGHT + PILL_VERTICAL_ADJUSTMENT; // pixel Y of the border line
 		const pill = $.CreatePanel('GroupPill', this.panels.groupPillsLayer, '', {
 			class: 'group-pill group-pill--leaderboards-pill group-pill--solid'
 		});
@@ -423,7 +429,7 @@ export class LeaderboardsHandler {
 
 		lbEntry.AddClass(`leaderboard-entry--group-${groupName}`);
 
-		const borderY = (index + 1) * ENTRY_HEIGHT;
+		const borderY = (index + 1) * ENTRY_HEIGHT + PILL_VERTICAL_ADJUSTMENT;
 
 		const pill = $.CreatePanel('GroupPill', this.panels.groupPillsLayer, '', {
 			class: 'group-pill group-pill--leaderboards-pill group-pill--solid'
