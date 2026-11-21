@@ -4,9 +4,8 @@
 @use 'sass:color';
 @use 'sass:list';
 
-$main-border: 1px solid rgba(43, 43, 43, 0.4);
-$radio-border: 1px solid rgba(86, 86, 86, 0.4);
-$times-border: 0px solid rgba(24, 24, 24, 0.4);
+$main-border: 1px solid rgba(70, 70, 70, 0.4);
+$main-padding: 13px;
 
 // ─── Main Container ───────────────────────────────────────────────────────────
 
@@ -16,25 +15,15 @@ $times-border: 0px solid rgba(24, 24, 24, 0.4);
 	height: 100%;
 	background-color: rgba(0, 0, 0, 0.6);
 	border: $main-border;
+	border-radius: 3px;
 }
 
 // ─── Layout regions ───────────────────────────────────────────────────────────
 
-.leaderboard-top {
-	flow-children: right;
-	width: 100%;
-	height: fill-parent-flow(1);
-}
-
-.leaderboard-center {
-	width: 100%;
-	flow-children: down;
-	height: fill-parent-flow(14);
-}
-
 .leaderboard-bottom {
 	width: 100%;
-	height: fill-parent-flow(1);
+	vertical-align: bottom;
+	padding: $main-padding;
 }
 
 // ─── Content containers ───────────────────────────────────────────────────────
@@ -43,15 +32,17 @@ $times-border: 0px solid rgba(24, 24, 24, 0.4);
 	width: 100%;
 	height: 40px;
 	flow-children: right;
+	margin-bottom: $main-padding;
 
 	&__radio-button {
 		$root: &;
 
 		width: fill-parent-flow(1);
+		height: 100%;
 		background-color: rgba(10, 10, 10, 0.5);
-		padding: 8px 16px;
-		border-right: $radio-border;
-		border-bottom: $radio-border;
+		border-right: $main-border;
+		border-bottom: $main-border;
+		box-shadow: inset rgba(0, 0, 0, 0.25) 0px -7px 7px 0px;
 
 		&--saved {
 			width: fill-parent-flow(1.5);
@@ -65,6 +56,7 @@ $times-border: 0px solid rgba(24, 24, 24, 0.4);
 		&:selected {
 			background-color: rgba(0, 0, 0, 0);
 			border-bottom: 0px;
+			box-shadow: none;
 		}
 
 		// Maps with no online data only have saved replays, so the online categories get disabled
@@ -99,8 +91,8 @@ $times-border: 0px solid rgba(24, 24, 24, 0.4);
 	$root: &;
 
 	width: 100%;
-	height: 100%;
-	padding: 8px 16px;
+	height: fill-parent-flow(1);
+	padding: 0px $main-padding;
 
 	&--empty {
 		#{$root}__list {
@@ -133,12 +125,20 @@ $times-border: 0px solid rgba(24, 24, 24, 0.4);
 		}
 	}
 
+	&__content-frame {
+		width: 100%;
+		height: 100%;
+		border: $main-border;
+		border-radius: 2px;
+		background-color: rgba(0, 0, 0, 0.5);
+		box-shadow: inset rgba(0, 0, 0, 0.7) 0 0 7px 0;
+	}
+
 	&__list {
 		width: 100%;
 		height: 100%;
 		flow-children: down;
 		overflow: squish noclip;
-		border: $times-border;
 		transition: opacity 0.1s ease-in-out 0s;
 		opacity: 1;
 	}
@@ -146,8 +146,6 @@ $times-border: 0px solid rgba(24, 24, 24, 0.4);
 	&__empty {
 		width: 100%;
 		height: 100%;
-		background-color: rgba(0, 0, 0, 0.4);
-		padding-bottom: 36px;
 		transition: opacity 0.1s ease-in-out 0s;
 		opacity: 0;
 	}
@@ -155,9 +153,7 @@ $times-border: 0px solid rgba(24, 24, 24, 0.4);
 	&__loading {
 		width: 100%;
 		height: 100%;
-		background-color: rgba(0, 0, 0, 0.4);
-		padding-bottom: 36px;
-		transition: opacity 0.3s ease-in-out 0s;
+		transition: opacity 0.1s ease-in-out 0s;
 		opacity: 0;
 
 		&-spinner {
@@ -178,7 +174,6 @@ $times-border: 0px solid rgba(24, 24, 24, 0.4);
 
 .leaderboard-controls {
 	width: fit-children;
-	height: 100%;
 	align: center center;
 	flow-children: right;
 
@@ -213,6 +208,7 @@ $times-border: 0px solid rgba(24, 24, 24, 0.4);
 		vertical-align: center;
 		border-radius: 2px;
 		margin-left: 4px;
+		border: $main-border;
 	}
 
 	&__total-pages {
@@ -223,9 +219,8 @@ $times-border: 0px solid rgba(24, 24, 24, 0.4);
 }
 
 .leaderboard-around {
-	width: 32px;
-	height: 32px;
-	margin: 0 16px 5px 0;
+	width: 28px;
+	height: 28px;
 	align: right center;
 
 	&__button {
@@ -251,11 +246,11 @@ $times-border: 0px solid rgba(24, 24, 24, 0.4);
 	&__icon-container {
 		width: fit-children;
 		height: fit-children;
-		align: center center;
+		align: right center;
 	}
 
 	&__icon {
-		align: center center;
+		align: right center;
 	}
 }
 
