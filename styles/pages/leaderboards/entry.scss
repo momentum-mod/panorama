@@ -14,7 +14,6 @@
 	}
 }
 
-$entry-border: 1px solid rgba(44, 44, 44, 0.6);
 .leaderboard-entry {
 	flow-children: right;
 	width: 100%;
@@ -23,20 +22,22 @@ $entry-border: 1px solid rgba(44, 44, 44, 0.6);
 
 	padding: 0 8px;
 
-	border-left: $entry-border;
-	border-right: $entry-border;
-	border-bottom: $entry-border;
+	$separating-border: 1px solid rgba(44, 44, 44, 0.6);
 
-	background-color: rgba(0, 0, 0, 0.6);
-	// transition: background-color 0.1s linear 0s;
+	border-top: $separating-border;
 
 	&:hover {
 		background-color: rgba(255, 255, 255, 0.1);
 	}
 
 	&--first {
-		border-top: $entry-border;
+		border-top: 0;
 	}
+
+	&--short-page-end {
+		border-bottom: $separating-border;
+	}
+
 	&--localplayer {
 		background-color: color.scale(rgba($blue, 0.5), $lightness: -20%);
 
