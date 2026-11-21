@@ -5,11 +5,17 @@
 
 	<snippets>
 		<snippet name="game">
-			<Panel class="flow-right mb-2">
-				<Image id="Icon" style="width: 20px; height: 20px;" />
+			<Panel class="flow-right mb-2 w-fill">
+				<Image id="Icon" class="v-align-center" style="width: 20px; height: 20px;" />
 				<Label class="ml-2 mr-3 v-align-center text-medium" text="{s:game}" />
 				<Label id="MountedStatus" class="v-align-center text-medium mr-1" text="{s:mounted_status}" />
-				<Image id="MountedIcon" class="v-align-center" style="width: 12px; height: 12px;" />
+				<Image id="MountedIcon" class="v-align-center mr-1" style="width: 12px; height: 12px;" />
+				<Button id="RequiredGameStorePageButton" class="button mr-1 flow-right h-align-right">
+					<Panel class="flow-right v-align-center h-align-center">
+						<Image class="button__icon p-0" src="file://{images}/social/steam.svg" textureheight="40" />
+						<Label class="button__text" text="#RequiredGame_StorePage_Button" />
+					</Panel>
+				</Button>
 			</Panel>
 		</snippet>
 	</snippets>
