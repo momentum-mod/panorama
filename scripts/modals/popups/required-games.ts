@@ -43,6 +43,10 @@ class RequiredGamesPopupHandler implements OnPanelLoad {
 			mountedStatus.text = $.Localize(isMounted ? '#Common_OK' : '#MapSelector_RequiredGames_Missing');
 			mountedStatus.SetHasClass('wash-color-green', isMounted);
 			mountedStatus.SetHasClass('wash-color-red', !isMounted);
+			const storePageButton = gamePanel.FindChildTraverse<Button>('RequiredGameStorePageButton');
+			storePageButton.SetPanelEvent('onactivate', () => {
+				SteamOverlayAPI.OpenGameOverlayStore(game, 0);
+			});
 		});
 	}
 
