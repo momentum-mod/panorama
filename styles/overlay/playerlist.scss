@@ -2,17 +2,22 @@ $player-border: 1px solid rgba(70, 70, 70, 0.5);
 
 .playerlist {
 	flow-children: down;
+}
+
+.playerlist__frame {
+	flow-children: down;
+	width: 550px;
+	background-color: rgba(0, 0, 0, 0.5);
+}
+
+.playerlist__section {
+	flow-children: down;
 	width: 100%;
+	border-bottom: $player-border;
+}
 
-	&__section {
-		flow-children: down;
-		width: 100%;
-		border-bottom: $player-border;
-	}
-
-	#PlayerListNotconnectedSection {
-		margin-top: 20px;
-	}
+#PlayerListNotconnectedSection {
+	margin-top: 20px;
 }
 
 .playerlist-player {
