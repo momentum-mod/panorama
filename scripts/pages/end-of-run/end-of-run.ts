@@ -97,7 +97,7 @@ export class EndOfRunHandler {
 		$.RegisterForUnhandledEvent('ComparisonRunUpdated', () => this.onComparisonUpdated());
 		$.RegisterForUnhandledEvent('EndOfRun_Hide', () => this.applyResult());
 		// The run poster patches the new PB into the completions cache, which can land before or after the upload event
-		$.RegisterForUnhandledEvent('MapCache_CompletionsUpdate', () => this.updateLatestResult());
+		// $.RegisterForUnhandledEvent('MapCache_CompletionsUpdate', () => this.updateLatestResult());
 
 		this.runCache = new RunCache();
 	}
