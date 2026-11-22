@@ -16,7 +16,13 @@ export class GalleryHandler {
 		credits: $<Panel>('#Credits'),
 		descLabel: $<Label>('#Description'),
 		bottom: $<Panel>('#Bottom'),
-		imageContainer: $<Panel>('#ImageContainer')
+		imageContainer: $<Panel>('#ImageContainer'),
+		dates: {
+			creationDateLabel: $<Label>('#CreationDateLabel'),
+			creationDate: $<Label>('#CreationDate'),
+			approvalDateLabel: $<Label>('#ApprovalDateLabel'),
+			approvalDate: $<Label>('#ApprovalDate')
+		}
 	};
 
 	readonly strings = {
@@ -62,6 +68,7 @@ export class GalleryHandler {
 
 		this.updateCredits(staticData);
 		this.updateDescription(staticData);
+		this.updateDates(staticData);
 
 		// TODO: Waiting for panorama layouting, figure out if onlayout event for panels is possible
 		waitForLayoutHack(this.panels.bottom, () => this.scaleImageContainer());
@@ -177,5 +184,15 @@ export class GalleryHandler {
 	updateDescription(staticData: MapCacheAPI.StaticData) {
 		const description = staticData.info?.description;
 		this.panels.descLabel.text = description;
+	}
+
+	updateDates(staticData: MapCacheAPI.StaticData) {
+		const { approvedDate, creationDate } = staticData.info;
+		const format = (date: string | number | undefined) => (date ? new Date(date).toLocaleDateString() : '-');
+
+		this.panels.dates.creationDateLabel.text = `${$.Localize('#MapSelector_Info_DateCreated')}:`;
+		this.panels.dates.approvalDateLabel.text = `${$.Localize('#MapSelector_Info_DateApproved')}:`;
+		this.panels.dates.creationDate.text = format(creationDate);
+		this.panels.dates.approvalDate.text = format(approvedDate);
 	}
 }
