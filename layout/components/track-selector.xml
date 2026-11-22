@@ -2,7 +2,7 @@
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
-	
+
 	<scripts>
 		<include type="module" src="file://{scripts}/components/track-selector.ts" />
 	</scripts>
@@ -31,7 +31,7 @@
                 	<Panel class="track-panel__actions--spacer" />
 	                <Panel class="track-selector-button-container">
 	                    <Button id="OpenEOR" class="track-selector-button-container__button">
-	                        <Image class="button__icon icon-play" src="file://{images}/eye.svg" textureheight="20"/>
+	                        <Image class="button__icon icon-play" src="file://{images}/chart-timeline.svg" textureheight="20"/>
 	                    </Button>
 	                </Panel>
                     <Panel class="track-selector-button-container">
