@@ -56,6 +56,7 @@
 		font-size: 14px;
 		vertical-align: center;
 		color: rgba(255, 255, 255, 0.7);
+		text-overflow: shrink;
 	}
 
 	&__spacer {
@@ -63,7 +64,7 @@
 	}
 
 	&__rank {
-		width: fill-parent-flow(0.15);
+		width: fill-parent-flow(0.2);
 		text-align: right;
 		padding-right: 8px;
 	}
@@ -75,9 +76,10 @@
 	}
 
 	&__time {
-		width: fill-parent-flow(0.25);
+		width: fill-parent-flow(0.5);
 		text-align: right;
 		color: rgba(255, 255, 255, 0.7);
+		margin-right: 16px;
 	}
 
 	&__avatar {
@@ -89,5 +91,11 @@
 
 	&__name {
 		width: fill-parent-flow(1);
+	}
+
+	&__date {
+		width: fill-parent-flow(0.5);
+		text-align: right;
+		color: rgba(200, 200, 200, 0.7);
 	}
 }
