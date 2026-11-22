@@ -1,6 +1,6 @@
 @use '../config' as *;
 
-$style-selector-border: 1px solid rgba(255, 255, 255, 0.1);
+$style-selector-border: 1px solid rgba(255, 255, 255, 0.302);
 
 .style-selector {
 	width: fit-children;
@@ -10,20 +10,20 @@ $style-selector-border: 1px solid rgba(255, 255, 255, 0.1);
 
 	&__dropdown {
 		min-width: 120px;
-		background-color: rgba(0, 0, 0, 0.6);
+		background-color: rgba(0, 0, 0, 0.352);
 		border: $style-selector-border;
 
 		&:hover {
-			background-color: rgba(35, 35, 35, 0.7);
+			background-color: rgba(35, 35, 35, 0.536);
 		}
 
 		// Class the engine adds while the menu is open
 		&.DropDownMenuVisible {
-			background-color: rgba(0, 0, 0, 0.8);
+			background-color: rgba(0, 0, 0, 0.542);
 		}
 
 		Label {
-			color: rgba(255, 255, 255, 0.9);
+			color: rgba(255, 255, 255, 0.949);
 		}
 
 		&:disabled Label {
@@ -33,11 +33,11 @@ $style-selector-border: 1px solid rgba(255, 255, 255, 0.1);
 
 	// menu class targets the popped-out menu, which the engine reparents to an overlay layer
 	&__menu {
-		background-color: rgba(0, 0, 0, 0.85);
+		background-color: rgba(0, 0, 0, 0.606);
 		border: $style-selector-border;
 
 		Label {
-			color: rgba(255, 255, 255, 0.85);
+			color: rgba(255, 255, 255, 0.923);
 		}
 	}
 }

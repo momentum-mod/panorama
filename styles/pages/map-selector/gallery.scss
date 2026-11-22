@@ -4,7 +4,7 @@
 @use 'sass:color';
 
 %panel-card {
-	background-color: rgba(0, 0, 0, 0.7);
+	background-color: rgba(0, 0, 0, 0.438);
 	border: 1px solid rgb(15, 15, 15);
 	border-radius: 2px;
 }
@@ -149,7 +149,7 @@ $image-shadow: 4px 4px 64px black;
 		width: 24px;
 		height: 24px;
 		margin-right: 6px;
-		opacity: 0.6;
+		opacity: 0.776;
 	}
 
 	&__credits-text {
@@ -183,11 +183,11 @@ $image-shadow: 4px 4px 64px black;
 	&__background {
 		width: 100%;
 		height: 100%;
-		background-color: rgba(0, 0, 0, 0.5);
+		background-color: rgba(0, 0, 0, 0.278);
 		transition: background-color 0.2s ease-in-out 0s;
 
 		&:hover {
-			background-color: rgba(0, 0, 0, 0.6);
+			background-color: rgba(0, 0, 0, 0.352);
 		}
 	}
 
@@ -207,7 +207,7 @@ $image-shadow: 4px 4px 64px black;
 		transition-duration: 0.1s;
 
 		&:hover {
-			background-color: rgba(255, 255, 255, 0.05);
+			background-color: rgba(255, 255, 255, 0.202);
 			wash-color: #eee;
 		}
 	}

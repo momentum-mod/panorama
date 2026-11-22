@@ -4,7 +4,7 @@
 @use 'sass:color';
 @use 'sass:list';
 
-$main-border: 1px solid rgba(70, 70, 70, 0.4);
+$main-border: 1px solid rgba(70, 70, 70, 0.562);
 $main-padding: 13px;
 
 // ─── Main Container ───────────────────────────────────────────────────────────
@@ -13,7 +13,7 @@ $main-padding: 13px;
 	flow-children: down;
 	width: 100%;
 	height: 100%;
-	background-color: rgba(0, 0, 0, 0.6);
+	background-color: rgba(0, 0, 0, 0.352);
 	border: $main-border;
 	border-radius: 3px;
 }
@@ -39,10 +39,10 @@ $main-padding: 13px;
 
 		width: fill-parent-flow(1);
 		height: 100%;
-		background-color: rgba(10, 10, 10, 0.5);
+		background-color: rgba(10, 10, 10, 0.297);
 		border-right: $main-border;
 		border-bottom: $main-border;
-		box-shadow: inset rgba(0, 0, 0, 0.25) 0px -7px 7px 0px;
+		box-shadow: inset rgba(0, 0, 0, 0.125) 0px -7px 7px 0px;
 
 		&--saved {
 			width: fill-parent-flow(1.5);
@@ -50,7 +50,7 @@ $main-padding: 13px;
 		}
 
 		&:hover {
-			background-color: rgba(72, 72, 72, 0.4);
+			background-color: rgba(72, 72, 72, 0.565);
 		}
 
 		&:selected {
@@ -62,7 +62,7 @@ $main-padding: 13px;
 		// Maps with no online data only have saved replays, so the online categories get disabled
 		&:disabled,
 		&:disabled:hover {
-			background-color: rgba(10, 10, 10, 0.7);
+			background-color: rgba(10, 10, 10, 0.465);
 		}
 
 		&__label {
@@ -73,7 +73,7 @@ $main-padding: 13px;
 			vertical-align: center;
 			horizontal-align: center;
 			margin: 0px;
-			opacity: 0.9;
+			opacity: 0.949;
 			text-overflow: shrink;
 
 			#{$root}:selected & {
@@ -81,7 +81,7 @@ $main-padding: 13px;
 			}
 
 			#{$root}:disabled & {
-				color: rgba(138, 138, 138, 0.8);
+				color: rgba(138, 138, 138, 0.889);
 			}
 		}
 	}
@@ -130,8 +130,8 @@ $main-padding: 13px;
 		height: 100%;
 		border: $main-border;
 		border-radius: 2px;
-		background-color: rgba(0, 0, 0, 0.5);
-		box-shadow: inset rgba(0, 0, 0, 0.7) 0 0 7px 0;
+		background-color: rgba(0, 0, 0, 0.278);
+		box-shadow: inset rgba(0, 0, 0, 0.438) 0 0 7px 0;
 	}
 
 	&__list {
@@ -184,11 +184,11 @@ $main-padding: 13px;
 		border-radius: 2px;
 
 		&:not(:disabled):hover {
-			background-color: rgba(167, 167, 167, 0.2);
+			background-color: rgba(167, 167, 167, 0.42);
 		}
 
 		&:not(:disabled):active {
-			background-color: rgba(255, 255, 255, 0.2);
+			background-color: rgba(255, 255, 255, 0.44);
 		}
 
 		&:disabled Image {
@@ -203,7 +203,7 @@ $main-padding: 13px;
 	&__select-page {
 		width: 45px;
 		height: 25px;
-		background-color: rgba(0, 0, 0, 0.7);
+		background-color: rgba(0, 0, 0, 0.438);
 		padding: 3px 4px;
 		vertical-align: center;
 		border-radius: 2px;
@@ -229,11 +229,11 @@ $main-padding: 13px;
 		border-radius: 2px;
 
 		&:not(:disabled):hover {
-			background-color: rgba(167, 167, 167, 0.2);
+			background-color: rgba(167, 167, 167, 0.42);
 		}
 
 		&:not(:disabled):active {
-			background-color: rgba(255, 255, 255, 0.2);
+			background-color: rgba(255, 255, 255, 0.44);
 		}
 
 		&:disabled {
@@ -279,11 +279,11 @@ $main-padding: 13px;
 		border-radius: 2px;
 
 		&:hover {
-			background-color: rgba(167, 167, 167, 0.2);
+			background-color: rgba(167, 167, 167, 0.42);
 		}
 
 		&:active {
-			background-color: rgba(255, 255, 255, 0.2);
+			background-color: rgba(255, 255, 255, 0.44);
 		}
 	}
 

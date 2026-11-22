@@ -123,7 +123,7 @@ $drawer-width: 768px;
 	&__page-blur {
 		width: 100%;
 		height: 100%;
-		background-color: rgba(0, 0, 0, 0.875);
+		background-color: rgba(0, 0, 0, 0.643);
 	}
 
 	&__voice {
@@ -152,7 +152,7 @@ $drawer-width: 768px;
 	flow-children: right;
 	height: $topnav-height;
 	width: 100%;
-	background-color: function.gradient-vertical(rgba(51, 51, 51, 0.3), rgba(20, 20, 20, 0.3));
+	background-color: function.gradient-vertical(rgba(51, 51, 51, 0.212), rgba(20, 20, 20, 0.175));
 	z-index: 1;
 
 	@include hide-in-announce-mode();
@@ -167,8 +167,8 @@ $drawer-width: 768px;
 		transition-timing-function: ease-in-out;
 
 		&:hover {
-			background-color: function.gradient-radial-button(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.2));
-			box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.2);
+			background-color: function.gradient-radial-button(rgba(255, 255, 255, 0.545), rgba(255, 255, 255, 0.44));
+			box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.099);
 		}
 
 		.RadioBox {
@@ -200,11 +200,11 @@ $drawer-width: 768px;
 
 		$this: &;
 		&:hover {
-			background-color: function.gradient-radial-button(rgba(255, 255, 255, 0.25), rgba(209, 209, 209, 0.25));
-			box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.35);
+			background-color: function.gradient-radial-button(rgba(255, 255, 255, 0.496), rgba(209, 209, 209, 0.488));
+			box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.182);
 
 			&:disabled {
-				background-color: function.gradient-radial-button(rgba(75, 75, 75, 0.25), rgba(83, 83, 83, 0.21));
+				background-color: function.gradient-radial-button(rgba(75, 75, 75, 0.414), rgba(83, 83, 83, 0.377));
 			}
 
 			#{$this}__icon {
@@ -213,8 +213,8 @@ $drawer-width: 768px;
 		}
 
 		&:selected {
-			background-color: function.gradient-radial-button(rgba(88, 88, 88, 0.7), rgba(20, 20, 20, 0.7));
-			box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.3);
+			background-color: function.gradient-radial-button(rgba(88, 88, 88, 0.815), rgba(20, 20, 20, 0.495));
+			box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.153);
 
 			#{$this}__icon {
 				opacity: 1;
@@ -222,7 +222,7 @@ $drawer-width: 768px;
 		}
 
 		&:selected:hover {
-			background-color: function.gradient-radial-button(rgba(70, 70, 70, 0.8), rgba(20, 20, 20, 0.8));
+			background-color: function.gradient-radial-button(rgba(70, 70, 70, 0.874), rgba(20, 20, 20, 0.608));
 		}
 	}
 
@@ -231,8 +231,8 @@ $drawer-width: 768px;
 		height: 100%;
 		vertical-align: middle;
 		color: white;
-		opacity: 0.85;
-		img-shadow: 0px 0px 4px 0 rgba(0, 0, 0, 0.4);
+		opacity: 0.923;
+		img-shadow: 0px 0px 4px 0 rgba(0, 0, 0, 0.213);
 		transition-property: opacity;
 		transition-duration: 0.1s;
 		transition-timing-function: ease-in;
@@ -254,14 +254,14 @@ $drawer-width: 768px;
 		width: 100%;
 		height: 20px;
 		opacity: 0.8;
-		border-top: 1px solid rgba(0, 0, 0, 0.5);
+		border-top: 1px solid rgba(0, 0, 0, 0.278);
 		background-color: gradient(
 			linear,
 			0% 100%,
 			0% 0%,
 			from(rgba(0, 0, 0, 0)),
-			color-stop(0.5, rgba(0, 0, 0, 0.275)),
-			to(rgba(0, 0, 0, 0.8))
+			color-stop(0.5, rgba(0, 0, 0, 0.139)),
+			to(rgba(0, 0, 0, 0.542))
 		);
 
 		@include hide-in-announce-mode();
@@ -273,7 +273,7 @@ $drawer-width: 768px;
 	width: $rightnav-width;
 	height: 100%;
 	horizontal-align: right;
-	background-color: rgba(0, 0, 0, 0.5);
+	background-color: rgba(0, 0, 0, 0.278);
 	overflow: noclip;
 
 	// Wrapper class needed because borders around parent can crash randomly ¯\_(ツ)_/¯
@@ -281,8 +281,8 @@ $drawer-width: 768px;
 		flow-children: down;
 		width: 100%;
 		height: 100%;
-		border-right: 1px solid rgba(0, 0, 0, 0.6);
-		border-left: 1px solid rgba(0, 0, 0, 0.4);
+		border-right: 1px solid rgba(0, 0, 0, 0.352);
+		border-left: 1px solid rgba(0, 0, 0, 0.213);
 	}
 
 	&__button {
@@ -298,18 +298,18 @@ $drawer-width: 768px;
 		transition-timing-function: ease-in-out;
 
 		&:hover {
-			background-color: function.gradient-radial-button(rgba(255, 255, 255, 0.15), rgba(179, 179, 179, 0.15));
-			border-top: 1px solid rgba(255, 255, 255, 0.02);
-			border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+			background-color: function.gradient-radial-button(rgba(255, 255, 255, 0.377), rgba(179, 179, 179, 0.359));
+			border-top: 1px solid rgba(255, 255, 255, 0.113);
+			border-bottom: 1px solid rgba(255, 255, 255, 0.113);
 			#{$root}__icon {
 				opacity: 1;
 			}
 		}
 
 		&:selected {
-			background-color: function.gradient-radial-button(rgba(77, 77, 77, 0.4), rgba(0, 0, 0, 0.4));
-			border-top: 1px solid rgba(0, 0, 0, 0.3);
-			border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+			background-color: function.gradient-radial-button(rgba(77, 77, 77, 0.57), rgba(0, 0, 0, 0.213));
+			border-top: 1px solid rgba(0, 0, 0, 0.153);
+			border-bottom: 1px solid rgba(0, 0, 0, 0.153);
 			sound: 'UIPanorama.ButtonSecondary';
 
 			#{$root}__icon {
@@ -317,9 +317,9 @@ $drawer-width: 768px;
 			}
 
 			&:hover {
-				background-color: function.gradient-radial-button(rgba(24, 24, 24, 0.5), rgba(0, 0, 0, 0.5));
-				border-top: 1px solid rgba(0, 0, 0, 0.35);
-				border-bottom: 1px solid rgba(0, 0, 0, 0.35);
+				background-color: function.gradient-radial-button(rgba(24, 24, 24, 0.325), rgba(0, 0, 0, 0.278));
+				border-top: 1px solid rgba(0, 0, 0, 0.182);
+				border-bottom: 1px solid rgba(0, 0, 0, 0.182);
 			}
 		}
 	}
@@ -329,9 +329,9 @@ $drawer-width: 768px;
 		height: width-percentage(100%);
 		vertical-align: middle;
 		padding: 7px;
-		img-shadow: 0px 0px 2px 0 rgba(0, 0, 0, 0.8);
+		img-shadow: 0px 0px 2px 0 rgba(0, 0, 0, 0.542);
 
-		opacity: 0.75;
+		opacity: 0.868;
 		transition: opacity 0.1s ease-in-out 0s;
 	}
 
@@ -339,7 +339,7 @@ $drawer-width: 768px;
 		@include mixin.font-header();
 		background-color: function.gradient-vertical($mid-blue, $blue);
 		border-radius: 6px;
-		border: 1px solid rgba(0, 0, 0, 0.35);
+		border: 1px solid rgba(0, 0, 0, 0.182);
 
 		margin-right: 2px;
 		$size: 18px;
@@ -375,15 +375,15 @@ $drawer-width: 768px;
 		z-index: 1;
 		width: 24px;
 		height: 100%;
-		border-right: 1px solid rgba(0, 0, 0, 0.12);
+		border-right: 1px solid rgba(0, 0, 0, 0.058);
 		opacity: 0.8;
 		background-color: gradient(
 			linear,
 			0% 0%,
 			100% 0%,
 			from(rgba(0, 0, 0, 0)),
-			color-stop(0.5, rgba(0, 0, 0, 0.275)),
-			to(rgba(0, 0, 0, 0.7))
+			color-stop(0.5, rgba(0, 0, 0, 0.139)),
+			to(rgba(0, 0, 0, 0.438))
 		);
 		transition: border-right 0.35s ease-out 0s;
 	}
@@ -408,7 +408,7 @@ $drawer-width: 768px;
 			border-radius: 4px;
 			padding: 1px 3px;
 			font-weight: bold;
-			box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.7);
+			box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.438);
 			transform: translateX(-50%) translateY(0px) rotateZ(-10deg) scale3d(0.9, 0.9, 1);
 			@include mixin.font-header();
 		}
@@ -436,18 +436,18 @@ $drawer-width: 768px;
 		transform: translateX(0);
 
 		#{$this}__rightnav {
-			background-color: rgba(32, 32, 32, 0.8);
+			background-color: rgba(32, 32, 32, 0.645);
 		}
 
 		#{$this}__left-shadow {
-			border-right: 1px solid rgba(0, 0, 0, 0.2);
+			border-right: 1px solid rgba(0, 0, 0, 0.099);
 			background-color: gradient(
 				linear,
 				0% 0%,
 				100% 0%,
 				from(rgba(0, 0, 0, 0)),
-				color-stop(0.5, rgba(0, 0, 0, 0.275)),
-				to(rgba(0, 0, 0, 0.8))
+				color-stop(0.5, rgba(0, 0, 0, 0.139)),
+				to(rgba(0, 0, 0, 0.542))
 			);
 		}
 
@@ -459,14 +459,14 @@ $drawer-width: 768px;
 	&__content {
 		width: $drawer-width;
 		height: 100%;
-		background-color: rgba(27, 27, 27, 0.7);
+		background-color: rgba(27, 27, 27, 0.514);
 	}
 
 	&__wrapper {
 		width: 100%;
 		height: 100%;
-		border-left: 1px solid rgba(0, 0, 0, 0.5);
-		box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.6);
+		border-left: 1px solid rgba(0, 0, 0, 0.278);
+		box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.352);
 	}
 
 	&__tab {
@@ -499,7 +499,7 @@ $drawer-width: 768px;
 
 	&__newspanel {
 		margin: 24px;
-		background-color: rgba(0, 0, 0, 0.6);
+		background-color: rgba(0, 0, 0, 0.352);
 	}
 
 	&__modelpanel {
@@ -553,13 +553,13 @@ $drawer-width: 768px;
 	&__wrapper {
 		flow-children: down;
 		box-shadow: 0 0 20px 0 rgba(0, 0, 0, 1);
-		border: 1px solid rgba(0, 0, 0, 0.4);
+		border: 1px solid rgba(0, 0, 0, 0.213);
 	}
 
 	&__header {
 		width: 100%;
-		background-color: rgba(0, 0, 0, 0.4);
-		border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+		background-color: rgba(0, 0, 0, 0.213);
+		border-bottom: 1px solid rgba(0, 0, 0, 0.073);
 		padding: 2px 4px 1px 8px;
 	}
 
@@ -575,7 +575,7 @@ $drawer-width: 768px;
 		height: 100%;
 		color: white;
 
-		opacity: 0.5;
+		opacity: 0.708;
 		transition: opacity 0.1s ease-in-out 0s;
 
 		&:hover {
@@ -603,8 +603,8 @@ $drawer-width: 768px;
 
 	&__other {
 		width: 100%;
-		background-color: rgba(0, 0, 0, 0.1);
-		border-top: 1px solid rgba(0, 0, 0, 0.15);
+		background-color: rgba(0, 0, 0, 0.048);
+		border-top: 1px solid rgba(0, 0, 0, 0.073);
 	}
 
 	&__horiz-scroll {
@@ -680,7 +680,7 @@ $drawer-width: 768px;
 	&__image {
 		width: 384px;
 		height: 384px * 0.5625;
-		box-shadow: 1px 1px 4px 0 rgba(0, 0, 0, 0.8);
+		box-shadow: 1px 1px 4px 0 rgba(0, 0, 0, 0.542);
 
 		transition: wash-color 0.1s linear 0s;
 
@@ -722,7 +722,7 @@ $drawer-width: 768px;
 		padding: 8px;
 		vertical-align: middle;
 
-		opacity: 0.8;
+		opacity: 0.896;
 
 		transition-property: opacity, img-shadow;
 		transition-timing-function: ease-out;
@@ -754,7 +754,7 @@ $drawer-width: 768px;
 .legal {
 	width: 100%;
 	height: 100%;
-	background-color: rgba(0, 0, 0, 0.8);
+	background-color: rgba(0, 0, 0, 0.542);
 	opacity: 0;
 	transition: opacity 0.6s ease-in-out 0s;
 

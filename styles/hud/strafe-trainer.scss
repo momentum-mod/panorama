@@ -2,7 +2,7 @@
 @use '../config' as *;
 @use 'sass:color';
 
-$border-color: rgba(255, 255, 255, 0.3);
+$border-color: rgba(255, 255, 255, 0.545);
 
 .strafetrainer {
 	height: 80px;
@@ -36,7 +36,7 @@ $border-color: rgba(255, 255, 255, 0.3);
 		height: 100%;
 		horizontal-align: center;
 		//Breaks HUD Customizer background styling
-		// box-shadow: 0 0 2px rgba(255, 255, 255, 0.05);
+		// box-shadow: 0 0 2px rgba(255, 255, 255, 0.202);
 	}
 
 	&__stats {

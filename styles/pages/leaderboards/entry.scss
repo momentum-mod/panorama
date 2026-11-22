@@ -6,10 +6,10 @@
 .leaderboard-time {
 	&--even,
 	&--odd {
-		background-color: rgba(0, 0, 0, 0.6);
+		background-color: rgba(0, 0, 0, 0.352);
 		transition: background-color 0.1s linear 0s;
 		&:hover {
-			background-color: rgba(255, 255, 255, 0.1);
+			background-color: rgba(255, 255, 255, 0.302);
 		}
 	}
 }
@@ -22,12 +22,12 @@
 
 	padding: 0 8px;
 
-	$separating-border: 1px solid rgba(44, 44, 44, 0.6);
+	$separating-border: 1px solid rgba(44, 44, 44, 0.457);
 
 	border-top: $separating-border;
 
 	&:hover {
-		background-color: rgba(255, 255, 255, 0.1);
+		background-color: rgba(255, 255, 255, 0.302);
 	}
 
 	&--first {
@@ -39,10 +39,10 @@
 	}
 
 	&--localplayer {
-		background-color: color.scale(rgba($blue, 0.5), $lightness: -20%);
+		background-color: color.scale(rgba($blue, 0.694), $lightness: -20%);
 
 		&:hover {
-			background-color: rgba($blue, 0.5);
+			background-color: rgba($blue, 0.694);
 		}
 	}
 
@@ -55,7 +55,7 @@
 	&__item {
 		font-size: 14px;
 		vertical-align: center;
-		color: rgba(255, 255, 255, 0.7);
+		color: rgba(255, 255, 255, 0.838);
 	}
 
 	&__spacer {
@@ -77,7 +77,7 @@
 	&__time {
 		width: fill-parent-flow(0.25);
 		text-align: right;
-		color: rgba(255, 255, 255, 0.7);
+		color: rgba(255, 255, 255, 0.838);
 	}
 
 	&__avatar {

@@ -94,8 +94,8 @@
 	&__beta-info {
 		align: center center;
 		flow-children: right;
-		background-color: rgba(0, 0, 0, 0.6);
-		border: 1px solid rgba(255, 255, 255, 0.08);
+		background-color: rgba(0, 0, 0, 0.352);
+		border: 1px solid rgba(255, 255, 255, 0.266);
 		border-radius: 2px;
 		padding: 12px 20px;
 
@@ -109,8 +109,8 @@
 		margin-right: 20px;
 		font-size: 20px;
 		font-weight: bold;
-		color: rgba(255, 255, 255, 0.9);
-		text-shadow: 0px 2px 4px 2 rgba(0, 0, 0, 0.5);
+		color: rgba(255, 255, 255, 0.949);
+		text-shadow: 0px 2px 4px 2 rgba(0, 0, 0, 0.278);
 	}
 
 	&__website-button {
@@ -163,8 +163,8 @@
 		background-position: center;
 		background-repeat: no-repeat;
 		background-size: 70% 70%;
-		background-color: rgba(0, 0, 0, 0.5);
-		border: 1px solid rgba(70, 70, 70, 0.5);
+		background-color: rgba(0, 0, 0, 0.278);
+		border: 1px solid rgba(70, 70, 70, 0.651);
 		img-shadow: $button-icon-shadow;
 		wash-color: $button-text-color;
 		transition: background-color 0.05s ease-out 0s;
@@ -174,7 +174,7 @@
 		}
 
 		&:hover {
-			background-color: rgba(100, 100, 100, 0.4);
+			background-color: rgba(100, 100, 100, 0.59);
 		}
 	}
 }

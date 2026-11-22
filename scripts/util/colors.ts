@@ -139,6 +139,21 @@ export function rgbaStringToRgb(str: rgbaColor): rgbColor {
 	return `rgb(${r}, ${g}, ${b})`;
 }
 
+function srgbToLinear(c: number): number {
+	return c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+}
+
+function linearToSrgb(c: number): number {
+	return c <= 0.0031308 ? c * 12.92 : 1.055 * Math.pow(c, 1 / 2.4) - 0.055;
+}
+
+/** Converts a black overlay's linear-blend alpha to the sRGB-blend alpha that looks the same over mid grey */
+export function darkOverlayAlpha(alpha: number): number {
+	const backdrop = 0.5;
+	const shown = linearToSrgb((1 - Math.max(Math.min(alpha, 1), 0)) * srgbToLinear(backdrop));
+	return 1 - shown / backdrop;
+}
+
 /** Compresses A value from string formatted `rgba(R, G, B, A)` to the range `[0.75, 1]` */
 export function enhanceAlpha(str: rgbaColor): rgbaColor {
 	const [r, g, b, a = 255] = rgbaStringToTuple(str);

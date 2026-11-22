@@ -196,7 +196,7 @@ export class InputColors {
 			cell.style.width = `${LEGEND_CELL}px`;
 			cell.style.height = `${LEGEND_CELL}px`;
 			cell.style.position = `${column * pitch}px ${cellRow * pitch}px 0px`;
-			cell.style.border = '1px solid rgba(0, 0, 0, 0.6)';
+			cell.style.border = '1px solid rgba(0, 0, 0, 0.352)';
 
 			const label = $.CreatePanel('Label', cell, `${this.idPrefix}LegendLabel${input}`);
 			label.text = input.split('').join('+');
@@ -205,7 +205,7 @@ export class InputColors {
 			label.style.fontSize = '10px';
 			label.style.fontWeight = 'bold';
 			label.style.color = 'rgba(255, 255, 255, 1)';
-			label.style.textShadow = 'rgba(0, 0, 0, 0.8) 0px 1px 2px 2.5';
+			label.style.textShadow = 'rgba(0, 0, 0, 0.542) 0px 1px 2px 2.5';
 			return cell;
 		});
 		this.colorLegend();

@@ -1,7 +1,7 @@
 import { PanelHandler } from 'util/module-helpers';
 import { registerHUDCustomizerComponent, CustomizerPropertyType } from 'common/hud-customizer';
 import { GamemodeCategory, GamemodeCategoryToGamemode } from 'common/web/enums/gamemode.enum';
-import { rgbaStringToTuple } from 'util/colors';
+import { darkOverlayAlpha, rgbaStringToTuple } from 'util/colors';
 
 const Config = {
 	countDown: false,
@@ -181,6 +181,6 @@ class ConcEntitiesHandler {
 
 	getTextShadow(color: rgbaColor) {
 		const alpha = rgbaStringToTuple(color)[3] / 255;
-		return `rgba(0, 0, 0, ${alpha * 0.5}) 0px 1px 2px 2.5`;
+		return `rgba(0, 0, 0, ${darkOverlayAlpha(alpha * 0.5)}) 0px 1px 2px 2.5`;
 	}
 }

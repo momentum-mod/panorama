@@ -6,22 +6,22 @@
 		overflow: squish scroll;
 		white-space: normal;
 
-		background-color: rgba(0, 0, 0, 0.35);
-		border: 1px solid rgba(255, 255, 255, 0.4);
+		background-color: rgba(0, 0, 0, 0.182);
+		border: 1px solid rgba(255, 255, 255, 0.632);
 		border-radius: 4px;
-		box-shadow: fill rgba(0, 0, 0, 0.3) 0px 0px 3px 0px;
+		box-shadow: fill rgba(0, 0, 0, 0.153) 0px 0px 3px 0px;
 
 		&:hover,
 		&:focus {
-			background-color: rgba(0, 0, 0, 0.35);
-			border-color: rgba(255, 255, 255, 0.4);
-			box-shadow: fill rgba(0, 0, 0, 0.3) 0px 0px 3px 0px;
+			background-color: rgba(0, 0, 0, 0.182);
+			border-color: rgba(255, 255, 255, 0.632);
+			box-shadow: fill rgba(0, 0, 0, 0.153) 0px 0px 3px 0px;
 		}
 
 		#PlaceholderText {
 			vertical-align: top;
 			font-size: 14px;
-			color: rgba(255, 255, 255, 0.35);
+			color: rgba(255, 255, 255, 0.59);
 		}
 	}
 }

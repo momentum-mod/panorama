@@ -37,7 +37,7 @@ export class MapInfoHandler {
 		this.blurPanel = panel;
 
 		this.panels.container.SetPanelEvent('onmouseover', () => {
-			this.panels.container.style.backgroundColor = 'rgba(70, 70, 70, 0.1)';
+			this.panels.container.style.backgroundColor = 'rgba(70, 70, 70, 0.204)';
 			this.blurPanel.AddBlurPanel(this.panels.container);
 		});
 
