@@ -30,6 +30,16 @@
                     <Panel id="DescriptionContainer" class="gallery__description-container mt-4">
                         <Label id="Description" class="gallery__description" />
                     </Panel>
+                    <Panel id="DatesContainer" class="gallery__dates-container mt-4">
+                        <Panel class="gallery__date">
+                            <Label id="CreationDateLabel" class="gallery__date--label" />
+                            <Label id="CreationDate" class="gallery__date--value" />
+                        </Panel>
+                        <Panel class="gallery__date">
+                            <Label id="ApprovalDateLabel" class="gallery__date--label" />
+                            <Label id="ApprovalDate" class="gallery__date--value" />
+                        </Panel>
+                    </Panel>
                 </Panel>
             </Panel>
 		</Panel>
