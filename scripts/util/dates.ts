@@ -52,11 +52,25 @@ const TIME_AGO_UNITS: [Intl.RelativeTimeFormatUnit, number][] = [
 	['second', 1]
 ];
 
+const TIME_AGO_DEFAULT_OPTIONS: Intl.RelativeTimeFormatOptions = {
+	numeric: 'always',
+	style: 'long'
+};
+
+const DATE_DEFAULT_OPTIONS: Intl.DateTimeFormatOptions = {
+	year: 'numeric',
+	month: '2-digit',
+	day: '2-digit'
+};
+
 /**
  * Localized relative time, e.g. "3 days ago", from a unix timestamp in seconds.
  */
-export function getTimeAgoString(timestampSeconds: number): string {
-	relativeFormat ??= new Intl.RelativeTimeFormat(getLocale(), { numeric: 'always', style: 'long' });
+export function formatTimeAgoString(
+	timestampSeconds: number,
+	formatOptions: Intl.RelativeTimeFormatOptions = TIME_AGO_DEFAULT_OPTIONS
+) {
+	relativeFormat ??= new Intl.RelativeTimeFormat(getLocale(), formatOptions);
 
 	const diff = timestampSeconds - Math.floor(Date.now() / 1000); // Negative when in the past
 	for (const [unit, seconds] of TIME_AGO_UNITS) {
@@ -81,7 +95,10 @@ export function formatDuration(seconds: number): string {
 /**
  * Localized numeric calendar date, e.g. "11/23/2026" in English, from an ISO string, millisecond timestamp or Date.
  */
-export function formatDate(date: string | number | Date): string {
-	dateFormat ??= new Intl.DateTimeFormat(getLocale(), { year: 'numeric', month: '2-digit', day: '2-digit' });
+export function formatDate(
+	date: string | number | Date,
+	formatOptions: Intl.DateTimeFormatOptions = DATE_DEFAULT_OPTIONS
+): string {
+	dateFormat ??= new Intl.DateTimeFormat(getLocale(), formatOptions);
 	return dateFormat.format(new Date(date));
 }
