@@ -56,13 +56,13 @@ const TIME_AGO_UNITS: [Intl.RelativeTimeFormatUnit, number][] = [
  * Localized relative time, e.g. "3 days ago", from a unix timestamp in seconds.
  */
 export function getTimeAgoString(timestampSeconds: number): string {
-	relativeFormat ??= new Intl.RelativeTimeFormat(getLocale(), { numeric: 'auto', style: 'long' });
+	relativeFormat ??= new Intl.RelativeTimeFormat(getLocale(), { numeric: 'always', style: 'long' });
 
 	const diff = timestampSeconds - Math.floor(Date.now() / 1000); // Negative when in the past
 	for (const [unit, seconds] of TIME_AGO_UNITS) {
 		if (Math.abs(diff) >= seconds) return relativeFormat.format(Math.trunc(diff / seconds), unit);
 	}
-	return relativeFormat.format(0, 'second');
+	return relativeFormat.format(-0, 'second'); // -0 so it reads "0 seconds ago" rather than "in 0 seconds"
 }
 
 /**
