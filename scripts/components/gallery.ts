@@ -1,5 +1,6 @@
 import { PanelHandler } from 'util/module-helpers';
 import { parseMapImageUrl } from 'util/functions';
+import { formatDate } from 'util/dates';
 import { MapCreditType } from 'common/web/enums/map-credit-type.enum';
 import { waitForLayoutHack } from 'common/layout';
 import * as Maps from 'common/maps';
@@ -188,7 +189,7 @@ export class GalleryHandler {
 
 	updateDates(staticData: MapCacheAPI.StaticData) {
 		const { approvedDate, creationDate } = staticData.info;
-		const format = (date: string | number | undefined) => (date ? new Date(date).toLocaleDateString() : '-');
+		const format = (date: string | number | undefined) => (date ? formatDate(date) : '-');
 
 		this.panels.dates.creationDateLabel.text = `${$.Localize('#MapSelector_Info_DateCreated')}:`;
 		this.panels.dates.approvalDateLabel.text = `${$.Localize('#MapSelector_Info_DateApproved')}:`;

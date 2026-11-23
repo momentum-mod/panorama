@@ -6,6 +6,7 @@ import { GamemodeInfo } from 'common/gamemode';
 import { getUserMapDataTrack } from 'common/leaderboard';
 import { getTier, handlePlayMap } from 'common/maps';
 import { Role } from 'common/web/enums/role.enum';
+import { formatDate } from 'util/dates';
 
 const NEW_MAP_BANNER_CUTOFF = 1000 * 60 * 60 * 24 * 5; // 5 days
 
@@ -151,7 +152,7 @@ class MapEntryHandler {
 			let tooltip = `<b>${$.Localize('#Common_PersonalBest')}</b>: {g:time:time}`;
 			if (userData.lastPlayed > 0) {
 				// Derived from C time() function (unix time in seconds, JS is in milliseconds), so * 1000
-				const lastPlayed = new Date(userData.lastPlayed * 1000).toLocaleDateString();
+				const lastPlayed = formatDate(userData.lastPlayed * 1000);
 				tooltip += `<br><b>${$.Localize('#Common_LastPlayed')}</b>: ${lastPlayed}`;
 			}
 
