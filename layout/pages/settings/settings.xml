@@ -47,14 +47,17 @@
 
 						<RadioButton id="AudioRadio" class="settings-nav__item" group="SettingsNav" onactivate="SettingsHandler.navigateToTab('AudioSettings')">
 							<Label class="settings-nav__item-label" text="#Settings_Audio" />
-							<Panel class="settings-nav__subsection settings-nav__subsection--4 settings-nav__subsection--hidden">
+							<Panel class="settings-nav__subsection settings-nav__subsection--5 settings-nav__subsection--hidden">
 								<RadioButton id="VolumeRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="SettingsHandler.navigateToSubsection('AudioSettings', 'VolumeSubSection')">
 									<Label class="settings-nav__subitem-label" text="#Settings_Volume_Title" />
+								</RadioButton>
+								<RadioButton id="VoiceRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="SettingsHandler.navigateToSubsection('AudioSettings', 'VoiceSubSection')">
+									<Label class="settings-nav__subitem-label" text="#Settings_Voice_Title" />
 								</RadioButton>
 								<RadioButton id="AudioDeviceRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="SettingsHandler.navigateToSubsection('AudioSettings', 'AudioDevicesSubSection')">
 									<Label class="settings-nav__subitem-label" text="#Settings_AudioDevices_Title" />
 								</RadioButton>
-                                <RadioButton id="TimerRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="SettingsHandler.navigateToSubsection('AudioSettings', 'TimerSubSection')">
+								<RadioButton id="TimerRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="SettingsHandler.navigateToSubsection('AudioSettings', 'TimerSubSection')">
 									<Label class="settings-nav__subitem-label" text="#Settings_Timer_Title" />
 								</RadioButton>
                                 <RadioButton id="WeaponSelRadio" class="settings-nav__subitem" group="SettingsSubNav" onactivate="SettingsHandler.navigateToSubsection('AudioSettings', 'WeaponSelSubSection')">
