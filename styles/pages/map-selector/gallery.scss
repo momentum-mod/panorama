@@ -186,10 +186,12 @@ $image-shadow: 4px 4px 64px black;
 		&--label {
 			font-weight: bold;
 			margin-right: 4px;
+			text-overflow: shrink;
 		}
 
 		&--value {
 			font-weight: medium;
+			text-overflow: shrink;
 		}
 	}
 
