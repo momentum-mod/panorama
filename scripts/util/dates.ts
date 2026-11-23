@@ -33,6 +33,7 @@ const SOURCE_LANGUAGE_TO_LOCALE: Record<string, string> = {
 
 let cachedLocale: string;
 let relativeFormat: Intl.RelativeTimeFormat;
+let dateFormat: Intl.DateTimeFormat;
 
 function getLocale(): string {
 	if (!cachedLocale) {
@@ -62,4 +63,25 @@ export function getTimeAgoString(timestampSeconds: number): string {
 		if (Math.abs(diff) >= seconds) return relativeFormat.format(Math.trunc(diff / seconds), unit);
 	}
 	return relativeFormat.format(0, 'second');
+}
+
+/**
+ * Localized duration rounded to the largest sensible unit, e.g. "2 days" or "35 minutes", from seconds.
+ */
+export function formatDuration(seconds: number): string {
+	const minutes = Math.round(seconds / 60);
+	const hours = Math.round(minutes / 60);
+	const days = Math.round(hours / 24);
+
+	const [value, unit] = minutes < 60 ? [minutes, 'minute'] : hours < 24 ? [hours, 'hour'] : [days, 'day'];
+
+	return new Intl.NumberFormat(getLocale(), { style: 'unit', unit, unitDisplay: 'long' }).format(value);
+}
+
+/**
+ * Localized numeric calendar date, e.g. "11/23/2026" in English, from an ISO string, millisecond timestamp or Date.
+ */
+export function formatDate(date: string | number | Date): string {
+	dateFormat ??= new Intl.DateTimeFormat(getLocale(), { year: 'numeric', month: '2-digit', day: '2-digit' });
+	return dateFormat.format(new Date(date));
 }

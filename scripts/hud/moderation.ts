@@ -1,4 +1,4 @@
-import { formatDuration } from 'util/strings';
+import { formatDuration } from 'util/dates';
 import ChatBanType = MomentumAPI.ChatBanType;
 
 // Toasts for the moderation systems.
