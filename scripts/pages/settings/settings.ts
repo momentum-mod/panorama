@@ -202,7 +202,8 @@ export class SettingsHandler {
 				scrollOffset === 0
 			) {
 				// Would need do some crazy mapping over type unions here, fuck it
-				this.panels.nav.FindChildTraverse((SettingsTabs[tab] as any).children[child.id]).checked = true;
+				const navItem = this.panels.nav.FindChildTraverse((SettingsTabs[tab] as any).children[child.id]);
+				if (navItem) navItem.checked = true;
 				break;
 			}
 		}

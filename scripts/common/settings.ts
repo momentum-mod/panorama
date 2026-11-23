@@ -12,7 +12,8 @@ export const SettingsTabs = {
 		radioid: 'AudioRadio',
 		children: {
 			VolumeSubSection: 'VolumeRadio',
-			AudioDeviceSubSection: 'AudioDeviceRadio',
+			VoiceSubSection: 'VoiceRadio',
+			AudioDevicesSubSection: 'AudioDeviceRadio',
 			TimerSubSection: 'TimerRadio',
 			WeaponSelSubSection: 'WeaponSelRadio'
 		}
