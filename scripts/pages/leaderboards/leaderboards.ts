@@ -1,4 +1,5 @@
 import { exposeToPanelContext, PanelHandler } from 'util/module-helpers';
+import { getTimeAgoString } from 'util/dates';
 import {
 	LeaderboardListType,
 	LeaderboardRecord,
@@ -23,58 +24,6 @@ const GROUP_BORDER_TOP_ALIGN = -13;
 
 // Show the loading spinner if the request takes longer than this in seconds
 const LOADING_SPINNER_DELAY = 0.2;
-
-const enum TIME_AGO_UNIT {
-	YEAR,
-	MONTH,
-	DAY,
-	HOUR,
-	MINUTE,
-	SECOND,
-	NOW
-}
-
-const TIME_AGO_UNITS: [TIME_AGO_UNIT, number][] = [
-	[TIME_AGO_UNIT.YEAR, 31557600],
-	[TIME_AGO_UNIT.MONTH, 2629800],
-	[TIME_AGO_UNIT.DAY, 86400],
-	[TIME_AGO_UNIT.HOUR, 3600],
-	[TIME_AGO_UNIT.MINUTE, 60],
-	[TIME_AGO_UNIT.SECOND, 1]
-];
-
-type UnitLocalization = {
-	singular: string;
-	plural: string;
-};
-
-const TIME_AGO_LABELS: Record<TIME_AGO_UNIT, UnitLocalization> = {
-	[TIME_AGO_UNIT.YEAR]: {
-		singular: $.Localize('#Leaderboards_Date_Year'),
-		plural: $.Localize('#Leaderboards_Date_Years')
-	},
-	[TIME_AGO_UNIT.MONTH]: {
-		singular: $.Localize('#Leaderboards_Date_Month'),
-		plural: $.Localize('#Leaderboards_Date_Months')
-	},
-	[TIME_AGO_UNIT.DAY]: {
-		singular: $.Localize('#Leaderboards_Date_Day'),
-		plural: $.Localize('#Leaderboards_Date_Days')
-	},
-	[TIME_AGO_UNIT.HOUR]: {
-		singular: $.Localize('#Leaderboards_Date_Hour'),
-		plural: $.Localize('#Leaderboards_Date_Hours')
-	},
-	[TIME_AGO_UNIT.MINUTE]: {
-		singular: $.Localize('#Leaderboards_Date_Minute'),
-		plural: $.Localize('#Leaderboards_Date_Minutes')
-	},
-	[TIME_AGO_UNIT.SECOND]: {
-		singular: $.Localize('#Leaderboards_Date_Second'),
-		plural: $.Localize('#Leaderboards_Date_Seconds')
-	},
-	[TIME_AGO_UNIT.NOW]: { singular: $.Localize('#Leaderboards_Date_Now'), plural: '' }
-};
 
 exposeToPanelContext({ LeaderboardListType, LeaderboardType, LeaderboardRecordsFilter });
 @PanelHandler({ exposeToPanel: true })
@@ -380,7 +329,7 @@ export class LeaderboardsHandler {
 			lbEntry.SetDialogVariableInt('rank', record.rank);
 			lbEntry.SetDialogVariable('player', record.playerName);
 			lbEntry.SetDialogVariableFloat('time', record.runTime);
-			lbEntry.SetDialogVariable('date', this.getTimeAgoString(Number(record.date)));
+			lbEntry.SetDialogVariable('date', getTimeAgoString(Number(record.date)));
 
 			if (
 				this.state.filter === LeaderboardRecordsFilter.FRIENDS ||
@@ -404,21 +353,6 @@ export class LeaderboardsHandler {
 		});
 
 		this.updateEmptyState(records.length === 0, data.status);
-	}
-
-	private getTimeAgoString(timestampSeconds: number): string {
-		const diff = Math.floor(Date.now() / 1000) - timestampSeconds;
-		for (const [unit, seconds] of TIME_AGO_UNITS) {
-			const count = Math.floor(diff / seconds);
-			if (count >= 1) return this.formatTimeAgo(count, unit);
-		}
-		return TIME_AGO_LABELS[TIME_AGO_UNIT.NOW].singular;
-	}
-
-	private formatTimeAgo(count: number, unit: TIME_AGO_UNIT) {
-		const { singular, plural } = TIME_AGO_LABELS[unit];
-		const label = count === 1 ? singular : plural;
-		return `${count} ${label}`;
 	}
 
 	private showEntryContextMenu(index: number, record: LeaderboardRecord) {
