@@ -30,8 +30,9 @@
                         <TrackSelector id="HudTrackSelector" />
                     </Panel>
                     <Panel class="tab-menu-center__right">
-                        <!-- Above the leaderboard; right edge tracks the leaderboard column's -->
-                        <StyleSelector id="HudStyleSelector" class="tab-menu-center__style-selector" />
+                        <Panel class="tab-menu-center__right__top">
+                        	<StyleSelector id="HudStyleSelector" class="tab-menu-center__style-selector" />
+                        </Panel>
                         <Leaderboards id="HudLeaderboards" />
                     </Panel>
                 </Panel>
