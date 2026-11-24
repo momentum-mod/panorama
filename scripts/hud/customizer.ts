@@ -600,7 +600,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 					name: $.Localize('#Customizer_Customizer_DefaultStyles'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
-					children: [{ styleID: 'fontStyles' }, { styleID: 'colors' }]
+					children: [{ styleID: 'fontStyles' }, { styleID: 'colors' }, { styleID: 'timePrecision' }]
 				},
 				fontStyles: {
 					name: $.Localize('#Customizer_Customizer_FontStyles'),
@@ -668,6 +668,13 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 					type: CustomizerPropertyType.GRADIENT_PICKER,
 					callbackFunc: (_, value) => (Component.referencedValues['progressBarBlockedGradient'] = value),
 					onChanged: (value) => this.updateReferencedValue('progressBarBlockedGradient', value)
+				},
+				timePrecision: {
+					name: $.Localize('#Customizer_TimePrecision'),
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					callbackFunc: (_, value) => (Component.referencedValues['timePrecision'] = value),
+					onChanged: (value) => this.updateReferencedValue('timePrecision', value),
+					settingProps: { min: 0, max: 3 }
 				}
 			},
 			postInit: () => {

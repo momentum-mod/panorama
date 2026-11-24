@@ -135,3 +135,17 @@ export function rad2deg(x: number): number {
 export function lerp(a: number, b: number, t: number): number {
 	return a + (b - a) * t;
 }
+
+export function truncateNumber(value: number, decimals: number): number {
+	// NumberFormat converts null to 0
+	if (value == null) return null;
+
+	return Number(
+		Intl.NumberFormat('en-US', {
+			minimumFractionDigits: decimals,
+			maximumFractionDigits: decimals,
+			roundingMode: 'trunc',
+			useGrouping: false
+		}).format(value)
+	);
+}

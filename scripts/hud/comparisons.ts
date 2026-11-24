@@ -2,6 +2,7 @@ import { PanelHandler } from 'util/module-helpers';
 import * as Timer from 'common/timer';
 import { CustomizerPropertyType, getHudCustomizer, registerHUDCustomizerComponent } from 'common/hud-customizer';
 import { getTextShadowFast } from 'common/hud-customizer';
+import { formatDurationDigital } from 'util/strings';
 
 // MomTV networking limits max numbers of networked splits to 10; this value is
 // immutable and used to build out our split panel arrays.
@@ -51,6 +52,10 @@ class HudComparisonsHandler {
 
 	comparisonColors = {} as ColorConfig;
 
+	// Decimal places of time and comparison labels
+	timePrecision: number;
+	comparisonsPrecision: number;
+
 	currentRunSplits: Timer.RunSplits | null = null;
 	// Build out our permanent split panel array. This classes's job is ultimately to just tweak
 	// each panel's properties as needed.
@@ -76,7 +81,7 @@ class HudComparisonsHandler {
 			'',
 			{
 				class: 'hud-splits__time',
-				text: '{g:time:time}'
+				text: '{s:time}'
 			}
 		),
 		diff: $.CreatePanel(
@@ -87,7 +92,7 @@ class HudComparisonsHandler {
 			'',
 			{
 				class: 'hud-splits__diff diff',
-				text: '{s:diff_sign}{g:time:diff}'
+				text: '{s:diff_sign}{s:diff}'
 			}
 		)
 	}));
@@ -219,7 +224,12 @@ class HudComparisonsHandler {
 					name: $.Localize('#Customizer_Comparisons_Time'),
 					type: CustomizerPropertyType.NONE,
 					expandable: true,
-					children: [{ styleID: 'timeFont' }, { styleID: 'timeSize' }, { styleID: 'timeColor' }]
+					children: [
+						{ styleID: 'timeFont' },
+						{ styleID: 'timeSize' },
+						{ styleID: 'timeColor' },
+						{ styleID: 'timePrecision' }
+					]
 				},
 				timeFont: {
 					name: $.Localize('#Customizer_Font'),
@@ -243,6 +253,17 @@ class HudComparisonsHandler {
 					callbackFunc: (panel, value) =>
 						(panel.style.textShadowFast = getTextShadowFast(value as rgbaColor, 0.9))
 				},
+				timePrecision: {
+					name: $.Localize('#Customizer_TimePrecision'),
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					callbackFunc: (_, value) => {
+						this.timePrecision = value;
+					},
+					onChanged: () => {
+						this.createDummySplits();
+					},
+					settingProps: { min: 0, max: 3 }
+				},
 				comparisons: {
 					name: $.Localize('#Customizer_Comparisons_Comparisons'),
 					type: CustomizerPropertyType.NONE,
@@ -250,7 +271,8 @@ class HudComparisonsHandler {
 					children: [
 						{ styleID: 'comparisonsFont' },
 						{ styleID: 'comparisonsFontSize' },
-						{ styleID: 'comparisonsColors' }
+						{ styleID: 'comparisonsColors' },
+						{ styleID: 'comparisonsPrecision' }
 					]
 				},
 				comparisonsFont: {
@@ -277,6 +299,17 @@ class HudComparisonsHandler {
 						{ styleID: 'comparisonsBehindGain' },
 						{ styleID: 'comparisonsBehindLoss' }
 					]
+				},
+				comparisonsPrecision: {
+					name: $.Localize('#Customizer_ComparisonPrecision'),
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					callbackFunc: (_, value) => {
+						this.comparisonsPrecision = value;
+					},
+					onChanged: () => {
+						this.createDummySplits();
+					},
+					settingProps: { min: 0, max: 3 }
 				},
 				comparisonsNeutral: {
 					name: $.Localize('#Customizer_Neutral'),
@@ -483,7 +516,7 @@ class HudComparisonsHandler {
 		// diff.SetHasClass('hud-splits__diff--subsegment', isSubsegment);
 
 		name.SetDialogVariable('name', split.name);
-		time.SetDialogVariableFloat('time', split.time);
+		time.SetDialogVariable('time', formatDurationDigital(split.time, this.timePrecision));
 		name.RemoveClass('hud-splits__name--hidden');
 		time.RemoveClass('hud-splits__time--hidden');
 
@@ -504,7 +537,7 @@ class HudComparisonsHandler {
 		if (!hasComparison) return;
 
 		diff.SetDialogVariable('diff_sign', split.diff! > 0 ? '+' : split.diff === 0 ? '' : '-');
-		diff.SetDialogVariableFloat('diff', Math.abs(split.diff!));
+		diff.SetDialogVariable('diff', formatDurationDigital(Math.abs(split.diff!), this.comparisonsPrecision));
 
 		const getSplitState = (diff: number, delta: number) => {
 			if (diff === 0) return ComparisonState.NEUTRAL;

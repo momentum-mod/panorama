@@ -4,6 +4,7 @@ import * as Timer from 'common/timer';
 
 import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
 import { getTextShadowFast } from 'common/hud-customizer';
+import { formatDurationDigital } from 'util/strings';
 
 const DIFF_DISPLAY_TIME = 5;
 const HIDDEN_CLASS = 'hudtimer--hidden';
@@ -31,15 +32,20 @@ class HudTimerHandler {
 
 	comparison: RunMetadata | null = null;
 	showComparison: boolean;
+	timePrecision: number;
+	comparisonsPrecision: number;
 	fadeoutScheduleId: uuid | null = null;
 
 	constructor() {
-		this.panels.cp.SetDialogVariableFloat('runtime', 0);
+		this.panels.cp.SetDialogVariable('runtime', formatDurationDigital(0, this.timePrecision));
 		this.panels.cp.hiddenHUDBits = HideHud.TABMENU;
 
 		$.RegisterEventHandler('HudProcessInput', this.panels.cp, () => {
 			// Each frame just needs to update time, everything else is more specific events.
-			this.panels.cp.SetDialogVariableFloat('runtime', MomentumTimerAPI.GetObservedTimerStatus().runTime);
+			this.panels.cp.SetDialogVariable(
+				'runtime',
+				formatDurationDigital(MomentumTimerAPI.GetObservedTimerStatus().runTime, this.timePrecision)
+			);
 		});
 
 		$.RegisterForUnhandledEvent('OnObservedTimerStateChange', () => {
@@ -90,7 +96,20 @@ class HudTimerHandler {
 				showComparisons: {
 					name: $.Localize('#Customizer_Timer_ShowComparisons'),
 					type: CustomizerPropertyType.CHECKBOX,
+					children: { styleID: 'comparisonsPrecision', showWhen: true },
 					callbackFunc: (_, value) => (this.showComparison = value)
+				},
+				comparisonsPrecision: {
+					name: $.Localize('#Customizer_ComparisonsPrecision'),
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					callbackFunc: (_, value) => (this.comparisonsPrecision = value),
+					settingProps: { min: 0, max: 3 }
+				},
+				timePrecision: {
+					name: $.Localize('#Customizer_TimePrecision'),
+					type: CustomizerPropertyType.NUMBER_ENTRY,
+					callbackFunc: (_, value) => (this.timePrecision = value),
+					settingProps: { min: 0, max: 3 }
 				},
 				fontStyling: {
 					name: $.Localize('#Customizer_FontStyling'),
@@ -305,7 +324,10 @@ class HudTimerHandler {
 		this.panels.comparison.RemoveClass(ENABLE_FADE_CLASS);
 		this.panels.comparison.style.opacity = 1;
 
-		this.panels.cp.SetDialogVariableFloat('runtime_diff', Math.abs(diff));
+		this.panels.cp.SetDialogVariable(
+			'runtime_diff',
+			formatDurationDigital(Math.abs(diff), this.comparisonsPrecision)
+		);
 		this.panels.cp.SetDialogVariable('diff_symbol', diffSymbol);
 
 		// Used to do this fade using a custom cubic-bezier but looks off for such a long duration,
