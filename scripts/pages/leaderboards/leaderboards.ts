@@ -21,6 +21,17 @@ const PILL_VERTICAL_ADJUSTMENT = 2;
 const GROUP_BORDER_LEFT_ALIGN = -10;
 const GROUP_BORDER_TOP_ALIGN = -13;
 
+// Search tokens for the rank groups shown on the global leaderboard.
+const SEARCH_GROUP_TAGS: Readonly<Record<string, CompletionGroup>> = {
+	'@top10': CompletionGroup.TOP_10,
+	'@g1': CompletionGroup.GROUP_1,
+	'@g2': CompletionGroup.GROUP_2,
+	'@g3': CompletionGroup.GROUP_3,
+	'@g4': CompletionGroup.GROUP_4,
+	'@g5': CompletionGroup.GROUP_5,
+	'@g6': CompletionGroup.GROUP_6
+};
+
 // Show the loading spinner if the request takes longer than this in seconds
 const LOADING_SPINNER_DELAY = 0.2;
 
@@ -48,6 +59,10 @@ export class LeaderboardsHandler {
 			lobby: $<RadioButton>('#TimesListLobby'),
 			local: $<RadioButton>('#TimesListLocal')
 		},
+		search: {
+			textEntry: $<TextEntry>('#LeaderboardSearchTextEntry'),
+			clearButton: $<Button>('#LeaderboardSearchClear')
+		},
 		controls: {
 			container: $<Panel>('#ControlsContainer'),
 			pagePrev: $<Button>('#PagePrev'),
@@ -74,9 +89,13 @@ export class LeaderboardsHandler {
 	totalCompletions: number = null;
 	currentUserRank = null;
 	groupEnds: number[];
+	private searchGroups: CompletionGroup[] = [];
+	private searchText = '';
 
 	/** handles loading spinner for quick leaderboard requests */
 	private loadingHandle: number = null;
+	/** Debounces search input so we don't request a page on every keystroke. */
+	private searchHandle: number = null;
 
 	/** The only records request whose result gets shown; null while none is wanted. */
 	private pendingRequestToken: number | null = null;
@@ -128,6 +147,7 @@ export class LeaderboardsHandler {
 				this.selectPage(parsed);
 			}
 		});
+		this.panels.search.textEntry.SetPanelEvent('ontextentrychange', () => this.onSearchTextChanged());
 
 		this.setToolsAvailable(false);
 	}
@@ -162,6 +182,7 @@ export class LeaderboardsHandler {
 
 	setTotalCompletions(completions: number) {
 		this.totalCompletions = completions;
+		this.groupEnds = getRankGroupEnds(completions);
 	}
 
 	setFilter(filter: LeaderboardRecordsFilter) {
@@ -303,6 +324,14 @@ export class LeaderboardsHandler {
 
 		this.groupEnds = getRankGroupEnds(this.totalCompletions);
 
+		const searchPages = this.getSearchPages();
+		if (searchPages !== null && searchPages.length > 0 && !searchPages.includes(this.state.page)) {
+			this.state.page = searchPages[0];
+			this.setTextEntry(this.state.page);
+			this.updateLeaderboards();
+			return;
+		}
+
 		this.updateControlButtons();
 
 		// The backend always includes local player's run in the friends filter response
@@ -313,7 +342,7 @@ export class LeaderboardsHandler {
 			data.records.length === 1 &&
 			this.currentUserRank != null;
 
-		const records = isOwnRunOnly ? [] : data.records;
+		const records = (isOwnRunOnly ? [] : data.records).filter((record) => this.matchesSearch(record));
 
 		this.panels.timesList.RemoveAndDeleteChildren();
 		this.panels.groupPillsLayer.RemoveAndDeleteChildren();
@@ -337,7 +366,11 @@ export class LeaderboardsHandler {
 			} else if (this.state.filter === LeaderboardRecordsFilter.GLOBAL) {
 				const group = getCompletionGroup(record.rank, this.groupEnds);
 				const matchedGroup = group !== getCompletionGroup(record.rank + 1, this.groupEnds) ? group : undefined;
-				this.createBoundaryGroupIndicators(matchedGroup, lbEntry, index);
+
+				const isSearching = this.searchText.length > 0 || this.searchGroups.length > 0;
+				if (!isSearching) {
+					this.createBoundaryGroupIndicators(matchedGroup, lbEntry, index);
+				}
 			}
 
 			const avatar = lbEntry.FindChildTraverse<AvatarImage>('LeaderboardEntryAvatarPanel');
@@ -381,7 +414,7 @@ export class LeaderboardsHandler {
 						$.Localize('#Action_DeleteReplay_Confirm'),
 						'ok-cancel-popup',
 						() => this.deleteReplay(index),
-						() => {}
+						() => { }
 					)
 			});
 		}
@@ -439,13 +472,111 @@ export class LeaderboardsHandler {
 		pill.handler.setGroup(currentGroup);
 	}
 
+	private onSearchTextChanged() {
+		const query = this.panels.search.textEntry.text.trim();
+		const groups = new Set<CompletionGroup>();
+		const terms: string[] = [];
+
+		for (const token of query.split(/\s+/).filter(Boolean)) {
+			const group = SEARCH_GROUP_TAGS[token.toLowerCase()];
+			if (group !== undefined) groups.add(group);
+			else terms.push(token);
+		}
+
+		this.searchGroups = Array.from(groups);
+		this.searchText = terms.join(' ').toLowerCase();
+		this.panels.search.clearButton.SetHasClass('search__clearbutton--hidden', query.length === 0);
+
+		if (this.searchHandle !== null) $.CancelScheduled(this.searchHandle);
+		this.searchHandle = $.Schedule(0.15, () => {
+			this.searchHandle = null;
+			const pages = this.getSearchPages();
+			this.state.page = pages === null ? 1 : (pages[0] ?? 1);
+			this.setTextEntry(this.state.page);
+			this.updateLeaderboards();
+		});
+	}
+
+	clearSearch() {
+		this.panels.search.textEntry.text = '';
+	}
+
+	/** Return the rank intervals selected by @top10 and @g1-@g6. */
+	private getSearchGroupRanges(): Array<{ startRank: number; endRank: number }> {
+		const ranges: Array<{ startRank: number; endRank: number }> = [];
+
+		if (this.searchGroups.includes(CompletionGroup.TOP_10)) {
+			ranges.push({ startRank: 1, endRank: 10 });
+		}
+
+		if (!this.groupEnds) return ranges;
+
+		const numberedGroups = [
+			CompletionGroup.GROUP_1,
+			CompletionGroup.GROUP_2,
+			CompletionGroup.GROUP_3,
+			CompletionGroup.GROUP_4,
+			CompletionGroup.GROUP_5,
+			CompletionGroup.GROUP_6
+		];
+
+		for (const [index, group] of numberedGroups.entries()) {
+			if (!this.searchGroups.includes(group)) continue;
+
+			const previousEnd = index === 0 ? 10 : (this.groupEnds[index - 1] ?? 10);
+			const startRank = previousEnd + 1;
+			const endRank = this.groupEnds[index] ?? 0;
+			if (endRank >= startRank) ranges.push({ startRank, endRank });
+		}
+
+		return ranges;
+	}
+
+	/** Pages containing the selected groups; null means normal pagination. */
+	private getSearchPages(): number[] | null {
+		if (this.searchGroups.length === 0 || this.state.filter !== LeaderboardRecordsFilter.GLOBAL) return null;
+
+		const pages = new Set<number>();
+		for (const range of this.getSearchGroupRanges()) {
+			const firstPage = Math.ceil(range.startRank / LEADERBOARD_RECORDS_PER_PAGE);
+			const lastPage = Math.min(Math.ceil(range.endRank / LEADERBOARD_RECORDS_PER_PAGE), this.state.totalPages);
+			for (let page = firstPage; page <= lastPage; page++) pages.add(page);
+		}
+
+		return Array.from(pages).sort((a, b) => a - b);
+	}
+
+	private matchesSearch(record: LeaderboardRecord): boolean {
+		if (this.searchText && !record.playerName.toLowerCase().includes(this.searchText)) return false;
+		if (this.searchGroups.length === 0 || this.state.filter !== LeaderboardRecordsFilter.GLOBAL) return true;
+
+		const group = getCompletionGroup(record.rank, this.groupEnds);
+		return this.searchGroups.some((selectedGroup) =>
+			selectedGroup === CompletionGroup.TOP_10 ? record.rank <= 10 : group === selectedGroup
+		);
+	}
+
 	previousPage() {
+		const searchPages = this.getSearchPages();
+		if (searchPages !== null) {
+			const previous = searchPages.filter((page) => page < this.state.page).pop();
+			if (previous !== undefined) this.selectPage(previous);
+			return;
+		}
+
 		this.state.page = Math.max(this.state.page - 1, 1);
 		this.setTextEntry(this.state.page);
 		this.updateLeaderboards();
 	}
 
 	nextPage() {
+		const searchPages = this.getSearchPages();
+		if (searchPages !== null) {
+			const next = searchPages.find((page) => page > this.state.page);
+			if (next !== undefined) this.selectPage(next);
+			return;
+		}
+
 		this.state.page = Math.min(this.state.page + 1, this.state.totalPages);
 		this.setTextEntry(this.state.page);
 		this.updateLeaderboards();
@@ -493,12 +624,13 @@ export class LeaderboardsHandler {
 	private updateControlButtons() {
 		const { pagePrev, pageNext, groupPrev, groupNext } = this.panels.controls;
 		const { page, totalPages } = this.state;
+		const searchPages = this.getSearchPages();
 
-		pagePrev.enabled = page > 1;
-		pageNext.enabled = page < totalPages;
+		pagePrev.enabled = searchPages !== null ? searchPages.some((searchPage) => searchPage < page) : page > 1;
+		pageNext.enabled = searchPages !== null ? searchPages.some((searchPage) => searchPage > page) : page < totalPages;
 
-		groupPrev.enabled = this.getPreviousGroupPage() !== page;
-		groupNext.enabled = this.getNextGroupPage() !== page;
+		groupPrev.enabled = searchPages === null && this.getPreviousGroupPage() !== page;
+		groupNext.enabled = searchPages === null && this.getNextGroupPage() !== page;
 
 		this.updateAroundButton();
 	}
@@ -511,7 +643,10 @@ export class LeaderboardsHandler {
 	private updateAroundButton() {
 		const pbPage = this.getPersonalBestPage();
 		const enabled =
-			pbPage !== null && pbPage !== this.state.page && this.state.filter === LeaderboardRecordsFilter.GLOBAL;
+			pbPage !== null &&
+			pbPage !== this.state.page &&
+			this.state.filter === LeaderboardRecordsFilter.GLOBAL &&
+			this.searchGroups.length === 0;
 
 		this.panels.around.enabled = enabled;
 
@@ -521,7 +656,15 @@ export class LeaderboardsHandler {
 	}
 
 	selectPage(page: number) {
-		const clamped = Math.min(Math.max(1, page), this.state.totalPages);
+		const searchPages = this.getSearchPages();
+		const clamped =
+			searchPages === null
+				? Math.min(Math.max(1, page), this.state.totalPages)
+				: searchPages.reduce<number>(
+					(closest, candidate) =>
+						Math.abs(candidate - page) < Math.abs(closest - page) ? candidate : closest,
+					searchPages[0] ?? 1
+				);
 		this.state.page = clamped;
 
 		if (this.panels.controls.pageSelect.text !== `${clamped}`) {
