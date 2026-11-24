@@ -67,7 +67,7 @@ export class StyleSelectorHandler {
 		this.panels.dropdown.SetSelected(StyleSelectorHandler.optionId(this.selectedStyle));
 
 		// Nothing to pick between for a single-style mode.
-		this.panels.dropdown.enabled = this.styles.length > 1;
+		this.panels.dropdown.enabled = this.panels.dropdown.visible = this.styles.length > 1;
 	}
 
 	private onDropdownChanged() {
