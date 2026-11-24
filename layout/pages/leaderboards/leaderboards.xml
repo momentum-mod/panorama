@@ -26,7 +26,7 @@
             <Panel id="LeaderboardSearch" class="search leaderboard-search" acceptsfocus="true">
                 <Image class="search__icon" src="file://{images}/search.svg" textureheight="32" />
                 <TextEntry id="LeaderboardSearchTextEntry" class="search__textentry" maxchars="96"
-                           placeholder="Search the leaderboard." />
+                           placeholder="#Leaderboards_SearchPlaceholder" />
                 <Button id="LeaderboardSearchClear" class="search__clearbutton search__clearbutton--hidden"
                         onactivate="LeaderboardsHandler.clearSearch()">
                     <Image class="search__clearicon" src="file://{images}/close.svg" textureheight="32" />
