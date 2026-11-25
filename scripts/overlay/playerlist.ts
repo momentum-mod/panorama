@@ -8,6 +8,13 @@ class PlayerListPlayerHandler {
 		const items = [];
 
 		if (player.connected && !player.isSelf) {
+			items.push({
+				label: $.Localize('#Lobby_Spectate'),
+				icon: 'file://{images}/eye.svg',
+				style: 'icon-color-white',
+				jsCallback: () => GameInterfaceAPI.ConsoleCommand('mom_spectate ' + player.steamId)
+			});
+
 			if (player.spectating) {
 				// 0 means they are spectating something we can't spectate ourselves
 				if (player.spectateWithTarget !== '0') {
@@ -19,20 +26,12 @@ class PlayerListPlayerHandler {
 					});
 				}
 			} else {
-				items.push(
-					{
-						label: $.Localize('#Lobby_Spectate'),
-						icon: 'file://{images}/eye.svg',
-						style: 'icon-color-white',
-						jsCallback: () => GameInterfaceAPI.ConsoleCommand('mom_spectate ' + player.steamId)
-					},
-					{
-						label: $.Localize('#Lobby_TeleportTo'),
-						icon: 'file://{images}/goto.svg',
-						style: 'icon-color-white',
-						jsCallback: () => GameInterfaceAPI.ConsoleCommand('mom_goto ' + player.steamId)
-					}
-				);
+				items.push({
+					label: $.Localize('#Lobby_TeleportTo'),
+					icon: 'file://{images}/goto.svg',
+					style: 'icon-color-white',
+					jsCallback: () => GameInterfaceAPI.ConsoleCommand('mom_goto ' + player.steamId)
+				});
 			}
 		}
 
