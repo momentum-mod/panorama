@@ -23,12 +23,11 @@ export interface LobbyMember {
 
 	isTyping: 'y' | undefined;
 
-	isSpectating: '1' | undefined;
+	/** Empty when not spectating, otherwise 'none', 'replay' or the target's steam ID */
+	spec_target: string;
 
 	/** Not passed by C++, but used in JS code */
 	isMuted: boolean | undefined;
-
-	specTargetID: steamID;
 }
 
 // TODO: All of left/disconnected/kicked/banned are lumped into LEAVE here in C++, could distinguish if needed.

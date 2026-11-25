@@ -358,44 +358,49 @@ class LobbyHandler {
 
 		if (!memberMap) return;
 
-		if (memberData.isSpectating === '1') {
-			const specTargetName = FriendsAPI.GetNameForXUID(memberData.specTargetID);
+		const specTarget = memberData.spec_target;
 
-			memberStatePanel.SetImage('file://{images}/eye.svg');
+		if (specTarget) {
+			const isReplay = specTarget === 'replay';
+			const icon = `file://{images}/${isReplay ? 'movie-open-outline' : 'eye'}.svg`;
 
-			memberStatePanel.RemoveClass('hide');
+			let status: string;
+			if (isReplay) {
+				status = $.Localize('#Spectate_Status_WatchingReplay');
+			} else if (specTarget === 'none') {
+				status = $.Localize('#Spectate_Status_Spectating');
+			} else {
+				const specTargetName = FriendsAPI.GetNameForXUID(specTarget);
+				status = $.Localize('#Spectate_Status_Spectating_Player').replace('%user%', `<b>${specTargetName}</b>`);
+			}
+
+			memberStatePanel.SetImage(icon);
 
 			memberStatePanel.SetPanelEvent('onmouseover', () =>
-				UiToolkitAPI.ShowTitleImageTextTooltipStyled(
-					memberStatePanel.id,
-					'',
-					'file://{images}/eye.svg',
-					$.Localize('#Spectate_Status_Spectating_Player').replace('%user%', `<b>${specTargetName}</b>`),
-					'tooltip--notitle'
-				)
+				UiToolkitAPI.ShowTitleImageTextTooltipStyled(memberStatePanel.id, '', icon, status, 'tooltip--notitle')
 			);
 		} else {
 			memberStatePanel.ClearPanelEvent('onmouseover');
 			memberStatePanel.SetImage('file://{images}/play.svg');
+		}
 
-			memberStatePanel.RemoveClass('hide');
+		memberStatePanel.RemoveClass('hide');
 
-			if (memberMap === localMap && memberMap) {
-				joinButton.SetDialogVariable('memberJoinLabel', $.Localize('#Lobby_Spectate'));
-				joinButton.RemoveClass('hide');
+		if (memberMap === localMap && memberMap) {
+			joinButton.SetDialogVariable('memberJoinLabel', $.Localize('#Lobby_Spectate'));
+			joinButton.RemoveClass('hide');
 
-				const joinCallback = () => GameInterfaceAPI.ConsoleCommand('mom_spectate ' + memberSteamID);
+			const joinCallback = () => GameInterfaceAPI.ConsoleCommand('mom_spectate ' + memberSteamID);
 
-				panel.SetPanelEvent('ondblclick', joinCallback);
-				panel.FindChildTraverse('MemberJoinButton').SetPanelEvent('onactivate', joinCallback);
-			} else {
-				// if (MapCacheAPI.GetMapData ... needs web and C++ work
-				// joinButton.SetDialogVariable('memberJoinLabel', 'Join Map');
-				// joinButton.RemoveClass('hide');
-				// const joinCallback = () => $.DispatchEvent('MapSelector_TryPlayMap', memberMap);
-				// panel.SetPanelEvent('ondblclick', joinCallback);
-				// panel.FindChildTraverse('MemberJoinButton').SetPanelEvent('onactivate', joinCallback);
-			}
+			panel.SetPanelEvent('ondblclick', joinCallback);
+			panel.FindChildTraverse('MemberJoinButton').SetPanelEvent('onactivate', joinCallback);
+		} else {
+			// if (MapCacheAPI.GetMapData ... needs web and C++ work
+			// joinButton.SetDialogVariable('memberJoinLabel', 'Join Map');
+			// joinButton.RemoveClass('hide');
+			// const joinCallback = () => $.DispatchEvent('MapSelector_TryPlayMap', memberMap);
+			// panel.SetPanelEvent('ondblclick', joinCallback);
+			// panel.FindChildTraverse('MemberJoinButton').SetPanelEvent('onactivate', joinCallback);
 		}
 	}
 
