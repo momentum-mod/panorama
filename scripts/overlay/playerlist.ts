@@ -15,24 +15,22 @@ class PlayerListPlayerHandler {
 				jsCallback: () => GameInterfaceAPI.ConsoleCommand('mom_spectate ' + player.steamId)
 			});
 
-			if (player.spectating) {
-				// 0 means they are spectating something we can't spectate ourselves
-				if (player.spectateWithTarget !== '0') {
-					items.push({
-						label: $.Localize('#Lobby_SpectateWithPlayer'),
-						icon: 'file://{images}/eye-arrow-right.svg',
-						style: 'icon-color-white',
-						jsCallback: () => GameInterfaceAPI.ConsoleCommand('mom_spectate ' + player.spectateWithTarget)
-					});
-				}
-			} else {
+			// 0 means they are spectating something we can't spectate ourselves
+			if (player.spectating && player.spectateWithTarget !== '0') {
 				items.push({
-					label: $.Localize('#Lobby_TeleportTo'),
-					icon: 'file://{images}/goto.svg',
+					label: $.Localize('#Lobby_SpectateWithPlayer'),
+					icon: 'file://{images}/eye-arrow-right.svg',
 					style: 'icon-color-white',
-					jsCallback: () => GameInterfaceAPI.ConsoleCommand('mom_goto ' + player.steamId)
+					jsCallback: () => GameInterfaceAPI.ConsoleCommand('mom_spectate ' + player.spectateWithTarget)
 				});
 			}
+
+			items.push({
+				label: $.Localize('#Lobby_TeleportTo'),
+				icon: 'file://{images}/goto.svg',
+				style: 'icon-color-white',
+				jsCallback: () => GameInterfaceAPI.ConsoleCommand('mom_goto ' + player.steamId)
+			});
 		}
 
 		items.push({
