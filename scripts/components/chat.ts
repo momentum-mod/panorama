@@ -71,13 +71,14 @@ class ChatHandler {
 		if (!this.typingLabel || !this.typingLabel.visible) return;
 
 		for (const memberSteamID of Object.keys(memberData)) {
-			if (memberSteamID === UserAPI.GetXUID()) return;
+			if (memberSteamID === UserAPI.GetXUID()) continue;
 
 			const index = this.membersTyping.indexOf(memberSteamID);
+			const isTyping = memberData[memberSteamID].is_typing === 'y';
 
-			if (index === -1 && memberData[memberSteamID].isTyping === 'y') {
+			if (isTyping && index === -1) {
 				this.membersTyping.push(memberSteamID);
-			} else if (index !== -1) {
+			} else if (!isTyping && index !== -1) {
 				this.membersTyping.splice(index, 1);
 			}
 		}

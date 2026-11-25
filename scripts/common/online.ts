@@ -21,7 +21,7 @@ export type MemberData = Record<steamID, LobbyMember>;
 export interface LobbyMember {
 	map_name: string;
 
-	isTyping: 'y' | undefined;
+	is_typing: 'y' | '';
 
 	/** Empty when not spectating, otherwise 'none', 'replay' or the target's steam ID */
 	spec_target: string;
