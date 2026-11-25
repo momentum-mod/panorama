@@ -2,44 +2,81 @@
 	<styles>
 		<include src="file://{resources}/styles/main.scss" />
 	</styles>
-	
+
 	<scripts>
 		<include type="module" src="file://{scripts}/modals/popups/hud-customizer-copy-to-other-presets.ts" />
 	</scripts>
 
-    <snippets>
-        <snippet name="preset-select">
-            <Panel>
-                <ToggleButton id="ToggleButton" class="button togglebutton togglebutton--blue h-align-left" style="min-width: 170px">
-                    <Label id="ToggleButtonLabel" class="button__text" text="" />
-                </ToggleButton>
-                <DropDown id="DropDown" class="dropdown h-align-right" menuclass="dropdown-menu" />
-            </Panel>
-        </snippet>
-    </snippets>
-	
-	<PopupCustomLayout class="PopupPanel Hidden" popupbackground="dim">
+	<snippets>
+		<snippet name="source-select">
+			<Panel class="copy-preset-popup__row">
+				<RadioButton id="RadioButton" group="CopyPresetSource" class="radiobutton-classic copy-preset-popup__row__control" hittestchildren="false">
+					<Label id="RadioButtonLabel" class="copy-preset-popup__row__label" text="" />
+				</RadioButton>
+				<DropDown id="DropDown" class="dropdown copy-preset-popup__dropdown" menuclass="dropdown-menu" />
+			</Panel>
+		</snippet>
+		<snippet name="preset-select">
+			<Panel class="copy-preset-popup__row">
+				<ToggleButton id="ToggleButton" class="checkbox copy-preset-popup__row__control" hittestchildren="false">
+					<Label id="ToggleButtonLabel" class="copy-preset-popup__row__label" text="" />
+				</ToggleButton>
+				<DropDown id="DropDown" class="dropdown copy-preset-popup__dropdown" menuclass="dropdown-menu" />
+			</Panel>
+		</snippet>
+	</snippets>
+
+	<PopupCustomLayout class="PopupPanel Hidden copy-preset-popup" popupbackground="dim">
 		<Panel class="row h-align-center mt-0">
 			<Label id="TitleLabel" class="generic-popup__title" text="" />
 		</Panel>
-        <Panel class="row h-align-center mt-4 generic-popup__button-row">
-			<Button class="button mr-4" onactivate="HudCustomizerCopyToOtherPresetsHandler.setAllButtons(true)">
-				<Label class="button__text" text="#Customizer_EnableAll" />
-			</Button>
-            <Button id="CancelButton" class="button" onactivate="HudCustomizerCopyToOtherPresetsHandler.setAllButtons(false)">
-				<Label class="button__text" text="#Customizer_DisableAll" />
-			</Button>
+
+		<Panel class="copy-preset-popup__body">
+			<Panel id="CopyFromContainer" class="copy-preset-popup__column copy-preset-popup__column--from">
+				<Panel class="copy-preset-popup__section-header">
+					<Label class="copy-preset-popup__section-header__title" text="#Customizer_Preset_Copy_From" />
+				</Panel>
+
+				<Panel class="copy-preset-popup__inset">
+					<Label id="NoSourcesLabel" class="text-m h-align-center my-4" text="#Customizer_Preset_Copy_NoSources" />
+					<Panel id="SourcePresetContainer" class="flow-down w-full">
+						<!-- Populated by TS -->
+					</Panel>
+				</Panel>
+			</Panel>
+
+			<Panel class="copy-preset-popup__arrow-col">
+				<Panel class="copy-preset-popup__arrow-badge">
+					<Image src="file://{images}/arrow-forward.svg" />
+				</Panel>
+			</Panel>
+
+			<Panel id="CopyToContainer" class="copy-preset-popup__column copy-preset-popup__column--to">
+				<Panel class="copy-preset-popup__section-header">
+					<Label class="copy-preset-popup__section-header__title" text="#Customizer_Preset_Copy_To" />
+					<Panel class="copy-preset-popup__section-header__actions">
+						<Button class="button copy-preset-popup__toolbar-btn mr-2" onactivate="HudCustomizerCopyToOtherPresetsHandler.setAllButtons(true)">
+							<Label class="button__text" text="#Customizer_EnableAll" />
+						</Button>
+						<Button class="button copy-preset-popup__toolbar-btn" onactivate="HudCustomizerCopyToOtherPresetsHandler.setAllButtons(false)">
+							<Label class="button__text" text="#Customizer_DisableAll" />
+						</Button>
+					</Panel>
+				</Panel>
+
+				<Panel class="copy-preset-popup__inset">
+					<Panel id="GamemodePresetContainer" class="flow-down w-full">
+						<!-- Populated by TS -->
+					</Panel>
+				</Panel>
+			</Panel>
 		</Panel>
 
-		<Panel id="GamemodePresetContainer" class="flow-down h-align-center">
-            <!-- Populated by TS -->
-        </Panel>
-
 		<Panel class="row h-align-center mt-4 generic-popup__button-row">
-			<Button class="button button--green mr-4">
-				<Label class="button__text" text="Copy To Selected" onactivate="HudCustomizerCopyToOtherPresetsHandler.onOkButtonPressed()"/>
+			<Button id="ConfirmButton" class="button button--green mr-4" onactivate="HudCustomizerCopyToOtherPresetsHandler.onOkButtonPressed()">
+				<Label class="button__text" text="#Customizer_Preset_Copy" />
 			</Button>
-            <Button id="CancelButton" class="button" onactivate="UiToolkitAPI.CloseAllVisiblePopups()">
+			<Button id="CancelButton" class="button" onactivate="UiToolkitAPI.CloseAllVisiblePopups()">
 				<Label class="button__text" text="#Common_Cancel" />
 			</Button>
 		</Panel>

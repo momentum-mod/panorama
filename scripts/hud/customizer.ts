@@ -14,7 +14,7 @@ import { GamemodeInfo, GamemodeInfoList } from 'common/gamemode';
 import { Gamemode } from 'common/web/enums/gamemode.enum';
 import { PanelHandler } from 'util/module-helpers';
 import { mergeDeep, compareDeepIgnoreNull, compareDeepAsymmetric } from 'util/functions';
-import { CopyToOtherPresetsData } from 'modals/popups/hud-customizer-copy-to-other-presets';
+import { CopyToOtherPresetsData, PresetRef } from 'modals/popups/hud-customizer-copy-to-other-presets';
 
 /** Structure of layout stored out to JSON */
 interface ComponentLayout {
@@ -539,6 +539,7 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 
 	presetList: Set<string>;
 	unsavedPresets: Set<string> = new Set();
+	componentGamemodes = new Map<string, Gamemode[] | undefined>();
 
 	static presetLayout: HudLayout;
 	static defaultLayout: HudLayout;
@@ -885,10 +886,12 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			const copyPresetData = () => {
 				return {
 					title: $.Localize('#Customizer_Preset_Copy_Header'),
-					gamemodes: GamemodeInfoList,
+					gamemodes: [...GamemodeInfoList],
 					presetList: [...this.presetList, ...this.unsavedPresets],
-					onConfirm: (_, presetList: { gamemodeID: string; presetName: string }[]) =>
-						this.copyPreset(presetList)
+					savedPresetList: [...this.presetList],
+					currentGamemodeID: this.gamemodeInfo.id,
+					currentPreset: this.currentPreset,
+					onConfirm: (_, source: PresetRef, targets: PresetRef[]) => this.copyPreset(source, targets)
 				} as CopyToOtherPresetsData;
 			};
 
@@ -896,14 +899,15 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			const copyPresetLabel = copyPreset.GetFirstChild() as Label;
 			copyPresetLabel.text = $.Localize('#Customizer_Preset_Copy');
 
-			copyPreset.enabled = !isDefaultPreset;
-			copyPreset.SetPanelEvent('onactivate', () =>
+			copyPreset.enabled = true;
+			copyPreset.SetPanelEvent('onactivate', () => {
+				if (this.customizerReady) this.save();
 				UiToolkitAPI.ShowCustomLayoutPopupParameters(
 					'CopyToOtherPresets',
 					'file://{resources}/layout/modals/popups/hud-customizer-copy-to-other-presets.xml',
 					`data=${UiToolkitAPI.RegisterJSCallback(() => copyPresetData())}`
-				)
-			);
+				);
+			});
 			copyPreset.SetPanelEvent('onmouseover', () =>
 				UiToolkitAPI.ShowTextTooltip(copyPreset.id, $.Localize('#Customizer_Preset_Copy_Tooltip'))
 			);
@@ -1033,82 +1037,74 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		}
 	}
 
-	copyPreset(presetList: { gamemodeID: string; presetName: string }[]) {
-		const getAvailableGamemodes = (gamemodes: Gamemode | Gamemode[]) => {
-			if (gamemodes === undefined || gamemodes === null) {
-				return Object.values(Gamemode).filter((v) => typeof v === 'number') as Gamemode[];
-			}
-			return Array.isArray(gamemodes) ? gamemodes : [gamemodes];
-		};
+	copyPreset(source: PresetRef, targets: PresetRef[], componentID: string | null = null) {
+		const srcLayout = this.loadFullPresetLayout(source.gamemodeID, source.presetName);
+		if (!srcLayout) {
+			displayToast(
+				$.Localize('#Customizer_Preset_Copy_FailedHeader'),
+				$.Localize('#Customizer_Preset_Copy_LoadFailed').replace('{presetName}', source.presetName)
+			);
+			return;
+		}
 
-		for (const { gamemodeID, presetName } of presetList) {
+		const componentIDs = componentID ? [componentID] : [...this.componentGamemodes.keys()];
+		let updatedCurrentGamemodePreset: string | undefined;
+
+		for (const { gamemodeID, presetName } of targets) {
 			const fullPresetName = `${gamemodeID}_${presetName}`;
-			const layout: HudLayout = this.panels.customizer.loadLayout(fullPresetName) ?? {};
+			const tgtDefault = this.getGamemodeDefaultLayout(gamemodeID);
+			const layout: HudLayout = this.loadFullPresetLayout(gamemodeID, presetName) ?? { ...tgtDefault };
 
 			// layers are positions in this gamemode's stack, so other gamemodes, whose stacks have different members,
 			// keep their own
-			const bSameGamemode = gamemodeID === this.gamemodeInfo.id;
+			const bSameGamemode = source.gamemodeID === gamemodeID;
 
-			for (const [componentID, component] of Object.entries(this.components)) {
-				const availableGamemodes = getAvailableGamemodes(component.properties.gamemode);
-
-				const componentAvailable = availableGamemodes.some(
-					(gamemode) => GamemodeInfo.get(gamemode)?.id === gamemodeID
-				);
-
-				if (!componentAvailable) continue;
+			for (const id of componentIDs) {
+				if (
+					!this.isComponentInGamemode(id, source.gamemodeID) ||
+					!this.isComponentInGamemode(id, gamemodeID) ||
+					!srcLayout[id]
+				) {
+					continue;
+				}
 
 				if (bSameGamemode) {
-					layout[componentID] = component.getLayout();
+					layout[id] = srcLayout[id];
 				} else {
-					const { layer: _layer, ...componentData } = component.getLayout();
-					const existingLayer = layout[componentID]?.layer;
-					layout[componentID] = {
+					const { layer: _layer, ...componentData } = srcLayout[id];
+					const existingLayer = layout[id]?.layer;
+					layout[id] = {
 						...componentData,
 						...(existingLayer !== undefined && { layer: existingLayer })
 					};
 				}
 			}
 
-			const saveData = this.getLayoutDelta(layout, HudCustomizerHandler.defaultLayout);
+			const saveData = this.getLayoutDelta(layout, tgtDefault);
 			const saveSuccessful = this.panels.customizer.saveLayout(fullPresetName, saveData);
 
 			if (saveSuccessful) {
 				$.persistentStorage.setItem(`hud-customizer.preset.${gamemodeID}`, presetName);
 				this.presetList.add(fullPresetName);
-				this.updatePresetSettings();
+				this.unsavedPresets.delete(fullPresetName);
+				if (gamemodeID === this.gamemodeInfo.id) {
+					updatedCurrentGamemodePreset = presetName;
+				}
 			}
 		}
+
+		if (updatedCurrentGamemodePreset) {
+			this.changePreset(updatedCurrentGamemodePreset);
+		}
+
+		this.updatePresetSettings();
 	}
 
-	copyPanelToOtherPresets(componentID: string, presetList: { gamemodeID: string; presetName: string }[]) {
-		const componentLayout = this.components[componentID].getLayout();
-		const { layer: _layer, ...componentData } = componentLayout;
-
-		for (const { gamemodeID, presetName } of presetList) {
-			const fullPresetName = `${gamemodeID}_${presetName}`;
-
-			const existingLayout: HudLayout = this.panels.customizer.loadLayout(fullPresetName) ?? {};
-
-			// layers are positions in this gamemode's stack, so other gamemodes, whose stacks have different members,
-			// keep their own
-			const bSameGamemode = gamemodeID === this.gamemodeInfo.id;
-			const existingLayer = existingLayout[componentID]?.layer;
-			const updatedLayout: HudLayout = {
-				...existingLayout,
-				[componentID]: bSameGamemode
-					? componentLayout
-					: { ...componentData, ...(existingLayer !== undefined && { layer: existingLayer }) }
-			};
-
-			const saveSuccessful = this.panels.customizer.saveLayout(fullPresetName, updatedLayout);
-
-			if (saveSuccessful) {
-				$.persistentStorage.setItem(`hud-customizer.preset.${gamemodeID}`, presetName);
-				this.presetList.add(fullPresetName);
-				this.updatePresetSettings();
-			}
-		}
+	isComponentInGamemode(componentID: string, gamemodeID: string): boolean {
+		if (!this.componentGamemodes.has(componentID)) return false;
+		const gamemodes = this.componentGamemodes.get(componentID);
+		if (gamemodes === undefined) return true;
+		return gamemodes.some((gamemode) => GamemodeInfo.get(gamemode)?.id === gamemodeID);
 	}
 
 	/**
@@ -1118,6 +1114,14 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 	 */
 	loadComponent(panel: GenericPanel, properties: CustomizerComponentProperties): void {
 		if (!panel) return;
+		this.componentGamemodes.set(
+			panel.id,
+			properties.gamemode === undefined
+				? undefined
+				: Array.isArray(properties.gamemode)
+					? properties.gamemode
+					: [properties.gamemode]
+		);
 		//Skip registering if the gamemode doesn't match. If the gamemode property doesn't exist always register
 		if (properties.gamemode) {
 			const allowed = Array.isArray(properties.gamemode) ? properties.gamemode : [properties.gamemode];
@@ -1320,21 +1324,25 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 				const copyButtonData = () => {
 					return {
 						title: header,
-						gamemodes: getAvailableGamemodes(component.properties.gamemode),
+						gamemodes: [...getAvailableGamemodes(component.properties.gamemode)],
 						presetList: [...this.presetList, ...this.unsavedPresets],
+						savedPresetList: [...this.presetList],
+						currentGamemodeID: this.gamemodeInfo.id,
+						currentPreset: this.currentPreset,
 						componentID: id,
-						onConfirm: (componentID: string, presetList: { gamemodeID: string; presetName: string }[]) =>
-							this.copyPanelToOtherPresets(componentID, presetList)
+						onConfirm: (componentID: string | null, source: PresetRef, targets: PresetRef[]) =>
+							this.copyPreset(source, targets, componentID)
 					} as CopyToOtherPresetsData;
 				};
 
-				copyButton.SetPanelEvent('onactivate', () =>
+				copyButton.SetPanelEvent('onactivate', () => {
+					if (this.customizerReady) this.save();
 					UiToolkitAPI.ShowCustomLayoutPopupParameters(
 						'CopyToOtherPresets',
 						'file://{resources}/layout/modals/popups/hud-customizer-copy-to-other-presets.xml',
 						`data=${UiToolkitAPI.RegisterJSCallback(() => copyButtonData())}`
-					)
-				);
+					);
+				});
 			}
 
 			const resetButton = $.CreatePanel('Button', right, `${id}ResetButton`, {
@@ -2768,6 +2776,10 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 			throw new Error(`Could not find gamemode id for gamemode: ${this.gamemodeInfo.name}`);
 		}
 
+		return this.getGamemodeDefaultLayout(gamemodeID);
+	}
+
+	getGamemodeDefaultLayout(gamemodeID: string): HudLayout {
 		const generalLayout = $.GetContextPanel<HudCustomizer>().loadLayout('hud_default');
 		const gamemodeLayout = $.GetContextPanel<HudCustomizer>().loadLayout(`${gamemodeID}_default`);
 
@@ -2779,6 +2791,13 @@ class HudCustomizerHandler implements IHudCustomizerHandler {
 		}
 
 		return mergeDeep(generalLayout, gamemodeLayout) as HudLayout;
+	}
+
+	loadFullPresetLayout(gamemodeID: string, presetName: string): HudLayout | null {
+		const presetLayout = $.GetContextPanel<HudCustomizer>().loadLayout(`${gamemodeID}_${presetName}`);
+		if (!presetLayout) return null;
+
+		return mergeDeep(this.getGamemodeDefaultLayout(gamemodeID), presetLayout) as HudLayout;
 	}
 
 	getLayoutDelta(layoutA: HudLayout, layoutB: HudLayout) {
