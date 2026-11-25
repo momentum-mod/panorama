@@ -16,6 +16,7 @@
 		<Panel class="tab-menu-toggles">
 			<ToggleButton id="VoiceToggle" class="tab-menu-toggles__button tab-menu-toggles__button--voice" convar="voice_enable" />
 			<ToggleButton id="PaintToggle" class="tab-menu-toggles__button tab-menu-toggles__button--paint" convar="mom_paint_hide_others" />
+			<ToggleButton id="PlayersToggle" class="tab-menu-toggles__button tab-menu-toggles__button--players" convar="mom_hide_players" />
 		</Panel>
 	</PlayerList>
 </root>
