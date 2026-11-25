@@ -19,6 +19,12 @@ const TOGGLES: ConVarToggle[] = [
 		convar: 'mom_paint_hide_others',
 		tooltipWhenOn: '#HudTabMenu_ShowOthersPaint',
 		tooltipWhenOff: '#HudTabMenu_HideOthersPaint'
+	},
+	{
+		id: 'PlayersToggle',
+		convar: 'mom_hide_players',
+		tooltipWhenOn: '#HudTabMenu_ShowOtherPlayers',
+		tooltipWhenOff: '#HudTabMenu_HideOtherPlayers'
 	}
 ];
 

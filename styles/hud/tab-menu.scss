@@ -186,6 +186,14 @@
 			}
 		}
 
+		&--players {
+			background-image: url('file://{images}/player.svg');
+
+			&:selected {
+				background-image: url('file://{images}/player-off.svg');
+			}
+		}
+
 		&:hover {
 			background-color: rgba(100, 100, 100, 0.4);
 		}
