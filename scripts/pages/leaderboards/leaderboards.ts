@@ -16,7 +16,7 @@ import { CompletionGroup } from 'common/web/enums/completion-group.enum';
 import { getRankGroupEnds, getCompletionGroup } from 'common/web/consts/rank-groups.const';
 
 // Keep in sync with entry.scss
-const ENTRY_HEIGHT = 32;
+const ENTRY_HEIGHT = 30;
 const PILL_VERTICAL_ADJUSTMENT = 2;
 
 // Offsets for the group pills
