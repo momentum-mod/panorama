@@ -156,7 +156,8 @@
 }
 
 // Sits under the bottom-left corner of the lobby player list
-.tab-menu-voice-toggle {
+.tab-menu-toggles {
+	flow-children: right;
 	margin-top: 6px;
 
 	&__button {
@@ -164,7 +165,7 @@
 
 		width: $size;
 		height: $size;
-		background-image: url('file://{images}/voice-disable.svg');
+		margin-right: 6px;
 		background-position: center;
 		background-repeat: no-repeat;
 		background-size: 70% 70%;
@@ -174,8 +175,20 @@
 		wash-color: $button-text-color;
 		transition: background-color 0.05s ease-out 0s;
 
-		&:selected {
-			background-image: url('file://{images}/voice-enable.svg');
+		&--voice {
+			background-image: url('file://{images}/voice-disable.svg');
+
+			&:selected {
+				background-image: url('file://{images}/voice-enable.svg');
+			}
+		}
+
+		&--paint {
+			background-image: url('file://{images}/paint-bucket.svg');
+
+			&:selected {
+				background-image: url('file://{images}/paint-bucket-off.svg');
+			}
 		}
 
 		&:hover {
