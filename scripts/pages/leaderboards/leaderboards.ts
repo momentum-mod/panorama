@@ -25,6 +25,7 @@ const GROUP_BORDER_TOP_ALIGN = -13;
 
 // Search tokens for the rank groups shown on the global leaderboard.
 const SEARCH_GROUP_TAGS: Readonly<Record<string, CompletionGroup>> = {
+	'@wr': CompletionGroup.WORLD_RECORD,
 	'@top10': CompletionGroup.TOP_10,
 	'@g1': CompletionGroup.GROUP_1,
 	'@g2': CompletionGroup.GROUP_2,
@@ -710,9 +711,9 @@ export class LeaderboardsHandler {
 		for (const token of query.split(/\s+/).filter(Boolean)) {
 			const group = SEARCH_GROUP_TAGS[token.toLowerCase()];
 			if (group !== undefined) groups.add(group);
-			else if (/^#[1-9]\d*$/.test(token)) rank = +token.slice(1);
+			else if (/^#?[1-9]\d*$/.test(token)) rank = +token.replace('#', '');
 			// A lone "#" or "@g" is a tag still being typed, not a name to search for
-			else if (!/^(#|@(t|to|top|top1|g)?)$/i.test(token)) terms.push(token);
+			else if (!/^(#|@(w|t|to|top|top1|g)?)$/i.test(token)) terms.push(token);
 		}
 
 		this.searchGroups = Array.from(groups);
@@ -733,9 +734,13 @@ export class LeaderboardsHandler {
 		this.panels.search.textEntry.text = '';
 	}
 
-	/** Return the rank intervals selected by @top10 and @g1-@g6. */
+	/** Return the rank intervals selected by @wr, @top10 and @g1-@g6. */
 	private getSearchGroupRanges(): Array<{ startRank: number; endRank: number }> {
 		const ranges: Array<{ startRank: number; endRank: number }> = [];
+
+		if (this.searchGroups.includes(CompletionGroup.WORLD_RECORD)) {
+			ranges.push({ startRank: 1, endRank: 1 });
+		}
 
 		if (this.searchGroups.includes(CompletionGroup.TOP_10)) {
 			ranges.push({ startRank: 1, endRank: 10 });
@@ -767,7 +772,13 @@ export class LeaderboardsHandler {
 	/** Pages containing the selected groups; null means all backend pages. */
 	private getSearchPages(totalPages = this.state.totalPages): number[] | null {
 		if (this.searchGroups.length === 0 || this.state.filter !== LeaderboardRecordsFilter.GLOBAL) return null;
-		if (this.searchGroups.some((group) => group !== CompletionGroup.TOP_10) && !this.groupEnds) return null;
+		if (
+			this.searchGroups.some(
+				(group) => group !== CompletionGroup.WORLD_RECORD && group !== CompletionGroup.TOP_10
+			) &&
+			!this.groupEnds
+		)
+			return null;
 
 		const pages = new Set<number>();
 		for (const range of this.getSearchGroupRanges()) {
@@ -785,9 +796,11 @@ export class LeaderboardsHandler {
 		if (this.searchGroups.length === 0 || this.state.filter !== LeaderboardRecordsFilter.GLOBAL) return true;
 
 		const group = getCompletionGroup(record.rank, this.groupEnds);
-		return this.searchGroups.some((selectedGroup) =>
-			selectedGroup === CompletionGroup.TOP_10 ? record.rank <= 10 : group === selectedGroup
-		);
+		return this.searchGroups.some((selectedGroup) => {
+			if (selectedGroup === CompletionGroup.WORLD_RECORD) return record.rank === 1;
+			if (selectedGroup === CompletionGroup.TOP_10) return record.rank <= 10;
+			return group === selectedGroup;
+		});
 	}
 
 	previousPage() {
