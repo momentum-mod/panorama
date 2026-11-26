@@ -1,0 +1,153 @@
+@use '../../config' as *;
+@use '../../abstract/function';
+@use '../../abstract/mixin';
+
+.copy-preset-popup {
+	width: 960px;
+
+	&__body {
+		flow-children: right;
+		width: 100%;
+		margin-top: 16px;
+	}
+
+	&__column {
+		flow-children: down;
+
+		&--from {
+			width: 400px;
+		}
+
+		&--to {
+			width: fill-parent-flow(1);
+		}
+	}
+
+	&__section-header {
+		flow-children: right;
+		width: 100%;
+		height: 32px;
+		margin-bottom: 8px;
+
+		&__title {
+			@include mixin.font-header();
+			font-size: 16px;
+			font-weight: bold;
+			color: rgba(255, 255, 255, 0.85);
+			vertical-align: center;
+		}
+
+		&__actions {
+			flow-children: right;
+			horizontal-align: right;
+			vertical-align: center;
+		}
+	}
+
+	&__toolbar-btn {
+		height: 26px;
+		padding: 0 10px;
+
+		& .button__text {
+			font-size: 12px;
+			margin: 0;
+		}
+	}
+
+	&__inset {
+		flow-children: down;
+		width: 100%;
+		max-height: 580px;
+		padding: 8px;
+		background-color: $gray-200;
+		border: 1px solid rgba(255, 255, 255, 0.06);
+		border-radius: 3px;
+		overflow: squish scroll;
+	}
+
+	&__arrow-col {
+		width: 48px;
+		height: 100%;
+		vertical-align: middle;
+	}
+
+	&__arrow-badge {
+		width: 32px;
+		height: 32px;
+		horizontal-align: center;
+		vertical-align: middle;
+		border-radius: 50%;
+		background-color: rgba(255, 255, 255, 0.06);
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		padding: 7px;
+
+		& Image {
+			width: 100%;
+			height: 100%;
+			wash-color: $mid-blue;
+		}
+	}
+
+	&__row {
+		flow-children: right;
+		width: 100%;
+		padding-right: 8px;
+		margin-bottom: 6px;
+		border-radius: 3px;
+		background-color: function.gradient-vertical(#363636, #242424);
+		border: 1px solid rgba(255, 255, 255, 0.08);
+		transition:
+			background-color 0.1s ease-in-out 0s,
+			border-color 0.1s ease-in-out 0s;
+
+		&:hover {
+			background-color: function.gradient-vertical(#424242, #2e2e2e);
+		}
+
+		&--selected {
+			background-color: function.gradient-vertical(#1672a0, #0d4b6e);
+			border: 1px solid rgba(87, 200, 255, 0.35);
+
+			&:hover {
+				background-color: function.gradient-vertical(#1b83b8, #105a82);
+			}
+		}
+
+		&__control {
+			width: fill-parent-flow(1);
+			padding: 7px 8px;
+			vertical-align: center;
+			flow-children: right;
+			background-color: none;
+			border: 0px solid transparent;
+
+			& .RadioBox,
+			& .TickBox {
+				vertical-align: center;
+				margin-right: 8px;
+			}
+		}
+
+		&__label {
+			@include mixin.font-header();
+			font-size: 14px;
+			font-weight: bold;
+			color: #ffffff;
+			vertical-align: center;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+	}
+
+	&__dropdown {
+		width: 140px;
+		height: 28px;
+		vertical-align: center;
+		horizontal-align: right;
+
+		& Label {
+			font-size: 13px;
+			padding: 0 8px;
+		}
+	}
+}
