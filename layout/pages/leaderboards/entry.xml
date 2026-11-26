@@ -5,7 +5,7 @@
 
 	<LeaderboardEntry class="leaderboard-entry" oncontextmenu="LeaderboardEntryHandler.showContextMenu()">
         <Panel class="leaderboard-entry__item leaderboard-entry__spacer"/>
-        
+
 		<Label class="leaderboard-entry__item leaderboard-entry__rank" text="{d:rank}" />
 
 		<Panel class="leaderboard-entry__item leaderboard-entry__item leaderboard-entry__player">
@@ -14,6 +14,7 @@
 		</Panel>
 
 		<Label class="leaderboard-entry__item leaderboard-entry__time" text="{g:time:time}" />
+		<Label class="leaderboard-entry__item leaderboard-entry__date" text="{s:date}" />
 		<!-- TODO: Tags -->
 
 	</LeaderboardEntry>

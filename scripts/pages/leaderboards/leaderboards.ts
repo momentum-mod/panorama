@@ -1,4 +1,5 @@
 import { exposeToPanelContext, PanelHandler } from 'util/module-helpers';
+import { formatTimeAgoString } from 'util/dates';
 import {
 	LeaderboardListType,
 	LeaderboardRecord,
@@ -498,6 +499,7 @@ export class LeaderboardsHandler {
 			lbEntry.SetDialogVariableInt('rank', record.rank);
 			lbEntry.SetDialogVariable('player', record.playerName);
 			lbEntry.SetDialogVariableFloat('time', record.runTime);
+			lbEntry.SetDialogVariable('date', formatTimeAgoString(Number(record.date)));
 
 			if (
 				this.state.filter === LeaderboardRecordsFilter.FRIENDS ||

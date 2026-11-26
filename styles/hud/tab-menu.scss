@@ -72,6 +72,11 @@
 		height: 813px;
 		flow-children: down;
 
+		&__top {
+			width: 100%;
+			height: 50px;
+		}
+
 		// Fill the space left below the style selector rather than the default 100%, which would
 		// overflow the column
 		Leaderboards {
