@@ -32,6 +32,7 @@
                     <Image class="search__clearicon" src="file://{images}/close.svg" textureheight="32" />
                 </Button>
             </Panel>
+            <Label class="leaderboard-search__progress" text="{s:search-progress}" hittest="false" />
         </Panel>
         <Panel id="LeaderboardTimesContainer" class="leaderboard-times">
             <Panel class="leaderboard-times__content-frame">

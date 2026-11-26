@@ -88,6 +88,7 @@ $main-padding: 13px;
 }
 
 .leaderboard-search-row {
+	flow-children: right;
 	width: 100%;
 	height: 32px;
 	padding: 0 $main-padding;
@@ -95,8 +96,14 @@ $main-padding: 13px;
 }
 
 .leaderboard-search {
-	width: 100%;
+	width: fill-parent-flow(1);
 	height: 28px;
+
+	&__progress {
+		vertical-align: center;
+		margin-left: 6px;
+		opacity: 0.6;
+	}
 }
 
 .leaderboard-times {

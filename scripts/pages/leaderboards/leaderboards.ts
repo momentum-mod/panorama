@@ -5,6 +5,7 @@ import {
 	LeaderboardRecord,
 	LeaderboardRecordsFilter,
 	LeaderboardStatusType,
+	type LoadedLeaderboardRecords,
 	LeaderboardType,
 	LEADERBOARD_RECORDS_PER_PAGE
 } from 'common/leaderboard';
@@ -36,6 +37,15 @@ const SEARCH_GROUP_TAGS: Readonly<Record<string, CompletionGroup>> = {
 // Show the loading spinner if the request takes longer than this in seconds
 const LOADING_SPINNER_DELAY = 0.2;
 
+// Wait for typing to pause before searching
+const SEARCH_DEBOUNCE = 0.35;
+
+// Each page is one backend request, so cap how many a single search may download
+const SEARCH_MAX_PAGES = 50;
+
+// How long downloaded pages can be reused by later searches, in milliseconds
+const SEARCH_CACHE_LIFETIME = 60_000;
+
 exposeToPanelContext({ LeaderboardListType, LeaderboardType, LeaderboardRecordsFilter });
 
 interface SearchLeaderboardRecord {
@@ -46,7 +56,7 @@ interface SearchLeaderboardRecord {
 
 interface LeaderboardRecordAction {
 	page: number;
-	index: number;
+	record: LeaderboardRecord;
 	type: 'watch' | 'compare' | 'delete';
 }
 
@@ -105,12 +115,17 @@ export class LeaderboardsHandler {
 	groupEnds: number[];
 	private searchGroups: CompletionGroup[] = [];
 	private searchText = '';
+	private searchRank: number | null = null;
 	private searchResults: SearchLeaderboardRecord[] = [];
-	private searchScanPages: number[] | null = null;
-	private searchScanIndex = 0;
 	private searchScanning = false;
-	private searchBackendOwnRunOnly = false;
-	private searchStatus = LeaderboardStatusType.NO_TIMES_RETURNED;
+	/** Downloaded pages (0-based) of the leaderboard identified by {@link searchCacheKey}. */
+	private readonly searchCache = new Map<number, LoadedLeaderboardRecords>();
+	private searchCacheKey = '';
+	private searchCacheTime = 0;
+	/** The 0-based page asked for most recently. */
+	private requestedPage = 0;
+	/** Identifies the rows currently on screen, so they're only rebuilt when they change. */
+	private renderedSearchRows: string | null = null;
 	private loadedRecordsPage: number | null = null;
 	private pendingRecordAction: LeaderboardRecordAction | null = null;
 
@@ -135,16 +150,16 @@ export class LeaderboardsHandler {
 		// via Leaderboards_LocalRunsLoaded -- it never re-fires LeaderboardRecords_Loaded -- so
 		// re-request the page ourselves when it fires while local-only.
 		$.RegisterEventHandler('Leaderboards_LocalRunsLoaded', this.panels.cp, () => {
-			if (this.localOnly) this.updateLeaderboards();
+			if (this.localOnly) this.reloadLeaderboards();
 		});
 
 		$.RegisterForUnhandledEvent('EndOfRun_Result_RunUpload', () => {
-			this.updateLeaderboards();
+			this.reloadLeaderboards();
 		});
 
 		// The engine builds the lobby filter from the lobby's members at request time
 		$.RegisterForUnhandledEvent('PanoramaComponent_SteamLobby_OnMemberStateChanged', () => {
-			if (this.state.filter === LeaderboardRecordsFilter.LOBBY) this.updateLeaderboards();
+			if (this.state.filter === LeaderboardRecordsFilter.LOBBY) this.reloadLeaderboards();
 		});
 
 		$.RegisterForUnhandledEvent('SteamLobby_Exit', () => {
@@ -172,6 +187,7 @@ export class LeaderboardsHandler {
 		this.panels.search.textEntry.SetPanelEvent('ontextentrychange', () => this.onSearchTextChanged());
 
 		this.setToolsAvailable(false);
+		this.panels.cp.SetDialogVariable('search-progress', '');
 	}
 
 	setMapID(mapID: number) {
@@ -275,6 +291,8 @@ export class LeaderboardsHandler {
 				return '#Leaderboards_Error_NoPB';
 		}
 
+		if (this.isSearchActive()) return '#Leaderboards_Error_NoSearchResults';
+
 		switch (this.state.filter) {
 			case LeaderboardRecordsFilter.GLOBAL:
 				return '#Leaderboards_Error_NoCompletions';
@@ -303,21 +321,29 @@ export class LeaderboardsHandler {
 		}
 	}
 
+	/** Show the leaderboard again after its data changed, without reusing downloaded pages. */
+	private reloadLeaderboards() {
+		this.searchCache.clear();
+		this.updateLeaderboards();
+	}
+
 	updateLeaderboards() {
+		this.pendingRecordAction = null;
+
 		if (this.isSearchActive()) {
-			this.startSearchScan();
+			this.startSearch();
 			return;
 		}
 
 		this.searchScanning = false;
-		this.searchScanPages = null;
 		this.searchResults = [];
-		this.pendingRecordAction = null;
+		this.panels.cp.SetDialogVariable('search-progress', '');
 		this.beginLoading();
 		this.requestLeaderboardPage(this.state.page - 1);
 	}
 
 	private requestLeaderboardPage(page: number) {
+		this.requestedPage = page;
 		this.loadedRecordsPage = null;
 		this.pendingRequestToken = this.panels.cp.getLeaderboardRecords(
 			this.state.mapID,
@@ -331,95 +357,105 @@ export class LeaderboardsHandler {
 	}
 
 	private isSearchActive(): boolean {
-		return this.searchText.length > 0 || this.searchGroups.length > 0;
+		return this.searchText.length > 0 || this.searchGroups.length > 0 || this.searchRank !== null;
 	}
 
-	private startSearchScan() {
-		this.pendingRecordAction = null;
-		this.searchResults = [];
-		this.searchScanPages = null;
-		this.searchScanIndex = 0;
+	private startSearch() {
+		const { mapID, gamemode, trackType, trackNum, style, filter } = this.state;
+		const key = [mapID, gamemode, trackType, trackNum, style, filter].join();
+		if (key !== this.searchCacheKey || Date.now() - this.searchCacheTime > SEARCH_CACHE_LIFETIME) {
+			this.searchCache.clear();
+			this.searchCacheKey = key;
+		}
+
+		if (this.searchCache.size === 0) this.searchCacheTime = Date.now();
+
+		this.groupEnds = getRankGroupEnds(this.totalCompletions);
 		this.searchScanning = true;
-		this.searchBackendOwnRunOnly = false;
-		this.searchStatus = LeaderboardStatusType.NO_TIMES_RETURNED;
-		this.state.page = 1;
-		this.state.totalPages = 1;
-		this.setTextEntry(1);
-		this.updateControlButtons();
+		this.renderedSearchRows = null;
+		this.pendingRequestToken = null;
 		this.beginLoading();
-		this.requestLeaderboardPage(0);
+		this.continueSearch();
 	}
 
-	private handleSearchScanResponse(data: ReturnType<Leaderboards['getLoadedLeaderboardRecords']>) {
-		this.searchStatus = data.status;
+	/** Show the matches found so far, then request the next page that hasn't been downloaded. */
+	private continueSearch() {
+		// On the global leaderboard a rank tells us which page it's on, so only that one is needed
+		const rankPage =
+			this.searchRank !== null && this.state.filter === LeaderboardRecordsFilter.GLOBAL
+				? Math.floor((this.searchRank - 1) / LEADERBOARD_RECORDS_PER_PAGE)
+				: null;
 
-		if (this.searchScanPages === null) {
-			this.searchBackendOwnRunOnly =
+		let pages: number[];
+		if (rankPage !== null) {
+			pages = [rankPage];
+		} else {
+			const first = this.searchCache.get(0);
+			if (!first) {
+				this.requestLeaderboardPage(0);
+				return;
+			}
+
+			const totalPages = Math.max(first.totalPages, 1);
+			pages =
+				this.getSearchPages(totalPages)?.map((page) => page - 1) ??
+				Array.from({ length: totalPages }, (_, index) => index);
+		}
+
+		const wanted = pages.slice(0, SEARCH_MAX_PAGES);
+		const nextPage = wanted.find((page) => !this.searchCache.has(page));
+		const searched = wanted.filter((page) => this.searchCache.has(page));
+
+		this.searchResults = [];
+		for (const page of searched) {
+			const data = this.searchCache.get(page);
+
+			// The backend includes the local player's run in the friends filter even when it's the only one
+			const isOwnRunOnly =
 				this.state.filter === LeaderboardRecordsFilter.FRIENDS &&
 				data.totalPages === 1 &&
 				data.records.length === 1 &&
 				this.currentUserRank != null;
-			this.groupEnds = getRankGroupEnds(this.totalCompletions);
+			if (isOwnRunOnly) continue;
 
-			const pages = this.getSearchPages(Math.max(data.totalPages, 1));
-			this.searchScanPages = (
-				pages ?? Array.from({ length: Math.max(data.totalPages, 1) }, (_, index) => index + 1)
-			).map((page) => page - 1);
-
-			if (this.searchScanPages.includes(data.page)) {
-				this.appendSearchRecords(data);
+			for (const [index, record] of data.records.entries()) {
+				if (this.matchesSearch(record)) this.searchResults.push({ record, page, index });
 			}
-
-			this.searchScanIndex = this.searchScanPages[0] === 0 ? 1 : 0;
-			this.requestNextSearchPage();
-			return;
 		}
 
-		if (this.searchScanPages.includes(data.page)) {
-			this.appendSearchRecords(data);
+		this.searchScanning = nextPage !== undefined;
+
+		// Show how far we got while searching, and afterwards too if the cap cut the search short
+		const incomplete = this.searchScanning || pages.length > wanted.length;
+		this.panels.cp.SetDialogVariable('search-progress', incomplete ? `${searched.length} / ${pages.length}` : '');
+
+		this.updateSearchPaging();
+		if (this.searchResults.length > 0 || !this.searchScanning) {
+			this.renderSearchResults(this.searchCache.get(searched[0])?.status);
 		}
 
-		this.requestNextSearchPage();
+		if (this.searchScanning) this.requestLeaderboardPage(nextPage);
 	}
 
-	private appendSearchRecords(data: ReturnType<Leaderboards['getLoadedLeaderboardRecords']>) {
-		data.records.forEach((record, index) => {
-			if (!this.matchesSearch(record)) return;
-			this.searchResults.push({ record, page: data.page, index });
-		});
-	}
-
-	private requestNextSearchPage() {
-		if (this.searchScanPages === null) return;
-
-		if (this.searchScanIndex >= this.searchScanPages.length) {
-			this.finishSearchScan();
-			return;
+	private updateSearchPaging() {
+		this.state.totalPages = Math.max(1, Math.ceil(this.searchResults.length / LEADERBOARD_RECORDS_PER_PAGE));
+		if (this.state.page > this.state.totalPages) {
+			this.state.page = this.state.totalPages;
+			this.setTextEntry(this.state.page);
 		}
 
-		const page = this.searchScanPages[this.searchScanIndex++];
-		this.requestLeaderboardPage(page);
-	}
-
-	private finishSearchScan() {
-		this.searchScanning = false;
-		this.searchScanPages = null;
-		if (this.searchBackendOwnRunOnly) this.searchResults = [];
-
-		this.state.totalPages = Math.max(
-			1,
-			Math.ceil(this.searchResults.length / LEADERBOARD_RECORDS_PER_PAGE)
-		);
-		this.state.page = Math.min(this.state.page, this.state.totalPages);
-		this.setTextEntry(this.state.page);
 		this.updateControlButtons();
-		this.renderSearchResults();
 	}
 
-	private renderSearchResults() {
+	private renderSearchResults(status = LeaderboardStatusType.NO_TIMES_RETURNED) {
 		const start = (this.state.page - 1) * LEADERBOARD_RECORDS_PER_PAGE;
-		const pageRecords = this.searchResults.slice(start, start + LEADERBOARD_RECORDS_PER_PAGE);
-		this.renderLeaderboardRecords(pageRecords, this.searchStatus);
+		const rows = this.searchResults.slice(start, start + LEADERBOARD_RECORDS_PER_PAGE);
+
+		const rowsKey = rows.map(({ page, index }) => `${page}:${index}`).join();
+		if (rowsKey === this.renderedSearchRows) return;
+		this.renderedSearchRows = rowsKey;
+
+		this.renderLeaderboardRecords(rows, status);
 	}
 
 	/**
@@ -430,7 +466,8 @@ export class LeaderboardsHandler {
 	clearRecords(status: LeaderboardStatusType) {
 		this.pendingRequestToken = null;
 		this.searchScanning = false;
-		this.searchScanPages = null;
+		this.searchCache.clear();
+		this.panels.cp.SetDialogVariable('search-progress', '');
 		this.pendingRecordAction = null;
 		this.loadedRecordsPage = null;
 		this.panels.timesList.RemoveAndDeleteChildren();
@@ -454,16 +491,27 @@ export class LeaderboardsHandler {
 			const action = this.pendingRecordAction;
 			this.pendingRecordAction = null;
 
-			if (data.page === action.page) {
-				this.performRecordAction(action);
-			} else {
-				this.updateLeaderboards();
-			}
+			if (data.page === action.page) this.performRecordAction(action);
+			if (this.searchScanning) this.continueSearch();
 			return;
 		}
 
 		if (this.searchScanning) {
-			this.handleSearchScanResponse(data);
+			const failed =
+				data.status === LeaderboardStatusType.SERVER_ERROR ||
+				data.status === LeaderboardStatusType.TIMES_LOADING;
+
+			if (failed) {
+				// Keep whatever was already found, and don't hammer a struggling backend
+				this.searchScanning = false;
+				this.updateControlButtons();
+				if (this.searchResults.length === 0) this.updateEmptyState(true, data.status);
+				return;
+			}
+
+			// Keyed by what was asked for: an out of range rank can be answered with a different page
+			this.searchCache.set(this.requestedPage, data);
+			this.continueSearch();
 			return;
 		}
 
@@ -488,7 +536,7 @@ export class LeaderboardsHandler {
 
 		const pageRecords = records.map((entry) => entry.record);
 		records.forEach((entry, index) => {
-			const { record } = entry;
+			const { record, page } = entry;
 			const lbEntry = $.CreatePanel('LeaderboardEntry', this.panels.timesList, '');
 			if (index === 0) {
 				lbEntry.AddClass('leaderboard-entry--first');
@@ -518,9 +566,7 @@ export class LeaderboardsHandler {
 			const avatar = lbEntry.FindChildTraverse<AvatarImage>('LeaderboardEntryAvatarPanel');
 			avatar.steamid = record.steamID;
 
-			lbEntry.SetPanelEvent('oncontextmenu', () =>
-				this.showEntryContextMenu(entry.page, entry.index, record)
-			);
+			lbEntry.SetPanelEvent('oncontextmenu', () => this.showEntryContextMenu(page, record));
 
 			if (this.currentUserRank === record.rank) {
 				lbEntry.AddClass('leaderboard-entry--localplayer');
@@ -530,19 +576,19 @@ export class LeaderboardsHandler {
 		this.updateEmptyState(records.length === 0, status);
 	}
 
-	private showEntryContextMenu(page: number, index: number, record: LeaderboardRecord) {
+	private showEntryContextMenu(page: number, record: LeaderboardRecord) {
 		const items: UiToolkitAPI.SimpleContextMenuItem[] = [
 			{
 				label: $.Localize('#Action_WatchReplay'),
 				icon: 'file://{images}/movie-open-outline.svg',
 				style: 'icon-color-mid-blue',
-				jsCallback: () => this.runRecordAction(page, index, 'watch')
+				jsCallback: () => this.runRecordAction(page, record, 'watch')
 			},
 			{
 				label: $.Localize('#Action_SetComparisonRun'),
 				icon: 'file://{images}/chart-timeline.svg',
 				style: 'icon-color-light-blue',
-				jsCallback: () => this.runRecordAction(page, index, 'compare')
+				jsCallback: () => this.runRecordAction(page, record, 'compare')
 			}
 		];
 
@@ -557,8 +603,8 @@ export class LeaderboardsHandler {
 						$.Localize('#Action_DeleteReplay'),
 						$.Localize('#Action_DeleteReplay_Confirm'),
 						'ok-cancel-popup',
-						() => this.runRecordAction(page, index, 'delete'),
-						() => { }
+						() => this.runRecordAction(page, record, 'delete'),
+						() => {}
 					)
 			});
 		}
@@ -573,28 +619,41 @@ export class LeaderboardsHandler {
 		UiToolkitAPI.ShowSimpleContextMenu('', 'ControlsLibSimpleContextMenu', items);
 	}
 
-	private runRecordAction(page: number, index: number, type: LeaderboardRecordAction['type']) {
-		const action = { page, index, type };
+	private runRecordAction(page: number, record: LeaderboardRecord, type: LeaderboardRecordAction['type']) {
+		const action = { page, record, type };
 		if (this.loadedRecordsPage === page) {
 			this.performRecordAction(action);
 			return;
 		}
 
+		// The game only acts on the page it loaded last, so load this record's page first
 		this.pendingRecordAction = action;
 		this.requestLeaderboardPage(page);
 	}
 
-	private performRecordAction(action: LeaderboardRecordAction) {
-		switch (action.type) {
+	private performRecordAction({ record, type }: LeaderboardRecordAction) {
+		// Look the record up again, since its position may have changed since it was downloaded
+		const index = this.panels.cp
+			.getLoadedLeaderboardRecords()
+			.records.findIndex(
+				(other) =>
+					other.steamID === record.steamID && other.runTime === record.runTime && other.date === record.date
+			);
+		if (index === -1) {
+			this.reloadLeaderboards();
+			return;
+		}
+
+		switch (type) {
 			case 'watch':
-				this.panels.cp.playRecordReplay(action.index);
+				this.panels.cp.playRecordReplay(index);
 				break;
 			case 'compare':
-				this.panels.cp.setRecordComparisonRun(action.index);
+				this.panels.cp.setRecordComparisonRun(index);
 				break;
 			case 'delete':
-				this.panels.cp.deleteRecordReplay(action.index);
-				this.updateLeaderboards();
+				this.panels.cp.deleteRecordReplay(index);
+				this.reloadLeaderboards();
 				break;
 		}
 	}
@@ -646,19 +705,23 @@ export class LeaderboardsHandler {
 		const query = this.panels.search.textEntry.text.trim();
 		const groups = new Set<CompletionGroup>();
 		const terms: string[] = [];
+		let rank: number | null = null;
 
 		for (const token of query.split(/\s+/).filter(Boolean)) {
 			const group = SEARCH_GROUP_TAGS[token.toLowerCase()];
 			if (group !== undefined) groups.add(group);
-			else terms.push(token);
+			else if (/^#[1-9]\d*$/.test(token)) rank = +token.slice(1);
+			// A lone "#" or "@g" is a tag still being typed, not a name to search for
+			else if (!/^(#|@(t|to|top|top1|g)?)$/i.test(token)) terms.push(token);
 		}
 
 		this.searchGroups = Array.from(groups);
 		this.searchText = terms.join(' ').toLowerCase();
+		this.searchRank = rank;
 		this.panels.search.clearButton.SetHasClass('search__clearbutton--hidden', query.length === 0);
 
 		if (this.searchHandle !== null) $.CancelScheduled(this.searchHandle);
-		this.searchHandle = $.Schedule(0.15, () => {
+		this.searchHandle = $.Schedule(SEARCH_DEBOUNCE, () => {
 			this.searchHandle = null;
 			this.state.page = 1;
 			this.setTextEntry(this.state.page);
@@ -717,6 +780,7 @@ export class LeaderboardsHandler {
 	}
 
 	private matchesSearch(record: LeaderboardRecord): boolean {
+		if (this.searchRank !== null && record.rank !== this.searchRank) return false;
 		if (this.searchText && !record.playerName.toLowerCase().includes(this.searchText)) return false;
 		if (this.searchGroups.length === 0 || this.state.filter !== LeaderboardRecordsFilter.GLOBAL) return true;
 
@@ -728,7 +792,7 @@ export class LeaderboardsHandler {
 
 	previousPage() {
 		if (this.isSearchActive()) {
-			if (!this.searchScanning) this.selectPage(this.state.page - 1);
+			this.selectPage(this.state.page - 1);
 			return;
 		}
 
@@ -739,7 +803,7 @@ export class LeaderboardsHandler {
 
 	nextPage() {
 		if (this.isSearchActive()) {
-			if (!this.searchScanning) this.selectPage(this.state.page + 1);
+			this.selectPage(this.state.page + 1);
 			return;
 		}
 
@@ -788,15 +852,15 @@ export class LeaderboardsHandler {
 
 	/** Disable page/group navigation buttons that wouldn't move anywhere from the current page. */
 	private updateControlButtons() {
-		const { pagePrev, pageNext, groupPrev, groupNext, pageSelect } = this.panels.controls;
+		const { container, pagePrev, pageNext, groupPrev, groupNext, pageSelect } = this.panels.controls;
 		const { page, totalPages } = this.state;
 
 		if (this.isSearchActive()) {
-			pagePrev.enabled = !this.searchScanning && page > 1;
-			pageNext.enabled = !this.searchScanning && page < totalPages;
+			pagePrev.enabled = page > 1;
+			pageNext.enabled = page < totalPages;
 			groupPrev.enabled = false;
 			groupNext.enabled = false;
-			pageSelect.enabled = !this.searchScanning;
+			pageSelect.enabled = true;
 		} else {
 			pagePrev.enabled = page > 1;
 			pageNext.enabled = page < totalPages;
@@ -805,7 +869,7 @@ export class LeaderboardsHandler {
 			pageSelect.enabled = true;
 		}
 
-		this.panels.controls.container.SetDialogVariableInt('total-pages', totalPages);
+		container.SetDialogVariableInt('total-pages', totalPages);
 		this.updateAroundButton();
 	}
 
@@ -835,10 +899,8 @@ export class LeaderboardsHandler {
 		this.setTextEntry(clamped);
 
 		if (this.isSearchActive()) {
-			if (!this.searchScanning) {
-				this.updateControlButtons();
-				this.renderSearchResults();
-			}
+			this.updateControlButtons();
+			this.renderSearchResults();
 			return;
 		}
 
@@ -873,5 +935,4 @@ export class LeaderboardsHandler {
 		this.panels.controls.pageSelect.text = `${val}`;
 		this.blockTextEntryEvent = false;
 	}
-
 }
