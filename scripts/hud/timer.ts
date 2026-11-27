@@ -304,19 +304,15 @@ class HudTimerHandler {
 			diff = runTime - this.comparison.runTime;
 		}
 
-		let diffSymbol: string;
 		if (diff > 0) {
 			this.panels.comparison.style.color = Colors.DECREASE;
 			this.panels.comparison.style.textShadowFast = getTextShadowFast(Colors.DECREASE, 0.9);
-			diffSymbol = '+';
 		} else if (diff < 0) {
 			this.panels.comparison.style.color = Colors.INCREASE;
 			this.panels.comparison.style.textShadowFast = getTextShadowFast(Colors.INCREASE, 0.9);
-			diffSymbol = '-';
 		} else {
 			this.panels.comparison.style.color = Colors.INVISIBLE;
 			this.panels.comparison.style.textShadowFast = getTextShadowFast(Colors.INVISIBLE, 0.9);
-			diffSymbol = '';
 		}
 
 		this.cancelFadeout();
@@ -324,11 +320,7 @@ class HudTimerHandler {
 		this.panels.comparison.RemoveClass(ENABLE_FADE_CLASS);
 		this.panels.comparison.style.opacity = 1;
 
-		this.panels.cp.SetDialogVariable(
-			'runtime_diff',
-			formatDurationDigital(Math.abs(diff), this.comparisonsPrecision)
-		);
-		this.panels.cp.SetDialogVariable('diff_symbol', diffSymbol);
+		this.panels.cp.SetDialogVariable('runtime_diff', formatDurationDigital(diff, this.comparisonsPrecision, true));
 
 		// Used to do this fade using a custom cubic-bezier but looks off for such a long duration,
 		// keyframing is annoying, just JS is fine.

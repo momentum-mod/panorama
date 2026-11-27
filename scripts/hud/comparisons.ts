@@ -92,7 +92,7 @@ class HudComparisonsHandler {
 			'',
 			{
 				class: 'hud-splits__diff diff',
-				text: '{s:diff_sign}{s:diff}'
+				text: '{s:diff}'
 			}
 		)
 	}));
@@ -536,8 +536,7 @@ class HudComparisonsHandler {
 
 		if (!hasComparison) return;
 
-		diff.SetDialogVariable('diff_sign', split.diff! > 0 ? '+' : split.diff === 0 ? '' : '-');
-		diff.SetDialogVariable('diff', formatDurationDigital(Math.abs(split.diff!), this.comparisonsPrecision));
+		diff.SetDialogVariable('diff', formatDurationDigital(split.diff!, this.comparisonsPrecision, true));
 
 		const getSplitState = (diff: number, delta: number) => {
 			if (diff === 0) return ComparisonState.NEUTRAL;

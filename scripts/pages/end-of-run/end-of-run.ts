@@ -469,7 +469,6 @@ export class EndOfRunHandler {
 		if (!runSplits) return;
 
 		// Clear the diff string, we don't have one
-		this.panels.cp.SetDialogVariable('run_diff_prefix', '');
 		this.panels.cp.SetDialogVariable('run_diff', formatDurationDigital(0, 3));
 
 		// Give the styling for a first/no comparison set run
@@ -538,8 +537,7 @@ export class EndOfRunHandler {
 		const isAhead = comparison.diff < 0;
 
 		// Set the diff
-		this.panels.cp.SetDialogVariable('run_diff_prefix', isAhead ? '-' : '+');
-		this.panels.cp.SetDialogVariable('run_diff', formatDurationDigital(Math.abs(comparison.diff), 3));
+		this.panels.cp.SetDialogVariable('run_diff', formatDurationDigital(comparison.diff, 3, true));
 
 		// Set styling based on if we're ahead or behind
 		this.panels.cp.SetHasClass('endofrun--ahead', isAhead);
@@ -602,8 +600,7 @@ export class EndOfRunHandler {
 
 		if (!split.hasComparison) return;
 
-		panel.SetDialogVariable('diff_sign', split.diff! > 0 ? '+' : split.diff === 0 ? '' : '-');
-		panel.SetDialogVariable('diff', formatDurationDigital(Math.abs(split.diff!), 3));
+		panel.SetDialogVariable('diff', formatDurationDigital(split.diff!, 3, true));
 		panel.SetHasClass('--ahead', split.diff! < 0);
 		panel.SetHasClass('--behind', split.diff! > 0);
 		panel.SetHasClass('--gain', split.delta! <= 0);
@@ -732,8 +729,8 @@ export class EndOfRunHandler {
 				tooltipString =
 					`${$.Localize('#Run_Comparison_TotalTime')}: <b>{s:total_time}</b>\n` +
 					`${$.Localize('#Run_Comparison_ZoneTime')}: <b>{s:zone_time}</b>\n` +
-					`${$.Localize('#Run_Comparison_Diff')}: <b class='${diffStyle}'>${this.getDiffSign(split.diff!)}{s:time_diff}</b>\n` +
-					`${$.Localize('#Run_Comparison_Delta')}: <b class='${deltaStyle}'>${this.getDiffSign(split.delta!)}{s:time_delta}</b>`;
+					`${$.Localize('#Run_Comparison_Diff')}: <b class='${diffStyle}'>{s:time_diff}</b>\n` +
+					`${$.Localize('#Run_Comparison_Delta')}: <b class='${deltaStyle}'>{s:time_delta}</b>`;
 			} else {
 				// Using string instead of float here, floats add a shit ton of floating point imprecision e.g. 90.00000000128381273
 				tooltipString =
@@ -756,10 +753,10 @@ export class EndOfRunHandler {
 						if (!stat) {
 							this.panels.cp.SetDialogVariable('total_time', formatDurationDigital(split.time, 3));
 							this.panels.cp.SetDialogVariable('zone_time', formatDurationDigital(split.segmentTime, 3));
-							this.panels.cp.SetDialogVariable('time_diff', formatDurationDigital(Math.abs(diff), 3));
+							this.panels.cp.SetDialogVariable('time_diff', formatDurationDigital(diff, 3, true));
 							this.panels.cp.SetDialogVariable(
 								'time_delta',
-								formatDurationDigital(Math.abs(split.delta!), 3)
+								formatDurationDigital(split.delta!, 3, true)
 							);
 						} else {
 							this.panels.cp.SetDialogVariable('name', $.Localize(stat.name));
@@ -860,7 +857,12 @@ export class EndOfRunHandler {
 			});
 
 			const isTime = statName === 'time';
-			const formatValue = (n: number) => (isTime ? formatDurationDigital(n, 3) : `${this.roundFloat(n, 2)}`);
+			const formatValue = (n: number, includeSign = false) => {
+				if (isTime) return formatDurationDigital(n, 3, includeSign);
+				return includeSign
+					? `${this.getDiffSign(n)}${this.roundFloat(Math.abs(n), 2)}`
+					: `${this.roundFloat(n, 2)}`;
+			};
 
 			$.CreatePanel('Label', row, '', {
 				text: formatValue(statComparison.baseValue),
@@ -873,7 +875,7 @@ export class EndOfRunHandler {
 			});
 
 			$.CreatePanel('Label', row, '', {
-				text: `${this.getDiffSign(statComparison.diff)}${formatValue(Math.abs(statComparison.diff))}`,
+				text: formatValue(statComparison.diff, true),
 				class: 'endofrun-stats__value'
 			});
 		};
