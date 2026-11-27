@@ -4,6 +4,7 @@ import { SpeedometerColorType, SpeedometerType } from 'common/speedometer';
 
 import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
 import { getTextShadowFast } from 'common/hud-customizer';
+import { findSubsegmentComparison, TimerState, type RunMetadata } from 'common/timer';
 
 // arbitrary value to determine how much speed needs to change to be considered an increase/decrease
 // adjusted by speedometer update delta time
@@ -87,7 +88,6 @@ class Speedometer {
 @PanelHandler()
 class SpeedometerHandler {
 	container = $<Panel>('#SpeedometersContainer');
-	lastZone = 0;
 	correctedColorizeDeadzone = 0;
 
 	speedometers: Map<SpeedometerType, Array<Speedometer>> = new Map();
@@ -108,6 +108,8 @@ class SpeedometerHandler {
 		$.RegisterEventHandler('OnSpeedometerUpdate', this.container, (deltaTime: float) =>
 			this.onSpeedometerUpdate(deltaTime)
 		);
+		$.RegisterForUnhandledEvent('OnObservedTimerCheckpointProgressed', () => this.onCheckpointProgressed());
+		$.RegisterForUnhandledEvent('OnObservedTimerSegmentEffectiveStart', () => this.onSegmentEffectiveStart());
 
 		// color profiles load before speedo settings, so listening to just the speedo settings load event should be enough
 		$.RegisterForUnhandledEvent('OnSpeedometerSettingsLoaded', (succ: boolean) => this.onSettingsUpdate(succ));
@@ -316,42 +318,47 @@ class SpeedometerHandler {
 		this.updateSpeedometersOfType(SpeedometerType.ENERGY, MomentumPlayerAPI.GetEnergy());
 	}
 
-	/* TODO: replace with updates based on new timer events
-	onZoneChange(enter: boolean, linear: boolean, curZone: int32, _curTrack: int32, timerState: TimerState_OLD) {
-		const startZone = curZone === 1;
-		if (enter && startZone) {
-			this.lastZone = 0;
-			this.resetSpeedometerFadeouts();
-			return;
-		}
+	/** Speed when hitting a checkpoint, compared with the comparison run's speed at the same checkpoint. */
+	onCheckpointProgressed() {
+		const { majorNum, minorNum } = MomentumTimerAPI.GetObservedTimerStatus();
+		// The start of the run is handled by onSegmentEffectiveStart
+		if (majorNum === 1 && minorNum === 1) return;
 
-		if (timerState === 0) return; // timer isn't running
+		const splits = MomentumTimerAPI.GetObservedTimerRunSplits();
+		const reached = splits?.segments[majorNum - 1]?.subsegments.some((subseg) => subseg.minorNum === minorNum);
+		if (!reached) return;
 
-		// return on current or previous zone, on a linear map
-		if (curZone <= this.lastZone && linear) return;
+		const comparisonSplits = this.getComparisonRun()?.runSplits ?? null;
+		const [, comparison] = findSubsegmentComparison(splits, comparisonSplits, majorNum, minorNum);
 
-		// show only on zone enter for linear maps, zone exits on staged maps,
-		// and start zone exits on linear maps
-		const exitStartOnLinear = linear && !enter && startZone;
-		if (linear === !enter && !exitStartOnLinear) return;
-
-		this.lastZone = curZone;
-		const actualSpeedAbs = ZonesAPI.GetZoneSpeed(curZone, false);
-		const actualSpeedHoriz = ZonesAPI.GetZoneSpeed(curZone, true);
-		const comparisonLoaded = RunComparisonsAPI.IsComparisonLoaded();
-
-		if (comparisonLoaded) {
-			const comparisonSpeedAbs = RunComparisonsAPI.GetLoadedComparisonSpeed(curZone, false);
-			const comparisonSpeedHoriz = RunComparisonsAPI.GetLoadedComparisonSpeed(curZone, true);
-			const diffAbs = actualSpeedAbs - comparisonSpeedAbs;
-			const diffHoriz = actualSpeedHoriz - comparisonSpeedHoriz;
-
-			this.updateZoneSpeedometers(actualSpeedAbs, actualSpeedHoriz, true, diffAbs, diffHoriz);
-		} else {
-			this.updateZoneSpeedometers(actualSpeedAbs, actualSpeedHoriz, false);
-		}
+		this.updateZoneSpeedometers(comparison?.velocityWhenReached);
 	}
-	*/
+
+	/** Speed when leaving a segment's start zone. */
+	onSegmentEffectiveStart() {
+		const { majorNum } = MomentumTimerAPI.GetObservedTimerStatus();
+		const comparison = this.getComparisonRun()?.runSplits?.segments[majorNum - 1];
+
+		this.updateZoneSpeedometers(comparison?.effectiveStartVelocity);
+	}
+
+	/** The comparison run, if it's for the track being run and isn't the run being watched. */
+	getComparisonRun(): RunMetadata | null {
+		const comparison = RunComparisonsAPI.GetComparisonRun();
+		const { trackId, state } = MomentumTimerAPI.GetObservedTimerStatus();
+
+		if (
+			!comparison ||
+			state === TimerState.DISABLED ||
+			comparison.trackId.type !== trackId.type ||
+			comparison.trackId.number !== trackId.number ||
+			comparison.tempId === MomentumTimerAPI.GetObservedRunMetadata()?.tempId
+		) {
+			return null;
+		}
+
+		return comparison;
+	}
 
 	resetSpeedometerFadeouts() {
 		for (const [type, speedometers] of this.speedometers) {
@@ -389,29 +396,37 @@ class SpeedometerHandler {
 		}
 	}
 
-	updateZoneSpeedometers(
-		absSpeed: float,
-		horizSpeed: float,
-		hasComparison = true,
-		absCustomdiff?: number,
-		horizCustomdiff?: number
-	) {
+	/** Velocities in run splits arrive as [x, y, z] arrays, despite being typed as vec3. */
+	toVec3(velocity: vec3): vec3 {
+		if (!Array.isArray(velocity)) return velocity;
+
+		const [x, y, z] = velocity;
+		return { x, y, z };
+	}
+
+	updateZoneSpeedometers(comparisonVelocity?: vec3) {
 		const speedometers = this.speedometers.get(SpeedometerType.ZONE_VELOCITY);
 		if (!speedometers) return;
 
-		for (const speedometer of speedometers) {
-			// HACK: current runstats system only has abs and horiz speed, not the velocity vector
-			const enabledAxes = speedometer.settings.enabled_axes;
-			const isHoriz = enabledAxes[0] && enabledAxes[1] && !enabledAxes[2];
+		// The velocity in the current run's splits is [0, 0, 0] while running, so read it from the player
+		const velocity = MomentumPlayerAPI.GetVelocity();
+		const comparison = comparisonVelocity && this.toVec3(comparisonVelocity);
 
-			this.updateSpeedometer(
-				SpeedometerType.ZONE_VELOCITY,
-				speedometer,
-				isHoriz ? horizSpeed : absSpeed,
-				hasComparison,
-				isHoriz ? absCustomdiff : horizCustomdiff
-			);
+		// Zone speeds are compared directly, so ignore the deadzone meant for continuous updates
+		const deadzone = this.correctedColorizeDeadzone;
+		this.correctedColorizeDeadzone = 0;
+
+		for (const speedometer of speedometers) {
+			const speed = this.getSpeedFromVelocity(velocity, speedometer.settings);
+			const diff = comparison ? speed - this.getSpeedFromVelocity(comparison, speedometer.settings) : undefined;
+
+			// Don't leave an earlier difference on screen when there's nothing to compare with
+			if (diff === undefined) speedometer.comparisonLabel.text = '';
+
+			this.updateSpeedometer(SpeedometerType.ZONE_VELOCITY, speedometer, speed, diff !== undefined, diff);
 		}
+
+		this.correctedColorizeDeadzone = deadzone;
 	}
 
 	updateSpeedometersOfType(type: SpeedometerType, velocity: vec3 | number) {
