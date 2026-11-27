@@ -6,6 +6,7 @@ import { CompletionGroup } from 'common/web/enums/completion-group.enum';
 import { getCompletionGroup, getRankGroupEnds } from 'common/web/consts/rank-groups.const';
 import { LeaderboardType } from 'common/web/enums/leaderboard-type.enum';
 import { LeaderboardStatusType } from 'common/leaderboard';
+import { formatDurationDigital } from 'util/strings';
 
 /**
  * A track to render, whatever its source. Online maps source these from the map's completions;
@@ -407,7 +408,7 @@ export class TrackSelectorHandler {
 			tierLabel.text = '';
 		}
 
-		this.setOptionalFloat(trackPanel, 'track-panel__time-label', 'time', '{g:time:time}', data.time);
+		this.setTrackTime(trackPanel, 'track-panel__time-label', 'time', '{s:time}', data.time);
 
 		const rankLabel = trackPanel.FindChildrenWithClassTraverse('track-panel__rank-label')[0] as Label;
 		if (data.total == null) {
@@ -431,10 +432,10 @@ export class TrackSelectorHandler {
 		groupPill.handler.setGroup(group);
 	}
 
-	private setOptionalFloat(panel: RadioButton, className: string, dialogVar: string, token: string, value?: number) {
+	private setTrackTime(panel: RadioButton, className: string, dialogVar: string, token: string, value?: number) {
 		const label = panel.FindChildrenWithClassTraverse(className)[0] as Label;
 		if (value != null) {
-			panel.SetDialogVariableFloat(dialogVar, value);
+			panel.SetDialogVariable(dialogVar, formatDurationDigital(value, 3));
 			label.SetTextWithDialogVariables(token);
 			label.SetHasClass('track-selector-label--muted', false);
 		} else {

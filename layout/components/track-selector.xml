@@ -17,7 +17,7 @@
                     <Label class="track-selector-label track-panel__tier-label" text="T{i:tier}"/>
                 </Panel>
                 <Panel class="track-panel__time">
-                    <Label class="track-selector-label track-panel__time-label" text="{g:time:time}"/>
+                    <Label class="track-selector-label track-panel__time-label" text="{s:time}"/>
                 </Panel>
                 <Panel class="track-panel__rank">
                     <Label class="track-selector-label track-panel__rank-label" text="{i:rank}/{i:total}"/>

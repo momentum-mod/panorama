@@ -13,6 +13,7 @@ import { Style } from 'common/web/enums/style.enum';
 import { Gamemode } from 'common/web/enums/gamemode.enum';
 import { CompletionGroup } from 'common/web/enums/completion-group.enum';
 import { getRankGroupEnds, getCompletionGroup } from 'common/web/consts/rank-groups.const';
+import { formatDurationDigital } from 'util/strings';
 
 // Keep in sync with entry.scss
 const ENTRY_HEIGHT = 32;
@@ -328,7 +329,7 @@ export class LeaderboardsHandler {
 			}
 			lbEntry.SetDialogVariableInt('rank', record.rank);
 			lbEntry.SetDialogVariable('player', record.playerName);
-			lbEntry.SetDialogVariableFloat('time', record.runTime);
+			lbEntry.SetDialogVariable('time', formatDurationDigital(record.runTime, 3));
 			lbEntry.SetDialogVariable('date', formatTimeAgoString(Number(record.date)));
 
 			if (

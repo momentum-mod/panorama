@@ -5,6 +5,7 @@ import { Style } from 'common/web/enums/style.enum';
 import { TrackType } from 'common/web/enums/track-type.enum';
 import { CompletionGroup } from 'common/web/enums/completion-group.enum';
 import { getRunStyleName } from 'common/style';
+import { formatDurationDigital } from 'util/strings';
 import { getCompletionGroup, getRankGroupEnds } from 'common/web/consts/rank-groups.const';
 
 /** Class on the header's right side that reveals the uploaded run's rank and group (animated in CSS). */
@@ -316,7 +317,7 @@ export class EndOfRunHandler {
 		this.panels.cp.RemoveClass('endofrun--ahead');
 		this.panels.cp.RemoveClass('endofrun--behind');
 
-		this.panels.cp.SetDialogVariableFloat('run_time', this.baseRun.runTime);
+		this.panels.cp.SetDialogVariable('run_time', formatDurationDigital(this.baseRun.runTime, 3));
 
 		// If we have a comparison, make the full stats, otherwise just simple page without graph
 		if (
@@ -469,7 +470,7 @@ export class EndOfRunHandler {
 
 		// Clear the diff string, we don't have one
 		this.panels.cp.SetDialogVariable('run_diff_prefix', '');
-		this.panels.cp.SetDialogVariableFloat('run_diff', 0);
+		this.panels.cp.SetDialogVariable('run_diff', formatDurationDigital(0, 3));
 
 		// Give the styling for a first/no comparison set run
 		this.panels.cp.AddClass('endofrun--first');
@@ -537,8 +538,8 @@ export class EndOfRunHandler {
 		const isAhead = comparison.diff < 0;
 
 		// Set the diff
-		this.panels.cp.SetDialogVariable('run_diff_prefix', isAhead ? '' : '+');
-		this.panels.cp.SetDialogVariableFloat('run_diff', comparison.diff);
+		this.panels.cp.SetDialogVariable('run_diff_prefix', isAhead ? '-' : '+');
+		this.panels.cp.SetDialogVariable('run_diff', formatDurationDigital(Math.abs(comparison.diff), 3));
 
 		// Set styling based on if we're ahead or behind
 		this.panels.cp.SetHasClass('endofrun--ahead', isAhead);
@@ -596,13 +597,13 @@ export class EndOfRunHandler {
 
 	private updateSplitPanel(panel: Panel, split: Timer.Split) {
 		panel.SetDialogVariable('name', split.name);
-		panel.SetDialogVariableFloat('time', split.time);
+		panel.SetDialogVariable('time', formatDurationDigital(split.time, 3));
 		panel.SetHasClass('endofrun-split--no-comparison', !split.hasComparison);
 
 		if (!split.hasComparison) return;
 
 		panel.SetDialogVariable('diff_sign', split.diff! > 0 ? '+' : split.diff === 0 ? '' : '-');
-		panel.SetDialogVariableFloat('diff', Math.abs(split.diff!));
+		panel.SetDialogVariable('diff', formatDurationDigital(Math.abs(split.diff!), 3));
 		panel.SetHasClass('--ahead', split.diff! < 0);
 		panel.SetHasClass('--behind', split.diff! > 0);
 		panel.SetHasClass('--gain', split.delta! <= 0);
@@ -729,10 +730,10 @@ export class EndOfRunHandler {
 					(split.delta! < 0 ? ' --gain' : split.delta! > 0 ? ' --loss' : '');
 
 				tooltipString =
-					`${$.Localize('#Run_Comparison_TotalTime')}: <b>{g:time:total_time}</b>\n` +
-					`${$.Localize('#Run_Comparison_ZoneTime')}: <b>{g:time:zone_time}</b>\n` +
-					`${$.Localize('#Run_Comparison_Diff')}: <b class='${diffStyle}'>${this.getDiffSign(split.diff!)}{g:time:time_diff}</b>\n` +
-					`${$.Localize('#Run_Comparison_Delta')}: <b class='${deltaStyle}'>${this.getDiffSign(split.delta!)}{g:time:time_delta}</b>`;
+					`${$.Localize('#Run_Comparison_TotalTime')}: <b>{s:total_time}</b>\n` +
+					`${$.Localize('#Run_Comparison_ZoneTime')}: <b>{s:zone_time}</b>\n` +
+					`${$.Localize('#Run_Comparison_Diff')}: <b class='${diffStyle}'>${this.getDiffSign(split.diff!)}{s:time_diff}</b>\n` +
+					`${$.Localize('#Run_Comparison_Delta')}: <b class='${deltaStyle}'>${this.getDiffSign(split.delta!)}{s:time_delta}</b>`;
 			} else {
 				// Using string instead of float here, floats add a shit ton of floating point imprecision e.g. 90.00000000128381273
 				tooltipString =
@@ -753,10 +754,13 @@ export class EndOfRunHandler {
 					onactivate: () => $.DispatchEvent('Activated', $(`#Split${id}`)!, PanelEventSource.MOUSE),
 					onmouseover: () => {
 						if (!stat) {
-							this.panels.cp.SetDialogVariableFloat('total_time', split.time);
-							this.panels.cp.SetDialogVariableFloat('zone_time', split.segmentTime);
-							this.panels.cp.SetDialogVariableFloat('time_diff', diff);
-							this.panels.cp.SetDialogVariableFloat('time_delta', split.delta!);
+							this.panels.cp.SetDialogVariable('total_time', formatDurationDigital(split.time, 3));
+							this.panels.cp.SetDialogVariable('zone_time', formatDurationDigital(split.segmentTime, 3));
+							this.panels.cp.SetDialogVariable('time_diff', formatDurationDigital(Math.abs(diff), 3));
+							this.panels.cp.SetDialogVariable(
+								'time_delta',
+								formatDurationDigital(Math.abs(split.delta!), 3)
+							);
 						} else {
 							this.panels.cp.SetDialogVariable('name', $.Localize(stat.name));
 							this.panels.cp.SetDialogVariableInt('base_value', this.roundFloat(stat.baseValue, 2));
@@ -764,7 +768,7 @@ export class EndOfRunHandler {
 								'compare_value',
 								this.roundFloat(stat.comparisonValue, 2)
 							);
-							this.panels.cp.SetDialogVariableInt('diff', this.roundFloat(stat.diff, 2));
+							this.panels.cp.SetDialogVariableInt('diff', this.roundFloat(Math.abs(stat.diff), 2));
 						}
 						UiToolkitAPI.ShowTextTooltip(`Point${id}`, tooltipString);
 					},
@@ -855,18 +859,21 @@ export class EndOfRunHandler {
 				class: 'endofrun-stats__name'
 			});
 
+			const isTime = statName === 'time';
+			const formatValue = (n: number) => (isTime ? formatDurationDigital(n, 3) : `${this.roundFloat(n, 2)}`);
+
 			$.CreatePanel('Label', row, '', {
-				text: `${this.roundFloat(statComparison.baseValue, 2)}`,
+				text: formatValue(statComparison.baseValue),
 				class: 'endofrun-stats__value'
 			});
 
 			$.CreatePanel('Label', row, '', {
-				text: `${this.roundFloat(statComparison.comparisonValue, 2)}`,
+				text: formatValue(statComparison.comparisonValue),
 				class: 'endofrun-stats__value'
 			});
 
 			$.CreatePanel('Label', row, '', {
-				text: `${this.getDiffSign(statComparison.diff)}${this.roundFloat(statComparison.diff, 2)}`,
+				text: `${this.getDiffSign(statComparison.diff)}${formatValue(Math.abs(statComparison.diff))}`,
 				class: 'endofrun-stats__value'
 			});
 		};
@@ -920,6 +927,6 @@ export class EndOfRunHandler {
 	}
 
 	private getDiffSign(diff: number) {
-		return diff > 0 ? '+' : '';
+		return diff > 0 ? '+' : diff < 0 ? '-' : '';
 	}
 }
