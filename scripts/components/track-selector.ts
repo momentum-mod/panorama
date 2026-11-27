@@ -6,7 +6,7 @@ import { CompletionGroup } from 'common/web/enums/completion-group.enum';
 import { getCompletionGroup, getRankGroupEnds } from 'common/web/consts/rank-groups.const';
 import { LeaderboardType } from 'common/web/enums/leaderboard-type.enum';
 import { LeaderboardStatusType } from 'common/leaderboard';
-import { formatDurationDigital } from 'util/strings';
+import { formatDurationDigital } from 'util/dates';
 
 /**
  * A track to render, whatever its source. Online maps source these from the map's completions;

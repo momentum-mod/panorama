@@ -4,7 +4,7 @@ import * as Timer from 'common/timer';
 
 import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
 import { getTextShadowFast } from 'common/hud-customizer';
-import { formatDurationDigital } from 'util/strings';
+import { formatDurationDigital } from 'util/dates';
 
 const DIFF_DISPLAY_TIME = 5;
 const HIDDEN_CLASS = 'hudtimer--hidden';

@@ -2,7 +2,7 @@ import { PanelHandler } from 'util/module-helpers';
 import * as Timer from 'common/timer';
 import { CustomizerPropertyType, getHudCustomizer, registerHUDCustomizerComponent } from 'common/hud-customizer';
 import { getTextShadowFast } from 'common/hud-customizer';
-import { formatDurationDigital } from 'util/strings';
+import { formatDurationDigital } from 'util/dates';
 
 // MomTV networking limits max numbers of networked splits to 10; this value is
 // immutable and used to build out our split panel arrays.

@@ -6,8 +6,7 @@ import { GamemodeInfo } from 'common/gamemode';
 import { getUserMapDataTrack } from 'common/leaderboard';
 import { getTier, handlePlayMap } from 'common/maps';
 import { Role } from 'common/web/enums/role.enum';
-import { formatDate } from 'util/dates';
-import { formatDurationDigital } from 'util/strings';
+import { formatDate, formatDurationDigital } from 'util/dates';
 
 const NEW_MAP_BANNER_CUTOFF = 1000 * 60 * 60 * 24 * 5; // 5 days
 

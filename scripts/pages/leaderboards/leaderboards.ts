@@ -1,5 +1,5 @@
 import { exposeToPanelContext, PanelHandler } from 'util/module-helpers';
-import { formatTimeAgoString } from 'util/dates';
+import { formatDurationDigital, formatTimeAgoString } from 'util/dates';
 import {
 	LeaderboardListType,
 	LeaderboardRecord,
@@ -13,7 +13,6 @@ import { Style } from 'common/web/enums/style.enum';
 import { Gamemode } from 'common/web/enums/gamemode.enum';
 import { CompletionGroup } from 'common/web/enums/completion-group.enum';
 import { getRankGroupEnds, getCompletionGroup } from 'common/web/consts/rank-groups.const';
-import { formatDurationDigital } from 'util/strings';
 
 // Keep in sync with entry.scss
 const ENTRY_HEIGHT = 32;

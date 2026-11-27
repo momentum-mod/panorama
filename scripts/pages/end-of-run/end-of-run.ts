@@ -5,7 +5,7 @@ import { Style } from 'common/web/enums/style.enum';
 import { TrackType } from 'common/web/enums/track-type.enum';
 import { CompletionGroup } from 'common/web/enums/completion-group.enum';
 import { getRunStyleName } from 'common/style';
-import { formatDurationDigital } from 'util/strings';
+import { formatDurationDigital } from 'util/dates';
 import { getCompletionGroup, getRankGroupEnds } from 'common/web/consts/rank-groups.const';
 
 /** Class on the header's right side that reveals the uploaded run's rank and group (animated in CSS). */

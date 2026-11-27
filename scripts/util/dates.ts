@@ -80,7 +80,10 @@ export function formatTimeAgoString(
 }
 
 /**
- * Localized duration rounded to the largest sensible unit, e.g. "2 days" or "35 minutes", from seconds.
+ * Localized, human-readable duration rounded to the largest sensible unit, e.g. "2 days" or "35 minutes", from seconds.
+ *
+ * For approximate, prose-style durations (bans, cooldowns). For precise run times shown as a clock, use
+ * {@link formatDurationDigital}.
  */
 export function formatDuration(seconds: number): string {
 	const minutes = Math.round(seconds / 60);
@@ -90,6 +93,59 @@ export function formatDuration(seconds: number): string {
 	const [value, unit] = minutes < 60 ? [minutes, 'minute'] : hours < 24 ? [hours, 'hour'] : [days, 'day'];
 
 	return new Intl.NumberFormat(getLocale(), { style: 'unit', unit, unitDisplay: 'long' }).format(value);
+}
+
+/**
+ * Formats a duration in seconds as a digital clock string (`h:mm:ss.fff`), truncating (never rounding) to the given
+ * number of fractional digits. Leading zero units are omitted, so short times read as `5.123` and `1:05.123`.
+ *
+ * For precise run times, splits and comparison diffs. Not localized. For an approximate, human-readable duration
+ * like "35 minutes", use {@link formatDuration}.
+ *
+ * @example
+ * formatDurationDigital(5.1239, 3); // "5.123"
+ * formatDurationDigital(65.1239, 3); // "1:05.123"
+ * formatDurationDigital(3725.5, 2); // "1:02:05.50"
+ * formatDurationDigital(-0.0004, 3, true); // "-0.000"
+ * formatDurationDigital(0.0004, 3, true); // "+0.000"
+ * formatDurationDigital(0, 3, true); // "0.000"
+ *
+ * @param rawSeconds Duration in seconds. May be negative; the magnitude is what gets formatted.
+ * @param fractionalDigits Number of digits shown after the decimal point, 0 (none) to 9 (nanoseconds).
+ * @param includeSign If true, prefix `+` for positive and `-` for negative values. The sign is taken from the raw
+ * value, before truncation, so a tiny non-zero value still gets a sign. Exactly 0 never gets one.
+ * @returns The formatted duration string.
+ */
+export function formatDurationDigital(rawSeconds: number, fractionalDigits: number, includeSign = false): string {
+	/**
+	 * TODO: This code doesn't fix the underlying issue that exists in the engine timer code.
+	 * Rework this after the engine issue gets fixed
+	 */
+
+	const sign = includeSign ? (rawSeconds > 0 ? '+' : rawSeconds < 0 ? '-' : '') : '';
+
+	// Doubles can't store most decimal times exactly (1.005 is stored as 1.00499999999999989...)
+	// Truncating the float directly can lose a whole digit. Snap to the nearest whole nanosecond first to absorb that error
+	const totalNanos = Math.round(Math.abs(rawSeconds) * 1e9);
+	const units = Math.trunc(totalNanos / 10 ** (9 - fractionalDigits));
+
+	const scale = 10 ** fractionalDigits;
+	const frac = units % scale;
+	const wholeSeconds = Math.trunc(units / scale);
+	const seconds = wholeSeconds % 60;
+	const minutes = Math.trunc(wholeSeconds / 60) % 60;
+	const hours = Math.trunc(wholeSeconds / 3600);
+
+	const fraction = fractionalDigits > 0 ? `.${padNumber(frac, fractionalDigits)}` : '';
+
+	if (hours > 0) return `${sign}${hours}:${padNumber(minutes, 2)}:${padNumber(seconds, 2)}${fraction}`;
+	if (minutes > 0) return `${sign}${minutes}:${padNumber(seconds, 2)}${fraction}`;
+	return `${sign}${seconds}${fraction}`;
+}
+
+/** Left-pads an integer with zeros to the given width, e.g. `padNumber(5, 2)` is "05". */
+function padNumber(value: number, width: number): string {
+	return value.toString().padStart(width, '0');
 }
 
 /**
