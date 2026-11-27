@@ -87,6 +87,25 @@ $main-padding: 13px;
 	}
 }
 
+.leaderboard-search-row {
+	flow-children: right;
+	width: 100%;
+	height: 32px;
+	padding: 0 $main-padding;
+	margin-bottom: 8px;
+}
+
+.leaderboard-search {
+	width: fill-parent-flow(1);
+	height: 28px;
+
+	&__progress {
+		vertical-align: center;
+		margin-left: 6px;
+		opacity: 0.6;
+	}
+}
+
 .leaderboard-times {
 	$root: &;
 
@@ -98,12 +117,15 @@ $main-padding: 13px;
 		#{$root}__list {
 			opacity: 0;
 		}
+
 		#{$root}__loading {
 			opacity: 0;
 		}
+
 		#{$root}__empty {
 			opacity: 1;
 		}
+
 		#{$root}__group-pills {
 			opacity: 0;
 		}
@@ -113,13 +135,16 @@ $main-padding: 13px;
 		#{$root}__list {
 			opacity: 0;
 		}
+
 		#{$root}__loading {
 			opacity: 1;
 			transition: opacity 0.05s ease-in 0s;
 		}
+
 		#{$root}__empty {
 			opacity: 0;
 		}
+
 		#{$root}__group-pills {
 			opacity: 0;
 		}

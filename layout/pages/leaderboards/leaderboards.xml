@@ -22,6 +22,19 @@
                 <Label class="leaderboard-radio__radio-button__label" text="Saved Replays" />
             </RadioButton>
         </Panel>
+        <Panel class="leaderboard-search-row">
+            <Panel id="LeaderboardSearch" class="search leaderboard-search" acceptsfocus="true"
+                   onactivate="LeaderboardsHandler.focusSearch()">
+                <Image class="search__icon" src="file://{images}/search.svg" textureheight="32" />
+                <TextEntry id="LeaderboardSearchTextEntry" class="search__textentry" maxchars="96"
+                           placeholder="#Leaderboards_SearchPlaceholder" />
+                <Button id="LeaderboardSearchClear" class="search__clearbutton search__clearbutton--hidden"
+                        onactivate="LeaderboardsHandler.clearSearch()">
+                    <Image class="search__clearicon" src="file://{images}/close.svg" textureheight="32" />
+                </Button>
+            </Panel>
+            <Label class="leaderboard-search__progress" text="{s:search-progress}" hittest="false" />
+        </Panel>
         <Panel id="LeaderboardTimesContainer" class="leaderboard-times">
             <Panel class="leaderboard-times__content-frame">
                 <Panel id="TimesList" class="leaderboard-times__list">
