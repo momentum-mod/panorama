@@ -23,7 +23,8 @@
             </RadioButton>
         </Panel>
         <Panel class="leaderboard-search-row">
-            <Panel id="LeaderboardSearch" class="search leaderboard-search" acceptsfocus="true">
+            <Panel id="LeaderboardSearch" class="search leaderboard-search" acceptsfocus="true"
+                   onactivate="LeaderboardsHandler.focusSearch()">
                 <Image class="search__icon" src="file://{images}/search.svg" textureheight="32" />
                 <TextEntry id="LeaderboardSearchTextEntry" class="search__textentry" maxchars="96"
                            placeholder="#Leaderboards_SearchPlaceholder" />

@@ -730,8 +730,14 @@ export class LeaderboardsHandler {
 		});
 	}
 
+	/** Keep typing in the search box, so key presses don't reach the game's key binds. */
+	focusSearch() {
+		this.panels.search.textEntry.SetFocus();
+	}
+
 	clearSearch() {
 		this.panels.search.textEntry.text = '';
+		this.focusSearch();
 	}
 
 	/** Return the rank intervals selected by @wr, @top10 and @g1-@g6. */
