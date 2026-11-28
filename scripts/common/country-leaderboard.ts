@@ -55,44 +55,41 @@ export function loadCountryLeaderboard(
 			`${API_URL}/maps/${mapID}/leaderboard?gamemode=${gamemode}&trackType=${trackType}` +
 			`&trackNum=${trackNum}&style=${style}&skip=${index * RUNS_PER_REQUEST}&take=${RUNS_PER_REQUEST}`;
 
-		$.AsyncWebRequest(url, {
-			type: 'GET',
-			complete: (response) => {
-				if (isCancelled()) return;
+		get(url, (response) => {
+			if (isCancelled()) return;
 
-				const body = parseResponse(response.responseText);
-				if (!body) {
-					$.Warning(`Country leaderboard request failed (${response.statusText}): ${url}`);
-					onUpdate({ records, done: true, failed: true });
-					return;
-				}
-
-				for (const run of body.data) {
-					if (run.user?.country !== country) continue;
-
-					records.push({
-						rank: records.length + 1,
-						playerName: run.user.alias,
-						steamID: run.user.steamID,
-						runTime: run.time,
-						date: `${Math.floor(Date.parse(run.createdAt) / 1000)}` as uint64_str,
-						trackId: 0,
-						style,
-						replayHash: '',
-						fileURL: '',
-						userRoles: 0,
-						userBans: 0
-					});
-				}
-
-				const done =
-					body.data.length < RUNS_PER_REQUEST ||
-					(index + 1) * RUNS_PER_REQUEST >= body.totalCount ||
-					index + 1 >= MAX_REQUESTS;
-
-				onUpdate({ records, done, failed: false });
-				if (!done && !isCancelled()) request(index + 1);
+			const body = parseResponse(response.responseText);
+			if (!body) {
+				$.Warning(`Country leaderboard request failed (${response.statusText}): ${url}`);
+				onUpdate({ records, done: true, failed: true });
+				return;
 			}
+
+			for (const run of body.data) {
+				if (run.user?.country !== country) continue;
+
+				records.push({
+					rank: records.length + 1,
+					playerName: run.user.alias,
+					steamID: run.user.steamID,
+					runTime: run.time,
+					date: `${Math.floor(Date.parse(run.createdAt) / 1000)}` as uint64_str,
+					trackId: 0,
+					style,
+					replayHash: '',
+					fileURL: '',
+					userRoles: 0,
+					userBans: 0
+				});
+			}
+
+			const done =
+				body.data.length < RUNS_PER_REQUEST ||
+				(index + 1) * RUNS_PER_REQUEST >= body.totalCount ||
+				index + 1 >= MAX_REQUESTS;
+
+			onUpdate({ records, done, failed: false });
+			if (!done && !isCancelled()) request(index + 1);
 		});
 	};
 
@@ -110,10 +107,16 @@ export function getGlobalRank(
 		`${API_URL}/maps/${mapID}/leaderboard?gamemode=${gamemode}&trackType=${trackType}` +
 		`&trackNum=${trackNum}&style=${style}&steamIDs=${steamID}`;
 
-	$.AsyncWebRequest(url, {
-		type: 'GET',
-		complete: (response) => onResult(parseResponse(response.responseText)?.data[0]?.rank ?? null)
-	});
+	get(url, (response) => onResult(parseResponse(response.responseText)?.data[0]?.rank ?? null));
+}
+
+/** GET a URL, always calling `complete`: the game throws if the domain isn't whitelisted. */
+function get(url: string, complete: (response: { responseText: string; statusText: string }) => void) {
+	try {
+		$.AsyncWebRequest(url, { type: 'GET', complete });
+	} catch (error) {
+		complete({ responseText: '', statusText: String(error) });
+	}
 }
 
 function parseResponse(text: string): ApiLeaderboardResponse | null {
