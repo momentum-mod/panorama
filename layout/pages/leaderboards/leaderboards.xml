@@ -18,6 +18,9 @@
             <RadioButton id="TimesListLobby" class="leaderboard-radio__radio-button" onactivate="LeaderboardsHandler.setFilter(LeaderboardRecordsFilter.LOBBY)">
                 <Label class="leaderboard-radio__radio-button__label" text="#Leaderboards_Category_Lobby" />
             </RadioButton>
+            <RadioButton id="TimesListCountry" class="leaderboard-radio__radio-button" onactivate="LeaderboardsHandler.showCountry()">
+                <Label class="leaderboard-radio__radio-button__label" text="#Leaderboards_Category_Country" />
+            </RadioButton>
             <RadioButton id="TimesListLocal" class="leaderboard-radio__radio-button leaderboard-radio__radio-button--saved" onactivate="LeaderboardsHandler.setFilter(LeaderboardRecordsFilter.SAVED_REPLAYS)">
                 <Label class="leaderboard-radio__radio-button__label" text="Saved Replays" />
             </RadioButton>

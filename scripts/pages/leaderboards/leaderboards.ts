@@ -8,6 +8,7 @@ import {
 	LeaderboardType,
 	LEADERBOARD_RECORDS_PER_PAGE
 } from 'common/leaderboard';
+import { loadCountryLeaderboard, getGlobalRank } from 'common/country-leaderboard';
 import { TrackType } from 'common/web/enums/track-type.enum';
 import { Style } from 'common/web/enums/style.enum';
 import { Gamemode } from 'common/web/enums/gamemode.enum';
@@ -47,7 +48,8 @@ export class LeaderboardsHandler {
 			global: $<RadioButton>('#TimesListGlobal'),
 			friends: $<RadioButton>('#TimesListFriends'),
 			lobby: $<RadioButton>('#TimesListLobby'),
-			local: $<RadioButton>('#TimesListLocal')
+			local: $<RadioButton>('#TimesListLocal'),
+			country: $<RadioButton>('#TimesListCountry')
 		},
 		controls: {
 			container: $<Panel>('#ControlsContainer'),
@@ -75,6 +77,18 @@ export class LeaderboardsHandler {
 	totalCompletions: number = null;
 	currentUserRank = null;
 	groupEnds: number[];
+
+	/** Showing only runs from the local player's country. The engine filter stays on GLOBAL meanwhile. */
+	private countryOnly = false;
+	private countryRecords: LeaderboardRecord[] = [];
+	private countryLoading = false;
+	/** Bumped to abandon a country download that's no longer wanted. */
+	private countryRequest = 0;
+	/** The page and row count of the country rows on screen, so they're only rebuilt when they change. */
+	private renderedCountryRows = '';
+	/** The 0-based page the engine loaded last, which replay actions work on. */
+	private loadedRecordsPage: number | null = null;
+	private pendingCountryAction: { page: number; steamID: string; type: 'watch' | 'compare' } | null = null;
 
 	/** handles loading spinner for quick leaderboard requests */
 	private loadingHandle: number = null;
@@ -166,9 +180,21 @@ export class LeaderboardsHandler {
 	}
 
 	setFilter(filter: LeaderboardRecordsFilter) {
-		if (this.state.filter === filter) return;
+		if (this.state.filter === filter && !this.countryOnly) return;
 
+		this.countryOnly = false;
 		this.state.filter = filter;
+		this.state.page = 1;
+		this.setTextEntry(this.state.page);
+		this.updateLeaderboards();
+	}
+
+	/** Show only runs from the local player's country. */
+	showCountry() {
+		if (this.countryOnly) return;
+
+		this.countryOnly = true;
+		this.state.filter = LeaderboardRecordsFilter.GLOBAL;
 		this.state.page = 1;
 		this.setTextEntry(this.state.page);
 		this.updateLeaderboards();
@@ -187,8 +213,9 @@ export class LeaderboardsHandler {
 		if (this.localOnly === localOnly) return;
 		this.localOnly = localOnly;
 
-		const { global, friends, lobby, local } = this.panels.radioButtons;
+		const { global, friends, lobby, local, country } = this.panels.radioButtons;
 		global.enabled = !localOnly;
+		country.enabled = !localOnly;
 		friends.enabled = !localOnly;
 
 		if (localOnly) {
@@ -233,6 +260,8 @@ export class LeaderboardsHandler {
 				return '#Leaderboards_Error_NoPB';
 		}
 
+		if (this.countryOnly) return '#Leaderboards_Error_NoCountryTimes';
+
 		switch (this.state.filter) {
 			case LeaderboardRecordsFilter.GLOBAL:
 				return '#Leaderboards_Error_NoCompletions';
@@ -262,10 +291,23 @@ export class LeaderboardsHandler {
 	}
 
 	updateLeaderboards() {
+		this.countryRequest++;
+		this.countryLoading = false;
+		this.pendingCountryAction = null;
+
+		if (this.countryOnly) {
+			this.loadCountry();
+			return;
+		}
+
 		// When this request finishes it fires LeaderboardRecords_Loaded event
 		// That event runs updateLeaderboardWithToken() using this data
 		this.beginLoading();
+		this.requestLeaderboardPage(this.state.page - 1);
+	}
 
+	private requestLeaderboardPage(page: number) {
+		this.loadedRecordsPage = null;
 		this.pendingRequestToken = this.panels.cp.getLeaderboardRecords(
 			this.state.mapID,
 			this.state.gamemode,
@@ -273,8 +315,70 @@ export class LeaderboardsHandler {
 			this.state.trackNum,
 			this.state.style,
 			this.state.filter,
-			this.state.page - 1
+			page
 		);
+	}
+
+	private loadCountry() {
+		this.pendingRequestToken = null;
+		this.loadedRecordsPage = null;
+		this.renderedCountryRows = '';
+		this.countryRecords = [];
+		this.state.totalPages = 1;
+		this.panels.controls.container.SetDialogVariableInt('total-pages', 1);
+		this.panels.timesList.RemoveAndDeleteChildren();
+		this.panels.groupPillsLayer.RemoveAndDeleteChildren();
+		this.updateControlButtons();
+
+		const country = MomentumAPI.GetLocalUserData()?.country;
+		if (!country) {
+			this.updateEmptyState(true);
+			this.panels.cp.SetDialogVariable('empty-warning', $.Localize('#Leaderboards_Error_NoCountry'));
+			return;
+		}
+
+		this.beginLoading();
+		this.countryLoading = true;
+
+		const request = this.countryRequest;
+		const query = {
+			mapID: this.state.mapID,
+			gamemode: this.state.gamemode,
+			trackType: this.state.trackType,
+			trackNum: this.state.trackNum,
+			style: this.state.style,
+			country
+		};
+
+		loadCountryLeaderboard(
+			query,
+			() => request !== this.countryRequest,
+			({ records, done, failed }) => {
+				this.countryRecords = records;
+				this.countryLoading = !done;
+				this.state.totalPages = Math.max(1, Math.ceil(records.length / LEADERBOARD_RECORDS_PER_PAGE));
+				this.panels.controls.container.SetDialogVariableInt('total-pages', this.state.totalPages);
+				this.updateControlButtons();
+
+				// Keep the spinner up until there's something to show
+				if (records.length === 0 && !done) return;
+
+				const status = failed ? LeaderboardStatusType.SERVER_ERROR : LeaderboardStatusType.NO_TIMES_RETURNED;
+				this.renderCountryPage(status);
+			}
+		);
+	}
+
+	private renderCountryPage(status = LeaderboardStatusType.NO_TIMES_RETURNED) {
+		const { page } = this.state;
+		const start = (page - 1) * LEADERBOARD_RECORDS_PER_PAGE;
+		const rows = this.countryRecords.slice(start, start + LEADERBOARD_RECORDS_PER_PAGE);
+
+		const rowsKey = `${page}:${rows.length}`;
+		if (rows.length > 0 && rowsKey === this.renderedCountryRows) return;
+		this.renderedCountryRows = rowsKey;
+
+		this.renderLeaderboardRecords(rows, status);
 	}
 
 	/**
@@ -284,6 +388,11 @@ export class LeaderboardsHandler {
 	 */
 	clearRecords(status: LeaderboardStatusType) {
 		this.pendingRequestToken = null;
+		this.countryRequest++;
+		this.countryLoading = false;
+		this.countryRecords = [];
+		this.pendingCountryAction = null;
+		this.loadedRecordsPage = null;
 		this.panels.timesList.RemoveAndDeleteChildren();
 		this.panels.groupPillsLayer.RemoveAndDeleteChildren();
 
@@ -298,6 +407,16 @@ export class LeaderboardsHandler {
 		if (requestToken !== this.pendingRequestToken) return; // superseded or cleared
 		const data = this.panels.cp.getLoadedLeaderboardRecords();
 		if (data.requestToken !== requestToken) return; //superseded by a newer request;
+
+		this.loadedRecordsPage = data.page;
+
+		// The country view only uses the engine's records to act on a replay
+		if (this.countryOnly) {
+			const action = this.pendingCountryAction;
+			this.pendingCountryAction = null;
+			if (action && action.page === data.page) this.performCountryAction(action.steamID, action.type);
+			return;
+		}
 
 		this.state.totalPages = Math.max(data.totalPages, 1);
 		this.panels.controls.container.SetDialogVariableInt('total-pages', this.state.totalPages);
@@ -314,8 +433,10 @@ export class LeaderboardsHandler {
 			data.records.length === 1 &&
 			this.currentUserRank != null;
 
-		const records = isOwnRunOnly ? [] : data.records;
+		this.renderLeaderboardRecords(isOwnRunOnly ? [] : data.records, data.status);
+	}
 
+	private renderLeaderboardRecords(records: LeaderboardRecord[], status: LeaderboardStatusType) {
 		this.panels.timesList.RemoveAndDeleteChildren();
 		this.panels.groupPillsLayer.RemoveAndDeleteChildren();
 		records.forEach((record, index) => {
@@ -336,7 +457,7 @@ export class LeaderboardsHandler {
 				this.state.filter === LeaderboardRecordsFilter.LOBBY
 			) {
 				this.createMembershipGroupIndicators(records, record.rank, lbEntry, index);
-			} else if (this.state.filter === LeaderboardRecordsFilter.GLOBAL) {
+			} else if (this.state.filter === LeaderboardRecordsFilter.GLOBAL && !this.countryOnly) {
 				const group = getCompletionGroup(record.rank, this.groupEnds);
 				const matchedGroup = group !== getCompletionGroup(record.rank + 1, this.groupEnds) ? group : undefined;
 				this.createBoundaryGroupIndicators(matchedGroup, lbEntry, index);
@@ -347,12 +468,16 @@ export class LeaderboardsHandler {
 
 			lbEntry.SetPanelEvent('oncontextmenu', () => this.showEntryContextMenu(index, record));
 
-			if (this.currentUserRank === record.rank) {
+			// Ranks in the country view aren't global ranks, so find the player by Steam ID there
+			const isLocalPlayer = this.countryOnly
+				? record.steamID === MomentumAPI.GetLocalUserData()?.steamID
+				: this.currentUserRank === record.rank;
+			if (isLocalPlayer) {
 				lbEntry.AddClass('leaderboard-entry--localplayer');
 			}
 		});
 
-		this.updateEmptyState(records.length === 0, data.status);
+		this.updateEmptyState(records.length === 0, status);
 	}
 
 	private showEntryContextMenu(index: number, record: LeaderboardRecord) {
@@ -361,13 +486,17 @@ export class LeaderboardsHandler {
 				label: $.Localize('#Action_WatchReplay'),
 				icon: 'file://{images}/movie-open-outline.svg',
 				style: 'icon-color-mid-blue',
-				jsCallback: () => this.panels.cp.playRecordReplay(index)
+				jsCallback: () =>
+					this.countryOnly ? this.runCountryAction(record, 'watch') : this.panels.cp.playRecordReplay(index)
 			},
 			{
 				label: $.Localize('#Action_SetComparisonRun'),
 				icon: 'file://{images}/chart-timeline.svg',
 				style: 'icon-color-light-blue',
-				jsCallback: () => this.panels.cp.setRecordComparisonRun(index)
+				jsCallback: () =>
+					this.countryOnly
+						? this.runCountryAction(record, 'compare')
+						: this.panels.cp.setRecordComparisonRun(index)
 			}
 		];
 
@@ -396,6 +525,38 @@ export class LeaderboardsHandler {
 		});
 
 		UiToolkitAPI.ShowSimpleContextMenu('', 'ControlsLibSimpleContextMenu', items);
+	}
+
+	/**
+	 * The engine only acts on records it has loaded itself, so load the global page holding this
+	 * player's run first. Country records don't keep global ranks, so ask the API for it.
+	 */
+	private runCountryAction(record: LeaderboardRecord, type: 'watch' | 'compare') {
+		const { mapID, gamemode, trackType, trackNum, style } = this.state;
+		const request = this.countryRequest;
+
+		getGlobalRank({ mapID, gamemode, trackType, trackNum, style }, record.steamID, (rank) => {
+			if (request !== this.countryRequest || rank === null) return;
+
+			const page = Math.floor((rank - 1) / LEADERBOARD_RECORDS_PER_PAGE);
+			this.pendingCountryAction = { page, steamID: record.steamID, type };
+			if (this.loadedRecordsPage === page) {
+				this.pendingCountryAction = null;
+				this.performCountryAction(record.steamID, type);
+			} else {
+				this.requestLeaderboardPage(page);
+			}
+		});
+	}
+
+	private performCountryAction(steamID: string, type: 'watch' | 'compare') {
+		const index = this.panels.cp
+			.getLoadedLeaderboardRecords()
+			.records.findIndex((record) => record.steamID === steamID);
+		if (index === -1) return;
+
+		if (type === 'watch') this.panels.cp.playRecordReplay(index);
+		else this.panels.cp.setRecordComparisonRun(index);
 	}
 
 	private createBoundaryGroupIndicators(matchedGroup: CompletionGroup, lbEntry: LeaderboardEntry, index: number) {
@@ -442,15 +603,11 @@ export class LeaderboardsHandler {
 	}
 
 	previousPage() {
-		this.state.page = Math.max(this.state.page - 1, 1);
-		this.setTextEntry(this.state.page);
-		this.updateLeaderboards();
+		this.selectPage(this.state.page - 1);
 	}
 
 	nextPage() {
-		this.state.page = Math.min(this.state.page + 1, this.state.totalPages);
-		this.setTextEntry(this.state.page);
-		this.updateLeaderboards();
+		this.selectPage(this.state.page + 1);
 	}
 
 	previousGroup() {
@@ -499,8 +656,9 @@ export class LeaderboardsHandler {
 		pagePrev.enabled = page > 1;
 		pageNext.enabled = page < totalPages;
 
-		groupPrev.enabled = this.getPreviousGroupPage() !== page;
-		groupNext.enabled = this.getNextGroupPage() !== page;
+		// Rank groups only exist on the global leaderboard
+		groupPrev.enabled = !this.countryOnly && this.getPreviousGroupPage() !== page;
+		groupNext.enabled = !this.countryOnly && this.getNextGroupPage() !== page;
 
 		this.updateAroundButton();
 	}
@@ -513,7 +671,10 @@ export class LeaderboardsHandler {
 	private updateAroundButton() {
 		const pbPage = this.getPersonalBestPage();
 		const enabled =
-			pbPage !== null && pbPage !== this.state.page && this.state.filter === LeaderboardRecordsFilter.GLOBAL;
+			!this.countryOnly &&
+			pbPage !== null &&
+			pbPage !== this.state.page &&
+			this.state.filter === LeaderboardRecordsFilter.GLOBAL;
 
 		this.panels.around.enabled = enabled;
 
@@ -530,7 +691,13 @@ export class LeaderboardsHandler {
 			this.setTextEntry(clamped);
 		}
 
-		this.updateLeaderboards();
+		// Country pages are cut from what's already downloaded
+		if (this.countryOnly) {
+			if (this.countryRecords.length > 0 || !this.countryLoading) this.renderCountryPage();
+			this.updateControlButtons();
+		} else {
+			this.updateLeaderboards();
+		}
 	}
 
 	showAroundPage() {

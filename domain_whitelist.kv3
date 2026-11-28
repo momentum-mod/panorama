@@ -5,6 +5,9 @@
 		"localhost",
 		"127.0.0.1",
 
+		// Country leaderboard
+		"api.momentum-mod.org",
+
 		// Temporarily added for Learn
 		"docs.google.com",
 	]
