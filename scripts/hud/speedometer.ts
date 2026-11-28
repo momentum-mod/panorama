@@ -4,7 +4,8 @@ import { SpeedometerColorType, SpeedometerType } from 'common/speedometer';
 
 import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
 import { getTextShadowFast } from 'common/hud-customizer';
-import { findSubsegmentComparison, TimerState, type RunMetadata, type SplitVelocity } from 'common/timer';
+import { findSubsegmentComparison, TimerState, type RunMetadata } from 'common/timer';
+import { Vector } from 'common/web/types/utils/vector.type';
 
 // arbitrary value to determine how much speed needs to change to be considered an increase/decrease
 // adjusted by speedometer update delta time
@@ -396,7 +397,7 @@ class SpeedometerHandler {
 		}
 	}
 
-	updateZoneSpeedometers(comparisonVelocity?: SplitVelocity) {
+	updateZoneSpeedometers(comparisonVelocity?: Vector) {
 		const speedometers = this.speedometers.get(SpeedometerType.ZONE_VELOCITY);
 		if (!speedometers) return;
 

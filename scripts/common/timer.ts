@@ -1,4 +1,5 @@
 import { Style } from 'common/web/enums/style.enum';
+import { Vector } from 'common/web/types/utils/vector.type';
 type Gamemode = import('./web/enums/gamemode.enum').Gamemode;
 
 //#region Types
@@ -40,9 +41,6 @@ export interface RunMetadata {
 	runSplits: RunSplits | null;
 }
 
-/** Velocities in run splits are serialized as [x, y, z] arrays, unlike the {x, y, z} of engine APIs */
-export type SplitVelocity = [x: number, y: number, z: number];
-
 export interface RunSplits {
 	trackStats: RunStats;
 	segments: RunSegment[];
@@ -55,7 +53,7 @@ export interface RunSegment {
 	stats: RunStats;
 
 	/** This is velocity when effectively starting this segment (when *leaving* the first zone) */
-	effectiveStartVelocity: SplitVelocity;
+	effectiveStartVelocity: Vector;
 
 	/**
 	 * Whether this segment's checkpoints have a logical order. This lets split comparison logic know if apparent gaps
@@ -96,7 +94,7 @@ export interface RunSubsegment {
 	timeReached: float;
 
 	/** Velocity when triggering this checkpoint; note the difference between this and Segment.effectiveStartVelocity */
-	velocityWhenReached: SplitVelocity;
+	velocityWhenReached: Vector;
 
 	stats: RunStats;
 }

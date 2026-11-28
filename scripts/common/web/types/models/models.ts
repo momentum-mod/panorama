@@ -29,7 +29,7 @@ import type { LeaderboardType } from '../../enums/leaderboard-type.enum';
 import type { MapTestInviteState } from '../../enums/map-test-invite-state.enum';
 import type { Vector, Vector2D } from '../utils/vector.type';
 import type { Style } from '../../enums/style.enum';
-import type { float, uint16, uint8, vec3 } from '../utils/numeric.type';
+import type { float, uint16, uint8 } from '../utils/numeric.type';
 import type { MapSubmissionType } from '../../enums/map-submission-type.enum';
 
 /* eslint @typescript-eslint/no-namespace: 0 */
@@ -641,7 +641,7 @@ export namespace RunSplits {
 
 		// This is velocity when effectively starting this segment (when *leaving* the
 		// first zone)
-		effectiveStartVelocity: vec3;
+		effectiveStartVelocity: Vector;
 
 		// Whether this segment's checkpoints have a logical order. This lets split
 		// comparison logic know if apparent gaps are due to skipped checkpoints
@@ -667,7 +667,7 @@ export namespace RunSplits {
 
 		// Velocity when triggering this checkpoint; note the difference between this
 		// and Segment::effectiveStartVelocity
-		velocityWhenReached: vec3;
+		velocityWhenReached: Vector;
 
 		stats: Stats;
 	}
