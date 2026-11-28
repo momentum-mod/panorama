@@ -1,4 +1,5 @@
 import { Style } from 'common/web/enums/style.enum';
+import { Vector } from 'common/web/types/utils/vector.type';
 type Gamemode = import('./web/enums/gamemode.enum').Gamemode;
 
 //#region Types
@@ -52,7 +53,7 @@ export interface RunSegment {
 	stats: RunStats;
 
 	/** This is velocity when effectively starting this segment (when *leaving* the first zone) */
-	effectiveStartVelocity: vec3;
+	effectiveStartVelocity: Vector;
 
 	/**
 	 * Whether this segment's checkpoints have a logical order. This lets split comparison logic know if apparent gaps
@@ -93,7 +94,7 @@ export interface RunSubsegment {
 	timeReached: float;
 
 	/** Velocity when triggering this checkpoint; note the difference between this and Segment.effectiveStartVelocity */
-	velocityWhenReached: vec3;
+	velocityWhenReached: Vector;
 
 	stats: RunStats;
 }
