@@ -6,7 +6,7 @@ import { GamemodeInfo } from 'common/gamemode';
 import { getUserMapDataTrack } from 'common/leaderboard';
 import { getTier, handlePlayMap } from 'common/maps';
 import { Role } from 'common/web/enums/role.enum';
-import { formatDate } from 'util/dates';
+import { formatDate, formatDurationDigital } from 'util/dates';
 
 const NEW_MAP_BANNER_CUTOFF = 1000 * 60 * 60 * 24 * 5; // 5 days
 
@@ -143,13 +143,13 @@ class MapEntryHandler {
 		cp.SetHasClass('map-entry--completed', userTrackData?.completed ?? false);
 
 		if (userData && userTrackData && userTrackData.time > 0) {
-			cp.SetDialogVariableFloat('time', userTrackData.time);
+			cp.SetDialogVariable('time', formatDurationDigital(userTrackData.time, 3));
 			// Current system doesn't know user ranks
 			const icon = /* track.pr.rank <= 10 ? 'file://{images}/ranks/top10.svg' : */ 'file://{images}/flag.svg';
 			this.panels.pbIcon.SetImage(icon);
-			this.panels.pbLabel.SetTextWithDialogVariables('{g:time:time}'); // BUG: This is already set in the XML, but for some reason this is needed for the time to always display
+			this.panels.pbLabel.SetTextWithDialogVariables('{s:time}'); // BUG: This is already set in the XML, but for some reason this is needed for the time to always display
 
-			let tooltip = `<b>${$.Localize('#Common_PersonalBest')}</b>: {g:time:time}`;
+			let tooltip = `<b>${$.Localize('#Common_PersonalBest')}</b>: {s:time}`;
 			if (userData.lastPlayed > 0) {
 				// Derived from C time() function (unix time in seconds, JS is in milliseconds), so * 1000
 				const lastPlayed = formatDate(userData.lastPlayed * 1000);

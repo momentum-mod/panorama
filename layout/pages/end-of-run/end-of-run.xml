@@ -15,8 +15,8 @@
 					<Label id="Name" class="endofrun-split__name" text="{s:name}" />
 				</Panel>
 				<Panel class="endofrun-split__right">
-					<Label class="endofrun-split__time" text="{g:time:time}" />
-					<Label class="endofrun-split__diff diff" text="{s:diff_sign}{g:time:diff}" />
+					<Label class="endofrun-split__time" text="{s:time}" />
+					<Label class="endofrun-split__diff diff" text="{s:diff}" />
 				</Panel>
 			</Panel>
 		</snippet>
@@ -48,8 +48,8 @@
 					</Button>
 				</Panel>
 				<Panel class="endofrun__times">
-					<Label id="RunTime" class="endofrun__time" text="{g:time:run_time}" />
-					<Label id="RunDiff" class="endofrun__diff" text="{s:run_diff_prefix}{g:time:run_diff}" />
+					<Label id="RunTime" class="endofrun__time" text="{s:run_time}" />
+					<Label id="RunDiff" class="endofrun__diff" text="{s:run_diff}" />
 				</Panel>
 				<Panel class="endofrun__header-right">
 					<Panel id="RunStatusIndicators" class="endofrun__run-status-indicators">
