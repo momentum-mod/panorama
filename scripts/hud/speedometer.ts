@@ -4,7 +4,7 @@ import { SpeedometerColorType, SpeedometerType } from 'common/speedometer';
 
 import { CustomizerPropertyType, registerHUDCustomizerComponent } from 'common/hud-customizer';
 import { getTextShadowFast } from 'common/hud-customizer';
-import { findSubsegmentComparison, TimerState, type RunMetadata } from 'common/timer';
+import { findSubsegmentComparison, TimerState, type RunMetadata, type SplitVelocity } from 'common/timer';
 
 // arbitrary value to determine how much speed needs to change to be considered an increase/decrease
 // adjusted by speedometer update delta time
@@ -396,21 +396,17 @@ class SpeedometerHandler {
 		}
 	}
 
-	/** Velocities in run splits arrive as [x, y, z] arrays, despite being typed as vec3. */
-	toVec3(velocity: vec3): vec3 {
-		if (!Array.isArray(velocity)) return velocity;
-
-		const [x, y, z] = velocity;
-		return { x, y, z };
-	}
-
-	updateZoneSpeedometers(comparisonVelocity?: vec3) {
+	updateZoneSpeedometers(comparisonVelocity?: SplitVelocity) {
 		const speedometers = this.speedometers.get(SpeedometerType.ZONE_VELOCITY);
 		if (!speedometers) return;
 
 		// The velocity in the current run's splits is [0, 0, 0] while running, so read it from the player
 		const velocity = MomentumPlayerAPI.GetVelocity();
-		const comparison = comparisonVelocity && this.toVec3(comparisonVelocity);
+		const comparison = comparisonVelocity && {
+			x: comparisonVelocity[0],
+			y: comparisonVelocity[1],
+			z: comparisonVelocity[2]
+		};
 
 		// Zone speeds are compared directly, so ignore the deadzone meant for continuous updates
 		const deadzone = this.correctedColorizeDeadzone;
